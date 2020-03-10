@@ -1,0 +1,1 @@
+SUBSYSTEM=="tty",ATTRS{idVendor}=="2a03",ATTRS{idProduct}=="0042",SYMLINK+="arduino"

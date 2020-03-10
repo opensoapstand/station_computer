@@ -1,0 +1,107 @@
+//***************************************
+//
+// payment diplay window
+// update scheme for to work with payment device
+//
+// created: 03-SEP-2019
+// by: Jason Wang
+//
+//
+// copyright 2019 by drinkfill
+// all rights reserved
+//***************************************
+
+#ifndef PAYMENT_H
+#define PAYMENT_H
+
+#include "includefiles.h"
+
+//#include "moneris/moneriscommunication.h"
+//#include "moneris/packetfromecr.h"
+//#include "moneris/packetfromux410.h"
+//#include "moneris/transactionPackets.h"
+//#include "moneris/transactioninfo.h"
+
+#include
+class MainWindow;
+class DispenseWindow;
+class countdownWindow;
+
+namespace Ui {
+class payment;
+}
+
+class payment : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit payment(QWidget *parent = nullptr);
+    ~payment();
+
+    void pageSetup(QString optionTitle, QString imgFile, QString price, bool survey);
+    void labelSetup(QLabel* label, int fontSize);
+    void setPages(MainWindow* main, DispenseWindow* dispense);
+    bool setpaymentProcess(bool status);
+    void setProgressLabel(QLabel* label, int dot);
+    void setProductPrice(QString price);
+
+private:
+    Ui::payment *ui;
+    DispenseWindow* dispensePage;
+    MainWindow * mainPage;
+    QTimer* timer;
+    QTimer* pageUpdateTimer;
+    bool paymentProcessing;
+    int progressDots = 1;
+    int counter = 0;
+    int declineCounter;
+
+    /*payment send & responding packet for moneris device*/
+    monerisCommunication com;
+    packetFromECR sendPacket;
+    packetFromUX410 readPacket;
+    transactionPacket paymentPacket;
+    transactionInfo paymentPktInfo;
+
+    QTimer *readTimer;
+    QTimer *declineTimer;
+
+    std::vector<uint8_t> pktToSend;
+    std::vector<uint8_t> pktResponded;
+
+    bool purchaseEnable;
+    int monerisConfig = 0;
+    bool timerEnabled;
+    std::string productSelectedPrice;
+    QString certifiedPrice = "0";
+    bool sendToUX410();
+    bool paymentInit();
+    bool waitForUX410();
+
+
+protected:
+    void showEvent(QShowEvent *event);
+    void paintEvent(QPaintEvent *p);
+
+
+private slots:
+    void declineTimer_start();
+    void on_goBackButton_clicked();
+    void progressStatusLabel();
+    void updatePageNumber();
+    void on_payButton_clicked();
+    void readTimer_loop();
+    void on_price1Button_clicked();
+    void on_price2Button_clicked();
+    void on_price3Button_clicked();
+    void on_price4Button_clicked();
+    void on_price5Button_clicked();
+    void on_price6Button_clicked();
+    void on_price7Button_clicked();
+    void on_price8Button_clicked();
+    void on_price9Button_clicked();
+    void on_price10Button_clicked();
+};
+
+#endif // PAYMENT_H

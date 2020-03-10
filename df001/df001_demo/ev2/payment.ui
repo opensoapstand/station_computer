@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>payment</class>
+ <widget class="QWidget" name="payment">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1080</width>
+    <height>1920</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QLabel" name="productLabel">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>100</y>
+     <width>1080</width>
+     <height>180</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="imageLabel">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>340</y>
+     <width>400</width>
+     <height>400</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="priceLabel">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>950</y>
+     <width>1080</width>
+     <height>200</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="totalLabel">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>1150</y>
+     <width>1080</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="goBackButton">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>1290</y>
+     <width>300</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="orLabel">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>1330</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="tapLabel">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>1300</y>
+     <width>300</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="arrowLabel">
+   <property name="geometry">
+    <rect>
+     <x>840</x>
+     <y>1540</y>
+     <width>161</width>
+     <height>251</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>:/assets/up_arrow.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="processLabel">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>1290</y>
+     <width>1080</width>
+     <height>150</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="payButton">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>1290</y>
+     <width>300</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="declineLabel">
+   <property name="geometry">
+    <rect>
+     <x>226</x>
+     <y>1150</y>
+     <width>691</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="priceVolume1Button">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>820</y>
+     <width>260</width>
+     <height>160</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="priceVolume2Button">
+   <property name="geometry">
+    <rect>
+     <x>640</x>
+     <y>820</y>
+     <width>260</width>
+     <height>160</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

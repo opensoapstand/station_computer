@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/page0/kombucha-button.png</file>
+        <file>images/page0/Coldbrew-button.png</file>
+        <file>images/page0/carbonated-button.png</file>
+        <file>images/tea.png</file>
+	<file>images/cold_brew_resized_3.png</file>
+
+	<file>images/carbonated_2(1).png</file>
+        <file>images/Coldbrew_2.png</file>
+        <file>images/kombucha_4.png</file>
+
+
+	<file>images/page1/carbonated.png</file>
+        <file>images/page1/coldbrew.png</file>
+        <file>images/page1/kombucha.png</file>
+
+
+	<file>images/page1/pg2-carbonated.png</file>
+        <file>images/page1/Pg2-Coldbrew.png</file>
+        <file>images/page1/Pg2-Kombucha.png</file>
+
+
+
+    </qresource>
+</RCC>

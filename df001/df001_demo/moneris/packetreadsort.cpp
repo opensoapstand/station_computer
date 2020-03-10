@@ -1,0 +1,46 @@
+#include"enums.h"
+#include"packetreadsort.h"
+
+#include <iostream>
+
+packetReadSort::packetReadSort()
+{
+
+}
+
+packetReadSort::~packetReadSort()
+{
+
+}
+
+void packetReadSort::sortPacket(packetResponse readPacket)
+{
+    packetToSort = readPacket;
+    if (packetToSort.status == communicationPacketField::NAK){
+
+    } else if (packetToSort.status == communicationPacketField::ACK){
+        if (packetToSort.classID == communicationPacketField::ppPos){
+            uint8_t APIID[2] = {packetToSort.APIID[0], packetToSort.APIID[1]};
+            if (packetFromECR::convertFrom8To16(APIID[0],APIID[1]) == API_ID::PpPosDirectTxn){
+                if (packetToSort.data[0]== 0x50){
+                    if(packetToSort.data[2] == TXN_STATUS_CODE::SUCCCESS){
+                        std::cout << "Approved";
+                    }
+                    if(packetToSort.data[2] == TXN_STATUS_CODE::NOT_COMPLETED){
+                        std::cout << "Declined";
+                    }
+                    if(packetToSort.data[2] == TXN_STATUS_CODE::TIMEOUT){
+                        std::cout << "USER TIMEOUT";
+                    }
+                }
+            }
+
+        }
+        if (packetToSort.classID == communicationPacketField::ppDvc){
+
+        }
+        if (packetToSort.classID == communicationPacketField::ppRtc){
+
+        }
+    }
+}

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>simulator</class>
+ <widget class="QWidget" name="simulator">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>480</width>
+    <height>339</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QPushButton" name="logonButton">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>30</y>
+     <width>140</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>logon</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="BalanceButton">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>60</y>
+     <width>140</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>batchBalance</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="CloseButton">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>90</y>
+     <width>140</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>batchClose</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="purchaseButton">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>120</y>
+     <width>140</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>purchase</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="cancelButton">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>150</y>
+     <width>140</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>purchaseCancel</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="sendButton">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>80</y>
+     <width>140</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>send</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="configButton">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>270</y>
+     <width>100</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Configuration</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="textEdit">
+   <property name="geometry">
+    <rect>
+     <x>23</x>
+     <y>119</y>
+     <width>111</width>
+     <height>31</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="nameButton">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>270</y>
+     <width>121</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>company name</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="addressButton">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>270</y>
+     <width>121</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>address</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>269</y>
+     <width>81</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Get Config</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

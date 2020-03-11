@@ -23,12 +23,20 @@
 
 database_logger::database_logger()
 {
-    db.setHostName("drinkfilldb.cqraowv1leln.us-west-2.rds.amazonaws.com");
-    db.setPort(3306);
-    db.setUserName("admin");
-    db.setPassword("Drinkfill");
-    db.setDatabaseName("gold_unit");
-    //db.setDatabaseName("/home/drinkfill/dev/evt/drinkfill_ui/database/datacollection.db");
+//    db.setHostName("drinkfilldb.cqraowv1leln.us-west-2.rds.amazonaws.com");
+//    db.setPort(3306);
+//    db.setUserName("admin");
+//    db.setPassword("Drinkfill");
+//    db.setDatabaseName("gold_unit");
+//    //db.setDatabaseName("/home/drinkfill/dev/evt/drinkfill_ui/database/datacollection.db");
+
+    //    db.setHostName("drinkfilldb.cqraowv1leln.us-west-2.rds.amazonaws.com");
+         db.setPort(3306);
+    //     db.setDatabaseName("/home/drinkfill/Desktop/mini_800x1280/datacollection.db");
+    //    db.setUserName("admin");
+    //    db.setPassword("Drinkfill");
+    //    db.setDatabaseName(databaseName);
+          db.setDatabaseName("/home/soapstand/Downloads/drinkfill/df002/mini_800x1280/datacollection.db");
 
     if (db.open()){
         qDebug() << "connected " << db.hostName();
@@ -73,12 +81,20 @@ bool database_logger::checkDataBaseConnection()
 
 void database_logger::reconnectDatabase()
 {
-    db.setHostName("drinkfilldb.cqraowv1leln.us-west-2.rds.amazonaws.com");
-    db.setPort(3306);
-    db.setUserName("admin");
-    db.setPassword("Drinkfill");
-    db.setDatabaseName("gold_unit");
-    //db.setDatabaseName("/home/drinkfill/dev/evt/drinkfill_ui/database/datacollection.db");
+    //    db.setHostName("drinkfilldb.cqraowv1leln.us-west-2.rds.amazonaws.com");
+    //    db.setPort(3306);
+    //    db.setUserName("admin");
+    //    db.setPassword("Drinkfill");
+    //    db.setDatabaseName("gold_unit");
+    //    //db.setDatabaseName("/home/drinkfill/dev/evt/drinkfill_ui/database/datacollection.db");
+
+    //    db.setHostName("drinkfilldb.cqraowv1leln.us-west-2.rds.amazonaws.com");
+          db.setPort(3306);
+    //    db.setDatabaseName("/home/drinkfill/Desktop/mini_800x1280/datacollection.db");
+    //    db.setUserName("admin");
+    //    db.setPassword("Drinkfill");
+    //    db.setDatabaseName(databaseName);
+          db.setDatabaseName("/home/soapstand/Downloads/drinkfill/df002/mini_800x1280/datacollection.db");
 
     if (db.open()){
         qDebug() << "connection restored " + db.hostName();
@@ -366,6 +382,12 @@ int database_logger::getInventory(int eventCode, QString machineid)
     QSqlQueryModel* model = new QSqlQueryModel();
     model->setQuery("SELECT * FROM `event` WHERE `event_code` = '" + QString::number(eventCode) + "'"
                     + "AND `machine_id` = '" + machineid + "'");
+
+
+    while(model->canFetchMore())
+    {
+        model->fetchMore();
+    }
 
     int currentInventory;
 

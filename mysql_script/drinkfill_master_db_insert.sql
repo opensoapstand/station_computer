@@ -11,9 +11,13 @@
 // all rights reservedname
  ********************************************************/
  /*sample vendor insertion*/
-insert into `vendors` (`full_address`, `name`, `contact_name`, `contact_phone`,`contact_email`,`connector`) 
-				       value 
-					  ('vancouver somewhere', 'NYPD', 'Jake Peralta', '909-000-0192', 'xxx@xxx.com', '242');
+-- insert into `vendors` (`full_address`, `name`, `contact_name`, `contact_phone`,`contact_email`,`connector`) 
+-- 				       value 
+-- 					  ('vancouver somewhere', 'NYPD', 'Jake Peralta', '909-000-0192', 'xxx@xxx.com', '242');
+
+insert into `vendors` (`id`, `full_address`, `name`, `contact_name`, `contact_phone`,`contact_email`,`connector`) 
+				       values ('1', 'vancouver somewhere', 'NYPD', 'Jake Peralta', '909-000-0192', 'xxx@xxx.com', '242')
+                       on duplicate key update full_address = 'vancouver la';
 
 select * from `vendors`;
 -- ------------------------------------------------------------------------------------------------------------- --
@@ -36,20 +40,23 @@ insert into `pricing` (`product_id`, `price_per_litre`,`location`)
 select * from `pricing`;
 -- --------------------------------------------------------------------------------------------------------------- --
 /*sample machine insertion*/
-insert into `machine` (`type`,`location`,`number_of_drinks`,`last_maintenance`,`vendor_host`,`vendor_provider`)
+insert into `machine` (`id`, `type`,`number_of_drinks`,`last_maintenance`,`vendor_host`,`vendor_provider`)
 					   value
 					  (1, 1, 9, now(), 'City of vancouver', 'CCPD');
 select * from `machine`;
 -- ---------------------------------------------------------------------------------------------------------------- --
 /*sample inventory insertion*/
-insert into `inventory` (`machine_id`, `drink1`)
-			            value
-                        (1, 452.21);
+-- insert into `inventory` (`machine_id`, `drink1`)
+-- 			            value
+--                         (1, 452.21);
+insert into `inventory` (`id`, `machine_id`, `volume`) value (1, 1, 452.21)
+						on duplicate key update `volume` = '20', `machine_id` = 1;
+                        
 select * from `inventory`;		
 -- ---------------------------------------------------------------------------------------------------------------- --
 /*sample sales insertion*/
 insert into `sales` (`machine_id`, `date`, `amount`,`pan`, `reference`)
 					value
-                    ();	
+                    (1, now(), 3.3, "****334", "333");	
 						
 

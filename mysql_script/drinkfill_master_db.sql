@@ -77,7 +77,7 @@ create table if not exists `pricing` (`product_id` int, -- cost for consumers
 /*general infomation about the machine*/                                       
 create table if not exists `machine` (`id` int not null auto_increment,
 									   `type` ENUM('V1', 'V2', 'V3') NOT NULL,  -- machine version
-									   `location` int, 
+									   `location` int default null, 
 									   `number_of_drinks` int,                  -- how many drinks to display on UI
 									   `last_maintenance` timestamp NOT NULL,
                                        `option1` int default null,
@@ -104,17 +104,9 @@ create table if not exists `machine` (`id` int not null auto_increment,
                                        primary key(`id`)
                                        );
                                        
-create table if not exists `inventory` (`machine_id` int,
-										`drink1` double default null,
-                                        `drink2` double default null,
-                                        `drink3` double default null,
-                                        `drink4` double default null,
-                                        `drink5` double default null,
-                                        `drink6` double default null,
-                                        `drink7` double default null,
-                                        `drink8` double default null,
-                                        `drink9` double default null,
-                                        `co2` double default null,
+create table if not exists `inventory` (`id` int primary key not null auto_increment,
+									    `machine_id` int,
+										`volume` double default null,
                                         foreign key (`machine_id`) references machine(id));
                                        
 /*Daily update of the revenue from the machine, get summarized revenue daily*/
@@ -172,7 +164,10 @@ create table if not exists `coupon` (`id` int primary key,
 									 `end_date` timestamp,
                                      unique(`code`),
                                      foreign key(`machine_id`) references machine(`id`));
-                                     
+                     
+-- ALTER TABLE `coupon` ADD COLUMN `testing` VARCHAR(120);
+-- ALTER TABLE `coupon` DROP COLUMN `testing`
+-- EXPLAIN SELECT * FROM `coupon`;
 -- drop table sales;
 
 -- create table if not exists `users` (`id` serial,

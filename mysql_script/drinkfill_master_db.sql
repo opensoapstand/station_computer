@@ -76,7 +76,7 @@ create table if not exists `pricing` (`product_id` int, -- cost for consumers
                                        
 /*general infomation about the machine*/                                       
 create table if not exists `machine` (`id` int not null auto_increment,
-									   `type` ENUM('V1', 'V2', 'V3') NOT NULL,  -- machine version
+									   `type` ENUM('V1', 'V2', 'V3') default NULL,  -- machine version
 									   `location` int default null, 
 									   `number_of_drinks` int,                  -- how many drinks to display on UI
 									   `last_maintenance` timestamp NOT NULL,
@@ -89,8 +89,8 @@ create table if not exists `machine` (`id` int not null auto_increment,
                                        `option7` int default null,
                                        `option8` int default null,
                                        `option9` int default null,
-                                       `vendor_host` varchar(100),
-                                       `vendor_provider` varchar(100),
+                                       `vendor_host` varchar(100) default null,
+                                       `vendor_provider` varchar(100) default null,
                                        foreign key(`option1`) references product(`id`),
                                        foreign key(`option2`) references product(`id`),
                                        foreign key(`option3`) references product(`id`),

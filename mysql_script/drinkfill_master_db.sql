@@ -40,13 +40,13 @@ create table if not exists `vendors` (`id` int not null auto_increment,
 /*Product table shows infomation about the drinks that we used or using or will be using*/
 /**/
 create table if not exists `product` (`id` int not null auto_increment,           -- SERIAL is an alias for BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE.
-									   `name` varchar(100) NOT NULL,
-                                       `vendor` int, -- unique vendor 
-                                       `image` blob,
-									   `calibration_const` double,
-                                       `cost_per_litre` double, -- cost from vendor
-                                       primary key(`id`),
-                                       foreign key (`vendor`) references vendors(`id`)); -- build index on unique value column
+									  `name` varchar(100) NOT NULL,
+									  `vendor` int, -- unique vendor 
+									  `image` blob,
+									  `calibration_const` double,
+									  `cost_per_litre` double, -- cost from vendor
+									  primary key(`id`),
+									  foreign key (`vendor`) references vendors(`id`)); -- build index on unique value column
 
 -- if not exists (select * from `product` where `id` = 0)
 -- insert into `product`(`id`, `name`, `image`, `calibration_const`, `cost_per_litre`) values
@@ -76,7 +76,7 @@ create table if not exists `pricing` (`product_id` int, -- cost for consumers
                                        
 /*general infomation about the machine*/                                       
 create table if not exists `machine` (`id` int not null auto_increment,
-									   `type` ENUM('V1', 'V2', 'V3') default NULL,  -- machine version
+									   `type` ENUM('V1', 'V2', 'V3') NOT NULL,  -- machine version
 									   `location` int default null, 
 									   `number_of_drinks` int,                  -- how many drinks to display on UI
 									   `last_maintenance` timestamp NOT NULL,
@@ -89,8 +89,8 @@ create table if not exists `machine` (`id` int not null auto_increment,
                                        `option7` int default null,
                                        `option8` int default null,
                                        `option9` int default null,
-                                       `vendor_host` varchar(100) default null,
-                                       `vendor_provider` varchar(100) default null,
+                                       `vendor_host` varchar(100),
+                                       `vendor_provider` varchar(100),
                                        foreign key(`option1`) references product(`id`),
                                        foreign key(`option2`) references product(`id`),
                                        foreign key(`option3`) references product(`id`),
@@ -104,10 +104,12 @@ create table if not exists `machine` (`id` int not null auto_increment,
                                        primary key(`id`)
                                        );
                                        
-create table if not exists `inventory` (`id` int primary key not null auto_increment,
-									    `machine_id` int,
+create table if not exists `inventory` (`id` int primary key not null auto_increment, 
+										`product_id` int not null,     -- every time when there is a log, there should be coresponding id for what product and which machine
+									    `machine_id` int not null,
 										`volume` double default null,
-                                        foreign key (`machine_id`) references machine(id));
+                                        foreign key(`product_id`) references product(`id`),
+                                        foreign key (`machine_id`) references machine(`id`));
                                        
 /*Daily update of the revenue from the machine, get summarized revenue daily*/
 /*can utilize this table to display histogram of the progress*/

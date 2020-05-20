@@ -49,8 +49,7 @@ select * from `machine`;
 -- insert into `inventory` (`machine_id`, `drink1`)
 -- 			            value
 --                         (1, 452.21);
-insert into `inventory` (`id`, `machine_id`, `volume`) value (1, 1, 452.21)
-						on duplicate key update `volume` = '20', `machine_id` = 1;
+insert into `inventory` (`product_id`, `machine_id`, `volume`) value (1, 1, 452.21); -- inventory should always be logged individually so we can track progress
                         
 select * from `inventory`;		
 -- ---------------------------------------------------------------------------------------------------------------- --

@@ -22,15 +22,16 @@ insert into `vendors` (`id`, `full_address`, `name`, `contact_name`, `contact_ph
 select * from `vendors`;
 -- ------------------------------------------------------------------------------------------------------------- --
 /*Product table shows infomation about the drinks that we used or using or will be using*/
-insert into `product` (`name`, `vendor`,`image`,`calibration_const`,`cost_per_litre`) 
+insert into `product` (`name`,`image`,`calibration_const`,`cost_per_litre`) 
 			           value
-					  ('Elderflower Kombucha', 1, NULL, 2.19, 1.20);
+					  ('Elderflower Kombucha', NULL, 2.19, 1.20);
 select * from `product`;
 -- -------------------------------------------------------------------------------------------------------------- --
 /*sample location insertion*/
-insert into `location` (`full_address`,`name`,`in_store_location`,`contact_name`,`contact_phone`,`contact_email`,`connector`,`price_multiplier`)
+insert into `location` (`id`, `full_address`,`name`,`in_store_location`,`contact_name`,`contact_phone`,`contact_email`,`connector`,`price_multiplier`)
 						value
-					   ('#303 6th East Ave Vancouver', 'drinkfill', 'room #303', 'Jason Wang', '222-293-2942', 'www@drinkfill.com', '212', 1.23 );
+					   (1, '#303 6th East Ave Vancouver', 'drinkfill', 'room #303', 'Jason Wang', '222-293-2942', 'www@drinkfill.com', '212', 1.23 )
+                       on duplicate key update `in_store_location` = 'main entrance';
 select * from `location`;
 -- --------------------------------------------------------------------------------------------------------------- --
 /*sample pricing insertion*/
@@ -42,7 +43,8 @@ select * from `pricing`;
 /*sample machine insertion*/
 insert into `machine` (`id`, `type`,`number_of_drinks`,`last_maintenance`,`vendor_host`,`vendor_provider`)
 					   value
-					  (1, 1, 9, now(), 'City of vancouver', 'CCPD');
+					  (1, 1, 9, now(), 'City of vancouver', 'CCPD')
+                      on duplicate key update `vendor_host` = 'vancouver la';
 select * from `machine`;
 -- ---------------------------------------------------------------------------------------------------------------- --
 /*sample inventory insertion*/

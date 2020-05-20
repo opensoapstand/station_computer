@@ -24,6 +24,8 @@ drop table if exists pricing;
 drop table if exists product;
 drop table if exists sales;
 drop table if exists vendors;
+drop table if exists temperature_log;
+drop table if exists waste_log;
 SET FOREIGN_KEY_CHECKS = 1;
 
 /*Main database gateway*/
@@ -41,7 +43,7 @@ create table if not exists `vendors` (`id` int not null auto_increment,
 /**/
 create table if not exists `product` (`id` int not null auto_increment,           -- SERIAL is an alias for BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE.
 									  `name` varchar(100) NOT NULL,
-									  `vendor` int, -- unique vendor 
+									  `vendor` int default null, -- unique vendor 
 									  `image` blob,
 									  `calibration_const` double,
 									  `cost_per_litre` double, -- cost from vendor
@@ -110,7 +112,19 @@ create table if not exists `inventory` (`id` int primary key not null auto_incre
 										`volume` double default null,
                                         foreign key(`product_id`) references product(`id`),
                                         foreign key (`machine_id`) references machine(`id`));
-                                       
+
+create table if not exists `temperature_log` (`id` int primary key not null auto_increment, 
+									          `machine_id` int not null,
+											  `top` double default null,
+                                              `bottom` double default null,
+                                              foreign key (`machine_id`) references machine(`id`));
+                                              
+create table if not exists `waste_log` (`id` int primary key not null auto_increment, 
+									    `machine_id` int not null,
+										`top` int default null,
+									    `bottom` int default null,
+										foreign key (`machine_id`) references machine(`id`));
+                                              
 /*Daily update of the revenue from the machine, get summarized revenue daily*/
 /*can utilize this table to display histogram of the progress*/
 -- create table if not exists `revenue` (`day` DATE NOT NULL,

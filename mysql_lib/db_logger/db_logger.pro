@@ -10,6 +10,6 @@ SOURCES += \
 HEADERS += \
     local_db_logger.h \
 
-#QMAKE_CXXFLAGS += `mysql_config --cflags --libs`
+QMAKE_CXXFLAGS += `mysql_config --cflags --libs`
 LIBS += $$system(mysql_config --libs)
 

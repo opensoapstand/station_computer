@@ -19,8 +19,15 @@ class i2cGpios{
 
 public:
     i2cGpios();
+    ~i2cGpios();
+
+    void setPinMode_out(int address, int pinNum);
+
+    void setPin_on(int address, int pinNum);
+    void setPin_off(int address, int pinNum);
+
 private:
-    MCP23017* solenoid_1;
-    MCP23017* solenoid_2;
-    MCP23017* pump;
+    MCP23017 solenoid_1;
+    MCP23017 solenoid_2;
+    MCP23017 pump;
 };

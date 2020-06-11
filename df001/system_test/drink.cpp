@@ -15,16 +15,16 @@
 drink::drink()
 {
     pump = COMPRESS;
-    drinkPin = nullptr;
-    waterPin = nullptr;
-    airPin = nullptr;
-    flowPin = nullptr;
+    drinkPin = 0;
+    waterPin = 0;
+    airPin = 0;
+    flowPin = 0;
 
-    pumpFwdPin = nullptr;
-    pumpRevPin = nullptr;
+    pumpFwdPin = 0;
+    pumpRevPin = 0;
 }
 
-drink::drink(bool type, int* drink, int* water, int *air, int *flow, int *fowardP, int *reversP)
+drink::drink(bool type, int drink, int water, int air, int flow, int fowardP, int reversP)
 {
     drinkPin = drink;
     waterPin = water;
@@ -34,8 +34,8 @@ drink::drink(bool type, int* drink, int* water, int *air, int *flow, int *foward
     pump = type;
 
     if(pump == STILL){
-        pumpFwdPin = nullptr;
-        pumpRevPin = nullptr;
+        pumpFwdPin = 99;
+        pumpRevPin = 99;
     }
     else
     {
@@ -46,30 +46,30 @@ drink::drink(bool type, int* drink, int* water, int *air, int *flow, int *foward
 
 int drink::getDrinkPinAddress()
 {
-    return *drinkPin/100;
+    return drinkPin/100;
 }
 
 int drink::getDrinkPin_pin()
 {
-    return *drinkPin-getDrinkPinAddress()*100;
+    return drinkPin-getDrinkPinAddress()*100;
 }
 
 int drink::getWaterPinAddress()
 {
-    return *waterPin/100;
+    return waterPin/100;
 }
 
 int drink::getWaterPin_pin()
 {
-    return *waterPin-getWaterPinAddress()*100;
+    return waterPin-getWaterPinAddress()*100;
 }
 
 int drink::getAirPinAddress()
 {
-    return *airPin/100;
+    return airPin/100;
 }
 
 int drink::getAirPin_pin()
 {
-    return *airPin-getAirPinAddress()*100;
+    return airPin-getAirPinAddress()*100;
 }

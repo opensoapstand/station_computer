@@ -17,7 +17,7 @@ class drink
 {
     public:
         drink();
-        drink(bool type, int* drink, int* water, int *air, int *flow, int *fowardP, int *reversP);
+        drink(bool type, int drink, int water, int air, int flow, int fowardP, int reversP);
 
         int getDrinkPinAddress();
         int getDrinkPin_pin();
@@ -31,11 +31,11 @@ class drink
     private:
         bool pump;
 
-        int* drinkPin;
-        int* waterPin;
-        int* airPin;
-        int* flowPin;
+        int drinkPin;
+        int waterPin;
+        int airPin;
+        int flowPin;
 
-        int* pumpFwdPin;
-        int* pumpRevPin;
+        int pumpFwdPin;
+        int pumpRevPin;
 };

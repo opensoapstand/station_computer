@@ -83,21 +83,15 @@
 
 //
 int drinkP[] = {drink1, drink2, drink3, drink4, drink5, drink6, drink7, drink8, drink9};
-int *drinkPtr = drinkP;
 
 int waterP[] = {water1, water2, water3, water4, water5, water6, water7, water8, water9};
-int *waterPtr = waterP;
 
 int airP[] = {air1, air2, air3, air4, air5, air6, air7, air8, air9};
-int *airPtr = airP;
 
 int flowP[] = {flow1, flow2, flow3, flow4, flow5, flow6, flow7, flow8, flow9};
-int *flowPtr = flowP;
 
 int pumpFwdP[] = {pump6_F, pump7_F, pump8_F, pump9_F};
-int *pumpFwdPtr = pumpFwdP;
 
 int pumpRevP[] = {pump6_R, pump7_R, pump8_R, pump9_R};
-int *pumpRevPtr = pumpRevP;
 
 #endif //_GPIOS_H

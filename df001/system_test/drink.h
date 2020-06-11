@@ -1,3 +1,15 @@
+//***************************************
+//
+// drink.h
+// class to access gpio infomation 
+//
+// created: 10-06-2020
+// by: Jason Wang
+//
+// copyright 2020 by Drinkfill Beverages Ltd
+// all rights reserved
+//***************************************
+
 #define STILL 0
 #define COMPRESS 1
 

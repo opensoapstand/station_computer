@@ -1,3 +1,14 @@
+//***************************************
+//
+// main.cpp
+// class to handle input and control of the pins 
+//
+// created: 10-06-2020
+// by: Jason Wang
+//
+// copyright 2020 by Drinkfill Beverages Ltd
+// all rights reserved
+//***************************************
 #include <iostream>
 #include <string.h>
 

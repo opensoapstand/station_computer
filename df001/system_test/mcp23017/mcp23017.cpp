@@ -1,4 +1,4 @@
-#include "mpc23017/MCP23017.h"
+#include "mcp23017.h"
 #include <iostream>
 
 

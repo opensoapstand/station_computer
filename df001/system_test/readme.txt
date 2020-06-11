@@ -1,0 +1,1 @@
+g++ -o system_test *.cpp

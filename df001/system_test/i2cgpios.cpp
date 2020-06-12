@@ -84,7 +84,6 @@ void i2cGpios::setPin_off(int address, int pinNum){
     else if (address == X22){
         //pump.digitalWrite(pinNum, LOW);
         std::clog << "Address:" << address << " Pin: " << pinNum << " is off\n";
-
     }
     else
     {

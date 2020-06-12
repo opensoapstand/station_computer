@@ -15,10 +15,14 @@
 #include "gpios.h"
 #include "drink.h"
 #include "i2cgpios.h"
+#include "sensors/dispense.h"
 
 using namespace std;
 
 #define Num_Cassettes 9
+#define H2O_activation_time 5
+#define DRINK_activation_time 5
+#define AIR_activation_time 5 
 
 bool type = false;
 
@@ -26,6 +30,7 @@ bool inputNumber(drink *drinkArray[Num_Cassettes], char *inputArray);
 bool inputType(drink *drinkArray, char *inputArray);
 
 i2cGpios gpioControl = i2cGpios();
+dispense flowsensor;
 
 int main()
 {
@@ -203,8 +208,13 @@ bool inputType(drink *drinkArray, char *inputArray)
         cout << "Address: " << drinkArray->getDrinkPinAddress();
         cout << " Pin:" << drinkArray->getDrinkPin_pin() << endl;
 
+        flowsensor.read_FlowSensor(drinkArray->getFlowSensor_pin(), 1);
+
         gpioControl.setPinMode_out(drinkArray->getDrinkPinAddress(), drinkArray->getDrinkPin_pin());
         gpioControl.setPin_on(drinkArray->getDrinkPinAddress(), drinkArray->getDrinkPin_pin());
+        sleep(DRINK_activation_time);
+        gpioControl.setPin_off(drinkArray->getDrinkPinAddress(), drinkArray->getDrinkPin_pin());
+
         return true;
     }
     else if (strcmp("a", inputArray) == 0)
@@ -214,6 +224,8 @@ bool inputType(drink *drinkArray, char *inputArray)
 
         gpioControl.setPinMode_out(drinkArray->getAirPinAddress(), drinkArray->getAirPin_pin());
         gpioControl.setPin_on(drinkArray->getAirPinAddress(), drinkArray->getAirPin_pin());
+        sleep(AIR_activation_time);
+        gpioControl.setPin_off(drinkArray->getAirPinAddress(), drinkArray->getAirPin_pin());
 
         return true;
     }
@@ -224,6 +236,8 @@ bool inputType(drink *drinkArray, char *inputArray)
 
         gpioControl.setPinMode_out(drinkArray->getWaterPinAddress(), drinkArray->getWaterPin_pin());
         gpioControl.setPin_on(drinkArray->getWaterPinAddress(), drinkArray->getWaterPin_pin());
+        sleep(H2O_activation_time);
+        gpioControl.setPin_off(drinkArray->getWaterPinAddress(), drinkArray->getWaterPin_pin());
 
         return true;
     }

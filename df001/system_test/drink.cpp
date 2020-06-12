@@ -73,3 +73,8 @@ int drink::getAirPin_pin()
 {
     return airPin-getAirPinAddress()*100;
 }
+
+int drink::getFlowSensor_pin()
+{
+    return flowPin;
+}

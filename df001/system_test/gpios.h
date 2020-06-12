@@ -16,6 +16,7 @@
 #ifndef _GPIOS_H
 #define _GPIOS_H
 
+#define FSM_VERSION "0.1.1"
 #define button 2000
 
 #define drink1 2001

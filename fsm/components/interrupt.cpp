@@ -1,8 +1,8 @@
 //***************************************
 //
 // <interrupt.cpp>
-// <Contians functions that enables GPIO interrupt function...
-// <... and utilizes it for flow sensro edge counting>
+// <Contains functions that enables GPIO interrupt function...
+// <... and utilizes it for flow sensor edge counting>
 //
 // created: <04-27-2020>
 // by: <Gabriel Leung>
@@ -37,16 +37,16 @@ int interrupt::countEDGE_LowVolume(int gpio, int calibration){
 
     while(counter < DISPENSE_VOLUME_CALIBRATED){
 
-    lseek(fd, 0, SEEK_SET);    /* consume any prior interrupt */
-    read(fd, buf, sizeof buf);
+		lseek(fd, 0, SEEK_SET);    /* consume any prior interrupt */
+		read(fd, buf, sizeof buf);
 
-    poll(&pfd, 1, -1);         /* wait for interrupt */
+		poll(&pfd, 1, -1);         /* wait for interrupt */
 
-    lseek(fd, 0, SEEK_SET);    /* consume interrupt */
-    read(fd, buf, sizeof buf);
+		lseek(fd, 0, SEEK_SET);    /* consume interrupt */
+		read(fd, buf, sizeof buf);
 
-    counter = counter + 1;
-    cout << counter << endl;
+		counter = counter + 1;
+		cout << counter << endl;
    }
     return counter;
   }

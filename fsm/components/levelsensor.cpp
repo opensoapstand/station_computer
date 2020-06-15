@@ -1,7 +1,7 @@
 //***************************************
 //
 // <levelsensor.cpp>
-// <Contians functions that monitor the level sensors...
+// <Contains functions that monitor the level sensors...
 // <... and shows should sent a warning when the sensor is triggered>
 //
 // created: <04-27-2020>

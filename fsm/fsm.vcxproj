@@ -99,10 +99,13 @@
     <ClInclude Include="components\mcp23017.h" />
     <ClInclude Include="components\setgpio.h" />
     <ClInclude Include="components\smbus.h" />
+    <ClInclude Include="objects\debugoutput.h" />
     <ClInclude Include="dftypes.h" />
+    <ClInclude Include="components\gpio.h" />
     <ClInclude Include="objects\dispenser.h" />
     <ClInclude Include="objects\drink.h" />
     <ClInclude Include="objects\messagemediator.h" />
+    <ClInclude Include="components\oddyseyx86GPIO.h" />
     <ClInclude Include="states\stateinit.h" />
     <ClInclude Include="states\statevirtual.h" />
   </ItemGroup>
@@ -113,8 +116,11 @@
     <ClCompile Include="components\mcp23017.cpp" />
     <ClCompile Include="components\setgpio.cpp" />
     <ClCompile Include="components\smbus.c" />
+    <ClCompile Include="objects\debugoutput.cpp" />
     <ClCompile Include="fsm.cpp" />
+    <ClCompile Include="components\gpio.cpp" />
     <ClCompile Include="objects\messagemediator.cpp" />
+    <ClCompile Include="components\oddyseyx86GPIO.cpp" />
     <ClCompile Include="states\stateinit.cpp" />
     <ClCompile Include="states\statevirtual.cpp" />
   </ItemGroup>

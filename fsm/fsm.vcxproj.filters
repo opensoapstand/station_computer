@@ -51,6 +51,15 @@
     <ClInclude Include="components\smbus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="components\gpio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="components\oddyseyx86GPIO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="objects\debugoutput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="fsm.cpp">
@@ -81,6 +90,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="components\smbus.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="components\gpio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="components\oddyseyx86GPIO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="objects\debugoutput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

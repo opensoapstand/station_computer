@@ -15,7 +15,7 @@
 #include <functional>
 #include <thread>
 
-#include "dftypes.h"
+#include "../dftypes.h"
 
 class gpio
 {

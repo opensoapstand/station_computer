@@ -9,7 +9,7 @@
 // copyright 2020 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
-#include "mcp23017/mcp23017.h"
+#include "mcp23017.h"
 
 #define X20 20
 #define X21 21

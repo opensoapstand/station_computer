@@ -19,6 +19,7 @@ typedef enum MESSAGE_LEVEL {
 	INFO,
 	WARN,
 	ERROR,
+	MESSAGE_MAX
 } MESSAGE_LEVEL;
 
 
@@ -29,8 +30,12 @@ public:
 	~debugOutput();
 
 	bool setMessageLevel(MESSAGE_LEVEL dbgLvl) { m_dbgLvl = dbgLvl; };
+	virtual void sendMessage(std::string msg, MESSAGE_LEVEL lvl);
+
 
 protected:
 	MESSAGE_LEVEL m_dbgLvl;
+	std::string m_lvlArray[MESSAGE_MAX] = { "INFO", "WARNING", "ERROR" };
 };
 
+#endif

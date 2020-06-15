@@ -12,14 +12,26 @@
 //***************************************
 
 #include "debugoutput.h"
+#include <iostream>
+#include <fstream>
 
-
+using namespace std;
 
 debugOutput::debugOutput()
 {
+	m_dbgLvl = INFO;
 }
 
 
 debugOutput::~debugOutput()
 {
+}
+
+//!!! this is not threadsafe at the moment
+void debugOutput::sendMessage(std::string msg, MESSAGE_LEVEL lvl)
+{
+
+	if (lvl >= this->m_dbgLvl) {
+		cerr << this->m_lvlArray[lvl] + " " + msg;
+	}
 }

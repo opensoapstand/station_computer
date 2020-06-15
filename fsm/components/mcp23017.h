@@ -6,7 +6,7 @@
 #include <cstdint>
 
 //extern "C" {
-#include "../smbus/smbus.h"
+#include "smbus.h"
 //}
 
 #include <linux/i2c-dev.h>

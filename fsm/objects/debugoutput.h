@@ -29,7 +29,6 @@ public:
 	~debugOutput();
 
 	bool setMessageLevel(MESSAGE_LEVEL dbgLvl) { m_dbgLvl = dbgLvl; };
-	virtual void sendMessage(std::string output, MESSAGE_LEVEL dbg_Lvl);
 
 protected:
 	MESSAGE_LEVEL m_dbgLvl;

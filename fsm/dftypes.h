@@ -24,6 +24,7 @@ typedef enum DF_FSM {
 typedef enum DF_ERROR {
    OK = 0,
    ERROR_BAD_PARAMS,
+   ERROR_FS_FAULT,
 } DF_ERROR;
 
 #endif

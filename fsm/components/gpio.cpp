@@ -17,18 +17,32 @@ gpio::gpio()
 {
 	m_nAddress = -1;  //illegal on prupose
 	m_stop = false;
+	m_input = false;
 }
 
 gpio::gpio(int address)
 {
 	m_nAddress = address;
 	m_stop = false;
+	m_input = false;
 }
 
 
 gpio::~gpio()
 {
 	//kill thread!
+}
+
+DF_ERROR gpio::setInterrupt(DF_ERROR(*pf)())
+{
+	DF_ERROR df_ret = ERROR_BAD_PARAMS;
+
+	if (nullptr != pf) {
+		m_pf = pf;
+		df_ret = OK;
+	}
+	
+	return df_ret;;
 }
 
 //call this with code that looks like
@@ -40,7 +54,7 @@ std::thread gpio::listener()
 	m_stop = true;
 
 	while (!m_stop) {
-		//do stuff but this is a prototype so we skip
+		monitorGPIO();
 	}
 
 	m_stop = true;  //reset

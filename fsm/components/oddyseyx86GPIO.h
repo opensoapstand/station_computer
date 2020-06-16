@@ -18,7 +18,7 @@ class oddyseyx86GPIO :
 	public gpio
 {
 public:
-	oddyseyx86GPIO();
+	oddyseyx86GPIO(int address);
 	~oddyseyx86GPIO();
 
 	DF_ERROR setDirection(bool input);
@@ -26,6 +26,9 @@ public:
 	DF_ERROR writePin(bool level);
 
 	DF_ERROR setInterrupt(DF_ERROR(*pf)());
+
+protected:
+	void monitorGPIO();
 };
 
 #endif

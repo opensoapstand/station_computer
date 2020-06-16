@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -99,7 +99,9 @@
     <ClInclude Include="components\mcp23017.h" />
     <ClInclude Include="components\setgpio.h" />
     <ClInclude Include="components\smbus.h" />
-    <ClInclude Include="objects\debugoutput.h" />
+    <ClInclude Include="objects\debugoutput.h">
+      <DeploymentContent>false</DeploymentContent>
+    </ClInclude>
     <ClInclude Include="dftypes.h" />
     <ClInclude Include="components\gpio.h" />
     <ClInclude Include="objects\dispenser.h" />

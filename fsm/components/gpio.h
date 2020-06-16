@@ -16,11 +16,11 @@
 #include <thread>
 
 #include "../dftypes.h"
+#include "../objects/debugoutput.h"
 
 class gpio
 {
 public:
-	gpio();
 	gpio(int address);
 	virtual ~gpio() = 0;
 
@@ -28,7 +28,7 @@ public:
 	virtual DF_ERROR readPin(bool* level) = 0;
 	virtual DF_ERROR writePin(bool level) = 0;
 
-	virtual DF_ERROR setInterrupt(DF_ERROR (*pf)()) = 0;
+	DF_ERROR setInterrupt(DF_ERROR(*pf)());
 
 	std::thread listener();
 	void stopListener() { m_stop = true; };
@@ -37,6 +37,7 @@ public:
 protected:
 	int m_nAddress;
 	bool m_stop;
+	bool m_input;
 	std::function<DF_ERROR()> m_pf;
 
 

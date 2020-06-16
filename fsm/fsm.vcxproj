@@ -94,11 +94,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="components\i2cgpios.h" />
-    <ClInclude Include="components\interrupt.h" />
     <ClInclude Include="components\levelsensor.h" />
     <ClInclude Include="components\mcp23017.h" />
-    <ClInclude Include="components\setgpio.h" />
     <ClInclude Include="components\smbus.h" />
+    <ClInclude Include="components\mcpGPIO.h" />
     <ClInclude Include="objects\debugoutput.h">
       <DeploymentContent>false</DeploymentContent>
     </ClInclude>
@@ -113,11 +112,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="components\i2cgpios.cpp" />
-    <ClCompile Include="components\interrupt.cpp" />
     <ClCompile Include="components\levelsensor.cpp" />
     <ClCompile Include="components\mcp23017.cpp" />
-    <ClCompile Include="components\setgpio.cpp" />
     <ClCompile Include="components\smbus.c" />
+    <ClCompile Include="components\mcpGPIO.cpp" />
     <ClCompile Include="objects\debugoutput.cpp" />
     <ClCompile Include="fsm.cpp" />
     <ClCompile Include="components\gpio.cpp" />

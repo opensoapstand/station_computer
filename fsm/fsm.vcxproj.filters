@@ -36,16 +36,10 @@
     <ClInclude Include="components\i2cgpios.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="components\interrupt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="components\levelsensor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="components\mcp23017.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="components\setgpio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="components\smbus.h">
@@ -58,6 +52,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="objects\debugoutput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="components\mcpGPIO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -77,16 +74,10 @@
     <ClCompile Include="components\i2cgpios.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="components\interrupt.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="components\levelsensor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="components\mcp23017.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="components\setgpio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="components\smbus.c">
@@ -99,6 +90,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="objects\debugoutput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="components\mcpGPIO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

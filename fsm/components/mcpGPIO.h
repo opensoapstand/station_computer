@@ -1,7 +1,7 @@
 //***************************************
 //
 // mcpgpio.h
-// implementation of GPIO for native x86 pins on Oddysey board
+// implementation of GPIO via i2c extender
 //
 // created: 15-06-2020
 // by: Denis Londry
@@ -25,8 +25,6 @@ public:
 	DF_ERROR setDirection(bool input);
 	DF_ERROR readPin(bool* level);
 	DF_ERROR writePin(bool level);
-
-	DF_ERROR setInterrupt(DF_ERROR(*pf)());
 
 protected:
 	void monitorGPIO();

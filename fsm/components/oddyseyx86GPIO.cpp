@@ -104,10 +104,10 @@ DF_ERROR oddyseyx86GPIO::readPin(bool * level)
 		read(fd, &ch, 1);
 
 		if (ch != '0') {
-			*level = 1;
+			*level = true;
 		}
 		else {
-			*level = 0;
+			*level = false;
 		}
 
 		close(fd);

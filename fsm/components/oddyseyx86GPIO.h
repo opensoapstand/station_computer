@@ -25,8 +25,6 @@ public:
 	DF_ERROR readPin(bool* level);
 	DF_ERROR writePin(bool level);
 
-	DF_ERROR setInterrupt(DF_ERROR(*pf)());
-
 protected:
 	void monitorGPIO();
 };

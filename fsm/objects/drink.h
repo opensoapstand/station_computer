@@ -14,18 +14,31 @@
 #define _DRINK__H_
 
 #include "../dftypes.h"
+#include <string>
+
+#using namespace std;
 
 class drink
 {
    public:
       drink();
+	  drink(int slot);
       ~drink();
 
+	  void setSlot(int slot);
+	  int getVolumeRemaining();
+	  void recordSale(int volume);
+	  void refill(int volume);
+
    private:
-   // name
-   // ingredients
-   // volume
-   // image
+	   int m_nSlot
+	   string m_name;
+	   string m_ingredients;
+	   int m_nVolume;
+	   
+	   //last filled as date
+	   //best before as date
+
 };
 
 #endif

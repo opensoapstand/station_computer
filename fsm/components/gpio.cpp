@@ -12,14 +12,6 @@
 
 #include "gpio.h"
 
-
-gpio::gpio()
-{
-	m_nAddress = -1;  //illegal on prupose
-	m_stop = false;
-	m_input = false;
-}
-
 gpio::gpio(int address)
 {
 	m_nAddress = address;
@@ -58,5 +50,5 @@ std::thread gpio::listener()
 	}
 
 	m_stop = true;  //reset
-	return DF_ERROR();
+	return;
 }

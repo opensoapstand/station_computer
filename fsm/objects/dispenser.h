@@ -14,6 +14,7 @@
 #define _DISPENSER__H_
 
 #include "../dftypes.h"
+#include "../components/gpio.h"
 #include "drink.h"
 
 class dispenser
@@ -22,8 +23,20 @@ class dispenser
       dispenser();
       ~dispenser();
 
+      void initDispenser(int slot);
+
+      DF_ERROR startDispense();
+      DF_ERROR stopDispense();
+      DF_ERROR cleanNozzle();
+
+      drink getDrink();
+
    private:
       drink * m_pDrink;
+
+      gpio * m_pSolenoid[3];
+      gpio * m_pFlowsenor;
+      gpio * m_pPump[2];
    
 };
 

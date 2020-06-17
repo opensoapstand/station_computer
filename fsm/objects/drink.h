@@ -14,15 +14,17 @@
 #define _DRINK__H_
 
 #include "../dftypes.h"
+#include <iostream>
 #include <string>
+#include <unistd.h>
 
-#using namespace std;
+using namespace std;
 
 class drink
 {
    public:
-      drink();
-	  drink(int slot);
+		drink();
+	  	drink(int slot);
       ~drink();
 
 	  void setSlot(int slot);
@@ -31,7 +33,7 @@ class drink
 	  void refill(int volume);
 
    private:
-	   int m_nSlot
+	   int m_nSlot;
 	   string m_name;
 	   string m_ingredients;
 	   int m_nVolume;

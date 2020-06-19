@@ -16,18 +16,18 @@
 i2cGpios::i2cGpios(){
     solenoid_1 = MCP23017(1,0x20);
     solenoid_2 = MCP23017(1,0x21);
-    //pump = MCP23017(1, 0x22);
+    pump = MCP23017(1, 0x22);
 
     solenoid_1.openI2C();
     solenoid_2.openI2C();
-    //pump.openI2C();
+    pump.openI2C();
 }
 
 i2cGpios::~i2cGpios(){
     for(int i = 0; i <=15; i++){
         solenoid_1.digitalWrite(i, LOW);
         solenoid_2.digitalWrite(i, LOW);
-        //pump.digitalWrite(i, LOW);
+        pump.digitalWrite(i, LOW);
     }
 }
 

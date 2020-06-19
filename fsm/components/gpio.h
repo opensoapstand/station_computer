@@ -21,7 +21,6 @@
 class gpio
 {
 public:
-	gpio();
 	gpio(int address);
 	virtual ~gpio() = 0;
 

@@ -37,7 +37,7 @@ public:
 
 protected:
 	static MESSAGE_LEVEL m_dbgLvl;
-	string m_lvlArray[MESSAGE_MAX] = { "INFO", "WARNING", "ERROR" } const;
+	string m_lvlArray[MESSAGE_MAX] = { "INFO", "WARNING", "ERROR" };
 };
 
 #endif

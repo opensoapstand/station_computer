@@ -12,13 +12,6 @@
 
 #include "gpio.h"
 
-gpio::gpio()
-{
-	m_nAddress = 0;
-	m_stop = false;
-	m_input = false;	
-}
-
 gpio::gpio(int address)
 {
 	m_nAddress = address;

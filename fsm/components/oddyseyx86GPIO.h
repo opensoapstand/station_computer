@@ -27,9 +27,6 @@ public:
 
 protected:
 	void monitorGPIO();
-
-private:
-	struct pollfd pfd;
 };
 
 #endif

@@ -16,7 +16,11 @@ gpio::gpio()
 {
 	m_nAddress = 0;
 	m_stop = false;
+<<<<<<< HEAD
 	m_input = false;	
+=======
+	m_input = false;
+>>>>>>> dev-jason
 }
 
 gpio::gpio(int address)

@@ -12,6 +12,7 @@
 
 #include "gpio.h"
 
+<<<<<<< HEAD
 gpio::gpio()
 {
 	m_nAddress = 0;
@@ -23,6 +24,8 @@ gpio::gpio()
 >>>>>>> dev-jason
 }
 
+=======
+>>>>>>> 280064dbc1a8bd6aff5b5e2a3f2e97f0ce5a3e51
 gpio::gpio(int address)
 {
 	m_nAddress = address;

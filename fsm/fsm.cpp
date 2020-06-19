@@ -21,11 +21,15 @@ messageMediator * g_pMessaging;
 stateVirtual * g_stateArray[FSM_MAX];
 dispenser * g_dispenseArray[9];   //replace the magic number
 
+DF_ERROR initObjects();
+DF_ERROR createStateArray();
+DF_ERROR stateLoop();
+
 int main()
 {
     DF_ERROR dfRet = OK;
 
-    if (OK != createStateArray())
+    if (OK != initObjects())
     {
         dfRet = stateLoop();
     }
@@ -65,6 +69,8 @@ DF_ERROR stateLoop()
 DF_ERROR initObjects()
 {
     DF_ERROR dfRet = OK;
+
+    g_pMessaging = new messageMediator();
 
     dfRet = createStateArray();
     if (OK != dfRet)

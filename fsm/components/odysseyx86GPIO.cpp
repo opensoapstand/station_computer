@@ -73,7 +73,9 @@ DF_ERROR oddyseyx86GPIO::setDirection(bool input)
 	int fd, len;
 	char buf[MAX_BUF];
 
-	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR  "/gpio%d/direction", gpio);
+	//Composes a string with the same text that would be printed if format was used on printf, but instead of being printed, 
+	//the content is stored as a C string in the buffer pointed by s
+	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR  "/gpio%d/direction", m_nAddress);
 
 	fd = open(buf, O_WRONLY);
 	if (fd >= 0) {

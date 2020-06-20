@@ -13,8 +13,8 @@
 #ifndef STATEVIRTUAL__H_
 #define STATEVIRTUAL__H_
 
-#include "..\dftypes.h"
-#include "..\objects\messagemediator.h"
+#include "../dftypes.h"
+#include "../objects/messagemediator.h"
 
 class stateVirtual
 {

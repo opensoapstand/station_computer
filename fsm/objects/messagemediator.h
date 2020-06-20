@@ -13,7 +13,7 @@
 #ifndef _MESSAGEMEDIATOR__H_
 #define _MESSAGEMEDIATOR__H_
 
-#include "..\dftypes.h"
+#include "../dftypes.h"
 
 class messageMediator
 {

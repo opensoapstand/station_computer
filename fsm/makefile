@@ -1,7 +1,7 @@
 TARGET_EXEC ?= fsm
 
 BUILD_DIR ?= ./build
-SRC_DIRS ?= . ./components ./tinyxml ./objects ./states
+SRC_DIRS ?= ./ ./components ./tinyxml ./objects ./states
 
 SRCS := $(shell find $(SRC_DIRS) -name *.cpp -or -name *.c -or -name *.s)
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)

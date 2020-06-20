@@ -13,8 +13,8 @@
 #ifndef STATEINIT__H_
 #define STATEINIT__H_
 
-#include "..\dftypes.h"
-#include "..\objects\messagemediator.h"
+#include "../dftypes.h"
+#include "../objects/messagemediator.h"
 #include "statevirtual.h"
 
 class stateInit : public stateVirtual

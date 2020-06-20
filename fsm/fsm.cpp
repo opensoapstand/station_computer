@@ -12,10 +12,10 @@
 
 #include "dftypes.h"
 
-#include "states\statevirtual.h"
-#include "states\stateinit.h"
+#include "states/statevirtual.h"
+#include "states/stateinit.h"
 
-#include "objects\dispenser.h"
+#include "objects/dispenser.h"
 
 messageMediator * g_pMessaging;
 stateVirtual * g_stateArray[FSM_MAX];

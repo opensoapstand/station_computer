@@ -14,7 +14,7 @@
 
 gpio::gpio()
 {
-	m_nAddress = 0;
+	m_nAddress = -1; //set negative one for illegal addressing
 	m_stop = false;
 	m_input = false;	
 }

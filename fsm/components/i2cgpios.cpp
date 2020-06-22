@@ -29,6 +29,10 @@ i2cGpios::~i2cGpios(){
         solenoid_2.digitalWrite(i, LOW);
         pump.digitalWrite(i, LOW);
     }
+
+    solenoid_1.closeI2C();
+    solenoid_2.closeI2C();
+    pump.closeI2C();
 }
 
 void i2cGpios::setPinMode_out(int address, int pinNum){
@@ -40,7 +44,7 @@ void i2cGpios::setPinMode_out(int address, int pinNum){
         solenoid_2.pinMode(pinNum, OUTPUT);
     }
     else if (address == X22){
-        //pump.pinMode(pinNum, OUTPUT);
+        pump.pinMode(pinNum, OUTPUT);
     }
     else
     {
@@ -61,7 +65,7 @@ void i2cGpios::setPin_on(int address, int pinNum){
 
     }
     else if (address == X22){
-        //pump.digitalWrite(pinNum, HIGH);
+        pump.digitalWrite(pinNum, HIGH);
         std::clog << "Address:" << address << " Pin: " << pinNum << " is on\n";
 
     }
@@ -82,7 +86,7 @@ void i2cGpios::setPin_off(int address, int pinNum){
         std::clog << "Address:" << address << " Pin: " << pinNum << " is off\n";
     }
     else if (address == X22){
-        //pump.digitalWrite(pinNum, LOW);
+        pump.digitalWrite(pinNum, LOW);
         std::clog << "Address:" << address << " Pin: " << pinNum << " is off\n";
     }
     else

@@ -9,6 +9,9 @@
 // copyright 2020 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
+#ifndef _I2CGPIOS__H__
+#define _I2CGPIOS__H__
+
 #include "mcp23017.h"
 
 #define X20 20
@@ -31,3 +34,5 @@ private:
     MCP23017 solenoid_2;
     MCP23017 pump;
 };
+
+#endif

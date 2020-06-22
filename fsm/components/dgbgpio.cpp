@@ -9,6 +9,8 @@
 // copyright 2020 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
+#include "dbggpio.h"
+
 dbggpio::dbggpio()
 {
 
@@ -30,10 +32,10 @@ DF_ERROR dbggpio::setDirection(bool input)
 	DF_ERROR df_ret = OK;
 
 	m_input = input;
-	this->m_mcp->pinMode(m_nAddress, OUTPUT);
-	if (m_input) {
-		this->m_mcp->pinMode(m_nAddress, INPUT);
-	}	
+	// this->m_mcp->pinMode(m_nAddress, OUTPUT);
+	// if (m_input) {
+	// 	this->m_mcp->pinMode(m_nAddress, INPUT);
+	// }	
 
 	return df_ret;
 }
@@ -44,10 +46,10 @@ DF_ERROR dbggpio::readPin(bool * level)
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
 	
-	if (m_input && (nullptr != level)) {
-		*level = this->m_mcp->digitalRead(m_nAddress);
-		df_ret = OK;
-	}
+	// if (m_input && (nullptr != level)) {
+	// 	*level = this->m_mcp->digitalRead(m_nAddress);
+	// 	df_ret = OK;
+	// }
 
 	return df_ret;
 }
@@ -58,10 +60,10 @@ DF_ERROR dbggpio::writePin(bool level)
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
 
-	if (!m_input) {
-		this->m_mcp->digitalWrite(m_nAddress, level);   //relies on bool to int
-		df_ret = OK;
-	}
+	// if (!m_input) {
+	// 	this->m_mcp->digitalWrite(m_nAddress, level);   //relies on bool to int
+	// 	df_ret = OK;
+	// }
 
 	return df_ret;
 }

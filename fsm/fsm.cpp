@@ -16,6 +16,7 @@
 #include "states/stateinit.h"
 
 #include "objects/dispenser.h"
+#include "objects/messagemediator.h"
 
 messageMediator * g_pMessaging;
 stateVirtual * g_stateArray[FSM_MAX];
@@ -29,10 +30,10 @@ int main()
 {
     DF_ERROR dfRet = OK;
 
-    // if (OK != initObjects())
-    // {
-    //     dfRet = stateLoop();
-    // }
+    if (OK != initObjects())
+    {
+        dfRet = stateLoop();
+    }
 
     return dfRet;
 }

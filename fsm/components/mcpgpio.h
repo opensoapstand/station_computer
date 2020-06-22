@@ -15,8 +15,7 @@
 #include "gpio.h"
 #include "mcp23017.h"
 
-class mcpGPIO :
-	public gpio
+class mcpGPIO : public gpio
 {
 public:
 	mcpGPIO(int address);

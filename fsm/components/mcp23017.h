@@ -5,9 +5,9 @@
 #include <cstddef>
 #include <cstdint>
 
-extern "C" {
+//extern "C" {
     #include "smbus.h"
-}
+//}
 
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>

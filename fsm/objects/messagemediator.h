@@ -22,6 +22,9 @@ class messageMediator
       ~messageMediator();
 
       DF_ERROR sendMessage();   //this is just a prototype needs to be fleshed out
+   
+   private:
+      int messageIP;
 };
 
 #endif

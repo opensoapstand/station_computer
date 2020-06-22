@@ -12,6 +12,11 @@
 
 #include "stateinit.h"
 
+stateInit::stateInit()
+{
+   
+}
+
 stateInit::stateInit(messageMediator * message)
 {
    

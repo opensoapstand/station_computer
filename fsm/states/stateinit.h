@@ -20,6 +20,7 @@
 class stateInit : public stateVirtual
 {
     public:
+        stateInit();
         stateInit(messageMediator * message);
         ~stateInit();
 

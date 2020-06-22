@@ -29,10 +29,10 @@ int main()
 {
     DF_ERROR dfRet = OK;
 
-    if (OK != initObjects())
-    {
-        dfRet = stateLoop();
-    }
+    // if (OK != initObjects())
+    // {
+    //     dfRet = stateLoop();
+    // }
 
     return dfRet;
 }
@@ -70,7 +70,7 @@ DF_ERROR initObjects()
 {
     DF_ERROR dfRet = OK;
 
-    g_pMessaging = new messageMediator();
+    //g_pMessaging = new messageMediator();
 
     dfRet = createStateArray();
     if (OK != dfRet)
@@ -85,7 +85,7 @@ DF_ERROR createStateArray()
 {
     DF_ERROR dfRet = OK;
 
-    g_stateArray[INIT] = new stateInit(g_pMessaging);
+    //g_stateArray[INIT] = new stateInit(g_pMessaging);
 
     return dfRet;
 }

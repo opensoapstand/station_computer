@@ -12,6 +12,10 @@
 
 #include "statevirtual.h"
 
+stateVirtual::stateVirtual(){
+   
+}
+
 stateVirtual::stateVirtual(messageMediator * message)
 {
    if (nullptr == message)

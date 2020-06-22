@@ -19,6 +19,7 @@
 class stateVirtual
 {
     public:
+        stateVirtual();
         stateVirtual(messageMediator * message);
         ~stateVirtual();
 

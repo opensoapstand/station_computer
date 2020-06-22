@@ -11,10 +11,11 @@
 //***************************************
 
 #include "messagemediator.h"
+#include <iostream>
 
 messageMediator::messageMediator()
 {
-
+   std::cout << "I passed\n";
 }
 
 messageMediator::~messageMediator()
@@ -25,7 +26,6 @@ messageMediator::~messageMediator()
 DF_ERROR messageMediator::sendMessage()
 {
    DF_ERROR dfError = OK;
-
 
    return dfError;
 }

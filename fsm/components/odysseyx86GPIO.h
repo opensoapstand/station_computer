@@ -15,8 +15,7 @@
 #include "gpio.h"
 #include <poll.h>
 
-class oddyseyx86GPIO :
-	public gpio
+class oddyseyx86GPIO : public gpio
 {
 public:
 	oddyseyx86GPIO();
@@ -29,6 +28,7 @@ public:
 
 protected:
 	void monitorGPIO();
+	string command_to_string(string cmd);
 
 private:
 	struct pollfd pfd;

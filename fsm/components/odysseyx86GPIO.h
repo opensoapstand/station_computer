@@ -19,6 +19,7 @@ class oddyseyx86GPIO :
 	public gpio
 {
 public:
+	oddyseyx86GPIO();
 	oddyseyx86GPIO(int address);
 	~oddyseyx86GPIO();
 

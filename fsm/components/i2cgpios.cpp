@@ -27,7 +27,7 @@ i2cGpios::~i2cGpios(){
     for(int i = 0; i <=15; i++){
         solenoid_1.digitalWrite(i, LOW);
         solenoid_2.digitalWrite(i, LOW);
-        //pump.digitalWrite(i, LOW);
+        pump.digitalWrite(i, LOW);
     }
 }
 

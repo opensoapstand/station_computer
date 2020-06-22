@@ -10,7 +10,7 @@
 // all rights reserved
 //***************************************
 
-#include "oddyseyx86GPIO.h"
+#include "odysseyx86GPIO.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,6 +25,10 @@
 #define SYSFS_GPIO_DIR "/sys/class/gpio"
 #define MAX_BUF 64
 
+oddyseyx86GPIO::oddyseyx86GPIO()
+{
+
+}
 
 oddyseyx86GPIO::oddyseyx86GPIO(int address)
 {

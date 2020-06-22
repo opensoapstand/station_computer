@@ -10,7 +10,7 @@
 // all rights reserved
 //***************************************
 
-#include "mcpGPIO.h"
+#include "mcpgpio.h"
 #include <iostream>
 
 #define DEFAULT_BUS 1

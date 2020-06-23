@@ -31,7 +31,7 @@ public:
 	virtual DF_ERROR readPin(bool* level) = 0;
 	virtual DF_ERROR writePin(bool level) = 0;
 
-	DF_ERROR setInterrupt(DF_ERROR(*pf)());
+	DF_ERROR setInterrupt(DF_ERROR(*pf)()); //should be virtual? only use for odysseyx86
 
 	std::thread listener();
 	void stopListener() { m_stop = true; };

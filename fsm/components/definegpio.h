@@ -13,8 +13,8 @@
 //first two digit is address and later 2 digit is pin number
 //2000 -> x20 (i2c address) and 00 pin 0 for i2c chip
 
-#ifndef _GPIOS_H
-#define _GPIOS_H
+#ifndef _DEFINEGPIO_H
+#define _DEFINEGPIO_H
 
 #define FSM_VERSION "0.1.1"
 #define button 2000

@@ -10,7 +10,6 @@
 // all rights reserved
 //***************************************
 
-#include "odysseyx86GPIO.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,6 +19,8 @@
 #include <sys/time.h>
 #include <poll.h>
 #include <iostream>
+
+#include "odysseyx86gpio.h"
 
 
 #define SYSFS_GPIO_DIR "/sys/class/gpio"

@@ -13,7 +13,7 @@
 #include "statevirtual.h"
 
 stateVirtual::stateVirtual(){
-   
+   m_state = DF_FSM::START;
 }
 
 stateVirtual::stateVirtual(messageMediator * message)
@@ -24,6 +24,11 @@ stateVirtual::stateVirtual(messageMediator * message)
    }
 
    m_pMessaging = message;
+}
+
+stateVirtual::stateVirtual(int state)
+{
+   m_state = state;
 }
 
 stateVirtual::~stateVirtual()

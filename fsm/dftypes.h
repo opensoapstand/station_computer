@@ -17,8 +17,9 @@ typedef enum DF_FSM {
    START,
    INIT,
    IDLE,
-   PRODUCT_SELECT,
-   PAYMENT,
+   PRODUCT_SELECT, //retrieve info from ui which cassettes need to be set
+   PAYMENT,        //retrieve info from ui whether or not payment is finished proccessing
+   DISPESE_IDLE,
    DISPENSE,
    CLEANING,
    FSM_MAX,

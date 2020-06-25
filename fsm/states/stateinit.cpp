@@ -22,6 +22,10 @@ stateInit::stateInit(messageMediator * message)
    
 }
 
+stateInit::stateInit(char *inputArray){
+   //init the cassette 
+}
+
 stateInit::~stateInit()
 {
    //delete stuff

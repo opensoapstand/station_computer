@@ -21,9 +21,24 @@ i2cGpios::i2cGpios(){
     solenoid_1.openI2C();
     solenoid_2.openI2C();
     pump.openI2C();
+
+    //since all i2c is oing to use to control the cassettes, set all pin as output for now
+    for(int i = 0; i <=15; i++){
+        solenoid_1.pinMode(i, OUTPUT);
+        solenoid_2.pinMode(i, OUTPUT);
+        pump.pinMode(i, OUTPUT);
+    }
+
+    //make sure all the output is at LOW during initial setup
+    for(int i = 0; i <=15; i++){
+        solenoid_1.digitalWrite(i, LOW);
+        solenoid_2.digitalWrite(i, LOW);
+        pump.digitalWrite(i, LOW);
+    }
 }
 
 i2cGpios::~i2cGpios(){
+    //turn off all output for the cassettes
     for(int i = 0; i <=15; i++){
         solenoid_1.digitalWrite(i, LOW);
         solenoid_2.digitalWrite(i, LOW);

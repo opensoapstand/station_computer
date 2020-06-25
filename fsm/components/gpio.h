@@ -38,11 +38,11 @@ public:
 
 
 protected:
-	int m_nAddress; //address of i2c 
+	//int m_nAddress; //address of i2c 
 	int m_nPin;		//actual pin number 
 	bool m_stop;
 	bool m_input;
-	bool m_i2c;
+	//bool m_i2c;
 
 	std::function<DF_ERROR()> m_pf;
 	virtual void monitorGPIO() = 0;

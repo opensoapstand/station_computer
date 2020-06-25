@@ -14,30 +14,30 @@
 
 gpio::gpio()
 {
-	m_nAddress = -1; //set negative one for illegal i2c address
+	//m_nAddress = -1; //set negative one for illegal i2c address
 	m_nPin = -1; //set negative one for illegal pin address
 	m_stop = false;
 	m_input = false;
-	m_i2c = false; //no i2c chip associate with it 
+	//m_i2c = false; //no i2c chip associate with it 
 }
 
 gpio::gpio(int pin)
 {
-	m_nAddress = -1; //not i2c expanded gpio
+	//m_nAddress = -1; //not i2c expanded gpio
 	m_nPin = pin;
 	m_stop = false;
 	m_input = false;
-	m_i2c = false; //no i2c chip associate with it 
+	//m_i2c = false; //no i2c chip associate with it 
 }
 
-gpio::gpio(int address, int pin)
-{
-	m_nAddress = address; //i2c expanded gpio
-	m_nPin = pin;
-	m_stop = false;
-	m_input = false;
-	m_i2c = true; //there is i2c chip associated with it 
-}
+// gpio::gpio(int address, int pin)
+// {
+// 	m_nAddress = address; //i2c expanded gpio
+// 	m_nPin = pin;
+// 	m_stop = false;
+// 	m_input = false;
+// 	m_i2c = true; //there is i2c chip associated with it 
+// }
 
 
 gpio::~gpio()

@@ -21,13 +21,13 @@ class stateInit : public stateVirtual
 {
     public:
         stateInit();
-        stateInit(messageMediator * message);
+        stateInit(messageMediator * message); //debug through local network 
+        stateInit(int inputDigit); //debug through terminal
         ~stateInit();
 
         DF_ERROR onEntry();
         DF_ERROR onAction(DF_FSM * nextState);
         DF_ERROR onExit();
-
 
     private:
         

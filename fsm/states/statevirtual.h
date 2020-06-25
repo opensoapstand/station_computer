@@ -21,6 +21,7 @@ class stateVirtual
     public:
         stateVirtual();
         stateVirtual(messageMediator * message);
+        stateVirtual(int state);
         ~stateVirtual();
 
         virtual DF_ERROR onEntry() = 0;

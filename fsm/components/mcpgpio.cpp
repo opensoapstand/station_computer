@@ -36,6 +36,7 @@ DF_ERROR mcpGPIO::setDirection(bool input)
 
 	m_input = input;
 	this->m_mcp->pinMode(m_nAddress, OUTPUT);
+
 	if (m_input) {
 		this->m_mcp->pinMode(m_nAddress, INPUT);
 	}	

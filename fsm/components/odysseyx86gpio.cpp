@@ -26,6 +26,9 @@
 #define SYSFS_GPIO_DIR "/sys/class/gpio"
 #define MAX_BUF 64
 
+#define INPUT 1
+#define OUTPUT 0
+
 oddyseyx86GPIO::oddyseyx86GPIO()
 {
 
@@ -37,7 +40,7 @@ oddyseyx86GPIO::oddyseyx86GPIO(int address)
 	int fd, len;
 	char buf[MAX_BUF];
 
-	m_nAddress = address;
+	m_nPin = address;
 
 	fd = open(SYSFS_GPIO_DIR "/export", O_WRONLY);
 	if (fd < 0) {
@@ -45,7 +48,7 @@ oddyseyx86GPIO::oddyseyx86GPIO(int address)
 		return;
 	}
 
-	len = snprintf(buf, sizeof(buf), "%d", m_nAddress);
+	len = snprintf(buf, sizeof(buf), "%d", m_nPin );
 	write(fd, buf, len);
 	close(fd);
 
@@ -65,7 +68,7 @@ oddyseyx86GPIO::~oddyseyx86GPIO()
 		return;
 	}
 
-	len = snprintf(buf, sizeof(buf), "%d", m_nAddress);
+	len = snprintf(buf, sizeof(buf), "%d", m_nPin);
 	write(fd, buf, len);
 	close(fd);
 	return;
@@ -80,11 +83,11 @@ DF_ERROR oddyseyx86GPIO::setDirection(bool input)
 
 	//Composes a string with the same text that would be printed if format was used on printf, but instead of being printed, 
 	//the content is stored as a C string in the buffer pointed by s
-	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR  "/gpio%d/direction", m_nAddress);
+	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR  "/gpio%d/direction", m_nPin);
 
 	fd = open(buf, O_WRONLY);
 	if (fd >= 0) {
-		if (input)
+		if (INPUT == input)
 			write(fd, "in", 3);
 		else
 			write(fd, "out", 4);
@@ -104,7 +107,7 @@ DF_ERROR oddyseyx86GPIO::readPin(bool * level)
 	char buf[MAX_BUF];
 	char ch;
 
-	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", m_nAddress);
+	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", m_nPin);
 
 	fd = open(buf, O_RDONLY);
 	if (fd >= 0) {
@@ -154,7 +157,7 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
 	int fd, len;
 	char buf[MAX_BUF];
 
-	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", m_nAddress);
+	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", m_nPin);
 
 	fd = open(buf, O_WRONLY);
 	if (fd >= 0) {
@@ -175,7 +178,7 @@ void oddyseyx86GPIO::monitorGPIO()
 	debugOutput::sendMessage("monitorGPIO", INFO);  //nuke this later it will cause so much spam
 	int fd, len;
 	char buf[MAX_BUF];
-	string GPIO = std::to_string(m_nAddress);
+	string GPIO = std::to_string(m_nPin);
 	string command("/sys/class/gpio/gpio");
 	command += GPIO;
 	command += "/value";

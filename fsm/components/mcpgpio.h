@@ -29,6 +29,7 @@ protected:
 	void monitorGPIO();
 
 	MCP23017 * m_mcp;
+	int m_nAddress; //address of the mcp chip
 };
 
 #endif

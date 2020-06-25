@@ -30,7 +30,7 @@ class stateInit : public stateVirtual
         DF_ERROR onExit();
 
     private:
-        
+    
 };
 
 

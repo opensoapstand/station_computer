@@ -34,10 +34,9 @@ class dispenser
    private:
       drink * m_pDrink;
 
-      gpio * m_pSolenoid[3];
+      gpio * m_pSolenoid[3]; //air,drink, and water solenoid control
       gpio * m_pFlowsenor;
-      gpio * m_pPump[2];
-   
+      gpio * m_pPump[2]; //forward and reverse pin control
 };
 
 #endif

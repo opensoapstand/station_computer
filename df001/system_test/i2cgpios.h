@@ -15,6 +15,8 @@
 #define X21 21
 #define X22 22
 
+#define I2C_FILE_ADDRESS 2
+
 class i2cGpios{
 
 public:
@@ -25,6 +27,10 @@ public:
 
     void setPin_on(int address, int pinNum);
     void setPin_off(int address, int pinNum);
+
+    void setPump_Forward(int addressFWD, int pinNumFWD, int addressREV, int pinNumREV);
+    void setPump_Reverse(int addressFWD, int pinNumFWD, int addressREV, int pinNumREV);
+    void setPump_Off(int addressFWD, int pinNumFWD, int addressREV, int pinNumREV);
 
 private:
     MCP23017 solenoid_1;

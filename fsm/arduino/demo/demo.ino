@@ -1,15 +1,20 @@
 #include "Adafruit_NeoPixel.h"
 
-#define NUMPIXELS 19
+#define NUMPIXELS 3
 int led = 13;
 int colourSpec = 0;
 
-int period = 50;
-unsigned long time_now = 0;
-
 bool change = true;
 
+// Interval is how long we wait
+// add const if this should never change
+int interval=15;
+// Tracks the time since last event fired
+unsigned long previousMillis=0;
+
+
 Adafruit_NeoPixel strip(NUMPIXELS, led, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel strip(NUMPIXELS, led, NEO_GRB + NEO_KHZ800);
 
 void setup() {
   // put your setup code here, to run once:
@@ -23,7 +28,9 @@ void loop() {
   //colorWipe(strip.Color(random(255),random(255),random(255)),50);
   //colorWipe(strip.Color(255,255,255),50);
 
-  if (millis() >= time_now + period){
+  unsigned long currentMillis = millis();
+
+  if ((unsigned long)(currentMillis - previousMillis) >= interval){
     if (change == true){
       colourSpec = colourSpec - 5; 
       if (colourSpec <= 5)
@@ -40,12 +47,8 @@ void loop() {
       strip.setPixelColor(i, colourSpec,colourSpec,colourSpec);
     }
 
-    if(time_now >10000*millis())
-      time_now = 0; //resets time_now
-    else 
-      time_now += period;
-      
-    
+    // Use the snapshot to set track time until next event
+    previousMillis = currentMillis;
     strip.show();
   }
   //delay(25);

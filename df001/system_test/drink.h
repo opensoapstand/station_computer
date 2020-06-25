@@ -28,6 +28,14 @@ class drink
         int getAirPinAddress();
         int getAirPin_pin();
 
+        int getpumpFwdPinAddress();
+        int getpumpFwdPin_pin();
+
+        int getpumpRevPinAddress();
+        int getpumpRevPin_pin();
+
+        int getPumpBool();
+
         int getFlowSensor_pin();
 
     private:

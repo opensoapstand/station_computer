@@ -23,8 +23,8 @@ using namespace std;
 class drink
 {
    public:
-		drink();
-	  	drink(int slot);
+	  drink();
+	  drink(int slot);
       ~drink();
 
 	  void setSlot(int slot);

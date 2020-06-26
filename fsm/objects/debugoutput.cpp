@@ -31,7 +31,7 @@ debugOutput::~debugOutput()
 void debugOutput::sendMessage(std::string msg, MESSAGE_LEVEL lvl)
 {
 
-	if (lvl >= this->m_dbgLvl) {
-		cerr << this->m_lvlArray[lvl] + " " + msg;
-	}
+	//if (lvl >= this->m_dbgLvl) {
+	//	cerr << this->m_lvlArray[lvl] + " " + msg;
+	//}
 }

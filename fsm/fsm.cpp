@@ -16,6 +16,7 @@
 
 #include "states/stateinit.h"
 #include "states/statedispense.h"
+#include "states/statedispenseidle.h"
 
 #include "objects/dispenser.h"
 #include "objects/messagemediator.h"

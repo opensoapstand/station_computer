@@ -22,7 +22,8 @@
 
 mcpGPIO::mcpGPIO(int address)
 {
-	debugOutput::sendMessage("mcpGPIO", INFO);
+	debugOutput debugInfo;
+	debugInfo.sendMessage("mcpGPIO", INFO);
 
 	this->m_nAddress = address;
 	this->m_mcp = new MCP23017(DEFAULT_BUS, m_nAddress);
@@ -33,7 +34,9 @@ mcpGPIO::mcpGPIO(int address)
 
 mcpGPIO::~mcpGPIO()
 {
-	debugOutput::sendMessage("~mcpGPIO", INFO);
+	debugOutput debugInfo;
+	debugInfo.sendMessage("~mcpGPIO", INFO);
+
 	this->m_mcp->closeI2C();
 	delete (this->m_mcp);
 }
@@ -54,7 +57,9 @@ DF_ERROR mcpGPIO::setMCPPin(int pinNumber){
 
 DF_ERROR mcpGPIO::setDirection(bool input)
 {
-	debugOutput::sendMessage("setDirection", INFO);
+	debugOutput debugInfo;
+	debugInfo.sendMessage("setDirection", INFO);
+
 	DF_ERROR df_ret = OK;
 
 	m_input = input;
@@ -69,7 +74,9 @@ DF_ERROR mcpGPIO::setDirection(bool input)
 
 DF_ERROR mcpGPIO::readPin(bool * level) //may not be use or needed 
 {
-	debugOutput::sendMessage("readPin", INFO);
+	debugOutput debugInfo;
+	debugInfo.sendMessage("readPin", INFO);
+	
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
 	
@@ -83,7 +90,9 @@ DF_ERROR mcpGPIO::readPin(bool * level) //may not be use or needed
 
 DF_ERROR mcpGPIO::writePin(bool level) //control of the cassettes
 {
-	debugOutput::sendMessage("writePin", INFO);
+	debugOutput debugInfo;
+	debugInfo.sendMessage("writePin", INFO);
+
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
 	if(m_nPin < 0 && m_nPin > 15)
@@ -110,7 +119,9 @@ DF_ERROR mcpGPIO::writePin(bool level) //control of the cassettes
 //since pump should only work on address X22
 DF_ERROR mcpGPIO::setPump_Forward(int pinNumFWD, int pinNumREV)
 {
-	debugOutput::sendMessage("Set Pump forward", INFO);
+	debugOutput debugInfo;
+	debugInfo.sendMessage("Set Pump forward", INFO);
+	
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
 	if(X22 == m_nAddress){
@@ -125,7 +136,9 @@ DF_ERROR mcpGPIO::setPump_Forward(int pinNumFWD, int pinNumREV)
 
 DF_ERROR mcpGPIO::setPump_Reverse(int pinNumFWD, int pinNumREV)
 {
-	debugOutput::sendMessage("Set Pump reverse", INFO);
+	debugOutput debugInfo;
+	debugInfo.sendMessage("Set Pump reverse", INFO);
+	
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
 	if(X22 == m_nAddress){
@@ -140,7 +153,9 @@ DF_ERROR mcpGPIO::setPump_Reverse(int pinNumFWD, int pinNumREV)
 
 DF_ERROR mcpGPIO::setPump_Off(int pinNumFWD, int pinNumREV)
 {
-	debugOutput::sendMessage("Turn off pump", INFO);
+	debugOutput debugInfo;
+	debugInfo.sendMessage("Turn off pump", INFO);
+	
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
 	if(X22 == m_nAddress){

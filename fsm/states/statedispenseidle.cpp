@@ -39,7 +39,7 @@ DF_ERROR stateDispenseIdle::onEntry()
    return e_ret;
 }
 
-DF_ERROR stateDispenseIdlee::onAction(DF_FSM * nextState)
+DF_ERROR stateDispenseIdle::onAction(DF_FSM * nextState)
 {
    DF_ERROR e_ret  = ERROR_BAD_PARAMS;
 

@@ -13,18 +13,20 @@
 #include "dftypes.h"
 
 #include "states/statevirtual.h"
+
 #include "states/stateinit.h"
+#include "states/statedispense.h"
 
 #include "objects/dispenser.h"
 #include "objects/messagemediator.h"
 
 messageMediator *g_pMessaging; //debug through local network
-stateVirtual *g_stateArray[FSM_MAX];
+stateVirtual *g_stateArray[FSM_MAX]; //an object for every state
 dispenser *g_dispenseArray[9];   //replace the magic number
 
 DF_ERROR initObjects();
 DF_ERROR createStateArray();
-DF_ERROR createStateArray(char* inputChar);
+DF_ERROR createStateArray(char* inputChar); 
 DF_ERROR stateLoop();
 
 int main()
@@ -47,9 +49,10 @@ DF_ERROR stateLoop()
 
     while (OK == dfRet) //while no error has occur
     {
+        cout << fsmState << endl;
         if (fsmState != fsmNewState) //state change
         {
-            //dfRet = g_stateArray[fsmNewState]->onEntry();
+            dfRet = g_stateArray[fsmNewState]->onEntry();
             fsmState = fsmNewState;
         }
 
@@ -105,10 +108,16 @@ DF_ERROR createStateArray(char* inputChar)
     if('s' == inputChar[0])
     {
         //int pos = atoi(inputChar);
-        for(int i = DF_FSM::START; i < DF_FSM::FSM_MAX; i++)
+        /*for(int i = DF_FSM::START; i < DF_FSM::FSM_MAX; i++)
         {
-            g_stateArray[i] = new stateVirtual(i);
-        }
+            //g_stateArray[i] = new stateVirtual(i);
+            g_stateArray[i] = new stateInit(i);
+        }*/
+
+        g_stateArray[DF_FSM::INIT] = new stateInit();
+        g_stateArray[DF_FSM::DISPESE_IDLE] = new stateDispenseIdle();
+        g_stateArray[DF_FSM::DISPENSE] = new stateDispense();
+
         return dfRet;
     }
     else

@@ -36,7 +36,7 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 .PHONY: clean controller
 
 controller:
-	g++ -o controller fsm.cpp states/*.cpp
+	g++ -o controller fsm.cpp states/*.cpp objects/*.cpp
 
 #controller_clean:
 #	rm controller

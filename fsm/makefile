@@ -33,13 +33,13 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
 
-.PHONY: clean
+.PHONY: clean controller
 
 controller:
 	g++ -o controller fsm.cpp states/*.cpp
 
-controller_clean:
-	rm controller
+#controller_clean:
+#	rm controller
 
 clean:
 	$(RM) -r $(BUILD_DIR)

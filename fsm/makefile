@@ -41,6 +41,12 @@ controller:
 #controller_clean:
 #	rm controller
 
+controller:
+	g++ -o controller fsm.cpp states/*.cpp
+
+controller_clean:
+	rm controller
+
 clean:
 	$(RM) -r $(BUILD_DIR)
 

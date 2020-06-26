@@ -14,7 +14,7 @@
 
 stateInit::stateInit()
 {
-   m_stateNext = static_cast<DF_FSM>(DF_FSM::INIT+1);
+   //m_stateNext = static_cast<DF_FSM>(DF_FSM::INIT+1);
 }
 
 stateInit::stateInit(messageMediator * message)

@@ -41,21 +41,43 @@ DF_ERROR stateDispenseIdle::onEntry()
 
 DF_ERROR stateDispenseIdle::onAction(DF_FSM * nextState)
 {
-   DF_ERROR e_ret  = ERROR_BAD_PARAMS;
+   debugOutput debugInfo;
+   DF_ERROR df_ret  = ERROR_BAD_PARAMS;
 
    if (nullptr != nextState)
    {
       // do stuff
-      
-
+      debugInfo.sendMessage("onAction() for state [" + std::to_string((int)*nextState) + "]", INFO);
+          
+      return df_ret = OK;
    }
 
-   return e_ret;
+   return df_ret;
 }
 
-DF_ERROR stateDispenseIdle::onExit()
+DF_FSM stateDispenseIdle::onAction(DF_FSM *nextState, dispenser* dispenseObj)
 {
-   DF_ERROR e_ret  = OK;
+    debugOutput debugInfo;
+    DF_FSM df_state_ret  = DISPESE_IDLE;
+
+    if (nullptr != nextState)
+    {
+        // do stuff
+        debugInfo.sendMessage("onAction() for state [" + std::to_string((int)*nextState) + "]", INFO);
+          
+        return df_state_ret = DISPENSE;
+    }
+
+    return df_state_ret;
+}
+
+DF_ERROR stateDispenseIdle::onExit(DF_FSM *curState)
+{
+    debugOutput debugInfo;
+    DF_ERROR e_ret  = OK;
+
+    debugInfo.sendMessage("onExit() for state [" + std::to_string((int)*curState) + "]", INFO);
+
 
    return e_ret;
 }

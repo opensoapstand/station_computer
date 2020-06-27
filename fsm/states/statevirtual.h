@@ -16,6 +16,8 @@
 #include "../dftypes.h"
 #include "../objects/messagemediator.h"
 
+#include "../objects/debugoutput.h"
+
 class stateVirtual
 {
     public:

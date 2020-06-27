@@ -16,6 +16,8 @@
 #include "../objects/messagemediator.h"
 #include "statevirtual.h"
 
+#include "../objects/dispenser.h"
+
 class stateDispenseIdle : public stateVirtual
 {
     public:
@@ -25,12 +27,15 @@ class stateDispenseIdle : public stateVirtual
         ~stateDispenseIdle();
 
         DF_ERROR onEntry();
+        
         DF_ERROR onAction(DF_FSM * nextState);
-        DF_ERROR onExit();
+        DF_FSM onAction(DF_FSM *nextState, dispenser* dispenseObj);
+        
+        DF_ERROR onExit(DF_FSM *nextState);
+        DF_FSM onExit(DF_FSM *nextState, dispenser* dispenseObj);
 
     private:
-        DF_FSM m_stateCurrent;
-    
+        DF_FSM m_stateCurrent;    
 };
 
 

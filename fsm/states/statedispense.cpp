@@ -11,6 +11,7 @@
 //***************************************
 
 #include "statedispense.h"
+#include <string>
 
 stateDispense::stateDispense(){
     m_stateCurrent = DF_FSM::DISPENSE;
@@ -40,12 +41,13 @@ DF_ERROR stateDispense::onEntry()
 
 DF_ERROR stateDispense::onAction(DF_FSM * nextState)
 {
+   debugOutput debugInfo;
    DF_ERROR e_ret  = ERROR_BAD_PARAMS;
 
    if (nullptr != nextState)
    {
       // do stuff
-
+      debugInfo.sendMessage("onAction() for state [" + std::to_string((int)*nextState) + "]", INFO);
    }
 
    return e_ret;

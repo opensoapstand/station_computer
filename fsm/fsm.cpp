@@ -34,7 +34,7 @@ int main()
 {
     DF_ERROR dfRet = OK;
 
-    if (OK != initObjects())
+    if (OK == initObjects())
     {
         dfRet = stateLoop();
     }
@@ -44,26 +44,32 @@ int main()
 
 DF_ERROR stateLoop()
 {
+    debugOutput debugInfo;
     DF_ERROR dfRet = OK;
-    DF_FSM fsmState = START;
-    DF_FSM fsmNewState = IDLE;
+    DF_FSM fsmState = INIT; //!!!change to start once implement
+    DF_FSM fsmNewState = DISPESE_IDLE; //!!!change once other state is implemented
 
     while (OK == dfRet) //while no error has occur
     {
-        cout << fsmState << endl;
+        debugInfo.sendMessage("Current state [" + to_string(fsmState) + "]", INFO);
+
         if (fsmState != fsmNewState) //state change
         {
+            debugInfo.sendMessage("State change", INFO);
             dfRet = g_stateArray[fsmNewState]->onEntry();
+            
             fsmState = fsmNewState;
         }
 
         if (OK == dfRet) //
         {
-            //dfRet = g_stateArray[fsmState]->onAction(&fsmNewState);
-            if ((OK == dfRet) &&
-                (fsmNewState != fsmState))
+            debugInfo.sendMessage("New state set [" + to_string(fsmState) + "]", INFO);
+
+
+            dfRet = g_stateArray[fsmState]->onAction(&fsmNewState);
+            if ((OK == dfRet) && (fsmNewState != fsmState))
             {
-                //dfRet = g_stateArray[fsmState]->onExit();
+                dfRet = g_stateArray[fsmState]->onExit();
             }
         }
 
@@ -104,27 +110,30 @@ DF_ERROR createStateArray()
 
 DF_ERROR createStateArray(char* inputChar)
 {
+    debugOutput debugInfo;
     DF_ERROR dfRet = OK;
 
     if('s' == inputChar[0])
     {
-        //int pos = atoi(inputChar);
         /*for(int i = DF_FSM::START; i < DF_FSM::FSM_MAX; i++)
         {
             //g_stateArray[i] = new stateVirtual(i);
             g_stateArray[i] = new stateInit(i);
         }*/
 
+        //creating an object for each state
         g_stateArray[DF_FSM::INIT] = new stateInit();
         g_stateArray[DF_FSM::DISPESE_IDLE] = new stateDispenseIdle();
         g_stateArray[DF_FSM::DISPENSE] = new stateDispense();
 
+        g_dispenseArray[0] = new dispenser();
         return dfRet;
     }
     else
     {
         dfRet = ERROR_BAD_PARAMS;
-        cout << "Invalid input \n";
+
+        debugInfo.sendMessage("Invalid input", MESSAGE_LEVEL::ERROR);
     }
 
     return dfRet;

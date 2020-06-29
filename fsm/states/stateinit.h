@@ -16,6 +16,7 @@
 #include "../dftypes.h"
 #include "../objects/messagemediator.h"
 #include "statevirtual.h"
+#include "../tinyxml/tinyxml.h"
 
 class stateInit : public stateVirtual
 {
@@ -33,6 +34,7 @@ class stateInit : public stateVirtual
         DF_FSM m_stateNext;
         DF_FSM m_statePrev;  
     
+        TiXmlDocument * m_pXMLSettings;
 };
 
 

@@ -46,8 +46,8 @@ DF_ERROR stateLoop()
 {
     debugOutput debugInfo;
     DF_ERROR dfRet = OK;
-    DF_FSM fsmState = START; //first loop the state is already prepare to change
-    DF_FSM fsmNewState = DISPENSE_IDLE; //!!!change once other state is implemented
+    DF_FSM fsmState = START; 
+    DF_FSM fsmNewState = IDLE; 
 
     while (OK == dfRet) //while no error has occur
     {
@@ -61,7 +61,7 @@ DF_ERROR stateLoop()
             fsmState = fsmNewState;
         }
 
-        if (OK == dfRet) //
+        if (OK == dfRet) 
         {
             //debugInfo.sendMessage("New state set [" + to_string(fsmState) + "]", INFO);
 

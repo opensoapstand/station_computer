@@ -44,21 +44,21 @@ DF_ERROR dispenser::setSolenoid(int drinkPin, int waterPin, int airPin)
 {
     DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
-    df_ret = m_pSolenoid[DRINK]->setMCPPin(drinkPin);
+    //df_ret = m_pSolenoid[DRINK]->setMCPPin(drinkPin);
     if(OK != df_ret)
     {
         return df_ret = ERROR_DRINK_FAULT;
     }
     
     df_ret = ERROR_BAD_PARAMS; //reset variable
-    df_ret = m_pSolenoid[WATER]->setMCPPin(waterPin);
+    //df_ret = m_pSolenoid[WATER]->setMCPPin(waterPin);
     if(OK != df_ret)
     {
         return df_ret = ERROR_WATER_FAULT;
     }
     
     df_ret = ERROR_BAD_PARAMS; //reset variable
-    df_ret = m_pSolenoid[AIR]->setMCPPin(airPin);
+    //df_ret = m_pSolenoid[AIR]->setMCPPin(airPin);
     if(OK != df_ret)
     {
         return df_ret = ERROR_AIR_FAULT;
@@ -71,7 +71,7 @@ DF_ERROR dispenser::setFlowsensor(int pin)
 {
     DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
-    df_ret = m_pFlowsenor[FLOW]->setFlowPin(pin);
+    //df_ret = m_pFlowsenor[FLOW]->setFlowPin(pin);
     if(OK != df_ret)
     {
         return df_ret = ERROR_FS_FAULT;
@@ -84,14 +84,14 @@ DF_ERROR dispenser::setPump(int forwardPin, int reversePin)
 {
 
     DF_ERROR df_ret = ERROR_BAD_PARAMS; //reset variable
-    df_ret = m_pPump[FORWARD]->setMCPPin(forwardPin);
+    //df_ret = m_pPump[FORWARD]->setMCPPin(forwardPin);
     if(OK != df_ret)
     {
         return df_ret = ERROR_FPUMP_FAULT;
     }
     
     df_ret = ERROR_BAD_PARAMS; //reset variable
-    df_ret = m_pPump[REVERSE]->setMCPPin(reversePin);
+    //df_ret = m_pPump[REVERSE]->setMCPPin(reversePin);
     if(OK != df_ret)
     {
         return df_ret = ERROR_RPUMP_FAULT;

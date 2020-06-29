@@ -37,3 +37,17 @@ stateVirtual::~stateVirtual()
    //clean up
 }
 
+//getter for next state from fsm
+DF_FSM stateVirtual::getNextState()
+{
+   return m_nextState;
+}
+
+//setter for state change
+void stateVirtual::setNextState(DF_FSM *nextState)
+{
+   m_nextState = *nextState;
+
+   debugOutput debugInfo;
+   debugInfo.sendMessage("state changed -> new state [" + to_string(m_nextState) + "]", INFO);
+}

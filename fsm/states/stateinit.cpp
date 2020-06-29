@@ -41,6 +41,7 @@ DF_ERROR stateInit::onEntry()
 
 DF_ERROR stateInit::onAction(DF_FSM * nextState)
 {
+   //need to check with tinyXML for hardware info
    DF_ERROR e_ret  = ERROR_BAD_PARAMS;
 
    if (nullptr != nextState)

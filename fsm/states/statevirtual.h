@@ -18,6 +18,7 @@
 
 #include "../objects/debugoutput.h"
 
+
 class stateVirtual
 {
     public:
@@ -26,6 +27,9 @@ class stateVirtual
         stateVirtual(int state);
         ~stateVirtual();
 
+        DF_FSM getNextState();
+        void setNextState(DF_FSM *nextState);
+
         virtual DF_ERROR onEntry(){};
         virtual DF_ERROR onAction(DF_FSM * nextState){};
         virtual DF_ERROR onExit(){};
@@ -33,6 +37,7 @@ class stateVirtual
 
     protected:
         DF_FSM  m_state;
+        DF_FSM  m_nextState;
         messageMediator * m_pMessaging;
 };
 

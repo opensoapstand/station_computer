@@ -58,7 +58,7 @@ DF_ERROR stateDispenseIdle::onAction(DF_FSM * nextState)
 DF_FSM stateDispenseIdle::onAction(DF_FSM *nextState, dispenser* dispenseObj)
 {
     debugOutput debugInfo;
-    DF_FSM df_state_ret  = DISPESE_IDLE;
+    DF_FSM df_state_ret  = DISPENSE_IDLE;
 
     if (nullptr != nextState)
     {

@@ -26,7 +26,6 @@
                 <io>337</io>
             </flowsensor>
         </dispenser>
-        
         <dispenser id="b">
             <solenoid index="0">
                 <type>x86</type>
@@ -51,7 +50,6 @@
                 <io>24</io>
             </pump>
         </dispenser>
-
         <dispenser id="c">
             <solenoid index="0">
                 <type>x86</type>
@@ -76,7 +74,6 @@
                 <io>24</io>
             </pump>
         </dispenser>
-
     </hardware>
     <networking />
 </DRINKFILL>

@@ -28,10 +28,12 @@ class stateVirtual
         ~stateVirtual();
 
         DF_FSM getNextState();
-        void setNextState(DF_FSM *nextState);
+        DF_FSM getCurrentState();
+
+        //void setNextState(DF_FSM *nextState);
 
         virtual DF_ERROR onEntry(){};
-        virtual DF_ERROR onAction(DF_FSM * nextState){};
+        virtual DF_ERROR onAction(){};
         virtual DF_ERROR onExit(){};
 
 

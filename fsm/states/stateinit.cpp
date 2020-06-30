@@ -1,6 +1,6 @@
 //***************************************
 //
-// stateinit.h
+// stateinit.cpp
 // init state class
 //
 // created: 12-06-2020
@@ -11,6 +11,7 @@
 //***************************************
 
 #include "stateinit.h"
+#include <iostream>
 
 stateInit::stateInit()
 {
@@ -35,18 +36,52 @@ DF_ERROR stateInit::onEntry()
 {
    DF_ERROR e_ret  = OK;
 
+   m_state = INIT; //ensure the current state is INIT
+   m_nextState = INIT;
+
    this->m_pXMLSettings = new TiXmlDocument(XML_SETTINGS);
    //test to see if loaded correctly
-   
+   //debugOutput::sendMessage("Loading XML", INFO);
+   bool loadOkay = m_pXMLSettings->LoadFile();
+   if(loadOkay){
+      debugOutput::sendMessage("XML LOADED: " + string(XML_SETTINGS), INFO);
+      e_ret = OK;
+
+      //setting up elements for proccessing xml file
+      m_pRoot = m_pXMLSettings->FirstChildElement("DRINKFILL");
+      m_pHardware = m_pRoot->FirstChildElement("hardware");
+      m_pDispenser = m_pHardware->FirstChildElement("dispenser");
+
+      setDispenserId();
+   }
+   else
+   {
+      debugOutput::sendMessage("Problem loading XML file: " + string(XML_SETTINGS), ERROR);
+      e_ret = ERROR_XMLFILE_NOT_FOUND;
+   }
    return e_ret;
 }
 
-DF_ERROR stateInit::onAction(DF_FSM * nextState)
+//start to initialize all related hardware
+DF_ERROR stateInit::onAction()
 {
    //need to check with tinyXML for hardware info
    DF_ERROR e_ret  = ERROR_BAD_PARAMS;
 
-   if (nullptr != nextState)
+   m_state = INIT; //ensure the current state is INIT
+
+   TiXmlElement *pParam;
+
+   // while(pRoot){
+   //    if(pRoot -> FirstChildElement())
+   //    {
+   //       //debugOutput::sendMessage(pRoot->GetText(), INFO);
+   //       std::cout<<pRoot->FirstAttribute()<<std::endl;
+   //       pRoot = pRoot ->NextSiblingElement();
+   //    }
+   // }
+
+   if (nullptr != &m_nextState && m_pRoot)
    {
       // set up major objects
 
@@ -58,6 +93,21 @@ DF_ERROR stateInit::onAction(DF_FSM * nextState)
 
       //methods to load and test the other various items
 
+      //pParam = pParam->FirstChildElement("solenoid");
+      // int i = 0;
+
+      // while(pParam){
+      //    //debugOutput::sendMessage(pParam->GetText(), INFO);
+      //    pParam = pParam->NextSiblingElement("solenoid");
+      // }
+
+      m_nextState = IDLE;
+      debugOutput::sendMessage("Hardware initialized...", INFO);
+      e_ret = OK;
+   }
+   else
+   {
+      e_ret = ERROR_XMLFILE_NOT_FOUND;
    }
 
    return e_ret;
@@ -68,6 +118,27 @@ DF_ERROR stateInit::onExit()
    DF_ERROR e_ret  = OK;
 
    //close the xml file
+   m_pXMLSettings->SaveFile();//!!! temperory.... no bult-in file close function
+
+   m_state = INIT;
+   m_nextState = IDLE; //once everything is good, move to idle state
 
    return e_ret;
+}
+
+void stateInit::setDispenserId()
+{
+   TiXmlElement *l_pDispenser = m_pDispenser;
+   int l_counter = 0;
+
+   while(l_pDispenser->LastChild() != l_pDispenser)
+   {
+      dispenserId[l_counter] = l_pDispenser->Attribute("id");
+
+      std::cout << dispenserId[l_counter] << std::endl;
+
+      //if(nullptr != l_pDispenser->NextSiblingElement())
+      l_pDispenser = l_pDispenser->NextSiblingElement();
+      l_counter++;
+   }
 }

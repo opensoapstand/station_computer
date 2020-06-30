@@ -27,11 +27,10 @@ class stateDispense : public stateVirtual
         ~stateDispense();
 
         DF_ERROR onEntry();
-        DF_ERROR onAction(DF_FSM * nextState);
+        DF_ERROR onAction();
         DF_ERROR onExit();
 
     private:
-        DF_FSM m_stateCurrent;
     
 };
 

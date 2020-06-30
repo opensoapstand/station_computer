@@ -26,15 +26,21 @@ class stateInit : public stateVirtual
         stateInit(int inputDigit); //debug through terminal
         ~stateInit();
 
+        TiXmlElement *getSolenoid(char* dispenserID); 
+
         DF_ERROR onEntry();
-        DF_ERROR onAction(DF_FSM * nextState);
+        DF_ERROR onAction();
         DF_ERROR onExit();
 
-    private:
-        DF_FSM m_stateNext;
-        DF_FSM m_statePrev;  
-    
-        TiXmlDocument * m_pXMLSettings;
+    private:    
+        TiXmlDocument *m_pXMLSettings;
+        TiXmlElement *m_pRoot, *m_pHardware, *m_pDispenser;
+
+        const char* dispenserId[];
+        const char* solenoidId[];
+
+        void setDispenserId();
+        void setSolenoidId();
 };
 
 

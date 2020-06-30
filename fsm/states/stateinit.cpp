@@ -46,13 +46,6 @@ DF_ERROR stateInit::onEntry()
    if(loadOkay){
       debugOutput::sendMessage("XML LOADED: " + string(XML_SETTINGS), INFO);
       e_ret = OK;
-
-      //setting up elements for proccessing xml file
-      m_pRoot = m_pXMLSettings->FirstChildElement("DRINKFILL");
-      m_pHardware = m_pRoot->FirstChildElement("hardware");
-      m_pDispenser = m_pHardware->FirstChildElement("dispenser");
-
-      setDispenserId();
    }
    else
    {
@@ -80,8 +73,15 @@ DF_ERROR stateInit::onAction()
    //       pRoot = pRoot ->NextSiblingElement();
    //    }
    // }
+   
+   //setting up elements for proccessing xml file
+   m_pRoot = m_pXMLSettings->FirstChildElement("DRINKFILL");
+   m_pHardware = m_pRoot->FirstChildElement("hardware");
+   m_pDispenser = m_pHardware->FirstChildElement("dispenser");
 
-   if (nullptr != &m_nextState && m_pRoot)
+   e_ret = setDispenserId();
+
+   if (nullptr != &m_nextState && e_ret == OK)
    {
       // set up major objects
 
@@ -103,11 +103,11 @@ DF_ERROR stateInit::onAction()
 
       m_nextState = IDLE;
       debugOutput::sendMessage("Hardware initialized...", INFO);
-      e_ret = OK;
+      //e_ret = OK;
    }
    else
    {
-      e_ret = ERROR_XMLFILE_NOT_FOUND;
+      e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
    }
 
    return e_ret;
@@ -118,7 +118,7 @@ DF_ERROR stateInit::onExit()
    DF_ERROR e_ret  = OK;
 
    //close the xml file
-   m_pXMLSettings->SaveFile();//!!! temperory.... no bult-in file close function
+   //m_pXMLSettings->SaveFile();//!!! temperory.... no bult-in file close function
 
    m_state = INIT;
    m_nextState = IDLE; //once everything is good, move to idle state
@@ -126,19 +126,31 @@ DF_ERROR stateInit::onExit()
    return e_ret;
 }
 
-void stateInit::setDispenserId()
+DF_ERROR stateInit::setDispenserId()
 {
-   TiXmlElement *l_pDispenser = m_pDispenser;
+   DF_ERROR e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
    int l_counter = 0;
 
-   while(l_pDispenser->LastChild() != l_pDispenser)
-   {
-      dispenserId[l_counter] = l_pDispenser->Attribute("id");
-
-      std::cout << dispenserId[l_counter] << std::endl;
-
-      //if(nullptr != l_pDispenser->NextSiblingElement())
-      l_pDispenser = l_pDispenser->NextSiblingElement();
-      l_counter++;
+   if (m_pDispenser == NULL){
+      e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
    }
+   else
+   {
+      for(TiXmlElement *l_p = m_pDispenser; l_p !=  NULL; l_p = l_p->NextSiblingElement())// != l_pDispenser->NextSiblingElement("dispenser"))
+      {
+         dispenserId[l_counter] = l_p->Attribute("id");
+
+         debugOutput::sendMessage(dispenserId[l_counter], INFO);
+
+         //if(nullptr == l_pDispenser->NextSiblingElement("dispenser"))
+         //   break;
+
+         //l_pDispenser = l_pDispenser->NextSiblingElement("dispenser");
+         l_counter++;
+      }
+
+      e_ret = OK;
+   }
+
+   return e_ret;
 }

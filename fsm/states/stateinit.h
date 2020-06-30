@@ -39,8 +39,7 @@ class stateInit : public stateVirtual
         const char* dispenserId[];
         const char* solenoidId[];
 
-        void setDispenserId();
-        void setSolenoidId();
+        DF_ERROR setDispenserId();
 };
 
 

@@ -13,8 +13,9 @@
 
 #include "statedispenseidle.h"
 
-stateDispenseIdle::stateDispenseIdle(){
-    m_stateCurrent = DF_FSM::DISPENSE;
+stateDispenseIdle::stateDispenseIdle()
+{
+
 }
 
 stateDispenseIdle::stateDispenseIdle(messageMediator * message){
@@ -35,19 +36,21 @@ DF_ERROR stateDispenseIdle::onEntry()
 {
    DF_ERROR e_ret  = OK;
 
+   m_state = DISPENSE_IDLE;
+   m_nextState = DISPENSE_IDLE;
    
    return e_ret;
 }
 
-DF_ERROR stateDispenseIdle::onAction(DF_FSM * nextState)
+DF_ERROR stateDispenseIdle::onAction()
 {
    debugOutput debugInfo;
    DF_ERROR df_ret  = ERROR_BAD_PARAMS;
 
-   if (nullptr != nextState)
+   if (nullptr != &m_nextState)
    {
       // do stuff
-      debugInfo.sendMessage("onAction() for state [" + std::to_string((int)*nextState) + "]", INFO);
+      //debugInfo.sendMessage("onAction() for state [" + std::to_string((int)m_nextState) + "]", INFO);
           
       return df_ret = OK;
    }
@@ -55,15 +58,14 @@ DF_ERROR stateDispenseIdle::onAction(DF_FSM * nextState)
    return df_ret;
 }
 
-DF_FSM stateDispenseIdle::onAction(DF_FSM *nextState, dispenser* dispenseObj)
+DF_FSM stateDispenseIdle::onAction(dispenser* dispenseObj)
 {
-    debugOutput debugInfo;
     DF_FSM df_state_ret  = DISPENSE_IDLE;
 
-    if (nullptr != nextState)
+    if (nullptr != &m_nextState)
     {
         // do stuff
-        debugInfo.sendMessage("onAction() for state [" + std::to_string((int)*nextState) + "]", INFO);
+        //debugOutput::sendMessage("onAction() for state [" + std::to_string((int)m_nextState) + "]", INFO);
           
         return df_state_ret = DISPENSE;
     }
@@ -71,13 +73,13 @@ DF_FSM stateDispenseIdle::onAction(DF_FSM *nextState, dispenser* dispenseObj)
     return df_state_ret;
 }
 
-DF_ERROR stateDispenseIdle::onExit(DF_FSM *curState)
+DF_ERROR stateDispenseIdle::onExit()
 {
     debugOutput debugInfo;
     DF_ERROR e_ret  = OK;
 
-    debugInfo.sendMessage("onExit() for state [" + std::to_string((int)*curState) + "]", INFO);
-
+    m_state = DISPENSE_IDLE;
+    //m_nextState = DISPENSE;
 
    return e_ret;
 }

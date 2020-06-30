@@ -14,7 +14,7 @@
 #include <iostream>
 
 stateVirtual::stateVirtual(){
-   m_state = DF_FSM::START;
+   m_state = START;
 }
 
 stateVirtual::stateVirtual(messageMediator * message)
@@ -43,11 +43,17 @@ DF_FSM stateVirtual::getNextState()
    return m_nextState;
 }
 
-//setter for state change
-void stateVirtual::setNextState(DF_FSM *nextState)
+//getter for current state from fsm
+DF_FSM stateVirtual::getCurrentState()
 {
-   m_nextState = *nextState;
-
-   debugOutput debugInfo;
-   debugInfo.sendMessage("state changed -> new state [" + to_string(m_nextState) + "]", INFO);
+   return m_state;
 }
+
+//setter for state change
+// void stateVirtual::setNextState(DF_FSM *nextState)
+// {
+//    m_nextState = *nextState;
+
+//    debugOutput debugInfo;
+//    debugInfo.sendMessage("state changed -> new state [" + to_string((int)m_nextState) + "]", INFO);
+// }

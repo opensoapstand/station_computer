@@ -16,6 +16,10 @@
 stateInit::stateInit()
 {
    //m_stateNext = static_cast<DF_FSM>(DF_FSM::INIT+1);
+   for(int i = 0; i < CASSETTES_MAX; i++)
+   {
+      dispenserId[i] = nullptr;
+   }
 }
 
 stateInit::stateInit(messageMediator * message)
@@ -40,8 +44,8 @@ DF_ERROR stateInit::onEntry()
    m_nextState = INIT;
 
    this->m_pXMLSettings = new TiXmlDocument(XML_SETTINGS);
+   
    //test to see if loaded correctly
-   //debugOutput::sendMessage("Loading XML", INFO);
    bool loadOkay = m_pXMLSettings->LoadFile();
    if(loadOkay){
       debugOutput::sendMessage("XML LOADED: " + string(XML_SETTINGS), INFO);
@@ -63,21 +67,20 @@ DF_ERROR stateInit::onAction()
 
    m_state = INIT; //ensure the current state is INIT
 
-   TiXmlElement *pParam;
-
-   // while(pRoot){
-   //    if(pRoot -> FirstChildElement())
-   //    {
-   //       //debugOutput::sendMessage(pRoot->GetText(), INFO);
-   //       std::cout<<pRoot->FirstAttribute()<<std::endl;
-   //       pRoot = pRoot ->NextSiblingElement();
-   //    }
-   // }
+   TiXmlElement *l_pDispenser;
    
    //setting up elements for proccessing xml file
    m_pRoot = m_pXMLSettings->FirstChildElement("DRINKFILL");
    m_pHardware = m_pRoot->FirstChildElement("hardware");
    m_pDispenser = m_pHardware->FirstChildElement("dispenser");
+
+   if(nullptr == m_pDispenser){
+       debugOutput::sendMessage("m_pDispenser is null", INFO);
+       return e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+   }
+   else{
+      l_pDispenser = m_pDispenser;
+   }
 
    e_ret = setDispenserId();
 
@@ -100,16 +103,36 @@ DF_ERROR stateInit::onAction()
       //    //debugOutput::sendMessage(pParam->GetText(), INFO);
       //    pParam = pParam->NextSiblingElement("solenoid");
       // }
+           
+      int idx = 0;
 
-      m_nextState = IDLE;
-      debugOutput::sendMessage("Hardware initialized...", INFO);
-      //e_ret = OK;
+      while(nullptr != dispenserId[idx] && l_pDispenser->NextSiblingElement("dispenser"))
+      {
+         e_ret = setDispenser(l_pDispenser, idx);
+         
+         if(OK != e_ret) //if dispenser not set properly, return error
+         {
+            debugOutput::sendMessage("setDispenser did not return OK", INFO);
+            return e_ret;
+         }
+
+         l_pDispenser = l_pDispenser->NextSiblingElement("dispenser");
+         idx++;
+      }
+
+      if(OK == e_ret)
+      {
+         m_nextState = IDLE;
+      }
    }
    else
    {
       e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+      debugOutput::sendMessage("setDispenserId did not return OK", INFO);
+
    }
 
+   debugOutput::sendMessage("Hardware initialized...", INFO);
    return e_ret;
 }
 
@@ -118,7 +141,7 @@ DF_ERROR stateInit::onExit()
    DF_ERROR e_ret  = OK;
 
    //close the xml file
-   //m_pXMLSettings->SaveFile();//!!! temperory.... no bult-in file close function
+   m_pXMLSettings->SaveFile();//!!! temperory.... no bult-in file close function
 
    m_state = INIT;
    m_nextState = IDLE; //once everything is good, move to idle state
@@ -136,21 +159,79 @@ DF_ERROR stateInit::setDispenserId()
    }
    else
    {
-      for(TiXmlElement *l_p = m_pDispenser; l_p !=  NULL; l_p = l_p->NextSiblingElement())// != l_pDispenser->NextSiblingElement("dispenser"))
+      TiXmlElement *l_p;
+
+      for(l_p = m_pDispenser; l_p !=  NULL; l_p = l_p->NextSiblingElement())// != l_pDispenser->NextSiblingElement("dispenser"))
       {
          dispenserId[l_counter] = l_p->Attribute("id");
-
-         debugOutput::sendMessage(dispenserId[l_counter], INFO);
-
-         //if(nullptr == l_pDispenser->NextSiblingElement("dispenser"))
-         //   break;
-
-         //l_pDispenser = l_pDispenser->NextSiblingElement("dispenser");
          l_counter++;
       }
-
       e_ret = OK;
    }
 
    return e_ret;
+}
+
+DF_ERROR stateInit::setDispenser(TiXmlElement *dispenserEle, int dispenserIdx)
+{
+   DF_ERROR e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+   TiXmlElement *l_pSolenoid;
+
+   if(dispenserEle->FirstChildElement("solenoid"))
+   {
+      l_pSolenoid = dispenserEle->FirstChildElement("solenoid");
+   } 
+   else
+   {
+      debugOutput::sendMessage("dispenseElement was null", INFO);
+      e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+      return e_ret;
+   }
+   
+   std::string sDispenser = dispenserId[dispenserIdx];
+   debugOutput::sendMessage("Sort for dispenser:" + sDispenser, INFO);
+
+   int l_type = 0;
+   TiXmlElement *l_pSingleSolenoid = l_pSolenoid;
+
+   while(nullptr != l_pSingleSolenoid) //should loop through 3 times
+   {
+      const char* typeCheck = getType(l_pSingleSolenoid);
+      std::string sType = typeCheck;
+
+      if("" != typeCheck) //set dispenser parameters accrodingly [mcp|x86|ard]
+      {
+         debugOutput::sendMessage("dispenser: " + sDispenser + " |type " + sType, INFO);
+
+         l_pSingleSolenoid = l_pSingleSolenoid -> NextSiblingElement();
+      }
+      else
+      {
+            debugOutput::sendMessage("done sorting dispense:" + sDispenser, INFO);
+            //finish with current dispenser
+      }
+   }
+
+   e_ret = OK;
+   return e_ret;
+}
+
+const char* stateInit::getType(TiXmlElement *solenoidEle)
+{
+   TiXmlElement *type = solenoidEle->FirstChildElement("type");
+
+   const char* char_ret;
+
+   if(nullptr != type)
+   {
+      char_ret = type->GetText();
+   }
+   else
+   {
+      char_ret = {""}; //returning a empty char* if not found 
+   }
+
+   debugOutput::sendMessage(char_ret, INFO);
+
+   return char_ret;
 }

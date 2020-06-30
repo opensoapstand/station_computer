@@ -97,16 +97,10 @@ DF_ERROR stateInit::onAction()
       //methods to load and test the other various items
 
       //pParam = pParam->FirstChildElement("solenoid");
-      // int i = 0;
-
-      // while(pParam){
-      //    //debugOutput::sendMessage(pParam->GetText(), INFO);
-      //    pParam = pParam->NextSiblingElement("solenoid");
-      // }
            
       int idx = 0;
 
-      while(nullptr != dispenserId[idx] && l_pDispenser->NextSiblingElement("dispenser"))
+      while(nullptr != dispenserId[idx])
       {
          e_ret = setDispenser(l_pDispenser, idx);
          
@@ -116,7 +110,11 @@ DF_ERROR stateInit::onAction()
             return e_ret;
          }
 
-         l_pDispenser = l_pDispenser->NextSiblingElement("dispenser");
+         if(nullptr != l_pDispenser->NextSiblingElement("dispenser"))
+         {
+            l_pDispenser = l_pDispenser->NextSiblingElement("dispenser");
+         }
+
          idx++;
       }
 
@@ -196,7 +194,7 @@ DF_ERROR stateInit::setDispenser(TiXmlElement *dispenserEle, int dispenserIdx)
 
    while(nullptr != l_pSingleSolenoid) //should loop through 3 times
    {
-      const char* typeCheck = getType(l_pSingleSolenoid);
+      const char* typeCheck = getXML("type", l_pSingleSolenoid);
       std::string sType = typeCheck;
 
       if("" != typeCheck) //set dispenser parameters accrodingly [mcp|x86|ard]
@@ -216,9 +214,9 @@ DF_ERROR stateInit::setDispenser(TiXmlElement *dispenserEle, int dispenserIdx)
    return e_ret;
 }
 
-const char* stateInit::getType(TiXmlElement *solenoidEle)
+const char* stateInit::getXML(const char* subHeader, TiXmlElement *solenoidEle)
 {
-   TiXmlElement *type = solenoidEle->FirstChildElement("type");
+   TiXmlElement *type = solenoidEle->FirstChildElement(subHeader);
 
    const char* char_ret;
 
@@ -231,7 +229,7 @@ const char* stateInit::getType(TiXmlElement *solenoidEle)
       char_ret = {""}; //returning a empty char* if not found 
    }
 
-   debugOutput::sendMessage(char_ret, INFO);
-
+   //debugOutput::sendMessage(char_ret, INFO);
    return char_ret;
 }
+

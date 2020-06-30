@@ -41,7 +41,7 @@ class stateInit : public stateVirtual
         DF_ERROR setDispenserId();
         DF_ERROR setDispenser(TiXmlElement *dispenserEle, int index);
 
-        const char* getType(TiXmlElement *solenoidEle);
+        const char* getXML(const char* subHeader, TiXmlElement *solenoidEle);
 };
 
 

@@ -36,10 +36,12 @@ class stateInit : public stateVirtual
         TiXmlDocument *m_pXMLSettings;
         TiXmlElement *m_pRoot, *m_pHardware, *m_pDispenser;
 
-        const char* dispenserId[];
-        const char* solenoidId[];
+        const char* dispenserId[CASSETTES_MAX];
 
         DF_ERROR setDispenserId();
+        DF_ERROR setDispenser(TiXmlElement *dispenserEle, int index);
+
+        const char* getType(TiXmlElement *solenoidEle);
 };
 
 

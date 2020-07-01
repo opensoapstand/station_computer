@@ -16,17 +16,11 @@
 #define DEFAULT_BUS 2 //i2cdetect tool to find the corresponding value
 					  //Odyessey is 2 and Udoo is 0
 
-#define X20 20
-#define X21 21
-#define X22 22
-
 mcpGPIO::mcpGPIO(int i2caddress, int pin)
 {
-	debugOutput debugInfo;
-	debugInfo.sendMessage("mcpGPIO", INFO);
 
-	this->m_nPin = pin;
-	this->m_nAddress = i2caddress;
+	m_nPin = pin;
+	m_nAddress = i2caddress;
 	this->m_mcp = new MCP23017(DEFAULT_BUS, m_nAddress);
 
 	//may need to modify the source file to ensure proper error is identified
@@ -35,8 +29,7 @@ mcpGPIO::mcpGPIO(int i2caddress, int pin)
 
 mcpGPIO::~mcpGPIO()
 {
-	debugOutput debugInfo;
-	debugInfo.sendMessage("~mcpGPIO", INFO);
+	debugOutput::sendMessage("~mcpGPIO", INFO);
 
 	this->m_mcp->closeI2C();
 	delete (this->m_mcp);

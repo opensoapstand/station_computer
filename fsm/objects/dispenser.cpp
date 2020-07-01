@@ -23,8 +23,7 @@ dispenser::dispenser(){
     for (int i = 0; i < NUM_PUMP; i++)
         m_pPump[i] = nullptr;
 
-    debugOutput debugInfo;
-    debugInfo.sendMessage("Object has been created", INFO);
+    debugOutput::sendMessage("Object has been created", INFO);
 }
 
 dispenser::~dispenser(){
@@ -40,38 +39,31 @@ void dispenser::initDispenser(int slot){
 }
 
 //Setters
-DF_ERROR dispenser::setSolenoid(int drinkPin, int waterPin, int airPin)
+DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
 {
-    DF_ERROR df_ret = ERROR_BAD_PARAMS;
-
-    //df_ret = m_pSolenoid[DRINK]->setMCPPin(drinkPin);
-    if(OK != df_ret)
-    {
-        return df_ret = ERROR_DRINK_FAULT;
-    }
+    DF_ERROR e_ret = ERROR_BAD_PARAMS; 
     
-    df_ret = ERROR_BAD_PARAMS; //reset variable
-    //df_ret = m_pSolenoid[WATER]->setMCPPin(waterPin);
-    if(OK != df_ret)
-    {
-        return df_ret = ERROR_WATER_FAULT;
-    }
-    
-    df_ret = ERROR_BAD_PARAMS; //reset variable
-    //df_ret = m_pSolenoid[AIR]->setMCPPin(airPin);
-    if(OK != df_ret)
-    {
-        return df_ret = ERROR_AIR_FAULT;
+	if((X20 <= mcpAddress &&  X22 >=mcpAddress) && (MCP_PIN_START <= pin && MPC_PIN_END >= pin))
+	{
+        //m_pSolenoid[pos] = new mcpGPIO(mcpAddress, pin);
+		e_ret = OK;
+	}
+	else if(X20 >= mcpAddress || X22 <= mcpAddress)
+	{
+		e_ret = ERROR_WRONG_I2C_ADDRESS;
+	}
+	else if(MCP_PIN_START >= pin || MPC_PIN_END <= pin)
+	{
+		e_ret = ERROR_BAD_PARAMS;
     }
 
-    return df_ret;
+    return e_ret;
 }
 
 DF_ERROR dispenser::setFlowsensor(int pin)
 {
     DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
-    //df_ret = m_pFlowsenor[FLOW]->setFlowPin(pin);
     if(OK != df_ret)
     {
         return df_ret = ERROR_FS_FAULT;
@@ -80,24 +72,25 @@ DF_ERROR dispenser::setFlowsensor(int pin)
     return df_ret;
 }
 
-DF_ERROR dispenser::setPump(int forwardPin, int reversePin)
+DF_ERROR dispenser::setPump(int mcpAddress, int forwardPin, int direction)
 {
-
-    DF_ERROR df_ret = ERROR_BAD_PARAMS; //reset variable
-    //df_ret = m_pPump[FORWARD]->setMCPPin(forwardPin);
-    if(OK != df_ret)
-    {
-        return df_ret = ERROR_FPUMP_FAULT;
-    }
+    DF_ERROR e_ret = ERROR_BAD_PARAMS; //reset variable    
     
-    df_ret = ERROR_BAD_PARAMS; //reset variable
-    //df_ret = m_pPump[REVERSE]->setMCPPin(reversePin);
-    if(OK != df_ret)
-    {
-        return df_ret = ERROR_RPUMP_FAULT;
-    }
+	if((X20 <= mcpAddress &&  X22 >=mcpAddress) && (MCP_PIN_START <= forwardPin && MPC_PIN_END >= forwardPin))
+	{
+        //m_pPump[direction] = new mcpGPIO(mcpAddress, forwardPin);
+		e_ret = OK;
+	}
+	else if(X20 >= mcpAddress || X22 <= mcpAddress)
+	{
+		e_ret = ERROR_WRONG_I2C_ADDRESS;
+	}
+	else if(MCP_PIN_START >= forwardPin || MPC_PIN_END <= forwardPin)
+	{
+		e_ret = ERROR_BAD_PARAMS;
+	}
 
-    return df_ret;
+    return e_ret;
 }
 
 

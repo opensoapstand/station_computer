@@ -44,5 +44,24 @@ class stateInit : public stateVirtual
         const char* getXML(const char* subHeader, TiXmlElement *solenoidEle);
 };
 
+//first layer
+#define DRINKFILL_STRING "DRINKFILL"
+
+//second layer
+#define HARDWARE_STRING "hardware"
+
+//third layer
+#define DISPENSER_STRING "dispenser"
+#define ID_STRING "id"
+
+//forth layer
+#define SOLENOID_STRING "solenoid"
+#define TYPE_STRING "type"
+#define IO_STRING "io"
+#define FLOWSENSOR_STRING "flowsensor"
+
+#define X86_STRING "x86"
+#define MCP_STRING "mcp"
+#define ARD_STRING "ard"
 
 #endif

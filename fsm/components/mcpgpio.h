@@ -26,7 +26,6 @@ public:
 	DF_ERROR readPin(bool* level);
 	DF_ERROR writePin(bool level);
 
-
 protected:
 	void monitorGPIO();
 

@@ -70,9 +70,9 @@ DF_ERROR stateInit::onAction()
    TiXmlElement *l_pDispenser;
    
    //setting up elements for proccessing xml file
-   m_pRoot = m_pXMLSettings->FirstChildElement("DRINKFILL");
-   m_pHardware = m_pRoot->FirstChildElement("hardware");
-   m_pDispenser = m_pHardware->FirstChildElement("dispenser");
+   m_pRoot = m_pXMLSettings->FirstChildElement(DRINKFILL_STRING);
+   m_pHardware = m_pRoot->FirstChildElement(HARDWARE_STRING);
+   m_pDispenser = m_pHardware->FirstChildElement(DISPENSER_STRING);
 
    if(nullptr == m_pDispenser){
        debugOutput::sendMessage("m_pDispenser is null", INFO);
@@ -110,9 +110,9 @@ DF_ERROR stateInit::onAction()
             return e_ret;
          }
 
-         if(nullptr != l_pDispenser->NextSiblingElement("dispenser"))
+         if(nullptr != l_pDispenser->NextSiblingElement(DISPENSER_STRING))
          {
-            l_pDispenser = l_pDispenser->NextSiblingElement("dispenser");
+            l_pDispenser = l_pDispenser->NextSiblingElement(DISPENSER_STRING);
          }
 
          idx++;
@@ -175,9 +175,9 @@ DF_ERROR stateInit::setDispenser(TiXmlElement *dispenserEle, int dispenserIdx)
    DF_ERROR e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
    TiXmlElement *l_pSolenoid;
 
-   if(dispenserEle->FirstChildElement("solenoid"))
+   if(dispenserEle->FirstChildElement(SOLENOID_STRING))
    {
-      l_pSolenoid = dispenserEle->FirstChildElement("solenoid");
+      l_pSolenoid = dispenserEle->FirstChildElement(SOLENOID_STRING);
    } 
    else
    {
@@ -194,13 +194,24 @@ DF_ERROR stateInit::setDispenser(TiXmlElement *dispenserEle, int dispenserIdx)
 
    while(nullptr != l_pSingleSolenoid) //should loop through 3 times
    {
-      const char* typeCheck = getXML("type", l_pSingleSolenoid);
+      const char* typeCheck = getXML(TYPE_STRING, l_pSingleSolenoid);
       std::string sType = typeCheck;
 
       if("" != typeCheck) //set dispenser parameters accrodingly [mcp|x86|ard]
       {
-         debugOutput::sendMessage("dispenser: " + sDispenser + " |type " + sType, INFO);
+         if(MCP_STRING== sType)
+         {
+            //cassettes[dispenserIdx]->;
+         }
+         else if(X86_STRING == sType)
+         {
 
+         }
+         else if(ARD_STRING == sType)
+         {
+
+         }
+         debugOutput::sendMessage("dispenser: " + sDispenser + " |type " + sType, INFO);
          l_pSingleSolenoid = l_pSingleSolenoid -> NextSiblingElement();
       }
       else

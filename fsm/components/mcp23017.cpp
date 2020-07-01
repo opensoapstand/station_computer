@@ -38,10 +38,11 @@ void MCP23017::bitWrite(uint8_t &var, uint8_t index, uint8_t bit)
 bool MCP23017::openI2C()
 {
     char fileNameBuffer[32];
-    sprintf(fileNameBuffer,"/dev/i2c-%d", kI2CBus);
+    //sprintf(fileNameBuffer,"/dev/i2c-%d", kI2CBus);
     //printf("File name descriptor: %s \n", fileNameBuffer);
-    std::cout<<"File name descriptor: " <<  fileNameBuffer << std::endl;
-    kI2CFileDescriptor = open(fileNameBuffer, O_RDWR);
+    //std::cout<<"File name descriptor: " <<  fileNameBuffer << std::endl;
+    debugOutput::sendMessage("File name descriptor: " + string(fileNameBuffer), ERROR);
+	kI2CFileDescriptor = open(fileNameBuffer, O_RDWR);
 
     if (kI2CFileDescriptor < 0) {
         // Could not open the file
@@ -93,7 +94,8 @@ uint8_t MCP23017::readRegister(uint8_t addr)
 {
     int toReturn = i2c_smbus_read_byte_data(kI2CFileDescriptor, addr);
     if (toReturn < 0) {
-        printf("MCP23017 Read Byte error: %d",errno) ;
+        //printf("MCP23017 Read Byte error: %d",errno) ;
+		debugOutput::sendMessage("MCP23017 read Byte error", ERROR);
         error = errno ;
         toReturn = -1 ;
     }
@@ -129,8 +131,9 @@ uint8_t MCP23017::readByte()
 {
     int toReturn = i2c_smbus_read_byte(kI2CFileDescriptor);
     if (toReturn < 0) {
-        printf("MCP23017 Read Byte error: %d",errno) ;
-        error = errno ;
+        //printf("MCP23017 Read Byte error: %d",errno) ;
+        debugOutput::sendMessage("MCP23017 read Byte error", ERROR);
+		error = errno ;
         toReturn = -1 ;
     }
     // For debugging

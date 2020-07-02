@@ -31,12 +31,15 @@ public:
 	~debugOutput();
 
 	//setter
-	static bool setMessageLevel(MESSAGE_LEVEL dbgLvl);	
-	static void sendMessage(string msg, MESSAGE_LEVEL lvl);
+	bool setMessageLevel(MESSAGE_LEVEL dbgLvl);
+	
+	
+	void sendMessage(string msg, MESSAGE_LEVEL lvl);
 
 
-	static MESSAGE_LEVEL m_dbgLvl;
 protected:
+	MESSAGE_LEVEL m_dbgLvl;
+	string m_lvlArray[MESSAGE_MAX] = { "INFO", "WARNING", "ERROR" };
 };
 
 #endif

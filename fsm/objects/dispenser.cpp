@@ -9,7 +9,7 @@
 // copyright 2020 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
-#include <dispenser.h>
+#include "dispenser.h"
 
 dispenser::dispenser(){
     //default constructor to set all pin to nullptr
@@ -22,14 +22,17 @@ dispenser::dispenser(){
       
     for (int i = 0; i < NUM_PUMP; i++)
         m_pPump[i] = nullptr;
+
+    debugOutput debugInfo;
+    debugInfo.sendMessage("Object has been created", INFO);
 }
 
 dispenser::~dispenser(){
-    delete []m_pDrink;
+    // delete [] m_pDrink;
 
-    delete []m_pSolenoid;
-    delete []m_pFlowsenor;
-    delete []m_pPump;
+    // delete [] m_pSolenoid;
+    // delete [] m_pFlowsenor;
+    // delete [] m_pPump;
 }
 
 void dispenser::initDispenser(int slot){

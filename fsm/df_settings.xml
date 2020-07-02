@@ -23,23 +23,24 @@
             </solenoid>
             <flowsensor>
                 <type>x86</type>
-                <io>337</io>
+                <io>23</io>
             </flowsensor>
         </dispenser>
         <dispenser id="b">
             <solenoid index="0">
-                <type>x86</type>
-                <io>13</io>
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>04</io>
             </solenoid>
             <solenoid index="1">
                 <type>mcp</type>
                 <i2caddress>20</i2caddress>
-                <io>13</io>
+                <io>05</io>
             </solenoid>
             <solenoid index="2">
-                <type>ard</type>
-                <uart>1</uart>
-                <io>13</io>
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>06</io>
             </solenoid>
             <flowsensor>
                 <type>x86</type>
@@ -52,18 +53,19 @@
         </dispenser>
         <dispenser id="c">
             <solenoid index="0">
-                <type>x86</type>
-                <io>13</io>
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>07</io>
             </solenoid>
             <solenoid index="1">
                 <type>mcp</type>
                 <i2caddress>20</i2caddress>
-                <io>13</io>
+                <io>9</io>
             </solenoid>
             <solenoid index="2">
-                <type>ard</type>
-                <uart>1</uart>
-                <io>13</io>
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>10</io>
             </solenoid>
             <flowsensor>
                 <type>x86</type>

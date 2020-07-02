@@ -14,7 +14,14 @@
 
 gpio::gpio()
 {
-	m_nPin = -1; //set negative one for illegal pin address
+	m_nAddress = -1; //set negative one for illegal addressing
+	m_stop = false;
+	m_input = false;	
+}
+
+gpio::gpio(int address)
+{
+	m_nAddress = address;
 	m_stop = false;
 	m_input = false;
 }
@@ -40,8 +47,7 @@ DF_ERROR gpio::setInterrupt(DF_ERROR(*pf)())
 //call this with code that looks like
 // std::thread tGPIOListener tgpio = <gpioinstance>->listener();
 // tgpio.join();
-
-/*std::thread gpio::listener()
+std::thread gpio::listener()
 {
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 	m_stop = true;
@@ -52,6 +58,4 @@ DF_ERROR gpio::setInterrupt(DF_ERROR(*pf)())
 
 	m_stop = true;  //reset
 	return;
-} */
-
-
+}

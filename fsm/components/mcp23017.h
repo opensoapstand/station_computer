@@ -5,9 +5,9 @@
 #include <cstddef>
 #include <cstdint>
 
-//extern "C" {
+extern "C" {
     #include "smbus.h"
-//}
+}
 
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
@@ -16,8 +16,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
-
-#include "../objects/debugoutput.h"
 
 class MCP23017
 {
@@ -32,6 +30,7 @@ public:
 
     bool openI2C() ;
     void closeI2C();
+
 
     void pinMode(uint8_t p, uint8_t d);
     void digitalWrite(uint8_t p, uint8_t d);

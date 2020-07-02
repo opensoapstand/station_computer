@@ -128,7 +128,7 @@ DF_ERROR createStateArray(char* inputChar)
         g_stateArray[DISPENSE_IDLE] = new stateDispenseIdle();
         g_stateArray[DISPENSE] = new stateDispense(); //6
 
-        g_dispenseArray[0] = new dispenser();
+        //g_dispenseArray[0] = new dispenser();
         return dfRet;
     }
     else

@@ -17,6 +17,8 @@ extern "C" {
 #include <unistd.h>
 #include <errno.h>
 
+#include "../objects/debugoutput.h"
+
 class MCP23017
 {
 public:

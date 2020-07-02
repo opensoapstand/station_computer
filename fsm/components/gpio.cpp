@@ -39,6 +39,19 @@ gpio::gpio(int pin)
 // 	m_i2c = true; //there is i2c chip associated with it 
 // }
 
+DF_ERROR gpio::setPin(int pinNumber){
+
+	DF_ERROR df_Ret = ERROR_BAD_PARAMS;
+
+	if(pinNumber < 0 || pinNumber > 15)
+		return df_Ret;
+	else{
+		m_nPin = pinNumber;
+		df_Ret = OK;
+	}
+
+	return df_Ret;
+}
 
 gpio::~gpio()
 {
@@ -72,3 +85,5 @@ std::thread gpio::listener()
 	m_stop = true;  //reset
 	return;
 }
+
+

@@ -74,6 +74,17 @@ oddyseyx86GPIO::~oddyseyx86GPIO()
 	return;
 }
 
+DF_ERROR oddyseyx86GPIO::setFlowPin(int pinNumber)
+{
+	DF_ERROR df_Ret = ERROR_BAD_PARAMS;
+
+	//may need a set of array for avilable x86 pins to verify
+	m_nPin = pinNumber;
+	df_Ret = OK;
+
+	return df_Ret;
+}
+
 DF_ERROR oddyseyx86GPIO::setDirection(bool input)
 {
 	debugOutput::sendMessage("setDirection", INFO);

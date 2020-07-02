@@ -17,35 +17,21 @@
 
 using namespace std;
 
-const string m_lvlArray[] = { "INFO", "WARNING", "ERROR" };
-MESSAGE_LEVEL debugOutput::m_dbgLvl = INFO;
-
 debugOutput::debugOutput()
 {
-	
+	m_dbgLvl = INFO;
 }
 
 
 debugOutput::~debugOutput()
 {
-
 }
-
-bool debugOutput::setMessageLevel(MESSAGE_LEVEL dbgLvl)
- {
-	bool dbg_ret = false;
-
-	debugOutput::m_dbgLvl = dbgLvl; 
-	dbg_ret = true;
-
-	return dbg_ret;
- }
 
 //!!! this is not threadsafe at the moment
 void debugOutput::sendMessage(std::string msg, MESSAGE_LEVEL lvl)
 {
-	if (lvl >= debugOutput::m_dbgLvl)
-	{
-		cerr << m_lvlArray[lvl] + ": " + msg << endl;
-	}
+
+	//if (lvl >= this->m_dbgLvl) {
+	//	cerr << this->m_lvlArray[lvl] + " " + msg;
+	//}
 }

@@ -11,15 +11,9 @@
 //***************************************
 
 #include "statevirtual.h"
-#include <iostream>
 
 stateVirtual::stateVirtual(){
-
-   for (int i = 0; i < CASSETTES_MAX; i++)
-   {
-      cassettes[i] = new dispenser();
-   }
-   m_state = START;
+   m_state = DF_FSM::START;
 }
 
 stateVirtual::stateVirtual(messageMediator * message)
@@ -34,7 +28,7 @@ stateVirtual::stateVirtual(messageMediator * message)
 
 stateVirtual::stateVirtual(int state)
 {
-   //m_state = static_cast<DF_FSM>(state); //cast to proper enum type
+   m_state = state;
 }
 
 stateVirtual::~stateVirtual()
@@ -42,23 +36,3 @@ stateVirtual::~stateVirtual()
    //clean up
 }
 
-//getter for next state from fsm
-DF_FSM stateVirtual::getNextState()
-{
-   return m_nextState;
-}
-
-//getter for current state from fsm
-DF_FSM stateVirtual::getCurrentState()
-{
-   return m_state;
-}
-
-//setter for state change
-// void stateVirtual::setNextState(DF_FSM *nextState)
-// {
-//    m_nextState = *nextState;
-
-//    debugOutput debugInfo;
-//    debugInfo.sendMessage("state changed -> new state [" + to_string((int)m_nextState) + "]", INFO);
-// }

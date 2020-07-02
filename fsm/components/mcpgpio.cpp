@@ -13,50 +13,40 @@
 #include "mcpgpio.h"
 #include <iostream>
 
+#define DEFAULT_BUS 1
 
-mcpGPIO::mcpGPIO(int i2caddress, int pin)
+mcpGPIO::mcpGPIO(int address)
 {
+	debugOutput::sendMessage("mcpGPIO", INFO);
 
-	m_nPin = pin;
-	m_nAddress = convert_to_int(i2caddress);
-
+	this->m_nAddress = address;
 	this->m_mcp = new MCP23017(DEFAULT_BUS, m_nAddress);
-
-	//may need to modify the source file to ensure proper error is identified
-	this->m_mcp->openI2C(); 
 }
 
 mcpGPIO::~mcpGPIO()
 {
 	debugOutput::sendMessage("~mcpGPIO", INFO);
-
-	this->m_mcp->closeI2C();
 	delete (this->m_mcp);
 }
 
-
 DF_ERROR mcpGPIO::setDirection(bool input)
 {
-	debugOutput debugInfo;
-	debugInfo.sendMessage("setDirection", INFO);
-
+	debugOutput::sendMessage("setDirection", INFO);
 	DF_ERROR df_ret = OK;
 
 	m_input = input;
-	this->m_mcp->pinMode(m_nPin, OUTPUT);
+	this->m_mcp->pinMode(m_nAddress, OUTPUT);
 
 	if (m_input) {
-		this->m_mcp->pinMode(m_nPin, INPUT);
+		this->m_mcp->pinMode(m_nAddress, INPUT);
 	}	
 
 	return df_ret;
 }
 
-DF_ERROR mcpGPIO::readPin(bool * level) //may not be use or needed 
+DF_ERROR mcpGPIO::readPin(bool * level)
 {
-	debugOutput debugInfo;
-	debugInfo.sendMessage("readPin", INFO);
-	
+	debugOutput::sendMessage("readPin", INFO);
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
 	
@@ -68,49 +58,21 @@ DF_ERROR mcpGPIO::readPin(bool * level) //may not be use or needed
 	return df_ret;
 }
 
-DF_ERROR mcpGPIO::writePin(bool level) //control of the cassettes
+DF_ERROR mcpGPIO::writePin(bool level)
 {
-	debugOutput debugInfo;
-	debugInfo.sendMessage("writePin", INFO);
-
+	debugOutput::sendMessage("writePin", INFO);
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
-	if(m_nPin < 0 && m_nPin > 15)
-	{
-		return df_ret; //pin number out of range
-	}
 
-	if (HIGH == level) {
-		this->m_mcp->digitalWrite(m_nPin, HIGH);   //relies on bool to int
-		df_ret = OK;
-	}
-	else
-	{
-		this->m_mcp->digitalWrite(m_nPin, LOW); 
+	if (!m_input) {
+		this->m_mcp->digitalWrite(m_nAddress, level);   //relies on bool to int
 		df_ret = OK;
 	}
 
 	return df_ret;
-	
 }
 
 void mcpGPIO::monitorGPIO()
 {
 	//!!! look at oddyseyx86GPIO for example
-}
-
-int mcpGPIO::convert_to_int(int addressNum)
-{
-	int hex_int = 0;
-	int remainder = 0;
-
-	for(int i = 10; i > 0; i = i/10)
-	{
-		remainder = addressNum/i;
-		addressNum = addressNum%i;
-
-		hex_int = hex_int + 16*remainder; 
-	}	
-
-	return hex_int;
 }

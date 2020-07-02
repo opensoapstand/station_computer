@@ -34,13 +34,13 @@ oddyseyx86GPIO::oddyseyx86GPIO()
 
 }
 
-oddyseyx86GPIO::oddyseyx86GPIO(int address)
+oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
 {
 	debugOutput::sendMessage("oddyseyx86GPIO", INFO);
 	int fd, len;
 	char buf[MAX_BUF];
 
-	m_nPin = address;
+	m_nPin = pinNumber;
 
 	fd = open(SYSFS_GPIO_DIR "/export", O_WRONLY);
 	if (fd < 0) {

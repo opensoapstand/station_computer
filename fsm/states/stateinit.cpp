@@ -104,14 +104,25 @@ DF_ERROR stateInit::onAction()
 
       while(nullptr != dispenserId[idx])
       {
-         e_ret = setDispenser(l_pDispenser, idx);
+         debugOutput::sendMessage("Sort for dispenser:" + string(dispenserId[idx]), INFO);
+         e_ret = setDispenserSolenoid(l_pDispenser, idx);
          
-         if(OK != e_ret) //if dispenser not set properly, return error
+         if(OK != e_ret) //if solenoid not set properly, return error
          {
-            debugOutput::sendMessage("setDispenser did not return OK", INFO);
+            debugOutput::sendMessage("setDispenserSolenoid did not return OK", INFO);
             return e_ret;
          }
 
+         e_ret  = ERROR_BAD_PARAMS; //reset e_ret
+         e_ret = setDispenserFlowSensor(l_pDispenser, idx);
+
+         if(OK != e_ret) //if flowsensor not set properly, return error
+         {
+            debugOutput::sendMessage("setDispenserFlowsensor did not return OK", INFO);
+            return e_ret;
+         }
+
+         //check for nullptr
          if(nullptr != l_pDispenser->NextSiblingElement(DISPENSER_STRING))
          {
             l_pDispenser = l_pDispenser->NextSiblingElement(DISPENSER_STRING);
@@ -149,6 +160,7 @@ DF_ERROR stateInit::onExit()
    return e_ret;
 }
 
+//extracting the id of the dispenser
 DF_ERROR stateInit::setDispenserId()
 {
    DF_ERROR e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
@@ -172,55 +184,110 @@ DF_ERROR stateInit::setDispenserId()
    return e_ret;
 }
 
-DF_ERROR stateInit::setDispenser(TiXmlElement *dispenserEle, int dispenserIdx)
+DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx)
 {
    DF_ERROR e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
    TiXmlElement *l_pSolenoid;
 
    if(dispenserEle->FirstChildElement(SOLENOID_STRING))
    {
-      l_pSolenoid = dispenserEle->FirstChildElement(SOLENOID_STRING);
+      //get the node of solenoid
+      l_pSolenoid = dispenserEle->FirstChildElement(SOLENOID_STRING); 
    } 
    else
    {
-      debugOutput::sendMessage("dispenseElement was null", INFO);
+      debugOutput::sendMessage("Solenoid element is null", INFO);
       e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
       return e_ret;
    }
    
-   std::string sDispenser = dispenserId[dispenserIdx];
-   debugOutput::sendMessage("Sort for dispenser:" + sDispenser, INFO);
-
-   int l_type = 0;
+   int l_pos = 0;
    TiXmlElement *l_pSingleSolenoid = l_pSolenoid;
 
-   while(nullptr != l_pSingleSolenoid) //should loop through 3 times
+   while(nullptr != l_pSingleSolenoid && l_pos < NUM_SOLENOID) //should loop through 3 times
    {
-      const char* typeCheck = getSolenoidXML(TYPE_STRING, l_pSingleSolenoid);
-      std::string sType = typeCheck;
+      string typeCheck = getXML(TYPE_STRING, l_pSingleSolenoid);
 
       if("" != typeCheck) //set dispenser parameters accrodingly [mcp|x86|ard]
       {
-         if(MCP_STRING== sType)
+         if(MCP_STRING == typeCheck) //ensures solenoid is control with mcp pins
          {
-            //cassettes[dispenserIdx]->;
-         }
-         else if(X86_STRING == sType)
-         {
+            int address_num = atoi(getXML(I2CADDRESS_STRING, l_pSingleSolenoid));
+            int pin_num = atoi(getXML(IO_STRING, l_pSingleSolenoid));
+            cassettes[dispenserIdx]->setSolenoid(address_num, pin_num, l_pos);
 
+            debugOutput::sendMessage("Solenoid:   " + to_string(l_pos) + " |type " + typeCheck 
+                                     + " |address " + to_string(address_num) + " |pin " + to_string(pin_num), INFO);
          }
-         else if(ARD_STRING == sType)
+         else
          {
-
+            //wrong xml content found
+            e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+            return e_ret;
          }
-         debugOutput::sendMessage("dispenser: " + sDispenser + " |type " + sType, INFO);
-         l_pSingleSolenoid = l_pSingleSolenoid -> NextSiblingElement();
+
+         l_pSingleSolenoid = l_pSingleSolenoid -> NextSiblingElement(SOLENOID_STRING);
       }
       else
       {
-            debugOutput::sendMessage("done sorting dispense:" + sDispenser, INFO);
+            debugOutput::sendMessage("done sorting dispense:" + string(dispenserId[dispenserIdx]), INFO);
             //finish with current dispenser
       }
+      l_pos++;
+   }
+
+   e_ret = OK;
+   return e_ret;
+}
+
+DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx)
+{
+   DF_ERROR e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+   TiXmlElement *l_pFlowsensor;
+
+   if(dispenserEle->FirstChildElement(FLOWSENSOR_STRING))
+   {
+      //get the node of flowsnesor
+      l_pFlowsensor = dispenserEle->FirstChildElement(FLOWSENSOR_STRING); 
+   } 
+   else
+   {
+      debugOutput::sendMessage("Flowsensor element is null", INFO);
+      e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+      return e_ret;
+   }
+   
+   int l_pos = 0;
+   TiXmlElement *l_pSingleFlowsensor = l_pFlowsensor;
+
+   while(nullptr != l_pSingleFlowsensor && l_pos < NUM_FLOWSENSOR) //should loop through once times
+   {
+      string typeCheck = getXML(TYPE_STRING, l_pSingleFlowsensor);
+
+      if("" != typeCheck) //set dispenser parameters accrodingly [mcp|x86|ard]
+      {
+         if(X86_STRING == typeCheck) //ensures flowsensor is control with x86 pin
+         {
+            int pin_num = atoi(getXML(IO_STRING, l_pSingleFlowsensor));
+            debugOutput::sendMessage("Flowsensor: " + to_string(l_pos) + " |type " + typeCheck 
+                                     + "             |pin " + to_string(pin_num), INFO);
+            
+            cassettes[dispenserIdx]->setFlowsensor(pin_num, l_pos);
+         }
+         else
+         {
+            //wrong xml content found
+            e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+            return e_ret;
+         }
+
+         l_pSingleFlowsensor = l_pSingleFlowsensor -> NextSiblingElement();
+      }
+      else
+      {
+            debugOutput::sendMessage("done sorting dispense:" + string(dispenserId[dispenserIdx]), INFO);
+      }
+      l_pos++;
    }
 
    e_ret = OK;
@@ -228,9 +295,9 @@ DF_ERROR stateInit::setDispenser(TiXmlElement *dispenserEle, int dispenserIdx)
 }
 
 //return the proper string regarding to solenoid from tinyXML
-const char* stateInit::getSolenoidXML(const char* subHeader, TiXmlElement *solenoidEle)
+const char* stateInit::getXML(const char* subHeader, TiXmlElement *childEle)
 {
-   TiXmlElement *type = solenoidEle->FirstChildElement(subHeader);
+   TiXmlElement *type = childEle->FirstChildElement(subHeader);
 
    const char* char_ret;
 

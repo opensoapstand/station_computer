@@ -32,6 +32,7 @@ class stateInit : public stateVirtual
         DF_ERROR onAction();
         DF_ERROR onExit();
 
+
     private:    
         TiXmlDocument *m_pXMLSettings;
         TiXmlElement *m_pRoot, *m_pHardware, *m_pDispenser;
@@ -39,11 +40,10 @@ class stateInit : public stateVirtual
         const char* dispenserId[CASSETTES_MAX];
 
         DF_ERROR setDispenserId();
-        DF_ERROR setDispenser(TiXmlElement *dispenserEle, int index);
+        DF_ERROR setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx);
+        DF_ERROR setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx);
+        const char* getXML(const char* subHeader, TiXmlElement *childEle);
 
-        const char* getSolenoidXML(const char* subHeader, TiXmlElement *solenoidEle);
-        const char* getFlowsensorXML(const char* subHeader, TiXmlElement *flowsensorEle);
-        const char* getPumpXML(const char* subHeader, TiXmlElement *pumpEle);
 };
 
 //first layer
@@ -59,6 +59,7 @@ class stateInit : public stateVirtual
 //forth layer
 #define SOLENOID_STRING "solenoid"
 #define TYPE_STRING "type"
+#define I2CADDRESS_STRING "i2caddress"
 #define IO_STRING "io"
 #define FLOWSENSOR_STRING "flowsensor"
 #define X86_STRING "x86"

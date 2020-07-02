@@ -31,7 +31,6 @@ public:
     bool openI2C() ;
     void closeI2C();
 
-
     void pinMode(uint8_t p, uint8_t d);
     void digitalWrite(uint8_t p, uint8_t d);
     void pullUp(uint8_t p, uint8_t d);

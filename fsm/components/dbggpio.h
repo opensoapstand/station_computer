@@ -13,6 +13,7 @@
 #define _DBGGPIO__H__
 
 #include "gpio.h"
+#include "../objects/debugoutput.h"
 
 class dbggpio : public gpio{
 public:

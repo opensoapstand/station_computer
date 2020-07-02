@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+<DRINKFILL>
+    <machine>
+        <type>df001</type><id>808</id>
+    </machine>
+    <hardware>
+        <dispenser id="a">
+            <solenoid index="0">
+                <type>x86</type>
+                <io>12</io>
+            </solenoid>
+            <solenoid index="1">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>12</io>
+            </solenoid>
+            <solenoid index="2">
+                <type>ard</type>
+                <uart>1</uart>
+                <io>12</io>
+            </solenoid>
+            <flowsensor>
+                <type>x86</type>
+                <io>22</io>
+            </flowsensor>
+        </dispenser>
+        <dispenser id="b">
+            <solenoid index="0">
+                <type>x86</type>
+                <io>13</io>
+            </solenoid>
+            <solenoid index="1">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>13</io>
+            </solenoid>
+            <solenoid index="2">
+                <type>ard</type>
+                <uart>1</uart>
+                <io>13</io>
+            </solenoid>
+            <flowsensor>
+                <type>x86</type>
+                <io>23</io>
+            </flowsensor>
+            <pump>
+                <type>x86</type>
+                <io>24</io>
+            </pump>
+        </dispenser>
+    </hardware>
+    <networking>
+        
+    </networking>
+
+</DRINKFILL>

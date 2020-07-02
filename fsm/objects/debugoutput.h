@@ -24,19 +24,21 @@ typedef enum MESSAGE_LEVEL {
 	MESSAGE_MAX
 } MESSAGE_LEVEL;
 
-
 class debugOutput
 {
 public:
 	debugOutput();
 	~debugOutput();
 
-	static bool setMessageLevel(MESSAGE_LEVEL dbgLvl) { m_dbgLvl = dbgLvl; };
-	static void sendMessage(string msg, MESSAGE_LEVEL lvl);
+	//setter
+	bool setMessageLevel(MESSAGE_LEVEL dbgLvl);
+	
+	
+	void sendMessage(string msg, MESSAGE_LEVEL lvl);
 
 
 protected:
-	static MESSAGE_LEVEL m_dbgLvl;
+	MESSAGE_LEVEL m_dbgLvl;
 	string m_lvlArray[MESSAGE_MAX] = { "INFO", "WARNING", "ERROR" };
 };
 

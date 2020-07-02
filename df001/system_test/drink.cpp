@@ -33,7 +33,7 @@ drink::drink(bool type, int drink, int water, int air, int flow, int fowardP, in
 
     pump = type;
 
-    if(pump == STILL){
+    if(pump == COMPRESS){
         pumpFwdPin = 99;
         pumpRevPin = 99;
     }
@@ -77,4 +77,25 @@ int drink::getAirPin_pin()
 int drink::getFlowSensor_pin()
 {
     return flowPin;
+}
+
+int drink::getpumpFwdPinAddress(){
+    return pumpFwdPin/100;
+}
+
+int drink::getpumpFwdPin_pin(){
+    return pumpFwdPin-getpumpFwdPinAddress()*100;
+}
+
+int drink::getpumpRevPinAddress(){
+    return pumpRevPin/100;
+}
+
+int drink::getpumpRevPin_pin(){
+    return pumpRevPin-getpumpRevPinAddress()*100;
+}
+
+int drink::getPumpBool()
+{
+    return pump;
 }

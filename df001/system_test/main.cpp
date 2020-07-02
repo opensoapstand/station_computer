@@ -20,9 +20,10 @@
 using namespace std;
 
 #define Num_Cassettes 9
-#define H2O_activation_time 5
-#define DRINK_activation_time 5
-#define AIR_activation_time 5 
+#define H2O_activation_time 20
+#define DRINK_activation_time 20
+#define PUMP_activation_time 10
+#define AIR_activation_time 20 
 
 bool type = false;
 
@@ -31,6 +32,9 @@ bool inputType(drink *drinkArray, char *inputArray);
 
 i2cGpios gpioControl = i2cGpios();
 dispense flowsensor;
+
+int buttonAddr = button/100;
+int buttonPin = button-buttonAddr*100;
 
 int main()
 {
@@ -137,7 +141,7 @@ bool inputNumber(drink *drinkArray[Num_Cassettes], char *inputArray)
     {
         do
         {
-            cout << "Cassette 6 selected, activate solenoid with input (d, w, a, stop)" << endl;
+            cout << "Cassette 6 selected, activate solenoid with input (d, w, a, p, stop)" << endl;
 
             cin >> inputChar;
         } while (inputType(drinkArray[6 - 1], inputChar));
@@ -150,7 +154,7 @@ bool inputNumber(drink *drinkArray[Num_Cassettes], char *inputArray)
     {
         do
         {
-            cout << "Cassette 7 selected, activate solenoid with input (d, w, a, stop)" << endl;
+            cout << "Cassette 7 selected, activate solenoid with input (d, w, a, p, stop)" << endl;
 
             cin >> inputChar;
         } while (inputType(drinkArray[7 - 1], inputChar));
@@ -163,7 +167,7 @@ bool inputNumber(drink *drinkArray[Num_Cassettes], char *inputArray)
     {
         do
         {
-            cout << "Cassette 8 selected, activate solenoid with input (d, w, a, stop)" << endl;
+            cout << "Cassette 8 selected, activate solenoid with input (d, w, a, p, stop)" << endl;
 
             cin >> inputChar;
         } while (inputType(drinkArray[8 - 1], inputChar));
@@ -176,7 +180,7 @@ bool inputNumber(drink *drinkArray[Num_Cassettes], char *inputArray)
     {
         do
         {
-            cout << "Cassette 9 selected, activate solenoid with input (d, w, a, stop)" << endl;
+            cout << "Cassette 9 selected, activate solenoid with input (d, w, a, p, stop)" << endl;
 
             cin >> inputChar;
         } while (inputType(drinkArray[9 - 1], inputChar));
@@ -194,13 +198,18 @@ bool inputNumber(drink *drinkArray[Num_Cassettes], char *inputArray)
 
 bool inputType(drink *drinkArray, char *inputArray)
 {
+    gpioControl.setPinMode_out(buttonAddr, buttonPin);
+    gpioControl.setPin_on(buttonAddr, buttonPin);
+
+        // cout << "Address: " << buttonAddr;
+        // cout << " Pin:" << buttonPin << endl;
 
     if (strcmp("stop", inputArray) == 0)
     {
         gpioControl.setPin_off(drinkArray->getDrinkPinAddress(), drinkArray->getDrinkPin_pin());
         gpioControl.setPin_off(drinkArray->getWaterPinAddress(), drinkArray->getWaterPin_pin());
         gpioControl.setPin_off(drinkArray->getAirPinAddress(), drinkArray->getAirPin_pin());
-
+        gpioControl.setPin_off(buttonAddr, buttonPin);
         return false;
     }
     else if (strcmp("d", inputArray) == 0)
@@ -208,9 +217,11 @@ bool inputType(drink *drinkArray, char *inputArray)
         cout << "Address: " << drinkArray->getDrinkPinAddress();
         cout << " Pin:" << drinkArray->getDrinkPin_pin() << endl;
 
-        flowsensor.read_FlowSensor(drinkArray->getFlowSensor_pin(), 1);
+        //flowsensor.read_FlowSensor(drinkArray->getFlowSensor_pin(), 1);
+        flowsensor.read_FlowSensor(417, 1);
 
-        gpioControl.setPinMode_out(drinkArray->getDrinkPinAddress(), drinkArray->getDrinkPin_pin());
+
+        //gpioControl.setPinMode_out(drinkArray->getDrinkPinAddress(), drinkArray->getDrinkPin_pin());
         gpioControl.setPin_on(drinkArray->getDrinkPinAddress(), drinkArray->getDrinkPin_pin());
         sleep(DRINK_activation_time);
         gpioControl.setPin_off(drinkArray->getDrinkPinAddress(), drinkArray->getDrinkPin_pin());
@@ -222,7 +233,7 @@ bool inputType(drink *drinkArray, char *inputArray)
         cout << "Address: " << drinkArray->getAirPinAddress();
         cout << " Pin:" << drinkArray->getAirPin_pin() << endl;
 
-        gpioControl.setPinMode_out(drinkArray->getAirPinAddress(), drinkArray->getAirPin_pin());
+        //gpioControl.setPinMode_out(drinkArray->getAirPinAddress(), drinkArray->getAirPin_pin());
         gpioControl.setPin_on(drinkArray->getAirPinAddress(), drinkArray->getAirPin_pin());
         sleep(AIR_activation_time);
         gpioControl.setPin_off(drinkArray->getAirPinAddress(), drinkArray->getAirPin_pin());
@@ -234,10 +245,41 @@ bool inputType(drink *drinkArray, char *inputArray)
         cout << "Address: " << drinkArray->getWaterPinAddress();
         cout << " Pin:" << drinkArray->getWaterPin_pin() << endl;
 
-        gpioControl.setPinMode_out(drinkArray->getWaterPinAddress(), drinkArray->getWaterPin_pin());
+        //gpioControl.setPinMode_out(drinkArray->getWaterPinAddress(), drinkArray->getWaterPin_pin());
         gpioControl.setPin_on(drinkArray->getWaterPinAddress(), drinkArray->getWaterPin_pin());
         sleep(H2O_activation_time);
         gpioControl.setPin_off(drinkArray->getWaterPinAddress(), drinkArray->getWaterPin_pin());
+
+        return true;
+    }
+    else if (strcmp("p", inputArray) == 0)
+    {
+        if(STILL == drinkArray->getPumpBool()){
+            cout << "Forward Address: " << drinkArray->getpumpFwdPinAddress();
+            cout << " Forward Pin:" << drinkArray->getpumpFwdPin_pin() << endl;
+
+            cout << "Reverse Address: " << drinkArray->getpumpRevPinAddress();
+            cout << " Reverse Pin:" << drinkArray->getpumpRevPin_pin() << endl;
+
+            //gpioControl.setPinMode_out(drinkArray->getpumpFwdPinAddress(), drinkArray->getpumpFwdPin_pin());
+            //gpioControl.setPinMode_out(drinkArray->getpumpRevPinAddress(), drinkArray->getpumpRevPin_pin());
+
+            gpioControl.setPump_Forward(drinkArray->getpumpFwdPinAddress(), drinkArray->getpumpFwdPin_pin(),
+                                        drinkArray->getpumpRevPinAddress(), drinkArray->getpumpRevPin_pin());
+
+            sleep(PUMP_activation_time);
+
+            gpioControl.setPump_Reverse(drinkArray->getpumpFwdPinAddress(), drinkArray->getpumpFwdPin_pin(),
+                                        drinkArray->getpumpRevPinAddress(), drinkArray->getpumpRevPin_pin());
+            sleep(PUMP_activation_time);
+
+            gpioControl.setPump_Off(drinkArray->getpumpFwdPinAddress(), drinkArray->getpumpFwdPin_pin(),
+                                    drinkArray->getpumpRevPinAddress(), drinkArray->getpumpRevPin_pin());
+        }
+        else{
+            cout << "This is a compress drink no pump connected"<< endl;
+        }
+
 
         return true;
     }

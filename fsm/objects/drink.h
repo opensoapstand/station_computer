@@ -23,23 +23,28 @@ using namespace std;
 class drink
 {
    public:
-		drink();
-	  	drink(int slot);
-      ~drink();
+	drink();
+	drink(int slot);
+    ~drink();
 
-	  void setSlot(int slot);
-	  int getVolumeRemaining();
-	  void recordSale(int volume);
-	  void refill(int volume);
+	//setter
+	void setSlot(int slot);
+	void setDrinkName(string drinkName);
+
+
+	//getter
+	int getVolumeRemaining();
+	void recordSale(int volume);
+	void refill(int volume);
 
    private:
-	   int m_nSlot;
-	   string m_name;
-	   string m_ingredients;
-	   int m_nVolume;
+	int m_nSlot;
+	string m_name;
+	string m_ingredients;
+	int m_nVolume;
 	   
-	   //last filled as date
-	   //best before as date
+	//last filled as date
+	//best before as date
 
 };
 

@@ -11,9 +11,10 @@
 //***************************************
 
 #include "statevirtual.h"
+#include <iostream>
 
 stateVirtual::stateVirtual(){
-   
+   m_state = DF_FSM::START;
 }
 
 stateVirtual::stateVirtual(messageMediator * message)
@@ -24,6 +25,11 @@ stateVirtual::stateVirtual(messageMediator * message)
    }
 
    m_pMessaging = message;
+}
+
+stateVirtual::stateVirtual(int state)
+{
+   //m_state = static_cast<DF_FSM>(state); //cast to proper enum type
 }
 
 stateVirtual::~stateVirtual()

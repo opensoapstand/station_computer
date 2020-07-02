@@ -21,14 +21,28 @@ public:
 	mcpGPIO(int address);
 	~mcpGPIO();
 
+	//setter
+	DF_ERROR setMCPPin(int pinNumber);
+
+	//solenoid control, pin number should be inherited from gpio class
 	DF_ERROR setDirection(bool input);
 	DF_ERROR readPin(bool* level);
 	DF_ERROR writePin(bool level);
+
+	//pump contorl
+
+
+    //address is to verify is the correct address
+    //since pump should only work on address X22
+    DF_ERROR setPump_Forward(int pinNumFWD, int pinNumREV);
+    DF_ERROR setPump_Reverse(int pinNumFWD, int pinNumREV);
+    DF_ERROR setPump_Off(int pinNumFWD, int pinNumREV);
 
 protected:
 	void monitorGPIO();
 	int	m_i2cAddress;
 	MCP23017 * m_mcp;
+	int m_nAddress; //address of the mcp chip
 };
 
 #endif

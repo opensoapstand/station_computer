@@ -12,6 +12,7 @@
 
 #include "stateinit.h"
 #include <iostream>
+#include <string>
 
 stateInit::stateInit()
 {
@@ -19,6 +20,7 @@ stateInit::stateInit()
    for(int i = 0; i < CASSETTES_MAX; i++)
    {
       dispenserId[i] = nullptr;
+      debugOutput::sendMessage("Object "+ to_string(i) + " has been created", INFO);
    }
 }
 
@@ -194,7 +196,7 @@ DF_ERROR stateInit::setDispenser(TiXmlElement *dispenserEle, int dispenserIdx)
 
    while(nullptr != l_pSingleSolenoid) //should loop through 3 times
    {
-      const char* typeCheck = getXML(TYPE_STRING, l_pSingleSolenoid);
+      const char* typeCheck = getSolenoidXML(TYPE_STRING, l_pSingleSolenoid);
       std::string sType = typeCheck;
 
       if("" != typeCheck) //set dispenser parameters accrodingly [mcp|x86|ard]
@@ -225,7 +227,8 @@ DF_ERROR stateInit::setDispenser(TiXmlElement *dispenserEle, int dispenserIdx)
    return e_ret;
 }
 
-const char* stateInit::getXML(const char* subHeader, TiXmlElement *solenoidEle)
+//return the proper string regarding to solenoid from tinyXML
+const char* stateInit::getSolenoidXML(const char* subHeader, TiXmlElement *solenoidEle)
 {
    TiXmlElement *type = solenoidEle->FirstChildElement(subHeader);
 

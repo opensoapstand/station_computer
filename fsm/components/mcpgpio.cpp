@@ -13,14 +13,13 @@
 #include "mcpgpio.h"
 #include <iostream>
 
-#define DEFAULT_BUS 2 //i2cdetect tool to find the corresponding value
-					  //Odyessey is 2 and Udoo is 0
 
 mcpGPIO::mcpGPIO(int i2caddress, int pin)
 {
 
 	m_nPin = pin;
-	m_nAddress = i2caddress;
+	m_nAddress = convert_to_int(i2caddress);
+
 	this->m_mcp = new MCP23017(DEFAULT_BUS, m_nAddress);
 
 	//may need to modify the source file to ensure proper error is identified
@@ -98,4 +97,20 @@ DF_ERROR mcpGPIO::writePin(bool level) //control of the cassettes
 void mcpGPIO::monitorGPIO()
 {
 	//!!! look at oddyseyx86GPIO for example
+}
+
+int mcpGPIO::convert_to_int(int addressNum)
+{
+	int hex_int = 0;
+	int remainder = 0;
+
+	for(int i = 10; i > 0; i = i/10)
+	{
+		remainder = addressNum/i;
+		addressNum = addressNum%i;
+
+		hex_int = hex_int + 16*remainder; 
+	}	
+
+	return hex_int;
 }

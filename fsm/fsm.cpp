@@ -15,6 +15,7 @@
 #include "states/statevirtual.h"
 
 #include "states/stateinit.h"
+#include "states/stateidle.h"
 #include "states/statedispense.h"
 #include "states/statedispenseidle.h"
 
@@ -44,33 +45,32 @@ int main()
 
 DF_ERROR stateLoop()
 {
-    debugOutput debugInfo;
     DF_ERROR dfRet = OK;
-    DF_FSM fsmState = START; //first loop the state is already prepare to change
-    DF_FSM fsmNewState = DISPENSE_IDLE; //!!!change once other state is implemented
+    DF_FSM fsmState = START; 
+    DF_FSM fsmNewState = INIT; 
 
     while (OK == dfRet) //while no error has occur
     {
-        debugInfo.sendMessage("Current state [" + to_string(fsmState) + "]", INFO);
-
         if (fsmState != fsmNewState) //state change
         {
-            //debugInfo.sendMessage("State change", INFO);
             dfRet = g_stateArray[fsmNewState]->onEntry();
-            
-            fsmState = fsmNewState;
+            debugOutput::sendMessage("onEntry() [" + to_string(fsmNewState) + "]", INFO);
+            fsmState = g_stateArray[fsmNewState]->getCurrentState();
         }
 
-        if (OK == dfRet) //
+        if (OK == dfRet) 
         {
-            //debugInfo.sendMessage("New state set [" + to_string(fsmState) + "]", INFO);
+            dfRet = g_stateArray[fsmState]->onAction();
+            debugOutput::sendMessage("onAction() [" + to_string(fsmState) + "]", INFO);
 
-            dfRet = g_stateArray[fsmState]->onAction(&fsmNewState);
             fsmNewState = g_stateArray[fsmState]->getNextState();
 
             if ((OK == dfRet) && (fsmNewState != fsmState))
             {
                 dfRet = g_stateArray[fsmState]->onExit();
+                debugOutput::sendMessage("onExit() [" + to_string(fsmState) + "]", INFO);
+
+                fsmNewState = g_stateArray[fsmState]->getNextState(); //update tge state
             }
         }
 
@@ -83,7 +83,7 @@ DF_ERROR initObjects()
 {
     DF_ERROR dfRet = OK;
 
-    char inputChar[1] = {'s'};
+    char inputChar[] = {'s'};
     //g_pMessaging = new messageMediator();
     //do{
     //    cout << "Enter \"s\" to start: ";
@@ -123,9 +123,10 @@ DF_ERROR createStateArray(char* inputChar)
         }*/
 
         //creating an object for each state
-        g_stateArray[DF_FSM::INIT] = new stateInit();
-        g_stateArray[DF_FSM::DISPENSE_IDLE] = new stateDispenseIdle();
-        g_stateArray[DF_FSM::DISPENSE] = new stateDispense();
+        g_stateArray[INIT] = new stateInit(); //1
+        g_stateArray[IDLE] = new stateIdle(); //2
+        g_stateArray[DISPENSE_IDLE] = new stateDispenseIdle();
+        g_stateArray[DISPENSE] = new stateDispense(); //6
 
         g_dispenseArray[0] = new dispenser();
         return dfRet;

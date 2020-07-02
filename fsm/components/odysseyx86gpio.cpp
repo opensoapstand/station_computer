@@ -34,13 +34,13 @@ oddyseyx86GPIO::oddyseyx86GPIO()
 
 }
 
-oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
+oddyseyx86GPIO::oddyseyx86GPIO(int address)
 {
 	debugOutput::sendMessage("oddyseyx86GPIO", INFO);
 	int fd, len;
 	char buf[MAX_BUF];
 
-	m_nPin = pinNumber;
+	m_nPin = address;
 
 	fd = open(SYSFS_GPIO_DIR "/export", O_WRONLY);
 	if (fd < 0) {
@@ -72,17 +72,6 @@ oddyseyx86GPIO::~oddyseyx86GPIO()
 	write(fd, buf, len);
 	close(fd);
 	return;
-}
-
-DF_ERROR oddyseyx86GPIO::setFlowPin(int pinNumber)
-{
-	DF_ERROR df_Ret = ERROR_BAD_PARAMS;
-
-	//may need a set of array for avilable x86 pins to verify
-	m_nPin = pinNumber;
-	df_Ret = OK;
-
-	return df_Ret;
 }
 
 DF_ERROR oddyseyx86GPIO::setDirection(bool input)

@@ -22,7 +22,7 @@ stateInit::stateInit(messageMediator * message)
    
 }
 
-stateInit::stateInit(char *inputArray){
+stateInit::stateInit(int inputDigit){
    //init the cassette 
 }
 

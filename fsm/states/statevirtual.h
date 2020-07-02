@@ -16,12 +16,6 @@
 #include "../dftypes.h"
 #include "../objects/messagemediator.h"
 
-#include "../objects/debugoutput.h"
-#include "../objects/dispenser.h"
-
-#define CASSETTES_MAX 9
-
-
 class stateVirtual
 {
     public:
@@ -30,19 +24,13 @@ class stateVirtual
         stateVirtual(int state);
         ~stateVirtual();
 
-        DF_FSM getNextState();
-        DF_FSM getCurrentState();
-
-        //void setNextState(DF_FSM *nextState);
-
         virtual DF_ERROR onEntry(){};
-        virtual DF_ERROR onAction(){};
+        virtual DF_ERROR onAction(DF_FSM * nextState){};
         virtual DF_ERROR onExit(){};
+
 
     protected:
         DF_FSM  m_state;
-        DF_FSM  m_nextState;
-        dispenser* cassettes[CASSETTES_MAX];
         messageMediator * m_pMessaging;
 };
 

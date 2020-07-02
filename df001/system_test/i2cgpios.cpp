@@ -14,24 +14,24 @@
 #include <iostream>
 
 i2cGpios::i2cGpios(){
-    solenoid_1 = MCP23017(I2C_FILE_ADDRESS,0x20);
+    solenoid_1 = MCP23017(I2C_FILE_ADDRESS,32);
     solenoid_2 = MCP23017(I2C_FILE_ADDRESS,0x21);
-    pump = MCP23017(I2C_FILE_ADDRESS, 0x22);
+    //pump = MCP23017(I2C_FILE_ADDRESS, 0x22);
 
     solenoid_1.openI2C();
     solenoid_2.openI2C();
-    pump.openI2C();
+    //pump.openI2C();
 
     for(int i = 0; i <=15; i++){
         solenoid_1.pinMode(i, OUTPUT);
         solenoid_2.pinMode(i, OUTPUT);
-        pump.pinMode(i, OUTPUT);
+        //pump.pinMode(i, OUTPUT);
     }
 
     for(int i = 0; i <=15; i++){
         solenoid_1.digitalWrite(i, LOW);
         solenoid_2.digitalWrite(i, LOW);
-        pump.digitalWrite(i, LOW);
+        //pump.digitalWrite(i, LOW);
     }
 }
 

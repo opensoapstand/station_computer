@@ -22,8 +22,6 @@ dispenser::dispenser(){
       
     for (int i = 0; i < NUM_PUMP; i++)
         m_pPump[i] = nullptr;
-
-    debugOutput::sendMessage("Object has been created", INFO);
 }
 
 dispenser::~dispenser(){
@@ -45,7 +43,7 @@ DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
     
 	if((X20 <= mcpAddress &&  X22 >=mcpAddress) && (MCP_PIN_START <= pin && MPC_PIN_END >= pin))
 	{
-        //m_pSolenoid[pos] = new mcpGPIO(mcpAddress, pin);
+        m_pSolenoid[pos] = new mcpGPIO(mcpAddress, pin);
 		e_ret = OK;
 	}
 	else if(X20 >= mcpAddress || X22 <= mcpAddress)
@@ -60,16 +58,20 @@ DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
     return e_ret;
 }
 
-DF_ERROR dispenser::setFlowsensor(int pin)
+DF_ERROR dispenser::setFlowsensor(int pin, int pos)
 {
-    DF_ERROR df_ret = ERROR_BAD_PARAMS;
+    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
-    if(OK != df_ret)
+    if(pos == 0)
     {
-        return df_ret = ERROR_FS_FAULT;
-    };
+        m_pFlowsenor[pos] = new oddyseyx86GPIO(pin);
+    }
+    else
+    {
+        return e_ret = ERROR_FS_FAULT;
+    }
 
-    return df_ret;
+    return e_ret;
 }
 
 DF_ERROR dispenser::setPump(int mcpAddress, int forwardPin, int direction)
@@ -78,7 +80,7 @@ DF_ERROR dispenser::setPump(int mcpAddress, int forwardPin, int direction)
     
 	if((X20 <= mcpAddress &&  X22 >=mcpAddress) && (MCP_PIN_START <= forwardPin && MPC_PIN_END >= forwardPin))
 	{
-        //m_pPump[direction] = new mcpGPIO(mcpAddress, forwardPin);
+        m_pPump[direction] = new mcpGPIO(mcpAddress, forwardPin);
 		e_ret = OK;
 	}
 	else if(X20 >= mcpAddress || X22 <= mcpAddress)

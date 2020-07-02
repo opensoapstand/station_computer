@@ -50,7 +50,7 @@ class dispenser
       //private variable setters
       DF_ERROR setSolenoid(int mcpAddress, int pin, int pos);
       DF_ERROR setPump(int mcpAddress, int forwardPin, int direction);
-      DF_ERROR setFlowsensor(int pin);
+      DF_ERROR setFlowsensor(int pinint, int pos);
 
       DF_ERROR startDispense();
       DF_ERROR stopDispense(); //reached dispense value

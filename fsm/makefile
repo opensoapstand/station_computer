@@ -1,7 +1,7 @@
 TARGET_EXEC ?= fsm
 
 BUILD_DIR ?= ./build
-SRC_DIRS ?= ./ ./components ./tinyxml ./objects ./states
+SRC_DIRS ?= . ./states ./components ./tinyxml ./objects 
 
 SRCS := $(shell find $(SRC_DIRS) -name *.cpp -or -name *.c -or -name *.s)
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
@@ -12,7 +12,6 @@ INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
 CC = g++
 CXX = g++
-CXXFLAGS = -lstdc++
 CPPFLAGS ?= $(INC_FLAGS) -MMD -MP
 
 $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
@@ -34,7 +33,13 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
 
-.PHONY: clean
+.PHONY: clean controller
+
+controller:
+	g++ -o controller fsm.cpp states/*.cpp objects/*.cpp tinyxml/*.cpp components/*.cpp
+
+#controller_clean:
+#	rm controller
 
 clean:
 	$(RM) -r $(BUILD_DIR)

@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+<DRINKFILL>
+    <machine>
+        <type>df001</type>
+        <id>808</id>
+    </machine>
+    <hardware>
+        <dispenser id="a">
+            <solenoid index="0">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>01</io>
+            </solenoid>
+            <solenoid index="1">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>02</io>
+            </solenoid>
+            <solenoid index="2">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>03</io>
+            </solenoid>
+            <flowsensor>
+                <type>x86</type>
+                <io>23</io>
+            </flowsensor>
+        </dispenser>
+        <dispenser id="b">
+            <solenoid index="0">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>04</io>
+            </solenoid>
+            <solenoid index="1">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>05</io>
+            </solenoid>
+            <solenoid index="2">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>06</io>
+            </solenoid>
+            <flowsensor>
+                <type>x86</type>
+                <io>23</io>
+            </flowsensor>
+            <pump>
+                <type>x86</type>
+                <io>24</io>
+            </pump>
+        </dispenser>
+        <dispenser id="c">
+            <solenoid index="0">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>07</io>
+            </solenoid>
+            <solenoid index="1">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>9</io>
+            </solenoid>
+            <solenoid index="2">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>10</io>
+            </solenoid>
+            <flowsensor>
+                <type>x86</type>
+                <io>23</io>
+            </flowsensor>
+            <pump>
+                <type>x86</type>
+                <io>24</io>
+            </pump>
+        </dispenser>
+    </hardware>
+    <networking />
+</DRINKFILL>

@@ -41,7 +41,9 @@ class stateInit : public stateVirtual
         DF_ERROR setDispenserId();
         DF_ERROR setDispenser(TiXmlElement *dispenserEle, int index);
 
-        const char* getXML(const char* subHeader, TiXmlElement *solenoidEle);
+        const char* getSolenoidXML(const char* subHeader, TiXmlElement *solenoidEle);
+        const char* getFlowsensorXML(const char* subHeader, TiXmlElement *flowsensorEle);
+        const char* getPumpXML(const char* subHeader, TiXmlElement *pumpEle);
 };
 
 //first layer
@@ -59,7 +61,6 @@ class stateInit : public stateVirtual
 #define TYPE_STRING "type"
 #define IO_STRING "io"
 #define FLOWSENSOR_STRING "flowsensor"
-
 #define X86_STRING "x86"
 #define MCP_STRING "mcp"
 #define ARD_STRING "ard"

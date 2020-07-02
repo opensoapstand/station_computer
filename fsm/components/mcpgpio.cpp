@@ -15,11 +15,17 @@
 
 #define DEFAULT_BUS 1
 
+//receiving a 2 part address i2c and pin xxyy
 mcpGPIO::mcpGPIO(int address)
 {
 	debugOutput::sendMessage("mcpGPIO", INFO);
+	int nTemp = 0;
 
-	this->m_nAddress = address;
+	nTemp = address/100;
+	this->m_i2cAddress = nTemp;
+	nTemp = nTemp * 100;
+	nTemp = address - nTemp;
+	this->m_nAddress = nTemp;
 	this->m_mcp = new MCP23017(DEFAULT_BUS, m_nAddress);
 }
 

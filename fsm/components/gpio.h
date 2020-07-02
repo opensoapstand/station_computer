@@ -24,14 +24,13 @@ class gpio
 public:
 	gpio();
 	gpio(int pin); //non i2c gpio
-	gpio(int address, int pin); //i2c expanded gpio 
 	virtual ~gpio() = 0;
 
 	virtual DF_ERROR setDirection(bool input) = 0;
 	virtual DF_ERROR readPin(bool* level) = 0;
 	virtual DF_ERROR writePin(bool level) = 0;
 
-	DF_ERROR setInterrupt(DF_ERROR(*pf)()); //should be virtual? only use for odysseyx86
+	DF_ERROR setInterrupt(DF_ERROR(*pf)()); 
 
 	std::thread listener();
 	void stopListener() { m_stop = true; };
@@ -39,7 +38,6 @@ public:
 
 protected:
 	int m_nAddress; //address of i2c 
-	int m_nPin;		//actual pin number 
 	bool m_stop;
 	bool m_input;
 	bool m_i2c;

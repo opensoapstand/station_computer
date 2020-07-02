@@ -16,7 +16,7 @@
 
 class dbggpio : public gpio{
 public:
-    dbggpio();
+   dbggpio();
 	dbggpio(int address);
 	~dbggpio();
 

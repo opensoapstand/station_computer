@@ -30,15 +30,6 @@ gpio::gpio(int pin)
 	m_i2c = false; //no i2c chip associate with it 
 }
 
-gpio::gpio(int address, int pin)
-{
-	m_nAddress = address; //i2c expanded gpio
-	m_nPin = pin;
-	m_stop = false;
-	m_input = false;
-	m_i2c = true; //there is i2c chip associated with it 
-}
-
 
 gpio::~gpio()
 {

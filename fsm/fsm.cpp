@@ -24,7 +24,7 @@
 
 messageMediator *g_pMessaging; //debug through local network
 stateVirtual *g_stateArray[FSM_MAX]; //an object for every state
-dispenser *g_dispenseArray[9];   //replace the magic number
+dispenser *g_dispense;   //replace the magic number
 
 DF_ERROR initObjects();
 DF_ERROR createStateArray();
@@ -128,7 +128,7 @@ DF_ERROR createStateArray(char* inputChar)
         g_stateArray[DISPENSE_IDLE] = new stateDispenseIdle();
         g_stateArray[DISPENSE] = new stateDispense(); //6
 
-        //g_dispenseArray[0] = new dispenser();
+        //g_dispense = new dispenser();
         return dfRet;
     }
     else

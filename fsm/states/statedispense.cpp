@@ -11,11 +11,9 @@
 //***************************************
 
 #include "statedispense.h"
-#include <string>
 
-stateDispense::stateDispense()
-{
-
+stateDispense::stateDispense(){
+    m_stateCurrent = DF_FSM::DISPENSE;
 }
 
 stateDispense::stateDispense(messageMediator * message){
@@ -36,19 +34,18 @@ DF_ERROR stateDispense::onEntry()
 {
    DF_ERROR e_ret  = OK;
 
-   m_state = DISPENSE;
-   m_nextState = DISPENSE;
    
    return e_ret;
 }
 
-DF_ERROR stateDispense::onAction()
+DF_ERROR stateDispense::onAction(DF_FSM * nextState)
 {
    DF_ERROR e_ret  = ERROR_BAD_PARAMS;
 
-   if (nullptr != &m_nextState)
+   if (nullptr != nextState)
    {
       // do stuff
+
    }
 
    return e_ret;
@@ -57,9 +54,6 @@ DF_ERROR stateDispense::onAction()
 DF_ERROR stateDispense::onExit()
 {
    DF_ERROR e_ret  = OK;
-
-   m_state = DISPENSE;
-   //m_nextState = INIT; //go back for now
 
    return e_ret;
 }

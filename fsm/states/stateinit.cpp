@@ -14,7 +14,7 @@
 
 stateInit::stateInit()
 {
-   
+   m_stateNext = static_cast<DF_FSM>(DF_FSM::INIT+1);
 }
 
 stateInit::stateInit(messageMediator * message)
@@ -35,6 +35,7 @@ DF_ERROR stateInit::onEntry()
 {
    DF_ERROR e_ret  = OK;
 
+   
    return e_ret;
 }
 
@@ -45,6 +46,7 @@ DF_ERROR stateInit::onAction(DF_FSM * nextState)
    if (nullptr != nextState)
    {
       // do stuff
+
    }
 
    return e_ret;

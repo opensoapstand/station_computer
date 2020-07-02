@@ -13,9 +13,8 @@
 
 #include "statedispenseidle.h"
 
-stateDispenseIdle::stateDispenseIdle()
-{
-
+stateDispenseIdle::stateDispenseIdle(){
+    m_stateCurrent = DF_FSM::DISPENSE;
 }
 
 stateDispenseIdle::stateDispenseIdle(messageMediator * message){
@@ -36,50 +35,26 @@ DF_ERROR stateDispenseIdle::onEntry()
 {
    DF_ERROR e_ret  = OK;
 
-   m_state = DISPENSE_IDLE;
-   m_nextState = DISPENSE_IDLE;
    
    return e_ret;
 }
 
-DF_ERROR stateDispenseIdle::onAction()
+DF_ERROR stateDispenseIdlee::onAction(DF_FSM * nextState)
 {
-   debugOutput debugInfo;
-   DF_ERROR df_ret  = ERROR_BAD_PARAMS;
+   DF_ERROR e_ret  = ERROR_BAD_PARAMS;
 
-   if (nullptr != &m_nextState)
+   if (nullptr != nextState)
    {
       // do stuff
-      //debugInfo.sendMessage("onAction() for state [" + std::to_string((int)m_nextState) + "]", INFO);
-          
-      return df_ret = OK;
+
    }
 
-   return df_ret;
-}
-
-DF_FSM stateDispenseIdle::onAction(dispenser* dispenseObj)
-{
-    DF_FSM df_state_ret  = DISPENSE_IDLE;
-
-    if (nullptr != &m_nextState)
-    {
-        // do stuff
-        //debugOutput::sendMessage("onAction() for state [" + std::to_string((int)m_nextState) + "]", INFO);
-          
-        return df_state_ret = DISPENSE;
-    }
-
-    return df_state_ret;
+   return e_ret;
 }
 
 DF_ERROR stateDispenseIdle::onExit()
 {
-    debugOutput debugInfo;
-    DF_ERROR e_ret  = OK;
-
-    m_state = DISPENSE_IDLE;
-    //m_nextState = DISPENSE;
+   DF_ERROR e_ret  = OK;
 
    return e_ret;
 }

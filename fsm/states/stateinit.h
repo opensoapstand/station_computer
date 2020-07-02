@@ -30,6 +30,8 @@ class stateInit : public stateVirtual
         DF_ERROR onExit();
 
     private:
+        DF_FSM m_stateNext;
+        DF_FSM m_statePrev;  
     
 };
 

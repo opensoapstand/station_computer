@@ -18,7 +18,7 @@
 #define X21 21
 #define X22 22
 
-#define I2C_FILE_ADDRESS 2
+#define I2C_FILE_ADDRESS 1
 
 class i2cGpios{
 

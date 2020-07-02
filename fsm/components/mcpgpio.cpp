@@ -13,19 +13,13 @@
 #include "mcpgpio.h"
 #include <iostream>
 
-#define DEFAULT_BUS 2 //i2cdetect tool to find the corresponding value
-					  //Odyessey is 2 and Udoo is 0
 
-#define X20 20
-#define X21 21
-#define X22 22
-
-mcpGPIO::mcpGPIO(int address)
+mcpGPIO::mcpGPIO(int i2caddress, int pin)
 {
-	debugOutput debugInfo;
-	debugInfo.sendMessage("mcpGPIO", INFO);
 
-	this->m_nAddress = address;
+	m_nPin = pin;
+	m_nAddress = convert_to_int(i2caddress);
+
 	this->m_mcp = new MCP23017(DEFAULT_BUS, m_nAddress);
 
 	//may need to modify the source file to ensure proper error is identified
@@ -34,26 +28,12 @@ mcpGPIO::mcpGPIO(int address)
 
 mcpGPIO::~mcpGPIO()
 {
-	debugOutput debugInfo;
-	debugInfo.sendMessage("~mcpGPIO", INFO);
+	debugOutput::sendMessage("~mcpGPIO", INFO);
 
 	this->m_mcp->closeI2C();
 	delete (this->m_mcp);
 }
 
-DF_ERROR mcpGPIO::setMCPPin(int pinNumber){
-
-	DF_ERROR df_Ret = ERROR_BAD_PARAMS;
-
-	if(pinNumber < 0 || pinNumber > 15) //ensure the pin is within range
-		return df_Ret;
-	else{
-		m_nPin = pinNumber;
-		df_Ret = OK;
-	}
-
-	return df_Ret;
-}
 
 DF_ERROR mcpGPIO::setDirection(bool input)
 {
@@ -109,67 +89,28 @@ DF_ERROR mcpGPIO::writePin(bool level) //control of the cassettes
 		this->m_mcp->digitalWrite(m_nPin, LOW); 
 		df_ret = OK;
 	}
-	
 
 	return df_ret;
-}
-
-
-//the address is just to verify is the correct address
-//since pump should only work on address X22
-DF_ERROR mcpGPIO::setPump_Forward(int pinNumFWD, int pinNumREV)
-{
-	debugOutput debugInfo;
-	debugInfo.sendMessage("Set Pump forward", INFO);
 	
-	DF_ERROR df_ret = ERROR_BAD_PARAMS;
-
-	if(X22 == m_nAddress){
-	}
-	else
-	{
-		df_ret = ERROR_WRONG_I2C_ADDRESS; //wrong address
-	}
-	
-	return df_ret;
-}
-
-DF_ERROR mcpGPIO::setPump_Reverse(int pinNumFWD, int pinNumREV)
-{
-	debugOutput debugInfo;
-	debugInfo.sendMessage("Set Pump reverse", INFO);
-	
-	DF_ERROR df_ret = ERROR_BAD_PARAMS;
-
-	if(X22 == m_nAddress){
-	}
-	else
-	{
-		df_ret = ERROR_WRONG_I2C_ADDRESS; //wrong address
-	}
-
-	return df_ret;
-}
-
-DF_ERROR mcpGPIO::setPump_Off(int pinNumFWD, int pinNumREV)
-{
-	debugOutput debugInfo;
-	debugInfo.sendMessage("Turn off pump", INFO);
-	
-	DF_ERROR df_ret = ERROR_BAD_PARAMS;
-
-	if(X22 == m_nAddress){
-	}
-	else
-	{
-		df_ret = ERROR_WRONG_I2C_ADDRESS; //wrong address
-	}
-
-	return df_ret;
-
 }
 
 void mcpGPIO::monitorGPIO()
 {
 	//!!! look at oddyseyx86GPIO for example
+}
+
+int mcpGPIO::convert_to_int(int addressNum)
+{
+	int hex_int = 0;
+	int remainder = 0;
+
+	for(int i = 10; i > 0; i = i/10)
+	{
+		remainder = addressNum/i;
+		addressNum = addressNum%i;
+
+		hex_int = hex_int + 16*remainder; 
+	}	
+
+	return hex_int;
 }

@@ -21,7 +21,7 @@ typedef enum DF_FSM {
    IDLE,
    PRODUCT_SELECT, //retrieve info from ui which cassettes need to be set
    PAYMENT,        //retrieve info from ui whether or not payment is finished proccessing
-   DISPESE_IDLE,
+   DISPENSE_IDLE,
    DISPENSE,
    CLEANING,
    FSM_MAX,
@@ -39,6 +39,8 @@ typedef enum DF_ERROR {
    ERROR_FS_FAULT,
    ERROR_I2C_ADDRESS_NOT_FOUND,
    ERROR_WRONG_I2C_ADDRESS,
+   ERROR_XMLFILE_NOT_FOUND,
+   ERROR_XMLFILE_NO_MATCH_CONTENT,
    ERROR_PAYMENT_NOT_FOUND
 } DF_ERROR;
 

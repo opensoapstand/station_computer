@@ -14,7 +14,12 @@
 #include <iostream>
 
 stateVirtual::stateVirtual(){
-   m_state = DF_FSM::START;
+
+   for (int i = 0; i < CASSETTES_MAX; i++)
+   {
+      cassettes[i] = new dispenser();
+   }
+   m_state = START;
 }
 
 stateVirtual::stateVirtual(messageMediator * message)
@@ -37,3 +42,23 @@ stateVirtual::~stateVirtual()
    //clean up
 }
 
+//getter for next state from fsm
+DF_FSM stateVirtual::getNextState()
+{
+   return m_nextState;
+}
+
+//getter for current state from fsm
+DF_FSM stateVirtual::getCurrentState()
+{
+   return m_state;
+}
+
+//setter for state change
+// void stateVirtual::setNextState(DF_FSM *nextState)
+// {
+//    m_nextState = *nextState;
+
+//    debugOutput debugInfo;
+//    debugInfo.sendMessage("state changed -> new state [" + to_string((int)m_nextState) + "]", INFO);
+// }

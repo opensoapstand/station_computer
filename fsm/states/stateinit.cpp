@@ -114,15 +114,6 @@ DF_ERROR stateInit::onAction()
          }
 
          e_ret  = ERROR_BAD_PARAMS; //reset e_ret
-         e_ret = setDispenserFlowSensor(l_pDispenser, idx);
-
-         if(OK != e_ret) //if flowsensor not set properly, return error
-         {
-            debugOutput::sendMessage("setDispenserFlowsensor did not return OK", INFO);
-            return e_ret;
-         }
-
-         e_ret  = ERROR_BAD_PARAMS; //reset e_ret
          e_ret = setDispenserPump(l_pDispenser, idx);
 
          if(OK != e_ret) //if flowsensor not set properly, return error
@@ -130,6 +121,16 @@ DF_ERROR stateInit::onAction()
             debugOutput::sendMessage("setDispenserPump did not return OK", INFO);
             return e_ret;
          }
+
+         e_ret  = ERROR_BAD_PARAMS; //reset e_ret
+         e_ret = setDispenserFlowSensor(l_pDispenser, idx);
+
+         if(OK != e_ret) //if flowsensor not set properly, return error
+         {
+            debugOutput::sendMessage("setDispenserFlowsensor did not return OK", INFO);
+            return e_ret;
+         }
+        
 
          //check for nullptr
          if(nullptr != l_pDispenser->NextSiblingElement(DISPENSER_STRING))

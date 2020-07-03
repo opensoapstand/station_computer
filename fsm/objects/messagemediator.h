@@ -14,6 +14,7 @@
 #define _MESSAGEMEDIATOR__H_
 
 #include "../dftypes.h"
+#include "debugoutput.h"
 
 class messageMediator
 {
@@ -23,6 +24,8 @@ class messageMediator
 
       DF_ERROR sendMessage();   //this is just a prototype needs to be fleshed out
    
+      void* doKBThread (void * pThreadArgs);
+
    private:
       int messageIP;
 };

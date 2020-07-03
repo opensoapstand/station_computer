@@ -122,6 +122,15 @@ DF_ERROR stateInit::onAction()
             return e_ret;
          }
 
+         e_ret  = ERROR_BAD_PARAMS; //reset e_ret
+         e_ret = setDispenserPump(l_pDispenser, idx);
+
+         if(OK != e_ret) //if flowsensor not set properly, return error
+         {
+            debugOutput::sendMessage("setDispenserPump did not return OK", INFO);
+            return e_ret;
+         }
+
          //check for nullptr
          if(nullptr != l_pDispenser->NextSiblingElement(DISPENSER_STRING))
          {
@@ -286,6 +295,63 @@ DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispe
       else
       {
             debugOutput::sendMessage("done sorting dispense:" + string(dispenserId[dispenserIdx]), INFO);
+      }
+      l_pos++;
+   }
+
+   e_ret = OK;
+   return e_ret;
+}
+
+DF_ERROR stateInit::setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx)
+{
+   DF_ERROR e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+   TiXmlElement *l_pPump;
+
+   if(dispenserEle->FirstChildElement(PUMP_STRING))
+   {
+      //get the node of solenoid
+      l_pPump = dispenserEle->FirstChildElement(PUMP_STRING); 
+   } 
+   else
+   {
+      debugOutput::sendMessage("Pump element is null", INFO);
+      //e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+      e_ret = OK; //not all cassettes have pump element
+      return e_ret;
+   }
+   
+   int l_pos = 0;
+   TiXmlElement *l_pSinglePump = l_pPump;
+
+   while(nullptr != l_pSinglePump && l_pos < NUM_PUMP) //should loop through 3 times
+   {
+      string typeCheck = getXML(TYPE_STRING, l_pSinglePump);
+
+      if("" != typeCheck) //set dispenser parameters accrodingly [mcp|x86|ard]
+      {
+         if(MCP_STRING == typeCheck) //ensures pump is control with mcp pins
+         {
+            int address_num = atoi(getXML(I2CADDRESS_STRING, l_pSinglePump));
+            int pin_num = atoi(getXML(IO_STRING, l_pSinglePump));
+            cassettes[dispenserIdx]->setPump(address_num, pin_num, l_pos);
+
+            debugOutput::sendMessage("Pump:       " + to_string(l_pos) + " |type " + typeCheck 
+                                     + " |address " + to_string(address_num) + " |pin " + to_string(pin_num), INFO);
+         }
+         else
+         {
+            //wrong xml content found
+            e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+            return e_ret;
+         }
+
+         l_pSinglePump = l_pSinglePump -> NextSiblingElement(PUMP_STRING);
+      }
+      else
+      {
+            debugOutput::sendMessage("done sorting dispense:" + string(dispenserId[dispenserIdx]), INFO);
+            //finish with current dispenser
       }
       l_pos++;
    }

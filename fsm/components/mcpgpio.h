@@ -15,8 +15,8 @@
 #include "gpio.h"
 #include "mcp23017.h"
 
-#define DEFAULT_BUS 1 //i2cdetect tool to find the corresponding value
-					  //Odyessey is 1 and Udoo is 0
+#define DEFAULT_BUS 2 //i2cdetect tool to find the corresponding value
+					  //Odyessey is 2 and Udoo is 0
 
 class mcpGPIO : public gpio
 {

@@ -32,9 +32,9 @@
 
 #define FLOW 0
 
-#define X20 20
-#define X21 21
-#define X22 22
+#define X20 0x20
+#define X21 0x21
+#define X22 0x22
 
 #define MCP_PIN_START 0
 #define MPC_PIN_END 15

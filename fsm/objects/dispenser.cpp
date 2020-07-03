@@ -81,6 +81,7 @@ DF_ERROR dispenser::setPump(int mcpAddress, int forwardPin, int direction)
 	if((X20 <= mcpAddress &&  X22 >=mcpAddress) && (MCP_PIN_START <= forwardPin && MPC_PIN_END >= forwardPin))
 	{
         m_pPump[direction] = new mcpGPIO(mcpAddress, forwardPin);
+        debugOutput::sendMessage(to_string(MCP23017_ADDRESS) + to_string(forwardPin), INFO);
 		e_ret = OK;
 	}
 	else if(X20 >= mcpAddress || X22 <= mcpAddress)

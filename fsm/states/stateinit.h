@@ -42,6 +42,7 @@ class stateInit : public stateVirtual
         DF_ERROR setDispenserId();
         DF_ERROR setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx);
         DF_ERROR setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx);
+        DF_ERROR setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx);
         const char* getXML(const char* subHeader, TiXmlElement *childEle);
 
 };
@@ -65,5 +66,6 @@ class stateInit : public stateVirtual
 #define X86_STRING "x86"
 #define MCP_STRING "mcp"
 #define ARD_STRING "ard"
+#define PUMP_STRING "pump"
 
 #endif

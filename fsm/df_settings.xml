@@ -5,6 +5,11 @@
         <id>808</id>
     </machine>
     <hardware>
+        <button>
+            <type>mcp</type>
+            <i2caddress>20</i2caddress>
+            <io>00</io>
+        </button>
         <dispenser id="a">
             <solenoid index="0">
                 <type>mcp</type>

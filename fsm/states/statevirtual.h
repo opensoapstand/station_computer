@@ -43,6 +43,7 @@ class stateVirtual
         DF_FSM  m_state;
         DF_FSM  m_nextState;
         dispenser* cassettes[CASSETTES_MAX];
+        gpio *m_pButton[NUM_BUTTON];
         messageMediator * m_pMessaging;
 };
 

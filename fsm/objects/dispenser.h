@@ -22,6 +22,7 @@
 #define NUM_SOLENOID 3 //12v for drink,water, and air
 #define NUM_PUMP 2 //forward and reverse pin
 #define NUM_FLOWSENSOR  1 
+#define NUM_BUTTON 1
 
 #define DRINK 0
 #define WATER 1
@@ -32,9 +33,9 @@
 
 #define FLOW 0
 
-#define X20 0x20
-#define X21 0x21
-#define X22 0x22
+#define X20 20
+#define X21 21
+#define X22 22
 
 #define MCP_PIN_START 0
 #define MPC_PIN_END 15
@@ -49,7 +50,7 @@ class dispenser
 
       //private variable setters
       DF_ERROR setSolenoid(int mcpAddress, int pin, int pos);
-      DF_ERROR setPump(int mcpAddress, int forwardPin, int direction);
+      DF_ERROR setPump(int mcpAddress, int pin, int direction); //0 as forward and 1 as reverse
       DF_ERROR setFlowsensor(int pinint, int pos);
 
       DF_ERROR startDispense();

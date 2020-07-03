@@ -102,15 +102,8 @@ void mcpGPIO::monitorGPIO()
 int mcpGPIO::convert_to_int(int addressNum)
 {
 	int hex_int = 0;
-	int remainder = 0;
-
-	for(int i = 10; i > 0; i = i/10)
-	{
-		remainder = addressNum/i;
-		addressNum = addressNum%i;
-
-		hex_int = hex_int + 16*remainder; 
-	}	
+	
+	hex_int = 16*(addressNum/10) + (addressNum%10); 	
 
 	return hex_int;
 }

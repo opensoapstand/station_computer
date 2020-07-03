@@ -26,8 +26,6 @@ class stateInit : public stateVirtual
         stateInit(int inputDigit); //debug through terminal
         ~stateInit();
 
-        TiXmlElement *getSolenoid(char* dispenserID); 
-
         DF_ERROR onEntry();
         DF_ERROR onAction();
         DF_ERROR onExit();
@@ -43,6 +41,7 @@ class stateInit : public stateVirtual
         DF_ERROR setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx);
         DF_ERROR setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx);
         DF_ERROR setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx);
+        DF_ERROR setButton(TiXmlElement *hardwareEle, int dispenserIdx);
         const char* getXML(const char* subHeader, TiXmlElement *childEle);
 
 };
@@ -56,6 +55,8 @@ class stateInit : public stateVirtual
 //third layer
 #define DISPENSER_STRING "dispenser"
 #define ID_STRING "id"
+
+#define BUTTON_STRING "button"
 
 //forth layer
 #define SOLENOID_STRING "solenoid"

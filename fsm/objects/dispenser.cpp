@@ -40,19 +40,19 @@ void dispenser::initDispenser(int slot){
 DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS; 
-    
-	if((X20 <= mcpAddress &&  X22 >=mcpAddress) && (MCP_PIN_START <= pin && MPC_PIN_END >= pin))
+   
+	if((X20 <= mcpAddress &&  X22 >= mcpAddress) && (MCP_PIN_START <= pin && MPC_PIN_END >= pin))
 	{
         m_pSolenoid[pos] = new mcpGPIO(mcpAddress, pin);
 		e_ret = OK;
 	}
-	else if(X20 >= mcpAddress || X22 <= mcpAddress)
+	else if(X20 > mcpAddress || X22 < mcpAddress)
 	{
-		e_ret = ERROR_WRONG_I2C_ADDRESS;
+		return e_ret = ERROR_WRONG_I2C_ADDRESS;
 	}
-	else if(MCP_PIN_START >= pin || MPC_PIN_END <= pin)
+	else if(MCP_PIN_START > pin || MPC_PIN_END < pin)
 	{
-		e_ret = ERROR_BAD_PARAMS;
+		return e_ret = ERROR_BAD_PARAMS;
     }
 
     return e_ret;
@@ -74,28 +74,27 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
     return e_ret;
 }
 
-DF_ERROR dispenser::setPump(int mcpAddress, int forwardPin, int direction)
+DF_ERROR dispenser::setPump(int mcpAddress, int pin, int direction)
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS; //reset variable    
     
-	if((X20 <= mcpAddress &&  X22 >=mcpAddress) && (MCP_PIN_START <= forwardPin && MPC_PIN_END >= forwardPin))
+	if((X20 <= mcpAddress &&  X22 >=mcpAddress) && (MCP_PIN_START <= pin && MPC_PIN_END >= pin))
 	{
-        m_pPump[direction] = new mcpGPIO(mcpAddress, forwardPin);
-        debugOutput::sendMessage(to_string(MCP23017_ADDRESS) + to_string(forwardPin), INFO);
+        m_pPump[direction] = new mcpGPIO(mcpAddress, pin);
 		e_ret = OK;
 	}
-	else if(X20 >= mcpAddress || X22 <= mcpAddress)
+	else if(X20 > mcpAddress || X22 < mcpAddress)
 	{
-		e_ret = ERROR_WRONG_I2C_ADDRESS;
+        debugOutput::sendMessage("got here", INFO);
+		return e_ret = ERROR_WRONG_I2C_ADDRESS;
 	}
-	else if(MCP_PIN_START >= forwardPin || MPC_PIN_END <= forwardPin)
+	else if(MCP_PIN_START > pin || MPC_PIN_END < pin)
 	{
-		e_ret = ERROR_BAD_PARAMS;
+		return e_ret = ERROR_BAD_PARAMS;
 	}
 
     return e_ret;
 }
-
 
 //
 DF_ERROR dispenser::startDispense(){

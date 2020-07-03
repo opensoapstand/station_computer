@@ -120,7 +120,7 @@ uint8_t MCP23017::writeRegister(uint8_t addr, uint8_t writeValue)
     int toReturn = i2c_smbus_write_byte_data(kI2CFileDescriptor, addr, writeValue);
     if (toReturn < 0) {
         //perror("Write to I2C Device failed");
-		debugOutput::sendMessage("Write to I2C Device failed (writeRegister)", ERROR);
+		debugOutput::sendMessage("Write to I2C Device failed (writeRegister): " + to_string(kI2CAddress) + "-" + to_string(kI2CBus), ERROR);
         error = errno ;
         toReturn = -1 ;
     }

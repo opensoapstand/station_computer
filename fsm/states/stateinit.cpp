@@ -102,6 +102,16 @@ DF_ERROR stateInit::onAction()
            
       int idx = 0;
 
+      debugOutput::sendMessage("Set up button: ------------------" , INFO);
+
+      e_ret = setButton(m_pHardware, idx);
+
+      if(OK != e_ret) //if solenoid not set properly, return error
+      {
+         debugOutput::sendMessage("setButton did not return OK", INFO);
+         return e_ret;
+      }
+
       while(nullptr != dispenserId[idx])
       {
          debugOutput::sendMessage("Sort for dispenser:" + string(dispenserId[idx]), INFO);
@@ -291,7 +301,7 @@ DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispe
             return e_ret;
          }
 
-         l_pSingleFlowsensor = l_pSingleFlowsensor -> NextSiblingElement();
+         l_pSingleFlowsensor = l_pSingleFlowsensor -> NextSiblingElement(FLOWSENSOR_STRING);
       }
       else
       {
@@ -353,6 +363,77 @@ DF_ERROR stateInit::setDispenserPump(TiXmlElement *dispenserEle, int dispenserId
       {
             debugOutput::sendMessage("done sorting dispense:" + string(dispenserId[dispenserIdx]), INFO);
             //finish with current dispenser
+      }
+      l_pos++;
+   }
+
+   e_ret = OK;
+   return e_ret;
+}
+
+DF_ERROR stateInit::setButton(TiXmlElement *hardwareEle, int dispenserIdx)
+{
+   DF_ERROR e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+   TiXmlElement *l_pButton;
+
+   if(hardwareEle->FirstChildElement(BUTTON_STRING))
+   {
+      //get the node of flowsnesor
+      l_pButton = hardwareEle->FirstChildElement(BUTTON_STRING); 
+   } 
+   else
+   {
+      debugOutput::sendMessage("Button element is null", INFO);
+      e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT; //no button should return error
+      return e_ret;
+   }
+   
+   int l_pos = 0;
+   TiXmlElement *l_pSingleButton = l_pButton;
+
+   while(nullptr != l_pSingleButton && l_pos < NUM_BUTTON) //should loop through once times
+   {
+      string typeCheck = getXML(TYPE_STRING, l_pSingleButton);
+
+      if("" != typeCheck) //set dispenser parameters accrodingly [mcp|x86|ard]
+      {
+         if(MCP_STRING == typeCheck) //ensures button is control with mcp pin
+         {
+            int address_num = atoi(getXML(I2CADDRESS_STRING, l_pSingleButton));
+            int pin_num = atoi(getXML(IO_STRING, l_pSingleButton));
+
+            debugOutput::sendMessage("Button:     " + to_string(l_pos) + " |type " + typeCheck 
+                                     + " |address " + to_string(address_num) + " |pin " + to_string(pin_num), INFO);                         
+         
+            if((20 <= address_num &&  22 >= address_num) && (MCP_PIN_START <= pin_num && MPC_PIN_END >= pin_num))
+            {
+               m_pButton[l_pos] = new mcpGPIO(address_num, pin_num);
+               e_ret = OK;
+               return e_ret;
+            }
+            else if(X20 > address_num || X22 < address_num)
+            {
+               e_ret = ERROR_WRONG_I2C_ADDRESS;
+               return e_ret;
+            }
+            else if(MCP_PIN_START > pin_num || MPC_PIN_END < pin_num)
+            {
+               e_ret = ERROR_BAD_PARAMS;
+               return e_ret;
+            }
+         }
+         else
+         {
+            //wrong xml content found
+            e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+            return e_ret;
+         }
+
+         l_pSingleButton = l_pSingleButton -> NextSiblingElement(BUTTON_STRING);
+      }
+      else
+      {
+            debugOutput::sendMessage("done sorting dispense:" + string(dispenserId[dispenserIdx]), INFO);
       }
       l_pos++;
    }

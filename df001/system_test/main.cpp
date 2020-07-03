@@ -198,8 +198,8 @@ bool inputNumber(drink *drinkArray[Num_Cassettes], char *inputArray)
 
 bool inputType(drink *drinkArray, char *inputArray)
 {
-    gpioControl.setPinMode_out(buttonAddr, buttonPin);
-    gpioControl.setPin_on(buttonAddr, buttonPin);
+    //gpioControl.setPinMode_out(buttonAddr, buttonPin);
+    //gpioControl.setPin_on(buttonAddr, buttonPin);
 
         // cout << "Address: " << buttonAddr;
         // cout << " Pin:" << buttonPin << endl;
@@ -214,12 +214,11 @@ bool inputType(drink *drinkArray, char *inputArray)
     }
     else if (strcmp("d", inputArray) == 0)
     {
-        cout << "Address: " << drinkArray->getDrinkPinAddress();
-        cout << " Pin:" << drinkArray->getDrinkPin_pin() << endl;
+        //cout << "Address: " << drinkArray->getDrinkPinAddress();
+        //cout << " Pin:" << drinkArray->getDrinkPin_pin() << endl;
 
         //flowsensor.read_FlowSensor(drinkArray->getFlowSensor_pin(), 1);
-        flowsensor.read_FlowSensor(417, 1);
-
+        //flowsensor.read_FlowSensor(417, 1);
 
         //gpioControl.setPinMode_out(drinkArray->getDrinkPinAddress(), drinkArray->getDrinkPin_pin());
         gpioControl.setPin_on(drinkArray->getDrinkPinAddress(), drinkArray->getDrinkPin_pin());
@@ -230,8 +229,8 @@ bool inputType(drink *drinkArray, char *inputArray)
     }
     else if (strcmp("a", inputArray) == 0)
     {
-        cout << "Address: " << drinkArray->getAirPinAddress();
-        cout << " Pin:" << drinkArray->getAirPin_pin() << endl;
+        //cout << "Address: " << drinkArray->getAirPinAddress();
+        //cout << " Pin:" << drinkArray->getAirPin_pin() << endl;
 
         //gpioControl.setPinMode_out(drinkArray->getAirPinAddress(), drinkArray->getAirPin_pin());
         gpioControl.setPin_on(drinkArray->getAirPinAddress(), drinkArray->getAirPin_pin());
@@ -242,8 +241,8 @@ bool inputType(drink *drinkArray, char *inputArray)
     }
     else if (strcmp("w", inputArray) == 0)
     {
-        cout << "Address: " << drinkArray->getWaterPinAddress();
-        cout << " Pin:" << drinkArray->getWaterPin_pin() << endl;
+        //cout << "Address: " << drinkArray->getWaterPinAddress();
+        //cout << " Pin:" << drinkArray->getWaterPin_pin() << endl;
 
         //gpioControl.setPinMode_out(drinkArray->getWaterPinAddress(), drinkArray->getWaterPin_pin());
         gpioControl.setPin_on(drinkArray->getWaterPinAddress(), drinkArray->getWaterPin_pin());

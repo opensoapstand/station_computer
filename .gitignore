@@ -8,7 +8,7 @@ fsm/.vs/fsm/v15/ipch/AutoPCH/a7b8246a94880a47/MCPGPIO.ipch
 
 ### VisualStudioCode ###
 .vscode/*
-!.vscode/settings.json
+.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json

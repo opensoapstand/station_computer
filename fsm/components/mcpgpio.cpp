@@ -16,7 +16,7 @@
 
 mcpGPIO::mcpGPIO(int i2caddress, int pin)
 {
-
+	debugOutput::sendMessage("mcpGPIO", INFO);
 	m_nPin = pin;
 	m_nAddress = convert_to_int(i2caddress);
 

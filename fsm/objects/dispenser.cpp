@@ -13,6 +13,7 @@
 
 dispenser::dispenser(){
     //default constructor to set all pin to nullptr
+    debugOutput::sendMessage("dispenser", INFO);
     m_pDrink = nullptr;
 
     for (int i = 0; i < NUM_SOLENOID; i++)
@@ -25,6 +26,7 @@ dispenser::dispenser(){
 }
 
 dispenser::~dispenser(){
+    debugOutput::sendMessage("~dispenser", INFO);
     // delete [] m_pDrink;
 
     // delete [] m_pSolenoid;

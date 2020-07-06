@@ -13,6 +13,8 @@
 
 #include "statedispenseidle.h"
 
+#define DISPENSE_IDLE_STRING  "Dispense Idled"
+
 stateDispenseIdle::stateDispenseIdle()
 {
 
@@ -22,15 +24,16 @@ stateDispenseIdle::stateDispenseIdle(messageMediator * message){
 
 }
 
-stateDispenseIdle::stateDispenseIdle(int inputDigit){
-
-}
 
 stateDispenseIdle::~stateDispenseIdle()
 {
 
 }
 
+string stateDispenseIdle::toString()
+{
+   return DISPENSE_IDLE_STRING;
+}
 
 DF_ERROR stateDispenseIdle::onEntry()
 {

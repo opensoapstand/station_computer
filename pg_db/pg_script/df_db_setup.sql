@@ -10,6 +10,8 @@
  // copyright 2020 by Drinkfill Beverages Ltd
  // all rights reserved
  ********************************************************/
+
+-- AWS may require '' EG: CREATE TABLE IF NOT EXISTS 'df_transaction.user' ...
 -- USE postgres USER ACCOUNT CONNECTION to template1
 -- List the name of all the databases in this server
 
@@ -26,6 +28,7 @@ IF (
 ) < 0 THEN -- Create the Database
 CREATE DATABASE drinkfill;
 
+-- todo set up admin account
 -- Create the Roles
 CREATE ROLE df_admin_Group WITH NOSUPERUSER NOCREATEDB;
 CREATE ROLE machine_group WITH NOSUPERUSER NOCREATEDB NOCREATEROLE;
@@ -35,8 +38,8 @@ CREATE ROLE machine_group WITH NOSUPERUSER NOCREATEDB NOCREATEROLE;
 -- Future role for vendor mobile interaction
 
 -- Change Default schema name
-ALTER SCHEMA public
-RENAME TO df_transaction;
+--ALTER DATABASE drinkfill OWNER TO df;
+--ALTER DATABASE drinkfill OWNER TO postgres;
 
 -- Set permissions to groups
 GRANT ALL PRIVILEGES ON DATABASE drinkfill TO df_admin_group;
@@ -63,86 +66,88 @@ CREATE USER df WITH PASSWORD 'password1234';
 GRANT df_admin_group TO df;
 
 CREATE USER local_machine WITH PASSWORD 'machine1234';
-
 GRANT machine_group TO local_machine;
 
+ALTER SCHEMA public
+RENAME TO df_transaction;
+
 -- Create User Table
-CREATE TABLE IF NOT EXISTS 'user_type' (
-  'user_type_id' DISTINCT VARCHAR(3),
-  'user_type_description' VARCHAR(100),
-    PRIMARY KEY ('user_type_id')
+CREATE TABLE IF NOT EXISTS df_transaction.user_type (
+  user_type_id VARCHAR(3) UNIQUE,
+  user_type_description VARCHAR(100),
+    PRIMARY KEY (user_type_id)
 );
 
-INSERT INTO 'user_type' VALUES 
+INSERT INTO df_transaction.user_type VALUES 
 ('ADM', 'Administrator Account'),
 ('MCH', 'Local Machine Account'),
 ('CUS', 'Customer Account'),
 ('VED', 'Vendor Account'),
 ('MTN', 'Maintenance Account');
 
-CREATE TABLE IF NOT EXISTS `user` (
-    'id' SERIAL,
-    'user_type' VARCHAR(3),
-    PRIMARY KEY ('user_type','id'),
-    FOREIGN KEY ('user_type') REFERENCES user_type(user_type_id)
+CREATE TABLE IF NOT EXISTS df_transaction.user (
+    user_id SERIAL,
+    user_type VARCHAR(3),
+    PRIMARY KEY (user_type, user_id),
+    FOREIGN KEY (user_type) REFERENCES df_transaction.user_type(user_type_id)
 );
 
 -- Check for Customer, Vendor and Maintenance type
-CREATE TABLE IF NOT EXISTS 'user_contact' (
-    'id' SERIAL,
-    'user_type' VARCHAR(3),
-    'user_first_name' VARCHAR(100),
-    'user_last_name' VARCHAR (100),
-    'user_email' VARCHAR (50),
-    'user_street_address' VARCHAR (255),
-    'user_phone' VARCHAR (15),
-    'user_country' VARCHAR (50),
-    PRIMARY KEY ('user_type','id'),
-    FOREIGN KEY ('user_type_id','user_type') REFERENCES user('user_type_id', 'user_type')
+CREATE TABLE IF NOT EXISTS df_transaction.user_contact (
+    user_contact_id INT NOT NULL,
+    user_type VARCHAR(3),
+    user_first_name VARCHAR(100),
+    user_last_name VARCHAR (100),
+    user_email VARCHAR (50),
+    user_street_address VARCHAR (255),
+    user_phone VARCHAR (15),
+    user_country VARCHAR (50),
+    PRIMARY KEY (user_contact_id),
+    FOREIGN KEY (user_contact_id,user_type) REFERENCES df_transaction.user(user_id, user_type)
 );
 
 /*Product holds a local catalog of drinks used in the machine*/
-CREATE TABLE IF NOT EXISTS 'product_catalog' (
-    'id' SERIAL,
-    'name' VARCHAR(100) NOT NULL,
-    'vendor' INT DEFAULT NULL,
+CREATE TABLE IF NOT EXISTS df_transaction.product_catalog (
+    product_catalog_id SERIAL,
+    name VARCHAR(100) NOT NULL,
+    vendor INT DEFAULT NULL,
     -- can move this to QT reference in future 
-    `image` BLOB,
-    `calibration_const` DOUBLE,
+    image BLOB,
+    calibration_const DOUBLE,
     -- cost from vendor
-    `cost_per_litre` DOUBLE,
-    'option_slot' INT CHECK(numrange(-1,8)),
-    'coupon_code' CHAR(6),
-    PRIMARY KEY(`id`),
-    FOREIGN KEY (`vendor`) REFERENCES vendors(`id`)
+    cost_per_litre DOUBLE,
+    option_slot INT CHECK(numrange(-1,8)),
+    coupon_code CHAR(6),
+    PRIMARY KEY(product_catalog_id),
+    FOREIGN KEY (vendor) REFERENCES vendors(id)
 );
 
 /*
 Location of the machine
 */
-CREATE TABLE IF NOT EXISTS `machine_location` (
-    `id` SERIAL,
-    `locale_name` VARCHAR (255),
-    'street_address' VARCHAR (255),
-    'phone' VARCHAR (15),
-    'country' VARCHAR (50),
-    `on_site_location` VARCHAR(255),
-    `user_id_fk` VARCHAR (100),
+CREATE TABLE IF NOT EXISTS df_transaction.machine_location (
+    id SERIAL,
+    locale_name VARCHAR (255),
+    street_address VARCHAR (255),
+    phone VARCHAR (15),
+    country VARCHAR (50),
+    on_site_location VARCHAR(255),
+    user_id_fk VARCHAR (100),
     -- Check for Vendor Type
-    `user_type_fk` VARCHAR (15),
-    PRIMARY KEY(`id`),
-    FOREIGN KEY('user_id_fk', 'user_type_fk') REFERECES users('id', 'user_type')
+    user_type_fk VARCHAR (15),
+    PRIMARY KEY(id),
+    FOREIGN KEY(user_id_fk, user_type_fk) REFERECES users(id, user_type)
 );
 
 /*product pricing*/
-CREATE TABLE IF NOT EXISTS `pricing` (
-    'product_id' int,
+CREATE TABLE IF NOT EXISTS df_transaction.pricing (
+    product_id int,
     -- cost for consumers
-    'price_per_litre' double,
-    'location' int,
-    PRIMARY KEY (`product_id`),
-    FOREIGN KEY (`product_id`) references product(`id`),
-    FOREIGN KEY (`location`) references location(`id`)
+    price_per_litre double,
+    location int,
+    PRIMARY KEY (product_id),
+    FOREIGN KEY (product_id) references product(id),
+    FOREIGN KEY (location) references location(id)
 );
 
 /*
@@ -189,16 +194,16 @@ CREATE TABLE IF NOT EXISTS `inventory_level` (
     FOREIGN KEY (`machine_id`) REFERENCES machine(`id`)
 );
 
-create table if not exists `temperature_log` (
-    `id` int primary key not null auto_increment,
-    `machine_id` int not null,
-    `top` double default null,
-    `bottom` double default null,
-    foreign key (`machine_id`) references machine(`id`)
+CREATE TABLE IF NOT EXISTS `temperature_log` (
+    `id` INT PRIMARY KEY NOT NULL auto_increment,
+    `machine_id` INT NOT NULL,
+    `top` DOUBLE DEFAULT NULL,
+    `bottom` DOUBLE DEFAULT NULL,
+    FOREIGN KEY (`machine_id`) REFERENCES machine(`id`)
 );
 
-create table if not exists `waste_log` (
-    `id` int primary key not null auto_increment,
+CREATE TABLE IF NOT EXISTS `waste_log` (
+    `id` SERIAL,
     `machine_id` int not null,
     `top` int default null,
     `bottom` int default null,
@@ -238,29 +243,29 @@ create table if not exists `waste_log` (
 --                                     `tsi` varchar(15),
 -- 									`disposition` varchar(50),                                    
 --                                     FOREIGN KEY (`machine_id`) REFERENCES machine(`id`));
-CREATE TABLE IF NOT EXISTS `sales` (
-    `id` INT NOT NULL auto_increment,
-    `machine_id` INT,
-    `date` DATETIME NOT NULL,
-    `amount` VARCHAR(10),
-    `pan` VARCHAR(20),
+CREATE TABLE IF NOT EXISTS df_transaction.sales (
+    id SERIAL,
+    machine_id INT,
+    date DATETIME NOT NULL,
+    amount VARCHAR(10),
+    pan VARCHAR(20),
     -- mask pan data
-    `reference` VARCHAR(30),
-    PRIMARY KEY (`id`),
-    FOREIGN KEY (`machine_id`) REFERENCES machine(`id`)
+    reference VARCHAR(30),
+    PRIMARY KEY (id),
+    FOREIGN KEY (machine_id) REFERENCES machine(id)
 );
 
 /*future implementation*/
 /*coupon code -> active time with 6 characters*/
-CREATE TABLE IF NOT EXISTS `coupon` (
-    `id` INT PRIMARY KEY,
-    `code` CHAR(6),
-    `machine_id` INT,
-    `percentage` INT,
-    `start_date` TIMESTAMP,
-    `end_date` TIMESTAMP,
-    UNIQUE(`code`),
-    FOREIGN KEY(`machine_id`) references machine(`id`)
+CREATE TABLE IF NOT EXISTS coupon (
+    id INT PRIMARY KEY,
+    code CHAR(6),
+    machine_id INT,
+    percentage INT,
+    start_date TIMESTAMP,
+    end_date TIMESTAMP,
+    UNIQUE(code),
+    FOREIGN KEY(machine_id) references machine(id)
 );
 
 END IF;
@@ -271,13 +276,13 @@ $$
 -- Teardown
 DO $$ DROP DATABASE IF EXISTS drinkfill;
 
-DROP USER localmachine;
+DROP USER IF EXISTS localmachine;
 
-DROP USER df;
+DROP USER IF EXISTS df;
 
-DROP GROUP dfAdminGroup;
+DROP GROUP IF EXISTS dfAdminGroup;
 
-DROP GROUP machineGroup;
+DROP GROUP IF EXISTS machineGroup;
 
 DROP TABLE IF EXISTS inventory;
 

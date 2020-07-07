@@ -11,7 +11,8 @@
  // all rights reserved
  ********************************************************/
 
-USE drinkfill;
+-- Postgres is connection based; Need different connections for switching DB.
+-- USE drinkfill;
 
 -- Check Contents
 SELECT * FROM `inventory`;

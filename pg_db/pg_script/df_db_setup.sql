@@ -50,12 +50,16 @@ GRANT ALL PRIVILEGES ON DATABASE drinkfill TO df_admin_group;
 GRANT CONNECT ON DATABASE drinkfill TO machine_group;
 
 -- Can restrict with product catalog
+
+-- REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA df_transaction FROM machine_group;
+
 GRANT SELECT,
     INSERT,
     UPDATE,
     TRUNCATE,
     REFERENCES,
     TRIGGER ON ALL TABLES IN SCHEMA df_transaction to machine_group;
+
 
 -- TODO: Future permissions required for customer mobile interaction
 -- TODO: Future permissions required for maintenance mobile interaction
@@ -223,6 +227,19 @@ CREATE TABLE IF NOT EXISTS df_transaction.inventory (
     PRIMARY KEY(inventory_id)
 );
 
+INSERT INTO df_transaction.inventory
+VALUES (0, NULL, NULL, current_timestamp, FALSE),
+    (1, NULL, NULL, current_timestamp, FALSE),
+    (2, NULL, NULL, current_timestamp, FALSE),
+    (3, NULL, NULL, current_timestamp, FALSE),
+    (4, NULL, NULL, current_timestamp, FALSE),
+    (5, NULL, NULL, current_timestamp, FALSE),
+    (6, NULL, NULL, current_timestamp, FALSE),
+    (7, NULL, NULL, current_timestamp, FALSE),
+    (8, NULL, NULL, current_timestamp, FALSE);
+
+REVOKE INSERT ON df_transaction.inventory FROM machine_group;
+
 -- drop table df_transaction.product CASCADE;
 /*
  Product holds a local catalog of drinks used in the machine
@@ -297,8 +314,8 @@ CREATE TABLE IF NOT EXISTS df_QT.product_image (
     PRIMARY KEY(product_image_id),
     FOREIGN KEY(product_image_id) REFERENCES df_transaction.product_catalog(product_catalog_id)
 )
-
 END IF;
+
 END;
 
 $$

@@ -29,6 +29,8 @@ SELECT * FROM pg_roles;
 SELECT *
 FROM pg_database;
 
+
+
 -- Alter for machine testing
 UPDATE `machine` SET `option1` = 4 WHERE `id` = 1;
 -- ALTER TABLE `coupon` ADD COLUMN `testing` VARCHAR(120);

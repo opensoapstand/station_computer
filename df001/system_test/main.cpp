@@ -22,7 +22,7 @@ using namespace std;
 #define Num_Cassettes 9
 #define H2O_activation_time 20
 #define DRINK_activation_time 20
-#define PUMP_activation_time 10
+#define PUMP_activation_time 5
 #define AIR_activation_time 20 
 
 bool type = false;
@@ -260,12 +260,13 @@ bool inputType(drink *drinkArray, char *inputArray)
             cout << "Reverse Address: " << drinkArray->getpumpRevPinAddress();
             cout << " Reverse Pin:" << drinkArray->getpumpRevPin_pin() << endl;
 
-            //gpioControl.setPinMode_out(drinkArray->getpumpFwdPinAddress(), drinkArray->getpumpFwdPin_pin());
-            //gpioControl.setPinMode_out(drinkArray->getpumpRevPinAddress(), drinkArray->getpumpRevPin_pin());
+            gpioControl.setPinMode_out(drinkArray->getpumpFwdPinAddress(), drinkArray->getpumpFwdPin_pin());
+            gpioControl.setPinMode_out(drinkArray->getpumpRevPinAddress(), drinkArray->getpumpRevPin_pin());
 
             gpioControl.setPump_Forward(drinkArray->getpumpFwdPinAddress(), drinkArray->getpumpFwdPin_pin(),
                                         drinkArray->getpumpRevPinAddress(), drinkArray->getpumpRevPin_pin());
 
+            //gpioControl.setPin_on(drinkArray->getpumpFwdPinAddress(), drinkArray->getpumpFwdPin_pin());
             sleep(PUMP_activation_time);
 
             gpioControl.setPump_Reverse(drinkArray->getpumpFwdPinAddress(), drinkArray->getpumpFwdPin_pin(),

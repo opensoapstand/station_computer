@@ -1,7 +1,7 @@
 #include "Adafruit_NeoPixel.h"
 
-#define NUMPIXELS 8
-int led = 12;
+#define NUMPIXELS 8                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+int led = 13;
 
 int colourSpec = 0;
 
@@ -11,7 +11,7 @@ bool change = true;
 
 // Interval is how long we wait
 // add const if this should never change
-unsigned long interval=500;
+unsigned long interval=50;
 // Tracks the time since last event fired
 unsigned long previousMillis=0;
 
@@ -51,9 +51,9 @@ void loop() {
     }
   
     for(int i = 0; i < NUMPIXELS; i++){
-      //strip.setPixelColor(i, colourSpec,colourSpec,colourSpec);
+      strip.setPixelColor(i, colourSpec,colourSpec,colourSpec);
       //strip.setPixelColor(i, random(250)*percentage,random(250)*percentage,random(250)*percentage);
-      colorWipe(strip.Color(random(250),random(250),random(250)), 10);
+      //colorWipe(strip.Color(random(250),random(250),random(250)), 10);
     }
 
     // Use the snapshot to set track time until next event

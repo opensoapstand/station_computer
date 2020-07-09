@@ -1,3 +1,16 @@
+/*******************************************************
+ // Drinkfill Postgres operations 
+ //
+ // df_db_operations.sql
+ // Typical function calls on database
+ //
+ // created: 07-08-2020
+ // by: Li Yan Tong
+ //
+ // copyright 2020 by Drinkfill Beverages Ltd
+ // all rights reservedname
+ ********************************************************/
+
 /*Daily update of the revenue from the machine, get summarized revenue daily*/
 /*can utilize this table to display histogram of the progress*/
 -- create table if not exists `revenue` (`day` DATE NOT NULL,

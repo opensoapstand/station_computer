@@ -1,4 +1,48 @@
-#include "df_setup.h"
+/*******************************************************
+ // Drinkfill Database thread listener - IMPLEMENTATION
+ //
+ // db_setup.cpp
+ // Create database, users, permissions and tables.
+ //
+ // created: 07-09-2020
+ // by: Li Yan Tong
+ //
+ // copyright 2020 by Drinkfill Beverages Ltd
+ // all rights reserved
+ ********************************************************/
+
+#include "db_setup.h"
+
+using namespace std;
+using namespace pqxx;
+
+db_setup::db_setup()
+{
+}
+
+// Connection
+bool pg_connect_newDB()
+{
+}
+
+// Create Database, Groups, Users and Tables
+bool pg_db_setup(db_setup connection_details)
+{
+}
+
+bool pg_user_setup(db_setup connection_details)
+{
+}
+
+bool pg_table_setup(db_setup connection_details)
+{
+}
+
+// Dtor
+db_setup::~db_setup()
+{
+
+}
 
 int main(int argc, char *argv[])
 {
@@ -9,7 +53,7 @@ int main(int argc, char *argv[])
    {
       // WILL NEED TO STORE AS SECRET!  connection as template1 required if db from stratch.
       string connection_string("dbname = template1 user = postgres password = * hostaddr=127.0.0.1 port=5432");
-      connection C(connection_string.c_str());
+      pqxx::connection C(connection_string.c_str());
 
       if (C.is_open())
       {

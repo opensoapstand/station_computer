@@ -1,47 +1,44 @@
+/*******************************************************
+ // Drinkfill Database thread listener - HEADER
+ //
+ // db_thread.h
+ // Listen for function calls from FSM; Route and execute
+ // CRUD on DB.
+ //
+ // created: 07-09-2020
+ // by: Li Yan Tong
+ //
+ // copyright 2020 by Drinkfill Beverages Ltd
+ // all rights reserved
+ ********************************************************/
+
 #ifndef DB_THREAD_H
 #define DB_THREAD_H
 
-#include "df_db.h"
-
-struct connection_details
-{
-    char const *server;
-    char const *user;
-    char const *password;
-    char const *database;
-};
+#include "../pg_util/db_utils.h"
 
 class db_thread
 {
 public:
-    local_db_logger();
-    pg_connection_setup(struct connection_details mysql_connection);
-    MYSQL_RES* create_machine_inDB(int machine_Number);
+    // Ctor
+    db_thread();
 
-    //inset to local database event logging
-    MYSQL_RES* insert_drink_inventory(int option, int machine, double volume);
-    MYSQL_RES* insert_temperature(int machine, double temp_top, double temp_bottom);
-    MYSQL_RES* insert_waste_level(int machine, int top, int bottom);
+    // Permission/User Checks
+    bool pg_connect_machine();
+    bool pg_connect_admin();
 
-    //update local database
-    MYSQL_RES* update_machine_option(int machine, int oldOption, int newOption);
+    // Machine Functions
+    bool insert_sale();
 
-    //cloud database management
+    // Admin Functions
+    bool insert_drink_inventory();
+    bool update_machine_option();
 
-    //need to work on sychronization to the master DB
+    // Dtor
+    ~db_thread();
 
 private:
-    connection local_Connection;
-    connection_details local_db;
-
-    string to_string(double double_value); //use for input type double
-    string to_string(int int_value);
-
-    string drink_options[9] = {
-        "option1","option2","option3",
-        "option4","option5","option6",
-        "option7","option8","option9"
-    };
+    connection_details db_connection;
 };
 
 #endif // LOCAL_DB_LOGGER_H

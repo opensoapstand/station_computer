@@ -11,6 +11,11 @@
  // all rights reservedname
  ********************************************************/
 
+/*
+ * Coupon Seed
+*/
+
+
 /*sample vendor insertion*/
 -- insert into `vendors` (`full_address`, `name`, `contact_name`, `contact_phone`,`contact_email`,`connector`) 
 -- 				       value 

@@ -1,24 +1,44 @@
-#include "df_db.h"
+/*******************************************************
+ // Drinkfill Database thread listener - HEADER
+ //
+ // db_setup.h
+ // Create database, users, permissions and tables.
+ //
+ // created: 07-09-2020
+ // by: Li Yan Tong
+ //
+ // copyright 2020 by Drinkfill Beverages Ltd
+ // all rights reserved
+ ********************************************************/
 
-class local_db_setup
+#ifndef DB_SETUP_H
+#define DB_SETUP_H
+
+#include "../pg_util/db_utils.h"
+
+// Define struct that matches tiny XML machine values
+struct {
+
+};
+
+class db_setup
 {
 public:
-    local_db_setup();
-    MYSQL* mysql_connection_setup(struct connection_details mysql_connection);
-    MYSQL_RES* create_machine_inDB(int machine_Number);
+    // Ctor
+    db_setup();
+    // Dtor
+    ~db_setup();
+    
+    // Connection
+    bool pg_connect_newDB();
+    // Create Database, Groups, Users and Tables
+    bool pg_db_setup(struct connection_details);
+    bool pg_user_setup(struct connection_details);
+    bool pg_table_setup(struct connection_details);
 
-
-    create_users();
-    MYSQL_RES* create_tables();
-
-    //cloud database management
-
-    //need to work on sychronization to the master DB
 
 private:
-    connection temp_local_Connection;
-    connection_details temp_local_db;
-
-    string to_string(double double_value); //use for input type double
-    string to_string(int int_value);
+    connection_details db_setup_connection;
 };
+
+#endif // DB_SETUP_H

@@ -1,7 +1,7 @@
 TARGET_EXEC ?= pg_db
 
 BUILD_DIR ?= ./build
-SRC_DIRS ?= . ./states ./components ./tinyxml ./objects 
+SRC_DIRS ?= . ./db_setup ./pg_util
 
 SRCS := $(shell find $(SRC_DIRS) -name *.cpp -or -name *.c -or -name *.s)
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
@@ -36,10 +36,10 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
 
-.PHONY: clean controller
+.PHONY: clean database
 
-controller:
-	g++ -o controller fsm.cpp states/*.cpp objects/*.cpp tinyxml/*.cpp
+database:
+	g++ -std=c++17 -o df_db db_thread.cpp -L /usr/local/lib/ -lpqxx -lpq
 
 #controller_clean:
 #	rm controller

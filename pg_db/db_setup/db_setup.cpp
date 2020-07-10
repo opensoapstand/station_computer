@@ -18,26 +18,56 @@ using namespace pqxx;
 
 db_setup::db_setup()
 {
-   if(pg_connect_newDB()) {
-      pg_db_setup(db_setup_connection);
+   db_setup_result = pg_connect_newDB(&db_setup_connection);
+
+   if(db_setup_result.DB_setup_code != ERROR_CREATE_CONNECTION_FAULT) {
+      pg_db_setup(&db_setup_connection);
    } else {
-      // Error handling for failed connection
+      // FSM Error handling for failed connection
    }
 
-   // TODO: DO NOT want postgres to manipulate server
-   if(pg_close_setup(db_setup_connection)){
+   // // TODO: DO NOT want postgres to manipulate server
+   // if(pg_close_setup(db_setup_connection)){
 
-   } else {
-      // Error handling for failed connection close
-   }
+   // } else {
+   //    // Error handling for failed connection close
+   // }
 }
 
 /*
  * Establish connection with postgres user account to template1 db
  */
-bool pg_connect_newDB()
+database_result pg_connect_newDB(connection_details *db_create_connection)
 {
+   database_result pg_connect_result = {
+      ERROR_MACHINE_CONNECTION_FAULT,
+      ERROR_CREATE_CONNECTION_FAULT,      
+   };
 
+   try
+   {
+      // WILL NEED TO STORE AS SECRET!  connection as template1 required if db from stratch.
+      string connection_string("dbname = template1 user = postgres password = * hostaddr=127.0.0.1 port=5432");
+      pqxx::connection C(connection_string.c_str());
+
+      if (C.is_open())
+      {
+         cout << "Opened database successfully: " << C.dbname() << endl;
+         db_create_connection->local_connection = C;
+         db_create_connection->DB_User_code = POSTGRES_SU;
+
+      }
+      else
+      {
+         cout << "Can't open database" << endl;
+      }
+   }
+   catch (const std::exception &e)
+   {
+      pg_connect_result.error_message = e;
+      cerr << e.what() << std::endl;
+   }
+   return pg_connect_result;
 }
 
 /*
@@ -47,7 +77,7 @@ bool pg_connect_newDB()
  *    Call pg_table_setup
  *    Call pg_alter_setup
  */
-bool pg_db_setup()
+database_result pg_db_setup(connection_details *db_create_connection)
 {
 }
 
@@ -56,7 +86,7 @@ bool pg_db_setup()
  * Create two users: dfAdmin and local_machine
  * dfAdmin has ALL CRUD and local_machine can CRU with limitations
  */
-bool pg_user_setup()
+database_result pg_user_setup(connection_details *db_create_connection)
 {
 }
 
@@ -65,7 +95,7 @@ bool pg_user_setup()
  * Create three schema: QT, Maintenance, Transactions
  * Set constraints and triggers
  */
-bool pg_table_setup()
+database_result pg_table_setup(connection_details *db_create_connection)
 {
 }
 
@@ -74,7 +104,7 @@ bool pg_table_setup()
  * Set constraints, Permissions and triggers once all 
  * tables and users exist
  */
-bool pg_alter_setup()
+database_result pg_alter_setup(connection_details *db_create_connection)
 {
 }
 

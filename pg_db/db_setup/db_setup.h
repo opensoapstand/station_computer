@@ -25,22 +25,21 @@ class db_setup
 {
 public:
     // Ctor
-    db_setup();
+    db_setup();    
+    // Connection
+    database_result pg_connect_newDB(connection_details *db_create_connection);
+    // Create Database, Groups, Users and Tables
+    database_result pg_db_setup(connection_details *db_create_connection);
+    database_result pg_user_setup(connection_details *db_create_connection);
+    database_result pg_table_setup(connection_details *db_create_connection);
+    database_result pg_alter_setup(connection_details *db_create_connection);
+    database_result pg_close_setup(connection_details *db_create_connection);
     // Dtor
     ~db_setup();
-    
-    // Connection
-    bool pg_connect_newDB();
-    // Create Database, Groups, Users and Tables
-    bool pg_db_setup(struct connection_details);
-    bool pg_user_setup();
-    bool pg_table_setup();
-    bool pg_alter_setup();
-    bool pg_close_setup(struct connection_details);
-
 
 private:
     connection_details db_setup_connection;
+    database_result db_setup_result;
 };
 
 #endif // DB_SETUP_H

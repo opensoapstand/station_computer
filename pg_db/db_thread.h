@@ -15,7 +15,7 @@
 #ifndef DB_THREAD_H
 #define DB_THREAD_H
 
-#include "../pg_util/db_utils.h"
+#include "./pg_util/db_utils.h"
 
 using namespace std;
 using namespace pqxx;
@@ -25,29 +25,28 @@ class db_thread
 public:
     // Ctor
     db_thread();
+    // Dtor
+    ~db_thread();
 
     // Intepret commands from FSM
-    bool db_command_parse();
-    bool db_command_switch();
+    database_result db_command_parse();
+    database_result db_command_switch();
 
     // Permission/User Checks
-    bool pg_connections();
+    connection_details pg_connections();
     // bool pg_connect_machine();
     // bool pg_connect_admin();
 
     // Machine Functions
-    bool insert_sale();
-    bool update_inventory();
+    database_result insert_sale(struct connection_details);
+    database_result update_inventory(struct connection_details);
 
     // Admin Functions
-    bool check_product();
-    bool insert_product();
-    bool update_product();
-    bool insert_new_inventory();
-    bool update_existing_inventory();
-
-    // Dtor
-    ~db_thread();
+    database_result check_product(struct connection_details);
+    database_result insert_product(struct connection_details);
+    database_result update_product(struct connection_details);
+    database_result insert_new_inventory(struct connection_details);
+    database_result update_existing_inventory(struct connection_details);
 
 private:
     connection_details db_connection;

@@ -25,7 +25,7 @@ db_thread::db_thread()
 /*
  * Take FSM command; Parse.
  */
-bool db_command_parse(string command_string)
+database_result db_command_parse(string command_string)
 {
     
 }
@@ -33,7 +33,7 @@ bool db_command_parse(string command_string)
 /*
  * Execute CRUD based on FSM command; called from infinite loop in main
  */
-bool db_command_switch(char parse_char)
+database_result db_command_switch(char parse_char)
 {
     // Will fill with ENUMS later...
     switch (parse_char)
@@ -67,7 +67,7 @@ bool db_command_switch(char parse_char)
 /*
  * Insert a new row for a completed sale
  */
-bool insert_sale()
+database_result insert_sale()
 {
 }
 
@@ -75,7 +75,7 @@ bool insert_sale()
  * Find row of selected drink; Deduct from total amount
  * Call the maintenance function for i/o
  */
-bool update_inventory()
+database_result update_inventory()
 {
 }
 
@@ -84,7 +84,7 @@ bool update_inventory()
 /*
  * Check for existing product through Query
  */
-bool product_check()
+database_result product_check()
 {
 }
 
@@ -93,7 +93,7 @@ bool product_check()
  * If Exists GO TO update_product().
  * Else insert new row with information.
  */
-bool insert_product()
+database_result insert_product()
 {
 }
 
@@ -102,7 +102,7 @@ bool insert_product()
  * If Exists update_product().
  * Else FAIL error with insert notification.
  */
-bool update_product()
+database_result update_product()
 {
 }
 
@@ -114,7 +114,7 @@ bool update_product()
 *   If False then fails Slot not available
 *   else inserts new row with inventory information
 */
-bool insert_new_inventory()
+database_result insert_new_inventory()
 {
 }
 
@@ -126,7 +126,7 @@ bool insert_new_inventory()
 *   If False then fails Slot not available
 *   else inserts new row with inventory information
 */
-bool update_existing_inventory()
+database_result update_existing_inventory()
 {
 }
 

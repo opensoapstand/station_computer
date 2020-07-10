@@ -11,6 +11,9 @@
 // all rights reserved
 //***************************************
 
+#ifndef _LEVELSENSOR__H__
+#define _LEVELSENSOR__H__
+
 #include <iostream>
 #include <string>
 #include <unistd.h>
@@ -24,3 +27,5 @@ class levelSensor{
     string command_to_string(string cmd);
 
 };
+
+#endif

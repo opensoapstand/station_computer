@@ -13,24 +13,29 @@
 
 #include "statedispenseidle.h"
 
+#define DISPENSE_IDLE_STRING  "Dispense Idle"
+
 stateDispenseIdle::stateDispenseIdle()
 {
 
 }
 
 stateDispenseIdle::stateDispenseIdle(messageMediator * message){
+   
+   debugOutput::sendMessage("stateDispenseIdle(messageMediator * message)", INFO);
 
 }
 
-stateDispenseIdle::stateDispenseIdle(int inputDigit){
-
-}
 
 stateDispenseIdle::~stateDispenseIdle()
 {
 
 }
 
+string stateDispenseIdle::toString()
+{
+   return DISPENSE_IDLE_STRING;
+}
 
 DF_ERROR stateDispenseIdle::onEntry()
 {
@@ -58,7 +63,7 @@ DF_ERROR stateDispenseIdle::onAction()
    return df_ret;
 }
 
-DF_FSM stateDispenseIdle::onAction(dispenser* dispenseObj)
+/*DF_FSM stateDispenseIdle::onAction(dispenser* dispenseObj)
 {
     DF_FSM df_state_ret  = DISPENSE_IDLE;
 
@@ -71,7 +76,7 @@ DF_FSM stateDispenseIdle::onAction(dispenser* dispenseObj)
     }
 
     return df_state_ret;
-}
+}*/
 
 DF_ERROR stateDispenseIdle::onExit()
 {

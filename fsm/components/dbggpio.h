@@ -17,7 +17,7 @@
 
 class dbggpio : public gpio{
 public:
-    dbggpio();
+   dbggpio();
 	dbggpio(int address);
 	~dbggpio();
 
@@ -26,7 +26,7 @@ public:
 	DF_ERROR writePin(bool level);
 
 protected:
-	void monitorGPIO();
+	//void monitorGPIO();
 };
 
 #endif

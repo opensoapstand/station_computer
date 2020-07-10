@@ -13,7 +13,8 @@
 
 dispenser::dispenser(){
     //default constructor to set all pin to nullptr
-    m_pDrink = nullptr;
+    //debugOutput::sendMessage("dispenser", INFO);
+    /*m_pDrink = nullptr;
 
     for (int i = 0; i < NUM_SOLENOID; i++)
         m_pSolenoid[i] = nullptr; 
@@ -21,13 +22,11 @@ dispenser::dispenser(){
     m_pFlowsenor[NUM_FLOWSENSOR] = nullptr;
       
     for (int i = 0; i < NUM_PUMP; i++)
-        m_pPump[i] = nullptr;
-
-    debugOutput debugInfo;
-    debugInfo.sendMessage("Object has been created", INFO);
+        m_pPump[i] = nullptr;*/
 }
 
 dispenser::~dispenser(){
+    debugOutput::sendMessage("~dispenser", INFO);
     // delete [] m_pDrink;
 
     // delete [] m_pSolenoid;
@@ -40,66 +39,64 @@ void dispenser::initDispenser(int slot){
 }
 
 //Setters
-DF_ERROR dispenser::setSolenoid(int drinkPin, int waterPin, int airPin)
+DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
 {
-    DF_ERROR df_ret = ERROR_BAD_PARAMS;
-
-    //df_ret = m_pSolenoid[DRINK]->setMCPPin(drinkPin);
-    if(OK != df_ret)
-    {
-        return df_ret = ERROR_DRINK_FAULT;
-    }
-    
-    df_ret = ERROR_BAD_PARAMS; //reset variable
-    //df_ret = m_pSolenoid[WATER]->setMCPPin(waterPin);
-    if(OK != df_ret)
-    {
-        return df_ret = ERROR_WATER_FAULT;
-    }
-    
-    df_ret = ERROR_BAD_PARAMS; //reset variable
-    //df_ret = m_pSolenoid[AIR]->setMCPPin(airPin);
-    if(OK != df_ret)
-    {
-        return df_ret = ERROR_AIR_FAULT;
+    DF_ERROR e_ret = ERROR_BAD_PARAMS; 
+   
+	if((X20 <= mcpAddress &&  X22 >= mcpAddress) && (MCP_PIN_START <= pin && MPC_PIN_END >= pin))
+	{
+        m_pSolenoid[pos] = new mcpGPIO(mcpAddress, pin);
+		e_ret = OK;
+	}
+	else if(X20 > mcpAddress || X22 < mcpAddress)
+	{
+		return e_ret = ERROR_WRONG_I2C_ADDRESS;
+	}
+	else if(MCP_PIN_START > pin || MPC_PIN_END < pin)
+	{
+		return e_ret = ERROR_BAD_PARAMS;
     }
 
-    return df_ret;
+    return e_ret;
 }
 
-DF_ERROR dispenser::setFlowsensor(int pin)
+DF_ERROR dispenser::setFlowsensor(int pin, int pos)
 {
-    DF_ERROR df_ret = ERROR_BAD_PARAMS;
+    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
-    //df_ret = m_pFlowsenor[FLOW]->setFlowPin(pin);
-    if(OK != df_ret)
+    if(pos == 0)
     {
-        return df_ret = ERROR_FS_FAULT;
-    };
+        m_pFlowsenor[pos] = new oddyseyx86GPIO(pin);
+    }
+    else
+    {
+        return e_ret = ERROR_FS_FAULT;
+    }
 
-    return df_ret;
+    return e_ret;
 }
 
-DF_ERROR dispenser::setPump(int forwardPin, int reversePin)
+DF_ERROR dispenser::setPump(int mcpAddress, int pin, int direction)
 {
-
-    DF_ERROR df_ret = ERROR_BAD_PARAMS; //reset variable
-    //df_ret = m_pPump[FORWARD]->setMCPPin(forwardPin);
-    if(OK != df_ret)
-    {
-        return df_ret = ERROR_FPUMP_FAULT;
-    }
+    DF_ERROR e_ret = ERROR_BAD_PARAMS; //reset variable    
     
-    df_ret = ERROR_BAD_PARAMS; //reset variable
-    //df_ret = m_pPump[REVERSE]->setMCPPin(reversePin);
-    if(OK != df_ret)
-    {
-        return df_ret = ERROR_RPUMP_FAULT;
-    }
+	if((X20 <= mcpAddress &&  X22 >=mcpAddress) && (MCP_PIN_START <= pin && MPC_PIN_END >= pin))
+	{
+        m_pPump[direction] = new mcpGPIO(mcpAddress, pin);
+		e_ret = OK;
+	}
+	else if(X20 > mcpAddress || X22 < mcpAddress)
+	{
+        //debugOutput::sendMessage("got here", INFO);
+		return e_ret = ERROR_WRONG_I2C_ADDRESS;
+	}
+	else if(MCP_PIN_START > pin || MPC_PIN_END < pin)
+	{
+		return e_ret = ERROR_BAD_PARAMS;
+	}
 
-    return df_ret;
+    return e_ret;
 }
-
 
 //
 DF_ERROR dispenser::startDispense(){

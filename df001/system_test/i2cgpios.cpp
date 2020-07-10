@@ -109,6 +109,7 @@ void i2cGpios::setPin_off(int address, int pinNum){
 
 void i2cGpios::setPump_Forward(int addressFWD, int pinNumFWD, int addressREV, int pinNumREV){
     if (addressFWD == X22 && addressREV ==X22){
+        //pump.pullUp(pinNumFWD, HIGH);
         pump.digitalWrite(pinNumFWD, HIGH);
         pump.digitalWrite(pinNumREV, LOW);
         std::clog << "Forward pumping\n";
@@ -127,7 +128,7 @@ void i2cGpios::setPump_Reverse(int addressFWD, int pinNumFWD, int addressREV, in
     }
     else
     {
-        std::clog << "i2c address not available\n";
+        std::clog << "i2c address not availablpe\n";
     }  
 }
 

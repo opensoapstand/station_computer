@@ -22,8 +22,9 @@ class stateIdle : public stateVirtual
     public:
         stateIdle();
         stateIdle (messageMediator * message); //debug through local network 
-        stateIdle (int inputDigit); //debug through terminal
         ~stateIdle ();
+
+        string toString();
 
         DF_ERROR onEntry();
         DF_ERROR onAction();

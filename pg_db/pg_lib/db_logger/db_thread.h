@@ -17,22 +17,34 @@
 
 #include "../pg_util/db_utils.h"
 
+using namespace std;
+using namespace pqxx;
+
 class db_thread
 {
 public:
     // Ctor
     db_thread();
 
+    // Intepret commands from FSM
+    bool db_command_parse();
+    bool db_command_switch();
+
     // Permission/User Checks
-    bool pg_connect_machine();
-    bool pg_connect_admin();
+    bool pg_connections();
+    // bool pg_connect_machine();
+    // bool pg_connect_admin();
 
     // Machine Functions
     bool insert_sale();
+    bool update_inventory();
 
     // Admin Functions
-    bool insert_drink_inventory();
-    bool update_machine_option();
+    bool check_product();
+    bool insert_product();
+    bool update_product();
+    bool insert_new_inventory();
+    bool update_existing_inventory();
 
     // Dtor
     ~db_thread();

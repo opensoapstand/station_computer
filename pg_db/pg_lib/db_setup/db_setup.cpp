@@ -18,32 +18,72 @@ using namespace pqxx;
 
 db_setup::db_setup()
 {
+   if(pg_connect_newDB()) {
+      pg_db_setup(db_setup_connection);
+   } else {
+      // Error handling for failed connection
+   }
+
+   // TODO: DO NOT want postgres to manipulate server
+   if(pg_close_setup(db_setup_connection)){
+
+   } else {
+      // Error handling for failed connection close
+   }
 }
 
-// Connection
+/*
+ * Establish connection with postgres user account to template1 db
+ */
 bool pg_connect_newDB()
 {
+
 }
 
-// Create Database, Groups, Users and Tables
-bool pg_db_setup(db_setup connection_details)
+/*
+ * pg_connect_newDB()
+ * Create db here
+ *    Call pg_user_setup
+ *    Call pg_table_setup
+ *    Call pg_alter_setup
+ */
+bool pg_db_setup()
 {
 }
 
-bool pg_user_setup(db_setup connection_details)
+/*
+ * Called from pg_db_setup
+ * Create two users: dfAdmin and local_machine
+ * dfAdmin has ALL CRUD and local_machine can CRU with limitations
+ */
+bool pg_user_setup()
 {
 }
 
-bool pg_table_setup(db_setup connection_details)
+/*
+ * Called from pg_db_setup
+ * Create three schema: QT, Maintenance, Transactions
+ * Set constraints and triggers
+ */
+bool pg_table_setup()
+{
+}
+
+/*
+ * Called from pg_db_setup
+ * Set constraints, Permissions and triggers once all 
+ * tables and users exist
+ */
+bool pg_alter_setup()
 {
 }
 
 // Dtor
 db_setup::~db_setup()
 {
-
 }
 
+// Ignore stratchpad for now...will move functions later.
 int main(int argc, char *argv[])
 {
    string dbName = "DropME";

@@ -33,8 +33,10 @@ public:
     bool pg_connect_newDB();
     // Create Database, Groups, Users and Tables
     bool pg_db_setup(struct connection_details);
-    bool pg_user_setup(struct connection_details);
-    bool pg_table_setup(struct connection_details);
+    bool pg_user_setup();
+    bool pg_table_setup();
+    bool pg_alter_setup();
+    bool pg_close_setup(struct connection_details);
 
 
 private:

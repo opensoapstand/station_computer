@@ -24,6 +24,7 @@
 struct connection_details
 {
     char const *connection_type;
+    // TODO:set up 3 admin, machine, postgres
     pqxx::connection *local_connection;
 };
 

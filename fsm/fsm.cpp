@@ -55,21 +55,21 @@ DF_ERROR stateLoop()
     {
         if (fsmState != fsmNewState) //state change
         {
-            debugOutput::sendMessage("onEntry()  [" + g_stateArray[fsmNewState]->toString() + "]", INFO);
+            //debugOutput::sendMessage("onEntry()  [" + g_stateArray[fsmNewState]->toString() + "]", INFO);
             dfRet = g_stateArray[fsmNewState]->onEntry();
             fsmState = g_stateArray[fsmNewState]->getCurrentState();
         }
 
         if (OK == dfRet) 
         {
-           debugOutput::sendMessage("onAction() [" + g_stateArray[fsmState]->toString() + "]", INFO);
+           //debugOutput::sendMessage("onAction() [" + g_stateArray[fsmState]->toString() + "]", INFO);
            dfRet = g_stateArray[fsmState]->onAction();
 
             fsmNewState = g_stateArray[fsmState]->getNextState();
 
             if ((OK == dfRet) && (fsmNewState != fsmState))
             {
-                debugOutput::sendMessage("onExit()   [" + g_stateArray[fsmState]->toString() + "]", INFO);
+                //debugOutput::sendMessage("onExit()   [" + g_stateArray[fsmState]->toString() + "]", INFO);
                 dfRet = g_stateArray[fsmState]->onExit();
 
                 fsmNewState = g_stateArray[fsmState]->getNextState(); //update the state

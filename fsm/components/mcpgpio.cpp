@@ -16,7 +16,7 @@
 
 mcpGPIO::mcpGPIO(int i2caddress, int pin)
 {
-	debugOutput::sendMessage("mcpGPIO", INFO);
+	debugOutput::sendMessage("------mcpGPIO------", INFO);
 	m_nPin = pin;
 	m_nAddress = convert_to_int(i2caddress);
 
@@ -54,8 +54,7 @@ DF_ERROR mcpGPIO::setDirection(bool input)
 
 DF_ERROR mcpGPIO::readPin(bool * level) //may not be use or needed 
 {
-	debugOutput debugInfo;
-	debugInfo.sendMessage("readPin", INFO);
+	debugOutput::sendMessage("readPin", INFO);
 	
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
@@ -70,8 +69,7 @@ DF_ERROR mcpGPIO::readPin(bool * level) //may not be use or needed
 
 DF_ERROR mcpGPIO::writePin(bool level) //control of the cassettes
 {
-	debugOutput debugInfo;
-	debugInfo.sendMessage("writePin", INFO);
+	debugOutput::sendMessage("writePin", INFO);
 
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
@@ -106,4 +104,9 @@ int mcpGPIO::convert_to_int(int addressNum)
 	hex_int = 16*(addressNum/10) + (addressNum%10); 	
 
 	return hex_int;
+}
+
+int mcpGPIO::getMCPAddress()
+{
+	return m_nAddress;
 }

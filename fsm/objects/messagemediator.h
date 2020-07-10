@@ -26,16 +26,23 @@ class messageMediator
       DF_ERROR createThreads();
 
       DF_ERROR sendMessage();
+
+      string getProcessString();
+      bool getStringReady();
+      void clearProcessString();
    
       //DF_ERROR doKBThread (void * pThreadArgs);
-      static void * doKBThread(void * pThreadArgs);
 
    private:
       int messageIP;
       static bool m_fExitThreads;
-      pthread_t * m_pKBThread;
+      pthread_t m_pKBThread;
 
-      static DF_ERROR updateCmdString(char key);      
+      static string m_processString;
+      static bool m_stringReady;
+
+      static DF_ERROR updateCmdString(char key);  
+      static void * doKBThread(void * pThreadArgs);    
 };
 
 #endif

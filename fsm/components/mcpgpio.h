@@ -29,6 +29,8 @@ public:
 	DF_ERROR readPin(bool* level);
 	DF_ERROR writePin(bool level);
 
+	int getMCPAddress();
+
 protected:
 	void monitorGPIO();
 	int	m_i2cAddress;

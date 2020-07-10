@@ -18,6 +18,10 @@
 
 #include "statevirtual.h"
 
+#define AIR_CHAR 'a'
+#define WATER_CHAR 'w'
+#define DRINK_CHAR 'd'
+
 class stateDispense : public stateVirtual
 {
     public:

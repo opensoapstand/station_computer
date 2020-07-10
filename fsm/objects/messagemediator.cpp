@@ -24,13 +24,15 @@
 #define DELAY_USEC 1
 
 bool messageMediator::m_fExitThreads = false;
+bool messageMediator::m_stringReady = false;
+string messageMediator::m_processString;
 
 messageMediator::messageMediator()
 {
-   debugOutput::sendMessage("messageMediator", INFO);
+   debugOutput::sendMessage("------messageMediator------", INFO);
 
    m_fExitThreads = false;
-   m_pKBThread = NULL;
+   m_pKBThread = -1;
 }
 
 messageMediator::~messageMediator()
@@ -43,7 +45,7 @@ messageMediator::~messageMediator()
    
 }
 
-//needs params, but this will be called by states in order to send data to receivers
+//needs params, but this will be !!called by states!! in order to send data to receivers
 DF_ERROR messageMediator::sendMessage()
 {
    DF_ERROR dfError = OK;
@@ -60,8 +62,10 @@ DF_ERROR messageMediator::createThreads()
 	pthread_attr_init(&attr);
 
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
-   //rc = pthread_create(m_pKBThread, &attr, &doKBThread, NULL);
-   
+   rc = pthread_create(&m_pKBThread, &attr, doKBThread, NULL);
+   //rc = pthread_create(m_pKBThread, NULL, &doKBThread, NULL);
+
+
    if (rc)
 	{
 		debugOutput::sendMessage("failed to create KB Thread", INFO);
@@ -71,11 +75,21 @@ DF_ERROR messageMediator::createThreads()
    return df_ret;
 }
 
+//up to you I would have a delimiter like ";" and concat to a string. Then when the delim goes analyse or sends to the state
 DF_ERROR messageMediator::updateCmdString(char key)
 {
    DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
-   //up to you I would have a delimiter like ";" and concat to a string. Then when the delim goes analyse or sends to the state
+   if(';' != key)
+   {
+      m_processString.push_back(key);
+   }
+   else
+   {
+      debugOutput::sendMessage(m_processString,INFO);
+      m_stringReady = true;
+   }
+   
 
    return df_ret;
 }
@@ -84,6 +98,8 @@ void* messageMediator::doKBThread(void * pThreadArgs)
 {
    debugOutput::sendMessage("doKBThread", INFO);
    DF_ERROR df_ret = OK;
+
+   //m_fExitThreads = false; 
 
    while (!m_fExitThreads)
    {
@@ -96,4 +112,20 @@ void* messageMediator::doKBThread(void * pThreadArgs)
    }
 
    // df_ret;
+}
+
+string messageMediator::getProcessString()
+{
+   return m_processString;
+}
+
+void messageMediator::clearProcessString()
+{
+      m_processString.clear();
+      m_stringReady = false;
+}
+
+bool messageMediator::getStringReady()
+{
+      return m_stringReady;
 }

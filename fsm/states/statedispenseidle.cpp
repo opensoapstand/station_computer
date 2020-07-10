@@ -22,8 +22,7 @@ stateDispenseIdle::stateDispenseIdle()
 
 stateDispenseIdle::stateDispenseIdle(messageMediator * message){
    
-   debugOutput::sendMessage("stateDispenseIdle(messageMediator * message)", INFO);
-
+   //debugOutput::sendMessage("stateDispenseIdle(messageMediator * message)", INFO);
 }
 
 
@@ -56,7 +55,7 @@ DF_ERROR stateDispenseIdle::onAction()
    {
       // do stuff
       //debugInfo.sendMessage("onAction() for state [" + std::to_string((int)m_nextState) + "]", INFO);
-          
+      m_nextState = DISPENSE;
       return df_ret = OK;
    }
 
@@ -84,7 +83,7 @@ DF_ERROR stateDispenseIdle::onExit()
     DF_ERROR e_ret  = OK;
 
     m_state = DISPENSE_IDLE;
-    //m_nextState = DISPENSE;
+    m_nextState = DISPENSE;
 
    return e_ret;
 }

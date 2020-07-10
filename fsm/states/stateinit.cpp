@@ -32,7 +32,7 @@ stateInit::stateInit(messageMediator * message)
 
    for (int i = 0; i < CASSETTES_MAX; i++)
    {
-      debugOutput::sendMessage("Object "+ to_string(i) + " has been created", INFO);
+      debugOutput::sendMessage("Cassette Object "+ to_string(i) + " has been created", INFO);
       cassettes[i] = new dispenser();
    }
 }
@@ -123,7 +123,7 @@ DF_ERROR stateInit::onAction()
 
       while(nullptr != dispenserId[idx])
       {
-         debugOutput::sendMessage("Sort for dispenser:" + string(dispenserId[idx]), INFO);
+         debugOutput::sendMessage("Sort for dispenser:" + to_string(idx), INFO);
          e_ret = setDispenserSolenoid(l_pDispenser, idx);
          
          if(OK != e_ret) //if solenoid not set properly, return error
@@ -245,6 +245,8 @@ DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispens
             int pin_num = atoi(getXML(IO_STRING, l_pSingleSolenoid));
             cassettes[dispenserIdx]->setSolenoid(address_num, pin_num, l_pos);
 
+            //debugOutput::sendMessage("Solenoid:   " + to_string(l_pos) + " |type " + typeCheck 
+            //                         + " |address " + to_string(cassettes[dispenserIdx]->getI2CAddress(l_pos)) + " |pin " + to_string(pin_num), INFO);
             debugOutput::sendMessage("Solenoid:   " + to_string(l_pos) + " |type " + typeCheck 
                                      + " |address " + to_string(address_num) + " |pin " + to_string(pin_num), INFO);
          }

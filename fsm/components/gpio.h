@@ -30,6 +30,8 @@ public:
 	virtual DF_ERROR readPin(bool* level) = 0;
 	virtual DF_ERROR writePin(bool level) = 0;
 
+	virtual int getMCPAddress() {};
+
 	DF_ERROR setInterrupt(DF_ERROR(*pf)()); 
 
 	std::thread listener();

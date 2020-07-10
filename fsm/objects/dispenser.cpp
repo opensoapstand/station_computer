@@ -11,6 +11,8 @@
 //***************************************
 #include "dispenser.h"
 
+#define ACTIVATION_TIME 10
+
 dispenser::dispenser(){
     //default constructor to set all pin to nullptr
     //debugOutput::sendMessage("dispenser", INFO);
@@ -45,6 +47,7 @@ DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
    
 	if((X20 <= mcpAddress &&  X22 >= mcpAddress) && (MCP_PIN_START <= pin && MPC_PIN_END >= pin))
 	{
+        //debugOutput::sendMessage("Address-" + to_string(mcpAddress) + ", Pin-" + to_string(pin) + " => solenoid set", INFO);
         m_pSolenoid[pos] = new mcpGPIO(mcpAddress, pin);
 		e_ret = OK;
 	}
@@ -108,7 +111,21 @@ DF_ERROR dispenser::stopDispense(){
 DF_ERROR dispenser::cleanNozzle(){
 
 }
-
 drink dispenser::getDrink(){
 
+}
+
+//timer based
+DF_ERROR dispenser::testDispense(int pos){
+    DF_ERROR e_ret = ERROR_BAD_PARAMS;
+
+    m_pSolenoid[pos]->writePin(HIGH);
+    sleep(ACTIVATION_TIME);
+    m_pSolenoid[pos]->writePin(LOW);
+
+    return e_ret = OK;
+}
+
+int dispenser::getI2CAddress(int pos){
+    return m_pSolenoid[pos]->getMCPAddress();
 }

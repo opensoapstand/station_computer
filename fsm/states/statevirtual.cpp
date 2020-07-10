@@ -14,11 +14,6 @@
 #include <iostream>
 
 stateVirtual::stateVirtual(){
-
-   for (int i = 0; i < CASSETTES_MAX; i++)
-   {
-      cassettes[i] = new dispenser();
-   }
    m_state = START;
 }
 

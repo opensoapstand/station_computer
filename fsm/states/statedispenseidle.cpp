@@ -21,6 +21,8 @@ stateDispenseIdle::stateDispenseIdle()
 }
 
 stateDispenseIdle::stateDispenseIdle(messageMediator * message){
+   
+   debugOutput::sendMessage("stateDispenseIdle(messageMediator * message)", INFO);
 
 }
 

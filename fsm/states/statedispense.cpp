@@ -22,6 +22,7 @@ stateDispense::stateDispense()
 
 stateDispense::stateDispense(messageMediator * message){
 
+   debugOutput::sendMessage("stateDispense(messageMediator * message)", INFO);
 }
 
 

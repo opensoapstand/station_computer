@@ -21,7 +21,7 @@ stateIdle::stateIdle()
 
 stateIdle::stateIdle(messageMediator * message)
 {
-   
+   debugOutput::sendMessage("stateIdle(messageMediator * message)", INFO);
 }
 
 

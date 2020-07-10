@@ -60,7 +60,7 @@ DF_ERROR messageMediator::createThreads()
 	pthread_attr_init(&attr);
 
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
-   rc = pthread_create(m_pKBThread, &attr, &doKBThread, NULL);
+   //rc = pthread_create(m_pKBThread, &attr, &doKBThread, NULL);
    
    if (rc)
 	{

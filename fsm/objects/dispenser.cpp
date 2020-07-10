@@ -13,8 +13,8 @@
 
 dispenser::dispenser(){
     //default constructor to set all pin to nullptr
-    debugOutput::sendMessage("dispenser", INFO);
-    m_pDrink = nullptr;
+    //debugOutput::sendMessage("dispenser", INFO);
+    /*m_pDrink = nullptr;
 
     for (int i = 0; i < NUM_SOLENOID; i++)
         m_pSolenoid[i] = nullptr; 
@@ -22,7 +22,7 @@ dispenser::dispenser(){
     m_pFlowsenor[NUM_FLOWSENSOR] = nullptr;
       
     for (int i = 0; i < NUM_PUMP; i++)
-        m_pPump[i] = nullptr;
+        m_pPump[i] = nullptr;*/
 }
 
 dispenser::~dispenser(){
@@ -87,7 +87,7 @@ DF_ERROR dispenser::setPump(int mcpAddress, int pin, int direction)
 	}
 	else if(X20 > mcpAddress || X22 < mcpAddress)
 	{
-        debugOutput::sendMessage("got here", INFO);
+        //debugOutput::sendMessage("got here", INFO);
 		return e_ret = ERROR_WRONG_I2C_ADDRESS;
 	}
 	else if(MCP_PIN_START > pin || MPC_PIN_END < pin)

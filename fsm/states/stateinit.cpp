@@ -19,19 +19,21 @@
 stateInit::stateInit()
 {
    //m_stateNext = static_cast<DF_FSM>(DF_FSM::INIT+1);
-   for(int i = 0; i < CASSETTES_MAX; i++)
-   {
-      dispenserId[i] = nullptr;
-      debugOutput::sendMessage("Object "+ to_string(i) + " has been created", INFO);
-   }
+   // for(int i = 0; i < CASSETTES_MAX; i++)
+   // {
+   //    dispenserId[i] = nullptr;
+   //    debugOutput::sendMessage("Object "+ to_string(i) + " has been created", INFO);
+   // }
 }
 
 stateInit::stateInit(messageMediator * message)
 {
-   for(int i = 0; i < CASSETTES_MAX; i++)
+   debugOutput::sendMessage("stateInit(messageMediator * message)", INFO);
+
+   for (int i = 0; i < CASSETTES_MAX; i++)
    {
-      dispenserId[i] = nullptr;
       debugOutput::sendMessage("Object "+ to_string(i) + " has been created", INFO);
+      cassettes[i] = new dispenser();
    }
 }
 

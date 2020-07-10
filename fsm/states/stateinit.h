@@ -23,8 +23,11 @@ class stateInit : public stateVirtual
     public:
         stateInit();
         stateInit(messageMediator * message); //debug through local network 
-        stateInit(int inputDigit); //debug through terminal
         ~stateInit();
+
+        string toString();
+
+        TiXmlElement *getSolenoid(char* dispenserID); 
 
         DF_ERROR onEntry();
         DF_ERROR onAction();

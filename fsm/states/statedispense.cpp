@@ -13,6 +13,8 @@
 #include "statedispense.h"
 #include <string>
 
+#define DISPENSE_STRING  "Dispense"
+
 stateDispense::stateDispense()
 {
 
@@ -22,15 +24,16 @@ stateDispense::stateDispense(messageMediator * message){
 
 }
 
-stateDispense::stateDispense(int inputDigit){
-
-}
 
 stateDispense::~stateDispense()
 {
 
 }
 
+string stateDispense::toString()
+{
+   return DISPENSE_STRING;
+}
 
 DF_ERROR stateDispense::onEntry()
 {

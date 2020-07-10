@@ -12,6 +12,8 @@
 
 #include "stateidle.h"
 
+#define IDLE_STRING "Idle"
+
 stateIdle::stateIdle()
 {
 
@@ -22,13 +24,15 @@ stateIdle::stateIdle(messageMediator * message)
    
 }
 
-stateIdle::stateIdle(int inputDigit){
-   //init the cassette 
-}
 
 stateIdle::~stateIdle()
 {
    //delete stuff
+}
+
+string stateIdle::toString()
+{
+   return IDLE_STRING;
 }
 
 DF_ERROR stateIdle::onEntry()

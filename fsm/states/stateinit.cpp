@@ -14,6 +14,8 @@
 #include <iostream>
 #include <string>
 
+#define INIT_STRING "Init"
+
 stateInit::stateInit()
 {
    //m_stateNext = static_cast<DF_FSM>(DF_FSM::INIT+1);
@@ -26,16 +28,21 @@ stateInit::stateInit()
 
 stateInit::stateInit(messageMediator * message)
 {
-   
-}
-
-stateInit::stateInit(int inputDigit){
-   //init the cassette 
+   for(int i = 0; i < CASSETTES_MAX; i++)
+   {
+      dispenserId[i] = nullptr;
+      debugOutput::sendMessage("Object "+ to_string(i) + " has been created", INFO);
+   }
 }
 
 stateInit::~stateInit()
 {
    //delete stuff
+}
+
+string stateInit::toString()
+{
+   return INIT_STRING;
 }
 
 DF_ERROR stateInit::onEntry()
@@ -405,7 +412,7 @@ DF_ERROR stateInit::setButton(TiXmlElement *hardwareEle, int dispenserIdx)
             debugOutput::sendMessage("Button:     " + to_string(l_pos) + " |type " + typeCheck 
                                      + " |address " + to_string(address_num) + " |pin " + to_string(pin_num), INFO);                         
          
-            if((20 <= address_num &&  22 >= address_num) && (MCP_PIN_START <= pin_num && MPC_PIN_END >= pin_num))
+            if((X20 <= address_num &&  X22 >= address_num) && (MCP_PIN_START <= pin_num && MPC_PIN_END >= pin_num))
             {
                m_pButton[l_pos] = new mcpGPIO(address_num, pin_num);
                e_ret = OK;

@@ -13,6 +13,7 @@
 #ifndef STATEVIRTUAL__H_
 #define STATEVIRTUAL__H_
 
+#include <string>
 #include "../dftypes.h"
 #include "../objects/messagemediator.h"
 
@@ -21,23 +22,22 @@
 
 #define CASSETTES_MAX 9
 
-
+using namespace std;
 class stateVirtual
 {
     public:
         stateVirtual();
         stateVirtual(messageMediator * message);
-        stateVirtual(int state);
         ~stateVirtual();
+
+        virtual string toString() = 0;
 
         DF_FSM getNextState();
         DF_FSM getCurrentState();
 
-        //void setNextState(DF_FSM *nextState);
-
-        virtual DF_ERROR onEntry(){};
-        virtual DF_ERROR onAction(){};
-        virtual DF_ERROR onExit(){};
+        virtual DF_ERROR onEntry() = 0;
+        virtual DF_ERROR onAction() = 0;
+        virtual DF_ERROR onExit() = 0;
 
     protected:
         DF_FSM  m_state;

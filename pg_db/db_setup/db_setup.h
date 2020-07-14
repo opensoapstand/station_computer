@@ -27,19 +27,23 @@ public:
     // Ctor
     db_setup();
     // Connection
-    database_result pg_connect_newDB(connection_details *db_conn);
+    pqxx::connection pg_connect_newDB();
     // Create Database, Groups, Users and Tables
     void pg_user_setup(pqxx::connection *conn, database_result *pg_setup_result);
     void pg_table_setup(pqxx::connection *conn, database_result *pg_setup_result);
     void pg_alter_setup(pqxx::connection *conn, database_result *pg_setup_result);
     database_result pg_db_setup(connection_details *db_conn);
-    database_result pg_close_setup(connection_details *db_conn);
+    void pg_close_setup(connection_details *db_conn);
+
+    pqxx::connection & conn() {return db_create_connection;}
+    const pqxx::connection & conn() const {return db_create_connection;}
     // Dtor
     ~db_setup();
-    connection_details db_setup_connection;
-    database_result db_setup_result;
 
 private:
+    pqxx::connection db_create_connection;
+    connection_details db_setup_connection;
+    database_result db_setup_result;
 };
 
 #endif // DB_SETUP_H

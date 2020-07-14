@@ -132,10 +132,11 @@ database_result update_existing_inventory()
 
 int main(int argc, char *argv[])
 {
+    db_setup();
     // TODO: Integrate FSM mutex.  Fails out on
     // FSM Thread pipes character commands here
-    while (1)
-    {
-        // Call db_command_parse()
-    }
+    // while (1)
+    // {
+    //     // Call db_command_parse()
+    // }
 }

@@ -16,34 +16,41 @@
 using namespace std;
 using namespace pqxx;
 
-
 /*
  * Establish connection with postgres user account to template1 db
  */
-database_result pg_connect_newDB(connection_details *db_conn)
+pqxx::connection pg_connect_newDB()
 {
    database_result pg_connect_result = {
        ERROR_TRANSACTION_UNDEFINED,
        ERROR_CREATE_DB_UNDEFINED,
    };
 
-   cout << "start connection" << endl;
+   cout << "start" << endl;
+
+   connection Conn;
+
    try
    {
       // WILL NEED TO STORE AS SECRET!  connection as template1 required if db from stratch.
-      string connection_string("hostname=localhost dbname = drinkfill user = local_machine password = machine1234 port=5432");
-      db_conn->local_connection = pqxx::connection(connection_string.c_str());
-      // pqxx::connection C(connection_string.c_str());
+      // string connection_string("hostaddr=127.0.0.1/32 dbname = drinkfill user = local_machine password = machine1234 port=5432");
+      string connection_string("dbname = template1 user = postgres password = P0$tGr@$$ hostaddr=127.0.0.1 port=5432");
+      // string connection_string("host=localhost dbname=template1 user=postgres password=P0$tGr@$$ port=5432");
+      // db_conn->local_connection = pqxx::connection(connection_string.c_str());
+      pqxx::connection C(connection_string.c_str());
+      // db_conn->local_connection = pqxx::connection(connection_string.c_str());
 
-      if (db_conn->local_connection.is_open())
+      if (C.is_open())
       {
-         cout << "Opened database successfully: " << db_conn->local_connection.dbname() << db_conn->local_connection.username() << endl;
-         db_conn->DB_User_code = POSTGRES_SU;
+         // cout << "Opened database successfully: " << db_conn->local_connection.dbname() << C.username() << endl;
+                  cout << "Opened database successfully: " << C.dbname() << C.username() << endl;
+         // db_conn->DB_User_code = POSTGRES_SU;
       }
       else
       {
          cout << "Can't open database" << endl;
       }
+      return C;
    }
    catch (const std::exception &e)
    {
@@ -51,7 +58,8 @@ database_result pg_connect_newDB(connection_details *db_conn)
       pg_connect_result.error_message = e.what();
       cerr << e.what() << std::endl;
    }
-   return pg_connect_result;
+
+   return Conn;
 }
 
 /*
@@ -108,22 +116,16 @@ void pg_alter_setup(pqxx::connection *conn, database_result *pg_setup_result)
  * Set constraints, Permissions and triggers once all 
  * tables and users exist
  */
-database_result pg_close_setup(connection_details *db_conn)
+void pg_close_setup(pqxx::connection *conn)
 {
-   database_result pg_connect_result = {
-       ERROR_TRANSACTION_UNDEFINED,
-       ERROR_CREATE_DB_UNDEFINED,
-   };
-
    try
    {
-      if (db_conn->local_connection.is_open())
+      if (conn->is_open())
       {
-         cout << "Opened database successfully: " << db_conn->local_connection.dbname() << endl;
+         cout << "Opened database successfully: " << conn->dbname() << endl;
 
-         cout << "NOW CLOSING " << db_conn->local_connection.dbname() << endl;
-         db_conn->DB_User_code = NO_USER;
-         db_conn->local_connection.close();
+         cout << "NOW CLOSING " << conn->dbname() << endl;
+         conn->close();
       }
       else
       {
@@ -132,11 +134,10 @@ database_result pg_close_setup(connection_details *db_conn)
    }
    catch (const std::exception &e)
    {
-      pg_connect_result.DB_setup_code = ERROR_CREATE_CONNECTION_FAULT;
-      pg_connect_result.error_message = e.what();
+      // pg_connect_result.DB_setup_code = ERROR_CREATE_CONNECTION_FAULT;
+      // pg_connect_result.error_message = e.what();
       cerr << e.what() << std::endl;
    }
-   return pg_connect_result;
 }
 
 /*
@@ -199,25 +200,7 @@ database_result pg_db_setup(connection_details *db_conn)
 
 db_setup::db_setup()
 {
-   // db_setup_result = pg_connect_newDB(db_setup_connection);
-
-   // if (db_setup_result.DB_setup_code != ERROR_CREATE_CONNECTION_FAULT)
-   // {
-   //    db_setup_result = pg_db_setup(db_setup_connection);
-   // }
-   // else
-   // {
-   //    // FSM Error handling for failed connection
-   // }
-
-   // if (db_setup_result.DB_setup_code == DB_CREATE_SUCESS)
-   // {
-   // }
-   // else
-   // {
-   // }
-
-   // db_setup_result = pg_close_setup(db_setup_connection);
+   
 }
 
 // Dtor
@@ -228,40 +211,8 @@ db_setup::~db_setup()
 //Ignore stratchpad for now...will move functions later.
 int main(int argc, char *argv[])
 {
-   db_setup *db = new db_setup();
-   cout << db->db_setup_connection.DB_User_code << endl;
-
-   // connection_details *dbConn = db.db_setup_connection.local_connection;
-   connection_details *dbConn = &db->db_setup_connection;
-   database_result dbResult = db->db_setup_result;
-
-   dbResult = pg_connect_newDB(dbConn);
-   dbResult = pg_close_setup(dbConn);
-
-   // cout << db->db_setup_connection.local_connection->is_open() << endl;
-
-   // db->db_setup_connection.local_connection->close();
-
-   // cout << db->db_setup_connection.local_connection->is_open() << endl;
-
-
-   // if (db_setup_result.DB_setup_code != ERROR_CREATE_CONNECTION_FAULT)
-   // {
-   //    db_setup_result = pg_db_setup(db_setup_connection);
-   // }
-   // else
-   // {
-   //    // FSM Error handling for failed connection
-   // }
-
-   // if (db_setup_result.DB_setup_code == DB_CREATE_SUCESS)
-   // {
-   // }
-   // else
-   // {
-   // }
-
-   // db_setup_result = pg_close_setup(db_setup_connection);
-
+   db_setup* db = new db_setup();
+   db->conn() = pg_connect_newDB();
+   pg_close_setup(&db->conn());
    return 0;
 }

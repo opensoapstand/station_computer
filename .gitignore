@@ -18,4 +18,4 @@ fsm/.vs/fsm/v15/ipch/AutoPCH/a7b8246a94880a47/MCPGPIO.ipch
 # Ignore all local history of files
 .history
 
-.pg_db/build/*
+/pg_db/build/*

@@ -16,6 +16,7 @@
 #define DB_THREAD_H
 
 #include "./pg_util/db_utils.h"
+#include "./db_setup/db_setup.h"
 
 using namespace std;
 using namespace pqxx;

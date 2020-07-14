@@ -27,7 +27,7 @@ class stateIdle : public stateVirtual
         string toString();
 
         DF_ERROR onEntry();
-        DF_ERROR onAction();
+        DF_ERROR onAction(dispenser* cassettes[]);
         DF_ERROR onExit();
 
     private:    

@@ -46,7 +46,7 @@ DF_ERROR stateDispenseIdle::onEntry()
    return e_ret;
 }
 
-DF_ERROR stateDispenseIdle::onAction()
+DF_ERROR stateDispenseIdle::onAction(dispenser* cassettes[])
 {
    debugOutput debugInfo;
    DF_ERROR df_ret  = ERROR_BAD_PARAMS;

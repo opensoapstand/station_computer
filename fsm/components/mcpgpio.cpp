@@ -110,3 +110,8 @@ int mcpGPIO::getMCPAddress()
 {
 	return m_nAddress;
 }
+
+int mcpGPIO::getMCPPin()
+{
+	return m_nPin;
+}

@@ -31,6 +31,7 @@ public:
 	virtual DF_ERROR writePin(bool level) = 0;
 
 	virtual int getMCPAddress() {};
+	virtual int getMCPPin() {};
 
 	DF_ERROR setInterrupt(DF_ERROR(*pf)()); 
 

@@ -26,10 +26,8 @@ stateInit::stateInit()
    // }
 }
 
-stateInit::stateInit(messageMediator * message)
+stateInit::stateInit(messageMediator * message, dispenser* cassettes[])
 {
-   debugOutput::sendMessage("stateInit(messageMediator * message)", INFO);
-
    for (int i = 0; i < CASSETTES_MAX; i++)
    {
       debugOutput::sendMessage("Cassette Object "+ to_string(i) + " has been created", INFO);
@@ -71,7 +69,7 @@ DF_ERROR stateInit::onEntry()
 }
 
 //start to initialize all related hardware
-DF_ERROR stateInit::onAction()
+DF_ERROR stateInit::onAction(dispenser* cassettes[])
 {
    //need to check with tinyXML for hardware info
    DF_ERROR e_ret  = ERROR_BAD_PARAMS;
@@ -124,7 +122,7 @@ DF_ERROR stateInit::onAction()
       while(nullptr != dispenserId[idx])
       {
          debugOutput::sendMessage("Sort for dispenser:" + to_string(idx), INFO);
-         e_ret = setDispenserSolenoid(l_pDispenser, idx);
+         e_ret = setDispenserSolenoid(l_pDispenser, idx, cassettes);
          
          if(OK != e_ret) //if solenoid not set properly, return error
          {
@@ -133,7 +131,7 @@ DF_ERROR stateInit::onAction()
          }
 
          e_ret  = ERROR_BAD_PARAMS; //reset e_ret
-         e_ret = setDispenserPump(l_pDispenser, idx);
+         e_ret = setDispenserPump(l_pDispenser, idx, cassettes);
 
          if(OK != e_ret) //if flowsensor not set properly, return error
          {
@@ -142,7 +140,7 @@ DF_ERROR stateInit::onAction()
          }
 
          e_ret  = ERROR_BAD_PARAMS; //reset e_ret
-         e_ret = setDispenserFlowSensor(l_pDispenser, idx);
+         e_ret = setDispenserFlowSensor(l_pDispenser, idx, cassettes);
 
          if(OK != e_ret) //if flowsensor not set properly, return error
          {
@@ -213,7 +211,7 @@ DF_ERROR stateInit::setDispenserId()
    return e_ret;
 }
 
-DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx)
+DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes[])
 {
    DF_ERROR e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
    TiXmlElement *l_pSolenoid;
@@ -271,7 +269,7 @@ DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispens
    return e_ret;
 }
 
-DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx)
+DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes[])
 {
    DF_ERROR e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
    TiXmlElement *l_pFlowsensor;
@@ -325,7 +323,7 @@ DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispe
    return e_ret;
 }
 
-DF_ERROR stateInit::setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx)
+DF_ERROR stateInit::setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes[])
 {
    DF_ERROR e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
    TiXmlElement *l_pPump;

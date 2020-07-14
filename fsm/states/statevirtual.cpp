@@ -23,6 +23,7 @@ stateVirtual::stateVirtual(messageMediator * message)
    {
       //bad things have occured
    }
+   m_state = START;
 
    m_pMessaging = message;
 }
@@ -44,3 +45,9 @@ DF_FSM stateVirtual::getCurrentState()
 {
    return m_state;
 }
+
+// gpio* stateVirtual::getSolenoid(int pos, int type)
+// {
+//    gpio* temp = cassettes[pos]->;
+//    return ;
+// }

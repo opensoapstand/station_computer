@@ -30,6 +30,7 @@ public:
 	DF_ERROR writePin(bool level);
 
 	int getMCPAddress();
+	int getMCPPin();
 
 protected:
 	void monitorGPIO();

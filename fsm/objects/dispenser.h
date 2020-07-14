@@ -57,11 +57,12 @@ class dispenser
       DF_ERROR stopDispense(); //reached dispense value
       DF_ERROR cleanNozzle();
 
-      DF_ERROR testDispense(int pos);
+      DF_ERROR testSolenoidDispense(int pos);
 
       drink getDrink();
 
       int getI2CAddress(int pos);
+      int getI2CPin(int pos);
 
    private:
       drink *m_pDrink;

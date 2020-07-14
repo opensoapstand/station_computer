@@ -116,7 +116,7 @@ drink dispenser::getDrink(){
 }
 
 //timer based
-DF_ERROR dispenser::testDispense(int pos){
+DF_ERROR dispenser::testSolenoidDispense(int pos){
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
     m_pSolenoid[pos]->writePin(HIGH);
@@ -128,4 +128,8 @@ DF_ERROR dispenser::testDispense(int pos){
 
 int dispenser::getI2CAddress(int pos){
     return m_pSolenoid[pos]->getMCPAddress();
+}
+
+int dispenser::getI2CPin(int pos){
+    return m_pSolenoid[pos]->getMCPPin();
 }

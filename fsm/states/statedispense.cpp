@@ -46,7 +46,7 @@ DF_ERROR stateDispense::onEntry()
    return e_ret;
 }
 
-DF_ERROR stateDispense::onAction()
+DF_ERROR stateDispense::onAction(dispenser* cassettes[])
 {
    DF_ERROR e_ret  = ERROR_BAD_PARAMS;
    string temp;
@@ -102,26 +102,31 @@ DF_ERROR stateDispense::onAction()
       if(AIR_CHAR == solenoidChar)
       {
          debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> AIR", INFO);
-         if(nullptr != this->cassettes[pos])
+         debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos]->getI2CPin(AIR)), INFO);
+
+         if(nullptr != cassettes[pos])
          {
-            this->cassettes[pos]->testDispense(AIR);
+            cassettes[pos]->testSolenoidDispense(AIR);
          }
-         else
-         {
-            debugOutput::sendMessage("Cassette " +  to_string(pos+1) + " is nullptr", INFO);
-         }
+         // else
+         // {
+         //    debugOutput::sendMessage("Cassette " +  to_string(pos+1) + " is nullptr", INFO);
+         // }
          
       }
       else if(WATER_CHAR == solenoidChar)
       {
          debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> WATER", INFO);
-         cassettes[pos]->testDispense(WATER);
+         debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos]->getI2CPin(WATER)), INFO);
+         cassettes[pos]->testSolenoidDispense(WATER);
 
       }
       else if(DRINK_CHAR == solenoidChar)
       {
          debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> DRINK", INFO);
-         cassettes[pos]->testDispense(DRINK);
+         debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos]->getI2CPin(DRINK)), INFO);
+
+         cassettes[pos]->testSolenoidDispense(DRINK);
       }
       else{
          debugOutput::sendMessage("Irrelevant input", INFO); 

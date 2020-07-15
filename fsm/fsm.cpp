@@ -55,21 +55,25 @@ DF_ERROR stateLoop()
     {
         if (fsmState != fsmNewState) //state change
         {
-            debugOutput::sendMessage("onEntry()  [" + g_stateArray[fsmNewState]->toString() + "]", INFO);
+            //debugOutput::sendMessage("onEntry()  [" + g_stateArray[fsmNewState]->toString() + "]", INFO);
             dfRet = g_stateArray[fsmNewState]->onEntry();
             fsmState = g_stateArray[fsmNewState]->getCurrentState();
         }
 
         if (OK == dfRet) 
         {
-           debugOutput::sendMessage("onAction() [" + g_stateArray[fsmState]->toString() + "]", INFO);
-           dfRet = g_stateArray[fsmState]->onAction();
+            //debugOutput::sendMessage("onAction() [" + g_stateArray[fsmState]->toString() + "]", INFO);
+            dfRet = g_stateArray[fsmState]->onAction(g_dispense);
+            if(INIT == fsmState)
+            {
+                g_dispense = g_stateArray[INIT]->dispenserSetup();
+            }
 
             fsmNewState = g_stateArray[fsmState]->getNextState();
 
             if ((OK == dfRet) && (fsmNewState != fsmState))
             {
-                debugOutput::sendMessage("onExit()   [" + g_stateArray[fsmState]->toString() + "]", INFO);
+                //debugOutput::sendMessage("onExit()   [" + g_stateArray[fsmState]->toString() + "]", INFO);
                 dfRet = g_stateArray[fsmState]->onExit();
 
                 fsmNewState = g_stateArray[fsmState]->getNextState(); //update the state
@@ -107,7 +111,6 @@ DF_ERROR createStateArray()
         g_stateArray[IDLE] = new stateIdle(g_pMessaging);
         g_stateArray[DISPENSE_IDLE] = new stateDispenseIdle(g_pMessaging);
         g_stateArray[DISPENSE] = new stateDispense(g_pMessaging);
-
         dfRet = OK;
     }
 

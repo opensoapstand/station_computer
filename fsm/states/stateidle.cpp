@@ -21,7 +21,7 @@ stateIdle::stateIdle()
 
 stateIdle::stateIdle(messageMediator * message)
 {
-   debugOutput::sendMessage("stateIdle(messageMediator * message)", INFO);
+   //debugOutput::sendMessage("stateIdle(messageMediator * message)", INFO);
 }
 
 
@@ -45,15 +45,15 @@ DF_ERROR stateIdle::onEntry()
    return e_ret;
 }
 
-DF_ERROR stateIdle::onAction()
+DF_ERROR stateIdle::onAction(dispenser* cassettes)
 {
    DF_ERROR e_ret  = ERROR_BAD_PARAMS;
    m_state = IDLE;
 
    if (nullptr != &m_nextState)
    {
-
-       //e_ret = OK;
+      m_nextState = DISPENSE_IDLE;
+      e_ret = OK;
    }
 
    return e_ret;
@@ -64,7 +64,7 @@ DF_ERROR stateIdle::onExit()
    DF_ERROR e_ret  = OK;
 
    m_state = IDLE;
-   m_nextState = DISPENSE; //!!!will be needing more here
+   m_nextState = DISPENSE_IDLE; //!!!will be needing more here
 
    return e_ret;
 }

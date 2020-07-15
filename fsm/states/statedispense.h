@@ -18,6 +18,10 @@
 
 #include "statevirtual.h"
 
+#define AIR_CHAR 'a'
+#define WATER_CHAR 'w'
+#define DRINK_CHAR 'd'
+
 class stateDispense : public stateVirtual
 {
     public:
@@ -28,8 +32,11 @@ class stateDispense : public stateVirtual
         string toString();
 
         DF_ERROR onEntry();
-        DF_ERROR onAction();
+        DF_ERROR onAction(dispenser* cassettes);
         DF_ERROR onExit();
+
+        dispenser* dispenserSetup() {};
+
 
     private:
     

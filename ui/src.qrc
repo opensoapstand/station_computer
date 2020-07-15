@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>light/1_welcome_panel.jpg</file>
+        <file>light/2_drink_page_1.jpg</file>
+        <file>light/3_drink_page_2.jpg</file>
+        <file>light/4_pay_select_page.jpg</file>
+        <file>light/5_pay_page.jpg</file>
+        <file>light/6_dispense_page.jpg</file>
+        <file>light/7_thank_you_page.jpg</file>
+        <file>light/bottom_1.jpg</file>
+        <file>light/bottom_2.jpg</file>
+        <file>light/background.png</file>
+    </qresource>
+</RCC>

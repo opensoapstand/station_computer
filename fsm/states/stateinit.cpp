@@ -26,13 +26,9 @@ stateInit::stateInit()
    // }
 }
 
-stateInit::stateInit(messageMediator * message, dispenser* cassettes[])
+stateInit::stateInit(messageMediator * message)
 {
-   for (int i = 0; i < CASSETTES_MAX; i++)
-   {
-      debugOutput::sendMessage("Cassette Object "+ to_string(i) + " has been created", INFO);
-      cassettes[i] = new dispenser();
-   }
+
 }
 
 stateInit::~stateInit()
@@ -58,6 +54,11 @@ DF_ERROR stateInit::onEntry()
    bool loadOkay = m_pXMLSettings->LoadFile();
    if(loadOkay){
       debugOutput::sendMessage("XML LOADED: " + string(XML_SETTINGS), INFO);
+      
+      //setting up elements for proccessing xml file
+      m_pRoot = m_pXMLSettings->FirstChildElement(DRINKFILL_STRING);
+      m_pHardware = m_pRoot->FirstChildElement(HARDWARE_STRING);
+      m_pDispenser = m_pHardware->FirstChildElement(DISPENSER_STRING);
       e_ret = OK;
    }
    else
@@ -69,95 +70,16 @@ DF_ERROR stateInit::onEntry()
 }
 
 //start to initialize all related hardware
-DF_ERROR stateInit::onAction(dispenser* cassettes[])
+DF_ERROR stateInit::onAction(dispenser* cassettes)
 {
    //need to check with tinyXML for hardware info
    DF_ERROR e_ret  = ERROR_BAD_PARAMS;
-
    m_state = INIT; //ensure the current state is INIT
-
-   TiXmlElement *l_pDispenser;
-   
-   //setting up elements for proccessing xml file
-   m_pRoot = m_pXMLSettings->FirstChildElement(DRINKFILL_STRING);
-   m_pHardware = m_pRoot->FirstChildElement(HARDWARE_STRING);
-   m_pDispenser = m_pHardware->FirstChildElement(DISPENSER_STRING);
-
-   if(nullptr == m_pDispenser){
-       debugOutput::sendMessage("m_pDispenser is null", INFO);
-       return e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
-   }
-   else{
-      l_pDispenser = m_pDispenser;
-   }
 
    e_ret = setDispenserId();
 
-   if (nullptr != &m_nextState && e_ret == OK)
+   if (nullptr != &m_nextState && OK == e_ret)
    {
-      // set up major objects
-
-      //load the xml dom parser
-
-      //load the sql manager
-
-      //call a create dispenser method
-
-      //methods to load and test the other various items
-
-      //pParam = pParam->FirstChildElement("solenoid");
-           
-      int idx = 0;
-
-      debugOutput::sendMessage("Set up button: ------------------" , INFO);
-
-      e_ret = setButton(m_pHardware, idx);
-
-      if(OK != e_ret) //if solenoid not set properly, return error
-      {
-         debugOutput::sendMessage("setButton did not return OK", INFO);
-         return e_ret;
-      }
-
-      while(nullptr != dispenserId[idx])
-      {
-         debugOutput::sendMessage("Sort for dispenser:" + to_string(idx), INFO);
-         e_ret = setDispenserSolenoid(l_pDispenser, idx, cassettes);
-         
-         if(OK != e_ret) //if solenoid not set properly, return error
-         {
-            debugOutput::sendMessage("setDispenserSolenoid did not return OK", INFO);
-            return e_ret;
-         }
-
-         e_ret  = ERROR_BAD_PARAMS; //reset e_ret
-         e_ret = setDispenserPump(l_pDispenser, idx, cassettes);
-
-         if(OK != e_ret) //if flowsensor not set properly, return error
-         {
-            debugOutput::sendMessage("setDispenserPump did not return OK", INFO);
-            return e_ret;
-         }
-
-         e_ret  = ERROR_BAD_PARAMS; //reset e_ret
-         e_ret = setDispenserFlowSensor(l_pDispenser, idx, cassettes);
-
-         if(OK != e_ret) //if flowsensor not set properly, return error
-         {
-            debugOutput::sendMessage("setDispenserFlowsensor did not return OK", INFO);
-            return e_ret;
-         }
-        
-
-         //check for nullptr
-         if(nullptr != l_pDispenser->NextSiblingElement(DISPENSER_STRING))
-         {
-            l_pDispenser = l_pDispenser->NextSiblingElement(DISPENSER_STRING);
-         }
-
-         idx++;
-      }
-
       if(OK == e_ret)
       {
          m_nextState = IDLE;
@@ -167,10 +89,9 @@ DF_ERROR stateInit::onAction(dispenser* cassettes[])
    {
       e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
       debugOutput::sendMessage("setDispenserId did not return OK", INFO);
-
    }
 
-   debugOutput::sendMessage("Hardware initialized...", INFO);
+   
    return e_ret;
 }
 
@@ -211,7 +132,7 @@ DF_ERROR stateInit::setDispenserId()
    return e_ret;
 }
 
-DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes[])
+DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx, dispenser cassettes[])
 {
    DF_ERROR e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
    TiXmlElement *l_pSolenoid;
@@ -241,7 +162,7 @@ DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispens
          {
             int address_num = atoi(getXML(I2CADDRESS_STRING, l_pSingleSolenoid));
             int pin_num = atoi(getXML(IO_STRING, l_pSingleSolenoid));
-            cassettes[dispenserIdx]->setSolenoid(address_num, pin_num, l_pos);
+            cassettes[dispenserIdx].setSolenoid(address_num, pin_num, l_pos);
 
             //debugOutput::sendMessage("Solenoid:   " + to_string(l_pos) + " |type " + typeCheck 
             //                         + " |address " + to_string(cassettes[dispenserIdx]->getI2CAddress(l_pos)) + " |pin " + to_string(pin_num), INFO);
@@ -269,7 +190,7 @@ DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispens
    return e_ret;
 }
 
-DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes[])
+DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx, dispenser cassettes[])
 {
    DF_ERROR e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
    TiXmlElement *l_pFlowsensor;
@@ -301,7 +222,7 @@ DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispe
             debugOutput::sendMessage("Flowsensor: " + to_string(l_pos) + " |type " + typeCheck 
                                      + "             |pin " + to_string(pin_num), INFO);
             
-            cassettes[dispenserIdx]->setFlowsensor(pin_num, l_pos);
+            cassettes[dispenserIdx].setFlowsensor(pin_num, l_pos);
          }
          else
          {
@@ -323,7 +244,7 @@ DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispe
    return e_ret;
 }
 
-DF_ERROR stateInit::setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes[])
+DF_ERROR stateInit::setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser cassettes[])
 {
    DF_ERROR e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
    TiXmlElement *l_pPump;
@@ -354,7 +275,7 @@ DF_ERROR stateInit::setDispenserPump(TiXmlElement *dispenserEle, int dispenserId
          {
             int address_num = atoi(getXML(I2CADDRESS_STRING, l_pSinglePump));
             int pin_num = atoi(getXML(IO_STRING, l_pSinglePump));
-            cassettes[dispenserIdx]->setPump(address_num, pin_num, l_pos);
+            cassettes[dispenserIdx].setPump(address_num, pin_num, l_pos);
 
             debugOutput::sendMessage("Pump:       " + to_string(l_pos) + " |type " + typeCheck 
                                      + " |address " + to_string(address_num) + " |pin " + to_string(pin_num), INFO);
@@ -471,3 +392,87 @@ const char* stateInit::getXML(const char* subHeader, TiXmlElement *childEle)
    return char_ret;
 }
 
+
+dispenser* stateInit::dispenserSetup()
+{
+   //need to check with tinyXML for hardware info
+   DF_ERROR e_ret  = ERROR_BAD_PARAMS;
+
+   TiXmlElement *l_pDispenser;
+   static dispenser cassettes[CASSETTES_MAX];
+
+   if(nullptr == m_pDispenser){
+       debugOutput::sendMessage("m_pDispenser is null", INFO);
+       e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+   }
+   else{
+      l_pDispenser = m_pDispenser;
+   }
+   
+   // set up major objects
+
+   //load the xml dom parser
+
+   //load the sql manager
+
+   //call a create dispenser method
+
+   //methods to load and test the other various items
+
+   //pParam = pParam->FirstChildElement("solenoid");
+           
+   int idx = 0;
+
+   debugOutput::sendMessage("Set up button: ------------------" , INFO);
+
+   e_ret = setButton(m_pHardware, idx);
+
+   if(OK != e_ret) //if solenoid not set properly, return error
+   {
+      debugOutput::sendMessage("setButton did not return OK", INFO);
+      //return e_ret;
+   }
+
+   while(nullptr != dispenserId[idx])
+   {
+      debugOutput::sendMessage("Sort for dispenser:" + to_string(idx), INFO);
+      e_ret = setDispenserSolenoid(l_pDispenser, idx, cassettes);
+         
+      if(OK != e_ret) //if solenoid not set properly, return error
+      {
+         debugOutput::sendMessage("setDispenserSolenoid did not return OK", INFO);
+         //return e_ret;
+      }
+
+      e_ret  = ERROR_BAD_PARAMS; //reset e_ret
+      e_ret = setDispenserPump(l_pDispenser, idx, cassettes);
+
+      if(OK != e_ret) //if flowsensor not set properly, return error
+      {
+         debugOutput::sendMessage("setDispenserPump did not return OK", INFO);
+         //return e_ret;
+      }
+
+      e_ret  = ERROR_BAD_PARAMS; //reset e_ret
+      e_ret = setDispenserFlowSensor(l_pDispenser, idx, cassettes);
+
+      if(OK != e_ret) //if flowsensor not set properly, return error
+      {
+         debugOutput::sendMessage("setDispenserFlowsensor did not return OK", INFO);
+         //return e_ret;
+         //return;
+      }
+        
+
+      //check for nullptr
+      if(nullptr != l_pDispenser->NextSiblingElement(DISPENSER_STRING))
+      {
+         l_pDispenser = l_pDispenser->NextSiblingElement(DISPENSER_STRING);
+      }
+
+      idx++;
+   }
+   debugOutput::sendMessage("Hardware initialized...", INFO);
+
+   return cassettes;
+}

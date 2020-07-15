@@ -22,7 +22,7 @@ class stateInit : public stateVirtual
 {
     public:
         stateInit();
-        stateInit(messageMediator * message, dispenser* cassettes[]); //debug through local network 
+        stateInit(messageMediator * message); //debug through local network 
         ~stateInit();
 
         string toString();
@@ -30,20 +30,22 @@ class stateInit : public stateVirtual
         TiXmlElement *getSolenoid(char* dispenserID); 
 
         DF_ERROR onEntry();
-        DF_ERROR onAction(dispenser* cassettes[]);
+        DF_ERROR onAction(dispenser* cassettes);
         DF_ERROR onExit();
 
+        dispenser* dispenserSetup();
 
-    private:    
+
+    private:   
         TiXmlDocument *m_pXMLSettings;
         TiXmlElement *m_pRoot, *m_pHardware, *m_pDispenser;
 
         const char* dispenserId[CASSETTES_MAX];
 
         DF_ERROR setDispenserId();
-        DF_ERROR setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes[]);
-        DF_ERROR setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes[]);
-        DF_ERROR setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes[]);
+        DF_ERROR setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx, dispenser cassettes[]);
+        DF_ERROR setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx, dispenser cassettes[]);
+        DF_ERROR setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser cassettes[]);
         DF_ERROR setButton(TiXmlElement *hardwareEle, int dispenserIdx);
         const char* getXML(const char* subHeader, TiXmlElement *childEle);
 

@@ -36,8 +36,9 @@ class stateVirtual
         DF_FSM getCurrentState();
 
         virtual DF_ERROR onEntry() = 0;
-        virtual DF_ERROR onAction(dispenser* cassettes[]) = 0;
+        virtual DF_ERROR onAction(dispenser* cassettes) = 0;
         virtual DF_ERROR onExit() = 0;
+        virtual dispenser* dispenserSetup() = 0;
 
         gpio* getSolenoid(int pos, int type);
 

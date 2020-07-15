@@ -24,7 +24,7 @@
 
 messageMediator *g_pMessaging;       //debug through local network
 stateVirtual *g_stateArray[FSM_MAX]; //an object for every state
-dispenser *g_dispense[CASSETTES_MAX];               //replace the magic number
+dispenser *g_dispense;               //replace the magic number
 
 DF_ERROR initObjects();
 DF_ERROR createStateArray();
@@ -62,8 +62,12 @@ DF_ERROR stateLoop()
 
         if (OK == dfRet) 
         {
-           //debugOutput::sendMessage("onAction() [" + g_stateArray[fsmState]->toString() + "]", INFO);
-           dfRet = g_stateArray[fsmState]->onAction(g_dispense);
+            //debugOutput::sendMessage("onAction() [" + g_stateArray[fsmState]->toString() + "]", INFO);
+            dfRet = g_stateArray[fsmState]->onAction(g_dispense);
+            if(INIT == fsmState)
+            {
+                g_dispense = g_stateArray[INIT]->dispenserSetup();
+            }
 
             fsmNewState = g_stateArray[fsmState]->getNextState();
 
@@ -103,11 +107,10 @@ DF_ERROR createStateArray()
 
     if (NULL != g_pMessaging)
     {
-        g_stateArray[INIT] = new stateInit(g_pMessaging, g_dispense);
+        g_stateArray[INIT] = new stateInit(g_pMessaging);
         g_stateArray[IDLE] = new stateIdle(g_pMessaging);
         g_stateArray[DISPENSE_IDLE] = new stateDispenseIdle(g_pMessaging);
         g_stateArray[DISPENSE] = new stateDispense(g_pMessaging);
-
         dfRet = OK;
     }
 

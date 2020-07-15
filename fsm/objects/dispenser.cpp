@@ -16,7 +16,7 @@
 dispenser::dispenser(){
     //default constructor to set all pin to nullptr
     //debugOutput::sendMessage("dispenser", INFO);
-    /*m_pDrink = nullptr;
+    m_pDrink = nullptr;
 
     for (int i = 0; i < NUM_SOLENOID; i++)
         m_pSolenoid[i] = nullptr; 
@@ -24,7 +24,7 @@ dispenser::dispenser(){
     m_pFlowsenor[NUM_FLOWSENSOR] = nullptr;
       
     for (int i = 0; i < NUM_PUMP; i++)
-        m_pPump[i] = nullptr;*/
+        m_pPump[i] = nullptr;
 }
 
 dispenser::~dispenser(){
@@ -111,8 +111,8 @@ DF_ERROR dispenser::stopDispense(){
 DF_ERROR dispenser::cleanNozzle(){
 
 }
-drink dispenser::getDrink(){
-
+drink* dispenser::getDrink(){
+    return m_pDrink;
 }
 
 //timer based

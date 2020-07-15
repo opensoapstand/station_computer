@@ -59,7 +59,7 @@ class dispenser
 
       DF_ERROR testSolenoidDispense(int pos);
 
-      drink getDrink();
+      drink* getDrink();
 
       int getI2CAddress(int pos);
       int getI2CPin(int pos);

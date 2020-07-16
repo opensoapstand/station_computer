@@ -17,6 +17,7 @@
 #include "idle.h"
 #include "dispensepage.h"
 
+// CTOR
 thankYouPage::thankYouPage(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::thankYouPage)
@@ -32,12 +33,16 @@ thankYouPage::thankYouPage(QWidget *parent) :
     ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 }
 
+/*
+ * Page Tracking reference
+ */
 void thankYouPage::setPage(dispensePage *pageDispense, idle *pageIdle)
 {
     this->idlePage = pageIdle;
     this->dispensingPage = pageDispense;
 }
 
+// DTOR
 thankYouPage::~thankYouPage()
 {
     delete ui;

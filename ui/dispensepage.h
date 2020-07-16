@@ -5,6 +5,9 @@
 // Coordinates User input to payment class
 // then communcates results to FSM IP_thread
 //
+// Allows navigation to paymentpage and
+// thankyou page
+//
 // created: 16-07-2020
 // by: Jason Wang
 //

@@ -1,6 +1,6 @@
 //***************************************
 //
-// idle.h
+// idle.cpp
 // GUI class while machine is idle.
 //
 // Display Fullscreen DF branded Wallpaper
@@ -46,6 +46,7 @@ void idle::setPage(productPage_1 *pageProduct)
     this->selection_PageOne = pageProduct;
 }
 
+// DTOR
 idle::~idle()
 {
     delete ui;

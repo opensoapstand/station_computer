@@ -20,6 +20,7 @@
 #include "productpage_2.h"
 #include "payselect.h"
 
+// CTOR
 productPage_1::productPage_1(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::productPage_1)
@@ -37,12 +38,16 @@ productPage_1::productPage_1(QWidget *parent) :
 
 }
 
+/*
+ * Page Tracking reference
+ */
 void productPage_1::setPage(productPage_2 *pageTwoProducts, paySelect *pageSizeSelect)
 {
     this->selection_PageTwo = pageTwoProducts;
     this->paymentSelectPage = pageSizeSelect;
 }
 
+// DTOR
 productPage_1::~productPage_1()
 {
     delete ui;

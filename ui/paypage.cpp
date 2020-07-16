@@ -39,6 +39,9 @@ payPage::payPage(QWidget *parent) :
     ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 }
 
+/*
+ * Page Tracking reference
+ */
 void payPage::setPage(paySelect *pageSizeSelect, dispensePage* pageDispense, idle* pageIdle)
 {
     this->paySelectPage = pageSizeSelect;
@@ -46,6 +49,7 @@ void payPage::setPage(paySelect *pageSizeSelect, dispensePage* pageDispense, idl
     this->idlePage = pageIdle;
 }
 
+// DTOR
 payPage::~payPage()
 {
     delete ui;

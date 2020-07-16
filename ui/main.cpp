@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     dispensePage* dispensingPage = new dispensePage();
     thankYouPage* lastPage = new thankYouPage();
 
-    // Function Calls
+    // Page pathing references to function calls.
     idlePage->setPage(firstSelectPage);
     firstSelectPage->setPage(secondSelectPage, paySelectPage);
     secondSelectPage->setPage(firstSelectPage, paySelectPage);

@@ -50,6 +50,7 @@ void paySelect::setPage(productPage_1 *pageSelect, payPage *pagePayment, idle* p
     this->idlePage = pageIdle;
 }
 
+// DTOR
 paySelect::~paySelect()
 {
     delete ui;

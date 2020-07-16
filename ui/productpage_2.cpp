@@ -16,6 +16,7 @@
 #include "productpage_1.h"
 #include "payselect.h"
 
+// CTOR
 productPage_2::productPage_2(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::productPage_2)
@@ -32,12 +33,16 @@ productPage_2::productPage_2(QWidget *parent) :
     ui->selection7_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 }
 
+/*
+ * Page Tracking reference
+ */
 void productPage_2::setPage(productPage_1 *pageOneProducts, paySelect *pageSizeSelect)
 {
     this->firstProductPage = pageOneProducts;
     this->paySelectPage = pageSizeSelect;
 }
 
+// DTOR
 productPage_2::~productPage_2()
 {
     delete ui;

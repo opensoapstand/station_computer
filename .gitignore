@@ -6,6 +6,64 @@ fsm/.vs/fsm/v15/ipch/AutoPCH/23c177863f62ee0c/DEBUGOUTPUT.ipch
 fsm/.vs/fsm/v15/ipch/AutoPCH/d219b43e78693b6/ODDYSEYX86GPIO.ipch
 fsm/.vs/fsm/v15/ipch/AutoPCH/a7b8246a94880a47/MCPGPIO.ipch
 
+### QT Creator ###
+
+/build-ui-Desktop-Debug/*
+
+### Qt ###
+# C++ objects and libs
+*.slo
+*.lo
+*.o
+*.a
+*.la
+*.lai
+*.so
+*.so.*
+*.dll
+*.dylib
+
+# Qt-es
+object_script.*.Release
+object_script.*.Debug
+*_plugin_import.cpp
+/.qmake.cache
+/.qmake.stash
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.moc
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.qmlc
+*.jsc
+Makefile*
+*build-*
+*.qm
+*.prl
+
+# Qt unit tests
+target_wrapper.*
+
+# QtCreator
+*.autosave
+
+# QtCreator Qml
+*.qmlproject.user
+*.qmlproject.user.*
+
+# QtCreator CMake
+CMakeLists.txt.user*
+
+# QtCreator 4.8< compilation database 
+compile_commands.json
+
+# QtCreator local machine specific files for imported projects
+*creator.user*
+
 ### VisualStudioCode ###
 .vscode/*
 .vscode/settings.json
@@ -19,3 +77,4 @@ fsm/.vs/fsm/v15/ipch/AutoPCH/a7b8246a94880a47/MCPGPIO.ipch
 .history
 
 /pg_db/build/*
+ui/ui.pro.user

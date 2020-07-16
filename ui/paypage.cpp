@@ -1,3 +1,19 @@
+//***************************************
+//
+// paypage.cpp
+// GUI class while machine is processing
+// payment.
+//
+// Coordinates User input from payment select
+// class then communcates results to dispensepage.
+//
+// created: 16-07-2020
+// by: Jason Wang
+//
+// copyright 2020 by Drinkfill Beverages Ltd
+// all rights reserved
+//***************************************
+
 #include "paypage.h"
 #include "ui_paypage.h"
 
@@ -5,6 +21,7 @@
 #include "dispensepage.h"
 #include "idle.h"
 
+// CTOR
 payPage::payPage(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::payPage)
@@ -22,6 +39,9 @@ payPage::payPage(QWidget *parent) :
     ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 }
 
+/*
+ * Page Tracking reference
+ */
 void payPage::setPage(paySelect *pageSizeSelect, dispensePage* pageDispense, idle* pageIdle)
 {
     this->paySelectPage = pageSizeSelect;
@@ -29,6 +49,7 @@ void payPage::setPage(paySelect *pageSizeSelect, dispensePage* pageDispense, idl
     this->idlePage = pageIdle;
 }
 
+// DTOR
 payPage::~payPage()
 {
     delete ui;

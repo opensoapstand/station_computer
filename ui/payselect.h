@@ -1,3 +1,19 @@
+//***************************************
+//
+// payselect.h
+// GUI class for user to select size and
+// payment for drink.
+//
+// Allows navigation to First product page
+// payment page and idle page
+//
+// created: 16-07-2020
+// by: Jason Wang
+//
+// copyright 2020 by Drinkfill Beverages Ltd
+// all rights reserved
+//***************************************
+
 #ifndef PAYSELECT_H
 #define PAYSELECT_H
 

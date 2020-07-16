@@ -1,3 +1,19 @@
+//***************************************
+//
+// paypage.h
+// GUI class while machine is processing
+// payment.
+//
+// Coordinates User input from payment select
+// class then communcates results to dispensepage.
+//
+// created: 16-07-2020
+// by: Jason Wang
+//
+// copyright 2020 by Drinkfill Beverages Ltd
+// all rights reserved
+//***************************************
+
 #ifndef PAYPAGE_H
 #define PAYPAGE_H
 
@@ -25,6 +41,10 @@ private slots:
 
     void on_passPayment_Button_clicked();
 
+    /*
+     * Successful payment -> on_passPayment_Button_clicked()
+     * Failed payment -> on_previous_Button_clicked()
+     */
     void on_mainPage_Button_clicked();
 
 private:

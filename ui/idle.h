@@ -1,3 +1,19 @@
+//***************************************
+//
+// idle.h
+// GUI class while machine is idle.
+//
+// Display Fullscreen DF branded Wallpaper
+// Listen for User interaction to load
+// Product Page1
+//
+// created: 16-07-2020
+// by: Jason Wang
+//
+// copyright 2020 by Drinkfill Beverages Ltd
+// all rights reserved
+//***************************************
+
 #ifndef IDLE_H
 #define IDLE_H
 

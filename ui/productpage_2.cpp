@@ -1,3 +1,15 @@
+//***************************************
+//
+// productpage_2.cpp
+// TODO: Compress to single Product page class
+//
+// created: 16-07-2020
+// by: Jason Wang
+//
+// copyright 2020 by Drinkfill Beverages Ltd
+// all rights reserved
+//***************************************
+
 #include "productpage_2.h"
 #include "ui_productpage_2.h"
 

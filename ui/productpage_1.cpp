@@ -1,3 +1,19 @@
+//***************************************
+//
+// productpage_1.cpp
+// GUI class for user to browse up to
+// 6 drinks.
+//
+// Allows navigation to First product page
+// payment selection page
+//
+// created: 16-07-2020
+// by: Jason Wang
+//
+// copyright 2020 by Drinkfill Beverages Ltd
+// all rights reserved
+//***************************************
+
 #include "productpage_1.h"
 #include "ui_productpage_1.h"
 

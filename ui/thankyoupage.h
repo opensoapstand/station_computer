@@ -1,3 +1,16 @@
+//***************************************
+//
+// thankyoupage.h
+// GUI class to show user dispense has been
+// completed and route back to idle
+//
+// created: 16-07-2020
+// by: Jason Wang
+//
+// copyright 2020 by Drinkfill Beverages Ltd
+// all rights reserved
+//***************************************
+
 #ifndef THANKYOUPAGE_H
 #define THANKYOUPAGE_H
 

@@ -1,3 +1,19 @@
+//***************************************
+//
+// payselect.cpp
+// GUI class for user to select size and
+// payment for drink.
+//
+// Allows navigation to First product page
+// payment page and idle page
+//
+// created: 16-07-2020
+// by: Jason Wang
+//
+// copyright 2020 by Drinkfill Beverages Ltd
+// all rights reserved
+//***************************************
+
 #include "payselect.h"
 #include "ui_payselect.h"
 
@@ -5,6 +21,7 @@
 #include "productpage_1.h"
 #include "idle.h"
 
+// CTOR
 paySelect::paySelect(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::paySelect)
@@ -23,6 +40,9 @@ paySelect::paySelect(QWidget *parent) :
 
 }
 
+/*
+ * Page Tracking reference to Select Drink, Payment Page and Idle page
+ */
 void paySelect::setPage(productPage_1 *pageSelect, payPage *pagePayment, idle* pageIdle)
 {
     this->firstProductPage = pageSelect;

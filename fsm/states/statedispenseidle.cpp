@@ -1,8 +1,11 @@
 //***************************************
-//***************************************
 //
 // statedispenseidle.h
 // dispense idle state class
+//
+// Recieves and interprets string command from FSM.
+// Routes dispense instruction to GPIO's
+// HACK: JW What is difference between this and Idle?
 //
 // created: 26-06-2020
 // by: Jason Wang
@@ -36,6 +39,7 @@ string stateDispenseIdle::toString()
    return DISPENSE_IDLE_STRING;
 }
 
+// FIXME: See state dispense function header
 DF_ERROR stateDispenseIdle::onEntry()
 {
    DF_ERROR e_ret  = OK;

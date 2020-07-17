@@ -1,7 +1,11 @@
 //***************************************
 //
-// drink.h
-// drink class owns the beverages
+// drink.cpp
+// drink class owns the package of beverage use 
+// for the machine.
+//
+// Holds and coordinates values from database
+// to dispense classes.
 //
 // created: 12-06-2020
 // by: Denis Londry

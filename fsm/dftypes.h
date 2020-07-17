@@ -23,6 +23,7 @@ typedef enum DF_FSM {
    PAYMENT,        //retrieve info from ui whether or not payment is finished proccessing
    DISPENSE_IDLE,
    DISPENSE,
+   DISPENSE_END,
    CLEANING,
    FSM_MAX,
 } DF_FSM;

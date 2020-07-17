@@ -9,6 +9,7 @@
 // copyright 2020 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
+
 #include <string.h>
 #include "dftypes.h"
 
@@ -45,6 +46,9 @@ int main()
     return dfRet;
 }
 
+/*
+ * Poll for State changes: States oulined in DF_FSM
+*/
 DF_ERROR stateLoop()
 {
     DF_ERROR dfRet = OK;
@@ -66,6 +70,7 @@ DF_ERROR stateLoop()
             dfRet = g_stateArray[fsmState]->onAction(g_dispense);
             if(INIT == fsmState)
             {
+                
                 g_dispense = g_stateArray[INIT]->dispenserSetup();
             }
 
@@ -78,6 +83,9 @@ DF_ERROR stateLoop()
 
                 fsmNewState = g_stateArray[fsmState]->getNextState(); //update the state
             }
+
+            // TODO: Add Dispense states...Db to be added to Created DISPENSE_END
+
         }
 
     }
@@ -85,6 +93,9 @@ DF_ERROR stateLoop()
     return dfRet;
 }
 
+/*
+ * Mutex Setting; Spin up Threads
+*/
 DF_ERROR initObjects()
 {
     DF_ERROR dfRet = OK;
@@ -95,12 +106,15 @@ DF_ERROR initObjects()
     dfRet = createStateArray();
     if (OK != dfRet)
     {
+        // TODO: DB function to check/create DB
         //next 
     }
-
     return dfRet;
 }
 
+/*
+ * Instantiate Array to hold objects specfic to states (DF_FSM)
+*/
 DF_ERROR createStateArray()
 {
     DF_ERROR dfRet = ERROR_PTHREADS;

@@ -12,6 +12,7 @@
 
 #include "gpio.h"
 
+// CTOR
 gpio::gpio()
 {
 	//m_nAddress = -1; //set negative one for illegal i2c address
@@ -21,6 +22,7 @@ gpio::gpio()
 	m_i2c = false; //no i2c chip associate with it 
 }
 
+// DTOR
 gpio::~gpio()
 {
 	//kill thread!

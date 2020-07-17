@@ -17,6 +17,7 @@
 
 using namespace std;
 
+// FIXME: Can be moved to dftypes?
 const string m_lvlArray[] = { "INFO", "WARNING", "ERROR" };
 MESSAGE_LEVEL debugOutput::m_dbgLvl = INFO;
 

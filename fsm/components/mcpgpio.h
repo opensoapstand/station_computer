@@ -1,7 +1,9 @@
 //***************************************
 //
 // mcpgpio.h
-// implementation of GPIO via i2c extender
+// implementation of GPIO for i2c gpio extender
+//
+// Chip model: MCP23017 - 16 PIN Addresses
 //
 // created: 15-06-2020
 // by: Denis Londry

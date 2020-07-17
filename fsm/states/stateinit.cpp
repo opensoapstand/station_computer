@@ -1,7 +1,14 @@
 //***************************************
 //
-// stateinit.cpp
+// stateinit.h
 // init state class
+//
+// Set Objects for FSM and Addresses for 
+// GPIO's through XML Reference.
+// Check all Hardware is operational.
+// Initialize threads for operation and 
+// communication in machine.
+// Connect or create database.
 //
 // created: 12-06-2020
 // by: Denis Londry
@@ -41,6 +48,10 @@ string stateInit::toString()
    return INIT_STRING;
 }
 
+/*
+ * Initialize FSM State and set XML file reference with 
+ * TinyXML library
+ */
 DF_ERROR stateInit::onEntry()
 {
    DF_ERROR e_ret  = OK;
@@ -90,8 +101,6 @@ DF_ERROR stateInit::onAction(dispenser* cassettes)
       e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
       debugOutput::sendMessage("setDispenserId did not return OK", INFO);
    }
-
-   
    return e_ret;
 }
 

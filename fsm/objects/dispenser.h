@@ -1,7 +1,10 @@
 //***************************************
 //
-// dispenser.h
-// dispenser class owns the package for a dispense
+// dispenser.cpp
+// dispenser class owns the package for a dispense.
+//
+// Links to circuit board addresses and
+// holds instructions for dispensing.
 //
 // created: 12-06-2020
 // by: Denis Londry

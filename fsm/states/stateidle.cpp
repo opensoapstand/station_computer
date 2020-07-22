@@ -3,6 +3,8 @@
 // stateidle.cpp
 // idle state class
 //
+// HACK: JW What is difference between this and DispenseIdle?
+//
 // created: 29-06-2020
 // by: Jason Wang
 //
@@ -35,6 +37,7 @@ string stateIdle::toString()
    return IDLE_STRING;
 }
 
+// FIXME: See state dispense function header
 DF_ERROR stateIdle::onEntry()
 {
    DF_ERROR e_ret  = OK;

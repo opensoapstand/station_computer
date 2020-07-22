@@ -3,6 +3,13 @@
 // stateinit.h
 // init state class
 //
+// Set Objects for FSM and Addresses for 
+// GPIO's through XML Reference.
+// Check all Hardware is operational.
+// Initialize threads for operation and 
+// communication in machine.
+// Connect or create database.
+//
 // created: 12-06-2020
 // by: Denis Londry
 //
@@ -51,6 +58,7 @@ class stateInit : public stateVirtual
 
 };
 
+// **** XML DEPTH ***
 //first layer
 #define DRINKFILL_STRING "DRINKFILL"
 

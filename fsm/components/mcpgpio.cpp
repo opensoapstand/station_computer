@@ -3,6 +3,8 @@
 // mcpgpio.cpp
 // implementation of GPIO for i2c gpio extender
 //
+// Chip model: MCP23017 - 16 PIN Addresses
+//
 // created: 15-06-2020
 // by: Denis Londry
 //
@@ -13,7 +15,7 @@
 #include "mcpgpio.h"
 #include <iostream>
 
-
+// CTOR
 mcpGPIO::mcpGPIO(int i2caddress, int pin)
 {
 	debugOutput::sendMessage("------mcpGPIO------", INFO);
@@ -26,6 +28,7 @@ mcpGPIO::mcpGPIO(int i2caddress, int pin)
 	this->m_mcp->openI2C(); 
 }
 
+// DTOR
 mcpGPIO::~mcpGPIO()
 {
 	debugOutput::sendMessage("~mcpGPIO", INFO);
@@ -52,7 +55,8 @@ DF_ERROR mcpGPIO::setDirection(bool input)
 	return df_ret;
 }
 
-DF_ERROR mcpGPIO::readPin(bool * level) //may not be use or needed 
+// may not be use or needed due to tiny xml
+DF_ERROR mcpGPIO::readPin(bool * level) 
 {
 	debugOutput::sendMessage("readPin", INFO);
 	
@@ -67,12 +71,15 @@ DF_ERROR mcpGPIO::readPin(bool * level) //may not be use or needed
 	return df_ret;
 }
 
-DF_ERROR mcpGPIO::writePin(bool level) //control of the cassettes
+// Cassette controller base on high or low signal to acutate
+DF_ERROR mcpGPIO::writePin(bool level) 
 {
 	debugOutput::sendMessage("writePin", INFO);
 
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
+	// 16 Pin Total for Chip Model
+	// TODO: Can change magic number if model changes in future
 	if(m_nPin < 0 && m_nPin > 15)
 	{
 		return df_ret; //pin number out of range
@@ -96,6 +103,8 @@ void mcpGPIO::monitorGPIO()
 {
 	//!!! look at oddyseyx86GPIO for example
 }
+
+// *** Getters/Setters and Utilities below ***
 
 int mcpGPIO::convert_to_int(int addressNum)
 {

@@ -20,10 +20,10 @@
 using namespace std;
 
 #define Num_Cassettes 9
-#define H2O_activation_time 20
+#define H2O_activation_time 10
 #define DRINK_activation_time 20
 #define PUMP_activation_time 5
-#define AIR_activation_time 20 
+#define AIR_activation_time 10 
 
 bool type = false;
 
@@ -198,8 +198,8 @@ bool inputNumber(drink *drinkArray[Num_Cassettes], char *inputArray)
 
 bool inputType(drink *drinkArray, char *inputArray)
 {
-    //gpioControl.setPinMode_out(buttonAddr, buttonPin);
-    //gpioControl.setPin_on(buttonAddr, buttonPin);
+    gpioControl.setPinMode_out(buttonAddr, buttonPin);
+    gpioControl.setPin_on(buttonAddr, buttonPin);
 
         // cout << "Address: " << buttonAddr;
         // cout << " Pin:" << buttonPin << endl;

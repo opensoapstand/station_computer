@@ -3,6 +3,10 @@
 // messageMediator.h
 // messaging class owns the IP interfaces
 //
+// Holds reference and cordinates string 
+// commands from GUI, GPIO's and 
+// Database threads
+//
 // created: 12-06-2020
 // by: Denis Londry
 //

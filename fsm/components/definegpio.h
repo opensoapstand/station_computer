@@ -3,6 +3,9 @@
 // pinout.h
 // define all pin related to i2c/gpio readings
 //
+// TODO: May not be required due to xml
+//       data storage
+//
 // created: 10-06-2020
 // by: <author>
 //

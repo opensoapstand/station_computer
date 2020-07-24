@@ -2,6 +2,8 @@
 // statedispenseidle.h
 // dispense idle state class
 //
+// Recieves and interprets string command from FSM.
+// Routes dispense instruction to GPIO's
 // created: 26-06-2020
 // by: Jason Wang
 //

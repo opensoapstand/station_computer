@@ -33,8 +33,9 @@ public:
 
 private slots:
     void on_previousPage_Button_clicked();
-
     void on_selection7_Button_clicked();
+    void on_selection8_Button_clicked();
+    void on_selection9_Button_clicked();
 
 private:
     Ui::productPage_2 *ui;

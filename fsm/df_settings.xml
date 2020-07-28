@@ -84,5 +84,6 @@
             </flowsensor>
         </dispenser>
     </hardware>
-    <networking />
+    <networking>
+    </networking>
 </DRINKFILL>

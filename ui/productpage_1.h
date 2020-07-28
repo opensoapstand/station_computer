@@ -18,6 +18,7 @@
 #define PRODUCTPAGE_1_H
 
 #include <QWidget>
+#include "df_util.h"
 
 class productPage_2;
 class paySelect;
@@ -38,11 +39,17 @@ public:
 private slots:
     void on_nextPageButton_clicked();
     void on_selection1_Button_clicked();
+    void on_selection2_Button_clicked();
+    void on_selection3_Button_clicked();
+    void on_selection4_Button_clicked();
+    void on_selection5_Button_clicked();
+    void on_selection6_Button_clicked();
 
 private:
     Ui::productPage_1 *ui;
     productPage_2 *selection_PageTwo;
     paySelect *paymentSelectPage;
+    DrinkSelection *selectedDrink;
 };
 
 #endif // PRODUCTPAGE_1_H

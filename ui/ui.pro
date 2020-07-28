@@ -35,3 +35,6 @@ SOURCES += \
 
 RESOURCES += \
     src.qrc
+
+DISTFILES += \
+    styles/product_select.qss

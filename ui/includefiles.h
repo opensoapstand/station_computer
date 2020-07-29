@@ -4,6 +4,11 @@
 #include <QDebug>
 #include <stdint.h>
 #include <string.h>
+#include <QTcpSocket>
+#include <QTcpServer>
+#include <QDataStream>
+#include <QMessageBox>
+#include <QAbstractSocket>
 
 using namespace std;
 

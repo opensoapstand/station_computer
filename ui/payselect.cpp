@@ -39,8 +39,8 @@ paySelect::paySelect(QWidget *parent) :
     ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
     // TODO: ADD buttons to select size/price of drink
-    ui->orderSmall_Button->setStyleSheet("QPushButton { border-image: url(:/light/backgrouend.png); }");
-    ui->orderBig_Button->setStyleSheet("QPushButton { border-image: url(:/light/backgrouend.png); }");
+    ui->orderSmall_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->orderBig_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
     // TODO: Set up functions to manipulate DrinkOrder Object
 }

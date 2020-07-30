@@ -14,6 +14,7 @@
 #define _MESSAGEMEDIATOR__H_
 
 #include "../dftypes.h"
+#include <pthread.h>
 
 class messageMediator
 {
@@ -21,10 +22,17 @@ class messageMediator
       messageMediator();
       ~messageMediator();
 
-      DF_ERROR sendMessage();   //this is just a prototype needs to be fleshed out
+      DF_ERROR createThreads();
+
+      DF_ERROR sendMessage();
    
    private:
       int messageIP;
+      bool m_fExitThreads;
+      pthread_t * m_pKBThread;
+
+      DF_ERROR updateCmdString(char key);
+      static void * doKBThread(void * pThreadArgs);
 };
 
 #endif

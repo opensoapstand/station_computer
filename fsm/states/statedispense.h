@@ -22,9 +22,10 @@ class stateDispense : public stateVirtual
 {
     public:
         stateDispense();
-        stateDispense(messageMediator * message); //debug through local network 
-        stateDispense(int inputDigit); //debug through terminal
+        stateDispense(messageMediator * message); 
         ~stateDispense();
+
+        virtual string toString();
 
         DF_ERROR onEntry();
         DF_ERROR onAction();

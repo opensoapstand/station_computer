@@ -14,6 +14,8 @@
 #include <iostream>
 #include <string>
 
+#define INIT_STRING  "Init"
+
 stateInit::stateInit()
 {
    //m_stateNext = static_cast<DF_FSM>(DF_FSM::INIT+1);
@@ -29,13 +31,15 @@ stateInit::stateInit(messageMediator * message)
    
 }
 
-stateInit::stateInit(int inputDigit){
-   //init the cassette 
-}
 
 stateInit::~stateInit()
 {
    //delete stuff
+}
+
+string stateInit::toString()
+{
+   return INIT_STRING;
 }
 
 DF_ERROR stateInit::onEntry()

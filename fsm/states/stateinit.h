@@ -23,8 +23,9 @@ class stateInit : public stateVirtual
     public:
         stateInit();
         stateInit(messageMediator * message); //debug through local network 
-        stateInit(int inputDigit); //debug through terminal
         ~stateInit();
+
+        virtual string toString();
 
         TiXmlElement *getSolenoid(char* dispenserID); 
 

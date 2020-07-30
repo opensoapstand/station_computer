@@ -41,8 +41,8 @@ dispensePage::dispensePage(QWidget *parent) :
     in.setVersion(QDataStream::Qt_4_0);
     connect(tcpSocket, &QIODevice::readyRead, this, &dispensePage::send_to_FSM);
 
-    connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),
-    this, SLOT(&dispensePage::displayError(QAbstractSocket::SocketError)));
+//    connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),
+//    this, SLOT(&dispensePage::displayError(QAbstractSocket::SocketError)));
 //    connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError), SLOT()));
 //    connect(tcpSocket, &QAbstractSocket::error, this, &dispensePage::displayError);
 }
@@ -87,7 +87,7 @@ void dispensePage::send_to_FSM()
     tcpSocket->abort();
     tcpSocket->connectToHost(host,port);
 
-    QString msg = "hello!";
+    QString msg = "QT Land Hello!";
 
     QByteArray block;
     block.append(msg);

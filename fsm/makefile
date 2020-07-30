@@ -38,8 +38,12 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 controller:
 	g++ -pthread -o controller fsm.cpp components/*.cpp states/*.cpp objects/*.cpp tinyxml/*.cpp 
 
-#controller_clean:
-#	rm controller
+Socket: Socket.cpp
+ServerSocket: ServerSocket.cpp
+ClientSocket: ClientSocket.cpp
+
+controller_clean:
+	rm controller
 
 clean:
 	$(RM) -r $(BUILD_DIR)

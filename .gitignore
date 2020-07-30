@@ -6,6 +6,9 @@ fsm/.vs/fsm/v15/ipch/AutoPCH/23c177863f62ee0c/DEBUGOUTPUT.ipch
 fsm/.vs/fsm/v15/ipch/AutoPCH/d219b43e78693b6/ODDYSEYX86GPIO.ipch
 fsm/.vs/fsm/v15/ipch/AutoPCH/a7b8246a94880a47/MCPGPIO.ipch
 
+fsm/build/*
+fsm/controller
+
 ### QT Creator ###
 
 /build-ui-Desktop-Debug/*

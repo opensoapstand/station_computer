@@ -214,11 +214,11 @@ bool inputType(drink *drinkArray, char *inputArray)
     }
     else if (strcmp("d", inputArray) == 0)
     {
-        //cout << "Address: " << drinkArray->getDrinkPinAddress();
-        //cout << " Pin:" << drinkArray->getDrinkPin_pin() << endl;
+        cout << "Address: " << drinkArray->getDrinkPinAddress();
+        cout << " Pin:" << drinkArray->getDrinkPin_pin();
+        cout << " Flow Sensor Pin:" << drinkArray->getFlowSensor_pin() << endl;
 
-        //flowsensor.read_FlowSensor(drinkArray->getFlowSensor_pin(), 1);
-        //flowsensor.read_FlowSensor(417, 1);
+        flowsensor.read_FlowSensor(364, 1);
 
         //gpioControl.setPinMode_out(drinkArray->getDrinkPinAddress(), drinkArray->getDrinkPin_pin());
         gpioControl.setPin_on(drinkArray->getDrinkPinAddress(), drinkArray->getDrinkPin_pin());

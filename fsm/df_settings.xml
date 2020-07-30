@@ -5,6 +5,11 @@
         <id>808</id>
     </machine>
     <hardware>
+        <button>
+            <type>mcp</type>
+            <i2caddress>20</i2caddress>
+            <io>00</io>
+        </button>
         <dispenser id="a">
             <solenoid index="0">
                 <type>mcp</type>
@@ -46,9 +51,15 @@
                 <type>x86</type>
                 <io>23</io>
             </flowsensor>
-            <pump>
-                <type>x86</type>
-                <io>24</io>
+            <pump index="F">
+                <type>mcp</type>
+                <i2caddress>22</i2caddress>
+                <io>01</io>
+            </pump>
+            <pump index="R">
+                <type>mcp</type>
+                <i2caddress>22</i2caddress>
+                <io>02</io>
             </pump>
         </dispenser>
         <dispenser id="c">
@@ -71,10 +82,6 @@
                 <type>x86</type>
                 <io>23</io>
             </flowsensor>
-            <pump>
-                <type>x86</type>
-                <io>24</io>
-            </pump>
         </dispenser>
     </hardware>
     <networking />

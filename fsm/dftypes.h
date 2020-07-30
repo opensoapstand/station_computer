@@ -23,6 +23,7 @@ typedef enum DF_FSM {
    PAYMENT,        //retrieve info from ui whether or not payment is finished proccessing
    DISPENSE_IDLE,
    DISPENSE,
+   DISPENSE_END,
    CLEANING,
    FSM_MAX,
 } DF_FSM;
@@ -42,7 +43,9 @@ typedef enum DF_ERROR {
    ERROR_XMLFILE_NOT_FOUND,
    ERROR_XMLFILE_NO_MATCH_CONTENT,
    ERROR_PAYMENT_NOT_FOUND,
-   ERROR_PTHREADS
+   ERROR_PTHREADS,
+   ERROR_PTHREADS_KBTHREAD,
+   ERROR_PTHREADS_IPTHREAD
 } DF_ERROR;
 
 #endif

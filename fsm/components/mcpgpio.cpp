@@ -3,6 +3,8 @@
 // mcpgpio.cpp
 // implementation of GPIO for i2c gpio extender
 //
+// Chip model: MCP23017 - 16 PIN Addresses
+//
 // created: 15-06-2020
 // by: Denis Londry
 //
@@ -13,10 +15,10 @@
 #include "mcpgpio.h"
 #include <iostream>
 
-
+// CTOR
 mcpGPIO::mcpGPIO(int i2caddress, int pin)
 {
-	debugOutput::sendMessage("mcpGPIO", INFO);
+	debugOutput::sendMessage("------mcpGPIO------", INFO);
 	m_nPin = pin;
 	m_nAddress = convert_to_int(i2caddress);
 
@@ -26,6 +28,7 @@ mcpGPIO::mcpGPIO(int i2caddress, int pin)
 	this->m_mcp->openI2C(); 
 }
 
+// DTOR
 mcpGPIO::~mcpGPIO()
 {
 	debugOutput::sendMessage("~mcpGPIO", INFO);
@@ -52,10 +55,10 @@ DF_ERROR mcpGPIO::setDirection(bool input)
 	return df_ret;
 }
 
-DF_ERROR mcpGPIO::readPin(bool * level) //may not be use or needed 
+// may not be use or needed due to tiny xml
+DF_ERROR mcpGPIO::readPin(bool * level) 
 {
-	debugOutput debugInfo;
-	debugInfo.sendMessage("readPin", INFO);
+	debugOutput::sendMessage("readPin", INFO);
 	
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
@@ -68,13 +71,15 @@ DF_ERROR mcpGPIO::readPin(bool * level) //may not be use or needed
 	return df_ret;
 }
 
-DF_ERROR mcpGPIO::writePin(bool level) //control of the cassettes
+// Cassette controller base on high or low signal to acutate
+DF_ERROR mcpGPIO::writePin(bool level) 
 {
-	debugOutput debugInfo;
-	debugInfo.sendMessage("writePin", INFO);
+	debugOutput::sendMessage("writePin", INFO);
 
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
+	// 16 Pin Total for Chip Model
+	// TODO: Can change magic number if model changes in future
 	if(m_nPin < 0 && m_nPin > 15)
 	{
 		return df_ret; //pin number out of range
@@ -99,18 +104,23 @@ void mcpGPIO::monitorGPIO()
 	//!!! look at oddyseyx86GPIO for example
 }
 
+// *** Getters/Setters and Utilities below ***
+
 int mcpGPIO::convert_to_int(int addressNum)
 {
 	int hex_int = 0;
-	int remainder = 0;
-
-	for(int i = 10; i > 0; i = i/10)
-	{
-		remainder = addressNum/i;
-		addressNum = addressNum%i;
-
-		hex_int = hex_int + 16*remainder; 
-	}	
+	
+	hex_int = 16*(addressNum/10) + (addressNum%10); 	
 
 	return hex_int;
+}
+
+int mcpGPIO::getMCPAddress()
+{
+	return m_nAddress;
+}
+
+int mcpGPIO::getMCPPin()
+{
+	return m_nPin;
 }

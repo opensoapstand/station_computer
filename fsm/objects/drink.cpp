@@ -2,7 +2,10 @@
 //
 // drink.cpp
 // drink class owns the package of beverage use 
-// for the machine
+// for the machine.
+//
+// Holds and coordinates values from database
+// to dispense classes.
 //
 // created: 26-06-2020
 // by: Jason Wang

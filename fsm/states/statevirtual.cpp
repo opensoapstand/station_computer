@@ -14,11 +14,6 @@
 #include <iostream>
 
 stateVirtual::stateVirtual(){
-
-   for (int i = 0; i < CASSETTES_MAX; i++)
-   {
-      cassettes[i] = new dispenser();
-   }
    m_state = START;
 }
 
@@ -28,6 +23,7 @@ stateVirtual::stateVirtual(messageMediator * message)
    {
       //bad things have occured
    }
+   m_state = START;
 
    m_pMessaging = message;
 }
@@ -49,3 +45,9 @@ DF_FSM stateVirtual::getCurrentState()
 {
    return m_state;
 }
+
+// gpio* stateVirtual::getSolenoid(int pos, int type)
+// {
+//    gpio* temp = cassettes[pos]->;
+//    return ;
+// }

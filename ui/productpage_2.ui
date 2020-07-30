@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>productPage_2</class>
+ <widget class="QWidget" name="productPage_2">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1080</width>
+    <height>1920</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QPushButton" name="previousPage_Button">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>1820</y>
+     <width>1080</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="selection7_Button">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>370</y>
+     <width>250</width>
+     <height>350</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Select7</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="selection8_Button">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>370</y>
+     <width>250</width>
+     <height>350</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Select8</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="selection9_Button">
+   <property name="geometry">
+    <rect>
+     <x>720</x>
+     <y>370</y>
+     <width>250</width>
+     <height>350</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Select9</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

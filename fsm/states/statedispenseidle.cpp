@@ -1,8 +1,11 @@
 //***************************************
-//***************************************
 //
 // statedispenseidle.h
 // dispense idle state class
+//
+// Recieves and interprets string command from FSM.
+// Routes dispense instruction to GPIO's
+// HACK: JW What is difference between this and Idle?
 //
 // created: 26-06-2020
 // by: Jason Wang
@@ -13,7 +16,7 @@
 
 #include "statedispenseidle.h"
 
-#define DISPENSE_IDLE_STRING  "Dispense Idled"
+#define DISPENSE_IDLE_STRING  "Dispense Idle"
 
 stateDispenseIdle::stateDispenseIdle()
 {
@@ -21,7 +24,8 @@ stateDispenseIdle::stateDispenseIdle()
 }
 
 stateDispenseIdle::stateDispenseIdle(messageMediator * message){
-
+   
+   //debugOutput::sendMessage("stateDispenseIdle(messageMediator * message)", INFO);
 }
 
 
@@ -35,6 +39,7 @@ string stateDispenseIdle::toString()
    return DISPENSE_IDLE_STRING;
 }
 
+// FIXME: See state dispense function header
 DF_ERROR stateDispenseIdle::onEntry()
 {
    DF_ERROR e_ret  = OK;
@@ -45,7 +50,7 @@ DF_ERROR stateDispenseIdle::onEntry()
    return e_ret;
 }
 
-DF_ERROR stateDispenseIdle::onAction()
+DF_ERROR stateDispenseIdle::onAction(dispenser* cassettes)
 {
    debugOutput debugInfo;
    DF_ERROR df_ret  = ERROR_BAD_PARAMS;
@@ -54,14 +59,14 @@ DF_ERROR stateDispenseIdle::onAction()
    {
       // do stuff
       //debugInfo.sendMessage("onAction() for state [" + std::to_string((int)m_nextState) + "]", INFO);
-          
+      m_nextState = DISPENSE;
       return df_ret = OK;
    }
 
    return df_ret;
 }
 
-DF_FSM stateDispenseIdle::onAction(dispenser* dispenseObj)
+/*DF_FSM stateDispenseIdle::onAction(dispenser* dispenseObj)
 {
     DF_FSM df_state_ret  = DISPENSE_IDLE;
 
@@ -74,7 +79,7 @@ DF_FSM stateDispenseIdle::onAction(dispenser* dispenseObj)
     }
 
     return df_state_ret;
-}
+}*/
 
 DF_ERROR stateDispenseIdle::onExit()
 {
@@ -82,7 +87,7 @@ DF_ERROR stateDispenseIdle::onExit()
     DF_ERROR e_ret  = OK;
 
     m_state = DISPENSE_IDLE;
-    //m_nextState = DISPENSE;
+    m_nextState = DISPENSE;
 
    return e_ret;
 }

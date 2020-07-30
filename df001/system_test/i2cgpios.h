@@ -12,7 +12,7 @@
 #ifndef _I2CGPIOS__H__
 #define _I2CGPIOS__H__
 
-#include "mcp23017.h"
+#include "mcp23017/mcp23017.h"
 
 #define X20 20
 #define X21 21

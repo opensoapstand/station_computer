@@ -36,7 +36,7 @@ oddyseyx86GPIO::oddyseyx86GPIO()
 
 oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
 {
-	debugOutput::sendMessage("oddyseyx86GPIO", INFO);
+	debugOutput::sendMessage("------oddyseyx86GPIO------", INFO);
 	int fd, len;
 	char buf[MAX_BUF];
 

@@ -14,24 +14,24 @@
 #include <iostream>
 
 i2cGpios::i2cGpios(){
-    solenoid_1 = MCP23017(I2C_FILE_ADDRESS,32);
+    solenoid_1 = MCP23017(I2C_FILE_ADDRESS,0x20);
     solenoid_2 = MCP23017(I2C_FILE_ADDRESS,0x21);
-    //pump = MCP23017(I2C_FILE_ADDRESS, 0x22);
+    pump = MCP23017(I2C_FILE_ADDRESS, 0x22);
 
     solenoid_1.openI2C();
     solenoid_2.openI2C();
-    //pump.openI2C();
+    pump.openI2C();
 
     for(int i = 0; i <=15; i++){
         solenoid_1.pinMode(i, OUTPUT);
         solenoid_2.pinMode(i, OUTPUT);
-        //pump.pinMode(i, OUTPUT);
+        pump.pinMode(i, OUTPUT);
     }
 
     for(int i = 0; i <=15; i++){
         solenoid_1.digitalWrite(i, LOW);
         solenoid_2.digitalWrite(i, LOW);
-        //pump.digitalWrite(i, LOW);
+        pump.digitalWrite(i, LOW);
     }
 }
 
@@ -109,6 +109,7 @@ void i2cGpios::setPin_off(int address, int pinNum){
 
 void i2cGpios::setPump_Forward(int addressFWD, int pinNumFWD, int addressREV, int pinNumREV){
     if (addressFWD == X22 && addressREV ==X22){
+        //pump.pullUp(pinNumFWD, HIGH);
         pump.digitalWrite(pinNumFWD, HIGH);
         pump.digitalWrite(pinNumREV, LOW);
         std::clog << "Forward pumping\n";
@@ -127,7 +128,7 @@ void i2cGpios::setPump_Reverse(int addressFWD, int pinNumFWD, int addressREV, in
     }
     else
     {
-        std::clog << "i2c address not available\n";
+        std::clog << "i2c address not availablpe\n";
     }  
 }
 

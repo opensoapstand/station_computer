@@ -23,12 +23,15 @@ class gpio
 {
 public:
 	gpio();
-	gpio(int pin); //non i2c gpio
+	//gpio(int pin); //non i2c gpio
 	virtual ~gpio() = 0;
 
 	virtual DF_ERROR setDirection(bool input) = 0;
 	virtual DF_ERROR readPin(bool* level) = 0;
 	virtual DF_ERROR writePin(bool level) = 0;
+
+	virtual int getMCPAddress() {};
+	virtual int getMCPPin() {};
 
 	DF_ERROR setInterrupt(DF_ERROR(*pf)()); 
 
@@ -37,7 +40,7 @@ public:
 
 
 protected:
-	int m_nAddress; //address of i2c 
+	int m_nPin;
 	bool m_stop;
 	bool m_input;
 	bool m_i2c;

@@ -24,11 +24,12 @@ class stateIdle : public stateVirtual
         stateIdle (messageMediator * message); //debug through local network 
         ~stateIdle ();
 
-        virtual string toString();
+        string toString();
 
         DF_ERROR onEntry();
-        DF_ERROR onAction();
+        DF_ERROR onAction(dispenser* cassettes);
         DF_ERROR onExit();
+        dispenser* dispenserSetup(){};
 
     private:    
 };

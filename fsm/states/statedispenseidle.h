@@ -2,6 +2,8 @@
 // statedispenseidle.h
 // dispense idle state class
 //
+// Recieves and interprets string command from FSM.
+// Routes dispense instruction to GPIO's
 // created: 26-06-2020
 // by: Jason Wang
 //
@@ -25,11 +27,14 @@ class stateDispenseIdle : public stateVirtual
         stateDispenseIdle(messageMediator * message); //debug through local network 
         ~stateDispenseIdle();
 
-        virtual string toString();
+        string toString();
 
-        DF_ERROR onEntry();        
-        DF_ERROR onAction();        
+        DF_ERROR onEntry();    
+        //DF_ERROR onAction();     
+        DF_ERROR onAction(dispenser* cassettes);        
         DF_ERROR onExit();
+
+        dispenser* dispenserSetup(){};
 
     private:
 };

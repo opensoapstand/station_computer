@@ -3,6 +3,8 @@
 // stateidle.cpp
 // idle state class
 //
+// HACK: JW What is difference between this and DispenseIdle?
+//
 // created: 29-06-2020
 // by: Jason Wang
 //
@@ -21,7 +23,7 @@ stateIdle::stateIdle()
 
 stateIdle::stateIdle(messageMediator * message)
 {
-   
+   //debugOutput::sendMessage("stateIdle(messageMediator * message)", INFO);
 }
 
 
@@ -32,9 +34,10 @@ stateIdle::~stateIdle()
 
 string stateIdle::toString()
 {
-   return INIT_STRING;
+   return IDLE_STRING;
 }
 
+// FIXME: See state dispense function header
 DF_ERROR stateIdle::onEntry()
 {
    DF_ERROR e_ret  = OK;
@@ -45,15 +48,15 @@ DF_ERROR stateIdle::onEntry()
    return e_ret;
 }
 
-DF_ERROR stateIdle::onAction()
+DF_ERROR stateIdle::onAction(dispenser* cassettes)
 {
    DF_ERROR e_ret  = ERROR_BAD_PARAMS;
    m_state = IDLE;
 
    if (nullptr != &m_nextState)
    {
-
-       //e_ret = OK;
+      m_nextState = DISPENSE_IDLE;
+      e_ret = OK;
    }
 
    return e_ret;
@@ -64,7 +67,7 @@ DF_ERROR stateIdle::onExit()
    DF_ERROR e_ret  = OK;
 
    m_state = IDLE;
-   m_nextState = DISPENSE; //!!!will be needing more here
+   m_nextState = DISPENSE_IDLE; //!!!will be needing more here
 
    return e_ret;
 }

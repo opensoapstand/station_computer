@@ -1,7 +1,10 @@
 //***************************************
 //
-// dispenser.h
-// dispenser class owns the package for a dispense
+// dispenser.cpp
+// dispenser class owns the package for a dispense.
+//
+// Links to circuit board addresses and
+// holds instructions for dispensing.
 //
 // created: 12-06-2020
 // by: Denis Londry
@@ -22,6 +25,7 @@
 #define NUM_SOLENOID 3 //12v for drink,water, and air
 #define NUM_PUMP 2 //forward and reverse pin
 #define NUM_FLOWSENSOR  1 
+#define NUM_BUTTON 1
 
 #define DRINK 0
 #define WATER 1
@@ -49,14 +53,19 @@ class dispenser
 
       //private variable setters
       DF_ERROR setSolenoid(int mcpAddress, int pin, int pos);
-      DF_ERROR setPump(int mcpAddress, int forwardPin, int direction);
+      DF_ERROR setPump(int mcpAddress, int pin, int direction); //0 as forward and 1 as reverse
       DF_ERROR setFlowsensor(int pinint, int pos);
 
       DF_ERROR startDispense();
       DF_ERROR stopDispense(); //reached dispense value
       DF_ERROR cleanNozzle();
 
-      drink getDrink();
+      DF_ERROR testSolenoidDispense(int pos);
+
+      drink* getDrink();
+
+      int getI2CAddress(int pos);
+      int getI2CPin(int pos);
 
    private:
       drink *m_pDrink;

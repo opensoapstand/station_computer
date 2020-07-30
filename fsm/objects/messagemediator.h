@@ -3,6 +3,10 @@
 // messageMediator.h
 // messaging class owns the IP interfaces
 //
+// Holds reference and cordinates string 
+// commands from GUI, GPIO's and 
+// Database threads
+//
 // created: 12-06-2020
 // by: Denis Londry
 //
@@ -14,6 +18,7 @@
 #define _MESSAGEMEDIATOR__H_
 
 #include "../dftypes.h"
+#include "debugoutput.h"
 #include <pthread.h>
 
 class messageMediator
@@ -22,17 +27,27 @@ class messageMediator
       messageMediator();
       ~messageMediator();
 
-      DF_ERROR createThreads();
+      DF_ERROR createThreads(pthread_t &kbThread, pthread_t &ipThread);
 
       DF_ERROR sendMessage();
+
+      string getProcessString();
+      bool getStringReady();
+      void clearProcessString();
    
+      //DF_ERROR doKBThread (void * pThreadArgs);
+
    private:
       int messageIP;
-      bool m_fExitThreads;
-      pthread_t * m_pKBThread;
+      static bool m_fExitThreads;
+      // pthread_t m_pKBThread;
 
-      DF_ERROR updateCmdString(char key);
+      static string m_processString;
+      static bool m_stringReady;
+
+      static DF_ERROR updateCmdString(char key);  
       static void * doKBThread(void * pThreadArgs);
+      static void * doIPThread(void * pThreadArgs);
 };
 
 #endif

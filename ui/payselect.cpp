@@ -38,6 +38,11 @@ paySelect::paySelect(QWidget *parent) :
     ui->payPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
+    // TODO: ADD buttons to select size/price of drink
+    ui->orderSmall_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->orderBig_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+
+    // TODO: Set up functions to manipulate DrinkOrder Object
 }
 
 /*
@@ -56,6 +61,7 @@ paySelect::~paySelect()
     delete ui;
 }
 
+/* GUI */
 void paySelect::on_previousPage_Button_clicked()
 {
     firstProductPage->showFullScreen();
@@ -73,3 +79,19 @@ void paySelect::on_mainPage_Button_clicked()
     idlePage->showFullScreen();
     this->hide();
 }
+
+// on_Small_Order button listener
+void paySelect::on_orderSmall_Button_clicked()
+{
+    qInfo() << "Small Order" << endl;
+}
+
+// on_Large_Order button listener
+void paySelect::on_orderBig_Button_clicked()
+{
+    qInfo() << "Big Order" << endl;
+}
+
+/* Models */
+
+// Function setDrinkOrder

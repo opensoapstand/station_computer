@@ -19,6 +19,7 @@
 #define DISPENSEPAGE_H
 
 #include <QWidget>
+#include <includefiles.h>
 
 class payPage;
 class thankYouPage;
@@ -38,12 +39,21 @@ public:
 
 private slots:
     void on_finish_Button_clicked();
+    void send_to_FSM();
+    void displayError(QAbstractSocket::SocketError socketError);
 
 private:
     Ui::dispensePage *ui;
 
     payPage* paymentPage;
     thankYouPage* thanksPage;
+
+//    QComboBox *host = "localhost";
+//    QLineEdit *port = "1234";
+    const char* host = "localhost";
+    int port = 1234;
+    QTcpSocket *tcpSocket = nullptr;
+    QDataStream in;
 };
 
 #endif // DISPENSEPAGE_H

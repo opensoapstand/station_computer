@@ -38,7 +38,6 @@ public:
 
 private slots:
     void on_previousPage_Button_clicked();
-
     void on_passPayment_Button_clicked();
 
     /*

@@ -16,6 +16,8 @@
 #include "productpage_1.h"
 #include "payselect.h"
 
+#include "df_util.h"
+
 // CTOR
 productPage_2::productPage_2(QWidget *parent) :
     QWidget(parent),
@@ -28,9 +30,13 @@ productPage_2::productPage_2(QWidget *parent) :
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
+    // TODO: Populate Page Drink buttons with DrinkSelection[6-12]
+
     /*hacky transparent button*/
     ui->previousPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->selection7_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->selection8_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->selection9_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 }
 
 /*
@@ -48,14 +54,31 @@ productPage_2::~productPage_2()
     delete ui;
 }
 
+// FIXME: Again...this is terrible...product pages need better inheritance structure!
 void productPage_2::on_previousPage_Button_clicked()
 {
+    qInfo() << "Selection 6" << endl;
     firstProductPage->showFullScreen();
     this->hide();
 }
 
 void productPage_2::on_selection7_Button_clicked()
 {
+    qInfo() << "Selection 7" << endl;
+    paySelectPage->showFullScreen();
+    this->hide();
+}
+
+void productPage_2::on_selection8_Button_clicked()
+{
+    qInfo() << "Selection 8" << endl;
+    paySelectPage->showFullScreen();
+    this->hide();
+}
+
+void productPage_2::on_selection9_Button_clicked()
+{
+    qInfo() << "Selection 8" << endl;
     paySelectPage->showFullScreen();
     this->hide();
 }

@@ -35,6 +35,8 @@ idle::idle(QWidget *parent) :
     //ui->nextPageButton->setAttribute(Qt::WA_TranslucentBackground);
     ui->nextPageButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     //setStyleSheet("QPushButton{background: transparent;}");
+
+    // TODO: Hold and pass DrinkOrder Object
 }
 
 /*

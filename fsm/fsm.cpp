@@ -33,11 +33,14 @@ DF_ERROR stateLoop();
 
 int main()
 {
+
+    pthread_t ipThread, kbThread;
+
     DF_ERROR dfRet = OK;
 
     if (OK == initObjects())
     {
-        dfRet = g_pMessaging->createThreads();
+        dfRet = g_pMessaging->createThreads(kbThread, ipThread);
         if (OK == dfRet){
             dfRet = stateLoop();
         }

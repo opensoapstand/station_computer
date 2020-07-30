@@ -43,6 +43,10 @@ private slots:
 
     void on_mainPage_Button_clicked();
 
+    void on_orderSmall_Button_clicked();
+
+    void on_orderBig_Button_clicked();
+
 private:
     Ui::paySelect *ui;
 

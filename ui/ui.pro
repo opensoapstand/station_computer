@@ -1,4 +1,5 @@
-QT       += core gui
+QT += core gui sql widgets
+QT += network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += \
@@ -35,3 +36,6 @@ SOURCES += \
 
 RESOURCES += \
     src.qrc
+
+DISTFILES += \
+    styles/product_select.qss

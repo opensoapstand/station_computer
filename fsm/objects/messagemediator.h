@@ -27,7 +27,7 @@ class messageMediator
       messageMediator();
       ~messageMediator();
 
-      DF_ERROR createThreads();
+      DF_ERROR createThreads(pthread_t &kbThread, pthread_t &ipThread);
 
       DF_ERROR sendMessage();
 
@@ -40,13 +40,14 @@ class messageMediator
    private:
       int messageIP;
       static bool m_fExitThreads;
-      pthread_t m_pKBThread;
+      // pthread_t m_pKBThread;
 
       static string m_processString;
       static bool m_stringReady;
 
       static DF_ERROR updateCmdString(char key);  
-      static void * doKBThread(void * pThreadArgs);    
+      static void * doKBThread(void * pThreadArgs);
+      static void * doIPThread(void * pThreadArgs);
 };
 
 #endif

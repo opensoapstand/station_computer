@@ -55,6 +55,32 @@
     <string/>
    </property>
   </widget>
+  <widget class="QPushButton" name="orderSmall_Button">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>1310</y>
+     <width>250</width>
+     <height>150</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="orderBig_Button">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>1310</y>
+     <width>250</width>
+     <height>150</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

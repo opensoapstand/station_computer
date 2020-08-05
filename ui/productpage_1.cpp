@@ -69,8 +69,8 @@ void productPage_1::on_nextPageButton_clicked()
 void productPage_1::on_selection1_Button_clicked()
 {    
     qInfo() << "Selection 1" << endl;
-    this->selectedDrink->brandName = "ok";
-    qInfo() << selectedDrink->brandName << endl;
+//    this->selectedDrink->brandName = "ok";
+//    qInfo() << selectedDrink->brandName << endl;
 
     paymentSelectPage->showFullScreen();
     this->hide();

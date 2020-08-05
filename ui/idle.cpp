@@ -22,6 +22,9 @@ idle::idle(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::idle)
 {
+
+
+
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
     QPixmap background(":/light/1_welcome_panel.jpg");
@@ -37,6 +40,38 @@ idle::idle(QWidget *parent) :
     //setStyleSheet("QPushButton{background: transparent;}");
 
     // TODO: Hold and pass DrinkOrder Object
+
+
+    // TODO: Will need to determine standard path in future; Could skip if going with Postgres
+
+    QString path = "/home/df-admin/Project/drinkfill/sqlite/";
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName(path + "drinkfill-sqlite.db");
+
+    if(!db.open())
+    {
+        qDebug() << "Can't Connect to DB !";
+    }
+    else
+    {
+        qDebug() << "Connected Successfully to" + db.databaseName();
+        QSqlQuery query;
+        query.prepare("SELECT * FROM vendor WHERE vendor_id = 1");
+        if(!query.exec())
+        {
+            qDebug() << "Can't Execute Query !";
+        }
+        else
+        {
+            qDebug() << "Query Executed Successfully !";
+            while(query.next())
+            {
+                qDebug() << "Vendor Name : " << query.value(0).toString();
+                qDebug() << "Vendor Full Address: " << query.value(1).toString();
+            }
+        }
+    }
+
 }
 
 /*

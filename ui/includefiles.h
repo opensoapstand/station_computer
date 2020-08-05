@@ -10,6 +10,13 @@
 #include <QMessageBox>
 #include <QAbstractSocket>
 
+#include <QSqlDatabase>
+#include <QSqlDriver>
+#include <QSqlError>
+#include <QSqlQuery>
+
+#include <QStandardPaths>
+
 using namespace std;
 
 struct DrinkSelection{

@@ -22,9 +22,6 @@ idle::idle(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::idle)
 {
-
-
-
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
     QPixmap background(":/light/1_welcome_panel.jpg");
@@ -56,7 +53,7 @@ idle::idle(QWidget *parent) :
     {
         qDebug() << "Connected Successfully to" + db.databaseName();
         QSqlQuery query;
-        query.prepare("SELECT * FROM vendor WHERE vendor_id = 1");
+        query.prepare("SELECT name, full_address FROM vendor WHERE vendor_id = 1;");
         if(!query.exec())
         {
             qDebug() << "Can't Execute Query !";

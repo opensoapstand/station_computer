@@ -165,9 +165,13 @@ CREATE TABLE IF NOT EXISTS df_transaction.user_contact (
 
 /*
  * Location of the machine
+ * FIXME: Find a better way to tie vendors with machine location...better for web.
  */
 CREATE TABLE IF NOT EXISTS df_transaction.machine_location (
     machine_location_id SERIAL,
+    manager_name VARCHAR(50),
+    phone VARCHAR(15),
+    contact_email VARCHAR (50),
     locale_name VARCHAR(255),
     street_address VARCHAR(255),
     phone VARCHAR(15),

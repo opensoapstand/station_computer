@@ -18,8 +18,7 @@
 #ifndef DISPENSEPAGE_H
 #define DISPENSEPAGE_H
 
-#include <QWidget>
-#include <includefiles.h>
+#include "df_util.h"
 
 class payPage;
 class thankYouPage;

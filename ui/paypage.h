@@ -17,7 +17,7 @@
 #ifndef PAYPAGE_H
 #define PAYPAGE_H
 
-#include <QWidget>
+#include "df_util.h"
 
 class paySelect;
 class dispensePage;

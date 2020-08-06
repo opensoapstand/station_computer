@@ -13,7 +13,7 @@
 #ifndef PRODUCTPAGE_2_H
 #define PRODUCTPAGE_2_H
 
-#include <QWidget>
+#include "df_util.h"
 
 class productPage_1;
 class paySelect;

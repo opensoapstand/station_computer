@@ -17,7 +17,7 @@
 #ifndef IDLE_H
 #define IDLE_H
 
-#include <QWidget>
+#include "df_util.h"
 #include "productpage_1.h"
 
 namespace Ui {

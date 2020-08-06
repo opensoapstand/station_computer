@@ -17,7 +17,6 @@
 #ifndef PRODUCTPAGE_1_H
 #define PRODUCTPAGE_1_H
 
-#include <QWidget>
 #include "df_util.h"
 
 class productPage_2;

@@ -55,17 +55,15 @@ CREATE TABLE IF NOT EXISTS  flow_io_log (
 /*
  * Location of the machine
  */
-CREATE TABLE IF NOT EXISTS   machine_location (
+CREATE TABLE IF NOT EXISTS machine_location (
     machine_location_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    manager_name VARCHAR(50),
+    phone VARCHAR(15),
+    contact_email VARCHAR (50),
     locale_name VARCHAR(255),
     street_address VARCHAR(255),
-    phone VARCHAR(15),
     country VARCHAR(50),
-    on_site_location VARCHAR(255),
-    user_id_fk INT,
-    -- Check for Vendor Type
-    user_type_fk VARCHAR(15),
-    FOREIGN KEY(user_id_fk, user_type_fk) REFERENCES   user(user_id, user_type)
+    on_site_location VARCHAR(255)
 );
 
 /*

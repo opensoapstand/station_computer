@@ -22,7 +22,7 @@
 #include "dispensepage.h"
 #include "thankyoupage.h"
 #include <QApplication>
-#include "includefiles.h"
+#include "df_util.h"
 
 
 int main(int argc, char *argv[])
@@ -31,19 +31,6 @@ int main(int argc, char *argv[])
     QApplication mainApp(argc, argv);
 
     // Instantiate object to hold drink order
-//    public static struct DrinkSelection selectedDrink;
-//    selectedDrink = {
-//        "null",
-//        "null",
-//        "null",
-//        "null",
-//        "null",
-//        -1,
-//        "null",
-//        "null",
-//        355,
-//        3.00
-//    };
 
     // Build objects to hold navigation (pages)
     // Linking resources and Function definitions for pathing

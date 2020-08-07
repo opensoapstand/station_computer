@@ -32,6 +32,34 @@ productPage_1::productPage_1(QWidget *parent) :
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
+//    QString path = "/home/df-admin/Project/drinkfill/sqlite/";
+//    db = QSqlDatabase::addDatabase("QSQLITE");
+//    db.setDatabaseName(path + "drinkfill-sqlite.db");
+
+//    if(!db.open())
+//    {
+//        qDebug() << "Can't Connect to DB !";
+//    }
+//    else
+//    {
+//        qDebug() << "Connected Successfully to" + db.databaseName();
+//        QSqlQuery query;
+//        query.prepare("SELECT name, full_address FROM vendor WHERE vendor_id = 1;");
+//        if(!query.exec())
+//        {
+//            qDebug() << "Can't Execute Query !";
+//        }
+//        else
+//        {
+//            qDebug() << "Query Executed Successfully !";
+//            while(query.next())
+//            {
+//                qDebug() << "Vendor Name : " << query.value(0).toString();
+//                qDebug() << "Vendor Full Address: " << query.value(1).toString();
+//            }
+//        }
+//    }
+
     // TODO:  Populate Page Drink buttons with DrinkSelection[0-5]
 
     /*hacky transparent button*/
@@ -42,6 +70,8 @@ productPage_1::productPage_1(QWidget *parent) :
     ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->selection5_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->selection6_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+
+    ui->Brand1->setText("BRANDY1!");
 }
 
 /*

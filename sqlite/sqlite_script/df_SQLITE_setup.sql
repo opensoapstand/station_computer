@@ -55,17 +55,15 @@ CREATE TABLE IF NOT EXISTS  flow_io_log (
 /*
  * Location of the machine
  */
-CREATE TABLE IF NOT EXISTS   machine_location (
+CREATE TABLE IF NOT EXISTS machine_location (
     machine_location_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    manager_name VARCHAR(50),
+    phone VARCHAR(15),
+    contact_email VARCHAR (50),
     locale_name VARCHAR(255),
     street_address VARCHAR(255),
-    phone VARCHAR(15),
     country VARCHAR(50),
-    on_site_location VARCHAR(255),
-    user_id_fk INT,
-    -- Check for Vendor Type
-    user_type_fk VARCHAR(15),
-    FOREIGN KEY(user_id_fk, user_type_fk) REFERENCES   user(user_id, user_type)
+    on_site_location VARCHAR(255)
 );
 
 /*
@@ -113,16 +111,18 @@ CREATE TABLE IF NOT EXISTS   inventory (
     FOREIGN KEY(product_id) REFERENCES   product(product_id)
 );
 
+
+// SQLite does not take TRUE/FALSE has to be 1/0
 INSERT INTO   inventory
-VALUES (0, NULL, NULL, current_timestamp, FALSE),
-    (1, NULL, NULL, current_timestamp, FALSE),
-    (2, NULL, NULL, current_timestamp, FALSE),
-    (3, NULL, NULL, current_timestamp, FALSE),
-    (4, NULL, NULL, current_timestamp, FALSE),
-    (5, NULL, NULL, current_timestamp, FALSE),
-    (6, NULL, NULL, current_timestamp, FALSE),
-    (7, NULL, NULL, current_timestamp, FALSE),
-    (8, NULL, NULL, current_timestamp, FALSE);
+VALUES (0, NULL, NULL, current_timestamp, 0),
+    (1, NULL, NULL, current_timestamp, 0),
+    (2, NULL, NULL, current_timestamp, 0),
+    (3, NULL, NULL, current_timestamp, 0),
+    (4, NULL, NULL, current_timestamp, 0),
+    (5, NULL, NULL, current_timestamp, 0),
+    (6, NULL, NULL, current_timestamp, 0),
+    (7, NULL, NULL, current_timestamp, 0),
+    (8, NULL, NULL, current_timestamp, 0);
 
 /*
  Product holds a local catalog of drinks used in the machine

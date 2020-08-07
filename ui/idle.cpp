@@ -22,9 +22,6 @@ idle::idle(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::idle)
 {
-
-
-
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
     QPixmap background(":/light/1_welcome_panel.jpg");
@@ -33,6 +30,8 @@ idle::idle(QWidget *parent) :
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
+    userDrinkOrder = new DrinkOrder();
+
     /* Issues with QT buttons with images.  Button behind transparent image hack.
        TODO: find a way to make the button transparent/clickable image */
     //ui->nextPageButton->setAttribute(Qt::WA_TranslucentBackground);
@@ -40,6 +39,7 @@ idle::idle(QWidget *parent) :
     //setStyleSheet("QPushButton{background: transparent;}");
 
     // TODO: Hold and pass DrinkOrder Object
+
 
 
     // TODO: Will need to determine standard path in future; Could skip if going with Postgres
@@ -56,7 +56,7 @@ idle::idle(QWidget *parent) :
     {
         qDebug() << "Connected Successfully to" + db.databaseName();
         QSqlQuery query;
-        query.prepare("SELECT * FROM vendor WHERE vendor_id = 1");
+        query.prepare("SELECT name, full_address FROM vendor WHERE vendor_id = 1;");
         if(!query.exec())
         {
             qDebug() << "Can't Execute Query !";

@@ -17,7 +17,7 @@
 #ifndef IDLE_H
 #define IDLE_H
 
-#include <QWidget>
+#include "df_util.h"
 #include "productpage_1.h"
 
 namespace Ui {
@@ -32,6 +32,8 @@ public:
     explicit idle(QWidget *parent = nullptr);
     void setPage(productPage_1 *pageProduct);
     ~idle();
+
+    DrinkOrder* userDrinkOrder;
 
 private slots:
     void on_nextPageButton_clicked();

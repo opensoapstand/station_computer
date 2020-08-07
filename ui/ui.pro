@@ -22,7 +22,9 @@ HEADERS += \
     payselect.h \
     productpage_1.h \
     productpage_2.h \
-    thankyoupage.h
+    thankyoupage.h \
+    df_util.h \
+    drinkorder.h
 
 SOURCES += \
     dispensepage.cpp \
@@ -32,7 +34,9 @@ SOURCES += \
     payselect.cpp \
     productpage_1.cpp \
     productpage_2.cpp \
-    thankyoupage.cpp
+    thankyoupage.cpp \
+    df_util.cpp \
+    drinkorder.cpp
 
 RESOURCES += \
     src.qrc

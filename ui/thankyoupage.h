@@ -14,7 +14,7 @@
 #ifndef THANKYOUPAGE_H
 #define THANKYOUPAGE_H
 
-#include <QWidget>
+#include "df_util.h"
 
 class dispensePage;
 class idle;
@@ -40,6 +40,8 @@ private:
 
     dispensePage* dispensingPage;
     idle* idlePage;
+    QSqlDatabase db;
+
 };
 
 #endif // THANKYOUPAGE_H

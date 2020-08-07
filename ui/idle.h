@@ -33,6 +33,8 @@ public:
     void setPage(productPage_1 *pageProduct);
     ~idle();
 
+    DrinkOrder* userDrinkOrder;
+
 private slots:
     void on_nextPageButton_clicked();
 

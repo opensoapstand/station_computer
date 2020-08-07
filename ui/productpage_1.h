@@ -48,7 +48,6 @@ private:
     Ui::productPage_1 *ui;
     productPage_2 *selection_PageTwo;
     paySelect *paymentSelectPage;
-    DrinkSelection *selectedDrink;
 };
 
 #endif // PRODUCTPAGE_1_H

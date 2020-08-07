@@ -33,6 +33,7 @@ payPage::payPage(QWidget *parent) :
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
+
     /*hacky transparent button*/
     ui->previousPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->passPayment_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
@@ -63,6 +64,8 @@ void payPage::on_previousPage_Button_clicked()
 
 void payPage::on_passPayment_Button_clicked()
 {
+    qDebug() << this->idlePage->userDrinkOrder->getSize();
+
     dispensingPage->showFullScreen();
     this->hide();
 }

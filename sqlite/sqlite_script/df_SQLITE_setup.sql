@@ -111,16 +111,18 @@ CREATE TABLE IF NOT EXISTS   inventory (
     FOREIGN KEY(product_id) REFERENCES   product(product_id)
 );
 
+
+// SQLite does not take TRUE/FALSE has to be 1/0
 INSERT INTO   inventory
-VALUES (0, NULL, NULL, current_timestamp, FALSE),
-    (1, NULL, NULL, current_timestamp, FALSE),
-    (2, NULL, NULL, current_timestamp, FALSE),
-    (3, NULL, NULL, current_timestamp, FALSE),
-    (4, NULL, NULL, current_timestamp, FALSE),
-    (5, NULL, NULL, current_timestamp, FALSE),
-    (6, NULL, NULL, current_timestamp, FALSE),
-    (7, NULL, NULL, current_timestamp, FALSE),
-    (8, NULL, NULL, current_timestamp, FALSE);
+VALUES (0, NULL, NULL, current_timestamp, 0),
+    (1, NULL, NULL, current_timestamp, 0),
+    (2, NULL, NULL, current_timestamp, 0),
+    (3, NULL, NULL, current_timestamp, 0),
+    (4, NULL, NULL, current_timestamp, 0),
+    (5, NULL, NULL, current_timestamp, 0),
+    (6, NULL, NULL, current_timestamp, 0),
+    (7, NULL, NULL, current_timestamp, 0),
+    (8, NULL, NULL, current_timestamp, 0);
 
 /*
  Product holds a local catalog of drinks used in the machine

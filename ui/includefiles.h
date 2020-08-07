@@ -2,6 +2,7 @@
 #define INCLUDEFILES_H
 
 #include <QWidget>
+#include <QObject>
 
 #include <QDebug>
 #include <stdint.h>

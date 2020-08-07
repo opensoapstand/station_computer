@@ -52,7 +52,6 @@ private:
     paySelect* paySelectPage;
     dispensePage* dispensingPage;
     idle* idlePage;
-
 };
 
 #endif // PAYPAGE_H

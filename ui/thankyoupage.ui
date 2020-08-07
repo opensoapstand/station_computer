@@ -32,8 +32,8 @@
   <widget class="QLabel" name="Counter">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>790</y>
+     <x>290</x>
+     <y>770</y>
      <width>500</width>
      <height>100</height>
     </rect>

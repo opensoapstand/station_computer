@@ -14,7 +14,7 @@
 Insert Into 
 machine_location(manager_name, phone, contact_email, locale_name, street_address, country, on_site_location)
 VALUES
-( ""
+( 
 
 )
 
@@ -47,18 +47,6 @@ VALUES (
 	vendor_id = 1
 	user_type
 );
-
-
-INSERT INTO   inventory
-VALUES (0, NULL, NULL, current_timestamp, 0),
-    (1, NULL, NULL, current_timestamp, 0),
-    (2, NULL, NULL, current_timestamp, 0),
-    (3, NULL, NULL, current_timestamp, 0),
-    (4, NULL, NULL, current_timestamp, 0),
-    (5, NULL, NULL, current_timestamp, 0),
-    (6, NULL, NULL, current_timestamp, 0),
-    (7, NULL, NULL, current_timestamp, 0),
-    (8, NULL, NULL, current_timestamp, 0);
 
 UPDATE inventory
 SET 

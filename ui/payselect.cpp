@@ -83,15 +83,13 @@ void paySelect::on_mainPage_Button_clicked()
 // on_Small_Order button listener
 void paySelect::on_orderSmall_Button_clicked()
 {
-    qInfo() << "Existing Size" << idlePage->userDrinkOrder->getSize() << endl;
-    idlePage->userDrinkOrder->setSize(355.00);
-    qInfo() << "Small Order" << idlePage->userDrinkOrder->getSize() << endl;
+    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
 }
 
 // on_Large_Order button listener
 void paySelect::on_orderBig_Button_clicked()
 {
-    qInfo() << "Big Order" << endl;
+    idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
 }
 
 /* Models */

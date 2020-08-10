@@ -77,10 +77,11 @@ productPage_1::productPage_1(QWidget *parent) :
 /*
  * Page Tracking reference
  */
-void productPage_1::setPage(productPage_2 *pageTwoProducts, paySelect *pageSizeSelect)
+void productPage_1::setPage(productPage_2 *pageTwoProducts, paySelect *pageSizeSelect, idle* pageIdle)
 {
     this->selection_PageTwo = pageTwoProducts;
     this->paymentSelectPage = pageSizeSelect;
+    this->idlePage = pageIdle;
 }
 
 // DTOR
@@ -99,6 +100,7 @@ void productPage_1::on_nextPageButton_clicked()
 void productPage_1::on_selection1_Button_clicked()
 {    
     qInfo() << "Selection 1" << endl;
+
 //    this->selectedDrink->brandName = "ok";
 //    qInfo() << selectedDrink->brandName << endl;
 

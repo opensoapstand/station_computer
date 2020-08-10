@@ -49,11 +49,11 @@ int main(int argc, char *argv[])
 
     // Page pathing references to function calls.
     idlePage->setPage(firstSelectPage);
-    firstSelectPage->setPage(secondSelectPage, paySelectPage);
-    secondSelectPage->setPage(firstSelectPage, paySelectPage);
+    firstSelectPage->setPage(secondSelectPage, paySelectPage, idlePage);
+    secondSelectPage->setPage(firstSelectPage, paySelectPage, idlePage);
     paySelectPage->setPage(firstSelectPage, paymentPage, idlePage);
     paymentPage->setPage(paySelectPage, dispensingPage, idlePage);
-    dispensingPage->setPage(paymentPage, lastPage);
+    dispensingPage->setPage(paymentPage, lastPage, idlePage);
     lastPage->setPage(dispensingPage, idlePage);
 
 //    payOptionToggle->setPage();

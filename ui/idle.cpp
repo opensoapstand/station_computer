@@ -32,6 +32,8 @@ idle::idle(QWidget *parent) :
 
     userDrinkOrder = new DrinkOrder();
 
+
+
     /* Issues with QT buttons with images.  Button behind transparent image hack.
        TODO: find a way to make the button transparent/clickable image */
     //ui->nextPageButton->setAttribute(Qt::WA_TranslucentBackground);

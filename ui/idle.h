@@ -34,6 +34,7 @@ public:
     ~idle();
 
     DrinkOrder* userDrinkOrder;
+    df_util* dfUtility;
 
 private slots:
     void on_nextPageButton_clicked();

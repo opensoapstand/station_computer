@@ -42,10 +42,11 @@ productPage_2::productPage_2(QWidget *parent) :
 /*
  * Page Tracking reference
  */
-void productPage_2::setPage(productPage_1 *pageOneProducts, paySelect *pageSizeSelect)
+void productPage_2::setPage(productPage_1 *pageOneProducts, paySelect *pageSizeSelect, idle *pageIdle)
 {
     this->firstProductPage = pageOneProducts;
     this->paySelectPage = pageSizeSelect;
+    this->idlePage = pageIdle;
 }
 
 // DTOR

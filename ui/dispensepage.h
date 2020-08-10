@@ -22,6 +22,7 @@
 
 class payPage;
 class thankYouPage;
+class idle;
 
 namespace Ui {
 class dispensePage;
@@ -33,7 +34,7 @@ class dispensePage : public QWidget
 
 public:
     explicit dispensePage(QWidget *parent = nullptr);
-    void setPage(payPage* pagePayment, thankYouPage* pageThankYou);
+    void setPage(payPage* pagePayment, thankYouPage* pageThankYou, idle* pageIdle);
     ~dispensePage();
 
 private slots:
@@ -53,6 +54,7 @@ private:
     int port = 1234;
     QTcpSocket *tcpSocket = nullptr;
     QDataStream in;
+    idle* idlePage;
 };
 
 #endif // DISPENSEPAGE_H

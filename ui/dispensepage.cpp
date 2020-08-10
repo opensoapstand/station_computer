@@ -50,10 +50,11 @@ dispensePage::dispensePage(QWidget *parent) :
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void dispensePage::setPage(payPage *pagePayment, thankYouPage* pageThankYou)
+void dispensePage::setPage(payPage *pagePayment, thankYouPage* pageThankYou, idle* pageIdle)
 {
     this->thanksPage = pageThankYou;
     this->paymentPage = pagePayment;
+    this->idlePage = pageIdle;
 }
 
 // DTOR

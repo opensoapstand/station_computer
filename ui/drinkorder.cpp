@@ -51,4 +51,27 @@ void DrinkOrder::setSize(double size)
     }
 }
 
+// TODO: Decouple send_to_FSM from Dispenser to here
+void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
+    qInfo() << "Existing Size" << getSize() << endl;
+
+    switch (sizeOption)
+    {
+    case(SMALL_DRINK):
+        setSize(SMALL_SIZE_ML);
+        break;
+
+    case(LARGE_DRINK):
+        setSize(LARGE_SIZE_ML);
+        break;
+
+    default:
+        setSize(EMPTY_SIZE_ML);
+        break;
+    }
+
+    qInfo() << "Order Size" << getSize() << endl;
+}
+
+
 // SIGNALS Section

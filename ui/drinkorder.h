@@ -3,6 +3,12 @@
 
 #include "df_util.h"
 
+typedef enum DF_QT_OPTIONS {
+   SMALL_DRINK,
+   MEDIUM_DRINK,
+   LARGE_DRINK
+} DF_QT_OPTION_PICKED;
+
 struct DrinkSelection{
     int optionNumber;
     double drinkML;
@@ -37,6 +43,11 @@ public:
 //    int getOption() const {return selectedDrink->optionNumber;}
 //    double getPrice() const {return selectedDrink->drinkPrice;}
 //    double getSize() const {return selectedDrink->drinkML;}
+    constexpr static double EMPTY_SIZE_ML = 0.00;
+    constexpr static double SMALL_SIZE_ML = 355.00;
+    constexpr static double LARGE_SIZE_ML = 473.00;
+
+    void setDrinkSize(DF_QT_OPTIONS sizeOption);
 
     int getOption() const {return m_optionNumber;}
     double getPrice() const {return m_drinkPrice;}

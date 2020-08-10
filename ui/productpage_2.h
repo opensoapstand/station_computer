@@ -17,6 +17,7 @@
 
 class productPage_1;
 class paySelect;
+class idle;
 
 namespace Ui {
 class productPage_2;
@@ -28,7 +29,7 @@ class productPage_2 : public QWidget
 
 public:
     explicit productPage_2(QWidget *parent = nullptr);
-    void setPage(productPage_1 *pageOneProducts, paySelect *pageSizeSelect);
+    void setPage(productPage_1 *pageOneProducts, paySelect *pageSizeSelect, idle* pageIdle);
     ~productPage_2();
 
 private slots:
@@ -42,6 +43,7 @@ private:
 
     productPage_1* firstProductPage;
     paySelect* paySelectPage;
+    idle* idlePage;
 };
 
 #endif // PRODUCTPAGE_2_H

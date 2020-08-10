@@ -19,6 +19,7 @@
 
 #include "productpage_2.h"
 #include "payselect.h"
+#include "idle.h"
 
 // CTOR
 productPage_1::productPage_1(QWidget *parent) :
@@ -98,47 +99,43 @@ void productPage_1::on_nextPageButton_clicked()
 
 // FIXME: This is terrible...no time to make array reference to hold button press functions
 void productPage_1::on_selection1_Button_clicked()
-{    
-    qInfo() << "Selection 1" << endl;
-
-//    this->selectedDrink->brandName = "ok";
-//    qInfo() << selectedDrink->brandName << endl;
-
+{
+    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_1);
     paymentSelectPage->showFullScreen();
     this->hide();
 }
 
 void productPage_1::on_selection2_Button_clicked()
 {
-    qInfo() << "Selection 2" << endl;
+    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
     paymentSelectPage->showFullScreen();
     this->hide();
 }
 
 void productPage_1::on_selection3_Button_clicked()
 {
-    qInfo() << "Selection 3" << endl;
+    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
     paymentSelectPage->showFullScreen();
     this->hide();
 }
 
 void productPage_1::on_selection4_Button_clicked()
 {
-    qInfo() << "Selection 4" << endl;
+    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);
     paymentSelectPage->showFullScreen();
     this->hide();
 }
 
 void productPage_1::on_selection5_Button_clicked()
 {
-    qInfo() << "Selection 5" << endl;
+    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_5);
     paymentSelectPage->showFullScreen();
     this->hide();
 }
 
 void productPage_1::on_selection6_Button_clicked()
 {
-    qInfo() << "Selection 6" << endl;
+    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_6);
     paymentSelectPage->showFullScreen();
     this->hide();
 }

@@ -18,6 +18,8 @@
 #include "dispensepage.h"
 #include "ui_dispensepage.h"
 
+#include "idle.h"
+
 #include "thankyoupage.h"
 
 // CTOR

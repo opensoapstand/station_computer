@@ -4,6 +4,20 @@
 #include "df_util.h"
 
 typedef enum DF_QT_OPTIONS {
+   // Drink Slots
+   OPTION_SLOT = 0,
+   OPTION_SLOT_1,
+   OPTION_SLOT_2,
+   OPTION_SLOT_3,
+   OPTION_SLOT_4,
+   OPTION_SLOT_5,
+   OPTION_SLOT_6,
+   OPTION_SLOT_7,
+   OPTION_SLOT_8,
+   OPTION_SLOT_9,
+
+   // Drink Sizes
+   DRINK_SIZE_OPTIONS = 15,
    SMALL_DRINK,
    MEDIUM_DRINK,
    LARGE_DRINK
@@ -48,6 +62,7 @@ public:
     constexpr static double LARGE_SIZE_ML = 473.00;
 
     void setDrinkSize(DF_QT_OPTIONS sizeOption);
+    void setDrinkOption(DF_QT_OPTIONS optionSlot);
 
     int getOption() const {return m_optionNumber;}
     double getPrice() const {return m_drinkPrice;}
@@ -66,6 +81,7 @@ signals:
 
 private:
     DrinkSelection *selectedDrink;
+    QSqlDatabase db;
 };
 
 #endif // DRINKORDER_H

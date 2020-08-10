@@ -48,7 +48,6 @@ private slots:
 
 private:
     Ui::payPage *ui;
-
     paySelect* paySelectPage;
     dispensePage* dispensingPage;
     idle* idlePage;

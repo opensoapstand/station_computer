@@ -64,8 +64,9 @@ void payPage::on_previousPage_Button_clicked()
 
 void payPage::on_passPayment_Button_clicked()
 {
+    qDebug() << this->idlePage->userDrinkOrder->getOption();
     qDebug() << this->idlePage->userDrinkOrder->getSize();
-
+    qDebug() << this->idlePage->userDrinkOrder->getPrice();
     dispensingPage->showFullScreen();
     this->hide();
 }

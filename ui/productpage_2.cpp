@@ -16,6 +16,8 @@
 #include "productpage_1.h"
 #include "payselect.h"
 
+#include "idle.h"
+
 #include "df_util.h"
 
 // CTOR
@@ -58,28 +60,27 @@ productPage_2::~productPage_2()
 // FIXME: Again...this is terrible...product pages need better inheritance structure!
 void productPage_2::on_previousPage_Button_clicked()
 {
-    qInfo() << "Selection 6" << endl;
     firstProductPage->showFullScreen();
     this->hide();
 }
 
 void productPage_2::on_selection7_Button_clicked()
 {
-    qInfo() << "Selection 7" << endl;
+    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_7);
     paySelectPage->showFullScreen();
     this->hide();
 }
 
 void productPage_2::on_selection8_Button_clicked()
 {
-    qInfo() << "Selection 8" << endl;
+    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_8);
     paySelectPage->showFullScreen();
     this->hide();
 }
 
 void productPage_2::on_selection9_Button_clicked()
 {
-    qInfo() << "Selection 8" << endl;
+    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_9);
     paySelectPage->showFullScreen();
     this->hide();
 }

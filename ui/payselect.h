@@ -38,18 +38,13 @@ public:
 
 private slots:
     void on_previousPage_Button_clicked();
-
     void on_payPage_Button_clicked();
-
     void on_mainPage_Button_clicked();
-
     void on_orderSmall_Button_clicked();
-
     void on_orderBig_Button_clicked();
 
 private:
     Ui::paySelect *ui;
-
     productPage_1* firstProductPage;
     payPage* paymentPage;
     idle* idlePage;

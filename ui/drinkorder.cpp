@@ -51,7 +51,7 @@ void DrinkOrder::setSize(double size)
     }
 }
 
-// TODO: Decouple send_to_FSM from Dispenser to here
+// Enum search for drink sizes
 void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
     qInfo() << "Existing Size" << getSize() << endl;
 
@@ -71,6 +71,52 @@ void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
     }
 
     qInfo() << "Order Size" << getSize() << endl;
+}
+
+// Enum search for option slot
+void DrinkOrder::setDrinkOption(DF_QT_OPTIONS sizeOption) {
+    qInfo() << "Current Option" << getOption() << endl;
+
+    if(sizeOption >= OPTION_SLOT && sizeOption << DRINK_SIZE_OPTIONS)
+    {
+        switch (sizeOption)
+        {
+        case(OPTION_SLOT_1):
+            changeOption(OPTION_SLOT_1);
+            break;
+        case(OPTION_SLOT_2):
+            changeOption(OPTION_SLOT_2);
+            break;
+        case(OPTION_SLOT_3):
+            changeOption(OPTION_SLOT_3);
+            break;
+        case(OPTION_SLOT_4):
+            changeOption(OPTION_SLOT_4);
+            break;
+        case(OPTION_SLOT_5):
+            changeOption(OPTION_SLOT_5);
+            break;
+        case(OPTION_SLOT_6):
+            changeOption(OPTION_SLOT_6);
+            break;
+        case(OPTION_SLOT_7):
+            changeOption(OPTION_SLOT_7);
+            break;
+        case(OPTION_SLOT_8):
+            changeOption(OPTION_SLOT_8);
+            break;
+        case(OPTION_SLOT_9):
+            changeOption(OPTION_SLOT_9);
+            break;
+        default:
+            setSize(OPTION_SLOT);
+            break;
+        }
+    } else {
+        qInfo() << "OUT OF OPTION RANGE!" << sizeOption << endl;
+    }
+
+    qInfo() << "Changed Option" << getOption() << endl;
 }
 
 

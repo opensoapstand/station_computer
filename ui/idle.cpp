@@ -74,6 +74,8 @@ idle::idle(QWidget *parent) :
         }
     }
 
+    db.close();
+
 }
 
 /*

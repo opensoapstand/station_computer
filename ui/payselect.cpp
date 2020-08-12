@@ -27,7 +27,7 @@ paySelect::paySelect(QWidget *parent) :
     ui(new Ui::paySelect)
 {
     ui->setupUi(this);
-    QPixmap background(":/light/4_pay_select_page.jpg");
+    QPixmap background(":/light/4_pay_select_page_s.jpg");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
@@ -70,7 +70,22 @@ void paySelect::on_previousPage_Button_clicked()
 
 void paySelect::on_payPage_Button_clicked()
 {
+    // TODO: Grab from DB description
+    string description = "Drink Flavor DrinkSizeOZ (DrinkML)";
+
+    double drinkAmountDbl = idlePage->userDrinkOrder->getPrice();
+    QString qs = QString::number(drinkAmountDbl, 'f', 2);
+
+    string drinkAmount = qs.toUtf8().constData();
+
+    drinkAmount.insert(0,"$ ");
+
+    string drinkTotal = drinkAmount;
+
+    connect(this, SIGNAL(paymentTotal(string,string,string)), this->paymentPage, SLOT(updateTotals(string,string,string)));
+    emit(paymentTotal(description, drinkAmount, drinkTotal));
     paymentPage->showFullScreen();
+    qDebug() << idlePage->userDrinkOrder->getPrice();
     this->hide();
 }
 
@@ -83,13 +98,27 @@ void paySelect::on_mainPage_Button_clicked()
 // on_Small_Order button listener
 void paySelect::on_orderSmall_Button_clicked()
 {
+    QPixmap background(":/light/4_pay_select_page_s.jpg");
+    background = background.scaled(this->size(), Qt::KeepAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Background, background);
+    this->setPalette(palette);
+
     idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
+    idlePage->userDrinkOrder->setPrice(3.00);
 }
 
 // on_Large_Order button listener
 void paySelect::on_orderBig_Button_clicked()
 {
+    QPixmap background(":/light/4_pay_select_page_l.png");
+    background = background.scaled(this->size(), Qt::KeepAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Background, background);
+    this->setPalette(palette);
+
     idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
+    idlePage->userDrinkOrder->setPrice(4.00);
 }
 
 /* Models */

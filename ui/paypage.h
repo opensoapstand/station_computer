@@ -18,6 +18,7 @@
 #define PAYPAGE_H
 
 #include "df_util.h"
+#include "drinkorder.h"
 
 class paySelect;
 class dispensePage;
@@ -37,6 +38,8 @@ public:
     ~payPage();
 
 private slots:
+    void updateTotals(string drinkDescription, string drinkAmount, string orderTotal);
+
     void on_previousPage_Button_clicked();
     void on_passPayment_Button_clicked();
 
@@ -51,6 +54,12 @@ private:
     paySelect* paySelectPage;
     dispensePage* dispensingPage;
     idle* idlePage;
+
+    DrinkOrder paymentDrinkOrder;
+
+    string drinkAmount;
+    string drinkDescription;
+    string orderTotal;
 };
 
 #endif // PAYPAGE_H

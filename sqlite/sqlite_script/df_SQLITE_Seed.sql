@@ -11,13 +11,30 @@
 // all rights reserved
  ********************************************************/
 
+INSERT OR IGNORE INTO machine(machine_id, type, version, location_id, number_of_drinks)
+VALUES
+(
+	'Bentall-Pilot',
+	'DF001',
+	'1.0.0',
+	1,
+	( SELECT COUNT(*) FROM inventory where in_stock = 1)
+);
+
 Insert Into 
-machine_location(manager_name, phone, contact_email, locale_name, street_address, country, on_site_location)
+machine_location(manager_name, phone, contact_email, locale_name, street_address, postal_code, province_state, country, on_site_location)
 VALUES
 ( 
-
+	'Bentall Boss',
+	'xxx-xxx-xxxx',
+	'email@bentall.com',
+	'Bental Tower 5',
+	'123 Fake St.',
+	'XXX XXX',
+	'BC',
+	'Canada',
+	'Lobby 3'
 )
-
 
 INSERT OR IGNORE INTO 
 vendor(name, full_address, contact_name, contact_phone, contact_email)
@@ -40,13 +57,26 @@ INSERT IF NOT EXISTS INTO vendor (
 	contact_email = NULL
 )WHERE name = 'Bentall';
 
-INSERT INTO product(name, product_description, vendor_id, user_type, calibration_const, cost_per_litre, option_slot, coupon_code_id)
+UPDATE inventory
+SET
+in_stock = 1
+WHERE inventory_id = 0;
+
+INSERT INTO product(name, product_description, vendor_id, user_type, calibration_const, cost_per_litre, option_slot)
 VALUES (
 	'JJ Bean Cold brew',
 	'Cold Brew coffee',
-	vendor_id = 1
-	user_type
+	1,
+	'machine',
+	1.3,
+	20.00,
+	-1
 );
+
+update product
+SET
+option_slot = 0
+WHERE product_id = 1;
 
 UPDATE inventory
 SET 

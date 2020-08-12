@@ -36,6 +36,9 @@ public:
     void setPage(productPage_1 *pageSelect, payPage *pagePayment, idle* pageIdle);
     ~paySelect();
 
+signals:
+    void paymentTotal(string, string, string);
+
 private slots:
     void on_previousPage_Button_clicked();
     void on_payPage_Button_clicked();

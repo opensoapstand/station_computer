@@ -21,4 +21,7 @@
 
 #include <QStandardPaths>
 
+#include <iostream>
+#include <cmath>
+
 #endif // INCLUDEFILES_H

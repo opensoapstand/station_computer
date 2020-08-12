@@ -67,6 +67,7 @@ void productPage_2::on_previousPage_Button_clicked()
 void productPage_2::on_selection7_Button_clicked()
 {
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_7);
+    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
     paySelectPage->showFullScreen();
     this->hide();
 }
@@ -74,6 +75,7 @@ void productPage_2::on_selection7_Button_clicked()
 void productPage_2::on_selection8_Button_clicked()
 {
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_8);
+    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
     paySelectPage->showFullScreen();
     this->hide();
 }
@@ -81,6 +83,7 @@ void productPage_2::on_selection8_Button_clicked()
 void productPage_2::on_selection9_Button_clicked()
 {
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_9);
+    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
     paySelectPage->showFullScreen();
     this->hide();
 }

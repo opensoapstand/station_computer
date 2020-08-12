@@ -66,7 +66,7 @@ void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
         break;
 
     default:
-        setSize(EMPTY_SIZE_ML);
+        setSize(SMALL_DRINK);
         break;
     }
 
@@ -116,8 +116,12 @@ void DrinkOrder::setDrinkOption(DF_QT_OPTIONS sizeOption) {
         qInfo() << "OUT OF OPTION RANGE!" << sizeOption << endl;
     }
 
+    // HACK: For now asssume small sized order; Will need to validate for empty.
+    setDrinkSize(SMALL_DRINK);
+
     qInfo() << "Changed Option" << getOption() << endl;
 }
+
 
 
 // SIGNALS Section

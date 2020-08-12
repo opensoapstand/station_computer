@@ -72,7 +72,7 @@ productPage_1::productPage_1(QWidget *parent) :
     ui->selection5_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->selection6_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
-    ui->Brand1->setText("BRANDY1!");
+    ui->Brand1->setText("Brand Name");
 }
 
 /*
@@ -101,6 +101,7 @@ void productPage_1::on_nextPageButton_clicked()
 void productPage_1::on_selection1_Button_clicked()
 {
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_1);
+    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
     paymentSelectPage->showFullScreen();
     this->hide();
 }
@@ -108,6 +109,7 @@ void productPage_1::on_selection1_Button_clicked()
 void productPage_1::on_selection2_Button_clicked()
 {
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
+    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
     paymentSelectPage->showFullScreen();
     this->hide();
 }
@@ -115,6 +117,7 @@ void productPage_1::on_selection2_Button_clicked()
 void productPage_1::on_selection3_Button_clicked()
 {
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
+    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
     paymentSelectPage->showFullScreen();
     this->hide();
 }
@@ -122,6 +125,7 @@ void productPage_1::on_selection3_Button_clicked()
 void productPage_1::on_selection4_Button_clicked()
 {
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);
+    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
     paymentSelectPage->showFullScreen();
     this->hide();
 }
@@ -129,6 +133,7 @@ void productPage_1::on_selection4_Button_clicked()
 void productPage_1::on_selection5_Button_clicked()
 {
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_5);
+    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
     paymentSelectPage->showFullScreen();
     this->hide();
 }
@@ -136,6 +141,7 @@ void productPage_1::on_selection5_Button_clicked()
 void productPage_1::on_selection6_Button_clicked()
 {
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_6);
+    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
     paymentSelectPage->showFullScreen();
     this->hide();
 }

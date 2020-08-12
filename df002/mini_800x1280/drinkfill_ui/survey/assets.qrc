@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>asset/background.png</file>
+        <file>asset/logo-teal.png</file>
+        <file>asset/logo-white.png</file>
+        <file>layouts/en_GB/main.qml</file>
+        <file>asset/rect_button.png</file>
+        <file>layouts/en_GB/symbols.qml</file>
+    </qresource>
+</RCC>

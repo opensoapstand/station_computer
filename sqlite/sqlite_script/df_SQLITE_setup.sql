@@ -62,6 +62,8 @@ CREATE TABLE IF NOT EXISTS machine_location (
     contact_email VARCHAR (50),
     locale_name VARCHAR(255),
     street_address VARCHAR(255),
+    postal_code VARCHAR(10),
+    province_state VARCHAR(50),
     country VARCHAR(50),
     on_site_location VARCHAR(255)
 );
@@ -124,6 +126,8 @@ VALUES (0, NULL, NULL, current_timestamp, 0),
     (7, NULL, NULL, current_timestamp, 0),
     (8, NULL, NULL, current_timestamp, 0);
 
+drop table product;
+
 /*
  Product holds a local catalog of drinks used in the machine
  Holds references to all products placed in machine before.
@@ -138,8 +142,8 @@ CREATE TABLE IF NOT EXISTS   product (
     -- cost from vendor
     cost_per_litre MONEY,
     option_slot INT DEFAULT(-1) CHECK(
-        option_slot > -1
-        AND option_slot < 8
+        option_slot >= -1
+        AND option_slot <= 8
     ),
     -- -1 means empty; 0 to 8 are slots 1 to 9 respectively.
     coupon_code_id INT,

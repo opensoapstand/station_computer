@@ -1,7 +1,7 @@
 TARGET_EXEC ?= fsm
 
 BUILD_DIR ?= ./build
-SRC_DIRS ?= . ./states ./components ./tinyxml ./objects 
+SRC_DIRS ?= . ./states ./components ./objects ../library/tinyxml  ../library/i2c/mcp23017 ../library/i2c/smbus ../library/socket
 
 SRCS := $(shell find $(SRC_DIRS) -name *.cpp -or -name *.c -or -name *.s)
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
@@ -36,7 +36,7 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 .PHONY: clean controller
 
 controller:
-	g++ -pthread -o controller fsm.cpp components/*.cpp states/*.cpp objects/*.cpp tinyxml/*.cpp 
+	g++ -pthread -o controller fsm.cpp components/*.cpp states/*.cpp objects/*.cpp ../library/tinyxml/*.cpp  ../library/i2c/mcp23017/*.cpp ../library/i2c/smbus/*.c ../library/socket/*.cpp
 
 Socket: Socket.cpp
 ServerSocket: ServerSocket.cpp

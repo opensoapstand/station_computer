@@ -23,7 +23,7 @@
 #include "../dftypes.h"
 #include "../objects/messagemediator.h"
 #include "statevirtual.h"
-#include "../tinyxml/tinyxml.h"
+#include "../../library/tinyxml/tinyxml.h"
 
 class stateInit : public stateVirtual
 {

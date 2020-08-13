@@ -21,6 +21,9 @@
 #include "debugoutput.h"
 #include <pthread.h>
 
+#include "../../library/socket/ServerSocket.h"
+#include "../../library/socket/SocketException.h"
+
 class messageMediator
 {
    public:

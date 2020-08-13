@@ -1,4 +1,4 @@
-GPIO allocation plan:
+#GPIO allocation plan:
 
 1) Use UDOO GPIO for flow sensors
 2) Use i2c pins for solenoid activation

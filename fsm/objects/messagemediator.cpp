@@ -26,9 +26,6 @@
 #include <string>
 #include <unistd.h>
 
-#include "ServerSocket.h"
-#include "SocketException.h"
-
 #define DELAY_USEC 1
 
 bool messageMediator::m_fExitThreads = false;

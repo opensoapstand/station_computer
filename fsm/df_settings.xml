@@ -5,7 +5,6 @@
         <type>df001</type>
         <id>808</id>
     </machine>
-
     <!-- Hardware Address Reference -->
     <hardware>
         <!-- Dispense Button -->
@@ -310,8 +309,8 @@
         </warningsensor>
     </hardware>
     <networking>
-    <!-- TODO: Add IP -->
-    <!-- TODO: Add Database Local DB Reference -->
-    <!-- TODO: Add Remote DB Reference -->
+        <!-- TODO: Add IP -->
+        <!-- TODO: Add Database Local DB Reference -->
+        <!-- TODO: Add Remote DB Reference -->
     </networking>
 </DRINKFILL>

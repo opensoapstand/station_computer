@@ -1,26 +1,34 @@
 <?xml version="1.0" ?>
 <DRINKFILL>
+    <!-- Machine Information -->
     <machine>
         <type>df001</type>
         <id>808</id>
     </machine>
+
+    <!-- Hardware Address Reference -->
     <hardware>
+        <!-- Dispense Button -->
         <button>
             <type>mcp</type>
             <i2caddress>20</i2caddress>
             <io>00</io>
         </button>
+        <!-- Carbonated Drink 1 -->
         <dispenser id="a">
+            <!-- Drink -->
             <solenoid index="0">
                 <type>mcp</type>
                 <i2caddress>20</i2caddress>
                 <io>01</io>
             </solenoid>
+            <!-- Water -->
             <solenoid index="1">
                 <type>mcp</type>
                 <i2caddress>20</i2caddress>
                 <io>02</io>
             </solenoid>
+            <!-- Air -->
             <solenoid index="2">
                 <type>mcp</type>
                 <i2caddress>20</i2caddress>
@@ -28,20 +36,24 @@
             </solenoid>
             <flowsensor>
                 <type>x86</type>
-                <io>23</io>
+                <io>337</io>
             </flowsensor>
         </dispenser>
+        <!-- Carbonated Drink 2 -->
         <dispenser id="b">
+            <!-- Drink -->
             <solenoid index="0">
                 <type>mcp</type>
                 <i2caddress>20</i2caddress>
                 <io>04</io>
             </solenoid>
+            <!-- Water -->
             <solenoid index="1">
                 <type>mcp</type>
                 <i2caddress>20</i2caddress>
                 <io>05</io>
             </solenoid>
+            <!-- Air -->
             <solenoid index="2">
                 <type>mcp</type>
                 <i2caddress>20</i2caddress>
@@ -49,30 +61,25 @@
             </solenoid>
             <flowsensor>
                 <type>x86</type>
-                <io>23</io>
+                <io>364</io>
             </flowsensor>
-            <pump index="F">
-                <type>mcp</type>
-                <i2caddress>22</i2caddress>
-                <io>01</io>
-            </pump>
-            <pump index="R">
-                <type>mcp</type>
-                <i2caddress>22</i2caddress>
-                <io>02</io>
-            </pump>
         </dispenser>
+        <!-- Carbonated Drink 3 -->
         <dispenser id="c">
+            <!-- Drink -->
             <solenoid index="0">
                 <type>mcp</type>
                 <i2caddress>20</i2caddress>
                 <io>07</io>
             </solenoid>
+            <!-- Water -->
             <solenoid index="1">
                 <type>mcp</type>
                 <i2caddress>20</i2caddress>
-                <io>9</io>
+                <!-- Address 08 Reserved for LED Config -->
+                <io>09</io>
             </solenoid>
+            <!-- Air -->
             <solenoid index="2">
                 <type>mcp</type>
                 <i2caddress>20</i2caddress>
@@ -80,9 +87,231 @@
             </solenoid>
             <flowsensor>
                 <type>x86</type>
-                <io>23</io>
+                <io>412</io>
             </flowsensor>
         </dispenser>
+        <!-- Carbonated Drink 4 -->
+        <dispenser id="d">
+            <!-- Drink -->
+            <solenoid index="0">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>11</io>
+            </solenoid>
+            <!-- Water -->
+            <solenoid index="1">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>12</io>
+            </solenoid>
+            <!-- Air -->
+            <solenoid index="2">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>13</io>
+            </solenoid>
+            <flowsensor>
+                <type>x86</type>
+                <io>413</io>
+            </flowsensor>
+        </dispenser>
+        <!-- Carbonated Drink 1 -->
+        <dispenser id="e">
+            <!-- Drink -->
+            <solenoid index="0">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>014</io>
+            </solenoid>
+            <!-- Water -->
+            <solenoid index="1">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>15</io>
+            </solenoid>
+            <!-- Air -->
+            <solenoid index="2">
+                <type>mcp</type>
+                <i2caddress>21</i2caddress>
+                <io>00</io>
+            </solenoid>
+            <flowsensor>
+                <type>x86</type>
+                <io>415</io>
+            </flowsensor>
+        </dispenser>
+        <!-- Still Dispensing -->
+        <!-- Still Drink 6 -->
+        <dispenser id="f">
+            <!-- Drink -->
+            <solenoid index="0">
+                <type>mcp</type>
+                <i2caddress>21</i2caddress>
+                <io>01</io>
+            </solenoid>
+            <!-- Water -->
+            <solenoid index="1">
+                <type>mcp</type>
+                <i2caddress>21</i2caddress>
+                <io>02</io>
+            </solenoid>
+            <!-- Air -->
+            <solenoid index="2">
+                <type>mcp</type>
+                <i2caddress>21</i2caddress>
+                <io>03</io>
+            </solenoid>
+            <flowsensor>
+                <type>x86</type>
+                <io>416</io>
+            </flowsensor>
+            <!-- Still Pumps -->
+            <pump index="F">
+                <type>mcp</type>
+                <i2caddress>22</i2caddress>
+                <io>00</io>
+            </pump>
+            <pump index="R">
+                <type>mcp</type>
+                <i2caddress>22</i2caddress>
+                <io>01</io>
+            </pump>
+        </dispenser>
+        <!-- Still Drink 7 -->
+        <dispenser id="g">
+            <!-- Drink -->
+            <solenoid index="0">
+                <type>mcp</type>
+                <i2caddress>21</i2caddress>
+                <io>04</io>
+            </solenoid>
+            <!-- Water -->
+            <solenoid index="1">
+                <type>mcp</type>
+                <i2caddress>21</i2caddress>
+                <io>05</io>
+            </solenoid>
+            <!-- Air -->
+            <solenoid index="2">
+                <type>mcp</type>
+                <i2caddress>21</i2caddress>
+                <io>06</io>
+            </solenoid>
+            <flowsensor>
+                <type>x86</type>
+                <io>417</io>
+            </flowsensor>
+            <!-- Still Pumps -->
+            <pump index="F">
+                <type>mcp</type>
+                <i2caddress>22</i2caddress>
+                <io>02</io>
+            </pump>
+            <pump index="R">
+                <type>mcp</type>
+                <i2caddress>22</i2caddress>
+                <io>03</io>
+            </pump>
+        </dispenser>
+        <!-- Still Drink 8 -->
+        <dispenser id="h">
+            <!-- Drink -->
+            <solenoid index="0">
+                <type>mcp</type>
+                <i2caddress>21</i2caddress>
+                <io>07</io>
+            </solenoid>
+            <!-- Water -->
+            <solenoid index="1">
+                <type>mcp</type>
+                <i2caddress>21</i2caddress>
+                <io>08</io>
+            </solenoid>
+            <!-- Air -->
+            <solenoid index="2">
+                <type>mcp</type>
+                <i2caddress>21</i2caddress>
+                <io>09</io>
+            </solenoid>
+            <flowsensor>
+                <type>x86</type>
+                <io>339</io>
+            </flowsensor>
+            <!-- Still Pumps -->
+            <pump index="F">
+                <type>mcp</type>
+                <i2caddress>22</i2caddress>
+                <io>04</io>
+            </pump>
+            <pump index="R">
+                <type>mcp</type>
+                <i2caddress>22</i2caddress>
+                <io>05</io>
+            </pump>
+        </dispenser>
+        <!-- Still Drink 9 -->
+        <dispenser id="i">
+            <!-- Drink -->
+            <solenoid index="0">
+                <type>mcp</type>
+                <i2caddress>21</i2caddress>
+                <io>10</io>
+            </solenoid>
+            <!-- Water -->
+            <solenoid index="1">
+                <type>mcp</type>
+                <i2caddress>21</i2caddress>
+                <io>11</io>
+            </solenoid>
+            <!-- Air -->
+            <solenoid index="2">
+                <type>mcp</type>
+                <i2caddress>21</i2caddress>
+                <io>12</io>
+            </solenoid>
+            <flowsensor>
+                <type>x86</type>
+                <io>419</io>
+            </flowsensor>
+            <!-- Still Pumps -->
+            <pump index="F">
+                <type>mcp</type>
+                <i2caddress>22</i2caddress>
+                <io>06</io>
+            </pump>
+            <pump index="R">
+                <type>mcp</type>
+                <i2caddress>22</i2caddress>
+                <io>07</io>
+            </pump>
+        </dispenser>
+        <!-- TODO: Link these to stateinit.cpp -->
+        <!-- Sensors -->
+        <warningsensor>
+            <!-- Index will be (b)ottom (m)iddle (t)op locations -->
+            <!-- Temperature -->
+            <temperature index="b">
+                <type>x86</type>
+                <io>338</io>
+            </temperature>
+            <temperature index="b">
+                <type>x86</type>
+                <io>421</io>
+            </temperature>
+            <!-- Waste water levels -->
+            <wlevel index="m">
+                <type>x86</type>
+                <io>422</io>
+            </wlevel>
+            <wlevel index="t">
+                <type>x86</type>
+                <io>390</io>
+            </wlevel>
+        </warningsensor>
     </hardware>
-    <networking />
+    <networking>
+    <!-- TODO: Add IP -->
+    <!-- TODO: Add Database Local DB Reference -->
+    <!-- TODO: Add Remote DB Reference -->
+    </networking>
 </DRINKFILL>

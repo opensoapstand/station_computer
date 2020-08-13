@@ -6,7 +6,7 @@
 #include <cstdint>
 
 //extern "C" {
-    #include "smbus.h"
+    #include "../smbus/smbus.h"
 //}
 
 #include <linux/i2c-dev.h>
@@ -16,6 +16,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
+
+#include "../../../fsm/objects/debugoutput.h"
 
 class MCP23017
 {

@@ -2,8 +2,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include "i2c.h"
 #include <iostream>
-#include "i2c/i2c.h"
 
 #include <errno.h>
 

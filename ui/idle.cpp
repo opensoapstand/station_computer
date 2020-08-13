@@ -46,7 +46,7 @@ idle::idle(QWidget *parent) :
 
     // TODO: Will need to determine standard path in future; Could skip if going with Postgres
 
-    QString path = "/home/df-admin/Project/drinkfill/sqlite/";
+    QString path = "/home/df-admin/Project/drinkfill/db/sqlite/";
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(path + "drinkfill-sqlite.db");
 

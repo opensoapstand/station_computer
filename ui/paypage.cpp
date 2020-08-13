@@ -26,6 +26,7 @@ payPage::payPage(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::payPage)
 {
+    // Fullscreen background setup
     ui->setupUi(this);
     QPixmap background(":/light/5_pay_page_blank.jpg");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
@@ -42,7 +43,10 @@ payPage::payPage(QWidget *parent) :
     ui->order_tax_label->setText("Our Planet");
     ui->order_tax_amount->setText("Priceless");
     ui->order_total_label->setText("Total");
+
+    // Setup Reciept
     updateTotals(this->drinkDescription, this->drinkAmount, this->orderTotal);
+
 }
 /*
  * Page Tracking reference

@@ -90,7 +90,7 @@ void dispensePage::send_to_FSM()
     tcpSocket->abort();
     tcpSocket->connectToHost(host,port);
 
-    QString msg = "QT Land Hello!";
+    QString msg = "QT Land Hello;";
 
     QByteArray block;
     block.append(msg);

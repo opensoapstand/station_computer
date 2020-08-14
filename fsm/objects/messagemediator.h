@@ -48,7 +48,8 @@ class messageMediator
       static string m_processString;
       static bool m_stringReady;
 
-      static DF_ERROR updateCmdString(char key);  
+      static DF_ERROR updateCmdString(char key);
+      static DF_ERROR updateCmdString();    
       static void * doKBThread(void * pThreadArgs);
       static void * doIPThread(void * pThreadArgs);
 };

@@ -28,6 +28,8 @@
 
 #define DELAY_USEC 1
 
+extern messageMediator df_messaging;
+
 bool messageMediator::m_fExitThreads = false;
 bool messageMediator::m_stringReady = false;
 string messageMediator::m_processString;
@@ -95,11 +97,28 @@ DF_ERROR messageMediator::updateCmdString(char key)
    if (';' != key)
    {
       m_processString.push_back(key);
+   } else if (';' == key)
+   {
+      m_processString.clear();
+      m_stringReady = false;
    }
    else
    {
       debugOutput::sendMessage(m_processString, INFO);
       m_stringReady = true;
+   }
+
+   return df_ret;
+}
+
+DF_ERROR messageMediator::updateCmdString()
+{
+   DF_ERROR df_ret = ERROR_BAD_PARAMS;
+
+   cout << m_processString << endl;
+
+   for(int i= 0; i < m_processString.size(); i++) {
+      df_ret = updateCmdString(m_processString[i]);
    }
 
    return df_ret;
@@ -114,10 +133,14 @@ void *messageMediator::doKBThread(void *pThreadArgs)
 
    while (!m_fExitThreads)
    {
-      char key;
-      while (0 < scanf(" %c", &key))
-      {
-         updateCmdString(key);
+      if(m_processString.empty()) {
+         char key;
+         while (0 < scanf(" %c", &key))
+         {
+            updateCmdString(key);
+         }         
+      } else {
+         updateCmdString();
       }
       usleep(DELAY_USEC);
    }
@@ -150,6 +173,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
                new_sock >> data;
                cout << data << endl;
                m_processString = data;
+               updateCmdString();
                // new_sock << data;
             }
          }

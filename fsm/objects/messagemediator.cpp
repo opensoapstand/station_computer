@@ -90,6 +90,8 @@ DF_ERROR messageMediator::updateCmdString(char key)
 {
    DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
+   cout << key << endl;
+
    if (';' != key)
    {
       m_processString.push_back(key);
@@ -147,7 +149,8 @@ void *messageMediator::doIPThread(void *pThreadArgs)
                std::string data;
                new_sock >> data;
                cout << data << endl;
-               new_sock << data;
+               m_processString = data;
+               // new_sock << data;
             }
          }
          catch (SocketException &)

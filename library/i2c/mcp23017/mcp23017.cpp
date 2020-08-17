@@ -59,7 +59,9 @@ bool MCP23017::openI2C()
     }
     // set defaults!
 	// all inputs on port A and B
+	debugOutput::sendMessage("openI2C: write register port A", INFO);
 	writeRegister(MCP23017_IODIRA,0b11111110);
+	debugOutput::sendMessage("openI2C: write register port B", INFO);
 	writeRegister(MCP23017_IODIRB,0b11111110);
     return true ;
 }
@@ -118,6 +120,7 @@ uint8_t MCP23017::writeRegister(uint8_t addr, uint8_t writeValue)
 
 	std::cout << "Write to I2C Device: " << kI2CAddress <<  kI2CBus << std::endl;
 	std::cout << "Check: " << kI2CFileDescriptor <<  static_cast<int>(addr) <<  static_cast<int>(writeValue) << std::endl;
+	std::cout << "Write to I2C Device (writeRegister): " + std::to_string(kI2CAddress) + "-" + std::to_string(kI2CBus) << std::endl;
 
     int toReturn = i2c_smbus_write_byte_data(kI2CFileDescriptor, addr, writeValue);
 

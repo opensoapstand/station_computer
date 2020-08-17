@@ -46,7 +46,7 @@ void dispenser::initDispenser(int slot){
 //Setters
 DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
 {
-    debugOutput::sendMessage("setSolenoid", INFO);
+    debugOutput::sendMessage("dispenser::setSolenoid", INFO);
     DF_ERROR e_ret = ERROR_BAD_PARAMS; 
    
 	if((X20 <= mcpAddress &&  X22 >= mcpAddress) && (MCP_PIN_START <= pin && MPC_PIN_END >= pin))
@@ -55,8 +55,7 @@ DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
 
         size_t solenoids =  sizeof(m_pSolenoid) / sizeof(m_pSolenoid[0]);
 
-        std::cout << mcpAddress << std::endl;
-        std::cout << pin << std::endl;
+        std::cout << mcpAddress << pin << std::endl;
 
         // for(int i = 0; i < solenoids; i++) {
         //     std::cout << m_pSolenoid[i]->getMCPAddress() << std::endl;

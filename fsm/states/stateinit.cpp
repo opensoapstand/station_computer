@@ -70,6 +70,7 @@ DF_ERROR stateInit::onEntry()
       m_pRoot = m_pXMLSettings->FirstChildElement(DRINKFILL_STRING);
       m_pHardware = m_pRoot->FirstChildElement(HARDWARE_STRING);
       m_pDispenser = m_pHardware->FirstChildElement(DISPENSER_STRING);
+      // TODO: Insert node reference for sensors
       e_ret = OK;
    }
    else
@@ -445,6 +446,7 @@ dispenser* stateInit::dispenserSetup()
    while(nullptr != dispenserId[idx])
    {
       debugOutput::sendMessage("Sort for dispenser:" + to_string(idx), INFO);
+
       e_ret = setDispenserSolenoid(l_pDispenser, idx, cassettes);
          
       if(OK != e_ret) //if solenoid not set properly, return error

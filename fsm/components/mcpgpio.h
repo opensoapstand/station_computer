@@ -15,7 +15,7 @@
 #define _MCPGPIO__H__
 
 #include "gpio.h"
-#include "../../library/i2c/mcp23017/MCP23017.h"
+#include "../../library/i2c/mcp23017/mcp23017.h"
 
 #define DEFAULT_BUS 2 //i2cdetect tool to find the corresponding value
 					  //Odyessey is 2 and Udoo is 0

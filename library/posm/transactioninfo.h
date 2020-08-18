@@ -16,7 +16,7 @@
 #include <vector>
 #include "enums.h"
 //#include "paymentdatabase.h"
-#include "database_logger.h"
+//#include "database_logger.h"
 
 #include <string>
 #include <stdlib.h>
@@ -32,7 +32,7 @@ public:
     int idValue(uint8_t nibOne, uint8_t nibTwo);
     std::string dataField(std::vector<uint8_t> data);
     std::string getTransactionInfo(int id);
-    void makeReceipt(database_logger logData);
+//    void makeReceipt(database_logger logData);
 
 private:
     std::string ptr[MAX_FIELD];

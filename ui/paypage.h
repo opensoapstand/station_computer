@@ -20,6 +20,8 @@
 #include "df_util.h"
 #include "drinkorder.h"
 
+#include <QTimer>
+
 #include "../library/posm/mcommunication.h"
 #include "../library/posm/packetfromecr.h"
 #include "../library/posm/packetfromux410.h"
@@ -46,6 +48,20 @@ public:
     bool setpaymentProcess(bool status);
     void setProgressLabel(QLabel* label, int dot);
     void setProductPrice(QString price);
+
+    // TODO: Figure out better Style Setup.
+    void labelSetup(QLabel *label, int fontSize);
+
+    /* database */
+    void storeEvent(QSqlDatabase db, QString event);
+
+    /* mpos */
+    void stayAliveLogon();
+    void batchClose();
+
+    int getPriceSelect();
+
+    void  sendCommand();
 
 private slots:
     void updateTotals(string drinkDescription, string drinkAmount, string orderTotal);
@@ -80,6 +96,7 @@ private:
     idle* idlePage;
 
     bool paymentProcessing;
+    QSqlDatabase db;
 
     /*payment send & responding packet for moneris device*/
     mCommunication com;
@@ -95,7 +112,7 @@ private:
     QTimer* pageUpdateTimer;
     QTimer* goBackTimer;
 
-    /*prgress timer*/
+    /*progress timer*/
     int progressDots = 1;
     int counter = 0;
     int declineCounter;

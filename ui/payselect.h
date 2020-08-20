@@ -40,9 +40,12 @@ signals:
     void paymentTotal(string, string, string);
 
 private slots:
+    // **** Navigation ****
     void on_previousPage_Button_clicked();
     void on_payPage_Button_clicked();
     void on_mainPage_Button_clicked();
+
+    // Set Drink Order
     void on_orderSmall_Button_clicked();
     void on_orderBig_Button_clicked();
 

@@ -7,7 +7,7 @@ DrinkOrder::DrinkOrder()
 }
 
 // Ctor Object Copy
-DrinkOrder::DrinkOrder( const DrinkOrder& other )
+DrinkOrder::DrinkOrder(const DrinkOrder& other ):QObject(nullptr)
 {
     selectedDrink = new DrinkSelection( *other.selectedDrink );
 }
@@ -77,7 +77,7 @@ void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
 void DrinkOrder::setDrinkOption(DF_QT_OPTIONS sizeOption) {
     qInfo() << "Current Option" << getOption() << endl;
 
-    if(sizeOption >= OPTION_SLOT && sizeOption << DRINK_SIZE_OPTIONS)
+    if(sizeOption >= OPTION_SLOT && sizeOption <= DRINK_SIZE_OPTIONS)
     {
         switch (sizeOption)
         {

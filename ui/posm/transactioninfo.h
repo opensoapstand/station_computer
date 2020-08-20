@@ -33,6 +33,7 @@ public:
     std::string dataField(std::vector<uint8_t> data);
     std::string getTransactionInfo(int id);
 //    void makeReceipt(database_logger logData);
+    void makeReceipt();
 
 private:
     std::string ptr[MAX_FIELD];

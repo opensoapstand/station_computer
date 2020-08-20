@@ -44,7 +44,6 @@ int main(int argc, char *argv[])
 
     // TODO: Instantiate a DrinkSelection[] Array
     // TODO: Create Query to populate DrinkSelection[0-12]
-
     // TODO: Instantiate a DrinkOrder Object
 
     // Page pathing references to function calls.

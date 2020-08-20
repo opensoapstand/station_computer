@@ -33,28 +33,32 @@ class dispensePage : public QWidget
     Q_OBJECT
 
 public:
+    // **** GUI ****
     explicit dispensePage(QWidget *parent = nullptr);
     void setPage(payPage* pagePayment, thankYouPage* pageThankYou, idle* pageIdle);
     ~dispensePage();
 
 private slots:
+    // **** Navigation ****
     void on_finish_Button_clicked();
+
+    // FSM communication
     void send_to_FSM();
     void displayError(QAbstractSocket::SocketError socketError);
 
 private:
+    // **** GUI *****
     Ui::dispensePage *ui;
-
     payPage* paymentPage;
     thankYouPage* thanksPage;
+    idle* idlePage;
 
-//    QComboBox *host = "localhost";
-//    QLineEdit *port = "1234";
-    const char* host = "localhost";
-    int port = 1234;
+    // FSM communication
     QTcpSocket *tcpSocket = nullptr;
     QDataStream in;
-    idle* idlePage;
+    // TODO: move host and port to XML
+    const char* host = "localhost";
+    int port = 1234;
 };
 
 #endif // DISPENSEPAGE_H

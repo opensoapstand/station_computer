@@ -21,25 +21,6 @@
 #include "dispensepage.h"
 #include "idle.h"
 
-extern int optionSelected;
-//static string Mid = "0030128909430";
-//static string pedID = "U4383005";
-//static string URL = "ipgt1.moneris.com:443";
-
-// TODO: Put information into XML
-
-static string Mid = "0030410835171"; //0030128909430 0030410835171
-static string pedID = "U4383002"; //U4383017 //U4383144 //U4383005
-static string URL = "ipg1.moneris.com:443";
-const QString tapDeclined = "Card Declined";
-const QString tapAgain = "Try Again";
-const QFont newFont("Arial", 30, QFont::Bold);
-extern QByteArray DispenseVolume;
-bool approved = false;
-bool paymentConnected = false;
-extern QString machineID;
-extern QByteArray tempValue;
-
 // CTOR
 payPage::payPage(QWidget *parent) :
     QWidget(parent),
@@ -63,10 +44,14 @@ payPage::payPage(QWidget *parent) :
     ui->order_tax_amount->setText("Priceless");
     ui->order_total_label->setText("Total");
 
+    displayPaymentPending(false);
+
     // Setup Reciept
     updateTotals(this->drinkDescription, this->drinkAmount, this->orderTotal);
 
     // Payment
+
+    cancelPayment();
 
     /* Create Timeout Interface: Wait for tap; message user; process tap*/
     {
@@ -86,7 +71,7 @@ payPage::payPage(QWidget *parent) :
         // Mutex
         setpaymentProcess(false);
         ui->payment_processLabel->hide();
-        ui->payment_declineLabel->setText(tapAgain);
+        ui->payment_declineLabel->setText(TAP_AGAIN);
         labelSetup(ui->payment_declineLabel, 40);
 
         //pageSetup("Kombucha", ":/assets/kombucha.png", 5.95);
@@ -126,6 +111,18 @@ payPage::~payPage()
     delete ui;
 }
 
+// Labels and button for tapping payment
+void payPage::displayPaymentPending(bool isVisible)
+{
+    if(isVisible = false){
+        ui->payment_declineLabel->hide();
+        ui->payment_processLabel->hide();
+
+    } else {
+
+    }
+}
+
 void payPage::on_previousPage_Button_clicked()
 {
     paySelectPage->showFullScreen();
@@ -153,24 +150,33 @@ void payPage::on_passPayment_Button_clicked()
         labelSetup(ui->payment_processLabel, 50);
         ui->payment_processLabel->setText("You get a free drink");
 
+        // Lock Navigation
         ui->payment_pass_Button->hide();
-        ui->orLabel->hide();
         ui->previousPage_Button->hide();
 
-        //paymentInit();
-        storeEvent(mainPage->getDatabase(), QString("mpos failed"));
+//        paymentInit();
+
+        // Database log a failed payment
+        storePaymentEvent(db, QString("mpos failed"));
         timer->start();
         //}
     } else {
-        //purchaseEnable = true;
-        ui->goBackButton->setFont(newFont);
-        ui->goBackButton->setText("CANCEL");
-        ui->goBackButton->show();
-        ui->tapLabel->show(); //currently replaced with pay button 10.18
-        ui->payButton->hide();
+        purchaseEnable = true;
+        QFont warning;
+        warning.setBold(true);
+        warning.setFamily("Arial");
+        warning.setPointSize(30);
 
-        ui->priceVolume1Button->setEnabled(false);
-        ui->priceVolume2Button->setEnabled(false);
+        ui->payment_cancel_Button->setFont(warning);
+        ui->payment_cancel_Button->setText("CANCEL");
+        ui->payment_cancel_Button->show();
+
+
+//        ui->tapLabel->show(); //currently replaced with pay button 10.18
+//        ui->payButton->hide();
+
+//        ui->priceVolume1Button->setEnabled(false);
+//        ui->priceVolume2Button->setEnabled(false);
 
         com.flushSerial();
 
@@ -205,6 +211,20 @@ void payPage::on_mainPage_Button_clicked()
 {
     this->hide();
     idlePage->showFullScreen();
+}
+
+/*Cancel any previous payment*/
+void payPage::cancelPayment()
+{
+        /*Cancel any previous payment*/
+        if(purchaseEnable){
+            pktToSend = paymentPacket.purchaseCancelPacket();
+            if (sendToUX410()){
+                waitForUX410();
+                pktResponded.clear();
+            }
+            com.flushSerial();
+        }
 }
 
 // Payment Section based on DF001 Prototype
@@ -245,20 +265,8 @@ void payPage::setProgressLabel(QLabel* label, int dot)
     label->setText("Processing" + dotString.repeated(dot));
 }
 
-void payPage::setProductPrice(QString price)
-{
-    if(1 == optionSelected)
-    {
-        productSelectedPrice = price.toUtf8().constData(); //QString convert to string
-    }
-    else if (2 == optionSelected)
-    {
-        productSelectedPrice = price.toUtf8().constData();
-    }
-}
-
 // Local storge for now.  Will need to refactor logger to do a nightly push to AWS
-void payPage::storeEvent(QSqlDatabase db, QString event)
+void payPage::storePaymentEvent(QSqlDatabase db, QString event)
 {
 
 //    beverageData* curBev = mainPage->getBeverageData(optionSelected);
@@ -405,4 +413,62 @@ bool payPage::waitForUX410()
         }
     }
     return waitResponse;
+}
+
+void payPage::readTimer_loop()
+{
+    if(pktResponded[0] != 0x02){
+        pktResponded = com.readPacket();
+        com.sendAck();
+
+        readTimer->start(10);
+    }
+    else {
+        com.sendAck();
+
+        readTimer->stop();
+
+        if (pktResponded[10] == 0x31){
+            purchaseEnable = true;
+            approved = true;
+            mainPage->getSurveyPage()->resetSurveyFilled(); //reset the coupon discount
+        }
+        else if(pktResponded[10] == 0x32){
+            purchaseEnable = true;
+            approved = true; //should be false
+        }
+        else {
+            purchaseEnable = false;
+        }
+
+        readPacket.packetReadFromUX(pktResponded);
+        //std::cout << readPacket;
+
+        if (purchaseEnable == true){//once purchase successed create a receipt and store into database
+
+            paymentPktInfo.transactionID(readPacket.getPacket().data);
+            paymentPktInfo.makeReceipt(mainPage->getDatabase());
+
+            paymentProcessing = false;
+            counter = 0;
+        }
+        timerEnabled = false;
+    }
+
+    if (timerEnabled == false){
+//        if (purchaseEnable == false){
+//            pageNumber = 0;
+//            mainPage->getSurveyPage()->resetSurveyFilled(); //reset the coupon discount
+//        }
+//        purchaseEnable = false;
+    }
+
+    if (pktResponded.size() > 100)
+    {
+        if (counter == 0){
+            ui->declineLabel->hide();
+            paymentProcessing = true;
+            timer->start();
+        }
+    }
 }

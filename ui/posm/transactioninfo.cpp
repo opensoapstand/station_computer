@@ -14,12 +14,16 @@
 
 #include <iostream>
 #include <algorithm>    // std::find_if
+#include <stdio.h>
 
-#include "database_logger.h"
-#include "../payment.h"
+//#include "database_logger.h"
+
+#include "../paypage.h"
 extern std::string merchantName;
 extern std::string merchantAddress;
 extern std::string terminalID;
+
+//using namespace std;
 
 transactionInfo::transactionInfo()
 {
@@ -89,7 +93,8 @@ std::string transactionInfo::getTransactionInfo(int id)
     return ptr[id];
 }
 
-void transactionInfo::makeReceipt(database_logger logData)
+//void transactionInfo::makeReceipt(database_logger logData)
+void transactionInfo::makeReceipt()
 {
 
     std::string cardType =  getTransactionInfo(TXN_FIDs::CARD_NAME);
@@ -221,11 +226,13 @@ void transactionInfo::makeReceipt(database_logger logData)
     merchantReceipt.close();
 
     merchantReceipt.flush();
-    logData.reconnectDatabase();
-    logData.paymentLog(purchaseDate, getTransactionInfo(TXN_FIDs::CARD_NAME), txnType, purchaseAmount,
-                       lastFourChar, ref, getTransactionInfo(TXN_FIDs::MOP), getTransactionInfo(TXN_FIDs::APPROVAL_CODE),
-                       getTransactionInfo(TXN_FIDs::ISO_CODE));
-    for (int i = 0; i < MAX_FIELD; i++){
-        ptr[i].clear();
-    }
+
+
+//    logData.reconnectDatabase();
+//    logData.paymentLog(purchaseDate, getTransactionInfo(TXN_FIDs::CARD_NAME), txnType, purchaseAmount,
+//                       lastFourChar, ref, getTransactionInfo(TXN_FIDs::MOP), getTransactionInfo(TXN_FIDs::APPROVAL_CODE),
+//                       getTransactionInfo(TXN_FIDs::ISO_CODE));
+//    for (int i = 0; i < MAX_FIELD; i++){
+//        ptr[i].clear();
+//    }
 }

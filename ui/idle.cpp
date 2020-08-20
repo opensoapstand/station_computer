@@ -30,10 +30,6 @@ idle::idle(QWidget *parent) :
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
-    userDrinkOrder = new DrinkOrder();
-
-
-
     /* Issues with QT buttons with images.  Button behind transparent image hack.
        TODO: find a way to make the button transparent/clickable image */
     //ui->nextPageButton->setAttribute(Qt::WA_TranslucentBackground);
@@ -41,41 +37,10 @@ idle::idle(QWidget *parent) :
     //setStyleSheet("QPushButton{background: transparent;}");
 
     // TODO: Hold and pass DrinkOrder Object
-
-
+    userDrinkOrder = new DrinkOrder();
 
     // TODO: Will need to determine standard path in future; Could skip if going with Postgres
-
-    QString path = "/home/df-admin/Project/drinkfill/db/sqlite/";
-    db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(path + "drinkfill-sqlite.db");
-
-    if(!db.open())
-    {
-        qDebug() << "Can't Connect to DB !";
-    }
-    else
-    {
-        qDebug() << "Connected Successfully to" + db.databaseName();
-        QSqlQuery query;
-        query.prepare("SELECT name, full_address FROM vendor WHERE vendor_id = 1;");
-        if(!query.exec())
-        {
-            qDebug() << "Can't Execute Query !";
-        }
-        else
-        {
-            qDebug() << "Query Executed Successfully !";
-            while(query.next())
-            {
-                qDebug() << "Vendor Name : " << query.value(0).toString();
-                qDebug() << "Vendor Full Address: " << query.value(1).toString();
-            }
-        }
-    }
-
-    db.close();
-
+    this->dfUtility->open_database();
 }
 
 /*

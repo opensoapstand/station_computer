@@ -42,7 +42,6 @@ private slots:
 private:
     Ui::idle *ui;
     productPage_1* selection_PageOne;
-    QSqlDatabase db;
 
 };
 

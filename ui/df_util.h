@@ -12,6 +12,10 @@ class df_util
 public:
     df_util();
     void send_to_FSM(QString * msg);
+    void open_database();
+    QString db_get_max_transaction();
+
+    QSqlDatabase db;
 
 };
 

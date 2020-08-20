@@ -29,34 +29,8 @@ thankYouPage::thankYouPage(QWidget *parent) :
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
-    QString path = "/home/df-admin/Project/drinkfill/sqlite/";
-    db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(path + "drinkfill-sqlite.db");
 
-    if(!db.open())
-    {
-        qDebug() << "Can't Connect to DB !";
-    }
-    else
-    {
-        qDebug() << "Connected Successfully to" + db.databaseName();
-        QSqlQuery query;
-        query.prepare("SELECT MAX(inventory_id) FROM inventory;");
-        if(!query.exec())
-        {
-            qDebug() << "Can't Execute Query !";
-        }
-        else
-        {
-            qDebug() << "Query Executed Successfully !";
-            while(query.next())
-            {
-                qDebug() << "Vendor Name : " << query.value(0).toString();
-                qDebug() << "Vendor Full Address: " << query.value(1).toString();
-            }
-        }
-    }
-
+    this->idlePage->dfUtility->open_database();
 
     /*hacky transparent button*/
     ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");

@@ -37,11 +37,8 @@ private slots:
 
 private:
     Ui::thankYouPage *ui;
-
     dispensePage* dispensingPage;
     idle* idlePage;
-    QSqlDatabase db;
-
 };
 
 #endif // THANKYOUPAGE_H

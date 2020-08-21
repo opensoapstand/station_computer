@@ -11,22 +11,48 @@ void df_util::send_to_FSM(QString * msg)
 {
 }
 
-void df_util::open_database()
-{
-    QString path = "/home/df-admin/Project/drinkfill/db/sqlite/";
+void df_util::initialize_local_db() {
     db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(path + "drinkfill-sqlite.db");
+    db.setDatabaseName(local_db_path + "drinkfill-sqlite.db");
 
+}
+
+bool df_util::open_local_db()
+{
+    initialize_local_db();
     if(!db.open())
     {
-        qDebug() << "Can't Connect to DB !";
+        qDebug() << "Can't Connect to DB!";
     }
     else
     {
         qDebug() << "Connected Successfully to" + db.databaseName();
+    }
+    return db.open();
+}
+
+
+bool df_util::close_local_db()
+{
+   if(db.open()) {
+        db.close();
+   } else {
+        qDebug() << "No Database open!" << endl;
+   }
+
+   return db.open();
+}
+
+bool df_util::getVendorDetails()
+{
+    bool isResultAvailble;
+
+    if(isResultAvailble = open_local_db())
+    {
         QSqlQuery query;
-        query.prepare("SELECT name, full_address FROM vendor WHERE vendor_id = 1;");
-        if(!query.exec())
+        query.prepare("SELECT name, full_address "
+                      "FROM vendor WHERE vendor_id = 1;");
+        if(!(isResultAvailble = query.exec()))
         {
             qDebug() << "Can't Execute Query !";
         }
@@ -40,11 +66,11 @@ void df_util::open_database()
             }
         }
     }
-
-    db.close();
+    close_local_db();
+    return isResultAvailble;
 }
 
-QString df_util::db_get_max_transaction()
+QString df_util::get_local_db_max_transaction()
 {
     QString result = "Db Error";
 

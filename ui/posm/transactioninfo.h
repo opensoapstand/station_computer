@@ -24,6 +24,8 @@
 
 const int MAX_FIELD = 45;
 
+using namespace std;
+
 class transactionInfo
 {
 public:
@@ -33,7 +35,7 @@ public:
     std::string dataField(std::vector<uint8_t> data);
     std::string getTransactionInfo(int id);
 //    void makeReceipt(database_logger logData);
-    void makeReceipt();
+    void makeReceipt(string terminalID, string merchantName, string merchantAddress);
 
 private:
     std::string ptr[MAX_FIELD];

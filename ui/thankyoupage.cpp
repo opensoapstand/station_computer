@@ -29,14 +29,12 @@ thankYouPage::thankYouPage(QWidget *parent) :
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
-
-    this->idlePage->dfUtility->open_database();
-
     /*hacky transparent button*/
     ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
+    QString counter = this->idlePage->dfUtility->get_local_db_max_transaction();
     ui->Counter->setStyleSheet("background-color : #F1F2F2; color: #CBA580");
-    ui->Counter->setText("1000");
+    ui->Counter->setText(counter);
 }
 
 /*

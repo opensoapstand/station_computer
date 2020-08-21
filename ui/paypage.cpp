@@ -63,16 +63,18 @@ payPage::payPage(QWidget *parent) :
         declineTimer = new QTimer(this);
         connect(declineTimer, SIGNAL(timeout()), this, SLOT(declineTimer_start()));
 
-        pageUpdateTimer = new QTimer(this);
-        connect(pageUpdateTimer, SIGNAL(timeout()), this, SLOT(updatePageNumber()));
-        pageUpdateTimer->setInterval(10);
+//        pageUpdateTimer = new QTimer(this);
+//        connect(pageUpdateTimer, SIGNAL(timeout()), this, SLOT(updatePageNumber()));
+//        pageUpdateTimer->setInterval(10);
         //pageUpdateTimer->start();
 
         // Mutex
         setpaymentProcess(false);
-        ui->payment_processLabel->hide();
-        ui->payment_declineLabel->setText(TAP_AGAIN);
-        labelSetup(ui->payment_declineLabel, 40);
+        ui->payment_processLabel->setText(TAP_READY_LABEL);
+        ui->payment_processLabel->show();
+//        ui->payment_processLabel->hide();
+//        ui->payment_declineLabel->setText(TAP_AGAIN);
+//        labelSetup(ui->payment_declineLabel, 40);
 
         //pageSetup("Kombucha", ":/assets/kombucha.png", 5.95);
 
@@ -111,24 +113,27 @@ payPage::~payPage()
     delete ui;
 }
 
+/* ----- GUI ----- */
+
 // Labels and button for tapping payment
 void payPage::displayPaymentPending(bool isVisible)
 {
     if(isVisible = false){
-        ui->payment_declineLabel->hide();
         ui->payment_processLabel->hide();
-
     } else {
 
     }
 }
 
+// Navigation: Back to Drink Size Selection
 void payPage::on_previousPage_Button_clicked()
 {
+    cancelPayment();
     paySelectPage->showFullScreen();
     this->hide();
 }
 
+// Payment Processing Debug Button
 void payPage::on_passPayment_Button_clicked()
 {
     // TODO: Moneris Linkage here!
@@ -209,6 +214,7 @@ void payPage::updateTotals(string drinkDescription, string drinkAmount, string o
 
 void payPage::on_mainPage_Button_clicked()
 {
+    cancelPayment();
     this->hide();
     idlePage->showFullScreen();
 }
@@ -272,6 +278,75 @@ void payPage::storePaymentEvent(QSqlDatabase db, QString event)
 //    beverageData* curBev = mainPage->getBeverageData(optionSelected);
 //    db.event_log(machineID, QDateTime::currentDateTime(), optionSelected, event, curBev->getInventoryVolume());
 }
+
+void payPage::progressStatusLabel()
+{
+    if (!paymentConnected){
+        //timer->start();
+        //pageUpdateTimer->start();
+//        mainPage->clearArd();
+        sendCommand();
+
+//        pageNumber = 1;
+    }
+    else
+    {
+        if (paymentProcessing == true)
+        {
+
+            ui->tapLabel->hide();
+            ui->goBackButton->hide();
+            ui->payButton->hide();
+            ui->processLabel->show();
+            labelSetup(ui->processLabel, 50);
+            setProgressLabel(ui->processLabel, progressDots);
+            if (progressDots < 3){
+                progressDots++;
+            }
+            else {
+                progressDots = 1;
+            }
+            counter++;
+        }
+
+        if (counter == 3) {
+            timer->stop();
+
+            ui->orLabel->hide();
+            ui->goBackButton->hide();
+            ui->processLabel->hide();
+            paymentProcessing = false;
+            if (approved){
+                mainPage->clearArd();
+                sendCommand();
+
+                ui->goBackButton->setEnabled(false);
+
+                pageNumber = 1;
+
+            }
+            else {
+                ui->declineLabel->setText(tapDeclined);
+                ui->declineLabel->show();
+                declineTimer->start(2000);
+            }
+        }
+    }
+}
+
+void payPage::declineTimer_start()
+{
+    ui->declineLabel->setText(tapAgain);
+    declineCounter++;
+    if (declineCounter<3){
+        on_payButton_clicked();
+    } else {
+        pageNumber = 0;
+    }
+    declineTimer->stop();
+}
+
+/* ----- Payment ----- */
 
 void payPage::stayAliveLogon()
 {
@@ -431,7 +506,7 @@ void payPage::readTimer_loop()
         if (pktResponded[10] == 0x31){
             purchaseEnable = true;
             approved = true;
-            mainPage->getSurveyPage()->resetSurveyFilled(); //reset the coupon discount
+//            mainPage->getSurveyPage()->resetSurveyFilled(); //reset the coupon discount
         }
         else if(pktResponded[10] == 0x32){
             purchaseEnable = true;
@@ -447,7 +522,8 @@ void payPage::readTimer_loop()
         if (purchaseEnable == true){//once purchase successed create a receipt and store into database
 
             paymentPktInfo.transactionID(readPacket.getPacket().data);
-            paymentPktInfo.makeReceipt(mainPage->getDatabase());
+//            paymentPktInfo.makeReceipt(mainPage->getDatabase());
+            paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
 
             paymentProcessing = false;
             counter = 0;
@@ -466,7 +542,7 @@ void payPage::readTimer_loop()
     if (pktResponded.size() > 100)
     {
         if (counter == 0){
-            ui->declineLabel->hide();
+            ui->payment_declineLabel->hide();
             paymentProcessing = true;
             timer->start();
         }

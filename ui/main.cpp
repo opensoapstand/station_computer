@@ -14,6 +14,7 @@
 // all rights reserved
 //***************************************
 
+#define UI_VERSION "0.1.4"
 #include "idle.h"
 #include "productpage_1.h"
 #include "productpage_2.h"

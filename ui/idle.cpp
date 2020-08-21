@@ -40,7 +40,7 @@ idle::idle(QWidget *parent) :
     userDrinkOrder = new DrinkOrder();
 
     // TODO: Will need to determine standard path in future; Could skip if going with Postgres
-    this->dfUtility->open_database();
+    this->dfUtility->getVendorDetails();
 }
 
 /*

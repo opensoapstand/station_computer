@@ -19,9 +19,9 @@
 //#include "database_logger.h"
 
 #include "../paypage.h"
-extern std::string merchantName;
-extern std::string merchantAddress;
-extern std::string terminalID;
+//extern std::string merchantName;
+//extern std::string merchantAddress;
+//extern std::string terminalID;
 
 //using namespace std;
 
@@ -94,7 +94,7 @@ std::string transactionInfo::getTransactionInfo(int id)
 }
 
 //void transactionInfo::makeReceipt(database_logger logData)
-void transactionInfo::makeReceipt()
+void transactionInfo::makeReceipt(string terminalID, string merchantName, string merchantAddress)
 {
 
     std::string cardType =  getTransactionInfo(TXN_FIDs::CARD_NAME);

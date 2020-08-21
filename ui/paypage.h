@@ -61,6 +61,18 @@ public:
     int getPriceSelect();
     void sendCommand();
 
+    string getTerminalID(){
+        return terminalID;
+    }
+
+    string getMerchantName(){
+        return merchantName;
+    }
+
+    string getMerchantAddress() {
+        return merchantAddress;
+    }
+
 private slots:
 
     // Update Drink order totals section
@@ -92,8 +104,9 @@ private:
     dispensePage* dispensingPage;
     idle* idlePage;
 
-    const QString TAP_DECLINED= "Card Declined";
-    const QString TAP_AGAIN = "Try Again";
+    const QString TAP_READY_LABEL = "Ready for Tap";
+    const QString TAP_DECLINED_LABEL = "Card Declined";
+    const QString TAP_AGAIN_LABEL = "Try Again";
 
     // Label Reference for order Details
     string drinkAmount;
@@ -111,9 +124,9 @@ private:
 
     // **** Payment ****
     // Payment Information
-//    std::string merchantName;
-//    std::string merchantAddress;
-//    std::string terminalID;
+    string merchantName;
+    string merchantAddress;
+    string terminalID;
 
     // Payment Control
     bool paymentProcessing;

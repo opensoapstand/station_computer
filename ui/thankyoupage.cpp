@@ -32,9 +32,10 @@ thankYouPage::thankYouPage(QWidget *parent) :
     /*hacky transparent button*/
     ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
-    QString counter = this->idlePage->dfUtility->get_local_db_max_transaction();
+//    QString counter = this->idlePage->dfUtility->get_local_db_max_transaction();
     ui->Counter->setStyleSheet("background-color : #F1F2F2; color: #CBA580");
-    ui->Counter->setText(counter);
+//    ui->Counter->setText(counter);
+    ui->Counter->setText("0");
 }
 
 /*

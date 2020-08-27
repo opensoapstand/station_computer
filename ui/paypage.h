@@ -82,7 +82,6 @@ private slots:
     void on_previousPage_Button_clicked();
     void on_mainPage_Button_clicked();
     // For Debugging; will be removed.
-    void on_passPayment_Button_clicked();
 
     // **** Payment ****
     void displayPaymentPending(bool isVisible);
@@ -93,9 +92,11 @@ private slots:
     void cancelPayment();
     void declineTimer_start();
 
+    void idlePaymentTimeout();
+
 protected:
-    void showEvent(QShowEvent *event);
-    void paintEvent(QPaintEvent *p);
+//    void showEvent(QShowEvent *event);
+//    void paintEvent(QPaintEvent *p);
 
 private:
     // **** GUI ****
@@ -105,8 +106,11 @@ private:
     idle* idlePage;
 
     const QString TAP_READY_LABEL = "Ready for Tap";
+    const QString TAP_PROCESSING_LABEL = "Processing";
     const QString TAP_DECLINED_LABEL = "Card Declined";
     const QString TAP_AGAIN_LABEL = "Try Again";
+    const QString TAP_APPROVED_LABEL = "Payment Approved";
+    const QString TAP_BLANK_LABEL = "";
 
     // Label Reference for order Details
     string drinkAmount;
@@ -134,9 +138,8 @@ private:
 
     QTimer *readTimer;
     QTimer *declineTimer;
-    QTimer* timer;
-    QTimer* pageUpdateTimer;
-    QTimer* goBackTimer;
+    QTimer *paymentProgressTimer;
+    QTimer *idlePaymentTimer;
 
     // Payment Communication
     // Moneris Packet communication reference
@@ -156,6 +159,8 @@ private:
     bool sendToUX410();
     bool paymentInit();
     bool waitForUX410();
+
+    void on_passPayment_Button_clicked();
 
     // **** Drink Order Reference ****
     DrinkOrder paymentDrinkOrder;

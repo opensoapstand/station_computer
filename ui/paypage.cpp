@@ -50,44 +50,41 @@ payPage::payPage(QWidget *parent) :
     updateTotals(this->drinkDescription, this->drinkAmount, this->orderTotal);
 
     // Payment
-
     cancelPayment();
 
-    /* Create Timeout Interface: Wait for tap; message user; process tap*/
+    /* Create Timeout Interface: Wait for tap; message user; process tap */
     {
-        // Timer and Slot Setup
-        timer = new QTimer(this);
-        connect(timer, SIGNAL(timeout()), this, SLOT(progressStatusLabel()));
-        timer->setInterval(500);
-
-        declineTimer = new QTimer(this);
-        connect(declineTimer, SIGNAL(timeout()), this, SLOT(declineTimer_start()));
-
-//        pageUpdateTimer = new QTimer(this);
-//        connect(pageUpdateTimer, SIGNAL(timeout()), this, SLOT(updatePageNumber()));
-//        pageUpdateTimer->setInterval(10);
-        //pageUpdateTimer->start();
-
         // Mutex
         setpaymentProcess(false);
+
+        // GUI Setup
         ui->payment_processLabel->setText(TAP_READY_LABEL);
         ui->payment_processLabel->show();
-//        ui->payment_processLabel->hide();
-//        ui->payment_declineLabel->setText(TAP_AGAIN);
-//        labelSetup(ui->payment_declineLabel, 40);
 
-        //pageSetup("Kombucha", ":/assets/kombucha.png", 5.95);
+        // **** Timer and Slot Setup ****
 
+        // Payment Tap Ready
         readTimer = new QTimer(this);
         connect (readTimer, SIGNAL(timeout()), this, SLOT(readTimer_loop()));
 
-        goBackTimer = new QTimer(this);
-        connect(goBackTimer, SIGNAL(timeout()), this, SLOT(goBack()));
-        goBackTimer->start(60000);
+        // Payment Progress
+        paymentProgressTimer = new QTimer(this);
+        connect(paymentProgressTimer, SIGNAL(timeout()), this, SLOT(progressStatusLabel()));
+        paymentProgressTimer->setInterval(500);
+
+        // Payment Declined
+        declineTimer = new QTimer(this);
+        connect(declineTimer, SIGNAL(timeout()), this, SLOT(declineTimer_start()));
+
+        // Idle Payment reset
+        idlePaymentTimer = new QTimer(this);
+        connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
+        idlePaymentTimer->start(60000);
     }
 
     paymentInit();
 }
+
 /*
  * Page Tracking reference
  */
@@ -118,10 +115,10 @@ payPage::~payPage()
 // Labels and button for tapping payment
 void payPage::displayPaymentPending(bool isVisible)
 {
-    if(isVisible = false){
+    if(isVisible == false){
         ui->payment_processLabel->hide();
     } else {
-
+        ui->payment_processLabel->show();
     }
 }
 
@@ -148,7 +145,7 @@ void payPage::on_passPayment_Button_clicked()
         //if(!com.init()){
 
         // TODO: Replace with an ACK NACK to FSM for Dispenser slot...
-//        mainPage->checkard();
+        //mainPage->checkard();
 
         // Wait for a Drink Payment
         ui->payment_processLabel->show();
@@ -159,12 +156,11 @@ void payPage::on_passPayment_Button_clicked()
         ui->payment_pass_Button->hide();
         ui->previousPage_Button->hide();
 
-//        paymentInit();
+        //paymentInit();
 
         // Database log a failed payment
         storePaymentEvent(db, QString("mpos failed"));
-        timer->start();
-        //}
+        paymentProgressTimer->start();
     } else {
         purchaseEnable = true;
         QFont warning;
@@ -177,11 +173,10 @@ void payPage::on_passPayment_Button_clicked()
         ui->payment_cancel_Button->show();
 
 
-//        ui->tapLabel->show(); //currently replaced with pay button 10.18
-//        ui->payButton->hide();
-
-//        ui->priceVolume1Button->setEnabled(false);
-//        ui->priceVolume2Button->setEnabled(false);
+        //ui->tapLabel->show(); //currently replaced with pay button 10.18
+        //ui->payButton->hide();
+        //ui->priceVolume1Button->setEnabled(false);
+        //ui->priceVolume2Button->setEnabled(false);
 
         com.flushSerial();
 
@@ -222,15 +217,15 @@ void payPage::on_mainPage_Button_clicked()
 /*Cancel any previous payment*/
 void payPage::cancelPayment()
 {
-        /*Cancel any previous payment*/
-        if(purchaseEnable){
-            pktToSend = paymentPacket.purchaseCancelPacket();
-            if (sendToUX410()){
-                waitForUX410();
-                pktResponded.clear();
-            }
-            com.flushSerial();
+    /*Cancel any previous payment*/
+    if(purchaseEnable){
+        pktToSend = paymentPacket.purchaseCancelPacket();
+        if (sendToUX410()){
+            waitForUX410();
+            pktResponded.clear();
         }
+        com.flushSerial();
+    }
 }
 
 // Payment Section based on DF001 Prototype
@@ -253,11 +248,17 @@ void payPage::cancelPayment()
 //    QWidget::showEvent(event);
 //}
 
-// HACK: This seems to do nothing...Could mask for GUI thread pausing?
-void payPage::paintEvent(QPaintEvent *p)
-{
-    QWidget::paintEvent(p);
-}
+//void payPage::showEvent(QShowEvent *event)
+//{
+
+//    QWidget::showEvent(event);
+//}
+
+//// HACK: This seems to do nothing...Could mask for GUI thread pausing?
+//void payPage::paintEvent(QPaintEvent *p)
+//{
+//    QWidget::paintEvent(p);
+//}
 
 
 bool payPage::setpaymentProcess(bool status)
@@ -285,7 +286,7 @@ void payPage::progressStatusLabel()
         //timer->start();
         //pageUpdateTimer->start();
 //        mainPage->clearArd();
-        sendCommand();
+//        sendCommand();
 
 //        pageNumber = 1;
     }
@@ -293,13 +294,15 @@ void payPage::progressStatusLabel()
     {
         if (paymentProcessing == true)
         {
+            // Setup progress dots
+            ui->payment_processLabel->setText(TAP_BLANK_LABEL);
 
-            ui->tapLabel->hide();
-            ui->goBackButton->hide();
-            ui->payButton->hide();
-            ui->processLabel->show();
-            labelSetup(ui->processLabel, 50);
-            setProgressLabel(ui->processLabel, progressDots);
+            // Lock down page navigation
+            ui->payment_pass_Button->hide();
+            ui->previousPage_Button->hide();
+            ui->mainPage_Button->hide();
+            labelSetup(ui->payment_processLabel, 50);
+            setProgressLabel(ui->payment_processLabel, progressDots);
             if (progressDots < 3){
                 progressDots++;
             }
@@ -310,24 +313,21 @@ void payPage::progressStatusLabel()
         }
 
         if (counter == 3) {
-            timer->stop();
+            paymentProgressTimer->stop();
 
-            ui->orLabel->hide();
-            ui->goBackButton->hide();
-            ui->processLabel->hide();
+            ui->payment_pass_Button->hide();
+            ui->previousPage_Button->hide();
+
             paymentProcessing = false;
+
             if (approved){
-                mainPage->clearArd();
-                sendCommand();
-
-                ui->goBackButton->setEnabled(false);
-
-                pageNumber = 1;
-
+                ui->previousPage_Button->setEnabled(false);
+                ui->mainPage_Button->setEnabled(false);
+                ui->payment_processLabel->setText(TAP_APPROVED_LABEL);
             }
             else {
-                ui->declineLabel->setText(tapDeclined);
-                ui->declineLabel->show();
+                ui->payment_processLabel->setText(TAP_DECLINED_LABEL);
+                ui->payment_processLabel->show();
                 declineTimer->start(2000);
             }
         }
@@ -336,14 +336,18 @@ void payPage::progressStatusLabel()
 
 void payPage::declineTimer_start()
 {
-    ui->declineLabel->setText(tapAgain);
+    ui->payment_processLabel->setText(TAP_AGAIN_LABEL);
     declineCounter++;
-    if (declineCounter<3){
-        on_payButton_clicked();
+    if (declineCounter < 3){
+        this->on_passPayment_Button_clicked();
     } else {
-        pageNumber = 0;
+        ui->payment_processLabel->setText(TAP_DECLINED_LABEL);
     }
     declineTimer->stop();
+}
+
+void payPage::idlePaymentTimeout() {
+    on_mainPage_Button_clicked();
 }
 
 /* ----- Payment ----- */
@@ -465,7 +469,6 @@ bool payPage::paymentInit()
     } else {
         return false;
     }
-
     return true;
 }
 
@@ -519,11 +522,11 @@ void payPage::readTimer_loop()
         readPacket.packetReadFromUX(pktResponded);
         //std::cout << readPacket;
 
-        if (purchaseEnable == true){//once purchase successed create a receipt and store into database
-
+        if (purchaseEnable == true){
+            //once purchase successed create a receipt and store into database
             paymentPktInfo.transactionID(readPacket.getPacket().data);
-//            paymentPktInfo.makeReceipt(mainPage->getDatabase());
-            paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
+            //paymentPktInfo.makeReceipt(mainPage->getDatabase());
+            //paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
 
             paymentProcessing = false;
             counter = 0;
@@ -542,9 +545,10 @@ void payPage::readTimer_loop()
     if (pktResponded.size() > 100)
     {
         if (counter == 0){
-            ui->payment_declineLabel->hide();
+            ui->payment_processLabel->setText(TAP_PROCESSING_LABEL);
+//            ui->payment_declineLabel->hide();
             paymentProcessing = true;
-            timer->start();
+            paymentProgressTimer->start();
         }
     }
 }

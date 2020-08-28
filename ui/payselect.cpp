@@ -106,7 +106,7 @@ void paySelect::on_orderSmall_Button_clicked()
     this->setPalette(palette);
 
     idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
-    idlePage->userDrinkOrder->setPrice(3.00);
+    idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_SMALL_TEST);
 }
 
 // on_Large_Order button listener
@@ -119,7 +119,7 @@ void paySelect::on_orderBig_Button_clicked()
     this->setPalette(palette);
 
     idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
-    idlePage->userDrinkOrder->setPrice(4.00);
+    idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_LARGE_TEST);
 }
 
 /* Models */

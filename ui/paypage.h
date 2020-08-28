@@ -81,6 +81,8 @@ private slots:
     // Navigation
     void on_previousPage_Button_clicked();
     void on_mainPage_Button_clicked();
+    void on_payment_pass_Button_clicked();
+    void on_payment_cancel_Button_clicked();
     // For Debugging; will be removed.
 
     // **** Payment ****
@@ -89,13 +91,13 @@ private slots:
     void readTimer_loop();
     void progressStatusLabel();
 
-    void cancelPayment();
+
     void declineTimer_start();
 
     void idlePaymentTimeout();
 
 protected:
-//    void showEvent(QShowEvent *event);
+    void showEvent(QShowEvent *event);
 //    void paintEvent(QPaintEvent *p);
 
 private:
@@ -159,8 +161,7 @@ private:
     bool sendToUX410();
     bool paymentInit();
     bool waitForUX410();
-
-    void on_passPayment_Button_clicked();
+    void cancelPayment();
 
     // **** Drink Order Reference ****
     DrinkOrder paymentDrinkOrder;

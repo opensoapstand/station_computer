@@ -39,6 +39,9 @@ payPage::payPage(QWidget *parent) :
     ui->payment_pass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
+    ui->payment_pass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->payment_cancel_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+
     // Setup static labels
     ui->order_tax_label->setText("Our Planet");
     ui->order_tax_amount->setText("Priceless");
@@ -79,7 +82,8 @@ payPage::payPage(QWidget *parent) :
         // Idle Payment reset
         idlePaymentTimer = new QTimer(this);
         connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
-        idlePaymentTimer->start(60000);
+//        idlePaymentTimer->start(60000);
+        idlePaymentTimer->start(60000000);
     }
 
     paymentInit();
@@ -131,9 +135,11 @@ void payPage::on_previousPage_Button_clicked()
 }
 
 // Payment Processing Debug Button
-void payPage::on_passPayment_Button_clicked()
+void payPage::on_payment_pass_Button_clicked()
 {
     // TODO: Moneris Linkage here!
+    qDebug() << "Payment Pass button" << endl;
+
     qDebug() << this->idlePage->userDrinkOrder->getOption();
     qDebug() << this->idlePage->userDrinkOrder->getSize();
     qDebug() << this->idlePage->userDrinkOrder->getPrice();
@@ -161,6 +167,10 @@ void payPage::on_passPayment_Button_clicked()
         // Database log a failed payment
         storePaymentEvent(db, QString("mpos failed"));
         paymentProgressTimer->start();
+
+        dispensingPage->showFullScreen();
+        this->hide();
+
     } else {
         purchaseEnable = true;
         QFont warning;
@@ -188,12 +198,17 @@ void payPage::on_passPayment_Button_clicked()
             readTimer->start(10);
         }
         else {
-            //std::cout<<"Jason: I wanna die!! :(";
+            std::cout<<"TIME OUT";
         }
     }
 
-    dispensingPage->showFullScreen();
-    this->hide();
+
+}
+
+void payPage::on_payment_cancel_Button_clicked()
+{
+    qDebug()<< "Cancel Clicked" << endl;
+    cancelPayment();
 }
 
 void payPage::updateTotals(string drinkDescription, string drinkAmount, string orderTotal)
@@ -217,6 +232,7 @@ void payPage::on_mainPage_Button_clicked()
 /*Cancel any previous payment*/
 void payPage::cancelPayment()
 {
+    qDebug() << "Payment cancelled!" << endl;
     /*Cancel any previous payment*/
     if(purchaseEnable){
         pktToSend = paymentPacket.purchaseCancelPacket();
@@ -248,11 +264,10 @@ void payPage::cancelPayment()
 //    QWidget::showEvent(event);
 //}
 
-//void payPage::showEvent(QShowEvent *event)
-//{
-
-//    QWidget::showEvent(event);
-//}
+void payPage::showEvent(QShowEvent *event)
+{
+    QWidget::showEvent(event);
+}
 
 //// HACK: This seems to do nothing...Could mask for GUI thread pausing?
 //void payPage::paintEvent(QPaintEvent *p)
@@ -339,7 +354,7 @@ void payPage::declineTimer_start()
     ui->payment_processLabel->setText(TAP_AGAIN_LABEL);
     declineCounter++;
     if (declineCounter < 3){
-        this->on_passPayment_Button_clicked();
+        this->on_payment_pass_Button_clicked();
     } else {
         ui->payment_processLabel->setText(TAP_DECLINED_LABEL);
     }
@@ -495,13 +510,16 @@ bool payPage::waitForUX410()
 
 void payPage::readTimer_loop()
 {
+    qDebug() << "reading TAP Timer" << endl;
     if(pktResponded[0] != 0x02){
+        qDebug() << "Reading TAP Packet" << endl;
         pktResponded = com.readPacket();
         com.sendAck();
 
         readTimer->start(10);
     }
     else {
+        qDebug() << "Check TAP Packet; Sending" << endl;
         com.sendAck();
 
         readTimer->stop();
@@ -520,7 +538,7 @@ void payPage::readTimer_loop()
         }
 
         readPacket.packetReadFromUX(pktResponded);
-        //std::cout << readPacket;
+        std::cout << readPacket;
 
         if (purchaseEnable == true){
             //once purchase successed create a receipt and store into database
@@ -535,11 +553,12 @@ void payPage::readTimer_loop()
     }
 
     if (timerEnabled == false){
+        qDebug() << "Timer has been disabled" << endl;
 //        if (purchaseEnable == false){
 //            pageNumber = 0;
 //            mainPage->getSurveyPage()->resetSurveyFilled(); //reset the coupon discount
 //        }
-//        purchaseEnable = false;
+        purchaseEnable = false;
     }
 
     if (pktResponded.size() > 100)

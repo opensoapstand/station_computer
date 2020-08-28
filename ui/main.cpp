@@ -56,9 +56,9 @@ int main(int argc, char *argv[])
     dispensingPage->setPage(paymentPage, lastPage, idlePage);
     lastPage->setPage(dispensingPage, idlePage);
 
-//    payOptionToggle->setPage();
-
+//    payOptionToggle->setPage();    
     idlePage->showFullScreen();
+
 
     return mainApp.exec();
 }

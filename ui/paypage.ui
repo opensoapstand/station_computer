@@ -36,7 +36,7 @@
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>payment_pass_Button</string>
    </property>
   </widget>
   <widget class="QPushButton" name="mainPage_Button">
@@ -220,8 +220,8 @@
   <widget class="QLabel" name="payment_processLabel">
    <property name="geometry">
     <rect>
-     <x>390</x>
-     <y>1150</y>
+     <x>290</x>
+     <y>1680</y>
      <width>231</width>
      <height>41</height>
     </rect>
@@ -244,27 +244,14 @@
   <widget class="QPushButton" name="payment_cancel_Button">
    <property name="geometry">
     <rect>
-     <x>380</x>
-     <y>1210</y>
+     <x>590</x>
+     <y>1670</y>
      <width>241</width>
      <height>61</height>
     </rect>
    </property>
    <property name="text">
     <string>payment_cancel_Button</string>
-   </property>
-  </widget>
-  <widget class="QProgressBar" name="progressBar">
-   <property name="geometry">
-    <rect>
-     <x>450</x>
-     <y>1290</y>
-     <width>118</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="value">
-    <number>24</number>
    </property>
   </widget>
  </widget>

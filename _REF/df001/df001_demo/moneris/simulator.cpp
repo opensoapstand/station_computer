@@ -95,7 +95,7 @@ void simulator::readtimer_loop()
         ux410.packetReadFromUX(packetRecievedTest);
         if (purchaseEnable == true){//once purchase successed create a receipt and store into database
             dataPacket.transactionID(ux410.getPacket().data);
-            dataPacket.makeReceipt();
+//            dataPacket.makeReceipt();
         }
         std::cout << ux410;
         timerEnabled = false;

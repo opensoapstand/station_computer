@@ -36,6 +36,8 @@ namespace Ui {
 class payPage;
 }
 
+using namespace std;
+
 class payPage : public QWidget
 {
     Q_OBJECT
@@ -90,10 +92,7 @@ private slots:
 
     void readTimer_loop();
     void progressStatusLabel();
-
-
     void declineTimer_start();
-
     void idlePaymentTimeout();
 
 protected:
@@ -123,9 +122,10 @@ private:
     // Payment progress timer    
     bool approved = false;
     bool paymentConnected = false;
+    bool isReadyForTap = false;
 
     int progressDots = 1;
-    int counter = 0;
+    int progressLoopCounter = 0;
     int declineCounter;
 
     // **** Payment ****
@@ -136,6 +136,14 @@ private:
 
     // Payment Control
     bool paymentProcessing;
+
+    bool isInitCancelled;
+    bool isInitBatched;
+    bool isInitLogin;
+    bool isInitMerchant;
+    bool isInitAddress;
+    bool isInitTerminalID;
+
     QSqlDatabase db;
 
     QTimer *readTimer;

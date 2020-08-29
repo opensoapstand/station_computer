@@ -53,7 +53,7 @@ payPage::payPage(QWidget *parent) :
     updateTotals(this->drinkDescription, this->drinkAmount, this->orderTotal);
 
     // Payment
-    cancelPayment();
+    // cancelPayment();
 
     /* Create Timeout Interface: Wait for tap; message user; process tap */
     {
@@ -68,7 +68,7 @@ payPage::payPage(QWidget *parent) :
 
         // Payment Tap Ready
         readTimer = new QTimer(this);
-        connect (readTimer, SIGNAL(timeout()), this, SLOT(readTimer_loop()));
+        connect(readTimer, SIGNAL(timeout()), this, SLOT(readTimer_loop()));
 
         // Payment Progress
         paymentProgressTimer = new QTimer(this);
@@ -82,8 +82,8 @@ payPage::payPage(QWidget *parent) :
         // Idle Payment reset
         idlePaymentTimer = new QTimer(this);
         connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
-//        idlePaymentTimer->start(60000);
-        idlePaymentTimer->start(60000000);
+        idlePaymentTimer->start(60000);
+//        idlePaymentTimer->start(60000000);
     }
 
     paymentInit();
@@ -129,6 +129,7 @@ void payPage::displayPaymentPending(bool isVisible)
 // Navigation: Back to Drink Size Selection
 void payPage::on_previousPage_Button_clicked()
 {
+    readTimer->stop();
     cancelPayment();
     paySelectPage->showFullScreen();
     this->hide();
@@ -144,9 +145,10 @@ void payPage::on_payment_pass_Button_clicked()
     qDebug() << this->idlePage->userDrinkOrder->getSize();
     qDebug() << this->idlePage->userDrinkOrder->getPrice();
 
-    purchaseEnable = true;
+//    purchaseEnable = true;
 
     if (!paymentConnected){
+        usleep(100000);
         //mainPage->sendardCommand("Z");
         //if(!com.init()){
 
@@ -171,8 +173,9 @@ void payPage::on_payment_pass_Button_clicked()
         dispensingPage->showFullScreen();
         this->hide();
 
-    } else {
-        purchaseEnable = true;
+    } else if(paymentConnected){
+
+
         QFont warning;
         warning.setBold(true);
         warning.setFamily("Arial");
@@ -182,7 +185,6 @@ void payPage::on_payment_pass_Button_clicked()
         ui->payment_cancel_Button->setText("CANCEL");
         ui->payment_cancel_Button->show();
 
-
         //ui->tapLabel->show(); //currently replaced with pay button 10.18
         //ui->payButton->hide();
         //ui->priceVolume1Button->setEnabled(false);
@@ -190,19 +192,44 @@ void payPage::on_payment_pass_Button_clicked()
 
         com.flushSerial();
 
+        // Set the price to send.
+        cout << "Setting price of packet" << endl;
         pktToSend = paymentPacket.purchasePacket(productSelectedPrice);
+
+        purchaseEnable = true;
+
 
         if (sendToUX410())
         {
+//            isReadyForTap = true;
+//            waitForUX410();
+            pktResponded.clear();
             timerEnabled = true;
+            cout << "From Payment Button" << endl;
             readTimer->start(10);
         }
         else {
+            isReadyForTap = false;
             std::cout<<"TIME OUT";
         }
     }
 
+//    com.sendPacket(pktToSend, uint(pktToSend.size()));
 
+//    std::cout<<paymentPacket.getSendPacket();
+
+//    //read back what is responded
+
+//    pktResponded = com.readForAck();
+
+//    readPacket.packetReadFromUX(pktResponded);
+//    pktResponded.clear();
+
+//    if (readPacket.getAckOrNak() == communicationPacketField::ACK)
+//    {
+//        timerEnabled = true;
+//        readTimer->start(10);
+//    }
 }
 
 void payPage::on_payment_cancel_Button_clicked()
@@ -224,6 +251,7 @@ void payPage::updateTotals(string drinkDescription, string drinkAmount, string o
 
 void payPage::on_mainPage_Button_clicked()
 {
+    qDebug() << "Main Button Page" << endl;
     cancelPayment();
     this->hide();
     idlePage->showFullScreen();
@@ -300,10 +328,9 @@ void payPage::progressStatusLabel()
     if (!paymentConnected){
         //timer->start();
         //pageUpdateTimer->start();
-//        mainPage->clearArd();
-//        sendCommand();
-
-//        pageNumber = 1;
+        //mainPage->clearArd();
+        //sendCommand();
+        //pageNumber = 1;
     }
     else
     {
@@ -324,10 +351,10 @@ void payPage::progressStatusLabel()
             else {
                 progressDots = 1;
             }
-            counter++;
+            progressLoopCounter++;
         }
 
-        if (counter == 3) {
+        if (progressLoopCounter == 3) {
             paymentProgressTimer->stop();
 
             ui->payment_pass_Button->hide();
@@ -395,20 +422,52 @@ bool payPage::sendToUX410()
 {
     int waitForAck = 0;
     while (waitForAck < 3){
-        com.sendPacket(pktToSend, uint(pktToSend.size()));
+        cout << waitForAck << endl;
 
-        //std::cout<<paymentPacket.getSendPacket();
+    cout << com.sendPacket(pktToSend, uint(pktToSend.size()));
+    std::cout<< "sendtoUX410 Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
 
-        //read back what is responded
-        pktResponded = com.readForAck();
-        readPacket.packetReadFromUX(pktResponded);
-        pktResponded.clear();
-        waitForAck++;
+    //read back what is responded
+    pktResponded = com.readForAck();
+    readPacket.packetReadFromUX(pktResponded);
+    pktResponded.clear();
+    waitForAck++;
+
+    // if(isReadyForTap) {
+        cout << "Waiting for TAP" << endl;
         if (readPacket.getAckOrNak() == communicationPacketField::ACK)
         {
+
+            cout << readPacket << endl;
             return true;
         }
-        usleep(500000);
+    // }
+    usleep(5000);
+
+    if(isInitCancelled) {
+        return true;
+    }
+
+    if(isInitBatched) {
+        return true;
+    }
+
+    if(isInitLogin) {
+        return true;
+    }
+
+    if(isInitMerchant) {
+        return true;
+    }
+
+    if(isInitAddress) {
+        return true;
+    }
+
+    if(isInitTerminalID) {
+        return true;
+    }
+
     }
     return false;
 }
@@ -420,6 +479,8 @@ bool payPage::paymentInit()
     /*Cancel any previous payment*/
     pktToSend = paymentPacket.purchaseCancelPacket();
     if (sendToUX410()){
+        cout << "Cancel payment" << endl;
+        isInitCancelled = true;
         waitForUX410();
         pktResponded.clear();
     } else {
@@ -430,6 +491,8 @@ bool payPage::paymentInit()
     /*batch close packet to send*/
     pktToSend = paymentPacket.batchClosePkt();
     if (sendToUX410()){
+        cout << "Batch Close" << endl;
+        isInitBatched = true;
         waitForUX410();
         pktResponded.clear();
     } else {
@@ -440,6 +503,8 @@ bool payPage::paymentInit()
     /*logon packet to send*/
     pktToSend = paymentPacket.logonPacket();
     if (sendToUX410()){
+        cout << "Logon" << endl;
+        isInitLogin = true;
         waitForUX410();
         pktResponded.clear();
     } else {
@@ -451,8 +516,9 @@ bool payPage::paymentInit()
     pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::MERCH_NAME);
     if (sendToUX410()){
         waitForUX410();
-        //merchantName = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
-        //std::cout << merchantName<<endl;
+        isInitMerchant = true;
+        merchantName = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
+        cout << merchantName<<endl;
         pktResponded.clear();
 
     } else {
@@ -464,8 +530,9 @@ bool payPage::paymentInit()
     pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::MERCH_ADDR);
     if (sendToUX410()){
         waitForUX410();
-        //merchantAddress = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
-        //std::cout << merchantAddress<<endl;
+        isInitAddress = true;
+        merchantAddress = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
+        std::cout << merchantAddress<<endl;
         pktResponded.clear();
 
     } else {
@@ -477,8 +544,9 @@ bool payPage::paymentInit()
     pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::CON_TID);
     if (sendToUX410()){
         waitForUX410();
+        isInitTerminalID = true;
         terminalID = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
-        //std::cout << terminalID<<endl;
+        std::cout << terminalID<<endl;
         pktResponded.clear();
 
     } else {
@@ -500,7 +568,7 @@ bool payPage::waitForUX410()
         else {
             //  pktResponded = com.readPacket();
             readPacket.packetReadFromUX(pktResponded);
-            //std::cout << readPacket;
+            std::cout << readPacket;
             com.sendAck();
             waitResponse = true;
         }
@@ -510,35 +578,44 @@ bool payPage::waitForUX410()
 
 void payPage::readTimer_loop()
 {
-    qDebug() << "reading TAP Timer" << endl;
+    qDebug() << "readingTimer_loop" << endl;
+    cout << "start loop pktResponded: " << to_string(pktResponded[0]) << endl;
     if(pktResponded[0] != 0x02){
         qDebug() << "Reading TAP Packet" << endl;
-        pktResponded = com.readPacket();
-        com.sendAck();
 
+        std::cout<< "ReadTimer Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
+//        pktResponded = com.readPacket();
+        cout << "MISS: pktResponded: " << to_string(pktResponded[0]) << endl;
+
+//        com.sendAck();
+        cout << "Polling Timer" << endl;
         readTimer->start(10);
-    }
-    else {
+    } else {
+        cout << "HIT: pktResponded: " << to_string(pktResponded[0]) << endl;
+
         qDebug() << "Check TAP Packet; Sending" << endl;
         com.sendAck();
 
-        readTimer->stop();
 
         if (pktResponded[10] == 0x31){
             purchaseEnable = true;
             approved = true;
+            cout << "Approval Packet 31" << endl;
 //            mainPage->getSurveyPage()->resetSurveyFilled(); //reset the coupon discount
         }
         else if(pktResponded[10] == 0x32){
             purchaseEnable = true;
             approved = true; //should be false
+            cout << "Approval Packet 32" << endl;
         }
         else {
             purchaseEnable = false;
+            cout << "No Approval Packet!" << endl;
         }
 
         readPacket.packetReadFromUX(pktResponded);
         std::cout << readPacket;
+
 
         if (purchaseEnable == true){
             //once purchase successed create a receipt and store into database
@@ -547,7 +624,7 @@ void payPage::readTimer_loop()
             //paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
 
             paymentProcessing = false;
-            counter = 0;
+            progressLoopCounter = 0;
         }
         timerEnabled = false;
     }
@@ -558,12 +635,13 @@ void payPage::readTimer_loop()
 //            pageNumber = 0;
 //            mainPage->getSurveyPage()->resetSurveyFilled(); //reset the coupon discount
 //        }
+        readTimer->stop();
         purchaseEnable = false;
     }
 
     if (pktResponded.size() > 100)
     {
-        if (counter == 0){
+        if (progressLoopCounter == 0){
             ui->payment_processLabel->setText(TAP_PROCESSING_LABEL);
 //            ui->payment_declineLabel->hide();
             paymentProcessing = true;

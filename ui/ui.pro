@@ -72,12 +72,12 @@ DISTFILES += \
 #     moneris_obj/transactionPackets.o\
 #     moneris_obj/transactioninfo.o
 
-unix:!macx: LIBS += -L$$PWD/objm/ -lposm
+#unix:!macx: LIBS += -L$$PWD/objm/ -lposm
 
-INCLUDEPATH += $$PWD/objm
-DEPENDPATH += $$PWD/objme
+#INCLUDEPATH += $$PWD/objm
+#DEPENDPATH += $$PWD/objme
 
-unix:!macx: PRE_TARGETDEPS += $$PWD/objm/libposm.a
+#unix:!macx: PRE_TARGETDEPS += $$PWD/objm/libposm.a
 
 # Release Flag
 #CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT

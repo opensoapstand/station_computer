@@ -175,6 +175,7 @@ bool mCommunication::sendAck()
 
 void mCommunication::flushSerial()
 {
+    std::cout << "Flushing Serial port..." << std::endl;
     tcflush(fd, TCIOFLUSH);
 }
 

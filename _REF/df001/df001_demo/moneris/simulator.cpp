@@ -64,7 +64,7 @@ void simulator::on_cancelButton_clicked()
 
 void simulator::on_sendButton_clicked()
 {
-    com.sendPacket(pktToSend, uint(pktToSend.size()));
+    std::cout << com.sendPacket(pktToSend, uint(pktToSend.size()));
 
     std::cout<<pkt.getSendPacket();
 
@@ -77,8 +77,9 @@ void simulator::on_sendButton_clicked()
 
     if (ux410.getAckOrNak() == communicationPacketField::ACK)
     {
-        timerEnabled = true;
+        timerEnabled = true;        
         readtimer->start(10);
+        cout << "Post Tap" << endl;
     }
 
 
@@ -89,6 +90,8 @@ void simulator::readtimer_loop()
 
     if(packetRecievedTest[0] != 0x02){
         packetRecievedTest = com.readPacket();
+        cout << to_string(packetRecievedTest[0]) << endl;
+        cout << "restart timer" << endl;
         readtimer->start(10);
     }
     else {

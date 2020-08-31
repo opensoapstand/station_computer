@@ -584,7 +584,9 @@ void payPage::readTimer_loop()
         qDebug() << "Reading TAP Packet" << endl;
 
         std::cout<< "ReadTimer Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
-//        pktResponded = com.readPacket();
+
+        // This breaks the polling loop!
+        //        pktResponded = com.readPacket();
         cout << "MISS: pktResponded: " << to_string(pktResponded[0]) << endl;
 
 //        com.sendAck();

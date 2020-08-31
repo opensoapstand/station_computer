@@ -5,7 +5,7 @@
 #include <QTimer>
 using namespace std;
 static string Mid = "0030410835171"; //0030128909430 0030410835171
-static string pedID = "U4383002"; //U4383017 //U4383144 //U4383005
+static string pedID = "U4393371";//Unit 8"U4383002"23383002; //U4383017 //U4383144 //U4383005
 static string URL = "ipg1.moneris.com:443";
 static string Name =  "DRINKFILL LTD";
 static string Address = "2608 GRANVILLE ST #330\n   VANCOUVER  BC  V6H 3H8";

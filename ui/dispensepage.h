@@ -54,11 +54,15 @@ private:
     idle* idlePage;
 
     // FSM communication
+    bool is_sending_to_FSM;
     QTcpSocket *tcpSocket = nullptr;
     QDataStream in;
     // TODO: move host and port to XML
     const char* host = "localhost";
     int port = 1234;
+
+protected:
+    void showEvent(QShowEvent *event);
 };
 
 #endif // DISPENSEPAGE_H

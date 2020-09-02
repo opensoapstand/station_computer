@@ -28,6 +28,7 @@ dispensePage::dispensePage(QWidget *parent) :
     ui(new Ui::dispensePage)
     , tcpSocket(new QTcpSocket(this))
 {
+    is_sending_to_FSM = false;
     ui->setupUi(this);
     QPixmap background(":/light/6_dispense_page.jpg");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
@@ -65,6 +66,18 @@ dispensePage::~dispensePage()
     delete ui;
 }
 
+void dispensePage::showEvent(QShowEvent *event)
+{
+    if(is_sending_to_FSM) {
+        return;
+    }
+    is_sending_to_FSM = true;
+    QWidget::showEvent(event);
+    send_to_FSM();
+    is_sending_to_FSM = false;
+    ui->finish_Button->setEnabled(true);
+}
+
 
 /*
  * Page Tracking reference to Payment page and completed payment
@@ -72,9 +85,10 @@ dispensePage::~dispensePage()
 void dispensePage::on_finish_Button_clicked()
 {
     // TODO: Link to FSM for Dispense
-    send_to_FSM();
+//    send_to_FSM();
+    qDebug() << "finish button clicked" << endl;
+    is_sending_to_FSM = false;
     tcpSocket->disconnectFromHost();
-    ui->finish_Button->setEnabled(true);
     this->hide();
     thanksPage->showFullScreen();
 }
@@ -85,6 +99,7 @@ void dispensePage::on_finish_Button_clicked()
  */
 void dispensePage::send_to_FSM()
 {
+    qDebug() << "Sending to FSM" << endl;
     // TODO: Local socket to FSM
     ui->finish_Button->setEnabled(false);
     tcpSocket->abort();

@@ -254,6 +254,19 @@
     <string>payment_cancel_Button</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="payment_bypass_Button">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>1260</y>
+     <width>241</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>payment_bypass_Button</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

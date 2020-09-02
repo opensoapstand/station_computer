@@ -39,6 +39,7 @@ payPage::payPage(QWidget *parent) :
     ui->payment_pass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
+    ui->payment_bypass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->payment_pass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->payment_cancel_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
@@ -80,9 +81,9 @@ payPage::payPage(QWidget *parent) :
         connect(declineTimer, SIGNAL(timeout()), this, SLOT(declineTimer_start()));
 
         // Idle Payment reset
-        idlePaymentTimer = new QTimer(this);
-        connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
-        idlePaymentTimer->start(60000);
+//        idlePaymentTimer = new QTimer(this);
+//        connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
+//        idlePaymentTimer->start(60000);
 //        idlePaymentTimer->start(60000000);
     }
 
@@ -135,6 +136,14 @@ void payPage::on_previousPage_Button_clicked()
     this->hide();
 }
 
+void payPage::on_payment_bypass_Button_clicked()
+{
+    qDebug() << "ByPass payment to Dispense" << endl;
+    cancelPayment();
+    this->hide();
+    dispensingPage->showFullScreen();
+}
+
 // Payment Processing Debug Button
 void payPage::on_payment_pass_Button_clicked()
 {
@@ -156,9 +165,9 @@ void payPage::on_payment_pass_Button_clicked()
         //mainPage->checkard();
 
         // Wait for a Drink Payment
-        ui->payment_processLabel->show();
-        labelSetup(ui->payment_processLabel, 50);
-        ui->payment_processLabel->setText("You get a free drink");
+//        ui->payment_processLabel->show();
+//        labelSetup(ui->payment_processLabel, 50);
+//        ui->payment_processLabel->setText("You get a free drink");
 
         // Lock Navigation
         ui->payment_pass_Button->hide();
@@ -193,7 +202,7 @@ void payPage::on_payment_pass_Button_clicked()
         com.flushSerial();
 
         // Set the price to send.
-        cout << "Setting price of packet" << endl;
+        cout << "Setting price of packet: " << productSelectedPrice << endl;
         pktToSend = paymentPacket.purchasePacket(productSelectedPrice);
 
         purchaseEnable = true;
@@ -422,9 +431,8 @@ bool payPage::sendToUX410()
 {
     int waitForAck = 0;
     while (waitForAck < 3){
-        cout << waitForAck << endl;
-
-    cout << com.sendPacket(pktToSend, uint(pktToSend.size()));
+    cout << "Wait for ACK counter: " << waitForAck << endl;
+    com.sendPacket(pktToSend, uint(pktToSend.size()));
     std::cout<< "sendtoUX410 Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
 
     //read back what is responded

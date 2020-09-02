@@ -83,6 +83,7 @@ private slots:
     // Navigation
     void on_previousPage_Button_clicked();
     void on_mainPage_Button_clicked();
+    void on_payment_bypass_Button_clicked();
     void on_payment_pass_Button_clicked();
     void on_payment_cancel_Button_clicked();
     // For Debugging; will be removed.

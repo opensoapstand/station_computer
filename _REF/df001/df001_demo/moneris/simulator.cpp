@@ -5,7 +5,8 @@
 #include <QTimer>
 using namespace std;
 static string Mid = "0030410835171"; //0030128909430 0030410835171
-static string pedID = "U4393371";//Unit 8"U4383002"23383002; //U4383017 //U4383144 //U4383005
+//static string pedID = "U4393371";//Unit 8"U4383002"23383002; //U4383017 //U4383144 //U4383005
+static string pedID = "U4383002"; //U4383017 //U4383144 //U4383005
 static string URL = "ipg1.moneris.com:443";
 static string Name =  "DRINKFILL LTD";
 static string Address = "2608 GRANVILLE ST #330\n   VANCOUVER  BC  V6H 3H8";
@@ -79,7 +80,6 @@ void simulator::on_sendButton_clicked()
     {
         timerEnabled = true;        
         readtimer->start(10);
-        cout << "Post Tap" << endl;
     }
 
 
@@ -90,15 +90,17 @@ void simulator::readtimer_loop()
 
     if(packetRecievedTest[0] != 0x02){
         packetRecievedTest = com.readPacket();
-        cout << to_string(packetRecievedTest[0]) << endl;
+        cout << "packetReceivedTest: " << to_string(packetRecievedTest[0]) << endl;
         cout << "restart timer" << endl;
         readtimer->start(10);
     }
     else {
+        cout << "Post Tap" << endl;
+        cout<<pkt.getSendPacket();
         ux410.packetReadFromUX(packetRecievedTest);
         if (purchaseEnable == true){//once purchase successed create a receipt and store into database
             dataPacket.transactionID(ux410.getPacket().data);
-//            dataPacket.makeReceipt();
+            dataPacket.makeReceipt();
         }
         std::cout << ux410;
         timerEnabled = false;

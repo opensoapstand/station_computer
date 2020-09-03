@@ -76,7 +76,7 @@ DF_ERROR stateInit::onEntry()
    else
    {
       debugOutput::sendMessage("Problem loading XML file: " + string(XML_SETTINGS), ERROR);
-      e_ret = ERROR_XMLFILE_NOT_FOUND;
+      e_ret = ERROR_SECU_XMLFILE_NOT_FOUND;
    }
    return e_ret;
 }
@@ -99,7 +99,7 @@ DF_ERROR stateInit::onAction(dispenser* cassettes)
    }
    else
    {
-      e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+      e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
       debugOutput::sendMessage("setDispenserId did not return OK", INFO);
    }
    return e_ret;
@@ -121,11 +121,11 @@ DF_ERROR stateInit::onExit()
 //extracting the id of the dispenser
 DF_ERROR stateInit::setDispenserId()
 {
-   DF_ERROR e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+   DF_ERROR e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
    int l_counter = 0;
 
    if (m_pDispenser == NULL){
-      e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+      e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
    }
    else
    {
@@ -144,7 +144,7 @@ DF_ERROR stateInit::setDispenserId()
 
 DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx, dispenser cassettes[])
 {
-   DF_ERROR e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+   DF_ERROR e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
    TiXmlElement *l_pSolenoid;
 
    if(dispenserEle->FirstChildElement(SOLENOID_STRING))
@@ -155,7 +155,7 @@ DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispens
    else
    {
       debugOutput::sendMessage("Solenoid element is null", INFO);
-      e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+      e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
       return e_ret;
    }
    
@@ -182,7 +182,7 @@ DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispens
          else
          {
             //wrong xml content found
-            e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+            e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
             return e_ret;
          }
 
@@ -202,7 +202,7 @@ DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispens
 
 DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx, dispenser cassettes[])
 {
-   DF_ERROR e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+   DF_ERROR e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
    TiXmlElement *l_pFlowsensor;
 
    if(dispenserEle->FirstChildElement(FLOWSENSOR_STRING))
@@ -213,7 +213,7 @@ DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispe
    else
    {
       debugOutput::sendMessage("Flowsensor element is null", INFO);
-      e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+      e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
       return e_ret;
    }
    
@@ -237,7 +237,7 @@ DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispe
          else
          {
             //wrong xml content found
-            e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+            e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
             return e_ret;
          }
 
@@ -256,7 +256,7 @@ DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispe
 
 DF_ERROR stateInit::setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser cassettes[])
 {
-   DF_ERROR e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+   DF_ERROR e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
    TiXmlElement *l_pPump;
 
    if(dispenserEle->FirstChildElement(PUMP_STRING))
@@ -267,7 +267,7 @@ DF_ERROR stateInit::setDispenserPump(TiXmlElement *dispenserEle, int dispenserId
    else
    {
       debugOutput::sendMessage("Pump element is null", INFO);
-      //e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+      //e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT
       e_ret = OK; //not all cassettes have pump element
       return e_ret;
    }
@@ -293,7 +293,7 @@ DF_ERROR stateInit::setDispenserPump(TiXmlElement *dispenserEle, int dispenserId
          else
          {
             //wrong xml content found
-            e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+            e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
             return e_ret;
          }
 
@@ -313,7 +313,7 @@ DF_ERROR stateInit::setDispenserPump(TiXmlElement *dispenserEle, int dispenserId
 
 DF_ERROR stateInit::setButton(TiXmlElement *hardwareEle, int dispenserIdx)
 {
-   DF_ERROR e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+   DF_ERROR e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
    TiXmlElement *l_pButton;
 
    if(hardwareEle->FirstChildElement(BUTTON_STRING))
@@ -324,7 +324,7 @@ DF_ERROR stateInit::setButton(TiXmlElement *hardwareEle, int dispenserIdx)
    else
    {
       debugOutput::sendMessage("Button element is null", INFO);
-      e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT; //no button should return error
+      e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT; //no button should return error
       return e_ret;
    }
    
@@ -353,7 +353,7 @@ DF_ERROR stateInit::setButton(TiXmlElement *hardwareEle, int dispenserIdx)
             }
             else if(X20 > address_num || X22 < address_num)
             {
-               e_ret = ERROR_WRONG_I2C_ADDRESS;
+               e_ret = ERROR_ELEC_WRONG_I2C_ADDRESS;
                return e_ret;
             }
             else if(MCP_PIN_START > pin_num || MPC_PIN_END < pin_num)
@@ -365,7 +365,7 @@ DF_ERROR stateInit::setButton(TiXmlElement *hardwareEle, int dispenserIdx)
          else
          {
             //wrong xml content found
-            e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+            e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
             return e_ret;
          }
 
@@ -413,7 +413,7 @@ dispenser* stateInit::dispenserSetup()
 
    if(nullptr == m_pDispenser){
        debugOutput::sendMessage("m_pDispenser is null", INFO);
-       e_ret = ERROR_XMLFILE_NO_MATCH_CONTENT;
+       e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
    }
    else{
       l_pDispenser = m_pDispenser;

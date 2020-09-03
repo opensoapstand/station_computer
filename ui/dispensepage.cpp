@@ -112,6 +112,7 @@ void dispensePage::send_to_FSM()
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_1);
     tcpSocket->write(block);
+    tcpSocket->close();
 }
 
 void dispensePage::displayError(QAbstractSocket::SocketError socketError)

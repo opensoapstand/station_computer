@@ -67,7 +67,7 @@ DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
 	}
 	else if(X20 > mcpAddress || X22 < mcpAddress)
 	{
-		return e_ret = ERROR_WRONG_I2C_ADDRESS;
+		return e_ret = ERROR_ELEC_WRONG_I2C_ADDRESS;
 	}
 	else if(MCP_PIN_START > pin || MPC_PIN_END < pin)
 	{
@@ -87,7 +87,7 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
     }
     else
     {
-        return e_ret = ERROR_FS_FAULT;
+        return e_ret = ERROR_MECH_FS_FAULT;
     }
 
     return e_ret;
@@ -105,7 +105,7 @@ DF_ERROR dispenser::setPump(int mcpAddress, int pin, int direction)
 	else if(X20 > mcpAddress || X22 < mcpAddress)
 	{
         //debugOutput::sendMessage("got here", INFO);
-		return e_ret = ERROR_WRONG_I2C_ADDRESS;
+		return e_ret = ERROR_ELEC_WRONG_I2C_ADDRESS;
 	}
 	else if(MCP_PIN_START > pin || MPC_PIN_END < pin)
 	{

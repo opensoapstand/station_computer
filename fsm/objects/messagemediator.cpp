@@ -37,7 +37,7 @@ string messageMediator::m_processString;
 messageMediator::messageMediator()
 {
    debugOutput::sendMessage("------messageMediator------", INFO);
-
+   // new_sock = new ServerSocket();
    m_fExitThreads = false;
    // m_pKBThread = -1;
 }
@@ -55,6 +55,40 @@ DF_ERROR messageMediator::sendMessage()
 {
    DF_ERROR dfError = OK;
 
+   return dfError;
+}
+
+//needs params, but this will be !!called by states!! in order to send data to receivers
+DF_ERROR messageMediator::sendProgress(int percentComplete)
+{
+   DF_ERROR dfError = OK;
+
+   return dfError;
+}
+
+DF_ERROR messageMediator::sendQtACK(string AckOrNak)
+{
+   DF_ERROR dfError = OK;
+  try
+    {
+      ClientSocket client_socket ( "localhost", 1235 );
+      std::string reply;
+      try
+	{
+	  client_socket << AckOrNak;
+	  client_socket >> reply;
+	}
+      catch ( SocketException& ) {}
+
+      std::cout << "We received this response from the server:\n\"" << reply << "\"\n";;
+
+    }
+  catch ( SocketException& e )
+    {
+      std::cout << "Exception was caught:" << e.description() << "\n";
+    }   
+
+   dfError = ERROR_PTHREADS_IPTHREAD_NAK;
    return dfError;
 }
 
@@ -157,34 +191,43 @@ void *messageMediator::doIPThread(void *pThreadArgs)
    try
    {
       // Create the socket
-      ServerSocket server(1234);
+      ServerSocket fsm_comm_server(1234);
 
       while (!m_fExitThreads)
       {
-
          ServerSocket new_sock;
-         server.accept(new_sock);
+         fsm_comm_server.accept(new_sock);
 
          try
          {
             while (true)
             {
                std::string data;
+               // *fsm_comm_socket >> data;
+               // *fsm_comm_socket << "";
                new_sock >> data;
+
+               // AckOrNakResult = "FSM ACK";               
+               sendQtACK("ACK");
                cout << data << endl;
                m_processString = data;
                updateCmdString();
                // new_sock << data;
             }
+
+            new_sock << "Hi Back";
          }
-         catch (SocketException &)
+         catch (SocketException &sock)
          {
+            std::cout << "Socket Transfer Exception was caught:" << sock.description() << "\nExiting.\n";
+            // AckOrNakResult = "FSM NAK";           
+            // sendQtACK(AckOrNakResult);
          }
       }
    }
    catch (SocketException &e)
    {
-      std::cout << "Exception was caught:" << e.description() << "\nExiting.\n";
+      std::cout << "Socket Creation Exception was caught:" << e.description() << "\nExiting.\n";
    }
 
    return 0;

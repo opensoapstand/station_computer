@@ -2,6 +2,8 @@ QT += core gui sql widgets serialport network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+TARGET = DF_UI
+
 CONFIG += \
     c++11
 
@@ -15,6 +17,8 @@ FORMS += \
     thankyoupage.ui
 
 HEADERS += \
+    dfuicommthread.h \
+    dfuiserver.h \
     dispensepage.h \
     idle.h \
     includefiles.h \
@@ -36,6 +40,8 @@ HEADERS += \
     drinkorder.h
 
 SOURCES += \
+    dfuicommthread.cpp \
+    dfuiserver.cpp \
     dispensepage.cpp \
     idle.cpp \
     main.cpp \

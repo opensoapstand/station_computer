@@ -23,6 +23,7 @@
 
 #include "../../library/socket/ServerSocket.h"
 #include "../../library/socket/SocketException.h"
+#include "../../library/socket/ClientSocket.h"
 
 class messageMediator
 {
@@ -37,6 +38,8 @@ class messageMediator
       string getProcessString();
       bool getStringReady();
       void clearProcessString();
+
+      // static ServerSocket *fsm_comm_socket;
    
       //DF_ERROR doKBThread (void * pThreadArgs);
 
@@ -45,11 +48,17 @@ class messageMediator
       static bool m_fExitThreads;
       // pthread_t m_pKBThread;
 
+      static int percentComplete;
+      static string AckOrNakResult;
+
       static string m_processString;
       static bool m_stringReady;
 
+      static DF_ERROR sendProgress(int percentComplete);
+      static DF_ERROR sendQtACK(string AckOrNak);
+
       static DF_ERROR updateCmdString(char key);
-      static DF_ERROR updateCmdString();    
+      static DF_ERROR updateCmdString();
       static void * doKBThread(void * pThreadArgs);
       static void * doIPThread(void * pThreadArgs);
 };

@@ -59,6 +59,8 @@ int main(int argc, char *argv[])
 //    payOptionToggle->setPage();    
     idlePage->showFullScreen();
 
+    DfUiServer dfUiServer;
+    dfUiServer.startServer();
 
     return mainApp.exec();
 }

@@ -88,7 +88,7 @@ DF_ERROR oddyseyx86GPIO::setFlowPin(int pinNumber)
 DF_ERROR oddyseyx86GPIO::setDirection(bool input)
 {
 	debugOutput::sendMessage("setDirection", INFO);
-	DF_ERROR df_ret = ERROR_FS_FAULT;
+	DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
 	int fd, len;
 	char buf[MAX_BUF];
 
@@ -113,7 +113,7 @@ DF_ERROR oddyseyx86GPIO::setDirection(bool input)
 DF_ERROR oddyseyx86GPIO::readPin(bool * level)
 {
 	debugOutput::sendMessage("readPin", INFO);
-	DF_ERROR df_ret = ERROR_FS_FAULT;
+	DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
 	int fd, len;
 	char buf[MAX_BUF];
 	char ch;
@@ -164,7 +164,7 @@ DF_ERROR oddyseyx86GPIO::readPin(bool * level)
 DF_ERROR oddyseyx86GPIO::writePin(bool level)
 {
 	debugOutput::sendMessage("writePin", INFO);
-	DF_ERROR df_ret = ERROR_FS_FAULT;
+	DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
 	int fd, len;
 	char buf[MAX_BUF];
 

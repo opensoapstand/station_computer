@@ -87,7 +87,8 @@ payPage::payPage(QWidget *parent) :
 //        idlePaymentTimer->start(60000000);
     }
 
-    paymentInit();
+    // XXX: Comment on/off for Bypassing payment testing
+//    paymentInit();
 }
 
 /*
@@ -139,7 +140,7 @@ void payPage::on_previousPage_Button_clicked()
 void payPage::on_payment_bypass_Button_clicked()
 {
     qDebug() << "ByPass payment to Dispense" << endl;
-    cancelPayment();
+//    cancelPayment();
     this->hide();
     dispensingPage->showFullScreen();
 }
@@ -165,9 +166,9 @@ void payPage::on_payment_pass_Button_clicked()
         //mainPage->checkard();
 
         // Wait for a Drink Payment
-//        ui->payment_processLabel->show();
-//        labelSetup(ui->payment_processLabel, 50);
-//        ui->payment_processLabel->setText("You get a free drink");
+        // ui->payment_processLabel->show();
+        // labelSetup(ui->payment_processLabel, 50);
+        // ui->payment_processLabel->setText("You get a free drink");
 
         // Lock Navigation
         ui->payment_pass_Button->hide();

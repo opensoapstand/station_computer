@@ -105,7 +105,11 @@ void dispensePage::send_to_FSM()
     tcpSocket->abort();
     tcpSocket->connectToHost(host,port);
 
-    QString msg = "QT Land Hello;";
+    QString msg;
+    msg = QString::number(this->idlePage->userDrinkOrder->getOption());
+    msg.append("d");
+    msg.append(";");
+    qDebug() << msg << endl;
 
     QByteArray block;
     block.append(msg);

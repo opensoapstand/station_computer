@@ -62,18 +62,17 @@ DF_ERROR stateLoop()
     {
         if (fsmState != fsmNewState) //state change
         {
-            //debugOutput::sendMessage("onEntry()  [" + g_stateArray[fsmNewState]->toString() + "]", INFO);
+            debugOutput::sendMessage("onEntry()  [" + g_stateArray[fsmNewState]->toString() + "]", INFO);
             dfRet = g_stateArray[fsmNewState]->onEntry();
             fsmState = g_stateArray[fsmNewState]->getCurrentState();
         }
 
         if (OK == dfRet) 
         {
-            //debugOutput::sendMessage("onAction() [" + g_stateArray[fsmState]->toString() + "]", INFO);
+            debugOutput::sendMessage("onAction() [" + g_stateArray[fsmState]->toString() + "]", INFO);
             dfRet = g_stateArray[fsmState]->onAction(g_dispense);
             if(INIT == fsmState)
-            {
-                
+            {                
                 g_dispense = g_stateArray[INIT]->dispenserSetup();
             }
 
@@ -86,8 +85,6 @@ DF_ERROR stateLoop()
 
                 fsmNewState = g_stateArray[fsmState]->getNextState(); //update the state
             }
-
-            // TODO: Add Dispense states...Db to be added to Created DISPENSE_END
 
         }
 

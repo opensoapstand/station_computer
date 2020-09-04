@@ -66,7 +66,7 @@ DF_ERROR stateDispense::onAction(dispenser* cassettes)
    // Parse and check command String
    if(m_pMessaging->getStringReady())
    {
-      temp = m_pMessaging->getProcessString();
+      temp = m_pMessaging->getCommandString();
    }
    else
    {
@@ -109,7 +109,7 @@ DF_ERROR stateDispense::onAction(dispenser* cassettes)
       if(!isalpha(solenoidChar)) //for second char not an alphabet
       {
          debugOutput::sendMessage("Irrelevant input", INFO); 
-         m_pMessaging->clearProcessString(); //make sure to clear the processed string for new input
+         m_pMessaging->clearCommandString(); //make sure to clear the processed string for new input
            return e_ret = OK;
       }
 

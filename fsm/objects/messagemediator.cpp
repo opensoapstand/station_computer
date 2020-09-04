@@ -31,8 +31,9 @@
 extern messageMediator df_messaging;
 
 bool messageMediator::m_fExitThreads = false;
-bool messageMediator::m_stringReady = false;
+bool messageMediator::m_commandReady = false;
 string messageMediator::m_processString;
+string messageMediator::m_processCommand;
 
 messageMediator::messageMediator()
 {
@@ -126,31 +127,35 @@ DF_ERROR messageMediator::updateCmdString(char key)
 {
    DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
-   cout << key << endl;
+   string incommingCharMsg = "Incomming CHAR: ";
+   incommingCharMsg += key;
+   debugOutput::sendMessage( incommingCharMsg, INFO);
+   incommingCharMsg.clear();
 
    if (';' != key)
    {
-      m_processString.push_back(key);
+      m_processCommand.push_back(key);
    } else if (';' == key)
    {
+      debugOutput::sendMessage("Flushing processing string: " + m_processString, INFO);
       m_processString.clear();
-      m_stringReady = false;
+      m_commandReady = true;
+
+      debugOutput::sendMessage("Command String Ready: " + m_processCommand, INFO);
+
    }
    else
    {
-      debugOutput::sendMessage(m_processString, INFO);
-      m_stringReady = true;
+      debugOutput::sendMessage("Command String Status: " + m_processCommand, INFO);
+      m_commandReady = false;
    }
-
    return df_ret;
 }
 
 DF_ERROR messageMediator::updateCmdString()
 {
    DF_ERROR df_ret = ERROR_BAD_PARAMS;
-
-   cout << m_processString << endl;
-
+   debugOutput::sendMessage("Process string..." + m_processString, INFO);
    for(int i= 0; i < m_processString.size(); i++) {
       df_ret = updateCmdString(m_processString[i]);
    }
@@ -241,10 +246,21 @@ string messageMediator::getProcessString()
 void messageMediator::clearProcessString()
 {
    m_processString.clear();
-   m_stringReady = false;
+   m_commandReady = false;
+}
+
+string messageMediator::getCommandString()
+{
+   return m_processCommand;
+}
+
+void messageMediator::clearCommandString()
+{
+   m_processCommand.clear();
+   m_commandReady = false;
 }
 
 bool messageMediator::getStringReady()
 {
-   return m_stringReady;
+   return m_commandReady;
 }

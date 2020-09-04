@@ -39,6 +39,9 @@ class messageMediator
       bool getStringReady();
       void clearProcessString();
 
+      string getCommandString();
+      void clearCommandString();
+
       // static ServerSocket *fsm_comm_socket;
    
       //DF_ERROR doKBThread (void * pThreadArgs);
@@ -52,7 +55,8 @@ class messageMediator
       static string AckOrNakResult;
 
       static string m_processString;
-      static bool m_stringReady;
+      static string m_processCommand;
+      static bool m_commandReady;
 
       static DF_ERROR sendProgress(int percentComplete);
       static DF_ERROR sendQtACK(string AckOrNak);

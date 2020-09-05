@@ -26,7 +26,7 @@
 dispensePage::dispensePage(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::dispensePage)
-    , tcpSocket(new QTcpSocket(this))
+  , tcpSocket(new QTcpSocket(this))
 {
     is_sending_to_FSM = false;
     ui->setupUi(this);
@@ -42,12 +42,15 @@ dispensePage::dispensePage(QWidget *parent) :
     /* Networking */
     in.setDevice(tcpSocket);
     in.setVersion(QDataStream::Qt_4_0);
+
+//    m_fsmMsg = df_util::FSM_COMM::SEND_EMPTY;
+
     connect(tcpSocket, &QIODevice::readyRead, this, &dispensePage::send_to_FSM);
 
-//    connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),
-//    this, SLOT(&dispensePage::displayError(QAbstractSocket::SocketError)));
-//    connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError), SLOT()));
-//    connect(tcpSocket, &QAbstractSocket::error, this, &dispensePage::displayError);
+    //    connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),
+    //    this, SLOT(&dispensePage::displayError(QAbstractSocket::SocketError)));
+    //    connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError), SLOT()));
+    //    connect(tcpSocket, &QAbstractSocket::error, this, &dispensePage::displayError);
 }
 
 /*
@@ -73,6 +76,7 @@ void dispensePage::showEvent(QShowEvent *event)
     }
     is_sending_to_FSM = true;
     QWidget::showEvent(event);
+    m_fsmMsg = SEND_DRINK;
     send_to_FSM();
     is_sending_to_FSM = false;
     ui->finish_Button->setEnabled(true);
@@ -85,9 +89,15 @@ void dispensePage::showEvent(QShowEvent *event)
 void dispensePage::on_finish_Button_clicked()
 {
     // TODO: Link to FSM for Dispense
-//    send_to_FSM();
+    is_sending_to_FSM = true;
+    m_fsmMsg = SEND_CLEAN;
+    send_to_FSM();
     qDebug() << "finish button clicked" << endl;
-    is_sending_to_FSM = false;
+
+    while(is_sending_to_FSM) {
+        qDebug() << "CLEAN MODE" << endl;
+    }
+//    is_sending_to_FSM = false;
     tcpSocket->disconnectFromHost();
     this->hide();
     thanksPage->showFullScreen();
@@ -107,8 +117,25 @@ void dispensePage::send_to_FSM()
 
     QString msg;
     msg = QString::number(this->idlePage->userDrinkOrder->getOption());
-    msg.append("d");
-    msg.append(";");
+
+    switch (m_fsmMsg) {
+    case SEND_DRINK:
+        msg.append("d");
+        msg.append(";");
+        break;
+
+    case SEND_CLEAN:
+        msg.append("c");
+        msg.append(";");
+        break;
+
+    default:
+        msg.append("e");
+        msg.append(";");
+        break;
+    }
+
+
     qDebug() << msg << endl;
 
     QByteArray block;

@@ -89,7 +89,7 @@ DF_ERROR stateDispense::onAction(dispenser* cassettes)
 
          if(CASSETTES_MAX < pos || 0 > pos)
          {
-            debugOutput::sendMessage("Irrelevant input", INFO); 
+            debugOutput::sendMessage("Irrelevant input", ERROR); 
             m_pMessaging->clearProcessString();  
             return e_ret = OK; //require valid cassettes
          }
@@ -138,10 +138,27 @@ DF_ERROR stateDispense::onAction(dispenser* cassettes)
       }
       else if(DRINK_CHAR == solenoidChar)
       {
+         debugOutput::sendMessage("------Dispensing Drink------", INFO);
          debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> DRINK", INFO);
          debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
-         cassettes[pos].testSolenoidDispense(DRINK);
+         // cassettes[pos].testSolenoidDispense(DRINK);
+         cassettes[pos].startDispense(DRINK);
+      }
+      else if(CLEAN_CHAR == solenoidChar)
+      {
+         debugOutput::sendMessage("------Cleaning Mode------", INFO);
+         debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> WATER", INFO);
+         debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(WATER)), INFO);
+
+         debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> WATER", INFO);
+         debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
+
+         // cassettes[pos].testSolenoidDispense(DRINK);
+         cassettes[pos].cleanNozzle(WATER, AIR);
+
+         m_pMessaging->sendMessage("!");
+
       }
       else{
          debugOutput::sendMessage("Irrelevant input", INFO); 

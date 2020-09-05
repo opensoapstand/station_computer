@@ -33,7 +33,7 @@ class messageMediator
 
       DF_ERROR createThreads(pthread_t &kbThread, pthread_t &ipThread);
 
-      DF_ERROR sendMessage();
+      DF_ERROR sendMessage(string msg);
 
       string getProcessString();
       bool getStringReady();

@@ -46,6 +46,10 @@ void DfUiCommThread::readyRead()
     // will write on server side window
     qDebug() << socketDescriptor << " Data in: " << Data;
 
+    if(Data == "!") {
+        qDebug() << "from CLEAN";
+    }
+
     Data.append(" Recieved");
 
     socket->write(Data);

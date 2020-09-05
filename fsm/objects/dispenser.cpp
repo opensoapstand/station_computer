@@ -15,6 +15,8 @@
 #include "dispenser.h"
 
 #define ACTIVATION_TIME 10
+#define CLEAN_WATER_TIME 5
+#define CLEAN_AIR_TIME 5
 
 dispenser::dispenser(){
     //default constructor to set all pin to nullptr
@@ -115,21 +117,58 @@ DF_ERROR dispenser::setPump(int mcpAddress, int pin, int direction)
     return e_ret;
 }
 
-//
-DF_ERROR dispenser::startDispense(){
+// Disenses drinks by turning Solenoid Signal to HIGH then to LOW
+DF_ERROR dispenser::startDispense(int pos){
+    DF_ERROR e_ret = ERROR_MECH_DRINK_FAULT;
 
-}
-DF_ERROR dispenser::stopDispense(){
+    // Solenoid Position Check
+    if(pos != DRINK) {
+        e_ret = ERROR_ELEC_PIN_DISPENSE;
+        return e_ret;
+    }
 
-}
-DF_ERROR dispenser::cleanNozzle(){
+    // Dispense the Drink
+    m_pSolenoid[pos]->writePin(HIGH);
+    sleep(ACTIVATION_TIME);
+    m_pSolenoid[pos]->writePin(LOW);
 
+    return e_ret = OK;
 }
+
+// TODO: May not be nessecary...turn into an interrupt instead.
+DF_ERROR dispenser::stopDispense(int pos){
+    DF_ERROR e_ret = ERROR_BAD_PARAMS;
+
+    return e_ret = OK;
+}
+
+// Cleans the nozzle by dispensing Water followed by Air
+DF_ERROR dispenser::cleanNozzle(int posW, int posA){
+    DF_ERROR e_ret = ERROR_BAD_PARAMS;
+
+    if(posW != WATER && posA != AIR) {
+        e_ret = ERROR_ELEC_PIN_CLEAN;
+        return e_ret;
+    }
+
+    // Flush the lines with water
+    m_pSolenoid[posW]->writePin(HIGH);
+    sleep(CLEAN_WATER_TIME);
+    m_pSolenoid[posW]->writePin(LOW);
+
+    // Flush the lines with Air
+    m_pSolenoid[posA]->writePin(HIGH);
+    sleep(CLEAN_AIR_TIME);
+    m_pSolenoid[posA]->writePin(LOW);
+
+    return e_ret = OK;
+}
+
 drink* dispenser::getDrink(){
     return m_pDrink;
 }
 
-//timer based
+// Timer based
 DF_ERROR dispenser::testSolenoidDispense(int pos){
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
 

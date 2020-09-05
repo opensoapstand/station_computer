@@ -6,10 +6,20 @@
 #include "dfuicommthread.h"
 #include "dfuiserver.h"
 
+// TODO: Refactor to fit with dfuicommthread
+
 using namespace std;
+
+typedef enum FSM_COMM {
+    SEND_EMPTY = 0,
+    SEND_DRINK,
+    SEND_CLEAN,
+    SEND_ERROR
+} FSM_COMM;
 
 class df_util
 {
+
 public:
     df_util();
     void send_to_FSM(QString * msg);

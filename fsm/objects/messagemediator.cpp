@@ -52,9 +52,30 @@ messageMediator::~messageMediator()
 }
 
 //needs params, but this will be !!called by states!! in order to send data to receivers
-DF_ERROR messageMediator::sendMessage()
+DF_ERROR messageMediator::sendMessage(string msg)
 {
    DF_ERROR dfError = OK;
+
+  try
+    {
+      ClientSocket client_socket ( "localhost", 1235 );
+      std::string reply;
+      try
+	{
+	  client_socket << msg;
+	  client_socket >> reply;
+	}
+      catch ( SocketException& ) {}
+
+      std::cout << "We received this response from the server:\n\"" << reply << "\"\n";;
+
+    }
+  catch ( SocketException& e )
+    {
+      std::cout << "Exception was caught:" << e.description() << "\n";
+    }   
+
+   dfError = ERROR_PTHREADS_IPTHREAD_NAK;
 
    return dfError;
 }
@@ -156,6 +177,14 @@ DF_ERROR messageMediator::updateCmdString()
 {
    DF_ERROR df_ret = ERROR_BAD_PARAMS;
    debugOutput::sendMessage("Process string..." + m_processString, INFO);
+
+   if(!m_processCommand.empty())
+   {
+      debugOutput::sendMessage("Flush old command..." + m_processCommand, INFO);
+      m_processCommand.clear();
+      debugOutput::sendMessage( m_processCommand, INFO);
+   }
+
    for(int i= 0; i < m_processString.size(); i++) {
       df_ret = updateCmdString(m_processString[i]);
    }

@@ -56,9 +56,9 @@ class dispenser
       DF_ERROR setPump(int mcpAddress, int pin, int direction); //0 as forward and 1 as reverse
       DF_ERROR setFlowsensor(int pinint, int pos);
 
-      DF_ERROR startDispense();
-      DF_ERROR stopDispense(); //reached dispense value
-      DF_ERROR cleanNozzle();
+      DF_ERROR startDispense(int pos);
+      DF_ERROR stopDispense(int pos); //reached dispense value
+      DF_ERROR cleanNozzle(int posW, int posA);
 
       DF_ERROR testSolenoidDispense(int pos);
 

@@ -54,6 +54,7 @@ private:
     idle* idlePage;
 
     // FSM communication
+    FSM_COMM m_fsmMsg; // Sets type of message/command
     bool is_sending_to_FSM;
     QTcpSocket *tcpSocket = nullptr;
     QDataStream in;

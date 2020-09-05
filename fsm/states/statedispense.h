@@ -21,6 +21,7 @@
 #define AIR_CHAR 'a'
 #define WATER_CHAR 'w'
 #define DRINK_CHAR 'd'
+#define CLEAN_CHAR 'c'
 
 class stateDispense : public stateVirtual
 {

@@ -22,7 +22,10 @@ mcpGPIO::mcpGPIO(int i2caddress, int pin)
 	m_nPin = pin;
 	m_nAddress = convert_to_int(i2caddress);
 
-	std::cout << m_nAddress << convert_to_int(m_nPin) << std::endl;
+	debugOutput::sendMessage("i2c to int Address: ", INFO);
+	cout << m_nAddress << endl;;
+	debugOutput::sendMessage("Pin out: ", INFO);
+	cout << convert_to_int(m_nPin) << endl;
 
 	// this->m_mcp = new MCP23017(DEFAULT_BUS, m_nAddress);
 

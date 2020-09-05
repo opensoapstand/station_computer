@@ -42,7 +42,10 @@ bool debugOutput::setMessageLevel(MESSAGE_LEVEL dbgLvl)
 	return dbg_ret;
  }
 
-//!!! this is not threadsafe at the moment
+/* 
+* !!! this is not threadsafe at the moment
+* Has issues spitting out raw addresses; cout on next line for this.
+*/
 void debugOutput::sendMessage(std::string msg, MESSAGE_LEVEL lvl)
 {
 	if (lvl >= debugOutput::m_dbgLvl)

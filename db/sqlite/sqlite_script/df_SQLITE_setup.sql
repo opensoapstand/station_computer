@@ -76,10 +76,17 @@ CREATE TABLE IF NOT EXISTS   sales (
     location_id INT NOT NULL,
     date TIMESTAMP WITH TIME ZONE NOT NULL,
     amount VARCHAR(10),
-    -- pan VARCHAR(20),
-    -- mask pan data FOR MONERIS; removed for security
-    -- reference VARCHAR(30),
+    card_type VARCHAR(10),
+    -- FIXME: Will need better masking card_type FOR MONERIS;
+    transaction_type VARCHAR(8),
+    -- FIXME: Will need better masking transaction_type FOR MONERIS;
+    pan VARCHAR(16),
+    -- FIXME: Will need better masking pan data FOR MONERIS;
+    reference VARCHAR(30),
     -- FOR MONERIS; removed for security
+    mop VARCHAR(1),
+    approval_number VARCHAR(6),
+    SPDH VARCHAR(2),
     FOREIGN KEY(location_id) REFERENCES   machine_location(machine_location_id)
 );
 

@@ -1,9 +1,9 @@
 //***************************************
 //
 // drink.cpp
-// drink class owns the package of beverage use 
-// for the machine.
+// Drink (Model) class definition:
 //
+// Owns current beverage use/transaction.
 // Holds and coordinates values from database
 // to dispense classes.
 //
@@ -42,6 +42,8 @@ class drink
 	void refill(int volume);
 
    private:
+	// TODO: Determine more data to modify per transaction...
+
 	int m_nSlot;
 	string m_name;
 	string m_ingredients;

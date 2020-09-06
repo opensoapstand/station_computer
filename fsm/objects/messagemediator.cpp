@@ -1,14 +1,15 @@
 //***************************************
 //
 // messageMediator.cpp
-// messaging class owns the IP interfaces
+// Messaging IPC Controller and Model 
+// Implementation:
 //
 // Holds reference and cordinates string 
 // commands from GUI, GPIO's and 
 // Database threads
 //
 // created: 12-06-2020
-// by: Denis Londry
+// by: Denis Londry & Li-Yan Tong
 //
 // copyright 2020 by Drinkfill Beverages Ltd
 // all rights reserved
@@ -35,14 +36,17 @@ bool messageMediator::m_commandReady = false;
 string messageMediator::m_processString;
 string messageMediator::m_processCommand;
 
+// CTOR
 messageMediator::messageMediator()
 {
    debugOutput::sendMessage("------messageMediator------", INFO);
+   // TODO: Initialize with Pointer reference to socket...
    // new_sock = new ServerSocket();
    m_fExitThreads = false;
    // m_pKBThread = -1;
 }
 
+// DTOR
 messageMediator::~messageMediator()
 {
    debugOutput::sendMessage("~messageMediator", INFO);
@@ -51,36 +55,32 @@ messageMediator::~messageMediator()
    m_fExitThreads = true;
 }
 
-//needs params, but this will be !!called by states!! in order to send data to receivers
+// Sends a message string to QT through a socket 
+// IPC on Local network
 DF_ERROR messageMediator::sendMessage(string msg)
 {
    DF_ERROR dfError = OK;
 
-  try
-    {
+  try {
       ClientSocket client_socket ( "localhost", 1235 );
       std::string reply;
-      try
-	{
-	  client_socket << msg;
-	  client_socket >> reply;
-	}
-      catch ( SocketException& ) {}
-
+      try {
+	      client_socket << msg;
+	      client_socket >> reply;
+      } catch ( SocketException& ) {
+        // TODO: Should catch no message error...
+      }
       std::cout << "We received this response from the server:\n\"" << reply << "\"\n";;
-
+    } catch ( SocketException& e ) {
+      std::cout << "Connection Exception was caught:" << e.description() << "\n";
     }
-  catch ( SocketException& e )
-    {
-      std::cout << "Exception was caught:" << e.description() << "\n";
-    }   
-
    dfError = ERROR_PTHREADS_IPTHREAD_NAK;
 
    return dfError;
 }
 
-//needs params, but this will be !!called by states!! in order to send data to receivers
+// Sends a progress of dispensing to QT through a socket 
+// TODO: Need to grab information from flow sensor...and update on GUI...
 DF_ERROR messageMediator::sendProgress(int percentComplete)
 {
    DF_ERROR dfError = OK;
@@ -88,6 +88,8 @@ DF_ERROR messageMediator::sendProgress(int percentComplete)
    return dfError;
 }
 
+// Sends an ACK to QT through a socket 
+// TODO: Refactor to work with sendMessage...Code duplication here
 DF_ERROR messageMediator::sendQtACK(string AckOrNak)
 {
    DF_ERROR dfError = OK;
@@ -114,6 +116,8 @@ DF_ERROR messageMediator::sendQtACK(string AckOrNak)
    return dfError;
 }
 
+// Initialize thread to listen to console for input and ipThread to listen
+// for Socket Data.
 DF_ERROR messageMediator::createThreads(pthread_t &kbThread, pthread_t &ipThread)
 {
    debugOutput::sendMessage("messageMediator::createThreads", INFO);
@@ -143,7 +147,7 @@ DF_ERROR messageMediator::createThreads(pthread_t &kbThread, pthread_t &ipThread
    return df_ret;
 }
 
-//up to you I would have a delimiter like ";" and concat to a string. Then when the delim goes analyse or sends to the state
+// Parse a character command and build a command string.
 DF_ERROR messageMediator::updateCmdString(char key)
 {
    DF_ERROR df_ret = ERROR_BAD_PARAMS;
@@ -173,6 +177,8 @@ DF_ERROR messageMediator::updateCmdString(char key)
    return df_ret;
 }
 
+// Parse/verify and incomming processing string
+// then break down into a command string.
 DF_ERROR messageMediator::updateCmdString()
 {
    DF_ERROR df_ret = ERROR_BAD_PARAMS;
@@ -192,6 +198,7 @@ DF_ERROR messageMediator::updateCmdString()
    return df_ret;
 }
 
+// Loop for threaded listening for console input
 void *messageMediator::doKBThread(void *pThreadArgs)
 {
    debugOutput::sendMessage("doKBThread", INFO);
@@ -217,6 +224,7 @@ void *messageMediator::doKBThread(void *pThreadArgs)
    return 0;
 }
 
+// Loop for threaded listening for Socket input
 void *messageMediator::doIPThread(void *pThreadArgs)
 {
    debugOutput::sendMessage("doIPThread", INFO);
@@ -266,6 +274,8 @@ void *messageMediator::doIPThread(void *pThreadArgs)
 
    return 0;
 }
+
+/* ------Getter, Setters and Utilities------ */
 
 string messageMediator::getProcessString()
 {

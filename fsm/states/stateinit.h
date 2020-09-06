@@ -11,7 +11,7 @@
 // Connect or create database.
 //
 // created: 12-06-2020
-// by: Denis Londry
+// by: Denis Londry & Li-Yan Tong
 //
 // copyright 2020 by Drinkfill Beverages Ltd
 // all rights reserved

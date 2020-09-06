@@ -1,7 +1,7 @@
 //***************************************
 //
 // mcpgpio.h
-// implementation of GPIO for i2c gpio extender
+// GPIO Definition for i2c gpio extender chip
 //
 // Chip model: MCP23017 - 16 PIN Addresses
 //
@@ -18,7 +18,7 @@
 #include "../../library/i2c/mcp23017/mcp23017.h"
 
 #define DEFAULT_BUS 2 //i2cdetect tool to find the corresponding value
-					  //Odyessey is 2 and Udoo is 0
+					  //Odyssey is 2 and Udoo is 0
 
 class mcpGPIO : public gpio
 {
@@ -31,6 +31,7 @@ public:
 	DF_ERROR readPin(bool* level);
 	DF_ERROR writePin(bool level);
 
+	// Getters
 	int getMCPAddress();
 	int getMCPPin();
 
@@ -40,6 +41,7 @@ protected:
 	MCP23017 * m_mcp;
 	int m_nAddress; //address of the mcp chip
 
+	// Utility
 	int convert_to_int(int addressNum);
 };
 

@@ -1,7 +1,7 @@
 //***************************************
 //
 // mcpgpio.cpp
-// implementation of GPIO for i2c gpio extender
+// GPIO Implementation for i2c gpio extender chip
 //
 // Chip model: MCP23017 - 16 PIN Addresses
 //
@@ -45,7 +45,7 @@ mcpGPIO::~mcpGPIO()
 	delete (this->m_mcp);
 }
 
-
+// Setter for the pin direction for i2c Chip Address
 DF_ERROR mcpGPIO::setDirection(bool input)
 {
 	debugOutput debugInfo;
@@ -63,7 +63,10 @@ DF_ERROR mcpGPIO::setDirection(bool input)
 	return df_ret;
 }
 
-// may not be use or needed due to tiny xml
+/* 
+ * Read the pin for i2c Chip Address 
+ * XXX: MAY be obolete due to XML parsing
+ */
 DF_ERROR mcpGPIO::readPin(bool * level) 
 {
 	debugOutput::sendMessage("readPin", INFO);
@@ -79,7 +82,10 @@ DF_ERROR mcpGPIO::readPin(bool * level)
 	return df_ret;
 }
 
-// Cassette controller base on high or low signal to acutate
+/*
+ * Write to i2c Chip Address pin on main board
+ * Typically: Cassette controller base on high or low signal to acutate
+ */
 DF_ERROR mcpGPIO::writePin(bool level) 
 {
 	debugOutput::sendMessage("writePin", INFO);
@@ -107,12 +113,16 @@ DF_ERROR mcpGPIO::writePin(bool level)
 	
 }
 
+/*
+ * Monitor i2c Chip Address pin on main board
+ */
 void mcpGPIO::monitorGPIO()
 {
+	// TODO: Implementation for Interrupt!
 	//!!! look at oddyseyx86GPIO for example
 }
 
-// *** Getters/Setters and Utilities below ***
+/* ------ Getters, Setters and Utilities below ------ */
 
 int mcpGPIO::convert_to_int(int addressNum)
 {

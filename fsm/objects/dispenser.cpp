@@ -1,13 +1,14 @@
 //***************************************
 //
 // dispenser.cpp
-// dispenser class owns the package for a dispense.
+// Dispenser (Model) class Implementation: 
 //
+// Manages and owns the package for a dispense.
 // Links to circuit board addresses and
 // holds instructions for dispensing.
 //
 // created: 25-06-2020
-// by: Jason Wang
+// by: Jason Wang & Li-Yan Tong
 //
 // copyright 2020 by Drinkfill Beverages Ltd
 // all rights reserved
@@ -18,6 +19,7 @@
 #define CLEAN_WATER_TIME 5
 #define CLEAN_AIR_TIME 5
 
+// CTOR
 dispenser::dispenser(){
     //default constructor to set all pin to nullptr
     //debugOutput::sendMessage("dispenser", INFO);
@@ -32,6 +34,7 @@ dispenser::dispenser(){
         m_pPump[i] = nullptr;
 }
 
+// DTOR
 dispenser::~dispenser(){
     debugOutput::sendMessage("~dispenser", INFO);
     // delete [] m_pDrink;
@@ -41,11 +44,12 @@ dispenser::~dispenser(){
     // delete [] m_pPump;
 }
 
+// TODO: Check and remove; stateinit should handle cassettes
 void dispenser::initDispenser(int slot){
 
 }
 
-//Setters
+
 DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
 {
     debugOutput::sendMessage("-----dispenser::setSolenoid-----", INFO);
@@ -182,6 +186,8 @@ DF_ERROR dispenser::testSolenoidDispense(int pos){
 
     return e_ret = OK;
 }
+
+/* ------Getters, Setters and Utilities------ */
 
 int dispenser::getI2CAddress(int pos){
     return m_pSolenoid[pos]->getMCPAddress();

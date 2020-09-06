@@ -1,7 +1,8 @@
 //***************************************
 //
 // oddyseyX86gpio.h
-// implementation of GPIO for native x86 pins on Oddysey board
+// GPIO Definitions for 
+// NATIVE x86 pins on Oddysey board
 //
 // created: 15-06-2020
 // by: Denis Londry

@@ -1,8 +1,9 @@
 //***************************************
 //
 // debugOutput.cpp
-// threadsafe debug output class
-// outputs to console, override for other systems
+// DEBUG output Implementation:
+// threadsafe outputs to console and 
+// override for other systems
 //
 // created: 15-06-2020
 // by: Denis Londry
@@ -21,17 +22,20 @@ using namespace std;
 const string m_lvlArray[] = { "INFO", "WARNING", "ERROR" };
 MESSAGE_LEVEL debugOutput::m_dbgLvl = INFO;
 
+// Default CTOR
 debugOutput::debugOutput()
 {
 	
 }
 
-
+// DTOR
 debugOutput::~debugOutput()
 {
 
 }
 
+// Setter for Debugger Console 
+// MESSAGELEVEL: Debug message
 bool debugOutput::setMessageLevel(MESSAGE_LEVEL dbgLvl)
  {
 	bool dbg_ret = false;

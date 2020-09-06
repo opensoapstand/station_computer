@@ -11,7 +11,7 @@
 // Connect or create database.
 //
 // created: 12-06-2020
-// by: Denis Londry
+// by: Denis Londry & Li-Yan Tong
 //
 // copyright 2020 by Drinkfill Beverages Ltd
 // all rights reserved
@@ -23,6 +23,7 @@
 
 #define INIT_STRING "Init"
 
+// Default Ctor
 stateInit::stateInit()
 {
    //m_stateNext = static_cast<DF_FSM>(DF_FSM::INIT+1);
@@ -33,16 +34,19 @@ stateInit::stateInit()
    // }
 }
 
+// CTOR Linked to IPC
 stateInit::stateInit(messageMediator * message)
 {
 
 }
 
+// DTOR
 stateInit::~stateInit()
 {
    //delete stuff
 }
 
+// Overload for Debugger output
 string stateInit::toString()
 {
    return INIT_STRING;
@@ -81,7 +85,7 @@ DF_ERROR stateInit::onEntry()
    return e_ret;
 }
 
-//start to initialize all related hardware
+// Initialize all related hardware
 DF_ERROR stateInit::onAction(dispenser* cassettes)
 {
    //need to check with tinyXML for hardware info
@@ -118,7 +122,8 @@ DF_ERROR stateInit::onExit()
    return e_ret;
 }
 
-//extracting the id of the dispenser
+// Set Dispenser Cassettes:
+// Extract addressing id from XML and map to dispenser
 DF_ERROR stateInit::setDispenserId()
 {
    DF_ERROR e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
@@ -142,6 +147,8 @@ DF_ERROR stateInit::setDispenserId()
    return e_ret;
 }
 
+// Set Solenoids on Dispenser Cassettes
+// Extract addressing id from XML and map to Solenoid
 DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx, dispenser cassettes[])
 {
    DF_ERROR e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
@@ -200,6 +207,8 @@ DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispens
    return e_ret;
 }
 
+// Set Flow Sensors
+// Extract addressing id from XML and map to Flowsensor
 DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx, dispenser cassettes[])
 {
    DF_ERROR e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
@@ -254,6 +263,8 @@ DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispe
    return e_ret;
 }
 
+// Set Dispenser Pumps
+// Extract addressing id from XML and map to Still Pumps
 DF_ERROR stateInit::setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser cassettes[])
 {
    DF_ERROR e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
@@ -311,6 +322,9 @@ DF_ERROR stateInit::setDispenserPump(TiXmlElement *dispenserEle, int dispenserId
    return e_ret;
 }
 
+// Set Dispenser Button
+// Extract addressing id from XML and map to Dispensing Button
+// BUTTON REFERENCE in State Virtual Required due to LED Arduino control.
 DF_ERROR stateInit::setButton(TiXmlElement *hardwareEle, int dispenserIdx)
 {
    DF_ERROR e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
@@ -318,13 +332,12 @@ DF_ERROR stateInit::setButton(TiXmlElement *hardwareEle, int dispenserIdx)
 
    if(hardwareEle->FirstChildElement(BUTTON_STRING))
    {
-      //get the node of flowsnesor
+      // Get the button node
       l_pButton = hardwareEle->FirstChildElement(BUTTON_STRING); 
-   } 
-   else
+   } else
    {
-      debugOutput::sendMessage("Button element is null", INFO);
-      e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT; //no button should return error
+      debugOutput::sendMessage("Button element is null", ERROR);
+      e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT; // XML missing button
       return e_ret;
    }
    
@@ -382,7 +395,7 @@ DF_ERROR stateInit::setButton(TiXmlElement *hardwareEle, int dispenserIdx)
    return e_ret;
 }
 
-//return the proper string regarding to solenoid from tinyXML
+// Return the proper string regarding to solenoid from tinyXML
 const char* stateInit::getXML(const char* subHeader, TiXmlElement *childEle)
 {
    TiXmlElement *type = childEle->FirstChildElement(subHeader);
@@ -402,7 +415,8 @@ const char* stateInit::getXML(const char* subHeader, TiXmlElement *childEle)
    return char_ret;
 }
 
-
+// Initilization function for all dispensers...mainly function calls
+// XML and GPIO mapping.
 dispenser* stateInit::dispenserSetup()
 {
    //need to check with tinyXML for hardware info

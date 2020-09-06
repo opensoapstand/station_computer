@@ -1,10 +1,10 @@
 //***************************************
 //
 // gpio.h
-// class to abstract gpios
+// GPIO Abstract Class Implementation
 //
 // created: 15-06-2020
-// by: Denis Londry
+// by: Denis Londry & Li-Yan Tong
 //
 // copyright 2020 by Drinkfill Beverages Ltd
 // all rights reserved
@@ -28,6 +28,7 @@ gpio::~gpio()
 	//kill thread!
 }
 
+// Setter for interrupt signals to GPIO
 DF_ERROR gpio::setInterrupt(DF_ERROR(*pf)())
 {
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
@@ -40,7 +41,8 @@ DF_ERROR gpio::setInterrupt(DF_ERROR(*pf)())
 	return df_ret;;
 }
 
-//call this with code that looks like
+// TODO: Threaded GPIO interrupt...
+// call this with code that looks like
 // std::thread tGPIOListener tgpio = <gpioinstance>->listener();
 // tgpio.join();
 /*std::thread gpio::listener()

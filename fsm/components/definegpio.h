@@ -1,13 +1,15 @@
 //***************************************
 //
-// pinout.h
-// define all pin related to i2c/gpio readings
+// definegpio.h
+// i2c/GPIO Definition (Model Class):
+// Address assignment/reference for pins 
+// and readings
 //
 // TODO: May not be required due to xml
 //       data storage
 //
 // created: 10-06-2020
-// by: <author>
+// by: Jason Wang & Li-Yan Tong
 //
 // copyright 2020 by Drinkfill Beverages Ltd
 // all rights reserved
@@ -75,7 +77,8 @@
 #define pump9_F 2206
 #define pump9_R 2207
 
-//future digital control pin
+// Future digital control pin
+// i.e. Temperature and level sensors
 #define FC1 2208
 #define FC2 2209
 #define FC3 2210
@@ -84,7 +87,7 @@
 #define FC6 2213
 #define FC7 2214
 
-
+// OLD Implementation.  XML to replace this.
 /*
 int drinkP[] = {drink1, drink2, drink3, drink4, drink5, drink6, drink7, drink8, drink9};
 

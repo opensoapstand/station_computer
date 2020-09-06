@@ -1,7 +1,7 @@
 //***************************************
 //
 // gpio.h
-// class to abstract gpios
+// GPIO Abstract Class Definition
 //
 // created: 15-06-2020
 // by: Denis Londry
@@ -26,18 +26,19 @@ public:
 	//gpio(int pin); //non i2c gpio
 	virtual ~gpio() = 0;
 
+	// GPIO Initilization
 	virtual DF_ERROR setDirection(bool input) = 0;
 	virtual DF_ERROR readPin(bool* level) = 0;
 	virtual DF_ERROR writePin(bool level) = 0;
 
+	// Getters
 	virtual int getMCPAddress() {};
 	virtual int getMCPPin() {};
 
+	// Functions for Threaded GPIO Interrupts
 	DF_ERROR setInterrupt(DF_ERROR(*pf)()); 
-
 	std::thread listener();
 	void stopListener() { m_stop = true; };
-
 
 protected:
 	int m_nPin;

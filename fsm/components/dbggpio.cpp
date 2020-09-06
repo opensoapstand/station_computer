@@ -1,31 +1,38 @@
 //***************************************
 //
-// dgbgpio.h.h
-// system level child class that are use for debug only
+// dgbgpio.h
+// GPIO Debugger Implementation:
+// System level child class of GPIO
 //
 // created: 19-06-2020
-// by: Jason Wang
+// by: Jason Wang & Li-Yan Tong
+//
 //
 // copyright 2020 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
 #include "dbggpio.h"
 
+// Default Ctor
 dbggpio::dbggpio()
 {
 
 }
 
+// Ctor with Pin Address Reference
 dbggpio::dbggpio(int address)
 {
 
 }
 
+// Dtor
 dbggpio::~dbggpio()
 {
 
 }
 
+// XXX: This does not have a reference anywhere!
+// Setter for the pin direction
 DF_ERROR dbggpio::setDirection(bool input)
 {
 	debugOutput debugInfo;
@@ -42,6 +49,8 @@ DF_ERROR dbggpio::setDirection(bool input)
 	return df_ret;
 }
 
+// XXX: This does not have a reference anywhere!
+// Getter for the pin HIGH or LOW
 DF_ERROR dbggpio::readPin(bool * level)
 {
 	debugOutput debugInfo;
@@ -58,6 +67,8 @@ DF_ERROR dbggpio::readPin(bool * level)
 	return df_ret;
 }
 
+// XXX: This does not have a reference anywhere!
+// Acuation for the pin; true = HIGH - false = LOW
 DF_ERROR dbggpio::writePin(bool level)
 {
 	debugOutput debugInfo;

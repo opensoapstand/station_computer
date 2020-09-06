@@ -4,7 +4,7 @@
 // idle state class
 //
 // created: 29-06-2020
-// by: Jason Wang
+// by: Jason Wang & Li-Yan Tong
 //
 // copyright 2020 by Drinkfill Beverages Ltd
 // all rights reserved

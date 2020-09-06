@@ -1,7 +1,8 @@
 //***************************************
 //
 // oddyseyX86gpio.cpp
-// implementation of GPIO for native x86 pins on Oddysey board
+// GPIO implementation for 
+// NATIVE x86 pins on Oddysey board
 //
 // created: 15-06-2020
 // by: Denis Londry
@@ -29,11 +30,18 @@
 #define INPUT 1
 #define OUTPUT 0
 
+// Default CTOR
 oddyseyx86GPIO::oddyseyx86GPIO()
 {
 
 }
 
+/* 
+ * CTOR with Pin reference
+ * Typically for Initializing sensors directly...Flow Sensors for now.
+ * SEE Manual, Use last three digits to initialize class
+ * i.e. GPIO 335; new oddyseyx86GPIO(335);
+ */
 oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
 {
 	debugOutput::sendMessage("------oddyseyx86GPIO------", INFO);
@@ -55,7 +63,7 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
 	return;
 }
 
-
+// DTOR
 oddyseyx86GPIO::~oddyseyx86GPIO()
 {
 	debugOutput::sendMessage("~oddyseyx86GPIO", INFO);
@@ -74,6 +82,7 @@ oddyseyx86GPIO::~oddyseyx86GPIO()
 	return;
 }
 
+// Setter for flow sensor on Odyssey GPIO Pin
 DF_ERROR oddyseyx86GPIO::setFlowPin(int pinNumber)
 {
 	DF_ERROR df_Ret = ERROR_BAD_PARAMS;
@@ -85,6 +94,9 @@ DF_ERROR oddyseyx86GPIO::setFlowPin(int pinNumber)
 	return df_Ret;
 }
 
+// Setter for Direction of flow sensor on Odyssey GPIO Pin
+// Writes "in" into a GPIO direction file while 
+// reading input and "out" otherwise.
 DF_ERROR oddyseyx86GPIO::setDirection(bool input)
 {
 	debugOutput::sendMessage("setDirection", INFO);
@@ -110,6 +122,9 @@ DF_ERROR oddyseyx86GPIO::setDirection(bool input)
 	return df_ret;
 }
 
+// Checks for Level sensor on Waste tank...
+// TODO: Implementation is commented out and needs testing.;
+//		 A SPECIFIC function name change REQUIRED. i.e. readWastePinLevel
 DF_ERROR oddyseyx86GPIO::readPin(bool * level)
 {
 	debugOutput::sendMessage("readPin", INFO);
@@ -161,6 +176,8 @@ DF_ERROR oddyseyx86GPIO::readPin(bool * level)
 	return df_ret;
 }
 
+// Flags Level sensor on Waste tank...
+// TODO: A SPECIFIC function name change REQUIRED. i.e. triggersWasteLevel
 DF_ERROR oddyseyx86GPIO::writePin(bool level)
 {
 	debugOutput::sendMessage("writePin", INFO);
@@ -184,6 +201,7 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
 	return df_ret;
 }
 
+// Threaded function call to monitor Odyssecy GPIO pin activity.
 void oddyseyx86GPIO::monitorGPIO()
 {
 	debugOutput::sendMessage("monitorGPIO", INFO);  //nuke this later it will cause so much spam
@@ -213,6 +231,8 @@ void oddyseyx86GPIO::monitorGPIO()
 
 }
 
+// Utility
+// TODO: Should be interpreting for flow sensor buffer...this does not seem to provide value...
 string oddyseyx86GPIO::command_to_string(string cmd) {
 
   string data;

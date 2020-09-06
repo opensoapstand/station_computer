@@ -1,8 +1,9 @@
 //***************************************
 //
 // debugOutput.h
-// threadsafe debug output class
-// outputs to console, override for other systems
+// DEBUG output Definition:
+// threadsafe outputs to console and 
+// override for other systems
 //
 // created: 15-06-2020
 // by: Denis Londry
@@ -17,6 +18,7 @@
 
 using namespace std;
 
+// Dictionary for Console Output Message Level
 typedef enum MESSAGE_LEVEL {
 	INFO,
 	WARN,
@@ -34,7 +36,6 @@ public:
 	//setter
 	static bool setMessageLevel(MESSAGE_LEVEL dbgLvl);	
 	static void sendMessage(string msg, MESSAGE_LEVEL lvl);
-
 
 	static MESSAGE_LEVEL m_dbgLvl;
 protected:

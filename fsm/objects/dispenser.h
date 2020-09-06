@@ -70,9 +70,12 @@ class dispenser
    private:
       drink *m_pDrink;
 
+      // Pointers to Addresses set in State Init
+      // Button reference m_pButton[1] in stateVirtual; IPC shared due to Arduino!
       gpio *m_pSolenoid[NUM_SOLENOID]; //air,drink, and water solenoid control
       gpio *m_pFlowsenor[NUM_FLOWSENSOR];
       gpio *m_pPump[NUM_PUMP]; //forward and reverse pin control
+
 };
 
 #endif

@@ -3,11 +3,12 @@
 // statedispense.h
 // dispense state class
 //
-// Recieves and interprets string command from FSM.
+// Recieves and interprets string command 
+// from messageMediator in FSM.
 // Routes dispense instruction to GPIO's
 //
 // created: 26-06-2020
-// by: Jason Wang
+// by: Jason Wang & Li-Yan Tong
 //
 // copyright 2020 by Drinkfill Beverages Ltd
 // all rights reserved
@@ -18,22 +19,25 @@
 
 #define DISPENSE_STRING "Dispense"
 
+// CTOR
 stateDispense::stateDispense()
 {
 
 }
 
+// CTOR Linked to IPC
 stateDispense::stateDispense(messageMediator * message){
 
    //debugOutput::sendMessage("stateDispense(messageMediator * message)", INFO);
 }
 
-
+// DTOR
 stateDispense::~stateDispense()
 {
 
 }
 
+// Overload for Debugger output
 string stateDispense::toString()
 {
    return DISPENSE_STRING;
@@ -41,7 +45,7 @@ string stateDispense::toString()
 
 /*
  * Called from FSM loop to check state before inAction execution
- // TODO: Create State Class to hold this function definition
+ * TODO: Create State Class to hold this function definition
  */ 
 DF_ERROR stateDispense::onEntry()
 {
@@ -171,10 +175,12 @@ DF_ERROR stateDispense::onAction(dispenser* cassettes)
    return e_ret;
 }
 
+// Actions on leaving Dispense state
 DF_ERROR stateDispense::onExit()
 {
    DF_ERROR e_ret  = OK;
 
+   // TODO: Does not seem to advance to Idle again...
    m_state = DISPENSE;
    //m_nextState = INIT; //go back for now
 

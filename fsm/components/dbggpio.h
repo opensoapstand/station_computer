@@ -1,7 +1,8 @@
 //***************************************
 //
-// dgbgpio.h.h
-// system level child class that are use for debug only
+// dgbgpio.h
+// GPIO Debugger Definition:
+// System level child class of GPIO
 //
 // created: 19-06-2020
 // by: Jason Wang

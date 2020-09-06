@@ -8,7 +8,7 @@
 // HACK: JW What is difference between this and Idle?
 //
 // created: 26-06-2020
-// by: Jason Wang
+// by: Jason Wang & Li-Yan Tong
 //
 // copyright 2020 by Drinkfill Beverages Ltd
 // all rights reserved
@@ -18,22 +18,25 @@
 
 #define DISPENSE_IDLE_STRING  "Dispense Idle"
 
+// Default CTOR
 stateDispenseIdle::stateDispenseIdle()
 {
 
 }
 
+// CTOR Linked to IPC
 stateDispenseIdle::stateDispenseIdle(messageMediator * message){
    
    //debugOutput::sendMessage("stateDispenseIdle(messageMediator * message)", INFO);
 }
 
-
+// DTOR
 stateDispenseIdle::~stateDispenseIdle()
 {
 
 }
 
+// Overload for Debugger output
 string stateDispenseIdle::toString()
 {
    return DISPENSE_IDLE_STRING;
@@ -50,6 +53,7 @@ DF_ERROR stateDispenseIdle::onEntry()
    return e_ret;
 }
 
+// Idles after proper initilization;  Waits for a command from messageMediator
 DF_ERROR stateDispenseIdle::onAction(dispenser* cassettes)
 {
    debugOutput debugInfo;
@@ -81,6 +85,7 @@ DF_ERROR stateDispenseIdle::onAction(dispenser* cassettes)
     return df_state_ret;
 }*/
 
+// Advances to Dispense State with successful onAction()
 DF_ERROR stateDispenseIdle::onExit()
 {
     debugOutput debugInfo;

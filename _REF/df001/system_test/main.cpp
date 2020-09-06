@@ -218,7 +218,8 @@ bool inputType(drink *drinkArray, char *inputArray)
         cout << " Pin:" << drinkArray->getDrinkPin_pin();
         cout << " Flow Sensor Pin:" << drinkArray->getFlowSensor_pin() << endl;
 
-        flowsensor.read_FlowSensor(364, 1);
+        // FIXME: The flowsensor kills dispensing!  Cannot read and stops whole process!
+        // flowsensor.read_FlowSensor(364, 1);
 
         //gpioControl.setPinMode_out(drinkArray->getDrinkPinAddress(), drinkArray->getDrinkPin_pin());
         gpioControl.setPin_on(drinkArray->getDrinkPinAddress(), drinkArray->getDrinkPin_pin());

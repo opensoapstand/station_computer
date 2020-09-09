@@ -106,7 +106,7 @@ uint8_t MCP23017::readRegister(uint8_t addr)
     }
     // For debugging
     // printf("Device 0x%02X returned 0x%02X from register 0x%02X\n", kI2CAddress, toReturn, readRegister);
-    //std::cout << std::hex << "Device: " << static_cast<int>(kI2CAddress) << " returned " << toReturn << " from register "<< &MCP23017::readRegister << std::endl;
+    std::cout << std::hex << "Device: " << static_cast<int>(kI2CAddress) << " returned " << toReturn << " from register "<< &MCP23017::readRegister << std::endl;
     return toReturn ;
 }
 
@@ -116,7 +116,7 @@ uint8_t MCP23017::readRegister(uint8_t addr)
 uint8_t MCP23017::writeRegister(uint8_t addr, uint8_t writeValue)
 {   // For debugging:
     // printf("Wrote: 0x%02X to register 0x%02X \n",writeValue, writeRegister) ;
-    std::cout << std::hex << "Wrote: " << static_cast<int>(writeValue) << " to register " << &MCP23017::writeRegister << std::endl;
+    std::cout << std::hex << "WRITE REGISTER Wrote: " << static_cast<int>(writeValue) << " to register " << &MCP23017::writeRegister << std::endl;
 
 	std::cout << "Write to I2C Device: " << kI2CAddress <<  kI2CBus << std::endl;
 	std::cout << "Check: " << kI2CFileDescriptor <<  static_cast<int>(addr) <<  static_cast<int>(writeValue) << std::endl;
@@ -241,6 +241,7 @@ void MCP23017::writeGPIOAB(uint16_t ba) {
 }
 
 void MCP23017::digitalWrite(uint8_t pin, uint8_t d) {
+	std::cout << "DIGITAL WRITE: " << std::endl;
 	uint8_t gpio;
 	uint8_t bit=bitForPin(pin);
 

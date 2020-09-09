@@ -31,6 +31,9 @@ public:
 	virtual DF_ERROR readPin(bool* level) = 0;
 	virtual DF_ERROR writePin(bool level) = 0;
 
+	// virtual DF_ERROR setPin_on(int address, int pinNum);
+	// virtual DF_ERROR setPin_off(int address, int pinNum);
+
 	// Getters
 	virtual int getMCPAddress() {};
 	virtual int getMCPPin() {};

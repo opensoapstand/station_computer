@@ -198,6 +198,7 @@ bool inputNumber(drink *drinkArray[Num_Cassettes], char *inputArray)
 
 bool inputType(drink *drinkArray, char *inputArray)
 {
+    // Prime the Button.
     gpioControl.setPinMode_out(buttonAddr, buttonPin);
     gpioControl.setPin_on(buttonAddr, buttonPin);
 

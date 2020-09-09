@@ -136,9 +136,11 @@ DF_ERROR dispenser::startDispense(int pos){
     }
 
     // Dispense the Drink
+    //m_pSolenoid[pos]->setPin_on(m_pSolenoid[pos]->getMCPAddress(), m_pSolenoid[pos]->getMCPPin());
     m_pSolenoid[pos]->writePin(HIGH);
     sleep(ACTIVATION_TIME);
     m_pSolenoid[pos]->writePin(LOW);
+    //m_pSolenoid[pos]->setPin_off(m_pSolenoid[pos]->getMCPAddress(), m_pSolenoid[pos]->getMCPPin());
 
     return e_ret = OK;
 }

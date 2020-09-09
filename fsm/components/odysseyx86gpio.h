@@ -30,6 +30,8 @@ public:
 	DF_ERROR setDirection(bool input);
 	DF_ERROR readPin(bool* level);
 	DF_ERROR writePin(bool level);
+	// DF_ERROR setPin_on(int address, int pinNum);
+	// DF_ERROR setPin_off(int address, int pinNum);
 
 protected:
 	void monitorGPIO();

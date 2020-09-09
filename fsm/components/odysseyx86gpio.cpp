@@ -30,6 +30,13 @@
 #define INPUT 1
 #define OUTPUT 0
 
+#define X20 20
+#define X21 21
+#define X22 22
+
+#define HIGH = 1
+#define LOW = 0
+
 // Default CTOR
 oddyseyx86GPIO::oddyseyx86GPIO()
 {
@@ -180,7 +187,7 @@ DF_ERROR oddyseyx86GPIO::readPin(bool * level)
 // TODO: A SPECIFIC function name change REQUIRED. i.e. triggersWasteLevel
 DF_ERROR oddyseyx86GPIO::writePin(bool level)
 {
-	debugOutput::sendMessage("writePin", INFO);
+	debugOutput::sendMessage("OdysseyX86 writePin", INFO);
 	DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
 	int fd, len;
 	char buf[MAX_BUF];
@@ -200,6 +207,51 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
 	
 	return df_ret;
 }
+
+// DF_ERROR oddyseyx86GPIO::setPin_on(int address, int pinNum){
+
+// 	this->digi
+//     if(address == X20)
+//     {
+//         solenoid_1.digitalWrite(pinNum, HIGH);
+
+//         std::clog << "Address:" << address << " Pin: " << pinNum << " is on\n";
+//     }
+//     else if (address == X21){
+//         solenoid_2.digitalWrite(pinNum, HIGH);
+//         std::clog << "Address:" << address << " Pin: " << pinNum << " is on\n";
+
+//     }
+//     else if (address == X22){
+//         pump.digitalWrite(pinNum, HIGH);
+//         std::clog << "Address:" << address << " Pin: " << pinNum << " is on\n";
+
+//     }
+//     else
+//     {
+//         std::clog << "i2c address not available\n";
+//     }  
+// }
+
+// DF_ERROR oddyseyx86GPIO::setPin_off(int address, int pinNum){
+//     if(address == X20)
+//     {
+//         solenoid_1.digitalWrite(pinNum, LOW);
+//         std::clog << "Address:" << address << " Pin: " << pinNum << " is off\n";
+//     }
+//     else if (address == X21){
+//         solenoid_2.digitalWrite(pinNum, LOW);
+//         std::clog << "Address:" << address << " Pin: " << pinNum << " is off\n";
+//     }
+//     else if (address == X22){
+//         pump.digitalWrite(pinNum, LOW);
+//         std::clog << "Address:" << address << " Pin: " << pinNum << " is off\n";
+//     }
+//     else
+//     {
+//         std::clog << "i2c address not available\n";
+//     }  
+// }
 
 // Threaded function call to monitor Odyssecy GPIO pin activity.
 void oddyseyx86GPIO::monitorGPIO()

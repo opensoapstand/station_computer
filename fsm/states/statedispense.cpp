@@ -143,7 +143,7 @@ DF_ERROR stateDispense::onAction(dispenser* cassettes)
       else if(DRINK_CHAR == solenoidChar)
       {
          debugOutput::sendMessage("------Dispensing Drink------", INFO);
-         debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> DRINK", INFO);
+         // debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> DRINK", INFO);
          debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
          // cassettes[pos].testSolenoidDispense(DRINK);

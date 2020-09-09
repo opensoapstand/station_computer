@@ -88,7 +88,7 @@ DF_ERROR mcpGPIO::readPin(bool * level)
  */
 DF_ERROR mcpGPIO::writePin(bool level) 
 {
-	debugOutput::sendMessage("writePin", INFO);
+	debugOutput::sendMessage("MCPGPIO writePin", INFO);
 
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
@@ -99,7 +99,11 @@ DF_ERROR mcpGPIO::writePin(bool level)
 		return df_ret; //pin number out of range
 	}
 
+	cout << level << endl;
+	cout << HIGH << endl;
+
 	if (HIGH == level) {
+		cout << "Got HIGH signal" << endl;
 		this->m_mcp->digitalWrite(m_nPin, HIGH);   //relies on bool to int
 		df_ret = OK;
 	}

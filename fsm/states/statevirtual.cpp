@@ -51,3 +51,8 @@ DF_FSM stateVirtual::getCurrentState()
 //    gpio* temp = cassettes[pos]->;
 //    return ;
 // }
+
+gpio* stateVirtual::getButton()
+{
+   return m_pButton[NUM_BUTTON];
+}

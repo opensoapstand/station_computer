@@ -41,6 +41,7 @@ class stateVirtual
         virtual dispenser* dispenserSetup() = 0;
 
         gpio* getSolenoid(int pos, int type);
+        gpio* getButton();
 
     protected:
         DF_FSM  m_state;

@@ -19,10 +19,25 @@
 #define CLEAN_WATER_TIME 5
 #define CLEAN_AIR_TIME 5
 
-// CTOR
 dispenser::dispenser(){
     //default constructor to set all pin to nullptr
     //debugOutput::sendMessage("dispenser", INFO);
+    m_pDrink = nullptr;
+
+    for (int i = 0; i < NUM_SOLENOID; i++)
+        m_pSolenoid[i] = nullptr; 
+      
+    m_pFlowsenor[NUM_FLOWSENSOR] = nullptr;
+      
+    for (int i = 0; i < NUM_PUMP; i++)
+        m_pPump[i] = nullptr;
+}
+
+// CTOR
+dispenser::dispenser(gpio* ButtonReference){
+    //default constructor to set all pin to nullptr
+    //debugOutput::sendMessage("dispenser", INFO);
+    m_pButton[0] = ButtonReference;
     m_pDrink = nullptr;
 
     for (int i = 0; i < NUM_SOLENOID; i++)
@@ -129,6 +144,10 @@ DF_ERROR dispenser::setPump(int mcpAddress, int pin, int direction)
 DF_ERROR dispenser::startDispense(int pos){
     DF_ERROR e_ret = ERROR_MECH_DRINK_FAULT;
 
+    // Prime Button
+    // FIXME: Magic Number Button
+    e_ret = connectButton();
+
     // Solenoid Position Check
     if(pos != DRINK) {
         e_ret = ERROR_ELEC_PIN_DISPENSE;
@@ -136,12 +155,13 @@ DF_ERROR dispenser::startDispense(int pos){
     }
 
     // Dispense the Drink
-    //m_pSolenoid[pos]->setPin_on(m_pSolenoid[pos]->getMCPAddress(), m_pSolenoid[pos]->getMCPPin());
     m_pSolenoid[pos]->writePin(HIGH);
     sleep(ACTIVATION_TIME);
     m_pSolenoid[pos]->writePin(LOW);
-    //m_pSolenoid[pos]->setPin_off(m_pSolenoid[pos]->getMCPAddress(), m_pSolenoid[pos]->getMCPPin());
 
+    // Disable Button
+    e_ret = disconnectButton();
+    
     return e_ret = OK;
 }
 
@@ -150,6 +170,14 @@ DF_ERROR dispenser::stopDispense(int pos){
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
     return e_ret = OK;
+}
+
+DF_ERROR dispenser::connectButton(){
+    return m_pButton[0]->writePin(HIGH);
+}
+
+DF_ERROR dispenser::disconnectButton(){
+    return m_pButton[0]->writePin(LOW);
 }
 
 // Cleans the nozzle by dispensing Water followed by Air
@@ -190,7 +218,6 @@ DF_ERROR dispenser::testSolenoidDispense(int pos){
 }
 
 /* ------Getters, Setters and Utilities------ */
-
 int dispenser::getI2CAddress(int pos){
     return m_pSolenoid[pos]->getMCPAddress();
 }

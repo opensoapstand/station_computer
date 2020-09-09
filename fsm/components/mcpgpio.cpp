@@ -34,6 +34,11 @@ mcpGPIO::mcpGPIO(int i2caddress, int pin)
 
 	//may need to modify the source file to ensure proper error is identified
 	this->m_mcp->openI2C(); 
+
+	// if(m_nAddress == 20 && m_nPin = 0) {
+	// 	// this->m_mcp->digitalWrite(HIGH);
+	// }
+
 }
 
 // DTOR
@@ -114,7 +119,6 @@ DF_ERROR mcpGPIO::writePin(bool level)
 	}
 
 	return df_ret;
-	
 }
 
 /*

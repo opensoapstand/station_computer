@@ -35,9 +35,10 @@ class stateDispense : public stateVirtual
         DF_ERROR onEntry();
         DF_ERROR onAction(dispenser* cassettes);
         DF_ERROR onExit();
-
-        dispenser* dispenserSetup() {};
-
+        
+        // FIXME: Issues with Initializing with Button...
+        // dispenser* dispenserSetup(getButton()) {};
+        dispenser* dispenserSetup(){};
 
     private:
     

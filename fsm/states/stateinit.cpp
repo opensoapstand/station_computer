@@ -158,9 +158,7 @@ DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispens
    {
       //get the node of solenoid
       l_pSolenoid = dispenserEle->FirstChildElement(SOLENOID_STRING); 
-   } 
-   else
-   {
+   } else {
       debugOutput::sendMessage("Solenoid element is null", INFO);
       e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
       return e_ret;
@@ -361,6 +359,8 @@ DF_ERROR stateInit::setButton(TiXmlElement *hardwareEle, int dispenserIdx)
             if((X20 <= address_num &&  X22 >= address_num) && (MCP_PIN_START <= pin_num && MPC_PIN_END >= pin_num))
             {
                m_pButton[l_pos] = new mcpGPIO(address_num, pin_num);
+               debugOutput::sendMessage("Set button High", PIN_CHANGE);
+               m_pButton[l_pos]->writePin(HIGH);
                e_ret = OK;
                return e_ret;
             }

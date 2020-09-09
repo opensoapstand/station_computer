@@ -253,6 +253,14 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
 //     }  
 // }
 
+DF_ERROR oddyseyx86GPIO::setButton_on(){
+
+}
+
+DF_ERROR oddyseyx86GPIO::setButton_off(){
+
+}
+
 // Threaded function call to monitor Odyssecy GPIO pin activity.
 void oddyseyx86GPIO::monitorGPIO()
 {

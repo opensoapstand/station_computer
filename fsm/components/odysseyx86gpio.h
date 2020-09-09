@@ -33,6 +33,9 @@ public:
 	// DF_ERROR setPin_on(int address, int pinNum);
 	// DF_ERROR setPin_off(int address, int pinNum);
 
+	DF_ERROR setButton_on();
+	DF_ERROR setButton_off();
+
 protected:
 	void monitorGPIO();
 	string command_to_string(string cmd);

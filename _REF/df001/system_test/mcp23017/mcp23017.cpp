@@ -55,8 +55,10 @@ bool MCP23017::openI2C()
     }
     // set defaults!
 	// all inputs on port A and B
-	writeRegister(MCP23017_IODIRA,0b11111110);
-	writeRegister(MCP23017_IODIRB,0b11111110);
+	// writeRegister(MCP23017_IODIRA,0b11111110);
+	// writeRegister(MCP23017_IODIRB,0b11111110);
+	writeRegister(MCP23017_IODIRA,0b00000000);
+	writeRegister(MCP23017_IODIRB,0b00000000);
     return true ;
 }
 

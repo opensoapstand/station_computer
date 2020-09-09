@@ -60,9 +60,16 @@ bool MCP23017::openI2C()
     // set defaults!
 	// all inputs on port A and B
 	debugOutput::sendMessage("openI2C: write register port A", INFO);
-	writeRegister(MCP23017_IODIRA,0b11111110);
+
+	// writeRegister(MCP23017_IODIRA,0b11111110);
+
+	// Sets Pins to Output write to 0
+	writeRegister(MCP23017_IODIRA,0b00000000);
 	debugOutput::sendMessage("openI2C: write register port B", INFO);
-	writeRegister(MCP23017_IODIRB,0b11111110);
+	writeRegister(MCP23017_IODIRB,0b00000000);
+
+	// writeRegister(MCP23017_IODIRB,0b11111110);
+
     return true ;
 }
 

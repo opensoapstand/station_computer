@@ -69,7 +69,12 @@ void i2cGpios::setPin_on(int address, int pinNum){
     {
         solenoid_1.digitalWrite(pinNum, HIGH);
 
-        std::clog << "Address:" << address << " Pin: " << pinNum << " is on\n";
+        if(pinNum == 0) {
+            std::clog << "Button Press!" << address << " Pin: " << pinNum << " is on\n";            
+        } else  {
+            std::clog << "Address:" << address << " Pin: " << pinNum << " is on\n";
+        }
+
     }
     else if (address == X21){
         solenoid_2.digitalWrite(pinNum, HIGH);

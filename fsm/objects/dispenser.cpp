@@ -22,6 +22,8 @@
 dispenser::dispenser(){
     //default constructor to set all pin to nullptr
     //debugOutput::sendMessage("dispenser", INFO);
+
+    // TODO: Need to build Drink Object reference
     m_pDrink = nullptr;
 
     for (int i = 0; i < NUM_SOLENOID; i++)
@@ -140,6 +142,22 @@ DF_ERROR dispenser::setPump(int mcpAddress, int pin, int direction)
     return e_ret;
 }
 
+DF_ERROR dispenser::startPump()
+{
+    debugOutput::sendMessage("-----Start Pump-----", INFO);   
+    // m_pPump[0]->writePin(HIGH);
+    // m_pPump[1]->writePin(LOW);
+    m_pPump[0]->writePin(LOW);
+    m_pPump[1]->writePin(HIGH);
+}
+
+DF_ERROR dispenser::stopPump()
+{
+    debugOutput::sendMessage("-----Stop Pump-----", INFO);   
+    m_pPump[0]->writePin(LOW);
+    m_pPump[1]->writePin(LOW);
+}
+
 // Disenses drinks by turning Solenoid Signal to HIGH then to LOW
 DF_ERROR dispenser::startDispense(int pos){
     DF_ERROR e_ret = ERROR_MECH_DRINK_FAULT;
@@ -154,10 +172,22 @@ DF_ERROR dispenser::startDispense(int pos){
         return e_ret;
     }
 
+    // if(m_pDrink->getIsStillDrink()) {
+        // m_pPump[pos]->writePin(HIGH);
+
+        startPump();
+    // }
+
     // Dispense the Drink
     m_pSolenoid[pos]->writePin(HIGH);
     sleep(ACTIVATION_TIME);
+
+    stopPump();
+
+    // m_pPump[pos]->writePin(LOW);
+
     m_pSolenoid[pos]->writePin(LOW);
+
 
     // Disable Button
     // e_ret = disconnectButton();

@@ -34,9 +34,10 @@ class drink
 	//setter
 	void setSlot(int slot);
 	void setDrinkName(string drinkName);
-
+	void setIsStillDrink(bool isStillDrink);
 
 	//getter
+	bool getIsStillDrink();
 	int getVolumeRemaining();
 	void recordSale(int volume);
 	void refill(int volume);
@@ -48,6 +49,8 @@ class drink
 	string m_name;
 	string m_ingredients;
 	int m_nVolume;
+
+	bool m_isStillDrink;
 	   
 	//last filled as date
 	//best before as date

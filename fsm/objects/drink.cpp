@@ -48,6 +48,20 @@ void drink::setDrinkName(string drinkName)
     // TODO: SQLite database Query could be better option.
 }
 
+// TODO: Redefine function prototype, no argument.
+void drink::setIsStillDrink(bool isStillDrink)
+{
+    // TODO: SQLite database Query could be better option.
+    m_isStillDrink = isStillDrink;
+}
+
+// TODO: Redefine function prototype, no argument.
+bool drink::getIsStillDrink()
+{
+    // TODO: SQLite database Query could be better option.
+    return m_isStillDrink;
+}
+
 // Get the remaining volume
 int drink::getVolumeRemaining()
 {

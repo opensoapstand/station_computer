@@ -28,6 +28,10 @@
 #define NUM_FLOWSENSOR  1 
 #define NUM_BUTTON 1
 
+// Range of Dispenser Still Option positions that use pumps
+#define PUMP_OPTION_START_POSITION 5
+#define PUMP_OPTION_STOP_POSITION 8
+
 #define DRINK 0
 #define WATER 1
 #define AIR 2
@@ -60,6 +64,9 @@ class dispenser
 
       DF_ERROR startDispense(int pos);
       DF_ERROR stopDispense(int pos); //reached dispense value
+
+      DF_ERROR startPump(); //reached dispense value
+      DF_ERROR stopPump(); //reached dispense value
 
       DF_ERROR connectButton();
       DF_ERROR disconnectButton();

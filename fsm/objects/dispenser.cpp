@@ -146,7 +146,7 @@ DF_ERROR dispenser::startDispense(int pos){
 
     // Prime Button
     // FIXME: Magic Number Button
-    e_ret = connectButton();
+    // e_ret = connectButton();
 
     // Solenoid Position Check
     if(pos != DRINK) {
@@ -160,7 +160,7 @@ DF_ERROR dispenser::startDispense(int pos){
     m_pSolenoid[pos]->writePin(LOW);
 
     // Disable Button
-    e_ret = disconnectButton();
+    // e_ret = disconnectButton();
     
     return e_ret = OK;
 }

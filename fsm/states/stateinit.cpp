@@ -331,6 +331,7 @@ DF_ERROR stateInit::setButton(TiXmlElement *hardwareEle, int dispenserIdx)
    if(hardwareEle->FirstChildElement(BUTTON_STRING))
    {
       // Get the button node
+      debugOutput::sendMessage("Found Button Element", INFO);
       l_pButton = hardwareEle->FirstChildElement(BUTTON_STRING); 
    } else
    {
@@ -346,8 +347,10 @@ DF_ERROR stateInit::setButton(TiXmlElement *hardwareEle, int dispenserIdx)
    {
       string typeCheck = getXML(TYPE_STRING, l_pSingleButton);
 
-      if("" != typeCheck) //set dispenser parameters accrodingly [mcp|x86|ard]
-      {
+      debugOutput::sendMessage("Button typeCheck Result:" + typeCheck, INFO);
+
+      // if("" != typeCheck) //set dispenser parameters accrodingly [mcp|x86|ard]
+      // {
          if(MCP_STRING == typeCheck) //ensures button is control with mcp pin
          {
             int address_num = atoi(getXML(I2CADDRESS_STRING, l_pSingleButton));
@@ -383,11 +386,11 @@ DF_ERROR stateInit::setButton(TiXmlElement *hardwareEle, int dispenserIdx)
          }
 
          l_pSingleButton = l_pSingleButton -> NextSiblingElement(BUTTON_STRING);
-      }
-      else
-      {
-            debugOutput::sendMessage("done sorting dispense:" + string(dispenserId[dispenserIdx]), INFO);
-      }
+      // }
+      // else
+      // {
+      //       debugOutput::sendMessage("done sorting dispense:" + string(dispenserId[dispenserIdx]), INFO);
+      // }
       l_pos++;
    }
 

@@ -17,7 +17,6 @@
 
 #include "../dftypes.h"
 #include "../objects/debugoutput.h"
-#include "definegpio.h"
 
 class gpio
 {

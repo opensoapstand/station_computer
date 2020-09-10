@@ -22,10 +22,11 @@
 #include "../components/odysseyx86gpio.h"
 #include "drink.h"
 
+// Total Number of Devices
 #define NUM_SOLENOID 3 //12v for drink,water, and air
 #define NUM_PUMP 2 //forward and reverse pin
 #define NUM_FLOWSENSOR  1 
-#define NUM_BUTTON 0
+#define NUM_BUTTON 1
 
 #define DRINK 0
 #define WATER 1

@@ -65,7 +65,8 @@ class dispenser
       DF_ERROR startDispense(int pos);
       DF_ERROR stopDispense(int pos); //reached dispense value
 
-      DF_ERROR startPump(); //reached dispense value
+      DF_ERROR forwardPump(); //reached dispense value
+      DF_ERROR reversePump(); //reached dispense value
       DF_ERROR stopPump(); //reached dispense value
 
       DF_ERROR connectButton();
@@ -81,7 +82,8 @@ class dispenser
       int getI2CPin(int pos);
 
    private:
-      bool isDispensing;
+      bool m_isDispensing;
+      bool m_isStill;
 
       drink *m_pDrink;
 

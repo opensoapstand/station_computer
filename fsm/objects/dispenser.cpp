@@ -128,34 +128,46 @@ DF_ERROR dispenser::setPump(int mcpAddress, int pin, int direction)
 	{
         m_pPump[direction] = new mcpGPIO(mcpAddress, pin);
 		e_ret = OK;
+
+        // FIXME: Refactor..Message mediator should set this as a m_pdrink Object
+        m_isStill = true;
 	}
 	else if(X20 > mcpAddress || X22 < mcpAddress)
 	{
         //debugOutput::sendMessage("got here", INFO);
 		return e_ret = ERROR_ELEC_WRONG_I2C_ADDRESS;
+        // FIXME: Refactor..Message mediator should set this as a m_pdrink Object
+        m_isStill = false;
 	}
 	else if(MCP_PIN_START > pin || MPC_PIN_END < pin)
 	{
+        // FIXME: Refactor..Message mediator should set this as a m_pdrink Object
+        m_isStill = false;
 		return e_ret = ERROR_BAD_PARAMS;
 	}
-
     return e_ret;
 }
 
-DF_ERROR dispenser::startPump()
+// TODO: Refactor Pumping with switch in future...
+DF_ERROR dispenser::forwardPump()
 {
-    debugOutput::sendMessage("-----Start Pump-----", INFO);   
-    // m_pPump[0]->writePin(HIGH);
-    // m_pPump[1]->writePin(LOW);
-    m_pPump[0]->writePin(LOW);
-    m_pPump[1]->writePin(HIGH);
+    debugOutput::sendMessage("-----FORWARD Pump-----", INFO);   
+    m_pPump[FORWARD]->writePin(LOW);
+    m_pPump[REVERSE]->writePin(HIGH);
+}
+
+DF_ERROR dispenser::reversePump()
+{
+    debugOutput::sendMessage("-----REVERSE Pump-----", INFO);   
+    m_pPump[FORWARD]->writePin(HIGH);
+    m_pPump[REVERSE]->writePin(LOW);
 }
 
 DF_ERROR dispenser::stopPump()
 {
     debugOutput::sendMessage("-----Stop Pump-----", INFO);   
-    m_pPump[0]->writePin(LOW);
-    m_pPump[1]->writePin(LOW);
+    m_pPump[FORWARD]->writePin(LOW);
+    m_pPump[FORWARD]->writePin(LOW);
 }
 
 // Disenses drinks by turning Solenoid Signal to HIGH then to LOW
@@ -172,22 +184,22 @@ DF_ERROR dispenser::startDispense(int pos){
         return e_ret;
     }
 
-    // if(m_pDrink->getIsStillDrink()) {
+    if(m_isStill && m_pPump != nullptr ) {
         // m_pPump[pos]->writePin(HIGH);
-
-        startPump();
-    // }
+        // forwardPump();
+        reversePump();
+    }
 
     // Dispense the Drink
     m_pSolenoid[pos]->writePin(HIGH);
     sleep(ACTIVATION_TIME);
 
-    stopPump();
-
-    // m_pPump[pos]->writePin(LOW);
+    if(m_isStill && m_pPump != nullptr ) {
+        // m_pPump[pos]->writePin(LOW);
+        stopPump();
+    }
 
     m_pSolenoid[pos]->writePin(LOW);
-
 
     // Disable Button
     // e_ret = disconnectButton();

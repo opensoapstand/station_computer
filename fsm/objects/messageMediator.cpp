@@ -15,7 +15,7 @@
 // all rights reserved
 //***************************************
 
-#include "messagemediator.h"
+#include "messageMediator.h"
 #include <time.h>
 #include <sys/time.h>
 #include <stdlib.h>

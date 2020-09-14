@@ -13,15 +13,15 @@
 #include <string.h>
 #include "dftypes.h"
 
-#include "states/statevirtual.h"
+#include "states/stateVirtual.h"
 
-#include "states/stateinit.h"
-#include "states/stateidle.h"
-#include "states/statedispense.h"
-#include "states/statedispenseidle.h"
+#include "states/stateInit.h"
+#include "states/stateIdle.h"
+#include "states/stateDispense.h"
+#include "states/stateDispenseIdle.h"
 
 #include "objects/dispenser.h"
-#include "objects/messagemediator.h"
+#include "objects/messageMediator.h"
 
 messageMediator *g_pMessaging;       //debug through local network
 stateVirtual *g_stateArray[FSM_MAX]; //an object for every state
@@ -71,6 +71,8 @@ DF_ERROR stateLoop()
         {
             // debugOutput::sendMessage("onAction() [" + g_stateArray[fsmState]->toString() + "]", STATE_CHANGE);
             dfRet = g_stateArray[fsmState]->onAction(g_dispense);
+
+            // FIXME: Move to initialization within init state...
             if(INIT == fsmState)
             {                
                 g_dispense = g_stateArray[INIT]->dispenserSetup();

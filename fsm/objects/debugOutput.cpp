@@ -12,7 +12,7 @@
 // all rights reserved
 //***************************************
 
-#include "debugoutput.h"
+#include "debugOutput.h"
 #include <iostream>
 #include <fstream>
 

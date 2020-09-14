@@ -14,7 +14,7 @@
 #define _DBGGPIO__H__
 
 #include "gpio.h"
-#include "../objects/debugoutput.h"
+#include "../objects/debugOutput.h"
 
 class dbggpio : public gpio{
 public:

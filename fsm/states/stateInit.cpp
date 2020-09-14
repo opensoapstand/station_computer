@@ -17,7 +17,7 @@
 // all rights reserved
 //***************************************
 
-#include "stateinit.h"
+#include "stateInit.h"
 #include <iostream>
 #include <string>
 
@@ -93,6 +93,8 @@ DF_ERROR stateInit::onAction(dispenser* cassettes)
    m_state = INIT; //ensure the current state is INIT
 
    e_ret = setDispenserId();
+
+   dispenserSetup();
 
    if (nullptr != &m_nextState && OK == e_ret)
    {

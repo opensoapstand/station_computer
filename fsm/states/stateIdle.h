@@ -14,8 +14,8 @@
 #define STATEIDLE__H_
 
 #include "../dftypes.h"
-#include "../objects/messagemediator.h"
-#include "statevirtual.h"
+#include "../objects/messageMediator.h"
+#include "stateVirtual.h"
 
 class stateIdle : public stateVirtual
 {

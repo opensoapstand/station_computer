@@ -14,7 +14,7 @@
 // all rights reserved
 //***************************************
 
-#include "statedispense.h"
+#include "stateDispense.h"
 #include <cstring>
 
 #define DISPENSE_STRING "Dispense"
@@ -182,6 +182,8 @@ DF_ERROR stateDispense::onExit()
 
    // TODO: Does not seem to advance to Idle again...
    m_state = DISPENSE;
+
+   
    //m_nextState = INIT; //go back for now
 
    return e_ret;

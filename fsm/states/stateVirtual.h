@@ -15,9 +15,9 @@
 
 #include <string>
 #include "../dftypes.h"
-#include "../objects/messagemediator.h"
+#include "../objects/messageMediator.h"
 
-#include "../objects/debugoutput.h"
+#include "../objects/debugOutput.h"
 #include "../objects/dispenser.h"
 
 #define CASSETTES_MAX 9

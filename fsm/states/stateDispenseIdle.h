@@ -15,8 +15,8 @@
 #define STATEDISPENSEIDLE__H_
 
 #include "../dftypes.h"
-#include "../objects/messagemediator.h"
-#include "statevirtual.h"
+#include "../objects/messageMediator.h"
+#include "stateVirtual.h"
 
 #include "../objects/dispenser.h"
 

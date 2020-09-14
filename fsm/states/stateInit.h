@@ -21,8 +21,8 @@
 #define STATEINIT__H_
 
 #include "../dftypes.h"
-#include "../objects/messagemediator.h"
-#include "statevirtual.h"
+#include "../objects/messageMediator.h"
+#include "stateVirtual.h"
 #include "../../library/tinyxml/tinyxml.h"
 
 class stateInit : public stateVirtual

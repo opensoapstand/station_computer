@@ -17,7 +17,7 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include "../../../fsm/objects/debugoutput.h"
+#include "../../../fsm/objects/debugOutput.h"
 
 class MCP23017
 {

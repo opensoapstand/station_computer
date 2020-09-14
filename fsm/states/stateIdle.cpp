@@ -12,7 +12,7 @@
 // all rights reserved
 //***************************************
 
-#include "stateidle.h"
+#include "stateIdle.h"
 
 #define IDLE_STRING "Idle"
 

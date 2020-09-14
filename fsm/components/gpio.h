@@ -16,7 +16,7 @@
 #include <thread>
 
 #include "../dftypes.h"
-#include "../objects/debugoutput.h"
+#include "../objects/debugOutput.h"
 
 class gpio
 {

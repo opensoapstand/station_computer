@@ -81,10 +81,10 @@ payPage::payPage(QWidget *parent) :
         connect(declineTimer, SIGNAL(timeout()), this, SLOT(declineTimer_start()));
 
         // Idle Payment reset
-//        idlePaymentTimer = new QTimer(this);
-//        connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
-//        idlePaymentTimer->start(60000);
-//        idlePaymentTimer->start(60000000);
+        idlePaymentTimer = new QTimer(this);
+        connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
+        // FIXME: MAGIC NUMBER!!! UX410 Socket Auto Close time is 60 seconds so timer kills page GUI
+        idlePaymentTimer->start(60000);
     }
 
     // XXX: Comment on/off for Bypassing payment testing

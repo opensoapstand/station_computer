@@ -14,9 +14,9 @@
 #define STATEDISPENSE__H_
 
 #include "../dftypes.h"
-#include "../objects/messagemediator.h"
+#include "../objects/messageMediator.h"
 
-#include "statevirtual.h"
+#include "stateVirtual.h"
 
 #define AIR_CHAR 'a'
 #define WATER_CHAR 'w'
@@ -41,6 +41,8 @@ class stateDispense : public stateVirtual
         dispenser* dispenserSetup(){};
 
     private:
+
+        bool isDipenseEnd;
     
 };
 #endif

@@ -19,7 +19,7 @@
 #define _MESSAGEMEDIATOR__H_
 
 #include "../dftypes.h"
-#include "debugoutput.h"
+#include "debugOutput.h"
 #include <pthread.h>
 
 #include "../../library/socket/ServerSocket.h"

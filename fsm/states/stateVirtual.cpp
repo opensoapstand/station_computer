@@ -10,7 +10,7 @@
 // all rights reserved
 //***************************************
 
-#include "statevirtual.h"
+#include "stateVirtual.h"
 #include <iostream>
 
 stateVirtual::stateVirtual(){

@@ -14,7 +14,7 @@
 // all rights reserved
 //***************************************
 
-#include "statedispenseidle.h"
+#include "stateDispenseIdle.h"
 
 #define DISPENSE_IDLE_STRING  "Dispense Idle"
 

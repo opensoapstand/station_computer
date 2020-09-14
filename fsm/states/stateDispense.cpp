@@ -149,7 +149,7 @@ DF_ERROR stateDispense::onAction(dispenser* cassettes)
          // cassettes[pos].testSolenoidDispense(DRINK);
          cassettes[pos].startDispense(DRINK);
       }
-      else if(CLEAN_CHAR == solenoidChar)
+      else if(DISPENSE_END_CHAR == solenoidChar)
       {
          debugOutput::sendMessage("------Cleaning Mode------", INFO);
          debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> WATER", INFO);
@@ -161,14 +161,15 @@ DF_ERROR stateDispense::onAction(dispenser* cassettes)
          // cassettes[pos].testSolenoidDispense(DRINK);
          cassettes[pos].cleanNozzle(WATER, AIR);
 
-         m_pMessaging->sendMessage("!");
+         // m_pMessaging->sendMessage("!");
 
+         // onExit();
       }
       else{
          debugOutput::sendMessage("Irrelevant input", INFO); 
       }
 
-      m_pMessaging->clearProcessString();        
+      m_pMessaging->clearProcessString();
       e_ret = OK;
    }
 
@@ -182,8 +183,7 @@ DF_ERROR stateDispense::onExit()
 
    // TODO: Does not seem to advance to Idle again...
    m_state = DISPENSE;
-
-   
+   m_nextState = DISPENSE_END;   
    //m_nextState = INIT; //go back for now
 
    return e_ret;

@@ -3,9 +3,10 @@
 // statedispenseidle.h
 // dispense idle state class
 //
-// Recieves and interprets string command from FSM.
-// Routes dispense instruction to GPIO's
-// HACK: JW What is difference between this and Idle?
+// Dispense Idle state while waiting for user to
+// Press button to dispense - Flips between
+// Dispense and Dispense Idle.
+// Receives and interprets string command from FSM.
 //
 // created: 26-06-2020
 // by: Jason Wang & Li-Yan Tong

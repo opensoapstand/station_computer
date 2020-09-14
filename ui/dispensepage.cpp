@@ -91,12 +91,14 @@ void dispensePage::on_finish_Button_clicked()
     // TODO: Link to FSM for Dispense
     is_sending_to_FSM = true;
     m_fsmMsg = SEND_CLEAN;
+
+    // Send a Cleanse and TODO: helps FSM onExit...
     send_to_FSM();
     qDebug() << "finish button clicked" << endl;
 
-    while(is_sending_to_FSM) {
-        qDebug() << "CLEAN MODE" << endl;
-    }
+//    while(is_sending_to_FSM) {
+//        qDebug() << "CLEAN MODE" << endl;
+//    }
 //    is_sending_to_FSM = false;
     tcpSocket->disconnectFromHost();
     this->hide();
@@ -125,7 +127,7 @@ void dispensePage::send_to_FSM()
         break;
 
     case SEND_CLEAN:
-        msg.append("c");
+        msg.append("f");
         msg.append(";");
         break;
 

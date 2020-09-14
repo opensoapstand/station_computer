@@ -16,8 +16,9 @@
 #include "dispenser.h"
 
 #define ACTIVATION_TIME 10
-#define CLEAN_WATER_TIME 5
-#define CLEAN_AIR_TIME 5
+#define TEST_ACTIVATION_TIME 3
+#define CLEAN_WATER_TIME 1
+#define CLEAN_AIR_TIME 1
 
 dispenser::dispenser(){
     //default constructor to set all pin to nullptr
@@ -148,21 +149,24 @@ DF_ERROR dispenser::setPump(int mcpAddress, int pin, int direction)
     return e_ret;
 }
 
-// TODO: Refactor Pumping with switch in future...
+// TODO: Refactor Pumping with switch and ternary in future...keep seperate for ease of testing.
+// Reverse pump: Turn forward pin HIGH - Reverse pin LOW
 DF_ERROR dispenser::forwardPump()
 {
     debugOutput::sendMessage("-----FORWARD Pump-----", INFO);   
-    m_pPump[FORWARD]->writePin(LOW);
-    m_pPump[REVERSE]->writePin(HIGH);
-}
-
-DF_ERROR dispenser::reversePump()
-{
-    debugOutput::sendMessage("-----REVERSE Pump-----", INFO);   
     m_pPump[FORWARD]->writePin(HIGH);
     m_pPump[REVERSE]->writePin(LOW);
 }
 
+// Reverse pump: Turn forward pin LOW - Reverse pin HIGH
+DF_ERROR dispenser::reversePump()
+{
+    debugOutput::sendMessage("-----REVERSE Pump-----", INFO);   
+    m_pPump[FORWARD]->writePin(LOW);
+    m_pPump[REVERSE]->writePin(HIGH);
+}
+
+// Stops pumping: Turn forward pin LOW - Reverse pin LOW
 DF_ERROR dispenser::stopPump()
 {
     debugOutput::sendMessage("-----Stop Pump-----", INFO);   
@@ -174,8 +178,7 @@ DF_ERROR dispenser::stopPump()
 DF_ERROR dispenser::startDispense(int pos){
     DF_ERROR e_ret = ERROR_MECH_DRINK_FAULT;
 
-    // Prime Button
-    // FIXME: Magic Number Button
+    // XXX: Prime Button - Linked thru State Virtual
     // e_ret = connectButton();
 
     // Solenoid Position Check
@@ -184,24 +187,29 @@ DF_ERROR dispenser::startDispense(int pos){
         return e_ret;
     }
 
+    // Open Drink Solenoid
+    m_pSolenoid[pos]->writePin(HIGH);
+ 
+    // If Still start pump!
     if(m_isStill && m_pPump != nullptr ) {
         // m_pPump[pos]->writePin(HIGH);
-        // forwardPump();
-        reversePump();
+        forwardPump();
+        // reversePump();
     }
 
-    // Dispense the Drink
-    m_pSolenoid[pos]->writePin(HIGH);
+    // FIXME: Timer to Shut down relay paths; Should be flow or interrupt based
     sleep(ACTIVATION_TIME);
 
+    // Stop Pump
     if(m_isStill && m_pPump != nullptr ) {
         // m_pPump[pos]->writePin(LOW);
         stopPump();
     }
 
+    // Shut Solenoid
     m_pSolenoid[pos]->writePin(LOW);
 
-    // Disable Button
+    // XXX: Disable Button - Linked thru State Virtual
     // e_ret = disconnectButton();
     
     return e_ret = OK;
@@ -232,11 +240,13 @@ DF_ERROR dispenser::cleanNozzle(int posW, int posA){
     }
 
     // Flush the lines with water
+    debugOutput::sendMessage("Water Cleanse", INFO);
     m_pSolenoid[posW]->writePin(HIGH);
     sleep(CLEAN_WATER_TIME);
     m_pSolenoid[posW]->writePin(LOW);
 
     // Flush the lines with Air
+    debugOutput::sendMessage("Air Release", INFO);
     m_pSolenoid[posA]->writePin(HIGH);
     sleep(CLEAN_AIR_TIME);
     m_pSolenoid[posA]->writePin(LOW);
@@ -253,7 +263,7 @@ DF_ERROR dispenser::testSolenoidDispense(int pos){
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
     m_pSolenoid[pos]->writePin(HIGH);
-    sleep(ACTIVATION_TIME);
+    sleep(TEST_ACTIVATION_TIME);
     m_pSolenoid[pos]->writePin(LOW);
 
     return e_ret = OK;

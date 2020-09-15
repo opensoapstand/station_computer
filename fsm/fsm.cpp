@@ -41,7 +41,8 @@ int main()
     if (OK == initObjects())
     {
         dfRet = g_pMessaging->createThreads(kbThread, ipThread);
-        if (OK == dfRet){
+        if (OK == dfRet)
+        {
             dfRet = stateLoop();
         }
     }
@@ -55,8 +56,8 @@ int main()
 DF_ERROR stateLoop()
 {
     DF_ERROR dfRet = OK;
-    DF_FSM fsmState = START; 
-    DF_FSM fsmNewState = INIT; 
+    DF_FSM fsmState = START;
+    DF_FSM fsmNewState = INIT;
 
     while (OK == dfRet) //while no error has occurred
     {
@@ -67,31 +68,51 @@ DF_ERROR stateLoop()
             fsmState = g_stateArray[fsmNewState]->getCurrentState();
         }
 
-        if (OK == dfRet) 
+        // Should Poll for Idle state change.  This triggers FSM to go forward.
+        if (OK == dfRet)
         {
             // debugOutput::sendMessage("onAction() [" + g_stateArray[fsmState]->toString() + "]", STATE_CHANGE);
             dfRet = g_stateArray[fsmState]->onAction(g_dispense);
 
             // FIXME: Move to initialization within init state...
-            if(INIT == fsmState)
-            {                
+            if (INIT == fsmState)
+            {
                 g_dispense = g_stateArray[INIT]->dispenserSetup();
             }
 
             fsmNewState = g_stateArray[fsmState]->getNextState();
 
+            // Thread and FSM Change Check
             if ((OK == dfRet) && (fsmNewState != fsmState))
             {
-                debugOutput::sendMessage("onExit()   [" + g_stateArray[fsmState]->toString() + "]", STATE_CHANGE);
-                dfRet = g_stateArray[fsmState]->onExit();
-
-                fsmNewState = g_stateArray[fsmState]->getNextState(); //update the state
+                debugOutput::sendMessage("fsmState:" + g_stateArray[fsmState]->toString(), INFO);
+                // DISPENSE when IP thread has a command ready
+                if (IDLE == fsmState && g_pMessaging->isCommandReady())
+                {
+                    debugOutput::sendMessage("PREPARE TO DISPENSE...onExit()   [" + g_stateArray[fsmState]->toString() + "]", STATE_CHANGE);
+                    dfRet = g_stateArray[fsmState]->onExit();
+                    fsmNewState = g_stateArray[fsmState]->getNextState(); //update the state
+                }
+                else // Other States advance
+                {
+                    debugOutput::sendMessage("onExit()   [" + g_stateArray[fsmState]->toString() + "]", STATE_CHANGE);
+                    dfRet = g_stateArray[fsmState]->onExit();
+                    fsmNewState = g_stateArray[fsmState]->getNextState(); //update the state
+                }
             }
-
+            // We stay Idle until a command is ready
+            // TODO: Maybe we can leverage this for DispenseIdle as well!
+            else if (fsmNewState == fsmState)
+            {
+                // Turn on to check Idle Looping
+                // debugOutput::sendMessage("No State Change   [" + g_stateArray[fsmState]->toString() + "]", STATE_CHANGE);
+            }
+            else
+            {
+                debugOutput::sendMessage("Thread or State change ERROR", ERROR);
+            }
         }
-
     }
-
     return dfRet;
 }
 
@@ -104,12 +125,12 @@ DF_ERROR initObjects()
 
     g_pMessaging = NULL;
     g_pMessaging = new messageMediator();
-        
+
     dfRet = createStateArray();
     if (OK != dfRet)
     {
         // TODO: DB function to check/create DB
-        //next 
+        //next
     }
     return dfRet;
 }

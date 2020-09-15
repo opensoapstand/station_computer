@@ -31,7 +31,9 @@ class stateIdle : public stateVirtual
         DF_ERROR onExit();
         dispenser* dispenserSetup(){};
 
-    private:    
+        // messageMediator * g_pMessaging;
+
+    private:
 };
 
 

@@ -28,7 +28,7 @@ stateDispenseEnd::stateDispenseEnd()
 // CTOR Linked to IPC
 stateDispenseEnd::stateDispenseEnd(messageMediator * message){
 
-   //debugOutput::sendMessage("stateDispense(messageMediator * message)", INFO);
+   debugOutput::sendMessage("stateDispenseEnd(messageMediator * message)", INFO);
 }
 
 // DTOR
@@ -64,42 +64,17 @@ DF_ERROR stateDispenseEnd::onAction(dispenser* cassettes)
    
    if (nullptr != &m_nextState)
    {
-      //only allow [cassette_num][A/D/W] to be keyboard input for now...
-      //eg. 1a -> cassette 1 for air solenoid
+      // TODO: Cleaning Nozzle
+      // debugOutput::sendMessage("------Cleaning Mode------", INFO);
+      // debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> WATER", INFO);
+      // debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(WATER)), INFO);
+      // debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> WATER", INFO);
+      // debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
-      int pos = -1;
-      // do stuff
-      char posChar;
-      strcpy(&posChar, &temp[0]);
-
-      if(isdigit(posChar)) //first character should be string
-      {
-         pos = atoi(&posChar) - 1;
-
-         if(CASSETTES_MAX < pos || 0 > pos)
-         {
-            debugOutput::sendMessage("Irrelevant input", ERROR); 
-            m_pMessaging->clearProcessString();  
-            return e_ret = OK; //require valid cassettes
-         }
-      }
-      else
-      {
-         // Error Handling
-         debugOutput::sendMessage("Irrelevant input", INFO);
-         m_pMessaging->clearProcessString(); //make sure to clear the processed string for new input
-         return e_ret = OK; //require valid cassettes
-      }
-
-      debugOutput::sendMessage("------Cleaning Mode------", INFO);
-      debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> WATER", INFO);
-      debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(WATER)), INFO);
-      debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> WATER", INFO);
-      debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
-
-      // cassettes[pos].testSolenoidDispense(DRINK);
-      cassettes[pos].cleanNozzle(WATER, AIR);
-      m_pMessaging->clearProcessString();        
+      // // cassettes[pos].testSolenoidDispense(DRINK);
+      // cassettes[pos].cleanNozzle(WATER, AIR);
+      // m_pMessaging->clearProcessString();
+      m_pMessaging->clearCommandString(); 
       e_ret = OK;
    }
 
@@ -112,7 +87,7 @@ DF_ERROR stateDispenseEnd::onExit()
    DF_ERROR e_ret  = OK;
 
    // TODO: Does not seem to advance to Idle again...
-   m_state = IDLE;
+   m_state = DISPENSE_END;
    m_nextState = IDLE; //go back for now
 
    return e_ret;

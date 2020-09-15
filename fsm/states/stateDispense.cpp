@@ -163,13 +163,14 @@ DF_ERROR stateDispense::onAction(dispenser* cassettes)
 
          // m_pMessaging->sendMessage("!");
 
-         // onExit();
+         this->onExit();
       }
       else{
          debugOutput::sendMessage("Irrelevant input", INFO); 
       }
 
-      m_pMessaging->clearProcessString();
+      // m_pMessaging->clearProcessString();
+      m_pMessaging->clearCommandString();
       e_ret = OK;
    }
 

@@ -41,6 +41,7 @@ class messageMediator
       void clearProcessString();
 
       string getCommandString();
+      bool isCommandReady(){return m_commandReady;}
       void clearCommandString();
 
       // static ServerSocket *fsm_comm_socket;

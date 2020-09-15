@@ -17,6 +17,7 @@
 
 #define ACTIVATION_TIME 10
 #define TEST_ACTIVATION_TIME 3
+#define PRIME_PUMP_TIME 1
 #define CLEAN_WATER_TIME 1
 #define CLEAN_AIR_TIME 1
 
@@ -171,7 +172,7 @@ DF_ERROR dispenser::stopPump()
 {
     debugOutput::sendMessage("-----Stop Pump-----", INFO);   
     m_pPump[FORWARD]->writePin(LOW);
-    m_pPump[FORWARD]->writePin(LOW);
+    // m_pPump[REVERSE]->writePin(LOW);
 }
 
 // Disenses drinks by turning Solenoid Signal to HIGH then to LOW
@@ -193,6 +194,7 @@ DF_ERROR dispenser::startDispense(int pos){
     // If Still start pump!
     if(m_isStill && m_pPump != nullptr ) {
         // m_pPump[pos]->writePin(HIGH);
+        sleep(PRIME_PUMP_TIME);
         forwardPump();
         // reversePump();
     }
@@ -204,6 +206,7 @@ DF_ERROR dispenser::startDispense(int pos){
     if(m_isStill && m_pPump != nullptr ) {
         // m_pPump[pos]->writePin(LOW);
         stopPump();
+        sleep(PRIME_PUMP_TIME);
     }
 
     // Shut Solenoid

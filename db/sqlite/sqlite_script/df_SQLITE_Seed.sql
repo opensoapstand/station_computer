@@ -62,7 +62,9 @@ SET
 in_stock = 1
 WHERE inventory_id = 0;
 
-INSERT INTO product(name, product_description, vendor_id, user_type, calibration_const, cost_per_litre, option_slot)
+/* ######## INSERTING A NEW PRODUCT ########*/
+
+INSERT INTO product(name, product_type, product_description, vendor_id, user_type, calibration_const, cost_per_litre, option_slot)
 VALUES (
 	'JJ Bean Cold brew',
 	'Cold Brew coffee',
@@ -85,6 +87,8 @@ SET
 	date_refresh = '2020-09-10 08:00:00',
 	in_stock = 0
 WHERE inventory_id = 0;
+
+/* ######## INSERTING A SALE ########*/
 
 INSERT INTO sales()
 

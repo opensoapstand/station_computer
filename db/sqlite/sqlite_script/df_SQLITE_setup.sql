@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS   sales (
     mop VARCHAR(1),
     approval_number VARCHAR(6),
     SPDH VARCHAR(2),
-    FOREIGN KEY(location_id) REFERENCES   machine_location(machine_location_id)
+    FOREIGN KEY(location_id) REFERENCES   machine_location(machine_location_id) ON DELETE CASCADE
 );
 
 /*
@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS   machine (
     location_id INT DEFAULT NULL,
     number_of_drinks INT,
     -- Do a count of inventory level
-    FOREIGN KEY(location_id) REFERENCES   machine_location(machine_location_id)
+    FOREIGN KEY(location_id) REFERENCES   machine_location(machine_location_id) ON DELETE CASCADE
 );
 
 /*
@@ -117,21 +117,10 @@ CREATE TABLE IF NOT EXISTS   inventory (
     volume NUMERIC(2) DEFAULT NULL,
     date_refresh TIMESTAMP WITH TIME ZONE NOT NULL,
     in_stock BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY(product_id) REFERENCES   product(product_id)
+    FOREIGN KEY(product_id) REFERENCES   product(product_id) ON DELETE CASCADE
 );
 
 
-// SQLite does not take TRUE/FALSE has to be 1/0
-INSERT INTO   inventory
-VALUES (0, NULL, NULL, current_timestamp, 0),
-    (1, NULL, NULL, current_timestamp, 0),
-    (2, NULL, NULL, current_timestamp, 0),
-    (3, NULL, NULL, current_timestamp, 0),
-    (4, NULL, NULL, current_timestamp, 0),
-    (5, NULL, NULL, current_timestamp, 0),
-    (6, NULL, NULL, current_timestamp, 0),
-    (7, NULL, NULL, current_timestamp, 0),
-    (8, NULL, NULL, current_timestamp, 0);
 
 drop table product;
 
@@ -142,9 +131,9 @@ drop table product;
 CREATE TABLE IF NOT EXISTS   product (
     product_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(100) NOT NULL,
+    product_type VARCHAR(50) NOT NULL,
     product_description VARCHAR(100) NOT NULL,
     vendor_id INT DEFAULT NULL,
-    user_type VARCHAR(3) DEFAULT 'VED',
     calibration_const NUMERIC(6),
     -- cost from vendor
     cost_per_litre MONEY,
@@ -154,9 +143,9 @@ CREATE TABLE IF NOT EXISTS   product (
     ),
     -- -1 means empty; 0 to 8 are slots 1 to 9 respectively.
     coupon_code_id INT,
-    FOREIGN KEY(vendor_id, user_type) REFERENCES   user(user_id, user_type),
-    FOREIGN KEY(coupon_code_id) REFERENCES   coupon(coupon_id),
-    FOREIGN KEY(option_slot) REFERENCES   inventory(inventory_id)
+    FOREIGN KEY(vendor_id) REFERENCES   vendor(vendor_id) ON DELETE CASCADE,
+    FOREIGN KEY(coupon_code_id) REFERENCES   coupon(coupon_id) ON DELETE CASCADE,
+    FOREIGN KEY(option_slot) REFERENCES   inventory(inventory_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS vendor (
@@ -179,6 +168,7 @@ CREATE TABLE IF NOT EXISTS   coupon (
     coupon_id INTEGER PRIMARY KEY AUTOINCREMENT,
     code CHAR(6) UNIQUE,
     percentage INT,
+    dollar_amount INT,
     start_date TIMESTAMP WITH TIME ZONE NOT NULL,
     end_date TIMESTAMP WITH TIME ZONE NOT NULL
 );
@@ -190,9 +180,12 @@ CREATE TABLE IF NOT EXISTS   pricing (
     product_id INT,
     -- cost for consumers
     price_per_litre MONEY,
+    small_price MONEY,
+    medium_price MONEY,
+    large_price MONEY,
     location_id INT,
-    FOREIGN KEY(product_id) REFERENCES   product(product_id),
-    FOREIGN KEY(location_id) REFERENCES   machine_location(machine_location_id)
+    FOREIGN KEY(product_id) REFERENCES   product(product_id) ON DELETE CASCADE,
+    FOREIGN KEY(location_id) REFERENCES   machine_location(machine_location_id) ON DELETE CASCADE
 );
 
 /*
@@ -205,8 +198,21 @@ CREATE TABLE IF NOT EXISTS   product_image_QT (
     image_name VARCHAR(100),
     image_path VARCHAR(255),
     -- Upload to standardized folder location!
-    FOREIGN KEY(product_image_id) REFERENCES   product_catalog(product_catalog_id)
+    FOREIGN KEY(product_image_id) REFERENCES   product_catalog(product_catalog_id) ON DELETE CASCADE
 )
+
+/* SQLite does not take TRUE/FALSE has to be 1/0 */
+INSERT INTO   inventory
+VALUES (0, NULL, NULL, current_timestamp, 0),
+    (1, NULL, NULL, current_timestamp, 0),
+    (2, NULL, NULL, current_timestamp, 0),
+    (3, NULL, NULL, current_timestamp, 0),
+    (4, NULL, NULL, current_timestamp, 0),
+    (5, NULL, NULL, current_timestamp, 0),
+    (6, NULL, NULL, current_timestamp, 0),
+    (7, NULL, NULL, current_timestamp, 0),
+    (8, NULL, NULL, current_timestamp, 0);
+
 
 /*
  * Teardown: todo integrate into create database procedural

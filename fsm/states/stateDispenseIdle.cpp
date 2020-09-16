@@ -60,21 +60,27 @@ DF_ERROR stateDispenseIdle::onAction(dispenser *cassettes)
 
    if (nullptr != &m_nextState)
    {
-      // do stuff
       //debugInfo.sendMessage("onAction() for state [" + std::to_string((int)m_nextState) + "]", INFO);
-      if (dispenserSetup()->getIsDispenseComplete())
+
+      // FIXME: State Check 
+      if (dispenserSetup()->getIsDispenseComplete()) // Exit if Dispense limit is hit
       {
-         debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]", INFO);
-         m_state = DISPENSE_END;
-         m_nextState = IDLE;
-      }
-      else
+         onExit();
+      } 
+      // TODO: else if to check button interrupt swap to Dispensing
+      // {
+      //    debugOutput::sendMessage("Dispensing [" + toString() + "]", INFO);
+      //    m_state = DISPENSE;
+      //    m_nextState = DISPENSE_IDLE;
+      // }
+      else // Assume no button push and not complete Keep IdleDispensing
       {
-         debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
+         // debugOutput::sendMessage("Keep Idling [" + toString() + "]", INFO);
          m_state = DISPENSE_IDLE;
          m_nextState = DISPENSE;
       }
 
+      // FIXME: No Coordination for Idles...Just go to Dispense for now.
       m_nextState = DISPENSE;
       df_ret = OK;
    }
@@ -82,24 +88,14 @@ DF_ERROR stateDispenseIdle::onAction(dispenser *cassettes)
    return df_ret;
 }
 
-// Advances to Dispense State with successful onAction()
+// Advances to Dispense End with completed Dispense
 DF_ERROR stateDispenseIdle::onExit()
 {
+   // debugOutput::sendMessage("Exiting[" + toString() + "]", STATE_CHANGE);
    DF_ERROR e_ret = OK;
 
-   // debugOutput::sendMessage("StateDispenseIdle OnExit()", INFO);
-   // if (dispenserSetup()->getIsDispenseComplete())
-   // {
-   //    debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]", INFO);
-      m_state = DISPENSE_END;
-      m_nextState = IDLE;
-   // }
-   // else
-   // {
-   //    debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
-      m_state = DISPENSE_IDLE;
-      m_nextState = DISPENSE;
-   // }
+   m_state = DISPENSE_END;
+   m_nextState = IDLE;
 
    return e_ret;
 }

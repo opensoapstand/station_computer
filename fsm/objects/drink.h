@@ -26,35 +26,37 @@ using namespace std;
 
 class drink
 {
-   public:
+public:
 	drink();
 	drink(int slot);
-    ~drink();
+	~drink();
 
 	//setter
 	void setSlot(int slot);
-	void setDrinkName(string drinkName);
 	void setIsStillDrink(bool isStillDrink);
-
+	
 	//getter
+	int getDrinkOption();
 	bool getIsStillDrink();
 	int getVolumeRemaining();
+
+	// DB Updates
 	void recordSale(int volume);
 	void refill(int volume);
 
-   private:
+private:
 	// TODO: Determine more data to modify per transaction...
-
 	int m_nSlot;
 	string m_name;
 	string m_ingredients;
 	int m_nVolume;
 
 	bool m_isStillDrink;
-	   
+
+	void setDrinkName();
+
 	//last filled as date
 	//best before as date
-
 };
 
 #endif

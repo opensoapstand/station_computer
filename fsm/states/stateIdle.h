@@ -33,6 +33,8 @@ class stateIdle : public stateVirtual
 
         // messageMediator * g_pMessaging;
 
+        drink* drinkOrder;
+
     private:
 };
 

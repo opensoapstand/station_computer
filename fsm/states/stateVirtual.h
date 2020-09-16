@@ -54,6 +54,8 @@ class stateVirtual
         gpio *m_pButton[NUM_BUTTON];
         messageMediator * m_pMessaging;
 
+        unique_ptr<drink> drinkPtr;
+
         // FIXME: Cludgey fix to exit dispense loop.
         // bool m_isDispenseComplete;
 };

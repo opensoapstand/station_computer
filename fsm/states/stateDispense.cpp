@@ -82,8 +82,6 @@ DF_ERROR stateDispense::onAction(dispenser *cassettes)
          m_nextState = DISPENSE_IDLE;
       }
 
-
-
    // TODO: Do a check if Pumps are operational
 
    // FIXME: Move this to Idle...Parse and check command String

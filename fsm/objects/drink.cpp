@@ -26,7 +26,9 @@ drink::drink()
 //       And figure out storage/reference location...
 drink::drink(int slot)
 {
-
+    setSlot(slot);
+    setDrinkName();
+    setIsStillDrink();    
 }
 
 // DTOR
@@ -43,7 +45,7 @@ void drink::setSlot(int slot)
 
 // Set the Drink Name
 // TODO: Redefine function prototype, no argument.
-void drink::setDrinkName(string drinkName)
+void drink::setDrinkName()
 {
     // TODO: SQLite database Query could be better option.
 }

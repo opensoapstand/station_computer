@@ -62,6 +62,19 @@ DF_ERROR stateDispenseIdle::onAction(dispenser *cassettes)
    {
       // do stuff
       //debugInfo.sendMessage("onAction() for state [" + std::to_string((int)m_nextState) + "]", INFO);
+      if (dispenserSetup()->getIsDispenseComplete())
+      {
+         debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]", INFO);
+         m_state = DISPENSE_END;
+         m_nextState = IDLE;
+      }
+      else
+      {
+         debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
+         m_state = DISPENSE_IDLE;
+         m_nextState = DISPENSE;
+      }
+
       m_nextState = DISPENSE;
       df_ret = OK;
    }
@@ -74,16 +87,16 @@ DF_ERROR stateDispenseIdle::onExit()
 {
    DF_ERROR e_ret = OK;
 
-   //  debugOutput::sendMessage("StateDispenseIdle OnExit()", INFO);
+   // debugOutput::sendMessage("StateDispenseIdle OnExit()", INFO);
    // if (dispenserSetup()->getIsDispenseComplete())
    // {
    //    debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]", INFO);
-   //    m_state = DISPENSE_END;
-   //    m_nextState = IDLE;
+      m_state = DISPENSE_END;
+      m_nextState = IDLE;
    // }
    // else
    // {
-      debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
+   //    debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
       m_state = DISPENSE_IDLE;
       m_nextState = DISPENSE;
    // }

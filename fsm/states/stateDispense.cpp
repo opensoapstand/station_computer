@@ -66,18 +66,36 @@ DF_ERROR stateDispense::onAction(dispenser *cassettes)
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
    string temp;
 
-   // Parse and check command String
-   if (m_pMessaging->getStringReady())
+   if (nullptr != &m_nextState) // TODO: Do a Check if Button is Pressed
    {
+      // State Check
+      if (dispenserSetup()->getIsDispenseComplete())
+      {
+         debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]", INFO);
+         m_state = DISPENSE;
+         m_nextState = DISPENSE_END;
+      }
+      else
+      {
+         debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
+         m_state = DISPENSE;
+         m_nextState = DISPENSE_IDLE;
+      }
+
+
+
+   // TODO: Do a check if Pumps are operational
+
+   // FIXME: Move this to Idle...Parse and check command String
+   if (m_pMessaging->getStringReady())
+   {      
       temp = m_pMessaging->getCommandString();
    }
    else
    {
-      return e_ret = OK;
+      return e_ret = ERROR_NETW_NO_COMMAND;
    }
 
-   if (nullptr != &m_nextState)
-   {
       //only allow [cassette_num][A/D/W] to be keyboard input for now...
       //eg. 1a -> cassette 1 for air solenoid
 
@@ -157,19 +175,7 @@ DF_ERROR stateDispense::onAction(dispenser *cassettes)
          break;
 
       case DISPENSE_END_CHAR: // TODO: Shift this to DISPENSE_END
-         debugOutput::sendMessage("------Cleaning Mode------", INFO);
-         debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
-         debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(WATER)), INFO);
-         debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> AIR", INFO);
-         debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(AIR)), INFO);
-
-         cassettes[pos].cleanNozzle(WATER, AIR);
-
-         // TODO: Send a complete ACK back to QT
-         // m_pMessaging->sendMessage("!");
-
          onExit();
-         // this->onExit();
          break;
 
       default:
@@ -188,19 +194,19 @@ DF_ERROR stateDispense::onExit()
    DF_ERROR e_ret = OK;
    debugOutput::sendMessage("Dispense OnEXIT", INFO);
 
-   // TODO: Does not seem to advance to Idle again...
-   if (dispenserSetup()->getIsDispenseComplete())
-   {
-      debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]", INFO);
+   // // TODO: Does not seem to advance to Idle again...
+   // if (dispenserSetup()->getIsDispenseComplete())
+   // {
+   //    debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]", INFO);
       m_state = DISPENSE;
       m_nextState = DISPENSE_END;
-   }
-   else
-   {
-      debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
-      m_state = DISPENSE;
-      m_nextState = DISPENSE_IDLE;
-   }
+   // }
+   // else
+   // {
+   //    debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
+   //    m_state = DISPENSE;
+   //    m_nextState = DISPENSE_IDLE;
+   // }
 
    return e_ret;
 }

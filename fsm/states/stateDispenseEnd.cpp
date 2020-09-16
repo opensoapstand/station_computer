@@ -1,11 +1,7 @@
 //***************************************
 //
-// statedispense.h
-// dispense state class
-//
-// Recieves and interprets string command 
-// from messageMediator in FSM.
-// Routes dispense instruction to GPIO's
+// stateDispenseEnd.h
+// Dispense End State; Reset for Idle
 //
 // created: 26-06-2020
 // by: Jason Wang & Li-Yan Tong
@@ -61,12 +57,10 @@ DF_ERROR stateDispenseEnd::onEntry()
 DF_ERROR stateDispenseEnd::onAction(dispenser* cassettes)
 {
    DF_ERROR e_ret  = ERROR_BAD_PARAMS;
-   string temp;
-
-   cout << "Dispense end hello!" << endl;
-    
    if (nullptr != &m_nextState)
    {
+
+
       // TODO: Cleaning Nozzle
       debugOutput::sendMessage("------Cleaning Mode------", INFO);
       // debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> WATER", INFO);
@@ -74,10 +68,16 @@ DF_ERROR stateDispenseEnd::onAction(dispenser* cassettes)
       // debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> WATER", INFO);
       // debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
-      // // cassettes[pos].testSolenoidDispense(DRINK);
-      // cassettes[pos].cleanNozzle(WATER, AIR);
-      // m_pMessaging->clearProcessString();
-      m_pMessaging->clearCommandString(); 
+      cassettes[pos].testSolenoidDispense(DRINK);
+      cassettes[pos].cleanNozzle(WATER, AIR);
+      m_pMessaging->clearProcessString();
+      m_pMessaging->clearCommandString();
+
+      // TODO: Log events to DB
+
+      // TODO: Send a complete ACK back to QT
+      // m_pMessaging->sendMessage("!");
+
       e_ret = OK;
    }
 
@@ -88,6 +88,7 @@ DF_ERROR stateDispenseEnd::onAction(dispenser* cassettes)
 DF_ERROR stateDispenseEnd::onExit()
 {
    DF_ERROR e_ret  = OK;
+   debugOutput::sendMessage("Exiting Dispensing END[" + toString() + "]", INFO);
 
    // TODO: Does not seem to advance to Idle again...
    m_state = DISPENSE_END;

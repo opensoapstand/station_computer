@@ -12,7 +12,7 @@
  ********************************************************/
 
 -- Tables will need machine_id FK for Web.  Do not need reference to machine_id locally-- Log and describe maintenance performed--
-CREATE TABLE IF NOT EXISTS master_log (
+CREATE TABLE IF NOT EXISTS log_master (
     master_log_id INTEGER PRIMARY KEY AUTOINCREMENT,
     -- 'maintenance_user' reference needed...
     maintenance_code VARCHAR(10),
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS master_log (
 );
 
 -- Log and describe temperature
-CREATE TABLE IF NOT EXISTS  temperature_log (
+CREATE TABLE IF NOT EXISTS  log_temperature (
     temperature_log_id INTEGER PRIMARY KEY AUTOINCREMENT,
     -- Sensors in Degrees Celcius
     top_sensor_C DECIMAL(2) DEFAULT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS  temperature_log (
 );
 
 -- Log and provide warning switch for waste overflow
-CREATE TABLE IF NOT EXISTS  waste_log (
+CREATE TABLE IF NOT EXISTS  log_waste (
     waste_log_id INTEGER PRIMARY KEY AUTOINCREMENT,
     -- Sensors are level sensors for liquid overspill in waste
     top_failure_sensor BOOLEAN default FALSE,
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS  waste_log (
 );
 
 -- Log and describe dispensed liquids
-CREATE TABLE IF NOT EXISTS  flow_io_log (
+CREATE TABLE IF NOT EXISTS  log_flow_io (
     flow_io_log_id INTEGER PRIMARY KEY AUTOINCREMENT,
     flow_sensor_slot INT CHECK(
         flow_sensor_slot > -1
@@ -76,6 +76,7 @@ CREATE TABLE IF NOT EXISTS   sales (
     location_id INT NOT NULL,
     date TIMESTAMP WITH TIME ZONE NOT NULL,
     amount VARCHAR(10),
+    coupon_id INT DEFAULT NULL,
     card_type VARCHAR(10),
     -- FIXME: Will need better masking card_type FOR MONERIS;
     transaction_type VARCHAR(8),
@@ -117,12 +118,38 @@ CREATE TABLE IF NOT EXISTS   inventory (
     volume NUMERIC(2) DEFAULT NULL,
     date_refresh TIMESTAMP WITH TIME ZONE NOT NULL,
     in_stock BOOLEAN DEFAULT FALSE,
+    has_pump BOOLEAN DEFAULT FALSE,
     FOREIGN KEY(product_id) REFERENCES   product(product_id) ON DELETE CASCADE
 );
 
 
 
 drop table product;
+
+INSERT INTO product (
+    product_id,
+    name,
+    product_brand,
+    product_type,
+    product_flavour,
+    product_description,
+    product_requires_pump,
+    vendor_id,
+    calibration_const,
+    cost_per_litre,
+    option_slot
+    ) SELECT product_id,
+    name,
+    product_brand,
+    product_type,
+    product_flavour,
+    product_description,
+    product_requires_pump,
+    vendor_id,
+    calibration_const,
+    cost_per_litre,
+    option_slot
+	FROM tempproduct;
 
 /*
  Product holds a local catalog of drinks used in the machine
@@ -131,17 +158,21 @@ drop table product;
 CREATE TABLE IF NOT EXISTS   product (
     product_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(100) NOT NULL,
+    product_brand VARCHAR(50) NOT NULL,
     product_type VARCHAR(50) NOT NULL,
-    product_description VARCHAR(100) NOT NULL,
+    product_flavour VARCHAR(50) NOT NULL,
+    product_description VARCHAR(255),
+    product_ingredients VARCHAR(255),
+    product_requires_pump BOOLEAN DEFAULT FALSE,
     vendor_id INT DEFAULT NULL,
     calibration_const NUMERIC(6),
     -- cost from vendor
     cost_per_litre MONEY,
-    option_slot INT DEFAULT(-1) CHECK(
-        option_slot >= -1
+    option_slot INT DEFAULT(NULL) CHECK(
+        option_slot >= 0
         AND option_slot <= 8
     ),
-    -- -1 means empty; 0 to 8 are slots 1 to 9 respectively.
+    -- NULL means empty; 0 to 8 are slots 1 to 9 respectively.
     coupon_code_id INT,
     FOREIGN KEY(vendor_id) REFERENCES   vendor(vendor_id) ON DELETE CASCADE,
     FOREIGN KEY(coupon_code_id) REFERENCES   coupon(coupon_id) ON DELETE CASCADE,
@@ -203,15 +234,15 @@ CREATE TABLE IF NOT EXISTS   product_image_QT (
 
 /* SQLite does not take TRUE/FALSE has to be 1/0 */
 INSERT INTO   inventory
-VALUES (0, NULL, NULL, current_timestamp, 0),
-    (1, NULL, NULL, current_timestamp, 0),
-    (2, NULL, NULL, current_timestamp, 0),
-    (3, NULL, NULL, current_timestamp, 0),
-    (4, NULL, NULL, current_timestamp, 0),
-    (5, NULL, NULL, current_timestamp, 0),
-    (6, NULL, NULL, current_timestamp, 0),
-    (7, NULL, NULL, current_timestamp, 0),
-    (8, NULL, NULL, current_timestamp, 0);
+VALUES (0, NULL, NULL, current_timestamp, 0, 0),
+    (1, NULL, NULL, current_timestamp, 0, 0),
+    (2, NULL, NULL, current_timestamp, 0, 0),
+    (3, NULL, NULL, current_timestamp, 0, 0),
+    (4, NULL, NULL, current_timestamp, 0, 0),
+    (5, NULL, NULL, current_timestamp, 0, 1),
+    (6, NULL, NULL, current_timestamp, 0, 1),
+    (7, NULL, NULL, current_timestamp, 0, 1),
+    (8, NULL, NULL, current_timestamp, 0, 1);
 
 
 /*

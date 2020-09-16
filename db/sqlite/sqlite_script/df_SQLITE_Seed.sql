@@ -57,22 +57,144 @@ INSERT IF NOT EXISTS INTO vendor (
 	contact_email = NULL
 )WHERE name = 'Bentall';
 
+
+/* ######## INSERTING A NEW PRODUCT ########*/
+
+/* If we know the supplier or Vendor */
+INSERT OR IGNORE INTO vendor(
+	name,
+	full_address,
+	contact_name,
+	contact_phone,
+	contact_email
+) VALUES 
+(
+	'Oddity Kombucha',
+	'1863 Ontario St., Vancouver, BC',
+	NULL,
+	NULL,
+	NULL
+);
+
+INSERT OR IGNORE INTO product(
+name, 
+product_brand, 
+product_type, 
+product_flavour, 
+product_description,
+product_ingredients,
+product_requires_pump,
+vendor_id,
+calibration_const, 
+cost_per_litre)
+VALUES (
+	'Oddity''s Ginger Kombucha',
+	'Oddity Kombucha',
+	'Kombucha',
+	'Ginger',
+	'Oddity''s Ginger Kombucha is made with green and black tea and blended with fresh ginger juice and lemongrass for a crisp and refreshing taste',
+	'Black tea, green tea, cane sugar, ginger juice, lemongrass, water and kombucha culture',
+	0,
+	(SELECT vendor_id from vendor
+    WHERE name = "Oddity Kombucha"),
+	1.3,
+	0.00
+);
+
+/* FIXME: Hardcoded, should select query these values */
+INSERT OR IGNORE INTO pricing (
+	product_id,
+	price_per_litre,
+	small_price,
+	medium_price,
+	large_price,
+	location_id
+) VALUES (
+	1,
+	0.00,
+	3.00,
+	3.50,
+	4.00,
+	1
+)
+
+update product
+SET
+option_slot = 0
+WHERE product_id = 1;
+
+/* FIXME: Hardcoded, should do a query to link with Product */
+UPDATE inventory
+SET 
+	product_id = 1,
+	volume = 18900, 
+	date_refresh = '2020-09-31 08:00:00',
+	in_stock = 1
+WHERE inventory_id = 0;
+
+
 UPDATE inventory
 SET
 in_stock = 1
 WHERE inventory_id = 0;
 
-/* ######## INSERTING A NEW PRODUCT ########*/
+/* FOR BENTALL */
 
-INSERT INTO product(name, product_type, product_description, vendor_id, user_type, calibration_const, cost_per_litre, option_slot)
+INSERT OR IGNORE INTO vendor(
+	name,
+	full_address,
+	contact_name,
+	contact_phone,
+	contact_email
+) VALUES 
+(
+	'Bucha Brew',
+	NULL,
+	'Julia Moss',
+	NULL,
+	"chantal@buchabrew.ca"
+);
+
+INSERT OR IGNORE INTO product(
+name, 
+product_brand, 
+product_type, 
+product_flavour, 
+product_description,
+product_ingredients,
+product_requires_pump,
+vendor_id,
+calibration_const, 
+cost_per_litre)
 VALUES (
-	'JJ Bean Cold brew',
-	'Cold Brew coffee',
-	1,
-	'machine',
+	'Bucha Brew Mango Kombucha',
+	'Bucha Brew',
+	'Kombucha',
+	'Mango',
+	'Mouthwatering mango that will save you from the melting point.  Just when you think you can''t take the heat, strip, take a sip and show that sun of a bucha who''s hotter now.',
+	'Water, organic kombucha culture, organic cane sugar, oragnic green tea, organic black tea, mango',
+	0,
+	(SELECT vendor_id from vendor
+    WHERE name = "Bucha Brew"),
 	1.3,
-	20.00,
-	-1
+	0.00
+);
+
+/* FIXME: Hardcoded, should select query these values */
+INSERT OR IGNORE INTO pricing (
+	product_id,
+	price_per_litre,
+	small_price,
+	medium_price,
+	large_price,
+	location_id
+) VALUES (
+	(SELECT product_id from product where product_brand = "Bucha Brew" AND product_flavour == "Mango"),
+	0.00,
+	3.00,
+	3.50,
+	4.00,
+	1
 );
 
 update product
@@ -80,13 +202,20 @@ SET
 option_slot = 0
 WHERE product_id = 1;
 
+/* FIXME: Hardcoded, should do a query to link with Product */
 UPDATE inventory
 SET 
 	product_id = 1,
 	volume = 1000, 
 	date_refresh = '2020-09-10 08:00:00',
-	in_stock = 0
+	in_stock = 1
 WHERE inventory_id = 0;
+
+UPDATE inventory
+SET
+in_stock = 1
+WHERE inventory_id = 0;
+
 
 /* ######## INSERTING A SALE ########*/
 

@@ -3,7 +3,7 @@
 // statedispense.h
 // dispense state class
 //
-// Recieves and interprets string command 
+// Recieves and interprets string command
 // from messageMediator in FSM.
 // Routes dispense instruction to GPIO's
 //
@@ -22,11 +22,11 @@
 // CTOR
 stateDispense::stateDispense()
 {
-
 }
 
 // CTOR Linked to IPC
-stateDispense::stateDispense(messageMediator * message){
+stateDispense::stateDispense(messageMediator *message)
+{
 
    //debugOutput::sendMessage("stateDispense(messageMediator * message)", INFO);
 }
@@ -34,7 +34,6 @@ stateDispense::stateDispense(messageMediator * message){
 // DTOR
 stateDispense::~stateDispense()
 {
-
 }
 
 // Overload for Debugger output
@@ -46,14 +45,14 @@ string stateDispense::toString()
 /*
  * Called from FSM loop to check state before inAction execution
  * TODO: Create State Class to hold this function definition
- */ 
+ */
 DF_ERROR stateDispense::onEntry()
 {
-   DF_ERROR e_ret  = OK;
+   DF_ERROR e_ret = OK;
 
    m_state = DISPENSE;
    m_nextState = DISPENSE;
-   
+
    return e_ret;
 }
 
@@ -62,13 +61,13 @@ DF_ERROR stateDispense::onEntry()
  * Air, Water and Drink.  Sends signal to Solenoids to Dispense,
  * Based on string command
  */
-DF_ERROR stateDispense::onAction(dispenser* cassettes)
+DF_ERROR stateDispense::onAction(dispenser *cassettes)
 {
-   DF_ERROR e_ret  = ERROR_BAD_PARAMS;
+   DF_ERROR e_ret = ERROR_BAD_PARAMS;
    string temp;
 
    // Parse and check command String
-   if(m_pMessaging->getStringReady())
+   if (m_pMessaging->getStringReady())
    {
       temp = m_pMessaging->getCommandString();
    }
@@ -76,7 +75,7 @@ DF_ERROR stateDispense::onAction(dispenser* cassettes)
    {
       return e_ret = OK;
    }
-   
+
    if (nullptr != &m_nextState)
    {
       //only allow [cassette_num][A/D/W] to be keyboard input for now...
@@ -87,14 +86,14 @@ DF_ERROR stateDispense::onAction(dispenser* cassettes)
       char posChar;
       strcpy(&posChar, &temp[0]);
 
-      if(isdigit(posChar)) //first character should be string
+      if (isdigit(posChar)) //first character should be string
       {
          pos = atoi(&posChar) - 1;
 
-         if(CASSETTES_MAX < pos || 0 > pos)
+         if (CASSETTES_MAX < pos || 0 > pos)
          {
-            debugOutput::sendMessage("Irrelevant input", ERROR); 
-            m_pMessaging->clearProcessString();  
+            debugOutput::sendMessage("Irrelevant input", ERROR);
+            m_pMessaging->clearProcessString();
             return e_ret = OK; //require valid cassettes
          }
       }
@@ -103,73 +102,79 @@ DF_ERROR stateDispense::onAction(dispenser* cassettes)
          // Error Handling
          debugOutput::sendMessage("Irrelevant input", INFO);
          m_pMessaging->clearProcessString(); //make sure to clear the processed string for new input
-         return e_ret = OK; //require valid cassettes
+         return e_ret = OK;                  //require valid cassettes
       }
 
-      // Check for Char then int pairing values            
+      // Check for Char then int pairing values
       char solenoidChar;
       strcpy(&solenoidChar, &temp[1]);
 
-      if(!isalpha(solenoidChar)) //for second char not an alphabet
+      if (!isalpha(solenoidChar)) //for second char not an alphabet
       {
-         debugOutput::sendMessage("Irrelevant input", INFO); 
+         debugOutput::sendMessage("Irrelevant input", INFO);
          m_pMessaging->clearCommandString(); //make sure to clear the processed string for new input
-           return e_ret = OK;
+         return e_ret = OK;
       }
 
       // TODO: Can seperate this into char parsing switch statment and further into function.
-      if(AIR_CHAR == solenoidChar)
+      switch (solenoidChar)
       {
-         debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> AIR", INFO);
+      case AIR_CHAR:
+         debugOutput::sendMessage("------Dispensing AIR------", INFO);
+         debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> AIR", INFO);
          debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(AIR)), INFO);
 
-         if(nullptr != cassettes[pos].getDrink())
+         // FIXME: Should we do a null check for every dispense...
+         if (nullptr != cassettes[pos].getDrink())
          {
             cassettes[pos].testSolenoidDispense(AIR);
          }
-         // else
-         // {
-         //    debugOutput::sendMessage("Cassette " +  to_string(pos+1) + " is nullptr", INFO);
-         // }
-         
-      }
-      else if(WATER_CHAR == solenoidChar)
-      {
-         debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> WATER", INFO);
+         else
+         {
+            debugOutput::sendMessage("Cassette " + to_string(pos + 1) + " is nullptr", INFO);
+         }
+         break;
+
+      case WATER_CHAR:
+         debugOutput::sendMessage("------Dispensing WATER------", INFO);
+         debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
          debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(WATER)), INFO);
+
          cassettes[pos].testSolenoidDispense(WATER);
+         break;
 
-      }
-      else if(DRINK_CHAR == solenoidChar)
-      {
+      case DRINK_CHAR:
          debugOutput::sendMessage("------Dispensing Drink------", INFO);
-         // debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> DRINK", INFO);
+         debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> DRINK", INFO);
          debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
-         // cassettes[pos].testSolenoidDispense(DRINK);
          cassettes[pos].startDispense(DRINK);
-      }
-      else if(DISPENSE_END_CHAR == solenoidChar)
-      {
+         // this->onExit();
+
+         // FIXME: FSM loop is not looping/pushing through to onExit().
+         sleep(3);
+         // onExit();
+         break;
+
+      case DISPENSE_END_CHAR: // TODO: Shift this to DISPENSE_END
          debugOutput::sendMessage("------Cleaning Mode------", INFO);
-         debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> WATER", INFO);
+         debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
          debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(WATER)), INFO);
+         debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> AIR", INFO);
+         debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(AIR)), INFO);
 
-         debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> WATER", INFO);
-         debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
-
-         // cassettes[pos].testSolenoidDispense(DRINK);
          cassettes[pos].cleanNozzle(WATER, AIR);
 
+         // TODO: Send a complete ACK back to QT
          // m_pMessaging->sendMessage("!");
 
-         this->onExit();
-      }
-      else{
-         debugOutput::sendMessage("Irrelevant input", INFO); 
-      }
+         onExit();
+         // this->onExit();
+         break;
 
-      // m_pMessaging->clearProcessString();
+      default:
+         break;
+      }
       m_pMessaging->clearCommandString();
       e_ret = OK;
    }
@@ -180,12 +185,22 @@ DF_ERROR stateDispense::onAction(dispenser* cassettes)
 // Actions on leaving Dispense state
 DF_ERROR stateDispense::onExit()
 {
-   DF_ERROR e_ret  = OK;
+   DF_ERROR e_ret = OK;
+   debugOutput::sendMessage("Dispense OnEXIT", INFO);
 
    // TODO: Does not seem to advance to Idle again...
-   m_state = DISPENSE;
-   m_nextState = DISPENSE_END;   
-   //m_nextState = INIT; //go back for now
+   if (dispenserSetup()->getIsDispenseComplete())
+   {
+      debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]", INFO);
+      m_state = DISPENSE;
+      m_nextState = DISPENSE_END;
+   }
+   else
+   {
+      debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
+      m_state = DISPENSE;
+      m_nextState = DISPENSE_IDLE;
+   }
 
    return e_ret;
 }

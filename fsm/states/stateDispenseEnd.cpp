@@ -27,7 +27,6 @@ stateDispenseEnd::stateDispenseEnd()
 
 // CTOR Linked to IPC
 stateDispenseEnd::stateDispenseEnd(messageMediator * message){
-
    debugOutput::sendMessage("stateDispenseEnd(messageMediator * message)", INFO);
 }
 
@@ -51,6 +50,8 @@ DF_ERROR stateDispenseEnd::onEntry()
 {
    DF_ERROR e_ret  = OK;
 
+   debugOutput::sendMessage("Entering Dispense End...", STATE_CHANGE);
+
    m_state = DISPENSE_END;
    m_nextState = IDLE;
    
@@ -61,11 +62,13 @@ DF_ERROR stateDispenseEnd::onAction(dispenser* cassettes)
 {
    DF_ERROR e_ret  = ERROR_BAD_PARAMS;
    string temp;
-   
+
+   cout << "Dispense end hello!" << endl;
+    
    if (nullptr != &m_nextState)
    {
       // TODO: Cleaning Nozzle
-      // debugOutput::sendMessage("------Cleaning Mode------", INFO);
+      debugOutput::sendMessage("------Cleaning Mode------", INFO);
       // debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> WATER", INFO);
       // debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(WATER)), INFO);
       // debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> WATER", INFO);

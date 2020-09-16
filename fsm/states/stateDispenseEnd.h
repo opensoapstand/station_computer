@@ -30,9 +30,9 @@ class stateDispenseEnd : public stateVirtual
         DF_ERROR onEntry();
         DF_ERROR onAction(dispenser* cassettes);
         DF_ERROR onExit();
-        
-    private:
 
-    
+        dispenser* dispenserSetup(){};
+        
+    private:    
 };
 #endif

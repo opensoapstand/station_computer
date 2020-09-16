@@ -43,12 +43,19 @@ class stateVirtual
         gpio* getSolenoid(int pos, int type);
         gpio* getButton();
 
+        // // FIXME: Cludgey fix to exit dispense loop.
+        // bool getIsDispenseComplete(){return m_isDispenseComplete;}
+        // void setIsDispenseComplete(bool isDispenseComplete){m_isDispenseComplete = isDispenseComplete;}
+
     protected:
         DF_FSM  m_state;
         DF_FSM  m_nextState;
         //dispenser* cassettes[CASSETTES_MAX];
         gpio *m_pButton[NUM_BUTTON];
         messageMediator * m_pMessaging;
+
+        // FIXME: Cludgey fix to exit dispense loop.
+        // bool m_isDispenseComplete;
 };
 
 

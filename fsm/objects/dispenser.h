@@ -71,6 +71,9 @@ class dispenser
 
       DF_ERROR connectButton();
       DF_ERROR disconnectButton();
+
+      bool getIsDispenseComplete(){return m_isDispenseDone;}
+      // void setIsDispenseComplete(bool isDispenseComplete){m_isDispenseDone = isDispenseComplete;}
       
       DF_ERROR cleanNozzle(int posW, int posA);
 
@@ -82,7 +85,7 @@ class dispenser
       int getI2CPin(int pos);
 
    private:
-      bool m_isDispensing;
+      bool m_isDispenseDone;
       bool m_isStill;
 
       drink *m_pDrink;

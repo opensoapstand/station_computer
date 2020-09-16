@@ -41,9 +41,10 @@ class stateDispense : public stateVirtual
         // dispenser* dispenserSetup(getButton()) {};
         dispenser* dispenserSetup(){};
 
+
     private:
 
-        bool isDipenseEnd;
+
     
 };
 #endif

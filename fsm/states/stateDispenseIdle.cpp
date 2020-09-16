@@ -17,24 +17,22 @@
 
 #include "stateDispenseIdle.h"
 
-#define DISPENSE_IDLE_STRING  "Dispense Idle"
+#define DISPENSE_IDLE_STRING "Dispense Idle"
 
 // Default CTOR
 stateDispenseIdle::stateDispenseIdle()
 {
-
 }
 
 // CTOR Linked to IPC
-stateDispenseIdle::stateDispenseIdle(messageMediator * message){
-   
+stateDispenseIdle::stateDispenseIdle(messageMediator *message)
+{
    //debugOutput::sendMessage("stateDispenseIdle(messageMediator * message)", INFO);
 }
 
 // DTOR
 stateDispenseIdle::~stateDispenseIdle()
 {
-
 }
 
 // Overload for Debugger output
@@ -46,54 +44,49 @@ string stateDispenseIdle::toString()
 // FIXME: See state dispense function header
 DF_ERROR stateDispenseIdle::onEntry()
 {
-   DF_ERROR e_ret  = OK;
+   DF_ERROR e_ret = OK;
 
    m_state = DISPENSE_IDLE;
    m_nextState = DISPENSE_IDLE;
-   
+
    return e_ret;
 }
 
 // Idles after proper initilization;  Waits for a command from messageMediator
-DF_ERROR stateDispenseIdle::onAction(dispenser* cassettes)
+DF_ERROR stateDispenseIdle::onAction(dispenser *cassettes)
 {
    debugOutput debugInfo;
-   DF_ERROR df_ret  = ERROR_BAD_PARAMS;
+   DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
    if (nullptr != &m_nextState)
    {
       // do stuff
       //debugInfo.sendMessage("onAction() for state [" + std::to_string((int)m_nextState) + "]", INFO);
       m_nextState = DISPENSE;
-      return df_ret = OK;
+      df_ret = OK;
    }
 
    return df_ret;
 }
 
-/*DF_FSM stateDispenseIdle::onAction(dispenser* dispenseObj)
-{
-    DF_FSM df_state_ret  = DISPENSE_IDLE;
-
-    if (nullptr != &m_nextState)
-    {
-        // do stuff
-        //debugOutput::sendMessage("onAction() for state [" + std::to_string((int)m_nextState) + "]", INFO);
-          
-        return df_state_ret = DISPENSE;
-    }
-
-    return df_state_ret;
-}*/
-
 // Advances to Dispense State with successful onAction()
 DF_ERROR stateDispenseIdle::onExit()
 {
-    debugOutput debugInfo;
-    DF_ERROR e_ret  = OK;
+   DF_ERROR e_ret = OK;
 
-    m_state = DISPENSE_IDLE;
-    m_nextState = DISPENSE;
+   //  debugOutput::sendMessage("StateDispenseIdle OnExit()", INFO);
+   // if (dispenserSetup()->getIsDispenseComplete())
+   // {
+   //    debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]", INFO);
+   //    m_state = DISPENSE_END;
+   //    m_nextState = IDLE;
+   // }
+   // else
+   // {
+      debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
+      m_state = DISPENSE_IDLE;
+      m_nextState = DISPENSE;
+   // }
 
    return e_ret;
 }

@@ -15,7 +15,7 @@
 //***************************************
 #include "dispenser.h"
 
-#define ACTIVATION_TIME 10
+#define ACTIVATION_TIME 5
 #define TEST_ACTIVATION_TIME 3
 #define PRIME_PUMP_TIME 1
 #define CLEAN_WATER_TIME 1
@@ -214,7 +214,8 @@ DF_ERROR dispenser::startDispense(int pos){
 
     // XXX: Disable Button - Linked thru State Virtual
     // e_ret = disconnectButton();
-    
+    m_isDispenseDone = true;
+
     return e_ret = OK;
 }
 

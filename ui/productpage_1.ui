@@ -17,6 +17,9 @@
    <string notr="true"/>
   </property>
   <widget class="QPushButton" name="nextPageButton">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>0</x>

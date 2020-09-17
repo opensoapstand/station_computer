@@ -65,6 +65,37 @@ RESOURCES += \
     src.qrc
 
 DISTFILES += \
+    light/1_welcome_panel.jpg \
+    light/2_drink_page_1.jpg \
+    light/3_drink_page_2.jpg \
+    light/4_pay_select_page_l.png \
+    light/4_pay_select_page_l_1.jpg \
+    light/4_pay_select_page_l_2.jpg \
+    light/4_pay_select_page_l_3.jpg \
+    light/4_pay_select_page_l_4.jpg \
+    light/4_pay_select_page_l_5.jpg \
+    light/4_pay_select_page_s.jpg \
+    light/4_pay_select_page_s_1.jpg \
+    light/4_pay_select_page_s_2.jpg \
+    light/4_pay_select_page_s_3.jpg \
+    light/4_pay_select_page_s_4.jpg \
+    light/4_pay_select_page_s_5.jpg \
+    light/5_pay_page_blank.jpg \
+    light/5_pay_page_l_1.jpg \
+    light/5_pay_page_l_2.jpg \
+    light/5_pay_page_l_3.jpg \
+    light/5_pay_page_l_4.jpg \
+    light/5_pay_page_l_5.jpg \
+    light/5_pay_page_s_1.jpg \
+    light/5_pay_page_s_2.jpg \
+    light/5_pay_page_s_3.jpg \
+    light/5_pay_page_s_4.jpg \
+    light/5_pay_page_s_5.jpg \
+    light/6_dispense_page.png \
+    light/7_thank_you_page.png \
+    light/background.png \
+    light/bottom_1.jpg \
+    light/bottom_2.jpg \
     styles/product_select.qss
 
 # EV2 Reference for moneris

@@ -30,6 +30,9 @@ paySelect::paySelect(QWidget *parent) :
     ui->setupUi(this);
     QPixmap background(":/light/4_pay_select_page_s.jpg");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+
+//    background = background.scaled(this->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
@@ -99,7 +102,13 @@ void paySelect::on_mainPage_Button_clicked()
 // on_Small_Order button listener
 void paySelect::on_orderSmall_Button_clicked()
 {
-    QPixmap background(":/light/4_pay_select_page_s.jpg");
+    QString bitmap_location;
+
+    bitmap_location.append(":/light/4_pay_select_page_s_");
+    bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
+    bitmap_location.append(".jpg");
+
+    QPixmap background(bitmap_location);
     background = background.scaled(this->size(), Qt::KeepAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
@@ -112,7 +121,13 @@ void paySelect::on_orderSmall_Button_clicked()
 // on_Large_Order button listener
 void paySelect::on_orderBig_Button_clicked()
 {
-    QPixmap background(":/light/4_pay_select_page_l.png");
+    QString bitmap_location;
+
+    bitmap_location.append(":/light/4_pay_select_page_l_");
+    bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
+    bitmap_location.append(".jpg");
+
+    QPixmap background(bitmap_location);
     background = background.scaled(this->size(), Qt::KeepAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);

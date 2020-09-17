@@ -54,6 +54,9 @@ DF_ERROR stateDispenseEnd::onEntry()
    return e_ret;
 }
 
+/*
+ * 
+ */
 DF_ERROR stateDispenseEnd::onAction(dispenser* cassettes)
 {
    DF_ERROR e_ret  = ERROR_BAD_PARAMS;

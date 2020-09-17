@@ -36,7 +36,7 @@ productPage_1::productPage_1(QWidget *parent) :
     // TODO:  Populate Page Drink buttons with DrinkSelection[0-5]
 
     /*hacky transparent button*/
-    ui->nextPageButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+//    ui->nextPageButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");

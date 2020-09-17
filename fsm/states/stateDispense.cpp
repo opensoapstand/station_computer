@@ -82,17 +82,17 @@ DF_ERROR stateDispense::onAction(dispenser *cassettes)
          m_nextState = DISPENSE_IDLE;
       }
 
-   // TODO: Do a check if Pumps are operational
+      // TODO: Do a check if Pumps are operational
 
-   // FIXME: Move this to Idle...Parse and check command String
-   if (m_pMessaging->getStringReady())
-   {      
-      temp = m_pMessaging->getCommandString();
-   }
-   else
-   {
-      return e_ret = ERROR_NETW_NO_COMMAND;
-   }
+      // FIXME: Move this to Idle...Parse and check command String
+      if (m_pMessaging->getStringReady())
+      {
+         temp = m_pMessaging->getCommandString();
+      }
+      else
+      {
+         return e_ret = ERROR_NETW_NO_COMMAND;
+      }
 
       //only allow [cassette_num][A/D/W] to be keyboard input for now...
       //eg. 1a -> cassette 1 for air solenoid
@@ -112,6 +112,9 @@ DF_ERROR stateDispense::onAction(dispenser *cassettes)
             m_pMessaging->clearProcessString();
             return e_ret = OK; //require valid cassettes
          }
+
+         // drinkPtr(new drink(posChar));
+
       }
       else
       {
@@ -173,6 +176,15 @@ DF_ERROR stateDispense::onAction(dispenser *cassettes)
          break;
 
       case DISPENSE_END_CHAR: // TODO: Shift this to DISPENSE_END
+
+         debugOutput::sendMessage("------Cleaning Mode------", INFO);
+         debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
+         debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(WATER)), INFO);
+         debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
+         debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
+
+         cassettes[pos].testSolenoidDispense(DRINK);
+         cassettes[pos].cleanNozzle(WATER, AIR);
          onExit();
          break;
 
@@ -196,8 +208,8 @@ DF_ERROR stateDispense::onExit()
    // if (dispenserSetup()->getIsDispenseComplete())
    // {
    //    debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]", INFO);
-      m_state = DISPENSE;
-      m_nextState = DISPENSE_END;
+   m_state = DISPENSE;
+   m_nextState = DISPENSE_END;
    // }
    // else
    // {

@@ -36,7 +36,7 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 .PHONY: clean controller
 
 controller:
-	g++ -pthread -o controller fsm.cpp components/*.cpp states/*.cpp objects/*.cpp ../library/tinyxml/*.cpp  ../library/i2c/mcp23017/*.cpp ../library/i2c/smbus/*.c ../library/socket/*.cpp
+	g++ -pthread -o controller fsm.cpp components/*.cpp states/*.cpp objects/*.cpp ../library/tinyxml/*.cpp  ../library/i2c/mcp23017/*.cpp ../library/i2c/smbus/*.c ../library/socket/*.cpp -l sqlite3
 
 Socket: Socket.cpp
 ServerSocket: ServerSocket.cpp

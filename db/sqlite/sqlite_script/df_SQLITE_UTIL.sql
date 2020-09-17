@@ -20,5 +20,19 @@ select * from `waste_log`;
 select `option2` from `machine`;
 update `machine` set `option1` = 4 where `id` = 1;
 
+// Select Query for Drink Object in FSM
+
+SELECT 
+inventory.inventory_id, 
+product.product_id, 
+product.name, 
+product.calibration_const,
+pricing.small_price,
+pricing.large_price
+FROM
+inventory
+INNER JOIN product ON inventory.product_id = product.product_id
+INNER JOIN pricing ON inventory.product_id = pricing.product_id;
+
 
 SELECT * FROM vendor WHERE vendor_id = 1;

@@ -64,7 +64,7 @@ DF_ERROR stateLoop()
     {
         if (fsmState != fsmNewState) //state change
         {
-            debugOutput::sendMessage("onEntry()  [" + g_stateArray[fsmNewState]->toString() + "]", STATE_CHANGE);
+            // debugOutput::sendMessage("onEntry()  [" + g_stateArray[fsmNewState]->toString() + "]", STATE_CHANGE);
             dfRet = g_stateArray[fsmNewState]->onEntry();
             fsmState = g_stateArray[fsmNewState]->getCurrentState();
         }
@@ -86,17 +86,17 @@ DF_ERROR stateLoop()
             // Thread and FSM Change Check
             if ((OK == dfRet) && (fsmNewState != fsmState))
             {
-                debugOutput::sendMessage("Main Loop fsmState:" + g_stateArray[fsmState]->toString(), INFO);
+                // debugOutput::sendMessage("Main Loop fsmState:" + g_stateArray[fsmState]->toString(), INFO);
                 // DISPENSE when IP thread has a command ready
                 if (IDLE == fsmState && g_pMessaging->isCommandReady())
                 {
-                    debugOutput::sendMessage("PREPARE TO DISPENSE...onExit()   [" + g_stateArray[fsmState]->toString() + "]", STATE_CHANGE);
+                    // debugOutput::sendMessage("PREPARE TO DISPENSE...onExit()   [" + g_stateArray[fsmState]->toString() + "]", STATE_CHANGE);
                     dfRet = g_stateArray[fsmState]->onExit();
                     fsmNewState = g_stateArray[fsmState]->getNextState(); // Go to State Dispense -> DispenseIdle Loop
                 }
                 else // Other States advance
                 {
-                    debugOutput::sendMessage("State Change...onExit()   [" + g_stateArray[fsmState]->toString() + "]", STATE_CHANGE);
+                    // debugOutput::sendMessage("State Change...onExit()   [" + g_stateArray[fsmState]->toString() + "]", STATE_CHANGE);
                     dfRet = g_stateArray[fsmState]->onExit();
                     fsmNewState = g_stateArray[fsmState]->getNextState(); // Advance until Idle State Loops
                 }

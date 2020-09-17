@@ -22,6 +22,8 @@
 #include <string>
 #include <unistd.h>
 
+#include <sqlite3.h> 
+
 using namespace std;
 
 class drink
@@ -31,12 +33,8 @@ public:
 	drink(int slot);
 	~drink();
 
-	//setter
-	void setSlot(int slot);
-	void setIsStillDrink(bool isStillDrink);
-	
 	//getter
-	int getDrinkOption();
+	int getDrinkOption(){return m_nSlot;}
 	bool getIsStillDrink();
 	int getVolumeRemaining();
 
@@ -48,12 +46,13 @@ private:
 	// TODO: Determine more data to modify per transaction...
 	int m_nSlot;
 	string m_name;
-	string m_ingredients;
 	int m_nVolume;
 
 	bool m_isStillDrink;
 
-	void setDrinkName();
+	void setSlot(int slot);
+	void setDrinkName(string drinkName);
+	void setIsStillDrink(bool isStillDrink);
 
 	//last filled as date
 	//best before as date

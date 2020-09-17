@@ -62,14 +62,16 @@ DF_ERROR stateDispenseEnd::onAction(dispenser* cassettes)
 
 
       // TODO: Cleaning Nozzle
-      debugOutput::sendMessage("------Cleaning Mode------", INFO);
+      // debugOutput::sendMessage("------Cleaning Mode------", INFO);
       // debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> WATER", INFO);
       // debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(WATER)), INFO);
       // debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> WATER", INFO);
       // debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
-      cassettes[pos].testSolenoidDispense(DRINK);
-      cassettes[pos].cleanNozzle(WATER, AIR);
+      // cassettes[pos].testSolenoidDispense(DRINK);
+      // cassettes[pos].cleanNozzle(WATER, AIR);
+
+
       m_pMessaging->clearProcessString();
       m_pMessaging->clearCommandString();
 

@@ -18,7 +18,25 @@
 // Default CTOR
 drink::drink()
 {
+}
 
+static int callback(void *data, int argc, char **argv, char **azColName)
+{
+    int i;
+    fprintf(stderr, "%s: ", (const char *)data);
+
+    for (i = 0; i < argc; i++)
+    {
+        printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+        // if()
+    }
+
+
+    // setDrinkName("test");
+    // setIsStillDrink(false);
+
+    printf("\n");
+    return 0;
 }
 
 // CTOR with Option Slot
@@ -27,14 +45,42 @@ drink::drink()
 drink::drink(int slot)
 {
     setSlot(slot);
-    setDrinkName();
-    setIsStillDrink();    
+
+    sqlite3 *db;
+    char *zErrMsg = 0;
+    int rc;
+
+    string data("CALLBACK FUNCTION");
+
+    // FIXME: Figure out better URI file opening reference...
+    rc = sqlite3_open("/home/drinkfill/bitbucket/drinkfill/db/sqlite/drinkfill-sqlite.db", &db);
+
+    if (rc)
+    {
+        fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+    }
+    else
+    {
+        fprintf(stderr, "Opened database successfully\n");
+    }
+
+    string sql = "SELECT inventory.inventory_id, product.product_id,product.name, product.calibration_const, pricing.small_price, pricing.large_price FROM inventory INNER JOIN product ON inventory.product_id = product.product_id INNER JOIN pricing ON inventory.product_id = pricing.product_id WHERE inventory.inventory_id = " + to_string(m_nSlot) + ";";
+
+    rc = sqlite3_exec(db, sql.c_str(), callback, (void*)data.c_str(), NULL); 
+  
+    if (rc != SQLITE_OK) 
+        cerr << "Error SELECT" << endl; 
+    else {
+        cout << "Operation OK!" << endl; 
+    } 
+
+
+    sqlite3_close(db);
 }
 
 // DTOR
 drink::~drink()
 {
-
 }
 
 // Set the Drink option slot
@@ -45,9 +91,10 @@ void drink::setSlot(int slot)
 
 // Set the Drink Name
 // TODO: Redefine function prototype, no argument.
-void drink::setDrinkName()
+void drink::setDrinkName(string drinkName)
 {
     // TODO: SQLite database Query could be better option.
+    m_name = drinkName;
 }
 
 // TODO: Redefine function prototype, no argument.

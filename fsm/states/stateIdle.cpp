@@ -49,6 +49,9 @@ DF_ERROR stateIdle::onEntry()
    m_state = IDLE;
    m_nextState = IDLE;
 
+         debugOutput::sendMessage("Making a Drink", ERROR);
+         new drink(1);
+
    return e_ret;
 }
 

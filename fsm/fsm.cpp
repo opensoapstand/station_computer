@@ -96,7 +96,7 @@ DF_ERROR stateLoop()
                 }
                 else // Other States advance
                 {
-                    // debugOutput::sendMessage("State Change...onExit()   [" + g_stateArray[fsmState]->toString() + "]", STATE_CHANGE);
+                    debugOutput::sendMessage("State Change...onExit()   [" + g_stateArray[fsmState]->toString() + "]", STATE_CHANGE);
                     dfRet = g_stateArray[fsmState]->onExit();
                     fsmNewState = g_stateArray[fsmState]->getNextState(); // Advance until Idle State Loops
                 }

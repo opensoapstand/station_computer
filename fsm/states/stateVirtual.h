@@ -54,7 +54,10 @@ class stateVirtual
         gpio *m_pButton[NUM_BUTTON];
         messageMediator * m_pMessaging;
 
-        unique_ptr<drink> drinkPtr;
+        // Unique Reference to selected Drink
+        unique_ptr<drink> selectedDrinkPtr;
+        // Unique Reference to currently selected Dispenser
+        unique_ptr<dispenser> selectedDispenserPtr;
 
         // FIXME: Cludgey fix to exit dispense loop.
         // bool m_isDispenseComplete;

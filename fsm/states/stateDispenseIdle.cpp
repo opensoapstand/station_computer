@@ -63,22 +63,22 @@ DF_ERROR stateDispenseIdle::onAction(dispenser *cassettes)
       //debugInfo.sendMessage("onAction() for state [" + std::to_string((int)m_nextState) + "]", INFO);
 
       // FIXME: State Check 
-      if (dispenserSetup()->getIsDispenseComplete()) // Exit if Dispense limit is hit
-      {
-         onExit();
-      } 
+      // if (dispenserSetup()->getIsDispenseComplete()) // Exit if Dispense limit is hit
+      // {
+      //    onExit();
+      // } 
       // TODO: else if to check button interrupt swap to Dispensing
       // {
       //    debugOutput::sendMessage("Dispensing [" + toString() + "]", INFO);
       //    m_state = DISPENSE;
       //    m_nextState = DISPENSE_IDLE;
       // }
-      else // Assume no button push and not complete Keep IdleDispensing
-      {
-         // debugOutput::sendMessage("Keep Idling [" + toString() + "]", INFO);
-         m_state = DISPENSE_IDLE;
-         m_nextState = DISPENSE;
-      }
+      // else // Assume no button push and not complete Keep IdleDispensing
+      // {
+      //    // debugOutput::sendMessage("Keep Idling [" + toString() + "]", INFO);
+      //    m_state = DISPENSE_IDLE;
+      //    m_nextState = DISPENSE;
+      // }
 
       // FIXME: No Coordination for Idles...Just go to Dispense for now.
       m_nextState = DISPENSE;
@@ -94,8 +94,13 @@ DF_ERROR stateDispenseIdle::onExit()
    // debugOutput::sendMessage("Exiting[" + toString() + "]", STATE_CHANGE);
    DF_ERROR e_ret = OK;
 
-   m_state = DISPENSE_END;
-   m_nextState = IDLE;
+   debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
+   m_state = DISPENSE_IDLE;
+   m_nextState = DISPENSE;
+
+   // TODO: If timeout occurs, then we can skip to cleaning cycle.
+   // m_state = DISPENSE_END;
+   // m_nextState = IDLE;
 
    return e_ret;
 }

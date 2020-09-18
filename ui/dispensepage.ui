@@ -22,11 +22,14 @@
   <widget class="QPushButton" name="finish_Button">
    <property name="geometry">
     <rect>
-     <x>460</x>
-     <y>1260</y>
-     <width>161</width>
-     <height>81</height>
+     <x>426</x>
+     <y>1298</y>
+     <width>230</width>
+     <height>72</height>
     </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
    </property>
    <property name="styleSheet">
     <string notr="true"/>

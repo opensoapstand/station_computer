@@ -28,16 +28,29 @@ paySelect::paySelect(QWidget *parent) :
     ui(new Ui::paySelect)
 {
     ui->setupUi(this);
-    QPixmap background(":/light/4_pay_select_page_s.jpg");
+
+    int checkOption = idlePage->userDrinkOrder->getOption();
+    cout << checkOption << endl;
+//    qDebug() << checkOption << endl;
+    QString bitmap_location;
+
+    if(checkOption > 0 && checkOption <= 6) {
+        bitmap_location.append(":/light/4_pay_select_page_s_");
+        bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
+        bitmap_location.append(".jpg");
+    } else {
+        bitmap_location = ":/light/4_pay_select_page_s.jpg";
+    }
+    QPixmap background(bitmap_location);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
 
-//    background = background.scaled(this->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    // background = background.scaled(this->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
-    /*hacky transparent button*/
+    /* Hacky transparent button */
     ui->previousPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->payPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
@@ -91,6 +104,31 @@ void paySelect::on_payPage_Button_clicked()
     paymentPage->showFullScreen();
     qDebug() << idlePage->userDrinkOrder->getPrice();
     this->hide();
+}
+
+void paySelect::resizeEvent(QResizeEvent *event){
+    int checkOption = idlePage->userDrinkOrder->getOption();
+    cout << checkOption << endl;
+//    qDebug() << checkOption << endl;
+    QString bitmap_location;
+
+    if(checkOption > 0 && checkOption <= 6) {
+        bitmap_location.append(":/light/4_pay_select_page_s_");
+        bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
+        bitmap_location.append(".jpg");
+    } else {
+        bitmap_location = ":/light/4_pay_select_page_s.jpg";
+    }
+
+    QPixmap background(bitmap_location);
+    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+
+    // background = background.scaled(this->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    QPalette palette;
+    palette.setBrush(QPalette::Background, background);
+    this->setPalette(palette);
+    this->resize(this->geometry().width(), this->geometry().height());
 }
 
 void paySelect::on_mainPage_Button_clicked()

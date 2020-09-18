@@ -32,12 +32,13 @@ idle::idle(QWidget *parent) :
 
     /* Issues with QT buttons with images.  Button behind transparent image hack.
        TODO: find a way to make the button transparent/clickable image */
-    //ui->nextPageButton->setAttribute(Qt::WA_TranslucentBackground);
-//    ui->nextPageButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    //setStyleSheet("QPushButton{background: transparent;}");
+    ui->nextPageButton->setAttribute(Qt::WA_TranslucentBackground);
+    ui->nextPageButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    setStyleSheet("QPushButton{background: transparent;}");
 
     // TODO: Hold and pass DrinkOrder Object
     userDrinkOrder = new DrinkOrder();
+    userDrinkOrder->setDrinkOption(OPTION_SLOT);
 
     // TODO: Will need to determine standard path in future; Could skip if going with Postgres
 //    this->dfUtility->getVendorDetails();

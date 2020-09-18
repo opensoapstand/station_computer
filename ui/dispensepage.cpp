@@ -88,19 +88,19 @@ void dispensePage::showEvent(QShowEvent *event)
  */
 void dispensePage::on_finish_Button_clicked()
 {
+    qDebug() << "finish button clicked" << endl;
     // TODO: Link to FSM for Dispense
     is_sending_to_FSM = true;
     m_fsmMsg = SEND_CLEAN;
 
     // Send a Cleanse and TODO: helps FSM onExit...
     send_to_FSM();
-    qDebug() << "finish button clicked" << endl;
 
 //    while(is_sending_to_FSM) {
 //        qDebug() << "CLEAN MODE" << endl;
 //    }
 //    is_sending_to_FSM = false;
-    tcpSocket->disconnectFromHost();
+//    tcpSocket->disconnectFromHost();
     this->hide();
     thanksPage->showFullScreen();
 }

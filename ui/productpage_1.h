@@ -52,6 +52,8 @@ private:
     productPage_2 *selection_PageTwo;
     paySelect *paymentSelectPage;
     idle* idlePage;
+
+    QResizeEvent *productResize;
 };
 
 #endif // PRODUCTPAGE_1_H

@@ -36,6 +36,8 @@ public:
     void setPage(productPage_1 *pageSelect, payPage *pagePayment, idle* pageIdle);
     ~paySelect();
 
+    void resizeEvent(QResizeEvent *event);
+
 signals:
     void paymentTotal(string, string, string);
 

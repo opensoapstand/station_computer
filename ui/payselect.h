@@ -56,6 +56,8 @@ private:
     productPage_1* firstProductPage;
     payPage* paymentPage;
     idle* idlePage;
+
+    QResizeEvent *paySelectResize;
 };
 
 #endif // PAYSELECT_H

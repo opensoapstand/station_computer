@@ -51,6 +51,8 @@ public:
     // TODO: Figure out better Style Setup.
     void labelSetup(QLabel *label, int fontSize);
 
+    void resizeEvent(QResizeEvent *event, char drinkSize);
+
     // **** Control Functions ****
     bool setpaymentProcess(bool status);
 
@@ -95,6 +97,7 @@ private slots:
     void progressStatusLabel();
     void declineTimer_start();
     void idlePaymentTimeout();
+
 
 protected:
     void showEvent(QShowEvent *event);

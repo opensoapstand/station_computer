@@ -109,6 +109,34 @@ void payPage::labelSetup(QLabel *label, int fontSize)
     label->setAlignment(Qt::AlignCenter);
 }
 
+void payPage::resizeEvent(QResizeEvent *event, char drinkSize){
+    int checkOption = idlePage->userDrinkOrder->getOption();
+    cout << checkOption << endl;
+//    qDebug() << checkOption << endl;
+    QString bitmap_location;
+
+    if(checkOption > 0 && checkOption <= 6) {
+        bitmap_location.append(":/light/5_pay_page_");
+        bitmap_location.append(drinkSize);
+        bitmap_location.append("_");
+        bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
+        bitmap_location.append(".jpg");
+    } else {
+        bitmap_location = ":/light/4_pay_select_page_s.jpg";
+    }
+
+    QPixmap background(bitmap_location);
+    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+
+    // background = background.scaled(this->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    QPalette palette;
+    palette.setBrush(QPalette::Background, background);
+    this->setPalette(palette);
+    this->resize(this->geometry().width(), this->geometry().height());
+}
+
+
 // DTOR
 payPage::~payPage()
 {

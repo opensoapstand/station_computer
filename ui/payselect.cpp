@@ -101,6 +101,18 @@ void paySelect::on_payPage_Button_clicked()
 
     connect(this, SIGNAL(paymentTotal(string,string,string)), this->paymentPage, SLOT(updateTotals(string,string,string)));
     emit(paymentTotal(description, drinkAmount, drinkTotal));
+
+    char drinkSize;
+    // FIXME: This is fucking terrible object use and magic values.
+    // Cannot be long term fix, need to get rid of fullscreen hackery.
+    if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->SMALL_SIZE_ML)
+    {
+        drinkSize = 's';
+    } else {
+        drinkSize = 'l';
+    }
+
+    paymentPage->resizeEvent(paySelectResize, drinkSize);
     paymentPage->showFullScreen();
     qDebug() << idlePage->userDrinkOrder->getPrice();
     this->hide();

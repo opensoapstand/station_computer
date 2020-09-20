@@ -17,20 +17,42 @@ typedef enum FSM_COMM {
     SEND_ERROR
 } FSM_COMM;
 
-class df_util
+class df_util : public QWidget
 {
-
+    Q_OBJECT
 public:
-    df_util();
-    void send_to_FSM(QString * msg);
+    explicit df_util(QWidget *parent = nullptr);
+
     void initialize_local_db();
     bool open_local_db();
     bool close_local_db();
     bool getVendorDetails();
     QString get_local_db_max_transaction();
 
+//    void setIsSendingFSM(bool isSendingFSM){m_IsSendingFSM = isSendingFSM;};
+//    bool getIsSendingFSM(){return m_IsSendingFSM;};
+
+    bool m_IsSendingFSM;
+    FSM_COMM m_fsmMsg; // Sets type of message/command
+
+    QString msg;
+
+    QTcpSocket *tcpSocket = nullptr;
+    QDataStream in;
+
+
 protected:
+    // FSM communication
+
+    // TODO: move host and port to XML
+    const char* host = "localhost";
+    int port = 1234;
+
     QSqlDatabase db;
+
+public slots:
+    void send_to_FSM();
+    void displayError(QAbstractSocket::SocketError socketError);
 
 private:
     QString local_db_path = "/home/df-admin/Project/drinkfill/db/sqlite/";

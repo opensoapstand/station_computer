@@ -26,9 +26,9 @@
 dispensePage::dispensePage(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::dispensePage)
-  , tcpSocket(new QTcpSocket(this))
 {
-    is_sending_to_FSM = false;
+
+//    dfUtil->is_sending_to_FSM = false;
     ui->setupUi(this);
     QPixmap background(":/light/6_dispense_page.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
@@ -40,12 +40,11 @@ dispensePage::dispensePage(QWidget *parent) :
     ui->finish_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
     /* Networking */
-    in.setDevice(tcpSocket);
-    in.setVersion(QDataStream::Qt_4_0);
 
-//    m_fsmMsg = df_util::FSM_COMM::SEND_EMPTY;
 
-    connect(tcpSocket, &QIODevice::readyRead, this, &dispensePage::send_to_FSM);
+
+
+    //    m_fsmMsg = df_util::FSM_COMM::SEND_EMPTY;
 
     //    connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),
     //    this, SLOT(&dispensePage::displayError(QAbstractSocket::SocketError)));
@@ -71,14 +70,21 @@ dispensePage::~dispensePage()
 
 void dispensePage::showEvent(QShowEvent *event)
 {
-    if(is_sending_to_FSM) {
-        return;
-    }
-    is_sending_to_FSM = true;
+    this->idlePage->dfUtility->msg = QString::number(this->idlePage->userDrinkOrder->getOption());
+
+//    idlePage->dfUtility->send_to_FSM(msg);
+
+//    if(idlePage->dfUtility->m_IsSendingFSM) {
+//        return;
+//    }
+    idlePage->dfUtility->m_IsSendingFSM = true;
     QWidget::showEvent(event);
-    m_fsmMsg = SEND_DRINK;
-    send_to_FSM();
-    is_sending_to_FSM = false;
+    idlePage->dfUtility->m_fsmMsg = SEND_DRINK;
+    idlePage->dfUtility->send_to_FSM();
+//    send_to_FSM();
+
+    idlePage->dfUtility->m_IsSendingFSM = false;
+//    is_sending_to_FSM = false;
     ui->finish_Button->setEnabled(true);
 }
 
@@ -90,11 +96,15 @@ void dispensePage::on_finish_Button_clicked()
 {
     qDebug() << "finish button clicked" << endl;
     // TODO: Link to FSM for Dispense
-    is_sending_to_FSM = true;
-    m_fsmMsg = SEND_CLEAN;
+    idlePage->dfUtility->m_IsSendingFSM = true;
+//    is_sending_to_FSM = true;
+    idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
+
+
+    this->idlePage->dfUtility->msg = QString::number(this->idlePage->userDrinkOrder->getOption());
 
     // Send a Cleanse and TODO: helps FSM onExit...
-    send_to_FSM();
+    idlePage->dfUtility->send_to_FSM();
 
 //    while(is_sending_to_FSM) {
 //        qDebug() << "CLEAN MODE" << endl;
@@ -106,70 +116,4 @@ void dispensePage::on_finish_Button_clicked()
 }
 
 
-/*
- *
- */
-void dispensePage::send_to_FSM()
-{
-    qDebug() << "Sending to FSM" << endl;
-    // TODO: Local socket to FSM
-    ui->finish_Button->setEnabled(false);
-    tcpSocket->abort();
-    tcpSocket->connectToHost(host,port);
 
-    QString msg;
-    msg = QString::number(this->idlePage->userDrinkOrder->getOption());
-
-    switch (m_fsmMsg) {
-    case SEND_DRINK:
-        msg.append("d");
-        msg.append(";");
-        break;
-
-    case SEND_CLEAN:
-        msg.append("f");
-        msg.append(";");
-        break;
-
-    default:
-        msg.append("e");
-        msg.append(";");
-        break;
-    }
-
-
-    qDebug() << msg << endl;
-
-    QByteArray block;
-    block.append(msg);
-    QDataStream out(&block, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_1);
-    tcpSocket->write(block);
-    tcpSocket->close();
-}
-
-void dispensePage::displayError(QAbstractSocket::SocketError socketError)
-{
-    switch (socketError) {
-    case QAbstractSocket::RemoteHostClosedError:
-        break;
-    case QAbstractSocket::HostNotFoundError:
-        QMessageBox::information(this, tr("DF Client"),
-                                 tr("The host was not found. Please check the "
-                                    "host name and port settings."));
-        break;
-    case QAbstractSocket::ConnectionRefusedError:
-        QMessageBox::information(this, tr("DF Client"),
-                                 tr("The connection was refused by the peer. "
-                                    "Make sure the fortune server is running, "
-                                    "and check that the host name and port "
-                                    "settings are correct."));
-        break;
-    default:
-        QMessageBox::information(this, tr("DF Client"),
-                                 tr("The following error occurred: %1.")
-                                 .arg(tcpSocket->errorString()));
-    }
-
-    ui->finish_Button->setEnabled(true);
-}

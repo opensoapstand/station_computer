@@ -42,25 +42,12 @@ private slots:
     // **** Navigation ****
     void on_finish_Button_clicked();
 
-    // FSM communication
-    void send_to_FSM();
-    void displayError(QAbstractSocket::SocketError socketError);
-
 private:
     // **** GUI *****
     Ui::dispensePage *ui;
     payPage* paymentPage;
     thankYouPage* thanksPage;
     idle* idlePage;
-
-    // FSM communication
-    FSM_COMM m_fsmMsg; // Sets type of message/command
-    bool is_sending_to_FSM;
-    QTcpSocket *tcpSocket = nullptr;
-    QDataStream in;
-    // TODO: move host and port to XML
-    const char* host = "localhost";
-    int port = 1234;
 
 protected:
     void showEvent(QShowEvent *event);

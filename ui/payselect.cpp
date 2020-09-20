@@ -29,7 +29,14 @@ paySelect::paySelect(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    int checkOption = idlePage->userDrinkOrder->getOption();
+    int checkOption;
+
+    if(idlePage->userDrinkOrder != nullptr) {
+        checkOption = idlePage->userDrinkOrder->getOption();
+    } else {
+        checkOption = 0;
+    }
+
     cout << checkOption << endl;
 //    qDebug() << checkOption << endl;
     QString bitmap_location;

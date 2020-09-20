@@ -40,6 +40,10 @@ idle::idle(QWidget *parent) :
     userDrinkOrder = new DrinkOrder();
     userDrinkOrder->setDrinkOption(OPTION_SLOT);
 
+    // IPC Networking
+    dfUtility = new df_util();
+    dfUtility->m_IsSendingFSM = false;
+
     // TODO: Will need to determine standard path in future; Could skip if going with Postgres
 //    this->dfUtility->getVendorDetails();
 }

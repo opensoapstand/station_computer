@@ -41,13 +41,19 @@ public:
 private slots:
     // **** Navigation ****
     void on_finish_Button_clicked();
-
+    void onDispenseTick();
 private:
     // **** GUI *****
     Ui::dispensePage *ui;
     payPage* paymentPage;
     thankYouPage* thanksPage;
     idle* idlePage;
+
+    // XXX: Remove when interrupts and flowsensors work.
+
+    QString _dispenseTimeLabel;
+    int _dispenseTimeoutSec;
+    QTimer* dispenseEndTimer;
 
 protected:
     void showEvent(QShowEvent *event);

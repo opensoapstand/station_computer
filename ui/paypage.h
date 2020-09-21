@@ -20,8 +20,6 @@
 #include "df_util.h"
 #include "drinkorder.h"
 
-#include <QTimer>
-
 #include "posm/mcommunication.h"
 #include "posm/packetfromecr.h"
 #include "posm/packetfromux410.h"

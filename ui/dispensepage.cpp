@@ -27,8 +27,6 @@ dispensePage::dispensePage(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::dispensePage)
 {
-
-//    dfUtil->is_sending_to_FSM = false;
     ui->setupUi(this);
     QPixmap background(":/light/6_dispense_page.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
@@ -38,18 +36,6 @@ dispensePage::dispensePage(QWidget *parent) :
 
     /*hacky transparent button*/
     ui->finish_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-
-    /* Networking */
-
-
-
-
-    //    m_fsmMsg = df_util::FSM_COMM::SEND_EMPTY;
-
-    //    connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),
-    //    this, SLOT(&dispensePage::displayError(QAbstractSocket::SocketError)));
-    //    connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError), SLOT()));
-    //    connect(tcpSocket, &QAbstractSocket::error, this, &dispensePage::displayError);
 }
 
 /*
@@ -72,20 +58,24 @@ void dispensePage::showEvent(QShowEvent *event)
 {
     this->idlePage->dfUtility->msg = QString::number(this->idlePage->userDrinkOrder->getOption());
 
-//    idlePage->dfUtility->send_to_FSM(msg);
-
-//    if(idlePage->dfUtility->m_IsSendingFSM) {
-//        return;
-//    }
+    // Networking
     idlePage->dfUtility->m_IsSendingFSM = true;
     QWidget::showEvent(event);
     idlePage->dfUtility->m_fsmMsg = SEND_DRINK;
     idlePage->dfUtility->send_to_FSM();
-//    send_to_FSM();
-
     idlePage->dfUtility->m_IsSendingFSM = false;
-//    is_sending_to_FSM = false;
     ui->finish_Button->setEnabled(true);
+
+    // XXX: Remove when interrupts work.
+    {
+        ui->dispense_progress_label->setText("Begin Dispensing...");
+
+        dispenseEndTimer = new QTimer(this);
+        dispenseEndTimer->setInterval(1000);
+        connect(dispenseEndTimer, SIGNAL(timeout()), this, SLOT(onDispenseTick()));
+        dispenseEndTimer->start(1000);
+        _dispenseTimeoutSec = 10;
+    }
 }
 
 
@@ -97,23 +87,36 @@ void dispensePage::on_finish_Button_clicked()
     qDebug() << "finish button clicked" << endl;
     // TODO: Link to FSM for Dispense
     idlePage->dfUtility->m_IsSendingFSM = true;
-//    is_sending_to_FSM = true;
     idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
-
-
     this->idlePage->dfUtility->msg = QString::number(this->idlePage->userDrinkOrder->getOption());
 
     // Send a Cleanse and TODO: helps FSM onExit...
     idlePage->dfUtility->send_to_FSM();
 
+    // XXX: Better to have ACKs to coordinate cleaning; When sensors work...
 //    while(is_sending_to_FSM) {
 //        qDebug() << "CLEAN MODE" << endl;
 //    }
 //    is_sending_to_FSM = false;
 //    tcpSocket->disconnectFromHost();
+    dispenseEndTimer->stop();
+    dispenseEndTimer->deleteLater();
     this->hide();
     thanksPage->showFullScreen();
 }
 
+// XXX: Remove this when interrupts and flow sensors work!
+void dispensePage::onDispenseTick(){
+    if(-- _dispenseTimeoutSec >= 0) {
+        qDebug() << "Tick Down: " << _dispenseTimeoutSec << endl;
 
-
+        _dispenseTimeLabel.clear();
+        QString time = QString::number(_dispenseTimeoutSec);
+        _dispenseTimeLabel.append(time);
+        this->ui->dispense_progress_label->setText(_dispenseTimeLabel);
+    } else {
+        qDebug() << "Timer Done!" << _dispenseTimeoutSec << endl;
+        dispenseEndTimer->stop();
+        this->ui->dispense_progress_label->setText("Finished!");
+    }
+}

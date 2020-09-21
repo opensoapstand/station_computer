@@ -36,7 +36,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>payment_pass_Button</string>
+    <string>.</string>
    </property>
   </widget>
   <widget class="QPushButton" name="mainPage_Button">
@@ -53,6 +53,9 @@
    </property>
   </widget>
   <widget class="QLabel" name="order_drink_label">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>170</x>
@@ -77,6 +80,9 @@
    </property>
   </widget>
   <widget class="QLabel" name="order_tax_label">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>170</x>
@@ -99,6 +105,9 @@
    </property>
   </widget>
   <widget class="QLabel" name="order_total_label">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>170</x>
@@ -126,8 +135,8 @@
    <property name="geometry">
     <rect>
      <x>170</x>
-     <y>1450</y>
-     <width>751</width>
+     <y>1452</y>
+     <width>735</width>
      <height>16</height>
     </rect>
    </property>
@@ -138,7 +147,7 @@
   <widget class="QLabel" name="order_total_amount">
    <property name="geometry">
     <rect>
-     <x>600</x>
+     <x>591</x>
      <y>1480</y>
      <width>321</width>
      <height>41</height>
@@ -165,7 +174,7 @@
   <widget class="QLabel" name="order_drink_amount">
    <property name="geometry">
     <rect>
-     <x>699</x>
+     <x>690</x>
      <y>1365</y>
      <width>221</width>
      <height>41</height>
@@ -192,7 +201,7 @@
   <widget class="QLabel" name="order_tax_amount">
    <property name="geometry">
     <rect>
-     <x>719</x>
+     <x>710</x>
      <y>1405</y>
      <width>201</width>
      <height>41</height>
@@ -220,8 +229,8 @@
   <widget class="QLabel" name="payment_processLabel">
    <property name="geometry">
     <rect>
-     <x>290</x>
-     <y>1680</y>
+     <x>690</x>
+     <y>1580</y>
      <width>231</width>
      <height>41</height>
     </rect>
@@ -244,14 +253,14 @@
   <widget class="QPushButton" name="payment_cancel_Button">
    <property name="geometry">
     <rect>
-     <x>590</x>
+     <x>420</x>
      <y>1670</y>
      <width>241</width>
      <height>61</height>
     </rect>
    </property>
    <property name="text">
-    <string>payment_cancel_Button</string>
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="payment_bypass_Button">
@@ -264,7 +273,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>payment_bypass_Button</string>
+    <string/>
    </property>
   </widget>
  </widget>

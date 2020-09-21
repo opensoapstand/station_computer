@@ -36,15 +36,22 @@ productPage_1::productPage_1(QWidget *parent) :
     // TODO:  Populate Page Drink buttons with DrinkSelection[0-5]
 
     /*hacky transparent button*/
+    // TODO: Initialize By option i.e. Brand1, BrandImage1, DrinkFlavor1, DrinkImageButton with Array or loop...
 //    ui->nextPageButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->selection5_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->selection6_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->Brand1->setText("");
+    ui->BrandImage1->clear();
+    ui->DrinkFlavor1->setText("");
 
-    ui->Brand1->setText("Brand Name");
+    ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+
+    ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+
+    ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+
+    ui->selection5_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+
+    ui->selection6_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 }
 
 /*

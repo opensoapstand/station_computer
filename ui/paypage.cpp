@@ -44,9 +44,15 @@ payPage::payPage(QWidget *parent) :
     ui->payment_cancel_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
     // Setup static labels
-    ui->order_tax_label->setText("Our Planet");
-    ui->order_tax_amount->setText("Priceless");
-    ui->order_total_label->setText("Total");
+    // TODO: Swap this when modular GUI ready
+//    ui->order_tax_label->setText("Our Planet");
+//    ui->order_tax_amount->setText("Priceless");
+//    ui->order_total_label->setText("Total");
+
+    ui->order_tax_label->setText(" ");
+    ui->order_tax_amount->setText(" ");
+    ui->order_total_label->setText(" ");
+    ui->order_drink_label->setText(" ");
 
     displayPaymentPending(false);
 
@@ -280,9 +286,10 @@ void payPage::updateTotals(string drinkDescription, string drinkAmount, string o
     this->drinkAmount = drinkAmount;
     this->orderTotal = orderTotal;
 
-    ui->order_drink_label->setText(this->drinkDescription.c_str());
+//    ui->order_drink_label->setText(this->drinkDescription.c_str());
     ui->order_drink_amount->setText(this->drinkAmount.c_str());
     ui->order_total_amount->setText(this->orderTotal.c_str());
+
 }
 
 void payPage::on_mainPage_Button_clicked()

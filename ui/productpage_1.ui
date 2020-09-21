@@ -60,7 +60,7 @@
     </size>
    </property>
    <property name="text">
-    <string>Select1</string>
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="selection2_Button">
@@ -73,7 +73,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Select2</string>
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="selection3_Button">
@@ -86,7 +86,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Select3</string>
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="selection4_Button">
@@ -99,7 +99,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Select4</string>
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="selection5_Button">
@@ -112,10 +112,13 @@
     </rect>
    </property>
    <property name="text">
-    <string>Select5</string>
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="selection6_Button">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>720</x>
@@ -125,7 +128,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Select6</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="DrinkFlavor1">

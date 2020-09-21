@@ -65,7 +65,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>orderSmall_Button</string>
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="orderBig_Button">
@@ -78,7 +78,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>orderBig_Button</string>
+    <string/>
    </property>
   </widget>
  </widget>

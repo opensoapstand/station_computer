@@ -21,6 +21,8 @@
 
 #include <QStandardPaths>
 
+#include <QTimer>
+
 #include <iostream>
 #include <cmath>
 

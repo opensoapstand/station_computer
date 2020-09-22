@@ -17,6 +17,8 @@
 #include "stateDispense.h"
 #include <cstring>
 
+#include "../fsm.h"
+
 #define DISPENSE_STRING "Dispense"
 
 // CTOR
@@ -62,15 +64,16 @@ DF_ERROR stateDispense::onEntry()
  * Air, Water and Drink.  Sends signal to Solenoids to Dispense,
  * Based on string command
  */
-DF_ERROR stateDispense::onAction(dispenser *cassettes)
+DF_ERROR stateDispense::onAction()
 {
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
+   dispenser* cassettes = g_cassettes;
    string temp;
 
    if (nullptr != &m_nextState) // TODO: Do a Check if Button is Pressed
    {
       // State Check
-      if (dispenserSetup()->getIsDispenseComplete())
+      if (cassettes->getIsDispenseComplete())
       {
          debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]", INFO);         
          m_nextState = DISPENSE_END;
@@ -103,7 +106,7 @@ DF_ERROR stateDispense::onAction(dispenser *cassettes)
       //only allow [cassette_num][A/D/W] to be keyboard input for now...
       //eg. 1a -> cassette 1 for air solenoid
 
-      int pos = -1;
+      pos = -1;
       // do stuff
       char posChar;
       strcpy(&posChar, &temp[0]);
@@ -181,8 +184,17 @@ DF_ERROR stateDispense::onAction(dispenser *cassettes)
          // onExit();
          break;
 
-      case DISPENSE_END_CHAR: // TODO: Shift this to DISPENSE_END
+      case DISPENSE_END_CHAR: 
+      
+         // TODO: Shift this to DISPENSE_END
+         debugOutput::sendMessage("------Cleaning Mode------", INFO);
+         debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
+         debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(WATER)), INFO);
+         debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
+         debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
+         cassettes[pos].testSolenoidDispense(DRINK);
+         cassettes[pos].cleanNozzle(WATER, AIR);
 
          onExit();
          break;
@@ -203,18 +215,8 @@ DF_ERROR stateDispense::onExit()
    DF_ERROR e_ret = OK;
    debugOutput::sendMessage("Dispense OnEXIT", INFO);
 
-   // // TODO: Does not seem to advance to Idle again...
-
-            debugOutput::sendMessage("------Cleaning Mode------", INFO);
-         debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
-         debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(WATER)), INFO);
-         debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
-         debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
-
-         cassettes[pos].testSolenoidDispense(DRINK);
-         cassettes[pos].cleanNozzle(WATER, AIR);
-
-         // Shut down Registers!
+   // // TODO: Does not seem to advance to Idle again..
+   // Shut down Registers!
 
    return e_ret;
 }

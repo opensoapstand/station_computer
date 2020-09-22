@@ -46,14 +46,11 @@ DF_ERROR stateDispenseIdle::onEntry()
 {
    DF_ERROR e_ret = OK;
 
-   m_state = DISPENSE_IDLE;
-   m_nextState = DISPENSE_IDLE;
-
    return e_ret;
 }
 
 // Idles after proper initilization;  Waits for a command from messageMediator
-DF_ERROR stateDispenseIdle::onAction(dispenser *cassettes)
+DF_ERROR stateDispenseIdle::onAction()
 {
    debugOutput debugInfo;
    DF_ERROR df_ret = ERROR_BAD_PARAMS;
@@ -94,9 +91,9 @@ DF_ERROR stateDispenseIdle::onExit()
    // debugOutput::sendMessage("Exiting[" + toString() + "]", STATE_CHANGE);
    DF_ERROR e_ret = OK;
 
-   debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
-   m_state = DISPENSE_IDLE;
-   m_nextState = DISPENSE;
+   // debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
+   // m_state = DISPENSE_IDLE;
+   // m_nextState = DISPENSE;
 
    // TODO: If timeout occurs, then we can skip to cleaning cycle.
    // m_state = DISPENSE_END;

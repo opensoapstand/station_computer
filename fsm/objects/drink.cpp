@@ -78,6 +78,16 @@ drink::drink(int slot)
     sqlite3_close(db);
 }
 
+// Test CTOR
+drink::drink(int slot, string name, int nVolume, int rVolume, double price, bool isStillDrink){
+    m_nSlot = slot;
+    m_name = name;
+    m_nVolume = nVolume;
+    m_rVolume = rVolume;
+    m_price = price;
+    m_isStillDrink = isStillDrink;
+}
+
 // DTOR
 drink::~drink()
 {

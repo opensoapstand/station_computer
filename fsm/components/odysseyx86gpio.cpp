@@ -140,46 +140,27 @@ DF_ERROR oddyseyx86GPIO::readPin(bool * level)
 	char buf[MAX_BUF];
 	char ch;
 
-	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", m_nPin);
+	// test to see if level exists
+	if (NULL != level) {
 
-	fd = open(buf, O_RDONLY);
-	if (fd >= 0) {
-		read(fd, &ch, 1);
+		len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", m_nPin);
 
-		if (ch != '0') {
-			*level = true;
+		fd = open(buf, O_RDONLY);
+		if (fd >= 0) {
+			read(fd, &ch, 1);
+
+			if (ch != '0') {
+				*level = true;
+			}
+			else {
+				*level = false;
+			}
+
+			close(fd);
+			df_ret = OK;
 		}
-		else {
-			*level = false;
-		}
-
-		close(fd);
-		df_ret = OK;
 	}
 	
-	//-------------Reserve until testing is done-------------------//
-	// string command("sudo sh -c 'cat /sys/class/gpio/gpio493/value'");
-	// string sys_command = command_to_string(command.c_str());
-
-	// int sensorValue = stoi(sys_command);  //convert string to integer
-
-	// while(1){
-
-	// 	string sys_command = command_to_string(command.c_str());
-	// 	sensorValue = stoi(sys_command);
-	// 	sleep(1);
-
-	// 	if(sensorValue == 1){
-	// 	std::cout << "Waste tank at critical level" << '\n';
-	// 	}
-
-	// 	else{
-	// 	std::cout << "Waste tank isn't full yet" << '\n';
-	// 	}
-	// }
-	//------------------------------------------------------------//
-
-
 	return df_ret;
 }
 
@@ -208,58 +189,6 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
 	return df_ret;
 }
 
-// DF_ERROR oddyseyx86GPIO::setPin_on(int address, int pinNum){
-
-// 	this->digi
-//     if(address == X20)
-//     {
-//         solenoid_1.digitalWrite(pinNum, HIGH);
-
-//         std::clog << "Address:" << address << " Pin: " << pinNum << " is on\n";
-//     }
-//     else if (address == X21){
-//         solenoid_2.digitalWrite(pinNum, HIGH);
-//         std::clog << "Address:" << address << " Pin: " << pinNum << " is on\n";
-
-//     }
-//     else if (address == X22){
-//         pump.digitalWrite(pinNum, HIGH);
-//         std::clog << "Address:" << address << " Pin: " << pinNum << " is on\n";
-
-//     }
-//     else
-//     {
-//         std::clog << "i2c address not available\n";
-//     }  
-// }
-
-// DF_ERROR oddyseyx86GPIO::setPin_off(int address, int pinNum){
-//     if(address == X20)
-//     {
-//         solenoid_1.digitalWrite(pinNum, LOW);
-//         std::clog << "Address:" << address << " Pin: " << pinNum << " is off\n";
-//     }
-//     else if (address == X21){
-//         solenoid_2.digitalWrite(pinNum, LOW);
-//         std::clog << "Address:" << address << " Pin: " << pinNum << " is off\n";
-//     }
-//     else if (address == X22){
-//         pump.digitalWrite(pinNum, LOW);
-//         std::clog << "Address:" << address << " Pin: " << pinNum << " is off\n";
-//     }
-//     else
-//     {
-//         std::clog << "i2c address not available\n";
-//     }  
-// }
-
-DF_ERROR oddyseyx86GPIO::setButton_on(){
-	
-}
-
-DF_ERROR oddyseyx86GPIO::setButton_off(){
-
-}
 
 // Threaded function call to monitor Odyssecy GPIO pin activity.
 void oddyseyx86GPIO::monitorGPIO()

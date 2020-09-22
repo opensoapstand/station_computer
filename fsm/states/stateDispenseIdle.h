@@ -31,10 +31,10 @@ class stateDispenseIdle : public stateVirtual
 
         DF_ERROR onEntry();    
         //DF_ERROR onAction();     
-        DF_ERROR onAction(dispenser* cassettes);        
+        DF_ERROR onAction();        
         DF_ERROR onExit();
 
-        dispenser* dispenserSetup(){};
+        // DF_ERROR dispenserSetup(){};
 
     private:
 };

@@ -34,17 +34,21 @@ class stateDispense : public stateVirtual
         string toString();
 
         DF_ERROR onEntry();
-        DF_ERROR onAction(dispenser* cassettes);
+        DF_ERROR onAction();
         DF_ERROR onExit();
         
         // FIXME: Issues with Initializing with Button...
         // dispenser* dispenserSetup(getButton()) {};
-        dispenser* dispenserSetup(){};
+        // DF_ERROR dispenserSetup();
 
 
     private:
+        // XXX: Remove when drink instantiated
+        int pos;
 
-
+        // present read Volume
+        // last read Volume
+        // max read volume
     
 };
 #endif

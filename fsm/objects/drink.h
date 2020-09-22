@@ -31,6 +31,7 @@ class drink
 public:
 	drink();
 	drink(int slot);
+	drink(int slot, string name, int nVolume, int rVolume, double price, bool isStillDrink);
 	~drink();
 
 	//getter
@@ -47,6 +48,9 @@ private:
 	int m_nSlot;
 	string m_name;
 	int m_nVolume;
+	int m_rVolume;
+
+	double m_price;
 
 	bool m_isStillDrink;
 

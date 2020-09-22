@@ -30,10 +30,8 @@ public:
 	virtual DF_ERROR readPin(bool* level) = 0;
 	virtual DF_ERROR writePin(bool level) = 0;
 
-	// virtual DF_ERROR setPin_on(int address, int pinNum);
-	// virtual DF_ERROR setPin_off(int address, int pinNum);
-
 	// Getters
+	// TODO these chouldn't be here, MCP does not exist at this level
 	virtual int getMCPAddress() {};
 	virtual int getMCPPin() {};
 
@@ -48,6 +46,7 @@ protected:
 	bool m_input;
 	bool m_i2c;
 
+	// Interrupt Function Definition
 	std::function<DF_ERROR()> m_pf;
 	virtual void monitorGPIO() = 0;
 };

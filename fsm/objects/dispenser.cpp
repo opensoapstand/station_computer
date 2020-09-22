@@ -68,7 +68,7 @@ void dispenser::initDispenser(int slot){
 
 }
 
-
+// TODO: Call this function on Dispense onEntry()
 DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
 {
     debugOutput::sendMessage("-----dispenser::setSolenoid-----", INFO);
@@ -106,6 +106,7 @@ DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
     return e_ret;
 }
 
+// TODO: Call this function on Dispense onEntry()
 DF_ERROR dispenser::setFlowsensor(int pin, int pos)
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
@@ -113,6 +114,9 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
     if(pos == 0)
     {
         m_pFlowsenor[pos] = new oddyseyx86GPIO(pin);
+        // TODO: associate the pointer to function (pfn)
+        // here and start monitoring
+        // note that dispense state will determine if an error is occuring or not
     }
     else
     {
@@ -122,6 +126,7 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
     return e_ret;
 }
 
+// TODO: Call this function on Dispense onEntry()
 DF_ERROR dispenser::setPump(int mcpAddress, int pin, int direction)
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS; //reset variable    

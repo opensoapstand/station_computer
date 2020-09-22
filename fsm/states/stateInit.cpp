@@ -20,6 +20,7 @@
 #include "stateInit.h"
 #include <iostream>
 #include <string>
+#include "../fsm.h"
 
 #define INIT_STRING "Init"
 
@@ -86,15 +87,28 @@ DF_ERROR stateInit::onEntry()
 }
 
 // Initialize all related hardware
-DF_ERROR stateInit::onAction(dispenser* cassettes)
+DF_ERROR stateInit::onAction()
 {
    //need to check with tinyXML for hardware info
    DF_ERROR e_ret  = ERROR_BAD_PARAMS;
    m_state = INIT; //ensure the current state is INIT
 
+   // Initialization do e_rets
+   
+   /*
+   * Note: Button set up in state virtual.
+   * Set up Dispenser Register; 
+   * Dispenser Array to hold Register values;
+   * Setup drink Inventory Array;
+   */
    e_ret = setDispenserId();
 
-   dispenserSetup();
+   // TODO: Seperate buttonSetup() atomic function.
+
+   if(OK == e_ret) 
+   {
+      e_ret = dispenserSetup();// Do error check per state
+   }
 
    if (nullptr != &m_nextState && OK == e_ret)
    {
@@ -151,7 +165,7 @@ DF_ERROR stateInit::setDispenserId()
 
 // Set Solenoids on Dispenser Cassettes
 // Extract addressing id from XML and map to Solenoid
-DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx, dispenser cassettes[])
+DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes)
 {
    DF_ERROR e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
    TiXmlElement *l_pSolenoid;
@@ -209,7 +223,7 @@ DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispens
 
 // Set Flow Sensors
 // Extract addressing id from XML and map to Flowsensor
-DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx, dispenser cassettes[])
+DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes)
 {
    DF_ERROR e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
    TiXmlElement *l_pFlowsensor;
@@ -265,7 +279,7 @@ DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispe
 
 // Set Dispenser Pumps
 // Extract addressing id from XML and map to Still Pumps
-DF_ERROR stateInit::setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser cassettes[])
+DF_ERROR stateInit::setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes)
 {
    DF_ERROR e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
    TiXmlElement *l_pPump;
@@ -422,13 +436,26 @@ const char* stateInit::getXML(const char* subHeader, TiXmlElement *childEle)
 
 // Initilization function for all dispensers...mainly function calls
 // XML and GPIO mapping.
-dispenser* stateInit::dispenserSetup()
+DF_ERROR stateInit::dispenserSetup()
 {
    //need to check with tinyXML for hardware info
    DF_ERROR e_ret  = ERROR_BAD_PARAMS;
 
+   dispenser* cassettes = g_cassettes;
+
    TiXmlElement *l_pDispenser;
-   static dispenser cassettes[CASSETTES_MAX];
+
+   // XML Node (ideally through 0-2 Slots for Cassettes)
+   int idx = 0;
+
+   // Move this to a Function for setup button...Atomic INIT on action
+   debugOutput::sendMessage("Set up button: ------------------" , INFO);\
+   e_ret = setButton(m_pHardware, idx);
+
+
+   // Move this to state virtual
+   // Protected
+   // static dispenser cassettes[CASSETTES_MAX];
 
    if(nullptr == m_pDispenser){
        debugOutput::sendMessage("m_pDispenser is null", INFO);
@@ -437,29 +464,11 @@ dispenser* stateInit::dispenserSetup()
    else{
       l_pDispenser = m_pDispenser;
    }
-   
-   // set up major objects
-
-   //load the xml dom parser
-
-   //load the sql manager
-
-   //call a create dispenser method
-
-   //methods to load and test the other various items
-
-   //pParam = pParam->FirstChildElement("solenoid");
-           
-   int idx = 0;
-
-   debugOutput::sendMessage("Set up button: ------------------" , INFO);
-
-   e_ret = setButton(m_pHardware, idx);
 
    if(OK != e_ret) //if solenoid not set properly, return error
    {
       debugOutput::sendMessage("setButton did not return OK", INFO);
-      //return e_ret;
+      return e_ret;
    }
 
    while(nullptr != dispenserId[idx])
@@ -471,7 +480,7 @@ dispenser* stateInit::dispenserSetup()
       if(OK != e_ret) //if solenoid not set properly, return error
       {
          debugOutput::sendMessage("setDispenserSolenoid did not return OK", INFO);
-         //return e_ret;
+         return e_ret;
       }
 
       e_ret  = ERROR_BAD_PARAMS; //reset e_ret
@@ -486,7 +495,7 @@ dispenser* stateInit::dispenserSetup()
       if(OK != e_ret) //if flowsensor not set properly, return error
       {
          debugOutput::sendMessage("setDispenserPump did not return OK", INFO);
-         //return e_ret;
+         return e_ret;
       }
 
       e_ret  = ERROR_BAD_PARAMS; //reset e_ret
@@ -510,5 +519,15 @@ dispenser* stateInit::dispenserSetup()
    }
    debugOutput::sendMessage("Hardware initialized...", INFO);
 
-   return cassettes;
+   return e_ret;
 }
+
+/*
+drinkOrder drinkSetup() {
+
+   // Drink Array Setup
+
+   // load the SQLITE manager
+
+}
+*/

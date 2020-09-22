@@ -43,6 +43,8 @@ class stateVirtual
         gpio* getSolenoid(int pos, int type);
         gpio* getButton();
 
+        // Getters and Setters for cassettes
+
         // // FIXME: Cludgey fix to exit dispense loop.
         // bool getIsDispenseComplete(){return m_isDispenseComplete;}
         // void setIsDispenseComplete(bool isDispenseComplete){m_isDispenseComplete = isDispenseComplete;}
@@ -61,6 +63,9 @@ class stateVirtual
 
         // FIXME: Cludgey fix to exit dispense loop.
         // bool m_isDispenseComplete;
+
+        // 
+        static dispenser cassettes[CASSETTES_MAX];
 };
 
 

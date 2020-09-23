@@ -37,7 +37,7 @@ public:
 	//getter
 	int getDrinkOption(){return m_nSlot;}
 	bool getIsStillDrink();
-	int getVolumeRemaining();
+	int getVolumeDispensed(){return m_nVolumeDispensed;}
 
 	// DB Updates
 	void recordSale(int volume);
@@ -46,7 +46,7 @@ public:
 	void drinkInfo();
 	void drinkVolumeInfo();
 
-	void registerFlowSensorTick();
+	bool registerFlowSensorTick();
 
 private:
 	// TODO: Determine more data to modify per transaction...
@@ -54,14 +54,19 @@ private:
 	string m_name;
 
 	double m_calibration_const;
-	int m_nVolumeCurrent;
-	int m_nVolumeRemaining;
+	int m_nVolumeMax;
+	int m_nVolumeDispensed;
+	int m_nVolumePerTick;
 
 	double m_price;
 
 	bool m_isStillDrink;
 
+	bool isDispenseFinished;
+
 	void setSlot(int slot);
+	bool resetVolumeDispensed();
+	bool isDispenseComplete();
 	void setDrinkName(string drinkName);
 	void setIsStillDrink(bool isStillDrink);
 

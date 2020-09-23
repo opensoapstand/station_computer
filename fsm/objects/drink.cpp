@@ -79,14 +79,17 @@ drink::drink(int slot)
 }
 
 // Test CTOR
-drink::drink(int slot, string name, int nVolumeCurrent, int nVolumeRemaining, double calibration_const, double price, bool isStillDrink){
+drink::drink(int slot, string name, int nVolumeDispensed, int nVolumeMax, double calibration_const, double price, bool isStillDrink){
     m_nSlot = slot;
     m_name = name;
-    m_nVolumeCurrent = nVolumeCurrent;
-    m_nVolumeRemaining = nVolumeRemaining;
+    m_nVolumeDispensed = nVolumeDispensed;
+    m_nVolumeMax = nVolumeMax;
     m_calibration_const = calibration_const;
     m_price = price;
     m_isStillDrink = isStillDrink;
+
+    // XXX: Find calculation for this...
+    m_nVolumePerTick = 20;
 }
 
 // DTOR
@@ -122,10 +125,22 @@ bool drink::getIsStillDrink()
     return m_isStillDrink;
 }
 
-// Get the remaining volume
-int drink::getVolumeRemaining()
-{
-    // TODO: SQLite database Query could be better option.
+bool drink::resetVolumeDispensed(){
+    m_nVolumeDispensed = m_nVolumeMax;
+}
+
+bool drink::registerFlowSensorTick(){
+    cout << "hello!" << endl; // XXX: for testing remove when here.
+    // FIXME: DO REASSIGMENT HERE
+    m_nVolumeDispensed -= m_nVolumePerTick;
+}
+
+bool drink::isDispenseComplete(){
+    if(m_nVolumeDispensed <= 0){
+        return true;
+    } else {
+        return false;
+    }
 }
 
 // TODO: Function name is inaccurate...deduct sale would be better
@@ -149,6 +164,6 @@ void drink::drinkInfo() {
 }
 
 void drink::drinkVolumeInfo(){
-    cout << m_nVolumeCurrent << endl;
-    cout << m_nVolumeRemaining << endl;
+    cout << m_nVolumeDispensed << endl;
+    cout << m_nVolumeMax << endl;
 }

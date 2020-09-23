@@ -14,6 +14,7 @@
 // all rights reserved
 //***************************************
 #include "dispenser.h"
+// #include "fsm.h"
 
 #define ACTIVATION_TIME 5
 #define TEST_ACTIVATION_TIME 3
@@ -111,14 +112,15 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
+    // *m_pIsDispensing = false;
+
     if(pos == 0)
     {
+        // Instantiate, set input, spin up a flowsensor thread.
         m_pFlowsenor[pos] = new oddyseyx86GPIO(pin);
         m_pFlowsenor[pos]->setDirection(true);
-        
-        // TODO: associate the pointer to function (pfn)
-        // here and start monitoring
-        // note that dispense state will determine if an error is occuring or not
+        m_pFlowsenor[pos]->registerDrink(m_pDrink);
+        m_pFlowsenor[pos]->startListener();
     }
     else
     {
@@ -206,6 +208,10 @@ DF_ERROR dispenser::startDispense(int pos){
         // reversePump();
     }
 
+    // cout << "FLOW SENSOR" << endl;
+    // setm_pIsDispensing();
+    // cout << m_pFlowsenor[pos]->readPin(m_pIsDispensing) << endl;
+
     // FIXME: Timer to Shut down relay paths; Should be flow or interrupt based
     sleep(ACTIVATION_TIME);
 
@@ -290,6 +296,9 @@ int dispenser::getI2CPin(int pos){
 }
 
 DF_ERROR dispenser::setDrink(drink* drink){
-
-    m_pDrink = drink;
+    if(drink != nullptr) {
+        m_pDrink = drink;
+    } else {
+        debugOutput::sendMessage("Set Drink Error!", ERROR);
+    }
 }

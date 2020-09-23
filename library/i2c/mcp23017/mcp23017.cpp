@@ -126,11 +126,11 @@ uint8_t MCP23017::readRegister(uint8_t addr)
 uint8_t MCP23017::writeRegister(uint8_t addr, uint8_t writeValue)
 {   // For debugging:
     // printf("Wrote: 0x%02X to register 0x%02X \n",writeValue, writeRegister) ;
-    std::cout << std::hex << "WRITE REGISTER Wrote: " << static_cast<int>(writeValue) << " to register " << &MCP23017::writeRegister << std::endl;
+    // std::cout << std::hex << "WRITE REGISTER Wrote: " << static_cast<int>(writeValue) << " to register " << &MCP23017::writeRegister << std::endl;
 
-	std::cout << "Write to I2C Device: " << kI2CAddress <<  kI2CBus << std::endl;
-	std::cout << "Check: " << kI2CFileDescriptor <<  static_cast<int>(addr) <<  static_cast<int>(writeValue) << std::endl;
-	std::cout << "Write to I2C Device (writeRegister): " + std::to_string(kI2CAddress) + "-" + std::to_string(kI2CBus) << std::endl;
+	// std::cout << "Write to I2C Device: " << kI2CAddress <<  kI2CBus << std::endl;
+	// std::cout << "Check: " << kI2CFileDescriptor <<  static_cast<int>(addr) <<  static_cast<int>(writeValue) << std::endl;
+	// std::cout << "Write to I2C Device (writeRegister): " + std::to_string(kI2CAddress) + "-" + std::to_string(kI2CBus) << std::endl;
 
     int toReturn = i2c_smbus_write_byte_data(kI2CFileDescriptor, addr, writeValue);
 

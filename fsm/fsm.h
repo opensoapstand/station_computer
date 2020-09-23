@@ -17,5 +17,6 @@
 #define MAX_CASSETTES 9
 
 extern dispenser g_cassettes[MAX_CASSETTES];
+// extern pthread_t flowThreads[MAX_CASSETTES];
 
 #endif

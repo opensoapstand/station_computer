@@ -105,10 +105,16 @@ DF_ERROR stateInit::onAction()
 
    // TODO: Seperate buttonSetup() atomic function.
 
+   if(OK == e_ret)
+   {
+      e_ret = setDrinks();
+   }
+
    if(OK == e_ret) 
    {
       e_ret = dispenserSetup();// Do error check per state
    }
+
 
    if (nullptr != &m_nextState && OK == e_ret)
    {
@@ -506,10 +512,8 @@ DF_ERROR stateInit::dispenserSetup()
       // }
 
       e_ret  = ERROR_BAD_PARAMS; //reset e_ret
-
-      // 
+      // e_ret = setDispenserFlowSensor(l_pDispenser, idx);
       e_ret = setDispenserFlowSensor(l_pDispenser, idx, cassettes);
-      // setDispenserFlowSensor(l_pDispenser, idx, cassettes);
 
       // XXX: REMOVE THIS AFTER TESTING
       e_ret = OK;
@@ -536,7 +540,7 @@ DF_ERROR stateInit::dispenserSetup()
 }
 
 
-DF_ERROR setDrinks(){
+DF_ERROR stateInit::setDrinks(){
 
    // Drink Setup
    // load the SQLITE manager
@@ -558,4 +562,6 @@ DF_ERROR setDrinks(){
    g_cassettes[6].setDrink(new drink(7, "Drink7", 355, 355, 1.3, 4.00, false));
    g_cassettes[7].setDrink(new drink(8, "Drink8", 355, 355, 1.3, 4.00, false));
    g_cassettes[8].setDrink(new drink(9, "Drink9", 355, 355, 1.3, 4.00, false));
+
+   return OK;
 }

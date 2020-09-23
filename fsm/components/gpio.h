@@ -37,10 +37,10 @@ public:
 	virtual int getMCPPin() {};
 
 	// Functions for Threaded GPIO Interrupts
-	void registerDrink(drink* pDrink) {m_pDrink = pDrink;}
-	DF_ERROR setInterrupt(DF_ERROR(*pf)()); 
-	std::thread listener();
-	void stopListener() { m_stop = true; };
+	void registerDrink(drink* pDrink) {m_pDrink = pDrink;} 
+	void startListener();
+	void listener();
+	void stopListener() { m_stop = true; }; 
 
 protected:
 	int m_nPin;
@@ -51,6 +51,7 @@ protected:
 	// Interrupt Function Definition
 	drink* m_pDrink;
 	virtual void monitorGPIO() = 0;
+	std::thread * gpioThread;
 };
 
 #endif

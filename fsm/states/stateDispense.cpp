@@ -108,7 +108,11 @@ DF_ERROR stateDispense::onAction()
 
       // Logic compare present and last 3 states for volume..continue
 
+      cassettes[pos].getDrink()->drinkInfo();
+
       // TODO: Figure out a Cancel/completed volume from IPC if volume is hit
+
+      // std::thread tGPIOListener tgpio = <gpioinstance>->listener();
 
       //only allow [cassette_num][A/D/W] to be keyboard input for now...
       //eg. 1a -> cassette 1 for air solenoid
@@ -190,6 +194,8 @@ DF_ERROR stateDispense::onAction()
          // FIXME: FSM loop is not looping/pushing through to onExit().
          sleep(2);
          // onExit();
+
+         // XXX: Move this to Drink as interrupt...
          cassettes[pos].setIsDispenseComplete(true);
          break;
 

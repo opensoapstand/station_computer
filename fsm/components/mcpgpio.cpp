@@ -22,10 +22,10 @@ mcpGPIO::mcpGPIO(int i2caddress, int pin)
 	m_nPin = pin;
 	m_nAddress = convert_to_int(i2caddress);
 
-	debugOutput::sendMessage("i2c to int Address: ", INFO);
-	cout << m_nAddress << endl;;
-	debugOutput::sendMessage("Pin out: ", INFO);
-	cout << convert_to_int(m_nPin) << endl;
+	// debugOutput::sendMessage("i2c to int Address: ", INFO);
+	// cout << m_nAddress << endl;;
+	// debugOutput::sendMessage("Pin out: ", INFO);
+	// cout << convert_to_int(m_nPin) << endl;
 
 	// this->m_mcp = new MCP23017(DEFAULT_BUS, m_nAddress);
 
@@ -104,8 +104,8 @@ DF_ERROR mcpGPIO::writePin(bool level)
 		return df_ret; //pin number out of range
 	}
 
-	cout << level << endl;
-	cout << HIGH << endl;
+	// cout << level << endl;
+	// cout << HIGH << endl;
 
 	if (HIGH == level) {
 		cout << "Got HIGH signal" << endl;
@@ -128,7 +128,7 @@ void mcpGPIO::monitorGPIO()
 {
 	// TODO: Implementation for Interrupt!
 	//!!! look at oddyseyx86GPIO for example
-
+	cout << "hello!" << endl;
 	// 
 }
 

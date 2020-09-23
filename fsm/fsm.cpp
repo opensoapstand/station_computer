@@ -30,6 +30,7 @@
 messageMediator *g_pMessaging;       //debug through local network
 stateVirtual *g_stateArray[FSM_MAX]; //an object for every state
 dispenser g_cassettes[MAX_CASSETTES]; //replace the magic number
+pthread_t flowThreads[MAX_CASSETTES];
 
 DF_ERROR initObjects();
 DF_ERROR createStateArray();
@@ -45,6 +46,7 @@ int main()
     if (OK == initObjects())
     {
         dfRet = g_pMessaging->createThreads(kbThread, ipThread);
+
         if (OK == dfRet)
         {
             dfRet = stateLoop();

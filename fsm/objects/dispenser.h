@@ -74,6 +74,10 @@ class dispenser
 
       bool getIsDispenseComplete(){return m_isDispenseDone;}
       void setIsDispenseComplete(bool isDispenseComplete){m_isDispenseDone = isDispenseComplete;}
+
+      void setm_pIsDispenseDone(){*m_pIsDispensing = false;}
+      void setm_pIsDispensing(){*m_pIsDispensing = true;}
+      void setm_pRestartDispense(){*m_pIsDispensing = false;}
       
       DF_ERROR cleanNozzle(int posW, int posA);
 
@@ -87,10 +91,14 @@ class dispenser
       int getI2CPin(int pos);
 
    private:
-      bool m_isDispenseDone;
+      bool m_isDispenseDone; // XXX: Remove later.
       bool m_isStill;
 
+      bool* m_pIsDispensing;
+
       drink* m_pDrink;
+
+      DF_ERROR * m_pthreadError;
 
       // Pointers to Addresses set in State Init
 

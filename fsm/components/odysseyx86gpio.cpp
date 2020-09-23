@@ -117,8 +117,10 @@ DF_ERROR oddyseyx86GPIO::setDirection(bool input)
 
 	fd = open(buf, O_WRONLY);
 	if (fd >= 0) {
-		if (INPUT == input)
+		if (INPUT == input){
+			cout << "direction input set" << endl;
 			write(fd, "in", 3);
+		}
 		else
 			write(fd, "out", 4);
 
@@ -142,7 +144,6 @@ DF_ERROR oddyseyx86GPIO::readPin(bool * level)
 
 	// test to see if level exists
 	if (NULL != level) {
-
 		len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", m_nPin);
 
 		fd = open(buf, O_RDONLY);
@@ -150,15 +151,19 @@ DF_ERROR oddyseyx86GPIO::readPin(bool * level)
 			read(fd, &ch, 1);
 
 			if (ch != '0') {
+				cout << "ON" << endl;
 				*level = true;
 			}
 			else {
+				cout << "OFF" << endl;
 				*level = false;
 			}
 
 			close(fd);
 			df_ret = OK;
 		}
+	} else {
+		debugOutput::sendMessage("readPin: Null Level reference", ERROR);
 	}
 	
 	return df_ret;
@@ -214,7 +219,7 @@ void oddyseyx86GPIO::monitorGPIO()
 	lseek(fd, 0, SEEK_SET);    /* consume interrupt */
 	read(fd, buf, sizeof buf);
 
-	// m_pDrink->registerFlowSensorTick();  //trigger the callback
+	m_pDrink->registerFlowSensorTick();  //trigger the callback
 
 	return;
 

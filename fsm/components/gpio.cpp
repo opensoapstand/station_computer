@@ -53,7 +53,7 @@ void gpio::listener()
 {
 	cout << "Spin up GPIO Thread" << endl;
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
-	m_stop = true;
+	m_stop = false;
 
 	while (!m_stop) {
 		monitorGPIO();

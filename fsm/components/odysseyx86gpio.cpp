@@ -198,28 +198,40 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
 // Threaded function call to monitor Odyssecy GPIO pin activity.
 void oddyseyx86GPIO::monitorGPIO()
 {
-	debugOutput::sendMessage("monitorGPIO", INFO);  //nuke this later it will cause so much spam
+	//debugOutput::sendMessage("monitorGPIO", INFO);  //nuke this later it will cause so much spam
 	int fd, len;
 	char buf[MAX_BUF];
+	struct pollfd pfd;
 	string GPIO = std::to_string(m_nPin);
 	string command("/sys/class/gpio/gpio");
 	command += GPIO;
-	command += "/value";
-
+	command += "/edge";
+	
+	//set the pin to interrupt
+	fd = open(command.c_str(), O_WRONLY);
+	write(fd, "both", 4);
+	close(fd);
+	
+	command = "/sys/class/gpio/gpio" + GPIO + "/value";
 	fd = open(command.c_str(), O_RDONLY);
-
 	pfd.fd = fd;
-	pfd.events = POLLPRI;
+	pfd.events = POLLPRI | POLLERR;
 
-	lseek(fd, 0, SEEK_SET);    /* consume any prior interrupt */
-	read(fd, buf, sizeof buf);
+	lseek(fd, 0, SEEK_SET);
+	int ret = poll(&pfd, 1, 100000);
+	char c;
+	read(fd, &c, 1);
+	if (0 == ret){
+		//debugOutput::sendMessage("gpioTimeout", INFO);
+	} else{
+		if ('1' == c){
+			debugOutput::sendMessage("Triggered Flow", INFO);
+			m_pDrink->registerFlowSensorTick();  //trigger the callback
+		}
+	}
 
-	poll(&pfd, 1, -1);         /* wait for interrupt */
-
-	lseek(fd, 0, SEEK_SET);    /* consume interrupt */
-	read(fd, buf, sizeof buf);
-
-	m_pDrink->registerFlowSensorTick();  //trigger the callback
+	close(fd);
+	
 
 	return;
 

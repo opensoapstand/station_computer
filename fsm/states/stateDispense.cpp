@@ -54,6 +54,8 @@ DF_ERROR stateDispense::onEntry()
 
    // TODO: Priming Pumps and Registers for HIGH
 
+   m_nextState = DISPENSE;
+
    // TODO: Status Check
    // Do a check if there is not enough stock i.e. 350 order 250 left in tank
    return e_ret;
@@ -67,21 +69,26 @@ DF_ERROR stateDispense::onEntry()
 DF_ERROR stateDispense::onAction()
 {
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
-   dispenser* cassettes = g_cassettes;
+   cassettes = g_cassettes;
    string temp;
 
    if (nullptr != &m_nextState) // TODO: Do a Check if Button is Pressed
    {
+
       // State Check
-      if (cassettes->getIsDispenseComplete())
+      if (pos != 1)
       {
-         debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]", INFO);         
+      }
+      if (cassettes[pos].getIsDispenseComplete())
+      {
+         debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]" + to_string(cassettes[pos].getIsDispenseComplete()), INFO);
          m_nextState = DISPENSE_END;
+         return e_ret = OK;
       }
       else
       {
          debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
-         m_nextState = DISPENSE_IDLE;
+         // m_nextState = DISPENSE_IDLE;
       }
 
       // TODO: Do a check if Pumps are operational
@@ -123,7 +130,6 @@ DF_ERROR stateDispense::onAction()
          }
 
          // drinkPtr(new drink(posChar));
-
       }
       else
       {
@@ -176,16 +182,19 @@ DF_ERROR stateDispense::onAction()
          debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> DRINK", INFO);
          debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
+         // cassettes[pos].getDrink()->drinkInfo();
+
          cassettes[pos].startDispense(DRINK);
          // this->onExit();
 
          // FIXME: FSM loop is not looping/pushing through to onExit().
-         sleep(3);
+         sleep(2);
          // onExit();
+         cassettes[pos].setIsDispenseComplete(true);
          break;
 
-      case DISPENSE_END_CHAR: 
-      
+      case DISPENSE_END_CHAR:
+
          // TODO: Shift this to DISPENSE_END
          debugOutput::sendMessage("------Cleaning Mode------", INFO);
          debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
@@ -215,6 +224,7 @@ DF_ERROR stateDispense::onExit()
    DF_ERROR e_ret = OK;
    debugOutput::sendMessage("Dispense OnEXIT", INFO);
 
+   cassettes[pos].setIsDispenseComplete(false);
    // // TODO: Does not seem to advance to Idle again..
    // Shut down Registers!
 

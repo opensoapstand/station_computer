@@ -83,7 +83,5 @@ DF_ERROR stateIdle::onExit()
 {
    DF_ERROR e_ret = OK;
 
-   
-
    return e_ret;
 }

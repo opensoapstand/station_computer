@@ -45,7 +45,10 @@ class stateDispense : public stateVirtual
     private:
         // XXX: Remove when drink instantiated
         int pos;
+        char solenoidChar;
+        string temp;
 
+        dispenser* cassettes;
         // present read Volume
         // last read Volume
         // max read volume

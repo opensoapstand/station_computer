@@ -47,9 +47,6 @@ DF_ERROR stateDispenseEnd::onEntry()
    DF_ERROR e_ret  = OK;
 
    debugOutput::sendMessage("Entering Dispense End...", STATE_CHANGE);
-
-   m_state = DISPENSE_END;
-   m_nextState = IDLE;
    
    return e_ret;
 }
@@ -82,6 +79,8 @@ DF_ERROR stateDispenseEnd::onAction()
 
       // TODO: Send a complete ACK back to QT
       // m_pMessaging->sendMessage("!");
+
+      m_nextState = IDLE;
 
       e_ret = OK;
    }

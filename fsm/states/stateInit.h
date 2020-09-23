@@ -54,6 +54,8 @@ class stateInit : public stateVirtual
         DF_ERROR setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes);
         DF_ERROR setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes);
         DF_ERROR setButton(TiXmlElement *hardwareEle, int dispenserIdx);
+        DF_ERROR setDrinks();
+
         const char* getXML(const char* subHeader, TiXmlElement *childEle);
 
 };

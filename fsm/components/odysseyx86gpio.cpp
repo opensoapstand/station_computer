@@ -214,7 +214,7 @@ void oddyseyx86GPIO::monitorGPIO()
 	lseek(fd, 0, SEEK_SET);    /* consume interrupt */
 	read(fd, buf, sizeof buf);
 
-	this->m_pf();  //trigger the callback
+	// m_pDrink->registerFlowSensorTick();  //trigger the callback
 
 	return;
 

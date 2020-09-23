@@ -34,7 +34,8 @@ DF_ERROR gpio::setInterrupt(DF_ERROR(*pf)())
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
 	if (nullptr != pf) {
-		m_pf = pf;
+		// TODO: Set mutex reference to Drink Object
+		// m_pf = pf;
 		df_ret = OK;
 	}
 	
@@ -44,7 +45,6 @@ DF_ERROR gpio::setInterrupt(DF_ERROR(*pf)())
 // TODO: Threaded GPIO interrupt...
 // call this with code that looks like
 // std::thread tGPIOListener tgpio = <gpioinstance>->listener();
-// tgpio.join();
 std::thread gpio::listener()
 {
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;

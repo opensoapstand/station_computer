@@ -28,16 +28,6 @@ stateVirtual::stateVirtual(messageMediator *message)
 
    m_pMessaging = message;
 
-   // Hardcoded drink class for testing.
-   // testDrinks[0] = new drink(1, "Drink1", 355, 355, 4.00, false);
-   // testDrinks[1] = new drink(2, "Drink2", 355, 355, 4.00, false);
-   // testDrinks[2] = new drink(3, "Drink3", 355, 355, 4.00, false);
-   // testDrinks[3] = new drink(4, "Drink4", 355, 355, 4.00, false);
-   // testDrinks[4] = new drink(5, "Drink5", 355, 355, 4.00, false);
-   // testDrinks[5] = new drink(6, "Drink6", 355, 355, 4.00, false);
-   // testDrinks[6] = new drink(7, "Drink7", 355, 355, 4.00, false);
-   // testDrinks[7] = new drink(8, "Drink8", 355, 355, 4.00, false);
-   // testDrinks[8] = new drink(9, "Drink9", 355, 355, 4.00, false);
 }
 
 stateVirtual::~stateVirtual()

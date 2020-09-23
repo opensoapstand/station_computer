@@ -26,7 +26,7 @@ dispenser::dispenser(){
     //debugOutput::sendMessage("dispenser", INFO);
 
     // TODO: Need to build Drink Object reference
-    m_pDrink = nullptr;
+    // m_pDrink = nullptr;
 
     for (int i = 0; i < NUM_SOLENOID; i++)
         m_pSolenoid[i] = nullptr; 
@@ -114,6 +114,8 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
     if(pos == 0)
     {
         m_pFlowsenor[pos] = new oddyseyx86GPIO(pin);
+        m_pFlowsenor[pos]->setDirection(true);
+        
         // TODO: associate the pointer to function (pfn)
         // here and start monitoring
         // note that dispense state will determine if an error is occuring or not
@@ -285,4 +287,9 @@ int dispenser::getI2CAddress(int pos){
 
 int dispenser::getI2CPin(int pos){
     return m_pSolenoid[pos]->getMCPPin();
+}
+
+DF_ERROR dispenser::setDrink(drink* drink){
+
+    m_pDrink = drink;
 }

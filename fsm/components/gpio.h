@@ -17,6 +17,7 @@
 
 #include "../dftypes.h"
 #include "../objects/debugOutput.h"
+#include "../objects/drink.h"
 
 class gpio
 {
@@ -36,6 +37,7 @@ public:
 	virtual int getMCPPin() {};
 
 	// Functions for Threaded GPIO Interrupts
+	void registerDrink(drink* pDrink) {m_pDrink = pDrink;}
 	DF_ERROR setInterrupt(DF_ERROR(*pf)()); 
 	std::thread listener();
 	void stopListener() { m_stop = true; };
@@ -47,7 +49,7 @@ protected:
 	bool m_i2c;
 
 	// Interrupt Function Definition
-	std::function<DF_ERROR()> m_pf;
+	drink* m_pDrink;
 	virtual void monitorGPIO() = 0;
 };
 

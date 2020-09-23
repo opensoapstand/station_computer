@@ -67,7 +67,7 @@ DF_ERROR stateLoop()
     {
         if (fsmState != fsmNewState) //state change
         {
-            // debugOutput::sendMessage("onEntry()  [" + g_stateArray[fsmNewState]->toString() + "]", STATE_CHANGE);
+            debugOutput::sendMessage("onEntry()  [" + g_stateArray[fsmNewState]->toString() + "]", STATE_CHANGE);
             fsmState = fsmNewState;
             dfRet = g_stateArray[fsmState]->onEntry();
         }
@@ -82,8 +82,9 @@ DF_ERROR stateLoop()
             fsmNewState = g_stateArray[fsmState]->getNextState();
 
             
-            if ((OK == dfRet) &&fsmNewState != fsmState)
+            if ((OK == dfRet) && (fsmNewState != fsmState))
             {
+                debugOutput::sendMessage("onExit() going to [" + g_stateArray[fsmNewState]->toString() + "]", STATE_CHANGE);
                 dfRet = g_stateArray[fsmState]->onExit();
                 //TODO if this isn't ok deal with bad things
             }

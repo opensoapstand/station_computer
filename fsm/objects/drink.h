@@ -31,7 +31,7 @@ class drink
 public:
 	drink();
 	drink(int slot);
-	drink(int slot, string name, int nVolume, int rVolume, double price, bool isStillDrink);
+	drink(int slot, string name, int nVolumeCurrent, int nVolumeRemaining, double calibration_const, double price, bool isStillDrink);
 	~drink();
 
 	//getter
@@ -43,12 +43,19 @@ public:
 	void recordSale(int volume);
 	void refill(int volume);
 
+	void drinkInfo();
+	void drinkVolumeInfo();
+
+	void registerFlowSensorTick();
+
 private:
 	// TODO: Determine more data to modify per transaction...
 	int m_nSlot;
 	string m_name;
-	int m_nVolume;
-	int m_rVolume;
+
+	double m_calibration_const;
+	int m_nVolumeCurrent;
+	int m_nVolumeRemaining;
 
 	double m_price;
 

@@ -79,11 +79,12 @@ drink::drink(int slot)
 }
 
 // Test CTOR
-drink::drink(int slot, string name, int nVolume, int rVolume, double price, bool isStillDrink){
+drink::drink(int slot, string name, int nVolumeCurrent, int nVolumeRemaining, double calibration_const, double price, bool isStillDrink){
     m_nSlot = slot;
     m_name = name;
-    m_nVolume = nVolume;
-    m_rVolume = rVolume;
+    m_nVolumeCurrent = nVolumeCurrent;
+    m_nVolumeRemaining = nVolumeRemaining;
+    m_calibration_const = calibration_const;
     m_price = price;
     m_isStillDrink = isStillDrink;
 }
@@ -137,4 +138,17 @@ void drink::recordSale(int volume)
 void drink::refill(int volume)
 {
     // TODO: SQLite database Update.
+}
+
+void drink::drinkInfo() {
+    cout << m_nSlot << endl;
+    cout << m_name << endl;
+    cout << m_calibration_const << endl;
+    cout << m_price << endl;
+    cout << m_isStillDrink << endl;
+}
+
+void drink::drinkVolumeInfo(){
+    cout << m_nVolumeCurrent << endl;
+    cout << m_nVolumeRemaining << endl;
 }

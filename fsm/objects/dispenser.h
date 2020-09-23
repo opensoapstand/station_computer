@@ -73,13 +73,15 @@ class dispenser
       DF_ERROR disconnectButton();
 
       bool getIsDispenseComplete(){return m_isDispenseDone;}
-      // void setIsDispenseComplete(bool isDispenseComplete){m_isDispenseDone = isDispenseComplete;}
+      void setIsDispenseComplete(bool isDispenseComplete){m_isDispenseDone = isDispenseComplete;}
       
       DF_ERROR cleanNozzle(int posW, int posA);
 
       DF_ERROR testSolenoidDispense(int pos);
 
       drink* getDrink();
+
+      DF_ERROR setDrink(drink* drink);
 
       int getI2CAddress(int pos);
       int getI2CPin(int pos);
@@ -88,7 +90,7 @@ class dispenser
       bool m_isDispenseDone;
       bool m_isStill;
 
-      drink *m_pDrink;
+      drink* m_pDrink;
 
       // Pointers to Addresses set in State Init
 

@@ -483,23 +483,36 @@ DF_ERROR stateInit::dispenserSetup()
          return e_ret;
       }
 
+      // NO PUMPS FOR NOW NEED LOGIC CHECK
+      /*
       e_ret  = ERROR_BAD_PARAMS; //reset e_ret
       if(idx > PUMP_OPTION_START_POSITION && idx < PUMP_OPTION_STOP_POSITION )
       {
-         e_ret = setDispenserPump(l_pDispenser, idx, cassettes);
+         // FIXME: PUMP LOGIC
+         // e_ret = setDispenserPump(l_pDispenser, idx, cassettes);
+         setDispenserPump(l_pDispenser, idx, cassettes);
       } else {
          debugOutput::sendMessage("Not a still drink; Out of Pump Range", ERROR);
       }
+      */
 
 
-      if(OK != e_ret) //if flowsensor not set properly, return error
-      {
-         debugOutput::sendMessage("setDispenserPump did not return OK", INFO);
-         return e_ret;
-      }
+      // if(OK != e_ret) //if flowsensor not set properly, return error
+      // {
+      //    debugOutput::sendMessage("setDispenserPump did not return OK", INFO);
+      //    // XXX: REMOVE THIS AFTER!!!
+      //    e_ret = OK;
+      //    return e_ret;
+      // }
 
       e_ret  = ERROR_BAD_PARAMS; //reset e_ret
+
+      // 
       e_ret = setDispenserFlowSensor(l_pDispenser, idx, cassettes);
+      // setDispenserFlowSensor(l_pDispenser, idx, cassettes);
+
+      // XXX: REMOVE THIS AFTER TESTING
+      e_ret = OK;
 
       if(OK != e_ret) //if flowsensor not set properly, return error
       {
@@ -522,12 +535,27 @@ DF_ERROR stateInit::dispenserSetup()
    return e_ret;
 }
 
-/*
-drinkOrder drinkSetup() {
 
-   // Drink Array Setup
+DF_ERROR setDrinks(){
 
+   // Drink Setup
    // load the SQLITE manager
 
+   // FIXME: Hardcode for now.
+   
+
+   // for(int i = 0; i < MAX_CASSETTES; i++) {
+   //    g_cassettes[i]->setDrink()
+   // }
+   // Hardcoded drink class for testing
+
+   g_cassettes[0].setDrink(new drink(1, "Drink1", 355, 355, 1.3, 4.00, false));
+   g_cassettes[1].setDrink(new drink(2, "Drink2", 355, 355, 1.3, 4.00, false));
+   g_cassettes[2].setDrink(new drink(3, "Drink3", 355, 355, 1.3, 4.00, false));
+   g_cassettes[3].setDrink(new drink(4, "Drink4", 355, 355, 1.3, 4.00, false));
+   g_cassettes[4].setDrink(new drink(5, "Drink5", 355, 355, 1.3, 4.00, false));
+   g_cassettes[5].setDrink(new drink(6, "Drink6", 355, 355, 1.3, 4.00, false));
+   g_cassettes[6].setDrink(new drink(7, "Drink7", 355, 355, 1.3, 4.00, false));
+   g_cassettes[7].setDrink(new drink(8, "Drink8", 355, 355, 1.3, 4.00, false));
+   g_cassettes[8].setDrink(new drink(9, "Drink9", 355, 355, 1.3, 4.00, false));
 }
-*/

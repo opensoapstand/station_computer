@@ -45,7 +45,7 @@ string stateDispenseIdle::toString()
 DF_ERROR stateDispenseIdle::onEntry()
 {
    DF_ERROR e_ret = OK;
-
+   m_pMessaging->getPositionReady();
    return e_ret;
 }
 

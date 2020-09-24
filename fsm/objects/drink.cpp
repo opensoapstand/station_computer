@@ -130,17 +130,7 @@ bool drink::resetVolumeDispensed(){
 }
 
 bool drink::registerFlowSensorTick(){
-    cout << "hello!" << endl; // XXX: for testing remove when here.
-    // FIXME: DO REASSIGMENT HERE
     m_nVolumeDispensed -= m_nVolumePerTick;
-}
-
-bool drink::isDispenseComplete(){
-    if(m_nVolumeDispensed <= 0){
-        return true;
-    } else {
-        return false;
-    }
 }
 
 // TODO: Function name is inaccurate...deduct sale would be better
@@ -153,6 +143,38 @@ void drink::recordSale(int volume)
 void drink::refill(int volume)
 {
     // TODO: SQLite database Update.
+}
+
+int drink::getVolumeSinceLastPoll()
+{
+    int temp = m_nVolumeDispensedSinceLastPoll;
+
+    m_nVolumeDispensed += m_nVolumeDispensedSinceLastPoll;
+
+    return temp;
+}
+
+DF_ERROR drink::startDispense(int nVolumeToDispense)
+{
+    DF_ERROR dfRet = ERROR_BAD_PARAMS;
+
+    m_nDispenseVolume = nVolumeToDispense;
+    m_nVolumeDispensed = 0;
+    m_nVolumeDispensedSinceLastPoll = 0;
+
+    return dfRet;
+}
+
+bool drink::isDispenseComplete()
+{
+    bool bRet = false;
+
+    if (m_nDispenseVolume >= m_nVolumeDispensed){
+        bRet = true;
+        //deduct from total volume available
+        //update SQL?
+    }
+    return bRet;
 }
 
 void drink::drinkInfo() {

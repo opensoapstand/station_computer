@@ -187,8 +187,8 @@ DF_ERROR dispenser::stopPump()
 // Disenses drinks by turning Solenoid Signal to HIGH then to LOW
 DF_ERROR dispenser::startDispense(int pos){
     DF_ERROR e_ret = ERROR_MECH_DRINK_FAULT;
-
-    // XXX: Prime Button - Linked thru State Virtual
+    debugOutput::sendMessage("-----Start Dispense-----", INFO);
+    // XXX: Prepare Button - Linked thru State Virtual
     // e_ret = connectButton();
 
     // Solenoid Position Check
@@ -198,6 +198,8 @@ DF_ERROR dispenser::startDispense(int pos){
     }
 
     // Open Drink Solenoid
+    debugOutput::sendMessage("Write out solenoid:", INFO);
+    cout << pos << endl;
     m_pSolenoid[pos]->writePin(HIGH);
  
     // If Still start pump!
@@ -207,14 +209,12 @@ DF_ERROR dispenser::startDispense(int pos){
         forwardPump();
         // reversePump();
     }
+    return e_ret = OK;
+}
 
-    // cout << "FLOW SENSOR" << endl;
-    // setm_pIsDispensing();
-    // cout << m_pFlowsenor[pos]->readPin(m_pIsDispensing) << endl;
-
-    // FIXME: Timer to Shut down relay paths; Should be flow or interrupt based
-    sleep(ACTIVATION_TIME);
-
+// 
+DF_ERROR dispenser::stopDispense(int pos){
+    DF_ERROR e_ret = ERROR_BAD_PARAMS;
     // Stop Pump
     if(m_isStill && m_pPump != nullptr ) {
         // m_pPump[pos]->writePin(LOW);
@@ -228,13 +228,6 @@ DF_ERROR dispenser::startDispense(int pos){
     // XXX: Disable Button - Linked thru State Virtual
     // e_ret = disconnectButton();
     m_isDispenseDone = true;
-
-    return e_ret = OK;
-}
-
-// TODO: May not be nessecary...turn into an interrupt instead.
-DF_ERROR dispenser::stopDispense(int pos){
-    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
     return e_ret = OK;
 }
@@ -292,6 +285,7 @@ int dispenser::getI2CAddress(int pos){
 }
 
 int dispenser::getI2CPin(int pos){
+    debugOutput::sendMessage("getI2C Error!", ERROR);
     return m_pSolenoid[pos]->getMCPPin();
 }
 

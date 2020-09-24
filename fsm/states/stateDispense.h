@@ -18,12 +18,6 @@
 
 #include "stateVirtual.h"
 
-#define AIR_CHAR 'a'
-#define WATER_CHAR 'w'
-#define DRINK_CHAR 'd'
-#define CLEAN_CHAR 'c'
-#define DISPENSE_END_CHAR 'f'
-
 class stateDispense : public stateVirtual
 {
     public:
@@ -43,12 +37,9 @@ class stateDispense : public stateVirtual
 
 
     private:
-        // XXX: Remove when drink instantiated
         int pos;
-        char solenoidChar;
-        string temp;
-
         dispenser* cassettes;
+        
         // present read Volume
         // last read Volume
         // max read volume

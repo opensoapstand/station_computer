@@ -35,9 +35,15 @@ public:
 	~drink();
 
 	//getter
-	int getDrinkOption(){return m_nSlot;}
-	bool getIsStillDrink();
+	int getDrinkOption(){return m_nSlot;} // For IPC
+	bool getIsStillDrink(); // For pump check
 	int getVolumeDispensed(){return m_nVolumeDispensed;}
+
+	// Interrupt Helpers
+	DF_ERROR startDispense(int nVolumeToDispense);
+	int getVolumeSinceLastPoll();
+	bool isDispenseComplete();
+	bool registerFlowSensorTick();
 
 	// DB Updates
 	void recordSale(int volume);
@@ -46,7 +52,6 @@ public:
 	void drinkInfo();
 	void drinkVolumeInfo();
 
-	bool registerFlowSensorTick();
 
 private:
 	// TODO: Determine more data to modify per transaction...
@@ -55,7 +60,9 @@ private:
 
 	double m_calibration_const;
 	int m_nVolumeMax;
-	int m_nVolumeDispensed;
+	int m_nDispenseVolume;  //how much to dispense
+	int m_nVolumeDispensed; //how much has been dispensed in this sale
+	int m_nVolumeDispensedSinceLastPoll;
 	int m_nVolumePerTick;
 
 	double m_price;
@@ -66,7 +73,6 @@ private:
 
 	void setSlot(int slot);
 	bool resetVolumeDispensed();
-	bool isDispenseComplete();
 	void setDrinkName(string drinkName);
 	void setIsStillDrink(bool isStillDrink);
 

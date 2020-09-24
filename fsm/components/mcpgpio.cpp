@@ -128,7 +128,7 @@ void mcpGPIO::monitorGPIO()
 {
 	// TODO: Implementation for Interrupt!
 	//!!! look at oddyseyx86GPIO for example
-	cout << "hello!" << endl;
+	cout << "hello! MCPGPIO" << endl;
 	// 
 }
 

@@ -36,6 +36,7 @@ class stateIdle : public stateVirtual
         drink* drinkOrder;
 
     private:
+
 };
 
 

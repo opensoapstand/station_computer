@@ -79,11 +79,11 @@ drink::drink(int slot)
 }
 
 // Test CTOR
-drink::drink(int slot, string name, int nVolumeDispensed, int nVolumeMax, double calibration_const, double price, bool isStillDrink){
+drink::drink(int slot, string name, int nVolumeDispensed, int nVolumeTarget, double calibration_const, double price, bool isStillDrink){
     m_nSlot = slot;
     m_name = name;
     m_nVolumeDispensed = nVolumeDispensed;
-    m_nVolumeMax = nVolumeMax;
+    m_nVolumeTarget = nVolumeTarget;
     m_calibration_const = calibration_const;
     m_price = price;
     m_isStillDrink = isStillDrink;
@@ -125,12 +125,8 @@ bool drink::getIsStillDrink()
     return m_isStillDrink;
 }
 
-bool drink::resetVolumeDispensed(){
-    m_nVolumeDispensed = m_nVolumeMax;
-}
-
 bool drink::registerFlowSensorTick(){
-    m_nVolumeDispensed -= m_nVolumePerTick;
+    m_nVolumeDispensed += m_nVolumePerTick;
 }
 
 // TODO: Function name is inaccurate...deduct sale would be better
@@ -154,22 +150,24 @@ int drink::getVolumeSinceLastPoll()
     return temp;
 }
 
+// Reset values onEntry()
 DF_ERROR drink::startDispense(int nVolumeToDispense)
 {
     DF_ERROR dfRet = ERROR_BAD_PARAMS;
 
-    m_nDispenseVolume = nVolumeToDispense;
+    nVolumeToDispense = m_nVolumeTarget;
     m_nVolumeDispensed = 0;
     m_nVolumeDispensedSinceLastPoll = 0;
 
     return dfRet;
 }
 
+// VolumeDispense check!
 bool drink::isDispenseComplete()
 {
     bool bRet = false;
 
-    if (m_nDispenseVolume >= m_nVolumeDispensed){
+    if (m_nVolumeTarget <= m_nVolumeDispensed){
         bRet = true;
         //deduct from total volume available
         //update SQL?
@@ -178,14 +176,17 @@ bool drink::isDispenseComplete()
 }
 
 void drink::drinkInfo() {
-    cout << m_nSlot << endl;
-    cout << m_name << endl;
-    cout << m_calibration_const << endl;
-    cout << m_price << endl;
-    cout << m_isStillDrink << endl;
+    cout << "Drink Option: " << m_nSlot << endl;
+    cout << "Drink Name: " << m_name << endl;
+    cout << "Drink Dispense Volume: " << m_nVolumeDispensed << endl;
+    cout << "Drink Target Volume: " << m_nVolumeTarget << endl;
+    cout << "Drink Calibration: " << m_calibration_const << endl;
+    cout << "Drink Price: " << m_price << endl;
+    cout << "Drink is Still?: " << m_isStillDrink << endl;
 }
 
 void drink::drinkVolumeInfo(){
-    cout << m_nVolumeDispensed << endl;
-    cout << m_nVolumeMax << endl;
+    cout << "Volume since last poll: " << m_nVolumeDispensedSinceLastPoll << endl;
+    cout << "How much to dispense: " << m_nVolumeTarget << endl;
+	cout << "Dispensed so far: " << m_nVolumeDispensed << endl;
 }

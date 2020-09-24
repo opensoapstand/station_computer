@@ -31,7 +31,7 @@ class drink
 public:
 	drink();
 	drink(int slot);
-	drink(int slot, string name, int nVolumeCurrent, int nVolumeRemaining, double calibration_const, double price, bool isStillDrink);
+	drink(int slot, string name, int nDispenseVolume, int nTargetVolume, double calibration_const, double price, bool isStillDrink);
 	~drink();
 
 	//getter
@@ -58,21 +58,17 @@ private:
 	int m_nSlot;
 	string m_name;
 
-	double m_calibration_const;
-	int m_nVolumeMax;
-	int m_nDispenseVolume;  //how much to dispense
+	bool isDispenseFinished;
+	int m_nVolumeTarget;  //how much to dispense
 	int m_nVolumeDispensed; //how much has been dispensed in this sale
 	int m_nVolumeDispensedSinceLastPoll;
+	double m_calibration_const;
 	int m_nVolumePerTick;
 
 	double m_price;
-
 	bool m_isStillDrink;
 
-	bool isDispenseFinished;
-
 	void setSlot(int slot);
-	bool resetVolumeDispensed();
 	void setDrinkName(string drinkName);
 	void setIsStillDrink(bool isStillDrink);
 

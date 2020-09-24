@@ -221,18 +221,17 @@ void oddyseyx86GPIO::monitorGPIO()
 	int ret = poll(&pfd, 1, 100000);
 	char c;
 	read(fd, &c, 1);
+
 	if (0 == ret){
-		//debugOutput::sendMessage("gpioTimeout", INFO);
+		debugOutput::sendMessage("gpioTimeout", INFO);
 	} else{
 		if ('1' == c){
-			debugOutput::sendMessage("Triggered Flow", INFO);
+			// debugOutput::sendMessage("Triggered Flow", INFO);
 			m_pDrink->registerFlowSensorTick();  //trigger the callback
 		}
 	}
 
 	close(fd);
-	
-
 	return;
 
 }

@@ -52,13 +52,14 @@ DF_ERROR stateDispense::onEntry()
    cassettes = g_cassettes;
    DF_ERROR e_ret = OK;
    pos = m_pMessaging->getnOption();
-   pos = pos-1;
+   pos = pos - 1;
    // TODO: Priming Pumps and Registers for HIGH
    debugOutput::sendMessage("------Dispensing Drink------", INFO);
    // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> DRINK", INFO);
    // debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
-   cassettes[pos].stopDispense(DRINK);
+   cassettes[pos].getDrink()->startDispense(cassettes[pos].getDrink()->getVolumeDispensed());
+   cassettes[pos].getDrink()->drinkInfo();
    cassettes[pos].getDrink()->drinkVolumeInfo();
    cassettes[pos].startDispense(DRINK);
 
@@ -97,18 +98,21 @@ DF_ERROR stateDispense::onAction()
       // send IPC if pump fails
 
       // TODO: Check the Volume dispensed so far
+      cassettes[pos].getDrink()->getVolumeDispensed();
 
       // Logic compare present and last 3 states for volume..continue
       cassettes[pos].getDrink()->drinkVolumeInfo();
 
       // TODO: Figure out a Cancel/completed volume from IPC if volume is hit
+      if (cassettes[pos].getDrink()->isDispenseComplete())
+      {
+         cassettes[pos].setIsDispenseComplete(true);
+      }
 
-      // std::thread tGPIOListener tgpio = <gpioinstance>->listener();
+      // sleep(10);
 
-      sleep(2);
-
-      // XXX: Move this to Drink as interrupt...
-      cassettes[pos].setIsDispenseComplete(true);
+      // // XXX: Move this to Drink as interrupt...
+      // cassettes[pos].setIsDispenseComplete(true);
    }
    e_ret = OK;
    return e_ret;
@@ -126,7 +130,7 @@ DF_ERROR stateDispense::onExit()
    debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
    debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
-   cassettes[pos].cleanNozzle(WATER, AIR);
+   // cassettes[pos].cleanNozzle(WATER, AIR);
 
    cassettes[pos].setIsDispenseComplete(false);
    return e_ret;

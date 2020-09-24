@@ -317,7 +317,7 @@ void messageMediator::clearCommandString()
 DF_ERROR messageMediator::getPositionReady()
 {
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
-   debugOutput::sendMessage("getPositionReady", INFO);
+   // debugOutput::sendMessage("getPositionReady", INFO);
    char temp[10];
    string commandString = getCommandString();
 
@@ -334,13 +334,11 @@ DF_ERROR messageMediator::getPositionReady()
       if (isdigit(commandString[i]))
       {
          posChar = commandString[i];
-         cout << posChar << endl;
          continue;
       }
       if (isalpha(commandString[i]))
       {
          solenoidChar = commandString[i];
-         cout << solenoidChar << endl;
          continue;
       }
    }
@@ -351,15 +349,14 @@ DF_ERROR messageMediator::getPositionReady()
 
    if (isdigit(posChar)) //first character should be string
    {
-      debugOutput::sendMessage("Set Option", INFO);
+      // debugOutput::sendMessage("Set Option", INFO);
 
       int check = posChar - '0';
       // pos = atoi(&posChar) - 1;
       // FIXME: MAGIC NUMBER reference...
       if (9 < check || 0 > check)
       {
-         debugOutput::sendMessage("Irrelevant input", ERROR);
-         // this->clearProcessString();
+         // debugOutput::sendMessage("Irrelevant input", ERROR);
          e_ret = ERROR_NETW_NO_OPTION; //require valid cassettes
       }
       else
@@ -384,7 +381,6 @@ DF_ERROR messageMediator::getPositionReady()
    if (!isalpha(solenoidChar)) //for second char not an alphabet
    {
       debugOutput::sendMessage("Irrelevant input", INFO);
-      // this->clearCommandString(); //make sure to clear the processed string for new input
       e_ret = ERROR_NETW_NO_POSITION;
    }
    else

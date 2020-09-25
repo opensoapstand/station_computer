@@ -58,7 +58,9 @@ DF_ERROR stateDispense::onEntry()
    // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> DRINK", INFO);
    // debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
-   cassettes[pos].getDrink()->startDispense(cassettes[pos].getDrink()->getVolumeDispensed());
+   cassettes[pos].getDrink()->startDispense(cassettes[pos].getDrink()->getTargetVolume());
+   cout << cassettes[pos].getDrink()->getTargetVolume() << endl;
+   cassettes[pos].setIsDispenseComplete(false);
    cassettes[pos].getDrink()->drinkInfo();
    cassettes[pos].getDrink()->drinkVolumeInfo();
    cassettes[pos].startDispense(DRINK);
@@ -110,8 +112,7 @@ DF_ERROR stateDispense::onAction()
          cassettes[pos].setIsDispenseComplete(true);
       }
 
-      sleep(10);
-
+      // sleep(1);
       // // XXX: Move this to Drink as interrupt...
       // cassettes[pos].setIsDispenseComplete(true);
 
@@ -126,6 +127,7 @@ DF_ERROR stateDispense::onExit()
 {
    DF_ERROR e_ret = OK;
    cassettes[pos].stopDispense(DRINK);
+   sleep(3);
    debugOutput::sendMessage("Dispense OnEXIT", INFO);
    debugOutput::sendMessage("------Cleaning Mode------", INFO);
    debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
@@ -133,7 +135,7 @@ DF_ERROR stateDispense::onExit()
    debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
    debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
-   // cassettes[pos].cleanNozzle(WATER, AIR);
+   cassettes[pos].cleanNozzle(WATER, AIR);
 
    cassettes[pos].setIsDispenseComplete(false);
    return e_ret;

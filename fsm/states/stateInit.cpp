@@ -166,6 +166,7 @@ DF_ERROR stateInit::setDispenserId()
       // for(l_p = m_pDispenser; l_p->ValueTStr() !=  "dispenser"; l_p = l_p->NextSiblingElement())// != l_pDispenser->NextSiblingElement("dispenser"))
       for(l_p = m_pDispenser; l_p !=  NULL; l_p = l_p->NextSiblingElement())// != l_pDispenser->NextSiblingElement("dispenser"))
       {
+         // FIXME: UGLY way to iterate through XML.  Need to find better way!
          cout << "accessing element" << endl;
          string szTemp = l_p->Value();        
          if (0 == szTemp.compare("dispenser")) {  

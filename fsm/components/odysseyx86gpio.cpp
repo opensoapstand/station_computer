@@ -211,6 +211,10 @@ void oddyseyx86GPIO::monitorGPIO()
 	fd = open(command.c_str(), O_WRONLY);
 	write(fd, "both", 4);
 	close(fd);
+
+	// command = "/sys/class/gpio/gpio" + GPIO + "/active_low";
+	// write(fd, "1", 4);
+	// close(fd);
 	
 	command = "/sys/class/gpio/gpio" + GPIO + "/value";
 	fd = open(command.c_str(), O_RDONLY);
@@ -226,9 +230,13 @@ void oddyseyx86GPIO::monitorGPIO()
 		debugOutput::sendMessage("gpioTimeout", INFO);
 	} else{
 		if ('1' == c){
-			// debugOutput::sendMessage("Triggered Flow", INFO);
-			// usleep(500000); // Sleep to make sure debug gets chance to print
+			debugOutput::sendMessage("HIGH Triggered Flow", INFO);
+			usleep(500000); // Sleep to make sure debug gets chance to print
+		} else if ('0' == c){
+			debugOutput::sendMessage("LOW Triggered Flow", INFO);
+			usleep(500000); // Sleep to make sure debug gets chance to print
 			m_pDrink->registerFlowSensorTick();  //trigger the callback
+
 		}
 	}
 

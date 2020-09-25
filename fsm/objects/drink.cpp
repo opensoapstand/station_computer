@@ -79,7 +79,7 @@ drink::drink(int slot)
 }
 
 // Test CTOR
-drink::drink(int slot, string name, int nVolumeDispensed, int nVolumeTarget, double calibration_const, double price, bool isStillDrink){
+drink::drink(int slot, string name, double nVolumeDispensed, double nVolumeTarget, double calibration_const, double price, bool isStillDrink){
     m_nSlot = slot;
     m_name = name;
     m_nVolumeDispensed = nVolumeDispensed;
@@ -88,8 +88,10 @@ drink::drink(int slot, string name, int nVolumeDispensed, int nVolumeTarget, dou
     m_price = price;
     m_isStillDrink = isStillDrink;
 
+    m_nVolumePerTick = 50; // Seems like best guesstimate tick.
+
     // XXX: Find calculation for this...
-    m_nVolumePerTick = 20;
+    // m_nVolumePerTick = 30; // Seems like best guesstimate tick.
 }
 
 // DTOR
@@ -155,7 +157,7 @@ DF_ERROR drink::startDispense(int nVolumeToDispense)
 {
     DF_ERROR dfRet = ERROR_BAD_PARAMS;
 
-    nVolumeToDispense = m_nVolumeTarget;
+    m_nVolumeTarget = nVolumeToDispense;
     m_nVolumeDispensed = 0;
     m_nVolumeDispensedSinceLastPoll = 0;
 
@@ -167,7 +169,8 @@ bool drink::isDispenseComplete()
 {
     bool bRet = false;
 
-    if (m_nVolumeTarget <= m_nVolumeDispensed){
+    if (m_nVolumeTarget < m_nVolumeDispensed){
+        cout << "Target HIT!" << endl;
         bRet = true;
         //deduct from total volume available
         //update SQL?

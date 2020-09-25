@@ -31,13 +31,14 @@ class drink
 public:
 	drink();
 	drink(int slot);
-	drink(int slot, string name, int nDispenseVolume, int nTargetVolume, double calibration_const, double price, bool isStillDrink);
+	drink(int slot, string name, double nDispenseVolume, double nTargetVolume, double calibration_const, double price, bool isStillDrink);
 	~drink();
 
 	//getter
 	int getDrinkOption(){return m_nSlot;} // For IPC
 	bool getIsStillDrink(); // For pump check
 	int getVolumeDispensed(){return m_nVolumeDispensed;}
+	int getTargetVolume(){return m_nVolumeTarget;};
 
 	// Interrupt Helpers
 	DF_ERROR startDispense(int nVolumeToDispense);
@@ -59,11 +60,11 @@ private:
 	string m_name;
 
 	bool isDispenseFinished;
-	int m_nVolumeTarget;  //how much to dispense
-	int m_nVolumeDispensed; //how much has been dispensed in this sale
-	int m_nVolumeDispensedSinceLastPoll;
+	double m_nVolumeTarget;  //how much to dispense
+	double m_nVolumeDispensed; //how much has been dispensed in this sale
+	double m_nVolumeDispensedSinceLastPoll;
 	double m_calibration_const;
-	int m_nVolumePerTick;
+	double m_nVolumePerTick;
 
 	double m_price;
 	bool m_isStillDrink;

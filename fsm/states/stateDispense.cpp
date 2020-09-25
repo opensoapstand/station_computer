@@ -77,6 +77,7 @@ DF_ERROR stateDispense::onEntry()
  */
 DF_ERROR stateDispense::onAction()
 {
+   debugOutput::sendMessage("+stateDispense::onAction()", INFO); 
    cassettes = g_cassettes;
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
@@ -109,12 +110,14 @@ DF_ERROR stateDispense::onAction()
          cassettes[pos].setIsDispenseComplete(true);
       }
 
-      // sleep(10);
+      sleep(10);
 
       // // XXX: Move this to Drink as interrupt...
       // cassettes[pos].setIsDispenseComplete(true);
+
+      e_ret = OK;
    }
-   e_ret = OK;
+   debugOutput::sendMessage("-stateDispense::onAction()", INFO);
    return e_ret;
 }
 

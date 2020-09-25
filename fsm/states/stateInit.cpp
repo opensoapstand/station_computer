@@ -103,6 +103,9 @@ DF_ERROR stateInit::onAction()
    */
    e_ret = setDispenserId();
 
+   if(OK != e_ret) {
+      debugOutput::sendMessage("setDispenserId did not return OK", INFO);
+   }
    // TODO: Seperate buttonSetup() atomic function.
 
    if(OK == e_ret)
@@ -126,7 +129,7 @@ DF_ERROR stateInit::onAction()
    else
    {
       e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
-      debugOutput::sendMessage("setDispenserId did not return OK", INFO);
+
    }
    return e_ret;
 }
@@ -157,12 +160,23 @@ DF_ERROR stateInit::setDispenserId()
    else
    {
       TiXmlElement *l_p;
-
+      const char * att;
+      l_counter = 0;
+      int position = 0;
+      // for(l_p = m_pDispenser; l_p->ValueTStr() !=  "dispenser"; l_p = l_p->NextSiblingElement())// != l_pDispenser->NextSiblingElement("dispenser"))
       for(l_p = m_pDispenser; l_p !=  NULL; l_p = l_p->NextSiblingElement())// != l_pDispenser->NextSiblingElement("dispenser"))
       {
-         dispenserId[l_counter] = l_p->Attribute("id");
-         l_counter++;
+         cout << "accessing element" << endl;
+         string szTemp = l_p->Value();        
+         if (0 == szTemp.compare("dispenser")) {  
+            cout << l_p->Value() << endl;
+            att = l_p->Attribute("id");
+            position = *att - '0';
+            cout << position << endl;
+            dispenserId[position] = l_p->Attribute("id");
+         }
       }
+      debugOutput::sendMessage("Done getting dispense ID!", INFO);
       e_ret = OK;
    }
 
@@ -247,6 +261,7 @@ DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispe
    }
    
    int l_pos = 0;
+
    TiXmlElement *l_pSingleFlowsensor = l_pFlowsensor;
 
    while(nullptr != l_pSingleFlowsensor && l_pos < NUM_FLOWSENSOR) //should loop through once times
@@ -477,8 +492,11 @@ DF_ERROR stateInit::dispenserSetup()
       return e_ret;
    }
 
-   while(nullptr != dispenserId[idx])
+   // while(nullptr != dispenserId[idx])
+   while(idx < 9 )
    {
+
+      if(nullptr != dispenserId[idx]) {
       debugOutput::sendMessage("Sort for dispenser:" + to_string(idx), INFO);
 
       e_ret = setDispenserSolenoid(l_pDispenser, idx, cassettes);
@@ -531,7 +549,7 @@ DF_ERROR stateInit::dispenserSetup()
       {
          l_pDispenser = l_pDispenser->NextSiblingElement(DISPENSER_STRING);
       }
-
+      }
       idx++;
    }
    debugOutput::sendMessage("Hardware initialized...", INFO);

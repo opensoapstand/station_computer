@@ -93,6 +93,7 @@ DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
         // }
 
         m_pSolenoid[pos] = new mcpGPIO(mcpAddress, pin);
+        m_pSolenoid[pos]->writePin(LOW);
 		e_ret = OK;
 	}
 	else if(X20 > mcpAddress || X22 < mcpAddress)
@@ -198,12 +199,12 @@ DF_ERROR dispenser::startDispense(int pos){
     }
 
     // Open Drink Solenoid
-    debugOutput::sendMessage("Write out solenoid:", INFO);
-    cout << pos << endl;
+    // debugOutput::sendMessage("Trigger solenoid:", INFO);
     m_pSolenoid[pos]->writePin(HIGH);
+    // debugOutput::sendMessage("Triggered solenoid:", INFO);
  
     // If Still start pump!
-    if(m_isStill && m_pPump != nullptr ) {
+    if(m_isStill && (m_pPump != nullptr) ) {
         // m_pPump[pos]->writePin(HIGH);
         sleep(PRIME_PUMP_TIME);
         forwardPump();

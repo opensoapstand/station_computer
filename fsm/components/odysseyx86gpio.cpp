@@ -227,6 +227,7 @@ void oddyseyx86GPIO::monitorGPIO()
 	} else{
 		if ('1' == c){
 			// debugOutput::sendMessage("Triggered Flow", INFO);
+			// usleep(500000); // Sleep to make sure debug gets chance to print
 			m_pDrink->registerFlowSensorTick();  //trigger the callback
 		}
 	}

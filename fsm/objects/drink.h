@@ -46,13 +46,15 @@ public:
 	bool isDispenseComplete();
 	bool registerFlowSensorTick();
 
+	// int getTickCount(){return m_nTickCount;};
+	// void resetTickCount(){m_nTickCount = 0;};
+
 	// DB Updates
 	void recordSale(int volume);
 	void refill(int volume);
 
 	void drinkInfo();
 	void drinkVolumeInfo();
-
 
 private:
 	// TODO: Determine more data to modify per transaction...
@@ -65,6 +67,9 @@ private:
 	double m_nVolumeDispensedSinceLastPoll;
 	double m_calibration_const;
 	double m_nVolumePerTick;
+
+	double m_nTickCount;
+	bool valueChange;
 
 	double m_price;
 	bool m_isStillDrink;

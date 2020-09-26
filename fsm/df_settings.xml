@@ -17,6 +17,57 @@
         <!-- Solenoid index 0 = Drink; 1 = Water; 2 = Air-->
         <!-- TODO: Link these to stateinit.cpp -->
         <!-- Sensors -->
+        <!-- Carbonated Drink 1 -->
+        <dispenser id="0">
+            <!-- Drink -->
+            <solenoid index="0">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>01</io>
+            </solenoid>
+            <!-- Water -->
+            <solenoid index="1">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>02</io>
+            </solenoid>
+            <!-- Air -->
+            <solenoid index="2">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>03</io>
+            </solenoid>
+            <flowsensor>
+                <type>x86</type>
+                <io>337</io>
+            </flowsensor>
+        </dispenser>
+        <!-- Carbonated Drink 3 -->
+        <dispenser id="2">
+            <!-- Drink -->
+            <solenoid index="0">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>07</io>
+            </solenoid>
+            <!-- Water -->
+            <solenoid index="1">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <!-- Address 08 Reserved for LED Config -->
+                <io>09</io>
+            </solenoid>
+            <!-- Air -->
+            <solenoid index="2">
+                <type>mcp</type>
+                <i2caddress>20</i2caddress>
+                <io>10</io>
+            </solenoid>
+            <flowsensor>
+                <type>x86</type>
+                <io>412</io>
+            </flowsensor>
+        </dispenser>
         <!-- Still Drink 7 -->
         <dispenser id="6">
             <!-- Drink -->

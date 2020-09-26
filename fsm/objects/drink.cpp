@@ -31,7 +31,6 @@ static int callback(void *data, int argc, char **argv, char **azColName)
         // if()
     }
 
-
     // setDrinkName("test");
     // setIsStillDrink(false);
 
@@ -88,10 +87,11 @@ drink::drink(int slot, string name, double nVolumeDispensed, double nVolumeTarge
     m_price = price;
     m_isStillDrink = isStillDrink;
 
-    m_nVolumePerTick = 50; // Seems like best guesstimate tick.
+    // m_nVolumePerTick = 50;
 
     // XXX: Find calculation for this...
-    // m_nVolumePerTick = 30; // Seems like best guesstimate tick.
+    // m_nVolumePerTick = 1; // Seems like best guesstimate tick.
+    m_nVolumePerTick = 50; // Seems like best guesstimate tick.
 }
 
 // DTOR
@@ -172,8 +172,6 @@ bool drink::isDispenseComplete()
     if (m_nVolumeTarget < m_nVolumeDispensed){
         cout << "Target HIT!" << endl;
         bRet = true;
-        //deduct from total volume available
-        //update SQL?
     }
     return bRet;
 }
@@ -189,7 +187,7 @@ void drink::drinkInfo() {
 }
 
 void drink::drinkVolumeInfo(){
-    cout << "Volume since last poll: " << m_nVolumeDispensedSinceLastPoll << endl;
-    cout << "How much to dispense: " << m_nVolumeTarget << endl;
+    // cout << "Volume since last poll: " << m_nVolumeDispensedSinceLastPoll << endl;
+    // cout << "How much to dispense: " << m_nVolumeTarget << endl;
 	cout << "Dispensed so far: " << m_nVolumeDispensed << endl;
 }

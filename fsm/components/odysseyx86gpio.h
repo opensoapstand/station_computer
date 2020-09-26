@@ -38,6 +38,8 @@ protected:
 
 private:
 	struct pollfd pfd;
+
+	double tickcounter;
 };
 
 #endif

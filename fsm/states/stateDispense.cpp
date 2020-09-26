@@ -79,7 +79,7 @@ DF_ERROR stateDispense::onEntry()
  */
 DF_ERROR stateDispense::onAction()
 {
-   debugOutput::sendMessage("+stateDispense::onAction()", INFO); 
+   // debugOutput::sendMessage("+stateDispense::onAction()", INFO); 
    cassettes = g_cassettes;
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
@@ -93,7 +93,7 @@ DF_ERROR stateDispense::onAction()
       }
       else
       {
-         debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
+         // debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
          // m_nextState = DISPENSE_IDLE;
       }
 
@@ -103,22 +103,20 @@ DF_ERROR stateDispense::onAction()
       // TODO: Check the Volume dispensed so far
       cassettes[pos].getDrink()->getVolumeDispensed();
 
-      // Logic compare present and last 3 states for volume..continue
       cassettes[pos].getDrink()->drinkVolumeInfo();
 
       // TODO: Figure out a Cancel/completed volume from IPC if volume is hit
+      // Logic compare present and last 3 states for volume..continue
       if (cassettes[pos].getDrink()->isDispenseComplete())
       {
          cassettes[pos].setIsDispenseComplete(true);
       }
 
-      // sleep(1);
-      // // XXX: Move this to Drink as interrupt...
-      // cassettes[pos].setIsDispenseComplete(true);
-
+      usleep(500000);
       e_ret = OK;
+
    }
-   debugOutput::sendMessage("-stateDispense::onAction()", INFO);
+   // debugOutput::sendMessage("-stateDispense::onAction()", INFO);
    return e_ret;
 }
 
@@ -135,7 +133,7 @@ DF_ERROR stateDispense::onExit()
    debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
    debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
-   cassettes[pos].cleanNozzle(WATER, AIR);
+   // cassettes[pos].cleanNozzle(WATER, AIR);
 
    cassettes[pos].setIsDispenseComplete(false);
    return e_ret;

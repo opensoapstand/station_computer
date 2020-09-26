@@ -131,7 +131,7 @@ void paySelect::resizeEvent(QResizeEvent *event){
 //    qDebug() << checkOption << endl;
     QString bitmap_location;
 
-    if(checkOption > 0 && checkOption <= 6) {
+    if(checkOption > 0 && checkOption <= 9) {
         bitmap_location.append(":/light/4_pay_select_page_s_");
         bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
         bitmap_location.append(".jpg");

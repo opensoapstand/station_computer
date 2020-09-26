@@ -67,7 +67,9 @@ payPage::payPage(QWidget *parent) :
         setpaymentProcess(false);
 
         // GUI Setup
-        ui->payment_processLabel->setText(TAP_READY_LABEL);
+//        ui->payment_processLabel->setText(TAP_READY_LABEL);
+        ui->payment_processLabel->setText(" ");
+
         ui->payment_processLabel->show();
 
         // **** Timer and Slot Setup ****
@@ -121,7 +123,7 @@ void payPage::resizeEvent(QResizeEvent *event, char drinkSize){
 //    qDebug() << checkOption << endl;
     QString bitmap_location;
 
-    if(checkOption > 0 && checkOption <= 6) {
+    if(checkOption > 0 && checkOption <= 9) {
         bitmap_location.append(":/light/5_pay_page_");
         bitmap_location.append(drinkSize);
         bitmap_location.append("_");
@@ -338,7 +340,40 @@ void payPage::cancelPayment()
 void payPage::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
+    {
+        ui->payment_countdownLabel->setText("Down!");
+
+        paymentEndTimer = new QTimer(this);
+        paymentEndTimer->setInterval(1000);
+        connect(paymentEndTimer, SIGNAL(timeout()), this, SLOT(onTimeoutTick()));
+        paymentEndTimer->start(1000);
+        _paymentTimeoutSec = 60;
+    }
+
 }
+
+// XXX: Remove this when interrupts and flow sensors work!
+void payPage::onTimeoutTick(){
+    if(-- _paymentTimeoutSec >= 0) {
+        qDebug() << "Tick Down: " << _paymentTimeoutSec << endl;
+
+        _paymentTimeLabel.clear();
+        QString time = QString::number(_paymentTimeoutSec);
+        if(_paymentTimeoutSec % 2 == 0) {
+            _paymentTimeLabel.append("Tap");
+            qDebug() << _paymentTimeLabel << endl;
+        } else {
+            _paymentTimeLabel.append("Now");
+            qDebug() << _paymentTimeLabel << endl;
+        }
+        this->ui->payment_countdownLabel->setText(_paymentTimeLabel);
+    } else {
+        qDebug() << "Timer Done!" << _paymentTimeoutSec << endl;
+        paymentEndTimer->stop();
+        this->ui->payment_countdownLabel->setText("Finished!");
+    }
+}
+
 
 //// HACK: This seems to do nothing...Could mask for GUI thread pausing?
 //void payPage::paintEvent(QPaintEvent *p)

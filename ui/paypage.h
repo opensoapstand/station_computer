@@ -91,6 +91,7 @@ private slots:
     // **** Payment ****
     void displayPaymentPending(bool isVisible);
 
+    void onTimeoutTick();
     void readTimer_loop();
     void progressStatusLabel();
     void declineTimer_start();
@@ -178,6 +179,10 @@ private:
 
     // Placeholder
     bool surveyBool;
+
+    QString _paymentTimeLabel;
+    int _paymentTimeoutSec;
+    QTimer* paymentEndTimer;
 };
 
 #endif // PAYPAGE_H

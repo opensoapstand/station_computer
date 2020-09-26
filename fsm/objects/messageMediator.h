@@ -50,12 +50,16 @@ class messageMediator
       string getProcessString();
       DF_ERROR getPositionReady();
       void clearProcessString();
+      void clearcCommand(){m_cCommand = '0';}
 
       string getCommandString();
       bool isCommandReady(){return m_bCommandReady;}
       void clearCommandString();
 
       int getnOption(){return m_nOption;}
+      int getnSolenoid(){return m_nSolenoid;}
+      char getcCommand(){return m_cCommand;}
+
 
       // static ServerSocket *fsm_comm_socket;
    
@@ -76,6 +80,7 @@ class messageMediator
       //int pos;
       static int m_nOption;
       static int m_nSolenoid;
+      static char m_cCommand;
    
       static DF_ERROR sendProgress(int percentComplete);
       static DF_ERROR sendQtACK(string AckOrNak);

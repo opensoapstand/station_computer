@@ -66,16 +66,9 @@ void dispensePage::showEvent(QShowEvent *event)
     idlePage->dfUtility->m_IsSendingFSM = false;
     ui->finish_Button->setEnabled(true);
 
-    // XXX: Remove when interrupts work.
-    {
-        ui->dispense_progress_label->setText("Begin Dispensing...");
+    ui->dispense_clean_label->setText(" ");
+    ui->dispense_progress_label->setText(" ");
 
-        dispenseEndTimer = new QTimer(this);
-        dispenseEndTimer->setInterval(1000);
-        connect(dispenseEndTimer, SIGNAL(timeout()), this, SLOT(onDispenseTick()));
-        dispenseEndTimer->start(1000);
-        _dispenseTimeoutSec = 10;
-    }
 }
 
 
@@ -86,6 +79,18 @@ void dispensePage::on_finish_Button_clicked()
 {
     qDebug() << "finish button clicked" << endl;
     // TODO: Link to FSM for Dispense
+
+    {
+        ui->dispense_clean_label->setText("REMOVE BOTTLE!");
+        ui->dispense_progress_label->setText("...");
+
+        dispenseEndTimer = new QTimer(this);
+        dispenseEndTimer->setInterval(1000);
+        connect(dispenseEndTimer, SIGNAL(timeout()), this, SLOT(onDispenseTick()));
+        dispenseEndTimer->start(1000);
+        _dispenseTimeoutSec = 5;
+    }
+
     idlePage->dfUtility->m_IsSendingFSM = true;
     idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
     this->idlePage->dfUtility->msg = QString::number(this->idlePage->userDrinkOrder->getOption());
@@ -93,14 +98,10 @@ void dispensePage::on_finish_Button_clicked()
     // Send a Cleanse and TODO: helps FSM onExit...
     idlePage->dfUtility->send_to_FSM();
 
-    // XXX: Better to have ACKs to coordinate cleaning; When sensors work...
-//    while(is_sending_to_FSM) {
-//        qDebug() << "CLEAN MODE" << endl;
-//    }
-//    is_sending_to_FSM = false;
-//    tcpSocket->disconnectFromHost();
     dispenseEndTimer->stop();
     dispenseEndTimer->deleteLater();
+
+
     this->hide();
     thanksPage->showFullScreen();
 }

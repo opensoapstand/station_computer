@@ -17,8 +17,6 @@
 #include "stateDispense.h"
 #include <cstring>
 
-#include "../fsm.h"
-
 #define DISPENSE_STRING "Dispense"
 
 // CTOR
@@ -83,9 +81,11 @@ DF_ERROR stateDispense::onAction()
    cassettes = g_cassettes;
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
+   m_pMessaging->getPositionReady();
+
    if (nullptr != &m_nextState) // TODO: Do a Check if Button is Pressed
    {
-      if (cassettes[pos].getIsDispenseComplete())
+      if ( (m_pMessaging->getcCommand() == DISPENSE_END_CHAR) || (cassettes[pos].getIsDispenseComplete()) )
       {
          debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]" + to_string(cassettes[pos].getIsDispenseComplete()), INFO);
          m_nextState = DISPENSE_END;
@@ -125,15 +125,6 @@ DF_ERROR stateDispense::onExit()
 {
    DF_ERROR e_ret = OK;
    cassettes[pos].stopDispense(DRINK);
-   sleep(3);
-   debugOutput::sendMessage("Dispense OnEXIT", INFO);
-   debugOutput::sendMessage("------Cleaning Mode------", INFO);
-   debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
-   debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(WATER)), INFO);
-   debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
-   debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
-
-   // cassettes[pos].cleanNozzle(WATER, AIR);
 
    cassettes[pos].setIsDispenseComplete(false);
    return e_ret;

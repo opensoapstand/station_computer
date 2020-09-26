@@ -61,8 +61,8 @@ public:
     constexpr static double SMALL_SIZE_ML = 355.00;
     constexpr static double LARGE_SIZE_ML = 473.00;
 
-    constexpr static double PRICE_SMALL_TEST = 0.01;
-    constexpr static double PRICE_LARGE_TEST = 0.02;
+    constexpr static double PRICE_SMALL_TEST = 3.00;
+    constexpr static double PRICE_LARGE_TEST = 4.00;
 
     // Setters and Getters
     void setDrinkSize(DF_QT_OPTIONS sizeOption);

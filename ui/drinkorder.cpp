@@ -122,6 +122,4 @@ void DrinkOrder::setDrinkOption(DF_QT_OPTIONS sizeOption) {
     qInfo() << "Changed Option" << getOption() << endl;
 }
 
-
-
 // SIGNALS Section

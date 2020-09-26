@@ -55,6 +55,8 @@ private:
     int _dispenseTimeoutSec;
     QTimer* dispenseEndTimer;
 
+    QTimer* dispenseNextPageTimer;
+
 protected:
     void showEvent(QShowEvent *event);
 };

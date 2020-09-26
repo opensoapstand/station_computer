@@ -15,6 +15,7 @@
 
 #include "../dftypes.h"
 #include "../objects/messageMediator.h"
+#include "../fsm.h"
 
 #include "stateVirtual.h"
 
@@ -39,6 +40,7 @@ class stateDispense : public stateVirtual
     private:
         int pos;
         dispenser* cassettes;
+        bool flushCommand;
         
         // present read Volume
         // last read Volume

@@ -46,7 +46,7 @@ DF_ERROR stateDispenseEnd::onEntry()
    DF_ERROR e_ret  = OK;
 
    debugOutput::sendMessage("Entering Dispense End...", STATE_CHANGE);
-   
+      
    return e_ret;
 }
 
@@ -56,27 +56,34 @@ DF_ERROR stateDispenseEnd::onEntry()
 DF_ERROR stateDispenseEnd::onAction()
 {
    DF_ERROR e_ret  = ERROR_BAD_PARAMS;
+   m_pMessaging->getPositionReady();
+   command = m_pMessaging->getcCommand();
    if (nullptr != &m_nextState)
    {
-      // TODO: Cleaning Nozzle
-      // debugOutput::sendMessage("------Cleaning Mode------", INFO);
-      // debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> WATER", INFO);
-      // debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(WATER)), INFO);
-      // debugOutput::sendMessage("Activating position -> " + to_string(pos+1) + " solenoid -> WATER", INFO);
-      // debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
+      switch (command)
+      {
+      case DRINK_CHAR:
+         /* code */
+         m_pMessaging->clearCommandString();
+         m_pMessaging->clearcCommand();
+         m_nextState = DISPENSE_END;
+         sleep(2);
+         break;
 
-      // cassettes[pos].testSolenoidDispense(DRINK);
-      // cassettes[pos].cleanNozzle(WATER, AIR);
-
-      m_pMessaging->clearProcessString();
-      m_pMessaging->clearCommandString();
+      case DISPENSE_END_CHAR:
+         debugOutput::sendMessage("Exit", INFO);
+         m_nextState = IDLE;
+         break;
+      
+      default:
+         break;
+      }
 
       // TODO: Log events to DB
 
       // TODO: Send a complete ACK back to QT
       // m_pMessaging->sendMessage("!");
 
-      m_nextState = IDLE;
 
       e_ret = OK;
    }
@@ -87,7 +94,25 @@ DF_ERROR stateDispenseEnd::onAction()
 // Actions on leaving Dispense state
 DF_ERROR stateDispenseEnd::onExit()
 {
-   DF_ERROR e_ret  = OK;
+   cassettes = g_cassettes;
+   DF_ERROR e_ret = OK;
+   pos = m_pMessaging->getnOption();
+   pos = pos - 1;
+
+   sleep(5);
+   debugOutput::sendMessage("Dispense OnEXIT", INFO);
+   debugOutput::sendMessage("------Cleaning Mode------", INFO);
+   debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
+   debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(WATER)), INFO);
+   debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
+   debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
+
+   cassettes[pos].cleanNozzle(WATER, AIR);
+
+   m_pMessaging->clearProcessString();
+   m_pMessaging->clearCommandString();
+   m_pMessaging->clearcCommand();
+
    debugOutput::sendMessage("Exiting Dispensing END[" + toString() + "]", INFO);
 
    // TODO: Does not seem to advance to Idle again...

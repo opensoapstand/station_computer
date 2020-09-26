@@ -86,14 +86,14 @@ payPage::payPage(QWidget *parent) :
         connect(declineTimer, SIGNAL(timeout()), this, SLOT(declineTimer_start()));
 
         // Idle Payment reset
-//        idlePaymentTimer = new QTimer(this);
-//        connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
-//        // FIXME: MAGIC NUMBER!!! UX410 Socket Auto Close time is 60 seconds so timer kills page GUI
-//        idlePaymentTimer->start(60000);
+        idlePaymentTimer = new QTimer(this);
+        connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
+        // FIXME: MAGIC NUMBER!!! UX410 Socket Auto Close time is 60 seconds so timer kills page GUI
+        idlePaymentTimer->start(60000);
     }
 
     // XXX: Comment on/off for Bypassing payment testing
-    // paymentInit();
+//     paymentInit();
 }
 
 /*
@@ -295,7 +295,7 @@ void payPage::updateTotals(string drinkDescription, string drinkAmount, string o
 void payPage::on_mainPage_Button_clicked()
 {
     qDebug() << "Main Button Page" << endl;
-    cancelPayment();
+//    cancelPayment();
     this->hide();
     idlePage->showFullScreen();
 }

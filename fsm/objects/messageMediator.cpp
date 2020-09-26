@@ -37,6 +37,7 @@ string messageMediator::m_processString;
 string messageMediator::m_processCommand;
 int messageMediator::m_nOption;
 int messageMediator::m_nSolenoid;
+char messageMediator::m_cCommand;
 
 // CTOR
 messageMediator::messageMediator()
@@ -391,17 +392,18 @@ DF_ERROR messageMediator::getPositionReady()
       {
       case AIR_CHAR:
          debugOutput::sendMessage("Air Solenoid", INFO);
-         m_nSolenoid = AIR;
+         // m_nSolenoid = AIR;
          break;
 
       case WATER_CHAR:
          debugOutput::sendMessage("Water Solenoid", INFO);
-         m_nSolenoid = WATER;
+         // m_nSolenoid = WATER;
          break;
 
       case DRINK_CHAR:
          debugOutput::sendMessage("Drink CHAR", INFO);
-         m_nSolenoid = DRINK;
+         // m_nSolenoid = DRINK;
+         m_cCommand = DRINK_CHAR;
          break;
 
       case CLEAN_CHAR:
@@ -409,7 +411,7 @@ DF_ERROR messageMediator::getPositionReady()
          break;
 
       case DISPENSE_END_CHAR:
-
+         m_cCommand = DISPENSE_END_CHAR;
          break;
 
       default:

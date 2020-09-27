@@ -78,7 +78,7 @@ drink::drink(int slot)
 }
 
 // Test CTOR
-drink::drink(int slot, string name, double nVolumeDispensed, double nVolumeTarget, double calibration_const, double price, bool isStillDrink){
+drink::drink(int slot, string name, double nVolumeDispensed, double nVolumeTarget, double calibration_const, double price, bool isStillDrink, double nVolumePerTick){
     m_nSlot = slot;
     m_name = name;
     m_nVolumeDispensed = nVolumeDispensed;
@@ -86,12 +86,10 @@ drink::drink(int slot, string name, double nVolumeDispensed, double nVolumeTarge
     m_calibration_const = calibration_const;
     m_price = price;
     m_isStillDrink = isStillDrink;
-
-    // m_nVolumePerTick = 50;
+    m_nVolumePerTick = nVolumePerTick;
 
     // XXX: Find calculation for this...
-    // m_nVolumePerTick = 1; // Seems like best guesstimate tick.
-    m_nVolumePerTick = 50; // Seems like best guesstimate tick.
+    // m_nVolumePerTick = 20; // Seems like best guesstimate tick.
 }
 
 // DTOR

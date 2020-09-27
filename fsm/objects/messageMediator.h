@@ -37,6 +37,9 @@
 #define CLEAN_CHAR 'c'
 #define DISPENSE_END_CHAR 'f'
 
+#define SMALL_DRINK_CHAR 's'
+#define LARGE_DRINK_CHAR 'l'
+
 class messageMediator
 {
    public:
@@ -59,6 +62,7 @@ class messageMediator
       int getnOption(){return m_nOption;}
       int getnSolenoid(){return m_nSolenoid;}
       char getcCommand(){return m_cCommand;}
+      double getnTargetVolume(){return m_nVolumeTarget;}
 
 
       // static ServerSocket *fsm_comm_socket;
@@ -81,6 +85,7 @@ class messageMediator
       static int m_nOption;
       static int m_nSolenoid;
       static char m_cCommand;
+      static double m_nVolumeTarget;
    
       static DF_ERROR sendProgress(int percentComplete);
       static DF_ERROR sendQtACK(string AckOrNak);

@@ -75,6 +75,8 @@ public:
         return merchantAddress;
     }
 
+    void stopTimers();
+
 private slots:
 
     // Update Drink order totals section

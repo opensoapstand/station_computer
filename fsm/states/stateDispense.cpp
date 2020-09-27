@@ -56,7 +56,9 @@ DF_ERROR stateDispense::onEntry()
    // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> DRINK", INFO);
    // debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
-   cassettes[pos].getDrink()->startDispense(cassettes[pos].getDrink()->getTargetVolume());
+   cassettes[pos].getDrink()->setTargetVolume(m_pMessaging->getnTargetVolume());
+
+   cassettes[pos].getDrink()->startDispense(cassettes[pos].getDrink()->getTargetVolume());   
    cout << cassettes[pos].getDrink()->getTargetVolume() << endl;
    cassettes[pos].setIsDispenseComplete(false);
    cassettes[pos].getDrink()->drinkInfo();

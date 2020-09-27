@@ -38,6 +38,7 @@ string messageMediator::m_processCommand;
 int messageMediator::m_nOption;
 int messageMediator::m_nSolenoid;
 char messageMediator::m_cCommand;
+double messageMediator::m_nVolumeTarget;
 
 // CTOR
 messageMediator::messageMediator()
@@ -330,17 +331,25 @@ DF_ERROR messageMediator::getPositionReady()
    char posChar;
    char solenoidChar;
 
+   // FIXME: Need a better string parser...
    for (std::string::size_type i = 0; i < commandString.size(); ++i)
    {
       if (isdigit(commandString[i]))
       {
          posChar = commandString[i];
-         continue;
+
       }
-      if (isalpha(commandString[i]))
+      if ((commandString[i] == DISPENSE_END_CHAR) || (commandString[i] == DRINK_CHAR))
       {
          solenoidChar = commandString[i];
-         continue;
+      }
+
+      // FIXME: This is horrible...will remove later.
+      if (commandString[i] == SMALL_DRINK_CHAR)
+      {
+         m_nVolumeTarget = 355;
+      } else if(commandString[i] == LARGE_DRINK_CHAR) {
+         m_nVolumeTarget = 473;
       }
    }
 
@@ -411,6 +420,7 @@ DF_ERROR messageMediator::getPositionReady()
          break;
 
       case DISPENSE_END_CHAR:
+         debugOutput::sendMessage("Dispense END CHAR", INFO);
          m_cCommand = DISPENSE_END_CHAR;
          break;
 

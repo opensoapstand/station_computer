@@ -98,6 +98,14 @@ payPage::payPage(QWidget *parent) :
 //     paymentInit();
 }
 
+void payPage::stopTimers(){
+//    readTimer->stop();
+    paymentProgressTimer->stop();
+    declineTimer->stop();
+    idlePaymentTimer->stop();
+    paymentEndTimer->stop();
+}
+
 /*
  * Page Tracking reference
  */
@@ -166,8 +174,9 @@ void payPage::displayPaymentPending(bool isVisible)
 // Navigation: Back to Drink Size Selection
 void payPage::on_previousPage_Button_clicked()
 {
-    readTimer->stop();
-    cancelPayment();
+    stopTimers();
+//    readTimer->stop();
+//    cancelPayment();
     paySelectPage->showFullScreen();
     this->hide();
 }
@@ -176,6 +185,7 @@ void payPage::on_payment_bypass_Button_clicked()
 {
     qDebug() << "ByPass payment to Dispense" << endl;
 //    cancelPayment();
+    stopTimers();
     this->hide();
     dispensingPage->showFullScreen();
 }
@@ -298,6 +308,7 @@ void payPage::on_mainPage_Button_clicked()
 {
     qDebug() << "Main Button Page" << endl;
 //    cancelPayment();
+    stopTimers();
     this->hide();
     idlePage->showFullScreen();
 }
@@ -349,6 +360,17 @@ void payPage::showEvent(QShowEvent *event)
         paymentEndTimer->start(1000);
         _paymentTimeoutSec = 60;
     }
+
+//    pktResponded = com.readForAck();
+//    readPacket.packetReadFromUX(pktResponded);
+//    pktResponded.clear();
+
+//    if (readPacket.getAckOrNak() == communicationPacketField::ACK)
+//    {
+//        timerEnabled = true;
+//        readtimer->start(10);
+//    }
+
 
 }
 
@@ -519,7 +541,7 @@ bool payPage::sendToUX410()
             return true;
         }
     // }
-    usleep(5000);
+    usleep(50000);
 
     if(isInitCancelled) {
         return true;
@@ -668,7 +690,7 @@ void payPage::readTimer_loop()
 
 //        com.sendAck();
         cout << "Polling Timer" << endl;
-        readTimer->start(10);
+        readTimer->start(1000);
     } else {
         cout << "HIT: pktResponded: " << to_string(pktResponded[0]) << endl;
 

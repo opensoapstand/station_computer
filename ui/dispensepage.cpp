@@ -56,12 +56,23 @@ dispensePage::~dispensePage()
 
 void dispensePage::showEvent(QShowEvent *event)
 {
-    this->idlePage->dfUtility->msg = QString::number(this->idlePage->userDrinkOrder->getOption());
+
+    // FIXME: this is a hack for size changes...
+    QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
+    if(idlePage->userDrinkOrder->getSize() <= 355){
+        command.append('s');
+    } else {
+        command.append('l');
+    }
+
+    this->idlePage->dfUtility->msg = command;
 
     // Networking
     idlePage->dfUtility->m_IsSendingFSM = true;
     QWidget::showEvent(event);
     idlePage->dfUtility->m_fsmMsg = SEND_DRINK;
+
+
     idlePage->dfUtility->send_to_FSM();
     idlePage->dfUtility->m_IsSendingFSM = false;
     ui->finish_Button->setEnabled(true);
@@ -70,7 +81,6 @@ void dispensePage::showEvent(QShowEvent *event)
     ui->dispense_progress_label->setText(" ");
 
 }
-
 
 /*
  * Page Tracking reference to Payment page and completed payment
@@ -91,9 +101,19 @@ void dispensePage::on_finish_Button_clicked()
         _dispenseTimeoutSec = 5;
     }
 
-    idlePage->dfUtility->m_IsSendingFSM = true;
+
+
+    // FIXME: this is a hack for size changes...
+    QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
+    command.append('s');
+    this->idlePage->dfUtility->msg = command;
+
+    qDebug() << this->idlePage->dfUtility->msg << endl;
+
+        idlePage->dfUtility->m_IsSendingFSM = true;
+
     idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
-    this->idlePage->dfUtility->msg = QString::number(this->idlePage->userDrinkOrder->getOption());
+//    this->idlePage->dfUtility->msg = QString::number(this->idlePage->userDrinkOrder->getOption());
 
     // Send a Cleanse and TODO: helps FSM onExit...
     idlePage->dfUtility->send_to_FSM();

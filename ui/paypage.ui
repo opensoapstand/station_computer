@@ -28,7 +28,7 @@
   </widget>
   <widget class="QPushButton" name="payment_pass_Button">
    <property name="enabled">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="geometry">
     <rect>
@@ -254,6 +254,9 @@
    </property>
   </widget>
   <widget class="QPushButton" name="payment_cancel_Button">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>420</x>
@@ -268,7 +271,7 @@
   </widget>
   <widget class="QPushButton" name="payment_bypass_Button">
    <property name="enabled">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="geometry">
     <rect>
@@ -285,18 +288,18 @@
   <widget class="QLabel" name="payment_countdownLabel">
    <property name="geometry">
     <rect>
-     <x>660</x>
-     <y>1580</y>
-     <width>231</width>
-     <height>41</height>
+     <x>330</x>
+     <y>1600</y>
+     <width>421</width>
+     <height>71</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <family>Open Sans</family>
-     <pointsize>15</pointsize>
-     <weight>50</weight>
-     <bold>false</bold>
+     <family>DejaVu Sans</family>
+     <pointsize>30</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
     </font>
    </property>
    <property name="text">
@@ -304,6 +307,9 @@
    </property>
    <property name="textFormat">
     <enum>Qt::RichText</enum>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

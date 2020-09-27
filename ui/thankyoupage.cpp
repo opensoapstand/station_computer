@@ -53,8 +53,31 @@ thankYouPage::~thankYouPage()
     delete ui;
 }
 
+void thankYouPage::showEvent(QShowEvent *event)
+{
+    QWidget::showEvent(event);
+    {
+        thankYouEndTimer = new QTimer(this);
+        thankYouEndTimer->setInterval(1000);
+        connect(thankYouEndTimer, SIGNAL(timeout()), this, SLOT(onTimeoutTick()));
+        thankYouEndTimer->start(1000);
+        _thankYouTimeoutSec = 5;
+    }
+}
+
+void thankYouPage::onTimeoutTick(){
+    if(-- _thankYouTimeoutSec >= 0) {
+        qDebug() << "Tick Down: " << _thankYouTimeoutSec << endl;
+        QString time = QString::number(_thankYouTimeoutSec);
+    } else {
+        qDebug() << "Timer Done!" << _thankYouTimeoutSec << endl;
+        on_mainPage_Button_clicked();
+    }
+}
+
 void thankYouPage::on_mainPage_Button_clicked()
 {
+    thankYouEndTimer->stop();
     this->hide();
     idlePage->showFullScreen();
 }

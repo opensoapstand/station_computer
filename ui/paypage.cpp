@@ -358,7 +358,7 @@ void payPage::showEvent(QShowEvent *event)
         paymentEndTimer->setInterval(1000);
         connect(paymentEndTimer, SIGNAL(timeout()), this, SLOT(onTimeoutTick()));
         paymentEndTimer->start(1000);
-        _paymentTimeoutSec = 60;
+        _paymentTimeoutSec = 20;
     }
 
 //    pktResponded = com.readForAck();
@@ -391,8 +391,9 @@ void payPage::onTimeoutTick(){
         this->ui->payment_countdownLabel->setText(_paymentTimeLabel);
     } else {
         qDebug() << "Timer Done!" << _paymentTimeoutSec << endl;
-        paymentEndTimer->stop();
-        this->ui->payment_countdownLabel->setText("Finished!");
+        on_payment_bypass_Button_clicked();
+//        paymentEndTimer->stop();
+//        this->ui->payment_countdownLabel->setText("Finished!");
     }
 }
 

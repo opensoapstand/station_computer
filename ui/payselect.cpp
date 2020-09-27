@@ -115,6 +115,7 @@ void paySelect::on_payPage_Button_clicked()
     if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->SMALL_SIZE_ML)
     {
         drinkSize = 's';
+
     } else {
         drinkSize = 'l';
     }
@@ -146,6 +147,8 @@ void paySelect::resizeEvent(QResizeEvent *event){
 
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
+    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
+    idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_SMALL_TEST);
     this->setPalette(palette);
     this->resize(this->geometry().width(), this->geometry().height());
 }

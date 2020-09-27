@@ -59,10 +59,12 @@ void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
     {
     case(SMALL_DRINK):
         setSize(SMALL_SIZE_ML);
+        setPrice(PRICE_SMALL_TEST);
         break;
 
     case(LARGE_DRINK):
         setSize(LARGE_SIZE_ML);
+        setPrice(PRICE_LARGE_TEST);
         break;
 
     default:

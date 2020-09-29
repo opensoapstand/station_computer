@@ -97,6 +97,15 @@ void paySelect::on_payPage_Button_clicked()
     // TODO: Grab from DB description
     string description = "Drink Flavor DrinkSizeOZ (DrinkML)";
 
+    // FIXME: Remove this when DB price referencing/calculations are correct.
+    if(idlePage->userDrinkOrder->getOption() == 9) {
+        if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->SMALL_SIZE_ML) {
+            idlePage->userDrinkOrder->setPrice(0.99);
+        } else {
+            idlePage->userDrinkOrder->setPrice(1.25);
+        }
+    }
+
     double drinkAmountDbl = idlePage->userDrinkOrder->getPrice();
     QString qs = QString::number(drinkAmountDbl, 'f', 2);
 
@@ -118,6 +127,15 @@ void paySelect::on_payPage_Button_clicked()
 
     } else {
         drinkSize = 'l';
+    }
+
+    // FIXME: Remove this when DB price referencing/calculations are correct.
+    if(idlePage->userDrinkOrder->getOption() == 9) {
+        if(drinkSize =='s') {
+            idlePage->userDrinkOrder->setPrice(0.99);
+        } else if (drinkSize == 'l') {
+            idlePage->userDrinkOrder->setPrice(1.25);
+        }
     }
 
     paymentPage->resizeEvent(paySelectResize, drinkSize);

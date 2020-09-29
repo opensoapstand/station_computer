@@ -89,14 +89,14 @@ void productPage_1::on_selection1_Button_clicked()
 
 void productPage_1::on_selection2_Button_clicked()
 {
-    // XXX: For BNTL Selection 2 goes to OPTION 3
-    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
+//    // XXX: For BNTL Selection 2 goes to OPTION 3
+//    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
 
-    // idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
-    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
-    paymentSelectPage->resizeEvent(productResize);
-    paymentSelectPage->showFullScreen();
-    this->hide();
+//    // idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
+//    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
+//    paymentSelectPage->resizeEvent(productResize);
+//    paymentSelectPage->showFullScreen();
+//    this->hide();
 }
 
 void productPage_1::on_selection3_Button_clicked()

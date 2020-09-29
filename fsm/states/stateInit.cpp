@@ -572,15 +572,15 @@ DF_ERROR stateInit::setDrinks(){
    // }
    // Hardcoded drink class for testing
 
-   g_cassettes[0].setDrink(new drink(1, "Drink1", 0, 355, 1.3, 4.00, false, 25));
+   g_cassettes[0].setDrink(new drink(1, "Drink1", 0, 355, 1.3, 4.00, false, 10));
    g_cassettes[1].setDrink(new drink(2, "Drink2", 0, 355, 1.3, 4.00, false, 25));
-   g_cassettes[2].setDrink(new drink(3, "Drink3", 0, 355, 1.3, 4.00, false, 25));
+   g_cassettes[2].setDrink(new drink(3, "Drink3", 0, 355, 1.3, 4.00, false, 10));
    g_cassettes[3].setDrink(new drink(4, "Drink4", 0, 355, 1.3, 4.00, false, 25));
-   g_cassettes[4].setDrink(new drink(5, "Drink5", 0, 355, 1.3, 4.00, false, 25));
+   g_cassettes[4].setDrink(new drink(5, "Drink5", 0, 355, 1.3, 4.00, false, 10));
    g_cassettes[5].setDrink(new drink(6, "Drink6", 0, 355, 1.3, 4.00, false, 25));
-   g_cassettes[6].setDrink(new drink(7, "Drink7", 0, 355, 1.3, 4.00, false, 25));
+   g_cassettes[6].setDrink(new drink(7, "Drink7", 0, 355, 1.3, 4.00, false, 10));
    g_cassettes[7].setDrink(new drink(8, "Drink8", 0, 355, 1.3, 4.00, false, 25));
-   g_cassettes[8].setDrink(new drink(9, "Drink9", 0, 355, 1.3, 4.00, false, 25));
+   g_cassettes[8].setDrink(new drink(9, "Drink9", 0, 355, 1.3, 4.00, false, 10));
 
    return OK;
 }

@@ -100,10 +100,27 @@ payPage::payPage(QWidget *parent) :
 
 void payPage::stopTimers(){
     //    readTimer->stop();
-    paymentProgressTimer->stop();
-    declineTimer->stop();
-    idlePaymentTimer->stop();
-    paymentEndTimer->stop();
+    qDebug() << "Stop Timers" << endl;
+    if(paymentProgressTimer != nullptr) {
+        qDebug() << "cancel payment progress Timer" << endl;
+        paymentProgressTimer->stop();
+    }
+
+    if(declineTimer != nullptr) {
+        qDebug() << "cancel decline Timer" << endl;
+        declineTimer->stop();
+    }
+
+    if(idlePaymentTimer != nullptr) {
+        qDebug() << "cancel idle payment Timer" << endl;
+        idlePaymentTimer->stop();
+    }
+
+    if(paymentEndTimer != nullptr) {
+        qDebug() << "cancel idle payment END Timer" << endl;
+        paymentEndTimer->stop();
+    }
+
 }
 
 /*

@@ -69,10 +69,10 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>420</x>
-     <y>370</y>
-     <width>250</width>
-     <height>350</height>
+     <x>0</x>
+     <y>60</y>
+     <width>16</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="text">

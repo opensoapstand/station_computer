@@ -37,7 +37,7 @@ productPage_1::productPage_1(QWidget *parent) :
 
     /*hacky transparent button*/
     // TODO: Initialize By option i.e. Brand1, BrandImage1, DrinkFlavor1, DrinkImageButton with Array or loop...
-//    ui->nextPageButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    //    ui->nextPageButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->Brand1->setText("");
     ui->BrandImage1->clear();
@@ -89,14 +89,14 @@ void productPage_1::on_selection1_Button_clicked()
 
 void productPage_1::on_selection2_Button_clicked()
 {
-//    // XXX: For BNTL Selection 2 goes to OPTION 3
-//    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
+    // XXX: For BNTL Selection 2 goes to OPTION 3
+    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
 
-//    // idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
-//    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
-//    paymentSelectPage->resizeEvent(productResize);
-//    paymentSelectPage->showFullScreen();
-//    this->hide();
+    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
+    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
+    paymentSelectPage->resizeEvent(productResize);
+    paymentSelectPage->showFullScreen();
+    this->hide();
 }
 
 void productPage_1::on_selection3_Button_clicked()

@@ -80,6 +80,14 @@ void dispensePage::showEvent(QShowEvent *event)
     ui->dispense_clean_label->setText(" ");
     ui->dispense_progress_label->setText(" ");
 
+    {
+        qDebug() << "Start Dispense Timers" << endl;
+        dispenseIdleTimer = new QTimer(this);
+        dispenseIdleTimer->setInterval(1000);
+        dispenseIdleTimer->isSingleShot();
+        connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(on_finish_Button_clicked()));
+        dispenseIdleTimer->start(90000);
+    }
 }
 
 /*
@@ -87,6 +95,7 @@ void dispensePage::showEvent(QShowEvent *event)
  */
 void dispensePage::on_finish_Button_clicked()
 {
+    stopDispenseTimer();
     qDebug() << "finish button clicked" << endl;
     // TODO: Link to FSM for Dispense
 
@@ -101,8 +110,6 @@ void dispensePage::on_finish_Button_clicked()
         _dispenseTimeoutSec = 5;
     }
 
-
-
     // FIXME: this is a hack for size changes...
     QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
     command.append('s');
@@ -110,10 +117,10 @@ void dispensePage::on_finish_Button_clicked()
 
     qDebug() << this->idlePage->dfUtility->msg << endl;
 
-        idlePage->dfUtility->m_IsSendingFSM = true;
+    idlePage->dfUtility->m_IsSendingFSM = true;
 
     idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
-//    this->idlePage->dfUtility->msg = QString::number(this->idlePage->userDrinkOrder->getOption());
+    //    this->idlePage->dfUtility->msg = QString::number(this->idlePage->userDrinkOrder->getOption());
 
     // Send a Cleanse and TODO: helps FSM onExit...
     idlePage->dfUtility->send_to_FSM();
@@ -124,6 +131,14 @@ void dispensePage::on_finish_Button_clicked()
 
     this->hide();
     thanksPage->showFullScreen();
+}
+
+void dispensePage::stopDispenseTimer(){
+    if(dispenseIdleTimer != nullptr){
+        dispenseIdleTimer->stop();
+
+    }
+    dispenseIdleTimer = nullptr;
 }
 
 // XXX: Remove this when interrupts and flow sensors work!

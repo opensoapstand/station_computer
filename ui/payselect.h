@@ -52,12 +52,18 @@ private slots:
     void on_orderBig_Button_clicked();
 
 private:
+    void stopSelectTimers();
+    void selectOnTick();
+
     Ui::paySelect *ui;
     productPage_1* firstProductPage;
     payPage* paymentPage;
     idle* idlePage;
 
+    QTimer* selectIdleTimer;
+
     QResizeEvent *paySelectResize;
+
 };
 
 #endif // PAYSELECT_H

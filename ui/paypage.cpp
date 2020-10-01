@@ -98,7 +98,7 @@ payPage::payPage(QWidget *parent) :
     //     paymentInit();
 }
 
-void payPage::stopTimers(){
+void payPage::stopPayTimers(){
     //    readTimer->stop();
     qDebug() << "Stop Timers" << endl;
     if(paymentProgressTimer != nullptr) {
@@ -191,9 +191,10 @@ void payPage::displayPaymentPending(bool isVisible)
 // Navigation: Back to Drink Size Selection
 void payPage::on_previousPage_Button_clicked()
 {
-    stopTimers();
+    stopPayTimers();
     //    readTimer->stop();
     //    cancelPayment();
+    paySelectPage->resizeEvent(paySelectResize);
     paySelectPage->showFullScreen();
     this->hide();
 }
@@ -202,7 +203,8 @@ void payPage::on_payment_bypass_Button_clicked()
 {
     qDebug() << "ByPass payment to Dispense" << endl;
     //    cancelPayment();
-    stopTimers();
+    stopPayTimers();
+    dispensingPage->showEvent(dispenseEvent);
     this->hide();
     dispensingPage->showFullScreen();
 }
@@ -325,7 +327,7 @@ void payPage::on_mainPage_Button_clicked()
 {
     qDebug() << "Main Button Page" << endl;
     //    cancelPayment();
-    stopTimers();
+    stopPayTimers();
     this->hide();
     idlePage->showFullScreen();
 }

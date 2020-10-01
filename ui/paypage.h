@@ -75,7 +75,7 @@ public:
         return merchantAddress;
     }
 
-    void stopTimers();
+
 
 private slots:
 
@@ -128,6 +128,8 @@ private:
     bool approved = false;
     bool paymentConnected = false;
     bool isReadyForTap = false;
+
+    void stopPayTimers();
 
     int progressDots = 1;
     int progressLoopCounter = 0;
@@ -185,6 +187,9 @@ private:
     QString _paymentTimeLabel;
     int _paymentTimeoutSec;
     QTimer* paymentEndTimer;
+
+    QResizeEvent *paySelectResize;
+    QShowEvent *dispenseEvent;
 };
 
 #endif // PAYPAGE_H

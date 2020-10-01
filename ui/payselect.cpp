@@ -29,25 +29,25 @@ paySelect::paySelect(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    int checkOption;
+    int checkOption = 99;
 
-    if(idlePage->userDrinkOrder != nullptr) {
-        checkOption = idlePage->userDrinkOrder->getOption();
-    } else {
-        checkOption = 0;
-    }
+//    qDebug() << idlePage->userDrinkOrder << endl;
 
-    cout << checkOption << endl;
-//    qDebug() << checkOption << endl;
+//    if(idlePage->userDrinkOrder != nullptr) {
+//        checkOption = idlePage->userDrinkOrder->getOption();
+//    }
+
+//    cout << checkOption << endl;
+////    qDebug() << checkOption << endl;
     QString bitmap_location;
 
-    if(checkOption > 0 && checkOption <= 6) {
-        bitmap_location.append(":/light/4_pay_select_page_s_");
-        bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
-        bitmap_location.append(".jpg");
-    } else {
+//    if(checkOption > 0 && checkOption <= 6) {
+//        bitmap_location.append(":/light/4_pay_select_page_s_");
+//        bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
+//        bitmap_location.append(".jpg");
+//    } else {
         bitmap_location = ":/light/4_pay_select_page_s.jpg";
-    }
+//    }
     QPixmap background(bitmap_location);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
 
@@ -90,6 +90,7 @@ void paySelect::on_previousPage_Button_clicked()
 {
     firstProductPage->showFullScreen();
     this->hide();
+    stopSelectTimers();
 }
 
 void paySelect::on_payPage_Button_clicked()
@@ -139,9 +140,11 @@ void paySelect::on_payPage_Button_clicked()
     }
 
     paymentPage->resizeEvent(paySelectResize, drinkSize);
+
+    this->stopSelectTimers();
     paymentPage->showFullScreen();
-    qDebug() << idlePage->userDrinkOrder->getPrice();
     this->hide();
+    qDebug() << idlePage->userDrinkOrder->getPrice();
 }
 
 void paySelect::resizeEvent(QResizeEvent *event){
@@ -168,11 +171,31 @@ void paySelect::resizeEvent(QResizeEvent *event){
     idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
     idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_SMALL_TEST);
     this->setPalette(palette);
-    this->resize(this->geometry().width(), this->geometry().height());
+
+    if(selectIdleTimer == nullptr){
+            qDebug() << "Start Select Timers" << endl;
+        selectIdleTimer = new QTimer(this);
+        selectIdleTimer->setInterval(1000);
+        selectIdleTimer->isSingleShot();
+        connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(on_previousPage_Button_clicked()));
+        selectIdleTimer->start(10000);
+    }
+}
+
+void paySelect::stopSelectTimers(){
+    qDebug() << "Stop Select Timers" << endl;
+    if(selectIdleTimer != nullptr) {
+        qDebug() << "Enter Stop" << endl;
+        selectIdleTimer->stop();
+
+    }
+        selectIdleTimer = nullptr;
 }
 
 void paySelect::on_mainPage_Button_clicked()
 {
+
+    this->stopSelectTimers();
     idlePage->showFullScreen();
     this->hide();
 }
@@ -214,6 +237,7 @@ void paySelect::on_orderBig_Button_clicked()
     idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
     idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_LARGE_TEST);
 }
+
 
 /* Models */
 

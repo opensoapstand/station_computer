@@ -31,23 +31,23 @@ paySelect::paySelect(QWidget *parent) :
 
     int checkOption = 99;
 
-//    qDebug() << idlePage->userDrinkOrder << endl;
+    //    qDebug() << idlePage->userDrinkOrder << endl;
 
-//    if(idlePage->userDrinkOrder != nullptr) {
-//        checkOption = idlePage->userDrinkOrder->getOption();
-//    }
+    //    if(idlePage->userDrinkOrder != nullptr) {
+    //        checkOption = idlePage->userDrinkOrder->getOption();
+    //    }
 
-//    cout << checkOption << endl;
-////    qDebug() << checkOption << endl;
+    //    cout << checkOption << endl;
+    qDebug() << checkOption << endl;
     QString bitmap_location;
 
-//    if(checkOption > 0 && checkOption <= 6) {
-//        bitmap_location.append(":/light/4_pay_select_page_s_");
-//        bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
-//        bitmap_location.append(".jpg");
-//    } else {
-        bitmap_location = ":/light/4_pay_select_page_s.jpg";
-//    }
+    //    if(checkOption > 0 && checkOption <= 6) {
+    //        bitmap_location.append(":/light/4_pay_select_page_s_");
+    //        bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
+    //        bitmap_location.append(".jpg");
+    //    } else {
+    bitmap_location = ":/light/4_pay_select_page_s.jpg";
+    //    }
     QPixmap background(bitmap_location);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
 
@@ -67,6 +67,15 @@ paySelect::paySelect(QWidget *parent) :
     ui->orderBig_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
     // TODO: Set up functions to manipulate DrinkOrder Object
+
+
+    {
+        selectIdleTimer = new QTimer(this);
+        selectIdleTimer->setInterval(1000);
+//        selectIdleTimer->isSingleShot();
+        connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
+    }
+
 }
 
 /*
@@ -88,13 +97,19 @@ paySelect::~paySelect()
 /* GUI */
 void paySelect::on_previousPage_Button_clicked()
 {
+    qDebug() << "paySelect: Previous button" << endl;
+    while(!stopSelectTimers()){
+
+    };
+    selectIdleTimer->stop();
     firstProductPage->showFullScreen();
     this->hide();
-    stopSelectTimers();
+
 }
 
 void paySelect::on_payPage_Button_clicked()
 {
+    qDebug() << "paySelect: Pay button" << endl;
     // TODO: Grab from DB description
     string description = "Drink Flavor DrinkSizeOZ (DrinkML)";
 
@@ -139,6 +154,7 @@ void paySelect::on_payPage_Button_clicked()
         }
     }
 
+
     paymentPage->resizeEvent(paySelectResize, drinkSize);
 
     this->stopSelectTimers();
@@ -149,8 +165,7 @@ void paySelect::on_payPage_Button_clicked()
 
 void paySelect::resizeEvent(QResizeEvent *event){
     int checkOption = idlePage->userDrinkOrder->getOption();
-    cout << checkOption << endl;
-//    qDebug() << checkOption << endl;
+    //    qDebug() << checkOption << endl;
     QString bitmap_location;
 
     if(checkOption > 0 && checkOption <= 9) {
@@ -172,29 +187,41 @@ void paySelect::resizeEvent(QResizeEvent *event){
     idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_SMALL_TEST);
     this->setPalette(palette);
 
-    if(selectIdleTimer == nullptr){
-            qDebug() << "Start Select Timers" << endl;
+    if(selectIdleTimer == nullptr) {
         selectIdleTimer = new QTimer(this);
         selectIdleTimer->setInterval(1000);
-        selectIdleTimer->isSingleShot();
-        connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(on_previousPage_Button_clicked()));
-        selectIdleTimer->start(10000);
+        connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
+    }
+
+    qDebug() << "Start paySelect Timers" << endl;
+    selectIdleTimer->start(1000);
+    _selectIdleTimeoutSec = 15;
+}
+
+void paySelect::onSelectTimeoutTick(){
+    if(-- _selectIdleTimeoutSec >= 0) {
+        qDebug() << "paySelect: Tick Down - " << _selectIdleTimeoutSec << endl;
+    } else {
+        qDebug() << "Timer Done!" << _selectIdleTimeoutSec << endl;
+        selectIdleTimer->stop();
+        on_previousPage_Button_clicked();
     }
 }
 
-void paySelect::stopSelectTimers(){
-    qDebug() << "Stop Select Timers" << endl;
+bool paySelect::stopSelectTimers(){
+    qDebug() << "Stop paySelect Timers" << endl;
     if(selectIdleTimer != nullptr) {
         qDebug() << "Enter Stop" << endl;
         selectIdleTimer->stop();
-
+        return true;
+    } else {
+        return false;
     }
-        selectIdleTimer = nullptr;
 }
 
 void paySelect::on_mainPage_Button_clicked()
 {
-
+    qDebug() << "paySelect: mainPage button" << endl;
     this->stopSelectTimers();
     idlePage->showFullScreen();
     this->hide();

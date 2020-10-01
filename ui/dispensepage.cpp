@@ -36,6 +36,11 @@ dispensePage::dispensePage(QWidget *parent) :
 
     /*hacky transparent button*/
     ui->finish_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+
+    dispenseIdleTimer = new QTimer(this);
+    dispenseIdleTimer->setInterval(1000);
+    connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
+
 }
 
 /*
@@ -80,14 +85,17 @@ void dispensePage::showEvent(QShowEvent *event)
     ui->dispense_clean_label->setText(" ");
     ui->dispense_progress_label->setText(" ");
 
-    {
-        qDebug() << "Start Dispense Timers" << endl;
+    if(nullptr == dispenseIdleTimer){
         dispenseIdleTimer = new QTimer(this);
         dispenseIdleTimer->setInterval(1000);
-        dispenseIdleTimer->isSingleShot();
-        connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(on_finish_Button_clicked()));
-        dispenseIdleTimer->start(90000);
+//        dispenseIdleTimer->isSingleShot();
+        connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
     }
+
+    qDebug() << "Start Dispense Timers" << endl;
+    dispenseIdleTimer->start(1000);
+    _dispenseIdleTimeoutSec = 90;
+
 }
 
 /*
@@ -95,11 +103,12 @@ void dispensePage::showEvent(QShowEvent *event)
  */
 void dispensePage::on_finish_Button_clicked()
 {
+    qDebug() << "dispensePage: finish button clicked" << endl;
     stopDispenseTimer();
-    qDebug() << "finish button clicked" << endl;
-    // TODO: Link to FSM for Dispense
 
+    // TODO: Link to FSM for Dispense
     {
+        qDebug() << "dispensePage: Cleanse cycle." << endl;
         ui->dispense_clean_label->setText("REMOVE BOTTLE!");
         ui->dispense_progress_label->setText("...");
 
@@ -134,9 +143,9 @@ void dispensePage::on_finish_Button_clicked()
 }
 
 void dispensePage::stopDispenseTimer(){
+    qDebug() << "dispensePage: Stop Timers" << endl;
     if(dispenseIdleTimer != nullptr){
         dispenseIdleTimer->stop();
-
     }
     dispenseIdleTimer = nullptr;
 }
@@ -154,5 +163,15 @@ void dispensePage::onDispenseTick(){
         qDebug() << "Timer Done!" << _dispenseTimeoutSec << endl;
         dispenseEndTimer->stop();
         this->ui->dispense_progress_label->setText("Finished!");
+    }
+}
+
+void dispensePage::onDispenseIdleTick(){
+    if(-- _dispenseIdleTimeoutSec >= 0) {
+        qDebug() << "dispensePage: Idle Tick Down: " << _dispenseIdleTimeoutSec << endl;
+    } else {
+        qDebug() << "Timer Done!" << _dispenseIdleTimeoutSec << endl;
+//        dispenseIdleTimer->stop();
+        on_finish_Button_clicked();
     }
 }

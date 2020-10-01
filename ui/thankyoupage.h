@@ -34,7 +34,7 @@ public:
 
 private slots:
     void on_mainPage_Button_clicked();
-    void onTimeoutTick();
+    void onThankyouTimeoutTick();
 
 private:
     void showEvent(QShowEvent *event);

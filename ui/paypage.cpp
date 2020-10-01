@@ -67,7 +67,7 @@ payPage::payPage(QWidget *parent) :
         setpaymentProcess(false);
 
         // GUI Setup
-        //        ui->payment_processLabel->setText(TAP_READY_LABEL);
+        // ui->payment_processLabel->setText(TAP_READY_LABEL);
         ui->payment_processLabel->setText(" ");
 
         ui->payment_processLabel->show();
@@ -90,8 +90,6 @@ payPage::payPage(QWidget *parent) :
         // Idle Payment reset
         idlePaymentTimer = new QTimer(this);
         connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
-        // FIXME: MAGIC NUMBER!!! UX410 Socket Auto Close time is 60 seconds so timer kills page GUI
-        idlePaymentTimer->start(60000);
     }
 
     // XXX: Comment on/off for Bypassing payment testing
@@ -100,7 +98,7 @@ payPage::payPage(QWidget *parent) :
 
 void payPage::stopPayTimers(){
     //    readTimer->stop();
-    qDebug() << "Stop Timers" << endl;
+    qDebug() << "payPage: Stop Timers" << endl;
     if(paymentProgressTimer != nullptr) {
         qDebug() << "cancel payment progress Timer" << endl;
         paymentProgressTimer->stop();
@@ -143,6 +141,9 @@ void payPage::labelSetup(QLabel *label, int fontSize)
 }
 
 void payPage::resizeEvent(QResizeEvent *event, char drinkSize){
+    // FIXME: MAGIC NUMBER!!! UX410 Socket Auto Close time is 60 seconds so timer kills page GUI
+    idlePaymentTimer->start(60000);
+
     int checkOption = idlePage->userDrinkOrder->getOption();
     cout << checkOption << endl;
     //    qDebug() << checkOption << endl;
@@ -191,6 +192,7 @@ void payPage::displayPaymentPending(bool isVisible)
 // Navigation: Back to Drink Size Selection
 void payPage::on_previousPage_Button_clicked()
 {
+    qDebug() << "payPage: previous button" << endl;
     stopPayTimers();
     //    readTimer->stop();
     //    cancelPayment();

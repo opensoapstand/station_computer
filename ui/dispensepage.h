@@ -42,6 +42,8 @@ private slots:
     // **** Navigation ****
     void on_finish_Button_clicked();
     void onDispenseTick();
+    void onDispenseIdleTick();
+
 private:
     // **** GUI *****
     Ui::dispensePage *ui;
@@ -54,6 +56,8 @@ private:
     QString _dispenseTimeLabel;
     int _dispenseTimeoutSec;
     QTimer *dispenseEndTimer;
+
+    int _dispenseIdleTimeoutSec;
     QTimer *dispenseIdleTimer;
 
     QTimer* dispenseNextPageTimer;

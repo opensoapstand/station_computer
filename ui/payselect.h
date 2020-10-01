@@ -37,6 +37,8 @@ public:
     ~paySelect();
 
     void resizeEvent(QResizeEvent *event);
+    QTimer* selectIdleTimer;
+
 
 signals:
     void paymentTotal(string, string, string);
@@ -51,16 +53,20 @@ private slots:
     void on_orderSmall_Button_clicked();
     void on_orderBig_Button_clicked();
 
+    void onSelectTimeoutTick();
+
 private:
-    void stopSelectTimers();
+    bool stopSelectTimers();
     void selectOnTick();
+
+
 
     Ui::paySelect *ui;
     productPage_1* firstProductPage;
     payPage* paymentPage;
     idle* idlePage;
 
-    QTimer* selectIdleTimer;
+    int _selectIdleTimeoutSec;
 
     QResizeEvent *paySelectResize;
 

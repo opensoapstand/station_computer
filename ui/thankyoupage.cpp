@@ -32,6 +32,10 @@ thankYouPage::thankYouPage(QWidget *parent) :
     /*hacky transparent button*/
     ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
+    thankYouEndTimer = new QTimer(this);
+    thankYouEndTimer->setInterval(1000);
+    connect(thankYouEndTimer, SIGNAL(timeout()), this, SLOT(onThankyouTimeoutTick()));
+
 //    QString counter = this->idlePage->dfUtility->get_local_db_max_transaction();
 //    ui->Counter->setStyleSheet("background-color : #F1F2F2; color: #CBA580");
 //    ui->Counter->setText(counter);
@@ -56,19 +60,21 @@ thankYouPage::~thankYouPage()
 void thankYouPage::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
-    {
+
+    if(thankYouEndTimer == nullptr){
         thankYouEndTimer = new QTimer(this);
         thankYouEndTimer->setInterval(1000);
-        connect(thankYouEndTimer, SIGNAL(timeout()), this, SLOT(onTimeoutTick()));
-        thankYouEndTimer->start(1000);
-        _thankYouTimeoutSec = 5;
+        connect(thankYouEndTimer, SIGNAL(timeout()), this, SLOT(onThankyouTimeoutTick()));
     }
+
+    thankYouEndTimer->start(1000);
+    _thankYouTimeoutSec = 5;
+
 }
 
-void thankYouPage::onTimeoutTick(){
+void thankYouPage::onThankyouTimeoutTick(){
     if(-- _thankYouTimeoutSec >= 0) {
         qDebug() << "Tick Down: " << _thankYouTimeoutSec << endl;
-        QString time = QString::number(_thankYouTimeoutSec);
     } else {
         qDebug() << "Timer Done!" << _thankYouTimeoutSec << endl;
         on_mainPage_Button_clicked();

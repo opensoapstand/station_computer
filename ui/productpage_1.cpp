@@ -44,13 +44,9 @@ productPage_1::productPage_1(QWidget *parent) :
     ui->DrinkFlavor1->setText("");
 
     ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-
     ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-
     ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-
     ui->selection5_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-
     ui->selection6_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 }
 

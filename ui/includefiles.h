@@ -2,7 +2,10 @@
 #define INCLUDEFILES_H
 
 #include <QWidget>
+#include <QDesktopWidget>
 #include <QObject>
+#include <QRect>
+#include <QSize>
 
 #include <QDebug>
 #include <stdint.h>

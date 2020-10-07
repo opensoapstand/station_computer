@@ -33,6 +33,9 @@
    </property>
   </widget>
   <widget class="QPushButton" name="selection1_Button">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>110</x>
@@ -65,14 +68,14 @@
   </widget>
   <widget class="QPushButton" name="selection2_Button">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>60</y>
-     <width>16</width>
-     <height>16</height>
+     <x>410</x>
+     <y>370</y>
+     <width>250</width>
+     <height>350</height>
     </rect>
    </property>
    <property name="text">
@@ -187,31 +190,6 @@
    </property>
    <property name="text">
     <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>450</y>
-     <width>211</width>
-     <height>221</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>FreeSans</family>
-     <pointsize>27</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>COMING 
- SOON</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

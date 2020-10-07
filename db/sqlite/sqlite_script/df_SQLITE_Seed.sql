@@ -219,16 +219,55 @@ WHERE inventory_id = 0;
 
 /* ######## INSERTING A SALE ########*/
 
-INSERT INTO sales()
 
 CREATE TABLE IF NOT EXISTS   sales (
     sales_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	product_id INT NOT NULL,
     location_id INT NOT NULL,
     date TIMESTAMP WITH TIME ZONE NOT NULL,
     amount VARCHAR(10),
-    -- pan VARCHAR(20),
+	coupon_id INT DEFAULT NULL,
+	card_type VARCHAR(10) DEFAULT NULL,
+	transaction_type VARCHAR(8) DEFAULT NULL,
+    pan VARCHAR(20),
     -- mask pan data FOR MONERIS; removed for security
-    -- reference VARCHAR(30),
+    reference VARCHAR(30),
     -- FOR MONERIS; removed for security
-    FOREIGN KEY(location_id) REFERENCES   machine_location(machine_location_id)
+	mop VARCHAR(10) DEFAULT NULL, -- method of payment (tapped [EMV, MSD, TOKEN)
+	approval_number VARCHAR(10) DEFAULT NULL,
+	SPDH VARCHAR(10) DEFAULT NULL,
+
+    FOREIGN KEY(location_id) REFERENCES   machine_location(machine_location_id),
+	FOREIGN KEY(product_id) REFERENCES   product(product_id)
 );
+
+INSERT INTO
+    sales (
+		product_id,
+        location_id,
+		date,
+        amount,
+        coupon_id,
+        card_type,
+        transaction_type,
+        pan,
+        reference,
+        mop,
+        approval_number,
+        SPDH
+    )
+VALUES
+    (
+        1,
+		1,
+		CURRENT_TIMESTAMP,
+        0.00,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL
+    );

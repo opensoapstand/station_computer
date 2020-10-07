@@ -109,6 +109,38 @@ DF_ERROR stateDispenseEnd::onExit()
 
    cassettes[pos].cleanNozzle(WATER, AIR);
 
+
+   char *zErrMsg = 0;
+
+   // FIXME: DB needs fully qualified link to find...obscure with XML loading.
+   rc = sqlite3_open("/home/df-admin/Project/drinkfill/db/sqlite/drinkfill-sqlite.db", &db);
+
+   debugOutput::sendMessage("DB Update", INFO);
+
+   if( rc ) {
+      fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+      // TODO: Error handling here...
+   } else {
+      fprintf(stderr, "Opened database successfully\n");
+   }
+   
+   char *sql;
+   
+   /* Create SQL statement */
+   sql = "";
+
+   /* Execute SQL statement */
+   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   
+   if( rc != SQLITE_OK ){
+      fprintf(stderr, "SQL error: %s\n", zErrMsg);
+      sqlite3_free(zErrMsg);
+   } else {
+      fprintf(stdout, "Table created successfully\n");
+   }
+   sqlite3_close(db);
+
+
    m_pMessaging->clearProcessString();
    m_pMessaging->clearCommandString();
    m_pMessaging->clearcCommand();
@@ -120,4 +152,13 @@ DF_ERROR stateDispenseEnd::onExit()
    m_nextState = IDLE; //go back for now
 
    return e_ret;
+}
+
+static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
+   int i;
+   for(i = 0; i<argc; i++) {
+      printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+   }
+   printf("\n");
+   return 0;
 }

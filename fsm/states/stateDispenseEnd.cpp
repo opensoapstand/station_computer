@@ -123,23 +123,22 @@ DF_ERROR stateDispenseEnd::onExit()
    } else {
       fprintf(stderr, "Opened database successfully\n");
    }
-   
-   char *sql;
-   
-   /* Create SQL statement */
-   sql = "";
 
-   /* Execute SQL statement */
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+
+   // /* Create SQL statement */
+   // char *sql;   
+   // sql = "";
+
+   // /* Execute SQL statement */
+   // rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   // if( rc != SQLITE_OK ){
+   //    fprintf(stderr, "SQL error: %s\n", zErrMsg);
+   //    sqlite3_free(zErrMsg);
+   // } else {
+   //    fprintf(stdout, "Command Executed successfully\n");
+   // }
    
-   if( rc != SQLITE_OK ){
-      fprintf(stderr, "SQL error: %s\n", zErrMsg);
-      sqlite3_free(zErrMsg);
-   } else {
-      fprintf(stdout, "Table created successfully\n");
-   }
    sqlite3_close(db);
-
 
    m_pMessaging->clearProcessString();
    m_pMessaging->clearCommandString();

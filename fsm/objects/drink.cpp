@@ -31,7 +31,6 @@ static int callback(void *data, int argc, char **argv, char **azColName)
         // if()
     }
 
-
     // setDrinkName("test");
     // setIsStillDrink(false);
 
@@ -78,6 +77,21 @@ drink::drink(int slot)
     sqlite3_close(db);
 }
 
+// Test CTOR
+drink::drink(int slot, string name, double nVolumeDispensed, double nVolumeTarget, double calibration_const, double price, bool isStillDrink, double nVolumePerTick){
+    m_nSlot = slot;
+    m_name = name;
+    m_nVolumeDispensed = nVolumeDispensed;
+    m_nVolumeTarget = nVolumeTarget;
+    m_calibration_const = calibration_const;
+    m_price = price;
+    m_isStillDrink = isStillDrink;
+    m_nVolumePerTick = nVolumePerTick;
+
+    // XXX: Find calculation for this...
+    // m_nVolumePerTick = 20; // Seems like best guesstimate tick.
+}
+
 // DTOR
 drink::~drink()
 {
@@ -111,10 +125,8 @@ bool drink::getIsStillDrink()
     return m_isStillDrink;
 }
 
-// Get the remaining volume
-int drink::getVolumeRemaining()
-{
-    // TODO: SQLite database Query could be better option.
+bool drink::registerFlowSensorTick(){
+    m_nVolumeDispensed += m_nVolumePerTick;
 }
 
 // TODO: Function name is inaccurate...deduct sale would be better
@@ -127,4 +139,53 @@ void drink::recordSale(int volume)
 void drink::refill(int volume)
 {
     // TODO: SQLite database Update.
+}
+
+int drink::getVolumeSinceLastPoll()
+{
+    int temp = m_nVolumeDispensedSinceLastPoll;
+
+    m_nVolumeDispensed += m_nVolumeDispensedSinceLastPoll;
+
+    return temp;
+}
+
+// Reset values onEntry()
+DF_ERROR drink::startDispense(int nVolumeToDispense)
+{
+    DF_ERROR dfRet = ERROR_BAD_PARAMS;
+
+    m_nVolumeTarget = nVolumeToDispense;
+    m_nVolumeDispensed = 0;
+    m_nVolumeDispensedSinceLastPoll = 0;
+
+    return dfRet;
+}
+
+// VolumeDispense check!
+bool drink::isDispenseComplete()
+{
+    bool bRet = false;
+
+    if (m_nVolumeTarget < m_nVolumeDispensed){
+        cout << "Target HIT!" << endl;
+        bRet = true;
+    }
+    return bRet;
+}
+
+void drink::drinkInfo() {
+    cout << "Drink Option: " << m_nSlot << endl;
+    cout << "Drink Name: " << m_name << endl;
+    cout << "Drink Dispense Volume: " << m_nVolumeDispensed << endl;
+    cout << "Drink Target Volume: " << m_nVolumeTarget << endl;
+    cout << "Drink Calibration: " << m_calibration_const << endl;
+    cout << "Drink Price: " << m_price << endl;
+    cout << "Drink is Still?: " << m_isStillDrink << endl;
+}
+
+void drink::drinkVolumeInfo(){
+    // cout << "Volume since last poll: " << m_nVolumeDispensedSinceLastPoll << endl;
+    // cout << "How much to dispense: " << m_nVolumeTarget << endl;
+	cout << "Dispensed so far: " << m_nVolumeDispensed << endl;
 }

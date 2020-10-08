@@ -56,21 +56,30 @@ DF_ERROR stateIdle::onEntry()
 * Advances State: If IP Thread detects DISPENSE 
 * command then advance to DISPENSE_IDLE
 */
-DF_ERROR stateIdle::onAction(dispenser *cassettes)
+DF_ERROR stateIdle::onAction()
 {
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
    m_state = IDLE;
 
    if (nullptr != &m_nextState)
    {
+
       // Check if Command String is ready
       if (m_pMessaging->isCommandReady())
       {
+         // if (m_pMessaging->getPositionReady())
+         // {
          m_nextState = DISPENSE_IDLE;
+         // }
+         // else
+         // {
+         //    return e_ret = ERROR_NETW_NO_COMMAND;
+         // }
       }
       else
       {
          m_nextState = IDLE;
+         // usleep(100000); // UNISTD Thread PAUSE
       }
       e_ret = OK;
    }
@@ -81,9 +90,5 @@ DF_ERROR stateIdle::onAction(dispenser *cassettes)
 DF_ERROR stateIdle::onExit()
 {
    DF_ERROR e_ret = OK;
-
-   m_state = IDLE;
-   m_nextState = DISPENSE_IDLE;
-
    return e_ret;
 }

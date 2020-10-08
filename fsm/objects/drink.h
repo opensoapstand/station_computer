@@ -31,23 +31,49 @@ class drink
 public:
 	drink();
 	drink(int slot);
+	drink(int slot, string name, double nDispenseVolume, double nTargetVolume, double calibration_const, double price, bool isStillDrink, double nVolumePerTick);
 	~drink();
 
 	//getter
-	int getDrinkOption(){return m_nSlot;}
-	bool getIsStillDrink();
-	int getVolumeRemaining();
+	int getDrinkOption(){return m_nSlot;} // For IPC
+	bool getIsStillDrink(); // For pump check
+	int getVolumeDispensed(){return m_nVolumeDispensed;}
+	double getTargetVolume(){return m_nVolumeTarget;};
+
+	void setTargetVolume(double nVolumeTarget){m_nVolumeTarget = nVolumeTarget;};
+
+	// Interrupt Helpers
+	DF_ERROR startDispense(int nVolumeToDispense);
+	int getVolumeSinceLastPoll();
+	bool isDispenseComplete();
+	bool registerFlowSensorTick();
+
+	// int getTickCount(){return m_nTickCount;};
+	// void resetTickCount(){m_nTickCount = 0;};
 
 	// DB Updates
 	void recordSale(int volume);
 	void refill(int volume);
 
+	void drinkInfo();
+	void drinkVolumeInfo();
+
 private:
 	// TODO: Determine more data to modify per transaction...
 	int m_nSlot;
 	string m_name;
-	int m_nVolume;
 
+	bool isDispenseFinished;
+	double m_nVolumeTarget;  //how much to dispense
+	double m_nVolumeDispensed; //how much has been dispensed in this sale
+	double m_nVolumeDispensedSinceLastPoll;
+	double m_calibration_const;
+	double m_nVolumePerTick;
+
+	double m_nTickCount;
+	bool valueChange;
+
+	double m_price;
 	bool m_isStillDrink;
 
 	void setSlot(int slot);

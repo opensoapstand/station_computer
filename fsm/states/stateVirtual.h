@@ -20,6 +20,7 @@
 #include "../objects/debugOutput.h"
 #include "../objects/dispenser.h"
 
+// TODO: Move reference to XML
 #define CASSETTES_MAX 9
 
 using namespace std;
@@ -36,12 +37,13 @@ class stateVirtual
         DF_FSM getCurrentState();
 
         virtual DF_ERROR onEntry() = 0;
-        virtual DF_ERROR onAction(dispenser* cassettes) = 0;
+        virtual DF_ERROR onAction() = 0;
         virtual DF_ERROR onExit() = 0;
-        virtual dispenser* dispenserSetup() = 0;
 
         gpio* getSolenoid(int pos, int type);
         gpio* getButton();
+        
+        static drink* testDrinks[CASSETTES_MAX];
 
         // // FIXME: Cludgey fix to exit dispense loop.
         // bool getIsDispenseComplete(){return m_isDispenseComplete;}
@@ -50,7 +52,6 @@ class stateVirtual
     protected:
         DF_FSM  m_state;
         DF_FSM  m_nextState;
-        //dispenser* cassettes[CASSETTES_MAX];
         gpio *m_pButton[NUM_BUTTON];
         messageMediator * m_pMessaging;
 
@@ -59,8 +60,6 @@ class stateVirtual
         // Unique Reference to currently selected Dispenser
         unique_ptr<dispenser> selectedDispenserPtr;
 
-        // FIXME: Cludgey fix to exit dispense loop.
-        // bool m_isDispenseComplete;
 };
 
 

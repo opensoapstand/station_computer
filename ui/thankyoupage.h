@@ -34,11 +34,17 @@ public:
 
 private slots:
     void on_mainPage_Button_clicked();
+    void onThankyouTimeoutTick();
 
 private:
+    void showEvent(QShowEvent *event);
+
     Ui::thankYouPage *ui;
     dispensePage* dispensingPage;
     idle* idlePage;
+
+    int _thankYouTimeoutSec;
+    QTimer* thankYouEndTimer;
 };
 
 #endif // THANKYOUPAGE_H

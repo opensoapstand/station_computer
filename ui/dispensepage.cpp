@@ -36,6 +36,11 @@ dispensePage::dispensePage(QWidget *parent) :
 
     /*hacky transparent button*/
     ui->finish_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+
+    dispenseIdleTimer = new QTimer(this);
+    dispenseIdleTimer->setInterval(1000);
+    connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
+
 }
 
 /*
@@ -56,53 +61,93 @@ dispensePage::~dispensePage()
 
 void dispensePage::showEvent(QShowEvent *event)
 {
-    this->idlePage->dfUtility->msg = QString::number(this->idlePage->userDrinkOrder->getOption());
+
+    // FIXME: this is a hack for size changes...
+    QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
+    if(idlePage->userDrinkOrder->getSize() <= 355){
+        command.append('s');
+    } else {
+        command.append('l');
+    }
+
+    this->idlePage->dfUtility->msg = command;
 
     // Networking
     idlePage->dfUtility->m_IsSendingFSM = true;
     QWidget::showEvent(event);
     idlePage->dfUtility->m_fsmMsg = SEND_DRINK;
+
+
     idlePage->dfUtility->send_to_FSM();
     idlePage->dfUtility->m_IsSendingFSM = false;
     ui->finish_Button->setEnabled(true);
 
-    // XXX: Remove when interrupts work.
-    {
-        ui->dispense_progress_label->setText("Begin Dispensing...");
+    ui->dispense_clean_label->setText(" ");
+    ui->dispense_progress_label->setText(" ");
 
-        dispenseEndTimer = new QTimer(this);
-        dispenseEndTimer->setInterval(1000);
-        connect(dispenseEndTimer, SIGNAL(timeout()), this, SLOT(onDispenseTick()));
-        dispenseEndTimer->start(1000);
-        _dispenseTimeoutSec = 10;
+    if(nullptr == dispenseIdleTimer){
+        dispenseIdleTimer = new QTimer(this);
+        dispenseIdleTimer->setInterval(1000);
+//        dispenseIdleTimer->isSingleShot();
+        connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
     }
-}
 
+    qDebug() << "Start Dispense Timers" << endl;
+    dispenseIdleTimer->start(1000);
+    _dispenseIdleTimeoutSec = 90;
+
+}
 
 /*
  * Page Tracking reference to Payment page and completed payment
  */
 void dispensePage::on_finish_Button_clicked()
 {
-    qDebug() << "finish button clicked" << endl;
+    qDebug() << "dispensePage: finish button clicked" << endl;
+    stopDispenseTimer();
+
     // TODO: Link to FSM for Dispense
+    {
+        qDebug() << "dispensePage: Cleanse cycle." << endl;
+        ui->dispense_clean_label->setText("REMOVE BOTTLE!");
+        ui->dispense_progress_label->setText("...");
+
+        dispenseEndTimer = new QTimer(this);
+        dispenseEndTimer->setInterval(1000);
+        connect(dispenseEndTimer, SIGNAL(timeout()), this, SLOT(onDispenseTick()));
+        dispenseEndTimer->start(1000);
+        _dispenseTimeoutSec = 5;
+    }
+
+    // FIXME: this is a hack for size changes...
+    QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
+    command.append('s');
+    this->idlePage->dfUtility->msg = command;
+
+    qDebug() << this->idlePage->dfUtility->msg << endl;
+
     idlePage->dfUtility->m_IsSendingFSM = true;
+
     idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
-    this->idlePage->dfUtility->msg = QString::number(this->idlePage->userDrinkOrder->getOption());
+    //    this->idlePage->dfUtility->msg = QString::number(this->idlePage->userDrinkOrder->getOption());
 
     // Send a Cleanse and TODO: helps FSM onExit...
     idlePage->dfUtility->send_to_FSM();
 
-    // XXX: Better to have ACKs to coordinate cleaning; When sensors work...
-//    while(is_sending_to_FSM) {
-//        qDebug() << "CLEAN MODE" << endl;
-//    }
-//    is_sending_to_FSM = false;
-//    tcpSocket->disconnectFromHost();
     dispenseEndTimer->stop();
     dispenseEndTimer->deleteLater();
+
+
     this->hide();
     thanksPage->showFullScreen();
+}
+
+void dispensePage::stopDispenseTimer(){
+    qDebug() << "dispensePage: Stop Timers" << endl;
+    if(dispenseIdleTimer != nullptr){
+        dispenseIdleTimer->stop();
+    }
+    dispenseIdleTimer = nullptr;
 }
 
 // XXX: Remove this when interrupts and flow sensors work!
@@ -118,5 +163,15 @@ void dispensePage::onDispenseTick(){
         qDebug() << "Timer Done!" << _dispenseTimeoutSec << endl;
         dispenseEndTimer->stop();
         this->ui->dispense_progress_label->setText("Finished!");
+    }
+}
+
+void dispensePage::onDispenseIdleTick(){
+    if(-- _dispenseIdleTimeoutSec >= 0) {
+        qDebug() << "dispensePage: Idle Tick Down: " << _dispenseIdleTimeoutSec << endl;
+    } else {
+        qDebug() << "Timer Done!" << _dispenseIdleTimeoutSec << endl;
+//        dispenseIdleTimer->stop();
+        on_finish_Button_clicked();
     }
 }

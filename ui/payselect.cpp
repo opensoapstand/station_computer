@@ -29,25 +29,25 @@ paySelect::paySelect(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    int checkOption;
+    int checkOption = 99;
 
-    if(idlePage->userDrinkOrder != nullptr) {
-        checkOption = idlePage->userDrinkOrder->getOption();
-    } else {
-        checkOption = 0;
-    }
+    //    qDebug() << idlePage->userDrinkOrder << endl;
 
-    cout << checkOption << endl;
-//    qDebug() << checkOption << endl;
+    //    if(idlePage->userDrinkOrder != nullptr) {
+    //        checkOption = idlePage->userDrinkOrder->getOption();
+    //    }
+
+    //    cout << checkOption << endl;
+    qDebug() << checkOption << endl;
     QString bitmap_location;
 
-    if(checkOption > 0 && checkOption <= 6) {
-        bitmap_location.append(":/light/4_pay_select_page_s_");
-        bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
-        bitmap_location.append(".jpg");
-    } else {
-        bitmap_location = ":/light/4_pay_select_page_s.jpg";
-    }
+    //    if(checkOption > 0 && checkOption <= 6) {
+    //        bitmap_location.append(":/light/4_pay_select_page_s_");
+    //        bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
+    //        bitmap_location.append(".jpg");
+    //    } else {
+    bitmap_location = ":/light/4_pay_select_page_s.jpg";
+    //    }
     QPixmap background(bitmap_location);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
 
@@ -67,6 +67,15 @@ paySelect::paySelect(QWidget *parent) :
     ui->orderBig_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
     // TODO: Set up functions to manipulate DrinkOrder Object
+
+
+    {
+        selectIdleTimer = new QTimer(this);
+        selectIdleTimer->setInterval(1000);
+//        selectIdleTimer->isSingleShot();
+        connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
+    }
+
 }
 
 /*
@@ -88,14 +97,30 @@ paySelect::~paySelect()
 /* GUI */
 void paySelect::on_previousPage_Button_clicked()
 {
+    qDebug() << "paySelect: Previous button" << endl;
+    while(!stopSelectTimers()){
+
+    };
+    selectIdleTimer->stop();
     firstProductPage->showFullScreen();
     this->hide();
+
 }
 
 void paySelect::on_payPage_Button_clicked()
 {
+    qDebug() << "paySelect: Pay button" << endl;
     // TODO: Grab from DB description
     string description = "Drink Flavor DrinkSizeOZ (DrinkML)";
+
+    // FIXME: Remove this when DB price referencing/calculations are correct.
+    if(idlePage->userDrinkOrder->getOption() == 9) {
+        if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->SMALL_SIZE_ML) {
+            idlePage->userDrinkOrder->setPrice(0.99);
+        } else {
+            idlePage->userDrinkOrder->setPrice(1.25);
+        }
+    }
 
     double drinkAmountDbl = idlePage->userDrinkOrder->getPrice();
     QString qs = QString::number(drinkAmountDbl, 'f', 2);
@@ -115,23 +140,35 @@ void paySelect::on_payPage_Button_clicked()
     if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->SMALL_SIZE_ML)
     {
         drinkSize = 's';
+
     } else {
         drinkSize = 'l';
     }
 
+    // FIXME: Remove this when DB price referencing/calculations are correct.
+    if(idlePage->userDrinkOrder->getOption() == 9) {
+        if(drinkSize =='s') {
+            idlePage->userDrinkOrder->setPrice(0.99);
+        } else if (drinkSize == 'l') {
+            idlePage->userDrinkOrder->setPrice(1.25);
+        }
+    }
+
+
     paymentPage->resizeEvent(paySelectResize, drinkSize);
+
+    this->stopSelectTimers();
     paymentPage->showFullScreen();
-    qDebug() << idlePage->userDrinkOrder->getPrice();
     this->hide();
+    qDebug() << idlePage->userDrinkOrder->getPrice();
 }
 
 void paySelect::resizeEvent(QResizeEvent *event){
     int checkOption = idlePage->userDrinkOrder->getOption();
-    cout << checkOption << endl;
-//    qDebug() << checkOption << endl;
+    //    qDebug() << checkOption << endl;
     QString bitmap_location;
 
-    if(checkOption > 0 && checkOption <= 6) {
+    if(checkOption > 0 && checkOption <= 9) {
         bitmap_location.append(":/light/4_pay_select_page_s_");
         bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
         bitmap_location.append(".jpg");
@@ -146,12 +183,46 @@ void paySelect::resizeEvent(QResizeEvent *event){
 
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
+    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
+    idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_SMALL_TEST);
     this->setPalette(palette);
-    this->resize(this->geometry().width(), this->geometry().height());
+
+    if(selectIdleTimer == nullptr) {
+        selectIdleTimer = new QTimer(this);
+        selectIdleTimer->setInterval(1000);
+        connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
+    }
+
+    qDebug() << "Start paySelect Timers" << endl;
+    selectIdleTimer->start(1000);
+    _selectIdleTimeoutSec = 15;
+}
+
+void paySelect::onSelectTimeoutTick(){
+    if(-- _selectIdleTimeoutSec >= 0) {
+        qDebug() << "paySelect: Tick Down - " << _selectIdleTimeoutSec << endl;
+    } else {
+        qDebug() << "Timer Done!" << _selectIdleTimeoutSec << endl;
+        selectIdleTimer->stop();
+        on_previousPage_Button_clicked();
+    }
+}
+
+bool paySelect::stopSelectTimers(){
+    qDebug() << "Stop paySelect Timers" << endl;
+    if(selectIdleTimer != nullptr) {
+        qDebug() << "Enter Stop" << endl;
+        selectIdleTimer->stop();
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void paySelect::on_mainPage_Button_clicked()
 {
+    qDebug() << "paySelect: mainPage button" << endl;
+    this->stopSelectTimers();
     idlePage->showFullScreen();
     this->hide();
 }
@@ -193,6 +264,7 @@ void paySelect::on_orderBig_Button_clicked()
     idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
     idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_LARGE_TEST);
 }
+
 
 /* Models */
 

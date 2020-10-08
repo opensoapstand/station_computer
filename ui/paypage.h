@@ -75,6 +75,8 @@ public:
         return merchantAddress;
     }
 
+
+
 private slots:
 
     // Update Drink order totals section
@@ -91,6 +93,7 @@ private slots:
     // **** Payment ****
     void displayPaymentPending(bool isVisible);
 
+    void onTimeoutTick();
     void readTimer_loop();
     void progressStatusLabel();
     void declineTimer_start();
@@ -125,6 +128,8 @@ private:
     bool approved = false;
     bool paymentConnected = false;
     bool isReadyForTap = false;
+
+    void stopPayTimers();
 
     int progressDots = 1;
     int progressLoopCounter = 0;
@@ -178,6 +183,13 @@ private:
 
     // Placeholder
     bool surveyBool;
+
+    QString _paymentTimeLabel;
+    int _paymentTimeoutSec;
+    QTimer* paymentEndTimer;
+
+    QResizeEvent *paySelectResize;
+    QShowEvent *dispenseEvent;
 };
 
 #endif // PAYPAGE_H

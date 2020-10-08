@@ -13,6 +13,8 @@
 #include <string.h>
 #include "dftypes.h"
 
+#include "fsm.h"
+
 #include "states/stateVirtual.h"
 
 #include "states/stateInit.h"
@@ -24,9 +26,10 @@
 #include "objects/dispenser.h"
 #include "objects/messageMediator.h"
 
+
 messageMediator *g_pMessaging;       //debug through local network
 stateVirtual *g_stateArray[FSM_MAX]; //an object for every state
-dispenser *g_dispense;               //replace the magic number
+dispenser g_cassettes[MAX_CASSETTES]; //replace the magic number
 
 DF_ERROR initObjects();
 DF_ERROR createStateArray();
@@ -34,7 +37,6 @@ DF_ERROR stateLoop();
 
 int main()
 {
-
     pthread_t ipThread, kbThread;
 
     DF_ERROR dfRet = OK;
@@ -42,6 +44,7 @@ int main()
     if (OK == initObjects())
     {
         dfRet = g_pMessaging->createThreads(kbThread, ipThread);
+
         if (OK == dfRet)
         {
             dfRet = stateLoop();
@@ -64,53 +67,26 @@ DF_ERROR stateLoop()
     {
         if (fsmState != fsmNewState) //state change
         {
-            // debugOutput::sendMessage("onEntry()  [" + g_stateArray[fsmNewState]->toString() + "]", STATE_CHANGE);
-            dfRet = g_stateArray[fsmNewState]->onEntry();
-            fsmState = g_stateArray[fsmNewState]->getCurrentState();
+            debugOutput::sendMessage("onEntry()  [" + g_stateArray[fsmNewState]->toString() + "]", STATE_CHANGE);
+            fsmState = fsmNewState;
+            dfRet = g_stateArray[fsmState]->onEntry();
         }
 
         // Should Poll for Idle state change.  This triggers FSM to go forward.
         if (OK == dfRet)
         {
-            // debugOutput::sendMessage("onAction() [" + g_stateArray[fsmState]->toString() + "]", STATE_CHANGE);
-            dfRet = g_stateArray[fsmState]->onAction(g_dispense);
-
-            // FIXME: Move to initialization within init state...
-            if (INIT == fsmState)
-            {
-                g_dispense = g_stateArray[INIT]->dispenserSetup();
-            }
-
+            
+            dfRet = g_stateArray[fsmState]->onAction();
+            // TODO if this isn't OK deal with bad things
+            
             fsmNewState = g_stateArray[fsmState]->getNextState();
 
-            // Thread and FSM Change Check
+            
             if ((OK == dfRet) && (fsmNewState != fsmState))
             {
-                // debugOutput::sendMessage("Main Loop fsmState:" + g_stateArray[fsmState]->toString(), INFO);
-                // DISPENSE when IP thread has a command ready
-                if (IDLE == fsmState && g_pMessaging->isCommandReady())
-                {
-                    // debugOutput::sendMessage("PREPARE TO DISPENSE...onExit()   [" + g_stateArray[fsmState]->toString() + "]", STATE_CHANGE);
-                    dfRet = g_stateArray[fsmState]->onExit();
-                    fsmNewState = g_stateArray[fsmState]->getNextState(); // Go to State Dispense -> DispenseIdle Loop
-                }
-                else // Other States advance
-                {
-                    debugOutput::sendMessage("State Change...onExit()   [" + g_stateArray[fsmState]->toString() + "]", STATE_CHANGE);
-                    dfRet = g_stateArray[fsmState]->onExit();
-                    fsmNewState = g_stateArray[fsmState]->getNextState(); // Advance until Idle State Loops
-                }
-            }
-            // We stay Idle until a command is ready
-            // TODO: Maybe we can leverage this for DispenseIdle as well!
-            else if (fsmNewState == fsmState)
-            {
-                // Turn on to check Idle Looping
-                // debugOutput::sendMessage("No State Change   [" + g_stateArray[fsmState]->toString() + "]", STATE_CHANGE);
-            }
-            else
-            {
-                debugOutput::sendMessage("Thread or State change ERROR", ERROR);
+                debugOutput::sendMessage("onExit() going to [" + g_stateArray[fsmNewState]->toString() + "]", STATE_CHANGE);
+                dfRet = g_stateArray[fsmState]->onExit();
+                //TODO if this isn't ok deal with bad things
             }
         }
     }

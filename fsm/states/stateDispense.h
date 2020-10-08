@@ -15,14 +15,9 @@
 
 #include "../dftypes.h"
 #include "../objects/messageMediator.h"
+#include "../fsm.h"
 
 #include "stateVirtual.h"
-
-#define AIR_CHAR 'a'
-#define WATER_CHAR 'w'
-#define DRINK_CHAR 'd'
-#define CLEAN_CHAR 'c'
-#define DISPENSE_END_CHAR 'f'
 
 class stateDispense : public stateVirtual
 {
@@ -34,17 +29,22 @@ class stateDispense : public stateVirtual
         string toString();
 
         DF_ERROR onEntry();
-        DF_ERROR onAction(dispenser* cassettes);
+        DF_ERROR onAction();
         DF_ERROR onExit();
         
         // FIXME: Issues with Initializing with Button...
         // dispenser* dispenserSetup(getButton()) {};
-        dispenser* dispenserSetup(){};
+        // DF_ERROR dispenserSetup();
 
 
     private:
-
-
+        int pos;
+        dispenser* cassettes;
+        bool flushCommand;
+        
+        // present read Volume
+        // last read Volume
+        // max read volume
     
 };
 #endif

@@ -22,9 +22,23 @@
 #include "debugOutput.h"
 #include <pthread.h>
 
+#include "dispenser.h"
+
+#include <stdio.h>
+#include <cstring>
+
 #include "../../library/socket/ServerSocket.h"
 #include "../../library/socket/SocketException.h"
 #include "../../library/socket/ClientSocket.h"
+
+#define AIR_CHAR 'a'
+#define WATER_CHAR 'w'
+#define DRINK_CHAR 'd'
+#define CLEAN_CHAR 'c'
+#define DISPENSE_END_CHAR 'f'
+
+#define SMALL_DRINK_CHAR 's'
+#define LARGE_DRINK_CHAR 'l'
 
 class messageMediator
 {
@@ -37,12 +51,19 @@ class messageMediator
       DF_ERROR sendMessage(string msg);
 
       string getProcessString();
-      bool getStringReady();
+      DF_ERROR getPositionReady();
       void clearProcessString();
+      void clearcCommand(){m_cCommand = '0';}
 
       string getCommandString();
-      bool isCommandReady(){return m_commandReady;}
+      bool isCommandReady(){return m_bCommandReady;}
       void clearCommandString();
+
+      int getnOption(){return m_nOption;}
+      int getnSolenoid(){return m_nSolenoid;}
+      char getcCommand(){return m_cCommand;}
+      double getnTargetVolume(){return m_nVolumeTarget;}
+
 
       // static ServerSocket *fsm_comm_socket;
    
@@ -58,8 +79,14 @@ class messageMediator
 
       static string m_processString;
       static string m_processCommand;
-      static bool m_commandReady;
+      static bool m_bCommandReady;
 
+      //int pos;
+      static int m_nOption;
+      static int m_nSolenoid;
+      static char m_cCommand;
+      static double m_nVolumeTarget;
+   
       static DF_ERROR sendProgress(int percentComplete);
       static DF_ERROR sendQtACK(string AckOrNak);
 

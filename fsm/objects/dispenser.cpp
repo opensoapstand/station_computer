@@ -14,6 +14,7 @@
 // all rights reserved
 //***************************************
 #include "dispenser.h"
+// #include "fsm.h"
 
 #define ACTIVATION_TIME 5
 #define TEST_ACTIVATION_TIME 3
@@ -26,7 +27,7 @@ dispenser::dispenser(){
     //debugOutput::sendMessage("dispenser", INFO);
 
     // TODO: Need to build Drink Object reference
-    m_pDrink = nullptr;
+    // m_pDrink = nullptr;
 
     for (int i = 0; i < NUM_SOLENOID; i++)
         m_pSolenoid[i] = nullptr; 
@@ -68,7 +69,7 @@ void dispenser::initDispenser(int slot){
 
 }
 
-
+// TODO: Call this function on Dispense onEntry()
 DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
 {
     debugOutput::sendMessage("-----dispenser::setSolenoid-----", INFO);
@@ -92,6 +93,7 @@ DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
         // }
 
         m_pSolenoid[pos] = new mcpGPIO(mcpAddress, pin);
+        m_pSolenoid[pos]->writePin(LOW);
 		e_ret = OK;
 	}
 	else if(X20 > mcpAddress || X22 < mcpAddress)
@@ -106,13 +108,20 @@ DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
     return e_ret;
 }
 
+// TODO: Call this function on Dispense onEntry()
 DF_ERROR dispenser::setFlowsensor(int pin, int pos)
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
+    // *m_pIsDispensing = false;
+
     if(pos == 0)
     {
+        // Instantiate, set input, spin up a flowsensor thread.
         m_pFlowsenor[pos] = new oddyseyx86GPIO(pin);
+        m_pFlowsenor[pos]->setDirection(true);
+        m_pFlowsenor[pos]->registerDrink(m_pDrink);
+        m_pFlowsenor[pos]->startListener();
     }
     else
     {
@@ -122,6 +131,7 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
     return e_ret;
 }
 
+// TODO: Call this function on Dispense onEntry()
 DF_ERROR dispenser::setPump(int mcpAddress, int pin, int direction)
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS; //reset variable    
@@ -178,8 +188,8 @@ DF_ERROR dispenser::stopPump()
 // Disenses drinks by turning Solenoid Signal to HIGH then to LOW
 DF_ERROR dispenser::startDispense(int pos){
     DF_ERROR e_ret = ERROR_MECH_DRINK_FAULT;
-
-    // XXX: Prime Button - Linked thru State Virtual
+    debugOutput::sendMessage("-----Start Dispense-----", INFO);
+    // XXX: Prepare Button - Linked thru State Virtual
     // e_ret = connectButton();
 
     // Solenoid Position Check
@@ -189,19 +199,23 @@ DF_ERROR dispenser::startDispense(int pos){
     }
 
     // Open Drink Solenoid
+    // debugOutput::sendMessage("Trigger solenoid:", INFO);
     m_pSolenoid[pos]->writePin(HIGH);
+    // debugOutput::sendMessage("Triggered solenoid:", INFO);
  
     // If Still start pump!
-    if(m_isStill && m_pPump != nullptr ) {
+    if(m_isStill && (m_pPump != nullptr) ) {
         // m_pPump[pos]->writePin(HIGH);
         sleep(PRIME_PUMP_TIME);
         forwardPump();
         // reversePump();
     }
+    return e_ret = OK;
+}
 
-    // FIXME: Timer to Shut down relay paths; Should be flow or interrupt based
-    sleep(ACTIVATION_TIME);
-
+// 
+DF_ERROR dispenser::stopDispense(int pos){
+    DF_ERROR e_ret = ERROR_BAD_PARAMS;
     // Stop Pump
     if(m_isStill && m_pPump != nullptr ) {
         // m_pPump[pos]->writePin(LOW);
@@ -215,13 +229,6 @@ DF_ERROR dispenser::startDispense(int pos){
     // XXX: Disable Button - Linked thru State Virtual
     // e_ret = disconnectButton();
     m_isDispenseDone = true;
-
-    return e_ret = OK;
-}
-
-// TODO: May not be nessecary...turn into an interrupt instead.
-DF_ERROR dispenser::stopDispense(int pos){
-    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
     return e_ret = OK;
 }
@@ -279,5 +286,14 @@ int dispenser::getI2CAddress(int pos){
 }
 
 int dispenser::getI2CPin(int pos){
+    debugOutput::sendMessage("getI2C Error!", ERROR);
     return m_pSolenoid[pos]->getMCPPin();
+}
+
+DF_ERROR dispenser::setDrink(drink* drink){
+    if(drink != nullptr) {
+        m_pDrink = drink;
+    } else {
+        debugOutput::sendMessage("Set Drink Error!", ERROR);
+    }
 }

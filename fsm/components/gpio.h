@@ -17,6 +17,7 @@
 
 #include "../dftypes.h"
 #include "../objects/debugOutput.h"
+#include "../objects/drink.h"
 
 class gpio
 {
@@ -30,17 +31,16 @@ public:
 	virtual DF_ERROR readPin(bool* level) = 0;
 	virtual DF_ERROR writePin(bool level) = 0;
 
-	// virtual DF_ERROR setPin_on(int address, int pinNum);
-	// virtual DF_ERROR setPin_off(int address, int pinNum);
-
 	// Getters
+	// TODO these chouldn't be here, MCP does not exist at this level
 	virtual int getMCPAddress() {};
 	virtual int getMCPPin() {};
 
 	// Functions for Threaded GPIO Interrupts
-	DF_ERROR setInterrupt(DF_ERROR(*pf)()); 
-	std::thread listener();
-	void stopListener() { m_stop = true; };
+	void registerDrink(drink* pDrink) {m_pDrink = pDrink;} 
+	void startListener();
+	void listener();
+	void stopListener() { m_stop = true; }; 
 
 protected:
 	int m_nPin;
@@ -48,8 +48,10 @@ protected:
 	bool m_input;
 	bool m_i2c;
 
-	std::function<DF_ERROR()> m_pf;
+	// Interrupt Function Definition
+	drink* m_pDrink;
 	virtual void monitorGPIO() = 0;
+	std::thread * gpioThread;
 };
 
 #endif

@@ -33,6 +33,9 @@
    </property>
   </widget>
   <widget class="QPushButton" name="selection1_Button">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>110</x>
@@ -64,9 +67,12 @@
    </property>
   </widget>
   <widget class="QPushButton" name="selection2_Button">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
-     <x>420</x>
+     <x>410</x>
      <y>370</y>
      <width>250</width>
      <height>350</height>

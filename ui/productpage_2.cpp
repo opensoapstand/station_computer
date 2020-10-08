@@ -39,6 +39,7 @@ productPage_2::productPage_2(QWidget *parent) :
     ui->selection7_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->selection8_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->selection9_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+
 }
 
 /*

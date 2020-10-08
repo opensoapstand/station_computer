@@ -20,6 +20,7 @@
 #include "stateInit.h"
 #include <iostream>
 #include <string>
+#include "../fsm.h"
 
 #define INIT_STRING "Init"
 
@@ -86,15 +87,37 @@ DF_ERROR stateInit::onEntry()
 }
 
 // Initialize all related hardware
-DF_ERROR stateInit::onAction(dispenser* cassettes)
+DF_ERROR stateInit::onAction()
 {
    //need to check with tinyXML for hardware info
    DF_ERROR e_ret  = ERROR_BAD_PARAMS;
    m_state = INIT; //ensure the current state is INIT
 
+   // Initialization do e_rets
+   
+   /*
+   * Note: Button set up in state virtual.
+   * Set up Dispenser Register; 
+   * Dispenser Array to hold Register values;
+   * Setup drink Inventory Array;
+   */
    e_ret = setDispenserId();
 
-   dispenserSetup();
+   if(OK != e_ret) {
+      debugOutput::sendMessage("setDispenserId did not return OK", INFO);
+   }
+   // TODO: Seperate buttonSetup() atomic function.
+
+   if(OK == e_ret)
+   {
+      e_ret = setDrinks();
+   }
+
+   if(OK == e_ret) 
+   {
+      e_ret = dispenserSetup();// Do error check per state
+   }
+
 
    if (nullptr != &m_nextState && OK == e_ret)
    {
@@ -106,7 +129,7 @@ DF_ERROR stateInit::onAction(dispenser* cassettes)
    else
    {
       e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
-      debugOutput::sendMessage("setDispenserId did not return OK", INFO);
+
    }
    return e_ret;
 }
@@ -137,12 +160,24 @@ DF_ERROR stateInit::setDispenserId()
    else
    {
       TiXmlElement *l_p;
-
+      const char * att;
+      l_counter = 0;
+      int position = 0;
+      // for(l_p = m_pDispenser; l_p->ValueTStr() !=  "dispenser"; l_p = l_p->NextSiblingElement())// != l_pDispenser->NextSiblingElement("dispenser"))
       for(l_p = m_pDispenser; l_p !=  NULL; l_p = l_p->NextSiblingElement())// != l_pDispenser->NextSiblingElement("dispenser"))
       {
-         dispenserId[l_counter] = l_p->Attribute("id");
-         l_counter++;
+         // FIXME: UGLY way to iterate through XML.  Need to find better way!
+         cout << "accessing element" << endl;
+         string szTemp = l_p->Value();        
+         if (0 == szTemp.compare("dispenser")) {  
+            cout << l_p->Value() << endl;
+            att = l_p->Attribute("id");
+            position = *att - '0';
+            cout << position << endl;
+            dispenserId[position] = l_p->Attribute("id");
+         }
       }
+      debugOutput::sendMessage("Done getting dispense ID!", INFO);
       e_ret = OK;
    }
 
@@ -151,7 +186,7 @@ DF_ERROR stateInit::setDispenserId()
 
 // Set Solenoids on Dispenser Cassettes
 // Extract addressing id from XML and map to Solenoid
-DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx, dispenser cassettes[])
+DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes)
 {
    DF_ERROR e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
    TiXmlElement *l_pSolenoid;
@@ -209,7 +244,7 @@ DF_ERROR stateInit::setDispenserSolenoid(TiXmlElement *dispenserEle, int dispens
 
 // Set Flow Sensors
 // Extract addressing id from XML and map to Flowsensor
-DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx, dispenser cassettes[])
+DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes)
 {
    DF_ERROR e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
    TiXmlElement *l_pFlowsensor;
@@ -227,6 +262,7 @@ DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispe
    }
    
    int l_pos = 0;
+
    TiXmlElement *l_pSingleFlowsensor = l_pFlowsensor;
 
    while(nullptr != l_pSingleFlowsensor && l_pos < NUM_FLOWSENSOR) //should loop through once times
@@ -265,7 +301,7 @@ DF_ERROR stateInit::setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispe
 
 // Set Dispenser Pumps
 // Extract addressing id from XML and map to Still Pumps
-DF_ERROR stateInit::setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser cassettes[])
+DF_ERROR stateInit::setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes)
 {
    DF_ERROR e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
    TiXmlElement *l_pPump;
@@ -422,13 +458,26 @@ const char* stateInit::getXML(const char* subHeader, TiXmlElement *childEle)
 
 // Initilization function for all dispensers...mainly function calls
 // XML and GPIO mapping.
-dispenser* stateInit::dispenserSetup()
+DF_ERROR stateInit::dispenserSetup()
 {
    //need to check with tinyXML for hardware info
    DF_ERROR e_ret  = ERROR_BAD_PARAMS;
 
+   dispenser* cassettes = g_cassettes;
+
    TiXmlElement *l_pDispenser;
-   static dispenser cassettes[CASSETTES_MAX];
+
+   // XML Node (ideally through 0-2 Slots for Cassettes)
+   int idx = 0;
+
+   // Move this to a Function for setup button...Atomic INIT on action
+   debugOutput::sendMessage("Set up button: ------------------" , INFO);\
+   e_ret = setButton(m_pHardware, idx);
+
+
+   // Move this to state virtual
+   // Protected
+   // static dispenser cassettes[CASSETTES_MAX];
 
    if(nullptr == m_pDispenser){
        debugOutput::sendMessage("m_pDispenser is null", INFO);
@@ -437,33 +486,18 @@ dispenser* stateInit::dispenserSetup()
    else{
       l_pDispenser = m_pDispenser;
    }
-   
-   // set up major objects
-
-   //load the xml dom parser
-
-   //load the sql manager
-
-   //call a create dispenser method
-
-   //methods to load and test the other various items
-
-   //pParam = pParam->FirstChildElement("solenoid");
-           
-   int idx = 0;
-
-   debugOutput::sendMessage("Set up button: ------------------" , INFO);
-
-   e_ret = setButton(m_pHardware, idx);
 
    if(OK != e_ret) //if solenoid not set properly, return error
    {
       debugOutput::sendMessage("setButton did not return OK", INFO);
-      //return e_ret;
+      return e_ret;
    }
 
-   while(nullptr != dispenserId[idx])
+   // while(nullptr != dispenserId[idx])
+   while(idx < 9 )
    {
+
+      if(nullptr != dispenserId[idx]) {
       debugOutput::sendMessage("Sort for dispenser:" + to_string(idx), INFO);
 
       e_ret = setDispenserSolenoid(l_pDispenser, idx, cassettes);
@@ -471,26 +505,37 @@ dispenser* stateInit::dispenserSetup()
       if(OK != e_ret) //if solenoid not set properly, return error
       {
          debugOutput::sendMessage("setDispenserSolenoid did not return OK", INFO);
-         //return e_ret;
+         return e_ret;
       }
 
+      // NO PUMPS FOR NOW NEED LOGIC CHECK
+      /*
       e_ret  = ERROR_BAD_PARAMS; //reset e_ret
       if(idx > PUMP_OPTION_START_POSITION && idx < PUMP_OPTION_STOP_POSITION )
       {
-         e_ret = setDispenserPump(l_pDispenser, idx, cassettes);
+         // FIXME: PUMP LOGIC
+         // e_ret = setDispenserPump(l_pDispenser, idx, cassettes);
+         setDispenserPump(l_pDispenser, idx, cassettes);
       } else {
          debugOutput::sendMessage("Not a still drink; Out of Pump Range", ERROR);
       }
+      */
 
 
-      if(OK != e_ret) //if flowsensor not set properly, return error
-      {
-         debugOutput::sendMessage("setDispenserPump did not return OK", INFO);
-         //return e_ret;
-      }
+      // if(OK != e_ret) //if flowsensor not set properly, return error
+      // {
+      //    debugOutput::sendMessage("setDispenserPump did not return OK", INFO);
+      //    // XXX: REMOVE THIS AFTER!!!
+      //    e_ret = OK;
+      //    return e_ret;
+      // }
 
       e_ret  = ERROR_BAD_PARAMS; //reset e_ret
+      // e_ret = setDispenserFlowSensor(l_pDispenser, idx);
       e_ret = setDispenserFlowSensor(l_pDispenser, idx, cassettes);
+
+      // XXX: REMOVE THIS AFTER TESTING
+      e_ret = OK;
 
       if(OK != e_ret) //if flowsensor not set properly, return error
       {
@@ -505,10 +550,37 @@ dispenser* stateInit::dispenserSetup()
       {
          l_pDispenser = l_pDispenser->NextSiblingElement(DISPENSER_STRING);
       }
-
+      }
       idx++;
    }
    debugOutput::sendMessage("Hardware initialized...", INFO);
 
-   return cassettes;
+   return e_ret;
+}
+
+
+DF_ERROR stateInit::setDrinks(){
+
+   // Drink Setup
+   // load the SQLITE manager
+
+   // FIXME: Hardcode for now.
+   
+
+   // for(int i = 0; i < MAX_CASSETTES; i++) {
+   //    g_cassettes[i]->setDrink()
+   // }
+   // Hardcoded drink class for testing
+
+   g_cassettes[0].setDrink(new drink(1, "Drink1", 0, 355, 1.3, 4.00, false, 10));
+   g_cassettes[1].setDrink(new drink(2, "Drink2", 0, 355, 1.3, 4.00, false, 25));
+   g_cassettes[2].setDrink(new drink(3, "Drink3", 0, 355, 1.3, 4.00, false, 10));
+   g_cassettes[3].setDrink(new drink(4, "Drink4", 0, 355, 1.3, 4.00, false, 25));
+   g_cassettes[4].setDrink(new drink(5, "Drink5", 0, 355, 1.3, 4.00, false, 10));
+   g_cassettes[5].setDrink(new drink(6, "Drink6", 0, 355, 1.3, 4.00, false, 25));
+   g_cassettes[6].setDrink(new drink(7, "Drink7", 0, 355, 1.3, 4.00, false, 10));
+   g_cassettes[7].setDrink(new drink(8, "Drink8", 0, 355, 1.3, 4.00, false, 25));
+   g_cassettes[8].setDrink(new drink(9, "Drink9", 0, 355, 1.3, 4.00, false, 10));
+
+   return OK;
 }

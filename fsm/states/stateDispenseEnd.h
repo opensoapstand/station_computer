@@ -16,6 +16,11 @@
 #include "../dftypes.h"
 #include "../objects/messageMediator.h"
 
+#include <stdio.h>
+#include <sqlite3.h> 
+
+#include "../fsm.h"
+
 #include "stateVirtual.h"
 
 class stateDispenseEnd : public stateVirtual
@@ -27,12 +32,20 @@ class stateDispenseEnd : public stateVirtual
 
         string toString();
 
+        dispenser* cassettes;
+
         DF_ERROR onEntry();
-        DF_ERROR onAction(dispenser* cassettes);
+        DF_ERROR onAction();
         DF_ERROR onExit();
 
-        dispenser* dispenserSetup(){};
         
     private:    
+        int pos;
+        char command;
+
+        sqlite3 *db;
+        int rc;
+
+        static int callback(void *NotUsed, int argc, char **argv, char **azColName);
 };
 #endif

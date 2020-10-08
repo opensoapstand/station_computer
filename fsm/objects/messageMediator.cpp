@@ -1,11 +1,11 @@
 //***************************************
 //
 // messageMediator.cpp
-// Messaging IPC Controller and Model 
+// Messaging IPC Controller and Model
 // Implementation:
 //
-// Holds reference and cordinates string 
-// commands from GUI, GPIO's and 
+// Holds reference and cordinates string
+// commands from GUI, GPIO's and
 // Database threads
 //
 // created: 12-06-2020
@@ -32,9 +32,13 @@
 extern messageMediator df_messaging;
 
 bool messageMediator::m_fExitThreads = false;
-bool messageMediator::m_commandReady = false;
+bool messageMediator::m_bCommandReady = false;
 string messageMediator::m_processString;
 string messageMediator::m_processCommand;
+int messageMediator::m_nOption;
+int messageMediator::m_nSolenoid;
+char messageMediator::m_cCommand;
+double messageMediator::m_nVolumeTarget;
 
 // CTOR
 messageMediator::messageMediator()
@@ -55,31 +59,38 @@ messageMediator::~messageMediator()
    m_fExitThreads = true;
 }
 
-// Sends a message string to QT through a socket 
+// Sends a message string to QT through a socket
 // IPC on Local network
 DF_ERROR messageMediator::sendMessage(string msg)
 {
    DF_ERROR dfError = OK;
 
-  try {
-      ClientSocket client_socket ( "localhost", 1235 );
+   try
+   {
+      ClientSocket client_socket("localhost", 1235);
       std::string reply;
-      try {
-	      client_socket << msg;
-	      client_socket >> reply;
-      } catch ( SocketException& ) {
-        // TODO: Should catch no message error...
+      try
+      {
+         client_socket << msg;
+         client_socket >> reply;
       }
-      std::cout << "We received this response from the server:\n\"" << reply << "\"\n";;
-    } catch ( SocketException& e ) {
+      catch (SocketException &)
+      {
+         // TODO: Should catch no message error...
+      }
+      std::cout << "We received this response from the server:\n\"" << reply << "\"\n";
+      ;
+   }
+   catch (SocketException &e)
+   {
       std::cout << "Connection Exception was caught:" << e.description() << "\n";
-    }
+   }
    dfError = ERROR_PTHREADS_IPTHREAD_NAK;
 
    return dfError;
 }
 
-// Sends a progress of dispensing to QT through a socket 
+// Sends a progress of dispensing to QT through a socket
 // TODO: Need to grab information from flow sensor...and update on GUI...
 DF_ERROR messageMediator::sendProgress(int percentComplete)
 {
@@ -88,29 +99,31 @@ DF_ERROR messageMediator::sendProgress(int percentComplete)
    return dfError;
 }
 
-// Sends an ACK to QT through a socket 
+// Sends an ACK to QT through a socket
 // TODO: Refactor to work with sendMessage...Code duplication here
 DF_ERROR messageMediator::sendQtACK(string AckOrNak)
 {
    DF_ERROR dfError = OK;
-  try
-    {
-      ClientSocket client_socket ( "localhost", 1235 );
+   try
+   {
+      ClientSocket client_socket("localhost", 1235);
       std::string reply;
       try
-	{
-	  client_socket << AckOrNak;
-	  client_socket >> reply;
-	}
-      catch ( SocketException& ) {}
+      {
+         client_socket << AckOrNak;
+         client_socket >> reply;
+      }
+      catch (SocketException &)
+      {
+      }
 
-      std::cout << "We received this response from the server:\n\"" << reply << "\"\n";;
-
-    }
-  catch ( SocketException& e )
-    {
+      std::cout << "We received this response from the server:\n\"" << reply << "\"\n";
+      ;
+   }
+   catch (SocketException &e)
+   {
       std::cout << "Exception was caught:" << e.description() << "\n";
-    }   
+   }
 
    dfError = ERROR_PTHREADS_IPTHREAD_NAK;
    return dfError;
@@ -154,25 +167,25 @@ DF_ERROR messageMediator::updateCmdString(char key)
 
    string incommingCharMsg = "Incomming CHAR: ";
    incommingCharMsg += key;
-   debugOutput::sendMessage( incommingCharMsg, INFO);
+   debugOutput::sendMessage(incommingCharMsg, INFO);
    incommingCharMsg.clear();
 
    if (';' != key)
    {
       m_processCommand.push_back(key);
-   } else if (';' == key)
+   }
+   else if (';' == key)
    {
       debugOutput::sendMessage("Flushing processing string: " + m_processString, INFO);
       m_processString.clear();
-      m_commandReady = true;
+      m_bCommandReady = true;
 
       debugOutput::sendMessage("Command String Ready: " + m_processCommand, INFO);
-
    }
    else
    {
       debugOutput::sendMessage("Command String Status: " + m_processCommand, INFO);
-      m_commandReady = false;
+      m_bCommandReady = false;
    }
    return df_ret;
 }
@@ -184,14 +197,15 @@ DF_ERROR messageMediator::updateCmdString()
    DF_ERROR df_ret = ERROR_BAD_PARAMS;
    debugOutput::sendMessage("Process string..." + m_processString, INFO);
 
-   if(!m_processCommand.empty())
+   if (!m_processCommand.empty())
    {
       debugOutput::sendMessage("Flush old command..." + m_processCommand, INFO);
       m_processCommand.clear();
-      debugOutput::sendMessage( m_processCommand, INFO);
+      debugOutput::sendMessage(m_processCommand, INFO);
    }
 
-   for(int i= 0; i < m_processString.size(); i++) {
+   for (int i = 0; i < m_processString.size(); i++)
+   {
       df_ret = updateCmdString(m_processString[i]);
    }
 
@@ -208,13 +222,16 @@ void *messageMediator::doKBThread(void *pThreadArgs)
 
    while (!m_fExitThreads)
    {
-      if(m_processString.empty()) {
+      if (m_processString.empty())
+      {
          char key;
          while (0 < scanf(" %c", &key))
          {
             updateCmdString(key);
-         }         
-      } else {
+         }
+      }
+      else
+      {
          updateCmdString();
       }
       usleep(DELAY_USEC);
@@ -249,7 +266,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
                // *fsm_comm_socket << "";
                new_sock >> data;
 
-               // AckOrNakResult = "FSM ACK";               
+               // AckOrNakResult = "FSM ACK";
                sendQtACK("ACK");
                cout << data << endl;
                m_processString = data;
@@ -262,7 +279,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
          catch (SocketException &sock)
          {
             std::cout << "Socket Transfer Exception was caught:" << sock.description() << "\nExiting.\n";
-            // AckOrNakResult = "FSM NAK";           
+            // AckOrNakResult = "FSM NAK";
             // sendQtACK(AckOrNakResult);
          }
       }
@@ -285,7 +302,7 @@ string messageMediator::getProcessString()
 void messageMediator::clearProcessString()
 {
    m_processString.clear();
-   m_commandReady = false;
+   m_bCommandReady = false;
 }
 
 string messageMediator::getCommandString()
@@ -296,10 +313,121 @@ string messageMediator::getCommandString()
 void messageMediator::clearCommandString()
 {
    m_processCommand.clear();
-   m_commandReady = false;
+   m_bCommandReady = false;
 }
 
-bool messageMediator::getStringReady()
+DF_ERROR messageMediator::getPositionReady()
 {
-   return m_commandReady;
+   DF_ERROR e_ret = ERROR_BAD_PARAMS;
+   // debugOutput::sendMessage("getPositionReady", INFO);
+   char temp[10];
+   string commandString = getCommandString();
+
+   if (isCommandReady())
+   {
+      // temp = commandString;
+   }
+
+   char posChar;
+   char solenoidChar;
+
+   // FIXME: Need a better string parser...
+   for (std::string::size_type i = 0; i < commandString.size(); ++i)
+   {
+      if (isdigit(commandString[i]))
+      {
+         posChar = commandString[i];
+
+      }
+      if ((commandString[i] == DISPENSE_END_CHAR) || (commandString[i] == DRINK_CHAR))
+      {
+         solenoidChar = commandString[i];
+      }
+
+      // FIXME: This is horrible...will remove later.
+      if (commandString[i] == SMALL_DRINK_CHAR)
+      {
+         m_nVolumeTarget = 355;
+      } else if(commandString[i] == LARGE_DRINK_CHAR) {
+         m_nVolumeTarget = 473;
+      }
+   }
+
+   // TODO: Can seperate this into char parsing switch statment and further into function.
+   // pos = -1;
+   // strcpy(&posChar, &temp[0]);
+
+   if (isdigit(posChar)) //first character should be string
+   {
+      // debugOutput::sendMessage("Set Option", INFO);
+
+      int check = posChar - '0';
+      // pos = atoi(&posChar) - 1;
+      // FIXME: MAGIC NUMBER reference...
+      if (9 < check || 0 > check)
+      {
+         // debugOutput::sendMessage("Irrelevant input", ERROR);
+         e_ret = ERROR_NETW_NO_OPTION; //require valid cassettes
+      }
+      else
+      {
+         m_nOption = check;
+         cout << m_nOption << endl;
+         e_ret = OK;
+      }
+   }
+   else
+   {
+      // Error Handling
+      debugOutput::sendMessage("Irrelevant input", INFO);
+      this->clearProcessString();    //make sure to clear the processed string for new input
+      e_ret = ERROR_NETW_NO_COMMAND; //require valid cassettes
+   }
+
+   // Check for Char then int pairing values
+   // solenoidChar;
+   // strcpy(&solenoidChar, &temp[1]);
+
+   if (!isalpha(solenoidChar)) //for second char not an alphabet
+   {
+      debugOutput::sendMessage("Irrelevant input", INFO);
+      e_ret = ERROR_NETW_NO_POSITION;
+   }
+   else
+   {
+      // TODO: Parse and save a reference for command string
+
+      switch (solenoidChar)
+      {
+      case AIR_CHAR:
+         debugOutput::sendMessage("Air Solenoid", INFO);
+         // m_nSolenoid = AIR;
+         break;
+
+      case WATER_CHAR:
+         debugOutput::sendMessage("Water Solenoid", INFO);
+         // m_nSolenoid = WATER;
+         break;
+
+      case DRINK_CHAR:
+         debugOutput::sendMessage("Drink CHAR", INFO);
+         // m_nSolenoid = DRINK;
+         m_cCommand = DRINK_CHAR;
+         break;
+
+      case CLEAN_CHAR:
+
+         break;
+
+      case DISPENSE_END_CHAR:
+         debugOutput::sendMessage("Dispense END CHAR", INFO);
+         m_cCommand = DISPENSE_END_CHAR;
+         break;
+
+      default:
+         break;
+      }
+   }
+   m_bCommandReady = true;
+   return e_ret;
 }

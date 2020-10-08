@@ -1,7 +1,7 @@
 //***************************************
 //
 // oddyseyX86gpio.cpp
-// GPIO implementation for 
+// GPIO implementation for
 // NATIVE x86 pins on Oddysey board
 //
 // created: 15-06-2020
@@ -23,7 +23,6 @@
 
 #include "odysseyx86gpio.h"
 
-
 #define SYSFS_GPIO_DIR "/sys/class/gpio"
 #define MAX_BUF 64
 
@@ -40,7 +39,6 @@
 // Default CTOR
 oddyseyx86GPIO::oddyseyx86GPIO()
 {
-
 }
 
 /* 
@@ -58,12 +56,13 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
 	m_nPin = pinNumber;
 
 	fd = open(SYSFS_GPIO_DIR "/export", O_WRONLY);
-	if (fd < 0) {
+	if (fd < 0)
+	{
 		debugOutput::sendMessage("~oddyseyx86GPIO could not open the gpio", ERROR);
 		return;
 	}
 
-	len = snprintf(buf, sizeof(buf), "%d", m_nPin );
+	len = snprintf(buf, sizeof(buf), "%d", m_nPin);
 	write(fd, buf, len);
 	close(fd);
 
@@ -78,7 +77,8 @@ oddyseyx86GPIO::~oddyseyx86GPIO()
 	char buf[MAX_BUF];
 
 	fd = open(SYSFS_GPIO_DIR "/unexport", O_WRONLY);
-	if (fd < 0) {
+	if (fd < 0)
+	{
 		debugOutput::sendMessage("~oddyseyx86GPIO could not close the gpio", ERROR);
 		return;
 	}
@@ -102,7 +102,7 @@ DF_ERROR oddyseyx86GPIO::setFlowPin(int pinNumber)
 }
 
 // Setter for Direction of flow sensor on Odyssey GPIO Pin
-// Writes "in" into a GPIO direction file while 
+// Writes "in" into a GPIO direction file while
 // reading input and "out" otherwise.
 DF_ERROR oddyseyx86GPIO::setDirection(bool input)
 {
@@ -111,28 +111,32 @@ DF_ERROR oddyseyx86GPIO::setDirection(bool input)
 	int fd, len;
 	char buf[MAX_BUF];
 
-	//Composes a string with the same text that would be printed if format was used on printf, but instead of being printed, 
+	//Composes a string with the same text that would be printed if format was used on printf, but instead of being printed,
 	//the content is stored as a C string in the buffer pointed by s
-	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR  "/gpio%d/direction", m_nPin);
+	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/direction", m_nPin);
 
 	fd = open(buf, O_WRONLY);
-	if (fd >= 0) {
+	if (fd >= 0)
+	{
 		if (INPUT == input)
+		{
+			cout << "direction input set" << endl;
 			write(fd, "in", 3);
+		}
 		else
 			write(fd, "out", 4);
 
 		close(fd);
 		df_ret = OK;
-	}	
-		
+	}
+
 	return df_ret;
 }
 
 // Checks for Level sensor on Waste tank...
 // TODO: Implementation is commented out and needs testing.;
 //		 A SPECIFIC function name change REQUIRED. i.e. readWastePinLevel
-DF_ERROR oddyseyx86GPIO::readPin(bool * level)
+DF_ERROR oddyseyx86GPIO::readPin(bool *level)
 {
 	debugOutput::sendMessage("readPin", INFO);
 	DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
@@ -140,45 +144,35 @@ DF_ERROR oddyseyx86GPIO::readPin(bool * level)
 	char buf[MAX_BUF];
 	char ch;
 
-	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", m_nPin);
+	// test to see if level exists
+	if (NULL != level)
+	{
+		len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", m_nPin);
 
-	fd = open(buf, O_RDONLY);
-	if (fd >= 0) {
-		read(fd, &ch, 1);
+		fd = open(buf, O_RDONLY);
+		if (fd >= 0)
+		{
+			read(fd, &ch, 1);
 
-		if (ch != '0') {
-			*level = true;
+			if (ch != '0')
+			{
+				cout << "ON" << endl;
+				*level = true;
+			}
+			else
+			{
+				cout << "OFF" << endl;
+				*level = false;
+			}
+
+			close(fd);
+			df_ret = OK;
 		}
-		else {
-			*level = false;
-		}
-
-		close(fd);
-		df_ret = OK;
 	}
-	
-	//-------------Reserve until testing is done-------------------//
-	// string command("sudo sh -c 'cat /sys/class/gpio/gpio493/value'");
-	// string sys_command = command_to_string(command.c_str());
-
-	// int sensorValue = stoi(sys_command);  //convert string to integer
-
-	// while(1){
-
-	// 	string sys_command = command_to_string(command.c_str());
-	// 	sensorValue = stoi(sys_command);
-	// 	sleep(1);
-
-	// 	if(sensorValue == 1){
-	// 	std::cout << "Waste tank at critical level" << '\n';
-	// 	}
-
-	// 	else{
-	// 	std::cout << "Waste tank isn't full yet" << '\n';
-	// 	}
-	// }
-	//------------------------------------------------------------//
-
+	else
+	{
+		debugOutput::sendMessage("readPin: Null Level reference", ERROR);
+	}
 
 	return df_ret;
 }
@@ -195,7 +189,8 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
 	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", m_nPin);
 
 	fd = open(buf, O_WRONLY);
-	if (fd >= 0) {
+	if (fd >= 0)
+	{
 		if (level)
 			write(fd, "1", 2);
 		else
@@ -204,108 +199,80 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
 		close(fd);
 		df_ret = OK;
 	}
-	
+
 	return df_ret;
-}
-
-// DF_ERROR oddyseyx86GPIO::setPin_on(int address, int pinNum){
-
-// 	this->digi
-//     if(address == X20)
-//     {
-//         solenoid_1.digitalWrite(pinNum, HIGH);
-
-//         std::clog << "Address:" << address << " Pin: " << pinNum << " is on\n";
-//     }
-//     else if (address == X21){
-//         solenoid_2.digitalWrite(pinNum, HIGH);
-//         std::clog << "Address:" << address << " Pin: " << pinNum << " is on\n";
-
-//     }
-//     else if (address == X22){
-//         pump.digitalWrite(pinNum, HIGH);
-//         std::clog << "Address:" << address << " Pin: " << pinNum << " is on\n";
-
-//     }
-//     else
-//     {
-//         std::clog << "i2c address not available\n";
-//     }  
-// }
-
-// DF_ERROR oddyseyx86GPIO::setPin_off(int address, int pinNum){
-//     if(address == X20)
-//     {
-//         solenoid_1.digitalWrite(pinNum, LOW);
-//         std::clog << "Address:" << address << " Pin: " << pinNum << " is off\n";
-//     }
-//     else if (address == X21){
-//         solenoid_2.digitalWrite(pinNum, LOW);
-//         std::clog << "Address:" << address << " Pin: " << pinNum << " is off\n";
-//     }
-//     else if (address == X22){
-//         pump.digitalWrite(pinNum, LOW);
-//         std::clog << "Address:" << address << " Pin: " << pinNum << " is off\n";
-//     }
-//     else
-//     {
-//         std::clog << "i2c address not available\n";
-//     }  
-// }
-
-DF_ERROR oddyseyx86GPIO::setButton_on(){
-	
-}
-
-DF_ERROR oddyseyx86GPIO::setButton_off(){
-
 }
 
 // Threaded function call to monitor Odyssecy GPIO pin activity.
 void oddyseyx86GPIO::monitorGPIO()
 {
-	debugOutput::sendMessage("monitorGPIO", INFO);  //nuke this later it will cause so much spam
+	//debugOutput::sendMessage("monitorGPIO", INFO);  //nuke this later it will cause so much spam
 	int fd, len;
 	char buf[MAX_BUF];
+	char compareChar;
+	struct pollfd pfd;
+
 	string GPIO = std::to_string(m_nPin);
 	string command("/sys/class/gpio/gpio");
 	command += GPIO;
-	command += "/value";
+	command += "/edge";
 
+	//set the pin to interrupt
+	fd = open(command.c_str(), O_WRONLY);
+	write(fd, "both", 4);
+	close(fd);
+
+	command = "/sys/class/gpio/gpio" + GPIO + "/value";
 	fd = open(command.c_str(), O_RDONLY);
-
 	pfd.fd = fd;
-	pfd.events = POLLPRI;
+	pfd.events = POLLPRI | POLLERR;
 
-	lseek(fd, 0, SEEK_SET);    /* consume any prior interrupt */
-	read(fd, buf, sizeof buf);
+	lseek(fd, 0, SEEK_SET);
+	int ret = poll(&pfd, 1, 100000);
+	char c;
+	read(fd, &c, 1);
 
-	poll(&pfd, 1, -1);         /* wait for interrupt */
-
-	lseek(fd, 0, SEEK_SET);    /* consume interrupt */
-	read(fd, buf, sizeof buf);
-
-	this->m_pf();  //trigger the callback
-
+	if (0 == ret)
+	{
+		//debugOutput::sendMessage("gpioTimeout", INFO);
+	}
+	else
+	{
+		if (('1' == c) && (compareChar != c))
+		{
+			// debugOutput::sendMessage("HIGH Triggered Flow", INFO);
+			usleep(500000);						// Sleep to make sure debug gets chance to print
+			m_pDrink->registerFlowSensorTick(); //trigger the callback
+		}
+		else if (('0' == c) && (compareChar != c))
+		{
+			// debugOutput::sendMessage("LOW Triggered Flow", INFO);
+			usleep(500000); // Sleep to make sure debug gets chance to print
+		}
+		compareChar = c;
+	}
+	close(fd);
 	return;
-
 }
 
 // Utility
 // TODO: Should be interpreting for flow sensor buffer...this does not seem to provide value...
-string oddyseyx86GPIO::command_to_string(string cmd) {
+string oddyseyx86GPIO::command_to_string(string cmd)
+{
 
-  string data;
-  FILE * stream;
-  const int max_buffer = 256;
-  char buffer[max_buffer];
-  cmd.append(" 2>&1");
+	string data;
+	FILE *stream;
+	const int max_buffer = 256;
+	char buffer[max_buffer];
+	cmd.append(" 2>&1");
 
-  stream = popen(cmd.c_str(), "r");
-  if (stream) {
-    while (!feof(stream))
-      if (fgets(buffer, max_buffer, stream) != NULL) data.append(buffer);
-        pclose(stream);
-    }
-  return data;
+	stream = popen(cmd.c_str(), "r");
+	if (stream)
+	{
+		while (!feof(stream))
+			if (fgets(buffer, max_buffer, stream) != NULL)
+				data.append(buffer);
+		pclose(stream);
+	}
+	return data;
 }

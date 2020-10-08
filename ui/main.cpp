@@ -49,14 +49,28 @@ int main(int argc, char *argv[])
 
     // Page pathing references to function calls.
     idlePage->setPage(firstSelectPage);
-    firstSelectPage->setPage(secondSelectPage, paySelectPage, idlePage);
-    secondSelectPage->setPage(firstSelectPage, paySelectPage, idlePage);
-    paySelectPage->setPage(firstSelectPage, paymentPage, idlePage);
-    paymentPage->setPage(paySelectPage, dispensingPage, idlePage);
-    dispensingPage->setPage(paymentPage, lastPage, idlePage);
-    lastPage->setPage(dispensingPage, idlePage);
+    idlePage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-//    payOptionToggle->setPage();    
+    firstSelectPage->setPage(secondSelectPage, paySelectPage, idlePage);
+    firstSelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
+
+    secondSelectPage->setPage(firstSelectPage, paySelectPage, idlePage);
+    secondSelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
+
+    paySelectPage->setPage(firstSelectPage, paymentPage, idlePage);
+    paySelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
+
+    paymentPage->setPage(paySelectPage, dispensingPage, idlePage);
+    paymentPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
+
+    dispensingPage->setPage(paymentPage, lastPage, idlePage);
+    dispensingPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
+
+    lastPage->setPage(dispensingPage, idlePage);
+    lastPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
+
+    //    payOptionToggle->setPage();
+
     idlePage->showFullScreen();
 
     DfUiServer dfUiServer;

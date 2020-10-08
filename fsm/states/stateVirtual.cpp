@@ -13,11 +13,12 @@
 #include "stateVirtual.h"
 #include <iostream>
 
-stateVirtual::stateVirtual(){
+stateVirtual::stateVirtual()
+{
    m_state = START;
 }
 
-stateVirtual::stateVirtual(messageMediator * message)
+stateVirtual::stateVirtual(messageMediator *message)
 {
    if (nullptr == message)
    {
@@ -26,8 +27,8 @@ stateVirtual::stateVirtual(messageMediator * message)
    m_state = START;
 
    m_pMessaging = message;
-}
 
+}
 
 stateVirtual::~stateVirtual()
 {
@@ -52,7 +53,7 @@ DF_FSM stateVirtual::getCurrentState()
 //    return ;
 // }
 
-gpio* stateVirtual::getButton()
+gpio *stateVirtual::getButton()
 {
    return m_pButton[NUM_BUTTON];
 }

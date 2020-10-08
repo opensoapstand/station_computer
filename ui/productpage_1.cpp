@@ -86,7 +86,7 @@ void productPage_1::on_selection1_Button_clicked()
 void productPage_1::on_selection2_Button_clicked()
 {
     // XXX: For BNTL Selection 2 goes to OPTION 3
-    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
+    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_7);
 
     // idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
     idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
@@ -98,7 +98,7 @@ void productPage_1::on_selection2_Button_clicked()
 void productPage_1::on_selection3_Button_clicked()
 {
     // XXX: For BNTL Selection 3 goes to OPTION 5
-    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_5);
+    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_9);
 
     // idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
     idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
@@ -110,7 +110,7 @@ void productPage_1::on_selection3_Button_clicked()
 void productPage_1::on_selection4_Button_clicked()
 {
     // XXX: For BNTL Selection 4 goes to OPTION 7
-    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_7);
+    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
 
     // idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);
     idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
@@ -122,7 +122,7 @@ void productPage_1::on_selection4_Button_clicked()
 void productPage_1::on_selection5_Button_clicked()
 {
     // XXX: For BNTL Selection 2 goes to OPTION 9
-    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_9);
+    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_5);
 
     // idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_5);
     idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);

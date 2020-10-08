@@ -122,6 +122,23 @@ void paySelect::on_payPage_Button_clicked()
         }
     }
 
+    if(idlePage->userDrinkOrder->getOption() == 3) {
+        if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->SMALL_SIZE_ML) {
+            idlePage->userDrinkOrder->setPrice(2.99);
+        } else {
+            idlePage->userDrinkOrder->setPrice(3.49);
+        }
+    }
+
+    if(idlePage->userDrinkOrder->getOption() == 5) {
+        if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->SMALL_SIZE_ML) {
+            idlePage->userDrinkOrder->setPrice(3.49);
+        } else {
+            idlePage->userDrinkOrder->setPrice(3.99);
+        }
+    }
+
+
     double drinkAmountDbl = idlePage->userDrinkOrder->getPrice();
     QString qs = QString::number(drinkAmountDbl, 'f', 2);
 

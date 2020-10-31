@@ -13,7 +13,7 @@
 #ifndef DFTYPES__H_
 #define DFTYPES__H_
 
-#define XML_SETTINGS  "df_settings.xml"
+#define XML_SETTINGS  "/release/df_settings.xml"
 
 typedef enum DF_FSM {
    START,

@@ -28,7 +28,7 @@ dispensePage::dispensePage(QWidget *parent) :
     ui(new Ui::dispensePage)
 {
     ui->setupUi(this);
-    QPixmap background(":/light/6_dispense_page.png");
+    QPixmap background(":/light/6_dispense_page.jpg");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
@@ -82,8 +82,8 @@ void dispensePage::showEvent(QShowEvent *event)
     idlePage->dfUtility->m_IsSendingFSM = false;
     ui->finish_Button->setEnabled(true);
 
-    ui->dispense_clean_label->setText(" ");
-    ui->dispense_progress_label->setText(" ");
+//    ui->dispense_clean_label->setText(" ");
+//    ui->dispense_progress_label->setText(" ");
 
     if(nullptr == dispenseIdleTimer){
         dispenseIdleTimer = new QTimer(this);
@@ -109,8 +109,8 @@ void dispensePage::on_finish_Button_clicked()
     // TODO: Link to FSM for Dispense
     {
         qDebug() << "dispensePage: Cleanse cycle." << endl;
-        ui->dispense_clean_label->setText("REMOVE BOTTLE!");
-        ui->dispense_progress_label->setText("...");
+//        ui->dispense_clean_label->setText("REMOVE BOTTLE!");
+//        ui->dispense_progress_label->setText("...");
 
         dispenseEndTimer = new QTimer(this);
         dispenseEndTimer->setInterval(1000);
@@ -158,11 +158,11 @@ void dispensePage::onDispenseTick(){
         _dispenseTimeLabel.clear();
         QString time = QString::number(_dispenseTimeoutSec);
         _dispenseTimeLabel.append(time);
-        this->ui->dispense_progress_label->setText(_dispenseTimeLabel);
+//        this->ui->dispense_progress_label->setText(_dispenseTimeLabel);
     } else {
         qDebug() << "Timer Done!" << _dispenseTimeoutSec << endl;
         dispenseEndTimer->stop();
-        this->ui->dispense_progress_label->setText("Finished!");
+//        this->ui->dispense_progress_label->setText("Finished!");
     }
 }
 

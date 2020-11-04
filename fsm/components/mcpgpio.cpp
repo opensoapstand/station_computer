@@ -30,7 +30,7 @@ mcpGPIO::mcpGPIO(int i2caddress, int pin)
 	// this->m_mcp = new MCP23017(DEFAULT_BUS, m_nAddress);
 
 	// HACK: DEFAULT_BUS of 2 did not work.  BUS value of 1 works...
-	this->m_mcp = new MCP23017(1, m_nAddress);
+        this->m_mcp = new MCP23017(2, m_nAddress);
 
 	//may need to modify the source file to ensure proper error is identified
 	this->m_mcp->openI2C(); 

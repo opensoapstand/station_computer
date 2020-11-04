@@ -39,15 +39,15 @@ productPage_1::productPage_1(QWidget *parent) :
     // TODO: Initialize By option i.e. Brand1, BrandImage1, DrinkFlavor1, DrinkImageButton with Array or loop...
     //    ui->nextPageButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->Brand1->setText("");
-    ui->BrandImage1->clear();
-    ui->DrinkFlavor1->setText("");
+//    ui->Brand1->setText("");
+//    ui->BrandImage1->clear();
+//    ui->DrinkFlavor1->setText("");
 
     ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->selection5_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->selection6_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+//    ui->selection5_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+//    ui->selection6_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 }
 
 /*
@@ -86,9 +86,9 @@ void productPage_1::on_selection1_Button_clicked()
 void productPage_1::on_selection2_Button_clicked()
 {
     // XXX: For BNTL Selection 2 goes to OPTION 3
-    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_7);
+    //idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_7);
 
-    // idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
+    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
     idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
     paymentSelectPage->resizeEvent(productResize);
     paymentSelectPage->showFullScreen();
@@ -98,9 +98,9 @@ void productPage_1::on_selection2_Button_clicked()
 void productPage_1::on_selection3_Button_clicked()
 {
     // XXX: For BNTL Selection 3 goes to OPTION 5
-    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_9);
+    //idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_9);
 
-    // idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
+    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
     idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
     paymentSelectPage->resizeEvent(productResize);
     paymentSelectPage->showFullScreen();
@@ -110,32 +110,32 @@ void productPage_1::on_selection3_Button_clicked()
 void productPage_1::on_selection4_Button_clicked()
 {
     // XXX: For BNTL Selection 4 goes to OPTION 7
-    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
+    //idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
 
-    // idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);
+    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);
     idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
     paymentSelectPage->resizeEvent(productResize);
     paymentSelectPage->showFullScreen();
     this->hide();
 }
 
-void productPage_1::on_selection5_Button_clicked()
-{
-    // XXX: For BNTL Selection 2 goes to OPTION 9
-    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_5);
+//void productPage_1::on_selection5_Button_clicked()
+//{
+//    // XXX: For BNTL Selection 2 goes to OPTION 9
+//    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_5);
 
-    // idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_5);
-    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
-    paymentSelectPage->resizeEvent(productResize);
-    paymentSelectPage->showFullScreen();
-    this->hide();
-}
+//    // idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_5);
+//    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
+//    paymentSelectPage->resizeEvent(productResize);
+//    paymentSelectPage->showFullScreen();
+//    this->hide();
+//}
 
-void productPage_1::on_selection6_Button_clicked()
-{
-    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_6);
-    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
-    paymentSelectPage->resizeEvent(productResize);
-    paymentSelectPage->showFullScreen();
-    this->hide();
-}
+//void productPage_1::on_selection6_Button_clicked()
+//{
+//    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_6);
+//    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
+//    paymentSelectPage->resizeEvent(productResize);
+//    paymentSelectPage->showFullScreen();
+//    this->hide();
+//}

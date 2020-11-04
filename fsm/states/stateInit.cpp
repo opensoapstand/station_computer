@@ -509,17 +509,17 @@ DF_ERROR stateInit::dispenserSetup()
       }
 
       // NO PUMPS FOR NOW NEED LOGIC CHECK
-      /*
+
       e_ret  = ERROR_BAD_PARAMS; //reset e_ret
       if(idx > PUMP_OPTION_START_POSITION && idx < PUMP_OPTION_STOP_POSITION )
       {
          // FIXME: PUMP LOGIC
-         // e_ret = setDispenserPump(l_pDispenser, idx, cassettes);
+         e_ret = setDispenserPump(l_pDispenser, idx, cassettes);
          setDispenserPump(l_pDispenser, idx, cassettes);
       } else {
          debugOutput::sendMessage("Not a still drink; Out of Pump Range", ERROR);
       }
-      */
+
 
 
       // if(OK != e_ret) //if flowsensor not set properly, return error

@@ -194,6 +194,7 @@ DF_ERROR dispenser::startDispense(int pos){
 
     // Solenoid Position Check
     if(pos != DRINK) {
+        debugOutput::sendMessage("here", INFO);
         e_ret = ERROR_ELEC_PIN_DISPENSE;
         return e_ret;
     }

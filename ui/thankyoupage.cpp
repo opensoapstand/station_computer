@@ -23,7 +23,7 @@ thankYouPage::thankYouPage(QWidget *parent) :
     ui(new Ui::thankYouPage)
 {
     ui->setupUi(this);
-    QPixmap background(":/light/7_thank_you_page.png");
+    QPixmap background(":/light/7_thank_you_page.jpg");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);

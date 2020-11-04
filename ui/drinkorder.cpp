@@ -95,20 +95,20 @@ void DrinkOrder::setDrinkOption(DF_QT_OPTIONS sizeOption) {
         case(OPTION_SLOT_4):
             changeOption(OPTION_SLOT_4);
             break;
-        case(OPTION_SLOT_5):
-            changeOption(OPTION_SLOT_5);
-            break;
-        case(OPTION_SLOT_6):
-            changeOption(OPTION_SLOT_6);
-            break;
-        case(OPTION_SLOT_7):
-            changeOption(OPTION_SLOT_7);
-            break;
-        case(OPTION_SLOT_8):
-            changeOption(OPTION_SLOT_8);
-            break;
-        case(OPTION_SLOT_9):
-            changeOption(OPTION_SLOT_9);
+//        case(OPTION_SLOT_5):
+//            changeOption(OPTION_SLOT_5);
+//            break;
+//        case(OPTION_SLOT_6):
+//            changeOption(OPTION_SLOT_6);
+//            break;
+//        case(OPTION_SLOT_7):
+//            changeOption(OPTION_SLOT_7);
+//            break;
+//        case(OPTION_SLOT_8):
+//            changeOption(OPTION_SLOT_8);
+//            break;
+//        case(OPTION_SLOT_9):
+//            changeOption(OPTION_SLOT_9);
             break;
         default:
             setSize(OPTION_SLOT);

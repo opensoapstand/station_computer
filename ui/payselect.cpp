@@ -41,13 +41,14 @@ paySelect::paySelect(QWidget *parent) :
     qDebug() << checkOption << endl;
     QString bitmap_location;
 
-    //    if(checkOption > 0 && checkOption <= 6) {
-    //        bitmap_location.append(":/light/4_pay_select_page_s_");
-    //        bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
-    //        bitmap_location.append(".jpg");
-    //    } else {
-    bitmap_location = ":/light/4_pay_select_page_s.jpg";
-    //    }
+        if(checkOption > 0 && checkOption <= 6) {
+            bitmap_location.append(":/light/4_pay_select_page_");
+            bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
+            bitmap_location.append(".jpg");
+        } else {
+            bitmap_location = ":/light/4_pay_select_page_1.jpg";
+        }
+        qDebug() << bitmap_location << endl;
     QPixmap background(bitmap_location);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
 
@@ -60,11 +61,11 @@ paySelect::paySelect(QWidget *parent) :
     /* Hacky transparent button */
     ui->previousPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->payPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    //ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
     // TODO: ADD buttons to select size/price of drink
-    ui->orderSmall_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->orderBig_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    //ui->orderSmall_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    //ui->orderBig_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
     // TODO: Set up functions to manipulate DrinkOrder Object
 
@@ -114,28 +115,20 @@ void paySelect::on_payPage_Button_clicked()
     string description = "Drink Flavor DrinkSizeOZ (DrinkML)";
 
     // FIXME: Remove this when DB price referencing/calculations are correct.
-    if(idlePage->userDrinkOrder->getOption() == 9) {
-        if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->SMALL_SIZE_ML) {
-            idlePage->userDrinkOrder->setPrice(0.99);
-        } else {
-            idlePage->userDrinkOrder->setPrice(1.25);
-        }
+    if(idlePage->userDrinkOrder->getOption() == 1) {
+        idlePage->userDrinkOrder->setPrice(3.75);
+    }
+
+    if(idlePage->userDrinkOrder->getOption() == 2) {
+        idlePage->userDrinkOrder->setPrice(2.20);
     }
 
     if(idlePage->userDrinkOrder->getOption() == 3) {
-        if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->SMALL_SIZE_ML) {
-            idlePage->userDrinkOrder->setPrice(2.99);
-        } else {
-            idlePage->userDrinkOrder->setPrice(3.49);
-        }
+        idlePage->userDrinkOrder->setPrice(2.00);
     }
 
-    if(idlePage->userDrinkOrder->getOption() == 5) {
-        if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->SMALL_SIZE_ML) {
-            idlePage->userDrinkOrder->setPrice(3.49);
-        } else {
-            idlePage->userDrinkOrder->setPrice(3.99);
-        }
+    if(idlePage->userDrinkOrder->getOption() == 4) {
+        idlePage->userDrinkOrder->setPrice(1.10);
     }
 
 
@@ -186,11 +179,11 @@ void paySelect::resizeEvent(QResizeEvent *event){
     QString bitmap_location;
 
     if(checkOption > 0 && checkOption <= 9) {
-        bitmap_location.append(":/light/4_pay_select_page_s_");
+        bitmap_location.append(":/light/4_pay_select_page_");
         bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
         bitmap_location.append(".jpg");
     } else {
-        bitmap_location = ":/light/4_pay_select_page_s.jpg";
+        bitmap_location = ":/light/4_pay_select_page_1.jpg";
     }
 
     QPixmap background(bitmap_location);
@@ -249,7 +242,7 @@ void paySelect::on_orderSmall_Button_clicked()
 {
     QString bitmap_location;
 
-    bitmap_location.append(":/light/4_pay_select_page_s_");
+    bitmap_location.append(":/light/4_pay_select_page_");
     bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
     bitmap_location.append(".jpg");
 
@@ -268,7 +261,7 @@ void paySelect::on_orderBig_Button_clicked()
 {
     QString bitmap_location;
 
-    bitmap_location.append(":/light/4_pay_select_page_l_");
+    bitmap_location.append(":/light/4_pay_select_page_");
     bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
     bitmap_location.append(".jpg");
 

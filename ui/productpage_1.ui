@@ -16,22 +16,6 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QPushButton" name="nextPageButton">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>1820</y>
-     <width>1080</width>
-     <height>100</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QPushButton" name="selection1_Button">
    <property name="enabled">
     <bool>true</bool>
@@ -39,8 +23,8 @@
    <property name="geometry">
     <rect>
      <x>110</x>
-     <y>370</y>
-     <width>250</width>
+     <y>360</y>
+     <width>411</width>
      <height>350</height>
     </rect>
    </property>
@@ -72,9 +56,9 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>410</x>
-     <y>370</y>
-     <width>250</width>
+     <x>560</x>
+     <y>360</y>
+     <width>421</width>
      <height>350</height>
     </rect>
    </property>
@@ -85,9 +69,9 @@
   <widget class="QPushButton" name="selection3_Button">
    <property name="geometry">
     <rect>
-     <x>720</x>
-     <y>370</y>
-     <width>250</width>
+     <x>109</x>
+     <y>900</y>
+     <width>411</width>
      <height>350</height>
     </rect>
    </property>
@@ -98,98 +82,14 @@
   <widget class="QPushButton" name="selection4_Button">
    <property name="geometry">
     <rect>
-     <x>110</x>
+     <x>560</x>
      <y>900</y>
-     <width>250</width>
+     <width>421</width>
      <height>350</height>
     </rect>
    </property>
    <property name="text">
     <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="selection5_Button">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
-     <y>900</y>
-     <width>250</width>
-     <height>350</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="selection6_Button">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>720</x>
-     <y>900</y>
-     <width>250</width>
-     <height>350</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="DrinkFlavor1">
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>810</y>
-     <width>67</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="Line" name="line">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>790</y>
-     <width>118</width>
-     <height>3</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="QLabel" name="Brand1">
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>760</y>
-     <width>67</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="BrandImage1">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>680</y>
-     <width>75</width>
-     <height>75</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
    </property>
   </widget>
  </widget>

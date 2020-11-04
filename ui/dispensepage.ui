@@ -22,10 +22,10 @@
   <widget class="QPushButton" name="finish_Button">
    <property name="geometry">
     <rect>
-     <x>426</x>
-     <y>1298</y>
-     <width>230</width>
-     <height>72</height>
+     <x>420</x>
+     <y>1340</y>
+     <width>251</width>
+     <height>91</height>
     </rect>
    </property>
    <property name="autoFillBackground">
@@ -36,54 +36,6 @@
    </property>
    <property name="text">
     <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="dispense_progress_label">
-   <property name="geometry">
-    <rect>
-     <x>270</x>
-     <y>1390</y>
-     <width>541</width>
-     <height>151</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Waree</family>
-     <pointsize>35</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>.</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="dispense_clean_label">
-   <property name="geometry">
-    <rect>
-     <x>270</x>
-     <y>1520</y>
-     <width>541</width>
-     <height>151</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Waree</family>
-     <pointsize>35</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>...</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

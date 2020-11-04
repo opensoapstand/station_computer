@@ -1,35 +1,14 @@
 <RCC>
     <qresource prefix="/">
-        <file>light/3_drink_page_2.jpg</file>
-        <file>light/4_pay_select_page_l.png</file>
-        <file>light/4_pay_select_page_l_5.jpg</file>
-        <file>light/4_pay_select_page_l_7.jpg</file>
-        <file>light/4_pay_select_page_l_9.jpg</file>
-        <file>light/4_pay_select_page_s.jpg</file>
-        <file>light/4_pay_select_page_s_1.jpg</file>
-        <file>light/4_pay_select_page_s_3.jpg</file>
-        <file>light/4_pay_select_page_s_5.jpg</file>
-        <file>light/4_pay_select_page_s_7.jpg</file>
-        <file>light/4_pay_select_page_s_9.jpg</file>
-        <file>light/5_pay_page_blank.jpg</file>
-        <file>light/5_pay_page_l_1.jpg</file>
-        <file>light/5_pay_page_l_3.jpg</file>
-        <file>light/5_pay_page_l_7.jpg</file>
-        <file>light/5_pay_page_l_9.jpg</file>
-        <file>light/5_pay_page_s_1.jpg</file>
-        <file>light/5_pay_page_s_3.jpg</file>
-        <file>light/5_pay_page_s_5.jpg</file>
-        <file>light/5_pay_page_s_7.jpg</file>
-        <file>light/5_pay_page_s_9.jpg</file>
-        <file>light/6_dispense_page.png</file>
-        <file>light/7_thank_you_page.png</file>
+        <file>light/7_thank_you_page.jpg</file>
+        <file>light/5_pay_page.jpg</file>
+        <file>light/4_pay_select_page_4.jpg</file>
+        <file>light/4_pay_select_page_3.jpg</file>
+        <file>light/4_pay_select_page_2.jpg</file>
+        <file>light/4_pay_select_page_1.jpg</file>
         <file>light/background.png</file>
-        <file>light/bottom_1.jpg</file>
-        <file>light/bottom_2.jpg</file>
         <file>light/2_drink_page_1.jpg</file>
-        <file>light/4_pay_select_page_l_1.jpg</file>
-        <file>light/4_pay_select_page_l_3.jpg</file>
-        <file>light/5_pay_page_l_5.jpg</file>
         <file>light/1_welcome_panel.jpg</file>
+        <file>light/6_dispense_page.jpg</file>
     </qresource>
 </RCC>

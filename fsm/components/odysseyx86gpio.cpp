@@ -54,6 +54,11 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
 	char buf[MAX_BUF];
 
 	m_nPin = pinNumber;
+        debugOutput::sendMessage("Changing permissions of export/unexport...", INFO);
+        system("echo 'D@nkF1ll$' | sudo -S chmod 777 /sys/class/gpio/export");
+        system("echo 'D@nkF1ll$' | sudo -S chmod 777 /sys/class/gpio/unexport");
+        debugOutput::sendMessage("Permissions changed...", INFO);
+
 
 	fd = open(SYSFS_GPIO_DIR "/export", O_WRONLY);
 	if (fd < 0)
@@ -106,7 +111,7 @@ DF_ERROR oddyseyx86GPIO::setFlowPin(int pinNumber)
 // reading input and "out" otherwise.
 DF_ERROR oddyseyx86GPIO::setDirection(bool input)
 {
-	debugOutput::sendMessage("setDirection", INFO);
+        debugOutput::sendMessage("setDirection", INFO);
 	DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
 	int fd, len;
 	char buf[MAX_BUF];
@@ -206,7 +211,7 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
 // Threaded function call to monitor Odyssecy GPIO pin activity.
 void oddyseyx86GPIO::monitorGPIO()
 {
-	//debugOutput::sendMessage("monitorGPIO", INFO);  //nuke this later it will cause so much spam
+        //debugOutput::sendMessage("monitorGPIO", INFO);  //nuke this later it will cause so much spam
 	int fd, len;
 	char buf[MAX_BUF];
 	char compareChar;
@@ -240,13 +245,13 @@ void oddyseyx86GPIO::monitorGPIO()
 	{
 		if (('1' == c) && (compareChar != c))
 		{
-			// debugOutput::sendMessage("HIGH Triggered Flow", INFO);
+                        debugOutput::sendMessage("HIGH Triggered Flow", INFO);
 			usleep(500000);						// Sleep to make sure debug gets chance to print
 			m_pDrink->registerFlowSensorTick(); //trigger the callback
 		}
 		else if (('0' == c) && (compareChar != c))
 		{
-			// debugOutput::sendMessage("LOW Triggered Flow", INFO);
+                        debugOutput::sendMessage("LOW Triggered Flow", INFO);
 			usleep(500000); // Sleep to make sure debug gets chance to print
 		}
 		compareChar = c;

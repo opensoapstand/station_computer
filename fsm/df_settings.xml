@@ -39,7 +39,7 @@
             </solenoid>
             <flowsensor>
                 <type>x86</type>
-                <io>337</io>
+                <io>364</io>
             </flowsensor>
         </dispenser>
         <!-- Carbonated Drink 3 -->
@@ -65,7 +65,7 @@
             </solenoid>
             <flowsensor>
                 <type>x86</type>
-                <io>412</io>
+                <io>413</io>
             </flowsensor>
         </dispenser>
         <!-- Carbonated Drink 5 -->
@@ -90,7 +90,7 @@
             </solenoid>
             <flowsensor>
                 <type>x86</type>
-                <io>415</io>
+                <io>416</io>
             </flowsensor>
         </dispenser>
         <!-- Still Drink 7 -->
@@ -115,7 +115,7 @@
             </solenoid>
             <flowsensor>
                 <type>x86</type>
-                <io>417</io>
+                <io>339</io>
             </flowsensor>
             <!-- Still Pumps -->
             <pump index="F">

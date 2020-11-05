@@ -194,7 +194,6 @@ DF_ERROR dispenser::startDispense(int pos){
 
     // Solenoid Position Check
     if(pos != DRINK) {
-        debugOutput::sendMessage("here", INFO);
         e_ret = ERROR_ELEC_PIN_DISPENSE;
         return e_ret;
     }
@@ -252,16 +251,16 @@ DF_ERROR dispenser::cleanNozzle(int posW, int posA){
     }
 
     // Flush the lines with water
-    debugOutput::sendMessage("Water Cleanse", INFO);
-    m_pSolenoid[posW]->writePin(HIGH);
-    sleep(CLEAN_WATER_TIME);
-    m_pSolenoid[posW]->writePin(LOW);
+//    debugOutput::sendMessage("Water Cleanse", INFO);
+//    m_pSolenoid[posW]->writePin(HIGH);
+//    sleep(CLEAN_WATER_TIME);
+//    m_pSolenoid[posW]->writePin(LOW);
 
     // Flush the lines with Air
-    debugOutput::sendMessage("Air Release", INFO);
-    m_pSolenoid[posA]->writePin(HIGH);
-    sleep(CLEAN_AIR_TIME);
-    m_pSolenoid[posA]->writePin(LOW);
+//    debugOutput::sendMessage("Air Release", INFO);
+//    m_pSolenoid[posA]->writePin(HIGH);
+//    sleep(CLEAN_AIR_TIME);
+//    m_pSolenoid[posA]->writePin(LOW);
 
     return e_ret = OK;
 }

@@ -84,6 +84,11 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
         system("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio413/edge");
         system("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio416/edge");
 
+        system("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio339/value");
+        system("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio364/value");
+        system("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio413/value");
+        system("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio416/value");
+
 	return;
 }
 
@@ -152,16 +157,6 @@ DF_ERROR oddyseyx86GPIO::setDirection(bool input)
 		close(fd);
 		df_ret = OK;
 	}
-
-//        system("echo 'D@nkF1ll$' | sudo -S chmod a+w sys/class/gpio/gpio339/direction");
-//        system("echo 'D@nkF1ll$' | sudo -S chmod a+w sys/class/gpio/gpio364/direction");
-//        system("echo 'D@nkF1ll$' | sudo -S chmod a+w sys/class/gpio/gpio413/direction");
-//        system("echo 'D@nkF1ll$' | sudo -S chmod a+w sys/class/gpio/gpio416/direction");
-
-//        system("echo 'D@nkF1ll$' | sudo -S chmod a+w sys/class/gpio/gpio339/edge");
-//        system("echo 'D@nkF1ll$' | sudo -S chmod a+w sys/class/gpio/gpio364/edge");
-//        system("echo 'D@nkF1ll$' | sudo -S chmod a+w sys/class/gpio/gpio413/edge");
-//        system("echo 'D@nkF1ll$' | sudo -S chmod a+w sys/class/gpio/gpio416/edge");
 
 	return df_ret;
 }

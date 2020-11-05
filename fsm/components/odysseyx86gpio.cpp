@@ -54,6 +54,9 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
 	char buf[MAX_BUF];
 
 	m_nPin = pinNumber;
+
+        //TODO: FIX THIS UNSECURE NASTY CODE!
+
         debugOutput::sendMessage("Changing permissions of export/unexport...", INFO);
         system("echo 'D@nkF1ll$' | sudo -S chmod 777 /sys/class/gpio/export");
         system("echo 'D@nkF1ll$' | sudo -S chmod 777 /sys/class/gpio/unexport");
@@ -70,6 +73,16 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
 	len = snprintf(buf, sizeof(buf), "%d", m_nPin);
 	write(fd, buf, len);
 	close(fd);
+
+        system("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio339/direction");
+        system("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio364/direction");
+        system("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio413/direction");
+        system("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio416/direction");
+
+        system("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio339/edge");
+        system("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio364/edge");
+        system("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio413/edge");
+        system("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio416/edge");
 
 	return;
 }
@@ -113,12 +126,17 @@ DF_ERROR oddyseyx86GPIO::setDirection(bool input)
 {
         debugOutput::sendMessage("setDirection", INFO);
 	DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
-	int fd, len;
+        int fd, len;
+        char syscode;
 	char buf[MAX_BUF];
 
 	//Composes a string with the same text that would be printed if format was used on printf, but instead of being printed,
 	//the content is stored as a C string in the buffer pointed by s
 	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/direction", m_nPin);
+
+        // PADDYS CODE (pls dont judge me):
+
+
 
 	fd = open(buf, O_WRONLY);
 	if (fd >= 0)
@@ -134,6 +152,16 @@ DF_ERROR oddyseyx86GPIO::setDirection(bool input)
 		close(fd);
 		df_ret = OK;
 	}
+
+//        system("echo 'D@nkF1ll$' | sudo -S chmod a+w sys/class/gpio/gpio339/direction");
+//        system("echo 'D@nkF1ll$' | sudo -S chmod a+w sys/class/gpio/gpio364/direction");
+//        system("echo 'D@nkF1ll$' | sudo -S chmod a+w sys/class/gpio/gpio413/direction");
+//        system("echo 'D@nkF1ll$' | sudo -S chmod a+w sys/class/gpio/gpio416/direction");
+
+//        system("echo 'D@nkF1ll$' | sudo -S chmod a+w sys/class/gpio/gpio339/edge");
+//        system("echo 'D@nkF1ll$' | sudo -S chmod a+w sys/class/gpio/gpio364/edge");
+//        system("echo 'D@nkF1ll$' | sudo -S chmod a+w sys/class/gpio/gpio413/edge");
+//        system("echo 'D@nkF1ll$' | sudo -S chmod a+w sys/class/gpio/gpio416/edge");
 
 	return df_ret;
 }

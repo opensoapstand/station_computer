@@ -17,7 +17,7 @@
         <!-- Solenoid index 0 = Drink; 1 = Water; 2 = Air-->
         <!-- TODO: Link these to stateinit.cpp -->
         <!-- Sensors -->
-        <!-- Carbonated Drink 1 -->
+
         <dispenser id="0">
             <!-- Drink -->
             <solenoid index="0">
@@ -25,24 +25,12 @@
                 <i2caddress>22</i2caddress>
                 <io>06</io>
             </solenoid>
-            <!-- Water -->
-            <solenoid index="1">
-                <type>mcp</type>
-                <i2caddress>20</i2caddress>
-                <io>02</io>
-            </solenoid>
-            <!-- Air -->
-            <solenoid index="2">
-                <type>mcp</type>
-                <i2caddress>20</i2caddress>
-                <io>03</io>
-            </solenoid>
             <flowsensor>
                 <type>x86</type>
                 <io>364</io>
             </flowsensor>
         </dispenser>
-        <!-- Carbonated Drink 3 -->
+
         <dispenser id="1">
             <!-- Drink -->
             <solenoid index="0">
@@ -50,25 +38,12 @@
                 <i2caddress>22</i2caddress>
                 <io>04</io>
             </solenoid>
-            <!-- Water -->
-            <solenoid index="1">
-                <type>mcp</type>
-                <i2caddress>20</i2caddress>
-                <!-- Address 08 Reserved for LED Config -->
-                <io>09</io>
-            </solenoid>
-            <!-- Air -->
-            <solenoid index="2">
-                <type>mcp</type>
-                <i2caddress>20</i2caddress>
-                <io>10</io>
-            </solenoid>
             <flowsensor>
                 <type>x86</type>
                 <io>413</io>
             </flowsensor>
         </dispenser>
-        <!-- Carbonated Drink 5 -->
+
         <dispenser id="2">
             <!-- Drink -->
             <solenoid index="0">
@@ -76,24 +51,12 @@
                 <i2caddress>22</i2caddress>
                 <io>02</io>
             </solenoid>
-            <!-- Water -->
-            <solenoid index="1">
-                <type>mcp</type>
-                <i2caddress>20</i2caddress>
-                <io>15</io>
-            </solenoid>
-            <!-- Air -->
-            <solenoid index="2">
-                <type>mcp</type>
-                <i2caddress>21</i2caddress>
-                <io>00</io>
-            </solenoid>
             <flowsensor>
                 <type>x86</type>
                 <io>416</io>
             </flowsensor>
         </dispenser>
-        <!-- Still Drink 7 -->
+
         <dispenser id="3">
             <!-- Drink -->
             <solenoid index="0">
@@ -101,70 +64,12 @@
                 <i2caddress>22</i2caddress>
                 <io>00</io>
             </solenoid>
-            <!-- Water -->
-            <solenoid index="1">
-                <type>mcp</type>
-                <i2caddress>21</i2caddress>
-                <io>05</io>
-            </solenoid>
-            <!-- Air -->
-            <solenoid index="2">
-                <type>mcp</type>
-                <i2caddress>21</i2caddress>
-                <io>06</io>
-            </solenoid>
             <flowsensor>
                 <type>x86</type>
                 <io>339</io>
             </flowsensor>
-            <!-- Still Pumps -->
-            <pump index="F">
-                <type>mcp</type>
-                <i2caddress>22</i2caddress>
-                <io>02</io>
-            </pump>
-            <pump index="R">
-                <type>mcp</type>
-                <i2caddress>22</i2caddress>
-                <io>03</io>
-            </pump>
         </dispenser>
-        <!-- Still Drink 9 -->
-        <!--<dispenser id="8">
-            <!-- Drink
-            <solenoid index="0">
-                <type>mcp</type>
-                <i2caddress>21</i2caddress>
-                <io>10</io>
-            </solenoid>
-            <!-- Water
-            <solenoid index="1">
-                <type>mcp</type>
-                <i2caddress>21</i2caddress>
-                <io>11</io>
-            </solenoid>
-            <!-- Air
-            <solenoid index="2">
-                <type>mcp</type>
-                <i2caddress>21</i2caddress>
-                <io>12</io>
-            </solenoid>
-            <flowsensor>
-                <type>x86</type>
-                <io>419</io>
-            </flowsensor>
-            <!-- Still Pumps
-            <pump index="F">
-                <type>mcp</type>
-                <i2caddress>22</i2caddress>
-                <io>06</io>
-            </pump>
-            <pump index="R">
-                <type>mcp</type>
-                <i2caddress>22</i2caddress>
-                <io>07</io>
-            </pump>
-        </dispenser>-->
+
         <warningsensor>
             <!-- Index will be (b)ottom (m)iddle (t)op locations -->
             <!-- Temperature -->

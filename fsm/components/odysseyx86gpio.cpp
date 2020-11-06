@@ -231,56 +231,49 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
 	return df_ret;
 }
 
-// Threaded function call to monitor Odyssecy GPIO pin activity.
 void oddyseyx86GPIO::monitorGPIO()
 {
-        //debugOutput::sendMessage("monitorGPIO", INFO);  //nuke this later it will cause so much spam
-	int fd, len;
-	char buf[MAX_BUF];
-	char compareChar;
-	struct pollfd pfd;
+    int fd;
+    char local_buffer[16];
+    struct pollfd pfd;
 
-	string GPIO = std::to_string(m_nPin);
-	string command("/sys/class/gpio/gpio");
-	command += GPIO;
-	command += "/edge";
+    string GPIO = std::to_string(m_nPin);
+    string command("/sys/class/gpio/gpio");
+    command += GPIO;
+    command += "/edge";
+    //debugOutput::sendMessage(command.c_str(), INFO);
 
-	//set the pin to interrupt
-	fd = open(command.c_str(), O_WRONLY);
-	write(fd, "both", 4);
-	close(fd);
+    // Set the pin to interrupt
+    fd = open(command.c_str(), O_WRONLY);
+    write(fd, "rising", 6);
+    close(fd);
 
-	command = "/sys/class/gpio/gpio" + GPIO + "/value";
-	fd = open(command.c_str(), O_RDONLY);
-	pfd.fd = fd;
-	pfd.events = POLLPRI | POLLERR;
+    command = "/sys/class/gpio/gpio" + GPIO + "/value";
+    fd = open(command.c_str(), O_RDONLY);
 
-	lseek(fd, 0, SEEK_SET);
-	int ret = poll(&pfd, 1, 100000);
-	char c;
-	read(fd, &c, 1);
+    pfd.fd = fd;
+    pfd.events = POLLPRI | POLLERR;
 
-	if (0 == ret)
-	{
-		//debugOutput::sendMessage("gpioTimeout", INFO);
-	}
-	else
-	{
-		if (('1' == c) && (compareChar != c))
-		{
-                        debugOutput::sendMessage("HIGH Triggered Flow", INFO);
-			usleep(500000);						// Sleep to make sure debug gets chance to print
-			m_pDrink->registerFlowSensorTick(); //trigger the callback
-		}
-		else if (('0' == c) && (compareChar != c))
-		{
-                        debugOutput::sendMessage("LOW Triggered Flow", INFO);
-			usleep(500000); // Sleep to make sure debug gets chance to print
-		}
-		compareChar = c;
-	}
-	close(fd);
-	return;
+    // Clear out any old interrupts
+    lseek(fd, 0, SEEK_SET);
+    read (fd, local_buffer, sizeof(local_buffer));
+
+    // Block waiting for the interrupt
+    int ret = poll(&pfd, 1, 5000);
+
+    if (0 == ret)
+    {
+        //debugOutput::sendMessage("gpioTimeout", INFO);
+    }
+    else
+    {
+        //debugOutput::sendMessage("FLOW TICK", INFO);
+        m_pDrink->registerFlowSensorTick(); //trigger the callback
+    }
+
+    close(fd);
+
+    return;
 }
 
 // Utility

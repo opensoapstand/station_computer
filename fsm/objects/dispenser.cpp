@@ -145,8 +145,7 @@ DF_ERROR dispenser::setPump(int mcpAddress, int pin, int direction)
         m_isStill = true;
 	}
 	else if(X20 > mcpAddress || X22 < mcpAddress)
-	{
-        //debugOutput::sendMessage("got here", INFO);
+        {
 		return e_ret = ERROR_ELEC_WRONG_I2C_ADDRESS;
         // FIXME: Refactor..Message mediator should set this as a m_pdrink Object
         m_isStill = false;

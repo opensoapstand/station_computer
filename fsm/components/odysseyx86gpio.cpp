@@ -75,20 +75,20 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
 	write(fd, buf, len);
         close(fd);
 
-        system("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio339/direction");
-        system("sudo -S chmod a+w /sys/class/gpio/gpio364/direction");
-        system("sudo -S chmod a+w /sys/class/gpio/gpio413/direction");
-        system("sudo -S chmod a+w /sys/class/gpio/gpio416/direction");
+//        system("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio339/direction");
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio364/direction");
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio413/direction");
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio416/direction");
 
-        system("sudo -S chmod a+w /sys/class/gpio/gpio339/edge");
-        system("sudo -S chmod a+w /sys/class/gpio/gpio364/edge");
-        system("sudo -S chmod a+w /sys/class/gpio/gpio413/edge");
-        system("sudo -S chmod a+w /sys/class/gpio/gpio416/edge");
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio339/edge");
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio364/edge");
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio413/edge");
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio416/edge");
 
-        system("sudo -S chmod a+w /sys/class/gpio/gpio339/value");
-        system("sudo -S chmod a+w /sys/class/gpio/gpio364/value");
-        system("sudo -S chmod a+w /sys/class/gpio/gpio413/value");
-        system("sudo -S chmod a+w /sys/class/gpio/gpio416/value");
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio339/value");
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio364/value");
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio413/value");
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio416/value");
 
 	return;
 }
@@ -97,7 +97,7 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
 oddyseyx86GPIO::~oddyseyx86GPIO()
 {
 	debugOutput::sendMessage("~oddyseyx86GPIO", INFO);
-	int fd, len;
+        int fd, len;
 	char buf[MAX_BUF];
 
 	fd = open(SYSFS_GPIO_DIR "/unexport", O_WRONLY);
@@ -132,33 +132,33 @@ DF_ERROR oddyseyx86GPIO::setDirection(bool input)
 {
         debugOutput::sendMessage("setDirection", INFO);
 	DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
-        int fd, len, fd2, len2;
+        int fd, len;
         char syscode;
 	char buf[MAX_BUF];
-        char buf2[MAX_BUF];
+        //char buf2[MAX_BUF];
 
 	//Composes a string with the same text that would be printed if format was used on printf, but instead of being printed,
 	//the content is stored as a C string in the buffer pointed by s
 	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/direction", m_nPin);
-        len2 = snprintf(buf2, sizeof(buf2), SYSFS_GPIO_DIR "/gpio%d/edge", m_nPin);
+        //len2 = snprintf(buf2, sizeof(buf2), SYSFS_GPIO_DIR "/gpio%d/edge", m_nPin);
 
 
 	fd = open(buf, O_WRONLY);
-        fd2 = open(buf2, O_WRONLY);
+        //fd2 = open(buf2, O_WRONLY);
 	if (fd >= 0)
 	{
 		if (INPUT == input)
 		{
 			cout << "direction input set" << endl;
                         write(fd, "in", 3);
-                        cout << "edge set" << endl;
-                        write(fd2, "rising", 7);
+                       // cout << "edge set" << endl;
+                       // write(fd2, "rising", 7);
 		}
 		else
 			write(fd, "out", 4);
 
 		close(fd);
-                close(fd2);
+          //      close(fd2);
 		df_ret = OK;
 	}
 
@@ -282,6 +282,8 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
 
 // Threaded function call to monitor Odyssecy GPIO pin activity.
 
+// Threaded function call to monitor Odyssecy GPIO pin activity.
+
 void oddyseyx86GPIO::monitorGPIO()
 {
         //debugOutput::sendMessage("monitorGPIO", INFO);  //nuke this later it will cause so much spam
@@ -291,16 +293,16 @@ void oddyseyx86GPIO::monitorGPIO()
         struct pollfd pfd;
 
         string GPIO = std::to_string(m_nPin);
-        string command("/sys/class/gpio/gpio");
-        command += GPIO;
-        command += "/edge";
+        //string command("/sys/class/gpio/gpio");
+        //command += GPIO;
+        //command += "/edge";
 
         //set the pin to interrupt
-        fd = open(command.c_str(), O_WRONLY);
-        write(fd, "both", 4);
-        close(fd);
+        //fd = open(command.c_str(), O_WRONLY);
+        //write(fd, "both", 4);
+        //close(fd);
 
-        command = "/sys/class/gpio/gpio" + GPIO + "/value";
+        string command = "/sys/class/gpio/gpio" + GPIO + "/value";
         fd = open(command.c_str(), O_RDONLY);
         pfd.fd = fd;
         pfd.events = POLLPRI | POLLERR;
@@ -318,14 +320,14 @@ void oddyseyx86GPIO::monitorGPIO()
         {
                 if (('1' == c) && (compareChar != c))
                 {
-                        //debugOutput::sendMessage("HIGH Triggered Flow", INFO);
-                        //usleep(500000);						// Sleep to make sure debug gets chance to print
+                        // debugOutput::sendMessage("HIGH Triggered Flow", INFO);
+                      //  usleep(500000);						// Sleep to make sure debug gets chance to print
                         m_pDrink->registerFlowSensorTick(); //trigger the callback
                 }
                 else if (('0' == c) && (compareChar != c))
                 {
-                        //debugOutput::sendMessage("LOW Triggered Flow", INFO);
-                        //usleep(500000); // Sleep to make sure debug gets chance to print
+                        // debugOutput::sendMessage("LOW Triggered Flow", INFO);
+                     //   usleep(500000); // Sleep to make sure debug gets chance to print
                 }
                 compareChar = c;
         }

@@ -75,20 +75,20 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
 	write(fd, buf, len);
         close(fd);
 
-//        system("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio339/direction");
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio364/direction");
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio413/direction");
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio416/direction");
+        system("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio339/direction");
+        system("sudo -S chmod a+w /sys/class/gpio/gpio364/direction");
+        system("sudo -S chmod a+w /sys/class/gpio/gpio413/direction");
+        system("sudo -S chmod a+w /sys/class/gpio/gpio416/direction");
 
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio339/edge");
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio364/edge");
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio413/edge");
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio416/edge");
+        system("sudo -S chmod a+w /sys/class/gpio/gpio339/edge");
+        system("sudo -S chmod a+w /sys/class/gpio/gpio364/edge");
+        system("sudo -S chmod a+w /sys/class/gpio/gpio413/edge");
+        system("sudo -S chmod a+w /sys/class/gpio/gpio416/edge");
 
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio339/value");
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio364/value");
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio413/value");
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio416/value");
+        system("sudo -S chmod a+w /sys/class/gpio/gpio339/value");
+        system("sudo -S chmod a+w /sys/class/gpio/gpio364/value");
+        system("sudo -S chmod a+w /sys/class/gpio/gpio413/value");
+        system("sudo -S chmod a+w /sys/class/gpio/gpio416/value");
 
 	return;
 }
@@ -293,16 +293,16 @@ void oddyseyx86GPIO::monitorGPIO()
         struct pollfd pfd;
 
         string GPIO = std::to_string(m_nPin);
-        //string command("/sys/class/gpio/gpio");
-        //command += GPIO;
-        //command += "/edge";
+        string command("/sys/class/gpio/gpio");
+        command += GPIO;
+        command += "/edge";
 
-        //set the pin to interrupt
-        //fd = open(command.c_str(), O_WRONLY);
-        //write(fd, "both", 4);
-        //close(fd);
+       // set the pin to interrupt
+        fd = open(command.c_str(), O_WRONLY);
+        write(fd, "rising", 4);
+        close(fd);
 
-        string command = "/sys/class/gpio/gpio" + GPIO + "/value";
+        command = "/sys/class/gpio/gpio" + GPIO + "/value";
         fd = open(command.c_str(), O_RDONLY);
         pfd.fd = fd;
         pfd.events = POLLPRI | POLLERR;

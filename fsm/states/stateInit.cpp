@@ -572,11 +572,7 @@ DF_ERROR stateInit::setDrinks(){
    // }
    // Hardcoded drink class for testing
 
-<<<<<<< HEAD
-   g_cassettes[0].setDrink(new drink(1, "Drink1", 0, 500, 1, 3.75, false, 100));
-=======
    g_cassettes[0].setDrink(new drink(1, "Drink1", 0, 500, 1.3, 3.75, false, 100));
->>>>>>> 7504bc79f7350c83554634ea845014e21ce33358
    g_cassettes[1].setDrink(new drink(2, "Drink2", 0, 755, 1.3, 2.20, false, 1));
    g_cassettes[2].setDrink(new drink(3, "Drink3", 0, 755, 1.3, 2.00, false, 1));
    g_cassettes[3].setDrink(new drink(4, "Drink4", 0, 755, 1.3, 1.10, false, 1));

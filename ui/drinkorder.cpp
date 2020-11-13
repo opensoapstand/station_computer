@@ -57,18 +57,38 @@ void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
 
     switch (sizeOption)
     {
-    case(SMALL_DRINK):
-        setSize(SMALL_SIZE_ML);
+//    case(SMALL_DRINK):
+//        setSize(SMALL_SIZE_ML);
+//        setPrice(PRICE_SMALL_TEST);
+//        break;
+
+//    case(LARGE_DRINK):
+//        setSize(LARGE_SIZE_ML);
+//        setPrice(PRICE_LARGE_TEST);
+//        break;
+
+    case(DRINK1):
+        setSize(DRINK1_SIZE_ML);
         setPrice(PRICE_SMALL_TEST);
         break;
 
-    case(LARGE_DRINK):
-        setSize(LARGE_SIZE_ML);
+    case(DRINK2):
+        setSize(DRINK2_SIZE_ML);
+        setPrice(PRICE_LARGE_TEST);
+        break;
+
+    case(DRINK3):
+        setSize(DRINK3_SIZE_ML);
+        setPrice(PRICE_SMALL_TEST);
+        break;
+
+    case(DRINK4):
+        setSize(DRINK4_SIZE_ML);
         setPrice(PRICE_LARGE_TEST);
         break;
 
     default:
-        setSize(SMALL_DRINK);
+        setSize(DRINK4);
         break;
     }
 
@@ -119,7 +139,7 @@ void DrinkOrder::setDrinkOption(DF_QT_OPTIONS sizeOption) {
     }
 
     // HACK: For now asssume small sized order; Will need to validate for empty.
-    setDrinkSize(SMALL_DRINK);
+    setDrinkSize(DRINK4);
 
     qInfo() << "Changed Option" << getOption() << endl;
 }

@@ -117,18 +117,22 @@ void paySelect::on_payPage_Button_clicked()
     // FIXME: Remove this when DB price referencing/calculations are correct.
     if(idlePage->userDrinkOrder->getOption() == 1) {
         idlePage->userDrinkOrder->setPrice(3.75);
+        idlePage->userDrinkOrder->setDrinkSize(DRINK1);
     }
 
     if(idlePage->userDrinkOrder->getOption() == 2) {
         idlePage->userDrinkOrder->setPrice(2.20);
+        idlePage->userDrinkOrder->setDrinkSize(DRINK2);
     }
 
     if(idlePage->userDrinkOrder->getOption() == 3) {
         idlePage->userDrinkOrder->setPrice(2.00);
+        idlePage->userDrinkOrder->setDrinkSize(DRINK3);
     }
 
     if(idlePage->userDrinkOrder->getOption() == 4) {
         idlePage->userDrinkOrder->setPrice(1.10);
+        idlePage->userDrinkOrder->setDrinkSize(DRINK4);
     }
 
 
@@ -147,12 +151,17 @@ void paySelect::on_payPage_Button_clicked()
     char drinkSize;
     // FIXME: This is fucking terrible object use and magic values.
     // Cannot be long term fix, need to get rid of fullscreen hackery.
-    if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->SMALL_SIZE_ML)
+    if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->DRINK1_SIZE_ML)
     {
-        drinkSize = 's';
-
+        drinkSize = 'p';
+    } else if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->DRINK2_SIZE_ML)  {
+        drinkSize = 'o';
+    } else if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->DRINK3_SIZE_ML)  {
+        drinkSize = 'i';
+    } else if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->DRINK4_SIZE_ML)  {
+        drinkSize = 'u';
     } else {
-        drinkSize = 'l';
+        cout << "drink sizeeeee" << endl;
     }
 
     // FIXME: Remove this when DB price referencing/calculations are correct.
@@ -193,8 +202,8 @@ void paySelect::resizeEvent(QResizeEvent *event){
 
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
-    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
-    idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_SMALL_TEST);
+    //idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
+    //idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_SMALL_TEST);
     this->setPalette(palette);
 
     if(selectIdleTimer == nullptr) {
@@ -252,8 +261,8 @@ void paySelect::on_orderSmall_Button_clicked()
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
-    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
-    idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_SMALL_TEST);
+    //idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
+    //idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_SMALL_TEST);
 }
 
 // on_Large_Order button listener
@@ -271,8 +280,8 @@ void paySelect::on_orderBig_Button_clicked()
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
-    idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
-    idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_LARGE_TEST);
+    //idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
+    //idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_LARGE_TEST);
 }
 
 

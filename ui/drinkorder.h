@@ -19,9 +19,13 @@ typedef enum DF_QT_OPTIONS {
 
    // Drink Sizes
    DRINK_SIZE_OPTIONS = 15,
-   SMALL_DRINK,
-   MEDIUM_DRINK,
-   LARGE_DRINK
+//   SMALL_DRINK,
+//   MEDIUM_DRINK,
+//   LARGE_DRINK,
+   DRINK1,
+   DRINK2,
+   DRINK3,
+   DRINK4
 } DF_QT_OPTION_PICKED;
 
 // Values for Selected drink.
@@ -58,8 +62,13 @@ public:
 
     // HACK: Fixed volume reference; Need to figure out best storage location...
     constexpr static double EMPTY_SIZE_ML = 0.00;
-    constexpr static double SMALL_SIZE_ML = 355.00;
-    constexpr static double LARGE_SIZE_ML = 473.00;
+//    constexpr static double SMALL_SIZE_ML = 355.00;
+//    constexpr static double LARGE_SIZE_ML = 473.00;
+
+    constexpr static double DRINK1_SIZE_ML = 1500.00;
+    constexpr static double DRINK2_SIZE_ML = 400.00;
+    constexpr static double DRINK3_SIZE_ML = 200.00;
+    constexpr static double DRINK4_SIZE_ML = 500.00;
 
     constexpr static double PRICE_SMALL_TEST = 3.00;
     constexpr static double PRICE_LARGE_TEST = 4.00;

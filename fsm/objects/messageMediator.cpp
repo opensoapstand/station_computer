@@ -345,11 +345,15 @@ DF_ERROR messageMediator::getPositionReady()
       }
 
       // FIXME: This is horrible...will remove later.
-      if (commandString[i] == SMALL_DRINK_CHAR)
+      if (commandString[i] == DRINK1_CHAR)
       {
-         m_nVolumeTarget = 355;
-      } else if(commandString[i] == LARGE_DRINK_CHAR) {
-         m_nVolumeTarget = 473;
+         m_nVolumeTarget = 1500;
+      } else if(commandString[i] == DRINK2_CHAR) {
+         m_nVolumeTarget = 400;
+      } else if(commandString[i] == DRINK3_CHAR) {
+          m_nVolumeTarget = 200;
+      } else if(commandString[i] == DRINK4_CHAR) {
+          m_nVolumeTarget = 500;
       }
    }
 

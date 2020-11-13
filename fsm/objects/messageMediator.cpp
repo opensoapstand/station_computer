@@ -345,17 +345,20 @@ DF_ERROR messageMediator::getPositionReady()
       }
 
       // FIXME: This is horrible...will remove later.
-      if (commandString[i] == DRINK1_CHAR)
+      if (commandString[i] == '1')
       {
          m_nVolumeTarget = 1500;
-      } else if(commandString[i] == DRINK2_CHAR) {
+      } else if(commandString[i] == '2') {
          m_nVolumeTarget = 400;
-      } else if(commandString[i] == DRINK3_CHAR) {
+      } else if(commandString[i] == '3') {
           m_nVolumeTarget = 200;
-      } else if(commandString[i] == DRINK4_CHAR) {
+      } else if(commandString[i] == '4') {
           m_nVolumeTarget = 500;
       }
+     //cout << commandString[i] << endl;
    }
+
+
 
    // TODO: Can seperate this into char parsing switch statment and further into function.
    // pos = -1;

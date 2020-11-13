@@ -184,7 +184,7 @@ void paySelect::on_payPage_Button_clicked()
 
 void paySelect::resizeEvent(QResizeEvent *event){
     int checkOption = idlePage->userDrinkOrder->getOption();
-    //    qDebug() << checkOption << endl;
+    qDebug() << checkOption << endl;
     QString bitmap_location;
 
     if(checkOption > 0 && checkOption <= 9) {

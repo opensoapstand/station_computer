@@ -38,7 +38,7 @@ public:
 
 private slots:
     // **** Navigation ****
-    void on_nextPageButton_clicked();
+    //void on_nextPageButton_clicked();
     // HACK: Could have better way for modular reference to buttons and drink orders...
     void on_selection1_Button_clicked();
     void on_selection2_Button_clicked();

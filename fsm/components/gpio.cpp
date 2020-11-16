@@ -51,14 +51,14 @@ void gpio::startListener()
 // std::thread gpio::listener()
 void gpio::listener()
 {
-	cout << "Spin up GPIO Thread" << endl;
-	DF_ERROR df_ret = ERROR_BAD_PARAMS;
-	m_stop = false;
+        cout << "Spin up GPIO Thread" << endl;
+        DF_ERROR df_ret = ERROR_BAD_PARAMS;
+        m_stop = false;
 
-	while (!m_stop) {
-		monitorGPIO();
-	}
+        while (!m_stop) {
+                monitorGPIO();
+        }
 
-	m_stop = true;  //reset
+        m_stop = true;  //reset
 	// return;
 }

@@ -127,6 +127,7 @@ bool drink::getIsStillDrink()
 
 bool drink::registerFlowSensorTick(){
     m_nVolumeDispensed += m_nVolumePerTick;
+    //cout << "Something dispensed - reset timers!" << endl;
 }
 
 // TODO: Function name is inaccurate...deduct sale would be better

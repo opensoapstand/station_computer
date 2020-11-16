@@ -19,6 +19,8 @@
 
 #define DISPENSE_STRING "Dispense"
 
+int total_dispensed_prev = 0;
+
 // CTOR
 stateDispense::stateDispense()
 {
@@ -59,13 +61,14 @@ DF_ERROR stateDispense::onEntry()
    cassettes[pos].getDrink()->setTargetVolume(m_pMessaging->getnTargetVolume());
 
    cassettes[pos].getDrink()->startDispense(cassettes[pos].getDrink()->getTargetVolume());   
-   cout << cassettes[pos].getDrink()->getTargetVolume() << endl;
+   //cout << cassettes[pos].getDrink()->getTargetVolume() << endl;
    cassettes[pos].setIsDispenseComplete(false);
    cassettes[pos].getDrink()->drinkInfo();
    cassettes[pos].getDrink()->drinkVolumeInfo();
    cassettes[pos].startDispense(DRINK);
 
    m_nextState = DISPENSE;
+   total_dispensed_prev  = 0;
 
    // TODO: Status Check
    // Do a check if there is not enough stock i.e. 350 order 250 left in tank
@@ -96,7 +99,8 @@ DF_ERROR stateDispense::onAction()
       else
       {
          // debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
-         // m_nextState = DISPENSE_IDLE;
+         //debugOutput::sendMessage("I want to go to idle now", INFO);
+          //m_nextState = DISPENSE_IDLE;
       }
 
       // TODO: Do a check if Pumps are operational
@@ -104,6 +108,24 @@ DF_ERROR stateDispense::onAction()
 
       // TODO: Check the Volume dispensed so far
       cassettes[pos].getDrink()->getVolumeDispensed();
+
+      int total_dispensed = cassettes[pos].getDrink()->getVolumeDispensed();
+
+      string outputString = "Dispensed previsously: " + to_string(total_dispensed_prev) + " and dispensed now = " + to_string(total_dispensed);
+
+      if (total_dispensed_prev == total_dispensed){
+          debugOutput::sendMessage("IDLE - Start Timer Ticking!", INFO);
+          //m_nextState = DISPENSE_IDLE;
+      }
+      else {
+          debugOutput::sendMessage("DISPENSING - RESET TIMER!", INFO);
+
+          total_dispensed_prev = total_dispensed;
+      }
+
+
+
+      debugOutput::sendMessage(outputString, INFO);
 
       cassettes[pos].getDrink()->drinkVolumeInfo();
 

@@ -48,7 +48,7 @@ paySelect::paySelect(QWidget *parent) :
         } else {
             bitmap_location = ":/light/4_pay_select_page_1.jpg";
         }
-        qDebug() << bitmap_location << endl;
+        //qDebug() << bitmap_location << endl;
     QPixmap background(bitmap_location);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
 
@@ -238,51 +238,51 @@ bool paySelect::stopSelectTimers(){
     }
 }
 
-void paySelect::on_mainPage_Button_clicked()
-{
-    qDebug() << "paySelect: mainPage button" << endl;
-    this->stopSelectTimers();
-    idlePage->showFullScreen();
-    this->hide();
-}
+//void paySelect::on_mainPage_Button_clicked()
+//{
+//    qDebug() << "paySelect: mainPage button" << endl;
+//    this->stopSelectTimers();
+//    idlePage->showFullScreen();
+//    this->hide();
+//}
 
 // on_Small_Order button listener
-void paySelect::on_orderSmall_Button_clicked()
-{
-    QString bitmap_location;
+//void paySelect::on_orderSmall_Button_clicked()
+//{
+//    QString bitmap_location;
 
-    bitmap_location.append(":/light/4_pay_select_page_");
-    bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
-    bitmap_location.append(".jpg");
+//    bitmap_location.append(":/light/4_pay_select_page_");
+//    bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
+//    bitmap_location.append(".jpg");
 
-    QPixmap background(bitmap_location);
-    background = background.scaled(this->size(), Qt::KeepAspectRatio);
-    QPalette palette;
-    palette.setBrush(QPalette::Background, background);
-    this->setPalette(palette);
+//    QPixmap background(bitmap_location);
+//    background = background.scaled(this->size(), Qt::KeepAspectRatio);
+//    QPalette palette;
+//    palette.setBrush(QPalette::Background, background);
+//    this->setPalette(palette);
 
-    //idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
-    //idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_SMALL_TEST);
-}
+//    //idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
+//    //idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_SMALL_TEST);
+//}
 
 // on_Large_Order button listener
-void paySelect::on_orderBig_Button_clicked()
-{
-    QString bitmap_location;
+//void paySelect::on_orderBig_Button_clicked()
+//{
+//    QString bitmap_location;
 
-    bitmap_location.append(":/light/4_pay_select_page_");
-    bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
-    bitmap_location.append(".jpg");
+//    bitmap_location.append(":/light/4_pay_select_page_");
+//    bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
+//    bitmap_location.append(".jpg");
 
-    QPixmap background(bitmap_location);
-    background = background.scaled(this->size(), Qt::KeepAspectRatio);
-    QPalette palette;
-    palette.setBrush(QPalette::Background, background);
-    this->setPalette(palette);
+//    QPixmap background(bitmap_location);
+//    background = background.scaled(this->size(), Qt::KeepAspectRatio);
+//    QPalette palette;
+//    palette.setBrush(QPalette::Background, background);
+//    this->setPalette(palette);
 
-    //idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
-    //idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_LARGE_TEST);
-}
+//    //idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
+//    //idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_LARGE_TEST);
+//}
 
 
 /* Models */

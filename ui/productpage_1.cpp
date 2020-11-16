@@ -66,11 +66,11 @@ productPage_1::~productPage_1()
     delete ui;
 }
 
-void productPage_1::on_nextPageButton_clicked()
-{
-    selection_PageTwo->showFullScreen();
-    this->hide();
-}
+//void productPage_1::on_nextPageButton_clicked()
+//{
+//    selection_PageTwo->showFullScreen();
+//    this->hide();
+//}
 
 // FIXME: This is terrible...no time to make array reference to hold button press functions
 void productPage_1::on_selection1_Button_clicked()

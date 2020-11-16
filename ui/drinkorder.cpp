@@ -53,7 +53,7 @@ void DrinkOrder::setSize(double size)
 
 // Enum search for drink sizes
 void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
-    qInfo() << "Existing Size" << getSize() << endl;
+    //qInfo() << "Existing Size" << getSize() << endl;
 
     switch (sizeOption)
     {
@@ -92,12 +92,12 @@ void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
         break;
     }
 
-    qInfo() << "Order Size" << getSize() << endl;
+    //qInfo() << "Order Size" << getSize() << endl;
 }
 
 // Enum search for option slot
 void DrinkOrder::setDrinkOption(DF_QT_OPTIONS sizeOption) {
-    qInfo() << "Current Option" << getOption() << endl;
+   // qInfo() << "Current Option" << getOption() << endl;
 
     if(sizeOption >= OPTION_SLOT && sizeOption <= DRINK_SIZE_OPTIONS)
     {
@@ -141,7 +141,7 @@ void DrinkOrder::setDrinkOption(DF_QT_OPTIONS sizeOption) {
     // HACK: For now asssume small sized order; Will need to validate for empty.
     setDrinkSize(DRINK4);
 
-    qInfo() << "Changed Option" << getOption() << endl;
+    //qInfo() << "Changed Option" << getOption() << endl;
 }
 
 // SIGNALS Section

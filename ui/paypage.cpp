@@ -212,106 +212,106 @@ void payPage::on_payment_bypass_Button_clicked()
 }
 
 // Payment Processing Debug Button
-void payPage::on_payment_pass_Button_clicked()
-{
-    // TODO: Moneris Linkage here!
-    qDebug() << "Payment Pass button" << endl;
+//void payPage::on_payment_pass_Button_clicked()
+//{
+//    // TODO: Moneris Linkage here!
+//    qDebug() << "Payment Pass button" << endl;
 
-    qDebug() << this->idlePage->userDrinkOrder->getOption();
-    qDebug() << this->idlePage->userDrinkOrder->getSize();
-    qDebug() << this->idlePage->userDrinkOrder->getPrice();
+//    qDebug() << this->idlePage->userDrinkOrder->getOption();
+//    qDebug() << this->idlePage->userDrinkOrder->getSize();
+//    qDebug() << this->idlePage->userDrinkOrder->getPrice();
 
-    //    purchaseEnable = true;
+//    //    purchaseEnable = true;
 
-    if (!paymentConnected){
-        usleep(100000);
-        //mainPage->sendardCommand("Z");
-        //if(!com.init()){
+//    if (!paymentConnected){
+//        usleep(100000);
+//        //mainPage->sendardCommand("Z");
+//        //if(!com.init()){
 
-        // TODO: Replace with an ACK NACK to FSM for Dispenser slot...
-        //mainPage->checkard();
+//        // TODO: Replace with an ACK NACK to FSM for Dispenser slot...
+//        //mainPage->checkard();
 
-        // Wait for a Drink Payment
-        // ui->payment_processLabel->show();
-        // labelSetup(ui->payment_processLabel, 50);
-        // ui->payment_processLabel->setText("You get a free drink");
+//        // Wait for a Drink Payment
+//        // ui->payment_processLabel->show();
+//        // labelSetup(ui->payment_processLabel, 50);
+//        // ui->payment_processLabel->setText("You get a free drink");
 
-        // Lock Navigation
-        //ui->payment_pass_Button->hide();
-        ui->previousPage_Button->hide();
+//        // Lock Navigation
+//        //ui->payment_pass_Button->hide();
+//        ui->previousPage_Button->hide();
 
-        //paymentInit();
+//        //paymentInit();
 
-        // Database log a failed payment
-        storePaymentEvent(db, QString("mpos failed"));
-        paymentProgressTimer->start();
+//        // Database log a failed payment
+//        storePaymentEvent(db, QString("mpos failed"));
+//        paymentProgressTimer->start();
 
-        dispensingPage->showFullScreen();
-        this->hide();
+//        dispensingPage->showFullScreen();
+//        this->hide();
 
-    } else if(paymentConnected){
+//    } else if(paymentConnected){
 
-        QFont warning;
-        warning.setBold(true);
-        warning.setFamily("Arial");
-        warning.setPointSize(30);
+//        QFont warning;
+//        warning.setBold(true);
+//        warning.setFamily("Arial");
+//        warning.setPointSize(30);
 
-      //  ui->payment_cancel_Button->setFont(warning);
-      //  ui->payment_cancel_Button->setText("CANCEL");
-      //  ui->payment_cancel_Button->show();
+//      //  ui->payment_cancel_Button->setFont(warning);
+//      //  ui->payment_cancel_Button->setText("CANCEL");
+//      //  ui->payment_cancel_Button->show();
 
-        //ui->tapLabel->show(); //currently replaced with pay button 10.18
-        //ui->payButton->hide();
-        //ui->priceVolume1Button->setEnabled(false);
-        //ui->priceVolume2Button->setEnabled(false);
+//        //ui->tapLabel->show(); //currently replaced with pay button 10.18
+//        //ui->payButton->hide();
+//        //ui->priceVolume1Button->setEnabled(false);
+//        //ui->priceVolume2Button->setEnabled(false);
 
-        com.flushSerial();
+//        com.flushSerial();
 
-        // Set the price to send.
-        cout << "Setting price of packet: " << productSelectedPrice << endl;
-        pktToSend = paymentPacket.purchasePacket(productSelectedPrice);
+//        // Set the price to send.
+//        cout << "Setting price of packet: " << productSelectedPrice << endl;
+//        pktToSend = paymentPacket.purchasePacket(productSelectedPrice);
 
-        purchaseEnable = true;
+//        purchaseEnable = true;
 
 
-        if (sendToUX410())
-        {
-            //            isReadyForTap = true;
-            //            waitForUX410();
-            pktResponded.clear();
-            timerEnabled = true;
-            cout << "From Payment Button" << endl;
-            readTimer->start(10);
-        }
-        else {
-            isReadyForTap = false;
-            std::cout<<"TIME OUT";
-        }
-    }
+//        if (sendToUX410())
+//        {
+//            //            isReadyForTap = true;
+//            //            waitForUX410();
+//            pktResponded.clear();
+//            timerEnabled = true;
+//            cout << "From Payment Button" << endl;
+//            readTimer->start(10);
+//        }
+//        else {
+//            isReadyForTap = false;
+//            std::cout<<"TIME OUT";
+//        }
+//    }
 
-    //    com.sendPacket(pktToSend, uint(pktToSend.size()));
+//    //    com.sendPacket(pktToSend, uint(pktToSend.size()));
 
-    //    std::cout<<paymentPacket.getSendPacket();
+//    //    std::cout<<paymentPacket.getSendPacket();
 
-    //    //read back what is responded
+//    //    //read back what is responded
 
-    //    pktResponded = com.readForAck();
+//    //    pktResponded = com.readForAck();
 
-    //    readPacket.packetReadFromUX(pktResponded);
-    //    pktResponded.clear();
+//    //    readPacket.packetReadFromUX(pktResponded);
+//    //    pktResponded.clear();
 
-    //    if (readPacket.getAckOrNak() == communicationPacketField::ACK)
-    //    {
-    //        timerEnabled = true;
-    //        readTimer->start(10);
-    //    }
-}
+//    //    if (readPacket.getAckOrNak() == communicationPacketField::ACK)
+//    //    {
+//    //        timerEnabled = true;
+//    //        readTimer->start(10);
+//    //    }
+//}
 
-void payPage::on_payment_cancel_Button_clicked()
-{
-    qDebug()<< "Cancel Clicked" << endl;
-    cancelPayment();
-}
+//void payPage::on_payment_cancel_Button_clicked()
+//{
+//    qDebug()<< "Cancel Clicked" << endl;
+//    cancelPayment();
+//}
 
 void payPage::updateTotals(string drinkDescription, string drinkAmount, string orderTotal)
 {
@@ -325,29 +325,29 @@ void payPage::updateTotals(string drinkDescription, string drinkAmount, string o
 
 }
 
-void payPage::on_mainPage_Button_clicked()
-{
-    qDebug() << "Main Button Page" << endl;
-    //    cancelPayment();
-    stopPayTimers();
-    this->hide();
-    idlePage->showFullScreen();
-}
+//void payPage::on_mainPage_Button_clicked()
+//{
+//    qDebug() << "Main Button Page" << endl;
+//    //    cancelPayment();
+//    stopPayTimers();
+//    this->hide();
+//    idlePage->showFullScreen();
+//}
 
 /*Cancel any previous payment*/
-void payPage::cancelPayment()
-{
-    qDebug() << "Payment cancelled!" << endl;
-    /*Cancel any previous payment*/
-    if(purchaseEnable){
-        pktToSend = paymentPacket.purchaseCancelPacket();
-        if (sendToUX410()){
-            waitForUX410();
-            pktResponded.clear();
-        }
-        com.flushSerial();
-    }
-}
+//void payPage::cancelPayment()
+//{
+//    qDebug() << "Payment cancelled!" << endl;
+//    /*Cancel any previous payment*/
+//    if(purchaseEnable){
+//        pktToSend = paymentPacket.purchaseCancelPacket();
+//        if (sendToUX410()){
+//            waitForUX410();
+//            pktResponded.clear();
+//        }
+//        com.flushSerial();
+//    }
+//}
 
 // Payment Section based on DF001 Prototype
 
@@ -406,24 +406,24 @@ void payPage::onTimeoutTick(){
         _paymentTimeLabel.clear();
         QString time = QString::number(_paymentTimeoutSec);
 
-        if(_paymentTimeoutSec >= 10) {
-            if(_paymentTimeoutSec % 2 == 0) {
-                _paymentTimeLabel.append("TAP NOW");
-                qDebug() << _paymentTimeLabel << endl;
-            } else {
-                _paymentTimeLabel.append(" ");
-                qDebug() << _paymentTimeLabel << endl;
-            }
-        } else {
-            if(_paymentTimeoutSec % 2 == 0) {
-                _paymentTimeLabel.append("PROCESSING.");
-                qDebug() << _paymentTimeLabel << endl;
-            } else {
-                _paymentTimeLabel.append("PROCESSING..");
-                qDebug() << _paymentTimeLabel << endl;
-            }
-            qDebug() << _paymentTimeLabel << endl;
-        }
+//        if(_paymentTimeoutSec >= 10) {
+//            if(_paymentTimeoutSec % 2 == 0) {
+//                _paymentTimeLabel.append("TAP NOW");
+//                qDebug() << _paymentTimeLabel << endl;
+//            } else {
+//                _paymentTimeLabel.append(" ");
+//                qDebug() << _paymentTimeLabel << endl;
+//            }
+//        } else {
+//            if(_paymentTimeoutSec % 2 == 0) {
+//                _paymentTimeLabel.append("PROCESSING.");
+//                qDebug() << _paymentTimeLabel << endl;
+//            } else {
+//                _paymentTimeLabel.append("PROCESSING..");
+//                qDebug() << _paymentTimeLabel << endl;
+//            }
+//            qDebug() << _paymentTimeLabel << endl;
+//        }
         //this->ui->payment_countdownLabel->setText(_paymentTimeLabel);
     } else {
         qDebug() << "Timer Done!" << _paymentTimeoutSec << endl;
@@ -518,7 +518,7 @@ void payPage::declineTimer_start()
    // ui->payment_processLabel->setText(TAP_AGAIN_LABEL);
     declineCounter++;
     if (declineCounter < 3){
-        this->on_payment_pass_Button_clicked();
+        this->on_payment_bypass_Button_clicked();
     } else {
      //   ui->payment_processLabel->setText(TAP_DECLINED_LABEL);
     }
@@ -526,7 +526,9 @@ void payPage::declineTimer_start()
 }
 
 void payPage::idlePaymentTimeout() {
-    on_mainPage_Button_clicked();
+    stopPayTimers();
+    this->hide();
+    idlePage->showFullScreen();
 }
 
 /* ----- Payment ----- */

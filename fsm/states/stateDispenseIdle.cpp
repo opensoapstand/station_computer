@@ -19,6 +19,8 @@
 
 #define DISPENSE_IDLE_STRING "Dispense Idle"
 
+int total_dispensed_prev2;
+
 // Default CTOR
 stateDispenseIdle::stateDispenseIdle()
 {
@@ -45,7 +47,28 @@ string stateDispenseIdle::toString()
 DF_ERROR stateDispenseIdle::onEntry()
 {
    DF_ERROR e_ret = OK;
+
    m_pMessaging->getPositionReady();
+
+   debugOutput::sendMessage("In Idle Mode!", INFO);
+
+   cassettes = g_cassettes;
+   pos = m_pMessaging->getnOption();
+   pos = pos - 1;
+
+   int total_dispensed_prev2 = cassettes[pos].getDrink()->getVolumeDispensed();
+
+//   if (total_dispensed_prev2 == total_dispensed){
+//       debugOutput::sendMessage("remain in idle", INFO);
+//       total_dispensed = cassettes[pos].getDrink()->getVolumeDispensed();
+//       m_state = DISPENSE_IDLE;
+//   }
+//   else{
+//       debugOutput::sendMessage("exit idle", INFO);
+//       total_dispensed_prev2 = total_dispensed;
+//       m_nextState = DISPENSE;
+//   }
+
    return e_ret;
 }
 
@@ -57,13 +80,29 @@ DF_ERROR stateDispenseIdle::onAction()
 
    if (nullptr != &m_nextState)
    {
-      //debugInfo.sendMessage("onAction() for state [" + std::to_string((int)m_nextState) + "]", INFO);
+       //debugOutput::sendMessage("im heretoo", INFO);
 
-      // FIXME: State Check 
+       int total_dispensed = cassettes[pos].getDrink()->getVolumeDispensed();
+
+//       while (total_dispensed_prev2 == total_dispensed){
+//           debugOutput::sendMessage("remain in idle", INFO);
+//           total_dispensed = cassettes[pos].getDrink()->getVolumeDispensed();
+//           //m_state = DISPENSE_IDLE;
+//       }
+
+       debugOutput::sendMessage("exit idle", INFO);
+       total_dispensed_prev2 = total_dispensed;
+       m_nextState = DISPENSE;
+
+
+
+       //debugInfo.sendMessage("onAction() for state [" + std::to_string((int)m_nextState) + "]", INFO);
+
+      // FIXME: State Check
       // if (dispenserSetup()->getIsDispenseComplete()) // Exit if Dispense limit is hit
       // {
       //    onExit();
-      // } 
+      // }
       // TODO: else if to check button interrupt swap to Dispensing
       // {
       //    debugOutput::sendMessage("Dispensing [" + toString() + "]", INFO);
@@ -78,7 +117,7 @@ DF_ERROR stateDispenseIdle::onAction()
       // }
 
       // FIXME: No Coordination for Idles...Just go to Dispense for now.
-      m_nextState = DISPENSE;
+      //m_nextState = DISPENSE;
       df_ret = OK;
    }
 

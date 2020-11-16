@@ -151,20 +151,28 @@ void dispensePage::stopDispenseTimer(){
 }
 
 // XXX: Remove this when interrupts and flow sensors work!
-void dispensePage::onDispenseTick(){
-    if(-- _dispenseTimeoutSec >= 0) {
-        qDebug() << "Tick Down: " << _dispenseTimeoutSec << endl;
 
-        _dispenseTimeLabel.clear();
-        QString time = QString::number(_dispenseTimeoutSec);
-        _dispenseTimeLabel.append(time);
-//        this->ui->dispense_progress_label->setText(_dispenseTimeLabel);
-    } else {
-        qDebug() << "Timer Done!" << _dispenseTimeoutSec << endl;
-        dispenseEndTimer->stop();
-//        this->ui->dispense_progress_label->setText("Finished!");
-    }
+void dispensePage::onDispenseTick(){
+    // RESET TIMERS
+    qDebug() << "RESET TIMERS!!" << endl;
+    _dispenseIdleTimeoutSec = 90;
 }
+
+
+//void dispensePage::onDispenseTick(){
+//    if(-- _dispenseTimeoutSec >= 0) {
+//        qDebug() << "Tick Down: " << _dispenseTimeoutSec << endl;
+
+//        _dispenseTimeLabel.clear();
+//        QString time = QString::number(_dispenseTimeoutSec);
+//        _dispenseTimeLabel.append(time);
+//        this->ui->dispense_progress_label->setText(_dispenseTimeLabel);
+//    } else {
+//        qDebug() << "Timer Done!" << _dispenseTimeoutSec << endl;
+//        dispenseEndTimer->stop();
+//        this->ui->dispense_progress_label->setText("Finished!");
+//    }
+//}
 
 void dispensePage::onDispenseIdleTick(){
     if(-- _dispenseIdleTimeoutSec >= 0) {

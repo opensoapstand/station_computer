@@ -17,8 +17,10 @@
 #include "../dftypes.h"
 #include "../objects/messageMediator.h"
 #include "stateVirtual.h"
+#include "../fsm.h"
 
 #include "../objects/dispenser.h"
+
 
 class stateDispenseIdle : public stateVirtual
 {
@@ -37,6 +39,9 @@ class stateDispenseIdle : public stateVirtual
         // DF_ERROR dispenserSetup(){};
 
     private:
+        int pos;
+        dispenser* cassettes;
+        bool flushCommand;
 };
 
 

@@ -111,16 +111,17 @@ DF_ERROR stateDispense::onAction()
 
       int total_dispensed = cassettes[pos].getDrink()->getVolumeDispensed();
 
-      string outputString = "Dispensed previsously: " + to_string(total_dispensed_prev) + " and dispensed now = " + to_string(total_dispensed);
+//      string outputString = "Dispensed previsously: " + to_string(total_dispensed_prev) + " and dispensed now = " + to_string(total_dispensed);
 
-      if (total_dispensed_prev == total_dispensed){
-          debugOutput::sendMessage("IDLE - Start Timer Ticking!", INFO);
-          //m_nextState = DISPENSE_IDLE;
-      }
-      else {
-          debugOutput::sendMessage("DISPENSING - RESET TIMER!", INFO);
-          total_dispensed_prev = total_dispensed;
-      }
+//      if (total_dispensed_prev == total_dispensed){
+//          debugOutput::sendMessage("IDLE - Timer should be ticking!", INFO);
+//          //m_nextState = DISPENSE_IDLE;
+//      }
+//      else {
+//          debugOutput::sendMessage("DISPENSING - RESET TIMER!", INFO);
+//          total_dispensed_prev = total_dispensed;
+//          //m_pMessaging->sendMessage("Yo can you reset that timer please?");
+//      }
 
 
 

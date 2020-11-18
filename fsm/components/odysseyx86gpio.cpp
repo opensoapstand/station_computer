@@ -52,17 +52,8 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
 	debugOutput::sendMessage("------oddyseyx86GPIO------", INFO);
 	int fd, len;
         char buf[MAX_BUF];
-        string command;
 
 	m_nPin = pinNumber;
-
-        //TODO: FIX THIS UNSECURE NASTY CODE!
-
-        debugOutput::sendMessage("Changing permissions of export/unexport...", INFO);
-        system("echo 'D@nkF1ll$' | sudo -S chmod 777 /sys/class/gpio/export");
-        system("echo 'D@nkF1ll$' | sudo -S chmod 777 /sys/class/gpio/unexport");
-        debugOutput::sendMessage("Permissions changed...", INFO);
-
 
 	fd = open(SYSFS_GPIO_DIR "/export", O_WRONLY);
 	if (fd < 0)
@@ -75,20 +66,29 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
 	write(fd, buf, len);
         close(fd);
 
-        system("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio339/direction");
-        system("sudo -S chmod a+w /sys/class/gpio/gpio364/direction");
-        system("sudo -S chmod a+w /sys/class/gpio/gpio413/direction");
-        system("sudo -S chmod a+w /sys/class/gpio/gpio416/direction");
+        string GPIO = std::to_string(m_nPin);
+        string command("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio");
+        command += GPIO;
+        string command_dir = command + "/direction";
+        string command_edg = command + "/edge";
+        string command_val = command + "/value";
 
-        system("sudo -S chmod a+w /sys/class/gpio/gpio339/edge");
-        system("sudo -S chmod a+w /sys/class/gpio/gpio364/edge");
-        system("sudo -S chmod a+w /sys/class/gpio/gpio413/edge");
-        system("sudo -S chmod a+w /sys/class/gpio/gpio416/edge");
+        system(command_dir.c_str());
+        system(command_edg.c_str());
+        system(command_val.c_str());
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio364/direction");
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio413/direction");
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio416/direction");
 
-        system("sudo -S chmod a+w /sys/class/gpio/gpio339/value");
-        system("sudo -S chmod a+w /sys/class/gpio/gpio364/value");
-        system("sudo -S chmod a+w /sys/class/gpio/gpio413/value");
-        system("sudo -S chmod a+w /sys/class/gpio/gpio416/value");
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio339/edge");
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio364/edge");
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio413/edge");
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio416/edge");
+
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio339/value");
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio364/value");
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio413/value");
+//        system("sudo -S chmod a+w /sys/class/gpio/gpio416/value");
 
 	return;
 }

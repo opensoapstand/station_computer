@@ -38,11 +38,14 @@ public:
     void setPage(payPage* pagePayment, thankYouPage* pageThankYou, idle* pageIdle);
     ~dispensePage();
     void showEvent(QShowEvent *event);
+    //void resetTimer();
+
 private slots:
     // **** Navigation ****
     void on_finish_Button_clicked();
     void onDispenseTick();
     void onDispenseIdleTick();
+    void resetTimer();
 
 private:
     // **** GUI *****

@@ -80,7 +80,11 @@ DF_ERROR stateDispenseIdle::onAction()
 
    if (nullptr != &m_nextState)
    {
-       //debugOutput::sendMessage("im heretoo", INFO);
+       if (m_pMessaging->getcCommand() != DISPENSE_END_CHAR){
+             debugOutput::sendMessage("in idle", INFO);
+       }
+
+       //debugOutput::sendMessage("in idle", INFO);
 
        int total_dispensed = cassettes[pos].getDrink()->getVolumeDispensed();
 
@@ -90,7 +94,7 @@ DF_ERROR stateDispenseIdle::onAction()
 //           //m_state = DISPENSE_IDLE;
 //       }
 
-       debugOutput::sendMessage("exit idle", INFO);
+
        total_dispensed_prev2 = total_dispensed;
        m_nextState = DISPENSE;
 
@@ -129,6 +133,7 @@ DF_ERROR stateDispenseIdle::onExit()
 {
    // debugOutput::sendMessage("Exiting[" + toString() + "]", STATE_CHANGE);
    DF_ERROR e_ret = OK;
+   debugOutput::sendMessage("exit idle", INFO);
 
    // debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
    // m_state = DISPENSE_IDLE;

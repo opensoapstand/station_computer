@@ -1,0 +1,11 @@
+[Unit]
+Description=Set permissions for GPIO access
+Before=drinkfill.service
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/bin/bash -c "/bin/chmod 777 /sys/class/gpio/export"
+
+[Install]
+WantedBy=multi-user.target

@@ -14,7 +14,8 @@ typedef enum FSM_COMM {
     SEND_EMPTY = 0,
     SEND_DRINK,
     SEND_CLEAN,
-    SEND_ERROR
+    SEND_ERROR,
+    REQ_VOL
 } FSM_COMM;
 
 class df_util : public QWidget

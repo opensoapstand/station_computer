@@ -17,10 +17,12 @@
 
 #include "dispensepage.h"
 #include "ui_dispensepage.h"
+#include "includefiles.h"
 
 #include "idle.h"
 
 #include "thankyoupage.h"
+
 
 // CTOR
 dispensePage::dispensePage(QWidget *parent) :
@@ -40,6 +42,7 @@ dispensePage::dispensePage(QWidget *parent) :
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
+
 
 }
 
@@ -150,29 +153,28 @@ void dispensePage::stopDispenseTimer(){
     dispenseIdleTimer = nullptr;
 }
 
-// XXX: Remove this when interrupts and flow sensors work!
-
-void dispensePage::onDispenseTick(){
-    // RESET TIMERS
-    qDebug() << "RESET TIMERS!!" << endl;
+void dispensePage::resetTimer(){
+    qDebug() << "RESET TIMER!!" << endl;
     _dispenseIdleTimeoutSec = 90;
 }
 
+// XXX: Remove this when interrupts and flow sensors work!
 
-//void dispensePage::onDispenseTick(){
-//    if(-- _dispenseTimeoutSec >= 0) {
-//        qDebug() << "Tick Down: " << _dispenseTimeoutSec << endl;
+void dispensePage::onDispenseTick(){
+    if(-- _dispenseTimeoutSec >= 0) {
 
-//        _dispenseTimeLabel.clear();
-//        QString time = QString::number(_dispenseTimeoutSec);
-//        _dispenseTimeLabel.append(time);
-//        this->ui->dispense_progress_label->setText(_dispenseTimeLabel);
-//    } else {
-//        qDebug() << "Timer Done!" << _dispenseTimeoutSec << endl;
-//        dispenseEndTimer->stop();
-//        this->ui->dispense_progress_label->setText("Finished!");
-//    }
-//}
+        qDebug() << "Tick Down: " << _dispenseTimeoutSec << endl;
+
+        _dispenseTimeLabel.clear();
+        QString time = QString::number(_dispenseTimeoutSec);
+        _dispenseTimeLabel.append(time);
+     //   this->ui->dispense_progress_label->setText(_dispenseTimeLabel);
+    } else {
+        qDebug() << "Timer Done!" << _dispenseTimeoutSec << endl;
+        dispenseEndTimer->stop();
+       // this->ui->dispense_progress_label->setText("Finished!");
+    }
+}
 
 void dispensePage::onDispenseIdleTick(){
     if(-- _dispenseIdleTimeoutSec >= 0) {

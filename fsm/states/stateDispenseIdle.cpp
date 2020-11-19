@@ -19,8 +19,6 @@
 
 #define DISPENSE_IDLE_STRING "Dispense Idle"
 
-int total_dispensed_prev2 = 0;
-
 // Default CTOR
 stateDispenseIdle::stateDispenseIdle()
 {
@@ -71,25 +69,7 @@ DF_ERROR stateDispenseIdle::onAction()
              //debugOutput::sendMessage("in idle", INFO);
        }
 
-       //debugOutput::sendMessage("in idle", INFO);
-
-//       int total_dispensed = cassettes[pos].getDrink()->getVolumeDispensed();
-
-//       if (total_dispensed_prev2 == total_dispensed){
-//           //debugOutput::sendMessage("remain in idle", INFO);
-//           total_dispensed = cassettes[pos].getDrink()->getVolumeDispensed();
-//           m_nextState = DISPENSE_IDLE;
-//       }
-//       else {
-//           m_nextState = DISPENSE;
-//           total_dispensed_prev2 = total_dispensed;
-//       }
-
-
-
        m_nextState = DISPENSE;
-
-
 
        //debugInfo.sendMessage("onAction() for state [" + std::to_string((int)m_nextState) + "]", INFO);
 

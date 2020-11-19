@@ -19,8 +19,6 @@
 
 #define DISPENSE_STRING "Dispense"
 
-int total_dispensed_prev = 0;
-
 // CTOR
 stateDispense::stateDispense()
 {
@@ -49,9 +47,7 @@ string stateDispense::toString()
  */
 DF_ERROR stateDispense::onEntry()
 {
-    if (total_dispensed_prev>0){
-        onAction();
-    } else{
+
    cassettes = g_cassettes;
    DF_ERROR e_ret = OK;
    pos = m_pMessaging->getnOption();
@@ -63,7 +59,7 @@ DF_ERROR stateDispense::onEntry()
 
    cassettes[pos].getDrink()->setTargetVolume(m_pMessaging->getnTargetVolume());
 
-   cassettes[pos].getDrink()->startDispense(cassettes[pos].getDrink()->getTargetVolume());   
+   cassettes[pos].getDrink()->startDispense(cassettes[pos].getDrink()->getTargetVolume());
    //cout << cassettes[pos].getDrink()->getTargetVolume() << endl;
    cassettes[pos].setIsDispenseComplete(false);
    cassettes[pos].getDrink()->drinkInfo();
@@ -71,12 +67,12 @@ DF_ERROR stateDispense::onEntry()
    cassettes[pos].startDispense(DRINK);
 
    m_nextState = DISPENSE;
-   total_dispensed_prev  = 0;
 
    // TODO: Status Check
    // Do a check if there is not enough stock i.e. 350 order 250 left in tank
    return e_ret;
-    }
+
+
 }
 
 /*
@@ -113,19 +109,6 @@ DF_ERROR stateDispense::onAction()
       // TODO: Check the Volume dispensed so far
       cassettes[pos].getDrink()->getVolumeDispensed();
 
-//      int total_dispensed = cassettes[pos].getDrink()->getVolumeDispensed();
-
-//      string outputString = "Dispensed previsously: " + to_string(total_dispensed_prev) + " and dispensed now = " + to_string(total_dispensed);
-
-//      if (total_dispensed_prev == total_dispensed){
-//          debugOutput::sendMessage("IDLE - Timer should be ticking!", INFO);
-//          m_nextState = DISPENSE_IDLE;
-//      }
-//      else {
-//          debugOutput::sendMessage("DISPENSING - RESET TIMER!", INFO);
-//          total_dispensed_prev = total_dispensed;
-//          //m_pMessaging->sendMessage("Yo can you reset that timer please?");
-//      }
 
 
 
@@ -155,7 +138,5 @@ DF_ERROR stateDispense::onExit()
    cassettes[pos].stopDispense(DRINK);
 
    cassettes[pos].setIsDispenseComplete(false);
-
-   total_dispensed_prev = 0;
    return e_ret;
 }

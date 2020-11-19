@@ -19,7 +19,7 @@
 
 #define DISPENSE_IDLE_STRING "Dispense Idle"
 
-int total_dispensed_prev2;
+int total_dispensed_prev2 = 0;
 
 // Default CTOR
 stateDispenseIdle::stateDispenseIdle()
@@ -56,19 +56,6 @@ DF_ERROR stateDispenseIdle::onEntry()
    pos = m_pMessaging->getnOption();
    pos = pos - 1;
 
-   int total_dispensed_prev2 = cassettes[pos].getDrink()->getVolumeDispensed();
-
-//   if (total_dispensed_prev2 == total_dispensed){
-//       debugOutput::sendMessage("remain in idle", INFO);
-//       total_dispensed = cassettes[pos].getDrink()->getVolumeDispensed();
-//       m_state = DISPENSE_IDLE;
-//   }
-//   else{
-//       debugOutput::sendMessage("exit idle", INFO);
-//       total_dispensed_prev2 = total_dispensed;
-//       m_nextState = DISPENSE;
-//   }
-
    return e_ret;
 }
 
@@ -81,21 +68,25 @@ DF_ERROR stateDispenseIdle::onAction()
    if (nullptr != &m_nextState)
    {
        if (m_pMessaging->getcCommand() != DISPENSE_END_CHAR){
-             debugOutput::sendMessage("in idle", INFO);
+             //debugOutput::sendMessage("in idle", INFO);
        }
 
        //debugOutput::sendMessage("in idle", INFO);
 
-       int total_dispensed = cassettes[pos].getDrink()->getVolumeDispensed();
+//       int total_dispensed = cassettes[pos].getDrink()->getVolumeDispensed();
 
-//       while (total_dispensed_prev2 == total_dispensed){
-//           debugOutput::sendMessage("remain in idle", INFO);
+//       if (total_dispensed_prev2 == total_dispensed){
+//           //debugOutput::sendMessage("remain in idle", INFO);
 //           total_dispensed = cassettes[pos].getDrink()->getVolumeDispensed();
-//           //m_state = DISPENSE_IDLE;
+//           m_nextState = DISPENSE_IDLE;
+//       }
+//       else {
+//           m_nextState = DISPENSE;
+//           total_dispensed_prev2 = total_dispensed;
 //       }
 
 
-       total_dispensed_prev2 = total_dispensed;
+
        m_nextState = DISPENSE;
 
 

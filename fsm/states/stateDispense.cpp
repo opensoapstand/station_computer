@@ -49,6 +49,9 @@ string stateDispense::toString()
  */
 DF_ERROR stateDispense::onEntry()
 {
+    if (total_dispensed_prev>0){
+        onAction();
+    } else{
    cassettes = g_cassettes;
    DF_ERROR e_ret = OK;
    pos = m_pMessaging->getnOption();
@@ -73,6 +76,7 @@ DF_ERROR stateDispense::onEntry()
    // TODO: Status Check
    // Do a check if there is not enough stock i.e. 350 order 250 left in tank
    return e_ret;
+    }
 }
 
 /*
@@ -109,13 +113,13 @@ DF_ERROR stateDispense::onAction()
       // TODO: Check the Volume dispensed so far
       cassettes[pos].getDrink()->getVolumeDispensed();
 
-      int total_dispensed = cassettes[pos].getDrink()->getVolumeDispensed();
+//      int total_dispensed = cassettes[pos].getDrink()->getVolumeDispensed();
 
 //      string outputString = "Dispensed previsously: " + to_string(total_dispensed_prev) + " and dispensed now = " + to_string(total_dispensed);
 
 //      if (total_dispensed_prev == total_dispensed){
 //          debugOutput::sendMessage("IDLE - Timer should be ticking!", INFO);
-//          //m_nextState = DISPENSE_IDLE;
+//          m_nextState = DISPENSE_IDLE;
 //      }
 //      else {
 //          debugOutput::sendMessage("DISPENSING - RESET TIMER!", INFO);
@@ -151,5 +155,7 @@ DF_ERROR stateDispense::onExit()
    cassettes[pos].stopDispense(DRINK);
 
    cassettes[pos].setIsDispenseComplete(false);
+
+   total_dispensed_prev = 0;
    return e_ret;
 }

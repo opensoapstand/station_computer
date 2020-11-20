@@ -39,7 +39,7 @@ void DfUiCommThread::run()
     exec();
 }
 
-void DfUiCommThread::readyRead()
+QByteArray DfUiCommThread::readyRead()
 {
     // get the information
     QByteArray Data = socket->readAll();
@@ -51,9 +51,15 @@ void DfUiCommThread::readyRead()
         qDebug() << "from CLEAN";
     }
 
+    if(Data == "Reset Timer") {
+        qDebug() << "I NEED TO RESET TIMERS NOW!" << endl;
+    }
+
     Data.append(" Recieved");
 
     socket->write(Data);
+
+    return Data;
 }
 
 void DfUiCommThread::disconnected()

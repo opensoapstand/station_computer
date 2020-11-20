@@ -19,6 +19,7 @@
 #define DISPENSEPAGE_H
 
 #include "df_util.h"
+#include "dfuicommthread.h"
 
 class payPage;
 class thankYouPage;

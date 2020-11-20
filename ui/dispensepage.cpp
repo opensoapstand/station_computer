@@ -179,6 +179,7 @@ void dispensePage::onDispenseTick(){
 void dispensePage::onDispenseIdleTick(){
     if(-- _dispenseIdleTimeoutSec >= 0) {
         qDebug() << "dispensePage: Idle Tick Down: " << _dispenseIdleTimeoutSec << endl;
+
     } else {
         qDebug() << "Timer Done!" << _dispenseIdleTimeoutSec << endl;
 //        dispenseIdleTimer->stop();

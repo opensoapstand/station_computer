@@ -152,7 +152,6 @@ int drink::getVolumeSinceLastPoll()
 
 int drink::getVolumeDispensedPreviously()
 {
-    cout << "Volume Dispensed Previously: " << m_nVolumeDispensedPreviously << endl;
     return m_nVolumeDispensedPreviously;
 }
 

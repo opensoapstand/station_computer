@@ -117,6 +117,7 @@ DF_ERROR stateDispense::onAction()
       }
       else {
           debugOutput::sendMessage("DISPENSING! - RESET TIMER!", INFO);
+          m_pMessaging->sendMessage("Reset Timer");
           m_nextState = DISPENSE;
           cassettes[pos].getDrink()->m_nVolumeDispensedPreviously = cassettes[pos].getDrink()->getVolumeDispensed();
       }

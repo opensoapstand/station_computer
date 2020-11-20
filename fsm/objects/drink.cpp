@@ -127,7 +127,6 @@ bool drink::getIsStillDrink()
 
 bool drink::registerFlowSensorTick(){
     m_nVolumeDispensed += m_nVolumePerTick;
-    //cout << "Something dispensed - reset timers!" << endl;
 }
 
 // TODO: Function name is inaccurate...deduct sale would be better
@@ -151,6 +150,12 @@ int drink::getVolumeSinceLastPoll()
     return temp;
 }
 
+int drink::getVolumeDispensedPreviously()
+{
+    cout << "Volume Dispensed Previously: " << m_nVolumeDispensedPreviously << endl;
+    return m_nVolumeDispensedPreviously;
+}
+
 // Reset values onEntry()
 DF_ERROR drink::startDispense(int nVolumeToDispense)
 {
@@ -158,7 +163,19 @@ DF_ERROR drink::startDispense(int nVolumeToDispense)
 
     m_nVolumeTarget = nVolumeToDispense;
     m_nVolumeDispensed = 0;
+    m_nVolumeDispensedPreviously = 0;
     m_nVolumeDispensedSinceLastPoll = 0;
+
+    return dfRet;
+}
+
+DF_ERROR drink::stopDispense()
+{
+    DF_ERROR dfRet = ERROR_BAD_PARAMS;
+
+    m_nVolumeDispensed = 0;
+    m_nVolumeDispensedSinceLastPoll = 0;
+    m_nVolumeDispensedPreviously = 0;
 
     return dfRet;
 }

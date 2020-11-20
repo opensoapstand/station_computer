@@ -150,6 +150,8 @@ DF_ERROR stateDispenseEnd::onExit()
    m_state = DISPENSE_END;
    m_nextState = IDLE; //go back for now
 
+   cassettes[pos].getDrink()->stopDispense();
+
    return e_ret;
 }
 

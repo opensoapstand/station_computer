@@ -48,30 +48,36 @@ string stateDispense::toString()
 DF_ERROR stateDispense::onEntry()
 {
 
-   cassettes = g_cassettes;
-   DF_ERROR e_ret = OK;
-   pos = m_pMessaging->getnOption();
-   pos = pos - 1;
-   // TODO: Priming Pumps and Registers for HIGH
-   debugOutput::sendMessage("------Dispensing Drink------", INFO);
-   // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> DRINK", INFO);
-   // debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
+       cassettes = g_cassettes;
+       DF_ERROR e_ret = OK;
+       pos = m_pMessaging->getnOption();
+       pos = pos - 1;
+       cassettes[pos].getDrink()->drinkVolumeInfo();
+       if (cassettes[pos].getDrink()->getVolumeDispensed() == 0) {
+           debugOutput::sendMessage("-----NEW TRANSACTION-----", INFO);
+           // TODO: Priming Pumps and Registers for HIGH
+           debugOutput::sendMessage("------Dispensing Drink------", INFO);
+           // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> DRINK", INFO);
+           // debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
-   cassettes[pos].getDrink()->setTargetVolume(m_pMessaging->getnTargetVolume());
+           cassettes[pos].getDrink()->setTargetVolume(m_pMessaging->getnTargetVolume());
 
-   cassettes[pos].getDrink()->startDispense(cassettes[pos].getDrink()->getTargetVolume());
-   //cout << cassettes[pos].getDrink()->getTargetVolume() << endl;
-   cassettes[pos].setIsDispenseComplete(false);
-   cassettes[pos].getDrink()->drinkInfo();
-   cassettes[pos].getDrink()->drinkVolumeInfo();
-   cassettes[pos].startDispense(DRINK);
+           cassettes[pos].getDrink()->startDispense(cassettes[pos].getDrink()->getTargetVolume());
+           cassettes[pos].setIsDispenseComplete(false);
+           cassettes[pos].getDrink()->drinkInfo();
+           cassettes[pos].getDrink()->drinkVolumeInfo();
+           cassettes[pos].startDispense(DRINK);
 
-   m_nextState = DISPENSE;
+           //m_nextState = DISPENSE;
 
-   // TODO: Status Check
-   // Do a check if there is not enough stock i.e. 350 order 250 left in tank
-   return e_ret;
-
+           // TODO: Status Check
+           // Do a check if there is not enough stock i.e. 350 order 250 left in tank
+           return e_ret;
+       }
+   else {
+       debugOutput::sendMessage("-----BUSY TRANSACTION-----", INFO);
+       onAction();
+   }
 
 }
 
@@ -99,16 +105,21 @@ DF_ERROR stateDispense::onAction()
       else
       {
          // debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
-         //debugOutput::sendMessage("I want to go to idle now", INFO);
-          //m_nextState = DISPENSE_IDLE;
       }
 
       // TODO: Do a check if Pumps are operational
       // send IPC if pump fails
-
-      // TODO: Check the Volume dispensed so far
       cassettes[pos].getDrink()->getVolumeDispensed();
 
+      if (cassettes[pos].getDrink()->getVolumeDispensedPreviously() == cassettes[pos].getDrink()->getVolumeDispensed()){
+          //debugOutput::sendMessage("IDLE - Timer should be ticking!", INFO);
+          m_nextState = DISPENSE_IDLE;
+      }
+      else {
+          debugOutput::sendMessage("DISPENSING! - RESET TIMER!", INFO);
+          m_nextState = DISPENSE;
+          cassettes[pos].getDrink()->m_nVolumeDispensedPreviously = cassettes[pos].getDrink()->getVolumeDispensed();
+      }
 
 
 
@@ -135,8 +146,9 @@ DF_ERROR stateDispense::onAction()
 DF_ERROR stateDispense::onExit()
 {
    DF_ERROR e_ret = OK;
-   cassettes[pos].stopDispense(DRINK);
+   //cassettes[pos].stopDispense(DRINK);
 
    cassettes[pos].setIsDispenseComplete(false);
+
    return e_ret;
 }

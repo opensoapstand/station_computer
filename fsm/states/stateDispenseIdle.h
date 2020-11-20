@@ -31,8 +31,7 @@ class stateDispenseIdle : public stateVirtual
 
         string toString();
 
-        DF_ERROR onEntry();    
-        //DF_ERROR onAction();     
+        DF_ERROR onEntry();
         DF_ERROR onAction();        
         DF_ERROR onExit();
 
@@ -42,6 +41,7 @@ class stateDispenseIdle : public stateVirtual
         int pos;
         dispenser* cassettes;
         bool flushCommand;
+
 };
 
 

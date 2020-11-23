@@ -19,6 +19,7 @@
 
 #include "df_util.h"
 #include "productpage_1.h"
+#include "dfuicommthread.h"
 
 namespace Ui {
 class idle;
@@ -35,6 +36,9 @@ public:
 
     DrinkOrder* userDrinkOrder;
     df_util* dfUtility;
+
+    DfUiCommThread* dfComm;
+
 
 private slots:
     void on_nextPageButton_clicked();

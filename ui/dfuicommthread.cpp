@@ -1,6 +1,5 @@
 #include "dfuicommthread.h"
 
-
 DfUiCommThread::DfUiCommThread(qintptr ID, QObject *parent) :
     QThread(parent)
 {

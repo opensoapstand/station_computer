@@ -23,6 +23,8 @@
 
 #include "thankyoupage.h"
 
+#include "dfuicommthread.h"
+
 
 // CTOR
 dispensePage::dispensePage(QWidget *parent) :

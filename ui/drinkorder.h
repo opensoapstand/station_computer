@@ -70,8 +70,13 @@ public:
     constexpr static double DRINK3_SIZE_ML = 200.00;
     constexpr static double DRINK4_SIZE_ML = 500.00;
 
-    constexpr static double PRICE_SMALL_TEST = 3.00;
-    constexpr static double PRICE_LARGE_TEST = 4.00;
+    constexpr static double DRINK1_PRICE = 3.75;
+    constexpr static double DRINK2_PRICE = 2.20;
+    constexpr static double DRINK3_PRICE = 2.00;
+    constexpr static double DRINK4_PRICE = 1.10;
+
+    //constexpr static double PRICE_SMALL_TEST = 3.00;
+    //constexpr static double PRICE_LARGE_TEST = 4.00;
 
     // Setters and Getters
     void setDrinkSize(DF_QT_OPTIONS sizeOption);

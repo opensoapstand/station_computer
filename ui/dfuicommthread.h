@@ -5,6 +5,11 @@
 #include <QTcpSocket>
 #include <QDebug>
 
+#include "dispensepage.h"
+#include "df_util.h"
+
+class dispensePage;
+
 class DfUiCommThread : public QThread
 {
     Q_OBJECT
@@ -14,6 +19,7 @@ public:
 
 signals:
     void error(QTcpSocket::SocketError socketerror);
+    void resetTimer();
 
 public slots:
     QByteArray readyRead();
@@ -22,6 +28,7 @@ public slots:
 private:
     QTcpSocket *socket;
     qintptr socketDescriptor;
+    dispensePage* dispensepage;
 };
 
 #endif // DFUICOMMTHREAD_H

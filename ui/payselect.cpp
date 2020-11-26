@@ -145,6 +145,8 @@ void paySelect::on_payPage_Button_clicked()
 
     string drinkTotal = drinkAmount;
 
+    qDebug() << "DRINK AMOUNT IS: " << drinkAmount.c_str();
+
     connect(this, SIGNAL(paymentTotal(string,string,string)), this->paymentPage, SLOT(updateTotals(string,string,string)));
     emit(paymentTotal(description, drinkAmount, drinkTotal));
 

@@ -76,19 +76,6 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
         system(command_dir.c_str());
         system(command_edg.c_str());
         system(command_val.c_str());
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio364/direction");
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio413/direction");
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio416/direction");
-
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio339/edge");
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio364/edge");
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio413/edge");
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio416/edge");
-
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio339/value");
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio364/value");
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio413/value");
-//        system("sudo -S chmod a+w /sys/class/gpio/gpio416/value");
 
 	return;
 }

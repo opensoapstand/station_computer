@@ -28,6 +28,10 @@ void DfUiCommThread::run()
     connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::DirectConnection);
     connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
 
+
+
+
+
     // We'll have multiple clients, we want to know which is which
     qDebug() << socketDescriptor << " Client connected";
 
@@ -52,6 +56,8 @@ QByteArray DfUiCommThread::readyRead()
 
     if(Data == "Reset Timer") {
         qDebug() << "I NEED TO RESET TIMERS NOW!" << endl;
+        connect(this, SIGNAL(resetTimer()), dispensepage, SLOT(resetTimer()));
+        emit(resetTimer());
     }
 
     Data.append(" Recieved");

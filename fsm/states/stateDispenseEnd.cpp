@@ -144,14 +144,16 @@ DF_ERROR stateDispenseEnd::onExit()
    m_pMessaging->clearCommandString();
    m_pMessaging->clearcCommand();
 
+   cassettes[pos].getDrink()->stopDispense();
+   cassettes[pos].stopDispense(DRINK);
+
    debugOutput::sendMessage("Exiting Dispensing END[" + toString() + "]", INFO);
 
    // TODO: Does not seem to advance to Idle again...
    m_state = DISPENSE_END;
    m_nextState = IDLE; //go back for now
 
-   cassettes[pos].getDrink()->stopDispense();
-   cassettes[pos].stopDispense(DRINK);
+
 
    return e_ret;
 }

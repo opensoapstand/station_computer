@@ -168,6 +168,12 @@ DF_ERROR drink::startDispense(int nVolumeToDispense)
     return dfRet;
 }
 
+DF_ERROR drink::initDispense()
+{
+     m_nVolumeDispensed = 0;
+     m_nVolumeDispensedPreviously = 0;
+}
+
 DF_ERROR drink::stopDispense()
 {
     DF_ERROR dfRet = ERROR_BAD_PARAMS;
@@ -175,6 +181,9 @@ DF_ERROR drink::stopDispense()
     m_nVolumeDispensed = 0;
     m_nVolumeDispensedSinceLastPoll = 0;
     m_nVolumeDispensedPreviously = 0;
+
+    cout << "VOLUME DISPENSED CLEARED!" << endl;
+    cout << "VOLUME NOW : " << m_nVolumeDispensed << endl;
 
     return dfRet;
 }

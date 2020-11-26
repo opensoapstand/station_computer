@@ -44,8 +44,10 @@ public:
 	void setTargetVolume(double nVolumeTarget){m_nVolumeTarget = nVolumeTarget;};
 
 	// Interrupt Helpers
-	DF_ERROR startDispense(int nVolumeToDispense);
+        DF_ERROR startDispense(int nVolumeToDispense);
         DF_ERROR stopDispense();
+
+        DF_ERROR initDispense();
 
 	int getVolumeSinceLastPoll();
 	bool isDispenseComplete();

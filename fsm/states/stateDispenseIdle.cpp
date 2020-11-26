@@ -48,10 +48,9 @@ DF_ERROR stateDispenseIdle::onEntry()
    pos = m_pMessaging->getnOption();
    pos = pos - 1;
 
-   cassettes[pos].startDispense(DRINK);
    cassettes[pos].setIsDispenseComplete(false);
-
    return e_ret;
+
 }
 
 // Idles after proper initilization;  Waits for a command from messageMediator

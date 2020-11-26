@@ -53,7 +53,7 @@ DF_ERROR stateIdle::onEntry()
 }
 
 /*
-* Advances State: If IP Thread detects DISPENSE 
+* Advances State: If IP Thread detects DISPENSE
 * command then advance to DISPENSE_IDLE
 */
 DF_ERROR stateIdle::onAction()
@@ -67,8 +67,14 @@ DF_ERROR stateIdle::onAction()
       // Check if Command String is ready
       if (m_pMessaging->isCommandReady())
       {
-         // if (m_pMessaging->getPositionReady())
+         m_pMessaging->getPositionReady();
          // {
+         cassettes = g_cassettes;
+         pos = m_pMessaging->getnOption();
+         pos = pos - 1;
+
+         cassettes[pos].getDrink()->initDispense();
+
          m_nextState = DISPENSE_IDLE;
          // }
          // else

@@ -16,6 +16,8 @@
 #include "../dftypes.h"
 #include "../objects/messageMediator.h"
 #include "stateVirtual.h"
+#include "../fsm.h"
+#include "../objects/drink.h"
 
 class stateIdle : public stateVirtual
 {
@@ -36,6 +38,8 @@ class stateIdle : public stateVirtual
         drink* drinkOrder;
 
     private:
+        int pos;
+        dispenser* cassettes;
 
 };
 

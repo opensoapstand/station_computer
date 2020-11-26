@@ -96,6 +96,8 @@ class dispenser
 
       bool* m_pIsDispensing;
 
+      bool m_isDispenseNew;
+
       drink* m_pDrink;
 
       DF_ERROR * m_pthreadError;

@@ -200,7 +200,7 @@ DF_ERROR dispenser::startDispense(int pos){
     // Open Drink Solenoid
     // debugOutput::sendMessage("Trigger solenoid:", INFO);
     m_pSolenoid[pos]->writePin(HIGH);
-    // debugOutput::sendMessage("Triggered solenoid:", INFO);
+    debugOutput::sendMessage("Triggered pump:", INFO);
  
     // If Still start pump!
     if(m_isStill && (m_pPump != nullptr) ) {
@@ -224,6 +224,7 @@ DF_ERROR dispenser::stopDispense(int pos){
 
     // Shut Solenoid
     m_pSolenoid[pos]->writePin(LOW);
+    debugOutput::sendMessage("UnTriggered pump:", INFO);
 
     // XXX: Disable Button - Linked thru State Virtual
     // e_ret = disconnectButton();

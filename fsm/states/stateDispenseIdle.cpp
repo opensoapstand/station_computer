@@ -48,6 +48,8 @@ DF_ERROR stateDispenseIdle::onEntry()
    pos = m_pMessaging->getnOption();
    pos = pos - 1;
 
+   cassettes[pos].startDispense(DRINK);
+
    return e_ret;
 }
 

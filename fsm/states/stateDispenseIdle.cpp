@@ -49,6 +49,23 @@ DF_ERROR stateDispenseIdle::onEntry()
    pos = pos - 1;
 
    cassettes[pos].setIsDispenseComplete(false);
+   if (cassettes[pos].getDrink()->getVolumeDispensed() == 0) {
+       debugOutput::sendMessage("-----NEW TRANSACTION-----", INFO);
+       // TODO: Priming Pumps and Registers for HIGH
+       debugOutput::sendMessage("------Dispensing Drink------", INFO);
+       // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> DRINK", INFO);
+       // debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
+
+       cassettes[pos].getDrink()->setTargetVolume(m_pMessaging->getnTargetVolume());
+
+       cassettes[pos].getDrink()->startDispense(cassettes[pos].getDrink()->getTargetVolume());
+       cassettes[pos].setIsDispenseComplete(false);
+       cassettes[pos].getDrink()->drinkInfo();
+       cassettes[pos].getDrink()->drinkVolumeInfo();
+       cassettes[pos].startDispense(DRINK);
+
+   }
+
    return e_ret;
 
 }

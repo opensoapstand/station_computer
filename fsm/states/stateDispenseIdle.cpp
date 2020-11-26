@@ -62,30 +62,32 @@ DF_ERROR stateDispenseIdle::onAction()
 
 
 
-   if (nullptr != &m_nextState)
-   {
-       m_pMessaging->getPositionReady();
+   //   if (nullptr != &m_nextState)
+   //   {
+   //       m_pMessaging->getPositionReady();
 
-       if ((m_pMessaging->getcCommand() == DISPENSE_END_CHAR) || (cassettes[pos].getIsDispenseComplete())){
+   //       if ((m_pMessaging->getcCommand() == DISPENSE_END_CHAR) || (cassettes[pos].getIsDispenseComplete())){
 
-           m_nextState = DISPENSE_END;
-           return df_ret = OK;
-       }
+   //           m_nextState = DISPENSE_END;
+   //           return df_ret = OK;
+   //       }
 
-       cassettes[pos].getDrink()->drinkVolumeInfo();
+   //       cassettes[pos].getDrink()->drinkVolumeInfo();
 
 
-       if (cassettes[pos].getDrink()->getVolumeDispensed() == cassettes[pos].getDrink()->getVolumeDispensedPreviously()){
-           debugOutput::sendMessage("IDLING - COUNTDOWN!", INFO);
-           m_nextState = DISPENSE_IDLE;
-       }
-       else {
-           cassettes[pos].getDrink()->m_nVolumeDispensedPreviously = cassettes[pos].getDrink()->getVolumeDispensed();
-           m_nextState = DISPENSE;
-       }
+   //       if (cassettes[pos].getDrink()->getVolumeDispensed() == cassettes[pos].getDrink()->getVolumeDispensedPreviously()){
+   //           debugOutput::sendMessage("IDLING - COUNTDOWN!", INFO);
+   //           m_nextState = DISPENSE_IDLE;
+   //       }
+   //       else {
+   //           cassettes[pos].getDrink()->m_nVolumeDispensedPreviously = cassettes[pos].getDrink()->getVolumeDispensed();
+   //           m_nextState = DISPENSE;
+   //       }
+
+   m_nextState = DISPENSE;
       usleep(500000);
       df_ret = OK;
-   }
+//   }
 
    return df_ret;
 }

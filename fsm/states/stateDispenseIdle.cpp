@@ -49,6 +49,7 @@ DF_ERROR stateDispenseIdle::onEntry()
    pos = pos - 1;
 
    cassettes[pos].startDispense(DRINK);
+   cassettes[pos].setIsDispenseComplete(false);
 
    return e_ret;
 }

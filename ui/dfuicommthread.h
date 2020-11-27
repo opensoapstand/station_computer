@@ -5,10 +5,8 @@
 #include <QTcpSocket>
 #include <QDebug>
 
-#include "dispensepage.h"
 #include "df_util.h"
-
-class dispensePage;
+#include "dispensepage.h"
 
 class DfUiCommThread : public QThread
 {
@@ -16,6 +14,8 @@ class DfUiCommThread : public QThread
 public:
     explicit DfUiCommThread(qintptr ID, QObject *parent = 0);
     void run();
+    void timerFunc();
+    bool isDispense;
 
 signals:
     void error(QTcpSocket::SocketError socketerror);
@@ -28,7 +28,7 @@ public slots:
 private:
     QTcpSocket *socket;
     qintptr socketDescriptor;
-    dispensePage* dispensepage;
+    class dispensePage* dispensepage;
 };
 
 #endif // DFUICOMMTHREAD_H

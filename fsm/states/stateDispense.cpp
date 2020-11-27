@@ -113,6 +113,7 @@ DF_ERROR stateDispense::onAction()
 
       if (cassettes[pos].getDrink()->getVolumeDispensedPreviously() == cassettes[pos].getDrink()->getVolumeDispensed()){
           //debugOutput::sendMessage("IDLE - Timer should be ticking!", INFO);
+
           m_nextState = DISPENSE_IDLE;
       }
       else {

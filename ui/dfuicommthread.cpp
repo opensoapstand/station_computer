@@ -28,10 +28,12 @@ void DfUiCommThread::run()
 
     connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::DirectConnection);
     connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
-    connect(this, &DfUiCommThread::resetTimerSignal, dispensepage, &dispensePage::resetTimerSlot);
 
     // We'll have multiple clients, we want to know which is which
     qDebug() << socketDescriptor << " Client connected";
+
+    //connect(this, &DfUiCommThread::resetTimerSignal, this->dispensepage, &dispensePage::resetTimerSlot, Qt::DirectConnection);
+
 
     // make this thread a loop,
     // thread will stay alive so that signal/slot to function properly
@@ -54,7 +56,13 @@ QByteArray DfUiCommThread::readyRead()
 
     if(Data == "Reset Timer") {
         qDebug() << "I NEED TO RESET TIMERS NOW!" << endl;
-        emit(resetTimerSignal());
+        isDispense = true;
+    }
+
+    if(Data == "Go Timer!"){
+        qDebug() << "I GOT THE GO!" << endl;
+        isDispense = false;
+        qDebug() << "I GOT THE GO! -- SET TO FALSE" << endl;
     }
 
     Data.append(" Recieved");
@@ -62,6 +70,12 @@ QByteArray DfUiCommThread::readyRead()
     socket->write(Data);
 
     return Data;
+}
+
+void DfUiCommThread::timerFunc(){
+    qDebug() << "In Func" << endl;
+//    emit(resetTimerSignal());
+    //qDebug() << dispensepage->isDispense << endl;
 }
 
 void DfUiCommThread::disconnected()

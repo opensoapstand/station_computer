@@ -19,11 +19,12 @@
 #define DISPENSEPAGE_H
 
 #include "df_util.h"
-#include "dfuicommthread.h"
+#include "dfuiserver.h"
 
 class payPage;
 class thankYouPage;
 class idle;
+class DfUiServer;
 
 namespace Ui {
 class dispensePage;
@@ -39,7 +40,8 @@ public:
     void setPage(payPage* pagePayment, thankYouPage* pageThankYou, idle* pageIdle);
     ~dispensePage();
     void showEvent(QShowEvent *event);
-    void resetTimerSlot();
+    //void resetTimerSlot();
+    bool isDispense = false;
 
 private slots:
     // **** Navigation ****
@@ -47,15 +49,13 @@ private slots:
     void onDispenseTick();
     void onDispenseIdleTick();
 
-public slots:
-     //void resetTimerSlot();
-
 private:
     // **** GUI *****
     Ui::dispensePage *ui;
     payPage* paymentPage;
     thankYouPage* thanksPage;
     idle* idlePage;
+    DfUiServer* dfuiserver;
 
     // XXX: Remove when interrupts and flowsensors work.
 
@@ -69,6 +69,7 @@ private:
     QTimer* dispenseNextPageTimer;
 
     void stopDispenseTimer();
+    void resetTimerSlot();
 
 protected:
 

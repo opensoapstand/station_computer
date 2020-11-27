@@ -39,6 +39,7 @@ public:
     void setPage(payPage* pagePayment, thankYouPage* pageThankYou, idle* pageIdle);
     ~dispensePage();
     void showEvent(QShowEvent *event);
+    void resetTimerSlot();
 
 private slots:
     // **** Navigation ****
@@ -47,7 +48,7 @@ private slots:
     void onDispenseIdleTick();
 
 public slots:
-     void resetTimerSlot();
+     //void resetTimerSlot();
 
 private:
     // **** GUI *****

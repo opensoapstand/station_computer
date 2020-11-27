@@ -31,16 +31,6 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
 
     // connect signal/slot
     // once a thread is not needed, it will be beleted later
-
-    if (thread->isDispense == true){
-        qDebug() << "setting isdispense true" << endl;
-        isDispense = true;
-    }
-    if (thread->isDispense == false){
-        qDebug() << "setting isdispense FLASE" << endl;
-        isDispense = false;
-    }
-
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
     thread->start();

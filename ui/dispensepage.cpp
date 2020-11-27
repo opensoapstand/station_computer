@@ -22,8 +22,6 @@
 #include "idle.h"
 
 #include "thankyoupage.h"
-#include "dfuiserver.h"
-
 
 // CTOR
 dispensePage::dispensePage(QWidget *parent) :
@@ -153,20 +151,11 @@ void dispensePage::stopDispenseTimer(){
     dispenseIdleTimer = nullptr;
 }
 
-void dispensePage::resetTimerSlot(){
-    qDebug() << "RESET TIMER!!" << endl;
-    _dispenseIdleTimeoutSec = 90;
-    isDispense = false;
-}
-
 // XXX: Remove this when interrupts and flow sensors work!
 
 void dispensePage::onDispenseTick(){
     if(-- _dispenseTimeoutSec >= 0) {
-
         qDebug() << "Tick Down: " << _dispenseTimeoutSec << endl;
-
-
         _dispenseTimeLabel.clear();
         QString time = QString::number(_dispenseTimeoutSec);
         _dispenseTimeLabel.append(time);
@@ -181,16 +170,6 @@ void dispensePage::onDispenseTick(){
 void dispensePage::onDispenseIdleTick(){
     if(-- _dispenseIdleTimeoutSec >= 0) {
         qDebug() << "dispensePage: Idle Tick Down: " << _dispenseIdleTimeoutSec << endl;
-
-        //qDebug() << dfuiserver->isDispense << endl;
-
-        if (dfuiserver->isDispense == true){
-            qDebug() << "Ishould reset now mos" << endl;
-            resetTimerSlot();
-        }
-        else{
-            qDebug() << "isDispense probs false" << endl;
-        }
     } else {
         qDebug() << "Timer Done!" << _dispenseIdleTimeoutSec << endl;
 //        dispenseIdleTimer->stop();

@@ -64,7 +64,7 @@ DF_ERROR stateDispenseIdle::onEntry()
        cassettes[pos].getDrink()->drinkVolumeInfo();
        cassettes[pos].startDispense(DRINK);
 
-       m_pMessaging->sendMessage("Go Timer!");
+      // m_pMessaging->sendMessage("Go Timer!");
 
    }
 

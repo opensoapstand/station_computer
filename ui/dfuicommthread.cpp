@@ -1,5 +1,4 @@
 #include "dfuicommthread.h"
-#include "dispensepage.h"
 
 DfUiCommThread::DfUiCommThread(qintptr ID, QObject *parent) :
     QThread(parent)
@@ -28,9 +27,7 @@ void DfUiCommThread::run()
 
     connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::DirectConnection);
     connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
-    connect(this, this->resetTimerSignal(), dispensepage, dispensepage->resetTimerSlot);
-
-
+    connect(this, this->resetTimerSignal(), dispensepage, dispensepage->resetTimerSlot());
 
     // We'll have multiple clients, we want to know which is which
     qDebug() << socketDescriptor << " Client connected";

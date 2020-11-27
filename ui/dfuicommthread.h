@@ -19,7 +19,7 @@ public:
 
 signals:
     void error(QTcpSocket::SocketError socketerror);
-    void resetTimer();
+    void resetTimerSignal();
 
 public slots:
     QByteArray readyRead();

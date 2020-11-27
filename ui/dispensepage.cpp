@@ -155,8 +155,8 @@ void dispensePage::stopDispenseTimer(){
     dispenseIdleTimer = nullptr;
 }
 
-void dispensePage::resetTimer(){
-    qDebug() << "RESET TIMER!!" << endl;
+void dispensePage::resetTimerSlot(){
+    Debug() << "RESET TIMER!!" << endl;
     _dispenseIdleTimeoutSec = 90;
 }
 

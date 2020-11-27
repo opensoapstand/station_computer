@@ -1,4 +1,5 @@
 #include "dfuicommthread.h"
+#include "dispensepage.h"
 
 DfUiCommThread::DfUiCommThread(qintptr ID, QObject *parent) :
     QThread(parent)
@@ -27,8 +28,7 @@ void DfUiCommThread::run()
 
     connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::DirectConnection);
     connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
-
-
+    connect(this, this->resetTimerSignal(), dispensepage, dispensepage->resetTimerSlot);
 
 
 
@@ -56,8 +56,7 @@ QByteArray DfUiCommThread::readyRead()
 
     if(Data == "Reset Timer") {
         qDebug() << "I NEED TO RESET TIMERS NOW!" << endl;
-        connect(this, SIGNAL(resetTimer()), dispensepage, SLOT(resetTimer()));
-        emit(resetTimer());
+        emit(resetTimerSignal());
     }
 
     Data.append(" Recieved");

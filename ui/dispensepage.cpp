@@ -95,7 +95,7 @@ void dispensePage::showEvent(QShowEvent *event)
 
     qDebug() << "Start Dispense Timers" << endl;
     dispenseIdleTimer->start(1000);
-    _dispenseIdleTimeoutSec = 90;
+    _dispenseIdleTimeoutSec = 300;
 
 }
 

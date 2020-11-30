@@ -46,6 +46,13 @@ DF_ERROR stateDispenseEnd::onEntry()
    DF_ERROR e_ret  = OK;
 
    debugOutput::sendMessage("Entering Dispense End...", STATE_CHANGE);
+
+   cassettes = g_cassettes;
+   pos = m_pMessaging->getnOption();
+   pos = pos - 1;
+
+   cassettes[pos].getDrink()->stopDispense();
+   cassettes[pos].stopDispense(DRINK);
       
    return e_ret;
 }
@@ -144,8 +151,7 @@ DF_ERROR stateDispenseEnd::onExit()
    m_pMessaging->clearCommandString();
    m_pMessaging->clearcCommand();
 
-   cassettes[pos].getDrink()->stopDispense();
-   cassettes[pos].stopDispense(DRINK);
+
 
    debugOutput::sendMessage("Exiting Dispensing END[" + toString() + "]", INFO);
 

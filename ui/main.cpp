@@ -25,7 +25,6 @@
 #include <QApplication>
 #include "df_util.h"
 
-
 int main(int argc, char *argv[])
 {
     // Fire up QT GUI Thread
@@ -75,6 +74,9 @@ int main(int argc, char *argv[])
 
     DfUiServer dfUiServer;
     dfUiServer.startServer();
+
+    QObject::connect(&dfUiServer, &DfUiServer::pleaseReset, dispensingPage, &dispensePage::PleaseResetTimerSlot);
+
 
     return mainApp.exec();
 }

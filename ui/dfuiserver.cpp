@@ -1,5 +1,6 @@
 #include "dfuiserver.h"
 #include "dfuicommthread.h"
+#include "dispensepage.h"
 
 DfUiServer::DfUiServer(QObject *parent) :
     QTcpServer(parent)
@@ -20,6 +21,11 @@ void DfUiServer::startServer()
     }
 }
 
+void DfUiServer::resetTimerSlot(){
+    qDebug() << "here I am!" << endl;
+    emit pleaseReset();
+}
+
 // This function is called by QTcpServer when a new connection is available.
 void DfUiServer::incomingConnection(qintptr socketDescriptor)
 {
@@ -32,6 +38,9 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
     // connect signal/slot
     // once a thread is not needed, it will be beleted later
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    connect(thread, &DfUiCommThread::resetTimerSignal, this, &DfUiServer::resetTimerSlot);
 
     thread->start();
 }
+
+

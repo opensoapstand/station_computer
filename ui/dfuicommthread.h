@@ -19,7 +19,7 @@ public:
 
 signals:
     void error(QTcpSocket::SocketError socketerror);
-    void resetTimer();
+    void resetTimerSignal(void);
 
 public slots:
     QByteArray readyRead();
@@ -28,7 +28,6 @@ public slots:
 private:
     QTcpSocket *socket;
     qintptr socketDescriptor;
-    dispensePage* dispensepage;
 };
 
 #endif // DFUICOMMTHREAD_H

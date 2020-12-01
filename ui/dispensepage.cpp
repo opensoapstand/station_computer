@@ -38,9 +38,12 @@ dispensePage::dispensePage(QWidget *parent) :
     /*hacky transparent button*/
     ui->finish_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
+    //DfUiCommThread *dfuicommthread = new DfUiCommThread;
+
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
+   // connect(dfuicommthread, &DfUiCommThread::resetTimerSignal, this, &dispensePage::resetTimerSlot);
 
 }
 
@@ -175,4 +178,9 @@ void dispensePage::onDispenseIdleTick(){
 //        dispenseIdleTimer->stop();
         on_finish_Button_clicked();
     }
+}
+
+void dispensePage::PleaseResetTimerSlot(void){
+    qDebug() << "RESET SIGNAL RECEIVED!" << endl;
+    _dispenseIdleTimeoutSec = 300;
 }

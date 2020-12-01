@@ -1,6 +1,5 @@
 #include "dfuiserver.h"
 #include "dfuicommthread.h"
-#include "dispensepage.h"
 
 DfUiServer::DfUiServer(QObject *parent) :
     QTcpServer(parent)
@@ -22,7 +21,6 @@ void DfUiServer::startServer()
 }
 
 void DfUiServer::resetTimerSlot(){
-    qDebug() << "here I am!" << endl;
     emit pleaseReset();
 }
 

@@ -5,7 +5,6 @@
 #include <QTcpSocket>
 #include <QDebug>
 
-#include "dispensepage.h"
 #include "df_util.h"
 
 class dispensePage;

@@ -3,10 +3,6 @@
 
 #include <QTcpServer>
 
-#include "dispensepage.h"
-
-class dispensePage;
-
 class DfUiServer : public QTcpServer
 {
     Q_OBJECT
@@ -17,11 +13,6 @@ public:
 
 signals:
     void pleaseReset();
-
-public slots:
-
-private:
-    dispensePage* dispensingPage;
 
 protected:
     void incomingConnection(qintptr socketDescriptor);

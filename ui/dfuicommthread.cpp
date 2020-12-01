@@ -1,5 +1,4 @@
 #include "dfuicommthread.h"
-#include "dispensepage.h"
 
 DfUiCommThread::DfUiCommThread(qintptr ID, QObject *parent) :
     QThread(parent)
@@ -26,14 +25,8 @@ void DfUiCommThread::run()
     // note - Qt::DirectConnection is used because it's multithreaded
     //        This makes the slot to be invoked immediately, when the signal is emitted.
 
-   // dispensePage* dispensepage;
-
     connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::DirectConnection);
     connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
-    //connect(this, &DfUiCommThread::resetTimerSignal, dispensepage, &dispensePage::resetTimerSlot);
-
-    //connect(this, SIGNAL(resetTimer()), dispensepage, SLOT(resetTimer()));
-
 
 
     // We'll have multiple clients, we want to know which is which

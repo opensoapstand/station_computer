@@ -98,7 +98,7 @@ void dispensePage::showEvent(QShowEvent *event)
 
     qDebug() << "Start Dispense Timers" << endl;
     dispenseIdleTimer->start(1000);
-    _dispenseIdleTimeoutSec = 300;
+    _dispenseIdleTimeoutSec = 30;
 
 }
 
@@ -181,6 +181,6 @@ void dispensePage::onDispenseIdleTick(){
 }
 
 void dispensePage::PleaseResetTimerSlot(void){
-    qDebug() << "RESET SIGNAL RECEIVED!" << endl;
-    _dispenseIdleTimeoutSec = 300;
+    //qDebug() << "RESET SIGNAL RECEIVED!" << endl;
+    _dispenseIdleTimeoutSec = 30;
 }

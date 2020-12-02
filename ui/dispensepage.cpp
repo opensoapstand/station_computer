@@ -108,42 +108,63 @@ void dispensePage::showEvent(QShowEvent *event)
 void dispensePage::on_finish_Button_clicked()
 {
     qDebug() << "dispensePage: finish button clicked" << endl;
-    stopDispenseTimer();
 
-    // TODO: Link to FSM for Dispense
-    {
-        qDebug() << "dispensePage: Cleanse cycle." << endl;
-//        ui->dispense_clean_label->setText("REMOVE BOTTLE!");
-//        ui->dispense_progress_label->setText("...");
-
-        dispenseEndTimer = new QTimer(this);
-        dispenseEndTimer->setInterval(1000);
-        connect(dispenseEndTimer, SIGNAL(timeout()), this, SLOT(onDispenseTick()));
-        dispenseEndTimer->start(1000);
-        _dispenseTimeoutSec = 5;
-    }
-
-    // FIXME: this is a hack for size changes...
     QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
     command.append('s');
-    this->idlePage->dfUtility->msg = command;
 
-    qDebug() << this->idlePage->dfUtility->msg << endl;
+    QMessageBox msgBox;
+    msgBox.setText("Are you sure?");
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    int ret = msgBox.exec();
 
-    idlePage->dfUtility->m_IsSendingFSM = true;
+    switch(ret){
+        case QMessageBox::Yes:
+            qDebug() << "YES CLICKED" << endl;
+            stopDispenseTimer();
 
-    idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
-    //    this->idlePage->dfUtility->msg = QString::number(this->idlePage->userDrinkOrder->getOption());
+            // TODO: Link to FSM for Dispense
 
-    // Send a Cleanse and TODO: helps FSM onExit...
-    idlePage->dfUtility->send_to_FSM();
+                qDebug() << "dispensePage: Cleanse cycle." << endl;
+                //ui->dispense_clean_label->setText("REMOVE BOTTLE!");
+                //ui->dispense_progress_label->setText("...");
 
-    dispenseEndTimer->stop();
-    dispenseEndTimer->deleteLater();
+                dispenseEndTimer = new QTimer(this);
+                dispenseEndTimer->setInterval(1000);
+                connect(dispenseEndTimer, SIGNAL(timeout()), this, SLOT(onDispenseTick()));
+                dispenseEndTimer->start(1000);
+                _dispenseTimeoutSec = 5;
 
 
-    this->hide();
-    thanksPage->showFullScreen();
+            // FIXME: this is a hack for size changes...
+
+            this->idlePage->dfUtility->msg = command;
+
+            qDebug() << this->idlePage->dfUtility->msg << endl;
+
+            idlePage->dfUtility->m_IsSendingFSM = true;
+
+            idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
+            //    this->idlePage->dfUtility->msg = QString::number(this->idlePage->userDrinkOrder->getOption());
+
+            // Send a Cleanse and TODO: helps FSM onExit...
+            idlePage->dfUtility->send_to_FSM();
+
+            dispenseEndTimer->stop();
+            dispenseEndTimer->deleteLater();
+
+            this->hide();
+            thanksPage->showFullScreen();
+            break;
+
+        case QMessageBox::No:
+            qDebug() << "NO CLICKED" << endl;
+            break;
+
+        default:
+            break;
+    }
+
+
 }
 
 void dispensePage::stopDispenseTimer(){

@@ -39,6 +39,8 @@ public:
     ~dispensePage();
     void showEvent(QShowEvent *event);
     void PleaseResetTimerSlot(void);
+    void updateVolumeDisplayed(int dispensed);
+    //void volumeDispensedLabel(QLabel* label);
 
 public slots:
 
@@ -67,6 +69,8 @@ private:
     QTimer *dispenseIdleTimer;
 
     QTimer* dispenseNextPageTimer;
+
+    int volumeDispensed;
 
     void stopDispenseTimer();
 

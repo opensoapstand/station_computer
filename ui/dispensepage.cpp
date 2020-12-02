@@ -38,7 +38,7 @@ dispensePage::dispensePage(QWidget *parent) :
     /*hacky transparent button*/
     ui->finish_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
-    //DfUiCommThread *dfuicommthread = new DfUiCommThread;
+    ui->volumeDispensedLabel->setText("");
 
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
@@ -183,4 +183,13 @@ void dispensePage::onDispenseIdleTick(){
 void dispensePage::PleaseResetTimerSlot(void){
     //qDebug() << "RESET SIGNAL RECEIVED!" << endl;
     _dispenseIdleTimeoutSec = 30;
+}
+
+void dispensePage::updateVolumeDisplayed(int dispensed){
+    string disSTRING = "I am in dispensed page and I know that " + to_string(dispensed) + " has been dispensed!";
+    qDebug() << (disSTRING).c_str() << endl;
+    volumeDispensed = dispensed;
+    //volumeDispensedLabel.clear();
+    this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ "ml dispensed");
+
 }

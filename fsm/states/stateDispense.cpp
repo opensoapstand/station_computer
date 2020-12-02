@@ -109,7 +109,9 @@ DF_ERROR stateDispense::onAction()
 
       // TODO: Do a check if Pumps are operational
       // send IPC if pump fails
-      cassettes[pos].getDrink()->getVolumeDispensed();
+
+      m_pMessaging->sendMessage(to_string(cassettes[pos].getDrink()->getVolumeDispensed()));
+
 
       if (cassettes[pos].getDrink()->getVolumeDispensedPreviously() == cassettes[pos].getDrink()->getVolumeDispensed()){
           //debugOutput::sendMessage("IDLE - Timer should be ticking!", INFO);

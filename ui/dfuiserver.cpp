@@ -24,6 +24,10 @@ void DfUiServer::resetTimerSlot(){
     emit pleaseReset();
 }
 
+void DfUiServer::updateVolumeSlot(int dispensed){
+    emit updateVolume(dispensed);
+}
+
 // This function is called by QTcpServer when a new connection is available.
 void DfUiServer::incomingConnection(qintptr socketDescriptor)
 {
@@ -37,6 +41,7 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
     // once a thread is not needed, it will be beleted later
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     connect(thread, &DfUiCommThread::resetTimerSignal, this, &DfUiServer::resetTimerSlot);
+    connect(thread, &DfUiCommThread::updateVolumeSignal, this, &DfUiServer::updateVolumeSlot);
 
     thread->start();
 }

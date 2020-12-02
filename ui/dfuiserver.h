@@ -10,9 +10,11 @@ public:
     explicit DfUiServer(QObject *parent = 0);
     void startServer();
     void resetTimerSlot();
+    void updateVolumeSlot(int dispensed);
 
 signals:
     void pleaseReset();
+    void updateVolume(int dispensed);
 
 protected:
     void incomingConnection(qintptr socketDescriptor);

@@ -52,9 +52,11 @@ QByteArray DfUiCommThread::readyRead()
     }
 
     if(Data == "Reset Timer") {
-        qDebug() << "I NEED TO RESET TIMERS NOW!" << endl;
-
         emit resetTimerSignal();
+    }
+
+    if(strtol(Data, &pEnd, 10)){
+       emit updateVolumeSignal(strtol(Data, &pEnd, 10));
     }
 
     Data.append(" Recieved");

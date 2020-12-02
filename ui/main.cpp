@@ -76,6 +76,7 @@ int main(int argc, char *argv[])
     dfUiServer.startServer();
 
     QObject::connect(&dfUiServer, &DfUiServer::pleaseReset, dispensingPage, &dispensePage::PleaseResetTimerSlot);
+    QObject::connect(&dfUiServer, &DfUiServer::updateVolume, dispensingPage, &dispensePage::updateVolumeDisplayed);
 
 
     return mainApp.exec();

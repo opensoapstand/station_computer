@@ -41,11 +41,16 @@
   <widget class="QLabel" name="volumeDispensedLabel">
    <property name="geometry">
     <rect>
-     <x>510</x>
-     <y>1676</y>
-     <width>141</width>
+     <x>420</x>
+     <y>1690</y>
+     <width>511</width>
      <height>61</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>20</pointsize>
+    </font>
    </property>
    <property name="styleSheet">
     <string notr="true"/>
@@ -54,7 +59,7 @@
     <string/>
    </property>
    <property name="alignment">
-    <set>Qt::AlignCenter</set>
+    <set>Qt::AlignJustify|Qt::AlignVCenter</set>
    </property>
   </widget>
  </widget>

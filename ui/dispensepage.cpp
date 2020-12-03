@@ -113,7 +113,10 @@ void dispensePage::on_finish_Button_clicked()
     command.append('s');
 
     QMessageBox msgBox;
-    msgBox.setText("Are you sure?");
+    msgBox.setWindowFlags(Qt::FramelessWindowHint);
+    msgBox.setText("<p align=center>Are you sure?</p>");
+    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-width: 300px; min-height: 300px;}");
+
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     int ret = msgBox.exec();
 

@@ -46,7 +46,7 @@ private slots:
     void on_selection4_Button_clicked();
     //void on_selection5_Button_clicked();
     //void on_selection6_Button_clicked();
-    void on_mainPage_Button_clicked();
+    void mainPage();
     void onProductPageTimeoutTick();
 
 private:

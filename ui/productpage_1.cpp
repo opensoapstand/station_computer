@@ -167,11 +167,11 @@ void productPage_1::onProductPageTimeoutTick(){
         qDebug() << "Tick Down: " << _productPageTimeoutSec << endl;
     } else {
         qDebug() << "Timer Done!" << _productPageTimeoutSec << endl;
-        on_mainPage_Button_clicked();
+        mainPage();
     }
 }
 
-void productPage_1::on_mainPage_Button_clicked()
+void productPage_1::mainPage()
 {
     productPageEndTimer->stop();
     this->hide();

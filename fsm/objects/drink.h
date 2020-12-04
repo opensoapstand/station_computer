@@ -64,6 +64,9 @@ public:
 	void drinkVolumeInfo();
 
         double m_nVolumeDispensedPreviously;
+        double m_nVolumeTarget;  //how much to dispense
+        double m_nVolumeDispensed; //how much has been dispensed in this sale
+        double m_price;
 
 private:
 	// TODO: Determine more data to modify per transaction...
@@ -71,9 +74,7 @@ private:
 	string m_name;
 
 	bool isDispenseFinished;
-	double m_nVolumeTarget;  //how much to dispense
-	double m_nVolumeDispensed; //how much has been dispensed in this sale
-	double m_nVolumeDispensedSinceLastPoll;
+        double m_nVolumeDispensedSinceLastPoll;
 	double m_calibration_const;
 	double m_nVolumePerTick;
 
@@ -81,7 +82,7 @@ private:
 	double m_nTickCount;
 	bool valueChange;
 
-	double m_price;
+
 	bool m_isStillDrink;
 
 	void setSlot(int slot);

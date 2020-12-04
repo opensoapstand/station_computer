@@ -1,0 +1,1 @@
+INSERT INTO transactions VALUES (2, "TIDE", 2, 1000, datetime('now', 'localtime'), 750, 75, datetime('now', 'localtime'));

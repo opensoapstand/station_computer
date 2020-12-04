@@ -41,7 +41,7 @@ class stateDispense : public stateVirtual
         int pos;
         dispenser* cassettes;
         bool flushCommand;
-        DF_ERROR updateDB();
+
 
     
 };

@@ -136,11 +136,20 @@ DF_ERROR stateDispenseEnd::onExit()
    return e_ret;
 }
 
+static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
+   int i;
+   for(i = 0; i<argc; i++) {
+      printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+   }
+   printf("\n");
+   return 0;
+}
+
 DF_ERROR stateDispenseEnd::updateDB(){
     char *zErrMsg = 0;
 
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
-    rc = sqlite3_open("/home/df-admin/Project/drinkfill/db/sqlite/drinkfill-sqlite.db", &db);
+    rc = sqlite3_open("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db", &db);
 
     debugOutput::sendMessage("DB Update START", INFO);
 
@@ -151,28 +160,24 @@ DF_ERROR stateDispenseEnd::updateDB(){
        fprintf(stderr, "Opened database successfully\n");
     }
 
+     /* Create SQL statement */
+     std::string sql1;
+     sql1 = ("INSERT INTO transactions VALUES (NULL, " + to_string(pos+1) + ", " + to_string(cassettes[pos].getDrink()->m_price) + ", " + to_string(cassettes[pos].getDrink()->getTargetVolume()) + ", datetime('now', 'localtime'), "  + to_string(cassettes[pos].getDrink()->m_nVolumeDispensed) + ", datetime('now', 'localtime'));");
 
-    // /* Create SQL statement */
-    // char *sql;
-    // sql = "";
+     char *sql = new char[sql1.length() + 1];
+     strcpy(sql, sql1.c_str());
 
-    // /* Execute SQL statement */
-    // rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-    // if( rc != SQLITE_OK ){
-    //    fprintf(stderr, "SQL error: %s\n", zErrMsg);
-    //    sqlite3_free(zErrMsg);
-    // } else {
-    //    fprintf(stdout, "Command Executed successfully\n");
-    // }
+     /* Execute SQL statement */
+     rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+
+     if( rc != SQLITE_OK ){
+        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+     } else {
+        fprintf(stdout, "Command Executed successfully\n");
+     }
 
     sqlite3_close(db);
 }
 
-static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
-   int i;
-   for(i = 0; i<argc; i++) {
-      printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-   }
-   printf("\n");
-   return 0;
-}
+

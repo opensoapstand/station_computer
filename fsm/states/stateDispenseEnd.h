@@ -46,6 +46,6 @@ class stateDispenseEnd : public stateVirtual
         sqlite3 *db;
         int rc;
 
-        static int callback(void *NotUsed, int argc, char **argv, char **azColName);
+        DF_ERROR updateDB();
 };
 #endif

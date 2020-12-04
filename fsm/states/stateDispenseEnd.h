@@ -23,6 +23,8 @@
 
 #include "stateVirtual.h"
 
+#include <ctime>
+
 class stateDispenseEnd : public stateVirtual
 {
     public:
@@ -42,6 +44,7 @@ class stateDispenseEnd : public stateVirtual
     private:    
         int pos;
         char command;
+        char start_time[100];
 
         sqlite3 *db;
         int rc;

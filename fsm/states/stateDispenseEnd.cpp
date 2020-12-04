@@ -51,8 +51,6 @@ DF_ERROR stateDispenseEnd::onEntry()
    pos = m_pMessaging->getnOption();
    pos = pos - 1;
 
-   cassettes[pos].getDrink()->stopDispense();
-   cassettes[pos].stopDispense(DRINK);
       
    return e_ret;
 }
@@ -124,6 +122,10 @@ DF_ERROR stateDispenseEnd::onExit()
    m_pMessaging->clearcCommand();
 
 
+   cassettes[pos].getDrink()->stopDispense();
+   cassettes[pos].stopDispense(DRINK);
+
+
 
    debugOutput::sendMessage("Exiting Dispensing END[" + toString() + "]", INFO);
 
@@ -162,7 +164,7 @@ DF_ERROR stateDispenseEnd::updateDB(){
 
      /* Create SQL statement */
      std::string sql1;
-     sql1 = ("INSERT INTO transactions VALUES (NULL, " + to_string(pos+1) + ", " + to_string(cassettes[pos].getDrink()->m_price) + ", " + to_string(cassettes[pos].getDrink()->getTargetVolume()) + ", datetime('now', 'localtime'), "  + to_string(cassettes[pos].getDrink()->m_nVolumeDispensed) + ", datetime('now', 'localtime'));");
+     sql1 = ("INSERT INTO transactions VALUES (NULL, " + to_string(pos+1) + ", " + to_string(cassettes[pos].getDrink()->getTargetVolume()) + ", " + to_string(cassettes[pos].getDrink()->m_price) + ", '" + (cassettes[pos].getDrink()->m_nStartTime) + "', " + to_string(cassettes[pos].getDrink()->m_nVolumeDispensed) + ", datetime('now', 'localtime'));");
 
      char *sql = new char[sql1.length() + 1];
      strcpy(sql, sql1.c_str());

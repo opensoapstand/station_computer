@@ -21,6 +21,7 @@
 #include <iostream>
 #include <string>
 #include <unistd.h>
+#include <time.h>
 
 #include <sqlite3.h> 
 
@@ -67,6 +68,11 @@ public:
         double m_nVolumeTarget;  //how much to dispense
         double m_nVolumeDispensed; //how much has been dispensed in this sale
         double m_price;
+
+        time_t rawtime;
+        struct tm * timeinfo;
+
+        char m_nStartTime[50];
 
 private:
 	// TODO: Determine more data to modify per transaction...

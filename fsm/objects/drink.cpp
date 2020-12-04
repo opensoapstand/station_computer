@@ -172,6 +172,12 @@ DF_ERROR drink::initDispense()
 {
      m_nVolumeDispensed = 0;
      m_nVolumeDispensedPreviously = 0;
+
+     // Set Start Time
+     time(&rawtime);
+     timeinfo = localtime(&rawtime);
+
+     strftime(m_nStartTime, 50, "%F %T", timeinfo);
 }
 
 DF_ERROR drink::stopDispense()
@@ -181,9 +187,6 @@ DF_ERROR drink::stopDispense()
     m_nVolumeDispensed = 0;
     m_nVolumeDispensedSinceLastPoll = 0;
     m_nVolumeDispensedPreviously = 0;
-
-    cout << "VOLUME DISPENSED CLEARED!" << endl;
-    cout << "VOLUME NOW : " << m_nVolumeDispensed << endl;
 
     return dfRet;
 }

@@ -48,6 +48,12 @@ productPage_1::productPage_1(QWidget *parent) :
     ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 //    ui->selection5_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 //    ui->selection6_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+
+    productPageEndTimer = new QTimer(this);
+    productPageEndTimer->setInterval(1000);
+    connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
+
+
 }
 
 /*
@@ -71,6 +77,22 @@ productPage_1::~productPage_1()
 //    selection_PageTwo->showFullScreen();
 //    this->hide();
 //}
+
+void productPage_1::showEvent(QShowEvent *event)
+{
+    QWidget::showEvent(event);
+
+    if(productPageEndTimer == nullptr){
+        productPageEndTimer = new QTimer(this);
+        productPageEndTimer->setInterval(1000);
+        connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
+    }
+
+    productPageEndTimer->start(1000);
+    _productPageTimeoutSec = 15;
+
+}
+
 
 // FIXME: This is terrible...no time to make array reference to hold button press functions
 void productPage_1::on_selection1_Button_clicked()
@@ -139,3 +161,19 @@ void productPage_1::on_selection4_Button_clicked()
 //    paymentSelectPage->showFullScreen();
 //    this->hide();
 //}
+
+void productPage_1::onProductPageTimeoutTick(){
+    if(-- _productPageTimeoutSec >= 0) {
+        qDebug() << "Tick Down: " << _productPageTimeoutSec << endl;
+    } else {
+        qDebug() << "Timer Done!" << _productPageTimeoutSec << endl;
+        on_mainPage_Button_clicked();
+    }
+}
+
+void productPage_1::on_mainPage_Button_clicked()
+{
+    productPageEndTimer->stop();
+    this->hide();
+    idlePage->showFullScreen();
+}

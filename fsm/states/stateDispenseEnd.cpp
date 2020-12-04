@@ -117,35 +117,7 @@ DF_ERROR stateDispenseEnd::onExit()
    //cassettes[pos].cleanNozzle(WATER, AIR);
 
 
-   char *zErrMsg = 0;
-
-   // FIXME: DB needs fully qualified link to find...obscure with XML loading.
-   rc = sqlite3_open("/home/df-admin/Project/drinkfill/db/sqlite/drinkfill-sqlite.db", &db);
-
-   debugOutput::sendMessage("DB Update", INFO);
-
-   if( rc ) {
-      fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
-      // TODO: Error handling here...
-   } else {
-      fprintf(stderr, "Opened database successfully\n");
-   }
-
-
-   // /* Create SQL statement */
-   // char *sql;   
-   // sql = "";
-
-   // /* Execute SQL statement */
-   // rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-   // if( rc != SQLITE_OK ){
-   //    fprintf(stderr, "SQL error: %s\n", zErrMsg);
-   //    sqlite3_free(zErrMsg);
-   // } else {
-   //    fprintf(stdout, "Command Executed successfully\n");
-   // }
-   
-   sqlite3_close(db);
+   updateDB();
 
    m_pMessaging->clearProcessString();
    m_pMessaging->clearCommandString();
@@ -162,6 +134,38 @@ DF_ERROR stateDispenseEnd::onExit()
 
 
    return e_ret;
+}
+
+DF_ERROR stateDispenseEnd::updateDB(){
+    char *zErrMsg = 0;
+
+    // FIXME: DB needs fully qualified link to find...obscure with XML loading.
+    rc = sqlite3_open("/home/df-admin/Project/drinkfill/db/sqlite/drinkfill-sqlite.db", &db);
+
+    debugOutput::sendMessage("DB Update START", INFO);
+
+    if( rc ) {
+       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+       // TODO: Error handling here...
+    } else {
+       fprintf(stderr, "Opened database successfully\n");
+    }
+
+
+    // /* Create SQL statement */
+    // char *sql;
+    // sql = "";
+
+    // /* Execute SQL statement */
+    // rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    // if( rc != SQLITE_OK ){
+    //    fprintf(stderr, "SQL error: %s\n", zErrMsg);
+    //    sqlite3_free(zErrMsg);
+    // } else {
+    //    fprintf(stdout, "Command Executed successfully\n");
+    // }
+
+    sqlite3_close(db);
 }
 
 static int callback(void *NotUsed, int argc, char **argv, char **azColName) {

@@ -114,17 +114,18 @@ void dispensePage::on_finish_Button_clicked()
     QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
     command.append('s');
 
-    QMessageBox msgBox;
-    msgBox.setWindowFlags(Qt::FramelessWindowHint);
-    msgBox.setText("<p align=center>Are you sure?</p>");
-    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-width: 300px; min-height: 300px;}");
+    // ARE YOU SURE YOU WANT TO COMPLETE?
+//    QMessageBox msgBox;
+//    msgBox.setWindowFlags(Qt::FramelessWindowHint);
+//    msgBox.setText("<p align=center>Are you sure?</p>");
+//    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-width: 300px; min-height: 300px;}");
 
-    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-    int ret = msgBox.exec();
+//    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+//    int ret = msgBox.exec();
 
-    switch(ret){
-        case QMessageBox::Yes:
-            qDebug() << "YES CLICKED" << endl;
+//    switch(ret){
+//        case QMessageBox::Yes:
+//            qDebug() << "YES CLICKED" << endl;
             stopDispenseTimer();
 
             // TODO: Link to FSM for Dispense
@@ -160,15 +161,15 @@ void dispensePage::on_finish_Button_clicked()
             this->hide();
             thanksPage->showFullScreen();
             this->ui->volumeDispensedLabel->setText("");
-            break;
+//            break;
 
-        case QMessageBox::No:
-            qDebug() << "NO CLICKED" << endl;
-            break;
+//        case QMessageBox::No:
+//            qDebug() << "NO CLICKED" << endl;
+//            break;
 
-        default:
-            break;
-    }
+//        default:
+//            break;
+//    }
 
 
 }
@@ -217,5 +218,5 @@ void dispensePage::updateVolumeDisplayed(int dispensed){
     //qDebug() << (disSTRING).c_str() << endl;
     volumeDispensed = dispensed;
     //volumeDispensedLabel.clear();
-    this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ "ml dispensed");
+    //this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ "ml dispensed");
 }

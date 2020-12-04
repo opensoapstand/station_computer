@@ -41,11 +41,8 @@ class stateDispense : public stateVirtual
         int pos;
         dispenser* cassettes;
         bool flushCommand;
+        DF_ERROR updateDB();
 
-        
-        // present read Volume
-        // last read Volume
-        // max read volume
     
 };
 #endif

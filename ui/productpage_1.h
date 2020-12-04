@@ -46,14 +46,20 @@ private slots:
     void on_selection4_Button_clicked();
     //void on_selection5_Button_clicked();
     //void on_selection6_Button_clicked();
+    void on_mainPage_Button_clicked();
+    void onProductPageTimeoutTick();
 
 private:
+    void showEvent(QShowEvent *event);
     Ui::productPage_1 *ui;
     productPage_2 *selection_PageTwo;
     paySelect *paymentSelectPage;
     idle* idlePage;
 
     QResizeEvent *productResize;
+
+    int _productPageTimeoutSec;
+    QTimer* productPageEndTimer;
 };
 
 #endif // PRODUCTPAGE_1_H

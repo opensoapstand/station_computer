@@ -83,6 +83,10 @@ void thankYouPage::onThankyouTimeoutTick(){
 
 void thankYouPage::on_mainPage_Button_clicked()
 {
+    //Update Click DB
+    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    db.addPageClick("TRANSACTION COMPLETED");
+
     thankYouEndTimer->stop();
     this->hide();
     idlePage->showFullScreen();

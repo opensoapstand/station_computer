@@ -41,6 +41,7 @@ public:
     DfUiCommThread* dfComm;
 
 
+
 private slots:
     void on_nextPageButton_clicked();
 

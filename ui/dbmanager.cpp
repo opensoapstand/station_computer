@@ -2,6 +2,8 @@
 
 DbManager::DbManager(const QString& path)
 {
+   QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
+
    m_db = QSqlDatabase::addDatabase("QSQLITE");
    m_db.setDatabaseName(path);
 
@@ -16,7 +18,7 @@ DbManager::DbManager(const QString& path)
 }
 
 bool DbManager::addPageClick(const QString& page){
-    qDebug() << "Enntering addPageClick()" << endl;
+
     bool success = false;
     // you should check if args are ok first...
     QSqlQuery query;

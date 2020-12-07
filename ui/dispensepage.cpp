@@ -46,6 +46,7 @@ dispensePage::dispensePage(QWidget *parent) :
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
 
+
 }
 
 /*

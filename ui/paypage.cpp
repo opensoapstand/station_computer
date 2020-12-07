@@ -212,6 +212,10 @@ void payPage::on_payment_bypass_Button_clicked()
     DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
     db.addPageClick("Pay Page -> Dispense Page");
 
+    //Update Click DB
+    //DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    db.addPageClick("TRANSACTION STARTED");
+
     qDebug() << "ByPass payment to Dispense" << endl;
     //    cancelPayment();
     stopPayTimers();
@@ -436,7 +440,12 @@ void payPage::onTimeoutTick(){
         //this->ui->payment_countdownLabel->setText(_paymentTimeLabel);
     } else {
         qDebug() << "Timer Done!" << _paymentTimeoutSec << endl;
-        on_payment_bypass_Button_clicked();
+
+        //Update Click DB
+        DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+        db.addPageClick("PAY PAGE TIME OUT");
+
+        on_mainPage_Button_clicked();
         //        paymentEndTimer->stop();
         //        this->ui->payment_countdownLabel->setText("Finished!");
     }
@@ -448,6 +457,18 @@ void payPage::onTimeoutTick(){
 //{
 //    QWidget::paintEvent(p);
 //}
+
+void payPage::on_mainPage_Button_clicked()
+{
+
+    //Update Click DB
+    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    db.addPageClick("Pay Page -> Main Page");
+
+    stopPayTimers();
+    idlePage->showFullScreen();
+    this->hide();
+}
 
 
 bool payPage::setpaymentProcess(bool status)

@@ -48,7 +48,7 @@ public slots:
 private slots:
     // **** Navigation ****
     void on_finish_Button_clicked();
-    void onDispenseTick();
+   // void onDispenseTick();
     void onDispenseIdleTick();
 
 
@@ -62,7 +62,7 @@ private:
     // XXX: Remove when interrupts and flowsensors work.
 
     QString _dispenseTimeLabel;
-    int _dispenseTimeoutSec;
+    //int _dispenseTimeoutSec;
     QTimer *dispenseEndTimer;
 
     int _dispenseIdleTimeoutSec;

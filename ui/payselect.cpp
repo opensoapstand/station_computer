@@ -153,7 +153,7 @@ void paySelect::on_payPage_Button_clicked()
 
     string drinkTotal = drinkAmount;
 
-    qDebug() << "DRINK AMOUNT IS: " << drinkAmount.c_str();
+    //qDebug() << "DRINK AMOUNT IS: " << drinkAmount.c_str();
 
     connect(this, SIGNAL(paymentTotal(string,string,string)), this->paymentPage, SLOT(updateTotals(string,string,string)));
     emit(paymentTotal(description, drinkAmount, drinkTotal));
@@ -175,18 +175,19 @@ void paySelect::on_payPage_Button_clicked()
     }
 
     // FIXME: Remove this when DB price referencing/calculations are correct.
-    if(idlePage->userDrinkOrder->getOption() == 9) {
-        if(drinkSize =='s') {
-            idlePage->userDrinkOrder->setPrice(0.99);
-        } else if (drinkSize == 'l') {
-            idlePage->userDrinkOrder->setPrice(1.25);
-        }
-    }
+//    if(idlePage->userDrinkOrder->getOption() == 9) {
+//        if(drinkSize =='s') {
+//            idlePage->userDrinkOrder->setPrice(0.99);
+//        } else if (drinkSize == 'l') {
+//            idlePage->userDrinkOrder->setPrice(1.25);
+//        }
+//    }
 
 
     paymentPage->resizeEvent(paySelectResize, drinkSize);
 
     this->stopSelectTimers();
+    selectIdleTimer->stop();
     paymentPage->showFullScreen();
     this->hide();
     qDebug() << idlePage->userDrinkOrder->getPrice();
@@ -233,7 +234,12 @@ void paySelect::onSelectTimeoutTick(){
     } else {
         qDebug() << "Timer Done!" << _selectIdleTimeoutSec << endl;
         selectIdleTimer->stop();
-        on_previousPage_Button_clicked();
+
+        //Update Click DB
+        DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+        db.addPageClick("PAY SELECT TIME OUT");
+
+        on_mainPage_Button_clicked();
     }
 }
 
@@ -248,13 +254,19 @@ bool paySelect::stopSelectTimers(){
     }
 }
 
-//void paySelect::on_mainPage_Button_clicked()
-//{
-//    qDebug() << "paySelect: mainPage button" << endl;
-//    this->stopSelectTimers();
-//    idlePage->showFullScreen();
-//    this->hide();
-//}
+void paySelect::on_mainPage_Button_clicked()
+{
+
+    //Update Click DB
+    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    db.addPageClick("Pay Select -> Main Page");
+
+    qDebug() << "paySelect: mainPage button" << endl;
+    this->stopSelectTimers();
+    selectIdleTimer->stop();
+    idlePage->showFullScreen();
+    this->hide();
+}
 
 // on_Small_Order button listener
 //void paySelect::on_orderSmall_Button_clicked()

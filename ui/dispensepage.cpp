@@ -130,41 +130,41 @@ void dispensePage::on_finish_Button_clicked()
 //    switch(ret){
 //        case QMessageBox::Yes:
 //            qDebug() << "YES CLICKED" << endl;
-            stopDispenseTimer();
+    stopDispenseTimer();
 
             // TODO: Link to FSM for Dispense
 
-                qDebug() << "dispensePage: Cleanse cycle." << endl;
+                //qDebug() << "dispensePage: Cleanse cycle." << endl;
                 //ui->dispense_clean_label->setText("REMOVE BOTTLE!");
                 //ui->dispense_progress_label->setText("...");
 
-                dispenseEndTimer = new QTimer(this);
-                dispenseEndTimer->setInterval(1000);
-                connect(dispenseEndTimer, SIGNAL(timeout()), this, SLOT(onDispenseTick()));
-                dispenseEndTimer->start(1000);
-                _dispenseTimeoutSec = 5;
+//                dispenseEndTimer = new QTimer(this);
+//                dispenseEndTimer->setInterval(1000);
+//                connect(dispenseEndTimer, SIGNAL(timeout()), this, SLOT(onDispenseTick()));
+//                dispenseEndTimer->start(1000);
+//                _dispenseTimeoutSec = 5;
 
 
             // FIXME: this is a hack for size changes...
 
-            this->idlePage->dfUtility->msg = command;
+    this->idlePage->dfUtility->msg = command;
 
-            qDebug() << this->idlePage->dfUtility->msg << endl;
+    qDebug() << this->idlePage->dfUtility->msg << endl;
 
-            idlePage->dfUtility->m_IsSendingFSM = true;
+    idlePage->dfUtility->m_IsSendingFSM = true;
 
-            idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
-            //    this->idlePage->dfUtility->msg = QString::number(this->idlePage->userDrinkOrder->getOption());
+    idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
+    //    this->idlePage->dfUtility->msg = QString::number(this->idlePage->userDrinkOrder->getOption());
 
-            // Send a Cleanse and TODO: helps FSM onExit...
-            idlePage->dfUtility->send_to_FSM();
+    // Send a Cleanse and TODO: helps FSM onExit...
+    idlePage->dfUtility->send_to_FSM();
 
-            dispenseEndTimer->stop();
-            dispenseEndTimer->deleteLater();
+    //dispenseEndTimer->stop();
+    //dispenseEndTimer->deleteLater();
 
-            this->hide();
-            thanksPage->showFullScreen();
-            this->ui->volumeDispensedLabel->setText("");
+    this->hide();
+    thanksPage->showFullScreen();
+    this->ui->volumeDispensedLabel->setText("");
 //            break;
 
 //        case QMessageBox::No:
@@ -188,19 +188,19 @@ void dispensePage::stopDispenseTimer(){
 
 // XXX: Remove this when interrupts and flow sensors work!
 
-void dispensePage::onDispenseTick(){
-    if(-- _dispenseTimeoutSec >= 0) {
-        qDebug() << "Tick Down: " << _dispenseTimeoutSec << endl;
-        _dispenseTimeLabel.clear();
-        QString time = QString::number(_dispenseTimeoutSec);
-        _dispenseTimeLabel.append(time);
-     //   this->ui->dispense_progress_label->setText(_dispenseTimeLabel);
-    } else {
-        qDebug() << "Timer Done!" << _dispenseTimeoutSec << endl;
-        dispenseEndTimer->stop();
-       // this->ui->dispense_progress_label->setText("Finished!");
-    }
-}
+//void dispensePage::onDispenseTick(){
+//    if(-- _dispenseTimeoutSec >= 0) {
+//        qDebug() << "Tick Down: " << _dispenseTimeoutSec << endl;
+//        _dispenseTimeLabel.clear();
+//        QString time = QString::number(_dispenseTimeoutSec);
+//        _dispenseTimeLabel.append(time);
+//     //   this->ui->dispense_progress_label->setText(_dispenseTimeLabel);
+//    } else {
+//        qDebug() << "Timer Done!" << _dispenseTimeoutSec << endl;
+//        dispenseEndTimer->stop();
+//       // this->ui->dispense_progress_label->setText("Finished!");
+//    }
+//}
 
 void dispensePage::onDispenseIdleTick(){
     if(-- _dispenseIdleTimeoutSec >= 0) {
@@ -208,6 +208,11 @@ void dispensePage::onDispenseIdleTick(){
     } else {
         qDebug() << "Timer Done!" << _dispenseIdleTimeoutSec << endl;
 //        dispenseIdleTimer->stop();
+
+        //Update Click DB
+        DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+        db.addPageClick("DISPENSE TIME OUT");
+
         on_finish_Button_clicked();
     }
 }
@@ -215,6 +220,10 @@ void dispensePage::onDispenseIdleTick(){
 void dispensePage::PleaseResetTimerSlot(void){
     //qDebug() << "RESET SIGNAL RECEIVED!" << endl;
     _dispenseIdleTimeoutSec = 30;
+
+    //Update Click DB
+    //DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    //db.addPageClick("DISPENSING");
 }
 
 void dispensePage::updateVolumeDisplayed(int dispensed){

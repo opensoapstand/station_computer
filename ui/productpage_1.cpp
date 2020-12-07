@@ -101,6 +101,8 @@ void productPage_1::on_selection1_Button_clicked()
     DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
     db.addPageClick("Product Page -> Option 1");
 
+    productPageEndTimer->stop();
+
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_1);
     idlePage->userDrinkOrder->setDrinkSize(DRINK1);
     paymentSelectPage->resizeEvent(productResize);
@@ -114,6 +116,8 @@ void productPage_1::on_selection2_Button_clicked()
     DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
     db.addPageClick("Product Page -> Option 2");
 
+    productPageEndTimer->stop();
+
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
     idlePage->userDrinkOrder->setDrinkSize(DRINK2);
     paymentSelectPage->resizeEvent(productResize);
@@ -126,6 +130,8 @@ void productPage_1::on_selection3_Button_clicked()
     DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
     db.addPageClick("Product Page -> Option 3");
 
+    productPageEndTimer->stop();
+
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
     idlePage->userDrinkOrder->setDrinkSize(DRINK3);
     paymentSelectPage->resizeEvent(productResize);
@@ -137,6 +143,8 @@ void productPage_1::on_selection4_Button_clicked()
 {
     DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
     db.addPageClick("Product Page -> Option 4");
+
+    productPageEndTimer->stop();
 
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);
     idlePage->userDrinkOrder->setDrinkSize(DRINK4);
@@ -171,6 +179,11 @@ void productPage_1::onProductPageTimeoutTick(){
         qDebug() << "Tick Down: " << _productPageTimeoutSec << endl;
     } else {
         qDebug() << "Timer Done!" << _productPageTimeoutSec << endl;
+
+        //Update Click DB
+        DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+        db.addPageClick("PRODUCT PAGE TIME OUT");
+
         mainPage();
     }
 }

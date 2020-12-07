@@ -37,7 +37,8 @@ HEADERS += \
     productpage_2.h \
     thankyoupage.h \
     df_util.h \
-    drinkorder.h
+    drinkorder.h \
+    dbmanager.h
 
 SOURCES += \
     dfuicommthread.cpp \
@@ -59,7 +60,8 @@ SOURCES += \
     productpage_2.cpp \
     thankyoupage.cpp \
     df_util.cpp \
-    drinkorder.cpp
+    drinkorder.cpp \
+    dbmanager.cpp
 
 RESOURCES += \
     src.qrc

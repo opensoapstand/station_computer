@@ -38,7 +38,7 @@ paySelect::paySelect(QWidget *parent) :
     //    }
 
     //    cout << checkOption << endl;
-    qDebug() << checkOption << endl;
+   // qDebug() << checkOption << endl;
     QString bitmap_location;
 
         if(checkOption > 0 && checkOption <= 6) {
@@ -98,6 +98,10 @@ paySelect::~paySelect()
 /* GUI */
 void paySelect::on_previousPage_Button_clicked()
 {
+    //Update Click DB
+    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    db.addPageClick("Pay Select -> Product Page");
+
     qDebug() << "paySelect: Previous button" << endl;
     while(!stopSelectTimers()){
 
@@ -113,6 +117,10 @@ void paySelect::on_payPage_Button_clicked()
     qDebug() << "paySelect: Pay button" << endl;
     // TODO: Grab from DB description
     string description = "Drink Flavor DrinkSizeOZ (DrinkML)";
+
+    //Update Click DB
+    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    db.addPageClick("Pay Select -> Pay Page");
 
     // FIXME: Remove this when DB price referencing/calculations are correct.
     if(idlePage->userDrinkOrder->getOption() == 1) {

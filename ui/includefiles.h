@@ -26,6 +26,8 @@
 
 #include <QTimer>
 
+#include <QDateTime>
+
 #include <iostream>
 #include <cmath>
 

@@ -97,6 +97,10 @@ void productPage_1::showEvent(QShowEvent *event)
 // FIXME: This is terrible...no time to make array reference to hold button press functions
 void productPage_1::on_selection1_Button_clicked()
 {
+    // UPDATE DB
+    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    db.addPageClick("Product Page -> Option 1");
+
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_1);
     idlePage->userDrinkOrder->setDrinkSize(DRINK1);
     paymentSelectPage->resizeEvent(productResize);
@@ -107,8 +111,8 @@ void productPage_1::on_selection1_Button_clicked()
 
 void productPage_1::on_selection2_Button_clicked()
 {
-    // XXX: For BNTL Selection 2 goes to OPTION 3
-    //idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_7);
+    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    db.addPageClick("Product Page -> Option 2");
 
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
     idlePage->userDrinkOrder->setDrinkSize(DRINK2);
@@ -119,8 +123,8 @@ void productPage_1::on_selection2_Button_clicked()
 
 void productPage_1::on_selection3_Button_clicked()
 {
-    // XXX: For BNTL Selection 3 goes to OPTION 5
-    //idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_9);
+    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    db.addPageClick("Product Page -> Option 3");
 
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
     idlePage->userDrinkOrder->setDrinkSize(DRINK3);
@@ -131,8 +135,8 @@ void productPage_1::on_selection3_Button_clicked()
 
 void productPage_1::on_selection4_Button_clicked()
 {
-    // XXX: For BNTL Selection 4 goes to OPTION 7
-    //idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
+    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    db.addPageClick("Product Page -> Option 4");
 
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);
     idlePage->userDrinkOrder->setDrinkSize(DRINK4);
@@ -173,6 +177,10 @@ void productPage_1::onProductPageTimeoutTick(){
 
 void productPage_1::mainPage()
 {
+    // UPDATE DB
+    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    db.addPageClick("Product Page -> Main Page");
+
     productPageEndTimer->stop();
     this->hide();
     idlePage->showFullScreen();

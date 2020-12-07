@@ -68,6 +68,11 @@ idle::~idle()
  */
 void idle::on_nextPageButton_clicked()
 {
+
+    // UPDATE DB
+    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    db.addPageClick("Main -> Product Page");
+
     // Connect to KB Listener
     selection_PageOne->showFullScreen();
     this->hide();

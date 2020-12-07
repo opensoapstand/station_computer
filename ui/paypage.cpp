@@ -192,6 +192,10 @@ void payPage::displayPaymentPending(bool isVisible)
 // Navigation: Back to Drink Size Selection
 void payPage::on_previousPage_Button_clicked()
 {
+    //Update Click DB
+    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    db.addPageClick("Pay Page -> Pay Select");
+
     qDebug() << "payPage: previous button" << endl;
     stopPayTimers();
     //    readTimer->stop();
@@ -203,6 +207,11 @@ void payPage::on_previousPage_Button_clicked()
 
 void payPage::on_payment_bypass_Button_clicked()
 {
+
+    //Update Click DB
+    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    db.addPageClick("Pay Page -> Dispense Page");
+
     qDebug() << "ByPass payment to Dispense" << endl;
     //    cancelPayment();
     stopPayTimers();

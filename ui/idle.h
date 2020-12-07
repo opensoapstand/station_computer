@@ -20,6 +20,7 @@
 #include "df_util.h"
 #include "productpage_1.h"
 #include "dfuicommthread.h"
+#include "dbmanager.h"
 
 namespace Ui {
 class idle;

@@ -45,7 +45,6 @@ dispensePage::dispensePage(QWidget *parent) :
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
-   // connect(dfuicommthread, &DfUiCommThread::resetTimerSignal, this, &dispensePage::resetTimerSlot);
 
 }
 
@@ -109,6 +108,10 @@ void dispensePage::showEvent(QShowEvent *event)
  */
 void dispensePage::on_finish_Button_clicked()
 {
+    //Update Click DB
+    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    db.addPageClick("Dispense Page -> Thank You Page");
+
     qDebug() << "dispensePage: finish button clicked" << endl;
 
     QString command = QString::number(this->idlePage->userDrinkOrder->getOption());

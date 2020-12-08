@@ -130,7 +130,7 @@ void dispensePage::on_finish_Button_clicked()
 //    switch(ret){
 //        case QMessageBox::Yes:
 //            qDebug() << "YES CLICKED" << endl;
-    stopDispenseTimer();
+
 
             // TODO: Link to FSM for Dispense
 
@@ -146,6 +146,8 @@ void dispensePage::on_finish_Button_clicked()
 
 
             // FIXME: this is a hack for size changes...
+
+    stopDispenseTimer();
 
     this->idlePage->dfUtility->msg = command;
 

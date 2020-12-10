@@ -17,7 +17,7 @@ using namespace std;
 using namespace pqxx;
 
 /*
- * Establish connection with postgres user account to template1 db
+ * Establish connection with postgres user account to soapstand db
  */
 pqxx::connection pg_connect_newDB()
 {
@@ -26,7 +26,7 @@ pqxx::connection pg_connect_newDB()
        ERROR_CREATE_DB_UNDEFINED,
    };
 
-   cout << "start" << endl;
+   cout << "db start" << endl;
 
    connection Conn;
 
@@ -34,7 +34,7 @@ pqxx::connection pg_connect_newDB()
    {
       // WILL NEED TO STORE AS SECRET!  connection as template1 required if db from stratch.
       // string connection_string("hostaddr=127.0.0.1/32 dbname = drinkfill user = local_machine password = machine1234 port=5432");
-      string connection_string("dbname = template1 user = postgres password = P0$tGr@$$ hostaddr=127.0.0.1 port=5432");
+      string connection_string("dbname = soapstand user = postgres password = postgres hostaddr=127.0.0.1 port=5432");
       // string connection_string("host=localhost dbname=template1 user=postgres password=P0$tGr@$$ port=5432");
       // db_conn->local_connection = pqxx::connection(connection_string.c_str());
       pqxx::connection C(connection_string.c_str());

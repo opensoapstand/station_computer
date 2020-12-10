@@ -17,7 +17,8 @@
 #include "../objects/messageMediator.h"
 
 #include <stdio.h>
-#include <sqlite3.h> 
+
+#include <pqxx/pqxx>
 
 #include "../fsm.h"
 

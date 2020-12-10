@@ -18,7 +18,7 @@
 
 #include <stdio.h>
 
-#include <pqxx/pqxx>
+#include <sqlite3.h>
 
 #include "../fsm.h"
 

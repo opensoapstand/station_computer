@@ -51,6 +51,11 @@ DF_ERROR stateDispenseEnd::onEntry()
    pos = m_pMessaging->getnOption();
    pos = pos - 1;
 
+   updateDB();
+
+   cassettes[pos].getDrink()->stopDispense();
+   cassettes[pos].stopDispense(DRINK);
+
       
    return e_ret;
 }

@@ -45,11 +45,16 @@ class stateDispenseEnd : public stateVirtual
     private:    
         int pos;
         char command;
-        char start_time[100];
 
         sqlite3 *db;
         int rc;
 
+        time_t rawtime;
+        struct tm * timeinfo;
+
+        char now[50];
+
         DF_ERROR updateDB();
+        DF_ERROR printer();
 };
 #endif

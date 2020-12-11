@@ -14,6 +14,8 @@
 
 #define DISPENSE_END_STRING "Dispense End"
 
+#define MAX_BUF 64
+
 // CTOR
 stateDispenseEnd::stateDispenseEnd()
 {
@@ -126,6 +128,7 @@ DF_ERROR stateDispenseEnd::onExit()
    m_pMessaging->clearCommandString();
    m_pMessaging->clearcCommand();
 
+   printer();
 
    cassettes[pos].getDrink()->stopDispense();
    cassettes[pos].stopDispense(DRINK);
@@ -185,6 +188,28 @@ DF_ERROR stateDispenseEnd::updateDB(){
      }
 
     sqlite3_close(db);
+}
+
+DF_ERROR stateDispenseEnd::printer(){
+
+    char cost2[MAX_BUF];
+    char volume2[MAX_BUF];
+
+    snprintf(cost2, sizeof(cost2), "%.2f", cassettes[pos].getDrink()->m_price);
+    snprintf(volume2, sizeof(volume2), "%.2f", cassettes[pos].getDrink()->m_nVolumeDispensed);
+
+    string cost = (cost2);
+    string volume = (volume2);
+
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+
+    strftime(now, 50, "%F %T", timeinfo);
+
+    string printerstring = "Price: $" + cost + " Volume: " + volume + "ml Time: " + now;
+
+    debugOutput::sendMessage(printerstring, INFO);
+
 }
 
 

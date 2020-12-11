@@ -55,7 +55,7 @@ DF_ERROR stateDispenseEnd::onEntry()
 
    updateDB();
 
-   cassettes[pos].getDrink()->stopDispense();
+   //cassettes[pos].getDrink()->stopDispense();
    cassettes[pos].stopDispense(DRINK);
 
       

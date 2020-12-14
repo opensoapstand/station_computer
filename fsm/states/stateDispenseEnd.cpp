@@ -172,7 +172,14 @@ DF_ERROR stateDispenseEnd::updateDB(){
 
      /* Create SQL statement */
      std::string sql1;
-     sql1 = ("INSERT INTO transactions VALUES (NULL, " + to_string(pos+1) + ", " + to_string(cassettes[pos].getDrink()->getTargetVolume()) + ", " + to_string(cassettes[pos].getDrink()->m_price) + ", '" + (cassettes[pos].getDrink()->m_nStartTime) + "', " + to_string(cassettes[pos].getDrink()->m_nVolumeDispensed) + ", datetime('now', 'localtime'));");
+
+     std::string product = to_string(pos+1);
+     std::string target_volume = to_string(cassettes[pos].getDrink()->getTargetVolume());
+     std::string price = to_string(cassettes[pos].getDrink()->m_price);
+     std::string start_time = (cassettes[pos].getDrink()->m_nStartTime);
+     std::string dispensed_volume = to_string(cassettes[pos].getDrink()->m_nVolumeDispensed);
+
+     sql1 = ("INSERT INTO transactions VALUES (NULL, " + product + ", " + target_volume + ", " + price + ", '" + start_time + "', " + dispensed_volume + ", datetime('now', 'localtime'));");
 
      char *sql = new char[sql1.length() + 1];
      strcpy(sql, sql1.c_str());

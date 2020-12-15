@@ -2,25 +2,19 @@
 
 DbManager::DbManager(const QString& path)
 {
-   QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
+    QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
 
-   m_db = QSqlDatabase::addDatabase("QPSQL");
-   m_db.setHostName("localhost");
-   m_db.setDatabaseName("soapstand");
-   m_db.setUserName("postgres");
-   m_db.setPassword("postgres");
+    m_db = QSqlDatabase::addDatabase("QSQLITE");
+    m_db.setDatabaseName(path);
 
-   bool ok = m_db.open();
-
-   if (!ok)
-   {
-      qDebug() << "Error: connection with database failed";
-      qDebug() << m_db.lastError().text();
-   }
-   else
-   {
-      qDebug() << "Database: connection ok";
-   }
+    if (!m_db.open())
+    {
+        qDebug() << "Error: connection with database failed";
+    }
+    else
+    {
+        qDebug() << "Database: connection ok";
+    }
 }
 
 bool DbManager::addPageClick(const QString& page){
@@ -34,6 +28,7 @@ bool DbManager::addPageClick(const QString& page){
     if(query.exec())
     {
         success = true;
+        qDebug() << "addPageClick success!";
     }
     else
     {

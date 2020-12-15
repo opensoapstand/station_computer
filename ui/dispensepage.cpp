@@ -37,6 +37,7 @@ dispensePage::dispensePage(QWidget *parent) :
 
     /*hacky transparent button*/
     ui->finish_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->finish_Button->setVisible(false);
 
     //ui->volumeDispensedLabel->setText("");
 
@@ -101,6 +102,7 @@ void dispensePage::showEvent(QShowEvent *event)
     qDebug() << "Start Dispense Timers" << endl;
     dispenseIdleTimer->start(1000);
     _dispenseIdleTimeoutSec = 30;
+    ui->finish_Button->setVisible(false);
 
 }
 
@@ -227,6 +229,7 @@ void dispensePage::PleaseResetTimerSlot(void){
 void dispensePage::updateVolumeDisplayed(int dispensed){
 
     volumeDispensed = dispensed;
+    ui->finish_Button->setVisible(true);
     //volumeDispensedLabel.clear();
     //this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ "ml dispensed");
 }

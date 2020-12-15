@@ -82,11 +82,12 @@ paySelect::paySelect(QWidget *parent) :
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void paySelect::setPage(productPage_1 *pageSelect, payPage *pagePayment, idle* pageIdle)
+void paySelect::setPage(productPage_1 *pageSelect, dispensePage* pageDispense, idle* pageIdle)
 {
     this->firstProductPage = pageSelect;
-    this->paymentPage = pagePayment;
+    //this->paymentPage = pagePayment;
     this->idlePage = pageIdle;
+    this->dispensingPage = pageDispense;
 }
 
 // DTOR
@@ -155,8 +156,8 @@ void paySelect::on_payPage_Button_clicked()
 
     //qDebug() << "DRINK AMOUNT IS: " << drinkAmount.c_str();
 
-    connect(this, SIGNAL(paymentTotal(string,string,string)), this->paymentPage, SLOT(updateTotals(string,string,string)));
-    emit(paymentTotal(description, drinkAmount, drinkTotal));
+    //connect(this, SIGNAL(paymentTotal(string,string,string)), this->paymentPage, SLOT(updateTotals(string,string,string)));
+    //emit(paymentTotal(description, drinkAmount, drinkTotal));
 
     char drinkSize;
     // FIXME: This is fucking terrible object use and magic values.
@@ -184,11 +185,13 @@ void paySelect::on_payPage_Button_clicked()
 //    }
 
 
-    paymentPage->resizeEvent(paySelectResize, drinkSize);
+    //paymentPage->resizeEvent(paySelectResize, drinkSize);
 
     this->stopSelectTimers();
     selectIdleTimer->stop();
-    paymentPage->showFullScreen();
+    //paymentPage->showFullScreen();
+    dispensingPage->showEvent(dispenseEvent);
+    dispensingPage->showFullScreen();
     this->hide();
     qDebug() << idlePage->userDrinkOrder->getPrice();
 }

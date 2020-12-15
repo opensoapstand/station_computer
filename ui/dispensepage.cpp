@@ -222,15 +222,10 @@ void dispensePage::onDispenseIdleTick(){
 void dispensePage::PleaseResetTimerSlot(void){
     //qDebug() << "RESET SIGNAL RECEIVED!" << endl;
     _dispenseIdleTimeoutSec = 30;
-
-    //Update Click DB
-    //DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
-    //db.addPageClick("DISPENSING");
 }
 
 void dispensePage::updateVolumeDisplayed(int dispensed){
-    //string disSTRING = "I am in dispensed page and I know that " + to_string(dispensed) + " has been dispensed!";
-    //qDebug() << (disSTRING).c_str() << endl;
+
     volumeDispensed = dispensed;
     //volumeDispensedLabel.clear();
     //this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ "ml dispensed");

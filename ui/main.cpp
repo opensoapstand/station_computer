@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     secondSelectPage->setPage(firstSelectPage, paySelectPage, idlePage);
     secondSelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    paySelectPage->setPage(firstSelectPage, paymentPage, idlePage);
+    paySelectPage->setPage(firstSelectPage, dispensingPage, idlePage);
     paySelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
     paymentPage->setPage(paySelectPage, dispensingPage, idlePage);

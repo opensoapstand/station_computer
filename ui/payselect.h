@@ -18,10 +18,12 @@
 #define PAYSELECT_H
 
 #include "df_util.h"
+#include "dispensepage.h"
 
 class productPage_1;
 class payPage;
 class idle;
+class dispensePage;
 
 namespace Ui {
 class paySelect;
@@ -33,7 +35,7 @@ class paySelect : public QWidget
 
 public:
     explicit paySelect(QWidget *parent = nullptr);
-    void setPage(productPage_1 *pageSelect, payPage *pagePayment, idle* pageIdle);
+    void setPage(productPage_1 *pageSelect, dispensePage* pageDispense, idle* pageIdle);
     ~paySelect();
 
     void resizeEvent(QResizeEvent *event);
@@ -66,10 +68,12 @@ private:
     productPage_1* firstProductPage;
     payPage* paymentPage;
     idle* idlePage;
+    dispensePage* dispensingPage;
 
     int _selectIdleTimeoutSec;
 
     QResizeEvent *paySelectResize;
+    QShowEvent *dispenseEvent;
 
 };
 

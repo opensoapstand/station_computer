@@ -29,7 +29,7 @@ dispensePage::dispensePage(QWidget *parent) :
     ui(new Ui::dispensePage)
 {
     ui->setupUi(this);
-    QPixmap background(":/light/6_dispense_page.jpg");
+    QPixmap background(":/light/5_dispense_page_before.jpg");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
@@ -37,8 +37,6 @@ dispensePage::dispensePage(QWidget *parent) :
 
     /*hacky transparent button*/
     ui->finish_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->finish_Button->setVisible(false);
-
     //ui->volumeDispensedLabel->setText("");
 
     this->ui->volumeDispensedLabel->setText("");
@@ -69,6 +67,12 @@ dispensePage::~dispensePage()
 void dispensePage::showEvent(QShowEvent *event)
 {
 
+    QPixmap background(":/light/5_dispense_page_before.jpg");
+    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Background, background);
+    this->setPalette(palette);
+
     // FIXME: this is a hack for size changes...
     QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
     if(idlePage->userDrinkOrder->getSize() <= 355){
@@ -87,7 +91,7 @@ void dispensePage::showEvent(QShowEvent *event)
 
     idlePage->dfUtility->send_to_FSM();
     idlePage->dfUtility->m_IsSendingFSM = false;
-    ui->finish_Button->setEnabled(true);
+    ui->finish_Button->setEnabled(false);
 
 //    ui->dispense_clean_label->setText(" ");
 //    ui->dispense_progress_label->setText(" ");
@@ -102,7 +106,6 @@ void dispensePage::showEvent(QShowEvent *event)
     qDebug() << "Start Dispense Timers" << endl;
     dispenseIdleTimer->start(1000);
     _dispenseIdleTimeoutSec = 30;
-    ui->finish_Button->setVisible(false);
 
 }
 
@@ -229,7 +232,14 @@ void dispensePage::PleaseResetTimerSlot(void){
 void dispensePage::updateVolumeDisplayed(int dispensed){
 
     volumeDispensed = dispensed;
-    ui->finish_Button->setVisible(true);
+
+    QPixmap background(":/light/6_dispense_page.jpg");
+    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Background, background);
+    this->setPalette(palette);
+
+    ui->finish_Button->setEnabled(true);
     //volumeDispensedLabel.clear();
     //this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ "ml dispensed");
 }

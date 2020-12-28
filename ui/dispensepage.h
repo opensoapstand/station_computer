@@ -40,7 +40,7 @@ public:
     void showEvent(QShowEvent *event);
     void PleaseResetTimerSlot(void);
     void updateVolumeDisplayed(int dispensed);
-    //void volumeDispensedLabel(QLabel* label);
+    void volumeDispensedLabel(QLabel* label);
 
 public slots:
 

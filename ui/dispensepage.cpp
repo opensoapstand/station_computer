@@ -37,7 +37,7 @@ dispensePage::dispensePage(QWidget *parent) :
 
     /*hacky transparent button*/
     ui->finish_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    //ui->volumeDispensedLabel->setText("");
+    ui->volumeDispensedLabel->setText("");
 
     this->ui->volumeDispensedLabel->setText("");
 
@@ -241,5 +241,5 @@ void dispensePage::updateVolumeDisplayed(int dispensed){
 
     ui->finish_Button->setEnabled(true);
     //volumeDispensedLabel.clear();
-    //this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ "ml dispensed");
+    this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ "ml dispensed");
 }

@@ -228,7 +228,7 @@ void paySelect::resizeEvent(QResizeEvent *event){
 
     qDebug() << "Start paySelect Timers" << endl;
     selectIdleTimer->start(1000);
-    _selectIdleTimeoutSec = 15;
+    _selectIdleTimeoutSec = 40;
 }
 
 void paySelect::onSelectTimeoutTick(){

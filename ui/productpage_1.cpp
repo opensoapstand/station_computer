@@ -27,7 +27,7 @@ productPage_1::productPage_1(QWidget *parent) :
     ui(new Ui::productPage_1)
 {
     ui->setupUi(this);
-    QPixmap background(":/light/2_drink_page_1.jpg");
+    QPixmap background(":/light/ComingSoon.jpg");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
@@ -101,13 +101,13 @@ void productPage_1::on_selection1_Button_clicked()
     DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
     db.addPageClick("Product Page -> Option 1");
 
-    productPageEndTimer->stop();
+//    productPageEndTimer->stop();
 
-    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_1);
-    idlePage->userDrinkOrder->setDrinkSize(DRINK1);
-    paymentSelectPage->resizeEvent(productResize);
-    paymentSelectPage->showFullScreen();
-    this->hide();
+//    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_1);
+//    idlePage->userDrinkOrder->setDrinkSize(DRINK1);
+//    paymentSelectPage->resizeEvent(productResize);
+//    paymentSelectPage->showFullScreen();
+//    this->hide();
 }
 
 
@@ -116,13 +116,13 @@ void productPage_1::on_selection2_Button_clicked()
     DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
     db.addPageClick("Product Page -> Option 2");
 
-    productPageEndTimer->stop();
+//    productPageEndTimer->stop();
 
-    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
-    idlePage->userDrinkOrder->setDrinkSize(DRINK2);
-    paymentSelectPage->resizeEvent(productResize);
-    paymentSelectPage->showFullScreen();
-    this->hide();
+//    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
+//    idlePage->userDrinkOrder->setDrinkSize(DRINK2);
+//    paymentSelectPage->resizeEvent(productResize);
+//    paymentSelectPage->showFullScreen();
+//    this->hide();
 }
 
 void productPage_1::on_selection3_Button_clicked()
@@ -144,13 +144,13 @@ void productPage_1::on_selection4_Button_clicked()
     DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
     db.addPageClick("Product Page -> Option 4");
 
-    productPageEndTimer->stop();
+//    productPageEndTimer->stop();
 
-    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);
-    idlePage->userDrinkOrder->setDrinkSize(DRINK4);
-    paymentSelectPage->resizeEvent(productResize);
-    paymentSelectPage->showFullScreen();
-    this->hide();
+//    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);
+//    idlePage->userDrinkOrder->setDrinkSize(DRINK4);
+//    paymentSelectPage->resizeEvent(productResize);
+//    paymentSelectPage->showFullScreen();
+//    this->hide();
 }
 
 //void productPage_1::on_selection5_Button_clicked()

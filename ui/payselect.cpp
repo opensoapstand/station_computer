@@ -121,7 +121,7 @@ void paySelect::on_payPage_Button_clicked()
 
     //Update Click DB
     DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
-    db.addPageClick("Pay Select -> Pay Page");
+    db.addPageClick("Pay Select -> Dispense Page");
 
     // FIXME: Remove this when DB price referencing/calculations are correct.
     if(idlePage->userDrinkOrder->getOption() == 1) {

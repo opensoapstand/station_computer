@@ -246,4 +246,7 @@ void dispensePage::updateVolumeDisplayed(int dispensed){
 
 void dispensePage::targetHitDisplay(){
     this->ui->volumeDispensedLabel->setText("Target Hit");
+    //Update Click DB
+    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    db.addPageClick("TARGET HIT");
 }

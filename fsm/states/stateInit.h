@@ -58,6 +58,20 @@ class stateInit : public stateVirtual
 
         const char* getXML(const char* subHeader, TiXmlElement *childEle);
 
+        sqlite3 *db;
+        int rc;
+
+        static int callback(void *data, int argc, char **argv, char **azColName);
+
+        int slot;
+        string name;
+        double volume_dispensed;
+        double volume_target;
+        double calibration_const;
+        double price;
+        int is_still;
+        double volume_per_tick;
+
 };
 
 // **** XML DEPTH ***

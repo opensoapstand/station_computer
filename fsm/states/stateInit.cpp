@@ -564,6 +564,20 @@ DF_ERROR stateInit::setDrinks(){
    // Drink Setup
    // load the SQLITE manager
 
+    rc = sqlite3_open("/home/df-admin/drinkfill/db/sqlite/drinkfill-products.db", &db);
+
+    debugOutput::sendMessage("DB GETTER START", INFO);
+
+    if( rc ) {
+       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+       // TODO: Error handling here...
+    } else {
+       fprintf(stderr, "Opened database successfully\n");
+    }
+
+
+
+
    // FIXME: Hardcode for now.
    
 
@@ -572,6 +586,8 @@ DF_ERROR stateInit::setDrinks(){
    // }
    // Hardcoded drink class for testing
 
+
+                            // drink(int slot, string name, double nVolumeDispensed, double nVolumeTarget, double calibration_const, double price, bool isStillDrink, double nVolumePerTick)
    g_cassettes[0].setDrink(new drink(1, "Drink1", 0, 1500, 1.3, 3.75, false, 1));
    g_cassettes[1].setDrink(new drink(2, "Drink2", 0, 400, 1.3, 2.20, false, 1));
    g_cassettes[2].setDrink(new drink(3, "Drink3", 0, 200, 1.3, 2.00, false, 1));
@@ -583,4 +599,16 @@ DF_ERROR stateInit::setDrinks(){
 //   g_cassettes[8].setDrink(new drink(9, "Drink9", 0, 355, 1.3, 4.00, false, 10));
 
    return OK;
+}
+
+static int callback(void *data, int argc, char **argv, char **azColName){
+   int i;
+   fprintf(stderr, "%s: ", (const char*)data);
+
+   for(i = 0; i<argc; i++){
+      printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+   }
+
+   printf("\n");
+   return 0;
 }

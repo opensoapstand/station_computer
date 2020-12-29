@@ -15,6 +15,8 @@
 
 #define XML_SETTINGS  "/release/df_settings.xml"
 
+#include <sqlite3.h>
+
 typedef enum DF_FSM {
    START,
    INIT,

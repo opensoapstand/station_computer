@@ -241,5 +241,5 @@ void dispensePage::updateVolumeDisplayed(int dispensed){
 
     ui->finish_Button->setEnabled(true);
     //volumeDispensedLabel.clear();
-    this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ "ml dispensed");
+    this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ " ticks");
 }

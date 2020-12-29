@@ -243,3 +243,7 @@ void dispensePage::updateVolumeDisplayed(int dispensed){
     //volumeDispensedLabel.clear();
     this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ " ticks");
 }
+
+void dispensePage::targetHitDisplay(){
+    this->ui->volumeDispensedLabel->setText("Target Hit");
+}

@@ -55,6 +55,10 @@ QByteArray DfUiCommThread::readyRead()
         emit resetTimerSignal();
     }
 
+    if(Data == "Target Hit"){
+        emit targetHitSignal();
+    }
+
     if(strtol(Data, &pEnd, 10)){
        emit updateVolumeSignal(strtol(Data, &pEnd, 10));
     }

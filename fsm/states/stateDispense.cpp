@@ -136,6 +136,9 @@ DF_ERROR stateDispense::onAction()
       if (cassettes[pos].getDrink()->isDispenseComplete())
       {
          cassettes[pos].setIsDispenseComplete(true);
+         // TARGET HIT!
+         m_pMessaging->sendMessage("Target Hit");
+
       }
 
       usleep(500000);

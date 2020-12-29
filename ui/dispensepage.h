@@ -41,6 +41,7 @@ public:
     void PleaseResetTimerSlot(void);
     void updateVolumeDisplayed(int dispensed);
     void volumeDispensedLabel(QLabel* label);
+    void targetHitDisplay();
 
 public slots:
 

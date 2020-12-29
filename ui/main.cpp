@@ -77,6 +77,7 @@ int main(int argc, char *argv[])
 
     QObject::connect(&dfUiServer, &DfUiServer::pleaseReset, dispensingPage, &dispensePage::PleaseResetTimerSlot);
     QObject::connect(&dfUiServer, &DfUiServer::updateVolume, dispensingPage, &dispensePage::updateVolumeDisplayed);
+    QObject::connect(&dfUiServer, &DfUiServer::targetHit, dispensingPage, &dispensePage::targetHitDisplay);
 
     //Update Click DB
     DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");

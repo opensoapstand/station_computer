@@ -19,6 +19,7 @@ public:
 signals:
     void error(QTcpSocket::SocketError socketerror);
     void resetTimerSignal(void);
+    void targetHitSignal(void);
     void updateVolumeSignal(int dispensed);
 
 public slots:

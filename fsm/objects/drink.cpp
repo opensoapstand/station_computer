@@ -211,6 +211,7 @@ void drink::drinkInfo() {
     cout << "Drink Calibration: " << m_calibration_const << endl;
     cout << "Drink Price: " << m_price << endl;
     cout << "Drink is Still?: " << m_isStillDrink << endl;
+    cout << "Drink Volume per Tick: " << m_nVolumePerTick << endl;
 }
 
 void drink::drinkVolumeInfo(){

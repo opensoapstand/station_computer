@@ -40,12 +40,6 @@
 //#define SMALL_DRINK_CHAR 's'
 //#define LARGE_DRINK_CHAR 'l'
 
-#define DRINK1_CHAR 'p'
-#define DRINK2_CHAR 'o'
-#define DRINK3_CHAR 'i'
-#define DRINK4_CHAR 'u'
-
-
 class messageMediator
 {
    public:

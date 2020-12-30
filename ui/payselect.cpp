@@ -120,7 +120,7 @@ void paySelect::on_payPage_Button_clicked()
     string description = "Drink Flavor DrinkSizeOZ (DrinkML)";
 
     //Update Click DB
-    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    DbManager db(DB_PATH);
     db.addPageClick("Pay Select -> Dispense Page");
 
     // FIXME: Remove this when DB price referencing/calculations are correct.

@@ -558,11 +558,80 @@ DF_ERROR stateInit::dispenserSetup()
    return e_ret;
 }
 
+static int callback(void *data, int argc, char **argv, char **azColName){
+   int i;
+   //fprintf(stderr, "%s: ", (const char*)data);
+
+   int slot;
+   string name;
+   double volume_dispensed;
+   double volume_target;
+   double calibration_const;
+   double price;
+   int is_still;
+   double volume_per_tick;
+
+   for(i = 0; i<argc; i++){
+      //printf("%s = %s\n", azColName[i], argv[i]);
+      std::string colname = azColName[i];
+
+      if (colname == "slot"){
+          //printf("setting slot \n");
+          slot = atoi(argv[i]);
+          //printf("slot: %d \n", slot);
+      }
+      else if (colname == "name"){
+          //printf("setting name \n");
+          name = argv[i];
+          //printf("name: %s \n", name2.c_str());
+      }
+      else if (colname == "volume_dispensed"){
+          //printf("setting vol disp \n");
+          volume_dispensed = atof(argv[i]);
+          //printf("vol dispensed: %f \n", volume_dispensed);
+      }
+      else if (colname == "volume_target"){
+          //printf("setting vol tar \n");
+          volume_target = atof(argv[i]);
+          //printf("vol taget: %f \n", volume_target);
+      }
+      else if (colname == "calibration_const"){
+          //printf("setting cal con \n");
+          calibration_const = atof(argv[i]);
+          //printf("cal const: %f \n", calibration_const);
+      }
+      else if (colname == "price"){
+          //printf("setting price \n");
+          price = atof(argv[i]);
+          //printf("price: %f \n", price);
+      }
+      else if (colname == "is_still"){
+          //printf("setting is still \n");
+          is_still = atoi(argv[i]);
+          //printf("isstill: %d \n", is_still);
+      }
+      else if (colname == "volume_per_tick"){
+          //printf("setting vol per tick \n");
+          volume_per_tick = atof(argv[i]);
+          //printf("vol per tick: %f \n", volume_per_tick);
+      }
+
+      g_cassettes[slot-1].setDrink(new drink(slot, name, volume_dispensed, volume_target, calibration_const, price, false, volume_per_tick));
+   }
+
+   return 0;
+}
 
 DF_ERROR stateInit::setDrinks(){
 
    // Drink Setup
    // load the SQLITE manager
+
+
+    char *zErrMsg = 0;
+    int rc;
+    //char *sql;
+    const char* data = "Callback function called";
 
     rc = sqlite3_open(DB_PRODUCTS_PATH, &db);
 
@@ -572,10 +641,25 @@ DF_ERROR stateInit::setDrinks(){
        fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
        // TODO: Error handling here...
     } else {
-       fprintf(stderr, "Opened database successfully\n");
+       fprintf(stderr, "Opened database successfully\n\n");
     }
 
+    /* Create SQL statement */
+    std::string sql11 = "SELECT * from products";
+    char *sql = new char[sql11.length() + 1];
+    strcpy(sql, sql11.c_str());
 
+
+    /* Execute SQL statement */
+    rc = sqlite3_exec(db, sql, callback, (void*)data, &zErrMsg);
+
+    if( rc != SQLITE_OK ) {
+       fprintf(stderr, "SQL error: %s\n", zErrMsg);
+       sqlite3_free(zErrMsg);
+    } else {
+       fprintf(stdout, "Operation done successfully\n");
+    }
+    sqlite3_close(db);
 
 
    // FIXME: Hardcode for now.
@@ -588,10 +672,10 @@ DF_ERROR stateInit::setDrinks(){
 
 
                             // drink(int slot, string name, double nVolumeDispensed, double nVolumeTarget, double calibration_const, double price, bool isStillDrink, double nVolumePerTick)
-   g_cassettes[0].setDrink(new drink(1, "Drink1", 0, 1500, 1.3, 3.75, false, 1));
-   g_cassettes[1].setDrink(new drink(2, "Drink2", 0, 400, 1.3, 2.20, false, 1));
-   g_cassettes[2].setDrink(new drink(3, "Drink3", 0, 200, 1.3, 2.00, false, 1));
-   g_cassettes[3].setDrink(new drink(4, "Drink4", 0, 500, 1.3, 1.10, false, 1));
+//   g_cassettes[0].setDrink(new drink(1, "Drink1", 0, 1500, 1.3, 3.75, false, 1));
+//   g_cassettes[1].setDrink(new drink(2, "Drink2", 0, 400, 1.3, 2.20, false, 1));
+//   g_cassettes[2].setDrink(new drink(3, "Drink3", 0, 200, 1.3, 2.00, false, 1));
+//   g_cassettes[3].setDrink(new drink(4, "Drink4", 0, 500, 1.3, 1.10, false, 1));
 //   g_cassettes[4].setDrink(new drink(5, "Drink5", 0, 355, 1.3, 4.00, false, 10));
 //   g_cassettes[5].setDrink(new drink(6, "Drink6", 0, 355, 1.3, 4.00, false, 25));
 //   g_cassettes[6].setDrink(new drink(7, "Drink7", 0, 355, 1.3, 4.00, false, 10));
@@ -601,14 +685,4 @@ DF_ERROR stateInit::setDrinks(){
    return OK;
 }
 
-static int callback(void *data, int argc, char **argv, char **azColName){
-   int i;
-   fprintf(stderr, "%s: ", (const char*)data);
 
-   for(i = 0; i<argc; i++){
-      printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-   }
-
-   printf("\n");
-   return 0;
-}

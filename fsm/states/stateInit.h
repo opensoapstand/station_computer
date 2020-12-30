@@ -61,7 +61,7 @@ class stateInit : public stateVirtual
         sqlite3 *db;
         int rc;
 
-        static int callback(void *data, int argc, char **argv, char **azColName);
+        //static int callback(void *data, int argc, char **argv, char **azColName);
 
         int slot;
         string name;

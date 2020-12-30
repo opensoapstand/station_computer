@@ -564,7 +564,7 @@ DF_ERROR stateInit::setDrinks(){
    // Drink Setup
    // load the SQLITE manager
 
-    rc = sqlite3_open("/home/df-admin/drinkfill/db/sqlite/drinkfill-products.db", &db);
+    rc = sqlite3_open(DB_PRODUCTS_PATH, &db);
 
     debugOutput::sendMessage("DB GETTER START", INFO);
 

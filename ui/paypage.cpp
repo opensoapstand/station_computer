@@ -193,7 +193,7 @@ void payPage::displayPaymentPending(bool isVisible)
 void payPage::on_previousPage_Button_clicked()
 {
     //Update Click DB
-    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    DbManager db(DB_PATH);
     db.addPageClick("Pay Page -> Pay Select");
 
     qDebug() << "payPage: previous button" << endl;
@@ -209,11 +209,8 @@ void payPage::on_payment_bypass_Button_clicked()
 {
 
     //Update Click DB
-    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    DbManager db(DB_PATH);
     db.addPageClick("Pay Page -> Dispense Page");
-
-    //Update Click DB
-    //DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
     db.addPageClick("TRANSACTION STARTED");
 
     qDebug() << "ByPass payment to Dispense" << endl;
@@ -462,7 +459,7 @@ void payPage::on_mainPage_Button_clicked()
 {
 
     //Update Click DB
-    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    DbManager db(DB_PATH);
     db.addPageClick("Pay Page -> Main Page");
 
     stopPayTimers();

@@ -22,6 +22,8 @@
 #include "dfuicommthread.h"
 #include "dbmanager.h"
 
+#define DB_PATH "/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db"
+
 namespace Ui {
 class idle;
 }

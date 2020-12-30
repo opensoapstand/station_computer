@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
     QObject::connect(&dfUiServer, &DfUiServer::targetHit, dispensingPage, &dispensePage::targetHitDisplay);
 
     //Update Click DB
-    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    DbManager db(DB_PATH);
     db.addPageClick("INITIALIZED");
 
     return mainApp.exec();

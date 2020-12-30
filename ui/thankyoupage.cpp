@@ -79,7 +79,7 @@ void thankYouPage::onThankyouTimeoutTick(){
         qDebug() << "Timer Done!" << _thankYouTimeoutSec << endl;
 
         //Update Click DB
-        DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+        DbManager db(DB_PATH);
         db.addPageClick("THANK YOU PAGE TIME OUT");
 
         on_mainPage_Button_clicked();
@@ -89,7 +89,7 @@ void thankYouPage::onThankyouTimeoutTick(){
 void thankYouPage::on_mainPage_Button_clicked()
 {
     //Update Click DB
-    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    DbManager db(DB_PATH);
     db.addPageClick("TRANSACTION COMPLETED");
     db.addPageClick("Thank You Page -> Main Page");
 

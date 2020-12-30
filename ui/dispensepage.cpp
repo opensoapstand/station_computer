@@ -115,7 +115,7 @@ void dispensePage::showEvent(QShowEvent *event)
 void dispensePage::on_finish_Button_clicked()
 {
     //Update Click DB
-    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    DbManager db(DB_PATH);
     db.addPageClick("Dispense Page -> Thank You Page");
 
     qDebug() << "dispensePage: finish button clicked" << endl;
@@ -217,7 +217,7 @@ void dispensePage::onDispenseIdleTick(){
 //        dispenseIdleTimer->stop();
 
         //Update Click DB
-        DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+        DbManager db(DB_PATH);
         db.addPageClick("DISPENSE TIME OUT");
 
         on_finish_Button_clicked();
@@ -247,6 +247,6 @@ void dispensePage::updateVolumeDisplayed(int dispensed){
 void dispensePage::targetHitDisplay(){
     this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ " ticks - Target Hit!");
     //Update Click DB
-    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    DbManager db(DB_PATH);
     db.addPageClick("TARGET HIT");
 }

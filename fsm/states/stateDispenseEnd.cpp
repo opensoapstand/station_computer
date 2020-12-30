@@ -159,7 +159,7 @@ DF_ERROR stateDispenseEnd::updateDB(){
     char *zErrMsg = 0;
 
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
-    rc = sqlite3_open("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db", &db);
+    rc = sqlite3_open(DB_PATH, &db);
 
     debugOutput::sendMessage("DB Update START", INFO);
 

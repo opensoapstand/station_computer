@@ -100,7 +100,7 @@ paySelect::~paySelect()
 void paySelect::on_previousPage_Button_clicked()
 {
     //Update Click DB
-    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    DbManager db(DB_PATH);
     db.addPageClick("Pay Select -> Product Page");
 
     qDebug() << "paySelect: Previous button" << endl;
@@ -239,7 +239,7 @@ void paySelect::onSelectTimeoutTick(){
         selectIdleTimer->stop();
 
         //Update Click DB
-        DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+        DbManager db(DB_PATH);
         db.addPageClick("PAY SELECT TIME OUT");
 
         on_mainPage_Button_clicked();
@@ -261,7 +261,7 @@ void paySelect::on_mainPage_Button_clicked()
 {
 
     //Update Click DB
-    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    DbManager db(DB_PATH);
     db.addPageClick("Pay Select -> Main Page");
 
     qDebug() << "paySelect: mainPage button" << endl;

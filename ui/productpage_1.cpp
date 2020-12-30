@@ -98,7 +98,7 @@ void productPage_1::showEvent(QShowEvent *event)
 void productPage_1::on_selection1_Button_clicked()
 {
     // UPDATE DB
-    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    DbManager db(DB_PATH);
     db.addPageClick("Product Page -> Option 1");
 
     productPageEndTimer->stop();
@@ -113,7 +113,7 @@ void productPage_1::on_selection1_Button_clicked()
 
 void productPage_1::on_selection2_Button_clicked()
 {
-    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    DbManager db(DB_PATH);
     db.addPageClick("Product Page -> Option 2");
 
     productPageEndTimer->stop();
@@ -127,7 +127,7 @@ void productPage_1::on_selection2_Button_clicked()
 
 void productPage_1::on_selection3_Button_clicked()
 {
-    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    DbManager db(DB_PATH);
     db.addPageClick("Product Page -> Option 3");
 
     productPageEndTimer->stop();
@@ -141,7 +141,7 @@ void productPage_1::on_selection3_Button_clicked()
 
 void productPage_1::on_selection4_Button_clicked()
 {
-    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    DbManager db(DB_PATH);
     db.addPageClick("Product Page -> Option 4");
 
     productPageEndTimer->stop();
@@ -181,7 +181,7 @@ void productPage_1::onProductPageTimeoutTick(){
         qDebug() << "Timer Done!" << _productPageTimeoutSec << endl;
 
         //Update Click DB
-        DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+        DbManager db(DB_PATH);
         db.addPageClick("PRODUCT PAGE TIME OUT");
 
         mainPage();
@@ -191,7 +191,7 @@ void productPage_1::onProductPageTimeoutTick(){
 void productPage_1::mainPage()
 {
     // UPDATE DB
-    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    DbManager db(DB_PATH);
     db.addPageClick("Product Page -> Main Page");
 
     productPageEndTimer->stop();

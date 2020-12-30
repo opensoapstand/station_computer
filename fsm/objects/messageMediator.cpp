@@ -345,16 +345,16 @@ DF_ERROR messageMediator::getPositionReady()
       }
 
       // FIXME: This is horrible...will remove later.
-      if (commandString[i] == '1')
-      {
-         m_nVolumeTarget = 1500;
-      } else if(commandString[i] == '2') {
-         m_nVolumeTarget = 400;
-      } else if(commandString[i] == '3') {
-          m_nVolumeTarget = 200;
-      } else if(commandString[i] == '4') {
-          m_nVolumeTarget = 500;
-      }
+//      if (commandString[i] == '1')
+//      {
+//         m_nVolumeTarget = 1500;
+//      } else if(commandString[i] == '2') {
+//         m_nVolumeTarget = 400;
+//      } else if(commandString[i] == '3') {
+//          m_nVolumeTarget = 200;
+//      } else if(commandString[i] == '4') {
+//          m_nVolumeTarget = 500;
+//      }
      //cout << commandString[i] << endl;
    }
 

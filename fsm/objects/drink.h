@@ -42,7 +42,7 @@ public:
         int getVolumeDispensedPreviously();
 	double getTargetVolume(){return m_nVolumeTarget;};
 
-	void setTargetVolume(double nVolumeTarget){m_nVolumeTarget = nVolumeTarget;};
+        //void setTargetVolume(double nVolumeTarget){m_nVolumeTarget = nVolumeTarget;};
 
 	// Interrupt Helpers
         DF_ERROR startDispense(int nVolumeToDispense);

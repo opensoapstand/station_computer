@@ -46,6 +46,8 @@ idle::idle(QWidget *parent) :
 
     // TODO: Will need to determine standard path in future; Could skip if going with Postgres
     // this->dfUtility->getVendorDetails();
+
+
 }
 
 /*
@@ -70,8 +72,25 @@ void idle::on_nextPageButton_clicked()
 {
 
     // UPDATE DB
-    DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+    DbManager db(DB_PATH);
     db.addPageClick("Main Page -> Product Page");
+
+//    DbManager db_product(DB_PRODUCTS_PATH);
+//    db_product.getProductName(1);
+//    db_product.getProductPrice(1);
+//    db_product.getProductVolume(1);
+
+//    db_product.getProductName(2);
+//    db_product.getProductPrice(2);
+//    db_product.getProductVolume(2);
+
+//    db_product.getProductName(3);
+//    db_product.getProductPrice(3);
+//    db_product.getProductVolume(3);
+
+//    db_product.getProductName(4);
+//    db_product.getProductPrice(4);
+//    db_product.getProductVolume(4);
 
     // Connect to KB Listener
     selection_PageOne->showFullScreen();

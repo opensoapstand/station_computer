@@ -571,6 +571,8 @@ static int callback(void *data, int argc, char **argv, char **azColName){
    int is_still;
    double volume_per_tick;
 
+   printf("\n----------\n");
+
    for(i = 0; i<argc; i++){
       //printf("%s = %s\n", azColName[i], argv[i]);
       std::string colname = azColName[i];
@@ -578,43 +580,45 @@ static int callback(void *data, int argc, char **argv, char **azColName){
       if (colname == "slot"){
           //printf("setting slot \n");
           slot = atoi(argv[i]);
-          //printf("slot: %d \n", slot);
+          printf("Slot: %d \n", slot);
       }
       else if (colname == "name"){
           //printf("setting name \n");
           name = argv[i];
-          //printf("name: %s \n", name2.c_str());
+          printf("Name: %s \n", name.c_str());
       }
       else if (colname == "volume_dispensed"){
           //printf("setting vol disp \n");
           volume_dispensed = atof(argv[i]);
-          //printf("vol dispensed: %f \n", volume_dispensed);
+          printf("Volume Dispensed: %f \n", volume_dispensed);
       }
       else if (colname == "volume_target"){
           //printf("setting vol tar \n");
           volume_target = atof(argv[i]);
-          //printf("vol taget: %f \n", volume_target);
+          printf("Volume Target: %f \n", volume_target);
       }
       else if (colname == "calibration_const"){
           //printf("setting cal con \n");
           calibration_const = atof(argv[i]);
-          //printf("cal const: %f \n", calibration_const);
+          printf("Calibration Const: %f \n", calibration_const);
       }
       else if (colname == "price"){
           //printf("setting price \n");
           price = atof(argv[i]);
-          //printf("price: %f \n", price);
+          printf("Price: %f \n", price);
       }
       else if (colname == "is_still"){
           //printf("setting is still \n");
           is_still = atoi(argv[i]);
-          //printf("isstill: %d \n", is_still);
+          printf("Is Still: %d \n", is_still);
       }
       else if (colname == "volume_per_tick"){
           //printf("setting vol per tick \n");
           volume_per_tick = atof(argv[i]);
-          //printf("vol per tick: %f \n", volume_per_tick);
+          printf("Volume per Tick: %f \n", volume_per_tick);
       }
+
+      printf("\n");
 
       g_cassettes[slot-1].setDrink(new drink(slot, name, volume_dispensed, volume_target, calibration_const, price, false, volume_per_tick));
    }
@@ -633,7 +637,7 @@ DF_ERROR stateInit::setDrinks(){
     //char *sql;
     const char* data = "Callback function called";
 
-    rc = sqlite3_open(DB_PRODUCTS_PATH, &db);
+    rc = sqlite3_open(DB_PATH, &db);
 
     debugOutput::sendMessage("DB GETTER START", INFO);
 
@@ -649,6 +653,8 @@ DF_ERROR stateInit::setDrinks(){
     char *sql = new char[sql11.length() + 1];
     strcpy(sql, sql11.c_str());
 
+    printf("\n______________PRODUCTS_______________\n\n");
+
 
     /* Execute SQL statement */
     rc = sqlite3_exec(db, sql, callback, (void*)data, &zErrMsg);
@@ -660,6 +666,8 @@ DF_ERROR stateInit::setDrinks(){
        fprintf(stdout, "Operation done successfully\n");
     }
     sqlite3_close(db);
+
+    printf("\n_____________________________________\n\n");
 
 
    // FIXME: Hardcode for now.

@@ -204,14 +204,14 @@ bool drink::isDispenseComplete()
 }
 
 void drink::drinkInfo() {
-    cout << "Drink Option: " << m_nSlot << endl;
-    cout << "Drink Name: " << m_name << endl;
-    cout << "Drink Dispense Volume: " << m_nVolumeDispensed << endl;
-    cout << "Drink Target Volume: " << m_nVolumeTarget << endl;
-    cout << "Drink Calibration: " << m_calibration_const << endl;
-    cout << "Drink Price: " << m_price << endl;
-    cout << "Drink is Still?: " << m_isStillDrink << endl;
-    cout << "Drink Volume per Tick: " << m_nVolumePerTick << endl;
+    cout << "Option: " << m_nSlot << endl;
+    cout << "Name: " << m_name << endl;
+    cout << "Dispense Volume: " << m_nVolumeDispensed << endl;
+    cout << "Target Volume: " << m_nVolumeTarget << endl;
+    cout << "Calibration: " << m_calibration_const << endl;
+    cout << "Price: " << m_price << endl;
+    cout << "Is Still?: " << m_isStillDrink << endl;
+    cout << "Volume per Tick: " << m_nVolumePerTick << endl;
 }
 
 void drink::drinkVolumeInfo(){

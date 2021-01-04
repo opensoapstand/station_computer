@@ -3,9 +3,6 @@
 
 #include <includefiles.h>
 
-#define DB_PRODUCTS_PATH "/home/df-admin/drinkfill/db/sqlite/drinkfill-products.db"
-
-
 class DbManager
 {
 public:

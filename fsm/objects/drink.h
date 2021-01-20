@@ -68,6 +68,7 @@ public:
         double m_nVolumeTarget;  //how much to dispense
         double m_nVolumeDispensed; //how much has been dispensed in this sale
         double m_price;
+	string m_name;
 
         time_t rawtime;
         struct tm * timeinfo;
@@ -77,7 +78,7 @@ public:
 private:
 	// TODO: Determine more data to modify per transaction...
 	int m_nSlot;
-	string m_name;
+	
 
 	bool isDispenseFinished;
         double m_nVolumeDispensedSinceLastPoll;

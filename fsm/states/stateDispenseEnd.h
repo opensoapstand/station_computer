@@ -15,6 +15,7 @@
 
 #include "../dftypes.h"
 #include "../objects/messageMediator.h"
+#include "../../library/printer/Adafruit_Thermal.h"
 
 #include <stdio.h>
 

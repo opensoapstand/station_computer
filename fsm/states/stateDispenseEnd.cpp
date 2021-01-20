@@ -199,6 +199,8 @@ DF_ERROR stateDispenseEnd::updateDB(){
 
 DF_ERROR stateDispenseEnd::printer(){
 
+    debugOutput::sendMessage("Printing...", INFO);
+
     char cost2[MAX_BUF];
     char volume2[MAX_BUF];
 
@@ -207,15 +209,22 @@ DF_ERROR stateDispenseEnd::printer(){
 
     string cost = (cost2);
     string volume = (volume2);
+    std::string name = (cassettes[pos].getDrink()->m_name);
 
     time(&rawtime);
     timeinfo = localtime(&rawtime);
 
     strftime(now, 50, "%F %T", timeinfo);
 
-    string printerstring = "Price: $" + cost + " Volume: " + volume + "ml Time: " + now;
+    string printerstring = name +"\nPrice: $" + cost + " \nVolume: " + volume + "ml \nTime: " + now;
+    string sysstring = "echo '"+printerstring+"' > /dev/ttyS4";
 
-    debugOutput::sendMessage(printerstring, INFO);
+    Adafruit_Thermal* printerr = new Adafruit_Thermal();
+
+    system(sysstring.c_str());
+    printerr->setBarcodeHeight(100);
+    printerr->printBarcode("005808293490", UPC_A);
+    system("echo '\n\n\n' > /dev/ttyS4");
 
 }
 

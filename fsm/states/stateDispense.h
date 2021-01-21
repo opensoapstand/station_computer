@@ -41,6 +41,7 @@ class stateDispense : public stateVirtual
         int pos;
         dispenser* cassettes;
         bool flushCommand;
+        char size;
 
 
     

@@ -39,6 +39,7 @@ class stateDispenseIdle : public stateVirtual
 
     private:
         int pos;
+        char size;
         dispenser* cassettes;
         bool flushCommand;
 

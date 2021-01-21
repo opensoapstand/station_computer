@@ -9,8 +9,8 @@ public:
     DbManager(const QString& path);
     bool addPageClick(const QString& page);
     QString getProductName(int slot);
-    double getProductPrice(int slot);
-    double getProductVolume(int slot);
+    double getProductPrice(int slot, char ml);
+    double getProductVolume(int slot, char ml);
 
 private:
     QSqlDatabase m_db;

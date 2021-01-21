@@ -72,6 +72,8 @@ class dispenser
       DF_ERROR connectButton();
       DF_ERROR disconnectButton();
 
+//      DF_ERROR buttonPressListener();
+
       bool getIsDispenseComplete(){return m_isDispenseDone;}
       void setIsDispenseComplete(bool isDispenseComplete){m_isDispenseDone = isDispenseComplete;}
 
@@ -89,6 +91,14 @@ class dispenser
 
       int getI2CAddress(int pos);
       int getI2CPin(int pos);
+
+      DF_ERROR setButtonPress(int address_num, int pin_num);
+      bool reader = true;
+
+      double getButtonPressDuration();
+      int getButtonPressTimes();
+      void resetButtonPressTimes();
+      void resetButtonPressDuration();
 
    private:
       bool m_isDispenseDone; // XXX: Remove later.
@@ -110,6 +120,7 @@ class dispenser
       
       // Button reference m_pButton[1] in stateVirtual; IPC shared due to Arduino!
       gpio *m_pButton[NUM_BUTTON];
+      mcpGPIO *m_pButtonPress;
 };
 
 #endif

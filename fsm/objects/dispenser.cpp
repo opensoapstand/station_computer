@@ -43,6 +43,7 @@ dispenser::dispenser(gpio* ButtonReference){
     //default constructor to set all pin to nullptr
     //debugOutput::sendMessage("dispenser", INFO);
     m_pButton[0] = ButtonReference;
+    //m_pButtonPress[0] = ButtonReference
     m_pDrink = nullptr;
 
     for (int i = 0; i < NUM_SOLENOID; i++)
@@ -235,11 +236,33 @@ DF_ERROR dispenser::stopDispense(int pos){
 }
 
 DF_ERROR dispenser::connectButton(){
-    return m_pButton[0]->writePin(HIGH);
+    return m_pButton[0]->writePin(HIGH);    
 }
 
 DF_ERROR dispenser::disconnectButton(){
     return m_pButton[0]->writePin(LOW);
+}
+
+DF_ERROR dispenser::setButtonPress(int address_num, int pin_num){
+    m_pButtonPress = new mcpGPIO(address_num, pin_num);
+    m_pButtonPress->setDirection(true);
+    m_pButtonPress->startButtonListener();
+}
+
+double dispenser::getButtonPressDuration(){
+    return m_pButtonPress->getPressDuration();
+}
+
+int dispenser::getButtonPressTimes(){
+    return m_pButtonPress->getPressAmount();
+}
+
+void dispenser::resetButtonPressTimes(){
+    m_pButtonPress->resetPressAmount();
+}
+
+void dispenser::resetButtonPressDuration(){
+    m_pButtonPress->resetPressDuration();
 }
 
 // Cleans the nozzle by dispensing Water followed by Air

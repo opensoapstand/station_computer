@@ -116,7 +116,7 @@ uint8_t MCP23017::readRegister(uint8_t addr)
     }
     // For debugging
     // printf("Device 0x%02X returned 0x%02X from register 0x%02X\n", kI2CAddress, toReturn, readRegister);
-    std::cout << std::hex << "Device: " << static_cast<int>(kI2CAddress) << " returned " << toReturn << " from register "<< &MCP23017::readRegister << std::endl;
+    //std::cout << std::hex << "Device: " << static_cast<int>(kI2CAddress) << " returned " << toReturn << " from register "<< &MCP23017::readRegister << std::endl;
     return toReturn ;
 }
 

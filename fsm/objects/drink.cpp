@@ -78,13 +78,15 @@ drink::drink(int slot)
 }
 
 // Test CTOR
-drink::drink(int slot, string name, double nVolumeDispensed, double nVolumeTarget, double calibration_const, double price, bool isStillDrink, double nVolumePerTick){
+drink::drink(int slot, string name, double nVolumeDispensed, double nVolumeTarget_l,double nVolumeTarget_s , double calibration_const, double price_l, double price_s, bool isStillDrink, double nVolumePerTick){
     m_nSlot = slot;
     m_name = name;
     m_nVolumeDispensed = nVolumeDispensed;
-    m_nVolumeTarget = nVolumeTarget;
+    m_nVolumeTarget_l = nVolumeTarget_l;
+    m_nVolumeTarget_s = nVolumeTarget_s;
     m_calibration_const = calibration_const;
-    m_price = price;
+    m_price_l = price_l;
+    m_price_s = price_s;
     m_isStillDrink = isStillDrink;
     m_nVolumePerTick = nVolumePerTick;
 
@@ -156,11 +158,12 @@ int drink::getVolumeDispensedPreviously()
 }
 
 // Reset values onEntry()
-DF_ERROR drink::startDispense(int nVolumeToDispense)
+DF_ERROR drink::startDispense(int nVolumeToDispense, double nPrice)
 {
     DF_ERROR dfRet = ERROR_BAD_PARAMS;
 
     m_nVolumeTarget = nVolumeToDispense;
+    m_price = nPrice;
     m_nVolumeDispensed = 0;
     m_nVolumeDispensedPreviously = 0;
     m_nVolumeDispensedSinceLastPoll = 0;
@@ -219,3 +222,23 @@ void drink::drinkVolumeInfo(){
     // cout << "How much to dispense: " << m_nVolumeTarget << endl;
 	cout << "Dispensed so far: " << m_nVolumeDispensed << endl;
 }
+
+double drink::getTargetVolume(char size){
+    if (size == 'l'){
+        return m_nVolumeTarget_l;
+    }
+    else if (size == 's'){
+        return m_nVolumeTarget_s;
+    }
+
+}
+
+double drink::getPrice(char size){
+    if (size == 'l'){
+        return m_price_l;
+    }
+    else if (size == 's'){
+        return m_price_s;
+    }
+}
+

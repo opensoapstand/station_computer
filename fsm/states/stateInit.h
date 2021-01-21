@@ -54,6 +54,7 @@ class stateInit : public stateVirtual
         DF_ERROR setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes);
         DF_ERROR setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes);
         DF_ERROR setButton(TiXmlElement *hardwareEle, int dispenserIdx);
+        DF_ERROR setButtonPress(TiXmlElement *hardwareEle, int dispenserIdx, dispenser* cassettes);
         DF_ERROR setDrinks();
 
         const char* getXML(const char* subHeader, TiXmlElement *childEle);
@@ -66,11 +67,15 @@ class stateInit : public stateVirtual
         int slot;
         string name;
         double volume_dispensed;
-        double volume_target;
+        double volume_target_l;
+        double volume_target_s;
         double calibration_const;
-        double price;
+        double price_l;
+        double price_s;
         int is_still;
         double volume_per_tick;
+
+        bool level = true;
 
 };
 
@@ -88,6 +93,7 @@ class stateInit : public stateVirtual
 #define ID_STRING "id"
 
 #define BUTTON_STRING "button"
+#define BUTTONPRESS_STRING "buttonpress"
 
 //forth layer
 #define SOLENOID_STRING "solenoid"

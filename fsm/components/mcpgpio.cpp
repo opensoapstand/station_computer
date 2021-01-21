@@ -13,7 +13,6 @@
 //***************************************
 
 #include "mcpgpio.h"
-#include <iostream>
 
 // CTOR
 mcpGPIO::mcpGPIO(int i2caddress, int pin)
@@ -61,7 +60,7 @@ DF_ERROR mcpGPIO::setDirection(bool input)
 	m_input = input;
 	this->m_mcp->pinMode(m_nPin, OUTPUT);
 
-	if (m_input) {
+        if (m_input) {
 		this->m_mcp->pinMode(m_nPin, INPUT);
 	}	
 
@@ -72,19 +71,19 @@ DF_ERROR mcpGPIO::setDirection(bool input)
  * Read the pin for i2c Chip Address 
  * XXX: MAY be obolete due to XML parsing
  */
-DF_ERROR mcpGPIO::readPin(bool * level) 
+DF_ERROR mcpGPIO::readPin(bool * level)
 {
-	debugOutput::sendMessage("readPin", INFO);
+        //debugOutput::sendMessage("readPin", INFO);
 	
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
 	
-	if (m_input && (nullptr != level)) {
-		*level = this->m_mcp->digitalRead(m_nAddress);
-		df_ret = OK;
+        if (m_input && (nullptr != level)) {
+                *level = this->m_mcp->digitalRead(m_nPin);
+                df_ret = OK;
 	}
 
-	return df_ret;
+        return df_ret;
 }
 
 /*
@@ -128,8 +127,23 @@ void mcpGPIO::monitorGPIO()
 {
 	// TODO: Implementation for Interrupt!
 	//!!! look at oddyseyx86GPIO for example
-	cout << "hello! MCPGPIO" << endl;
-	// 
+        //cout << "hello! MCPGPIO" << endl;
+    readPin(&level);
+    if(level){
+        if (!button_pressed){
+            t1 = Clock::now();
+            press_times++;
+        }
+        button_pressed = true;
+    }
+    else{
+        if (button_pressed){
+            button_pressed = false;
+            t2 = Clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count();
+            press_duration+= duration/1000.00;
+        }
+    }
 }
 
 /* ------ Getters, Setters and Utilities below ------ */

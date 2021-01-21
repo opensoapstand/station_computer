@@ -48,7 +48,6 @@ DF_ERROR stateIdle::onEntry()
    // Set current and future states to IDLE
    m_state = IDLE;
    m_nextState = IDLE;
-
    return e_ret;
 }
 
@@ -72,6 +71,9 @@ DF_ERROR stateIdle::onAction()
          cassettes = g_cassettes;
          pos = m_pMessaging->getnOption();
          pos = pos - 1;
+
+         cassettes[pos].resetButtonPressDuration();
+         cassettes[pos].resetButtonPressTimes();
 
          cassettes[pos].getDrink()->initDispense();
 

@@ -51,6 +51,7 @@ DF_ERROR stateDispense::onEntry()
        cassettes = g_cassettes;
        DF_ERROR e_ret = OK;
        pos = m_pMessaging->getnOption();
+       size = m_pMessaging->getnSize();
        pos = pos - 1;
        cassettes[pos].getDrink()->drinkVolumeInfo();
        if (cassettes[pos].getDrink()->getVolumeDispensed() == 0) {
@@ -60,7 +61,7 @@ DF_ERROR stateDispense::onEntry()
            // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> DRINK", INFO);
            // debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
-           cassettes[pos].getDrink()->startDispense(cassettes[pos].getDrink()->getTargetVolume());
+           cassettes[pos].getDrink()->startDispense(cassettes[pos].getDrink()->getTargetVolume(size), cassettes[pos].getDrink()->getPrice(size));
            cassettes[pos].setIsDispenseComplete(false);
            cassettes[pos].getDrink()->drinkInfo();
            cassettes[pos].getDrink()->drinkVolumeInfo();

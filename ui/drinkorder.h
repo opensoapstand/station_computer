@@ -65,15 +65,25 @@ public:
 //    constexpr static double SMALL_SIZE_ML = 355.00;
 //    constexpr static double LARGE_SIZE_ML = 473.00;
 
-    constexpr static double DRINK1_SIZE_ML = 1500.00;
-    constexpr static double DRINK2_SIZE_ML = 400.00;
-    constexpr static double DRINK3_SIZE_ML = 200.00;
-    constexpr static double DRINK4_SIZE_ML = 500.00;
+    double DRINK1_SIZE_ML_L;
+    double DRINK2_SIZE_ML_L;
+    double DRINK3_SIZE_ML_L;
+    double DRINK4_SIZE_ML_L;
 
-    constexpr static double DRINK1_PRICE = 3.75;
-    constexpr static double DRINK2_PRICE = 2.20;
-    constexpr static double DRINK3_PRICE = 2.00;
-    constexpr static double DRINK4_PRICE = 1.10;
+    double DRINK1_SIZE_ML_S;
+    double DRINK2_SIZE_ML_S;
+    double DRINK3_SIZE_ML_S;
+    double DRINK4_SIZE_ML_S;
+
+    double DRINK1_PRICE_L;
+    double DRINK2_PRICE_L;
+    double DRINK3_PRICE_L;
+    double DRINK4_PRICE_L;
+
+    double DRINK1_PRICE_S;
+    double DRINK2_PRICE_S;
+    double DRINK3_PRICE_S;
+    double DRINK4_PRICE_S;
 
     //constexpr static double PRICE_SMALL_TEST = 3.00;
     //constexpr static double PRICE_LARGE_TEST = 4.00;

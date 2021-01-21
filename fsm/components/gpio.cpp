@@ -45,6 +45,19 @@ void gpio::startListener()
 	}
 }
 
+void gpio::startButtonListener()
+{
+        debugOutput::sendMessage("-----startListener-----", INFO);
+        DF_ERROR df_ret = ERROR_BAD_PARAMS;
+
+        if ((nullptr ==  gpioThread)){
+                gpioThread = new std::thread(&gpio::listener, this);
+                df_ret = OK;
+        } else {
+                debugOutput::sendMessage("Did not pass null check", INFO);
+        }
+}
+
 // TODO: Threaded GPIO interrupt...
 // call this with code that looks like
 // std::thread tGPIOListener tgpio = <gpioinstance>->listener();

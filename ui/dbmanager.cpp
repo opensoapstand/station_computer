@@ -51,43 +51,55 @@ QString DbManager::getProductName(int slot){
     while (product_query.next()) {
             product_name = product_query.value(0).toString();
 
-            qDebug() << "Product: " << product_name << endl;
+            //qDebug() << "Product: " << product_name << endl;
         }
 
     return product_name;
 }
 
-double DbManager::getProductPrice(int slot){
+double DbManager::getProductPrice(int slot, char ml){
 
     QSqlQuery price_query;
     double price;
 
-    price_query.prepare("SELECT price FROM products WHERE slot=:slot");
+    if (ml == 'l'){
+        price_query.prepare("SELECT price_l FROM products WHERE slot=:slot");
+    }
+    else if (ml == 's'){
+        price_query.prepare("SELECT price_s FROM products WHERE slot=:slot");
+    }
+    //price_query.prepare("SELECT price FROM products WHERE slot=:slot");
     price_query.bindValue(":slot", slot);
     price_query.exec();
 
     while (price_query.next()) {
             price = price_query.value(0).toDouble();
 
-            qDebug() << "Price: " << price << endl;
+            //qDebug() << "Price: " << price << endl;
         }
 
     return price;
 }
 
-double DbManager::getProductVolume(int slot){
+double DbManager::getProductVolume(int slot, char ml){
 
     QSqlQuery volume_query;
     double volume;
 
-    volume_query.prepare("SELECT volume_target FROM products WHERE slot=:slot");
+    if (ml == 'l'){
+        volume_query.prepare("SELECT volume_target_l FROM products WHERE slot=:slot");
+    }
+    else if (ml == 's'){
+        volume_query.prepare("SELECT volume_target_s FROM products WHERE slot=:slot");
+    }
+    //volume_query.prepare("SELECT volume_target FROM products WHERE slot=:slot");
     volume_query.bindValue(":slot", slot);
     volume_query.exec();
 
     while (volume_query.next()) {
             volume = volume_query.value(0).toDouble();
 
-            qDebug() << "Volume: " << volume << endl;
+            //qDebug() << "Volume: " << volume << endl;
         }
 
     return volume;

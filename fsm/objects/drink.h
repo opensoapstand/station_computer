@@ -32,20 +32,21 @@ class drink
 public:
 	drink();
 	drink(int slot);
-	drink(int slot, string name, double nDispenseVolume, double nTargetVolume, double calibration_const, double price, bool isStillDrink, double nVolumePerTick);
+        drink(int slot, string name, double nDispenseVolume, double nTargetVolume_l, double nTargetVolume_s, double calibration_const, double price_l, double price_s, bool isStillDrink, double nVolumePerTick);
 	~drink();
 
 	//getter
 	int getDrinkOption(){return m_nSlot;} // For IPC
 	bool getIsStillDrink(); // For pump check
-	int getVolumeDispensed(){return m_nVolumeDispensed;}
+        int getVolumeDispensed(){return m_nVolumeDispensed;}
         int getVolumeDispensedPreviously();
-	double getTargetVolume(){return m_nVolumeTarget;};
+        double getTargetVolume(char size);
+        double getPrice(char size);
 
         //void setTargetVolume(double nVolumeTarget){m_nVolumeTarget = nVolumeTarget;};
 
 	// Interrupt Helpers
-        DF_ERROR startDispense(int nVolumeToDispense);
+        DF_ERROR startDispense(int nVolumeToDispense, double nPrice);
         DF_ERROR stopDispense();
 
         DF_ERROR initDispense();
@@ -65,10 +66,15 @@ public:
 	void drinkVolumeInfo();
 
         double m_nVolumeDispensedPreviously;
-        double m_nVolumeTarget;  //how much to dispense
+        double m_nVolumeTarget;
+        double m_nVolumeTarget_l;  //how much to dispense
+        double m_nVolumeTarget_s;  //how much to dispense
         double m_nVolumeDispensed; //how much has been dispensed in this sale
         double m_price;
-	string m_name;
+        double m_price_l;
+        double m_price_s;
+        string m_name;
+        double m_buttonPressDuration;
 
         time_t rawtime;
         struct tm * timeinfo;
@@ -78,7 +84,7 @@ public:
 private:
 	// TODO: Determine more data to modify per transaction...
 	int m_nSlot;
-	
+
 
 	bool isDispenseFinished;
         double m_nVolumeDispensedSinceLastPoll;

@@ -46,6 +46,7 @@ DF_ERROR stateDispenseIdle::onEntry()
 
    cassettes = g_cassettes;
    pos = m_pMessaging->getnOption();
+   size = m_pMessaging->getnSize();
    pos = pos - 1;
 
    cassettes[pos].setIsDispenseComplete(false);
@@ -56,7 +57,7 @@ DF_ERROR stateDispenseIdle::onEntry()
        // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> DRINK", INFO);
        // debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
-       cassettes[pos].getDrink()->startDispense(cassettes[pos].getDrink()->getTargetVolume());
+       cassettes[pos].getDrink()->startDispense(cassettes[pos].getDrink()->getTargetVolume(size), cassettes[pos].getDrink()->getPrice(size));
        cassettes[pos].setIsDispenseComplete(false);
        cassettes[pos].getDrink()->drinkInfo();
        cassettes[pos].getDrink()->drinkVolumeInfo();
@@ -114,7 +115,7 @@ DF_ERROR stateDispenseIdle::onExit()
 
    // debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
    if ((m_pMessaging->getcCommand() == DISPENSE_END_CHAR) || (cassettes[pos].getIsDispenseComplete())){
-       debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]" + to_string(cassettes[pos].getIsDispenseComplete()), INFO);
+       debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]", INFO);
        m_nextState = DISPENSE_END;
    }
    // TODO: If timeout occurs, then we can skip to cleaning cycle.

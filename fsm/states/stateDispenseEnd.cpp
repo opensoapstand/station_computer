@@ -11,6 +11,7 @@
 //***************************************
 
 #include "stateDispenseEnd.h"
+#include "../components/mcpgpio.h"
 
 #define DISPENSE_END_STRING "Dispense End"
 
@@ -51,14 +52,12 @@ DF_ERROR stateDispenseEnd::onEntry()
 
    cassettes = g_cassettes;
    pos = m_pMessaging->getnOption();
+   size = m_pMessaging->getnSize();
    pos = pos - 1;
-
-   updateDB();
 
    //cassettes[pos].getDrink()->stopDispense();
    cassettes[pos].stopDispense(DRINK);
 
-      
    return e_ret;
 }
 
@@ -133,7 +132,8 @@ DF_ERROR stateDispenseEnd::onExit()
    cassettes[pos].getDrink()->stopDispense();
    cassettes[pos].stopDispense(DRINK);
 
-
+   cassettes[pos].resetButtonPressTimes();
+   cassettes[pos].resetButtonPressDuration();
 
    debugOutput::sendMessage("Exiting Dispensing END[" + toString() + "]", INFO);
 
@@ -172,14 +172,16 @@ DF_ERROR stateDispenseEnd::updateDB(){
 
      /* Create SQL statement */
      std::string sql1;
-
-     std::string product = to_string(pos+1);
-     std::string target_volume = to_string(cassettes[pos].getDrink()->getTargetVolume());
-     std::string price = to_string(cassettes[pos].getDrink()->m_price);
+     std::string product = (cassettes[pos].getDrink()->m_name).c_str();
+     std::string target_volume = to_string(cassettes[pos].getDrink()->getTargetVolume(size));
+     std::string price = to_string(cassettes[pos].getDrink()->getPrice(size));
      std::string start_time = (cassettes[pos].getDrink()->m_nStartTime);
      std::string dispensed_volume = to_string(cassettes[pos].getDrink()->m_nVolumeDispensed);
+     std::string buttonPressDuration = to_string(cassettes[pos].getButtonPressDuration());
+     std::string buttonPressTimes = to_string(cassettes[pos].getButtonPressTimes());
 
-     sql1 = ("INSERT INTO transactions VALUES (NULL, " + product + ", " + target_volume + ", " + price + ", '" + start_time + "', " + dispensed_volume + ", datetime('now', 'localtime'));");
+     sql1 = ("INSERT INTO transactions VALUES (NULL, '" + product + "', " + target_volume + ", " + price + ", '" + start_time + "', " + dispensed_volume + ", datetime('now', 'localtime'), '" + buttonPressDuration + "', '" + buttonPressTimes + "' );");
+     //cout << sql1 << endl;
 
      char *sql = new char[sql1.length() + 1];
      strcpy(sql, sql1.c_str());
@@ -199,12 +201,11 @@ DF_ERROR stateDispenseEnd::updateDB(){
 
 DF_ERROR stateDispenseEnd::printer(){
 
-    debugOutput::sendMessage("Printing...", INFO);
-
     char cost2[MAX_BUF];
     char volume2[MAX_BUF];
+    //char name2[MAX_BUF];
 
-    snprintf(cost2, sizeof(cost2), "%.2f", cassettes[pos].getDrink()->m_price);
+    snprintf(cost2, sizeof(cost2), "%.2f", cassettes[pos].getDrink()->getPrice(size));
     snprintf(volume2, sizeof(volume2), "%.2f", cassettes[pos].getDrink()->m_nVolumeDispensed);
 
     string cost = (cost2);
@@ -225,6 +226,7 @@ DF_ERROR stateDispenseEnd::printer(){
     printerr->setBarcodeHeight(100);
     printerr->printBarcode("005808293490", UPC_A);
     system("echo '\n\n\n' > /dev/ttyS4");
+
 
 }
 

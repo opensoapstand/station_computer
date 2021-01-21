@@ -28,8 +28,8 @@ public:
 
 	// GPIO Initilization
 	virtual DF_ERROR setDirection(bool input) = 0;
-	virtual DF_ERROR readPin(bool* level) = 0;
-	virtual DF_ERROR writePin(bool level) = 0;
+        virtual DF_ERROR readPin(bool* level) = 0;
+        virtual DF_ERROR writePin(bool level) = 0;
 
 	// Getters
 	// TODO these chouldn't be here, MCP does not exist at this level
@@ -39,6 +39,7 @@ public:
 	// Functions for Threaded GPIO Interrupts
 	void registerDrink(drink* pDrink) {m_pDrink = pDrink;} 
 	void startListener();
+        void startButtonListener();
 	void listener();
 	void stopListener() { m_stop = true; }; 
 

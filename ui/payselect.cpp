@@ -162,18 +162,18 @@ void paySelect::on_payPage_Button_clicked()
     char drinkSize;
     // FIXME: This is fucking terrible object use and magic values.
     // Cannot be long term fix, need to get rid of fullscreen hackery.
-    if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->DRINK1_SIZE_ML)
-    {
-        drinkSize = 'p';
-    } else if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->DRINK2_SIZE_ML)  {
-        drinkSize = 'o';
-    } else if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->DRINK3_SIZE_ML)  {
-        drinkSize = 'i';
-    } else if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->DRINK4_SIZE_ML)  {
-        drinkSize = 'u';
-    } else {
-        cout << "drink sizeeeee" << endl;
-    }
+//    if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->DRINK1_SIZE_ML)
+//    {
+//        drinkSize = 'p';
+//    } else if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->DRINK2_SIZE_ML)  {
+//        drinkSize = 'o';
+//    } else if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->DRINK3_SIZE_ML)  {
+//        drinkSize = 'i';
+//    } else if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->DRINK4_SIZE_ML)  {
+//        drinkSize = 'u';
+//    } else {
+//        cout << "drink sizeeeee" << endl;
+//    }
 
     // FIXME: Remove this when DB price referencing/calculations are correct.
 //    if(idlePage->userDrinkOrder->getOption() == 9) {

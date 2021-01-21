@@ -436,6 +436,94 @@ DF_ERROR stateInit::setButton(TiXmlElement *hardwareEle, int dispenserIdx)
    return e_ret;
 }
 
+// Set Dispenser Button Press
+// Extract addressing id from XML and map to Dispensing Button Press
+// BUTTON REFERENCE in State Virtual Required due to LED Arduino control.
+DF_ERROR stateInit::setButtonPress(TiXmlElement *hardwareEle, int dispenserIdx, dispenser* cassettes)
+{
+   DF_ERROR e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
+   TiXmlElement *l_pButtonPress;
+
+   if(hardwareEle->FirstChildElement(BUTTONPRESS_STRING))
+   {
+      // Get the button node
+      debugOutput::sendMessage("Found Button Press Element", INFO);
+      l_pButtonPress = hardwareEle->FirstChildElement(BUTTONPRESS_STRING);
+   } else
+   {
+      debugOutput::sendMessage("Button Press element is null", ERROR);
+      e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT; // XML missing button
+      return e_ret;
+   }
+
+   int l_pos = 0;
+   TiXmlElement *l_pSingleButton = l_pButtonPress;
+
+   while(nullptr != l_pSingleButton && l_pos < NUM_BUTTON) //should loop through once times
+   {
+      string typeCheck = getXML(TYPE_STRING, l_pSingleButton);
+
+      debugOutput::sendMessage("Button Press typeCheck Result:" + typeCheck, INFO);
+
+      // if("" != typeCheck) //set dispenser parameters accrodingly [mcp|x86|ard]
+      // {
+         if(MCP_STRING == typeCheck) //ensures button is control with mcp pin
+         {
+            int address_num = atoi(getXML(I2CADDRESS_STRING, l_pSingleButton));
+            int pin_num = atoi(getXML(IO_STRING, l_pSingleButton));
+
+            debugOutput::sendMessage("ButtonPress:     " + to_string(l_pos) + " |type " + typeCheck
+                                     + " |address " + to_string(address_num) + " |pin " + to_string(pin_num), INFO);
+
+            if((X20 <= address_num &&  X22 >= address_num) && (MCP_PIN_START <= pin_num && MPC_PIN_END >= pin_num))
+            {
+               m_pButtonPress = new mcpGPIO(address_num, pin_num);
+
+               debugOutput::sendMessage("Setting BUTTON PRESS Direction", PIN_CHANGE);
+              // m_pButtonPress->setDirection(true);
+               //m_pButtonPress->startButtonListener();
+
+               cassettes[dispenserIdx].setButtonPress(address_num, pin_num);
+
+               //debugOutput::sendMessage("READ BUTTON PRESS", PIN_CHANGE);
+               //bool level = true;
+               //m_pButtonPress[l_pos]->readPin(&level);
+               //cout << "level: " << level << endl;
+
+               e_ret = OK;
+               return e_ret;
+            }
+            else if(X20 > address_num || X22 < address_num)
+            {
+               e_ret = ERROR_ELEC_WRONG_I2C_ADDRESS;
+               return e_ret;
+            }
+            else if(MCP_PIN_START > pin_num || MPC_PIN_END < pin_num)
+            {
+               e_ret = ERROR_BAD_PARAMS;
+               return e_ret;
+            }
+         }
+         else
+         {
+            //wrong xml content found
+            e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
+            return e_ret;
+         }
+
+         l_pSingleButton = l_pSingleButton -> NextSiblingElement(BUTTONPRESS_STRING);
+      // }
+      // else
+      // {
+      //       debugOutput::sendMessage("done sorting dispense:" + string(dispenserId[dispenserIdx]), INFO);
+      // }
+      l_pos++;
+   }
+
+   e_ret = OK;
+   return e_ret;
+}
+
 // Return the proper string regarding to solenoid from tinyXML
 const char* stateInit::getXML(const char* subHeader, TiXmlElement *childEle)
 {
@@ -471,8 +559,14 @@ DF_ERROR stateInit::dispenserSetup()
    int idx = 0;
 
    // Move this to a Function for setup button...Atomic INIT on action
+   debugOutput::sendMessage("Set up button press: ------------------" , INFO);\
+
+   // Move this to a Function for setup button...Atomic INIT on action
    debugOutput::sendMessage("Set up button: ------------------" , INFO);\
    e_ret = setButton(m_pHardware, idx);
+
+
+
 
 
    // Move this to state virtual
@@ -535,7 +629,7 @@ DF_ERROR stateInit::dispenserSetup()
       e_ret = setDispenserFlowSensor(l_pDispenser, idx, cassettes);
 
       // XXX: REMOVE THIS AFTER TESTING
-      e_ret = OK;
+     // e_ret = OK;
 
       if(OK != e_ret) //if flowsensor not set properly, return error
       {
@@ -551,6 +645,18 @@ DF_ERROR stateInit::dispenserSetup()
          l_pDispenser = l_pDispenser->NextSiblingElement(DISPENSER_STRING);
       }
       }
+
+      e_ret = setButtonPress(m_pHardware, idx, cassettes);
+
+      if(OK != e_ret) //if buttonpress not set properly, return error
+      {
+         debugOutput::sendMessage("setButtonPress did not return OK", INFO);
+         //return e_ret;
+         //return;
+      }
+
+
+
       idx++;
    }
    debugOutput::sendMessage("Hardware initialized...", INFO);
@@ -565,9 +671,11 @@ static int callback(void *data, int argc, char **argv, char **azColName){
    int slot;
    string name;
    double volume_dispensed;
-   double volume_target;
+   double volume_target_l;
+   double volume_target_s;
    double calibration_const;
-   double price;
+   double price_l;
+   double price_s;
    int is_still;
    double volume_per_tick;
 
@@ -580,47 +688,57 @@ static int callback(void *data, int argc, char **argv, char **azColName){
       if (colname == "slot"){
           //printf("setting slot \n");
           slot = atoi(argv[i]);
-          printf("Slot: %d \n", slot);
+          //printf("Slot: %d \n", slot);
       }
       else if (colname == "name"){
           //printf("setting name \n");
           name = argv[i];
-          printf("Name: %s \n", name.c_str());
+          //printf("Name: %s \n", name.c_str());
       }
       else if (colname == "volume_dispensed"){
           //printf("setting vol disp \n");
           volume_dispensed = atof(argv[i]);
-          printf("Volume Dispensed: %f \n", volume_dispensed);
+          //printf("Volume Dispensed: %.2f \n", volume_dispensed);
       }
-      else if (colname == "volume_target"){
+      else if (colname == "volume_target_l"){
           //printf("setting vol tar \n");
-          volume_target = atof(argv[i]);
-          printf("Volume Target: %f \n", volume_target);
+          volume_target_l = atof(argv[i]);
+          //printf("Volume Target: %.2f \n", volume_target_l);
+      }
+      else if (colname == "volume_target_s"){
+          //printf("setting vol tar \n");
+          volume_target_s = atof(argv[i]);
+          //printf("Volume Target: %.2f \n", volume_target_s);
       }
       else if (colname == "calibration_const"){
           //printf("setting cal con \n");
           calibration_const = atof(argv[i]);
-          printf("Calibration Const: %f \n", calibration_const);
+          //printf("Calibration Const: %.2f \n", calibration_const);
       }
-      else if (colname == "price"){
+      else if (colname == "price_l"){
           //printf("setting price \n");
-          price = atof(argv[i]);
-          printf("Price: %f \n", price);
+          price_l = atof(argv[i]);
+          //printf("Price: %.2f \n", price_l);
+      }
+      else if (colname == "price_s"){
+          //printf("setting price \n");
+          price_s = atof(argv[i]);
+          //printf("Price: %.2f \n", price_s);
       }
       else if (colname == "is_still"){
           //printf("setting is still \n");
           is_still = atoi(argv[i]);
-          printf("Is Still: %d \n", is_still);
+          //printf("Is Still: %d \n", is_still);
       }
       else if (colname == "volume_per_tick"){
           //printf("setting vol per tick \n");
           volume_per_tick = atof(argv[i]);
-          printf("Volume per Tick: %f \n", volume_per_tick);
+          //printf("Volume per Tick: %.2f \n", volume_per_tick);
       }
 
       printf("\n");
 
-      g_cassettes[slot-1].setDrink(new drink(slot, name, volume_dispensed, volume_target, calibration_const, price, false, volume_per_tick));
+      g_cassettes[slot-1].setDrink(new drink(slot, name, volume_dispensed, volume_target_l, volume_target_s , calibration_const, price_l, price_s, false, volume_per_tick));
    }
 
    return 0;

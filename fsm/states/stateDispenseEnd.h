@@ -16,6 +16,8 @@
 #include "../dftypes.h"
 #include "../objects/messageMediator.h"
 #include "../../library/printer/Adafruit_Thermal.h"
+#include "../components/gpio.h"
+#include "../components/mcpgpio.h"
 
 #include <stdio.h>
 
@@ -48,6 +50,7 @@ class stateDispenseEnd : public stateVirtual
     private:    
         int pos;
         char command;
+        char size;
 
         sqlite3 *db;
         int rc;
@@ -59,5 +62,6 @@ class stateDispenseEnd : public stateVirtual
 
         DF_ERROR updateDB();
         DF_ERROR printer();
+
 };
 #endif

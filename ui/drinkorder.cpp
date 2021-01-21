@@ -1,9 +1,32 @@
 #include "drinkorder.h"
+#include "idle.h"
 
 // Ctor
 DrinkOrder::DrinkOrder()
 {
     selectedDrink = new DrinkSelection;
+    DbManager db(DB_PATH);
+
+    DRINK1_SIZE_ML_L = db.getProductVolume(1, 'l');
+    DRINK2_SIZE_ML_L = db.getProductVolume(2, 'l');
+    DRINK3_SIZE_ML_L = db.getProductVolume(3, 'l');
+    DRINK4_SIZE_ML_L = db.getProductVolume(4, 'l');
+
+    DRINK1_SIZE_ML_S = db.getProductVolume(1, 's');
+    DRINK2_SIZE_ML_S = db.getProductVolume(2, 's');
+    DRINK3_SIZE_ML_S = db.getProductVolume(3, 's');
+    DRINK4_SIZE_ML_S = db.getProductVolume(4, 's');
+
+    DRINK1_PRICE_L = db.getProductPrice(1, 'l');
+    DRINK2_PRICE_L = db.getProductPrice(2, 'l');
+    DRINK3_PRICE_L = db.getProductPrice(3, 'l');
+    DRINK4_PRICE_L = db.getProductPrice(4, 'l');
+
+    DRINK1_PRICE_S = db.getProductPrice(1, 's');
+    DRINK2_PRICE_S = db.getProductPrice(2, 's');
+    DRINK3_PRICE_S = db.getProductPrice(3, 's');
+    DRINK4_PRICE_S = db.getProductPrice(4, 's');
+
 }
 
 // Ctor Object Copy
@@ -68,23 +91,23 @@ void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
 //        break;
 
     case(DRINK1):
-        setSize(DRINK1_SIZE_ML);
-        setPrice(DRINK1_PRICE);
+        setSize(DRINK1_SIZE_ML_L);
+        setPrice(DRINK1_PRICE_L);
         break;
 
     case(DRINK2):
-        setSize(DRINK2_SIZE_ML);
-        setPrice(DRINK2_PRICE);
+        setSize(DRINK2_SIZE_ML_L);
+        setPrice(DRINK2_PRICE_L);
         break;
 
     case(DRINK3):
-        setSize(DRINK3_SIZE_ML);
-        setPrice(DRINK3_PRICE);
+        setSize(DRINK3_SIZE_ML_L);
+        setPrice(DRINK3_PRICE_L);
         break;
 
     case(DRINK4):
-        setSize(DRINK4_SIZE_ML);
-        setPrice(DRINK4_PRICE);
+        setSize(DRINK4_SIZE_ML_L);
+        setPrice(DRINK4_PRICE_L);
         break;
 
     default:

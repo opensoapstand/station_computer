@@ -38,6 +38,7 @@ string messageMediator::m_processCommand;
 int messageMediator::m_nOption;
 int messageMediator::m_nSolenoid;
 char messageMediator::m_cCommand;
+char messageMediator::m_nSize;
 double messageMediator::m_nVolumeTarget;
 
 // CTOR
@@ -330,6 +331,7 @@ DF_ERROR messageMediator::getPositionReady()
 
    char posChar;
    char solenoidChar;
+   char sizeChar;
 
    // FIXME: Need a better string parser...
    for (std::string::size_type i = 0; i < commandString.size(); ++i)
@@ -344,6 +346,12 @@ DF_ERROR messageMediator::getPositionReady()
          solenoidChar = commandString[i];
       }
 
+      if (commandString[i] == SMALL_DRINK_CHAR || commandString[i] == LARGE_DRINK_CHAR)
+      {
+          sizeChar = (commandString[i]);
+      }
+
+
       // FIXME: This is horrible...will remove later.
 //      if (commandString[i] == '1')
 //      {
@@ -357,6 +365,8 @@ DF_ERROR messageMediator::getPositionReady()
 //      }
      //cout << commandString[i] << endl;
    }
+
+
 
 
 
@@ -379,7 +389,7 @@ DF_ERROR messageMediator::getPositionReady()
       else
       {
          m_nOption = check;
-         cout << m_nOption << endl;
+         //cout << m_nOption << endl;
          e_ret = OK;
       }
    }
@@ -435,6 +445,32 @@ DF_ERROR messageMediator::getPositionReady()
          break;
       }
    }
+
+   if (!isalpha(sizeChar)) //for second char not an alphabet
+   {
+      debugOutput::sendMessage("Irrelevant input", INFO);
+      e_ret = ERROR_NETW_NO_POSITION;
+   }
+   else
+   {
+       switch (sizeChar)
+       {
+       case SMALL_DRINK_CHAR:
+           debugOutput::sendMessage("Small Size", INFO);
+           m_nSize = SMALL_DRINK_CHAR;
+           break;
+
+       case LARGE_DRINK_CHAR:
+           debugOutput::sendMessage("Large Size", INFO);
+           m_nSize = LARGE_DRINK_CHAR;
+           break;
+
+       default:
+           break;
+       }
+   }
+
+
    m_bCommandReady = true;
    return e_ret;
 }

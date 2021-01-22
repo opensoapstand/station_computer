@@ -86,12 +86,12 @@ void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
         switch (sizeOption)
         {
         case(SMALL_DRINK):
-            qDebug() << "Drink 1 : Small" << endl;
+            //qDebug() << "Drink 1 : Small" << endl;
             setSize(DRINK1_SIZE_ML_S);
             setPrice(DRINK1_PRICE_S);
             break;
         case(LARGE_DRINK):
-            qDebug() << "Drink 1 : Large" << endl;
+            //qDebug() << "Drink 1 : Large" << endl;
             setSize(DRINK1_SIZE_ML_L);
             setPrice(DRINK1_PRICE_L);
             break;
@@ -102,12 +102,12 @@ void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
     case(2):
         switch (sizeOption){
         case(SMALL_DRINK):
-            qDebug() << "Drink 2 : Small" << endl;
+//            qDebug() << "Drink 2 : Small" << endl;
             setSize(DRINK2_SIZE_ML_S);
             setPrice(DRINK2_PRICE_S);
             break;
         case(LARGE_DRINK):
-            qDebug() << "Drink 2 : Large" << endl;
+//            qDebug() << "Drink 2 : Large" << endl;
             setSize(DRINK2_SIZE_ML_L);
             setPrice(DRINK2_PRICE_L);
             break;
@@ -118,12 +118,12 @@ void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
     case(3):
         switch (sizeOption){
         case(SMALL_DRINK):
-            qDebug() << "Drink 3 : Small" << endl;
+//            qDebug() << "Drink 3 : Small" << endl;
             setSize(DRINK3_SIZE_ML_S);
             setPrice(DRINK3_PRICE_S);
             break;
         case(LARGE_DRINK):
-            qDebug() << "Drink 3 : Large" << endl;
+//            qDebug() << "Drink 3 : Large" << endl;
             setSize(DRINK3_SIZE_ML_L);
             setPrice(DRINK3_PRICE_L);
             break;
@@ -134,12 +134,12 @@ void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
     case(4):
         switch (sizeOption){
         case(SMALL_DRINK):
-            qDebug() << "Drink 4 : Small" << endl;
+//            qDebug() << "Drink 4 : Small" << endl;
             setSize(DRINK4_SIZE_ML_S);
             setPrice(DRINK4_PRICE_S);
             break;
         case(LARGE_DRINK):
-            qDebug() << "Drink 4 : Large" << endl;
+//            qDebug() << "Drink 4 : Large" << endl;
             setSize(DRINK4_SIZE_ML_L);
             setPrice(DRINK4_PRICE_L);
             break;

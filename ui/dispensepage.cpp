@@ -84,8 +84,6 @@ void dispensePage::showEvent(QShowEvent *event)
         command.append('l');
     }
 
-    qDebug() << "command: " << command << endl;
-
     this->idlePage->dfUtility->msg = command;
 
     // Networking
@@ -126,7 +124,12 @@ void dispensePage::on_finish_Button_clicked()
     qDebug() << "dispensePage: finish button clicked" << endl;
 
     QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
-    command.append('s');
+
+    if(idlePage->userDrinkOrder->getSize() == 500){
+        command.append('s');
+    } else {
+        command.append('l');
+    }
 
     // ARE YOU SURE YOU WANT TO COMPLETE?
 //    QMessageBox msgBox;

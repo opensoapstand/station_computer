@@ -29,7 +29,7 @@
 
 #include <ctime>
 
-#define DB_PATH "/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db"
+#define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 
 class stateDispenseEnd : public stateVirtual
 {

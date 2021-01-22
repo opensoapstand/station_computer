@@ -79,7 +79,7 @@ class stateInit : public stateVirtual
 
 };
 
-#define DB_PATH "/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db"
+#define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 
 // **** XML DEPTH ***
 //first layer

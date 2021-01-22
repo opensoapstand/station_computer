@@ -4,7 +4,7 @@ wget -q --spider http://google.com
 
 if [ $? -eq 0 ]; then
 	echo "Internet is connected, starting db backup"
-	pgloader --on-error-stop /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db pgsql://df-admin:D@@nkF1ll$\@/chinook
+	pgloader --on-error-stop /release/db/sqlite/drinkfill-sqlite.db pgsql://df-admin:D@@nkF1ll$\@/chinook
 	if [ $? -eq 0 ]; then
 		echo "pgloader win"
 		heroku pg:reset -a soapstand --confirm soapstand

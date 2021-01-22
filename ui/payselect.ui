@@ -20,8 +20,8 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>150</y>
-     <width>371</width>
+     <y>1820</y>
+     <width>281</width>
      <height>100</height>
     </rect>
    </property>
@@ -32,10 +32,36 @@
   <widget class="QPushButton" name="payPage_Button">
    <property name="geometry">
     <rect>
-     <x>170</x>
-     <y>1570</y>
-     <width>771</width>
-     <height>100</height>
+     <x>780</x>
+     <y>1820</y>
+     <width>281</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="orderSmall_Button">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>1330</y>
+     <width>261</width>
+     <height>151</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="orderBig_Button">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>1330</y>
+     <width>261</width>
+     <height>151</height>
     </rect>
    </property>
    <property name="text">

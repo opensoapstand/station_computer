@@ -78,44 +78,80 @@ void DrinkOrder::setSize(double size)
 void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
     //qInfo() << "Existing Size" << getSize() << endl;
 
-    switch (sizeOption)
+    qDebug() << "option: " << m_optionNumber << endl;
+
+    switch (m_optionNumber)
     {
-//    case(SMALL_DRINK):
-//        setSize(SMALL_SIZE_ML);
-//        setPrice(PRICE_SMALL_TEST);
-//        break;
-
-//    case(LARGE_DRINK):
-//        setSize(LARGE_SIZE_ML);
-//        setPrice(PRICE_LARGE_TEST);
-//        break;
-
-    case(DRINK1):
+    case(1):
+        switch (sizeOption)
+        {
+        case(SMALL_DRINK):
+            qDebug() << "Drink 1 : Small" << endl;
+            setSize(DRINK1_SIZE_ML_S);
+            setPrice(DRINK1_PRICE_S);
+            break;
+        case(LARGE_DRINK):
+            qDebug() << "Drink 1 : Large" << endl;
+            setSize(DRINK1_SIZE_ML_L);
+            setPrice(DRINK1_PRICE_L);
+            break;
+        default:
+            break;
+       }
+        break;
+    case(2):
+        switch (sizeOption){
+        case(SMALL_DRINK):
+            qDebug() << "Drink 2 : Small" << endl;
+            setSize(DRINK2_SIZE_ML_S);
+            setPrice(DRINK2_PRICE_S);
+            break;
+        case(LARGE_DRINK):
+            qDebug() << "Drink 2 : Large" << endl;
+            setSize(DRINK2_SIZE_ML_L);
+            setPrice(DRINK2_PRICE_L);
+            break;
+        default:
+            break;
+        }
+        break;
+    case(3):
+        switch (sizeOption){
+        case(SMALL_DRINK):
+            qDebug() << "Drink 3 : Small" << endl;
+            setSize(DRINK3_SIZE_ML_S);
+            setPrice(DRINK3_PRICE_S);
+            break;
+        case(LARGE_DRINK):
+            qDebug() << "Drink 3 : Large" << endl;
+            setSize(DRINK3_SIZE_ML_L);
+            setPrice(DRINK3_PRICE_L);
+            break;
+        default:
+            break;
+       }
+        break;
+    case(4):
+        switch (sizeOption){
+        case(SMALL_DRINK):
+            qDebug() << "Drink 4 : Small" << endl;
+            setSize(DRINK4_SIZE_ML_S);
+            setPrice(DRINK4_PRICE_S);
+            break;
+        case(LARGE_DRINK):
+            qDebug() << "Drink 4 : Large" << endl;
+            setSize(DRINK4_SIZE_ML_L);
+            setPrice(DRINK4_PRICE_L);
+            break;
+        default:
+            break;
+        }
+        break;
+    default:
         setSize(DRINK1_SIZE_ML_L);
         setPrice(DRINK1_PRICE_L);
         break;
-
-    case(DRINK2):
-        setSize(DRINK2_SIZE_ML_L);
-        setPrice(DRINK2_PRICE_L);
-        break;
-
-    case(DRINK3):
-        setSize(DRINK3_SIZE_ML_L);
-        setPrice(DRINK3_PRICE_L);
-        break;
-
-    case(DRINK4):
-        setSize(DRINK4_SIZE_ML_L);
-        setPrice(DRINK4_PRICE_L);
-        break;
-
-    default:
-        setSize(DRINK4);
-        break;
     }
-
-    //qInfo() << "Order Size" << getSize() << endl;
 }
 
 // Enum search for option slot

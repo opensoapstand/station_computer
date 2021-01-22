@@ -42,11 +42,11 @@ paySelect::paySelect(QWidget *parent) :
     QString bitmap_location;
 
         if(checkOption > 0 && checkOption <= 6) {
-            bitmap_location.append(":/light/4_pay_select_page_");
+            bitmap_location.append(":/light/4_pay_select_page_l_");
             bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
             bitmap_location.append(".jpg");
         } else {
-            bitmap_location = ":/light/4_pay_select_page_1.jpg";
+            bitmap_location = ":/light/4_pay_select_page_l_1.jpg";
         }
         //qDebug() << bitmap_location << endl;
     QPixmap background(bitmap_location);
@@ -64,8 +64,8 @@ paySelect::paySelect(QWidget *parent) :
     //ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
     // TODO: ADD buttons to select size/price of drink
-    //ui->orderSmall_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    //ui->orderBig_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->orderSmall_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->orderBig_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
     // TODO: Set up functions to manipulate DrinkOrder Object
 
@@ -124,25 +124,25 @@ void paySelect::on_payPage_Button_clicked()
     db.addPageClick("Pay Select -> Dispense Page");
 
     // FIXME: Remove this when DB price referencing/calculations are correct.
-    if(idlePage->userDrinkOrder->getOption() == 1) {
-        idlePage->userDrinkOrder->setPrice(3.75);
-        idlePage->userDrinkOrder->setDrinkSize(DRINK1);
-    }
+//    if(idlePage->userDrinkOrder->getOption() == 1) {
+//        idlePage->userDrinkOrder->setPrice(3.75);
+//        idlePage->userDrinkOrder->setDrinkSize(DRINK1);
+//    }
 
-    if(idlePage->userDrinkOrder->getOption() == 2) {
-        idlePage->userDrinkOrder->setPrice(2.20);
-        idlePage->userDrinkOrder->setDrinkSize(DRINK2);
-    }
+//    if(idlePage->userDrinkOrder->getOption() == 2) {
+//        idlePage->userDrinkOrder->setPrice(2.20);
+//        idlePage->userDrinkOrder->setDrinkSize(DRINK2);
+//    }
 
-    if(idlePage->userDrinkOrder->getOption() == 3) {
-        idlePage->userDrinkOrder->setPrice(2.00);
-        idlePage->userDrinkOrder->setDrinkSize(DRINK3);
-    }
+//    if(idlePage->userDrinkOrder->getOption() == 3) {
+//        idlePage->userDrinkOrder->setPrice(2.00);
+//        idlePage->userDrinkOrder->setDrinkSize(DRINK3);
+//    }
 
-    if(idlePage->userDrinkOrder->getOption() == 4) {
-        idlePage->userDrinkOrder->setPrice(1.10);
-        idlePage->userDrinkOrder->setDrinkSize(DRINK4);
-    }
+//    if(idlePage->userDrinkOrder->getOption() == 4) {
+//        idlePage->userDrinkOrder->setPrice(1.10);
+//        idlePage->userDrinkOrder->setDrinkSize(DRINK4);
+//    }
 
 
     double drinkAmountDbl = idlePage->userDrinkOrder->getPrice();
@@ -162,18 +162,7 @@ void paySelect::on_payPage_Button_clicked()
     char drinkSize;
     // FIXME: This is fucking terrible object use and magic values.
     // Cannot be long term fix, need to get rid of fullscreen hackery.
-//    if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->DRINK1_SIZE_ML)
-//    {
-//        drinkSize = 'p';
-//    } else if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->DRINK2_SIZE_ML)  {
-//        drinkSize = 'o';
-//    } else if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->DRINK3_SIZE_ML)  {
-//        drinkSize = 'i';
-//    } else if(idlePage->userDrinkOrder->getSize() == idlePage->userDrinkOrder->DRINK4_SIZE_ML)  {
-//        drinkSize = 'u';
-//    } else {
-//        cout << "drink sizeeeee" << endl;
-//    }
+
 
     // FIXME: Remove this when DB price referencing/calculations are correct.
 //    if(idlePage->userDrinkOrder->getOption() == 9) {
@@ -194,6 +183,8 @@ void paySelect::on_payPage_Button_clicked()
     dispensingPage->showFullScreen();
     this->hide();
     qDebug() << idlePage->userDrinkOrder->getPrice();
+    qDebug() << idlePage->userDrinkOrder->getSize();
+
 }
 
 void paySelect::resizeEvent(QResizeEvent *event){
@@ -202,11 +193,11 @@ void paySelect::resizeEvent(QResizeEvent *event){
     QString bitmap_location;
 
     if(checkOption > 0 && checkOption <= 9) {
-        bitmap_location.append(":/light/4_pay_select_page_");
+        bitmap_location.append(":/light/4_pay_select_page_l_");
         bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
         bitmap_location.append(".jpg");
     } else {
-        bitmap_location = ":/light/4_pay_select_page_1.jpg";
+        bitmap_location = ":/light/4_pay_select_page_l_1.jpg";
     }
 
     QPixmap background(bitmap_location);
@@ -272,42 +263,42 @@ void paySelect::on_mainPage_Button_clicked()
 }
 
 // on_Small_Order button listener
-//void paySelect::on_orderSmall_Button_clicked()
-//{
-//    QString bitmap_location;
+void paySelect::on_orderSmall_Button_clicked()
+{
+    QString bitmap_location;
 
-//    bitmap_location.append(":/light/4_pay_select_page_");
-//    bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
-//    bitmap_location.append(".jpg");
+    bitmap_location.append(":/light/4_pay_select_page_s_");
+    bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
+    bitmap_location.append(".jpg");
 
-//    QPixmap background(bitmap_location);
-//    background = background.scaled(this->size(), Qt::KeepAspectRatio);
-//    QPalette palette;
-//    palette.setBrush(QPalette::Background, background);
-//    this->setPalette(palette);
+    QPixmap background(bitmap_location);
+    background = background.scaled(this->size(), Qt::KeepAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Background, background);
+    this->setPalette(palette);
 
-//    //idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
-//    //idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_SMALL_TEST);
-//}
+    idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
+    //idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_SMALL_TEST);
+}
 
 // on_Large_Order button listener
-//void paySelect::on_orderBig_Button_clicked()
-//{
-//    QString bitmap_location;
+void paySelect::on_orderBig_Button_clicked()
+{
+    QString bitmap_location;
 
-//    bitmap_location.append(":/light/4_pay_select_page_");
-//    bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
-//    bitmap_location.append(".jpg");
+    bitmap_location.append(":/light/4_pay_select_page_l_");
+    bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
+    bitmap_location.append(".jpg");
 
-//    QPixmap background(bitmap_location);
-//    background = background.scaled(this->size(), Qt::KeepAspectRatio);
-//    QPalette palette;
-//    palette.setBrush(QPalette::Background, background);
-//    this->setPalette(palette);
+    QPixmap background(bitmap_location);
+    background = background.scaled(this->size(), Qt::KeepAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Background, background);
+    this->setPalette(palette);
 
-//    //idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
-//    //idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_LARGE_TEST);
-//}
+    idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
+    //idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_LARGE_TEST);
+}
 
 
 /* Models */

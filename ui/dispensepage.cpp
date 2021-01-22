@@ -75,11 +75,16 @@ void dispensePage::showEvent(QShowEvent *event)
 
     // FIXME: this is a hack for size changes...
     QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
-    if(idlePage->userDrinkOrder->getSize() <= 355){
+
+    qDebug() << "getSize: " << idlePage->userDrinkOrder->getSize() << endl;
+
+    if(idlePage->userDrinkOrder->getSize() == 500){
         command.append('s');
     } else {
         command.append('l');
     }
+
+    qDebug() << "command: " << command << endl;
 
     this->idlePage->dfUtility->msg = command;
 

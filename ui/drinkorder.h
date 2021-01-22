@@ -19,9 +19,9 @@ typedef enum DF_QT_OPTIONS {
 
    // Drink Sizes
    DRINK_SIZE_OPTIONS = 15,
-//   SMALL_DRINK,
+   SMALL_DRINK,
 //   MEDIUM_DRINK,
-//   LARGE_DRINK,
+   LARGE_DRINK,
    DRINK1,
    DRINK2,
    DRINK3,

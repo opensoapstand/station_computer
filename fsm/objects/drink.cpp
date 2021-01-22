@@ -78,7 +78,7 @@ drink::drink(int slot)
 }
 
 // Test CTOR
-drink::drink(int slot, string name, double nVolumeDispensed, double nVolumeTarget_l,double nVolumeTarget_s , double calibration_const, double price_l, double price_s, bool isStillDrink, double nVolumePerTick){
+drink::drink(int slot, string name, double nVolumeDispensed, double nVolumeTarget_l,double nVolumeTarget_s , double calibration_const, double price_l, double price_s, bool isStillDrink, double nVolumePerTick, string nPLU){
     m_nSlot = slot;
     m_name = name;
     m_nVolumeDispensed = nVolumeDispensed;
@@ -89,6 +89,7 @@ drink::drink(int slot, string name, double nVolumeDispensed, double nVolumeTarge
     m_price_s = price_s;
     m_isStillDrink = isStillDrink;
     m_nVolumePerTick = nVolumePerTick;
+    m_nPLU = nPLU;
 
     // XXX: Find calculation for this...
     // m_nVolumePerTick = 20; // Seems like best guesstimate tick.
@@ -215,6 +216,7 @@ void drink::drinkInfo() {
     cout << "Price: " << m_price << endl;
     cout << "Is Still?: " << m_isStillDrink << endl;
     cout << "Volume per Tick: " << m_nVolumePerTick << endl;
+    cout << "PLU" << m_nPLU << endl;
 }
 
 void drink::drinkVolumeInfo(){
@@ -240,5 +242,9 @@ double drink::getPrice(char size){
     else if (size == 's'){
         return m_price_s;
     }
+}
+
+string drink::getPLU(){
+    return m_nPLU;
 }
 

@@ -211,6 +211,7 @@ DF_ERROR stateDispenseEnd::printer(){
     string cost = (cost2);
     string volume = (volume2);
     std::string name = (cassettes[pos].getDrink()->m_name);
+    std::string plu = (cassettes[pos].getDrink()->m_nPLU);
 
     time(&rawtime);
     timeinfo = localtime(&rawtime);
@@ -224,7 +225,7 @@ DF_ERROR stateDispenseEnd::printer(){
 
     system(sysstring.c_str());
     printerr->setBarcodeHeight(100);
-    printerr->printBarcode("005808293490", UPC_A);
+    printerr->printBarcode(plu.c_str(), UPC_A);
     system("echo '\n\n\n' > /dev/ttyS4");
 
 

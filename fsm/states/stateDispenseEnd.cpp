@@ -206,10 +206,9 @@ DF_ERROR stateDispenseEnd::printer(){
     //char name2[MAX_BUF];
 
     snprintf(cost2, sizeof(cost2), "%.2f", cassettes[pos].getDrink()->getPrice(size));
-    snprintf(volume2, sizeof(volume2), "%.2f", cassettes[pos].getDrink()->m_nVolumeDispensed);
 
     string cost = (cost2);
-    string volume = (volume2);
+
     std::string name = (cassettes[pos].getDrink()->m_name);
     std::string plu;
 
@@ -217,10 +216,14 @@ DF_ERROR stateDispenseEnd::printer(){
 
     if (size == 'l'){
         plu = (cassettes[pos].getDrink()->m_nPLU_l);
+        snprintf(volume2, sizeof(volume2), "%.0f", cassettes[pos].getDrink()->m_nVolumeTarget_l);
     }
     else{
         plu = (cassettes[pos].getDrink()->m_nPLU_s);
+        snprintf(volume2, sizeof(volume2), "%.0f", cassettes[pos].getDrink()->m_nVolumeTarget_s);
     }
+
+    string volume = (volume2);
 
     time(&rawtime);
     timeinfo = localtime(&rawtime);

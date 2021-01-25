@@ -678,7 +678,8 @@ static int callback(void *data, int argc, char **argv, char **azColName){
    double price_s;
    int is_still;
    double volume_per_tick;
-   string plu;
+   string plu_l;
+   string plu_s;
 
    printf("\n----------\n");
 
@@ -736,13 +737,16 @@ static int callback(void *data, int argc, char **argv, char **azColName){
           volume_per_tick = atof(argv[i]);
           //printf("Volume per Tick: %.2f \n", volume_per_tick);
       }
-      else if (colname == "PLU"){
-          plu = argv[i];
+      else if (colname == "PLU_l"){
+          plu_l = argv[i];
+      }
+      else if (colname == "PLU_s"){
+          plu_s = argv[i];
       }
 
       printf("\n");
 
-      g_cassettes[slot-1].setDrink(new drink(slot, name, volume_dispensed, volume_target_l, volume_target_s , calibration_const, price_l, price_s, false, volume_per_tick, plu));
+      g_cassettes[slot-1].setDrink(new drink(slot, name, volume_dispensed, volume_target_l, volume_target_s , calibration_const, price_l, price_s, false, volume_per_tick, plu_l, plu_s));
    }
 
    return 0;

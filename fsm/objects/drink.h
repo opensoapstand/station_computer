@@ -32,7 +32,7 @@ class drink
 public:
 	drink();
 	drink(int slot);
-        drink(int slot, string name, double nDispenseVolume, double nTargetVolume_l, double nTargetVolume_s, double calibration_const, double price_l, double price_s, bool isStillDrink, double nVolumePerTick, string nPLU);
+        drink(int slot, string name, double nDispenseVolume, double nTargetVolume_l, double nTargetVolume_s, double calibration_const, double price_l, double price_s, bool isStillDrink, double nVolumePerTick, string nPLU_l, string nPLU_s);
 	~drink();
 
 	//getter
@@ -42,7 +42,7 @@ public:
         int getVolumeDispensedPreviously();
         double getTargetVolume(char size);
         double getPrice(char size);
-        string getPLU();
+        string getPLU(char size);
 
         //void setTargetVolume(double nVolumeTarget){m_nVolumeTarget = nVolumeTarget;};
 
@@ -76,7 +76,8 @@ public:
         double m_price_s;
         string m_name;
         double m_buttonPressDuration;
-        string m_nPLU;
+        string m_nPLU_l;
+        string m_nPLU_s;
 
         time_t rawtime;
         struct tm * timeinfo;

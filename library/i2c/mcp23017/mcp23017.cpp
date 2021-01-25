@@ -110,7 +110,7 @@ uint8_t MCP23017::readRegister(uint8_t addr)
     int toReturn = i2c_smbus_read_byte_data(kI2CFileDescriptor, addr);
     if (toReturn < 0) {
         // printf("MCP23017 Read Byte error: %d",errno) ;
-		debugOutput::sendMessage("MCP23017 read Byte error", ERROR);
+                //debugOutput::sendMessage("MCP23017 read Byte error", ERROR);
         error = errno ;
         toReturn = -1 ;
     }

@@ -20,5 +20,18 @@
         <file>light/4_pay_select_page_l_3.jpg</file>
         <file>light/4_pay_select_page_l_2.jpg</file>
         <file>light/4_pay_select_page_l_1.jpg</file>
+        <file>light/7_thank_you_page.png</file>
+        <file>light/6_dispense_page.png</file>
+        <file>light/5_dispense_page_before.png</file>
+        <file>light/4_pay_select_page_s_4.png</file>
+        <file>light/4_pay_select_page_s_3.png</file>
+        <file>light/4_pay_select_page_s_2.png</file>
+        <file>light/4_pay_select_page_s_1.png</file>
+        <file>light/4_pay_select_page_l_4.png</file>
+        <file>light/4_pay_select_page_l_3.png</file>
+        <file>light/4_pay_select_page_l_2.png</file>
+        <file>light/4_pay_select_page_l_1.png</file>
+        <file>light/2_drink_page_1.png</file>
+        <file>light/1_welcome_panel.png</file>
     </qresource>
 </RCC>

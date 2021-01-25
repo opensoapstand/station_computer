@@ -272,7 +272,7 @@ void paySelect::on_orderSmall_Button_clicked()
     bitmap_location.append(".png");
 
     QPixmap background(bitmap_location);
-    background = background.scaled(this->size(), Qt::KeepAspectRatio);
+    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
@@ -291,7 +291,7 @@ void paySelect::on_orderBig_Button_clicked()
     bitmap_location.append(".png");
 
     QPixmap background(bitmap_location);
-    background = background.scaled(this->size(), Qt::KeepAspectRatio);
+    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);

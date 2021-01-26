@@ -241,7 +241,7 @@ void dispensePage::updateVolumeDisplayed(int dispensed){
 
     volumeDispensed = dispensed;
 
-    QPixmap background(":/light/6_dispense_page.jpg");
+    QPixmap background(":/light/6_dispense_page.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);

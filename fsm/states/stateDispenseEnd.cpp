@@ -170,7 +170,7 @@ DF_ERROR stateDispenseEnd::updateDB(){
        fprintf(stderr, "Opened database successfully\n");
     }
 
-     /* Create SQL statement */
+     /* Create SQL statement for transactions */
      std::string sql1;
      std::string product = (cassettes[pos].getDrink()->m_name).c_str();
      std::string target_volume = to_string(cassettes[pos].getDrink()->getTargetVolume(size));
@@ -183,17 +183,51 @@ DF_ERROR stateDispenseEnd::updateDB(){
      sql1 = ("INSERT INTO transactions VALUES (NULL, '" + product + "', " + target_volume + ", " + price + ", '" + start_time + "', " + dispensed_volume + ", datetime('now', 'localtime'), '" + buttonPressDuration + "', '" + buttonPressTimes + "' );");
      //cout << sql1 << endl;
 
-     char *sql = new char[sql1.length() + 1];
-     strcpy(sql, sql1.c_str());
+     char *sql_trans = new char[sql1.length() + 1];
+     strcpy(sql_trans, sql1.c_str());
 
      /* Execute SQL statement */
-     rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+     rc = sqlite3_exec(db, sql_trans, callback, 0, &zErrMsg);
 
      if( rc != SQLITE_OK ){
         fprintf(stderr, "SQL error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
      } else {
-        fprintf(stdout, "Command Executed successfully\n");
+        fprintf(stdout, "Transaction Command Executed successfully\n");
+     }
+
+     /* Create SQL statement for total product dispensed */
+     std::string sql2;
+     sql2 = ("UPDATE products SET total_dispensed=total_dispensed+"+dispensed_volume+" WHERE name='"+product+"';");
+
+     char *sql_prod = new char[sql2.length() + 1];
+     strcpy(sql_prod, sql2.c_str());
+
+     /* Execute SQL statement */
+     rc = sqlite3_exec(db, sql_prod, callback, 0, &zErrMsg);
+
+     if( rc != SQLITE_OK ){
+        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+     } else {
+        fprintf(stdout, "Product Command Executed successfully\n");
+     }
+
+     /* Create SQL statement for product remaining */
+     std::string sql3;
+     sql3 = ("UPDATE products SET remaining_ml=full_ml-total_dispensed WHERE name='"+product+"';");
+
+     char *sql_prod2 = new char[sql3.length() + 1];
+     strcpy(sql_prod2, sql3.c_str());
+
+     /* Execute SQL statement */
+     rc = sqlite3_exec(db, sql_prod2, callback, 0, &zErrMsg);
+
+     if( rc != SQLITE_OK ){
+        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+     } else {
+        fprintf(stdout, "Product Remaining Command Executed successfully\n");
      }
 
     sqlite3_close(db);

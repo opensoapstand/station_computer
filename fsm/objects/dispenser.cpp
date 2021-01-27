@@ -246,7 +246,7 @@ DF_ERROR dispenser::disconnectButton(){
 DF_ERROR dispenser::setButtonPress(int address_num, int pin_num){
     m_pButtonPress = new mcpGPIO(address_num, pin_num);
     m_pButtonPress->setDirection(true);
-    m_pButtonPress->startButtonListener();
+   // m_pButtonPress->startButtonListener();
 }
 
 double dispenser::getButtonPressDuration(){

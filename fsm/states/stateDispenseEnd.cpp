@@ -127,7 +127,7 @@ DF_ERROR stateDispenseEnd::onExit()
    m_pMessaging->clearCommandString();
    m_pMessaging->clearcCommand();
 
-   //printer();
+   printer();
 
    cassettes[pos].getDrink()->stopDispense();
    cassettes[pos].stopDispense(DRINK);

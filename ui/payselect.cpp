@@ -210,6 +210,7 @@ void paySelect::resizeEvent(QResizeEvent *event){
     //idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
     //idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_SMALL_TEST);
     this->setPalette(palette);
+    idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
 
     if(selectIdleTimer == nullptr) {
         selectIdleTimer = new QTimer(this);
@@ -279,6 +280,7 @@ void paySelect::on_orderSmall_Button_clicked()
 
     idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
     //idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_SMALL_TEST);
+    _selectIdleTimeoutSec = 40;
 }
 
 // on_Large_Order button listener
@@ -298,6 +300,7 @@ void paySelect::on_orderBig_Button_clicked()
 
     idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
     //idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_LARGE_TEST);
+    _selectIdleTimeoutSec = 40;
 }
 
 

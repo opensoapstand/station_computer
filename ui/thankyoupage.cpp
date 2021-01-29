@@ -68,7 +68,7 @@ void thankYouPage::showEvent(QShowEvent *event)
     }
 
     thankYouEndTimer->start(1000);
-    _thankYouTimeoutSec = 5;
+    _thankYouTimeoutSec = 20;
 
 }
 
@@ -82,18 +82,26 @@ void thankYouPage::onThankyouTimeoutTick(){
         DbManager db(DB_PATH);
         db.addPageClick("THANK YOU PAGE TIME OUT");
 
-        on_mainPage_Button_clicked();
+  //      on_mainPage_Button_clicked();
+           //Update Click DB
+//        DbManager db(DB_PATH);
+        db.addPageClick("TRANSACTION COMPLETED");
+        db.addPageClick("Thank You Page -> Main Page");
+
+        thankYouEndTimer->stop();
+        this->hide();
+        idlePage->showFullScreen();
     }
 }
 
 void thankYouPage::on_mainPage_Button_clicked()
 {
     //Update Click DB
-    DbManager db(DB_PATH);
-    db.addPageClick("TRANSACTION COMPLETED");
-    db.addPageClick("Thank You Page -> Main Page");
+//    DbManager db(DB_PATH);
+//    db.addPageClick("TRANSACTION COMPLETED");
+//    db.addPageClick("Thank You Page -> Main Page");
 
-    thankYouEndTimer->stop();
-    this->hide();
-    idlePage->showFullScreen();
+//    thankYouEndTimer->stop();
+//    this->hide();
+//    idlePage->showFullScreen();
 }

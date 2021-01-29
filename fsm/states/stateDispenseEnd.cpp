@@ -135,6 +135,10 @@ DF_ERROR stateDispenseEnd::onExit()
    cassettes[pos].resetButtonPressTimes();
    cassettes[pos].resetButtonPressDuration();
 
+   debugOutput::sendMessage("START backing up DB", INFO);
+   system("/release/dbbackup.sh >> /home/df-admin/dbbackup.log");
+   debugOutput::sendMessage("END backing up DB", INFO);
+
    debugOutput::sendMessage("Exiting Dispensing END[" + toString() + "]", INFO);
 
    // TODO: Does not seem to advance to Idle again...
@@ -231,6 +235,7 @@ DF_ERROR stateDispenseEnd::updateDB(){
      }
 
     sqlite3_close(db);
+
 }
 
 DF_ERROR stateDispenseEnd::printer(){

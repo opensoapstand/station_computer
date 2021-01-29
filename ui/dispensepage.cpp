@@ -249,12 +249,13 @@ void dispensePage::updateVolumeDisplayed(int dispensed){
 
     ui->finish_Button->setEnabled(true);
     //volumeDispensedLabel.clear();
-    this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ " ml");
+    //this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ " ml");
 }
 
 void dispensePage::targetHitDisplay(){
-    this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ " ml - Target Hit!");
+    //this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ " ml - Target Hit!");
     //Update Click DB
     DbManager db(DB_PATH);
     db.addPageClick("TARGET HIT");
+    on_finish_Button_clicked();
 }

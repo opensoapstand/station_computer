@@ -121,13 +121,13 @@ DF_ERROR stateDispenseEnd::onExit()
    //cassettes[pos].cleanNozzle(WATER, AIR);
 
 
-   updateDB();
+   //updateDB();
 
    m_pMessaging->clearProcessString();
    m_pMessaging->clearCommandString();
    m_pMessaging->clearcCommand();
 
-   printer();
+   //printer();
 
    cassettes[pos].getDrink()->stopDispense();
    cassettes[pos].stopDispense(DRINK);
@@ -136,7 +136,7 @@ DF_ERROR stateDispenseEnd::onExit()
    cassettes[pos].resetButtonPressDuration();
 
    debugOutput::sendMessage("START backing up DB", INFO);
-   system("/release/dbbackup.sh");
+   //system("/release/dbbackup.sh");
    //system("heroku restart -a soapstand");
    debugOutput::sendMessage("END backing up DB", INFO);
 

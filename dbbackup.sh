@@ -13,6 +13,7 @@ if [ $? -eq 0 ]; then
 			heroku pg:push chinook DATABASE_URL -a soapstand
 			if [ $? -eq 0 ]; then
 				echo "heroku pg:push win"
+				heroku restart -a soapstand
 			else
 				echo "heroku pq:push fail"
 			fi

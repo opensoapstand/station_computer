@@ -11,6 +11,7 @@ public:
     QString getProductName(int slot);
     double getProductPrice(int slot, char ml);
     double getProductVolume(int slot, char ml);
+    bool checkLevels(int slot);
 
 private:
     QSqlDatabase m_db;

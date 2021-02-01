@@ -24,8 +24,8 @@
     <rect>
      <x>110</x>
      <y>360</y>
-     <width>411</width>
-     <height>350</height>
+     <width>421</width>
+     <height>501</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -56,10 +56,10 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>560</x>
+     <x>570</x>
      <y>360</y>
      <width>421</width>
-     <height>350</height>
+     <height>501</height>
     </rect>
    </property>
    <property name="text">
@@ -71,8 +71,8 @@
     <rect>
      <x>109</x>
      <y>900</y>
-     <width>411</width>
-     <height>350</height>
+     <width>421</width>
+     <height>501</height>
     </rect>
    </property>
    <property name="text">
@@ -85,7 +85,7 @@
      <x>560</x>
      <y>900</y>
      <width>421</width>
-     <height>350</height>
+     <height>501</height>
     </rect>
    </property>
    <property name="text">

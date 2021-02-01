@@ -75,24 +75,35 @@ void idle::on_nextPageButton_clicked()
     DbManager db(DB_PATH);
     db.addPageClick("Main Page -> Product Page");
 
-//    DbManager db_product(DB_PRODUCTS_PATH);
-//    db_product.getProductName(1);
-//    db_product.getProductPrice(1);
-//    db_product.getProductVolume(1);
-
-//    db_product.getProductName(2);
-//    db_product.getProductPrice(2);
-//    db_product.getProductVolume(2);
-
-//    db_product.getProductName(3);
-//    db_product.getProductPrice(3);
-//    db_product.getProductVolume(3);
-
-//    db_product.getProductName(4);
-//    db_product.getProductPrice(4);
-//    db_product.getProductVolume(4);
+    //Check product levels
+    p1 = db.checkLevels(1);
+    p2 = db.checkLevels(2);
+    p3 = db.checkLevels(3);
+    p4 = db.checkLevels(4);
 
     // Connect to KB Listener
     selection_PageOne->showFullScreen();
     this->hide();
+}
+
+bool idle::isEnough(int p){
+    switch(p){
+        case(1):
+            return p1;
+            break;
+        case(2):
+            return p2;
+            break;
+        case(3):
+            return p3;
+            break;
+        case(4):
+            return p4;
+            break;
+    default:
+            break;
+
+
+    }
+
 }

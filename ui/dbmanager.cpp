@@ -104,3 +104,22 @@ double DbManager::getProductVolume(int slot, char ml){
 
     return volume;
 }
+
+bool DbManager::checkLevels(int slot){
+    QSqlQuery level_query;
+    double level;
+
+    level_query.prepare("SELECT remaining_ml FROM products where slot=:slot");
+    level_query.bindValue(":slot", slot);
+    level_query.exec();
+
+    while (level_query.next()) {
+            level = level_query.value(0).toDouble();
+            if (level > 0){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+}

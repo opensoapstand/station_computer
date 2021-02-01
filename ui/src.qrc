@@ -14,5 +14,9 @@
         <file>light/4_pay_select_page_l_1.png</file>
         <file>light/2_drink_page_1.png</file>
         <file>light/1_welcome_panel.png</file>
+        <file>light/p4_soldOut.png</file>
+        <file>light/p3_soldOut.png</file>
+        <file>light/p2_soldOut.png</file>
+        <file>light/p1_soldOut.png</file>
     </qresource>
 </RCC>

@@ -31,14 +31,6 @@ paySelect::paySelect(QWidget *parent) :
 
     int checkOption = 99;
 
-    //    qDebug() << idlePage->userDrinkOrder << endl;
-
-    //    if(idlePage->userDrinkOrder != nullptr) {
-    //        checkOption = idlePage->userDrinkOrder->getOption();
-    //    }
-
-    //    cout << checkOption << endl;
-   // qDebug() << checkOption << endl;
     QString bitmap_location;
 
         if(checkOption > 0 && checkOption <= 6) {
@@ -48,11 +40,9 @@ paySelect::paySelect(QWidget *parent) :
         } else {
             bitmap_location = ":/light/4_pay_select_page_l_1.png";
         }
-        //qDebug() << bitmap_location << endl;
+
     QPixmap background(bitmap_location);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-
-    // background = background.scaled(this->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
@@ -116,34 +106,10 @@ void paySelect::on_previousPage_Button_clicked()
 void paySelect::on_payPage_Button_clicked()
 {
     qDebug() << "paySelect: Pay button" << endl;
-    // TODO: Grab from DB description
-    string description = "Drink Flavor DrinkSizeOZ (DrinkML)";
 
     //Update Click DB
     DbManager db(DB_PATH);
     db.addPageClick("Pay Select -> Dispense Page");
-
-    // FIXME: Remove this when DB price referencing/calculations are correct.
-//    if(idlePage->userDrinkOrder->getOption() == 1) {
-//        idlePage->userDrinkOrder->setPrice(3.75);
-//        idlePage->userDrinkOrder->setDrinkSize(DRINK1);
-//    }
-
-//    if(idlePage->userDrinkOrder->getOption() == 2) {
-//        idlePage->userDrinkOrder->setPrice(2.20);
-//        idlePage->userDrinkOrder->setDrinkSize(DRINK2);
-//    }
-
-//    if(idlePage->userDrinkOrder->getOption() == 3) {
-//        idlePage->userDrinkOrder->setPrice(2.00);
-//        idlePage->userDrinkOrder->setDrinkSize(DRINK3);
-//    }
-
-//    if(idlePage->userDrinkOrder->getOption() == 4) {
-//        idlePage->userDrinkOrder->setPrice(1.10);
-//        idlePage->userDrinkOrder->setDrinkSize(DRINK4);
-//    }
-
 
     double drinkAmountDbl = idlePage->userDrinkOrder->getPrice();
     QString qs = QString::number(drinkAmountDbl, 'f', 2);
@@ -154,31 +120,10 @@ void paySelect::on_payPage_Button_clicked()
 
     string drinkTotal = drinkAmount;
 
-    //qDebug() << "DRINK AMOUNT IS: " << drinkAmount.c_str();
-
-    //connect(this, SIGNAL(paymentTotal(string,string,string)), this->paymentPage, SLOT(updateTotals(string,string,string)));
-    //emit(paymentTotal(description, drinkAmount, drinkTotal));
-
     char drinkSize;
-    // FIXME: This is fucking terrible object use and magic values.
-    // Cannot be long term fix, need to get rid of fullscreen hackery.
-
-
-    // FIXME: Remove this when DB price referencing/calculations are correct.
-//    if(idlePage->userDrinkOrder->getOption() == 9) {
-//        if(drinkSize =='s') {
-//            idlePage->userDrinkOrder->setPrice(0.99);
-//        } else if (drinkSize == 'l') {
-//            idlePage->userDrinkOrder->setPrice(1.25);
-//        }
-//    }
-
-
-    //paymentPage->resizeEvent(paySelectResize, drinkSize);
 
     this->stopSelectTimers();
     selectIdleTimer->stop();
-    //paymentPage->showFullScreen();
     dispensingPage->showEvent(dispenseEvent);
     dispensingPage->showFullScreen();
     this->hide();
@@ -189,7 +134,7 @@ void paySelect::on_payPage_Button_clicked()
 
 void paySelect::resizeEvent(QResizeEvent *event){
     int checkOption = idlePage->userDrinkOrder->getOption();
-    qDebug() << checkOption << endl;
+
     QString bitmap_location;
 
     if(checkOption > 0 && checkOption <= 9) {
@@ -203,12 +148,8 @@ void paySelect::resizeEvent(QResizeEvent *event){
     QPixmap background(bitmap_location);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
 
-    // background = background.scaled(this->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
-    //idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
-    //idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_SMALL_TEST);
     this->setPalette(palette);
     idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
 
@@ -279,8 +220,10 @@ void paySelect::on_orderSmall_Button_clicked()
     this->setPalette(palette);
 
     idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
-    //idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_SMALL_TEST);
     _selectIdleTimeoutSec = 40;
+
+    DbManager db(DB_PATH);
+    db.addPageClick("Small Drink Size Selected");
 }
 
 // on_Large_Order button listener
@@ -299,11 +242,8 @@ void paySelect::on_orderBig_Button_clicked()
     this->setPalette(palette);
 
     idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
-    //idlePage->userDrinkOrder->setPrice(idlePage->userDrinkOrder->PRICE_LARGE_TEST);
     _selectIdleTimeoutSec = 40;
+
+    DbManager db(DB_PATH);
+    db.addPageClick("Large Drink Size Selected");
 }
-
-
-/* Models */
-
-// Function setDrinkOrder

@@ -197,10 +197,5 @@ void DrinkOrder::setDrinkOption(DF_QT_OPTIONS sizeOption) {
         qInfo() << "OUT OF OPTION RANGE!" << sizeOption << endl;
     }
 
-    // HACK: For now asssume small sized order; Will need to validate for empty.
-    setDrinkSize(DRINK4);
-
-    //qInfo() << "Changed Option" << getOption() << endl;
 }
 
-// SIGNALS Section

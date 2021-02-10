@@ -121,7 +121,7 @@ DF_ERROR stateDispenseEnd::onExit()
    //cassettes[pos].cleanNozzle(WATER, AIR);
 
 
-   //updateDB();
+   updateDB();
 
    m_pMessaging->clearProcessString();
    m_pMessaging->clearCommandString();

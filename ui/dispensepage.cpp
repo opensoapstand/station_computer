@@ -18,9 +18,7 @@
 #include "dispensepage.h"
 #include "ui_dispensepage.h"
 #include "includefiles.h"
-
 #include "idle.h"
-
 #include "thankyoupage.h"
 
 // CTOR
@@ -44,8 +42,6 @@ dispensePage::dispensePage(QWidget *parent) :
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
-
-
 }
 
 /*

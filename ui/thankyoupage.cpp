@@ -81,10 +81,6 @@ void thankYouPage::onThankyouTimeoutTick(){
         //Update Click DB
         DbManager db(DB_PATH);
         db.addPageClick("THANK YOU PAGE TIME OUT");
-
-  //      on_mainPage_Button_clicked();
-           //Update Click DB
-//        DbManager db(DB_PATH);
         db.addPageClick("TRANSACTION COMPLETED");
         db.addPageClick("Thank You Page -> Main Page");
 

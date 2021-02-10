@@ -94,7 +94,7 @@ void productPage_1::showEvent(QShowEvent *event)
     if (!this->idlePage->isEnough(1)){
         // Change p1 to Sold Out
         qDebug() << "Product 1 is Sold Out!" << endl;
-       // ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(:/light/p1_soldOut.png); }");
+        ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(:/light/soldOut.png); }");
     }
     else{
         ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
@@ -102,7 +102,7 @@ void productPage_1::showEvent(QShowEvent *event)
     if (!this->idlePage->isEnough(2)){
         // Change p2 to Sold Out
         qDebug() << "Product 2 is Sold Out!" << endl;
-      //  ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(:/light/p2_soldOut.png); }");
+        ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(:/light/soldOut.png); }");
     }
     else{
         ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
@@ -110,7 +110,7 @@ void productPage_1::showEvent(QShowEvent *event)
     if (!this->idlePage->isEnough(3)){
         // Change p3 to Sold Out
         qDebug() << "Product 3 is Sold Out!" << endl;
-       // ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/p3_soldOut.png); }");
+        ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/soldOut.png); }");
     }
     else{
         ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
@@ -118,7 +118,7 @@ void productPage_1::showEvent(QShowEvent *event)
     if (!this->idlePage->isEnough(4)){
         // Change p4 to Sold Out
         qDebug() << "Product 4 is Sold Out!" << endl;
-      //  ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/p4_soldOut.png); }");
+        ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/soldOut.png); }");
     }
     else{
         ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
@@ -138,7 +138,7 @@ void productPage_1::on_selection1_Button_clicked()
         productPageEndTimer->stop();
 
         idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_1);
-        idlePage->userDrinkOrder->setDrinkSize(DRINK1);
+        //idlePage->userDrinkOrder->setDrinkSize(DRINK1);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
         this->hide();
@@ -155,7 +155,7 @@ void productPage_1::on_selection2_Button_clicked()
         productPageEndTimer->stop();
 
         idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
-        idlePage->userDrinkOrder->setDrinkSize(DRINK2);
+        //idlePage->userDrinkOrder->setDrinkSize(DRINK2);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
         this->hide();
@@ -171,7 +171,7 @@ void productPage_1::on_selection3_Button_clicked()
         productPageEndTimer->stop();
 
         idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
-        idlePage->userDrinkOrder->setDrinkSize(DRINK3);
+        //idlePage->userDrinkOrder->setDrinkSize(DRINK3);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
         this->hide();
@@ -187,7 +187,7 @@ void productPage_1::on_selection4_Button_clicked()
         productPageEndTimer->stop();
 
         idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);
-        idlePage->userDrinkOrder->setDrinkSize(DRINK4);
+        //idlePage->userDrinkOrder->setDrinkSize(DRINK4);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
         this->hide();

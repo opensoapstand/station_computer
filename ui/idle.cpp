@@ -102,8 +102,5 @@ bool idle::isEnough(int p){
             break;
     default:
             break;
-
-
     }
-
 }

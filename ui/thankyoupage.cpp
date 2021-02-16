@@ -68,7 +68,7 @@ void thankYouPage::showEvent(QShowEvent *event)
     }
 
     thankYouEndTimer->start(1000);
-    _thankYouTimeoutSec = 20;
+    _thankYouTimeoutSec = 25;
 
 }
 

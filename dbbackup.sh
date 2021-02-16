@@ -7,13 +7,19 @@ if [ $? -eq 0 ]; then
 	pgloader --on-error-stop /release/db/sqlite/drinkfill-sqlite.db pgsql://df-admin:D@@nkF1ll$\@/chinook
 	if [ $? -eq 0 ]; then
 		echo "pgloader win"
-		heroku pg:reset -a soapstanddemo --confirm soapstanddemo
+		heroku pg:reset -a soapstand --confirm soapstand
 		if [ $? -eq 0 ]; then
 			echo "heroku pg:reset win"
-			heroku pg:push chinook DATABASE_URL -a soapstanddemo
+			heroku pg:push chinook DATABASE_URL -a soapstand
 			if [ $? -eq 0 ]; then
 				echo "heroku pg:push win"
 				heroku restart -a soapstand
+				if [ $? -eq 0 ]; then
+					echo "heroku restart win"
+					exit
+				else
+					echo "heroku restart fail"
+				fi
 			else
 				echo "heroku pq:push fail"
 			fi

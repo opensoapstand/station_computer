@@ -78,6 +78,8 @@ void DrinkOrder::setSize(double size)
 void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
     //qInfo() << "Existing Size" << getSize() << endl;
 
+    sizeOptionSelected = sizeOption;
+
     qDebug() << "option: " << m_optionNumber << endl;
 
     switch (m_optionNumber)
@@ -158,7 +160,6 @@ void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
 void DrinkOrder::setDrinkOption(DF_QT_OPTIONS sizeOption) {
    // qInfo() << "Current Option" << getOption() << endl;
 
-    sizeOptionSelected = sizeOption;
 
     if(sizeOption >= OPTION_SLOT && sizeOption <= DRINK_SIZE_OPTIONS)
     {

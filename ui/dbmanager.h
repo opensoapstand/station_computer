@@ -10,8 +10,12 @@ public:
     bool addPageClick(const QString& page);
     QString getProductName(int slot);
     double getProductPrice(int slot, char ml);
-    double getProductVolume(int slot, char ml);
+    double getProductTargetVolume(int slot);
+    double getProductVolumePerTick(int slot);
     bool checkLevels(int slot);
+    double getProductVolume(int slot, char ml);
+    bool refill(int slot);
+
 
 private:
     QSqlDatabase m_db;

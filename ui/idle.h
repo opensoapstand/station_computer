@@ -49,6 +49,7 @@ public:
 
 private slots:
     void on_nextPageButton_clicked();
+    void on_maintenanceModeButton_clicked();
 
 private:
     Ui::idle *ui;

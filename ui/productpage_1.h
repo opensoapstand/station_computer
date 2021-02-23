@@ -48,6 +48,7 @@ private slots:
     //void on_selection6_Button_clicked();
     void mainPage();
     void onProductPageTimeoutTick();
+    void on_backButton_clicked();
 
 private:
     void showEvent(QShowEvent *event);

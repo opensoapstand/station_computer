@@ -48,6 +48,8 @@ productPage_1::productPage_1(QWidget *parent) :
     ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 //    ui->selection5_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 //    ui->selection6_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->backButton->setStyleSheet("QPushButton{background: white;}");
+
 
     productPageEndTimer = new QTimer(this);
     productPageEndTimer->setInterval(1000);
@@ -238,4 +240,12 @@ void productPage_1::mainPage()
     productPageEndTimer->stop();
     this->hide();
     idlePage->showFullScreen();
+}
+
+void productPage_1::on_backButton_clicked()
+{
+    DbManager db(DB_PATH);
+    db.addPageClick("Product Page -> Main Page");
+
+    mainPage();
 }

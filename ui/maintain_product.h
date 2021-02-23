@@ -51,6 +51,7 @@ private slots:
     void on_priceButton_clicked();
     void on_target_volumeButton_clicked();
     void on_vol_per_tickButton_clicked();
+    void on_refillButton_clicked();
 
 private:
     Ui::maintain_product *ui;

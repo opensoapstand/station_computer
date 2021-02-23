@@ -81,6 +81,42 @@ double DbManager::getProductPrice(int slot, char ml){
     return price;
 }
 
+double DbManager::getProductTargetVolume(int slot){
+
+    QSqlQuery volume_query;
+    double volume;
+
+    volume_query.prepare("SELECT volume_target FROM products WHERE slot=:slot");
+    volume_query.bindValue(":slot", slot);
+    volume_query.exec();
+
+    while (volume_query.next()) {
+            volume = volume_query.value(0).toDouble();
+
+            //qDebug() << "Volume: " << volume << endl;
+        }
+
+    return volume;
+}
+
+double DbManager::getProductVolumePerTick(int slot){
+
+    QSqlQuery vol_per_tick_query;
+    double vol_per_tick;
+
+    vol_per_tick_query.prepare("SELECT volume_per_tick FROM products WHERE slot=:slot");
+    vol_per_tick_query.bindValue(":slot", slot);
+    vol_per_tick_query.exec();
+
+    while (vol_per_tick_query.next()) {
+            vol_per_tick = vol_per_tick_query.value(0).toDouble();
+
+            //qDebug() << "Volume Per Tick: " << vol_per_tick << endl;
+        }
+
+    return vol_per_tick;
+}
+
 double DbManager::getProductVolume(int slot, char ml){
 
     QSqlQuery volume_query;
@@ -122,4 +158,37 @@ bool DbManager::checkLevels(int slot){
                 return false;
             }
         }
+}
+
+bool DbManager::refill(int slot){
+    QSqlQuery refill_query;
+    bool success=false;
+    double remaining = 14500.0;
+
+    refill_query.prepare("UPDATE products SET remaining_ml=:remaining WHERE slot=:slot");
+    refill_query.bindValue(":slot", slot);
+    refill_query.bindValue(":remaining", remaining);
+    if(refill_query.exec())
+    {
+        qDebug() << "remaining ml updated successfully!";
+        refill_query.prepare("UPDATE products SET total_dispensed=0 WHERE slot=:slot");
+        refill_query.bindValue(":slot", slot);
+        if(refill_query.exec()){
+            qDebug() << "total ml dispensed update successful!";
+            success=true;
+        }
+        else{
+            qDebug() << "total ml dispensed update error:"
+                     << refill_query.lastError();
+            success=false;
+        }
+    }
+    else
+    {
+        qDebug() << "remaining ml update error:"
+                 << refill_query.lastError();
+        success=false;
+    }
+
+    return success;
 }

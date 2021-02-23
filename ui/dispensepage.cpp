@@ -74,9 +74,14 @@ void dispensePage::showEvent(QShowEvent *event)
 
     qDebug() << "getSize: " << idlePage->userDrinkOrder->getSize() << endl;
 
-    if(idlePage->userDrinkOrder->getSize() == 500){
+
+
+    if(idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
+
         command.append('s');
+
     } else {
+
         command.append('l');
     }
 
@@ -121,11 +126,16 @@ void dispensePage::on_finish_Button_clicked()
 
     QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
 
-    if(idlePage->userDrinkOrder->getSize() == 500){
+
+    if(idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
+
         command.append('s');
+
     } else {
+
         command.append('l');
     }
+
 
     // ARE YOU SURE YOU WANT TO COMPLETE?
 //    QMessageBox msgBox;

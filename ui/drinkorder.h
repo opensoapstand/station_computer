@@ -95,6 +95,7 @@ public:
     int getOption() const {return m_optionNumber;}
     double getPrice() const {return m_drinkPrice;}
     double getSize() const {return m_drinkML;}
+    DF_QT_OPTIONS getSizeOption();
 
 public slots:
     void changeOption(int optNumber);
@@ -108,6 +109,7 @@ signals:
 
 private:
     DrinkSelection *selectedDrink;
+    DF_QT_OPTIONS sizeOptionSelected;
 };
 
 #endif // DRINKORDER_H

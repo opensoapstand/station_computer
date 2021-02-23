@@ -14,7 +14,9 @@ FORMS += \
     payselect.ui \
     productpage_1.ui \
     productpage_2.ui \
-    thankyoupage.ui
+    thankyoupage.ui \
+    maintenancePage.ui \
+    maintain_product.ui
 
 HEADERS += \
     dfuicommthread.h \
@@ -63,7 +65,9 @@ SOURCES += \
     thankyoupage.cpp \
     df_util.cpp \
     drinkorder.cpp \
-    dbmanager.cpp
+    dbmanager.cpp \
+    maintenance.cpp \
+    maintain_product.cpp
 
 RESOURCES += \
     src.qrc

@@ -107,3 +107,10 @@ bool idle::isEnough(int p){
             break;
     }
 }
+
+
+void idle::on_maintenanceModeButton_clicked()
+{
+    maintenanceMode->showFullScreen();
+    this->hide();
+}

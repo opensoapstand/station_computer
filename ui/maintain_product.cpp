@@ -34,9 +34,12 @@ void maintain_product::setPage(maintenancePage* pageMaintenance, idle* pageIdle)
     this->idlePage = pageIdle;
 
     ui->name->setText("Product Name: ");
-    ui->price->setText("Product Price: ");
-    ui->target_volume->setText("Product Volume: ");
+    ui->price_s->setText("Product Price: ");
+    ui->price_l->setText("Product Price: ");
+    ui->target_volume_s->setText("Product Volume: ");
+    ui->target_volume_l->setText("Product Volume: ");
     ui->volume_per_tick->setText("Product Volume Per Tick: ");
+    ui->refillLabel->setText("");
 }
 
 void maintain_product::on_backButton_clicked(){
@@ -45,9 +48,12 @@ void maintain_product::on_backButton_clicked(){
     this->hide();
 
     ui->name->setText("");
-    ui->price->setText("");
-    ui->target_volume->setText("");
+    ui->price_s->setText("");
+    ui->price_l->setText("");
+    ui->target_volume_s->setText("");
+    ui->target_volume_l->setText("");
     ui->volume_per_tick->setText("");
+    ui->refillLabel->setText("");
 
     if (pumping) {
         qDebug() << "Stopping pump" << endl;
@@ -67,39 +73,51 @@ void maintain_product::on_backButton_clicked(){
 
 void maintain_product::setValues(int option){
 
-    DbManager db(DB_PATH);
+//    DbManager db(DB_PATH);
 
-    ui->name->setText("");
-    ui->price->setText("");
-    ui->target_volume->setText("");
-    ui->volume_per_tick->setText("");
+//    ui->name->setText("");
+//    ui->price_s->setText("");
+//    ui->price_l->setText("");
+//    ui->target_volume_s->setText("");
+//    ui->target_volume_l->setText("");
+//    ui->volume_per_tick->setText("");
 
-    switch (option){
-        case 1:
-            ui->name->setText(db.getProductName(1));
-            ui->price->setText(QString::number(db.getProductPrice(1)));
-            ui->target_volume->setText(QString::number(db.getProductTargetVolume(1)));
-            ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(1)));
-            break;
-        case 2:
-            ui->name->setText(db.getProductName(2));
-            ui->price->setText(QString::number(db.getProductPrice(2)));
-            ui->target_volume->setText(QString::number(db.getProductTargetVolume(2)));
-            ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(2)));
-            break;
-        case 3:
-            ui->name->setText(db.getProductName(3));
-            ui->price->setText(QString::number(db.getProductPrice(3)));
-            ui->target_volume->setText(QString::number(db.getProductTargetVolume(3)));
-            ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(3)));
-            break;
-        case 4:
-            ui->name->setText(db.getProductName(4));
-            ui->price->setText(QString::number(db.getProductPrice(4)));
-            ui->target_volume->setText(QString::number(db.getProductTargetVolume(4)));
-            ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(4)));
-            break;
-    }
+//    qDebug() << db.getProductVolume(1, SMALL_DRINK) << endl;
+
+//    switch (option){
+//        case 1:
+//            ui->name->setText(db.getProductName(1));
+//            ui->price_s->setText(QString::number(db.getProductPrice(1, SMALL_DRINK)));
+//            ui->price_l->setText(QString::number(db.getProductPrice(1, LARGE_DRINK)));
+//            ui->target_volume_s->setText(QString::number(db.getProductVolume(1, SMALL_DRINK)));
+//            ui->target_volume_l->setText(QString::number(db.getProductVolume(1, LARGE_DRINK)));
+//            ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(1)));
+//            break;
+//        case 2:
+//            ui->name->setText(db.getProductName(2));
+//            ui->price_s->setText(QString::number(db.getProductPrice(2, SMALL_DRINK)));
+//            ui->price_l->setText(QString::number(db.getProductPrice(2, LARGE_DRINK)));
+//            ui->target_volume_s->setText(QString::number(db.getProductVolume(2, SMALL_DRINK)));
+//            ui->target_volume_l->setText(QString::number(db.getProductVolume(2, LARGE_DRINK)));
+//            ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(2)));
+//            break;
+//        case 3:
+//            ui->name->setText(db.getProductName(3));
+//            ui->price_s->setText(QString::number(db.getProductPrice(3, SMALL_DRINK)));
+//            ui->price_l->setText(QString::number(db.getProductPrice(3, LARGE_DRINK)));
+//            ui->target_volume_s->setText(QString::number(db.getProductVolume(3, SMALL_DRINK)));
+//            ui->target_volume_l->setText(QString::number(db.getProductVolume(3, LARGE_DRINK)));
+//            ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(3)));
+//            break;
+//        case 4:
+//            ui->name->setText(db.getProductName(4));
+//            ui->price_s->setText(QString::number(db.getProductPrice(4, SMALL_DRINK)));
+//            ui->price_l->setText(QString::number(db.getProductPrice(4, LARGE_DRINK)));
+//            ui->target_volume_s->setText(QString::number(db.getProductVolume(4, SMALL_DRINK)));
+//            ui->target_volume_l->setText(QString::number(db.getProductVolume(4, LARGE_DRINK)));
+//            ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(4)));
+//            break;
+//    }
 }
 
 void maintain_product::resizeEvent(QResizeEvent *event){
@@ -127,35 +145,35 @@ void maintain_product::resizeEvent(QResizeEvent *event){
 }
 
 void maintain_product::on_image_clicked(){
-    int checkOption = idlePage->userDrinkOrder->getOption();
-    if(checkOption > 0 && checkOption <= 9) {
-        QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
-        if (!pumping){
-            command.append("s");
+//    int checkOption = idlePage->userDrinkOrder->getOption();
+//    if(checkOption > 0 && checkOption <= 9) {
+//        QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
+//        if (!pumping){
+//            command.append("s");
 
-            this->idlePage->dfUtility->msg = command;
-            idlePage->dfUtility->m_IsSendingFSM = true;
-            idlePage->dfUtility->m_fsmMsg = SEND_DRINK;
-            idlePage->dfUtility->send_to_FSM();
-            idlePage->dfUtility->m_IsSendingFSM = false;
+//            this->idlePage->dfUtility->msg = command;
+//            idlePage->dfUtility->m_IsSendingFSM = true;
+//            idlePage->dfUtility->m_fsmMsg = SEND_DRINK;
+//            idlePage->dfUtility->send_to_FSM();
+//            idlePage->dfUtility->m_IsSendingFSM = false;
 
-            pumping = true;
-            ui->pump_label->setText("ON");
-        }
-        else {
-            pumping = false;
-            ui->pump_label->setText("OFF");
-            ui->vol_dispensed_label->setText("");
-            command = QString::number(this->idlePage->userDrinkOrder->getOption());
-            command.append("s");
+//            pumping = true;
+//            ui->pump_label->setText("ON");
+//        }
+//        else {
+//            pumping = false;
+//            ui->pump_label->setText("OFF");
+//            ui->vol_dispensed_label->setText("");
+//            command = QString::number(this->idlePage->userDrinkOrder->getOption());
+//            command.append("s");
 
-            this->idlePage->dfUtility->msg = command;
-            idlePage->dfUtility->m_IsSendingFSM = true;
-            idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
-            idlePage->dfUtility->send_to_FSM();
-            idlePage->dfUtility->m_IsSendingFSM = false;
-        }
-    }
+//            this->idlePage->dfUtility->msg = command;
+//            idlePage->dfUtility->m_IsSendingFSM = true;
+//            idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
+//            idlePage->dfUtility->send_to_FSM();
+//            idlePage->dfUtility->m_IsSendingFSM = false;
+//        }
+//    }
 
 }
 
@@ -185,5 +203,18 @@ void maintain_product::updateVolumeDisplayed(int dispensed){
 
 void maintain_product::targetHitDisplay(){
     ui->vol_dispensed_label->setText(ui->vol_dispensed_label->text() + " - TARGET HIT!");
+}
+
+void maintain_product::on_refillButton_clicked(){
+    qDebug() << "Refill button clicked" << endl;
+    DbManager db(DB_PATH);
+    if(db.refill(this->idlePage->userDrinkOrder->getOption())){
+        qDebug() << "REFILLED!" << endl;
+        ui->refillLabel->setText("Refill Succesfull");
+    }
+    else{
+        ui->refillLabel->setText("Refill ERROR");
+    }
+
 }
 

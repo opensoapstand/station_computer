@@ -15,5 +15,13 @@
         <file>light/2_drink_page_1.png</file>
         <file>light/1_welcome_panel.png</file>
         <file>light/soldOut.png</file>
+        <file>maintenancePage.ui</file>
+        <file>maintenancePage.h</file>
+        <file>maintenance.cpp</file>
+        <file>maintain_product.ui</file>
+        <file>maintain_product.h</file>
+        <file>maintain_product.cpp</file>
+        <file>idle.cpp</file>
+        <file>idle.ui</file>
     </qresource>
 </RCC>

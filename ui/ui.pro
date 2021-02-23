@@ -38,7 +38,9 @@ HEADERS += \
     thankyoupage.h \
     df_util.h \
     drinkorder.h \
-    dbmanager.h
+    dbmanager.h \
+    maintenancePage.h \
+    maintain_product.h
 
 SOURCES += \
     dfuicommthread.cpp \

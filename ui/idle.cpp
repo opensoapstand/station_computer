@@ -16,6 +16,7 @@
 
 #include "idle.h"
 #include "ui_idle.h"
+#include "maintenancePage.h"
 
 // CTOR
 idle::idle(QWidget *parent) :
@@ -35,6 +36,7 @@ idle::idle(QWidget *parent) :
     ui->nextPageButton->setAttribute(Qt::WA_TranslucentBackground);
     ui->nextPageButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     setStyleSheet("QPushButton{background: transparent;}");
+    ui->maintenanceModeButton->setStyleSheet("QPushButton{background: white;}");
 
     // TODO: Hold and pass DrinkOrder Object
     userDrinkOrder = new DrinkOrder();
@@ -53,10 +55,11 @@ idle::idle(QWidget *parent) :
 /*
  * Navigation to Product item
  */
-void idle::setPage(productPage_1 *pageProduct)
+void idle::setPage(productPage_1 *pageProduct, maintenancePage *pageMaintenance)
 {
     // Chained to KB Listener
     this->selection_PageOne = pageProduct;
+    this->maintenanceMode = pageMaintenance;
 }
 
 // DTOR

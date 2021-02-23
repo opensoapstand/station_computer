@@ -21,8 +21,11 @@
 #include "productpage_1.h"
 #include "dfuicommthread.h"
 #include "dbmanager.h"
+#include "maintenancePage.h"
 
 #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
+
+class maintenancePage;
 
 namespace Ui {
 class idle;
@@ -34,7 +37,7 @@ class idle : public QWidget
 
 public:
     explicit idle(QWidget *parent = nullptr);
-    void setPage(productPage_1 *pageProduct);
+    void setPage(productPage_1 *pageProduct, maintenancePage *pageMaintenance);
     ~idle();
 
     DrinkOrder* userDrinkOrder;
@@ -50,6 +53,7 @@ private slots:
 private:
     Ui::idle *ui;
     productPage_1* selection_PageOne;
+    maintenancePage* maintenanceMode;
     bool p1, p2, p3, p4;
 
 };

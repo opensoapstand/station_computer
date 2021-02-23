@@ -29,6 +29,19 @@
     <string/>
    </property>
   </widget>
+  <widget class="QPushButton" name="maintenanceModeButton">
+   <property name="geometry">
+    <rect>
+     <x>798</x>
+     <y>0</y>
+     <width>281</width>
+     <height>241</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Maintenance Mode</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

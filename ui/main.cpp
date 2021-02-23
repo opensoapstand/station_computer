@@ -24,6 +24,8 @@
 #include "thankyoupage.h"
 #include <QApplication>
 #include "df_util.h"
+#include "maintenancePage.h"
+#include "maintain_product.h"
 
 int main(int argc, char *argv[])
 {
@@ -41,13 +43,21 @@ int main(int argc, char *argv[])
     payPage* paymentPage = new payPage();
     dispensePage* dispensingPage = new dispensePage();
     thankYouPage* lastPage = new thankYouPage();
+    maintenancePage* maintenanceMode = new maintenancePage();
+    maintain_product* maintainPage = new maintain_product();
 
     // TODO: Instantiate a DrinkSelection[] Array
     // TODO: Create Query to populate DrinkSelection[0-12]
     // TODO: Instantiate a DrinkOrder Object
 
     // Page pathing references to function calls.
-    idlePage->setPage(firstSelectPage);
+    maintainPage->setPage(maintenanceMode, idlePage);
+    maintainPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
+
+    maintenanceMode->setPage(idlePage, maintainPage);
+    maintenanceMode->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
+
+    idlePage->setPage(firstSelectPage, maintenanceMode);
     idlePage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
     firstSelectPage->setPage(secondSelectPage, paySelectPage, idlePage);

@@ -192,3 +192,36 @@ bool DbManager::refill(int slot){
 
     return success;
 }
+
+bool DbManager::sellout(int slot){
+    QSqlQuery sellout_query;
+    bool success=false;
+    double remaining = 14500.0;
+
+    sellout_query.prepare("UPDATE products SET remaining_ml=0 WHERE slot=:slot");
+    sellout_query.bindValue(":slot", slot);
+    sellout_query.bindValue(":remaining", remaining);
+    if(sellout_query.exec())
+    {
+        qDebug() << "remaining ml updated successfully!";
+        sellout_query.prepare("UPDATE products SET total_dispensed=:remaining WHERE slot=:slot");
+        sellout_query.bindValue(":slot", slot);
+        if(sellout_query.exec()){
+            qDebug() << "total ml dispensed update successful!";
+            success=true;
+        }
+        else{
+            qDebug() << "total ml dispensed update error:"
+                     << sellout_query.lastError();
+            success=false;
+        }
+    }
+    else
+    {
+        qDebug() << "remaining ml update error:"
+                 << sellout_query.lastError();
+        success=false;
+    }
+
+    return success;
+}

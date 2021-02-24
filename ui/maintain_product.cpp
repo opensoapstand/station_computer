@@ -40,6 +40,7 @@ void maintain_product::setPage(maintenancePage* pageMaintenance, idle* pageIdle)
     ui->target_volume_l->setText("Product Volume: ");
     ui->volume_per_tick->setText("Product Volume Per Tick: ");
     ui->refillLabel->setText("");
+    ui->soldOutLabel->setText("");
 }
 
 void maintain_product::on_backButton_clicked(){
@@ -54,6 +55,8 @@ void maintain_product::on_backButton_clicked(){
     ui->target_volume_l->setText("");
     ui->volume_per_tick->setText("");
     ui->refillLabel->setText("");
+    ui->soldOutLabel->setText("");
+
 
     if (pumping) {
         qDebug() << "Stopping pump" << endl;
@@ -204,15 +207,69 @@ void maintain_product::on_vol_per_tickButton_clicked(){
 //}
 
 void maintain_product::on_refillButton_clicked(){
-    qDebug() << "Refill button clicked" << endl;
     DbManager db(DB_PATH);
-    if(db.refill(this->idlePage->userDrinkOrder->getOption())){
-        qDebug() << "REFILLED!" << endl;
-        ui->refillLabel->setText("Refill Succesfull");
-    }
-    else{
-        ui->refillLabel->setText("Refill ERROR");
-    }
+    qDebug() << "Refill button clicked" << endl;
 
+    // ARE YOU SURE YOU WANT TO COMPLETE?
+    QMessageBox msgBox;
+    msgBox.setWindowFlags(Qt::FramelessWindowHint);
+    msgBox.setText("<p align=center>Are you sure you want to refill?</p>");
+    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-width: 300px; min-height: 300px;}");
+
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    int ret = msgBox.exec();
+
+    switch(ret){
+        case QMessageBox::Yes:
+            qDebug() << "YES CLICKED" << endl;
+
+            if(db.refill(this->idlePage->userDrinkOrder->getOption())){
+                qDebug() << "REFILLED!" << endl;
+                ui->refillLabel->setText("Refill Succesfull");
+                break;
+            }
+            else{
+                ui->refillLabel->setText("Refill ERROR");
+                break;
+            }
+
+        case QMessageBox::No:
+            qDebug() << "No Clicked" << endl;
+            msgBox.hide();
+        break;
+    }
 }
 
+void maintain_product::on_soldOutButton_clicked(){
+    DbManager db(DB_PATH);
+    qDebug() << "Sold Out button clicked" << endl;
+
+    // ARE YOU SURE YOU WANT TO COMPLETE?
+    QMessageBox msgBox;
+    msgBox.setWindowFlags(Qt::FramelessWindowHint);
+    msgBox.setText("<p align=center>Are you sure you want to mark as Sold Out?</p>");
+    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-width: 300px; min-height: 300px;}");
+
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    int ret = msgBox.exec();
+
+    switch(ret){
+        case QMessageBox::Yes:
+            qDebug() << "YES CLICKED" << endl;
+
+            if(db.sellout(this->idlePage->userDrinkOrder->getOption())){
+                qDebug() << "REFILLED!" << endl;
+                ui->soldOutLabel->setText("Sold Out Succesfull");
+                break;
+            }
+            else{
+                ui->soldOutLabel->setText("Sold Out ERROR");
+                break;
+            }
+
+        case QMessageBox::No:
+            qDebug() << "No Clicked" << endl;
+            msgBox.hide();
+        break;
+    }
+}

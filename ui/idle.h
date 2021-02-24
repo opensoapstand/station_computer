@@ -49,13 +49,18 @@ public:
 
 private slots:
     void on_nextPageButton_clicked();
-    void on_maintenanceModeButton_clicked();
+    void on_maintenanceModeButton_pressed();
+    void on_maintenanceModeButton_released();
+    void open_maintenance_mode();
+    void onMaintenanceTimeoutTick();
 
 private:
     Ui::idle *ui;
     productPage_1* selection_PageOne;
     maintenancePage* maintenanceMode;
     bool p1, p2, p3, p4;
+    QTimer* maintenanceTimer;
+    int _maintenanceTimeoutSec;
 
 };
 

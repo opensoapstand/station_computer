@@ -223,6 +223,32 @@
     <string/>
    </property>
   </widget>
+  <widget class="QPushButton" name="soldOutButton">
+   <property name="geometry">
+    <rect>
+     <x>640</x>
+     <y>560</y>
+     <width>321</width>
+     <height>391</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Sold Out</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="soldOutLabel">
+   <property name="geometry">
+    <rect>
+     <x>640</x>
+     <y>960</y>
+     <width>311</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

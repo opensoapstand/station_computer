@@ -15,6 +15,7 @@ public:
     bool checkLevels(int slot);
     double getProductVolume(int slot, char ml);
     bool refill(int slot);
+    bool sellout(int slot);
 
 
 private:

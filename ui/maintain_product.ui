@@ -144,58 +144,6 @@
     <string>Volume per Tick</string>
    </property>
   </widget>
-  <widget class="QLabel" name="PumpStatus">
-   <property name="geometry">
-    <rect>
-     <x>320</x>
-     <y>80</y>
-     <width>111</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Pump Status:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="pump_label">
-   <property name="geometry">
-    <rect>
-     <x>430</x>
-     <y>80</y>
-     <width>111</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="VolumeDispensed">
-   <property name="geometry">
-    <rect>
-     <x>320</x>
-     <y>120</y>
-     <width>141</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Volume Dispensed: </string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="vol_dispensed_label">
-   <property name="geometry">
-    <rect>
-     <x>460</x>
-     <y>120</y>
-     <width>141</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QLabel" name="price_s">
    <property name="geometry">
     <rect>

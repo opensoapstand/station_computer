@@ -81,23 +81,23 @@ double DbManager::getProductPrice(int slot, char ml){
     return price;
 }
 
-double DbManager::getProductTargetVolume(int slot){
+//double DbManager::getProductTargetVolume(int slot){
 
-    QSqlQuery volume_query;
-    double volume;
+//    QSqlQuery volume_query;
+//    double volume;
 
-    volume_query.prepare("SELECT volume_target FROM products WHERE slot=:slot");
-    volume_query.bindValue(":slot", slot);
-    volume_query.exec();
+//    volume_query.prepare("SELECT volume_target FROM products WHERE slot=:slot");
+//    volume_query.bindValue(":slot", slot);
+//    volume_query.exec();
 
-    while (volume_query.next()) {
-            volume = volume_query.value(0).toDouble();
+//    while (volume_query.next()) {
+//            volume = volume_query.value(0).toDouble();
 
-            //qDebug() << "Volume: " << volume << endl;
-        }
+//            //qDebug() << "Volume: " << volume << endl;
+//        }
 
-    return volume;
-}
+//    return volume;
+//}
 
 double DbManager::getProductVolumePerTick(int slot){
 

@@ -23,5 +23,9 @@
         <file>maintain_product.cpp</file>
         <file>idle.cpp</file>
         <file>idle.ui</file>
+        <file>maintenance/product4.png</file>
+        <file>maintenance/product3.png</file>
+        <file>maintenance/product2.png</file>
+        <file>maintenance/product1.png</file>
     </qresource>
 </RCC>

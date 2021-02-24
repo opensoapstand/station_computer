@@ -127,7 +127,7 @@ DF_ERROR stateDispenseEnd::onExit()
    m_pMessaging->clearCommandString();
    m_pMessaging->clearcCommand();
 
-   printer();
+  //printer();
 
    cassettes[pos].getDrink()->stopDispense();
    cassettes[pos].stopDispense(DRINK);
@@ -136,7 +136,7 @@ DF_ERROR stateDispenseEnd::onExit()
    cassettes[pos].resetButtonPressDuration();
 
    debugOutput::sendMessage("START backing up DB", INFO);
-   system("/release/dbbackup.sh");
+   //system("/release/dbbackup.sh");
    debugOutput::sendMessage("END backing up DB", INFO);
 
    debugOutput::sendMessage("Exiting Dispensing END[" + toString() + "]", INFO);

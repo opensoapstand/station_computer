@@ -163,7 +163,7 @@ bool DbManager::checkLevels(int slot){
 bool DbManager::refill(int slot){
     QSqlQuery refill_query;
     bool success=false;
-    double remaining = 14500.0;
+    double remaining = getFullProduct(slot);
 
     refill_query.prepare("UPDATE products SET remaining_ml=:remaining WHERE slot=:slot");
     refill_query.bindValue(":slot", slot);
@@ -193,10 +193,27 @@ bool DbManager::refill(int slot){
     return success;
 }
 
+double DbManager::getFullProduct(int slot){
+
+    QSqlQuery full_query;
+    double full;
+
+    full_query.prepare("SELECT full_ml FROM products WHERE slot=:slot");
+    full_query.bindValue(":slot", slot);
+    full_query.exec();
+
+    while (full_query.next()) {
+            full = full_query.value(0).toDouble();
+
+        }
+
+    return full;
+}
+
 bool DbManager::sellout(int slot){
     QSqlQuery sellout_query;
     bool success=false;
-    double remaining = 14500.0;
+    double remaining = getFullProduct(slot);
 
     sellout_query.prepare("UPDATE products SET remaining_ml=0 WHERE slot=:slot");
     sellout_query.bindValue(":slot", slot);

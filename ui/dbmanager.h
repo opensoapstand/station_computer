@@ -16,6 +16,8 @@ public:
     double getProductVolume(int slot, char ml);
     bool refill(int slot);
     bool sellout(int slot);
+    double getFullProduct(int slot);
+
 
 
 private:

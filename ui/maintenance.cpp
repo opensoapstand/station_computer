@@ -142,20 +142,20 @@ void maintenancePage::on_product9_button_clicked(){
 
 }
 
-void maintenancePage::on_wifi_button_clicked(){
-    qDebug() << "WiFi button clicked" << endl;
+//void maintenancePage::on_wifi_button_clicked(){
+//    qDebug() << "WiFi button clicked" << endl;
 
-}
+//}
 
-void maintenancePage::on_clean_button_clicked(){
-    qDebug() << "Clean button clicked" << endl;
+//void maintenancePage::on_clean_button_clicked(){
+//    qDebug() << "Clean button clicked" << endl;
 
-}
+//}
 
-void maintenancePage::on_restock_button_clicked(){
-    qDebug() << "Restock button clicked" << endl;
+//void maintenancePage::on_restock_button_clicked(){
+//    qDebug() << "Restock button clicked" << endl;
 
-}
+//}
 
 int getSelection(){
     return selection;

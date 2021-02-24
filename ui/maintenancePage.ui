@@ -13,19 +13,6 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLabel" name="wifi_label">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>580</y>
-     <width>81</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>WiFi</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="product7_label">
    <property name="geometry">
     <rect>
@@ -63,45 +50,6 @@
    </property>
    <property name="text">
     <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="restock_button">
-   <property name="geometry">
-    <rect>
-     <x>290</x>
-     <y>460</y>
-     <width>101</width>
-     <height>111</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="clean_button">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
-     <y>460</y>
-     <width>101</width>
-     <height>111</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="clean_label">
-   <property name="geometry">
-    <rect>
-     <x>420</x>
-     <y>580</y>
-     <width>81</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Clean</string>
    </property>
   </widget>
   <widget class="QPushButton" name="product9_button">
@@ -156,42 +104,6 @@
     <string>Product 5</string>
    </property>
   </widget>
-  <widget class="QScrollArea" name="clicks_area">
-   <property name="geometry">
-    <rect>
-     <x>740</x>
-     <y>310</y>
-     <width>191</width>
-     <height>351</height>
-    </rect>
-   </property>
-   <property name="widgetResizable">
-    <bool>true</bool>
-   </property>
-   <widget class="QWidget" name="scrollAreaWidgetContents_2">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>189</width>
-      <height>349</height>
-     </rect>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QLabel" name="restock_label">
-   <property name="geometry">
-    <rect>
-     <x>300</x>
-     <y>580</y>
-     <width>81</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Restock</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="product2_label">
    <property name="geometry">
     <rect>
@@ -203,55 +115,6 @@
    </property>
    <property name="text">
     <string>Product 2</string>
-   </property>
-  </widget>
-  <widget class="QScrollArea" name="transactions_area">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>310</y>
-     <width>191</width>
-     <height>351</height>
-    </rect>
-   </property>
-   <property name="widgetResizable">
-    <bool>true</bool>
-   </property>
-   <widget class="QWidget" name="scrollAreaWidgetContents">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>189</width>
-      <height>349</height>
-     </rect>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QPushButton" name="wifi_button">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>460</y>
-     <width>101</width>
-     <height>111</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="transactions_label">
-   <property name="geometry">
-    <rect>
-     <x>600</x>
-     <y>280</y>
-     <width>111</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Transactions</string>
    </property>
   </widget>
   <widget class="QLabel" name="product9_label">
@@ -356,19 +219,6 @@
    </property>
    <property name="text">
     <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="clicks_label">
-   <property name="geometry">
-    <rect>
-     <x>810</x>
-     <y>280</y>
-     <width>51</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Clicks</string>
    </property>
   </widget>
   <widget class="QLabel" name="product6_label">

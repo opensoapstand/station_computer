@@ -36,7 +36,7 @@
 // this constant.  This will NOT make printing slower!  The physical
 // print and feed mechanisms are the bottleneck, not the port speed.
 #define BAUDRATE                                                               \
-  19200 //!< How many bits per second the serial port should transfer
+  9600 //!< How many bits per second the serial port should transfer
 
 // ASCII codes used by some of the printer config commands:
 #define ASCII_TAB '\t' //!< Horizontal tab

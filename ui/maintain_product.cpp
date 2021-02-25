@@ -183,13 +183,21 @@ void maintain_product::on_nameButton_clicked(){
 }
 
 
-void maintain_product::on_priceButton_clicked(){
-    qDebug() << "Price button clicked" << endl;
+void maintain_product::on_priceButton_s_clicked(){
+    qDebug() << "Small Price button clicked" << endl;
+}
+
+void maintain_product::on_priceButton_l_clicked(){
+    qDebug() << "Large Price button clicked" << endl;
 }
 
 
-void maintain_product::on_target_volumeButton_clicked(){
-    qDebug() << "Target Volume button clicked" << endl;
+void maintain_product::on_target_volumeButton_s_clicked(){
+    qDebug() << "Small Volume button clicked" << endl;
+}
+
+void maintain_product::on_target_volumeButton_l_clicked(){
+    qDebug() << "Large Volume button clicked" << endl;
 }
 
 

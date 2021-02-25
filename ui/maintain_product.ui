@@ -157,7 +157,7 @@
     <string>Product Price: </string>
    </property>
   </widget>
-  <widget class="QPushButton" name="priceButton_2">
+  <widget class="QPushButton" name="priceButton_l">
    <property name="geometry">
     <rect>
      <x>40</x>

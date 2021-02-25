@@ -119,7 +119,7 @@ void dispensePage::showEvent(QShowEvent *event)
 void dispensePage::on_finish_Button_clicked()
 {
     //Update Click DB
-    DbManager db(DB_PATH);
+    DbManager db(DB_PATH_CLICKS);
     db.addPageClick("Dispense Page -> Thank You Page");
 
     qDebug() << "dispensePage: finish button clicked" << endl;
@@ -231,7 +231,7 @@ void dispensePage::onDispenseIdleTick(){
 //        dispenseIdleTimer->stop();
 
         //Update Click DB
-        DbManager db(DB_PATH);
+        DbManager db(DB_PATH_CLICKS);
         db.addPageClick("DISPENSE TIME OUT");
 
         on_finish_Button_clicked();
@@ -261,7 +261,7 @@ void dispensePage::updateVolumeDisplayed(int dispensed){
 void dispensePage::targetHitDisplay(){
     //this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ " ml - Target Hit!");
     //Update Click DB
-    DbManager db(DB_PATH);
+    DbManager db(DB_PATH_CLICKS);
     db.addPageClick("TARGET HIT");
     on_finish_Button_clicked();
 }

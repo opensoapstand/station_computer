@@ -23,7 +23,9 @@
 #include "dbmanager.h"
 #include "maintenancePage.h"
 
-#define DB_PATH "/release/db/sqlite/clicks.db"
+#define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
+#define DB_PATH_CLICKS "/release/db/sqlite/clicks.db"
+
 
 class maintenancePage;
 

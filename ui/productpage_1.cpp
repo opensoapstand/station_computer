@@ -133,7 +133,7 @@ void productPage_1::showEvent(QShowEvent *event)
 void productPage_1::on_selection1_Button_clicked()
 {
     // UPDATE DB
-    DbManager db(DB_PATH);
+    DbManager db(DB_PATH_CLICKS);
     db.addPageClick("Product Page -> Option 1");
 
     if(this->idlePage->isEnough(1)){
@@ -150,7 +150,7 @@ void productPage_1::on_selection1_Button_clicked()
 
 void productPage_1::on_selection2_Button_clicked()
 {
-    DbManager db(DB_PATH);
+    DbManager db(DB_PATH_CLICKS);
     db.addPageClick("Product Page -> Option 2");
 
     if(this->idlePage->isEnough(2)){
@@ -166,7 +166,7 @@ void productPage_1::on_selection2_Button_clicked()
 
 void productPage_1::on_selection3_Button_clicked()
 {
-    DbManager db(DB_PATH);
+    DbManager db(DB_PATH_CLICKS);
     db.addPageClick("Product Page -> Option 3");
 
     if(this->idlePage->isEnough(3)){
@@ -182,7 +182,7 @@ void productPage_1::on_selection3_Button_clicked()
 
 void productPage_1::on_selection4_Button_clicked()
 {
-    DbManager db(DB_PATH);
+    DbManager db(DB_PATH_CLICKS);
     db.addPageClick("Product Page -> Option 4");
 
     if(this->idlePage->isEnough(4)){
@@ -224,7 +224,7 @@ void productPage_1::onProductPageTimeoutTick(){
         qDebug() << "Timer Done!" << _productPageTimeoutSec << endl;
 
         //Update Click DB
-        DbManager db(DB_PATH);
+        DbManager db(DB_PATH_CLICKS);
         db.addPageClick("PRODUCT PAGE TIME OUT");
 
         mainPage();
@@ -234,7 +234,7 @@ void productPage_1::onProductPageTimeoutTick(){
 void productPage_1::mainPage()
 {
     // UPDATE DB
-    DbManager db(DB_PATH);
+    DbManager db(DB_PATH_CLICKS);
     db.addPageClick("Product Page -> Main Page");
 
     productPageEndTimer->stop();

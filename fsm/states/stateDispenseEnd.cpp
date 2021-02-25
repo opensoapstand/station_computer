@@ -137,6 +137,7 @@ DF_ERROR stateDispenseEnd::onExit()
 
    debugOutput::sendMessage("START backing up DB", INFO);
    system("/release/dbbackup.sh");
+   system("heroku restart -a soapstand");
    debugOutput::sendMessage("END backing up DB", INFO);
 
    debugOutput::sendMessage("Exiting Dispensing END[" + toString() + "]", INFO);

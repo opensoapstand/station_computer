@@ -46,12 +46,33 @@ maintenancePage::maintenancePage(QWidget *parent) :
     ui->product4_button->setIcon(ButtonIcon4);
     ui->product4_button->setIconSize(QSize(101,111));
 
+    maintenancePageEndTimer = new QTimer(this);
+    maintenancePageEndTimer->setInterval(1000);
+    connect(maintenancePageEndTimer, SIGNAL(timeout()), this, SLOT(onMaintenancePageTimeoutTick()));
+
 }
 
 // DTOR
 maintenancePage::~maintenancePage()
 {
     delete ui;
+}
+
+void maintenancePage::showEvent(QShowEvent *event)
+{
+    QWidget::showEvent(event);
+
+    DbManager db(DB_PATH);
+    db.addPageClick("MAINTENANCE PAGE ENTERED");
+
+    if(maintenancePageEndTimer == nullptr){
+        maintenancePageEndTimer = new QTimer(this);
+        maintenancePageEndTimer->setInterval(1000);
+        connect(maintenancePageEndTimer, SIGNAL(timeout()), this, SLOT(onMaintenancePageTimeoutTick()));
+    }
+
+    maintenancePageEndTimer->start(1000);
+    _maintenancePageTimeoutSec = 15;
 }
 
 /*
@@ -66,12 +87,21 @@ void maintenancePage::setPage(idle* pageIdle, maintain_product* pageMaintain, pr
 
 void maintenancePage::on_backButton_clicked(){
     qDebug() << "Back button clicked" << endl;
+
+    DbManager db(DB_PATH);
+    db.addPageClick("MAINTENANCE PAGE EXITED");
+
+    maintenancePageEndTimer->stop();
     idlePage->showFullScreen();
     this->hide();
 }
 
 void maintenancePage::on_product1_button_clicked(){
     qDebug() << "Product 1 button clicked" << endl;
+    maintenancePageEndTimer->stop();
+
+    DbManager db(DB_PATH);
+    db.addPageClick("MAINTAIN PRODUCT 1");
 
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_1);
     idlePage->userDrinkOrder->setDrinkSize(DRINK1);
@@ -84,6 +114,10 @@ void maintenancePage::on_product1_button_clicked(){
 
 void maintenancePage::on_product2_button_clicked(){
     qDebug() << "Product 2 button clicked" << endl;
+    maintenancePageEndTimer->stop();
+
+    DbManager db(DB_PATH);
+    db.addPageClick("MAINTAIN PRODUCT 2");
 
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
     idlePage->userDrinkOrder->setDrinkSize(DRINK2);
@@ -96,6 +130,10 @@ void maintenancePage::on_product2_button_clicked(){
 
 void maintenancePage::on_product3_button_clicked(){
     qDebug() << "Product 3 button clicked" << endl;
+    maintenancePageEndTimer->stop();
+
+    DbManager db(DB_PATH);
+    db.addPageClick("MAINTAIN PRODUCT 3");
 
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
     idlePage->userDrinkOrder->setDrinkSize(DRINK3);
@@ -108,6 +146,10 @@ void maintenancePage::on_product3_button_clicked(){
 
 void maintenancePage::on_product4_button_clicked(){
     qDebug() << "Product 4 button clicked" << endl;
+    maintenancePageEndTimer->stop();
+
+    DbManager db(DB_PATH);
+    db.addPageClick("MAINTAIN PRODUCT 4");
 
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);
     idlePage->userDrinkOrder->setDrinkSize(DRINK4);
@@ -160,4 +202,21 @@ void maintenancePage::on_product4_button_clicked(){
 
 int getSelection(){
     return selection;
+}
+
+void maintenancePage::onMaintenancePageTimeoutTick(){
+
+    if(-- _maintenancePageTimeoutSec >= 0) {
+        qDebug() << "Maintenance Tick Down: " << _maintenancePageTimeoutSec << endl;
+    } else {
+        qDebug() << "Maintenance Timer Done!" << _maintenancePageTimeoutSec << endl;
+
+        //Update Click DB
+        DbManager db(DB_PATH);
+        db.addPageClick("MAINTENANCE PAGE TIME OUT");
+
+        maintenancePageEndTimer->stop();
+        this->hide();
+        idlePage->showFullScreen();
+    }
 }

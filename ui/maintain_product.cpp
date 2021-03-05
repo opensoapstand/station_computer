@@ -17,12 +17,34 @@ maintain_product::maintain_product(QWidget *parent) :
 
     //ui->pump_label->setText("OFF");
 
+    maintainProductPageEndTimer = new QTimer(this);
+    maintainProductPageEndTimer->setInterval(1000);
+    connect(maintainProductPageEndTimer, SIGNAL(timeout()), this, SLOT(onMaintainProductPageTimeoutTick()));
+
 }
 
 // DTOR
 maintain_product::~maintain_product()
 {
     delete ui;
+}
+
+void maintain_product::showEvent(QShowEvent *event)
+{
+    QWidget::showEvent(event);
+
+    DbManager db(DB_PATH);
+    //db.addPageClick("MAINTENANCE PAGE ENTERED");
+
+    if(maintainProductPageEndTimer == nullptr){
+        maintainProductPageEndTimer = new QTimer(this);
+        maintainProductPageEndTimer->setInterval(1000);
+        connect(maintainProductPageEndTimer, SIGNAL(timeout()), this, SLOT(onMaintainProductPageTimeoutTick()));
+    }
+
+    maintainProductPageEndTimer->start(1000);
+    _maintainProductPageTimeoutSec = 15;
+
 }
 
 /*
@@ -46,6 +68,12 @@ void maintain_product::setPage(maintenancePage* pageMaintenance, idle* pageIdle)
 
 void maintain_product::on_backButton_clicked(){
     qDebug() << "Back button clicked" << endl;
+
+    //Update Click DB
+    DbManager db(DB_PATH);
+    db.addPageClick("MAINTAIN PRODUCT PAGE EXITED");
+
+    maintainProductPageEndTimer->stop();
     maintenanceMode->showFullScreen();
     this->hide();
 
@@ -153,6 +181,7 @@ void maintain_product::resizeEvent(QResizeEvent *event){
 }
 
 void maintain_product::on_image_clicked(){
+    _maintainProductPageTimeoutSec=15;
 //    int checkOption = idlePage->userDrinkOrder->getOption();
 //    if(checkOption > 0 && checkOption <= 9) {
 //        QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
@@ -187,21 +216,25 @@ void maintain_product::on_image_clicked(){
 
 void maintain_product::on_nameButton_clicked(){
     qDebug() << "Name button clicked" << endl;
+    _maintainProductPageTimeoutSec=15;
 }
 
 
 void maintain_product::on_priceButton_clicked(){
     qDebug() << "Price button clicked" << endl;
+    _maintainProductPageTimeoutSec=15;
 }
 
 
 void maintain_product::on_target_volumeButton_clicked(){
     qDebug() << "Target Volume button clicked" << endl;
+    _maintainProductPageTimeoutSec=15;
 }
 
 
 void maintain_product::on_vol_per_tickButton_clicked(){
     qDebug() << "Volume Per Tick button clicked" << endl;
+    _maintainProductPageTimeoutSec=15;
 }
 
 //void maintain_product::updateVolumeDisplayed(int dispensed){
@@ -216,6 +249,8 @@ void maintain_product::on_vol_per_tickButton_clicked(){
 void maintain_product::on_refillButton_clicked(){
     DbManager db(DB_PATH);
     qDebug() << "Refill button clicked" << endl;
+
+    _maintainProductPageTimeoutSec=15;
 
     // ARE YOU SURE YOU WANT TO COMPLETE?
     QMessageBox msgBox;
@@ -233,6 +268,9 @@ void maintain_product::on_refillButton_clicked(){
             if(db.refill(this->idlePage->userDrinkOrder->getOption())){
                 qDebug() << "REFILLED!" << endl;
                 ui->refillLabel->setText("Refill Succesfull");
+                //Update Click DB
+                DbManager db(DB_PATH);
+                db.addPageClick("PRODUCT REFILLED");
                 break;
             }
             else{
@@ -251,6 +289,8 @@ void maintain_product::on_soldOutButton_clicked(){
     DbManager db(DB_PATH);
     qDebug() << "Sold Out button clicked" << endl;
 
+    _maintainProductPageTimeoutSec=15;
+
     // ARE YOU SURE YOU WANT TO COMPLETE?
     QMessageBox msgBox;
     msgBox.setWindowFlags(Qt::FramelessWindowHint);
@@ -265,8 +305,11 @@ void maintain_product::on_soldOutButton_clicked(){
             qDebug() << "YES CLICKED" << endl;
 
             if(db.sellout(this->idlePage->userDrinkOrder->getOption())){
-                qDebug() << "REFILLED!" << endl;
+                qDebug() << "SOLD OUT!" << endl;
                 ui->soldOutLabel->setText("Sold Out Succesfull");
+                //Update Click DB
+                DbManager db(DB_PATH);
+                db.addPageClick("PRODUCT SOLD OUT");
                 break;
             }
             else{
@@ -283,4 +326,22 @@ void maintain_product::on_soldOutButton_clicked(){
 
 void maintain_product::on_fullButton_clicked(){
     qDebug() << "Full Volume button clicked" << endl;
+    _maintainProductPageTimeoutSec=15;
+}
+
+void maintain_product::onMaintainProductPageTimeoutTick(){
+
+    if(-- _maintainProductPageTimeoutSec >= 0) {
+        qDebug() << "Maintain Product Tick Down: " << _maintainProductPageTimeoutSec << endl;
+    } else {
+        qDebug() << "Maintain Product Timer Done!" << _maintainProductPageTimeoutSec << endl;
+
+        //Update Click DB
+        DbManager db(DB_PATH);
+        db.addPageClick("MAINTAIN PRODUCT PAGE TIME OUT");
+
+        maintainProductPageEndTimer->stop();
+        this->hide();
+        idlePage->showFullScreen();
+    }
 }

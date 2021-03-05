@@ -62,14 +62,19 @@ private slots:
     //void on_wifi_button_clicked();
     //void on_clean_button_clicked();
     //void on_restock_button_clicked();
+    void onMaintenancePageTimeoutTick();
 
 private:
+    void showEvent(QShowEvent *event);
     Ui::maintenancePage *ui;
     idle* idlePage;
     maintain_product* maintainPage;
     productPage_1* selection_PageOne;
 
     QResizeEvent *productSelection;
+
+    int _maintenancePageTimeoutSec;
+    QTimer* maintenancePageEndTimer;
 };
 
 #endif // MAINTENANCEPAGE_H

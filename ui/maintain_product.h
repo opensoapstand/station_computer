@@ -54,14 +54,19 @@ private slots:
     void on_refillButton_clicked();
     void on_soldOutButton_clicked();
     void on_fullButton_clicked();
+    void onMaintainProductPageTimeoutTick();
 
 private:
+    void showEvent(QShowEvent *event);
     Ui::maintain_product *ui;
     maintenancePage* maintenanceMode;
     idle* idlePage;
 
     void setValues(int option);
     bool pumping = false;
+
+    int _maintainProductPageTimeoutSec;
+    QTimer* maintainProductPageEndTimer;
 };
 
 #endif // MAINTAIN_PRODUCT_H

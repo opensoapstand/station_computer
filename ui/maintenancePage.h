@@ -23,9 +23,11 @@
 #include "idle.h"
 #include "dfuicommthread.h"
 #include "maintain_product.h"
+#include "productpage_1.h"
 
 class idle;
 class maintain_product;
+class productPage_1;
 
 namespace Ui {
 class maintenancePage;
@@ -40,7 +42,7 @@ class maintenancePage : public QWidget
 public:
 
     explicit maintenancePage(QWidget *parent = nullptr);
-    void setPage(idle* pageIdle, maintain_product* pageMaintain);
+    void setPage(idle* pageIdle, maintain_product* pageMaintain, productPage_1 *pageProduct);
     ~maintenancePage();
 
     int getSelection();
@@ -52,11 +54,11 @@ private slots:
     void on_product2_button_clicked();
     void on_product3_button_clicked();
     void on_product4_button_clicked();
-    void on_product5_button_clicked();
-    void on_product6_button_clicked();
-    void on_product7_button_clicked();
-    void on_product8_button_clicked();
-    void on_product9_button_clicked();
+//    void on_product5_button_clicked();
+//    void on_product6_button_clicked();
+//    void on_product7_button_clicked();
+//    void on_product8_button_clicked();
+//    void on_product9_button_clicked();
     //void on_wifi_button_clicked();
     //void on_clean_button_clicked();
     //void on_restock_button_clicked();
@@ -65,6 +67,7 @@ private:
     Ui::maintenancePage *ui;
     idle* idlePage;
     maintain_product* maintainPage;
+    productPage_1* selection_PageOne;
 
     QResizeEvent *productSelection;
 };

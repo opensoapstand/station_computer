@@ -48,13 +48,12 @@ private slots:
     void on_backButton_clicked();
     void on_image_clicked();
     void on_nameButton_clicked();
-    void on_priceButton_s_clicked();
-    void on_priceButton_l_clicked();
-    void on_target_volumeButton_s_clicked();
-    void on_target_volumeButton_l_clicked();
+    void on_priceButton_clicked();
+    void on_target_volumeButton_clicked();
     void on_vol_per_tickButton_clicked();
     void on_refillButton_clicked();
     void on_soldOutButton_clicked();
+    void on_fullButton_clicked();
 
 private:
     Ui::maintain_product *ui;

@@ -14,10 +14,12 @@
 #define PRODUCTPAGE_2_H
 
 #include "df_util.h"
+#include "maintenancePage.h"
 
 class productPage_1;
 class paySelect;
 class idle;
+class maintenancePage;
 
 namespace Ui {
 class productPage_2;
@@ -29,7 +31,7 @@ class productPage_2 : public QWidget
 
 public:
     explicit productPage_2(QWidget *parent = nullptr);
-    void setPage(productPage_1 *pageOneProducts, paySelect *pageSizeSelect, idle* pageIdle);
+    void setPage(productPage_1 *pageOneProducts, paySelect *pageSizeSelect, idle* pageIdle, maintenancePage *pageMaintenance);
     ~productPage_2();
 
 private slots:
@@ -44,6 +46,7 @@ private:
     productPage_1* firstProductPage;
     paySelect* paySelectPage;
     idle* idlePage;
+    maintenancePage* maintenanceMode;
 };
 
 #endif // PRODUCTPAGE_2_H

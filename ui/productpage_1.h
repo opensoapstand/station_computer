@@ -18,10 +18,12 @@
 #define PRODUCTPAGE_1_H
 
 #include "df_util.h"
+#include "maintenancePage.h"
 
 class productPage_2;
 class paySelect;
 class idle;
+class maintenancePage;
 
 namespace Ui {
 class productPage_1;
@@ -33,7 +35,7 @@ class productPage_1 : public QWidget
 
 public:
     explicit productPage_1(QWidget *parent = nullptr);
-    void setPage(productPage_2 *pageTwoProducts, paySelect *pageSizeSelect, idle* pageIdle);
+    void setPage(productPage_2 *pageTwoProducts, paySelect *pageSizeSelect, idle* pageIdle, maintenancePage *pageMaintenance);
     ~productPage_1();
 
 private slots:
@@ -49,6 +51,7 @@ private slots:
     void mainPage();
     void onProductPageTimeoutTick();
     //void on_backButton_clicked();
+    void on_maintenanceModeButton_pressed();
 
 private:
     void showEvent(QShowEvent *event);
@@ -61,6 +64,10 @@ private:
 
     int _productPageTimeoutSec;
     QTimer* productPageEndTimer;
+
+    maintenancePage* maintenanceMode;
+
+    int maintenanceCounter;
 };
 
 #endif // PRODUCTPAGE_1_H

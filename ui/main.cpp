@@ -54,16 +54,16 @@ int main(int argc, char *argv[])
     maintainPage->setPage(maintenanceMode, idlePage);
     maintainPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    maintenanceMode->setPage(idlePage, maintainPage);
+    maintenanceMode->setPage(idlePage, maintainPage, firstSelectPage);
     maintenanceMode->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    idlePage->setPage(firstSelectPage, maintenanceMode);
+    idlePage->setPage(firstSelectPage);
     idlePage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    firstSelectPage->setPage(secondSelectPage, paySelectPage, idlePage);
+    firstSelectPage->setPage(secondSelectPage, paySelectPage, idlePage, maintenanceMode);
     firstSelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    secondSelectPage->setPage(firstSelectPage, paySelectPage, idlePage);
+    secondSelectPage->setPage(firstSelectPage, paySelectPage, idlePage, maintenanceMode);
     secondSelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
     paySelectPage->setPage(firstSelectPage, dispensingPage, idlePage);

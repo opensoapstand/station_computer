@@ -41,6 +41,7 @@ void maintain_product::setPage(maintenancePage* pageMaintenance, idle* pageIdle)
     ui->volume_per_tick->setText("Product Volume Per Tick: ");
     ui->refillLabel->setText("");
     ui->soldOutLabel->setText("");
+    ui->full_volume->setText("");
 }
 
 void maintain_product::on_backButton_clicked(){
@@ -56,6 +57,7 @@ void maintain_product::on_backButton_clicked(){
     ui->volume_per_tick->setText("");
     ui->refillLabel->setText("");
     ui->soldOutLabel->setText("");
+    ui->full_volume->setText("");
 
 
     if (pumping) {
@@ -84,6 +86,7 @@ void maintain_product::setValues(int option){
     ui->target_volume_s->setText("");
     ui->target_volume_l->setText("");
     ui->volume_per_tick->setText("");
+    ui->full_volume->setText("");
 
     switch (option){
         case 1:
@@ -93,6 +96,7 @@ void maintain_product::setValues(int option){
             ui->target_volume_s->setText(QString::number(db.getProductVolume(1, 's')) + "ml");
             ui->target_volume_l->setText(QString::number(db.getProductVolume(1, 'l')) + "ml");
             ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(1)) + "ml");
+            ui->full_volume->setText(QString::number(db.getFullProduct(1)) + "ml");
             break;
         case 2:
             ui->name->setText(db.getProductName(2));
@@ -101,6 +105,7 @@ void maintain_product::setValues(int option){
             ui->target_volume_s->setText(QString::number(db.getProductVolume(2, 's')) + "ml");
             ui->target_volume_l->setText(QString::number(db.getProductVolume(2, 'l')) + "ml");
             ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(2)) + "ml");
+            ui->full_volume->setText(QString::number(db.getFullProduct(2)) + "ml");
             break;
         case 3:
             ui->name->setText(db.getProductName(3));
@@ -109,6 +114,7 @@ void maintain_product::setValues(int option){
             ui->target_volume_s->setText(QString::number(db.getProductVolume(3, 's')) + "ml");
             ui->target_volume_l->setText(QString::number(db.getProductVolume(3, 'l')) + "ml");
             ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(3)) + "ml");
+            ui->full_volume->setText(QString::number(db.getFullProduct(3)) + "ml");
             break;
         case 4:
             ui->name->setText(db.getProductName(4));
@@ -117,6 +123,7 @@ void maintain_product::setValues(int option){
             ui->target_volume_s->setText(QString::number(db.getProductVolume(4, 's')) + "ml");
             ui->target_volume_l->setText(QString::number(db.getProductVolume(4, 'l')) + "ml");
             ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(4)) + "ml");
+            ui->full_volume->setText(QString::number(db.getFullProduct(4)) + "ml");
             break;
     }
 }
@@ -183,21 +190,13 @@ void maintain_product::on_nameButton_clicked(){
 }
 
 
-void maintain_product::on_priceButton_s_clicked(){
-    qDebug() << "Small Price button clicked" << endl;
-}
-
-void maintain_product::on_priceButton_l_clicked(){
-    qDebug() << "Large Price button clicked" << endl;
+void maintain_product::on_priceButton_clicked(){
+    qDebug() << "Price button clicked" << endl;
 }
 
 
-void maintain_product::on_target_volumeButton_s_clicked(){
-    qDebug() << "Small Volume button clicked" << endl;
-}
-
-void maintain_product::on_target_volumeButton_l_clicked(){
-    qDebug() << "Large Volume button clicked" << endl;
+void maintain_product::on_target_volumeButton_clicked(){
+    qDebug() << "Target Volume button clicked" << endl;
 }
 
 
@@ -280,4 +279,8 @@ void maintain_product::on_soldOutButton_clicked(){
             msgBox.hide();
         break;
     }
+}
+
+void maintain_product::on_fullButton_clicked(){
+    qDebug() << "Full Volume button clicked" << endl;
 }

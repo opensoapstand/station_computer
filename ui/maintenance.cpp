@@ -57,10 +57,11 @@ maintenancePage::~maintenancePage()
 /*
  * Page Tracking reference
  */
-void maintenancePage::setPage(idle* pageIdle, maintain_product* pageMaintain)
+void maintenancePage::setPage(idle* pageIdle, maintain_product* pageMaintain, productPage_1 *pageProduct)
 {
     this->idlePage = pageIdle;
     this->maintainPage = pageMaintain;
+    this->selection_PageOne = pageProduct;
 }
 
 void maintenancePage::on_backButton_clicked(){
@@ -117,30 +118,30 @@ void maintenancePage::on_product4_button_clicked(){
 
 }
 
-void maintenancePage::on_product5_button_clicked(){
-    qDebug() << "Product 5 button clicked" << endl;
+//void maintenancePage::on_product5_button_clicked(){
+//    qDebug() << "Product 5 button clicked" << endl;
 
-}
+//}
 
-void maintenancePage::on_product6_button_clicked(){
-    qDebug() << "Product 6 button clicked" << endl;
+//void maintenancePage::on_product6_button_clicked(){
+//    qDebug() << "Product 6 button clicked" << endl;
 
-}
+//}
 
-void maintenancePage::on_product7_button_clicked(){
-    qDebug() << "Product 7 button clicked" << endl;
+//void maintenancePage::on_product7_button_clicked(){
+//    qDebug() << "Product 7 button clicked" << endl;
 
-}
+//}
 
-void maintenancePage::on_product8_button_clicked(){
-    qDebug() << "Product 8 button clicked" << endl;
+//void maintenancePage::on_product8_button_clicked(){
+//    qDebug() << "Product 8 button clicked" << endl;
 
-}
+//}
 
-void maintenancePage::on_product9_button_clicked(){
-    qDebug() << "Product 9 button clicked" << endl;
+//void maintenancePage::on_product9_button_clicked(){
+//    qDebug() << "Product 9 button clicked" << endl;
 
-}
+//}
 
 //void maintenancePage::on_wifi_button_clicked(){
 //    qDebug() << "WiFi button clicked" << endl;

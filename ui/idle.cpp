@@ -36,7 +36,6 @@ idle::idle(QWidget *parent) :
     ui->nextPageButton->setAttribute(Qt::WA_TranslucentBackground);
     ui->nextPageButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     setStyleSheet("QPushButton{background: transparent;}");
-    ui->maintenanceModeButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
     // TODO: Hold and pass DrinkOrder Object
     userDrinkOrder = new DrinkOrder();
@@ -49,19 +48,15 @@ idle::idle(QWidget *parent) :
     // TODO: Will need to determine standard path in future; Could skip if going with Postgres
     // this->dfUtility->getVendorDetails();
 
-    maintenanceTimer = new QTimer(this);
-    maintenanceTimer->setInterval(1000);
-    connect(maintenanceTimer, SIGNAL(timeout()), this, SLOT(onMaintenanceTimeoutTick()));
 }
 
 /*
  * Navigation to Product item
  */
-void idle::setPage(productPage_1 *pageProduct, maintenancePage *pageMaintenance)
+void idle::setPage(productPage_1 *pageProduct)
 {
     // Chained to KB Listener
     this->selection_PageOne = pageProduct;
-    this->maintenanceMode = pageMaintenance;
 }
 
 // DTOR
@@ -78,8 +73,7 @@ void idle::on_nextPageButton_clicked()
 
     // UPDATE DB
     DbManager db(DB_PATH);
-    DbManager db_clicks(DB_PATH_CLICKS);
-    db_clicks.addPageClick("Main Page -> Product Page");
+    db.addPageClick("Main Page -> Product Page");
 
     //Check product levels
     p1 = db.checkLevels(1);
@@ -106,53 +100,5 @@ bool idle::isEnough(int p){
         case(4):
             return p4;
             break;
-    default:
-            return false;
-            break;
-    }
-}
-
-
-void idle::on_maintenanceModeButton_pressed()
-{
-    qDebug() << "Maintenance button pressed" << endl;
-    if(maintenanceTimer == nullptr){
-        maintenanceTimer = new QTimer(this);
-        maintenanceTimer->setInterval(1000);
-        connect(maintenanceTimer, SIGNAL(timeout()), this, SLOT(onMaintenanceTimeoutTick()));
-    }
-
-    maintenanceTimer->start(1000);
-    _maintenanceTimeoutSec = 10;
-}
-
-void idle::on_maintenanceModeButton_released()
-{
-    qDebug() << "Maintenance button released" << endl;
-    if (_maintenanceTimeoutSec > 0){
-        qDebug() << "Sec: " << _maintenanceTimeoutSec << endl;
-        maintenanceTimer->stop();
-        _maintenanceTimeoutSec = 10;
-        on_nextPageButton_clicked();
-    }
-    else{
-        maintenanceTimer->stop();
-        _maintenanceTimeoutSec = 10;
-    }
-}
-
-void idle::open_maintenance_mode()
-{
-    maintenanceTimer->stop();
-    maintenanceMode->showFullScreen();
-    this->hide();
-}
-
-void idle::onMaintenanceTimeoutTick(){
-    if(-- _maintenanceTimeoutSec >= 0) {
-        qDebug() << "Maintenance Tick Down: " << _maintenanceTimeoutSec << endl;
-    } else {
-        qDebug() << "Maintenace Timer Done!" << _maintenanceTimeoutSec << endl;
-        open_maintenance_mode();
     }
 }

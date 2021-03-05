@@ -49,6 +49,7 @@ productPage_1::productPage_1(QWidget *parent) :
 //    ui->selection5_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 //    ui->selection6_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     //ui->backButton->setStyleSheet("QPushButton{background: white;}");
+    ui->maintenanceModeButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
 
     productPageEndTimer = new QTimer(this);
@@ -61,11 +62,12 @@ productPage_1::productPage_1(QWidget *parent) :
 /*
  * Page Tracking reference
  */
-void productPage_1::setPage(productPage_2 *pageTwoProducts, paySelect *pageSizeSelect, idle* pageIdle)
+void productPage_1::setPage(productPage_2 *pageTwoProducts, paySelect *pageSizeSelect, idle* pageIdle, maintenancePage *pageMaintenance)
 {
     this->selection_PageTwo = pageTwoProducts;
     this->paymentSelectPage = pageSizeSelect;
     this->idlePage = pageIdle;
+    this->maintenanceMode = pageMaintenance;
 }
 
 // DTOR
@@ -83,6 +85,8 @@ productPage_1::~productPage_1()
 void productPage_1::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
+
+    maintenanceCounter=0;
 
     if(productPageEndTimer == nullptr){
         productPageEndTimer = new QTimer(this);
@@ -133,7 +137,7 @@ void productPage_1::showEvent(QShowEvent *event)
 void productPage_1::on_selection1_Button_clicked()
 {
     // UPDATE DB
-    DbManager db(DB_PATH_CLICKS);
+    DbManager db(DB_PATH);
     db.addPageClick("Product Page -> Option 1");
 
     if(this->idlePage->isEnough(1)){
@@ -150,7 +154,7 @@ void productPage_1::on_selection1_Button_clicked()
 
 void productPage_1::on_selection2_Button_clicked()
 {
-    DbManager db(DB_PATH_CLICKS);
+    DbManager db(DB_PATH);
     db.addPageClick("Product Page -> Option 2");
 
     if(this->idlePage->isEnough(2)){
@@ -166,7 +170,7 @@ void productPage_1::on_selection2_Button_clicked()
 
 void productPage_1::on_selection3_Button_clicked()
 {
-    DbManager db(DB_PATH_CLICKS);
+    DbManager db(DB_PATH);
     db.addPageClick("Product Page -> Option 3");
 
     if(this->idlePage->isEnough(3)){
@@ -182,7 +186,7 @@ void productPage_1::on_selection3_Button_clicked()
 
 void productPage_1::on_selection4_Button_clicked()
 {
-    DbManager db(DB_PATH_CLICKS);
+    DbManager db(DB_PATH);
     db.addPageClick("Product Page -> Option 4");
 
     if(this->idlePage->isEnough(4)){
@@ -224,7 +228,7 @@ void productPage_1::onProductPageTimeoutTick(){
         qDebug() << "Timer Done!" << _productPageTimeoutSec << endl;
 
         //Update Click DB
-        DbManager db(DB_PATH_CLICKS);
+        DbManager db(DB_PATH);
         db.addPageClick("PRODUCT PAGE TIME OUT");
 
         mainPage();
@@ -234,7 +238,7 @@ void productPage_1::onProductPageTimeoutTick(){
 void productPage_1::mainPage()
 {
     // UPDATE DB
-    DbManager db(DB_PATH_CLICKS);
+    DbManager db(DB_PATH);
     db.addPageClick("Product Page -> Main Page");
 
     productPageEndTimer->stop();
@@ -249,3 +253,16 @@ void productPage_1::mainPage()
 
 //    mainPage();
 //}
+
+void productPage_1::on_maintenanceModeButton_pressed()
+{
+    qDebug() << "Maintenance button pressed" << endl;
+    maintenanceCounter++;
+    if (maintenanceCounter > 15){
+        productPageEndTimer->stop();
+        this->hide();
+        maintenanceMode->showFullScreen();
+        //maintenanceCounter=0;
+    }
+
+}

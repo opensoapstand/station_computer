@@ -157,7 +157,7 @@
     <string>Product Price: </string>
    </property>
   </widget>
-  <widget class="QPushButton" name="priceButton_l">
+  <widget class="QPushButton" name="priceButton_2">
    <property name="geometry">
     <rect>
      <x>40</x>
@@ -247,6 +247,32 @@
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="fullButton">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>1220</y>
+     <width>141</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Full Volume</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="full_volume">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>1250</y>
+     <width>721</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Full Volume:</string>
    </property>
   </widget>
  </widget>

@@ -19,7 +19,6 @@ public:
     double getFullProduct(int slot);
 
 
-
 private:
     QSqlDatabase m_db;
 };

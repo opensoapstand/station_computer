@@ -141,6 +141,23 @@ double DbManager::getProductVolume(int slot, char ml){
     return volume;
 }
 
+double DbManager::getFullProduct(int slot){
+
+    QSqlQuery full_query;
+    double full;
+
+    full_query.prepare("SELECT full_ml FROM products WHERE slot=:slot");
+    full_query.bindValue(":slot", slot);
+    full_query.exec();
+
+    while (full_query.next()) {
+            full = full_query.value(0).toDouble();
+
+        }
+
+    return full;
+}
+
 bool DbManager::checkLevels(int slot){
     QSqlQuery level_query;
     double level;
@@ -151,7 +168,7 @@ bool DbManager::checkLevels(int slot){
 
     while (level_query.next()) {
             level = level_query.value(0).toDouble();
-            if (level > 0){
+            if (level > getProductVolume(slot, 'l')){
                 return true;
             }
             else{
@@ -191,23 +208,6 @@ bool DbManager::refill(int slot){
     }
 
     return success;
-}
-
-double DbManager::getFullProduct(int slot){
-
-    QSqlQuery full_query;
-    double full;
-
-    full_query.prepare("SELECT full_ml FROM products WHERE slot=:slot");
-    full_query.bindValue(":slot", slot);
-    full_query.exec();
-
-    while (full_query.next()) {
-            full = full_query.value(0).toDouble();
-
-        }
-
-    return full;
 }
 
 bool DbManager::sellout(int slot){

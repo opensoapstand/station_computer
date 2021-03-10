@@ -16,10 +16,10 @@
   <widget class="QPushButton" name="backButton">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>20</y>
-     <width>251</width>
-     <height>41</height>
+     <x>330</x>
+     <y>1350</y>
+     <width>311</width>
+     <height>281</height>
     </rect>
    </property>
    <property name="text">
@@ -82,9 +82,9 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>80</y>
-     <width>271</width>
-     <height>391</height>
+     <y>30</y>
+     <width>311</width>
+     <height>441</height>
     </rect>
    </property>
    <property name="text">
@@ -215,9 +215,14 @@
     <rect>
      <x>646</x>
      <y>490</y>
-     <width>311</width>
-     <height>41</height>
+     <width>1031</width>
+     <height>101</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>24</pointsize>
+    </font>
    </property>
    <property name="text">
     <string/>
@@ -227,7 +232,7 @@
    <property name="geometry">
     <rect>
      <x>640</x>
-     <y>560</y>
+     <y>690</y>
      <width>321</width>
      <height>391</height>
     </rect>
@@ -240,10 +245,15 @@
    <property name="geometry">
     <rect>
      <x>640</x>
-     <y>960</y>
-     <width>311</width>
-     <height>41</height>
+     <y>1090</y>
+     <width>911</width>
+     <height>141</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>24</pointsize>
+    </font>
    </property>
    <property name="text">
     <string/>

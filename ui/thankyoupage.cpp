@@ -92,12 +92,12 @@ void thankYouPage::onThankyouTimeoutTick(){
 
 void thankYouPage::on_mainPage_Button_clicked()
 {
-    //Update Click DB
-//    DbManager db(DB_PATH);
-//    db.addPageClick("TRANSACTION COMPLETED");
-//    db.addPageClick("Thank You Page -> Main Page");
+   // Update Click DB
+   DbManager db(DB_PATH);
+   db.addPageClick("TRANSACTION COMPLETED");
+   db.addPageClick("Thank You Page -> Main Page");
 
-//    thankYouEndTimer->stop();
-//    this->hide();
-//    idlePage->showFullScreen();
+   thankYouEndTimer->stop();
+   this->hide();
+   idlePage->showFullScreen();
 }

@@ -79,7 +79,7 @@ void thankYouPage::onThankyouTimeoutTick(){
         qDebug() << "Timer Done!" << _thankYouTimeoutSec << endl;
 
         //Update Click DB
-        DbManager db(DB_PATH_CLICKS);
+        DbManager db(DB_PATH);
         db.addPageClick("THANK YOU PAGE TIME OUT");
         db.addPageClick("TRANSACTION COMPLETED");
         db.addPageClick("Thank You Page -> Main Page");

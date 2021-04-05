@@ -90,7 +90,7 @@ paySelect::~paySelect()
 void paySelect::on_previousPage_Button_clicked()
 {
     //Update Click DB
-    DbManager db(DB_PATH_CLICKS);
+    DbManager db(DB_PATH);
     db.addPageClick("Pay Select -> Product Page");
 
     qDebug() << "paySelect: Previous button" << endl;
@@ -108,7 +108,7 @@ void paySelect::on_payPage_Button_clicked()
     qDebug() << "paySelect: Pay button" << endl;
 
     //Update Click DB
-    DbManager db(DB_PATH_CLICKS);
+    DbManager db(DB_PATH);
     db.addPageClick("Pay Select -> Dispense Page");
 
     double drinkAmountDbl = idlePage->userDrinkOrder->getPrice();
@@ -194,7 +194,7 @@ void paySelect::on_mainPage_Button_clicked()
 {
 
     //Update Click DB
-    DbManager db(DB_PATH_CLICKS);
+    DbManager db(DB_PATH);
     db.addPageClick("Pay Select -> Main Page");
 
     qDebug() << "paySelect: mainPage button" << endl;
@@ -222,7 +222,7 @@ void paySelect::on_orderSmall_Button_clicked()
     idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
     _selectIdleTimeoutSec = 40;
 
-    DbManager db(DB_PATH_CLICKS);
+    DbManager db(DB_PATH);
     db.addPageClick("Small Drink Size Selected");
 }
 
@@ -244,6 +244,6 @@ void paySelect::on_orderBig_Button_clicked()
     idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
     _selectIdleTimeoutSec = 40;
 
-    DbManager db(DB_PATH_CLICKS);
+    DbManager db(DB_PATH);
     db.addPageClick("Large Drink Size Selected");
 }

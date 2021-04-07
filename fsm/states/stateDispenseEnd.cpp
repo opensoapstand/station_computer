@@ -132,8 +132,8 @@ DF_ERROR stateDispenseEnd::onExit()
    cassettes[pos].getDrink()->stopDispense();
    cassettes[pos].stopDispense(DRINK);
 
-   cassettes[pos].resetButtonPressTimes();
-   cassettes[pos].resetButtonPressDuration();
+//   cassettes[pos].resetButtonPressTimes();
+//   cassettes[pos].resetButtonPressDuration();
 
    //debugOutput::sendMessage("START backing up DB", INFO);
    //system("/release/dbbackup.sh");
@@ -182,10 +182,10 @@ DF_ERROR stateDispenseEnd::updateDB(){
      std::string price = to_string(cassettes[pos].getDrink()->getPrice(size));
      std::string start_time = (cassettes[pos].getDrink()->m_nStartTime);
      std::string dispensed_volume = to_string(cassettes[pos].getDrink()->m_nVolumeDispensed);
-     std::string buttonPressDuration = to_string(cassettes[pos].getButtonPressDuration());
-     std::string buttonPressTimes = to_string(cassettes[pos].getButtonPressTimes());
+//     std::string buttonPressDuration = to_string(cassettes[pos].getButtonPressDuration());
+//     std::string buttonPressTimes = to_string(cassettes[pos].getButtonPressTimes());
 
-     sql1 = ("INSERT INTO transactions VALUES (NULL, '" + product + "', " + target_volume + ", " + price + ", '" + start_time + "', " + dispensed_volume + ", datetime('now', 'localtime'), '" + buttonPressDuration + "', '" + buttonPressTimes + "' );");
+     sql1 = ("INSERT INTO transactions VALUES (NULL, '" + product + "', " + target_volume + ", " + price + ", '" + start_time + "', " + dispensed_volume + ", datetime('now', 'localtime'), '" + "0" + "', '" + "0" + "' );");
      //cout << sql1 << endl;
 
      char *sql_trans = new char[sql1.length() + 1];

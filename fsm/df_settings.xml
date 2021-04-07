@@ -8,11 +8,11 @@
     <!-- Hardware Address Reference -->
     <hardware>
 
-        <buttonpress>
+        <!--  <buttonpress>
             <type>mcp</type>
             <i2caddress>21</i2caddress>
             <io>15</io>
-        </buttonpress>
+        </buttonpress> -->
         <!-- Dispense Button -->
         <button>
             <type>mcp</type>

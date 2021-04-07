@@ -72,8 +72,8 @@ DF_ERROR stateIdle::onAction()
          pos = m_pMessaging->getnOption();
          pos = pos - 1;
 
-         cassettes[pos].resetButtonPressDuration();
-         cassettes[pos].resetButtonPressTimes();
+//         cassettes[pos].resetButtonPressDuration();
+//         cassettes[pos].resetButtonPressTimes();
 
          cassettes[pos].getDrink()->initDispense();
 

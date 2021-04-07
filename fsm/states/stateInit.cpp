@@ -439,90 +439,90 @@ DF_ERROR stateInit::setButton(TiXmlElement *hardwareEle, int dispenserIdx)
 // Set Dispenser Button Press
 // Extract addressing id from XML and map to Dispensing Button Press
 // BUTTON REFERENCE in State Virtual Required due to LED Arduino control.
-DF_ERROR stateInit::setButtonPress(TiXmlElement *hardwareEle, int dispenserIdx, dispenser* cassettes)
-{
-   DF_ERROR e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
-   TiXmlElement *l_pButtonPress;
+//DF_ERROR stateInit::setButtonPress(TiXmlElement *hardwareEle, int dispenserIdx, dispenser* cassettes)
+//{
+//   DF_ERROR e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
+//   TiXmlElement *l_pButtonPress;
 
-   if(hardwareEle->FirstChildElement(BUTTONPRESS_STRING))
-   {
-      // Get the button node
-      debugOutput::sendMessage("Found Button Press Element", INFO);
-      l_pButtonPress = hardwareEle->FirstChildElement(BUTTONPRESS_STRING);
-   } else
-   {
-      debugOutput::sendMessage("Button Press element is null", ERROR);
-      e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT; // XML missing button
-      return e_ret;
-   }
+//   if(hardwareEle->FirstChildElement(BUTTONPRESS_STRING))
+//   {
+//      // Get the button node
+//      debugOutput::sendMessage("Found Button Press Element", INFO);
+//      l_pButtonPress = hardwareEle->FirstChildElement(BUTTONPRESS_STRING);
+//   } else
+//   {
+//      debugOutput::sendMessage("Button Press element is null", ERROR);
+//      e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT; // XML missing button
+//      return e_ret;
+//   }
 
-   int l_pos = 0;
-   TiXmlElement *l_pSingleButton = l_pButtonPress;
+//   int l_pos = 0;
+//   TiXmlElement *l_pSingleButton = l_pButtonPress;
 
-   while(nullptr != l_pSingleButton && l_pos < NUM_BUTTON) //should loop through once times
-   {
-      string typeCheck = getXML(TYPE_STRING, l_pSingleButton);
+//   while(nullptr != l_pSingleButton && l_pos < NUM_BUTTON) //should loop through once times
+//   {
+//      string typeCheck = getXML(TYPE_STRING, l_pSingleButton);
 
-      debugOutput::sendMessage("Button Press typeCheck Result:" + typeCheck, INFO);
+//      debugOutput::sendMessage("Button Press typeCheck Result:" + typeCheck, INFO);
 
-      // if("" != typeCheck) //set dispenser parameters accrodingly [mcp|x86|ard]
-      // {
-         if(MCP_STRING == typeCheck) //ensures button is control with mcp pin
-         {
-            int address_num = atoi(getXML(I2CADDRESS_STRING, l_pSingleButton));
-            int pin_num = atoi(getXML(IO_STRING, l_pSingleButton));
+//      // if("" != typeCheck) //set dispenser parameters accrodingly [mcp|x86|ard]
+//      // {
+//         if(MCP_STRING == typeCheck) //ensures button is control with mcp pin
+//         {
+//            int address_num = atoi(getXML(I2CADDRESS_STRING, l_pSingleButton));
+//            int pin_num = atoi(getXML(IO_STRING, l_pSingleButton));
 
-            debugOutput::sendMessage("ButtonPress:     " + to_string(l_pos) + " |type " + typeCheck
-                                     + " |address " + to_string(address_num) + " |pin " + to_string(pin_num), INFO);
+//            debugOutput::sendMessage("ButtonPress:     " + to_string(l_pos) + " |type " + typeCheck
+//                                     + " |address " + to_string(address_num) + " |pin " + to_string(pin_num), INFO);
 
-            if((X20 <= address_num &&  X22 >= address_num) && (MCP_PIN_START <= pin_num && MPC_PIN_END >= pin_num))
-            {
-               m_pButtonPress = new mcpGPIO(address_num, pin_num);
+//            if((X20 <= address_num &&  X22 >= address_num) && (MCP_PIN_START <= pin_num && MPC_PIN_END >= pin_num))
+//            {
+//               m_pButtonPress = new mcpGPIO(address_num, pin_num);
 
-               debugOutput::sendMessage("Setting BUTTON PRESS Direction", PIN_CHANGE);
-              // m_pButtonPress->setDirection(true);
-               //m_pButtonPress->startButtonListener();
+//               debugOutput::sendMessage("Setting BUTTON PRESS Direction", PIN_CHANGE);
+//              // m_pButtonPress->setDirection(true);
+//               //m_pButtonPress->startButtonListener();
 
-               cassettes[dispenserIdx].setButtonPress(address_num, pin_num);
+//               cassettes[dispenserIdx].setButtonPress(address_num, pin_num);
 
-               //debugOutput::sendMessage("READ BUTTON PRESS", PIN_CHANGE);
-               //bool level = true;
-               //m_pButtonPress[l_pos]->readPin(&level);
-               //cout << "level: " << level << endl;
+//               //debugOutput::sendMessage("READ BUTTON PRESS", PIN_CHANGE);
+//               //bool level = true;
+//               //m_pButtonPress[l_pos]->readPin(&level);
+//               //cout << "level: " << level << endl;
 
-               e_ret = OK;
-               return e_ret;
-            }
-            else if(X20 > address_num || X22 < address_num)
-            {
-               e_ret = ERROR_ELEC_WRONG_I2C_ADDRESS;
-               return e_ret;
-            }
-            else if(MCP_PIN_START > pin_num || MPC_PIN_END < pin_num)
-            {
-               e_ret = ERROR_BAD_PARAMS;
-               return e_ret;
-            }
-         }
-         else
-         {
-            //wrong xml content found
-            e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
-            return e_ret;
-         }
+//               e_ret = OK;
+//               return e_ret;
+//            }
+//            else if(X20 > address_num || X22 < address_num)
+//            {
+//               e_ret = ERROR_ELEC_WRONG_I2C_ADDRESS;
+//               return e_ret;
+//            }
+//            else if(MCP_PIN_START > pin_num || MPC_PIN_END < pin_num)
+//            {
+//               e_ret = ERROR_BAD_PARAMS;
+//               return e_ret;
+//            }
+//         }
+//         else
+//         {
+//            //wrong xml content found
+//            e_ret = ERROR_SECU_XMLFILE_NO_MATCH_CONTENT;
+//            return e_ret;
+//         }
 
-         l_pSingleButton = l_pSingleButton -> NextSiblingElement(BUTTONPRESS_STRING);
-      // }
-      // else
-      // {
-      //       debugOutput::sendMessage("done sorting dispense:" + string(dispenserId[dispenserIdx]), INFO);
-      // }
-      l_pos++;
-   }
+//         l_pSingleButton = l_pSingleButton -> NextSiblingElement(BUTTONPRESS_STRING);
+//      // }
+//      // else
+//      // {
+//      //       debugOutput::sendMessage("done sorting dispense:" + string(dispenserId[dispenserIdx]), INFO);
+//      // }
+//      l_pos++;
+//   }
 
-   e_ret = OK;
-   return e_ret;
-}
+//   e_ret = OK;
+//   return e_ret;
+//}
 
 // Return the proper string regarding to solenoid from tinyXML
 const char* stateInit::getXML(const char* subHeader, TiXmlElement *childEle)
@@ -559,7 +559,7 @@ DF_ERROR stateInit::dispenserSetup()
    int idx = 0;
 
    // Move this to a Function for setup button...Atomic INIT on action
-   debugOutput::sendMessage("Set up button press: ------------------" , INFO);\
+//   debugOutput::sendMessage("Set up button press: ------------------" , INFO);\
 
    // Move this to a Function for setup button...Atomic INIT on action
    debugOutput::sendMessage("Set up button: ------------------" , INFO);\
@@ -646,14 +646,14 @@ DF_ERROR stateInit::dispenserSetup()
       }
       }
 
-      e_ret = setButtonPress(m_pHardware, idx, cassettes);
+//      e_ret = setButtonPress(m_pHardware, idx, cassettes);
 
-      if(OK != e_ret) //if buttonpress not set properly, return error
-      {
-         debugOutput::sendMessage("setButtonPress did not return OK", INFO);
-         //return e_ret;
-         //return;
-      }
+//      if(OK != e_ret) //if buttonpress not set properly, return error
+//      {
+//         debugOutput::sendMessage("setButtonPress did not return OK", INFO);
+//         //return e_ret;
+//         //return;
+//      }
 
 
 

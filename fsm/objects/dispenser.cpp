@@ -243,27 +243,27 @@ DF_ERROR dispenser::disconnectButton(){
     return m_pButton[0]->writePin(LOW);
 }
 
-DF_ERROR dispenser::setButtonPress(int address_num, int pin_num){
-    m_pButtonPress = new mcpGPIO(address_num, pin_num);
-    m_pButtonPress->setDirection(true);
-   // m_pButtonPress->startButtonListener();
-}
+//DF_ERROR dispenser::setButtonPress(int address_num, int pin_num){
+//    m_pButtonPress = new mcpGPIO(address_num, pin_num);
+//    m_pButtonPress->setDirection(true);
+//   // m_pButtonPress->startButtonListener();
+//}
 
-double dispenser::getButtonPressDuration(){
-    return m_pButtonPress->getPressDuration();
-}
+//double dispenser::getButtonPressDuration(){
+//    return m_pButtonPress->getPressDuration();
+//}
 
-int dispenser::getButtonPressTimes(){
-    return m_pButtonPress->getPressAmount();
-}
+//int dispenser::getButtonPressTimes(){
+//    return m_pButtonPress->getPressAmount();
+//}
 
-void dispenser::resetButtonPressTimes(){
-    m_pButtonPress->resetPressAmount();
-}
+//void dispenser::resetButtonPressTimes(){
+//    m_pButtonPress->resetPressAmount();
+//}
 
-void dispenser::resetButtonPressDuration(){
-    m_pButtonPress->resetPressDuration();
-}
+//void dispenser::resetButtonPressDuration(){
+//    m_pButtonPress->resetPressDuration();
+//}
 
 // Cleans the nozzle by dispensing Water followed by Air
 DF_ERROR dispenser::cleanNozzle(int posW, int posA){

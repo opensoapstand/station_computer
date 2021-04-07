@@ -92,13 +92,13 @@ class dispenser
       int getI2CAddress(int pos);
       int getI2CPin(int pos);
 
-      DF_ERROR setButtonPress(int address_num, int pin_num);
+//      DF_ERROR setButtonPress(int address_num, int pin_num);
       bool reader = true;
 
-      double getButtonPressDuration();
-      int getButtonPressTimes();
-      void resetButtonPressTimes();
-      void resetButtonPressDuration();
+//      double getButtonPressDuration();
+//      int getButtonPressTimes();
+//      void resetButtonPressTimes();
+//      void resetButtonPressDuration();
 
    private:
       bool m_isDispenseDone; // XXX: Remove later.
@@ -120,7 +120,7 @@ class dispenser
       
       // Button reference m_pButton[1] in stateVirtual; IPC shared due to Arduino!
       gpio *m_pButton[NUM_BUTTON];
-      mcpGPIO *m_pButtonPress;
+//      mcpGPIO *m_pButtonPress;
 };
 
 #endif

@@ -270,14 +270,14 @@ DF_ERROR stateDispenseEnd::printer(){
 
     strftime(now, 50, "%F %T", timeinfo);
 
-    string printerstring = name +"\nPrice: $" + cost + " \nVolume: " + volume + "ml \nTime: " + now + "\nPLU: " + plu;
+    string printerstring = name +"\nPrice: $" + cost + " \nVolume: " + volume + "ml \nTime: " + now;
     string sysstring = "echo '\n---------------------------\n\n\n"+printerstring+"' > /dev/ttyS4";
 
-    //Adafruit_Thermal* printerr = new Adafruit_Thermal();
+    Adafruit_Thermal* printerr = new Adafruit_Thermal();
 
     system(sysstring.c_str());
-    //printerr->setBarcodeHeight(100);
-    //printerr->printBarcode(plu.c_str(), EAN13);
+    printerr->setBarcodeHeight(100);
+    printerr->printBarcode(plu.c_str(), EAN13);
     system("echo '\n\n\n---------------------------\n\n\n' > /dev/ttyS4");
 
 

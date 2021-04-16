@@ -31,5 +31,6 @@
         <file>init.ui</file>
         <file>init.h</file>
         <file>init.cpp</file>
+        <file>light/0_init.png</file>
     </qresource>
 </RCC>

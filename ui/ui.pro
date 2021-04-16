@@ -16,7 +16,8 @@ FORMS += \
     productpage_2.ui \
     thankyoupage.ui \
     maintenancePage.ui \
-    maintain_product.ui
+    maintain_product.ui \
+    init.ui
 
 HEADERS += \
     dfuicommthread.h \
@@ -42,7 +43,8 @@ HEADERS += \
     drinkorder.h \
     dbmanager.h \
     maintenancePage.h \
-    maintain_product.h
+    maintain_product.h \
+    init.h
 
 SOURCES += \
     dfuicommthread.cpp \
@@ -67,7 +69,8 @@ SOURCES += \
     drinkorder.cpp \
     dbmanager.cpp \
     maintenance.cpp \
-    maintain_product.cpp
+    maintain_product.cpp \
+    init.cpp
 
 RESOURCES += \
     src.qrc

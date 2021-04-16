@@ -41,7 +41,7 @@ public:
 	void startListener();
         void startButtonListener();
 	void listener();
-	void stopListener() { m_stop = true; }; 
+        void stopListener() { m_stop = true; }
 
 protected:
 	int m_nPin;

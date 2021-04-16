@@ -77,6 +77,10 @@ class stateInit : public stateVirtual
 
         bool level = true;
 
+    protected:
+        mcpGPIO *i2c_tester;
+
+
 };
 
 #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"

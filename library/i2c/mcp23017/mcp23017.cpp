@@ -64,12 +64,26 @@ bool MCP23017::openI2C()
 	// writeRegister(MCP23017_IODIRA,0b11111110);
 
 	// Sets Pins to Output write to 0...Just let everything through!
-	writeRegister(MCP23017_IODIRA,0b00000000);
+        bool checkerA = writeRegister(MCP23017_IODIRA,0b00000000);
+
+        if (checkerA){
+            debugOutput::sendMessage("Writing to I2C PASSED!", INFO);
+        }else{
+            debugOutput::sendMessage("Writing to I2C FAILED!", INFO);
+            return false;
+        }
 	
 	debugOutput::sendMessage("openI2C: write register port B", INFO);
 
 	// Sets Pins to Output write to 0...Just let everything through!
-	writeRegister(MCP23017_IODIRB,0b00000000);
+        bool checkerB = writeRegister(MCP23017_IODIRB,0b00000000);
+
+        if (checkerB){
+            debugOutput::sendMessage("Writing to I2C PASSED!", INFO);
+        }else{
+            debugOutput::sendMessage("Writing to I2C FAILED!", INFO);
+            return false;
+        }
 
 	// writeRegister(MCP23017_IODIRB,0b11111110);
 
@@ -123,7 +137,7 @@ uint8_t MCP23017::readRegister(uint8_t addr)
 /**
  * Writes a given register
  */
-uint8_t MCP23017::writeRegister(uint8_t addr, uint8_t writeValue)
+bool MCP23017::writeRegister(uint8_t addr, uint8_t writeValue)
 {   // For debugging:
     // printf("Wrote: 0x%02X to register 0x%02X \n",writeValue, writeRegister) ;
     // std::cout << std::hex << "WRITE REGISTER Wrote: " << static_cast<int>(writeValue) << " to register " << &MCP23017::writeRegister << std::endl;
@@ -137,9 +151,13 @@ uint8_t MCP23017::writeRegister(uint8_t addr, uint8_t writeValue)
 
     if (toReturn < 0) {
         // perror("Write to I2C Device failed");
-		debugOutput::sendMessage("Write to I2C Device failed (writeRegister): " + to_string(kI2CAddress) + "-" + to_string(kI2CBus), ERROR);
+
+        debugOutput::sendMessage("Write to I2C Device failed (writeRegister): " + to_string(kI2CAddress) + "-" + to_string(kI2CBus), ERROR);
         error = errno ;
-        toReturn = -1 ;
+        toReturn = false ;
+    }
+    else{
+        toReturn = true;
     }
     return toReturn ;
 

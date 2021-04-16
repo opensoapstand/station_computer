@@ -12,11 +12,13 @@ public:
     void resetTimerSlot();
     void updateVolumeSlot(int dispensed);
     void targetHitSlot();
+    void initReadySlot();
 
 signals:
     void pleaseReset();
     void updateVolume(int dispensed);
     void targetHit();
+    void initReady();
 
 protected:
     void incomingConnection(qintptr socketDescriptor);

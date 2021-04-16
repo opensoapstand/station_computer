@@ -27,5 +27,9 @@
         <file>maintenance/product3.png</file>
         <file>maintenance/product2.png</file>
         <file>maintenance/product1.png</file>
+        <file>ui_init.h</file>
+        <file>init.ui</file>
+        <file>init.h</file>
+        <file>init.cpp</file>
     </qresource>
 </RCC>

@@ -29,6 +29,7 @@ typedef std::chrono::high_resolution_clock Clock;
 class mcpGPIO : public gpio
 {
 public:
+        mcpGPIO();
 	mcpGPIO(int i2caddress, int pin);
 	~mcpGPIO();
 
@@ -36,6 +37,7 @@ public:
 	DF_ERROR setDirection(bool input);
         DF_ERROR readPin(bool* level);
         DF_ERROR writePin(bool level);
+        bool openi2c();
 
 	// Getters
 	int getMCPAddress();
@@ -45,6 +47,7 @@ public:
         int getPressAmount(){return press_times;}
         void resetPressAmount(){press_times=0;}
         void resetPressDuration(){press_duration=0.0;}
+
 
 private:
         bool button_pressed = false;

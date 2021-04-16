@@ -118,12 +118,32 @@ DF_ERROR stateInit::onAction()
       e_ret = dispenserSetup();// Do error check per state
    }
 
+   if (OK == e_ret)
+   {
+
+       //Check i2C comms
+       cout << "Checking i2c comms" << endl;
+
+       i2c_tester = new mcpGPIO;
+
+       if (i2c_tester->openi2c()){
+           cout << "i2c comms good" << endl;
+           e_ret = OK;
+       }
+       else{
+           cout << "BAD i2c comms" << endl;
+           e_ret = ERROR_COMMS;
+       }
+   }
+
 
    if (nullptr != &m_nextState && OK == e_ret)
    {
       if(OK == e_ret)
       {
          m_nextState = IDLE;
+
+         m_pMessaging->sendMessage("Init Ready");
       }
    }
    else
@@ -690,42 +710,42 @@ static int callback(void *data, int argc, char **argv, char **azColName){
       if (colname == "slot"){
           //printf("setting slot \n");
           slot = atoi(argv[i]);
-          //printf("Slot: %d \n", slot);
+          printf("Slot: %d \n", slot);
       }
       else if (colname == "name"){
           //printf("setting name \n");
           name = argv[i];
-          //printf("Name: %s \n", name.c_str());
+          printf("Name: %s \n", name.c_str());
       }
       else if (colname == "volume_dispensed"){
           //printf("setting vol disp \n");
           volume_dispensed = atof(argv[i]);
-          //printf("Volume Dispensed: %.2f \n", volume_dispensed);
+//          printf("Volume Dispensed: %.2f \n", volume_dispensed);
       }
       else if (colname == "volume_target_l"){
           //printf("setting vol tar \n");
           volume_target_l = atof(argv[i]);
-          //printf("Volume Target: %.2f \n", volume_target_l);
+          printf("Volume Target L: %.2f \n", volume_target_l);
       }
       else if (colname == "volume_target_s"){
           //printf("setting vol tar \n");
           volume_target_s = atof(argv[i]);
-          //printf("Volume Target: %.2f \n", volume_target_s);
+          printf("Volume Target S: %.2f \n", volume_target_s);
       }
       else if (colname == "calibration_const"){
           //printf("setting cal con \n");
           calibration_const = atof(argv[i]);
-          //printf("Calibration Const: %.2f \n", calibration_const);
+//          printf("Calibration Const: %.2f \n", calibration_const);
       }
       else if (colname == "price_l"){
           //printf("setting price \n");
           price_l = atof(argv[i]);
-          //printf("Price: %.2f \n", price_l);
+          printf("Price L: %.2f \n", price_l);
       }
       else if (colname == "price_s"){
           //printf("setting price \n");
           price_s = atof(argv[i]);
-          //printf("Price: %.2f \n", price_s);
+          printf("Price S: %.2f \n", price_s);
       }
       else if (colname == "is_still"){
           //printf("setting is still \n");
@@ -735,13 +755,15 @@ static int callback(void *data, int argc, char **argv, char **azColName){
       else if (colname == "volume_per_tick"){
           //printf("setting vol per tick \n");
           volume_per_tick = atof(argv[i]);
-          //printf("Volume per Tick: %.2f \n", volume_per_tick);
+          printf("Volume per Tick: %.2f \n", volume_per_tick);
       }
       else if (colname == "PLU_l"){
           plu_l = argv[i];
+          printf("PLU L: %s \n", plu_l.c_str());
       }
       else if (colname == "PLU_s"){
           plu_s = argv[i];
+          printf("PLU S: %s \n", plu_s.c_str());
       }
 
       printf("\n");

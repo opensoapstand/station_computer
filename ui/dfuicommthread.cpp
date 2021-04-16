@@ -59,6 +59,10 @@ QByteArray DfUiCommThread::readyRead()
         emit targetHitSignal();
     }
 
+    if(Data == "Init Ready") {
+        emit initReadySignal();
+    }
+
     if(strtol(Data, &pEnd, 10)){
        emit updateVolumeSignal(strtol(Data, &pEnd, 10));
     }

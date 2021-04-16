@@ -15,6 +15,10 @@
 #include "mcpgpio.h"
 
 // CTOR
+mcpGPIO::mcpGPIO(){
+    this->m_mcp = new MCP23017(2,34);
+}
+
 mcpGPIO::mcpGPIO(int i2caddress, int pin)
 {
 	debugOutput::sendMessage("------mcpGPIO------", INFO);
@@ -31,12 +35,7 @@ mcpGPIO::mcpGPIO(int i2caddress, int pin)
 	// HACK: DEFAULT_BUS of 2 did not work.  BUS value of 1 works...
         this->m_mcp = new MCP23017(2, m_nAddress);
 
-	//may need to modify the source file to ensure proper error is identified
-	this->m_mcp->openI2C(); 
-
-	// if(m_nAddress == 20 && m_nPin = 0) {
-	// 	// this->m_mcp->digitalWrite(HIGH);
-	// }
+        openi2c();
 
 }
 
@@ -165,4 +164,18 @@ int mcpGPIO::getMCPAddress()
 int mcpGPIO::getMCPPin()
 {
 	return m_nPin;
+}
+
+bool mcpGPIO::openi2c()
+{
+
+    cout << "im here" << endl;
+    if (this->m_mcp->openI2C()){
+        cout << "here am i - all good" << endl;
+        return true;
+    }else{
+        cout << "here am i - all bad" << endl;
+        return false;
+    }
+
 }

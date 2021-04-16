@@ -14,7 +14,6 @@
 // all rights reserved
 //***************************************
 #include "dispenser.h"
-// #include "fsm.h"
 
 #define ACTIVATION_TIME 5
 #define TEST_ACTIVATION_TIME 3

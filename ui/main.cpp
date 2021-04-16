@@ -15,6 +15,7 @@
 //***************************************
 
 #define UI_VERSION "0.1.4"
+#include "init.h"
 #include "idle.h"
 #include "productpage_1.h"
 #include "productpage_2.h"
@@ -36,6 +37,7 @@ int main(int argc, char *argv[])
 
     // Build objects to hold navigation (pages)
     // Linking resources and Function definitions for pathing
+    init* initPage = new init();
     idle* idlePage = new idle();
     productPage_1* firstSelectPage = new productPage_1();
     productPage_2* secondSelectPage = new productPage_2();
@@ -51,6 +53,9 @@ int main(int argc, char *argv[])
     // TODO: Instantiate a DrinkOrder Object
 
     // Page pathing references to function calls.
+    initPage->setPage(idlePage);
+    initPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
+
     maintainPage->setPage(maintenanceMode, idlePage);
     maintainPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
@@ -80,7 +85,7 @@ int main(int argc, char *argv[])
 
     //    payOptionToggle->setPage();
 
-    idlePage->showFullScreen();
+    initPage->showFullScreen();
 
     DfUiServer dfUiServer;
     dfUiServer.startServer();
@@ -88,6 +93,8 @@ int main(int argc, char *argv[])
     QObject::connect(&dfUiServer, &DfUiServer::pleaseReset, dispensingPage, &dispensePage::PleaseResetTimerSlot);
     QObject::connect(&dfUiServer, &DfUiServer::updateVolume, dispensingPage, &dispensePage::updateVolumeDisplayed);
     QObject::connect(&dfUiServer, &DfUiServer::targetHit, dispensingPage, &dispensePage::targetHitDisplay);
+    QObject::connect(&dfUiServer, &DfUiServer::initReady, initPage, &init::initReadySlot);
+
 
     //Update Click DB
     DbManager db(DB_PATH);

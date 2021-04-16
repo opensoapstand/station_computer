@@ -32,6 +32,10 @@ void DfUiServer::targetHitSlot(){
     emit targetHit();
 }
 
+void DfUiServer::initReadySlot(){
+    emit initReady();
+}
+
 // This function is called by QTcpServer when a new connection is available.
 void DfUiServer::incomingConnection(qintptr socketDescriptor)
 {
@@ -47,6 +51,7 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
     connect(thread, &DfUiCommThread::resetTimerSignal, this, &DfUiServer::resetTimerSlot);
     connect(thread, &DfUiCommThread::updateVolumeSignal, this, &DfUiServer::updateVolumeSlot);
     connect(thread, &DfUiCommThread::targetHitSignal, this, &DfUiServer::targetHitSlot);
+    connect(thread, &DfUiCommThread::initReadySignal, this, &DfUiServer::initReadySlot);
 
     thread->start();
 }

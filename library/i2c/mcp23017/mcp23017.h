@@ -55,7 +55,7 @@ private:
     uint8_t regForPin(uint8_t pin, uint8_t portAaddr, uint8_t portBaddr);
 
     uint8_t readRegister(uint8_t addr);
-    uint8_t writeRegister(uint8_t addr, uint8_t value);
+    bool writeRegister(uint8_t addr, uint8_t value);
     uint8_t readByte();
     uint8_t writeByte(uint8_t value);
 

@@ -127,11 +127,9 @@ DF_ERROR stateInit::onAction()
        i2c_tester = new mcpGPIO;
 
        if (i2c_tester->openi2c()){
-           cout << "i2c comms good" << endl;
            e_ret = OK;
        }
        else{
-           cout << "BAD i2c comms" << endl;
            e_ret = ERROR_COMMS;
        }
    }

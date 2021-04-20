@@ -171,10 +171,8 @@ bool mcpGPIO::openi2c()
 
     cout << "im here" << endl;
     if (this->m_mcp->openI2C()){
-        cout << "here am i - all good" << endl;
         return true;
     }else{
-        cout << "here am i - all bad" << endl;
         return false;
     }
 

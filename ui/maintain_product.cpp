@@ -220,13 +220,23 @@ void maintain_product::on_nameButton_clicked(){
 }
 
 
-void maintain_product::on_priceButton_clicked(){
+void maintain_product::on_priceButton_s_clicked(){
+    qDebug() << "Price button clicked" << endl;
+    _maintainProductPageTimeoutSec=15;
+}
+
+void maintain_product::on_priceButton_l_clicked(){
     qDebug() << "Price button clicked" << endl;
     _maintainProductPageTimeoutSec=15;
 }
 
 
-void maintain_product::on_target_volumeButton_clicked(){
+void maintain_product::on_target_volumeButton_s_clicked(){
+    qDebug() << "Target Volume button clicked" << endl;
+    _maintainProductPageTimeoutSec=15;
+}
+
+void maintain_product::on_target_volumeButton_l_clicked(){
     qDebug() << "Target Volume button clicked" << endl;
     _maintainProductPageTimeoutSec=15;
 }

@@ -35,6 +35,10 @@ init::init(QWidget *parent) :
     dfUtility = new df_util();
     dfUtility->m_IsSendingFSM = false;
 
+    initIdleTimer = new QTimer(this);
+    initIdleTimer->setInterval(1000);
+    connect(initIdleTimer, SIGNAL(timeout()), this, SLOT(onInitTimeoutTick()));
+
 }
 
 /*
@@ -52,7 +56,30 @@ init::~init()
     delete ui;
 }
 
+void init::showEvent(QShowEvent *event)
+{
+    QWidget::showEvent(event);
+    qDebug() << "Start init Timers" << endl;
+    initIdleTimer->start(1000);
+    _initIdleTimeoutSec = 40;
+}
+
 void init::initReadySlot(void){
+    initIdleTimer->stop();
     idlePage->showFullScreen();
     this->hide();
+}
+
+void init::onInitTimeoutTick(){
+    if(-- _initIdleTimeoutSec >= 0) {
+        qDebug() << "init: Tick Down - " << _initIdleTimeoutSec << endl;
+    } else {
+        qDebug() << "Timer Done!" << _initIdleTimeoutSec << endl;
+        initIdleTimer->stop();
+
+        //REBOOT!
+
+        qDebug() << "i want to reboot the system now!" << endl;
+
+    }
 }

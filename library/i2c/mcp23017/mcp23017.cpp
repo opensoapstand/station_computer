@@ -67,9 +67,7 @@ bool MCP23017::openI2C()
         bool checkerA = writeRegister(MCP23017_IODIRA,0b00000000);
 
         if (checkerA){
-            debugOutput::sendMessage("Writing to I2C PASSED!", INFO);
         }else{
-            debugOutput::sendMessage("Writing to I2C FAILED!", INFO);
             return false;
         }
 	
@@ -79,9 +77,7 @@ bool MCP23017::openI2C()
         bool checkerB = writeRegister(MCP23017_IODIRB,0b00000000);
 
         if (checkerB){
-            debugOutput::sendMessage("Writing to I2C PASSED!", INFO);
         }else{
-            debugOutput::sendMessage("Writing to I2C FAILED!", INFO);
             return false;
         }
 

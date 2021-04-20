@@ -38,6 +38,7 @@ class init : public QWidget
 public:
     explicit init(QWidget *parent = nullptr);
     void setPage(idle *pageIdle);
+    void showEvent(QShowEvent *event);
     ~init();
     void initReadySlot(void);
 
@@ -46,9 +47,14 @@ public:
 
     DfUiCommThread* dfComm;
 
+private slots:
+    void onInitTimeoutTick();
+
 private:
     Ui::init *ui;
     idle* idlePage;
+    QTimer* initIdleTimer;
+    int _initIdleTimeoutSec;
 
 };
 

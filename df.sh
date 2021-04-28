@@ -8,6 +8,6 @@ while true
 	    #DISPLAY=:0 xterm -hold  /release/fsm/controller &
 	    #DISPLAY=:0 xterm /release/ui/DF_UI
 	    DISPLAY=:0 xterm /release/ui/DF_UI &
-	    sleep 5
+	    sleep 8
 	    DISPLAY=:0 xterm -hold  /release/fsm/controller 
 done

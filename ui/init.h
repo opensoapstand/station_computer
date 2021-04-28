@@ -49,12 +49,15 @@ public:
 
 private slots:
     void onInitTimeoutTick();
+    void onRebootTimeoutTick();
 
 private:
     Ui::init *ui;
     idle* idlePage;
     QTimer* initIdleTimer;
     int _initIdleTimeoutSec;
+    QTimer* rebootTimer;
+    int _rebootTimeoutSec;
 
 };
 

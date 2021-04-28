@@ -169,7 +169,6 @@ int mcpGPIO::getMCPPin()
 bool mcpGPIO::openi2c()
 {
 
-    cout << "im here" << endl;
     if (this->m_mcp->openI2C()){
         return true;
     }else{

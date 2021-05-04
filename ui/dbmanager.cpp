@@ -172,6 +172,7 @@ bool DbManager::checkLevels(int slot){
                 return true;
             }
             else{
+                //emailEmpty(slot);
                 return false;
             }
         }
@@ -241,4 +242,16 @@ bool DbManager::sellout(int slot){
     }
 
     return success;
+}
+
+void DbManager::emailEmpty(int slot){
+    QString mt_product = getProductName(slot);
+    QString email_subject = mt_product + " has sold out!";
+    QString email_body = mt_product + " has sold out";
+    QString email_recipients = "paddy@drinkfill.com";
+    QString email = "echo '" + email_body + "' | mail -s '" + email_subject +"' -a 'From: Stongs Soapstand <hello@drinkfill.com>' " + email_recipients + " | screen -d -m";
+
+    //qDebug() << email.toStdString().c_str();
+
+    system(email.toStdString().c_str());
 }

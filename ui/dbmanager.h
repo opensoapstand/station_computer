@@ -18,8 +18,8 @@ public:
     bool sellout(int slot);
     double getFullProduct(int slot);
 
-
 private:
+    void emailEmpty(int slot);
     QSqlDatabase m_db;
 };
 

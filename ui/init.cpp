@@ -90,7 +90,7 @@ void init::onInitTimeoutTick(){
         ui->fail_label->setText("Init failed. Rebooting");
 
         rebootTimer->start(1000);
-        _rebootTimeoutSec = 3;
+        _rebootTimeoutSec = 5;
 
 
     }
@@ -108,6 +108,6 @@ void init::onRebootTimeoutTick(){
 
         qDebug() << "i am going to reboot the system now!" << endl;
 
-        system("echo D@nkF1ll$ | sudo -S reboot");
+        system("./release/reboot.sh");
     }
 }

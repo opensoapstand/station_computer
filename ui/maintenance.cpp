@@ -35,16 +35,16 @@ maintenancePage::maintenancePage(QWidget *parent) :
     this->setPalette(palette);
 
     ui->product1_button->setIcon(ButtonIcon1);
-    ui->product1_button->setIconSize(QSize(101,111));
+    ui->product1_button->setIconSize(QSize(241,381));
 
     ui->product2_button->setIcon(ButtonIcon2);
-    ui->product2_button->setIconSize(QSize(101,111));
+    ui->product2_button->setIconSize(QSize(241,381));
 
     ui->product3_button->setIcon(ButtonIcon3);
-    ui->product3_button->setIconSize(QSize(101,111));
+    ui->product3_button->setIconSize(QSize(241,381));
 
     ui->product4_button->setIcon(ButtonIcon4);
-    ui->product4_button->setIconSize(QSize(101,111));
+    ui->product4_button->setIconSize(QSize(241,381));
 
     maintenancePageEndTimer = new QTimer(this);
     maintenancePageEndTimer->setInterval(1000);
@@ -73,6 +73,12 @@ void maintenancePage::showEvent(QShowEvent *event)
 
     maintenancePageEndTimer->start(1000);
     _maintenancePageTimeoutSec = 15;
+
+    ui->product1_label->setText(db.getProductName(1));
+    ui->product2_label->setText(db.getProductName(2));
+    ui->product3_label->setText(db.getProductName(3));
+    ui->product4_label->setText(db.getProductName(4));
+
 }
 
 /*

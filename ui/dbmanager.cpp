@@ -57,6 +57,24 @@ QString DbManager::getProductName(int slot){
     return product_name;
 }
 
+QString DbManager::getProductReceiptName(int slot){
+
+    QSqlQuery product_query;
+    QString product_name;
+
+    product_query.prepare("SELECT name_receipt FROM products WHERE slot=:slot");
+    product_query.bindValue(":slot", slot);
+    product_query.exec();
+
+    while (product_query.next()) {
+            product_name = product_query.value(0).toString();
+
+            //qDebug() << "Product: " << product_name << endl;
+        }
+
+    return product_name;
+}
+
 double DbManager::getProductPrice(int slot, char ml){
 
     QSqlQuery price_query;

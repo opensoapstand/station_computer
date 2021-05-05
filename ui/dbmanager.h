@@ -13,6 +13,7 @@ public:
     //double getProductTargetVolume(int slot);
     double getProductVolumePerTick(int slot);
     bool checkLevels(int slot);
+    QString getProductReceiptName(int slot);
     double getProductVolume(int slot, char ml);
     bool refill(int slot);
     bool sellout(int slot);

@@ -222,7 +222,7 @@ bool DbManager::sellout(int slot){
     if(sellout_query.exec())
     {
         qDebug() << "remaining ml updated successfully!";
-        sellout_query.prepare("UPDATE products SET total_dispensed=:remaining WHERE slot=:slot");
+        sellout_query.prepare("UPDATE products SET total_dispensed=full_ml WHERE slot=:slot");
         sellout_query.bindValue(":slot", slot);
         if(sellout_query.exec()){
             qDebug() << "total ml dispensed update successful!";

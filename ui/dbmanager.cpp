@@ -201,9 +201,9 @@ bool DbManager::refill(int slot){
     bool success=false;
     double remaining = getFullProduct(slot);
 
-    refill_query.prepare("UPDATE products SET remaining_ml=:remaining WHERE slot=:slot");
+    refill_query.prepare("UPDATE products SET remaining_ml=full_ml WHERE slot=:slot");
     refill_query.bindValue(":slot", slot);
-    refill_query.bindValue(":remaining", remaining);
+//    refill_query.bindValue(":remaining", remaining);
     if(refill_query.exec())
     {
         qDebug() << "remaining ml updated successfully!";
@@ -236,7 +236,7 @@ bool DbManager::sellout(int slot){
 
     sellout_query.prepare("UPDATE products SET remaining_ml=0 WHERE slot=:slot");
     sellout_query.bindValue(":slot", slot);
-    sellout_query.bindValue(":remaining", remaining);
+//    sellout_query.bindValue(":remaining", remaining);
     if(sellout_query.exec())
     {
         qDebug() << "remaining ml updated successfully!";

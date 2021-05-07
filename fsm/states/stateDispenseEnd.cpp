@@ -240,7 +240,7 @@ DF_ERROR stateDispenseEnd::updateDB(){
 }
 
 DF_ERROR stateDispenseEnd::printer(){
-
+    
     char cost2[MAX_BUF];
     char volume2[MAX_BUF];
     //char name2[MAX_BUF];
@@ -273,12 +273,12 @@ DF_ERROR stateDispenseEnd::printer(){
     string printerstring = name +"\nPrice: $" + cost + " \nVolume: " + volume + "ml \nTime: " + now + "\nPLU: " + plu;
     string sysstring = "echo '\n---------------------------\n\n\n"+printerstring+"' > /dev/ttyS4";
 
-//    Adafruit_Thermal* printerr = new Adafruit_Thermal();
+    Adafruit_Thermal* printerr = new Adafruit_Thermal();
 
     system(sysstring.c_str());
-//    printerr->setBarcodeHeight(100);
-//    printerr->printBarcode(plu.c_str(), EAN13);
-    system("echo '\n\n\n---------------------------\n\n\n' > /dev/ttyS4");
+    printerr->setBarcodeHeight(100);
+    printerr->printBarcode(plu.c_str(), EAN13);
+    system("echo '\n---------------------------\n\n\n' > /dev/ttyS4");
 
 
 }

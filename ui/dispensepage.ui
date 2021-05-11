@@ -17,19 +17,19 @@
    <enum>Qt::RightToLeft</enum>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">background-image: url(:/light/6_dispense_page.png);</string>
   </property>
   <widget class="QPushButton" name="finish_Button">
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>1340</y>
+     <y>1320</y>
      <width>251</width>
      <height>91</height>
     </rect>
    </property>
    <property name="autoFillBackground">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="styleSheet">
     <string notr="true"/>

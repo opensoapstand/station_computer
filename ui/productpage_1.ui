@@ -22,10 +22,10 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>103</x>
-     <y>350</y>
-     <width>418</width>
-     <height>500</height>
+     <x>90</x>
+     <y>360</y>
+     <width>281</width>
+     <height>491</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -56,10 +56,10 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>559</x>
-     <y>350</y>
-     <width>418</width>
-     <height>500</height>
+     <x>400</x>
+     <y>360</y>
+     <width>281</width>
+     <height>491</height>
     </rect>
    </property>
    <property name="text">
@@ -69,10 +69,10 @@
   <widget class="QPushButton" name="selection3_Button">
    <property name="geometry">
     <rect>
-     <x>103</x>
-     <y>890</y>
-     <width>418</width>
-     <height>500</height>
+     <x>710</x>
+     <y>360</y>
+     <width>281</width>
+     <height>491</height>
     </rect>
    </property>
    <property name="text">
@@ -82,10 +82,10 @@
   <widget class="QPushButton" name="selection4_Button">
    <property name="geometry">
     <rect>
-     <x>559</x>
-     <y>890</y>
-     <width>418</width>
-     <height>500</height>
+     <x>90</x>
+     <y>880</y>
+     <width>281</width>
+     <height>471</height>
     </rect>
    </property>
    <property name="text">

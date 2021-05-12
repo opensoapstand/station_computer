@@ -291,7 +291,7 @@
   <widget class="QLabel" name="payment_countdownLabel">
    <property name="geometry">
     <rect>
-     <x>330</x>
+     <x>290</x>
      <y>1600</y>
      <width>421</width>
      <height>71</height>
@@ -306,7 +306,7 @@
     </font>
    </property>
    <property name="text">
-    <string>payment_countdownLabel</string>
+    <string>TAP NOW</string>
    </property>
    <property name="textFormat">
     <enum>Qt::RichText</enum>

@@ -413,38 +413,33 @@ void payPage::showEvent(QShowEvent *event)
 // XXX: Remove this when interrupts and flow sensors work!
 void payPage::onTimeoutTick(){
     if(-- _paymentTimeoutSec >= 0) {
-        qDebug() << "Tick Down: " << _paymentTimeoutSec << endl;
+        qDebug() << "payPage: Tick Down: " << _paymentTimeoutSec << endl;
 
         _paymentTimeLabel.clear();
         QString time = QString::number(_paymentTimeoutSec);
 
-//        if(_paymentTimeoutSec >= 10) {
-//            if(_paymentTimeoutSec % 2 == 0) {
-//                _paymentTimeLabel.append("TAP NOW");
-//                qDebug() << _paymentTimeLabel << endl;
-//            } else {
-//                _paymentTimeLabel.append(" ");
-//                qDebug() << _paymentTimeLabel << endl;
-//            }
-//        } else {
-//            if(_paymentTimeoutSec % 2 == 0) {
-//                _paymentTimeLabel.append("PROCESSING.");
-//                qDebug() << _paymentTimeLabel << endl;
-//            } else {
-//                _paymentTimeLabel.append("PROCESSING..");
-//                qDebug() << _paymentTimeLabel << endl;
-//            }
-//            qDebug() << _paymentTimeLabel << endl;
-//        }
-        //this->ui->payment_countdownLabel->setText(_paymentTimeLabel);
+        if(_paymentTimeoutSec >= 10) {
+            if(_paymentTimeoutSec % 2 == 0) {
+                _paymentTimeLabel.append("TAP NOW");
+                qDebug() << _paymentTimeLabel << endl;
+            } else {
+                _paymentTimeLabel.append(" ");
+                qDebug() << _paymentTimeLabel << endl;
+            }
+        } else {
+            if(_paymentTimeoutSec % 2 == 0) {
+                _paymentTimeLabel.append("PROCESSING.");
+                qDebug() << _paymentTimeLabel << endl;
+            } else {
+                _paymentTimeLabel.append("PROCESSING..");
+                qDebug() << _paymentTimeLabel << endl;
+            }
+            qDebug() << _paymentTimeLabel << endl;
+        }
+        this->ui->payment_countdownLabel->setText(_paymentTimeLabel);
     } else {
         qDebug() << "Timer Done!" << _paymentTimeoutSec << endl;
-
-        //Update Click DB
-        DbManager db(DB_PATH);
-        db.addPageClick("PAY PAGE TIME OUT");
-
-        on_mainPage_Button_clicked();
+        on_payment_bypass_Button_clicked();
         //        paymentEndTimer->stop();
         //        this->ui->payment_countdownLabel->setText("Finished!");
     }

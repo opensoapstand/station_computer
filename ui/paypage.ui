@@ -188,11 +188,14 @@
    </property>
    <property name="font">
     <font>
-     <family>Open Sans</family>
-     <pointsize>15</pointsize>
-     <weight>50</weight>
-     <bold>false</bold>
+     <family>Proxima Nova</family>
+     <pointsize>-1</pointsize>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Proxima Nova;
+font-size: 24px;
+color: #58595B;</string>
    </property>
    <property name="text">
     <string>order_drink_amount</string>
@@ -292,7 +295,7 @@
    <property name="geometry">
     <rect>
      <x>290</x>
-     <y>1600</y>
+     <y>1610</y>
      <width>421</width>
      <height>71</height>
     </rect>

@@ -53,6 +53,7 @@ payPage::payPage(QWidget *parent) :
     ui->order_tax_amount->setText(" ");
     ui->order_total_label->setText(" ");
     ui->order_drink_label->setText(" ");
+    ui->order_drink_amount->setText(" ");
 
     displayPaymentPending(false);
 
@@ -145,8 +146,7 @@ void payPage::resizeEvent(QResizeEvent *event, char drinkSize){
     idlePaymentTimer->start(60000);
 
     int checkOption = idlePage->userDrinkOrder->getOption();
-    cout << checkOption << endl;
-    //    qDebug() << checkOption << endl;
+
     QString bitmap_location;
 
     if(checkOption > 0 && checkOption <= 9) {
@@ -170,6 +170,9 @@ void payPage::resizeEvent(QResizeEvent *event, char drinkSize){
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
     this->resize(this->geometry().width(), this->geometry().height());
+
+    ui->order_drink_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
+    ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
 }
 
 

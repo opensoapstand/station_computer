@@ -14,6 +14,7 @@ public:
     double getProductVolumePerTick(int slot);
     bool checkLevels(int slot);
     QString getProductReceiptName(int slot);
+    QString getPaymentMethod(int slot);
     double getProductVolume(int slot, char ml);
     bool refill(int slot);
     bool sellout(int slot);

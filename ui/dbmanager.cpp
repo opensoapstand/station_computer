@@ -176,6 +176,24 @@ double DbManager::getFullProduct(int slot){
     return full;
 }
 
+QString DbManager::getPaymentMethod(int slot){
+
+    QSqlQuery paymeny_query;
+    QString payment_method;
+
+    paymeny_query.prepare("SELECT payment FROM products WHERE slot=:slot");
+    paymeny_query.bindValue(":slot", slot);
+    paymeny_query.exec();
+
+    while (paymeny_query.next()) {
+            payment_method = paymeny_query.value(0).toString();
+
+            //qDebug() << "Product: " << product_name << endl;
+        }
+
+    return payment_method;
+}
+
 bool DbManager::checkLevels(int slot){
     QSqlQuery level_query;
     double level;

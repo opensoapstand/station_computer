@@ -72,10 +72,10 @@ paySelect::paySelect(QWidget *parent) :
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void paySelect::setPage(productPage_1 *pageSelect, dispensePage* pageDispense, idle* pageIdle)
+void paySelect::setPage(productPage_1 *pageSelect, dispensePage* pageDispense, idle* pageIdle, payPage* pagePayment)
 {
     this->firstProductPage = pageSelect;
-    //this->paymentPage = pagePayment;
+    this->paymentPage = pagePayment;
     this->idlePage = pageIdle;
     this->dispensingPage = pageDispense;
 }
@@ -122,11 +122,27 @@ void paySelect::on_payPage_Button_clicked()
 
     char drinkSize;
 
+    if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
+        drinkSize = 's';
+    }
+    if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK){
+        drinkSize = 'l';
+    }
+
+
     this->stopSelectTimers();
     selectIdleTimer->stop();
-    dispensingPage->showEvent(dispenseEvent);
-    dispensingPage->showFullScreen();
-    this->hide();
+
+    if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "barcode" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "plu"){
+        dispensingPage->showEvent(dispenseEvent);
+        dispensingPage->showFullScreen();
+        this->hide();
+    }else{
+        paymentPage->resizeEvent(paySelectResize, drinkSize);
+        paymentPage->showFullScreen();
+        this->hide();
+    }
+
     qDebug() << idlePage->userDrinkOrder->getPrice();
     qDebug() << idlePage->userDrinkOrder->getSize();
 

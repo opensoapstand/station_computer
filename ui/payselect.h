@@ -35,7 +35,7 @@ class paySelect : public QWidget
 
 public:
     explicit paySelect(QWidget *parent = nullptr);
-    void setPage(productPage_1 *pageSelect, dispensePage* pageDispense, idle* pageIdle);
+    void setPage(productPage_1 *pageSelect, dispensePage* pageDispense, idle* pageIdle, payPage *pagePayment);
     ~paySelect();
 
     void resizeEvent(QResizeEvent *event);

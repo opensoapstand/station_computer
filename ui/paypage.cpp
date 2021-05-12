@@ -149,15 +149,17 @@ void payPage::resizeEvent(QResizeEvent *event, char drinkSize){
     //    qDebug() << checkOption << endl;
     QString bitmap_location;
 
-//    if(checkOption > 0 && checkOption <= 9) {
-//        bitmap_location.append(":/light/5_pay_page_");
-//        bitmap_location.append(drinkSize);
-//        bitmap_location.append("_");
-//        bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
-//        bitmap_location.append(".jpg");
-//    } else {
-        bitmap_location = ":/light/5_pay_page.jpg";
-//    }
+    if(checkOption > 0 && checkOption <= 9) {
+        bitmap_location.append(":/light/5_pay_page_");
+        bitmap_location.append(drinkSize);
+        bitmap_location.append("_");
+        bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
+        bitmap_location.append(".png");
+    } else {
+        bitmap_location = ":/light/5_pay_page_l_1.png";
+    }
+
+    qDebug() << "BITMAP: " << bitmap_location << endl;
 
     QPixmap background(bitmap_location);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);

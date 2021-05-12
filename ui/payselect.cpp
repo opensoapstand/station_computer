@@ -198,7 +198,7 @@ void paySelect::onSelectTimeoutTick(){
 bool paySelect::stopSelectTimers(){
     qDebug() << "Stop paySelect Timers" << endl;
     if(selectIdleTimer != nullptr) {
-        qDebug() << "Enter Stop" << endl;
+       // qDebug() << "Enter Stop" << endl;
         selectIdleTimer->stop();
         return true;
     } else {

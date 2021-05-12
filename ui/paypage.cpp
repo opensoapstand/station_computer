@@ -36,23 +36,23 @@ payPage::payPage(QWidget *parent) :
 
     /* HACK: transparent button*/
     ui->previousPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    //ui->payment_pass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    //ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->payment_pass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
     ui->payment_bypass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
    // ui->payment_pass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-  //  ui->payment_cancel_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->payment_cancel_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
     // Setup static labels
     // TODO: Swap this when modular GUI ready
-    //    ui->order_tax_label->setText("Our Planet");
-    //    ui->order_tax_amount->setText("Priceless");
-    //    ui->order_total_label->setText("Total");
+        ui->order_tax_label->setText("Our Planet");
+        ui->order_tax_amount->setText("Priceless");
+        ui->order_total_label->setText("Total");
 
-    //ui->order_tax_label->setText(" ");
-    //ui->order_tax_amount->setText(" ");
-    //ui->order_total_label->setText(" ");
-    //ui->order_drink_label->setText(" ");
+    ui->order_tax_label->setText(" ");
+    ui->order_tax_amount->setText(" ");
+    ui->order_total_label->setText(" ");
+    ui->order_drink_label->setText(" ");
 
     displayPaymentPending(false);
 
@@ -68,7 +68,7 @@ payPage::payPage(QWidget *parent) :
 
         // GUI Setup
         // ui->payment_processLabel->setText(TAP_READY_LABEL);
-       // ui->payment_processLabel->setText(" ");
+        ui->payment_processLabel->setText(" ");
 
       //  ui->payment_processLabel->show();
 
@@ -159,7 +159,7 @@ void payPage::resizeEvent(QResizeEvent *event, char drinkSize){
         bitmap_location = ":/light/5_pay_page_l_1.png";
     }
 
-    qDebug() << "BITMAP: " << bitmap_location << endl;
+    //qDebug() << "BITMAP: " << bitmap_location << endl;
 
     QPixmap background(bitmap_location);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
@@ -337,14 +337,14 @@ void payPage::updateTotals(string drinkDescription, string drinkAmount, string o
 
 }
 
-//void payPage::on_mainPage_Button_clicked()
-//{
-//    qDebug() << "Main Button Page" << endl;
-//    //    cancelPayment();
-//    stopPayTimers();
-//    this->hide();
-//    idlePage->showFullScreen();
-//}
+void payPage::on_mainPage_Button_clicked()
+{
+    qDebug() << "Main Button Page" << endl;
+    //    cancelPayment();
+    stopPayTimers();
+    this->hide();
+    idlePage->showFullScreen();
+}
 
 /*Cancel any previous payment*/
 //void payPage::cancelPayment()
@@ -385,7 +385,7 @@ void payPage::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
     {
-        //ui->payment_countdownLabel->setText(" ");
+        ui->payment_countdownLabel->setText(" ");
 
         paymentEndTimer = new QTimer(this);
         paymentEndTimer->setInterval(1000);
@@ -395,7 +395,7 @@ void payPage::showEvent(QShowEvent *event)
     }
 
   //  ui->payment_pass_Button->setEnabled(false);
-    ui->payment_bypass_Button->setEnabled(true);
+  //  ui->payment_bypass_Button->setEnabled(true);
   //  ui->payment_cancel_Button->setEnabled(false);
     //    pktResponded = com.readForAck();
     //    readPacket.packetReadFromUX(pktResponded);
@@ -441,7 +441,7 @@ void payPage::onTimeoutTick(){
         qDebug() << "Timer Done!" << _paymentTimeoutSec << endl;
 
         //Update Click DB
-        DbManager db("/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db");
+        DbManager db(DB_PATH);
         db.addPageClick("PAY PAGE TIME OUT");
 
         on_mainPage_Button_clicked();
@@ -457,17 +457,6 @@ void payPage::onTimeoutTick(){
 //    QWidget::paintEvent(p);
 //}
 
-void payPage::on_mainPage_Button_clicked()
-{
-
-    //Update Click DB
-    DbManager db(DB_PATH);
-    db.addPageClick("Pay Page -> Main Page");
-
-    stopPayTimers();
-    idlePage->showFullScreen();
-    this->hide();
-}
 
 
 bool payPage::setpaymentProcess(bool status)
@@ -507,7 +496,7 @@ void payPage::progressStatusLabel()
 
             // Lock down page navigation
     //        ui->payment_pass_Button->hide();
-            ui->previousPage_Button->hide();
+     //       ui->previousPage_Button->hide();
      //       ui->mainPage_Button->hide();
             //labelSetup(ui->payment_processLabel, 50);
             //setProgressLabel(ui->payment_processLabel, progressDots);
@@ -524,12 +513,12 @@ void payPage::progressStatusLabel()
             paymentProgressTimer->stop();
 
     //        ui->payment_pass_Button->hide();
-            ui->previousPage_Button->hide();
+      //      ui->previousPage_Button->hide();
 
             paymentProcessing = false;
 
             if (approved){
-                ui->previousPage_Button->setEnabled(false);
+          //      ui->previousPage_Button->setEnabled(false);
            //     ui->mainPage_Button->setEnabled(false);
            //     ui->payment_processLabel->setText(TAP_APPROVED_LABEL);
             }

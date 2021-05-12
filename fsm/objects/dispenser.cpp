@@ -273,17 +273,17 @@ DF_ERROR dispenser::cleanNozzle(int posW, int posA){
         return e_ret;
     }
 
-    // Flush the lines with water
-//    debugOutput::sendMessage("Water Cleanse", INFO);
-//    m_pSolenoid[posW]->writePin(HIGH);
-//    sleep(CLEAN_WATER_TIME);
-//    m_pSolenoid[posW]->writePin(LOW);
+//     Flush the lines with water
+    debugOutput::sendMessage("Water Cleanse", INFO);
+    m_pSolenoid[posW]->writePin(HIGH);
+    sleep(CLEAN_WATER_TIME);
+    m_pSolenoid[posW]->writePin(LOW);
 
-    // Flush the lines with Air
-//    debugOutput::sendMessage("Air Release", INFO);
-//    m_pSolenoid[posA]->writePin(HIGH);
-//    sleep(CLEAN_AIR_TIME);
-//    m_pSolenoid[posA]->writePin(LOW);
+//     Flush the lines with Air
+    debugOutput::sendMessage("Air Release", INFO);
+    m_pSolenoid[posA]->writePin(HIGH);
+    sleep(CLEAN_AIR_TIME);
+    m_pSolenoid[posA]->writePin(LOW);
 
     return e_ret = OK;
 }
@@ -309,7 +309,7 @@ int dispenser::getI2CAddress(int pos){
 }
 
 int dispenser::getI2CPin(int pos){
-    debugOutput::sendMessage("getI2C Error!", ERROR);
+    //debugOutput::sendMessage("getI2C Error!", ERROR);
     return m_pSolenoid[pos]->getMCPPin();
 }
 

@@ -276,13 +276,15 @@ DF_ERROR dispenser::cleanNozzle(int posW, int posA){
 //     Flush the lines with water
     debugOutput::sendMessage("Water Cleanse", INFO);
     m_pSolenoid[posW]->writePin(HIGH);
-    sleep(CLEAN_WATER_TIME);
+    //sleep(CLEAN_WATER_TIME);
+    sleep(10);
     m_pSolenoid[posW]->writePin(LOW);
 
 //     Flush the lines with Air
     debugOutput::sendMessage("Air Release", INFO);
     m_pSolenoid[posA]->writePin(HIGH);
-    sleep(CLEAN_AIR_TIME);
+    //sleep(CLEAN_AIR_TIME);
+    sleep(10);
     m_pSolenoid[posA]->writePin(LOW);
 
     return e_ret = OK;

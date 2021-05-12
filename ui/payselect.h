@@ -54,13 +54,13 @@ private slots:
     // Set Drink Order
     void on_orderSmall_Button_clicked();
     void on_orderBig_Button_clicked();
-
+    void on_mainPage_Button_clicked();
     void onSelectTimeoutTick();
 
 private:
     bool stopSelectTimers();
     void selectOnTick();
-    void on_mainPage_Button_clicked();
+
 
 
 

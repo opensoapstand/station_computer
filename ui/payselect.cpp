@@ -51,7 +51,7 @@ paySelect::paySelect(QWidget *parent) :
     /* Hacky transparent button */
     ui->previousPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->payPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    //ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
     // TODO: ADD buttons to select size/price of drink
     ui->orderSmall_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");

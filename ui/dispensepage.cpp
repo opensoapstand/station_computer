@@ -63,7 +63,7 @@ dispensePage::~dispensePage()
 void dispensePage::showEvent(QShowEvent *event)
 {
 
-    QPixmap background(":/light/6_dispense_page.png");
+    QPixmap background(":/light/5_dispense_page_before.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);

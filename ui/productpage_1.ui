@@ -22,8 +22,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>360</y>
+     <x>202</x>
+     <y>590</y>
      <width>281</width>
      <height>491</height>
     </rect>
@@ -56,36 +56,10 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>400</x>
-     <y>360</y>
+     <x>600</x>
+     <y>590</y>
      <width>281</width>
      <height>491</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="selection3_Button">
-   <property name="geometry">
-    <rect>
-     <x>710</x>
-     <y>360</y>
-     <width>281</width>
-     <height>491</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="selection4_Button">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>880</y>
-     <width>281</width>
-     <height>471</height>
     </rect>
    </property>
    <property name="text">

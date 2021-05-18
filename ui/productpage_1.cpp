@@ -44,8 +44,8 @@ productPage_1::productPage_1(QWidget *parent) :
 //    ui->DrinkFlavor1->setText("");
 
     ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+//    ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+//    ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 //    ui->selection5_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 //    ui->selection6_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     //ui->backButton->setStyleSheet("QPushButton{background: white;}");
@@ -113,22 +113,22 @@ void productPage_1::showEvent(QShowEvent *event)
     else{
         ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     }
-    if (!this->idlePage->isEnough(3)){
-        // Change p3 to Sold Out
-        qDebug() << "Product 3 is Sold Out!" << endl;
-        ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/soldOut.png); }");
-    }
-    else{
-        ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    }
-    if (!this->idlePage->isEnough(4)){
-        // Change p4 to Sold Out
-        qDebug() << "Product 4 is Sold Out!" << endl;
-        ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/soldOut.png); }");
-    }
-    else{
-        ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    }
+//    if (!this->idlePage->isEnough(3)){
+//        // Change p3 to Sold Out
+//        qDebug() << "Product 3 is Sold Out!" << endl;
+//        ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/soldOut.png); }");
+//    }
+//    else{
+//        ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+//    }
+//    if (!this->idlePage->isEnough(4)){
+//        // Change p4 to Sold Out
+//        qDebug() << "Product 4 is Sold Out!" << endl;
+//        ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/soldOut.png); }");
+//    }
+//    else{
+//        ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+//    }
 
 }
 
@@ -168,37 +168,37 @@ void productPage_1::on_selection2_Button_clicked()
     }
 }
 
-void productPage_1::on_selection3_Button_clicked()
-{
-    DbManager db(DB_PATH);
-    db.addPageClick("Product Page -> Option 3");
+//void productPage_1::on_selection3_Button_clicked()
+//{
+//    DbManager db(DB_PATH);
+//    db.addPageClick("Product Page -> Option 3");
 
-    if(this->idlePage->isEnough(3)){
-        productPageEndTimer->stop();
+//    if(this->idlePage->isEnough(3)){
+//        productPageEndTimer->stop();
 
-        idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
-        //idlePage->userDrinkOrder->setDrinkSize(DRINK3);
-        paymentSelectPage->resizeEvent(productResize);
-        paymentSelectPage->showFullScreen();
-        this->hide();
-    }
-}
+//        idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
+//        //idlePage->userDrinkOrder->setDrinkSize(DRINK3);
+//        paymentSelectPage->resizeEvent(productResize);
+//        paymentSelectPage->showFullScreen();
+//        this->hide();
+//    }
+//}
 
-void productPage_1::on_selection4_Button_clicked()
-{
-    DbManager db(DB_PATH);
-    db.addPageClick("Product Page -> Option 4");
+//void productPage_1::on_selection4_Button_clicked()
+//{
+//    DbManager db(DB_PATH);
+//    db.addPageClick("Product Page -> Option 4");
 
-    if(this->idlePage->isEnough(4)){
-        productPageEndTimer->stop();
+//    if(this->idlePage->isEnough(4)){
+//        productPageEndTimer->stop();
 
-        idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);
-        //idlePage->userDrinkOrder->setDrinkSize(DRINK4);
-        paymentSelectPage->resizeEvent(productResize);
-        paymentSelectPage->showFullScreen();
-        this->hide();
-    }
-}
+//        idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);
+//        //idlePage->userDrinkOrder->setDrinkSize(DRINK4);
+//        paymentSelectPage->resizeEvent(productResize);
+//        paymentSelectPage->showFullScreen();
+//        this->hide();
+//    }
+//}
 
 //void productPage_1::on_selection5_Button_clicked()
 //{

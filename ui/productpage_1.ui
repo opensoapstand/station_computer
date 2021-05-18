@@ -23,7 +23,7 @@
    <property name="geometry">
     <rect>
      <x>202</x>
-     <y>590</y>
+     <y>412</y>
      <width>281</width>
      <height>491</height>
     </rect>
@@ -57,7 +57,7 @@
    <property name="geometry">
     <rect>
      <x>600</x>
-     <y>590</y>
+     <y>412</y>
      <width>281</width>
      <height>491</height>
     </rect>
@@ -73,6 +73,38 @@
      <y>0</y>
      <width>281</width>
      <height>241</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="selection3_Button">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>202</x>
+     <y>1031</y>
+     <width>281</width>
+     <height>491</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="selection4_Button">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>600</x>
+     <y>1031</y>
+     <width>281</width>
+     <height>491</height>
     </rect>
    </property>
    <property name="text">

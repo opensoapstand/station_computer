@@ -1,0 +1,15 @@
+[Unit]
+Description=DF screen calibration
+Partof=graphical-session.target
+
+[Service]
+ExecStart=/release/calibrate_screen.sh
+Type=simple
+Restart=always
+RestartSec=20
+User=df-admin
+StartLimitInterval=100
+startLimitBurst=5
+
+[Install]
+WantedBy=xsession.target

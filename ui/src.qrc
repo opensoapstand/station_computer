@@ -23,7 +23,6 @@
         <file>maintain_product.cpp</file>
         <file>idle.cpp</file>
         <file>idle.ui</file>
-        <file>maintenance/product4.png</file>
         <file>maintenance/product3.png</file>
         <file>maintenance/product2.png</file>
         <file>maintenance/product1.png</file>
@@ -51,5 +50,9 @@
         <file>light/4_pay_select_page_l_5.png</file>
         <file>light/4_pay_select_page_l.png</file>
         <file>light/3_drink_page_2.png</file>
+        <file>light/product3.png</file>
+        <file>light/product2.png</file>
+        <file>light/product1.png</file>
+        <file>light/6_dispense_page2.png</file>
     </qresource>
 </RCC>

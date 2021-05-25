@@ -281,14 +281,14 @@ color: #58595B;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>420</x>
-     <y>1260</y>
-     <width>241</width>
-     <height>61</height>
+     <x>730</x>
+     <y>1730</y>
+     <width>351</width>
+     <height>191</height>
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>PAYMENT BYPASS</string>
    </property>
   </widget>
   <widget class="QLabel" name="payment_countdownLabel">

@@ -39,7 +39,7 @@ payPage::payPage(QWidget *parent) :
     ui->payment_pass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
-    ui->payment_bypass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+//    ui->payment_bypass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
    // ui->payment_pass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->payment_cancel_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
@@ -398,7 +398,7 @@ void payPage::showEvent(QShowEvent *event)
     }
 
   //  ui->payment_pass_Button->setEnabled(false);
-  //  ui->payment_bypass_Button->setEnabled(true);
+    ui->payment_bypass_Button->setEnabled(true);
   //  ui->payment_cancel_Button->setEnabled(false);
     //    pktResponded = com.readForAck();
     //    readPacket.packetReadFromUX(pktResponded);

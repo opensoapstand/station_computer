@@ -28,7 +28,7 @@ payPage::payPage(QWidget *parent) :
 {
     // Fullscreen background setup
     ui->setupUi(this);
-    QPixmap background(":/light/5_pay_page.jpg");
+    QPixmap background(":/light/5_pay_page_l_1.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
@@ -36,40 +36,39 @@ payPage::payPage(QWidget *parent) :
 
     /* HACK: transparent button*/
     ui->previousPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->payment_pass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    //ui->payment_pass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
 //    ui->payment_bypass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
    // ui->payment_pass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->payment_cancel_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+   // ui->payment_cancel_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
     // Setup static labels
     // TODO: Swap this when modular GUI ready
-        ui->order_tax_label->setText("Our Planet");
-        ui->order_tax_amount->setText("Priceless");
-        ui->order_total_label->setText("Total");
+       // ui->order_tax_label->setText("Our Planet");
+       // ui->order_tax_amount->setText("Priceless");
+      //  ui->order_total_label->setText("Total");
 
-    ui->order_tax_label->setText(" ");
-    ui->order_tax_amount->setText(" ");
-    ui->order_total_label->setText(" ");
-    ui->order_drink_label->setText(" ");
-    ui->order_drink_amount->setText(" ");
+    //ui->order_total_label->setText(" ");
+   // ui->order_drink_amount->setText(" ");
 
-    displayPaymentPending(false);
+    ui->payment_bypass_Button->setEnabled(true);
+
+    //displayPaymentPending(false);
 
     // Setup Reciept
-    updateTotals(this->drinkDescription, this->drinkAmount, this->orderTotal);
+    //updateTotals(this->drinkDescription, this->drinkAmount, this->orderTotal);
 
     // Payment
 
     /* Create Timeout Interface: Wait for tap; message user; process tap */
-    {
+
         // Mutex
-        setpaymentProcess(false);
+       // setpaymentProcess(false);
 
         // GUI Setup
         // ui->payment_processLabel->setText(TAP_READY_LABEL);
-        ui->payment_processLabel->setText(" ");
+       // ui->payment_processLabel->setText(" ");
 
       //  ui->payment_processLabel->show();
 
@@ -80,18 +79,18 @@ payPage::payPage(QWidget *parent) :
         //connect(readTimer, SIGNAL(timeout()), this, SLOT(readTimer_loop()));
 
         // Payment Progress
-        paymentProgressTimer = new QTimer(this);
-        connect(paymentProgressTimer, SIGNAL(timeout()), this, SLOT(progressStatusLabel()));
-        paymentProgressTimer->setInterval(500);
+//        paymentProgressTimer = new QTimer(this);
+//        connect(paymentProgressTimer, SIGNAL(timeout()), this, SLOT(progressStatusLabel()));
+//        paymentProgressTimer->setInterval(500);
 
         // Payment Declined
-        declineTimer = new QTimer(this);
-        connect(declineTimer, SIGNAL(timeout()), this, SLOT(declineTimer_start()));
+//        declineTimer = new QTimer(this);
+//        connect(declineTimer, SIGNAL(timeout()), this, SLOT(declineTimer_start()));
 
         // Idle Payment reset
-        idlePaymentTimer = new QTimer(this);
-        connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
-    }
+//        idlePaymentTimer = new QTimer(this);
+//        connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
+
 
     // XXX: Comment on/off for Bypassing payment testing
     //     paymentInit();
@@ -135,15 +134,15 @@ void payPage::setPage(paySelect *pageSizeSelect, dispensePage* pageDispense, idl
 // TODO: Link style to sheet
 void payPage::labelSetup(QLabel *label, int fontSize)
 {
-    QFont font("Arial", fontSize, QFont::Bold);
-    label->setFont(font);
-    label->setStyleSheet("color: white");
-    label->setAlignment(Qt::AlignCenter);
+//    QFont font("Arial", fontSize, QFont::Bold);
+//    label->setFont(font);
+//    label->setStyleSheet("color: white");
+//    label->setAlignment(Qt::AlignCenter);
 }
 
 void payPage::resizeEvent(QResizeEvent *event, char drinkSize){
     // FIXME: MAGIC NUMBER!!! UX410 Socket Auto Close time is 60 seconds so timer kills page GUI
-    idlePaymentTimer->start(60000);
+    //idlePaymentTimer->start(60000);
 
     int checkOption = idlePage->userDrinkOrder->getOption();
 
@@ -169,7 +168,7 @@ void payPage::resizeEvent(QResizeEvent *event, char drinkSize){
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
-    this->resize(this->geometry().width(), this->geometry().height());
+    //this->resize(this->geometry().width(), this->geometry().height());
 
     ui->order_drink_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
     ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
@@ -330,13 +329,13 @@ void payPage::on_payment_bypass_Button_clicked()
 
 void payPage::updateTotals(string drinkDescription, string drinkAmount, string orderTotal)
 {
-    this->drinkDescription = drinkDescription;
-    this->drinkAmount = drinkAmount;
-    this->orderTotal = orderTotal;
+//    this->drinkDescription = drinkDescription;
+//    this->drinkAmount = drinkAmount;
+//    this->orderTotal = orderTotal;
 
-    //    ui->order_drink_label->setText(this->drinkDescription.c_str());
-   // ui->order_drink_amount->setText(this->drinkAmount.c_str());
-    ui->order_total_amount->setText(this->orderTotal.c_str());
+//    //    ui->order_drink_label->setText(this->drinkDescription.c_str());
+//   // ui->order_drink_amount->setText(this->drinkAmount.c_str());
+//    ui->order_total_amount->setText(this->orderTotal.c_str());
 
 }
 
@@ -386,8 +385,8 @@ void payPage::on_mainPage_Button_clicked()
 
 void payPage::showEvent(QShowEvent *event)
 {
-    QWidget::showEvent(event);
-    {
+    //QWidget::showEvent(event);
+
         ui->payment_countdownLabel->setText(" ");
 
         paymentEndTimer = new QTimer(this);
@@ -395,10 +394,9 @@ void payPage::showEvent(QShowEvent *event)
         connect(paymentEndTimer, SIGNAL(timeout()), this, SLOT(onTimeoutTick()));
         paymentEndTimer->start(1000);
         _paymentTimeoutSec = 20;
-    }
+
 
   //  ui->payment_pass_Button->setEnabled(false);
-    ui->payment_bypass_Button->setEnabled(true);
   //  ui->payment_cancel_Button->setEnabled(false);
     //    pktResponded = com.readForAck();
     //    readPacket.packetReadFromUX(pktResponded);
@@ -448,15 +446,6 @@ void payPage::onTimeoutTick(){
     }
 }
 
-
-//// HACK: This seems to do nothing...Could mask for GUI thread pausing?
-//void payPage::paintEvent(QPaintEvent *p)
-//{
-//    QWidget::paintEvent(p);
-//}
-
-
-
 bool payPage::setpaymentProcess(bool status)
 {
     return (paymentProcessing = status);
@@ -478,67 +467,67 @@ void payPage::storePaymentEvent(QSqlDatabase db, QString event)
 
 void payPage::progressStatusLabel()
 {
-    if (!paymentConnected){
-        //timer->start();
-        //pageUpdateTimer->start();
-        //mainPage->clearArd();
-        //sendCommand();
-        //pageNumber = 1;
-    }
-    else
-    {
-        if (paymentProcessing == true)
-        {
-            // Setup progress dots
-   //         ui->payment_processLabel->setText(TAP_BLANK_LABEL);
+//    if (!paymentConnected){
+//        //timer->start();
+//        //pageUpdateTimer->start();
+//        //mainPage->clearArd();
+//        //sendCommand();
+//        //pageNumber = 1;
+//    }
+//    else
+//    {
+//        if (paymentProcessing == true)
+//        {
+//            // Setup progress dots
+//   //         ui->payment_processLabel->setText(TAP_BLANK_LABEL);
 
-            // Lock down page navigation
-    //        ui->payment_pass_Button->hide();
-     //       ui->previousPage_Button->hide();
-     //       ui->mainPage_Button->hide();
-            //labelSetup(ui->payment_processLabel, 50);
-            //setProgressLabel(ui->payment_processLabel, progressDots);
-            if (progressDots < 3){
-                progressDots++;
-            }
-            else {
-                progressDots = 1;
-            }
-            progressLoopCounter++;
-        }
+//            // Lock down page navigation
+//    //        ui->payment_pass_Button->hide();
+//     //       ui->previousPage_Button->hide();
+//     //       ui->mainPage_Button->hide();
+//            //labelSetup(ui->payment_processLabel, 50);
+//            //setProgressLabel(ui->payment_processLabel, progressDots);
+//            if (progressDots < 3){
+//                progressDots++;
+//            }
+//            else {
+//                progressDots = 1;
+//            }
+//            progressLoopCounter++;
+//        }
 
-        if (progressLoopCounter == 3) {
-            paymentProgressTimer->stop();
+//        if (progressLoopCounter == 3) {
+//            paymentProgressTimer->stop();
 
-    //        ui->payment_pass_Button->hide();
-      //      ui->previousPage_Button->hide();
+//    //        ui->payment_pass_Button->hide();
+//      //      ui->previousPage_Button->hide();
 
-            paymentProcessing = false;
+//            paymentProcessing = false;
 
-            if (approved){
-          //      ui->previousPage_Button->setEnabled(false);
-           //     ui->mainPage_Button->setEnabled(false);
-           //     ui->payment_processLabel->setText(TAP_APPROVED_LABEL);
-            }
-            else {
-          //      ui->payment_processLabel->setText(TAP_DECLINED_LABEL);
-          //      ui->payment_processLabel->show();
-                declineTimer->start(2000);
-            }
-        }
-    }
+//            if (approved){
+//          //      ui->previousPage_Button->setEnabled(false);
+//           //     ui->mainPage_Button->setEnabled(false);
+//           //     ui->payment_processLabel->setText(TAP_APPROVED_LABEL);
+//            }
+//            else {
+//          //      ui->payment_processLabel->setText(TAP_DECLINED_LABEL);
+//          //      ui->payment_processLabel->show();
+//                declineTimer->start(2000);
+//            }
+//        }
+//    }
 }
 
 void payPage::declineTimer_start()
 {
-   // ui->payment_processLabel->setText(TAP_AGAIN_LABEL);
-    declineCounter++;
-    if (declineCounter < 3){
-        this->on_payment_bypass_Button_clicked();
-    } else {
-     //   ui->payment_processLabel->setText(TAP_DECLINED_LABEL);
-    }
-    declineTimer->stop();
+//   // ui->payment_processLabel->setText(TAP_AGAIN_LABEL);
+//    declineCounter++;
+//    if (declineCounter < 3){
+//        this->on_payment_bypass_Button_clicked();
+//    } else {
+//     //   ui->payment_processLabel->setText(TAP_DECLINED_LABEL);
+//    }
+//    declineTimer->stop();
 }
 
 void payPage::idlePaymentTimeout() {

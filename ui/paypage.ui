@@ -29,22 +29,6 @@
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="payment_pass_Button">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>1550</y>
-     <width>1080</width>
-     <height>100</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>.</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="mainPage_Button">
    <property name="geometry">
     <rect>
@@ -56,98 +40,6 @@
    </property>
    <property name="text">
     <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="order_drink_label">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>1365</y>
-     <width>651</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Open Sans</family>
-     <pointsize>15</pointsize>
-     <weight>50</weight>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>order_drink_label</string>
-   </property>
-   <property name="textFormat">
-    <enum>Qt::RichText</enum>
-   </property>
-  </widget>
-  <widget class="QLabel" name="order_tax_label">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>1405</y>
-     <width>171</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Open Sans</family>
-     <pointsize>15</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>order_tax_label</string>
-   </property>
-   <property name="textFormat">
-    <enum>Qt::RichText</enum>
-   </property>
-  </widget>
-  <widget class="QLabel" name="order_total_label">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>1480</y>
-     <width>281</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Open Sans</family>
-     <pointsize>22</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>order_total_label</string>
-   </property>
-   <property name="textFormat">
-    <enum>Qt::RichText</enum>
-   </property>
-  </widget>
-  <widget class="Line" name="line">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>1452</y>
-     <width>735</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
    </property>
   </widget>
   <widget class="QLabel" name="order_total_amount">
@@ -205,74 +97,6 @@ color: #58595B;</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="order_tax_amount">
-   <property name="geometry">
-    <rect>
-     <x>710</x>
-     <y>1405</y>
-     <width>201</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Open Sans</family>
-     <pointsize>15</pointsize>
-     <weight>50</weight>
-     <italic>true</italic>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>order_tax_amount</string>
-   </property>
-   <property name="textFormat">
-    <enum>Qt::RichText</enum>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="payment_processLabel">
-   <property name="geometry">
-    <rect>
-     <x>700</x>
-     <y>1680</y>
-     <width>231</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Open Sans</family>
-     <pointsize>15</pointsize>
-     <weight>50</weight>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>payment_processLabel</string>
-   </property>
-   <property name="textFormat">
-    <enum>Qt::RichText</enum>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="payment_cancel_Button">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>420</x>
-     <y>1670</y>
-     <width>241</width>
-     <height>61</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="payment_bypass_Button">

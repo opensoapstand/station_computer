@@ -111,40 +111,42 @@ void paySelect::on_payPage_Button_clicked()
     DbManager db(DB_PATH);
     db.addPageClick("Pay Select -> Dispense Page");
 
-    double drinkAmountDbl = idlePage->userDrinkOrder->getPrice();
-    QString qs = QString::number(drinkAmountDbl, 'f', 2);
+    //double drinkAmountDbl = idlePage->userDrinkOrder->getPrice();
+    //QString qs = QString::number(drinkAmountDbl, 'f', 2);
 
-    string drinkAmount = qs.toUtf8().constData();
+    //string drinkAmount = qs.toUtf8().constData();
 
-    drinkAmount.insert(0,"$ ");
+    //drinkAmount.insert(0,"$ ");
 
-    string drinkTotal = drinkAmount;
+    //string drinkTotal = drinkAmount;
 
     char drinkSize;
 
     if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
         drinkSize = 's';
+        paymentPage->resizeEvent(paySelectResize, drinkSize);
     }
     if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK){
         drinkSize = 'l';
+        paymentPage->resizeEvent(paySelectResize, drinkSize);
     }
 
 
     this->stopSelectTimers();
     selectIdleTimer->stop();
 
-    if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "barcode" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "plu"){
-        dispensingPage->showEvent(dispenseEvent);
-        dispensingPage->showFullScreen();
-        this->hide();
-    }else{
-        paymentPage->resizeEvent(paySelectResize, drinkSize);
+    if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "tap"){
+        //paymentPage->resizeEvent(paySelectResize, drinkSize);
         paymentPage->showFullScreen();
         this->hide();
+    }else if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "barcode" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "plu"){
+        dispensingPage->showEvent(dispenseEvent);
+        this->hide();
+        dispensingPage->showFullScreen();
     }
 
-    qDebug() << idlePage->userDrinkOrder->getPrice();
-    qDebug() << idlePage->userDrinkOrder->getSize();
+    //qDebug() << idlePage->userDrinkOrder->getPrice();
+    //qDebug() << idlePage->userDrinkOrder->getSize();
 
 }
 

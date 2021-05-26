@@ -112,7 +112,7 @@ color: #58595B;</string>
     </rect>
    </property>
    <property name="text">
-    <string>PAYMENT BYPASS</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="payment_countdownLabel">

@@ -39,7 +39,7 @@ payPage::payPage(QWidget *parent) :
     //ui->payment_pass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
-//    ui->payment_bypass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->payment_bypass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
    // ui->payment_pass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
    // ui->payment_cancel_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
@@ -52,7 +52,7 @@ payPage::payPage(QWidget *parent) :
     //ui->order_total_label->setText(" ");
    // ui->order_drink_amount->setText(" ");
 
-    ui->payment_bypass_Button->setEnabled(true);
+    ui->payment_bypass_Button->setEnabled(false);
 
     //displayPaymentPending(false);
 

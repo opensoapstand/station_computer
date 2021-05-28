@@ -193,7 +193,7 @@ void paySelect::onSelectTimeoutTick(){
         DbManager db(DB_PATH_CLICKS);
         db.addPageClick("PAY SELECT TIME OUT");
 
-        on_mainPage_Button_clicked();
+        mainPage();
     }
 }
 
@@ -208,7 +208,7 @@ bool paySelect::stopSelectTimers(){
     }
 }
 
-void paySelect::on_mainPage_Button_clicked()
+void paySelect::mainPage()
 {
 
     //Update Click DB
@@ -220,6 +220,44 @@ void paySelect::on_mainPage_Button_clicked()
     selectIdleTimer->stop();
     idlePage->showFullScreen();
     this->hide();
+}
+
+void paySelect::on_mainPage_Button_clicked()
+{
+
+    //Update Click DB
+//    DbManager db(DB_PATH);
+//    db.addPageClick("Pay Select -> Main Page");
+
+//    qDebug() << "paySelect: mainPage button" << endl;
+//    this->stopSelectTimers();
+//    selectIdleTimer->stop();
+//    idlePage->showFullScreen();
+//    this->hide();
+
+    qDebug() << "Main Page Button pressed" << endl;
+
+    selectIdleTimer->stop();
+
+    QMessageBox msgBox;
+    msgBox.setWindowFlags(Qt::FramelessWindowHint);
+    //msgBox.setText("<p align=center>How Can We Help You?<br><br></p>");
+    msgBox.setInformativeText("<p align=center>Phone: (604) 837-5066<br></p><p align=center>Email: hello@drinkfill.com<br></p>");
+    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-height: 30px; align: center}");
+
+    msgBox.setStandardButtons(QMessageBox::Close);
+    int ret = msgBox.exec();
+
+    switch(ret){
+        case QMessageBox::Close:
+            qDebug() << "Return CLICKED" << endl;
+            msgBox.hide();
+            selectIdleTimer->start(1000);
+            _selectIdleTimeoutSec = 40;
+        break;
+
+    }
+
 }
 
 // on_Small_Order button listener

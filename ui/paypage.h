@@ -130,6 +130,7 @@ private:
     bool isReadyForTap = false;
 
     void stopPayTimers();
+    void mainPage();
 
     int progressDots = 1;
     int progressLoopCounter = 0;

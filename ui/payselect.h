@@ -60,6 +60,7 @@ private slots:
 private:
     bool stopSelectTimers();
     void selectOnTick();
+    void mainPage();
 
 
 

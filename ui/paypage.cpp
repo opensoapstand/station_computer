@@ -339,13 +339,46 @@ void payPage::updateTotals(string drinkDescription, string drinkAmount, string o
 
 }
 
-void payPage::on_mainPage_Button_clicked()
+void payPage::mainPage()
 {
     qDebug() << "Main Button Page" << endl;
     //    cancelPayment();
     stopPayTimers();
     this->hide();
     idlePage->showFullScreen();
+}
+
+void payPage::on_mainPage_Button_clicked()
+{
+//    qDebug() << "Main Button Page" << endl;
+//    //    cancelPayment();
+//    stopPayTimers();
+//    this->hide();
+//    idlePage->showFullScreen();
+
+    qDebug() << "Main Page Button pressed" << endl;
+
+    paymentEndTimer->stop();
+
+    QMessageBox msgBox;
+    msgBox.setWindowFlags(Qt::FramelessWindowHint);
+    //msgBox.setText("<p align=center>How Can We Help You?<br><br></p>");
+    msgBox.setInformativeText("<p align=center>Phone: (604) 837-5066<br></p><p align=center>Email: hello@drinkfill.com<br></p>");
+    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-height: 30px; align: center}");
+
+    msgBox.setStandardButtons(QMessageBox::Close);
+    int ret = msgBox.exec();
+
+    switch(ret){
+        case QMessageBox::Close:
+            qDebug() << "Return CLICKED" << endl;
+            msgBox.hide();
+            paymentEndTimer->start(1000);
+            _paymentTimeoutSec = 20;
+        break;
+
+    }
+
 }
 
 /*Cancel any previous payment*/

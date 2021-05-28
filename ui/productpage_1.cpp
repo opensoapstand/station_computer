@@ -46,6 +46,7 @@ productPage_1::productPage_1(QWidget *parent) :
     ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 //    ui->selection5_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 //    ui->selection6_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     //ui->backButton->setStyleSheet("QPushButton{background: white;}");
@@ -265,4 +266,30 @@ void productPage_1::on_maintenanceModeButton_pressed()
         //maintenanceCounter=0;
     }
 
+}
+
+void productPage_1::on_mainPage_Button_clicked()
+{
+    qDebug() << "Main Page Button pressed" << endl;
+
+    productPageEndTimer->stop();
+
+    QMessageBox msgBox;
+    msgBox.setWindowFlags(Qt::FramelessWindowHint);
+    //msgBox.setText("<p align=center>How Can We Help You?<br><br></p>");
+    msgBox.setInformativeText("<p align=center>Phone: (604) 837-5066<br></p><p align=center>Email: hello@drinkfill.com<br></p>");
+    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-height: 30px; align: center}");
+
+    msgBox.setStandardButtons(QMessageBox::Close);
+    int ret = msgBox.exec();
+
+    switch(ret){
+        case QMessageBox::Close:
+            qDebug() << "Return CLICKED" << endl;
+            msgBox.hide();
+            productPageEndTimer->start(1000);
+            _productPageTimeoutSec = 15;
+        break;
+
+    }
 }

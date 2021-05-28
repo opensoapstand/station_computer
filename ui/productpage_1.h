@@ -52,6 +52,7 @@ private slots:
     void onProductPageTimeoutTick();
     //void on_backButton_clicked();
     void on_maintenanceModeButton_pressed();
+    void on_mainPage_Button_clicked();
 
 private:
     void showEvent(QShowEvent *event);

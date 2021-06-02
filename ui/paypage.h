@@ -19,6 +19,7 @@
 
 #include "df_util.h"
 #include "drinkorder.h"
+#include "help.h"
 
 #include "posm/mcommunication.h"
 #include "posm/packetfromecr.h"
@@ -29,6 +30,7 @@
 class paySelect;
 class dispensePage;
 class idle;
+class help;
 
 namespace Ui {
 class payPage;
@@ -43,7 +45,7 @@ class payPage : public QWidget
 public:
     // **** GUI Setup ****
     explicit payPage(QWidget *parent = nullptr);
-    void setPage(paySelect* pageSizeSelect, dispensePage* pageDispense, idle* pageIdle);
+    void setPage(paySelect* pageSizeSelect, dispensePage* pageDispense, idle* pageIdle, help* pageHelp);
     ~payPage();
     void setProgressLabel(QLabel* label, int dot);
     // TODO: Figure out better Style Setup.
@@ -110,6 +112,7 @@ private:
     paySelect* paySelectPage;
     dispensePage* dispensingPage;
     idle* idlePage;
+    help* helpPage;
 
     const QString TAP_READY_LABEL = "Ready for Tap";
     const QString TAP_PROCESSING_LABEL = "Processing";

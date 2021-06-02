@@ -19,11 +19,13 @@
 
 #include "df_util.h"
 #include "maintenancePage.h"
+#include "help.h"
 
 class productPage_2;
 class paySelect;
 class idle;
 class maintenancePage;
+class help;
 
 namespace Ui {
 class productPage_1;
@@ -35,7 +37,7 @@ class productPage_1 : public QWidget
 
 public:
     explicit productPage_1(QWidget *parent = nullptr);
-    void setPage(productPage_2 *pageTwoProducts, paySelect *pageSizeSelect, idle* pageIdle, maintenancePage *pageMaintenance);
+    void setPage(productPage_2 *pageTwoProducts, paySelect *pageSizeSelect, idle* pageIdle, maintenancePage *pageMaintenance, help *pageHelp);
     ~productPage_1();
 
 private slots:
@@ -67,6 +69,8 @@ private:
     QTimer* productPageEndTimer;
 
     maintenancePage* maintenanceMode;
+
+    help* helpPage;
 
     int maintenanceCounter;
 };

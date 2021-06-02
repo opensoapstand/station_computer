@@ -124,11 +124,12 @@ void payPage::stopPayTimers(){
 /*
  * Page Tracking reference
  */
-void payPage::setPage(paySelect *pageSizeSelect, dispensePage* pageDispense, idle* pageIdle)
+void payPage::setPage(paySelect *pageSizeSelect, dispensePage* pageDispense, idle* pageIdle, help* pageHelp)
 {
     this->paySelectPage = pageSizeSelect;
     this->dispensingPage = pageDispense;
     this->idlePage = pageIdle;
+    this->helpPage = pageHelp;
 }
 
 // TODO: Link style to sheet
@@ -350,34 +351,39 @@ void payPage::mainPage()
 
 void payPage::on_mainPage_Button_clicked()
 {
-//    qDebug() << "Main Button Page" << endl;
-//    //    cancelPayment();
-//    stopPayTimers();
-//    this->hide();
-//    idlePage->showFullScreen();
+    qDebug() << "Help Button" << endl;
 
-    qDebug() << "Main Page Button pressed" << endl;
+    //Update Click DB
+    DbManager db(DB_PATH);
+    db.addPageClick("Pay Page -> Help Page");
 
-    paymentEndTimer->stop();
+    //    cancelPayment();
+    stopPayTimers();
+    this->hide();
+    helpPage->showFullScreen();
 
-    QMessageBox msgBox;
-    msgBox.setWindowFlags(Qt::FramelessWindowHint);
-    //msgBox.setText("<p align=center>How Can We Help You?<br><br></p>");
-    msgBox.setInformativeText("<p align=center>Phone: (604) 837-5066<br></p><p align=center>Email: hello@drinkfill.com<br></p>");
-    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-height: 30px; align: center}");
+//    qDebug() << "Main Page Button pressed" << endl;
 
-    msgBox.setStandardButtons(QMessageBox::Close);
-    int ret = msgBox.exec();
+//    paymentEndTimer->stop();
 
-    switch(ret){
-        case QMessageBox::Close:
-            qDebug() << "Return CLICKED" << endl;
-            msgBox.hide();
-            paymentEndTimer->start(1000);
-            _paymentTimeoutSec = 20;
-        break;
+//    QMessageBox msgBox;
+//    msgBox.setWindowFlags(Qt::FramelessWindowHint);
+//    //msgBox.setText("<p align=center>How Can We Help You?<br><br></p>");
+//    msgBox.setInformativeText("<p align=center>Phone: (604) 837-5066<br></p><p align=center>Email: hello@drinkfill.com<br></p>");
+//    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-height: 30px; align: center}");
 
-    }
+//    msgBox.setStandardButtons(QMessageBox::Close);
+//    int ret = msgBox.exec();
+
+//    switch(ret){
+//        case QMessageBox::Close:
+//            qDebug() << "Return CLICKED" << endl;
+//            msgBox.hide();
+//            paymentEndTimer->start(1000);
+//            _paymentTimeoutSec = 20;
+//        break;
+
+//    }
 
 }
 

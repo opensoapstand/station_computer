@@ -63,12 +63,13 @@ productPage_1::productPage_1(QWidget *parent) :
 /*
  * Page Tracking reference
  */
-void productPage_1::setPage(productPage_2 *pageTwoProducts, paySelect *pageSizeSelect, idle* pageIdle, maintenancePage *pageMaintenance)
+void productPage_1::setPage(productPage_2 *pageTwoProducts, paySelect *pageSizeSelect, idle* pageIdle, maintenancePage *pageMaintenance, help *pageHelp)
 {
     this->selection_PageTwo = pageTwoProducts;
     this->paymentSelectPage = pageSizeSelect;
     this->idlePage = pageIdle;
     this->maintenanceMode = pageMaintenance;
+    this->helpPage = pageHelp;
 }
 
 // DTOR
@@ -274,22 +275,30 @@ void productPage_1::on_mainPage_Button_clicked()
 
     productPageEndTimer->stop();
 
-    QMessageBox msgBox;
-    msgBox.setWindowFlags(Qt::FramelessWindowHint);
-    //msgBox.setText("<p align=center>How Can We Help You?<br><br></p>");
-    msgBox.setInformativeText("<p align=center>Phone: (604) 837-5066<br></p><p align=center>Email: hello@drinkfill.com<br></p>");
-    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-height: 30px; align: center}");
+    //Update Click DB
+    DbManager db(DB_PATH);
+    db.addPageClick("Product Page -> Help Page");
 
-    msgBox.setStandardButtons(QMessageBox::Close);
-    int ret = msgBox.exec();
+    qDebug() << "productPage: helpPage button" << endl;
+    helpPage->showFullScreen();
+    this->hide();
 
-    switch(ret){
-        case QMessageBox::Close:
-            qDebug() << "Return CLICKED" << endl;
-            msgBox.hide();
-            productPageEndTimer->start(1000);
-            _productPageTimeoutSec = 15;
-        break;
+//    QMessageBox msgBox;
+//    msgBox.setWindowFlags(Qt::FramelessWindowHint);
+//    //msgBox.setText("<p align=center>How Can We Help You?<br><br></p>");
+//    msgBox.setInformativeText("<p align=center>Phone: (604) 837-5066<br></p><p align=center>Email: hello@drinkfill.com<br></p>");
+//    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-height: 30px; align: center}");
 
-    }
+//    msgBox.setStandardButtons(QMessageBox::Close);
+//    int ret = msgBox.exec();
+
+//    switch(ret){
+//        case QMessageBox::Close:
+//            qDebug() << "Return CLICKED" << endl;
+//            msgBox.hide();
+//            productPageEndTimer->start(1000);
+//            _productPageTimeoutSec = 15;
+//        break;
+
+//    }
 }

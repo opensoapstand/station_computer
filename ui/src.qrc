@@ -54,5 +54,6 @@
         <file>light/product2.png</file>
         <file>light/product1.png</file>
         <file>light/6_dispense_page2.png</file>
+        <file>light/3_help_page.png</file>
     </qresource>
 </RCC>

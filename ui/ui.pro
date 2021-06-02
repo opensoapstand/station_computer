@@ -17,7 +17,8 @@ FORMS += \
     thankyoupage.ui \
     maintenancePage.ui \
     maintain_product.ui \
-    init.ui
+    init.ui \
+    help.ui
 
 HEADERS += \
     dfuicommthread.h \
@@ -44,7 +45,8 @@ HEADERS += \
     dbmanager.h \
     maintenancePage.h \
     maintain_product.h \
-    init.h
+    init.h \
+    help.h
 
 SOURCES += \
     dfuicommthread.cpp \
@@ -70,7 +72,8 @@ SOURCES += \
     dbmanager.cpp \
     maintenance.cpp \
     maintain_product.cpp \
-    init.cpp
+    init.cpp \
+    help.cpp
 
 RESOURCES += \
     src.qrc

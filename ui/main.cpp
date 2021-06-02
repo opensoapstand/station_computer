@@ -15,6 +15,7 @@
 //***************************************
 
 #define UI_VERSION "0.1.4"
+#include "help.h"
 #include "init.h"
 #include "idle.h"
 #include "productpage_1.h"
@@ -37,6 +38,7 @@ int main(int argc, char *argv[])
 
     // Build objects to hold navigation (pages)
     // Linking resources and Function definitions for pathing
+    help* helpPage = new help();
     init* initPage = new init();
     idle* idlePage = new idle();
     productPage_1* firstSelectPage = new productPage_1();
@@ -53,6 +55,9 @@ int main(int argc, char *argv[])
     // TODO: Instantiate a DrinkOrder Object
 
     // Page pathing references to function calls.
+    helpPage->setPage(firstSelectPage, paySelectPage, idlePage, paymentPage);
+    helpPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
+
     initPage->setPage(idlePage);
     initPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
@@ -65,16 +70,16 @@ int main(int argc, char *argv[])
     idlePage->setPage(firstSelectPage);
     idlePage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    firstSelectPage->setPage(secondSelectPage, paySelectPage, idlePage, maintenanceMode);
+    firstSelectPage->setPage(secondSelectPage, paySelectPage, idlePage, maintenanceMode, helpPage);
     firstSelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
     secondSelectPage->setPage(firstSelectPage, paySelectPage, idlePage, maintenanceMode);
     secondSelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    paySelectPage->setPage(firstSelectPage, dispensingPage, idlePage, paymentPage);
+    paySelectPage->setPage(firstSelectPage, dispensingPage, idlePage, paymentPage, helpPage);
     paySelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    paymentPage->setPage(paySelectPage, dispensingPage, idlePage);
+    paymentPage->setPage(paySelectPage, dispensingPage, idlePage, helpPage);
     paymentPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
     dispensingPage->setPage(paymentPage, lastPage, idlePage);

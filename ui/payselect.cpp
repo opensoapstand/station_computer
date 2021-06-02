@@ -72,12 +72,13 @@ paySelect::paySelect(QWidget *parent) :
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void paySelect::setPage(productPage_1 *pageSelect, dispensePage* pageDispense, idle* pageIdle, payPage* pagePayment)
+void paySelect::setPage(productPage_1 *pageSelect, dispensePage* pageDispense, idle* pageIdle, payPage* pagePayment, help* pageHelp)
 {
     this->firstProductPage = pageSelect;
     this->paymentPage = pagePayment;
     this->idlePage = pageIdle;
     this->dispensingPage = pageDispense;
+    this->helpPage = pageHelp;
 }
 
 // DTOR
@@ -226,37 +227,37 @@ void paySelect::on_mainPage_Button_clicked()
 {
 
     //Update Click DB
-//    DbManager db(DB_PATH);
-//    db.addPageClick("Pay Select -> Main Page");
+    DbManager db(DB_PATH);
+    db.addPageClick("Pay Select -> Help Page");
 
-//    qDebug() << "paySelect: mainPage button" << endl;
-//    this->stopSelectTimers();
-//    selectIdleTimer->stop();
-//    idlePage->showFullScreen();
-//    this->hide();
-
-    qDebug() << "Main Page Button pressed" << endl;
-
+    qDebug() << "paySelect: helpPage button" << endl;
+    this->stopSelectTimers();
     selectIdleTimer->stop();
+    helpPage->showFullScreen();
+    this->hide();
 
-    QMessageBox msgBox;
-    msgBox.setWindowFlags(Qt::FramelessWindowHint);
-    //msgBox.setText("<p align=center>How Can We Help You?<br><br></p>");
-    msgBox.setInformativeText("<p align=center>Phone: (604) 837-5066<br></p><p align=center>Email: hello@drinkfill.com<br></p>");
-    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-height: 30px; align: center}");
+//    qDebug() << "Main Page Button pressed" << endl;
 
-    msgBox.setStandardButtons(QMessageBox::Close);
-    int ret = msgBox.exec();
+//    selectIdleTimer->stop();
 
-    switch(ret){
-        case QMessageBox::Close:
-            qDebug() << "Return CLICKED" << endl;
-            msgBox.hide();
-            selectIdleTimer->start(1000);
-            _selectIdleTimeoutSec = 40;
-        break;
+//    QMessageBox msgBox;
+//    msgBox.setWindowFlags(Qt::FramelessWindowHint);
+//    //msgBox.setText("<p align=center>How Can We Help You?<br><br></p>");
+//    msgBox.setInformativeText("<p align=center>Phone: (604) 837-5066<br></p><p align=center>Email: hello@drinkfill.com<br></p>");
+//    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-height: 30px; align: center}");
 
-    }
+//    msgBox.setStandardButtons(QMessageBox::Close);
+//    int ret = msgBox.exec();
+
+//    switch(ret){
+//        case QMessageBox::Close:
+//            qDebug() << "Return CLICKED" << endl;
+//            msgBox.hide();
+//            selectIdleTimer->start(1000);
+//            _selectIdleTimeoutSec = 40;
+//        break;
+
+//    }
 
 }
 

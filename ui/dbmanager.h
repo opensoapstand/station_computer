@@ -19,6 +19,7 @@ public:
     bool refill(int slot);
     bool sellout(int slot);
     double getFullProduct(int slot);
+    int getTotalTransactions();
 
 private:
     void emailEmpty(int slot);

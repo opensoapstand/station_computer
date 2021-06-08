@@ -19,25 +19,6 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QPushButton" name="finish_Button">
-   <property name="geometry">
-    <rect>
-     <x>420</x>
-     <y>1340</y>
-     <width>251</width>
-     <height>91</height>
-    </rect>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QLabel" name="volumeDispensedLabel">
    <property name="geometry">
     <rect>
@@ -61,6 +42,65 @@
    <property name="alignment">
     <set>Qt::AlignJustify|Qt::AlignVCenter</set>
    </property>
+  </widget>
+  <widget class="QWidget" name="filler" native="true">
+   <property name="geometry">
+    <rect>
+     <x>416</x>
+     <y>978</y>
+     <width>271</width>
+     <height>621</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url(:/light/drink_fill.png);</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="widget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1080</width>
+     <height>1920</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url(:/light/6_dispense_page.png);</string>
+   </property>
+   <widget class="QPushButton" name="finish_Button">
+    <property name="geometry">
+     <rect>
+      <x>425</x>
+      <y>1349</y>
+      <width>230</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Proxima Nova</family>
+      <pointsize>-1</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background: #FFFFFF;
+border: 1px solid #CBA580;
+border-radius: 5px;
+
+font-family: Proxima Nova;
+font-style: normal;
+font-weight: bold;
+font-size: 24px;
+line-height: 29px;</string>
+    </property>
+    <property name="text">
+     <string>COMPLETE</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

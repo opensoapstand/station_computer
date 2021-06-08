@@ -65,9 +65,17 @@ idle::~idle()
     delete ui;
 }
 
+void idle::showEvent(QShowEvent *event)
+{
+    QWidget::showEvent(event);
+    DbManager db(DB_PATH);
+    ui->savedBottles_label->setText("Thanks to you, this machine has saved<br>over " + QString::number(db.getTotalTransactions()) + " plastic containers<br>from the landfill");
+}
+
 /*
  * Screen click shows product page as full screen and hides idle screen
  */
+
 void idle::on_nextPageButton_clicked()
 {
 

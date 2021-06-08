@@ -51,6 +51,7 @@ private slots:
     void on_finish_Button_clicked();
    // void onDispenseTick();
     void onDispenseIdleTick();
+    void onRinseTimerTick();
 
 
 private:
@@ -70,6 +71,10 @@ private:
     QTimer *dispenseIdleTimer;
 
     QTimer* dispenseNextPageTimer;
+
+    QTimer* rinseTimer;
+    int _rinseTimerTimeoutSec;
+    bool rinse;
 
     int volumeDispensed;
 

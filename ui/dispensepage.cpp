@@ -27,14 +27,14 @@ dispensePage::dispensePage(QWidget *parent) :
     ui(new Ui::dispensePage)
 {
     ui->setupUi(this);
-    QPixmap background(":/light/6_dispense_page.png");
-    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-    QPalette palette;
-    palette.setBrush(QPalette::Background, background);
-    this->setPalette(palette);
+//    QPixmap background(":/light/6_dispense_page.png");
+//    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+//    QPalette palette;
+//    palette.setBrush(QPalette::Background, background);
+//    this->setPalette(palette);
 
     /*hacky transparent button*/
-    ui->finish_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    //ui->finish_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->volumeDispensedLabel->setText("");
 
     this->ui->volumeDispensedLabel->setText("");
@@ -42,6 +42,10 @@ dispensePage::dispensePage(QWidget *parent) :
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
+
+//    rinseTimer = new QTimer(this);
+//    rinseTimer->setInterval(1000);
+//    connect(rinseTimer, SIGNAL(timeout()), this, SLOT(onRinseTimerTick()));
 }
 
 /*
@@ -69,12 +73,13 @@ void dispensePage::showEvent(QShowEvent *event)
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
+    ui->widget->hide();
+    ui->filler->hide();
+
     // FIXME: this is a hack for size changes...
     QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
 
-    qDebug() << "getSize: " << idlePage->userDrinkOrder->getSize() << endl;
-
-
+    //qDebug() << "getSize: " << idlePage->userDrinkOrder->getSize() << endl;
 
     if(idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
 
@@ -136,36 +141,6 @@ void dispensePage::on_finish_Button_clicked()
         command.append('l');
     }
 
-
-    // ARE YOU SURE YOU WANT TO COMPLETE?
-//    QMessageBox msgBox;
-//    msgBox.setWindowFlags(Qt::FramelessWindowHint);
-//    msgBox.setText("<p align=center>Are you sure?</p>");
-//    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-width: 300px; min-height: 300px;}");
-
-//    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-//    int ret = msgBox.exec();
-
-//    switch(ret){
-//        case QMessageBox::Yes:
-//            qDebug() << "YES CLICKED" << endl;
-
-
-            // TODO: Link to FSM for Dispense
-
-                //qDebug() << "dispensePage: Cleanse cycle." << endl;
-                //ui->dispense_clean_label->setText("REMOVE BOTTLE!");
-                //ui->dispense_progress_label->setText("...");
-
-//                dispenseEndTimer = new QTimer(this);
-//                dispenseEndTimer->setInterval(1000);
-//                connect(dispenseEndTimer, SIGNAL(timeout()), this, SLOT(onDispenseTick()));
-//                dispenseEndTimer->start(1000);
-//                _dispenseTimeoutSec = 5;
-
-
-            // FIXME: this is a hack for size changes...
-
     stopDispenseTimer();
 
     this->idlePage->dfUtility->msg = command;
@@ -175,28 +150,49 @@ void dispensePage::on_finish_Button_clicked()
     idlePage->dfUtility->m_IsSendingFSM = true;
 
     idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
-    //    this->idlePage->dfUtility->msg = QString::number(this->idlePage->userDrinkOrder->getOption());
 
     // Send a Cleanse and TODO: helps FSM onExit...
     idlePage->dfUtility->send_to_FSM();
 
-    //dispenseEndTimer->stop();
-    //dispenseEndTimer->deleteLater();
+//    // RINSING MESSAGE
 
-    this->hide();
-    thanksPage->showFullScreen();
-    this->ui->volumeDispensedLabel->setText("");
-//            break;
+//    rinse=false;
+//    rinseTimer->start(1000);
+//    _rinseTimerTimeoutSec = 5;
 
-//        case QMessageBox::No:
-//            qDebug() << "NO CLICKED" << endl;
-//            break;
+      this->hide();
+      thanksPage->showFullScreen();
+      this->ui->volumeDispensedLabel->setText("");
+}
 
-//        default:
-//            break;
+void dispensePage::onRinseTimerTick(){
+
+//    QMessageBox msgBox;
+//    if (!rinse){
+//        msgBox.setWindowFlags(Qt::FramelessWindowHint);
+//        msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
+//        msgBox.setText("<p align=center>Water rinse coming in<br>5</p>");
+//        msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;}");
+//        msgBox.show();
+//        msgBox.raise();
+//        QCoreApplication::processEvents();
+//        rinse=true;
 //    }
 
-
+//    if(-- _rinseTimerTimeoutSec >= 0) {
+//        qDebug() << "rinseTimer: Tick Down: " << _rinseTimerTimeoutSec << endl;
+//        msgBox.setText("<p align=center>Water rinse coming in<br>"+ QString::number(_rinseTimerTimeoutSec) +"</p>");
+//        msgBox.show();
+//        msgBox.raise();
+//        QCoreApplication::processEvents();
+//    } else {
+//        qDebug() << "rinseTimer Done!" << _rinseTimerTimeoutSec << endl;
+//        rinseTimer->stop();
+//        msgBox.hide();
+//        this->hide();
+//        thanksPage->showFullScreen();
+//        this->ui->volumeDispensedLabel->setText("");
+//    }
 }
 
 void dispensePage::stopDispenseTimer(){
@@ -246,16 +242,23 @@ void dispensePage::PleaseResetTimerSlot(void){
 void dispensePage::updateVolumeDisplayed(int dispensed){
 
     volumeDispensed = dispensed;
+    double target_volume = idlePage->userDrinkOrder->getSize();
+    double percentage = dispensed/target_volume*100;
 
-    QPixmap background(":/light/6_dispense_page.png");
+    //this->ui->filler->setStyleSheet("QWidget { height: 463px}");
+    this->ui->filler->move(416, 978 - 3*percentage);
+
+    QPixmap background(":/light/drink_empty.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
+    ui->widget->show();
+    ui->filler->show();
 
     ui->finish_Button->setEnabled(true);
-    //volumeDispensedLabel.clear();
-    //this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ " ml");
+    //ui->volumeDispensedLabel->setText("");
+    //this->ui->volumeDispensedLabel->setText(QString::number(percentage));
 }
 
 void dispensePage::targetHitDisplay(){

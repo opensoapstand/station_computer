@@ -23,10 +23,32 @@
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">background-image: url(:/light/1_welcome_panel.png);</string>
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="savedBottles_label">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>780</y>
+     <width>791</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Proxima Nova ScOsf</family>
+     <pointsize>30</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

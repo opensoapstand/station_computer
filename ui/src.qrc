@@ -55,5 +55,8 @@
         <file>light/product1.png</file>
         <file>light/6_dispense_page2.png</file>
         <file>light/3_help_page.png</file>
+        <file>light/drink_fill.png</file>
+        <file>light/drink_empty.png</file>
+        <file>light/drink_shadow.png</file>
     </qresource>
 </RCC>

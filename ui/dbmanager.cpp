@@ -291,3 +291,18 @@ void DbManager::emailEmpty(int slot){
 
     system(email.toStdString().c_str());
 }
+
+int DbManager::getTotalTransactions(){
+    QSqlQuery transaction_query;
+    double transactions;
+
+    transaction_query.prepare("SELECT COUNT(*) FROM transactions;");
+    transaction_query.exec();
+
+    while (transaction_query.next()) {
+            transactions = transaction_query.value(0).toInt();
+
+        }
+
+    return transactions;
+}

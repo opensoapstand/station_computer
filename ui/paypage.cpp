@@ -52,7 +52,7 @@ payPage::payPage(QWidget *parent) :
     //ui->order_total_label->setText(" ");
    // ui->order_drink_amount->setText(" ");
 
-    ui->payment_bypass_Button->setEnabled(false);
+    ui->payment_bypass_Button->setEnabled(true);
 
     //displayPaymentPending(false);
 

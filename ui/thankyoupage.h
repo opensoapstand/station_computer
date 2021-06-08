@@ -35,6 +35,7 @@ public:
 private slots:
     void on_mainPage_Button_clicked();
     void onThankyouTimeoutTick();
+    void onRinseTimerTick();
 
 private:
     void showEvent(QShowEvent *event);
@@ -45,6 +46,11 @@ private:
 
     int _thankYouTimeoutSec;
     QTimer* thankYouEndTimer;
+
+
+    QTimer* rinseTimer;
+    int _rinseTimerTimeoutSec;
+    bool rinse;
 };
 
 #endif // THANKYOUPAGE_H

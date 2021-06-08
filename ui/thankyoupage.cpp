@@ -36,6 +36,10 @@ thankYouPage::thankYouPage(QWidget *parent) :
     thankYouEndTimer->setInterval(1000);
     connect(thankYouEndTimer, SIGNAL(timeout()), this, SLOT(onThankyouTimeoutTick()));
 
+    rinseTimer = new QTimer(this);
+    rinseTimer->setInterval(1000);
+    connect(rinseTimer, SIGNAL(timeout()), this, SLOT(onRinseTimerTick()));
+
     //    QString counter = this->idlePage->dfUtility->get_local_db_max_transaction();
     //    ui->Counter->setStyleSheet("background-color : #F1F2F2; color: #CBA580");
     //    ui->Counter->setText(counter);
@@ -67,16 +71,21 @@ void thankYouPage::showEvent(QShowEvent *event)
         connect(thankYouEndTimer, SIGNAL(timeout()), this, SLOT(onThankyouTimeoutTick()));
     }
 
-    thankYouEndTimer->start(1000);
-    _thankYouTimeoutSec = 5;
+    //    // RINSING MESSAGE
+
+        rinse=false;
+        rinseTimer->start(1000);
+        _rinseTimerTimeoutSec = 5;
+
+
 
 }
 
 void thankYouPage::onThankyouTimeoutTick(){
     if(-- _thankYouTimeoutSec >= 0) {
-        qDebug() << "Tick Down: " << _thankYouTimeoutSec << endl;
+        qDebug() << "thanksPage: Tick Down: " << _thankYouTimeoutSec << endl;
     } else {
-        qDebug() << "Timer Done!" << _thankYouTimeoutSec << endl;
+        qDebug() << "thanksPage: Timer Done!" << _thankYouTimeoutSec << endl;
 
         //Update Click DB
         DbManager db(DB_PATH);
@@ -92,12 +101,42 @@ void thankYouPage::onThankyouTimeoutTick(){
 
 void thankYouPage::on_mainPage_Button_clicked()
 {
-   // Update Click DB
-   DbManager db(DB_PATH);
-   db.addPageClick("TRANSACTION COMPLETED");
-   db.addPageClick("Thank You Page -> Main Page");
+//   // Update Click DB
+//   DbManager db(DB_PATH);
+//   db.addPageClick("TRANSACTION COMPLETED");
+//   db.addPageClick("Thank You Page -> Main Page");
 
-   thankYouEndTimer->stop();
-   this->hide();
-   idlePage->showFullScreen();
+//   thankYouEndTimer->stop();
+//   this->hide();
+//   idlePage->showFullScreen();
+}
+
+void thankYouPage::onRinseTimerTick(){
+
+    QMessageBox msgBox;
+    if (!rinse){
+        msgBox.setWindowFlags(Qt::FramelessWindowHint);
+        msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
+        msgBox.setText("<p align=center>Water rinse coming in<br>5</p>");
+        msgBox.setStyleSheet("QMessageBox{min-width: 7000px; min-height:2000px; font-size: 24px;}");
+        msgBox.show();
+        msgBox.raise();
+        QCoreApplication::processEvents();
+        rinse=true;
+    }
+
+    if(-- _rinseTimerTimeoutSec >= 0) {
+        qDebug() << "rinseTimer: Tick Down: " << _rinseTimerTimeoutSec << endl;
+        msgBox.setText("<p align=center>Water rinse coming in<br>"+ QString::number(_rinseTimerTimeoutSec) +"</p>");
+        //msgBox.show();
+        //msgBox.raise();
+        //QCoreApplication::processEvents();
+    } else {
+        qDebug() << "rinseTimer Done!" << _rinseTimerTimeoutSec << endl;
+        rinseTimer->stop();
+        msgBox.hide();
+        thankYouEndTimer->start(1000);
+        _thankYouTimeoutSec = 7;
+        //this->ui->volumeDispensedLabel->setText("");
+    }
 }

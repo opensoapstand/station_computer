@@ -42,6 +42,7 @@ public:
     explicit idle(QWidget *parent = nullptr);
     void setPage(productPage_1 *pageProduct);
     ~idle();
+    void showEvent(QShowEvent *event);
 
     DrinkOrder* userDrinkOrder;
     df_util* dfUtility;

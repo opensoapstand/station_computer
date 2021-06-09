@@ -41,7 +41,7 @@
    <property name="font">
     <font>
      <family>Proxima Nova ScOsf</family>
-     <pointsize>30</pointsize>
+     <pointsize>25</pointsize>
     </font>
    </property>
    <property name="text">

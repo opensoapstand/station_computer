@@ -73,9 +73,12 @@ void thankYouPage::showEvent(QShowEvent *event)
 
     //    // RINSING MESSAGE
 
-        rinse=false;
-        rinseTimer->start(1000);
-        _rinseTimerTimeoutSec = 5;
+//        rinse=false;
+//        rinseTimer->start(1000);
+//        _rinseTimerTimeoutSec = 5;
+
+    thankYouEndTimer->start(1000);
+    _thankYouTimeoutSec = 7;
 
 
 
@@ -113,30 +116,30 @@ void thankYouPage::on_mainPage_Button_clicked()
 
 void thankYouPage::onRinseTimerTick(){
 
-    QMessageBox msgBox;
-    if (!rinse){
-        msgBox.setWindowFlags(Qt::FramelessWindowHint);
-        msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
-        msgBox.setText("<p align=center>Water rinse coming in<br>5</p>");
-        msgBox.setStyleSheet("QMessageBox{min-width: 7000px; min-height:2000px; font-size: 24px;}");
-        msgBox.show();
-        msgBox.raise();
-        QCoreApplication::processEvents();
-        rinse=true;
-    }
+//    QMessageBox msgBox;
+//    if (!rinse){
+//        msgBox.setWindowFlags(Qt::FramelessWindowHint);
+//        msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
+//        msgBox.setText("<p align=center>Water rinse coming in<br>5</p>");
+//        msgBox.setStyleSheet("QMessageBox{min-width: 7000px; min-height:2000px; font-size: 24px;}");
+//        msgBox.show();
+//        msgBox.raise();
+//        QCoreApplication::processEvents();
+//        rinse=true;
+//    }
 
-    if(-- _rinseTimerTimeoutSec >= 0) {
-        qDebug() << "rinseTimer: Tick Down: " << _rinseTimerTimeoutSec << endl;
-        msgBox.setText("<p align=center>Water rinse coming in<br>"+ QString::number(_rinseTimerTimeoutSec) +"</p>");
-        //msgBox.show();
-        //msgBox.raise();
-        //QCoreApplication::processEvents();
-    } else {
-        qDebug() << "rinseTimer Done!" << _rinseTimerTimeoutSec << endl;
-        rinseTimer->stop();
-        msgBox.hide();
-        thankYouEndTimer->start(1000);
-        _thankYouTimeoutSec = 7;
-        //this->ui->volumeDispensedLabel->setText("");
-    }
+//    if(-- _rinseTimerTimeoutSec >= 0) {
+//        qDebug() << "rinseTimer: Tick Down: " << _rinseTimerTimeoutSec << endl;
+//        msgBox.setText("<p align=center>Water rinse coming in<br>"+ QString::number(_rinseTimerTimeoutSec) +"</p>");
+//        //msgBox.show();
+//        //msgBox.raise();
+//        //QCoreApplication::processEvents();
+//    } else {
+//        qDebug() << "rinseTimer Done!" << _rinseTimerTimeoutSec << endl;
+//        rinseTimer->stop();
+//        msgBox.hide();
+//        thankYouEndTimer->start(1000);
+//        _thankYouTimeoutSec = 7;
+//        //this->ui->volumeDispensedLabel->setText("");
+//    }
 }

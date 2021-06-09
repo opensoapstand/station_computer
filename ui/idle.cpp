@@ -69,7 +69,7 @@ void idle::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
     DbManager db(DB_PATH);
-    ui->savedBottles_label->setText("Thanks to you, this machine has saved<br>over " + QString::number(db.getTotalTransactions()) + " plastic containers<br>from the landfill");
+    ui->savedBottles_label->setText("THANKS TO YOU, THIS MACHINE HAS SAVED<br>OVER " + QString::number(db.getTotalTransactions()) + " PLASTIC CONTAINERS<br>FROM THE LANDFILL");
 }
 
 /*

@@ -53,6 +53,7 @@ public:
 
 private slots:
     void on_nextPageButton_clicked();
+    void on_savedBottles_label_clicked();
 
 private:
     Ui::idle *ui;

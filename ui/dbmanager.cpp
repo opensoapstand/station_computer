@@ -306,3 +306,18 @@ int DbManager::getTotalTransactions(){
 
     return transactions;
 }
+
+int DbManager::getNumberOfProducts(){
+    QSqlQuery products_query;
+    int products;
+
+    products_query.prepare("SELECT COUNT(*) FROM products;");
+    products_query.exec();
+
+    while (products_query.next()) {
+            products = products_query.value(0).toInt();
+
+        }
+
+    return products;
+}

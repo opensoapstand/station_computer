@@ -20,6 +20,7 @@ public:
     bool sellout(int slot);
     double getFullProduct(int slot);
     int getTotalTransactions();
+    int getNumberOfProducts();
 
 private:
     void emailEmpty(int slot);

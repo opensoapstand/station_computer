@@ -93,7 +93,18 @@ payPage::payPage(QWidget *parent) :
 
 
     // XXX: Comment on/off for Bypassing payment testing
-         while (!paymentInit());
+        bool payment=false;
+        DbManager db(DB_PATH);
+        for (int i = 1; i<db.getNumberOfProducts(); i++){
+            if (db.getPaymentMethod(i) == "tap"){
+                payment = true;
+            }
+        }
+        if (payment){
+            while (!paymentInit());
+            }
+
+
 }
 
 void payPage::stopPayTimers(){

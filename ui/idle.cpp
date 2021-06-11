@@ -95,23 +95,23 @@ void idle::on_nextPageButton_clicked()
     this->hide();
 }
 
-void idle::on_savedBottles_label_clicked()
-{
+//void idle::on_savedBottles_label_clicked()
+//{
 
-    // UPDATE DB
-    DbManager db(DB_PATH);
-    db.addPageClick("Main Page -> Product Page");
+//    // UPDATE DB
+//    DbManager db(DB_PATH);
+//    db.addPageClick("Main Page -> Product Page");
 
-    //Check product levels
-    p1 = db.checkLevels(1);
-    p2 = db.checkLevels(2);
-    p3 = db.checkLevels(3);
-    p4 = db.checkLevels(4);
+//    //Check product levels
+//    p1 = db.checkLevels(1);
+//    p2 = db.checkLevels(2);
+//    p3 = db.checkLevels(3);
+//    p4 = db.checkLevels(4);
 
-    // Connect to KB Listener
-    selection_PageOne->showFullScreen();
-    this->hide();
-}
+//    // Connect to KB Listener
+//    selection_PageOne->showFullScreen();
+//    this->hide();
+//}
 
 bool idle::isEnough(int p){
     switch(p){

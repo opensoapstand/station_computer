@@ -66,6 +66,7 @@ void init::showEvent(QShowEvent *event)
     qDebug() << "Start init Timers" << endl;
     initIdleTimer->start(1000);
     _initIdleTimeoutSec = 20;
+    system("DISPLAY=:0 xterm -hold  /release/fsm/controller &");
 }
 
 void init::initReadySlot(void){

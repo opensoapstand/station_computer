@@ -74,7 +74,7 @@ void thankYouPage::showEvent(QShowEvent *event)
     }
 
     //    // RINSING MESSAGE
-    ui->rinse_label->setText("<p align=center>Water rinse coming in<br>5</p>");
+    ui->rinse_label->setText("<p align=center>Water rinse coming in<br><br>5</p>");
     ui->rinse_label->show();
 
     rinse=false;
@@ -123,13 +123,13 @@ void thankYouPage::onRinseTimerTick(){
     QMessageBox msgBox;
     if (!rinse){
         ui->rinse_label->show();
-        ui->rinse_label->setText("<p align=center>Water rinse coming in<br>"+ QString::number(_rinseTimerTimeoutSec) +"</p>");
+        ui->rinse_label->setText("<p align=center>Water rinse coming in<br><br>"+ QString::number(_rinseTimerTimeoutSec) +"</p>");
         rinse=true;
     }
 
     if(-- _rinseTimerTimeoutSec >= 1) {
         qDebug() << "rinseTimer: Tick Down: " << _rinseTimerTimeoutSec << endl;
-        ui->rinse_label->setText("<p align=center>Water rinse coming in<br>"+ QString::number(_rinseTimerTimeoutSec) +"</p>");
+        ui->rinse_label->setText("<p align=center>Water rinse coming in<br><br>"+ QString::number(_rinseTimerTimeoutSec) +"</p>");
     }else if(_rinseTimerTimeoutSec == 0) {
         ui->rinse_label->setText("<p align=center>Rinsing with water now</p>");
     }

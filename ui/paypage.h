@@ -45,7 +45,7 @@ class payPage : public QWidget
 public:
     // **** GUI Setup ****
     explicit payPage(QWidget *parent = nullptr);
-    void setPage(paySelect* pageSizeSelect, dispensePage* pageDispense, idle* pageIdle, help* pageHelp);
+    void setPage(paySelect* pageSizeSelect, dispensePage* pageDispense, idle* pageIdle, help *pageHelp);
     ~payPage();
     void setProgressLabel(QLabel* label, int dot);
     // TODO: Figure out better Style Setup.
@@ -77,7 +77,7 @@ public:
         return merchantAddress;
     }
 
-
+    QTimer *readTimer;
 
 private slots:
 
@@ -133,7 +133,6 @@ private:
     bool isReadyForTap = false;
 
     void stopPayTimers();
-    void mainPage();
 
     int progressDots = 1;
     int progressLoopCounter = 0;
@@ -157,7 +156,7 @@ private:
 
     QSqlDatabase db;
 
-    QTimer *readTimer;
+
     QTimer *declineTimer;
     QTimer *paymentProgressTimer;
     QTimer *idlePaymentTimer;
@@ -181,6 +180,7 @@ private:
     bool paymentInit();
     bool waitForUX410();
     void cancelPayment();
+    bool getResponse(){return response;}
 
     // **** Drink Order Reference ****
     DrinkOrder paymentDrinkOrder;
@@ -194,6 +194,8 @@ private:
 
     QResizeEvent *paySelectResize;
     QShowEvent *dispenseEvent;
+
+    bool response;
 };
 
 #endif // PAYPAGE_H

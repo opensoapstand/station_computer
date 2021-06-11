@@ -52,7 +52,7 @@ payPage::payPage(QWidget *parent) :
     //ui->order_total_label->setText(" ");
    // ui->order_drink_amount->setText(" ");
 
-    ui->payment_bypass_Button->setEnabled(true);
+    ui->payment_bypass_Button->setEnabled(false);
 
     //displayPaymentPending(false);
 
@@ -75,25 +75,25 @@ payPage::payPage(QWidget *parent) :
         // **** Timer and Slot Setup ****
 
         // Payment Tap Ready
-        //readTimer = new QTimer(this);
-        //connect(readTimer, SIGNAL(timeout()), this, SLOT(readTimer_loop()));
+        readTimer = new QTimer(this);
+        connect(readTimer, SIGNAL(timeout()), this, SLOT(readTimer_loop()));
 
         // Payment Progress
-//        paymentProgressTimer = new QTimer(this);
-//        connect(paymentProgressTimer, SIGNAL(timeout()), this, SLOT(progressStatusLabel()));
-//        paymentProgressTimer->setInterval(500);
+        paymentProgressTimer = new QTimer(this);
+        connect(paymentProgressTimer, SIGNAL(timeout()), this, SLOT(progressStatusLabel()));
+        paymentProgressTimer->setInterval(500);
 
         // Payment Declined
-//        declineTimer = new QTimer(this);
-//        connect(declineTimer, SIGNAL(timeout()), this, SLOT(declineTimer_start()));
+        declineTimer = new QTimer(this);
+        connect(declineTimer, SIGNAL(timeout()), this, SLOT(declineTimer_start()));
 
         // Idle Payment reset
-//        idlePaymentTimer = new QTimer(this);
-//        connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
+        idlePaymentTimer = new QTimer(this);
+        connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
 
 
     // XXX: Comment on/off for Bypassing payment testing
-    //     paymentInit();
+         while (!paymentInit());
 }
 
 void payPage::stopPayTimers(){
@@ -118,6 +118,13 @@ void payPage::stopPayTimers(){
         qDebug() << "cancel idle payment END Timer" << endl;
         paymentEndTimer->stop();
     }
+
+    if(readTimer != nullptr) {
+        qDebug() << "cancel readTimer" << endl;
+        readTimer->stop();
+        readTimer->stop();
+    }
+    qDebug() << "payPage: Stopped Timers" << endl;
 
 }
 
@@ -173,6 +180,8 @@ void payPage::resizeEvent(QResizeEvent *event, char drinkSize){
 
     ui->order_drink_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
     ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
+
+    readTimer->start(1000);
 }
 
 
@@ -203,8 +212,9 @@ void payPage::on_previousPage_Button_clicked()
 
     qDebug() << "payPage: previous button" << endl;
     stopPayTimers();
-    //    readTimer->stop();
-    //    cancelPayment();
+    response = true;
+    readTimer->stop();
+    cancelPayment();
     paySelectPage->resizeEvent(paySelectResize);
     paySelectPage->showFullScreen();
     this->hide();
@@ -221,6 +231,7 @@ void payPage::on_payment_bypass_Button_clicked()
     qDebug() << "ByPass payment to Dispense" << endl;
     //    cancelPayment();
     stopPayTimers();
+    //readTimer->stop();
     dispensingPage->showEvent(dispenseEvent);
     this->hide();
     dispensingPage->showFullScreen();
@@ -340,67 +351,42 @@ void payPage::updateTotals(string drinkDescription, string drinkAmount, string o
 
 }
 
-void payPage::mainPage()
-{
-    qDebug() << "Main Button Page" << endl;
-    //    cancelPayment();
-    stopPayTimers();
-    this->hide();
-    idlePage->showFullScreen();
-}
-
 void payPage::on_mainPage_Button_clicked()
 {
-    qDebug() << "Help Button" << endl;
+    qDebug() << "Main Button Page" << endl;
 
-    //Update Click DB
-    DbManager db(DB_PATH);
-    db.addPageClick("Pay Page -> Help Page");
-
-    //    cancelPayment();
+    //sleep(1);
     stopPayTimers();
+    response = true;
+    readTimer->stop();
+
+    cancelPayment();
     this->hide();
     helpPage->showFullScreen();
-
-//    qDebug() << "Main Page Button pressed" << endl;
-
-//    paymentEndTimer->stop();
-
-//    QMessageBox msgBox;
-//    msgBox.setWindowFlags(Qt::FramelessWindowHint);
-//    //msgBox.setText("<p align=center>How Can We Help You?<br><br></p>");
-//    msgBox.setInformativeText("<p align=center>Phone: (604) 837-5066<br></p><p align=center>Email: hello@drinkfill.com<br></p>");
-//    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-height: 30px; align: center}");
-
-//    msgBox.setStandardButtons(QMessageBox::Close);
-//    int ret = msgBox.exec();
-
-//    switch(ret){
-//        case QMessageBox::Close:
-//            qDebug() << "Return CLICKED" << endl;
-//            msgBox.hide();
-//            paymentEndTimer->start(1000);
-//            _paymentTimeoutSec = 20;
-//        break;
-
-//    }
-
 }
 
 /*Cancel any previous payment*/
-//void payPage::cancelPayment()
-//{
-//    qDebug() << "Payment cancelled!" << endl;
-//    /*Cancel any previous payment*/
-//    if(purchaseEnable){
-//        pktToSend = paymentPacket.purchaseCancelPacket();
-//        if (sendToUX410()){
-//            waitForUX410();
-//            pktResponded.clear();
-//        }
-//        com.flushSerial();
-//    }
-//}
+void payPage::cancelPayment()
+{
+
+
+    //waitResponse = true;
+
+    //com.flushSerial();
+    /*Cancel any previous payment*/
+    //if(purchaseEnable){
+        pktToSend = paymentPacket.purchaseCancelPacket();
+        if (sendToUX410()){
+            waitForUX410();
+            // If this is not commented out, the GUI crashes! (But it was uncommented when I found it...)
+            //pktResponded.clear();
+        }
+        com.flushSerial();
+
+        qDebug() << "Payment cancelled!" << endl;
+   // }
+
+}
 
 // Payment Section based on DF001 Prototype
 
@@ -437,52 +423,53 @@ void payPage::showEvent(QShowEvent *event)
 
   //  ui->payment_pass_Button->setEnabled(false);
   //  ui->payment_cancel_Button->setEnabled(false);
-    //    pktResponded = com.readForAck();
-    //    readPacket.packetReadFromUX(pktResponded);
-    //    pktResponded.clear();
+        pktResponded = com.readForAck();
+        readPacket.packetReadFromUX(pktResponded);
+        pktResponded.clear();
 
-    //    if (readPacket.getAckOrNak() == communicationPacketField::ACK)
-    //    {
-    //        timerEnabled = true;
-    //        readtimer->start(10);
-    //    }
+        if (readPacket.getAckOrNak() == communicationPacketField::ACK)
+        {
+            timerEnabled = true;
+            //readTimer->start(10);
+        }
 
 
 }
 
+
 // XXX: Remove this when interrupts and flow sensors work!
 void payPage::onTimeoutTick(){
-    if(-- _paymentTimeoutSec >= 0) {
-        qDebug() << "payPage: Tick Down: " << _paymentTimeoutSec << endl;
+//    if(-- _paymentTimeoutSec >= 0) {
+//        qDebug() << "payPage: Tick Down: " << _paymentTimeoutSec << endl;
 
-        _paymentTimeLabel.clear();
-        QString time = QString::number(_paymentTimeoutSec);
+//        _paymentTimeLabel.clear();
+//        QString time = QString::number(_paymentTimeoutSec);
 
-        if(_paymentTimeoutSec >= 10) {
-            if(_paymentTimeoutSec % 2 == 0) {
-                _paymentTimeLabel.append("TAP NOW");
-                qDebug() << _paymentTimeLabel << endl;
-            } else {
-                _paymentTimeLabel.append(" ");
-                qDebug() << _paymentTimeLabel << endl;
-            }
-        } else {
-            if(_paymentTimeoutSec % 2 == 0) {
-                _paymentTimeLabel.append("PROCESSING.");
-                qDebug() << _paymentTimeLabel << endl;
-            } else {
-                _paymentTimeLabel.append("PROCESSING..");
-                qDebug() << _paymentTimeLabel << endl;
-            }
-            qDebug() << _paymentTimeLabel << endl;
-        }
-        this->ui->payment_countdownLabel->setText(_paymentTimeLabel);
-    } else {
-        qDebug() << "Timer Done!" << _paymentTimeoutSec << endl;
-        on_payment_bypass_Button_clicked();
-        //        paymentEndTimer->stop();
-        //        this->ui->payment_countdownLabel->setText("Finished!");
-    }
+//        if(_paymentTimeoutSec >= 10) {
+//            if(_paymentTimeoutSec % 2 == 0) {
+//                _paymentTimeLabel.append("TAP NOW");
+//                qDebug() << _paymentTimeLabel << endl;
+//            } else {
+//                _paymentTimeLabel.append(" ");
+//                qDebug() << _paymentTimeLabel << endl;
+//            }
+//        } else {
+//            if(_paymentTimeoutSec % 2 == 0) {
+//                _paymentTimeLabel.append("PROCESSING.");
+//                qDebug() << _paymentTimeLabel << endl;
+//            } else {
+//                _paymentTimeLabel.append("PROCESSING..");
+//                qDebug() << _paymentTimeLabel << endl;
+//            }
+//            qDebug() << _paymentTimeLabel << endl;
+//        }
+//        this->ui->payment_countdownLabel->setText(_paymentTimeLabel);
+//    } else {
+//        qDebug() << "Timer Done!" << _paymentTimeoutSec << endl;
+//        on_payment_bypass_Button_clicked();
+//        //        paymentEndTimer->stop();
+//        //        this->ui->payment_countdownLabel->setText("Finished!");
+//    }
 }
 
 bool payPage::setpaymentProcess(bool status)
@@ -762,6 +749,19 @@ void payPage::readTimer_loop()
 {
     qDebug() << "readingTimer_loop" << endl;
     cout << "start loop pktResponded: " << to_string(pktResponded[0]) << endl;
+
+    response = false;
+    pktToSend = paymentPacket.purchasePacket("0.01");
+
+    //this->ui->payment_countdownLabel->setText("TAP NOW");
+
+    if (sendToUX410()){
+
+    while (!response){
+        response = getResponse();
+
+        QCoreApplication::processEvents();
+
     if(pktResponded[0] != 0x02){
         qDebug() << "Reading TAP Packet" << endl;
 
@@ -770,66 +770,83 @@ void payPage::readTimer_loop()
         // This breaks the polling loop!
         //        pktResponded = com.readPacket();
         cout << "MISS: pktResponded: " << to_string(pktResponded[0]) << endl;
-
+        pktResponded.clear();
+        pktResponded = com.readPacket();
+        usleep(10);
         //        com.sendAck();
-        cout << "Polling Timer" << endl;
-        readTimer->start(1000);
+        //cout << "Polling Timer" << endl;
+        //readTimer->start(1000);
     } else {
         cout << "HIT: pktResponded: " << to_string(pktResponded[0]) << endl;
 
         qDebug() << "Check TAP Packet; Sending" << endl;
+       // com.sendAck();
+        readPacket.packetReadFromUX(pktResponded);
+        std::cout << readPacket;
         com.sendAck();
 
-
-        if (pktResponded[10] == 0x31){
+        if (pktResponded[19] == 0x41){      // Host Response 41 = A "Approved"
             purchaseEnable = true;
             approved = true;
-            cout << "Approval Packet 31" << endl;
+            cout << "Approval Packet 41" << endl;
+            this->ui->payment_countdownLabel->setText("APPROVED!");
+            //sleep(5);
+            response = true;
+            on_payment_bypass_Button_clicked();
+
             //            mainPage->getSurveyPage()->resetSurveyFilled(); //reset the coupon discount
         }
-        else if(pktResponded[10] == 0x32){
+        else if(pktResponded[19] == 0x44){  // Host Response 44 = D "Declined"
             purchaseEnable = true;
-            approved = true; //should be false
-            cout << "Approval Packet 32" << endl;
+            approved = false;
+            cout << "Declined Packet 32" << endl;
+            this->ui->payment_countdownLabel->setText("DECLINED!");
+            //sleep(5);
+            on_mainPage_Button_clicked();
         }
         else {
             purchaseEnable = false;
             cout << "No Approval Packet!" << endl;
+            //this->ui->payment_countdownLabel->setText("Hmm...");
+            //sleep(5);
+            //on_mainPage_Button_clicked();
         }
 
-        readPacket.packetReadFromUX(pktResponded);
-        std::cout << readPacket;
+//        readPacket.packetReadFromUX(pktResponded);
+//        std::cout << readPacket;
 
 
-        if (purchaseEnable == true){
-            //once purchase successed create a receipt and store into database
-            paymentPktInfo.transactionID(readPacket.getPacket().data);
-            //paymentPktInfo.makeReceipt(mainPage->getDatabase());
-            //paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
+//        if (purchaseEnable == true){
+//            //once purchase successed create a receipt and store into database
+//            paymentPktInfo.transactionID(readPacket.getPacket().data);
+//            //paymentPktInfo.makeReceipt(mainPage->getDatabase());
+//            //paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
 
-            paymentProcessing = false;
-            progressLoopCounter = 0;
-        }
-        timerEnabled = false;
+//            paymentProcessing = false;
+//            progressLoopCounter = 0;
+//        }
+//        timerEnabled = false;
     }
 
-    if (timerEnabled == false){
-        qDebug() << "Timer has been disabled" << endl;
-        //        if (purchaseEnable == false){
-        //            pageNumber = 0;
-        //            mainPage->getSurveyPage()->resetSurveyFilled(); //reset the coupon discount
-        //        }
-        readTimer->stop();
-        purchaseEnable = false;
-    }
+//    if (timerEnabled == false){
+//        qDebug() << "Timer has been disabled" << endl;
+//        //        if (purchaseEnable == false){
+//        //            pageNumber = 0;
+//        //            mainPage->getSurveyPage()->resetSurveyFilled(); //reset the coupon discount
+//        //        }
+//        readTimer->stop();
+//        purchaseEnable = false;
+//    }
 
-    if (pktResponded.size() > 100)
-    {
-        if (progressLoopCounter == 0){
- //           ui->payment_processLabel->setText(TAP_PROCESSING_LABEL);
-            //            ui->payment_declineLabel->hide();
-            paymentProcessing = true;
-            paymentProgressTimer->start();
+//    if (pktResponded.size() > 100)
+//    {
+//        if (progressLoopCounter == 0){
+// //           ui->payment_processLabel->setText(TAP_PROCESSING_LABEL);
+//            //            ui->payment_declineLabel->hide();
+//            paymentProcessing = true;
+//            paymentProgressTimer->start();
+//        }
+//    }
         }
     }
 }

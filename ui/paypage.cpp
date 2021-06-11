@@ -656,6 +656,14 @@ bool payPage::paymentInit()
 {
     paymentConnected = com.init();
 
+    while (!paymentConnected){
+        paymentConnected = com.init();
+        sleep(1);
+    }
+
+    //This is super shitty - there must be a better way to find out when the green light starts flashing on the UX420
+    sleep(35);
+
     /*Cancel any previous payment*/
     pktToSend = paymentPacket.purchaseCancelPacket();
     if (sendToUX410()){

@@ -799,6 +799,8 @@ void payPage::readTimer_loop()
             approved = true;
             cout << "Approval Packet 41" << endl;
             this->ui->payment_countdownLabel->setText("APPROVED!");
+            paymentPktInfo.transactionID(readPacket.getPacket().data);
+            paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
             //sleep(5);
             response = true;
             on_payment_bypass_Button_clicked();
@@ -810,6 +812,8 @@ void payPage::readTimer_loop()
             approved = false;
             cout << "Declined Packet 32" << endl;
             this->ui->payment_countdownLabel->setText("DECLINED!");
+            paymentPktInfo.transactionID(readPacket.getPacket().data);
+            paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
             //sleep(5);
             on_mainPage_Button_clicked();
         }
@@ -828,8 +832,8 @@ void payPage::readTimer_loop()
 //        if (purchaseEnable == true){
 //            //once purchase successed create a receipt and store into database
 //            paymentPktInfo.transactionID(readPacket.getPacket().data);
-//            //paymentPktInfo.makeReceipt(mainPage->getDatabase());
-//            //paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
+//            paymentPktInfo.makeReceipt(mainPage->getDatabase());
+
 
 //            paymentProcessing = false;
 //            progressLoopCounter = 0;

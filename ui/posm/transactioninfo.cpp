@@ -122,10 +122,11 @@ void transactionInfo::makeReceipt(string terminalID, string merchantName, string
     purchaseDate.insert(8, " ");
     purchaseDate.insert(11, ":");
     purchaseDate.insert(14, ":");
-    std::ofstream customerReceipt("/home/soapstand/receipts/"+filenameC);
-    std::ofstream merchantReceipt("/home/soapstand/receipts/"+filenameM);
+    std::ofstream customerReceipt;
+    std::ofstream merchantReceipt;
 
-    //customerReceipt.open(filename);
+    customerReceipt.open("/release/receipts/"+filenameC);
+    merchantReceipt.open("/release/receipts/"+filenameM);
     if (accountType == "01"){
         customerReceipt <<"TRANSACTION RECORD\n";
         merchantReceipt <<"TRANSACTION RECORD\n";
@@ -137,7 +138,7 @@ void transactionInfo::makeReceipt(string terminalID, string merchantName, string
         accountType = "NO SIGNATURE TRANSACTION \n\n";
     customerReceipt <<"   " << merchantName<<endl;
     customerReceipt <<"   " << merchantAddress << "\n\n";
-    customerReceipt << "TYPE: " << txnType <<endl;
+    customerReceipt << "TYPE: " << txnType << endl;
     customerReceipt <<"                 -----------\n";
     customerReceipt<< "ACCT: "<< cardType<<"       $    " << purchaseAmount <<endl;
     customerReceipt <<"                 -----------\n\n";
@@ -213,6 +214,7 @@ void transactionInfo::makeReceipt(string terminalID, string merchantName, string
 
         }
     }
+
     customerReceipt <<endl<<accountType;
     customerReceipt <<"   ---IMPORTANT--- \nRetain This Copy For Your Records\n\n"
                    <<"   ***CUSTOMER COPY***";
@@ -235,4 +237,5 @@ void transactionInfo::makeReceipt(string terminalID, string merchantName, string
 //    for (int i = 0; i < MAX_FIELD; i++){
 //        ptr[i].clear();
 //    }
+
 }

@@ -161,7 +161,7 @@ void payPage::labelSetup(QLabel *label, int fontSize)
 
 void payPage::resizeEvent(QResizeEvent *event, char drinkSize){
     // FIXME: MAGIC NUMBER!!! UX410 Socket Auto Close time is 60 seconds so timer kills page GUI
-    //idlePaymentTimer->start(60000);
+    idlePaymentTimer->start(60000);
 
     int checkOption = idlePage->userDrinkOrder->getOption();
 
@@ -399,26 +399,6 @@ void payPage::cancelPayment()
 
 }
 
-// Payment Section based on DF001 Prototype
-
-// XXX: Old implementation of Dispensing.  ARDUINO SHOULD NOT BE THIS TIGHTLY COUPLED TO UI!!!
-//void payPage::showEvent(QShowEvent *event)
-//{
-//    enterPage = true;
-//    progressValue = 0;
-//    tempValue = "0";
-//    DispenseVolume = "0";
-
-//    mainPage->sendardCommand("Z");
-
-//    ui->priceVolume1Button->setStyleSheet("border-image:url(:/assets/V6/ev2_ui_assets_v6-14.png); color: white;");
-//    ui->priceVolume2Button->setStyleSheet("border-image:url(:/assets/V6/ev2_ui_assets_v6-15.png); color: white;");
-
-//    pageUpdateTimer->start();
-//    goBackTimer->start();//if no one uses the machine go back to first page
-//    QWidget::showEvent(event);
-//}
-
 void payPage::showEvent(QShowEvent *event)
 {
     //QWidget::showEvent(event);
@@ -450,8 +430,8 @@ void payPage::showEvent(QShowEvent *event)
 
 // XXX: Remove this when interrupts and flow sensors work!
 void payPage::onTimeoutTick(){
-//    if(-- _paymentTimeoutSec >= 0) {
-//        qDebug() << "payPage: Tick Down: " << _paymentTimeoutSec << endl;
+    if(-- _paymentTimeoutSec >= 0) {
+        qDebug() << "payPage: Tick Down: " << _paymentTimeoutSec << endl;
 
 //        _paymentTimeLabel.clear();
 //        QString time = QString::number(_paymentTimeoutSec);
@@ -475,12 +455,18 @@ void payPage::onTimeoutTick(){
 //            qDebug() << _paymentTimeLabel << endl;
 //        }
 //        this->ui->payment_countdownLabel->setText(_paymentTimeLabel);
-//    } else {
-//        qDebug() << "Timer Done!" << _paymentTimeoutSec << endl;
+    } else {
+        qDebug() << "Timer Done!" << _paymentTimeoutSec << endl;
+
+        //response = true;
+        //stopPayTimers();
+        //readTimer->stop();
+        //cancelPayment();
+        idlePaymentTimeout();
 //        on_payment_bypass_Button_clicked();
 //        //        paymentEndTimer->stop();
 //        //        this->ui->payment_countdownLabel->setText("Finished!");
-//    }
+    }
 }
 
 bool payPage::setpaymentProcess(bool status)
@@ -569,6 +555,10 @@ void payPage::declineTimer_start()
 
 void payPage::idlePaymentTimeout() {
     stopPayTimers();
+    response = true;
+    readTimer->stop();
+
+    cancelPayment();
     this->hide();
     idlePage->showFullScreen();
 }

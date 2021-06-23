@@ -383,7 +383,7 @@ void payPage::cancelPayment()
 
     //waitResponse = true;
 
-    //com.flushSerial();
+    com.flushSerial();
     /*Cancel any previous payment*/
     //if(purchaseEnable){
         pktToSend = paymentPacket.purchaseCancelPacket();
@@ -760,6 +760,7 @@ void payPage::readTimer_loop()
     cout << "start loop pktResponded: " << to_string(pktResponded[0]) << endl;
 
     response = false;
+    com.flushSerial();
     pktToSend = paymentPacket.purchasePacket("0.01");
 
     //this->ui->payment_countdownLabel->setText("TAP NOW");
@@ -812,14 +813,15 @@ void payPage::readTimer_loop()
             approved = false;
             cout << "Declined Packet 32" << endl;
             this->ui->payment_countdownLabel->setText("DECLINED!");
-            paymentPktInfo.transactionID(readPacket.getPacket().data);
-            paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
+            //paymentPktInfo.transactionID(readPacket.getPacket().data);
+            //paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
             //sleep(5);
             on_mainPage_Button_clicked();
         }
         else {
             purchaseEnable = false;
             cout << "No Approval Packet!" << endl;
+            pktResponded.clear();
             //this->ui->payment_countdownLabel->setText("Hmm...");
             //sleep(5);
             //on_mainPage_Button_clicked();

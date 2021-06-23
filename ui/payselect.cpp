@@ -121,30 +121,56 @@ void paySelect::on_payPage_Button_clicked()
 
     //string drinkTotal = drinkAmount;
 
-    char drinkSize;
-
-    if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
-        drinkSize = 's';
-        paymentPage->resizeEvent(paySelectResize, drinkSize);
-    }
-    if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK){
-        drinkSize = 'l';
-        paymentPage->resizeEvent(paySelectResize, drinkSize);
-    }
-
-
     this->stopSelectTimers();
     selectIdleTimer->stop();
 
-    if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "tap" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "qr"){
-        //paymentPage->resizeEvent(paySelectResize, drinkSize);
+    if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "qr"){
         paymentPage->showFullScreen();
         this->hide();
-    }else if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "barcode" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "plu"){
+    }
+    else if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "tap"){
+        char drinkSize;
+
+        if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
+            drinkSize = 's';
+            paymentPage->resizeEvent(paySelectResize, drinkSize);
+        }
+        if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK){
+            drinkSize = 'l';
+            paymentPage->resizeEvent(paySelectResize, drinkSize);
+        }
+        paymentPage->showFullScreen();
+        this->hide();
+    }
+    else if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "barcode" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "plu"){
         dispensingPage->showEvent(dispenseEvent);
         this->hide();
         dispensingPage->showFullScreen();
     }
+
+//    char drinkSize;
+
+//    if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
+//        drinkSize = 's';
+//        paymentPage->resizeEvent(paySelectResize, drinkSize);
+//    }
+//    if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK){
+//        drinkSize = 'l';
+//        paymentPage->resizeEvent(paySelectResize, drinkSize);
+//    }
+
+
+
+
+//    if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "tap" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "qr"){
+//        //paymentPage->resizeEvent(paySelectResize, drinkSize);
+//        paymentPage->showFullScreen();
+//        this->hide();
+//    }else if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "barcode" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "plu"){
+//        dispensingPage->showEvent(dispenseEvent);
+//        this->hide();
+//        dispensingPage->showFullScreen();
+//    }
 
     //qDebug() << idlePage->userDrinkOrder->getPrice();
     //qDebug() << idlePage->userDrinkOrder->getSize();

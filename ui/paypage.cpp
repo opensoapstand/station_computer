@@ -99,7 +99,11 @@ payPage::payPage(QWidget *parent) :
         for (int i = 1; i<db.getNumberOfProducts(); i++){
             if (db.getPaymentMethod(i) == "tap"){
                 payment = true;
+                ui->payment_bypass_Button->setEnabled(false);
+            }else{
+                 ui->payment_bypass_Button->setEnabled(true);
             }
+
         }
         if (payment){
             while (!paymentInit());
@@ -177,6 +181,7 @@ void payPage::resizeEvent(QResizeEvent *event, char drinkSize){
         bitmap_location.append("_");
         bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
         bitmap_location.append(".png");
+        ui->order_drink_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
     } else {
         bitmap_location = ":/light/5_pay_page_l_1.png";
     }
@@ -193,8 +198,7 @@ void payPage::resizeEvent(QResizeEvent *event, char drinkSize){
     this->setPalette(palette);
     //this->resize(this->geometry().width(), this->geometry().height());
 
-    ui->order_drink_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
-    ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
+        ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
 
     if (payment){
         readTimer->start(1000);
@@ -412,7 +416,7 @@ void payPage::showEvent(QShowEvent *event)
 {
     //QWidget::showEvent(event);
 
-        ui->payment_countdownLabel->setText(" ");
+       // ui->payment_countdownLabel->setText(" ");
 
         paymentEndTimer = new QTimer(this);
         paymentEndTimer->setInterval(1000);
@@ -420,19 +424,23 @@ void payPage::showEvent(QShowEvent *event)
         paymentEndTimer->start(1000);
         _paymentTimeoutSec = 20;
 
+        ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
+
 
   //  ui->payment_pass_Button->setEnabled(false);
   //  ui->payment_cancel_Button->setEnabled(false);
-        pktResponded = com.readForAck();
-        readPacket.packetReadFromUX(pktResponded);
-        pktResponded.clear();
 
-        if (readPacket.getAckOrNak() == communicationPacketField::ACK)
-        {
-            timerEnabled = true;
-            //readTimer->start(10);
+        if (payment){
+            pktResponded = com.readForAck();
+            readPacket.packetReadFromUX(pktResponded);
+            pktResponded.clear();
+
+            if (readPacket.getAckOrNak() == communicationPacketField::ACK)
+            {
+                timerEnabled = true;
+                //readTimer->start(10);
+            }
         }
-
 
 }
 
@@ -809,7 +817,7 @@ void payPage::readTimer_loop()
             purchaseEnable = true;
             approved = true;
             cout << "Approval Packet 41" << endl;
-            this->ui->payment_countdownLabel->setText("APPROVED!");
+            //this->ui->payment_countdownLabel->setText("APPROVED!");
             paymentPktInfo.transactionID(readPacket.getPacket().data);
             paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
             //sleep(5);
@@ -822,7 +830,7 @@ void payPage::readTimer_loop()
             purchaseEnable = true;
             approved = false;
             cout << "Declined Packet 32" << endl;
-            this->ui->payment_countdownLabel->setText("DECLINED!");
+            //this->ui->payment_countdownLabel->setText("DECLINED!");
             //paymentPktInfo.transactionID(readPacket.getPacket().data);
             //paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
             //sleep(5);

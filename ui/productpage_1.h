@@ -47,7 +47,7 @@ private slots:
     void on_selection1_Button_clicked();
     void on_selection2_Button_clicked();
     void on_selection3_Button_clicked();
-//    void on_selection4_Button_clicked();
+    void on_selection4_Button_clicked();
     //void on_selection5_Button_clicked();
     //void on_selection6_Button_clicked();
     void mainPage();

@@ -196,6 +196,7 @@ private:
     QShowEvent *dispenseEvent;
 
     bool response;
+    bool payment;
 };
 
 #endif // PAYPAGE_H

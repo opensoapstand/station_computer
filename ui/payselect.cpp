@@ -136,7 +136,7 @@ void paySelect::on_payPage_Button_clicked()
     this->stopSelectTimers();
     selectIdleTimer->stop();
 
-    if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "tap"){
+    if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "tap" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "qr"){
         //paymentPage->resizeEvent(paySelectResize, drinkSize);
         paymentPage->showFullScreen();
         this->hide();

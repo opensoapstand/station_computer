@@ -44,6 +44,10 @@
      <pointsize>25</pointsize>
     </font>
    </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Proxima Nova ScOsf;
+color: #FFFFFF;</string>
+   </property>
    <property name="text">
     <string/>
    </property>

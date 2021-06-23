@@ -93,7 +93,8 @@ payPage::payPage(QWidget *parent) :
 
 
     // XXX: Comment on/off for Bypassing payment testing
-        bool payment=false;
+        payment=false;
+
         DbManager db(DB_PATH);
         for (int i = 1; i<db.getNumberOfProducts(); i++){
             if (db.getPaymentMethod(i) == "tap"){
@@ -192,7 +193,9 @@ void payPage::resizeEvent(QResizeEvent *event, char drinkSize){
     ui->order_drink_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
     ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
 
-    readTimer->start(1000);
+    if (payment){
+        readTimer->start(1000);
+    }
 }
 
 

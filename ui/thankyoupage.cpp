@@ -67,19 +67,30 @@ void thankYouPage::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
 
+    DbManager db(DB_PATH);
+
     if(thankYouEndTimer == nullptr){
         thankYouEndTimer = new QTimer(this);
         thankYouEndTimer->setInterval(1000);
         connect(thankYouEndTimer, SIGNAL(timeout()), this, SLOT(onThankyouTimeoutTick()));
     }
 
-    //    // RINSING MESSAGE
-    ui->rinse_label->setText("<p align=center>Water rinse coming in<br><br>5</p>");
-    ui->rinse_label->show();
 
-    rinse=false;
-    rinseTimer->start(1000);
-    _rinseTimerTimeoutSec = 5;
+    // THIS WILL HAVE TO BE CHANGED SO THE SYSTEM CHECKS IF IT IS A DF / SS MACHINE
+
+    if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "tap"){
+        rinse=false;
+        rinseTimer->start(1000);
+        _rinseTimerTimeoutSec = 5;
+        ui->rinse_label->setText("<p align=center>Water rinse coming in<br><br>5</p>");
+        ui->rinse_label->show();
+        ui->mainPage_Button->setEnabled(false);
+    }else{
+        ui->rinse_label->hide();
+        thankYouEndTimer->start(1000);
+        _thankYouTimeoutSec = 5;
+        ui->mainPage_Button->setEnabled(true);
+    }
 
 //    thankYouEndTimer->start(1000);
 //    _thankYouTimeoutSec = 7;
@@ -108,14 +119,14 @@ void thankYouPage::onThankyouTimeoutTick(){
 
 void thankYouPage::on_mainPage_Button_clicked()
 {
-//   // Update Click DB
-//   DbManager db(DB_PATH);
-//   db.addPageClick("TRANSACTION COMPLETED");
-//   db.addPageClick("Thank You Page -> Main Page");
+   // Update Click DB
+   DbManager db(DB_PATH);
+   db.addPageClick("TRANSACTION COMPLETED");
+   db.addPageClick("Thank You Page -> Main Page");
 
-//   thankYouEndTimer->stop();
-//   this->hide();
-//   idlePage->showFullScreen();
+   thankYouEndTimer->stop();
+   this->hide();
+   idlePage->showFullScreen();
 }
 
 void thankYouPage::onRinseTimerTick(){

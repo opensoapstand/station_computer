@@ -28,7 +28,7 @@ payPage::payPage(QWidget *parent) :
 {
     // Fullscreen background setup
     ui->setupUi(this);
-    QPixmap background(":/light/5_pay_page_l_1.png");
+    QPixmap background(":/light/5_pay_page.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
@@ -168,7 +168,10 @@ void payPage::resizeEvent(QResizeEvent *event, char drinkSize){
 
     QString bitmap_location;
 
-    if(checkOption > 0 && checkOption <= 9) {
+    if (!payment){
+        bitmap_location = ":/light/5_pay_page.png";
+    }
+    else if(checkOption > 0 && checkOption <= 9) {
         bitmap_location.append(":/light/5_pay_page_");
         bitmap_location.append(drinkSize);
         bitmap_location.append("_");
@@ -228,7 +231,9 @@ void payPage::on_previousPage_Button_clicked()
     stopPayTimers();
     response = true;
     readTimer->stop();
-    cancelPayment();
+    if (payment){
+        cancelPayment();
+    }
     paySelectPage->resizeEvent(paySelectResize);
     paySelectPage->showFullScreen();
     this->hide();
@@ -373,8 +378,9 @@ void payPage::on_mainPage_Button_clicked()
     stopPayTimers();
     response = true;
     readTimer->stop();
-
-    cancelPayment();
+    if (payment){
+        cancelPayment();
+    }
     this->hide();
     helpPage->showFullScreen();
 }
@@ -560,8 +566,9 @@ void payPage::idlePaymentTimeout() {
     stopPayTimers();
     response = true;
     readTimer->stop();
-
-    cancelPayment();
+    if (payment){
+        cancelPayment();
+    }
     this->hide();
     idlePage->showFullScreen();
 }

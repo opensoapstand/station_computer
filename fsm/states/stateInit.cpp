@@ -696,6 +696,7 @@ static int callback(void *data, int argc, char **argv, char **azColName){
    double price_s;
    int is_still;
    double volume_per_tick;
+   string paymentMethod;
    string plu_l;
    string plu_s;
 
@@ -763,10 +764,14 @@ static int callback(void *data, int argc, char **argv, char **azColName){
           plu_s = argv[i];
           printf("PLU S: %s \n", plu_s.c_str());
       }
+      else if (colname == "payment"){
+          paymentMethod = argv[i];
+          printf("Payment Method: %s \n", paymentMethod.c_str());
+      }
 
       printf("\n");
 
-      g_cassettes[slot-1].setDrink(new drink(slot, name, volume_dispensed, volume_target_l, volume_target_s , calibration_const, price_l, price_s, false, volume_per_tick, plu_l, plu_s));
+      g_cassettes[slot-1].setDrink(new drink(slot, name, volume_dispensed, volume_target_l, volume_target_s , calibration_const, price_l, price_s, false, volume_per_tick, plu_l, plu_s, paymentMethod));
    }
 
    return 0;

@@ -54,5 +54,6 @@
         <file>light/drink_fill.png</file>
         <file>light/drink_empty.png</file>
         <file>light/drink_shadow.png</file>
+        <file>light/5_pay_page.png</file>
     </qresource>
 </RCC>

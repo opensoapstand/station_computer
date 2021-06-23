@@ -110,17 +110,19 @@ DF_ERROR stateDispenseEnd::onExit()
    pos = m_pMessaging->getnOption();
    pos = pos - 1;
 
-   // TODO: DF -- SS COMBINED: CHECK IF SYSTEM IS DF AND DO BELOW, ELSE DONT
+   std::string paymentMethod = cassettes[pos].getDrink()->getPaymentMethod();
 
-//   sleep(5);
-//   debugOutput::sendMessage("Dispense OnEXIT", INFO);
-//   debugOutput::sendMessage("------Cleaning Mode------", INFO);
-//   debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
-//   debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(WATER)), INFO);
-//   debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> AIR", INFO);
-//   debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(AIR)), INFO);
-   //cassettes[pos].cleanNozzle(WATER, AIR);
+   if (paymentMethod == "tap"){
+       sleep(5);
+       debugOutput::sendMessage("Dispense OnEXIT", INFO);
+       debugOutput::sendMessage("------Cleaning Mode------", INFO);
+       debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
+       debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(WATER)), INFO);
+       debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
+       debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
+       cassettes[pos].cleanNozzle(WATER, AIR);
+   }
 
    updateDB();
 
@@ -128,7 +130,10 @@ DF_ERROR stateDispenseEnd::onExit()
    m_pMessaging->clearCommandString();
    m_pMessaging->clearcCommand();
 
-   printer();
+   if (paymentMethod == "barcode" || paymentMethod == "plu"){
+       debugOutput::sendMessage("Printing receipt", INFO);
+       printer();
+   }
 
    cassettes[pos].getDrink()->stopDispense();
    cassettes[pos].stopDispense(DRINK);
@@ -138,7 +143,6 @@ DF_ERROR stateDispenseEnd::onExit()
 
    debugOutput::sendMessage("START backing up DB", INFO);
    system("screen -d -m /release/dbbackup.sh");
-   //system("heroku restart -a soapstand");
    debugOutput::sendMessage("END backing up DB", INFO);
 
    debugOutput::sendMessage("Exiting Dispensing END[" + toString() + "]", INFO);

@@ -85,6 +85,49 @@
     <string/>
    </property>
   </widget>
+  <widget class="QPushButton" name="mainPage_Button">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>1750</y>
+     <width>133</width>
+     <height>133</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="order_drink_amount">
+   <property name="geometry">
+    <rect>
+     <x>760</x>
+     <y>1630</y>
+     <width>221</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Proxima Nova</family>
+     <pointsize>-1</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Proxima Nova;
+font-size: 24px;
+color: #58595B;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::RichText</enum>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

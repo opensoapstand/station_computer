@@ -19,9 +19,9 @@
   <widget class="QPushButton" name="previousPage_Button">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>160</y>
-     <width>241</width>
+     <x>0</x>
+     <y>1820</y>
+     <width>301</width>
      <height>100</height>
     </rect>
    </property>
@@ -29,25 +29,25 @@
     <string/>
    </property>
   </widget>
-  <widget class="Line" name="line">
+  <widget class="QPushButton" name="mainPage_Button">
    <property name="geometry">
     <rect>
-     <x>170</x>
-     <y>1452</y>
-     <width>735</width>
-     <height>16</height>
+     <x>470</x>
+     <y>1740</y>
+     <width>161</width>
+     <height>141</height>
     </rect>
    </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
+   <property name="text">
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="order_total_amount">
    <property name="geometry">
     <rect>
-     <x>373</x>
-     <y>1180</y>
-     <width>341</width>
+     <x>591</x>
+     <y>1480</y>
+     <width>321</width>
      <height>41</height>
     </rect>
    </property>
@@ -60,49 +60,20 @@
     </font>
    </property>
    <property name="text">
-    <string/>
+    <string>order_total_amount</string>
    </property>
    <property name="textFormat">
     <enum>Qt::RichText</enum>
    </property>
    <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="payment_bypass_Button">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>1340</y>
-     <width>751</width>
-     <height>91</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="mainPage_Button">
-   <property name="geometry">
-    <rect>
-     <x>480</x>
-     <y>1750</y>
-     <width>133</width>
-     <height>133</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="order_drink_amount">
    <property name="geometry">
     <rect>
-     <x>760</x>
-     <y>1630</y>
+     <x>690</x>
+     <y>1365</y>
      <width>221</width>
      <height>41</height>
     </rect>
@@ -119,13 +90,56 @@ font-size: 24px;
 color: #58595B;</string>
    </property>
    <property name="text">
-    <string/>
+    <string>order_drink_amount</string>
    </property>
    <property name="textFormat">
     <enum>Qt::RichText</enum>
    </property>
    <property name="alignment">
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="payment_bypass_Button">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>730</x>
+     <y>1730</y>
+     <width>351</width>
+     <height>191</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="payment_countdownLabel">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>1610</y>
+     <width>421</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>DejaVu Sans</family>
+     <pointsize>30</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::RichText</enum>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

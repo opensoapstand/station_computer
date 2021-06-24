@@ -19,7 +19,7 @@
   <widget class="QPushButton" name="previousPage_Button">
    <property name="geometry">
     <rect>
-     <x>60</x>
+     <x>70</x>
      <y>1820</y>
      <width>281</width>
      <height>100</height>
@@ -32,10 +32,10 @@
   <widget class="QPushButton" name="payPage_Button">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>1580</y>
-     <width>751</width>
-     <height>101</height>
+     <x>270</x>
+     <y>1540</y>
+     <width>541</width>
+     <height>111</height>
     </rect>
    </property>
    <property name="text">
@@ -45,9 +45,9 @@
   <widget class="QPushButton" name="orderSmall_Button">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>1150</y>
-     <width>221</width>
+     <x>270</x>
+     <y>1330</y>
+     <width>261</width>
      <height>151</height>
     </rect>
    </property>
@@ -58,9 +58,9 @@
   <widget class="QPushButton" name="orderBig_Button">
    <property name="geometry">
     <rect>
-     <x>780</x>
-     <y>1150</y>
-     <width>211</width>
+     <x>550</x>
+     <y>1330</y>
+     <width>251</width>
      <height>151</height>
     </rect>
    </property>
@@ -71,10 +71,10 @@
   <widget class="QPushButton" name="mainPage_Button">
    <property name="geometry">
     <rect>
-     <x>480</x>
-     <y>1750</y>
-     <width>133</width>
-     <height>133</height>
+     <x>470</x>
+     <y>1740</y>
+     <width>141</width>
+     <height>141</height>
     </rect>
    </property>
    <property name="text">

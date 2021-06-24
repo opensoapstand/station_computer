@@ -414,7 +414,7 @@ void payPage::cancelPayment()
 
 void payPage::showEvent(QShowEvent *event)
 {
-    //QWidget::showEvent(event);
+    QWidget::showEvent(event);
 
        // ui->payment_countdownLabel->setText(" ");
 
@@ -493,8 +493,8 @@ bool payPage::setpaymentProcess(bool status)
 
 void payPage::setProgressLabel(QLabel* label, int dot)
 {
-    QString dotString = ".";
-    label->setText("Processing" + dotString.repeated(dot));
+//    QString dotString = ".";
+//    label->setText("Processing" + dotString.repeated(dot));
 }
 
 // Local storge for now.  Will need to refactor logger to do a nightly push to AWS
@@ -670,7 +670,7 @@ bool payPage::paymentInit()
     }
 
     //This is super shitty - there must be a better way to find out when the green light starts flashing on the UX420
-    sleep(35);
+    //sleep(35);
 
     /*Cancel any previous payment*/
     pktToSend = paymentPacket.purchaseCancelPacket();

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>paySelect</class>
+ <widget class="QWidget" name="paySelect">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1080</width>
+    <height>1920</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QPushButton" name="previousPage_Button">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>1820</y>
+     <width>281</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="payPage_Button">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>1580</y>
+     <width>751</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="orderSmall_Button">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>1150</y>
+     <width>221</width>
+     <height>151</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="orderBig_Button">
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>1150</y>
+     <width>211</width>
+     <height>151</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="mainPage_Button">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>1750</y>
+     <width>133</width>
+     <height>133</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

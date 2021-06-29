@@ -217,7 +217,6 @@ bool DbManager::checkLevels(int slot){
 bool DbManager::refill(int slot){
     QSqlQuery refill_query;
     bool success=false;
-    double remaining = getFullProduct(slot);
 
     refill_query.prepare("UPDATE products SET remaining_ml=full_ml WHERE slot=:slot");
     refill_query.bindValue(":slot", slot);
@@ -229,7 +228,20 @@ bool DbManager::refill(int slot){
         refill_query.bindValue(":slot", slot);
         if(refill_query.exec()){
             qDebug() << "total ml dispensed update successful!";
-            success=true;
+
+            QSqlQuery refill_date;
+            refill_date.prepare("UPDATE products SET last_refill=:time WHERE slot=:slot");
+            refill_date.bindValue(":slot", slot);
+            refill_date.bindValue(":time", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+
+            if (refill_date.exec()){
+                success=true;
+            }else{
+                qDebug() << "refill date error:"
+                         << refill_date.lastError();
+                success=false;
+            }
+
         }
         else{
             qDebug() << "total ml dispensed update error:"
@@ -320,4 +332,53 @@ int DbManager::getNumberOfProducts(){
         }
 
     return products;
+}
+
+double DbManager::getTotalDispensed(int slot){
+    QSqlQuery dispensed_query;
+    double dispensed;
+
+    dispensed_query.prepare("SELECT total_dispensed FROM products WHERE slot=:slot");
+    dispensed_query.bindValue(":slot", slot);
+    dispensed_query.exec();
+
+    while (dispensed_query.next()) {
+            dispensed = dispensed_query.value(0).toDouble();
+
+        }
+
+    return dispensed;
+}
+
+double DbManager::getRemaining(int slot){
+    QSqlQuery remaining_query;
+    double remaining;
+
+    remaining_query.prepare("SELECT remaining_ml FROM products WHERE slot=:slot");
+    remaining_query.bindValue(":slot", slot);
+    remaining_query.exec();
+
+    while (remaining_query.next()) {
+            remaining = remaining_query.value(0).toDouble();
+
+        }
+
+    return remaining;
+}
+
+QString DbManager::getLastRefill(int slot){
+    QSqlQuery refill_date_query;
+    QString refill_date_string;
+
+    refill_date_query.prepare("SELECT last_refill FROM products WHERE slot=:slot");
+    refill_date_query.bindValue(":slot", slot);
+    refill_date_query.exec();
+
+    while (refill_date_query.next()) {
+            refill_date_string = refill_date_query.value(0).toString();
+
+            //qDebug() << "Product: " << product_name << endl;
+        }
+
+    return refill_date_string;
 }

@@ -22,10 +22,10 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>104</x>
-     <y>360</y>
-     <width>416</width>
-     <height>484</height>
+     <x>201</x>
+     <y>410</y>
+     <width>281</width>
+     <height>491</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -56,36 +56,10 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>560</x>
-     <y>360</y>
-     <width>416</width>
-     <height>484</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="selection3_Button">
-   <property name="geometry">
-    <rect>
-     <x>104</x>
-     <y>900</y>
-     <width>416</width>
-     <height>484</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="selection4_Button">
-   <property name="geometry">
-    <rect>
-     <x>560</x>
-     <y>900</y>
-     <width>416</width>
-     <height>484</height>
+     <x>599</x>
+     <y>411</y>
+     <width>281</width>
+     <height>491</height>
     </rect>
    </property>
    <property name="text">
@@ -105,13 +79,45 @@
     <string/>
    </property>
   </widget>
+  <widget class="QPushButton" name="selection3_Button">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>201</x>
+     <y>1030</y>
+     <width>281</width>
+     <height>491</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="selection4_Button">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>598</x>
+     <y>1029</y>
+     <width>281</width>
+     <height>491</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <widget class="QPushButton" name="mainPage_Button">
    <property name="geometry">
     <rect>
-     <x>480</x>
-     <y>1750</y>
-     <width>133</width>
-     <height>133</height>
+     <x>470</x>
+     <y>1740</y>
+     <width>141</width>
+     <height>141</height>
     </rect>
    </property>
    <property name="text">

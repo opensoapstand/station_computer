@@ -57,6 +57,9 @@ private slots:
     void on_soldOutButton_clicked();
     void on_fullButton_clicked();
     void onMaintainProductPageTimeoutTick();
+    void on_remainingButton_clicked();
+    void on_dispensedButton_clicked();
+    void on_lastRefillButton_clicked();
 
 private:
     void showEvent(QShowEvent *event);

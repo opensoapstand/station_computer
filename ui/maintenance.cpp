@@ -151,18 +151,18 @@ void maintenancePage::on_product3_button_clicked(){
 }
 
 void maintenancePage::on_product4_button_clicked(){
-//    qDebug() << "Product 4 button clicked" << endl;
-//    maintenancePageEndTimer->stop();
+    qDebug() << "Product 4 button clicked" << endl;
+    maintenancePageEndTimer->stop();
 
-//    DbManager db(DB_PATH);
-//    db.addPageClick("MAINTAIN PRODUCT 4");
+    DbManager db(DB_PATH);
+    db.addPageClick("MAINTAIN PRODUCT 4");
 
-//    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);
-//    idlePage->userDrinkOrder->setDrinkSize(DRINK4);
+    idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);
+    idlePage->userDrinkOrder->setDrinkSize(DRINK4);
 
-//    maintainPage->resizeEvent(productSelection);
-//    maintainPage->showFullScreen();
-//    this->hide();
+    maintainPage->resizeEvent(productSelection);
+    maintainPage->showFullScreen();
+    this->hide();
 
 }
 

@@ -12,7 +12,6 @@
         <file>light/4_pay_select_page_l_3.png</file>
         <file>light/4_pay_select_page_l_2.png</file>
         <file>light/4_pay_select_page_l_1.png</file>
-        <file>light/2_drink_page_1.png</file>
         <file>light/1_welcome_panel.png</file>
         <file>light/soldOut.png</file>
         <file>maintenancePage.ui</file>
@@ -55,5 +54,7 @@
         <file>light/drink_empty.png</file>
         <file>light/drink_shadow.png</file>
         <file>light/5_pay_page.png</file>
+        <file>maintenance/product4.png</file>
+        <file>light/2_drink_page_1.png</file>
     </qresource>
 </RCC>

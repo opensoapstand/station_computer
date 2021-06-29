@@ -64,6 +64,9 @@ void maintain_product::setPage(maintenancePage* pageMaintenance, idle* pageIdle)
     ui->refillLabel->setText("");
     ui->soldOutLabel->setText("");
     ui->full_volume->setText("");
+    ui->remainingLabel->setText("");
+    ui->total_dispensed->setText("");
+    ui->lastRefillLabel->setText("");
 }
 
 void maintain_product::on_backButton_clicked(){
@@ -86,6 +89,9 @@ void maintain_product::on_backButton_clicked(){
     ui->refillLabel->setText("");
     ui->soldOutLabel->setText("");
     ui->full_volume->setText("");
+    ui->remainingLabel->setText("");
+    ui->total_dispensed->setText("");
+    ui->lastRefillLabel->setText("");
 
 
     if (pumping) {
@@ -106,59 +112,71 @@ void maintain_product::on_backButton_clicked(){
 
 void maintain_product::setValues(int option){
 
-    DbManager db(DB_PATH);
+    //    DbManager db(DB_PATH);
 
-    ui->name->setText("");
-    ui->price_s->setText("");
-    ui->price_l->setText("");
-    ui->target_volume_s->setText("");
-    ui->target_volume_l->setText("");
-    ui->volume_per_tick->setText("");
-    ui->full_volume->setText("");
+    //    ui->name->setText("");
+    //    ui->price_s->setText("");
+    //    ui->price_l->setText("");
+    //    ui->target_volume_s->setText("");
+    //    ui->target_volume_l->setText("");
+    //    ui->volume_per_tick->setText("");
+    //    ui->full_volume->setText("");
+    //    ui->remainingLabel->setText("");
+    //    ui->total_dispensed->setText("");
 
-    switch (option){
-        case 1:
-            ui->name->setText(db.getProductName(1));
-            ui->price_s->setText("$"+QString::number(db.getProductPrice(1, 's')));
-            ui->price_l->setText("$"+QString::number(db.getProductPrice(1, 'l')));
-            ui->target_volume_s->setText(QString::number(db.getProductVolume(1, 's')) + "ml");
-            ui->target_volume_l->setText(QString::number(db.getProductVolume(1, 'l')) + "ml");
-            ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(1)) + "ml");
-            ui->full_volume->setText(QString::number(db.getFullProduct(1)) + "ml");
-            break;
-        case 2:
-            ui->name->setText(db.getProductName(2));
-            ui->price_s->setText("$"+QString::number(db.getProductPrice(2, 's')));
-            ui->price_l->setText("$"+QString::number(db.getProductPrice(2, 'l')));
-            ui->target_volume_s->setText(QString::number(db.getProductVolume(2, 's')) + "ml");
-            ui->target_volume_l->setText(QString::number(db.getProductVolume(2, 'l')) + "ml");
-            ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(2)) + "ml");
-            ui->full_volume->setText(QString::number(db.getFullProduct(2)) + "ml");
-            break;
-        case 3:
-            ui->name->setText(db.getProductName(3));
-            ui->price_s->setText("$"+QString::number(db.getProductPrice(3, 's')));
-            ui->price_l->setText("$"+QString::number(db.getProductPrice(3, 'l')));
-            ui->target_volume_s->setText(QString::number(db.getProductVolume(3, 's')) + "ml");
-            ui->target_volume_l->setText(QString::number(db.getProductVolume(3, 'l')) + "ml");
-            ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(3)) + "ml");
-            ui->full_volume->setText(QString::number(db.getFullProduct(3)) + "ml");
-            break;
-        case 4:
-            ui->name->setText(db.getProductName(4));
-            ui->price_s->setText("$"+QString::number(db.getProductPrice(4, 's')));
-            ui->price_l->setText("$"+QString::number(db.getProductPrice(4, 'l')));
-            ui->target_volume_s->setText(QString::number(db.getProductVolume(4, 's')) + "ml");
-            ui->target_volume_l->setText(QString::number(db.getProductVolume(4, 'l')) + "ml");
-            ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(4)) + "ml");
-            ui->full_volume->setText(QString::number(db.getFullProduct(4)) + "ml");
-            break;
-    }
+    //    switch (option){
+    //        case 1:
+    //            ui->name->setText(db.getProductName(1));
+    //            ui->price_s->setText("$"+QString::number(db.getProductPrice(1, 's')));
+    //            ui->price_l->setText("$"+QString::number(db.getProductPrice(1, 'l')));
+    //            ui->target_volume_s->setText(QString::number(db.getProductVolume(1, 's')) + "ml");
+    //            ui->target_volume_l->setText(QString::number(db.getProductVolume(1, 'l')) + "ml");
+    //            ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(1)) + "ml");
+    //            ui->full_volume->setText(QString::number(db.getFullProduct(1)) + "ml");
+    //            ui->total_dispensed->setText(QString::number(db.getTotalDispensed(1)) + "ml");
+    //            ui->remainingLabel->setText(QString::number(db.getRemaining(1)) + "ml");
+    //            break;
+    //        case 2:
+    //            ui->name->setText(db.getProductName(2));
+    //            ui->price_s->setText("$"+QString::number(db.getProductPrice(2, 's')));
+    //            ui->price_l->setText("$"+QString::number(db.getProductPrice(2, 'l')));
+    //            ui->target_volume_s->setText(QString::number(db.getProductVolume(2, 's')) + "ml");
+    //            ui->target_volume_l->setText(QString::number(db.getProductVolume(2, 'l')) + "ml");
+    //            ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(2)) + "ml");
+    //            ui->full_volume->setText(QString::number(db.getFullProduct(2)) + "ml");
+    //            ui->total_dispensed->setText(QString::number(db.getTotalDispensed(2)) + "ml");
+    //            ui->remainingLabel->setText(QString::number(db.getRemaining(2)) + "ml");
+    //            break;
+    //        case 3:
+    //            ui->name->setText(db.getProductName(3));
+    //            ui->price_s->setText("$"+QString::number(db.getProductPrice(3, 's')));
+    //            ui->price_l->setText("$"+QString::number(db.getProductPrice(3, 'l')));
+    //            ui->target_volume_s->setText(QString::number(db.getProductVolume(3, 's')) + "ml");
+    //            ui->target_volume_l->setText(QString::number(db.getProductVolume(3, 'l')) + "ml");
+    //            ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(3)) + "ml");
+    //            ui->full_volume->setText(QString::number(db.getFullProduct(3)) + "ml");
+    //            ui->total_dispensed->setText(QString::number(db.getTotalDispensed(3)) + "ml");
+    //            ui->remainingLabel->setText(QString::number(db.getRemaining(3)) + "ml");
+    //            break;
+    //        case 4:
+    //            ui->name->setText(db.getProductName(4));
+    //            ui->price_s->setText("$"+QString::number(db.getProductPrice(4, 's')));
+    //            ui->price_l->setText("$"+QString::number(db.getProductPrice(4, 'l')));
+    //            ui->target_volume_s->setText(QString::number(db.getProductVolume(4, 's')) + "ml");
+    //            ui->target_volume_l->setText(QString::number(db.getProductVolume(4, 'l')) + "ml");
+    //            ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(4)) + "ml");
+    //            ui->full_volume->setText(QString::number(db.getFullProduct(4)) + "ml");
+    //            ui->total_dispensed->setText(QString::number(db.getTotalDispensed(4)) + "ml");
+    //            ui->remainingLabel->setText(QString::number(db.getRemaining(4)) + "ml");
+    //            break;
+    //    }
 }
 
 void maintain_product::resizeEvent(QResizeEvent *event){
 
     int checkOption = idlePage->userDrinkOrder->getOption();
+
+    DbManager db(DB_PATH);
 
     QString bitmap_location;
 
@@ -170,7 +188,17 @@ void maintain_product::resizeEvent(QResizeEvent *event){
         qDebug() << "out of range" << endl;
     }
 
-    setValues(checkOption);
+    //setValues(checkOption);
+    ui->name->setText(db.getProductName(checkOption));
+    ui->price_s->setText("$"+QString::number(db.getProductPrice(checkOption, 's')));
+    ui->price_l->setText("$"+QString::number(db.getProductPrice(checkOption, 'l')));
+    ui->target_volume_s->setText(QString::number(db.getProductVolume(checkOption, 's')) + "ml");
+    ui->target_volume_l->setText(QString::number(db.getProductVolume(checkOption, 'l')) + "ml");
+    ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(checkOption)) + "ml");
+    ui->full_volume->setText(QString::number(db.getFullProduct(checkOption)) + "ml");
+    ui->total_dispensed->setText(QString::number(db.getTotalDispensed(checkOption)) + "ml");
+    ui->remainingLabel->setText(QString::number(db.getRemaining(checkOption)) + "ml");
+    ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
 
     QPixmap background(bitmap_location);
     QIcon ButtonIcon(background);
@@ -281,6 +309,9 @@ void maintain_product::on_refillButton_clicked(){
                 //Update Click DB
                 DbManager db(DB_PATH);
                 db.addPageClick("PRODUCT REFILLED");
+                ui->total_dispensed->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + "ml");
+                ui->remainingLabel->setText(QString::number(db.getRemaining(this->idlePage->userDrinkOrder->getOption())) + "ml");
+                ui->lastRefillLabel->setText(db.getLastRefill(this->idlePage->userDrinkOrder->getOption()));
                 break;
             }
             else{
@@ -320,6 +351,8 @@ void maintain_product::on_soldOutButton_clicked(){
                 //Update Click DB
                 DbManager db(DB_PATH);
                 db.addPageClick("PRODUCT SOLD OUT");
+                ui->total_dispensed->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + "ml");
+                ui->remainingLabel->setText(QString::number(db.getRemaining(this->idlePage->userDrinkOrder->getOption())) + "ml");
                 break;
             }
             else{
@@ -336,6 +369,21 @@ void maintain_product::on_soldOutButton_clicked(){
 
 void maintain_product::on_fullButton_clicked(){
     qDebug() << "Full Volume button clicked" << endl;
+    _maintainProductPageTimeoutSec=15;
+}
+
+void maintain_product::on_remainingButton_clicked(){
+    qDebug() << "Remaining button clicked" << endl;
+    _maintainProductPageTimeoutSec=15;
+}
+
+void maintain_product::on_dispensedButton_clicked(){
+    qDebug() << "Remaining button clicked" << endl;
+    _maintainProductPageTimeoutSec=15;
+}
+
+void maintain_product::on_lastRefillButton_clicked(){
+    qDebug() << "Last Refill button clicked" << endl;
     _maintainProductPageTimeoutSec=15;
 }
 

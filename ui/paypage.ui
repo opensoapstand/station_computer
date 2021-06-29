@@ -33,7 +33,7 @@
    <property name="geometry">
     <rect>
      <x>470</x>
-     <y>1740</y>
+     <y>1750</y>
      <width>161</width>
      <height>141</height>
     </rect>
@@ -133,7 +133,7 @@ color: #58595B;</string>
     </font>
    </property>
    <property name="text">
-    <string/>
+    <string>TAP NOW</string>
    </property>
    <property name="textFormat">
     <enum>Qt::RichText</enum>

@@ -83,6 +83,7 @@ std::vector<uint8_t> mCommunication::readPacket(){
 
     uint8_t buffer[1024] = {};
     long int readSize = -1;
+    long int readSize2 = -1;
     std::vector<uint8_t> pktRead;
     //tcflush(fd, TCIOFLUSH);
     //tcflush(fd, TCIOFLUSH);
@@ -95,15 +96,43 @@ std::vector<uint8_t> mCommunication::readPacket(){
         pktRead.push_back(0xFF);
         return pktRead;
     }
+//    else if (int(buffer[2]) < readSize) {
+//        std::cout << "buffer[2] = " << int(buffer[3]) << " readSzie: " << readSize << endl;
+//        readPacket();
+//    }
     else{
+
         pktRead.reserve(uint(readSize));
-        for (int i = 0; i < readSize; i++){ //store read bytes into vector
+        for (long i = 0; i < readSize; i++){ //store read bytes into vector
             pktRead.push_back(buffer[i]);
+//            std::cout << "buffer[" << i << "i] = " << int(buffer[i]) << " \n";
+        }
+
+//        std::cout << "pktRead.end()[-2]= " << pktRead.end()[-2] << "\n";
+        if (pktRead.end()[-2] != 0x03){
+//            std::cout << "True\n";
+            readSize2 = read(fd, buffer, MAX_SIZE);
+            if (readSize2 == -1)
+            {
+//                std::cout << "readSize2 = -1\n";
+                pktRead.clear();
+                pktRead.push_back(0xFF);
+                return pktRead;
+            }
+
+            else{
+//                std::cout << "here\n";
+                pktRead.reserve(uint(readSize2));
+                for (long i = 0; i < readSize2; i++){ //store read bytes into vector
+                    pktRead.push_back(buffer[i]);
+//                    std::cout << "buffer[" << i << "i] = " << int(buffer[i]) << " \n";
+                }
         }
 
         //tcflush(fd, TCIOFLUSH);
         return pktRead;
     }
+}
 }
 
 std::vector<uint8_t> mCommunication::readForAck()
@@ -176,7 +205,6 @@ bool mCommunication::sendAck()
 void mCommunication::flushSerial()
 {
     std::cout << "Flushing Serial port..." << std::endl;
-    tcflush(fd, TCIOFLUSH);
     tcflush(fd, TCIOFLUSH);
 }
 

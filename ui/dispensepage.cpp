@@ -90,6 +90,8 @@ void dispensePage::showEvent(QShowEvent *event)
         command.append('l');
     }
 
+    volumeDispensed=0;
+
     this->idlePage->dfUtility->msg = command;
 
     // Networking
@@ -111,11 +113,60 @@ void dispensePage::showEvent(QShowEvent *event)
 //        dispenseIdleTimer->isSingleShot();
         connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
     }
-
     qDebug() << "Start Dispense Timers" << endl;
     dispenseIdleTimer->start(1000);
     _dispenseIdleTimeoutSec = 30;
 
+}
+
+bool dispensePage::sendToUX410()
+{
+    int waitForAck = 0;
+    while (waitForAck < 3){
+        cout << "Wait for ACK counter: " << waitForAck << endl;
+        com.sendPacket(pktToSend, uint(pktToSend.size()));
+        std::cout<< "sendtoUX410 Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
+
+        //read back what is responded
+        pktResponded = com.readForAck();
+        readPacket.packetReadFromUX(pktResponded);
+        pktResponded.clear();
+        waitForAck++;
+
+        cout << "Waiting for TAP" << endl;
+        cout << readPacket << endl;
+        if (readPacket.getAckOrNak() == communicationPacketField::ACK)
+        {
+//            cout << readPacket << endl;
+            return true;
+        }
+
+        usleep(50000);
+
+    }
+    return false;
+}
+
+bool dispensePage::waitForUX410()
+{
+    bool waitResponse = false;
+    while (!waitResponse){
+//        QCoreApplication::processEvents();
+      // cout << readPacket << endl;
+        if(pktResponded[0] != 0x02){
+            pktResponded.clear();
+            pktResponded = com.readPacket();
+            usleep(10);
+        }
+        else {
+            //  pktResponded = com.readPacket();
+            readPacket.packetReadFromUX(pktResponded);
+            std::cout << readPacket;
+            com.sendAck();
+            waitResponse = true;
+        }
+    }
+    return waitResponse;
 }
 
 /*
@@ -128,6 +179,19 @@ void dispensePage::on_finish_Button_clicked()
     db.addPageClick("Dispense Page -> Thank You Page");
 
     qDebug() << "dispensePage: finish button clicked" << endl;
+
+    if (volumeDispensed == 0 && (db.getPaymentMethod(idlePage->userDrinkOrder->getOption())=="tap")){
+        // REVERSE PAYMENT
+        com.init();
+        qDebug() << "I want to reverse the payment now" << endl;
+        pktToSend = paymentPacket.reversePurchasePacket();
+        if (sendToUX410()){
+            waitForUX410();
+            qDebug() << "Pretty sure it worked?" << endl;
+            pktResponded.clear();
+            com.flushSerial();
+        }
+    }
 
     QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
 

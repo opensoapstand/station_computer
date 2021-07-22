@@ -105,11 +105,13 @@ std::vector<uint8_t> mCommunication::readPacket(){
         pktRead.reserve(uint(readSize));
         for (long i = 0; i < readSize; i++){ //store read bytes into vector
             pktRead.push_back(buffer[i]);
-//            std::cout << "buffer[" << i << "i] = " << int(buffer[i]) << " \n";
+            std::cout << "buffer[" << i << "i] = " << int(buffer[i]) << " \n";
         }
 
+//        std::cout << "buffer1 + buffer2 = " << (int(buffer[1]) + int(buffer[2])) << "\n" << "readSize-3 = " << readSize-0x05 << "\n" << "readSize = " << readSize << "\n";
+
 //        std::cout << "pktRead.end()[-2]= " << pktRead.end()[-2] << "\n";
-        if (pktRead.end()[-2] != 0x03){
+        while ((pktRead.end()[-2] != 0x03) && ((int(buffer[1]) + int(buffer[2])) != readSize-0x05)){
 //            std::cout << "True\n";
             readSize2 = read(fd, buffer, MAX_SIZE);
             if (readSize2 == -1)
@@ -118,18 +120,17 @@ std::vector<uint8_t> mCommunication::readPacket(){
                 pktRead.clear();
                 pktRead.push_back(0xFF);
                 return pktRead;
-            }
-
-            else{
-//                std::cout << "here\n";
+            }else {
+//
                 pktRead.reserve(uint(readSize2));
                 for (long i = 0; i < readSize2; i++){ //store read bytes into vector
                     pktRead.push_back(buffer[i]);
-//                    std::cout << "buffer[" << i << "i] = " << int(buffer[i]) << " \n";
+                    std::cout << "buffer[" << i << "i] = " << int(buffer[i]) << " \n";
                 }
         }
 
         //tcflush(fd, TCIOFLUSH);
+        buffer[1024] = {};
         return pktRead;
     }
 }

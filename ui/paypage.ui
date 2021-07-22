@@ -118,7 +118,7 @@ color: #58595B;</string>
   <widget class="QLabel" name="payment_countdownLabel">
    <property name="geometry">
     <rect>
-     <x>287</x>
+     <x>293</x>
      <y>1610</y>
      <width>421</width>
      <height>71</height>

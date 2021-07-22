@@ -258,8 +258,8 @@ enum TxnType
     Purchase           = 'P',
     BatchTotals        = 'T',
     CompletionToken    = 'c',
-
-    Logon              = 'L'
+    Logon              = 'L',
+    ReversePurchase    = 'R'
 };
 
 //Status Type for the PpPOsStatus command

@@ -30,6 +30,8 @@ public:
     std::vector<uint8_t> purchasePacket(std::string  amount);
     /* 3.1.2 PpPosCancelEvent (0D – 0001)*/
     std::vector<uint8_t> purchaseCancelPacket();
+    /* 3.1.1.2.5 Forced controller reversal */
+    std::vector<uint8_t> reversePurchasePacket();
     /* 3.1.3 PpPosStatus (0D – 0002)*/
     std::vector<uint8_t> ppPosStatusCheckPkt(char type);
     /* 3.1.4 PpPosSetConfig (0D – 0003)*/

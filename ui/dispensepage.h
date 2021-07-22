@@ -20,6 +20,12 @@
 
 #include "df_util.h"
 
+#include "posm/mcommunication.h"
+#include "posm/packetfromecr.h"
+#include "posm/packetfromux410.h"
+#include "posm/transactionPackets.h"
+#include "posm/transactioninfo.h"
+
 class payPage;
 class thankYouPage;
 class idle;
@@ -79,6 +85,15 @@ private:
     int volumeDispensed;
 
     void stopDispenseTimer();
+    bool sendToUX410();
+    bool waitForUX410();
+
+    mCommunication com;
+    packetFromECR sendPacket;
+    packetFromUX410 readPacket;
+    transactionPacket paymentPacket;
+    std::vector<uint8_t> pktToSend;
+    std::vector<uint8_t> pktResponded;
 
 protected:
 

@@ -163,11 +163,18 @@ void payPage::labelSetup(QLabel *label, int fontSize)
 //    label->setAlignment(Qt::AlignCenter);
 }
 
-void payPage::resizeEvent(QResizeEvent *event, char drinkSize){
+void payPage::resizeEvent(QResizeEvent *event){
     // FIXME: MAGIC NUMBER!!! UX410 Socket Auto Close time is 60 seconds so timer kills page GUI
     idlePaymentTimer->start(60000);
 
     int checkOption = idlePage->userDrinkOrder->getOption();
+    char drinkSize;
+    if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
+        drinkSize = 's';
+    }
+    if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK){
+        drinkSize = 'l';
+    }
 
     QString bitmap_location;
 
@@ -185,25 +192,18 @@ void payPage::resizeEvent(QResizeEvent *event, char drinkSize){
         bitmap_location = ":/light/5_pay_page_l_1.png";
     }
 
-    //qDebug() << "BITMAP: " << bitmap_location << endl;
-
     QPixmap background(bitmap_location);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-
-    // background = background.scaled(this->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
-    //this->resize(this->geometry().width(), this->geometry().height());
 
-        ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
+    ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
 
-    if (payment){
-        readTimer->start(1000);
-    }
+    response = false;
+
 }
-
 
 // DTOR
 payPage::~payPage()
@@ -386,14 +386,12 @@ void payPage::on_mainPage_Button_clicked()
     }
     this->hide();
     helpPage->showFullScreen();
+
 }
 
 /*Cancel any previous payment*/
 void payPage::cancelPayment()
 {
-
-
-    //waitResponse = true;
 
     com.flushSerial();
     /*Cancel any previous payment*/
@@ -414,40 +412,74 @@ void payPage::cancelPayment()
 void payPage::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
+    int checkOption = idlePage->userDrinkOrder->getOption();
+    char drinkSize;
+    if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
+        drinkSize = 's';
+    }
+    if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK){
+        drinkSize = 'l';
+    }
 
-       // ui->payment_countdownLabel->setText(" ");
+    QString bitmap_location;
 
-        paymentEndTimer = new QTimer(this);
-        paymentEndTimer->setInterval(1000);
-        connect(paymentEndTimer, SIGNAL(timeout()), this, SLOT(onTimeoutTick()));
-        paymentEndTimer->start(1000);
-        _paymentTimeoutSec = 30;
+    if (!payment){
+        bitmap_location = ":/light/5_pay_page.png";
+    }
+    else if(checkOption > 0 && checkOption <= 9) {
+        bitmap_location.append(":/light/5_pay_page_");
+        bitmap_location.append(drinkSize);
+        bitmap_location.append("_");
+        bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
+        bitmap_location.append(".png");
+        ui->order_drink_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
+    } else {
+        bitmap_location = ":/light/5_pay_page_l_1.png";
+    }
 
-        ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
-        this->ui->payment_countdownLabel->setText("");
+    QPixmap background(bitmap_location);
+    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+
+    QPalette palette;
+    palette.setBrush(QPalette::Background, background);
+    this->setPalette(palette);
+
+    paymentEndTimer = new QTimer(this);
+    paymentEndTimer->setInterval(1000);
+    connect(paymentEndTimer, SIGNAL(timeout()), this, SLOT(onTimeoutTick()));
+    paymentEndTimer->start(1000);
+    _paymentTimeoutSec = 30;
+
+    ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
+    this->ui->payment_countdownLabel->setText("");
 
 
   //  ui->payment_pass_Button->setEnabled(false);
   //  ui->payment_cancel_Button->setEnabled(false);
 
-        if (payment){
-            pktResponded = com.readForAck();
-            readPacket.packetReadFromUX(pktResponded);
-            pktResponded.clear();
-            response = false;
+    if (payment){
+        pktResponded = com.readForAck();
+        readPacket.packetReadFromUX(pktResponded);
+        pktResponded.clear();
+        response = false;
 
-            if (readPacket.getAckOrNak() == communicationPacketField::ACK)
-            {
-                timerEnabled = true;
-                //readTimer->start(10);
-            }
+        if (readPacket.getAckOrNak() == communicationPacketField::ACK)
+        {
+            timerEnabled = true;
+
         }
+        com.flushSerial();
+        readTimer->start();
+    }
+
 
 }
 
 
 // XXX: Remove this when interrupts and flow sensors work!
 void payPage::onTimeoutTick(){
+
+
     if(-- _paymentTimeoutSec >= 0) {
         qDebug() << "payPage: Tick Down: " << _paymentTimeoutSec << endl;
 
@@ -485,6 +517,7 @@ void payPage::onTimeoutTick(){
 //        //        paymentEndTimer->stop();
 //        //        this->ui->payment_countdownLabel->setText("Finished!");
     }
+
 }
 
 bool payPage::setpaymentProcess(bool status)
@@ -767,7 +800,7 @@ bool payPage::waitForUX410()
     bool waitResponse = false;
     while (!waitResponse){
 //        QCoreApplication::processEvents();
-
+      // cout << readPacket << endl;
         if(pktResponded[0] != 0x02){
             pktResponded.clear();
             pktResponded = com.readPacket();
@@ -787,9 +820,12 @@ bool payPage::waitForUX410()
 void payPage::readTimer_loop()
 {
     qDebug() << "readingTimer_loop" << endl;
-    cout << "start loop pktResponded: " << to_string(pktResponded[0]) << endl;
+    //cout << "start loop pktResponded: " << to_string(pktResponded[0]) << endl;
 
     //response = false;
+    pktResponded.clear();
+    pktResponded = com.readPacket();
+    usleep(100);
     com.flushSerial();
     pktToSend = paymentPacket.purchasePacket("0.01");
 
@@ -804,8 +840,9 @@ void payPage::readTimer_loop()
 
         QCoreApplication::processEvents();
 
-    if(pktResponded[0] != 0x02){
-        qDebug() << "Reading TAP Packet" << endl;
+    if(pktResponded[0] != 0x02 || pktResponded[10] == 0x33){
+//       qDebug() << "Reading TAP Packet" << endl;
+        cout << readPacket << endl;
 
         //std::cout<< "ReadTimer Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
 
@@ -814,12 +851,13 @@ void payPage::readTimer_loop()
         //cout << "MISS: pktResponded: " << to_string(pktResponded[0]) << endl;
         pktResponded.clear();
         pktResponded = com.readPacket();
-        usleep(10);
+        usleep(100);
         response = getResponse();
         //        com.sendAck();
         //cout << "Polling Timer" << endl;
         //readTimer->start(1000);
     } else {
+        cout << "here" << endl;
         if (!response){
 
         cout << "HIT: pktResponded: " << to_string(pktResponded[0]) << endl;
@@ -828,6 +866,7 @@ void payPage::readTimer_loop()
         QCoreApplication::processEvents();
 
         qDebug() << "Check TAP Packet; Sending" << endl;
+
        // com.sendAck();
         readPacket.packetReadFromUX(pktResponded);
         std::cout << readPacket;
@@ -853,9 +892,6 @@ void payPage::readTimer_loop()
             this->ui->payment_countdownLabel->setText("Declined");
             paymentPktInfo.transactionID(readPacket.getPacket().data);
             paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
-//            pktResponded.clear();
-//            pktResponded = com.readPacket();
-//            usleep(10);
             pktResponded.clear();
             QCoreApplication::processEvents();
             sleep(3);
@@ -863,7 +899,7 @@ void payPage::readTimer_loop()
             //sleep(5);
 //            on_mainPage_Button_clicked();
         }
-        else {
+        else if(pktResponded[19] == 0x4e) {
             purchaseEnable = false;
             cout << "No Approval Packet!" << endl;
             this->ui->payment_countdownLabel->setText("Not Approved");
@@ -877,6 +913,7 @@ void payPage::readTimer_loop()
             //sleep(5);
             //on_mainPage_Button_clicked();
         }
+
         }
 
 //        readPacket.packetReadFromUX(pktResponded);

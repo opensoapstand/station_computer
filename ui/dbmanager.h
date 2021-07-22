@@ -18,12 +18,14 @@ public:
     double getProductVolume(int slot, char ml);
     bool refill(int slot);
     bool sellout(int slot);
+    bool unsellout(int slot);
     double getFullProduct(int slot);
     int getTotalTransactions();
     int getNumberOfProducts();
     double getRemaining(int slot);
     double getTotalDispensed(int slot);
     QString getLastRefill(int slot);
+    double getTemperature();
 
 private:
     void emailEmpty(int slot);

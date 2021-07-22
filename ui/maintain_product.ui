@@ -207,7 +207,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Refill</string>
+    <string>Restock</string>
    </property>
   </widget>
   <widget class="QLabel" name="refillLabel">
@@ -238,7 +238,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Sold Out</string>
+    <string>Mark as Sold Out</string>
    </property>
   </widget>
   <widget class="QLabel" name="soldOutLabel">
@@ -362,6 +362,32 @@ Last Refill:</string>
    </property>
    <property name="text">
     <string>Last Refill</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="temperatureLabel">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>1730</y>
+     <width>721</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Temperature</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="temperatureButton">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>1700</y>
+     <width>141</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Temperature:</string>
    </property>
   </widget>
  </widget>

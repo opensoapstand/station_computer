@@ -270,17 +270,34 @@ bool DbManager::sellout(int slot){
     if(sellout_query.exec())
     {
         qDebug() << "remaining ml updated successfully!";
-        sellout_query.prepare("UPDATE products SET total_dispensed=full_ml WHERE slot=:slot");
-        sellout_query.bindValue(":slot", slot);
-        if(sellout_query.exec()){
-            qDebug() << "total ml dispensed update successful!";
-            success=true;
+//        sellout_query.prepare("UPDATE products SET total_dispensed=full_ml WHERE slot=:slot");
+//        sellout_query.bindValue(":slot", slot);
+//        if(sellout_query.exec()){
+//            qDebug() << "total ml dispensed update successful!";
+        success=true;
         }
-        else{
-            qDebug() << "total ml dispensed update error:"
-                     << sellout_query.lastError();
-            success=false;
-        }
+
+
+    else
+    {
+        qDebug() << "remaining ml update error:"
+                 << sellout_query.lastError();
+        success=false;
+    }
+
+    return success;
+}
+
+bool DbManager::unsellout(int slot){
+    QSqlQuery sellout_query;
+    bool success=false;
+
+    sellout_query.prepare("UPDATE products SET remaining_ml=full_ml-total_dispensed WHERE slot=:slot");
+    sellout_query.bindValue(":slot", slot);
+    if(sellout_query.exec())
+    {
+        qDebug() << "remaining ml updated successfully!";
+        success=true;
     }
     else
     {
@@ -381,4 +398,16 @@ QString DbManager::getLastRefill(int slot){
         }
 
     return refill_date_string;
+}
+
+double DbManager::getTemperature(){
+    QSqlQuery temperature_query;
+    double temperature;
+
+    temperature_query.prepare("SELECT * FROM temperature ORDER BY date DESC LIMIT 1");
+    temperature_query.exec();
+    while (temperature_query.next()){
+        temperature = temperature_query.value(0).toDouble();
+    }
+    return temperature;
 }

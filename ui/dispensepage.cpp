@@ -187,7 +187,7 @@ void dispensePage::on_finish_Button_clicked()
         pktToSend = paymentPacket.reversePurchasePacket();
         if (sendToUX410()){
             waitForUX410();
-            qDebug() << "Pretty sure it worked?" << endl;
+            qDebug() << "Payment Reversed" << endl;
             pktResponded.clear();
             com.flushSerial();
         }

@@ -857,7 +857,7 @@ void payPage::readTimer_loop()
         //cout << "Polling Timer" << endl;
         //readTimer->start(1000);
     } else {
-        cout << "here" << endl;
+
         if (!response){
 
         cout << "HIT: pktResponded: " << to_string(pktResponded[0]) << endl;

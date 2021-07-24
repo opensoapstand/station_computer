@@ -146,6 +146,7 @@ void productPage_1::on_selection1_Button_clicked()
         productPageEndTimer->stop();
 
         idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_1);
+        idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
         //idlePage->userDrinkOrder->setDrinkSize(DRINK1);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
@@ -163,6 +164,7 @@ void productPage_1::on_selection2_Button_clicked()
         productPageEndTimer->stop();
 
         idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
+        idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
         //idlePage->userDrinkOrder->setDrinkSize(DRINK2);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
@@ -179,6 +181,7 @@ void productPage_1::on_selection3_Button_clicked()
         productPageEndTimer->stop();
 
         idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
+        idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
         //idlePage->userDrinkOrder->setDrinkSize(DRINK3);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
@@ -195,6 +198,7 @@ void productPage_1::on_selection4_Button_clicked()
         productPageEndTimer->stop();
 
         idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);
+        idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
         //idlePage->userDrinkOrder->setDrinkSize(DRINK4);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();

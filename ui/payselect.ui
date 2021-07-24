@@ -32,10 +32,10 @@
   <widget class="QPushButton" name="payPage_Button">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>1540</y>
-     <width>541</width>
-     <height>111</height>
+     <x>180</x>
+     <y>1590</y>
+     <width>751</width>
+     <height>81</height>
     </rect>
    </property>
    <property name="text">
@@ -45,10 +45,10 @@
   <widget class="QPushButton" name="orderSmall_Button">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>1330</y>
-     <width>261</width>
-     <height>151</height>
+     <x>550</x>
+     <y>1160</y>
+     <width>211</width>
+     <height>141</height>
     </rect>
    </property>
    <property name="text">
@@ -58,10 +58,10 @@
   <widget class="QPushButton" name="orderBig_Button">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>1330</y>
-     <width>251</width>
-     <height>151</height>
+     <x>780</x>
+     <y>1160</y>
+     <width>211</width>
+     <height>141</height>
     </rect>
    </property>
    <property name="text">
@@ -79,6 +79,58 @@
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="priceLabel">
+   <property name="geometry">
+    <rect>
+     <x>819</x>
+     <y>1386</y>
+     <width>111</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Proxima Nova;
+background-image: url(:/light/background.png);
+font-style: normal;
+font-weight: normal;
+font-size: 24px;
+line-height: 29px;
+
+color: #58595B;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="totalPriceLabel">
+   <property name="geometry">
+    <rect>
+     <x>806</x>
+     <y>1498</y>
+     <width>121</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Proxima Nova;
+background-image: url(:/light/background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+
+color: #58595B;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
    </property>
   </widget>
  </widget>

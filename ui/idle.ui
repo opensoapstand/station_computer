@@ -46,7 +46,7 @@
    </property>
    <property name="styleSheet">
     <string notr="true">font-family: Proxima Nova ScOsf;
-color: black;</string>
+color: white;</string>
    </property>
    <property name="text">
     <string/>

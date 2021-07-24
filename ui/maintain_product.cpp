@@ -32,6 +32,7 @@ maintain_product::~maintain_product()
 void maintain_product::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
+    int checkOption = idlePage->userDrinkOrder->getOption();
 
     DbManager db(DB_PATH);
     //db.addPageClick("MAINTENANCE PAGE ENTERED");
@@ -44,6 +45,12 @@ void maintain_product::showEvent(QShowEvent *event)
 
     maintainProductPageEndTimer->start(1000);
     _maintainProductPageTimeoutSec = 15;
+
+    if(db.getRemaining(checkOption)>0){
+        ui->soldOutButton->setText("Mark as Sold Out");
+    }else{
+        ui->soldOutButton->setText("Un-Mark as Sold Out");
+    }
 
 }
 
@@ -67,6 +74,7 @@ void maintain_product::setPage(maintenancePage* pageMaintenance, idle* pageIdle)
     ui->remainingLabel->setText("");
     ui->total_dispensed->setText("");
     ui->lastRefillLabel->setText("");
+
 }
 
 void maintain_product::on_backButton_clicked(){

@@ -180,12 +180,21 @@ void paySelect::on_payPage_Button_clicked()
 
 void paySelect::resizeEvent(QResizeEvent *event){
     int checkOption = idlePage->userDrinkOrder->getOption();
+    DbManager db(DB_PATH);
+
+    char drinkSize;
+    if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
+        drinkSize = 's';
+    }
+    if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK){
+        drinkSize = 'l';
+    }
 
     QString bitmap_location;
 
     if(checkOption > 0 && checkOption <= 9) {
         bitmap_location.append(":/light/4_pay_select_page_l_");
-        bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
+        bitmap_location.append(QString::number(checkOption));
         bitmap_location.append(".png");
     } else {
         bitmap_location = ":/light/4_pay_select_page_l_1.png";
@@ -205,9 +214,28 @@ void paySelect::resizeEvent(QResizeEvent *event){
         connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
     }
 
+    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize)));
+    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize)));
+
     qDebug() << "Start paySelect Timers" << endl;
     selectIdleTimer->start(1000);
     _selectIdleTimeoutSec = 40;
+}
+
+void paySelect::showEvent(QShowEvent *event){
+    int checkOption = idlePage->userDrinkOrder->getOption();
+    DbManager db(DB_PATH);
+
+    char drinkSize;
+    if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
+        drinkSize = 's';
+    }
+    if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK){
+        drinkSize = 'l';
+    }
+    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize)));
+    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize)));
+
 }
 
 void paySelect::onSelectTimeoutTick(){
@@ -306,8 +334,13 @@ void paySelect::on_orderSmall_Button_clicked()
     idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
     _selectIdleTimeoutSec = 40;
 
+    char drinkSize = 's';
+
     DbManager db(DB_PATH);
     db.addPageClick("Small Drink Size Selected");
+
+    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize)));
+    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize)));
 }
 
 // on_Large_Order button listener
@@ -330,4 +363,9 @@ void paySelect::on_orderBig_Button_clicked()
 
     DbManager db(DB_PATH);
     db.addPageClick("Large Drink Size Selected");
+
+    char drinkSize = 'l';
+
+    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize)));
+    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize)));
 }

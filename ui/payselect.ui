@@ -42,32 +42,6 @@
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="orderSmall_Button">
-   <property name="geometry">
-    <rect>
-     <x>550</x>
-     <y>1160</y>
-     <width>211</width>
-     <height>141</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="orderBig_Button">
-   <property name="geometry">
-    <rect>
-     <x>780</x>
-     <y>1160</y>
-     <width>211</width>
-     <height>141</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QPushButton" name="mainPage_Button">
    <property name="geometry">
     <rect>
@@ -131,6 +105,84 @@ color: #58595B;</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="price_sLabel">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>1225</y>
+     <width>211</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Proxima-Nova;
+background-image: url(:/light/background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="price_lLabel">
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>1225</y>
+     <width>211</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Proxima-Nova;
+background-image: url(:/light/background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #3D6675;
+tex-align: center;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="orderBig_Button">
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>1160</y>
+     <width>208</width>
+     <height>138</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="orderSmall_Button">
+   <property name="geometry">
+    <rect>
+     <x>554</x>
+     <y>1160</y>
+     <width>209</width>
+     <height>138</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>

@@ -60,6 +60,9 @@ private slots:
     void on_mainPage_Button_clicked();
     void onSelectTimeoutTick();
 
+    void on_price_lLabel_clicked();
+    void on_price_sLabel_clicked();
+
 private:
     bool stopSelectTimers();
     void selectOnTick();

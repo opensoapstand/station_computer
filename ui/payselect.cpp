@@ -216,6 +216,12 @@ void paySelect::resizeEvent(QResizeEvent *event){
 
     ui->priceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize)));
     ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize)));
+    ui->price_sLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 's')));
+    ui->price_lLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 'l')));
+
+    ui->price_sLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #3D6675;");
+    ui->price_lLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+
 
     qDebug() << "Start paySelect Timers" << endl;
     selectIdleTimer->start(1000);
@@ -235,6 +241,10 @@ void paySelect::showEvent(QShowEvent *event){
     }
     ui->priceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize)));
     ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize)));
+    ui->price_sLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 's')));
+    ui->price_lLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 'l')));
+    ui->price_sLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #3D6675;");
+    ui->price_lLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
 
 }
 
@@ -316,6 +326,14 @@ void paySelect::on_mainPage_Button_clicked()
 
 }
 
+void paySelect::on_price_sLabel_clicked(){
+    on_orderSmall_Button_clicked();
+}
+
+void paySelect::on_price_lLabel_clicked(){
+    on_orderBig_Button_clicked();
+}
+
 // on_Small_Order button listener
 void paySelect::on_orderSmall_Button_clicked()
 {
@@ -341,6 +359,9 @@ void paySelect::on_orderSmall_Button_clicked()
 
     ui->priceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize)));
     ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize)));
+    ui->price_sLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+    ui->price_lLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #3D6675;");
+
 }
 
 // on_Large_Order button listener
@@ -368,4 +389,7 @@ void paySelect::on_orderBig_Button_clicked()
 
     ui->priceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize)));
     ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize)));
+
+    ui->price_sLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #3D6675;");
+    ui->price_lLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
 }

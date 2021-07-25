@@ -326,14 +326,6 @@ void paySelect::on_mainPage_Button_clicked()
 
 }
 
-void paySelect::on_price_sLabel_clicked(){
-    on_orderSmall_Button_clicked();
-}
-
-void paySelect::on_price_lLabel_clicked(){
-    on_orderBig_Button_clicked();
-}
-
 // on_Small_Order button listener
 void paySelect::on_orderSmall_Button_clicked()
 {

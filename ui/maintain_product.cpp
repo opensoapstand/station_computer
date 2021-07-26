@@ -52,6 +52,17 @@ void maintain_product::showEvent(QShowEvent *event)
         ui->soldOutButton->setText("Un-Mark as Sold Out");
     }
 
+    ui->name->setText(db.getProductName(checkOption));
+    ui->price_s->setText("$"+QString::number(db.getProductPrice(checkOption, 's')));
+    ui->price_l->setText("$"+QString::number(db.getProductPrice(checkOption, 'l')));
+    ui->target_volume_s->setText(QString::number(db.getProductVolume(checkOption, 's')) + "ml");
+    ui->target_volume_l->setText(QString::number(db.getProductVolume(checkOption, 'l')) + "ml");
+    ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(checkOption)) + "ml");
+    ui->full_volume->setText(QString::number(db.getFullProduct(checkOption)) + "ml");
+    ui->total_dispensed->setText(QString::number(db.getTotalDispensed(checkOption)) + "ml");
+    ui->remainingLabel->setText(QString::number(db.getRemaining(checkOption)) + "ml");
+    ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
+
 }
 
 /*
@@ -208,7 +219,8 @@ void maintain_product::resizeEvent(QResizeEvent *event){
     ui->total_dispensed->setText(QString::number(db.getTotalDispensed(checkOption)) + "ml");
     ui->remainingLabel->setText(QString::number(db.getRemaining(checkOption)) + "ml");
     ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
-    ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
+    //ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
+    ui->temperatureLabel->setText("");
 
     if(db.getRemaining(checkOption)>0){
         ui->soldOutButton->setText("Mark as Sold Out");

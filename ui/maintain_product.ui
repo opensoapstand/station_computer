@@ -296,7 +296,7 @@
    </property>
    <property name="text">
     <string>Dispensed Since 
-Last Refill:</string>
+Last Restock:</string>
    </property>
   </widget>
   <widget class="QPushButton" name="remainingButton">
@@ -348,7 +348,7 @@ Last Refill:</string>
     </rect>
    </property>
    <property name="text">
-    <string>Last Refill:</string>
+    <string>Last Restock:</string>
    </property>
   </widget>
   <widget class="QLabel" name="lastRefillLabel">

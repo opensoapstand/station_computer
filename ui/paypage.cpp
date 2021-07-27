@@ -167,6 +167,8 @@ void payPage::resizeEvent(QResizeEvent *event){
     // FIXME: MAGIC NUMBER!!! UX410 Socket Auto Close time is 60 seconds so timer kills page GUI
     idlePaymentTimer->start(60000);
 
+    DbManager db(DB_PATH);
+
     int checkOption = idlePage->userDrinkOrder->getOption();
     char drinkSize;
     if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
@@ -200,6 +202,12 @@ void payPage::resizeEvent(QResizeEvent *event){
     this->setPalette(palette);
 
     ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
+
+    if (db.getProductVolume(checkOption, drinkSize) < 1000){
+        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
+    }else{
+        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
+    }
 
     response = false;
 
@@ -412,6 +420,9 @@ void payPage::cancelPayment()
 void payPage::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
+
+    DbManager db(DB_PATH);
+
     int checkOption = idlePage->userDrinkOrder->getOption();
     char drinkSize;
     if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
@@ -452,6 +463,12 @@ void payPage::showEvent(QShowEvent *event)
 
     ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
     this->ui->payment_countdownLabel->setText("");
+
+    if (db.getProductVolume(checkOption, drinkSize) < 1000){
+        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
+    }else{
+        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
+    }
 
 
   //  ui->payment_pass_Button->setEnabled(false);

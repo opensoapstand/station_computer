@@ -108,18 +108,12 @@ void paySelect::on_payPage_Button_clicked()
 {
     qDebug() << "paySelect: Pay button" << endl;
 
+    ui->mainPage_Button->setEnabled(false);
+    ui->previousPage_Button->setEnabled(false);
+
     //Update Click DB
     DbManager db(DB_PATH);
     db.addPageClick("Pay Select -> Dispense Page");
-
-    //double drinkAmountDbl = idlePage->userDrinkOrder->getPrice();
-    //QString qs = QString::number(drinkAmountDbl, 'f', 2);
-
-    //string drinkAmount = qs.toUtf8().constData();
-
-    //drinkAmount.insert(0,"$ ");
-
-    //string drinkTotal = drinkAmount;
 
     this->stopSelectTimers();
     selectIdleTimer->stop();
@@ -128,59 +122,20 @@ void paySelect::on_payPage_Button_clicked()
         //paymentPage->showEvent(dispenseEvent);
         paymentPage->showFullScreen();
         this->hide();
-    }
-//    else if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "tap"){
-//        char drinkSize;
-
-//        if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
-//            drinkSize = 's';
-//            //paymentPage->resizeEvent(paySelectResize, drinkSize);
-//        }
-//        if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK){
-//            drinkSize = 'l';
-//            //paymentPage->resizeEvent(paySelectResize, drinkSize);
-//        }
-//        paymentPage->showFullScreen();
-//        this->hide();
-//    }
-    else if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "barcode" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "plu"){
+    } else if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "barcode" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "plu"){
         dispensingPage->showEvent(dispenseEvent);
         this->hide();
         dispensingPage->showFullScreen();
     }
-
-//    char drinkSize;
-
-//    if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
-//        drinkSize = 's';
-//        paymentPage->resizeEvent(paySelectResize, drinkSize);
-//    }
-//    if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK){
-//        drinkSize = 'l';
-//        paymentPage->resizeEvent(paySelectResize, drinkSize);
-//    }
-
-
-
-
-//    if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "tap" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "qr"){
-//        //paymentPage->resizeEvent(paySelectResize, drinkSize);
-//        paymentPage->showFullScreen();
-//        this->hide();
-//    }else if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "barcode" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "plu"){
-//        dispensingPage->showEvent(dispenseEvent);
-//        this->hide();
-//        dispensingPage->showFullScreen();
-//    }
-
-    //qDebug() << idlePage->userDrinkOrder->getPrice();
-    //qDebug() << idlePage->userDrinkOrder->getSize();
 
 }
 
 void paySelect::resizeEvent(QResizeEvent *event){
     int checkOption = idlePage->userDrinkOrder->getOption();
     DbManager db(DB_PATH);
+
+    ui->mainPage_Button->setEnabled(true);
+    ui->previousPage_Button->setEnabled(true);
 
     char drinkSize;
     if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
@@ -231,6 +186,9 @@ void paySelect::resizeEvent(QResizeEvent *event){
 void paySelect::showEvent(QShowEvent *event){
     int checkOption = idlePage->userDrinkOrder->getOption();
     DbManager db(DB_PATH);
+
+    ui->mainPage_Button->setEnabled(true);
+    ui->previousPage_Button->setEnabled(true);
 
     char drinkSize;
     if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){

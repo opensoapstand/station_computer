@@ -468,6 +468,7 @@ void payPage::showEvent(QShowEvent *event)
             timerEnabled = true;
 
         }
+        cancelPayment();
         com.flushSerial();
         readTimer->start();
     }
@@ -823,8 +824,10 @@ void payPage::readTimer_loop()
     //cout << "start loop pktResponded: " << to_string(pktResponded[0]) << endl;
 
     //response = false;
+   // pktResponded = com.readPacket();
     pktResponded.clear();
-    pktResponded = com.readPacket();
+    //com.clearBuffer();
+
     usleep(100);
     com.flushSerial();
     pktToSend = paymentPacket.purchasePacket("0.01");
@@ -840,7 +843,7 @@ void payPage::readTimer_loop()
 
         QCoreApplication::processEvents();
 
-    if(pktResponded[0] != 0x02 || pktResponded[10] == 0x33){
+    if(pktResponded[0] != 0x02){
 //       qDebug() << "Reading TAP Packet" << endl;
         cout << readPacket << endl;
 
@@ -853,16 +856,25 @@ void payPage::readTimer_loop()
         pktResponded = com.readPacket();
         usleep(100);
         response = getResponse();
+
         //        com.sendAck();
         //cout << "Polling Timer" << endl;
         //readTimer->start(1000);
-    } else {
+    } else if(pktResponded[10] == 0x33){
+        pktResponded.clear();
+        pktResponded = com.readPacket();
+        usleep(100);
+        response = getResponse();
+        //cancelPayment();
+        //readTimer->start(1000);
+    }
+    else{
 
         if (!response){
 
         cout << "HIT: pktResponded: " << to_string(pktResponded[0]) << endl;
 
-        this->ui->payment_countdownLabel->setText("Processing...");
+        //this->ui->payment_countdownLabel->setText("Processing...");
         QCoreApplication::processEvents();
 
         qDebug() << "Check TAP Packet; Sending" << endl;
@@ -899,7 +911,17 @@ void payPage::readTimer_loop()
             //sleep(5);
 //            on_mainPage_Button_clicked();
         }
-        else if(pktResponded[19] == 0x4e) {
+       /* else if (pktResponded[10] == 0x33){
+            pktResponded.clear();
+            pktResponded = com.readPacket();
+            usleep(100);
+            response = getResponse();
+            this->ui->payment_countdownLabel->setText("Try again");
+            //        com.sendAck();
+            //cout << "Polling Timer" << endl;
+            readTimer->start(1000);
+
+        }*/else if(pktResponded[19] == 0x4e) {
             purchaseEnable = false;
             cout << "No Approval Packet!" << endl;
             this->ui->payment_countdownLabel->setText("Not Approved");
@@ -912,6 +934,12 @@ void payPage::readTimer_loop()
             //this->ui->payment_countdownLabel->setText("Hmm...");
             //sleep(5);
             //on_mainPage_Button_clicked();
+        }else{
+            pktResponded.clear();
+            pktResponded = com.readPacket();
+            usleep(100);
+            response = getResponse();
+            readTimer->start(1000);
         }
 
         }

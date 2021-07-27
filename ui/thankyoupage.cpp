@@ -78,19 +78,19 @@ void thankYouPage::showEvent(QShowEvent *event)
 
     // THIS WILL HAVE TO BE CHANGED SO THE SYSTEM CHECKS IF IT IS A DF / SS MACHINE
 
-    if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "tap"){
-        rinse=false;
-        rinseTimer->start(1000);
-        _rinseTimerTimeoutSec = 5;
-        ui->rinse_label->setText("<p align=center>Water rinse coming in<br><br>5</p>");
-        ui->rinse_label->show();
-        ui->mainPage_Button->setEnabled(false);
-    }else{
+//    if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "tap"){
+//        rinse=false;
+//        rinseTimer->start(1000);
+//        _rinseTimerTimeoutSec = 5;
+//        ui->rinse_label->setText("<p align=center>Water rinse coming in<br><br>5</p>");
+//        ui->rinse_label->show();
+//        ui->mainPage_Button->setEnabled(false);
+//    }else{
         ui->rinse_label->hide();
         thankYouEndTimer->start(1000);
         _thankYouTimeoutSec = 5;
         ui->mainPage_Button->setEnabled(true);
-    }
+//    }
 
 //    thankYouEndTimer->start(1000);
 //    _thankYouTimeoutSec = 7;

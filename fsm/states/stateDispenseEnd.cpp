@@ -112,17 +112,17 @@ DF_ERROR stateDispenseEnd::onExit()
 
    std::string paymentMethod = cassettes[pos].getDrink()->getPaymentMethod();
 
-   if (paymentMethod == "tap"){
-       sleep(5);
-       debugOutput::sendMessage("Dispense OnEXIT", INFO);
-       debugOutput::sendMessage("------Cleaning Mode------", INFO);
-       debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
-       debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(WATER)), INFO);
-       debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
-       debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
+//   if (paymentMethod == "tap"){
+//       sleep(5);
+//       debugOutput::sendMessage("Dispense OnEXIT", INFO);
+//       debugOutput::sendMessage("------Cleaning Mode------", INFO);
+//       debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
+//       debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(WATER)), INFO);
+//       debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
+//       debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
-       cassettes[pos].cleanNozzle(WATER, AIR);
-   }
+//       cassettes[pos].cleanNozzle(WATER, AIR);
+//   }
 
    updateDB();
 

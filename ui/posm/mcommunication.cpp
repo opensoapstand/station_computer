@@ -81,7 +81,7 @@ bool mCommunication::init(){
 
 std::vector<uint8_t> mCommunication::readPacket(){
 
-    uint8_t buffer[1024] = {};
+    buffer[1024] = {};
     long int readSize = -1;
     long int readSize2 = -1;
     std::vector<uint8_t> pktRead;
@@ -134,6 +134,10 @@ std::vector<uint8_t> mCommunication::readPacket(){
         return pktRead;
     }
 }
+}
+
+void mCommunication::clearBuffer(){
+    buffer[1024] = {};
 }
 
 std::vector<uint8_t> mCommunication::readForAck()

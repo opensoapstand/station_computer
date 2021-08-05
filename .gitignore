@@ -16,7 +16,7 @@ sqlite/build
 ### QT Creator ###
 
 /build
-
+ui/DF_UI
 /build-ui-Desktop-Debug/*
 
 ### Qt ###

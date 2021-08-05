@@ -35,7 +35,8 @@ void maintain_product::showEvent(QShowEvent *event)
     int checkOption = idlePage->userDrinkOrder->getOption();
 
     DbManager db(DB_PATH);
-    //db.addPageClick("MAINTENANCE PAGE ENTERED");
+    DbManager db_temperature(DB_PATH_TEMPERATURE);
+    db.addPageClick("MAINTENANCE PAGE ENTERED");
 
     if(maintainProductPageEndTimer == nullptr){
         maintainProductPageEndTimer = new QTimer(this);
@@ -62,6 +63,8 @@ void maintain_product::showEvent(QShowEvent *event)
     ui->total_dispensed->setText(QString::number(db.getTotalDispensed(checkOption)) + "ml");
     ui->remainingLabel->setText(QString::number(db.getRemaining(checkOption)) + "ml");
     ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
+    ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
+//    ui->temperatureLabel->setText("");
 
 }
 
@@ -219,8 +222,8 @@ void maintain_product::resizeEvent(QResizeEvent *event){
     ui->total_dispensed->setText(QString::number(db.getTotalDispensed(checkOption)) + "ml");
     ui->remainingLabel->setText(QString::number(db.getRemaining(checkOption)) + "ml");
     ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
-    //ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
-    ui->temperatureLabel->setText("");
+    ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
+//    ui->temperatureLabel->setText("");
 
     if(db.getRemaining(checkOption)>0){
         ui->soldOutButton->setText("Mark as Sold Out");

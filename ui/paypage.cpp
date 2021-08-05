@@ -203,11 +203,11 @@ void payPage::resizeEvent(QResizeEvent *event){
 
     ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
 
-    if (db.getProductVolume(checkOption, drinkSize) < 1000){
-        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
-    }else{
-        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
-    }
+//    if (db.getProductVolume(checkOption, drinkSize) < 1000){
+//        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
+//    }else{
+//        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
+//    }
 
     response = false;
 
@@ -464,11 +464,11 @@ void payPage::showEvent(QShowEvent *event)
     ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
     this->ui->payment_countdownLabel->setText("");
 
-    if (db.getProductVolume(checkOption, drinkSize) < 1000){
-        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
-    }else{
-        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
-    }
+//    if (db.getProductVolume(checkOption, drinkSize) < 1000){
+//        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
+//    }else{
+//        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
+//    }
 
 
   //  ui->payment_pass_Button->setEnabled(false);
@@ -721,7 +721,7 @@ bool payPage::paymentInit()
     }
 
     //This is super shitty - there must be a better way to find out when the green light starts flashing on the UX420
-    //sleep(35);
+    sleep(35);
 
     /*Cancel any previous payment*/
     cout << "Sending Cancel payment packet..." << endl;

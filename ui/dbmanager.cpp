@@ -411,3 +411,35 @@ double DbManager::getTemperature(){
     }
     return temperature;
 }
+
+bool DbManager::updatePaymentsDb(QString date,QString time, QString txnType, QString amount, QString cardNo, QString refNo, QString authNo, QString cardType, QString status, QString isoCode, QString hostCode, QString tvr){
+    QSqlQuery payments_query;
+    bool success;
+
+    payments_query.prepare("INSERT INTO payments (date, time, txnType, amount, cardNo, refNo, authNo, cardType, status, isoCode, hostCode, tvr) VALUES (:date, :time, :txnType, :amount, :cardNo, :refNo, :authNo, :cardType, :status, :isoCode, :hostCode, :tvr);");
+    payments_query.bindValue(":date", date);
+    payments_query.bindValue(":time", time);
+    payments_query.bindValue(":txnType", txnType);
+    payments_query.bindValue(":amount", amount);
+    payments_query.bindValue(":cardNo", cardNo);
+    payments_query.bindValue(":refNo", refNo);
+    payments_query.bindValue(":authNo", authNo);
+    payments_query.bindValue(":cardType", cardType);
+    payments_query.bindValue(":status", status);
+    payments_query.bindValue(":isoCode", isoCode);
+    payments_query.bindValue(":hostCode", hostCode);
+    payments_query.bindValue(":tvr", tvr);
+
+    if(payments_query.exec())
+    {
+        success = true;
+        qDebug() << "Payment Database updated successfully!";
+    }
+    else
+    {
+        qDebug() << "Payment Database update error:"
+                 << payments_query.lastError();
+    }
+
+    return success;
+}

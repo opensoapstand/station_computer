@@ -26,6 +26,7 @@ public:
     double getTotalDispensed(int slot);
     QString getLastRefill(int slot);
     double getTemperature();
+    bool updatePaymentsDb(QString date, QString time, QString txnType, QString amount, QString cardNo, QString refNo, QString authNo, QString cardType, QString status, QString isoCode, QString hostCode, QString tvr);
 
 private:
     void emailEmpty(int slot);

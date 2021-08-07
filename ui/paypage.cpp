@@ -107,7 +107,7 @@ payPage::payPage(QWidget *parent) :
         }
         if (payment){
             while (!paymentInit());
-            }
+        }
 
 
 }
@@ -167,7 +167,7 @@ void payPage::resizeEvent(QResizeEvent *event){
     // FIXME: MAGIC NUMBER!!! UX410 Socket Auto Close time is 60 seconds so timer kills page GUI
     idlePaymentTimer->start(60000);
 
-    DbManager db(DB_PATH);
+    //DbManager db(DB_PATH);
 
     int checkOption = idlePage->userDrinkOrder->getOption();
     char drinkSize;
@@ -847,7 +847,9 @@ void payPage::readTimer_loop()
 
     usleep(100);
     com.flushSerial();
-    pktToSend = paymentPacket.purchasePacket("0.01");
+    pktToSend = paymentPacket.purchasePacket((QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2)).QString::toStdString());
+    cout << "to PAY: " << ((QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2)).QString::toStdString());
+//        pktToSend = paymentPacket.purchasePacket("0.01");
 
     //this->ui->payment_countdownLabel->setText("TAP NOW");
     response = getResponse();

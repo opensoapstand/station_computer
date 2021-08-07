@@ -1,11 +1,16 @@
-QT += core gui sql widgets serialport network
+QT += core gui sql widgets serialport network svg quick qml
+
+static {
+    QTPLUGIN += qtvirtualkeyboardplugin
+}
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = DF_UI
 
 CONFIG += \
-    c++11
+    c++11 \
+    disable-desktop
 
 FORMS += \
     dispensepage.ui \

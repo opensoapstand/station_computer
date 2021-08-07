@@ -60,6 +60,7 @@ private slots:
     void on_remainingButton_clicked();
     void on_dispensedButton_clicked();
     void on_lastRefillButton_clicked();
+    void on_temperatureButton_clicked();
 
 private:
     void showEvent(QShowEvent *event);

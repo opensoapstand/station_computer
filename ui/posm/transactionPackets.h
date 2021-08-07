@@ -37,6 +37,7 @@ public:
     /* 3.1.4 PpPosSetConfig (0D – 0003)*/
     std::vector<uint8_t> ppPosSetConfigPkt(char tag, std::string val); //Tag-Length-Value Format
     std::vector<uint8_t> ppPosGetConfigPkt(int tag);
+    std::vector<uint8_t> resetDevice();
 
     void transactionAmount(char type, std::string amount);
     packetFromECR getSendPacket();

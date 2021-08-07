@@ -151,6 +151,23 @@ std::vector<uint8_t> transactionPacket::reversePurchasePacket()
     return packet.getPacket();
 }
 
+std::vector<uint8_t> transactionPacket::resetDevice()
+{
+    uint8_t dataPacket[] = {}; //ECR transaction type 'R' - forced controller reversal
+
+    //STX is 0x02                                               //02
+
+    //parentID is fixed 0x02                                    //02
+    packet.setPacketClassID(communicationPacketField::ppDvc);   //01
+    packet.setPacketApiID(API_ID::PpDvcReset);                  //00 92
+    packet.setPacketData(dataPacket, sizeof (dataPacket));      //42 [B]
+    //ETX is 0x03                                               //03
+    packet.setPacketDataLen();                                  //00 05
+    packet.setPacketLRC();                                      //LRC
+
+    return packet.getPacket();
+}
+
 /*
  * 3.1.3 PpPosStatus (0D - 0002)
  *

@@ -2,6 +2,12 @@
 #include "ui_maintain_product.h"
 #include "idle.h"
 #include "drinkorder.h"
+#include <QInputDialog>
+#include <QQuickView>
+#include <QQmlEngine>
+#include <QCoreApplication>
+#include <QGuiApplication>
+#include <QKeyEvent>
 
 // CTOR
 maintain_product::maintain_product(QWidget *parent) :
@@ -35,8 +41,8 @@ void maintain_product::showEvent(QShowEvent *event)
     int checkOption = idlePage->userDrinkOrder->getOption();
 
     DbManager db(DB_PATH);
-    DbManager db_temperature(DB_PATH_TEMPERATURE);
-    db.addPageClick("MAINTENANCE PAGE ENTERED");
+    //DbManager db_temperature(DB_PATH_TEMPERATURE);
+    //db.addPageClick("MAINTENANCE PAGE ENTERED");
 
     if(maintainProductPageEndTimer == nullptr){
         maintainProductPageEndTimer = new QTimer(this);
@@ -63,7 +69,7 @@ void maintain_product::showEvent(QShowEvent *event)
     ui->total_dispensed->setText(QString::number(db.getTotalDispensed(checkOption)) + "ml");
     ui->remainingLabel->setText(QString::number(db.getRemaining(checkOption)) + "ml");
     ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
-    ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
+   // ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
 //    ui->temperatureLabel->setText("");
 
 }
@@ -88,6 +94,8 @@ void maintain_product::setPage(maintenancePage* pageMaintenance, idle* pageIdle)
     ui->remainingLabel->setText("");
     ui->total_dispensed->setText("");
     ui->lastRefillLabel->setText("");
+
+    //qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
 
 }
 
@@ -282,6 +290,16 @@ void maintain_product::on_nameButton_clicked(){
 void maintain_product::on_priceButton_s_clicked(){
     qDebug() << "Price button clicked" << endl;
     _maintainProductPageTimeoutSec=15;
+    bool ok;
+    //qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
+
+//    QQuickView view(QString("qrc:/%2").arg(MAIN_QML));
+//    view.setResizeMode(QQuickView::SizeRootObjectToView);
+//    view.show();
+    QString text = QInputDialog::getText(this, tr("HOWZIT"), tr("NEW PRICE:"), QLineEdit::Normal, "", &ok);
+    QInputMethod *im = QApplication::inputMethod();
+    im->setVisible(true);
+    im->show();
 }
 
 void maintain_product::on_priceButton_l_clicked(){
@@ -457,6 +475,13 @@ void maintain_product::on_dispensedButton_clicked(){
 
 void maintain_product::on_lastRefillButton_clicked(){
     qDebug() << "Last Refill button clicked" << endl;
+    _maintainProductPageTimeoutSec=15;
+}
+
+void maintain_product::on_temperatureButton_clicked(){
+    qDebug() << "Temperature button clicked" << endl;
+    DbManager db_temperature(DB_PATH_TEMPERATURE);
+    ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
     _maintainProductPageTimeoutSec=15;
 }
 

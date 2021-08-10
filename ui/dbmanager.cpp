@@ -404,11 +404,13 @@ double DbManager::getTemperature(){
     QSqlQuery temperature_query;
     double temperature;
 
-    temperature_query.prepare("SELECT * FROM temperature ORDER BY date DESC LIMIT 1");
+    temperature_query.prepare("SELECT temp FROM temperature ORDER BY date ASC LIMIT 1");
+   // qDebug() << temperature_query;
     temperature_query.exec();
     while (temperature_query.next()){
         temperature = temperature_query.value(0).toDouble();
     }
+    qDebug() << "temp< " << temperature;
     return temperature;
 }
 

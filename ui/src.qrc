@@ -90,22 +90,6 @@
         <file>idle.h</file>
         <file>includefiles.h</file>
         <file>main.cpp</file>
-        <file>moc_df_util.cpp</file>
-        <file>moc_dfuicommthread.cpp</file>
-        <file>moc_dfuiserver.cpp</file>
-        <file>moc_dispensepage.cpp</file>
-        <file>moc_drinkorder.cpp</file>
-        <file>moc_help.cpp</file>
-        <file>moc_idle.cpp</file>
-        <file>moc_init.cpp</file>
-        <file>moc_maintain_product.cpp</file>
-        <file>moc_maintenancePage.cpp</file>
-        <file>moc_paypage.cpp</file>
-        <file>moc_payselect.cpp</file>
-        <file>moc_predefs.h</file>
-        <file>moc_productpage_1.cpp</file>
-        <file>moc_productpage_2.cpp</file>
-        <file>moc_thankyoupage.cpp</file>
         <file>paypage.cpp</file>
         <file>paypage.h</file>
         <file>payselect.cpp</file>
@@ -114,7 +98,6 @@
         <file>productpage_1.h</file>
         <file>productpage_2.cpp</file>
         <file>productpage_2.h</file>
-        <file>qrc_src.cpp</file>
         <file>thankyoupage.cpp</file>
         <file>thankyoupage.h</file>
         <file>ui_dispensepage.h</file>

@@ -169,33 +169,33 @@ void paySelect::resizeEvent(QResizeEvent *event){
         connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
     }
 
-//    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize)));
-//    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize)));
-//    ui->price_sLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 's')));
-//    ui->price_lLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 'l')));
+    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize)));
+    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize)));
+    ui->price_sLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 's')));
+    ui->price_lLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 'l')));
 
-//    if (db.getProductVolume(checkOption, 's') < 1000){
-//        ui->volume_sLabel->setText(QString::number(db.getProductVolume(checkOption, 's')) + "ml");
-//    }else{
-//        ui->volume_sLabel->setText(QString::number(db.getProductVolume(checkOption, 's')/1000) + "L");
-//    }
+    if (db.getProductVolume(checkOption, 's') < 1000){
+        ui->volume_sLabel->setText(QString::number(db.getProductVolume(checkOption, 's')) + "ml");
+    }else{
+        ui->volume_sLabel->setText(QString::number(db.getProductVolume(checkOption, 's')/1000) + "L");
+    }
 
-//    if (db.getProductVolume(checkOption, 'l') < 1000){
-//        ui->volume_lLabel->setText(QString::number(db.getProductVolume(checkOption, 'l')) + "ml");
-//    }else{
-//        ui->volume_lLabel->setText(QString::number(db.getProductVolume(checkOption, 'l')/1000) + "L");
-//    }
+    if (db.getProductVolume(checkOption, 'l') < 1000){
+        ui->volume_lLabel->setText(QString::number(db.getProductVolume(checkOption, 'l')) + "ml");
+    }else{
+        ui->volume_lLabel->setText(QString::number(db.getProductVolume(checkOption, 'l')/1000) + "L");
+    }
 
-//    if (db.getProductVolume(checkOption, drinkSize) < 1000){
-//        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
-//    }else{
-//        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
-//    }
+    if (db.getProductVolume(checkOption, drinkSize) < 1000){
+        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
+    }else{
+        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
+    }
 
 
 
-//    ui->price_sLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #3D6675;");
-//    ui->price_lLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+    ui->price_sLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #3D6675;");
+    ui->price_lLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
 
 
     qDebug() << "Start paySelect Timers" << endl;
@@ -204,44 +204,44 @@ void paySelect::resizeEvent(QResizeEvent *event){
 }
 
 void paySelect::showEvent(QShowEvent *event){
-   //int checkOption = idlePage->userDrinkOrder->getOption();
+   int checkOption = idlePage->userDrinkOrder->getOption();
     DbManager db(DB_PATH);
 
     ui->mainPage_Button->setEnabled(true);
     ui->previousPage_Button->setEnabled(true);
 
-//    char drinkSize;
-//    if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
-//        drinkSize = 's';
-//    }
-//    if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK){
-//        drinkSize = 'l';
-//    }
-//    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize)));
-//    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize)));
-//    ui->price_sLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 's')));
-//    ui->price_lLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 'l')));
+    char drinkSize;
+    if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
+        drinkSize = 's';
+    }
+    if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK){
+        drinkSize = 'l';
+    }
+    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize)));
+    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize)));
+    ui->price_sLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 's')));
+    ui->price_lLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 'l')));
 
-//    if (db.getProductVolume(checkOption, 's') < 1000){
-//        ui->volume_sLabel->setText(QString::number(db.getProductVolume(checkOption, 's')) + "ml");
-//    }else{
-//        ui->volume_sLabel->setText(QString::number(db.getProductVolume(checkOption, 's')/1000) + "L");
-//    }
+    if (db.getProductVolume(checkOption, 's') < 1000){
+        ui->volume_sLabel->setText(QString::number(db.getProductVolume(checkOption, 's')) + "ml");
+    }else{
+        ui->volume_sLabel->setText(QString::number(db.getProductVolume(checkOption, 's')/1000) + "L");
+    }
 
-//    if (db.getProductVolume(checkOption, 'l') < 1000){
-//        ui->volume_lLabel->setText(QString::number(db.getProductVolume(checkOption, 'l')) + "ml");
-//    }else{
-//        ui->volume_lLabel->setText(QString::number(db.getProductVolume(checkOption, 'l')/1000) + "L");
-//    }
+    if (db.getProductVolume(checkOption, 'l') < 1000){
+        ui->volume_lLabel->setText(QString::number(db.getProductVolume(checkOption, 'l')) + "ml");
+    }else{
+        ui->volume_lLabel->setText(QString::number(db.getProductVolume(checkOption, 'l')/1000) + "L");
+    }
 
-//    if (db.getProductVolume(checkOption, drinkSize) < 1000){
-//        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
-//    }else{
-//        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
-//    }
+    if (db.getProductVolume(checkOption, drinkSize) < 1000){
+        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
+    }else{
+        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
+    }
 
-//    ui->price_sLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #3D6675;");
-//    ui->price_lLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+    ui->price_sLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #3D6675;");
+    ui->price_lLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
 
 }
 
@@ -328,7 +328,7 @@ void paySelect::on_orderSmall_Button_clicked()
 {
     QString bitmap_location;
 
-    //int checkOption = idlePage->userDrinkOrder->getOption();
+    int checkOption = idlePage->userDrinkOrder->getOption();
 
     bitmap_location.append(":/light/4_pay_select_page_s_");
     bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
@@ -343,21 +343,21 @@ void paySelect::on_orderSmall_Button_clicked()
     idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
     _selectIdleTimeoutSec = 40;
 
-//    char drinkSize = 's';
+    char drinkSize = 's';
 
-//    DbManager db(DB_PATH);
-//    db.addPageClick("Small Drink Size Selected");
+    DbManager db(DB_PATH);
+    db.addPageClick("Small Drink Size Selected");
 
-//    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize)));
-//    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize)));
-//    ui->price_sLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
-//    ui->price_lLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #3D6675;");
+    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize)));
+    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize)));
+    ui->price_sLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+    ui->price_lLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #3D6675;");
 
-//    if (db.getProductVolume(checkOption, drinkSize) < 1000){
-//        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
-//    }else{
-//        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
-//    }
+    if (db.getProductVolume(checkOption, drinkSize) < 1000){
+        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
+    }else{
+        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
+    }
 
 }
 
@@ -366,7 +366,7 @@ void paySelect::on_orderBig_Button_clicked()
 {
     QString bitmap_location;
 
-//    int checkOption = idlePage->userDrinkOrder->getOption();
+    int checkOption = idlePage->userDrinkOrder->getOption();
 
     bitmap_location.append(":/light/4_pay_select_page_l_");
     bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
@@ -381,20 +381,20 @@ void paySelect::on_orderBig_Button_clicked()
     idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
     _selectIdleTimeoutSec = 40;
 
-//    DbManager db(DB_PATH);
-//    db.addPageClick("Large Drink Size Selected");
+    DbManager db(DB_PATH);
+    db.addPageClick("Large Drink Size Selected");
 
-//    char drinkSize = 'l';
+    char drinkSize = 'l';
 
-//    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize)));
-//    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize)));
+    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize)));
+    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize)));
 
-//    ui->price_sLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #3D6675;");
-//    ui->price_lLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+    ui->price_sLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #3D6675;");
+    ui->price_lLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
 
-//    if (db.getProductVolume(checkOption, drinkSize) < 1000){
-//        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
-//    }else{
-//        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
-//    }
+    if (db.getProductVolume(checkOption, drinkSize) < 1000){
+        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
+    }else{
+        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
+    }
 }

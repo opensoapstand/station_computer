@@ -28,6 +28,11 @@ public:
     double getTemperature();
     bool updatePaymentsDb(QString date, QString time, QString txnType, QString amount, QString cardNo, QString refNo, QString authNo, QString cardType, QString status, QString isoCode, QString hostCode, QString tvr);
 
+    bool updatePrice(int slot, char size, double new_price);
+    bool updateTargetVolume(int slot, char size, double new_volume);
+    bool updateVolumePerTick(int slot, double new_volume_per_tick);
+    bool updateFullVolume(int slot, double new_full_volume);
+
 private:
     void emailEmpty(int slot);
     QSqlDatabase m_db;

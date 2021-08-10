@@ -291,15 +291,16 @@ void maintain_product::on_priceButton_s_clicked(){
     qDebug() << "Price button clicked" << endl;
     _maintainProductPageTimeoutSec=15;
     bool ok;
+    QInputMethod *im = QApplication::inputMethod();
+    im->setVisible(true);
+    im->show();
     //qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
 
 //    QQuickView view(QString("qrc:/%2").arg(MAIN_QML));
 //    view.setResizeMode(QQuickView::SizeRootObjectToView);
 //    view.show();
-    QString text = QInputDialog::getText(this, tr("HOWZIT"), tr("NEW PRICE:"), QLineEdit::Normal, "", &ok);
-    QInputMethod *im = QApplication::inputMethod();
-    im->setVisible(true);
-    im->show();
+    QString text = QInputDialog::getText(this, tr("New Price"), tr("NEW PRICE:"), QLineEdit::Normal, "", &ok);
+
 }
 
 void maintain_product::on_priceButton_l_clicked(){

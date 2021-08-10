@@ -405,12 +405,10 @@ double DbManager::getTemperature(){
     double temperature;
 
     temperature_query.prepare("SELECT temp FROM temperature ORDER BY date ASC LIMIT 1");
-   // qDebug() << temperature_query;
     temperature_query.exec();
     while (temperature_query.next()){
         temperature = temperature_query.value(0).toDouble();
     }
-    qDebug() << "temp< " << temperature;
     return temperature;
 }
 
@@ -444,4 +442,93 @@ bool DbManager::updatePaymentsDb(QString date,QString time, QString txnType, QSt
     }
 
     return success;
+}
+
+bool DbManager::updatePrice(int slot, char size, double new_price){
+    QSqlQuery update_price_query;
+    QString price_size;
+
+    if(size='s'){
+        price_size="price_s";
+    }else if (size='l'){
+        price_size="price_l";
+    }else{
+        return false;
+    }
+
+    update_price_query.prepare("UPDATE products SET :price_size = :new_price WHERE slot = :slot");
+    update_price_query.bindValue(":price_size", price_size);
+    update_price_query.bindValue(":new_price", new_price);
+    update_price_query.bindValue(":slot", slot);
+
+    if(update_price_query.exec()){
+        qDebug() << "Price updated successfully!";
+        return true;
+    }else{
+        qDebug() << "Price update error: !"
+                 << update_price_query.lastError();
+        return false;
+    }
+}
+
+bool DbManager::updateTargetVolume(int slot, char size, double new_volume){
+    QSqlQuery update_target_volume_query;
+    QString volume_size;
+
+    if(size='s'){
+        volume_size="volume_target_s";
+    }else if (size='l'){
+        volume_size="volume_target_l";
+    }else{
+        return false;
+    }
+
+    update_target_volume_query.prepare("UPDATE products SET :volume_size=:new_volume WHERE slot=:slot");
+    update_target_volume_query.bindValue(":volume_size", volume_size);
+    update_target_volume_query.bindValue(":new_volume", new_volume);
+    update_target_volume_query.bindValue(":slot", slot);
+
+    if(update_target_volume_query.exec()){
+        qDebug() << "Target Volume updated successfully!";
+        return true;
+    }else{
+        qDebug() << "Target volume update error: !"
+                 << update_target_volume_query.lastError();
+        return false;
+    }
+
+}
+
+bool DbManager::updateVolumePerTick(int slot, double new_volume_per_tick){
+    QSqlQuery update_volume_per_tick_query;
+
+    update_volume_per_tick_query.prepare("UPDATE products SET volume_per_tick=:new_volume_per_tick WHERE slot=:slot");
+    update_volume_per_tick_query.bindValue(":new_volume_per_tick", new_volume_per_tick);
+    update_volume_per_tick_query.bindValue(":slot", slot);
+
+    if(update_volume_per_tick_query.exec()){
+        qDebug() << "Volume per tick updated successfully!";
+        return true;
+    }else{
+        qDebug() << "Volume per tick update error: !"
+                 << update_volume_per_tick_query.lastError();
+        return false;
+    }
+}
+
+bool DbManager::updateFullVolume(int slot, double new_full_volume){
+    QSqlQuery update_full_volume_query;
+
+    update_full_volume_query.prepare("UPDATE products SET full_ml=:new_full_volume WHERE slot=:slot");
+    update_full_volume_query.bindValue(":new_full_volume", new_full_volume);
+    update_full_volume_query.bindValue(":slot", slot);
+
+    if(update_full_volume_query.exec()){
+        qDebug() << "Full volume updated successfully!";
+        return true;
+    }else{
+        qDebug() << "Full volume update error: !"
+                 << update_full_volume_query.lastError();
+        return false;
+    }
 }

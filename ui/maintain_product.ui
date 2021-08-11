@@ -16,10 +16,10 @@
   <widget class="QPushButton" name="backButton">
    <property name="geometry">
     <rect>
-     <x>650</x>
-     <y>1610</y>
-     <width>311</width>
-     <height>281</height>
+     <x>140</x>
+     <y>1730</y>
+     <width>821</width>
+     <height>161</height>
     </rect>
    </property>
    <property name="text">
@@ -42,8 +42,8 @@
   <widget class="QLabel" name="price_l">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>650</y>
+     <x>530</x>
+     <y>770</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -56,7 +56,7 @@
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>1130</y>
+     <y>890</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -68,8 +68,8 @@
   <widget class="QLabel" name="target_volume_l">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>890</y>
+     <x>530</x>
+     <y>650</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -107,8 +107,8 @@
   <widget class="QPushButton" name="priceButton_l">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>620</y>
+     <x>370</x>
+     <y>740</y>
      <width>141</width>
      <height>91</height>
     </rect>
@@ -120,8 +120,8 @@
   <widget class="QPushButton" name="target_volumeButton_l">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>860</y>
+     <x>370</x>
+     <y>620</y>
      <width>141</width>
      <height>91</height>
     </rect>
@@ -135,7 +135,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>1100</y>
+     <y>860</y>
      <width>141</width>
      <height>91</height>
     </rect>
@@ -174,7 +174,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>980</y>
+     <y>620</y>
      <width>141</width>
      <height>91</height>
     </rect>
@@ -188,7 +188,7 @@
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>1010</y>
+     <y>650</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -200,10 +200,10 @@
   <widget class="QPushButton" name="refillButton">
    <property name="geometry">
     <rect>
-     <x>640</x>
+     <x>770</x>
      <y>80</y>
-     <width>321</width>
-     <height>391</height>
+     <width>231</width>
+     <height>331</height>
     </rect>
    </property>
    <property name="text">
@@ -231,10 +231,10 @@
   <widget class="QPushButton" name="soldOutButton">
    <property name="geometry">
     <rect>
-     <x>640</x>
-     <y>690</y>
-     <width>321</width>
-     <height>391</height>
+     <x>450</x>
+     <y>80</y>
+     <width>231</width>
+     <height>331</height>
     </rect>
    </property>
    <property name="text">
@@ -263,7 +263,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>1220</y>
+     <y>980</y>
      <width>141</width>
      <height>91</height>
     </rect>
@@ -276,7 +276,7 @@
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>1250</y>
+     <y>1010</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -289,7 +289,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>1340</y>
+     <y>1100</y>
      <width>141</width>
      <height>91</height>
     </rect>
@@ -303,7 +303,7 @@ Last Restock:</string>
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>1460</y>
+     <y>1220</y>
      <width>141</width>
      <height>91</height>
     </rect>
@@ -316,7 +316,7 @@ Last Restock:</string>
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>1370</y>
+     <y>1130</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -329,7 +329,7 @@ Last Restock:</string>
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>1490</y>
+     <y>1250</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -342,7 +342,7 @@ Last Restock:</string>
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>1580</y>
+     <y>1340</y>
      <width>141</width>
      <height>91</height>
     </rect>
@@ -355,7 +355,7 @@ Last Restock:</string>
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>1610</y>
+     <y>1370</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -368,7 +368,7 @@ Last Restock:</string>
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>1730</y>
+     <y>1490</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -381,7 +381,7 @@ Last Restock:</string>
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>1700</y>
+     <y>1460</y>
      <width>141</width>
      <height>91</height>
     </rect>

@@ -59,7 +59,7 @@ private slots:
 //    void on_product7_button_clicked();
 //    void on_product8_button_clicked();
 //    void on_product9_button_clicked();
-    //void on_wifi_button_clicked();
+    void on_wifiButton_clicked();
     //void on_clean_button_clicked();
     //void on_restock_button_clicked();
     void onMaintenancePageTimeoutTick();

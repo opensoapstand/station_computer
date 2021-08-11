@@ -1,5 +1,6 @@
 #include "maintenancePage.h"
 #include "ui_maintenancePage.h"
+#include <QProcess>
 
 #include "idle.h"
 
@@ -72,12 +73,29 @@ void maintenancePage::showEvent(QShowEvent *event)
     }
 
     maintenancePageEndTimer->start(1000);
-    _maintenancePageTimeoutSec = 15;
+    _maintenancePageTimeoutSec = 20;
 
     ui->product1_label->setText(db.getProductName(1));
     ui->product2_label->setText(db.getProductName(2));
     ui->product3_label->setText(db.getProductName(3));
     ui->product4_label->setText(db.getProductName(4));
+
+    QProcess process;
+
+    process.start("iwgetid -r");
+    process.waitForFinished(-1);
+    QString stdout = process.readAllStandardOutput();
+    ui->wifi_name->setText("Wifi Name: " + stdout);
+
+    process.start("nmcli -t -f STATE general");
+    process.waitForFinished(-1);
+    stdout = process.readAllStandardOutput();
+    ui->wifi_status->setText("Wifi State: " + stdout);
+
+    process.start("nmcli networking connectivity");
+    process.waitForFinished(-1);
+    stdout = process.readAllStandardOutput();
+    ui->wifi_internet->setText("Wifi Connectivity: " + stdout);
 
 }
 
@@ -191,10 +209,32 @@ void maintenancePage::on_product4_button_clicked(){
 
 //}
 
-//void maintenancePage::on_wifi_button_clicked(){
-//    qDebug() << "WiFi button clicked" << endl;
+void maintenancePage::on_wifiButton_clicked(){
+    qDebug() << "WiFi button clicked" << endl;
+    _maintenancePageTimeoutSec = 20;
 
-//}
+
+    // OPEN LIST OF WIFI CONNECTIONS AVAILABLE, AS BUTTONS, WHEN YOU CLICK ON A BUTTON, OPEN PASSWORD ENTRY
+
+
+    QProcess process;
+
+    process.start("iwgetid -r");
+    process.waitForFinished(-1);
+    QString stdout = process.readAllStandardOutput();
+    ui->wifi_name->setText("Wifi Name: " + stdout);
+
+    process.start("nmcli -t -f STATE general");
+    process.waitForFinished(-1);
+    stdout = process.readAllStandardOutput();
+    ui->wifi_status->setText("Wifi State: " + stdout);
+
+    process.start("nmcli networking connectivity");
+    process.waitForFinished(-1);
+    stdout = process.readAllStandardOutput();
+    ui->wifi_internet->setText("Wifi Connectivity: " + stdout);
+
+}
 
 //void maintenancePage::on_clean_button_clicked(){
 //    qDebug() << "Clean button clicked" << endl;

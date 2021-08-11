@@ -28,8 +28,10 @@ public:
     double getTemperature();
     bool updatePaymentsDb(QString date, QString time, QString txnType, QString amount, QString cardNo, QString refNo, QString authNo, QString cardType, QString status, QString isoCode, QString hostCode, QString tvr);
 
-    bool updatePrice(int slot, char size, double new_price);
-    bool updateTargetVolume(int slot, char size, double new_volume);
+    bool updatePrice_s(int slot, double new_price);
+    bool updatePrice_l(int slot, double new_price);
+    bool updateTargetVolume_s(int slot, double new_volume);
+    bool updateTargetVolume_l(int slot, double new_volume);
     bool updateVolumePerTick(int slot, double new_volume_per_tick);
     bool updateFullVolume(int slot, double new_full_volume);
 

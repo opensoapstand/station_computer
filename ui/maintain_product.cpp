@@ -51,7 +51,7 @@ void maintain_product::showEvent(QShowEvent *event)
     }
 
     maintainProductPageEndTimer->start(1000);
-    _maintainProductPageTimeoutSec = 15;
+    _maintainProductPageTimeoutSec = 40;
 
     if(db.getRemaining(checkOption)>0){
         ui->soldOutButton->setText("Mark as Sold Out");
@@ -248,7 +248,7 @@ void maintain_product::resizeEvent(QResizeEvent *event){
 }
 
 void maintain_product::on_image_clicked(){
-    _maintainProductPageTimeoutSec=15;
+    _maintainProductPageTimeoutSec=40;
 //    int checkOption = idlePage->userDrinkOrder->getOption();
 //    if(checkOption > 0 && checkOption <= 9) {
 //        QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
@@ -283,46 +283,89 @@ void maintain_product::on_image_clicked(){
 
 void maintain_product::on_nameButton_clicked(){
     qDebug() << "Name button clicked" << endl;
-    _maintainProductPageTimeoutSec=15;
+    _maintainProductPageTimeoutSec=40;
 }
 
 
 void maintain_product::on_priceButton_s_clicked(){
     qDebug() << "Price button clicked" << endl;
-    _maintainProductPageTimeoutSec=15;
-    bool ok;
-    QInputMethod *im = QApplication::inputMethod();
-    im->setVisible(true);
-    im->show();
+
+    DbManager db(DB_PATH);
+
+    _maintainProductPageTimeoutSec=40;
+    bool ok=false;
+    //QInputMethod *im = QApplication::inputMethod();
+    //im->setVisible(true);
+    //im->show();
     //qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
 
 //    QQuickView view(QString("qrc:/%2").arg(MAIN_QML));
 //    view.setResizeMode(QQuickView::SizeRootObjectToView);
 //    view.show();
-    QString text = QInputDialog::getText(this, tr("New Price"), tr("NEW PRICE:"), QLineEdit::Normal, "", &ok);
+    double new_price = QInputDialog::getDouble(this, tr("New Price"), tr("NEW PRICE:"), db.getProductPrice(idlePage->userDrinkOrder->getOption(), 's'), 0.0, 100, 2, &ok);
+
+
+    if(ok){
+        db.updatePrice_s(idlePage->userDrinkOrder->getOption(), new_price);
+    }
+
+    ui->price_s->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), 's')));
 
 }
 
 void maintain_product::on_priceButton_l_clicked(){
     qDebug() << "Price button clicked" << endl;
-    _maintainProductPageTimeoutSec=15;
+
+    DbManager db(DB_PATH);
+
+    _maintainProductPageTimeoutSec=40;
+    bool ok=false;
+
+    double new_price = QInputDialog::getDouble(this, tr("New Price"), tr("NEW PRICE:"), db.getProductPrice(idlePage->userDrinkOrder->getOption(), 'l'), 0.00, 100.0, 2, &ok);
+
+    if(ok){
+        db.updatePrice_l(idlePage->userDrinkOrder->getOption(), new_price);
+    }
+
+    ui->price_l->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), 'l')));
 }
 
 
 void maintain_product::on_target_volumeButton_s_clicked(){
     qDebug() << "Target Volume button clicked" << endl;
-    _maintainProductPageTimeoutSec=15;
+    _maintainProductPageTimeoutSec=40;
+    DbManager db(DB_PATH);
+    bool ok=false;
+    double new_volume = QInputDialog::getDouble(this, tr("New Target Volume"), tr("NEW VOLUME:"), db.getProductVolume(idlePage->userDrinkOrder->getOption(), 's'), 0.00, 50000.00, 2, &ok);
+    if (ok){
+        db.updateTargetVolume_s(idlePage->userDrinkOrder->getOption(), new_volume);
+    }
+    ui->target_volume_s->setText(QString::number(db.getProductVolume(idlePage->userDrinkOrder->getOption(), 's')) + "ml");
 }
 
 void maintain_product::on_target_volumeButton_l_clicked(){
     qDebug() << "Target Volume button clicked" << endl;
-    _maintainProductPageTimeoutSec=15;
+    _maintainProductPageTimeoutSec=40;
+    DbManager db(DB_PATH);
+    bool ok=false;
+    double new_volume = QInputDialog::getDouble(this, tr("New Target Volume"), tr("NEW VOLUME:"), db.getProductVolume(idlePage->userDrinkOrder->getOption(), 'l'), 0.00, 50000.00, 2, &ok);
+    if (ok){
+        db.updateTargetVolume_l(idlePage->userDrinkOrder->getOption(), new_volume);
+    }
+    ui->target_volume_l->setText(QString::number(db.getProductVolume(idlePage->userDrinkOrder->getOption(), 'l')) + "ml");
 }
 
 
 void maintain_product::on_vol_per_tickButton_clicked(){
     qDebug() << "Volume Per Tick button clicked" << endl;
-    _maintainProductPageTimeoutSec=15;
+    _maintainProductPageTimeoutSec=40;
+    DbManager db(DB_PATH);
+    bool ok=false;
+    double new_volume_per_tick = QInputDialog::getDouble(this, tr("New Volume Per Tick"), tr("NEW VOLUME:"), db.getProductVolumePerTick(idlePage->userDrinkOrder->getOption()), 0.00, 50000.00, 2, &ok);
+    if (ok){
+        db.updateVolumePerTick(idlePage->userDrinkOrder->getOption(), new_volume_per_tick);
+    }
+    ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(idlePage->userDrinkOrder->getOption())) + "ml");
 }
 
 //void maintain_product::updateVolumeDisplayed(int dispensed){
@@ -338,7 +381,7 @@ void maintain_product::on_refillButton_clicked(){
     DbManager db(DB_PATH);
     qDebug() << "Refill button clicked" << endl;
 
-    _maintainProductPageTimeoutSec=15;
+    _maintainProductPageTimeoutSec=40;
 
     // ARE YOU SURE YOU WANT TO COMPLETE?
     QMessageBox msgBox;
@@ -380,7 +423,7 @@ void maintain_product::on_soldOutButton_clicked(){
     DbManager db(DB_PATH);
     qDebug() << "Sold Out button clicked" << endl;
 
-    _maintainProductPageTimeoutSec=15;
+    _maintainProductPageTimeoutSec=40;
 
     if (db.getRemaining(this->idlePage->userDrinkOrder->getOption()) > 0){
 
@@ -461,29 +504,36 @@ void maintain_product::on_soldOutButton_clicked(){
 
 void maintain_product::on_fullButton_clicked(){
     qDebug() << "Full Volume button clicked" << endl;
-    _maintainProductPageTimeoutSec=15;
+    _maintainProductPageTimeoutSec=40;
+    DbManager db(DB_PATH);
+    bool ok=false;
+    double new_full_volume = QInputDialog::getDouble(this, tr("New Full Volume"), tr("NEW VOLUME:"), db.getFullProduct(idlePage->userDrinkOrder->getOption()), 0.00, 100000.00, 2, &ok);
+    if (ok){
+        db.updateFullVolume(idlePage->userDrinkOrder->getOption(), new_full_volume);
+    }
+    ui->full_volume->setText(QString::number(db.getFullProduct(idlePage->userDrinkOrder->getOption())) + "ml");
 }
 
 void maintain_product::on_remainingButton_clicked(){
     qDebug() << "Remaining button clicked" << endl;
-    _maintainProductPageTimeoutSec=15;
+    _maintainProductPageTimeoutSec=40;
 }
 
 void maintain_product::on_dispensedButton_clicked(){
     qDebug() << "Remaining button clicked" << endl;
-    _maintainProductPageTimeoutSec=15;
+    _maintainProductPageTimeoutSec=40;
 }
 
 void maintain_product::on_lastRefillButton_clicked(){
     qDebug() << "Last Refill button clicked" << endl;
-    _maintainProductPageTimeoutSec=15;
+    _maintainProductPageTimeoutSec=40;
 }
 
 void maintain_product::on_temperatureButton_clicked(){
     qDebug() << "Temperature button clicked" << endl;
     DbManager db_temperature(DB_PATH_TEMPERATURE);
     ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
-    _maintainProductPageTimeoutSec=15;
+    _maintainProductPageTimeoutSec=40;
 }
 
 void maintain_product::onMaintainProductPageTimeoutTick(){

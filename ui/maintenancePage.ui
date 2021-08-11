@@ -192,6 +192,58 @@
     <string>MAINTENANCE MODE</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="wifiButton">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>1670</y>
+     <width>211</width>
+     <height>181</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>WiFi</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="wifi_status">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>1730</y>
+     <width>461</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Wifi Status</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="wifi_internet">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>1800</y>
+     <width>391</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Internet connection</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="wifi_name">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>1670</y>
+     <width>461</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Wifi Name</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

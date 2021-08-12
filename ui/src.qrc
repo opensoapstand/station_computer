@@ -118,6 +118,5 @@
         <file>content/HandwritingModeButton.qml</file>
         <file>content/TextArea.qml</file>
         <file>content/TextField.qml</file>
-        <file>qrc_src.cpp</file>
     </qresource>
 </RCC>

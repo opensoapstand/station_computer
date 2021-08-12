@@ -3,11 +3,12 @@
 #include "idle.h"
 #include "drinkorder.h"
 #include <QInputDialog>
-#include <QQuickView>
-#include <QQmlEngine>
 #include <QCoreApplication>
 #include <QGuiApplication>
 #include <QKeyEvent>
+#include <QQuickView>
+#include <QGuiApplication>
+#include <QQmlEngine>
 
 // CTOR
 maintain_product::maintain_product(QWidget *parent) :
@@ -69,7 +70,8 @@ void maintain_product::showEvent(QShowEvent *event)
     ui->total_dispensed->setText(QString::number(db.getTotalDispensed(checkOption)) + "ml");
     ui->remainingLabel->setText(QString::number(db.getRemaining(checkOption)) + "ml");
     ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
-    ui->pwmLabel->setText(QString::number(db.getPWM(idlePage->userDrinkOrder->getOption())));
+    ui->pwmLabel->setText(QString::number(db.getPWM(checkOption)) + "%");
+    ui->bufferLabel->setText(QString::number(db.getBuffer(checkOption)) + "ml");
    // ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
 //    ui->temperatureLabel->setText("");
 
@@ -232,7 +234,8 @@ void maintain_product::resizeEvent(QResizeEvent *event){
     ui->remainingLabel->setText(QString::number(db.getRemaining(checkOption)) + "ml");
     ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
     ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
-    ui->pwmLabel->setText(QString::number(db.getPWM(idlePage->userDrinkOrder->getOption())));
+    ui->pwmLabel->setText(QString::number(db.getPWM(checkOption)) + "%");
+    ui->bufferLabel->setText(QString::number(db.getBuffer(checkOption)) + "ml");
 //    ui->temperatureLabel->setText("");
 
     if(db.getRemaining(checkOption)>0){
@@ -322,6 +325,13 @@ void maintain_product::on_priceButton_l_clicked(){
 
     _maintainProductPageTimeoutSec=40;
     bool ok=false;
+
+
+//    QQuickView view(QString("qrc:/%2").arg(MAIN_QML));
+
+//    view.setResizeMode(QQuickView::SizeRootObjectToView);
+
+  //  view.show();
 
     double new_price = QInputDialog::getDouble(this, tr("New Price"), tr("NEW PRICE:"), db.getProductPrice(idlePage->userDrinkOrder->getOption(), 'l'), 0.00, 100.0, 2, &ok);
 
@@ -561,11 +571,11 @@ void maintain_product::on_pwmButton_clicked(){
 
     DbManager db(DB_PATH);
     bool ok=false;
-    int new_pwm = QInputDialog::getInt(this, tr("New PWM"), tr("NEW PWM"), db.getPWM(idlePage->userDrinkOrder->getOption()), 0, 255, 1, &ok);
+    int new_pwm = QInputDialog::getInt(this, tr("New PWM"), tr("NEW PWM"), db.getPWM(idlePage->userDrinkOrder->getOption()), 0, 100, 1, &ok);
     if (ok){
         db.updatePWM(idlePage->userDrinkOrder->getOption(), new_pwm);
     }
-    ui->pwmLabel->setText(QString::number(db.getPWM(idlePage->userDrinkOrder->getOption())));
+    ui->pwmLabel->setText(QString::number(db.getPWM(idlePage->userDrinkOrder->getOption())) + "%");
 }
 
 void maintain_product::on_bufferButton_clicked(){
@@ -578,5 +588,5 @@ void maintain_product::on_bufferButton_clicked(){
     if (ok){
         db.updateBuffer(idlePage->userDrinkOrder->getOption(), new_buffer);
     }
-    ui->bufferLabel->setText(QString::number(db.getBuffer(idlePage->userDrinkOrder->getOption())));
+    ui->bufferLabel->setText(QString::number(db.getBuffer(idlePage->userDrinkOrder->getOption())) + "ml");
 }

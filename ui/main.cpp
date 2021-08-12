@@ -31,6 +31,9 @@
 #include <QCoreApplication>
 #include <QGuiApplication>
 #include <QKeyEvent>
+#include <QQuickView>
+#include <QGuiApplication>
+#include <QQmlEngine>
 
 int main(int argc, char *argv[])
 {

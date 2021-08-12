@@ -721,7 +721,7 @@ bool payPage::paymentInit()
     }
 
     //This is super shitty - there must be a better way to find out when the green light starts flashing on the UX420
-//    sleep(35);
+    sleep(35);
 
     /*Cancel any previous payment*/
     cout << "Sending Cancel payment packet..." << endl;

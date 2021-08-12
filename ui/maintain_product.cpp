@@ -69,6 +69,7 @@ void maintain_product::showEvent(QShowEvent *event)
     ui->total_dispensed->setText(QString::number(db.getTotalDispensed(checkOption)) + "ml");
     ui->remainingLabel->setText(QString::number(db.getRemaining(checkOption)) + "ml");
     ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
+    ui->pwmLabel->setText(QString::number(db.getPWM(idlePage->userDrinkOrder->getOption())));
    // ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
 //    ui->temperatureLabel->setText("");
 
@@ -231,6 +232,7 @@ void maintain_product::resizeEvent(QResizeEvent *event){
     ui->remainingLabel->setText(QString::number(db.getRemaining(checkOption)) + "ml");
     ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
     ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
+    ui->pwmLabel->setText(QString::number(db.getPWM(idlePage->userDrinkOrder->getOption())));
 //    ui->temperatureLabel->setText("");
 
     if(db.getRemaining(checkOption)>0){
@@ -551,4 +553,30 @@ void maintain_product::onMaintainProductPageTimeoutTick(){
         this->hide();
         idlePage->showFullScreen();
     }
+}
+
+void maintain_product::on_pwmButton_clicked(){
+    qDebug() << "Remaining button clicked" << endl;
+    _maintainProductPageTimeoutSec=40;
+
+    DbManager db(DB_PATH);
+    bool ok=false;
+    int new_pwm = QInputDialog::getInt(this, tr("New PWM"), tr("NEW PWM"), db.getPWM(idlePage->userDrinkOrder->getOption()), 0, 255, 1, &ok);
+    if (ok){
+        db.updatePWM(idlePage->userDrinkOrder->getOption(), new_pwm);
+    }
+    ui->pwmLabel->setText(QString::number(db.getPWM(idlePage->userDrinkOrder->getOption())));
+}
+
+void maintain_product::on_bufferButton_clicked(){
+    qDebug() << "Remaining button clicked" << endl;
+    _maintainProductPageTimeoutSec=40;
+
+    DbManager db(DB_PATH);
+    bool ok=false;
+    int new_buffer = QInputDialog::getDouble(this, tr("New Buffer"), tr("NEW BUFFER"), db.getBuffer(idlePage->userDrinkOrder->getOption()), 0.0, 10000.0, 2, &ok);
+    if (ok){
+        db.updateBuffer(idlePage->userDrinkOrder->getOption(), new_buffer);
+    }
+    ui->bufferLabel->setText(QString::number(db.getBuffer(idlePage->userDrinkOrder->getOption())));
 }

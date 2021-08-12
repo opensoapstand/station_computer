@@ -200,10 +200,10 @@
   <widget class="QPushButton" name="refillButton">
    <property name="geometry">
     <rect>
-     <x>770</x>
-     <y>80</y>
+     <x>760</x>
+     <y>30</y>
      <width>231</width>
-     <height>331</height>
+     <height>211</height>
     </rect>
    </property>
    <property name="text">
@@ -214,7 +214,7 @@
    <property name="geometry">
     <rect>
      <x>646</x>
-     <y>490</y>
+     <y>380</y>
      <width>1031</width>
      <height>101</height>
     </rect>
@@ -231,10 +231,10 @@
   <widget class="QPushButton" name="soldOutButton">
    <property name="geometry">
     <rect>
-     <x>450</x>
-     <y>80</y>
+     <x>440</x>
+     <y>30</y>
      <width>231</width>
-     <height>331</height>
+     <height>211</height>
     </rect>
    </property>
    <property name="text">
@@ -288,8 +288,8 @@
   <widget class="QPushButton" name="dispensedButton">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>1100</y>
+     <x>470</x>
+     <y>360</y>
      <width>141</width>
      <height>91</height>
     </rect>
@@ -302,8 +302,8 @@ Last Restock:</string>
   <widget class="QPushButton" name="remainingButton">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>1220</y>
+     <x>470</x>
+     <y>250</y>
      <width>141</width>
      <height>91</height>
     </rect>
@@ -315,8 +315,8 @@ Last Restock:</string>
   <widget class="QLabel" name="total_dispensed">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>1130</y>
+     <x>630</x>
+     <y>390</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -328,8 +328,8 @@ Last Restock:</string>
   <widget class="QLabel" name="remainingLabel">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>1250</y>
+     <x>630</x>
+     <y>280</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -341,8 +341,8 @@ Last Restock:</string>
   <widget class="QPushButton" name="lastRefillButton">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>1340</y>
+     <x>750</x>
+     <y>290</y>
      <width>141</width>
      <height>91</height>
     </rect>
@@ -354,8 +354,8 @@ Last Restock:</string>
   <widget class="QLabel" name="lastRefillLabel">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>1370</y>
+     <x>910</x>
+     <y>320</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -367,8 +367,8 @@ Last Restock:</string>
   <widget class="QLabel" name="temperatureLabel">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>1490</y>
+     <x>210</x>
+     <y>1640</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -380,14 +380,66 @@ Last Restock:</string>
   <widget class="QPushButton" name="temperatureButton">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>1460</y>
+     <x>50</x>
+     <y>1610</y>
      <width>141</width>
      <height>91</height>
     </rect>
    </property>
    <property name="text">
     <string>Temperature:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="pwmLabel">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>1130</y>
+     <width>721</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PWM</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pwmButton">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>1100</y>
+     <width>141</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PWM:</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="bufferButton">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>1220</y>
+     <width>141</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Buffer:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="bufferLabel">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>1250</y>
+     <width>721</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Buffer</string>
    </property>
   </widget>
  </widget>

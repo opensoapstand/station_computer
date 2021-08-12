@@ -404,12 +404,41 @@ double DbManager::getTemperature(){
     QSqlQuery temperature_query;
     double temperature;
 
-    temperature_query.prepare("SELECT temp FROM temperature ORDER BY date ASC LIMIT 1");
+    temperature_query.prepare("SELECT temp FROM temperature LIMIT 1 offset cast((SELECT count(*) FROM temperature) AS INT) - 1");
     temperature_query.exec();
     while (temperature_query.next()){
         temperature = temperature_query.value(0).toDouble();
     }
     return temperature;
+}
+
+int DbManager::getPWM(int slot){
+    QSqlQuery pwm_query;
+    double pwm;
+
+    pwm_query.prepare("SELECT pwm FROM products WHERE slot=:slot");
+    pwm_query.bindValue(":slot", slot);
+    pwm_query.exec();
+
+    while (pwm_query.next()) {
+            pwm = pwm_query.value(0).toInt();
+
+        }
+
+    return pwm;
+}
+
+double DbManager::getBuffer(int slot){
+    QSqlQuery buffer_query;
+    double buffer;
+
+    buffer_query.prepare("SELECT buffer FROM products WHERE slot=:slot");
+    buffer_query.bindValue(":slot", slot);
+    buffer_query.exec();
+    while (buffer_query.next()){
+        buffer = buffer_query.value(0).toDouble();
+    }
+    return buffer;
 }
 
 bool DbManager::updatePaymentsDb(QString date,QString time, QString txnType, QString amount, QString cardNo, QString refNo, QString authNo, QString cardType, QString status, QString isoCode, QString hostCode, QString tvr){
@@ -545,6 +574,40 @@ bool DbManager::updateFullVolume(int slot, double new_full_volume){
     }else{
         qDebug() << "Full volume update error: !"
                  << update_full_volume_query.lastError();
+        return false;
+    }
+}
+
+bool DbManager::updatePWM(int slot, int new_pwm){
+    QSqlQuery pwm_query;
+
+    pwm_query.prepare("UPDATE products SET pwm=:new_pwm WHERE slot=:slot");
+    pwm_query.bindValue(":new_pwm", new_pwm);
+    pwm_query.bindValue(":slot", slot);
+
+    if(pwm_query.exec()){
+        qDebug() << "PWM updated successfully!";
+        return true;
+    }else{
+        qDebug() << "PWM update error: !"
+                 << pwm_query.lastError();
+        return false;
+    }
+}
+
+bool DbManager::updateBuffer(int slot, double new_buffer){
+    QSqlQuery buffer_query;
+
+    buffer_query.prepare("UPDATE products SET buffer=:new_buffer WHERE slot=:slot");
+    buffer_query.bindValue(":new_buffer", new_buffer);
+    buffer_query.bindValue(":slot", slot);
+
+    if(buffer_query.exec()){
+        qDebug() << "Buffer updated successfully!";
+        return true;
+    }else{
+        qDebug() << "Buffer update error: !"
+                 << buffer_query.lastError();
         return false;
     }
 }

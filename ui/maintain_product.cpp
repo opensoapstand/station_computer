@@ -74,6 +74,18 @@ void maintain_product::showEvent(QShowEvent *event)
     ui->bufferLabel->setText(QString::number(db.getBuffer(checkOption)) + "ml");
    // ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
 //    ui->temperatureLabel->setText("");
+    ui->numberEntry->hide();
+    ui->errorLabel->setText("");
+    ui->titleLabel->setText("");
+
+    price_s = false;
+    price_l = false;
+    target_s = false;
+    target_l = false;
+    vol_per_tick = false;
+    full = false;
+    pwm = false;
+    buffer = false;
 
 }
 
@@ -294,90 +306,66 @@ void maintain_product::on_nameButton_clicked(){
 
 void maintain_product::on_priceButton_s_clicked(){
     qDebug() << "Price button clicked" << endl;
-
-    DbManager db(DB_PATH);
+    price_s = true;
+//    DbManager db(DB_PATH);
 
     _maintainProductPageTimeoutSec=40;
-    bool ok=false;
-    //QInputMethod *im = QApplication::inputMethod();
-    //im->setVisible(true);
-    //im->show();
-    //qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
 
-//    QQuickView view(QString("qrc:/%2").arg(MAIN_QML));
-//    view.setResizeMode(QQuickView::SizeRootObjectToView);
-//    view.show();
-    double new_price = QInputDialog::getDouble(this, tr("New Price"), tr("NEW PRICE:"), db.getProductPrice(idlePage->userDrinkOrder->getOption(), 's'), 0.0, 100, 2, &ok);
+    ui->numberEntry->show();
+    ui->textEntry->setText("");
+    ui->titleLabel->setText("New Price:");
 
-
-    if(ok){
-        db.updatePrice_s(idlePage->userDrinkOrder->getOption(), new_price);
-    }
-
-    ui->price_s->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), 's')));
+//    ui->price_s->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), 's')));
 
 }
 
 void maintain_product::on_priceButton_l_clicked(){
     qDebug() << "Price button clicked" << endl;
-
-    DbManager db(DB_PATH);
+    price_l = true;
+//    DbManager db(DB_PATH);
 
     _maintainProductPageTimeoutSec=40;
-    bool ok=false;
 
+    ui->numberEntry->show();
+    ui->textEntry->setText("");
+    ui->titleLabel->setText("New Price:");
 
-//    QQuickView view(QString("qrc:/%2").arg(MAIN_QML));
-
-//    view.setResizeMode(QQuickView::SizeRootObjectToView);
-
-  //  view.show();
-
-    double new_price = QInputDialog::getDouble(this, tr("New Price"), tr("NEW PRICE:"), db.getProductPrice(idlePage->userDrinkOrder->getOption(), 'l'), 0.00, 100.0, 2, &ok);
-
-    if(ok){
-        db.updatePrice_l(idlePage->userDrinkOrder->getOption(), new_price);
-    }
-
-    ui->price_l->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), 'l')));
+//    ui->price_l->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), 'l')));
 }
 
 
 void maintain_product::on_target_volumeButton_s_clicked(){
     qDebug() << "Target Volume button clicked" << endl;
+    target_s=true;
     _maintainProductPageTimeoutSec=40;
-    DbManager db(DB_PATH);
-    bool ok=false;
-    double new_volume = QInputDialog::getDouble(this, tr("New Target Volume"), tr("NEW VOLUME:"), db.getProductVolume(idlePage->userDrinkOrder->getOption(), 's'), 0.00, 50000.00, 2, &ok);
-    if (ok){
-        db.updateTargetVolume_s(idlePage->userDrinkOrder->getOption(), new_volume);
-    }
-    ui->target_volume_s->setText(QString::number(db.getProductVolume(idlePage->userDrinkOrder->getOption(), 's')) + "ml");
+//    DbManager db(DB_PATH);
+    ui->numberEntry->show();
+    ui->textEntry->setText("");
+    ui->titleLabel->setText("New Volume:");
+//    ui->target_volume_s->setText(QString::number(db.getProductVolume(idlePage->userDrinkOrder->getOption(), 's')) + "ml");
 }
 
 void maintain_product::on_target_volumeButton_l_clicked(){
     qDebug() << "Target Volume button clicked" << endl;
+    target_l=true;
     _maintainProductPageTimeoutSec=40;
-    DbManager db(DB_PATH);
-    bool ok=false;
-    double new_volume = QInputDialog::getDouble(this, tr("New Target Volume"), tr("NEW VOLUME:"), db.getProductVolume(idlePage->userDrinkOrder->getOption(), 'l'), 0.00, 50000.00, 2, &ok);
-    if (ok){
-        db.updateTargetVolume_l(idlePage->userDrinkOrder->getOption(), new_volume);
-    }
-    ui->target_volume_l->setText(QString::number(db.getProductVolume(idlePage->userDrinkOrder->getOption(), 'l')) + "ml");
+//    DbManager db(DB_PATH);
+    ui->numberEntry->show();
+    ui->textEntry->setText("");
+    ui->titleLabel->setText("New Volume:");
+//    ui->target_volume_l->setText(QString::number(db.getProductVolume(idlePage->userDrinkOrder->getOption(), 'l')) + "ml");
 }
 
 
 void maintain_product::on_vol_per_tickButton_clicked(){
     qDebug() << "Volume Per Tick button clicked" << endl;
+    vol_per_tick=true;
     _maintainProductPageTimeoutSec=40;
-    DbManager db(DB_PATH);
-    bool ok=false;
-    double new_volume_per_tick = QInputDialog::getDouble(this, tr("New Volume Per Tick"), tr("NEW VOLUME:"), db.getProductVolumePerTick(idlePage->userDrinkOrder->getOption()), 0.00, 50000.00, 2, &ok);
-    if (ok){
-        db.updateVolumePerTick(idlePage->userDrinkOrder->getOption(), new_volume_per_tick);
-    }
-    ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(idlePage->userDrinkOrder->getOption())) + "ml");
+//    DbManager db(DB_PATH);
+    ui->numberEntry->show();
+    ui->textEntry->setText("");
+    ui->titleLabel->setText("New Volume Per Tick:");
+//    ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(idlePage->userDrinkOrder->getOption())) + "ml");
 }
 
 //void maintain_product::updateVolumeDisplayed(int dispensed){
@@ -516,14 +504,13 @@ void maintain_product::on_soldOutButton_clicked(){
 
 void maintain_product::on_fullButton_clicked(){
     qDebug() << "Full Volume button clicked" << endl;
+    full=true;
     _maintainProductPageTimeoutSec=40;
-    DbManager db(DB_PATH);
-    bool ok=false;
-    double new_full_volume = QInputDialog::getDouble(this, tr("New Full Volume"), tr("NEW VOLUME:"), db.getFullProduct(idlePage->userDrinkOrder->getOption()), 0.00, 100000.00, 2, &ok);
-    if (ok){
-        db.updateFullVolume(idlePage->userDrinkOrder->getOption(), new_full_volume);
-    }
-    ui->full_volume->setText(QString::number(db.getFullProduct(idlePage->userDrinkOrder->getOption())) + "ml");
+//    DbManager db(DB_PATH);
+    ui->numberEntry->show();
+    ui->textEntry->setText("");
+    ui->titleLabel->setText("New Full Volume:");
+//    ui->full_volume->setText(QString::number(db.getFullProduct(idlePage->userDrinkOrder->getOption())) + "ml");
 }
 
 void maintain_product::on_remainingButton_clicked(){
@@ -567,26 +554,167 @@ void maintain_product::onMaintainProductPageTimeoutTick(){
 
 void maintain_product::on_pwmButton_clicked(){
     qDebug() << "Remaining button clicked" << endl;
+    pwm=true;
     _maintainProductPageTimeoutSec=40;
-
-    DbManager db(DB_PATH);
-    bool ok=false;
-    int new_pwm = QInputDialog::getInt(this, tr("New PWM"), tr("NEW PWM"), db.getPWM(idlePage->userDrinkOrder->getOption()), 0, 100, 1, &ok);
-    if (ok){
-        db.updatePWM(idlePage->userDrinkOrder->getOption(), new_pwm);
-    }
-    ui->pwmLabel->setText(QString::number(db.getPWM(idlePage->userDrinkOrder->getOption())) + "%");
+//    DbManager db(DB_PATH);
+    ui->numberEntry->show();
+    ui->textEntry->setText("");
+    ui->titleLabel->setText("New PWM:");
+//    ui->pwmLabel->setText(QString::number(db.getPWM(idlePage->userDrinkOrder->getOption())) + "%");
 }
 
 void maintain_product::on_bufferButton_clicked(){
     qDebug() << "Remaining button clicked" << endl;
+    buffer=true;
     _maintainProductPageTimeoutSec=40;
-
-    DbManager db(DB_PATH);
-    bool ok=false;
-    int new_buffer = QInputDialog::getDouble(this, tr("New Buffer"), tr("NEW BUFFER"), db.getBuffer(idlePage->userDrinkOrder->getOption()), 0.0, 10000.0, 2, &ok);
-    if (ok){
-        db.updateBuffer(idlePage->userDrinkOrder->getOption(), new_buffer);
-    }
-    ui->bufferLabel->setText(QString::number(db.getBuffer(idlePage->userDrinkOrder->getOption())) + "ml");
+//    DbManager db(DB_PATH);
+    ui->numberEntry->show();
+    ui->textEntry->setText("");
+    ui->titleLabel->setText("New Buffer:");
+//    ui->bufferLabel->setText(QString::number(db.getBuffer(idlePage->userDrinkOrder->getOption())) + "ml");
 }
+
+void maintain_product::on_button1_clicked(){
+    ui->textEntry->setText(ui->textEntry->text()+"1");
+
+}
+
+void maintain_product::on_button2_clicked(){
+    ui->textEntry->setText(ui->textEntry->text()+"2");
+
+}
+
+void maintain_product::on_button3_clicked(){
+    ui->textEntry->setText(ui->textEntry->text()+"3");
+
+}
+
+void maintain_product::on_button4_clicked(){
+    ui->textEntry->setText(ui->textEntry->text()+"4");
+
+}
+
+void maintain_product::on_button5_clicked(){
+    ui->textEntry->setText(ui->textEntry->text()+"5");
+
+}
+
+void maintain_product::on_button6_clicked(){
+    ui->textEntry->setText(ui->textEntry->text()+"6");
+
+}
+
+void maintain_product::on_button7_clicked(){
+    ui->textEntry->setText(ui->textEntry->text()+"7");
+
+}
+
+void maintain_product::on_button8_clicked(){
+    ui->textEntry->setText(ui->textEntry->text()+"8");
+
+}
+
+void maintain_product::on_button9_clicked(){
+    ui->textEntry->setText(ui->textEntry->text()+"9");
+
+}
+
+void maintain_product::on_button0_clicked(){
+    ui->textEntry->setText(ui->textEntry->text()+"0");
+
+}
+
+void maintain_product::on_buttonBack_clicked(){
+    ui->textEntry->backspace();
+
+}
+
+void maintain_product::on_buttonPoint_clicked(){
+    ui->textEntry->setText(ui->textEntry->text()+".");
+
+}
+
+void maintain_product::on_buttonDone_clicked(){
+    if(pwm){
+        if(ui->textEntry->text().toInt()>100){
+            ui->errorLabel->setText("Error: Enter number less than 100");
+        }else{
+            text_entered = ui->textEntry->text();
+            ui->numberEntry->hide();
+            updateValues();
+        }
+    }else{
+        text_entered = ui->textEntry->text();
+        ui->numberEntry->hide();
+        updateValues();
+    }
+}
+
+void maintain_product::on_buttonCancel_clicked(){
+    ui->numberEntry->hide();
+    ui->textEntry->setText("");
+    ui->errorLabel->setText("");
+    text_entered = "";
+    price_s = false;
+    price_l = false;
+    target_s = false;
+    target_l = false;
+    vol_per_tick = false;
+    full = false;
+    pwm = false;
+    buffer = false;
+}
+
+void maintain_product::updateValues(){
+    DbManager db(DB_PATH);
+    int checkOption = idlePage->userDrinkOrder->getOption();
+
+    if(price_s){
+        db.updatePrice_s(checkOption, text_entered.toDouble());
+        ui->price_s->setText("$" + QString::number(db.getProductPrice(checkOption, 's')));
+
+    }else if(price_l){
+        db.updatePrice_l(checkOption, text_entered.toDouble());
+        ui->price_l->setText("$" + QString::number(db.getProductPrice(checkOption, 'l')));
+
+    }else if(target_s){
+        db.updateTargetVolume_s(checkOption, text_entered.toDouble());
+        ui->target_volume_s->setText(QString::number(db.getProductVolume(checkOption, 's')) + "ml");
+
+    }else if(target_l){
+        db.updateTargetVolume_l(checkOption, text_entered.toDouble());
+        ui->target_volume_l->setText(QString::number(db.getProductVolume(checkOption, 'l')) + "ml");
+    }else if(vol_per_tick){
+        db.updateVolumePerTick(checkOption, text_entered.toDouble());
+        ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(checkOption)) + "ml");
+
+    }else if(full){
+        db.updateFullVolume(checkOption, text_entered.toDouble());
+        ui->full_volume->setText(QString::number(db.getFullProduct(checkOption)) + "ml");
+
+    }else if(pwm){
+        db.updatePWM(checkOption, text_entered.toInt());
+        ui->pwmLabel->setText(QString::number(db.getPWM(checkOption)) + "%");
+
+    }else if(buffer){
+        db.updateBuffer(checkOption, text_entered.toDouble());
+        ui->bufferLabel->setText(QString::number(db.getBuffer(checkOption)) + "ml");
+
+    }
+
+    price_s = false;
+    price_l = false;
+    target_s = false;
+    target_l = false;
+    vol_per_tick = false;
+    full = false;
+    pwm = false;
+    buffer = false;
+    ui->textEntry->setText("");
+    ui->titleLabel->setText("");
+    ui->errorLabel->setText("");
+}
+
+
+
+

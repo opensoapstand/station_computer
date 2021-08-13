@@ -64,6 +64,21 @@ private slots:
     void on_pwmButton_clicked();
     void on_bufferButton_clicked();
 
+    void on_button1_clicked();
+    void on_button2_clicked();
+    void on_button3_clicked();
+    void on_button4_clicked();
+    void on_button5_clicked();
+    void on_button6_clicked();
+    void on_button7_clicked();
+    void on_button8_clicked();
+    void on_button9_clicked();
+    void on_button0_clicked();
+    void on_buttonBack_clicked();
+    void on_buttonPoint_clicked();
+    void on_buttonDone_clicked();
+    void on_buttonCancel_clicked();
+
 private:
     void showEvent(QShowEvent *event);
     Ui::maintain_product *ui;
@@ -75,6 +90,18 @@ private:
 
     int _maintainProductPageTimeoutSec;
     QTimer* maintainProductPageEndTimer;
+
+    QString text_entered;
+    bool price_s;
+    bool price_l;
+    bool target_s;
+    bool target_l;
+    bool vol_per_tick;
+    bool full;
+    bool pwm;
+    bool buffer;
+
+    void updateValues();
 };
 
 #endif // MAINTAIN_PRODUCT_H

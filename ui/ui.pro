@@ -1,17 +1,9 @@
 QT += core gui sql widgets serialport network svg quick qml
 
-static {
-    QTPLUGIN += qtvirtualkeyboardplugin
-}
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
 TARGET = DF_UI
 
 CONFIG += \
-    disable-desktop \
     c++11
-
 
 FORMS += \
     dispensepage.ui \
@@ -86,18 +78,6 @@ RESOURCES += \
 
 DISTFILES += \
     styles/product_select.qss 
-#    /usr/include/x86_64-linux-gnu/qt5/QtCore/QtCoreDepends \
-#    /usr/include/x86_64-linux-gnu/qt5/QtPlatformHeaders/QtPlatformHeadersDepends
-
-#OTHER_FILES += \
-#    Basic.qml \
-#    basic-b2qt.qml \
-#    content/AutoScroller.qml \
-#    content/HandwritingModeButton.qml \
-#    content/TextArea.qml \
-#    content/TextField.qml \
-
-# DEFINES += MAIN_QML=\\\"basic-b2qt.qml\\\"
 
 # EV2 Reference for moneris
 # TODO: Determine new linkage to object and library files...

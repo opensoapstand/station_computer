@@ -560,6 +560,7 @@ void maintain_product::on_pwmButton_clicked(){
     ui->numberEntry->show();
     ui->textEntry->setText("");
     ui->titleLabel->setText("New PWM:");
+    ui->buttonPoint->hide();
 //    ui->pwmLabel->setText(QString::number(db.getPWM(idlePage->userDrinkOrder->getOption())) + "%");
 }
 
@@ -640,6 +641,7 @@ void maintain_product::on_buttonDone_clicked(){
             ui->errorLabel->setText("Error: Enter number less than 100");
         }else{
             text_entered = ui->textEntry->text();
+            ui->buttonPoint->show();
             ui->numberEntry->hide();
             updateValues();
         }

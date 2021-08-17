@@ -105,9 +105,9 @@ color: #58595B;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>730</x>
+     <x>880</x>
      <y>1730</y>
-     <width>351</width>
+     <width>201</width>
      <height>191</height>
     </rect>
    </property>

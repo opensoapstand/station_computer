@@ -191,6 +191,23 @@ void dispensePage::on_finish_Button_clicked()
             pktResponded.clear();
             com.flushSerial();
         }
+    }else if ((db.getPaymentMethod(idlePage->userDrinkOrder->getOption())=="tap") && volumeDispensed != 0){
+        QMessageBox msgBox;
+        msgBox.setText("Complete!");
+        msgBox.setInformativeText("Would you like your receipt emailed to you?");
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        int ret = msgBox.exec();
+
+        switch(ret){
+        case QMessageBox::Yes:
+            qDebug() << "This person wants their receipt emailed";
+            break;
+        case QMessageBox::No:
+            qDebug() << "This person doesn't want a receipt";
+            break;
+        default:
+            break;
+        }
     }
 
     QString command = QString::number(this->idlePage->userDrinkOrder->getOption());

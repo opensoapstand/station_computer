@@ -40,11 +40,9 @@ class maintenancePage : public QWidget
     Q_OBJECT
 
 public:
-
     explicit maintenancePage(QWidget *parent = nullptr);
     void setPage(idle* pageIdle, maintain_product* pageMaintain, productPage_1 *pageProduct);
     ~maintenancePage();
-
     int getSelection();
 
 
@@ -63,6 +61,7 @@ private slots:
     //void on_clean_button_clicked();
     //void on_restock_button_clicked();
     void onMaintenancePageTimeoutTick();
+    void btn_clicked();
 
 private:
     void showEvent(QShowEvent *event);
@@ -75,6 +74,9 @@ private:
 
     int _maintenancePageTimeoutSec;
     QTimer* maintenancePageEndTimer;
+
+
+
 };
 
 #endif // MAINTENANCEPAGE_H

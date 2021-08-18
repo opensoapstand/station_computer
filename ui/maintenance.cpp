@@ -73,7 +73,7 @@ void maintenancePage::showEvent(QShowEvent *event)
     }
 
     maintenancePageEndTimer->start(1000);
-    _maintenancePageTimeoutSec = 20;
+    _maintenancePageTimeoutSec = 30;
 
     ui->product1_label->setText(db.getProductName(1));
     ui->product2_label->setText(db.getProductName(2));
@@ -96,6 +96,8 @@ void maintenancePage::showEvent(QShowEvent *event)
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
     ui->wifi_internet->setText("Wifi Connectivity: " + stdout);
+
+    ui->wifiTable->setRowCount(0);
 
 }
 
@@ -211,7 +213,8 @@ void maintenancePage::on_product4_button_clicked(){
 
 void maintenancePage::on_wifiButton_clicked(){
     qDebug() << "WiFi button clicked" << endl;
-    _maintenancePageTimeoutSec = 20;
+    _maintenancePageTimeoutSec = 30;
+    ui->wifiTable->setRowCount(0);
 
     // OPEN LIST OF WIFI CONNECTIONS AVAILABLE, AS BUTTONS, WHEN YOU CLICK ON A BUTTON, OPEN PASSWORD ENTRY
 
@@ -243,23 +246,28 @@ void maintenancePage::on_wifiButton_clicked(){
         //qDebug() << "Answer for GetAllAccessPoints: " << msg << endl;
         QDBusArgument ap_list_arg = msg.arguments().at(0).value<QDBusArgument>();
         QList<QDBusObjectPath> ap_path_list = qdbus_cast<QList<QDBusObjectPath> >(ap_list_arg);
-        int i=0;
 
         foreach(QDBusObjectPath p, ap_path_list){
             QDBusInterface ap_interface("org.freedesktop.NetworkManager", p.path(), "org.freedesktop.NetworkManager.AccessPoint", QDBusConnection::systemBus());
-            qDebug() << i << " SSID: " << ap_interface.property("Ssid").toString();
-            i++;
-            ui->wifiTable->insertRow(ui->wifiTable->rowCount());
-//            QWidget* pWidget = new QWidget();
-//            QPushButton* btn = new QPushButton();
-//            btn->setText(ap_interface.property("Ssid").toString());
-//            QHBoxLayout* pLayout = new QHBoxLayout(pWidget);
-//            pLayout->addWidget(btn);
-//            pLayout->setAlignment(Qt::AlignCenter);
-//            pLayout->setContentsMargins(0,0,0,0);
-//            pWidget->setLayout(pLayout);
-//            ui->wifiTable->setCellWidget(ui->wifiTable->rowCount(), 1, pWidget);
-            ui->wifiTable->setItem(ui->wifiTable->rowCount()-1, 1, new QTableWidgetItem(ap_interface.property("Ssid").toString()));
+            if(ap_interface.property("Ssid").toString() != ""){
+                qDebug() << " SSID: " << ap_interface.property("Ssid").toString();
+                ui->wifiTable->insertRow(ui->wifiTable->rowCount());
+                ui->wifiTable->setRowHeight(ui->wifiTable->rowCount()-1, 60);
+                QWidget* pWidget = new QWidget();
+                QPushButton* btn = new QPushButton();
+                btn->setText(ap_interface.property("Ssid").toString());
+                btn->setObjectName(ap_interface.property("Ssid").toString());
+                QHBoxLayout* pLayout = new QHBoxLayout(pWidget);
+                btn->setMinimumHeight(50);
+                pLayout->addWidget(btn);
+                //pLayout->setAlignment(Qt::AlignLeft);
+                pLayout->setContentsMargins(0,0,0,0);
+                pWidget->setLayout(pLayout);
+                ui->wifiTable->setCellWidget(ui->wifiTable->rowCount()-1, 0, pWidget);
+    //            ui->wifiTable->setItem(ui->wifiTable->rowCount()-1, 0, new QTableWidgetItem(ap_interface.property("Ssid").toString()));
+                connect(btn, SIGNAL(clicked()), this, SLOT(btn_clicked()));
+
+            }
         }
 
     }
@@ -295,6 +303,14 @@ void maintenancePage::on_wifiButton_clicked(){
 
 int getSelection(){
     return selection;
+}
+
+void maintenancePage::btn_clicked(){
+    QObject* button = QObject::sender();
+    qDebug() << "btn clicked -> " << button->objectName();
+    _maintenancePageTimeoutSec = 30;
+
+
 }
 
 void maintenancePage::onMaintenancePageTimeoutTick(){

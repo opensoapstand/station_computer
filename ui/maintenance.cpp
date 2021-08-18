@@ -213,9 +213,56 @@ void maintenancePage::on_wifiButton_clicked(){
     qDebug() << "WiFi button clicked" << endl;
     _maintenancePageTimeoutSec = 20;
 
-
     // OPEN LIST OF WIFI CONNECTIONS AVAILABLE, AS BUTTONS, WHEN YOU CLICK ON A BUTTON, OPEN PASSWORD ENTRY
 
+    QDBusInterface nm("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager", "org.freedesktop.NetworkManager", QDBusConnection::systemBus());
+    if (!nm.isValid()){
+        qFatal("Failed to connect to the system bus");
+    }
+    QDBusMessage msg = nm.call("GetDevices");
+    //qDebug() << "GetDevices reply: " << msg << endl;
+    QDBusArgument arg = msg.arguments().at(0).value<QDBusArgument>();
+
+    if (arg.currentType() != QDBusArgument::ArrayType){
+        qFatal("Something went wrong with the device list");
+    }
+
+    QList<QDBusObjectPath> pathsList = qdbus_cast<QList<QDBusObjectPath> >(arg);
+    foreach(QDBusObjectPath p, pathsList){
+        //qDebug() << "DEV PATH: " << p.path();
+        QDBusInterface device("org.freedesktop.NetworkManager", p.path(), "org.freedesktop.NetworkManager.Device", QDBusConnection::systemBus());
+        if(device.property("DeviceType").toInt() != 2){
+            continue;
+        }
+        QDBusInterface wifi_device("org.freedesktop.NetworkManager", p.path(), "org.freedesktop.NetworkManager.Device.Wireless", QDBusConnection::systemBus());
+        QMap<QString, QVariant> argList;
+        QDBusMessage msg = wifi_device.call("RequestScan", argList);
+        QThread::sleep(2);
+
+        msg = wifi_device.call("GetAllAccessPoints");
+        //qDebug() << "Answer for GetAllAccessPoints: " << msg << endl;
+        QDBusArgument ap_list_arg = msg.arguments().at(0).value<QDBusArgument>();
+        QList<QDBusObjectPath> ap_path_list = qdbus_cast<QList<QDBusObjectPath> >(ap_list_arg);
+        int i=0;
+
+        foreach(QDBusObjectPath p, ap_path_list){
+            QDBusInterface ap_interface("org.freedesktop.NetworkManager", p.path(), "org.freedesktop.NetworkManager.AccessPoint", QDBusConnection::systemBus());
+            qDebug() << i << " SSID: " << ap_interface.property("Ssid").toString();
+            i++;
+            ui->wifiTable->insertRow(ui->wifiTable->rowCount());
+//            QWidget* pWidget = new QWidget();
+//            QPushButton* btn = new QPushButton();
+//            btn->setText(ap_interface.property("Ssid").toString());
+//            QHBoxLayout* pLayout = new QHBoxLayout(pWidget);
+//            pLayout->addWidget(btn);
+//            pLayout->setAlignment(Qt::AlignCenter);
+//            pLayout->setContentsMargins(0,0,0,0);
+//            pWidget->setLayout(pLayout);
+//            ui->wifiTable->setCellWidget(ui->wifiTable->rowCount(), 1, pWidget);
+            ui->wifiTable->setItem(ui->wifiTable->rowCount()-1, 1, new QTableWidgetItem(ap_interface.property("Ssid").toString()));
+        }
+
+    }
 
     QProcess process;
 

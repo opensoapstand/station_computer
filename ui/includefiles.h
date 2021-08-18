@@ -31,4 +31,9 @@
 #include <iostream>
 #include <cmath>
 
+#include <QNetworkConfigurationManager>
+#include <QNetworkSession>
+#include <QtDBus/QtDBus>
+#include <QHBoxLayout>
+
 #endif // INCLUDEFILES_H

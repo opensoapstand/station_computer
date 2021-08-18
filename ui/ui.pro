@@ -1,4 +1,4 @@
-QT += core gui sql widgets serialport network svg quick qml
+QT += core gui sql widgets serialport network svg quick qml dbus
 
 TARGET = DF_UI
 

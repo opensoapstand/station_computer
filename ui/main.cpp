@@ -37,8 +37,6 @@
 
 int main(int argc, char *argv[])
 {
-    qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
-    qputenv("QT_VIRTUALKEYBOARD_DESKTOP_DISABLE", "1");
     // Fire up QT GUI Thread
     QApplication mainApp(argc, argv);
 

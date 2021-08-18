@@ -310,6 +310,17 @@ void maintenancePage::btn_clicked(){
     qDebug() << "btn clicked -> " << button->objectName();
     _maintenancePageTimeoutSec = 30;
 
+    // CONNECT TO WIFI SSID FROM HERE!
+
+//    QProcess *system_command = new QProcess;;
+//    QString connect_string = "nmcli --ask dev wifi connect '" + button->objectName() +"'";
+//    qDebug() << connect_string;
+//    system_command->start("/bin/bash");
+//    system_command->waitForFinished(500);
+//    system_command->write("nmcli --ask dev wifi connect 'Milla mansion'");
+//    system_command->waitForFinished(5000);
+//    QString stdout = system_command->readAll();
+//    qDebug() << stdout;
 
 }
 

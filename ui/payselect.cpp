@@ -169,10 +169,10 @@ void paySelect::resizeEvent(QResizeEvent *event){
         connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
     }
 
-    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize)));
-    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize)));
-    ui->price_sLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 's')));
-    ui->price_lLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 'l')));
+    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize), 'f', 2));
+    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize), 'f', 2));
+    ui->price_sLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 's'), 'f', 2));
+    ui->price_lLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 'l'), 'f', 2));
 
     if (db.getProductVolume(checkOption, 's') < 1000){
         ui->volume_sLabel->setText(QString::number(db.getProductVolume(checkOption, 's')) + "ml");
@@ -217,10 +217,10 @@ void paySelect::showEvent(QShowEvent *event){
     if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK){
         drinkSize = 'l';
     }
-    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize)));
-    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize)));
-    ui->price_sLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 's')));
-    ui->price_lLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 'l')));
+    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize), 'f', 2));
+    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize), 'f', 2));
+    ui->price_sLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 's'), 'f', 2));
+    ui->price_lLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 'l'), 'f', 2));
 
     if (db.getProductVolume(checkOption, 's') < 1000){
         ui->volume_sLabel->setText(QString::number(db.getProductVolume(checkOption, 's')) + "ml");
@@ -348,8 +348,8 @@ void paySelect::on_orderSmall_Button_clicked()
     DbManager db(DB_PATH);
     db.addPageClick("Small Drink Size Selected");
 
-    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize)));
-    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize)));
+    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
+    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
     ui->price_sLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
     ui->price_lLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #3D6675;");
 
@@ -386,8 +386,8 @@ void paySelect::on_orderBig_Button_clicked()
 
     char drinkSize = 'l';
 
-    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize)));
-    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize)));
+    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
+    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
 
     ui->price_sLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #3D6675;");
     ui->price_lLabel->setStyleSheet("font-family: Proxima-Nova; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");

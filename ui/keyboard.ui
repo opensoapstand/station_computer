@@ -1,278 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>maintenancePage</class>
- <widget class="QWidget" name="maintenancePage">
+ <class>keyboardWidget</class>
+ <widget class="QWidget" name="keyboardWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>1080</width>
-    <height>1920</height>
+    <height>639</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QPushButton" name="product4_button">
+  <property name="styleSheet">
+   <string notr="true">background-color:white;</string>
+  </property>
+  <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>680</y>
-     <width>281</width>
-     <height>341</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="product1_button">
-   <property name="geometry">
-    <rect>
-     <x>220</x>
-     <y>240</y>
-     <width>281</width>
-     <height>341</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="product3_label">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>1040</y>
-     <width>261</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>13</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Product 3</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignHCenter|Qt::AlignTop</set>
-   </property>
-   <property name="wordWrap">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="product2_label">
-   <property name="geometry">
-    <rect>
-     <x>560</x>
-     <y>590</y>
-     <width>261</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>13</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Product 2</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignHCenter|Qt::AlignTop</set>
-   </property>
-   <property name="wordWrap">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="product2_button">
-   <property name="geometry">
-    <rect>
-     <x>550</x>
-     <y>240</y>
-     <width>281</width>
-     <height>341</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="product3_button">
-   <property name="geometry">
-    <rect>
-     <x>220</x>
-     <y>680</y>
-     <width>281</width>
-     <height>341</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="product4_label">
-   <property name="geometry">
-    <rect>
-     <x>560</x>
-     <y>1040</y>
-     <width>261</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>13</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Product 4</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignHCenter|Qt::AlignTop</set>
-   </property>
-   <property name="wordWrap">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="product1_label">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>590</y>
-     <width>271</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>13</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Product 1</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignHCenter|Qt::AlignTop</set>
-   </property>
-   <property name="wordWrap">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="backButton">
-   <property name="geometry">
-    <rect>
-     <x>790</x>
-     <y>1670</y>
-     <width>271</width>
-     <height>211</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Back</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>250</x>
-     <y>120</y>
-     <width>691</width>
-     <height>71</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>40</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>MAINTENANCE MODE</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="wifiButton">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>1670</y>
-     <width>211</width>
-     <height>181</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>WiFi</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="wifi_status">
-   <property name="geometry">
-    <rect>
-     <x>320</x>
-     <y>1730</y>
-     <width>461</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Wifi Status</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="wifi_internet">
-   <property name="geometry">
-    <rect>
-     <x>320</x>
-     <y>1800</y>
-     <width>391</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Internet connection</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="wifi_name">
-   <property name="geometry">
-    <rect>
-     <x>320</x>
-     <y>1670</y>
-     <width>461</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Wifi Name</string>
-   </property>
-  </widget>
-  <widget class="QTableWidget" name="wifiTable">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>1100</y>
-     <width>501</width>
-     <height>551</height>
-    </rect>
-   </property>
-   <attribute name="horizontalHeaderDefaultSectionSize">
-    <number>500</number>
-   </attribute>
-   <column>
-    <property name="text">
-     <string>SSID</string>
-    </property>
-   </column>
-  </widget>
-  <widget class="QWidget" name="keyboard_2" native="true">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>1420</y>
+     <x>10</x>
+     <y>170</y>
      <width>1051</width>
      <height>441</height>
     </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color:white;</string>
    </property>
    <layout class="QGridLayout" name="keyboard">
     <item row="0" column="0" colspan="12">
@@ -293,7 +44,7 @@
      </widget>
     </item>
     <item row="2" column="0">
-     <widget class="QPushButton" name="pushButton_193">
+     <widget class="QPushButton" name="pushButton_21">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -303,13 +54,10 @@
       <property name="text">
        <string>!</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QPushButton" name="pushButton_194">
+     <widget class="QPushButton" name="pushButton_25">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -319,13 +67,10 @@
       <property name="text">
        <string>@</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="2" column="2">
-     <widget class="QPushButton" name="pushButton_195">
+     <widget class="QPushButton" name="pushButton_29">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -335,13 +80,10 @@
       <property name="text">
        <string>#</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="2" column="3">
-     <widget class="QPushButton" name="pushButton_196">
+     <widget class="QPushButton" name="pushButton_33">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -351,13 +93,10 @@
       <property name="text">
        <string>$</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="2" column="4">
-     <widget class="QPushButton" name="pushButton_197">
+     <widget class="QPushButton" name="pushButton_37">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -367,13 +106,10 @@
       <property name="text">
        <string>%</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="2" column="5">
-     <widget class="QPushButton" name="pushButton_198">
+     <widget class="QPushButton" name="pushButton_47">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -383,13 +119,10 @@
       <property name="text">
        <string>^</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="2" column="6">
-     <widget class="QPushButton" name="pushButton_199">
+     <widget class="QPushButton" name="pushButton_48">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -399,13 +132,10 @@
       <property name="text">
        <string>&amp;&amp;</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="2" column="7">
-     <widget class="QPushButton" name="pushButton_200">
+     <widget class="QPushButton" name="pushButton_50">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -415,13 +145,10 @@
       <property name="text">
        <string>*</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="2" column="8">
-     <widget class="QPushButton" name="pushButton_201">
+     <widget class="QPushButton" name="pushButton_53">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -431,13 +158,10 @@
       <property name="text">
        <string>(</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="2" column="9">
-     <widget class="QPushButton" name="pushButton_202">
+     <widget class="QPushButton" name="pushButton_56">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -447,13 +171,10 @@
       <property name="text">
        <string>)</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="2" column="10">
-     <widget class="QPushButton" name="pushButton_203">
+     <widget class="QPushButton" name="pushButton_61">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -463,13 +184,10 @@
       <property name="text">
        <string>_</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="2" column="11">
-     <widget class="QPushButton" name="pushButton_204">
+     <widget class="QPushButton" name="pushButton_62">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -479,13 +197,10 @@
       <property name="text">
        <string>=</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="2" column="12">
-     <widget class="QPushButton" name="pushButton_205">
+     <widget class="QPushButton" name="pushButton">
       <property name="maximumSize">
        <size>
         <width>87</width>
@@ -495,13 +210,10 @@
       <property name="text">
        <string>Backspace</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="3" column="0">
-     <widget class="QPushButton" name="pushButton_206">
+     <widget class="QPushButton" name="pushButton_6">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -511,13 +223,10 @@
       <property name="text">
        <string>1</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="3" column="1">
-     <widget class="QPushButton" name="pushButton_207">
+     <widget class="QPushButton" name="pushButton_17">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -527,13 +236,10 @@
       <property name="text">
        <string>2</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="3" column="2">
-     <widget class="QPushButton" name="pushButton_208">
+     <widget class="QPushButton" name="pushButton_16">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -543,13 +249,10 @@
       <property name="text">
        <string>3</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="3" column="3">
-     <widget class="QPushButton" name="pushButton_209">
+     <widget class="QPushButton" name="pushButton_15">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -559,13 +262,10 @@
       <property name="text">
        <string>4</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="3" column="4">
-     <widget class="QPushButton" name="pushButton_210">
+     <widget class="QPushButton" name="pushButton_14">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -575,13 +275,10 @@
       <property name="text">
        <string>5</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="3" column="5">
-     <widget class="QPushButton" name="pushButton_211">
+     <widget class="QPushButton" name="pushButton_13">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -591,13 +288,10 @@
       <property name="text">
        <string>6</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="3" column="6">
-     <widget class="QPushButton" name="pushButton_212">
+     <widget class="QPushButton" name="pushButton_12">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -607,13 +301,10 @@
       <property name="text">
        <string>7</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="3" column="7">
-     <widget class="QPushButton" name="pushButton_213">
+     <widget class="QPushButton" name="pushButton_11">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -623,13 +314,10 @@
       <property name="text">
        <string>8</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="3" column="8">
-     <widget class="QPushButton" name="pushButton_214">
+     <widget class="QPushButton" name="pushButton_3">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -639,13 +327,10 @@
       <property name="text">
        <string>9</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="3" column="9">
-     <widget class="QPushButton" name="pushButton_215">
+     <widget class="QPushButton" name="pushButton_2">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -655,13 +340,10 @@
       <property name="text">
        <string>0</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="3" column="10">
-     <widget class="QPushButton" name="pushButton_216">
+     <widget class="QPushButton" name="pushButton_4">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -671,13 +353,10 @@
       <property name="text">
        <string>-</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="3" column="11">
-     <widget class="QPushButton" name="pushButton_217">
+     <widget class="QPushButton" name="pushButton_5">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -687,13 +366,10 @@
       <property name="text">
        <string>+</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="3" column="12">
-     <widget class="QPushButton" name="pushButton_218">
+     <widget class="QPushButton" name="pushButton_60">
       <property name="maximumSize">
        <size>
         <width>87</width>
@@ -703,13 +379,10 @@
       <property name="text">
        <string>Clear</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="4" column="0">
-     <widget class="QPushButton" name="pushButton_219">
+     <widget class="QPushButton" name="pushButton_7">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -719,13 +392,10 @@
       <property name="text">
        <string>Q</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="4" column="1">
-     <widget class="QPushButton" name="pushButton_220">
+     <widget class="QPushButton" name="pushButton_18">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -735,13 +405,10 @@
       <property name="text">
        <string>W</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="4" column="2">
-     <widget class="QPushButton" name="pushButton_221">
+     <widget class="QPushButton" name="pushButton_22">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -751,13 +418,10 @@
       <property name="text">
        <string>E</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="4" column="3">
-     <widget class="QPushButton" name="pushButton_222">
+     <widget class="QPushButton" name="pushButton_26">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -767,13 +431,10 @@
       <property name="text">
        <string>R</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="4" column="4">
-     <widget class="QPushButton" name="pushButton_223">
+     <widget class="QPushButton" name="pushButton_30">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -783,13 +444,10 @@
       <property name="text">
        <string>T</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="4" column="5">
-     <widget class="QPushButton" name="pushButton_224">
+     <widget class="QPushButton" name="pushButton_34">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -799,13 +457,10 @@
       <property name="text">
        <string>Y</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="4" column="6">
-     <widget class="QPushButton" name="pushButton_225">
+     <widget class="QPushButton" name="pushButton_38">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -815,13 +470,10 @@
       <property name="text">
        <string>U</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="4" column="7">
-     <widget class="QPushButton" name="pushButton_226">
+     <widget class="QPushButton" name="pushButton_40">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -831,13 +483,10 @@
       <property name="text">
        <string>I</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="4" column="8">
-     <widget class="QPushButton" name="pushButton_227">
+     <widget class="QPushButton" name="pushButton_41">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -847,13 +496,10 @@
       <property name="text">
        <string>O</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="4" column="9">
-     <widget class="QPushButton" name="pushButton_228">
+     <widget class="QPushButton" name="pushButton_42">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -863,13 +509,10 @@
       <property name="text">
        <string>P</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="4" column="10">
-     <widget class="QPushButton" name="pushButton_229">
+     <widget class="QPushButton" name="pushButton_43">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -879,13 +522,10 @@
       <property name="text">
        <string>{</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="4" column="11">
-     <widget class="QPushButton" name="pushButton_230">
+     <widget class="QPushButton" name="pushButton_63">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -895,13 +535,10 @@
       <property name="text">
        <string>}</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="5" column="0">
-     <widget class="QPushButton" name="pushButton_231">
+     <widget class="QPushButton" name="pushButton_8">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -911,13 +548,10 @@
       <property name="text">
        <string>A</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="5" column="1">
-     <widget class="QPushButton" name="pushButton_232">
+     <widget class="QPushButton" name="pushButton_19">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -927,13 +561,10 @@
       <property name="text">
        <string>S</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="5" column="2">
-     <widget class="QPushButton" name="pushButton_233">
+     <widget class="QPushButton" name="pushButton_23">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -943,13 +574,10 @@
       <property name="text">
        <string>D</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="5" column="3">
-     <widget class="QPushButton" name="pushButton_234">
+     <widget class="QPushButton" name="pushButton_27">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -959,13 +587,10 @@
       <property name="text">
        <string>F</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="5" column="4">
-     <widget class="QPushButton" name="pushButton_235">
+     <widget class="QPushButton" name="pushButton_31">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -975,13 +600,10 @@
       <property name="text">
        <string>G</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="5" column="5">
-     <widget class="QPushButton" name="pushButton_236">
+     <widget class="QPushButton" name="pushButton_35">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -991,13 +613,10 @@
       <property name="text">
        <string>H</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="5" column="6">
-     <widget class="QPushButton" name="pushButton_237">
+     <widget class="QPushButton" name="pushButton_44">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -1007,13 +626,10 @@
       <property name="text">
        <string>J</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="5" column="7">
-     <widget class="QPushButton" name="pushButton_238">
+     <widget class="QPushButton" name="pushButton_51">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -1023,13 +639,10 @@
       <property name="text">
        <string>K</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="5" column="8">
-     <widget class="QPushButton" name="pushButton_239">
+     <widget class="QPushButton" name="pushButton_54">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -1039,13 +652,10 @@
       <property name="text">
        <string>L</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="5" column="9">
-     <widget class="QPushButton" name="pushButton_240">
+     <widget class="QPushButton" name="pushButton_57">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -1055,13 +665,10 @@
       <property name="text">
        <string>:</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="5" column="10">
-     <widget class="QPushButton" name="pushButton_241">
+     <widget class="QPushButton" name="pushButton_58">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -1071,13 +678,10 @@
       <property name="text">
        <string>&quot;</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="5" column="11">
-     <widget class="QPushButton" name="pushButton_242">
+     <widget class="QPushButton" name="pushButton_67">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -1087,13 +691,10 @@
       <property name="text">
        <string>|</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="6" column="0">
-     <widget class="QPushButton" name="pushButton_243">
+     <widget class="QPushButton" name="pushButton_9">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -1103,13 +704,10 @@
       <property name="text">
        <string>Z</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="6" column="1">
-     <widget class="QPushButton" name="pushButton_244">
+     <widget class="QPushButton" name="pushButton_20">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -1119,13 +717,10 @@
       <property name="text">
        <string>X</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="6" column="2">
-     <widget class="QPushButton" name="pushButton_245">
+     <widget class="QPushButton" name="pushButton_24">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -1135,13 +730,10 @@
       <property name="text">
        <string>C</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="6" column="3">
-     <widget class="QPushButton" name="pushButton_246">
+     <widget class="QPushButton" name="pushButton_28">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -1151,13 +743,10 @@
       <property name="text">
        <string>V</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="6" column="4">
-     <widget class="QPushButton" name="pushButton_247">
+     <widget class="QPushButton" name="pushButton_32">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -1167,13 +756,10 @@
       <property name="text">
        <string>B</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="6" column="5">
-     <widget class="QPushButton" name="pushButton_248">
+     <widget class="QPushButton" name="pushButton_36">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -1183,13 +769,10 @@
       <property name="text">
        <string>N</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="6" column="6">
-     <widget class="QPushButton" name="pushButton_249">
+     <widget class="QPushButton" name="pushButton_45">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -1199,13 +782,10 @@
       <property name="text">
        <string>M</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="6" column="7">
-     <widget class="QPushButton" name="pushButton_250">
+     <widget class="QPushButton" name="pushButton_52">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -1215,13 +795,10 @@
       <property name="text">
        <string>,</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="6" column="8">
-     <widget class="QPushButton" name="pushButton_251">
+     <widget class="QPushButton" name="pushButton_55">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -1231,13 +808,10 @@
       <property name="text">
        <string>.</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="6" column="9">
-     <widget class="QPushButton" name="pushButton_252">
+     <widget class="QPushButton" name="pushButton_59">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -1247,13 +821,10 @@
       <property name="text">
        <string>?</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="6" column="10">
-     <widget class="QPushButton" name="pushButton_253">
+     <widget class="QPushButton" name="pushButton_10">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -1263,13 +834,10 @@
       <property name="text">
        <string>`</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="6" column="11">
-     <widget class="QPushButton" name="pushButton_254">
+     <widget class="QPushButton" name="pushButton_39">
       <property name="maximumSize">
        <size>
         <width>50</width>
@@ -1279,13 +847,10 @@
       <property name="text">
        <string>~</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="6" column="12">
-     <widget class="QPushButton" name="pushButton_255">
+     <widget class="QPushButton" name="pushButton_66">
       <property name="maximumSize">
        <size>
         <width>87</width>
@@ -1295,13 +860,10 @@
       <property name="text">
        <string>CAPS</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="7" column="0" colspan="2">
-     <widget class="QPushButton" name="pushButton_256">
+     <widget class="QPushButton" name="pushButton_65">
       <property name="maximumSize">
        <size>
         <width>87</width>
@@ -1311,13 +873,10 @@
       <property name="text">
        <string>Cancel</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="7" column="2" colspan="9">
-     <widget class="QPushButton" name="pushButton_257">
+     <widget class="QPushButton" name="pushButton_68">
       <property name="maximumSize">
        <size>
         <width>10000</width>
@@ -1327,13 +886,10 @@
       <property name="text">
        <string>Space</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
     <item row="7" column="12">
-     <widget class="QPushButton" name="pushButton_258">
+     <widget class="QPushButton" name="pushButton_64">
       <property name="maximumSize">
        <size>
         <width>87</width>
@@ -1343,9 +899,6 @@
       <property name="text">
        <string>Done</string>
       </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
      </widget>
     </item>
    </layout>
@@ -1353,7 +906,4 @@
  </widget>
  <resources/>
  <connections/>
- <buttongroups>
-  <buttongroup name="buttonGroup"/>
- </buttongroups>
 </ui>

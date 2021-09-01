@@ -16,7 +16,8 @@ FORMS += \
     maintenancePage.ui \
     maintain_product.ui \
     init.ui \
-    help.ui
+    help.ui \
+    keyboard.ui
 
 HEADERS += \
     dfuicommthread.h \
@@ -77,7 +78,7 @@ RESOURCES += \
     src.qrc
 
 DISTFILES += \
-    styles/product_select.qss 
+    styles/product_select.qss  
 
 # EV2 Reference for moneris
 # TODO: Determine new linkage to object and library files...

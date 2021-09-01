@@ -50,6 +50,7 @@ maintenancePage::maintenancePage(QWidget *parent) :
     maintenancePageEndTimer = new QTimer(this);
     maintenancePageEndTimer->setInterval(1000);
     connect(maintenancePageEndTimer, SIGNAL(timeout()), this, SLOT(onMaintenancePageTimeoutTick()));
+    connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(buttonWasClicked(int)));
 
 }
 
@@ -98,6 +99,8 @@ void maintenancePage::showEvent(QShowEvent *event)
     ui->wifi_internet->setText("Wifi Connectivity: " + stdout);
 
     ui->wifiTable->setRowCount(0);
+
+    ui->keyboard_2->hide();
 
 }
 
@@ -252,7 +255,7 @@ void maintenancePage::on_wifiButton_clicked(){
         foreach(QDBusObjectPath p, ap_path_list){
             QDBusInterface ap_interface("org.freedesktop.NetworkManager", p.path(), "org.freedesktop.NetworkManager.AccessPoint", QDBusConnection::systemBus());
             if(ap_interface.property("Ssid").toString() != ""){
-                qDebug() << " SSID: " << ap_interface.property("Ssid").toString();
+//                qDebug() << " SSID: " << ap_interface.property("Ssid").toString();
                 ui->wifiTable->insertRow(ui->wifiTable->rowCount());
                 ui->wifiTable->setRowHeight(ui->wifiTable->rowCount()-1, 60);
                 QWidget* pWidget = new QWidget();
@@ -339,17 +342,20 @@ void maintenancePage::btn_clicked(){
     QObject* button = QObject::sender();
     qDebug() << "btn clicked -> " << button->objectName();
     _maintenancePageTimeoutSec = 30;
-
     // OPEN ON-SCREEN KEYBOARD FOR PASSWORD ENTRY
+
+    ui->keyboard_2->show();
+    ui->wifiPassLabel->setText(button->objectName());
+    ui->keyboardTextEntry->setText("");
 
     // CONNECT TO WIFI SSID FROM HERE!
 
     //QProcess system_command;
-    QString connect_string = "nmcli --ask dev wifi connect '" + button->objectName() +"' password 'KingPaddy'";
-    QByteArray ba = connect_string.toLocal8Bit();
-    const char *c_str = ba.data();
-    qDebug() << c_str;
-    system(c_str);
+//    QString connect_string = "nmcli --ask dev wifi connect '" + button->objectName() +"' password '" + ui->keyboardTextEntry->text() + "'";
+//    QByteArray ba = connect_string.toLocal8Bit();
+//    const char *c_str = ba.data();
+//    qDebug() << c_str;
+//    system(c_str);
     //system_command.waitForFinished(-1);
     //QString stdout = system_command.readAllStandardOutput();
     //qDebug() << stdout;
@@ -386,5 +392,85 @@ void maintenancePage::onMaintenancePageTimeoutTick(){
         maintenancePageEndTimer->stop();
         this->hide();
         idlePage->showFullScreen();
+    }
+}
+
+void maintenancePage::on_buttonGroup_buttonClicked(){
+//    QAbstractButton* buttonSender = qobject_cast<QPushButton*>(sender());
+//    QString buttonText = buttonSender->text();
+//    qDebug() << "btn clicked -> " << buttonText;
+}
+
+void maintenancePage::buttonWasClicked(int buttonID){
+
+    QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
+    //qDebug() << buttonpressed->text();
+    QString buttonText = buttonpressed->text();
+
+    if(buttonText=="Cancel"){
+        ui->keyboard_2->hide();
+        ui->keyboardTextEntry->setText("");
+    }
+    else if(buttonText=="CAPS"){
+        foreach (QAbstractButton *button, ui->buttonGroup->buttons()) {
+            if (button->text()=="Space" || button->text()=="Done" || button->text()=="Cancel" || button->text()=="Clear" || button->text()=="Backspace"){
+                //qDebug() << "doing nothing";
+            }else{
+                button->setText(button->text().toLower());
+            }
+        }
+    }
+    else if(buttonText=="caps"){
+        foreach (QAbstractButton *button, ui->buttonGroup->buttons()) {
+            if (button->text()=="Space" || button->text()=="Done" || button->text()=="Cancel" || button->text()=="Clear" || button->text()=="Backspace"){
+                //doing nothing
+            }else{
+                button->setText(button->text().toUpper());
+            }
+        }
+    }
+    else if(buttonText=="Backspace"){
+        ui->keyboardTextEntry->backspace();
+    }
+    else if(buttonText=="Clear"){
+        ui->keyboardTextEntry->setText("");
+    }
+    else if(buttonText=="Done"){
+        QString password = ui->keyboardTextEntry->text();
+        qDebug() << "Password: " << password;
+        // ATTEMPT nmcli connection
+
+        QString connect_string = "nmcli --ask dev wifi connect '" + ui->wifiPassLabel->text() +"' password '" + ui->keyboardTextEntry->text() + "'";
+        QByteArray ba = connect_string.toLocal8Bit();
+        const char *c_str = ba.data();
+        qDebug() << c_str;
+        system(c_str);
+
+        ui->keyboard_2->hide();
+
+        QProcess process;
+        process.start("iwgetid -r");
+        process.waitForFinished(-1);
+        QString stdout = process.readAllStandardOutput();
+        ui->wifi_name->setText("Wifi Name: " + stdout);
+
+        process.start("nmcli -t -f STATE general");
+        process.waitForFinished(-1);
+        stdout = process.readAllStandardOutput();
+        ui->wifi_status->setText("Wifi State: " + stdout);
+
+        process.start("nmcli networking connectivity");
+        process.waitForFinished(-1);
+        stdout = process.readAllStandardOutput();
+        ui->wifi_internet->setText("Wifi Connectivity: " + stdout);
+    }
+    else if(buttonText=="Space"){
+        ui->keyboardTextEntry->setText(ui->keyboardTextEntry->text()+" ");
+    }
+    else if(buttonText=="&&"){
+        ui->keyboardTextEntry->setText(ui->keyboardTextEntry->text()+"&");
+    }
+    else{
+        ui->keyboardTextEntry->setText(ui->keyboardTextEntry->text() + buttonText);
     }
 }

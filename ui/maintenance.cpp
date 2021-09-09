@@ -440,7 +440,7 @@ void maintenancePage::buttonWasClicked(int buttonID){
         qDebug() << "Password: " << password;
         // ATTEMPT nmcli connection
 
-        QString connect_string = "nmcli --ask dev wifi connect '" + ui->wifiPassLabel->text() +"' password '" + ui->keyboardTextEntry->text() + "'";
+        QString connect_string = "nmcli dev wifi connect '" + ui->wifiPassLabel->text() +"' password '" + ui->keyboardTextEntry->text() + "'";
         QByteArray ba = connect_string.toLocal8Bit();
         const char *c_str = ba.data();
         qDebug() << c_str;

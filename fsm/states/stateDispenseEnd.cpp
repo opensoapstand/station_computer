@@ -12,6 +12,7 @@
 
 #include "stateDispenseEnd.h"
 #include "../components/mcpgpio.h"
+#include <curl/curl.h>
 
 #define DISPENSE_END_STRING "Dispense End"
 
@@ -125,6 +126,7 @@ DF_ERROR stateDispenseEnd::onExit()
    }
 
    updateDB();
+   sendDB();
 
    m_pMessaging->clearProcessString();
    m_pMessaging->clearCommandString();
@@ -163,6 +165,21 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
    }
    printf("\n");
    return 0;
+}
+
+DF_ERROR stateDispenseEnd::sendDB(){
+
+    std::string product = (cassettes[pos].getDrink()->m_name);
+    std::string target_volume = to_string(cassettes[pos].getDrink()->getTargetVolume(size));
+    std::string price = to_string(cassettes[pos].getDrink()->getPrice(size));
+    std::string start_time = (cassettes[pos].getDrink()->m_nStartTime);
+    std::string dispensed_volume = to_string(cassettes[pos].getDrink()->m_nVolumeDispensed);
+
+    std::string json = "{\"product\": \"" + product + "\", \"target_volume\": \"" + target_volume + "\", \"price\": \"" + price + "\", \"start_time\": \"" + start_time + "\", \"dispensed_volume\": \"" + dispensed_volume + "\"}";
+    std::string curler = "curl -k -H \"Content-Type: application/json\" -d '"+json+"' https://drinkfill.herokuapp.com/machine_data/add";
+
+    system(curler.c_str());
+//    debugOutput::sendMessage(curler, INFO);
 }
 
 DF_ERROR stateDispenseEnd::updateDB(){

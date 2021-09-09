@@ -61,6 +61,7 @@ class stateDispenseEnd : public stateVirtual
         char now[50];
 
         DF_ERROR updateDB();
+        DF_ERROR sendDB();
         DF_ERROR printer();
 
 };

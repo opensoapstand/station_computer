@@ -75,6 +75,7 @@ class stateDispenseEnd : public stateVirtual
         DF_ERROR QRgen();
         std::string toSvgString(const QrCode &qr, int border);
         void printQr(const QrCode &qr);
+        std::string getMachineID();
 
 };
 #endif

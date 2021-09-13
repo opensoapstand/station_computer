@@ -126,7 +126,7 @@ DF_ERROR stateDispenseEnd::onExit()
 
    updateDB();
    sendDB();
-   QRgen();
+   //QRgen();
 
    m_pMessaging->clearProcessString();
    m_pMessaging->clearCommandString();
@@ -174,12 +174,39 @@ DF_ERROR stateDispenseEnd::sendDB(){
     std::string price = to_string(cassettes[pos].getDrink()->getPrice(size));
     std::string start_time = (cassettes[pos].getDrink()->m_nStartTime);
     std::string dispensed_volume = to_string(cassettes[pos].getDrink()->m_nVolumeDispensed);
+    std::string machine_id = getMachineID();
 
-    std::string json = "{\"product\": \"" + product + "\", \"target_volume\": \"" + target_volume + "\", \"price\": \"" + price + "\", \"start_time\": \"" + start_time + "\", \"dispensed_volume\": \"" + dispensed_volume + "\"}";
+    std::string json = "{\"machineId\": \"" + machine_id + "\", \"product\": \"" + product + "\", \"quantity_requested\": \"" + target_volume + "\", \"price\": \"" + price + "\", \"start_time\": \"" + start_time + "\", \"quantity_dispensed\": \"" + dispensed_volume + "\"}";
     std::string curler = "screen -d -m curl -k -H \"Content-Type: application/json\" -d '"+json+"' https://drinkfill.herokuapp.com/machine_data/add";
 
     system(curler.c_str());
 //    debugOutput::sendMessage(curler, INFO);
+}
+
+std::string stateDispenseEnd::getMachineID(){
+
+    rc = sqlite3_open(DB_PATH, &db);
+
+    sqlite3_stmt * stmt;
+
+    debugOutput::sendMessage("Machine ID getter START", INFO);
+
+    if( rc ) {
+       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+       // TODO: Error handling here...
+    } else {
+       fprintf(stderr, "Opened database successfully\n");
+    }
+
+     /* Create SQL statement for transactions */
+     sqlite3_prepare(db, "SELECT machine_id FROM machine;", -1, &stmt, NULL);
+     sqlite3_step(stmt);
+     std::string str = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0)));;
+     sqlite3_finalize(stmt);
+     sqlite3_close(db);
+//     cout << str << endl;
+     return str;
+
 }
 
 DF_ERROR stateDispenseEnd::updateDB(){

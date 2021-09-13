@@ -18,7 +18,7 @@
 
 #include "../dftypes.h"
 #include "../components/gpio.h"
-#include "../components/mcpgpio.h"
+#include "../components/dsed8344.h"
 #include "../components/odysseyx86gpio.h"
 #include "drink.h"
 
@@ -59,7 +59,7 @@ class dispenser
 
       //private variable setters
       DF_ERROR setSolenoid(int mcpAddress, int pin, int pos);
-      DF_ERROR setPump(int mcpAddress, int pin, int direction); //0 as forward and 1 as reverse
+      DF_ERROR setPump(int mcpAddress, int pin, int position);
       DF_ERROR setFlowsensor(int pinint, int pos);
 
       DF_ERROR startDispense(int pos);
@@ -101,6 +101,13 @@ class dispenser
 //      void resetButtonPressDuration();
 
    private:
+
+      // We only want to create one instance of the class that controls
+      // the actual hardware.
+      static dsed8344 *the_8344 = nullptr;
+
+      unsigned char pump_position;
+    
       bool m_isDispenseDone; // XXX: Remove later.
       bool m_isStill;
 
@@ -120,7 +127,6 @@ class dispenser
       
       // Button reference m_pButton[1] in stateVirtual; IPC shared due to Arduino!
       gpio *m_pButton[NUM_BUTTON];
-//      mcpGPIO *m_pButtonPress;
 };
 
 #endif

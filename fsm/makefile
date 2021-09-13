@@ -1,7 +1,7 @@
 TARGET_EXEC ?= fsm
 
 BUILD_DIR ?= ./build
-SRC_DIRS ?= . ./states ./components ./objects ../library/tinyxml  ../library/i2c/mcp23017 ../library/i2c/smbus ../library/socket
+SRC_DIRS ?= . ./states ./components ./objects ../library/tinyxml ../library/i2c/smbus ../library/socket
 
 SRCS := $(shell find $(SRC_DIRS) -name *.cpp -or -name *.c -or -name *.s)
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
@@ -36,7 +36,7 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 .PHONY: clean controller
 
 controller:
-	g++ -pthread -o controller fsm.cpp components/*.cpp states/*.cpp objects/*.cpp ../library/tinyxml/*.cpp  ../library/i2c/mcp23017/*.cpp ../library/i2c/smbus/*.c ../library/socket/*.cpp -l sqlite3
+	g++ -pthread -o controller fsm.cpp components/*.cpp states/*.cpp objects/*.cpp ../library/tinyxml/*.cpp ../library/i2c/smbus/*.c ../library/socket/*.cpp -l sqlite3
 
 Socket: Socket.cpp
 ServerSocket: ServerSocket.cpp
@@ -51,53 +51,3 @@ clean:
 -include $(DEPS)
 
 MKDIR_P ?= mkdir -p
-
-
-
-
-
-# CC     	:= gcc
-# CXX    	:= g++
-# LIBS		:=
-# INCS 		:=
-# CFLAGS   := -Wall 
-
-# OUTPUT 	:= fsm
-
-# all: ${OUTPUT}
-
-# #****************************************************************************
-# # Source files
-# #****************************************************************************
-
-# SRCS := 	./components/gpio.cpp \
-# 			./components/i2cgpio.cpp\
-# 			./components/mcp23017.cpp\
-# 			./components/mcpgpio.cpp\
-# 			./components/oddyseyx86gpio.cpp\
-# 			./components/smbuc.c\
-# 			./states/statevirtual.cpp\
-# 			./states/stateinit.cpp\
-# 			./objects/debugoutput.cpp\
-# 			./objects/messagemediator.cpp\
-# 			fsm.cpp
-
-# # Add on the sources for libraries
-# SRCS := ${SRCS}
-
-# OBJS := $(addsuffix .o,$(basename ${SRCS}))
-
-# #****************************************************************************
-# # common rules
-# #****************************************************************************
-
-# # Rules for compiling source files to object files
-# %.o : %.cpp
-# 	${CXX} -c ${CXXFLAGS} ${INCS} $< -o $@
-
-# %.o : %.c
-# 	${CC} -c ${CFLAGS} ${INCS} $< -o $@
-
-
-# clean:
-# 	-rm -f core ${OBJS} ${OUTPUT}

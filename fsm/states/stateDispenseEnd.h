@@ -17,7 +17,6 @@
 #include "../objects/messageMediator.h"
 #include "../../library/printer/Adafruit_Thermal.h"
 #include "../components/gpio.h"
-#include "../components/mcpgpio.h"
 
 #include <stdio.h>
 

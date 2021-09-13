@@ -53,7 +53,7 @@ class stateVirtual
         DF_FSM  m_state;
         DF_FSM  m_nextState;
         gpio *m_pButton[NUM_BUTTON];
-        mcpGPIO *m_pButtonPress;
+//        mcpGPIO *m_pButtonPress;
         messageMediator * m_pMessaging;
 
         // Unique Reference to selected Drink

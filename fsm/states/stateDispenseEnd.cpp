@@ -11,7 +11,6 @@
 //***************************************
 
 #include "stateDispenseEnd.h"
-#include "../components/mcpgpio.h"
 #include <curl/curl.h>
 
 #define DISPENSE_END_STRING "Dispense End"

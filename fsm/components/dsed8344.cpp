@@ -3,6 +3,9 @@
 #include "dsed8344.h"
 
 
+#define __USE_SMBUS_I2C_LIBRARY__  1
+
+
 // Constructor
 dsed8344::dsed8344 (const char *bus)
 {
@@ -175,6 +178,11 @@ void dsed8344::setButtonPower (bool poweron)
 ///////////////////////////////////////////////////////////////////////////
 bool dsed8344::SendByte (unsigned char address, unsigned char reg, unsigned char byte)
 {
+
+#ifdef __USE_SMBUS_I2C_LIBRARY__
+    set_i2c_address (address);
+    i2c_smbus_write_byte_data(i2c_handle, reg, byte);
+#else
     struct i2c_rdwr_ioctl_data packets;
     struct i2c_msg messages[2];
     unsigned char buffer[2];
@@ -194,7 +202,8 @@ bool dsed8344::SendByte (unsigned char address, unsigned char reg, unsigned char
 	debugOutput::sendMessage (strerror(errno), ERROR);
 	return false;
     }
-
+#endif
+    
     return true;
 }   // End of SendByte()
 
@@ -202,9 +211,14 @@ bool dsed8344::SendByte (unsigned char address, unsigned char reg, unsigned char
 ///////////////////////////////////////////////////////////////////////////
 unsigned char dsed8344::ReadByte (unsigned char address, unsigned char reg)
 {
+    unsigned char buffer[2];
+
+#ifdef __USE_SMBUS_I2C_LIBRARY__
+    set_i2c_address (address);
+    buffer[1] = i2c_smbus_read_byte_data(i2c_handle, reg);
+#else
     struct i2c_rdwr_ioctl_data packets;
     struct i2c_msg messages[2];
-    unsigned char buffer[2];
 
     buffer[0] = reg;
     
@@ -225,7 +239,8 @@ unsigned char dsed8344::ReadByte (unsigned char address, unsigned char reg)
 	debugOutput::sendMessage (strerror(errno), ERROR);
 	return false;
     }
-
+#endif
+    
     return buffer[1];
 }   // End of ReadByte()
 

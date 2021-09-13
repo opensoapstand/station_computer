@@ -124,14 +124,14 @@ DF_ERROR stateInit::onAction()
        //Check i2C comms
        cout << "Checking i2c comms" << endl;
 
-       i2c_tester = new mcpGPIO;
+       //i2c_tester = new mcpGPIO;
 
-       if (i2c_tester->openi2c()){
-           e_ret = OK;
-       }
-       else{
-           e_ret = ERROR_COMMS;
-       }
+       // if (i2c_tester->openi2c()){
+            e_ret = OK;
+       // }
+       // else{
+       //     e_ret = ERROR_COMMS;
+       // }
    }
 
 
@@ -417,9 +417,9 @@ DF_ERROR stateInit::setButton(TiXmlElement *hardwareEle, int dispenserIdx)
          
             if((X20 <= address_num &&  X22 >= address_num) && (MCP_PIN_START <= pin_num && MPC_PIN_END >= pin_num))
             {
-               m_pButton[l_pos] = new mcpGPIO(address_num, pin_num);
+		//m_pButton[l_pos] = new mcpGPIO(address_num, pin_num);
                debugOutput::sendMessage("Set button High", PIN_CHANGE);
-               m_pButton[l_pos]->writePin(HIGH);
+               //m_pButton[l_pos]->writePin(HIGH);
                e_ret = OK;
                return e_ret;
             }

@@ -21,6 +21,7 @@
 #include "dispensepage.h"
 #include "idle.h"
 
+
 // CTOR
 payPage::payPage(QWidget *parent) :
     QWidget(parent),
@@ -53,6 +54,8 @@ payPage::payPage(QWidget *parent) :
    // ui->order_drink_amount->setText(" ");
 
     ui->payment_bypass_Button->setEnabled(false);
+
+   // ui->qrCode->setStyleSheet("QLabel { border-image: url(:/light/background.png); }");
 
     //displayPaymentPending(false);
 
@@ -202,6 +205,7 @@ void payPage::resizeEvent(QResizeEvent *event){
     this->setPalette(palette);
 
     ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
+    ui->order_drink_amount->setText("");
 
 //    if (db.getProductVolume(checkOption, drinkSize) < 1000){
 //        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
@@ -421,7 +425,7 @@ void payPage::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
 
-    DbManager db(DB_PATH);
+    //DbManager db(DB_PATH);
 
     int checkOption = idlePage->userDrinkOrder->getOption();
     char drinkSize;
@@ -490,6 +494,15 @@ void payPage::showEvent(QShowEvent *event)
         readTimer->start();
     }
 
+    QPixmap map(400,400);
+    map.fill(QColor("black"));
+    QPainter painter(&map);
+//    ui->qrCode->setPixmap(map);
+
+    QString qrdata = QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2);
+
+    paintQR(painter, QSize(400,400), qrdata, QColor("white"));
+    ui->qrCode->setPixmap(map);
 
 }
 
@@ -1001,4 +1014,97 @@ void payPage::readTimer_loop()
 //        }
     }
     }
+}
+
+std::string payPage::toSvgString(const QrCode &qr, int border) {
+        if (border < 0)
+                throw std::domain_error("Border must be non-negative");
+        if (border > INT_MAX / 2 || border * 2 > INT_MAX - qr.getSize())
+                throw std::overflow_error("Border too large");
+
+        std::ostringstream sb;
+        sb << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+        sb << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n";
+        sb << "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" viewBox=\"0 0 ";
+        sb << (qr.getSize() + border * 2) << " " << (qr.getSize() + border * 2) << "\" stroke=\"none\">\n";
+        sb << "\t<rect width=\"100%\" height=\"100%\" fill=\"#FFFFFF\"/>\n";
+        sb << "\t<path d=\"";
+        for (int y = 0; y < qr.getSize(); y++) {
+                for (int x = 0; x < qr.getSize(); x++) {
+                        if (qr.getModule(x, y)) {
+                                if (x != 0 || y != 0)
+                                        sb << " ";
+                                sb << "M" << (x + border) << "," << (y + border) << "h1v1h-1z";
+                        }
+                }
+        }
+        sb << "\" fill=\"#000000\"/>\n";
+        sb << "</svg>\n";
+        return sb.str();
+}
+
+// Prints the given QrCode object to the console.
+void payPage::printQr(const QrCode &qr) {
+        int border = 4;
+        for (int y = -border; y < qr.getSize() + border; y++) {
+                for (int x = -border; x < qr.getSize() + border; x++) {
+                        std::cout << (qr.getModule(x, y) ? "##" : "  ");
+                }
+                std::cout << std::endl;
+        }
+        std::cout << std::endl;
+}
+
+
+void payPage::QRgen(){
+    //QrCode qr0 = QrCode::encodeText("Soapstand Rules", QrCode::Ecc::MEDIUM);
+    //std::string svg = toSvgString(qr0, 4);
+    //printQr(qr0);
+
+    QPixmap map(400,400);
+    QPainter painter(&map);
+
+    paintQR(painter, QSize(400,400), "SoapStand RULES", QColor("white"));
+    ui->qrCode->setPixmap(map);
+}
+
+void payPage::paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg)
+{
+    // NOTE: At this point you will use the API to get the encoding and format you want, instead of my hardcoded stuff:
+    qrcodegen::QrCode qr = qrcodegen::QrCode::encodeText(data.toUtf8().constData(), qrcodegen::QrCode::Ecc::HIGHH);
+    const int s=qr.getSize()>0?qr.getSize():1;
+    const double w=sz.width();
+    const double h=sz.height();
+    const double aspect=w/h;
+    const double size=((aspect>1.0)?h:w);
+    const double scale=size/(s+2);
+    // NOTE: For performance reasons my implementation only draws the foreground parts in supplied color.
+    // It expects background to be prepared already (in white or whatever is preferred).
+
+    painter.setPen(Qt::NoPen);
+
+//    painter.setBrush(QColor("red"));
+//    for (int y =0; y<400; y++){
+//        for(int x=0; x<400; x++){
+//            const double rx1=(x+1)*scale, ry1=(y+1)*scale;
+//            QRectF r(rx1,ry1,1,1);
+//            painter.drawRects(&r,1);
+//        }
+//    }
+
+    painter.setBrush(fg);
+    for(int y=0; y<s; y++) {
+        for(int x=0; x<s; x++) {
+            const int color=qr.getModule(x, y);  // 0 for white, 1 for black
+            if(0!=color) {
+                const double rx1=(x+1)*scale, ry1=(y+1)*scale;
+                QRectF r(rx1, ry1, scale, scale);
+                painter.drawRects(&r,1);
+            }
+        }
+    }
+
+
+
+
 }

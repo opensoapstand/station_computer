@@ -163,6 +163,25 @@ line-height: 29px;</string>
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="qrCode">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>660</y>
+     <width>400</width>
+     <height>400</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: white;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

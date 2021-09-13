@@ -27,6 +27,17 @@
 #include "posm/transactionPackets.h"
 #include "posm/transactioninfo.h"
 
+#include "../library/qr/qrcodegen.hpp"
+#include <climits>
+#include <cstdint>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <QPainter>
+
 class paySelect;
 class dispensePage;
 class idle;
@@ -37,6 +48,7 @@ class payPage;
 }
 
 using namespace std;
+using namespace qrcodegen;
 
 class payPage : public QWidget
 {
@@ -198,6 +210,12 @@ private:
 
     bool response;
     bool payment;
+
+    void QRgen();
+    void printQr(const QrCode &qr);
+    std::string toSvgString(const QrCode &qr, int border);
+    void paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg);
+
 };
 
 #endif // PAYPAGE_H

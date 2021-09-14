@@ -703,6 +703,19 @@ Last Restock:</string>
     <string>vol. dispensed</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>960</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Ticks</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

@@ -71,6 +71,7 @@ void maintain_product::showEvent(QShowEvent *event)
     ui->remainingLabel->setText(QString::number(db.getRemaining(checkOption)) + "ml");
     ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
     ui->pwmLabel->setText(QString::number(db.getPWM(checkOption)) + "%");
+    ui->vol_dispensed_label->setText("");
     // ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
 //    ui->temperatureLabel->setText("");
     ui->numberEntry->hide();
@@ -243,6 +244,7 @@ void maintain_product::resizeEvent(QResizeEvent *event){
     ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
     ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
     ui->pwmLabel->setText(QString::number(db.getPWM(checkOption)) + "%");
+    ui->vol_dispensed_label->setText("");
 
 //    ui->temperatureLabel->setText("");
 
@@ -301,6 +303,8 @@ void maintain_product::on_pumpButton_clicked(){
             if (!pumping){
                 command.append("t");
 
+                ui->vol_dispensed_label->setText("Volume Dispensed: 0ml");
+
                 this->idlePage->dfUtility->msg = command;
                 idlePage->dfUtility->m_IsSendingFSM = true;
                 idlePage->dfUtility->m_fsmMsg = SEND_DRINK;
@@ -313,7 +317,7 @@ void maintain_product::on_pumpButton_clicked(){
             else {
                 pumping = false;
                 ui->pumpLabel->setText("OFF");
-                ui->vol_dispensed_label->setText("");
+                //ui->vol_dispensed_label->setText("");
                 command = QString::number(this->idlePage->userDrinkOrder->getOption());
                 command.append("t");
 
@@ -398,7 +402,11 @@ void maintain_product::on_vol_per_tickButton_clicked(){
 
 void maintain_product::updateVolumeDisplayed(int dispensed){
     int vol_dispensed = dispensed;
-    ui->vol_dispensed_label->setText(QString::number(vol_dispensed) + "ml");
+    ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) + "ml");
+
+//    double ticks = ui->volume_per_tick->text();
+
+//    ui->ticksLabel->setText("Ticks: " + QString::number(vol_dispensed/ticks));
 }
 
 void maintain_product::targetHitDisplay(){
@@ -594,7 +602,7 @@ void maintain_product::onMaintainProductPageTimeoutTick(){
         this->hide();
         idlePage->showFullScreen();
     }
-    }
+
 }
 
 void maintain_product::on_pwmButton_clicked(){

@@ -499,7 +499,8 @@ void payPage::showEvent(QShowEvent *event)
     QPainter painter(&map);
 //    ui->qrCode->setPixmap(map);
 
-    QString qrdata = QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2);
+    QString qrdata_amount = QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2);
+    QString qrdata = "https://drinkfill.herokuapp.com/frontend?amount="+qrdata_amount;
 
     paintQR(painter, QSize(400,400), qrdata, QColor("white"));
     ui->qrCode->setPixmap(map);

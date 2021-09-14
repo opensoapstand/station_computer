@@ -4,7 +4,13 @@
 #include <cstddef>
 #include <cstdint>
 
-//#include "../smbus/smbus.h"
+// This is a bit of a hack, but on the Odyssey we need to explicitly
+// include code to access the I2C bus.  We could probably make this
+// work cleanly on the rPi but I got tired of fighting compiler
+// warnings...
+#ifndef __arm__
+#include "../smbus/smbus.h"
+#endif 
 
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>

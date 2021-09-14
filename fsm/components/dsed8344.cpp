@@ -15,7 +15,9 @@ dsed8344::dsed8344 (const char *bus)
 	i2c_handle = open (bus, O_RDWR);
 	if (i2c_handle < 0)
 	{
-	    debugOutput::sendMessage("dsed8344: Error opening" + bus, ERROR);
+	    std::string message("dsed8344: Error opening");
+	    message.append (bus);
+	    debugOutput::sendMessage(message, ERROR);
 	    return;
 	}
     }
@@ -32,7 +34,10 @@ dsed8344::dsed8344 (const char *bus)
     
     if (!check_8344_configuration ())
     {
-	debugOutput::sendMessage("dsed8344: I2C bus " + bus + " has a problem.", ERROR);
+	std::string message("dsed8344: I2C bus ");
+	message.append (bus);
+	message.append (" has a problem.");
+	debugOutput::sendMessage(message, ERROR);
 	return;
     }
     debugOutput::sendMessage  ("I2C bus configuration appears correct.", INFO);
@@ -275,7 +280,9 @@ bool dsed8344::check_8344_configuration (void)
     }
     if (i2c_smbus_write_quick (i2c_handle, I2C_SMBUS_WRITE) < 0)
     {
-	debugOutput::sendMessage ("PCA9534 not found on I2C bus " + i2c_bus_name, ERROR);
+	std::string message("PCA9534 not found on I2C bus ");
+	message.append (i2c_bus_name);
+	debugOutput::sendMessage(message, ERROR);
 	debugOutput::sendMessage ("Pump control impossible.", ERROR);
 	return false;
     }
@@ -286,7 +293,9 @@ bool dsed8344::check_8344_configuration (void)
     }
     if (i2c_smbus_write_quick (i2c_handle, I2C_SMBUS_WRITE) < 0)
     {
-	debugOutput::sendMessage ("MAX31760 not found on I2C bus " + i2c_bus_name, ERROR);
+	std::string message("MAX31760 not found on I2C bus ");
+	message.append (i2c_bus_name);
+	debugOutput::sendMessage(message, ERROR);
 	debugOutput::sendMessage ("Pump PWM control unavailable.", ERROR);
 	return false;
     }

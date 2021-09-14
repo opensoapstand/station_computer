@@ -78,7 +78,7 @@ class stateInit : public stateVirtual
         bool level = true;
 
     protected:
-        mcpGPIO *i2c_tester;
+//        mcpGPIO *i2c_tester;
 
 
 };

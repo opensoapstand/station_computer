@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "../smbus/smbus.h"
+//#include "../smbus/smbus.h"
 
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
@@ -15,7 +15,7 @@
 #include <string.h>
 #include <errno.h>
 
-#include "../../../fsm/objects/debugOutput.h"
+#include "../objects/debugOutput.h"
 
 #define PCA9534_ADDRESS  0b0100000
 #define MAX31760_ADDRESS 0b1010000

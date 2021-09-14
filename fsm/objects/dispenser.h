@@ -103,8 +103,8 @@ class dispenser
    private:
 
       // We only want to create one instance of the class that controls
-      // the actual hardware.
-      static dsed8344 *the_8344 = nullptr;
+      // the actual hardware, so declare this static.
+      static dsed8344 *the_8344;
 
       unsigned char pump_position;
     

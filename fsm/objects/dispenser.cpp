@@ -26,6 +26,10 @@
 #define CLEAN_WATER_TIME 1
 #define CLEAN_AIR_TIME 1
 
+
+dsed8344 *dispenser::the_8344 = nullptr;
+
+
 dispenser::dispenser(){
     //default constructor to set all pin to nullptr
     //debugOutput::sendMessage("dispenser", INFO);

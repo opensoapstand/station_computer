@@ -346,7 +346,7 @@ DF_ERROR messageMediator::getPositionReady()
          solenoidChar = commandString[i];
       }
 
-      if (commandString[i] == SMALL_DRINK_CHAR || commandString[i] == LARGE_DRINK_CHAR)
+      if (commandString[i] == SMALL_DRINK_CHAR || commandString[i] == LARGE_DRINK_CHAR || commandString[i] == TEST_CHAR)
       {
           sizeChar = (commandString[i]);
       }
@@ -464,6 +464,10 @@ DF_ERROR messageMediator::getPositionReady()
            debugOutput::sendMessage("Large Size", INFO);
            m_nSize = LARGE_DRINK_CHAR;
            break;
+
+       case TEST_CHAR:
+           debugOutput::sendMessage("Test Size", INFO);
+           m_nSize = TEST_CHAR;
 
        default:
            break;

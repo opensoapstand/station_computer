@@ -29,8 +29,8 @@
   <widget class="QLabel" name="name">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>530</y>
+     <x>190</x>
+     <y>510</y>
      <width>531</width>
      <height>31</height>
     </rect>
@@ -42,8 +42,8 @@
   <widget class="QLabel" name="price_l">
    <property name="geometry">
     <rect>
-     <x>530</x>
-     <y>770</y>
+     <x>590</x>
+     <y>630</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -55,8 +55,8 @@
   <widget class="QLabel" name="volume_per_tick">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>890</y>
+     <x>210</x>
+     <y>1420</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -68,8 +68,8 @@
   <widget class="QLabel" name="target_volume_l">
    <property name="geometry">
     <rect>
-     <x>530</x>
-     <y>650</y>
+     <x>590</x>
+     <y>570</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -97,7 +97,7 @@
      <x>40</x>
      <y>500</y>
      <width>141</width>
-     <height>91</height>
+     <height>51</height>
     </rect>
    </property>
    <property name="text">
@@ -107,10 +107,10 @@
   <widget class="QPushButton" name="priceButton_l">
    <property name="geometry">
     <rect>
-     <x>370</x>
-     <y>740</y>
+     <x>440</x>
+     <y>620</y>
      <width>141</width>
-     <height>91</height>
+     <height>51</height>
     </rect>
    </property>
    <property name="text">
@@ -120,10 +120,10 @@
   <widget class="QPushButton" name="target_volumeButton_l">
    <property name="geometry">
     <rect>
-     <x>370</x>
-     <y>620</y>
+     <x>440</x>
+     <y>560</y>
      <width>141</width>
-     <height>91</height>
+     <height>51</height>
     </rect>
    </property>
    <property name="text">
@@ -134,8 +134,8 @@
   <widget class="QPushButton" name="vol_per_tickButton">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>860</y>
+     <x>50</x>
+     <y>1390</y>
      <width>141</width>
      <height>91</height>
     </rect>
@@ -147,8 +147,8 @@
   <widget class="QLabel" name="price_s">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>770</y>
+     <x>190</x>
+     <y>630</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -161,9 +161,9 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>740</y>
+     <y>620</y>
      <width>141</width>
-     <height>91</height>
+     <height>51</height>
     </rect>
    </property>
    <property name="text">
@@ -174,9 +174,9 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>620</y>
+     <y>560</y>
      <width>141</width>
-     <height>91</height>
+     <height>51</height>
     </rect>
    </property>
    <property name="text">
@@ -187,8 +187,8 @@
   <widget class="QLabel" name="target_volume_s">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>650</y>
+     <x>190</x>
+     <y>570</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -213,8 +213,8 @@
   <widget class="QLabel" name="refillLabel">
    <property name="geometry">
     <rect>
-     <x>646</x>
-     <y>380</y>
+     <x>616</x>
+     <y>410</y>
      <width>1031</width>
      <height>101</height>
     </rect>
@@ -263,9 +263,9 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>980</y>
+     <y>680</y>
      <width>141</width>
-     <height>91</height>
+     <height>51</height>
     </rect>
    </property>
    <property name="text">
@@ -275,8 +275,8 @@
   <widget class="QLabel" name="full_volume">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>1010</y>
+     <x>190</x>
+     <y>690</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -288,10 +288,10 @@
   <widget class="QPushButton" name="dispensedButton">
    <property name="geometry">
     <rect>
-     <x>470</x>
-     <y>360</y>
+     <x>440</x>
+     <y>340</y>
      <width>141</width>
-     <height>91</height>
+     <height>51</height>
     </rect>
    </property>
    <property name="text">
@@ -302,10 +302,10 @@ Last Restock:</string>
   <widget class="QPushButton" name="remainingButton">
    <property name="geometry">
     <rect>
-     <x>470</x>
-     <y>250</y>
+     <x>440</x>
+     <y>280</y>
      <width>141</width>
-     <height>91</height>
+     <height>51</height>
     </rect>
    </property>
    <property name="text">
@@ -315,8 +315,8 @@ Last Restock:</string>
   <widget class="QLabel" name="total_dispensed">
    <property name="geometry">
     <rect>
-     <x>630</x>
-     <y>390</y>
+     <x>590</x>
+     <y>350</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -328,8 +328,8 @@ Last Restock:</string>
   <widget class="QLabel" name="remainingLabel">
    <property name="geometry">
     <rect>
-     <x>630</x>
-     <y>280</y>
+     <x>590</x>
+     <y>290</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -341,10 +341,10 @@ Last Restock:</string>
   <widget class="QPushButton" name="lastRefillButton">
    <property name="geometry">
     <rect>
-     <x>750</x>
-     <y>290</y>
+     <x>440</x>
+     <y>400</y>
      <width>141</width>
-     <height>91</height>
+     <height>51</height>
     </rect>
    </property>
    <property name="text">
@@ -354,8 +354,8 @@ Last Restock:</string>
   <widget class="QLabel" name="lastRefillLabel">
    <property name="geometry">
     <rect>
-     <x>910</x>
-     <y>320</y>
+     <x>590</x>
+     <y>410</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -393,8 +393,8 @@ Last Restock:</string>
   <widget class="QLabel" name="pwmLabel">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>1130</y>
+     <x>210</x>
+     <y>1530</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -406,40 +406,14 @@ Last Restock:</string>
   <widget class="QPushButton" name="pwmButton">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>1100</y>
+     <x>50</x>
+     <y>1500</y>
      <width>141</width>
      <height>91</height>
     </rect>
    </property>
    <property name="text">
     <string>PWM:</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="bufferButton">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>1220</y>
-     <width>141</width>
-     <height>91</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Buffer:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="bufferLabel">
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>1250</y>
-     <width>721</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Buffer</string>
    </property>
   </widget>
   <widget class="QWidget" name="numberEntry" native="true">
@@ -683,6 +657,51 @@ Last Restock:</string>
      <string/>
     </property>
    </widget>
+  </widget>
+  <widget class="QPushButton" name="pumpButton">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>920</y>
+     <width>191</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Activate Pump</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="pumpLabel">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>1130</y>
+     <width>191</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="text">
+    <string>Pump ON/OFF</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="vol_dispensed_label">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>1010</y>
+     <width>131</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>vol. dispensed</string>
+   </property>
   </widget>
  </widget>
  <resources/>

@@ -69,8 +69,9 @@ public:
 
         double m_nVolumeDispensedPreviously;
         double m_nVolumeTarget;
-        double m_nVolumeTarget_l;  //how much to dispense
-        double m_nVolumeTarget_s;  //how much to dispense
+        double m_nVolumeTarget_l;  //how much to dispense (large)
+        double m_nVolumeTarget_s;  //how much to dispense (small)
+        double m_nVolumeTarget_t = 10000000;  //test dispense (infinite)
         double m_nVolumeDispensed; //how much has been dispensed in this sale
         double m_price;
         double m_price_l;

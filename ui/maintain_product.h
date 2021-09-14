@@ -62,7 +62,7 @@ private slots:
     void on_lastRefillButton_clicked();
     void on_temperatureButton_clicked();
     void on_pwmButton_clicked();
-    void on_bufferButton_clicked();
+    void on_pumpButton_clicked();
 
     void on_button1_clicked();
     void on_button2_clicked();

@@ -105,6 +105,7 @@ int main(int argc, char *argv[])
     QObject::connect(&dfUiServer, &DfUiServer::updateVolume, dispensingPage, &dispensePage::updateVolumeDisplayed);
     QObject::connect(&dfUiServer, &DfUiServer::targetHit, dispensingPage, &dispensePage::targetHitDisplay);
     QObject::connect(&dfUiServer, &DfUiServer::initReady, initPage, &init::initReadySlot);
+    QObject::connect(&dfUiServer, &DfUiServer::updateVolume, maintainPage, &maintain_product::updateVolumeDisplayed);
 
 
     //Update Click DB

@@ -232,7 +232,8 @@ double drink::getTargetVolume(char size){
     }
     else if (size == 's'){
         return m_nVolumeTarget_s;
-    }
+    }else if (size == 't')
+        return m_nVolumeTarget_t;
 
 }
 

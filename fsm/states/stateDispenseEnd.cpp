@@ -124,18 +124,20 @@ DF_ERROR stateDispenseEnd::onExit()
        cassettes[pos].cleanNozzle(WATER, AIR);
    }
 
-   updateDB();
-   sendDB();
-   //QRgen();
+   if (size != TEST_CHAR){
+       updateDB();
+       sendDB();
+       //QRgen();
+
+       if (paymentMethod == "barcode" || paymentMethod == "plu"){
+           debugOutput::sendMessage("Printing receipt", INFO);
+           printer();
+       }
+   }
 
    m_pMessaging->clearProcessString();
    m_pMessaging->clearCommandString();
    m_pMessaging->clearcCommand();
-
-   if (paymentMethod == "barcode" || paymentMethod == "plu"){
-       debugOutput::sendMessage("Printing receipt", INFO);
-       printer();
-   }
 
    cassettes[pos].getDrink()->stopDispense();
    cassettes[pos].stopDispense(DRINK);
@@ -152,8 +154,6 @@ DF_ERROR stateDispenseEnd::onExit()
    // TODO: Does not seem to advance to Idle again...
    m_state = DISPENSE_END;
    m_nextState = IDLE; //go back for now
-
-
 
    return e_ret;
 }

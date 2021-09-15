@@ -60,6 +60,8 @@ void maintain_product::showEvent(QShowEvent *event)
         ui->soldOutButton->setText("Un-Mark as Sold Out");
     }
 
+    ticks = db.getProductVolumePerTick(checkOption);
+
     ui->name->setText(db.getProductName(checkOption));
     ui->price_s->setText("$"+QString::number(db.getProductPrice(checkOption, 's')));
     ui->price_l->setText("$"+QString::number(db.getProductPrice(checkOption, 'l')));
@@ -71,7 +73,8 @@ void maintain_product::showEvent(QShowEvent *event)
     ui->remainingLabel->setText(QString::number(db.getRemaining(checkOption)) + "ml");
     ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
     ui->pwmLabel->setText(QString::number(db.getPWM(checkOption)) + "%");
-    ui->vol_dispensed_label->setText("");
+    ui->vol_dispensed_label->setText("Volume Dispensed: 0ml");
+    ui->ticksLabel->setText("Ticks: 0");
     // ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
 //    ui->temperatureLabel->setText("");
     ui->numberEntry->hide();
@@ -108,6 +111,8 @@ void maintain_product::setPage(maintenancePage* pageMaintenance, idle* pageIdle)
     ui->remainingLabel->setText("");
     ui->total_dispensed->setText("");
     ui->lastRefillLabel->setText("");
+    ui->testLargeButton->setVisible(false);
+    ui->testSmallButton->setVisible(false);
 
 }
 
@@ -231,6 +236,8 @@ void maintain_product::resizeEvent(QResizeEvent *event){
         qDebug() << "out of range" << endl;
     }
 
+    ticks = db.getProductVolumePerTick(checkOption);
+
     //setValues(checkOption);
     ui->name->setText(db.getProductName(checkOption));
     ui->price_s->setText("$"+QString::number(db.getProductPrice(checkOption, 's')));
@@ -244,7 +251,8 @@ void maintain_product::resizeEvent(QResizeEvent *event){
     ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
     ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
     ui->pwmLabel->setText(QString::number(db.getPWM(checkOption)) + "%");
-    ui->vol_dispensed_label->setText("");
+    ui->vol_dispensed_label->setText("Volume Dispensed: 0ml");
+    ui->ticksLabel->setText("Ticks: 0");
 
 //    ui->temperatureLabel->setText("");
 
@@ -304,6 +312,7 @@ void maintain_product::on_pumpButton_clicked(){
                 command.append("t");
 
                 ui->vol_dispensed_label->setText("Volume Dispensed: 0ml");
+                ui->ticksLabel->setText("Ticks: 0");
 
                 this->idlePage->dfUtility->msg = command;
                 idlePage->dfUtility->m_IsSendingFSM = true;
@@ -329,6 +338,74 @@ void maintain_product::on_pumpButton_clicked(){
             }
         }
 }
+
+//void maintain_product::on_testSmallButton_clicked(){
+//    int checkOption = idlePage->userDrinkOrder->getOption();
+//    if(checkOption > 0 && checkOption <= 9) {
+//        QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
+//        if (!pumping){
+//            command.append("s");
+
+//            ui->vol_dispensed_label->setText("Volume Dispensed: 0ml");
+
+//            this->idlePage->dfUtility->msg = command;
+//            idlePage->dfUtility->m_IsSendingFSM = true;
+//            idlePage->dfUtility->m_fsmMsg = SEND_DRINK;
+//            idlePage->dfUtility->send_to_FSM();
+//            idlePage->dfUtility->m_IsSendingFSM = false;
+
+//            pumping = true;
+//            ui->pumpLabel->setText("ON");
+//        }
+//        else {
+//            pumping = false;
+//            ui->pumpLabel->setText("OFF");
+//            //ui->vol_dispensed_label->setText("");
+//            command = QString::number(this->idlePage->userDrinkOrder->getOption());
+//            command.append("s");
+
+//            this->idlePage->dfUtility->msg = command;
+//            idlePage->dfUtility->m_IsSendingFSM = true;
+//            idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
+//            idlePage->dfUtility->send_to_FSM();
+//            idlePage->dfUtility->m_IsSendingFSM = false;
+//        }
+//    }
+//}
+
+//void maintain_product::on_testLargeButton_clicked(){
+//    int checkOption = idlePage->userDrinkOrder->getOption();
+//    if(checkOption > 0 && checkOption <= 9) {
+//        QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
+//        if (!pumping){
+//            command.append("l");
+
+//            ui->vol_dispensed_label->setText("Volume Dispensed: 0ml");
+
+//            this->idlePage->dfUtility->msg = command;
+//            idlePage->dfUtility->m_IsSendingFSM = true;
+//            idlePage->dfUtility->m_fsmMsg = SEND_DRINK;
+//            idlePage->dfUtility->send_to_FSM();
+//            idlePage->dfUtility->m_IsSendingFSM = false;
+
+//            pumping = true;
+//            ui->pumpLabel->setText("ON");
+//        }
+//        else {
+//            pumping = false;
+//            ui->pumpLabel->setText("OFF");
+//            //ui->vol_dispensed_label->setText("");
+//            command = QString::number(this->idlePage->userDrinkOrder->getOption());
+//            command.append("l");
+
+//            this->idlePage->dfUtility->msg = command;
+//            idlePage->dfUtility->m_IsSendingFSM = true;
+//            idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
+//            idlePage->dfUtility->send_to_FSM();
+//            idlePage->dfUtility->m_IsSendingFSM = false;
+//        }
+//    }
+//}
 
 void maintain_product::on_nameButton_clicked(){
     qDebug() << "Name button clicked" << endl;
@@ -400,13 +477,11 @@ void maintain_product::on_vol_per_tickButton_clicked(){
 //    ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(idlePage->userDrinkOrder->getOption())) + "ml");
 }
 
-void maintain_product::updateVolumeDisplayed(int dispensed){
-    int vol_dispensed = dispensed;
+void maintain_product::updateVolumeDisplayed(double dispensed){
+    double vol_dispensed = dispensed;
     ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) + "ml");
 
-//    double ticks = ui->volume_per_tick->text();
-
-//    ui->ticksLabel->setText("Ticks: " + QString::number(vol_dispensed/ticks));
+    ui->ticksLabel->setText("Ticks: " + QString::number(vol_dispensed/ticks));
 }
 
 void maintain_product::targetHitDisplay(){
@@ -730,6 +805,7 @@ void maintain_product::updateValues(){
     }else if(vol_per_tick){
         db.updateVolumePerTick(checkOption, text_entered.toDouble());
         ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(checkOption)) + "ml");
+        ticks = db.getProductVolumePerTick(checkOption);
 
     }else if(full){
         db.updateFullVolume(checkOption, text_entered.toDouble());

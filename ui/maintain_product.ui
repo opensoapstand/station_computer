@@ -668,7 +668,8 @@ Last Restock:</string>
     </rect>
    </property>
    <property name="text">
-    <string>Activate Pump</string>
+    <string>Activate Pump
+(No limit)</string>
    </property>
   </widget>
   <widget class="QLabel" name="pumpLabel">
@@ -695,7 +696,7 @@ Last Restock:</string>
     <rect>
      <x>240</x>
      <y>1010</y>
-     <width>131</width>
+     <width>431</width>
      <height>17</height>
     </rect>
    </property>
@@ -703,17 +704,43 @@ Last Restock:</string>
     <string>vol. dispensed</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="ticksLabel">
    <property name="geometry">
     <rect>
      <x>240</x>
      <y>960</y>
-     <width>67</width>
+     <width>391</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
     <string>Ticks</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="testSmallButton">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>820</y>
+     <width>90</width>
+     <height>90</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Test Small</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="testLargeButton">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>820</y>
+     <width>90</width>
+     <height>90</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Test Large</string>
    </property>
   </widget>
  </widget>

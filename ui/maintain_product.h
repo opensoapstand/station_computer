@@ -41,7 +41,7 @@ public:
     void setPage(maintenancePage* pageMaintenance, idle* pageIdle);
     ~maintain_product();
     void resizeEvent(QResizeEvent *event);
-    void updateVolumeDisplayed(int dispensed);
+    void updateVolumeDisplayed(double dispensed);
     void targetHitDisplay();
 
 private slots:
@@ -63,6 +63,8 @@ private slots:
     void on_temperatureButton_clicked();
     void on_pwmButton_clicked();
     void on_pumpButton_clicked();
+//    void on_testSmallButton_clicked();
+//    void on_testLargeButton_clicked();
 
     void on_button1_clicked();
     void on_button2_clicked();
@@ -100,6 +102,8 @@ private:
     bool full;
     bool pwm;
     bool buffer;
+
+    double ticks;
 
     void updateValues();
 };

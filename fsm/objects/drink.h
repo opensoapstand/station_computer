@@ -25,6 +25,8 @@
 
 #include <sqlite3.h> 
 
+#define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
+
 using namespace std;
 
 class drink
@@ -38,8 +40,8 @@ public:
 	//getter
 	int getDrinkOption(){return m_nSlot;} // For IPC
 	bool getIsStillDrink(); // For pump check
-        int getVolumeDispensed(){return m_nVolumeDispensed;}
-        int getVolumeDispensedPreviously();
+        double getVolumeDispensed(){return m_nVolumeDispensed;}
+        double getVolumeDispensedPreviously();
         double getTargetVolume(char size);
         double getPrice(char size);
         string getPLU(char size);
@@ -53,7 +55,7 @@ public:
 
         DF_ERROR initDispense();
 
-	int getVolumeSinceLastPoll();
+        double getVolumeSinceLastPoll();
 	bool isDispenseComplete();
 	bool registerFlowSensorTick();
 
@@ -107,6 +109,10 @@ private:
 	void setSlot(int slot);
 	void setDrinkName(string drinkName);
 	void setIsStillDrink(bool isStillDrink);
+        double getVolPerTick();
+
+        sqlite3 *db;
+        int rc;
 
 	//last filled as date
 	//best before as date

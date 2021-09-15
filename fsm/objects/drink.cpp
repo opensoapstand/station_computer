@@ -146,7 +146,7 @@ void drink::refill(int volume)
     // TODO: SQLite database Update.
 }
 
-int drink::getVolumeSinceLastPoll()
+double drink::getVolumeSinceLastPoll()
 {
     int temp = m_nVolumeDispensedSinceLastPoll;
 
@@ -155,7 +155,7 @@ int drink::getVolumeSinceLastPoll()
     return temp;
 }
 
-int drink::getVolumeDispensedPreviously()
+double drink::getVolumeDispensedPreviously()
 {
     return m_nVolumeDispensedPreviously;
 }
@@ -170,8 +170,37 @@ DF_ERROR drink::startDispense(int nVolumeToDispense, double nPrice)
     m_nVolumeDispensed = 0;
     m_nVolumeDispensedPreviously = 0;
     m_nVolumeDispensedSinceLastPoll = 0;
+    m_nVolumePerTick = getVolPerTick();
 
     return dfRet;
+}
+
+double drink::getVolPerTick(){
+
+    rc = sqlite3_open(DB_PATH, &db);
+
+    sqlite3_stmt * stmt;
+
+    //debugOutput::sendMessage("Machine ID getter START", INFO);
+
+    if( rc ) {
+       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+       // TODO: Error handling here...
+    } else {
+       fprintf(stderr, "Opened database successfully\n");
+    }
+
+    string sql_string = "SELECT volume_per_tick FROM products WHERE slot="+ to_string(m_nSlot) +";";
+     /* Create SQL statement for transactions */
+     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+     sqlite3_step(stmt);
+     std::string str = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0)));;
+     double vol_per_tick = stod(str);
+     sqlite3_finalize(stmt);
+     sqlite3_close(db);
+//     cout << str << endl;
+     return vol_per_tick;
+
 }
 
 DF_ERROR drink::initDispense()

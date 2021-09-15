@@ -20,7 +20,7 @@ signals:
     void error(QTcpSocket::SocketError socketerror);
     void resetTimerSignal(void);
     void targetHitSignal(void);
-    void updateVolumeSignal(int dispensed);
+    void updateVolumeSignal(double dispensed);
     void initReadySignal(void);
 
 public slots:
@@ -31,6 +31,7 @@ private:
     QTcpSocket *socket;
     qintptr socketDescriptor;
     char * pEnd;
+    size_t sz;
 };
 
 #endif // DFUICOMMTHREAD_H

@@ -171,8 +171,35 @@ DF_ERROR drink::startDispense(int nVolumeToDispense, double nPrice)
     m_nVolumeDispensedPreviously = 0;
     m_nVolumeDispensedSinceLastPoll = 0;
     m_nVolumePerTick = getVolPerTick();
+    m_PWM = getPWM();
 
     return dfRet;
+}
+
+int drink::getPWM(){
+    rc = sqlite3_open(DB_PATH, &db);
+
+    sqlite3_stmt * stmt;
+
+    //debugOutput::sendMessage("Machine ID getter START", INFO);
+
+    if( rc ) {
+       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+       // TODO: Error handling here...
+    } else {
+       fprintf(stderr, "Opened database successfully\n");
+    }
+
+    string sql_string = "SELECT pwm FROM products WHERE slot="+ to_string(m_nSlot) +";";
+     /* Create SQL statement for transactions */
+     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+     sqlite3_step(stmt);
+     std::string str = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0)));;
+     int pwm = stod(str);
+     sqlite3_finalize(stmt);
+     sqlite3_close(db);
+//     cout << str << endl;
+     return pwm;
 }
 
 double drink::getVolPerTick(){

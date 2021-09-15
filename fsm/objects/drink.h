@@ -83,6 +83,7 @@ public:
         string m_nPLU_l;
         string m_nPLU_s;
         string m_paymentMethod;
+        int m_PWM;
 
         time_t rawtime;
         struct tm * timeinfo;
@@ -110,6 +111,7 @@ private:
 	void setDrinkName(string drinkName);
 	void setIsStillDrink(bool isStillDrink);
         double getVolPerTick();
+        int getPWM();
 
         sqlite3 *db;
         int rc;

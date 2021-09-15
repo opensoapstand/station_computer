@@ -55,8 +55,8 @@
   <widget class="QLabel" name="volume_per_tick">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>1420</y>
+     <x>630</x>
+     <y>950</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -134,8 +134,8 @@
   <widget class="QPushButton" name="vol_per_tickButton">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>1390</y>
+     <x>470</x>
+     <y>920</y>
      <width>141</width>
      <height>91</height>
     </rect>
@@ -393,8 +393,8 @@ Last Restock:</string>
   <widget class="QLabel" name="pwmLabel">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>1530</y>
+     <x>630</x>
+     <y>1060</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -406,8 +406,8 @@ Last Restock:</string>
   <widget class="QPushButton" name="pwmButton">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>1500</y>
+     <x>470</x>
+     <y>1030</y>
      <width>141</width>
      <height>91</height>
     </rect>
@@ -419,8 +419,8 @@ Last Restock:</string>
   <widget class="QWidget" name="numberEntry" native="true">
    <property name="geometry">
     <rect>
-     <x>440</x>
-     <y>1050</y>
+     <x>680</x>
+     <y>1090</y>
      <width>381</width>
      <height>641</height>
     </rect>
@@ -668,8 +668,7 @@ Last Restock:</string>
     </rect>
    </property>
    <property name="text">
-    <string>Activate Pump
-(No limit)</string>
+    <string>Activate Pump</string>
    </property>
   </widget>
   <widget class="QLabel" name="pumpLabel">
@@ -695,7 +694,7 @@ Last Restock:</string>
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>1010</y>
+     <y>1030</y>
      <width>431</width>
      <height>17</height>
     </rect>
@@ -708,7 +707,7 @@ Last Restock:</string>
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>960</y>
+     <y>980</y>
      <width>391</width>
      <height>17</height>
     </rect>

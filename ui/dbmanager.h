@@ -29,6 +29,7 @@ public:
     int getPWM(int slot);
     double getBuffer(int slot);
     QString getPLU(int slot, char size);
+    QString getMachineID();
 
     bool updatePaymentsDb(QString date, QString time, QString txnType, QString amount, QString cardNo, QString refNo, QString authNo, QString cardType, QString status, QString isoCode, QString hostCode, QString tvr);
     bool updatePrice_s(int slot, double new_price);

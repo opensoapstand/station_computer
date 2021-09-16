@@ -664,3 +664,18 @@ bool DbManager::updatePLU_l(int slot, QString new_plu){
         return false;
     }
 }
+
+QString DbManager::getMachineID(){
+    QSqlQuery mid_query;
+    QString mid_string;
+
+    mid_query.prepare("SELECT machine_id FROM machine");
+    mid_query.exec();
+
+    while (mid_query.next()) {
+            mid_string = mid_query.value(0).toString();
+        }
+
+    return mid_string;
+
+}

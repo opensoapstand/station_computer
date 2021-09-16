@@ -425,7 +425,7 @@ void payPage::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
 
-    //DbManager db(DB_PATH);
+    DbManager db(DB_PATH);
 
     int checkOption = idlePage->userDrinkOrder->getOption();
     char drinkSize;
@@ -500,6 +500,7 @@ void payPage::showEvent(QShowEvent *event)
 //    ui->qrCode->setPixmap(map);
 
     QString qrdata_amount = QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2);
+//    QString machine_id = db.getMachineID();
     QString qrdata = "https://drinkfill.herokuapp.com/frontend?amount="+qrdata_amount;
 
     paintQR(painter, QSize(400,400), qrdata, QColor("white"));

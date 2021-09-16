@@ -502,7 +502,7 @@ void payPage::showEvent(QShowEvent *event)
     QString qrdata_amount = QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2);
     QString machine_id = db.getMachineID();
     QString product_id = db.getProductID(checkOption);
-    QString qrdata = "https://drinkfill.herokuapp.com/frontend?mid="+machine_id+",pid="+product_id+",size="+drinkSize;
+    QString qrdata = "https://drinkfill.herokuapp.com/frontend?mid="+machine_id+"&pid="+product_id+"&size="+drinkSize;
 
     paintQR(painter, QSize(400,400), qrdata, QColor("white"));
     ui->qrCode->setPixmap(map);

@@ -134,6 +134,9 @@ void maintain_product::setPage(maintenancePage* pageMaintenance, idle* pageIdle)
     ui->testLargeButton->setVisible(false);
     ui->testSmallButton->setVisible(false);
 
+    ui->temperatureButton->setVisible(false);
+    ui->temperatureLabel->setVisible(false);
+
 }
 
 void maintain_product::on_backButton_clicked(){
@@ -542,6 +545,7 @@ void maintain_product::on_refillButton_clicked(){
             if(db.refill(this->idlePage->userDrinkOrder->getOption())){
                 qDebug() << "REFILLED!" << endl;
                 ui->refillLabel->setText("Refill Succesfull");
+                ui->soldOutLabel->setText("");
                 //Update Click DB
                 DbManager db(DB_PATH);
                 db.addPageClick("PRODUCT REFILLED");
@@ -552,6 +556,7 @@ void maintain_product::on_refillButton_clicked(){
             }
             else{
                 ui->refillLabel->setText("Refill ERROR");
+                ui->soldOutLabel->setText("");
                 break;
             }
 
@@ -586,6 +591,7 @@ void maintain_product::on_soldOutButton_clicked(){
             if(db.sellout(this->idlePage->userDrinkOrder->getOption())){
                 qDebug() << "SOLD OUT!" << endl;
                 ui->soldOutLabel->setText("Sold Out Succesfull");
+                ui->refillLabel->setText("");
                 //Update Click DB
                 DbManager db(DB_PATH);
                 db.addPageClick("PRODUCT SOLD OUT");
@@ -596,6 +602,7 @@ void maintain_product::on_soldOutButton_clicked(){
             }
             else{
                 ui->soldOutLabel->setText("Sold Out ERROR");
+                ui->refillLabel->setText("");
                 break;
             }
 
@@ -622,6 +629,7 @@ void maintain_product::on_soldOutButton_clicked(){
             if(db.unsellout(this->idlePage->userDrinkOrder->getOption())){
                 qDebug() << "UN-SOLD OUT!" << endl;
                 ui->soldOutLabel->setText("Un-Sold Out Succesfull");
+                ui->refillLabel->setText("");
                 //Update Click DB
                 DbManager db(DB_PATH);
                 db.addPageClick("PRODUCT UN-SOLD OUT");
@@ -632,6 +640,7 @@ void maintain_product::on_soldOutButton_clicked(){
             }
             else{
                 ui->soldOutLabel->setText("Un-Sold Out ERROR");
+                ui->refillLabel->setText("");
                 break;
             }
 

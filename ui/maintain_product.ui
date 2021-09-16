@@ -213,19 +213,22 @@
   <widget class="QLabel" name="refillLabel">
    <property name="geometry">
     <rect>
-     <x>616</x>
-     <y>410</y>
-     <width>1031</width>
-     <height>101</height>
+     <x>770</x>
+     <y>250</y>
+     <width>211</width>
+     <height>131</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>24</pointsize>
+     <pointsize>20</pointsize>
     </font>
    </property>
    <property name="text">
     <string/>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QPushButton" name="soldOutButton">
@@ -244,19 +247,22 @@
   <widget class="QLabel" name="soldOutLabel">
    <property name="geometry">
     <rect>
-     <x>640</x>
-     <y>1090</y>
-     <width>911</width>
+     <x>760</x>
+     <y>250</y>
+     <width>231</width>
      <height>141</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>24</pointsize>
+     <pointsize>20</pointsize>
     </font>
    </property>
    <property name="text">
     <string/>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QPushButton" name="fullButton">

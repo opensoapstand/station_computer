@@ -679,3 +679,20 @@ QString DbManager::getMachineID(){
     return mid_string;
 
 }
+
+QString DbManager::getProductID(int slot){
+    QSqlQuery product_id_query;
+    QString product_id_string;
+
+    product_id_query.prepare("SELECT product_id FROM products WHERE slot=:slot");
+    product_id_query.bindValue(":slot", slot);
+    product_id_query.exec();
+
+    while (product_id_query.next()) {
+            product_id_string = product_id_query.value(0).toString();
+
+            //qDebug() << "Product: " << product_name << endl;
+        }
+
+    return product_id_string;
+}

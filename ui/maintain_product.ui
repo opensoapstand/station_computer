@@ -263,7 +263,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>680</y>
+     <y>740</y>
      <width>141</width>
      <height>51</height>
     </rect>
@@ -276,7 +276,7 @@
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>690</y>
+     <y>750</y>
      <width>721</width>
      <height>31</height>
     </rect>
@@ -740,6 +740,58 @@ Last Restock:</string>
    </property>
    <property name="text">
     <string>Test Large</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pluButton_s">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>680</y>
+     <width>141</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Small PLU</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="pluLabel_s">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>690</y>
+     <width>241</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Small PLU</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pluButton_l">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>680</y>
+     <width>141</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Large PLU</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="pluLabel_l">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>690</y>
+     <width>241</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Large PLU</string>
    </property>
   </widget>
  </widget>

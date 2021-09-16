@@ -65,6 +65,7 @@ private slots:
     void on_pumpButton_clicked();
 //    void on_testSmallButton_clicked();
 //    void on_testLargeButton_clicked();
+//    void on_pluButton_clicked();
 
     void on_button1_clicked();
     void on_button2_clicked();
@@ -102,6 +103,8 @@ private:
     bool full;
     bool pwm;
     bool buffer;
+//    bool plu_s;
+//    bool plu_l;
 
     double ticks;
 

@@ -75,6 +75,8 @@ void maintain_product::showEvent(QShowEvent *event)
     ui->pwmLabel->setText(QString::number(db.getPWM(checkOption)) + "%");
     ui->vol_dispensed_label->setText("Volume Dispensed: 0ml");
     ui->ticksLabel->setText("Ticks: 0");
+    ui->pluLabel_s->setText(db.getPLU(checkOption, 's'));
+    ui->pluLabel_l->setText(db.getPLU(checkOption, 'l'));
     // ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
 //    ui->temperatureLabel->setText("");
     ui->numberEntry->hide();
@@ -88,6 +90,24 @@ void maintain_product::showEvent(QShowEvent *event)
     vol_per_tick = false;
     full = false;
     pwm = false;
+//    plu_s = false;
+//    plu_l = false;
+
+    if(db.getPaymentMethod(checkOption)=="plu" || db.getPaymentMethod(checkOption)=="barcode"){
+        ui->pluButton_s->setVisible(true);
+        ui->pluLabel_s->setVisible(true);
+        ui->pluButton_s->setEnabled(true);
+        ui->pluButton_l->setVisible(true);
+        ui->pluLabel_l->setVisible(true);
+        ui->pluButton_l->setEnabled(true);
+    }else{
+        ui->pluButton_s->setVisible(false);
+        ui->pluLabel_s->setVisible(false);
+        ui->pluButton_s->setEnabled(false);
+        ui->pluButton_l->setVisible(false);
+        ui->pluLabel_l->setVisible(false);
+        ui->pluButton_l->setEnabled(false);
+    }
 
 }
 
@@ -253,6 +273,8 @@ void maintain_product::resizeEvent(QResizeEvent *event){
     ui->pwmLabel->setText(QString::number(db.getPWM(checkOption)) + "%");
     ui->vol_dispensed_label->setText("Volume Dispensed: 0ml");
     ui->ticksLabel->setText("Ticks: 0");
+    ui->pluLabel_s->setText(db.getPLU(checkOption, 's'));
+    ui->pluLabel_l->setText(db.getPLU(checkOption, 'l'));
 
 //    ui->temperatureLabel->setText("");
 
@@ -267,6 +289,16 @@ void maintain_product::resizeEvent(QResizeEvent *event){
 
     ui->image->setIcon(ButtonIcon);
     ui->image->setIconSize(QSize(271,391));
+
+//    if(db.getPaymentMethod(checkOption)=="plu" || db.getPaymentMethod(checkOption)=="barcode"){
+//        ui->pluButton->setVisible(true);
+//        ui->pluLabel->setVisible(true);
+//        ui->pluButton->setEnabled(true);
+//    }else{
+//        ui->pluButton->setVisible(false);
+//        ui->pluLabel->setVisible(false);
+//        ui->pluButton->setEnabled(false);
+//    }
 
 }
 
@@ -692,6 +724,32 @@ void maintain_product::on_pwmButton_clicked(){
 //    ui->pwmLabel->setText(QString::number(db.getPWM(idlePage->userDrinkOrder->getOption())) + "%");
 }
 
+//void maintain_product::on_pluButton_s_clicked(){
+//    qDebug() << "PLU Button clicked" << endl;
+//    plu_s=true;
+//    _maintainProductPageTimeoutSec=40;
+//    DbManager db(DB_PATH);
+//    ui->numberEntry->show();
+//    ui->textEntry->setText("");
+//    ui->titleLabel->setText("New PLU/Barcode:");
+//    ui->buttonPoint->hide();
+//    ui->pluLabel->setText(QString::number(db.getPLU(idlePage->userDrinkOrder->getOption())));
+
+//}
+
+//void maintain_product::on_pluButton_l_clicked(){
+//    qDebug() << "PLU Button clicked" << endl;
+//    plu_l=true;
+//    _maintainProductPageTimeoutSec=40;
+//    DbManager db(DB_PATH);
+//    ui->numberEntry->show();
+//    ui->textEntry->setText("");
+//    ui->titleLabel->setText("New PLU/Barcode:");
+//    ui->buttonPoint->hide();
+//    ui->pluLabel->setText(QString::number(db.getPLU(idlePage->userDrinkOrder->getOption())));
+
+//}
+
 void maintain_product::on_button1_clicked(){
     ui->textEntry->setText(ui->textEntry->text()+"1");
 
@@ -781,6 +839,8 @@ void maintain_product::on_buttonCancel_clicked(){
     vol_per_tick = false;
     full = false;
     pwm = false;
+//    plu_s=false;
+//    plu_l=false;
 }
 
 void maintain_product::updateValues(){
@@ -815,6 +875,11 @@ void maintain_product::updateValues(){
         db.updatePWM(checkOption, text_entered.toInt());
         ui->pwmLabel->setText(QString::number(db.getPWM(checkOption)) + "%");
     }
+//    else if(plu_s){
+//        db.updatePLU_s(checkOption, text_entered);
+//    }else if(plu_l){
+//        db.updatePLU_l(checkOption, text_entered);
+//    }
 
 
 
@@ -825,6 +890,9 @@ void maintain_product::updateValues(){
     vol_per_tick = false;
     full = false;
     pwm = false;
+//    plu_s=false;
+//    plu_l=false;
+
     ui->textEntry->setText("");
     ui->titleLabel->setText("");
     ui->errorLabel->setText("");

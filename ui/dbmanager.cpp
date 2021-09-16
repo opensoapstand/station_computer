@@ -611,3 +611,56 @@ bool DbManager::updateBuffer(int slot, double new_buffer){
         return false;
     }
 }
+
+QString DbManager::getPLU(int slot, char size){
+    QSqlQuery plu_query;
+    QString plu_string;
+
+    if (size == 's'){
+        plu_query.prepare("SELECT PLU_s FROM products WHERE slot=:slot");
+    }else if (size == 'l'){
+        plu_query.prepare("SELECT PLU_l FROM products WHERE slot=:slot");
+    }
+    plu_query.bindValue(":slot", slot);
+    plu_query.exec();
+
+    while (plu_query.next()) {
+            plu_string = plu_query.value(0).toString();
+        }
+
+    return plu_string;
+}
+
+bool DbManager::updatePLU_s(int slot, QString new_plu){
+    QSqlQuery plu_query;
+
+    plu_query.prepare("UPDATE products SET PLU_s=:new_plu WHERE slot=:slot");
+    plu_query.bindValue(":new_plu", new_plu);
+    plu_query.bindValue(":slot", slot);
+
+    if(plu_query.exec()){
+        qDebug() << "PLU updated successfully!";
+        return true;
+    }else{
+        qDebug() << "PLU update error: !"
+                 << plu_query.lastError();
+        return false;
+    }
+}
+
+bool DbManager::updatePLU_l(int slot, QString new_plu){
+    QSqlQuery plu_query;
+
+    plu_query.prepare("UPDATE products SET PLU_l=:new_plu WHERE slot=:slot");
+    plu_query.bindValue(":new_plu", new_plu);
+    plu_query.bindValue(":slot", slot);
+
+    if(plu_query.exec()){
+        qDebug() << "PLU updated successfully!";
+        return true;
+    }else{
+        qDebug() << "PLU update error: !"
+                 << plu_query.lastError();
+        return false;
+    }
+}

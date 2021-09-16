@@ -98,9 +98,8 @@ void dispenser::initDispenser(int slot){
 DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
 {
     debugOutput::sendMessage("-----dispenser::setSolenoid-----", INFO);
-    DF_ERROR e_ret = ERROR_BAD_PARAMS; 
    
-    return e_ret = OK;
+    return OK;
 }
 
 // TODO: Call this function on Dispense onEntry()

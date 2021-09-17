@@ -105,9 +105,14 @@ DF_ERROR stateInit::dispenserSetup()
 
     debugOutput::sendMessage("Setting up DS-ED-8344 hardware control board.\n", INFO);
     
+    // We only need one flow sensor interrupt pin since only one pump
+    // is ever active at a time.  The flow sensors are all connected
+    // to the same pin in the hardware.
+    cassettes[idx].setFlowsensor(364, 0);
+
+    // Set up the four pumps
     for (idx=0; idx<4; idx++)
     {
-	cassettes[idx].setFlowsensor(364, 0);
 	cassettes[idx].setPump(0, 0, idx);
     }
 

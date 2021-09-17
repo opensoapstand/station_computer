@@ -108,7 +108,11 @@ DF_ERROR stateInit::dispenserSetup()
     // We only need one flow sensor interrupt pin since only one pump
     // is ever active at a time.  The flow sensors are all connected
     // to the same pin in the hardware.
-    cassettes[idx].setFlowsensor(364, 0);
+#ifndef __arm__
+    cassettes[0].setFlowsensor(364, 0);
+#else
+    cassettes[0].setFlowsensor(17, 0);
+#endif
 
     // Set up the four pumps
     for (idx=0; idx<4; idx++)

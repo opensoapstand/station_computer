@@ -109,6 +109,8 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
 
     // *m_pIsDispensing = false;
 
+    debugOutput::sendMessage("-----dispenser::setFlowsensor-----", INFO);
+
     if(pos == 0)
     {
         // Instantiate, set input, spin up a flowsensor thread.

@@ -13,6 +13,8 @@ fsm/build
 fsm/controller
 sqlite/build
 
+test/test_8344
+
 ### QT Creator ###
 
 /build

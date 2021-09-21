@@ -113,7 +113,7 @@ bool dsed8344::startPump (unsigned char pump_number)
     switch (pump_number)
     {
         case 1:
-	    reg_value = reg_value | 0b00000110;
+	    reg_value = reg_value | 0b00000001;
 	    break;
         case 2:
 	    reg_value = reg_value | 0b00000101;

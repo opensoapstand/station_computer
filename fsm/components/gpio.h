@@ -52,6 +52,7 @@ protected:
 	// Interrupt Function Definition
 	drink* m_pDrink;
 	virtual void monitorGPIO() = 0;
+        virtual void monitorGPIO_PWR() = 0;
 	std::thread * gpioThread;
 };
 

@@ -120,6 +120,13 @@ DF_ERROR stateInit::dispenserSetup()
 	cassettes[idx].setPump(0, 0, idx);
     }
 
+    m_pPWRorMM[0] = new oddyseyx86GPIO(391);
+    m_pPowerOff[0] = new oddyseyx86GPIO(340);
+    m_pMM[0] = new oddyseyx86GPIO(341);
+    m_pPWRorMM[0]->setDirection(true);
+    m_pPowerOff[0]->setDirection(true);
+    m_pMM[0]->setDirection(true);
+
     debugOutput::sendMessage("Hardware initialized...", INFO);
 
     return OK;
@@ -144,7 +151,7 @@ static int callback(void *data, int argc, char **argv, char **azColName){
    string plu_l;
    string plu_s;
 
-   printf("\n----------\n");
+//   printf("\n----------\n");
 
    for(i = 0; i<argc; i++){
       //printf("%s = %s\n", azColName[i], argv[i]);
@@ -153,12 +160,12 @@ static int callback(void *data, int argc, char **argv, char **azColName){
       if (colname == "slot"){
           //printf("setting slot \n");
           slot = atoi(argv[i]);
-          printf("Slot: %d \n", slot);
+//          printf("Slot: %d \n", slot);
       }
       else if (colname == "name"){
           //printf("setting name \n");
           name = argv[i];
-          printf("Name: %s \n", name.c_str());
+//          printf("Name: %s \n", name.c_str());
       }
       else if (colname == "volume_dispensed"){
           //printf("setting vol disp \n");
@@ -168,12 +175,12 @@ static int callback(void *data, int argc, char **argv, char **azColName){
       else if (colname == "volume_target_l"){
           //printf("setting vol tar \n");
           volume_target_l = atof(argv[i]);
-          printf("Volume Target L: %.2f \n", volume_target_l);
+//          printf("Volume Target L: %.2f \n", volume_target_l);
       }
       else if (colname == "volume_target_s"){
           //printf("setting vol tar \n");
           volume_target_s = atof(argv[i]);
-          printf("Volume Target S: %.2f \n", volume_target_s);
+//          printf("Volume Target S: %.2f \n", volume_target_s);
       }
       else if (colname == "calibration_const"){
           //printf("setting cal con \n");
@@ -183,12 +190,12 @@ static int callback(void *data, int argc, char **argv, char **azColName){
       else if (colname == "price_l"){
           //printf("setting price \n");
           price_l = atof(argv[i]);
-          printf("Price L: %.2f \n", price_l);
+//          printf("Price L: %.2f \n", price_l);
       }
       else if (colname == "price_s"){
           //printf("setting price \n");
           price_s = atof(argv[i]);
-          printf("Price S: %.2f \n", price_s);
+//          printf("Price S: %.2f \n", price_s);
       }
       else if (colname == "is_still"){
           //printf("setting is still \n");
@@ -198,22 +205,22 @@ static int callback(void *data, int argc, char **argv, char **azColName){
       else if (colname == "volume_per_tick"){
           //printf("setting vol per tick \n");
           volume_per_tick = atof(argv[i]);
-          printf("Volume per Tick: %.2f \n", volume_per_tick);
+//          printf("Volume per Tick: %.2f \n", volume_per_tick);
       }
       else if (colname == "PLU_l"){
           plu_l = argv[i];
-          printf("PLU L: %s \n", plu_l.c_str());
+//          printf("PLU L: %s \n", plu_l.c_str());
       }
       else if (colname == "PLU_s"){
           plu_s = argv[i];
-          printf("PLU S: %s \n", plu_s.c_str());
+//          printf("PLU S: %s \n", plu_s.c_str());
       }
       else if (colname == "payment"){
           paymentMethod = argv[i];
-          printf("Payment Method: %s \n", paymentMethod.c_str());
+//          printf("Payment Method: %s \n", paymentMethod.c_str());
       }
 
-      printf("\n");
+//      printf("\n");
 
       g_cassettes[slot-1].setDrink(new drink(slot, name, volume_dispensed, volume_target_l, volume_target_s , calibration_const, price_l, price_s, false, volume_per_tick, plu_l, plu_s, paymentMethod));
    }

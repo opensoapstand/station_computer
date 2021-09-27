@@ -41,6 +41,12 @@ oddyseyx86GPIO::oddyseyx86GPIO()
 {
 }
 
+//oddyseyx86GPIO::oddyseyx86GPIO(messageMediator * message)
+//{
+//   //debugOutput::sendMessage("stateDispense(messageMediator * message)", INFO);
+//}
+
+
 /* 
  * CTOR with Pin reference
  * Typically for Initializing sensors directly...Flow Sensors for now.
@@ -320,6 +326,95 @@ void oddyseyx86GPIO::monitorGPIO()
         }
         close(fd);
         return;
+}
+
+void oddyseyx86GPIO::monitorGPIO_PWR()
+{
+//        debugOutput::sendMessage("monitorGPIO", INFO);  //nuke this later it will cause so much spam
+        int fd, len;
+        char buf[MAX_BUF];
+
+        struct pollfd pfd;
+
+        string GPIO = ("391");
+        string command("/sys/class/gpio/gpio");
+        command += GPIO;
+        command += "/edge";
+
+       // set the pin to interrupt
+        fd = open(command.c_str(), O_WRONLY);
+        write(fd, "rising", 4);
+        close(fd);
+
+        command = "/sys/class/gpio/gpio" + GPIO + "/value";
+        fd = open(command.c_str(), O_RDONLY);
+        pfd.fd = fd;
+        pfd.events = POLLPRI | POLLERR;
+
+        lseek(fd, 0, SEEK_SET);
+        int ret = poll(&pfd, 1, 100000);
+        char c;
+        read(fd, &c, 1);
+
+        if (0 == ret)
+        {
+                //debugOutput::sendMessage("gpioTimeout", INFO);
+        }
+        else
+        {
+                if ((c == '1') && (compareChar2 != c))
+                {
+                        debugOutput::sendMessage("Power button pushed", INFO);
+                        usleep(500000);
+                        if (readButtonPin(341)){
+                            debugOutput::sendMessage("POWER OFF\n",INFO);
+                            system("echo 'D@nkF1ll$' | sudo shutdown -h now");
+                        }else if(readButtonPin(340)){
+                            debugOutput::sendMessage("MM\n", INFO);
+                            // ENTER MAINTENANCE MODE!
+                            m_pMessaging->sendMessage("MM");
+                        }else{
+                            debugOutput::sendMessage("Nothing", INFO);
+                        }
+                        usleep(5000);						// Sleep to make sure debug gets chance to print
+
+                }
+
+        }
+        compareChar2 = c;
+        close(fd);
+        return;
+}
+
+bool oddyseyx86GPIO::readButtonPin(int pin)
+{
+
+        int fd, len;
+        char buf[MAX_BUF];
+        char ch;
+        len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", pin);
+
+        fd = open(buf, O_RDONLY);
+        if (fd >= 0)
+        {
+            read(fd, &ch, 1);
+
+            if (ch == '0')
+            {
+
+                close(fd);
+                return true;
+            }
+            else if (ch == '1')
+            {
+
+                close(fd);
+                return false;
+            }
+
+        }
+
+
 }
 
 // Utility

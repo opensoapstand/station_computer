@@ -16,7 +16,7 @@
 #include "dispenser.h"
 
 
-#define I2C_BUS_NAME      "/dev/i2c-1"
+#define I2C_BUS_NAME      "/dev/i2c-4"
 #define DEFAULT_PUMP_PWM  0x80
 
 
@@ -56,6 +56,8 @@ dispenser::dispenser(){
       
     for (int i = 0; i < NUM_PUMP; i++)
         m_pPump[i] = nullptr;
+
+
 }
 
 // CTOR
@@ -73,6 +75,7 @@ dispenser::dispenser(gpio* ButtonReference){
       
     for (int i = 0; i < NUM_PUMP; i++)
         m_pPump[i] = nullptr;
+
 }
 
 // DTOR

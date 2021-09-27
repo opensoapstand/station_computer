@@ -51,6 +51,7 @@ public:
     DfUiCommThread* dfComm;
 
     bool isEnough(int p);
+    void MMSlot();
 
 private slots:
     void on_nextPageButton_clicked();

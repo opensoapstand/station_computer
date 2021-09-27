@@ -22,6 +22,7 @@ signals:
     void targetHitSignal(void);
     void updateVolumeSignal(int dispensed);
     void initReadySignal(void);
+    void MMSignal(void);
 
 public slots:
     QByteArray readyRead();

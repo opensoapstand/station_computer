@@ -10,7 +10,7 @@
 // warnings...
 #ifndef __arm__
 #include "../smbus/smbus.h"
-#endif 
+#endif
 
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>

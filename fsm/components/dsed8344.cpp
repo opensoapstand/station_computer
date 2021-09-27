@@ -155,6 +155,7 @@ unsigned short dsed8344::getPumpTach (void)
 
 bool dsed8344::getButton (void)
 {
+    printf("ReadButton: %u \n", (ReadByte (PCA9534_ADDRESS, 0x00) & 0x80));
     return ((ReadByte (PCA9534_ADDRESS, 0x00) & 0x80) ? false : true);
 }   // End of getButton()
 
@@ -245,7 +246,6 @@ unsigned char dsed8344::ReadByte (unsigned char address, unsigned char reg)
 	return false;
     }
 #endif
-    
     return buffer[1];
 }   // End of ReadByte()
 

@@ -129,3 +129,7 @@ bool idle::isEnough(int p){
             break;
     }
 }
+
+void idle::MMSlot(){
+    qDebug() << "HERE I AM I KNOW I MUIST ENTER MM" << endl;
+}

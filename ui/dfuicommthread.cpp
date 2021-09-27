@@ -67,6 +67,10 @@ QByteArray DfUiCommThread::readyRead()
        emit updateVolumeSignal(strtol(Data, &pEnd, 10));
     }
 
+    if(Data == "MM") {
+        emit MMSignal();
+    }
+
     Data.append(" Recieved");
 
     socket->write(Data);

@@ -14,13 +14,17 @@
 #define _ODDYSEYX86GPIO__H__
 
 #include "gpio.h"
+#include "../objects/messageMediator.h"
 #include <poll.h>
+
+class messageMediator;
 
 class oddyseyx86GPIO : public gpio
 {
 public:
 	oddyseyx86GPIO();
 	oddyseyx86GPIO(int address);
+//        oddyseyx86GPIO(messageMediator * message);
 	~oddyseyx86GPIO();
 
 	//setter
@@ -36,12 +40,18 @@ public:
 
 protected:
 	void monitorGPIO();
+        void monitorGPIO_PWR();
 	string command_to_string(string cmd);
+        messageMediator* m_pMessaging;
 
 private:
 	struct pollfd pfd;
 
 	double tickcounter;
+
+        char compareChar2;
+
+        bool readButtonPin(int pin);
 };
 
 #endif

@@ -45,6 +45,8 @@ void gpio::startListener()
 	}
 }
 
+
+
 //void gpio::startButtonListener()
 //{
 //        debugOutput::sendMessage("-----startListener-----", INFO);
@@ -70,6 +72,7 @@ void gpio::listener()
 
         while (!m_stop) {
                 monitorGPIO();
+                monitorGPIO_PWR();
         }
 
         m_stop = true;  //reset

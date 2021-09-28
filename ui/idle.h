@@ -41,7 +41,7 @@ class idle : public QWidget
 
 public:
     explicit idle(QWidget *parent = nullptr);
-    void setPage(productPage_1 *pageProduct);
+    void setPage(productPage_1 *pageProduct, maintenancePage *pageMaintenance);
     ~idle();
     void showEvent(QShowEvent *event);
 
@@ -60,6 +60,7 @@ private slots:
 private:
     Ui::idle *ui;
     productPage_1* selection_PageOne;
+    maintenancePage* maintenanceMode;
     bool p1, p2, p3, p4;
 
 

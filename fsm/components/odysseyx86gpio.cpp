@@ -365,7 +365,7 @@ void oddyseyx86GPIO::monitorGPIO_PWR()
                 if ((c == '1') && (compareChar2 != c))
                 {
                         debugOutput::sendMessage("Power button pushed", INFO);
-                        usleep(500000);
+                        usleep(1000000);
                         if (readButtonPin(341)){
                             debugOutput::sendMessage("POWER OFF\n",INFO);
                             system("echo 'D@nkF1ll$' | sudo shutdown -h now");

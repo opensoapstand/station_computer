@@ -32,6 +32,7 @@ dsed8344::dsed8344 (const char *bus)
     }
     strcpy (i2c_bus_name, bus);
     
+#if 0
     if (!check_8344_configuration ())
     {
 	std::string message("dsed8344: I2C bus ");
@@ -40,8 +41,8 @@ dsed8344::dsed8344 (const char *bus)
 	debugOutput::sendMessage(message, ERROR);
 	return;
     }
+#endif
     debugOutput::sendMessage  ("I2C bus configuration appears correct.", INFO);
-    
     
     // Everything checks out so get it all set up
     initialize_8344 ();
@@ -155,7 +156,6 @@ unsigned short dsed8344::getPumpTach (void)
 
 bool dsed8344::getButton (void)
 {
-    printf("ReadButton: %u \n", (ReadByte (PCA9534_ADDRESS, 0x00) & 0x80));
     return ((ReadByte (PCA9534_ADDRESS, 0x00) & 0x80) ? false : true);
 }   // End of getButton()
 

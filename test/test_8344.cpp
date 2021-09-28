@@ -3,7 +3,7 @@
 #include "../fsm/components/dsed8344.h"
 
 
-#define I2C_BUS_NAME  "/dev/i2c-4"
+#define I2C_BUS_NAME  "/dev/i2c-1"
 
 
 int main (int argc, char *argv[])
@@ -42,7 +42,7 @@ int main (int argc, char *argv[])
 
             pwm_value += 5;
             the_8344->setPumpPWM (pwm_value);
-            printf ("PWM: %d", the_8344->getPumpPWM());
+            printf ("PWM: %d, ", the_8344->getPumpPWM());
 
         }
 

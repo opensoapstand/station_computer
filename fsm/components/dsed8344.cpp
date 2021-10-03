@@ -13,7 +13,13 @@ dsed8344::dsed8344 (void)
 
 #ifdef __arm__
 
-    i2c_bus_name = DEFAULT_I2C_BUS;
+    i2c_bus_name = (char *) calloc (strlen (DEFAULT_I2C_BUS) + 1, sizeof (char));
+    if (i2c_bus_name == NULL)
+    { 
+	debugOutput::sendMessage("dsed8344: Unable to allocate memory.", ERROR);
+	return;
+    }
+    strcpy (i2c_bus_name, DEFAULT_I2C_BUS);
 
 #else
     

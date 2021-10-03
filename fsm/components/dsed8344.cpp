@@ -332,37 +332,48 @@ void dsed8344::setup_i2c_bus (void)
 ///////////////////////////////////////////////////////////////////////////
 bool dsed8344::check_8344_configuration (void)
 {
+    unsigned char i2c_probe_address;
 
-    return true;
+    for (i2c_probe_address=0x03; i2c_probe_address<=0x77; i2c_probe_address++)
+    {
+	// Go through all the devices
+	if (!set_i2c_address (i2c_probe_address))
+	{
+	    return false;
+	}
+	if (i2c_smbus_read_byte (i2c_handle) < 0)
+	{
+	    if (i2c_probe_address == PCA9534_ADDRESS)
+	    {
+		std::string message("PCA9534 not found on I2C bus ");
+		message.append (i2c_bus_name);
+		debugOutput::sendMessage(message, ERROR);
+		debugOutput::sendMessage ("Pump control impossible.", ERROR);
+		return false;
+	    }
+	    if (i2c_probe_address == MAX31760_ADDRESS)
+	    {
+		std::string message("MAX31760 not found on I2C bus ");
+		message.append (i2c_bus_name);
+		debugOutput::sendMessage(message, ERROR);
+		debugOutput::sendMessage ("Pump control impossible.", ERROR);
+		return false;
+	    }
+	}
+	else
+	{
+	    if ((i2c_probe_address != PCA9534_ADDRESS) &&
+		(i2c_probe_address != MAX31760_ADDRESS))
+	    {
+		std::string message("Unknown device found on I2C bus ");
+		message.append (i2c_bus_name);
+		debugOutput::sendMessage(message, ERROR);
+		return false;
+	    }
+	}
+	
+    }
     
-
-    // Go through all the devices
-    if (!set_i2c_address (PCA9534_ADDRESS))
-    {
-	return false;
-    }
-    if (i2c_smbus_write_quick (i2c_handle, I2C_SMBUS_WRITE) < 0)
-    {
-	std::string message("PCA9534 not found on I2C bus ");
-	message.append (i2c_bus_name);
-	debugOutput::sendMessage(message, ERROR);
-	debugOutput::sendMessage ("Pump control impossible.", ERROR);
-	return false;
-    }
-    
-    if (!set_i2c_address (MAX31760_ADDRESS))
-    {
-	return false;
-    }
-    if (i2c_smbus_write_quick (i2c_handle, I2C_SMBUS_WRITE) < 0)
-    {
-	std::string message("MAX31760 not found on I2C bus ");
-	message.append (i2c_bus_name);
-	debugOutput::sendMessage(message, ERROR);
-	debugOutput::sendMessage ("Pump PWM control unavailable.", ERROR);
-	return false;
-    }
-
     return true;
     
 }  // End of check_8344_configuration()

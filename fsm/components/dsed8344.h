@@ -37,6 +37,7 @@
 class dsed8344
 {
 public:
+    dsed8344(void);
     dsed8344(const char *);
     ~dsed8344();
     
@@ -56,6 +57,7 @@ private:
     bool SendByte (unsigned char address, unsigned char reg, unsigned char byte);
     unsigned char ReadByte (unsigned char address, unsigned char reg);
     bool set_i2c_address (unsigned char address);
+    void setup_i2c_bus (void);
     bool check_8344_configuration (void);
     void initialize_8344 (void);
 };

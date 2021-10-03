@@ -2,26 +2,60 @@
 
 #include "dsed8344.h"
 
+#define DEFAULT_I2C_BUS "/dev/i2c-1"
 
 #define __USE_SMBUS_I2C_LIBRARY__  1
 
 
-// Constructor
+// Constructor that works out the name of the I2C bus
+dsed8344::dsed8344 (void)
+{
+
+#ifdef __arm__
+
+    i2c_bus_name = DEFAULT_I2C_BUS;
+
+#else
+    
+    FILE *fp;
+    char path[1035];
+
+    // Open the command for reading.
+    fp = popen("/bin/ls /sys/bus/pci/devices/*/i2c_designware.1/ | /bin/grep i2c", "r");
+    if (fp == NULL)
+    {
+	debugOutput::sendMessage("Failed to run command.\n", ERROR);
+	return;
+    }
+    
+    // Read the output of the command from the pipe
+    if (fgets(path, sizeof(path), fp) == NULL)
+    {
+	debugOutput::sendMessage("Failed to get I2C bus name.\n", ERROR);
+	return;
+    }
+    pclose(fp);
+    
+    i2c_bus_name = (char *) calloc (strlen (path) + 5, sizeof (char));
+    if (i2c_bus_name == NULL)
+    { 
+	debugOutput::sendMessage("dsed8344: Unable to allocate memory.", ERROR);
+	return;
+    }
+    strcpy (i2c_bus_name, "/dev/");
+    strcpy (i2c_bus_name+5, path);
+    i2c_bus_name[strlen(i2c_bus_name)-1] = 0;
+    
+#endif   
+
+    setup_i2c_bus();
+    
+}  // End of dsed8344() constructor
+
+
+// Constructor where you can specify the name of the I2C bus
 dsed8344::dsed8344 (const char *bus)
 {
-    // Get a handle to the bus device if we haven't already
-    if (i2c_handle < 0)
-    {
-	i2c_handle = open (bus, O_RDWR);
-	if (i2c_handle < 0)
-	{
-	    std::string message("dsed8344: Error opening");
-	    message.append (bus);
-	    debugOutput::sendMessage(message, ERROR);
-	    return;
-	}
-    }
-
     // Make a copy of the bus name for later use
     i2c_bus_name = (char *) calloc (strlen (bus) + 1, sizeof (char));
     if (i2c_bus_name == NULL)
@@ -31,23 +65,8 @@ dsed8344::dsed8344 (const char *bus)
 	return;
     }
     strcpy (i2c_bus_name, bus);
-    
-#if 0
-    if (!check_8344_configuration ())
-    {
-	std::string message("dsed8344: I2C bus ");
-	message.append (bus);
-	message.append (" has a problem.");
-	debugOutput::sendMessage(message, ERROR);
-	return;
-    }
-#endif
-    debugOutput::sendMessage  ("I2C bus configuration appears correct.", INFO);
-    
-    // Everything checks out so get it all set up
-    initialize_8344 ();
 
-    debugOutput::sendMessage  ("Initialized I2C bus components.", INFO);
+    setup_i2c_bus();
     
 }  // End of dsed8344() constructor
 
@@ -271,8 +290,46 @@ bool dsed8344::set_i2c_address (unsigned char address)
 
 
 ///////////////////////////////////////////////////////////////////////////
+void dsed8344::setup_i2c_bus (void)
+{
+    // Get a handle to the bus device if we haven't already
+    if (i2c_handle < 0)
+    {
+	i2c_handle = open (i2c_bus_name, O_RDWR);
+	if (i2c_handle < 0)
+	{
+	    std::string message("dsed8344: Error opening");
+	    message.append (i2c_bus_name);
+	    debugOutput::sendMessage(message, ERROR);
+	    return;
+	}
+    }
+
+    if (!check_8344_configuration ())
+    {
+	std::string message("dsed8344: I2C bus ");
+	message.append (i2c_bus_name);
+	message.append (" has a problem.");
+	debugOutput::sendMessage(message, ERROR);
+	return;
+    }
+
+    debugOutput::sendMessage  ("I2C bus configuration appears correct.", INFO);
+    
+    // Everything checks out so get it all set up
+    initialize_8344 ();
+
+    debugOutput::sendMessage  ("Initialized I2C bus components.", INFO);
+
+}  // End of setup_i2c_bus()
+
+///////////////////////////////////////////////////////////////////////////
 bool dsed8344::check_8344_configuration (void)
 {
+
+    return true;
+    
+
     // Go through all the devices
     if (!set_i2c_address (PCA9534_ADDRESS))
     {

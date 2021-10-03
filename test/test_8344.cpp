@@ -3,9 +3,6 @@
 #include "../fsm/components/dsed8344.h"
 
 
-#define I2C_BUS_NAME  "/dev/i2c-1"
-
-
 int main (int argc, char *argv[])
 {
     dsed8344 *the_8344;
@@ -14,7 +11,7 @@ int main (int argc, char *argv[])
     unsigned int count;
     unsigned char pwm_value;
     
-    the_8344 = new dsed8344 (I2C_BUS_NAME);
+    the_8344 = new dsed8344 ();
 
     button_state = the_8344->getButton();
     printf ("Button is %s\n", (button_state ? "down" : "up"));

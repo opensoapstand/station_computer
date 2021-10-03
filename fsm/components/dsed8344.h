@@ -8,7 +8,13 @@
 // include code to access the I2C bus.  We could probably make this
 // work cleanly on the rPi but I got tired of fighting compiler
 // warnings...
-#ifndef __arm__
+#ifdef __arm__
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <linux/i2c-dev.h>
+#include <i2c/smbus.h>
+#else
 #include "../smbus/smbus.h"
 #endif
 

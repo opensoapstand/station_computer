@@ -16,7 +16,6 @@
 #include "dispenser.h"
 
 
-#define I2C_BUS_NAME      "/dev/i2c-4"
 #define DEFAULT_PUMP_PWM  0x80
 
 
@@ -43,7 +42,7 @@ dispenser::dispenser(){
     // times we create a dispenser() class.
     if (the_8344 == nullptr)
     {
-	the_8344 = new dsed8344 (I2C_BUS_NAME);
+	the_8344 = new dsed8344 ();
     }
 
     // Set the pump PWM value to a nominal value

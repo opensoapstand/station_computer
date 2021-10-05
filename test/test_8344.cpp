@@ -20,6 +20,7 @@ int main (int argc, char *argv[])
     
     the_8344->setPumpPWM (pwm_value);
     the_8344->setPumpDirection (true);
+    the_8344->setButtonPower(false);
 
     for (pump_number=1; pump_number<=4; pump_number++)
     {

@@ -54,29 +54,29 @@ DF_ERROR stateDispense::onEntry()
        size = m_pMessaging->getnSize();
        pos = pos - 1;
        cassettes[pos].getDrink()->drinkVolumeInfo();
-       if (cassettes[pos].getDrink()->getVolumeDispensed() == 0) {
-           debugOutput::sendMessage("-----NEW TRANSACTION-----", INFO);
-           // TODO: Priming Pumps and Registers for HIGH
-           debugOutput::sendMessage("------Dispensing Drink------", INFO);
-           // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> DRINK", INFO);
-           // debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
+//       if (cassettes[pos].getDrink()->getVolumeDispensed() == 0) {
+//           debugOutput::sendMessage("-----NEW TRANSACTION-----", INFO);
+//           // TODO: Priming Pumps and Registers for HIGH
+//           debugOutput::sendMessage("------Dispensing Drink------", INFO);
+//           // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> DRINK", INFO);
+//           // debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
-           cassettes[pos].getDrink()->startDispense(cassettes[pos].getDrink()->getTargetVolume(size), cassettes[pos].getDrink()->getPrice(size));
-           cassettes[pos].setIsDispenseComplete(false);
-           cassettes[pos].getDrink()->drinkInfo();
-           cassettes[pos].getDrink()->drinkVolumeInfo();
-           cassettes[pos].startDispense(DRINK);
+//           cassettes[pos].getDrink()->startDispense(cassettes[pos].getDrink()->getTargetVolume(size), cassettes[pos].getDrink()->getPrice(size));
+//           cassettes[pos].setIsDispenseComplete(false);
+//           cassettes[pos].getDrink()->drinkInfo();
+//           cassettes[pos].getDrink()->drinkVolumeInfo();
+          // cassettes[pos].startDispense(DRINK);
 
            //m_nextState = DISPENSE;
 
            // TODO: Status Check
            // Do a check if there is not enough stock i.e. 350 order 250 left in tank
            return e_ret;
-       }
-   else {
-       debugOutput::sendMessage("-----BUSY TRANSACTION-----", INFO);
-       onAction();
-   }
+      // }
+//   else {
+//       debugOutput::sendMessage("-----BUSY TRANSACTION-----", INFO);
+//       onAction();
+//   }
 
 }
 

@@ -11,7 +11,7 @@
 //***************************************
 
 #include "stateDispenseEnd.h"
-#include <curl/curl.h>
+//#include <curl/curl.h>
 
 #define DISPENSE_END_STRING "Dispense End"
 
@@ -56,7 +56,7 @@ DF_ERROR stateDispenseEnd::onEntry()
    pos = pos - 1;
 
    //cassettes[pos].getDrink()->stopDispense();
-   cassettes[pos].stopDispense(DRINK);
+   cassettes[pos].stopDispense(pos);
 
    return e_ret;
 }

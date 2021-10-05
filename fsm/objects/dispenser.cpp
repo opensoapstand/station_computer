@@ -47,6 +47,7 @@ dispenser::dispenser(){
 
     // Set the pump PWM value to a nominal value
     the_8344->setPumpPWM (DEFAULT_PUMP_PWM);
+    the_8344->setButtonPower(false);
     
     for (int i = 0; i < NUM_SOLENOID; i++)
         m_pSolenoid[i] = nullptr; 
@@ -171,22 +172,25 @@ DF_ERROR dispenser::startDispense (int pos){
     // e_ret = connectButton();
 
     // Solenoid Position Check
-    if(pos != DRINK) {
-        e_ret = ERROR_ELEC_PIN_DISPENSE;
-        return e_ret;
-    }
+//    if(pos != DRINK) {
+//        debugOutput::sendMessage("IN THIS ERROR!", ERROR);
+//        e_ret = ERROR_ELEC_PIN_DISPENSE;
+//        return e_ret;
+//    }
 
     // Open Drink Solenoid
     // debugOutput::sendMessage("Trigger solenoid:", INFO);
     // m_pSolenoid[pos]->writePin(HIGH);
-    debugOutput::sendMessage("Triggered pump:", INFO);
+    debugOutput::sendMessage("Triggered pump:"+to_string(pos), INFO);
  
     // If Still start pump!
-    if(m_isStill && (m_pPump != nullptr) ) {
-        sleep(PRIME_PUMP_TIME);
+   // if(m_isStill && (m_pPump != nullptr) ) {
+        //sleep(PRIME_PUMP_TIME);
         forwardPump();
-	the_8344->startPump(pump_position);
-    }
+        debugOutput::sendMessage("HERE!!!!", INFO);
+        //the_8344->setPumpPWM(100);
+        the_8344->startPump(pos);
+    //}
     return e_ret = OK;
 }
 
@@ -194,10 +198,10 @@ DF_ERROR dispenser::startDispense (int pos){
 DF_ERROR dispenser::stopDispense(int pos){
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
     // Stop Pump
-    if(m_isStill && m_pPump != nullptr ) {
+//    if(m_isStill && m_pPump != nullptr ) {
         the_8344->stopPump();
-        sleep(PRIME_PUMP_TIME);
-    }
+//        sleep(PRIME_PUMP_TIME);
+//    }
 
     // Shut Solenoid
     // m_pSolenoid[pos]->writePin(LOW);

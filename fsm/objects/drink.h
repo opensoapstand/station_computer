@@ -25,6 +25,8 @@
 
 #include <sqlite3.h> 
 
+#define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
+
 using namespace std;
 
 class drink
@@ -38,8 +40,8 @@ public:
 	//getter
 	int getDrinkOption(){return m_nSlot;} // For IPC
 	bool getIsStillDrink(); // For pump check
-        int getVolumeDispensed(){return m_nVolumeDispensed;}
-        int getVolumeDispensedPreviously();
+        double getVolumeDispensed(){return m_nVolumeDispensed;}
+        double getVolumeDispensedPreviously();
         double getTargetVolume(char size);
         double getPrice(char size);
         string getPLU(char size);
@@ -53,7 +55,7 @@ public:
 
         DF_ERROR initDispense();
 
-	int getVolumeSinceLastPoll();
+        double getVolumeSinceLastPoll();
 	bool isDispenseComplete();
 	bool registerFlowSensorTick();
 
@@ -69,8 +71,9 @@ public:
 
         double m_nVolumeDispensedPreviously;
         double m_nVolumeTarget;
-        double m_nVolumeTarget_l;  //how much to dispense
-        double m_nVolumeTarget_s;  //how much to dispense
+        double m_nVolumeTarget_l;  //how much to dispense (large)
+        double m_nVolumeTarget_s;  //how much to dispense (small)
+        double m_nVolumeTarget_t = 10000000;  //test dispense (infinite)
         double m_nVolumeDispensed; //how much has been dispensed in this sale
         double m_price;
         double m_price_l;
@@ -80,6 +83,7 @@ public:
         string m_nPLU_l;
         string m_nPLU_s;
         string m_paymentMethod;
+        int m_PWM;
 
         time_t rawtime;
         struct tm * timeinfo;
@@ -106,6 +110,11 @@ private:
 	void setSlot(int slot);
 	void setDrinkName(string drinkName);
 	void setIsStillDrink(bool isStillDrink);
+        double getVolPerTick();
+        int getPWM();
+
+        sqlite3 *db;
+        int rc;
 
 	//last filled as date
 	//best before as date

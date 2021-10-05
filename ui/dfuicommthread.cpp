@@ -63,8 +63,9 @@ QByteArray DfUiCommThread::readyRead()
         emit initReadySignal();
     }
 
-    if(strtol(Data, &pEnd, 10)){
-       emit updateVolumeSignal(strtol(Data, &pEnd, 10));
+    if(strtol(Data, &pEnd, 10)){ 
+       double volume_dispensed = stod(Data.constData(), &sz);
+       emit updateVolumeSignal(volume_dispensed);
     }
 
     if(Data == "MM") {

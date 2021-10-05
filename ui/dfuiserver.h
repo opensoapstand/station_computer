@@ -10,14 +10,14 @@ public:
     explicit DfUiServer(QObject *parent = 0);
     void startServer();
     void resetTimerSlot();
-    void updateVolumeSlot(int dispensed);
+    void updateVolumeSlot(double dispensed);
     void targetHitSlot();
     void initReadySlot();
     void MMSlot();
 
 signals:
     void pleaseReset();
-    void updateVolume(int dispensed);
+    void updateVolume(double dispensed);
     void targetHit();
     void initReady();
     void MM();

@@ -72,7 +72,8 @@ SOURCES += \
     maintenance.cpp \
     maintain_product.cpp \
     init.cpp \
-    help.cpp
+    help.cpp \
+    ../library/qr/qrcodegen.cpp
 
 RESOURCES += \
     src.qrc

@@ -24,7 +24,7 @@ void DfUiServer::resetTimerSlot(){
     emit pleaseReset();
 }
 
-void DfUiServer::updateVolumeSlot(int dispensed){
+void DfUiServer::updateVolumeSlot(double dispensed){
     emit updateVolume(dispensed);
 }
 

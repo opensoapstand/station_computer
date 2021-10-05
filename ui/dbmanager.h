@@ -28,6 +28,9 @@ public:
     double getTemperature();
     int getPWM(int slot);
     double getBuffer(int slot);
+    QString getPLU(int slot, char size);
+    QString getMachineID();
+    QString getProductID(int slot);
 
     bool updatePaymentsDb(QString date, QString time, QString txnType, QString amount, QString cardNo, QString refNo, QString authNo, QString cardType, QString status, QString isoCode, QString hostCode, QString tvr);
     bool updatePrice_s(int slot, double new_price);
@@ -38,6 +41,8 @@ public:
     bool updateFullVolume(int slot, double new_full_volume);
     bool updatePWM(int slot, int new_pwm);
     bool updateBuffer(int slot, double new_buffer);
+    bool updatePLU_s(int slot, QString new_plu);
+    bool updatePLU_l(int slot, QString new_plu);
 
 private:
     void emailEmpty(int slot);

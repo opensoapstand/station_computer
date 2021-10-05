@@ -11,7 +11,6 @@
 //***************************************
 
 #include "stateDispenseEnd.h"
-//#include <curl/curl.h>
 
 #define DISPENSE_END_STRING "Dispense End"
 
@@ -124,17 +123,20 @@ DF_ERROR stateDispenseEnd::onExit()
        cassettes[pos].cleanNozzle(WATER, AIR);
    }
 
-   updateDB();
-   sendDB();
+   if (size != TEST_CHAR){
+       updateDB();
+       sendDB();
+       //QRgen();
+
+       if (paymentMethod == "barcode" || paymentMethod == "plu"){
+           debugOutput::sendMessage("Printing receipt", INFO);
+           printer();
+       }
+   }
 
    m_pMessaging->clearProcessString();
    m_pMessaging->clearCommandString();
    m_pMessaging->clearcCommand();
-
-   if (paymentMethod == "barcode" || paymentMethod == "plu"){
-       debugOutput::sendMessage("Printing receipt", INFO);
-       printer();
-   }
 
    cassettes[pos].getDrink()->stopDispense();
    cassettes[pos].stopDispense(DRINK);
@@ -151,8 +153,6 @@ DF_ERROR stateDispenseEnd::onExit()
    // TODO: Does not seem to advance to Idle again...
    m_state = DISPENSE_END;
    m_nextState = IDLE; //go back for now
-
-
 
    return e_ret;
 }
@@ -173,12 +173,39 @@ DF_ERROR stateDispenseEnd::sendDB(){
     std::string price = to_string(cassettes[pos].getDrink()->getPrice(size));
     std::string start_time = (cassettes[pos].getDrink()->m_nStartTime);
     std::string dispensed_volume = to_string(cassettes[pos].getDrink()->m_nVolumeDispensed);
+    std::string machine_id = getMachineID();
 
-    std::string json = "{\"product\": \"" + product + "\", \"target_volume\": \"" + target_volume + "\", \"price\": \"" + price + "\", \"start_time\": \"" + start_time + "\", \"dispensed_volume\": \"" + dispensed_volume + "\"}";
-    std::string curler = "curl -k -H \"Content-Type: application/json\" -d '"+json+"' https://drinkfill.herokuapp.com/machine_data/add";
+    std::string json = "{\"machineId\": \"" + machine_id + "\", \"product\": \"" + product + "\", \"quantity_requested\": \"" + target_volume + "\", \"price\": \"" + price + "\", \"start_time\": \"" + start_time + "\", \"quantity_dispensed\": \"" + dispensed_volume + "\"}";
+    std::string curler = "screen -d -m curl -k -H \"Content-Type: application/json\" -d '"+json+"' https://drinkfill.herokuapp.com/machine_data/add";
 
     system(curler.c_str());
 //    debugOutput::sendMessage(curler, INFO);
+}
+
+std::string stateDispenseEnd::getMachineID(){
+
+    rc = sqlite3_open(DB_PATH, &db);
+
+    sqlite3_stmt * stmt;
+
+    debugOutput::sendMessage("Machine ID getter START", INFO);
+
+    if( rc ) {
+       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+       // TODO: Error handling here...
+    } else {
+       fprintf(stderr, "Opened database successfully\n");
+    }
+
+     /* Create SQL statement for transactions */
+     sqlite3_prepare(db, "SELECT machine_id FROM machine;", -1, &stmt, NULL);
+     sqlite3_step(stmt);
+     std::string str = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0)));;
+     sqlite3_finalize(stmt);
+     sqlite3_close(db);
+//     cout << str << endl;
+     return str;
+
 }
 
 DF_ERROR stateDispenseEnd::updateDB(){
@@ -304,4 +331,49 @@ DF_ERROR stateDispenseEnd::printer(){
 
 }
 
+std::string stateDispenseEnd::toSvgString(const QrCode &qr, int border) {
+        if (border < 0)
+                throw std::domain_error("Border must be non-negative");
+        if (border > INT_MAX / 2 || border * 2 > INT_MAX - qr.getSize())
+                throw std::overflow_error("Border too large");
+
+        std::ostringstream sb;
+        sb << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+        sb << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n";
+        sb << "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" viewBox=\"0 0 ";
+        sb << (qr.getSize() + border * 2) << " " << (qr.getSize() + border * 2) << "\" stroke=\"none\">\n";
+        sb << "\t<rect width=\"100%\" height=\"100%\" fill=\"#FFFFFF\"/>\n";
+        sb << "\t<path d=\"";
+        for (int y = 0; y < qr.getSize(); y++) {
+                for (int x = 0; x < qr.getSize(); x++) {
+                        if (qr.getModule(x, y)) {
+                                if (x != 0 || y != 0)
+                                        sb << " ";
+                                sb << "M" << (x + border) << "," << (y + border) << "h1v1h-1z";
+                        }
+                }
+        }
+        sb << "\" fill=\"#000000\"/>\n";
+        sb << "</svg>\n";
+        return sb.str();
+}
+
+// Prints the given QrCode object to the console.
+void stateDispenseEnd::printQr(const QrCode &qr) {
+        int border = 4;
+        for (int y = -border; y < qr.getSize() + border; y++) {
+                for (int x = -border; x < qr.getSize() + border; x++) {
+                        std::cout << (qr.getModule(x, y) ? "##" : "  ");
+                }
+                std::cout << std::endl;
+        }
+        std::cout << std::endl;
+}
+
+
+DF_ERROR stateDispenseEnd::QRgen(){
+    QrCode qr0 = QrCode::encodeText("Soapstand Rules", QrCode::Ecc::MEDIUM);
+    std::string svg = toSvgString(qr0, 4);
+    printQr(qr0);
+}
 

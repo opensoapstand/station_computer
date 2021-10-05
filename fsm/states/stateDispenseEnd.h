@@ -17,10 +17,17 @@
 #include "../objects/messageMediator.h"
 #include "../../library/printer/Adafruit_Thermal.h"
 #include "../components/gpio.h"
-
+#include "../../library/qr/qrcodegen.hpp"
+#include <climits>
+#include <cstdint>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+using namespace qrcodegen;
 #include <stdio.h>
-
-//#include <sqlite3.h>
 
 #include "../fsm.h"
 
@@ -62,6 +69,10 @@ class stateDispenseEnd : public stateVirtual
         DF_ERROR updateDB();
         DF_ERROR sendDB();
         DF_ERROR printer();
+        DF_ERROR QRgen();
+        std::string toSvgString(const QrCode &qr, int border);
+        void printQr(const QrCode &qr);
+        std::string getMachineID();
 
 };
 #endif

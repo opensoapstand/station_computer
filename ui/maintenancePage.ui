@@ -1350,6 +1350,24 @@
     </item>
    </layout>
   </widget>
+  <widget class="QLabel" name="machineLabel">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>20</y>
+     <width>391</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>15</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Machine ID: </string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

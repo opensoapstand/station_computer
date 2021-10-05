@@ -39,6 +39,7 @@
 
 #define SMALL_DRINK_CHAR 's'
 #define LARGE_DRINK_CHAR 'l'
+#define TEST_CHAR 't'
 
 class messageMediator
 {

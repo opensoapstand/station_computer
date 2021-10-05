@@ -387,11 +387,23 @@ void dsed8344::initialize_8344 (void)
     SendByte (PCA9534_ADDRESS, 0x03, 0b10011000); // Enable outputs
 
     // Initialize the MAX31760
+
+    // Temperature alerts masked
+    // PWM frequency 25 kHz
+    // PWM polarity negative (100% setting is low)
     SendByte (MAX31760_ADDRESS, 0x00, 0b10011100);
+
+    // Set direct fan control
     SendByte (MAX31760_ADDRESS, 0x01, 0b00010001);
-    SendByte (MAX31760_ADDRESS, 0x02, 0b00110000);
-    SendByte (MAX31760_ADDRESS, 0x50, 0x80); // PWM value
+
+    // Set ramp to immediate
     // Enable TACH1 input
     SendByte (MAX31760_ADDRESS, 0x02, 0b00110001);
+
+    // Disable all alerts
+    SendByte (MAX31760_ADDRESS, 0x04, 0b11111111);
+    
+    // Set PWM value
+    SendByte (MAX31760_ADDRESS, 0x50, 0x80);
 
 }  // End of initialize_8344 ()

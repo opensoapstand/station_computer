@@ -94,6 +94,9 @@ payPage::payPage(QWidget *parent) :
         idlePaymentTimer = new QTimer(this);
         connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
 
+        qrTimer = new QTimer(this);
+        connect(qrTimer, SIGNAL(timeout()), this, SLOT(qrTimeout()));
+
 
     // XXX: Comment on/off for Bypassing payment testing
         payment=false;
@@ -142,6 +145,11 @@ void payPage::stopPayTimers(){
         qDebug() << "cancel readTimer" << endl;
         readTimer->stop();
     }
+
+    if(qrTimer != nullptr) {
+        qDebug() << "cancel qrTimer" << endl;
+        qrTimer->stop();
+    }
     qDebug() << "payPage: Stopped Timers" << endl;
 
 }
@@ -158,13 +166,13 @@ void payPage::setPage(paySelect *pageSizeSelect, dispensePage* pageDispense, idl
 }
 
 // TODO: Link style to sheet
-void payPage::labelSetup(QLabel *label, int fontSize)
-{
-//    QFont font("Arial", fontSize, QFont::Bold);
-//    label->setFont(font);
-//    label->setStyleSheet("color: white");
-//    label->setAlignment(Qt::AlignCenter);
-}
+//void payPage::labelSetup(QLabel *label, int fontSize)
+//{
+////    QFont font("Arial", fontSize, QFont::Bold);
+////    label->setFont(font);
+////    label->setStyleSheet("color: white");
+////    label->setAlignment(Qt::AlignCenter);
+//}
 
 void payPage::resizeEvent(QResizeEvent *event){
     // FIXME: MAGIC NUMBER!!! UX410 Socket Auto Close time is 60 seconds so timer kills page GUI
@@ -421,6 +429,12 @@ void payPage::cancelPayment()
 
 }
 
+
+size_t WriteCallback(char* contents, size_t size, size_t nmemb, void *userp){
+    ((std::string*)userp)->append((char*)contents, size * nmemb);
+    return size * nmemb;
+}
+
 void payPage::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
@@ -494,20 +508,116 @@ void payPage::showEvent(QShowEvent *event)
         readTimer->start();
     }
 
+    if (db.getPaymentMethod(checkOption) == "qr"){
+       generateQR();
+    }
+
+
+}
+
+void payPage::generateQR(){
+    DbManager db(DB_PATH);
+
+    int checkOption = idlePage->userDrinkOrder->getOption();
+    char drinkSize;
+    if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
+        drinkSize = 's';
+    }
+    if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK){
+        drinkSize = 'l';
+    }
+
     QPixmap map(400,400);
     map.fill(QColor("black"));
     QPainter painter(&map);
 //    ui->qrCode->setPixmap(map);
 
-    QString qrdata_amount = QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2);
+    //QString qrdata_amount = QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2);
     QString machine_id = db.getMachineID();
     QString product_id = db.getProductID(checkOption);
-    QString qrdata = "https://drinkfill.herokuapp.com/frontend?mid="+machine_id+"&pid="+product_id+"&size="+drinkSize;
+    order_id = QUuid::createUuid().QUuid::toString();
+    order_id = order_id.remove("{");
+    order_id = order_id.remove("}");
+    //qDebug() << "ORDER ID: " << order_id << endl;
+    QString qrdata = "https://drinkfill.herokuapp.com/payment?mid="+machine_id+"&pid="+product_id+"&size="+drinkSize+"&oid="+order_id;
 
     paintQR(painter, QSize(400,400), qrdata, QColor("white"));
     ui->qrCode->setPixmap(map);
 
+    QString curl_param = "oid="+order_id;
+    curl_param_array = curl_param.toLocal8Bit();
+    curl_data = curl_param_array.data();
+    cout << "CURLING DATA: " << curl_data << " is " << sizeof(curl_data) << " bytes" << endl;
+    //curler();
+
+//        curl = curl_easy_init();
+//        if (!curl){
+//            qDebug() << "cURL failed to init" << endl;
+//        }else{
+//            qDebug() << "cURL init success" << endl;
+//            curl_easy_setopt(curl, CURLOPT_URL, "https://drinkfill.herokuapp.com/api/machine_data/check_order_status");
+//            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_data);
+//            curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+//            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+//            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+//            qDebug() << "Curl Setup done" << endl;
+//            res = curl_easy_perform(curl);
+//            if (res != CURLE_OK){
+//                fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+//                curl_easy_cleanup(curl);
+//            }else{
+//                qDebug() << "CURL SUCCESS!" << endl;
+//                std::cout <<"Here's the output:\n" << readBuffer << endl;
+//            }
+//        }
+
+    _paymentTimeoutSec=120;
+    _qrTimeOutSec=5;
+    qrTimer->start(1000);
+
 }
+
+void payPage::curler(){
+
+    curl = curl_easy_init();
+    if (!curl){
+        qDebug() << "cURL failed to init" << endl;
+    }else{
+        qDebug() << "cURL init success" << endl;
+
+        cout << "CURLING DATA: " << curl_param_array.data() << " is " << sizeof(curl_param_array.data()) << " bytes" << endl;
+
+        curl_easy_setopt(curl, CURLOPT_URL, "https://drinkfill.herokuapp.com/api/machine_data/check_order_status");
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
+        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+        qDebug() << "Curl Setup done" << endl;
+
+        res = curl_easy_perform(curl);
+
+        if (res != CURLE_OK){
+            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+            curl_easy_cleanup(curl);
+        }else{
+            qDebug() << "CURL SUCCESS!" << endl;
+            std::cout <<"Here's the output:\n" << readBuffer << endl;
+            curl_easy_cleanup(curl);
+        }
+    }
+
+}
+
+void payPage::qrTimeout(){
+    if(-- _qrTimeOutSec >= 0){
+        qDebug() << "PayPaeg: QR Timer Tick" << _qrTimeOutSec << endl;
+    }else{
+        qDebug() << "QR Timer Done!" << endl << "Checking API endpoint now..." << endl;
+        curler();
+        _qrTimeOutSec=5;
+    }
+}
+
 
 
 // XXX: Remove this when interrupts and flow sensors work!

@@ -81,6 +81,9 @@ RESOURCES += \
 DISTFILES += \
     styles/product_select.qss  
 
+LIBS += \
+    -lcurl
+
 # EV2 Reference for moneris
 # TODO: Determine new linkage to object and library files...
 

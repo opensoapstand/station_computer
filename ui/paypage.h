@@ -37,6 +37,8 @@
 #include <string>
 #include <vector>
 #include <QPainter>
+#include <QUuid>
+#include <curl/curl.h>
 
 class paySelect;
 class dispensePage;
@@ -91,6 +93,7 @@ public:
     }
 
     QTimer *readTimer;
+    char * curl_data;
 
 private slots:
 
@@ -113,6 +116,8 @@ private slots:
     void progressStatusLabel();
     void declineTimer_start();
     void idlePaymentTimeout();
+
+    void qrTimeout();
 
 
 protected:
@@ -205,6 +210,9 @@ private:
     int _paymentTimeoutSec;
     QTimer* paymentEndTimer;
 
+    int _qrTimeOutSec;
+    QTimer* qrTimer;
+
     QResizeEvent *paySelectResize;
     QShowEvent *dispenseEvent;
 
@@ -216,6 +224,17 @@ private:
     std::string toSvgString(const QrCode &qr, int border);
     void paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg);
 
+    QString order_id;
+    CURL *curl;
+    CURLcode res;
+
+    //size_t WriteCallback(char* contents, size_t size, size_t nmemb, void *userp);
+    std::string readBuffer;
+
+
+    void curler();
+    void generateQR();
+    QByteArray curl_param_array;
 };
 
 #endif // PAYPAGE_H

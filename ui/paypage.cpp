@@ -509,6 +509,7 @@ void payPage::showEvent(QShowEvent *event)
     }
 
     if (db.getPaymentMethod(checkOption) == "qr"){
+        _paymentTimeoutSec = 120;
        generateQR();
     }
 
@@ -589,7 +590,7 @@ void payPage::curler(){
 
         curl_easy_setopt(curl, CURLOPT_URL, "https://drinkfill.herokuapp.com/api/machine_data/check_order_status");
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
-        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+       // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
         qDebug() << "Curl Setup done" << endl;
@@ -602,7 +603,16 @@ void payPage::curler(){
         }else{
             qDebug() << "CURL SUCCESS!" << endl;
             std::cout <<"Here's the output:\n" << readBuffer << endl;
-            curl_easy_cleanup(curl);
+
+            if (readBuffer == "true"){
+                curl_easy_cleanup(curl);
+                readBuffer = "";
+                on_payment_bypass_Button_clicked();
+            }else{
+                curl_easy_cleanup(curl);
+                readBuffer = "";
+            }
+
         }
     }
 

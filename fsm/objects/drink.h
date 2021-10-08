@@ -69,6 +69,8 @@ public:
 	void drinkInfo();
 	void drinkVolumeInfo();
 
+        int getPWM();
+
         double m_nVolumeDispensedPreviously;
         double m_nVolumeTarget;
         double m_nVolumeTarget_l;  //how much to dispense (large)
@@ -111,7 +113,7 @@ private:
 	void setDrinkName(string drinkName);
 	void setIsStillDrink(bool isStillDrink);
         double getVolPerTick();
-        int getPWM();
+
 
         sqlite3 *db;
         int rc;

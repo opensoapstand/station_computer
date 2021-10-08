@@ -1,5 +1,5 @@
 /.vscode/
-
+ui/DF_UI 
 fsm/.vscode/
 fsm/.vs/fsm/v15/Browse.VC.db
 fsm/.vs/fsm/v15/Browse.VC.opendb
@@ -14,6 +14,8 @@ fsm/controller
 sqlite/build
 
 test/test_8344
+test/bus_test1
+test/bus_test2
 
 ### QT Creator ###
 

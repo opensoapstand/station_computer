@@ -72,7 +72,7 @@ void maintain_product::showEvent(QShowEvent *event)
     ui->total_dispensed->setText(QString::number(db.getTotalDispensed(checkOption)) + "ml");
     ui->remainingLabel->setText(QString::number(db.getRemaining(checkOption)) + "ml");
     ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
-    ui->pwmLabel->setText(QString::number(db.getPWM(checkOption)) + "%");
+    ui->pwmLabel->setText(QString::number(round(double((db.getPWM(checkOption))*100)/255)) + "%");
     ui->vol_dispensed_label->setText("Volume Dispensed: 0ml");
     ui->ticksLabel->setText("Ticks: 0");
     ui->pluLabel_s->setText(db.getPLU(checkOption, 's'));
@@ -273,7 +273,7 @@ void maintain_product::resizeEvent(QResizeEvent *event){
     ui->remainingLabel->setText(QString::number(db.getRemaining(checkOption)) + "ml");
     ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
     ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
-    ui->pwmLabel->setText(QString::number(db.getPWM(checkOption)) + "%");
+    ui->pwmLabel->setText(QString::number(round(double((db.getPWM(checkOption))*100)/255)) + "%");
     ui->vol_dispensed_label->setText("Volume Dispensed: 0ml");
     ui->ticksLabel->setText("Ticks: 0");
     ui->pluLabel_s->setText(db.getPLU(checkOption, 's'));
@@ -823,6 +823,7 @@ void maintain_product::on_buttonDone_clicked(){
     if(pwm){
         if(ui->textEntry->text().toInt()>100){
             ui->errorLabel->setText("Error: Enter number less than 100");
+            ui->textEntry->setText("");
         }else{
             text_entered = ui->textEntry->text();
             ui->buttonPoint->show();
@@ -881,8 +882,10 @@ void maintain_product::updateValues(){
         ui->full_volume->setText(QString::number(db.getFullProduct(checkOption)) + "ml");
 
     }else if(pwm){
-        db.updatePWM(checkOption, text_entered.toInt());
-        ui->pwmLabel->setText(QString::number(db.getPWM(checkOption)) + "%");
+        int new_pwm = round(((text_entered.toInt())*255)/100);
+        qDebug() << "New PWM: " << text_entered.toInt() << "% equals = " << (new_pwm) << endl;
+        db.updatePWM(checkOption, new_pwm);
+        ui->pwmLabel->setText(QString::number(round(double((db.getPWM(checkOption))*100)/255)) + "%");
     }
 //    else if(plu_s){
 //        db.updatePLU_s(checkOption, text_entered);

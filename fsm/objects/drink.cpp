@@ -198,7 +198,7 @@ int drink::getPWM(){
      int pwm = stod(str);
      sqlite3_finalize(stmt);
      sqlite3_close(db);
-//     cout << str << endl;
+     cout << "INSIDE getPWM() and PWM is = " << str << endl;
      return pwm;
 }
 

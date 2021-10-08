@@ -173,7 +173,6 @@ DF_ERROR dispenser::startDispense (int pos){
 
     // Solenoid Position Check
 //    if(pos != DRINK) {
-//        debugOutput::sendMessage("IN THIS ERROR!", ERROR);
 //        e_ret = ERROR_ELEC_PIN_DISPENSE;
 //        return e_ret;
 //    }
@@ -187,8 +186,9 @@ DF_ERROR dispenser::startDispense (int pos){
    // if(m_isStill && (m_pPump != nullptr) ) {
         //sleep(PRIME_PUMP_TIME);
         forwardPump();
-        debugOutput::sendMessage("HERE!!!!", INFO);
-        //the_8344->setPumpPWM(100);
+        the_8344->setPumpPWM((unsigned char)(m_pDrink->getPWM()));
+        debugOutput::sendMessage("PWM SET!", INFO);
+        cout << the_8344->getPumpPWM();
         the_8344->startPump(pos);
     //}
     return e_ret = OK;

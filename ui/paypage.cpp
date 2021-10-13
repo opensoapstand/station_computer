@@ -540,7 +540,7 @@ void payPage::generateQR(){
     order_id = order_id.remove("{");
     order_id = order_id.remove("}");
     //qDebug() << "ORDER ID: " << order_id << endl;
-    QString qrdata = "https://drinkfill.herokuapp.com/payment?mid="+machine_id+"&pid="+product_id+"&size="+drinkSize+"&oid="+order_id;
+    QString qrdata = "http://Drinkfill-env.eba-qatmjpdr.us-east-2.elasticbeanstalk.com/payment?mid="+machine_id+"&pid="+product_id+"&size="+drinkSize+"&oid="+order_id;
 
     paintQR(painter, QSize(400,400), qrdata, QColor("white"));
     ui->qrCode->setPixmap(map);
@@ -588,7 +588,7 @@ void payPage::curler(){
 
         cout << "CURLING DATA: " << curl_param_array.data() << " is " << sizeof(curl_param_array.data()) << " bytes" << endl;
 
-        curl_easy_setopt(curl, CURLOPT_URL, "https://drinkfill.herokuapp.com/api/machine_data/check_order_status");
+        curl_easy_setopt(curl, CURLOPT_URL, "http://Drinkfill-env.eba-qatmjpdr.us-east-2.elasticbeanstalk.com/api/machine_data/check_order_status");
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
        // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);

@@ -131,6 +131,7 @@ bool drink::getIsStillDrink()
 }
 
 bool drink::registerFlowSensorTick(){
+    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
     m_nVolumeDispensed += m_nVolumePerTick;
 }
 
@@ -157,6 +158,7 @@ double drink::getVolumeSinceLastPoll()
 
 double drink::getVolumeDispensedPreviously()
 {
+    cout << "GETTING VOLUME DISPENSED AND IT IS: " << m_nVolumeDispensedPreviously << endl;
     return m_nVolumeDispensedPreviously;
 }
 

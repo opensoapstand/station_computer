@@ -109,7 +109,12 @@ DF_ERROR stateInit::dispenserSetup()
     // is ever active at a time.  The flow sensors are all connected
     // to the same pin in the hardware.
 #ifndef __arm__
-    cassettes[0].setFlowsensor(364, 0);
+//    cassettes[0].setFlowsensor(364, 0);
+    for (idx=0; idx<4; idx++)
+    {
+        cassettes[idx].setFlowsensor(364, idx);
+//    cassettes[0].setFlowsensor(364, 0);
+    }
 #else
     cassettes[0].setFlowsensor(17, 0);
 #endif

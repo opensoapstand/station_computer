@@ -114,19 +114,19 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
 
     debugOutput::sendMessage("-----dispenser::setFlowsensor-----", INFO);
 
-    if(pos == 0)
-    {
+//    if(pos == 0)
+//    {
         // Instantiate, set input, spin up a flowsensor thread.
         m_pFlowsenor[pos] = new oddyseyx86GPIO(pin);
         m_pFlowsenor[pos]->setDirection(true);
         m_pFlowsenor[pos]->registerDrink(m_pDrink);
         m_pFlowsenor[pos]->startListener();
 	e_ret = OK;
-    }
-    else
-    {
-        return e_ret = ERROR_MECH_FS_FAULT;
-    }
+//    }
+//    else
+//    {
+//        return e_ret = ERROR_MECH_FS_FAULT;
+//    }
 
     return e_ret;
 }

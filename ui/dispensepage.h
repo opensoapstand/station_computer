@@ -45,7 +45,7 @@ public:
     ~dispensePage();
     void showEvent(QShowEvent *event);
     void PleaseResetTimerSlot(void);
-    void updateVolumeDisplayed(int dispensed);
+    void updateVolumeDisplayed(double dispensed);
     void volumeDispensedLabel(QLabel* label);
     void targetHitDisplay();
     double getTotalDispensed(){return volumeDispensed;}
@@ -83,7 +83,7 @@ private:
     int _rinseTimerTimeoutSec;
     bool rinse;
 
-    int volumeDispensed;
+    double volumeDispensed;
 
     void stopDispenseTimer();
     bool sendToUX410();

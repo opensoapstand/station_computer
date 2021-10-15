@@ -112,7 +112,7 @@ void thankYouPage::curler(){
     double dispensed = this->dispensingPage->getTotalDispensed();
     qDebug() << "I'm in Thank You Page and the OID is: " << order_id << " and the total dispensed is: " << dispensed << endl;
 
-    QString curl_param = "oid="+order_id+"&dispensed_amount="+QString::number(dispensed);
+    QString curl_param = "oid="+order_id+"&dispensed_amount="+QString::number(dispensed, 'f', 2);
     curl_param_array = curl_param.toLocal8Bit();
     curl_data = curl_param_array.data();
 

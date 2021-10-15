@@ -321,7 +321,7 @@ void dispensePage::PleaseResetTimerSlot(void){
     _dispenseIdleTimeoutSec = 30;
 }
 
-void dispensePage::updateVolumeDisplayed(int dispensed){
+void dispensePage::updateVolumeDisplayed(double dispensed){
 
     volumeDispensed = dispensed;
     double target_volume = idlePage->userDrinkOrder->getSize();

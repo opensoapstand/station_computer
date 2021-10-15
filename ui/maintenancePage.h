@@ -28,6 +28,7 @@
 class idle;
 class maintain_product;
 class productPage_1;
+class paySelect;
 
 namespace Ui {
 class maintenancePage;
@@ -41,7 +42,7 @@ class maintenancePage : public QWidget
 
 public:
     explicit maintenancePage(QWidget *parent = nullptr);
-    void setPage(idle* pageIdle, maintain_product* pageMaintain, productPage_1 *pageProduct);
+    void setPage(idle* pageIdle, maintain_product* pageMaintain, productPage_1 *pageProduct, paySelect* pagePaySelect);
     ~maintenancePage();
     int getSelection();
 
@@ -71,6 +72,7 @@ private:
     idle* idlePage;
     maintain_product* maintainPage;
     productPage_1* selection_PageOne;
+    paySelect* paySelectPage;
 
     QResizeEvent *productSelection;
 

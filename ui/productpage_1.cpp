@@ -134,6 +134,10 @@ void productPage_1::showEvent(QShowEvent *event)
 
 }
 
+void productPage_1::cancelTimers(){
+    productPageEndTimer->stop();
+}
+
 
 // FIXME: This is terrible...no time to make array reference to hold button press functions
 void productPage_1::on_selection1_Button_clicked()

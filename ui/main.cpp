@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
     maintainPage->setPage(maintenanceMode, idlePage);
     //maintainPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    maintenanceMode->setPage(idlePage, maintainPage, firstSelectPage);
+    maintenanceMode->setPage(idlePage, maintainPage, firstSelectPage, paySelectPage);
     //maintenanceMode->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
     idlePage->setPage(firstSelectPage, maintenanceMode);

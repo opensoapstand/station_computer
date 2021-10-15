@@ -45,6 +45,19 @@ void gpio::startListener()
 	}
 }
 
+void gpio::startListenerPWR()
+{
+        debugOutput::sendMessage("-----startListenerPWR-----", INFO);
+        DF_ERROR df_ret = ERROR_BAD_PARAMS;
+
+//        if ((nullptr ==  gpioThread) && (nullptr != m_pDrink)){
+                gpioThread = new std::thread(&gpio::listenerPWR, this);
+                df_ret = OK;
+//        } else {
+//                debugOutput::sendMessage("Did not pass null check", INFO);
+//        }
+}
+
 
 
 //void gpio::startButtonListener()
@@ -72,9 +85,24 @@ void gpio::listener()
 
         while (!m_stop) {
                 monitorGPIO();
-                monitorGPIO_PWR();
+//                monitorGPIO_PWR();
         }
 
         m_stop = true;  //reset
 	// return;
+}
+
+void gpio::listenerPWR()
+{
+    cout << "Spin up GPIO Thread" << endl;
+    DF_ERROR df_ret = ERROR_BAD_PARAMS;
+    m_stop = false;
+
+    while (!m_stop) {
+//            monitorGPIO();
+            monitorGPIO_PWR();
+    }
+
+    m_stop = true;  //reset
+    // return;
 }

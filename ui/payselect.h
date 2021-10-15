@@ -42,7 +42,9 @@ public:
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
-    QTimer* selectIdleTimer;
+
+    void cancelTimers();
+
 
 
 signals:
@@ -72,6 +74,7 @@ private:
     dispensePage* dispensingPage;
     help* helpPage;
 
+    QTimer* selectIdleTimer;
     int _selectIdleTimeoutSec;
 
     QResizeEvent *paySelectResize;

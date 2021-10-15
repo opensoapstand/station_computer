@@ -77,10 +77,6 @@ class stateInit : public stateVirtual
 
         bool level = true;
 
-        gpio *m_pPowerOff[1];
-        gpio *m_pMM[1];
-        gpio *m_pPWRorMM[1];
-
     protected:
 //        mcpGPIO *i2c_tester;
 

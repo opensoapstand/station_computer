@@ -131,7 +131,7 @@ bool drink::getIsStillDrink()
 }
 
 bool drink::registerFlowSensorTick(){
-    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
+//    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
     m_nVolumeDispensed += m_nVolumePerTick;
 }
 
@@ -158,7 +158,7 @@ double drink::getVolumeSinceLastPoll()
 
 double drink::getVolumeDispensedPreviously()
 {
-    cout << "GETTING VOLUME DISPENSED AND IT IS: " << m_nVolumeDispensedPreviously << endl;
+//    cout << "GETTING VOLUME DISPENSED AND IT IS: " << m_nVolumeDispensedPreviously << endl;
     return m_nVolumeDispensedPreviously;
 }
 
@@ -281,7 +281,7 @@ void drink::drinkInfo() {
 void drink::drinkVolumeInfo(){
     // cout << "Volume since last poll: " << m_nVolumeDispensedSinceLastPoll << endl;
     // cout << "How much to dispense: " << m_nVolumeTarget << endl;
-	cout << "Dispensed so far: " << m_nVolumeDispensed << endl;
+//	cout << "Dispensed so far: " << m_nVolumeDispensed << endl;
 }
 
 double drink::getTargetVolume(char size){

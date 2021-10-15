@@ -87,6 +87,10 @@ paySelect::~paySelect()
     delete ui;
 }
 
+void paySelect::cancelTimers(){
+    selectIdleTimer->stop();
+}
+
 /* GUI */
 void paySelect::on_previousPage_Button_clicked()
 {

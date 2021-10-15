@@ -39,6 +39,7 @@ public:
     explicit productPage_1(QWidget *parent = nullptr);
     void setPage(productPage_2 *pageTwoProducts, paySelect *pageSizeSelect, idle* pageIdle, maintenancePage *pageMaintenance, help *pageHelp);
     ~productPage_1();
+    void cancelTimers();
 
 private slots:
     // **** Navigation ****

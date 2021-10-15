@@ -39,8 +39,10 @@ public:
 	// Functions for Threaded GPIO Interrupts
 	void registerDrink(drink* pDrink) {m_pDrink = pDrink;} 
 	void startListener();
+        void startListenerPWR();
         void startButtonListener();
 	void listener();
+        void listenerPWR();
         void stopListener() { m_stop = true; }
 
 protected:

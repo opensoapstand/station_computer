@@ -92,7 +92,7 @@ class dispenser
       int getI2CAddress(int pos);
       int getI2CPin(int pos);
 
-      DF_ERROR setPowerOffListener(int pin);
+      DF_ERROR setPowerOffListener();
 
 //      DF_ERROR setButtonPress(int address_num, int pin_num);
       bool reader = true;
@@ -126,6 +126,9 @@ class dispenser
       gpio *m_pSolenoid[NUM_SOLENOID]; //air,drink, and water solenoid control
       gpio *m_pFlowsenor[NUM_FLOWSENSOR];
       gpio *m_pPump[NUM_PUMP]; //forward and reverse pin control
+      gpio *m_pPowerOff[1];
+      gpio *m_pMM[1];
+      gpio *m_pPWRorMM[1];
 
 
       // Button reference m_pButton[1] in stateVirtual; IPC shared due to Arduino!

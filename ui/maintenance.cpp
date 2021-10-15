@@ -103,16 +103,20 @@ void maintenancePage::showEvent(QShowEvent *event)
 
     ui->keyboard_2->hide();
 
+    selection_PageOne->cancelTimers();
+    paySelectPage->cancelTimers();
+
 }
 
 /*
  * Page Tracking reference
  */
-void maintenancePage::setPage(idle* pageIdle, maintain_product* pageMaintain, productPage_1 *pageProduct)
+void maintenancePage::setPage(idle* pageIdle, maintain_product* pageMaintain, productPage_1 *pageProduct, paySelect *pagePaySelect)
 {
     this->idlePage = pageIdle;
     this->maintainPage = pageMaintain;
     this->selection_PageOne = pageProduct;
+    this->paySelectPage = pagePaySelect;
 }
 
 void maintenancePage::on_backButton_clicked(){

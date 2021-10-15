@@ -132,7 +132,7 @@ bool idle::isEnough(int p){
 }
 
 void idle::MMSlot(){
-    qDebug() << "HERE I AM I KNOW I MUIST ENTER MM" << endl;
+//    qDebug() << "HERE I AM I KNOW I MUIST ENTER MM" << endl;
     maintenanceMode->showFullScreen();
     this->hide();
 }

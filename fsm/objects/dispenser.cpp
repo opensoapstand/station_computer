@@ -114,21 +114,33 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
 
     debugOutput::sendMessage("-----dispenser::setFlowsensor-----", INFO);
 
-//    if(pos == 0)
-//    {
+    if((pos >= 0) && (pos < 4))
+    {
         // Instantiate, set input, spin up a flowsensor thread.
         m_pFlowsenor[pos] = new oddyseyx86GPIO(pin);
         m_pFlowsenor[pos]->setDirection(true);
         m_pFlowsenor[pos]->registerDrink(m_pDrink);
         m_pFlowsenor[pos]->startListener();
-	e_ret = OK;
-//    }
-//    else
-//    {
-//        return e_ret = ERROR_MECH_FS_FAULT;
-//    }
+        e_ret = OK;
+    }
+    else
+    {
+        return e_ret = ERROR_MECH_FS_FAULT;
+    }
 
     return e_ret;
+}
+
+DF_ERROR dispenser::setPowerOffListener(){
+
+    m_pPWRorMM[0] = new oddyseyx86GPIO(391);
+    m_pPowerOff[0] = new oddyseyx86GPIO(340);
+    m_pMM[0] = new oddyseyx86GPIO(341);
+    m_pPWRorMM[0]->setDirection(true);
+    m_pPowerOff[0]->setDirection(true);
+    m_pMM[0]->setDirection(true);
+    m_pPWRorMM[0]->startListenerPWR();
+
 }
 
 // TODO: Call this function on Dispense onEntry()

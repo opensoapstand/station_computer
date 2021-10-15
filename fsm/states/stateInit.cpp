@@ -125,12 +125,7 @@ DF_ERROR stateInit::dispenserSetup()
 	cassettes[idx].setPump(0, 0, idx);
     }
 
-    m_pPWRorMM[0] = new oddyseyx86GPIO(391);
-    m_pPowerOff[0] = new oddyseyx86GPIO(340);
-    m_pMM[0] = new oddyseyx86GPIO(341);
-    m_pPWRorMM[0]->setDirection(true);
-    m_pPowerOff[0]->setDirection(true);
-    m_pMM[0]->setDirection(true);
+    cassettes[0].setPowerOffListener();
 
     debugOutput::sendMessage("Hardware initialized...", INFO);
 

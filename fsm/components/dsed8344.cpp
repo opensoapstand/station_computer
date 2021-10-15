@@ -398,7 +398,7 @@ void dsed8344::initialize_8344 (void)
 
     // Set ramp to immediate
     // Enable TACH1 input
-    SendByte (MAX31760_ADDRESS, 0x02, 0b00110001);
+//    SendByte (MAX31760_ADDRESS, 0x02, 0b00110001);
 
     // Disable all alerts
     SendByte (MAX31760_ADDRESS, 0x04, 0b11111111);

@@ -41,6 +41,8 @@
 #define LARGE_DRINK_CHAR 'l'
 #define TEST_CHAR 't'
 
+#define PWM_CHAR 'P'
+
 class messageMediator
 {
    public:

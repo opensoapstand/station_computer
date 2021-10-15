@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
     dispensingPage->setPage(paymentPage, lastPage, idlePage);
 //    dispensingPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    lastPage->setPage(dispensingPage, idlePage);
+    lastPage->setPage(dispensingPage, idlePage, paymentPage);
 //    lastPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
     //    payOptionToggle->setPage();

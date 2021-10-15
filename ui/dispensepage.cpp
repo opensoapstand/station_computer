@@ -241,9 +241,10 @@ void dispensePage::on_finish_Button_clicked()
 //    rinseTimer->start(1000);
 //    _rinseTimerTimeoutSec = 5;
 
-      this->hide();
+
       thanksPage->showFullScreen();
       this->ui->volumeDispensedLabel->setText("");
+      this->hide();
 }
 
 void dispensePage::onRinseTimerTick(){

@@ -51,10 +51,11 @@ thankYouPage::thankYouPage(QWidget *parent) :
 /*
  * Page Tracking reference
  */
-void thankYouPage::setPage(dispensePage *pageDispense, idle *pageIdle)
+void thankYouPage::setPage(dispensePage *pageDispense, idle *pageIdle, payPage *pagePayment)
 {
     this->idlePage = pageIdle;
     this->dispensingPage = pageDispense;
+    this->paymentPage = pagePayment;
 }
 
 // DTOR
@@ -95,8 +96,60 @@ void thankYouPage::showEvent(QShowEvent *event)
     thankYouEndTimer->start(1000);
     _thankYouTimeoutSec = 7;
 
+    curler();
 
 
+
+}
+
+size_t WriteCallback2(char* contents, size_t size, size_t nmemb, void *userp){
+    ((std::string*)userp)->append((char*)contents, size * nmemb);
+    return size * nmemb;
+}
+
+void thankYouPage::curler(){
+    QString order_id = this->paymentPage->getOID();
+    double dispensed = this->dispensingPage->getTotalDispensed();
+    qDebug() << "I'm in Thank You Page and the OID is: " << order_id << " and the total dispensed is: " << dispensed << endl;
+
+    QString curl_param = "oid="+order_id+"&dispensed_amount="+QString::number(dispensed);
+    curl_param_array = curl_param.toLocal8Bit();
+    curl_data = curl_param_array.data();
+
+    curl = curl_easy_init();
+    if (!curl){
+        qDebug() << "cURL failed to init" << endl;
+    }else{
+        qDebug() << "cURL init success" << endl;
+
+        cout << "CURLING DATA: " << curl_param_array.data() << " is " << sizeof(curl_param_array.data()) << " bytes" << endl;
+
+        curl_easy_setopt(curl, CURLOPT_URL, "http://Drinkfill-env.eba-qatmjpdr.us-east-2.elasticbeanstalk.com/api/machine_data/updateOrder");
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
+       // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback2);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+        qDebug() << "Curl Setup done" << endl;
+
+        res = curl_easy_perform(curl);
+
+        if (res != CURLE_OK){
+            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+            curl_easy_cleanup(curl);
+        }else{
+            qDebug() << "CURL SUCCESS!" << endl;
+            std::cout <<"Here's the output:\n" << readBuffer << endl;
+
+            if (readBuffer == "true"){
+                curl_easy_cleanup(curl);
+                readBuffer = "";
+            }else{
+                curl_easy_cleanup(curl);
+                readBuffer = "";
+            }
+
+        }
+    }
 }
 
 void thankYouPage::onThankyouTimeoutTick(){

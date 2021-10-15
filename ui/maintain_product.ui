@@ -406,7 +406,7 @@ Last Restock:</string>
     </rect>
    </property>
    <property name="text">
-    <string>PWM</string>
+    <string>Pump Speed</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pwmButton">
@@ -419,7 +419,7 @@ Last Restock:</string>
     </rect>
    </property>
    <property name="text">
-    <string>PWM:</string>
+    <string> Pump Speed:</string>
    </property>
   </widget>
   <widget class="QWidget" name="numberEntry" native="true">
@@ -798,6 +798,28 @@ Last Restock:</string>
    </property>
    <property name="text">
     <string>Large PLU</string>
+   </property>
+  </widget>
+  <widget class="QSlider" name="pwmSlider">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>1130</y>
+     <width>31</width>
+     <height>381</height>
+    </rect>
+   </property>
+   <property name="maximum">
+    <number>100</number>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+   <property name="tickPosition">
+    <enum>QSlider::TicksBothSides</enum>
+   </property>
+   <property name="tickInterval">
+    <number>10</number>
    </property>
   </widget>
  </widget>

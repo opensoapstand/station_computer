@@ -9,6 +9,7 @@
 #include <QQuickView>
 #include <QGuiApplication>
 #include <QQmlEngine>
+#include <QSlider>
 
 // CTOR
 maintain_product::maintain_product(QWidget *parent) :
@@ -23,11 +24,12 @@ maintain_product::maintain_product(QWidget *parent) :
     this->setPalette(palette);
 
     ui->pumpLabel->setText("OFF");
+    ui->pwmSlider->setTracking(true);
 
     maintainProductPageEndTimer = new QTimer(this);
     maintainProductPageEndTimer->setInterval(1000);
     connect(maintainProductPageEndTimer, SIGNAL(timeout()), this, SLOT(onMaintainProductPageTimeoutTick()));
-
+    connect(ui->pwmSlider, SIGNAL(valueChanged(int)), this, SLOT(pwmSliderMoved(int)));
 }
 
 // DTOR
@@ -108,6 +110,9 @@ void maintain_product::showEvent(QShowEvent *event)
         ui->pluLabel_l->setVisible(false);
         ui->pluButton_l->setEnabled(false);
     }
+
+    ui->pwmSlider->setValue(round(double((db.getPWM(checkOption))*100)/255));
+    ui->pwmSlider->hide();
 
 }
 
@@ -302,6 +307,8 @@ void maintain_product::resizeEvent(QResizeEvent *event){
 //        ui->pluLabel->setVisible(false);
 //        ui->pluButton->setEnabled(false);
 //    }
+
+    ui->pwmSlider->setValue(round(double((db.getPWM(checkOption))*100)/255));
 
 }
 
@@ -728,7 +735,7 @@ void maintain_product::on_pwmButton_clicked(){
 //    DbManager db(DB_PATH);
     ui->numberEntry->show();
     ui->textEntry->setText("");
-    ui->titleLabel->setText("New PWM:");
+    ui->titleLabel->setText("New Pump Speed:");
     ui->buttonPoint->hide();
 //    ui->pwmLabel->setText(QString::number(db.getPWM(idlePage->userDrinkOrder->getOption())) + "%");
 }
@@ -883,7 +890,7 @@ void maintain_product::updateValues(){
 
     }else if(pwm){
         int new_pwm = round(((text_entered.toInt())*255)/100);
-        qDebug() << "New PWM: " << text_entered.toInt() << "% equals = " << (new_pwm) << endl;
+        qDebug() << "New Pump Speed: " << text_entered.toInt() << "% equals = " << (new_pwm) << endl;
         db.updatePWM(checkOption, new_pwm);
         ui->pwmLabel->setText(QString::number(round(double((db.getPWM(checkOption))*100)/255)) + "%");
     }
@@ -911,5 +918,22 @@ void maintain_product::updateValues(){
 }
 
 
+void maintain_product::pwmSliderMoved(int percentage){
+    int value = ui->pwmSlider->value();
+    qDebug() << "Slider Value: " << value << endl;
 
+    QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
+    command.append("P");
+    command.append(QString::number(value));
+
+    qDebug() << "In PWMSlider: " << command << endl;
+
+//    this->idlePage->dfUtility->msg = command;
+//    idlePage->dfUtility->m_IsSendingFSM = true;
+//    idlePage->dfUtility->m_fsmMsg = SEND_PWM;
+//    idlePage->dfUtility->send_to_FSM();
+//    idlePage->dfUtility->m_IsSendingFSM = false;
+
+//    command = "";
+}
 

@@ -14,6 +14,7 @@ typedef enum FSM_COMM {
     SEND_EMPTY = 0,
     SEND_DRINK,
     SEND_CLEAN,
+    SEND_PWM,
     SEND_ERROR,
 } FSM_COMM;
 

@@ -48,6 +48,7 @@ public:
     void updateVolumeDisplayed(int dispensed);
     void volumeDispensedLabel(QLabel* label);
     void targetHitDisplay();
+    double getTotalDispensed(){return volumeDispensed;}
 
 public slots:
 

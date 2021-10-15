@@ -92,6 +92,10 @@ public:
         return merchantAddress;
     }
 
+    QString getOID(){
+        return order_id;
+    }
+
     QTimer *readTimer;
     char * curl_data;
 

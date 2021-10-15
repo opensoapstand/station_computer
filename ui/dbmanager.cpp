@@ -19,24 +19,25 @@ DbManager::DbManager(const QString& path)
 
 bool DbManager::addPageClick(const QString& page){
 
-    bool success = false;
-    // you should check if args are ok first...
-    QSqlQuery click_query;
-    click_query.prepare("INSERT INTO clicks (time, page_info) VALUES (:time, :page);");
-    click_query.bindValue(":time", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
-    click_query.bindValue(":page", page);
-    if(click_query.exec())
-    {
-        success = true;
-        qDebug() << "addPageClick success!";
-    }
-    else
-    {
-        qDebug() << "addPageClick error:"
-                 << click_query.lastError();
-    }
+//    bool success = false;
+//    // you should check if args are ok first...
+//    QSqlQuery click_query;
+//    click_query.prepare("INSERT INTO clicks (time, page_info) VALUES (:time, :page);");
+//    click_query.bindValue(":time", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+//    click_query.bindValue(":page", page);
+//    if(click_query.exec())
+//    {
+//        success = true;
+//        qDebug() << "addPageClick success!";
+//    }
+//    else
+//    {
+//        qDebug() << "addPageClick error:"
+//                 << click_query.lastError();
+//    }
 
-    return success;
+//    return success;
+    return true;
 }
 
 QString DbManager::getProductName(int slot){

@@ -75,10 +75,15 @@ DF_ERROR stateIdle::onAction()
 //         cassettes[pos].resetButtonPressDuration();
 //         cassettes[pos].resetButtonPressTimes();
 
-         cassettes[pos].getDrink()->initDispense();
+         if (m_pMessaging->getcCommand() == DRINK_CHAR){
+             cassettes[pos].getDrink()->initDispense();
+             m_nextState = DISPENSE_IDLE;
 
-         m_nextState = DISPENSE_IDLE;
-         // }
+         }else if (m_pMessaging->getcCommand() == DRINK_CHAR){
+            debugOutput::sendMessage("in stae Idle I know this is pwm", INFO);
+         }
+
+                  // }
          // else
          // {
          //    return e_ret = ERROR_NETW_NO_COMMAND;

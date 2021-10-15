@@ -178,7 +178,7 @@ DF_ERROR stateDispenseEnd::sendDB(){
     std::string json = "{\"machineId\": \"" + machine_id + "\", \"product\": \"" + product + "\", \"quantity_requested\": \"" + target_volume + "\", \"price\": \"" + price + "\", \"start_time\": \"" + start_time + "\", \"quantity_dispensed\": \"" + dispensed_volume + "\"}";
     std::string curler = "screen -d -m curl -k -H \"Content-Type: application/json\" -d '"+json+"' https://drinkfill.herokuapp.com/machine_data/add";
 
-    system(curler.c_str());
+//    system(curler.c_str());
 //    debugOutput::sendMessage(curler, INFO);
 }
 

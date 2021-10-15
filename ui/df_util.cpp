@@ -53,6 +53,10 @@ void df_util::send_to_FSM()
         msg.append(";");
         break;
 
+    case SEND_PWM:
+        msg.append(";");
+        qDebug() << "IN DF_UTIL: " << msg << endl;
+
     default:
         msg.append("e");
         msg.append(";");

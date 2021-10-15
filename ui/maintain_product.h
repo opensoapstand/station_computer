@@ -23,6 +23,7 @@
 #include "dfuicommthread.h"
 #include "maintenancePage.h"
 
+
 class maintenancePage;
 class idle;
 
@@ -81,6 +82,8 @@ private slots:
     void on_buttonPoint_clicked();
     void on_buttonDone_clicked();
     void on_buttonCancel_clicked();
+
+    void pwmSliderMoved(int percentage);
 
 private:
     void showEvent(QShowEvent *event);

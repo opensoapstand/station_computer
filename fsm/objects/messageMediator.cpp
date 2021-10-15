@@ -336,12 +336,12 @@ DF_ERROR messageMediator::getPositionReady()
    // FIXME: Need a better string parser...
    for (std::string::size_type i = 0; i < commandString.size(); ++i)
    {
-      if (isdigit(commandString[i]))
+      if (isdigit(commandString[0]))
       {
-         posChar = commandString[i];
+         posChar = commandString[0];
 
       }
-      if ((commandString[i] == DISPENSE_END_CHAR) || (commandString[i] == DRINK_CHAR))
+      if ((commandString[i] == DISPENSE_END_CHAR) || (commandString[i] == DRINK_CHAR) || commandString[i] == PWM_CHAR)
       {
          solenoidChar = commandString[i];
       }
@@ -351,19 +351,6 @@ DF_ERROR messageMediator::getPositionReady()
           sizeChar = (commandString[i]);
       }
 
-
-      // FIXME: This is horrible...will remove later.
-//      if (commandString[i] == '1')
-//      {
-//         m_nVolumeTarget = 1500;
-//      } else if(commandString[i] == '2') {
-//         m_nVolumeTarget = 400;
-//      } else if(commandString[i] == '3') {
-//          m_nVolumeTarget = 200;
-//      } else if(commandString[i] == '4') {
-//          m_nVolumeTarget = 500;
-//      }
-     //cout << commandString[i] << endl;
    }
 
 
@@ -433,8 +420,12 @@ DF_ERROR messageMediator::getPositionReady()
          break;
 
       case CLEAN_CHAR:
-
          break;
+
+      case PWM_CHAR:
+          debugOutput::sendMessage("PWM CHAR", INFO);
+          m_cCommand = PWM_CHAR;
+          break;
 
       case DISPENSE_END_CHAR:
          debugOutput::sendMessage("Dispense END CHAR", INFO);
@@ -448,8 +439,10 @@ DF_ERROR messageMediator::getPositionReady()
 
    if (!isalpha(sizeChar)) //for second char not an alphabet
    {
-      debugOutput::sendMessage("Irrelevant input", INFO);
-      e_ret = ERROR_NETW_NO_POSITION;
+//      debugOutput::sendMessage("Irrelevant input", INFO);
+//      e_ret = ERROR_NETW_NO_POSITION;
+       debugOutput::sendMessage("In Message Mediator - I know this is PWM", INFO);
+       m_nSize = TEST_CHAR;
    }
    else
    {

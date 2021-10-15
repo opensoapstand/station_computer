@@ -15,9 +15,11 @@
 #define THANKYOUPAGE_H
 
 #include "df_util.h"
+#include <curl/curl.h>
 
 class dispensePage;
 class idle;
+class payPage;
 
 namespace Ui {
 class thankYouPage;
@@ -29,7 +31,7 @@ class thankYouPage : public QWidget
 
 public:
     explicit thankYouPage(QWidget *parent = nullptr);
-    void setPage(dispensePage* pageDispense, idle* pageIdle);
+    void setPage(dispensePage* pageDispense, idle* pageIdle, payPage* pagePayment);
     ~thankYouPage();
 
 private slots:
@@ -43,6 +45,7 @@ private:
     Ui::thankYouPage *ui;
     dispensePage* dispensingPage;
     idle* idlePage;
+    payPage* paymentPage;
 
     int _thankYouTimeoutSec;
     QTimer* thankYouEndTimer;
@@ -51,6 +54,14 @@ private:
     QTimer* rinseTimer;
     int _rinseTimerTimeoutSec;
     bool rinse;
+
+    CURL *curl;
+    CURLcode res;
+    std::string readBuffer;
+    QByteArray curl_param_array;
+    char * curl_data;
+
+    void curler();
 };
 
 #endif // THANKYOUPAGE_H

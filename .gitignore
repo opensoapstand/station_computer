@@ -16,6 +16,7 @@ sqlite/build
 test/test_8344
 test/bus_test1
 test/bus_test2
+node_modules/*
 
 ### QT Creator ###
 

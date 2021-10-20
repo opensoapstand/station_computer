@@ -707,7 +707,7 @@ QString DbManager::getUnits(int slot){
     units_query.exec();
 
     while (units_query.next()) {
-            units_string = product_id_query.value(0).toString();
+            units_string = units_query.value(0).toString();
 
             //qDebug() << "Product: " << product_name << endl;
         }

@@ -697,3 +697,20 @@ QString DbManager::getProductID(int slot){
 
     return product_id_string;
 }
+
+QString DbManager::getUnits(int slot){
+    QSqlQuery units_query;
+    QString units_string;
+
+    units_query.prepare("SELECT units FROM products WHERE slot=:slot");
+    units_query.bindValue(":slot", slot);
+    units_query.exec();
+
+    while (units_query.next()) {
+            units_string = product_id_query.value(0).toString();
+
+            //qDebug() << "Product: " << product_name << endl;
+        }
+
+    return units_string;
+}

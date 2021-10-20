@@ -102,7 +102,7 @@ void dispensePage::showEvent(QShowEvent *event)
 
     idlePage->dfUtility->send_to_FSM();
     idlePage->dfUtility->m_IsSendingFSM = false;
-    ui->finish_Button->setEnabled(false);
+    ui->finish_Button->setEnabled(true);
 
 //    ui->dispense_clean_label->setText(" ");
 //    ui->dispense_progress_label->setText(" ");

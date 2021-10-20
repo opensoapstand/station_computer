@@ -347,6 +347,8 @@ void maintain_product::on_image_clicked(){
 }
 
 void maintain_product::on_pumpButton_clicked(){
+        DbManager db(DB_PATH);
+
         int checkOption = idlePage->userDrinkOrder->getOption();
         if(checkOption > 0 && checkOption <= 9) {
             QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
@@ -520,6 +522,8 @@ void maintain_product::on_vol_per_tickButton_clicked(){
 }
 
 void maintain_product::updateVolumeDisplayed(double dispensed){
+    DbManager db(DB_PATH);
+
     double vol_dispensed = dispensed;
     ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) + db.getUnits(this->idlePage->userDrinkOrder->getOption()));
 

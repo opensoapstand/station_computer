@@ -509,7 +509,7 @@ void payPage::showEvent(QShowEvent *event)
     }
 
     if (db.getPaymentMethod(checkOption) == "qr"){
-        _paymentTimeoutSec = 120;
+        _paymentTimeoutSec = 444;
        generateQR();
     }
 

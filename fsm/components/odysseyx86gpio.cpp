@@ -369,7 +369,7 @@ void oddyseyx86GPIO::monitorGPIO_PWR()
                         usleep(1000000);
                         if (readButtonPin(341)){
                             debugOutput::sendMessage("POWER OFF\n",INFO);
-                            system("echo 'D@nkF1ll$' | sudo shutdown -h now");
+                            system("echo D@nkF1ll$ | sudo -S shutdown -h now");
                         }else if(readButtonPin(340)){
                             debugOutput::sendMessage("MM\n", INFO);
                             // ENTER MAINTENANCE MODE!

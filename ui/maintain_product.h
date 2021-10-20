@@ -22,6 +22,7 @@
 #include "drinkorder.h"
 #include "dfuicommthread.h"
 #include "maintenancePage.h"
+#include <curl/curl.h>
 
 
 class maintenancePage;
@@ -112,6 +113,12 @@ private:
     double ticks;
 
     void updateValues();
+    void curler();
+    CURL *curl;
+    CURLcode res;
+    std::string readBuffer;
+    QByteArray curl_param_array;
+    char * curl_data;
 };
 
 #endif // MAINTAIN_PRODUCT_H

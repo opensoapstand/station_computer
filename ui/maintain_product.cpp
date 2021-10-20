@@ -559,6 +559,7 @@ void maintain_product::on_refillButton_clicked(){
                 ui->total_dispensed->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + "ml");
                 ui->remainingLabel->setText(QString::number(db.getRemaining(this->idlePage->userDrinkOrder->getOption())) + "ml");
                 ui->lastRefillLabel->setText(db.getLastRefill(this->idlePage->userDrinkOrder->getOption()));
+                curler();
                 break;
             }
             else{
@@ -935,5 +936,55 @@ void maintain_product::pwmSliderMoved(int percentage){
 //    idlePage->dfUtility->m_IsSendingFSM = false;
 
 //    command = "";
+}
+
+size_t WriteCallback3(char* contents, size_t size, size_t nmemb, void *userp){
+    ((std::string*)userp)->append((char*)contents, size * nmemb);
+    return size * nmemb;
+}
+
+void maintain_product::curler(){
+
+    DbManager db(DB_PATH);
+    int checkOption = idlePage->userDrinkOrder->getOption();
+
+    QString curl_param = "pid="+db.getProductID(checkOption)+"&full_amount="+QString::number(db.getFullProduct(checkOption));
+    curl_param_array = curl_param.toLocal8Bit();
+    curl_data = curl_param_array.data();
+
+    curl = curl_easy_init();
+    if (!curl){
+        qDebug() << "cURL failed to init" << endl;
+    }else{
+        qDebug() << "cURL init success" << endl;
+
+        cout << "CURLING DATA: " << curl_param_array.data() << " is " << sizeof(curl_param_array.data()) << " bytes" << endl;
+
+        curl_easy_setopt(curl, CURLOPT_URL, "http://Drinkfill-env.eba-qatmjpdr.us-east-2.elasticbeanstalk.com/api/machine_data/resetStock");
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
+       // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback3);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+        qDebug() << "Curl Setup done" << endl;
+
+        res = curl_easy_perform(curl);
+
+        if (res != CURLE_OK){
+            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+            curl_easy_cleanup(curl);
+        }else{
+            qDebug() << "CURL SUCCESS!" << endl;
+            std::cout <<"Here's the output:\n" << readBuffer << endl;
+
+            if (readBuffer == "true"){
+                curl_easy_cleanup(curl);
+                readBuffer = "";
+            }else{
+                curl_easy_cleanup(curl);
+                readBuffer = "";
+            }
+
+        }
+    }
 }
 

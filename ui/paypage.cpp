@@ -572,7 +572,7 @@ void payPage::generateQR(){
 //            }
 //        }
 
-    _paymentTimeoutSec=120;
+    _paymentTimeoutSec=444;
     _qrTimeOutSec=5;
     qrTimer->start(1000);
 

@@ -78,7 +78,7 @@ drink::drink(int slot)
 }
 
 // Test CTOR
-drink::drink(int slot, string name, double nVolumeDispensed, double nVolumeTarget_l,double nVolumeTarget_s , double calibration_const, double price_l, double price_s, bool isStillDrink, double nVolumePerTick, string nPLU_l, string nPLU_s, string paymentMethod){
+drink::drink(int slot, string name, double nVolumeDispensed, double nVolumeTarget_l,double nVolumeTarget_s , double calibration_const, double price_l, double price_s, bool isStillDrink, double nVolumePerTick, string nPLU_l, string nPLU_s, string paymentMethod, string name_receipt){
     m_nSlot = slot;
     m_name = name;
     m_nVolumeDispensed = nVolumeDispensed;
@@ -92,6 +92,7 @@ drink::drink(int slot, string name, double nVolumeDispensed, double nVolumeTarge
     m_nPLU_l = nPLU_l;
     m_nPLU_s = nPLU_s;
     m_paymentMethod = paymentMethod;
+    m_name_receipt = name_receipt;
 
     // XXX: Find calculation for this...
     // m_nVolumePerTick = 20; // Seems like best guesstimate tick.

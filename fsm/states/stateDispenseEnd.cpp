@@ -297,7 +297,7 @@ DF_ERROR stateDispenseEnd::printer(){
 
     string cost = (cost2);
 
-    std::string name = (cassettes[pos].getDrink()->m_name);
+    std::string name = (cassettes[pos].getDrink()->m_name_receipt);
     std::string plu;
 
     size = m_pMessaging->getnSize();

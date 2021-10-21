@@ -96,8 +96,9 @@ void thankYouPage::showEvent(QShowEvent *event)
     thankYouEndTimer->start(1000);
     _thankYouTimeoutSec = 7;
 
-    //curler();
-
+    if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "qr"){
+        curler();
+    }
 
 
 }

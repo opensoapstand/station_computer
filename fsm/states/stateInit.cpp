@@ -150,6 +150,7 @@ static int callback(void *data, int argc, char **argv, char **azColName){
    string paymentMethod;
    string plu_l;
    string plu_s;
+   string name_receipt;
 
 //   printf("\n----------\n");
 
@@ -166,6 +167,9 @@ static int callback(void *data, int argc, char **argv, char **azColName){
           //printf("setting name \n");
           name = argv[i];
 //          printf("Name: %s \n", name.c_str());
+      }
+      else if (colname == "name_receipt"){
+        name_receipt = argv[i];
       }
       else if (colname == "volume_dispensed"){
           //printf("setting vol disp \n");
@@ -222,7 +226,7 @@ static int callback(void *data, int argc, char **argv, char **azColName){
 
 //      printf("\n");
 
-      g_cassettes[slot-1].setDrink(new drink(slot, name, volume_dispensed, volume_target_l, volume_target_s , calibration_const, price_l, price_s, false, volume_per_tick, plu_l, plu_s, paymentMethod));
+      g_cassettes[slot-1].setDrink(new drink(slot, name, volume_dispensed, volume_target_l, volume_target_s , calibration_const, price_l, price_s, false, volume_per_tick, plu_l, plu_s, paymentMethod, name_receipt));
    }
 
    return 0;
@@ -255,7 +259,7 @@ DF_ERROR stateInit::setDrinks(){
     char *sql = new char[sql11.length() + 1];
     strcpy(sql, sql11.c_str());
 
-    printf("\n______________PRODUCTS_______________\n\n");
+    //printf("\n______________PRODUCTS_______________\n\n");
 
 
     /* Execute SQL statement */
@@ -269,7 +273,7 @@ DF_ERROR stateInit::setDrinks(){
     }
     sqlite3_close(db);
 
-    printf("\n_____________________________________\n\n");
+//    printf("\n_____________________________________\n\n");
 
 
    // FIXME: Hardcode for now.

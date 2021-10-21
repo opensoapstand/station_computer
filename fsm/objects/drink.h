@@ -81,6 +81,7 @@ public:
         double m_price_l;
         double m_price_s;
         string m_name;
+        string m_name_receipt;
         double m_buttonPressDuration;
         string m_nPLU_l;
         string m_nPLU_s;

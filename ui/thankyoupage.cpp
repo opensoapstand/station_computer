@@ -101,6 +101,7 @@ void thankYouPage::showEvent(QShowEvent *event)
         ui->mainPage_Button->setEnabled(true);
     }
 
+    QCoreApplication::processEvents();
     curler();
 }
 

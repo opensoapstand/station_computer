@@ -101,7 +101,7 @@ void thankYouPage::showEvent(QShowEvent *event)
         ui->mainPage_Button->setEnabled(true);
     }
 
-    //curler();
+    curler();
 }
 
 size_t WriteCallback2(char* contents, size_t size, size_t nmemb, void *userp){
@@ -157,9 +157,6 @@ void thankYouPage::curler(){
 void thankYouPage::onThankyouTimeoutTick(){
     if(-- _thankYouTimeoutSec >= 0) {
         qDebug() << "thanksPage: Tick Down: " << _thankYouTimeoutSec << endl;
-        if (_thankYouTimeoutSec == 4){
-            curler();
-        }
     } else {
         qDebug() << "thanksPage: Timer Done!" << _thankYouTimeoutSec << endl;
 

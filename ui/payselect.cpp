@@ -130,7 +130,6 @@ void paySelect::on_payPage_Button_clicked()
         // dispensingPage->showEvent(dispenseEvent);
         // this->hide();
         // dispensingPage->showFullScreen();
-        paymentPage->showEvent(dispenseEvent);
         paymentPage->showFullScreen();
         this->hide();
     }

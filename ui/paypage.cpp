@@ -580,6 +580,42 @@ void payPage::generateQR(){
         _paymentTimeoutSec=120;
         _qrTimeOutSec=5;
         qrTimer->start(1000);
+    }else{
+        curl = curl_easy_init();
+    if (!curl){
+        qDebug() << "cURL failed to init" << endl;
+    }else{
+        qDebug() << "cURL init success" << endl;
+
+        cout << "CURLING DATA: " << curl_param_array.data() << " is " << sizeof(curl_param_array.data()) << " bytes" << endl;
+
+        curl_easy_setopt(curl, CURLOPT_URL, "http://Drinkfill-env.eba-qatmjpdr.us-east-2.elasticbeanstalk.com/api/machine_data/check_order_status");
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
+       // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+        qDebug() << "Curl Setup done" << endl;
+
+        res = curl_easy_perform(curl);
+
+        if (res != CURLE_OK){
+            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+            curl_easy_cleanup(curl);
+        }else{
+            qDebug() << "CURL SUCCESS!" << endl;
+            std::cout <<"Here's the output:\n" << readBuffer << endl;
+
+            //if (readBuffer == "true"){
+                curl_easy_cleanup(curl);
+                readBuffer = "";
+                on_payment_bypass_Button_clicked();
+            //}else{
+              //  curl_easy_cleanup(curl);
+              //  readBuffer = "";
+            //}
+
+        }
+    }
     }
 
 }

@@ -575,9 +575,11 @@ void payPage::generateQR(){
 //            }
 //        }
 
-    _paymentTimeoutSec=120;
-    _qrTimeOutSec=5;
-    qrTimer->start(1000);
+    if (db.getPaymentMethod(checkOption) == "qr"){
+        _paymentTimeoutSec=120;
+        _qrTimeOutSec=5;
+        qrTimer->start(1000);
+    }
 
 }
 

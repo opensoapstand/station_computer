@@ -275,8 +275,9 @@ void payPage::on_payment_bypass_Button_clicked()
     stopPayTimers();
     //readTimer->stop();
     dispensingPage->showEvent(dispenseEvent);
-    this->hide();
     dispensingPage->showFullScreen();
+    this->hide();
+    
 }
 
 // Payment Processing Debug Button

@@ -107,7 +107,7 @@ payPage::payPage(QWidget *parent) :
                 payment = true;
                 ui->payment_bypass_Button->setEnabled(false);
             }else{
-                 ui->payment_bypass_Button->setEnabled(true);
+                 ui->payment_bypass_Button->setEnabled(false);
             }
 
         }
@@ -511,6 +511,9 @@ void payPage::showEvent(QShowEvent *event)
     if (db.getPaymentMethod(checkOption) == "qr"){
         _paymentTimeoutSec = 444;
        generateQR();
+    }else if (db.getPaymentMethod(checkOption) == "plu" || db.getPaymentMethod(checkOption) == "barcode"){
+        generateQR();
+        on_payment_bypass_Button_clicked();
     }
 
 

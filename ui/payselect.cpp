@@ -127,9 +127,11 @@ void paySelect::on_payPage_Button_clicked()
         paymentPage->showFullScreen();
         this->hide();
     } else if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "barcode" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "plu"){
-        dispensingPage->showEvent(dispenseEvent);
+        // dispensingPage->showEvent(dispenseEvent);
+        // this->hide();
+        // dispensingPage->showFullScreen();
+        paymentPage->showFullScreen();
         this->hide();
-        dispensingPage->showFullScreen();
     }
 
 }

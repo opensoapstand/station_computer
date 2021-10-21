@@ -86,23 +86,20 @@ void thankYouPage::showEvent(QShowEvent *event)
         ui->rinse_label->setText("<p align=center>Water rinse coming in<br><br>5</p>");
         ui->rinse_label->show();
         ui->mainPage_Button->setEnabled(false);
-    }
-    // else if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "qr" ){
-    //     ui->rinse_label->hide();
-    //     thankYouEndTimer->start(1000);
-    //     _thankYouTimeoutSec = 5;
-    //     ui->mainPage_Button->setEnabled(true);
-    //     curler();
-    // }
-    else{
+    }else{
         ui->rinse_label->hide();
         thankYouEndTimer->start(1000);
         _thankYouTimeoutSec = 5;
         ui->mainPage_Button->setEnabled(true);
     }
 
-    QCoreApplication::processEvents();
-    curler();
+    thankYouEndTimer->start(1000);
+    _thankYouTimeoutSec = 7;
+
+    //curler();
+
+
+
 }
 
 size_t WriteCallback2(char* contents, size_t size, size_t nmemb, void *userp){

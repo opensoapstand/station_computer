@@ -176,52 +176,52 @@ void payPage::setPage(paySelect *pageSizeSelect, dispensePage* pageDispense, idl
 
 void payPage::resizeEvent(QResizeEvent *event){
     // FIXME: MAGIC NUMBER!!! UX410 Socket Auto Close time is 60 seconds so timer kills page GUI
-//     idlePaymentTimer->start(60000);
+    idlePaymentTimer->start(60000);
 
-//     //DbManager db(DB_PATH);
+    //DbManager db(DB_PATH);
 
-//     int checkOption = idlePage->userDrinkOrder->getOption();
-//     char drinkSize;
-//     if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
-//         drinkSize = 's';
-//     }
-//     if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK){
-//         drinkSize = 'l';
-//     }
+    int checkOption = idlePage->userDrinkOrder->getOption();
+    char drinkSize;
+    if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
+        drinkSize = 's';
+    }
+    if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK){
+        drinkSize = 'l';
+    }
 
-//     QString bitmap_location;
+    QString bitmap_location;
 
-//     if (!payment){
-//         bitmap_location = ":/light/5_pay_page.png";
-//     }
-//     else if(checkOption > 0 && checkOption <= 9) {
-//         bitmap_location.append(":/light/5_pay_page_");
-//         bitmap_location.append(drinkSize);
-//         bitmap_location.append("_");
-//         bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
-//         bitmap_location.append(".png");
-//         ui->order_drink_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
-//     } else {
-//         bitmap_location = ":/light/5_pay_page_l_1.png";
-//     }
+    if (!payment){
+        bitmap_location = ":/light/5_pay_page.png";
+    }
+    else if(checkOption > 0 && checkOption <= 9) {
+        bitmap_location.append(":/light/5_pay_page_");
+        bitmap_location.append(drinkSize);
+        bitmap_location.append("_");
+        bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
+        bitmap_location.append(".png");
+        ui->order_drink_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
+    } else {
+        bitmap_location = ":/light/5_pay_page_l_1.png";
+    }
 
-//     QPixmap background(bitmap_location);
-//     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+    QPixmap background(bitmap_location);
+    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
 
-//     QPalette palette;
-//     palette.setBrush(QPalette::Background, background);
-//     this->setPalette(palette);
+    QPalette palette;
+    palette.setBrush(QPalette::Background, background);
+    this->setPalette(palette);
 
-//     ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
-//     ui->order_drink_amount->setText("");
+    ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
+    ui->order_drink_amount->setText("");
 
-// //    if (db.getProductVolume(checkOption, drinkSize) < 1000){
-// //        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
-// //    }else{
-// //        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
-// //    }
+//    if (db.getProductVolume(checkOption, drinkSize) < 1000){
+//        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
+//    }else{
+//        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
+//    }
 
-//     response = false;
+    response = false;
 
 }
 
@@ -275,9 +275,8 @@ void payPage::on_payment_bypass_Button_clicked()
     stopPayTimers();
     //readTimer->stop();
     dispensingPage->showEvent(dispenseEvent);
-    dispensingPage->showFullScreen();
     this->hide();
-    
+    dispensingPage->showFullScreen();
 }
 
 // Payment Processing Debug Button
@@ -512,9 +511,6 @@ void payPage::showEvent(QShowEvent *event)
     if (db.getPaymentMethod(checkOption) == "qr"){
         _paymentTimeoutSec = 444;
        generateQR();
-    }else if (db.getPaymentMethod(checkOption) == "plu" || db.getPaymentMethod(checkOption) == "barcode"){
-        generateQR();
-        on_payment_bypass_Button_clicked();
     }
 
 
@@ -532,13 +528,27 @@ void payPage::generateQR(){
         drinkSize = 'l';
     }
 
-        QString machine_id = db.getMachineID();
+    QPixmap map(400,400);
+    map.fill(QColor("black"));
+    QPainter painter(&map);
+//    ui->qrCode->setPixmap(map);
+
+    //QString qrdata_amount = QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2);
+    QString machine_id = db.getMachineID();
     QString product_id = db.getProductID(checkOption);
     order_id = QUuid::createUuid().QUuid::toString();
     order_id = order_id.remove("{");
     order_id = order_id.remove("}");
+    //qDebug() << "ORDER ID: " << order_id << endl;
+    QString qrdata = "http://Drinkfill-env.eba-qatmjpdr.us-east-2.elasticbeanstalk.com/payment?mid="+machine_id+"&pid="+product_id+"&size="+drinkSize+"&oid="+order_id;
 
-    
+    paintQR(painter, QSize(400,400), qrdata, QColor("white"));
+    ui->qrCode->setPixmap(map);
+
+    QString curl_param = "oid="+order_id;
+    curl_param_array = curl_param.toLocal8Bit();
+    curl_data = curl_param_array.data();
+    cout << "CURLING DATA: " << curl_data << " is " << sizeof(curl_data) << " bytes" << endl;
     //curler();
 
 //        curl = curl_easy_init();
@@ -562,65 +572,9 @@ void payPage::generateQR(){
 //            }
 //        }
 
-    if (db.getPaymentMethod(checkOption) == "qr"){
-        QPixmap map(400,400);
-        map.fill(QColor("black"));
-        QPainter painter(&map);
-//    ui->qrCode->setPixmap(map);
-
-    //QString qrdata_amount = QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2);
-
-    //qDebug() << "ORDER ID: " << order_id << endl;
-    QString qrdata = "http://Drinkfill-env.eba-qatmjpdr.us-east-2.elasticbeanstalk.com/payment?mid="+machine_id+"&pid="+product_id+"&size="+drinkSize+"&oid="+order_id;
-
-    paintQR(painter, QSize(400,400), qrdata, QColor("white"));
-    ui->qrCode->setPixmap(map);
-
-    QString curl_param = "oid="+order_id;
-    curl_param_array = curl_param.toLocal8Bit();
-    curl_data = curl_param_array.data();
-    cout << "CURLING DATA: " << curl_data << " is " << sizeof(curl_data) << " bytes" << endl;
-
-        _paymentTimeoutSec=120;
-        _qrTimeOutSec=5;
-        qrTimer->start(1000);
-    }else{
-        curl = curl_easy_init();
-    if (!curl){
-        qDebug() << "cURL failed to init" << endl;
-    }else{
-        qDebug() << "cURL init success" << endl;
-
-        cout << "CURLING DATA: " << curl_param_array.data() << " is " << sizeof(curl_param_array.data()) << " bytes" << endl;
-
-        curl_easy_setopt(curl, CURLOPT_URL, "http://Drinkfill-env.eba-qatmjpdr.us-east-2.elasticbeanstalk.com/api/machine_data/check_order_status");
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
-       // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-        qDebug() << "Curl Setup done" << endl;
-
-        res = curl_easy_perform(curl);
-
-        if (res != CURLE_OK){
-            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
-            curl_easy_cleanup(curl);
-        }else{
-            qDebug() << "CURL SUCCESS!" << endl;
-            std::cout <<"Here's the output:\n" << readBuffer << endl;
-
-            //if (readBuffer == "true"){
-                curl_easy_cleanup(curl);
-                readBuffer = "";
-                on_payment_bypass_Button_clicked();
-            //}else{
-              //  curl_easy_cleanup(curl);
-              //  readBuffer = "";
-            //}
-
-        }
-    }
-    }
+    _paymentTimeoutSec=120;
+    _qrTimeOutSec=5;
+    qrTimer->start(1000);
 
 }
 

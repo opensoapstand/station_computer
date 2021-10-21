@@ -101,7 +101,7 @@ void thankYouPage::showEvent(QShowEvent *event)
         ui->mainPage_Button->setEnabled(true);
     }
 
-    curler();
+    //curler();
 }
 
 size_t WriteCallback2(char* contents, size_t size, size_t nmemb, void *userp){

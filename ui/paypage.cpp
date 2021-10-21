@@ -551,7 +551,7 @@ void payPage::generateQR(){
     QString curl_param = "oid="+order_id;
     curl_param_array = curl_param.toLocal8Bit();
     curl_data = curl_param_array.data();
-    cout << "CURLING DATA: " << curl_data << " is " << sizeof(curl_data) << " bytes" << endl;
+    //cout << "CURLING DATA: " << curl_data << " is " << sizeof(curl_data) << " bytes" << endl;
     //curler();
 
 //        curl = curl_easy_init();
@@ -591,7 +591,7 @@ void payPage::curler(){
     }else{
         qDebug() << "cURL init success" << endl;
 
-        cout << "CURLING DATA: " << curl_param_array.data() << " is " << sizeof(curl_param_array.data()) << " bytes" << endl;
+        //cout << "CURLING DATA: " << curl_param_array.data() << " is " << sizeof(curl_param_array.data()) << " bytes" << endl;
 
         curl_easy_setopt(curl, CURLOPT_URL, "http://Drinkfill-env.eba-qatmjpdr.us-east-2.elasticbeanstalk.com/api/machine_data/check_order_status");
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());

@@ -19,8 +19,8 @@
   <widget class="QPushButton" name="previousPage_Button">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>1820</y>
+     <x>20</x>
+     <y>20</y>
      <width>301</width>
      <height>100</height>
     </rect>
@@ -32,8 +32,8 @@
   <widget class="QPushButton" name="mainPage_Button">
    <property name="geometry">
     <rect>
-     <x>470</x>
-     <y>1750</y>
+     <x>460</x>
+     <y>1760</y>
      <width>161</width>
      <height>141</height>
     </rect>
@@ -45,19 +45,29 @@
   <widget class="QLabel" name="order_total_amount">
    <property name="geometry">
     <rect>
-     <x>591</x>
-     <y>1480</y>
-     <width>321</width>
+     <x>700</x>
+     <y>1440</y>
+     <width>231</width>
      <height>41</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <family>Open Sans</family>
-     <pointsize>22</pointsize>
+     <family>Montserrat</family>
+     <pointsize>-1</pointsize>
      <weight>75</weight>
      <bold>true</bold>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(:/light/background.png);
+font-style: light;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+
+color: #58595B;</string>
    </property>
    <property name="text">
     <string>order_total_amount</string>
@@ -72,20 +82,21 @@
   <widget class="QLabel" name="order_drink_amount">
    <property name="geometry">
     <rect>
-     <x>690</x>
-     <y>1365</y>
+     <x>700</x>
+     <y>1310</y>
      <width>221</width>
      <height>41</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <family>Proxima Nova</family>
+     <family>Montserrat</family>
      <pointsize>-1</pointsize>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">font-family: Proxima Nova;
+    <string notr="true">font-family: Montserrat;
+font-style: light;
 font-size: 24px;
 color: #58595B;</string>
    </property>
@@ -145,19 +156,17 @@ color: #58595B;</string>
   <widget class="QLabel" name="productLabel">
    <property name="geometry">
     <rect>
-     <x>170</x>
-     <y>1365</y>
+     <x>180</x>
+     <y>1310</y>
      <width>650</width>
      <height>41</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">color: #58595B;
-font-family: Proxima Nova;
-font-style: normal;
-font-weight: normal;
-font-size: 23px;
-line-height: 29px;</string>
+    <string notr="true">font-family: Montserrat;
+font-style: light;
+font-size: 24px;
+color: #58595B;</string>
    </property>
    <property name="text">
     <string/>
@@ -166,10 +175,10 @@ line-height: 29px;</string>
   <widget class="QLabel" name="qrCode">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>660</y>
-     <width>400</width>
-     <height>400</height>
+     <x>350</x>
+     <y>600</y>
+     <width>360</width>
+     <height>360</height>
     </rect>
    </property>
    <property name="autoFillBackground">

@@ -19,8 +19,8 @@
   <widget class="QPushButton" name="previousPage_Button">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>1820</y>
+     <x>30</x>
+     <y>30</y>
      <width>281</width>
      <height>100</height>
     </rect>
@@ -33,9 +33,9 @@
    <property name="geometry">
     <rect>
      <x>180</x>
-     <y>1590</y>
+     <y>1520</y>
      <width>751</width>
-     <height>81</height>
+     <height>91</height>
     </rect>
    </property>
    <property name="text">
@@ -46,7 +46,7 @@
    <property name="geometry">
     <rect>
      <x>470</x>
-     <y>1740</y>
+     <y>1770</y>
      <width>141</width>
      <height>141</height>
     </rect>
@@ -58,14 +58,14 @@
   <widget class="QLabel" name="priceLabel">
    <property name="geometry">
     <rect>
-     <x>819</x>
-     <y>1391</y>
+     <x>810</x>
+     <y>1320</y>
      <width>111</width>
      <height>29</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font-family: Proxima Nova;
+    <string notr="true">font-family: Montserrat;
 background-image: url(:/light/background.png);
 font-style: normal;
 font-weight: normal;
@@ -85,15 +85,15 @@ color: #58595B;</string>
    <property name="geometry">
     <rect>
      <x>806</x>
-     <y>1498</y>
+     <y>1430</y>
      <width>121</width>
      <height>51</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font-family: Proxima Nova;
+    <string notr="true">font-family: Montserrat;
 background-image: url(:/light/background.png);
-font-style: normal;
+font-style: light;
 font-weight: bold;
 font-size: 36px;
 line-height: 44px;
@@ -110,14 +110,14 @@ color: #58595B;</string>
   <widget class="QLabel" name="price_sLabel">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>1225</y>
+     <x>560</x>
+     <y>1149</y>
      <width>211</width>
      <height>41</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font-family: Proxima-Nova;
+    <string notr="true">font-family: Montserrat;
 background-image: url(:/light/background.png);
 font-style: normal;
 font-weight: bold;
@@ -136,14 +136,14 @@ color: #FFFFFF;
   <widget class="QLabel" name="price_lLabel">
    <property name="geometry">
     <rect>
-     <x>780</x>
-     <y>1225</y>
+     <x>790</x>
+     <y>1149</y>
      <width>211</width>
      <height>41</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font-family: Proxima-Nova;
+    <string notr="true">font-family: Montserrat;
 background-image: url(:/light/background.png);
 font-style: normal;
 font-weight: bold;
@@ -162,16 +162,16 @@ text-align: center;</string>
   <widget class="QLabel" name="volume_sLabel">
    <property name="geometry">
     <rect>
-     <x>553</x>
-     <y>1180</y>
+     <x>559</x>
+     <y>1100</y>
      <width>211</width>
      <height>41</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">color: #CBA580;
-font-family: Proxima Nova;
-font-style: normal;
+font-family: Montserrat;
+font-style: light;
 font-weight: normal;
 font-size: 20px;
 line-height: 24px;
@@ -188,16 +188,16 @@ text-align: center;
   <widget class="QLabel" name="volume_lLabel">
    <property name="geometry">
     <rect>
-     <x>778</x>
-     <y>1180</y>
+     <x>790</x>
+     <y>1100</y>
      <width>211</width>
      <height>41</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">color: #CBA580;
-font-family: Proxima Nova;
-font-style: normal;
+font-family: Montserrat;
+font-style: light;
 font-weight: normal;
 font-size: 20px;
 line-height: 24px;
@@ -213,8 +213,8 @@ text-align: center;</string>
   <widget class="QPushButton" name="orderSmall_Button">
    <property name="geometry">
     <rect>
-     <x>554</x>
-     <y>1160</y>
+     <x>560</x>
+     <y>1080</y>
      <width>209</width>
      <height>138</height>
     </rect>
@@ -226,8 +226,8 @@ text-align: center;</string>
   <widget class="QPushButton" name="orderBig_Button">
    <property name="geometry">
     <rect>
-     <x>780</x>
-     <y>1160</y>
+     <x>790</x>
+     <y>1080</y>
      <width>209</width>
      <height>138</height>
     </rect>
@@ -240,15 +240,15 @@ text-align: center;</string>
    <property name="geometry">
     <rect>
      <x>187</x>
-     <y>1391</y>
+     <y>1320</y>
      <width>650</width>
      <height>29</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">color: #58595B;
-font-family: Proxima Nova;
-font-style: normal;
+font-family: Montserrat;
+font-style: light;
 font-weight: normal;
 font-size: 23px;
 line-height: 29px;</string>

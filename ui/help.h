@@ -42,6 +42,7 @@ public:
 private slots:
     // **** Navigation ****
     void on_previousPage_Button_clicked();
+    void on_previousPage_Button_2_clicked();
     void on_refreshButton_clicked();
     void onHelpTimeoutTick();
 

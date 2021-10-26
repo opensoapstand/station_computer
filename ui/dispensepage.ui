@@ -19,89 +19,18 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QLabel" name="volumeDispensedLabel">
+  <widget class="QPushButton" name="finish_Button">
    <property name="geometry">
     <rect>
-     <x>420</x>
-     <y>1690</y>
-     <width>511</width>
-     <height>61</height>
+     <x>430</x>
+     <y>1450</y>
+     <width>231</width>
+     <height>91</height>
     </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>20</pointsize>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
    </property>
    <property name="text">
     <string/>
    </property>
-   <property name="alignment">
-    <set>Qt::AlignJustify|Qt::AlignVCenter</set>
-   </property>
-  </widget>
-  <widget class="QWidget" name="filler" native="true">
-   <property name="geometry">
-    <rect>
-     <x>416</x>
-     <y>978</y>
-     <width>271</width>
-     <height>621</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-image: url(:/light/drink_fill.png);</string>
-   </property>
-  </widget>
-  <widget class="QWidget" name="widget" native="true">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1080</width>
-     <height>1920</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-image: url(:/light/6_dispense_page.png);</string>
-   </property>
-   <widget class="QPushButton" name="finish_Button">
-    <property name="geometry">
-     <rect>
-      <x>425</x>
-      <y>1349</y>
-      <width>230</width>
-      <height>80</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Proxima Nova</family>
-      <pointsize>-1</pointsize>
-      <weight>75</weight>
-      <italic>false</italic>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background: #FFFFFF;
-border: 1px solid #CBA580;
-border-radius: 5px;
-color: #3D6675;
-
-font-family: Proxima Nova;
-font-style: normal;
-font-weight: bold;
-font-size: 24px;
-line-height: 29px;</string>
-    </property>
-    <property name="text">
-     <string>COMPLETE</string>
-    </property>
-   </widget>
   </widget>
  </widget>
  <resources/>

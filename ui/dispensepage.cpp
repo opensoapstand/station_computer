@@ -34,10 +34,10 @@ dispensePage::dispensePage(QWidget *parent) :
 //    this->setPalette(palette);
 
     /*hacky transparent button*/
-    //ui->finish_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->volumeDispensedLabel->setText("");
+    ui->finish_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+//    ui->volumeDispensedLabel->setText("");
 
-    this->ui->volumeDispensedLabel->setText("");
+//    this->ui->volumeDispensedLabel->setText("");
 
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
@@ -73,8 +73,8 @@ void dispensePage::showEvent(QShowEvent *event)
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
-    ui->widget->hide();
-    ui->filler->hide();
+//    ui->widget->hide();
+//    ui->filler->hide();
 
     // FIXME: this is a hack for size changes...
     QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
@@ -243,7 +243,7 @@ void dispensePage::on_finish_Button_clicked()
 
 
       thanksPage->showFullScreen();
-      this->ui->volumeDispensedLabel->setText("");
+//      this->ui->volumeDispensedLabel->setText("");
       this->hide();
 }
 
@@ -323,20 +323,26 @@ void dispensePage::PleaseResetTimerSlot(void){
 
 void dispensePage::updateVolumeDisplayed(double dispensed){
 
-    volumeDispensed = dispensed;
-    double target_volume = idlePage->userDrinkOrder->getSize();
-    double percentage = dispensed/target_volume*100;
+//    volumeDispensed = dispensed;
+//    double target_volume = idlePage->userDrinkOrder->getSize();
+//    double percentage = dispensed/target_volume*100;
 
-    //this->ui->filler->setStyleSheet("QWidget { height: 463px}");
-    this->ui->filler->move(416, 978 - 3*percentage);
+//    //this->ui->filler->setStyleSheet("QWidget { height: 463px}");
+//    this->ui->filler->move(416, 978 - 3*percentage);
 
-    QPixmap background(":/light/drink_empty.png");
+//    QPixmap background(":/light/drink_empty.png");
+//    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+//    QPalette palette;
+//    palette.setBrush(QPalette::Background, background);
+//    this->setPalette(palette);
+//    ui->widget->show();
+//    ui->filler->show();
+
+    QPixmap background(":/light/6_dispense_page.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
-    ui->widget->show();
-    ui->filler->show();
 
     ui->finish_Button->setEnabled(true);
     //ui->volumeDispensedLabel->setText("");

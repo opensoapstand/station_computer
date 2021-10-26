@@ -30,6 +30,7 @@ help::help(QWidget *parent) :
     ui->setupUi(this);
 
     ui->previousPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->previousPage_Button_2->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->refreshButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
     QPixmap background(":/light/3_help_page.png");
@@ -80,6 +81,17 @@ void help::setPage(productPage_1 *pageSelect, paySelect* paySelect, idle* pageId
 }
 
 void help::on_previousPage_Button_clicked(){
+    qDebug() << "Previoue Page button clicked" << endl;
+
+    DbManager db(DB_PATH);
+    db.addPageClick("HELP PAGE EXITED");
+
+    helpIdleTimer->stop();
+    idlePage->showFullScreen();
+    this->hide();
+}
+
+void help::on_previousPage_Button_2_clicked(){
     qDebug() << "Previoue Page button clicked" << endl;
 
     DbManager db(DB_PATH);

@@ -19,8 +19,8 @@
   <widget class="QPushButton" name="previousPage_Button">
    <property name="geometry">
     <rect>
-     <x>470</x>
-     <y>1740</y>
+     <x>450</x>
+     <y>1760</y>
      <width>171</width>
      <height>151</height>
     </rect>
@@ -36,6 +36,19 @@
      <y>-6</y>
      <width>1081</width>
      <height>1711</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="previousPage_Button_2">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>40</y>
+     <width>181</width>
+     <height>81</height>
     </rect>
    </property>
    <property name="text">

@@ -482,11 +482,13 @@ void payPage::showEvent(QShowEvent *event)
     ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
     this->ui->payment_countdownLabel->setText("");
 
-//    if (db.getProductVolume(checkOption, drinkSize) < 1000){
-//        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
-//    }else{
-//        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
-//    }
+    if (db.getProductVolume(checkOption, drinkSize) < 1000){
+        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + " " + db.getUnits(checkOption));
+    }else{
+        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
+    }
+
+    ui->order_drink_amount->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize), 'f', 2));
 
 
   //  ui->payment_pass_Button->setEnabled(false);
@@ -528,7 +530,7 @@ void payPage::generateQR(){
         drinkSize = 'l';
     }
 
-    QPixmap map(400,400);
+    QPixmap map(360,360);
     map.fill(QColor("black"));
     QPainter painter(&map);
 //    ui->qrCode->setPixmap(map);
@@ -542,7 +544,7 @@ void payPage::generateQR(){
     //qDebug() << "ORDER ID: " << order_id << endl;
     QString qrdata = "http://Drinkfill-env.eba-qatmjpdr.us-east-2.elasticbeanstalk.com/payment?mid="+machine_id+"&pid="+product_id+"&size="+drinkSize+"&oid="+order_id;
 
-    paintQR(painter, QSize(400,400), qrdata, QColor("white"));
+    paintQR(painter, QSize(360,360), qrdata, QColor("white"));
     ui->qrCode->setPixmap(map);
 
     QString curl_param = "oid="+order_id;

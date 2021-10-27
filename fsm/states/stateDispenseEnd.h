@@ -74,5 +74,8 @@ class stateDispenseEnd : public stateVirtual
         void printQr(const QrCode &qr);
         std::string getMachineID();
 
+        CURL *curl;
+        CURLcode res;
+        char * curl_data;
 };
 #endif

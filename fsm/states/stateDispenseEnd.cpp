@@ -11,6 +11,7 @@
 //***************************************
 
 #include "stateDispenseEnd.h"
+#include <curl/curl.h>
 
 #define DISPENSE_END_STRING "Dispense End"
 
@@ -125,12 +126,13 @@ DF_ERROR stateDispenseEnd::onExit()
 
    if (size != TEST_CHAR){
        updateDB();
-       sendDB();
+
        //QRgen();
 
        if (paymentMethod == "barcode" || paymentMethod == "plu"){
            debugOutput::sendMessage("Printing receipt", INFO);
            printer();
+           sendDB();
        }
    }
 
@@ -157,6 +159,8 @@ DF_ERROR stateDispenseEnd::onExit()
    return e_ret;
 }
 
+
+
 static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
    int i;
    for(i = 0; i<argc; i++) {
@@ -174,12 +178,42 @@ DF_ERROR stateDispenseEnd::sendDB(){
     std::string start_time = (cassettes[pos].getDrink()->m_nStartTime);
     std::string dispensed_volume = to_string(cassettes[pos].getDrink()->m_nVolumeDispensed);
     std::string machine_id = getMachineID();
+    std::string pid = cassettes[pos].getDrink()->m_pid;
+    std::string EndTime;
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+    strftime(EndTime, 50, "%F %T", timeinfo);
 
-    std::string json = "{\"machineId\": \"" + machine_id + "\", \"product\": \"" + product + "\", \"quantity_requested\": \"" + target_volume + "\", \"price\": \"" + price + "\", \"start_time\": \"" + start_time + "\", \"quantity_dispensed\": \"" + dispensed_volume + "\"}";
-    std::string curler = "screen -d -m curl -k -H \"Content-Type: application/json\" -d '"+json+"' https://drinkfill.herokuapp.com/machine_data/add";
+//    std::string json = "{\"machineId\": \"" + machine_id + "\", \"product\": \"" + product + "\", \"quantity_requested\": \"" + target_volume + "\", \"price\": \"" + price + "\", \"start_time\": \"" + start_time + "\", \"quantity_dispensed\": \"" + dispensed_volume + "\"}";
+//    std::string curler = "screen -d -m curl -k -H \"Content-Type: application/json\" -d '"+json+"' https://drinkfill.herokuapp.com/machine_data/add";
 
 //    system(curler.c_str());
 //    debugOutput::sendMessage(curler, INFO);
+
+    std::string curl_param = "contents="+product+"&quantity_requested="+target_volume+"&quantity_dispensed="+dispensed_volume+"&size_unit=ml&price="+price+"&productId="+pid+"&start_time="+start_time+"&end_time="+EndTime+"MachineSerialNumber="+machine_id;
+    char buffer[1080];
+    strcpy(buffer, curl_param.C_str());
+
+    curl = curl_easy_init();
+    if (!curl){
+        debugOutput::sendMessage("cURL failed to init", INFO);
+    }else{
+        debugOutput::sendMessage("cURL init success", INFO);
+
+        //cout << "CURLING DATA: " << curl_param_array.data() << " is " << sizeof(curl_param_array.data()) << " bytes" << endl;
+
+        curl_easy_setopt(curl, CURLOPT_URL, "http://Drinkfill-env.eba-qatmjpdr.us-east-2.elasticbeanstalk.com/api/machine_data/updateOrder");
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, buffer.data());
+        res = curl_easy_perform(curl);
+
+        if (res != CURLE_OK){
+            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+            curl_easy_cleanup(curl);
+        }else{
+            debugOutput::sendMessage("CURL SUCCESS!", INFO);
+            curl_easy_cleanup(curl);
+        }
+    }
 }
 
 std::string stateDispenseEnd::getMachineID(){

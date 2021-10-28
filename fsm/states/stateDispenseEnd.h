@@ -28,6 +28,7 @@
 #include <vector>
 using namespace qrcodegen;
 #include <stdio.h>
+#include <curl/curl.h>
 
 #include "../fsm.h"
 
@@ -73,6 +74,7 @@ class stateDispenseEnd : public stateVirtual
         std::string toSvgString(const QrCode &qr, int border);
         void printQr(const QrCode &qr);
         std::string getMachineID();
+        std::string getProductID(int slot);
 
         CURL *curl;
         CURLcode res;

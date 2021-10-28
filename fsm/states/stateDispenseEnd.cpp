@@ -11,7 +11,6 @@
 //***************************************
 
 #include "stateDispenseEnd.h"
-#include <curl/curl.h>
 
 #define DISPENSE_END_STRING "Dispense End"
 
@@ -146,9 +145,9 @@ DF_ERROR stateDispenseEnd::onExit()
 //   cassettes[pos].resetButtonPressTimes();
 //   cassettes[pos].resetButtonPressDuration();
 
-   debugOutput::sendMessage("START backing up DB", INFO);
-   system("screen -d -m /release/dbbackup.sh");
-   debugOutput::sendMessage("END backing up DB", INFO);
+//   debugOutput::sendMessage("START backing up DB", INFO);
+//   system("screen -d -m /release/dbbackup.sh");
+//   debugOutput::sendMessage("END backing up DB", INFO);
 
    debugOutput::sendMessage("Exiting Dispensing END[" + toString() + "]", INFO);
 
@@ -170,6 +169,11 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
    return 0;
 }
 
+size_t WriteCallback(char* contents, size_t size, size_t nmemb, void *userp){
+    ((std::string*)userp)->append((char*)contents, size * nmemb);
+    return size * nmemb;
+}
+
 DF_ERROR stateDispenseEnd::sendDB(){
 
     std::string product = (cassettes[pos].getDrink()->m_name);
@@ -178,11 +182,12 @@ DF_ERROR stateDispenseEnd::sendDB(){
     std::string start_time = (cassettes[pos].getDrink()->m_nStartTime);
     std::string dispensed_volume = to_string(cassettes[pos].getDrink()->m_nVolumeDispensed);
     std::string machine_id = getMachineID();
-    std::string pid = cassettes[pos].getDrink()->m_pid;
-    std::string EndTime;
+    std::string pid = getProductID(pos+1);
+    char EndTime[50];
     time(&rawtime);
     timeinfo = localtime(&rawtime);
     strftime(EndTime, 50, "%F %T", timeinfo);
+    std::string readBuffer;
 
 //    std::string json = "{\"machineId\": \"" + machine_id + "\", \"product\": \"" + product + "\", \"quantity_requested\": \"" + target_volume + "\", \"price\": \"" + price + "\", \"start_time\": \"" + start_time + "\", \"quantity_dispensed\": \"" + dispensed_volume + "\"}";
 //    std::string curler = "screen -d -m curl -k -H \"Content-Type: application/json\" -d '"+json+"' https://drinkfill.herokuapp.com/machine_data/add";
@@ -190,9 +195,11 @@ DF_ERROR stateDispenseEnd::sendDB(){
 //    system(curler.c_str());
 //    debugOutput::sendMessage(curler, INFO);
 
-    std::string curl_param = "contents="+product+"&quantity_requested="+target_volume+"&quantity_dispensed="+dispensed_volume+"&size_unit=ml&price="+price+"&productId="+pid+"&start_time="+start_time+"&end_time="+EndTime+"MachineSerialNumber="+machine_id;
+    std::string curl_param = "contents="+product+"&quantity_requested="+target_volume+"&quantity_dispensed="+dispensed_volume+"&size_unit=ml&price="+price+"&productId="+pid+"&start_time="+start_time+"&end_time="+EndTime+"&MachineSerialNumber="+machine_id+"&paymentMethod=Printer";
     char buffer[1080];
-    strcpy(buffer, curl_param.C_str());
+    strcpy(buffer, curl_param.c_str());
+
+    cout << buffer << endl;
 
     curl = curl_easy_init();
     if (!curl){
@@ -202,8 +209,11 @@ DF_ERROR stateDispenseEnd::sendDB(){
 
         //cout << "CURLING DATA: " << curl_param_array.data() << " is " << sizeof(curl_param_array.data()) << " bytes" << endl;
 
-        curl_easy_setopt(curl, CURLOPT_URL, "http://Drinkfill-env.eba-qatmjpdr.us-east-2.elasticbeanstalk.com/api/machine_data/updateOrder");
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, buffer.data());
+        curl_easy_setopt(curl, CURLOPT_URL, "http://Drinkfill-env.eba-qatmjpdr.us-east-2.elasticbeanstalk.com/api/machine_data/pushPrinterOrder");
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, buffer);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+
         res = curl_easy_perform(curl);
 
         if (res != CURLE_OK){
@@ -211,9 +221,35 @@ DF_ERROR stateDispenseEnd::sendDB(){
             curl_easy_cleanup(curl);
         }else{
             debugOutput::sendMessage("CURL SUCCESS!", INFO);
+            std::cout <<"Here's the output:\n" << readBuffer << endl;
             curl_easy_cleanup(curl);
         }
     }
+}
+
+std::string stateDispenseEnd::getProductID(int slot){
+    rc = sqlite3_open(DB_PATH, &db);
+
+    sqlite3_stmt * stmt;
+
+    debugOutput::sendMessage("Product ID getter START", INFO);
+
+    if( rc ) {
+       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+       // TODO: Error handling here...
+    } else {
+       fprintf(stderr, "Opened database successfully\n");
+    }
+
+    std::string sql_string_pid = "SELECT product_id FROM products WHERE slot="+std::to_string(slot)+";";
+     /* Create SQL statement for transactions */
+     sqlite3_prepare(db, sql_string_pid.c_str(), -1, &stmt, NULL);
+     sqlite3_step(stmt);
+     std::string str = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0)));;
+     sqlite3_finalize(stmt);
+     sqlite3_close(db);
+//     cout << str << endl;
+     return str;
 }
 
 std::string stateDispenseEnd::getMachineID(){

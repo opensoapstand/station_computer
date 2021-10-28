@@ -9,7 +9,7 @@ DfUiCommThread::DfUiCommThread(qintptr ID, QObject *parent) :
 void DfUiCommThread::run()
 {
     // thread starts here
-    qDebug() << " Thread started";
+//    qDebug() << " Thread started";
 
     socket = new QTcpSocket();
 
@@ -30,7 +30,7 @@ void DfUiCommThread::run()
 
 
     // We'll have multiple clients, we want to know which is which
-    qDebug() << socketDescriptor << " Client connected";
+//    qDebug() << socketDescriptor << " Client connected";
 
     // make this thread a loop,
     // thread will stay alive so that signal/slot to function properly
@@ -45,10 +45,10 @@ QByteArray DfUiCommThread::readyRead()
     QByteArray Data = socket->readAll();
 
     // will write on server side window
-    qDebug() << socketDescriptor << " Data in: " << Data;
+//    qDebug() << socketDescriptor << " Data in: " << Data;
 
     if(Data == "!") {
-        qDebug() << "from CLEAN";
+//        qDebug() << "from CLEAN";
     }
 
     if(Data == "Reset Timer") {
@@ -81,7 +81,7 @@ QByteArray DfUiCommThread::readyRead()
 
 void DfUiCommThread::disconnected()
 {
-    qDebug() << socketDescriptor << " Disconnected";
+//    qDebug() << socketDescriptor << " Disconnected";
     socket->deleteLater();
     exit(0);
 }

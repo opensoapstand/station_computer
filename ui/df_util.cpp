@@ -16,7 +16,7 @@ df_util::df_util(QWidget *parent):
 
 void df_util::send_to_FSM()
 {
-    qDebug() << "Sending to FSM" << endl;
+//    qDebug() << "Sending to FSM" << endl;
     // TODO: Local socket to FSM
 //    ui->finish_Button->setEnabled(false);
     // Message Validation
@@ -39,7 +39,7 @@ void df_util::send_to_FSM()
 //        tcpSocket->waitForReadyRead(3000);
 //        qDebug() << "Reading: " << tcpSocket->bytesAvailable();
     } else {
-        qDebug() << "Failed Connection" << endl;
+//        qDebug() << "Failed Connection" << endl;
     }
 
     switch (m_fsmMsg) {
@@ -55,7 +55,7 @@ void df_util::send_to_FSM()
 
     case SEND_PWM:
         msg.append(";");
-        qDebug() << "IN DF_UTIL: " << msg << endl;
+//        qDebug() << "IN DF_UTIL: " << msg << endl;
 
     default:
         msg.append("e");
@@ -63,14 +63,14 @@ void df_util::send_to_FSM()
         break;
     }
 
-    qDebug() << msg << endl;
+//    qDebug() << msg << endl;
 
     QByteArray block;
     block.append(msg);
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
 
-    qDebug() << "Writable Socket? " << tcpSocket->isWritable();
+//    qDebug() << "Writable Socket? " << tcpSocket->isWritable();
 
     tcpSocket->write(block);
     tcpSocket->flush();
@@ -79,29 +79,29 @@ void df_util::send_to_FSM()
 
 void df_util::displayError(QAbstractSocket::SocketError socketError)
 {
-    switch (socketError) {
-    case QAbstractSocket::RemoteHostClosedError:
-        break;
-    case QAbstractSocket::HostNotFoundError:
-//        QMessageBox::information(this, tr("DF Client"),
-//                                 tr("The host was not found. Please check the "
-//                                    "host name and port settings."));
-        qDebug() << "DF Client: The host was not found. Please check the host name and port settings." << endl;
-        break;
-    case QAbstractSocket::ConnectionRefusedError:
-//        QMessageBox::information(this, tr("DF Client"),
-//                                 tr("The connection was refused by the peer. "
-//                                    "Make sure the fortune server is running, "
-//                                    "and check that the host name and port "
-//                                    "settings are correct."));
-        qDebug() << "DF Client: The connection was refused by the peer. Make sure the fortune server is running, and check that the host name and port settings are correct." << endl;
-        break;
-    default:
-//        QMessageBox::information(this, tr("DF Client"),
-//                                 tr("The following error occurred: %1.")
-//                                 .arg(tcpSocket->errorString()));
-        qDebug() << "DF Client: Error..." << endl;
-    }
+//    switch (socketError) {
+//    case QAbstractSocket::RemoteHostClosedError:
+//        break;
+//    case QAbstractSocket::HostNotFoundError:
+////        QMessageBox::information(this, tr("DF Client"),
+////                                 tr("The host was not found. Please check the "
+////                                    "host name and port settings."));
+////        qDebug() << "DF Client: The host was not found. Please check the host name and port settings." << endl;
+//        break;
+//    case QAbstractSocket::ConnectionRefusedError:
+////        QMessageBox::information(this, tr("DF Client"),
+////                                 tr("The connection was refused by the peer. "
+////                                    "Make sure the fortune server is running, "
+////                                    "and check that the host name and port "
+////                                    "settings are correct."));
+////        qDebug() << "DF Client: The connection was refused by the peer. Make sure the fortune server is running, and check that the host name and port settings are correct." << endl;
+//        break;
+//    default:
+////        QMessageBox::information(this, tr("DF Client"),
+////                                 tr("The following error occurred: %1.")
+////                                 .arg(tcpSocket->errorString()));
+////        qDebug() << "DF Client: Error..." << endl;
+//    }
 
 //    ui->finish_Button->setEnabled(true);
 }
@@ -118,11 +118,11 @@ bool df_util::open_local_db()
     initialize_local_db();
     if(!db.open())
     {
-        qDebug() << "Can't Connect to DB!";
+//        qDebug() << "Can't Connect to DB!";
     }
     else
     {
-        qDebug() << "Connected Successfully to" + db.databaseName();
+//        qDebug() << "Connected Successfully to" + db.databaseName();
     }
     return db.open();
 }
@@ -133,7 +133,7 @@ bool df_util::close_local_db()
    if(db.open()) {
         db.close();
    } else {
-        qDebug() << "No Database open!" << endl;
+//        qDebug() << "No Database open!" << endl;
    }
 
    return db.open();
@@ -150,15 +150,15 @@ bool df_util::getVendorDetails()
                       "FROM vendor WHERE vendor_id = 1;");
         if(!(isResultAvailable = query.exec()))
         {
-            qDebug() << "Can't Execute Query !";
+//            qDebug() << "Can't Execute Query !";
         }
         else
         {
-            qDebug() << "Query Executed Successfully !";
+//            qDebug() << "Query Executed Successfully !";
             while(query.next())
             {
-                qDebug() << "Vendor Name : " << query.value(0).toString();
-                qDebug() << "Vendor Full Address: " << query.value(1).toString();
+//                qDebug() << "Vendor Name : " << query.value(0).toString();
+//                qDebug() << "Vendor Full Address: " << query.value(1).toString();
             }
         }
     }
@@ -176,20 +176,20 @@ QString df_util::get_local_db_max_transaction()
 
     if(!db.open())
     {
-        qDebug() << "Can't Connect to DB !";
+//        qDebug() << "Can't Connect to DB !";
     }
     else
     {
-        qDebug() << "Connected Successfully to" + db.databaseName();
+//        qDebug() << "Connected Successfully to" + db.databaseName();
         QSqlQuery query;
         query.prepare("SELECT MAX(inventory_id) FROM inventory;");
         if(!query.exec())
         {
-            qDebug() << "Can't Execute Query !";
+//            qDebug() << "Can't Execute Query !";
         }
         else
         {
-            qDebug() << "Query Executed Successfully !";
+//            qDebug() << "Query Executed Successfully !";
             result = query.value(0).toString();
         }
     }

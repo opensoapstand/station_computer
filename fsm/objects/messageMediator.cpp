@@ -79,12 +79,12 @@ DF_ERROR messageMediator::sendMessage(string msg)
       {
          // TODO: Should catch no message error...
       }
-      std::cout << "We received this response from the server:\n\"" << reply << "\"\n";
+      //std::cout << "We received this response from the server:\n\"" << reply << "\"\n";
       ;
    }
    catch (SocketException &e)
    {
-      std::cout << "Connection Exception was caught:" << e.description() << "\n";
+    //  std::cout << "Connection Exception was caught:" << e.description() << "\n";
    }
    dfError = ERROR_PTHREADS_IPTHREAD_NAK;
 
@@ -118,12 +118,12 @@ DF_ERROR messageMediator::sendQtACK(string AckOrNak)
       {
       }
 
-      std::cout << "We received this response from the server:\n\"" << reply << "\"\n";
+     // std::cout << "We received this response from the server:\n\"" << reply << "\"\n";
       ;
    }
    catch (SocketException &e)
    {
-      std::cout << "Exception was caught:" << e.description() << "\n";
+     // std::cout << "Exception was caught:" << e.description() << "\n";
    }
 
    dfError = ERROR_PTHREADS_IPTHREAD_NAK;
@@ -269,7 +269,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
 
                // AckOrNakResult = "FSM ACK";
                sendQtACK("ACK");
-               cout << data << endl;
+              // cout << data << endl;
                m_processString = data;
                updateCmdString();
                // new_sock << data;
@@ -279,7 +279,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
          }
          catch (SocketException &sock)
          {
-            std::cout << "Socket Transfer Exception was caught:" << sock.description() << "\nExiting.\n";
+          //  std::cout << "Socket Transfer Exception was caught:" << sock.description() << "\nExiting.\n";
             // AckOrNakResult = "FSM NAK";
             // sendQtACK(AckOrNakResult);
          }
@@ -287,7 +287,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
    }
    catch (SocketException &e)
    {
-      std::cout << "Socket Creation Exception was caught:" << e.description() << "\nExiting.\n";
+     // std::cout << "Socket Creation Exception was caught:" << e.description() << "\nExiting.\n";
    }
 
    return 0;

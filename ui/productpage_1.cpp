@@ -101,7 +101,7 @@ void productPage_1::showEvent(QShowEvent *event)
 
     if (!this->idlePage->isEnough(1)){
         // Change p1 to Sold Out
-        qDebug() << "Product 1 is Sold Out!" << endl;
+//        qDebug() << "Product 1 is Sold Out!" << endl;
         ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(:/light/soldOut.png); }");
     }
     else{
@@ -109,7 +109,7 @@ void productPage_1::showEvent(QShowEvent *event)
     }
     if (!this->idlePage->isEnough(2)){
         // Change p2 to Sold Out
-        qDebug() << "Product 2 is Sold Out!" << endl;
+//        qDebug() << "Product 2 is Sold Out!" << endl;
         ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(:/light/soldOut.png); }");
     }
     else{
@@ -117,7 +117,7 @@ void productPage_1::showEvent(QShowEvent *event)
     }
     if (!this->idlePage->isEnough(3)){
         // Change p3 to Sold Out
-        qDebug() << "Product 3 is Sold Out!" << endl;
+//        qDebug() << "Product 3 is Sold Out!" << endl;
         ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/soldOut.png); }");
     }
     else{
@@ -125,7 +125,7 @@ void productPage_1::showEvent(QShowEvent *event)
     }
     if (!this->idlePage->isEnough(4)){
         // Change p4 to Sold Out
-        qDebug() << "Product 4 is Sold Out!" << endl;
+//        qDebug() << "Product 4 is Sold Out!" << endl;
         ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/soldOut.png); }");
     }
     else{
@@ -233,9 +233,9 @@ void productPage_1::on_selection4_Button_clicked()
 
 void productPage_1::onProductPageTimeoutTick(){
     if(-- _productPageTimeoutSec >= 0) {
-        qDebug() << "Tick Down: " << _productPageTimeoutSec << endl;
+//        qDebug() << "Tick Down: " << _productPageTimeoutSec << endl;
     } else {
-        qDebug() << "Timer Done!" << _productPageTimeoutSec << endl;
+//        qDebug() << "Timer Done!" << _productPageTimeoutSec << endl;
 
         //Update Click DB
         DbManager db(DB_PATH);
@@ -266,7 +266,7 @@ void productPage_1::mainPage()
 
 void productPage_1::on_maintenanceModeButton_pressed()
 {
-    qDebug() << "Maintenance button pressed" << endl;
+//    qDebug() << "Maintenance button pressed" << endl;
     maintenanceCounter++;
     if (maintenanceCounter > 15){
         productPageEndTimer->stop();
@@ -279,7 +279,7 @@ void productPage_1::on_maintenanceModeButton_pressed()
 
 void productPage_1::on_mainPage_Button_clicked()
 {
-    qDebug() << "Main Page Button pressed" << endl;
+//    qDebug() << "Main Page Button pressed" << endl;
 
     productPageEndTimer->stop();
 
@@ -287,7 +287,7 @@ void productPage_1::on_mainPage_Button_clicked()
     DbManager db(DB_PATH);
     db.addPageClick("Product Page -> Help Page");
 
-    qDebug() << "productPage: helpPage button" << endl;
+//    qDebug() << "productPage: helpPage button" << endl;
     helpPage->showFullScreen();
     this->hide();
 

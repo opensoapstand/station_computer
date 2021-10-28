@@ -145,7 +145,7 @@ void maintain_product::setPage(maintenancePage* pageMaintenance, idle* pageIdle)
 }
 
 void maintain_product::on_backButton_clicked(){
-    qDebug() << "Back button clicked" << endl;
+//    qDebug() << "Back button clicked" << endl;
 
     //Update Click DB
     DbManager db(DB_PATH);
@@ -170,7 +170,7 @@ void maintain_product::on_backButton_clicked(){
 
 
     if (pumping) {
-        qDebug() << "Stopping pump" << endl;
+//        qDebug() << "Stopping pump" << endl;
         pumping = false;
         QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
         command.append("s");
@@ -261,7 +261,7 @@ void maintain_product::resizeEvent(QResizeEvent *event){
         bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
         bitmap_location.append(".png");
     } else {
-        qDebug() << "out of range" << endl;
+//        qDebug() << "out of range" << endl;
     }
 
     ticks = db.getProductVolumePerTick(checkOption);
@@ -452,13 +452,13 @@ void maintain_product::on_pumpButton_clicked(){
 //}
 
 void maintain_product::on_nameButton_clicked(){
-    qDebug() << "Name button clicked" << endl;
+//    qDebug() << "Name button clicked" << endl;
     _maintainProductPageTimeoutSec=40;
 }
 
 
 void maintain_product::on_priceButton_s_clicked(){
-    qDebug() << "Price button clicked" << endl;
+//    qDebug() << "Price button clicked" << endl;
     price_s = true;
 //    DbManager db(DB_PATH);
 
@@ -473,7 +473,7 @@ void maintain_product::on_priceButton_s_clicked(){
 }
 
 void maintain_product::on_priceButton_l_clicked(){
-    qDebug() << "Price button clicked" << endl;
+//    qDebug() << "Price button clicked" << endl;
     price_l = true;
 //    DbManager db(DB_PATH);
 
@@ -488,7 +488,7 @@ void maintain_product::on_priceButton_l_clicked(){
 
 
 void maintain_product::on_target_volumeButton_s_clicked(){
-    qDebug() << "Target Volume button clicked" << endl;
+//    qDebug() << "Target Volume button clicked" << endl;
     target_s=true;
     _maintainProductPageTimeoutSec=40;
 //    DbManager db(DB_PATH);
@@ -499,7 +499,7 @@ void maintain_product::on_target_volumeButton_s_clicked(){
 }
 
 void maintain_product::on_target_volumeButton_l_clicked(){
-    qDebug() << "Target Volume button clicked" << endl;
+//    qDebug() << "Target Volume button clicked" << endl;
     target_l=true;
     _maintainProductPageTimeoutSec=40;
 //    DbManager db(DB_PATH);
@@ -511,7 +511,7 @@ void maintain_product::on_target_volumeButton_l_clicked(){
 
 
 void maintain_product::on_vol_per_tickButton_clicked(){
-    qDebug() << "Volume Per Tick button clicked" << endl;
+//    qDebug() << "Volume Per Tick button clicked" << endl;
     vol_per_tick=true;
     _maintainProductPageTimeoutSec=40;
 //    DbManager db(DB_PATH);
@@ -536,7 +536,7 @@ void maintain_product::targetHitDisplay(){
 
 void maintain_product::on_refillButton_clicked(){
     DbManager db(DB_PATH);
-    qDebug() << "Refill button clicked" << endl;
+//    qDebug() << "Refill button clicked" << endl;
 
     _maintainProductPageTimeoutSec=40;
 
@@ -551,10 +551,10 @@ void maintain_product::on_refillButton_clicked(){
 
     switch(ret){
         case QMessageBox::Yes:
-            qDebug() << "YES CLICKED" << endl;
+//            qDebug() << "YES CLICKED" << endl;
 
             if(db.refill(this->idlePage->userDrinkOrder->getOption())){
-                qDebug() << "REFILLED!" << endl;
+//                qDebug() << "REFILLED!" << endl;
                 ui->refillLabel->setText("Refill Succesfull");
                 ui->soldOutLabel->setText("");
                 //Update Click DB
@@ -573,7 +573,7 @@ void maintain_product::on_refillButton_clicked(){
             }
 
         case QMessageBox::No:
-            qDebug() << "No Clicked" << endl;
+//            qDebug() << "No Clicked" << endl;
             msgBox.hide();
         break;
     }
@@ -581,7 +581,7 @@ void maintain_product::on_refillButton_clicked(){
 
 void maintain_product::on_soldOutButton_clicked(){
     DbManager db(DB_PATH);
-    qDebug() << "Sold Out button clicked" << endl;
+//    qDebug() << "Sold Out button clicked" << endl;
 
     _maintainProductPageTimeoutSec=40;
 
@@ -598,10 +598,10 @@ void maintain_product::on_soldOutButton_clicked(){
 
         switch(ret){
         case QMessageBox::Yes:
-            qDebug() << "YES CLICKED" << endl;
+//            qDebug() << "YES CLICKED" << endl;
 
             if(db.sellout(this->idlePage->userDrinkOrder->getOption())){
-                qDebug() << "SOLD OUT!" << endl;
+//                qDebug() << "SOLD OUT!" << endl;
                 ui->soldOutLabel->setText("Sold Out Succesfull");
                 ui->refillLabel->setText("");
                 //Update Click DB
@@ -619,7 +619,7 @@ void maintain_product::on_soldOutButton_clicked(){
             }
 
         case QMessageBox::No:
-            qDebug() << "No Clicked" << endl;
+//            qDebug() << "No Clicked" << endl;
             msgBox.hide();
             break;
         }
@@ -636,10 +636,10 @@ void maintain_product::on_soldOutButton_clicked(){
 
         switch(ret){
         case QMessageBox::Yes:
-            qDebug() << "YES CLICKED" << endl;
+//            qDebug() << "YES CLICKED" << endl;
 
             if(db.unsellout(this->idlePage->userDrinkOrder->getOption())){
-                qDebug() << "UN-SOLD OUT!" << endl;
+//                qDebug() << "UN-SOLD OUT!" << endl;
                 ui->soldOutLabel->setText("Un-Sold Out Succesfull");
                 ui->refillLabel->setText("");
                 //Update Click DB
@@ -657,7 +657,7 @@ void maintain_product::on_soldOutButton_clicked(){
             }
 
         case QMessageBox::No:
-            qDebug() << "No Clicked" << endl;
+//            qDebug() << "No Clicked" << endl;
             msgBox.hide();
             break;
         }
@@ -667,7 +667,7 @@ void maintain_product::on_soldOutButton_clicked(){
 }
 
 void maintain_product::on_fullButton_clicked(){
-    qDebug() << "Full Volume button clicked" << endl;
+//    qDebug() << "Full Volume button clicked" << endl;
     full=true;
     _maintainProductPageTimeoutSec=40;
 //    DbManager db(DB_PATH);
@@ -678,22 +678,22 @@ void maintain_product::on_fullButton_clicked(){
 }
 
 void maintain_product::on_remainingButton_clicked(){
-    qDebug() << "Remaining button clicked" << endl;
+//    qDebug() << "Remaining button clicked" << endl;
     _maintainProductPageTimeoutSec=40;
 }
 
 void maintain_product::on_dispensedButton_clicked(){
-    qDebug() << "Remaining button clicked" << endl;
+//    qDebug() << "Remaining button clicked" << endl;
     _maintainProductPageTimeoutSec=40;
 }
 
 void maintain_product::on_lastRefillButton_clicked(){
-    qDebug() << "Last Refill button clicked" << endl;
+//    qDebug() << "Last Refill button clicked" << endl;
     _maintainProductPageTimeoutSec=40;
 }
 
 void maintain_product::on_temperatureButton_clicked(){
-    qDebug() << "Temperature button clicked" << endl;
+//    qDebug() << "Temperature button clicked" << endl;
     DbManager db_temperature(DB_PATH_TEMPERATURE);
     ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
     _maintainProductPageTimeoutSec=40;
@@ -702,9 +702,9 @@ void maintain_product::on_temperatureButton_clicked(){
 void maintain_product::onMaintainProductPageTimeoutTick(){
 
     if(-- _maintainProductPageTimeoutSec >= 0) {
-        qDebug() << "Maintain Product Tick Down: " << _maintainProductPageTimeoutSec << endl;
+//        qDebug() << "Maintain Product Tick Down: " << _maintainProductPageTimeoutSec << endl;
     } else {
-        qDebug() << "Maintain Product Timer Done!" << _maintainProductPageTimeoutSec << endl;
+//        qDebug() << "Maintain Product Timer Done!" << _maintainProductPageTimeoutSec << endl;
 
         //Update Click DB
         DbManager db(DB_PATH);
@@ -712,7 +712,7 @@ void maintain_product::onMaintainProductPageTimeoutTick(){
 
 
         if (pumping) {
-            qDebug() << "Stopping pump" << endl;
+//            qDebug() << "Stopping pump" << endl;
             pumping = false;
             QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
             command.append("s");
@@ -734,7 +734,7 @@ void maintain_product::onMaintainProductPageTimeoutTick(){
 }
 
 void maintain_product::on_pwmButton_clicked(){
-    qDebug() << "Remaining button clicked" << endl;
+//    qDebug() << "Remaining button clicked" << endl;
     pwm=true;
     _maintainProductPageTimeoutSec=40;
 //    DbManager db(DB_PATH);
@@ -895,7 +895,7 @@ void maintain_product::updateValues(){
 
     }else if(pwm){
         int new_pwm = round(((text_entered.toInt())*255)/100);
-        qDebug() << "New Pump Speed: " << text_entered.toInt() << "% equals = " << (new_pwm) << endl;
+//        qDebug() << "New Pump Speed: " << text_entered.toInt() << "% equals = " << (new_pwm) << endl;
         db.updatePWM(checkOption, new_pwm);
         ui->pwmLabel->setText(QString::number(round(double((db.getPWM(checkOption))*100)/255)) + "%");
     }
@@ -925,13 +925,13 @@ void maintain_product::updateValues(){
 
 void maintain_product::pwmSliderMoved(int percentage){
     int value = ui->pwmSlider->value();
-    qDebug() << "Slider Value: " << value << endl;
+//    qDebug() << "Slider Value: " << value << endl;
 
     QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
     command.append("P");
     command.append(QString::number(value));
 
-    qDebug() << "In PWMSlider: " << command << endl;
+//    qDebug() << "In PWMSlider: " << command << endl;
 
 //    this->idlePage->dfUtility->msg = command;
 //    idlePage->dfUtility->m_IsSendingFSM = true;
@@ -958,9 +958,9 @@ void maintain_product::curler(){
 
     curl = curl_easy_init();
     if (!curl){
-        qDebug() << "cURL failed to init" << endl;
+//        qDebug() << "cURL failed to init" << endl;
     }else{
-        qDebug() << "cURL init success" << endl;
+//        qDebug() << "cURL init success" << endl;
 
         cout << "CURLING DATA: " << curl_param_array.data() << " is " << sizeof(curl_param_array.data()) << " bytes" << endl;
 
@@ -969,7 +969,7 @@ void maintain_product::curler(){
        // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback3);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-        qDebug() << "Curl Setup done" << endl;
+//        qDebug() << "Curl Setup done" << endl;
 
         res = curl_easy_perform(curl);
 
@@ -977,7 +977,7 @@ void maintain_product::curler(){
             fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
             curl_easy_cleanup(curl);
         }else{
-            qDebug() << "CURL SUCCESS!" << endl;
+//            qDebug() << "CURL SUCCESS!" << endl;
             std::cout <<"Here's the output:\n" << readBuffer << endl;
 
             if (readBuffer == "true"){

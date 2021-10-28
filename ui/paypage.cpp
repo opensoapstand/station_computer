@@ -120,37 +120,37 @@ payPage::payPage(QWidget *parent) :
 
 void payPage::stopPayTimers(){
     //    readTimer->stop();
-    qDebug() << "payPage: Stop Timers" << endl;
+//    qDebug() << "payPage: Stop Timers" << endl;
     if(paymentProgressTimer != nullptr) {
-        qDebug() << "cancel payment progress Timer" << endl;
+//        qDebug() << "cancel payment progress Timer" << endl;
         paymentProgressTimer->stop();
     }
 
     if(declineTimer != nullptr) {
-        qDebug() << "cancel decline Timer" << endl;
+//        qDebug() << "cancel decline Timer" << endl;
         declineTimer->stop();
     }
 
     if(idlePaymentTimer != nullptr) {
-        qDebug() << "cancel idle payment Timer" << endl;
+//        qDebug() << "cancel idle payment Timer" << endl;
         idlePaymentTimer->stop();
     }
 
     if(paymentEndTimer != nullptr) {
-        qDebug() << "cancel idle payment END Timer" << endl;
+//        qDebug() << "cancel idle payment END Timer" << endl;
         paymentEndTimer->stop();
     }
 
     if(readTimer != nullptr) {
-        qDebug() << "cancel readTimer" << endl;
+//        qDebug() << "cancel readTimer" << endl;
         readTimer->stop();
     }
 
     if(qrTimer != nullptr) {
-        qDebug() << "cancel qrTimer" << endl;
+//        qDebug() << "cancel qrTimer" << endl;
         qrTimer->stop();
     }
-    qDebug() << "payPage: Stopped Timers" << endl;
+//    qDebug() << "payPage: Stopped Timers" << endl;
 
 }
 
@@ -250,7 +250,7 @@ void payPage::on_previousPage_Button_clicked()
     DbManager db(DB_PATH);
     db.addPageClick("Pay Page -> Pay Select");
 
-    qDebug() << "payPage: previous button" << endl;
+//    qDebug() << "payPage: previous button" << endl;
     stopPayTimers();
     response = true;
     readTimer->stop();
@@ -270,7 +270,7 @@ void payPage::on_payment_bypass_Button_clicked()
     db.addPageClick("Pay Page -> Dispense Page");
     db.addPageClick("TRANSACTION STARTED");
 
-    qDebug() << "ByPass payment to Dispense" << endl;
+//    qDebug() << "ByPass payment to Dispense" << endl;
     //    cancelPayment();
     stopPayTimers();
     //readTimer->stop();
@@ -395,7 +395,7 @@ void payPage::updateTotals(string drinkDescription, string drinkAmount, string o
 
 void payPage::on_mainPage_Button_clicked()
 {
-    qDebug() << "Main Button Page" << endl;
+//    qDebug() << "Main Button Page" << endl;
 
     //sleep(1);
     stopPayTimers();
@@ -424,7 +424,7 @@ void payPage::cancelPayment()
         }
         com.flushSerial();
 
-        qDebug() << "Payment cancelled!" << endl;
+//        qDebug() << "Payment cancelled!" << endl;
    // }
 
 }
@@ -584,9 +584,9 @@ void payPage::curler(){
 
     curl = curl_easy_init();
     if (!curl){
-        qDebug() << "cURL failed to init" << endl;
+//        qDebug() << "cURL failed to init" << endl;
     }else{
-        qDebug() << "cURL init success" << endl;
+//        qDebug() << "cURL init success" << endl;
 
         cout << "CURLING DATA: " << curl_param_array.data() << " is " << sizeof(curl_param_array.data()) << " bytes" << endl;
 
@@ -595,7 +595,7 @@ void payPage::curler(){
        // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-        qDebug() << "Curl Setup done" << endl;
+//        qDebug() << "Curl Setup done" << endl;
 
         res = curl_easy_perform(curl);
 
@@ -603,7 +603,7 @@ void payPage::curler(){
             fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
             curl_easy_cleanup(curl);
         }else{
-            qDebug() << "CURL SUCCESS!" << endl;
+//            qDebug() << "CURL SUCCESS!" << endl;
             std::cout <<"Here's the output:\n" << readBuffer << endl;
 
             if (readBuffer == "true"){
@@ -622,9 +622,9 @@ void payPage::curler(){
 
 void payPage::qrTimeout(){
     if(-- _qrTimeOutSec >= 0){
-        qDebug() << "PayPaeg: QR Timer Tick" << _qrTimeOutSec << endl;
+//        qDebug() << "PayPaeg: QR Timer Tick" << _qrTimeOutSec << endl;
     }else{
-        qDebug() << "QR Timer Done!" << endl << "Checking API endpoint now..." << endl;
+//        qDebug() << "QR Timer Done!" << endl << "Checking API endpoint now..." << endl;
         curler();
         _qrTimeOutSec=5;
     }
@@ -637,7 +637,7 @@ void payPage::onTimeoutTick(){
 
 
     if(-- _paymentTimeoutSec >= 0) {
-        qDebug() << "payPage: Tick Down: " << _paymentTimeoutSec << endl;
+//        qDebug() << "payPage: Tick Down: " << _paymentTimeoutSec << endl;
 
 //        _paymentTimeLabel.clear();
 //        QString time = QString::number(_paymentTimeoutSec);
@@ -662,7 +662,7 @@ void payPage::onTimeoutTick(){
 //        }
 //        this->ui->payment_countdownLabel->setText(_paymentTimeLabel);
     } else {
-        qDebug() << "Timer Done!" << _paymentTimeoutSec << endl;
+//        qDebug() << "Timer Done!" << _paymentTimeoutSec << endl;
 
         //response = true;
         //stopPayTimers();
@@ -975,7 +975,7 @@ bool payPage::waitForUX410()
 
 void payPage::readTimer_loop()
 {
-    qDebug() << "readingTimer_loop" << endl;
+//    qDebug() << "readingTimer_loop" << endl;
     //cout << "start loop pktResponded: " << to_string(pktResponded[0]) << endl;
 
     //response = false;
@@ -1034,7 +1034,7 @@ void payPage::readTimer_loop()
         //this->ui->payment_countdownLabel->setText("Processing...");
         QCoreApplication::processEvents();
 
-        qDebug() << "Check TAP Packet; Sending" << endl;
+//        qDebug() << "Check TAP Packet; Sending" << endl;
 
        // com.sendAck();
         readPacket.packetReadFromUX(pktResponded);

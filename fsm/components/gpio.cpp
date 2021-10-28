@@ -79,7 +79,7 @@ void gpio::startListenerPWR()
 // std::thread gpio::listener()
 void gpio::listener()
 {
-        cout << "Spin up GPIO Thread" << endl;
+        //cout << "Spin up GPIO Thread" << endl;
         DF_ERROR df_ret = ERROR_BAD_PARAMS;
         m_stop = false;
 
@@ -94,7 +94,7 @@ void gpio::listener()
 
 void gpio::listenerPWR()
 {
-    cout << "Spin up GPIO Thread" << endl;
+   // cout << "Spin up GPIO Thread" << endl;
     DF_ERROR df_ret = ERROR_BAD_PARAMS;
     m_stop = false;
 

@@ -80,7 +80,7 @@ void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
 
     sizeOptionSelected = sizeOption;
 
-    qDebug() << "option: " << m_optionNumber << endl;
+//    qDebug() << "option: " << m_optionNumber << endl;
 
     switch (m_optionNumber)
     {

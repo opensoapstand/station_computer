@@ -200,7 +200,7 @@ DF_ERROR dispenser::startDispense (int pos){
         forwardPump();
         the_8344->setPumpPWM((unsigned char)(m_pDrink->getPWM()));
         debugOutput::sendMessage("PWM SET!", INFO);
-        cout << the_8344->getPumpPWM();
+        //cout << the_8344->getPumpPWM();
         the_8344->startPump(pos);
     //}
     return e_ret = OK;

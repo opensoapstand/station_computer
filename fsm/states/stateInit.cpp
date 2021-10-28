@@ -248,10 +248,10 @@ DF_ERROR stateInit::setDrinks(){
     debugOutput::sendMessage("DB GETTER START", INFO);
 
     if( rc ) {
-       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+//       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
        // TODO: Error handling here...
     } else {
-       fprintf(stderr, "Opened database successfully\n\n");
+//       fprintf(stderr, "Opened database successfully\n\n");
     }
 
     /* Create SQL statement */
@@ -266,10 +266,10 @@ DF_ERROR stateInit::setDrinks(){
     rc = sqlite3_exec(db, sql, callback, (void*)data, &zErrMsg);
 
     if( rc != SQLITE_OK ) {
-       fprintf(stderr, "SQL error: %s\n", zErrMsg);
+//       fprintf(stderr, "SQL error: %s\n", zErrMsg);
        sqlite3_free(zErrMsg);
     } else {
-       fprintf(stdout, "Operation done successfully\n");
+//       fprintf(stdout, "Operation done successfully\n");
     }
     sqlite3_close(db);
 

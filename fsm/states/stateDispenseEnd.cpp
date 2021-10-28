@@ -199,7 +199,7 @@ DF_ERROR stateDispenseEnd::sendDB(){
     char buffer[1080];
     strcpy(buffer, curl_param.c_str());
 
-    cout << buffer << endl;
+    //cout << buffer << endl;
 
     curl = curl_easy_init();
     if (!curl){
@@ -217,11 +217,11 @@ DF_ERROR stateDispenseEnd::sendDB(){
         res = curl_easy_perform(curl);
 
         if (res != CURLE_OK){
-            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+//            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
             curl_easy_cleanup(curl);
         }else{
             debugOutput::sendMessage("CURL SUCCESS!", INFO);
-            std::cout <<"Here's the output:\n" << readBuffer << endl;
+            //std::cout <<"Here's the output:\n" << readBuffer << endl;
             curl_easy_cleanup(curl);
         }
     }
@@ -235,10 +235,10 @@ std::string stateDispenseEnd::getProductID(int slot){
     debugOutput::sendMessage("Product ID getter START", INFO);
 
     if( rc ) {
-       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+//       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
        // TODO: Error handling here...
     } else {
-       fprintf(stderr, "Opened database successfully\n");
+//       fprintf(stderr, "Opened database successfully\n");
     }
 
     std::string sql_string_pid = "SELECT product_id FROM products WHERE slot="+std::to_string(slot)+";";
@@ -261,10 +261,10 @@ std::string stateDispenseEnd::getMachineID(){
     debugOutput::sendMessage("Machine ID getter START", INFO);
 
     if( rc ) {
-       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+//       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
        // TODO: Error handling here...
     } else {
-       fprintf(stderr, "Opened database successfully\n");
+//       fprintf(stderr, "Opened database successfully\n");
     }
 
      /* Create SQL statement for transactions */
@@ -287,10 +287,10 @@ DF_ERROR stateDispenseEnd::updateDB(){
     debugOutput::sendMessage("DB Update START", INFO);
 
     if( rc ) {
-       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+//       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
        // TODO: Error handling here...
     } else {
-       fprintf(stderr, "Opened database successfully\n");
+//       fprintf(stderr, "Opened database successfully\n");
     }
 
      /* Create SQL statement for transactions */
@@ -313,10 +313,10 @@ DF_ERROR stateDispenseEnd::updateDB(){
      rc = sqlite3_exec(db, sql_trans, callback, 0, &zErrMsg);
 
      if( rc != SQLITE_OK ){
-        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+//        fprintf(stderr, "SQL error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
      } else {
-        fprintf(stdout, "Transaction Command Executed successfully\n");
+//        fprintf(stdout, "Transaction Command Executed successfully\n");
      }
 
      /* Create SQL statement for total product dispensed */
@@ -330,10 +330,10 @@ DF_ERROR stateDispenseEnd::updateDB(){
      rc = sqlite3_exec(db, sql_prod, callback, 0, &zErrMsg);
 
      if( rc != SQLITE_OK ){
-        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+//        fprintf(stderr, "SQL error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
      } else {
-        fprintf(stdout, "Product Command Executed successfully\n");
+//        fprintf(stdout, "Product Command Executed successfully\n");
      }
 
      /* Create SQL statement for product remaining */
@@ -347,10 +347,10 @@ DF_ERROR stateDispenseEnd::updateDB(){
      rc = sqlite3_exec(db, sql_prod2, callback, 0, &zErrMsg);
 
      if( rc != SQLITE_OK ){
-        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+//        fprintf(stderr, "SQL error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
      } else {
-        fprintf(stdout, "Product Remaining Command Executed successfully\n");
+//        fprintf(stdout, "Product Remaining Command Executed successfully\n");
      }
 
     sqlite3_close(db);
@@ -433,11 +433,11 @@ void stateDispenseEnd::printQr(const QrCode &qr) {
         int border = 4;
         for (int y = -border; y < qr.getSize() + border; y++) {
                 for (int x = -border; x < qr.getSize() + border; x++) {
-                        std::cout << (qr.getModule(x, y) ? "##" : "  ");
+//                        std::cout << (qr.getModule(x, y) ? "##" : "  ");
                 }
-                std::cout << std::endl;
+//                std::cout << std::endl;
         }
-        std::cout << std::endl;
+//        std::cout << std::endl;
 }
 
 

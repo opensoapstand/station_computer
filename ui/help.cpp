@@ -81,7 +81,7 @@ void help::setPage(productPage_1 *pageSelect, paySelect* paySelect, idle* pageId
 }
 
 void help::on_previousPage_Button_clicked(){
-    qDebug() << "Previoue Page button clicked" << endl;
+//    qDebug() << "Previoue Page button clicked" << endl;
 
     DbManager db(DB_PATH);
     db.addPageClick("HELP PAGE EXITED");
@@ -92,7 +92,7 @@ void help::on_previousPage_Button_clicked(){
 }
 
 void help::on_previousPage_Button_2_clicked(){
-    qDebug() << "Previoue Page button clicked" << endl;
+//    qDebug() << "Previoue Page button clicked" << endl;
 
     DbManager db(DB_PATH);
     db.addPageClick("HELP PAGE EXITED");
@@ -104,9 +104,9 @@ void help::on_previousPage_Button_2_clicked(){
 
 void help::onHelpTimeoutTick(){
     if(-- _helpIdleTimeoutSec >= 0) {
-        qDebug() << "Help Tick Down: " << _helpIdleTimeoutSec << endl;
+//        qDebug() << "Help Tick Down: " << _helpIdleTimeoutSec << endl;
     } else {
-        qDebug() << "Help Timer Done!" << _helpIdleTimeoutSec << endl;
+//        qDebug() << "Help Timer Done!" << _helpIdleTimeoutSec << endl;
 
         //Update Click DB
         DbManager db(DB_PATH);
@@ -119,6 +119,6 @@ void help::onHelpTimeoutTick(){
 }
 
 void help::on_refreshButton_clicked(){
-    qDebug() << "Page Refreshed" << endl;
+//    qDebug() << "Page Refreshed" << endl;
     _helpIdleTimeoutSec = 60;
 }

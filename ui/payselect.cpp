@@ -98,7 +98,7 @@ void paySelect::on_previousPage_Button_clicked()
     DbManager db(DB_PATH);
     db.addPageClick("Pay Select -> Product Page");
 
-    qDebug() << "paySelect: Previous button" << endl;
+//    qDebug() << "paySelect: Previous button" << endl;
     while(!stopSelectTimers()){
 
     };
@@ -110,7 +110,7 @@ void paySelect::on_previousPage_Button_clicked()
 
 void paySelect::on_payPage_Button_clicked()
 {
-    qDebug() << "paySelect: Pay button" << endl;
+//    qDebug() << "paySelect: Pay button" << endl;
 
     ui->mainPage_Button->setEnabled(false);
     ui->previousPage_Button->setEnabled(false);
@@ -202,7 +202,7 @@ void paySelect::resizeEvent(QResizeEvent *event){
     ui->price_lLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
 
 
-    qDebug() << "Start paySelect Timers" << endl;
+//    qDebug() << "Start paySelect Timers" << endl;
     selectIdleTimer->start(1000);
     _selectIdleTimeoutSec = 40;
 }
@@ -253,9 +253,9 @@ void paySelect::showEvent(QShowEvent *event){
 
 void paySelect::onSelectTimeoutTick(){
     if(-- _selectIdleTimeoutSec >= 0) {
-        qDebug() << "paySelect: Tick Down - " << _selectIdleTimeoutSec << endl;
+//        qDebug() << "paySelect: Tick Down - " << _selectIdleTimeoutSec << endl;
     } else {
-        qDebug() << "Timer Done!" << _selectIdleTimeoutSec << endl;
+//        qDebug() << "Timer Done!" << _selectIdleTimeoutSec << endl;
         selectIdleTimer->stop();
 
         //Update Click DB
@@ -267,7 +267,7 @@ void paySelect::onSelectTimeoutTick(){
 }
 
 bool paySelect::stopSelectTimers(){
-    qDebug() << "Stop paySelect Timers" << endl;
+//    qDebug() << "Stop paySelect Timers" << endl;
     if(selectIdleTimer != nullptr) {
        // qDebug() << "Enter Stop" << endl;
         selectIdleTimer->stop();
@@ -284,7 +284,7 @@ void paySelect::mainPage()
     DbManager db(DB_PATH);
     db.addPageClick("Pay Select -> Main Page");
 
-    qDebug() << "paySelect: mainPage button" << endl;
+//    qDebug() << "paySelect: mainPage button" << endl;
     this->stopSelectTimers();
     selectIdleTimer->stop();
     idlePage->showFullScreen();
@@ -298,7 +298,7 @@ void paySelect::on_mainPage_Button_clicked()
     DbManager db(DB_PATH);
     db.addPageClick("Pay Select -> Help Page");
 
-    qDebug() << "paySelect: helpPage button" << endl;
+//    qDebug() << "paySelect: helpPage button" << endl;
     this->stopSelectTimers();
     selectIdleTimer->stop();
     helpPage->showFullScreen();

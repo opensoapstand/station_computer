@@ -23,7 +23,7 @@ drink::drink()
 static int callback(void *data, int argc, char **argv, char **azColName)
 {
     int i;
-    fprintf(stderr, "%s: ", (const char *)data);
+//    fprintf(stderr, "%s: ", (const char *)data);
 
     for (i = 0; i < argc; i++)
     {
@@ -56,11 +56,11 @@ drink::drink(int slot)
 
     if (rc)
     {
-        fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+       // fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
     }
     else
     {
-        fprintf(stderr, "Opened database successfully\n");
+       // fprintf(stderr, "Opened database successfully\n");
     }
 
     string sql = "SELECT inventory.inventory_id, product.product_id,product.name, product.calibration_const, pricing.small_price, pricing.large_price FROM inventory INNER JOIN product ON inventory.product_id = product.product_id INNER JOIN pricing ON inventory.product_id = pricing.product_id WHERE inventory.inventory_id = " + to_string(m_nSlot) + ";";
@@ -70,7 +70,7 @@ drink::drink(int slot)
     if (rc != SQLITE_OK) 
         cerr << "Error SELECT" << endl; 
     else {
-        cout << "Operation OK!" << endl; 
+      //  cout << "Operation OK!" << endl;
     } 
 
 
@@ -187,10 +187,10 @@ int drink::getPWM(){
     //debugOutput::sendMessage("Machine ID getter START", INFO);
 
     if( rc ) {
-       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+      // fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
        // TODO: Error handling here...
     } else {
-       fprintf(stderr, "Opened database successfully\n");
+     //  fprintf(stderr, "Opened database successfully\n");
     }
 
     string sql_string = "SELECT pwm FROM products WHERE slot="+ to_string(m_nSlot) +";";
@@ -201,7 +201,7 @@ int drink::getPWM(){
      int pwm = stod(str);
      sqlite3_finalize(stmt);
      sqlite3_close(db);
-     cout << "INSIDE getPWM() and PWM is = " << str << endl;
+//     cout << "INSIDE getPWM() and PWM is = " << str << endl;
      return pwm;
 }
 
@@ -214,10 +214,10 @@ double drink::getVolPerTick(){
     //debugOutput::sendMessage("Machine ID getter START", INFO);
 
     if( rc ) {
-       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+      // fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
        // TODO: Error handling here...
     } else {
-       fprintf(stderr, "Opened database successfully\n");
+//       fprintf(stderr, "Opened database successfully\n");
     }
 
     string sql_string = "SELECT volume_per_tick FROM products WHERE slot="+ to_string(m_nSlot) +";";
@@ -262,21 +262,21 @@ bool drink::isDispenseComplete()
     bool bRet = false;
 
     if (m_nVolumeTarget < m_nVolumeDispensed){
-        cout << "Target HIT!" << endl;
+       // cout << "Target HIT!" << endl;
         bRet = true;
     }
     return bRet;
 }
 
 void drink::drinkInfo() {
-    cout << "Option: " << m_nSlot << endl;
-    cout << "Name: " << m_name << endl;
-    cout << "Dispense Volume: " << m_nVolumeDispensed << endl;
-    cout << "Target Volume: " << m_nVolumeTarget << endl;
-    cout << "Calibration: " << m_calibration_const << endl;
-    cout << "Price: " << m_price << endl;
-    cout << "Is Still?: " << m_isStillDrink << endl;
-    cout << "Volume per Tick: " << m_nVolumePerTick << endl;
+//    cout << "Option: " << m_nSlot << endl;
+//    cout << "Name: " << m_name << endl;
+//    cout << "Dispense Volume: " << m_nVolumeDispensed << endl;
+//    cout << "Target Volume: " << m_nVolumeTarget << endl;
+//    cout << "Calibration: " << m_calibration_const << endl;
+//    cout << "Price: " << m_price << endl;
+//    cout << "Is Still?: " << m_isStillDrink << endl;
+//    cout << "Volume per Tick: " << m_nVolumePerTick << endl;
 }
 
 void drink::drinkVolumeInfo(){

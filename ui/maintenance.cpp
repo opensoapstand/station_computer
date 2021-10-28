@@ -120,7 +120,7 @@ void maintenancePage::setPage(idle* pageIdle, maintain_product* pageMaintain, pr
 }
 
 void maintenancePage::on_backButton_clicked(){
-    qDebug() << "Back button clicked" << endl;
+//    qDebug() << "Back button clicked" << endl;
 
     DbManager db(DB_PATH);
     db.addPageClick("MAINTENANCE PAGE EXITED");
@@ -131,7 +131,7 @@ void maintenancePage::on_backButton_clicked(){
 }
 
 void maintenancePage::on_product1_button_clicked(){
-    qDebug() << "Product 1 button clicked" << endl;
+//    qDebug() << "Product 1 button clicked" << endl;
     maintenancePageEndTimer->stop();
 
     DbManager db(DB_PATH);
@@ -147,7 +147,7 @@ void maintenancePage::on_product1_button_clicked(){
 }
 
 void maintenancePage::on_product2_button_clicked(){
-    qDebug() << "Product 2 button clicked" << endl;
+//    qDebug() << "Product 2 button clicked" << endl;
     maintenancePageEndTimer->stop();
 
     DbManager db(DB_PATH);
@@ -163,7 +163,7 @@ void maintenancePage::on_product2_button_clicked(){
 }
 
 void maintenancePage::on_product3_button_clicked(){
-    qDebug() << "Product 3 button clicked" << endl;
+//    qDebug() << "Product 3 button clicked" << endl;
     maintenancePageEndTimer->stop();
 
     DbManager db(DB_PATH);
@@ -179,7 +179,7 @@ void maintenancePage::on_product3_button_clicked(){
 }
 
 void maintenancePage::on_product4_button_clicked(){
-    qDebug() << "Product 4 button clicked" << endl;
+//    qDebug() << "Product 4 button clicked" << endl;
     maintenancePageEndTimer->stop();
 
     DbManager db(DB_PATH);
@@ -220,7 +220,7 @@ void maintenancePage::on_product4_button_clicked(){
 //}
 
 void maintenancePage::on_wifiButton_clicked(){
-    qDebug() << "WiFi button clicked" << endl;
+//    qDebug() << "WiFi button clicked" << endl;
     _maintenancePageTimeoutSec = 30;
     ui->wifiTable->setRowCount(0);
 
@@ -345,7 +345,7 @@ int getSelection(){
 
 void maintenancePage::btn_clicked(){
     QObject* button = QObject::sender();
-    qDebug() << "btn clicked -> " << button->objectName();
+//    qDebug() << "btn clicked -> " << button->objectName();
     _maintenancePageTimeoutSec = 30;
     // OPEN ON-SCREEN KEYBOARD FOR PASSWORD ENTRY
 
@@ -386,9 +386,9 @@ void maintenancePage::btn_clicked(){
 void maintenancePage::onMaintenancePageTimeoutTick(){
 
     if(-- _maintenancePageTimeoutSec >= 0) {
-        qDebug() << "Maintenance Tick Down: " << _maintenancePageTimeoutSec << endl;
+//        qDebug() << "Maintenance Tick Down: " << _maintenancePageTimeoutSec << endl;
     } else {
-        qDebug() << "Maintenance Timer Done!" << _maintenancePageTimeoutSec << endl;
+//        qDebug() << "Maintenance Timer Done!" << _maintenancePageTimeoutSec << endl;
 
         //Update Click DB
         DbManager db(DB_PATH);
@@ -442,13 +442,13 @@ void maintenancePage::buttonWasClicked(int buttonID){
     }
     else if(buttonText=="Done"){
         QString password = ui->keyboardTextEntry->text();
-        qDebug() << "Password: " << password;
+//        qDebug() << "Password: " << password;
         // ATTEMPT nmcli connection
 
         QString connect_string = "nmcli dev wifi connect '" + ui->wifiPassLabel->text() +"' password '" + ui->keyboardTextEntry->text() + "'";
         QByteArray ba = connect_string.toLocal8Bit();
         const char *c_str = ba.data();
-        qDebug() << c_str;
+//        qDebug() << c_str;
         system(c_str);
 
         ui->keyboard_2->hide();

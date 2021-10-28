@@ -142,7 +142,7 @@ DF_ERROR oddyseyx86GPIO::setDirection(bool input)
 	{
 		if (INPUT == input)
 		{
-			cout << "direction input set" << endl;
+                        //cout << "direction input set" << endl;
                         write(fd, "in", 3);
                        // cout << "edge set" << endl;
                        // write(fd2, "rising", 7);
@@ -181,12 +181,12 @@ DF_ERROR oddyseyx86GPIO::readPin(bool *level)
 
 			if (ch != '0')
 			{
-				cout << "ON" << endl;
+                                //cout << "ON" << endl;
 				*level = true;
 			}
 			else
 			{
-				cout << "OFF" << endl;
+                                //cout << "OFF" << endl;
 				*level = false;
 			}
 

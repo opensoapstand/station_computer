@@ -9,11 +9,11 @@ DbManager::DbManager(const QString& path)
 
     if (!m_db.open())
     {
-        qDebug() << "Error: connection with database failed";
+//        qDebug() << "Error: connection with database failed";
     }
     else
     {
-        qDebug() << "Database: connection ok";
+//        qDebug() << "Database: connection ok";
     }
 }
 
@@ -224,11 +224,11 @@ bool DbManager::refill(int slot){
 //    refill_query.bindValue(":remaining", remaining);
     if(refill_query.exec())
     {
-        qDebug() << "remaining ml updated successfully!";
+//        qDebug() << "remaining ml updated successfully!";
         refill_query.prepare("UPDATE products SET total_dispensed=0 WHERE slot=:slot");
         refill_query.bindValue(":slot", slot);
         if(refill_query.exec()){
-            qDebug() << "total ml dispensed update successful!";
+//            qDebug() << "total ml dispensed update successful!";
 
             QSqlQuery refill_date;
             refill_date.prepare("UPDATE products SET last_refill=:time WHERE slot=:slot");
@@ -238,22 +238,22 @@ bool DbManager::refill(int slot){
             if (refill_date.exec()){
                 success=true;
             }else{
-                qDebug() << "refill date error:"
-                         << refill_date.lastError();
+//                qDebug() << "refill date error:"
+//                         << refill_date.lastError();
                 success=false;
             }
 
         }
         else{
-            qDebug() << "total ml dispensed update error:"
-                     << refill_query.lastError();
+//            qDebug() << "total ml dispensed update error:"
+//                     << refill_query.lastError();
             success=false;
         }
     }
     else
     {
-        qDebug() << "remaining ml update error:"
-                 << refill_query.lastError();
+//        qDebug() << "remaining ml update error:"
+//                 << refill_query.lastError();
         success=false;
     }
 
@@ -263,14 +263,14 @@ bool DbManager::refill(int slot){
 bool DbManager::sellout(int slot){
     QSqlQuery sellout_query;
     bool success=false;
-    double remaining = getFullProduct(slot);
+//    double remaining = getFullProduct(slot);
 
     sellout_query.prepare("UPDATE products SET remaining_ml=0 WHERE slot=:slot");
     sellout_query.bindValue(":slot", slot);
 //    sellout_query.bindValue(":remaining", remaining);
     if(sellout_query.exec())
     {
-        qDebug() << "remaining ml updated successfully!";
+//        qDebug() << "remaining ml updated successfully!";
 //        sellout_query.prepare("UPDATE products SET total_dispensed=full_ml WHERE slot=:slot");
 //        sellout_query.bindValue(":slot", slot);
 //        if(sellout_query.exec()){
@@ -281,8 +281,8 @@ bool DbManager::sellout(int slot){
 
     else
     {
-        qDebug() << "remaining ml update error:"
-                 << sellout_query.lastError();
+//        qDebug() << "remaining ml update error:"
+//                 << sellout_query.lastError();
         success=false;
     }
 
@@ -297,13 +297,13 @@ bool DbManager::unsellout(int slot){
     sellout_query.bindValue(":slot", slot);
     if(sellout_query.exec())
     {
-        qDebug() << "remaining ml updated successfully!";
+//        qDebug() << "remaining ml updated successfully!";
         success=true;
     }
     else
     {
-        qDebug() << "remaining ml update error:"
-                 << sellout_query.lastError();
+//        qDebug() << "remaining ml update error:"
+//                 << sellout_query.lastError();
         success=false;
     }
 
@@ -463,12 +463,12 @@ bool DbManager::updatePaymentsDb(QString date,QString time, QString txnType, QSt
     if(payments_query.exec())
     {
         success = true;
-        qDebug() << "Payment Database updated successfully!";
+//        qDebug() << "Payment Database updated successfully!";
     }
     else
     {
-        qDebug() << "Payment Database update error:"
-                 << payments_query.lastError();
+//        qDebug() << "Payment Database update error:"
+//                 << payments_query.lastError();
     }
 
     return success;
@@ -482,12 +482,12 @@ bool DbManager::updatePrice_s(int slot, double new_price){
     update_price_query.bindValue(":slot", slot);
 
     if(update_price_query.exec()){
-        qDebug() << "Price updated successfully!";
+//        qDebug() << "Price updated successfully!";
         return true;
     }else{
-        qDebug() << "Price update error: !"
-                 << update_price_query.lastQuery()
-                 << update_price_query.lastError();
+//        qDebug() << "Price update error: !"
+//                 << update_price_query.lastQuery()
+//                 << update_price_query.lastError();
         return false;
     }
 }
@@ -500,11 +500,11 @@ bool DbManager::updatePrice_l(int slot, double new_price){
     update_price_query.bindValue(":slot", slot);
 
     if(update_price_query.exec()){
-        qDebug() << "Price updated successfully!";
+//        qDebug() << "Price updated successfully!";
         return true;
     }else{
-        qDebug() << "Price update error: !"
-                 << update_price_query.lastError();
+//        qDebug() << "Price update error: !"
+//                 << update_price_query.lastError();
         return false;
     }
 }
@@ -517,11 +517,11 @@ bool DbManager::updateTargetVolume_s(int slot, double new_volume){
     update_target_volume_query.bindValue(":slot", slot);
 
     if(update_target_volume_query.exec()){
-        qDebug() << "Target Volume updated successfully!";
+//        qDebug() << "Target Volume updated successfully!";
         return true;
     }else{
-        qDebug() << "Target volume update error: !"
-                 << update_target_volume_query.lastError();
+//        qDebug() << "Target volume update error: !"
+//                 << update_target_volume_query.lastError();
         return false;
     }
 
@@ -535,11 +535,11 @@ bool DbManager::updateTargetVolume_l(int slot, double new_volume){
     update_target_volume_query.bindValue(":slot", slot);
 
     if(update_target_volume_query.exec()){
-        qDebug() << "Target Volume updated successfully!";
+//        qDebug() << "Target Volume updated successfully!";
         return true;
     }else{
-        qDebug() << "Target volume update error: !"
-                 << update_target_volume_query.lastError();
+//        qDebug() << "Target volume update error: !"
+//                 << update_target_volume_query.lastError();
         return false;
     }
 
@@ -553,11 +553,11 @@ bool DbManager::updateVolumePerTick(int slot, double new_volume_per_tick){
     update_volume_per_tick_query.bindValue(":slot", slot);
 
     if(update_volume_per_tick_query.exec()){
-        qDebug() << "Volume per tick updated successfully!";
+//        qDebug() << "Volume per tick updated successfully!";
         return true;
     }else{
-        qDebug() << "Volume per tick update error: !"
-                 << update_volume_per_tick_query.lastError();
+//        qDebug() << "Volume per tick update error: !"
+//                 << update_volume_per_tick_query.lastError();
         return false;
     }
 }
@@ -570,11 +570,11 @@ bool DbManager::updateFullVolume(int slot, double new_full_volume){
     update_full_volume_query.bindValue(":slot", slot);
 
     if(update_full_volume_query.exec()){
-        qDebug() << "Full volume updated successfully!";
+//        qDebug() << "Full volume updated successfully!";
         return true;
     }else{
-        qDebug() << "Full volume update error: !"
-                 << update_full_volume_query.lastError();
+//        qDebug() << "Full volume update error: !"
+//                 << update_full_volume_query.lastError();
         return false;
     }
 }
@@ -587,11 +587,11 @@ bool DbManager::updatePWM(int slot, int new_pwm){
     pwm_query.bindValue(":slot", slot);
 
     if(pwm_query.exec()){
-        qDebug() << "PWM updated successfully!";
+//        qDebug() << "PWM updated successfully!";
         return true;
     }else{
-        qDebug() << "PWM update error: !"
-                 << pwm_query.lastError();
+//        qDebug() << "PWM update error: !"
+//                 << pwm_query.lastError();
         return false;
     }
 }
@@ -604,11 +604,11 @@ bool DbManager::updateBuffer(int slot, double new_buffer){
     buffer_query.bindValue(":slot", slot);
 
     if(buffer_query.exec()){
-        qDebug() << "Buffer updated successfully!";
+//        qDebug() << "Buffer updated successfully!";
         return true;
     }else{
-        qDebug() << "Buffer update error: !"
-                 << buffer_query.lastError();
+//        qDebug() << "Buffer update error: !"
+//                 << buffer_query.lastError();
         return false;
     }
 }
@@ -640,11 +640,11 @@ bool DbManager::updatePLU_s(int slot, QString new_plu){
     plu_query.bindValue(":slot", slot);
 
     if(plu_query.exec()){
-        qDebug() << "PLU updated successfully!";
+//        qDebug() << "PLU updated successfully!";
         return true;
     }else{
-        qDebug() << "PLU update error: !"
-                 << plu_query.lastError();
+//        qDebug() << "PLU update error: !"
+//                 << plu_query.lastError();
         return false;
     }
 }
@@ -657,11 +657,11 @@ bool DbManager::updatePLU_l(int slot, QString new_plu){
     plu_query.bindValue(":slot", slot);
 
     if(plu_query.exec()){
-        qDebug() << "PLU updated successfully!";
+//        qDebug() << "PLU updated successfully!";
         return true;
     }else{
-        qDebug() << "PLU update error: !"
-                 << plu_query.lastError();
+//        qDebug() << "PLU update error: !"
+//                 << plu_query.lastError();
         return false;
     }
 }

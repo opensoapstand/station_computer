@@ -111,7 +111,7 @@ size_t WriteCallback2(char* contents, size_t size, size_t nmemb, void *userp){
 void thankYouPage::curler(){
     QString order_id = this->paymentPage->getOID();
     double dispensed = this->dispensingPage->getTotalDispensed();
-    qDebug() << "I'm in Thank You Page and the OID is: " << order_id << " and the total dispensed is: " << dispensed << endl;
+//    qDebug() << "I'm in Thank You Page and the OID is: " << order_id << " and the total dispensed is: " << dispensed << endl;
 
     QString curl_param = "oid="+order_id+"&dispensed_amount="+QString::number(dispensed, 'f', 2);
     curl_param_array = curl_param.toLocal8Bit();
@@ -119,9 +119,9 @@ void thankYouPage::curler(){
 
     curl = curl_easy_init();
     if (!curl){
-        qDebug() << "cURL failed to init" << endl;
+//        qDebug() << "cURL failed to init" << endl;
     }else{
-        qDebug() << "cURL init success" << endl;
+//        qDebug() << "cURL init success" << endl;
 
         cout << "CURLING DATA: " << curl_param_array.data() << " is " << sizeof(curl_param_array.data()) << " bytes" << endl;
 
@@ -130,7 +130,7 @@ void thankYouPage::curler(){
        // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback2);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-        qDebug() << "Curl Setup done" << endl;
+//        qDebug() << "Curl Setup done" << endl;
 
         res = curl_easy_perform(curl);
 
@@ -138,7 +138,7 @@ void thankYouPage::curler(){
             fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
             curl_easy_cleanup(curl);
         }else{
-            qDebug() << "CURL SUCCESS!" << endl;
+//            qDebug() << "CURL SUCCESS!" << endl;
             std::cout <<"Here's the output:\n" << readBuffer << endl;
 
             if (readBuffer == "true"){
@@ -155,9 +155,9 @@ void thankYouPage::curler(){
 
 void thankYouPage::onThankyouTimeoutTick(){
     if(-- _thankYouTimeoutSec >= 0) {
-        qDebug() << "thanksPage: Tick Down: " << _thankYouTimeoutSec << endl;
+//        qDebug() << "thanksPage: Tick Down: " << _thankYouTimeoutSec << endl;
     } else {
-        qDebug() << "thanksPage: Timer Done!" << _thankYouTimeoutSec << endl;
+//        qDebug() << "thanksPage: Timer Done!" << _thankYouTimeoutSec << endl;
 
         //Update Click DB
         DbManager db(DB_PATH);
@@ -193,7 +193,7 @@ void thankYouPage::onRinseTimerTick(){
     }
 
     if(-- _rinseTimerTimeoutSec >= 1) {
-        qDebug() << "rinseTimer: Tick Down: " << _rinseTimerTimeoutSec << endl;
+//        qDebug() << "rinseTimer: Tick Down: " << _rinseTimerTimeoutSec << endl;
         ui->rinse_label->setText("<p align=center>Water rinse coming in<br><br>"+ QString::number(_rinseTimerTimeoutSec) +"</p>");
     }else if(_rinseTimerTimeoutSec == 0) {
         ui->rinse_label->setText("<p align=center>Rinsing with water now</p>");
@@ -202,7 +202,7 @@ void thankYouPage::onRinseTimerTick(){
         ui->rinse_label->setText("<p align=center>Rinsing with water now</p>");
     }
     else{
-        qDebug() << "rinseTimer Done!" << _rinseTimerTimeoutSec << endl;
+//        qDebug() << "rinseTimer Done!" << _rinseTimerTimeoutSec << endl;
         rinseTimer->stop();
         ui->rinse_label->hide();
         thankYouEndTimer->start(1000);

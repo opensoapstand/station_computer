@@ -113,7 +113,7 @@ void dispensePage::showEvent(QShowEvent *event)
 //        dispenseIdleTimer->isSingleShot();
         connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
     }
-    qDebug() << "Start Dispense Timers" << endl;
+//    qDebug() << "Start Dispense Timers" << endl;
     dispenseIdleTimer->start(1000);
     _dispenseIdleTimeoutSec = 30;
 
@@ -178,16 +178,16 @@ void dispensePage::on_finish_Button_clicked()
     DbManager db(DB_PATH);
     db.addPageClick("Dispense Page -> Thank You Page");
 
-    qDebug() << "dispensePage: finish button clicked" << endl;
+//    qDebug() << "dispensePage: finish button clicked" << endl;
 
     if (volumeDispensed == 0 && (db.getPaymentMethod(idlePage->userDrinkOrder->getOption())=="tap")){
         // REVERSE PAYMENT
         com.init();
-        qDebug() << "I want to reverse the payment now" << endl;
+//        qDebug() << "I want to reverse the payment now" << endl;
         pktToSend = paymentPacket.reversePurchasePacket();
         if (sendToUX410()){
             waitForUX410();
-            qDebug() << "Payment Reversed" << endl;
+//            qDebug() << "Payment Reversed" << endl;
             pktResponded.clear();
             com.flushSerial();
         }
@@ -200,10 +200,10 @@ void dispensePage::on_finish_Button_clicked()
 
         switch(ret){
         case QMessageBox::Yes:
-            qDebug() << "This person wants their receipt emailed";
+//            qDebug() << "This person wants their receipt emailed";
             break;
         case QMessageBox::No:
-            qDebug() << "This person doesn't want a receipt";
+//            qDebug() << "This person doesn't want a receipt";
             break;
         default:
             break;
@@ -226,7 +226,7 @@ void dispensePage::on_finish_Button_clicked()
 
     this->idlePage->dfUtility->msg = command;
 
-    qDebug() << this->idlePage->dfUtility->msg << endl;
+//    qDebug() << this->idlePage->dfUtility->msg << endl;
 
     idlePage->dfUtility->m_IsSendingFSM = true;
 
@@ -278,7 +278,7 @@ void dispensePage::onRinseTimerTick(){
 }
 
 void dispensePage::stopDispenseTimer(){
-    qDebug() << "dispensePage: Stop Timers" << endl;
+//    qDebug() << "dispensePage: Stop Timers" << endl;
     if(dispenseIdleTimer != nullptr){
         dispenseIdleTimer->stop();
     }
@@ -303,9 +303,9 @@ void dispensePage::stopDispenseTimer(){
 
 void dispensePage::onDispenseIdleTick(){
     if(-- _dispenseIdleTimeoutSec >= 0) {
-        qDebug() << "dispensePage: Idle Tick Down: " << _dispenseIdleTimeoutSec << endl;
+//        qDebug() << "dispensePage: Idle Tick Down: " << _dispenseIdleTimeoutSec << endl;
     } else {
-        qDebug() << "Timer Done!" << _dispenseIdleTimeoutSec << endl;
+//        qDebug() << "Timer Done!" << _dispenseIdleTimeoutSec << endl;
 //        dispenseIdleTimer->stop();
 
         //Update Click DB

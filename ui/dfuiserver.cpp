@@ -12,11 +12,11 @@ void DfUiServer::startServer()
 
     if(!this->listen(QHostAddress::Any, port))
     {
-        qDebug() << "Could not start server";
+//        qDebug() << "Could not start server";
     }
     else
     {
-        qDebug() << "Listening to port " << port << "...";
+//        qDebug() << "Listening to port " << port << "...";
     }
 }
 
@@ -44,7 +44,7 @@ void DfUiServer::MMSlot(){
 void DfUiServer::incomingConnection(qintptr socketDescriptor)
 {
     // We have a new connection
-    qDebug() << socketDescriptor << " Connecting...";
+//    qDebug() << socketDescriptor << " Connecting...";
 
     // Every new connection will be run in a newly created thread
     DfUiCommThread *thread = new DfUiCommThread(socketDescriptor, this);

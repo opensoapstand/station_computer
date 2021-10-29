@@ -323,7 +323,7 @@ void dispensePage::PleaseResetTimerSlot(void){
 
 void dispensePage::updateVolumeDisplayed(double dispensed){
 
-//    volumeDispensed = dispensed;
+    volumeDispensed = dispensed;
 //    double target_volume = idlePage->userDrinkOrder->getSize();
 //    double percentage = dispensed/target_volume*100;
 

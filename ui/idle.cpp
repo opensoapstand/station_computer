@@ -93,6 +93,7 @@ void idle::on_nextPageButton_clicked()
 
     // Connect to KB Listener
     selection_PageOne->showFullScreen();
+    usleep(100);
     this->hide();
 }
 

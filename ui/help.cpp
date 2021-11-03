@@ -88,6 +88,7 @@ void help::on_previousPage_Button_clicked(){
 
     helpIdleTimer->stop();
     idlePage->showFullScreen();
+    usleep(100);
     this->hide();
 }
 
@@ -99,6 +100,7 @@ void help::on_previousPage_Button_2_clicked(){
 
     helpIdleTimer->stop();
     idlePage->showFullScreen();
+    usleep(100);
     this->hide();
 }
 

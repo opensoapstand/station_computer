@@ -259,6 +259,7 @@ void payPage::on_previousPage_Button_clicked()
     }
     paySelectPage->resizeEvent(paySelectResize);
     paySelectPage->showFullScreen();
+    usleep(100);
     this->hide();
 }
 
@@ -275,8 +276,9 @@ void payPage::on_payment_bypass_Button_clicked()
     stopPayTimers();
     //readTimer->stop();
     dispensingPage->showEvent(dispenseEvent);
-    this->hide();
     dispensingPage->showFullScreen();
+    usleep(100);
+    this->hide();
 }
 
 // Payment Processing Debug Button
@@ -404,8 +406,10 @@ void payPage::on_mainPage_Button_clicked()
     if (payment){
         cancelPayment();
     }
-    this->hide();
+
     helpPage->showFullScreen();
+    usleep(100);
+    this->hide();
 
 }
 
@@ -767,8 +771,10 @@ void payPage::idlePaymentTimeout() {
     if (payment){
         cancelPayment();
     }
-    this->hide();
+
     idlePage->showFullScreen();
+    usleep(100);
+    this->hide();
 }
 
 /* ----- Payment ----- */

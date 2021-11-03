@@ -166,8 +166,10 @@ void thankYouPage::onThankyouTimeoutTick(){
         db.addPageClick("Thank You Page -> Main Page");
 
         thankYouEndTimer->stop();
-        this->hide();
+
         idlePage->showFullScreen();
+        usleep(100);
+        this->hide();
     }
 }
 
@@ -179,8 +181,9 @@ void thankYouPage::on_mainPage_Button_clicked()
    db.addPageClick("Thank You Page -> Main Page");
 
    thankYouEndTimer->stop();
-   this->hide();
    idlePage->showFullScreen();
+   usleep(100);
+   this->hide();
 }
 
 void thankYouPage::onRinseTimerTick(){

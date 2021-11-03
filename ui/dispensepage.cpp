@@ -244,6 +244,7 @@ void dispensePage::on_finish_Button_clicked()
 
       thanksPage->showFullScreen();
 //      this->ui->volumeDispensedLabel->setText("");
+      usleep(100);
       this->hide();
 }
 

@@ -154,6 +154,7 @@ void productPage_1::on_selection1_Button_clicked()
         //idlePage->userDrinkOrder->setDrinkSize(DRINK1);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
+        usleep(100);
         this->hide();
     }
 }
@@ -172,6 +173,7 @@ void productPage_1::on_selection2_Button_clicked()
         //idlePage->userDrinkOrder->setDrinkSize(DRINK2);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
+        usleep(100);
         this->hide();
     }
 }
@@ -189,6 +191,7 @@ void productPage_1::on_selection3_Button_clicked()
         //idlePage->userDrinkOrder->setDrinkSize(DRINK3);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
+        usleep(100);
         this->hide();
     }
 }
@@ -206,6 +209,7 @@ void productPage_1::on_selection4_Button_clicked()
         //idlePage->userDrinkOrder->setDrinkSize(DRINK4);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
+        usleep(100);
         this->hide();
     }
 }
@@ -289,6 +293,7 @@ void productPage_1::on_mainPage_Button_clicked()
 
 //    qDebug() << "productPage: helpPage button" << endl;
     helpPage->showFullScreen();
+    usleep(100);
     this->hide();
 
 //    QMessageBox msgBox;

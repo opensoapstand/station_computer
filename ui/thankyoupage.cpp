@@ -100,7 +100,7 @@ void thankYouPage::showEvent(QShowEvent *event)
         curler();
     }
 
-
+    db.closeDB();
 }
 
 size_t WriteCallback2(char* contents, size_t size, size_t nmemb, void *userp){
@@ -159,12 +159,6 @@ void thankYouPage::onThankyouTimeoutTick(){
     } else {
 //        qDebug() << "thanksPage: Timer Done!" << _thankYouTimeoutSec << endl;
 
-        //Update Click DB
-        DbManager db(DB_PATH);
-        db.addPageClick("THANK YOU PAGE TIME OUT");
-        db.addPageClick("TRANSACTION COMPLETED");
-        db.addPageClick("Thank You Page -> Main Page");
-
         thankYouEndTimer->stop();
 
         idlePage->showFullScreen();
@@ -175,10 +169,6 @@ void thankYouPage::onThankyouTimeoutTick(){
 
 void thankYouPage::on_mainPage_Button_clicked()
 {
-   // Update Click DB
-   DbManager db(DB_PATH);
-   db.addPageClick("TRANSACTION COMPLETED");
-   db.addPageClick("Thank You Page -> Main Page");
 
    thankYouEndTimer->stop();
    idlePage->showFullScreen();

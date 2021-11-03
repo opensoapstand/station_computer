@@ -17,6 +17,11 @@ DbManager::DbManager(const QString& path)
     }
 }
 
+// DTOR
+DbManager::~DbManager(){
+    QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
+}
+
 bool DbManager::addPageClick(const QString& page){
 
 //    bool success = false;
@@ -38,6 +43,11 @@ bool DbManager::addPageClick(const QString& page){
 
 //    return success;
     return true;
+}
+
+void DbManager::closeDB(){
+    m_db.close();
+    QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
 }
 
 QString DbManager::getProductName(int slot){

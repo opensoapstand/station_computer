@@ -312,13 +312,14 @@ void oddyseyx86GPIO::monitorGPIO()
         }
         else
         {
-                if (('1' == c) && (compareChar != c))
+                if (('1' == c) && (compareChar == '0'))
                 {
 //                        debugOutput::sendMessage("HIGH Triggered Flow", INFO);
                       //  usleep(500000);						// Sleep to make sure debug gets chance to print
                         m_pDrink->registerFlowSensorTick(); //trigger the callback
+//                        cout << "Registered Tick" << endl;
                 }
-                else if (('0' == c) && (compareChar != c))
+                else if (('0' == c) && (compareChar == '1'))
                 {
 //                         debugOutput::sendMessage("LOW Triggered Flow", INFO);
                      //   usleep(500000); // Sleep to make sure debug gets chance to print

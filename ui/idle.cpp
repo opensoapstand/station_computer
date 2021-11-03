@@ -70,7 +70,7 @@ idle::~idle()
 void idle::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
-    DbManager db(DB_PATH);
+//    DbManager db(DB_PATH);
     //ui->savedBottles_label->setText("THANKS TO YOU, THIS MACHINE HAS SAVED<br>OVER " + QString::number(db.getTotalTransactions()) + " PLASTIC CONTAINERS<br>FROM THE LANDFILL");
 }
 
@@ -90,6 +90,8 @@ void idle::on_nextPageButton_clicked()
     p2 = db.checkLevels(2);
     p3 = db.checkLevels(3);
     p4 = db.checkLevels(4);
+
+    db.closeDB();
 
     // Connect to KB Listener
     selection_PageOne->showFullScreen();

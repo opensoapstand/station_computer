@@ -157,6 +157,8 @@ void productPage_1::on_selection1_Button_clicked()
         usleep(100);
         this->hide();
     }
+
+    db.closeDB();
 }
 
 
@@ -176,6 +178,8 @@ void productPage_1::on_selection2_Button_clicked()
         usleep(100);
         this->hide();
     }
+
+    db.closeDB();
 }
 
 void productPage_1::on_selection3_Button_clicked()
@@ -194,6 +198,8 @@ void productPage_1::on_selection3_Button_clicked()
         usleep(100);
         this->hide();
     }
+
+    db.closeDB();
 }
 
 void productPage_1::on_selection4_Button_clicked()
@@ -212,6 +218,8 @@ void productPage_1::on_selection4_Button_clicked()
         usleep(100);
         this->hide();
     }
+
+    db.closeDB();
 }
 
 //void productPage_1::on_selection5_Button_clicked()
@@ -241,19 +249,12 @@ void productPage_1::onProductPageTimeoutTick(){
     } else {
 //        qDebug() << "Timer Done!" << _productPageTimeoutSec << endl;
 
-        //Update Click DB
-        DbManager db(DB_PATH);
-        db.addPageClick("PRODUCT PAGE TIME OUT");
-
         mainPage();
     }
 }
 
 void productPage_1::mainPage()
 {
-    // UPDATE DB
-    DbManager db(DB_PATH);
-    db.addPageClick("Product Page -> Main Page");
 
     productPageEndTimer->stop();
     this->hide();
@@ -286,10 +287,6 @@ void productPage_1::on_mainPage_Button_clicked()
 //    qDebug() << "Main Page Button pressed" << endl;
 
     productPageEndTimer->stop();
-
-    //Update Click DB
-    DbManager db(DB_PATH);
-    db.addPageClick("Product Page -> Help Page");
 
 //    qDebug() << "productPage: helpPage button" << endl;
     helpPage->showFullScreen();

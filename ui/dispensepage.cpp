@@ -174,9 +174,7 @@ bool dispensePage::waitForUX410()
  */
 void dispensePage::on_finish_Button_clicked()
 {
-    //Update Click DB
     DbManager db(DB_PATH);
-    db.addPageClick("Dispense Page -> Thank You Page");
 
 //    qDebug() << "dispensePage: finish button clicked" << endl;
 
@@ -246,6 +244,8 @@ void dispensePage::on_finish_Button_clicked()
 //      this->ui->volumeDispensedLabel->setText("");
       usleep(100);
       this->hide();
+
+      db.closeDB();
 }
 
 void dispensePage::onRinseTimerTick(){
@@ -309,12 +309,16 @@ void dispensePage::onDispenseIdleTick(){
 //        qDebug() << "Timer Done!" << _dispenseIdleTimeoutSec << endl;
 //        dispenseIdleTimer->stop();
 
-        //Update Click DB
-        DbManager db(DB_PATH);
-        db.addPageClick("DISPENSE TIME OUT");
-
         on_finish_Button_clicked();
     }
+}
+
+double dispensePage::getTotalDispensed(){
+    DbManager db(DB_PATH);
+    if (volumeDispensed == db.getProductVolumePerTick(this->idlePage->userDrinkOrder->getOption())){
+        volumeDispensed=0;
+    }
+    return volumeDispensed;
 }
 
 void dispensePage::PleaseResetTimerSlot(void){
@@ -352,8 +356,6 @@ void dispensePage::updateVolumeDisplayed(double dispensed){
 
 void dispensePage::targetHitDisplay(){
     //this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ " ml - Target Hit!");
-    //Update Click DB
-    DbManager db(DB_PATH);
-    db.addPageClick("TARGET HIT");
+
     on_finish_Button_clicked();
 }

@@ -180,7 +180,7 @@ DF_ERROR stateDispenseEnd::sendDB(){
     std::string target_volume = to_string(cassettes[pos].getDrink()->getTargetVolume(size));
     std::string price = to_string(cassettes[pos].getDrink()->getPrice(size));
     std::string start_time = (cassettes[pos].getDrink()->m_nStartTime);
-    std::string dispensed_volume = to_string(cassettes[pos].getDrink()->m_nVolumeDispensed);
+    //std::string dispensed_volume = to_string(cassettes[pos].getDrink()->m_nVolumeDispensed);
     std::string machine_id = getMachineID();
     std::string pid = getProductID(pos+1);
     char EndTime[50];
@@ -188,6 +188,13 @@ DF_ERROR stateDispenseEnd::sendDB(){
     timeinfo = localtime(&rawtime);
     strftime(EndTime, 50, "%F %T", timeinfo);
     std::string readBuffer;
+    std::string dispensed_volume;
+
+    if (cassettes[pos].getDrink()->m_nVolumeDispensed == cassettes[pos].getDrink()->m_nVolumePerTick){
+        dispensed_volume = "0";
+    }else{
+        dispensed_volume = to_string(cassettes[pos].getDrink()->m_nVolumeDispensed);
+    }
 
 //    std::string json = "{\"machineId\": \"" + machine_id + "\", \"product\": \"" + product + "\", \"quantity_requested\": \"" + target_volume + "\", \"price\": \"" + price + "\", \"start_time\": \"" + start_time + "\", \"quantity_dispensed\": \"" + dispensed_volume + "\"}";
 //    std::string curler = "screen -d -m curl -k -H \"Content-Type: application/json\" -d '"+json+"' https://drinkfill.herokuapp.com/machine_data/add";
@@ -299,7 +306,12 @@ DF_ERROR stateDispenseEnd::updateDB(){
      std::string target_volume = to_string(cassettes[pos].getDrink()->getTargetVolume(size));
      std::string price = to_string(cassettes[pos].getDrink()->getPrice(size));
      std::string start_time = (cassettes[pos].getDrink()->m_nStartTime);
-     std::string dispensed_volume = to_string(cassettes[pos].getDrink()->m_nVolumeDispensed);
+     std::string dispensed_volume;
+     if (cassettes[pos].getDrink()->m_nVolumeDispensed == cassettes[pos].getDrink()->m_nVolumePerTick){
+         dispensed_volume = "0";
+     }else{
+         dispensed_volume = to_string(cassettes[pos].getDrink()->m_nVolumeDispensed);
+     }
 //     std::string buttonPressDuration = to_string(cassettes[pos].getButtonPressDuration());
 //     std::string buttonPressTimes = to_string(cassettes[pos].getButtonPressTimes());
 

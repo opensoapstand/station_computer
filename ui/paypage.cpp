@@ -246,9 +246,6 @@ void payPage::displayPaymentPending(bool isVisible)
 // Navigation: Back to Drink Size Selection
 void payPage::on_previousPage_Button_clicked()
 {
-    //Update Click DB
-    DbManager db(DB_PATH);
-    db.addPageClick("Pay Page -> Pay Select");
 
 //    qDebug() << "payPage: previous button" << endl;
     stopPayTimers();
@@ -265,11 +262,6 @@ void payPage::on_previousPage_Button_clicked()
 
 void payPage::on_payment_bypass_Button_clicked()
 {
-
-    //Update Click DB
-    DbManager db(DB_PATH);
-    db.addPageClick("Pay Page -> Dispense Page");
-    db.addPageClick("TRANSACTION STARTED");
 
 //    qDebug() << "ByPass payment to Dispense" << endl;
     //    cancelPayment();
@@ -519,6 +511,8 @@ void payPage::showEvent(QShowEvent *event)
        generateQR();
     }
 
+    db.closeDB();
+
 
 }
 
@@ -581,6 +575,8 @@ void payPage::generateQR(){
     _paymentTimeoutSec=444;
     _qrTimeOutSec=5;
     qrTimer->start(1000);
+
+    db.closeDB();
 
 }
 

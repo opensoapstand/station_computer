@@ -87,6 +87,7 @@ public:
         string m_nPLU_s;
         string m_paymentMethod;
         int m_PWM;
+        double m_nVolumePerTick;
 
         time_t rawtime;
         struct tm * timeinfo;
@@ -101,12 +102,9 @@ private:
 	bool isDispenseFinished;
         double m_nVolumeDispensedSinceLastPoll;
 	double m_calibration_const;
-	double m_nVolumePerTick;
-
 
 	double m_nTickCount;
 	bool valueChange;
-
 
 	bool m_isStillDrink;
 
@@ -115,12 +113,9 @@ private:
 	void setIsStillDrink(bool isStillDrink);
         double getVolPerTick();
 
-
         sqlite3 *db;
         int rc;
 
-	//last filled as date
-	//best before as date
 };
 
 #endif

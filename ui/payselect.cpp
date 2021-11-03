@@ -94,9 +94,6 @@ void paySelect::cancelTimers(){
 /* GUI */
 void paySelect::on_previousPage_Button_clicked()
 {
-    //Update Click DB
-    DbManager db(DB_PATH);
-    db.addPageClick("Pay Select -> Product Page");
 
 //    qDebug() << "paySelect: Previous button" << endl;
     while(!stopSelectTimers()){
@@ -134,6 +131,8 @@ void paySelect::on_payPage_Button_clicked()
         usleep(100);
         this->hide();
     }
+
+    db.closeDB();
 
 }
 
@@ -208,6 +207,8 @@ void paySelect::resizeEvent(QResizeEvent *event){
 //    qDebug() << "Start paySelect Timers" << endl;
     selectIdleTimer->start(1000);
     _selectIdleTimeoutSec = 40;
+
+    db.closeDB();
 }
 
 void paySelect::showEvent(QShowEvent *event){
@@ -252,6 +253,7 @@ void paySelect::showEvent(QShowEvent *event){
     ui->volume_lLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
     ui->volume_sLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
 
+    db.closeDB();
 }
 
 void paySelect::onSelectTimeoutTick(){
@@ -260,10 +262,6 @@ void paySelect::onSelectTimeoutTick(){
     } else {
 //        qDebug() << "Timer Done!" << _selectIdleTimeoutSec << endl;
         selectIdleTimer->stop();
-
-        //Update Click DB
-        DbManager db(DB_PATH_CLICKS);
-        db.addPageClick("PAY SELECT TIME OUT");
 
         mainPage();
     }
@@ -283,10 +281,6 @@ bool paySelect::stopSelectTimers(){
 void paySelect::mainPage()
 {
 
-    //Update Click DB
-    DbManager db(DB_PATH);
-    db.addPageClick("Pay Select -> Main Page");
-
 //    qDebug() << "paySelect: mainPage button" << endl;
     this->stopSelectTimers();
     selectIdleTimer->stop();
@@ -297,10 +291,6 @@ void paySelect::mainPage()
 
 void paySelect::on_mainPage_Button_clicked()
 {
-
-    //Update Click DB
-    DbManager db(DB_PATH);
-    db.addPageClick("Pay Select -> Help Page");
 
 //    qDebug() << "paySelect: helpPage button" << endl;
     this->stopSelectTimers();
@@ -357,7 +347,6 @@ void paySelect::on_orderSmall_Button_clicked()
     char drinkSize = 's';
 
     DbManager db(DB_PATH);
-    db.addPageClick("Small Drink Size Selected");
 
     ui->priceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
     ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
@@ -371,6 +360,8 @@ void paySelect::on_orderSmall_Button_clicked()
     }else{
         ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
     }
+
+    db.closeDB();
 
 }
 
@@ -412,4 +403,6 @@ void paySelect::on_orderBig_Button_clicked()
     }else{
         ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
     }
+
+    db.closeDB();
 }

@@ -23,6 +23,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -75,6 +76,7 @@ class stateDispenseEnd : public stateVirtual
         void printQr(const QrCode &qr);
         std::string getMachineID();
         std::string getProductID(int slot);
+        void bufferCURL(std::string curl_params);
 
         CURL *curl;
         CURLcode res;

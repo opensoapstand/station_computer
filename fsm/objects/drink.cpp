@@ -249,7 +249,7 @@ DF_ERROR drink::stopDispense()
 {
     DF_ERROR dfRet = ERROR_BAD_PARAMS;
 
-    m_nVolumeDispensed = 0;
+//    m_nVolumeDispensed = 0;
     m_nVolumeDispensedSinceLastPoll = 0;
     m_nVolumeDispensedPreviously = 0;
 
@@ -261,7 +261,7 @@ bool drink::isDispenseComplete()
 {
     bool bRet = false;
 
-    if (m_nVolumeTarget < m_nVolumeDispensed){
+    if (m_nVolumeTarget <= m_nVolumeDispensed){
        // cout << "Target HIT!" << endl;
         bRet = true;
     }

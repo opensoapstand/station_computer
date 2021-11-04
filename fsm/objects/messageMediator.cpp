@@ -440,9 +440,8 @@ DF_ERROR messageMediator::getPositionReady()
    if (!isalpha(sizeChar)) //for second char not an alphabet
    {
 //      debugOutput::sendMessage("Irrelevant input", INFO);
-//      e_ret = ERROR_NETW_NO_POSITION;
-       debugOutput::sendMessage("In Message Mediator - I know this is PWM", INFO);
-       m_nSize = TEST_CHAR;
+      e_ret = ERROR_NETW_NO_POSITION;
+//       m_nSize = TEST_CHAR;
    }
    else
    {

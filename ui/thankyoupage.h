@@ -16,6 +16,7 @@
 
 #include "df_util.h"
 #include <curl/curl.h>
+#include <ctime>
 
 class dispensePage;
 class idle;
@@ -61,7 +62,11 @@ private:
     QByteArray curl_param_array;
     char * curl_data;
 
+    time_t rawtime;
+    struct tm * timeinfo;
+
     void curler();
+    void bufferCURL(char *curl_params);
 };
 
 #endif // THANKYOUPAGE_H

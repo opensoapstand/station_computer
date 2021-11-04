@@ -224,8 +224,8 @@ DF_ERROR stateDispenseEnd::sendDB(){
         res = curl_easy_perform(curl);
 
         if (res != CURLE_OK){
-            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
-            std::cout << "Curl didn't work, I need to buffer cURL" << endl;
+//            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+//            std::cout << "Curl didn't work, I need to buffer cURL" << endl;
             bufferCURL(curl_param);
             curl_easy_cleanup(curl);
         }else{
@@ -233,9 +233,9 @@ DF_ERROR stateDispenseEnd::sendDB(){
             std::cout <<"Here's the output:\n" << readBuffer << endl;
             if (readBuffer == "true"){
 //                readBuffer = "";
-                std::cout << "Curl worked!" << endl;
+//                std::cout << "Curl worked!" << endl;
             }else{
-                std::cout << "Curl didn't work, I need to buffer cURL" << endl;
+//                std::cout << "Curl didn't work, I need to buffer cURL" << endl;
                 bufferCURL(curl_param);
 //                readBuffer = "";
             }
@@ -250,15 +250,15 @@ void stateDispenseEnd::bufferCURL(std::string curl_params){
     time(&rawtime);
     timeinfo = localtime(&rawtime);
     strftime(filetime, 50, "%F %T", timeinfo);
-    std::cout << "Here I am in bufferCURL and I know the buffer is: " << curl_params << endl;
+//    std::cout << "Here I am in bufferCURL and I know the buffer is: " << curl_params << endl;
     std::string filelocation = "/home/df-admin/curlBuffer/";
     std::string filetype = ".txt";
     std::string filename = filelocation+filetime+filetype;
-    std::cout << "filename is: " << filename << endl;
+//    std::cout << "filename is: " << filename << endl;
     std::ofstream out;
     out.open(filename);
     if (!out.is_open()){
-        std::cout << "Cannot open output file!";
+//        std::cout << "Cannot open output file!";
     }else{
         out << curl_params;
         out.close();

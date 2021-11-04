@@ -54,6 +54,6 @@ void debugOutput::sendMessage(std::string msg, MESSAGE_LEVEL lvl)
 {
 	if (lvl >= debugOutput::m_dbgLvl)
 	{
-                cerr << m_lvlArray[lvl] + ": " + msg << endl;
+//                cerr << m_lvlArray[lvl] + ": " + msg << endl;
 	}
 }

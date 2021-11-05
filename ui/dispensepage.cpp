@@ -314,6 +314,10 @@ void dispensePage::onDispenseIdleTick(){
 }
 
 double dispensePage::getTotalDispensed(){
+    DbManager db(DB_PATH);
+    if (volumeDispensed == db.getProductVolumePerTick(this->idlePage->userDrinkOrder->getOption())){
+        volumeDispensed=0;
+    }
     return volumeDispensed;
 }
 

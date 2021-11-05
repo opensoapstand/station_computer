@@ -55,20 +55,7 @@ DF_ERROR stateDispenseEnd::onEntry()
    pos = pos - 1;
 
    //cassettes[pos].getDrink()->stopDispense();
-//   cassettes[pos].stopDispense(pos);
-//   cassettes[pos].getDrink()->stopDispense();
-//   cassettes[pos].stopDispense(DRINK);
-
-   std::string paymentMethod = cassettes[pos].getDrink()->getPaymentMethod();
-
-   if (size != TEST_CHAR){
-       updateDB();
-       if (paymentMethod == "barcode" || paymentMethod == "plu"){
-           debugOutput::sendMessage("Printing receipt", INFO);
-           printer();
-           sendDB();
-       }
-   }
+   cassettes[pos].stopDispense(pos);
 
    return e_ret;
 }
@@ -136,9 +123,24 @@ DF_ERROR stateDispenseEnd::onExit()
        cassettes[pos].cleanNozzle(WATER, AIR);
    }
 
+   if (size != TEST_CHAR){
+       updateDB();
+
+       //QRgen();
+
+       if (paymentMethod == "barcode" || paymentMethod == "plu"){
+           debugOutput::sendMessage("Printing receipt", INFO);
+           printer();
+           sendDB();
+       }
+   }
+
    m_pMessaging->clearProcessString();
    m_pMessaging->clearCommandString();
    m_pMessaging->clearcCommand();
+
+   cassettes[pos].getDrink()->stopDispense();
+   cassettes[pos].stopDispense(DRINK);
 
 //   cassettes[pos].resetButtonPressTimes();
 //   cassettes[pos].resetButtonPressDuration();
@@ -178,7 +180,7 @@ DF_ERROR stateDispenseEnd::sendDB(){
     std::string target_volume = to_string(cassettes[pos].getDrink()->getTargetVolume(size));
     std::string price = to_string(cassettes[pos].getDrink()->getPrice(size));
     std::string start_time = (cassettes[pos].getDrink()->m_nStartTime);
-    std::string dispensed_volume = to_string(cassettes[pos].getDrink()->m_nVolumeDispensed);
+    //std::string dispensed_volume = to_string(cassettes[pos].getDrink()->m_nVolumeDispensed);
     std::string machine_id = getMachineID();
     std::string pid = getProductID(pos+1);
     char EndTime[50];
@@ -186,7 +188,13 @@ DF_ERROR stateDispenseEnd::sendDB(){
     timeinfo = localtime(&rawtime);
     strftime(EndTime, 50, "%F %T", timeinfo);
     std::string readBuffer;
-//    std::string dispensed_volume;
+    std::string dispensed_volume;
+
+    if (cassettes[pos].getDrink()->m_nVolumeDispensed == cassettes[pos].getDrink()->m_nVolumePerTick){
+        dispensed_volume = "0";
+    }else{
+        dispensed_volume = to_string(cassettes[pos].getDrink()->m_nVolumeDispensed);
+    }
 
 //    std::string json = "{\"machineId\": \"" + machine_id + "\", \"product\": \"" + product + "\", \"quantity_requested\": \"" + target_volume + "\", \"price\": \"" + price + "\", \"start_time\": \"" + start_time + "\", \"quantity_dispensed\": \"" + dispensed_volume + "\"}";
 //    std::string curler = "screen -d -m curl -k -H \"Content-Type: application/json\" -d '"+json+"' https://drinkfill.herokuapp.com/machine_data/add";
@@ -222,7 +230,7 @@ DF_ERROR stateDispenseEnd::sendDB(){
             curl_easy_cleanup(curl);
         }else{
             debugOutput::sendMessage("CURL SUCCESS!", INFO);
-//            std::cout <<"Here's the output:\n" << readBuffer << endl;
+            std::cout <<"Here's the output:\n" << readBuffer << endl;
             if (readBuffer == "true"){
 //                readBuffer = "";
 //                std::cout << "Curl worked!" << endl;
@@ -329,8 +337,12 @@ DF_ERROR stateDispenseEnd::updateDB(){
      std::string target_volume = to_string(cassettes[pos].getDrink()->getTargetVolume(size));
      std::string price = to_string(cassettes[pos].getDrink()->getPrice(size));
      std::string start_time = (cassettes[pos].getDrink()->m_nStartTime);
-     std::string dispensed_volume = to_string(cassettes[pos].getDrink()->m_nVolumeDispensed);
-
+     std::string dispensed_volume;
+     if (cassettes[pos].getDrink()->m_nVolumeDispensed == cassettes[pos].getDrink()->m_nVolumePerTick){
+         dispensed_volume = "0";
+     }else{
+         dispensed_volume = to_string(cassettes[pos].getDrink()->m_nVolumeDispensed);
+     }
 //     std::string buttonPressDuration = to_string(cassettes[pos].getButtonPressDuration());
 //     std::string buttonPressTimes = to_string(cassettes[pos].getButtonPressTimes());
 

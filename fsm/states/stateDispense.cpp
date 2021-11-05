@@ -95,22 +95,10 @@ DF_ERROR stateDispense::onAction()
 
    if (nullptr != &m_nextState) // TODO: Do a Check if Button is Pressed
    {
-       m_pMessaging->sendMessage(to_string(cassettes[pos].getDrink()->getVolumeDispensed()));
-
-       if (cassettes[pos].getDrink()->isDispenseComplete())
-       {
-          cassettes[pos].setIsDispenseComplete(true);
-          // TARGET HIT!
-          // m_pMessaging->sendMessage("Target Hit");
-       }
-
       if ( (m_pMessaging->getcCommand() == DISPENSE_END_CHAR) || (cassettes[pos].getIsDispenseComplete()) )
       {
          debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]" + to_string(cassettes[pos].getIsDispenseComplete()), INFO);
          m_nextState = DISPENSE_END;
-         cassettes[pos].getDrink()->stopDispense();
-         cassettes[pos].stopDispense(pos);
-         m_pMessaging->sendMessage("Target Hit");
          return e_ret = OK;
       }
       else
@@ -121,8 +109,12 @@ DF_ERROR stateDispense::onAction()
       // TODO: Do a check if Pumps are operational
       // send IPC if pump fails
 
+      m_pMessaging->sendMessage(to_string(cassettes[pos].getDrink()->getVolumeDispensed()));
+
+
       if (cassettes[pos].getDrink()->getVolumeDispensedPreviously() == cassettes[pos].getDrink()->getVolumeDispensed()){
           //debugOutput::sendMessage("IDLE - Timer should be ticking!", INFO);
+
           m_nextState = DISPENSE_IDLE;
       }
       else {
@@ -132,11 +124,21 @@ DF_ERROR stateDispense::onAction()
           cassettes[pos].getDrink()->m_nVolumeDispensedPreviously = cassettes[pos].getDrink()->getVolumeDispensed();
       }
 
-//      cassettes[pos].getDrink()->drinkVolumeInfo();
+
+
+      //debugOutput::sendMessage(outputString, INFO);
+
+      cassettes[pos].getDrink()->drinkVolumeInfo();
 
       // TODO: Figure out a Cancel/completed volume from IPC if volume is hit
       // Logic compare present and last 3 states for volume..continue
+      if (cassettes[pos].getDrink()->isDispenseComplete())
+      {
+         cassettes[pos].setIsDispenseComplete(true);
+         // TARGET HIT!
+         m_pMessaging->sendMessage("Target Hit");
 
+      }
 
       usleep(500000);
       e_ret = OK;

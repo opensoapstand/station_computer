@@ -96,7 +96,9 @@ void thankYouPage::showEvent(QShowEvent *event)
     thankYouEndTimer->start(1000);
     _thankYouTimeoutSec = 7;
 
-
+    if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "qr"){
+        curler();
+    }
 
     db.closeDB();
 }
@@ -122,7 +124,7 @@ void thankYouPage::curler(){
     }else{
 //        qDebug() << "cURL init success" << endl;
 
-        cout << "CURLING DATA in THANK YOU PAGE: " << curl_param_array.data() << " is " << sizeof(curl_param_array.data()) << " bytes" << endl;
+//        cout << "CURLING DATA: " << curl_param_array.data() << " is " << sizeof(curl_param_array.data()) << " bytes" << endl;
 
         curl_easy_setopt(curl, CURLOPT_URL, "http://Drinkfill-env.eba-qatmjpdr.us-east-2.elasticbeanstalk.com/api/machine_data/updateOrder");
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
@@ -182,18 +184,17 @@ void thankYouPage::onThankyouTimeoutTick(){
     } else {
 //        qDebug() << "thanksPage: Timer Done!" << _thankYouTimeoutSec << endl;
 
-//        thankYouEndTimer->stop();
+        thankYouEndTimer->stop();
 
-        on_mainPage_Button_clicked();
+        idlePage->showFullScreen();
+        usleep(100);
+        this->hide();
     }
 }
 
 void thankYouPage::on_mainPage_Button_clicked()
 {
-   DbManager db(DB_PATH);
-   if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "qr"){
-       curler();
-   }
+
    thankYouEndTimer->stop();
    idlePage->showFullScreen();
    usleep(100);

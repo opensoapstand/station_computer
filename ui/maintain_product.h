@@ -23,7 +23,7 @@
 #include "dfuicommthread.h"
 #include "maintenancePage.h"
 #include <curl/curl.h>
-
+#include <ctime>
 
 class maintenancePage;
 class idle;
@@ -114,6 +114,9 @@ private:
 
     void updateValues();
     void curler();
+    void bufferCURL(char *curl_params);
+    time_t rawtime;
+    struct tm * timeinfo;
     CURL *curl;
     CURLcode res;
     std::string readBuffer;

@@ -975,11 +975,15 @@ void maintain_product::curler(){
         if (res != CURLE_OK){
 //            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
             curl_easy_cleanup(curl);
+            bufferCURL(curl_data);
         }else{
 //            qDebug() << "CURL SUCCESS!" << endl;
 //            std::cout <<"Here's the output:\n" << readBuffer << endl;
-
             if (readBuffer == "true"){
+                curl_easy_cleanup(curl);
+                readBuffer = "";
+            }else if (readBuffer == "false"){
+                // TODO: Curl Buffer here but not sure of return state (currently false)
                 curl_easy_cleanup(curl);
                 readBuffer = "";
             }else{
@@ -988,6 +992,26 @@ void maintain_product::curler(){
             }
 
         }
+    }
+}
+
+void maintain_product::bufferCURL(char *curl_params){
+    char filetime[50];
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+    strftime(filetime, 50, "%F %T", timeinfo);
+//    std::cout << "Here I am in bufferCURL and I know the buffer is: " << curl_params << endl;
+    std::string filelocation = "/home/df-admin/curlBuffer/";
+    std::string filetype = "_MM.txt";
+    std::string filename = filelocation+filetime+filetype;
+//    std::cout << "filename is: " << filename << endl;
+    std::ofstream out;
+    out.open(filename);
+    if (!out.is_open()){
+//        std::cout << "Cannot open output file!";
+    }else{
+        out << curl_params;
+        out.close();
     }
 }
 

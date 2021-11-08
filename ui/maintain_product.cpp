@@ -149,10 +149,11 @@ void maintain_product::on_backButton_clicked(){
 
     //Update Click DB
     DbManager db(DB_PATH);
-    db.addPageClick("MAINTAIN PRODUCT PAGE EXITED");
+//    db.addPageClick("MAINTAIN PRODUCT PAGE EXITED");
 
     maintainProductPageEndTimer->stop();
     maintenanceMode->showFullScreen();
+    usleep(100);
     this->hide();
 
     ui->name->setText("");
@@ -606,7 +607,7 @@ void maintain_product::on_soldOutButton_clicked(){
                 ui->refillLabel->setText("");
                 //Update Click DB
                 DbManager db(DB_PATH);
-                db.addPageClick("PRODUCT SOLD OUT");
+//                db.addPageClick("PRODUCT SOLD OUT");
                 ui->total_dispensed->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
                 ui->remainingLabel->setText(QString::number(db.getRemaining(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
                 ui->soldOutButton->setText("Un-Mark as Sold Out");
@@ -644,7 +645,7 @@ void maintain_product::on_soldOutButton_clicked(){
                 ui->refillLabel->setText("");
                 //Update Click DB
                 DbManager db(DB_PATH);
-                db.addPageClick("PRODUCT UN-SOLD OUT");
+//                db.addPageClick("PRODUCT UN-SOLD OUT");
                 ui->total_dispensed->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
                 ui->remainingLabel->setText(QString::number(db.getRemaining(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
                 ui->soldOutButton->setText("Mark as Sold Out");
@@ -708,8 +709,7 @@ void maintain_product::onMaintainProductPageTimeoutTick(){
 
         //Update Click DB
         DbManager db(DB_PATH);
-        db.addPageClick("MAINTAIN PRODUCT PAGE TIME OUT");
-
+//        db.addPageClick("MAINTAIN PRODUCT PAGE TIME OUT");
 
         if (pumping) {
 //            qDebug() << "Stopping pump" << endl;
@@ -727,8 +727,9 @@ void maintain_product::onMaintainProductPageTimeoutTick(){
         }
 
         maintainProductPageEndTimer->stop();
-        this->hide();
         idlePage->showFullScreen();
+        usleep(100);
+        this->hide();
     }
 
 }
@@ -904,8 +905,6 @@ void maintain_product::updateValues(){
 //    }else if(plu_l){
 //        db.updatePLU_l(checkOption, text_entered);
 //    }
-
-
 
     price_s = false;
     price_l = false;

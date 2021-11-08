@@ -168,10 +168,10 @@ void payPage::setPage(paySelect *pageSizeSelect, dispensePage* pageDispense, idl
 // TODO: Link style to sheet
 //void payPage::labelSetup(QLabel *label, int fontSize)
 //{
-////    QFont font("Arial", fontSize, QFont::Bold);
-////    label->setFont(font);
-////    label->setStyleSheet("color: white");
-////    label->setAlignment(Qt::AlignCenter);
+//    QFont font("Arial", fontSize, QFont::Bold);
+//    label->setFont(font);
+//    label->setStyleSheet("color: white");
+//    label->setAlignment(Qt::AlignCenter);
 //}
 
 void payPage::resizeEvent(QResizeEvent *event){

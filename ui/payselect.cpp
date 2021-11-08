@@ -115,7 +115,7 @@ void paySelect::on_payPage_Button_clicked()
 
     //Update Click DB
     DbManager db(DB_PATH);
-    db.addPageClick("Pay Select -> Dispense Page");
+//    db.addPageClick("Pay Select -> Dispense Page");
 
     this->stopSelectTimers();
     selectIdleTimer->stop();
@@ -386,7 +386,7 @@ void paySelect::on_orderBig_Button_clicked()
     _selectIdleTimeoutSec = 40;
 
     DbManager db(DB_PATH);
-    db.addPageClick("Large Drink Size Selected");
+//    db.addPageClick("Large Drink Size Selected");
 
     char drinkSize = 'l';
 

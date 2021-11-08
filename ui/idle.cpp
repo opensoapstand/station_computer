@@ -83,7 +83,7 @@ void idle::on_nextPageButton_clicked()
 
     // UPDATE DB
     DbManager db(DB_PATH);
-    db.addPageClick("Main Page -> Product Page");
+//    db.addPageClick("Main Page -> Product Page");
 
     //Check product levels
     p1 = db.checkLevels(1);

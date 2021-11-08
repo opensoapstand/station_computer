@@ -55,8 +55,8 @@ void help::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
 
-    DbManager db(DB_PATH);
-    db.addPageClick("HELP PAGE ENTERED");
+//    DbManager db(DB_PATH);
+//    db.addPageClick("HELP PAGE ENTERED");
 
     if(helpIdleTimer == nullptr){
         helpIdleTimer = new QTimer(this);
@@ -83,8 +83,8 @@ void help::setPage(productPage_1 *pageSelect, paySelect* paySelect, idle* pageId
 void help::on_previousPage_Button_clicked(){
 //    qDebug() << "Previoue Page button clicked" << endl;
 
-    DbManager db(DB_PATH);
-    db.addPageClick("HELP PAGE EXITED");
+//    DbManager db(DB_PATH);
+//    db.addPageClick("HELP PAGE EXITED");
 
     helpIdleTimer->stop();
     idlePage->showFullScreen();
@@ -95,8 +95,8 @@ void help::on_previousPage_Button_clicked(){
 void help::on_previousPage_Button_2_clicked(){
 //    qDebug() << "Previoue Page button clicked" << endl;
 
-    DbManager db(DB_PATH);
-    db.addPageClick("HELP PAGE EXITED");
+//    DbManager db(DB_PATH);
+//    db.addPageClick("HELP PAGE EXITED");
 
     helpIdleTimer->stop();
     idlePage->showFullScreen();

@@ -143,8 +143,8 @@ void productPage_1::cancelTimers(){
 void productPage_1::on_selection1_Button_clicked()
 {
     // UPDATE DB
-    DbManager db(DB_PATH);
-    db.addPageClick("Product Page -> Option 1");
+//    DbManager db(DB_PATH);
+//    db.addPageClick("Product Page -> Option 1");
 
     if(this->idlePage->isEnough(1)){
         productPageEndTimer->stop();
@@ -158,14 +158,14 @@ void productPage_1::on_selection1_Button_clicked()
         this->hide();
     }
 
-    db.closeDB();
+//    db.closeDB();
 }
 
 
 void productPage_1::on_selection2_Button_clicked()
 {
-    DbManager db(DB_PATH);
-    db.addPageClick("Product Page -> Option 2");
+//    DbManager db(DB_PATH);
+//    db.addPageClick("Product Page -> Option 2");
 
     if(this->idlePage->isEnough(2)){
         productPageEndTimer->stop();
@@ -179,13 +179,13 @@ void productPage_1::on_selection2_Button_clicked()
         this->hide();
     }
 
-    db.closeDB();
+//    db.closeDB();
 }
 
 void productPage_1::on_selection3_Button_clicked()
 {
-    DbManager db(DB_PATH);
-    db.addPageClick("Product Page -> Option 3");
+//    DbManager db(DB_PATH);
+//    db.addPageClick("Product Page -> Option 3");
 
     if(this->idlePage->isEnough(3)){
         productPageEndTimer->stop();
@@ -199,13 +199,13 @@ void productPage_1::on_selection3_Button_clicked()
         this->hide();
     }
 
-    db.closeDB();
+//    db.closeDB();
 }
 
 void productPage_1::on_selection4_Button_clicked()
 {
-    DbManager db(DB_PATH);
-    db.addPageClick("Product Page -> Option 4");
+//    DbManager db(DB_PATH);
+//    db.addPageClick("Product Page -> Option 4");
 
     if(this->idlePage->isEnough(4)){
         productPageEndTimer->stop();
@@ -219,7 +219,7 @@ void productPage_1::on_selection4_Button_clicked()
         this->hide();
     }
 
-    db.closeDB();
+//    db.closeDB();
 }
 
 //void productPage_1::on_selection5_Button_clicked()
@@ -257,8 +257,9 @@ void productPage_1::mainPage()
 {
 
     productPageEndTimer->stop();
-    this->hide();
     idlePage->showFullScreen();
+    usleep(100);
+    this->hide();
 }
 
 //void productPage_1::on_backButton_clicked()

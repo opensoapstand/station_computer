@@ -72,6 +72,8 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
 	write(fd, buf, len);
         close(fd);
 
+        /* ------------------------- TODO: THIS NEEDS TO BE DONE BETTER ------------------------ */
+
         string GPIO = std::to_string(m_nPin);
         string command("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio");
         command += GPIO;
@@ -82,6 +84,9 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
         system(command_dir.c_str());
         system(command_edg.c_str());
         system(command_val.c_str());
+
+        /* -------------------------------------------------------------------------------------- */
+
 
 	return;
 }

@@ -230,7 +230,7 @@ DF_ERROR stateDispenseEnd::sendDB(){
             curl_easy_cleanup(curl);
         }else{
             debugOutput::sendMessage("CURL SUCCESS!", INFO);
-            std::cout <<"Here's the output:\n" << readBuffer << endl;
+//            std::cout <<"Here's the output:\n" << readBuffer << endl;
             if (readBuffer == "true"){
 //                readBuffer = "";
 //                std::cout << "Curl worked!" << endl;

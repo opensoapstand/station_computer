@@ -14,9 +14,6 @@
 #include "thankyoupage.h"
 #include "ui_thankyoupage.h"
 
-#include "idle.h"
-#include "dispensepage.h"
-
 // CTOR
 thankYouPage::thankYouPage(QWidget *parent) :
     QWidget(parent),

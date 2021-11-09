@@ -114,6 +114,7 @@ payPage::payPage(QWidget *parent) :
         if (payment){
             while (!paymentInit());
         }
+        db.closeDB();
 
 
 }
@@ -1230,8 +1231,5 @@ void payPage::paintQR(QPainter &painter, const QSize sz, const QString &data, QC
             }
         }
     }
-
-
-
 
 }

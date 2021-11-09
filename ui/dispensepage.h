@@ -19,6 +19,9 @@
 #define DISPENSEPAGE_H
 
 #include "df_util.h"
+#include "includefiles.h"
+#include "idle.h"
+#include "thankyoupage.h"
 
 #include "posm/mcommunication.h"
 #include "posm/packetfromecr.h"

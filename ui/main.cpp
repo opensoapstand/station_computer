@@ -110,8 +110,8 @@ int main(int argc, char *argv[])
 
 
     //Update Click DB
-    DbManager db(DB_PATH);
-    db.addPageClick("INITIALIZED");
+//    DbManager db(DB_PATH);
+//    db.addPageClick("INITIALIZED");
 
     return mainApp.exec();
 }

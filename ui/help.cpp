@@ -111,12 +111,13 @@ void help::onHelpTimeoutTick(){
 //        qDebug() << "Help Timer Done!" << _helpIdleTimeoutSec << endl;
 
         //Update Click DB
-        DbManager db(DB_PATH);
-        db.addPageClick("HELP PAGE TIME OUT");
+//        DbManager db(DB_PATH);
+//        db.addPageClick("HELP PAGE TIME OUT");
 
         helpIdleTimer->stop();
-        this->hide();
         idlePage->showFullScreen();
+        usleep(100);
+        this->hide();
     }
 }
 

@@ -68,7 +68,7 @@ private slots:
 //    void on_testSmallButton_clicked();
 //    void on_testLargeButton_clicked();
 //    void on_pluButton_clicked();
-
+//    void on_numberEntry_buttonClicked();
     void on_button1_clicked();
     void on_button2_clicked();
     void on_button3_clicked();

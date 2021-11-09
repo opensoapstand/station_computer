@@ -15,6 +15,8 @@
 #define THANKYOUPAGE_H
 
 #include "df_util.h"
+#include "idle.h"
+#include "dispensepage.h"
 #include <curl/curl.h>
 #include <ctime>
 
@@ -67,6 +69,7 @@ private:
 
     void curler();
     void bufferCURL(char *curl_params);
+
 };
 
 #endif // THANKYOUPAGE_H

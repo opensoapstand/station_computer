@@ -27,7 +27,7 @@ productPage_2::productPage_2(QWidget *parent) :
 {
     ui->setupUi(this);
     QPixmap background(":/light/3_drink_page_2.jpg");
-    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+    //background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);

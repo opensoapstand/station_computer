@@ -239,6 +239,7 @@ private:
     void curler();
     void generateQR();
     QByteArray curl_param_array;
+
 };
 
 #endif // PAYPAGE_H

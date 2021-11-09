@@ -114,6 +114,8 @@ void maintain_product::showEvent(QShowEvent *event)
     ui->pwmSlider->setValue(round(double((db.getPWM(checkOption))*100)/255));
     ui->pwmSlider->hide();
 
+    db.closeDB();
+
 }
 
 /*
@@ -148,7 +150,7 @@ void maintain_product::on_backButton_clicked(){
 //    qDebug() << "Back button clicked" << endl;
 
     //Update Click DB
-    DbManager db(DB_PATH);
+//    DbManager db(DB_PATH);
 //    db.addPageClick("MAINTAIN PRODUCT PAGE EXITED");
 
     maintainProductPageEndTimer->stop();
@@ -311,6 +313,10 @@ void maintain_product::resizeEvent(QResizeEvent *event){
 
     ui->pwmSlider->setValue(round(double((db.getPWM(checkOption))*100)/255));
 
+    db.closeDB();
+    db_temperature.closeDB();
+
+
 }
 
 void maintain_product::on_image_clicked(){
@@ -348,40 +354,43 @@ void maintain_product::on_image_clicked(){
 }
 
 void maintain_product::on_pumpButton_clicked(){
-        DbManager db(DB_PATH);
+    DbManager db(DB_PATH);
 
-        int checkOption = idlePage->userDrinkOrder->getOption();
-        if(checkOption > 0 && checkOption <= 9) {
-            QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
-            if (!pumping){
-                command.append("t");
+    int checkOption = idlePage->userDrinkOrder->getOption();
+    if(checkOption > 0 && checkOption <= 9) {
+        QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
+        if (!pumping){
+            command.append("t");
 
-                ui->vol_dispensed_label->setText("Volume Dispensed: 0 " + db.getUnits(checkOption));
-                ui->ticksLabel->setText("Ticks: 0");
+            ui->vol_dispensed_label->setText("Volume Dispensed: 0 " + db.getUnits(checkOption));
+            ui->ticksLabel->setText("Ticks: 0");
 
-                this->idlePage->dfUtility->msg = command;
-                idlePage->dfUtility->m_IsSendingFSM = true;
-                idlePage->dfUtility->m_fsmMsg = SEND_DRINK;
-                idlePage->dfUtility->send_to_FSM();
-                idlePage->dfUtility->m_IsSendingFSM = false;
+            this->idlePage->dfUtility->msg = command;
+            idlePage->dfUtility->m_IsSendingFSM = true;
+            idlePage->dfUtility->m_fsmMsg = SEND_DRINK;
+            idlePage->dfUtility->send_to_FSM();
+            idlePage->dfUtility->m_IsSendingFSM = false;
 
-                pumping = true;
-                ui->pumpLabel->setText("ON");
-            }
-            else {
-                pumping = false;
-                ui->pumpLabel->setText("OFF");
-                //ui->vol_dispensed_label->setText("");
-                command = QString::number(this->idlePage->userDrinkOrder->getOption());
-                command.append("t");
-
-                this->idlePage->dfUtility->msg = command;
-                idlePage->dfUtility->m_IsSendingFSM = true;
-                idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
-                idlePage->dfUtility->send_to_FSM();
-                idlePage->dfUtility->m_IsSendingFSM = false;
-            }
+            pumping = true;
+            ui->pumpLabel->setText("ON");
         }
+        else {
+            pumping = false;
+            ui->pumpLabel->setText("OFF");
+            //ui->vol_dispensed_label->setText("");
+            command = QString::number(this->idlePage->userDrinkOrder->getOption());
+            command.append("t");
+
+            this->idlePage->dfUtility->msg = command;
+            idlePage->dfUtility->m_IsSendingFSM = true;
+            idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
+            idlePage->dfUtility->send_to_FSM();
+            idlePage->dfUtility->m_IsSendingFSM = false;
+        }
+    }
+
+    db.closeDB();
+
 }
 
 //void maintain_product::on_testSmallButton_clicked(){
@@ -529,6 +538,9 @@ void maintain_product::updateVolumeDisplayed(double dispensed){
     ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
 
     ui->ticksLabel->setText("Ticks: " + QString::number(vol_dispensed/ticks));
+
+    db.closeDB();
+
 }
 
 void maintain_product::targetHitDisplay(){
@@ -559,7 +571,7 @@ void maintain_product::on_refillButton_clicked(){
                 ui->refillLabel->setText("Refill Succesfull");
                 ui->soldOutLabel->setText("");
                 //Update Click DB
-                DbManager db(DB_PATH);
+//                DbManager db(DB_PATH);
 //                db.addPageClick("PRODUCT REFILLED");
                 ui->total_dispensed->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
                 ui->remainingLabel->setText(QString::number(db.getRemaining(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
@@ -578,6 +590,9 @@ void maintain_product::on_refillButton_clicked(){
             msgBox.hide();
         break;
     }
+
+    db.closeDB();
+
 }
 
 void maintain_product::on_soldOutButton_clicked(){
@@ -606,7 +621,7 @@ void maintain_product::on_soldOutButton_clicked(){
                 ui->soldOutLabel->setText("Sold Out Succesfull");
                 ui->refillLabel->setText("");
                 //Update Click DB
-                DbManager db(DB_PATH);
+//                DbManager db(DB_PATH);
 //                db.addPageClick("PRODUCT SOLD OUT");
                 ui->total_dispensed->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
                 ui->remainingLabel->setText(QString::number(db.getRemaining(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
@@ -644,7 +659,7 @@ void maintain_product::on_soldOutButton_clicked(){
                 ui->soldOutLabel->setText("Un-Sold Out Succesfull");
                 ui->refillLabel->setText("");
                 //Update Click DB
-                DbManager db(DB_PATH);
+//                DbManager db(DB_PATH);
 //                db.addPageClick("PRODUCT UN-SOLD OUT");
                 ui->total_dispensed->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
                 ui->remainingLabel->setText(QString::number(db.getRemaining(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
@@ -664,6 +679,9 @@ void maintain_product::on_soldOutButton_clicked(){
         }
 
     }
+
+    db.closeDB();
+
 
 }
 
@@ -698,6 +716,7 @@ void maintain_product::on_temperatureButton_clicked(){
     DbManager db_temperature(DB_PATH_TEMPERATURE);
     ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
     _maintainProductPageTimeoutSec=40;
+    db_temperature.closeDB();
 }
 
 void maintain_product::onMaintainProductPageTimeoutTick(){
@@ -726,11 +745,14 @@ void maintain_product::onMaintainProductPageTimeoutTick(){
             idlePage->dfUtility->m_IsSendingFSM = false;
         }
 
+        db.closeDB();
         maintainProductPageEndTimer->stop();
         idlePage->showFullScreen();
         usleep(100);
         this->hide();
     }
+
+
 
 }
 
@@ -919,6 +941,8 @@ void maintain_product::updateValues(){
     ui->textEntry->setText("");
     ui->titleLabel->setText("");
     ui->errorLabel->setText("");
+
+    db.closeDB();
 }
 
 
@@ -993,6 +1017,8 @@ void maintain_product::curler(){
 
         }
     }
+
+    db.closeDB();
 }
 
 void maintain_product::bufferCURL(char *curl_params){

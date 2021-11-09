@@ -331,9 +331,13 @@ void paySelect::on_orderSmall_Button_clicked()
 
     int checkOption = idlePage->userDrinkOrder->getOption();
 
-    bitmap_location.append(":/light/4_pay_select_page_s_");
-    bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
-    bitmap_location.append(".png");
+    if(checkOption > 0 && checkOption <= 9) {
+        bitmap_location.append(":/light/4_pay_select_page_s_");
+        bitmap_location.append(QString::number(checkOption));
+        bitmap_location.append(".png");
+    } else {
+        bitmap_location = ":/light/4_pay_select_page_s_1.png";
+    }
 
     QPixmap background(bitmap_location);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
@@ -372,9 +376,13 @@ void paySelect::on_orderBig_Button_clicked()
 
     int checkOption = idlePage->userDrinkOrder->getOption();
 
-    bitmap_location.append(":/light/4_pay_select_page_l_");
-    bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
-    bitmap_location.append(".png");
+    if(checkOption > 0 && checkOption <= 9) {
+        bitmap_location.append(":/light/4_pay_select_page_l_");
+        bitmap_location.append(QString::number(checkOption));
+        bitmap_location.append(".png");
+    } else {
+        bitmap_location = ":/light/4_pay_select_page_l_1.png";
+    }
 
     QPixmap background(bitmap_location);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);

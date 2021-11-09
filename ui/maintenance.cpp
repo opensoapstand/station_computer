@@ -106,6 +106,8 @@ void maintenancePage::showEvent(QShowEvent *event)
     selection_PageOne->cancelTimers();
     paySelectPage->cancelTimers();
 
+    db.closeDB();
+
 }
 
 /*

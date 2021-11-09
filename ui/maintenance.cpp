@@ -50,6 +50,7 @@ maintenancePage::maintenancePage(QWidget *parent) :
     maintenancePageEndTimer = new QTimer(this);
     maintenancePageEndTimer->setInterval(1000);
     connect(maintenancePageEndTimer, SIGNAL(timeout()), this, SLOT(onMaintenancePageTimeoutTick()));
+//    connect(ui->buttonGroup, SIGNAL(buttonClicked(QAbstractButton*)),this, SLOT(on_buttonGroup_buttonClicked()));
     connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(buttonWasClicked(int)));
 
 }
@@ -143,6 +144,9 @@ void maintenancePage::on_product1_button_clicked(){
     this->hide();
 
 }
+
+//void maintenancePage::on_buttonGroup_buttonClicked(QAbstractButton*){}
+//void maintenancePage::buttonWasClicked(int){}
 
 void maintenancePage::on_product2_button_clicked(){
 //    qDebug() << "Product 2 button clicked" << endl;
@@ -389,11 +393,11 @@ void maintenancePage::onMaintenancePageTimeoutTick(){
     }
 }
 
-void maintenancePage::on_buttonGroup_buttonClicked(){
-//    QAbstractButton* buttonSender = qobject_cast<QPushButton*>(sender());
-//    QString buttonText = buttonSender->text();
-//    qDebug() << "btn clicked -> " << buttonText;
-}
+//void maintenancePage::on_buttonGroup_buttonClicked(){
+////    QAbstractButton* buttonSender = qobject_cast<QPushButton*>(sender());
+////    QString buttonText = buttonSender->text();
+////    qDebug() << "btn clicked -> " << buttonText;
+//}
 
 void maintenancePage::buttonWasClicked(int buttonID){
 

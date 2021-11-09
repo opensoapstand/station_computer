@@ -63,7 +63,7 @@ private slots:
     //void on_restock_button_clicked();
     void onMaintenancePageTimeoutTick();
     void btn_clicked();
-    void on_buttonGroup_buttonClicked();
+//    void on_buttonGroup_buttonClicked();
     void buttonWasClicked(int);
 
 private:
@@ -78,8 +78,6 @@ private:
 
     int _maintenancePageTimeoutSec;
     QTimer* maintenancePageEndTimer;
-
-
 
 };
 

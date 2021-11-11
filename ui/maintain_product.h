@@ -92,7 +92,6 @@ private:
     maintenancePage* maintenanceMode;
     idle* idlePage;
 
-    void setValues(int option);
     bool pumping = false;
 
     int _maintainProductPageTimeoutSec;

@@ -30,8 +30,6 @@
         <file>init.h</file>
         <file>init.cpp</file>
         <file>light/0_init.png</file>
-        <file>light/bottom_2.png</file>
-        <file>light/bottom_1.png</file>
         <file>light/5_pay_page_s_4.png</file>
         <file>light/5_pay_page_s_3.png</file>
         <file>light/5_pay_page_s_2.png</file>
@@ -51,8 +49,6 @@
         <file>light/6_dispense_page2.png</file>
         <file>light/3_help_page.png</file>
         <file>light/drink_fill.png</file>
-        <file>light/drink_empty.png</file>
-        <file>light/drink_shadow.png</file>
         <file>light/5_pay_page.png</file>
         <file>maintenance/product4.png</file>
         <file>light/2_drink_page_1.png</file>
@@ -110,5 +106,6 @@
         <file>ui_productpage_1.h</file>
         <file>ui_productpage_2.h</file>
         <file>ui_thankyoupage.h</file>
+        <file>light/drink_fill_2.png</file>
     </qresource>
 </RCC>

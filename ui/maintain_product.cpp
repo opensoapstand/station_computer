@@ -188,74 +188,13 @@ void maintain_product::on_backButton_clicked(){
     }
 }
 
-void maintain_product::setValues(int option){
-
-    //    DbManager db(DB_PATH);
-
-    //    ui->name->setText("");
-    //    ui->price_s->setText("");
-    //    ui->price_l->setText("");
-    //    ui->target_volume_s->setText("");
-    //    ui->target_volume_l->setText("");
-    //    ui->volume_per_tick->setText("");
-    //    ui->full_volume->setText("");
-    //    ui->remainingLabel->setText("");
-    //    ui->total_dispensed->setText("");
-
-    //    switch (option){
-    //        case 1:
-    //            ui->name->setText(db.getProductName(1));
-    //            ui->price_s->setText("$"+QString::number(db.getProductPrice(1, 's')));
-    //            ui->price_l->setText("$"+QString::number(db.getProductPrice(1, 'l')));
-    //            ui->target_volume_s->setText(QString::number(db.getProductVolume(1, 's')) + "ml");
-    //            ui->target_volume_l->setText(QString::number(db.getProductVolume(1, 'l')) + "ml");
-    //            ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(1)) + "ml");
-    //            ui->full_volume->setText(QString::number(db.getFullProduct(1)) + "ml");
-    //            ui->total_dispensed->setText(QString::number(db.getTotalDispensed(1)) + "ml");
-    //            ui->remainingLabel->setText(QString::number(db.getRemaining(1)) + "ml");
-    //            break;
-    //        case 2:
-    //            ui->name->setText(db.getProductName(2));
-    //            ui->price_s->setText("$"+QString::number(db.getProductPrice(2, 's')));
-    //            ui->price_l->setText("$"+QString::number(db.getProductPrice(2, 'l')));
-    //            ui->target_volume_s->setText(QString::number(db.getProductVolume(2, 's')) + "ml");
-    //            ui->target_volume_l->setText(QString::number(db.getProductVolume(2, 'l')) + "ml");
-    //            ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(2)) + "ml");
-    //            ui->full_volume->setText(QString::number(db.getFullProduct(2)) + "ml");
-    //            ui->total_dispensed->setText(QString::number(db.getTotalDispensed(2)) + "ml");
-    //            ui->remainingLabel->setText(QString::number(db.getRemaining(2)) + "ml");
-    //            break;
-    //        case 3:
-    //            ui->name->setText(db.getProductName(3));
-    //            ui->price_s->setText("$"+QString::number(db.getProductPrice(3, 's')));
-    //            ui->price_l->setText("$"+QString::number(db.getProductPrice(3, 'l')));
-    //            ui->target_volume_s->setText(QString::number(db.getProductVolume(3, 's')) + "ml");
-    //            ui->target_volume_l->setText(QString::number(db.getProductVolume(3, 'l')) + "ml");
-    //            ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(3)) + "ml");
-    //            ui->full_volume->setText(QString::number(db.getFullProduct(3)) + "ml");
-    //            ui->total_dispensed->setText(QString::number(db.getTotalDispensed(3)) + "ml");
-    //            ui->remainingLabel->setText(QString::number(db.getRemaining(3)) + "ml");
-    //            break;
-    //        case 4:
-    //            ui->name->setText(db.getProductName(4));
-    //            ui->price_s->setText("$"+QString::number(db.getProductPrice(4, 's')));
-    //            ui->price_l->setText("$"+QString::number(db.getProductPrice(4, 'l')));
-    //            ui->target_volume_s->setText(QString::number(db.getProductVolume(4, 's')) + "ml");
-    //            ui->target_volume_l->setText(QString::number(db.getProductVolume(4, 'l')) + "ml");
-    //            ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(4)) + "ml");
-    //            ui->full_volume->setText(QString::number(db.getFullProduct(4)) + "ml");
-    //            ui->total_dispensed->setText(QString::number(db.getTotalDispensed(4)) + "ml");
-    //            ui->remainingLabel->setText(QString::number(db.getRemaining(4)) + "ml");
-    //            break;
-    //    }
-}
-
 void maintain_product::resizeEvent(QResizeEvent *event){
+    QWidget::resizeEvent(event);
 
     int checkOption = idlePage->userDrinkOrder->getOption();
 
     DbManager db(DB_PATH);
-    DbManager db_temperature(DB_PATH_TEMPERATURE);
+   // DbManager db_temperature(DB_PATH_TEMPERATURE);
 
     QString bitmap_location;
 
@@ -269,7 +208,6 @@ void maintain_product::resizeEvent(QResizeEvent *event){
 
     ticks = db.getProductVolumePerTick(checkOption);
 
-    //setValues(checkOption);
     ui->name->setText(db.getProductName(checkOption));
     ui->price_s->setText("$"+QString::number(db.getProductPrice(checkOption, 's')));
     ui->price_l->setText("$"+QString::number(db.getProductPrice(checkOption, 'l')));
@@ -280,7 +218,7 @@ void maintain_product::resizeEvent(QResizeEvent *event){
     ui->total_dispensed->setText(QString::number(db.getTotalDispensed(checkOption)) + " " +  db.getUnits(checkOption));
     ui->remainingLabel->setText(QString::number(db.getRemaining(checkOption)) + " " +  db.getUnits(checkOption));
     ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
-    ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
+//    ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
     ui->pwmLabel->setText(QString::number(round(double((db.getPWM(checkOption))*100)/255)) + "%");
     ui->vol_dispensed_label->setText("Volume Dispensed: 0 " + db.getUnits(checkOption));
     ui->ticksLabel->setText("Ticks: 0");
@@ -314,7 +252,7 @@ void maintain_product::resizeEvent(QResizeEvent *event){
     ui->pwmSlider->setValue(round(double((db.getPWM(checkOption))*100)/255));
 
     db.closeDB();
-    db_temperature.closeDB();
+   // db_temperature.closeDB();
 
 
 }
@@ -576,22 +514,24 @@ void maintain_product::on_refillButton_clicked(){
                 ui->total_dispensed->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
                 ui->remainingLabel->setText(QString::number(db.getRemaining(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
                 ui->lastRefillLabel->setText(db.getLastRefill(this->idlePage->userDrinkOrder->getOption()));
+                db.closeDB();
                 curler();
                 break;
             }
             else{
                 ui->refillLabel->setText("Refill ERROR");
                 ui->soldOutLabel->setText("");
+                db.closeDB();
                 break;
             }
 
         case QMessageBox::No:
 //            qDebug() << "No Clicked" << endl;
             msgBox.hide();
+            db.closeDB();
         break;
     }
 
-    db.closeDB();
 
 }
 
@@ -713,10 +653,10 @@ void maintain_product::on_lastRefillButton_clicked(){
 
 void maintain_product::on_temperatureButton_clicked(){
 //    qDebug() << "Temperature button clicked" << endl;
-    DbManager db_temperature(DB_PATH_TEMPERATURE);
-    ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
+//    DbManager db_temperature(DB_PATH_TEMPERATURE);
+//    ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
     _maintainProductPageTimeoutSec=40;
-    db_temperature.closeDB();
+//    db_temperature.closeDB();
 }
 
 void maintain_product::onMaintainProductPageTimeoutTick(){

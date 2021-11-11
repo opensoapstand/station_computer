@@ -94,10 +94,12 @@ void thankYouPage::showEvent(QShowEvent *event)
     _thankYouTimeoutSec = 7;
 
     if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "qr"){
+        db.closeDB();
         curler();
+    }else{
+         db.closeDB();
     }
 
-    db.closeDB();
 }
 
 size_t WriteCallback2(char* contents, size_t size, size_t nmemb, void *userp){
@@ -191,7 +193,6 @@ void thankYouPage::onThankyouTimeoutTick(){
 
 void thankYouPage::on_mainPage_Button_clicked()
 {
-
    thankYouEndTimer->stop();
    idlePage->showFullScreen();
    usleep(100);

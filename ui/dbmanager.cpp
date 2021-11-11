@@ -4,9 +4,7 @@ DbManager::DbManager(const QString& path)
 {
 //    qDebug() << "CREATING DB OBJECT" << endl;
     if (m_db.isOpen()){
-//        qDebug() << "DB ALREADY OPEN -- REMOVING" << endl;
         m_db.close();
-//        m_db = QSqlDatabase();
         m_db = QSqlDatabase();
         QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
     }
@@ -370,8 +368,8 @@ bool DbManager::unsellout(int slot){
         success=false;
     }
 
-    return success;
     }
+    return success;
 }
 
 void DbManager::emailEmpty(int slot){
@@ -777,9 +775,9 @@ QString DbManager::getMachineID(){
             mid_string = mid_query.value(0).toString();
         }
 
-    return mid_string;
 
     }
+    return mid_string;
 }
 
 QString DbManager::getProductID(int slot){

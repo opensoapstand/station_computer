@@ -91,12 +91,11 @@ void idle::on_nextPageButton_clicked()
     p3 = db.checkLevels(3);
     p4 = db.checkLevels(4);
 
-    db.closeDB();
-
     // Connect to KB Listener
     selection_PageOne->showFullScreen();
     usleep(100);
     this->hide();
+    db.closeDB();
 }
 
 //void idle::on_savedBottles_label_clicked()

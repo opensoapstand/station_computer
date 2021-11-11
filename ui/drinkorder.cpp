@@ -27,6 +27,8 @@ DrinkOrder::DrinkOrder()
     DRINK3_PRICE_S = db.getProductPrice(3, 's');
     DRINK4_PRICE_S = db.getProductPrice(4, 's');
 
+    db.closeDB();
+
 }
 
 // Ctor Object Copy

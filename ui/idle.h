@@ -27,7 +27,6 @@
 #define DB_PATH_CLICKS "/release/db/sqlite/clicks.db"
 #define DB_PATH_TEMPERATURE "/release/db/sqlite/temperature.db"
 
-
 class maintenancePage;
 class productPage_1;
 

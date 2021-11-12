@@ -186,7 +186,7 @@ void thankYouPage::onThankyouTimeoutTick(){
         thankYouEndTimer->stop();
 
         idlePage->showFullScreen();
-        usleep(100);
+//        usleep(100);
         this->hide();
     }
 }
@@ -195,7 +195,7 @@ void thankYouPage::on_mainPage_Button_clicked()
 {
    thankYouEndTimer->stop();
    idlePage->showFullScreen();
-   usleep(100);
+//   usleep(100);
    this->hide();
 }
 

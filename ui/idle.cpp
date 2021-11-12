@@ -82,20 +82,20 @@ void idle::on_nextPageButton_clicked()
 {
 
     // UPDATE DB
-    DbManager db(DB_PATH);
+//    DbManager db(DB_PATH);
 //    db.addPageClick("Main Page -> Product Page");
 
     //Check product levels
-    p1 = db.checkLevels(1);
-    p2 = db.checkLevels(2);
-    p3 = db.checkLevels(3);
-    p4 = db.checkLevels(4);
+//    p1 = db.checkLevels(1);
+//    p2 = db.checkLevels(2);
+//    p3 = db.checkLevels(3);
+//    p4 = db.checkLevels(4);
 
     // Connect to KB Listener
     selection_PageOne->showFullScreen();
-    usleep(100);
+//    usleep(100);
     this->hide();
-    db.closeDB();
+//    db.closeDB();
 }
 
 //void idle::on_savedBottles_label_clicked()
@@ -137,4 +137,5 @@ void idle::MMSlot(){
 //    qDebug() << "HERE I AM I KNOW I MUIST ENTER MM" << endl;
     maintenanceMode->showFullScreen();
     this->hide();
+    this->selection_PageOne->hide();
 }

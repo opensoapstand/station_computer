@@ -88,6 +88,8 @@ void productPage_1::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
 
+    DbManager db(DB_PATH);
+
     maintenanceCounter=0;
 
     if(productPageEndTimer == nullptr){
@@ -99,7 +101,7 @@ void productPage_1::showEvent(QShowEvent *event)
     productPageEndTimer->start(1000);
     _productPageTimeoutSec = 15;
 
-    if (!this->idlePage->isEnough(1)){
+    if (!db.checkLevels(1)){
         // Change p1 to Sold Out
 //        qDebug() << "Product 1 is Sold Out!" << endl;
         ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(:/light/soldOut.png); }");
@@ -107,7 +109,7 @@ void productPage_1::showEvent(QShowEvent *event)
     else{
         ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     }
-    if (!this->idlePage->isEnough(2)){
+    if (!db.checkLevels(2)){
         // Change p2 to Sold Out
 //        qDebug() << "Product 2 is Sold Out!" << endl;
         ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(:/light/soldOut.png); }");
@@ -115,7 +117,7 @@ void productPage_1::showEvent(QShowEvent *event)
     else{
         ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     }
-    if (!this->idlePage->isEnough(3)){
+    if (!db.checkLevels(3)){
         // Change p3 to Sold Out
 //        qDebug() << "Product 3 is Sold Out!" << endl;
         ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/soldOut.png); }");
@@ -123,7 +125,7 @@ void productPage_1::showEvent(QShowEvent *event)
     else{
         ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     }
-    if (!this->idlePage->isEnough(4)){
+    if (!db.checkLevels(4)){
         // Change p4 to Sold Out
 //        qDebug() << "Product 4 is Sold Out!" << endl;
         ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/soldOut.png); }");
@@ -132,6 +134,7 @@ void productPage_1::showEvent(QShowEvent *event)
         ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     }
 
+    db.closeDB();
 }
 
 void productPage_1::cancelTimers(){
@@ -143,83 +146,87 @@ void productPage_1::cancelTimers(){
 void productPage_1::on_selection1_Button_clicked()
 {
     // UPDATE DB
-//    DbManager db(DB_PATH);
+    DbManager db(DB_PATH);
 //    db.addPageClick("Product Page -> Option 1");
 
-    if(this->idlePage->isEnough(1)){
+    if(db.checkLevels(1)){
+        db.closeDB();
         productPageEndTimer->stop();
-
         idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_1);
         idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
         //idlePage->userDrinkOrder->setDrinkSize(DRINK1);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
-        usleep(100);
+//        usleep(100);
         this->hide();
+    }else{
+        db.closeDB();
     }
 
-//    db.closeDB();
+
 }
 
 
 void productPage_1::on_selection2_Button_clicked()
 {
-//    DbManager db(DB_PATH);
+    DbManager db(DB_PATH);
 //    db.addPageClick("Product Page -> Option 2");
 
-    if(this->idlePage->isEnough(2)){
+    if(db.checkLevels(2)){
+        db.closeDB();
         productPageEndTimer->stop();
-
         idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
         idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
         //idlePage->userDrinkOrder->setDrinkSize(DRINK2);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
-        usleep(100);
+//        usleep(100);
         this->hide();
+    }else{
+        db.closeDB();
     }
-
-//    db.closeDB();
 }
 
 void productPage_1::on_selection3_Button_clicked()
 {
-//    DbManager db(DB_PATH);
+    DbManager db(DB_PATH);
 //    db.addPageClick("Product Page -> Option 3");
 
-    if(this->idlePage->isEnough(3)){
+    if(db.checkLevels(3)){
+        db.closeDB();
         productPageEndTimer->stop();
-
         idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
         idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
         //idlePage->userDrinkOrder->setDrinkSize(DRINK3);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
-        usleep(100);
+//        usleep(100);
         this->hide();
+    }else{
+        db.closeDB();
     }
 
-//    db.closeDB();
 }
 
 void productPage_1::on_selection4_Button_clicked()
 {
-//    DbManager db(DB_PATH);
+    DbManager db(DB_PATH);
 //    db.addPageClick("Product Page -> Option 4");
 
-    if(this->idlePage->isEnough(4)){
+    if(db.checkLevels(4)){
+        db.closeDB();
         productPageEndTimer->stop();
-
         idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);
         idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
         //idlePage->userDrinkOrder->setDrinkSize(DRINK4);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
-        usleep(100);
+//        usleep(100);
         this->hide();
+    }else{
+        db.closeDB();
     }
 
-//    db.closeDB();
 }
 
 //void productPage_1::on_selection5_Button_clicked()
@@ -255,10 +262,9 @@ void productPage_1::onProductPageTimeoutTick(){
 
 void productPage_1::mainPage()
 {
-
     productPageEndTimer->stop();
     idlePage->showFullScreen();
-    usleep(100);
+//    usleep(100);
     this->hide();
 }
 
@@ -291,7 +297,7 @@ void productPage_1::on_mainPage_Button_clicked()
 
 //    qDebug() << "productPage: helpPage button" << endl;
     helpPage->showFullScreen();
-    usleep(100);
+//    usleep(100);
     this->hide();
 
 //    QMessageBox msgBox;

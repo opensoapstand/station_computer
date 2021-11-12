@@ -127,7 +127,7 @@ void maintenancePage::on_backButton_clicked(){
 
     maintenancePageEndTimer->stop();
     idlePage->showFullScreen();
-    usleep(100);
+//    usleep(100);
     this->hide();
 }
 
@@ -140,7 +140,7 @@ void maintenancePage::on_product1_button_clicked(){
 
     maintainPage->resizeEvent(productSelection);
     maintainPage->showFullScreen();
-    usleep(100);
+//    usleep(100);
     this->hide();
 
 }
@@ -157,7 +157,7 @@ void maintenancePage::on_product2_button_clicked(){
 
     maintainPage->resizeEvent(productSelection);
     maintainPage->showFullScreen();
-    usleep(100);
+//    usleep(100);
     this->hide();
 
 }
@@ -171,7 +171,7 @@ void maintenancePage::on_product3_button_clicked(){
 
     maintainPage->resizeEvent(productSelection);
     maintainPage->showFullScreen();
-    usleep(100);
+//    usleep(100);
     this->hide();
 
 }
@@ -185,7 +185,7 @@ void maintenancePage::on_product4_button_clicked(){
 
     maintainPage->resizeEvent(productSelection);
     maintainPage->showFullScreen();
-    usleep(100);
+//    usleep(100);
     this->hide();
 
 }
@@ -388,7 +388,7 @@ void maintenancePage::onMaintenancePageTimeoutTick(){
 
         maintenancePageEndTimer->stop();
         idlePage->showFullScreen();
-        usleep(100);
+//        usleep(100);
         this->hide();
     }
 }

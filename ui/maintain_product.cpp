@@ -155,7 +155,7 @@ void maintain_product::on_backButton_clicked(){
 
     maintainProductPageEndTimer->stop();
     maintenanceMode->showFullScreen();
-    usleep(100);
+//    usleep(100);
     this->hide();
 
     ui->name->setText("");
@@ -688,7 +688,7 @@ void maintain_product::onMaintainProductPageTimeoutTick(){
         db.closeDB();
         maintainProductPageEndTimer->stop();
         idlePage->showFullScreen();
-        usleep(100);
+//        usleep(100);
         this->hide();
     }
 

@@ -30,6 +30,9 @@
      <pointsize>33</pointsize>
     </font>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color:white;</string>
+   </property>
    <property name="text">
     <string>Initializing</string>
    </property>
@@ -47,6 +50,9 @@
     <font>
      <pointsize>33</pointsize>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:white;</string>
    </property>
    <property name="text">
     <string/>

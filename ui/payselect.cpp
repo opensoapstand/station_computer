@@ -101,7 +101,7 @@ void paySelect::on_previousPage_Button_clicked()
     };
     selectIdleTimer->stop();
     firstProductPage->showFullScreen();
-    usleep(100);
+//    usleep(100);
     this->hide();
 
 }
@@ -123,12 +123,12 @@ void paySelect::on_payPage_Button_clicked()
     if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "qr" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "tap"){
         //paymentPage->showEvent(dispenseEvent);
         paymentPage->showFullScreen();
-        usleep(100);
+//        usleep(100);
         this->hide();
     } else if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "barcode" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "plu"){
         dispensingPage->showEvent(dispenseEvent);
         dispensingPage->showFullScreen();
-        usleep(100);
+//        usleep(100);
         this->hide();
     }
 
@@ -296,7 +296,7 @@ void paySelect::on_mainPage_Button_clicked()
     this->stopSelectTimers();
     selectIdleTimer->stop();
     helpPage->showFullScreen();
-    usleep(100);
+//    usleep(100);
     this->hide();
 
 //    qDebug() << "Main Page Button pressed" << endl;

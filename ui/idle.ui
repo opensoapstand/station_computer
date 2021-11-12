@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-image: url(:/light/1_welcome_panel.png);</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>
@@ -39,10 +39,7 @@
     </rect>
    </property>
    <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>17</pointsize>
-    </font>
+    <font/>
    </property>
    <property name="styleSheet">
     <string notr="true">color: white;

@@ -316,6 +316,32 @@ std::string stateDispenseEnd::getMachineID(){
 
 }
 
+std::string stateDispenseEnd::getUnits(int slot){
+    rc = sqlite3_open(DB_PATH, &db);
+
+    sqlite3_stmt * stmt;
+
+    debugOutput::sendMessage("Units getter START", INFO);
+
+    if( rc ) {
+//       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+       // TODO: Error handling here...
+    } else {
+//       fprintf(stderr, "Opened database successfully\n");
+    }
+
+    std::string sql_string_units = "SELECT units FROM products WHERE slot="+std::to_string(slot)+";";
+     /* Create SQL statement for transactions */
+     sqlite3_prepare(db, sql_string_units.c_str(), -1, &stmt, NULL);
+     sqlite3_step(stmt);
+     std::string str = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0)));;
+     sqlite3_finalize(stmt);
+     sqlite3_close(db);
+//     cout << str << endl;
+     return str;
+
+}
+
 DF_ERROR stateDispenseEnd::updateDB(){
     char *zErrMsg = 0;
 
@@ -412,6 +438,7 @@ DF_ERROR stateDispenseEnd::printer(){
 
     std::string name = (cassettes[pos].getDrink()->m_name_receipt);
     std::string plu;
+    std::string units = getUnits(pos+1);
 
     size = m_pMessaging->getnSize();
 
@@ -431,7 +458,7 @@ DF_ERROR stateDispenseEnd::printer(){
 
     strftime(now, 50, "%F %T", timeinfo);
 
-    string printerstring = name +"\nPrice: $" + cost + " \nVolume: " + volume + "ml \nTime: " + now + "\nPLU: " + plu;
+    string printerstring = name +"\nPrice: $" + cost + " \nVolume: " + volume + units + "\nTime: " + now + "\nPLU: " + plu;
     string sysstring = "echo '\n---------------------------\n\n\n"+printerstring+"' > /dev/ttyS4";
 
     Adafruit_Thermal* printerr = new Adafruit_Thermal();

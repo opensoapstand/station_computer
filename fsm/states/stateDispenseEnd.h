@@ -77,6 +77,7 @@ class stateDispenseEnd : public stateVirtual
         std::string getMachineID();
         std::string getProductID(int slot);
         void bufferCURL(std::string curl_params);
+        std::string getUnits(int slot);
 
         CURL *curl;
         CURLcode res;

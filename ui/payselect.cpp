@@ -122,17 +122,19 @@ void paySelect::on_payPage_Button_clicked()
 
     if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "qr" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "tap"){
         //paymentPage->showEvent(dispenseEvent);
+        db.closeDB();
         paymentPage->showFullScreen();
 //        usleep(100);
         this->hide();
     } else if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "barcode" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "plu"){
+        db.closeDB();
         dispensingPage->showEvent(dispenseEvent);
         dispensingPage->showFullScreen();
 //        usleep(100);
         this->hide();
     }
 
-    db.closeDB();
+
 
 }
 
@@ -198,11 +200,8 @@ void paySelect::resizeEvent(QResizeEvent *event){
         ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
     }
 
-
-
     ui->price_sLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
     ui->price_lLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
-
 
 //    qDebug() << "Start paySelect Timers" << endl;
     selectIdleTimer->start(1000);
@@ -280,12 +279,11 @@ bool paySelect::stopSelectTimers(){
 
 void paySelect::mainPage()
 {
-
 //    qDebug() << "paySelect: mainPage button" << endl;
     this->stopSelectTimers();
     selectIdleTimer->stop();
     idlePage->showFullScreen();
-    usleep(100);
+//    usleep(100);
     this->hide();
 }
 

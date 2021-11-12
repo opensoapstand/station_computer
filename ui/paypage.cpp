@@ -41,6 +41,8 @@ payPage::payPage(QWidget *parent) :
     ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
     ui->payment_bypass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+
+    ui->refreshButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
    // ui->payment_pass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
    // ui->payment_cancel_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
 
@@ -102,6 +104,7 @@ payPage::payPage(QWidget *parent) :
         payment=false;
 
         DbManager db(DB_PATH);
+
         for (int i = 1; i<db.getNumberOfProducts(); i++){
             if (db.getPaymentMethod(i) == "tap"){
                 payment = true;
@@ -177,7 +180,7 @@ void payPage::setPage(paySelect *pageSizeSelect, dispensePage* pageDispense, idl
 
 void payPage::resizeEvent(QResizeEvent *event){
     // FIXME: MAGIC NUMBER!!! UX410 Socket Auto Close time is 60 seconds so timer kills page GUI
-    idlePaymentTimer->start(60000);
+//    idlePaymentTimer->start(60000);
 
     //DbManager db(DB_PATH);
 
@@ -223,6 +226,8 @@ void payPage::resizeEvent(QResizeEvent *event){
 //    }
 
     response = false;
+
+    ui->refreshLabel->hide();
 
 }
 
@@ -474,10 +479,11 @@ void payPage::showEvent(QShowEvent *event)
     paymentEndTimer->setInterval(1000);
     connect(paymentEndTimer, SIGNAL(timeout()), this, SLOT(onTimeoutTick()));
     paymentEndTimer->start(1000);
-    _paymentTimeoutSec = 30;
+    _paymentTimeoutSec = 444;
 
     ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
     this->ui->payment_countdownLabel->setText("");
+    ui->refreshLabel->hide();
 
     if (db.getProductVolume(checkOption, drinkSize) < 1000){
         ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + " " + db.getUnits(checkOption));
@@ -509,11 +515,11 @@ void payPage::showEvent(QShowEvent *event)
 
     if (db.getPaymentMethod(checkOption) == "qr"){
         _paymentTimeoutSec = 444;
-       generateQR();
+        db.closeDB();
+        generateQR();
+    }else{
+        db.closeDB();
     }
-
-    db.closeDB();
-
 
 }
 
@@ -631,6 +637,11 @@ void payPage::qrTimeout(){
     }
 }
 
+void payPage::on_refreshButton_clicked(){
+    ui->refreshLabel->hide();
+    _paymentTimeoutSec=444;
+}
+
 
 
 // XXX: Remove this when interrupts and flow sensors work!
@@ -673,6 +684,9 @@ void payPage::onTimeoutTick(){
 //        on_payment_bypass_Button_clicked();
 //        //        paymentEndTimer->stop();
 //        //        this->ui->payment_countdownLabel->setText("Finished!");
+    }
+    if (_paymentTimeoutSec < 20){
+        ui->refreshLabel->show();
     }
 
 }

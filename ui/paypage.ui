@@ -191,6 +191,61 @@ color: #58595B;</string>
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="refreshLabel">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>350</y>
+     <width>371</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #58595B;
+font-family: Montserrat;
+font-style: light;
+font-weight: normal;
+font-size: 23px;
+line-height: 29px;</string>
+   </property>
+   <property name="text">
+    <string>Don't mean to rush you but, 
+This page is about to close... 
+Tap anywhere to keep it open!</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="refreshButton">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1081</width>
+     <height>1931</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <zorder>refreshButton</zorder>
+  <zorder>previousPage_Button</zorder>
+  <zorder>mainPage_Button</zorder>
+  <zorder>order_total_amount</zorder>
+  <zorder>order_drink_amount</zorder>
+  <zorder>payment_bypass_Button</zorder>
+  <zorder>payment_countdownLabel</zorder>
+  <zorder>productLabel</zorder>
+  <zorder>qrCode</zorder>
+  <zorder>refreshLabel</zorder>
  </widget>
  <resources/>
  <connections/>

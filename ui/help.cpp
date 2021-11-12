@@ -66,6 +66,7 @@ void help::showEvent(QShowEvent *event)
 
     helpIdleTimer->start(1000);
     _helpIdleTimeoutSec = 60;
+    ui->refreshLabel->hide();
 
 }
 
@@ -118,6 +119,9 @@ void help::onHelpTimeoutTick(){
         idlePage->showFullScreen();
 //        usleep(100);
         this->hide();
+    }
+    if(_helpIdleTimeoutSec<10){
+        ui->refreshLabel->show();
     }
 }
 

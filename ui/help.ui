@@ -35,8 +35,11 @@
      <x>0</x>
      <y>-6</y>
      <width>1081</width>
-     <height>1711</height>
+     <height>1931</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url(:/light/background.png);</string>
    </property>
    <property name="text">
     <string/>
@@ -55,6 +58,39 @@
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="refreshLabel">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>20</y>
+     <width>371</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #58595B;
+font-family: Montserrat;
+font-style: light;
+font-weight: normal;
+font-size: 23px;
+line-height: 29px;</string>
+   </property>
+   <property name="text">
+    <string>Don't mean to rush you but, 
+This page is about to close... 
+Tap anywhere to keep it open!</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <zorder>refreshButton</zorder>
+  <zorder>previousPage_Button_2</zorder>
+  <zorder>previousPage_Button</zorder>
+  <zorder>refreshLabel</zorder>
  </widget>
  <resources/>
  <connections/>

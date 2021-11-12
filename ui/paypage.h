@@ -120,6 +120,7 @@ private slots:
     void progressStatusLabel();
     void declineTimer_start();
     void idlePaymentTimeout();
+    void on_refreshButton_clicked();
 
     void qrTimeout();
 

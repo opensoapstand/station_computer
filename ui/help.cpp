@@ -128,4 +128,5 @@ void help::onHelpTimeoutTick(){
 void help::on_refreshButton_clicked(){
 //    qDebug() << "Page Refreshed" << endl;
     _helpIdleTimeoutSec = 60;
+    ui->refreshLabel->hide();
 }

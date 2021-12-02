@@ -547,7 +547,9 @@ void payPage::generateQR(){
     order_id = order_id.remove("{");
     order_id = order_id.remove("}");
     //qDebug() << "ORDER ID: " << order_id << endl;
-    QString qrdata = "http://Drinkfill-env.eba-qatmjpdr.us-east-2.elasticbeanstalk.com/payment?mid="+machine_id+"&pid="+product_id+"&size="+drinkSize+"&oid="+order_id;
+//    QString qrdata = "https://soapstandportal.com/payment?mid="+machine_id+"&pid="+product_id+"&size="+drinkSize+"&oid="+order_id;
+    QString qrdata = "https://soapstandportal.com/payment?oid="+order_id;
+
 
     paintQR(painter, QSize(360,360), qrdata, QColor("white"));
     ui->qrCode->setPixmap(map);

@@ -38,11 +38,6 @@ thankYouPage::thankYouPage(QWidget *parent) :
     rinseTimer = new QTimer(this);
     rinseTimer->setInterval(1000);
     connect(rinseTimer, SIGNAL(timeout()), this, SLOT(onRinseTimerTick()));
-
-    //    QString counter = this->idlePage->dfUtility->get_local_db_max_transaction();
-    //    ui->Counter->setStyleSheet("background-color : #F1F2F2; color: #CBA580");
-    //    ui->Counter->setText(counter);
-    //    ui->Counter->setText("0");
 }
 
 /*
@@ -127,7 +122,6 @@ void thankYouPage::curler(){
 
         curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/updateOrder");
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
-       // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback2);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 //        qDebug() << "Curl Setup done" << endl;
@@ -140,7 +134,6 @@ void thankYouPage::curler(){
             bufferCURL(curl_data);
         }else{
 //            qDebug() << "CURL SUCCESS!" << endl;
-//            std::cout <<"Here's the output:\n" << readBuffer << endl;
             if (readBuffer == "true"){
                 curl_easy_cleanup(curl);
                 readBuffer = "";
@@ -152,7 +145,6 @@ void thankYouPage::curler(){
                 curl_easy_cleanup(curl);
                 readBuffer = "";
             }
-
         }
     }
 }
@@ -162,11 +154,9 @@ void thankYouPage::bufferCURL(char *curl_params){
     time(&rawtime);
     timeinfo = localtime(&rawtime);
     strftime(filetime, 50, "%F %T", timeinfo);
-//    std::cout << "Here I am in bufferCURL and I know the buffer is: " << curl_params << endl;
     std::string filelocation = "/home/df-admin/curlBuffer/";
     std::string filetype = "_fromQR.txt";
     std::string filename = filelocation+filetime+filetype;
-//    std::cout << "filename is: " << filename << endl;
     std::ofstream out;
     out.open(filename);
     if (!out.is_open()){
@@ -182,11 +172,8 @@ void thankYouPage::onThankyouTimeoutTick(){
 //        qDebug() << "thanksPage: Tick Down: " << _thankYouTimeoutSec << endl;
     } else {
 //        qDebug() << "thanksPage: Timer Done!" << _thankYouTimeoutSec << endl;
-
         thankYouEndTimer->stop();
-
         idlePage->showFullScreen();
-//        usleep(100);
         this->hide();
     }
 }
@@ -195,7 +182,6 @@ void thankYouPage::on_mainPage_Button_clicked()
 {
    thankYouEndTimer->stop();
    idlePage->showFullScreen();
-//   usleep(100);
    this->hide();
 }
 

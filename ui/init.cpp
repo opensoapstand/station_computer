@@ -83,11 +83,6 @@ void init::onInitTimeoutTick(){
 //        qDebug() << "Timer Done!" << _initIdleTimeoutSec << endl;
         initIdleTimer->stop();
 
-        //REBOOT!
-        //Press button to reboot?
-
-//        qDebug() << "i want to reboot the system now!" << endl;
-
         ui->fail_label->setText("Init failed. Rebooting");
 
         rebootTimer->start(1000);
@@ -106,9 +101,6 @@ void init::onRebootTimeoutTick(){
         rebootTimer->stop();
 
         //REBOOT!
-
-//        qDebug() << "i am going to reboot the system now!" << endl;
-
         system("./release/reboot.sh");
     }
 }

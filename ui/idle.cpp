@@ -35,7 +35,6 @@ idle::idle(QWidget *parent) :
        TODO: find a way to make the button transparent/clickable image */
     ui->nextPageButton->setAttribute(Qt::WA_TranslucentBackground);
     ui->nextPageButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    //setStyleSheet("QPushButton{background: transparent;}");
     ui->nextPageButton->raise();
 
     // TODO: Hold and pass DrinkOrder Object
@@ -45,10 +44,6 @@ idle::idle(QWidget *parent) :
     // IPC Networking
     dfUtility = new df_util();
     dfUtility->m_IsSendingFSM = false;
-
-    // TODO: Will need to determine standard path in future; Could skip if going with Postgres
-    // this->dfUtility->getVendorDetails();
-
 }
 
 /*
@@ -80,41 +75,9 @@ void idle::showEvent(QShowEvent *event)
 
 void idle::on_nextPageButton_clicked()
 {
-
-    // UPDATE DB
-//    DbManager db(DB_PATH);
-//    db.addPageClick("Main Page -> Product Page");
-
-    //Check product levels
-//    p1 = db.checkLevels(1);
-//    p2 = db.checkLevels(2);
-//    p3 = db.checkLevels(3);
-//    p4 = db.checkLevels(4);
-
-    // Connect to KB Listener
     selection_PageOne->showFullScreen();
-//    usleep(100);
     this->hide();
-//    db.closeDB();
 }
-
-//void idle::on_savedBottles_label_clicked()
-//{
-
-//    // UPDATE DB
-//    DbManager db(DB_PATH);
-//    db.addPageClick("Main Page -> Product Page");
-
-//    //Check product levels
-//    p1 = db.checkLevels(1);
-//    p2 = db.checkLevels(2);
-//    p3 = db.checkLevels(3);
-//    p4 = db.checkLevels(4);
-
-//    // Connect to KB Listener
-//    selection_PageOne->showFullScreen();
-//    this->hide();
-//}
 
 bool idle::isEnough(int p){
     switch(p){

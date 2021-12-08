@@ -67,20 +67,16 @@ DF_ERROR stateIdle::onAction()
       if (m_pMessaging->isCommandReady())
       {
          m_pMessaging->getPositionReady();
-         // {
+
          cassettes = g_cassettes;
          pos = m_pMessaging->getnOption();
          pos = pos - 1;
 
-//         cassettes[pos].resetButtonPressDuration();
-//         cassettes[pos].resetButtonPressTimes();
-
+         // If DRINK_CHAR is received, enter Dispense state, else, stay in Idle state
          if (m_pMessaging->getcCommand() == DRINK_CHAR){
              cassettes[pos].getDrink()->initDispense();
              m_nextState = DISPENSE_IDLE;
 
-         }else if (m_pMessaging->getcCommand() == DRINK_CHAR){
-            debugOutput::sendMessage("in stae Idle I know this is pwm", INFO);
          }
 
                   // }

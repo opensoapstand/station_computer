@@ -108,11 +108,6 @@ int main(int argc, char *argv[])
     QObject::connect(&dfUiServer, &DfUiServer::MM, idlePage, &idle::MMSlot);
     QObject::connect(&dfUiServer, &DfUiServer::updateVolume, maintainPage, &maintain_product::updateVolumeDisplayed);
 
-
-    //Update Click DB
-//    DbManager db(DB_PATH);
-//    db.addPageClick("INITIALIZED");
-
     return mainApp.exec();
 }
 

@@ -220,8 +220,6 @@ void maintenancePage::on_wifiButton_clicked(){
     _maintenancePageTimeoutSec = 30;
     ui->wifiTable->setRowCount(0);
 
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // OPEN LIST OF WIFI CONNECTIONS AVAILABLE, AS BUTTONS, WHEN YOU CLICK ON A BUTTON, OPEN PASSWORD ENTRY
 
     QDBusInterface nm("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager", "org.freedesktop.NetworkManager", QDBusConnection::systemBus());
@@ -270,43 +268,13 @@ void maintenancePage::on_wifiButton_clicked(){
                 pLayout->setContentsMargins(0,0,0,0);
                 pWidget->setLayout(pLayout);
                 ui->wifiTable->setCellWidget(ui->wifiTable->rowCount()-1, 0, pWidget);
-    //            ui->wifiTable->setItem(ui->wifiTable->rowCount()-1, 0, new QTableWidgetItem(ap_interface.property("Ssid").toString()));
                 connect(btn, SIGNAL(clicked()), this, SLOT(btn_clicked()));
 
             }
         }
-
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     QProcess process;
-//    process.start("nmcli dev wifi rescan");
-//    process.waitForFinished(-1);
-//    process.start("nmcli -g -p -field SSID -c no dev wifi list");
-//    process.waitForFinished(-1);
-//    QString stdout = process.readAllStandardOutput();
-//    qDebug().noquote() << stdout;
-//    QTextStream in(&stdout);
-//    while (!in.atEnd()){
-//        QString buttonText = in.readLine();
-//        ui->wifiTable->insertRow(ui->wifiTable->rowCount());
-//        ui->wifiTable->setRowHeight(ui->wifiTable->rowCount()-1, 60);
-//        QWidget* pWidget = new QWidget();
-//        QPushButton* btn = new QPushButton();
-//        btn->setText(buttonText);
-//        btn->setObjectName(buttonText);
-//        QHBoxLayout* pLayout = new QHBoxLayout(pWidget);
-//        btn->setMinimumHeight(50);
-//        pLayout->addWidget(btn);
-//        //pLayout->setAlignment(Qt::AlignLeft);
-//        pLayout->setContentsMargins(0,0,0,0);
-//        pWidget->setLayout(pLayout);
-//        ui->wifiTable->setCellWidget(ui->wifiTable->rowCount()-1, 0, pWidget);
-//        //            ui->wifiTable->setItem(ui->wifiTable->rowCount()-1, 0, new QTableWidgetItem(ap_interface.property("Ssid").toString()));
-//        connect(btn, SIGNAL(clicked()), this, SLOT(btn_clicked()));
-
-//    }
 
     process.start("iwgetid -r");
     process.waitForFinished(-1);
@@ -325,16 +293,6 @@ void maintenancePage::on_wifiButton_clicked(){
 
 }
 
-//void maintenancePage::on_clean_button_clicked(){
-//    qDebug() << "Clean button clicked" << endl;
-
-//}
-
-//void maintenancePage::on_restock_button_clicked(){
-//    qDebug() << "Restock button clicked" << endl;
-
-//}
-
 int getSelection(){
     return selection;
 }
@@ -348,18 +306,6 @@ void maintenancePage::btn_clicked(){
     ui->keyboard_2->show();
     ui->wifiPassLabel->setText(button->objectName());
     ui->keyboardTextEntry->setText("");
-
-    // CONNECT TO WIFI SSID FROM HERE!
-
-    //QProcess system_command;
-//    QString connect_string = "nmcli --ask dev wifi connect '" + button->objectName() +"' password '" + ui->keyboardTextEntry->text() + "'";
-//    QByteArray ba = connect_string.toLocal8Bit();
-//    const char *c_str = ba.data();
-//    qDebug() << c_str;
-//    system(c_str);
-    //system_command.waitForFinished(-1);
-    //QString stdout = system_command.readAllStandardOutput();
-    //qDebug() << stdout;
 
     QProcess process;
     process.start("iwgetid -r");
@@ -392,12 +338,6 @@ void maintenancePage::onMaintenancePageTimeoutTick(){
         this->hide();
     }
 }
-
-//void maintenancePage::on_buttonGroup_buttonClicked(){
-////    QAbstractButton* buttonSender = qobject_cast<QPushButton*>(sender());
-////    QString buttonText = buttonSender->text();
-////    qDebug() << "btn clicked -> " << buttonText;
-//}
 
 void maintenancePage::buttonWasClicked(int buttonID){
 

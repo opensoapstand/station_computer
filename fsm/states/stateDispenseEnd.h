@@ -27,15 +27,12 @@
 #include <sstream>
 #include <string>
 #include <vector>
-using namespace qrcodegen;
 #include <stdio.h>
 #include <curl/curl.h>
+#include <ctime>
 
 #include "../fsm.h"
-
 #include "stateVirtual.h"
-
-#include <ctime>
 
 #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 
@@ -71,9 +68,6 @@ class stateDispenseEnd : public stateVirtual
         DF_ERROR updateDB();
         DF_ERROR sendDB();
         DF_ERROR printer();
-        DF_ERROR QRgen();
-        std::string toSvgString(const QrCode &qr, int border);
-        void printQr(const QrCode &qr);
         std::string getMachineID();
         std::string getProductID(int slot);
         void bufferCURL(std::string curl_params);

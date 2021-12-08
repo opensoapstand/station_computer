@@ -239,56 +239,15 @@ void maintain_product::resizeEvent(QResizeEvent *event){
     ui->image->setIcon(ButtonIcon);
     ui->image->setIconSize(QSize(271,391));
 
-//    if(db.getPaymentMethod(checkOption)=="plu" || db.getPaymentMethod(checkOption)=="barcode"){
-//        ui->pluButton->setVisible(true);
-//        ui->pluLabel->setVisible(true);
-//        ui->pluButton->setEnabled(true);
-//    }else{
-//        ui->pluButton->setVisible(false);
-//        ui->pluLabel->setVisible(false);
-//        ui->pluButton->setEnabled(false);
-//    }
-
     ui->pwmSlider->setValue(round(double((db.getPWM(checkOption))*100)/255));
 
     db.closeDB();
-   // db_temperature.closeDB();
 
 
 }
 
 void maintain_product::on_image_clicked(){
     _maintainProductPageTimeoutSec=40;
-//    int checkOption = idlePage->userDrinkOrder->getOption();
-//    if(checkOption > 0 && checkOption <= 9) {
-//        QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
-//        if (!pumping){
-//            command.append("s");
-
-//            this->idlePage->dfUtility->msg = command;
-//            idlePage->dfUtility->m_IsSendingFSM = true;
-//            idlePage->dfUtility->m_fsmMsg = SEND_DRINK;
-//            idlePage->dfUtility->send_to_FSM();
-//            idlePage->dfUtility->m_IsSendingFSM = false;
-
-//            pumping = true;
-//            ui->pump_label->setText("ON");
-//        }
-//        else {
-//            pumping = false;
-//            ui->pump_label->setText("OFF");
-//            ui->vol_dispensed_label->setText("");
-//            command = QString::number(this->idlePage->userDrinkOrder->getOption());
-//            command.append("s");
-
-//            this->idlePage->dfUtility->msg = command;
-//            idlePage->dfUtility->m_IsSendingFSM = true;
-//            idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
-//            idlePage->dfUtility->send_to_FSM();
-//            idlePage->dfUtility->m_IsSendingFSM = false;
-//        }
-//    }
-
 }
 
 void maintain_product::on_pumpButton_clicked(){
@@ -315,7 +274,6 @@ void maintain_product::on_pumpButton_clicked(){
         else {
             pumping = false;
             ui->pumpLabel->setText("OFF");
-            //ui->vol_dispensed_label->setText("");
             command = QString::number(this->idlePage->userDrinkOrder->getOption());
             command.append("t");
 
@@ -688,12 +646,8 @@ void maintain_product::onMaintainProductPageTimeoutTick(){
         db.closeDB();
         maintainProductPageEndTimer->stop();
         idlePage->showFullScreen();
-//        usleep(100);
         this->hide();
     }
-
-
-
 }
 
 void maintain_product::on_pwmButton_clicked(){
@@ -925,11 +879,8 @@ void maintain_product::curler(){
     }else{
 //        qDebug() << "cURL init success" << endl;
 
-//        cout << "CURLING DATA: " << curl_param_array.data() << " is " << sizeof(curl_param_array.data()) << " bytes" << endl;
-
         curl_easy_setopt(curl, CURLOPT_URL, "http://Drinkfill-env.eba-qatmjpdr.us-east-2.elasticbeanstalk.com/api/machine_data/resetStock");
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
-       // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback3);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 //        qDebug() << "Curl Setup done" << endl;
@@ -954,10 +905,8 @@ void maintain_product::curler(){
                 curl_easy_cleanup(curl);
                 readBuffer = "";
             }
-
         }
     }
-
     db.closeDB();
 }
 
@@ -966,7 +915,6 @@ void maintain_product::bufferCURL(char *curl_params){
     time(&rawtime);
     timeinfo = localtime(&rawtime);
     strftime(filetime, 50, "%F %T", timeinfo);
-//    std::cout << "Here I am in bufferCURL and I know the buffer is: " << curl_params << endl;
     std::string filelocation = "/home/df-admin/curlBuffer/";
     std::string filetype = "_MM.txt";
     std::string filename = filelocation+filetime+filetype;

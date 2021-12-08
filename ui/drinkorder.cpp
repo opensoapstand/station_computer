@@ -28,7 +28,6 @@ DrinkOrder::DrinkOrder()
     DRINK4_PRICE_S = db.getProductPrice(4, 's');
 
     db.closeDB();
-
 }
 
 // Ctor Object Copy
@@ -78,11 +77,8 @@ void DrinkOrder::setSize(double size)
 
 // Enum search for drink sizes
 void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
-    //qInfo() << "Existing Size" << getSize() << endl;
 
     sizeOptionSelected = sizeOption;
-
-//    qDebug() << "option: " << m_optionNumber << endl;
 
     switch (m_optionNumber)
     {
@@ -201,11 +197,8 @@ void DrinkOrder::setDrinkOption(DF_QT_OPTIONS sizeOption) {
     } else {
         qInfo() << "OUT OF OPTION RANGE!" << sizeOption << endl;
     }
-
 }
 
 DF_QT_OPTIONS DrinkOrder::getSizeOption(){
-
     return sizeOptionSelected;
-
 }

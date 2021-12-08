@@ -37,45 +37,11 @@ payPage::payPage(QWidget *parent) :
 
     /* HACK: transparent button*/
     ui->previousPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    //ui->payment_pass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-
     ui->payment_bypass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-
     ui->refreshButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-   // ui->payment_pass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-   // ui->payment_cancel_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-
-    // Setup static labels
-    // TODO: Swap this when modular GUI ready
-       // ui->order_tax_label->setText("Our Planet");
-       // ui->order_tax_amount->setText("Priceless");
-      //  ui->order_total_label->setText("Total");
-
-    //ui->order_total_label->setText(" ");
-   // ui->order_drink_amount->setText(" ");
 
     ui->payment_bypass_Button->setEnabled(false);
-
-   // ui->qrCode->setStyleSheet("QLabel { border-image: url(:/light/background.png); }");
-
-    //displayPaymentPending(false);
-
-    // Setup Reciept
-    //updateTotals(this->drinkDescription, this->drinkAmount, this->orderTotal);
-
-    // Payment
-
-    /* Create Timeout Interface: Wait for tap; message user; process tap */
-
-        // Mutex
-       // setpaymentProcess(false);
-
-        // GUI Setup
-        // ui->payment_processLabel->setText(TAP_READY_LABEL);
-       // ui->payment_processLabel->setText(" ");
-
-      //  ui->payment_processLabel->show();
 
         // **** Timer and Slot Setup ****
 
@@ -169,20 +135,9 @@ void payPage::setPage(paySelect *pageSizeSelect, dispensePage* pageDispense, idl
     this->helpPage = pageHelp;
 }
 
-// TODO: Link style to sheet
-//void payPage::labelSetup(QLabel *label, int fontSize)
-//{
-//    QFont font("Arial", fontSize, QFont::Bold);
-//    label->setFont(font);
-//    label->setStyleSheet("color: white");
-//    label->setAlignment(Qt::AlignCenter);
-//}
-
 void payPage::resizeEvent(QResizeEvent *event){
     // FIXME: MAGIC NUMBER!!! UX410 Socket Auto Close time is 60 seconds so timer kills page GUI
 //    idlePaymentTimer->start(60000);
-
-    //DbManager db(DB_PATH);
 
     int checkOption = idlePage->userDrinkOrder->getOption();
     char drinkSize;
@@ -226,9 +181,7 @@ void payPage::resizeEvent(QResizeEvent *event){
 //    }
 
     response = false;
-
     ui->refreshLabel->hide();
-
 }
 
 // DTOR
@@ -242,11 +195,6 @@ payPage::~payPage()
 // Labels and button for tapping payment
 void payPage::displayPaymentPending(bool isVisible)
 {
-//    if(isVisible == false){
-//        ui->payment_processLabel->hide();
-//    } else {
-//        ui->payment_processLabel->show();
-//    }
 }
 
 // Navigation: Back to Drink Size Selection
@@ -268,145 +216,26 @@ void payPage::on_previousPage_Button_clicked()
 
 void payPage::on_payment_bypass_Button_clicked()
 {
-
-//    qDebug() << "ByPass payment to Dispense" << endl;
-    //    cancelPayment();
     stopPayTimers();
-    //readTimer->stop();
     dispensingPage->showEvent(dispenseEvent);
     dispensingPage->showFullScreen();
-//    usleep(100);
     this->hide();
 }
 
-// Payment Processing Debug Button
-//void payPage::on_payment_pass_Button_clicked()
-//{
-//    // TODO: Moneris Linkage here!
-//    qDebug() << "Payment Pass button" << endl;
-
-//    qDebug() << this->idlePage->userDrinkOrder->getOption();
-//    qDebug() << this->idlePage->userDrinkOrder->getSize();
-
-
-//    //    purchaseEnable = true;
-
-//    if (!paymentConnected){
-//        usleep(100000);
-//        //mainPage->sendardCommand("Z");
-//        //if(!com.init()){
-
-//        // TODO: Replace with an ACK NACK to FSM for Dispenser slot...
-//        //mainPage->checkard();
-
-//        // Wait for a Drink Payment
-//        // ui->payment_processLabel->show();
-//        // labelSetup(ui->payment_processLabel, 50);
-//        // ui->payment_processLabel->setText("You get a free drink");
-
-//        // Lock Navigation
-//        //ui->payment_pass_Button->hide();
-//        ui->previousPage_Button->hide();
-
-//        //paymentInit();
-
-//        // Database log a failed payment
-//        storePaymentEvent(db, QString("mpos failed"));
-//        paymentProgressTimer->start();
-
-//        dispensingPage->showFullScreen();
-//        this->hide();
-
-//    } else if(paymentConnected){
-
-//        QFont warning;
-//        warning.setBold(true);
-//        warning.setFamily("Arial");
-//        warning.setPointSize(30);
-
-//      //  ui->payment_cancel_Button->setFont(warning);
-//      //  ui->payment_cancel_Button->setText("CANCEL");
-//      //  ui->payment_cancel_Button->show();
-
-//        //ui->tapLabel->show(); //currently replaced with pay button 10.18
-//        //ui->payButton->hide();
-//        //ui->priceVolume1Button->setEnabled(false);
-//        //ui->priceVolume2Button->setEnabled(false);
-
-//        com.flushSerial();
-
-//        // Set the price to send.
-//        cout << "Setting price of packet: " << productSelectedPrice << endl;
-//        pktToSend = paymentPacket.purchasePacket(productSelectedPrice);
-
-//        purchaseEnable = true;
-
-
-//        if (sendToUX410())
-//        {
-//            //            isReadyForTap = true;
-//            //            waitForUX410();
-//            pktResponded.clear();
-//            timerEnabled = true;
-//            cout << "From Payment Button" << endl;
-//            readTimer->start(10);
-//        }
-//        else {
-//            isReadyForTap = false;
-//            std::cout<<"TIME OUT";
-//        }
-//    }
-
-//    //    com.sendPacket(pktToSend, uint(pktToSend.size()));
-
-//    //    std::cout<<paymentPacket.getSendPacket();
-
-//    //    //read back what is responded
-
-//    //    pktResponded = com.readForAck();
-
-//    //    readPacket.packetReadFromUX(pktResponded);
-//    //    pktResponded.clear();
-
-//    //    if (readPacket.getAckOrNak() == communicationPacketField::ACK)
-//    //    {
-//    //        timerEnabled = true;
-//    //        readTimer->start(10);
-//    //    }
-//}
-
-//void payPage::on_payment_cancel_Button_clicked()
-//{
-//    qDebug()<< "Cancel Clicked" << endl;
-//    cancelPayment();
-//}
 
 void payPage::updateTotals(string drinkDescription, string drinkAmount, string orderTotal)
 {
-//    this->drinkDescription = drinkDescription;
-//    this->drinkAmount = drinkAmount;
-//    this->orderTotal = orderTotal;
-
-//    //    ui->order_drink_label->setText(this->drinkDescription.c_str());
-//   // ui->order_drink_amount->setText(this->drinkAmount.c_str());
-//    ui->order_total_amount->setText(this->orderTotal.c_str());
-
 }
 
 void payPage::on_mainPage_Button_clicked()
 {
-//    qDebug() << "Main Button Page" << endl;
-
-    //sleep(1);
     stopPayTimers();
     response = true;
     readTimer->stop();
     if (payment){
         cancelPayment();
     }
-
     helpPage->showFullScreen();
-//    usleep(100);
     this->hide();
 
 }
@@ -425,10 +254,6 @@ void payPage::cancelPayment()
             pktResponded.clear();
         }
         com.flushSerial();
-
-//        qDebug() << "Payment cancelled!" << endl;
-   // }
-
 }
 
 
@@ -493,7 +318,6 @@ void payPage::showEvent(QShowEvent *event)
 
     ui->order_drink_amount->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize), 'f', 2));
 
-
   //  ui->payment_pass_Button->setEnabled(false);
   //  ui->payment_cancel_Button->setEnabled(false);
 
@@ -550,36 +374,12 @@ void payPage::generateQR(){
     QString qrdata = "https://soapstandportal.com/payment?mid="+machine_id+"&pid="+product_id+"&size="+drinkSize+"&oid="+order_id;
 //    QString qrdata = "https://soapstandportal.com/payment?oid="+order_id;
 
-
     paintQR(painter, QSize(360,360), qrdata, QColor("white"));
     ui->qrCode->setPixmap(map);
 
     QString curl_param = "oid="+order_id;
     curl_param_array = curl_param.toLocal8Bit();
     curl_data = curl_param_array.data();
-//    cout << "CURLING DATA: " << curl_data << " is " << sizeof(curl_data) << " bytes" << endl;
-    //curler();
-
-//        curl = curl_easy_init();
-//        if (!curl){
-//            qDebug() << "cURL failed to init" << endl;
-//        }else{
-//            qDebug() << "cURL init success" << endl;
-//            curl_easy_setopt(curl, CURLOPT_URL, "https://drinkfill.herokuapp.com/api/machine_data/check_order_status");
-//            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_data);
-//            curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-//            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-//            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-//            qDebug() << "Curl Setup done" << endl;
-//            res = curl_easy_perform(curl);
-//            if (res != CURLE_OK){
-//                fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
-//                curl_easy_cleanup(curl);
-//            }else{
-//                qDebug() << "CURL SUCCESS!" << endl;
-//                std::cout <<"Here's the output:\n" << readBuffer << endl;
-//            }
-//        }
 
     _paymentTimeoutSec=444;
     _qrTimeOutSec=5;
@@ -596,12 +396,8 @@ void payPage::curler(){
 //        qDebug() << "cURL failed to init" << endl;
     }else{
 //        qDebug() << "cURL init success" << endl;
-
-//        cout << "CURLING DATA: " << curl_param_array.data() << " is " << sizeof(curl_param_array.data()) << " bytes" << endl;
-
         curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/check_order_status");
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
-       // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 //        qDebug() << "Curl Setup done" << endl;
@@ -613,8 +409,6 @@ void payPage::curler(){
             curl_easy_cleanup(curl);
         }else{
 //            qDebug() << "CURL SUCCESS!" << endl;
-//            std::cout <<"Here's the output:\n" << readBuffer << endl;
-
             if (readBuffer == "true"){
                 curl_easy_cleanup(curl);
                 readBuffer = "";
@@ -623,10 +417,8 @@ void payPage::curler(){
                 curl_easy_cleanup(curl);
                 readBuffer = "";
             }
-
         }
     }
-
 }
 
 void payPage::qrTimeout(){
@@ -644,53 +436,17 @@ void payPage::on_refreshButton_clicked(){
     _paymentTimeoutSec=444;
 }
 
-
-
 // XXX: Remove this when interrupts and flow sensors work!
 void payPage::onTimeoutTick(){
-
-
     if(-- _paymentTimeoutSec >= 0) {
-//        qDebug() << "payPage: Tick Down: " << _paymentTimeoutSec << endl;
 
-//        _paymentTimeLabel.clear();
-//        QString time = QString::number(_paymentTimeoutSec);
-
-//        if(_paymentTimeoutSec >= 10) {
-//            if(_paymentTimeoutSec % 2 == 0) {
-//                _paymentTimeLabel.append("TAP NOW");
-//                qDebug() << _paymentTimeLabel << endl;
-//            } else {
-//                _paymentTimeLabel.append(" ");
-//                qDebug() << _paymentTimeLabel << endl;
-//            }
-//        } else {
-//            if(_paymentTimeoutSec % 2 == 0) {
-//                _paymentTimeLabel.append("PROCESSING.");
-//                qDebug() << _paymentTimeLabel << endl;
-//            } else {
-//                _paymentTimeLabel.append("PROCESSING..");
-//                qDebug() << _paymentTimeLabel << endl;
-//            }
-//            qDebug() << _paymentTimeLabel << endl;
-//        }
-//        this->ui->payment_countdownLabel->setText(_paymentTimeLabel);
     } else {
 //        qDebug() << "Timer Done!" << _paymentTimeoutSec << endl;
-
-        //response = true;
-        //stopPayTimers();
-        //readTimer->stop();
-        //cancelPayment();
         idlePaymentTimeout();
-//        on_payment_bypass_Button_clicked();
-//        //        paymentEndTimer->stop();
-//        //        this->ui->payment_countdownLabel->setText("Finished!");
     }
     if (_paymentTimeoutSec < 20){
         ui->refreshLabel->show();
     }
-
 }
 
 bool payPage::setpaymentProcess(bool status)
@@ -700,81 +456,20 @@ bool payPage::setpaymentProcess(bool status)
 
 void payPage::setProgressLabel(QLabel* label, int dot)
 {
-//    QString dotString = ".";
-//    label->setText("Processing" + dotString.repeated(dot));
 }
 
 // Local storge for now.  Will need to refactor logger to do a nightly push to AWS
 void payPage::storePaymentEvent(QSqlDatabase db, QString event)
 {
 
-    //    beverageData* curBev = mainPage->getBeverageData(optionSelected);
-    //    db.event_log(machineID, QDateTime::currentDateTime(), optionSelected, event, curBev->getInventoryVolume());
 }
 
 void payPage::progressStatusLabel()
 {
-//    if (!paymentConnected){
-//        //timer->start();
-//        //pageUpdateTimer->start();
-//        //mainPage->clearArd();
-//        //sendCommand();
-//        //pageNumber = 1;
-//    }
-//    else
-//    {
-//        if (paymentProcessing == true)
-//        {
-//            // Setup progress dots
-//   //         ui->payment_processLabel->setText(TAP_BLANK_LABEL);
-
-//            // Lock down page navigation
-//    //        ui->payment_pass_Button->hide();
-//     //       ui->previousPage_Button->hide();
-//     //       ui->mainPage_Button->hide();
-//            //labelSetup(ui->payment_processLabel, 50);
-//            //setProgressLabel(ui->payment_processLabel, progressDots);
-//            if (progressDots < 3){
-//                progressDots++;
-//            }
-//            else {
-//                progressDots = 1;
-//            }
-//            progressLoopCounter++;
-//        }
-
-//        if (progressLoopCounter == 3) {
-//            paymentProgressTimer->stop();
-
-//    //        ui->payment_pass_Button->hide();
-//      //      ui->previousPage_Button->hide();
-
-//            paymentProcessing = false;
-
-//            if (approved){
-//          //      ui->previousPage_Button->setEnabled(false);
-//           //     ui->mainPage_Button->setEnabled(false);
-//           //     ui->payment_processLabel->setText(TAP_APPROVED_LABEL);
-//            }
-//            else {
-//          //      ui->payment_processLabel->setText(TAP_DECLINED_LABEL);
-//          //      ui->payment_processLabel->show();
-//                declineTimer->start(2000);
-//            }
-//        }
-//    }
 }
 
 void payPage::declineTimer_start()
 {
-//   // ui->payment_processLabel->setText(TAP_AGAIN_LABEL);
-//    declineCounter++;
-//    if (declineCounter < 3){
-//        this->on_payment_bypass_Button_clicked();
-//    } else {
-//     //   ui->payment_processLabel->setText(TAP_DECLINED_LABEL);
-//    }
-//    declineTimer->stop();
 }
 
 void payPage::idlePaymentTimeout() {
@@ -1201,9 +896,6 @@ void payPage::printQr(const QrCode &qr) {
 
 
 void payPage::QRgen(){
-    //QrCode qr0 = QrCode::encodeText("Soapstand Rules", QrCode::Ecc::MEDIUM);
-    //std::string svg = toSvgString(qr0, 4);
-    //printQr(qr0);
 
     QPixmap map(400,400);
     QPainter painter(&map);
@@ -1226,15 +918,6 @@ void payPage::paintQR(QPainter &painter, const QSize sz, const QString &data, QC
     // It expects background to be prepared already (in white or whatever is preferred).
 
     painter.setPen(Qt::NoPen);
-
-//    painter.setBrush(QColor("red"));
-//    for (int y =0; y<400; y++){
-//        for(int x=0; x<400; x++){
-//            const double rx1=(x+1)*scale, ry1=(y+1)*scale;
-//            QRectF r(rx1,ry1,1,1);
-//            painter.drawRects(&r,1);
-//        }
-//    }
 
     painter.setBrush(fg);
     for(int y=0; y<s; y++) {

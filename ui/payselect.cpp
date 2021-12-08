@@ -63,10 +63,8 @@ paySelect::paySelect(QWidget *parent) :
     {
         selectIdleTimer = new QTimer(this);
         selectIdleTimer->setInterval(1000);
-//        selectIdleTimer->isSingleShot();
         connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
     }
-
 }
 
 /*
@@ -113,29 +111,21 @@ void paySelect::on_payPage_Button_clicked()
     ui->mainPage_Button->setEnabled(false);
     ui->previousPage_Button->setEnabled(false);
 
-    //Update Click DB
     DbManager db(DB_PATH);
-//    db.addPageClick("Pay Select -> Dispense Page");
 
     this->stopSelectTimers();
     selectIdleTimer->stop();
 
     if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "qr" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "tap"){
-        //paymentPage->showEvent(dispenseEvent);
         db.closeDB();
         paymentPage->showFullScreen();
-//        usleep(100);
         this->hide();
     } else if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "barcode" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "plu"){
         db.closeDB();
         dispensingPage->showEvent(dispenseEvent);
         dispensingPage->showFullScreen();
-//        usleep(100);
         this->hide();
     }
-
-
-
 }
 
 void paySelect::resizeEvent(QResizeEvent *event){
@@ -289,37 +279,11 @@ void paySelect::mainPage()
 
 void paySelect::on_mainPage_Button_clicked()
 {
-
 //    qDebug() << "paySelect: helpPage button" << endl;
     this->stopSelectTimers();
     selectIdleTimer->stop();
     helpPage->showFullScreen();
-//    usleep(100);
     this->hide();
-
-//    qDebug() << "Main Page Button pressed" << endl;
-
-//    selectIdleTimer->stop();
-
-//    QMessageBox msgBox;
-//    msgBox.setWindowFlags(Qt::FramelessWindowHint);
-//    //msgBox.setText("<p align=center>How Can We Help You?<br><br></p>");
-//    msgBox.setInformativeText("<p align=center>Phone: (604) 837-5066<br></p><p align=center>Email: hello@drinkfill.com<br></p>");
-//    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-height: 30px; align: center}");
-
-//    msgBox.setStandardButtons(QMessageBox::Close);
-//    int ret = msgBox.exec();
-
-//    switch(ret){
-//        case QMessageBox::Close:
-//            qDebug() << "Return CLICKED" << endl;
-//            msgBox.hide();
-//            selectIdleTimer->start(1000);
-//            _selectIdleTimeoutSec = 40;
-//        break;
-
-//    }
-
 }
 
 // on_Small_Order button listener

@@ -42,7 +42,6 @@ help::help(QWidget *parent) :
     helpIdleTimer = new QTimer(this);
     helpIdleTimer->setInterval(1000);
     connect(helpIdleTimer, SIGNAL(timeout()), this, SLOT(onHelpTimeoutTick()));
-
 }
 
 // DTOR
@@ -55,9 +54,6 @@ void help::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
 
-//    DbManager db(DB_PATH);
-//    db.addPageClick("HELP PAGE ENTERED");
-
     if(helpIdleTimer == nullptr){
         helpIdleTimer = new QTimer(this);
         helpIdleTimer->setInterval(1000);
@@ -67,7 +63,6 @@ void help::showEvent(QShowEvent *event)
     helpIdleTimer->start(1000);
     _helpIdleTimeoutSec = 60;
     ui->refreshLabel->hide();
-
 }
 
 /*
@@ -82,26 +77,14 @@ void help::setPage(productPage_1 *pageSelect, paySelect* paySelect, idle* pageId
 }
 
 void help::on_previousPage_Button_clicked(){
-//    qDebug() << "Previoue Page button clicked" << endl;
-
-//    DbManager db(DB_PATH);
-//    db.addPageClick("HELP PAGE EXITED");
-
     helpIdleTimer->stop();
     idlePage->showFullScreen();
-//    usleep(100);
     this->hide();
 }
 
 void help::on_previousPage_Button_2_clicked(){
-//    qDebug() << "Previoue Page button clicked" << endl;
-
-//    DbManager db(DB_PATH);
-//    db.addPageClick("HELP PAGE EXITED");
-
     helpIdleTimer->stop();
     idlePage->showFullScreen();
-//    usleep(100);
     this->hide();
 }
 
@@ -111,13 +94,8 @@ void help::onHelpTimeoutTick(){
     } else {
 //        qDebug() << "Help Timer Done!" << _helpIdleTimeoutSec << endl;
 
-        //Update Click DB
-//        DbManager db(DB_PATH);
-//        db.addPageClick("HELP PAGE TIME OUT");
-
         helpIdleTimer->stop();
         idlePage->showFullScreen();
-//        usleep(100);
         this->hide();
     }
     if(_helpIdleTimeoutSec<10){
@@ -126,7 +104,6 @@ void help::onHelpTimeoutTick(){
 }
 
 void help::on_refreshButton_clicked(){
-//    qDebug() << "Page Refreshed" << endl;
     _helpIdleTimeoutSec = 60;
     ui->refreshLabel->hide();
 }

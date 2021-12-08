@@ -63,8 +63,6 @@ DF_ERROR stateDispenseIdle::onEntry()
        cassettes[pos].getDrink()->drinkVolumeInfo();
        cassettes[pos].startDispense(cassettes[pos].getDrink()->getDrinkOption());
 
-      // m_pMessaging->sendMessage("Go Timer!");
-
    }
 
    return e_ret;
@@ -74,15 +72,12 @@ DF_ERROR stateDispenseIdle::onEntry()
 // Idles after proper initilization;  Waits for a command from messageMediator
 DF_ERROR stateDispenseIdle::onAction()
 {
-   debugOutput debugInfo;
    DF_ERROR df_ret = ERROR_BAD_PARAMS;
-
-
 
    if (nullptr != &m_nextState)
    {
        m_pMessaging->getPositionReady();
-
+        // Check if UI has sent a DISPENSE_END_CHAR to compelte the transaction, or, the taget has been hit, to enter into the DispenseEnd state
        if ((m_pMessaging->getcCommand() == DISPENSE_END_CHAR) || (cassettes[pos].getIsDispenseComplete())){
 
            m_nextState = DISPENSE_END;
@@ -91,7 +86,7 @@ DF_ERROR stateDispenseIdle::onAction()
 
        cassettes[pos].getDrink()->drinkVolumeInfo();
 
-
+        // If volume has not changed, stay in Idle state, else, volume is changing, go to Dispense state...
        if (cassettes[pos].getDrink()->getVolumeDispensed() == cassettes[pos].getDrink()->getVolumeDispensedPreviously()){
            debugOutput::sendMessage("IDLING - COUNTDOWN!", INFO);
            m_nextState = DISPENSE_IDLE;
@@ -113,11 +108,11 @@ DF_ERROR stateDispenseIdle::onExit()
    debugOutput::sendMessage("Exiting[" + toString() + "]", STATE_CHANGE);
    DF_ERROR e_ret = OK;
 
-   // debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
    if ((m_pMessaging->getcCommand() == DISPENSE_END_CHAR) || (cassettes[pos].getIsDispenseComplete())){
        debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]", INFO);
        m_nextState = DISPENSE_END;
    }
+
    // TODO: If timeout occurs, then we can skip to cleaning cycle.
    // m_state = DISPENSE_END;
    // m_nextState = IDLE;

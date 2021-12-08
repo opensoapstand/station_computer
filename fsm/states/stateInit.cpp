@@ -79,6 +79,7 @@ DF_ERROR stateInit::onAction()
       {
          m_nextState = IDLE;
 
+        // The UI program waits for this message to move from its initializing phase to its Idle phase:
          m_pMessaging->sendMessage("Init Ready");
       }
    }
@@ -133,10 +134,9 @@ DF_ERROR stateInit::dispenserSetup()
 }   // End of dispenserSetup()
 
 
+// This function (called in SetDrinks) converts the data that is in the product database to variables, which are then passed to the SetDrink function to create drink objects for each product.
 static int callback(void *data, int argc, char **argv, char **azColName){
    int i;
-   //fprintf(stderr, "%s: ", (const char*)data);
-
    int slot;
    string name;
    double volume_dispensed;
@@ -159,72 +159,47 @@ static int callback(void *data, int argc, char **argv, char **azColName){
       std::string colname = azColName[i];
 
       if (colname == "slot"){
-          //printf("setting slot \n");
           slot = atoi(argv[i]);
-//          printf("Slot: %d \n", slot);
       }
       else if (colname == "name"){
-          //printf("setting name \n");
           name = argv[i];
-//          printf("Name: %s \n", name.c_str());
       }
       else if (colname == "name_receipt"){
         name_receipt = argv[i];
       }
       else if (colname == "volume_dispensed"){
-          //printf("setting vol disp \n");
           volume_dispensed = atof(argv[i]);
-//          printf("Volume Dispensed: %.2f \n", volume_dispensed);
       }
       else if (colname == "volume_target_l"){
-          //printf("setting vol tar \n");
           volume_target_l = atof(argv[i]);
-//          printf("Volume Target L: %.2f \n", volume_target_l);
       }
       else if (colname == "volume_target_s"){
-          //printf("setting vol tar \n");
           volume_target_s = atof(argv[i]);
-//          printf("Volume Target S: %.2f \n", volume_target_s);
       }
       else if (colname == "calibration_const"){
-          //printf("setting cal con \n");
           calibration_const = atof(argv[i]);
-//          printf("Calibration Const: %.2f \n", calibration_const);
       }
       else if (colname == "price_l"){
-          //printf("setting price \n");
           price_l = atof(argv[i]);
-//          printf("Price L: %.2f \n", price_l);
       }
       else if (colname == "price_s"){
-          //printf("setting price \n");
           price_s = atof(argv[i]);
-//          printf("Price S: %.2f \n", price_s);
       }
       else if (colname == "is_still"){
-          //printf("setting is still \n");
           is_still = atoi(argv[i]);
-          //printf("Is Still: %d \n", is_still);
       }
       else if (colname == "volume_per_tick"){
-          //printf("setting vol per tick \n");
           volume_per_tick = atof(argv[i]);
-//          printf("Volume per Tick: %.2f \n", volume_per_tick);
       }
       else if (colname == "PLU_l"){
           plu_l = argv[i];
-//          printf("PLU L: %s \n", plu_l.c_str());
       }
       else if (colname == "PLU_s"){
           plu_s = argv[i];
-//          printf("PLU S: %s \n", plu_s.c_str());
       }
       else if (colname == "payment"){
           paymentMethod = argv[i];
-//          printf("Payment Method: %s \n", paymentMethod.c_str());
       }
-
-//      printf("\n");
 
       g_cassettes[slot-1].setDrink(new drink(slot, name, volume_dispensed, volume_target_l, volume_target_s , calibration_const, price_l, price_s, false, volume_per_tick, plu_l, plu_s, paymentMethod, name_receipt));
    }
@@ -237,10 +212,8 @@ DF_ERROR stateInit::setDrinks(){
    // Drink Setup
    // load the SQLITE manager
 
-
     char *zErrMsg = 0;
     int rc;
-    //char *sql;
     const char* data = "Callback function called";
 
     rc = sqlite3_open(DB_PATH, &db);
@@ -259,9 +232,6 @@ DF_ERROR stateInit::setDrinks(){
     char *sql = new char[sql11.length() + 1];
     strcpy(sql, sql11.c_str());
 
-    //printf("\n______________PRODUCTS_______________\n\n");
-
-
     /* Execute SQL statement */
     rc = sqlite3_exec(db, sql, callback, (void*)data, &zErrMsg);
 
@@ -272,29 +242,6 @@ DF_ERROR stateInit::setDrinks(){
 //       fprintf(stdout, "Operation done successfully\n");
     }
     sqlite3_close(db);
-
-//    printf("\n_____________________________________\n\n");
-
-
-   // FIXME: Hardcode for now.
-   
-
-   // for(int i = 0; i < MAX_CASSETTES; i++) {
-   //    g_cassettes[i]->setDrink()
-   // }
-   // Hardcoded drink class for testing
-
-
-                            // drink(int slot, string name, double nVolumeDispensed, double nVolumeTarget, double calibration_const, double price, bool isStillDrink, double nVolumePerTick)
-//   g_cassettes[0].setDrink(new drink(1, "Drink1", 0, 1500, 1.3, 3.75, false, 1));
-//   g_cassettes[1].setDrink(new drink(2, "Drink2", 0, 400, 1.3, 2.20, false, 1));
-//   g_cassettes[2].setDrink(new drink(3, "Drink3", 0, 200, 1.3, 2.00, false, 1));
-//   g_cassettes[3].setDrink(new drink(4, "Drink4", 0, 500, 1.3, 1.10, false, 1));
-//   g_cassettes[4].setDrink(new drink(5, "Drink5", 0, 355, 1.3, 4.00, false, 10));
-//   g_cassettes[5].setDrink(new drink(6, "Drink6", 0, 355, 1.3, 4.00, false, 25));
-//   g_cassettes[6].setDrink(new drink(7, "Drink7", 0, 355, 1.3, 4.00, false, 10));
-//   g_cassettes[7].setDrink(new drink(8, "Drink8", 0, 355, 1.3, 4.00, false, 25));
-//   g_cassettes[8].setDrink(new drink(9, "Drink9", 0, 355, 1.3, 4.00, false, 10));
 
    return OK;
 }

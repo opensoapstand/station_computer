@@ -21,6 +21,7 @@
 #include "paypage.h"
 #include "productpage_1.h"
 #include "idle.h"
+#include <curl/curl.h>
 
 // CTOR
 paySelect::paySelect(QWidget *parent) :
@@ -70,13 +71,14 @@ paySelect::paySelect(QWidget *parent) :
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void paySelect::setPage(productPage_1 *pageSelect, dispensePage* pageDispense, idle* pageIdle, payPage* pagePayment, help* pageHelp)
+void paySelect::setPage(productPage_1 *pageSelect, dispensePage* pageDispense,wifiErrorPage* pageWifiError,  idle* pageIdle, payPage* pagePayment, help* pageHelp)
 {
     this->firstProductPage = pageSelect;
     this->paymentPage = pagePayment;
     this->idlePage = pageIdle;
     this->dispensingPage = pageDispense;
     this->helpPage = pageHelp;
+    this->wifiError = pageWifiError;
 }
 
 // DTOR
@@ -118,8 +120,24 @@ void paySelect::on_payPage_Button_clicked()
 
     if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "qr" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "tap"){
         db.closeDB();
-        paymentPage->showFullScreen();
-        this->hide();
+        CURL *curl;
+        CURLcode res;
+        curl = curl_easy_init();
+        
+        curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine/get_machine_info/SS-DEV-001");
+        
+        res = curl_easy_perform(curl);
+        if(res!= CURLE_OK){
+            qDebug() << "Fail" << endl;
+            wifiError->showEvent(wifiErrorEvent);
+            wifiError->showFullScreen();
+            this->hide();
+        }
+        else{
+            paymentPage->showFullScreen();
+            this->hide();
+        }
+        
     } else if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "barcode" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "plu"){
         db.closeDB();
         dispensingPage->showEvent(dispenseEvent);

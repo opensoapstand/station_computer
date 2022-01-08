@@ -7,6 +7,7 @@ CONFIG += \
 
 FORMS += \
     dispensepage.ui \
+    wifiErrorPage.ui \
     idle.ui \
     paypage.ui \
     payselect.ui \
@@ -44,6 +45,7 @@ HEADERS += \
     dbmanager.h \
     maintenancePage.h \
     maintain_product.h \
+    wifiErrorPage.h \
     init.h \
     help.h
 
@@ -70,6 +72,7 @@ SOURCES += \
     drinkorder.cpp \
     dbmanager.cpp \
     maintenance.cpp \
+    wifiErrorPage.cpp \
     maintain_product.cpp \
     init.cpp \
     help.cpp \

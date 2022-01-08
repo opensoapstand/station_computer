@@ -23,6 +23,7 @@
 #include "payselect.h"
 #include "paypage.h"
 #include "dispensepage.h"
+#include "wifiErrorPage.h"
 #include "thankyoupage.h"
 #include <QApplication>
 #include "df_util.h"
@@ -52,6 +53,7 @@ int main(int argc, char *argv[])
     paySelect* paySelectPage = new paySelect();
     payPage* paymentPage = new payPage();
     dispensePage* dispensingPage = new dispensePage();
+    wifiErrorPage* wifiError = new wifiErrorPage();
     thankYouPage* lastPage = new thankYouPage();
     maintenancePage* maintenanceMode = new maintenancePage();
     maintain_product* maintainPage = new maintain_product();
@@ -82,7 +84,7 @@ int main(int argc, char *argv[])
     secondSelectPage->setPage(firstSelectPage, paySelectPage, idlePage, maintenanceMode);
     //secondSelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    paySelectPage->setPage(firstSelectPage, dispensingPage, idlePage, paymentPage, helpPage);
+    paySelectPage->setPage(firstSelectPage, dispensingPage,wifiError, idlePage, paymentPage, helpPage);
     //paySelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
     paymentPage->setPage(paySelectPage, dispensingPage, idlePage, helpPage);
@@ -93,6 +95,7 @@ int main(int argc, char *argv[])
 
     lastPage->setPage(dispensingPage, idlePage, paymentPage);
 //    lastPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
+    wifiError->setPage(paymentPage, lastPage, idlePage);
 
     //    payOptionToggle->setPage();
 

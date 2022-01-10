@@ -124,7 +124,7 @@ void paySelect::on_payPage_Button_clicked()
         CURLcode res;
         curl = curl_easy_init();
         
-        curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine/get_machine_info/SS-DEV-001");
+        curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/ping");
         
         res = curl_easy_perform(curl);
         if(res!= CURLE_OK){

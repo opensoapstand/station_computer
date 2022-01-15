@@ -98,6 +98,7 @@ public:
 
     QTimer *readTimer;
     char * curl_data;
+    char * curlOrderdata;
 
 private slots:
 
@@ -231,7 +232,10 @@ private:
 
     QString order_id;
     CURL *curl;
+    CURL *curl1;
+
     CURLcode res;
+    CURLcode res1;
 
     //size_t WriteCallback(char* contents, size_t size, size_t nmemb, void *userp);
     std::string readBuffer;
@@ -240,6 +244,7 @@ private:
     void curler();
     void generateQR();
     QByteArray curl_param_array;
+    QByteArray createOrderParamsArray;
 
 };
 

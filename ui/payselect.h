@@ -46,6 +46,7 @@ public:
     void showEvent(QShowEvent *event);
 
     void cancelTimers();
+    void updatePriceAfterPromo(double promoPercent);
 
 
 
@@ -56,6 +57,8 @@ private slots:
     // **** Navigation ****
     void on_previousPage_Button_clicked();
     void on_payPage_Button_clicked();
+    void on_applyPromo_Button_clicked();
+    void on_promoCodeInput_clicked();
 
 
     // Set Drink Order
@@ -63,12 +66,15 @@ private slots:
     void on_orderBig_Button_clicked();
     void on_mainPage_Button_clicked();
     void onSelectTimeoutTick();
+    void buttonWasClicked(int);
+
 
 private:
     bool stopSelectTimers();
     void selectOnTick();
     void mainPage();
 
+    std::string readBuffer;
     Ui::paySelect *ui;
     productPage_1* firstProductPage;
     payPage* paymentPage;

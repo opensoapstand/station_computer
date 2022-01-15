@@ -49,6 +49,7 @@ public:
 
     DfUiCommThread* dfComm;
 
+
     bool isEnough(int p);
     void MMSlot();
 

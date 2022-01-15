@@ -316,7 +316,7 @@ void payPage::showEvent(QShowEvent *event)
         ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
     }
 
-    ui->order_drink_amount->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize), 'f', 2));
+    ui->order_drink_amount->setText("$"+QString::number(idlePage->userDrinkOrder->getPrice()));
 
   //  ui->payment_pass_Button->setEnabled(false);
   //  ui->payment_cancel_Button->setEnabled(false);

@@ -44,6 +44,7 @@ idle::idle(QWidget *parent) :
     // IPC Networking
     dfUtility = new df_util();
     dfUtility->m_IsSendingFSM = false;
+
 }
 
 /*

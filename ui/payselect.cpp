@@ -17,11 +17,19 @@
 
 #include "payselect.h"
 #include "ui_payselect.h"
+#include <iostream>
+#include <string>
 
 #include "paypage.h"
 #include "productpage_1.h"
 #include "idle.h"
 #include <curl/curl.h>
+#include <json.hpp>
+
+
+using json = nlohmann::json;
+double promoPercent = 0.0;
+
 
 // CTOR
 paySelect::paySelect(QWidget *parent) :
@@ -57,13 +65,22 @@ paySelect::paySelect(QWidget *parent) :
     // TODO: ADD buttons to select size/price of drink
     ui->orderSmall_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->orderBig_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-
-    // TODO: Set up functions to manipulate DrinkOrder Object
+    ui->promoInputButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->promoCode->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->promoButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->discountLabel->setText("-$0.0");
+    promoPercent = 0.0;
+    ui->promoCode->clear();
+    ui->promoKeyboard->hide();
+    ui->promoInputButton->show();
 
 
     {
         selectIdleTimer = new QTimer(this);
         selectIdleTimer->setInterval(1000);
+        connect(ui->promoButton, SIGNAL(clicked()), this, SLOT(on_applyPromo_Button_clicked()));
+        connect(ui->promoInputButton, SIGNAL(clicked()), this, SLOT(on_promoCodeInput_clicked()));
+        connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(buttonWasClicked(int)));
         connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
     }
 }
@@ -79,6 +96,8 @@ void paySelect::setPage(productPage_1 *pageSelect, dispensePage* pageDispense,wi
     this->dispensingPage = pageDispense;
     this->helpPage = pageHelp;
     this->wifiError = pageWifiError;
+    ui->promoCode->clear();
+    usleep(100);
 }
 
 // DTOR
@@ -101,6 +120,8 @@ void paySelect::on_previousPage_Button_clicked()
     };
     selectIdleTimer->stop();
     firstProductPage->showFullScreen();
+    ui->promoInputButton->show();
+
 //    usleep(100);
     this->hide();
 
@@ -128,7 +149,6 @@ void paySelect::on_payPage_Button_clicked()
         
         res = curl_easy_perform(curl);
         if(res!= CURLE_OK){
-            qDebug() << "Fail" << endl;
             wifiError->showEvent(wifiErrorEvent);
             wifiError->showFullScreen();
             this->hide();
@@ -186,7 +206,7 @@ void paySelect::resizeEvent(QResizeEvent *event){
     }
 
     ui->priceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize), 'f', 2));
-    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize), 'f', 2));
+    ui->totalPriceLabel->setText("$"+QString::number(idlePage->userDrinkOrder->getPrice()));
     ui->price_sLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 's'), 'f', 2));
     ui->price_lLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 'l'), 'f', 2));
 
@@ -210,6 +230,8 @@ void paySelect::resizeEvent(QResizeEvent *event){
 
     ui->price_sLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
     ui->price_lLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+    ui->promoCode->clear();
+    promoPercent = 0.0;
 
 //    qDebug() << "Start paySelect Timers" << endl;
     selectIdleTimer->start(1000);
@@ -233,7 +255,8 @@ void paySelect::showEvent(QShowEvent *event){
         drinkSize = 'l';
     }
     ui->priceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize), 'f', 2));
-    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize), 'f', 2));
+    // ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize), 'f', 2));
+    ui->totalPriceLabel->setText("$"+QString::number(idlePage->userDrinkOrder->getPrice()));
     ui->price_sLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 's'), 'f', 2));
     ui->price_lLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 'l'), 'f', 2));
 
@@ -254,11 +277,12 @@ void paySelect::showEvent(QShowEvent *event){
     }else{
         ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
     }
-
     ui->price_sLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
     ui->price_lLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
     ui->volume_lLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
     ui->volume_sLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
+    ui->promoCode->clear();
+    promoPercent = 0.0;
 
     db.closeDB();
 }
@@ -319,6 +343,7 @@ void paySelect::on_orderSmall_Button_clicked()
         bitmap_location = ":/light/4_pay_select_page_s_1.png";
     }
 
+
     QPixmap background(bitmap_location);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
@@ -326,14 +351,17 @@ void paySelect::on_orderSmall_Button_clicked()
     this->setPalette(palette);
 
     idlePage->userDrinkOrder->setDrinkSize(SMALL_DRINK);
-    _selectIdleTimeoutSec = 40;
+    _selectIdleTimeoutSec = 140;
 
     char drinkSize = 's';
 
     DbManager db(DB_PATH);
-
+    
+    
     ui->priceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
-    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
+    // ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
+    updatePriceAfterPromo(promoPercent);
+
     ui->price_sLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
     ui->price_lLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
     ui->volume_sLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
@@ -371,7 +399,7 @@ void paySelect::on_orderBig_Button_clicked()
     this->setPalette(palette);
 
     idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
-    _selectIdleTimeoutSec = 40;
+    _selectIdleTimeoutSec = 140;
 
     DbManager db(DB_PATH);
 //    db.addPageClick("Large Drink Size Selected");
@@ -379,8 +407,8 @@ void paySelect::on_orderBig_Button_clicked()
     char drinkSize = 'l';
 
     ui->priceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
-    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
-
+    // ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
+    updatePriceAfterPromo(promoPercent);
     ui->price_sLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
     ui->price_lLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
     ui->volume_lLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
@@ -393,4 +421,124 @@ void paySelect::on_orderBig_Button_clicked()
     }
 
     db.closeDB();
+}
+
+size_t WriteCallback_coupon(char* contents, size_t size, size_t nmemb, void *userp){
+    ((std::string*)userp)->append((char*)contents, size * nmemb);
+    return size * nmemb;
+}
+
+void paySelect::on_promoCodeInput_clicked(){
+    QObject* button = QObject::sender();
+    ui->promoInputButton->hide();
+    ui->promoKeyboard->show();
+//    qDebug() << "btn clicked -> " << button->objectName();
+    // OPEN ON-SCREEN KEYBOARD FOR PASSWORD ENTRY
+
+    // idlePage>maintenance->promoKeyboard->show();
+    // ui->promoCode->setText("");
+}
+
+void paySelect::updatePriceAfterPromo(double discountPercent){
+    double discount;
+    QString old_price = (ui->priceLabel->text()).split("$")[1];
+    double price = old_price.toDouble();
+    discount = discountPercent * price /100;
+    price = (100-discountPercent) * price / 100;
+    ui->discountLabel->setText("-$"+QString::number(discount,  'f', 2));
+    idlePage->userDrinkOrder->setPrice(price);
+    ui->totalPriceLabel->setText("$"+QString::number(price, 'f', 2));
+
+}
+
+void paySelect::on_applyPromo_Button_clicked()
+{
+
+    QString promocode = ui->promoCode->text();
+    CURL *curl;
+    CURLcode res;
+    long http_code = 0;
+    readBuffer.clear();
+    curl = curl_easy_init();
+        
+    curl_easy_setopt(curl, CURLOPT_URL, ("https://soapstandportal.com/api/coupon/find/"+promocode).toUtf8().constData());
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback_coupon);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+    res = curl_easy_perform(curl);
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+    if(res!=CURLE_OK){
+    ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;border-color:red;");
+        qDebug()<< "Invalid Coupon" << endl;
+    }
+    else {
+        int new_percent;
+        
+        if(http_code==200){
+            json j_complete = json::parse(readBuffer);
+            new_percent = j_complete["discount_amount"];
+            updatePriceAfterPromo(new_percent);
+            promoPercent = new_percent;
+        }
+        else{
+            qDebug()<< "Invalid Coupon" << endl;
+            // ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;border-color:red;");
+
+        }
+
+    }
+}
+
+
+
+void paySelect::buttonWasClicked(int buttonID){
+
+    QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
+    //qDebug() << buttonpressed->text();
+    QString buttonText = buttonpressed->text();
+
+    if(buttonText=="Cancel"){
+        ui->promoKeyboard->hide();
+        ui->promoCode->setText("");
+    }
+    else if(buttonText=="CAPS"){
+        foreach (QAbstractButton *button, ui->buttonGroup->buttons()) {
+            if (button->text()=="Space" || button->text()=="Done" || button->text()=="Cancel" || button->text()=="Clear" || button->text()=="Backspace"){
+                //qDebug() << "doing nothing";
+            }else{
+                button->setText(button->text().toLower());
+            }
+        }
+    }
+    else if(buttonText=="caps"){
+        foreach (QAbstractButton *button, ui->buttonGroup->buttons()) {
+            if (button->text()=="Space" || button->text()=="Done" || button->text()=="Cancel" || button->text()=="Clear" || button->text()=="Backspace"){
+                //doing nothing
+            }else{
+                button->setText(button->text().toUpper());
+            }
+        }
+    }
+    else if(buttonText=="<-"){
+        ui->promoCode->backspace();
+    }
+    else if(buttonText=="Clear"){
+        ui->promoCode->setText("");
+    }
+    else if(buttonText=="Done"){
+//        qDebug() << "Password: " << password;
+        // ATTEMPT nmcli connection
+
+
+        ui->promoKeyboard->hide();
+
+    }
+    else if(buttonText=="Space"){
+        ui->promoCode->setText(ui->promoCode->text()+" ");
+    }
+    else if(buttonText=="&&"){
+        ui->promoCode->setText(ui->promoCode->text()+"&");
+    }
+    else{
+        ui->promoCode->setText(ui->promoCode->text() + buttonText);
+    }
 }

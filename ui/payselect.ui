@@ -71,8 +71,8 @@ line-height: 29px;</string>
   <widget class="QLabel" name="priceLabel">
    <property name="geometry">
     <rect>
-     <x>820</x>
-     <y>1336</y>
+     <x>810</x>
+     <y>1340</y>
      <width>111</width>
      <height>29</height>
     </rect>
@@ -266,6 +266,9 @@ text-align: center;</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="promoCode">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>180</x>
@@ -303,19 +306,20 @@ text-align: center;</string>
     </size>
    </property>
    <property name="styleSheet">
-    <string notr="true">
-
-</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>
    </property>
   </widget>
   <widget class="QWidget" name="promoKeyboard" native="true">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>690</y>
+     <x>100</x>
+     <y>1340</y>
      <width>971</width>
      <height>351</height>
     </rect>
@@ -1427,9 +1431,9 @@ color: #58595B;</string>
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>1340</y>
-     <width>451</width>
-     <height>17</height>
+     <y>1336</y>
+     <width>561</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -1454,6 +1458,9 @@ color: #58595B;
    </property>
   </widget>
   <widget class="QLabel" name="discountLabel">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>820</x>
@@ -1493,10 +1500,10 @@ color: #58595B;</string>
   <zorder>volume_lLabel</zorder>
   <zorder>orderSmall_Button</zorder>
   <zorder>orderBig_Button</zorder>
-  <zorder>promoKeyboard</zorder>
   <zorder>discountPriceLabel</zorder>
   <zorder>productLabel</zorder>
   <zorder>discountLabel</zorder>
+  <zorder>promoKeyboard</zorder>
  </widget>
  <resources/>
  <connections/>

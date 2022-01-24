@@ -74,6 +74,13 @@ paySelect::paySelect(QWidget *parent) :
     ui->promoKeyboard->hide();
     ui->promoInputButton->show();
 
+    /*Stations without coupon code */
+    ui->promoCode->hide();
+    ui->promoKeyboard->hide();
+    ui->promoInputButton->hide();
+    ui->discountLabel->hide();
+    ui->promoButton->hide();
+    ui->discountPriceLabel->hide();
 
     {
         selectIdleTimer = new QTimer(this);
@@ -97,6 +104,16 @@ void paySelect::setPage(productPage_1 *pageSelect, dispensePage* pageDispense,wi
     this->helpPage = pageHelp;
     this->wifiError = pageWifiError;
     ui->promoCode->clear();
+    ui->discountLabel->setText("-$0.0");
+    /*
+    Stations without Promo Code
+    */
+    ui->promoCode->hide();
+    ui->promoKeyboard->hide();
+    ui->promoInputButton->hide();
+    ui->discountLabel->hide();
+    ui->promoButton->hide();
+    ui->discountPriceLabel->hide();
     usleep(100);
 }
 
@@ -120,9 +137,16 @@ void paySelect::on_previousPage_Button_clicked()
     };
     selectIdleTimer->stop();
     firstProductPage->showFullScreen();
+    ui->discountLabel->setText("-$0.0");
     ui->promoInputButton->show();
+    ui->promoCode->hide();
+    ui->promoKeyboard->hide();
+    ui->promoInputButton->hide();
+    ui->discountLabel->hide();
+    ui->promoButton->hide();
+    ui->discountPriceLabel->hide();
 
-//    usleep(100);
+    usleep(100);
     this->hide();
 
 }
@@ -209,7 +233,7 @@ void paySelect::resizeEvent(QResizeEvent *event){
     ui->totalPriceLabel->setText("$"+QString::number(idlePage->userDrinkOrder->getPrice()));
     ui->price_sLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 's'), 'f', 2));
     ui->price_lLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 'l'), 'f', 2));
-
+    ui->discountLabel->setText("-$0.0");
     if (db.getProductVolume(checkOption, 's') < 1000){
         ui->volume_sLabel->setText(QString::number(db.getProductVolume(checkOption, 's')) + " " + db.getUnits(checkOption));
     }else{
@@ -235,7 +259,7 @@ void paySelect::resizeEvent(QResizeEvent *event){
 
 //    qDebug() << "Start paySelect Timers" << endl;
     selectIdleTimer->start(1000);
-    _selectIdleTimeoutSec = 40;
+    _selectIdleTimeoutSec = 400;
 
     db.closeDB();
 }
@@ -430,13 +454,9 @@ size_t WriteCallback_coupon(char* contents, size_t size, size_t nmemb, void *use
 
 void paySelect::on_promoCodeInput_clicked(){
     QObject* button = QObject::sender();
-    ui->promoInputButton->hide();
+    ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
+    // ui->promoInputButton->hide();
     ui->promoKeyboard->show();
-//    qDebug() << "btn clicked -> " << button->objectName();
-    // OPEN ON-SCREEN KEYBOARD FOR PASSWORD ENTRY
-
-    // idlePage>maintenance->promoKeyboard->show();
-    // ui->promoCode->setText("");
 }
 
 void paySelect::updatePriceAfterPromo(double discountPercent){
@@ -467,7 +487,7 @@ void paySelect::on_applyPromo_Button_clicked()
     res = curl_easy_perform(curl);
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
     if(res!=CURLE_OK){
-    ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;border-color:red;");
+    ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #f44336;border-color:#f44336;");
         qDebug()<< "Invalid Coupon" << endl;
     }
     else {
@@ -481,7 +501,7 @@ void paySelect::on_applyPromo_Button_clicked()
         }
         else{
             qDebug()<< "Invalid Coupon" << endl;
-            // ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;border-color:red;");
+            ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #f44336;border-color:#f44336;");
 
         }
 

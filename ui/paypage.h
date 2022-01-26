@@ -98,6 +98,7 @@ public:
 
     QTimer *readTimer;
     char * curl_data;
+    char * curl_data1;
     char * curlOrderdata;
 
 private slots:
@@ -231,6 +232,7 @@ private:
     void paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg);
 
     QString order_id;
+    QString orderId;
     CURL *curl;
     CURL *curl1;
 
@@ -243,7 +245,9 @@ private:
 
     void curler();
     void generateQR();
+    void createOrder();
     QByteArray curl_param_array;
+    QByteArray curl_param_array1;
     QByteArray createOrderParamsArray;
 
 };

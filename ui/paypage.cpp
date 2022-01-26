@@ -347,6 +347,48 @@ void payPage::showEvent(QShowEvent *event)
 
 }
 
+void payPage::createOrder(){
+    DbManager db(DB_PATH);
+
+    int checkOption = idlePage->userDrinkOrder->getOption();
+    char drinkSize;
+    if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
+        drinkSize = 's';
+    }
+    if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK){
+        drinkSize = 'l';
+    }
+    QString MachineSerialNumber = db.getMachineID();
+    QString productId = db.getProductID(checkOption);
+    QString contents = db.getProductName(checkOption);
+    QString price = QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2);
+    orderId = QUuid::createUuid().QUuid::toString();
+    orderId = orderId.remove("{");
+    orderId = orderId.remove("}");
+    QString curl_param1 = "orderId="+orderId +"&size=" + drinkSize+ "&MachineSerialNumber="+MachineSerialNumber + "&contents="+ contents + "&price="+price + "&productId=" + productId;
+    curl_param_array1 = curl_param1.toLocal8Bit();
+    curl_data1= curl_param_array1.data();
+    curl1 = curl_easy_init();
+    if (!curl1){
+//        qDebug() << "cURL failed to init" << endl;
+    }else{
+//        qDebug() << "cURL init success" << endl;
+        curl_easy_setopt(curl1, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/createOrderInDbTest");
+        curl_easy_setopt(curl1, CURLOPT_POSTFIELDS, curl_param_array1.data());
+        curl_easy_setopt(curl1, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl1, CURLOPT_WRITEDATA, &readBuffer);
+//        qDebug() << "Curl Setup done" << endl;
+
+        res1 = curl_easy_perform(curl1);
+
+    _paymentTimeoutSec=444;
+    _qrTimeOutSec=5;
+    qrTimer->start(1000);
+
+    db.closeDB();
+    }
+}
+
 void payPage::generateQR(){
     DbManager db(DB_PATH);
 
@@ -358,21 +400,21 @@ void payPage::generateQR(){
     if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK){
         drinkSize = 'l';
     }
-
+    createOrder();
     QPixmap map(360,360);
     map.fill(QColor("black"));
     QPainter painter(&map);
 //    ui->qrCode->setPixmap(map);
 
     //QString qrdata_amount = QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2);
-    QString machine_id = db.getMachineID();
-    QString product_id = db.getProductID(checkOption);
-    order_id = QUuid::createUuid().QUuid::toString();
-    order_id = order_id.remove("{");
-    order_id = order_id.remove("}");
+    // QString machine_id = db.getMachineID();
+    // QString product_id = db.getProductID(checkOption);
+    // order_id = QUuid::createUuid().QUuid::toString();
+    // order_id = order_id.remove("{");
+    // order_id = order_id.remove("}");
     //qDebug() << "ORDER ID: " << order_id << endl;
-    QString qrdata = "https://soapstandportal.com/payment?mid="+machine_id+"&pid="+product_id+"&size="+drinkSize+"&oid="+order_id;
-//    QString qrdata = "https://soapstandportal.com/payment?oid="+order_id;
+    // QString qrdata = "https://soapstandportal.com/payment?mid="+machine_id+"&pid="+product_id+"&size="+drinkSize+"&oid="+order_id;
+   QString qrdata = "https://soapstandportal.com/paymentTest?oid="+orderId;
 
     paintQR(painter, QSize(360,360), qrdata, QColor("white"));
     ui->qrCode->setPixmap(map);
@@ -380,7 +422,7 @@ void payPage::generateQR(){
     QString curl_param = "oid="+order_id;
     curl_param_array = curl_param.toLocal8Bit();
     curl_data = curl_param_array.data();
-
+    
     _paymentTimeoutSec=444;
     _qrTimeOutSec=5;
     qrTimer->start(1000);
@@ -426,7 +468,7 @@ void payPage::qrTimeout(){
 //        qDebug() << "PayPaeg: QR Timer Tick" << _qrTimeOutSec << endl;
     }else{
 //        qDebug() << "QR Timer Done!" << endl << "Checking API endpoint now..." << endl;
-        curler();
+        // curler();
         _qrTimeOutSec=5;
     }
 }

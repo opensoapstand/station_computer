@@ -75,12 +75,12 @@ paySelect::paySelect(QWidget *parent) :
     ui->promoInputButton->show();
 
     /*Stations without coupon code */
-    ui->promoCode->hide();
-    ui->promoKeyboard->hide();
-    ui->promoInputButton->hide();
-    ui->discountLabel->hide();
-    ui->promoButton->hide();
-    ui->discountPriceLabel->hide();
+    // ui->promoCode->hide();
+    // ui->promoKeyboard->hide();
+    // ui->promoInputButton->hide();
+    // ui->discountLabel->hide();
+    // ui->promoButton->hide();
+    // ui->discountPriceLabel->hide();
 
     {
         selectIdleTimer = new QTimer(this);
@@ -108,13 +108,12 @@ void paySelect::setPage(productPage_1 *pageSelect, dispensePage* pageDispense,wi
     /*
     Stations without Promo Code
     */
-    ui->promoCode->hide();
-    ui->promoKeyboard->hide();
-    ui->promoInputButton->hide();
-    ui->discountLabel->hide();
-    ui->promoButton->hide();
-    ui->discountPriceLabel->hide();
-    usleep(100);
+    // ui->promoCode->hide();
+    // ui->promoKeyboard->hide();
+    // ui->promoInputButton->hide();
+    // ui->discountLabel->hide();
+    // ui->promoButton->hide();
+    // ui->discountPriceLabel->hide();
 }
 
 // DTOR
@@ -139,12 +138,12 @@ void paySelect::on_previousPage_Button_clicked()
     firstProductPage->showFullScreen();
     ui->discountLabel->setText("-$0.0");
     ui->promoInputButton->show();
-    ui->promoCode->hide();
-    ui->promoKeyboard->hide();
-    ui->promoInputButton->hide();
-    ui->discountLabel->hide();
-    ui->promoButton->hide();
-    ui->discountPriceLabel->hide();
+    // ui->promoCode->hide();
+    // ui->promoKeyboard->hide();
+    // ui->promoInputButton->hide();
+    // ui->discountLabel->hide();
+    // ui->promoButton->hide();
+    // ui->discountPriceLabel->hide();
 
     usleep(100);
     this->hide();
@@ -178,6 +177,8 @@ void paySelect::on_payPage_Button_clicked()
             this->hide();
         }
         else{
+            db.closeDB();
+            ui->totalPriceLabel->getText();
             paymentPage->showFullScreen();
             this->hide();
         }

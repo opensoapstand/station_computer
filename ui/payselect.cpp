@@ -459,7 +459,7 @@ size_t WriteCallback_coupon(char* contents, size_t size, size_t nmemb, void *use
 
 void paySelect::on_promoCodeInput_clicked(){
     QObject* button = QObject::sender();
-    ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
+    ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
     // ui->promoInputButton->hide();
     ui->promoKeyboard->show();
     ui->promoCode->show();
@@ -493,7 +493,7 @@ void paySelect::on_applyPromo_Button_clicked()
     res = curl_easy_perform(curl);
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
     if(res!=CURLE_OK){
-    ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #f44336;border-color:#f44336;");
+    ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
         qDebug()<< "Invalid Coupon" << endl;
     }
     else {
@@ -507,7 +507,7 @@ void paySelect::on_applyPromo_Button_clicked()
         }
         else{
             qDebug()<< "Invalid Coupon" << endl;
-            ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #f44336;border-color:#f44336;");
+            ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
 
         }
 
@@ -553,6 +553,9 @@ void paySelect::buttonWasClicked(int buttonID){
     else if(buttonText=="Done"){
 //        qDebug() << "Password: " << password;
         // ATTEMPT nmcli connection
+        if(ui->promoCode->text() == ""){
+            ui->promoCode->hide();
+        }
 
 
         ui->promoKeyboard->hide();

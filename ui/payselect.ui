@@ -253,9 +253,9 @@ text-align: center;</string>
    <property name="geometry">
     <rect>
      <x>760</x>
-     <y>1260</y>
+     <y>1270</y>
      <width>171</width>
-     <height>41</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -272,9 +272,9 @@ text-align: center;</string>
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>1260</y>
-     <width>541</width>
-     <height>51</height>
+     <y>1266</y>
+     <width>531</width>
+     <height>35</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -283,11 +283,17 @@ text-align: center;</string>
      <height>35</height>
     </size>
    </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
    <property name="styleSheet">
     <string notr="true"/>
    </property>
    <property name="text">
     <string/>
+   </property>
+   <property name="frame">
+    <bool>false</bool>
    </property>
   </widget>
   <widget class="QPushButton" name="promoInputButton">
@@ -295,8 +301,8 @@ text-align: center;</string>
     <rect>
      <x>190</x>
      <y>1260</y>
-     <width>541</width>
-     <height>51</height>
+     <width>531</width>
+     <height>37</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -305,11 +311,17 @@ text-align: center;</string>
      <height>37</height>
     </size>
    </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
    <property name="styleSheet">
     <string notr="true"/>
    </property>
    <property name="text">
     <string/>
+   </property>
+   <property name="flat">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QWidget" name="promoKeyboard" native="true">
@@ -319,7 +331,7 @@ text-align: center;</string>
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>1340</y>
+     <y>1320</y>
      <width>971</width>
      <height>351</height>
     </rect>

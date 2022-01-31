@@ -102,7 +102,6 @@
         <file>ui_productpage_2.h</file>
         <file>ui_thankyoupage.h</file>
         <file>light/drink_fill_2.png</file>
-        <file>../../Downloads/oops.png</file>
         <file>light/oops.png</file>
     </qresource>
 </RCC>

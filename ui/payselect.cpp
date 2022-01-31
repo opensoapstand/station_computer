@@ -71,6 +71,7 @@ paySelect::paySelect(QWidget *parent) :
     ui->discountLabel->setText("-$0.0");
     promoPercent = 0.0;
     ui->promoCode->clear();
+    ui->promoCode->hide();
     ui->promoKeyboard->hide();
     ui->promoInputButton->show();
 
@@ -104,6 +105,7 @@ void paySelect::setPage(productPage_1 *pageSelect, dispensePage* pageDispense,wi
     this->helpPage = pageHelp;
     this->wifiError = pageWifiError;
     ui->promoCode->clear();
+    ui->promoCode->hide();
     ui->discountLabel->setText("-$0.0");
     /*
     Stations without Promo Code
@@ -178,7 +180,7 @@ void paySelect::on_payPage_Button_clicked()
         }
         else{
             db.closeDB();
-            ui->totalPriceLabel->getText();
+            ui->totalPriceLabel->text();
             paymentPage->showFullScreen();
             this->hide();
         }
@@ -256,6 +258,7 @@ void paySelect::resizeEvent(QResizeEvent *event){
     ui->price_sLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
     ui->price_lLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
     ui->promoCode->clear();
+    ui->promoCode->hide();
     promoPercent = 0.0;
 
 //    qDebug() << "Start paySelect Timers" << endl;
@@ -307,6 +310,7 @@ void paySelect::showEvent(QShowEvent *event){
     ui->volume_lLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
     ui->volume_sLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
     ui->promoCode->clear();
+    ui->promoCode->hide();
     promoPercent = 0.0;
 
     db.closeDB();
@@ -458,6 +462,7 @@ void paySelect::on_promoCodeInput_clicked(){
     ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
     // ui->promoInputButton->hide();
     ui->promoKeyboard->show();
+    ui->promoCode->show();
 }
 
 void paySelect::updatePriceAfterPromo(double discountPercent){

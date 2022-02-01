@@ -481,37 +481,49 @@ void paySelect::on_applyPromo_Button_clicked()
 {
 
     QString promocode = ui->promoCode->text();
+    ui->promoKeyboard->hide();
     CURL *curl;
     CURLcode res;
     long http_code = 0;
-    readBuffer.clear();
-    curl = curl_easy_init();
-        
-    curl_easy_setopt(curl, CURLOPT_URL, ("https://soapstandportal.com/api/coupon/find/"+promocode).toUtf8().constData());
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback_coupon);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-    res = curl_easy_perform(curl);
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-    if(res!=CURLE_OK){
-    ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
-        qDebug()<< "Invalid Coupon" << endl;
-    }
-    else {
-        int new_percent;
-        
-        if(http_code==200){
-            json j_complete = json::parse(readBuffer);
-            new_percent = j_complete["discount_amount"];
-            updatePriceAfterPromo(new_percent);
-            promoPercent = new_percent;
-        }
-        else{
+    if(promocode != ""){
+        readBuffer.clear();
+        curl = curl_easy_init();
+            
+        curl_easy_setopt(curl, CURLOPT_URL, ("https://soapstandportal.com/api/coupon/find/"+promocode).toUtf8().constData());
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback_coupon);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+        res = curl_easy_perform(curl);
+        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+        if(res!=CURLE_OK){
+        ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
             qDebug()<< "Invalid Coupon" << endl;
-            ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
+        }
+        else {
+            int new_percent;
+            
+            if(http_code==200){
+                json coupon_obj = json::parse(readBuffer);
+                if(coupon_obj["active"]){
+                    new_percent = coupon_obj["discount_amount"];
+                    updatePriceAfterPromo(new_percent);
+                    promoPercent = new_percent;
+                }
+                else{
+                    qDebug()<< "Invalid Coupon" << endl;
+                    ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #75756f;border-color:#f44336;");
+
+                }
+              
+            }
+            else{
+                qDebug()<< "Invalid Coupon" << endl;
+                ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
+
+            }
 
         }
-
     }
+    
 }
 
 

@@ -36,7 +36,7 @@ dbggpio::~dbggpio()
 DF_ERROR dbggpio::setDirection(bool input)
 {
 	debugOutput debugInfo;
-	debugInfo.sendMessage("setDirection", INFO);
+	debugInfo.sendMessage("dbggpio::setDirection=-=-=-=", INFO);
 	
 	DF_ERROR df_ret = OK;
 

@@ -15,11 +15,13 @@
 #include "debugOutput.h"
 #include <iostream>
 #include <fstream>
+#include <stdio.h>
+#include <string.h>
 
 using namespace std;
 
 // FIXME: Can be moved to dftypes?
-const string m_lvlArray[] = { "INFO", "WARNING", "ERROR" };
+const string m_lvlArray[] = { "INFO", "WARNING", "ERROR", "STATE_CHANGE", "PIN_CHANGE", "MESSAGE_MAX"};
 MESSAGE_LEVEL debugOutput::m_dbgLvl = INFO;
 
 // Default CTOR
@@ -54,6 +56,29 @@ void debugOutput::sendMessage(std::string msg, MESSAGE_LEVEL lvl)
 {
 	if (lvl >= debugOutput::m_dbgLvl)
 	{
-//                cerr << m_lvlArray[lvl] + ": " + msg << endl;
+		// outputting this might lead to segmentation errors 
+		cerr << m_lvlArray[lvl] + ": " + msg << endl; 
+		//cout << m_lvlArray[lvl] + ": " + msg << endl; 
+		
+
+	// 	//https://stackoverflow.com/questions/9469790/execution-of-printf-and-segmentation-fault
+  	// 	// debugOutput::sendMessage("oddyseyx86GPIO::setDirection ", INFO);
+    //     std::string msg = m_lvlArray[lvl] + ":" + msg;
+
+
+	// 	//https://stackoverflow.com/questions/7352099/stdstring-to-char/7352131
+	// 	//std::string str = "string";
+	// 	char *cstr = new char[msg.length() + 1];
+	// 	strcpy(cstr, msg.c_str());
+
+	// 	printf("%s",cstr);
+	// 	// do stuff
+	// 	delete [] cstr;
+
+
+    //     // printf("%s",name);
+    //    //printf("%s",msg);
+	// 	fflush(stdout);  
+
 	}
 }

@@ -55,7 +55,10 @@ oddyseyx86GPIO::oddyseyx86GPIO()
  */
 oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
 {
-	debugOutput::sendMessage("------oddyseyx86GPIO------", INFO);
+        std::string msg = "------oddyseyx86GPIO------ pin:" + std::to_string(pinNumber);
+        debugOutput::sendMessage(msg, INFO);
+
+	// debugOutput::sendMessage("------oddyseyx86GPIO------", INFO);
 	int fd, len;
         char buf[MAX_BUF];
 
@@ -128,7 +131,11 @@ DF_ERROR oddyseyx86GPIO::setFlowPin(int pinNumber)
 // reading input and "out" otherwise.
 DF_ERROR oddyseyx86GPIO::setDirection(bool input)
 {
-        debugOutput::sendMessage("setDirection", INFO);
+        // debugOutput::sendMessage("oddyseyx86GPIO::setDirection ", INFO);
+        std::string msg = "oddyseyx86GPIO::setDirection " + std::to_string(m_nPin);
+        debugOutput::sendMessage(msg, INFO);
+
+        //debugOutput::sendMessage("oddyseyx86GPIO::setDirection ", INFO);
 	DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
         int fd, len;
         char syscode;

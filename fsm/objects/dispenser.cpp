@@ -111,8 +111,9 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
     // *m_pIsDispensing = false;
-
-    debugOutput::sendMessage("-----dispenser::setFlowsensor-----", INFO);
+    std::string msg = "-----dispenser::setFlowsensor-----Position: " + std::to_string(pos) + " (pin: " + std::to_string(pin) + ")";
+    // debugOutput::sendMessage("-----dispenser::setFlowsensor-----", INFO);
+    debugOutput::sendMessage(msg, INFO);
 
     if((pos >= 0) && (pos < 4))
     {

@@ -65,12 +65,15 @@ DF_ERROR stateLoop()
 
     while (OK == dfRet) //while no error has occurred
     {
-        if (fsmState != fsmNewState) //state change
+
+        // state change, deal with new state
+        if (fsmState != fsmNewState)
         {
-            debugOutput::sendMessage("onEntry()  [" + g_stateArray[fsmNewState]->toString() + "]", STATE_CHANGE);
+           // debugOutput::sendMessage( "coming from:" + g_stateArray[fsmState]->toString() + "onEntry() new state:  [" + g_stateArray[fsmNewState]->toString() + "]", STATE_CHANGE);
             fsmState = fsmNewState;
             dfRet = g_stateArray[fsmState]->onEntry();
         }
+
 
         // Should Poll for Idle state change.  This triggers FSM to go forward.
         if (OK == dfRet)
@@ -81,10 +84,10 @@ DF_ERROR stateLoop()
             
             fsmNewState = g_stateArray[fsmState]->getNextState();
 
-            
+            // deal with end of state if state changed
             if ((OK == dfRet) && (fsmNewState != fsmState))
             {
-                debugOutput::sendMessage("onExit() going to [" + g_stateArray[fsmNewState]->toString() + "]", STATE_CHANGE);
+                // debugOutput::sendMessage("coming from:" + g_stateArray[fsmState]->toString() + "onExit() going to [" + g_stateArray[fsmNewState]->toString() + "]", STATE_CHANGE);
                 dfRet = g_stateArray[fsmState]->onExit();
                 //TODO if this isn't ok deal with bad things
             }

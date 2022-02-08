@@ -51,8 +51,8 @@ paySelect::paySelect(QWidget *parent) :
         }
 
     QPixmap background(bitmap_location);
-    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
 
+    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
@@ -61,11 +61,13 @@ paySelect::paySelect(QWidget *parent) :
     ui->previousPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->payPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->promoKeyboard->setStyleSheet(" background-image: url(:/light/soapstand-keyboard.png); }");
 
     // TODO: ADD buttons to select size/price of drink
     ui->orderSmall_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->orderBig_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->promoInputButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+
     ui->promoCode->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->promoButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->discountLabel->setText("-$0.0");
@@ -81,7 +83,6 @@ paySelect::paySelect(QWidget *parent) :
     // ui->promoInputButton->hide();
     // ui->discountLabel->hide();
     // ui->promoButton->hide();
-    // ui->discountPriceLabel->hide();
 
     {
         selectIdleTimer = new QTimer(this);
@@ -115,7 +116,6 @@ void paySelect::setPage(productPage_1 *pageSelect, dispensePage* pageDispense,wi
     // ui->promoInputButton->hide();
     // ui->discountLabel->hide();
     // ui->promoButton->hide();
-    // ui->discountPriceLabel->hide();
 }
 
 // DTOR
@@ -145,7 +145,6 @@ void paySelect::on_previousPage_Button_clicked()
     // ui->promoInputButton->hide();
     // ui->discountLabel->hide();
     // ui->promoButton->hide();
-    // ui->discountPriceLabel->hide();
 
     usleep(100);
     this->hide();
@@ -390,7 +389,6 @@ void paySelect::on_orderSmall_Button_clicked()
     ui->priceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
     // ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
     updatePriceAfterPromo(promoPercent);
-
     ui->price_sLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
     ui->price_lLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
     ui->volume_sLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
@@ -532,52 +530,21 @@ void paySelect::buttonWasClicked(int buttonID){
 
     QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
     //qDebug() << buttonpressed->text();
-    QString buttonText = buttonpressed->text();
+    QString buttonText = buttonpressed->objectName();
 
-    if(buttonText=="Cancel"){
-        ui->promoKeyboard->hide();
-        ui->promoCode->setText("");
-    }
-    else if(buttonText=="CAPS"){
-        foreach (QAbstractButton *button, ui->buttonGroup->buttons()) {
-            if (button->text()=="Space" || button->text()=="Done" || button->text()=="Cancel" || button->text()=="Clear" || button->text()=="Backspace"){
-                //qDebug() << "doing nothing";
-            }else{
-                button->setText(button->text().toLower());
-            }
-        }
-    }
-    else if(buttonText=="caps"){
-        foreach (QAbstractButton *button, ui->buttonGroup->buttons()) {
-            if (button->text()=="Space" || button->text()=="Done" || button->text()=="Cancel" || button->text()=="Clear" || button->text()=="Backspace"){
-                //doing nothing
-            }else{
-                button->setText(button->text().toUpper());
-            }
-        }
-    }
-    else if(buttonText=="<-"){
+  if(buttonText=="backspace"){
         ui->promoCode->backspace();
     }
-    else if(buttonText=="Clear"){
-        ui->promoCode->setText("");
-    }
-    else if(buttonText=="Done"){
-//        qDebug() << "Password: " << password;
-        // ATTEMPT nmcli connection
+    else if(buttonText=="done"){
         if(ui->promoCode->text() == ""){
             ui->promoCode->hide();
         }
-
-
         ui->promoKeyboard->hide();
 
     }
-    else if(buttonText=="Space"){
-        ui->promoCode->setText(ui->promoCode->text()+" ");
-    }
-    else if(buttonText=="&&"){
-        ui->promoCode->setText(ui->promoCode->text()+"&");
+    else if(buttonText.mid(0,3)=="num"){
+        ui->promoCode->setText(ui->promoCode->text() + buttonText.mid(3,1));
+
     }
     else{
         ui->promoCode->setText(ui->promoCode->text() + buttonText);

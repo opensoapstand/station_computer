@@ -93,7 +93,7 @@ public:
     }
 
     QString getOID(){
-        return order_id;
+        return orderId;
     }
 
     QTimer *readTimer;

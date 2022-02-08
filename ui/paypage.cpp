@@ -316,7 +316,7 @@ void payPage::showEvent(QShowEvent *event)
         ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
     }
 
-    ui->order_drink_amount->setText("$"+QString::number(idlePage->userDrinkOrder->getPrice()));
+    ui->order_drink_amount->setText("$"+QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
 
   //  ui->payment_pass_Button->setEnabled(false);
   //  ui->payment_cancel_Button->setEnabled(false);
@@ -361,11 +361,12 @@ void payPage::createOrder(){
     QString MachineSerialNumber = db.getMachineID();
     QString productId = db.getProductID(checkOption);
     QString contents = db.getProductName(checkOption);
+    QString quantity_requested = QString::number(db.getProductVolume(checkOption, drinkSize));
     QString price = QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2);
     orderId = QUuid::createUuid().QUuid::toString();
     orderId = orderId.remove("{");
     orderId = orderId.remove("}");
-    QString curl_param1 = "orderId="+orderId +"&size=" + drinkSize+ "&MachineSerialNumber="+MachineSerialNumber + "&contents="+ contents + "&price="+price + "&productId=" + productId;
+    QString curl_param1 = "orderId="+orderId +"&size=" + drinkSize+ "&MachineSerialNumber="+MachineSerialNumber + "&contents="+ contents + "&price="+price + "&productId=" + productId + "&quantity_requested="+quantity_requested;
     curl_param_array1 = curl_param1.toLocal8Bit();
     curl_data1= curl_param_array1.data();
     curl1 = curl_easy_init();
@@ -419,7 +420,7 @@ void payPage::generateQR(){
     paintQR(painter, QSize(360,360), qrdata, QColor("white"));
     ui->qrCode->setPixmap(map);
 
-    QString curl_param = "oid="+order_id;
+    QString curl_param = "oid="+orderId;
     curl_param_array = curl_param.toLocal8Bit();
     curl_data = curl_param_array.data();
     
@@ -468,7 +469,7 @@ void payPage::qrTimeout(){
 //        qDebug() << "PayPaeg: QR Timer Tick" << _qrTimeOutSec << endl;
     }else{
 //        qDebug() << "QR Timer Done!" << endl << "Checking API endpoint now..." << endl;
-        // curler();
+        curler();
         _qrTimeOutSec=5;
     }
 }

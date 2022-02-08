@@ -103,5 +103,6 @@
         <file>ui_thankyoupage.h</file>
         <file>light/drink_fill_2.png</file>
         <file>light/oops.png</file>
+        <file>light/soapstand-keyboard.png</file>
     </qresource>
 </RCC>

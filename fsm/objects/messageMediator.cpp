@@ -35,10 +35,10 @@ bool messageMediator::m_fExitThreads = false;
 bool messageMediator::m_bCommandReady = false;
 string messageMediator::m_processString;
 string messageMediator::m_processCommand;
-int messageMediator::m_nOption;
+int messageMediator::m_RequestedProductIndexInt;
 int messageMediator::m_nSolenoid;
-char messageMediator::m_cCommand;
-char messageMediator::m_nSize;
+char messageMediator::m_requestedAction;
+char messageMediator::m_requestedVolume;
 double messageMediator::m_nVolumeTarget;
 
 // CTOR
@@ -154,7 +154,7 @@ DF_ERROR messageMediator::createThreads(pthread_t &kbThread, pthread_t &ipThread
 
    if (rc)
    {
-      debugOutput::sendMessage("failed to create KB Thread", INFO);
+      debugOutput::sendMessage("failed to create IP Thread", INFO);
       df_ret = ERROR_PTHREADS_IPTHREAD;
    }
 
@@ -169,25 +169,30 @@ DF_ERROR messageMediator::updateCmdString(char key)
    string incommingCharMsg = "Incomming CHAR: ";
    incommingCharMsg += key;
    debugOutput::sendMessage(incommingCharMsg, INFO);
-   incommingCharMsg.clear();
+    incommingCharMsg.clear();
 
    if (';' != key)
    {
+      // build up command as long as no ;
       m_processCommand.push_back(key);
    }
    else if (';' == key)
    {
+      // command creation finished, execute command
       debugOutput::sendMessage("Flushing processing string: " + m_processString, INFO);
       m_processString.clear();
       m_bCommandReady = true;
 
       debugOutput::sendMessage("Command String Ready: " + m_processCommand, INFO);
+      debugOutput::sendMessage("Leftover process string: " + m_processString, INFO);
    }
-   else
-   {
-      debugOutput::sendMessage("Command String Status: " + m_processCommand, INFO);
-      m_bCommandReady = false;
-   }
+   //lode: will not come here?!
+   // else
+   // {
+   //    debugOutput::sendMessage("Command String Status: " + m_processCommand, INFO);
+   //    m_bCommandReady = false;
+   // }
+
    return df_ret;
 }
 
@@ -223,7 +228,7 @@ void *messageMediator::doKBThread(void *pThreadArgs)
 
    while (!m_fExitThreads)
    {
-      if (m_processString.empty())
+      if (m_processString.empty()) // still processing process string
       {
          char key;
          while (0 < scanf(" %c", &key))
@@ -314,59 +319,51 @@ string messageMediator::getCommandString()
 void messageMediator::clearCommandString()
 {
    m_processCommand.clear();
+   debugOutput::sendMessage("Should be emptied: clear process command" + m_processCommand, INFO);
    m_bCommandReady = false;
 }
 
-DF_ERROR messageMediator::getPositionReady()
+DF_ERROR messageMediator::parseCommandString()
 {
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
-   // debugOutput::sendMessage("getPositionReady", INFO);
+   // debugOutput::sendMessage("parseCommandString", INFO);
    char temp[10];
    string commandString = getCommandString();
 
-   if (isCommandReady())
-   {
-      // temp = commandString;
-   }
-
-   char posChar;
-   char solenoidChar;
-   char sizeChar;
+   char productChar;
+   char actionChar;
+   char volumeChar;
 
    // FIXME: Need a better string parser...
    for (std::string::size_type i = 0; i < commandString.size(); ++i)
    {
       if (isdigit(commandString[0]))
       {
-         posChar = commandString[0];
+         productChar = commandString[0];
 
       }
       if ((commandString[i] == DISPENSE_END_CHAR) || (commandString[i] == DRINK_CHAR) || commandString[i] == PWM_CHAR)
       {
-         solenoidChar = commandString[i];
+         actionChar = commandString[i];
       }
 
       if (commandString[i] == SMALL_DRINK_CHAR || commandString[i] == LARGE_DRINK_CHAR || commandString[i] == TEST_CHAR)
       {
-          sizeChar = (commandString[i]);
+          volumeChar = (commandString[i]);
       }
 
    }
 
-
-
-
-
    // TODO: Can seperate this into char parsing switch statment and further into function.
    // pos = -1;
-   // strcpy(&posChar, &temp[0]);
+   // strcpy(&productChar, &temp[0]);
 
-   if (isdigit(posChar)) //first character should be string
+   if (isdigit(productChar)) //first character should be string
    {
       // debugOutput::sendMessage("Set Option", INFO);
 
-      int check = posChar - '0';
-      // pos = atoi(&posChar) - 1;
+      int check = productChar - '0';
+      // pos = atoi(&productChar) - 1;
       // FIXME: MAGIC NUMBER reference...
       if (9 < check || 0 > check)
       {
@@ -375,33 +372,33 @@ DF_ERROR messageMediator::getPositionReady()
       }
       else
       {
-         m_nOption = check;
-         //cout << m_nOption << endl;
+         m_RequestedProductIndexInt = check;
+         //cout << m_RequestedProductIndexInt << endl;
          e_ret = OK;
       }
    }
    else
    {
       // Error Handling
-      debugOutput::sendMessage("Irrelevant input", INFO);
+      debugOutput::sendMessage("Irrelevant input, first char should be a digit: " + productChar , INFO);
       this->clearProcessString();    //make sure to clear the processed string for new input
       e_ret = ERROR_NETW_NO_COMMAND; //require valid cassettes
    }
 
    // Check for Char then int pairing values
-   // solenoidChar;
-   // strcpy(&solenoidChar, &temp[1]);
+   // actionChar;
+   // strcpy(&actionChar, &temp[1]);
 
-   if (!isalpha(solenoidChar)) //for second char not an alphabet
+   if (!isalpha(actionChar)) //for second char not an alphabet
    {
-      debugOutput::sendMessage("Irrelevant input", INFO);
+      debugOutput::sendMessage("Irrelevant input .. ", INFO);
       e_ret = ERROR_NETW_NO_POSITION;
    }
    else
    {
       // TODO: Parse and save a reference for command string
 
-      switch (solenoidChar)
+      switch (actionChar)
       {
       case AIR_CHAR:
          debugOutput::sendMessage("Air Solenoid", INFO);
@@ -416,7 +413,7 @@ DF_ERROR messageMediator::getPositionReady()
       case DRINK_CHAR:
          debugOutput::sendMessage("Drink CHAR", INFO);
          // m_nSolenoid = DRINK;
-         m_cCommand = DRINK_CHAR;
+         m_requestedAction = DRINK_CHAR;
          break;
 
       case CLEAN_CHAR:
@@ -424,12 +421,12 @@ DF_ERROR messageMediator::getPositionReady()
 
       case PWM_CHAR:
           debugOutput::sendMessage("PWM CHAR", INFO);
-          m_cCommand = PWM_CHAR;
+          m_requestedAction = PWM_CHAR;
           break;
 
       case DISPENSE_END_CHAR:
          debugOutput::sendMessage("Dispense END CHAR", INFO);
-         m_cCommand = DISPENSE_END_CHAR;
+         m_requestedAction = DISPENSE_END_CHAR;
          break;
 
       default:
@@ -437,36 +434,37 @@ DF_ERROR messageMediator::getPositionReady()
       }
    }
 
-   if (!isalpha(sizeChar)) //for second char not an alphabet
+   if (!isalpha(volumeChar)) //for second char not an alphabet
    {
 //      debugOutput::sendMessage("Irrelevant input", INFO);
       e_ret = ERROR_NETW_NO_POSITION;
-//       m_nSize = TEST_CHAR;
+//       m_requestedVolume = TEST_CHAR;
    }
    else
    {
-       switch (sizeChar)
+       switch (volumeChar)
        {
        case SMALL_DRINK_CHAR:
            debugOutput::sendMessage("Small Size", INFO);
-           m_nSize = SMALL_DRINK_CHAR;
+           m_requestedVolume = SMALL_DRINK_CHAR;
            break;
 
        case LARGE_DRINK_CHAR:
            debugOutput::sendMessage("Large Size", INFO);
-           m_nSize = LARGE_DRINK_CHAR;
+           m_requestedVolume = LARGE_DRINK_CHAR;
            break;
 
        case TEST_CHAR:
            debugOutput::sendMessage("Test Size", INFO);
-           m_nSize = TEST_CHAR;
+           m_requestedVolume = TEST_CHAR;
 
        default:
            break;
        }
    }
 
-
-   m_bCommandReady = true;
+ // 
+   this->clearCommandString(); // lode added
+   //m_bCommandReady = true; // lode deletedf
    return e_ret;
 }

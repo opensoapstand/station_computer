@@ -50,8 +50,8 @@ DF_ERROR stateDispenseEnd::onEntry()
    debugOutput::sendMessage("Entering Dispense End...", STATE_CHANGE);
 
    cassettes = g_cassettes;
-   pos = m_pMessaging->getnOption();
-   size = m_pMessaging->getnSize();
+   pos = m_pMessaging->getProductIndex();
+   size = m_pMessaging->getRequestedVolume();
    pos = pos - 1;
 
    //cassettes[pos].getDrink()->stopDispense();
@@ -66,8 +66,8 @@ DF_ERROR stateDispenseEnd::onEntry()
 DF_ERROR stateDispenseEnd::onAction()
 {
    DF_ERROR e_ret  = ERROR_BAD_PARAMS;
-   m_pMessaging->getPositionReady();
-   command = m_pMessaging->getcCommand();
+   m_pMessaging->parseCommandString();
+   command = m_pMessaging->getAction();
    if (nullptr != &m_nextState)
    {
       switch (command)
@@ -106,7 +106,7 @@ DF_ERROR stateDispenseEnd::onExit()
 {
    cassettes = g_cassettes;
    DF_ERROR e_ret = OK;
-   pos = m_pMessaging->getnOption();
+   pos = m_pMessaging->getProductIndex();
    pos = pos - 1;
 
    std::string paymentMethod = cassettes[pos].getDrink()->getPaymentMethod();
@@ -423,7 +423,7 @@ DF_ERROR stateDispenseEnd::printer(){
     std::string plu;
     std::string units = getUnits(pos+1);
 
-    size = m_pMessaging->getnSize();
+    size = m_pMessaging->getRequestedVolume();
 
     if (size == 'l'){
         plu = (cassettes[pos].getDrink()->m_nPLU_l);

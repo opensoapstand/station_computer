@@ -40,13 +40,13 @@ DF_ERROR stateDispenseIdle::onEntry()
 {
    DF_ERROR e_ret = OK;
 
-   m_pMessaging->getPositionReady();
+   m_pMessaging->parseCommandString();
 
    debugOutput::sendMessage("In Idle Mode!", INFO);
 
    cassettes = g_cassettes;
-   pos = m_pMessaging->getnOption();
-   size = m_pMessaging->getnSize();
+   pos = m_pMessaging->getProductIndex();
+   size = m_pMessaging->getRequestedVolume();
    pos = pos - 1;
 
    cassettes[pos].setIsDispenseComplete(false);
@@ -76,13 +76,24 @@ DF_ERROR stateDispenseIdle::onAction()
 
    if (nullptr != &m_nextState)
    {
-       m_pMessaging->getPositionReady();
-        // Check if UI has sent a DISPENSE_END_CHAR to compelte the transaction, or, the taget has been hit, to enter into the DispenseEnd state
-       if ((m_pMessaging->getcCommand() == DISPENSE_END_CHAR) || (cassettes[pos].getIsDispenseComplete())){
 
-           m_nextState = DISPENSE_END;
-           return df_ret = OK;
+       if (m_pMessaging->isCommandReady())
+       {
+            m_pMessaging->parseCommandString();
+
+                // Check if UI has sent a DISPENSE_END_CHAR to compelte the transaction, or, the taget has been hit, to enter into the DispenseEnd state
+            if ((m_pMessaging->getAction() == DISPENSE_END_CHAR) ){
+
+                m_nextState = DISPENSE_END;
+                return df_ret = OK;
+            }
        }
+        
+        if (cassettes[pos].getIsDispenseComplete()){
+
+                m_nextState = DISPENSE_END;
+                return df_ret = OK;
+        }
 
        cassettes[pos].getDrink()->drinkVolumeInfo();
 
@@ -108,7 +119,7 @@ DF_ERROR stateDispenseIdle::onExit()
    debugOutput::sendMessage("Exiting[" + toString() + "]", STATE_CHANGE);
    DF_ERROR e_ret = OK;
 
-   if ((m_pMessaging->getcCommand() == DISPENSE_END_CHAR) || (cassettes[pos].getIsDispenseComplete())){
+   if ((m_pMessaging->getAction() == DISPENSE_END_CHAR) || (cassettes[pos].getIsDispenseComplete())){
        debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]", INFO);
        m_nextState = DISPENSE_END;
    }

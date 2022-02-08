@@ -66,14 +66,16 @@ DF_ERROR stateIdle::onAction()
       // Check if Command String is ready
       if (m_pMessaging->isCommandReady())
       {
-         m_pMessaging->getPositionReady();
-
+         debugOutput::sendMessage("tmplode", INFO);
+         DF_ERROR ret_msg;
+         ret_msg = m_pMessaging->parseCommandString();
+                 
          cassettes = g_cassettes;
-         pos = m_pMessaging->getnOption();
+         pos = m_pMessaging->getProductIndex();
          pos = pos - 1;
 
          // If DRINK_CHAR is received, enter Dispense state, else, stay in Idle state
-         if (m_pMessaging->getcCommand() == DRINK_CHAR){
+         if (m_pMessaging->getAction() == DRINK_CHAR){
              cassettes[pos].getDrink()->initDispense();
              m_nextState = DISPENSE_IDLE;
 

@@ -54,19 +54,19 @@ class messageMediator
       DF_ERROR sendMessage(string msg);
 
       string getProcessString();
-      DF_ERROR getPositionReady();
+      DF_ERROR parseCommandString();
       void clearProcessString();
-      void clearcCommand(){m_cCommand = '0';}
+      void clearcCommand(){m_requestedAction = '0';}
 
       string getCommandString();
       bool isCommandReady(){return m_bCommandReady;}
       void clearCommandString();
 
-      int getnOption(){return m_nOption;}
-      int getnSolenoid(){return m_nSolenoid;}
-      char getcCommand(){return m_cCommand;}
+      int getProductIndex(){return m_RequestedProductIndexInt;}
+      char getAction(){return m_requestedAction;}
+     
       double getnTargetVolume(){return m_nVolumeTarget;}
-      char getnSize(){return m_nSize;}
+      char getRequestedVolume(){return m_requestedVolume;}
 
 
       // static ServerSocket *fsm_comm_socket;
@@ -86,11 +86,11 @@ class messageMediator
       static bool m_bCommandReady;
 
       //int pos;
-      static int m_nOption;
+      static int m_RequestedProductIndexInt;
       static int m_nSolenoid;
-      static char m_cCommand;
+      static char m_requestedAction;
       static double m_nVolumeTarget;
-      static char m_nSize;
+      static char m_requestedVolume;
    
       static DF_ERROR sendProgress(int percentComplete);
       static DF_ERROR sendQtACK(string AckOrNak);

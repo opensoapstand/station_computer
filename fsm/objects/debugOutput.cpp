@@ -56,8 +56,12 @@ void debugOutput::sendMessage(std::string msg, MESSAGE_LEVEL lvl)
 {
 	if (lvl >= debugOutput::m_dbgLvl)
 	{
-		// outputting this might lead to segmentation errors 
+		// original. outputting this might lead to segmentation errors 
 		cerr << m_lvlArray[lvl] + ": " + msg << endl; 
+
+
+	//	cout << lvl << endl;
+		//sprintf("tetst",);
 		//cout << m_lvlArray[lvl] + ": " + msg << endl; 
 		
 

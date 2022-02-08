@@ -49,8 +49,8 @@ DF_ERROR stateDispense::onEntry()
 {
        cassettes = g_cassettes;
        DF_ERROR e_ret = OK;
-       pos = m_pMessaging->getnOption();
-       size = m_pMessaging->getnSize();
+       pos = m_pMessaging->getProductIndex();
+       size = m_pMessaging->getRequestedVolume();
        pos = pos - 1;
        cassettes[pos].getDrink()->drinkVolumeInfo();
        return e_ret;
@@ -67,12 +67,12 @@ DF_ERROR stateDispense::onAction()
    cassettes = g_cassettes;
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
-   m_pMessaging->getPositionReady();
+   m_pMessaging->parseCommandString();
 
    if (nullptr != &m_nextState) // TODO: Do a Check if Button is Pressed
    {
        // Check if UI has sent a DISPENSE_END_CHAR to finish the transaction, or, if dispensing is complete
-      if ( (m_pMessaging->getcCommand() == DISPENSE_END_CHAR) || (cassettes[pos].getIsDispenseComplete()) )
+      if ( (m_pMessaging->getAction() == DISPENSE_END_CHAR) || (cassettes[pos].getIsDispenseComplete()) )
       {
          debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]" + to_string(cassettes[pos].getIsDispenseComplete()), INFO);
          m_nextState = DISPENSE_END;

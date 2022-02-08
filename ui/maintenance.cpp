@@ -84,11 +84,16 @@ void maintenancePage::showEvent(QShowEvent *event)
     ui->machineLabel->setText("Machine ID: " + db.getMachineID());
 
     QProcess process;
-
+   
     process.start("iwgetid -r");
     process.waitForFinished(-1);
     QString stdout = process.readAllStandardOutput();
     ui->wifi_name->setText("Wifi Name: " + stdout);
+
+    process.start("hostname -I");
+    process.waitForFinished(-1);
+    stdout = process.readAllStandardOutput();
+    ui->wifi_ip_address->setText("Wifi IP Address: " + stdout);
 
     process.start("nmcli -t -f STATE general");
     process.waitForFinished(-1);
@@ -276,10 +281,15 @@ void maintenancePage::on_wifiButton_clicked(){
 
     QProcess process;
 
-    process.start("iwgetid -r");
+   process.start("iwgetid -r");
     process.waitForFinished(-1);
     QString stdout = process.readAllStandardOutput();
     ui->wifi_name->setText("Wifi Name: " + stdout);
+
+    process.start("hostname -I");
+    process.waitForFinished(-1);
+    stdout = process.readAllStandardOutput();
+    ui->wifi_ip_address->setText("Wifi IP Address: " + stdout);
 
     process.start("nmcli -t -f STATE general");
     process.waitForFinished(-1);
@@ -308,20 +318,25 @@ void maintenancePage::btn_clicked(){
     ui->keyboardTextEntry->setText("");
 
     QProcess process;
-    process.start("iwgetid -r");
+    process.start("iwgetid -r"); // nmcli -t -f NAME connection show --active
     process.waitForFinished(-1);
     QString stdout = process.readAllStandardOutput();
     ui->wifi_name->setText("Wifi Name: " + stdout);
-
-    process.start("nmcli -t -f STATE general");
+    
+    process.start("hostname -I");
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
-    ui->wifi_status->setText("Wifi State: " + stdout);
+    ui->wifi_ip_address->setText("Wifi IP Address: " + stdout);
 
     process.start("nmcli networking connectivity");
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
     ui->wifi_internet->setText("Wifi Connectivity: " + stdout);
+    
+    process.start("nmcli -t -f STATE general");
+    process.waitForFinished(-1);
+    stdout = process.readAllStandardOutput();
+    ui->wifi_status->setText("Wifi State: " + stdout);
 
 }
 
@@ -391,6 +406,11 @@ void maintenancePage::buttonWasClicked(int buttonID){
         process.waitForFinished(-1);
         QString stdout = process.readAllStandardOutput();
         ui->wifi_name->setText("Wifi Name: " + stdout);
+
+        process.start("hostname -I");
+        process.waitForFinished(-1);
+        stdout = process.readAllStandardOutput();
+        ui->wifi_ip_address->setText("Wifi IP Address: " + stdout);
 
         process.start("nmcli -t -f STATE general");
         process.waitForFinished(-1);

@@ -103,7 +103,7 @@ DF_ERROR stateInit::onExit()
 DF_ERROR stateInit::dispenserSetup()
 {
     int idx;
-    dispenser* cassettes = g_cassettes;
+    dispenser* productDispensers = g_productDispensers;
 
     debugOutput::sendMessage("Setting up DS-ED-8344 hardware control board.\n", INFO);
     
@@ -111,23 +111,23 @@ DF_ERROR stateInit::dispenserSetup()
     // is ever active at a time.  The flow sensors are all connected
     // to the same pin in the hardware.
 #ifndef __arm__
-//    cassettes[0].setFlowsensor(364, 0);
+//    productDispensers[0].setFlowsensor(364, 0);
     for (idx=0; idx<4; idx++)
     {
-        cassettes[idx].setFlowsensor(364, idx);
-//    cassettes[0].setFlowsensor(364, 0);
+        productDispensers[idx].setFlowsensor(364, idx);
+//    productDispensers[0].setFlowsensor(364, 0);
     }
 #else
-    cassettes[0].setFlowsensor(17, 0);
+    productDispensers[0].setFlowsensor(17, 0);
 #endif
 
     // Set up the four pumps
     for (idx=0; idx<4; idx++)
     {
-	cassettes[idx].setPump(0, 0, idx);
+	productDispensers[idx].setPump(0, 0, idx);
     }
 
-    cassettes[0].setPowerOffListener();
+    productDispensers[0].setPowerOffListener();
 
     debugOutput::sendMessage("Dispenser intialized.", INFO);
 
@@ -137,7 +137,7 @@ DF_ERROR stateInit::dispenserSetup()
 
 // This function (called in SetDrinks) converts the data that is in the product database to variables, 
 //which are then passed to the SetDrink function to create drink objects for each product.
-static int callback(void *data, int argc, char **argv, char **azColName){
+static int db_sql_drink_callback(void *data, int argc, char **argv, char **azColName){
    int i;
    int slot;
    string name;
@@ -203,7 +203,7 @@ static int callback(void *data, int argc, char **argv, char **azColName){
           paymentMethod = argv[i];
       }
 
-      g_cassettes[slot-1].setDrink(new drink(slot, name, volume_dispensed, volume_target_l, volume_target_s , calibration_const, price_l, price_s, false, volume_per_tick, plu_l, plu_s, paymentMethod, name_receipt));
+      g_productDispensers[slot-1].setProduct(new drink(slot, name, volume_dispensed, volume_target_l, volume_target_s , calibration_const, price_l, price_s, false, volume_per_tick, plu_l, plu_s, paymentMethod, name_receipt));
    }
 
    return 0;
@@ -225,6 +225,8 @@ DF_ERROR stateInit::setDrinks(){
     if( rc ) {
 //       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
        // TODO: Error handling here...
+
+        debugOutput::sendMessage("Database opening error", INFO);
     } else {
 //       fprintf(stderr, "Opened database successfully\n\n");
     }
@@ -235,9 +237,10 @@ DF_ERROR stateInit::setDrinks(){
     strcpy(sql, sql11.c_str());
 
     /* Execute SQL statement */
-    rc = sqlite3_exec(db, sql, callback, (void*)data, &zErrMsg);
+    rc = sqlite3_exec(db, sql, db_sql_drink_callback, (void*)data, &zErrMsg);
 
     if( rc != SQLITE_OK ) {
+        debugOutput::sendMessage("Drink info SQL error", INFO);
 //       fprintf(stderr, "SQL error: %s\n", zErrMsg);
        sqlite3_free(zErrMsg);
     } else {

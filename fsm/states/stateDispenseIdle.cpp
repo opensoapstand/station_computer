@@ -40,21 +40,21 @@ DF_ERROR stateDispenseIdle::onEntry()
 {
    DF_ERROR e_ret = OK;
 
-   cassettes = g_cassettes;
+   productDispensers = g_productDispensers;
    pos = m_pMessaging->getProductNumber();
    pos = pos - 1;
    size = m_pMessaging->getRequestedVolume();
 
-   cassettes[pos].setIsDispenseComplete(false);
+   productDispensers[pos].setIsDispenseComplete(false);
 
-   if (cassettes[pos].getDrink()->getVolumeDispensed() == 0) {
+   if (productDispensers[pos].getProduct()->getVolumeDispensed() == 0) {
        // TODO this should be a separate state (dispense_init)
 
-       cassettes[pos].getDrink()->startDispense(cassettes[pos].getDrink()->getTargetVolume(size), cassettes[pos].getDrink()->getPrice(size));
-       cassettes[pos].setIsDispenseComplete(false);
-       assettes[pos].getDrink(c)->drinkInfo();
-       cassettes[pos].getDrink()->drinkVolumeInfo();
-       cassettes[pos].startDispense(cassettes[pos].getDrink()->getDrinkOption());
+       productDispensers[pos].getProduct()->startDispense(productDispensers[pos].getProduct()->getTargetVolume(size), productDispensers[pos].getProduct()->getPrice(size));
+       productDispensers[pos].setIsDispenseComplete(false);
+       productDispensers[pos].getProduct()->drinkInfo();
+       productDispensers[pos].getProduct()->drinkVolumeInfo();
+       productDispensers[pos].startDispense(productDispensers[pos].getProduct()->getDrinkOption());
 
    }
 
@@ -82,22 +82,22 @@ DF_ERROR stateDispenseIdle::onAction()
             }
         }
         
-        if (cassettes[pos].getIsDispenseComplete()){
+        if (productDispensers[pos].getIsDispenseComplete()){
 
                 m_nextState = DISPENSE_END;
                 return df_ret = OK;
         }
 
-        cassettes[pos].getDrink()->drinkVolumeInfo();
+        productDispensers[pos].getProduct()->drinkVolumeInfo();
 
         // If volume has not changed, stay in Idle state, else, volume is changing, go to Dispense state...
-        if (cassettes[pos].getDrink()->getVolumeDispensed() == cassettes[pos].getDrink()->getVolumeDispensedPreviously()){
+        if (productDispensers[pos].getProduct()->getVolumeDispensed() == productDispensers[pos].getProduct()->getVolumeDispensedPreviously()){
             //    debugOutput::sendMessage("IDLING - COUNTDOWN!", INFO);
             debugOutput::sendMessage("Wait for volume to change to go to dispensing state", INFO);
             m_nextState = DISPENSE_IDLE;
         }
         else {
-            cassettes[pos].getDrink()->m_nVolumeDispensedPreviously = cassettes[pos].getDrink()->getVolumeDispensed();
+            productDispensers[pos].getProduct()->m_nVolumeDispensedPreviously = productDispensers[pos].getProduct()->getVolumeDispensed();
             m_nextState = DISPENSE;
         }
         usleep(500000);
@@ -112,7 +112,7 @@ DF_ERROR stateDispenseIdle::onExit()
 {
    DF_ERROR e_ret = OK;
 
-   if ((m_pMessaging->getAction() == ACTION_DISPENSE_END) || (cassettes[pos].getIsDispenseComplete())){
+   if ((m_pMessaging->getAction() == ACTION_DISPENSE_END) || (productDispensers[pos].getIsDispenseComplete())){
     //    debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]", INFO);
        debugOutput::sendMessage("Exiting Dispensing", INFO);
        m_nextState = DISPENSE_END;

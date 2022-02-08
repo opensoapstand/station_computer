@@ -37,14 +37,15 @@ std::string stateStrings [10]= {
    "DISPENSE_END",
    "CLEANING",
    "FSM_MAX"};
-   
+
 messageMediator *g_pMessaging;       //debug through local network
 stateVirtual* g_stateArray[FSM_MAX]; //an object for every state
-dispenser g_cassettes[MAX_CASSETTES]; //replace the magic number
+dispenser g_productDispensers[PRODUCT_DISPENSERS_MAX]; //replace the magic number
 
 DF_ERROR initObjects();
 DF_ERROR createStateArray();
 DF_ERROR stateLoop();
+
 
 int main()
 {

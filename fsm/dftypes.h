@@ -16,14 +16,14 @@
 #define XML_SETTINGS  "/release/df_settings.xml"
 
 #include <sqlite3.h>
-
+#define PRODUCT_DISPENSERS_MAX 4
 
 
 typedef enum DF_FSM {
    START,
    INIT,
    IDLE,
-   PRODUCT_SELECT, //retrieve info from ui which cassettes need to be set
+   PRODUCT_SELECT, //retrieve info from ui which productDispensers need to be set
    PAYMENT,        //retrieve info from ui whether or not payment is finished proccessing
    DISPENSE_IDLE,
    DISPENSE,

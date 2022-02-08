@@ -39,7 +39,7 @@ class stateIdle : public stateVirtual
 
     private:
         int pos;
-        dispenser* cassettes;
+        dispenser* productDispensers;
 
 };
 

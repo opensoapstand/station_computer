@@ -85,9 +85,9 @@ class dispenser
 
       DF_ERROR testSolenoidDispense(int pos);
 
-      drink* getDrink();
+      drink* getProduct();
 
-      DF_ERROR setDrink(drink* drink);
+      DF_ERROR setProduct(drink* drink);
 
       int getI2CAddress(int pos);
       int getI2CPin(int pos);
@@ -117,7 +117,7 @@ class dispenser
 
       bool m_isDispenseNew;
 
-      drink* m_pDrink;
+      drink* m_pSelectedProduct;
 
       DF_ERROR * m_pthreadError;
 

@@ -70,7 +70,7 @@ DF_ERROR stateIdle::onAction()
          ret_msg = m_pMessaging->parseCommandString();
         
                  
-         cassettes = g_cassettes;
+         productDispensers = g_productDispensers;
          pos = m_pMessaging->getProductNumber();
          pos = pos - 1;
 
@@ -79,7 +79,7 @@ DF_ERROR stateIdle::onAction()
             debugOutput::sendMessage("Dispense selected product (1,2,3 or 4)", INFO);
             //  debugOutput::sendMessage("position" + std::to_string(pos), INFO); // give sometimes segmentation error
             
-             cassettes[pos].getDrink()->initDispense();
+             productDispensers[pos].getProduct()->initDispense();
              m_nextState = DISPENSE_IDLE;
          }
       }

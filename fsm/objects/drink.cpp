@@ -20,7 +20,7 @@ drink::drink()
 {
 }
 
-static int callback(void *data, int argc, char **argv, char **azColName)
+static int db_sql_callback(void *data, int argc, char **argv, char **azColName)
 {
     int i;
 //    fprintf(stderr, "%s: ", (const char *)data);
@@ -65,7 +65,7 @@ drink::drink(int slot)
 
     string sql = "SELECT inventory.inventory_id, product.product_id,product.name, product.calibration_const, pricing.small_price, pricing.large_price FROM inventory INNER JOIN product ON inventory.product_id = product.product_id INNER JOIN pricing ON inventory.product_id = pricing.product_id WHERE inventory.inventory_id = " + to_string(m_nSlot) + ";";
 
-    rc = sqlite3_exec(db, sql.c_str(), callback, (void*)data.c_str(), NULL); 
+    rc = sqlite3_exec(db, sql.c_str(), db_sql_callback, (void*)data.c_str(), NULL); 
   
     if (rc != SQLITE_OK) 
         cerr << "Error SELECT" << endl; 

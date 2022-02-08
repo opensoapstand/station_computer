@@ -40,7 +40,7 @@ class stateDispenseIdle : public stateVirtual
     private:
         int pos;
         char size;
-        dispenser* cassettes;
+        dispenser* productDispensers;
         bool flushCommand;
 
 };

@@ -14,8 +14,8 @@
 #define FSM__H_
 #include "objects/dispenser.h"
 
-#define MAX_CASSETTES 9
+// #define PRODUCT_DISPENSERS_MAX 4
 
-extern dispenser g_cassettes[MAX_CASSETTES];
+extern dispenser g_productDispensers[PRODUCT_DISPENSERS_MAX];
 
 #endif

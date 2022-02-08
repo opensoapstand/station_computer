@@ -45,7 +45,7 @@ class stateDispenseEnd : public stateVirtual
 
         string toString();
 
-        dispenser* cassettes;
+        dispenser* productDispensers;
 
         DF_ERROR onEntry();
         DF_ERROR onAction();

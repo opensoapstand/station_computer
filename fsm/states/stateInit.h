@@ -47,14 +47,14 @@ class stateInit : public stateVirtual
         TiXmlDocument *m_pXMLSettings;
         TiXmlElement *m_pRoot, *m_pHardware, *m_pDispenser;
 
-        const char* dispenserId[CASSETTES_MAX];
+        const char* dispenserId[PRODUCT_DISPENSERS_MAX];
 
         DF_ERROR setDispenserId();
-        DF_ERROR setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes);
-        DF_ERROR setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes);
-        DF_ERROR setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes);
+        DF_ERROR setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* productDispensers);
+        DF_ERROR setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* productDispensers);
+        DF_ERROR setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* productDispensers);
         DF_ERROR setButton(TiXmlElement *hardwareEle, int dispenserIdx);
-        //DF_ERROR setButtonPress(TiXmlElement *hardwareEle, int dispenserIdx, dispenser* cassettes);
+        //DF_ERROR setButtonPress(TiXmlElement *hardwareEle, int dispenserIdx, dispenser* productDispensers);
         DF_ERROR setDrinks();
 
         const char* getXML(const char* subHeader, TiXmlElement *childEle);

@@ -21,7 +21,7 @@
 #include "../objects/dispenser.h"
 
 // TODO: Move reference to XML
-#define CASSETTES_MAX 9
+#define PRODUCT_DISPENSERS_MAX 4
 
 using namespace std;
 class stateVirtual
@@ -43,7 +43,7 @@ class stateVirtual
         gpio* getSolenoid(int pos, int type);
         gpio* getButton();
         
-        static drink* testDrinks[CASSETTES_MAX];
+        static drink* testDrinks[PRODUCT_DISPENSERS_MAX];
 
         // // FIXME: Cludgey fix to exit dispense loop.
         // bool getIsDispenseComplete(){return m_isDispenseComplete;}

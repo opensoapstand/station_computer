@@ -370,7 +370,7 @@ DF_ERROR messageMediator::parseCommandString()
       // // FIXME: MAGIC NUMBER reference...
       // if (9 < check || 0 > check)
       // {
-      //    e_ret = ERROR_NETW_NO_OPTION; //require valid cassettes
+      //    e_ret = ERROR_NETW_NO_OPTION; //require valid productDispensers
       // }
       // else
       // {
@@ -390,7 +390,7 @@ DF_ERROR messageMediator::parseCommandString()
    //    // Error Handling
    //    debugOutput::sendMessage("error start with digit: [1..9]: " + productChar , INFO);
    //    this->clearProcessString();    //make sure to clear the processed string for new input
-   //    e_ret = ERROR_NETW_NO_COMMAND; //require valid cassettes
+   //    e_ret = ERROR_NETW_NO_COMMAND; //require valid productDispensers
    // }
 
 

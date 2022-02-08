@@ -47,12 +47,12 @@ string stateDispense::toString()
  */
 DF_ERROR stateDispense::onEntry()
 {
-       cassettes = g_cassettes;
+       productDispensers = g_productDispensers;
        DF_ERROR e_ret = OK;
        pos = m_pMessaging->getProductNumber();
        size = m_pMessaging->getRequestedVolume();
        pos = pos - 1;
-       cassettes[pos].getDrink()->drinkVolumeInfo();
+       productDispensers[pos].getProduct()->drinkVolumeInfo();
        return e_ret;
 }
 
@@ -64,7 +64,7 @@ DF_ERROR stateDispense::onEntry()
 DF_ERROR stateDispense::onAction()
 {
    // debugOutput::sendMessage("+stateDispense::onAction()", INFO); 
-   cassettes = g_cassettes;
+   productDispensers = g_productDispensers;
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
    if (m_pMessaging->isCommandReady())
@@ -77,15 +77,15 @@ DF_ERROR stateDispense::onAction()
        // Check if UI has sent a ACTION_DISPENSE_END to finish the transaction, or, if dispensing is complete
       if ( m_pMessaging->getAction() == ACTION_DISPENSE_END) 
       {
-         // debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]" + to_string(cassettes[pos].getIsDispenseComplete()), INFO);
+         // debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]" + to_string(productDispensers[pos].getIsDispenseComplete()), INFO);
          debugOutput::sendMessage("Stop dispensing (stop command received)", INFO);
          m_nextState = DISPENSE_END;
          return e_ret = OK;
       }
      
-      if ( cassettes[pos].getIsDispenseComplete()) 
+      if ( productDispensers[pos].getIsDispenseComplete()) 
       {
-         // debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]" + to_string(cassettes[pos].getIsDispenseComplete()), INFO);
+         // debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]" + to_string(productDispensers[pos].getIsDispenseComplete()), INFO);
          debugOutput::sendMessage("Stop dispensing. Requested volume reached.", INFO);
          m_nextState = DISPENSE_END;
          return e_ret = OK;
@@ -96,10 +96,10 @@ DF_ERROR stateDispense::onAction()
       // send IPC if pump fails
 
       // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
-      m_pMessaging->sendMessage(to_string(cassettes[pos].getDrink()->getVolumeDispensed()));
+      m_pMessaging->sendMessage(to_string(productDispensers[pos].getProduct()->getVolumeDispensed()));
 
       
-      if (cassettes[pos].getDrink()->getVolumeDispensedPreviously() == cassettes[pos].getDrink()->getVolumeDispensed()){
+      if (productDispensers[pos].getProduct()->getVolumeDispensedPreviously() == productDispensers[pos].getProduct()->getVolumeDispensed()){
          // no dispensing detected since the last check    
          m_nextState = DISPENSE_IDLE;
       }
@@ -107,16 +107,16 @@ DF_ERROR stateDispense::onAction()
       {
          // continue dispensing
          m_nextState = DISPENSE;
-         cassettes[pos].getDrink()->m_nVolumeDispensedPreviously = cassettes[pos].getDrink()->getVolumeDispensed();
+         productDispensers[pos].getProduct()->m_nVolumeDispensedPreviously = productDispensers[pos].getProduct()->getVolumeDispensed();
       }
 
-      cassettes[pos].getDrink()->drinkVolumeInfo();
+      productDispensers[pos].getProduct()->drinkVolumeInfo();
 
       // TODO: Figure out a Cancel/completed volume from IPC if volume is hit
       // Logic compare present and last 3 states for volume..continue
-      if (cassettes[pos].getDrink()->isDispenseComplete())
+      if (productDispensers[pos].getProduct()->isDispenseComplete())
       {
-         cassettes[pos].setIsDispenseComplete(true);
+         productDispensers[pos].setIsDispenseComplete(true);
          // Send message to the UI that the target volume has been reached
          m_pMessaging->sendMessage("Target Hit");
       }
@@ -133,9 +133,9 @@ DF_ERROR stateDispense::onAction()
 DF_ERROR stateDispense::onExit()
 {
    DF_ERROR e_ret = OK;
-   //cassettes[pos].stopDispense(DRINK);
+   //productDispensers[pos].stopDispense(DRINK);
 
-   cassettes[pos].setIsDispenseComplete(false);
+   productDispensers[pos].setIsDispenseComplete(false);
 
    return e_ret;
 }

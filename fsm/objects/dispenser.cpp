@@ -3,7 +3,7 @@
 // dispenser.cpp
 // Dispenser (Model) class Implementation: 
 //
-// Manages and owns the package for a dispense.
+// Manages and owns the package for one product to dispense.
 // Links to circuit board addresses and
 // holds instructions for dispensing.
 //
@@ -34,7 +34,7 @@ dispenser::dispenser(){
     //debugOutput::sendMessage("dispenser", INFO);
 
     // TODO: Need to build Drink Object reference
-    // m_pDrink = nullptr;
+    // m_pSelectedProduct = nullptr;
 
     // If we haven't instantiated and initialized the hardware yet we
     // do it here.  Note that the pointer is declared as static so we
@@ -66,7 +66,7 @@ dispenser::dispenser(gpio* ButtonReference){
     //debugOutput::sendMessage("dispenser", INFO);
     m_pButton[0] = ButtonReference;
     //m_pButtonPress[0] = ButtonReference
-    m_pDrink = nullptr;
+    m_pSelectedProduct = nullptr;
 
     for (int i = 0; i < NUM_SOLENOID; i++)
         m_pSolenoid[i] = nullptr; 
@@ -85,14 +85,14 @@ dispenser::~dispenser(){
     delete the_8344;
     the_8344 = nullptr;
 
-    // delete [] m_pDrink;
+    // delete [] m_pSelectedProduct;
 
     // delete [] m_pSolenoid;
     // delete [] m_pFlowsenor;
     // delete [] m_pPump;
 }
 
-// TODO: Check and remove; stateinit should handle cassettes
+// TODO: Check and remove; stateinit should handle productDispensers
 void dispenser::initDispenser(int slot){
 
 }
@@ -120,7 +120,7 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
         // Instantiate, set input, spin up a flowsensor thread.
         m_pFlowsenor[pos] = new oddyseyx86GPIO(pin);
         m_pFlowsenor[pos]->setDirection(true);
-        m_pFlowsenor[pos]->registerDrink(m_pDrink);
+        m_pFlowsenor[pos]->registerDrink(m_pSelectedProduct);
         m_pFlowsenor[pos]->startListener();
         e_ret = OK;
     }
@@ -199,7 +199,7 @@ DF_ERROR dispenser::startDispense (int pos){
    // if(m_isStill && (m_pPump != nullptr) ) {
         //sleep(PRIME_PUMP_TIME);
         forwardPump();
-        the_8344->setPumpPWM((unsigned char)(m_pDrink->getPWM()));
+        the_8344->setPumpPWM((unsigned char)(m_pSelectedProduct->getPWM()));
         debugOutput::sendMessage("PWM SET!", INFO);
         //cout << the_8344->getPumpPWM();
         the_8344->startPump(pos);
@@ -218,7 +218,7 @@ DF_ERROR dispenser::stopDispense(int pos){
 
     // Shut Solenoid
     // m_pSolenoid[pos]->writePin(LOW);
-    debugOutput::sendMessage("UnTriggered pump:", INFO);
+    debugOutput::sendMessage("Pump disabled", INFO);
 
     // XXX: Disable Button - Linked thru State Virtual
     // e_ret = disconnectButton();
@@ -262,8 +262,8 @@ DF_ERROR dispenser::disconnectButton(){
 //     return e_ret = OK;
 // }
 
-drink* dispenser::getDrink(){
-    return m_pDrink;
+drink* dispenser::getProduct(){
+    return m_pSelectedProduct;
 }
 
 // Timer based
@@ -287,9 +287,9 @@ int dispenser::getI2CPin(int pos){
     //return m_pSolenoid[pos]->getMCPPin();
 }
 
-DF_ERROR dispenser::setDrink(drink* drink){
+DF_ERROR dispenser::setProduct(drink* drink){
     if(drink != nullptr) {
-        m_pDrink = drink;
+        m_pSelectedProduct = drink;
     } else {
         debugOutput::sendMessage("Set Drink Error!", ERROR);
     }

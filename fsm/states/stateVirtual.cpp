@@ -49,7 +49,7 @@ DF_FSM stateVirtual::getCurrentState()
 
 // gpio* stateVirtual::getSolenoid(int pos, int type)
 // {
-//    gpio* temp = cassettes[pos]->;
+//    gpio* temp = productDispensers[pos]->;
 //    return ;
 // }
 

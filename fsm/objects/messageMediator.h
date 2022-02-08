@@ -31,15 +31,18 @@
 #include "../../library/socket/SocketException.h"
 #include "../../library/socket/ClientSocket.h"
 
-#define AIR_CHAR 'a'
-#define WATER_CHAR 'w'
-#define DRINK_CHAR 'd'
-#define CLEAN_CHAR 'c'
-#define DISPENSE_END_CHAR 'f'
+// #define AIR_CHAR 'a'
+// #define WATER_CHAR 'w'
+#define ACTION_DISPENSE 'd'
+// #define CLEAN_CHAR 'c'
+#define ACTION_DISPENSE_END 'f'
+#define ACTION_DUMMY 'x'
 
-#define SMALL_DRINK_CHAR 's'
-#define LARGE_DRINK_CHAR 'l'
-#define TEST_CHAR 't'
+#define REQUESTED_VOLUME_1 's'
+#define REQUESTED_VOLUME_2 'l'
+#define REQUESTED_VOLUME_CUSTOM 't'
+
+#define REQUESTED_VOLUME_DUMMY '0'
 
 #define PWM_CHAR 'P'
 
@@ -56,13 +59,13 @@ class messageMediator
       string getProcessString();
       DF_ERROR parseCommandString();
       void clearProcessString();
-      void clearcCommand(){m_requestedAction = '0';}
+      //void clearcCommand(){m_requestedAction = '0';}
 
       string getCommandString();
       bool isCommandReady(){return m_bCommandReady;}
       void clearCommandString();
 
-      int getProductIndex(){return m_RequestedProductIndexInt;}
+      int getProductNumber(){return m_RequestedProductIndexInt;}
       char getAction(){return m_requestedAction;}
      
       double getnTargetVolume(){return m_nVolumeTarget;}

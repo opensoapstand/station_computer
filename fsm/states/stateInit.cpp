@@ -91,8 +91,9 @@ DF_ERROR stateInit::onExit()
 {
    DF_ERROR e_ret  = OK;
 
-   m_state = INIT;
-   m_nextState = IDLE; //once everything is good, move to idle state
+    // this is on exit, no need to set states here
+//    m_state = INIT;
+//    m_nextState = IDLE; //once everything is good, move to idle state
 
    return e_ret;
 }
@@ -128,13 +129,14 @@ DF_ERROR stateInit::dispenserSetup()
 
     cassettes[0].setPowerOffListener();
 
-    debugOutput::sendMessage("Hardware initialized...", INFO);
+    debugOutput::sendMessage("Dispenser intialized.", INFO);
 
     return OK;
 }   // End of dispenserSetup()
 
 
-// This function (called in SetDrinks) converts the data that is in the product database to variables, which are then passed to the SetDrink function to create drink objects for each product.
+// This function (called in SetDrinks) converts the data that is in the product database to variables, 
+//which are then passed to the SetDrink function to create drink objects for each product.
 static int callback(void *data, int argc, char **argv, char **azColName){
    int i;
    int slot;
@@ -242,6 +244,8 @@ DF_ERROR stateInit::setDrinks(){
 //       fprintf(stdout, "Operation done successfully\n");
     }
     sqlite3_close(db);
+
+    debugOutput::sendMessage("Products intialized.", INFO);
 
    return OK;
 }

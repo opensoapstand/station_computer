@@ -66,26 +66,22 @@ DF_ERROR stateIdle::onAction()
       // Check if Command String is ready
       if (m_pMessaging->isCommandReady())
       {
-         debugOutput::sendMessage("tmplode", INFO);
          DF_ERROR ret_msg;
          ret_msg = m_pMessaging->parseCommandString();
+        
                  
          cassettes = g_cassettes;
-         pos = m_pMessaging->getProductIndex();
+         pos = m_pMessaging->getProductNumber();
          pos = pos - 1;
 
-         // If DRINK_CHAR is received, enter Dispense state, else, stay in Idle state
-         if (m_pMessaging->getAction() == DRINK_CHAR){
+         // If ACTION_DISPENSE is received, enter Dispense state, else, stay in Idle state
+         if (m_pMessaging->getAction() == ACTION_DISPENSE){
+            debugOutput::sendMessage("Dispense selected product (1,2,3 or 4)", INFO);
+            //  debugOutput::sendMessage("position" + std::to_string(pos), INFO); // give sometimes segmentation error
+            
              cassettes[pos].getDrink()->initDispense();
              m_nextState = DISPENSE_IDLE;
-
          }
-
-                  // }
-         // else
-         // {
-         //    return e_ret = ERROR_NETW_NO_COMMAND;
-         // }
       }
       else
       {

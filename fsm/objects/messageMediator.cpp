@@ -179,12 +179,11 @@ DF_ERROR messageMediator::updateCmdString(char key)
    else if (';' == key)
    {
       // command creation finished, execute command
-      debugOutput::sendMessage("Flushing processing string: " + m_processString, INFO);
+      // debugOutput::sendMessage("Flushing processing string: " + m_processString, INFO);
       m_processString.clear();
       m_bCommandReady = true;
 
-      debugOutput::sendMessage("Command String Ready: " + m_processCommand, INFO);
-      debugOutput::sendMessage("Leftover process string: " + m_processString, INFO);
+      debugOutput::sendMessage("Provided command (unparsed) : " + m_processCommand, INFO);
    }
    //lode: will not come here?!
    // else
@@ -319,80 +318,127 @@ string messageMediator::getCommandString()
 void messageMediator::clearCommandString()
 {
    m_processCommand.clear();
-   debugOutput::sendMessage("Should be emptied: clear process command" + m_processCommand, INFO);
    m_bCommandReady = false;
 }
 
 DF_ERROR messageMediator::parseCommandString()
 {
+
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
-   // debugOutput::sendMessage("parseCommandString", INFO);
+   debugOutput::sendMessage("parseCommandString", INFO);
    char temp[10];
    string commandString = getCommandString();
 
-   char productChar;
-   char actionChar;
-   char volumeChar;
+   char productChar = 'z';
+   char actionChar = ACTION_DUMMY;
+   char volumeChar = REQUESTED_VOLUME_DUMMY;
 
-   // FIXME: Need a better string parser...
-   for (std::string::size_type i = 0; i < commandString.size(); ++i)
+   // if (isdigit(commandString[0]))
+   if (isdigit(commandString[0]))
    {
-      if (isdigit(commandString[0]))
+      productChar = commandString[0];
+      debugOutput::sendMessage("digit", INFO);
+   }
+
+   if (commandString.size() > 1){
+
+      // FIXME: Need a better string parser...
+      for (std::string::size_type i = 0; i < commandString.size(); ++i)
       {
-         productChar = commandString[0];
+         if ((commandString[i] == ACTION_DISPENSE_END) || (commandString[i] == ACTION_DISPENSE) || commandString[i] == PWM_CHAR)
+         {
+            actionChar = commandString[i];
+         }
+
+         if (commandString[i] == REQUESTED_VOLUME_1 || commandString[i] == REQUESTED_VOLUME_2 || commandString[i] == REQUESTED_VOLUME_CUSTOM)
+         {
+            volumeChar = (commandString[i]);
+         }
 
       }
-      if ((commandString[i] == DISPENSE_END_CHAR) || (commandString[i] == DRINK_CHAR) || commandString[i] == PWM_CHAR)
-      {
-         actionChar = commandString[i];
-      }
-
-      if (commandString[i] == SMALL_DRINK_CHAR || commandString[i] == LARGE_DRINK_CHAR || commandString[i] == TEST_CHAR)
-      {
-          volumeChar = (commandString[i]);
-      }
-
    }
 
    // TODO: Can seperate this into char parsing switch statment and further into function.
    // pos = -1;
    // strcpy(&productChar, &temp[0]);
 
-   if (isdigit(productChar)) //first character should be string
-   {
+   // if (isdigit(productChar)) //first character should be string
+   // {
       // debugOutput::sendMessage("Set Option", INFO);
+      //int check = productChar - '0'; // from ascii to value
 
-      int check = productChar - '0';
-      // pos = atoi(&productChar) - 1;
-      // FIXME: MAGIC NUMBER reference...
-      if (9 < check || 0 > check)
-      {
-         // debugOutput::sendMessage("Irrelevant input", ERROR);
-         e_ret = ERROR_NETW_NO_OPTION; //require valid cassettes
-      }
-      else
-      {
-         m_RequestedProductIndexInt = check;
-         //cout << m_RequestedProductIndexInt << endl;
-         e_ret = OK;
-      }
-   }
-   else
+      // // FIXME: MAGIC NUMBER reference...
+      // if (9 < check || 0 > check)
+      // {
+      //    e_ret = ERROR_NETW_NO_OPTION; //require valid cassettes
+      // }
+      // else
+      // {
+      //    m_RequestedProductIndexInt = check;
+
+
+
+      //    debugOutput::sendMessage("Product digit: char " + productChar , INFO);
+      //    //cout << m_RequestedProductIndexInt << endl;
+      //    e_ret = OK;
+      // }
+     
+
+   // }
+   // else
+   // {
+   //    // Error Handling
+   //    debugOutput::sendMessage("error start with digit: [1..9]: " + productChar , INFO);
+   //    this->clearProcessString();    //make sure to clear the processed string for new input
+   //    e_ret = ERROR_NETW_NO_COMMAND; //require valid cassettes
+   // }
+
+
+   switch (productChar)
    {
-      // Error Handling
-      debugOutput::sendMessage("Irrelevant input, first char should be a digit: " + productChar , INFO);
-      this->clearProcessString();    //make sure to clear the processed string for new input
-      e_ret = ERROR_NETW_NO_COMMAND; //require valid cassettes
+      case '1':
+      {
+         m_RequestedProductIndexInt = 1;
+         debugOutput::sendMessage("Product 1 requested", INFO);
+          e_ret = OK;
+         break;
+      }
+      case '2':
+      {
+         m_RequestedProductIndexInt = 2;
+         debugOutput::sendMessage("Product 2 requested", INFO);
+          e_ret = OK;
+         break;
+      }
+      case '3':
+      {
+         m_RequestedProductIndexInt = 3;
+         debugOutput::sendMessage("Product 3 requested", INFO);
+          e_ret = OK;
+         break;
+      }
+      case '4':
+      {
+         m_RequestedProductIndexInt = 4;
+         debugOutput::sendMessage("Product 4 requested", INFO);
+          e_ret = OK;
+         break;
+      }
+      default:
+      {
+         debugOutput::sendMessage("No product requested [1..4]", INFO);
+         break;
+      }
    }
 
-   // Check for Char then int pairing values
-   // actionChar;
-   // strcpy(&actionChar, &temp[1]);
 
-   if (!isalpha(actionChar)) //for second char not an alphabet
+   if (!isalpha(actionChar))
    {
       debugOutput::sendMessage("Irrelevant input .. ", INFO);
-      e_ret = ERROR_NETW_NO_POSITION;
+      // e_ret = ERROR_NETW_NO_POSITION;
+   }
+   else if (actionChar == ACTION_DUMMY){
+      debugOutput::sendMessage("No action provided ", INFO);
    }
    else
    {
@@ -400,33 +446,23 @@ DF_ERROR messageMediator::parseCommandString()
 
       switch (actionChar)
       {
-      case AIR_CHAR:
-         debugOutput::sendMessage("Air Solenoid", INFO);
-         // m_nSolenoid = AIR;
-         break;
-
-      case WATER_CHAR:
-         debugOutput::sendMessage("Water Solenoid", INFO);
-         // m_nSolenoid = WATER;
-         break;
-
-      case DRINK_CHAR:
-         debugOutput::sendMessage("Drink CHAR", INFO);
+      case ACTION_DISPENSE:
+         debugOutput::sendMessage("Action: Dispense", INFO);
          // m_nSolenoid = DRINK;
-         m_requestedAction = DRINK_CHAR;
-         break;
-
-      case CLEAN_CHAR:
+         m_requestedAction = ACTION_DISPENSE;
+          e_ret = OK;
          break;
 
       case PWM_CHAR:
-          debugOutput::sendMessage("PWM CHAR", INFO);
+          debugOutput::sendMessage("Action: PWM", INFO);
           m_requestedAction = PWM_CHAR;
+           e_ret = OK;
           break;
 
-      case DISPENSE_END_CHAR:
-         debugOutput::sendMessage("Dispense END CHAR", INFO);
-         m_requestedAction = DISPENSE_END_CHAR;
+      case ACTION_DISPENSE_END:
+         debugOutput::sendMessage("Action: End Dispense", INFO);
+         m_requestedAction = ACTION_DISPENSE_END;
+          e_ret = OK;
          break;
 
       default:
@@ -434,36 +470,40 @@ DF_ERROR messageMediator::parseCommandString()
       }
    }
 
-   if (!isalpha(volumeChar)) //for second char not an alphabet
+   if (!isalpha(volumeChar)) 
    {
-//      debugOutput::sendMessage("Irrelevant input", INFO);
-      e_ret = ERROR_NETW_NO_POSITION;
-//       m_requestedVolume = TEST_CHAR;
+      // e_ret = ERROR_NETW_NO_POSITION;
+   }
+   else if (volumeChar == REQUESTED_VOLUME_DUMMY){
+      debugOutput::sendMessage("No Requested volume provided", INFO);
    }
    else
    {
        switch (volumeChar)
        {
-       case SMALL_DRINK_CHAR:
-           debugOutput::sendMessage("Small Size", INFO);
-           m_requestedVolume = SMALL_DRINK_CHAR;
+       case REQUESTED_VOLUME_1:
+           debugOutput::sendMessage("Requested volume 1, Small Size", INFO);
+           m_requestedVolume = REQUESTED_VOLUME_1;
+            e_ret = OK;
            break;
 
-       case LARGE_DRINK_CHAR:
-           debugOutput::sendMessage("Large Size", INFO);
-           m_requestedVolume = LARGE_DRINK_CHAR;
+       case REQUESTED_VOLUME_2:
+           debugOutput::sendMessage("Requested volume 2, Large Size", INFO);
+           m_requestedVolume = REQUESTED_VOLUME_2;
+            e_ret = OK;
            break;
 
-       case TEST_CHAR:
-           debugOutput::sendMessage("Test Size", INFO);
-           m_requestedVolume = TEST_CHAR;
+       case REQUESTED_VOLUME_CUSTOM:
+           debugOutput::sendMessage("Requested volume custom, Test Size", INFO);
+           m_requestedVolume = REQUESTED_VOLUME_CUSTOM;
+           e_ret = OK;
+           break;
 
        default:
            break;
        }
    }
 
- // 
    this->clearCommandString(); // lode added
    //m_bCommandReady = true; // lode deletedf
    return e_ret;

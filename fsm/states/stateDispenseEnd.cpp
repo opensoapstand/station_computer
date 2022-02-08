@@ -47,12 +47,12 @@ DF_ERROR stateDispenseEnd::onEntry()
 {
    DF_ERROR e_ret  = OK;
 
-   debugOutput::sendMessage("Entering Dispense End...", STATE_CHANGE);
+//    debugOutput::sendMessage("Entering Dispense End...", STATE_CHANGE);
 
    cassettes = g_cassettes;
-   pos = m_pMessaging->getProductIndex();
-   size = m_pMessaging->getRequestedVolume();
+   pos = m_pMessaging->getProductNumber();
    pos = pos - 1;
+   size = m_pMessaging->getRequestedVolume();
 
    //cassettes[pos].getDrink()->stopDispense();
    cassettes[pos].stopDispense(pos);
@@ -65,48 +65,70 @@ DF_ERROR stateDispenseEnd::onEntry()
  */
 DF_ERROR stateDispenseEnd::onAction()
 {
-   DF_ERROR e_ret  = ERROR_BAD_PARAMS;
-   m_pMessaging->parseCommandString();
-   command = m_pMessaging->getAction();
-   if (nullptr != &m_nextState)
-   {
-      switch (command)
-      {
-      case DRINK_CHAR:
-         /* code */
-         m_pMessaging->clearCommandString();
-         m_pMessaging->clearcCommand();
-         m_nextState = DISPENSE_END;
-         sleep(2);
-         break;
+    debugOutput::sendMessage("onAction Dispense End...", STATE_CHANGE);
+    m_nextState = IDLE;
+    // TODO: Log events to DB
 
-      case DISPENSE_END_CHAR:
-         debugOutput::sendMessage("Exit", INFO);
-         m_nextState = IDLE;
-         break;
-      
-      default:
-         break;
-      }
-
-      // TODO: Log events to DB
-
-      // TODO: Send a complete ACK back to QT
-      // m_pMessaging->sendMessage("!");
+    // TODO: Send a complete ACK back to QT
+    // m_pMessaging->sendMessage("!");
 
 
-      e_ret = OK;
-   }
+    DF_ERROR e_ret = OK;
+   
 
    return e_ret;
 }
+
+/*
+* original
+*
+*/
+// DF_ERROR stateDispenseEnd::onAction()
+// {
+//    DF_ERROR e_ret  = ERROR_BAD_PARAMS;
+
+//    m_pMessaging->parseCommandString();
+
+//    command = m_pMessaging->getAction();
+//    if (nullptr != &m_nextState)
+//    {
+//       switch (command)
+//       {
+//       case ACTION_DISPENSE:
+//          /* code */
+//          m_pMessaging->clearCommandString();
+//          //m_pMessaging->clearcCommand();
+//          m_nextState = DISPENSE_END;
+//          sleep(2);
+//          break;
+
+//       case ACTION_DISPENSE_END:
+//          debugOutput::sendMessage("Exit", INFO);
+//          m_nextState = IDLE;
+//          break;
+      
+//       default:
+//          break;
+//       }
+
+//       // TODO: Log events to DB
+
+//       // TODO: Send a complete ACK back to QT
+//       // m_pMessaging->sendMessage("!");
+
+
+//       e_ret = OK;
+//    }
+
+//    return e_ret;
+// }
 
 // Actions on leaving Dispense state
 DF_ERROR stateDispenseEnd::onExit()
 {
    cassettes = g_cassettes;
    DF_ERROR e_ret = OK;
-   pos = m_pMessaging->getProductIndex();
+   pos = m_pMessaging->getProductNumber();
    pos = pos - 1;
 
    std::string paymentMethod = cassettes[pos].getDrink()->getPaymentMethod();
@@ -124,11 +146,11 @@ DF_ERROR stateDispenseEnd::onExit()
        debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
 
        // Function to clean the Drinkfill nozzle:
-       cassettes[pos].cleanNozzle(WATER, AIR);
+    //    cassettes[pos].cleanNozzle(WATER, AIR);
    }
 
-   // TEST_CHAR is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
-   if (size != TEST_CHAR){
+   // REQUESTED_VOLUME_CUSTOM is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
+   if (size != REQUESTED_VOLUME_CUSTOM){
        updateDB();
 
        if (paymentMethod == "barcode" || paymentMethod == "plu"){
@@ -138,18 +160,18 @@ DF_ERROR stateDispenseEnd::onExit()
        }
    }
 
-   m_pMessaging->clearProcessString();
-   m_pMessaging->clearCommandString();
-   m_pMessaging->clearcCommand();
+//    m_pMessaging->clearProcessString();
+//    m_pMessaging->clearCommandString();
+   //m_pMessaging->clearcCommand();
 
-   cassettes[pos].getDrink()->stopDispense();
-   cassettes[pos].stopDispense(DRINK);
+//    cassettes[pos].getDrink()->stopDispense();
+//    cassettes[pos].stopDispense(DRINK);
 
-   debugOutput::sendMessage("Exiting Dispensing END[" + toString() + "]", INFO);
+//    debugOutput::sendMessage("Exiting Dispensing END[" + toString() + "]", INFO);
 
    // TODO: Does not seem to advance to Idle again...
-   m_state = DISPENSE_END;
-   m_nextState = IDLE; //go back for now
+//    m_state = DISPENSE_END;
+//    m_nextState = IDLE; //go back for now
 
    return e_ret;
 }

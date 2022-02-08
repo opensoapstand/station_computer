@@ -49,7 +49,7 @@ DF_ERROR stateDispense::onEntry()
 {
        cassettes = g_cassettes;
        DF_ERROR e_ret = OK;
-       pos = m_pMessaging->getProductIndex();
+       pos = m_pMessaging->getProductNumber();
        size = m_pMessaging->getRequestedVolume();
        pos = pos - 1;
        cassettes[pos].getDrink()->drinkVolumeInfo();
@@ -67,21 +67,30 @@ DF_ERROR stateDispense::onAction()
    cassettes = g_cassettes;
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
-   m_pMessaging->parseCommandString();
+   if (m_pMessaging->isCommandReady())
+   {
+      m_pMessaging->parseCommandString();
+   }
 
    if (nullptr != &m_nextState) // TODO: Do a Check if Button is Pressed
    {
-       // Check if UI has sent a DISPENSE_END_CHAR to finish the transaction, or, if dispensing is complete
-      if ( (m_pMessaging->getAction() == DISPENSE_END_CHAR) || (cassettes[pos].getIsDispenseComplete()) )
+       // Check if UI has sent a ACTION_DISPENSE_END to finish the transaction, or, if dispensing is complete
+      if ( m_pMessaging->getAction() == ACTION_DISPENSE_END) 
       {
-         debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]" + to_string(cassettes[pos].getIsDispenseComplete()), INFO);
+         // debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]" + to_string(cassettes[pos].getIsDispenseComplete()), INFO);
+         debugOutput::sendMessage("Stop dispensing (stop command received)", INFO);
          m_nextState = DISPENSE_END;
          return e_ret = OK;
       }
-      else
+     
+      if ( cassettes[pos].getIsDispenseComplete()) 
       {
-         // debugOutput::sendMessage("Keep Dispensing [" + toString() + "]", INFO);
+         // debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]" + to_string(cassettes[pos].getIsDispenseComplete()), INFO);
+         debugOutput::sendMessage("Stop dispensing. Requested volume reached.", INFO);
+         m_nextState = DISPENSE_END;
+         return e_ret = OK;
       }
+     
 
       // TODO: Do a check if Pumps are operational
       // send IPC if pump fails
@@ -89,16 +98,16 @@ DF_ERROR stateDispense::onAction()
       // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
       m_pMessaging->sendMessage(to_string(cassettes[pos].getDrink()->getVolumeDispensed()));
 
+      
       if (cassettes[pos].getDrink()->getVolumeDispensedPreviously() == cassettes[pos].getDrink()->getVolumeDispensed()){
-          //debugOutput::sendMessage("IDLE - Timer should be ticking!", INFO);
-
-          m_nextState = DISPENSE_IDLE;
+         // no dispensing detected since the last check    
+         m_nextState = DISPENSE_IDLE;
       }
-      else {
-          debugOutput::sendMessage("DISPENSING! - RESET TIMER!", INFO);
-          m_pMessaging->sendMessage("Reset Timer");
-          m_nextState = DISPENSE;
-          cassettes[pos].getDrink()->m_nVolumeDispensedPreviously = cassettes[pos].getDrink()->getVolumeDispensed();
+      else
+      {
+         // continue dispensing
+         m_nextState = DISPENSE;
+         cassettes[pos].getDrink()->m_nVolumeDispensedPreviously = cassettes[pos].getDrink()->getVolumeDispensed();
       }
 
       cassettes[pos].getDrink()->drinkVolumeInfo();
@@ -110,7 +119,6 @@ DF_ERROR stateDispense::onAction()
          cassettes[pos].setIsDispenseComplete(true);
          // Send message to the UI that the target volume has been reached
          m_pMessaging->sendMessage("Target Hit");
-
       }
 
       usleep(500000);

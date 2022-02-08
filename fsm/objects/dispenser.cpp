@@ -238,29 +238,29 @@ DF_ERROR dispenser::disconnectButton(){
     // return m_pButton[0]->writePin(LOW);
 }
 
-// Cleans the nozzle by dispensing Water followed by Air
-DF_ERROR dispenser::cleanNozzle(int posW, int posA){
-    DF_ERROR e_ret = ERROR_BAD_PARAMS;
+// // Cleans the nozzle by dispensing Water followed by Air
+// DF_ERROR dispenser::cleanNozzle(int posW, int posA){
+//     DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
-    if(posW != WATER && posA != AIR) {
-        e_ret = ERROR_ELEC_PIN_CLEAN;
-        return e_ret;
-    }
+//     if(posW != WATER && posA != AIR) {
+//         e_ret = ERROR_ELEC_PIN_CLEAN;
+//         return e_ret;
+//     }
 
-    // Flush the lines with water
-    debugOutput::sendMessage("Water Cleanse", INFO);
-    //m_pSolenoid[posW]->writePin(HIGH);
-    sleep(CLEAN_WATER_TIME);
-    //m_pSolenoid[posW]->writePin(LOW);
+//     // Flush the lines with water
+//     debugOutput::sendMessage("Water Cleanse", INFO);
+//     //m_pSolenoid[posW]->writePin(HIGH);
+//     sleep(CLEAN_WATER_TIME);
+//     //m_pSolenoid[posW]->writePin(LOW);
 
-    // Flush the lines with Air
-    debugOutput::sendMessage("Air Release", INFO);
-    //m_pSolenoid[posA]->writePin(HIGH);
-    sleep(CLEAN_AIR_TIME);
-    //m_pSolenoid[posA]->writePin(LOW);
+//     // Flush the lines with Air
+//     debugOutput::sendMessage("Air Release", INFO);
+//     //m_pSolenoid[posA]->writePin(HIGH);
+//     sleep(CLEAN_AIR_TIME);
+//     //m_pSolenoid[posA]->writePin(LOW);
 
-    return e_ret = OK;
-}
+//     return e_ret = OK;
+// }
 
 drink* dispenser::getDrink(){
     return m_pDrink;

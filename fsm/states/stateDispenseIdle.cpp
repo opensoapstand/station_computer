@@ -40,26 +40,19 @@ DF_ERROR stateDispenseIdle::onEntry()
 {
    DF_ERROR e_ret = OK;
 
-   m_pMessaging->parseCommandString();
-
-   debugOutput::sendMessage("In Idle Mode!", INFO);
-
    cassettes = g_cassettes;
-   pos = m_pMessaging->getProductIndex();
-   size = m_pMessaging->getRequestedVolume();
+   pos = m_pMessaging->getProductNumber();
    pos = pos - 1;
+   size = m_pMessaging->getRequestedVolume();
 
    cassettes[pos].setIsDispenseComplete(false);
+
    if (cassettes[pos].getDrink()->getVolumeDispensed() == 0) {
-       debugOutput::sendMessage("-----NEW TRANSACTION-----", INFO);
-       // TODO: Priming Pumps and Registers for HIGH
-       debugOutput::sendMessage("------Dispensing Drink------", INFO);
-       // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> DRINK", INFO);
-       // debugOutput::sendMessage("Pin -> " + to_string(cassettes[pos].getI2CPin(DRINK)), INFO);
+       // TODO this should be a separate state (dispense_init)
 
        cassettes[pos].getDrink()->startDispense(cassettes[pos].getDrink()->getTargetVolume(size), cassettes[pos].getDrink()->getPrice(size));
        cassettes[pos].setIsDispenseComplete(false);
-       cassettes[pos].getDrink()->drinkInfo();
+       assettes[pos].getDrink(c)->drinkInfo();
        cassettes[pos].getDrink()->drinkVolumeInfo();
        cassettes[pos].startDispense(cassettes[pos].getDrink()->getDrinkOption());
 
@@ -77,17 +70,17 @@ DF_ERROR stateDispenseIdle::onAction()
    if (nullptr != &m_nextState)
    {
 
-       if (m_pMessaging->isCommandReady())
-       {
+        if (m_pMessaging->isCommandReady())
+        {
             m_pMessaging->parseCommandString();
 
-                // Check if UI has sent a DISPENSE_END_CHAR to compelte the transaction, or, the taget has been hit, to enter into the DispenseEnd state
-            if ((m_pMessaging->getAction() == DISPENSE_END_CHAR) ){
+            // Check if UI has sent a ACTION_DISPENSE_END to compelte the transaction, or, the taget has been hit, to enter into the DispenseEnd state
+            if ((m_pMessaging->getAction() == ACTION_DISPENSE_END) ){
 
                 m_nextState = DISPENSE_END;
                 return df_ret = OK;
             }
-       }
+        }
         
         if (cassettes[pos].getIsDispenseComplete()){
 
@@ -95,19 +88,20 @@ DF_ERROR stateDispenseIdle::onAction()
                 return df_ret = OK;
         }
 
-       cassettes[pos].getDrink()->drinkVolumeInfo();
+        cassettes[pos].getDrink()->drinkVolumeInfo();
 
         // If volume has not changed, stay in Idle state, else, volume is changing, go to Dispense state...
-       if (cassettes[pos].getDrink()->getVolumeDispensed() == cassettes[pos].getDrink()->getVolumeDispensedPreviously()){
-           debugOutput::sendMessage("IDLING - COUNTDOWN!", INFO);
-           m_nextState = DISPENSE_IDLE;
-       }
-       else {
-           cassettes[pos].getDrink()->m_nVolumeDispensedPreviously = cassettes[pos].getDrink()->getVolumeDispensed();
-           m_nextState = DISPENSE;
-       }
-      usleep(500000);
-      df_ret = OK;
+        if (cassettes[pos].getDrink()->getVolumeDispensed() == cassettes[pos].getDrink()->getVolumeDispensedPreviously()){
+            //    debugOutput::sendMessage("IDLING - COUNTDOWN!", INFO);
+            debugOutput::sendMessage("Wait for volume to change to go to dispensing state", INFO);
+            m_nextState = DISPENSE_IDLE;
+        }
+        else {
+            cassettes[pos].getDrink()->m_nVolumeDispensedPreviously = cassettes[pos].getDrink()->getVolumeDispensed();
+            m_nextState = DISPENSE;
+        }
+        usleep(500000);
+        df_ret = OK;
    }
 
    return df_ret;
@@ -116,17 +110,13 @@ DF_ERROR stateDispenseIdle::onAction()
 // Advances to Dispense End with completed Dispense
 DF_ERROR stateDispenseIdle::onExit()
 {
-   debugOutput::sendMessage("Exiting[" + toString() + "]", STATE_CHANGE);
    DF_ERROR e_ret = OK;
 
-   if ((m_pMessaging->getAction() == DISPENSE_END_CHAR) || (cassettes[pos].getIsDispenseComplete())){
-       debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]", INFO);
+   if ((m_pMessaging->getAction() == ACTION_DISPENSE_END) || (cassettes[pos].getIsDispenseComplete())){
+    //    debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]", INFO);
+       debugOutput::sendMessage("Exiting Dispensing", INFO);
        m_nextState = DISPENSE_END;
    }
-
-   // TODO: If timeout occurs, then we can skip to cleaning cycle.
-   // m_state = DISPENSE_END;
-   // m_nextState = IDLE;
 
    return e_ret;
 }

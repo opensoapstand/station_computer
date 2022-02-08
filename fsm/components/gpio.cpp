@@ -15,34 +15,37 @@
 // CTOR
 gpio::gpio()
 {
-	//m_nAddress = -1; //set negative one for illegal i2c address
-	m_nPin = -1; //set negative one for illegal pin address
-	m_stop = false;
-	m_input = false;
-	m_i2c = false; //no i2c chip associate with it 
-	gpioThread = nullptr;
-	m_pDrink = nullptr;
+        //m_nAddress = -1; //set negative one for illegal i2c address
+        m_nPin = -1; //set negative one for illegal pin address
+        m_stop = false;
+        m_input = false;
+        m_i2c = false; //no i2c chip associate with it
+        gpioThread = nullptr;
+        m_pDrink = nullptr;
 }
 
 // DTOR
 gpio::~gpio()
 {
-	//kill thread!
-	this->stopListener();
+        //kill thread!
+        this->stopListener();
 }
 
 // kick off a listener
 void gpio::startListener()
 {
-	debugOutput::sendMessage("-----startListener-----", INFO);
-	DF_ERROR df_ret = ERROR_BAD_PARAMS;
+        debugOutput::sendMessage("-----startListener-----", INFO);
+        DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
-	if ((nullptr ==  gpioThread) && (nullptr != m_pDrink)){
-		gpioThread = new std::thread(&gpio::listener, this);
-		df_ret = OK;
-	} else {
-		debugOutput::sendMessage("Did not pass null check", INFO);
-	}
+        if ((nullptr == gpioThread) && (nullptr != m_pDrink))
+        {
+                gpioThread = new std::thread(&gpio::listener, this);
+                df_ret = OK;
+        }
+        else
+        {
+                debugOutput::sendMessage("Did not pass null check", INFO);
+        }
 }
 
 void gpio::startListenerPWR()
@@ -50,15 +53,13 @@ void gpio::startListenerPWR()
         debugOutput::sendMessage("-----startListenerPWR-----", INFO);
         DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
-//        if ((nullptr ==  gpioThread) && (nullptr != m_pDrink)){
-                gpioThread = new std::thread(&gpio::listenerPWR, this);
-                df_ret = OK;
-//        } else {
-//                debugOutput::sendMessage("Did not pass null check", INFO);
-//        }
+        //        if ((nullptr ==  gpioThread) && (nullptr != m_pDrink)){
+        gpioThread = new std::thread(&gpio::listenerPWR, this);
+        df_ret = OK;
+        //        } else {
+        //                debugOutput::sendMessage("Did not pass null check", INFO);
+        //        }
 }
-
-
 
 //void gpio::startButtonListener()
 //{
@@ -83,26 +84,28 @@ void gpio::listener()
         DF_ERROR df_ret = ERROR_BAD_PARAMS;
         m_stop = false;
 
-        while (!m_stop) {
+        while (!m_stop)
+        {
                 monitorGPIO();
-//                monitorGPIO_PWR();
+                //                monitorGPIO_PWR();
         }
 
-        m_stop = true;  //reset
-	// return;
+        m_stop = true; //reset
+                       // return;
 }
 
 void gpio::listenerPWR()
 {
-   // cout << "Spin up GPIO Thread" << endl;
-    DF_ERROR df_ret = ERROR_BAD_PARAMS;
-    m_stop = false;
+        // cout << "Spin up GPIO Thread" << endl;
+        DF_ERROR df_ret = ERROR_BAD_PARAMS;
+        m_stop = false;
 
-    while (!m_stop) {
-//            monitorGPIO();
-            monitorGPIO_PWR();
-    }
+        while (!m_stop)
+        {
+                //            monitorGPIO();
+                monitorGPIO_PWR();
+        }
 
-    m_stop = true;  //reset
-    // return;
+        m_stop = true; //reset
+                       // return;
 }

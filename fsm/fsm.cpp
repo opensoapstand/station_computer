@@ -26,26 +26,25 @@
 #include "objects/dispenser.h"
 #include "objects/messageMediator.h"
 
-std::string stateStrings [10]= {
-   "START",
-   "INIT",
-   "IDLE",
-   "PRODUCT_SELECT",
-   "PAYMENT",
-   "DISPENSE_IDLE",
-   "DISPENSE",
-   "DISPENSE_END",
-   "CLEANING",
-   "FSM_MAX"};
+std::string stateStrings[10] = {
+    "START",
+    "INIT",
+    "IDLE",
+    "PRODUCT_SELECT",
+    "PAYMENT",
+    "DISPENSE_IDLE",
+    "DISPENSE",
+    "DISPENSE_END",
+    "CLEANING",
+    "FSM_MAX"};
 
-messageMediator *g_pMessaging;       //debug through local network
-stateVirtual* g_stateArray[FSM_MAX]; //an object for every state
+messageMediator *g_pMessaging;                         //debug through local network
+stateVirtual *g_stateArray[FSM_MAX];                   //an object for every state
 dispenser g_productDispensers[PRODUCT_DISPENSERS_MAX]; //replace the magic number
 
 DF_ERROR initObjects();
 DF_ERROR createStateArray();
 DF_ERROR stateLoop();
-
 
 int main()
 {
@@ -81,14 +80,13 @@ DF_ERROR stateLoop()
         // state change, deal with new state
         if (fsmState != fsmNewState)
         {
-            
+
             // debugOutput::sendMessage( "coming from:" + g_stateArray[fsmState]->toString(), STATE_CHANGE);
             // debugOutput::sendMessage( "new state:" + g_stateArray[fsmNewState]->toString(), STATE_CHANGE);
-            debugOutput::sendMessage( "coming from: " + stateStrings[fsmState], STATE_CHANGE);
-            debugOutput::sendMessage( "new state: " + stateStrings[fsmNewState], STATE_CHANGE);
+            debugOutput::sendMessage("coming from: " + stateStrings[fsmState], STATE_CHANGE);
+            debugOutput::sendMessage("new state: " + stateStrings[fsmNewState], STATE_CHANGE);
             //debugOutput::sendMessage( "coming from:" + g_stateArray[fsmState]->toString() + "onEntry() new state:  [" + g_stateArray[fsmNewState]->toString() + "]", STATE_CHANGE);
-            
-            
+
             // debugOutput::sendMessage( "coming from: onEntry() new state:  [" + g_stateArray[fsmNewState]->toString() + "]", STATE_CHANGE);
             fsmState = fsmNewState;
             dfRet = g_stateArray[fsmState]->onEntry();
@@ -99,7 +97,7 @@ DF_ERROR stateLoop()
         {
             dfRet = g_stateArray[fsmState]->onAction();
             // TODO if this isn't OK deal with bad things
-            
+
             fsmNewState = g_stateArray[fsmState]->getNextState();
 
             // deal with end of state if state changed

@@ -84,7 +84,7 @@ DF_ERROR messageMediator::sendMessage(string msg)
    }
    catch (SocketException &e)
    {
-    //  std::cout << "Connection Exception was caught:" << e.description() << "\n";
+      //  std::cout << "Connection Exception was caught:" << e.description() << "\n";
    }
    dfError = ERROR_PTHREADS_IPTHREAD_NAK;
 
@@ -118,12 +118,12 @@ DF_ERROR messageMediator::sendQtACK(string AckOrNak)
       {
       }
 
-     // std::cout << "We received this response from the server:\n\"" << reply << "\"\n";
+      // std::cout << "We received this response from the server:\n\"" << reply << "\"\n";
       ;
    }
    catch (SocketException &e)
    {
-     // std::cout << "Exception was caught:" << e.description() << "\n";
+      // std::cout << "Exception was caught:" << e.description() << "\n";
    }
 
    dfError = ERROR_PTHREADS_IPTHREAD_NAK;
@@ -169,7 +169,7 @@ DF_ERROR messageMediator::updateCmdString(char key)
    string incommingCharMsg = "Incomming CHAR: ";
    incommingCharMsg += key;
    debugOutput::sendMessage(incommingCharMsg, INFO);
-    incommingCharMsg.clear();
+   incommingCharMsg.clear();
 
    if (';' != key)
    {
@@ -273,7 +273,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
 
                // AckOrNakResult = "FSM ACK";
                sendQtACK("ACK");
-              // cout << data << endl;
+               // cout << data << endl;
                m_processString = data;
                updateCmdString();
                // new_sock << data;
@@ -283,7 +283,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
          }
          catch (SocketException &sock)
          {
-          //  std::cout << "Socket Transfer Exception was caught:" << sock.description() << "\nExiting.\n";
+            //  std::cout << "Socket Transfer Exception was caught:" << sock.description() << "\nExiting.\n";
             // AckOrNakResult = "FSM NAK";
             // sendQtACK(AckOrNakResult);
          }
@@ -291,7 +291,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
    }
    catch (SocketException &e)
    {
-     // std::cout << "Socket Creation Exception was caught:" << e.description() << "\nExiting.\n";
+      // std::cout << "Socket Creation Exception was caught:" << e.description() << "\nExiting.\n";
    }
 
    return 0;
@@ -340,7 +340,8 @@ DF_ERROR messageMediator::parseCommandString()
       debugOutput::sendMessage("digit", INFO);
    }
 
-   if (commandString.size() > 1){
+   if (commandString.size() > 1)
+   {
 
       // FIXME: Need a better string parser...
       for (std::string::size_type i = 0; i < commandString.size(); ++i)
@@ -354,7 +355,6 @@ DF_ERROR messageMediator::parseCommandString()
          {
             volumeChar = (commandString[i]);
          }
-
       }
    }
 
@@ -364,25 +364,22 @@ DF_ERROR messageMediator::parseCommandString()
 
    // if (isdigit(productChar)) //first character should be string
    // {
-      // debugOutput::sendMessage("Set Option", INFO);
-      //int check = productChar - '0'; // from ascii to value
+   // debugOutput::sendMessage("Set Option", INFO);
+   //int check = productChar - '0'; // from ascii to value
 
-      // // FIXME: MAGIC NUMBER reference...
-      // if (9 < check || 0 > check)
-      // {
-      //    e_ret = ERROR_NETW_NO_OPTION; //require valid productDispensers
-      // }
-      // else
-      // {
-      //    m_RequestedProductIndexInt = check;
+   // // FIXME: MAGIC NUMBER reference...
+   // if (9 < check || 0 > check)
+   // {
+   //    e_ret = ERROR_NETW_NO_OPTION; //require valid productDispensers
+   // }
+   // else
+   // {
+   //    m_RequestedProductIndexInt = check;
 
-
-
-      //    debugOutput::sendMessage("Product digit: char " + productChar , INFO);
-      //    //cout << m_RequestedProductIndexInt << endl;
-      //    e_ret = OK;
-      // }
-     
+   //    debugOutput::sendMessage("Product digit: char " + productChar , INFO);
+   //    //cout << m_RequestedProductIndexInt << endl;
+   //    e_ret = OK;
+   // }
 
    // }
    // else
@@ -393,51 +390,50 @@ DF_ERROR messageMediator::parseCommandString()
    //    e_ret = ERROR_NETW_NO_COMMAND; //require valid productDispensers
    // }
 
-
    switch (productChar)
    {
-      case '1':
-      {
-         m_RequestedProductIndexInt = 1;
-         debugOutput::sendMessage("Product 1 requested", INFO);
-          e_ret = OK;
-         break;
-      }
-      case '2':
-      {
-         m_RequestedProductIndexInt = 2;
-         debugOutput::sendMessage("Product 2 requested", INFO);
-          e_ret = OK;
-         break;
-      }
-      case '3':
-      {
-         m_RequestedProductIndexInt = 3;
-         debugOutput::sendMessage("Product 3 requested", INFO);
-          e_ret = OK;
-         break;
-      }
-      case '4':
-      {
-         m_RequestedProductIndexInt = 4;
-         debugOutput::sendMessage("Product 4 requested", INFO);
-          e_ret = OK;
-         break;
-      }
-      default:
-      {
-         debugOutput::sendMessage("No product requested [1..4]", INFO);
-         break;
-      }
+   case '1':
+   {
+      m_RequestedProductIndexInt = 1;
+      debugOutput::sendMessage("Product 1 requested", INFO);
+      e_ret = OK;
+      break;
    }
-
+   case '2':
+   {
+      m_RequestedProductIndexInt = 2;
+      debugOutput::sendMessage("Product 2 requested", INFO);
+      e_ret = OK;
+      break;
+   }
+   case '3':
+   {
+      m_RequestedProductIndexInt = 3;
+      debugOutput::sendMessage("Product 3 requested", INFO);
+      e_ret = OK;
+      break;
+   }
+   case '4':
+   {
+      m_RequestedProductIndexInt = 4;
+      debugOutput::sendMessage("Product 4 requested", INFO);
+      e_ret = OK;
+      break;
+   }
+   default:
+   {
+      debugOutput::sendMessage("No product requested [1..4]", INFO);
+      break;
+   }
+   }
 
    if (!isalpha(actionChar))
    {
       debugOutput::sendMessage("Irrelevant input .. ", INFO);
       // e_ret = ERROR_NETW_NO_POSITION;
    }
-   else if (actionChar == ACTION_DUMMY){
+   else if (actionChar == ACTION_DUMMY)
+   {
       debugOutput::sendMessage("No action provided ", INFO);
    }
    else
@@ -450,19 +446,19 @@ DF_ERROR messageMediator::parseCommandString()
          debugOutput::sendMessage("Action: Dispense", INFO);
          // m_nSolenoid = DRINK;
          m_requestedAction = ACTION_DISPENSE;
-          e_ret = OK;
+         e_ret = OK;
          break;
 
       case PWM_CHAR:
-          debugOutput::sendMessage("Action: PWM", INFO);
-          m_requestedAction = PWM_CHAR;
-           e_ret = OK;
-          break;
+         debugOutput::sendMessage("Action: PWM", INFO);
+         m_requestedAction = PWM_CHAR;
+         e_ret = OK;
+         break;
 
       case ACTION_DISPENSE_END:
          debugOutput::sendMessage("Action: End Dispense", INFO);
          m_requestedAction = ACTION_DISPENSE_END;
-          e_ret = OK;
+         e_ret = OK;
          break;
 
       default:
@@ -470,38 +466,39 @@ DF_ERROR messageMediator::parseCommandString()
       }
    }
 
-   if (!isalpha(volumeChar)) 
+   if (!isalpha(volumeChar))
    {
       // e_ret = ERROR_NETW_NO_POSITION;
    }
-   else if (volumeChar == REQUESTED_VOLUME_DUMMY){
+   else if (volumeChar == REQUESTED_VOLUME_DUMMY)
+   {
       debugOutput::sendMessage("No Requested volume provided", INFO);
    }
    else
    {
-       switch (volumeChar)
-       {
-       case REQUESTED_VOLUME_1:
-           debugOutput::sendMessage("Requested volume 1, Small Size", INFO);
-           m_requestedVolume = REQUESTED_VOLUME_1;
-            e_ret = OK;
-           break;
+      switch (volumeChar)
+      {
+      case REQUESTED_VOLUME_1:
+         debugOutput::sendMessage("Requested volume 1, Small Size", INFO);
+         m_requestedVolume = REQUESTED_VOLUME_1;
+         e_ret = OK;
+         break;
 
-       case REQUESTED_VOLUME_2:
-           debugOutput::sendMessage("Requested volume 2, Large Size", INFO);
-           m_requestedVolume = REQUESTED_VOLUME_2;
-            e_ret = OK;
-           break;
+      case REQUESTED_VOLUME_2:
+         debugOutput::sendMessage("Requested volume 2, Large Size", INFO);
+         m_requestedVolume = REQUESTED_VOLUME_2;
+         e_ret = OK;
+         break;
 
-       case REQUESTED_VOLUME_CUSTOM:
-           debugOutput::sendMessage("Requested volume custom, Test Size", INFO);
-           m_requestedVolume = REQUESTED_VOLUME_CUSTOM;
-           e_ret = OK;
-           break;
+      case REQUESTED_VOLUME_CUSTOM:
+         debugOutput::sendMessage("Requested volume custom, Test Size", INFO);
+         m_requestedVolume = REQUESTED_VOLUME_CUSTOM;
+         e_ret = OK;
+         break;
 
-       default:
-           break;
-       }
+      default:
+         break;
+      }
    }
 
    this->clearCommandString(); // lode added

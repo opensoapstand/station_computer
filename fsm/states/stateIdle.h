@@ -21,27 +21,25 @@
 
 class stateIdle : public stateVirtual
 {
-    public:
-        stateIdle();
-        stateIdle (messageMediator * message); //debug through local network 
-        ~stateIdle ();
+public:
+    stateIdle();
+    stateIdle(messageMediator *message); //debug through local network
+    ~stateIdle();
 
-        string toString();
+    string toString();
 
-        DF_ERROR onEntry();
-        DF_ERROR onAction();
-        DF_ERROR onExit();
-        // DF_ERROR dispenserSetup(){};
+    DF_ERROR onEntry();
+    DF_ERROR onAction();
+    DF_ERROR onExit();
+    // DF_ERROR dispenserSetup(){};
 
-        // messageMediator * g_pMessaging;
+    // messageMediator * g_pMessaging;
 
-        drink* drinkOrder;
+    drink *drinkOrder;
 
-    private:
-        int pos;
-        dispenser* productDispensers;
-
+private:
+    int pos;
+    dispenser *productDispensers;
 };
-
 
 #endif

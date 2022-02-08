@@ -13,13 +13,13 @@
 #ifndef DFTYPES__H_
 #define DFTYPES__H_
 
-#define XML_SETTINGS  "/release/df_settings.xml"
+#define XML_SETTINGS "/release/df_settings.xml"
 
 #include <sqlite3.h>
 #define PRODUCT_DISPENSERS_MAX 4
 
-
-typedef enum DF_FSM {
+typedef enum DF_FSM
+{
    START,
    INIT,
    IDLE,
@@ -32,8 +32,8 @@ typedef enum DF_FSM {
    FSM_MAX,
 } DF_FSM;
 
-
-typedef enum DF_ERROR {
+typedef enum DF_ERROR
+{
    OK = 0,
    ERROR_BAD_PARAMS,
    ERROR_MECH = 10,

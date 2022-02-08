@@ -1,7 +1,7 @@
 //***************************************
 //
 // dispenser.cpp
-// Dispenser (Model) class Implementation: 
+// Dispenser (Model) class Implementation:
 //
 // Manages and owns the package for one product to dispense.
 // Links to circuit board addresses and
@@ -15,9 +15,7 @@
 //***************************************
 #include "dispenser.h"
 
-
-#define DEFAULT_PUMP_PWM  0x80
-
+#define DEFAULT_PUMP_PWM 0x80
 
 #define ACTIVATION_TIME 5
 #define TEST_ACTIVATION_TIME 3
@@ -25,11 +23,10 @@
 #define CLEAN_WATER_TIME 1
 #define CLEAN_AIR_TIME 1
 
-
 dsed8344 *dispenser::the_8344 = nullptr;
 
-
-dispenser::dispenser(){
+dispenser::dispenser()
+{
     //default constructor to set all pin to nullptr
     //debugOutput::sendMessage("dispenser", INFO);
 
@@ -42,26 +39,25 @@ dispenser::dispenser(){
     // times we create a dispenser() class.
     if (the_8344 == nullptr)
     {
-	the_8344 = new dsed8344 ();
+        the_8344 = new dsed8344();
     }
 
     // Set the pump PWM value to a nominal value
-    the_8344->setPumpPWM (DEFAULT_PUMP_PWM);
+    the_8344->setPumpPWM(DEFAULT_PUMP_PWM);
     the_8344->setButtonPower(false);
-    
+
     for (int i = 0; i < NUM_SOLENOID; i++)
-        m_pSolenoid[i] = nullptr; 
-      
+        m_pSolenoid[i] = nullptr;
+
     m_pFlowsenor[NUM_FLOWSENSOR] = nullptr;
-      
+
     for (int i = 0; i < NUM_PUMP; i++)
         m_pPump[i] = nullptr;
-
-
 }
 
 // CTOR
-dispenser::dispenser(gpio* ButtonReference){
+dispenser::dispenser(gpio *ButtonReference)
+{
     //default constructor to set all pin to nullptr
     //debugOutput::sendMessage("dispenser", INFO);
     m_pButton[0] = ButtonReference;
@@ -69,17 +65,17 @@ dispenser::dispenser(gpio* ButtonReference){
     m_pSelectedProduct = nullptr;
 
     for (int i = 0; i < NUM_SOLENOID; i++)
-        m_pSolenoid[i] = nullptr; 
-      
+        m_pSolenoid[i] = nullptr;
+
     m_pFlowsenor[NUM_FLOWSENSOR] = nullptr;
-      
+
     for (int i = 0; i < NUM_PUMP; i++)
         m_pPump[i] = nullptr;
-
 }
 
 // DTOR
-dispenser::~dispenser(){
+dispenser::~dispenser()
+{
     debugOutput::sendMessage("~dispenser", INFO);
 
     delete the_8344;
@@ -93,15 +89,15 @@ dispenser::~dispenser(){
 }
 
 // TODO: Check and remove; stateinit should handle productDispensers
-void dispenser::initDispenser(int slot){
-
+void dispenser::initDispenser(int slot)
+{
 }
 
 // TODO: Call this function on Dispense onEntry()
 DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
 {
     debugOutput::sendMessage("-----dispenser::setSolenoid-----", INFO);
-   
+
     return OK;
 }
 
@@ -115,7 +111,7 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
     // debugOutput::sendMessage("-----dispenser::setFlowsensor-----", INFO);
     debugOutput::sendMessage(msg, INFO);
 
-    if((pos >= 0) && (pos < 4))
+    if ((pos >= 0) && (pos < 4))
     {
         // Instantiate, set input, spin up a flowsensor thread.
         m_pFlowsenor[pos] = new oddyseyx86GPIO(pin);
@@ -132,7 +128,8 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
     return e_ret;
 }
 
-DF_ERROR dispenser::setPowerOffListener(){
+DF_ERROR dispenser::setPowerOffListener()
+{
 
     m_pPWRorMM[0] = new oddyseyx86GPIO(391);
     m_pPowerOff[0] = new oddyseyx86GPIO(340);
@@ -141,17 +138,16 @@ DF_ERROR dispenser::setPowerOffListener(){
     m_pPowerOff[0]->setDirection(true);
     m_pMM[0]->setDirection(true);
     m_pPWRorMM[0]->startListenerPWR();
-
 }
 
 // TODO: Call this function on Dispense onEntry()
 DF_ERROR dispenser::setPump(int mcpAddress, int pin, int position)
 {
-    DF_ERROR e_ret = ERROR_BAD_PARAMS; //reset variable    
+    DF_ERROR e_ret = ERROR_BAD_PARAMS; //reset variable
 
     // Save the pump number of this instance
     pump_position = (unsigned char)(position + 1);
-    
+
     return e_ret = OK;
 }
 
@@ -159,62 +155,64 @@ DF_ERROR dispenser::setPump(int mcpAddress, int pin, int position)
 // Reverse pump: Turn forward pin HIGH - Reverse pin LOW
 DF_ERROR dispenser::forwardPump()
 {
-    debugOutput::sendMessage("-----FORWARD Pump-----", INFO);   
-    the_8344->setPumpDirection (true);
+    debugOutput::sendMessage("-----FORWARD Pump-----", INFO);
+    the_8344->setPumpDirection(true);
 }
 
 // Reverse pump: Turn forward pin LOW - Reverse pin HIGH
 DF_ERROR dispenser::reversePump()
 {
-    debugOutput::sendMessage("-----REVERSE Pump-----", INFO);   
-    the_8344->setPumpDirection (false);
+    debugOutput::sendMessage("-----REVERSE Pump-----", INFO);
+    the_8344->setPumpDirection(false);
 }
 
 // Stops pumping: Turn forward pin LOW - Reverse pin LOW
 DF_ERROR dispenser::stopPump()
 {
-    debugOutput::sendMessage("-----Stop Pump-----", INFO);   
-    the_8344->stopPump ();
+    debugOutput::sendMessage("-----Stop Pump-----", INFO);
+    the_8344->stopPump();
 }
 
 // Disenses drinks by turning Solenoid Signal to HIGH then to LOW
-DF_ERROR dispenser::startDispense (int pos){
+DF_ERROR dispenser::startDispense(int pos)
+{
     DF_ERROR e_ret = ERROR_MECH_DRINK_FAULT;
     debugOutput::sendMessage("-----Start Dispense-----", INFO);
     // XXX: Prepare Button - Linked thru State Virtual
     // e_ret = connectButton();
 
     // Solenoid Position Check
-//    if(pos != DRINK) {
-//        e_ret = ERROR_ELEC_PIN_DISPENSE;
-//        return e_ret;
-//    }
+    //    if(pos != DRINK) {
+    //        e_ret = ERROR_ELEC_PIN_DISPENSE;
+    //        return e_ret;
+    //    }
 
     // Open Drink Solenoid
     // debugOutput::sendMessage("Trigger solenoid:", INFO);
     // m_pSolenoid[pos]->writePin(HIGH);
-    debugOutput::sendMessage("Triggered pump:"+to_string(pos), INFO);
- 
+    debugOutput::sendMessage("Triggered pump:" + to_string(pos), INFO);
+
     // If Still start pump!
-   // if(m_isStill && (m_pPump != nullptr) ) {
-        //sleep(PRIME_PUMP_TIME);
-        forwardPump();
-        the_8344->setPumpPWM((unsigned char)(m_pSelectedProduct->getPWM()));
-        debugOutput::sendMessage("PWM SET!", INFO);
-        //cout << the_8344->getPumpPWM();
-        the_8344->startPump(pos);
+    // if(m_isStill && (m_pPump != nullptr) ) {
+    //sleep(PRIME_PUMP_TIME);
+    forwardPump();
+    the_8344->setPumpPWM((unsigned char)(m_pSelectedProduct->getPWM()));
+    debugOutput::sendMessage("PWM SET!", INFO);
+    //cout << the_8344->getPumpPWM();
+    the_8344->startPump(pos);
     //}
     return e_ret = OK;
 }
 
-// 
-DF_ERROR dispenser::stopDispense(int pos){
+//
+DF_ERROR dispenser::stopDispense(int pos)
+{
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
     // Stop Pump
-//    if(m_isStill && m_pPump != nullptr ) {
-        the_8344->stopPump();
-//        sleep(PRIME_PUMP_TIME);
-//    }
+    //    if(m_isStill && m_pPump != nullptr ) {
+    the_8344->stopPump();
+    //        sleep(PRIME_PUMP_TIME);
+    //    }
 
     // Shut Solenoid
     // m_pSolenoid[pos]->writePin(LOW);
@@ -224,16 +222,17 @@ DF_ERROR dispenser::stopDispense(int pos){
     // e_ret = disconnectButton();
     m_isDispenseDone = true;
 
-
     return e_ret = OK;
 }
 
-DF_ERROR dispenser::connectButton(){
+DF_ERROR dispenser::connectButton()
+{
     return OK;
-    // return m_pButton[0]->writePin(HIGH);    
+    // return m_pButton[0]->writePin(HIGH);
 }
 
-DF_ERROR dispenser::disconnectButton(){
+DF_ERROR dispenser::disconnectButton()
+{
     return OK;
     // return m_pButton[0]->writePin(LOW);
 }
@@ -262,12 +261,14 @@ DF_ERROR dispenser::disconnectButton(){
 //     return e_ret = OK;
 // }
 
-drink* dispenser::getProduct(){
+drink *dispenser::getProduct()
+{
     return m_pSelectedProduct;
 }
 
 // Timer based
-DF_ERROR dispenser::testSolenoidDispense(int pos){
+DF_ERROR dispenser::testSolenoidDispense(int pos)
+{
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
     //m_pSolenoid[pos]->writePin(HIGH);
@@ -278,19 +279,25 @@ DF_ERROR dispenser::testSolenoidDispense(int pos){
 }
 
 /* ------Getters, Setters and Utilities------ */
-int dispenser::getI2CAddress(int pos){
+int dispenser::getI2CAddress(int pos)
+{
     //return m_pSolenoid[pos]->getMCPAddress();
 }
 
-int dispenser::getI2CPin(int pos){
+int dispenser::getI2CPin(int pos)
+{
     debugOutput::sendMessage("getI2C Error!", ERROR);
     //return m_pSolenoid[pos]->getMCPPin();
 }
 
-DF_ERROR dispenser::setProduct(drink* drink){
-    if(drink != nullptr) {
+DF_ERROR dispenser::setProduct(drink *drink)
+{
+    if (drink != nullptr)
+    {
         m_pSelectedProduct = drink;
-    } else {
+    }
+    else
+    {
         debugOutput::sendMessage("Set Drink Error!", ERROR);
     }
 }

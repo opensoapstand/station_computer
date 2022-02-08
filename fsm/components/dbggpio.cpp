@@ -16,19 +16,16 @@
 // Default Ctor
 dbggpio::dbggpio()
 {
-
 }
 
 // Ctor with Pin Address Reference
 dbggpio::dbggpio(int address)
 {
-
 }
 
 // Dtor
 dbggpio::~dbggpio()
 {
-
 }
 
 // XXX: This does not have a reference anywhere!
@@ -37,28 +34,27 @@ DF_ERROR dbggpio::setDirection(bool input)
 {
 	debugOutput debugInfo;
 	debugInfo.sendMessage("dbggpio::setDirection=-=-=-=", INFO);
-	
+
 	DF_ERROR df_ret = OK;
 
 	m_input = input;
 	// this->m_mcp->pinMode(m_nAddress, OUTPUT);
 	// if (m_input) {
 	// 	this->m_mcp->pinMode(m_nAddress, INPUT);
-	// }	
+	// }
 
 	return df_ret;
 }
 
 // XXX: This does not have a reference anywhere!
 // Getter for the pin HIGH or LOW
-DF_ERROR dbggpio::readPin(bool * level)
+DF_ERROR dbggpio::readPin(bool *level)
 {
 	debugOutput debugInfo;
 	debugInfo.sendMessage("readPin", INFO);
 
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
-	
 	// if (m_input && (nullptr != level)) {
 	// 	*level = this->m_mcp->digitalRead(m_nAddress);
 	// 	df_ret = OK;
@@ -75,7 +71,6 @@ DF_ERROR dbggpio::writePin(bool level)
 	debugInfo.sendMessage("writePin", INFO);
 
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
-
 
 	// if (!m_input) {
 	// 	this->m_mcp->digitalWrite(m_nAddress, level);   //relies on bool to int

@@ -23,7 +23,7 @@
 #include <unistd.h>
 #include <time.h>
 
-#include <sqlite3.h> 
+#include <sqlite3.h>
 
 #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 
@@ -32,51 +32,51 @@ using namespace std;
 class drink
 {
 public:
-	drink();
-	drink(int slot);
+        drink();
+        drink(int slot);
         drink(int slot, string name, double nDispenseVolume, double nTargetVolume_l, double nTargetVolume_s, double calibration_const, double price_l, double price_s, bool isStillDrink, double nVolumePerTick, string nPLU_l, string nPLU_s, string paymentMethod, string name_receipt);
-	~drink();
+        ~drink();
 
-	//getter
-	int getDrinkOption(){return m_nSlot;} // For IPC
-	bool getIsStillDrink(); // For pump check
-        double getVolumeDispensed(){return m_nVolumeDispensed;}
+        //getter
+        int getDrinkOption() { return m_nSlot; } // For IPC
+        bool getIsStillDrink();                  // For pump check
+        double getVolumeDispensed() { return m_nVolumeDispensed; }
         double getVolumeDispensedPreviously();
         double getTargetVolume(char size);
         double getPrice(char size);
         string getPLU(char size);
-        string getPaymentMethod(){return m_paymentMethod;}
+        string getPaymentMethod() { return m_paymentMethod; }
 
         //void setTargetVolume(double nVolumeTarget){m_nVolumeTarget = nVolumeTarget;};
 
-	// Interrupt Helpers
+        // Interrupt Helpers
         DF_ERROR startDispense(int nVolumeToDispense, double nPrice);
         DF_ERROR stopDispense();
 
         DF_ERROR initDispense();
 
         double getVolumeSinceLastPoll();
-	bool isDispenseComplete();
-	bool registerFlowSensorTick();
+        bool isDispenseComplete();
+        bool registerFlowSensorTick();
 
-	// int getTickCount(){return m_nTickCount;};
-	// void resetTickCount(){m_nTickCount = 0;};
+        // int getTickCount(){return m_nTickCount;};
+        // void resetTickCount(){m_nTickCount = 0;};
 
-	// DB Updates
-	void recordSale(int volume);
-	void refill(int volume);
+        // DB Updates
+        void recordSale(int volume);
+        void refill(int volume);
 
-	void drinkInfo();
-	void drinkVolumeInfo();
+        void drinkInfo();
+        void drinkVolumeInfo();
 
         int getPWM();
 
         double m_nVolumeDispensedPreviously;
         double m_nVolumeTarget;
-        double m_nVolumeTarget_l;  //how much to dispense (large)
-        double m_nVolumeTarget_s;  //how much to dispense (small)
-        double m_nVolumeTarget_t = 10000000;  //test dispense (infinite)
-        double m_nVolumeDispensed; //how much has been dispensed in this sale
+        double m_nVolumeTarget_l;            //how much to dispense (large)
+        double m_nVolumeTarget_s;            //how much to dispense (small)
+        double m_nVolumeTarget_t = 10000000; //test dispense (infinite)
+        double m_nVolumeDispensed;           //how much has been dispensed in this sale
         double m_price;
         double m_price_l;
         double m_price_s;
@@ -90,32 +90,30 @@ public:
         double m_nVolumePerTick;
 
         time_t rawtime;
-        struct tm * timeinfo;
+        struct tm *timeinfo;
 
         char m_nStartTime[50];
 
 private:
-	// TODO: Determine more data to modify per transaction...
-	int m_nSlot;
+        // TODO: Determine more data to modify per transaction...
+        int m_nSlot;
 
-
-	bool isDispenseFinished;
+        bool isDispenseFinished;
         double m_nVolumeDispensedSinceLastPoll;
-	double m_calibration_const;
+        double m_calibration_const;
 
-	double m_nTickCount;
-	bool valueChange;
+        double m_nTickCount;
+        bool valueChange;
 
-	bool m_isStillDrink;
+        bool m_isStillDrink;
 
-	void setSlot(int slot);
-	void setDrinkName(string drinkName);
-	void setIsStillDrink(bool isStillDrink);
+        void setSlot(int slot);
+        void setDrinkName(string drinkName);
+        void setIsStillDrink(bool isStillDrink);
         double getVolPerTick();
 
         sqlite3 *db;
         int rc;
-
 };
 
 #endif

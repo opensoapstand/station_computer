@@ -21,29 +21,25 @@
 
 class stateDispense : public stateVirtual
 {
-    public:
-        stateDispense();
-        stateDispense(messageMediator * message); 
-        ~stateDispense();
+public:
+    stateDispense();
+    stateDispense(messageMediator *message);
+    ~stateDispense();
 
-        string toString();
+    string toString();
 
-        DF_ERROR onEntry();
-        DF_ERROR onAction();
-        DF_ERROR onExit();
-        
-        // FIXME: Issues with Initializing with Button...
-        // dispenser* dispenserSetup(getButton()) {};
-        // DF_ERROR dispenserSetup();
+    DF_ERROR onEntry();
+    DF_ERROR onAction();
+    DF_ERROR onExit();
 
+    // FIXME: Issues with Initializing with Button...
+    // dispenser* dispenserSetup(getButton()) {};
+    // DF_ERROR dispenserSetup();
 
-    private:
-        int pos;
-        dispenser* productDispensers;
-        bool flushCommand;
-        char size;
-
-
-    
+private:
+    int pos;
+    dispenser *productDispensers;
+    bool flushCommand;
+    char size;
 };
 #endif

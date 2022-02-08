@@ -21,29 +21,26 @@
 
 #include "../objects/dispenser.h"
 
-
 class stateDispenseIdle : public stateVirtual
 {
-    public:
-        stateDispenseIdle();
-        stateDispenseIdle(messageMediator * message); //debug through local network 
-        ~stateDispenseIdle();
+public:
+    stateDispenseIdle();
+    stateDispenseIdle(messageMediator *message); //debug through local network
+    ~stateDispenseIdle();
 
-        string toString();
+    string toString();
 
-        DF_ERROR onEntry();
-        DF_ERROR onAction();        
-        DF_ERROR onExit();
+    DF_ERROR onEntry();
+    DF_ERROR onAction();
+    DF_ERROR onExit();
 
-        // DF_ERROR dispenserSetup(){};
+    // DF_ERROR dispenserSetup(){};
 
-    private:
-        int pos;
-        char size;
-        dispenser* productDispensers;
-        bool flushCommand;
-
+private:
+    int pos;
+    char size;
+    dispenser *productDispensers;
+    bool flushCommand;
 };
-
 
 #endif

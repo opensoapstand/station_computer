@@ -27,7 +27,6 @@ stateVirtual::stateVirtual(messageMediator *message)
    m_state = START;
 
    m_pMessaging = message;
-
 }
 
 stateVirtual::~stateVirtual()

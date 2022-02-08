@@ -16,14 +16,15 @@
 #include "gpio.h"
 #include "../objects/debugOutput.h"
 
-class dbggpio : public gpio{
+class dbggpio : public gpio
+{
 public:
-   dbggpio();
+	dbggpio();
 	dbggpio(int address);
 	~dbggpio();
 
 	DF_ERROR setDirection(bool input);
-	DF_ERROR readPin(bool* level);
+	DF_ERROR readPin(bool *level);
 	DF_ERROR writePin(bool level);
 
 protected:

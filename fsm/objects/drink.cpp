@@ -23,7 +23,7 @@ drink::drink()
 static int db_sql_callback(void *data, int argc, char **argv, char **azColName)
 {
     int i;
-//    fprintf(stderr, "%s: ", (const char *)data);
+    //    fprintf(stderr, "%s: ", (const char *)data);
 
     for (i = 0; i < argc; i++)
     {
@@ -56,29 +56,30 @@ drink::drink(int slot)
 
     if (rc)
     {
-       // fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        // fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
     }
     else
     {
-       // fprintf(stderr, "Opened database successfully\n");
+        // fprintf(stderr, "Opened database successfully\n");
     }
 
     string sql = "SELECT inventory.inventory_id, product.product_id,product.name, product.calibration_const, pricing.small_price, pricing.large_price FROM inventory INNER JOIN product ON inventory.product_id = product.product_id INNER JOIN pricing ON inventory.product_id = pricing.product_id WHERE inventory.inventory_id = " + to_string(m_nSlot) + ";";
 
-    rc = sqlite3_exec(db, sql.c_str(), db_sql_callback, (void*)data.c_str(), NULL); 
-  
-    if (rc != SQLITE_OK) 
-        cerr << "Error SELECT" << endl; 
-    else {
-      //  cout << "Operation OK!" << endl;
-    } 
+    rc = sqlite3_exec(db, sql.c_str(), db_sql_callback, (void *)data.c_str(), NULL);
 
+    if (rc != SQLITE_OK)
+        cerr << "Error SELECT" << endl;
+    else
+    {
+        //  cout << "Operation OK!" << endl;
+    }
 
     sqlite3_close(db);
 }
 
 // Test CTOR
-drink::drink(int slot, string name, double nVolumeDispensed, double nVolumeTarget_l,double nVolumeTarget_s , double calibration_const, double price_l, double price_s, bool isStillDrink, double nVolumePerTick, string nPLU_l, string nPLU_s, string paymentMethod, string name_receipt){
+drink::drink(int slot, string name, double nVolumeDispensed, double nVolumeTarget_l, double nVolumeTarget_s, double calibration_const, double price_l, double price_s, bool isStillDrink, double nVolumePerTick, string nPLU_l, string nPLU_s, string paymentMethod, string name_receipt)
+{
     m_nSlot = slot;
     m_name = name;
     m_nVolumeDispensed = nVolumeDispensed;
@@ -131,8 +132,9 @@ bool drink::getIsStillDrink()
     return m_isStillDrink;
 }
 
-bool drink::registerFlowSensorTick(){
-//    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
+bool drink::registerFlowSensorTick()
+{
+    //    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
     m_nVolumeDispensed += m_nVolumePerTick;
 }
 
@@ -159,7 +161,7 @@ double drink::getVolumeSinceLastPoll()
 
 double drink::getVolumeDispensedPreviously()
 {
-//    cout << "GETTING VOLUME DISPENSED AND IT IS: " << m_nVolumeDispensedPreviously << endl;
+    //    cout << "GETTING VOLUME DISPENSED AND IT IS: " << m_nVolumeDispensedPreviously << endl;
     return m_nVolumeDispensedPreviously;
 }
 
@@ -179,77 +181,86 @@ DF_ERROR drink::startDispense(int nVolumeToDispense, double nPrice)
     return dfRet;
 }
 
-int drink::getPWM(){
+int drink::getPWM()
+{
     rc = sqlite3_open(DB_PATH, &db);
 
-    sqlite3_stmt * stmt;
+    sqlite3_stmt *stmt;
 
     //debugOutput::sendMessage("Machine ID getter START", INFO);
 
-    if( rc ) {
-      // fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
-       // TODO: Error handling here...
-    } else {
-     //  fprintf(stderr, "Opened database successfully\n");
+    if (rc)
+    {
+        // fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        // TODO: Error handling here...
+    }
+    else
+    {
+        //  fprintf(stderr, "Opened database successfully\n");
     }
 
-    string sql_string = "SELECT pwm FROM products WHERE slot="+ to_string(m_nSlot) +";";
-     /* Create SQL statement for transactions */
-     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
-     sqlite3_step(stmt);
-     std::string str = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0)));;
-     int pwm = stod(str);
-     sqlite3_finalize(stmt);
-     sqlite3_close(db);
-//     cout << "INSIDE getPWM() and PWM is = " << str << endl;
-     return pwm;
+    string sql_string = "SELECT pwm FROM products WHERE slot=" + to_string(m_nSlot) + ";";
+    /* Create SQL statement for transactions */
+    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+    sqlite3_step(stmt);
+    std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+    ;
+    int pwm = stod(str);
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    //     cout << "INSIDE getPWM() and PWM is = " << str << endl;
+    return pwm;
 }
 
-double drink::getVolPerTick(){
+double drink::getVolPerTick()
+{
 
     rc = sqlite3_open(DB_PATH, &db);
 
-    sqlite3_stmt * stmt;
+    sqlite3_stmt *stmt;
 
     //debugOutput::sendMessage("Machine ID getter START", INFO);
 
-    if( rc ) {
-      // fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
-       // TODO: Error handling here...
-    } else {
-//       fprintf(stderr, "Opened database successfully\n");
+    if (rc)
+    {
+        // fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        // TODO: Error handling here...
+    }
+    else
+    {
+        //       fprintf(stderr, "Opened database successfully\n");
     }
 
-    string sql_string = "SELECT volume_per_tick FROM products WHERE slot="+ to_string(m_nSlot) +";";
-     /* Create SQL statement for transactions */
-     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
-     sqlite3_step(stmt);
-     std::string str = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0)));;
-     double vol_per_tick = stod(str);
-     sqlite3_finalize(stmt);
-     sqlite3_close(db);
-//     cout << str << endl;
-     return vol_per_tick;
-
+    string sql_string = "SELECT volume_per_tick FROM products WHERE slot=" + to_string(m_nSlot) + ";";
+    /* Create SQL statement for transactions */
+    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+    sqlite3_step(stmt);
+    std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+    ;
+    double vol_per_tick = stod(str);
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    //     cout << str << endl;
+    return vol_per_tick;
 }
 
 DF_ERROR drink::initDispense()
 {
-     m_nVolumeDispensed = 0;
-     m_nVolumeDispensedPreviously = 0;
+    m_nVolumeDispensed = 0;
+    m_nVolumeDispensedPreviously = 0;
 
-     // Set Start Time
-     time(&rawtime);
-     timeinfo = localtime(&rawtime);
+    // Set Start Time
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
 
-     strftime(m_nStartTime, 50, "%F %T", timeinfo);
+    strftime(m_nStartTime, 50, "%F %T", timeinfo);
 }
 
 DF_ERROR drink::stopDispense()
 {
     DF_ERROR dfRet = ERROR_BAD_PARAMS;
 
-//    m_nVolumeDispensed = 0;
+    //    m_nVolumeDispensed = 0;
     m_nVolumeDispensedSinceLastPoll = 0;
     m_nVolumeDispensedPreviously = 0;
 
@@ -261,57 +272,67 @@ bool drink::isDispenseComplete()
 {
     bool bRet = false;
 
-    if (m_nVolumeTarget <= m_nVolumeDispensed){
-       // cout << "Target HIT!" << endl;
+    if (m_nVolumeTarget <= m_nVolumeDispensed)
+    {
+        // cout << "Target HIT!" << endl;
         bRet = true;
     }
     return bRet;
 }
 
-void drink::drinkInfo() {
-//    cout << "Option: " << m_nSlot << endl;
-//    cout << "Name: " << m_name << endl;
-//    cout << "Dispense Volume: " << m_nVolumeDispensed << endl;
-//    cout << "Target Volume: " << m_nVolumeTarget << endl;
-//    cout << "Calibration: " << m_calibration_const << endl;
-//    cout << "Price: " << m_price << endl;
-//    cout << "Is Still?: " << m_isStillDrink << endl;
-//    cout << "Volume per Tick: " << m_nVolumePerTick << endl;
+void drink::drinkInfo()
+{
+    //    cout << "Option: " << m_nSlot << endl;
+    //    cout << "Name: " << m_name << endl;
+    //    cout << "Dispense Volume: " << m_nVolumeDispensed << endl;
+    //    cout << "Target Volume: " << m_nVolumeTarget << endl;
+    //    cout << "Calibration: " << m_calibration_const << endl;
+    //    cout << "Price: " << m_price << endl;
+    //    cout << "Is Still?: " << m_isStillDrink << endl;
+    //    cout << "Volume per Tick: " << m_nVolumePerTick << endl;
 }
 
-void drink::drinkVolumeInfo(){
+void drink::drinkVolumeInfo()
+{
     // cout << "Volume since last poll: " << m_nVolumeDispensedSinceLastPoll << endl;
     // cout << "How much to dispense: " << m_nVolumeTarget << endl;
-//	cout << "Dispensed so far: " << m_nVolumeDispensed << endl;
+    //	cout << "Dispensed so far: " << m_nVolumeDispensed << endl;
 }
 
-double drink::getTargetVolume(char size){
-    if (size == 'l'){
+double drink::getTargetVolume(char size)
+{
+    if (size == 'l')
+    {
         return m_nVolumeTarget_l;
     }
-    else if (size == 's'){
+    else if (size == 's')
+    {
         return m_nVolumeTarget_s;
-    }else if (size == 't')
+    }
+    else if (size == 't')
         return m_nVolumeTarget_t;
-
 }
 
-double drink::getPrice(char size){
-    if (size == 'l'){
+double drink::getPrice(char size)
+{
+    if (size == 'l')
+    {
         return m_price_l;
     }
-    else if (size == 's'){
+    else if (size == 's')
+    {
         return m_price_s;
     }
 }
 
-string drink::getPLU(char size){
-    if (size == 'l'){
+string drink::getPLU(char size)
+{
+    if (size == 'l')
+    {
         return m_nPLU_l;
     }
-    else if (size == 's'){
+    else if (size == 's')
+    {
         return m_nPLU_s;
     }
-
 }
-

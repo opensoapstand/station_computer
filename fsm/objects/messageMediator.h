@@ -1,11 +1,11 @@
 //***************************************
 //
 // messageMediator.h
-// Messaging IPC Controller and Model 
+// Messaging IPC Controller and Model
 // Definition:
 //
-// Holds reference and cordinates string 
-// commands from GUI, GPIO's and 
+// Holds reference and cordinates string
+// commands from GUI, GPIO's and
 // Database threads
 //
 // created: 12-06-2020
@@ -48,60 +48,59 @@
 
 class messageMediator
 {
-   public:
-      messageMediator();
-      ~messageMediator();
+public:
+   messageMediator();
+   ~messageMediator();
 
-      DF_ERROR createThreads(pthread_t &kbThread, pthread_t &ipThread);
+   DF_ERROR createThreads(pthread_t &kbThread, pthread_t &ipThread);
 
-      DF_ERROR sendMessage(string msg);
+   DF_ERROR sendMessage(string msg);
 
-      string getProcessString();
-      DF_ERROR parseCommandString();
-      void clearProcessString();
-      //void clearcCommand(){m_requestedAction = '0';}
+   string getProcessString();
+   DF_ERROR parseCommandString();
+   void clearProcessString();
+   //void clearcCommand(){m_requestedAction = '0';}
 
-      string getCommandString();
-      bool isCommandReady(){return m_bCommandReady;}
-      void clearCommandString();
+   string getCommandString();
+   bool isCommandReady() { return m_bCommandReady; }
+   void clearCommandString();
 
-      int getProductNumber(){return m_RequestedProductIndexInt;}
-      char getAction(){return m_requestedAction;}
-     
-      double getnTargetVolume(){return m_nVolumeTarget;}
-      char getRequestedVolume(){return m_requestedVolume;}
+   int getProductNumber() { return m_RequestedProductIndexInt; }
+   char getAction() { return m_requestedAction; }
 
+   double getnTargetVolume() { return m_nVolumeTarget; }
+   char getRequestedVolume() { return m_requestedVolume; }
 
-      // static ServerSocket *fsm_comm_socket;
-   
-      //DF_ERROR doKBThread (void * pThreadArgs);
+   // static ServerSocket *fsm_comm_socket;
 
-   private:
-      int messageIP;
-      static bool m_fExitThreads;
-      // pthread_t m_pKBThread;
+   //DF_ERROR doKBThread (void * pThreadArgs);
 
-      static int percentComplete;
-      static string AckOrNakResult;
+private:
+   int messageIP;
+   static bool m_fExitThreads;
+   // pthread_t m_pKBThread;
 
-      static string m_processString;
-      static string m_processCommand;
-      static bool m_bCommandReady;
+   static int percentComplete;
+   static string AckOrNakResult;
 
-      //int pos;
-      static int m_RequestedProductIndexInt;
-      static int m_nSolenoid;
-      static char m_requestedAction;
-      static double m_nVolumeTarget;
-      static char m_requestedVolume;
-   
-      static DF_ERROR sendProgress(int percentComplete);
-      static DF_ERROR sendQtACK(string AckOrNak);
+   static string m_processString;
+   static string m_processCommand;
+   static bool m_bCommandReady;
 
-      static DF_ERROR updateCmdString(char key);
-      static DF_ERROR updateCmdString();
-      static void * doKBThread(void * pThreadArgs);
-      static void * doIPThread(void * pThreadArgs);
+   //int pos;
+   static int m_RequestedProductIndexInt;
+   static int m_nSolenoid;
+   static char m_requestedAction;
+   static double m_nVolumeTarget;
+   static char m_requestedVolume;
+
+   static DF_ERROR sendProgress(int percentComplete);
+   static DF_ERROR sendQtACK(string AckOrNak);
+
+   static DF_ERROR updateCmdString(char key);
+   static DF_ERROR updateCmdString();
+   static void *doKBThread(void *pThreadArgs);
+   static void *doIPThread(void *pThreadArgs);
 };
 
 #endif

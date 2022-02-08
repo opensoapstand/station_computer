@@ -24,8 +24,8 @@
 
 // Total Number of Devices
 #define NUM_SOLENOID 3 //12v for drink,water, and air
-#define NUM_PUMP 2 //forward and reverse pin
-#define NUM_FLOWSENSOR  1 
+#define NUM_PUMP 2     //forward and reverse pin
+#define NUM_FLOWSENSOR 1
 #define NUM_BUTTON 1
 
 // Range of Dispenser Still Option positions that use pumps
@@ -50,9 +50,9 @@
 
 class dispenser
 {
-   public:
+public:
       dispenser();
-      dispenser(gpio* buttonReference);
+      dispenser(gpio *buttonReference);
       ~dispenser();
 
       void initDispenser(int slot);
@@ -67,59 +67,58 @@ class dispenser
 
       DF_ERROR forwardPump(); //reached dispense value
       DF_ERROR reversePump(); //reached dispense value
-      DF_ERROR stopPump(); //reached dispense value
+      DF_ERROR stopPump();    //reached dispense value
 
       DF_ERROR connectButton();
       DF_ERROR disconnectButton();
 
-//      DF_ERROR buttonPressListener();
+      //      DF_ERROR buttonPressListener();
 
-      bool getIsDispenseComplete(){return m_isDispenseDone;}
-      void setIsDispenseComplete(bool isDispenseComplete){m_isDispenseDone = isDispenseComplete;}
+      bool getIsDispenseComplete() { return m_isDispenseDone; }
+      void setIsDispenseComplete(bool isDispenseComplete) { m_isDispenseDone = isDispenseComplete; }
 
-      void setm_pIsDispenseDone(){*m_pIsDispensing = false;}
-      void setm_pIsDispensing(){*m_pIsDispensing = true;}
-      void setm_pRestartDispense(){*m_pIsDispensing = false;}
-      
+      void setm_pIsDispenseDone() { *m_pIsDispensing = false; }
+      void setm_pIsDispensing() { *m_pIsDispensing = true; }
+      void setm_pRestartDispense() { *m_pIsDispensing = false; }
+
       DF_ERROR cleanNozzle(int posW, int posA);
 
       DF_ERROR testSolenoidDispense(int pos);
 
-      drink* getProduct();
+      drink *getProduct();
 
-      DF_ERROR setProduct(drink* drink);
+      DF_ERROR setProduct(drink *drink);
 
       int getI2CAddress(int pos);
       int getI2CPin(int pos);
 
       DF_ERROR setPowerOffListener();
 
-//      DF_ERROR setButtonPress(int address_num, int pin_num);
+      //      DF_ERROR setButtonPress(int address_num, int pin_num);
       bool reader = true;
 
-//      double getButtonPressDuration();
-//      int getButtonPressTimes();
-//      void resetButtonPressTimes();
-//      void resetButtonPressDuration();
+      //      double getButtonPressDuration();
+      //      int getButtonPressTimes();
+      //      void resetButtonPressTimes();
+      //      void resetButtonPressDuration();
 
-   private:
-
+private:
       // We only want to create one instance of the class that controls
       // the actual hardware, so declare this static.
       static dsed8344 *the_8344;
 
       unsigned char pump_position;
-    
+
       bool m_isDispenseDone; // XXX: Remove later.
       bool m_isStill;
 
-      bool* m_pIsDispensing;
+      bool *m_pIsDispensing;
 
       bool m_isDispenseNew;
 
-      drink* m_pSelectedProduct;
+      drink *m_pSelectedProduct;
 
-      DF_ERROR * m_pthreadError;
+      DF_ERROR *m_pthreadError;
 
       // Pointers to Addresses set in State Init
 
@@ -129,7 +128,6 @@ class dispenser
       gpio *m_pPowerOff[1];
       gpio *m_pMM[1];
       gpio *m_pPWRorMM[1];
-
 
       // Button reference m_pButton[1] in stateVirtual; IPC shared due to Arduino!
       gpio *m_pButton[NUM_BUTTON];

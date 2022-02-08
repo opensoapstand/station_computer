@@ -1,7 +1,7 @@
 //***************************************
 //
 // oddyseyX86gpio.h
-// GPIO Definitions for 
+// GPIO Definitions for
 // NATIVE x86 pins on Oddysey board
 //
 // created: 15-06-2020
@@ -24,7 +24,7 @@ class oddyseyx86GPIO : public gpio
 public:
 	oddyseyx86GPIO();
 	oddyseyx86GPIO(int address);
-//        oddyseyx86GPIO(messageMediator * message);
+	//        oddyseyx86GPIO(messageMediator * message);
 	~oddyseyx86GPIO();
 
 	//setter
@@ -32,27 +32,25 @@ public:
 
 	//
 	DF_ERROR setDirection(bool input);
-	DF_ERROR readPin(bool* level);
+	DF_ERROR readPin(bool *level);
 	DF_ERROR writePin(bool level);
 
-        bool reader = true;
-
+	bool reader = true;
 
 protected:
 	void monitorGPIO();
-        void monitorGPIO_PWR();
+	void monitorGPIO_PWR();
 	string command_to_string(string cmd);
-        messageMediator* m_pMessaging;
+	messageMediator *m_pMessaging;
 
 private:
 	struct pollfd pfd;
 
 	double tickcounter;
 
-        char compareChar2;
+	char compareChar2;
 
-        bool readButtonPin(int pin);
+	bool readButtonPin(int pin);
 };
 
 #endif
-

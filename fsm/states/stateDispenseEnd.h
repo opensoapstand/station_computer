@@ -38,43 +38,42 @@
 
 class stateDispenseEnd : public stateVirtual
 {
-    public:
-        stateDispenseEnd();
-        stateDispenseEnd(messageMediator * message); 
-        ~stateDispenseEnd();
+public:
+    stateDispenseEnd();
+    stateDispenseEnd(messageMediator *message);
+    ~stateDispenseEnd();
 
-        string toString();
+    string toString();
 
-        dispenser* productDispensers;
+    dispenser *productDispensers;
 
-        DF_ERROR onEntry();
-        DF_ERROR onAction();
-        DF_ERROR onExit();
+    DF_ERROR onEntry();
+    DF_ERROR onAction();
+    DF_ERROR onExit();
 
-        
-    private:    
-        int pos;
-        char command;
-        char size;
+private:
+    int pos;
+    char command;
+    char size;
 
-        sqlite3 *db;
-        int rc;
+    sqlite3 *db;
+    int rc;
 
-        time_t rawtime;
-        struct tm * timeinfo;
+    time_t rawtime;
+    struct tm *timeinfo;
 
-        char now[50];
+    char now[50];
 
-        DF_ERROR updateDB();
-        DF_ERROR sendDB();
-        DF_ERROR printer();
-        std::string getMachineID();
-        std::string getProductID(int slot);
-        void bufferCURL(std::string curl_params);
-        std::string getUnits(int slot);
+    DF_ERROR updateDB();
+    DF_ERROR sendDB();
+    DF_ERROR printer();
+    std::string getMachineID();
+    std::string getProductID(int slot);
+    void bufferCURL(std::string curl_params);
+    std::string getUnits(int slot);
 
-        CURL *curl;
-        CURLcode res;
-        char * curl_data;
+    CURL *curl;
+    CURLcode res;
+    char *curl_data;
 };
 #endif

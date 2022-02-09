@@ -52,13 +52,13 @@ DF_ERROR stateDispense::onEntry()
    pos = m_pMessaging->getProductNumber();
    size = m_pMessaging->getRequestedVolume();
    pos = pos - 1;
-   productDispensers[pos].getProduct()->drinkVolumeInfo();
+   productDispensers[pos].getProduct()->productVolumeInfo();
    return e_ret;
 }
 
 /*
  * Checks state of FSM; Accepts incomming string to process for
- * Air, Water and Drink.  Sends signal to Solenoids to Dispense,
+ * Air, Water and Product.  Sends signal to Solenoids to Dispense,
  * Based on string command
  */
 DF_ERROR stateDispense::onAction()
@@ -109,7 +109,7 @@ DF_ERROR stateDispense::onAction()
          productDispensers[pos].getProduct()->m_nVolumeDispensedPreviously = productDispensers[pos].getProduct()->getVolumeDispensed();
       }
 
-      productDispensers[pos].getProduct()->drinkVolumeInfo();
+      productDispensers[pos].getProduct()->productVolumeInfo();
 
       // TODO: Figure out a Cancel/completed volume from IPC if volume is hit
       // Logic compare present and last 3 states for volume..continue
@@ -131,8 +131,7 @@ DF_ERROR stateDispense::onAction()
 DF_ERROR stateDispense::onExit()
 {
    DF_ERROR e_ret = OK;
-   //productDispensers[pos].stopDispense(DRINK);
-
+   //productDispensers[pos].stopDispense(PRODUCT);
    productDispensers[pos].setIsDispenseComplete(false);
 
    return e_ret;

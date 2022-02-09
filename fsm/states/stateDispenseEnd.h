@@ -34,7 +34,6 @@
 #include "../fsm.h"
 #include "stateVirtual.h"
 
-#define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 
 class stateDispenseEnd : public stateVirtual
 {

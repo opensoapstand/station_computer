@@ -17,7 +17,7 @@
 #include "../objects/messageMediator.h"
 #include "stateVirtual.h"
 #include "../fsm.h"
-#include "../objects/drink.h"
+#include "../objects/product.h"
 
 class stateIdle : public stateVirtual
 {
@@ -35,7 +35,7 @@ public:
 
     // messageMediator * g_pMessaging;
 
-    drink *drinkOrder;
+    product *productOrder;
 
 private:
     int pos;

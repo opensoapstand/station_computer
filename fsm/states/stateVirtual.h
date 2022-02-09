@@ -43,7 +43,7 @@ public:
     gpio *getSolenoid(int pos, int type);
     gpio *getButton();
 
-    static drink *testDrinks[PRODUCT_DISPENSERS_MAX];
+    static product *testProducts[PRODUCT_DISPENSERS_MAX];
 
     // // FIXME: Cludgey fix to exit dispense loop.
     // bool getIsDispenseComplete(){return m_isDispenseComplete;}
@@ -56,8 +56,8 @@ protected:
     //        mcpGPIO *m_pButtonPress;
     messageMediator *m_pMessaging;
 
-    // Unique Reference to selected Drink
-    unique_ptr<drink> selectedDrinkPtr;
+    // Unique Reference to selected Product
+    unique_ptr<product> selectedProductPtr;
     // Unique Reference to currently selected Dispenser
     unique_ptr<dispenser> selectedDispenserPtr;
 };

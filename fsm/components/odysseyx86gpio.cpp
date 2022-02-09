@@ -274,7 +274,7 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
 //    else
 //    {
 //        //debugOutput::sendMessage("FLOW TICK", INFO);
-//        m_pDrink->registerFlowSensorTick(); //trigger the callback
+//        m_pProduct->registerFlowSensorTick(); //trigger the callback
 //    }
 
 //    close(fd);
@@ -325,7 +325,7 @@ void oddyseyx86GPIO::monitorGPIO()
                 {
                         //                        debugOutput::sendMessage("HIGH Triggered Flow", INFO);
                         //  usleep(500000);						// Sleep to make sure debug gets chance to print
-                        m_pDrink->registerFlowSensorTick(); //trigger the callback
+                        m_pProduct->registerFlowSensorTick(); //trigger the callback
                                                             //                        cout << "Registered Tick" << endl;
                 }
                 else if (('0' == c) && (compareChar == '1'))

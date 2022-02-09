@@ -54,7 +54,7 @@ private:
     DF_ERROR setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser *productDispensers);
     DF_ERROR setButton(TiXmlElement *hardwareEle, int dispenserIdx);
     //DF_ERROR setButtonPress(TiXmlElement *hardwareEle, int dispenserIdx, dispenser* productDispensers);
-    DF_ERROR setDrinks();
+    DF_ERROR setProducts();
 
     const char *getXML(const char *subHeader, TiXmlElement *childEle);
 
@@ -80,7 +80,7 @@ protected:
     //        mcpGPIO *i2c_tester;
 };
 
-#define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
+//#define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 
 // **** XML DEPTH ***
 //first layer

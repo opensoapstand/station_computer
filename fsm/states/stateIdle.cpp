@@ -76,9 +76,9 @@ DF_ERROR stateIdle::onAction()
          // If ACTION_DISPENSE is received, enter Dispense state, else, stay in Idle state
          if (m_pMessaging->getAction() == ACTION_DISPENSE)
          {
-            debugOutput::sendMessage("Dispense selected product (1,2,3 or 4)", INFO);
+            //debugOutput::sendMessage("Dispense selected product (1,2,3 or 4)", INFO);
             //  debugOutput::sendMessage("position" + std::to_string(pos), INFO); // give sometimes segmentation error
-
+            debugOutput::sendMessage("position" + std::to_string(pos), INFO);
             productDispensers[pos].getProduct()->initDispense();
             m_nextState = DISPENSE_IDLE;
          }

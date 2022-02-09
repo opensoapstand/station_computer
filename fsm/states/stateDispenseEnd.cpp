@@ -140,7 +140,7 @@ DF_ERROR stateDispenseEnd::onExit()
         debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
         debugOutput::sendMessage("Pin -> " + to_string(productDispensers[pos].getI2CPin(WATER)), INFO);
         debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
-        debugOutput::sendMessage("Pin -> " + to_string(productDispensers[pos].getI2CPin(DRINK)), INFO);
+        debugOutput::sendMessage("Pin -> " + to_string(productDispensers[pos].getI2CPin(PRODUCT)), INFO);
 
         // Function to clean the Drinkfill nozzle:
         //    productDispensers[pos].cleanNozzle(WATER, AIR);
@@ -164,7 +164,7 @@ DF_ERROR stateDispenseEnd::onExit()
     //m_pMessaging->clearcCommand();
 
     //    productDispensers[pos].getProduct()->stopDispense();
-    //    productDispensers[pos].stopDispense(DRINK);
+    //    productDispensers[pos].stopDispense(PRODUCT);
 
     //    debugOutput::sendMessage("Exiting Dispensing END[" + toString() + "]", INFO);
 

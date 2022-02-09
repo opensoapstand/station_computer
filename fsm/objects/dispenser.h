@@ -20,7 +20,7 @@
 #include "../components/gpio.h"
 #include "../components/dsed8344.h"
 #include "../components/odysseyx86gpio.h"
-#include "drink.h"
+#include "product.h"
 
 // Total Number of Devices
 #define NUM_SOLENOID 3 //12v for drink,water, and air
@@ -32,7 +32,7 @@
 #define PUMP_OPTION_START_POSITION 5
 #define PUMP_OPTION_STOP_POSITION 8
 
-#define DRINK 0
+#define PRODUCT 0
 #define WATER 1
 #define AIR 2
 
@@ -85,9 +85,9 @@ public:
 
       DF_ERROR testSolenoidDispense(int pos);
 
-      drink *getProduct();
+      product *getProduct();
 
-      DF_ERROR setProduct(drink *drink);
+      DF_ERROR setProduct(product *product);
 
       int getI2CAddress(int pos);
       int getI2CPin(int pos);
@@ -116,13 +116,13 @@ private:
 
       bool m_isDispenseNew;
 
-      drink *m_pSelectedProduct;
+      product *m_pSelectedProduct;
 
       DF_ERROR *m_pthreadError;
 
       // Pointers to Addresses set in State Init
 
-      gpio *m_pSolenoid[NUM_SOLENOID]; //air,drink, and water solenoid control
+      gpio *m_pSolenoid[NUM_SOLENOID]; //air,product, and water solenoid control
       gpio *m_pFlowsenor[NUM_FLOWSENSOR];
       gpio *m_pPump[NUM_PUMP]; //forward and reverse pin control
       gpio *m_pPowerOff[1];

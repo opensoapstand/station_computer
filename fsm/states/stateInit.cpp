@@ -64,7 +64,7 @@ DF_ERROR stateInit::onAction()
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
     m_state = INIT; //ensure the current state is INIT
 
-    e_ret = setDrinks();
+    e_ret = setProducts();
 
     if (OK == e_ret)
     {
@@ -132,8 +132,8 @@ DF_ERROR stateInit::dispenserSetup()
 } // End of dispenserSetup()
 
 // This function (called in SetDrinks) converts the data that is in the product database to variables,
-//which are then passed to the SetDrink function to create drink objects for each product.
-static int db_sql_drink_callback(void *data, int argc, char **argv, char **azColName)
+//which are then passed to the SetDrink function to create product objects for each product.
+static int db_sql_product_callback(void *data, int argc, char **argv, char **azColName)
 {
     int i;
     int slot;
@@ -215,16 +215,33 @@ static int db_sql_drink_callback(void *data, int argc, char **argv, char **azCol
             paymentMethod = argv[i];
         }
 
-        g_productDispensers[slot - 1].setProduct(new drink(slot, name, volume_dispensed, volume_target_l, volume_target_s, calibration_const, price_l, price_s, false, volume_per_tick, plu_l, plu_s, paymentMethod, name_receipt));
+        // debugOutput::sendMessage("---callback --- ", INFO);
+        // debugOutput::sendMessage(argv[i], INFO);
+        
+        g_productDispensers[slot - 1].setProduct(
+            new product(slot,
+                        name,
+                        volume_dispensed,
+                        volume_target_l,
+                        volume_target_s,
+                        calibration_const,
+                        price_l,
+                        price_s,
+                        false,
+                        volume_per_tick,
+                        plu_l,
+                        plu_s,
+                        paymentMethod,
+                        name_receipt));
     }
 
     return 0;
 }
 
-DF_ERROR stateInit::setDrinks()
+DF_ERROR stateInit::setProducts()
 {
 
-    // Drink Setup
+    // Product Setup
     // load the SQLITE manager
 
     char *zErrMsg = 0;
@@ -253,11 +270,11 @@ DF_ERROR stateInit::setDrinks()
     strcpy(sql, sql11.c_str());
 
     /* Execute SQL statement */
-    rc = sqlite3_exec(db, sql, db_sql_drink_callback, (void *)data, &zErrMsg);
+    rc = sqlite3_exec(db, sql, db_sql_product_callback, (void *)data, &zErrMsg);
 
     if (rc != SQLITE_OK)
     {
-        debugOutput::sendMessage("Drink info SQL error", INFO);
+        debugOutput::sendMessage("Product info SQL error", INFO);
         //       fprintf(stderr, "SQL error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
     }

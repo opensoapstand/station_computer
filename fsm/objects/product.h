@@ -1,7 +1,7 @@
 //***************************************
 //
-// drink.cpp
-// Drink (Model) class definition:
+// product.cpp
+// Product (Model) class definition:
 //
 // Owns current beverage use/transaction.
 // Holds and coordinates values from database
@@ -14,8 +14,8 @@
 // all rights reserved
 //***************************************
 
-#ifndef _DRINK__H_
-#define _DRINK__H_
+#ifndef _PRODUCT_H
+#define _PRODUCT_H
 
 #include "../dftypes.h"
 #include <iostream>
@@ -25,21 +25,21 @@
 
 #include <sqlite3.h>
 
-#define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
+// #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 
 using namespace std;
 
-class drink
+class product
 {
 public:
-        drink();
-        drink(int slot);
-        drink(int slot, string name, double nDispenseVolume, double nTargetVolume_l, double nTargetVolume_s, double calibration_const, double price_l, double price_s, bool isStillDrink, double nVolumePerTick, string nPLU_l, string nPLU_s, string paymentMethod, string name_receipt);
-        ~drink();
+        product();
+        product(int slot);
+        product(int slot, string name, double nDispenseVolume, double nTargetVolume_l, double nTargetVolume_s, double calibration_const, double price_l, double price_s, bool isStillProduct, double nVolumePerTick, string nPLU_l, string nPLU_s, string paymentMethod, string name_receipt);
+        ~product();
 
         //getter
-        int getDrinkOption() { return m_nSlot; } // For IPC
-        bool getIsStillDrink();                  // For pump check
+        int getProductOption() { return m_nSlot; } // For IPC
+        bool getIsStillProduct();                  // For pump check
         double getVolumeDispensed() { return m_nVolumeDispensed; }
         double getVolumeDispensedPreviously();
         double getTargetVolume(char size);
@@ -66,8 +66,8 @@ public:
         void recordSale(int volume);
         void refill(int volume);
 
-        void drinkInfo();
-        void drinkVolumeInfo();
+        void productInfo();
+        void productVolumeInfo();
 
         int getPWM();
 
@@ -105,11 +105,11 @@ private:
         double m_nTickCount;
         bool valueChange;
 
-        bool m_isStillDrink;
+        // bool m_isStillProduct;
 
         void setSlot(int slot);
-        void setDrinkName(string drinkName);
-        void setIsStillDrink(bool isStillDrink);
+        void setProductName(string productName);
+        // void setIsStillProduct(bool isStillProduct);
         double getVolPerTick();
 
         sqlite3 *db;

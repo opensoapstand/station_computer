@@ -444,7 +444,7 @@ DF_ERROR messageMediator::parseCommandString()
       {
       case ACTION_DISPENSE:
          debugOutput::sendMessage("Action: Dispense", INFO);
-         // m_nSolenoid = DRINK;
+         // m_nSolenoid = PRODUCT;
          m_requestedAction = ACTION_DISPENSE;
          e_ret = OK;
          break;

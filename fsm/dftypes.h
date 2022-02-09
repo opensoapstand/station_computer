@@ -6,7 +6,7 @@
 // created: 12-06-2020
 // by: Denis Londry
 //
-// copyright 2020 by Drinkfill Beverages Ltd
+// copyright 2020 by Productfill Beverages Ltd
 // all rights reserved
 //***************************************
 
@@ -17,6 +17,7 @@
 
 #include <sqlite3.h>
 #define PRODUCT_DISPENSERS_MAX 4
+#define DB_PATH "/release/db/sqlite/productfill-sqlite.db"
 
 typedef enum DF_FSM
 {
@@ -37,7 +38,7 @@ typedef enum DF_ERROR
    OK = 0,
    ERROR_BAD_PARAMS,
    ERROR_MECH = 10,
-   ERROR_MECH_DRINK_FAULT,
+   ERROR_MECH_PRODUCT_FAULT,
    ERROR_MECH_WATER_FAULT,
    ERROR_MECH_AIR_FAULT,
    ERROR_MECH_FPUMP_FAULT,

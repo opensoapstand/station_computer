@@ -53,9 +53,9 @@ DF_ERROR stateDispenseIdle::onEntry()
 
         productDispensers[pos].getProduct()->startDispense(productDispensers[pos].getProduct()->getTargetVolume(size), productDispensers[pos].getProduct()->getPrice(size));
         productDispensers[pos].setIsDispenseComplete(false);
-        productDispensers[pos].getProduct()->drinkInfo();
-        productDispensers[pos].getProduct()->drinkVolumeInfo();
-        productDispensers[pos].startDispense(productDispensers[pos].getProduct()->getDrinkOption());
+        productDispensers[pos].getProduct()->productInfo();
+        productDispensers[pos].getProduct()->productVolumeInfo();
+        productDispensers[pos].startDispense(productDispensers[pos].getProduct()->getProductOption());
     }
 
     return e_ret;
@@ -89,7 +89,7 @@ DF_ERROR stateDispenseIdle::onAction()
             return df_ret = OK;
         }
 
-        productDispensers[pos].getProduct()->drinkVolumeInfo();
+        productDispensers[pos].getProduct()->productVolumeInfo();
 
         // If volume has not changed, stay in Idle state, else, volume is changing, go to Dispense state...
         if (productDispensers[pos].getProduct()->getVolumeDispensed() == productDispensers[pos].getProduct()->getVolumeDispensedPreviously())

@@ -21,7 +21,7 @@ gpio::gpio()
         m_input = false;
         m_i2c = false; //no i2c chip associate with it
         gpioThread = nullptr;
-        m_pDrink = nullptr;
+        m_pProduct = nullptr;
 }
 
 // DTOR
@@ -37,7 +37,7 @@ void gpio::startListener()
         debugOutput::sendMessage("-----startListener-----", INFO);
         DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
-        if ((nullptr == gpioThread) && (nullptr != m_pDrink))
+        if ((nullptr == gpioThread) && (nullptr != m_pProduct))
         {
                 gpioThread = new std::thread(&gpio::listener, this);
                 df_ret = OK;
@@ -53,7 +53,7 @@ void gpio::startListenerPWR()
         debugOutput::sendMessage("-----startListenerPWR-----", INFO);
         DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
-        //        if ((nullptr ==  gpioThread) && (nullptr != m_pDrink)){
+        //        if ((nullptr ==  gpioThread) && (nullptr != m_pProduct)){
         gpioThread = new std::thread(&gpio::listenerPWR, this);
         df_ret = OK;
         //        } else {

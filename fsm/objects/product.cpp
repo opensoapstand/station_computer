@@ -1,7 +1,7 @@
 //***************************************
 //
-// drink.cpp
-// Drink (Model) class Implementation:
+// product.cpp
+// Product (Model) class Implementation:
 //
 // Owns current beverage use/transaction.
 // Holds and coordinates values from database
@@ -13,10 +13,10 @@
 // copyright 2020 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
-#include "drink.h"
+#include "product.h"
 
 // Default CTOR
-drink::drink()
+product::product()
 {
 }
 
@@ -31,8 +31,8 @@ static int db_sql_callback(void *data, int argc, char **argv, char **azColName)
         // if()
     }
 
-    // setDrinkName("test");
-    // setIsStillDrink(false);
+    // setProductName("test");
+    // setIsStillProduct(false);
 
     printf("\n");
     return 0;
@@ -41,7 +41,7 @@ static int db_sql_callback(void *data, int argc, char **argv, char **azColName)
 // CTOR with Option Slot
 // TODO: Should call this from Message Mediator
 //       And figure out storage/reference location...
-drink::drink(int slot)
+product::product(int slot)
 {
     setSlot(slot);
 
@@ -78,7 +78,7 @@ drink::drink(int slot)
 }
 
 // Test CTOR
-drink::drink(int slot, string name, double nVolumeDispensed, double nVolumeTarget_l, double nVolumeTarget_s, double calibration_const, double price_l, double price_s, bool isStillDrink, double nVolumePerTick, string nPLU_l, string nPLU_s, string paymentMethod, string name_receipt)
+product::product(int slot, string name, double nVolumeDispensed, double nVolumeTarget_l, double nVolumeTarget_s, double calibration_const, double price_l, double price_s, bool isStillProduct, double nVolumePerTick, string nPLU_l, string nPLU_s, string paymentMethod, string name_receipt)
 {
     m_nSlot = slot;
     m_name = name;
@@ -88,7 +88,7 @@ drink::drink(int slot, string name, double nVolumeDispensed, double nVolumeTarge
     m_calibration_const = calibration_const;
     m_price_l = price_l;
     m_price_s = price_s;
-    m_isStillDrink = isStillDrink;
+    // m_isStillProduct = isStillProduct;
     m_nVolumePerTick = nVolumePerTick;
     m_nPLU_l = nPLU_l;
     m_nPLU_s = nPLU_s;
@@ -100,57 +100,57 @@ drink::drink(int slot, string name, double nVolumeDispensed, double nVolumeTarge
 }
 
 // DTOR
-drink::~drink()
+product::~product()
 {
 }
 
-// Set the Drink option slot
-void drink::setSlot(int slot)
+// Set the Product option slot
+void product::setSlot(int slot)
 {
     m_nSlot = slot;
 }
 
-// Set the Drink Name
+// Set the Product Name
 // TODO: Redefine function prototype, no argument.
-void drink::setDrinkName(string drinkName)
+void product::setProductName(string productName)
 {
     // TODO: SQLite database Query could be better option.
-    m_name = drinkName;
+    m_name = productName;
 }
 
 // TODO: Redefine function prototype, no argument.
-void drink::setIsStillDrink(bool isStillDrink)
-{
-    // TODO: SQLite database Query could be better option.
-    m_isStillDrink = isStillDrink;
-}
+// void product::setIsStillProduct(bool isStillProduct)
+// {
+//     // TODO: SQLite database Query could be better option.
+//     m_isStillProduct = isStillProduct;
+// }
 
 // TODO: Redefine function prototype, no argument.
-bool drink::getIsStillDrink()
-{
-    // TODO: SQLite database Query could be better option.
-    return m_isStillDrink;
-}
+// bool product::getIsStillProduct()
+// {
+//     // TODO: SQLite database Query could be better option.
+//     return m_isStillProduct;
+// }
 
-bool drink::registerFlowSensorTick()
+bool product::registerFlowSensorTick()
 {
     //    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
     m_nVolumeDispensed += m_nVolumePerTick;
 }
 
 // TODO: Function name is inaccurate...deduct sale would be better
-void drink::recordSale(int volume)
+void product::recordSale(int volume)
 {
     // TODO: SQLite database Update.
 }
 
 // TODO: This function could live somewhere else...linked to future maintenance.
-void drink::refill(int volume)
+void product::refill(int volume)
 {
     // TODO: SQLite database Update.
 }
 
-double drink::getVolumeSinceLastPoll()
+double product::getVolumeSinceLastPoll()
 {
     int temp = m_nVolumeDispensedSinceLastPoll;
 
@@ -159,14 +159,14 @@ double drink::getVolumeSinceLastPoll()
     return temp;
 }
 
-double drink::getVolumeDispensedPreviously()
+double product::getVolumeDispensedPreviously()
 {
     //    cout << "GETTING VOLUME DISPENSED AND IT IS: " << m_nVolumeDispensedPreviously << endl;
     return m_nVolumeDispensedPreviously;
 }
 
 // Reset values onEntry()
-DF_ERROR drink::startDispense(int nVolumeToDispense, double nPrice)
+DF_ERROR product::startDispense(int nVolumeToDispense, double nPrice)
 {
     DF_ERROR dfRet = ERROR_BAD_PARAMS;
 
@@ -181,7 +181,7 @@ DF_ERROR drink::startDispense(int nVolumeToDispense, double nPrice)
     return dfRet;
 }
 
-int drink::getPWM()
+int product::getPWM()
 {
     rc = sqlite3_open(DB_PATH, &db);
 
@@ -212,7 +212,7 @@ int drink::getPWM()
     return pwm;
 }
 
-double drink::getVolPerTick()
+double product::getVolPerTick()
 {
 
     rc = sqlite3_open(DB_PATH, &db);
@@ -244,7 +244,7 @@ double drink::getVolPerTick()
     return vol_per_tick;
 }
 
-DF_ERROR drink::initDispense()
+DF_ERROR product::initDispense()
 {
     m_nVolumeDispensed = 0;
     m_nVolumeDispensedPreviously = 0;
@@ -256,7 +256,7 @@ DF_ERROR drink::initDispense()
     strftime(m_nStartTime, 50, "%F %T", timeinfo);
 }
 
-DF_ERROR drink::stopDispense()
+DF_ERROR product::stopDispense()
 {
     DF_ERROR dfRet = ERROR_BAD_PARAMS;
 
@@ -268,7 +268,7 @@ DF_ERROR drink::stopDispense()
 }
 
 // VolumeDispense check!
-bool drink::isDispenseComplete()
+bool product::isDispenseComplete()
 {
     bool bRet = false;
 
@@ -280,7 +280,7 @@ bool drink::isDispenseComplete()
     return bRet;
 }
 
-void drink::drinkInfo()
+void product::productInfo()
 {
     //    cout << "Option: " << m_nSlot << endl;
     //    cout << "Name: " << m_name << endl;
@@ -288,18 +288,18 @@ void drink::drinkInfo()
     //    cout << "Target Volume: " << m_nVolumeTarget << endl;
     //    cout << "Calibration: " << m_calibration_const << endl;
     //    cout << "Price: " << m_price << endl;
-    //    cout << "Is Still?: " << m_isStillDrink << endl;
+    //    cout << "Is Still?: " << m_isStillProduct << endl;
     //    cout << "Volume per Tick: " << m_nVolumePerTick << endl;
 }
 
-void drink::drinkVolumeInfo()
+void product::productVolumeInfo()
 {
     // cout << "Volume since last poll: " << m_nVolumeDispensedSinceLastPoll << endl;
     // cout << "How much to dispense: " << m_nVolumeTarget << endl;
     //	cout << "Dispensed so far: " << m_nVolumeDispensed << endl;
 }
 
-double drink::getTargetVolume(char size)
+double product::getTargetVolume(char size)
 {
     if (size == 'l')
     {
@@ -313,7 +313,7 @@ double drink::getTargetVolume(char size)
         return m_nVolumeTarget_t;
 }
 
-double drink::getPrice(char size)
+double product::getPrice(char size)
 {
     if (size == 'l')
     {
@@ -325,7 +325,7 @@ double drink::getPrice(char size)
     }
 }
 
-string drink::getPLU(char size)
+string product::getPLU(char size)
 {
     if (size == 'l')
     {

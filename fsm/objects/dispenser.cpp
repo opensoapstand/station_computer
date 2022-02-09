@@ -30,7 +30,7 @@ dispenser::dispenser()
     //default constructor to set all pin to nullptr
     //debugOutput::sendMessage("dispenser", INFO);
 
-    // TODO: Need to build Drink Object reference
+    // TODO: Need to build Product Object reference
     // m_pSelectedProduct = nullptr;
 
     // If we haven't instantiated and initialized the hardware yet we
@@ -116,7 +116,7 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
         // Instantiate, set input, spin up a flowsensor thread.
         m_pFlowsenor[pos] = new oddyseyx86GPIO(pin);
         m_pFlowsenor[pos]->setDirection(true);
-        m_pFlowsenor[pos]->registerDrink(m_pSelectedProduct);
+        m_pFlowsenor[pos]->registerProduct(m_pSelectedProduct);
         m_pFlowsenor[pos]->startListener();
         e_ret = OK;
     }
@@ -173,21 +173,21 @@ DF_ERROR dispenser::stopPump()
     the_8344->stopPump();
 }
 
-// Disenses drinks by turning Solenoid Signal to HIGH then to LOW
+// Disenses products by turning Solenoid Signal to HIGH then to LOW
 DF_ERROR dispenser::startDispense(int pos)
 {
-    DF_ERROR e_ret = ERROR_MECH_DRINK_FAULT;
+    DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
     debugOutput::sendMessage("-----Start Dispense-----", INFO);
     // XXX: Prepare Button - Linked thru State Virtual
     // e_ret = connectButton();
 
     // Solenoid Position Check
-    //    if(pos != DRINK) {
+    //    if(pos != PRODUCT) {
     //        e_ret = ERROR_ELEC_PIN_DISPENSE;
     //        return e_ret;
     //    }
 
-    // Open Drink Solenoid
+    // Open Product Solenoid
     // debugOutput::sendMessage("Trigger solenoid:", INFO);
     // m_pSolenoid[pos]->writePin(HIGH);
     debugOutput::sendMessage("Triggered pump:" + to_string(pos), INFO);
@@ -261,7 +261,7 @@ DF_ERROR dispenser::disconnectButton()
 //     return e_ret = OK;
 // }
 
-drink *dispenser::getProduct()
+product *dispenser::getProduct()
 {
     return m_pSelectedProduct;
 }
@@ -290,14 +290,14 @@ int dispenser::getI2CPin(int pos)
     //return m_pSolenoid[pos]->getMCPPin();
 }
 
-DF_ERROR dispenser::setProduct(drink *drink)
+DF_ERROR dispenser::setProduct(product *product)
 {
-    if (drink != nullptr)
+    if (product != nullptr)
     {
-        m_pSelectedProduct = drink;
+        m_pSelectedProduct = product;
     }
     else
     {
-        debugOutput::sendMessage("Set Drink Error!", ERROR);
+        debugOutput::sendMessage("Set Product Error!", ERROR);
     }
 }

@@ -17,7 +17,7 @@
 
 #include <sqlite3.h>
 #define PRODUCT_DISPENSERS_MAX 4
-#define DB_PATH "/release/db/sqlite/productfill-sqlite.db"
+#define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 
 typedef enum DF_FSM
 {

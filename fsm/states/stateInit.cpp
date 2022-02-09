@@ -47,7 +47,7 @@ string stateInit::toString()
 
 /*
  * Initialize FSM State
- */
+*/
 DF_ERROR stateInit::onEntry()
 {
     DF_ERROR e_ret = OK;
@@ -274,7 +274,7 @@ DF_ERROR stateInit::setProducts()
 
     if (rc != SQLITE_OK)
     {
-        debugOutput::sendMessage("Product info SQL error", INFO);
+        debugOutput::sendMessage("Product info SQL error (OR DB PATH opening ERROR!!)", INFO);
         //       fprintf(stderr, "SQL error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
     }

@@ -68,17 +68,18 @@ DF_ERROR stateDispenseIdle::onAction()
     if (nullptr != &m_state_requested)
     {
 
-        if (m_pMessaging->isCommandReady())
+        if (m_pMessaging->isCommandStringReadyToBeParsed())
         {
             m_pMessaging->parseCommandString();
 
             // Check if UI has sent a ACTION_DISPENSE_END to compelte the transaction, or, the taget has been hit, to enter into the DispenseEnd state
-            if ((m_pMessaging->getAction() == ACTION_DISPENSE_END))
+            if (ACTION_DISPENSE_END == m_pMessaging->getAction())
             {
 
                 m_state_requested = DISPENSE_END;
                 return df_ret = OK;
             }
+            
         }
 
         if (productDispensers[pos].getIsDispenseComplete())
@@ -111,6 +112,8 @@ DF_ERROR stateDispenseIdle::onAction()
 // Advances to Dispense End with completed Dispense
 DF_ERROR stateDispenseIdle::onExit()
 {
+
+    // TODO: NO STATE CHANGES ON EXIT PLEAAAASE
     DF_ERROR e_ret = OK;
 
     if ((m_pMessaging->getAction() == ACTION_DISPENSE_END) || (productDispensers[pos].getIsDispenseComplete()))

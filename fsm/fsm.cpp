@@ -22,11 +22,12 @@
 #include "states/stateDispense.h"
 #include "states/stateDispenseIdle.h"
 #include "states/stateDispenseEnd.h"
+#include "states/stateManualMode.h"
 
 #include "objects/dispenser.h"
 #include "objects/messageMediator.h"
 
-std::string stateStrings[10] = {
+std::string stateStrings[FSM_MAX + 1] = {
     "START",
     "INIT",
     "IDLE",
@@ -35,11 +36,12 @@ std::string stateStrings[10] = {
     "DISPENSE_IDLE",
     "DISPENSE",
     "DISPENSE_END",
+    "MANUAL_MODE",
     "CLEANING",
     "FSM_MAX"};
 
 messageMediator *g_pMessaging;                         //debug through local network
-stateVirtual *g_stateArray[FSM_MAX];                   //an object for every state
+stateVirtual *g_stateArray[FSM_MAX + 1];                   //an object for every state
 dispenser g_productDispensers[PRODUCT_DISPENSERS_MAX]; //replace the magic number
 
 DF_ERROR initObjects();
@@ -91,7 +93,8 @@ DF_ERROR stateLoop()
         {
             dfRet = g_stateArray[fsmState]->onAction();
             fsmRequestedState = g_stateArray[fsmState]->getRequestedState();
-
+            // debugOutput::sendMessage("tmplodee", INFO);   
+            // debugOutput::sendMessage( std::to_string(fsmRequestedState), INFO);   
             // deal with end of state if state changed
             if ((OK == dfRet) && (fsmRequestedState != fsmState))
             {
@@ -137,6 +140,7 @@ DF_ERROR createStateArray()
         g_stateArray[DISPENSE_IDLE] = new stateDispenseIdle(g_pMessaging);
         g_stateArray[DISPENSE] = new stateDispense(g_pMessaging);
         g_stateArray[DISPENSE_END] = new stateDispenseEnd(g_pMessaging);
+        g_stateArray[MANUAL_MODE] = new stateManualMode(g_pMessaging);
         dfRet = OK;
     }
 

@@ -51,10 +51,6 @@ string stateInit::toString()
 DF_ERROR stateInit::onEntry()
 {
     DF_ERROR e_ret = OK;
-
-    m_state = INIT; //ensure the current state is INIT
-    m_state_requested = INIT;
-
     return e_ret;
 }
 
@@ -62,7 +58,6 @@ DF_ERROR stateInit::onEntry()
 DF_ERROR stateInit::onAction()
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
-    m_state = INIT; //ensure the current state is INIT
 
     e_ret = setProducts();
 

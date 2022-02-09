@@ -30,6 +30,7 @@ typedef enum DF_FSM
    DISPENSE_IDLE,
    DISPENSE,
    DISPENSE_END,
+   MANUAL_MODE,
    CLEANING,
    FSM_MAX,
 } DF_FSM;

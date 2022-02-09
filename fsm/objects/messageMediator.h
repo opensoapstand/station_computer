@@ -37,6 +37,12 @@
 // #define CLEAN_CHAR 'c'
 #define ACTION_DISPENSE_END 'f'
 #define ACTION_DUMMY 'x'
+#define ACTION_NO_ACTION '-'
+#define ACTION_TEST_PRINTER 'p'
+#define ACTION_QUIT_TEST 'r'
+
+#define PRODUCT_DUMMY 'z'
+
 
 #define REQUESTED_VOLUME_1 's'
 #define REQUESTED_VOLUME_2 'l'
@@ -58,36 +64,33 @@ public:
 
    string getProcessString();
    DF_ERROR parseCommandString();
-   void clearProcessString();
-   //void clearcCommand(){m_requestedAction = '0';}
+   DF_ERROR parseDispenseCommand(string sCommand);
 
+   void clearProcessString();
    string getCommandString();
-   bool isCommandReady() { return m_bCommandReady; }
+   bool isCommandStringReadyToBeParsed() { return m_bCommandStringReceived; }
    void clearCommandString();
 
-   int getProductNumber() { return m_RequestedProductIndexInt; }
+   // dispense command 
    char getAction() { return m_requestedAction; }
-
-   double getnTargetVolume() { return m_nVolumeTarget; }
+   int getProductNumber() { return m_RequestedProductIndexInt; }
    char getRequestedVolume() { return m_requestedVolume; }
 
-   // static ServerSocket *fsm_comm_socket;
 
-   //DF_ERROR doKBThread (void * pThreadArgs);
+
+   // static ServerSocket *fsm_comm_socket;
 
 private:
    int messageIP;
    static bool m_fExitThreads;
-   // pthread_t m_pKBThread;
 
    static int percentComplete;
    static string AckOrNakResult;
 
-   static string m_processString;
+   static string m_receiveStringBuffer;
    static string m_processCommand;
-   static bool m_bCommandReady;
+   static bool m_bCommandStringReceived;
 
-   //int pos;
    static int m_RequestedProductIndexInt;
    static int m_nSolenoid;
    static char m_requestedAction;

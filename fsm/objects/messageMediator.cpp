@@ -32,8 +32,8 @@
 extern messageMediator df_messaging;
 
 bool messageMediator::m_fExitThreads = false;
-bool messageMediator::m_bCommandReady = false;
-string messageMediator::m_processString;
+bool messageMediator::m_bCommandStringReceived = false;
+string messageMediator::m_receiveStringBuffer;
 string messageMediator::m_processCommand;
 int messageMediator::m_RequestedProductIndexInt;
 int messageMediator::m_nSolenoid;
@@ -176,21 +176,14 @@ DF_ERROR messageMediator::updateCmdString(char key)
       // build up command as long as no ;
       m_processCommand.push_back(key);
    }
-   else if (';' == key)
+   else 
    {
-      // command creation finished, execute command
-      // debugOutput::sendMessage("Flushing processing string: " + m_processString, INFO);
-      m_processString.clear();
-      m_bCommandReady = true;
+      // ; is the command finished char
+      m_receiveStringBuffer.clear();
+      m_bCommandStringReceived = true;
 
       debugOutput::sendMessage("Provided command (unparsed) : " + m_processCommand, INFO);
    }
-   //lode: will not come here?!
-   // else
-   // {
-   //    debugOutput::sendMessage("Command String Status: " + m_processCommand, INFO);
-   //    m_bCommandReady = false;
-   // }
 
    return df_ret;
 }
@@ -200,7 +193,7 @@ DF_ERROR messageMediator::updateCmdString(char key)
 DF_ERROR messageMediator::updateCmdString()
 {
    DF_ERROR df_ret = ERROR_BAD_PARAMS;
-   debugOutput::sendMessage("Process string..." + m_processString, INFO);
+   debugOutput::sendMessage("Process string..." + m_receiveStringBuffer, INFO);
 
    if (!m_processCommand.empty())
    {
@@ -209,9 +202,9 @@ DF_ERROR messageMediator::updateCmdString()
       debugOutput::sendMessage(m_processCommand, INFO);
    }
 
-   for (int i = 0; i < m_processString.size(); i++)
+   for (int i = 0; i < m_receiveStringBuffer.size(); i++)
    {
-      df_ret = updateCmdString(m_processString[i]);
+      df_ret = updateCmdString(m_receiveStringBuffer[i]);
    }
 
    return df_ret;
@@ -220,30 +213,29 @@ DF_ERROR messageMediator::updateCmdString()
 // Loop for threaded listening for console input
 void *messageMediator::doKBThread(void *pThreadArgs)
 {
-   debugOutput::sendMessage("doKBThread", INFO);
+   debugOutput::sendMessage("Start up infinite keyboard input listener (doKBThread).", INFO);
    DF_ERROR df_ret = OK;
 
-   //m_fExitThreads = false;
+   // while (!m_fExitThreads) // lode: todo not relevant?! (contains infinite while loop)
+   // {
+      // make sure buffer is clear (seems overkill)
+   // if (!m_receiveStringBuffer.empty()) 
+   // {
+   //    updateCmdString();
+   // }
 
-   while (!m_fExitThreads)
+   char key;
+   // BLOCKING!!
+   while (0 < scanf(" %c", &key))
    {
-      if (m_processString.empty()) // still processing process string
-      {
-         char key;
-         while (0 < scanf(" %c", &key))
-         {
-            updateCmdString(key);
-         }
-      }
-      else
-      {
-         updateCmdString();
-      }
-      usleep(DELAY_USEC);
+      updateCmdString(key);
    }
+      
+      // usleep(DELAY_USEC);
+   // }
 
    // df_ret;
-   return 0;
+   // return 0;
 }
 
 // Loop for threaded listening for Socket input
@@ -274,7 +266,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
                // AckOrNakResult = "FSM ACK";
                sendQtACK("ACK");
                // cout << data << endl;
-               m_processString = data;
+               m_receiveStringBuffer = data;
                updateCmdString();
                // new_sock << data;
             }
@@ -301,13 +293,13 @@ void *messageMediator::doIPThread(void *pThreadArgs)
 
 string messageMediator::getProcessString()
 {
-   return m_processString;
+   return m_receiveStringBuffer;
 }
 
 void messageMediator::clearProcessString()
 {
-   m_processString.clear();
-   m_bCommandReady = false;
+   m_receiveStringBuffer.clear();
+   m_bCommandStringReceived = false;
 }
 
 string messageMediator::getCommandString()
@@ -318,42 +310,76 @@ string messageMediator::getCommandString()
 void messageMediator::clearCommandString()
 {
    m_processCommand.clear();
-   m_bCommandReady = false;
+   m_bCommandStringReceived = false;
 }
 
 DF_ERROR messageMediator::parseCommandString()
 {
+   DF_ERROR e_ret = ERROR_BAD_PARAMS;
+
+   string sCommand = getCommandString();
+   char first_char = sCommand[0];
+
+   if (
+      first_char == '1' ||
+      first_char == '2' ||
+      first_char == '3' ||
+      first_char == '4' 
+   ){
+      // check for dispensing command
+      e_ret = parseDispenseCommand(sCommand);
+
+   }else if (
+      // other commands
+      first_char == ACTION_TEST_PRINTER || 
+      first_char == ACTION_QUIT_TEST       
+      ){
+      
+      m_requestedAction = first_char;
+
+   }else{
+      // invalid commands
+      m_requestedAction = ACTION_NO_ACTION;
+      debugOutput::sendMessage("Command received is not valid.", INFO);
+   }
+   
+   this->clearCommandString();
+   return e_ret;
+}
+
+DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
+{
 
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
-   debugOutput::sendMessage("parseCommandString", INFO);
+   debugOutput::sendMessage("parseDispenseCommand", INFO);
    char temp[10];
-   string commandString = getCommandString();
+  
 
-   char productChar = 'z';
+   char productChar = PRODUCT_DUMMY;
    char actionChar = ACTION_DUMMY;
    char volumeChar = REQUESTED_VOLUME_DUMMY;
 
-   // if (isdigit(commandString[0]))
-   if (isdigit(commandString[0]))
+   // if (isdigit(sCommand[0]))
+   if (isdigit(sCommand[0]))
    {
-      productChar = commandString[0];
+      productChar = sCommand[0];
       debugOutput::sendMessage("digit", INFO);
    }
 
-   if (commandString.size() > 1)
+   if (sCommand.size() > 1)
    {
 
       // FIXME: Need a better string parser...
-      for (std::string::size_type i = 0; i < commandString.size(); ++i)
+      for (std::string::size_type i = 0; i < sCommand.size(); ++i)
       {
-         if ((commandString[i] == ACTION_DISPENSE_END) || (commandString[i] == ACTION_DISPENSE) || commandString[i] == PWM_CHAR)
+         if ((sCommand[i] == ACTION_DISPENSE_END) || (sCommand[i] == ACTION_DISPENSE) || sCommand[i] == PWM_CHAR)
          {
-            actionChar = commandString[i];
+            actionChar = sCommand[i];
          }
 
-         if (commandString[i] == REQUESTED_VOLUME_1 || commandString[i] == REQUESTED_VOLUME_2 || commandString[i] == REQUESTED_VOLUME_CUSTOM)
+         if (sCommand[i] == REQUESTED_VOLUME_1 || sCommand[i] == REQUESTED_VOLUME_2 || sCommand[i] == REQUESTED_VOLUME_CUSTOM)
          {
-            volumeChar = (commandString[i]);
+            volumeChar = (sCommand[i]);
          }
       }
    }
@@ -468,6 +494,159 @@ DF_ERROR messageMediator::parseCommandString()
       }
    }
 
-   this->clearCommandString();
    return e_ret;
 }
+
+
+
+
+// DF_ERROR messageMediator::parseCommandString()
+// {
+
+//    DF_ERROR e_ret = ERROR_BAD_PARAMS;
+//    debugOutput::sendMessage("parseCommandString", INFO);
+//    char temp[10];
+//    string commandString = getCommandString();
+
+//    char productChar = 'z';
+//    char actionChar = ACTION_DUMMY;
+//    char volumeChar = REQUESTED_VOLUME_DUMMY;
+
+//    // if (isdigit(commandString[0]))
+//    if (isdigit(commandString[0]))
+//    {
+//       productChar = commandString[0];
+//       debugOutput::sendMessage("digit", INFO);
+//    }
+
+//    if (commandString.size() > 1)
+//    {
+
+//       // FIXME: Need a better string parser...
+//       for (std::string::size_type i = 0; i < commandString.size(); ++i)
+//       {
+//          if ((commandString[i] == ACTION_DISPENSE_END) || (commandString[i] == ACTION_DISPENSE) || commandString[i] == PWM_CHAR)
+//          {
+//             actionChar = commandString[i];
+//          }
+
+//          if (commandString[i] == REQUESTED_VOLUME_1 || commandString[i] == REQUESTED_VOLUME_2 || commandString[i] == REQUESTED_VOLUME_CUSTOM)
+//          {
+//             volumeChar = (commandString[i]);
+//          }
+//       }
+//    }
+
+//    switch (productChar)
+//    {
+//    case '1':
+//    {
+//       m_RequestedProductIndexInt = 1;
+//       debugOutput::sendMessage("Product 1 requested", INFO);
+//       e_ret = OK;
+//       break;
+//    }
+//    case '2':
+//    {
+//       m_RequestedProductIndexInt = 2;
+//       debugOutput::sendMessage("Product 2 requested", INFO);
+//       e_ret = OK;
+//       break;
+//    }
+//    case '3':
+//    {
+//       m_RequestedProductIndexInt = 3;
+//       debugOutput::sendMessage("Product 3 requested", INFO);
+//       e_ret = OK;
+//       break;
+//    }
+//    case '4':
+//    {
+//       m_RequestedProductIndexInt = 4;
+//       debugOutput::sendMessage("Product 4 requested", INFO);
+//       e_ret = OK;
+//       break;
+//    }
+//    default:
+//    {
+//       debugOutput::sendMessage("No product requested [1..4]", INFO);
+//       break;
+//    }
+//    }
+
+//    if (!isalpha(actionChar))
+//    {
+//       debugOutput::sendMessage("Irrelevant input .. ", INFO);
+//    }
+//    else if (actionChar == ACTION_DUMMY)
+//    {
+//       debugOutput::sendMessage("No action provided ", INFO);
+//    }
+//    else
+//    {
+//       // TODO: Parse and save a reference for command string
+
+//       switch (actionChar)
+//       {
+//       case ACTION_DISPENSE:
+//          debugOutput::sendMessage("Action: Dispense", INFO);
+//          // m_nSolenoid = PRODUCT;
+//          m_requestedAction = ACTION_DISPENSE;
+//          e_ret = OK;
+//          break;
+
+//       case PWM_CHAR:
+//          debugOutput::sendMessage("Action: PWM", INFO);
+//          m_requestedAction = PWM_CHAR;
+//          e_ret = OK;
+//          break;
+
+//       case ACTION_DISPENSE_END:
+//          debugOutput::sendMessage("Action: End Dispense", INFO);
+//          m_requestedAction = ACTION_DISPENSE_END;
+//          e_ret = OK;
+//          break;
+
+//       default:
+//          break;
+//       }
+//    }
+
+//    if (!isalpha(volumeChar))
+//    {
+//       // e_ret = ERROR_NETW_NO_POSITION;
+//    }
+//    else if (volumeChar == REQUESTED_VOLUME_DUMMY)
+//    {
+//       debugOutput::sendMessage("No Requested volume provided", INFO);
+//    }
+//    else
+//    {
+//       switch (volumeChar)
+//       {
+//       case REQUESTED_VOLUME_1:
+//          debugOutput::sendMessage("Requested volume 1, Small Size", INFO);
+//          m_requestedVolume = REQUESTED_VOLUME_1;
+//          e_ret = OK;
+//          break;
+
+//       case REQUESTED_VOLUME_2:
+//          debugOutput::sendMessage("Requested volume 2, Large Size", INFO);
+//          m_requestedVolume = REQUESTED_VOLUME_2;
+//          e_ret = OK;
+//          break;
+
+//       case REQUESTED_VOLUME_CUSTOM:
+//          debugOutput::sendMessage("Requested volume custom, Test Size", INFO);
+//          m_requestedVolume = REQUESTED_VOLUME_CUSTOM;
+//          e_ret = OK;
+//          break;
+
+//       default:
+//          break;
+//       }
+//    }
+
+//    this->clearCommandString();
+//    return e_ret;
+// }

@@ -67,7 +67,7 @@ DF_ERROR stateDispense::onAction()
    productDispensers = g_productDispensers;
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
-   if (m_pMessaging->isCommandReady())
+   if (m_pMessaging->isCommandStringReadyToBeParsed())
    {
       m_pMessaging->parseCommandString();
    }

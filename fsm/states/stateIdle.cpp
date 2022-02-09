@@ -63,7 +63,7 @@ DF_ERROR stateIdle::onAction()
    {
 
       // Check if Command String is ready
-      if (m_pMessaging->isCommandReady())
+      if (m_pMessaging->isCommandStringReadyToBeParsed())
       {
          DF_ERROR ret_msg;
          ret_msg = m_pMessaging->parseCommandString();
@@ -73,11 +73,18 @@ DF_ERROR stateIdle::onAction()
          pos = pos - 1;
 
          // If ACTION_DISPENSE is received, enter Dispense state, else, stay in Idle state
-         if (m_pMessaging->getAction() == ACTION_DISPENSE)
+         if (ACTION_DISPENSE == m_pMessaging->getAction())
          {
             debugOutput::sendMessage("Chosen product: " + std::to_string(pos), INFO);
             productDispensers[pos].getProduct()->initDispense();
             m_state_requested = DISPENSE_IDLE;
+         }
+
+         if (ACTION_TEST_PRINTER == m_pMessaging->getAction())
+         {
+
+            m_state_requested = MANUAL_MODE;
+            
          }
       }
       else

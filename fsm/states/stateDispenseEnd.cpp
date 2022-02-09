@@ -24,7 +24,6 @@ stateDispenseEnd::stateDispenseEnd()
 // CTOR Linked to IPC
 stateDispenseEnd::stateDispenseEnd(messageMediator *message)
 {
-    debugOutput::sendMessage("stateDispenseEnd(messageMediator * message)", INFO);
 }
 
 // DTOR
@@ -46,14 +45,11 @@ DF_ERROR stateDispenseEnd::onEntry()
 {
     DF_ERROR e_ret = OK;
 
-    //    debugOutput::sendMessage("Entering Dispense End...", STATE_CHANGE);
-
     productDispensers = g_productDispensers;
     pos = m_pMessaging->getProductNumber();
     pos = pos - 1;
     size = m_pMessaging->getRequestedVolume();
 
-    //productDispensers[pos].getProduct()->stopDispense();
     productDispensers[pos].stopDispense(pos);
 
     return e_ret;
@@ -65,7 +61,7 @@ DF_ERROR stateDispenseEnd::onEntry()
 DF_ERROR stateDispenseEnd::onAction()
 {
     debugOutput::sendMessage("onAction Dispense End...", STATE_CHANGE);
-    m_nextState = IDLE;
+    m_state_requested = IDLE;
     // TODO: Log events to DB
 
     // TODO: Send a complete ACK back to QT
@@ -75,49 +71,6 @@ DF_ERROR stateDispenseEnd::onAction()
 
     return e_ret;
 }
-
-/*
-* original
-*
-*/
-// DF_ERROR stateDispenseEnd::onAction()
-// {
-//    DF_ERROR e_ret  = ERROR_BAD_PARAMS;
-
-//    m_pMessaging->parseCommandString();
-
-//    command = m_pMessaging->getAction();
-//    if (nullptr != &m_nextState)
-//    {
-//       switch (command)
-//       {
-//       case ACTION_DISPENSE:
-//          /* code */
-//          m_pMessaging->clearCommandString();
-//          //m_pMessaging->clearcCommand();
-//          m_nextState = DISPENSE_END;
-//          sleep(2);
-//          break;
-
-//       case ACTION_DISPENSE_END:
-//          debugOutput::sendMessage("Exit", INFO);
-//          m_nextState = IDLE;
-//          break;
-
-//       default:
-//          break;
-//       }
-
-//       // TODO: Log events to DB
-
-//       // TODO: Send a complete ACK back to QT
-//       // m_pMessaging->sendMessage("!");
-
-//       e_ret = OK;
-//    }
-
-//    return e_ret;
-// }
 
 // Actions on leaving Dispense state
 DF_ERROR stateDispenseEnd::onExit()
@@ -141,9 +94,6 @@ DF_ERROR stateDispenseEnd::onExit()
         debugOutput::sendMessage("Pin -> " + to_string(productDispensers[pos].getI2CPin(WATER)), INFO);
         debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
         debugOutput::sendMessage("Pin -> " + to_string(productDispensers[pos].getI2CPin(PRODUCT)), INFO);
-
-        // Function to clean the Drinkfill nozzle:
-        //    productDispensers[pos].cleanNozzle(WATER, AIR);
     }
 
     // REQUESTED_VOLUME_CUSTOM is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
@@ -158,20 +108,6 @@ DF_ERROR stateDispenseEnd::onExit()
             sendDB();
         }
     }
-
-    //    m_pMessaging->clearProcessString();
-    //    m_pMessaging->clearCommandString();
-    //m_pMessaging->clearcCommand();
-
-    //    productDispensers[pos].getProduct()->stopDispense();
-    //    productDispensers[pos].stopDispense(PRODUCT);
-
-    //    debugOutput::sendMessage("Exiting Dispensing END[" + toString() + "]", INFO);
-
-    // TODO: Does not seem to advance to Idle again...
-    //    m_state = DISPENSE_END;
-    //    m_nextState = IDLE; //go back for now
-
     return e_ret;
 }
 
@@ -294,16 +230,6 @@ std::string stateDispenseEnd::getProductID(int slot)
     sqlite3_stmt *stmt;
 
     debugOutput::sendMessage("Product ID getter START", INFO);
-
-    if (rc)
-    {
-        //       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
-        // TODO: Error handling here...
-    }
-    else
-    {
-        //       fprintf(stderr, "Opened database successfully\n");
-    }
 
     std::string sql_string_pid = "SELECT product_id FROM products WHERE slot=" + std::to_string(slot) + ";";
 

@@ -35,9 +35,9 @@ stateVirtual::~stateVirtual()
 }
 
 //getter for next state from fsm
-DF_FSM stateVirtual::getNextState()
+DF_FSM stateVirtual::getRequestedState()
 {
-   return m_nextState;
+   return m_state_requested;
 }
 
 //getter for current state from fsm
@@ -45,12 +45,6 @@ DF_FSM stateVirtual::getCurrentState()
 {
    return m_state;
 }
-
-// gpio* stateVirtual::getSolenoid(int pos, int type)
-// {
-//    gpio* temp = productDispensers[pos]->;
-//    return ;
-// }
 
 gpio *stateVirtual::getButton()
 {

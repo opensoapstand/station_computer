@@ -53,7 +53,6 @@ private:
     DF_ERROR setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx, dispenser *productDispensers);
     DF_ERROR setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser *productDispensers);
     DF_ERROR setButton(TiXmlElement *hardwareEle, int dispenserIdx);
-    //DF_ERROR setButtonPress(TiXmlElement *hardwareEle, int dispenserIdx, dispenser* productDispensers);
     DF_ERROR setProducts();
 
     const char *getXML(const char *subHeader, TiXmlElement *childEle);
@@ -61,7 +60,6 @@ private:
     sqlite3 *db;
     int rc;
 
-    //static int callback(void *data, int argc, char **argv, char **azColName);
 
     int slot;
     string name;
@@ -77,10 +75,7 @@ private:
     bool level = true;
 
 protected:
-    //        mcpGPIO *i2c_tester;
 };
-
-//#define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 
 // **** XML DEPTH ***
 //first layer

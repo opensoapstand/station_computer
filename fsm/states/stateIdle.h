@@ -31,10 +31,7 @@ public:
     DF_ERROR onEntry();
     DF_ERROR onAction();
     DF_ERROR onExit();
-    // DF_ERROR dispenserSetup(){};
-
-    // messageMediator * g_pMessaging;
-
+    
     product *productOrder;
 
 private:

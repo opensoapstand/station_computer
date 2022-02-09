@@ -32,10 +32,6 @@ public:
     DF_ERROR onAction();
     DF_ERROR onExit();
 
-    // FIXME: Issues with Initializing with Button...
-    // dispenser* dispenserSetup(getButton()) {};
-    // DF_ERROR dispenserSetup();
-
 private:
     int pos;
     dispenser *productDispensers;

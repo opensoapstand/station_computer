@@ -34,8 +34,6 @@ public:
     DF_ERROR onAction();
     DF_ERROR onExit();
 
-    // DF_ERROR dispenserSetup(){};
-
 private:
     int pos;
     char size;

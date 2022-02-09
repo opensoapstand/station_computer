@@ -27,7 +27,6 @@ stateDispenseIdle::stateDispenseIdle()
 // CTOR Linked to IPC
 stateDispenseIdle::stateDispenseIdle(messageMediator *message)
 {
-    //debugOutput::sendMessage("stateDispenseIdle(messageMediator * message)", INFO);
 }
 
 // DTOR
@@ -66,7 +65,7 @@ DF_ERROR stateDispenseIdle::onAction()
 {
     DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
-    if (nullptr != &m_nextState)
+    if (nullptr != &m_state_requested)
     {
 
         if (m_pMessaging->isCommandReady())
@@ -77,7 +76,7 @@ DF_ERROR stateDispenseIdle::onAction()
             if ((m_pMessaging->getAction() == ACTION_DISPENSE_END))
             {
 
-                m_nextState = DISPENSE_END;
+                m_state_requested = DISPENSE_END;
                 return df_ret = OK;
             }
         }
@@ -85,7 +84,7 @@ DF_ERROR stateDispenseIdle::onAction()
         if (productDispensers[pos].getIsDispenseComplete())
         {
 
-            m_nextState = DISPENSE_END;
+            m_state_requested = DISPENSE_END;
             return df_ret = OK;
         }
 
@@ -94,14 +93,13 @@ DF_ERROR stateDispenseIdle::onAction()
         // If volume has not changed, stay in Idle state, else, volume is changing, go to Dispense state...
         if (productDispensers[pos].getProduct()->getVolumeDispensed() == productDispensers[pos].getProduct()->getVolumeDispensedPreviously())
         {
-            //    debugOutput::sendMessage("IDLING - COUNTDOWN!", INFO);
             debugOutput::sendMessage("Wait for volume to change to go to dispensing state", INFO);
-            m_nextState = DISPENSE_IDLE;
+            m_state_requested = DISPENSE_IDLE;
         }
         else
         {
             productDispensers[pos].getProduct()->m_nVolumeDispensedPreviously = productDispensers[pos].getProduct()->getVolumeDispensed();
-            m_nextState = DISPENSE;
+            m_state_requested = DISPENSE;
         }
         usleep(500000);
         df_ret = OK;
@@ -117,9 +115,8 @@ DF_ERROR stateDispenseIdle::onExit()
 
     if ((m_pMessaging->getAction() == ACTION_DISPENSE_END) || (productDispensers[pos].getIsDispenseComplete()))
     {
-        //    debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]", INFO);
-        debugOutput::sendMessage("Exiting Dispensing", INFO);
-        m_nextState = DISPENSE_END;
+        debugOutput::sendMessage("Dispensing done.", INFO);
+        m_state_requested = DISPENSE_END;
     }
 
     return e_ret;

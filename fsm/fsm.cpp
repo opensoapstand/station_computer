@@ -72,43 +72,34 @@ DF_ERROR stateLoop()
 {
     DF_ERROR dfRet = OK;
     DF_FSM fsmState = START;
-    DF_FSM fsmNewState = INIT;
+    DF_FSM fsmRequestedState = INIT;
 
     while (OK == dfRet) //while no error has occurred
     {
-
         // state change, deal with new state
-        if (fsmState != fsmNewState)
+        if (fsmState != fsmRequestedState)
         {
 
-            // debugOutput::sendMessage( "coming from:" + g_stateArray[fsmState]->toString(), STATE_CHANGE);
-            // debugOutput::sendMessage( "new state:" + g_stateArray[fsmNewState]->toString(), STATE_CHANGE);
             debugOutput::sendMessage("coming from: " + stateStrings[fsmState], STATE_CHANGE);
-            debugOutput::sendMessage("new state: " + stateStrings[fsmNewState], STATE_CHANGE);
-            //debugOutput::sendMessage( "coming from:" + g_stateArray[fsmState]->toString() + "onEntry() new state:  [" + g_stateArray[fsmNewState]->toString() + "]", STATE_CHANGE);
-
-            // debugOutput::sendMessage( "coming from: onEntry() new state:  [" + g_stateArray[fsmNewState]->toString() + "]", STATE_CHANGE);
-            fsmState = fsmNewState;
+            debugOutput::sendMessage("new state: " + stateStrings[fsmRequestedState], STATE_CHANGE);
+            fsmState = fsmRequestedState;
             dfRet = g_stateArray[fsmState]->onEntry();
         }
 
-        // Should Poll for Idle state change.  This triggers FSM to go forward.
+        // state not changed
         if (OK == dfRet)
         {
             dfRet = g_stateArray[fsmState]->onAction();
-            // TODO if this isn't OK deal with bad things
-
-            fsmNewState = g_stateArray[fsmState]->getNextState();
+            fsmRequestedState = g_stateArray[fsmState]->getRequestedState();
 
             // deal with end of state if state changed
-            if ((OK == dfRet) && (fsmNewState != fsmState))
+            if ((OK == dfRet) && (fsmRequestedState != fsmState))
             {
-                // debugOutput::sendMessage("coming from:" + g_stateArray[fsmState]->toString() + "onExit() going to [" + g_stateArray[fsmNewState]->toString() + "]", STATE_CHANGE);
                 dfRet = g_stateArray[fsmState]->onExit();
-                //TODO if this isn't ok deal with bad things
             }
         }
     }
+    debugOutput::sendMessage("Problem with state machine", INFO);
     return dfRet;
 }
 

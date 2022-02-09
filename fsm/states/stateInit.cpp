@@ -53,7 +53,7 @@ DF_ERROR stateInit::onEntry()
     DF_ERROR e_ret = OK;
 
     m_state = INIT; //ensure the current state is INIT
-    m_nextState = INIT;
+    m_state_requested = INIT;
 
     return e_ret;
 }
@@ -71,11 +71,11 @@ DF_ERROR stateInit::onAction()
         e_ret = dispenserSetup();
     }
 
-    if (nullptr != &m_nextState && OK == e_ret)
+    if (nullptr != &m_state_requested && OK == e_ret)
     {
         if (OK == e_ret)
         {
-            m_nextState = IDLE;
+            m_state_requested = IDLE;
 
             // The UI program waits for this message to move from its initializing phase to its Idle phase:
             m_pMessaging->sendMessage("Init Ready");
@@ -88,11 +88,6 @@ DF_ERROR stateInit::onAction()
 DF_ERROR stateInit::onExit()
 {
     DF_ERROR e_ret = OK;
-
-    // this is on exit, no need to set states here
-    //    m_state = INIT;
-    //    m_nextState = IDLE; //once everything is good, move to idle state
-
     return e_ret;
 }
 
@@ -108,11 +103,9 @@ DF_ERROR stateInit::dispenserSetup()
     // is ever active at a time.  The flow sensors are all connected
     // to the same pin in the hardware.
 #ifndef __arm__
-    //    productDispensers[0].setFlowsensor(364, 0);
     for (idx = 0; idx < 4; idx++)
     {
         productDispensers[idx].setFlowsensor(364, idx);
-        //    productDispensers[0].setFlowsensor(364, 0);
     }
 #else
     productDispensers[0].setFlowsensor(17, 0);
@@ -215,9 +208,6 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
             paymentMethod = argv[i];
         }
 
-        // debugOutput::sendMessage("---callback --- ", INFO);
-        // debugOutput::sendMessage(argv[i], INFO);
-        
         g_productDispensers[slot - 1].setProduct(
             new product(slot,
                         name,
@@ -254,7 +244,7 @@ DF_ERROR stateInit::setProducts()
 
     if (rc)
     {
-        //       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        // fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
         // TODO: Error handling here...
 
         debugOutput::sendMessage("Database opening error", INFO);

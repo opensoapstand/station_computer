@@ -358,38 +358,6 @@ DF_ERROR messageMediator::parseCommandString()
       }
    }
 
-   // TODO: Can seperate this into char parsing switch statment and further into function.
-   // pos = -1;
-   // strcpy(&productChar, &temp[0]);
-
-   // if (isdigit(productChar)) //first character should be string
-   // {
-   // debugOutput::sendMessage("Set Option", INFO);
-   //int check = productChar - '0'; // from ascii to value
-
-   // // FIXME: MAGIC NUMBER reference...
-   // if (9 < check || 0 > check)
-   // {
-   //    e_ret = ERROR_NETW_NO_OPTION; //require valid productDispensers
-   // }
-   // else
-   // {
-   //    m_RequestedProductIndexInt = check;
-
-   //    debugOutput::sendMessage("Product digit: char " + productChar , INFO);
-   //    //cout << m_RequestedProductIndexInt << endl;
-   //    e_ret = OK;
-   // }
-
-   // }
-   // else
-   // {
-   //    // Error Handling
-   //    debugOutput::sendMessage("error start with digit: [1..9]: " + productChar , INFO);
-   //    this->clearProcessString();    //make sure to clear the processed string for new input
-   //    e_ret = ERROR_NETW_NO_COMMAND; //require valid productDispensers
-   // }
-
    switch (productChar)
    {
    case '1':
@@ -430,7 +398,6 @@ DF_ERROR messageMediator::parseCommandString()
    if (!isalpha(actionChar))
    {
       debugOutput::sendMessage("Irrelevant input .. ", INFO);
-      // e_ret = ERROR_NETW_NO_POSITION;
    }
    else if (actionChar == ACTION_DUMMY)
    {
@@ -501,7 +468,6 @@ DF_ERROR messageMediator::parseCommandString()
       }
    }
 
-   this->clearCommandString(); // lode added
-   //m_bCommandReady = true; // lode deletedf
+   this->clearCommandString();
    return e_ret;
 }

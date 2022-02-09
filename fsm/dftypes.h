@@ -16,6 +16,7 @@
 #define XML_SETTINGS "/release/df_settings.xml"
 
 #include <sqlite3.h>
+
 #define PRODUCT_DISPENSERS_MAX 4
 #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 

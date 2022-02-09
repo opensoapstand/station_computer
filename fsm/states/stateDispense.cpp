@@ -72,14 +72,14 @@ DF_ERROR stateDispense::onAction()
       m_pMessaging->parseCommandString();
    }
 
-   if (nullptr != &m_nextState) // TODO: Do a Check if Button is Pressed
+   if (nullptr != &m_state_requested) // TODO: Do a Check if Button is Pressed
    {
       // Check if UI has sent a ACTION_DISPENSE_END to finish the transaction, or, if dispensing is complete
       if (m_pMessaging->getAction() == ACTION_DISPENSE_END)
       {
          // debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]" + to_string(productDispensers[pos].getIsDispenseComplete()), INFO);
          debugOutput::sendMessage("Stop dispensing (stop command received)", INFO);
-         m_nextState = DISPENSE_END;
+         m_state_requested = DISPENSE_END;
          return e_ret = OK;
       }
 
@@ -87,7 +87,7 @@ DF_ERROR stateDispense::onAction()
       {
          // debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]" + to_string(productDispensers[pos].getIsDispenseComplete()), INFO);
          debugOutput::sendMessage("Stop dispensing. Requested volume reached.", INFO);
-         m_nextState = DISPENSE_END;
+         m_state_requested = DISPENSE_END;
          return e_ret = OK;
       }
 
@@ -100,12 +100,12 @@ DF_ERROR stateDispense::onAction()
       if (productDispensers[pos].getProduct()->getVolumeDispensedPreviously() == productDispensers[pos].getProduct()->getVolumeDispensed())
       {
          // no dispensing detected since the last check
-         m_nextState = DISPENSE_IDLE;
+         m_state_requested = DISPENSE_IDLE;
       }
       else
       {
          // continue dispensing
-         m_nextState = DISPENSE;
+         m_state_requested = DISPENSE;
          productDispensers[pos].getProduct()->m_nVolumeDispensedPreviously = productDispensers[pos].getProduct()->getVolumeDispensed();
       }
 

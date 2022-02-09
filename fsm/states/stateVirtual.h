@@ -20,8 +20,6 @@
 #include "../objects/debugOutput.h"
 #include "../objects/dispenser.h"
 
-// TODO: Move reference to XML
-#define PRODUCT_DISPENSERS_MAX 4
 
 using namespace std;
 class stateVirtual
@@ -33,7 +31,7 @@ public:
 
     virtual string toString() = 0;
 
-    DF_FSM getNextState();
+    DF_FSM getRequestedState();
     DF_FSM getCurrentState();
 
     virtual DF_ERROR onEntry() = 0;
@@ -45,15 +43,10 @@ public:
 
     static product *testProducts[PRODUCT_DISPENSERS_MAX];
 
-    // // FIXME: Cludgey fix to exit dispense loop.
-    // bool getIsDispenseComplete(){return m_isDispenseComplete;}
-    // void setIsDispenseComplete(bool isDispenseComplete){m_isDispenseComplete = isDispenseComplete;}
-
 protected:
     DF_FSM m_state;
-    DF_FSM m_nextState;
+    DF_FSM m_state_requested;
     gpio *m_pButton[NUM_BUTTON];
-    //        mcpGPIO *m_pButtonPress;
     messageMediator *m_pMessaging;
 
     // Unique Reference to selected Product

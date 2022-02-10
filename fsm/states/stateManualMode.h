@@ -38,7 +38,7 @@ public:
    
 
 private:
-    // Adafruit_Thermal *printerr;
+    Adafruit_Thermal printerr;
    
 };
 

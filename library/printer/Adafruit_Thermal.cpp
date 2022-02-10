@@ -68,14 +68,15 @@
 
 // Constructor
 Adafruit_Thermal::Adafruit_Thermal(void) {
-    mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
-    serialPort.Open();
+    // mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
+    // serialPort.Open();
     dtrEnabled = false;
 }
 
 // Destructor
 Adafruit_Thermal::~Adafruit_Thermal(void) {
-    serialPort.Close();
+    // serialPort.Close();
+    serialPort.~SerialPort();
 }
 
 // This method sets the estimated completion time for a just-issued task.
@@ -115,29 +116,33 @@ void Adafruit_Thermal::setTimes(unsigned long p, unsigned long f) {
 
 void Adafruit_Thermal::writeBytes(uint8_t a) {
   //timeoutWait();
-    mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
-    serialPort.Open();
+    // mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
+    // serialPort.Open();
   std::string a1(1,a);
   serialPort.Write(a1);
   
   timeoutSet(BYTE_TIME);
+  // serialPort.Close();
 }
+
 
 void Adafruit_Thermal::writeBytes(uint8_t a, uint8_t b) {
   //timeoutWait();
-  mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
-  serialPort.Open();
+  // mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
+  // serialPort.Open();
   std::string a2(1,a);
   serialPort.Write(a2);
   std::string b2(1,b);
   serialPort.Write(b2);
   timeoutSet(2 * BYTE_TIME);
+  // serialPort.Close();
+
 }
 
 void Adafruit_Thermal::writeBytes(uint8_t a, uint8_t b, uint8_t c) {
   //timeoutWait();
-  mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
-  serialPort.Open();
+  // mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
+  // serialPort.Open();
   std::string a3(1,a);
   serialPort.Write(a3);
   std::string b3(1,b);
@@ -145,12 +150,14 @@ void Adafruit_Thermal::writeBytes(uint8_t a, uint8_t b, uint8_t c) {
   std::string c3(1,c);
   serialPort.Write(c3);
   timeoutSet(3 * BYTE_TIME);
+  // serialPort.Close();
+
 }
 
 void Adafruit_Thermal::writeBytes(uint8_t a, uint8_t b, uint8_t c, uint8_t d) {
   //timeoutWait();
-    mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
-    serialPort.Open();
+    // mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
+    // serialPort.Open();
   std::string a4(1,a);
   serialPort.Write(a4);
   std::string b4(1,b);
@@ -160,6 +167,8 @@ void Adafruit_Thermal::writeBytes(uint8_t a, uint8_t b, uint8_t c, uint8_t d) {
   std::string d4(1,d);
   serialPort.Write(d4);
   timeoutSet(4 * BYTE_TIME);
+  // serialPort.Close();
+
 }
 
 // The underlying method for all high-level printing (e.g. println()).
@@ -168,8 +177,8 @@ size_t Adafruit_Thermal::write(uint8_t c) {
 
   if (c != 0x13) { // Strip carriage returns
     //timeoutWait();
-      mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
-      serialPort.Open();
+      // mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
+      // serialPort.Open();
     std::string s(1,c);
     serialPort.Write(s);
     unsigned long d = BYTE_TIME;
@@ -615,28 +624,28 @@ void Adafruit_Thermal::wake() {
 char  Adafruit_Thermal::hasPaperString() {
 
 
-  // std::string s(1,c);
-  // serialPort.Write(s);
+  // // std::string s(1,c);
+  // // serialPort.Write(s);
 
-  mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
-  serialPort.Open();
+  // mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
+  // serialPort.Open();
   
-  // writeBytes(ASCII_ESC, 'v', 'n');   // Esc v n (status)
+  // // writeBytes(ASCII_ESC, 'v', 'n');   // Esc v n (status)
 
-  std::string a3(1,ASCII_ESC);
-  serialPort.Write(a3);
-  std::string b3(1,'v');
-  serialPort.Write(b3);
-  std::string c3(1,'n');
-  serialPort.Write(c3);
+  // std::string a3(1,ASCII_ESC);
+  // serialPort.Write(a3);
+  // std::string b3(1,'v');
+  // serialPort.Write(b3);
+  // std::string c3(1,'n');
+  // serialPort.Write(c3);
 
   
 
-  std::string readVal = "p";
+  // std::string readVal = "p";
   
-  serialPort.Read(readVal); // also, you can add time out!! (blocking, non blocking,.... timeoutms)
+  // serialPort.Read(readVal); // also, you can add time out!! (blocking, non blocking,.... timeoutms)
 
-  return readVal[0];
+  // return readVal[0];
 
   //debugOutput::sendMessage(readVal, INFO);
   // char* tmp;
@@ -660,13 +669,27 @@ char  Adafruit_Thermal::hasPaperString() {
 //   return !(status & 0b00000100);
 }
 
+void  Adafruit_Thermal::disconnectPrinter() {
+  serialPort.Close();
+}
+
+void  Adafruit_Thermal::connectToPrinter() {
+  //
+  //mn::CppLinuxSerial::SerialPort serialPortTMP("/dev/ttyS4", BAUDRATE);
+  serialPort.SetBaudRate(BAUDRATE);
+  serialPort.SetDevice("/dev/ttyS4");
+
+  // serialPort = &serialPortTMP;
+  serialPort.SetTimeout(0);
+  serialPort.Open();
+}
+
 bool  Adafruit_Thermal::hasPaper() {
 
   // std::string s(1,c);
   // serialPort.Write(s);
+  // serialPort.~SerialPort();
 
-  mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
-  serialPort.Open();
   
   // writeBytes(ASCII_ESC, 'v', 'n');   // Esc v n (status)
 
@@ -682,6 +705,8 @@ bool  Adafruit_Thermal::hasPaper() {
   std::string readVal = "p";
   
   serialPort.Read(readVal); // also, you can add time out!! (blocking, non blocking,.... timeoutms)
+  
+  //serialPort.Close();
 
   return 4 != readVal[0];
 

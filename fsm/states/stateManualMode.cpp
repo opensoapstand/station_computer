@@ -48,7 +48,7 @@ DF_ERROR stateManualMode::onEntry()
    DF_ERROR e_ret = OK;
    debugOutput::sendMessage("test printer stuff.", INFO);
     
-
+   printerr.connectToPrinter();
    return e_ret;
 }
 
@@ -73,8 +73,8 @@ DF_ERROR stateManualMode::onAction()
          m_state_requested = IDLE;
       }
    }
-   Adafruit_Thermal printerr;
-   printerr.feed(1);
+   
+   // printerr.feed(1);
 
    // char paperChar;
    // paperChar = printerr.hasPaperString();
@@ -112,7 +112,7 @@ DF_ERROR stateManualMode::printTest(){
    string printerstring = "lodelode";
    string plu = "978020137962";
 
-   Adafruit_Thermal printerr;
+   // Adafruit_Thermal printerr;
    printerr.printBarcode(plu.c_str(), EAN13);
    system("echo '\n---------------------------\n\n\n' > /dev/ttyS4");
 
@@ -125,6 +125,8 @@ DF_ERROR stateManualMode::printTest(){
 DF_ERROR stateManualMode::onExit()
 {
    printTest();
+   //usleep(500000);
+   printerr.disconnectPrinter();
    DF_ERROR e_ret = OK;
    return e_ret;
 }

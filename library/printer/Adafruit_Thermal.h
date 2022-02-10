@@ -364,8 +364,12 @@ public:
      */
     hasPaperString();
 
+    void connectToPrinter();
+    void disconnectPrinter();
+
 private:
   mn::CppLinuxSerial::SerialPort serialPort;
+
   uint8_t printMode,
       prevByte,      // Last character issued to printer
       column,        // Last horizontal column printed

@@ -19,6 +19,9 @@
 #include "../fsm.h"
 #include "../objects/product.h"
 
+#include "../../library/printer/Adafruit_Thermal.h"
+#include <string>
+
 class stateManualMode : public stateVirtual
 {
 public:
@@ -27,6 +30,7 @@ public:
     ~stateManualMode();
 
     string toString();
+    DF_ERROR printTest();
 
     DF_ERROR onEntry();
     DF_ERROR onAction();
@@ -34,6 +38,7 @@ public:
    
 
 private:
+    // Adafruit_Thermal *printerr;
    
 };
 

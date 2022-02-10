@@ -357,6 +357,13 @@ public:
      */
     hasPaper();
 
+  char
+    /*!
+     * @brief Whether or not the printer has paper
+     * @return Returns true if there is still paper
+     */
+    hasPaperString();
+
 private:
   mn::CppLinuxSerial::SerialPort serialPort;
   uint8_t printMode,

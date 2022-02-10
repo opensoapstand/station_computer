@@ -20,6 +20,7 @@
 // Default CTOR
 stateManualMode::stateManualMode()
 {
+   // printerr = new Adafruit_Thermal();
 }
 
 // CTOR Linked to IP Thread Socket Listener
@@ -67,19 +68,63 @@ DF_ERROR stateManualMode::onAction()
 
       if (m_pMessaging->getAction() == ACTION_QUIT_TEST)
       {
+         
          debugOutput::sendMessage("back to idle", INFO);
          m_state_requested = IDLE;
       }
    }
-   
+   Adafruit_Thermal printerr;
+   printerr.feed(1);
+
+   // char paperChar;
+   // paperChar = printerr.hasPaperString();
+   // //paperChar = 'p';
+   // // debugOutput::sendMessage("has paper" + (int)paperChar, INFO);
+
+   // debugOutput::sendMessage("paper status"  + to_string(paperChar), INFO); // will display 112
+   // // debugOutput::sendMessage("value of char"  + to_string(paperChar), INFO); // will display 112
+
+   // if (paperChar){
+   //    debugOutput::sendMessage("has paper", INFO);
+
+   // }else{
+   //    debugOutput::sendMessage("has NO paper", INFO);
+   // }
+   if (printerr.hasPaper()){
+      debugOutput::sendMessage("has paper", INFO);
+
+   }else{
+      debugOutput::sendMessage("has NO paper", INFO);
+   }
+
+   usleep(500000);			
+   // hasPaper
+
    e_ret = OK;
   
    return e_ret;
 }
 
+
+DF_ERROR stateManualMode::printTest(){
+
+   
+   string printerstring = "lodelode";
+   string plu = "978020137962";
+
+   Adafruit_Thermal printerr;
+   printerr.printBarcode(plu.c_str(), EAN13);
+   system("echo '\n---------------------------\n\n\n' > /dev/ttyS4");
+
+   string sysstring = "echo '\n---------------------------\n\n\n" + printerstring + "' > /dev/ttyS4";
+    system(sysstring.c_str());
+   //  printerr->setBarcodeHeight(100);
+}
+
 // Advances to Dispense Idle
 DF_ERROR stateManualMode::onExit()
 {
+   printTest();
    DF_ERROR e_ret = OK;
    return e_ret;
 }

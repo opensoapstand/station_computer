@@ -688,7 +688,7 @@ void  Adafruit_Thermal::connectToPrinter() {
   serialPort.SetDevice("/dev/ttyS4");
 
   // serialPort = &serialPortTMP;
-  serialPort.SetTimeout(0);
+  serialPort.SetTimeout(1000);
   serialPort.Open();
 }
 
@@ -712,10 +712,10 @@ char Adafruit_Thermal::testComms(int waitMillis) {
 
 
 
-  usleep(waitMillis*100);
+  usleep(waitMillis*1000);
 
    //while (readVal[0] == '-'){
-    //serialPort.Read(readVal); // also, you can add time out!! (blocking, non blocking,.... timeoutms)
+  serialPort.Read(readVal); // also, you can add time out!! (blocking, non blocking,.... timeoutms)
     
    //}
 

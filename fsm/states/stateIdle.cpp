@@ -86,6 +86,13 @@ DF_ERROR stateIdle::onAction()
             m_state_requested = MANUAL_MODE;
             
          }
+         if (ACTION_HELP == m_pMessaging->getAction())
+         {
+            debugOutput::sendMessage("\n Idle Mode. Available Commands: \n p: Test printer \n Dispensing: provide command in the form of \n [1..4]d[l,s,t] End Dispensing command: [1..4]f[l,s,t] \n " + std::to_string(pos), INFO);
+
+            
+            
+         }
       }
       else
       {

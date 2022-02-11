@@ -71,7 +71,6 @@ void debugOutput::sendMessage(std::string msg, MESSAGE_LEVEL lvl)
 		// 	strcpy(cstr, msg.c_str());
 
 		// 	printf("%s",cstr);
-		// 	// do stuff
 		// 	delete [] cstr;
 
 		//     // printf("%s",name);

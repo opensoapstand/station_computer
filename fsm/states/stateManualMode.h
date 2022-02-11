@@ -31,6 +31,8 @@ public:
 
     string toString();
     DF_ERROR printTest();
+    DF_ERROR displayPrinterStatus();
+    DF_ERROR displayPrinterReachable();
 
     DF_ERROR onEntry();
     DF_ERROR onAction();
@@ -38,7 +40,8 @@ public:
    
 
 private:
-    int waitSerial;
+    //int waitSerial;
+    bool b_isContinuouslyChecking;
     Adafruit_Thermal printerr;
    
 };

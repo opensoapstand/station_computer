@@ -367,7 +367,7 @@ public:
     void cancelCustomCharacters();
     void connectToPrinter();
     void disconnectPrinter();
-    char testComms(int waitMillis);
+    bool testComms();
 
 private:
   mn::CppLinuxSerial::SerialPort serialPort;

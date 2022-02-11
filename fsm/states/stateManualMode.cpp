@@ -47,8 +47,6 @@ DF_ERROR stateManualMode::onEntry()
    m_state_requested = MANUAL_MODE;
    DF_ERROR e_ret = OK;
    debugOutput::sendMessage("test printer stuff.", INFO);
-    
-   waitSerial = 0;
    printerr.connectToPrinter();
    return e_ret;
 }
@@ -67,12 +65,47 @@ DF_ERROR stateManualMode::onAction()
       DF_ERROR ret_msg;
       ret_msg = m_pMessaging->parseCommandString();
 
-      if (m_pMessaging->getAction() == ACTION_QUIT_TEST)
+      if (ACTION_QUIT_TEST == m_pMessaging->getAction())
       {
-         debugOutput::sendMessage("back to idle", INFO);
+         debugOutput::sendMessage("Exit printer status test", INFO);
          m_state_requested = IDLE;
       }
+
+      // If ACTION_DISPENSE is received, enter Dispense state, else, stay in Idle state
+      if (ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY == m_pMessaging->getAction())
+      {
+         debugOutput::sendMessage("Toggle Continuous Printer display status", INFO);
+         b_isContinuouslyChecking = !b_isContinuouslyChecking;
+      }
+
+      if (ACTION_PRINTER_CHECK_STATUS == m_pMessaging->getAction())
+      {
+         debugOutput::sendMessage("Get Printer display status", INFO);
+         displayPrinterStatus();
+      }
+      if (ACTION_PRINTER_PRINT_TEST == m_pMessaging->getAction())
+      {
+         debugOutput::sendMessage("Get Printer display status", INFO);
+         printTest();
+      }
+      if (ACTION_PRINTER_REACHABLE == m_pMessaging->getAction())
+      {
+         debugOutput::sendMessage("Is Printer reachable?", INFO);
+         displayPrinterReachable();
+      }
+      if (ACTION_HELP == m_pMessaging->getAction())
+      {
+         debugOutput::sendMessage("help\nAvailable printer test commands: \n l: test print\n V: printer status toggle continuous mode\n v:printer status \n q:quit test mode \n r: Printer reachable", INFO);
+      }
    }
+
+   if (b_isContinuouslyChecking){
+      displayPrinterStatus();
+      //usleep(50000);	// 50 ms	between actions
+   }
+
+   m_state = MANUAL_MODE;
+
    
    // printerr.feed(1);
    // printerr.connectToPrinter();
@@ -100,22 +133,35 @@ DF_ERROR stateManualMode::onAction()
 
    // }
 
-   if (printerr.hasPaper()){
-      debugOutput::sendMessage("has paper", INFO);
-
-   }else{
-      debugOutput::sendMessage("has NO paper----------------------------------------", INFO);
-   }
-   
+ 
    // printerr.disconnectPrinter();
 
-   usleep(50000);			
    // usleep(500000);			
    // hasPaper
 
    e_ret = OK;
   
    return e_ret;
+}
+
+
+DF_ERROR stateManualMode::displayPrinterStatus(){
+  if (printerr.hasPaper()){
+      debugOutput::sendMessage("has paper", INFO);
+
+   }else{
+      debugOutput::sendMessage("has NO paper----------------------------------------", INFO);
+   }
+   
+}
+DF_ERROR stateManualMode::displayPrinterReachable(){
+  if (printerr.testComms()){
+      debugOutput::sendMessage("printer reachable", INFO);
+
+   }else{
+      debugOutput::sendMessage("printer not reachable", INFO);
+   }
+   
 }
 
 
@@ -138,7 +184,7 @@ DF_ERROR stateManualMode::printTest(){
 DF_ERROR stateManualMode::onExit()
 {
    // printerr.connectToPrinter();
-   // printTest();
+   //printTest();
    // printerr.testPage();
    //usleep(500000);
    printerr.disconnectPrinter();

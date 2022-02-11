@@ -682,45 +682,46 @@ void  Adafruit_Thermal::connectToPrinter() {
   // mn::CppLinuxSerial::BaudRate::B_460800 = 19
   // mn::CppLinuxSerial::BaudRate baudrate_test = B_9600;
 
-  serialPort.SetBaudRate(BAUDRATE);
-  // serialPort.SetBaudRate(mn::CppLinuxSerial::BaudRate::B_9600);
+  //serialPort.SetBaudRate(BAUDRATE);
+  serialPort.SetBaudRate(mn::CppLinuxSerial::BaudRate::B_9600);
   //serialPort.SetBaudRate(mn::CppLinuxSerial::BaudRate::B_19200);
   serialPort.SetDevice("/dev/ttyS4");
 
   // serialPort = &serialPortTMP;
-  serialPort.SetTimeout(1000);
+  serialPort.SetTimeout(100); // this printer is slow. // 10 does not work //1000 works 
   serialPort.Open();
 }
 
-char Adafruit_Thermal::testComms(int waitMillis) {
+bool Adafruit_Thermal::testComms() {
   //serialPort.SetEcho(true);
 
-  std::string a3(1,ASCII_ESC);
-  serialPort.Write(a3);
-  std::string b3(1,'v');
-  serialPort.Write(b3);
-  std::string c3(1,'n');
-  serialPort.Write(c3);
+  // std::string a3(1,ASCII_ESC);
+  // serialPort.Write(a3);
+  // std::string b3(1,'v');
+  // serialPort.Write(b3);
+  // std::string c3(1,'n');
+  // serialPort.Write(c3);
   //timeoutSet(3 * BYTE_TIME);
   //timeoutWait();
+
+  std::string command(1,ASCII_ESC);
+  command.push_back('v');
+  command.push_back('n');
+  serialPort.Write(command);
   
   // usleep(10000);
 
-  // std::string readVal = "P"; // let's default to a status with the 0x04 bit enabled. 
-  std::string readVal = "-"; // let's default to a status with the 0x04 bit enabled. 
+  std::string readVal = "-";
 
 
 
 
-  usleep(waitMillis*1000);
+  // usleep(waitMillis*1000);
 
    //while (readVal[0] == '-'){
   serialPort.Read(readVal); // also, you can add time out!! (blocking, non blocking,.... timeoutms)
     
-   //}
-
-  
-  return readVal[0];
+  return readVal.length()>0;
 }
 // char Adafruit_Thermal::cancelCustomCharacters() {
 //   serialPort.SetEcho(true);
@@ -734,7 +735,7 @@ char Adafruit_Thermal::testComms(int waitMillis) {
   
 // }
 
-bool  Adafruit_Thermal::hasPaper() {
+bool Adafruit_Thermal::hasPaper() {
   // status commmand
   // p40 user manual
   // 3rd bit: 0=has paper, 1=out of paper

@@ -332,7 +332,12 @@ DF_ERROR messageMediator::parseCommandString()
    }else if (
       // other commands
       first_char == ACTION_TEST_PRINTER || 
-      first_char == ACTION_QUIT_TEST       
+      first_char == ACTION_QUIT_TEST    ||
+      first_char == ACTION_PRINTER_CHECK_STATUS         ||
+      first_char == ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY ||
+      first_char == ACTION_PRINTER_PRINT_TEST ||
+      first_char == ACTION_HELP ||
+      first_char == ACTION_PRINTER_REACHABLE
       ){
       
       m_requestedAction = first_char;

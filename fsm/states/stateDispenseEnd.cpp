@@ -446,8 +446,9 @@ DF_ERROR stateDispenseEnd::printer()
 
     system(sysstring.c_str());
     printerr->setBarcodeHeight(100);
+
     printerr->printBarcode(plu.c_str(), EAN13);
 
-    printerr->disconnectPrinter();
     system("echo '\n---------------------------\n\n\n' > /dev/ttyS4");
+    printerr->disconnectPrinter();
 }

@@ -69,7 +69,6 @@ DF_ERROR stateManualMode::onAction()
 
       if (m_pMessaging->getAction() == ACTION_QUIT_TEST)
       {
-         
          debugOutput::sendMessage("back to idle", INFO);
          m_state_requested = IDLE;
       }
@@ -77,19 +76,16 @@ DF_ERROR stateManualMode::onAction()
    
    // printerr.feed(1);
    // printerr.connectToPrinter();
-  
-  
    //printerr.cancelCustomCharacters();
   
-  
-   char tmpTest;
-   waitSerial++;
-   tmpTest = printerr.testComms(waitSerial);
+   // char tmpTest;
+   //waitSerial++;
+   //tmpTest = printerr.testComms(waitSerial);
    
-   std::string c3(1,tmpTest);
+   // std::string c3(1,tmpTest);
    
-   debugOutput::sendMessage("test byte:==" + c3 + "==", INFO);
-   debugOutput::sendMessage("0.1 ms multiplier: " + std::to_string(waitSerial), INFO);
+   // debugOutput::sendMessage("test byte:==" + c3 + "==", INFO);
+   // debugOutput::sendMessage("0.1 ms multiplier: " + std::to_string(waitSerial), INFO);
 
    // if (tmpTest == 0){
    //    // debugOutput::sendMessage("zero", INFO);
@@ -104,12 +100,12 @@ DF_ERROR stateManualMode::onAction()
 
    // }
 
-   // if (printerr.hasPaper()){
-   //    debugOutput::sendMessage("has paper", INFO);
+   if (printerr.hasPaper()){
+      debugOutput::sendMessage("has paper", INFO);
 
-   // }else{
-   //    debugOutput::sendMessage("has NO paper----------------------------------------", INFO);
-   // }
+   }else{
+      debugOutput::sendMessage("has NO paper----------------------------------------", INFO);
+   }
    
    // printerr.disconnectPrinter();
 

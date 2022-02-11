@@ -765,8 +765,8 @@ bool  Adafruit_Thermal::hasPaper() {
   //serialPort.Close();
   //return 4 != readVal[0];
   //return false;
-  // return !(readVal[0] & 0x04);
-  return readVal[0] != '$';
+  return !(readVal[0] & 0x04);
+  //return readVal[0] != '$';
   
 
 // #if PRINTER_FIRMWARE >= 264

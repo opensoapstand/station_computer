@@ -70,12 +70,13 @@ paySelect::paySelect(QWidget *parent) :
 
     ui->promoCode->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
     ui->promoButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->discountLabel->setText("-$0.0");
+    ui->discountLabel->setText("-$0.00");
     promoPercent = 0.0;
     ui->promoCode->clear();
     ui->promoCode->hide();
     ui->promoKeyboard->hide();
     ui->promoInputButton->show();
+    
 
     /*Stations without coupon code */
     // ui->promoCode->hide();
@@ -86,7 +87,7 @@ paySelect::paySelect(QWidget *parent) :
 
     {
         selectIdleTimer = new QTimer(this);
-        selectIdleTimer->setInterval(1000);
+        selectIdleTimer->setInterval(40);
         connect(ui->promoButton, SIGNAL(clicked()), this, SLOT(on_applyPromo_Button_clicked()));
         connect(ui->promoInputButton, SIGNAL(clicked()), this, SLOT(on_promoCodeInput_clicked()));
         connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(buttonWasClicked(int)));
@@ -107,7 +108,8 @@ void paySelect::setPage(productPage_1 *pageSelect, dispensePage* pageDispense,wi
     this->wifiError = pageWifiError;
     ui->promoCode->clear();
     ui->promoCode->hide();
-    ui->discountLabel->setText("-$0.0");
+    ui->discountLabel->setText("-$0.00");
+
     /*
     Stations without Promo Code
     */
@@ -138,8 +140,10 @@ void paySelect::on_previousPage_Button_clicked()
     };
     selectIdleTimer->stop();
     firstProductPage->showFullScreen();
-    ui->discountLabel->setText("-$0.0");
+    ui->discountLabel->setText("-$0.00");
     ui->promoInputButton->show();
+    
+    
     // ui->promoCode->hide();
     // ui->promoKeyboard->hide();
     // ui->promoInputButton->hide();
@@ -153,7 +157,7 @@ void paySelect::on_previousPage_Button_clicked()
 
 void paySelect::on_payPage_Button_clicked()
 {
-//    qDebug() << "paySelect: Pay button" << endl;
+   qDebug() << "paySelect: Pay button" << endl;
 
     ui->mainPage_Button->setEnabled(false);
     ui->previousPage_Button->setEnabled(false);
@@ -164,7 +168,6 @@ void paySelect::on_payPage_Button_clicked()
     selectIdleTimer->stop();
 
     if (db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "qr" || db.getPaymentMethod(idlePage->userDrinkOrder->getOption()) == "tap"){
-        db.closeDB();
         CURL *curl;
         CURLcode res;
         curl = curl_easy_init();
@@ -227,15 +230,17 @@ void paySelect::resizeEvent(QResizeEvent *event){
 
     if(selectIdleTimer == nullptr) {
         selectIdleTimer = new QTimer(this);
-        selectIdleTimer->setInterval(1000);
+        selectIdleTimer->setInterval(40);
         connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
     }
 
     ui->priceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize), 'f', 2));
-    ui->totalPriceLabel->setText("$"+QString::number(idlePage->userDrinkOrder->getPrice()));
+    ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
+
+    // ui->totalPriceLabel->setText("$"+QString::number(idlePage->userDrinkOrder->getPrice()));
     ui->price_sLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 's'), 'f', 2));
     ui->price_lLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 'l'), 'f', 2));
-    ui->discountLabel->setText("-$0.0");
+    ui->discountLabel->setText("-$0.00");
     if (db.getProductVolume(checkOption, 's') < 1000){
         ui->volume_sLabel->setText(QString::number(db.getProductVolume(checkOption, 's')) + " " + db.getUnits(checkOption));
     }else{
@@ -360,7 +365,7 @@ void paySelect::on_mainPage_Button_clicked()
 void paySelect::on_orderSmall_Button_clicked()
 {
     QString bitmap_location;
-
+    
     int checkOption = idlePage->userDrinkOrder->getOption();
 
     if(checkOption > 0 && checkOption <= 9) {
@@ -401,6 +406,7 @@ void paySelect::on_orderSmall_Button_clicked()
     }
 
     db.closeDB();
+    
 
 }
 

@@ -404,7 +404,7 @@ DF_ERROR stateDispenseEnd::updateDB()
 // This function prints the receipts by calling a system function (could be done better)
 DF_ERROR stateDispenseEnd::printer()
 {
-
+    // printerr.connectToPrinter();
     char cost2[MAX_BUF];
     char volume2[MAX_BUF];
     //char name2[MAX_BUF];
@@ -440,10 +440,14 @@ DF_ERROR stateDispenseEnd::printer()
     string printerstring = name + "\nPrice: $" + cost + " \nVolume: " + volume + units + "\nTime: " + now + "\nPLU: " + plu;
     string sysstring = "echo '\n---------------------------\n\n\n" + printerstring + "' > /dev/ttyS4";
 
+
     Adafruit_Thermal *printerr = new Adafruit_Thermal();
+    printerr->connectToPrinter();
 
     system(sysstring.c_str());
     printerr->setBarcodeHeight(100);
     printerr->printBarcode(plu.c_str(), EAN13);
+
+    printerr->disconnectPrinter();
     system("echo '\n---------------------------\n\n\n' > /dev/ttyS4");
 }

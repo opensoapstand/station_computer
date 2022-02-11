@@ -38,6 +38,7 @@ public:
    
 
 private:
+    int waitSerial;
     Adafruit_Thermal printerr;
    
 };

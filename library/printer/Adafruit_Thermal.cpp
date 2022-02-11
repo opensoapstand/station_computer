@@ -35,8 +35,10 @@
 // operation, a few rare specimens instead work at 9600.  If so, change
 // this constant.  This will NOT make printing slower!  The physical
 // print and feed mechanisms are the bottleneck, not the port speed.
+// #define BAUDRATE                                                               \
+//   19200 //!< How many bits per second the serial port should transfer
 #define BAUDRATE                                                               \
-  9600 //!< How many bits per second the serial port should transfer
+  9600 // setting before lode came along
 
 // ASCII codes used by some of the printer config commands:
 #define ASCII_TAB '\t' //!< Horizontal tab
@@ -76,7 +78,7 @@ Adafruit_Thermal::Adafruit_Thermal(void) {
 // Destructor
 Adafruit_Thermal::~Adafruit_Thermal(void) {
     // serialPort.Close();
-    serialPort.~SerialPort();
+    //serialPort.~SerialPort();
 }
 
 // This method sets the estimated completion time for a just-issued task.
@@ -621,7 +623,7 @@ void Adafruit_Thermal::wake() {
 // Check the status of the paper using the printer's self reporting
 // ability.  Returns true for paper, false for no paper.
 // Might not work on all printers!
-char  Adafruit_Thermal::hasPaperString() {
+// char  Adafruit_Thermal::hasPaperString() {
 
 
   // // std::string s(1,c);
@@ -667,7 +669,7 @@ char  Adafruit_Thermal::hasPaperString() {
 //   }
 
 //   return !(status & 0b00000100);
-}
+// }
 
 void  Adafruit_Thermal::disconnectPrinter() {
   serialPort.Close();
@@ -676,7 +678,13 @@ void  Adafruit_Thermal::disconnectPrinter() {
 void  Adafruit_Thermal::connectToPrinter() {
   //
   //mn::CppLinuxSerial::SerialPort serialPortTMP("/dev/ttyS4", BAUDRATE);
+
+  // mn::CppLinuxSerial::BaudRate::B_460800 = 19
+  // mn::CppLinuxSerial::BaudRate baudrate_test = B_9600;
+
   serialPort.SetBaudRate(BAUDRATE);
+  // serialPort.SetBaudRate(mn::CppLinuxSerial::BaudRate::B_9600);
+  //serialPort.SetBaudRate(mn::CppLinuxSerial::BaudRate::B_19200);
   serialPort.SetDevice("/dev/ttyS4");
 
   // serialPort = &serialPortTMP;
@@ -684,14 +692,8 @@ void  Adafruit_Thermal::connectToPrinter() {
   serialPort.Open();
 }
 
-bool  Adafruit_Thermal::hasPaper() {
-
-  // std::string s(1,c);
-  // serialPort.Write(s);
-  // serialPort.~SerialPort();
-
-  
-  // writeBytes(ASCII_ESC, 'v', 'n');   // Esc v n (status)
+char Adafruit_Thermal::testComms(int waitMillis) {
+  //serialPort.SetEcho(true);
 
   std::string a3(1,ASCII_ESC);
   serialPort.Write(a3);
@@ -699,18 +701,72 @@ bool  Adafruit_Thermal::hasPaper() {
   serialPort.Write(b3);
   std::string c3(1,'n');
   serialPort.Write(c3);
+  //timeoutSet(3 * BYTE_TIME);
+  //timeoutWait();
+  
+  // usleep(10000);
+
+  // std::string readVal = "P"; // let's default to a status with the 0x04 bit enabled. 
+  std::string readVal = "-"; // let's default to a status with the 0x04 bit enabled. 
+
+
+
+
+  usleep(waitMillis*100);
+
+   //while (readVal[0] == '-'){
+    //serialPort.Read(readVal); // also, you can add time out!! (blocking, non blocking,.... timeoutms)
+    
+   //}
 
   
+  return readVal[0];
+}
+// char Adafruit_Thermal::cancelCustomCharacters() {
+//   serialPort.SetEcho(true);
 
-  std::string readVal = "p";
+//   std::string a3(1,ASCII_ESC);
+//   serialPort.Write(a3);
+//   std::string b3(1,'v');
+//   serialPort.Write(b3);
+//   std::string c3(1,'?');
+//   serialPort.Write(c3);
+  
+// }
+
+bool  Adafruit_Thermal::hasPaper() {
+  // status commmand
+  // p40 user manual
+  // 3rd bit: 0=has paper, 1=out of paper
+
+
+  // writeBytes(ASCII_ESC, 'v', 'n');   // Esc v n (status)
+
+  // std::string a3(1,ASCII_ESC);
+  // serialPort.Write(a3);
+  // std::string b3(1,'v');
+  // serialPort.Write(b3);
+  // std::string c3(1,'n');
+  
+  // serialPort.Write(c3);
+
+  std::string command(1,ASCII_ESC);
+  command.push_back('v');
+  command.push_back('n');
+  serialPort.Write(command);
+
+  // std::string readVal = "D"; // let's default to a status with the 0x04 bit enabled. 
+  std::string readVal = "p"; // let's default to a status with the 0x04 bit enabled. 
+  
+  
   
   serialPort.Read(readVal); // also, you can add time out!! (blocking, non blocking,.... timeoutms)
   
   //serialPort.Close();
-
-  return 4 != readVal[0];
-
-
+  //return 4 != readVal[0];
+  //return false;
+  // return !(readVal[0] & 0x04);
+  return readVal[0] != '$';
   
 
 // #if PRINTER_FIRMWARE >= 264

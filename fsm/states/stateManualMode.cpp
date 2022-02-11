@@ -48,6 +48,7 @@ DF_ERROR stateManualMode::onEntry()
    DF_ERROR e_ret = OK;
    debugOutput::sendMessage("test printer stuff.", INFO);
     
+   waitSerial = 0;
    printerr.connectToPrinter();
    return e_ret;
 }
@@ -75,29 +76,45 @@ DF_ERROR stateManualMode::onAction()
    }
    
    // printerr.feed(1);
+   // printerr.connectToPrinter();
+  
+  
+   //printerr.cancelCustomCharacters();
+  
+  
+   char tmpTest;
+   waitSerial++;
+   tmpTest = printerr.testComms(waitSerial);
+   
+   std::string c3(1,tmpTest);
+   
+   debugOutput::sendMessage("test byte:==" + c3 + "==", INFO);
+   debugOutput::sendMessage("0.1 ms multiplier: " + std::to_string(waitSerial), INFO);
 
-   // char paperChar;
-   // paperChar = printerr.hasPaperString();
-   // //paperChar = 'p';
-   // // debugOutput::sendMessage("has paper" + (int)paperChar, INFO);
+   // if (tmpTest == 0){
+   //    // debugOutput::sendMessage("zero", INFO);
+   // }else if (tmpTest == 0x04){
+   //    debugOutput::sendMessage("four", INFO);
 
-   // debugOutput::sendMessage("paper status"  + to_string(paperChar), INFO); // will display 112
-   // // debugOutput::sendMessage("value of char"  + to_string(paperChar), INFO); // will display 112
+   // }else{
 
-   // if (paperChar){
+   //    std::string c3(1,tmpTest);
+      
+   //    debugOutput::sendMessage("test byte:" + c3, INFO);
+
+   // }
+
+   // if (printerr.hasPaper()){
    //    debugOutput::sendMessage("has paper", INFO);
 
    // }else{
-   //    debugOutput::sendMessage("has NO paper", INFO);
+   //    debugOutput::sendMessage("has NO paper----------------------------------------", INFO);
    // }
-   if (printerr.hasPaper()){
-      debugOutput::sendMessage("has paper", INFO);
+   
+   // printerr.disconnectPrinter();
 
-   }else{
-      debugOutput::sendMessage("has NO paper", INFO);
-   }
-
-   usleep(500000);			
+   usleep(50000);			
+   // usleep(500000);			
    // hasPaper
 
    e_ret = OK;
@@ -124,7 +141,9 @@ DF_ERROR stateManualMode::printTest(){
 // Advances to Dispense Idle
 DF_ERROR stateManualMode::onExit()
 {
-   printTest();
+   // printerr.connectToPrinter();
+   // printTest();
+   // printerr.testPage();
    //usleep(500000);
    printerr.disconnectPrinter();
    DF_ERROR e_ret = OK;

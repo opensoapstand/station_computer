@@ -357,15 +357,17 @@ public:
      */
     hasPaper();
 
-  char
-    /*!
-     * @brief Whether or not the printer has paper
-     * @return Returns true if there is still paper
-     */
-    hasPaperString();
+  // char
+  //   /*!
+  //    * @brief Whether or not the printer has paper
+  //    * @return Returns true if there is still paper
+  //    */
+  //   hasPaperString();
 
+    void cancelCustomCharacters();
     void connectToPrinter();
     void disconnectPrinter();
+    char testComms(int waitMillis);
 
 private:
   mn::CppLinuxSerial::SerialPort serialPort;

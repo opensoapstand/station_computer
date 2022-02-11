@@ -35,6 +35,9 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 
 .PHONY: clean controller
 
+# quick unoptimized
+fsmf:
+	g++ -g -pthread -O0 -o controller fsm.cpp components/*.cpp states/*.cpp objects/*.cpp ../library/tinyxml/*.cpp  ../library/i2c/mcp23017/*.cpp ../library/i2c/smbus/*.c ../library/socket/*.cpp ../library/printer/*.cpp ../library/qr/*.cpp -l sqlite3 -lCppLinuxSerial -lcurl
 
 # as taken from the official makefile (ui + fsm) (make_ui_fsm.sh)
 fsmgdb:

@@ -4,10 +4,10 @@
 //
 // Recieves and interprets string command from FSM.
 // Routes dispense instruction to GPIO's
-// created: 26-06-2020
-// by: Jason Wang & Li-Yan Tong
+// created: 01-2022
+// by:Lode Ameije & Ash Singla
 //
-// copyright 2020 by Drinkfill Beverages Ltd
+// copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
 

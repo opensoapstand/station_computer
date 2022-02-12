@@ -7,10 +7,10 @@
 // Holds and coordinates values from database
 // to dispense classes.
 //
-// created: 12-06-2020
-// by: Denis Londry
+// created: 01-2022
+// by: Lode Ameije & Ash Singla
 //
-// copyright 2020 by Drinkfill Beverages Ltd
+// copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
 

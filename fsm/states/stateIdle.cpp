@@ -6,10 +6,10 @@
 // After stateInit: Waits for a dispense
 // command from IPC QT Socket
 //
-// created: 29-06-2020
-// by: Jason Wang & Li-Yan Tong
+// created: 01-2022
+// by:Lode Ameije & Ash Singla
 //
-// copyright 2020 by Drinkfill Beverages Ltd
+// copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
 
@@ -72,7 +72,6 @@ DF_ERROR stateIdle::onAction()
          pos = m_pMessaging->getProductNumber();
          pos = pos - 1;
 
-         // If ACTION_DISPENSE is received, enter Dispense state, else, stay in Idle state
          if (ACTION_DISPENSE == m_pMessaging->getAction())
          {
             debugOutput::sendMessage("Chosen product: " + std::to_string(pos), INFO);
@@ -82,16 +81,12 @@ DF_ERROR stateIdle::onAction()
 
          if (ACTION_TEST_PRINTER == m_pMessaging->getAction())
          {
-
-            m_state_requested = MANUAL_MODE;
-            
+            m_state_requested = MANUAL_PRINTER;
          }
+
          if (ACTION_HELP == m_pMessaging->getAction())
          {
-            debugOutput::sendMessage("\n Idle Mode. Available Commands: \n p: Test printer \n Dispensing: provide command in the form of \n [1..4]d[l,s,t] End Dispensing command: [1..4]f[l,s,t] \n " + std::to_string(pos), INFO);
-
-            
-            
+            debugOutput::sendMessage("\n Idle Mode. Available Commands: \n p: Test printer \n [1..4]d[l,s,t]: Enter dispense mode. [product number]d[size] \n [1..4]f[l,s,t]: If dispensing: to End Dispensing [product number]f[size]", INFO);
          }
       }
       else

@@ -3,10 +3,10 @@
 // statedispense.h
 // dispense state class
 //
-// created: 26-06-2020
-// by: Jason Wang & Li-Yan Tong
+// created: 01-2022
+// by:Lode Ameije & Ash Singla
 //
-// copyright 2020 by Drinkfill Beverages Ltd
+// copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
 

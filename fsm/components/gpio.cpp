@@ -4,9 +4,9 @@
 // GPIO Abstract Class Implementation
 //
 // created: 15-06-2020
-// by: Denis Londry & Li-Yan Tong
+// by: Lode Ameije & Ash Singla
 //
-// copyright 2020 by Drinkfill Beverages Ltd
+// copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
 

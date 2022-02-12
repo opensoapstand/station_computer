@@ -3,10 +3,10 @@
 // fsm.cpp
 // main state class
 //
-// created: 12-06-2020
-// by: Denis Londry
+// created: 01-2022
+// by: Lode Ameije & Ash Singla
 //
-// copyright 2020 by Drinkfill Beverages Ltd
+// copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
 
@@ -22,7 +22,7 @@
 #include "states/stateDispense.h"
 #include "states/stateDispenseIdle.h"
 #include "states/stateDispenseEnd.h"
-#include "states/stateManualMode.h"
+#include "states/stateManualPrinter.h"
 
 #include "objects/dispenser.h"
 #include "objects/messageMediator.h"
@@ -36,7 +36,7 @@ std::string stateStrings[FSM_MAX + 1] = {
     "DISPENSE_IDLE",
     "DISPENSE",
     "DISPENSE_END",
-    "MANUAL_MODE",
+    "MANUAL_PRINTER",
     "CLEANING",
     "FSM_MAX"};
 
@@ -78,10 +78,17 @@ DF_ERROR stateLoop()
 
     while (OK == dfRet) //while no error has occurred
     {
+
+        // if (fsmState != START){
+        //     fsmRequestedState = g_stateArray[fsmState]->getRequestedState();
+        // }else{
+        //     fsmRequestedState = INIT;
+        // }
+
+
         // state change, deal with new state
         if (fsmState != fsmRequestedState)
         {
-
             debugOutput::sendMessage("coming from: " + stateStrings[fsmState], STATE_CHANGE);
             debugOutput::sendMessage("new state: " + stateStrings[fsmRequestedState], STATE_CHANGE);
             fsmState = fsmRequestedState;
@@ -140,7 +147,7 @@ DF_ERROR createStateArray()
         g_stateArray[DISPENSE_IDLE] = new stateDispenseIdle(g_pMessaging);
         g_stateArray[DISPENSE] = new stateDispense(g_pMessaging);
         g_stateArray[DISPENSE_END] = new stateDispenseEnd(g_pMessaging);
-        g_stateArray[MANUAL_MODE] = new stateManualMode(g_pMessaging);
+        g_stateArray[MANUAL_PRINTER] = new stateManualPrinter(g_pMessaging);
         dfRet = OK;
     }
 

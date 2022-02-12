@@ -3,10 +3,10 @@
 // dftypes.h
 // types specific to drinkfill
 //
-// created: 12-06-2020
-// by: Denis Londry
+// created: 01-2022
+// by: Lode Ameije & Ash Singla
 //
-// copyright 2020 by Productfill Beverages Ltd
+// copyright 2022 by Productfill Beverages Ltd
 // all rights reserved
 //***************************************
 
@@ -30,7 +30,7 @@ typedef enum DF_FSM
    DISPENSE_IDLE,
    DISPENSE,
    DISPENSE_END,
-   MANUAL_MODE,
+   MANUAL_PRINTER,
    CLEANING,
    FSM_MAX,
 } DF_FSM;

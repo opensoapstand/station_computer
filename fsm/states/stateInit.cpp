@@ -9,10 +9,10 @@
 // communication in machine.
 // Connect or create database.
 //
-// created: 12-06-2020
-// by: Denis Londry & Li-Yan Tong
+// created: 01-2022
+// by: Lode Ameije & Ash Singla
 //
-// copyright 2020 by Drinkfill Beverages Ltd
+// copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
 

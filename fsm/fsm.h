@@ -4,9 +4,9 @@
 // holds some globals for sharing
 //
 // created: 22-09-2020
-// by: Denis Londry
+// by: Lode Ameije & Ash Singla
 //
-// copyright 2020 by Drinkfill Beverages Ltd
+// copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
 

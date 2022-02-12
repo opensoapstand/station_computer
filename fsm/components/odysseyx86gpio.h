@@ -5,9 +5,9 @@
 // NATIVE x86 pins on Oddysey board
 //
 // created: 15-06-2020
-// by: Denis Londry
+// by: Lode Ameije & Ash Singla
 //
-// copyright 2020 by Drinkfill Beverages Ltd
+// copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
 #ifndef _ODDYSEYX86GPIO__H__

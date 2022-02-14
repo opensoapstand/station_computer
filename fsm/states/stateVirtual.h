@@ -32,7 +32,7 @@ public:
     virtual string toString() = 0;
 
     DF_FSM getRequestedState();
-    DF_FSM getCurrentState();
+    // DF_FSM getCurrentState();
 
     virtual DF_ERROR onEntry() = 0;
     virtual DF_ERROR onAction() = 0;
@@ -44,7 +44,7 @@ public:
     static product *testProducts[PRODUCT_DISPENSERS_MAX];
 
 protected:
-    DF_FSM m_state;
+    // DF_FSM m_state;
     DF_FSM m_state_requested;
     gpio *m_pButton[NUM_BUTTON];
     messageMediator *m_pMessaging;

@@ -43,6 +43,7 @@ string stateDispenseEnd::toString()
  */
 DF_ERROR stateDispenseEnd::onEntry()
 {
+    m_state_requested = DISPENSE_END;
     DF_ERROR e_ret = OK;
 
     productDispensers = g_productDispensers;

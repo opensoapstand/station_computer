@@ -37,6 +37,7 @@ stateDispenseIdle::~stateDispenseIdle()
 // FIXME: See state dispense function header
 DF_ERROR stateDispenseIdle::onEntry()
 {
+    m_state_requested = DISPENSE_IDLE;
     DF_ERROR e_ret = OK;
 
     productDispensers = g_productDispensers;

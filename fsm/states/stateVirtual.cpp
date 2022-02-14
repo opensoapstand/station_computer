@@ -15,7 +15,8 @@
 
 stateVirtual::stateVirtual()
 {
-   m_state = START;
+   //m_state = START;
+   //m_state_requested = START; // should error if ever on "START", this is only virtual!
 }
 
 stateVirtual::stateVirtual(messageMediator *message)
@@ -24,7 +25,7 @@ stateVirtual::stateVirtual(messageMediator *message)
    {
       //bad things have occured
    }
-   m_state = START;
+   //m_state = START;
 
    m_pMessaging = message;
 }
@@ -40,11 +41,11 @@ DF_FSM stateVirtual::getRequestedState()
    return m_state_requested;
 }
 
-//getter for current state from fsm
-DF_FSM stateVirtual::getCurrentState()
-{
-   return m_state;
-}
+// //getter for current state from fsm
+// DF_FSM stateVirtual::getCurrentState()
+// {
+//    return m_state;
+// }
 
 gpio *stateVirtual::getButton()
 {

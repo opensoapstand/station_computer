@@ -50,6 +50,7 @@ string stateInit::toString()
 */
 DF_ERROR stateInit::onEntry()
 {
+    m_state_requested = INIT;
     DF_ERROR e_ret = OK;
     return e_ret;
 }

@@ -45,8 +45,7 @@ DF_ERROR stateIdle::onEntry()
    DF_ERROR e_ret = OK;
 
    // Set current and future states to IDLE
-   m_state = IDLE;
-   m_state_requested = IDLE;
+   //m_state = IDLE;
    return e_ret;
 }
 
@@ -56,8 +55,9 @@ DF_ERROR stateIdle::onEntry()
 */
 DF_ERROR stateIdle::onAction()
 {
+   m_state_requested = IDLE;
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
-   m_state = IDLE;
+  // m_state = IDLE;
 
    if (nullptr != &m_state_requested)
    {

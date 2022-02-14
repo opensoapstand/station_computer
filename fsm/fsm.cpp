@@ -41,7 +41,7 @@ std::string stateStrings[FSM_MAX + 1] = {
     "FSM_MAX"};
 
 messageMediator *g_pMessaging;                         //debug through local network
-stateVirtual *g_stateArray[FSM_MAX + 1];                   //an object for every state
+stateVirtual *g_stateArray[FSM_MAX + 1];               //an object for every state
 dispenser g_productDispensers[PRODUCT_DISPENSERS_MAX]; //replace the magic number
 
 DF_ERROR initObjects();
@@ -70,48 +70,95 @@ int main()
 /*
  * Poll for State changes: States outlined in DF_FSM
 */
+
 DF_ERROR stateLoop()
 {
     DF_ERROR dfRet = OK;
-    DF_FSM fsmState = START;
-    DF_FSM fsmRequestedState = INIT;
+    DF_FSM fsmState = INIT;
+    DF_FSM previousState = START;
 
     while (OK == dfRet) //while no error has occurred
     {
-
-        // if (fsmState != START){
-        //     fsmRequestedState = g_stateArray[fsmState]->getRequestedState();
-        // }else{
-        //     fsmRequestedState = INIT;
-        // }
-
+        if (fsmState == START)
+        {
+            debugOutput::sendMessage("ERROR STATE uhg" + fsmState, STATE_CHANGE);
+        }
 
         // state change, deal with new state
-        if (fsmState != fsmRequestedState)
+        if (fsmState != previousState)
         {
-            debugOutput::sendMessage("coming from: " + stateStrings[fsmState], STATE_CHANGE);
-            debugOutput::sendMessage("new state: " + stateStrings[fsmRequestedState], STATE_CHANGE);
-            fsmState = fsmRequestedState;
+            debugOutput::sendMessage("Enter state: " + stateStrings[fsmState], STATE_CHANGE);
             dfRet = g_stateArray[fsmState]->onEntry();
         }
+
+        previousState = fsmState;
 
         // state not changed
         if (OK == dfRet)
         {
             dfRet = g_stateArray[fsmState]->onAction();
-            fsmRequestedState = g_stateArray[fsmState]->getRequestedState();
-            // debugOutput::sendMessage("tmplodee", INFO);   
-            // debugOutput::sendMessage( std::to_string(fsmRequestedState), INFO);   
-            // deal with end of state if state changed
-            if ((OK == dfRet) && (fsmRequestedState != fsmState))
+        }
+
+        // deal with end of state if state changed
+        if (OK == dfRet)
+        {
+            fsmState = g_stateArray[fsmState]->getRequestedState();
+
+            if (fsmState != previousState)
             {
-                dfRet = g_stateArray[fsmState]->onExit();
+                debugOutput::sendMessage("Exit state: " + stateStrings[previousState], STATE_CHANGE);
+                dfRet = g_stateArray[previousState]->onExit();
             }
         }
     }
     debugOutput::sendMessage("Problem with state machine", INFO);
     return dfRet;
 }
+
+// DF_ERROR stateLoop()
+// {
+//     DF_ERROR dfRet = OK;
+//     DF_FSM fsmState = INIT;
+//     // DF_FSM fsmRequestedState = INIT;
+//     // DF_FSM fsmState = START;
+//     // DF_FSM fsmRequestedState = INIT;
+//     DF_FSM previousState = START;
+
+//     while (OK == dfRet) //while no error has occurred
+//     {
+
+//         //if (fsmState != START){
+//         //     fsmRequestedState = g_stateArray[fsmState]->getRequestedState();
+//         // }else{
+//         //     fsmRequestedState = INIT;
+//         // }
+
+//         // state change, deal with new state
+//         if (fsmState != fsmRequestedState)
+//         {
+//             debugOutput::sendMessage("coming from: " + stateStrings[fsmState], STATE_CHANGE);
+//             debugOutput::sendMessage("new state: " + stateStrings[fsmRequestedState], STATE_CHANGE);
+//             fsmState = fsmRequestedState;
+//             dfRet = g_stateArray[fsmState]->onEntry();
+//         }
+
+//         // state not changed
+//         if (OK == dfRet)
+//         {
+//             dfRet = g_stateArray[fsmState]->onAction();
+//             fsmRequestedState = g_stateArray[fsmState]->getRequestedState();
+//             // debugOutput::sendMessage("tmplodee", INFO);
+//             // debugOutput::sendMessage( std::to_string(fsmRequestedState), INFO);
+//             // deal with end of state if state changed
+//             if ((OK == dfRet) && (fsmRequestedState != fsmState))
+//             {
+//                 dfRet = g_stateArray[fsmState]->onExit();
+//             }
+//         }
+//     }
+//     debugOutput::sendMessage("Problem with state machine", INFO);
+//     return dfRet;
+// }
 
 /*
  * Mutex Setting; Spin up Threads

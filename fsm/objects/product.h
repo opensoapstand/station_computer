@@ -105,11 +105,8 @@ private:
         double m_nTickCount;
         bool valueChange;
 
-        // bool m_isStillProduct;
-
         void setSlot(int slot);
         void setProductName(string productName);
-        // void setIsStillProduct(bool isStillProduct);
         double getVolPerTick();
 
         sqlite3 *db;

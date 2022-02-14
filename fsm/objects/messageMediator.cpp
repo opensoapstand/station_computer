@@ -176,7 +176,7 @@ DF_ERROR messageMediator::updateCmdString(char key)
       // build up command as long as no ;
       m_processCommand.push_back(key);
    }
-   else 
+   else
    {
       // ; is the command finished char
       m_receiveStringBuffer.clear();
@@ -218,8 +218,8 @@ void *messageMediator::doKBThread(void *pThreadArgs)
 
    // while (!m_fExitThreads) // lode: todo not relevant?! (contains infinite while loop)
    // {
-      // make sure buffer is clear (seems overkill)
-   // if (!m_receiveStringBuffer.empty()) 
+   // make sure buffer is clear (seems overkill)
+   // if (!m_receiveStringBuffer.empty())
    // {
    //    updateCmdString();
    // }
@@ -230,8 +230,15 @@ void *messageMediator::doKBThread(void *pThreadArgs)
    {
       updateCmdString(key);
    }
-      
-      // usleep(DELAY_USEC);
+
+   // char key;
+   // // BLOCKING!!
+   // while (0 < scanf(" %c", &key))
+   // {
+   //    updateCmdString(key);
+   // }
+
+   // usleep(DELAY_USEC);
    // }
 
    // df_ret;
@@ -321,33 +328,34 @@ DF_ERROR messageMediator::parseCommandString()
    char first_char = sCommand[0];
 
    if (
-      first_char == '1' ||
-      first_char == '2' ||
-      first_char == '3' ||
-      first_char == '4' 
-   ){
+       first_char == '1' ||
+       first_char == '2' ||
+       first_char == '3' ||
+       first_char == '4')
+   {
       // check for dispensing command
       e_ret = parseDispenseCommand(sCommand);
+   }
+   else if (
+       // other commands
+       first_char == ACTION_TEST_PRINTER ||
+       first_char == ACTION_QUIT_TEST ||
+       first_char == ACTION_PRINTER_CHECK_STATUS ||
+       first_char == ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY ||
+       first_char == ACTION_PRINTER_PRINT_TEST ||
+       first_char == ACTION_HELP ||
+       first_char == ACTION_PRINTER_REACHABLE)
+   {
 
-   }else if (
-      // other commands
-      first_char == ACTION_TEST_PRINTER || 
-      first_char == ACTION_QUIT_TEST    ||
-      first_char == ACTION_PRINTER_CHECK_STATUS         ||
-      first_char == ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY ||
-      first_char == ACTION_PRINTER_PRINT_TEST ||
-      first_char == ACTION_HELP ||
-      first_char == ACTION_PRINTER_REACHABLE
-      ){
-      
       m_requestedAction = first_char;
-
-   }else{
+   }
+   else
+   {
       // invalid commands
       m_requestedAction = ACTION_NO_ACTION;
       debugOutput::sendMessage("Command received is not valid.", INFO);
    }
-   
+
    this->clearCommandString();
    return e_ret;
 }
@@ -358,7 +366,6 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
    debugOutput::sendMessage("parseDispenseCommand", INFO);
    char temp[10];
-  
 
    char productChar = PRODUCT_DUMMY;
    char actionChar = ACTION_DUMMY;
@@ -501,9 +508,6 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
 
    return e_ret;
 }
-
-
-
 
 // DF_ERROR messageMediator::parseCommandString()
 // {

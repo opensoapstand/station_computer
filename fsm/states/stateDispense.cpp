@@ -47,6 +47,7 @@ string stateDispense::toString()
  */
 DF_ERROR stateDispense::onEntry()
 {
+   m_state_requested = DISPENSE;
    productDispensers = g_productDispensers;
    DF_ERROR e_ret = OK;
    pos = m_pMessaging->getProductNumber();

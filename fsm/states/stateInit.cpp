@@ -113,7 +113,7 @@ DF_ERROR stateInit::dispenserSetup()
         productDispensers[idx].setPump(0, 0, idx);
     }
 
-    productDispensers[0].setPowerOffListener();
+    productDispensers[0].setPowerOffListener(); // is this the power off button?
 
     debugOutput::sendMessage("Dispenser intialized.", MSG_INFO);
 

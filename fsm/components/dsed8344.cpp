@@ -124,7 +124,7 @@ bool dsed8344::setPumpDirection(bool direction)
     return true;
 } // End of seyPumpDirection()
 
-bool dsed8344::startPump(unsigned char pump_number)
+bool dsed8344::enablePump(unsigned char pump_number)
 {
     unsigned char reg_value;
 
@@ -149,9 +149,9 @@ bool dsed8344::startPump(unsigned char pump_number)
     SendByte(PCA9534_ADDRESS, 0x01, reg_value);
 
     return true;
-} // End startPump()
+} // End enablePump()
 
-bool dsed8344::stopPump()
+bool dsed8344::disableAllPumps()
 {
     unsigned char reg_value;
 
@@ -160,7 +160,7 @@ bool dsed8344::stopPump()
     SendByte(PCA9534_ADDRESS, 0x01, reg_value);
 
     return true;
-} // End stopPump()
+} // End disableAllPumps()
 
 unsigned short dsed8344::getPumpTach(void)
 {

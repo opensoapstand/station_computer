@@ -68,15 +68,27 @@ DF_ERROR stateManualPump::onAction()
          m_state_requested = STATE_IDLE;
       }
 
-      if (ACTION_PUMP_TEST == m_pMessaging->getAction())
+      if (ACTION_MANUAL_PUMP_TEST == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Do pump test", MSG_INFO);
          pumpTest();
       }
 
+      if (ACTION_MANUAL_PUMP_ENABLE == m_pMessaging->getAction())
+      {
+         debugOutput::sendMessage("Enable dispenser pump at pos 1 (needs button to be pressed to actually work)", MSG_INFO);
+         productDispensers[0].enablePump(1); // POS is 1->4! index is 0->3
+      }
+
+       if (ACTION_MANUAL_PUMP_DISABLE == m_pMessaging->getAction())
+      {
+         debugOutput::sendMessage("Disable dispenser pump at pos 1", MSG_INFO);
+         productDispensers[0].disableAllPumps(); // POS is 1->4! index is 0->3
+      }
+
       if (ACTION_HELP == m_pMessaging->getAction())
       {
-         debugOutput::sendMessage("help\nAvailable printer test commands: \n t: test pump \n q: quit ", MSG_INFO);
+         debugOutput::sendMessage("help\nAvailable printer test commands: \n t: test pump1 \n d: enable pump1 \n f: disable pump1\n q: quit ", MSG_INFO);
       }
    }
 
@@ -88,11 +100,20 @@ DF_ERROR stateManualPump::onAction()
 DF_ERROR stateManualPump::pumpTest()
 {
    debugOutput::sendMessage("pump pump", MSG_INFO);
+
    productDispensers[0].forwardPump();
    productDispensers[0].setPumpPWM(125);
-   productDispensers[0].startPump(1); // POS is 1->4! index is 0->3
+   productDispensers[0].enablePump(1); // POS is 1->4! index is 0->3
    usleep(500000); // press button to have the pump pumping. 
-   productDispensers[0].stopPump();
+   productDispensers[0].disableAllPumps();
+
+   
+   productDispensers[0].reversePump();
+   productDispensers[0].setPumpPWM(125);
+   productDispensers[0].enablePump(1); // POS is 1->4! index is 0->3
+   usleep(500000); // press button to have the pump pumping. 
+   productDispensers[0].disableAllPumps();
+
 }
 
 // Advances to Dispense Idle

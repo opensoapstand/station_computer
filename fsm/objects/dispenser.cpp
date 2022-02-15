@@ -94,12 +94,12 @@ void dispenser::initDispenser(int slot)
 }
 
 // TODO: Call this function on Dispense onEntry()
-DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
-{
-    debugOutput::sendMessage("-----dispenser::setSolenoid-----", MSG_INFO);
+// DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
+// {
+//     debugOutput::sendMessage("-----dispenser::setSolenoid-----", MSG_INFO);
 
-    return OK;
-}
+//     return OK;
+// }
 
 // TODO: Call this function on Dispense onEntry()
 DF_ERROR dispenser::setFlowsensor(int pin, int pos)
@@ -167,24 +167,23 @@ DF_ERROR dispenser::reversePump()
 }
 
 // Stops pumping: Turn forward pin LOW - Reverse pin LOW
-DF_ERROR dispenser::stopPump()
+DF_ERROR dispenser::disableAllPumps()
 {
     debugOutput::sendMessage("-----Stop Pump-----", MSG_INFO);
-    the_8344->stopPump();
+    the_8344->disableAllPumps();
 }
 
-// 
-DF_ERROR dispenser::startPump(int pos)
+DF_ERROR dispenser::enablePump(int pos)
 {
+    // still needs dispense button to actually get the pump to start
     debugOutput::sendMessage("-----Start Pump-----", MSG_INFO);
-    the_8344->startPump(pos);
+    the_8344->enablePump(pos);
 }
 
 DF_ERROR dispenser::setPumpPWM(int8_t value)
 {
     debugOutput::sendMessage("-----Set PWM-----", MSG_INFO);
     the_8344->setPumpPWM((unsigned char)value);
-    
 }
 
 // Disenses products by turning Solenoid Signal to HIGH then to LOW
@@ -192,52 +191,21 @@ DF_ERROR dispenser::startDispense(int pos)
 {
     DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
     debugOutput::sendMessage("-----Start Dispense-----", MSG_INFO);
-    // XXX: Prepare Button - Linked thru State Virtual
-    // e_ret = connectButton();
 
-    // Solenoid Position Check
-    //    if(pos != PRODUCT) {
-    //        e_ret = ERROR_ELEC_PIN_DISPENSE;
-    //        return e_ret;
-    //    }
-
-    // Open Product Solenoid
-    // debugOutput::sendMessage("Trigger solenoid:", MSG_INFO);
-    // m_pSolenoid[pos]->writePin(HIGH);
     debugOutput::sendMessage("Triggered pump:" + to_string(pos), MSG_INFO);
 
-    // If Still start pump!
-    // if(m_isStill && (m_pPump != nullptr) ) {
-    //sleep(PRIME_PUMP_TIME);
     forwardPump();
-    // the_8344->setPumpPWM((unsigned char)(m_pSelectedProduct->getPWM()));
     setPumpPWM((unsigned char)(m_pSelectedProduct->getPWM()));
 
-
     debugOutput::sendMessage("PWM SET!", MSG_INFO);
-    //cout << the_8344->getPumpPWM();
-    
-    
-    //the_8344->startPump(pos);
-    startPump(pos);
-
-
-    //}
+    enablePump(pos);
     return e_ret = OK;
 }
 
-//
 DF_ERROR dispenser::stopDispense(int pos)
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
-    // Stop Pump
-    //    if(m_isStill && m_pPump != nullptr ) {
-    the_8344->stopPump();
-    //        sleep(PRIME_PUMP_TIME);
-    //    }
-
-    // Shut Solenoid
-    // m_pSolenoid[pos]->writePin(LOW);
+    the_8344->disableAllPumps();
     debugOutput::sendMessage("Pump disabled", MSG_INFO);
 
     // XXX: Disable Button - Linked thru State Virtual
@@ -247,17 +215,17 @@ DF_ERROR dispenser::stopDispense(int pos)
     return e_ret = OK;
 }
 
-DF_ERROR dispenser::connectButton()
-{
-    return OK;
-    // return m_pButton[0]->writePin(HIGH);
-}
+// DF_ERROR dispenser::connectButton()
+// {
+//     return OK;
+//     // return m_pButton[0]->writePin(HIGH);
+// }
 
-DF_ERROR dispenser::disconnectButton()
-{
-    return OK;
-    // return m_pButton[0]->writePin(LOW);
-}
+// DF_ERROR dispenser::disconnectButton()
+// {
+//     return OK;
+//     // return m_pButton[0]->writePin(LOW);
+// }
 
 // // Cleans the nozzle by dispensing Water followed by Air
 // DF_ERROR dispenser::cleanNozzle(int posW, int posA){
@@ -289,16 +257,16 @@ product *dispenser::getProduct()
 }
 
 // Timer based
-DF_ERROR dispenser::testSolenoidDispense(int pos)
-{
-    DF_ERROR e_ret = ERROR_BAD_PARAMS;
+// DF_ERROR dispenser::testSolenoidDispense(int pos)
+// {
+//     DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
-    //m_pSolenoid[pos]->writePin(HIGH);
-    sleep(TEST_ACTIVATION_TIME);
-    //m_pSolenoid[pos]->writePin(LOW);
+//     //m_pSolenoid[pos]->writePin(HIGH);
+//     sleep(TEST_ACTIVATION_TIME);
+//     //m_pSolenoid[pos]->writePin(LOW);
 
-    return e_ret = OK;
-}
+//     return e_ret = OK;
+// }
 
 /* ------Getters, Setters and Utilities------ */
 int dispenser::getI2CAddress(int pos)

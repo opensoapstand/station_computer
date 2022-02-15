@@ -44,8 +44,8 @@ public:
     unsigned char getPumpPWM(void);
     bool setPumpPWM(unsigned char pwm_val);
     bool setPumpDirection(bool direction);
-    bool startPump(unsigned char pump_number);
-    bool stopPump();
+    bool enablePump(unsigned char pump_number);
+    bool disableAllPumps();
     unsigned short getPumpTach(void);
     bool getButton(void);
     void setButtonPower(bool poweron);

@@ -58,7 +58,7 @@ public:
       void initDispenser(int slot);
 
       //private variable setters
-      DF_ERROR setSolenoid(int mcpAddress, int pin, int pos);
+      // DF_ERROR setSolenoid(int mcpAddress, int pin, int pos);
       DF_ERROR setPump(int mcpAddress, int pin, int position);
       DF_ERROR setFlowsensor(int pinint, int pos);
 
@@ -67,12 +67,12 @@ public:
 
       DF_ERROR forwardPump(); 
       DF_ERROR reversePump(); 
-      DF_ERROR stopPump();    
-      DF_ERROR startPump(int pos);    
+      DF_ERROR disableAllPumps();    
+      DF_ERROR enablePump(int pos);    
       DF_ERROR setPumpPWM(int8_t value);    
 
-      DF_ERROR connectButton();
-      DF_ERROR disconnectButton();
+      // DF_ERROR connectButton();
+      // DF_ERROR disconnectButton();
 
       //      DF_ERROR buttonPressListener();
 
@@ -83,9 +83,9 @@ public:
       void setm_pIsDispensing() { *m_pIsDispensing = true; }
       void setm_pRestartDispense() { *m_pIsDispensing = false; }
 
-      DF_ERROR cleanNozzle(int posW, int posA);
+      // DF_ERROR cleanNozzle(int posW, int posA);
 
-      DF_ERROR testSolenoidDispense(int pos);
+      // DF_ERROR testSolenoidDispense(int pos);
 
       product *getProduct();
 

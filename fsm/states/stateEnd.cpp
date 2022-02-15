@@ -42,7 +42,7 @@ string stateEnd::toString()
 DF_ERROR stateEnd::onEntry()
 {
    // dummy, will never be reached
-   m_state_requested = END;
+   m_state_requested = STATE_END;
    DF_ERROR e_ret = OK;
    return e_ret;
 }
@@ -50,8 +50,7 @@ DF_ERROR stateEnd::onEntry()
 DF_ERROR stateEnd::onAction()
 {
    // dummy, will never be reached
-   DF_ERROR e_ret = ERROR_BAD_PARAMS;
-  
+   DF_ERROR e_ret = OK;
    return e_ret;
 }
 

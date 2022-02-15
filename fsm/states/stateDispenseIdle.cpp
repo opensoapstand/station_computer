@@ -37,7 +37,7 @@ stateDispenseIdle::~stateDispenseIdle()
 // FIXME: See state dispense function header
 DF_ERROR stateDispenseIdle::onEntry()
 {
-    m_state_requested = DISPENSE_IDLE;
+    m_state_requested = STATE_DISPENSE_IDLE;
     DF_ERROR e_ret = OK;
 
     productDispensers = g_productDispensers;
@@ -77,7 +77,7 @@ DF_ERROR stateDispenseIdle::onAction()
             if (ACTION_DISPENSE_END == m_pMessaging->getAction())
             {
 
-                m_state_requested = DISPENSE_END;
+                m_state_requested = STATE_DISPENSE_END;
                 return df_ret = OK;
             }
         }
@@ -85,7 +85,7 @@ DF_ERROR stateDispenseIdle::onAction()
         if (productDispensers[pos].getIsDispenseComplete())
         {
 
-            m_state_requested = DISPENSE_END;
+            m_state_requested = STATE_DISPENSE_END;
             return df_ret = OK;
         }
 
@@ -94,13 +94,13 @@ DF_ERROR stateDispenseIdle::onAction()
         // If volume has not changed, stay in Idle state, else, volume is changing, go to Dispense state...
         if (productDispensers[pos].getProduct()->getVolumeDispensed() == productDispensers[pos].getProduct()->getVolumeDispensedPreviously())
         {
-            debugOutput::sendMessage("Wait for volume to change to go to dispensing state", INFO);
-            m_state_requested = DISPENSE_IDLE;
+            debugOutput::sendMessage("Wait for volume to change to go to dispensing state", MSG_INFO);
+            m_state_requested = STATE_DISPENSE_IDLE;
         }
         else
         {
             productDispensers[pos].getProduct()->m_nVolumeDispensedPreviously = productDispensers[pos].getProduct()->getVolumeDispensed();
-            m_state_requested = DISPENSE;
+            m_state_requested = STATE_DISPENSE;
         }
         usleep(500000);
         df_ret = OK;
@@ -118,8 +118,8 @@ DF_ERROR stateDispenseIdle::onExit()
 
     if ((m_pMessaging->getAction() == ACTION_DISPENSE_END) || (productDispensers[pos].getIsDispenseComplete()))
     {
-        debugOutput::sendMessage("Dispensing done.", INFO);
-        m_state_requested = DISPENSE_END;
+        debugOutput::sendMessage("Dispensing done.", MSG_INFO);
+        m_state_requested = STATE_DISPENSE_END;
     }
 
     return e_ret;

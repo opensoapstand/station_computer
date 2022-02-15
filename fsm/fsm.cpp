@@ -10,10 +10,10 @@
 // all rights reserved
 //***************************************
 
+#include "fsm.h"
+
 #include <string.h>
 #include "dftypes.h"
-
-#include "fsm.h"
 
 #include "states/stateVirtual.h"
 
@@ -23,21 +23,20 @@
 #include "states/stateDispenseIdle.h"
 #include "states/stateDispenseEnd.h"
 #include "states/stateManualPrinter.h"
+#include "states/stateEnd.h"
 
 #include "objects/dispenser.h"
 #include "objects/messageMediator.h"
 
 std::string stateStrings[FSM_MAX + 1] = {
-    "DUMMY",
-    "INIT",
-    "IDLE",
-    "PRODUCT_SELECT",
-    "PAYMENT",
-    "DISPENSE_IDLE",
-    "DISPENSE",
-    "DISPENSE_END",
-    "MANUAL_PRINTER",
-    "END",
+    "STATE_DUMMY",
+    "STATE_INIT",
+    "STATE_IDLE",
+    "STATE_DISPENSE_IDLE",
+    "STATE_DISPENSE",
+    "STATE_DISPENSE_END",
+    "STATE_MANUAL_PRINTER",
+    "STATE_END",
     "FSM_MAX"};
 
 messageMediator *g_pMessaging;                         //debug through local network
@@ -47,6 +46,29 @@ dispenser g_productDispensers[PRODUCT_DISPENSERS_MAX]; //replace the magic numbe
 DF_ERROR initObjects();
 DF_ERROR createStateArray();
 DF_ERROR stateLoop();
+
+/*
+ * Instantiate Array to hold objects specfic to states (DF_FSM)
+ * XXX: Reminder to instantiate new states here!
+*/
+DF_ERROR createStateArray()
+{
+    DF_ERROR dfRet = ERROR_PTHREADS;
+
+    if (NULL != g_pMessaging)
+    {
+        g_stateArray[STATE_INIT] = new stateInit(g_pMessaging);
+        g_stateArray[STATE_IDLE] = new stateIdle(g_pMessaging);
+        g_stateArray[STATE_DISPENSE_IDLE] = new stateDispenseIdle(g_pMessaging);
+        g_stateArray[STATE_DISPENSE] = new stateDispense(g_pMessaging);
+        g_stateArray[STATE_DISPENSE_END] = new stateDispenseEnd(g_pMessaging);
+        g_stateArray[STATE_MANUAL_PRINTER] = new stateManualPrinter(g_pMessaging);
+        g_stateArray[STATE_END] = new stateEnd(g_pMessaging);
+        dfRet = OK;
+    }
+
+    return dfRet;
+}
 
 int main()
 {
@@ -74,20 +96,20 @@ int main()
 DF_ERROR stateLoop()
 {
     DF_ERROR dfRet = OK;
-    DF_FSM fsmState = INIT;
-    DF_FSM previousState = DUMMY;
+    DF_FSM fsmState = STATE_INIT;
+    DF_FSM previousState = STATE_DUMMY;
 
     while (OK == dfRet) //while no error has occurred
     {
-        if (fsmState == DUMMY)
+        if (fsmState == STATE_DUMMY)
         {
-            debugOutput::sendMessage("ERROR STATE " + fsmState, STATE_CHANGE);
+            debugOutput::sendMessage("ERROR STATE " + fsmState, MSG_STATE);
         }
 
         // state change, deal with new state
         if (fsmState != previousState)
         {
-            debugOutput::sendMessage("Enter state: " + stateStrings[fsmState], STATE_CHANGE);
+            debugOutput::sendMessage("Enter state: " + stateStrings[fsmState], MSG_STATE);
             dfRet = g_stateArray[fsmState]->onEntry();
         }
 
@@ -106,26 +128,27 @@ DF_ERROR stateLoop()
 
             if (fsmState != previousState)
             {
-                debugOutput::sendMessage("Exit state: " + stateStrings[previousState], STATE_CHANGE);
+                debugOutput::sendMessage("Exit state: " + stateStrings[previousState], MSG_STATE);
                 dfRet = g_stateArray[previousState]->onExit();
             }
         }
 
-        if (fsmState == END){
+        if (fsmState == STATE_END)
+        {
             dfRet = ERROR_END;
         }
     }
-    debugOutput::sendMessage("State machine ENDED. ", INFO);
+    debugOutput::sendMessage("State machine ENDED. ", MSG_INFO);
     return dfRet;
 }
 
 // DF_ERROR stateLoop()
 // {
 //     DF_ERROR dfRet = OK;
-//     DF_FSM fsmState = INIT;
-//     // DF_FSM fsmRequestedState = INIT;
+//     DF_FSM fsmState = STATE_INIT;
+//     // DF_FSM fsmRequestedState = STATE_INIT;
 //     // DF_FSM fsmState = START;
-//     // DF_FSM fsmRequestedState = INIT;
+//     // DF_FSM fsmRequestedState = STATE_INIT;
 //     DF_FSM previousState = START;
 
 //     while (OK == dfRet) //while no error has occurred
@@ -134,14 +157,14 @@ DF_ERROR stateLoop()
 //         //if (fsmState != START){
 //         //     fsmRequestedState = g_stateArray[fsmState]->getRequestedState();
 //         // }else{
-//         //     fsmRequestedState = INIT;
+//         //     fsmRequestedState = STATE_INIT;
 //         // }
 
 //         // state change, deal with new state
 //         if (fsmState != fsmRequestedState)
 //         {
-//             debugOutput::sendMessage("coming from: " + stateStrings[fsmState], STATE_CHANGE);
-//             debugOutput::sendMessage("new state: " + stateStrings[fsmRequestedState], STATE_CHANGE);
+//             debugOutput::sendMessage("coming from: " + stateStrings[fsmState], MSG_STATE);
+//             debugOutput::sendMessage("new state: " + stateStrings[fsmRequestedState], MSG_STATE);
 //             fsmState = fsmRequestedState;
 //             dfRet = g_stateArray[fsmState]->onEntry();
 //         }
@@ -151,8 +174,8 @@ DF_ERROR stateLoop()
 //         {
 //             dfRet = g_stateArray[fsmState]->onAction();
 //             fsmRequestedState = g_stateArray[fsmState]->getRequestedState();
-//             // debugOutput::sendMessage("tmplodee", INFO);
-//             // debugOutput::sendMessage( std::to_string(fsmRequestedState), INFO);
+//             // debugOutput::sendMessage("tmplodee", MSG_INFO);
+//             // debugOutput::sendMessage( std::to_string(fsmRequestedState), MSG_INFO);
 //             // deal with end of state if state changed
 //             if ((OK == dfRet) && (fsmRequestedState != fsmState))
 //             {
@@ -160,7 +183,7 @@ DF_ERROR stateLoop()
 //             }
 //         }
 //     }
-//     debugOutput::sendMessage("Problem with state machine", INFO);
+//     debugOutput::sendMessage("Problem with state machine", MSG_INFO);
 //     return dfRet;
 // }
 
@@ -180,27 +203,5 @@ DF_ERROR initObjects()
         // TODO: DB function to check/create DB
         //next
     }
-    return dfRet;
-}
-
-/*
- * Instantiate Array to hold objects specfic to states (DF_FSM)
- * XXX: Reminder to instantiate new states here!
-*/
-DF_ERROR createStateArray()
-{
-    DF_ERROR dfRet = ERROR_PTHREADS;
-
-    if (NULL != g_pMessaging)
-    {
-        g_stateArray[INIT] = new stateInit(g_pMessaging);
-        g_stateArray[IDLE] = new stateIdle(g_pMessaging);
-        g_stateArray[DISPENSE_IDLE] = new stateDispenseIdle(g_pMessaging);
-        g_stateArray[DISPENSE] = new stateDispense(g_pMessaging);
-        g_stateArray[DISPENSE_END] = new stateDispenseEnd(g_pMessaging);
-        g_stateArray[MANUAL_PRINTER] = new stateManualPrinter(g_pMessaging);
-        dfRet = OK;
-    }
-
     return dfRet;
 }

@@ -43,7 +43,7 @@ oddyseyx86GPIO::oddyseyx86GPIO()
 
 //oddyseyx86GPIO::oddyseyx86GPIO(messageMediator * message)
 //{
-//   //debugOutput::sendMessage("stateDispense(messageMediator * message)", INFO);
+//   //debugOutput::sendMessage("stateDispense(messageMediator * message)", MSG_INFO);
 //}
 
 /* 
@@ -55,9 +55,9 @@ oddyseyx86GPIO::oddyseyx86GPIO()
 oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
 {
         std::string msg = "------oddyseyx86GPIO------ pin:" + std::to_string(pinNumber);
-        debugOutput::sendMessage(msg, INFO);
+        debugOutput::sendMessage(msg, MSG_INFO);
 
-        // debugOutput::sendMessage("------oddyseyx86GPIO------", INFO);
+        // debugOutput::sendMessage("------oddyseyx86GPIO------", MSG_INFO);
         int fd, len;
         char buf[MAX_BUF];
 
@@ -66,7 +66,7 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
         fd = open(SYSFS_GPIO_DIR "/export", O_WRONLY);
         if (fd < 0)
         {
-                debugOutput::sendMessage("~oddyseyx86GPIO could not open the gpio", ERROR);
+                debugOutput::sendMessage("~oddyseyx86GPIO could not open the gpio", MSG_ERROR);
                 return;
         }
 
@@ -95,14 +95,14 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
 // DTOR
 oddyseyx86GPIO::~oddyseyx86GPIO()
 {
-        debugOutput::sendMessage("~oddyseyx86GPIO", INFO);
+        debugOutput::sendMessage("~oddyseyx86GPIO", MSG_INFO);
         int fd, len;
         char buf[MAX_BUF];
 
         fd = open(SYSFS_GPIO_DIR "/unexport", O_WRONLY);
         if (fd < 0)
         {
-                debugOutput::sendMessage("~oddyseyx86GPIO could not close the gpio", ERROR);
+                debugOutput::sendMessage("~oddyseyx86GPIO could not close the gpio", MSG_ERROR);
                 return;
         }
 
@@ -129,11 +129,11 @@ DF_ERROR oddyseyx86GPIO::setFlowPin(int pinNumber)
 // reading input and "out" otherwise.
 DF_ERROR oddyseyx86GPIO::setDirection(bool input)
 {
-        // debugOutput::sendMessage("oddyseyx86GPIO::setDirection ", INFO);
+        // debugOutput::sendMessage("oddyseyx86GPIO::setDirection ", MSG_INFO);
         std::string msg = "oddyseyx86GPIO::setDirection " + std::to_string(m_nPin);
-        debugOutput::sendMessage(msg, INFO);
+        debugOutput::sendMessage(msg, MSG_INFO);
 
-        //debugOutput::sendMessage("oddyseyx86GPIO::setDirection ", INFO);
+        //debugOutput::sendMessage("oddyseyx86GPIO::setDirection ", MSG_INFO);
         DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
         int fd, len;
         char syscode;
@@ -172,7 +172,7 @@ DF_ERROR oddyseyx86GPIO::setDirection(bool input)
 //		 A SPECIFIC function name change REQUIRED. i.e. readWastePinLevel
 DF_ERROR oddyseyx86GPIO::readPin(bool *level)
 {
-        debugOutput::sendMessage("readPin", INFO);
+        debugOutput::sendMessage("readPin", MSG_INFO);
         DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
         int fd, len;
         char buf[MAX_BUF];
@@ -205,7 +205,7 @@ DF_ERROR oddyseyx86GPIO::readPin(bool *level)
         }
         else
         {
-                debugOutput::sendMessage("readPin: Null Level reference", ERROR);
+                debugOutput::sendMessage("readPin: Null Level reference", MSG_ERROR);
         }
 
         return df_ret;
@@ -215,7 +215,7 @@ DF_ERROR oddyseyx86GPIO::readPin(bool *level)
 // TODO: A SPECIFIC function name change REQUIRED. i.e. triggersWasteLevel
 DF_ERROR oddyseyx86GPIO::writePin(bool level)
 {
-        debugOutput::sendMessage("OdysseyX86 writePin", INFO);
+        debugOutput::sendMessage("OdysseyX86 writePin", MSG_INFO);
         DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
         int fd, len;
         char buf[MAX_BUF];
@@ -247,7 +247,7 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
 //    string command("/sys/class/gpio/gpio");
 //    command += GPIO;
 //    command += "/edge";
-//    //debugOutput::sendMessage(command.c_str(), INFO);
+//    //debugOutput::sendMessage(command.c_str(), MSG_INFO);
 
 //    // Set the pin to interrupt
 //    fd = open(command.c_str(), O_WRONLY);
@@ -269,11 +269,11 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
 
 //    if (0 == ret)
 //    {
-//        //debugOutput::sendMessage("gpioTimeout", INFO);
+//        //debugOutput::sendMessage("gpioTimeout", MSG_INFO);
 //    }
 //    else
 //    {
-//        //debugOutput::sendMessage("FLOW TICK", INFO);
+//        //debugOutput::sendMessage("FLOW TICK", MSG_INFO);
 //        m_pProduct->registerFlowSensorTick(); //trigger the callback
 //    }
 
@@ -288,7 +288,7 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
 
 void oddyseyx86GPIO::monitorGPIO()
 {
-        //debugOutput::sendMessage("monitorGPIO", INFO);  //nuke this later it will cause so much spam
+        //debugOutput::sendMessage("monitorGPIO", MSG_INFO);  //nuke this later it will cause so much spam
         int fd, len;
         char buf[MAX_BUF];
         char compareChar;
@@ -317,20 +317,20 @@ void oddyseyx86GPIO::monitorGPIO()
 
         if (0 == ret)
         {
-                //debugOutput::sendMessage("gpioTimeout", INFO);
+                //debugOutput::sendMessage("gpioTimeout", MSG_INFO);
         }
         else
         {
                 if (('1' == c) && (compareChar == '0'))
                 {
-                        //                        debugOutput::sendMessage("HIGH Triggered Flow", INFO);
+                        //                        debugOutput::sendMessage("HIGH Triggered Flow", MSG_INFO);
                         //  usleep(500000);						// Sleep to make sure debug gets chance to print
                         m_pProduct->registerFlowSensorTick(); //trigger the callback
                                                             //                        cout << "Registered Tick" << endl;
                 }
                 else if (('0' == c) && (compareChar == '1'))
                 {
-                        //                         debugOutput::sendMessage("LOW Triggered Flow", INFO);
+                        //                         debugOutput::sendMessage("LOW Triggered Flow", MSG_INFO);
                         //   usleep(500000); // Sleep to make sure debug gets chance to print
                 }
                 compareChar = c;
@@ -341,7 +341,7 @@ void oddyseyx86GPIO::monitorGPIO()
 
 void oddyseyx86GPIO::monitorGPIO_PWR()
 {
-        //        debugOutput::sendMessage("monitorGPIO", INFO);  //nuke this later it will cause so much spam
+        //        debugOutput::sendMessage("monitorGPIO", MSG_INFO);  //nuke this later it will cause so much spam
         int fd, len;
         char buf[MAX_BUF];
 
@@ -369,28 +369,28 @@ void oddyseyx86GPIO::monitorGPIO_PWR()
 
         if (0 == ret)
         {
-                //debugOutput::sendMessage("gpioTimeout", INFO);
+                //debugOutput::sendMessage("gpioTimeout", MSG_INFO);
         }
         else
         {
                 if ((c == '1') && (compareChar2 != c))
                 {
-                        debugOutput::sendMessage("Power button pushed", INFO);
+                        debugOutput::sendMessage("Power button pushed", MSG_INFO);
                         usleep(1000000);
                         if (readButtonPin(341))
                         {
-                                debugOutput::sendMessage("POWER OFF\n", INFO);
+                                debugOutput::sendMessage("POWER OFF\n", MSG_INFO);
                                 system("echo D@nkF1ll$ | sudo -S shutdown -h now");
                         }
                         else if (readButtonPin(340))
                         {
-                                debugOutput::sendMessage("MM\n", INFO);
+                                debugOutput::sendMessage("MM\n", MSG_INFO);
                                 // ENTER MAINTENANCE MODE!
                                 m_pMessaging->sendMessage("MM");
                         }
                         else
                         {
-                                debugOutput::sendMessage("Nothing", INFO);
+                                debugOutput::sendMessage("Nothing", MSG_INFO);
                         }
                         usleep(5000); // Sleep to make sure debug gets chance to print
                 }

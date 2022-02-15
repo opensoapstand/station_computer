@@ -34,7 +34,7 @@ gpio::~gpio()
 // kick off a listener
 void gpio::startListener()
 {
-        debugOutput::sendMessage("-----startListener-----", INFO);
+        debugOutput::sendMessage("-----startListener-----", MSG_INFO);
         DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
         if ((nullptr == gpioThread) && (nullptr != m_pProduct))
@@ -44,33 +44,33 @@ void gpio::startListener()
         }
         else
         {
-                debugOutput::sendMessage("Did not pass null check", INFO);
+                debugOutput::sendMessage("Did not pass null check", MSG_INFO);
         }
 }
 
 void gpio::startListenerPWR()
 {
-        debugOutput::sendMessage("-----startListenerPWR-----", INFO);
+        debugOutput::sendMessage("-----startListenerPWR-----", MSG_INFO);
         DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
         //        if ((nullptr ==  gpioThread) && (nullptr != m_pProduct)){
         gpioThread = new std::thread(&gpio::listenerPWR, this);
         df_ret = OK;
         //        } else {
-        //                debugOutput::sendMessage("Did not pass null check", INFO);
+        //                debugOutput::sendMessage("Did not pass null check", MSG_INFO);
         //        }
 }
 
 //void gpio::startButtonListener()
 //{
-//        debugOutput::sendMessage("-----startListener-----", INFO);
+//        debugOutput::sendMessage("-----startListener-----", MSG_INFO);
 //        DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
 //        if ((nullptr ==  gpioThread)){
 //                gpioThread = new std::thread(&gpio::listener, this);
 //                df_ret = OK;
 //        } else {
-//                debugOutput::sendMessage("Did not pass null check", INFO);
+//                debugOutput::sendMessage("Did not pass null check", MSG_INFO);
 //        }
 //}
 

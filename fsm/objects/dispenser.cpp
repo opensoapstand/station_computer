@@ -28,7 +28,7 @@ dsed8344 *dispenser::the_8344 = nullptr;
 dispenser::dispenser()
 {
     //default constructor to set all pin to nullptr
-    //debugOutput::sendMessage("dispenser", INFO);
+    //debugOutput::sendMessage("dispenser", MSG_INFO);
 
     // TODO: Need to build Product Object reference
     // m_pSelectedProduct = nullptr;
@@ -59,7 +59,7 @@ dispenser::dispenser()
 dispenser::dispenser(gpio *ButtonReference)
 {
     //default constructor to set all pin to nullptr
-    //debugOutput::sendMessage("dispenser", INFO);
+    //debugOutput::sendMessage("dispenser", MSG_INFO);
     m_pButton[0] = ButtonReference;
     //m_pButtonPress[0] = ButtonReference
     m_pSelectedProduct = nullptr;
@@ -76,7 +76,7 @@ dispenser::dispenser(gpio *ButtonReference)
 // DTOR
 dispenser::~dispenser()
 {
-    debugOutput::sendMessage("~dispenser", INFO);
+    debugOutput::sendMessage("~dispenser", MSG_INFO);
 
     delete the_8344;
     the_8344 = nullptr;
@@ -96,7 +96,7 @@ void dispenser::initDispenser(int slot)
 // TODO: Call this function on Dispense onEntry()
 DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
 {
-    debugOutput::sendMessage("-----dispenser::setSolenoid-----", INFO);
+    debugOutput::sendMessage("-----dispenser::setSolenoid-----", MSG_INFO);
 
     return OK;
 }
@@ -108,8 +108,8 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
 
     // *m_pIsDispensing = false;
     std::string msg = "-----dispenser::setFlowsensor-----Position: " + std::to_string(pos) + " (pin: " + std::to_string(pin) + ")";
-    // debugOutput::sendMessage("-----dispenser::setFlowsensor-----", INFO);
-    debugOutput::sendMessage(msg, INFO);
+    // debugOutput::sendMessage("-----dispenser::setFlowsensor-----", MSG_INFO);
+    debugOutput::sendMessage(msg, MSG_INFO);
 
     if ((pos >= 0) && (pos < 4))
     {
@@ -155,21 +155,21 @@ DF_ERROR dispenser::setPump(int mcpAddress, int pin, int position)
 // Reverse pump: Turn forward pin HIGH - Reverse pin LOW
 DF_ERROR dispenser::forwardPump()
 {
-    debugOutput::sendMessage("-----FORWARD Pump-----", INFO);
+    debugOutput::sendMessage("-----FORWARD Pump-----", MSG_INFO);
     the_8344->setPumpDirection(true);
 }
 
 // Reverse pump: Turn forward pin LOW - Reverse pin HIGH
 DF_ERROR dispenser::reversePump()
 {
-    debugOutput::sendMessage("-----REVERSE Pump-----", INFO);
+    debugOutput::sendMessage("-----REVERSE Pump-----", MSG_INFO);
     the_8344->setPumpDirection(false);
 }
 
 // Stops pumping: Turn forward pin LOW - Reverse pin LOW
 DF_ERROR dispenser::stopPump()
 {
-    debugOutput::sendMessage("-----Stop Pump-----", INFO);
+    debugOutput::sendMessage("-----Stop Pump-----", MSG_INFO);
     the_8344->stopPump();
 }
 
@@ -177,7 +177,7 @@ DF_ERROR dispenser::stopPump()
 DF_ERROR dispenser::startDispense(int pos)
 {
     DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
-    debugOutput::sendMessage("-----Start Dispense-----", INFO);
+    debugOutput::sendMessage("-----Start Dispense-----", MSG_INFO);
     // XXX: Prepare Button - Linked thru State Virtual
     // e_ret = connectButton();
 
@@ -188,16 +188,16 @@ DF_ERROR dispenser::startDispense(int pos)
     //    }
 
     // Open Product Solenoid
-    // debugOutput::sendMessage("Trigger solenoid:", INFO);
+    // debugOutput::sendMessage("Trigger solenoid:", MSG_INFO);
     // m_pSolenoid[pos]->writePin(HIGH);
-    debugOutput::sendMessage("Triggered pump:" + to_string(pos), INFO);
+    debugOutput::sendMessage("Triggered pump:" + to_string(pos), MSG_INFO);
 
     // If Still start pump!
     // if(m_isStill && (m_pPump != nullptr) ) {
     //sleep(PRIME_PUMP_TIME);
     forwardPump();
     the_8344->setPumpPWM((unsigned char)(m_pSelectedProduct->getPWM()));
-    debugOutput::sendMessage("PWM SET!", INFO);
+    debugOutput::sendMessage("PWM SET!", MSG_INFO);
     //cout << the_8344->getPumpPWM();
     the_8344->startPump(pos);
     //}
@@ -216,7 +216,7 @@ DF_ERROR dispenser::stopDispense(int pos)
 
     // Shut Solenoid
     // m_pSolenoid[pos]->writePin(LOW);
-    debugOutput::sendMessage("Pump disabled", INFO);
+    debugOutput::sendMessage("Pump disabled", MSG_INFO);
 
     // XXX: Disable Button - Linked thru State Virtual
     // e_ret = disconnectButton();
@@ -247,13 +247,13 @@ DF_ERROR dispenser::disconnectButton()
 //     }
 
 //     // Flush the lines with water
-//     debugOutput::sendMessage("Water Cleanse", INFO);
+//     debugOutput::sendMessage("Water Cleanse", MSG_INFO);
 //     //m_pSolenoid[posW]->writePin(HIGH);
 //     sleep(CLEAN_WATER_TIME);
 //     //m_pSolenoid[posW]->writePin(LOW);
 
 //     // Flush the lines with Air
-//     debugOutput::sendMessage("Air Release", INFO);
+//     debugOutput::sendMessage("Air Release", MSG_INFO);
 //     //m_pSolenoid[posA]->writePin(HIGH);
 //     sleep(CLEAN_AIR_TIME);
 //     //m_pSolenoid[posA]->writePin(LOW);
@@ -286,7 +286,7 @@ int dispenser::getI2CAddress(int pos)
 
 int dispenser::getI2CPin(int pos)
 {
-    debugOutput::sendMessage("getI2C Error!", ERROR);
+    debugOutput::sendMessage("getI2C Error!", MSG_ERROR);
     //return m_pSolenoid[pos]->getMCPPin();
 }
 
@@ -298,6 +298,6 @@ DF_ERROR dispenser::setProduct(product *product)
     }
     else
     {
-        debugOutput::sendMessage("Set Product Error!", ERROR);
+        debugOutput::sendMessage("Set Product Error!", MSG_ERROR);
     }
 }

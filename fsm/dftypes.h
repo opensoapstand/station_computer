@@ -22,16 +22,14 @@
 
 typedef enum DF_FSM
 {
-   DUMMY,
-   INIT,
-   IDLE,
-   PRODUCT_SELECT, //retrieve info from ui which productDispensers need to be set
-   PAYMENT,        //retrieve info from ui whether or not payment is finished proccessing
-   DISPENSE_IDLE,
-   DISPENSE,
-   DISPENSE_END,
-   MANUAL_PRINTER,
-   END,
+   STATE_DUMMY,
+   STATE_INIT,
+   STATE_IDLE,
+   STATE_DISPENSE_IDLE,
+   STATE_DISPENSE,
+   STATE_DISPENSE_END,
+   STATE_MANUAL_PRINTER,
+   STATE_END,
    FSM_MAX,
 } DF_FSM;
 

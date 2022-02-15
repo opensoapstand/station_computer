@@ -14,8 +14,6 @@
 #define FSM__H_
 #include "objects/dispenser.h"
 
-// #define PRODUCT_DISPENSERS_MAX 4
-
 extern dispenser g_productDispensers[PRODUCT_DISPENSERS_MAX];
 
 #endif

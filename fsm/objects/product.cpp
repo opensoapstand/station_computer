@@ -187,7 +187,7 @@ int product::getPWM()
 
     sqlite3_stmt *stmt;
 
-    //debugOutput::sendMessage("Machine ID getter START", INFO);
+    //debugOutput::sendMessage("Machine ID getter START", MSG_INFO);
 
     if (rc)
     {
@@ -219,7 +219,7 @@ double product::getVolPerTick()
 
     sqlite3_stmt *stmt;
 
-    //debugOutput::sendMessage("Machine ID getter START", INFO);
+    //debugOutput::sendMessage("Machine ID getter START", MSG_INFO);
 
     if (rc)
     {

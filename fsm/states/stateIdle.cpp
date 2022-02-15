@@ -42,22 +42,19 @@ string stateIdle::toString()
 // Sets a looped Idle state
 DF_ERROR stateIdle::onEntry()
 {
-   m_state_requested = IDLE;
+   m_state_requested = STATE_IDLE;
    DF_ERROR e_ret = OK;
 
-   // Set current and future states to IDLE
-   //m_state = IDLE;
    return e_ret;
 }
 
 /*
-* Advances State: If IP Thread detects DISPENSE
-* command then advance to DISPENSE_IDLE
+* Advances State: If IP Thread detects STATE_DISPENSE
+* command then advance to STATE_DISPENSE_IDLE
 */
 DF_ERROR stateIdle::onAction()
 {
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
-  // m_state = IDLE;
 
    if (nullptr != &m_state_requested)
    {
@@ -74,29 +71,29 @@ DF_ERROR stateIdle::onAction()
 
          if (ACTION_DISPENSE == m_pMessaging->getAction())
          {
-            debugOutput::sendMessage("Chosen product: " + std::to_string(pos), INFO);
+            debugOutput::sendMessage("Chosen product: " + std::to_string(pos), MSG_INFO);
             productDispensers[pos].getProduct()->initDispense();
-            m_state_requested = DISPENSE_IDLE;
+            m_state_requested = STATE_DISPENSE_IDLE;
          }
 
          if (ACTION_TEST_PRINTER == m_pMessaging->getAction())
          {
-            m_state_requested = MANUAL_PRINTER;
+            m_state_requested = STATE_MANUAL_PRINTER;
          }
 
          if (ACTION_QUIT == m_pMessaging->getAction())
          {
-            m_state_requested = END;
+            m_state_requested = STATE_END;
          }
 
          if (ACTION_HELP == m_pMessaging->getAction())
          {
-            debugOutput::sendMessage("\n Idle State. Available Commands: \n q: Quit(in independent mode)\n p: Test printer \n [1..4]d[l,s,t]: Enter dispense mode. [product number]d[size] \n [1..4]f[l,s,t]: If dispensing: to End Dispensing [product number]f[size]", INFO);
+            debugOutput::sendMessage("\n Idle State. Available Commands: \n q: Quit(in independent mode)\n p: Test printer \n [1..4]d[l,s,t]: Enter dispense mode. [product number]d[size] \n [1..4]f[l,s,t]: If dispensing: to End Dispensing [product number]f[size]", MSG_INFO);
          }
       }
       else
       {
-         m_state_requested = IDLE;
+         m_state_requested = STATE_IDLE;
          // usleep(100000); // UNISTD Thread PAUSE
       }
       e_ret = OK;

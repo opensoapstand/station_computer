@@ -44,7 +44,7 @@ double messageMediator::m_nVolumeTarget;
 // CTOR
 messageMediator::messageMediator()
 {
-   debugOutput::sendMessage("------messageMediator------", INFO);
+   debugOutput::sendMessage("------messageMediator------", MSG_INFO);
    // TODO: Initialize with Pointer reference to socket...
    // new_sock = new ServerSocket();
    m_fExitThreads = false;
@@ -54,7 +54,7 @@ messageMediator::messageMediator()
 // DTOR
 messageMediator::~messageMediator()
 {
-   debugOutput::sendMessage("~messageMediator", INFO);
+   debugOutput::sendMessage("~messageMediator", MSG_INFO);
 
    //terminate the threads
    m_fExitThreads = true;
@@ -134,7 +134,7 @@ DF_ERROR messageMediator::sendQtACK(string AckOrNak)
 // for Socket Data.
 DF_ERROR messageMediator::createThreads(pthread_t &kbThread, pthread_t &ipThread)
 {
-   debugOutput::sendMessage("messageMediator::createThreads", INFO);
+   debugOutput::sendMessage("messageMediator::createThreads", MSG_INFO);
    DF_ERROR df_ret = OK;
    int rc = 0;
    pthread_attr_t attr;
@@ -145,7 +145,7 @@ DF_ERROR messageMediator::createThreads(pthread_t &kbThread, pthread_t &ipThread
 
    if (rc)
    {
-      debugOutput::sendMessage("failed to create KB Thread", INFO);
+      debugOutput::sendMessage("failed to create KB Thread", MSG_INFO);
       df_ret = ERROR_PTHREADS_KBTHREAD;
    }
 
@@ -154,7 +154,7 @@ DF_ERROR messageMediator::createThreads(pthread_t &kbThread, pthread_t &ipThread
 
    if (rc)
    {
-      debugOutput::sendMessage("failed to create IP Thread", INFO);
+      debugOutput::sendMessage("failed to create IP Thread", MSG_INFO);
       df_ret = ERROR_PTHREADS_IPTHREAD;
    }
 
@@ -169,7 +169,7 @@ DF_ERROR messageMediator::updateCmdString(char key)
    // debug input char
    // string incommingCharMsg = "Incomming CHAR: ";
    // incommingCharMsg += key;
-   // debugOutput::sendMessage(incommingCharMsg, INFO);
+   // debugOutput::sendMessage(incommingCharMsg, MSG_INFO);
    // incommingCharMsg.clear();
 
    if (';' != key)
@@ -183,7 +183,7 @@ DF_ERROR messageMediator::updateCmdString(char key)
       m_receiveStringBuffer.clear();
       m_bCommandStringReceived = true;
 
-      debugOutput::sendMessage("Provided command (unparsed) : " + m_processCommand, INFO);
+      debugOutput::sendMessage("Provided command (unparsed) : " + m_processCommand, MSG_INFO);
    }
 
    return df_ret;
@@ -194,13 +194,13 @@ DF_ERROR messageMediator::updateCmdString(char key)
 DF_ERROR messageMediator::updateCmdString()
 {
    DF_ERROR df_ret = ERROR_BAD_PARAMS;
-   debugOutput::sendMessage("Process string..." + m_receiveStringBuffer, INFO);
+   debugOutput::sendMessage("Process string..." + m_receiveStringBuffer, MSG_INFO);
 
    if (!m_processCommand.empty())
    {
-      debugOutput::sendMessage("Flush old command..." + m_processCommand, INFO);
+      debugOutput::sendMessage("Flush old command..." + m_processCommand, MSG_INFO);
       m_processCommand.clear();
-      debugOutput::sendMessage(m_processCommand, INFO);
+      debugOutput::sendMessage(m_processCommand, MSG_INFO);
    }
 
    for (int i = 0; i < m_receiveStringBuffer.size(); i++)
@@ -214,7 +214,7 @@ DF_ERROR messageMediator::updateCmdString()
 // Loop for threaded listening for console input
 void *messageMediator::doKBThread(void *pThreadArgs)
 {
-   debugOutput::sendMessage("Start up infinite keyboard input listener (doKBThread).", INFO);
+   debugOutput::sendMessage("Start up infinite keyboard input listener (doKBThread).", MSG_INFO);
    DF_ERROR df_ret = OK;
 
    // while (!m_fExitThreads) // lode: todo not relevant?! (contains infinite while loop)
@@ -249,7 +249,7 @@ void *messageMediator::doKBThread(void *pThreadArgs)
 // Loop for threaded listening for Socket input
 void *messageMediator::doIPThread(void *pThreadArgs)
 {
-   debugOutput::sendMessage("doIPThread", INFO);
+   debugOutput::sendMessage("doIPThread", MSG_INFO);
    DF_ERROR df_ret = OK;
 
    try
@@ -354,7 +354,7 @@ DF_ERROR messageMediator::parseCommandString()
    {
       // invalid commands
       m_requestedAction = ACTION_NO_ACTION;
-      debugOutput::sendMessage("Command received is not valid.", INFO);
+      debugOutput::sendMessage("Command received is not valid.", MSG_INFO);
    }
 
    this->clearCommandString();
@@ -365,7 +365,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
 {
 
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
-   debugOutput::sendMessage("parseDispenseCommand", INFO);
+   debugOutput::sendMessage("parseDispenseCommand", MSG_INFO);
    char temp[10];
 
    char productChar = PRODUCT_DUMMY;
@@ -376,7 +376,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
    if (isdigit(sCommand[0]))
    {
       productChar = sCommand[0];
-      debugOutput::sendMessage("digit", INFO);
+      debugOutput::sendMessage("digit", MSG_INFO);
    }
 
    if (sCommand.size() > 1)
@@ -402,45 +402,45 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
    case '1':
    {
       m_RequestedProductIndexInt = 1;
-      debugOutput::sendMessage("Product 1 requested", INFO);
+      debugOutput::sendMessage("Product 1 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '2':
    {
       m_RequestedProductIndexInt = 2;
-      debugOutput::sendMessage("Product 2 requested", INFO);
+      debugOutput::sendMessage("Product 2 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '3':
    {
       m_RequestedProductIndexInt = 3;
-      debugOutput::sendMessage("Product 3 requested", INFO);
+      debugOutput::sendMessage("Product 3 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '4':
    {
       m_RequestedProductIndexInt = 4;
-      debugOutput::sendMessage("Product 4 requested", INFO);
+      debugOutput::sendMessage("Product 4 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    default:
    {
-      debugOutput::sendMessage("No product requested [1..4]", INFO);
+      debugOutput::sendMessage("No product requested [1..4]", MSG_INFO);
       break;
    }
    }
 
    if (!isalpha(actionChar))
    {
-      debugOutput::sendMessage("Irrelevant input .. ", INFO);
+      debugOutput::sendMessage("Irrelevant input .. ", MSG_INFO);
    }
    else if (actionChar == ACTION_DUMMY)
    {
-      debugOutput::sendMessage("No action provided ", INFO);
+      debugOutput::sendMessage("No action provided ", MSG_INFO);
    }
    else
    {
@@ -449,20 +449,20 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
       switch (actionChar)
       {
       case ACTION_DISPENSE:
-         debugOutput::sendMessage("Action: Dispense", INFO);
+         debugOutput::sendMessage("Action: Dispense", MSG_INFO);
          // m_nSolenoid = PRODUCT;
          m_requestedAction = ACTION_DISPENSE;
          e_ret = OK;
          break;
 
       case PWM_CHAR:
-         debugOutput::sendMessage("Action: PWM", INFO);
+         debugOutput::sendMessage("Action: PWM", MSG_INFO);
          m_requestedAction = PWM_CHAR;
          e_ret = OK;
          break;
 
       case ACTION_DISPENSE_END:
-         debugOutput::sendMessage("Action: End Dispense", INFO);
+         debugOutput::sendMessage("Action: End Dispense", MSG_INFO);
          m_requestedAction = ACTION_DISPENSE_END;
          e_ret = OK;
          break;
@@ -478,26 +478,26 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
    }
    else if (volumeChar == REQUESTED_VOLUME_DUMMY)
    {
-      debugOutput::sendMessage("No Requested volume provided", INFO);
+      debugOutput::sendMessage("No Requested volume provided", MSG_INFO);
    }
    else
    {
       switch (volumeChar)
       {
       case REQUESTED_VOLUME_1:
-         debugOutput::sendMessage("Requested volume 1, Small Size", INFO);
+         debugOutput::sendMessage("Requested volume 1, Small Size", MSG_INFO);
          m_requestedVolume = REQUESTED_VOLUME_1;
          e_ret = OK;
          break;
 
       case REQUESTED_VOLUME_2:
-         debugOutput::sendMessage("Requested volume 2, Large Size", INFO);
+         debugOutput::sendMessage("Requested volume 2, Large Size", MSG_INFO);
          m_requestedVolume = REQUESTED_VOLUME_2;
          e_ret = OK;
          break;
 
       case REQUESTED_VOLUME_CUSTOM:
-         debugOutput::sendMessage("Requested volume custom, Test Size", INFO);
+         debugOutput::sendMessage("Requested volume custom, Test Size", MSG_INFO);
          m_requestedVolume = REQUESTED_VOLUME_CUSTOM;
          e_ret = OK;
          break;
@@ -514,7 +514,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
 // {
 
 //    DF_ERROR e_ret = ERROR_BAD_PARAMS;
-//    debugOutput::sendMessage("parseCommandString", INFO);
+//    debugOutput::sendMessage("parseCommandString", MSG_INFO);
 //    char temp[10];
 //    string commandString = getCommandString();
 
@@ -526,7 +526,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
 //    if (isdigit(commandString[0]))
 //    {
 //       productChar = commandString[0];
-//       debugOutput::sendMessage("digit", INFO);
+//       debugOutput::sendMessage("digit", MSG_INFO);
 //    }
 
 //    if (commandString.size() > 1)
@@ -552,45 +552,45 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
 //    case '1':
 //    {
 //       m_RequestedProductIndexInt = 1;
-//       debugOutput::sendMessage("Product 1 requested", INFO);
+//       debugOutput::sendMessage("Product 1 requested", MSG_INFO);
 //       e_ret = OK;
 //       break;
 //    }
 //    case '2':
 //    {
 //       m_RequestedProductIndexInt = 2;
-//       debugOutput::sendMessage("Product 2 requested", INFO);
+//       debugOutput::sendMessage("Product 2 requested", MSG_INFO);
 //       e_ret = OK;
 //       break;
 //    }
 //    case '3':
 //    {
 //       m_RequestedProductIndexInt = 3;
-//       debugOutput::sendMessage("Product 3 requested", INFO);
+//       debugOutput::sendMessage("Product 3 requested", MSG_INFO);
 //       e_ret = OK;
 //       break;
 //    }
 //    case '4':
 //    {
 //       m_RequestedProductIndexInt = 4;
-//       debugOutput::sendMessage("Product 4 requested", INFO);
+//       debugOutput::sendMessage("Product 4 requested", MSG_INFO);
 //       e_ret = OK;
 //       break;
 //    }
 //    default:
 //    {
-//       debugOutput::sendMessage("No product requested [1..4]", INFO);
+//       debugOutput::sendMessage("No product requested [1..4]", MSG_INFO);
 //       break;
 //    }
 //    }
 
 //    if (!isalpha(actionChar))
 //    {
-//       debugOutput::sendMessage("Irrelevant input .. ", INFO);
+//       debugOutput::sendMessage("Irrelevant input .. ", MSG_INFO);
 //    }
 //    else if (actionChar == ACTION_DUMMY)
 //    {
-//       debugOutput::sendMessage("No action provided ", INFO);
+//       debugOutput::sendMessage("No action provided ", MSG_INFO);
 //    }
 //    else
 //    {
@@ -599,20 +599,20 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
 //       switch (actionChar)
 //       {
 //       case ACTION_DISPENSE:
-//          debugOutput::sendMessage("Action: Dispense", INFO);
+//          debugOutput::sendMessage("Action: Dispense", MSG_INFO);
 //          // m_nSolenoid = PRODUCT;
 //          m_requestedAction = ACTION_DISPENSE;
 //          e_ret = OK;
 //          break;
 
 //       case PWM_CHAR:
-//          debugOutput::sendMessage("Action: PWM", INFO);
+//          debugOutput::sendMessage("Action: PWM", MSG_INFO);
 //          m_requestedAction = PWM_CHAR;
 //          e_ret = OK;
 //          break;
 
 //       case ACTION_DISPENSE_END:
-//          debugOutput::sendMessage("Action: End Dispense", INFO);
+//          debugOutput::sendMessage("Action: End Dispense", MSG_INFO);
 //          m_requestedAction = ACTION_DISPENSE_END;
 //          e_ret = OK;
 //          break;
@@ -628,26 +628,26 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
 //    }
 //    else if (volumeChar == REQUESTED_VOLUME_DUMMY)
 //    {
-//       debugOutput::sendMessage("No Requested volume provided", INFO);
+//       debugOutput::sendMessage("No Requested volume provided", MSG_INFO);
 //    }
 //    else
 //    {
 //       switch (volumeChar)
 //       {
 //       case REQUESTED_VOLUME_1:
-//          debugOutput::sendMessage("Requested volume 1, Small Size", INFO);
+//          debugOutput::sendMessage("Requested volume 1, Small Size", MSG_INFO);
 //          m_requestedVolume = REQUESTED_VOLUME_1;
 //          e_ret = OK;
 //          break;
 
 //       case REQUESTED_VOLUME_2:
-//          debugOutput::sendMessage("Requested volume 2, Large Size", INFO);
+//          debugOutput::sendMessage("Requested volume 2, Large Size", MSG_INFO);
 //          m_requestedVolume = REQUESTED_VOLUME_2;
 //          e_ret = OK;
 //          break;
 
 //       case REQUESTED_VOLUME_CUSTOM:
-//          debugOutput::sendMessage("Requested volume custom, Test Size", INFO);
+//          debugOutput::sendMessage("Requested volume custom, Test Size", MSG_INFO);
 //          m_requestedVolume = REQUESTED_VOLUME_CUSTOM;
 //          e_ret = OK;
 //          break;

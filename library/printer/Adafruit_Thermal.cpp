@@ -649,7 +649,7 @@ void Adafruit_Thermal::wake() {
 
   // return readVal[0];
 
-  //debugOutput::sendMessage(readVal, INFO);
+  //debugOutput::sendMessage(readVal, MSG_INFO);
   // char* tmp;
 
   // serialPort.Read(tmp); // also, you can add time out!! (blocking, non blocking,.... timeoutms)

@@ -21,11 +21,10 @@ using namespace std;
 // Dictionary for Console Output Message Level
 typedef enum MESSAGE_LEVEL
 {
-	INFO,
-	WARN,
-	ERROR,
-	STATE_CHANGE,
-	PIN_CHANGE,
+	MSG_INFO,
+	MSG_WARNING,
+	MSG_ERROR,
+	MSG_STATE,
 	MESSAGE_MAX
 } MESSAGE_LEVEL;
 

@@ -43,7 +43,7 @@ string stateDispenseEnd::toString()
  */
 DF_ERROR stateDispenseEnd::onEntry()
 {
-    m_state_requested = DISPENSE_END;
+    m_state_requested = STATE_DISPENSE_END;
     DF_ERROR e_ret = OK;
 
     productDispensers = g_productDispensers;
@@ -61,8 +61,8 @@ DF_ERROR stateDispenseEnd::onEntry()
  */
 DF_ERROR stateDispenseEnd::onAction()
 {
-    debugOutput::sendMessage("onAction Dispense End...", STATE_CHANGE);
-    m_state_requested = IDLE;
+    debugOutput::sendMessage("onAction Dispense End...", MSG_STATE);
+    m_state_requested = STATE_IDLE;
     // TODO: Log events to DB
 
     // TODO: Send a complete ACK back to QT
@@ -89,12 +89,12 @@ DF_ERROR stateDispenseEnd::onExit()
     {
         sleep(5);
 
-        debugOutput::sendMessage("Dispense OnEXIT", INFO);
-        debugOutput::sendMessage("------Cleaning Mode------", INFO);
-        debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
-        debugOutput::sendMessage("Pin -> " + to_string(productDispensers[pos].getI2CPin(WATER)), INFO);
-        debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", INFO);
-        debugOutput::sendMessage("Pin -> " + to_string(productDispensers[pos].getI2CPin(PRODUCT)), INFO);
+        debugOutput::sendMessage("Dispense OnEXIT", MSG_INFO);
+        debugOutput::sendMessage("------Cleaning Mode------", MSG_INFO);
+        debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
+        debugOutput::sendMessage("Pin -> " + to_string(productDispensers[pos].getI2CPin(WATER)), MSG_INFO);
+        debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
+        debugOutput::sendMessage("Pin -> " + to_string(productDispensers[pos].getI2CPin(PRODUCT)), MSG_INFO);
     }
 
     // REQUESTED_VOLUME_CUSTOM is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
@@ -104,7 +104,7 @@ DF_ERROR stateDispenseEnd::onExit()
 
         if (paymentMethod == "barcode" || paymentMethod == "plu")
         {
-            debugOutput::sendMessage("Printing receipt", INFO);
+            debugOutput::sendMessage("Printing receipt", MSG_INFO);
             printer();
             sendDB();
         }
@@ -163,11 +163,11 @@ DF_ERROR stateDispenseEnd::sendDB()
     curl = curl_easy_init();
     if (!curl)
     {
-        debugOutput::sendMessage("cURL failed to init", INFO);
+        debugOutput::sendMessage("cURL failed to init", MSG_INFO);
     }
     else
     {
-        debugOutput::sendMessage("cURL init success", INFO);
+        debugOutput::sendMessage("cURL init success", MSG_INFO);
 
         curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/pushPrinterOrder");
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, buffer);
@@ -185,7 +185,7 @@ DF_ERROR stateDispenseEnd::sendDB()
         }
         else
         {
-            debugOutput::sendMessage("CURL SUCCESS!", INFO);
+            debugOutput::sendMessage("CURL SUCCESS!", MSG_INFO);
             if (readBuffer == "true")
             {
                 //                std::cout << "Curl worked!" << endl;
@@ -230,7 +230,7 @@ std::string stateDispenseEnd::getProductID(int slot)
 
     sqlite3_stmt *stmt;
 
-    debugOutput::sendMessage("Product ID getter START", INFO);
+    debugOutput::sendMessage("Product ID getter START", MSG_INFO);
 
     std::string sql_string_pid = "SELECT product_id FROM products WHERE slot=" + std::to_string(slot) + ";";
 
@@ -251,7 +251,7 @@ std::string stateDispenseEnd::getMachineID()
 
     sqlite3_stmt *stmt;
 
-    debugOutput::sendMessage("Machine ID getter START", INFO);
+    debugOutput::sendMessage("Machine ID getter START", MSG_INFO);
 
     if (rc)
     {
@@ -279,7 +279,7 @@ std::string stateDispenseEnd::getUnits(int slot)
 
     sqlite3_stmt *stmt;
 
-    debugOutput::sendMessage("Units getter START", INFO);
+    debugOutput::sendMessage("Units getter START", MSG_INFO);
 
     if (rc)
     {
@@ -312,7 +312,7 @@ DF_ERROR stateDispenseEnd::updateDB()
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
     rc = sqlite3_open(DB_PATH, &db);
 
-    debugOutput::sendMessage("DB Update START", INFO);
+    debugOutput::sendMessage("DB Update START", MSG_INFO);
 
     if (rc)
     {

@@ -33,7 +33,7 @@ dbggpio::~dbggpio()
 DF_ERROR dbggpio::setDirection(bool input)
 {
 	debugOutput debugInfo;
-	debugInfo.sendMessage("dbggpio::setDirection=-=-=-=", INFO);
+	debugInfo.sendMessage("dbggpio::setDirection=-=-=-=", MSG_INFO);
 
 	DF_ERROR df_ret = OK;
 
@@ -51,7 +51,7 @@ DF_ERROR dbggpio::setDirection(bool input)
 DF_ERROR dbggpio::readPin(bool *level)
 {
 	debugOutput debugInfo;
-	debugInfo.sendMessage("readPin", INFO);
+	debugInfo.sendMessage("readPin", MSG_INFO);
 
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
@@ -68,7 +68,7 @@ DF_ERROR dbggpio::readPin(bool *level)
 DF_ERROR dbggpio::writePin(bool level)
 {
 	debugOutput debugInfo;
-	debugInfo.sendMessage("writePin", INFO);
+	debugInfo.sendMessage("writePin", MSG_INFO);
 
 	DF_ERROR df_ret = ERROR_BAD_PARAMS;
 

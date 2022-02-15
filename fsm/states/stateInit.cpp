@@ -50,7 +50,7 @@ string stateInit::toString()
 */
 DF_ERROR stateInit::onEntry()
 {
-    m_state_requested = INIT;
+    m_state_requested = STATE_INIT;
     DF_ERROR e_ret = OK;
     return e_ret;
 }
@@ -71,7 +71,7 @@ DF_ERROR stateInit::onAction()
     {
         if (OK == e_ret)
         {
-            m_state_requested = IDLE;
+            m_state_requested = STATE_IDLE;
 
             // The UI program waits for this message to move from its initializing phase to its Idle phase:
             m_pMessaging->sendMessage("Init Ready");
@@ -93,7 +93,7 @@ DF_ERROR stateInit::dispenserSetup()
     int idx;
     dispenser *productDispensers = g_productDispensers;
 
-    debugOutput::sendMessage("Setting up DS-ED-8344 hardware control board.\n", INFO);
+    debugOutput::sendMessage("Setting up DS-ED-8344 hardware control board.\n", MSG_INFO);
 
     // We only need one flow sensor interrupt pin since only one pump
     // is ever active at a time.  The flow sensors are all connected
@@ -115,7 +115,7 @@ DF_ERROR stateInit::dispenserSetup()
 
     productDispensers[0].setPowerOffListener();
 
-    debugOutput::sendMessage("Dispenser intialized.", INFO);
+    debugOutput::sendMessage("Dispenser intialized.", MSG_INFO);
 
     return OK;
 } // End of dispenserSetup()
@@ -236,14 +236,14 @@ DF_ERROR stateInit::setProducts()
 
     rc = sqlite3_open(DB_PATH, &db);
 
-    debugOutput::sendMessage("DB GETTER START", INFO);
+    debugOutput::sendMessage("DB GETTER START", MSG_INFO);
 
     if (rc)
     {
         // fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
         // TODO: Error handling here...
 
-        debugOutput::sendMessage("Database opening error", INFO);
+        debugOutput::sendMessage("Database opening error", MSG_INFO);
     }
     else
     {
@@ -260,7 +260,7 @@ DF_ERROR stateInit::setProducts()
 
     if (rc != SQLITE_OK)
     {
-        debugOutput::sendMessage("Product info SQL error (OR DB PATH opening ERROR!!)", INFO);
+        debugOutput::sendMessage("Product info SQL error (OR DB PATH opening ERROR!!)", MSG_INFO);
         //       fprintf(stderr, "SQL error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
     }
@@ -270,7 +270,7 @@ DF_ERROR stateInit::setProducts()
     }
     sqlite3_close(db);
 
-    debugOutput::sendMessage("Products intialized.", INFO);
+    debugOutput::sendMessage("Products intialized.", MSG_INFO);
 
     return OK;
 }

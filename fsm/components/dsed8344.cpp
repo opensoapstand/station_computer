@@ -15,7 +15,7 @@ dsed8344::dsed8344(void)
     i2c_bus_name = (char *)calloc(strlen(DEFAULT_I2C_BUS) + 1, sizeof(char));
     if (i2c_bus_name == NULL)
     {
-        debugOutput::sendMessage("dsed8344: Unable to allocate memory.", ERROR);
+        debugOutput::sendMessage("dsed8344: Unable to allocate memory.", MSG_ERROR);
         return;
     }
     strcpy(i2c_bus_name, DEFAULT_I2C_BUS);
@@ -29,14 +29,14 @@ dsed8344::dsed8344(void)
     fp = popen("/bin/ls /sys/bus/pci/devices/*/i2c_designware.1/ | /bin/grep i2c", "r");
     if (fp == NULL)
     {
-        debugOutput::sendMessage("Failed to run command.\n", ERROR);
+        debugOutput::sendMessage("Failed to run command.\n", MSG_ERROR);
         return;
     }
 
     // Read the output of the command from the pipe
     if (fgets(path, sizeof(path), fp) == NULL)
     {
-        debugOutput::sendMessage("Failed to get I2C bus name.\n", ERROR);
+        debugOutput::sendMessage("Failed to get I2C bus name.\n", MSG_ERROR);
         return;
     }
     pclose(fp);
@@ -44,7 +44,7 @@ dsed8344::dsed8344(void)
     i2c_bus_name = (char *)calloc(strlen(path) + 5, sizeof(char));
     if (i2c_bus_name == NULL)
     {
-        debugOutput::sendMessage("dsed8344: Unable to allocate memory.", ERROR);
+        debugOutput::sendMessage("dsed8344: Unable to allocate memory.", MSG_ERROR);
         return;
     }
     strcpy(i2c_bus_name, "/dev/");
@@ -64,7 +64,7 @@ dsed8344::dsed8344(const char *bus)
     i2c_bus_name = (char *)calloc(strlen(bus) + 1, sizeof(char));
     if (i2c_bus_name == NULL)
     {
-        debugOutput::sendMessage("dsed8344: Unable to allocate memory.", ERROR);
+        debugOutput::sendMessage("dsed8344: Unable to allocate memory.", MSG_ERROR);
         close(i2c_handle);
         return;
     }
@@ -217,7 +217,7 @@ bool dsed8344::SendByte(unsigned char address, unsigned char reg, unsigned char 
     packets.nmsgs = 1;
     if (ioctl(i2c_handle, I2C_RDWR, &packets) < 0)
     {
-        debugOutput::sendMessage(strerror(errno), ERROR);
+        debugOutput::sendMessage(strerror(errno), MSG_ERROR);
         return false;
     }
 #endif
@@ -253,7 +253,7 @@ unsigned char dsed8344::ReadByte(unsigned char address, unsigned char reg)
     packets.nmsgs = 2;
     if (ioctl(i2c_handle, I2C_RDWR, &packets) < 0)
     {
-        debugOutput::sendMessage(strerror(errno), ERROR);
+        debugOutput::sendMessage(strerror(errno), MSG_ERROR);
         return false;
     }
 #endif
@@ -267,11 +267,11 @@ bool dsed8344::set_i2c_address(unsigned char address)
     {
         if (errno == EBUSY)
         {
-            debugOutput::sendMessage("I2C bus busy.  Is something else running?", INFO);
+            debugOutput::sendMessage("I2C bus busy.  Is something else running?", MSG_INFO);
         }
         else
         {
-            debugOutput::sendMessage("Could not set I2C address to " + to_string(address), ERROR);
+            debugOutput::sendMessage("Could not set I2C address to " + to_string(address), MSG_ERROR);
             return false;
         }
     }
@@ -290,7 +290,7 @@ void dsed8344::setup_i2c_bus(void)
         {
             std::string message("dsed8344: Error opening");
             message.append(i2c_bus_name);
-            debugOutput::sendMessage(message, ERROR);
+            debugOutput::sendMessage(message, MSG_ERROR);
             return;
         }
     }
@@ -300,16 +300,16 @@ void dsed8344::setup_i2c_bus(void)
         std::string message("dsed8344: I2C bus ");
         message.append(i2c_bus_name);
         message.append(" has a problem.");
-        debugOutput::sendMessage(message, ERROR);
+        debugOutput::sendMessage(message, MSG_ERROR);
         return;
     }
 
-    debugOutput::sendMessage("I2C bus configuration appears correct.", INFO);
+    debugOutput::sendMessage("I2C bus configuration appears correct.", MSG_INFO);
 
     // Everything checks out so get it all set up
     initialize_8344();
 
-    debugOutput::sendMessage("Initialized I2C bus components.", INFO);
+    debugOutput::sendMessage("Initialized I2C bus components.", MSG_INFO);
 
 } // End of setup_i2c_bus()
 
@@ -331,16 +331,16 @@ bool dsed8344::check_8344_configuration(void)
             {
                 std::string message("PCA9534 not found on I2C bus ");
                 message.append(i2c_bus_name);
-                debugOutput::sendMessage(message, ERROR);
-                debugOutput::sendMessage("Pump control impossible.", ERROR);
+                debugOutput::sendMessage(message, MSG_ERROR);
+                debugOutput::sendMessage("Pump control impossible.", MSG_ERROR);
                 return false;
             }
             if (i2c_probe_address == MAX31760_ADDRESS)
             {
                 std::string message("MAX31760 not found on I2C bus ");
                 message.append(i2c_bus_name);
-                debugOutput::sendMessage(message, ERROR);
-                debugOutput::sendMessage("Pump control impossible.", ERROR);
+                debugOutput::sendMessage(message, MSG_ERROR);
+                debugOutput::sendMessage("Pump control impossible.", MSG_ERROR);
                 return false;
             }
         }
@@ -351,7 +351,7 @@ bool dsed8344::check_8344_configuration(void)
             {
                 std::string message("Unknown device found on I2C bus ");
                 message.append(i2c_bus_name);
-                debugOutput::sendMessage(message, ERROR);
+                debugOutput::sendMessage(message, MSG_ERROR);
                 return false;
             }
         }

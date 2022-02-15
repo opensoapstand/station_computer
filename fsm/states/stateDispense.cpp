@@ -27,7 +27,7 @@ stateDispense::stateDispense()
 // CTOR Linked to IPC
 stateDispense::stateDispense(messageMediator *message)
 {
-   //debugOutput::sendMessage("stateDispense(messageMediator * message)", INFO);
+   //debugOutput::sendMessage("stateDispense(messageMediator * message)", MSG_INFO);
 }
 
 // DTOR
@@ -47,7 +47,7 @@ string stateDispense::toString()
  */
 DF_ERROR stateDispense::onEntry()
 {
-   m_state_requested = DISPENSE;
+   m_state_requested = STATE_DISPENSE;
    productDispensers = g_productDispensers;
    DF_ERROR e_ret = OK;
    pos = m_pMessaging->getProductNumber();
@@ -64,7 +64,7 @@ DF_ERROR stateDispense::onEntry()
  */
 DF_ERROR stateDispense::onAction()
 {
-   // debugOutput::sendMessage("+stateDispense::onAction()", INFO);
+   // debugOutput::sendMessage("+stateDispense::onAction()", MSG_INFO);
    productDispensers = g_productDispensers;
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
@@ -78,17 +78,17 @@ DF_ERROR stateDispense::onAction()
       // Check if UI has sent a ACTION_DISPENSE_END to finish the transaction, or, if dispensing is complete
       if (m_pMessaging->getAction() == ACTION_DISPENSE_END)
       {
-         // debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]" + to_string(productDispensers[pos].getIsDispenseComplete()), INFO);
-         debugOutput::sendMessage("Stop dispensing (stop command received)", INFO);
-         m_state_requested = DISPENSE_END;
+         // debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]" + to_string(productDispensers[pos].getIsDispenseComplete()), MSG_INFO);
+         debugOutput::sendMessage("Stop dispensing (stop command received)", MSG_INFO);
+         m_state_requested = STATE_DISPENSE_END;
          return e_ret = OK;
       }
 
       if (productDispensers[pos].getIsDispenseComplete())
       {
-         // debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]" + to_string(productDispensers[pos].getIsDispenseComplete()), INFO);
-         debugOutput::sendMessage("Stop dispensing. Requested volume reached.", INFO);
-         m_state_requested = DISPENSE_END;
+         // debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]" + to_string(productDispensers[pos].getIsDispenseComplete()), MSG_INFO);
+         debugOutput::sendMessage("Stop dispensing. Requested volume reached.", MSG_INFO);
+         m_state_requested = STATE_DISPENSE_END;
          return e_ret = OK;
       }
 
@@ -101,12 +101,12 @@ DF_ERROR stateDispense::onAction()
       if (productDispensers[pos].getProduct()->getVolumeDispensedPreviously() == productDispensers[pos].getProduct()->getVolumeDispensed())
       {
          // no dispensing detected since the last check
-         m_state_requested = DISPENSE_IDLE;
+         m_state_requested = STATE_DISPENSE_IDLE;
       }
       else
       {
          // continue dispensing
-         m_state_requested = DISPENSE;
+         m_state_requested = STATE_DISPENSE;
          productDispensers[pos].getProduct()->m_nVolumeDispensedPreviously = productDispensers[pos].getProduct()->getVolumeDispensed();
       }
 
@@ -124,7 +124,7 @@ DF_ERROR stateDispense::onAction()
       usleep(500000);
       e_ret = OK;
    }
-   // debugOutput::sendMessage("-stateDispense::onAction()", INFO);
+   // debugOutput::sendMessage("-stateDispense::onAction()", MSG_INFO);
    return e_ret;
 }
 

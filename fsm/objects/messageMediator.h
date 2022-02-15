@@ -42,8 +42,11 @@
 #define ACTION_MANUAL_PUMP 'm'
 #define ACTION_QUIT 'q'
 #define ACTION_MANUAL_PUMP_TEST 't'
-#define ACTION_MANUAL_PUMP_ENABLE 'd'
-#define ACTION_MANUAL_PUMP_DISABLE 'f'
+#define ACTION_MANUAL_PUMP_ENABLE 'e'
+#define ACTION_MANUAL_PUMP_DISABLE 'd'
+#define ACTION_MANUAL_PUMP_DIRECTION_FORWARD 'f'
+#define ACTION_MANUAL_PUMP_DIRECTION_REVERSE 'r'
+#define ACTION_MANUAL_PUMP_PWM_SET 'i'
 
 #define ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY 'V'
 #define ACTION_PRINTER_CHECK_STATUS 'v'
@@ -52,7 +55,6 @@
 #define ACTION_HELP 'h'
 
 #define PRODUCT_DUMMY 'z'
-
 
 #define REQUESTED_VOLUME_1 's'
 #define REQUESTED_VOLUME_2 'l'
@@ -85,6 +87,7 @@ public:
    char getAction() { return m_requestedAction; }
    int getProductNumber() { return m_RequestedProductIndexInt; }
    char getRequestedVolume() { return m_requestedVolume; }
+   int getCommandValue() { return m_commandValue; }
 
 
 
@@ -106,6 +109,7 @@ private:
    static char m_requestedAction;
    static double m_nVolumeTarget;
    static char m_requestedVolume;
+   static int m_commandValue;
 
    static DF_ERROR sendProgress(int percentComplete);
    static DF_ERROR sendQtACK(string AckOrNak);

@@ -48,6 +48,11 @@ DF_ERROR stateManualPump::onEntry()
    debugOutput::sendMessage("Test pumps manually.", MSG_INFO);
    productDispensers = g_productDispensers;
 
+   // default pump setting
+   productDispensers[0].forwardPump();
+   productDispensers[0].setPumpPWM(255);
+
+
    return e_ret;
 }
 
@@ -80,15 +85,30 @@ DF_ERROR stateManualPump::onAction()
          productDispensers[0].enablePump(1); // POS is 1->4! index is 0->3
       }
 
-       if (ACTION_MANUAL_PUMP_DISABLE == m_pMessaging->getAction())
+      if (ACTION_MANUAL_PUMP_DISABLE == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Disable dispenser pump at pos 1", MSG_INFO);
-         productDispensers[0].disableAllPumps(); // POS is 1->4! index is 0->3
+         productDispensers[0].disableAllPumps();
+      }
+      if (ACTION_MANUAL_PUMP_DIRECTION_FORWARD == m_pMessaging->getAction())
+      {
+         debugOutput::sendMessage("Direction forward dispenser pump at pos 1", MSG_INFO);
+         productDispensers[0].forwardPump();
+      }
+      if (ACTION_MANUAL_PUMP_DIRECTION_REVERSE == m_pMessaging->getAction())
+      {
+         debugOutput::sendMessage("Direction backward pump at pos 1", MSG_INFO);
+         productDispensers[0].reversePump();
+      }
+      if (ACTION_MANUAL_PUMP_PWM_SET == m_pMessaging->getAction())
+      {
+         // debugOutput::sendMessage("PWM Speed pump at pos 1 to " + m_pMessaging->getCommandValue(), MSG_INFO);
+         productDispensers[0].setPumpPWM(m_pMessaging->getCommandValue());
       }
 
       if (ACTION_HELP == m_pMessaging->getAction())
       {
-         debugOutput::sendMessage("help\nAvailable printer test commands: \n t: test pump1 \n d: enable pump1 \n f: disable pump1\n q: quit ", MSG_INFO);
+         debugOutput::sendMessage("help\nAvailable printer test commands: \n t: test pump1 \n e: enable pump1 \n d: disable pump1\n f: direction forward pump1 \n r: direction reverse pump1\n ixxx: set pwm pump1 [0..255]\nq: quit ", MSG_INFO);
       }
    }
 
@@ -104,16 +124,14 @@ DF_ERROR stateManualPump::pumpTest()
    productDispensers[0].forwardPump();
    productDispensers[0].setPumpPWM(125);
    productDispensers[0].enablePump(1); // POS is 1->4! index is 0->3
-   usleep(500000); // press button to have the pump pumping. 
+   usleep(1000000);                     // press button to have the pump pumping.
    productDispensers[0].disableAllPumps();
 
-   
    productDispensers[0].reversePump();
    productDispensers[0].setPumpPWM(125);
    productDispensers[0].enablePump(1); // POS is 1->4! index is 0->3
-   usleep(500000); // press button to have the pump pumping. 
+   usleep(1000000);                     // press button to have the pump pumping.
    productDispensers[0].disableAllPumps();
-
 }
 
 // Advances to Dispense Idle

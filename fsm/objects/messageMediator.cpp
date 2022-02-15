@@ -38,6 +38,7 @@ string messageMediator::m_processCommand;
 int messageMediator::m_RequestedProductIndexInt;
 int messageMediator::m_nSolenoid;
 char messageMediator::m_requestedAction;
+int messageMediator::m_commandValue;
 char messageMediator::m_requestedVolume;
 double messageMediator::m_nVolumeTarget;
 
@@ -328,6 +329,9 @@ DF_ERROR messageMediator::parseCommandString()
    string sCommand = getCommandString();
    char first_char = sCommand[0];
 
+   // m_commandValue = std::stoi( sCommand );
+   // debugOutput::sendMessage("temptgmpemtpm" + m_commandValue, MSG_INFO);
+
    if (
        first_char == '1' ||
        first_char == '2' ||
@@ -336,6 +340,14 @@ DF_ERROR messageMediator::parseCommandString()
    {
       // check for dispensing command
       e_ret = parseDispenseCommand(sCommand);
+   }
+   else if (
+       // other commands
+       first_char == ACTION_MANUAL_PUMP_PWM_SET)
+   {
+      m_requestedAction = first_char;
+      std::string number = sCommand.substr(1, sCommand.size());
+      m_commandValue = std::stoi(number);
    }
    else if (
        // other commands

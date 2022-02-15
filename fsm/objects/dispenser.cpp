@@ -115,9 +115,9 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
     {
         // Instantiate, set input, spin up a flowsensor thread.
         m_pFlowsenor[pos] = new oddyseyx86GPIO(pin);
-        m_pFlowsenor[pos]->setDirection(true);
+        m_pFlowsenor[pos]->setPinAsInputElseOutput(true);
         m_pFlowsenor[pos]->registerProduct(m_pSelectedProduct);
-        m_pFlowsenor[pos]->startListener();
+        m_pFlowsenor[pos]->startListener_flowsensor();
         e_ret = OK;
     }
     else
@@ -128,16 +128,16 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
     return e_ret;
 }
 
-DF_ERROR dispenser::setPowerOffListener()
+DF_ERROR dispenser::setButtonsShutdownAndMaintenance()
 {
 
     m_pPWRorMM[0] = new oddyseyx86GPIO(391);
     m_pPowerOff[0] = new oddyseyx86GPIO(340);
     m_pMM[0] = new oddyseyx86GPIO(341);
-    m_pPWRorMM[0]->setDirection(true);
-    m_pPowerOff[0]->setDirection(true);
-    m_pMM[0]->setDirection(true);
-    m_pPWRorMM[0]->startListenerPWR();
+    m_pPWRorMM[0]->setPinAsInputElseOutput(true);
+    m_pPowerOff[0]->setPinAsInputElseOutput(true);
+    m_pMM[0]->setPinAsInputElseOutput(true);
+    m_pPWRorMM[0]->startListener_buttons_powerAndMaintenance();
 }
 
 // TODO: Call this function on Dispense onEntry()

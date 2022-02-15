@@ -71,9 +71,6 @@ DF_ERROR stateIdle::onAction()
 
          if (ACTION_DISPENSE == m_pMessaging->getAction())
          {
-            debugOutput::sendMessage("Chosen product: " + std::to_string(pos), MSG_INFO);
-
-           
             m_state_requested = STATE_DISPENSE_INIT;
          }
 
@@ -81,6 +78,7 @@ DF_ERROR stateIdle::onAction()
          {
             m_state_requested = STATE_MANUAL_PRINTER;
          }
+         
          if (ACTION_MANUAL_PUMP == m_pMessaging->getAction())
          {
             m_state_requested = STATE_MANUAL_PUMP;
@@ -99,7 +97,6 @@ DF_ERROR stateIdle::onAction()
       else
       {
          m_state_requested = STATE_IDLE;
-         // usleep(100000); // UNISTD Thread PAUSE
       }
       e_ret = OK;
    }

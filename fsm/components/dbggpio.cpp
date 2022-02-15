@@ -30,10 +30,10 @@ dbggpio::~dbggpio()
 
 // XXX: This does not have a reference anywhere!
 // Setter for the pin direction
-DF_ERROR dbggpio::setDirection(bool input)
+DF_ERROR dbggpio::setPinAsInputElseOutput(bool input)
 {
 	debugOutput debugInfo;
-	debugInfo.sendMessage("dbggpio::setDirection=-=-=-=", MSG_INFO);
+	debugInfo.sendMessage("dbggpio::setPinAsInputElseOutput=-=-=-=", MSG_INFO);
 
 	DF_ERROR df_ret = OK;
 

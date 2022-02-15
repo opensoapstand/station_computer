@@ -23,7 +23,7 @@ public:
 	dbggpio(int address);
 	~dbggpio();
 
-	DF_ERROR setDirection(bool input);
+	DF_ERROR setPinAsInputElseOutput(bool input);
 	DF_ERROR readPin(bool *level);
 	DF_ERROR writePin(bool level);
 

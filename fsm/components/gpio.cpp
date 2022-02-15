@@ -28,18 +28,18 @@ gpio::gpio()
 gpio::~gpio()
 {
         //kill thread!
-        this->stopListener();
+        this->stopListener_flowsensor();
 }
 
-// kick off a listener
-void gpio::startListener()
+// kick off a listener_flowsensor
+void gpio::startListener_flowsensor()
 {
-        debugOutput::sendMessage("-----startListener-----", MSG_INFO);
+        debugOutput::sendMessage("-----startListener_flowsensor-----", MSG_INFO);
         DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
         if ((nullptr == gpioThread) && (nullptr != m_pProduct))
         {
-                gpioThread = new std::thread(&gpio::listener, this);
+                gpioThread = new std::thread(&gpio::listener_flowsensor, this);
                 df_ret = OK;
         }
         else
@@ -48,13 +48,13 @@ void gpio::startListener()
         }
 }
 
-void gpio::startListenerPWR()
+void gpio::startListener_buttons_powerAndMaintenance()
 {
-        debugOutput::sendMessage("-----startListenerPWR-----", MSG_INFO);
+        debugOutput::sendMessage("-----startListener_buttons_powerAndMaintenance-----", MSG_INFO);
         DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
         //        if ((nullptr ==  gpioThread) && (nullptr != m_pProduct)){
-        gpioThread = new std::thread(&gpio::listenerPWR, this);
+        gpioThread = new std::thread(&gpio::listener_buttons_powerAndMaintenance, this);
         df_ret = OK;
         //        } else {
         //                debugOutput::sendMessage("Did not pass null check", MSG_INFO);
@@ -78,7 +78,7 @@ void gpio::startListenerPWR()
 // call this with code that looks like
 // std::thread tGPIOListener tgpio = <gpioinstance>->listener();
 // std::thread gpio::listener()
-void gpio::listener()
+void gpio::listener_flowsensor()
 {
         //cout << "Spin up GPIO Thread" << endl;
         DF_ERROR df_ret = ERROR_BAD_PARAMS;
@@ -86,15 +86,15 @@ void gpio::listener()
 
         while (!m_stop)
         {
-                monitorGPIO();
-                //                monitorGPIO_PWR();
+                monitorGPIO_Flowsensor();
+                //                monitorGPIO_Buttons_powerAndMaintenance();
         }
 
         m_stop = true; //reset
                        // return;
 }
 
-void gpio::listenerPWR()
+void gpio::listener_buttons_powerAndMaintenance()
 {
         // cout << "Spin up GPIO Thread" << endl;
         DF_ERROR df_ret = ERROR_BAD_PARAMS;
@@ -102,8 +102,8 @@ void gpio::listenerPWR()
 
         while (!m_stop)
         {
-                //            monitorGPIO();
-                monitorGPIO_PWR();
+                //            monitorGPIO_Flowsensor();
+                monitorGPIO_Buttons_powerAndMaintenance();
         }
 
         m_stop = true; //reset

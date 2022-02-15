@@ -34,6 +34,7 @@ std::string stateStrings[FSM_MAX + 1] = {
     "STATE_DUMMY",
     "STATE_INIT",
     "STATE_IDLE",
+    "STATE_DISPENSE_INIT",
     "STATE_DISPENSE_IDLE",
     "STATE_DISPENSE",
     "STATE_DISPENSE_END",

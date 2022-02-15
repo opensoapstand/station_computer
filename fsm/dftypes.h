@@ -20,6 +20,10 @@
 #define PRODUCT_DISPENSERS_MAX 4
 #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 
+
+#define IO_PIN_FLOW_SENSOR 364
+#define IO_PIN_FLOW_SENSOR_STRING "364"
+
 typedef enum DF_FSM
 {
    STATE_DUMMY,

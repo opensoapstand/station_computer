@@ -94,7 +94,7 @@ public:
       int getI2CAddress(int pos);
       int getI2CPin(int pos);
 
-      DF_ERROR setPowerOffListener();
+      DF_ERROR setButtonsShutdownAndMaintenance();
 
       //      DF_ERROR setButtonPress(int address_num, int pin_num);
       bool reader = true;

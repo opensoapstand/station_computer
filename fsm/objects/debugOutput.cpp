@@ -62,7 +62,7 @@ void debugOutput::sendMessage(std::string msg, MESSAGE_LEVEL lvl)
 		//cout << m_lvlArray[lvl] + ": " + msg << endl;
 
 		// 	//https://stackoverflow.com/questions/9469790/execution-of-printf-and-segmentation-fault
-		// 	// debugOutput::sendMessage("oddyseyx86GPIO::setDirection ", MSG_INFO);
+		// 	// debugOutput::sendMessage("oddyseyx86GPIO::setPinAsInputElseOutput ", MSG_INFO);
 		//     std::string msg = m_lvlArray[lvl] + ":" + msg;
 
 		// 	//https://stackoverflow.com/questions/7352099/stdstring-to-char/7352131

@@ -31,15 +31,15 @@ public:
 	DF_ERROR setFlowPin(int pinNumber);
 
 	//
-	DF_ERROR setDirection(bool input);
+	DF_ERROR setPinAsInputElseOutput(bool input);
 	DF_ERROR readPin(bool *level);
 	DF_ERROR writePin(bool level);
 
 	bool reader = true;
 
 protected:
-	void monitorGPIO();
-	void monitorGPIO_PWR();
+	void monitorGPIO_Flowsensor();
+	void monitorGPIO_Buttons_powerAndMaintenance();
 	string command_to_string(string cmd);
 	messageMediator *m_pMessaging;
 

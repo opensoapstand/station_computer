@@ -22,6 +22,7 @@
 #include <iostream>
 
 #include "odysseyx86gpio.h"
+#include "../dftypes.h"
 
 #define SYSFS_GPIO_DIR "/sys/class/gpio"
 #define MAX_BUF 64
@@ -127,13 +128,13 @@ DF_ERROR oddyseyx86GPIO::setFlowPin(int pinNumber)
 // Setter for Direction of flow sensor on Odyssey GPIO Pin
 // Writes "in" into a GPIO direction file while
 // reading input and "out" otherwise.
-DF_ERROR oddyseyx86GPIO::setDirection(bool input)
+DF_ERROR oddyseyx86GPIO::setPinAsInputElseOutput(bool input)
 {
-        // debugOutput::sendMessage("oddyseyx86GPIO::setDirection ", MSG_INFO);
-        std::string msg = "oddyseyx86GPIO::setDirection " + std::to_string(m_nPin);
+        // debugOutput::sendMessage("oddyseyx86GPIO::setPinAsInputElseOutput ", MSG_INFO);
+        std::string msg = "oddyseyx86GPIO::setPinAsInputElseOutput " + std::to_string(m_nPin);
         debugOutput::sendMessage(msg, MSG_INFO);
 
-        //debugOutput::sendMessage("oddyseyx86GPIO::setDirection ", MSG_INFO);
+        //debugOutput::sendMessage("oddyseyx86GPIO::setPinAsInputElseOutput ", MSG_INFO);
         DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
         int fd, len;
         char syscode;
@@ -237,7 +238,7 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
         return df_ret;
 }
 
-//void oddyseyx86GPIO::monitorGPIO()
+//void oddyseyx86GPIO::monitorGPIO_Flowsensor()
 //{
 //    int fd;
 //    char local_buffer[16];
@@ -286,16 +287,16 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
 
 // Threaded function call to monitor Odyssecy GPIO pin activity.
 
-void oddyseyx86GPIO::monitorGPIO()
+void oddyseyx86GPIO::monitorGPIO_Flowsensor()
 {
-        //debugOutput::sendMessage("monitorGPIO", MSG_INFO);  //nuke this later it will cause so much spam
+        //debugOutput::sendMessage("monitorGPIO_Flowsensor", MSG_INFO);  //nuke this later it will cause so much spam
         int fd, len;
         char buf[MAX_BUF];
         char compareChar;
         struct pollfd pfd;
 
         //string GPIO = std::to_string(m_nPin);
-        string GPIO = "364";
+        string GPIO = IO_PIN_FLOW_SENSOR_STRING;
         string command("/sys/class/gpio/gpio");
         command += GPIO;
         command += "/edge";
@@ -339,7 +340,7 @@ void oddyseyx86GPIO::monitorGPIO()
         return;
 }
 
-void oddyseyx86GPIO::monitorGPIO_PWR()
+void oddyseyx86GPIO::monitorGPIO_Buttons_powerAndMaintenance()
 {
         //        debugOutput::sendMessage("monitorGPIO", MSG_INFO);  //nuke this later it will cause so much spam
         int fd, len;

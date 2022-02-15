@@ -19,6 +19,7 @@
 
 #include "states/stateInit.h"
 #include "states/stateIdle.h"
+#include "states/stateDispenseInit.h"
 #include "states/stateDispense.h"
 #include "states/stateDispenseIdle.h"
 #include "states/stateDispenseEnd.h"
@@ -62,6 +63,7 @@ DF_ERROR createStateArray()
     {
         g_stateArray[STATE_INIT] = new stateInit(g_pMessaging);
         g_stateArray[STATE_IDLE] = new stateIdle(g_pMessaging);
+        g_stateArray[STATE_DISPENSE_INIT] = new stateDispenseInit(g_pMessaging);
         g_stateArray[STATE_DISPENSE_IDLE] = new stateDispenseIdle(g_pMessaging);
         g_stateArray[STATE_DISPENSE] = new stateDispense(g_pMessaging);
         g_stateArray[STATE_DISPENSE_END] = new stateDispenseEnd(g_pMessaging);

@@ -73,9 +73,8 @@ DF_ERROR stateIdle::onAction()
          {
             debugOutput::sendMessage("Chosen product: " + std::to_string(pos), MSG_INFO);
 
-            // DO THIS IN A STATE DISPENSE_INIT
-            productDispensers[pos].getProduct()->initDispense(); 
-            m_state_requested = STATE_DISPENSE_IDLE;
+           
+            m_state_requested = STATE_DISPENSE_INIT;
          }
 
          if (ACTION_MANUAL_PRINTER == m_pMessaging->getAction())

@@ -52,7 +52,6 @@ DF_ERROR stateManualPump::onEntry()
    productDispensers[0].forwardPump();
    productDispensers[0].setPumpPWM(255);
 
-
    return e_ret;
 }
 
@@ -138,5 +137,6 @@ DF_ERROR stateManualPump::pumpTest()
 DF_ERROR stateManualPump::onExit()
 {
    DF_ERROR e_ret = OK;
+    productDispensers[0].disableAllPumps();
    return e_ret;
 }

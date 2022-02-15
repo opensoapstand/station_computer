@@ -28,7 +28,7 @@
 #include "objects/messageMediator.h"
 
 std::string stateStrings[FSM_MAX + 1] = {
-    "START",
+    "DUMMY",
     "INIT",
     "IDLE",
     "PRODUCT_SELECT",
@@ -37,7 +37,7 @@ std::string stateStrings[FSM_MAX + 1] = {
     "DISPENSE",
     "DISPENSE_END",
     "MANUAL_PRINTER",
-    "CLEANING",
+    "END",
     "FSM_MAX"};
 
 messageMediator *g_pMessaging;                         //debug through local network
@@ -75,13 +75,13 @@ DF_ERROR stateLoop()
 {
     DF_ERROR dfRet = OK;
     DF_FSM fsmState = INIT;
-    DF_FSM previousState = START;
+    DF_FSM previousState = DUMMY;
 
     while (OK == dfRet) //while no error has occurred
     {
-        if (fsmState == START)
+        if (fsmState == DUMMY)
         {
-            debugOutput::sendMessage("ERROR STATE uhg" + fsmState, STATE_CHANGE);
+            debugOutput::sendMessage("ERROR STATE " + fsmState, STATE_CHANGE);
         }
 
         // state change, deal with new state
@@ -110,8 +110,12 @@ DF_ERROR stateLoop()
                 dfRet = g_stateArray[previousState]->onExit();
             }
         }
+
+        if (fsmState == END){
+            dfRet = ERROR_END;
+        }
     }
-    debugOutput::sendMessage("Problem with state machine", INFO);
+    debugOutput::sendMessage("State machine ENDED. ", INFO);
     return dfRet;
 }
 

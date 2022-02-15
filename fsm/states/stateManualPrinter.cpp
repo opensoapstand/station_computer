@@ -44,9 +44,8 @@ string stateManualPrinter::toString()
 DF_ERROR stateManualPrinter::onEntry()
 {
    m_state_requested = MANUAL_PRINTER;
-   //m_state = MANUAL_PRINTER;
    DF_ERROR e_ret = OK;
-   debugOutput::sendMessage("test printer stuff.", INFO);
+   debugOutput::sendMessage("Test printer manually.", INFO);
    printerr.connectToPrinter();
    return e_ret;
 }
@@ -65,9 +64,10 @@ DF_ERROR stateManualPrinter::onAction()
       DF_ERROR ret_msg;
       ret_msg = m_pMessaging->parseCommandString();
 
-      if (ACTION_QUIT_TEST == m_pMessaging->getAction())
+      if (ACTION_QUIT == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Exit printer status test", INFO);
+
          m_state_requested = IDLE;
       }
 
@@ -99,24 +99,24 @@ DF_ERROR stateManualPrinter::onAction()
       }
    }
 
-   if (b_isContinuouslyChecking){
+   if (b_isContinuouslyChecking)
+   {
       displayPrinterStatus();
       //usleep(50000);	// 50 ms	between actions
    }
 
    //m_state = MANUAL_PRINTER;
 
-   
    // printerr.feed(1);
    // printerr.connectToPrinter();
    //printerr.cancelCustomCharacters();
-  
+
    // char tmpTest;
    //waitSerial++;
    //tmpTest = printerr.testComms(waitSerial);
-   
+
    // std::string c3(1,tmpTest);
-   
+
    // debugOutput::sendMessage("test byte:==" + c3 + "==", INFO);
    // debugOutput::sendMessage("0.1 ms multiplier: " + std::to_string(waitSerial), INFO);
 
@@ -128,60 +128,59 @@ DF_ERROR stateManualPrinter::onAction()
    // }else{
 
    //    std::string c3(1,tmpTest);
-      
+
    //    debugOutput::sendMessage("test byte:" + c3, INFO);
 
    // }
 
- 
    // printerr.disconnectPrinter();
 
-   // usleep(500000);			
+   // usleep(500000);
    // hasPaper
 
    e_ret = OK;
-  
+
    return e_ret;
 }
 
-
-DF_ERROR stateManualPrinter::displayPrinterStatus(){
-  if (printerr.hasPaper()){
+DF_ERROR stateManualPrinter::displayPrinterStatus()
+{
+   if (printerr.hasPaper())
+   {
       debugOutput::sendMessage("has paper", INFO);
-
-   }else{
+   }
+   else
+   {
       debugOutput::sendMessage("has NO paper----------------------------------------", INFO);
    }
-   
 }
-DF_ERROR stateManualPrinter::displayPrinterReachable(){
-  if (printerr.testComms()){
+DF_ERROR stateManualPrinter::displayPrinterReachable()
+{
+   if (printerr.testComms())
+   {
       debugOutput::sendMessage("printer reachable", INFO);
-
-   }else{
+   }
+   else
+   {
       debugOutput::sendMessage("printer not reachable", INFO);
    }
-   
 }
 
+DF_ERROR stateManualPrinter::printTest()
+{
 
-DF_ERROR stateManualPrinter::printTest(){
+   string printerstring = "lodelode";
+   string plu = "978020137962";
 
-   
-   // string printerstring = "lodelode";
-   // string plu = "978020137962";
+   // Adafruit_Thermal printerr;
+   printerr.printBarcode(plu.c_str(), EAN13);
+   system("echo '\n---------------------------\n\n\n' > /dev/ttyS4");
 
-   // // Adafruit_Thermal printerr;
-   // printerr.printBarcode(plu.c_str(), EAN13);
-   // system("echo '\n---------------------------\n\n\n' > /dev/ttyS4");
+   string sysstring = "echo '\n---------------------------\n\n\n" + printerstring + "' > /dev/ttyS4";
+   system(sysstring.c_str());
 
-   // string sysstring = "echo '\n---------------------------\n\n\n" + printerstring + "' > /dev/ttyS4";
+   //  string sysstring = "echo '------------------------------\n-- Vancouver Active Tourism --\n--            2022-02-12    --\n------------------------------\n 1x Special morning activity \n 1x Batard Bakery experience \n 1x Guided bike tour to \n         Lighthouse park \n 1x Soapstand workplace demo \n Participants: Wafeltje + Lodey    \n   Grand total: Happy times <3 \n   Thank you, please come again!  \n\n\n\n' > /dev/ttyS4";
    //  system(sysstring.c_str());
-
-   // string sysstring = "echo '\n -- Vancouver Active Tourism --\n Participants: Wafeltje        \n    Grand total: Happy times "' > /dev/ttyS4";
-   string sysstring = "echo '------------------------------\n-- Vancouver Active Tourism --\n--            2022-02-12    --\n------------------------------\n 1x Special morning activity \n 1x Batard Bakery experience \n 1x Guided bike tour to \n         Lighthouse park \n 1x Soapstand workplace demo \n Participants: Wafeltje + Lodey    \n   Grand total: Happy times <3 \n   Thank you, please come again!  \n\n\n\n' > /dev/ttyS4";
-    system(sysstring.c_str());
-
 
    //  printerr->setBarcodeHeight(100);
 }
@@ -189,6 +188,9 @@ DF_ERROR stateManualPrinter::printTest(){
 // Advances to Dispense Idle
 DF_ERROR stateManualPrinter::onExit()
 {
+   // stop continuous checking setting
+   b_isContinuouslyChecking = false;
+
    // printerr.connectToPrinter();
    //printTest();
    // printerr.testPage();

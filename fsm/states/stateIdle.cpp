@@ -42,6 +42,7 @@ string stateIdle::toString()
 // Sets a looped Idle state
 DF_ERROR stateIdle::onEntry()
 {
+   m_state_requested = IDLE;
    DF_ERROR e_ret = OK;
 
    // Set current and future states to IDLE
@@ -55,7 +56,6 @@ DF_ERROR stateIdle::onEntry()
 */
 DF_ERROR stateIdle::onAction()
 {
-   m_state_requested = IDLE;
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
   // m_state = IDLE;
 
@@ -84,9 +84,14 @@ DF_ERROR stateIdle::onAction()
             m_state_requested = MANUAL_PRINTER;
          }
 
+         if (ACTION_QUIT == m_pMessaging->getAction())
+         {
+            m_state_requested = END;
+         }
+
          if (ACTION_HELP == m_pMessaging->getAction())
          {
-            debugOutput::sendMessage("\n Idle Mode. Available Commands: \n p: Test printer \n [1..4]d[l,s,t]: Enter dispense mode. [product number]d[size] \n [1..4]f[l,s,t]: If dispensing: to End Dispensing [product number]f[size]", INFO);
+            debugOutput::sendMessage("\n Idle State. Available Commands: \n q: Quit(in independent mode)\n p: Test printer \n [1..4]d[l,s,t]: Enter dispense mode. [product number]d[size] \n [1..4]f[l,s,t]: If dispensing: to End Dispensing [product number]f[size]", INFO);
          }
       }
       else

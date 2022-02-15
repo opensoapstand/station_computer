@@ -22,7 +22,7 @@
 
 typedef enum DF_FSM
 {
-   START,
+   DUMMY,
    INIT,
    IDLE,
    PRODUCT_SELECT, //retrieve info from ui which productDispensers need to be set
@@ -31,13 +31,14 @@ typedef enum DF_FSM
    DISPENSE,
    DISPENSE_END,
    MANUAL_PRINTER,
-   CLEANING,
+   END,
    FSM_MAX,
 } DF_FSM;
 
 typedef enum DF_ERROR
 {
    OK = 0,
+   ERROR_END,
    ERROR_BAD_PARAMS,
    ERROR_MECH = 10,
    ERROR_MECH_PRODUCT_FAULT,

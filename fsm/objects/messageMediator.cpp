@@ -166,10 +166,11 @@ DF_ERROR messageMediator::updateCmdString(char key)
 {
    DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
-   string incommingCharMsg = "Incomming CHAR: ";
-   incommingCharMsg += key;
-   debugOutput::sendMessage(incommingCharMsg, INFO);
-   incommingCharMsg.clear();
+   // debug input char
+   // string incommingCharMsg = "Incomming CHAR: ";
+   // incommingCharMsg += key;
+   // debugOutput::sendMessage(incommingCharMsg, INFO);
+   // incommingCharMsg.clear();
 
    if (';' != key)
    {
@@ -339,7 +340,7 @@ DF_ERROR messageMediator::parseCommandString()
    else if (
        // other commands
        first_char == ACTION_TEST_PRINTER ||
-       first_char == ACTION_QUIT_TEST ||
+       first_char == ACTION_QUIT ||
        first_char == ACTION_PRINTER_CHECK_STATUS ||
        first_char == ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY ||
        first_char == ACTION_PRINTER_PRINT_TEST ||

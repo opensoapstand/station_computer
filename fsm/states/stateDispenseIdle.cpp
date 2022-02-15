@@ -80,7 +80,6 @@ DF_ERROR stateDispenseIdle::onAction()
                 m_state_requested = DISPENSE_END;
                 return df_ret = OK;
             }
-            
         }
 
         if (productDispensers[pos].getIsDispenseComplete())

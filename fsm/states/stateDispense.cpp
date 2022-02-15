@@ -64,7 +64,6 @@ DF_ERROR stateDispense::onEntry()
  */
 DF_ERROR stateDispense::onAction()
 {
-   // debugOutput::sendMessage("+stateDispense::onAction()", MSG_INFO);
    productDispensers = g_productDispensers;
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 

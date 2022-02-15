@@ -41,6 +41,7 @@ DF_ERROR stateDispenseIdle::onEntry()
     DF_ERROR e_ret = OK;
 
     productDispensers = g_productDispensers;
+
     pos = m_pMessaging->getProductNumber();
     pos = pos - 1;
     size = m_pMessaging->getRequestedVolume();
@@ -51,11 +52,16 @@ DF_ERROR stateDispenseIdle::onEntry()
     {
         // TODO this should be a separate state (dispense_init)
 
-        productDispensers[pos].getProduct()->startDispense(productDispensers[pos].getProduct()->getTargetVolume(size), productDispensers[pos].getProduct()->getPrice(size));
+        productDispensers[pos].getProduct()->startDispense(
+            productDispensers[pos].getProduct()->getTargetVolume(size),
+            productDispensers[pos].getProduct()->getPrice(size));
+
         productDispensers[pos].setIsDispenseComplete(false);
         productDispensers[pos].getProduct()->productInfo();
         productDispensers[pos].getProduct()->productVolumeInfo();
-        productDispensers[pos].startDispense(productDispensers[pos].getProduct()->getProductOption());
+
+        productDispensers[pos].startDispense(
+            productDispensers[pos].getProduct()->getProductOption());
     }
 
     return e_ret;

@@ -72,13 +72,19 @@ DF_ERROR stateIdle::onAction()
          if (ACTION_DISPENSE == m_pMessaging->getAction())
          {
             debugOutput::sendMessage("Chosen product: " + std::to_string(pos), MSG_INFO);
-            productDispensers[pos].getProduct()->initDispense();
+
+            // DO THIS IN A STATE DISPENSE_INIT
+            productDispensers[pos].getProduct()->initDispense(); 
             m_state_requested = STATE_DISPENSE_IDLE;
          }
 
-         if (ACTION_TEST_PRINTER == m_pMessaging->getAction())
+         if (ACTION_MANUAL_PRINTER == m_pMessaging->getAction())
          {
             m_state_requested = STATE_MANUAL_PRINTER;
+         }
+         if (ACTION_MANUAL_PUMP == m_pMessaging->getAction())
+         {
+            m_state_requested = STATE_MANUAL_PUMP;
          }
 
          if (ACTION_QUIT == m_pMessaging->getAction())
@@ -88,7 +94,7 @@ DF_ERROR stateIdle::onAction()
 
          if (ACTION_HELP == m_pMessaging->getAction())
          {
-            debugOutput::sendMessage("\n Idle State. Available Commands: \n q: Quit(in independent mode)\n p: Test printer \n [1..4]d[l,s,t]: Enter dispense mode. [product number]d[size] \n [1..4]f[l,s,t]: If dispensing: to End Dispensing [product number]f[size]", MSG_INFO);
+            debugOutput::sendMessage("\n Idle State. Available Commands: \n q: Quit(in independent mode)\n p: Test printer\n m: Test pumps \n [1..4]d[l,s,t]: Enter dispense mode. [product number]d[size] \n [1..4]f[l,s,t]: If dispensing: to End Dispensing [product number]f[size]", MSG_INFO);
          }
       }
       else

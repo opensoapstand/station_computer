@@ -65,9 +65,11 @@ public:
       DF_ERROR startDispense(int pos);
       DF_ERROR stopDispense(int pos); //reached dispense value
 
-      DF_ERROR forwardPump(); //reached dispense value
-      DF_ERROR reversePump(); //reached dispense value
-      DF_ERROR stopPump();    //reached dispense value
+      DF_ERROR forwardPump(); 
+      DF_ERROR reversePump(); 
+      DF_ERROR stopPump();    
+      DF_ERROR startPump(int pos);    
+      DF_ERROR setPumpPWM(int8_t value);    
 
       DF_ERROR connectButton();
       DF_ERROR disconnectButton();

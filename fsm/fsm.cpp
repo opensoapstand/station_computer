@@ -23,6 +23,7 @@
 #include "states/stateDispenseIdle.h"
 #include "states/stateDispenseEnd.h"
 #include "states/stateManualPrinter.h"
+#include "states/stateManualPump.h"
 #include "states/stateEnd.h"
 
 #include "objects/dispenser.h"
@@ -36,11 +37,13 @@ std::string stateStrings[FSM_MAX + 1] = {
     "STATE_DISPENSE",
     "STATE_DISPENSE_END",
     "STATE_MANUAL_PRINTER",
+    "STATE_MANUAL_PUMP",
     "STATE_END",
     "FSM_MAX"};
 
 messageMediator *g_pMessaging;                         //debug through local network
 stateVirtual *g_stateArray[FSM_MAX + 1];               //an object for every state
+
 dispenser g_productDispensers[PRODUCT_DISPENSERS_MAX]; //replace the magic number
 
 DF_ERROR initObjects();
@@ -63,6 +66,7 @@ DF_ERROR createStateArray()
         g_stateArray[STATE_DISPENSE] = new stateDispense(g_pMessaging);
         g_stateArray[STATE_DISPENSE_END] = new stateDispenseEnd(g_pMessaging);
         g_stateArray[STATE_MANUAL_PRINTER] = new stateManualPrinter(g_pMessaging);
+        g_stateArray[STATE_MANUAL_PUMP] = new stateManualPump(g_pMessaging);
         g_stateArray[STATE_END] = new stateEnd(g_pMessaging);
         dfRet = OK;
     }

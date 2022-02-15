@@ -15,7 +15,7 @@
 
 #include "stateManualPrinter.h"
 
-#define IDLE_STRING "Idle"
+#define STRING_STATE_MANUAL_PRINTER "Manual Printer"
 
 // Default CTOR
 stateManualPrinter::stateManualPrinter()
@@ -37,7 +37,7 @@ stateManualPrinter::~stateManualPrinter()
 // Overload for Debugger output
 string stateManualPrinter::toString()
 {
-   return IDLE_STRING;
+   return STRING_STATE_MANUAL_PRINTER;
 }
 
 // Sets a looped Idle state

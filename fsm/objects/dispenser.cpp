@@ -173,6 +173,20 @@ DF_ERROR dispenser::stopPump()
     the_8344->stopPump();
 }
 
+// 
+DF_ERROR dispenser::startPump(int pos)
+{
+    debugOutput::sendMessage("-----Start Pump-----", MSG_INFO);
+    the_8344->startPump(pos);
+}
+
+DF_ERROR dispenser::setPumpPWM(int8_t value)
+{
+    debugOutput::sendMessage("-----Set PWM-----", MSG_INFO);
+    the_8344->setPumpPWM((unsigned char)value);
+    
+}
+
 // Disenses products by turning Solenoid Signal to HIGH then to LOW
 DF_ERROR dispenser::startDispense(int pos)
 {
@@ -196,10 +210,18 @@ DF_ERROR dispenser::startDispense(int pos)
     // if(m_isStill && (m_pPump != nullptr) ) {
     //sleep(PRIME_PUMP_TIME);
     forwardPump();
-    the_8344->setPumpPWM((unsigned char)(m_pSelectedProduct->getPWM()));
+    // the_8344->setPumpPWM((unsigned char)(m_pSelectedProduct->getPWM()));
+    setPumpPWM((unsigned char)(m_pSelectedProduct->getPWM()));
+
+
     debugOutput::sendMessage("PWM SET!", MSG_INFO);
     //cout << the_8344->getPumpPWM();
-    the_8344->startPump(pos);
+    
+    
+    //the_8344->startPump(pos);
+    startPump(pos);
+
+
     //}
     return e_ret = OK;
 }

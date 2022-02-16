@@ -41,41 +41,41 @@ static int db_sql_callback(void *data, int argc, char **argv, char **azColName)
 // CTOR with Option Slot
 // TODO: Should call this from Message Mediator
 //       And figure out storage/reference location...
-product::product(int slot)
-{
-    setSlot(slot);
+// product::product(int slot)
+// {
+//     setSlot(slot);
 
-    sqlite3 *db;
-    char *zErrMsg = 0;
-    int rc;
+//     sqlite3 *db;
+//     char *zErrMsg = 0;
+//     int rc;
 
-    string data("CALLBACK FUNCTION");
+//     string data("CALLBACK FUNCTION");
 
-    // FIXME: Figure out better URI file opening reference...
-    rc = sqlite3_open("/home/drinkfill/bitbucket/drinkfill/db/sqlite/drinkfill-sqlite.db", &db);
+//     // FIXME: Figure out better URI file opening reference...
+//     rc = sqlite3_open("/home/drinkfill/bitbucket/drinkfill/db/sqlite/drinkfill-sqlite.db", &db);
 
-    if (rc)
-    {
-        // fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
-    }
-    else
-    {
-        // fprintf(stderr, "Opened database successfully\n");
-    }
+//     if (rc)
+//     {
+//         // fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+//     }
+//     else
+//     {
+//         // fprintf(stderr, "Opened database successfully\n");
+//     }
 
-    string sql = "SELECT inventory.inventory_id, product.product_id,product.name, product.calibration_const, pricing.small_price, pricing.large_price FROM inventory INNER JOIN product ON inventory.product_id = product.product_id INNER JOIN pricing ON inventory.product_id = pricing.product_id WHERE inventory.inventory_id = " + to_string(m_nSlot) + ";";
+//     string sql = "SELECT inventory.inventory_id, product.product_id,product.name, product.calibration_const, pricing.small_price, pricing.large_price FROM inventory INNER JOIN product ON inventory.product_id = product.product_id INNER JOIN pricing ON inventory.product_id = pricing.product_id WHERE inventory.inventory_id = " + to_string(m_nSlot) + ";";
 
-    rc = sqlite3_exec(db, sql.c_str(), db_sql_callback, (void *)data.c_str(), NULL);
+//     rc = sqlite3_exec(db, sql.c_str(), db_sql_callback, (void *)data.c_str(), NULL);
 
-    if (rc != SQLITE_OK)
-        cerr << "Error SELECT" << endl;
-    else
-    {
-        //  cout << "Operation OK!" << endl;
-    }
+//     if (rc != SQLITE_OK)
+//         cerr << "Error SELECT" << endl;
+//     else
+//     {
+//         //  cout << "Operation OK!" << endl;
+//     }
 
-    sqlite3_close(db);
-}
+//     sqlite3_close(db);
+// }
 
 // Test CTOR
 product::product(int slot, string name, double nVolumeDispensed, double nVolumeTarget_l, double nVolumeTarget_s, double calibration_const, double price_l, double price_s, bool isStillProduct, double nVolumePerTick, string nPLU_l, string nPLU_s, string paymentMethod, string name_receipt)
@@ -118,20 +118,6 @@ void product::setProductName(string productName)
     m_name = productName;
 }
 
-// TODO: Redefine function prototype, no argument.
-// void product::setIsStillProduct(bool isStillProduct)
-// {
-//     // TODO: SQLite database Query could be better option.
-//     m_isStillProduct = isStillProduct;
-// }
-
-// TODO: Redefine function prototype, no argument.
-// bool product::getIsStillProduct()
-// {
-//     // TODO: SQLite database Query could be better option.
-//     return m_isStillProduct;
-// }
-
 bool product::registerFlowSensorTick()
 {
     //    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
@@ -166,7 +152,7 @@ double product::getVolumeDispensedPreviously()
 }
 
 // Reset values onEntry()
-DF_ERROR product::startDispense(int nVolumeToDispense, double nPrice)
+DF_ERROR product::initDispense(int nVolumeToDispense, double nPrice)
 {
     DF_ERROR dfRet = ERROR_BAD_PARAMS;
 
@@ -178,8 +164,16 @@ DF_ERROR product::startDispense(int nVolumeToDispense, double nPrice)
     m_nVolumePerTick = getVolPerTick();
     m_PWM = getPWM();
 
+
+    // Set Start Time
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+
+    strftime(m_nStartTime, 50, "%F %T", timeinfo);
+
     return dfRet;
 }
+
 
 int product::getPWM()
 {
@@ -244,17 +238,7 @@ double product::getVolPerTick()
     return vol_per_tick;
 }
 
-DF_ERROR product::initDispense()
-{
-    m_nVolumeDispensed = 0;
-    m_nVolumeDispensedPreviously = 0;
 
-    // Set Start Time
-    time(&rawtime);
-    timeinfo = localtime(&rawtime);
-
-    strftime(m_nStartTime, 50, "%F %T", timeinfo);
-}
 
 DF_ERROR product::stopDispense()
 {

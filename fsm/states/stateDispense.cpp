@@ -132,7 +132,8 @@ DF_ERROR stateDispense::onExit()
 {
    DF_ERROR e_ret = OK;
    //productDispensers[pos].stopDispense(PRODUCT);
-   productDispensers[pos].setIsDispenseComplete(false);
+   //productDispensers[pos].setIsDispenseComplete(false);
 
    return e_ret;
+
 }

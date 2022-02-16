@@ -14,6 +14,7 @@
 // all rights reserved
 //***************************************
 #include "dispenser.h"
+#include <chrono>
 
 #define DEFAULT_PUMP_PWM 0x80
 
@@ -31,7 +32,7 @@ dispenser::dispenser()
     //debugOutput::sendMessage("dispenser", MSG_INFO);
 
     // TODO: Need to build Product Object reference
-    // m_pSelectedProduct = nullptr;
+    // m_pDispensedProduct = nullptr;
 
     // If we haven't instantiated and initialized the hardware yet we
     // do it here.  Note that the pointer is declared as static so we
@@ -62,7 +63,7 @@ dispenser::dispenser(gpio *ButtonReference)
     //debugOutput::sendMessage("dispenser", MSG_INFO);
     m_pButton[0] = ButtonReference;
     //m_pButtonPress[0] = ButtonReference
-    m_pSelectedProduct = nullptr;
+    m_pDispensedProduct = nullptr;
 
     for (int i = 0; i < NUM_SOLENOID; i++)
         m_pSolenoid[i] = nullptr;
@@ -81,7 +82,7 @@ dispenser::~dispenser()
     delete the_8344;
     the_8344 = nullptr;
 
-    // delete [] m_pSelectedProduct;
+    // delete [] m_pDispensedProduct;
 
     // delete [] m_pSolenoid;
     // delete [] m_pFlowsenor;
@@ -100,6 +101,9 @@ void dispenser::initDispenser(int slot)
 
 //     return OK;
 // }
+DF_ERROR dispenser::setSlot(int slot){
+    this->slot = slot;
+}
 
 // TODO: Call this function on Dispense onEntry()
 DF_ERROR dispenser::setFlowsensor(int pin, int pos)
@@ -116,7 +120,7 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
         // Instantiate, set input, spin up a flowsensor thread.
         m_pFlowsenor[pos] = new oddyseyx86GPIO(pin);
         m_pFlowsenor[pos]->setPinAsInputElseOutput(true);
-        m_pFlowsenor[pos]->registerProduct(m_pSelectedProduct);
+        m_pFlowsenor[pos]->registerProduct(m_pDispensedProduct);
         m_pFlowsenor[pos]->startListener_flowsensor();
         e_ret = OK;
     }
@@ -159,9 +163,6 @@ DF_ERROR dispenser::setPumpDirectionForward()
     the_8344->setPumpDirectionForwardElseReverse(true);
 }
 
-unsigned short dispenser::getPumpSpeed(){
-    the_8344->getPumpSpeed();
-}
 bool dispenser::getDispenseButtonValue(){
     the_8344->getButton();
 }
@@ -201,22 +202,62 @@ DF_ERROR dispenser::setPumpPWM(uint8_t value)
 }
 
 // Disenses products by turning Solenoid Signal to HIGH then to LOW
-DF_ERROR dispenser::startDispense(int pos)
+DF_ERROR dispenser::startDispense()
 {
     DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
-    debugOutput::sendMessage("-----Start Dispense-----", MSG_INFO);
-
-    debugOutput::sendMessage("Triggered pump:" + to_string(pos), MSG_INFO);
+    debugOutput::sendMessage("Dispense start. Triggered pump:" + to_string(this->slot), MSG_INFO);
 
     setPumpDirectionForward();
-    setPumpPWM((uint8_t)(m_pSelectedProduct->getPWM()));
-
-    debugOutput::sendMessage("PWM SET!", MSG_INFO);
-    setPumpEnable(pos);
+    setPumpPWM((uint8_t)(m_pDispensedProduct->getPWM()));
+    setPumpEnable(this->slot);
     return e_ret = OK;
 }
 
-DF_ERROR dispenser::stopDispense(int pos)
+double dispenser::getDispensedVolume(){
+    return m_pDispensedProduct->getVolumeDispensed();
+}
+
+
+unsigned short dispenser::getPumpSpeed(){
+    the_8344->getPumpSpeed();
+}
+
+
+double dispenser::getVolumeDeltaAndReset(){
+    // will get volumeDelta since last call of this function
+
+    
+    double currentVolume = getDispensedVolume()
+    double deltaVolume = previousDispensedVolume - currentVolume;
+    previousDispensedVolume = currentVolume;
+    return deltaVolume;
+}
+double dispenser::getInstantFlowRate(){
+    
+    using namespace std::chrono;
+    uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
+}
+
+double dispenser::getAveragedFlowRate1s(){
+    
+}
+
+// flow rate at pump running when pumpspeed is non zero. check intervals. --> 0.5s frame?! 1s frame?
+double dispenser::getFlowRate(){
+
+    // average. x steps. 
+    // if speed is zero, reset average.
+    
+    // get volume change since last check.
+    // get time since last check
+    // calc flow.
+
+    // update avg flowrate.
+
+}
+
+DF_ERROR dispenser::stopDispense()
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
     the_8344->setPumpsDisableAll();
@@ -267,7 +308,7 @@ DF_ERROR dispenser::stopDispense(int pos)
 
 product *dispenser::getProduct()
 {
-    return m_pSelectedProduct;
+    return m_pDispensedProduct;
 }
 
 // Timer based
@@ -298,7 +339,7 @@ DF_ERROR dispenser::setProduct(product *product)
 {
     if (product != nullptr)
     {
-        m_pSelectedProduct = product;
+        m_pDispensedProduct = product;
     }
     else
     {

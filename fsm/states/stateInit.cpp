@@ -204,6 +204,7 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
             paymentMethod = argv[i];
         }
 
+        g_productDispensers[slot - 1].setSlot(slot);
         g_productDispensers[slot - 1].setProduct(
             new product(slot,
                         name,

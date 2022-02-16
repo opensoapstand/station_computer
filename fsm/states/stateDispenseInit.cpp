@@ -65,21 +65,20 @@ DF_ERROR stateDispenseInit::onAction()
     debugOutput::sendMessage("Chosen product: " + std::to_string(pos), MSG_INFO);
 
     // DO THIS IN A STATE DISPENSE_INIT
-    productDispensers[pos].getProduct()->initDispense(); 
-
     // TODO this should be a separate state (dispense_init)
 
-    productDispensers[pos].getProduct()->startDispense(
+    productDispensers[pos].getProduct()->initDispense(
         productDispensers[pos].getProduct()->getTargetVolume(size),
         productDispensers[pos].getProduct()->getPrice(size));
 
     productDispensers[pos].setIsDispenseComplete(false);
+
     productDispensers[pos].getProduct()->productInfo();
     productDispensers[pos].getProduct()->productVolumeInfo();
 
-    productDispensers[pos].startDispense(
-        productDispensers[pos].getProduct()->getProductOption());
-
+    // productDispensers[pos].startDispense(
+    //     productDispensers[pos].getProduct()->getProductOption());
+    productDispensers[pos].startDispense();
     m_state_requested = STATE_DISPENSE_IDLE;
 
     return e_ret;

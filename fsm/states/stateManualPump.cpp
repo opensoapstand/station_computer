@@ -14,6 +14,10 @@
 //***************************************
 
 #include "stateManualPump.h"
+#include <ctime> // only precise to the second
+#include <chrono>
+
+
 
 #define STRING_STATE_MANUAL_PUMP "Manual Pump"
 
@@ -117,6 +121,10 @@ DF_ERROR stateManualPump::onAction()
 
    if (productDispensers[0].getDispenseButtonValue()){
       debugOutput::sendMessage("dispense button pressed.", MSG_INFO);
+
+      double volume = productDispensers[0].getDispensedVolume();
+      debugOutput::sendMessage("Dispensed volume: " + to_string(volume), MSG_INFO);
+      
       usleep(500000);
    }
 
@@ -127,8 +135,13 @@ DF_ERROR stateManualPump::onAction()
       string msg = "Pump speed: " + value;
       debugOutput::sendMessage(msg, MSG_INFO);
       
+      using namespace std::chrono;
+      uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
+      debugOutput::sendMessage("Millis since epoch: " + to_string(millis_since_epoch), MSG_INFO);
+      
       usleep(500000);
+
    }
    e_ret = OK;
 

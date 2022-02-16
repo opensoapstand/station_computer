@@ -62,8 +62,8 @@ public:
       DF_ERROR setPump(int mcpAddress, int pin, int position);
       DF_ERROR setFlowsensor(int pinint, int pos);
 
-      DF_ERROR startDispense(int pos);
-      DF_ERROR stopDispense(int pos); //reached dispense value
+      DF_ERROR startDispense();
+      DF_ERROR stopDispense();
 
       unsigned short getPumpSpeed(); 
       bool isPumpEnabled(); 
@@ -73,11 +73,7 @@ public:
       DF_ERROR setPumpEnable(int pos);    
       DF_ERROR setPumpPWM(uint8_t value);    
       bool getDispenseButtonValue();
-
-      // DF_ERROR connectButton();
-      // DF_ERROR disconnectButton();
-
-      //      DF_ERROR buttonPressListener();
+      double getDispensedVolume();
 
       bool getIsDispenseComplete() { return m_isDispenseDone; }
       void setIsDispenseComplete(bool isDispenseComplete) { m_isDispenseDone = isDispenseComplete; }
@@ -85,10 +81,6 @@ public:
       void setm_pIsDispenseDone() { *m_pIsDispensing = false; }
       void setm_pIsDispensing() { *m_pIsDispensing = true; }
       void setm_pRestartDispense() { *m_pIsDispensing = false; }
-
-      // DF_ERROR cleanNozzle(int posW, int posA);
-
-      // DF_ERROR testSolenoidDispense(int pos);
 
       product *getProduct();
 
@@ -98,6 +90,7 @@ public:
       int getI2CPin(int pos);
 
       DF_ERROR setButtonsShutdownAndMaintenance();
+      DF_ERROR setSlot(int slot);
 
       //      DF_ERROR setButtonPress(int address_num, int pin_num);
       bool reader = true;
@@ -110,7 +103,10 @@ public:
 private:
       // We only want to create one instance of the class that controls
       // the actual hardware, so declare this static.
+      
       static dsed8344 *the_8344;
+
+      int slot;
 
       unsigned char pump_position;
       
@@ -123,7 +119,7 @@ private:
 
       bool m_isDispenseNew;
 
-      product *m_pSelectedProduct;
+      product *m_pDispensedProduct;
 
       DF_ERROR *m_pthreadError;
 

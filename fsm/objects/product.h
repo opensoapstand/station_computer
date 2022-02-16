@@ -33,7 +33,7 @@ class product
 {
 public:
         product();
-        product(int slot);
+        // product(int slot);
         product(int slot, string name, double nDispenseVolume, double nTargetVolume_l, double nTargetVolume_s, double calibration_const, double price_l, double price_s, bool isStillProduct, double nVolumePerTick, string nPLU_l, string nPLU_s, string paymentMethod, string name_receipt);
         ~product();
 
@@ -50,10 +50,8 @@ public:
         //void setTargetVolume(double nVolumeTarget){m_nVolumeTarget = nVolumeTarget;};
 
         // Interrupt Helpers
-        DF_ERROR startDispense(int nVolumeToDispense, double nPrice);
+        DF_ERROR initDispense(int nVolumeToDispense, double nPrice);
         DF_ERROR stopDispense();
-
-        DF_ERROR initDispense();
 
         double getVolumeSinceLastPoll();
         bool isDispenseComplete();

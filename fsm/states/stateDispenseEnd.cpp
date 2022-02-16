@@ -51,7 +51,7 @@ DF_ERROR stateDispenseEnd::onEntry()
     pos = pos - 1;
     size = m_pMessaging->getRequestedVolume();
 
-    productDispensers[pos].stopDispense(pos);
+    productDispensers[pos].stopDispense();
 
     return e_ret;
 }

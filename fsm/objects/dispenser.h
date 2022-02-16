@@ -65,11 +65,14 @@ public:
       DF_ERROR startDispense(int pos);
       DF_ERROR stopDispense(int pos); //reached dispense value
 
-      DF_ERROR forwardPump(); 
-      DF_ERROR reversePump(); 
-      DF_ERROR disableAllPumps();    
-      DF_ERROR enablePump(int pos);    
-      DF_ERROR setPumpPWM(int8_t value);    
+      unsigned short getPumpSpeed(); 
+      bool isPumpEnabled(); 
+      DF_ERROR setPumpDirectionForward(); 
+      DF_ERROR setPumpDirectionReverse(); 
+      DF_ERROR setPumpsDisableAll();    
+      DF_ERROR setPumpEnable(int pos);    
+      DF_ERROR setPumpPWM(uint8_t value);    
+      bool getDispenseButtonValue();
 
       // DF_ERROR connectButton();
       // DF_ERROR disconnectButton();
@@ -110,10 +113,12 @@ private:
       static dsed8344 *the_8344;
 
       unsigned char pump_position;
+      
 
       bool m_isDispenseDone; // XXX: Remove later.
       bool m_isStill;
 
+      bool m_isPumpEnabled;
       bool *m_pIsDispensing;
 
       bool m_isDispenseNew;

@@ -42,13 +42,13 @@ public:
     ~dsed8344();
 
     unsigned char getPumpPWM(void);
-    bool setPumpPWM(unsigned char pwm_val);
-    bool setPumpDirection(bool direction);
-    bool enablePump(unsigned char pump_number);
-    bool disableAllPumps();
-    unsigned short getPumpTach(void);
+    bool setPumpPWM(uint8_t pwm_val);
+    bool setPumpDirectionForwardElseReverse(bool direction);
+    bool setPumpEnable(unsigned char pump_number);
+    bool setPumpsDisableAll();
+    unsigned short getPumpSpeed(void);
     bool getButton(void);
-    void setButtonPower(bool poweron);
+    void setDispenseButtonLight(bool poweron);
 
 private:
     int i2c_handle = -1;

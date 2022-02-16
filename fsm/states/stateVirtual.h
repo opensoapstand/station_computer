@@ -38,8 +38,8 @@ public:
     virtual DF_ERROR onAction() = 0;
     virtual DF_ERROR onExit() = 0;
 
-    gpio *getSolenoid(int pos, int type);
-    gpio *getButton();
+    // gpio *getSolenoid(int pos, int type);
+    // gpio *getButton();
 
     static product *testProducts[PRODUCT_DISPENSERS_MAX];
 

@@ -44,7 +44,7 @@ dispenser::dispenser()
 
     // Set the pump PWM value to a nominal value
     the_8344->setPumpPWM(DEFAULT_PUMP_PWM);
-    the_8344->setButtonPower(false);
+    the_8344->setDispenseButtonLight(false);
 
     for (int i = 0; i < NUM_SOLENOID; i++)
         m_pSolenoid[i] = nullptr;
@@ -153,34 +153,48 @@ DF_ERROR dispenser::setPump(int mcpAddress, int pin, int position)
 
 // TODO: Refactor Pumping with switch and ternary in future...keep seperate for ease of testing.
 // Reverse pump: Turn forward pin HIGH - Reverse pin LOW
-DF_ERROR dispenser::forwardPump()
+DF_ERROR dispenser::setPumpDirectionForward()
 {
     debugOutput::sendMessage("-----FORWARD Pump-----", MSG_INFO);
-    the_8344->setPumpDirection(true);
+    the_8344->setPumpDirectionForwardElseReverse(true);
+}
+
+unsigned short dispenser::getPumpSpeed(){
+    the_8344->getPumpSpeed();
+}
+bool dispenser::getDispenseButtonValue(){
+    the_8344->getButton();
 }
 
 // Reverse pump: Turn forward pin LOW - Reverse pin HIGH
-DF_ERROR dispenser::reversePump()
+DF_ERROR dispenser::setPumpDirectionReverse()
 {
     debugOutput::sendMessage("-----REVERSE Pump-----", MSG_INFO);
-    the_8344->setPumpDirection(false);
+    the_8344->setPumpDirectionForwardElseReverse(false);
 }
 
 // Stops pumping: Turn forward pin LOW - Reverse pin LOW
-DF_ERROR dispenser::disableAllPumps()
+DF_ERROR dispenser::setPumpsDisableAll()
 {
     debugOutput::sendMessage("-----Stop Pump-----", MSG_INFO);
-    the_8344->disableAllPumps();
+    the_8344->setPumpsDisableAll();
+    m_isPumpEnabled = false;
 }
 
-DF_ERROR dispenser::enablePump(int pos)
+bool dispenser::isPumpEnabled()
+{
+    return m_isPumpEnabled;
+}
+
+DF_ERROR dispenser::setPumpEnable(int pos)
 {
     // still needs dispense button to actually get the pump to start
     debugOutput::sendMessage("-----Start Pump-----", MSG_INFO);
-    the_8344->enablePump(pos);
+    the_8344->setPumpEnable(pos);
+    m_isPumpEnabled = true;
 }
 
-DF_ERROR dispenser::setPumpPWM(int8_t value)
+DF_ERROR dispenser::setPumpPWM(uint8_t value)
 {
     debugOutput::sendMessage("-----Set PWM-----", MSG_INFO);
     the_8344->setPumpPWM((unsigned char)value);
@@ -194,18 +208,18 @@ DF_ERROR dispenser::startDispense(int pos)
 
     debugOutput::sendMessage("Triggered pump:" + to_string(pos), MSG_INFO);
 
-    forwardPump();
-    setPumpPWM((unsigned char)(m_pSelectedProduct->getPWM()));
+    setPumpDirectionForward();
+    setPumpPWM((uint8_t)(m_pSelectedProduct->getPWM()));
 
     debugOutput::sendMessage("PWM SET!", MSG_INFO);
-    enablePump(pos);
+    setPumpEnable(pos);
     return e_ret = OK;
 }
 
 DF_ERROR dispenser::stopDispense(int pos)
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
-    the_8344->disableAllPumps();
+    the_8344->setPumpsDisableAll();
     debugOutput::sendMessage("Pump disabled", MSG_INFO);
 
     // XXX: Disable Button - Linked thru State Virtual

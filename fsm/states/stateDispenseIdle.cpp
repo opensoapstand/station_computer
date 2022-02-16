@@ -48,21 +48,10 @@ DF_ERROR stateDispenseIdle::onEntry()
 
     productDispensers[pos].setIsDispenseComplete(false);
 
-    if (productDispensers[pos].getProduct()->getVolumeDispensed() == 0)
-    {
-        // TODO this should be a separate state (dispense_init)
-
-        productDispensers[pos].getProduct()->startDispense(
-            productDispensers[pos].getProduct()->getTargetVolume(size),
-            productDispensers[pos].getProduct()->getPrice(size));
-
-        productDispensers[pos].setIsDispenseComplete(false);
-        productDispensers[pos].getProduct()->productInfo();
-        productDispensers[pos].getProduct()->productVolumeInfo();
-
-        productDispensers[pos].startDispense(
-            productDispensers[pos].getProduct()->getProductOption());
-    }
+    // if (productDispensers[pos].getProduct()->getVolumeDispensed() == 0)
+    // {
+     
+    // }
 
     return e_ret;
 }

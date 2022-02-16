@@ -90,12 +90,12 @@ unsigned char dsed8344::getPumpPWM(void)
     return ReadByte(MAX31760_ADDRESS, 0x50); // PWM value
 } // End of getPumpRPM()
 
-bool dsed8344::setPumpPWM(unsigned char pwm_val)
+bool dsed8344::setPumpPWM(uint8_t pwm_val)
 {
     return SendByte(MAX31760_ADDRESS, 0x50, pwm_val); // PWM value
 } // End of setPumpPWM()
 
-bool dsed8344::setPumpDirection(bool direction)
+bool dsed8344::setPumpDirectionForwardElseReverse(bool direction)
 {
     unsigned char pwm_value;
     unsigned char reg_value;
@@ -124,7 +124,7 @@ bool dsed8344::setPumpDirection(bool direction)
     return true;
 } // End of seyPumpDirection()
 
-bool dsed8344::enablePump(unsigned char pump_number)
+bool dsed8344::setPumpEnable(unsigned char pump_number)
 {
     unsigned char reg_value;
 
@@ -149,9 +149,9 @@ bool dsed8344::enablePump(unsigned char pump_number)
     SendByte(PCA9534_ADDRESS, 0x01, reg_value);
 
     return true;
-} // End enablePump()
+} // End setPumpEnable()
 
-bool dsed8344::disableAllPumps()
+bool dsed8344::setPumpsDisableAll()
 {
     unsigned char reg_value;
 
@@ -160,21 +160,22 @@ bool dsed8344::disableAllPumps()
     SendByte(PCA9534_ADDRESS, 0x01, reg_value);
 
     return true;
-} // End disableAllPumps()
+} // End setPumpsDisableAll()
 
-unsigned short dsed8344::getPumpTach(void)
+unsigned short dsed8344::getPumpSpeed(void)
 {
+    // 2 byte value. standstill is max 65535 , lower is faster. (about 200 is max?! (tested with an idle pump))
     return ((ReadByte(MAX31760_ADDRESS, 0x52) << 8) |
             ReadByte(MAX31760_ADDRESS, 0x53));
 
-} // End of getpumpTach()
+} // End of getPumpSpeed()
 
 bool dsed8344::getButton(void)
 {
     return ((ReadByte(PCA9534_ADDRESS, 0x00) & 0x80) ? false : true);
 } // End of getButton()
 
-void dsed8344::setButtonPower(bool poweron)
+void dsed8344::setDispenseButtonLight(bool poweron)
 {
     unsigned char reg_value;
 
@@ -189,7 +190,7 @@ void dsed8344::setButtonPower(bool poweron)
     }
     SendByte(PCA9534_ADDRESS, 0x01, reg_value);
 
-} // End of setButtonPower()
+} // End of setDispenseButtonLight()
 
 ///////////////////////////////////////////////////////////////////////////
 // Private methods

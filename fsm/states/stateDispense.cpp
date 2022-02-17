@@ -96,6 +96,10 @@ DF_ERROR stateDispense::onAction()
 
       // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
       m_pMessaging->sendMessage(to_string(productDispensers[pos].getProduct()->getVolumeDispensed()));
+      debugOutput::sendMessage("debug. target(small): " + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_s) +". target(large): " + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_l) + "Vol dispensed: " + to_string(productDispensers[pos].getProduct()->getVolumeDispensed()), MSG_INFO);
+      
+
+
 
       if (productDispensers[pos].getProduct()->getVolumeDispensedPreviously() == productDispensers[pos].getProduct()->getVolumeDispensed())
       {

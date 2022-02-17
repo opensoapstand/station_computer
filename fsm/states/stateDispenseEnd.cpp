@@ -331,6 +331,8 @@ DF_ERROR stateDispenseEnd::updateDB()
     std::string price = to_string(productDispensers[pos].getProduct()->getPrice(size));
     std::string start_time = (productDispensers[pos].getProduct()->m_nStartTime);
     std::string dispensed_volume;
+    debugOutput::sendMessage("dispenseenddbadd: vol dispensed: " + to_string(productDispensers[pos].getProduct()->getVolumeDispensed()), MSG_INFO);
+    
     if (productDispensers[pos].getProduct()->m_nVolumeDispensed == productDispensers[pos].getProduct()->m_nVolumePerTick)
     {
         dispensed_volume = "0";

@@ -16,13 +16,22 @@
 #define XML_SETTINGS "/release/df_settings.xml"
 
 #include <sqlite3.h>
+#include <stdint.h>
 
 #define PRODUCT_DISPENSERS_MAX 4
 #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 
-
+#define MILLIS_INIT_DUMMY 0
 #define IO_PIN_FLOW_SENSOR 364
 #define IO_PIN_FLOW_SENSOR_STRING "364"
+#define RUNNING_AVERAGE_WINDOW_LENGTH 100
+
+struct Time_val{
+   uint64_t time_millis;
+   double value;
+};
+typedef struct Time_val Time_val;
+
 
 typedef enum DF_FSM
 {

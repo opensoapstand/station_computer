@@ -30,15 +30,16 @@ public:
 
     string toString();
     DF_ERROR pumpTest();
+    DF_ERROR pumpFlowTest();
 
     DF_ERROR onEntry();
     DF_ERROR onAction();
     DF_ERROR onExit();
-   
 
 private:
     dispenser *productDispensers;
-   
+    bool isFlowTest;
+    uint64_t startFlowTestMillis;
 };
 
 #endif

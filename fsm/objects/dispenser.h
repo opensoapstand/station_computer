@@ -21,7 +21,7 @@
 #include "../components/dsed8344.h"
 #include "../components/odysseyx86gpio.h"
 #include "product.h"
-
+// #include <stdint.h>
 // Total Number of Devices
 #define NUM_SOLENOID 3 //12v for drink,water, and air
 #define NUM_PUMP 2     //forward and reverse pin
@@ -75,6 +75,16 @@ public:
       bool getDispenseButtonValue();
       double getDispensedVolume();
 
+      double getVolumeDeltaAndReset();
+      // DF_ERROR updateVolumeDelta();
+      double getInstantFlowRate();
+
+      Time_val getDispensedVolumeNow();
+      DF_ERROR updateRunningAverageWindow();
+
+
+      Time_val getAveragedFlowRate(uint64_t window_length_millis);
+
       bool getIsDispenseComplete() { return m_isDispenseDone; }
       void setIsDispenseComplete(bool isDispenseComplete) { m_isDispenseDone = isDispenseComplete; }
 
@@ -107,7 +117,11 @@ private:
       static dsed8344 *the_8344;
 
       int slot;
+      Time_val flowRateBuffer[RUNNING_AVERAGE_WINDOW_LENGTH];
+      int flowRateBufferIndex;
 
+      uint64_t millisAtLastCheck;
+      double previousDispensedVolume;
       unsigned char pump_position;
       
 

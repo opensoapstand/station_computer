@@ -26,6 +26,7 @@
 
 dsed8344 *dispenser::the_8344 = nullptr;
 
+// CTOR
 dispenser::dispenser()
 {
     //default constructor to set all pin to nullptr
@@ -53,12 +54,22 @@ dispenser::dispenser()
     m_pFlowsenor[NUM_FLOWSENSOR] = nullptr;
 
     for (int i = 0; i < NUM_PUMP; i++)
+    {
+
         m_pPump[i] = nullptr;
+    }
+
+    millisAtLastCheck = MILLIS_INIT_DUMMY;
+    previousDispensedVolume = 0;
 }
 
-// CTOR
+/*
 dispenser::dispenser(gpio *ButtonReference)
 {
+
+    // NOT USED. To be reimplemented maybe.
+
+
     //default constructor to set all pin to nullptr
     //debugOutput::sendMessage("dispenser", MSG_INFO);
     m_pButton[0] = ButtonReference;
@@ -73,7 +84,7 @@ dispenser::dispenser(gpio *ButtonReference)
     for (int i = 0; i < NUM_PUMP; i++)
         m_pPump[i] = nullptr;
 }
-
+*/
 // DTOR
 dispenser::~dispenser()
 {
@@ -101,7 +112,8 @@ void dispenser::initDispenser(int slot)
 
 //     return OK;
 // }
-DF_ERROR dispenser::setSlot(int slot){
+DF_ERROR dispenser::setSlot(int slot)
+{
     this->slot = slot;
 }
 
@@ -163,7 +175,8 @@ DF_ERROR dispenser::setPumpDirectionForward()
     the_8344->setPumpDirectionForwardElseReverse(true);
 }
 
-bool dispenser::getDispenseButtonValue(){
+bool dispenser::getDispenseButtonValue()
+{
     the_8344->getButton();
 }
 
@@ -210,52 +223,198 @@ DF_ERROR dispenser::startDispense()
     setPumpDirectionForward();
     setPumpPWM((uint8_t)(m_pDispensedProduct->getPWM()));
     setPumpEnable(this->slot);
+
+    flowRateBufferIndex = 0;
+    for (uint16_t i = 0; i < RUNNING_AVERAGE_WINDOW_LENGTH; i++)
+    {
+        flowRateBuffer[i].time_millis = MILLIS_INIT_DUMMY;
+        flowRateBuffer[i].value = 0;
+    }
+
     return e_ret = OK;
 }
 
-double dispenser::getDispensedVolume(){
+double dispenser::getDispensedVolume()
+{
     return m_pDispensedProduct->getVolumeDispensed();
 }
 
-
-unsigned short dispenser::getPumpSpeed(){
+unsigned short dispenser::getPumpSpeed()
+{
     the_8344->getPumpSpeed();
 }
 
-
-double dispenser::getVolumeDeltaAndReset(){
+double dispenser::getVolumeDeltaAndReset()
+{
     // will get volumeDelta since last call of this function
 
-    
-    double currentVolume = getDispensedVolume()
-    double deltaVolume = previousDispensedVolume - currentVolume;
+    double currentVolume = getDispensedVolume();
+    double deltaVolume = currentVolume - previousDispensedVolume;
     previousDispensedVolume = currentVolume;
     return deltaVolume;
 }
-double dispenser::getInstantFlowRate(){
-    
+
+double dispenser::getInstantFlowRate()
+{
+
+    using namespace std::chrono;
+    uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    double volumeDelta = getVolumeDeltaAndReset();
+    double flowRate = 0;
+    if (millisAtLastCheck != MILLIS_INIT_DUMMY)
+    {
+        uint64_t millisDelta = millis_since_epoch - millisAtLastCheck;
+        // debugOutput::sendMessage("Avg flow rate: millisdelta: " + to_string(millisDelta), MSG_INFO);
+        // debugOutput::sendMessage("Avg flow rate: volume delta: " + to_string(volumeDelta), MSG_INFO);
+        flowRate = (volumeDelta / millisDelta) * 1000.0; // volume per second.
+    }
+    else
+    {
+        flowRate = 0;
+    }
+
+    millisAtLastCheck = millis_since_epoch;
+    return flowRate;
+}
+
+Time_val dispenser::getDispensedVolumeNow()
+{
+    Time_val tv;
+    tv.value = getDispensedVolume();
     using namespace std::chrono;
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
+    tv.time_millis = millis_since_epoch;
+    return tv;
 }
 
-double dispenser::getAveragedFlowRate1s(){
-    
+Time_val dispenser::getAveragedFlowRate(uint64_t window_length_millis)
+{
+    // check for most recent datapoint
+    // check for earliest datapoint
+    // if dt less then window, just give total average
+    // if dt more then window, search for point closest to window
+
+    Time_val result;
+    Time_val most_recent;
+    uint64_t most_recent_millis = 0;
+    Time_val earliest;
+    uint64_t earliest_millis = 0xFFFFFFFFFFFFFFFF;
+
+    for (uint16_t i = 0; i < RUNNING_AVERAGE_WINDOW_LENGTH; i++)
+    {
+        // debugOutput::sendMessage("Avg flow rate: run through window buffer: " + to_string(flowRateBuffer[i].time_millis), MSG_INFO);
+        if (flowRateBuffer[i].time_millis != MILLIS_INIT_DUMMY && flowRateBuffer[i].time_millis > most_recent_millis)
+        {
+            // more recent found
+            most_recent_millis = flowRateBuffer[i].time_millis;
+            most_recent.time_millis = flowRateBuffer[i].time_millis;
+            most_recent.value = flowRateBuffer[i].value;
+        }
+        if (flowRateBuffer[i].time_millis != MILLIS_INIT_DUMMY && flowRateBuffer[i].time_millis < earliest_millis)
+        {
+            // earlier found
+            earliest_millis = flowRateBuffer[i].time_millis;
+            earliest.time_millis = flowRateBuffer[i].time_millis;
+            earliest.value = flowRateBuffer[i].value;
+        }
+    }
+    if (most_recent_millis == 0 || earliest_millis == 0xFFFFFFFFFFFFFFFF)
+    {
+        // debugOutput::sendMessage("Avg flow rate: no values yet.", MSG_INFO);
+        result.value = 0;
+        result.time_millis = most_recent_millis;
+        return result;
+    }
+
+    uint64_t delta_t = most_recent_millis - earliest_millis;
+    // debugOutput::sendMessage("Avg flow rate delta t: " + to_string(delta_t), MSG_INFO);
+    // debugOutput::sendMessage("Avg flow rate most recent t: " + to_string(most_recent_millis), MSG_INFO);
+    // debugOutput::sendMessage("Avg flow rate earliest t: " + to_string(earliest_millis), MSG_INFO);
+
+    if (delta_t < 1)
+    {
+        // debugOutput::sendMessage("Avg flow rate: not enough values yet.", MSG_INFO);
+        result.value = 0;
+        result.time_millis = most_recent_millis;
+        return result;
+    }
+
+    double avg_vol_per_sec;
+
+    // window smaller than requested
+    if (delta_t <= window_length_millis)
+    {
+
+        avg_vol_per_sec = ((most_recent.value - earliest.value) / delta_t) * 1000;
+        // debugOutput::sendMessage("Avg flow rate: Less values then window request.", MSG_INFO);
+        result.value = avg_vol_per_sec;
+        result.time_millis = most_recent_millis;
+        return result;
+    }
+
+    // window bigger than requested
+
+    uint64_t requested_earliest_time_millis = most_recent.time_millis - window_length_millis;
+    uint64_t deviation = 0xFFFFFFFFFFFFFFFF;
+    Time_val window_earliest;
+
+    for (uint16_t i = 0; i < RUNNING_AVERAGE_WINDOW_LENGTH; i++)
+    {
+        int64_t diff = requested_earliest_time_millis - flowRateBuffer[i].time_millis;
+        if (most_recent.time_millis != flowRateBuffer[i].time_millis && abs(diff) <= deviation)
+        {
+            // find most accurate time point to account for window size
+            deviation = abs(diff);
+            window_earliest.time_millis = flowRateBuffer[i].time_millis;
+            window_earliest.value = flowRateBuffer[i].value;
+        }
+    }
+    delta_t = most_recent.time_millis - window_earliest.time_millis;
+
+    avg_vol_per_sec = ((most_recent.value - window_earliest.value) / delta_t) * 1000;
+    // debugOutput::sendMessage("Avg flow rate: Good values. between: "
+    //     + to_string(window_earliest.time_millis)
+    //     + " and "
+    //     + to_string(most_recent.time_millis)
+    //     , MSG_INFO);
+    result.value = avg_vol_per_sec;
+    result.time_millis = most_recent_millis;
+    return result;
 }
 
-// flow rate at pump running when pumpspeed is non zero. check intervals. --> 0.5s frame?! 1s frame?
-double dispenser::getFlowRate(){
+DF_ERROR dispenser::updateRunningAverageWindow()
+{
+    DF_ERROR e_ret;
 
-    // average. x steps. 
-    // if speed is zero, reset average.
-    
-    // get volume change since last check.
-    // get time since last check
-    // calc flow.
+    Time_val tv = getDispensedVolumeNow();
 
-    // update avg flowrate.
+    flowRateBuffer[flowRateBufferIndex].time_millis = tv.time_millis;
+    flowRateBuffer[flowRateBufferIndex].value = tv.value;
+    // debugOutput::sendMessage("updateRunningAverageWindow: index: " + to_string(flowRateBufferIndex) + " " + to_string(tv.time_millis) + ": " + to_string(tv.value), MSG_INFO);
 
+    flowRateBufferIndex++;
+    if (flowRateBufferIndex >= RUNNING_AVERAGE_WINDOW_LENGTH)
+    {
+        flowRateBufferIndex = 0;
+    }
+
+    return e_ret = OK;
 }
+
+// // flow rate at pump running when pumpspeed is non zero. check intervals. --> 0.5s frame?! 1s frame?
+// double dispenser::getFlowRate(){
+
+//     // average. x steps.
+//     // if speed is zero, reset average.
+
+//     // get volume change since last check.
+//     // get time since last check
+//     // calc flow.
+
+//     // update avg flowRate.
+
+// }
 
 DF_ERROR dispenser::stopDispense()
 {

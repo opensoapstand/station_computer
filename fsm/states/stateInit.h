@@ -3,17 +3,17 @@
 // stateinit.h
 // init state class
 //
-// Set Objects for FSM and Addresses for 
+// Set Objects for FSM and Addresses for
 // GPIO's through XML Reference.
 // Check all Hardware is operational.
-// Initialize threads for operation and 
+// Initialize threads for operation and
 // communication in machine.
 // Connect or create database.
 //
-// created: 12-06-2020
-// by: Denis Londry & Li-Yan Tong
+// created: 01-2022
+// by: Lode Ameije & Ash Singla
 //
-// copyright 2020 by Drinkfill Beverages Ltd
+// copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
 
@@ -27,63 +27,55 @@
 
 class stateInit : public stateVirtual
 {
-    public:
-        stateInit();
-        stateInit(messageMediator * message); //debug through local network 
-        ~stateInit();
+public:
+    stateInit();
+    stateInit(messageMediator *message); //debug through local network
+    ~stateInit();
 
-        string toString();
+    string toString();
 
-        TiXmlElement *getSolenoid(char* dispenserID); 
+    TiXmlElement *getSolenoid(char *dispenserID);
 
-        DF_ERROR onEntry();
-        DF_ERROR onAction();
-        DF_ERROR onExit();
+    DF_ERROR onEntry();
+    DF_ERROR onAction();
+    DF_ERROR onExit();
 
-        DF_ERROR dispenserSetup();
+    DF_ERROR dispenserSetup();
 
+private:
+    TiXmlDocument *m_pXMLSettings;
+    TiXmlElement *m_pRoot, *m_pHardware, *m_pDispenser;
 
-    private:   
-        TiXmlDocument *m_pXMLSettings;
-        TiXmlElement *m_pRoot, *m_pHardware, *m_pDispenser;
+    const char *dispenserId[PRODUCT_DISPENSERS_MAX];
 
-        const char* dispenserId[CASSETTES_MAX];
+    DF_ERROR setDispenserId();
+    DF_ERROR setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx, dispenser *productDispensers);
+    DF_ERROR setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx, dispenser *productDispensers);
+    DF_ERROR setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser *productDispensers);
+    DF_ERROR setButton(TiXmlElement *hardwareEle, int dispenserIdx);
+    DF_ERROR setProducts();
 
-        DF_ERROR setDispenserId();
-        DF_ERROR setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes);
-        DF_ERROR setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes);
-        DF_ERROR setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser* cassettes);
-        DF_ERROR setButton(TiXmlElement *hardwareEle, int dispenserIdx);
-        //DF_ERROR setButtonPress(TiXmlElement *hardwareEle, int dispenserIdx, dispenser* cassettes);
-        DF_ERROR setDrinks();
+    const char *getXML(const char *subHeader, TiXmlElement *childEle);
 
-        const char* getXML(const char* subHeader, TiXmlElement *childEle);
-
-        sqlite3 *db;
-        int rc;
-
-        //static int callback(void *data, int argc, char **argv, char **azColName);
-
-        int slot;
-        string name;
-        double volume_dispensed;
-        double volume_target_l;
-        double volume_target_s;
-        double calibration_const;
-        double price_l;
-        double price_s;
-        int is_still;
-        double volume_per_tick;
-
-        bool level = true;
-
-    protected:
-//        mcpGPIO *i2c_tester;
+    sqlite3 *db;
+    int rc;
 
 
+    int slot;
+    string name;
+    double volume_dispensed;
+    double volume_target_l;
+    double volume_target_s;
+    double calibration_const;
+    double price_l;
+    double price_s;
+    int is_still;
+    double volume_per_tick;
+
+    bool level = true;
+
+protected:
 };
-
-#define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 
 // **** XML DEPTH ***
 //first layer

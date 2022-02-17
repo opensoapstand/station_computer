@@ -357,8 +357,21 @@ public:
      */
     hasPaper();
 
+  // char
+  //   /*!
+  //    * @brief Whether or not the printer has paper
+  //    * @return Returns true if there is still paper
+  //    */
+  //   hasPaperString();
+
+    void cancelCustomCharacters();
+    void connectToPrinter();
+    void disconnectPrinter();
+    bool testComms();
+
 private:
   mn::CppLinuxSerial::SerialPort serialPort;
+
   uint8_t printMode,
       prevByte,      // Last character issued to printer
       column,        // Last horizontal column printed

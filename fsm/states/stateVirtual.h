@@ -3,10 +3,10 @@
 // statevirtual.h
 // virtual state class
 //
-// created: 12-06-2020
-// by: Denis Londry
+// created: 01-2022
+// by: Lode Ameije & Ash Singla
 //
-// copyright 2020 by Drinkfill Beverages Ltd
+// copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
 
@@ -20,48 +20,39 @@
 #include "../objects/debugOutput.h"
 #include "../objects/dispenser.h"
 
-// TODO: Move reference to XML
-#define CASSETTES_MAX 9
 
 using namespace std;
 class stateVirtual
 {
-    public:
-        stateVirtual();
-        stateVirtual(messageMediator * message);
-        ~stateVirtual();
+public:
+    stateVirtual();
+    stateVirtual(messageMediator *message);
+    ~stateVirtual();
 
-        virtual string toString() = 0;
+    virtual string toString() = 0;
 
-        DF_FSM getNextState();
-        DF_FSM getCurrentState();
+    DF_FSM getRequestedState();
+    // DF_FSM getCurrentState();
 
-        virtual DF_ERROR onEntry() = 0;
-        virtual DF_ERROR onAction() = 0;
-        virtual DF_ERROR onExit() = 0;
+    virtual DF_ERROR onEntry() = 0;
+    virtual DF_ERROR onAction() = 0;
+    virtual DF_ERROR onExit() = 0;
 
-        gpio* getSolenoid(int pos, int type);
-        gpio* getButton();
-        
-        static drink* testDrinks[CASSETTES_MAX];
+    // gpio *getSolenoid(int pos, int type);
+    // gpio *getButton();
 
-        // // FIXME: Cludgey fix to exit dispense loop.
-        // bool getIsDispenseComplete(){return m_isDispenseComplete;}
-        // void setIsDispenseComplete(bool isDispenseComplete){m_isDispenseComplete = isDispenseComplete;}
+    static product *testProducts[PRODUCT_DISPENSERS_MAX];
 
-    protected:
-        DF_FSM  m_state;
-        DF_FSM  m_nextState;
-        gpio *m_pButton[NUM_BUTTON];
-//        mcpGPIO *m_pButtonPress;
-        messageMediator * m_pMessaging;
+protected:
+    // DF_FSM m_state;
+    DF_FSM m_state_requested;
+    gpio *m_pButton[NUM_BUTTON];
+    messageMediator *m_pMessaging;
 
-        // Unique Reference to selected Drink
-        unique_ptr<drink> selectedDrinkPtr;
-        // Unique Reference to currently selected Dispenser
-        unique_ptr<dispenser> selectedDispenserPtr;
-
+    // Unique Reference to selected Product
+    unique_ptr<product> selectedProductPtr;
+    // Unique Reference to currently selected Dispenser
+    unique_ptr<dispenser> selectedDispenserPtr;
 };
-
 
 #endif

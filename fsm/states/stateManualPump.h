@@ -1,7 +1,7 @@
 //***************************************
 //
-// statedispense.h
-// dispense state class
+// stateManualPump.h
+// idle state class
 //
 // created: 01-2022
 // by:Lode Ameije & Ash Singla
@@ -10,32 +10,36 @@
 // all rights reserved
 //***************************************
 
-#ifndef STATEDISPENSE__H_
-#define STATEDISPENSE__H_
+#ifndef STATEMANUALPUMP__H_
+#define STATEMANUALPUMP__H_
 
 #include "../dftypes.h"
 #include "../objects/messageMediator.h"
-#include "../fsm.h"
-
 #include "stateVirtual.h"
+#include "../fsm.h"
+#include "../objects/product.h"
 
-class stateDispense : public stateVirtual
+#include <string>
+
+class stateManualPump : public stateVirtual
 {
 public:
-    stateDispense();
-    stateDispense(messageMediator *message);
-    ~stateDispense();
+    stateManualPump();
+    stateManualPump(messageMediator *message); //debug through local network
+    ~stateManualPump();
 
     string toString();
+    DF_ERROR pumpTest();
+    DF_ERROR pumpFlowTest();
 
     DF_ERROR onEntry();
     DF_ERROR onAction();
     DF_ERROR onExit();
 
 private:
-    int pos;
     dispenser *productDispensers;
-    bool flushCommand;
-    char size;
+    bool isFlowTest;
+    uint64_t startFlowTestMillis;
 };
+
 #endif

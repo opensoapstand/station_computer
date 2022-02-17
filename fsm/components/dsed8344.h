@@ -29,9 +29,9 @@
 
 #include "../objects/debugOutput.h"
 
-#define PCA9534_ADDRESS  0b0100000
+#define PCA9534_ADDRESS 0b0100000
 #define MAX31760_ADDRESS 0b1010000
-#define DS2485Q_ADDRESS  0b1000000
+#define DS2485Q_ADDRESS 0b1000000
 #define MCP3424T_ADDRESS 0b1101000
 
 class dsed8344
@@ -40,27 +40,26 @@ public:
     dsed8344(void);
     dsed8344(const char *);
     ~dsed8344();
-    
-    unsigned char getPumpPWM (void);
-    bool setPumpPWM (unsigned char pwm_val);
-    bool setPumpDirection (bool direction);
-    bool startPump (unsigned char pump_number);
-    bool stopPump ();
-    unsigned short getPumpTach (void);
-    bool getButton (void);
-    void setButtonPower (bool poweron);
+
+    unsigned char getPumpPWM(void);
+    bool setPumpPWM(uint8_t pwm_val);
+    bool setPumpDirectionForwardElseReverse(bool direction);
+    bool setPumpEnable(unsigned char pump_number);
+    bool setPumpsDisableAll();
+    unsigned short getPumpSpeed(void);
+    bool getButton(void);
+    void setDispenseButtonLight(bool poweron);
 
 private:
     int i2c_handle = -1;
     char *i2c_bus_name;
-    
-    bool SendByte (unsigned char address, unsigned char reg, unsigned char byte);
-    unsigned char ReadByte (unsigned char address, unsigned char reg);
-    bool set_i2c_address (unsigned char address);
-    void setup_i2c_bus (void);
-    bool check_8344_configuration (void);
-    void initialize_8344 (void);
+
+    bool SendByte(unsigned char address, unsigned char reg, unsigned char byte);
+    unsigned char ReadByte(unsigned char address, unsigned char reg);
+    bool set_i2c_address(unsigned char address);
+    void setup_i2c_bus(void);
+    bool check_8344_configuration(void);
+    void initialize_8344(void);
 };
 
-
-#endif  // _DSED8344_H
+#endif // _DSED8344_H

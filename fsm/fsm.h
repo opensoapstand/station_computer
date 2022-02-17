@@ -4,9 +4,9 @@
 // holds some globals for sharing
 //
 // created: 22-09-2020
-// by: Denis Londry
+// by: Lode Ameije & Ash Singla
 //
-// copyright 2020 by Drinkfill Beverages Ltd
+// copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
 
@@ -14,8 +14,6 @@
 #define FSM__H_
 #include "objects/dispenser.h"
 
-#define MAX_CASSETTES 9
-
-extern dispenser g_cassettes[MAX_CASSETTES];
+extern dispenser g_productDispensers[PRODUCT_DISPENSERS_MAX];
 
 #endif

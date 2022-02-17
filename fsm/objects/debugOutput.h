@@ -2,13 +2,13 @@
 //
 // debugOutput.h
 // DEBUG output Definition:
-// threadsafe outputs to console and 
+// threadsafe outputs to console and
 // override for other systems
 //
 // created: 15-06-2020
-// by: Denis Londry
+// by: Lode Ameije & Ash Singla
 //
-// copyright 2020 by Drinkfill Beverages Ltd
+// copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
 #ifndef _DEBUGOUTPUT__H_
@@ -19,12 +19,12 @@
 using namespace std;
 
 // Dictionary for Console Output Message Level
-typedef enum MESSAGE_LEVEL {
-	INFO,
-	WARN,
-	ERROR,
-	STATE_CHANGE,
-	PIN_CHANGE,
+typedef enum MESSAGE_LEVEL
+{
+	MSG_INFO,
+	MSG_WARNING,
+	MSG_ERROR,
+	MSG_STATE,
 	MESSAGE_MAX
 } MESSAGE_LEVEL;
 
@@ -35,10 +35,11 @@ public:
 	~debugOutput();
 
 	//setter
-	static bool setMessageLevel(MESSAGE_LEVEL dbgLvl);	
+	static bool setMessageLevel(MESSAGE_LEVEL dbgLvl);
 	static void sendMessage(string msg, MESSAGE_LEVEL lvl);
 
 	static MESSAGE_LEVEL m_dbgLvl;
+
 protected:
 };
 

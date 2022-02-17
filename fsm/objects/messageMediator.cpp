@@ -8,10 +8,10 @@
 // commands from GUI, GPIO's and
 // Database threads
 //
-// created: 12-06-2020
-// by: Denis Londry & Li-Yan Tong
+// created: 01-2022
+// by: Lode Ameije & Ash Singla
 //
-// copyright 2020 by Drinkfill Beverages Ltd
+// copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
 
@@ -32,19 +32,20 @@
 extern messageMediator df_messaging;
 
 bool messageMediator::m_fExitThreads = false;
-bool messageMediator::m_bCommandReady = false;
-string messageMediator::m_processString;
+bool messageMediator::m_bCommandStringReceived = false;
+string messageMediator::m_receiveStringBuffer;
 string messageMediator::m_processCommand;
-int messageMediator::m_nOption;
+int messageMediator::m_RequestedProductIndexInt;
 int messageMediator::m_nSolenoid;
-char messageMediator::m_cCommand;
-char messageMediator::m_nSize;
+char messageMediator::m_requestedAction;
+int messageMediator::m_commandValue;
+char messageMediator::m_requestedVolume;
 double messageMediator::m_nVolumeTarget;
 
 // CTOR
 messageMediator::messageMediator()
 {
-   debugOutput::sendMessage("------messageMediator------", INFO);
+   debugOutput::sendMessage("------messageMediator------", MSG_INFO);
    // TODO: Initialize with Pointer reference to socket...
    // new_sock = new ServerSocket();
    m_fExitThreads = false;
@@ -54,7 +55,7 @@ messageMediator::messageMediator()
 // DTOR
 messageMediator::~messageMediator()
 {
-   debugOutput::sendMessage("~messageMediator", INFO);
+   debugOutput::sendMessage("~messageMediator", MSG_INFO);
 
    //terminate the threads
    m_fExitThreads = true;
@@ -84,7 +85,7 @@ DF_ERROR messageMediator::sendMessage(string msg)
    }
    catch (SocketException &e)
    {
-    //  std::cout << "Connection Exception was caught:" << e.description() << "\n";
+      //  std::cout << "Connection Exception was caught:" << e.description() << "\n";
    }
    dfError = ERROR_PTHREADS_IPTHREAD_NAK;
 
@@ -118,12 +119,12 @@ DF_ERROR messageMediator::sendQtACK(string AckOrNak)
       {
       }
 
-     // std::cout << "We received this response from the server:\n\"" << reply << "\"\n";
+      // std::cout << "We received this response from the server:\n\"" << reply << "\"\n";
       ;
    }
    catch (SocketException &e)
    {
-     // std::cout << "Exception was caught:" << e.description() << "\n";
+      // std::cout << "Exception was caught:" << e.description() << "\n";
    }
 
    dfError = ERROR_PTHREADS_IPTHREAD_NAK;
@@ -134,7 +135,7 @@ DF_ERROR messageMediator::sendQtACK(string AckOrNak)
 // for Socket Data.
 DF_ERROR messageMediator::createThreads(pthread_t &kbThread, pthread_t &ipThread)
 {
-   debugOutput::sendMessage("messageMediator::createThreads", INFO);
+   debugOutput::sendMessage("messageMediator::createThreads", MSG_INFO);
    DF_ERROR df_ret = OK;
    int rc = 0;
    pthread_attr_t attr;
@@ -145,7 +146,7 @@ DF_ERROR messageMediator::createThreads(pthread_t &kbThread, pthread_t &ipThread
 
    if (rc)
    {
-      debugOutput::sendMessage("failed to create KB Thread", INFO);
+      debugOutput::sendMessage("failed to create KB Thread", MSG_INFO);
       df_ret = ERROR_PTHREADS_KBTHREAD;
    }
 
@@ -154,7 +155,7 @@ DF_ERROR messageMediator::createThreads(pthread_t &kbThread, pthread_t &ipThread
 
    if (rc)
    {
-      debugOutput::sendMessage("failed to create KB Thread", INFO);
+      debugOutput::sendMessage("failed to create IP Thread", MSG_INFO);
       df_ret = ERROR_PTHREADS_IPTHREAD;
    }
 
@@ -166,28 +167,26 @@ DF_ERROR messageMediator::updateCmdString(char key)
 {
    DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
-   string incommingCharMsg = "Incomming CHAR: ";
-   incommingCharMsg += key;
-   debugOutput::sendMessage(incommingCharMsg, INFO);
-   incommingCharMsg.clear();
+   // debug input char
+   // string incommingCharMsg = "Incomming CHAR: ";
+   // incommingCharMsg += key;
+   // debugOutput::sendMessage(incommingCharMsg, MSG_INFO);
+   // incommingCharMsg.clear();
 
    if (';' != key)
    {
+      // build up command as long as no ;
       m_processCommand.push_back(key);
-   }
-   else if (';' == key)
-   {
-      debugOutput::sendMessage("Flushing processing string: " + m_processString, INFO);
-      m_processString.clear();
-      m_bCommandReady = true;
-
-      debugOutput::sendMessage("Command String Ready: " + m_processCommand, INFO);
    }
    else
    {
-      debugOutput::sendMessage("Command String Status: " + m_processCommand, INFO);
-      m_bCommandReady = false;
+      // ; is the command finished char
+      m_receiveStringBuffer.clear();
+      m_bCommandStringReceived = true;
+
+      debugOutput::sendMessage("Provided command (unparsed) : " + m_processCommand, MSG_INFO);
    }
+
    return df_ret;
 }
 
@@ -196,18 +195,18 @@ DF_ERROR messageMediator::updateCmdString(char key)
 DF_ERROR messageMediator::updateCmdString()
 {
    DF_ERROR df_ret = ERROR_BAD_PARAMS;
-   debugOutput::sendMessage("Process string..." + m_processString, INFO);
+   debugOutput::sendMessage("Process string..." + m_receiveStringBuffer, MSG_INFO);
 
    if (!m_processCommand.empty())
    {
-      debugOutput::sendMessage("Flush old command..." + m_processCommand, INFO);
+      debugOutput::sendMessage("Flush old command..." + m_processCommand, MSG_INFO);
       m_processCommand.clear();
-      debugOutput::sendMessage(m_processCommand, INFO);
+      debugOutput::sendMessage(m_processCommand, MSG_INFO);
    }
 
-   for (int i = 0; i < m_processString.size(); i++)
+   for (int i = 0; i < m_receiveStringBuffer.size(); i++)
    {
-      df_ret = updateCmdString(m_processString[i]);
+      df_ret = updateCmdString(m_receiveStringBuffer[i]);
    }
 
    return df_ret;
@@ -216,36 +215,42 @@ DF_ERROR messageMediator::updateCmdString()
 // Loop for threaded listening for console input
 void *messageMediator::doKBThread(void *pThreadArgs)
 {
-   debugOutput::sendMessage("doKBThread", INFO);
+   debugOutput::sendMessage("Start up infinite keyboard input listener (doKBThread).", MSG_INFO);
    DF_ERROR df_ret = OK;
 
-   //m_fExitThreads = false;
+   // while (!m_fExitThreads) // lode: todo not relevant?! (contains infinite while loop)
+   // {
+   // make sure buffer is clear (seems overkill)
+   // if (!m_receiveStringBuffer.empty())
+   // {
+   //    updateCmdString();
+   // }
 
-   while (!m_fExitThreads)
+   char key;
+   // BLOCKING!!
+   while (0 < scanf(" %c", &key))
    {
-      if (m_processString.empty())
-      {
-         char key;
-         while (0 < scanf(" %c", &key))
-         {
-            updateCmdString(key);
-         }
-      }
-      else
-      {
-         updateCmdString();
-      }
-      usleep(DELAY_USEC);
+      updateCmdString(key);
    }
 
+   // char key;
+   // // BLOCKING!!
+   // while (0 < scanf(" %c", &key))
+   // {
+   //    updateCmdString(key);
+   // }
+
+   // usleep(DELAY_USEC);
+   // }
+
    // df_ret;
-   return 0;
+   // return 0;
 }
 
 // Loop for threaded listening for Socket input
 void *messageMediator::doIPThread(void *pThreadArgs)
 {
-   debugOutput::sendMessage("doIPThread", INFO);
+   debugOutput::sendMessage("doIPThread", MSG_INFO);
    DF_ERROR df_ret = OK;
 
    try
@@ -269,8 +274,8 @@ void *messageMediator::doIPThread(void *pThreadArgs)
 
                // AckOrNakResult = "FSM ACK";
                sendQtACK("ACK");
-              // cout << data << endl;
-               m_processString = data;
+               // cout << data << endl;
+               m_receiveStringBuffer = data;
                updateCmdString();
                // new_sock << data;
             }
@@ -279,7 +284,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
          }
          catch (SocketException &sock)
          {
-          //  std::cout << "Socket Transfer Exception was caught:" << sock.description() << "\nExiting.\n";
+            //  std::cout << "Socket Transfer Exception was caught:" << sock.description() << "\nExiting.\n";
             // AckOrNakResult = "FSM NAK";
             // sendQtACK(AckOrNakResult);
          }
@@ -287,7 +292,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
    }
    catch (SocketException &e)
    {
-     // std::cout << "Socket Creation Exception was caught:" << e.description() << "\nExiting.\n";
+      // std::cout << "Socket Creation Exception was caught:" << e.description() << "\nExiting.\n";
    }
 
    return 0;
@@ -297,13 +302,13 @@ void *messageMediator::doIPThread(void *pThreadArgs)
 
 string messageMediator::getProcessString()
 {
-   return m_processString;
+   return m_receiveStringBuffer;
 }
 
 void messageMediator::clearProcessString()
 {
-   m_processString.clear();
-   m_bCommandReady = false;
+   m_receiveStringBuffer.clear();
+   m_bCommandStringReceived = false;
 }
 
 string messageMediator::getCommandString()
@@ -314,122 +319,170 @@ string messageMediator::getCommandString()
 void messageMediator::clearCommandString()
 {
    m_processCommand.clear();
-   m_bCommandReady = false;
+   m_bCommandStringReceived = false;
 }
 
-DF_ERROR messageMediator::getPositionReady()
+DF_ERROR messageMediator::parseCommandString()
 {
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
-   // debugOutput::sendMessage("getPositionReady", INFO);
-   char temp[10];
-   string commandString = getCommandString();
 
-   if (isCommandReady())
+   string sCommand = getCommandString();
+   char first_char = sCommand[0];
+
+   // m_commandValue = std::stoi( sCommand );
+   // debugOutput::sendMessage("temptgmpemtpm" + m_commandValue, MSG_INFO);
+
+   if (
+       first_char == '1' ||
+       first_char == '2' ||
+       first_char == '3' ||
+       first_char == '4')
    {
-      // temp = commandString;
+      // check for dispensing command
+      e_ret = parseDispenseCommand(sCommand);
    }
-
-   char posChar;
-   char solenoidChar;
-   char sizeChar;
-
-   // FIXME: Need a better string parser...
-   for (std::string::size_type i = 0; i < commandString.size(); ++i)
+   else if (
+       // other commands
+       first_char == ACTION_MANUAL_PUMP_PWM_SET)
    {
-      if (isdigit(commandString[0]))
-      {
-         posChar = commandString[0];
-
-      }
-      if ((commandString[i] == DISPENSE_END_CHAR) || (commandString[i] == DRINK_CHAR) || commandString[i] == PWM_CHAR)
-      {
-         solenoidChar = commandString[i];
-      }
-
-      if (commandString[i] == SMALL_DRINK_CHAR || commandString[i] == LARGE_DRINK_CHAR || commandString[i] == TEST_CHAR)
-      {
-          sizeChar = (commandString[i]);
-      }
-
+      m_requestedAction = first_char;
+      std::string number = sCommand.substr(1, sCommand.size());
+      m_commandValue = std::stoi(number);
    }
-
-
-
-
-
-   // TODO: Can seperate this into char parsing switch statment and further into function.
-   // pos = -1;
-   // strcpy(&posChar, &temp[0]);
-
-   if (isdigit(posChar)) //first character should be string
+   else if (
+       // other commands
+       first_char == ACTION_MANUAL_PRINTER ||
+       first_char == ACTION_QUIT ||
+       first_char == ACTION_PRINTER_CHECK_STATUS ||
+       first_char == ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY ||
+       first_char == ACTION_PRINTER_PRINT_TEST ||
+       first_char == ACTION_HELP ||
+       first_char == ACTION_MANUAL_PUMP_TEST ||
+       first_char == ACTION_MANUAL_PUMP ||
+       first_char == ACTION_MANUAL_PUMP_ENABLE ||
+       first_char == ACTION_MANUAL_PUMP_DISABLE ||
+       first_char == ACTION_MANUAL_PUMP_DIRECTION_FORWARD ||
+       first_char == ACTION_MANUAL_PUMP_DIRECTION_REVERSE ||
+       first_char == ACTION_MANUAL_PUMP_FLOW_TEST_TOGGLE ||
+       first_char == ACTION_PRINTER_REACHABLE)
    {
-      // debugOutput::sendMessage("Set Option", INFO);
-
-      int check = posChar - '0';
-      // pos = atoi(&posChar) - 1;
-      // FIXME: MAGIC NUMBER reference...
-      if (9 < check || 0 > check)
-      {
-         // debugOutput::sendMessage("Irrelevant input", ERROR);
-         e_ret = ERROR_NETW_NO_OPTION; //require valid cassettes
-      }
-      else
-      {
-         m_nOption = check;
-         //cout << m_nOption << endl;
-         e_ret = OK;
-      }
+      m_requestedAction = first_char;
    }
    else
    {
-      // Error Handling
-      debugOutput::sendMessage("Irrelevant input", INFO);
-      this->clearProcessString();    //make sure to clear the processed string for new input
-      e_ret = ERROR_NETW_NO_COMMAND; //require valid cassettes
+      // invalid commands
+      m_requestedAction = ACTION_NO_ACTION;
+      debugOutput::sendMessage("Command received is not valid.", MSG_INFO);
    }
 
-   // Check for Char then int pairing values
-   // solenoidChar;
-   // strcpy(&solenoidChar, &temp[1]);
+   this->clearCommandString();
+   return e_ret;
+}
 
-   if (!isalpha(solenoidChar)) //for second char not an alphabet
+DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
+{
+
+   DF_ERROR e_ret = ERROR_BAD_PARAMS;
+   debugOutput::sendMessage("parseDispenseCommand", MSG_INFO);
+   char temp[10];
+
+   char productChar = PRODUCT_DUMMY;
+   char actionChar = ACTION_DUMMY;
+   char volumeChar = REQUESTED_VOLUME_DUMMY;
+
+   // if (isdigit(sCommand[0]))
+   if (isdigit(sCommand[0]))
    {
-      debugOutput::sendMessage("Irrelevant input", INFO);
-      e_ret = ERROR_NETW_NO_POSITION;
+      productChar = sCommand[0];
+      debugOutput::sendMessage("digit", MSG_INFO);
+   }
+
+   if (sCommand.size() > 1)
+   {
+
+      // FIXME: Need a better string parser...
+      for (std::string::size_type i = 0; i < sCommand.size(); ++i)
+      {
+         if ((sCommand[i] == ACTION_DISPENSE_END) || (sCommand[i] == ACTION_DISPENSE) || sCommand[i] == PWM_CHAR)
+         {
+            actionChar = sCommand[i];
+         }
+
+         if (sCommand[i] == REQUESTED_VOLUME_1 || sCommand[i] == REQUESTED_VOLUME_2 || sCommand[i] == REQUESTED_VOLUME_CUSTOM)
+         {
+            volumeChar = (sCommand[i]);
+         }
+      }
+   }
+
+   switch (productChar)
+   {
+   case '1':
+   {
+      m_RequestedProductIndexInt = 1;
+      debugOutput::sendMessage("Product 1 requested", MSG_INFO);
+      e_ret = OK;
+      break;
+   }
+   case '2':
+   {
+      m_RequestedProductIndexInt = 2;
+      debugOutput::sendMessage("Product 2 requested", MSG_INFO);
+      e_ret = OK;
+      break;
+   }
+   case '3':
+   {
+      m_RequestedProductIndexInt = 3;
+      debugOutput::sendMessage("Product 3 requested", MSG_INFO);
+      e_ret = OK;
+      break;
+   }
+   case '4':
+   {
+      m_RequestedProductIndexInt = 4;
+      debugOutput::sendMessage("Product 4 requested", MSG_INFO);
+      e_ret = OK;
+      break;
+   }
+   default:
+   {
+      debugOutput::sendMessage("No product requested [1..4]", MSG_INFO);
+      break;
+   }
+   }
+
+   if (!isalpha(actionChar))
+   {
+      debugOutput::sendMessage("Irrelevant input .. ", MSG_INFO);
+   }
+   else if (actionChar == ACTION_DUMMY)
+   {
+      debugOutput::sendMessage("No action provided ", MSG_INFO);
    }
    else
    {
       // TODO: Parse and save a reference for command string
 
-      switch (solenoidChar)
+      switch (actionChar)
       {
-      case AIR_CHAR:
-         debugOutput::sendMessage("Air Solenoid", INFO);
-         // m_nSolenoid = AIR;
-         break;
-
-      case WATER_CHAR:
-         debugOutput::sendMessage("Water Solenoid", INFO);
-         // m_nSolenoid = WATER;
-         break;
-
-      case DRINK_CHAR:
-         debugOutput::sendMessage("Drink CHAR", INFO);
-         // m_nSolenoid = DRINK;
-         m_cCommand = DRINK_CHAR;
-         break;
-
-      case CLEAN_CHAR:
+      case ACTION_DISPENSE:
+         debugOutput::sendMessage("Action: Dispense", MSG_INFO);
+         // m_nSolenoid = PRODUCT;
+         m_requestedAction = ACTION_DISPENSE;
+         e_ret = OK;
          break;
 
       case PWM_CHAR:
-          debugOutput::sendMessage("PWM CHAR", INFO);
-          m_cCommand = PWM_CHAR;
-          break;
+         debugOutput::sendMessage("Action: PWM", MSG_INFO);
+         m_requestedAction = PWM_CHAR;
+         e_ret = OK;
+         break;
 
-      case DISPENSE_END_CHAR:
-         debugOutput::sendMessage("Dispense END CHAR", INFO);
-         m_cCommand = DISPENSE_END_CHAR;
+      case ACTION_DISPENSE_END:
+         debugOutput::sendMessage("Action: End Dispense", MSG_INFO);
+         m_requestedAction = ACTION_DISPENSE_END;
+         e_ret = OK;
          break;
 
       default:
@@ -437,36 +490,191 @@ DF_ERROR messageMediator::getPositionReady()
       }
    }
 
-   if (!isalpha(sizeChar)) //for second char not an alphabet
+   if (!isalpha(volumeChar))
    {
-//      debugOutput::sendMessage("Irrelevant input", INFO);
-      e_ret = ERROR_NETW_NO_POSITION;
-//       m_nSize = TEST_CHAR;
+      // e_ret = ERROR_NETW_NO_POSITION;
+   }
+   else if (volumeChar == REQUESTED_VOLUME_DUMMY)
+   {
+      debugOutput::sendMessage("No Requested volume provided", MSG_INFO);
    }
    else
    {
-       switch (sizeChar)
-       {
-       case SMALL_DRINK_CHAR:
-           debugOutput::sendMessage("Small Size", INFO);
-           m_nSize = SMALL_DRINK_CHAR;
-           break;
+      switch (volumeChar)
+      {
+      case REQUESTED_VOLUME_1:
+         debugOutput::sendMessage("Requested volume 1, Small Size", MSG_INFO);
+         m_requestedVolume = REQUESTED_VOLUME_1;
+         e_ret = OK;
+         break;
 
-       case LARGE_DRINK_CHAR:
-           debugOutput::sendMessage("Large Size", INFO);
-           m_nSize = LARGE_DRINK_CHAR;
-           break;
+      case REQUESTED_VOLUME_2:
+         debugOutput::sendMessage("Requested volume 2, Large Size", MSG_INFO);
+         m_requestedVolume = REQUESTED_VOLUME_2;
+         e_ret = OK;
+         break;
 
-       case TEST_CHAR:
-           debugOutput::sendMessage("Test Size", INFO);
-           m_nSize = TEST_CHAR;
+      case REQUESTED_VOLUME_CUSTOM:
+         debugOutput::sendMessage("Requested volume custom, Test Size", MSG_INFO);
+         m_requestedVolume = REQUESTED_VOLUME_CUSTOM;
+         e_ret = OK;
+         break;
 
-       default:
-           break;
-       }
+      default:
+         break;
+      }
    }
 
-
-   m_bCommandReady = true;
    return e_ret;
 }
+
+// DF_ERROR messageMediator::parseCommandString()
+// {
+
+//    DF_ERROR e_ret = ERROR_BAD_PARAMS;
+//    debugOutput::sendMessage("parseCommandString", MSG_INFO);
+//    char temp[10];
+//    string commandString = getCommandString();
+
+//    char productChar = 'z';
+//    char actionChar = ACTION_DUMMY;
+//    char volumeChar = REQUESTED_VOLUME_DUMMY;
+
+//    // if (isdigit(commandString[0]))
+//    if (isdigit(commandString[0]))
+//    {
+//       productChar = commandString[0];
+//       debugOutput::sendMessage("digit", MSG_INFO);
+//    }
+
+//    if (commandString.size() > 1)
+//    {
+
+//       // FIXME: Need a better string parser...
+//       for (std::string::size_type i = 0; i < commandString.size(); ++i)
+//       {
+//          if ((commandString[i] == ACTION_DISPENSE_END) || (commandString[i] == ACTION_DISPENSE) || commandString[i] == PWM_CHAR)
+//          {
+//             actionChar = commandString[i];
+//          }
+
+//          if (commandString[i] == REQUESTED_VOLUME_1 || commandString[i] == REQUESTED_VOLUME_2 || commandString[i] == REQUESTED_VOLUME_CUSTOM)
+//          {
+//             volumeChar = (commandString[i]);
+//          }
+//       }
+//    }
+
+//    switch (productChar)
+//    {
+//    case '1':
+//    {
+//       m_RequestedProductIndexInt = 1;
+//       debugOutput::sendMessage("Product 1 requested", MSG_INFO);
+//       e_ret = OK;
+//       break;
+//    }
+//    case '2':
+//    {
+//       m_RequestedProductIndexInt = 2;
+//       debugOutput::sendMessage("Product 2 requested", MSG_INFO);
+//       e_ret = OK;
+//       break;
+//    }
+//    case '3':
+//    {
+//       m_RequestedProductIndexInt = 3;
+//       debugOutput::sendMessage("Product 3 requested", MSG_INFO);
+//       e_ret = OK;
+//       break;
+//    }
+//    case '4':
+//    {
+//       m_RequestedProductIndexInt = 4;
+//       debugOutput::sendMessage("Product 4 requested", MSG_INFO);
+//       e_ret = OK;
+//       break;
+//    }
+//    default:
+//    {
+//       debugOutput::sendMessage("No product requested [1..4]", MSG_INFO);
+//       break;
+//    }
+//    }
+
+//    if (!isalpha(actionChar))
+//    {
+//       debugOutput::sendMessage("Irrelevant input .. ", MSG_INFO);
+//    }
+//    else if (actionChar == ACTION_DUMMY)
+//    {
+//       debugOutput::sendMessage("No action provided ", MSG_INFO);
+//    }
+//    else
+//    {
+//       // TODO: Parse and save a reference for command string
+
+//       switch (actionChar)
+//       {
+//       case ACTION_DISPENSE:
+//          debugOutput::sendMessage("Action: Dispense", MSG_INFO);
+//          // m_nSolenoid = PRODUCT;
+//          m_requestedAction = ACTION_DISPENSE;
+//          e_ret = OK;
+//          break;
+
+//       case PWM_CHAR:
+//          debugOutput::sendMessage("Action: PWM", MSG_INFO);
+//          m_requestedAction = PWM_CHAR;
+//          e_ret = OK;
+//          break;
+
+//       case ACTION_DISPENSE_END:
+//          debugOutput::sendMessage("Action: End Dispense", MSG_INFO);
+//          m_requestedAction = ACTION_DISPENSE_END;
+//          e_ret = OK;
+//          break;
+
+//       default:
+//          break;
+//       }
+//    }
+
+//    if (!isalpha(volumeChar))
+//    {
+//       // e_ret = ERROR_NETW_NO_POSITION;
+//    }
+//    else if (volumeChar == REQUESTED_VOLUME_DUMMY)
+//    {
+//       debugOutput::sendMessage("No Requested volume provided", MSG_INFO);
+//    }
+//    else
+//    {
+//       switch (volumeChar)
+//       {
+//       case REQUESTED_VOLUME_1:
+//          debugOutput::sendMessage("Requested volume 1, Small Size", MSG_INFO);
+//          m_requestedVolume = REQUESTED_VOLUME_1;
+//          e_ret = OK;
+//          break;
+
+//       case REQUESTED_VOLUME_2:
+//          debugOutput::sendMessage("Requested volume 2, Large Size", MSG_INFO);
+//          m_requestedVolume = REQUESTED_VOLUME_2;
+//          e_ret = OK;
+//          break;
+
+//       case REQUESTED_VOLUME_CUSTOM:
+//          debugOutput::sendMessage("Requested volume custom, Test Size", MSG_INFO);
+//          m_requestedVolume = REQUESTED_VOLUME_CUSTOM;
+//          e_ret = OK;
+//          break;
+
+//       default:
+//          break;
+//       }
+//    }
+
+//    this->clearCommandString();
+//    return e_ret;
+// }

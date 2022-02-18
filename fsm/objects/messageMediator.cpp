@@ -262,11 +262,13 @@ void *messageMediator::doIPThread(void *pThreadArgs)
       {
          ServerSocket new_sock;
          fsm_comm_server.accept(new_sock);
+         debugOutput::sendMessage("new sock (UIDDFIJDF)", MSG_INFO);
 
          try
          {
             while (true)
             {
+               debugOutput::sendMessage("char received over IP", MSG_INFO);
                std::string data;
                // *fsm_comm_socket >> data;
                // *fsm_comm_socket << "";
@@ -277,6 +279,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
                // cout << data << endl;
                m_receiveStringBuffer = data;
                updateCmdString();
+               debugOutput::sendMessage("char received over IP" + data, MSG_INFO);
                // new_sock << data;
             }
 

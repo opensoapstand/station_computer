@@ -71,8 +71,8 @@ QByteArray DfUiCommThread::readyRead()
     if(Data == "MM") {
         emit MMSignal();
     }
-
     Data.append(" Recieved");
+    qDebug()<<"Message received from FSM: " << Data << endl;
 
     socket->write(Data);
 

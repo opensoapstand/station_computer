@@ -56,7 +56,7 @@ public slots:
     void displayError(QAbstractSocket::SocketError socketError);
 
 private:
-    QString local_db_path = "/home/df-admin/Project/drinkfill/db/sqlite/";
+    //QString local_db_path = "/home/df-admin/Project/drinkfill/db/sqlite/";
     QString local_db_name = "drinkfill-sqlite.db";
 
     QString remote_psql_db_path;

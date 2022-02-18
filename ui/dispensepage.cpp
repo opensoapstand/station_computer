@@ -54,6 +54,7 @@ dispensePage::~dispensePage()
 
 void dispensePage::showEvent(QShowEvent *event)
 {
+    qDebug()<<"Enter dispense page." << endl;
     QPixmap background(":/light/5_dispense_page_before.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;

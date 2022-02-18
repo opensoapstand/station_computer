@@ -47,6 +47,8 @@ void df_util::send_to_FSM()
     }
 
     QByteArray block;
+    qDebug()<<"send message to FSM: " <<  msg << endl;
+    
     block.append(msg);
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);

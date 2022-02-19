@@ -77,11 +77,11 @@ void idle::showEvent(QShowEvent *event)
 void idle::on_nextPageButton_clicked()
 {
 
-    qDebug() << "SEND LARGE FILL DEBUG TEST" << endl;
-    this->dfUtility->msg = "1dl;";
-    this->dfUtility->m_IsSendingFSM = true;
-    this->dfUtility->m_fsmMsg = SEND_CLEAN;
-    this->dfUtility->send_to_FSM();
+    // qDebug() << "SEND LARGE FILL DEBUG TEST" << endl;
+    // this->dfUtility->msg = "1dl;";
+    // this->dfUtility->m_IsSendingFSM = true;
+    // this->dfUtility->m_fsmMsg = SEND_CLEAN;
+    // this->dfUtility->send_to_FSM();
 
     selection_PageOne->showFullScreen();
     this->hide();

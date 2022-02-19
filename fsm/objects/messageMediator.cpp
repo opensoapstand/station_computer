@@ -367,6 +367,7 @@ DF_ERROR messageMediator::parseCommandString()
        first_char == ACTION_MANUAL_PUMP_DIRECTION_FORWARD ||
        first_char == ACTION_MANUAL_PUMP_DIRECTION_REVERSE ||
        first_char == ACTION_MANUAL_PUMP_FLOW_TEST_TOGGLE ||
+       first_char == ACTION_MANUAL_PUMP_GAS_PUMP_MODEL_TEST_TOGGLE ||
        first_char == ACTION_PRINTER_REACHABLE)
    {
       m_requestedAction = first_char;

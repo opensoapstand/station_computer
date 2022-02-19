@@ -177,7 +177,7 @@ DF_ERROR dispenser::setPumpDirectionForward()
 
 bool dispenser::getDispenseButtonValue()
 {
-    the_8344->getButton();
+    the_8344->getDispenseButtonStateDebounced();
 }
 
 // Reverse pump: Turn forward pin LOW - Reverse pin HIGH

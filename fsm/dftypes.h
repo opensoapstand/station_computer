@@ -25,6 +25,7 @@
 #define IO_PIN_FLOW_SENSOR 364
 #define IO_PIN_FLOW_SENSOR_STRING "364"
 #define RUNNING_AVERAGE_WINDOW_LENGTH 100
+#define DISPENSE_BUTTON_DEBOUNCE_MILLIS 50
 
 struct Time_val{
    uint64_t time_millis;

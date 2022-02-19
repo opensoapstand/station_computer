@@ -1,6 +1,7 @@
 
 
 #include "dsed8344.h"
+#include <chrono>
 
 #define DEFAULT_I2C_BUS "/dev/i2c-1"
 
@@ -55,6 +56,10 @@ dsed8344::dsed8344(void)
 
     setup_i2c_bus();
 
+    dispenseButtonStateMemory = false;
+    dispenseButtonStateDebounced = false;
+    dispenseButtonIsDebounced = true;
+
 } // End of dsed8344() constructor
 
 // Constructor where you can specify the name of the I2C bus
@@ -71,6 +76,9 @@ dsed8344::dsed8344(const char *bus)
     strcpy(i2c_bus_name, bus);
 
     setup_i2c_bus();
+    dispenseButtonStateMemory = false;
+    dispenseButtonStateDebounced = false;
+    dispenseButtonIsDebounced = true;
 
 } // End of dsed8344() constructor
 
@@ -170,10 +178,42 @@ unsigned short dsed8344::getPumpSpeed(void)
 
 } // End of getPumpSpeed()
 
-bool dsed8344::getButton(void)
+bool dsed8344::getDispenseButtonState(void)
 {
     return ((ReadByte(PCA9534_ADDRESS, 0x00) & 0x80) ? false : true);
-} // End of getButton()
+} // End of getDispenseButtonState()
+
+bool dsed8344::getDispenseButtonEdge(void)
+{
+    bool edge = false;
+    
+    bool state = getDispenseButtonState();
+    if (state != dispenseButtonStateMemory){
+        edge = true;
+    }
+    dispenseButtonStateMemory = state;
+    return edge;
+} // End of getDispenseButtonState()
+
+
+bool dsed8344::getDispenseButtonStateDebounced(){
+    // as this is not in a separate thread, we'll need to call it some times...
+	using namespace std::chrono;
+    uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    if (getDispenseButtonEdge()){
+        dispenseButtonDebounceMemory = millis_since_epoch;
+        dispenseButtonIsDebounced = false;
+        // debugOutput::sendMessage("edge detected!" + std::to_string(dispenseButtonDebounceMemory), MSG_INFO);
+    }
+
+    if (millis_since_epoch - dispenseButtonDebounceMemory > DISPENSE_BUTTON_DEBOUNCE_MILLIS && ! dispenseButtonIsDebounced){
+        dispenseButtonIsDebounced = true;
+        // debugOutput::sendMessage("commit edge to state" + std::to_string(millis_since_epoch - dispenseButtonDebounceMemory), MSG_INFO);
+        dispenseButtonStateDebounced = dispenseButtonStateMemory;
+    } 
+
+    return dispenseButtonStateDebounced;    
+}
 
 void dsed8344::setDispenseButtonLight(bool poweron)
 {

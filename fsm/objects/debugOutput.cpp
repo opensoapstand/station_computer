@@ -17,6 +17,7 @@
 #include <fstream>
 #include <stdio.h>
 #include <string.h>
+#include <chrono>
 
 using namespace std;
 
@@ -52,11 +53,15 @@ bool debugOutput::setMessageLevel(MESSAGE_LEVEL dbgLvl)
 */
 void debugOutput::sendMessage(std::string msg, MESSAGE_LEVEL lvl)
 {
+
+	using namespace std::chrono;
+    uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
 	if (lvl >= debugOutput::m_dbgLvl)
 	{
 		// original. outputting this might lead to segmentation errors
-		cerr << m_lvlArray[lvl] + ": " + msg << endl;
-
+		cerr << m_lvlArray[lvl] + " " + to_string(millis_since_epoch) + " : " + msg << endl;
+		
 		//	cout << lvl << endl;
 		//sprintf("tetst",);
 		//cout << m_lvlArray[lvl] + ": " + msg << endl;

@@ -216,7 +216,7 @@ DF_ERROR stateManualPump::gasPumpModelTest()
    {
       debugOutput::sendMessage("Start Dispensing", MSG_INFO);
 
-      productDispensers[0].setPumpPWM(125);
+      //productDispensers[0].setPumpPWM(125);
 
       isDispensing = true;
       using namespace std::chrono;

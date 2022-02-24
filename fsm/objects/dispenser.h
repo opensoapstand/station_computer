@@ -85,8 +85,7 @@ public:
 
       Time_val getAveragedFlowRate(uint64_t window_length_millis);
 
-      bool getIsDispenseComplete() { return m_isDispenseDone; }
-      void setIsDispenseComplete(bool isDispenseComplete) { m_isDispenseDone = isDispenseComplete; }
+      bool getIsDispenseTargetReached();
 
       void setm_pIsDispenseDone() { *m_pIsDispensing = false; }
       void setm_pIsDispensing() { *m_pIsDispensing = true; }

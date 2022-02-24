@@ -34,7 +34,11 @@ class product
 public:
         product();
         // product(int slot);
-        product(int slot, string name, double nDispenseVolume, double nTargetVolume_l, double nTargetVolume_s, double calibration_const, double price_l, double price_s, bool isStillProduct, double nVolumePerTick, string nPLU_l, string nPLU_s, string paymentMethod, string name_receipt);
+        product(int slot, string name, double calibration_const, double nVolumePerTick, 
+                double nVolumeTarget_s, double nVolumeTarget_m, double nVolumeTarget_l, double nVolumeTarget_c_min, double nVolumeTarget_c_max,
+                double price_small, double price_m, double price_large, double price_c_per_liter, 
+                string nPLU_small, string nPLU_m,  string nPLU_large, string nPLU_c,
+                string paymentMethod, string name_receipt);
         ~product();
 
         //getter
@@ -54,7 +58,7 @@ public:
         DF_ERROR stopDispense();
 
         double getVolumeSinceLastPoll();
-        bool isDispenseComplete();
+        bool isDispenseTargetVolumeReached();
         bool registerFlowSensorTick();
 
         // int getTickCount(){return m_nTickCount;};
@@ -72,17 +76,26 @@ public:
         double m_nVolumeDispensedPreviously;
         double m_nVolumeTarget;
         double m_nVolumeTarget_l;            //how much to dispense (large)
+        double m_nVolumeTarget_m;            //how much to dispense (medium)
         double m_nVolumeTarget_s;            //how much to dispense (small)
+        double m_nVolumeTarget_c_min;            //custom volume dispensing: min (zero volume can be dispensed, but we will still charge for min)
+        double m_nVolumeTarget_c_max;            //custom volume dispensing: max
+
         double m_nVolumeTarget_t = 10000000; //test dispense (infinite)
         double m_nVolumeDispensed;           //how much has been dispensed in this sale
         double m_price;
-        double m_price_l;
-        double m_price_s;
+        double m_price_small;
+        double m_price_m;
+        double m_price_large;
+        double m_price_c_per_liter;
+
         string m_name;
         string m_name_receipt;
         double m_buttonPressDuration;
-        string m_nPLU_l;
-        string m_nPLU_s;
+        string m_nPLU_small;
+        string m_nPLU_m;
+        string m_nPLU_large;
+        string m_nPLU_c;
         string m_paymentMethod;
         int m_PWM;
         double m_nVolumePerTick;

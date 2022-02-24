@@ -234,6 +234,10 @@ DF_ERROR dispenser::startDispense()
     return e_ret = OK;
 }
 
+bool dispenser::getIsDispenseTargetReached(){
+    return m_pDispensedProduct->isDispenseTargetVolumeReached();
+}
+
 double dispenser::getDispensedVolume()
 {
     return m_pDispensedProduct->getVolumeDispensed();

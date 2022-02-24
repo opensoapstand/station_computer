@@ -72,62 +72,55 @@ DF_ERROR stateDispense::onAction()
       m_pMessaging->parseCommandString();
    }
 
-   if (nullptr != &m_state_requested) // TODO: Do a Check if Button is Pressed
+   // if (nullptr != &m_state_requested) // TODO: Do a Check if Button is Pressed
+   // {
+
+   // Check if UI has sent a ACTION_DISPENSE_END to finish the transaction, or, if dispensing is complete
+   if (m_pMessaging->getAction() == ACTION_DISPENSE_END)
    {
-      // Check if UI has sent a ACTION_DISPENSE_END to finish the transaction, or, if dispensing is complete
-      if (m_pMessaging->getAction() == ACTION_DISPENSE_END)
-      {
-         // debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]" + to_string(productDispensers[pos].getIsDispenseComplete()), MSG_INFO);
-         debugOutput::sendMessage("Stop dispensing (stop command received)", MSG_INFO);
-         m_state_requested = STATE_DISPENSE_END;
-         return e_ret = OK;
-      }
-
-      if (productDispensers[pos].getIsDispenseComplete())
-      {
-         // debugOutput::sendMessage("Exiting Dispensing [" + toString() + "]" + to_string(productDispensers[pos].getIsDispenseComplete()), MSG_INFO);
-         debugOutput::sendMessage("Stop dispensing. Requested volume reached.", MSG_INFO);
-         m_state_requested = STATE_DISPENSE_END;
-         return e_ret = OK;
-      }
-
-      // TODO: Do a check if Pumps are operational
-      // send IPC if pump fails
-
-      // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
-      m_pMessaging->sendMessage(to_string(productDispensers[pos].getProduct()->getVolumeDispensed()));
-      debugOutput::sendMessage("debug. target(small): " + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_s) +". target(large): " + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_l) + "Vol dispensed: " + to_string(productDispensers[pos].getProduct()->getVolumeDispensed()), MSG_INFO);
-      
-
-
-
-      if (productDispensers[pos].getProduct()->getVolumeDispensedPreviously() == productDispensers[pos].getProduct()->getVolumeDispensed())
-      {
-         // no dispensing detected since the last check
-         m_state_requested = STATE_DISPENSE_IDLE;
-      }
-      else
-      {
-         // continue dispensing
-         m_state_requested = STATE_DISPENSE;
-         productDispensers[pos].getProduct()->m_nVolumeDispensedPreviously = productDispensers[pos].getProduct()->getVolumeDispensed();
-      }
-
-      productDispensers[pos].getProduct()->productVolumeInfo();
-
-      // TODO: Figure out a Cancel/completed volume from IPC if volume is hit
-      // Logic compare present and last 3 states for volume..continue
-      if (productDispensers[pos].getProduct()->isDispenseComplete())
-      {
-         productDispensers[pos].setIsDispenseComplete(true);
-         // Send message to the UI that the target volume has been reached
-         m_pMessaging->sendMessage("Target Hit");
-      }
-
-      usleep(500000);
-      e_ret = OK;
+      debugOutput::sendMessage("Stop dispensing (stop command received)", MSG_INFO);
+      m_state_requested = STATE_DISPENSE_END;
+      return e_ret = OK;
    }
-   // debugOutput::sendMessage("-stateDispense::onAction()", MSG_INFO);
+
+   if (productDispensers[pos].getIsDispenseTargetReached())
+   {
+      debugOutput::sendMessage("Stop dispensing. Requested volume reached.", MSG_INFO);
+      // productDispensers[pos].setIsDispenseComplete(true);
+
+      // Send message to the UI that the target volume has been reached
+      // TODO: Figure out a Cancel/completed volume from IPC if volume is hit
+
+      // Logic compare present and last 3 states for volume..continue
+      m_pMessaging->sendMessage("Target Hit");
+
+      m_state_requested = STATE_DISPENSE_END;
+      return e_ret = OK;
+   }
+
+   // TODO: Do a check if Pumps are operational
+   // send IPC if pump fails
+
+   // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
+   m_pMessaging->sendMessage(to_string(productDispensers[pos].getProduct()->getVolumeDispensed()));
+
+   debugOutput::sendMessage("debug. target(small): " + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_s) + ". target(large): " + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_l) + "Vol dispensed: " + to_string(productDispensers[pos].getProduct()->getVolumeDispensed()), MSG_INFO);
+
+   if (productDispensers[pos].getProduct()->getVolumeDispensedPreviously() == productDispensers[pos].getProduct()->getVolumeDispensed())
+   {
+      // no dispensing detected since the last check
+      m_state_requested = STATE_DISPENSE_IDLE;
+   }
+   else
+   {
+      // continue dispensing
+      //m_state_requested = STATE_DISPENSE;
+      productDispensers[pos].getProduct()->m_nVolumeDispensedPreviously = productDispensers[pos].getProduct()->getVolumeDispensed();
+   }
+
+   usleep(500000);
+   e_ret = OK;
+   // }
    return e_ret;
 }
 
@@ -135,9 +128,5 @@ DF_ERROR stateDispense::onAction()
 DF_ERROR stateDispense::onExit()
 {
    DF_ERROR e_ret = OK;
-   //productDispensers[pos].stopDispense(PRODUCT);
-   //productDispensers[pos].setIsDispenseComplete(false);
-
    return e_ret;
-
 }

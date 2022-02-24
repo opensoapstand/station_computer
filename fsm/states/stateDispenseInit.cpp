@@ -71,7 +71,7 @@ DF_ERROR stateDispenseInit::onAction()
         productDispensers[pos].getProduct()->getTargetVolume(size),
         productDispensers[pos].getProduct()->getPrice(size));
 
-    productDispensers[pos].setIsDispenseComplete(false);
+    // productDispensers[pos].setIsDispenseComplete(false);
 
     productDispensers[pos].getProduct()->productInfo();
     productDispensers[pos].getProduct()->productVolumeInfo();

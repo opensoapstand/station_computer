@@ -65,13 +65,13 @@ void maintain_product::showEvent(QShowEvent *event)
     ticks = db.getProductVolumePerTick(checkOption);
 
     ui->name->setText(db.getProductName(checkOption));
-    ui->price_s->setText("$"+QString::number(db.getProductPrice(checkOption, 's')));
-    ui->price_l->setText("$"+QString::number(db.getProductPrice(checkOption, 'l')));
+    ui->price_small->setText("$"+QString::number(db.getProductPrice(checkOption, 's')));
+    ui->price_large->setText("$"+QString::number(db.getProductPrice(checkOption, 'l')));
     ui->target_volume_s->setText(QString::number(db.getProductVolume(checkOption, 's')) + " " + db.getUnits(checkOption));
     ui->target_volume_l->setText(QString::number(db.getProductVolume(checkOption, 'l')) + " " + db.getUnits(checkOption));
     ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(checkOption)) + " " + db.getUnits(checkOption));
     ui->full_volume->setText(QString::number(db.getFullProduct(checkOption)) + " " + db.getUnits(checkOption));
-    ui->total_dispensed->setText(QString::number(db.getTotalDispensed(checkOption)) + " " + db.getUnits(checkOption));
+    ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(checkOption)) + " " + db.getUnits(checkOption));
     ui->remainingLabel->setText(QString::number(db.getRemaining(checkOption)) + " " + db.getUnits(checkOption));
     ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
     ui->pwmLabel->setText(QString::number(round(double((db.getPWM(checkOption))*100)/255)) + "%");
@@ -85,15 +85,15 @@ void maintain_product::showEvent(QShowEvent *event)
     ui->errorLabel->setText("");
     ui->titleLabel->setText("");
 
-    price_s = false;
-    price_l = false;
+    price_small = false;
+    price_large = false;
     target_s = false;
     target_l = false;
     vol_per_tick = false;
     full = false;
     pwm = false;
-//    plu_s = false;
-//    plu_l = false;
+//    plu_small = false;
+//    plu_large = false;
 
     if(db.getPaymentMethod(checkOption)=="plu" || db.getPaymentMethod(checkOption)=="barcode"){
         ui->pluButton_s->setVisible(true);
@@ -127,8 +127,8 @@ void maintain_product::setPage(maintenancePage* pageMaintenance, idle* pageIdle)
     this->idlePage = pageIdle;
 
     ui->name->setText("Product Name: ");
-    ui->price_s->setText("Product Price: ");
-    ui->price_l->setText("Product Price: ");
+    ui->price_small->setText("Product Price: ");
+    ui->price_large->setText("Product Price: ");
     ui->target_volume_s->setText("Product Volume: ");
     ui->target_volume_l->setText("Product Volume: ");
     ui->volume_per_tick->setText("Product Volume Per Tick: ");
@@ -136,7 +136,7 @@ void maintain_product::setPage(maintenancePage* pageMaintenance, idle* pageIdle)
     ui->soldOutLabel->setText("");
     ui->full_volume->setText("");
     ui->remainingLabel->setText("");
-    ui->total_dispensed->setText("");
+    ui->volume_dispensed_total->setText("");
     ui->lastRefillLabel->setText("");
     ui->testLargeButton->setVisible(false);
     ui->testSmallButton->setVisible(false);
@@ -159,8 +159,8 @@ void maintain_product::on_backButton_clicked(){
     this->hide();
 
     ui->name->setText("");
-    ui->price_s->setText("");
-    ui->price_l->setText("");
+    ui->price_small->setText("");
+    ui->price_large->setText("");
     ui->target_volume_s->setText("");
     ui->target_volume_l->setText("");
     ui->volume_per_tick->setText("");
@@ -168,7 +168,7 @@ void maintain_product::on_backButton_clicked(){
     ui->soldOutLabel->setText("");
     ui->full_volume->setText("");
     ui->remainingLabel->setText("");
-    ui->total_dispensed->setText("");
+    ui->volume_dispensed_total->setText("");
     ui->lastRefillLabel->setText("");
 
 
@@ -209,13 +209,13 @@ void maintain_product::resizeEvent(QResizeEvent *event){
     ticks = db.getProductVolumePerTick(checkOption);
 
     ui->name->setText(db.getProductName(checkOption));
-    ui->price_s->setText("$"+QString::number(db.getProductPrice(checkOption, 's')));
-    ui->price_l->setText("$"+QString::number(db.getProductPrice(checkOption, 'l')));
+    ui->price_small->setText("$"+QString::number(db.getProductPrice(checkOption, 's')));
+    ui->price_large->setText("$"+QString::number(db.getProductPrice(checkOption, 'l')));
     ui->target_volume_s->setText(QString::number(db.getProductVolume(checkOption, 's')) + " " +  db.getUnits(checkOption));
     ui->target_volume_l->setText(QString::number(db.getProductVolume(checkOption, 'l')) + " " +  db.getUnits(checkOption));
     ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(checkOption)) + " " +  db.getUnits(checkOption));
     ui->full_volume->setText(QString::number(db.getFullProduct(checkOption)) + " " +  db.getUnits(checkOption));
-    ui->total_dispensed->setText(QString::number(db.getTotalDispensed(checkOption)) + " " +  db.getUnits(checkOption));
+    ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(checkOption)) + " " +  db.getUnits(checkOption));
     ui->remainingLabel->setText(QString::number(db.getRemaining(checkOption)) + " " +  db.getUnits(checkOption));
     ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
 //    ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
@@ -365,7 +365,7 @@ void maintain_product::on_nameButton_clicked(){
 
 void maintain_product::on_priceButton_s_clicked(){
 //    qDebug() << "Price button clicked" << endl;
-    price_s = true;
+    price_small = true;
 //    DbManager db(DB_PATH);
 
     _maintainProductPageTimeoutSec=40;
@@ -374,13 +374,13 @@ void maintain_product::on_priceButton_s_clicked(){
 //    ui->textEntry->setText("");
 //    ui->titleLabel->setText("New Price:");
 
-//    ui->price_s->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), 's')));
+//    ui->price_small->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), 's')));
 
 }
 
 void maintain_product::on_priceButton_l_clicked(){
 //    qDebug() << "Price button clicked" << endl;
-    price_l = true;
+    price_large = true;
 //    DbManager db(DB_PATH);
 
     _maintainProductPageTimeoutSec=40;
@@ -389,7 +389,7 @@ void maintain_product::on_priceButton_l_clicked(){
 //    ui->textEntry->setText("");
 //    ui->titleLabel->setText("New Price:");
 
-//    ui->price_l->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), 'l')));
+//    ui->price_large->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), 'l')));
 }
 
 
@@ -469,7 +469,7 @@ void maintain_product::on_refillButton_clicked(){
                 //Update Click DB
 //                DbManager db(DB_PATH);
 //                db.addPageClick("PRODUCT REFILLED");
-                ui->total_dispensed->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
+                ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
                 ui->remainingLabel->setText(QString::number(db.getRemaining(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
                 ui->lastRefillLabel->setText(db.getLastRefill(this->idlePage->userDrinkOrder->getOption()));
                 db.closeDB();
@@ -521,7 +521,7 @@ void maintain_product::on_soldOutButton_clicked(){
                 //Update Click DB
 //                DbManager db(DB_PATH);
 //                db.addPageClick("PRODUCT SOLD OUT");
-                ui->total_dispensed->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
+                ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
                 ui->remainingLabel->setText(QString::number(db.getRemaining(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
                 ui->soldOutButton->setText("Un-Mark as Sold Out");
                 break;
@@ -559,7 +559,7 @@ void maintain_product::on_soldOutButton_clicked(){
                 //Update Click DB
 //                DbManager db(DB_PATH);
 //                db.addPageClick("PRODUCT UN-SOLD OUT");
-                ui->total_dispensed->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
+                ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
                 ui->remainingLabel->setText(QString::number(db.getRemaining(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
                 ui->soldOutButton->setText("Mark as Sold Out");
                 break;
@@ -664,7 +664,7 @@ void maintain_product::on_pwmButton_clicked(){
 
 //void maintain_product::on_pluButton_s_clicked(){
 //    qDebug() << "PLU Button clicked" << endl;
-//    plu_s=true;
+//    plu_small=true;
 //    _maintainProductPageTimeoutSec=40;
 //    DbManager db(DB_PATH);
 //    ui->numberEntry->show();
@@ -677,7 +677,7 @@ void maintain_product::on_pwmButton_clicked(){
 
 //void maintain_product::on_pluButton_l_clicked(){
 //    qDebug() << "PLU Button clicked" << endl;
-//    plu_l=true;
+//    plu_large=true;
 //    _maintainProductPageTimeoutSec=40;
 //    DbManager db(DB_PATH);
 //    ui->numberEntry->show();
@@ -771,28 +771,28 @@ void maintain_product::on_buttonCancel_clicked(){
     ui->textEntry->setText("");
     ui->errorLabel->setText("");
     text_entered = "";
-    price_s = false;
-    price_l = false;
+    price_small = false;
+    price_large = false;
     target_s = false;
     target_l = false;
     vol_per_tick = false;
     full = false;
     pwm = false;
-//    plu_s=false;
-//    plu_l=false;
+//    plu_small=false;
+//    plu_large=false;
 }
 
 void maintain_product::updateValues(){
     DbManager db(DB_PATH);
     int checkOption = idlePage->userDrinkOrder->getOption();
 
-    if(price_s){
-        db.updatePrice_s(checkOption, text_entered.toDouble());
-        ui->price_s->setText("$" + QString::number(db.getProductPrice(checkOption, 's')));
+    if(price_small){
+        db.updatePrice_small(checkOption, text_entered.toDouble());
+        ui->price_small->setText("$" + QString::number(db.getProductPrice(checkOption, 's')));
 
-    }else if(price_l){
-        db.updatePrice_l(checkOption, text_entered.toDouble());
-        ui->price_l->setText("$" + QString::number(db.getProductPrice(checkOption, 'l')));
+    }else if(price_large){
+        db.updatePrice_large(checkOption, text_entered.toDouble());
+        ui->price_large->setText("$" + QString::number(db.getProductPrice(checkOption, 'l')));
 
     }else if(target_s){
         db.updateTargetVolume_s(checkOption, text_entered.toDouble());
@@ -816,21 +816,21 @@ void maintain_product::updateValues(){
         db.updatePWM(checkOption, new_pwm);
         ui->pwmLabel->setText(QString::number(round(double((db.getPWM(checkOption))*100)/255)) + "%");
     }
-//    else if(plu_s){
-//        db.updatePLU_s(checkOption, text_entered);
-//    }else if(plu_l){
-//        db.updatePLU_l(checkOption, text_entered);
+//    else if(plu_small){
+//        db.updatePLU_small(checkOption, text_entered);
+//    }else if(plu_large){
+//        db.updatePLU_large(checkOption, text_entered);
 //    }
 
-    price_s = false;
-    price_l = false;
+    price_small = false;
+    price_large = false;
     target_s = false;
     target_l = false;
     vol_per_tick = false;
     full = false;
     pwm = false;
-//    plu_s=false;
-//    plu_l=false;
+//    plu_small=false;
+//    plu_large=false;
 
     ui->textEntry->setText("");
     ui->titleLabel->setText("");
@@ -869,7 +869,7 @@ void maintain_product::curler(){
     DbManager db(DB_PATH);
     int checkOption = idlePage->userDrinkOrder->getOption();
 
-    QString curl_param = "pid="+db.getProductID(checkOption)+"&full_amount="+QString::number(db.getFullProduct(checkOption));
+    QString curl_param = "pid="+db.getProductID(checkOption)+"&volume_full="+QString::number(db.getFullProduct(checkOption));
     curl_param_array = curl_param.toLocal8Bit();
     curl_data = curl_param_array.data();
 

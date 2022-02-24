@@ -367,7 +367,7 @@ DF_ERROR messageMediator::parseCommandString()
        first_char == ACTION_MANUAL_PUMP_DIRECTION_FORWARD ||
        first_char == ACTION_MANUAL_PUMP_DIRECTION_REVERSE ||
        first_char == ACTION_MANUAL_PUMP_FLOW_TEST_TOGGLE ||
-       first_char == ACTION_MANUAL_PUMP_GAS_PUMP_MODEL_TEST_TOGGLE ||
+       first_char == ACTION_MANUAL_PUMP_CUSTOM_VOLUME_TEST_TOGGLE ||
        first_char == ACTION_PRINTER_REACHABLE)
    {
       m_requestedAction = first_char;
@@ -412,7 +412,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
             actionChar = sCommand[i];
          }
 
-         if (sCommand[i] == REQUESTED_VOLUME_1 || sCommand[i] == REQUESTED_VOLUME_2 || sCommand[i] == REQUESTED_VOLUME_CUSTOM)
+         if (sCommand[i] == REQUESTED_VOLUME_1 || sCommand[i] == REQUESTED_VOLUME_2 || sCommand[i] == REQUESTED_VOLUME_3 ||sCommand[i] == REQUESTED_VOLUME_CUSTOM)
          {
             volumeChar = (sCommand[i]);
          }
@@ -513,13 +513,18 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
          break;
 
       case REQUESTED_VOLUME_2:
-         debugOutput::sendMessage("Requested volume 2, Large Size", MSG_INFO);
+         debugOutput::sendMessage("Requested volume 2, Medium Size", MSG_INFO);
          m_requestedVolume = REQUESTED_VOLUME_2;
+         e_ret = OK;
+         break;
+      case REQUESTED_VOLUME_3:
+         debugOutput::sendMessage("Requested volume 3, Large Size", MSG_INFO);
+         m_requestedVolume = REQUESTED_VOLUME_3;
          e_ret = OK;
          break;
 
       case REQUESTED_VOLUME_CUSTOM:
-         debugOutput::sendMessage("Requested volume custom, Test Size", MSG_INFO);
+         debugOutput::sendMessage("Requested volume custom, Size", MSG_INFO);
          m_requestedVolume = REQUESTED_VOLUME_CUSTOM;
          e_ret = OK;
          break;
@@ -531,154 +536,3 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
 
    return e_ret;
 }
-
-// DF_ERROR messageMediator::parseCommandString()
-// {
-
-//    DF_ERROR e_ret = ERROR_BAD_PARAMS;
-//    debugOutput::sendMessage("parseCommandString", MSG_INFO);
-//    char temp[10];
-//    string commandString = getCommandString();
-
-//    char productChar = 'z';
-//    char actionChar = ACTION_DUMMY;
-//    char volumeChar = REQUESTED_VOLUME_DUMMY;
-
-//    // if (isdigit(commandString[0]))
-//    if (isdigit(commandString[0]))
-//    {
-//       productChar = commandString[0];
-//       debugOutput::sendMessage("digit", MSG_INFO);
-//    }
-
-//    if (commandString.size() > 1)
-//    {
-
-//       // FIXME: Need a better string parser...
-//       for (std::string::size_type i = 0; i < commandString.size(); ++i)
-//       {
-//          if ((commandString[i] == ACTION_DISPENSE_END) || (commandString[i] == ACTION_DISPENSE) || commandString[i] == PWM_CHAR)
-//          {
-//             actionChar = commandString[i];
-//          }
-
-//          if (commandString[i] == REQUESTED_VOLUME_1 || commandString[i] == REQUESTED_VOLUME_2 || commandString[i] == REQUESTED_VOLUME_CUSTOM)
-//          {
-//             volumeChar = (commandString[i]);
-//          }
-//       }
-//    }
-
-//    switch (productChar)
-//    {
-//    case '1':
-//    {
-//       m_RequestedProductIndexInt = 1;
-//       debugOutput::sendMessage("Product 1 requested", MSG_INFO);
-//       e_ret = OK;
-//       break;
-//    }
-//    case '2':
-//    {
-//       m_RequestedProductIndexInt = 2;
-//       debugOutput::sendMessage("Product 2 requested", MSG_INFO);
-//       e_ret = OK;
-//       break;
-//    }
-//    case '3':
-//    {
-//       m_RequestedProductIndexInt = 3;
-//       debugOutput::sendMessage("Product 3 requested", MSG_INFO);
-//       e_ret = OK;
-//       break;
-//    }
-//    case '4':
-//    {
-//       m_RequestedProductIndexInt = 4;
-//       debugOutput::sendMessage("Product 4 requested", MSG_INFO);
-//       e_ret = OK;
-//       break;
-//    }
-//    default:
-//    {
-//       debugOutput::sendMessage("No product requested [1..4]", MSG_INFO);
-//       break;
-//    }
-//    }
-
-//    if (!isalpha(actionChar))
-//    {
-//       debugOutput::sendMessage("Irrelevant input .. ", MSG_INFO);
-//    }
-//    else if (actionChar == ACTION_DUMMY)
-//    {
-//       debugOutput::sendMessage("No action provided ", MSG_INFO);
-//    }
-//    else
-//    {
-//       // TODO: Parse and save a reference for command string
-
-//       switch (actionChar)
-//       {
-//       case ACTION_DISPENSE:
-//          debugOutput::sendMessage("Action: Dispense", MSG_INFO);
-//          // m_nSolenoid = PRODUCT;
-//          m_requestedAction = ACTION_DISPENSE;
-//          e_ret = OK;
-//          break;
-
-//       case PWM_CHAR:
-//          debugOutput::sendMessage("Action: PWM", MSG_INFO);
-//          m_requestedAction = PWM_CHAR;
-//          e_ret = OK;
-//          break;
-
-//       case ACTION_DISPENSE_END:
-//          debugOutput::sendMessage("Action: End Dispense", MSG_INFO);
-//          m_requestedAction = ACTION_DISPENSE_END;
-//          e_ret = OK;
-//          break;
-
-//       default:
-//          break;
-//       }
-//    }
-
-//    if (!isalpha(volumeChar))
-//    {
-//       // e_ret = ERROR_NETW_NO_POSITION;
-//    }
-//    else if (volumeChar == REQUESTED_VOLUME_DUMMY)
-//    {
-//       debugOutput::sendMessage("No Requested volume provided", MSG_INFO);
-//    }
-//    else
-//    {
-//       switch (volumeChar)
-//       {
-//       case REQUESTED_VOLUME_1:
-//          debugOutput::sendMessage("Requested volume 1, Small Size", MSG_INFO);
-//          m_requestedVolume = REQUESTED_VOLUME_1;
-//          e_ret = OK;
-//          break;
-
-//       case REQUESTED_VOLUME_2:
-//          debugOutput::sendMessage("Requested volume 2, Large Size", MSG_INFO);
-//          m_requestedVolume = REQUESTED_VOLUME_2;
-//          e_ret = OK;
-//          break;
-
-//       case REQUESTED_VOLUME_CUSTOM:
-//          debugOutput::sendMessage("Requested volume custom, Test Size", MSG_INFO);
-//          m_requestedVolume = REQUESTED_VOLUME_CUSTOM;
-//          e_ret = OK;
-//          break;
-
-//       default:
-//          break;
-//       }
-//    }
-
-//    this->clearCommandString();
-//    return e_ret;
-// }

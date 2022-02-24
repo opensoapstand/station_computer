@@ -78,20 +78,34 @@ static int db_sql_callback(void *data, int argc, char **argv, char **azColName)
 // }
 
 // Test CTOR
-product::product(int slot, string name, double nVolumeDispensed, double nVolumeTarget_l, double nVolumeTarget_s, double calibration_const, double price_l, double price_s, bool isStillProduct, double nVolumePerTick, string nPLU_l, string nPLU_s, string paymentMethod, string name_receipt)
+product::product(int slot, string name, double calibration_const, double nVolumePerTick, 
+    double nVolumeTarget_s, double nVolumeTarget_m, double nVolumeTarget_l, double nVolumeTarget_c_min, double nVolumeTarget_c_max,
+    double price_small, double price_m, double price_large, double price_c_per_liter, 
+   string nPLU_small, string nPLU_m,  string nPLU_large, string nPLU_c,
+   string paymentMethod, string name_receipt)
 {
     m_nSlot = slot;
     m_name = name;
-    m_nVolumeDispensed = nVolumeDispensed;
+    m_nVolumeDispensed = 0.0;
+    m_nVolumePerTick = nVolumePerTick;
+    m_calibration_const = calibration_const;
+
+    m_nVolumeTarget_m = nVolumeTarget_m;
     m_nVolumeTarget_l = nVolumeTarget_l;
     m_nVolumeTarget_s = nVolumeTarget_s;
-    m_calibration_const = calibration_const;
-    m_price_l = price_l;
-    m_price_s = price_s;
-    // m_isStillProduct = isStillProduct;
-    m_nVolumePerTick = nVolumePerTick;
-    m_nPLU_l = nPLU_l;
-    m_nPLU_s = nPLU_s;
+    m_nVolumeTarget_c_min = nVolumeTarget_c_min;
+    m_nVolumeTarget_c_max = nVolumeTarget_c_max;
+    
+    m_price_small = price_small;
+    m_price_m = price_m;
+    m_price_large = price_large;
+    m_price_c_per_liter = price_c_per_liter;
+
+    m_nPLU_small = nPLU_small;
+    m_nPLU_m = nPLU_m;
+    m_nPLU_large = nPLU_large;
+    m_nPLU_c = nPLU_c;
+    
     m_paymentMethod = paymentMethod;
     m_name_receipt = name_receipt;
 
@@ -252,7 +266,7 @@ DF_ERROR product::stopDispense()
 }
 
 // VolumeDispense check!
-bool product::isDispenseComplete()
+bool product::isDispenseTargetVolumeReached()
 {
     bool bRet = false;
 
@@ -289,23 +303,31 @@ double product::getTargetVolume(char size)
     {
         return m_nVolumeTarget_l;
     }
+    else if (size == 'm')
+    {
+        return m_nVolumeTarget_m;
+    }
     else if (size == 's')
     {
         return m_nVolumeTarget_s;
     }
     else if (size == 't')
-        return m_nVolumeTarget_t;
+        return m_nVolumeTarget_c_max;
 }
 
 double product::getPrice(char size)
 {
     if (size == 'l')
     {
-        return m_price_l;
+        return m_price_large;
+    }
+    else if (size == 'm')
+    {
+        return m_price_m;
     }
     else if (size == 's')
     {
-        return m_price_s;
+        return m_price_small;
     }
 }
 
@@ -313,10 +335,14 @@ string product::getPLU(char size)
 {
     if (size == 'l')
     {
-        return m_nPLU_l;
+        return m_nPLU_large;
     }
     else if (size == 's')
     {
-        return m_nPLU_s;
+        return m_nPLU_small;
+    }
+    else if (size == 'm')
+    {
+        return m_nPLU_m;
     }
 }

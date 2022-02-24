@@ -128,16 +128,23 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
     int slot;
     string name;
     double volume_dispensed;
-    double volume_target_l;
-    double volume_target_s;
+    double volume_large;
+    double volume_medium;
+    double volume_small;
+    double volume_target_c_min;
+    double volume_target_c_max;
     double calibration_const;
-    double price_l;
-    double price_s;
+    double price_large;
+    double price_small;
+    double price_m;
+    double price_c_per_liter;
     int is_still;
     double volume_per_tick;
     string paymentMethod;
-    string plu_l;
-    string plu_s;
+    string plu_large;
+    string plu_m;
+    string plu_small;
+    string plu_c;
     string name_receipt;
 
     //   printf("\n----------\n");
@@ -163,25 +170,37 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
         {
             volume_dispensed = atof(argv[i]);
         }
-        else if (colname == "volume_target_l")
+        else if (colname == "volume_medium")
         {
-            volume_target_l = atof(argv[i]);
+            volume_medium = atof(argv[i]);
         }
-        else if (colname == "volume_target_s")
+        else if (colname == "volume_target_c_min")
         {
-            volume_target_s = atof(argv[i]);
+            volume_target_c_min = atof(argv[i]);
+        }
+        else if (colname == "volume_target_c_max")
+        {
+            volume_target_c_max = atof(argv[i]);
+        }
+        else if (colname == "volume_large")
+        {
+            volume_large = atof(argv[i]);
+        }
+        else if (colname == "volume_small")
+        {
+            volume_small = atof(argv[i]);
         }
         else if (colname == "calibration_const")
         {
             calibration_const = atof(argv[i]);
         }
-        else if (colname == "price_l")
+        else if (colname == "price_large")
         {
-            price_l = atof(argv[i]);
+            price_large = atof(argv[i]);
         }
-        else if (colname == "price_s")
+        else if (colname == "price_small")
         {
-            price_s = atof(argv[i]);
+            price_small = atof(argv[i]);
         }
         else if (colname == "is_still")
         {
@@ -191,13 +210,13 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
         {
             volume_per_tick = atof(argv[i]);
         }
-        else if (colname == "PLU_l")
+        else if (colname == "PLU_large")
         {
-            plu_l = argv[i];
+            plu_large = argv[i];
         }
-        else if (colname == "PLU_s")
+        else if (colname == "PLU_small")
         {
-            plu_s = argv[i];
+            plu_small = argv[i];
         }
         else if (colname == "payment")
         {
@@ -206,20 +225,11 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
 
         g_productDispensers[slot - 1].setSlot(slot);
         g_productDispensers[slot - 1].setProduct(
-            new product(slot,
-                        name,
-                        volume_dispensed,
-                        volume_target_l,
-                        volume_target_s,
-                        calibration_const,
-                        price_l,
-                        price_s,
-                        false,
-                        volume_per_tick,
-                        plu_l,
-                        plu_s,
-                        paymentMethod,
-                        name_receipt));
+            new product(slot, name,calibration_const, volume_per_tick,
+                        volume_small, volume_medium, volume_large, volume_target_c_min, volume_target_c_max,
+                        price_small, price_m, price_large, price_c_per_liter,
+                        plu_small, plu_m, plu_large, plu_c,
+                        paymentMethod, name_receipt));
     }
 
     return 0;

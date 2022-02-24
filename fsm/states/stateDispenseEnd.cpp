@@ -156,7 +156,7 @@ DF_ERROR stateDispenseEnd::sendDB()
         dispensed_volume = to_string(productDispensers[pos].getProduct()->m_nVolumeDispensed);
     }
 
-    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume + "&size_unit=ml&price=" + price + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + EndTime + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer";
+    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume + "&display_unit=ml&price=" + price + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + EndTime + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer";
     char buffer[1080];
     strcpy(buffer, curl_param.c_str());
 
@@ -353,7 +353,7 @@ DF_ERROR stateDispenseEnd::updateDB()
 
     if (rc != SQLITE_OK)
     {
-        //        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        // fprintf(stderr, "SQL error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
     }
     else
@@ -363,7 +363,7 @@ DF_ERROR stateDispenseEnd::updateDB()
 
     /* Create SQL statement for total product dispensed */
     std::string sql2;
-    sql2 = ("UPDATE products SET total_dispensed=total_dispensed+" + dispensed_volume + " WHERE name='" + product + "';");
+    sql2 = ("UPDATE products SET volume_dispensed_total=volume_dispensed_total+" + dispensed_volume + " WHERE name='" + product + "';");
 
     char *sql_prod = new char[sql2.length() + 1];
     strcpy(sql_prod, sql2.c_str());
@@ -383,7 +383,7 @@ DF_ERROR stateDispenseEnd::updateDB()
 
     /* Create SQL statement for product remaining */
     std::string sql3;
-    sql3 = ("UPDATE products SET remaining_ml=full_ml-total_dispensed WHERE name='" + product + "';");
+    sql3 = ("UPDATE products SET volume_remaining=volume_full-volume_dispensed_total WHERE name='" + product + "';");
 
     char *sql_prod2 = new char[sql3.length() + 1];
     strcpy(sql_prod2, sql3.c_str());
@@ -424,12 +424,12 @@ DF_ERROR stateDispenseEnd::printer()
 
     if (size == 'l')
     {
-        plu = (productDispensers[pos].getProduct()->m_nPLU_l);
+        plu = (productDispensers[pos].getProduct()->m_nPLU_large);
         snprintf(volume2, sizeof(volume2), "%.0f", productDispensers[pos].getProduct()->m_nVolumeTarget_l);
     }
     else
     {
-        plu = (productDispensers[pos].getProduct()->m_nPLU_s);
+        plu = (productDispensers[pos].getProduct()->m_nPLU_small);
         snprintf(volume2, sizeof(volume2), "%.0f", productDispensers[pos].getProduct()->m_nVolumeTarget_s);
     }
 

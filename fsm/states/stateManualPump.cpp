@@ -123,7 +123,7 @@ DF_ERROR stateManualPump::onAction()
          }
       }
 
-      if (ACTION_MANUAL_PUMP_GAS_PUMP_MODEL_TEST_TOGGLE == m_pMessaging->getAction())
+      if (ACTION_MANUAL_PUMP_CUSTOM_VOLUME_TEST_TOGGLE == m_pMessaging->getAction())
       {
          dispenseButtonValueMemory = false;
          isGasPumpModelTest = !isGasPumpModelTest;

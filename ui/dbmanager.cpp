@@ -110,10 +110,10 @@ double DbManager::getProductPrice(int slot, char ml){
     {
 
     if (ml == 'l'){
-        price_query.prepare("SELECT price_l FROM products WHERE slot=:slot");
+        price_query.prepare("SELECT price_large FROM products WHERE slot=:slot");
     }
     else if (ml == 's'){
-        price_query.prepare("SELECT price_s FROM products WHERE slot=:slot");
+        price_query.prepare("SELECT price_small FROM products WHERE slot=:slot");
     }
 
     price_query.bindValue(":slot", slot);
@@ -157,10 +157,16 @@ double DbManager::getProductVolume(int slot, char ml){
     {
 
     if (ml == 'l'){
-        volume_query.prepare("SELECT volume_target_l FROM products WHERE slot=:slot");
+        volume_query.prepare("SELECT volume_large FROM products WHERE slot=:slot");
+    }
+    else if (ml == 'm'){
+        volume_query.prepare("SELECT volume_medium FROM products WHERE slot=:slot");
     }
     else if (ml == 's'){
-        volume_query.prepare("SELECT volume_target_s FROM products WHERE slot=:slot");
+        volume_query.prepare("SELECT volume_small FROM products WHERE slot=:slot");
+    }
+    else if (ml == 'c'){
+        volume_query.prepare("SELECT volume_custom FROM products WHERE slot=:slot");
     }
     volume_query.bindValue(":slot", slot);
     volume_query.exec();
@@ -179,7 +185,7 @@ double DbManager::getFullProduct(int slot){
     double full;
 
     {
-    full_query.prepare("SELECT full_ml FROM products WHERE slot=:slot");
+    full_query.prepare("SELECT volume_full FROM products WHERE slot=:slot");
     full_query.bindValue(":slot", slot);
     full_query.exec();
 
@@ -215,7 +221,7 @@ bool DbManager::checkLevels(int slot){
     double level;
 
     {
-    level_query.prepare("SELECT remaining_ml FROM products where slot=:slot");
+    level_query.prepare("SELECT volume_remaining FROM products where slot=:slot");
     level_query.bindValue(":slot", slot);
     level_query.exec();
 
@@ -236,15 +242,15 @@ bool DbManager::refill(int slot){
     bool success=false;
 
     {
-    refill_query.prepare("UPDATE products SET remaining_ml=full_ml WHERE slot=:slot");
+    refill_query.prepare("UPDATE products SET volume_remaining=volume_full WHERE slot=:slot");
     refill_query.bindValue(":slot", slot);
     if(refill_query.exec())
     {
-        refill_query.prepare("UPDATE products SET total_dispensed=0 WHERE slot=:slot");
+        refill_query.prepare("UPDATE products SET volume_dispensed_total=0 WHERE slot=:slot");
         refill_query.bindValue(":slot", slot);
         if(refill_query.exec()){
             QSqlQuery refill_date;
-            refill_date.prepare("UPDATE products SET last_refill=:time WHERE slot=:slot");
+            refill_date.prepare("UPDATE products SET last_restock=:time WHERE slot=:slot");
             refill_date.bindValue(":slot", slot);
             refill_date.bindValue(":time", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 
@@ -280,7 +286,7 @@ bool DbManager::sellout(int slot){
 //    double remaining = getFullProduct(slot);
     {
 
-    sellout_query.prepare("UPDATE products SET remaining_ml=0 WHERE slot=:slot");
+    sellout_query.prepare("UPDATE products SET volume_remaining=0 WHERE slot=:slot");
     sellout_query.bindValue(":slot", slot);
     if(sellout_query.exec())
     {
@@ -303,7 +309,7 @@ bool DbManager::unsellout(int slot){
     bool success=false;
     {
 
-    sellout_query.prepare("UPDATE products SET remaining_ml=full_ml-total_dispensed WHERE slot=:slot");
+    sellout_query.prepare("UPDATE products SET volume_remaining=volume_full-volume_dispensed_total WHERE slot=:slot");
     sellout_query.bindValue(":slot", slot);
     if(sellout_query.exec())
     {
@@ -369,7 +375,7 @@ double DbManager::getTotalDispensed(int slot){
     double dispensed;
 
     {
-    dispensed_query.prepare("SELECT total_dispensed FROM products WHERE slot=:slot");
+    dispensed_query.prepare("SELECT volume_dispensed_total FROM products WHERE slot=:slot");
     dispensed_query.bindValue(":slot", slot);
     dispensed_query.exec();
 
@@ -386,7 +392,7 @@ double DbManager::getRemaining(int slot){
     double remaining;
 
     {
-    remaining_query.prepare("SELECT remaining_ml FROM products WHERE slot=:slot");
+    remaining_query.prepare("SELECT volume_remaining FROM products WHERE slot=:slot");
     remaining_query.bindValue(":slot", slot);
     remaining_query.exec();
 
@@ -403,7 +409,7 @@ QString DbManager::getLastRefill(int slot){
     QString refill_date_string;
 
     {
-    refill_date_query.prepare("SELECT last_refill FROM products WHERE slot=:slot");
+    refill_date_query.prepare("SELECT last_restock FROM products WHERE slot=:slot");
     refill_date_query.bindValue(":slot", slot);
     refill_date_query.exec();
 
@@ -436,7 +442,7 @@ int DbManager::getPWM(int slot){
     double pwm;
 
     {
-    pwm_query.prepare("SELECT pwm FROM products WHERE slot=:slot");
+    pwm_query.prepare("SELECT dispense_speed FROM products WHERE slot=:slot");
     pwm_query.bindValue(":slot", slot);
     pwm_query.exec();
 
@@ -498,11 +504,11 @@ bool DbManager::updatePaymentsDb(QString date,QString time, QString txnType, QSt
     return success;
 }
 
-bool DbManager::updatePrice_s(int slot, double new_price){
+bool DbManager::updatePrice_small(int slot, double new_price){
     QSqlQuery update_price_query;
 
     {
-    update_price_query.prepare("UPDATE products SET price_s = :new_price WHERE slot = :slot");
+    update_price_query.prepare("UPDATE products SET price_small = :new_price WHERE slot = :slot");
     update_price_query.bindValue(":new_price", new_price);
     update_price_query.bindValue(":slot", slot);
 
@@ -518,11 +524,11 @@ bool DbManager::updatePrice_s(int slot, double new_price){
     }
 }
 
-bool DbManager::updatePrice_l(int slot, double new_price){
+bool DbManager::updatePrice_large(int slot, double new_price){
     QSqlQuery update_price_query;
 
     {
-    update_price_query.prepare("UPDATE products SET price_l = :new_price WHERE slot = :slot");
+    update_price_query.prepare("UPDATE products SET price_large = :new_price WHERE slot = :slot");
     update_price_query.bindValue(":new_price", new_price);
     update_price_query.bindValue(":slot", slot);
 
@@ -540,7 +546,7 @@ bool DbManager::updatePrice_l(int slot, double new_price){
 bool DbManager::updateTargetVolume_s(int slot, double new_volume){
     QSqlQuery update_target_volume_query;
 {
-    update_target_volume_query.prepare("UPDATE products SET volume_target_s=:new_volume WHERE slot=:slot");
+    update_target_volume_query.prepare("UPDATE products SET volume_small=:new_volume WHERE slot=:slot");
     update_target_volume_query.bindValue(":new_volume", new_volume);
     update_target_volume_query.bindValue(":slot", slot);
 
@@ -560,7 +566,7 @@ bool DbManager::updateTargetVolume_l(int slot, double new_volume){
     QSqlQuery update_target_volume_query;
 
     {
-    update_target_volume_query.prepare("UPDATE products SET volume_target_l=:new_volume WHERE slot=:slot");
+    update_target_volume_query.prepare("UPDATE products SET volume_large=:new_volume WHERE slot=:slot");
     update_target_volume_query.bindValue(":new_volume", new_volume);
     update_target_volume_query.bindValue(":slot", slot);
 
@@ -598,7 +604,7 @@ bool DbManager::updateFullVolume(int slot, double new_full_volume){
     QSqlQuery update_full_volume_query;
 
     {
-    update_full_volume_query.prepare("UPDATE products SET full_ml=:new_full_volume WHERE slot=:slot");
+    update_full_volume_query.prepare("UPDATE products SET volume_full=:new_full_volume WHERE slot=:slot");
     update_full_volume_query.bindValue(":new_full_volume", new_full_volume);
     update_full_volume_query.bindValue(":slot", slot);
 
@@ -617,7 +623,7 @@ bool DbManager::updatePWM(int slot, int new_pwm){
     QSqlQuery pwm_query;
 
     {
-    pwm_query.prepare("UPDATE products SET pwm=:new_pwm WHERE slot=:slot");
+    pwm_query.prepare("UPDATE products SET dispense_speed=:new_pwm WHERE slot=:slot");
     pwm_query.bindValue(":new_pwm", new_pwm);
     pwm_query.bindValue(":slot", slot);
 
@@ -653,30 +659,30 @@ bool DbManager::updateBuffer(int slot, double new_buffer){
 
 QString DbManager::getPLU(int slot, char size){
     QSqlQuery plu_query;
-    QString plu_string;
+    QString plu_smalltring;
 
     {
     if (size == 's'){
-        plu_query.prepare("SELECT PLU_s FROM products WHERE slot=:slot");
+        plu_query.prepare("SELECT PLU_small FROM products WHERE slot=:slot");
     }else if (size == 'l'){
-        plu_query.prepare("SELECT PLU_l FROM products WHERE slot=:slot");
+        plu_query.prepare("SELECT PLU_large FROM products WHERE slot=:slot");
     }
     plu_query.bindValue(":slot", slot);
     plu_query.exec();
 
     while (plu_query.next()) {
-            plu_string = plu_query.value(0).toString();
+            plu_smalltring = plu_query.value(0).toString();
         }
 
     }
-    return plu_string;
+    return plu_smalltring;
 }
 
-bool DbManager::updatePLU_s(int slot, QString new_plu){
+bool DbManager::updatePLU_small(int slot, QString new_plu){
     QSqlQuery plu_query;
 
     {
-    plu_query.prepare("UPDATE products SET PLU_s=:new_plu WHERE slot=:slot");
+    plu_query.prepare("UPDATE products SET PLU_small=:new_plu WHERE slot=:slot");
     plu_query.bindValue(":new_plu", new_plu);
     plu_query.bindValue(":slot", slot);
 
@@ -691,11 +697,11 @@ bool DbManager::updatePLU_s(int slot, QString new_plu){
     }
 }
 
-bool DbManager::updatePLU_l(int slot, QString new_plu){
+bool DbManager::updatePLU_large(int slot, QString new_plu){
     QSqlQuery plu_query;
 
     {
-    plu_query.prepare("UPDATE products SET PLU_l=:new_plu WHERE slot=:slot");
+    plu_query.prepare("UPDATE products SET PLU_large=:new_plu WHERE slot=:slot");
     plu_query.bindValue(":new_plu", new_plu);
     plu_query.bindValue(":slot", slot);
 
@@ -750,7 +756,7 @@ QString DbManager::getUnits(int slot){
     QString units_string;
 
     {
-    units_query.prepare("SELECT units FROM products WHERE slot=:slot");
+    units_query.prepare("SELECT display_unit FROM products WHERE slot=:slot");
     units_query.bindValue(":slot", slot);
     units_query.exec();
 

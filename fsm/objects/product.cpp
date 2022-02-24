@@ -81,7 +81,7 @@ static int db_sql_callback(void *data, int argc, char **argv, char **azColName)
 product::product(int slot, string name, double calibration_const, double nVolumePerTick, 
     double nVolumeTarget_s, double nVolumeTarget_m, double nVolumeTarget_l, double nVolumeTarget_c_min, double nVolumeTarget_c_max,
     double price_small, double price_m, double price_large, double price_c_per_liter, 
-   string nPLU_small, string nPLU_m,  string nPLU_large, string nPLU_c,
+    string nPLU_small, string nPLU_m,  string nPLU_large, string nPLU_c,
    string paymentMethod, string name_receipt)
 {
     m_nSlot = slot;

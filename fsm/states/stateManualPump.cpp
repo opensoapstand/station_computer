@@ -257,9 +257,13 @@ DF_ERROR stateManualPump::customVolumeDispenseTest()
 
 DF_ERROR stateManualPump::pumpFlowTest()
 {
+      // double volume = productDispensers[0].getDispensedVolume();
+      // debugOutput::sendMessage("Dispense flowRate test. millis/totalvolumne/avgSinceLastcall/02s avg/05s avg/1s avg, " + to_string(volume),MSG_INFO);
+      // debugOutput::sendMessage("volume per tick " + to_string(productDispensers[0].getProduct()->getVolumePerTick() ), MSG_INFO);
+           
    if (productDispensers[0].getDispenseButtonValue() & productDispensers[0].isPumpEnabled())
    {
-      double volume = productDispensers[0].getDispensedVolume();
+      
       // instant flow rate
       double flowRate = productDispensers[0].getInstantFlowRate();
 
@@ -292,8 +296,8 @@ DF_ERROR stateManualPump::pumpFlowTest()
       //                          //+ "," + to_string(avg_5s.value)
       //                          ,
       //                          MSG_INFO);
-      usleep(50000);
    }
+   usleep(50000);
 }
 
 DF_ERROR stateManualPump::pumpTest()

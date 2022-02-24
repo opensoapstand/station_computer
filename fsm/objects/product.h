@@ -42,8 +42,7 @@ public:
         ~product();
 
         //getter
-        int getProductOption() { return m_nSlot; } // For IPC
-        bool getIsStillProduct();                  // For pump check
+        double getVolumePerTick();
         double getVolumeDispensed() { return m_nVolumeDispensed; }
         double getVolumeDispensedPreviously();
         double getTargetVolume(char size);
@@ -60,9 +59,6 @@ public:
         double getVolumeSinceLastPoll();
         bool isDispenseTargetVolumeReached();
         bool registerFlowSensorTick();
-
-        // int getTickCount(){return m_nTickCount;};
-        // void resetTickCount(){m_nTickCount = 0;};
 
         // DB Updates
         void recordSale(int volume);
@@ -102,7 +98,7 @@ public:
         string m_nPLU_large;
         string m_nPLU_custom;
         string m_paymentMethod;
-        int m_PWM;
+        // int m_PWM;
         double m_nVolumePerTick;
 
         time_t rawtime;

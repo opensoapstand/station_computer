@@ -208,6 +208,7 @@ bool dispenser::isPumpEnabled()
 
 DF_ERROR dispenser::setPumpEnable(int pos)
 {
+    // first pump is 1.
     // still needs dispense button to actually get the pump to start
     debugOutput::sendMessage("-----Start Pump-----", MSG_INFO);
     the_8344->setPumpEnable(pos);

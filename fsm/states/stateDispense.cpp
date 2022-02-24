@@ -104,7 +104,13 @@ DF_ERROR stateDispense::onAction()
    // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
    m_pMessaging->sendMessage(to_string(productDispensers[pos].getProduct()->getVolumeDispensed()));
 
-   debugOutput::sendMessage("debug. target(small): " + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_s) + ". target(large): " + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_l) + "Vol dispensed: " + to_string(productDispensers[pos].getProduct()->getVolumeDispensed()), MSG_INFO);
+   debugOutput::sendMessage("debug. targets s,m,l,c:" + 
+      to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_s) + 
+      "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_m) + 
+      "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_l) + 
+      "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_c_max) + 
+      ", Vol dispensed: " + to_string(productDispensers[pos].getDispensedVolume()) 
+      ,MSG_INFO);
 
    if (productDispensers[pos].getProduct()->getVolumeDispensedPreviously() == productDispensers[pos].getProduct()->getVolumeDispensed())
    {
@@ -114,7 +120,6 @@ DF_ERROR stateDispense::onAction()
    else
    {
       // continue dispensing
-      //m_state_requested = STATE_DISPENSE;
       productDispensers[pos].getProduct()->m_nVolumeDispensedPreviously = productDispensers[pos].getProduct()->getVolumeDispensed();
    }
 

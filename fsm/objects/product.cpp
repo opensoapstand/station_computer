@@ -130,6 +130,10 @@ void product::setProductName(string productName)
     m_name = productName;
 }
 
+
+double product::getVolumePerTick(){
+    return m_nVolumePerTick;
+}
 bool product::registerFlowSensorTick()
 {
     //    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
@@ -172,8 +176,8 @@ DF_ERROR product::initDispense(int nVolumeToDispense, double nPrice)
     m_nVolumeDispensed = 0;
     m_nVolumeDispensedPreviously = 0;
     m_nVolumeDispensedSinceLastPoll = 0;
-    m_nVolumePerTick = getVolPerTick();
-    m_PWM = getPWM();
+    //m_nVolumePerTick = getVolPerTick();
+    //m_PWM = getPWM();
 
     // Set Start Time
     time(&rawtime);
@@ -189,6 +193,7 @@ int product::getPWM(){
 }
 int product::getPWMFromDB()
 {
+    // abandonned by Lode. What about updating the whole product properties at once when needed.
     rc = sqlite3_open(DB_PATH, &db);
 
     sqlite3_stmt *stmt;
@@ -221,8 +226,10 @@ int product::getPWMFromDB()
 double product::getVolPerTick(){
     return m_volumePerTick;
 }
+
 double product::getVolPerTickFromDB()
 {
+    // abandonned by Lode. What about updating the whole product properties at once when needed.
 
     rc = sqlite3_open(DB_PATH, &db);
 

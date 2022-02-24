@@ -76,21 +76,35 @@ DF_ERROR stateDispenseIdle::onAction()
         return df_ret = OK;
     }
 
-    // productDispensers[pos].getProduct()->productVolumeInfo();
 
     // If volume has not changed, stay in Idle state, else, volume is changing, go to Dispense state...
     if (productDispensers[pos].getProduct()->getVolumeDispensed() == productDispensers[pos].getProduct()->getVolumeDispensedPreviously())
     {
-        debugOutput::sendMessage("Wait for volume to change to go to dispensing state", MSG_INFO);
-        m_state_requested = STATE_DISPENSE_IDLE;
+        debugOutput::sendMessage("Wait for volume to change to go to dispensing state" +  to_string(productDispensers[pos].getProduct()->getVolumeDispensedPreviously()) + " --- " +
+        to_string(productDispensers[pos].getProduct()->getVolumeDispensed())  
+         , MSG_INFO);
     }
     else
     {
+        debugOutput::sendMessage("DO STATE CHANGE!!!!volume change detected, go to dispense state." +  to_string(productDispensers[pos].getProduct()->getVolumeDispensedPreviously()) + " --- " +
+        to_string(productDispensers[pos].getProduct()->getVolumeDispensed())  
+         , MSG_INFO);
+
         productDispensers[pos].getProduct()->m_nVolumeDispensedPreviously = productDispensers[pos].getProduct()->getVolumeDispensed();
+
+        
         m_state_requested = STATE_DISPENSE;
     }
 
-    debugOutput::sendMessage("dispense idle.", MSG_INFO);
+    // debugOutput::sendMessage("-------" , MSG_INFO);
+    // debugOutput::sendMessage("pump enabled?!       :" + to_string(productDispensers[0].getProduct()->getVolumePerTick() ), MSG_INFO);
+    // debugOutput::sendMessage("pump enabled?!       :" + to_string(productDispensers[0].isPumpEnabled() ), MSG_INFO);
+    // debugOutput::sendMessage("volume dispensed       :" + to_string(productDispensers[pos].getDispensedVolume() ), MSG_INFO);
+    // debugOutput::sendMessage("volume dispenseeeffefd1:" +to_string(productDispensers[0].getDispensedVolume()), MSG_INFO);
+    // debugOutput::sendMessage("volume dispenseeeffefd2:" +to_string(productDispensers[1].getDispensedVolume()), MSG_INFO);
+    // debugOutput::sendMessage("volume dispenseeeffefd3:" +to_string(productDispensers[2].getDispensedVolume()), MSG_INFO);
+    // debugOutput::sendMessage("volume dispenseeeffefd4:" +to_string(productDispensers[3].getDispensedVolume()), MSG_INFO);
+
     usleep(500000);
     df_ret = OK;
 

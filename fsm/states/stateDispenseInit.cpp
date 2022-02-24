@@ -61,20 +61,16 @@ DF_ERROR stateDispenseInit::onAction()
     DF_ERROR e_ret = OK;
 
     debugOutput::sendMessage("Chosen dispenser slot: " + std::to_string(  productDispensers[dispenser_index].getSlot()), MSG_INFO);
-    debugOutput::sendMessage("Chosen dispenser slot: " + std::to_string(  productDispensers[dispenser_index].getProduct()->getTargetVolume(size)), MSG_INFO);
-    debugOutput::sendMessage("Chosen dispenser slot: " + std::to_string(  productDispensers[dispenser_index].getProduct()->getPrice(size)), MSG_INFO);
+    // debugOutput::sendMessage("Chosen dispenser slot: " + std::to_string(  productDispensers[dispenser_index].getProduct()->getTargetVolume(size)), MSG_INFO);
+    // debugOutput::sendMessage("Chosen dispenser slot: " + std::to_string(  productDispensers[dispenser_index].getProduct()->getPrice(size)), MSG_INFO);
 
-     debugOutput::sendMessage("1", MSG_INFO);
     productDispensers[dispenser_index].getProduct()->initDispense(
         productDispensers[dispenser_index].getProduct()->getTargetVolume(size),
         productDispensers[dispenser_index].getProduct()->getPrice(size));
 
-     debugOutput::sendMessage("2", MSG_INFO);
     productDispensers[dispenser_index].getProduct()->productInfo();
-     debugOutput::sendMessage("3", MSG_INFO); 
     productDispensers[dispenser_index].getProduct()->productVolumeInfo();
 
-     debugOutput::sendMessage("4", MSG_INFO);
     productDispensers[dispenser_index].startDispense();
     m_state_requested = STATE_DISPENSE_IDLE;
 

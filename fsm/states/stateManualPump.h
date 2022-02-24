@@ -31,7 +31,7 @@ public:
     string toString();
     DF_ERROR pumpTest();
     DF_ERROR pumpFlowTest();
-    DF_ERROR gasPumpModelTest();
+    DF_ERROR customVolumeDispenseTest();
 
     DF_ERROR onEntry();
     DF_ERROR onAction();
@@ -40,7 +40,7 @@ public:
 private:
     dispenser *productDispensers;
     bool isFlowTest=false;
-    bool isGasPumpModelTest=false;
+    bool iscustomVolumeDispenseTest=false;
     bool dispenseButtonValueMemory=false;
     bool dispenseButtonValue=false;
 

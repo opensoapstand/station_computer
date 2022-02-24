@@ -114,7 +114,13 @@ void dispenser::initDispenser(int slot)
 // }
 DF_ERROR dispenser::setSlot(int slot)
 {
+    // first slot is 1
     this->slot = slot;
+}
+int dispenser::getSlot()
+{
+    // first slot is 1
+    return this->slot;
 }
 
 // TODO: Call this function on Dispense onEntry()

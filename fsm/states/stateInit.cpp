@@ -139,10 +139,11 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
     double calibration_const;
     double price_large;
     double price_small;
-    double price_m;
-    double price_c_per_liter;
+    double price_medium;
+    double price_custom_per_liter;
     int is_still;
     double volume_per_tick;
+    int dispense_speed_pwm;
     string paymentMethod;
 
     string plu_large;
@@ -166,12 +167,12 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
     {
         //printf("%s = %s\n", azColName[i], argv[i]);
         std::string colname = azColName[i];
-        
-        
-        char* value = argv[i];
+
+        char *value = argv[i];
         char dummy = '0';
-        char* dummy_pointer = &dummy;
-        if (!value){
+        char *dummy_pointer = &dummy;
+        if (!value)
+        {
             debugOutput::sendMessage("colname, NULL --> set to 0 :" + colname, MSG_INFO);
             value = dummy_pointer;
         }
@@ -181,7 +182,6 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
         if (colname == "slot")
         {
             slot = atoi(value);
-            //  debugOutput::sendMessage("------------------------------------" + colname, MSG_INFO);
         }
         else if (colname == "name")
         {
@@ -225,7 +225,7 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
         }
         else if (colname == "price_medium")
         {
-            price_large = atof(value);
+            price_medium = atof(value);
         }
         else if (colname == "price_large")
         {
@@ -233,15 +233,15 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
         }
         else if (colname == "price_custom")
         {
-            price_small = atof(value);
+            price_custom_per_liter = atof(value);
         }
-        // else if (colname == "is_still")
-        // {
-        //     is_still = atoi(value);
-        // }
         else if (colname == "volume_per_tick")
         {
             volume_per_tick = atof(value);
+        }
+        else if (colname == "dispense_speed")
+        {
+            dispense_speed_pwm = atof(value);
         }
         else if (colname == "plu_small")
         {
@@ -262,18 +262,18 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
         else if (colname == "payment")
         {
             paymentMethod = value;
-        }else{
+        }
+        else
+        {
             debugOutput::sendMessage("unprocessed colname: " + colname, MSG_INFO); //+ std::string to_string(colname)
         }
-        
-
     }
 
     g_productDispensers[slot - 1].setSlot(slot);
     g_productDispensers[slot - 1].setProduct(
-        new product(slot, name, calibration_const, volume_per_tick,
+        new product(slot, name, calibration_const, volume_per_tick, dispense_speed_pwm,
                     volume_small, volume_medium, volume_large, volume_target_custom_min, volume_target_custom_max,
-                    price_small, price_m, price_large, price_c_per_liter,
+                    price_small, price_medium, price_large, price_custom_per_liter,
                     plu_small, plu_medium, plu_large, plu_custom,
                     paymentMethod, name_receipt));
 
@@ -314,7 +314,6 @@ DF_ERROR stateInit::setProducts()
     /* Execute SQL statement */
     rc = sqlite3_exec(db, sql, db_sql_product_callback, (void *)data, &zErrMsg);
 
-    
     if (rc != SQLITE_OK)
     {
         debugOutput::sendMessage("Product info SQL error (OR DB PATH opening ERROR!!)", MSG_INFO);

@@ -106,7 +106,7 @@ DF_ERROR stateManualPump::onAction()
       {
          int val = m_pMessaging->getCommandValue();
 
-         if (isGasPumpModelTest)
+         if (iscustomVolumeDispenseTest)
          {
             string value_str2 = std::to_string(val);
             string msg2 = "Rectract time in millis set to: " + value_str2;
@@ -126,8 +126,8 @@ DF_ERROR stateManualPump::onAction()
       if (ACTION_MANUAL_PUMP_CUSTOM_VOLUME_TEST_TOGGLE == m_pMessaging->getAction())
       {
          dispenseButtonValueMemory = false;
-         isGasPumpModelTest = !isGasPumpModelTest;
-         debugOutput::sendMessage("gas pump model test active? : " + to_string(isGasPumpModelTest), MSG_INFO);
+         iscustomVolumeDispenseTest = !iscustomVolumeDispenseTest;
+         debugOutput::sendMessage("Custom volume dispense pump model test active? : " + to_string(iscustomVolumeDispenseTest), MSG_INFO);
       }
 
       if (ACTION_MANUAL_PUMP_FLOW_TEST_TOGGLE == m_pMessaging->getAction())
@@ -143,7 +143,7 @@ DF_ERROR stateManualPump::onAction()
       {
          debugOutput::sendMessage("help\nAvailable printer test commands: \n \
             t: test pump1 \n a: flow measuring test \n \
-            g: gas pump model test \n \
+            g: custom volume dispense model test \n \
             e: enable pump1 \n d: disable pump1\n \
             f: direction forward pump1 \n r: direction reverse pump1\n ixxx: set pwm pump1 [0..255]\nq: quit ",
                                   MSG_INFO);
@@ -154,9 +154,9 @@ DF_ERROR stateManualPump::onAction()
    {
       pumpFlowTest();
    }
-   else if (isGasPumpModelTest)
+   else if (iscustomVolumeDispenseTest)
    {
-      gasPumpModelTest();
+      customVolumeDispenseTest();
    }
    else
    {
@@ -200,7 +200,7 @@ DF_ERROR stateManualPump::onAction()
    return e_ret;
 }
 
-DF_ERROR stateManualPump::gasPumpModelTest()
+DF_ERROR stateManualPump::customVolumeDispenseTest()
 {
 
    // 1. pump with retraction at end

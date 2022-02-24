@@ -78,16 +78,17 @@ static int db_sql_callback(void *data, int argc, char **argv, char **azColName)
 // }
 
 // Test CTOR
-product::product(int slot, string name, double calibration_const, double nVolumePerTick, 
-    double nVolumeTarget_s, double nVolumeTarget_m, double nVolumeTarget_l, double nVolumeTarget_c_min, double nVolumeTarget_c_max,
-    double price_small, double price_m, double price_large, double price_c_per_liter, 
-    string nPLU_small, string nPLU_m,  string nPLU_large, string nPLU_c,
-   string paymentMethod, string name_receipt)
+product::product(int slot, string name, double calibration_const, double nVolumePerTick, int dispense_speed_pwm,
+                 double nVolumeTarget_s, double nVolumeTarget_m, double nVolumeTarget_l, double nVolumeTarget_c_min, double nVolumeTarget_c_max,
+                 double price_small, double price_medium, double price_large, double price_c_per_liter,
+                 string nPLU_small, string nPLU_m, string nPLU_large, string nPLU_c,
+                 string paymentMethod, string name_receipt)
 {
     m_nSlot = slot;
     m_name = name;
     m_nVolumeDispensed = 0.0;
-    m_nVolumePerTick = nVolumePerTick;
+    m_nVolumePerTick = nVolumePerTick; // m_nVolumePerTick = 6; //  6ml per tick is standard
+    m_nDispenseSpeedPWM = dispense_speed_pwm;
     m_calibration_const = calibration_const;
 
     m_nVolumeTarget_m = nVolumeTarget_m;
@@ -95,22 +96,19 @@ product::product(int slot, string name, double calibration_const, double nVolume
     m_nVolumeTarget_s = nVolumeTarget_s;
     m_nVolumeTarget_c_min = nVolumeTarget_c_min;
     m_nVolumeTarget_c_max = nVolumeTarget_c_max;
-    
+
     m_price_small = price_small;
-    m_price_m = price_m;
+    m_price_medium = price_medium;
     m_price_large = price_large;
     m_price_c_per_liter = price_c_per_liter;
 
     m_nPLU_small = nPLU_small;
-    m_nPLU_m = nPLU_m;
+    m_nPLU_medium = nPLU_m;
     m_nPLU_large = nPLU_large;
-    m_nPLU_c = nPLU_c;
-    
+    m_nPLU_custom = nPLU_c;
+
     m_paymentMethod = paymentMethod;
     m_name_receipt = name_receipt;
-
-    // XXX: Find calculation for this...
-    // m_nVolumePerTick = 20; // Seems like best guesstimate tick.
 }
 
 // DTOR
@@ -161,15 +159,14 @@ double product::getVolumeSinceLastPoll()
 
 double product::getVolumeDispensedPreviously()
 {
-    //    cout << "GETTING VOLUME DISPENSED AND IT IS: " << m_nVolumeDispensedPreviously << endl;
     return m_nVolumeDispensedPreviously;
 }
 
 // Reset values onEntry()
 DF_ERROR product::initDispense(int nVolumeToDispense, double nPrice)
 {
-    DF_ERROR dfRet = ERROR_BAD_PARAMS;
 
+    DF_ERROR dfRet = ERROR_BAD_PARAMS;
     m_nVolumeTarget = nVolumeToDispense;
     m_price = nPrice;
     m_nVolumeDispensed = 0;
@@ -177,7 +174,6 @@ DF_ERROR product::initDispense(int nVolumeToDispense, double nPrice)
     m_nVolumeDispensedSinceLastPoll = 0;
     m_nVolumePerTick = getVolPerTick();
     m_PWM = getPWM();
-
 
     // Set Start Time
     time(&rawtime);
@@ -188,8 +184,10 @@ DF_ERROR product::initDispense(int nVolumeToDispense, double nPrice)
     return dfRet;
 }
 
-
-int product::getPWM()
+int product::getPWM(){
+    return m_nDispenseSpeedPWM;
+}
+int product::getPWMFromDB()
 {
     rc = sqlite3_open(DB_PATH, &db);
 
@@ -220,7 +218,10 @@ int product::getPWM()
     return pwm;
 }
 
-double product::getVolPerTick()
+double product::getVolPerTick(){
+    return m_volumePerTick;
+}
+double product::getVolPerTickFromDB()
 {
 
     rc = sqlite3_open(DB_PATH, &db);
@@ -251,8 +252,6 @@ double product::getVolPerTick()
     //     cout << str << endl;
     return vol_per_tick;
 }
-
-
 
 DF_ERROR product::stopDispense()
 {
@@ -299,17 +298,17 @@ void product::productVolumeInfo()
 
 double product::getTargetVolume(char size)
 {
-    if (size == 'l')
+    if (size == 's')
     {
-        return m_nVolumeTarget_l;
+        return m_nVolumeTarget_s;
     }
     else if (size == 'm')
     {
         return m_nVolumeTarget_m;
     }
-    else if (size == 's')
+    else if (size == 'l')
     {
-        return m_nVolumeTarget_s;
+        return m_nVolumeTarget_l;
     }
     else if (size == 't')
         return m_nVolumeTarget_c_max;
@@ -317,32 +316,41 @@ double product::getTargetVolume(char size)
 
 double product::getPrice(char size)
 {
-    if (size == 'l')
+    if (size == 's')
     {
-        return m_price_large;
+        return m_price_small;
     }
     else if (size == 'm')
     {
-        return m_price_m;
+        return m_price_medium;
     }
-    else if (size == 's')
+    else if (size == 'l')
     {
-        return m_price_small;
+        return m_price_large;
+    }
+    else if (size == 't')
+    {
+        return m_price_c_per_liter;
     }
 }
 
 string product::getPLU(char size)
 {
-    if (size == 'l')
-    {
-        return m_nPLU_large;
-    }
-    else if (size == 's')
+    if (size == 's')
     {
         return m_nPLU_small;
     }
     else if (size == 'm')
     {
-        return m_nPLU_m;
+        return m_nPLU_medium;
+    }
+    else if (size == 'l')
+    {
+        return m_nPLU_large;
+    }
+    
+    else if (size == 't')
+    {
+        return m_nPLU_custom;
     }
 }

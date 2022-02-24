@@ -100,7 +100,7 @@ public:
 
       DF_ERROR setButtonsShutdownAndMaintenance();
       DF_ERROR setSlot(int slot);
-
+      int getSlot();
       //      DF_ERROR setButtonPress(int address_num, int pin_num);
       bool reader = true;
 

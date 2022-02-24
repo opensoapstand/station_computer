@@ -34,7 +34,7 @@ class product
 public:
         product();
         // product(int slot);
-        product(int slot, string name, double calibration_const, double nVolumePerTick, 
+        product(int slot, string name, double calibration_const, double nVolumePerTick, int dispense_speed_pwm,
                 double nVolumeTarget_s, double nVolumeTarget_m, double nVolumeTarget_l, double nVolumeTarget_c_min, double nVolumeTarget_c_max,
                 double price_small, double price_m, double price_large, double price_c_per_liter, 
                 string nPLU_small, string nPLU_m,  string nPLU_large, string nPLU_c,
@@ -72,6 +72,11 @@ public:
         void productVolumeInfo();
 
         int getPWM();
+        int getPWMFromDB();
+        double getVolPerTickFromDB();
+        
+        double m_volumePerTick;
+        int m_nDispenseSpeedPWM;
 
         double m_nVolumeDispensedPreviously;
         double m_nVolumeTarget;
@@ -85,7 +90,7 @@ public:
         double m_nVolumeDispensed;           //how much has been dispensed in this sale
         double m_price;
         double m_price_small;
-        double m_price_m;
+        double m_price_medium;
         double m_price_large;
         double m_price_c_per_liter;
 
@@ -93,9 +98,9 @@ public:
         string m_name_receipt;
         double m_buttonPressDuration;
         string m_nPLU_small;
-        string m_nPLU_m;
+        string m_nPLU_medium;
         string m_nPLU_large;
-        string m_nPLU_c;
+        string m_nPLU_custom;
         string m_paymentMethod;
         int m_PWM;
         double m_nVolumePerTick;
@@ -112,6 +117,8 @@ private:
         bool isDispenseFinished;
         double m_nVolumeDispensedSinceLastPoll;
         double m_calibration_const;
+
+        
 
         double m_nTickCount;
         bool valueChange;

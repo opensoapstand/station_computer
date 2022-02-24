@@ -45,23 +45,16 @@ DF_ERROR stateDispenseIdle::onEntry()
     pos = m_pMessaging->getProductNumber();
     pos = pos - 1;
     size = m_pMessaging->getRequestedVolume();
-
-    // productDispensers[pos].setIsDispenseComplete(false);
-
-    // if (productDispensers[pos].getProduct()->getVolumeDispensed() == 0)
-    // {
-     
-    // }
-
     return e_ret;
 }
 
-// Idles after proper initilization;  Waits for a command from messageMediator
 DF_ERROR stateDispenseIdle::onAction()
 {
     DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
     
+    // Idles after proper initilization;  Waits for a command from messageMediator or dispense action.
+
     if (m_pMessaging->isCommandStringReadyToBeParsed())
     {
         m_pMessaging->parseCommandString();
@@ -83,7 +76,7 @@ DF_ERROR stateDispenseIdle::onAction()
         return df_ret = OK;
     }
 
-    productDispensers[pos].getProduct()->productVolumeInfo();
+    // productDispensers[pos].getProduct()->productVolumeInfo();
 
     // If volume has not changed, stay in Idle state, else, volume is changing, go to Dispense state...
     if (productDispensers[pos].getProduct()->getVolumeDispensed() == productDispensers[pos].getProduct()->getVolumeDispensedPreviously())
@@ -96,6 +89,8 @@ DF_ERROR stateDispenseIdle::onAction()
         productDispensers[pos].getProduct()->m_nVolumeDispensedPreviously = productDispensers[pos].getProduct()->getVolumeDispensed();
         m_state_requested = STATE_DISPENSE;
     }
+
+    debugOutput::sendMessage("dispense idle.", MSG_INFO);
     usleep(500000);
     df_ret = OK;
 

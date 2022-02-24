@@ -87,40 +87,42 @@ DF_ERROR stateDispenseEnd::onExit()
     // TODO: Change this to just check if the system is Soapstand or Drinkfill instead of payment system!
     if (paymentMethod == "tap")
     {
-        sleep(5);
+        // sleep(5);
 
-        debugOutput::sendMessage("Dispense OnEXIT", MSG_INFO);
-        debugOutput::sendMessage("------Cleaning Mode------", MSG_INFO);
-        debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
-        debugOutput::sendMessage("Pin -> " + to_string(productDispensers[pos].getI2CPin(WATER)), MSG_INFO);
-        debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
-        debugOutput::sendMessage("Pin -> " + to_string(productDispensers[pos].getI2CPin(PRODUCT)), MSG_INFO);
+        // debugOutput::sendMessage("Dispense OnEXIT", MSG_INFO);
+        // debugOutput::sendMessage("------Cleaning Mode------", MSG_INFO);
+        // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
+        // debugOutput::sendMessage("Pin -> " + to_string(productDispensers[pos].getI2CPin(WATER)), MSG_INFO);
+        // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
+        // debugOutput::sendMessage("Pin -> " + to_string(productDispensers[pos].getI2CPin(PRODUCT)), MSG_INFO);
     }
 
     // REQUESTED_VOLUME_CUSTOM is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
-    if (size != REQUESTED_VOLUME_CUSTOM)
-    {
-        updateDB();
+    // if (size != REQUESTED_VOLUME_CUSTOM)
+    // {
+    debugOutput::sendMessage("Update database:", MSG_INFO);
+    updateDB();
 
-        if (paymentMethod == "barcode" || paymentMethod == "plu")
-        {
-            debugOutput::sendMessage("Printing receipt", MSG_INFO);
-            printer();
-            sendDB();
-        }
+    if (paymentMethod == "barcode" || paymentMethod == "plu")
+    {
+        debugOutput::sendMessage("Printing receipt:", MSG_INFO);
+        print_receipt();
+        debugOutput::sendMessage("Send db to cloud:", MSG_INFO);
+        sendDbToCloud();
     }
+    // }
     return e_ret;
 }
 
 static int db_sql_callback(void *NotUsed, int argc, char **argv, char **azColName)
 {
-    int i;
-    for (i = 0; i < argc; i++)
-    {
-        printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-    }
-    printf("\n");
-    return 0;
+    // int i;
+    // for (i = 0; i < argc; i++)
+    // {
+    //     printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+    // }
+    // printf("\n");
+    // return 0;
 }
 
 size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
@@ -131,7 +133,7 @@ size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
 
 // This function sends the transaction details to the cloud using libcurl, if it fails, it stores the data to be sent in the bufferCurl function
 // TODO: This will be replaced with an AWS IoT method!
-DF_ERROR stateDispenseEnd::sendDB()
+DF_ERROR stateDispenseEnd::sendDbToCloud()
 {
 
     std::string product = (productDispensers[pos].getProduct()->m_name);
@@ -156,6 +158,7 @@ DF_ERROR stateDispenseEnd::sendDB()
         dispensed_volume = to_string(productDispensers[pos].getProduct()->m_nVolumeDispensed);
     }
 
+    // todo Lode check with Ash
     std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume + "&display_unit=ml&price=" + price + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + EndTime + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer";
     char buffer[1080];
     strcpy(buffer, curl_param.c_str());
@@ -273,7 +276,11 @@ std::string stateDispenseEnd::getMachineID()
     return str;
 }
 
-std::string stateDispenseEnd::getUnits(int slot)
+std::string stateDispenseEnd::getUnits(int slot){
+    productDispensers[slot-1].getProduct()->getDisplayUnits();
+}
+
+std::string stateDispenseEnd::getUnitsFromDb(int slot)
 {
     rc = sqlite3_open(DB_PATH, &db);
 
@@ -333,7 +340,7 @@ DF_ERROR stateDispenseEnd::updateDB()
     std::string dispensed_volume;
     debugOutput::sendMessage("dispenseenddbadd: vol dispensed: " + to_string(productDispensers[pos].getProduct()->getVolumeDispensed()), MSG_INFO);
     
-    if (productDispensers[pos].getProduct()->m_nVolumeDispensed == productDispensers[pos].getProduct()->m_nVolumePerTick)
+    if (productDispensers[pos].getProduct()->m_nVolumeDispensed <= productDispensers[pos].getProduct()->m_nVolumePerTick)
     {
         dispensed_volume = "0";
     }
@@ -405,42 +412,59 @@ DF_ERROR stateDispenseEnd::updateDB()
 }
 
 // This function prints the receipts by calling a system function (could be done better)
-DF_ERROR stateDispenseEnd::printer()
+DF_ERROR stateDispenseEnd::print_receipt()
 {
     // printerr.connectToPrinter();
+    debugOutput::sendMessage("-- 1", MSG_INFO);
     char cost2[MAX_BUF];
-    char volume2[MAX_BUF];
+    char chars_volume_formatted[MAX_BUF];
     //char name2[MAX_BUF];
 
+    debugOutput::sendMessage("-- 2", MSG_INFO);
     snprintf(cost2, sizeof(cost2), "%.2f", productDispensers[pos].getProduct()->getPrice(size));
 
     string cost = (cost2);
 
+    debugOutput::sendMessage("-- 3", MSG_INFO);
     std::string name = (productDispensers[pos].getProduct()->m_name_receipt);
     std::string plu;
+    debugOutput::sendMessage("-- 4", MSG_INFO);
     std::string units = getUnits(pos + 1);
 
+    debugOutput::sendMessage("-- 5", MSG_INFO);
     size = m_pMessaging->getRequestedVolume();
+    debugOutput::sendMessage("-- 6", MSG_INFO);
 
+    if (size == 's')
+    {
+        plu = (productDispensers[pos].getProduct()->m_nPLU_small);
+        snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", productDispensers[pos].getProduct()->m_nVolumeTarget_s);
+    }
+    else if (size == 'm')
+    {
+        plu = (productDispensers[pos].getProduct()->m_nPLU_medium);
+        snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", productDispensers[pos].getProduct()->m_nVolumeTarget_m);
+    }
     if (size == 'l')
     {
         plu = (productDispensers[pos].getProduct()->m_nPLU_large);
-        snprintf(volume2, sizeof(volume2), "%.0f", productDispensers[pos].getProduct()->m_nVolumeTarget_l);
+        snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", productDispensers[pos].getProduct()->m_nVolumeTarget_l);
     }
-    else
+    if (size == 't')
     {
-        plu = (productDispensers[pos].getProduct()->m_nPLU_small);
-        snprintf(volume2, sizeof(volume2), "%.0f", productDispensers[pos].getProduct()->m_nVolumeTarget_s);
+        plu = (productDispensers[pos].getProduct()->m_nPLU_large);
+        snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", productDispensers[pos].getDispensedVolume());
     }
 
-    string volume = (volume2);
+    debugOutput::sendMessage("-- 7", MSG_INFO);
+    string receipt_volume_formatted = (chars_volume_formatted);
 
     time(&rawtime);
     timeinfo = localtime(&rawtime);
 
     strftime(now, 50, "%F %T", timeinfo);
 
-    string printerstring = name + "\nPrice: $" + cost + " \nVolume: " + volume + units + "\nTime: " + now + "\nPLU: " + plu;
+    string printerstring = name + "\nPrice: $" + cost + " \nVolume: " + receipt_volume_formatted + units + "\nTime: " + now + "\nPLU: " + plu;
     string sysstring = "echo '\n---------------------------\n\n\n" + printerstring + "' > /dev/ttyS4";
 
 

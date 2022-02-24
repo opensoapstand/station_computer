@@ -145,6 +145,7 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
     double volume_per_tick;
     int dispense_speed_pwm;
     string paymentMethod;
+    string display_units;
 
     string plu_large;
     string plu_medium;
@@ -186,6 +187,10 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
         else if (colname == "name")
         {
             name = value;
+        }
+        else if (colname == "display_units")
+        {
+            display_units = value;
         }
         else if (colname == "name_receipt")
         {
@@ -275,7 +280,7 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
                     volume_small, volume_medium, volume_large, volume_target_custom_min, volume_target_custom_max,
                     price_small, price_medium, price_large, price_custom_per_liter,
                     plu_small, plu_medium, plu_large, plu_custom,
-                    paymentMethod, name_receipt));
+                    paymentMethod, name_receipt, display_units));
 
     return 0;
 }

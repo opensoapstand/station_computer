@@ -82,7 +82,7 @@ product::product(int slot, string name, double calibration_const, double nVolume
                  double nVolumeTarget_s, double nVolumeTarget_m, double nVolumeTarget_l, double nVolumeTarget_c_min, double nVolumeTarget_c_max,
                  double price_small, double price_medium, double price_large, double price_c_per_liter,
                  string nPLU_small, string nPLU_m, string nPLU_large, string nPLU_c,
-                 string paymentMethod, string name_receipt)
+                 string paymentMethod, string name_receipt, string display_units)
 {
     m_nSlot = slot;
     m_name = name;
@@ -109,6 +109,7 @@ product::product(int slot, string name, double calibration_const, double nVolume
 
     m_paymentMethod = paymentMethod;
     m_name_receipt = name_receipt;
+    m_display_units = display_units;
 }
 
 // DTOR
@@ -339,6 +340,10 @@ double product::getPrice(char size)
     {
         return m_price_c_per_liter;
     }
+}
+
+string product::getDisplayUnits(){
+    return m_display_units;
 }
 
 string product::getPLU(char size)

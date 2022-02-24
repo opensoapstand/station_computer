@@ -38,7 +38,7 @@ public:
                 double nVolumeTarget_s, double nVolumeTarget_m, double nVolumeTarget_l, double nVolumeTarget_c_min, double nVolumeTarget_c_max,
                 double price_small, double price_m, double price_large, double price_c_per_liter, 
                 string nPLU_small, string nPLU_m,  string nPLU_large, string nPLU_c,
-                string paymentMethod, string name_receipt);
+                string paymentMethod, string name_receipt, string display_units);
         ~product();
 
         //getter
@@ -47,6 +47,8 @@ public:
         double getVolumeDispensedPreviously();
         double getTargetVolume(char size);
         double getPrice(char size);
+        string getDisplayUnits();
+
         string getPLU(char size);
         string getPaymentMethod() { return m_paymentMethod; }
 
@@ -91,6 +93,7 @@ public:
         double m_price_c_per_liter;
 
         string m_name;
+        string m_display_units;
         string m_name_receipt;
         double m_buttonPressDuration;
         string m_nPLU_small;

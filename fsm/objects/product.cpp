@@ -368,3 +368,5 @@ string product::getPLU(char size)
         return m_nPLU_custom;
     }
 }
+
+

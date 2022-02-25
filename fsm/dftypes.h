@@ -28,6 +28,8 @@
 #define RUNNING_AVERAGE_WINDOW_LENGTH 100
 #define DISPENSE_BUTTON_DEBOUNCE_MILLIS 50
 
+#define ML_TO_OZ 0.033814
+
 struct Time_val{
    uint64_t time_millis;
    double value;

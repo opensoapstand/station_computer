@@ -420,54 +420,86 @@ DF_ERROR stateDispenseEnd::print_receipt()
     // printerr.connectToPrinter();
     char chars_cost[MAX_BUF];
     char chars_volume_formatted[MAX_BUF];
+    char chars_price_per_liter_formatted[MAX_BUF];
     //char name2[MAX_BUF];
 
-    snprintf(chars_cost, sizeof(chars_cost), "%.2f", productDispensers[pos].getProduct()->getPrice(size));
 
     string cost = (chars_cost);
 
     std::string name_receipt = (productDispensers[pos].getProduct()->m_name_receipt);
-    std::string plu;
+    std::string plu = productDispensers[pos].getProduct()->getPLU(size);
     std::string units = (productDispensers[pos].getProduct()->m_display_unit);
+    double price = productDispensers[pos].getProduct()->getPrice(size);
+    double price_per_liter;
 
-    size = m_pMessaging->getRequestedVolume();
+    double volume_dispensed;
+
+    
+
 
     if (size == 's')
     {
-        plu = (productDispensers[pos].getProduct()->m_nPLU_small);
-        snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", productDispensers[pos].getProduct()->m_nVolumeTarget_s);
+        volume_dispensed = productDispensers[pos].getProduct()->m_nVolumeTarget_s;
+        
     }
     else if (size == 'm')
     {
-        plu = (productDispensers[pos].getProduct()->m_nPLU_medium);
-        snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", productDispensers[pos].getProduct()->m_nVolumeTarget_m);
+        volume_dispensed = productDispensers[pos].getProduct()->m_nVolumeTarget_m;
     }
-    if (size == 'l')
+    else if (size == 'l')
     {
-        plu = (productDispensers[pos].getProduct()->m_nPLU_large);
-        snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", productDispensers[pos].getProduct()->m_nVolumeTarget_l);
+        volume_dispensed = productDispensers[pos].getProduct()->m_nVolumeTarget_l;
     }
-    if (size == 't')
+    else if (size == 't')
     {
-        plu = (productDispensers[pos].getProduct()->m_nPLU_large);
-        snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", productDispensers[pos].getDispensedVolume());
+        price_per_liter = productDispensers[pos].getProduct()->getPrice(size);
+        volume_dispensed = productDispensers[pos].getDispensedVolume();
+        price = price_per_liter * volume_dispensed / 1000.0;
+    }else{
+        debugOutput::sendMessage("invalid size provided" + size, MSG_INFO);
     }
 
+    // convert units
+    if (units == "oz"){
+        volume_dispensed = volume_dispensed * ML_TO_OZ;
+        price_per_liter = price_per_liter/1000 / ML_TO_OZ;
+    }
+
+    string base_unit = "ml";
+    if (units == "ml"){
+        base_unit = "l";
+        snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", volume_dispensed);
+    }else if (units ==  "oz"){
+        base_unit =  "oz";
+        snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.1f", volume_dispensed);
+    }
     string receipt_volume_formatted = (chars_volume_formatted);
 
+
+    snprintf(chars_cost, sizeof(chars_cost), "%.2f", price );
+    string receipt_cost = (chars_cost);
+    
+
+    snprintf(chars_price_per_liter_formatted, sizeof(chars_volume_formatted), "%.2f", price_per_liter);
+    string receipt_price_per_liter = (chars_price_per_liter_formatted);
+
+
+
+    // add base price
+    if (size == 't'){
+        receipt_volume_formatted = receipt_volume_formatted + units + " @" + receipt_price_per_liter + "$/" + base_unit ;
+    }else{
+        receipt_volume_formatted += units;
+    }
+    
     time(&rawtime);
     timeinfo = localtime(&rawtime);
 
     strftime(now, 50, "%F %T", timeinfo);
 
-    debugOutput::sendMessage("-- 0" + name_receipt + "---", MSG_INFO);
-    debugOutput::sendMessage("-- 0" + units + "---", MSG_INFO);
 
-    string printerstring = name_receipt + "\nPrice: $" + cost + " \nVolume: " + receipt_volume_formatted + units + "\nTime: " + now + "\nPLU: " + plu;
-
-
+    string printerstring = name_receipt + "\nPrice: $" + receipt_cost + " \nVolume: " + receipt_volume_formatted  + "\nTime: " + now + "\nPLU: " + plu;
     string sysstring = "echo '\n---------------------------\n\n\n" + printerstring + "' > /dev/ttyS4";
-
 
     Adafruit_Thermal *printerr = new Adafruit_Thermal();
     printerr->connectToPrinter();
@@ -476,9 +508,7 @@ DF_ERROR stateDispenseEnd::print_receipt()
     printerr->setBarcodeHeight(100);
 
     printerr->printBarcode(plu.c_str(), EAN13);
-    debugOutput::sendMessage("-- 6", MSG_INFO);
 
     system("echo '\n---------------------------\n\n\n' > /dev/ttyS4");
-    debugOutput::sendMessage("-- 7", MSG_INFO);
     printerr->disconnectPrinter();
 }

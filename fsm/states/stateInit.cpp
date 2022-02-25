@@ -254,7 +254,7 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
         }
         else if (colname == "plu_medium")
         {
-            plu_large = value;
+            plu_medium = value;
         }
         else if (colname == "plu_large")
         {
@@ -262,7 +262,7 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
         }
         else if (colname == "plu_custom")
         {
-            plu_large = value;
+            plu_custom = value;
         }
         else if (colname == "payment")
         {

@@ -80,8 +80,8 @@ static int db_sql_callback(void *data, int argc, char **argv, char **azColName)
 // Test CTOR
 product::product(int slot, string name, double calibration_const, double nVolumePerTick, int dispense_speed_pwm,
                  double nVolumeTarget_s, double nVolumeTarget_m, double nVolumeTarget_l, double nVolumeTarget_c_min, double nVolumeTarget_c_max,
-                 double price_small, double price_medium, double price_large, double price_c_per_liter,
-                 string nPLU_small, string nPLU_m, string nPLU_large, string nPLU_c,
+                 double price_small, double price_medium, double price_large, double price_custom_per_liter,
+                 string nPLU_small, string nPLU_medium, string nPLU_large, string nPLU_c,
                  string paymentMethod, string name_receipt, string display_unit)
 {
     m_nSlot = slot;
@@ -100,10 +100,10 @@ product::product(int slot, string name, double calibration_const, double nVolume
     m_price_small = price_small;
     m_price_medium = price_medium;
     m_price_large = price_large;
-    m_price_c_per_liter = price_c_per_liter;
+    m_price_custom_per_liter = price_custom_per_liter;
 
     m_nPLU_small = nPLU_small;
-    m_nPLU_medium = nPLU_m;
+    m_nPLU_medium = nPLU_medium;
     m_nPLU_large = nPLU_large;
     m_nPLU_custom = nPLU_c;
 
@@ -340,7 +340,7 @@ double product::getPrice(char size)
     }
     else if (size == 't')
     {
-        return m_price_c_per_liter;
+        return m_price_custom_per_liter;
     }
 }
 

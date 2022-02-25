@@ -483,8 +483,6 @@ DF_ERROR stateDispenseEnd::print_receipt()
     snprintf(chars_price_per_liter_formatted, sizeof(chars_volume_formatted), "%.2f", price_per_liter);
     string receipt_price_per_liter = (chars_price_per_liter_formatted);
 
-
-
     // add base price
     if (size == 't'){
         receipt_volume_formatted = receipt_volume_formatted + units + " @" + receipt_price_per_liter + "$/" + base_unit ;
@@ -497,18 +495,25 @@ DF_ERROR stateDispenseEnd::print_receipt()
 
     strftime(now, 50, "%F %T", timeinfo);
 
+    print_text(name_receipt + "\nPrice: $" + receipt_cost + " \nVolume: " + receipt_volume_formatted  + "\nTime: " + now);
+    
+    if (plu.size() != 13){
+        // EAN13 codes need to be 13 digits, or else no barcode will be printed.
+        debugOutput::sendMessage("ERROR: bar code invalid (" + plu + "). EAN13, Should be 13 digits" + to_string(plu.size()), MSG_INFO);
+        print_text( "\nPLU: " + plu + " (No barcode available)");
+    }else{
+        Adafruit_Thermal *printerr = new Adafruit_Thermal();
+        printerr->connectToPrinter();
+        printerr->setBarcodeHeight(100);
+        printerr->printBarcode(plu.c_str(), EAN13);
+        printerr->disconnectPrinter();
+    }
 
-    string printerstring = name_receipt + "\nPrice: $" + receipt_cost + " \nVolume: " + receipt_volume_formatted  + "\nTime: " + now + "\nPLU: " + plu;
-    string sysstring = "echo '\n---------------------------\n\n\n" + printerstring + "' > /dev/ttyS4";
+    print_text( "\n\n\n");
+}
 
-    Adafruit_Thermal *printerr = new Adafruit_Thermal();
-    printerr->connectToPrinter();
-
-    system(sysstring.c_str());
-    printerr->setBarcodeHeight(100);
-
-    printerr->printBarcode(plu.c_str(), EAN13);
-
-    system("echo '\n---------------------------\n\n\n' > /dev/ttyS4");
-    printerr->disconnectPrinter();
+DF_ERROR stateDispenseEnd::print_text(string text){
+    string printerstring = text ;
+    string printer_command_string = "echo '\n" + printerstring + "' > /dev/ttyS4";
+    system(printer_command_string.c_str());
 }

@@ -36,8 +36,8 @@ public:
         // product(int slot);
         product(int slot, string name, double calibration_const, double nVolumePerTick, int dispense_speed_pwm,
                 double nVolumeTarget_s, double nVolumeTarget_m, double nVolumeTarget_l, double nVolumeTarget_c_min, double nVolumeTarget_c_max,
-                double price_small, double price_m, double price_large, double price_c_per_liter, 
-                string nPLU_small, string nPLU_m,  string nPLU_large, string nPLU_c,
+                double price_small, double price_m, double price_large, double price_custom_per_liter, 
+                string nPLU_small, string nPLU_medium,  string nPLU_large, string nPLU_c,
                 string paymentMethod, string name_receipt, string display_unit);
         ~product();
 
@@ -90,7 +90,7 @@ public:
         double m_price_small;
         double m_price_medium;
         double m_price_large;
-        double m_price_c_per_liter;
+        double m_price_custom_per_liter;
 
         string m_name;
         string m_display_unit;

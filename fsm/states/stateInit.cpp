@@ -145,7 +145,7 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
     double volume_per_tick;
     int dispense_speed_pwm;
     string paymentMethod;
-    string display_units;
+    string display_unit;
 
     string plu_large;
     string plu_medium;
@@ -188,9 +188,9 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
         {
             name = value;
         }
-        else if (colname == "display_units")
+        else if (colname == "display_unit")
         {
-            display_units = value;
+            display_unit = value;
         }
         else if (colname == "name_receipt")
         {
@@ -273,14 +273,13 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
             debugOutput::sendMessage("unprocessed colname: " + colname, MSG_INFO); //+ std::string to_string(colname)
         }
     }
-
     g_productDispensers[slot - 1].setSlot(slot);
     g_productDispensers[slot - 1].setProduct(
         new product(slot, name, calibration_const, volume_per_tick, dispense_speed_pwm,
                     volume_small, volume_medium, volume_large, volume_target_custom_min, volume_target_custom_max,
                     price_small, price_medium, price_large, price_custom_per_liter,
                     plu_small, plu_medium, plu_large, plu_custom,
-                    paymentMethod, name_receipt, display_units));
+                    paymentMethod, name_receipt, display_unit));
 
     return 0;
 }

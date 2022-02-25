@@ -277,7 +277,10 @@ std::string stateDispenseEnd::getMachineID()
 }
 
 std::string stateDispenseEnd::getUnits(int slot){
-    productDispensers[slot-1].getProduct()->getDisplayUnits();
+
+    // does not work.... strings in C++ Lode needs a course! 
+    //return productDispensers[slot-1].getProduct()->getDisplayUnits();
+    return "problemski";
 }
 
 std::string stateDispenseEnd::getUnitsFromDb(int slot)
@@ -415,25 +418,19 @@ DF_ERROR stateDispenseEnd::updateDB()
 DF_ERROR stateDispenseEnd::print_receipt()
 {
     // printerr.connectToPrinter();
-    debugOutput::sendMessage("-- 1", MSG_INFO);
-    char cost2[MAX_BUF];
+    char chars_cost[MAX_BUF];
     char chars_volume_formatted[MAX_BUF];
     //char name2[MAX_BUF];
 
-    debugOutput::sendMessage("-- 2", MSG_INFO);
-    snprintf(cost2, sizeof(cost2), "%.2f", productDispensers[pos].getProduct()->getPrice(size));
+    snprintf(chars_cost, sizeof(chars_cost), "%.2f", productDispensers[pos].getProduct()->getPrice(size));
 
-    string cost = (cost2);
+    string cost = (chars_cost);
 
-    debugOutput::sendMessage("-- 3", MSG_INFO);
-    std::string name = (productDispensers[pos].getProduct()->m_name_receipt);
+    std::string name_receipt = (productDispensers[pos].getProduct()->m_name_receipt);
     std::string plu;
-    debugOutput::sendMessage("-- 4", MSG_INFO);
-    std::string units = getUnits(pos + 1);
+    std::string units = (productDispensers[pos].getProduct()->m_display_unit);
 
-    debugOutput::sendMessage("-- 5", MSG_INFO);
     size = m_pMessaging->getRequestedVolume();
-    debugOutput::sendMessage("-- 6", MSG_INFO);
 
     if (size == 's')
     {
@@ -456,7 +453,6 @@ DF_ERROR stateDispenseEnd::print_receipt()
         snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", productDispensers[pos].getDispensedVolume());
     }
 
-    debugOutput::sendMessage("-- 7", MSG_INFO);
     string receipt_volume_formatted = (chars_volume_formatted);
 
     time(&rawtime);
@@ -464,7 +460,12 @@ DF_ERROR stateDispenseEnd::print_receipt()
 
     strftime(now, 50, "%F %T", timeinfo);
 
-    string printerstring = name + "\nPrice: $" + cost + " \nVolume: " + receipt_volume_formatted + units + "\nTime: " + now + "\nPLU: " + plu;
+    debugOutput::sendMessage("-- 0" + name_receipt + "---", MSG_INFO);
+    debugOutput::sendMessage("-- 0" + units + "---", MSG_INFO);
+
+    string printerstring = name_receipt + "\nPrice: $" + cost + " \nVolume: " + receipt_volume_formatted + units + "\nTime: " + now + "\nPLU: " + plu;
+
+
     string sysstring = "echo '\n---------------------------\n\n\n" + printerstring + "' > /dev/ttyS4";
 
 
@@ -475,7 +476,9 @@ DF_ERROR stateDispenseEnd::print_receipt()
     printerr->setBarcodeHeight(100);
 
     printerr->printBarcode(plu.c_str(), EAN13);
+    debugOutput::sendMessage("-- 6", MSG_INFO);
 
     system("echo '\n---------------------------\n\n\n' > /dev/ttyS4");
+    debugOutput::sendMessage("-- 7", MSG_INFO);
     printerr->disconnectPrinter();
 }

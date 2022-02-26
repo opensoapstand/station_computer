@@ -787,11 +787,11 @@ void maintain_product::updateValues(){
     int checkOption = idlePage->userDrinkOrder->getOption();
 
     if(price_small){
-        db.updatePrice_small(checkOption, text_entered.toDouble());
+        db.updatePriceSmall(checkOption, text_entered.toDouble());
         ui->price_small->setText("$" + QString::number(db.getProductPrice(checkOption, 's')));
 
     }else if(price_large){
-        db.updatePrice_large(checkOption, text_entered.toDouble());
+        db.updatePriceLarge(checkOption, text_entered.toDouble());
         ui->price_large->setText("$" + QString::number(db.getProductPrice(checkOption, 'l')));
 
     }else if(target_s){
@@ -817,9 +817,9 @@ void maintain_product::updateValues(){
         ui->pwmLabel->setText(QString::number(round(double((db.getPWM(checkOption))*100)/255)) + "%");
     }
 //    else if(plu_small){
-//        db.updatePLU_small(checkOption, text_entered);
+//        db.updatePluSmall(checkOption, text_entered);
 //    }else if(plu_large){
-//        db.updatePLU_large(checkOption, text_entered);
+//        db.updatePluLarge(checkOption, text_entered);
 //    }
 
     price_small = false;

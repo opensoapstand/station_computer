@@ -98,8 +98,8 @@ private:
     QTimer* maintainProductPageEndTimer;
 
     QString text_entered;
-    bool price_s;
-    bool price_l;
+    bool price_small;
+    bool price_large;
     bool target_s;
     bool target_l;
     bool vol_per_tick;

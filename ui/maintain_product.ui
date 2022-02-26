@@ -39,7 +39,7 @@
     <string>Product Name: </string>
    </property>
   </widget>
-  <widget class="QLabel" name="price_l">
+  <widget class="QLabel" name="price_large">
    <property name="geometry">
     <rect>
      <x>590</x>
@@ -144,7 +144,7 @@
     <string>Volume per Tick</string>
    </property>
   </widget>
-  <widget class="QLabel" name="price_s">
+  <widget class="QLabel" name="price_small">
    <property name="geometry">
     <rect>
      <x>190</x>
@@ -318,7 +318,7 @@ Last Restock:</string>
     <string>Remaining:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="total_dispensed">
+  <widget class="QLabel" name="volume_dispensed_total">
    <property name="geometry">
     <rect>
      <x>590</x>

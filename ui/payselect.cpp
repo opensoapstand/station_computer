@@ -238,19 +238,19 @@ void paySelect::resizeEvent(QResizeEvent *event){
     ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
 
     // ui->totalPriceLabel->setText("$"+QString::number(idlePage->userDrinkOrder->getPrice()));
-    ui->price_smallLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 's'), 'f', 2));
-    ui->price_largeLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 'l'), 'f', 2));
+    ui->label_price_small->setText("$"+QString::number(db.getProductPrice(checkOption, 's'), 'f', 2));
+    ui->label_price_large->setText("$"+QString::number(db.getProductPrice(checkOption, 'l'), 'f', 2));
     ui->discountLabel->setText("-$0.00");
     if (db.getProductVolume(checkOption, 's') < 1000){
-        ui->volume_sLabel->setText(QString::number(db.getProductVolume(checkOption, 's')) + " " + db.getUnits(checkOption));
+        ui->label_size_small->setText(QString::number(db.getProductVolume(checkOption, 's')) + " " + db.getUnits(checkOption));
     }else{
-        ui->volume_sLabel->setText(QString::number(db.getProductVolume(checkOption, 's')/1000) + "L");
+        ui->label_size_small->setText(QString::number(db.getProductVolume(checkOption, 's')/1000) + "L");
     }
 
     if (db.getProductVolume(checkOption, 'l') < 1000){
-        ui->volume_lLabel->setText(QString::number(db.getProductVolume(checkOption, 'l')) + " " + db.getUnits(checkOption));
+        ui->label_size_large->setText(QString::number(db.getProductVolume(checkOption, 'l')) + " " + db.getUnits(checkOption));
     }else{
-        ui->volume_lLabel->setText(QString::number(db.getProductVolume(checkOption, 'l')/1000) + "L");
+        ui->label_size_large->setText(QString::number(db.getProductVolume(checkOption, 'l')/1000) + "L");
     }
 
     if (db.getProductVolume(checkOption, drinkSize) < 1000){
@@ -259,8 +259,8 @@ void paySelect::resizeEvent(QResizeEvent *event){
         ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
     }
 
-    ui->price_smallLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
-    ui->price_largeLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+    ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+    ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
     ui->promoCode->clear();
     ui->promoCode->hide();
     promoPercent = 0.0;
@@ -289,19 +289,19 @@ void paySelect::showEvent(QShowEvent *event){
     ui->priceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize), 'f', 2));
     // ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize), 'f', 2));
     ui->totalPriceLabel->setText("$"+QString::number(idlePage->userDrinkOrder->getPrice()));
-    ui->price_smallLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 's'), 'f', 2));
-    ui->price_largeLabel->setText("$"+QString::number(db.getProductPrice(checkOption, 'l'), 'f', 2));
+    ui->label_price_small->setText("$"+QString::number(db.getProductPrice(checkOption, 's'), 'f', 2));
+    ui->label_price_large->setText("$"+QString::number(db.getProductPrice(checkOption, 'l'), 'f', 2));
 
     if (db.getProductVolume(checkOption, 's') < 1000){
-        ui->volume_sLabel->setText(QString::number(db.getProductVolume(checkOption, 's')) + " " + db.getUnits(checkOption));
+        ui->label_size_small->setText(QString::number(db.getProductVolume(checkOption, 's')) + " " + db.getUnits(checkOption));
     }else{
-        ui->volume_sLabel->setText(QString::number(db.getProductVolume(checkOption, 's')/1000) + "L");
+        ui->label_size_small->setText(QString::number(db.getProductVolume(checkOption, 's')/1000) + "L");
     }
 
     if (db.getProductVolume(checkOption, 'l') < 1000){
-        ui->volume_lLabel->setText(QString::number(db.getProductVolume(checkOption, 'l')) + " " + db.getUnits(checkOption));
+        ui->label_size_large->setText(QString::number(db.getProductVolume(checkOption, 'l')) + " " + db.getUnits(checkOption));
     }else{
-        ui->volume_lLabel->setText(QString::number(db.getProductVolume(checkOption, 'l')/1000) + "L");
+        ui->label_size_large->setText(QString::number(db.getProductVolume(checkOption, 'l')/1000) + "L");
     }
 
     if (db.getProductVolume(checkOption, drinkSize) < 1000){
@@ -309,10 +309,10 @@ void paySelect::showEvent(QShowEvent *event){
     }else{
         ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
     }
-    ui->price_smallLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
-    ui->price_largeLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
-    ui->volume_lLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
-    ui->volume_sLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
+    ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+    ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+    ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
+    ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
     ui->promoCode->clear();
     ui->promoCode->hide();
     promoPercent = 0.0;
@@ -394,10 +394,10 @@ void paySelect::on_orderSmall_Button_clicked()
     ui->priceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
     // ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
     updatePriceAfterPromo(promoPercent);
-    ui->price_smallLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
-    ui->price_largeLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
-    ui->volume_sLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
-    ui->volume_lLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
+    ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+    ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+    ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
+    ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
 
     if (db.getProductVolume(checkOption, drinkSize) < 1000){
         ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + " " + db.getUnits(checkOption));
@@ -442,10 +442,10 @@ void paySelect::on_orderBig_Button_clicked()
     ui->priceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
     // ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
     updatePriceAfterPromo(promoPercent);
-    ui->price_smallLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
-    ui->price_largeLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
-    ui->volume_lLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
-    ui->volume_sLabel->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
+    ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+    ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+    ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
+    ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(:/light/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
 
     if (db.getProductVolume(checkOption, drinkSize) < 1000){
         ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + " " + db.getUnits(checkOption));

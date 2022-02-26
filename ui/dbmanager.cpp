@@ -504,7 +504,7 @@ bool DbManager::updatePaymentsDb(QString date,QString time, QString txnType, QSt
     return success;
 }
 
-bool DbManager::updatePrice_small(int slot, double new_price){
+bool DbManager::updatePriceSmall(int slot, double new_price){
     QSqlQuery update_price_query;
 
     {
@@ -524,7 +524,7 @@ bool DbManager::updatePrice_small(int slot, double new_price){
     }
 }
 
-bool DbManager::updatePrice_large(int slot, double new_price){
+bool DbManager::updatePriceLarge(int slot, double new_price){
     QSqlQuery update_price_query;
 
     {
@@ -678,7 +678,7 @@ QString DbManager::getPLU(int slot, char size){
     return plu_smalltring;
 }
 
-bool DbManager::updatePLU_small(int slot, QString new_plu){
+bool DbManager::updatePluSmall(int slot, QString new_plu){
     QSqlQuery plu_query;
 
     {
@@ -697,7 +697,7 @@ bool DbManager::updatePLU_small(int slot, QString new_plu){
     }
 }
 
-bool DbManager::updatePLU_large(int slot, QString new_plu){
+bool DbManager::updatePluLarge(int slot, QString new_plu){
     QSqlQuery plu_query;
 
     {

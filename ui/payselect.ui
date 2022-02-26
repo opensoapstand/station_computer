@@ -123,7 +123,7 @@ color: #58595B;</string>
     <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
    </property>
   </widget>
-  <widget class="QLabel" name="price_sLabel">
+  <widget class="QLabel" name="label_price_small">
    <property name="geometry">
     <rect>
      <x>560</x>
@@ -153,7 +153,7 @@ text-align: center;
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="price_lLabel">
+  <widget class="QLabel" name="label_price_large">
    <property name="geometry">
     <rect>
      <x>790</x>
@@ -182,7 +182,7 @@ text-align: center;</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="volume_sLabel">
+  <widget class="QLabel" name="label_size_small">
    <property name="geometry">
     <rect>
      <x>570</x>
@@ -208,7 +208,7 @@ text-align: center;
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="volume_lLabel">
+  <widget class="QLabel" name="label_size_large">
    <property name="geometry">
     <rect>
      <x>790</x>
@@ -1953,10 +1953,10 @@ color: #58595B;</string>
   <zorder>mainPage_Button</zorder>
   <zorder>priceLabel</zorder>
   <zorder>totalPriceLabel</zorder>
-  <zorder>price_sLabel</zorder>
-  <zorder>price_lLabel</zorder>
-  <zorder>volume_sLabel</zorder>
-  <zorder>volume_lLabel</zorder>
+  <zorder>label_price_small</zorder>
+  <zorder>label_price_large</zorder>
+  <zorder>label_size_small</zorder>
+  <zorder>label_size_large</zorder>
   <zorder>orderSmall_Button</zorder>
   <zorder>orderBig_Button</zorder>
   <zorder>productLabel</zorder>

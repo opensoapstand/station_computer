@@ -5,14 +5,14 @@
 //
 // Set Objects for FSM
 // Check all Hardware is operational.
-// Initialize threads for operation and 
+// Initialize threads for operation and
 // communication in machine.
 // Connect or create database.
 //
-// created: 12-06-2020
-// by: Denis Londry & Li-Yan Tong
+// created: 01-2022
+// by: Lode Ameije & Ash Singla
 //
-// copyright 2020 by Drinkfill Beverages Ltd
+// copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
 
@@ -26,205 +26,229 @@
 // Default Ctor
 stateInit::stateInit()
 {
-
 }
 
 // CTOR Linked to IPC
-stateInit::stateInit(messageMediator * message)
+stateInit::stateInit(messageMediator *message)
 {
-
 }
 
 // DTOR
 stateInit::~stateInit()
 {
-   //delete stuff
+    //delete stuff
 }
 
 // Overload for Debugger output
 string stateInit::toString()
 {
-   return INIT_STRING;
+    return INIT_STRING;
 }
 
 /*
  * Initialize FSM State
- */
+*/
 DF_ERROR stateInit::onEntry()
 {
-   DF_ERROR e_ret  = OK;
-
-   m_state = INIT; //ensure the current state is INIT
-   m_nextState = INIT;
-
-   return e_ret;
+    m_state_requested = STATE_INIT;
+    DF_ERROR e_ret = OK;
+    return e_ret;
 }
 
 // Initialize all related hardware
 DF_ERROR stateInit::onAction()
 {
-   DF_ERROR e_ret  = ERROR_BAD_PARAMS;
-   m_state = INIT; //ensure the current state is INIT
+    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
-   e_ret = setDrinks();
+    e_ret = setProducts();
 
-   if(OK == e_ret) 
-   {
-      e_ret = dispenserSetup();
-   }
+    if (OK == e_ret)
+    {
+        e_ret = dispenserSetup();
+    }
 
-   if (nullptr != &m_nextState && OK == e_ret)
-   {
-      if(OK == e_ret)
-      {
-         m_nextState = IDLE;
+    if (nullptr != &m_state_requested && OK == e_ret)
+    {
+        if (OK == e_ret)
+        {
+            m_state_requested = STATE_IDLE;
 
-        // The UI program waits for this message to move from its initializing phase to its Idle phase:
-         m_pMessaging->sendMessage("Init Ready");
-      }
-   }
+            // The UI program waits for this message to move from its initializing phase to its Idle phase:
+            m_pMessaging->sendMessage("Init Ready");
+        }
+    }
 
-   return e_ret;
+    return e_ret;
 }
 
 DF_ERROR stateInit::onExit()
 {
-   DF_ERROR e_ret  = OK;
-
-   m_state = INIT;
-   m_nextState = IDLE; //once everything is good, move to idle state
-
-   return e_ret;
+    DF_ERROR e_ret = OK;
+    return e_ret;
 }
-
 
 // Initilization function for all dispensers...
 DF_ERROR stateInit::dispenserSetup()
 {
     int idx;
-    dispenser* cassettes = g_cassettes;
+    dispenser *productDispensers = g_productDispensers;
 
-    debugOutput::sendMessage("Setting up DS-ED-8344 hardware control board.\n", INFO);
-    
+    debugOutput::sendMessage("Setting up DS-ED-8344 hardware control board.\n", MSG_INFO);
+
     // We only need one flow sensor interrupt pin since only one pump
     // is ever active at a time.  The flow sensors are all connected
     // to the same pin in the hardware.
 #ifndef __arm__
-//    cassettes[0].setFlowsensor(364, 0);
-    for (idx=0; idx<4; idx++)
+    for (idx = 0; idx < 4; idx++)
     {
-        cassettes[idx].setFlowsensor(364, idx);
-//    cassettes[0].setFlowsensor(364, 0);
+        productDispensers[idx].setFlowsensor(IO_PIN_FLOW_SENSOR, idx);
     }
 #else
-    cassettes[0].setFlowsensor(17, 0);
+    productDispensers[0].setFlowsensor(17, 0);
 #endif
 
     // Set up the four pumps
-    for (idx=0; idx<4; idx++)
+    for (idx = 0; idx < 4; idx++)
     {
-	cassettes[idx].setPump(0, 0, idx);
+        productDispensers[idx].setPump(0, 0, idx);
     }
 
-    cassettes[0].setPowerOffListener();
+    productDispensers[0].setButtonsShutdownAndMaintenance(); // todo: this is a hack for the maintenance and power button. It should not be part of the dispenser class
 
-    debugOutput::sendMessage("Hardware initialized...", INFO);
+    debugOutput::sendMessage("Dispenser intialized.", MSG_INFO);
 
     return OK;
-}   // End of dispenserSetup()
+} // End of dispenserSetup()
 
+// This function (called in SetDrinks) converts the data that is in the product database to variables,
+//which are then passed to the SetDrink function to create product objects for each product.
+static int db_sql_product_callback(void *data, int argc, char **argv, char **azColName)
+{
+    int i;
+    int slot;
+    string name;
+    double volume_dispensed;
+    double volume_target_l;
+    double volume_target_s;
+    double calibration_const;
+    double price_l;
+    double price_s;
+    int is_still;
+    double volume_per_tick;
+    string paymentMethod;
+    string plu_l;
+    string plu_s;
+    string name_receipt;
 
-// This function (called in SetDrinks) converts the data that is in the product database to variables, which are then passed to the SetDrink function to create drink objects for each product.
-static int callback(void *data, int argc, char **argv, char **azColName){
-   int i;
-   int slot;
-   string name;
-   double volume_dispensed;
-   double volume_target_l;
-   double volume_target_s;
-   double calibration_const;
-   double price_l;
-   double price_s;
-   int is_still;
-   double volume_per_tick;
-   string paymentMethod;
-   string plu_l;
-   string plu_s;
-   string name_receipt;
+    //   printf("\n----------\n");
 
-//   printf("\n----------\n");
+    for (i = 0; i < argc; i++)
+    {
+        //printf("%s = %s\n", azColName[i], argv[i]);
+        std::string colname = azColName[i];
 
-   for(i = 0; i<argc; i++){
-      //printf("%s = %s\n", azColName[i], argv[i]);
-      std::string colname = azColName[i];
+        if (colname == "slot")
+        {
+            slot = atoi(argv[i]);
+        }
+        else if (colname == "name")
+        {
+            name = argv[i];
+        }
+        else if (colname == "name_receipt")
+        {
+            name_receipt = argv[i];
+        }
+        else if (colname == "volume_dispensed")
+        {
+            volume_dispensed = atof(argv[i]);
+        }
+        else if (colname == "volume_target_l")
+        {
+            volume_target_l = atof(argv[i]);
+        }
+        else if (colname == "volume_target_s")
+        {
+            volume_target_s = atof(argv[i]);
+        }
+        else if (colname == "calibration_const")
+        {
+            calibration_const = atof(argv[i]);
+        }
+        else if (colname == "price_l")
+        {
+            price_l = atof(argv[i]);
+        }
+        else if (colname == "price_s")
+        {
+            price_s = atof(argv[i]);
+        }
+        else if (colname == "is_still")
+        {
+            is_still = atoi(argv[i]);
+        }
+        else if (colname == "volume_per_tick")
+        {
+            volume_per_tick = atof(argv[i]);
+        }
+        else if (colname == "PLU_l")
+        {
+            plu_l = argv[i];
+        }
+        else if (colname == "PLU_s")
+        {
+            plu_s = argv[i];
+        }
+        else if (colname == "payment")
+        {
+            paymentMethod = argv[i];
+        }
 
-      if (colname == "slot"){
-          slot = atoi(argv[i]);
-      }
-      else if (colname == "name"){
-          name = argv[i];
-      }
-      else if (colname == "name_receipt"){
-        name_receipt = argv[i];
-      }
-      else if (colname == "volume_dispensed"){
-          volume_dispensed = atof(argv[i]);
-      }
-      else if (colname == "volume_target_l"){
-          volume_target_l = atof(argv[i]);
-      }
-      else if (colname == "volume_target_s"){
-          volume_target_s = atof(argv[i]);
-      }
-      else if (colname == "calibration_const"){
-          calibration_const = atof(argv[i]);
-      }
-      else if (colname == "price_l"){
-          price_l = atof(argv[i]);
-      }
-      else if (colname == "price_s"){
-          price_s = atof(argv[i]);
-      }
-      else if (colname == "is_still"){
-          is_still = atoi(argv[i]);
-      }
-      else if (colname == "volume_per_tick"){
-          volume_per_tick = atof(argv[i]);
-      }
-      else if (colname == "PLU_l"){
-          plu_l = argv[i];
-      }
-      else if (colname == "PLU_s"){
-          plu_s = argv[i];
-      }
-      else if (colname == "payment"){
-          paymentMethod = argv[i];
-      }
+        g_productDispensers[slot - 1].setSlot(slot);
+        g_productDispensers[slot - 1].setProduct(
+            new product(slot,
+                        name,
+                        volume_dispensed,
+                        volume_target_l,
+                        volume_target_s,
+                        calibration_const,
+                        price_l,
+                        price_s,
+                        false,
+                        volume_per_tick,
+                        plu_l,
+                        plu_s,
+                        paymentMethod,
+                        name_receipt));
+    }
 
-      g_cassettes[slot-1].setDrink(new drink(slot, name, volume_dispensed, volume_target_l, volume_target_s , calibration_const, price_l, price_s, false, volume_per_tick, plu_l, plu_s, paymentMethod, name_receipt));
-   }
-
-   return 0;
+    return 0;
 }
 
-DF_ERROR stateInit::setDrinks(){
+DF_ERROR stateInit::setProducts()
+{
 
-   // Drink Setup
-   // load the SQLITE manager
+    // Product Setup
+    // load the SQLITE manager
 
     char *zErrMsg = 0;
     int rc;
-    const char* data = "Callback function called";
+    const char *data = "Callback function called";
 
     rc = sqlite3_open(DB_PATH, &db);
 
-    debugOutput::sendMessage("DB GETTER START", INFO);
+    debugOutput::sendMessage("DB GETTER START", MSG_INFO);
 
-    if( rc ) {
-//       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
-       // TODO: Error handling here...
-    } else {
-//       fprintf(stderr, "Opened database successfully\n\n");
+    if (rc)
+    {
+        // fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        // TODO: Error handling here...
+
+        debugOutput::sendMessage("Database opening error", MSG_INFO);
+    }
+    else
+    {
+        //       fprintf(stderr, "Opened database successfully\n\n");
     }
 
     /* Create SQL statement */
@@ -233,17 +257,21 @@ DF_ERROR stateInit::setDrinks(){
     strcpy(sql, sql11.c_str());
 
     /* Execute SQL statement */
-    rc = sqlite3_exec(db, sql, callback, (void*)data, &zErrMsg);
+    rc = sqlite3_exec(db, sql, db_sql_product_callback, (void *)data, &zErrMsg);
 
-    if( rc != SQLITE_OK ) {
-//       fprintf(stderr, "SQL error: %s\n", zErrMsg);
-       sqlite3_free(zErrMsg);
-    } else {
-//       fprintf(stdout, "Operation done successfully\n");
+    if (rc != SQLITE_OK)
+    {
+        debugOutput::sendMessage("Product info SQL error (OR DB PATH opening ERROR!!)", MSG_INFO);
+        //       fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+    }
+    else
+    {
+        //       fprintf(stdout, "Operation done successfully\n");
     }
     sqlite3_close(db);
 
-   return OK;
+    debugOutput::sendMessage("Products intialized.", MSG_INFO);
+
+    return OK;
 }
-
-

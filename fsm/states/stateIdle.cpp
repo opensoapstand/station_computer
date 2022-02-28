@@ -6,10 +6,10 @@
 // After stateInit: Waits for a dispense
 // command from IPC QT Socket
 //
-// created: 29-06-2020
-// by: Jason Wang & Li-Yan Tong
+// created: 01-2022
+// by:Lode Ameije & Ash Singla
 //
-// copyright 2020 by Drinkfill Beverages Ltd
+// copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
 
@@ -25,7 +25,6 @@ stateIdle::stateIdle()
 // CTOR Linked to IP Thread Socket Listener
 stateIdle::stateIdle(messageMediator *message)
 {
-   //debugOutput::sendMessage("stateIdle(messageMediator * message)", INFO);
 }
 
 // DTOR
@@ -43,52 +42,61 @@ string stateIdle::toString()
 // Sets a looped Idle state
 DF_ERROR stateIdle::onEntry()
 {
+   m_state_requested = STATE_IDLE;
    DF_ERROR e_ret = OK;
 
-   // Set current and future states to IDLE
-   m_state = IDLE;
-   m_nextState = IDLE;
    return e_ret;
 }
 
 /*
-* Advances State: If IP Thread detects DISPENSE
-* command then advance to DISPENSE_IDLE
+* Advances State: If IP Thread detects STATE_DISPENSE
+* command then advance to STATE_DISPENSE_IDLE
 */
 DF_ERROR stateIdle::onAction()
 {
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
-   m_state = IDLE;
 
-   if (nullptr != &m_nextState)
+   if (nullptr != &m_state_requested)
    {
 
       // Check if Command String is ready
-      if (m_pMessaging->isCommandReady())
+      if (m_pMessaging->isCommandStringReadyToBeParsed())
       {
-         m_pMessaging->getPositionReady();
+         DF_ERROR ret_msg;
+         ret_msg = m_pMessaging->parseCommandString();
 
-         cassettes = g_cassettes;
-         pos = m_pMessaging->getnOption();
+         productDispensers = g_productDispensers;
+         pos = m_pMessaging->getProductNumber();
          pos = pos - 1;
 
-         // If DRINK_CHAR is received, enter Dispense state, else, stay in Idle state
-         if (m_pMessaging->getcCommand() == DRINK_CHAR){
-             cassettes[pos].getDrink()->initDispense();
-             m_nextState = DISPENSE_IDLE;
-
+         if (ACTION_DISPENSE == m_pMessaging->getAction())
+         {
+            m_state_requested = STATE_DISPENSE_INIT;
          }
 
-                  // }
-         // else
-         // {
-         //    return e_ret = ERROR_NETW_NO_COMMAND;
-         // }
+         if (ACTION_MANUAL_PRINTER == m_pMessaging->getAction())
+         {
+            m_state_requested = STATE_MANUAL_PRINTER;
+         }
+         
+         if (ACTION_MANUAL_PUMP == m_pMessaging->getAction())
+         {
+            m_state_requested = STATE_MANUAL_PUMP;
+         }
+
+         if (ACTION_QUIT == m_pMessaging->getAction())
+         {
+            m_state_requested = STATE_END;
+         }
+
+         if (ACTION_HELP == m_pMessaging->getAction())
+         {
+            debugOutput::sendMessage("\n Idle State. Available Commands: \n q: Quit(in independent mode)\n p: Test printer\n m: Test pumps \n [1..4]d[l,s,t]: Enter dispense mode. [product number]d[size] \n [1..4]f[l,s,t]: If dispensing: to End Dispensing [product number]f[size]", MSG_INFO);
+         }
       }
       else
       {
-         m_nextState = IDLE;
-         // usleep(100000); // UNISTD Thread PAUSE
+         m_state_requested = STATE_IDLE;
       }
       e_ret = OK;
    }

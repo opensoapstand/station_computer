@@ -23,12 +23,12 @@
 
 
         <!-- Cassette Dispenser Sorted alphabetically (Option 0 = a; 1 = b ...) -->
-        <!-- Solenoid index 0 = Drink; 1 = Water; 2 = Air-->
+        <!-- Solenoid index 0 = Product; 1 = Water; 2 = Air-->
         <!-- TODO: Link these to stateinit.cpp -->
         <!-- Sensors -->
 
         <dispenser id="0">
-            <!-- Drink -->
+            <!-- Product -->
             <solenoid index="0">
                 <type>mcp</type>
                 <i2caddress>22</i2caddress>
@@ -41,7 +41,7 @@
         </dispenser>
 
         <dispenser id="1">
-            <!-- Drink -->
+            <!-- Product -->
             <solenoid index="0">
                 <type>mcp</type>
                 <i2caddress>22</i2caddress>
@@ -54,7 +54,7 @@
         </dispenser>
 
         <dispenser id="2">
-            <!-- Drink -->
+            <!-- Product -->
             <solenoid index="0">
                 <type>mcp</type>
                 <i2caddress>22</i2caddress>
@@ -67,7 +67,7 @@
         </dispenser>
 
         <dispenser id="3">
-            <!-- Drink -->
+            <!-- Product -->
             <solenoid index="0">
                 <type>mcp</type>
                 <i2caddress>22</i2caddress>

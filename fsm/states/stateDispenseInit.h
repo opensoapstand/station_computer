@@ -1,9 +1,8 @@
+//***************************************
 //
-// statedispenseidle.h
-// dispense idle state class
+// statedispenseinit.h
+// idle state class
 //
-// Recieves and interprets string command from FSM.
-// Routes dispense instruction to GPIO's
 // created: 01-2022
 // by:Lode Ameije & Ash Singla
 //
@@ -11,34 +10,34 @@
 // all rights reserved
 //***************************************
 
-#ifndef STATEDISPENSEIDLE__H_
-#define STATEDISPENSEIDLE__H_
+#ifndef STATEDISPENSEINIT__H_
+#define STATEDISPENSEINIT__H_
 
 #include "../dftypes.h"
 #include "../objects/messageMediator.h"
 #include "stateVirtual.h"
 #include "../fsm.h"
+#include "../objects/product.h"
 
-#include "../objects/dispenser.h"
-
-class stateDispenseIdle : public stateVirtual
+class stateDispenseInit : public stateVirtual
 {
 public:
-    stateDispenseIdle();
-    stateDispenseIdle(messageMediator *message); //debug through local network
-    ~stateDispenseIdle();
+    stateDispenseInit();
+    stateDispenseInit(messageMediator *message); //debug through local network
+    ~stateDispenseInit();
 
     string toString();
 
     DF_ERROR onEntry();
     DF_ERROR onAction();
     DF_ERROR onExit();
+    
+    // product *productOrder;
 
 private:
     int pos;
     char size;
     dispenser *productDispensers;
-    bool flushCommand;
 };
 
 #endif

@@ -41,25 +41,25 @@ bool MCP23017::openI2C()
     sprintf(fileNameBuffer,"/dev/i2c-%d", kI2CBus);
 	//printf("File name descriptor: %s \n", fileNameBuffer);
     std::cout<<"File name descriptor: " <<  fileNameBuffer << std::endl;
-    //debugOutput::sendMessage("File name descriptor: " + string(fileNameBuffer), INFO);
+    //debugOutput::sendMessage("File name descriptor: " + string(fileNameBuffer), MSG_INFO);
     kI2CFileDescriptor = open(fileNameBuffer, O_RDWR);
 
     if (kI2CFileDescriptor < 0) {
         // Could not open the file
-		debugOutput::sendMessage("Could not open I2C file: " + string(fileNameBuffer), ERROR);
+		debugOutput::sendMessage("Could not open I2C file: " + string(fileNameBuffer), MSG_ERROR);
        error = errno ;
        return false ;
     }
     if (ioctl(kI2CFileDescriptor, I2C_SLAVE, kI2CAddress) < 0) {
         // Could not open the device on the bus
-		debugOutput::sendMessage("Could not open I2C device: " + string(fileNameBuffer), ERROR);
+		debugOutput::sendMessage("Could not open I2C device: " + string(fileNameBuffer), MSG_ERROR);
 
         error = errno ;
         return false ;
     }
     // set defaults!
 	// all inputs on port A and B
-	debugOutput::sendMessage("openI2C: write register port A", INFO);
+	debugOutput::sendMessage("openI2C: write register port A", MSG_INFO);
 
 	// writeRegister(MCP23017_IODIRA,0b11111110);
 
@@ -71,7 +71,7 @@ bool MCP23017::openI2C()
             return false;
         }
 	
-	debugOutput::sendMessage("openI2C: write register port B", INFO);
+	debugOutput::sendMessage("openI2C: write register port B", MSG_INFO);
 
 	// Sets Pins to Output write to 0...Just let everything through!
         bool checkerB = writeRegister(MCP23017_IODIRB,0b00000000);
@@ -120,7 +120,7 @@ uint8_t MCP23017::readRegister(uint8_t addr)
     int toReturn = i2c_smbus_read_byte_data(kI2CFileDescriptor, addr);
     if (toReturn < 0) {
         // printf("MCP23017 Read Byte error: %d",errno) ;
-                debugOutput::sendMessage("MCP23017 read Byte error", ERROR);
+                debugOutput::sendMessage("MCP23017 read Byte error", MSG_ERROR);
         error = errno ;
         toReturn = -1 ;
     }
@@ -148,7 +148,7 @@ bool MCP23017::writeRegister(uint8_t addr, uint8_t writeValue)
     if (toReturn < 0) {
         // perror("Write to I2C Device failed");
 
-        debugOutput::sendMessage("Write to I2C Device failed (writeRegister): " + to_string(kI2CAddress) + "-" + to_string(kI2CBus), ERROR);
+        debugOutput::sendMessage("Write to I2C Device failed (writeRegister): " + to_string(kI2CAddress) + "-" + to_string(kI2CBus), MSG_ERROR);
         error = errno ;
         toReturn = false ;
     }
@@ -167,7 +167,7 @@ uint8_t MCP23017::readByte()
     int toReturn = i2c_smbus_read_byte(kI2CFileDescriptor);
     if (toReturn < 0) {
         // printf("MCP23017 Read Byte error: %d",errno) ;
-		debugOutput::sendMessage("MCP23017 read Byte error", ERROR);
+		debugOutput::sendMessage("MCP23017 read Byte error", MSG_ERROR);
         error = errno ;
         toReturn = -1 ;
     }
@@ -187,7 +187,7 @@ uint8_t MCP23017::writeByte(uint8_t writeValue)
     int toReturn = i2c_smbus_write_byte(kI2CFileDescriptor, writeValue);
     if (toReturn < 0) {
         // printf("MCP23017 Write Byte error: %d",errno) ;
-		debugOutput::sendMessage("MCP23017 write Byte error (writeByte)", ERROR);
+		debugOutput::sendMessage("MCP23017 write Byte error (writeByte)", MSG_ERROR);
         error = errno ;
         toReturn = -1 ;
     }

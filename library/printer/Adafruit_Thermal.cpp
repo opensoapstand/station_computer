@@ -35,8 +35,10 @@
 // operation, a few rare specimens instead work at 9600.  If so, change
 // this constant.  This will NOT make printing slower!  The physical
 // print and feed mechanisms are the bottleneck, not the port speed.
+// #define BAUDRATE                                                               \
+//   19200 //!< How many bits per second the serial port should transfer
 #define BAUDRATE                                                               \
-  9600 //!< How many bits per second the serial port should transfer
+  9600 // setting before lode came along
 
 // ASCII codes used by some of the printer config commands:
 #define ASCII_TAB '\t' //!< Horizontal tab
@@ -68,14 +70,15 @@
 
 // Constructor
 Adafruit_Thermal::Adafruit_Thermal(void) {
-    mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
-    serialPort.Open();
-  dtrEnabled = false;
+    // mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
+    // serialPort.Open();
+    dtrEnabled = false;
 }
 
 // Destructor
 Adafruit_Thermal::~Adafruit_Thermal(void) {
-    serialPort.Close();
+    // serialPort.Close();
+    //serialPort.~SerialPort();
 }
 
 // This method sets the estimated completion time for a just-issued task.
@@ -115,28 +118,33 @@ void Adafruit_Thermal::setTimes(unsigned long p, unsigned long f) {
 
 void Adafruit_Thermal::writeBytes(uint8_t a) {
   //timeoutWait();
-    mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
-    serialPort.Open();
+    // mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
+    // serialPort.Open();
   std::string a1(1,a);
   serialPort.Write(a1);
+  
   timeoutSet(BYTE_TIME);
+  // serialPort.Close();
 }
+
 
 void Adafruit_Thermal::writeBytes(uint8_t a, uint8_t b) {
   //timeoutWait();
-    mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
-    serialPort.Open();
+  // mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
+  // serialPort.Open();
   std::string a2(1,a);
   serialPort.Write(a2);
   std::string b2(1,b);
   serialPort.Write(b2);
   timeoutSet(2 * BYTE_TIME);
+  // serialPort.Close();
+
 }
 
 void Adafruit_Thermal::writeBytes(uint8_t a, uint8_t b, uint8_t c) {
   //timeoutWait();
-    mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
-    serialPort.Open();
+  // mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
+  // serialPort.Open();
   std::string a3(1,a);
   serialPort.Write(a3);
   std::string b3(1,b);
@@ -144,12 +152,14 @@ void Adafruit_Thermal::writeBytes(uint8_t a, uint8_t b, uint8_t c) {
   std::string c3(1,c);
   serialPort.Write(c3);
   timeoutSet(3 * BYTE_TIME);
+  // serialPort.Close();
+
 }
 
 void Adafruit_Thermal::writeBytes(uint8_t a, uint8_t b, uint8_t c, uint8_t d) {
   //timeoutWait();
-    mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
-    serialPort.Open();
+    // mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
+    // serialPort.Open();
   std::string a4(1,a);
   serialPort.Write(a4);
   std::string b4(1,b);
@@ -159,6 +169,8 @@ void Adafruit_Thermal::writeBytes(uint8_t a, uint8_t b, uint8_t c, uint8_t d) {
   std::string d4(1,d);
   serialPort.Write(d4);
   timeoutSet(4 * BYTE_TIME);
+  // serialPort.Close();
+
 }
 
 // The underlying method for all high-level printing (e.g. println()).
@@ -167,8 +179,8 @@ size_t Adafruit_Thermal::write(uint8_t c) {
 
   if (c != 0x13) { // Strip carriage returns
     //timeoutWait();
-      mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
-      serialPort.Open();
+      // mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
+      // serialPort.Open();
     std::string s(1,c);
     serialPort.Write(s);
     unsigned long d = BYTE_TIME;
@@ -611,25 +623,169 @@ void Adafruit_Thermal::wake() {
 // Check the status of the paper using the printer's self reporting
 // ability.  Returns true for paper, false for no paper.
 // Might not work on all printers!
-bool Adafruit_Thermal::hasPaper() {
-#if PRINTER_FIRMWARE >= 264
-  writeBytes(ASCII_ESC, 'v', 0);
-#else
-  writeBytes(ASCII_GS, 'r', 0);
-#endif
+// char  Adafruit_Thermal::hasPaperString() {
 
-  int status = -1;
-  for (uint8_t i = 0; i < 10; i++) {
-//    if (stream->available()) {
-//      status = stream->read();
-//      break;
-//    }
-    delay(100);
-  }
 
-  return !(status & 0b00000100);
+  // // std::string s(1,c);
+  // // serialPort.Write(s);
+
+  // mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
+  // serialPort.Open();
+  
+  // // writeBytes(ASCII_ESC, 'v', 'n');   // Esc v n (status)
+
+  // std::string a3(1,ASCII_ESC);
+  // serialPort.Write(a3);
+  // std::string b3(1,'v');
+  // serialPort.Write(b3);
+  // std::string c3(1,'n');
+  // serialPort.Write(c3);
+
+  
+
+  // std::string readVal = "p";
+  
+  // serialPort.Read(readVal); // also, you can add time out!! (blocking, non blocking,.... timeoutms)
+
+  // return readVal[0];
+
+  //debugOutput::sendMessage(readVal, MSG_INFO);
+  // char* tmp;
+
+  // serialPort.Read(tmp); // also, you can add time out!! (blocking, non blocking,.... timeoutms)
+
+// #if PRINTER_FIRMWARE >= 264
+//   writeBytes(ASCII_ESC, 'v', 0);
+// #else
+//   writeBytes(ASCII_GS, 'r', 0);
+// #endif
+//   int status = -1;
+//   for (uint8_t i = 0; i < 10; i++) {
+// //    if (stream->available()) {
+// //      status = stream->read();
+// //      break;
+// //    }
+//     delay(100);
+//   }
+
+//   return !(status & 0b00000100);
+// }
+
+void  Adafruit_Thermal::disconnectPrinter() {
+  serialPort.Close();
 }
 
+void  Adafruit_Thermal::connectToPrinter() {
+  //
+  //mn::CppLinuxSerial::SerialPort serialPortTMP("/dev/ttyS4", BAUDRATE);
+
+  // mn::CppLinuxSerial::BaudRate::B_460800 = 19
+  // mn::CppLinuxSerial::BaudRate baudrate_test = B_9600;
+
+  //serialPort.SetBaudRate(BAUDRATE);
+  serialPort.SetBaudRate(mn::CppLinuxSerial::BaudRate::B_9600);
+  //serialPort.SetBaudRate(mn::CppLinuxSerial::BaudRate::B_19200);
+  serialPort.SetDevice("/dev/ttyS4");
+
+  // serialPort = &serialPortTMP;
+  serialPort.SetTimeout(100); // this printer is slow. // 10 does not work //1000 works 
+  serialPort.Open();
+}
+
+bool Adafruit_Thermal::testComms() {
+  //serialPort.SetEcho(true);
+
+  // std::string a3(1,ASCII_ESC);
+  // serialPort.Write(a3);
+  // std::string b3(1,'v');
+  // serialPort.Write(b3);
+  // std::string c3(1,'n');
+  // serialPort.Write(c3);
+  //timeoutSet(3 * BYTE_TIME);
+  //timeoutWait();
+
+  std::string command(1,ASCII_ESC);
+  command.push_back('v');
+  command.push_back('n');
+  serialPort.Write(command);
+  
+  // usleep(10000);
+
+  std::string readVal = "-";
+
+
+
+
+  // usleep(waitMillis*1000);
+
+   //while (readVal[0] == '-'){
+  serialPort.Read(readVal); // also, you can add time out!! (blocking, non blocking,.... timeoutms)
+    
+  return readVal.length()>0;
+}
+// char Adafruit_Thermal::cancelCustomCharacters() {
+//   serialPort.SetEcho(true);
+
+//   std::string a3(1,ASCII_ESC);
+//   serialPort.Write(a3);
+//   std::string b3(1,'v');
+//   serialPort.Write(b3);
+//   std::string c3(1,'?');
+//   serialPort.Write(c3);
+  
+// }
+
+bool Adafruit_Thermal::hasPaper() {
+  // status commmand
+  // p40 user manual
+  // 3rd bit: 0=has paper, 1=out of paper
+
+
+  // writeBytes(ASCII_ESC, 'v', 'n');   // Esc v n (status)
+
+  // std::string a3(1,ASCII_ESC);
+  // serialPort.Write(a3);
+  // std::string b3(1,'v');
+  // serialPort.Write(b3);
+  // std::string c3(1,'n');
+  
+  // serialPort.Write(c3);
+
+  std::string command(1,ASCII_ESC);
+  command.push_back('v');
+  command.push_back('n');
+  serialPort.Write(command);
+
+  // std::string readVal = "D"; // let's default to a status with the 0x04 bit enabled. 
+  std::string readVal = "p"; // let's default to a status with the 0x04 bit enabled. 
+  
+  
+  
+  serialPort.Read(readVal); // also, you can add time out!! (blocking, non blocking,.... timeoutms)
+  
+  //serialPort.Close();
+  //return 4 != readVal[0];
+  //return false;
+  return !(readVal[0] & 0x04);
+  //return readVal[0] != '$';
+  
+
+// #if PRINTER_FIRMWARE >= 264
+//   writeBytes(ASCII_ESC, 'v', 0);
+// #else
+//   writeBytes(ASCII_GS, 'r', 0);
+// #endif
+//   int status = -1;
+//   for (uint8_t i = 0; i < 10; i++) {
+// //    if (stream->available()) {
+// //      status = stream->read();
+// //      break;
+// //    }
+//     delay(100);
+//   }
+
+//   return !(status & 0b00000100);
+}
 void Adafruit_Thermal::setLineHeight(int val) {
   if (val < 24)
     val = 24;

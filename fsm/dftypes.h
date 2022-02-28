@@ -3,39 +3,58 @@
 // dftypes.h
 // types specific to drinkfill
 //
-// created: 12-06-2020
-// by: Denis Londry
+// created: 01-2022
+// by: Lode Ameije & Ash Singla
 //
-// copyright 2020 by Drinkfill Beverages Ltd
+// copyright 2022 by Productfill Beverages Ltd
 // all rights reserved
 //***************************************
 
 #ifndef DFTYPES__H_
 #define DFTYPES__H_
 
-#define XML_SETTINGS  "/release/df_settings.xml"
+#define XML_SETTINGS "/release/df_settings.xml"
 
 #include <sqlite3.h>
+#include <stdint.h>
 
-typedef enum DF_FSM {
-   START,
-   INIT,
-   IDLE,
-   PRODUCT_SELECT, //retrieve info from ui which cassettes need to be set
-   PAYMENT,        //retrieve info from ui whether or not payment is finished proccessing
-   DISPENSE_IDLE,
-   DISPENSE,
-   DISPENSE_END,
-   CLEANING,
+#define PRODUCT_DISPENSERS_MAX 4
+#define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
+
+#define MILLIS_INIT_DUMMY 0
+#define IO_PIN_FLOW_SENSOR 364
+#define IO_PIN_FLOW_SENSOR_STRING "364"
+#define RUNNING_AVERAGE_WINDOW_LENGTH 100
+
+struct Time_val{
+   uint64_t time_millis;
+   double value;
+};
+typedef struct Time_val Time_val;
+
+
+typedef enum DF_FSM
+{
+   STATE_DUMMY,
+   STATE_INIT,
+   STATE_IDLE,
+   STATE_DISPENSE_INIT,
+   STATE_DISPENSE_IDLE,
+   STATE_DISPENSE,
+   STATE_DISPENSE_END,
+   STATE_MANUAL_PRINTER,
+   STATE_MANUAL_PUMP,
+   STATE_END,
    FSM_MAX,
 } DF_FSM;
 
-
-typedef enum DF_ERROR {
+typedef enum DF_ERROR
+{
    OK = 0,
+   ERROR_END,
    ERROR_BAD_PARAMS,
    ERROR_MECH = 10,
-   ERROR_MECH_DRINK_FAULT,
+   ERROR_MECH_PRODUCT_FAULT,
    ERROR_MECH_WATER_FAULT,
    ERROR_MECH_AIR_FAULT,
    ERROR_MECH_FPUMP_FAULT,

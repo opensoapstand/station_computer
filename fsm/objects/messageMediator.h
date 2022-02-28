@@ -1,17 +1,17 @@
 //***************************************
 //
 // messageMediator.h
-// Messaging IPC Controller and Model 
+// Messaging IPC Controller and Model
 // Definition:
 //
-// Holds reference and cordinates string 
-// commands from GUI, GPIO's and 
+// Holds reference and cordinates string
+// commands from GUI, GPIO's and
 // Database threads
 //
-// created: 12-06-2020
-// by: Denis Londry & Li-Yan Tong
+// created: 01-2022
+// by: Lode Ameije & Ash Singla
 //
-// copyright 2020 by Drinkfill Beverages Ltd
+// copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
 
@@ -31,74 +31,94 @@
 #include "../../library/socket/SocketException.h"
 #include "../../library/socket/ClientSocket.h"
 
-#define AIR_CHAR 'a'
-#define WATER_CHAR 'w'
-#define DRINK_CHAR 'd'
-#define CLEAN_CHAR 'c'
-#define DISPENSE_END_CHAR 'f'
+// #define AIR_CHAR 'a'
+// #define WATER_CHAR 'w'
+#define ACTION_DISPENSE 'd'
+// #define CLEAN_CHAR 'c'
+#define ACTION_DISPENSE_END 'f'
+#define ACTION_DUMMY 'x'
+#define ACTION_NO_ACTION '-'
+#define ACTION_MANUAL_PRINTER 'p'
+#define ACTION_MANUAL_PUMP 'm'
+#define ACTION_QUIT 'q'
+#define ACTION_MANUAL_PUMP_TEST 't'
+#define ACTION_MANUAL_PUMP_ENABLE 'e'
+#define ACTION_MANUAL_PUMP_DISABLE 'd'
+#define ACTION_MANUAL_PUMP_DIRECTION_FORWARD 'f'
+#define ACTION_MANUAL_PUMP_DIRECTION_REVERSE 'r'
+#define ACTION_MANUAL_PUMP_PWM_SET 'i'
 
-#define SMALL_DRINK_CHAR 's'
-#define LARGE_DRINK_CHAR 'l'
-#define TEST_CHAR 't'
+#define ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY 'V'
+#define ACTION_PRINTER_CHECK_STATUS 'v'
+#define ACTION_PRINTER_PRINT_TEST 'l'
+#define ACTION_PRINTER_REACHABLE 'r'
+#define ACTION_MANUAL_PUMP_FLOW_TEST_TOGGLE 'a'
+#define ACTION_HELP 'h'
+
+#define PRODUCT_DUMMY 'z'
+
+#define REQUESTED_VOLUME_1 's'
+#define REQUESTED_VOLUME_2 'l'
+#define REQUESTED_VOLUME_CUSTOM 't'
+
+#define REQUESTED_VOLUME_DUMMY '0'
 
 #define PWM_CHAR 'P'
 
 class messageMediator
 {
-   public:
-      messageMediator();
-      ~messageMediator();
+public:
+   messageMediator();
+   ~messageMediator();
 
-      DF_ERROR createThreads(pthread_t &kbThread, pthread_t &ipThread);
+   DF_ERROR createThreads(pthread_t &kbThread, pthread_t &ipThread);
 
-      DF_ERROR sendMessage(string msg);
+   DF_ERROR sendMessage(string msg);
 
-      string getProcessString();
-      DF_ERROR getPositionReady();
-      void clearProcessString();
-      void clearcCommand(){m_cCommand = '0';}
+   string getProcessString();
+   DF_ERROR parseCommandString();
+   DF_ERROR parseDispenseCommand(string sCommand);
 
-      string getCommandString();
-      bool isCommandReady(){return m_bCommandReady;}
-      void clearCommandString();
+   void clearProcessString();
+   string getCommandString();
+   bool isCommandStringReadyToBeParsed() { return m_bCommandStringReceived; }
+   void clearCommandString();
 
-      int getnOption(){return m_nOption;}
-      int getnSolenoid(){return m_nSolenoid;}
-      char getcCommand(){return m_cCommand;}
-      double getnTargetVolume(){return m_nVolumeTarget;}
-      char getnSize(){return m_nSize;}
+   // dispense command 
+   char getAction() { return m_requestedAction; }
+   int getProductNumber() { return m_RequestedProductIndexInt; }
+   char getRequestedVolume() { return m_requestedVolume; }
+   int getCommandValue() { return m_commandValue; }
 
 
-      // static ServerSocket *fsm_comm_socket;
-   
-      //DF_ERROR doKBThread (void * pThreadArgs);
 
-   private:
-      int messageIP;
-      static bool m_fExitThreads;
-      // pthread_t m_pKBThread;
+   // static ServerSocket *fsm_comm_socket;
 
-      static int percentComplete;
-      static string AckOrNakResult;
+private:
+   int messageIP;
+   static bool m_fExitThreads;
 
-      static string m_processString;
-      static string m_processCommand;
-      static bool m_bCommandReady;
+   static int percentComplete;
+   static string AckOrNakResult;
 
-      //int pos;
-      static int m_nOption;
-      static int m_nSolenoid;
-      static char m_cCommand;
-      static double m_nVolumeTarget;
-      static char m_nSize;
-   
-      static DF_ERROR sendProgress(int percentComplete);
-      static DF_ERROR sendQtACK(string AckOrNak);
+   static string m_receiveStringBuffer;
+   static string m_processCommand;
+   static bool m_bCommandStringReceived;
 
-      static DF_ERROR updateCmdString(char key);
-      static DF_ERROR updateCmdString();
-      static void * doKBThread(void * pThreadArgs);
-      static void * doIPThread(void * pThreadArgs);
+   static int m_RequestedProductIndexInt;
+   static int m_nSolenoid;
+   static char m_requestedAction;
+   static double m_nVolumeTarget;
+   static char m_requestedVolume;
+   static int m_commandValue;
+
+   static DF_ERROR sendProgress(int percentComplete);
+   static DF_ERROR sendQtACK(string AckOrNak);
+
+   static DF_ERROR updateCmdString(char key);
+   static DF_ERROR updateCmdString();
+   static void *doKBThread(void *pThreadArgs);
+   static void *doIPThread(void *pThreadArgs);
 };
 
 #endif

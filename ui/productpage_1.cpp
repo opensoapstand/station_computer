@@ -27,7 +27,7 @@ productPage_1::productPage_1(QWidget *parent) :
     ui(new Ui::productPage_1)
 {
     ui->setupUi(this);
-    QPixmap background(":/light/2_drink_page_1.png");
+    QPixmap background("/release/references/general/2_drink_page_1.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
@@ -35,13 +35,17 @@ productPage_1::productPage_1(QWidget *parent) :
 
     // TODO:  Populate Page Drink buttons with DrinkSelection[0-5]
 
-    /*hacky transparent button*/
-    ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->maintenanceModeButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+   ui->selection1_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    ui->selection2_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    ui->selection3_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    ui->selection4_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    ui->maintenanceModeButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    
+
+
+
+
 
     productPageEndTimer = new QTimer(this);
     productPageEndTimer->setInterval(1000);
@@ -92,34 +96,39 @@ void productPage_1::showEvent(QShowEvent *event)
     if (!db.checkLevels(1)){
         // Change p1 to Sold Out
 //        qDebug() << "Product 1 is Sold Out!" << endl;
-        ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(:/light/soldOut.png); }");
+        ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(/references/general/soldOut.png); }");
     }
     else{
-        ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+        // ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(/references/general/background.png); }");
+        ui->selection1_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     }
     if (!db.checkLevels(2)){
         // Change p2 to Sold Out
 //        qDebug() << "Product 2 is Sold Out!" << endl;
-        ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(:/light/soldOut.png); }");
+        ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(/references/general/soldOut.png); }");
     }
     else{
-        ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+        // ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(/references/general/background.png); }");
+        ui->selection2_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+        
     }
     if (!db.checkLevels(3)){
         // Change p3 to Sold Out
 //        qDebug() << "Product 3 is Sold Out!" << endl;
-        ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/soldOut.png); }");
+        ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(/references/general/soldOut.png); }");
     }
     else{
-        ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+        // ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(/references/general/background.png); }");
+        ui->selection3_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     }
     if (!db.checkLevels(4)){
         // Change p4 to Sold Out
 //        qDebug() << "Product 4 is Sold Out!" << endl;
-        ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/soldOut.png); }");
+        ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(/references/general/soldOut.png); }");
     }
     else{
-        ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+        //ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(/references/general/background.png); }");
+        ui->selection4_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     }
 
     db.closeDB();

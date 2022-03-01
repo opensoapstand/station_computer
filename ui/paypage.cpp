@@ -29,18 +29,17 @@ payPage::payPage(QWidget *parent) :
 {
     // Fullscreen background setup
     ui->setupUi(this);
-    QPixmap background(":/light/5_pay_page.png");
+    QPixmap background("/release/references/general/5_pay_page.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
-    /* HACK: transparent button*/
-    ui->previousPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->payment_bypass_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->refreshButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-
+    ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->payment_bypass_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+  
     ui->payment_bypass_Button->setEnabled(false);
 
         // **** Timer and Slot Setup ****
@@ -151,17 +150,17 @@ void payPage::resizeEvent(QResizeEvent *event){
     QString bitmap_location;
 
     if (!payment){
-        bitmap_location = ":/light/5_pay_page.png";
+        bitmap_location = "/release/references/general/5_pay_page.png";
     }
     else if(checkOption > 0 && checkOption <= 9) {
-        bitmap_location.append(":/light/5_pay_page_");
+        bitmap_location.append("/release/references/general/5_pay_page_");
         bitmap_location.append(drinkSize);
         bitmap_location.append("_");
         bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
         bitmap_location.append(".png");
         ui->order_drink_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
     } else {
-        bitmap_location = ":/light/5_pay_page_l_1.png";
+        bitmap_location = "/release/references/general/5_pay_page_l_1.png";
     }
 
     QPixmap background(bitmap_location);
@@ -280,17 +279,17 @@ void payPage::showEvent(QShowEvent *event)
     QString bitmap_location;
 
     if (!payment){
-        bitmap_location = ":/light/5_pay_page.png";
+        bitmap_location = "/release/references/general/5_pay_page.png";
     }
     else if(checkOption > 0 && checkOption <= 9) {
-        bitmap_location.append(":/light/5_pay_page_");
+        bitmap_location.append("/release/references/general/5_pay_page_");
         bitmap_location.append(drinkSize);
         bitmap_location.append("_");
         bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
         bitmap_location.append(".png");
         ui->order_drink_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
     } else {
-        bitmap_location = ":/light/5_pay_page_l_1.png";
+        bitmap_location = "/release/references/general/5_pay_page_l_1.png";
     }
 
     QPixmap background(bitmap_location);

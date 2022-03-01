@@ -20,14 +20,18 @@ thankYouPage::thankYouPage(QWidget *parent) :
     ui(new Ui::thankYouPage)
 {
     ui->setupUi(this);
-    QPixmap background(":/light/7_thank_you_page.png");
+    QPixmap background("/release/references/general/7_thank_you_page.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
     /*hacky transparent button*/
-    ui->mainPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->rinse_label->setText("<p align=center>Water rinse coming in<br>5</p>");
+    ui->rinse_label->hide();
+    
+    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->rinse_label->setText("<p align=center>Water rinse coming in<br>5</p>");
     ui->rinse_label->hide();
 

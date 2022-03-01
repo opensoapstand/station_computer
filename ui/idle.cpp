@@ -25,17 +25,13 @@ idle::idle(QWidget *parent) :
 {
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
-    QPixmap background(":/light/1_welcome_panel.png");
+    QPixmap background("/release/references/general/1_welcome_panel.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
-    /* Issues with QT buttons with images.  Button behind transparent image hack.
-       TODO: find a way to make the button transparent/clickable image */
-    ui->nextPageButton->setAttribute(Qt::WA_TranslucentBackground);
-    ui->nextPageButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->nextPageButton->raise();
+    ui->nextPageButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
 
     // TODO: Hold and pass DrinkOrder Object
     userDrinkOrder = new DrinkOrder();

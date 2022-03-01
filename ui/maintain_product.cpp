@@ -199,7 +199,7 @@ void maintain_product::resizeEvent(QResizeEvent *event){
     QString bitmap_location;
 
     if(checkOption > 0 && checkOption <= 9) {
-        bitmap_location.append("references/products/product");
+        bitmap_location.append("/release/references/products/product");
         bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
         bitmap_location.append(".png");
     } else {

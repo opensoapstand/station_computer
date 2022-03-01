@@ -26,7 +26,7 @@ productPage_2::productPage_2(QWidget *parent) :
     ui(new Ui::productPage_2)
 {
     ui->setupUi(this);
-    QPixmap background(":/light/3_drink_page_2.jpg");
+    QPixmap background("/release/references/general/3_drink_page_2.jpg");
     //background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
@@ -34,11 +34,10 @@ productPage_2::productPage_2(QWidget *parent) :
 
     // TODO: Populate Page Drink buttons with DrinkSelection[6-12]
 
-    /*hacky transparent button*/
-    ui->previousPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->selection7_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->selection8_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->selection9_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->selection7_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->selection8_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->selection9_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
 }
 

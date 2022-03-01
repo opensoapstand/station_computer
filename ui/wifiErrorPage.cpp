@@ -28,7 +28,7 @@ wifiErrorPage::wifiErrorPage(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->finish_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(20);
@@ -55,7 +55,7 @@ wifiErrorPage::~wifiErrorPage()
 
 void wifiErrorPage::showEvent(QShowEvent *event)
 {
-    QPixmap background(":/light/oops.png");
+    QPixmap background("/release/references/general/oops.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);

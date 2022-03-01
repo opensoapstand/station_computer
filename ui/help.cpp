@@ -29,11 +29,11 @@ help::help(QWidget *parent) :
     // Fullscreen background setup
     ui->setupUi(this);
 
-    ui->previousPage_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->previousPage_Button_2->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
-    ui->refreshButton->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->previousPage_Button_2->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    QPixmap background(":/light/3_help_page.png");
+    QPixmap background("/release/references/general/3_help_page.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);

@@ -28,7 +28,7 @@ dispensePage::dispensePage(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->finish_Button->setStyleSheet("QPushButton { border-image: url(:/light/background.png); }");
+    ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
@@ -55,7 +55,7 @@ dispensePage::~dispensePage()
 void dispensePage::showEvent(QShowEvent *event)
 {
     qDebug()<<"Enter dispense page." << endl;
-    QPixmap background(":/light/5_dispense_page_before.png");
+    QPixmap background("/release/references/general/5_dispense_page_before.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);

@@ -427,6 +427,7 @@ void paySelect::on_orderBig_Button_clicked()
         bitmap_location.append(".png");
     } else {
         bitmap_location = "/release/references/general/4_pay_select_page_l_1.png";
+        
     }
     
     QPixmap background(bitmap_location);

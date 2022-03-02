@@ -36,7 +36,7 @@ class productPage_1 : public QWidget
 
 public:
     explicit productPage_1(QWidget *parent = nullptr);
-    // void setPage(productPage_2 *pageTwoProducts, paySelect *pageSizeSelect, idle* pageIdle, maintenancePage *pageMaintenance, help *pageHelp);
+    void setPage(paySelect *pageSizeSelect, idle* pageIdle, maintenancePage *pageMaintenance, help *pageHelp);
     ~productPage_1();
     void cancelTimers();
 

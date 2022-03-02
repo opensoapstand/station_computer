@@ -32,19 +32,13 @@ productPage_1::productPage_1(QWidget *parent) :
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
-    // TODO:  Populate Page Drink buttons with DrinkSelection[0-5]
-
-   ui->selection1_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-    ui->selection2_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-    ui->selection3_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-    ui->selection4_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->maintenanceModeButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     
-
-
-
-
+    ui->selection1_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    ui->selection2_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    ui->selection3_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    ui->selection4_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
 
     productPageEndTimer = new QTimer(this);
     productPageEndTimer->setInterval(1000);
@@ -54,14 +48,14 @@ productPage_1::productPage_1(QWidget *parent) :
 /*
  * Page Tracking reference
  */
-// void productPage_1::setPage(productPage_2 *pageTwoProducts, paySelect *pageSizeSelect, idle* pageIdle, maintenancePage *pageMaintenance, help *pageHelp)
-// {
-//     this->selection_PageTwo = pageTwoProducts;
-//     this->paymentSelectPage = pageSizeSelect;
-//     this->idlePage = pageIdle;
-//     this->maintenanceMode = pageMaintenance;
-//     this->helpPage = pageHelp;
-// }
+void productPage_1::setPage(paySelect *pageSizeSelect, idle* pageIdle, maintenancePage *pageMaintenance, help *pageHelp)
+{
+    //this->selection_PageTwo = pageTwoProducts;
+    this->paymentSelectPage = pageSizeSelect;
+    this->idlePage = pageIdle;
+    this->maintenanceMode = pageMaintenance;
+    this->helpPage = pageHelp;
+}
 
 // DTOR
 productPage_1::~productPage_1()
@@ -205,9 +199,9 @@ void productPage_1::on_selection4_Button_clicked()
 
 void productPage_1::onProductPageTimeoutTick(){
     if(-- _productPageTimeoutSec >= 0) {
-//        qDebug() << "Tick Down: " << _productPageTimeoutSec << endl;
+        qDebug() << "Tick Down: " << _productPageTimeoutSec << endl;
     } else {
-//        qDebug() << "Timer Done!" << _productPageTimeoutSec << endl;
+        qDebug() << "Timer Done!" << _productPageTimeoutSec << endl;
         mainPage();
     }
 }

@@ -18,12 +18,12 @@
 #define PAGEPRODUCTSOVERVIEW_H
 
 #include "df_util.h"
-#include "maintenancePage.h"
+#include "page_maintenance.h"
 #include "help.h"
 
 class paySelect;
 class idle;
-class maintenancePage;
+class page_maintenance;
 class help;
 
 namespace Ui {
@@ -36,7 +36,7 @@ class pageproductsoverview : public QWidget
 
 public:
     explicit pageproductsoverview(QWidget *parent = nullptr);
-    void setPage(paySelect *pageSizeSelect, idle* pageIdle, maintenancePage *pageMaintenance, help *pageHelp);
+    void setPage(paySelect *pageSizeSelect, idle* pageIdle, page_maintenance *pageMaintenance, help *pageHelp);
     ~pageproductsoverview();
     void cancelTimers();
 
@@ -53,7 +53,7 @@ private slots:
     void mainPage();
     void onProductPageTimeoutTick();
     //void on_backButton_clicked();
-    void on_maintenanceModeButton_pressed();
+    void on_p_page_maintenanceButton_pressed();
     void on_mainPage_Button_clicked();
 
 private:
@@ -68,7 +68,7 @@ private:
     int _productPageTimeoutSec;
     QTimer* productPageEndTimer;
 
-    maintenancePage* maintenanceMode;
+    page_maintenance* p_page_maintenance;
 
     help* helpPage;
 

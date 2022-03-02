@@ -66,7 +66,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="maintenanceModeButton">
+  <widget class="QPushButton" name="p_page_maintenanceButton">
    <property name="geometry">
     <rect>
      <x>800</x>

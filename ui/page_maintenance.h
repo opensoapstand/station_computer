@@ -1,6 +1,6 @@
 //***************************************
 //
-// maintenancePage.h
+// page_maintenance.h
 // GUI class while machine is processing
 // payment.
 //
@@ -14,8 +14,8 @@
 // all rights reserved
 //***************************************
 
-#ifndef MAINTENANCEPAGE_H
-#define MAINTENANCEPAGE_H
+#ifndef PAGE_MAINTENANCE_H
+#define PAGE_MAINTENANCE_H
 
 #include <includefiles.h>
 #include "df_util.h"
@@ -31,19 +31,19 @@ class pageproductsoverview;
 class paySelect;
 
 namespace Ui {
-class maintenancePage;
+class page_maintenance;
 }
 
 //using namespace std;
 
-class maintenancePage : public QWidget
+class page_maintenance : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit maintenancePage(QWidget *parent = nullptr);
+    explicit page_maintenance(QWidget *parent = nullptr);
     void setPage(idle* pageIdle, page_maintenance_dispenser* pageMaintain, pageproductsoverview *pageProduct, paySelect* pagePaySelect);
-    ~maintenancePage();
+    ~page_maintenance();
     int getSelection();
 
 
@@ -61,14 +61,14 @@ private slots:
     void on_wifiButton_clicked();
     //void on_clean_button_clicked();
     //void on_restock_button_clicked();
-    void onMaintenancePageTimeoutTick();
+    void onPage_maintenanceTimeoutTick();
     void btn_clicked();
 //    void on_buttonGroup_buttonClicked();
     void buttonWasClicked(int);
 
 private:
     void showEvent(QShowEvent *event);
-    Ui::maintenancePage *ui;
+    Ui::page_maintenance *ui;
     idle* idlePage;
     page_maintenance_dispenser* maintainPage;
     pageproductsoverview* selection_PageOne;
@@ -76,9 +76,9 @@ private:
 
     QResizeEvent *productSelection;
 
-    int _maintenancePageTimeoutSec;
-    QTimer* maintenancePageEndTimer;
+    int _page_maintenanceTimeoutSec;
+    QTimer* page_maintenanceEndTimer;
 
 };
 
-#endif // MAINTENANCEPAGE_H
+#endif // PAGE_MAINTENANCE_H

@@ -33,7 +33,7 @@ pageproductsoverview::pageproductsoverview(QWidget *parent) :
     this->setPalette(palette);
 
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-    ui->maintenanceModeButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    ui->p_page_maintenanceButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     
     ui->selection1_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->selection2_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
@@ -48,12 +48,12 @@ pageproductsoverview::pageproductsoverview(QWidget *parent) :
 /*
  * Page Tracking reference
  */
-void pageproductsoverview::setPage(paySelect *pageSizeSelect, idle* pageIdle, maintenancePage *pageMaintenance, help *pageHelp)
+void pageproductsoverview::setPage(paySelect *pageSizeSelect, idle* pageIdle, page_maintenance *pageMaintenance, help *pageHelp)
 {
     //this->selection_PageTwo = pageTwoProducts;
     this->paymentSelectPage = pageSizeSelect;
     this->idlePage = pageIdle;
-    this->maintenanceMode = pageMaintenance;
+    this->p_page_maintenance = pageMaintenance;
     this->helpPage = pageHelp;
 }
 
@@ -213,13 +213,13 @@ void pageproductsoverview::mainPage()
     this->hide();
 }
 
-void pageproductsoverview::on_maintenanceModeButton_pressed()
+void pageproductsoverview::on_p_page_maintenanceButton_pressed()
 {
 //    qDebug() << "Maintenance button pressed" << endl;
     maintenanceCounter++;
     if (maintenanceCounter > 15){
         productPageEndTimer->stop();
-        maintenanceMode->showFullScreen();
+        p_page_maintenance->showFullScreen();
         this->hide();
     }
 }

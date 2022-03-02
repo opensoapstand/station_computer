@@ -45,7 +45,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 
     DbManager db(DB_PATH);
     //DbManager db_temperature(DB_PATH_TEMPERATURE);
-    //db.addPageClick("MAINTENANCE PAGE ENTERED");
+    //db.addPageClick("PAGE_MAINTENANCE PAGE ENTERED");
 
     if(maintainProductPageEndTimer == nullptr){
         maintainProductPageEndTimer = new QTimer(this);
@@ -121,9 +121,9 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference
  */
-void page_maintenance_dispenser::setPage(maintenancePage* pageMaintenance, idle* pageIdle)
+void page_maintenance_dispenser::setPage(page_maintenance* pageMaintenance, idle* pageIdle)
 {
-    this->maintenanceMode = pageMaintenance;
+    this->p_page_maintenance = pageMaintenance;
     this->idlePage = pageIdle;
 
     ui->name->setText("Product Name: ");
@@ -154,7 +154,7 @@ void page_maintenance_dispenser::on_backButton_clicked(){
 //    db.addPageClick("MAINTAIN PRODUCT PAGE EXITED");
 
     maintainProductPageEndTimer->stop();
-    maintenanceMode->showFullScreen();
+    p_page_maintenance->showFullScreen();
 //    usleep(100);
     this->hide();
 

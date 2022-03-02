@@ -1,9 +1,9 @@
 <RCC>
     <qresource prefix="/">
       
-        <file>maintenancePage.ui</file>
-        <file>maintenancePage.h</file>
-        <file>maintenance.cpp</file>
+        <file>page_maintenance.ui</file>
+        <file>page_maintenance.h</file>
+        <file>page_maintenance.cpp</file>
         <file>page_maintenance_dispenser.ui</file>
         <file>page_maintenance_dispenser.h</file>
         <file>page_maintenance_dispenser.cpp</file>
@@ -61,7 +61,7 @@
         <file>ui_help.h</file>
         <file>ui_idle.h</file>
         <file>ui_page_maintenance_dispenser.h</file>
-        <file>ui_maintenancePage.h</file>
+        <file>ui_page_maintenance.h</file>
         <file>ui_pagepayment.h</file>
         <file>ui_payselect.h</file>
         <file>ui_pageproductsoverview.h</file>

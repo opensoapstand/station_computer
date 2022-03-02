@@ -13,7 +13,7 @@ FORMS += \
     payselect.ui \
     pageproductsoverview.ui \
     pagethankyou.ui \
-    maintenancePage.ui \
+    page_maintenance.ui \
     page_maintenance_dispenser.ui \
     init.ui \
     help.ui \
@@ -41,7 +41,7 @@ HEADERS += \
     df_util.h \
     drinkorder.h \
     dbmanager.h \
-    maintenancePage.h \
+    page_maintenance.h \
     page_maintenance_dispenser.h \
     wifiErrorPage.h \
     init.h \
@@ -68,7 +68,7 @@ SOURCES += \
     df_util.cpp \
     drinkorder.cpp \
     dbmanager.cpp \
-    maintenance.cpp \
+    page_maintenance.cpp \
     wifiErrorPage.cpp \
     page_maintenance_dispenser.cpp \
     init.cpp \

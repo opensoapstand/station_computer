@@ -1,5 +1,5 @@
-#include "maintenancePage.h"
-#include "ui_maintenancePage.h"
+#include "page_maintenance.h"
+#include "ui_page_maintenance.h"
 #include <QProcess>
 
 #include "idle.h"
@@ -11,9 +11,9 @@ int select4 = 4;
 int selection = 0;
 
 // CTOR
-maintenancePage::maintenancePage(QWidget *parent) :
+page_maintenance::page_maintenance(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::maintenancePage)
+    ui(new Ui::page_maintenance)
 {
     // Fullscreen background setup
     ui->setupUi(this);
@@ -47,35 +47,35 @@ maintenancePage::maintenancePage(QWidget *parent) :
     ui->product4_button->setIcon(ButtonIcon4);
     ui->product4_button->setIconSize(QSize(241,381));
 
-    maintenancePageEndTimer = new QTimer(this);
-    maintenancePageEndTimer->setInterval(1000);
-    connect(maintenancePageEndTimer, SIGNAL(timeout()), this, SLOT(onMaintenancePageTimeoutTick()));
+    page_maintenanceEndTimer = new QTimer(this);
+    page_maintenanceEndTimer->setInterval(1000);
+    connect(page_maintenanceEndTimer, SIGNAL(timeout()), this, SLOT(onPage_maintenanceTimeoutTick()));
 //    connect(ui->buttonGroup, SIGNAL(buttonClicked(QAbstractButton*)),this, SLOT(on_buttonGroup_buttonClicked()));
     connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(buttonWasClicked(int)));
 
 }
 
 // DTOR
-maintenancePage::~maintenancePage()
+page_maintenance::~page_maintenance()
 {
     delete ui;
 }
 
-void maintenancePage::showEvent(QShowEvent *event)
+void page_maintenance::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
 
     DbManager db(DB_PATH);
-//    db.addPageClick("MAINTENANCE PAGE ENTERED");
+//    db.addPageClick("PAGE_PAGE_MAINTENANCE PAGE ENTERED");
 
-    if(maintenancePageEndTimer == nullptr){
-        maintenancePageEndTimer = new QTimer(this);
-        maintenancePageEndTimer->setInterval(1000);
-        connect(maintenancePageEndTimer, SIGNAL(timeout()), this, SLOT(onMaintenancePageTimeoutTick()));
+    if(page_maintenanceEndTimer == nullptr){
+        page_maintenanceEndTimer = new QTimer(this);
+        page_maintenanceEndTimer->setInterval(1000);
+        connect(page_maintenanceEndTimer, SIGNAL(timeout()), this, SLOT(onPage_maintenanceTimeoutTick()));
     }
 
-    //maintenancePageEndTimer->start(1000);
-    _maintenancePageTimeoutSec = 30;
+    //page_maintenanceEndTimer->start(1000);
+    _page_maintenanceTimeoutSec = 30;
 
     ui->product1_label->setText(db.getProductName(1));
     ui->product2_label->setText(db.getProductName(2));
@@ -119,7 +119,7 @@ void maintenancePage::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference
  */
-void maintenancePage::setPage(idle* pageIdle, page_maintenance_dispenser* pageMaintain, pageproductsoverview *pageProduct, paySelect *pagePaySelect)
+void page_maintenance::setPage(idle* pageIdle, page_maintenance_dispenser* pageMaintain, pageproductsoverview *pageProduct, paySelect *pagePaySelect)
 {
     this->idlePage = pageIdle;
     this->maintainPage = pageMaintain;
@@ -127,18 +127,18 @@ void maintenancePage::setPage(idle* pageIdle, page_maintenance_dispenser* pageMa
     this->paySelectPage = pagePaySelect;
 }
 
-void maintenancePage::on_backButton_clicked(){
+void page_maintenance::on_backButton_clicked(){
 //    qDebug() << "Back button clicked" << endl;
 
-    maintenancePageEndTimer->stop();
+    page_maintenanceEndTimer->stop();
     idlePage->showFullScreen();
 //    usleep(100);
     this->hide();
 }
 
-void maintenancePage::on_product1_button_clicked(){
+void page_maintenance::on_product1_button_clicked(){
 //    qDebug() << "Product 1 button clicked" << endl;
-    maintenancePageEndTimer->stop();
+    page_maintenanceEndTimer->stop();
 
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_1);
     idlePage->userDrinkOrder->setDrinkSize(DRINK1);
@@ -150,12 +150,12 @@ void maintenancePage::on_product1_button_clicked(){
 
 }
 
-//void maintenancePage::on_buttonGroup_buttonClicked(QAbstractButton*){}
-//void maintenancePage::buttonWasClicked(int){}
+//void page_maintenance::on_buttonGroup_buttonClicked(QAbstractButton*){}
+//void page_maintenance::buttonWasClicked(int){}
 
-void maintenancePage::on_product2_button_clicked(){
+void page_maintenance::on_product2_button_clicked(){
 //    qDebug() << "Product 2 button clicked" << endl;
-    maintenancePageEndTimer->stop();
+    page_maintenanceEndTimer->stop();
 
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
     idlePage->userDrinkOrder->setDrinkSize(DRINK2);
@@ -167,9 +167,9 @@ void maintenancePage::on_product2_button_clicked(){
 
 }
 
-void maintenancePage::on_product3_button_clicked(){
+void page_maintenance::on_product3_button_clicked(){
 //    qDebug() << "Product 3 button clicked" << endl;
-    maintenancePageEndTimer->stop();
+    page_maintenanceEndTimer->stop();
 
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
     idlePage->userDrinkOrder->setDrinkSize(DRINK3);
@@ -181,9 +181,9 @@ void maintenancePage::on_product3_button_clicked(){
 
 }
 
-void maintenancePage::on_product4_button_clicked(){
+void page_maintenance::on_product4_button_clicked(){
 //    qDebug() << "Product 4 button clicked" << endl;
-    maintenancePageEndTimer->stop();
+    page_maintenanceEndTimer->stop();
 
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);
     idlePage->userDrinkOrder->setDrinkSize(DRINK4);
@@ -195,34 +195,34 @@ void maintenancePage::on_product4_button_clicked(){
 
 }
 
-//void maintenancePage::on_product5_button_clicked(){
+//void page_maintenance::on_product5_button_clicked(){
 //    qDebug() << "Product 5 button clicked" << endl;
 
 //}
 
-//void maintenancePage::on_product6_button_clicked(){
+//void page_maintenance::on_product6_button_clicked(){
 //    qDebug() << "Product 6 button clicked" << endl;
 
 //}
 
-//void maintenancePage::on_product7_button_clicked(){
+//void page_maintenance::on_product7_button_clicked(){
 //    qDebug() << "Product 7 button clicked" << endl;
 
 //}
 
-//void maintenancePage::on_product8_button_clicked(){
+//void page_maintenance::on_product8_button_clicked(){
 //    qDebug() << "Product 8 button clicked" << endl;
 
 //}
 
-//void maintenancePage::on_product9_button_clicked(){
+//void page_maintenance::on_product9_button_clicked(){
 //    qDebug() << "Product 9 button clicked" << endl;
 
 //}
 
-void maintenancePage::on_wifiButton_clicked(){
+void page_maintenance::on_wifiButton_clicked(){
 //    qDebug() << "WiFi button clicked" << endl;
-    _maintenancePageTimeoutSec = 30;
+    _page_maintenanceTimeoutSec = 30;
     ui->wifiTable->setRowCount(0);
 
     // OPEN LIST OF WIFI CONNECTIONS AVAILABLE, AS BUTTONS, WHEN YOU CLICK ON A BUTTON, OPEN PASSWORD ENTRY
@@ -307,10 +307,10 @@ int getSelection(){
     return selection;
 }
 
-void maintenancePage::btn_clicked(){
+void page_maintenance::btn_clicked(){
     QObject* button = QObject::sender();
 //    qDebug() << "btn clicked -> " << button->objectName();
-    _maintenancePageTimeoutSec = 30;
+    _page_maintenanceTimeoutSec = 30;
     // OPEN ON-SCREEN KEYBOARD FOR PASSWORD ENTRY
 
     ui->keyboard_2->show();
@@ -340,21 +340,21 @@ void maintenancePage::btn_clicked(){
 
 }
 
-void maintenancePage::onMaintenancePageTimeoutTick(){
+void page_maintenance::onPage_maintenanceTimeoutTick(){
 
-    if(-- _maintenancePageTimeoutSec >= 0) {
-//        qDebug() << "Maintenance Tick Down: " << _maintenancePageTimeoutSec << endl;
+    if(-- _page_maintenanceTimeoutSec >= 0) {
+//        qDebug() << "Page_page_maintenance Tick Down: " << _page_maintenanceTimeoutSec << endl;
     } else {
-//        qDebug() << "Maintenance Timer Done!" << _maintenancePageTimeoutSec << endl;
+//        qDebug() << "Page_page_maintenance Timer Done!" << _page_maintenanceTimeoutSec << endl;
 
-        maintenancePageEndTimer->stop();
+        page_maintenanceEndTimer->stop();
         idlePage->showFullScreen();
 //        usleep(100);
         this->hide();
     }
 }
 
-void maintenancePage::buttonWasClicked(int buttonID){
+void page_maintenance::buttonWasClicked(int buttonID){
 
     QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
     //qDebug() << buttonpressed->text();

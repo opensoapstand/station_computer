@@ -21,11 +21,11 @@
 #include "df_util.h"
 #include "drinkorder.h"
 #include "dfuicommthread.h"
-#include "maintenancePage.h"
+#include "page_maintenance.h"
 #include <curl/curl.h>
 #include <ctime>
 
-class maintenancePage;
+class page_maintenance;
 class idle;
 
 namespace Ui {
@@ -40,7 +40,7 @@ class page_maintenance_dispenser : public QWidget
 
 public:
     explicit page_maintenance_dispenser(QWidget *parent = nullptr);
-    void setPage(maintenancePage* pageMaintenance, idle* pageIdle);
+    void setPage(page_maintenance* pageMaintenance, idle* pageIdle);
     ~page_maintenance_dispenser();
     void resizeEvent(QResizeEvent *event);
     void updateVolumeDisplayed(double dispensed);
@@ -89,7 +89,7 @@ private slots:
 private:
     void showEvent(QShowEvent *event);
     Ui::page_maintenance_dispenser *ui;
-    maintenancePage* maintenanceMode;
+    page_maintenance* p_page_maintenance;
     idle* idlePage;
 
     bool pumping = false;

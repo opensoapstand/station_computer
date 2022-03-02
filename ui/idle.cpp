@@ -16,7 +16,7 @@
 
 #include "idle.h"
 #include "ui_idle.h"
-#include "maintenancePage.h"
+#include "page_maintenance.h"
 
 // CTOR
 idle::idle(QWidget *parent) :
@@ -46,11 +46,11 @@ idle::idle(QWidget *parent) :
 /*
  * Navigation to Product item
  */
-void idle::setPage(pageproductsoverview *pageProduct, maintenancePage *pageMaintenance)
+void idle::setPage(pageproductsoverview *pageProduct, page_maintenance *pageMaintenance)
 {
     // Chained to KB Listener
     this->selection_PageOne = pageProduct;
-    this->maintenanceMode = pageMaintenance;
+    this->p_page_maintenance = pageMaintenance;
 }
 
 // DTOR
@@ -102,7 +102,7 @@ bool idle::isEnough(int p){
 
 void idle::MMSlot(){
 //    qDebug() << "HERE I AM I KNOW I MUIST ENTER MM" << endl;
-    maintenanceMode->showFullScreen();
+    p_page_maintenance->showFullScreen();
     this->hide();
     this->selection_PageOne->hide();
 }

@@ -26,7 +26,7 @@
 #include "pagethankyou.h"
 #include <QApplication>
 #include "df_util.h"
-#include "maintenancePage.h"
+#include "page_maintenance.h"
 #include "page_maintenance_dispenser.h"
 #include <QCoreApplication>
 #include <QGuiApplication>
@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     page_dispenser* dispensingPage = new page_dispenser();
     wifiErrorPage* wifiError = new wifiErrorPage();
     pagethankyou* lastPage = new pagethankyou();
-    maintenancePage* maintenanceMode = new maintenancePage();
+    page_maintenance* p_page_maintenance = new page_maintenance();
     page_maintenance_dispenser* maintainPage = new page_maintenance_dispenser();
 
     // TODO: Instantiate a DrinkSelection[] Array
@@ -67,19 +67,19 @@ int main(int argc, char *argv[])
     initPage->setPage(idlePage);
     //initPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    maintainPage->setPage(maintenanceMode, idlePage);
+    maintainPage->setPage(p_page_maintenance, idlePage);
     //maintainPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    maintenanceMode->setPage(idlePage, maintainPage, firstSelectPage, paySelectPage);
-    //maintenanceMode->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
+    p_page_maintenance->setPage(idlePage, maintainPage, firstSelectPage, paySelectPage);
+    //p_page_maintenance->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    idlePage->setPage(firstSelectPage, maintenanceMode);
+    idlePage->setPage(firstSelectPage, p_page_maintenance);
     //idlePage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    firstSelectPage->setPage(paySelectPage, idlePage, maintenanceMode, helpPage);
+    firstSelectPage->setPage(paySelectPage, idlePage, p_page_maintenance, helpPage);
     //firstSelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    //secondSelectPage->setPage(firstSelectPage, paySelectPage, idlePage, maintenanceMode);
+    //secondSelectPage->setPage(firstSelectPage, paySelectPage, idlePage, p_page_maintenance);
     //secondSelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
     paySelectPage->setPage(firstSelectPage, dispensingPage,wifiError, idlePage, paymentPage, helpPage);

@@ -21,13 +21,13 @@
 #include "pageproductsoverview.h"
 #include "dfuicommthread.h"
 #include "dbmanager.h"
-#include "maintenancePage.h"
+#include "page_maintenance.h"
 
 #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 #define DB_PATH_CLICKS "/release/db/sqlite/clicks.db"
 #define DB_PATH_TEMPERATURE "/release/db/sqlite/temperature.db"
 
-class maintenancePage;
+class page_maintenance;
 class pageproductsoverview;
 
 namespace Ui {
@@ -40,7 +40,7 @@ class idle : public QWidget
 
 public:
     explicit idle(QWidget *parent = nullptr);
-    void setPage(pageproductsoverview *pageProduct, maintenancePage *pageMaintenance);
+    void setPage(pageproductsoverview *pageProduct, page_maintenance *pageMaintenance);
     ~idle();
     void showEvent(QShowEvent *event);
 
@@ -60,7 +60,7 @@ private slots:
 private:
     Ui::idle *ui;
     pageproductsoverview* selection_PageOne;
-    maintenancePage* maintenanceMode;
+    page_maintenance* p_page_maintenance;
     bool p1, p2, p3, p4;
 
 

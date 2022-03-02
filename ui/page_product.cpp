@@ -6,7 +6,7 @@
 // payment for drink.
 //
 // Allows navigation to First product page
-// payment page and idle page
+// payment page and page_idle page
 //
 // created: 16-07-2020
 // by: Jason Wang
@@ -22,7 +22,7 @@
 
 #include "pagepayment.h"
 #include "pageproductsoverview.h"
-#include "idle.h"
+#include "page_idle.h"
 #include <curl/curl.h>
 #include <json.hpp>
 
@@ -101,7 +101,7 @@ pageProduct::pageProduct(QWidget *parent) :
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void pageProduct::setPage(pageproductsoverview *pageSelect, page_dispenser* page_dispenser,wifiErrorPage* pageWifiError,  idle* pageIdle, pagePayment* pagePayment, help* pageHelp)
+void pageProduct::setPage(pageproductsoverview *pageSelect, page_dispenser* page_dispenser,page_error_wifi* pageWifiError,  page_idle* pageIdle, pagePayment* pagePayment, page_help* pageHelp)
 {
     this->firstProductPage = pageSelect;
     this->paymentPage = pagePayment;

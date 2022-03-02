@@ -1,7 +1,7 @@
 //***************************************
 //
-// idle.cpp
-// GUI class while machine is idle.
+// page_idle.cpp
+// GUI class while machine is page_idle.
 //
 // Display Fullscreen DF branded Wallpaper
 // Listen for User interaction to load
@@ -14,14 +14,14 @@
 // all rights reserved
 //***************************************
 
-#include "idle.h"
-#include "ui_idle.h"
+#include "page_idle.h"
+#include "ui_page_idle.h"
 #include "page_maintenance.h"
 
 // CTOR
-idle::idle(QWidget *parent) :
+page_idle::page_idle(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::idle)
+    ui(new Ui::page_idle)
 {
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
@@ -46,7 +46,7 @@ idle::idle(QWidget *parent) :
 /*
  * Navigation to Product item
  */
-void idle::setPage(pageproductsoverview *p_pageProduct, page_maintenance *pageMaintenance)
+void page_idle::setPage(pageproductsoverview *p_pageProduct, page_maintenance *pageMaintenance)
 {
     // Chained to KB Listener
     this->selection_PageOne = p_pageProduct;
@@ -54,12 +54,12 @@ void idle::setPage(pageproductsoverview *p_pageProduct, page_maintenance *pageMa
 }
 
 // DTOR
-idle::~idle()
+page_idle::~page_idle()
 {
     delete ui;
 }
 
-void idle::showEvent(QShowEvent *event)
+void page_idle::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
 //    DbManager db(DB_PATH);
@@ -67,10 +67,10 @@ void idle::showEvent(QShowEvent *event)
 }
 
 /*
- * Screen click shows product page as full screen and hides idle screen
+ * Screen click shows product page as full screen and hides page_idle screen
  */
 
-void idle::on_nextPageButton_clicked()
+void page_idle::on_nextPageButton_clicked()
 {
 
     // qDebug() << "SEND LARGE FILL DEBUG TEST" << endl;
@@ -83,7 +83,7 @@ void idle::on_nextPageButton_clicked()
     this->hide();
 }
 
-bool idle::isEnough(int p){
+bool page_idle::isEnough(int p){
     switch(p){
         case(1):
             return p1;
@@ -100,7 +100,7 @@ bool idle::isEnough(int p){
     }
 }
 
-void idle::MMSlot(){
+void page_idle::MMSlot(){
 //    qDebug() << "HERE I AM I KNOW I MUIST ENTER MM" << endl;
     p_page_maintenance->showFullScreen();
     this->hide();

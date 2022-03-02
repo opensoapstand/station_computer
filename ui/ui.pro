@@ -7,23 +7,23 @@ CONFIG += \
 
 FORMS += \
     page_dispenser.ui \
-    wifiErrorPage.ui \
-    idle.ui \
+    page_error_wifi.ui \
+    page_idle.ui \
     pagepayment.ui \
     page_product.ui \
     pageproductsoverview.ui \
     pagethankyou.ui \
     page_maintenance.ui \
     page_maintenance_dispenser.ui \
-    init.ui \
-    help.ui \
+    page_init.ui \
+    page_help.ui \
     keyboard.ui
 
 HEADERS += \
     dfuicommthread.h \
     dfuiserver.h \
     page_dispenser.h \
-    idle.h \
+    page_idle.h \
     includefiles.h \
     pagepayment.h \
     page_product.h \
@@ -43,15 +43,15 @@ HEADERS += \
     dbmanager.h \
     page_maintenance.h \
     page_maintenance_dispenser.h \
-    wifiErrorPage.h \
-    init.h \
-    help.h
+    page_error_wifi.h \
+    page_init.h \
+    page_help.h
 
 SOURCES += \
     dfuicommthread.cpp \
     dfuiserver.cpp \
     page_dispenser.cpp \
-    idle.cpp \
+    page_idle.cpp \
     main.cpp \
     pagepayment.cpp \
     page_product.cpp \
@@ -69,10 +69,10 @@ SOURCES += \
     drinkorder.cpp \
     dbmanager.cpp \
     page_maintenance.cpp \
-    wifiErrorPage.cpp \
+    page_error_wifi.cpp \
     page_maintenance_dispenser.cpp \
-    init.cpp \
-    help.cpp \
+    page_init.cpp \
+    page_help.cpp \
     ../library/qr/qrcodegen.cpp
 
 RESOURCES += \

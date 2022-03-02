@@ -2,7 +2,7 @@
 //
 // pagethankyou.cpp
 // GUI class to show user dispense has been
-// completed and route back to idle
+// completed and route back to page_idle
 //
 // created: 16-07-2020
 // by: Jason Wang
@@ -47,7 +47,7 @@ pagethankyou::pagethankyou(QWidget *parent) :
 /*
  * Page Tracking reference
  */
-void pagethankyou::setPage(page_dispenser *page_dispenser, idle *pageIdle, pagePayment *pagePayment)
+void pagethankyou::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, pagePayment *pagePayment)
 {
     this->idlePage = pageIdle;
     this->dispensingPage = page_dispenser;
@@ -117,10 +117,10 @@ void pagethankyou::curler(){
 
     curl = curl_easy_init();
     if (!curl){
-//        qDebug() << "cURL failed to init" << endl;
+//        qDebug() << "cURL failed to page_init" << endl;
         bufferCURL(curl_data);
     }else{
-//        qDebug() << "cURL init success" << endl;
+//        qDebug() << "cURL page_init success" << endl;
 
 //        cout << "CURLING DATA: " << curl_param_array.data() << " is " << sizeof(curl_param_array.data()) << " bytes" << endl;
 

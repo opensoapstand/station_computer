@@ -1,6 +1,6 @@
 //***************************************
 //
-// init.h
+// page_init.h
 // GUI class while machine is initializing.
 //
 // Display Fullscreen DF branded Wallpaper
@@ -18,28 +18,28 @@
 #define INIT_H
 
 #include "df_util.h"
-#include "idle.h"
+#include "page_idle.h"
 #include "dfuicommthread.h"
 #include "dbmanager.h"
 
 #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 #define DB_PATH_CLICKS "/release/db/sqlite/clicks.db"
 
-class idle;
+class page_idle;
 
 namespace Ui {
-class init;
+class page_init;
 }
 
-class init : public QWidget
+class page_init : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit init(QWidget *parent = nullptr);
-    void setPage(idle *pageIdle);
+    explicit page_init(QWidget *parent = nullptr);
+    void setPage(page_idle *pageIdle);
     void showEvent(QShowEvent *event);
-    ~init();
+    ~page_init();
     void initReadySlot(void);
 
     DrinkOrder* userDrinkOrder;
@@ -52,8 +52,8 @@ private slots:
     void onRebootTimeoutTick();
 
 private:
-    Ui::init *ui;
-    idle* idlePage;
+    Ui::page_init *ui;
+    page_idle* idlePage;
     QTimer* initIdleTimer;
     int _initIdleTimeoutSec;
     QTimer* rebootTimer;

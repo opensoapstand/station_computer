@@ -5,7 +5,7 @@
 // payment for drink.
 //
 // Allows navigation to First product page
-// payment page and idle page
+// payment page and page_idle page
 //
 // created: 16-07-2020
 // by: Jason Wang
@@ -19,15 +19,15 @@
 
 #include "df_util.h"
 #include "page_dispenser.h"
-#include "wifiErrorPage.h"
-#include "help.h"
+#include "page_error_wifi.h"
+#include "page_help.h"
 
 class pageproductsoverview;
 class pagePayment;
-class idle;
+class page_idle;
 class page_dispenser;
-class wifiErrorPage;
-class help;
+class page_error_wifi;
+class page_help;
 
 namespace Ui {
 class pageProduct;
@@ -39,7 +39,7 @@ class pageProduct : public QWidget
 
 public:
     explicit pageProduct(QWidget *parent = nullptr);
-    void setPage(pageproductsoverview *pageSelect, page_dispenser* page_dispenser,wifiErrorPage* pageWifiError,  idle* pageIdle, pagePayment *pagePayment, help* pageHelp);
+    void setPage(pageproductsoverview *pageSelect, page_dispenser* page_dispenser,page_error_wifi* pageWifiError,  page_idle* pageIdle, pagePayment *pagePayment, page_help* pageHelp);
     ~pageProduct();
 
     void resizeEvent(QResizeEvent *event);
@@ -78,10 +78,10 @@ private:
     Ui::pageProduct *ui;
     pageproductsoverview* firstProductPage;
     pagePayment* paymentPage;
-    idle* idlePage;
+    page_idle* idlePage;
     page_dispenser* dispensingPage;
-    wifiErrorPage* wifiError;
-    help* helpPage;
+    page_error_wifi* wifiError;
+    page_help* helpPage;
 
     QTimer* selectIdleTimer;
     int _selectIdleTimeoutSec;

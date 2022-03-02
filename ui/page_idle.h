@@ -1,6 +1,6 @@
 //***************************************
 //
-// idle.h
+// page_idle.h
 // GUI class while machine is idle.
 //
 // Display Fullscreen DF branded Wallpaper
@@ -31,17 +31,17 @@ class page_maintenance;
 class pageproductsoverview;
 
 namespace Ui {
-class idle;
+class page_idle;
 }
 
-class idle : public QWidget
+class page_idle : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit idle(QWidget *parent = nullptr);
+    explicit page_idle(QWidget *parent = nullptr);
     void setPage(pageproductsoverview *p_pageProduct, page_maintenance *pageMaintenance);
-    ~idle();
+    ~page_idle();
     void showEvent(QShowEvent *event);
 
     DrinkOrder* userDrinkOrder;
@@ -58,7 +58,7 @@ private slots:
 //    void on_savedBottles_label_clicked();
 
 private:
-    Ui::idle *ui;
+    Ui::page_idle *ui;
     pageproductsoverview* selection_PageOne;
     page_maintenance* p_page_maintenance;
     bool p1, p2, p3, p4;

@@ -18,7 +18,7 @@
 #include "ui_pageproductsoverview.h"
 
 #include "page_product.h"
-#include "idle.h"
+#include "page_idle.h"
 
 // CTOR
 pageproductsoverview::pageproductsoverview(QWidget *parent) :
@@ -48,7 +48,7 @@ pageproductsoverview::pageproductsoverview(QWidget *parent) :
 /*
  * Page Tracking reference
  */
-void pageproductsoverview::setPage(pageProduct *pageSizeSelect, idle* pageIdle, page_maintenance *pageMaintenance, help *pageHelp)
+void pageproductsoverview::setPage(pageProduct *pageSizeSelect, page_idle* pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp)
 {
     //this->selection_PageTwo = pageTwoProducts;
     this->paymentSelectPage = pageSizeSelect;

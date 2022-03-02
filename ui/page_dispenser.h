@@ -20,7 +20,7 @@
 
 #include "df_util.h"
 #include "includefiles.h"
-#include "idle.h"
+#include "page_idle.h"
 #include "pagethankyou.h"
 
 #include "posm/mcommunication.h"
@@ -31,7 +31,7 @@
 
 class pagePayment;
 class pagethankyou;
-class idle;
+class page_idle;
 
 namespace Ui {
 class page_dispenser;
@@ -44,7 +44,7 @@ class page_dispenser : public QWidget
 public:
     // **** GUI ****
     explicit page_dispenser(QWidget *parent = nullptr);
-    void setPage(pagePayment* pagePayment, pagethankyou* pageThankYou, idle* pageIdle);
+    void setPage(pagePayment* pagePayment, pagethankyou* pageThankYou, page_idle* pageIdle);
     ~page_dispenser();
     void showEvent(QShowEvent *event);
     void PleaseResetTimerSlot(void);
@@ -69,7 +69,7 @@ private:
     Ui::page_dispenser *ui;
     pagePayment* paymentPage;
     pagethankyou* thanksPage;
-    idle* idlePage;
+    page_idle* idlePage;
 
     // XXX: Remove when interrupts and flowsensors work.
 

@@ -1,6 +1,6 @@
 //***************************************
 //
-// init.cpp
+// page_init.cpp
 // GUI class while machine is initializing.
 //
 // Display Fullscreen DF branded Wallpaper
@@ -14,14 +14,14 @@
 // all rights reserved
 //***************************************
 
-#include "init.h"
-#include "idle.h"
-#include "ui_init.h"
+#include "page_init.h"
+#include "page_idle.h"
+#include "ui_page_init.h"
 
 // CTOR
-init::init(QWidget *parent) :
+page_init::page_init(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::init)
+    ui(new Ui::page_init)
 {
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
@@ -48,19 +48,19 @@ init::init(QWidget *parent) :
 /*
  * Navigation to Product item
  */
-void init::setPage(idle *pageIdle)
+void page_init::setPage(page_idle *pageIdle)
 {
     // Chained to KB Listener
     this->idlePage = pageIdle;
 }
 
 // DTOR
-init::~init()
+page_init::~page_init()
 {
     delete ui;
 }
 
-void init::showEvent(QShowEvent *event)
+void page_init::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
 //    qDebug() << "Start init Timers" << endl;
@@ -69,13 +69,13 @@ void init::showEvent(QShowEvent *event)
     system("DISPLAY=:0 xterm -hold  /release/fsm/controller &");
 }
 
-void init::initReadySlot(void){
+void page_init::initReadySlot(void){
     initIdleTimer->stop();
     idlePage->showFullScreen();
     this->hide();
 }
 
-void init::onInitTimeoutTick(){
+void page_init::onInitTimeoutTick(){
     if(-- _initIdleTimeoutSec >= 0) {
 //        qDebug() << "init: Tick Down - " << _initIdleTimeoutSec << endl;
         ui->init_label->setText(ui->init_label->text() + ".");
@@ -92,7 +92,7 @@ void init::onInitTimeoutTick(){
     }
 }
 
-void init::onRebootTimeoutTick(){
+void page_init::onRebootTimeoutTick(){
     if(-- _rebootTimeoutSec >= 0) {
 //        qDebug() << "init: Reboot Tick Down - " << _rebootTimeoutSec << endl;
         ui->fail_label->setText(ui->fail_label->text() + ".");

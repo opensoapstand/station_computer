@@ -18,7 +18,7 @@
 #include "page_dispenser.h"
 #include "ui_page_dispenser.h"
 #include "includefiles.h"
-#include "idle.h"
+#include "page_idle.h"
 #include "pagethankyou.h"
 
 // CTOR
@@ -39,7 +39,7 @@ page_dispenser::page_dispenser(QWidget *parent) :
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void page_dispenser::setPage(pagePayment *pagePayment, pagethankyou* pageThankYou, idle* pageIdle)
+void page_dispenser::setPage(pagePayment *pagePayment, pagethankyou* pageThankYou, page_idle* pageIdle)
 {
     this->thanksPage = pageThankYou;
     this->paymentPage = pagePayment;
@@ -155,7 +155,7 @@ void page_dispenser::on_finish_Button_clicked()
 
     if (volumeDispensed == 0 && (db.getPaymentMethod(idlePage->userDrinkOrder->getOption())=="tap")){
         // REVERSE PAYMENT
-        com.init();
+        com.page_init();
         pktToSend = paymentPacket.reversePurchasePacket();
         if (sendToUX410()){
             waitForUX410();

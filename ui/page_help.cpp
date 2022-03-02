@@ -1,8 +1,8 @@
 //***************************************
 //
-// help.cpp
+// page_help.cpp
 // GUI class for user to get drinkfill
-//  help and contactact info
+//  page_help and contactact info
 //
 //
 // created: 28-05-2021
@@ -12,19 +12,19 @@
 // all rights reserved
 //***************************************
 
-#include "help.h"
-#include "ui_help.h"
+#include "page_help.h"
+#include "ui_page_help.h"
 #include "df_util.h"
 #include "pageproductsoverview.h"
 #include "page_product.h"
 #include "pagepayment.h"
-#include "idle.h"
+#include "page_idle.h"
 
 
 // CTOR
-help::help(QWidget *parent) :
+page_help::page_help(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::help)
+    ui(new Ui::page_help)
 {
     // Fullscreen background setup
     ui->setupUi(this);
@@ -45,12 +45,12 @@ help::help(QWidget *parent) :
 }
 
 // DTOR
-help::~help()
+page_help::~page_help()
 {
     delete ui;
 }
 
-void help::showEvent(QShowEvent *event)
+void page_help::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
 
@@ -68,7 +68,7 @@ void help::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference
  */
-void help::setPage(pageproductsoverview *pageSelect, pageProduct* pageProduct, idle* pageIdle, pagePayment *pagePayment)
+void page_help::setPage(pageproductsoverview *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, pagePayment *pagePayment)
 {
     this->idlePage = pageIdle;
     this->paymentPage = pagePayment;
@@ -76,19 +76,19 @@ void help::setPage(pageproductsoverview *pageSelect, pageProduct* pageProduct, i
     this->firstProductPage = pageSelect;
 }
 
-void help::on_previousPage_Button_clicked(){
+void page_help::on_previousPage_Button_clicked(){
     helpIdleTimer->stop();
     idlePage->showFullScreen();
     this->hide();
 }
 
-void help::on_previousPage_Button_2_clicked(){
+void page_help::on_previousPage_Button_2_clicked(){
     helpIdleTimer->stop();
     idlePage->showFullScreen();
     this->hide();
 }
 
-void help::onHelpTimeoutTick(){
+void page_help::onHelpTimeoutTick(){
     if(-- _helpIdleTimeoutSec >= 0) {
 //        qDebug() << "Help Tick Down: " << _helpIdleTimeoutSec << endl;
     } else {
@@ -103,7 +103,7 @@ void help::onHelpTimeoutTick(){
     }
 }
 
-void help::on_refreshButton_clicked(){
+void page_help::on_refreshButton_clicked(){
     _helpIdleTimeoutSec = 60;
     ui->refreshLabel->hide();
 }

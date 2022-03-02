@@ -1,6 +1,6 @@
 //***************************************
 //
-// wifiErrorPage.cpp
+// page_error_wifi.cpp
 // GUI class to dispense drink.
 // Coordinates User input to payment class
 // then communcates results to FSM IP_thread
@@ -15,16 +15,16 @@
 // all rights reserved
 //***************************************
 
-#include "wifiErrorPage.h"
-#include "ui_wifiErrorPage.h"
+#include "page_error_wifi.h"
+#include "ui_page_error_wifi.h"
 #include "includefiles.h"
-#include "idle.h"
+#include "page_idle.h"
 #include "pagethankyou.h"
 
 // CTOR
-wifiErrorPage::wifiErrorPage(QWidget *parent) :
+page_error_wifi::page_error_wifi(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::wifiErrorPage)
+    ui(new Ui::page_error_wifi)
 {
     ui->setupUi(this);
 
@@ -40,7 +40,7 @@ wifiErrorPage::wifiErrorPage(QWidget *parent) :
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void wifiErrorPage::setPage(pagePayment *pagePayment, pagethankyou* pageThankYou, idle* pageIdle)
+void page_error_wifi::setPage(pagePayment *pagePayment, pagethankyou* pageThankYou, page_idle* pageIdle)
 {
     this->thanksPage = pageThankYou;
     this->paymentPage = pagePayment;
@@ -48,12 +48,12 @@ void wifiErrorPage::setPage(pagePayment *pagePayment, pagethankyou* pageThankYou
 }
 
 // DTOR
-wifiErrorPage::~wifiErrorPage()
+page_error_wifi::~page_error_wifi()
 {
     delete ui;
 }
 
-void wifiErrorPage::showEvent(QShowEvent *event)
+void page_error_wifi::showEvent(QShowEvent *event)
 {
     QPixmap background("/release/references/general/oops.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
@@ -83,7 +83,7 @@ void wifiErrorPage::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void wifiErrorPage::on_finish_Button_clicked()
+void page_error_wifi::on_finish_Button_clicked()
 {
     DbManager db(DB_PATH);
 
@@ -94,8 +94,8 @@ void wifiErrorPage::on_finish_Button_clicked()
 }
 
 
-void wifiErrorPage::stopDispenseTimer(){
-//    qDebug() << "wifiErrorPage: Stop Timers" << endl;
+void page_error_wifi::stopDispenseTimer(){
+//    qDebug() << "page_error_wifi: Stop Timers" << endl;
     if(dispenseIdleTimer != nullptr){
         dispenseIdleTimer->stop();
     }
@@ -103,7 +103,7 @@ void wifiErrorPage::stopDispenseTimer(){
 }
 
 
-void wifiErrorPage::onDispenseIdleTick(){
+void page_error_wifi::onDispenseIdleTick(){
     if(-- _dispenseIdleTimeoutSec >= 0) {
 //        qDebug() << "page_dispenser: Idle Tick Down: " << _dispenseIdleTimeoutSec << endl;
     } else {
@@ -114,6 +114,6 @@ void wifiErrorPage::onDispenseIdleTick(){
 }
 
 
-void wifiErrorPage::targetHitDisplay(){
+void page_error_wifi::targetHitDisplay(){
     on_finish_Button_clicked();
 }

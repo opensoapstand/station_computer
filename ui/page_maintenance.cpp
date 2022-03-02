@@ -2,7 +2,7 @@
 #include "ui_page_maintenance.h"
 #include <QProcess>
 
-#include "idle.h"
+#include "page_idle.h"
 
 int select1 = 1;
 int select2 = 2;
@@ -119,7 +119,7 @@ void page_maintenance::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference
  */
-void page_maintenance::setPage(idle* pageIdle, page_maintenance_dispenser* pageMaintain, pageproductsoverview *p_pageProduct, pageProduct *pagePaySelect)
+void page_maintenance::setPage(page_idle* pageIdle, page_maintenance_dispenser* pageMaintain, pageproductsoverview *p_pageProduct, pageProduct *pagePaySelect)
 {
     this->idlePage = pageIdle;
     this->maintainPage = pageMaintain;

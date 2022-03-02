@@ -26,7 +26,7 @@
 #include <ctime>
 
 class page_maintenance;
-class idle;
+class page_idle;
 
 namespace Ui {
 class page_maintenance_dispenser;
@@ -40,7 +40,7 @@ class page_maintenance_dispenser : public QWidget
 
 public:
     explicit page_maintenance_dispenser(QWidget *parent = nullptr);
-    void setPage(page_maintenance* pageMaintenance, idle* pageIdle);
+    void setPage(page_maintenance* pageMaintenance, page_idle* pageIdle);
     ~page_maintenance_dispenser();
     void resizeEvent(QResizeEvent *event);
     void updateVolumeDisplayed(double dispensed);
@@ -90,7 +90,7 @@ private:
     void showEvent(QShowEvent *event);
     Ui::page_maintenance_dispenser *ui;
     page_maintenance* p_page_maintenance;
-    idle* idlePage;
+    page_idle* idlePage;
 
     bool pumping = false;
 

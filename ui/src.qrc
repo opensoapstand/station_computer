@@ -7,13 +7,13 @@
         <file>page_maintenance_dispenser.ui</file>
         <file>page_maintenance_dispenser.h</file>
         <file>page_maintenance_dispenser.cpp</file>
-        <file>idle.cpp</file>
-        <file>idle.ui</file>
+        <file>page_idle.cpp</file>
+        <file>page_idle.ui</file>
 
-        <file>ui_init.h</file>
-        <file>init.ui</file>
-        <file>init.h</file>
-        <file>init.cpp</file>
+        <file>ui_page_init.h</file>
+        <file>page_init.ui</file>
+        <file>page_init.h</file>
+        <file>page_init.cpp</file>
        
         <file>posm/enums.h</file>
         <file>posm/lrcgenerator.cpp</file>
@@ -44,9 +44,9 @@
         <file>page_dispenser.h</file>
         <file>drinkorder.cpp</file>
         <file>drinkorder.h</file>
-        <file>help.cpp</file>
-        <file>help.h</file>
-        <file>idle.h</file>
+        <file>page_help.cpp</file>
+        <file>page_help.h</file>
+        <file>page_idle.h</file>
         <file>includefiles.h</file>
         <file>main.cpp</file>
         <file>pagepayment.cpp</file>
@@ -58,7 +58,7 @@
         <file>pagethankyou.cpp</file>
         <file>pagethankyou.h</file>
         <file>ui_page_dispenser.h</file>
-        <file>ui_help.h</file>
+        <file>ui_page_help.h</file>
         <file>ui_idle.h</file>
         <file>ui_page_maintenance_dispenser.h</file>
         <file>ui_page_maintenance.h</file>

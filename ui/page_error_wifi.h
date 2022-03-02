@@ -1,6 +1,6 @@
 //***************************************
 //
-// wifiErrorPage.h
+// page_error_wifi.h
 // GUI class to dispense drink.
 // Coordinates User input to payment class
 // then communcates results to FSM IP_thread
@@ -20,27 +20,27 @@
 
 #include "df_util.h"
 #include "includefiles.h"
-#include "idle.h"
+#include "page_idle.h"
 #include "pagethankyou.h"
 
 
 class pagePayment;
 class pagethankyou;
-class idle;
+class page_idle;
 
 namespace Ui {
-class wifiErrorPage;
+class page_error_wifi;
 }
 
-class wifiErrorPage : public QWidget
+class page_error_wifi : public QWidget
 {
     Q_OBJECT
 
 public:
     // **** GUI ****
-    explicit wifiErrorPage(QWidget *parent = nullptr);
-    void setPage(pagePayment* pagePayment, pagethankyou* pageThankYou, idle* pageIdle);
-    ~wifiErrorPage();
+    explicit page_error_wifi(QWidget *parent = nullptr);
+    void setPage(pagePayment* pagePayment, pagethankyou* pageThankYou, page_idle* pageIdle);
+    ~page_error_wifi();
     void showEvent(QShowEvent *event);
     void targetHitDisplay();
 
@@ -56,10 +56,10 @@ private slots:
 
 private:
     // **** GUI *****
-    Ui::wifiErrorPage *ui;
+    Ui::page_error_wifi *ui;
     pagePayment* paymentPage;
     pagethankyou* thanksPage;
-    idle* idlePage;
+    page_idle* idlePage;
 
     // XXX: Remove when interrupts and flowsensors work.
 

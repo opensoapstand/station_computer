@@ -1,6 +1,6 @@
 #include "page_maintenance_dispenser.h"
 #include "ui_page_maintenance_dispenser.h"
-#include "idle.h"
+#include "page_idle.h"
 #include "drinkorder.h"
 #include <QInputDialog>
 #include <QCoreApplication>
@@ -121,7 +121,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference
  */
-void page_maintenance_dispenser::setPage(page_maintenance* pageMaintenance, idle* pageIdle)
+void page_maintenance_dispenser::setPage(page_maintenance* pageMaintenance, page_idle* pageIdle)
 {
     this->p_page_maintenance = pageMaintenance;
     this->idlePage = pageIdle;
@@ -875,9 +875,9 @@ void page_maintenance_dispenser::curler(){
 
     curl = curl_easy_init();
     if (!curl){
-//        qDebug() << "cURL failed to init" << endl;
+//        qDebug() << "cURL failed to page_init" << endl;
     }else{
-//        qDebug() << "cURL init success" << endl;
+//        qDebug() << "cURL page_init success" << endl;
 
         curl_easy_setopt(curl, CURLOPT_URL, "http://Drinkfill-env.eba-qatmjpdr.us-east-2.elasticbeanstalk.com/api/machine_data/resetStock");
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());

@@ -28,7 +28,7 @@ mCommunication::mCommunication(){
 mCommunication::~mCommunication() {
 }
 
-bool mCommunication::init(){
+bool mCommunication::page_init(){
 
     bool bRet = false;
 

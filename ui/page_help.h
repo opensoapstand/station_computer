@@ -1,8 +1,8 @@
 //***************************************
 //
-// help.h
+// page_help.h
 // GUI class for user to see Drinkfill
-// help and contact info
+// page_help and contact info
 //
 // created: 28-05-2021
 // by: Paddy Riley
@@ -18,25 +18,25 @@
 #include "pageproductsoverview.h"
 #include "page_product.h"
 #include "pagepayment.h"
-#include "idle.h"
+#include "page_idle.h"
 
 class pageproductsoverview;
 class pagePayment;
-class idle;
+class page_idle;
 class pageProduct;
 
 namespace Ui {
-class help;
+class page_help;
 }
 
-class help : public QWidget
+class page_help : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit help(QWidget *parent = nullptr);
-    void setPage(pageproductsoverview *pageSelect, pageProduct* pageProduct, idle* pageIdle, pagePayment *pagePayment);
-    ~help();
+    explicit page_help(QWidget *parent = nullptr);
+    void setPage(pageproductsoverview *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, pagePayment *pagePayment);
+    ~page_help();
     QTimer* helpIdleTimer;
 
 private slots:
@@ -51,10 +51,10 @@ private:
     //bool stopHelpTimers();
     //void helpOnTick();
 
-    Ui::help *ui;
+    Ui::page_help *ui;
     pageproductsoverview* firstProductPage;
     pagePayment* paymentPage;
-    idle* idlePage;
+    page_idle* idlePage;
     pageProduct* selectPage;
 
     int _helpIdleTimeoutSec;

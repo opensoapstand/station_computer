@@ -19,7 +19,7 @@
 
 #include "page_product.h"
 #include "page_dispenser.h"
-#include "idle.h"
+#include "page_idle.h"
 
 
 // CTOR
@@ -101,12 +101,12 @@ void pagePayment::stopPayTimers(){
     }
 
     if(idlePaymentTimer != nullptr) {
-//        qDebug() << "cancel idle payment Timer" << endl;
+//        qDebug() << "cancel page_idle payment Timer" << endl;
         idlePaymentTimer->stop();
     }
 
     if(paymentEndTimer != nullptr) {
-//        qDebug() << "cancel idle payment END Timer" << endl;
+//        qDebug() << "cancel page_idle payment END Timer" << endl;
         paymentEndTimer->stop();
     }
 
@@ -126,7 +126,7 @@ void pagePayment::stopPayTimers(){
 /*
  * Page Tracking reference
  */
-void pagePayment::setPage(pageProduct *pageSizeSelect, page_dispenser* page_dispenser, idle* pageIdle, help* pageHelp)
+void pagePayment::setPage(pageProduct *pageSizeSelect, page_dispenser* page_dispenser, page_idle* pageIdle, page_help* pageHelp)
 {
     this->p_pageProduct = pageSizeSelect;
     this->dispensingPage = page_dispenser;
@@ -370,9 +370,9 @@ void pagePayment::createOrder(){
     curl_data1= curl_param_array1.data();
     curl1 = curl_easy_init();
     if (!curl1){
-//        qDebug() << "cURL failed to init" << endl;
+//        qDebug() << "cURL failed to page_init" << endl;
     }else{
-//        qDebug() << "cURL init success" << endl;
+//        qDebug() << "cURL page_init success" << endl;
         curl_easy_setopt(curl1, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/createOrderInDbTest");
         curl_easy_setopt(curl1, CURLOPT_POSTFIELDS, curl_param_array1.data());
         curl_easy_setopt(curl1, CURLOPT_WRITEFUNCTION, WriteCallback);
@@ -435,9 +435,9 @@ void pagePayment::curler(){
 
     curl = curl_easy_init();
     if (!curl){
-//        qDebug() << "cURL failed to init" << endl;
+//        qDebug() << "cURL failed to page_init" << endl;
     }else{
-//        qDebug() << "cURL init success" << endl;
+//        qDebug() << "cURL page_init success" << endl;
         curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/check_order_status");
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
@@ -607,10 +607,10 @@ bool pagePayment::sendToUX410()
 
 bool pagePayment::paymentInit()
 {
-    paymentConnected = com.init();
+    paymentConnected = com.page_init();
 
     while (!paymentConnected){
-        paymentConnected = com.init();
+        paymentConnected = com.page_init();
         sleep(1);
     }
 

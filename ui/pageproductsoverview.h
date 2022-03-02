@@ -19,12 +19,12 @@
 
 #include "df_util.h"
 #include "page_maintenance.h"
-#include "help.h"
+#include "page_help.h"
 
 class pageProduct;
-class idle;
+class page_idle;
 class page_maintenance;
-class help;
+class page_help;
 
 namespace Ui {
 class pageproductsoverview;
@@ -36,7 +36,7 @@ class pageproductsoverview : public QWidget
 
 public:
     explicit pageproductsoverview(QWidget *parent = nullptr);
-    void setPage(pageProduct *pageSizeSelect, idle* pageIdle, page_maintenance *pageMaintenance, help *pageHelp);
+    void setPage(pageProduct *pageSizeSelect, page_idle* pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp);
     ~pageproductsoverview();
     void cancelTimers();
 
@@ -61,7 +61,7 @@ private:
     Ui::pageproductsoverview *ui;
     // productPage_2 *selection_PageTwo;
     pageProduct *paymentSelectPage;
-    idle* idlePage;
+    page_idle* idlePage;
 
     QResizeEvent *productResize;
 
@@ -70,7 +70,7 @@ private:
 
     page_maintenance* p_page_maintenance;
 
-    help* helpPage;
+    page_help* helpPage;
 
     int maintenanceCounter;
 };

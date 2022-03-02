@@ -20,12 +20,12 @@
 #include <includefiles.h>
 #include "df_util.h"
 #include "drinkorder.h"
-#include "idle.h"
+#include "page_idle.h"
 #include "dfuicommthread.h"
 #include "page_maintenance_dispenser.h"
 #include "pageproductsoverview.h"
 
-class idle;
+class page_idle;
 class page_maintenance_dispenser;
 class pageproductsoverview;
 class pageProduct;
@@ -42,7 +42,7 @@ class page_maintenance : public QWidget
 
 public:
     explicit page_maintenance(QWidget *parent = nullptr);
-    void setPage(idle* pageIdle, page_maintenance_dispenser* pageMaintain, pageproductsoverview *p_pageProduct, pageProduct* pagePaySelect);
+    void setPage(page_idle* pageIdle, page_maintenance_dispenser* pageMaintain, pageproductsoverview *p_pageProduct, pageProduct* pagePaySelect);
     ~page_maintenance();
     int getSelection();
 
@@ -69,7 +69,7 @@ private slots:
 private:
     void showEvent(QShowEvent *event);
     Ui::page_maintenance *ui;
-    idle* idlePage;
+    page_idle* idlePage;
     page_maintenance_dispenser* maintainPage;
     pageproductsoverview* selection_PageOne;
     pageProduct* p_pageProduct;

@@ -1,6 +1,6 @@
 //***************************************
 //
-// productpage_1.cpp
+// pageproductsoverview.cpp
 // GUI class for user to browse up to
 // 6 drinks.
 //
@@ -14,16 +14,16 @@
 // all rights reserved
 //***************************************
 
-#include "productpage_1.h"
-#include "ui_productpage_1.h"
+#include "pageproductsoverview.h"
+#include "ui_pageproductsoverview.h"
 
 #include "payselect.h"
 #include "idle.h"
 
 // CTOR
-productPage_1::productPage_1(QWidget *parent) :
+pageproductsoverview::pageproductsoverview(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::productPage_1)
+    ui(new Ui::pageproductsoverview)
 {
     ui->setupUi(this);
     QPixmap background("/release/references/general/2_background_products.png");
@@ -48,7 +48,7 @@ productPage_1::productPage_1(QWidget *parent) :
 /*
  * Page Tracking reference
  */
-void productPage_1::setPage(paySelect *pageSizeSelect, idle* pageIdle, maintenancePage *pageMaintenance, help *pageHelp)
+void pageproductsoverview::setPage(paySelect *pageSizeSelect, idle* pageIdle, maintenancePage *pageMaintenance, help *pageHelp)
 {
     //this->selection_PageTwo = pageTwoProducts;
     this->paymentSelectPage = pageSizeSelect;
@@ -58,18 +58,18 @@ void productPage_1::setPage(paySelect *pageSizeSelect, idle* pageIdle, maintenan
 }
 
 // DTOR
-productPage_1::~productPage_1()
+pageproductsoverview::~pageproductsoverview()
 {
     delete ui;
 }
 
-//void productPage_1::on_nextPageButton_clicked()
+//void pageproductsoverview::on_nextPageButton_clicked()
 //{
 //    selection_PageTwo->showFullScreen();
 //    this->hide();
 //}
 
-void productPage_1::showEvent(QShowEvent *event)
+void pageproductsoverview::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
 
@@ -125,13 +125,13 @@ void productPage_1::showEvent(QShowEvent *event)
     db.closeDB();
 }
 
-void productPage_1::cancelTimers(){
+void pageproductsoverview::cancelTimers(){
     productPageEndTimer->stop();
 }
 
 
 // FIXME: This is terrible...no time to make array reference to hold button press functions
-void productPage_1::on_selection1_Button_clicked()
+void pageproductsoverview::on_selection1_Button_clicked()
 {
     DbManager db(DB_PATH);
     if(db.checkLevels(1)){
@@ -147,7 +147,7 @@ void productPage_1::on_selection1_Button_clicked()
     }
 }
 
-void productPage_1::on_selection2_Button_clicked()
+void pageproductsoverview::on_selection2_Button_clicked()
 {
     DbManager db(DB_PATH);
     if(db.checkLevels(2)){
@@ -163,7 +163,7 @@ void productPage_1::on_selection2_Button_clicked()
     }
 }
 
-void productPage_1::on_selection3_Button_clicked()
+void pageproductsoverview::on_selection3_Button_clicked()
 {
     DbManager db(DB_PATH);
     if(db.checkLevels(3)){
@@ -180,7 +180,7 @@ void productPage_1::on_selection3_Button_clicked()
 
 }
 
-void productPage_1::on_selection4_Button_clicked()
+void pageproductsoverview::on_selection4_Button_clicked()
 {
     DbManager db(DB_PATH);
     if(db.checkLevels(4)){
@@ -197,7 +197,7 @@ void productPage_1::on_selection4_Button_clicked()
 
 }
 
-void productPage_1::onProductPageTimeoutTick(){
+void pageproductsoverview::onProductPageTimeoutTick(){
     if(-- _productPageTimeoutSec >= 0) {
         qDebug() << "Tick Down: " << _productPageTimeoutSec << endl;
     } else {
@@ -206,14 +206,14 @@ void productPage_1::onProductPageTimeoutTick(){
     }
 }
 
-void productPage_1::mainPage()
+void pageproductsoverview::mainPage()
 {
     productPageEndTimer->stop();
     idlePage->showFullScreen();
     this->hide();
 }
 
-void productPage_1::on_maintenanceModeButton_pressed()
+void pageproductsoverview::on_maintenanceModeButton_pressed()
 {
 //    qDebug() << "Maintenance button pressed" << endl;
     maintenanceCounter++;
@@ -224,7 +224,7 @@ void productPage_1::on_maintenanceModeButton_pressed()
     }
 }
 
-void productPage_1::on_mainPage_Button_clicked()
+void pageproductsoverview::on_mainPage_Button_clicked()
 {
 //    qDebug() << "Main Page Button pressed" << endl;
     productPageEndTimer->stop();

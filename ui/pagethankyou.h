@@ -1,6 +1,6 @@
 //***************************************
 //
-// thankyoupage.h
+// pagethankyou.h
 // GUI class to show user dispense has been
 // completed and route back to idle
 //
@@ -11,31 +11,31 @@
 // all rights reserved
 //***************************************
 
-#ifndef THANKYOUPAGE_H
-#define THANKYOUPAGE_H
+#ifndef PAGETHANKYOU_H
+#define PAGETHANKYOU_H
 
 #include "df_util.h"
 #include "idle.h"
-#include "dispensepage.h"
+#include "page_dispenser.h"
 #include <curl/curl.h>
 #include <ctime>
 
-class dispensePage;
+class page_dispenser;
 class idle;
-class payPage;
+class pagePayment;
 
 namespace Ui {
-class thankYouPage;
+class pagethankyou;
 }
 
-class thankYouPage : public QWidget
+class pagethankyou : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit thankYouPage(QWidget *parent = nullptr);
-    void setPage(dispensePage* pageDispense, idle* pageIdle, payPage* pagePayment);
-    ~thankYouPage();
+    explicit pagethankyou(QWidget *parent = nullptr);
+    void setPage(page_dispenser* page_dispenser, idle* pageIdle, pagePayment* pagePayment);
+    ~pagethankyou();
 
 private slots:
     void on_mainPage_Button_clicked();
@@ -45,10 +45,10 @@ private slots:
 private:
     void showEvent(QShowEvent *event);
 
-    Ui::thankYouPage *ui;
-    dispensePage* dispensingPage;
+    Ui::pagethankyou *ui;
+    page_dispenser* dispensingPage;
     idle* idlePage;
-    payPage* paymentPage;
+    pagePayment* paymentPage;
 
     int _thankYouTimeoutSec;
     QTimer* thankYouEndTimer;
@@ -72,4 +72,4 @@ private:
 
 };
 
-#endif // THANKYOUPAGE_H
+#endif // PAGETHANKYOU_H

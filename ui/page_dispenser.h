@@ -1,6 +1,6 @@
 //***************************************
 //
-// dispensepage.h
+// page_dispenser.h
 // GUI class to dispense drink.
 // Coordinates User input to payment class
 // then communcates results to FSM IP_thread
@@ -15,13 +15,13 @@
 // all rights reserved
 //***************************************
 
-#ifndef DISPENSEPAGE_H
-#define DISPENSEPAGE_H
+#ifndef PAGE_DISPENSER_H
+#define PAGE_DISPENSER_H
 
 #include "df_util.h"
 #include "includefiles.h"
 #include "idle.h"
-#include "thankyoupage.h"
+#include "pagethankyou.h"
 
 #include "posm/mcommunication.h"
 #include "posm/packetfromecr.h"
@@ -29,23 +29,23 @@
 #include "posm/transactionPackets.h"
 #include "posm/transactioninfo.h"
 
-class payPage;
-class thankYouPage;
+class pagePayment;
+class pagethankyou;
 class idle;
 
 namespace Ui {
-class dispensePage;
+class page_dispenser;
 }
 
-class dispensePage : public QWidget
+class page_dispenser : public QWidget
 {
     Q_OBJECT
 
 public:
     // **** GUI ****
-    explicit dispensePage(QWidget *parent = nullptr);
-    void setPage(payPage* pagePayment, thankYouPage* pageThankYou, idle* pageIdle);
-    ~dispensePage();
+    explicit page_dispenser(QWidget *parent = nullptr);
+    void setPage(pagePayment* pagePayment, pagethankyou* pageThankYou, idle* pageIdle);
+    ~page_dispenser();
     void showEvent(QShowEvent *event);
     void PleaseResetTimerSlot(void);
     void updateVolumeDisplayed(double dispensed);
@@ -66,9 +66,9 @@ private slots:
 
 private:
     // **** GUI *****
-    Ui::dispensePage *ui;
-    payPage* paymentPage;
-    thankYouPage* thanksPage;
+    Ui::page_dispenser *ui;
+    pagePayment* paymentPage;
+    pagethankyou* thanksPage;
     idle* idlePage;
 
     // XXX: Remove when interrupts and flowsensors work.
@@ -103,4 +103,4 @@ protected:
 
 };
 
-#endif // DISPENSEPAGE_H
+#endif // PAGE_DISPENSER_H

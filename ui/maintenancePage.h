@@ -5,7 +5,7 @@
 // payment.
 //
 // Coordinates User input from payment select
-// class then communcates results to dispensepage.
+// class then communcates results to page_dispenser.
 //
 // created: 4-01-2021
 // by: Paddy Riley
@@ -22,12 +22,12 @@
 #include "drinkorder.h"
 #include "idle.h"
 #include "dfuicommthread.h"
-#include "maintain_product.h"
-#include "productpage_1.h"
+#include "page_maintenance_dispenser.h"
+#include "pageproductsoverview.h"
 
 class idle;
-class maintain_product;
-class productPage_1;
+class page_maintenance_dispenser;
+class pageproductsoverview;
 class paySelect;
 
 namespace Ui {
@@ -42,7 +42,7 @@ class maintenancePage : public QWidget
 
 public:
     explicit maintenancePage(QWidget *parent = nullptr);
-    void setPage(idle* pageIdle, maintain_product* pageMaintain, productPage_1 *pageProduct, paySelect* pagePaySelect);
+    void setPage(idle* pageIdle, page_maintenance_dispenser* pageMaintain, pageproductsoverview *pageProduct, paySelect* pagePaySelect);
     ~maintenancePage();
     int getSelection();
 
@@ -70,8 +70,8 @@ private:
     void showEvent(QShowEvent *event);
     Ui::maintenancePage *ui;
     idle* idlePage;
-    maintain_product* maintainPage;
-    productPage_1* selection_PageOne;
+    page_maintenance_dispenser* maintainPage;
+    pageproductsoverview* selection_PageOne;
     paySelect* paySelectPage;
 
     QResizeEvent *productSelection;

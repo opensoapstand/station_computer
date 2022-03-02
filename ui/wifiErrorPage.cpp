@@ -19,7 +19,7 @@
 #include "ui_wifiErrorPage.h"
 #include "includefiles.h"
 #include "idle.h"
-#include "thankyoupage.h"
+#include "pagethankyou.h"
 
 // CTOR
 wifiErrorPage::wifiErrorPage(QWidget *parent) :
@@ -40,7 +40,7 @@ wifiErrorPage::wifiErrorPage(QWidget *parent) :
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void wifiErrorPage::setPage(payPage *pagePayment, thankYouPage* pageThankYou, idle* pageIdle)
+void wifiErrorPage::setPage(pagePayment *pagePayment, pagethankyou* pageThankYou, idle* pageIdle)
 {
     this->thanksPage = pageThankYou;
     this->paymentPage = pagePayment;
@@ -105,7 +105,7 @@ void wifiErrorPage::stopDispenseTimer(){
 
 void wifiErrorPage::onDispenseIdleTick(){
     if(-- _dispenseIdleTimeoutSec >= 0) {
-//        qDebug() << "dispensePage: Idle Tick Down: " << _dispenseIdleTimeoutSec << endl;
+//        qDebug() << "page_dispenser: Idle Tick Down: " << _dispenseIdleTimeoutSec << endl;
     } else {
 //        qDebug() << "Timer Done!" << _dispenseIdleTimeoutSec << endl;
 //        dispenseIdleTimer->stop();

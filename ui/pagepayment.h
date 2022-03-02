@@ -1,11 +1,11 @@
 //***************************************
 //
-// paypage.h
+// pagepayment.h
 // GUI class while machine is processing
 // payment.
 //
 // Coordinates User input from payment select
-// class then communcates results to dispensepage.
+// class then communcates results to page_dispenser.
 //
 // created: 16-07-2020
 // by: Jason Wang
@@ -14,8 +14,8 @@
 // all rights reserved
 //***************************************
 
-#ifndef PAYPAGE_H
-#define PAYPAGE_H
+#ifndef PAGEPAYMENT_H
+#define PAGEPAYMENT_H
 
 #include "df_util.h"
 #include "drinkorder.h"
@@ -41,26 +41,26 @@
 #include <curl/curl.h>
 
 class paySelect;
-class dispensePage;
+class page_dispenser;
 class idle;
 class help;
 
 namespace Ui {
-class payPage;
+class pagePayment;
 }
 
 using namespace std;
 using namespace qrcodegen;
 
-class payPage : public QWidget
+class pagePayment : public QWidget
 {
     Q_OBJECT
 
 public:
     // **** GUI Setup ****
-    explicit payPage(QWidget *parent = nullptr);
-    void setPage(paySelect* pageSizeSelect, dispensePage* pageDispense, idle* pageIdle, help *pageHelp);
-    ~payPage();
+    explicit pagePayment(QWidget *parent = nullptr);
+    void setPage(paySelect* pageSizeSelect, page_dispenser* page_dispenser, idle* pageIdle, help *pageHelp);
+    ~pagePayment();
     void setProgressLabel(QLabel* label, int dot);
     // TODO: Figure out better Style Setup.
     void labelSetup(QLabel *label, int fontSize);
@@ -133,9 +133,9 @@ protected:
 
 private:
     // **** GUI ****
-    Ui::payPage *ui;
+    Ui::pagePayment *ui;
     paySelect* paySelectPage;
-    dispensePage* dispensingPage;
+    page_dispenser* dispensingPage;
     idle* idlePage;
     help* helpPage;
 
@@ -252,4 +252,4 @@ private:
 
 };
 
-#endif // PAYPAGE_H
+#endif // PAGEPAYMENT_H

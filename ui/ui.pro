@@ -6,15 +6,15 @@ CONFIG += \
     c++11
 
 FORMS += \
-    dispensepage.ui \
+    page_dispenser.ui \
     wifiErrorPage.ui \
     idle.ui \
-    paypage.ui \
+    pagepayment.ui \
     payselect.ui \
-    productpage_1.ui \
-    thankyoupage.ui \
+    pageproductsoverview.ui \
+    pagethankyou.ui \
     maintenancePage.ui \
-    maintain_product.ui \
+    page_maintenance_dispenser.ui \
     init.ui \
     help.ui \
     keyboard.ui
@@ -22,10 +22,10 @@ FORMS += \
 HEADERS += \
     dfuicommthread.h \
     dfuiserver.h \
-    dispensepage.h \
+    page_dispenser.h \
     idle.h \
     includefiles.h \
-    paypage.h \
+    pagepayment.h \
     payselect.h \
     posm/enums.h \
     posm/lrcgenerator.h \
@@ -36,13 +36,13 @@ HEADERS += \
     posm/paymentdatabase.h \
     posm/transactionPackets.h \
     posm/transactioninfo.h \
-    productpage_1.h \
-    thankyoupage.h \
+    pageproductsoverview.h \
+    pagethankyou.h \
     df_util.h \
     drinkorder.h \
     dbmanager.h \
     maintenancePage.h \
-    maintain_product.h \
+    page_maintenance_dispenser.h \
     wifiErrorPage.h \
     init.h \
     help.h
@@ -50,10 +50,10 @@ HEADERS += \
 SOURCES += \
     dfuicommthread.cpp \
     dfuiserver.cpp \
-    dispensepage.cpp \
+    page_dispenser.cpp \
     idle.cpp \
     main.cpp \
-    paypage.cpp \
+    pagepayment.cpp \
     payselect.cpp \
     posm/lrcgenerator.cpp \
     posm/mcommunication.cpp \
@@ -63,14 +63,14 @@ SOURCES += \
     posm/paymentdatabase.cpp \
     posm/transactionPackets.cpp \
     posm/transactioninfo.cpp \
-    productpage_1.cpp \
-    thankyoupage.cpp \
+    pageproductsoverview.cpp \
+    pagethankyou.cpp \
     df_util.cpp \
     drinkorder.cpp \
     dbmanager.cpp \
     maintenance.cpp \
     wifiErrorPage.cpp \
-    maintain_product.cpp \
+    page_maintenance_dispenser.cpp \
     init.cpp \
     help.cpp \
     ../library/qr/qrcodegen.cpp

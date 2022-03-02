@@ -20,8 +20,8 @@
 #include <iostream>
 #include <string>
 
-#include "paypage.h"
-#include "productpage_1.h"
+#include "pagepayment.h"
+#include "pageproductsoverview.h"
 #include "idle.h"
 #include <curl/curl.h>
 #include <json.hpp>
@@ -62,7 +62,7 @@ paySelect::paySelect(QWidget *parent) :
 
     /* Hacky transparent button */
     ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->payPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->pagePayment_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->promoKeyboard->setStyleSheet(" background-image: url(/references/general/soapstand-keyboard.png); }");
 
@@ -101,12 +101,12 @@ paySelect::paySelect(QWidget *parent) :
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void paySelect::setPage(productPage_1 *pageSelect, dispensePage* pageDispense,wifiErrorPage* pageWifiError,  idle* pageIdle, payPage* pagePayment, help* pageHelp)
+void paySelect::setPage(pageproductsoverview *pageSelect, page_dispenser* page_dispenser,wifiErrorPage* pageWifiError,  idle* pageIdle, pagePayment* pagePayment, help* pageHelp)
 {
     this->firstProductPage = pageSelect;
     this->paymentPage = pagePayment;
     this->idlePage = pageIdle;
-    this->dispensingPage = pageDispense;
+    this->dispensingPage = page_dispenser;
     this->helpPage = pageHelp;
     this->wifiError = pageWifiError;
     ui->promoCode->clear();
@@ -158,7 +158,7 @@ void paySelect::on_previousPage_Button_clicked()
 
 }
 
-void paySelect::on_payPage_Button_clicked()
+void paySelect::on_pagePayment_Button_clicked()
 {
    qDebug() << "paySelect: Pay button" << endl;
 
@@ -427,7 +427,7 @@ void paySelect::on_orderBig_Button_clicked()
         bitmap_location.append(".png");
     } else {
         bitmap_location = "/release/references/general/4_pay_select_page_l_1.png";
-        
+
     }
     
     QPixmap background(bitmap_location);

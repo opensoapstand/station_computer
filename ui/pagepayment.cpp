@@ -1,11 +1,11 @@
 //***************************************
 //
-// paypage.cpp
+// pagepayment.cpp
 // GUI class while machine is processing
 // payment.
 //
 // Coordinates User input from payment select
-// class then communcates results to dispensepage.
+// class then communcates results to page_dispenser.
 //
 // created: 16-07-2020
 // by: Jason Wang
@@ -14,18 +14,18 @@
 // all rights reserved
 //***************************************
 
-#include "paypage.h"
-#include "ui_paypage.h"
+#include "pagepayment.h"
+#include "ui_pagepayment.h"
 
 #include "payselect.h"
-#include "dispensepage.h"
+#include "page_dispenser.h"
 #include "idle.h"
 
 
 // CTOR
-payPage::payPage(QWidget *parent) :
+pagePayment::pagePayment(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::payPage)
+    ui(new Ui::pagePayment)
 {
     // Fullscreen background setup
     ui->setupUi(this);
@@ -87,9 +87,9 @@ payPage::payPage(QWidget *parent) :
 
 }
 
-void payPage::stopPayTimers(){
+void pagePayment::stopPayTimers(){
     //    readTimer->stop();
-//    qDebug() << "payPage: Stop Timers" << endl;
+//    qDebug() << "pagePayment: Stop Timers" << endl;
     if(paymentProgressTimer != nullptr) {
 //        qDebug() << "cancel payment progress Timer" << endl;
         paymentProgressTimer->stop();
@@ -119,22 +119,22 @@ void payPage::stopPayTimers(){
 //        qDebug() << "cancel qrTimer" << endl;
         qrTimer->stop();
     }
-//    qDebug() << "payPage: Stopped Timers" << endl;
+//    qDebug() << "pagePayment: Stopped Timers" << endl;
 
 }
 
 /*
  * Page Tracking reference
  */
-void payPage::setPage(paySelect *pageSizeSelect, dispensePage* pageDispense, idle* pageIdle, help* pageHelp)
+void pagePayment::setPage(paySelect *pageSizeSelect, page_dispenser* page_dispenser, idle* pageIdle, help* pageHelp)
 {
     this->paySelectPage = pageSizeSelect;
-    this->dispensingPage = pageDispense;
+    this->dispensingPage = page_dispenser;
     this->idlePage = pageIdle;
     this->helpPage = pageHelp;
 }
 
-void payPage::resizeEvent(QResizeEvent *event){
+void pagePayment::resizeEvent(QResizeEvent *event){
     // FIXME: MAGIC NUMBER!!! UX410 Socket Auto Close time is 60 seconds so timer kills page GUI
 //    idlePaymentTimer->start(60000);
 
@@ -184,7 +184,7 @@ void payPage::resizeEvent(QResizeEvent *event){
 }
 
 // DTOR
-payPage::~payPage()
+pagePayment::~pagePayment()
 {
     delete ui;
 }
@@ -192,15 +192,15 @@ payPage::~payPage()
 /* ----- GUI ----- */
 
 // Labels and button for tapping payment
-void payPage::displayPaymentPending(bool isVisible)
+void pagePayment::displayPaymentPending(bool isVisible)
 {
 }
 
 // Navigation: Back to Drink Size Selection
-void payPage::on_previousPage_Button_clicked()
+void pagePayment::on_previousPage_Button_clicked()
 {
 
-//    qDebug() << "payPage: previous button" << endl;
+//    qDebug() << "pagePayment: previous button" << endl;
     stopPayTimers();
     response = true;
     readTimer->stop();
@@ -213,7 +213,7 @@ void payPage::on_previousPage_Button_clicked()
     this->hide();
 }
 
-void payPage::on_payment_bypass_Button_clicked()
+void pagePayment::on_payment_bypass_Button_clicked()
 {
     stopPayTimers();
     dispensingPage->showEvent(dispenseEvent);
@@ -222,11 +222,11 @@ void payPage::on_payment_bypass_Button_clicked()
 }
 
 
-void payPage::updateTotals(string drinkDescription, string drinkAmount, string orderTotal)
+void pagePayment::updateTotals(string drinkDescription, string drinkAmount, string orderTotal)
 {
 }
 
-void payPage::on_mainPage_Button_clicked()
+void pagePayment::on_mainPage_Button_clicked()
 {
     stopPayTimers();
     response = true;
@@ -240,7 +240,7 @@ void payPage::on_mainPage_Button_clicked()
 }
 
 /*Cancel any previous payment*/
-void payPage::cancelPayment()
+void pagePayment::cancelPayment()
 {
 
     com.flushSerial();
@@ -261,7 +261,7 @@ size_t WriteCallback(char* contents, size_t size, size_t nmemb, void *userp){
     return size * nmemb;
 }
 
-void payPage::showEvent(QShowEvent *event)
+void pagePayment::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
 
@@ -346,7 +346,7 @@ void payPage::showEvent(QShowEvent *event)
 
 }
 
-void payPage::createOrder(){
+void pagePayment::createOrder(){
     DbManager db(DB_PATH);
 
     int checkOption = idlePage->userDrinkOrder->getOption();
@@ -389,7 +389,7 @@ void payPage::createOrder(){
     }
 }
 
-void payPage::generateQR(){
+void pagePayment::generateQR(){
     DbManager db(DB_PATH);
 
     int checkOption = idlePage->userDrinkOrder->getOption();
@@ -431,7 +431,7 @@ void payPage::generateQR(){
 
 }
 
-void payPage::curler(){
+void pagePayment::curler(){
 
     curl = curl_easy_init();
     if (!curl){
@@ -463,7 +463,7 @@ void payPage::curler(){
     }
 }
 
-void payPage::qrTimeout(){
+void pagePayment::qrTimeout(){
     if(-- _qrTimeOutSec >= 0){
 //        qDebug() << "PayPaeg: QR Timer Tick" << _qrTimeOutSec << endl;
     }else{
@@ -473,13 +473,13 @@ void payPage::qrTimeout(){
     }
 }
 
-void payPage::on_refreshButton_clicked(){
+void pagePayment::on_refreshButton_clicked(){
     ui->refreshLabel->hide();
     _paymentTimeoutSec=444;
 }
 
 // XXX: Remove this when interrupts and flow sensors work!
-void payPage::onTimeoutTick(){
+void pagePayment::onTimeoutTick(){
     if(-- _paymentTimeoutSec >= 0) {
 
     } else {
@@ -491,30 +491,30 @@ void payPage::onTimeoutTick(){
     }
 }
 
-bool payPage::setpaymentProcess(bool status)
+bool pagePayment::setpaymentProcess(bool status)
 {
     return (paymentProcessing = status);
 }
 
-void payPage::setProgressLabel(QLabel* label, int dot)
+void pagePayment::setProgressLabel(QLabel* label, int dot)
 {
 }
 
 // Local storge for now.  Will need to refactor logger to do a nightly push to AWS
-void payPage::storePaymentEvent(QSqlDatabase db, QString event)
+void pagePayment::storePaymentEvent(QSqlDatabase db, QString event)
 {
 
 }
 
-void payPage::progressStatusLabel()
+void pagePayment::progressStatusLabel()
 {
 }
 
-void payPage::declineTimer_start()
+void pagePayment::declineTimer_start()
 {
 }
 
-void payPage::idlePaymentTimeout() {
+void pagePayment::idlePaymentTimeout() {
     stopPayTimers();
     response = true;
     readTimer->stop();
@@ -529,7 +529,7 @@ void payPage::idlePaymentTimeout() {
 
 /* ----- Payment ----- */
 
-void payPage::stayAliveLogon()
+void pagePayment::stayAliveLogon()
 {
     com.flushSerial();
     /*logon packet to send*/
@@ -541,7 +541,7 @@ void payPage::stayAliveLogon()
     pktResponded.clear();
 }
 
-void payPage::batchClose()
+void pagePayment::batchClose()
 {
     com.flushSerial();
     /*logon packet to send*/
@@ -553,7 +553,7 @@ void payPage::batchClose()
     pktResponded.clear();
 }
 
-bool payPage::sendToUX410()
+bool pagePayment::sendToUX410()
 {
     int waitForAck = 0;
     while (waitForAck < 3){
@@ -605,7 +605,7 @@ bool payPage::sendToUX410()
     return false;
 }
 
-bool payPage::paymentInit()
+bool pagePayment::paymentInit()
 {
     paymentConnected = com.init();
 
@@ -707,7 +707,7 @@ bool payPage::paymentInit()
     return true;
 }
 
-bool payPage::waitForUX410()
+bool pagePayment::waitForUX410()
 {
     bool waitResponse = false;
     while (!waitResponse){
@@ -729,7 +729,7 @@ bool payPage::waitForUX410()
     return waitResponse;
 }
 
-void payPage::readTimer_loop()
+void pagePayment::readTimer_loop()
 {
 //    qDebug() << "readingTimer_loop" << endl;
     //cout << "start loop pktResponded: " << to_string(pktResponded[0]) << endl;
@@ -897,7 +897,7 @@ void payPage::readTimer_loop()
     }
 }
 
-std::string payPage::toSvgString(const QrCode &qr, int border) {
+std::string pagePayment::toSvgString(const QrCode &qr, int border) {
         if (border < 0)
                 throw std::domain_error("Border must be non-negative");
         if (border > INT_MAX / 2 || border * 2 > INT_MAX - qr.getSize())
@@ -925,7 +925,7 @@ std::string payPage::toSvgString(const QrCode &qr, int border) {
 }
 
 // Prints the given QrCode object to the console.
-void payPage::printQr(const QrCode &qr) {
+void pagePayment::printQr(const QrCode &qr) {
         int border = 4;
         for (int y = -border; y < qr.getSize() + border; y++) {
                 for (int x = -border; x < qr.getSize() + border; x++) {
@@ -937,7 +937,7 @@ void payPage::printQr(const QrCode &qr) {
 }
 
 
-void payPage::QRgen(){
+void pagePayment::QRgen(){
 
     QPixmap map(400,400);
     QPainter painter(&map);
@@ -946,7 +946,7 @@ void payPage::QRgen(){
     ui->qrCode->setPixmap(map);
 }
 
-void payPage::paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg)
+void pagePayment::paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg)
 {
     // NOTE: At this point you will use the API to get the encoding and format you want, instead of my hardcoded stuff:
     qrcodegen::QrCode qr = qrcodegen::QrCode::encodeText(data.toUtf8().constData(), qrcodegen::QrCode::Ecc::HIGHH);

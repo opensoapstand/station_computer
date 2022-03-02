@@ -18,14 +18,14 @@
 #define PAYSELECT_H
 
 #include "df_util.h"
-#include "dispensepage.h"
+#include "page_dispenser.h"
 #include "wifiErrorPage.h"
 #include "help.h"
 
-class productPage_1;
-class payPage;
+class pageproductsoverview;
+class pagePayment;
 class idle;
-class dispensePage;
+class page_dispenser;
 class wifiErrorPage;
 class help;
 
@@ -39,7 +39,7 @@ class paySelect : public QWidget
 
 public:
     explicit paySelect(QWidget *parent = nullptr);
-    void setPage(productPage_1 *pageSelect, dispensePage* pageDispense,wifiErrorPage* pageWifiError,  idle* pageIdle, payPage *pagePayment, help* pageHelp);
+    void setPage(pageproductsoverview *pageSelect, page_dispenser* page_dispenser,wifiErrorPage* pageWifiError,  idle* pageIdle, pagePayment *pagePayment, help* pageHelp);
     ~paySelect();
 
     void resizeEvent(QResizeEvent *event);
@@ -56,7 +56,7 @@ signals:
 private slots:
     // **** Navigation ****
     void on_previousPage_Button_clicked();
-    void on_payPage_Button_clicked();
+    void on_pagePayment_Button_clicked();
     void on_applyPromo_Button_clicked();
     void on_promoCodeInput_clicked();
 
@@ -76,10 +76,10 @@ private:
 
     std::string readBuffer;
     Ui::paySelect *ui;
-    productPage_1* firstProductPage;
-    payPage* paymentPage;
+    pageproductsoverview* firstProductPage;
+    pagePayment* paymentPage;
     idle* idlePage;
-    dispensePage* dispensingPage;
+    page_dispenser* dispensingPage;
     wifiErrorPage* wifiError;
     help* helpPage;
 

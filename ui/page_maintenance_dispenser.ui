@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>maintain_product</class>
- <widget class="QWidget" name="maintain_product">
+ <class>page_maintenance_dispenser</class>
+ <widget class="QWidget" name="page_maintenance_dispenser">
   <property name="geometry">
    <rect>
     <x>0</x>

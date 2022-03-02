@@ -119,7 +119,7 @@ void maintenancePage::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference
  */
-void maintenancePage::setPage(idle* pageIdle, maintain_product* pageMaintain, productPage_1 *pageProduct, paySelect *pagePaySelect)
+void maintenancePage::setPage(idle* pageIdle, page_maintenance_dispenser* pageMaintain, pageproductsoverview *pageProduct, paySelect *pagePaySelect)
 {
     this->idlePage = pageIdle;
     this->maintainPage = pageMaintain;

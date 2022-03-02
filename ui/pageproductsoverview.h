@@ -1,6 +1,6 @@
 //***************************************
 //
-// productpage_1.h
+// pageproductsoverview.h
 // GUI class for user to browse up to
 // 6 drinks.
 //
@@ -14,8 +14,8 @@
 // all rights reserved
 //***************************************
 
-#ifndef PRODUCTPAGE_1_H
-#define PRODUCTPAGE_1_H
+#ifndef PAGEPRODUCTSOVERVIEW_H
+#define PAGEPRODUCTSOVERVIEW_H
 
 #include "df_util.h"
 #include "maintenancePage.h"
@@ -27,17 +27,17 @@ class maintenancePage;
 class help;
 
 namespace Ui {
-class productPage_1;
+class pageproductsoverview;
 }
 
-class productPage_1 : public QWidget
+class pageproductsoverview : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit productPage_1(QWidget *parent = nullptr);
+    explicit pageproductsoverview(QWidget *parent = nullptr);
     void setPage(paySelect *pageSizeSelect, idle* pageIdle, maintenancePage *pageMaintenance, help *pageHelp);
-    ~productPage_1();
+    ~pageproductsoverview();
     void cancelTimers();
 
 private slots:
@@ -58,7 +58,7 @@ private slots:
 
 private:
     void showEvent(QShowEvent *event);
-    Ui::productPage_1 *ui;
+    Ui::pageproductsoverview *ui;
     // productPage_2 *selection_PageTwo;
     paySelect *paymentSelectPage;
     idle* idlePage;
@@ -75,4 +75,4 @@ private:
     int maintenanceCounter;
 };
 
-#endif // PRODUCTPAGE_1_H
+#endif // PAGEPRODUCTSOVERVIEW_H

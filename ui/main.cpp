@@ -18,16 +18,16 @@
 #include "help.h"
 #include "init.h"
 #include "idle.h"
-#include "productpage_1.h"
+#include "pageproductsoverview.h"
 #include "payselect.h"
-#include "paypage.h"
-#include "dispensepage.h"
+#include "pagepayment.h"
+#include "page_dispenser.h"
 #include "wifiErrorPage.h"
-#include "thankyoupage.h"
+#include "pagethankyou.h"
 #include <QApplication>
 #include "df_util.h"
 #include "maintenancePage.h"
-#include "maintain_product.h"
+#include "page_maintenance_dispenser.h"
 #include <QCoreApplication>
 #include <QGuiApplication>
 #include <QKeyEvent>
@@ -47,14 +47,14 @@ int main(int argc, char *argv[])
     help* helpPage = new help();
     init* initPage = new init();
     idle* idlePage = new idle();
-    productPage_1* firstSelectPage = new productPage_1();
+    pageproductsoverview* firstSelectPage = new pageproductsoverview();
     paySelect* paySelectPage = new paySelect();
-    payPage* paymentPage = new payPage();
-    dispensePage* dispensingPage = new dispensePage();
+    pagePayment* paymentPage = new pagePayment();
+    page_dispenser* dispensingPage = new page_dispenser();
     wifiErrorPage* wifiError = new wifiErrorPage();
-    thankYouPage* lastPage = new thankYouPage();
+    pagethankyou* lastPage = new pagethankyou();
     maintenancePage* maintenanceMode = new maintenancePage();
-    maintain_product* maintainPage = new maintain_product();
+    page_maintenance_dispenser* maintainPage = new page_maintenance_dispenser();
 
     // TODO: Instantiate a DrinkSelection[] Array
     // TODO: Create Query to populate DrinkSelection[0-12]
@@ -102,12 +102,12 @@ int main(int argc, char *argv[])
     DfUiServer dfUiServer;
     dfUiServer.startServer();
 
-    QObject::connect(&dfUiServer, &DfUiServer::pleaseReset, dispensingPage, &dispensePage::PleaseResetTimerSlot);
-    QObject::connect(&dfUiServer, &DfUiServer::updateVolume, dispensingPage, &dispensePage::updateVolumeDisplayed);
-    QObject::connect(&dfUiServer, &DfUiServer::targetHit, dispensingPage, &dispensePage::targetHitDisplay);
+    QObject::connect(&dfUiServer, &DfUiServer::pleaseReset, dispensingPage, &page_dispenser::PleaseResetTimerSlot);
+    QObject::connect(&dfUiServer, &DfUiServer::updateVolume, dispensingPage, &page_dispenser::updateVolumeDisplayed);
+    QObject::connect(&dfUiServer, &DfUiServer::targetHit, dispensingPage, &page_dispenser::targetHitDisplay);
     QObject::connect(&dfUiServer, &DfUiServer::initReady, initPage, &init::initReadySlot);
     QObject::connect(&dfUiServer, &DfUiServer::MM, idlePage, &idle::MMSlot);
-    QObject::connect(&dfUiServer, &DfUiServer::updateVolume, maintainPage, &maintain_product::updateVolumeDisplayed);
+    QObject::connect(&dfUiServer, &DfUiServer::updateVolume, maintainPage, &page_maintenance_dispenser::updateVolumeDisplayed);
 
     return mainApp.exec();
 }

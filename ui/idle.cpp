@@ -46,7 +46,7 @@ idle::idle(QWidget *parent) :
 /*
  * Navigation to Product item
  */
-void idle::setPage(productPage_1 *pageProduct, maintenancePage *pageMaintenance)
+void idle::setPage(pageproductsoverview *pageProduct, maintenancePage *pageMaintenance)
 {
     // Chained to KB Listener
     this->selection_PageOne = pageProduct;

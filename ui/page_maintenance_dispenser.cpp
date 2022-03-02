@@ -1,5 +1,5 @@
-#include "maintain_product.h"
-#include "ui_maintain_product.h"
+#include "page_maintenance_dispenser.h"
+#include "ui_page_maintenance_dispenser.h"
 #include "idle.h"
 #include "drinkorder.h"
 #include <QInputDialog>
@@ -12,9 +12,9 @@
 #include <QSlider>
 
 // CTOR
-maintain_product::maintain_product(QWidget *parent) :
+page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::maintain_product)
+    ui(new Ui::page_maintenance_dispenser)
 {
     // Fullscreen background setup
     ui->setupUi(this);
@@ -33,12 +33,12 @@ maintain_product::maintain_product(QWidget *parent) :
 }
 
 // DTOR
-maintain_product::~maintain_product()
+page_maintenance_dispenser::~page_maintenance_dispenser()
 {
     delete ui;
 }
 
-void maintain_product::showEvent(QShowEvent *event)
+void page_maintenance_dispenser::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
     int checkOption = idlePage->userDrinkOrder->getOption();
@@ -121,7 +121,7 @@ void maintain_product::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference
  */
-void maintain_product::setPage(maintenancePage* pageMaintenance, idle* pageIdle)
+void page_maintenance_dispenser::setPage(maintenancePage* pageMaintenance, idle* pageIdle)
 {
     this->maintenanceMode = pageMaintenance;
     this->idlePage = pageIdle;
@@ -146,7 +146,7 @@ void maintain_product::setPage(maintenancePage* pageMaintenance, idle* pageIdle)
 
 }
 
-void maintain_product::on_backButton_clicked(){
+void page_maintenance_dispenser::on_backButton_clicked(){
 //    qDebug() << "Back button clicked" << endl;
 
     //Update Click DB
@@ -188,7 +188,7 @@ void maintain_product::on_backButton_clicked(){
     }
 }
 
-void maintain_product::resizeEvent(QResizeEvent *event){
+void page_maintenance_dispenser::resizeEvent(QResizeEvent *event){
     QWidget::resizeEvent(event);
 
     int checkOption = idlePage->userDrinkOrder->getOption();
@@ -246,11 +246,11 @@ void maintain_product::resizeEvent(QResizeEvent *event){
 
 }
 
-void maintain_product::on_image_clicked(){
+void page_maintenance_dispenser::on_image_clicked(){
     _maintainProductPageTimeoutSec=40;
 }
 
-void maintain_product::on_pumpButton_clicked(){
+void page_maintenance_dispenser::on_pumpButton_clicked(){
     DbManager db(DB_PATH);
 
     int checkOption = idlePage->userDrinkOrder->getOption();
@@ -289,7 +289,7 @@ void maintain_product::on_pumpButton_clicked(){
 
 }
 
-//void maintain_product::on_testSmallButton_clicked(){
+//void page_maintenance_dispenser::on_testSmallButton_clicked(){
 //    int checkOption = idlePage->userDrinkOrder->getOption();
 //    if(checkOption > 0 && checkOption <= 9) {
 //        QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
@@ -323,7 +323,7 @@ void maintain_product::on_pumpButton_clicked(){
 //    }
 //}
 
-//void maintain_product::on_testLargeButton_clicked(){
+//void page_maintenance_dispenser::on_testLargeButton_clicked(){
 //    int checkOption = idlePage->userDrinkOrder->getOption();
 //    if(checkOption > 0 && checkOption <= 9) {
 //        QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
@@ -357,13 +357,13 @@ void maintain_product::on_pumpButton_clicked(){
 //    }
 //}
 
-void maintain_product::on_nameButton_clicked(){
+void page_maintenance_dispenser::on_nameButton_clicked(){
 //    qDebug() << "Name button clicked" << endl;
     _maintainProductPageTimeoutSec=40;
 }
 
 
-void maintain_product::on_priceButton_s_clicked(){
+void page_maintenance_dispenser::on_priceButton_s_clicked(){
 //    qDebug() << "Price button clicked" << endl;
     price_small = true;
 //    DbManager db(DB_PATH);
@@ -378,7 +378,7 @@ void maintain_product::on_priceButton_s_clicked(){
 
 }
 
-void maintain_product::on_priceButton_l_clicked(){
+void page_maintenance_dispenser::on_priceButton_l_clicked(){
 //    qDebug() << "Price button clicked" << endl;
     price_large = true;
 //    DbManager db(DB_PATH);
@@ -393,7 +393,7 @@ void maintain_product::on_priceButton_l_clicked(){
 }
 
 
-void maintain_product::on_target_volumeButton_s_clicked(){
+void page_maintenance_dispenser::on_target_volumeButton_s_clicked(){
 //    qDebug() << "Target Volume button clicked" << endl;
     target_s=true;
     _maintainProductPageTimeoutSec=40;
@@ -404,7 +404,7 @@ void maintain_product::on_target_volumeButton_s_clicked(){
 //    ui->target_volume_s->setText(QString::number(db.getProductVolume(idlePage->userDrinkOrder->getOption(), 's')) + "ml");
 }
 
-void maintain_product::on_target_volumeButton_l_clicked(){
+void page_maintenance_dispenser::on_target_volumeButton_l_clicked(){
 //    qDebug() << "Target Volume button clicked" << endl;
     target_l=true;
     _maintainProductPageTimeoutSec=40;
@@ -416,7 +416,7 @@ void maintain_product::on_target_volumeButton_l_clicked(){
 }
 
 
-void maintain_product::on_vol_per_tickButton_clicked(){
+void page_maintenance_dispenser::on_vol_per_tickButton_clicked(){
 //    qDebug() << "Volume Per Tick button clicked" << endl;
     vol_per_tick=true;
     _maintainProductPageTimeoutSec=40;
@@ -427,7 +427,7 @@ void maintain_product::on_vol_per_tickButton_clicked(){
 //    ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(idlePage->userDrinkOrder->getOption())) + "ml");
 }
 
-void maintain_product::updateVolumeDisplayed(double dispensed){
+void page_maintenance_dispenser::updateVolumeDisplayed(double dispensed){
     DbManager db(DB_PATH);
 
     double vol_dispensed = dispensed;
@@ -439,11 +439,11 @@ void maintain_product::updateVolumeDisplayed(double dispensed){
 
 }
 
-void maintain_product::targetHitDisplay(){
+void page_maintenance_dispenser::targetHitDisplay(){
     ui->vol_dispensed_label->setText(ui->vol_dispensed_label->text() + " - TARGET HIT!");
 }
 
-void maintain_product::on_refillButton_clicked(){
+void page_maintenance_dispenser::on_refillButton_clicked(){
     DbManager db(DB_PATH);
 //    qDebug() << "Refill button clicked" << endl;
 
@@ -493,7 +493,7 @@ void maintain_product::on_refillButton_clicked(){
 
 }
 
-void maintain_product::on_soldOutButton_clicked(){
+void page_maintenance_dispenser::on_soldOutButton_clicked(){
     DbManager db(DB_PATH);
 //    qDebug() << "Sold Out button clicked" << endl;
 
@@ -583,7 +583,7 @@ void maintain_product::on_soldOutButton_clicked(){
 
 }
 
-void maintain_product::on_fullButton_clicked(){
+void page_maintenance_dispenser::on_fullButton_clicked(){
 //    qDebug() << "Full Volume button clicked" << endl;
     full=true;
     _maintainProductPageTimeoutSec=40;
@@ -594,22 +594,22 @@ void maintain_product::on_fullButton_clicked(){
 //    ui->full_volume->setText(QString::number(db.getFullProduct(idlePage->userDrinkOrder->getOption())) + "ml");
 }
 
-void maintain_product::on_remainingButton_clicked(){
+void page_maintenance_dispenser::on_remainingButton_clicked(){
 //    qDebug() << "Remaining button clicked" << endl;
     _maintainProductPageTimeoutSec=40;
 }
 
-void maintain_product::on_dispensedButton_clicked(){
+void page_maintenance_dispenser::on_dispensedButton_clicked(){
 //    qDebug() << "Remaining button clicked" << endl;
     _maintainProductPageTimeoutSec=40;
 }
 
-void maintain_product::on_lastRefillButton_clicked(){
+void page_maintenance_dispenser::on_lastRefillButton_clicked(){
 //    qDebug() << "Last Refill button clicked" << endl;
     _maintainProductPageTimeoutSec=40;
 }
 
-void maintain_product::on_temperatureButton_clicked(){
+void page_maintenance_dispenser::on_temperatureButton_clicked(){
 //    qDebug() << "Temperature button clicked" << endl;
 //    DbManager db_temperature(DB_PATH_TEMPERATURE);
 //    ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
@@ -617,7 +617,7 @@ void maintain_product::on_temperatureButton_clicked(){
 //    db_temperature.closeDB();
 }
 
-void maintain_product::onMaintainProductPageTimeoutTick(){
+void page_maintenance_dispenser::onMaintainProductPageTimeoutTick(){
 
     if(-- _maintainProductPageTimeoutSec >= 0) {
 //        qDebug() << "Maintain Product Tick Down: " << _maintainProductPageTimeoutSec << endl;
@@ -650,7 +650,7 @@ void maintain_product::onMaintainProductPageTimeoutTick(){
     }
 }
 
-void maintain_product::on_pwmButton_clicked(){
+void page_maintenance_dispenser::on_pwmButton_clicked(){
 //    qDebug() << "Remaining button clicked" << endl;
     pwm=true;
     _maintainProductPageTimeoutSec=40;
@@ -662,7 +662,7 @@ void maintain_product::on_pwmButton_clicked(){
 //    ui->pwmLabel->setText(QString::number(db.getPWM(idlePage->userDrinkOrder->getOption())) + "%");
 }
 
-//void maintain_product::on_pluButton_s_clicked(){
+//void page_maintenance_dispenser::on_pluButton_s_clicked(){
 //    qDebug() << "PLU Button clicked" << endl;
 //    plu_small=true;
 //    _maintainProductPageTimeoutSec=40;
@@ -675,7 +675,7 @@ void maintain_product::on_pwmButton_clicked(){
 
 //}
 
-//void maintain_product::on_pluButton_l_clicked(){
+//void page_maintenance_dispenser::on_pluButton_l_clicked(){
 //    qDebug() << "PLU Button clicked" << endl;
 //    plu_large=true;
 //    _maintainProductPageTimeoutSec=40;
@@ -688,67 +688,67 @@ void maintain_product::on_pwmButton_clicked(){
 
 //}
 
-void maintain_product::on_button1_clicked(){
+void page_maintenance_dispenser::on_button1_clicked(){
     ui->textEntry->setText(ui->textEntry->text()+"1");
 
 }
 
-void maintain_product::on_button2_clicked(){
+void page_maintenance_dispenser::on_button2_clicked(){
     ui->textEntry->setText(ui->textEntry->text()+"2");
 
 }
 
-void maintain_product::on_button3_clicked(){
+void page_maintenance_dispenser::on_button3_clicked(){
     ui->textEntry->setText(ui->textEntry->text()+"3");
 
 }
 
-void maintain_product::on_button4_clicked(){
+void page_maintenance_dispenser::on_button4_clicked(){
     ui->textEntry->setText(ui->textEntry->text()+"4");
 
 }
 
-void maintain_product::on_button5_clicked(){
+void page_maintenance_dispenser::on_button5_clicked(){
     ui->textEntry->setText(ui->textEntry->text()+"5");
 
 }
 
-void maintain_product::on_button6_clicked(){
+void page_maintenance_dispenser::on_button6_clicked(){
     ui->textEntry->setText(ui->textEntry->text()+"6");
 
 }
 
-void maintain_product::on_button7_clicked(){
+void page_maintenance_dispenser::on_button7_clicked(){
     ui->textEntry->setText(ui->textEntry->text()+"7");
 
 }
 
-void maintain_product::on_button8_clicked(){
+void page_maintenance_dispenser::on_button8_clicked(){
     ui->textEntry->setText(ui->textEntry->text()+"8");
 
 }
 
-void maintain_product::on_button9_clicked(){
+void page_maintenance_dispenser::on_button9_clicked(){
     ui->textEntry->setText(ui->textEntry->text()+"9");
 
 }
 
-void maintain_product::on_button0_clicked(){
+void page_maintenance_dispenser::on_button0_clicked(){
     ui->textEntry->setText(ui->textEntry->text()+"0");
 
 }
 
-void maintain_product::on_buttonBack_clicked(){
+void page_maintenance_dispenser::on_buttonBack_clicked(){
     ui->textEntry->backspace();
 
 }
 
-void maintain_product::on_buttonPoint_clicked(){
+void page_maintenance_dispenser::on_buttonPoint_clicked(){
     ui->textEntry->setText(ui->textEntry->text()+".");
 
 }
 
-void maintain_product::on_buttonDone_clicked(){
+void page_maintenance_dispenser::on_buttonDone_clicked(){
     if(pwm){
         if(ui->textEntry->text().toInt()>100){
             ui->errorLabel->setText("Error: Enter number less than 100");
@@ -766,7 +766,7 @@ void maintain_product::on_buttonDone_clicked(){
     }
 }
 
-void maintain_product::on_buttonCancel_clicked(){
+void page_maintenance_dispenser::on_buttonCancel_clicked(){
     ui->numberEntry->hide();
     ui->textEntry->setText("");
     ui->errorLabel->setText("");
@@ -782,7 +782,7 @@ void maintain_product::on_buttonCancel_clicked(){
 //    plu_large=false;
 }
 
-void maintain_product::updateValues(){
+void page_maintenance_dispenser::updateValues(){
     DbManager db(DB_PATH);
     int checkOption = idlePage->userDrinkOrder->getOption();
 
@@ -840,7 +840,7 @@ void maintain_product::updateValues(){
 }
 
 
-void maintain_product::pwmSliderMoved(int percentage){
+void page_maintenance_dispenser::pwmSliderMoved(int percentage){
     int value = ui->pwmSlider->value();
 //    qDebug() << "Slider Value: " << value << endl;
 
@@ -864,7 +864,7 @@ size_t WriteCallback3(char* contents, size_t size, size_t nmemb, void *userp){
     return size * nmemb;
 }
 
-void maintain_product::curler(){
+void page_maintenance_dispenser::curler(){
 
     DbManager db(DB_PATH);
     int checkOption = idlePage->userDrinkOrder->getOption();
@@ -910,7 +910,7 @@ void maintain_product::curler(){
     db.closeDB();
 }
 
-void maintain_product::bufferCURL(char *curl_params){
+void page_maintenance_dispenser::bufferCURL(char *curl_params){
     char filetime[50];
     time(&rawtime);
     timeinfo = localtime(&rawtime);

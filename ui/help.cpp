@@ -15,9 +15,9 @@
 #include "help.h"
 #include "ui_help.h"
 #include "df_util.h"
-#include "productpage_1.h"
+#include "pageproductsoverview.h"
 #include "payselect.h"
-#include "paypage.h"
+#include "pagepayment.h"
 #include "idle.h"
 
 
@@ -68,7 +68,7 @@ void help::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference
  */
-void help::setPage(productPage_1 *pageSelect, paySelect* paySelect, idle* pageIdle, payPage *pagePayment)
+void help::setPage(pageproductsoverview *pageSelect, paySelect* paySelect, idle* pageIdle, pagePayment *pagePayment)
 {
     this->idlePage = pageIdle;
     this->paymentPage = pagePayment;

@@ -4,9 +4,9 @@
         <file>maintenancePage.ui</file>
         <file>maintenancePage.h</file>
         <file>maintenance.cpp</file>
-        <file>maintain_product.ui</file>
-        <file>maintain_product.h</file>
-        <file>maintain_product.cpp</file>
+        <file>page_maintenance_dispenser.ui</file>
+        <file>page_maintenance_dispenser.h</file>
+        <file>page_maintenance_dispenser.cpp</file>
         <file>idle.cpp</file>
         <file>idle.ui</file>
 
@@ -40,8 +40,8 @@
         <file>dfuicommthread.h</file>
         <file>dfuiserver.cpp</file>
         <file>dfuiserver.h</file>
-        <file>dispensepage.cpp</file>
-        <file>dispensepage.h</file>
+        <file>page_dispenser.cpp</file>
+        <file>page_dispenser.h</file>
         <file>drinkorder.cpp</file>
         <file>drinkorder.h</file>
         <file>help.cpp</file>
@@ -49,23 +49,23 @@
         <file>idle.h</file>
         <file>includefiles.h</file>
         <file>main.cpp</file>
-        <file>paypage.cpp</file>
-        <file>paypage.h</file>
+        <file>pagepayment.cpp</file>
+        <file>pagepayment.h</file>
         <file>payselect.cpp</file>
         <file>payselect.h</file>
-        <file>productpage_1.cpp</file>
-        <file>productpage_1.h</file>
-        <file>thankyoupage.cpp</file>
-        <file>thankyoupage.h</file>
-        <file>ui_dispensepage.h</file>
+        <file>pageproductsoverview.cpp</file>
+        <file>pageproductsoverview.h</file>
+        <file>pagethankyou.cpp</file>
+        <file>pagethankyou.h</file>
+        <file>ui_page_dispenser.h</file>
         <file>ui_help.h</file>
         <file>ui_idle.h</file>
-        <file>ui_maintain_product.h</file>
+        <file>ui_page_maintenance_dispenser.h</file>
         <file>ui_maintenancePage.h</file>
-        <file>ui_paypage.h</file>
+        <file>ui_pagepayment.h</file>
         <file>ui_payselect.h</file>
-        <file>ui_productpage_1.h</file>
-        <file>ui_thankyoupage.h</file>
+        <file>ui_pageproductsoverview.h</file>
+        <file>ui_pagethankyou.h</file>
 
     </qresource>
 </RCC>

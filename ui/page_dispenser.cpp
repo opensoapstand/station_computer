@@ -1,6 +1,6 @@
 //***************************************
 //
-// dispensepage.cpp
+// page_dispenser.cpp
 // GUI class to dispense drink.
 // Coordinates User input to payment class
 // then communcates results to FSM IP_thread
@@ -15,16 +15,16 @@
 // all rights reserved
 //***************************************
 
-#include "dispensepage.h"
-#include "ui_dispensepage.h"
+#include "page_dispenser.h"
+#include "ui_page_dispenser.h"
 #include "includefiles.h"
 #include "idle.h"
-#include "thankyoupage.h"
+#include "pagethankyou.h"
 
 // CTOR
-dispensePage::dispensePage(QWidget *parent) :
+page_dispenser::page_dispenser(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::dispensePage)
+    ui(new Ui::page_dispenser)
 {
     ui->setupUi(this);
 
@@ -39,7 +39,7 @@ dispensePage::dispensePage(QWidget *parent) :
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void dispensePage::setPage(payPage *pagePayment, thankYouPage* pageThankYou, idle* pageIdle)
+void page_dispenser::setPage(pagePayment *pagePayment, pagethankyou* pageThankYou, idle* pageIdle)
 {
     this->thanksPage = pageThankYou;
     this->paymentPage = pagePayment;
@@ -47,12 +47,12 @@ void dispensePage::setPage(payPage *pagePayment, thankYouPage* pageThankYou, idl
 }
 
 // DTOR
-dispensePage::~dispensePage()
+page_dispenser::~page_dispenser()
 {
     delete ui;
 }
 
-void dispensePage::showEvent(QShowEvent *event)
+void page_dispenser::showEvent(QShowEvent *event)
 {
     qDebug()<<"Enter dispense page." << endl;
     QPixmap background("/release/references/general/5_background_dispense_instructions.png");
@@ -98,7 +98,7 @@ void dispensePage::showEvent(QShowEvent *event)
 
 }
 
-bool dispensePage::sendToUX410()
+bool page_dispenser::sendToUX410()
 {
     int waitForAck = 0;
     while (waitForAck < 3){
@@ -124,7 +124,7 @@ bool dispensePage::sendToUX410()
     return false;
 }
 
-bool dispensePage::waitForUX410()
+bool page_dispenser::waitForUX410()
 {
     bool waitResponse = false;
     while (!waitResponse){
@@ -149,7 +149,7 @@ bool dispensePage::waitForUX410()
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void dispensePage::on_finish_Button_clicked()
+void page_dispenser::on_finish_Button_clicked()
 {
     DbManager db(DB_PATH);
 
@@ -205,20 +205,20 @@ void dispensePage::on_finish_Button_clicked()
      this->hide();
 }
 
-void dispensePage::onRinseTimerTick(){
+void page_dispenser::onRinseTimerTick(){
 }
 
-void dispensePage::stopDispenseTimer(){
-//    qDebug() << "dispensePage: Stop Timers" << endl;
+void page_dispenser::stopDispenseTimer(){
+//    qDebug() << "page_dispenser: Stop Timers" << endl;
     if(dispenseIdleTimer != nullptr){
         dispenseIdleTimer->stop();
     }
     dispenseIdleTimer = nullptr;
 }
 
-void dispensePage::onDispenseIdleTick(){
+void page_dispenser::onDispenseIdleTick(){
     if(-- _dispenseIdleTimeoutSec >= 0) {
-//        qDebug() << "dispensePage: Idle Tick Down: " << _dispenseIdleTimeoutSec << endl;
+//        qDebug() << "page_dispenser: Idle Tick Down: " << _dispenseIdleTimeoutSec << endl;
     } else {
 //        qDebug() << "Timer Done!" << _dispenseIdleTimeoutSec << endl;
 //        dispenseIdleTimer->stop();
@@ -226,16 +226,16 @@ void dispensePage::onDispenseIdleTick(){
     }
 }
 
-double dispensePage::getTotalDispensed(){
+double page_dispenser::getTotalDispensed(){
     return volumeDispensed;
 }
 
-void dispensePage::PleaseResetTimerSlot(void){
+void page_dispenser::PleaseResetTimerSlot(void){
     //qDebug() << "RESET SIGNAL RECEIVED!" << endl;
     _dispenseIdleTimeoutSec = 30;
 }
 
-void dispensePage::updateVolumeDisplayed(double dispensed){
+void page_dispenser::updateVolumeDisplayed(double dispensed){
 
     volumeDispensed = dispensed;
     double target_volume = idlePage->userDrinkOrder->getSize();
@@ -249,7 +249,7 @@ void dispensePage::updateVolumeDisplayed(double dispensed){
     ui->finish_Button->setEnabled(true);
 }
 
-void dispensePage::targetHitDisplay(){
+void page_dispenser::targetHitDisplay(){
     //this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ " ml - Target Hit!");
     on_finish_Button_clicked();
 }

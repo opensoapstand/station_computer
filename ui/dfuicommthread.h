@@ -7,7 +7,7 @@
 
 #include "df_util.h"
 
-class dispensePage;
+class page_dispenser;
 
 class DfUiCommThread : public QThread
 {

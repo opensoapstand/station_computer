@@ -18,7 +18,7 @@
 #define IDLE_H
 
 #include "df_util.h"
-#include "productpage_1.h"
+#include "pageproductsoverview.h"
 #include "dfuicommthread.h"
 #include "dbmanager.h"
 #include "maintenancePage.h"
@@ -28,7 +28,7 @@
 #define DB_PATH_TEMPERATURE "/release/db/sqlite/temperature.db"
 
 class maintenancePage;
-class productPage_1;
+class pageproductsoverview;
 
 namespace Ui {
 class idle;
@@ -40,7 +40,7 @@ class idle : public QWidget
 
 public:
     explicit idle(QWidget *parent = nullptr);
-    void setPage(productPage_1 *pageProduct, maintenancePage *pageMaintenance);
+    void setPage(pageproductsoverview *pageProduct, maintenancePage *pageMaintenance);
     ~idle();
     void showEvent(QShowEvent *event);
 
@@ -59,7 +59,7 @@ private slots:
 
 private:
     Ui::idle *ui;
-    productPage_1* selection_PageOne;
+    pageproductsoverview* selection_PageOne;
     maintenancePage* maintenanceMode;
     bool p1, p2, p3, p4;
 

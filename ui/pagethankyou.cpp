@@ -1,6 +1,6 @@
 //***************************************
 //
-// thankyoupage.cpp
+// pagethankyou.cpp
 // GUI class to show user dispense has been
 // completed and route back to idle
 //
@@ -11,13 +11,13 @@
 // all rights reserved
 //***************************************
 
-#include "thankyoupage.h"
-#include "ui_thankyoupage.h"
+#include "pagethankyou.h"
+#include "ui_pagethankyou.h"
 
 // CTOR
-thankYouPage::thankYouPage(QWidget *parent) :
+pagethankyou::pagethankyou(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::thankYouPage)
+    ui(new Ui::pagethankyou)
 {
     ui->setupUi(this);
     QPixmap background("/release/references/general/7_background_thank_you.png");
@@ -47,20 +47,20 @@ thankYouPage::thankYouPage(QWidget *parent) :
 /*
  * Page Tracking reference
  */
-void thankYouPage::setPage(dispensePage *pageDispense, idle *pageIdle, payPage *pagePayment)
+void pagethankyou::setPage(page_dispenser *page_dispenser, idle *pageIdle, pagePayment *pagePayment)
 {
     this->idlePage = pageIdle;
-    this->dispensingPage = pageDispense;
+    this->dispensingPage = page_dispenser;
     this->paymentPage = pagePayment;
 }
 
 // DTOR
-thankYouPage::~thankYouPage()
+pagethankyou::~pagethankyou()
 {
     delete ui;
 }
 
-void thankYouPage::showEvent(QShowEvent *event)
+void pagethankyou::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
 
@@ -106,7 +106,7 @@ size_t WriteCallback2(char* contents, size_t size, size_t nmemb, void *userp){
     return size * nmemb;
 }
 
-void thankYouPage::curler(){
+void pagethankyou::curler(){
     QString order_id = this->paymentPage->getOID();
     double dispensed = this->dispensingPage->getTotalDispensed();
 //    qDebug() << "I'm in Thank You Page and the OID is: " << order_id << " and the total dispensed is: " << dispensed << endl;
@@ -153,7 +153,7 @@ void thankYouPage::curler(){
     }
 }
 
-void thankYouPage::bufferCURL(char *curl_params){
+void pagethankyou::bufferCURL(char *curl_params){
     char filetime[50];
     time(&rawtime);
     timeinfo = localtime(&rawtime);
@@ -171,7 +171,7 @@ void thankYouPage::bufferCURL(char *curl_params){
     }
 }
 
-void thankYouPage::onThankyouTimeoutTick(){
+void pagethankyou::onThankyouTimeoutTick(){
     if(-- _thankYouTimeoutSec >= 0) {
 //        qDebug() << "thanksPage: Tick Down: " << _thankYouTimeoutSec << endl;
     } else {
@@ -182,14 +182,14 @@ void thankYouPage::onThankyouTimeoutTick(){
     }
 }
 
-void thankYouPage::on_mainPage_Button_clicked()
+void pagethankyou::on_mainPage_Button_clicked()
 {
    thankYouEndTimer->stop();
    idlePage->showFullScreen();
    this->hide();
 }
 
-void thankYouPage::onRinseTimerTick(){
+void pagethankyou::onRinseTimerTick(){
 
     QMessageBox msgBox;
     if (!rinse){

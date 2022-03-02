@@ -1,11 +1,11 @@
 //***************************************
 //
-// maintain_product.h
+// page_maintenance_dispenser.h
 // GUI class while machine is processing
 // payment.
 //
 // Coordinates User input from payment select
-// class then communcates results to dispensepage.
+// class then communcates results to page_dispenser.
 //
 // created: 4-01-2021
 // by: Paddy Riley
@@ -14,8 +14,8 @@
 // all rights reserved
 //***************************************
 
-#ifndef MAINTAIN_PRODUCT_H
-#define MAINTAIN_PRODUCT_H
+#ifndef PAGE_MAINTENANCE_DISPENSER_H
+#define PAGE_MAINTENANCE_DISPENSER_H
 
 #include <includefiles.h>
 #include "df_util.h"
@@ -29,19 +29,19 @@ class maintenancePage;
 class idle;
 
 namespace Ui {
-class maintain_product;
+class page_maintenance_dispenser;
 }
 
 
-class maintain_product : public QWidget
+class page_maintenance_dispenser : public QWidget
 {
     Q_OBJECT
 
 
 public:
-    explicit maintain_product(QWidget *parent = nullptr);
+    explicit page_maintenance_dispenser(QWidget *parent = nullptr);
     void setPage(maintenancePage* pageMaintenance, idle* pageIdle);
-    ~maintain_product();
+    ~page_maintenance_dispenser();
     void resizeEvent(QResizeEvent *event);
     void updateVolumeDisplayed(double dispensed);
     void targetHitDisplay();
@@ -88,7 +88,7 @@ private slots:
 
 private:
     void showEvent(QShowEvent *event);
-    Ui::maintain_product *ui;
+    Ui::page_maintenance_dispenser *ui;
     maintenancePage* maintenanceMode;
     idle* idlePage;
 
@@ -123,4 +123,4 @@ private:
     char * curl_data;
 };
 
-#endif // MAINTAIN_PRODUCT_H
+#endif // PAGE_MAINTENANCE_DISPENSER_H

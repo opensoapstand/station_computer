@@ -16,14 +16,14 @@
 
 #include "df_util.h"
 #include "pageproductsoverview.h"
-#include "payselect.h"
+#include "page_product.h"
 #include "pagepayment.h"
 #include "idle.h"
 
 class pageproductsoverview;
 class pagePayment;
 class idle;
-class paySelect;
+class pageProduct;
 
 namespace Ui {
 class help;
@@ -35,7 +35,7 @@ class help : public QWidget
 
 public:
     explicit help(QWidget *parent = nullptr);
-    void setPage(pageproductsoverview *pageSelect, paySelect* paySelect, idle* pageIdle, pagePayment *pagePayment);
+    void setPage(pageproductsoverview *pageSelect, pageProduct* pageProduct, idle* pageIdle, pagePayment *pagePayment);
     ~help();
     QTimer* helpIdleTimer;
 
@@ -55,7 +55,7 @@ private:
     pageproductsoverview* firstProductPage;
     pagePayment* paymentPage;
     idle* idlePage;
-    paySelect* selectPage;
+    pageProduct* selectPage;
 
     int _helpIdleTimeoutSec;
 

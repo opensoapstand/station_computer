@@ -40,7 +40,7 @@
 #include <QUuid>
 #include <curl/curl.h>
 
-class paySelect;
+class pageProduct;
 class page_dispenser;
 class idle;
 class help;
@@ -59,7 +59,7 @@ class pagePayment : public QWidget
 public:
     // **** GUI Setup ****
     explicit pagePayment(QWidget *parent = nullptr);
-    void setPage(paySelect* pageSizeSelect, page_dispenser* page_dispenser, idle* pageIdle, help *pageHelp);
+    void setPage(pageProduct* pageSizeSelect, page_dispenser* page_dispenser, idle* pageIdle, help *pageHelp);
     ~pagePayment();
     void setProgressLabel(QLabel* label, int dot);
     // TODO: Figure out better Style Setup.
@@ -134,7 +134,7 @@ protected:
 private:
     // **** GUI ****
     Ui::pagePayment *ui;
-    paySelect* paySelectPage;
+    pageProduct* p_pageProduct;
     page_dispenser* dispensingPage;
     idle* idlePage;
     help* helpPage;
@@ -220,7 +220,7 @@ private:
     int _qrTimeOutSec;
     QTimer* qrTimer;
 
-    QResizeEvent *paySelectResize;
+    QResizeEvent *pageProductResize;
     QShowEvent *dispenseEvent;
 
     bool response;

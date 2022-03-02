@@ -1,7 +1,7 @@
 
 //***************************************
 //
-// payselect.cpp
+// page_product.cpp
 // GUI class for user to select size and
 // payment for drink.
 //
@@ -15,8 +15,8 @@
 // all rights reserved
 //***************************************
 
-#include "payselect.h"
-#include "ui_payselect.h"
+#include "page_product.h"
+#include "ui_page_product.h"
 #include <iostream>
 #include <string>
 
@@ -32,9 +32,9 @@ double promoPercent = 0.0;
 
 
 // CTOR
-paySelect::paySelect(QWidget *parent) :
+pageProduct::pageProduct(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::paySelect)
+    ui(new Ui::pageProduct)
 {
     ui->setupUi(this);
 
@@ -101,7 +101,7 @@ paySelect::paySelect(QWidget *parent) :
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void paySelect::setPage(pageproductsoverview *pageSelect, page_dispenser* page_dispenser,wifiErrorPage* pageWifiError,  idle* pageIdle, pagePayment* pagePayment, help* pageHelp)
+void pageProduct::setPage(pageproductsoverview *pageSelect, page_dispenser* page_dispenser,wifiErrorPage* pageWifiError,  idle* pageIdle, pagePayment* pagePayment, help* pageHelp)
 {
     this->firstProductPage = pageSelect;
     this->paymentPage = pagePayment;
@@ -124,20 +124,20 @@ void paySelect::setPage(pageproductsoverview *pageSelect, page_dispenser* page_d
 }
 
 // DTOR
-paySelect::~paySelect()
+pageProduct::~pageProduct()
 {
     delete ui;
 }
 
-void paySelect::cancelTimers(){
+void pageProduct::cancelTimers(){
     selectIdleTimer->stop();
 }
 
 /* GUI */
-void paySelect::on_previousPage_Button_clicked()
+void pageProduct::on_previousPage_Button_clicked()
 {
 
-//    qDebug() << "paySelect: Previous button" << endl;
+//    qDebug() << "pageProduct: Previous button" << endl;
     while(!stopSelectTimers()){
 
     };
@@ -158,9 +158,9 @@ void paySelect::on_previousPage_Button_clicked()
 
 }
 
-void paySelect::on_pagePayment_Button_clicked()
+void pageProduct::on_pagePayment_Button_clicked()
 {
-   qDebug() << "paySelect: Pay button" << endl;
+   qDebug() << "pageProduct: Pay button" << endl;
 
     ui->mainPage_Button->setEnabled(false);
     ui->previousPage_Button->setEnabled(false);
@@ -198,7 +198,7 @@ void paySelect::on_pagePayment_Button_clicked()
     }
 }
 
-void paySelect::resizeEvent(QResizeEvent *event){
+void pageProduct::resizeEvent(QResizeEvent *event){
     int checkOption = idlePage->userDrinkOrder->getOption();
     DbManager db(DB_PATH);
 
@@ -269,14 +269,14 @@ void paySelect::resizeEvent(QResizeEvent *event){
     ui->promoCode->hide();
     promoPercent = 0.0;
 
-//    qDebug() << "Start paySelect Timers" << endl;
+//    qDebug() << "Start pageProduct Timers" << endl;
     selectIdleTimer->start(1000);
     _selectIdleTimeoutSec = 400;
 
     db.closeDB();
 }
 
-void paySelect::showEvent(QShowEvent *event){
+void pageProduct::showEvent(QShowEvent *event){
    int checkOption = idlePage->userDrinkOrder->getOption();
     DbManager db(DB_PATH);
 
@@ -324,9 +324,9 @@ void paySelect::showEvent(QShowEvent *event){
     db.closeDB();
 }
 
-void paySelect::onSelectTimeoutTick(){
+void pageProduct::onSelectTimeoutTick(){
     if(-- _selectIdleTimeoutSec >= 0) {
-//        qDebug() << "paySelect: Tick Down - " << _selectIdleTimeoutSec << endl;
+//        qDebug() << "pageProduct: Tick Down - " << _selectIdleTimeoutSec << endl;
     } else {
 //        qDebug() << "Timer Done!" << _selectIdleTimeoutSec << endl;
         selectIdleTimer->stop();
@@ -335,8 +335,8 @@ void paySelect::onSelectTimeoutTick(){
     }
 }
 
-bool paySelect::stopSelectTimers(){
-//    qDebug() << "Stop paySelect Timers" << endl;
+bool pageProduct::stopSelectTimers(){
+//    qDebug() << "Stop pageProduct Timers" << endl;
     if(selectIdleTimer != nullptr) {
        // qDebug() << "Enter Stop" << endl;
         selectIdleTimer->stop();
@@ -346,9 +346,9 @@ bool paySelect::stopSelectTimers(){
     }
 }
 
-void paySelect::mainPage()
+void pageProduct::mainPage()
 {
-//    qDebug() << "paySelect: mainPage button" << endl;
+//    qDebug() << "pageProduct: mainPage button" << endl;
     this->stopSelectTimers();
     selectIdleTimer->stop();
     idlePage->showFullScreen();
@@ -356,9 +356,9 @@ void paySelect::mainPage()
     this->hide();
 }
 
-void paySelect::on_mainPage_Button_clicked()
+void pageProduct::on_mainPage_Button_clicked()
 {
-//    qDebug() << "paySelect: helpPage button" << endl;
+//    qDebug() << "pageProduct: helpPage button" << endl;
     this->stopSelectTimers();
     selectIdleTimer->stop();
     helpPage->showFullScreen();
@@ -366,7 +366,7 @@ void paySelect::on_mainPage_Button_clicked()
 }
 
 // on_Small_Order button listener
-void paySelect::on_orderSmall_Button_clicked()
+void pageProduct::on_orderSmall_Button_clicked()
 {
     QString bitmap_location;
     
@@ -415,7 +415,7 @@ void paySelect::on_orderSmall_Button_clicked()
 }
 
 // on_Large_Order button listener
-void paySelect::on_orderBig_Button_clicked()
+void pageProduct::on_orderBig_Button_clicked()
 {
     QString bitmap_location;
 
@@ -466,7 +466,7 @@ size_t WriteCallback_coupon(char* contents, size_t size, size_t nmemb, void *use
     return size * nmemb;
 }
 
-void paySelect::on_promoCodeInput_clicked(){
+void pageProduct::on_promoCodeInput_clicked(){
     QObject* button = QObject::sender();
     ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
     // ui->promoInputButton->hide();
@@ -474,7 +474,7 @@ void paySelect::on_promoCodeInput_clicked(){
     ui->promoCode->show();
 }
 
-void paySelect::updatePriceAfterPromo(double discountPercent){
+void pageProduct::updatePriceAfterPromo(double discountPercent){
     double discount;
     QString old_price = (ui->priceLabel->text()).split("$")[1];
     double price = old_price.toDouble();
@@ -486,7 +486,7 @@ void paySelect::updatePriceAfterPromo(double discountPercent){
 
 }
 
-void paySelect::on_applyPromo_Button_clicked()
+void pageProduct::on_applyPromo_Button_clicked()
 {
 
     QString promocode = ui->promoCode->text();
@@ -537,7 +537,7 @@ void paySelect::on_applyPromo_Button_clicked()
 
 
 
-void paySelect::buttonWasClicked(int buttonID){
+void pageProduct::buttonWasClicked(int buttonID){
 
     QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
     //qDebug() << buttonpressed->text();

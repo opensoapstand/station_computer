@@ -40,7 +40,7 @@ class idle : public QWidget
 
 public:
     explicit idle(QWidget *parent = nullptr);
-    void setPage(pageproductsoverview *pageProduct, page_maintenance *pageMaintenance);
+    void setPage(pageproductsoverview *p_pageProduct, page_maintenance *pageMaintenance);
     ~idle();
     void showEvent(QShowEvent *event);
 

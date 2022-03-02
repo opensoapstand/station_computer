@@ -10,7 +10,7 @@ FORMS += \
     wifiErrorPage.ui \
     idle.ui \
     pagepayment.ui \
-    payselect.ui \
+    page_product.ui \
     pageproductsoverview.ui \
     pagethankyou.ui \
     page_maintenance.ui \
@@ -26,7 +26,7 @@ HEADERS += \
     idle.h \
     includefiles.h \
     pagepayment.h \
-    payselect.h \
+    page_product.h \
     posm/enums.h \
     posm/lrcgenerator.h \
     posm/mcommunication.h \
@@ -54,7 +54,7 @@ SOURCES += \
     idle.cpp \
     main.cpp \
     pagepayment.cpp \
-    payselect.cpp \
+    page_product.cpp \
     posm/lrcgenerator.cpp \
     posm/mcommunication.cpp \
     posm/packetfromecr.cpp \

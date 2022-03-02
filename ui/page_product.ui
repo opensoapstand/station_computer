@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>paySelect</class>
- <widget class="QWidget" name="paySelect">
+ <class>pageProduct</class>
+ <widget class="QWidget" name="pageProduct">
   <property name="geometry">
    <rect>
     <x>0</x>

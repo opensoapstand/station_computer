@@ -19,7 +19,7 @@
 #include "init.h"
 #include "idle.h"
 #include "pageproductsoverview.h"
-#include "payselect.h"
+#include "page_product.h"
 #include "pagepayment.h"
 #include "page_dispenser.h"
 #include "wifiErrorPage.h"
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     init* initPage = new init();
     idle* idlePage = new idle();
     pageproductsoverview* firstSelectPage = new pageproductsoverview();
-    paySelect* paySelectPage = new paySelect();
+    pageProduct* p_pageProduct = new pageProduct();
     pagePayment* paymentPage = new pagePayment();
     page_dispenser* dispensingPage = new page_dispenser();
     wifiErrorPage* wifiError = new wifiErrorPage();
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     // TODO: Instantiate a DrinkOrder Object
 
     // Page pathing references to function calls.
-    helpPage->setPage(firstSelectPage, paySelectPage, idlePage, paymentPage);
+    helpPage->setPage(firstSelectPage, p_pageProduct, idlePage, paymentPage);
     //helpPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
     initPage->setPage(idlePage);
@@ -70,22 +70,22 @@ int main(int argc, char *argv[])
     maintainPage->setPage(p_page_maintenance, idlePage);
     //maintainPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    p_page_maintenance->setPage(idlePage, maintainPage, firstSelectPage, paySelectPage);
+    p_page_maintenance->setPage(idlePage, maintainPage, firstSelectPage, p_pageProduct);
     //p_page_maintenance->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
     idlePage->setPage(firstSelectPage, p_page_maintenance);
     //idlePage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    firstSelectPage->setPage(paySelectPage, idlePage, p_page_maintenance, helpPage);
+    firstSelectPage->setPage(p_pageProduct, idlePage, p_page_maintenance, helpPage);
     //firstSelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    //secondSelectPage->setPage(firstSelectPage, paySelectPage, idlePage, p_page_maintenance);
+    //secondSelectPage->setPage(firstSelectPage, p_pageProduct, idlePage, p_page_maintenance);
     //secondSelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    paySelectPage->setPage(firstSelectPage, dispensingPage,wifiError, idlePage, paymentPage, helpPage);
-    //paySelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
+    p_pageProduct->setPage(firstSelectPage, dispensingPage,wifiError, idlePage, paymentPage, helpPage);
+    //p_pageProduct->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    paymentPage->setPage(paySelectPage, dispensingPage, idlePage, helpPage);
+    paymentPage->setPage(p_pageProduct, dispensingPage, idlePage, helpPage);
 //    paymentPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
     dispensingPage->setPage(paymentPage, lastPage, idlePage);

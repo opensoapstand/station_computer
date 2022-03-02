@@ -28,7 +28,7 @@
 class idle;
 class page_maintenance_dispenser;
 class pageproductsoverview;
-class paySelect;
+class pageProduct;
 
 namespace Ui {
 class page_maintenance;
@@ -42,7 +42,7 @@ class page_maintenance : public QWidget
 
 public:
     explicit page_maintenance(QWidget *parent = nullptr);
-    void setPage(idle* pageIdle, page_maintenance_dispenser* pageMaintain, pageproductsoverview *pageProduct, paySelect* pagePaySelect);
+    void setPage(idle* pageIdle, page_maintenance_dispenser* pageMaintain, pageproductsoverview *p_pageProduct, pageProduct* pagePaySelect);
     ~page_maintenance();
     int getSelection();
 
@@ -72,7 +72,7 @@ private:
     idle* idlePage;
     page_maintenance_dispenser* maintainPage;
     pageproductsoverview* selection_PageOne;
-    paySelect* paySelectPage;
+    pageProduct* p_pageProduct;
 
     QResizeEvent *productSelection;
 

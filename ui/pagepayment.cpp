@@ -17,7 +17,7 @@
 #include "pagepayment.h"
 #include "ui_pagepayment.h"
 
-#include "payselect.h"
+#include "page_product.h"
 #include "page_dispenser.h"
 #include "idle.h"
 
@@ -126,9 +126,9 @@ void pagePayment::stopPayTimers(){
 /*
  * Page Tracking reference
  */
-void pagePayment::setPage(paySelect *pageSizeSelect, page_dispenser* page_dispenser, idle* pageIdle, help* pageHelp)
+void pagePayment::setPage(pageProduct *pageSizeSelect, page_dispenser* page_dispenser, idle* pageIdle, help* pageHelp)
 {
-    this->paySelectPage = pageSizeSelect;
+    this->p_pageProduct = pageSizeSelect;
     this->dispensingPage = page_dispenser;
     this->idlePage = pageIdle;
     this->helpPage = pageHelp;
@@ -207,8 +207,8 @@ void pagePayment::on_previousPage_Button_clicked()
     if (payment){
         cancelPayment();
     }
-    paySelectPage->resizeEvent(paySelectResize);
-    paySelectPage->showFullScreen();
+    p_pageProduct->resizeEvent(pageProductResize);
+    p_pageProduct->showFullScreen();
 //    usleep(100);
     this->hide();
 }

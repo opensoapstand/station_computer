@@ -1,6 +1,6 @@
 //***************************************
 //
-// payselect.h
+// page_product.h
 // GUI class for user to select size and
 // payment for drink.
 //
@@ -30,17 +30,17 @@ class wifiErrorPage;
 class help;
 
 namespace Ui {
-class paySelect;
+class pageProduct;
 }
 
-class paySelect : public QWidget
+class pageProduct : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit paySelect(QWidget *parent = nullptr);
+    explicit pageProduct(QWidget *parent = nullptr);
     void setPage(pageproductsoverview *pageSelect, page_dispenser* page_dispenser,wifiErrorPage* pageWifiError,  idle* pageIdle, pagePayment *pagePayment, help* pageHelp);
-    ~paySelect();
+    ~pageProduct();
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
@@ -75,7 +75,7 @@ private:
     void mainPage();
 
     std::string readBuffer;
-    Ui::paySelect *ui;
+    Ui::pageProduct *ui;
     pageproductsoverview* firstProductPage;
     pagePayment* paymentPage;
     idle* idlePage;
@@ -86,7 +86,7 @@ private:
     QTimer* selectIdleTimer;
     int _selectIdleTimeoutSec;
 
-    QResizeEvent *paySelectResize;
+    QResizeEvent *pageProductResize;
     QShowEvent *dispenseEvent;
     QShowEvent *wifiErrorEvent;
 

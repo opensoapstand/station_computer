@@ -25,7 +25,7 @@ idle::idle(QWidget *parent) :
 {
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
-    QPixmap background("/release/references/general/1_welcome_panel.png");
+    QPixmap background("/release/references/general/1_background_welcome.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);

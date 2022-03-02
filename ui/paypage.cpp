@@ -29,7 +29,7 @@ payPage::payPage(QWidget *parent) :
 {
     // Fullscreen background setup
     ui->setupUi(this);
-    QPixmap background("/release/references/general/5_pay_page.png");
+    QPixmap background("/release/references/general/5_background_pay_qr.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
@@ -150,7 +150,7 @@ void payPage::resizeEvent(QResizeEvent *event){
     QString bitmap_location;
 
     if (!payment){
-        bitmap_location = "/release/references/general/5_pay_page.png";
+        bitmap_location = "/release/references/general/5_background_pay_qr.png";
     }
     else if(checkOption > 0 && checkOption <= 9) {
         bitmap_location.append("/release/references/general/5_pay_page_");
@@ -279,7 +279,7 @@ void payPage::showEvent(QShowEvent *event)
     QString bitmap_location;
 
     if (!payment){
-        bitmap_location = "/release/references/general/5_pay_page.png";
+        bitmap_location = "/release/references/general/5_background_pay_qr.png";
     }
     else if(checkOption > 0 && checkOption <= 9) {
         bitmap_location.append("/release/references/general/5_pay_page_");

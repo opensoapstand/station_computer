@@ -21,7 +21,6 @@
 #include "maintenancePage.h"
 #include "help.h"
 
-class productPage_2;
 class paySelect;
 class idle;
 class maintenancePage;
@@ -37,7 +36,7 @@ class productPage_1 : public QWidget
 
 public:
     explicit productPage_1(QWidget *parent = nullptr);
-    void setPage(productPage_2 *pageTwoProducts, paySelect *pageSizeSelect, idle* pageIdle, maintenancePage *pageMaintenance, help *pageHelp);
+    // void setPage(productPage_2 *pageTwoProducts, paySelect *pageSizeSelect, idle* pageIdle, maintenancePage *pageMaintenance, help *pageHelp);
     ~productPage_1();
     void cancelTimers();
 
@@ -60,7 +59,7 @@ private slots:
 private:
     void showEvent(QShowEvent *event);
     Ui::productPage_1 *ui;
-    productPage_2 *selection_PageTwo;
+    // productPage_2 *selection_PageTwo;
     paySelect *paymentSelectPage;
     idle* idlePage;
 

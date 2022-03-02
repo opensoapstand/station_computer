@@ -19,7 +19,6 @@
 #include "init.h"
 #include "idle.h"
 #include "productpage_1.h"
-#include "productpage_2.h"
 #include "payselect.h"
 #include "paypage.h"
 #include "dispensepage.h"
@@ -49,7 +48,6 @@ int main(int argc, char *argv[])
     init* initPage = new init();
     idle* idlePage = new idle();
     productPage_1* firstSelectPage = new productPage_1();
-    productPage_2* secondSelectPage = new productPage_2();
     paySelect* paySelectPage = new paySelect();
     payPage* paymentPage = new payPage();
     dispensePage* dispensingPage = new dispensePage();
@@ -78,10 +76,10 @@ int main(int argc, char *argv[])
     idlePage->setPage(firstSelectPage, maintenanceMode);
     //idlePage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    firstSelectPage->setPage(secondSelectPage, paySelectPage, idlePage, maintenanceMode, helpPage);
+    //firstSelectPage->setPage(secondSelectPage, paySelectPage, idlePage, maintenanceMode, helpPage);
     //firstSelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
-    secondSelectPage->setPage(firstSelectPage, paySelectPage, idlePage, maintenanceMode);
+    //secondSelectPage->setPage(firstSelectPage, paySelectPage, idlePage, maintenanceMode);
     //secondSelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 
     paySelectPage->setPage(firstSelectPage, dispensingPage,wifiError, idlePage, paymentPage, helpPage);

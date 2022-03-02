@@ -55,8 +55,6 @@
         <file>payselect.h</file>
         <file>productpage_1.cpp</file>
         <file>productpage_1.h</file>
-        <file>productpage_2.cpp</file>
-        <file>productpage_2.h</file>
         <file>thankyoupage.cpp</file>
         <file>thankyoupage.h</file>
         <file>ui_dispensepage.h</file>
@@ -67,7 +65,6 @@
         <file>ui_paypage.h</file>
         <file>ui_payselect.h</file>
         <file>ui_productpage_1.h</file>
-        <file>ui_productpage_2.h</file>
         <file>ui_thankyoupage.h</file>
 
     </qresource>

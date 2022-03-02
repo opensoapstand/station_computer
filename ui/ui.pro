@@ -12,7 +12,6 @@ FORMS += \
     paypage.ui \
     payselect.ui \
     productpage_1.ui \
-    productpage_2.ui \
     thankyoupage.ui \
     maintenancePage.ui \
     maintain_product.ui \
@@ -38,7 +37,6 @@ HEADERS += \
     posm/transactionPackets.h \
     posm/transactioninfo.h \
     productpage_1.h \
-    productpage_2.h \
     thankyoupage.h \
     df_util.h \
     drinkorder.h \
@@ -66,7 +64,6 @@ SOURCES += \
     posm/transactionPackets.cpp \
     posm/transactioninfo.cpp \
     productpage_1.cpp \
-    productpage_2.cpp \
     thankyoupage.cpp \
     df_util.cpp \
     drinkorder.cpp \

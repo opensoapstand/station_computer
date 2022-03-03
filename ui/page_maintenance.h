@@ -23,11 +23,11 @@
 #include "page_idle.h"
 #include "dfuicommthread.h"
 #include "page_maintenance_dispenser.h"
-#include "pageproductsoverview.h"
+#include "page_select_product.h"
 
 class page_idle;
 class page_maintenance_dispenser;
-class pageproductsoverview;
+class page_select_product;
 class pageProduct;
 
 namespace Ui {
@@ -42,7 +42,7 @@ class page_maintenance : public QWidget
 
 public:
     explicit page_maintenance(QWidget *parent = nullptr);
-    void setPage(page_idle* pageIdle, page_maintenance_dispenser* pageMaintain, pageproductsoverview *p_pageProduct, pageProduct* pagePaySelect);
+    void setPage(page_idle* pageIdle, page_maintenance_dispenser* pageMaintain, page_select_product *p_pageProduct, pageProduct* pagePaySelect);
     ~page_maintenance();
     int getSelection();
 
@@ -71,7 +71,7 @@ private:
     Ui::page_maintenance *ui;
     page_idle* idlePage;
     page_maintenance_dispenser* maintainPage;
-    pageproductsoverview* selection_PageOne;
+    page_select_product* p_pageSelectProduct;
     pageProduct* p_pageProduct;
 
     QResizeEvent *productSelection;

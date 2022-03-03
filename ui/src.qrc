@@ -53,8 +53,8 @@
         <file>pagepayment.h</file>
         <file>page_product.cpp</file>
         <file>page_product.h</file>
-        <file>pageproductsoverview.cpp</file>
-        <file>pageproductsoverview.h</file>
+        <file>page_select_product.cpp</file>
+        <file>page_select_product.h</file>
         <file>pagethankyou.cpp</file>
         <file>pagethankyou.h</file>
         <file>ui_page_dispenser.h</file>
@@ -64,7 +64,7 @@
         <file>ui_page_maintenance.h</file>
         <file>ui_pagepayment.h</file>
         <file>ui_page_product.h</file>
-        <file>ui_pageproductsoverview.h</file>
+        <file>ui_page_select_product.h</file>
         <file>ui_pagethankyou.h</file>
 
     </qresource>

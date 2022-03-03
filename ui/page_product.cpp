@@ -21,7 +21,7 @@
 #include <string>
 
 #include "pagepayment.h"
-#include "pageproductsoverview.h"
+#include "page_select_product.h"
 #include "page_idle.h"
 #include <curl/curl.h>
 #include <json.hpp>
@@ -50,7 +50,6 @@ pageProduct::pageProduct(QWidget *parent) :
         bitmap_location = "/release/references/general/4_pay_select_page_l_1.png";
     }
 
-    // bitmap_location ="/release/lodeisamazing.jpg";
     qDebug() << bitmap_location << endl;
     QPixmap background(bitmap_location);
     
@@ -101,7 +100,7 @@ pageProduct::pageProduct(QWidget *parent) :
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void pageProduct::setPage(pageproductsoverview *pageSelect, page_dispenser* page_dispenser,page_error_wifi* pageWifiError,  page_idle* pageIdle, pagePayment* pagePayment, page_help* pageHelp)
+void pageProduct::setPage(page_select_product *pageSelect, page_dispenser* page_dispenser,page_error_wifi* pageWifiError,  page_idle* pageIdle, pagePayment* pagePayment, page_help* pageHelp)
 {
     this->firstProductPage = pageSelect;
     this->paymentPage = pagePayment;
@@ -222,7 +221,6 @@ void pageProduct::resizeEvent(QResizeEvent *event){
     } else {
         bitmap_location = "/release/references/general/4_pay_select_page_l_1.png";
     }
-    // bitmap_location ="/release/lodeisamazing.jpg";
 
     QPixmap background(bitmap_location);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);

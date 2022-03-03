@@ -11,7 +11,7 @@ FORMS += \
     page_idle.ui \
     pagepayment.ui \
     page_product.ui \
-    pageproductsoverview.ui \
+    page_select_product.ui \
     pagethankyou.ui \
     page_maintenance.ui \
     page_maintenance_dispenser.ui \
@@ -36,7 +36,7 @@ HEADERS += \
     posm/paymentdatabase.h \
     posm/transactionPackets.h \
     posm/transactioninfo.h \
-    pageproductsoverview.h \
+    page_select_product.h \
     pagethankyou.h \
     df_util.h \
     drinkorder.h \
@@ -63,7 +63,7 @@ SOURCES += \
     posm/paymentdatabase.cpp \
     posm/transactionPackets.cpp \
     posm/transactioninfo.cpp \
-    pageproductsoverview.cpp \
+    page_select_product.cpp \
     pagethankyou.cpp \
     df_util.cpp \
     drinkorder.cpp \

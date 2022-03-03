@@ -22,7 +22,7 @@
 #include "page_error_wifi.h"
 #include "page_help.h"
 
-class pageproductsoverview;
+class page_select_product;
 class pagePayment;
 class page_idle;
 class page_dispenser;
@@ -39,7 +39,7 @@ class pageProduct : public QWidget
 
 public:
     explicit pageProduct(QWidget *parent = nullptr);
-    void setPage(pageproductsoverview *pageSelect, page_dispenser* page_dispenser,page_error_wifi* pageWifiError,  page_idle* pageIdle, pagePayment *pagePayment, page_help* pageHelp);
+    void setPage(page_select_product *pageSelect, page_dispenser* page_dispenser,page_error_wifi* pageWifiError,  page_idle* pageIdle, pagePayment *pagePayment, page_help* pageHelp);
     ~pageProduct();
 
     void resizeEvent(QResizeEvent *event);
@@ -76,7 +76,7 @@ private:
 
     std::string readBuffer;
     Ui::pageProduct *ui;
-    pageproductsoverview* firstProductPage;
+    page_select_product* firstProductPage;
     pagePayment* paymentPage;
     page_idle* idlePage;
     page_dispenser* dispensingPage;

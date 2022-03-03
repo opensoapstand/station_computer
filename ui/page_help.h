@@ -15,12 +15,12 @@
 #define HELP_H
 
 #include "df_util.h"
-#include "pageproductsoverview.h"
+#include "page_select_product.h"
 #include "page_product.h"
 #include "pagepayment.h"
 #include "page_idle.h"
 
-class pageproductsoverview;
+class page_select_product;
 class pagePayment;
 class page_idle;
 class pageProduct;
@@ -35,7 +35,7 @@ class page_help : public QWidget
 
 public:
     explicit page_help(QWidget *parent = nullptr);
-    void setPage(pageproductsoverview *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, pagePayment *pagePayment);
+    void setPage(page_select_product *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, pagePayment *pagePayment);
     ~page_help();
     QTimer* helpIdleTimer;
 
@@ -52,7 +52,7 @@ private:
     //void helpOnTick();
 
     Ui::page_help *ui;
-    pageproductsoverview* firstProductPage;
+    page_select_product* firstProductPage;
     pagePayment* paymentPage;
     page_idle* idlePage;
     pageProduct* selectPage;

@@ -42,7 +42,6 @@ page_init::page_init(QWidget *parent) :
     rebootTimer = new QTimer(this);
     rebootTimer->setInterval(1000);
     connect(rebootTimer, SIGNAL(timeout()), this, SLOT(onRebootTimeoutTick()));
-
 }
 
 /*
@@ -72,9 +71,8 @@ void page_init::showEvent(QShowEvent *event)
 
     }else{
         ui->init_label->setText("Start UI without controller.");
-        _initIdleTimeoutSec = 2;
+        _initIdleTimeoutSec = 1;
     }
-
 }
 
 void page_init::initReadySlot(void){
@@ -98,9 +96,6 @@ void page_init::onInitTimeoutTick(){
         }
         rebootTimer->start(1000);
         _rebootTimeoutSec = 5;
-
-
-
     }
 }
 

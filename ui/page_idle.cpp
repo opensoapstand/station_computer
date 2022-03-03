@@ -46,10 +46,10 @@ page_idle::page_idle(QWidget *parent) :
 /*
  * Navigation to Product item
  */
-void page_idle::setPage(pageproductsoverview *p_pageProduct, page_maintenance *pageMaintenance)
+void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance)
 {
     // Chained to KB Listener
-    this->selection_PageOne = p_pageProduct;
+    this->p_pageSelectProduct = p_pageProduct;
     this->p_page_maintenance = pageMaintenance;
 }
 
@@ -79,8 +79,13 @@ void page_idle::on_nextPageButton_clicked()
     // this->dfUtility->m_fsmMsg = SEND_CLEAN;
     // this->dfUtility->send_to_FSM();
 
-    selection_PageOne->showFullScreen();
-    this->hide();
+    p_pageSelectProduct->showFullScreen();
+
+    // DO NOT HIDE IDLE PAGE 
+    // it's staying in the background to counter a hack UBC students found (when changing screens and tapping during the swap, they could get a hold of the machine)
+    // Tapping on on the desktop wallpaper minimizes the application.
+    // If the idle page is not hidden, and always on the background, there is never a wall paper showing. Effectively preventing this vulnerability to be exploited.
+    //this->hide(); 
 }
 
 bool page_idle::isEnough(int p){
@@ -104,5 +109,5 @@ void page_idle::MMSlot(){
 //    qDebug() << "HERE I AM I KNOW I MUIST ENTER MM" << endl;
     p_page_maintenance->showFullScreen();
     this->hide();
-    this->selection_PageOne->hide();
+    this->p_pageSelectProduct->hide();
 }

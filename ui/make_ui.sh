@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ui/
+
 echo "Starting to make UI"
 qmake
 make

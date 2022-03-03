@@ -109,7 +109,7 @@ void page_maintenance::showEvent(QShowEvent *event)
 
     ui->keyboard_2->hide();
 
-    selection_PageOne->cancelTimers();
+    p_pageSelectProduct->cancelTimers();
     p_pageProduct->cancelTimers();
 
     db.closeDB();
@@ -119,11 +119,11 @@ void page_maintenance::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference
  */
-void page_maintenance::setPage(page_idle* pageIdle, page_maintenance_dispenser* pageMaintain, pageproductsoverview *p_pageProduct, pageProduct *pagePaySelect)
+void page_maintenance::setPage(page_idle* pageIdle, page_maintenance_dispenser* pageMaintain, page_select_product *p_pageProduct, pageProduct *pagePaySelect)
 {
     this->idlePage = pageIdle;
     this->maintainPage = pageMaintain;
-    this->selection_PageOne = p_pageProduct;
+    this->p_pageSelectProduct = p_pageProduct;
     this->p_pageProduct = pagePaySelect;
 }
 

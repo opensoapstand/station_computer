@@ -1,6 +1,6 @@
 //***************************************
 //
-// pageproductsoverview.cpp
+// page_select_product.cpp
 // GUI class for user to browse up to
 // 6 drinks.
 //
@@ -14,16 +14,16 @@
 // all rights reserved
 //***************************************
 
-#include "pageproductsoverview.h"
-#include "ui_pageproductsoverview.h"
+#include "page_select_product.h"
+#include "ui_page_select_product.h"
 
 #include "page_product.h"
 #include "page_idle.h"
 
 // CTOR
-pageproductsoverview::pageproductsoverview(QWidget *parent) :
+page_select_product::page_select_product(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::pageproductsoverview)
+    ui(new Ui::page_select_product)
 {
     ui->setupUi(this);
     QPixmap background("/release/references/general/2_background_products.png");
@@ -48,7 +48,7 @@ pageproductsoverview::pageproductsoverview(QWidget *parent) :
 /*
  * Page Tracking reference
  */
-void pageproductsoverview::setPage(pageProduct *pageSizeSelect, page_idle* pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp)
+void page_select_product::setPage(pageProduct *pageSizeSelect, page_idle* pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp)
 {
     //this->selection_PageTwo = pageTwoProducts;
     this->paymentSelectPage = pageSizeSelect;
@@ -58,18 +58,18 @@ void pageproductsoverview::setPage(pageProduct *pageSizeSelect, page_idle* pageI
 }
 
 // DTOR
-pageproductsoverview::~pageproductsoverview()
+page_select_product::~page_select_product()
 {
     delete ui;
 }
 
-//void pageproductsoverview::on_nextPageButton_clicked()
+//void page_select_product::on_nextPageButton_clicked()
 //{
 //    selection_PageTwo->showFullScreen();
 //    this->hide();
 //}
 
-void pageproductsoverview::showEvent(QShowEvent *event)
+void page_select_product::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
 
@@ -125,13 +125,13 @@ void pageproductsoverview::showEvent(QShowEvent *event)
     db.closeDB();
 }
 
-void pageproductsoverview::cancelTimers(){
+void page_select_product::cancelTimers(){
     productPageEndTimer->stop();
 }
 
 
 // FIXME: This is terrible...no time to make array reference to hold button press functions
-void pageproductsoverview::on_selection1_Button_clicked()
+void page_select_product::on_selection1_Button_clicked()
 {
     DbManager db(DB_PATH);
     if(db.checkLevels(1)){
@@ -147,7 +147,7 @@ void pageproductsoverview::on_selection1_Button_clicked()
     }
 }
 
-void pageproductsoverview::on_selection2_Button_clicked()
+void page_select_product::on_selection2_Button_clicked()
 {
     DbManager db(DB_PATH);
     if(db.checkLevels(2)){
@@ -163,7 +163,7 @@ void pageproductsoverview::on_selection2_Button_clicked()
     }
 }
 
-void pageproductsoverview::on_selection3_Button_clicked()
+void page_select_product::on_selection3_Button_clicked()
 {
     DbManager db(DB_PATH);
     if(db.checkLevels(3)){
@@ -180,7 +180,7 @@ void pageproductsoverview::on_selection3_Button_clicked()
 
 }
 
-void pageproductsoverview::on_selection4_Button_clicked()
+void page_select_product::on_selection4_Button_clicked()
 {
     DbManager db(DB_PATH);
     if(db.checkLevels(4)){
@@ -197,7 +197,7 @@ void pageproductsoverview::on_selection4_Button_clicked()
 
 }
 
-void pageproductsoverview::onProductPageTimeoutTick(){
+void page_select_product::onProductPageTimeoutTick(){
     if(-- _productPageTimeoutSec >= 0) {
         qDebug() << "Tick Down: " << _productPageTimeoutSec << endl;
     } else {
@@ -206,14 +206,14 @@ void pageproductsoverview::onProductPageTimeoutTick(){
     }
 }
 
-void pageproductsoverview::mainPage()
+void page_select_product::mainPage()
 {
     productPageEndTimer->stop();
     idlePage->showFullScreen();
     this->hide();
 }
 
-void pageproductsoverview::on_p_page_maintenanceButton_pressed()
+void page_select_product::on_p_page_maintenanceButton_pressed()
 {
 //    qDebug() << "Maintenance button pressed" << endl;
     maintenanceCounter++;
@@ -224,7 +224,7 @@ void pageproductsoverview::on_p_page_maintenanceButton_pressed()
     }
 }
 
-void pageproductsoverview::on_mainPage_Button_clicked()
+void page_select_product::on_mainPage_Button_clicked()
 {
 //    qDebug() << "Main Page Button pressed" << endl;
     productPageEndTimer->stop();

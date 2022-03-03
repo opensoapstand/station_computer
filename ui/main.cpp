@@ -18,7 +18,7 @@
 #include "page_help.h"
 #include "page_init.h"
 #include "page_idle.h"
-#include "pageproductsoverview.h"
+#include "page_select_product.h"
 #include "page_product.h"
 #include "pagepayment.h"
 #include "page_dispenser.h"
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     page_help* helpPage = new page_help();
     page_init* initPage = new page_init();
     page_idle* idlePage = new page_idle();
-    pageproductsoverview* firstSelectPage = new pageproductsoverview();
+    page_select_product* firstSelectPage = new page_select_product();
     pageProduct* p_pageProduct = new pageProduct();
     pagePayment* paymentPage = new pagePayment();
     page_dispenser* dispensingPage = new page_dispenser();

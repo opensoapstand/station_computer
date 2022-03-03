@@ -59,7 +59,7 @@
         <file>pagethankyou.h</file>
         <file>ui_page_dispenser.h</file>
         <file>ui_page_help.h</file>
-        <file>ui_idle.h</file>
+        <file>ui_page_idle.h</file>
         <file>ui_page_maintenance_dispenser.h</file>
         <file>ui_page_maintenance.h</file>
         <file>ui_pagepayment.h</file>

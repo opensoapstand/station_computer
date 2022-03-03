@@ -58,6 +58,7 @@ private:
     int _initIdleTimeoutSec;
     QTimer* rebootTimer;
     int _rebootTimeoutSec;
+    bool start_controller;
 
 };
 

@@ -62,41 +62,16 @@ int main(int argc, char *argv[])
 
     // Page pathing references to function calls.
     helpPage->setPage(firstSelectPage, p_pageProduct, idlePage, paymentPage);
-    //helpPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
-
     initPage->setPage(idlePage);
-    //initPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
-
     maintainPage->setPage(p_page_maintenance, idlePage);
-    //maintainPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
-
     p_page_maintenance->setPage(idlePage, maintainPage, firstSelectPage, p_pageProduct);
-    //p_page_maintenance->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
-
     idlePage->setPage(firstSelectPage, p_page_maintenance);
-    //idlePage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
-
     firstSelectPage->setPage(p_pageProduct, idlePage, p_page_maintenance, helpPage);
-    //firstSelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
-
-    //secondSelectPage->setPage(firstSelectPage, p_pageProduct, idlePage, p_page_maintenance);
-    //secondSelectPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
-
     p_pageProduct->setPage(firstSelectPage, dispensingPage,wifiError, idlePage, paymentPage, helpPage);
-    //p_pageProduct->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
-
     paymentPage->setPage(p_pageProduct, dispensingPage, idlePage, helpPage);
-//    paymentPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
-
     dispensingPage->setPage(paymentPage, lastPage, idlePage);
-//    dispensingPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
-
     lastPage->setPage(dispensingPage, idlePage, paymentPage);
-//    lastPage->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
     wifiError->setPage(paymentPage, lastPage, idlePage);
-
-    //    payOptionToggle->setPage();
-
     initPage->showFullScreen();
 
     DfUiServer dfUiServer;

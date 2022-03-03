@@ -65,8 +65,16 @@ void page_init::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 //    qDebug() << "Start init Timers" << endl;
     initIdleTimer->start(1000);
-    _initIdleTimeoutSec = 20;
-    system("DISPLAY=:0 xterm -hold  /release/fsm/controller &");
+    start_controller = false;
+    if (start_controller){
+        system("DISPLAY=:0 xterm -hold  /release/fsm/controller &");
+        _initIdleTimeoutSec = 20;
+
+    }else{
+        ui->init_label->setText("Start UI without controller.");
+        _initIdleTimeoutSec = 2;
+    }
+
 }
 
 void page_init::initReadySlot(void){
@@ -85,8 +93,12 @@ void page_init::onInitTimeoutTick(){
 
         ui->fail_label->setText("Init failed. Rebooting");
 
+        if (!start_controller){
+            initReadySlot();
+        }
         rebootTimer->start(1000);
         _rebootTimeoutSec = 5;
+
 
 
     }

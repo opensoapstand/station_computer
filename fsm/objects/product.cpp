@@ -212,8 +212,12 @@ int product::getPWMFromDB()
     {
         //  fprintf(stderr, "Opened database successfully\n");
     }
-
+#ifdef USE_OLD_DATABASE
+    
     string sql_string = "SELECT pwm FROM products WHERE slot=" + to_string(m_nSlot) + ";";
+#else
+    string sql_string = "SELECT dispense_speed FROM products WHERE slot=" + to_string(m_nSlot) + ";";
+#endif
     /* Create SQL statement for transactions */
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);

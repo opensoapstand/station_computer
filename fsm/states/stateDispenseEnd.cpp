@@ -301,8 +301,12 @@ std::string stateDispenseEnd::getUnitsFromDb(int slot)
         //       fprintf(stderr, "Opened database successfully\n");
     }
 
+#ifdef USE_OLD_DATABASE
     std::string sql_string_units = "SELECT units FROM products WHERE slot=" + std::to_string(slot) + ";";
+#else
+    std::string sql_string_units = "SELECT display_unit FROM products WHERE slot=" + std::to_string(slot) + ";";
 
+#endif
     /* Create SQL statement for transactions */
     sqlite3_prepare(db, sql_string_units.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
@@ -364,6 +368,7 @@ DF_ERROR stateDispenseEnd::updateDB()
     if (rc != SQLITE_OK)
     {
         // fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        debugOutput::sendMessage("ERROR: SQL : " + sql1, MSG_INFO);
         sqlite3_free(zErrMsg);
     }
     else
@@ -373,8 +378,13 @@ DF_ERROR stateDispenseEnd::updateDB()
 
     /* Create SQL statement for total product dispensed */
     std::string sql2;
+    
+#ifdef USE_OLD_DATABASE
+    sql2 = ("UPDATE products SET total_dispensed=total_dispensed+" + dispensed_volume + " WHERE name='" + product + "';");
+#else
     sql2 = ("UPDATE products SET volume_dispensed_total=volume_dispensed_total+" + dispensed_volume + " WHERE name='" + product + "';");
 
+#endif
     char *sql_prod = new char[sql2.length() + 1];
     strcpy(sql_prod, sql2.c_str());
 
@@ -384,6 +394,8 @@ DF_ERROR stateDispenseEnd::updateDB()
     if (rc != SQLITE_OK)
     {
         //        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        debugOutput::sendMessage("ERROR: SQL : " + sql2, MSG_INFO);
+    
         sqlite3_free(zErrMsg);
     }
     else
@@ -393,7 +405,13 @@ DF_ERROR stateDispenseEnd::updateDB()
 
     /* Create SQL statement for product remaining */
     std::string sql3;
+#ifdef USE_OLD_DATABASE
+    sql3 = ("UPDATE products SET remaining_ml=full_ml-total_dispensed WHERE name='" + product + "';");
+#else
     sql3 = ("UPDATE products SET volume_remaining=volume_full-volume_dispensed_total WHERE name='" + product + "';");
+
+#endif
+
 
     char *sql_prod2 = new char[sql3.length() + 1];
     strcpy(sql_prod2, sql3.c_str());
@@ -404,6 +422,7 @@ DF_ERROR stateDispenseEnd::updateDB()
     if (rc != SQLITE_OK)
     {
         //        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        debugOutput::sendMessage("ERROR: SQL : " + sql3, MSG_INFO);
         sqlite3_free(zErrMsg);
     }
     else

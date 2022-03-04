@@ -14,7 +14,7 @@ public:
     double getProductPrice(int slot, char ml);
     //double getProductTargetVolume(int slot);
     double getProductVolumePerTick(int slot);
-    bool checkLevels(int slot);
+    bool remainingVolumeIsBiggerThanLargestFixedSize(int slot);
     QString getProductReceiptName(int slot);
     QString getPaymentMethod(int slot);
     double getProductVolume(int slot, char ml);
@@ -34,6 +34,7 @@ public:
     QString getMachineID();
     QString getProductID(int slot);
     QString getUnits(int slot);
+    uint32_t getNumberOfRows(QString table);
 
     bool updatePaymentsDb(QString date, QString time, QString txnType, QString amount, QString cardNo, QString refNo, QString authNo, QString cardType, QString status, QString isoCode, QString hostCode, QString tvr);
     bool updatePriceSmall(int slot, double new_price);

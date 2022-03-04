@@ -86,37 +86,43 @@ void page_select_product::showEvent(QShowEvent *event)
     productPageEndTimer->start(1000);
     _productPageTimeoutSec = 15;
 
-    if (!db.checkLevels(1)){
+    qDebug() << "start s---- ======= "<< endl;
+    qDebug() << db.remainingVolumeIsBiggerThanLargestFixedSize(1) << "check levels" <<endl;
+    
+    qDebug() << db.getPWM(1) << endl;
+    qDebug() << "tetseitsejt ======= "<< endl;
+
+    if (!db.remainingVolumeIsBiggerThanLargestFixedSize(1)){
         // Change p1 to Sold Out
 //        qDebug() << "Product 1 is Sold Out!" << endl;
-        ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(/references/general/soldOut.png); }");
+        ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(/release/references/general/soldOut.png); }");
     }
     else{
         ui->selection1_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     }
 
-    if (!db.checkLevels(2)){
+    if (!db.remainingVolumeIsBiggerThanLargestFixedSize(2)){
         // Change p2 to Sold Out
 //        qDebug() << "Product 2 is Sold Out!" << endl;
-        ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(/references/general/soldOut.png); }");
+        ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(/release/references/general/soldOut.png); }");
     }
     else{
         ui->selection2_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     }
     
-    if (!db.checkLevels(3)){
+    if (!db.remainingVolumeIsBiggerThanLargestFixedSize(3)){
         // Change p3 to Sold Out
 //        qDebug() << "Product 3 is Sold Out!" << endl;
-        ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(/references/general/soldOut.png); }");
+        ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(/release/references/general/soldOut.png); }");
     } 
     else{
         ui->selection3_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     }
 
-    if (!db.checkLevels(4)){
+    if (!db.remainingVolumeIsBiggerThanLargestFixedSize(4)){
         // Change p4 to Sold Out
 //        qDebug() << "Product 4 is Sold Out!" << endl;
-        ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(/references/general/soldOut.png); }");
+        ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(/release/references/general/soldOut.png); }");
     }
     else{
         ui->selection4_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
@@ -134,7 +140,7 @@ void page_select_product::cancelTimers(){
 void page_select_product::on_selection1_Button_clicked()
 {
     DbManager db(DB_PATH);
-    if(db.checkLevels(1)){
+    if(db.remainingVolumeIsBiggerThanLargestFixedSize(1)){
         db.closeDB();
         productPageEndTimer->stop();
         idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_1);
@@ -150,7 +156,7 @@ void page_select_product::on_selection1_Button_clicked()
 void page_select_product::on_selection2_Button_clicked()
 {
     DbManager db(DB_PATH);
-    if(db.checkLevels(2)){
+    if(db.remainingVolumeIsBiggerThanLargestFixedSize(2)){
         db.closeDB();
         productPageEndTimer->stop();
         idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
@@ -166,7 +172,7 @@ void page_select_product::on_selection2_Button_clicked()
 void page_select_product::on_selection3_Button_clicked()
 {
     DbManager db(DB_PATH);
-    if(db.checkLevels(3)){
+    if(db.remainingVolumeIsBiggerThanLargestFixedSize(3)){
         db.closeDB();
         productPageEndTimer->stop();
         idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
@@ -183,7 +189,7 @@ void page_select_product::on_selection3_Button_clicked()
 void page_select_product::on_selection4_Button_clicked()
 {
     DbManager db(DB_PATH);
-    if(db.checkLevels(4)){
+    if(db.remainingVolumeIsBiggerThanLargestFixedSize(4)){
         db.closeDB();
         productPageEndTimer->stop();
         idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);

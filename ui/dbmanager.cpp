@@ -12,6 +12,7 @@
 //***************************************
 
 #include "dbmanager.h"
+#include "df_util.h"  // lode added for settings
 
 DbManager::DbManager(const QString& path)
 {
@@ -20,22 +21,24 @@ DbManager::DbManager(const QString& path)
         m_db.close();
         m_db = QSqlDatabase();
         QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
+        qDebug() << "m_db was already open. Closed it first." << endl;
     }
 
     if (m_db.connectionName().isEmpty()){
         m_db = QSqlDatabase::addDatabase("QSQLITE");
         m_db.setDatabaseName(path);
+        qDebug() << "m_db set connectionName" << endl;
     }else{
-//        qDebug() << "m_db connectionName is NOT EMPTY" << endl;
+        qDebug() << "m_db connectionName is NOT EMPTY" << endl;
     }
 
     if (!m_db.open())
     {
-//        qDebug() << "Error: connection with database failed";
+        qDebug() << "Error: connection with database failed";
     }
     else
     {
-//        qDebug() << "Database: connection ok";
+        qDebug() << "Database: connection ok";
     }
 }
 
@@ -149,32 +152,32 @@ double DbManager::getProductVolumePerTick(int slot){
     return vol_per_tick;
 }
 
-double DbManager::getProductVolume(int slot, char ml){
+double DbManager::getProductVolume(int slot, char size){
 
     QSqlQuery volume_query;
     double volume;
 
-    {
+    
 
-    if (ml == 'l'){
+    if (size == 'l'){
         volume_query.prepare("SELECT volume_large FROM products WHERE slot=:slot");
     }
-    else if (ml == 'm'){
+    else if (size == 'm'){
         volume_query.prepare("SELECT volume_medium FROM products WHERE slot=:slot");
     }
-    else if (ml == 's'){
+    else if (size == 's'){
         volume_query.prepare("SELECT volume_small FROM products WHERE slot=:slot");
     }
-    else if (ml == 'c'){
+    else if (size == 'c'){
         volume_query.prepare("SELECT volume_custom FROM products WHERE slot=:slot");
     }
     volume_query.bindValue(":slot", slot);
     volume_query.exec();
 
     while (volume_query.next()) {
-            volume = volume_query.value(0).toDouble();
-        }
+        volume = volume_query.value(0).toDouble();
     }
+    
 
     return volume;
 }
@@ -216,26 +219,68 @@ QString DbManager::getPaymentMethod(int slot){
     return payment_method;
 }
 
-bool DbManager::checkLevels(int slot){
+
+uint32_t DbManager::getNumberOfRows(QString table){
+    //qDebug() << "rows: " << getNumberOfRows("products") << endl;
+    QString qry = "SELECT COUNT(*) FROM ";
+    qry.append(table);
+
+    QSqlQuery query;
+    uint32_t row_count = 0;
+
+    query.exec(qry);
+
+    if(query.first()){
+        row_count = query.value(0).toInt();
+    }
+    return row_count;
+}
+
+
+bool DbManager::remainingVolumeIsBiggerThanLargestFixedSize(int slot){
     QSqlQuery level_query;
     double level;
+    
+#ifdef USE_OLD_DATABASE
+    level_query.prepare("SELECT remaining_ml FROM products where slot=:slot");
 
-    {
+#else
     level_query.prepare("SELECT volume_remaining FROM products where slot=:slot");
+#endif 
+
     level_query.bindValue(":slot", slot);
     level_query.exec();
+    
+    if( !level_query.exec() )
+    {
+        qDebug() << "ERROR: SQL query not successful: " << level_query.lastError() << endl;
+        return false;
+    }
 
-    while (level_query.next()) {
-            level = level_query.value(0).toDouble();
-            if (level > getProductVolume(slot, 'l')){
-                return true;
-            }
-            else{
-                return false;
-            }
+    if(level_query.first()){
+        // takes first row
+        qDebug() << "aeijfaijf" << level_query.value(0) << endl;
+    }
+
+CHECK IF things still work if first is skipped....
+    while (level_qu              ery.next()) {
+
+        level = level_query.value(0).toDouble();
+
+        qDebug() << level << "level"<< endl;
+
+        if (level > getProductVolume(slot, 'l'))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
+
 }
+
 
 bool DbManager::refill(int slot){
     QSqlQuery refill_query;
@@ -441,17 +486,17 @@ int DbManager::getPWM(int slot){
     QSqlQuery pwm_query;
     double pwm;
 
-    {
+    
     pwm_query.prepare("SELECT dispense_speed FROM products WHERE slot=:slot");
     pwm_query.bindValue(":slot", slot);
     pwm_query.exec();
 
     while (pwm_query.next()) {
-            pwm = pwm_query.value(0).toInt();
-
-        }
-
+        pwm = pwm_query.value(0).toInt();
+        qDebug() << "pwm" << slot << pwm << endl;
     }
+
+    
     return pwm;
 }
 

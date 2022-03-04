@@ -1,5 +1,6 @@
 #include "drinkorder.h"
 #include "page_idle.h"
+#include "df_util.h" // lode added for settings
 
 // Ctor
 DrinkOrder::DrinkOrder()

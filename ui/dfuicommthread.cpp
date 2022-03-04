@@ -1,4 +1,5 @@
 #include "dfuicommthread.h"
+#include "df_util.h" // lode added for settings
 
 DfUiCommThread::DfUiCommThread(qintptr ID, QObject *parent) :
     QThread(parent)

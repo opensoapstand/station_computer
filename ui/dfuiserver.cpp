@@ -1,6 +1,6 @@
 #include "dfuiserver.h"
 #include "dfuicommthread.h"
-
+#include "df_util.h" // lode added for settings
 DfUiServer::DfUiServer(QObject *parent) :
     QTcpServer(parent)
 {

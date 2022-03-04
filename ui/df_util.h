@@ -8,9 +8,12 @@
 
 // TODO: Refactor to fit with dfuicommthread
 #define USE_OLD_DATABASE
+#define START_FSM_FROM_UI //enabled by default
 
 
 #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
+//#define DB_PATH "/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db"
+
 #define DB_PATH_CLICKS "/release/db/sqlite/clicks.db"
 #define DB_PATH_TEMPERATURE "/release/db/sqlite/temperature.db"
 

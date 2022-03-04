@@ -156,13 +156,13 @@ void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
 }
 
 // Enum search for option slot
-void DrinkOrder::setDrinkOption(DF_QT_OPTIONS sizeOption) {
+void DrinkOrder::setDrinkOption(DF_QT_OPTIONS slot) {
    // qInfo() << "Current Option" << getOption() << endl;
 
 
-    if(sizeOption >= OPTION_SLOT && sizeOption <= DRINK_SIZE_OPTIONS)
+    if(slot >= OPTION_SLOT && slot <= DRINK_SIZE_OPTIONS)
     {
-        switch (sizeOption)
+        switch (slot)
         {
         case(OPTION_SLOT_1):
             changeOption(OPTION_SLOT_1);
@@ -192,11 +192,12 @@ void DrinkOrder::setDrinkOption(DF_QT_OPTIONS sizeOption) {
 //            changeOption(OPTION_SLOT_9);
             break;
         default:
-            setSize(OPTION_SLOT);
+            //setSize(OPTION_SLOT);
+             qInfo() << "BAD OPTION" << slot << endl;
             break;
         }
     } else {
-        qInfo() << "OUT OF OPTION RANGE!" << sizeOption << endl;
+        qInfo() << "OUT OF OPTION RANGE!" << slot << endl;
     }
 }
 

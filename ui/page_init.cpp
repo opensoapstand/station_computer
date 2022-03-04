@@ -64,7 +64,12 @@ void page_init::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 //    qDebug() << "Start init Timers" << endl;
     initIdleTimer->start(1000);
+#ifdef START_FSM_FROM_UI
+    start_controller = true;
+#else
     start_controller = false;
+#endif
+
     if (start_controller){
         system("DISPLAY=:0 xterm -hold  /release/fsm/controller &");
         _initIdleTimeoutSec = 20;

@@ -37,7 +37,7 @@ stateInit::stateInit(messageMediator *message)
 // DTOR
 stateInit::~stateInit()
 {
-    //delete stuff
+    // delete stuff
 }
 
 // Overload for Debugger output
@@ -48,7 +48,7 @@ string stateInit::toString()
 
 /*
  * Initialize FSM State
-*/
+ */
 DF_ERROR stateInit::onEntry()
 {
     m_state_requested = STATE_INIT;
@@ -122,7 +122,7 @@ DF_ERROR stateInit::dispenserSetup()
 } // End of dispenserSetup()
 
 // This function (called in SetDrinks) converts the data that is in the product database to variables,
-//which are then passed to the SetDrink function to create product objects for each product.
+// which are then passed to the SetDrink function to create product objects for each product.
 static int db_sql_product_callback(void *data, int argc, char **argv, char **azColName)
 {
     // callback is called for every record.
@@ -166,7 +166,7 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
     debugOutput::sendMessage("-------------------Set product values from database:", MSG_INFO);
     for (i = 0; i < argc; i++)
     {
-        //printf("%s = %s\n", azColName[i], argv[i]);
+        // printf("%s = %s\n", azColName[i], argv[i]);
         std::string colname = azColName[i];
 
         char *value = argv[i];
@@ -180,49 +180,63 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
 
         debugOutput::sendMessage("colname,value :" + colname + "," + value, MSG_INFO); //+ std::string to_string(colname)
 #ifdef USE_OLD_DATABASE
-      if (colname == "slot"){
-          slot = atoi(argv[i]);
-      }
-      else if (colname == "name"){
-          name = argv[i];
-      }
-      else if (colname == "name_receipt"){
-        name_receipt = argv[i];
-      }
-      else if (colname == "volume_dispensed"){
-          volume_dispensed = atof(argv[i]);
-      }
-      else if (colname == "volume_target_l"){
-          volume_large = atof(argv[i]);
-      }
-      else if (colname == "volume_target_s"){
-          volume_small = atof(argv[i]);
-      }
-      else if (colname == "calibration_const"){
-          calibration_const = atof(argv[i]);
-      }
-      else if (colname == "price_l"){
-          price_large = atof(argv[i]);
-      }
-      else if (colname == "price_s"){
-          price_small = atof(argv[i]);
-      }
-      else if (colname == "is_still"){
-          is_still = atoi(argv[i]);
-      }
-      else if (colname == "volume_per_tick"){
-          volume_per_tick = atof(argv[i]);
-      }
-      else if (colname == "PLU_l"){
-          plu_large = argv[i];
-      }
-      else if (colname == "PLU_s"){
-          plu_small = argv[i];
-      }
-      else if (colname == "payment"){
-          paymentMethod = argv[i];
-      }
-         else
+        if (colname == "slot")
+        {
+            slot = atoi(argv[i]);
+        }
+        else if (colname == "name")
+        {
+            name = argv[i];
+        }
+        else if (colname == "name_receipt")
+        {
+            name_receipt = argv[i];
+        }
+        else if (colname == "volume_dispensed")
+        {
+            volume_dispensed = atof(argv[i]);
+        }
+        else if (colname == "volume_target_l")
+        {
+            volume_large = atof(argv[i]);
+        }
+        else if (colname == "volume_target_s")
+        {
+            volume_small = atof(argv[i]);
+        }
+        else if (colname == "calibration_const")
+        {
+            calibration_const = atof(argv[i]);
+        }
+        else if (colname == "price_l")
+        {
+            price_large = atof(argv[i]);
+        }
+        else if (colname == "price_s")
+        {
+            price_small = atof(argv[i]);
+        }
+        else if (colname == "is_still")
+        {
+            is_still = atoi(argv[i]);
+        }
+        else if (colname == "volume_per_tick")
+        {
+            volume_per_tick = atof(argv[i]);
+        }
+        else if (colname == "PLU_l")
+        {
+            plu_large = argv[i];
+        }
+        else if (colname == "PLU_s")
+        {
+            plu_small = argv[i];
+        }
+        else if (colname == "payment")
+        {
+            paymentMethod = argv[i];
+        }
+        else
         {
             debugOutput::sendMessage("unprocessed colname: " + colname, MSG_INFO); //+ std::string to_string(colname)
         }
@@ -322,19 +336,7 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
             debugOutput::sendMessage("unprocessed colname: " + colname, MSG_INFO); //+ std::string to_string(colname)
         }
 
-
 #endif
-
-
-
-
-
-
-
-
-
-
-
     }
 
     g_productDispensers[slot - 1].setSlot(slot);

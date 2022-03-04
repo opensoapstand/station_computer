@@ -86,11 +86,11 @@ void page_select_product::showEvent(QShowEvent *event)
     productPageEndTimer->start(1000);
     _productPageTimeoutSec = 15;
 
-    qDebug() << "start s---- ======= "<< endl;
-    qDebug() << db.remainingVolumeIsBiggerThanLargestFixedSize(1) << "check levels" <<endl;
+    // qDebug() << "start s---- ======= "<< endl;
+    // qDebug() << db.remainingVolumeIsBiggerThanLargestFixedSize(1) << "check levels" <<endl;
     
-    qDebug() << db.getPWM(1) << endl;
-    qDebug() << "tetseitsejt ======= "<< endl;
+    // qDebug() << db.getPWM(1) << endl;
+    // qDebug() << "tetseitsejt ======= "<< endl;
 
     if (!db.remainingVolumeIsBiggerThanLargestFixedSize(1)){
         // Change p1 to Sold Out

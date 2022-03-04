@@ -23,7 +23,7 @@ void df_util::send_to_FSM()
     if(tcpSocket->waitForConnected(3000)){
           tcpSocket->flush();
     } else {
-//        qDebug() << "Failed Connection" << endl;
+        qDebug() << "ERROR: Failed Connection (Restarting the machine has worked in the past)" << endl;
     }
 
     switch (m_fsmMsg) {

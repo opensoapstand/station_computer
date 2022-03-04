@@ -516,8 +516,8 @@ DF_ERROR stateDispenseEnd::print_receipt()
 
     print_text(name_receipt + "\nPrice: $" + receipt_cost + " \nVolume: " + receipt_volume_formatted  + "\nTime: " + now);
     
-    if (plu.size() != 13){
-        // EAN13 codes need to be 13 digits, or else no barcode will be printed.
+    if (plu.size() != 13 && plu.size() != 12){
+        // EAN13 codes need to be 13 digits, or else no barcode will be printed. If 12 dgits are provided, the last digit (checksum?!) is automatically generated
         debugOutput::sendMessage("ERROR: bar code invalid (" + plu + "). EAN13, Should be 13 digits" + to_string(plu.size()), MSG_INFO);
         print_text( "\nPLU: " + plu + " (No barcode available)");
     }else{

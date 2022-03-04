@@ -801,6 +801,9 @@ void page_maintenance_dispenser::updateValues(){
     }else if(target_l){
         db.updateTargetVolume_l(checkOption, text_entered.toDouble());
         ui->target_volume_l->setText(QString::number(db.getProductVolume(checkOption, 'l')) + " " +  db.getUnits(checkOption));
+        
+
+        
     }else if(vol_per_tick){
         db.updateVolumePerTick(checkOption, text_entered.toDouble());
         ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(checkOption)) + " " +  db.getUnits(checkOption));

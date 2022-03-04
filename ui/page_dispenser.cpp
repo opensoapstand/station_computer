@@ -103,6 +103,7 @@ bool page_dispenser::sendToUX410()
     int waitForAck = 0;
     while (waitForAck < 3){
         cout << "Wait for ACK counter: " << waitForAck << endl;
+        qDebug()<<"Wait for ACK counter: " <<  endl;
         com.sendPacket(pktToSend, uint(pktToSend.size()));
         std::cout<< "sendtoUX410 Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
 

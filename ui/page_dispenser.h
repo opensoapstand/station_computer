@@ -50,18 +50,22 @@ public:
     void PleaseResetTimerSlot(void);
     void updateVolumeDisplayed(double dispensed);
     void volumeDispensedLabel(QLabel* label);
-    void targetHitDisplay();
+    void fsmReceiveTargetVolumeReached();
     double getTotalDispensed();
+    void force_finish_dispensing();
+
 
 public slots:
 
 
 private slots:
     // **** Navigation ****
-    void on_finish_Button_clicked();
+    void fsmSendStartDispensing();
+    void fsmSendStopDispensing();
    // void onDispenseTick();
     void onDispenseIdleTick();
     void onRinseTimerTick();
+    void dispensing_end_admin();
 
 
 private:

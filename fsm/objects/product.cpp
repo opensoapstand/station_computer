@@ -283,6 +283,7 @@ bool product::isDispenseTargetVolumeReached()
 {
     bool bRet = false;
 
+
     if (m_nVolumeTarget <= m_nVolumeDispensed)
     {
         // cout << "Target HIT!" << endl;
@@ -312,6 +313,17 @@ void product::productVolumeInfo()
 
 double product::getTargetVolume(char size)
 {
+#ifdef USE_OLD_DATABASE
+  if (size == 's')
+    {
+        return m_nVolumeTarget_s;
+    }
+    else
+    {
+        return m_nVolumeTarget_l;
+    }
+
+#else
     if (size == 's')
     {
         return m_nVolumeTarget_s;
@@ -326,10 +338,24 @@ double product::getTargetVolume(char size)
     }
     else if (size == 't')
         return m_nVolumeTarget_c_max;
+
+#endif
 }
 
 double product::getPrice(char size)
 {
+#ifdef USE_OLD_DATABASE
+  if (size == 's')
+    {
+        return m_price_small;
+    }
+    else
+    {
+        return m_price_large;
+    }
+
+#else
+
     if (size == 's')
     {
         return m_price_small;
@@ -346,6 +372,7 @@ double product::getPrice(char size)
     {
         return m_price_custom_per_liter;
     }
+#endif
 }
 
 string product::getDisplayUnits(){
@@ -354,6 +381,17 @@ string product::getDisplayUnits(){
 
 string product::getPLU(char size)
 {
+    #ifdef USE_OLD_DATABASE
+  if (size == 's')
+    {
+        return m_nPLU_small;
+    }
+    else
+    {
+        return m_nPLU_large;
+    }
+
+#else
     if (size == 's')
     {
         return m_nPLU_small;
@@ -371,6 +409,7 @@ string product::getPLU(char size)
     {
         return m_nPLU_custom;
     }
+#endif
 }
 
 

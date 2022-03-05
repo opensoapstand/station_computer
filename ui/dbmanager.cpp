@@ -333,7 +333,7 @@ bool DbManager::refill(int slot){
     {
         refill_query.prepare(sql_res_disp);
         refill_query.bindValue(":slot", slot);
-        if(refill_query.exec(sql_res_disp)){
+        if(refill_query.exec()){
             QSqlQuery refill_date;
             refill_date.prepare(sql_set_time);
             refill_date.bindValue(":slot", slot);

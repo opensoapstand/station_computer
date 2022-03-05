@@ -21,8 +21,8 @@ using namespace std;
 
 typedef enum FSM_COMM {
     SEND_EMPTY = 0,
-    SEND_DRINK,
-    SEND_CLEAN,
+    SEND_DISPENSE_START,
+    SEND_DISPENSE_STOP, // used to be SEND_CLEAN
     SEND_PWM,
     SEND_ERROR,
 } FSM_COMM;

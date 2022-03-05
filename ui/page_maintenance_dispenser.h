@@ -44,7 +44,7 @@ public:
     ~page_maintenance_dispenser();
     void resizeEvent(QResizeEvent *event);
     void updateVolumeDisplayed(double dispensed);
-    void targetHitDisplay();
+    void fsmReceiveTargetVolumeReached();
 
 private slots:
     void on_backButton_clicked();

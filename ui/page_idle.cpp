@@ -76,7 +76,7 @@ void page_idle::on_nextPageButton_clicked()
     // qDebug() << "SEND LARGE FILL DEBUG TEST" << endl;
     // this->dfUtility->msg = "1dl;";
     // this->dfUtility->m_IsSendingFSM = true;
-    // this->dfUtility->m_fsmMsg = SEND_CLEAN;
+    // this->dfUtility->m_fsmMsg = SEND_DISPENSE_STOP;
     // this->dfUtility->send_to_FSM();
 
     p_pageSelectProduct->showFullScreen();

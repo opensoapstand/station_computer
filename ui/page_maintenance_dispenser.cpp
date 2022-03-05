@@ -182,7 +182,7 @@ void page_maintenance_dispenser::on_backButton_clicked(){
 
         this->idlePage->dfUtility->msg = command;
         idlePage->dfUtility->m_IsSendingFSM = true;
-        idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
+        idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_STOP;
         idlePage->dfUtility->send_to_FSM();
         idlePage->dfUtility->m_IsSendingFSM = false;
     }
@@ -264,7 +264,7 @@ void page_maintenance_dispenser::on_pumpButton_clicked(){
 
             this->idlePage->dfUtility->msg = command;
             idlePage->dfUtility->m_IsSendingFSM = true;
-            idlePage->dfUtility->m_fsmMsg = SEND_DRINK;
+            idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_START;
             idlePage->dfUtility->send_to_FSM();
             idlePage->dfUtility->m_IsSendingFSM = false;
 
@@ -279,7 +279,7 @@ void page_maintenance_dispenser::on_pumpButton_clicked(){
 
             this->idlePage->dfUtility->msg = command;
             idlePage->dfUtility->m_IsSendingFSM = true;
-            idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
+            idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_STOP;
             idlePage->dfUtility->send_to_FSM();
             idlePage->dfUtility->m_IsSendingFSM = false;
         }
@@ -300,7 +300,7 @@ void page_maintenance_dispenser::on_pumpButton_clicked(){
 
 //            this->idlePage->dfUtility->msg = command;
 //            idlePage->dfUtility->m_IsSendingFSM = true;
-//            idlePage->dfUtility->m_fsmMsg = SEND_DRINK;
+//            idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_START;
 //            idlePage->dfUtility->send_to_FSM();
 //            idlePage->dfUtility->m_IsSendingFSM = false;
 
@@ -316,7 +316,7 @@ void page_maintenance_dispenser::on_pumpButton_clicked(){
 
 //            this->idlePage->dfUtility->msg = command;
 //            idlePage->dfUtility->m_IsSendingFSM = true;
-//            idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
+//            idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_STOP;
 //            idlePage->dfUtility->send_to_FSM();
 //            idlePage->dfUtility->m_IsSendingFSM = false;
 //        }
@@ -334,7 +334,7 @@ void page_maintenance_dispenser::on_pumpButton_clicked(){
 
 //            this->idlePage->dfUtility->msg = command;
 //            idlePage->dfUtility->m_IsSendingFSM = true;
-//            idlePage->dfUtility->m_fsmMsg = SEND_DRINK;
+//            idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_START;
 //            idlePage->dfUtility->send_to_FSM();
 //            idlePage->dfUtility->m_IsSendingFSM = false;
 
@@ -350,7 +350,7 @@ void page_maintenance_dispenser::on_pumpButton_clicked(){
 
 //            this->idlePage->dfUtility->msg = command;
 //            idlePage->dfUtility->m_IsSendingFSM = true;
-//            idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
+//            idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_STOP;
 //            idlePage->dfUtility->send_to_FSM();
 //            idlePage->dfUtility->m_IsSendingFSM = false;
 //        }
@@ -439,7 +439,7 @@ void page_maintenance_dispenser::updateVolumeDisplayed(double dispensed){
 
 }
 
-void page_maintenance_dispenser::targetHitDisplay(){
+void page_maintenance_dispenser::fsmReceiveTargetVolumeReached(){
     ui->vol_dispensed_label->setText(ui->vol_dispensed_label->text() + " - TARGET HIT!");
 }
 
@@ -638,7 +638,7 @@ void page_maintenance_dispenser::onMaintainProductPageTimeoutTick(){
 
             this->idlePage->dfUtility->msg = command;
             idlePage->dfUtility->m_IsSendingFSM = true;
-            idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
+            idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_STOP;
             idlePage->dfUtility->send_to_FSM();
             idlePage->dfUtility->m_IsSendingFSM = false;
         }

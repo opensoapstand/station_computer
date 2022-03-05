@@ -42,7 +42,7 @@ public:
     void setPage(pagePayment* pagePayment, pagethankyou* pageThankYou, page_idle* pageIdle);
     ~page_error_wifi();
     void showEvent(QShowEvent *event);
-    void targetHitDisplay();
+    // void fsmReceiveTargetVolumeReached();
 
 public slots:
 
@@ -50,7 +50,7 @@ public slots:
 private slots:
     // **** Navigation ****
     void on_finish_Button_clicked();
-    void onDispenseIdleTick();
+    void onTimeOutTick();
 
 
 
@@ -63,16 +63,12 @@ private:
 
     // XXX: Remove when interrupts and flowsensors work.
 
-    QString _dispenseTimeLabel;
+    // QString _dispenseTimeLabel;
     //int _dispenseTimeoutSec;
-    QTimer *dispenseEndTimer;
+    // QTimer *dispenseEndTimer;
 
-    int _dispenseIdleTimeoutSec;
-    QTimer *dispenseIdleTimer;
-
-    QTimer* dispenseNextPageTimer;
-
-
+    int _goToIdlePageTimeoutSec;
+    QTimer *timeoutTimer;
 
     void stopDispenseTimer();
 

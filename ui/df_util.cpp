@@ -27,12 +27,12 @@ void df_util::send_to_FSM()
     }
 
     switch (m_fsmMsg) {
-    case SEND_DRINK:
+    case SEND_DISPENSE_START:
         msg.append("d");
         msg.append(";");
         break;
 
-    case SEND_CLEAN:
+    case SEND_DISPENSE_STOP:
         msg.append("f");
         msg.append(";");
         break;

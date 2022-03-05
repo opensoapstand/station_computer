@@ -64,27 +64,11 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->widget->hide();
     ui->filler->hide();
 
-    // FIXME: this is a hack for size changes...
-    QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
-
-    if(idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
-        command.append('s');
-
-    } else {
-        command.append('l');
-    }
-
-    volumeDispensed=0;
-
-    this->idlePage->dfUtility->msg = command;
-
-    // Networking
-    idlePage->dfUtility->m_IsSendingFSM = true;
     QWidget::showEvent(event);
-    idlePage->dfUtility->m_fsmMsg = SEND_DRINK;
 
-    idlePage->dfUtility->send_to_FSM();
-    idlePage->dfUtility->m_IsSendingFSM = false;
+    // FIXME: this is a hack for size changes...
+    fsmSendStartDispensing();
+    
     ui->finish_Button->setEnabled(false);
 
     if(nullptr == dispenseIdleTimer){
@@ -150,7 +134,7 @@ bool page_dispenser::waitForUX410()
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void page_dispenser::on_finish_Button_clicked()
+void page_dispenser::dispensing_end_admin()
 {
     DbManager db(DB_PATH);
 
@@ -183,6 +167,22 @@ void page_dispenser::on_finish_Button_clicked()
         }
     }
 
+    stopDispenseTimer();
+
+     db.closeDB();
+     thanksPage->showFullScreen();
+     this->hide();
+}
+
+
+
+void page_dispenser::force_finish_dispensing(){
+
+    fsmSendStopDispensing();
+    dispensing_end_admin();
+}
+
+void page_dispenser::fsmSendStartDispensing(){
     QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
 
     if(idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
@@ -192,19 +192,37 @@ void page_dispenser::on_finish_Button_clicked()
         command.append('l');
     }
 
-    stopDispenseTimer();
+    volumeDispensed=0;
+
+    this->idlePage->dfUtility->msg = command;
+
+    // Networking
+    idlePage->dfUtility->m_IsSendingFSM = true;
+    idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_START;
+    idlePage->dfUtility->send_to_FSM();
+    idlePage->dfUtility->m_IsSendingFSM = false;
+}
+
+void page_dispenser::fsmSendStopDispensing(){
+    QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
+
+    if(idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
+        command.append('s');
+
+    } else {
+        command.append('l');
+    }
+
 
     this->idlePage->dfUtility->msg = command;
     idlePage->dfUtility->m_IsSendingFSM = true;
-    idlePage->dfUtility->m_fsmMsg = SEND_CLEAN;
+    idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_STOP;
 
     // Send a Cleanse and TODO: helps FSM onExit...
     idlePage->dfUtility->send_to_FSM();
-
-     db.closeDB();
-     thanksPage->showFullScreen();
-     this->hide();
+    idlePage->dfUtility->m_IsSendingFSM = false;
 }
+
 
 void page_dispenser::onRinseTimerTick(){
 }
@@ -223,7 +241,8 @@ void page_dispenser::onDispenseIdleTick(){
     } else {
 //        qDebug() << "Timer Done!" << _dispenseIdleTimeoutSec << endl;
 //        dispenseIdleTimer->stop();
-        on_finish_Button_clicked();
+        qDebug() << "Dispensing timeout. End dispensing."  << endl;
+        force_finish_dispensing();
     }
 }
 
@@ -250,7 +269,8 @@ void page_dispenser::updateVolumeDisplayed(double dispensed){
     ui->finish_Button->setEnabled(true);
 }
 
-void page_dispenser::targetHitDisplay(){
+void page_dispenser::fsmReceiveTargetVolumeReached(){
     //this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ " ml - Target Hit!");
-    on_finish_Button_clicked();
+    qDebug() << "fsm message: Target volume reached."  << endl;
+    dispensing_end_admin();
 }

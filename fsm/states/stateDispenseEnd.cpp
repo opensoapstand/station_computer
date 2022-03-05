@@ -107,8 +107,16 @@ DF_ERROR stateDispenseEnd::onExit()
     {
         debugOutput::sendMessage("Printing receipt:", MSG_INFO);
         print_receipt();
-        debugOutput::sendMessage("Send db to cloud:", MSG_INFO);
-        sendDbToCloud();
+
+        #define ENABLE_TRANSACTION_TO_CLOUD
+        #ifdef ENABLE_TRANSACTION_TO_CLOUD
+
+        debugOutput::sendMessage("Send transaction to cloud:", MSG_INFO);
+        sendTransactionToCloud();
+        #else
+
+        debugOutput::sendMessage("NOT SENDING transaction to cloud:", MSG_INFO);
+        #endif
     }
     // }
     return e_ret;
@@ -133,7 +141,7 @@ size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
 
 // This function sends the transaction details to the cloud using libcurl, if it fails, it stores the data to be sent in the bufferCurl function
 // TODO: This will be replaced with an AWS IoT method!
-DF_ERROR stateDispenseEnd::sendDbToCloud()
+DF_ERROR stateDispenseEnd::sendTransactionToCloud()
 {
 
     std::string product = (productDispensers[pos].getProduct()->m_name);
@@ -176,25 +184,31 @@ DF_ERROR stateDispenseEnd::sendDbToCloud()
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, buffer);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 3000);
 
         res = curl_easy_perform(curl);
-
-        if (res != CURLE_OK)
+        if (res == CURLOPT_TIMEOUT_MS){
+            debugOutput::sendMessage("CURL timed out (3s). err: " + to_string(res) + " Will buffer!", MSG_INFO);
+            bufferCURL(curl_param);
+            curl_easy_cleanup(curl);
+        }else if (res != CURLE_OK)
         {
             //            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
             //            std::cout << "Curl didn't work, I need to buffer cURL" << endl;
+            debugOutput::sendMessage("CURL fail. err: " + to_string(res) + " Will buffer!", MSG_INFO);
             bufferCURL(curl_param);
             curl_easy_cleanup(curl);
         }
         else
         {
-            debugOutput::sendMessage("CURL SUCCESS!", MSG_INFO);
             if (readBuffer == "true")
             {
+                debugOutput::sendMessage("CURL succes.", MSG_INFO);
                 //                std::cout << "Curl worked!" << endl;
             }
             else
             {
+                debugOutput::sendMessage("CURL readbuffer fail.", MSG_INFO);
                 //                std::cout << "Curl didn't work, I need to buffer cURL" << endl;
                 bufferCURL(curl_param);
             }
@@ -211,13 +225,15 @@ void stateDispenseEnd::bufferCURL(std::string curl_params)
     time(&rawtime);
     timeinfo = localtime(&rawtime);
     strftime(filetime, 50, "%F %T", timeinfo);
-    std::string filelocation = "/home/df-admin/curlBuffer/";
+    // std::string filelocation = "/home/df-admin/curlBuffer/";
+    std::string filelocation = "/home/df-admin/";
     std::string filetype = ".txt";
     std::string filename = filelocation + filetime + filetype;
     std::ofstream out;
     out.open(filename);
     if (!out.is_open())
     {
+        debugOutput::sendMessage("Cannot open output file at " + filename + " content: " + curl_params, MSG_INFO);
         //        std::cout << "Cannot open output file!";
     }
     else
@@ -367,13 +383,17 @@ DF_ERROR stateDispenseEnd::updateDB()
 
     if (rc != SQLITE_OK)
     {
+        
         // fprintf(stderr, "SQL error: %s\n", zErrMsg);
-        debugOutput::sendMessage("ERROR: SQL : " + sql1, MSG_INFO);
+
+         // INCORPORATE: zErrMsg !!!
+        debugOutput::sendMessage("ERROR: SQL : (err number " + to_string(rc) + ") " + sql1 + MSG_INFO);
         sqlite3_free(zErrMsg);
     }
     else
     {
-        //        fprintf(stdout, "Transaction Command Executed successfully\n");
+        debugOutput::sendMessage("SUCCES: SQL : (" + to_string(rc) + ") " + sql1, MSG_INFO);
+            //  fprintf(stdout, "Transaction Command Executed successfully\n");
     }
 
     /* Create SQL statement for total product dispensed */

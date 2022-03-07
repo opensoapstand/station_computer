@@ -35,10 +35,123 @@
 #include <QGuiApplication>
 #include <QQmlEngine>
 
+static QPointer<QFile> log_file = nullptr;
+
+void myMessageHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg)
+{
+    
+// https://www.qtcentre.org/threads/19534-redirect-qDebug%28%29-to-file
+	// QString txt;
+	// switch (type) {
+	// case QtDebugMsg:
+	// 	txt = QString("Debug: %1").arg(msg);
+	// 	break;
+	// case QtWarningMsg:
+	// 	txt = QString("Warning: %1").arg(msg);
+	// break;
+	// case QtCriticalMsg:
+	// 	txt = QString("Critical: %1").arg(msg);
+	// break;
+	// case QtFatalMsg:
+	// 	txt = QString("Fatal: %1").arg(msg);
+	// 	abort();
+	// }
+    
+	// QFile outFile("../log/loglodetest.txt");
+
+    // log_file = &outFile;
+
+    // if (!log_file->open(QFile::WriteOnly | QFile::Text | QFile::Append))
+    // {
+    //     qInstallMessageHandler(nullptr);
+    //     qDebug() << "Couldn't log to file!";
+    // }
+
+
+
+	// // outFile.open(QIODevice::WriteOnly | QIODevice::Append);
+	// outFile.open(QIODevice::Append);
+	// QTextStream ts(&outFile);
+	// ts << txt << endl;
+
+    // outFile.close();
+
+    Q_UNUSED(type)
+    Q_UNUSED(context)
+
+    printf("%s\n", qPrintable(msg));
+    fflush(stdout);
+
+    if (log_file)
+    {
+        log_file->write(msg.toLatin1());
+        log_file->write("\n");
+        log_file->flush();
+    }
+
+}
+
+
+// void myMessageHandler(QtMsgType type, const char *msg)
+// {
+    
+// // https://www.qtcentre.org/threads/19534-redirect-qDebug%28%29-to-file
+// 	QString txt;
+// 	switch (type) {
+// 	case QtDebugMsg:
+// 		txt = QString("Debug: %1").arg(msg);
+// 		break;
+// 	case QtWarningMsg:
+// 		txt = QString("Warning: %1").arg(msg);
+// 	break;
+// 	case QtCriticalMsg:
+// 		txt = QString("Critical: %1").arg(msg);
+// 	break;
+// 	case QtFatalMsg:
+// 		txt = QString("Fatal: %1").arg(msg);
+// 		abort();
+// 	}
+// 	QFile outFile("log");
+// 	outFile.open(QIODevice::WriteOnly | QIODevice::Append);
+// 	QTextStream ts(&outFile);
+// 	ts << txt << endl;
+// }
+
+// void messageHandler(QtMsgType type, const QMessageLogContext& context, const QString& message)
+// {
+//     //https://stackoverflow.com/questions/4954140/how-to-redirect-qdebug-qwarning-qcritical-etc-output
+//     static QMutex mutex;
+//     QMutexLocker lock(&mutex);
+
+//     LOGFILE_LOCATION = "testlode"
+//     static QFile logFile(LOGFILE_LOCATION);
+//     static bool logFileIsOpen = logFile.open(QIODevice::Append | QIODevice::Text);
+
+//     std::cerr << qPrintable(qFormatLogMessage(type, context, message)) << std::endl;
+
+//     if (logFileIsOpen) {
+//         logFile.write(qFormatLogMessage(type, context, message).toUtf8() + '\n');
+//         logFile.flush();
+//     }
+// }
+
+
 int main(int argc, char *argv[])
 {
     // set up logging
-    // qInstallMessageHandler(myMessageOutput); // Install the handler
+    qInstallMessageHandler(myMessageHandler); // Install the handler
+
+    // QFile file("../log/log.txt");
+    QFile file("/home/df-admin/drinkfill/log/lodelog.txt");
+
+    log_file = &file;
+
+    if (!log_file->open(QFile::WriteOnly | QFile::Text | QFile::Append))
+    {
+        qInstallMessageHandler(nullptr);
+        qDebug() << "Couldn't log to file!";
+    }
+
 
     // Fire up QT GUI Thread
     QApplication mainApp(argc, argv);
@@ -89,22 +202,4 @@ int main(int argc, char *argv[])
 
     return mainApp.exec();
 }
-
-// void messageHandler(QtMsgType type, const QMessageLogContext& context, const QString& message)
-// {
-//     //https://stackoverflow.com/questions/4954140/how-to-redirect-qdebug-qwarning-qcritical-etc-output
-//     static QMutex mutex;
-//     QMutexLocker lock(&mutex);
-
-//     LOGFILE_LOCATION = "testlode"
-//     static QFile logFile(LOGFILE_LOCATION);
-//     static bool logFileIsOpen = logFile.open(QIODevice::Append | QIODevice::Text);
-
-//     std::cerr << qPrintable(qFormatLogMessage(type, context, message)) << std::endl;
-
-//     if (logFileIsOpen) {
-//         logFile.write(qFormatLogMessage(type, context, message).toUtf8() + '\n');
-//         logFile.flush();
-//     }
-// }
 

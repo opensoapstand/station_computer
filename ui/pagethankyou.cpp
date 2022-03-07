@@ -20,7 +20,7 @@ pagethankyou::pagethankyou(QWidget *parent) :
     ui(new Ui::pagethankyou)
 {
     ui->setupUi(this);
-    QPixmap background("/release/references/general/7_background_thank_you.png");
+    QPixmap background("/release/references/7_background_thank_you.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);

@@ -103,12 +103,15 @@ public:
         string m_paymentMethod;
         // int m_PWM;
         double m_nVolumePerTick;
+        // DF_ERROR reloadProductFromDB();
 
         time_t rawtime;
         struct tm *timeinfo;
 
         char m_nStartTime[50];
 
+        void setSlot(int slot);
+        int getSlot();
 private:
         // TODO: Determine more data to modify per transaction...
         int m_nSlot;
@@ -122,7 +125,6 @@ private:
         double m_nTickCount;
         bool valueChange;
 
-        void setSlot(int slot);
         void setProductName(string productName);
         double getVolPerTick();
 

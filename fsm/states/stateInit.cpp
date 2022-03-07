@@ -339,7 +339,7 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
 #endif
     }
 
-    g_productDispensers[slot - 1].setSlot(slot);
+    g_productDispensers[slot-1].setSlot(slot);
     g_productDispensers[slot - 1].setProduct(
         new product(slot, name, calibration_const, volume_per_tick, dispense_speed_pwm,
                     volume_small, volume_medium, volume_large, volume_target_custom_min, volume_target_custom_max,

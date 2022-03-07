@@ -37,6 +37,9 @@
 
 int main(int argc, char *argv[])
 {
+    // set up logging
+    // qInstallMessageHandler(myMessageOutput); // Install the handler
+
     // Fire up QT GUI Thread
     QApplication mainApp(argc, argv);
 
@@ -86,4 +89,22 @@ int main(int argc, char *argv[])
 
     return mainApp.exec();
 }
+
+// void messageHandler(QtMsgType type, const QMessageLogContext& context, const QString& message)
+// {
+//     //https://stackoverflow.com/questions/4954140/how-to-redirect-qdebug-qwarning-qcritical-etc-output
+//     static QMutex mutex;
+//     QMutexLocker lock(&mutex);
+
+//     LOGFILE_LOCATION = "testlode"
+//     static QFile logFile(LOGFILE_LOCATION);
+//     static bool logFileIsOpen = logFile.open(QIODevice::Append | QIODevice::Text);
+
+//     std::cerr << qPrintable(qFormatLogMessage(type, context, message)) << std::endl;
+
+//     if (logFileIsOpen) {
+//         logFile.write(qFormatLogMessage(type, context, message).toUtf8() + '\n');
+//         logFile.flush();
+//     }
+// }
 

@@ -43,11 +43,11 @@ pageProduct::pageProduct(QWidget *parent) :
     QString bitmap_location;
 
     if(checkOption > 0 && checkOption <= 6) {
-        bitmap_location.append("/release/references/general/4_pay_select_page_l_");
+        bitmap_location.append("/release/references/4_pay_select_page_l_");
         bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
         bitmap_location.append(".png");
     } else {
-        bitmap_location = "/release/references/general/4_pay_select_page_l_1.png";
+        bitmap_location = "/release/references/4_pay_select_page_l_1.png";
     }
 
     qDebug() << bitmap_location << endl;
@@ -215,11 +215,11 @@ void pageProduct::resizeEvent(QResizeEvent *event){
     QString bitmap_location;
 
     if(checkOption > 0 && checkOption <= 9) {
-        bitmap_location.append("/release/references/general/4_pay_select_page_l_");
+        bitmap_location.append("/release/references/4_pay_select_page_l_");
         bitmap_location.append(QString::number(checkOption));
         bitmap_location.append(".png");
     } else {
-        bitmap_location = "/release/references/general/4_pay_select_page_l_1.png";
+        bitmap_location = "/release/references/4_pay_select_page_l_1.png";
     }
 
     QPixmap background(bitmap_location);
@@ -371,11 +371,11 @@ void pageProduct::on_orderSmall_Button_clicked()
     int checkOption = idlePage->userDrinkOrder->getOption();
 
     if(checkOption > 0 && checkOption <= 9) {
-        bitmap_location.append("/release/references/general/4_pay_select_page_s_");
+        bitmap_location.append("/release/references/4_pay_select_page_s_");
         bitmap_location.append(QString::number(checkOption));
         bitmap_location.append(".png");
     } else {
-        bitmap_location = "/release/references/general/4_pay_select_page_s_1.png";
+        bitmap_location = "/release/references/4_pay_select_page_s_1.png";
     }
 
 
@@ -420,11 +420,11 @@ void pageProduct::on_orderBig_Button_clicked()
     int checkOption = idlePage->userDrinkOrder->getOption();
 
     if(checkOption > 0 && checkOption <= 9) {
-        bitmap_location.append("/release/references/general/4_pay_select_page_l_");
+        bitmap_location.append("/release/references/4_pay_select_page_l_");
         bitmap_location.append(QString::number(checkOption));
         bitmap_location.append(".png");
     } else {
-        bitmap_location = "/release/references/general/4_pay_select_page_l_1.png";
+        bitmap_location = "/release/references/4_pay_select_page_l_1.png";
 
     }
     

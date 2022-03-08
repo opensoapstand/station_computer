@@ -256,6 +256,12 @@ void page_maintenance_dispenser::on_pumpButton_clicked(){
     qDebug() << "call db from maintenance on pump button c licked" << endl;
     DbManager db(DB_PATH);
 
+
+
+    this->units_active_pumped_product = db.getUnits(this->idlePage->userDrinkOrder->getOption());
+
+
+
     int checkOption = idlePage->userDrinkOrder->getOption();
     if(checkOption > 0 && checkOption <= 9) {
         QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
@@ -431,14 +437,21 @@ void page_maintenance_dispenser::on_vol_per_tickButton_clicked(){
 }
 
 void page_maintenance_dispenser::updateVolumeDisplayed(double dispensed, bool isFull){
-    DbManager db(DB_PATH);
-
     double vol_dispensed = dispensed;
-    ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
-
+    
+    ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) +this->units_active_pumped_product);
     ui->ticksLabel->setText("Ticks: " + QString::number(vol_dispensed/ticks));
 
-    db.closeDB();
+    
+    // qDebug() << "ahoyy3" ;
+    // DbManager db(DB_PATH);
+
+    // double vol_dispensed = dispensed;
+    // ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
+
+    // ui->ticksLabel->setText("Ticks: " + QString::number(vol_dispensed/ticks));
+
+    // db.closeDB();
 
 }
 
@@ -500,6 +513,7 @@ void page_maintenance_dispenser::on_refillButton_clicked(){
 }
 
 void page_maintenance_dispenser::on_soldOutButton_clicked(){
+    qDebug() << "ahoyy4" ;
     DbManager db(DB_PATH);
 //    qDebug() << "Sold Out button clicked" << endl;
 
@@ -635,6 +649,7 @@ void page_maintenance_dispenser::onMaintainProductPageTimeoutTick(){
 //        qDebug() << "Maintain Product Timer Done!" << _maintainProductPageTimeoutSec << endl;
 
         //Update Click DB
+        qDebug() << "ahoyy5" ;
         DbManager db(DB_PATH);
 //        db.addPageClick("MAINTAIN PRODUCT PAGE TIME OUT");
 
@@ -793,6 +808,7 @@ void page_maintenance_dispenser::on_buttonCancel_clicked(){
 }
 
 void page_maintenance_dispenser::updateValues(){
+    qDebug() << "ahoyy6" ;
     DbManager db(DB_PATH);
     int checkOption = idlePage->userDrinkOrder->getOption();
 
@@ -878,7 +894,7 @@ size_t WriteCallback3(char* contents, size_t size, size_t nmemb, void *userp){
 }
 
 void page_maintenance_dispenser::curler(){
-
+    qDebug() << "ahoyy7" ;
     DbManager db(DB_PATH);
     int checkOption = idlePage->userDrinkOrder->getOption();
 

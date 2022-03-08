@@ -6,6 +6,7 @@
 DrinkOrder::DrinkOrder()
 {
     selectedDrink = new DrinkSelection;
+    qDebug() << "ahoyy2" ;
     DbManager db(DB_PATH);
 
     DRINK1_SIZE_ML_L = db.getProductVolume(1, 'l');

@@ -9,6 +9,7 @@ public:
     DbManager(const QString& path);
     ~DbManager();
     void closeDB();
+    bool isDatabaseLocked(const QSqlDatabase & db);
     bool addPageClick(const QString& page);
     QString getProductName(int slot);
     double getProductPrice(int slot, char ml);

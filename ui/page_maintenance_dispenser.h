@@ -106,6 +106,8 @@ private:
     bool full;
     bool pwm;
     bool buffer;
+
+    QString units_active_pumped_product;
 //    bool plu_s;
 //    bool plu_l;
 

@@ -163,7 +163,7 @@ void pageProduct::on_pagePayment_Button_clicked()
 
     ui->mainPage_Button->setEnabled(false);
     ui->previousPage_Button->setEnabled(false);
-
+    qDebug() << "ahoyy11" ;
     DbManager db(DB_PATH);
 
     this->stopSelectTimers();
@@ -199,6 +199,7 @@ void pageProduct::on_pagePayment_Button_clicked()
 
 void pageProduct::resizeEvent(QResizeEvent *event){
     int checkOption = idlePage->userDrinkOrder->getOption();
+    qDebug() << "ahoyy1" ;
     DbManager db(DB_PATH);
 
     ui->mainPage_Button->setEnabled(true);
@@ -276,6 +277,7 @@ void pageProduct::resizeEvent(QResizeEvent *event){
 
 void pageProduct::showEvent(QShowEvent *event){
    int checkOption = idlePage->userDrinkOrder->getOption();
+   qDebug() << "ahoyy12" ;
     DbManager db(DB_PATH);
 
     ui->mainPage_Button->setEnabled(true);
@@ -389,7 +391,7 @@ void pageProduct::on_orderSmall_Button_clicked()
     _selectIdleTimeoutSec = 140;
 
     char drinkSize = 's';
-
+    qDebug() << "ahoyy13" ;
     DbManager db(DB_PATH);
     
     
@@ -436,7 +438,7 @@ void pageProduct::on_orderBig_Button_clicked()
 
     idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
     _selectIdleTimeoutSec = 140;
-
+    qDebug() << "ahoyy14" ;
     DbManager db(DB_PATH);
 //    db.addPageClick("Large Drink Size Selected");
 

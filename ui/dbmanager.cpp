@@ -14,10 +14,15 @@
 #include "dbmanager.h"
 #include "df_util.h"  // lode added for settings
 
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 DbManager::DbManager(const QString& path)
 {
 //    qDebug() << "CREATING DB OBJECT" << endl;
     if (m_db.isOpen()){
+        qDebug() << "m_db is already open. Try to close." << endl;
         m_db.close();
         m_db = QSqlDatabase();
         QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
@@ -25,9 +30,10 @@ DbManager::DbManager(const QString& path)
     }
 
     if (m_db.connectionName().isEmpty()){
+        qDebug() << "m_db set connectionNammmmmmmmmmmme" << endl;
         m_db = QSqlDatabase::addDatabase("QSQLITE");
         m_db.setDatabaseName(path);
-        qDebug() << "m_db set connectionName" << endl;
+        qDebug() << "m_db set connectionName";
     }else{
         qDebug() << "m_db connectionName is NOT EMPTY" << endl;
     }
@@ -40,6 +46,12 @@ DbManager::DbManager(const QString& path)
     {
         qDebug() << "Database: connection ok";
     }
+
+    while (isDatabaseLocked(m_db)){
+        qDebug() << "Database is locked. Wait until unlocked";
+        usleep(100000);
+    }
+
 }
 
 // DTOR
@@ -55,6 +67,18 @@ DbManager::~DbManager(){
 bool DbManager::addPageClick(const QString& page){
 
     return true;
+}
+
+bool DbManager::isDatabaseLocked(const QSqlDatabase & db)
+{
+    // https://stackoverflow.com/questions/57744538/determine-whether-sqlite-database-is-locked
+    QSqlQuery q(db);
+    if(q.exec("BEGIN EXCLUSIVE")) //tries to acquire the lock
+    {
+        q.exec("COMMIT"); //releases the lock immediately
+        return false; //db is not locked
+    }
+    return true; //failed to acquire the lock: returns true (db is locked)
 }
 
 void DbManager::closeDB(){

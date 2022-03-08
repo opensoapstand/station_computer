@@ -8,7 +8,7 @@
 
 // TODO: Refactor to fit with dfuicommthread
 #define USE_OLD_DATABASE
-#define START_FSM_FROM_UI //enabled by default (start controller from ui)
+//#define START_FSM_FROM_UI //enabled by default (start controller from ui)
 
 
 #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"

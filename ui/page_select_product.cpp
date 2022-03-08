@@ -26,6 +26,7 @@ page_select_product::page_select_product(QWidget *parent) :
     ui(new Ui::page_select_product)
 {
     ui->setupUi(this);
+    // qDebug()<< "Constructor callk"<< endl;
     QPixmap background("/release/references/2_background_products.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;

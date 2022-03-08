@@ -56,7 +56,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 //    maintainProductPageEndTimer->start(1000);
     _maintainProductPageTimeoutSec = 40;
 
-    if(db.getRemaining(checkOption)>0){
+    if(db.getVolumeRemaining(checkOption)>0){
         ui->soldOutButton->setText("Mark as Sold Out");
     }else{
         ui->soldOutButton->setText("Un-Mark as Sold Out");
@@ -72,7 +72,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(checkOption)) + " " + db.getUnits(checkOption));
     ui->full_volume->setText(QString::number(db.getFullProduct(checkOption)) + " " + db.getUnits(checkOption));
     ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(checkOption)) + " " + db.getUnits(checkOption));
-    ui->remainingLabel->setText(QString::number(db.getRemaining(checkOption)) + " " + db.getUnits(checkOption));
+    ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(checkOption)) + " " + db.getUnits(checkOption));
     ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
     ui->pwmLabel->setText(QString::number(round(double((db.getPWM(checkOption))*100)/255)) + "%");
     ui->vol_dispensed_label->setText("Volume Dispensed: 0 " + db.getUnits(checkOption));
@@ -216,7 +216,7 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event){
     ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(checkOption)) + " " +  db.getUnits(checkOption));
     ui->full_volume->setText(QString::number(db.getFullProduct(checkOption)) + " " +  db.getUnits(checkOption));
     ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(checkOption)) + " " +  db.getUnits(checkOption));
-    ui->remainingLabel->setText(QString::number(db.getRemaining(checkOption)) + " " +  db.getUnits(checkOption));
+    ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(checkOption)) + " " +  db.getUnits(checkOption));
     ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
 //    ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
     ui->pwmLabel->setText(QString::number(round(double((db.getPWM(checkOption))*100)/255)) + "%");
@@ -227,7 +227,7 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event){
 
 //    ui->temperatureLabel->setText("");
 
-    if(db.getRemaining(checkOption)>0){
+    if(db.getVolumeRemaining(checkOption)>0){
         ui->soldOutButton->setText("Mark as Sold Out");
     }else{
         ui->soldOutButton->setText("Un-Mark as Sold Out");
@@ -470,7 +470,7 @@ void page_maintenance_dispenser::on_refillButton_clicked(){
 //                DbManager db(DB_PATH);
 //                db.addPageClick("PRODUCT REFILLED");
                 ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
-                ui->remainingLabel->setText(QString::number(db.getRemaining(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
+                ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
                 ui->lastRefillLabel->setText(db.getLastRefill(this->idlePage->userDrinkOrder->getOption()));
                 db.closeDB();
                 curler();
@@ -499,7 +499,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked(){
 
     _maintainProductPageTimeoutSec=40;
 
-    if (db.getRemaining(this->idlePage->userDrinkOrder->getOption()) > 0){
+    if (db.getVolumeRemaining(this->idlePage->userDrinkOrder->getOption()) > 0){
 
         // ARE YOU SURE YOU WANT TO COMPLETE?
         QMessageBox msgBox;
@@ -522,7 +522,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked(){
 //                DbManager db(DB_PATH);
 //                db.addPageClick("PRODUCT SOLD OUT");
                 ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
-                ui->remainingLabel->setText(QString::number(db.getRemaining(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
+                ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
                 ui->soldOutButton->setText("Un-Mark as Sold Out");
                 break;
             }
@@ -560,7 +560,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked(){
 //                DbManager db(DB_PATH);
 //                db.addPageClick("PRODUCT UN-SOLD OUT");
                 ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
-                ui->remainingLabel->setText(QString::number(db.getRemaining(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
+                ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
                 ui->soldOutButton->setText("Mark as Sold Out");
                 break;
             }

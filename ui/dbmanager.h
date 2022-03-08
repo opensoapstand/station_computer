@@ -24,7 +24,7 @@ public:
     double getFullProduct(int slot);
     int getTotalTransactions();
     int getNumberOfProducts();
-    double getRemaining(int slot);
+    double getVolumeRemaining(int slot);
     double getTotalDispensed(int slot);
     QString getLastRefill(int slot);
     double getTemperature();

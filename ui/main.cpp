@@ -57,7 +57,7 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext& context, const Q
 	// 	abort();
 	// }
     
-	// QFile outFile("../log/loglodetest.txt");
+	// QFile outFile("/home/df-admin/log/lodesnexttest.txt");
 
     // log_file = &outFile;
 
@@ -82,9 +82,43 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext& context, const Q
     printf("%s\n", qPrintable(msg));
     fflush(stdout);
 
+    
+    QString line_out = "";
+
+	// using namespace std::chrono;
+    // uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    // line_out.append(QString::number(millis_since_epoch));
+    
+    // line_out.append(QString::fromStdString(lode));
+
+    QString time_stamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
+
+   
+    // string time_stamp = df_util::format_string(df_util::getTimeStamp(), "%Y-%m-%dT%H:%M:%S.%ms%Z");
+    // line_out.append(QString::fromStdString(time_stamp));
+
+    line_out.append(time_stamp);
+	line_out.append(" : ");
+    line_out.append(msg);
+
+
+    QFile file("/home/df-admin/drinkfill/log/soapstand_log_ui_all.txt");
+
+    log_file = &file;
+
+    if (!log_file->open(QFile::WriteOnly | QFile::Text | QFile::Append))
+    {
+        qInstallMessageHandler(nullptr);
+        qDebug() << "Couldn't log to file!";
+    }else{
+       
+    }
+
+
     if (log_file)
     {
-        log_file->write(msg.toLatin1());
+        // log_file->write(msg.toLatin1());
+        log_file->write(line_out.toUtf8());
         log_file->write("\n");
         log_file->flush();
     }
@@ -141,16 +175,9 @@ int main(int argc, char *argv[])
     // set up logging
     qInstallMessageHandler(myMessageHandler); // Install the handler
 
-    // QFile file("../log/log.txt");
-    QFile file("/home/df-admin/drinkfill/log/lodelog.txt");
-
-    log_file = &file;
-
-    if (!log_file->open(QFile::WriteOnly | QFile::Text | QFile::Append))
-    {
-        qInstallMessageHandler(nullptr);
-        qDebug() << "Couldn't log to file!";
-    }
+    qDebug() << "***************************************************************************";
+    qDebug() << "****************************** START SOAPSTAND UI *************************";
+    qDebug() << "***************************************************************************";
 
 
     // Fire up QT GUI Thread

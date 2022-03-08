@@ -184,11 +184,11 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, buffer);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 3000);
+        //curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 3000);
 
         res = curl_easy_perform(curl);
-        if (res == CURLOPT_TIMEOUT_MS){
-            debugOutput::sendMessage("CURL timed out (3s). err: " + to_string(res) + " Will buffer!", MSG_INFO);
+        if (res == CURLE_OPERATION_TIMEDOUT){
+            debugOutput::sendMessage("CURL timed out (" + to_string(CURLOPT_TIMEOUT_MS) + "ms). err: " + to_string(res) + " Will buffer!", MSG_INFO);
             bufferCURL(curl_param);
             curl_easy_cleanup(curl);
         }else if (res != CURLE_OK)
@@ -387,7 +387,7 @@ DF_ERROR stateDispenseEnd::updateDB()
         // fprintf(stderr, "SQL error: %s\n", zErrMsg);
 
          // INCORPORATE: zErrMsg !!!
-        debugOutput::sendMessage("ERROR: SQL : (err number " + to_string(rc) + ") " + sql1 + MSG_INFO);
+        debugOutput::sendMessage("ERROR: SQL : (err number " + to_string(rc) + ") " + sql1, MSG_INFO);
         sqlite3_free(zErrMsg);
     }
     else

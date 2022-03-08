@@ -8,7 +8,7 @@
 
 // TODO: Refactor to fit with dfuicommthread
 #define USE_OLD_DATABASE
-#define START_FSM_FROM_UI //enabled by default
+#define START_FSM_FROM_UI //enabled by default (start controller from ui)
 
 
 #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
@@ -32,6 +32,9 @@ class df_util : public QWidget
     Q_OBJECT
 public:
     explicit df_util(QWidget *parent = nullptr);
+    
+    // static long getTimeStamp();
+    // static string format_string(long time_stamp,string fmt,int cutBack=0);
 
     void initialize_local_db();
     bool open_local_db();

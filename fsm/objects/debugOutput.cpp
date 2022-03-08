@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <chrono>
+#include <fstream>
 
 using namespace std;
 
@@ -53,14 +54,23 @@ bool debugOutput::setMessageLevel(MESSAGE_LEVEL dbgLvl)
 */
 void debugOutput::sendMessage(std::string msg, MESSAGE_LEVEL lvl)
 {
+	// https://stackoverflow.com/questions/2393345/how-to-append-text-to-a-text-file-in-c
+	
+	std::ofstream outfile;
+	outfile.open("/home/df-admin/drinkfill/log/soapstand_log_fsm_all.txt", std::ios_base::app); // append instead of overwrite // will close automatically at destruction
 
 	using namespace std::chrono;
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
+
+
 	if (lvl >= debugOutput::m_dbgLvl)
 	{
 		// original. outputting this might lead to segmentation errors
-		cerr << m_lvlArray[lvl] + " " + to_string(millis_since_epoch) + " : " + msg << endl;
+		cerr << to_string(millis_since_epoch)  + " : " + m_lvlArray[lvl] + ": " +  msg << endl;
+
+		outfile << to_string(millis_since_epoch)  + " : " + m_lvlArray[lvl] + ": " +  msg << endl;
+
 		
 		//	cout << lvl << endl;
 		//sprintf("tetst",);

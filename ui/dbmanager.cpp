@@ -340,6 +340,10 @@ bool DbManager::refill(int slot){
             refill_date.bindValue(":time", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 
             if (refill_date.exec()){
+                qDebug() << "Restock success. slot:"<< QString::number(slot) 
+                    << " volume:" << QString::number(getVolumeRemaining(slot))
+                    ;
+        
                 success=true;
             }else{
                qDebug() << "refill date error:"
@@ -482,7 +486,7 @@ double DbManager::getTotalDispensed(int slot){
     return dispensed;
 }
 
-double DbManager::getRemaining(int slot){
+double DbManager::getVolumeRemaining(int slot){
     QSqlQuery remaining_query;
     double remaining;
 

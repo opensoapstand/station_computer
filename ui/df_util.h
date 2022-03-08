@@ -10,6 +10,9 @@
 #define USE_OLD_DATABASE
 //#define START_FSM_FROM_UI //enabled by default (start controller from ui)
 
+#ifndef START_FSM_FROM_UI
+//#define WAIT_FOR_CONTROLLER_READY // will wait for response of controller before continuing.
+#endif
 
 #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 //#define DB_PATH "/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db"

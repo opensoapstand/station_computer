@@ -76,14 +76,20 @@ void page_init::showEvent(QShowEvent *event)
 
     }else{
         ui->init_label->setText("Start UI without controller.");
+#ifdef WAIT_FOR_CONTROLLER_READY
+        _initIdleTimeoutSec = 20;
+#else
         _initIdleTimeoutSec = 1;
+#endif
     }
 }
 
 void page_init::initReadySlot(void){
     initIdleTimer->stop();
+    rebootTimer->stop();
     idlePage->showFullScreen();
     this->hide();
+    qDebug() << "Init done." << endl;
 }
 
 void page_init::onInitTimeoutTick(){
@@ -94,22 +100,27 @@ void page_init::onInitTimeoutTick(){
 //        qDebug() << "Timer Done!" << _initIdleTimeoutSec << endl;
         initIdleTimer->stop();
 
-        ui->fail_label->setText("Init failed. Rebooting");
+        ui->fail_label->setText("Init Timeout. No response from controller.");
 
-        if (!start_controller){
-            initReadySlot();
-        }
-        rebootTimer->start(1000);
+#ifdef WAIT_FOR_CONTROLLER_READY
+        // if (!start_controller){
+        // }
+        ui->fail_label->setText("No response from controller. Will reboot.");
         _rebootTimeoutSec = 5;
+        rebootTimer->start(1000);
+#else
+    ui->fail_label->setText("Will start standalone mode. If controller becomes active, commands will be executed. If not, no commands will be executed.");
+    initReadySlot();
+#endif
     }
 }
 
 void page_init::onRebootTimeoutTick(){
     if(-- _rebootTimeoutSec >= 0) {
-//        qDebug() << "init: Reboot Tick Down - " << _rebootTimeoutSec << endl;
+        qDebug() << "init: Reboot Tick Down - " << _rebootTimeoutSec << endl;
         ui->fail_label->setText(ui->fail_label->text() + ".");
     } else {
-//        qDebug() << "Reboot Timer Done!" << _rebootTimeoutSec << endl;
+        qDebug() << "Reboot Timer elapsed. (should reboot computer now)" << _rebootTimeoutSec << endl;
         rebootTimer->stop();
 
         //REBOOT!

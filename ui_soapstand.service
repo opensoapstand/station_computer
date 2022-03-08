@@ -7,7 +7,7 @@ StartLimitIntervalSec=10
 Requires=screen-calibration
 ExecStart=/home/df-admin/drinkfill/ui_execute.sh
 Type=simple
-Restart=on-failure
+Restart=always #on-failure
 RestartSec=5
 User=df-admin
 

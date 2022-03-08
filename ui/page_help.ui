@@ -39,7 +39,7 @@
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-image: url(/references/general/background.png);</string>
+    <string notr="true">background-image: url(/references/background.png);</string>
    </property>
    <property name="text">
     <string/>

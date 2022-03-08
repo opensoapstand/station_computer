@@ -63,7 +63,7 @@ pageProduct::pageProduct(QWidget *parent) :
     ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->pagePayment_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->promoKeyboard->setStyleSheet(" background-image: url(/references/general/soapstand-keyboard.png); }");
+    ui->promoKeyboard->setStyleSheet(" background-image: url(/references/soapstand-keyboard.png); }");
 
     // TODO: ADD buttons to select size/price of drink
     ui->orderSmall_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
@@ -262,8 +262,8 @@ void pageProduct::resizeEvent(QResizeEvent *event){
         ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
     }
 
-    ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/references/general/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
-    ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/references/general/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+    ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+    ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
     ui->promoCode->clear();
     ui->promoCode->hide();
     promoPercent = 0.0;
@@ -313,10 +313,10 @@ void pageProduct::showEvent(QShowEvent *event){
     }else{
         ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
     }
-    ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/references/general/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
-    ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/references/general/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
-    ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(/references/general/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
-    ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(/references/general/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
+    ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/references/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+    ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/references/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+    ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
+    ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
     ui->promoCode->clear();
     ui->promoCode->hide();
     promoPercent = 0.0;
@@ -398,10 +398,10 @@ void pageProduct::on_orderSmall_Button_clicked()
     ui->priceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
     // ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
     updatePriceAfterPromo(promoPercent);
-    ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/references/general/background.png); font-style: semibold; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
-    ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/references/general/background.png); font-style: semibold; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
-    ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(/references/general/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
-    ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(/references/general/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
+    ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/references/background.png); font-style: semibold; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+    ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/references/background.png); font-style: semibold; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+    ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
+    ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
 
     if (db.getProductVolume(checkOption, drinkSize) < 1000){
         ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + " " + db.getUnits(checkOption));
@@ -447,10 +447,10 @@ void pageProduct::on_orderBig_Button_clicked()
     ui->priceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
     // ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
     updatePriceAfterPromo(promoPercent);
-    ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/references/general/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
-    ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/references/general/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
-    ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(/references/general/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
-    ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(/references/general/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
+    ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+    ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+    ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
+    ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
 
     if (db.getProductVolume(checkOption, drinkSize) < 1000){
         ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + " " + db.getUnits(checkOption));

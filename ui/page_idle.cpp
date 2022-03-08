@@ -106,7 +106,7 @@ bool page_idle::isEnough(int p){
 }
 
 void page_idle::MMSlot(){
-//    qDebug() << "HERE I AM I KNOW I MUIST ENTER MM" << endl;
+    qDebug() << "Signal: Enter maintenance mode" << endl;
     p_page_maintenance->showFullScreen();
     this->hide();
     this->p_pageSelectProduct->hide();

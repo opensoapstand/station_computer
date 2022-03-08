@@ -26,7 +26,7 @@
     <bool>false</bool>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-image: url(/references/general/7_background_thank_you.png);</string>
+    <string notr="true">background-image: url(/references/7_background_thank_you.png);</string>
    </property>
    <property name="text">
     <string/>

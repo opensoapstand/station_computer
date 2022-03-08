@@ -82,7 +82,7 @@ line-height: 29px;</string>
    </property>
    <property name="styleSheet">
     <string notr="true">font-family: Montserrat;
-background-image: url(/references/general/background.png);
+background-image: url(/references/background.png);
 font-style: normal;
 font-weight: normal;
 font-size: 24px;
@@ -108,7 +108,7 @@ color: #58595B;</string>
    </property>
    <property name="styleSheet">
     <string notr="true">font-family: Montserrat;
-background-image: url(/references/general/background.png);
+background-image: url(/references/background.png);
 font-style: light;
 font-weight: bold;
 font-size: 36px;
@@ -137,7 +137,7 @@ color: #58595B;</string>
    </property>
    <property name="styleSheet">
     <string notr="true">font-family: Montserrat;
-background-image: url(/references/general/background.png);
+background-image: url(/references/background.png);
 font-style: normal;
 font-weight: bold;
 font-size: 36px;
@@ -167,7 +167,7 @@ text-align: center;
    </property>
    <property name="styleSheet">
     <string notr="true">font-family: Montserrat;
-background-image: url(/references/general/background.png);
+background-image: url(/references/background.png);
 font-style: normal;
 font-weight: bold;
 font-size: 36px;
@@ -1930,7 +1930,7 @@ color: #58595B;
    </property>
    <property name="styleSheet">
     <string notr="true">font-family: Montserrat;
-background-image: url(/references/general/background.png);
+background-image: url(/references/background.png);
 font-style: normal;
 font-weight: normal;
 font-size: 24px;

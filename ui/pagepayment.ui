@@ -61,7 +61,7 @@
    </property>
    <property name="styleSheet">
     <string notr="true">font-family: Montserrat;
-background-image: url(/references/general/background.png);
+background-image: url(/references/background.png);
 font-style: light;
 font-weight: bold;
 font-size: 36px;

@@ -426,6 +426,7 @@ void page_maintenance_dispenser::on_target_volumeButton_l_clicked(){
 
 
 void page_maintenance_dispenser::on_vol_per_tickButton_clicked(){
+
 //    qDebug() << "Volume Per Tick button clicked" << endl;
     vol_per_tick=true;
     _maintainProductPageTimeoutSec=40;
@@ -437,26 +438,35 @@ void page_maintenance_dispenser::on_vol_per_tickButton_clicked(){
 }
 
 void page_maintenance_dispenser::updateVolumeDisplayed(double dispensed, bool isFull){
-    double vol_dispensed = dispensed;
-    
-    ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) +this->units_active_pumped_product);
-    ui->ticksLabel->setText("Ticks: " + QString::number(vol_dispensed/ticks));
-
-    
-    // qDebug() << "ahoyy3" ;
-    // DbManager db(DB_PATH);
-
     // double vol_dispensed = dispensed;
-    // ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
-
+    // qDebug() << "Signal: updatevol in maintenance mode" + QString::number(vol_dispensed);
+    
+    // ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) +this->units_active_pumped_product);
     // ui->ticksLabel->setText("Ticks: " + QString::number(vol_dispensed/ticks));
 
-    // db.closeDB();
+
+
+
+
+
+
+    
+    // // qDebug() << "ahoyy3" ;
+    // // DbManager db(DB_PATH);
+// 
+    // // double vol_dispensed = dispensed;
+    // // ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
+// 
+    // // ui->ticksLabel->setText("Ticks: " + QString::number(vol_dispensed/ticks));
+// 
+    // // db.closeDB();
 
 }
 
 void page_maintenance_dispenser::fsmReceiveTargetVolumeReached(){
-    ui->vol_dispensed_label->setText(ui->vol_dispensed_label->text() + " - TARGET HIT!");
+
+    // qDebug() << "Signal: maintenance target hit. ";
+    // ui->vol_dispensed_label->setText(ui->vol_dispensed_label->text() + " - TARGET HIT!");
 }
 
 void page_maintenance_dispenser::on_refillButton_clicked(){

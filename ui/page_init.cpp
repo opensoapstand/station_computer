@@ -85,6 +85,7 @@ void page_init::showEvent(QShowEvent *event)
 }
 
 void page_init::initReadySlot(void){
+    qDebug() << "Signal: init ready from fsm";
     initIdleTimer->stop();
     rebootTimer->stop();
     idlePage->showFullScreen();

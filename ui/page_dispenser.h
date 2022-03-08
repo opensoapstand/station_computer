@@ -53,7 +53,7 @@ public:
     void fsmReceiveTargetVolumeReached();
     double getTotalDispensed();
     void force_finish_dispensing();
-
+    void on_finish_Button_clicked();    
 
 public slots:
 
@@ -69,6 +69,7 @@ private slots:
 
 
 private:
+    bool isDispensing;
     // **** GUI *****
     Ui::page_dispenser *ui;
     pagePayment* paymentPage;

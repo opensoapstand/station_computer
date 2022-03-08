@@ -26,6 +26,7 @@ page_dispenser::page_dispenser(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::page_dispenser)
 {
+    this->isDispensing = false;
     ui->setupUi(this);
 
     ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
@@ -54,6 +55,7 @@ page_dispenser::~page_dispenser()
 
 void page_dispenser::showEvent(QShowEvent *event)
 {
+    this->isDispensing = false;
     qDebug()<<"Enter dispense page." << endl;
     QPixmap background("/release/references/5_background_dispense_instructions.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
@@ -136,10 +138,14 @@ bool page_dispenser::waitForUX410()
  */
 void page_dispenser::dispensing_end_admin()
 {
+    this->isDispensing = false;
+    sleep(1);
     qDebug() << "call db from dispense end" << endl;
     DbManager db(DB_PATH);
+    qDebug() << "call db2 from dispense end" << endl;
 
     if (volumeDispensed == 0 && (db.getPaymentMethod(idlePage->userDrinkOrder->getOption())=="tap")){
+        qDebug() << "dispense end: tap payment No volume dispensed.";
         // REVERSE PAYMENT
         com.page_init();
         pktToSend = paymentPacket.reversePurchasePacket();
@@ -150,6 +156,7 @@ void page_dispenser::dispensing_end_admin()
             com.flushSerial();
         }
     }else if ((db.getPaymentMethod(idlePage->userDrinkOrder->getOption())=="tap") && volumeDispensed != 0){
+        qDebug() << "dispense end: tap payment. Some volume dispensed.";
         QMessageBox msgBox;
         msgBox.setText("Complete!");
         msgBox.setInformativeText("Would you like your receipt emailed to you?");
@@ -167,15 +174,25 @@ void page_dispenser::dispensing_end_admin()
             break;
         }
     }
-
+qDebug() << "cefesfsef" << endl;
     stopDispenseTimer();
 
+qDebug() << "cefes99999999999fsef" << endl;
      db.closeDB();
+qDebug() << "11111111111111111fsef" << endl;
      thanksPage->showFullScreen();
+qDebug() << "11144444fsef" << endl;
      this->hide();
+qDebug() << "6626622fsef" << endl;
+    qDebug() << "Finished dispense admin handling";
 }
 
 
+void page_dispenser::on_finish_Button_clicked(){
+    if(this->isDispensing){
+        force_finish_dispensing();
+    }
+}
 
 void page_dispenser::force_finish_dispensing(){
 
@@ -202,9 +219,11 @@ void page_dispenser::fsmSendStartDispensing(){
     idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_START;
     idlePage->dfUtility->send_to_FSM();
     idlePage->dfUtility->m_IsSendingFSM = false;
+    this->isDispensing = true;
 }
 
 void page_dispenser::fsmSendStopDispensing(){
+    this->isDispensing = false;
     QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
 
     if(idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
@@ -222,6 +241,7 @@ void page_dispenser::fsmSendStopDispensing(){
     // Send a Cleanse and TODO: helps FSM onExit...
     idlePage->dfUtility->send_to_FSM();
     idlePage->dfUtility->m_IsSendingFSM = false;
+     
 }
 
 
@@ -229,6 +249,7 @@ void page_dispenser::onRinseTimerTick(){
 }
 
 void page_dispenser::stopDispenseTimer(){
+    this->isDispensing = false;
 //    qDebug() << "page_dispenser: Stop Timers" << endl;
     if(dispenseIdleTimer != nullptr){
         dispenseIdleTimer->stop();
@@ -252,30 +273,39 @@ double page_dispenser::getTotalDispensed(){
 }
 
 void page_dispenser::resetDispenseTimeout(void){
-    //qDebug() << "RESET SIGNAL RECEIVED!" << endl;
     _dispenseIdleTimeoutSec = 30;
 }
 
 void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull){
-    resetDispenseTimeout();
+    if (this->isDispensing){
+        //qDebug() << "Signal: update vol in dispenser!" << endl;
+        resetDispenseTimeout();
 
-    volumeDispensed = dispensed;
-    double target_volume = idlePage->userDrinkOrder->getSize();
-    double percentage = dispensed/target_volume*100;
+        volumeDispensed = dispensed;
+        double target_volume = idlePage->userDrinkOrder->getSize();
+        double percentage = dispensed/target_volume*100;
+        if (isFull){
+            percentage = 100;
+        }
 
-    this->ui->filler->move(380, 590 - 3*percentage);
+        this->ui->filler->move(380, 590 - 3*percentage);
 
-    ui->widget->show();
-    ui->filler->show();
+        ui->widget->show();
+        ui->filler->show();
 
-    ui->finish_Button->setEnabled(true);
+        ui->finish_Button->setEnabled(true);
+    }
 }
 
 void page_dispenser::fsmReceiveTargetVolumeReached(){
-    
-    updateVolumeDisplayed(0, true); // make sure the fill bottle graphics are completed
+    if (this->isDispensing){
+        this->isDispensing = false;
+        // qDebug() << "Signal: Target volume reached."  << endl;
+        updateVolumeDisplayed(1.0, true); // make sure the fill bottle graphics are completed
 
-    //this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ " ml - Target Hit!");
-    qDebug() << "fsm message: Target volume reached."  << endl;
-    dispensing_end_admin();
+        
+
+        dispensing_end_admin();
+        // qDebug() << "Finish dispense end admin."  << endl;
+    }
 }

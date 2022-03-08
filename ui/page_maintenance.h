@@ -70,7 +70,7 @@ private:
     void showEvent(QShowEvent *event);
     Ui::page_maintenance *ui;
     page_idle* idlePage;
-    page_maintenance_dispenser* maintainPage;
+    page_maintenance_dispenser* p_page_maintenance_product;
     page_select_product* p_pageSelectProduct;
     pageProduct* p_pageProduct;
 

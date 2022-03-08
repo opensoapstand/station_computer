@@ -197,7 +197,7 @@ int main(int argc, char *argv[])
     page_error_wifi* wifiError = new page_error_wifi();
     pagethankyou* lastPage = new pagethankyou();
     page_maintenance* p_page_maintenance = new page_maintenance();
-    page_maintenance_dispenser* maintainPage = new page_maintenance_dispenser();
+    page_maintenance_dispenser* p_page_maintenance_product = new page_maintenance_dispenser();
 
     // TODO: Instantiate a DrinkSelection[] Array
     // TODO: Create Query to populate DrinkSelection[0-12]
@@ -206,8 +206,8 @@ int main(int argc, char *argv[])
     // Page pathing references to function calls.
     helpPage->setPage(firstSelectPage, p_pageProduct, idlePage, paymentPage);
     initPage->setPage(idlePage);
-    maintainPage->setPage(p_page_maintenance, idlePage);
-    p_page_maintenance->setPage(idlePage, maintainPage, firstSelectPage, p_pageProduct);
+    p_page_maintenance_product->setPage(p_page_maintenance, idlePage);
+    p_page_maintenance->setPage(idlePage, p_page_maintenance_product, firstSelectPage, p_pageProduct);
     idlePage->setPage(firstSelectPage, p_page_maintenance);
     firstSelectPage->setPage(p_pageProduct, idlePage, p_page_maintenance, helpPage);
     p_pageProduct->setPage(firstSelectPage, dispensingPage,wifiError, idlePage, paymentPage, helpPage);
@@ -220,12 +220,12 @@ int main(int argc, char *argv[])
     DfUiServer dfUiServer;
     dfUiServer.startServer();
 
-    QObject::connect(&dfUiServer, &DfUiServer::pleaseReset, dispensingPage, &page_dispenser::PleaseResetTimerSlot);
-    QObject::connect(&dfUiServer, &DfUiServer::updateVolume, dispensingPage, &page_dispenser::updateVolumeDisplayed);
+    QObject::connect(&dfUiServer, &DfUiServer::pleaseReset, dispensingPage, &page_dispenser::resetDispenseTimeout);
+    QObject::connect(&dfUiServer, &DfUiServer::signalUpdateVolume, dispensingPage, &page_dispenser::updateVolumeDisplayed);
     QObject::connect(&dfUiServer, &DfUiServer::targetHit, dispensingPage, &page_dispenser::fsmReceiveTargetVolumeReached);
     QObject::connect(&dfUiServer, &DfUiServer::initReady, initPage, &page_init::initReadySlot);
     QObject::connect(&dfUiServer, &DfUiServer::MM, idlePage, &page_idle::MMSlot);
-    QObject::connect(&dfUiServer, &DfUiServer::updateVolume, maintainPage, &page_maintenance_dispenser::updateVolumeDisplayed);
+    QObject::connect(&dfUiServer, &DfUiServer::signalUpdateVolume, p_page_maintenance_product, &page_maintenance_dispenser::updateVolumeDisplayed);
 
     return mainApp.exec();
 }

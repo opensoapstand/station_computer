@@ -101,7 +101,7 @@ DF_ERROR stateDispenseEnd::onExit()
     // if (size != REQUESTED_VOLUME_CUSTOM)
     // {
     debugOutput::sendMessage("Update database:", MSG_INFO);
-    updateDB();
+    dispenseEndUpdateDB();
 
     if (paymentMethod == "barcode" || paymentMethod == "plu")
     {
@@ -191,6 +191,7 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
             debugOutput::sendMessage("CURL timed out (" + to_string(CURLOPT_TIMEOUT_MS) + "ms). err: " + to_string(res) + " Will buffer!", MSG_INFO);
             bufferCURL(curl_param);
             curl_easy_cleanup(curl);
+            debugOutput::sendMessage("CURL error handled correctly.", MSG_INFO);
         }else if (res != CURLE_OK)
         {
             //            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
@@ -198,6 +199,7 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
             debugOutput::sendMessage("CURL fail. err: " + to_string(res) + " Will buffer!", MSG_INFO);
             bufferCURL(curl_param);
             curl_easy_cleanup(curl);
+            debugOutput::sendMessage("CURL error handled correctly.", MSG_INFO);
         }
         else
         {
@@ -335,7 +337,7 @@ std::string stateDispenseEnd::getUnitsFromDb(int slot)
 }
 
 // This function updates the local SQLite3 database with the transaction data, as well as updates the total product remaining locally
-DF_ERROR stateDispenseEnd::updateDB()
+DF_ERROR stateDispenseEnd::dispenseEndUpdateDB()
 {
     char *zErrMsg = 0;
 
@@ -361,7 +363,7 @@ DF_ERROR stateDispenseEnd::updateDB()
     std::string price = to_string(productDispensers[pos].getProduct()->getPrice(size));
     std::string start_time = (productDispensers[pos].getProduct()->m_nStartTime);
     std::string dispensed_volume;
-    debugOutput::sendMessage("dispenseenddbadd: vol dispensed: " + to_string(productDispensers[pos].getProduct()->getVolumeDispensed()), MSG_INFO);
+    debugOutput::sendMessage("update DB. dispense end: vol dispensed: " + to_string(productDispensers[pos].getProduct()->getVolumeDispensed()), MSG_INFO);
     
     if (productDispensers[pos].getProduct()->m_nVolumeDispensed <= productDispensers[pos].getProduct()->m_nVolumePerTick)
     {

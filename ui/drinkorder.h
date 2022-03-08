@@ -15,17 +15,19 @@ typedef enum DF_QT_OPTIONS {
    OPTION_SLOT_6,
    OPTION_SLOT_7,
    OPTION_SLOT_8,
-   OPTION_SLOT_9,
+   OPTION_SLOT_9
+   ,
 
    // Drink Sizes
    DRINK_SIZE_OPTIONS = 15,
    SMALL_DRINK,
 //   MEDIUM_DRINK,
-   LARGE_DRINK,
-   DRINK1,
-   DRINK2,
-   DRINK3,
-   DRINK4
+   LARGE_DRINK
+//    ,
+//    DRINK1,
+//    DRINK2,
+//    DRINK3,
+//    DRINK4
 } DF_QT_OPTION_PICKED;
 
 // Values for Selected drink.

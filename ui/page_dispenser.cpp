@@ -136,6 +136,7 @@ bool page_dispenser::waitForUX410()
  */
 void page_dispenser::dispensing_end_admin()
 {
+    qDebug() << "call db from dispense end" << endl;
     DbManager db(DB_PATH);
 
     if (volumeDispensed == 0 && (db.getPaymentMethod(idlePage->userDrinkOrder->getOption())=="tap")){
@@ -250,12 +251,13 @@ double page_dispenser::getTotalDispensed(){
     return volumeDispensed;
 }
 
-void page_dispenser::PleaseResetTimerSlot(void){
+void page_dispenser::resetDispenseTimeout(void){
     //qDebug() << "RESET SIGNAL RECEIVED!" << endl;
     _dispenseIdleTimeoutSec = 30;
 }
 
-void page_dispenser::updateVolumeDisplayed(double dispensed){
+void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull){
+    resetDispenseTimeout();
 
     volumeDispensed = dispensed;
     double target_volume = idlePage->userDrinkOrder->getSize();
@@ -270,6 +272,9 @@ void page_dispenser::updateVolumeDisplayed(double dispensed){
 }
 
 void page_dispenser::fsmReceiveTargetVolumeReached(){
+    
+    updateVolumeDisplayed(0, true); // make sure the fill bottle graphics are completed
+
     //this->ui->volumeDispensedLabel->setText(QString::number(volumeDispensed)+ " ml - Target Hit!");
     qDebug() << "fsm message: Target volume reached."  << endl;
     dispensing_end_admin();

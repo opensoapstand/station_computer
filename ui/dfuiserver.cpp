@@ -25,7 +25,7 @@ void DfUiServer::resetTimerSlot(){
 }
 
 void DfUiServer::updateVolumeSlot(double dispensed){
-    emit updateVolume(dispensed);
+    emit signalUpdateVolume(dispensed, false);
 }
 
 void DfUiServer::targetHitSlot(){

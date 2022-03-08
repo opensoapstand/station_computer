@@ -17,16 +17,16 @@ page_maintenance::page_maintenance(QWidget *parent) :
 {
     // Fullscreen background setup
     ui->setupUi(this);
-    QPixmap background1("/release/references/product1.png");
+    QPixmap background1("/release/products/product1.png");
     QIcon ButtonIcon1(background1);
 
-    QPixmap background2("/release/references/product2.png");
+    QPixmap background2("/release/products/product2.png");
     QIcon ButtonIcon2(background2);
 
-    QPixmap background3("/release/references/product3.png");
+    QPixmap background3("/release/products/product3.png");
     QIcon ButtonIcon3(background3);
 
-    QPixmap background4("/release/references/product4.png");
+    QPixmap background4("/release/products/product4.png");
     QIcon ButtonIcon4(background4);
 
 
@@ -122,7 +122,7 @@ void page_maintenance::showEvent(QShowEvent *event)
 void page_maintenance::setPage(page_idle* pageIdle, page_maintenance_dispenser* pageMaintain, page_select_product *p_pageProduct, pageProduct *pagePaySelect)
 {
     this->idlePage = pageIdle;
-    this->maintainPage = pageMaintain;
+    this->p_page_maintenance_product = pageMaintain;
     this->p_pageSelectProduct = p_pageProduct;
     this->p_pageProduct = pagePaySelect;
 }
@@ -141,10 +141,10 @@ void page_maintenance::on_product1_button_clicked(){
     page_maintenanceEndTimer->stop();
 
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_1);
-    idlePage->userDrinkOrder->setDrinkSize(DRINK1);
+    idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
 
-    maintainPage->resizeEvent(productSelection);
-    maintainPage->showFullScreen();
+    p_page_maintenance_product->resizeEvent(productSelection);
+    p_page_maintenance_product->showFullScreen();
 //    usleep(100);
     this->hide();
 
@@ -158,10 +158,10 @@ void page_maintenance::on_product2_button_clicked(){
     page_maintenanceEndTimer->stop();
 
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
-    idlePage->userDrinkOrder->setDrinkSize(DRINK2);
+    idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
 
-    maintainPage->resizeEvent(productSelection);
-    maintainPage->showFullScreen();
+    p_page_maintenance_product->resizeEvent(productSelection);
+    p_page_maintenance_product->showFullScreen();
 //    usleep(100);
     this->hide();
 
@@ -172,10 +172,10 @@ void page_maintenance::on_product3_button_clicked(){
     page_maintenanceEndTimer->stop();
 
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
-    idlePage->userDrinkOrder->setDrinkSize(DRINK3);
+    idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
 
-    maintainPage->resizeEvent(productSelection);
-    maintainPage->showFullScreen();
+    p_page_maintenance_product->resizeEvent(productSelection);
+    p_page_maintenance_product->showFullScreen();
 //    usleep(100);
     this->hide();
 
@@ -186,10 +186,10 @@ void page_maintenance::on_product4_button_clicked(){
     page_maintenanceEndTimer->stop();
 
     idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);
-    idlePage->userDrinkOrder->setDrinkSize(DRINK4);
+    idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
 
-    maintainPage->resizeEvent(productSelection);
-    maintainPage->showFullScreen();
+    p_page_maintenance_product->resizeEvent(productSelection);
+    p_page_maintenance_product->showFullScreen();
 //    usleep(100);
     this->hide();
 

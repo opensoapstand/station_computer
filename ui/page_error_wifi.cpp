@@ -85,6 +85,7 @@ void page_error_wifi::showEvent(QShowEvent *event)
  */
 void page_error_wifi::on_finish_Button_clicked()
 {
+    qDebug() << "call db from wifi error page" << endl;
     DbManager db(DB_PATH);
 
     //stopDispenseTimer();

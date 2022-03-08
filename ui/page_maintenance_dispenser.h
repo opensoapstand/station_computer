@@ -43,7 +43,7 @@ public:
     void setPage(page_maintenance* pageMaintenance, page_idle* pageIdle);
     ~page_maintenance_dispenser();
     void resizeEvent(QResizeEvent *event);
-    void updateVolumeDisplayed(double dispensed);
+    void updateVolumeDisplayed(double dispensed, bool isFull);
     void fsmReceiveTargetVolumeReached();
 
 private slots:

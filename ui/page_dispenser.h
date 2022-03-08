@@ -47,8 +47,8 @@ public:
     void setPage(pagePayment* pagePayment, pagethankyou* pageThankYou, page_idle* pageIdle);
     ~page_dispenser();
     void showEvent(QShowEvent *event);
-    void PleaseResetTimerSlot(void);
-    void updateVolumeDisplayed(double dispensed);
+    void resetDispenseTimeout(void);
+    void updateVolumeDisplayed(double dispensed, bool isFull );
     void volumeDispensedLabel(QLabel* label);
     void fsmReceiveTargetVolumeReached();
     double getTotalDispensed();

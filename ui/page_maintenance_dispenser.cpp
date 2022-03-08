@@ -43,6 +43,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
     int checkOption = idlePage->userDrinkOrder->getOption();
 
+    qDebug() << "call db from maintenance select dispenser page" << endl;
     DbManager db(DB_PATH);
     //DbManager db_temperature(DB_PATH_TEMPERATURE);
     //db.addPageClick("PAGE_MAINTENANCE PAGE ENTERED");
@@ -193,6 +194,7 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event){
 
     int checkOption = idlePage->userDrinkOrder->getOption();
 
+    qDebug() << "call db from maintenance select dispenser page  resize event" << endl;
     DbManager db(DB_PATH);
    // DbManager db_temperature(DB_PATH_TEMPERATURE);
 
@@ -251,6 +253,7 @@ void page_maintenance_dispenser::on_image_clicked(){
 }
 
 void page_maintenance_dispenser::on_pumpButton_clicked(){
+    qDebug() << "call db from maintenance on pump button c licked" << endl;
     DbManager db(DB_PATH);
 
     int checkOption = idlePage->userDrinkOrder->getOption();
@@ -427,7 +430,7 @@ void page_maintenance_dispenser::on_vol_per_tickButton_clicked(){
 //    ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(idlePage->userDrinkOrder->getOption())) + "ml");
 }
 
-void page_maintenance_dispenser::updateVolumeDisplayed(double dispensed){
+void page_maintenance_dispenser::updateVolumeDisplayed(double dispensed, bool isFull){
     DbManager db(DB_PATH);
 
     double vol_dispensed = dispensed;
@@ -444,6 +447,9 @@ void page_maintenance_dispenser::fsmReceiveTargetVolumeReached(){
 }
 
 void page_maintenance_dispenser::on_refillButton_clicked(){
+    qDebug() << "refill clicked. slot: " << QString::number(this->idlePage->userDrinkOrder->getOption()) << endl;
+    qDebug() << "refill clicked. size: " << QString::number(this->idlePage->userDrinkOrder->getSize()) << endl;
+
     DbManager db(DB_PATH);
 //    qDebug() << "Refill button clicked" << endl;
 
@@ -496,6 +502,10 @@ void page_maintenance_dispenser::on_refillButton_clicked(){
 void page_maintenance_dispenser::on_soldOutButton_clicked(){
     DbManager db(DB_PATH);
 //    qDebug() << "Sold Out button clicked" << endl;
+
+    // qDebug() << QString::number(db.getVolumeRemaining(this->idlePage->userDrinkOrder->getOption());
+    qDebug() << "soldout clicked. slot: " << QString::number(this->idlePage->userDrinkOrder->getOption()) << endl;
+    qDebug() << "soldout clicked. size: " << QString::number(this->idlePage->userDrinkOrder->getSize()) << endl;
 
     _maintainProductPageTimeoutSec=40;
 

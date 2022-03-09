@@ -6,16 +6,17 @@ sudo mv /home/df-admin/drinkfill/production /home/df-admin/production_"$(date +%
 echo "create soapstand production content"
 # delete production folder to start anew
 sudo rm -r -f production
-sudo mkdir production
+sudo -u df-admin mkdir production
+# chown -R $USER:$USER /home/df-admin/production
 cd production 
 
 # create subfolders 
-sudo mkdir db
-sudo mkdir logging
+sudo -u df-admin mkdir db
+sudo -u df-admin mkdir logging
 
 # move files to production folder
 sudo scp -r /home/df-admin/drinkfill/ui/references /home/df-admin/drinkfill/production/references
-sudo scp /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db /home/df-admin/drinkfill/production/db/drinkfill-sqlite.db 
+sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db /home/df-admin/drinkfill/production/db/drinkfill-sqlite.db 
 
 sudo scp /home/df-admin/drinkfill/ui/DF_UI /home/df-admin/drinkfill/production/DF_UI
 sudo scp /home/df-admin/drinkfill/fsm/controller /home/df-admin/drinkfill/production/controller

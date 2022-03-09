@@ -61,9 +61,9 @@
   <widget class="QLabel" name="refreshLabel">
    <property name="geometry">
     <rect>
-     <x>690</x>
+     <x>640</x>
      <y>20</y>
-     <width>371</width>
+     <width>421</width>
      <height>91</height>
     </rect>
    </property>
@@ -76,9 +76,8 @@ font-size: 23px;
 line-height: 29px;</string>
    </property>
    <property name="text">
-    <string>Don't mean to rush you but, 
-This page is about to close... 
-Tap anywhere to keep it open!</string>
+    <string> 
+Tap on screen to keep page open.</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>

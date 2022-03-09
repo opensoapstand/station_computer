@@ -22,10 +22,10 @@
   <widget class="QPushButton" name="finish_Button">
    <property name="geometry">
     <rect>
-     <x>420</x>
-     <y>1450</y>
-     <width>251</width>
-     <height>91</height>
+     <x>280</x>
+     <y>1420</y>
+     <width>81</width>
+     <height>121</height>
     </rect>
    </property>
    <property name="text">
@@ -61,9 +61,23 @@
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;/home/df-admin/drinkfill/production/references/bottle_fill_for_animation.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="abortButton">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>1440</y>
+     <width>261</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>filler</zorder>
   <zorder>widget</zorder>
   <zorder>finish_Button</zorder>
+  <zorder>abortButton</zorder>
  </widget>
  <resources/>
  <connections/>

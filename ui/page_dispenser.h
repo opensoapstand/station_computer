@@ -53,7 +53,6 @@ public:
     void fsmReceiveTargetVolumeReached();
     double getTotalDispensed();
     void force_finish_dispensing();
-    void on_finish_Button_clicked();    
 
 public slots:
 
@@ -66,6 +65,8 @@ private slots:
     void onDispenseIdleTick();
     void onRinseTimerTick();
     void dispensing_end_admin();
+    void on_abortButton_clicked();
+    void on_finish_Button_clicked();    
 
 
 private:

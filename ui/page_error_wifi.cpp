@@ -28,13 +28,13 @@ page_error_wifi::page_error_wifi(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->wifi_ack_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     timeoutTimer = new QTimer(this);
     timeoutTimer->setInterval(20);
     connect(timeoutTimer, SIGNAL(timeout()), this, SLOT(onTimeOutTick()));
 
-    ui->finish_Button->setEnabled(true);
+    ui->wifi_ack_Button->setEnabled(true);
 }
 
 /*
@@ -66,7 +66,7 @@ void page_error_wifi::showEvent(QShowEvent *event)
 
     QWidget::showEvent(event);
 
-    ui->finish_Button->setEnabled(false);
+    ui->wifi_ack_Button->setEnabled(false);
 
       if(nullptr == timeoutTimer){
         timeoutTimer = new QTimer(this);
@@ -83,7 +83,7 @@ void page_error_wifi::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void page_error_wifi::on_finish_Button_clicked()
+void page_error_wifi::on_wifi_ack_Button_clicked()
 {
     qDebug() << "call db from wifi error page" << endl;
     DbManager db(DB_PATH);

@@ -30,6 +30,7 @@ page_dispenser::page_dispenser(QWidget *parent) :
     ui->setupUi(this);
 
     ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->abortButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
@@ -72,6 +73,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     fsmSendStartDispensing();
     
     ui->finish_Button->setEnabled(false);
+    ui->abortButton->setEnabled(false);
 
     if(nullptr == dispenseIdleTimer){
         dispenseIdleTimer = new QTimer(this);
@@ -189,6 +191,7 @@ qDebug() << "6626622fsef" << endl;
 
 
 void page_dispenser::on_finish_Button_clicked(){
+    qDebug() << "Pressed dispense complete.";
     if(this->isDispensing){
         force_finish_dispensing();
     }
@@ -294,6 +297,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull){
         ui->filler->show();
 
         ui->finish_Button->setEnabled(true);
+        ui->abortButton->setEnabled(true);
     }
 }
 
@@ -307,5 +311,14 @@ void page_dispenser::fsmReceiveTargetVolumeReached(){
 
         dispensing_end_admin();
         // qDebug() << "Finish dispense end admin."  << endl;
+    }
+}
+
+
+void page_dispenser::on_abortButton_clicked()
+{
+    qDebug() << "Pressed dispense complete.";
+    if(this->isDispensing){
+        force_finish_dispensing();
     }
 }

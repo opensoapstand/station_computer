@@ -14,7 +14,7 @@ fsm/build
 fsm/controller
 sqlite/build
 
-/log
+/production
 
 test/test_8344
 test/bus_test1

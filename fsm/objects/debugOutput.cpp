@@ -57,7 +57,7 @@ void debugOutput::sendMessage(std::string msg, MESSAGE_LEVEL lvl)
 	// https://stackoverflow.com/questions/2393345/how-to-append-text-to-a-text-file-in-c
 	
 	std::ofstream outfile;
-	outfile.open("/home/df-admin/drinkfill/log/soapstand_log_fsm_all.txt", std::ios_base::app); // append instead of overwrite // will close automatically at destruction
+	outfile.open("/home/df-admin/drinkfill/production/logging/soapstand_log_fsm_all.txt", std::ios_base::app); // append instead of overwrite // will close automatically at destruction
 
 	using namespace std::chrono;
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();

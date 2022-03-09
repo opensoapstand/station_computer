@@ -20,7 +20,7 @@ pagethankyou::pagethankyou(QWidget *parent) :
     ui(new Ui::pagethankyou)
 {
     ui->setupUi(this);
-    QPixmap background("/release/references/7_background_thank_you.png");
+    QPixmap background("/home/df-admin/drinkfill/production/references/7_background_thank_you.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
@@ -63,7 +63,7 @@ pagethankyou::~pagethankyou()
 void pagethankyou::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
-
+    qDebug() << "ahoyy24" ;
     DbManager db(DB_PATH);
 
     if(thankYouEndTimer == nullptr){

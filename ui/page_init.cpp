@@ -25,7 +25,7 @@ page_init::page_init(QWidget *parent) :
 {
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
-    QPixmap background("/release/references/0_background_init.png");
+    QPixmap background("/home/df-admin/drinkfill/production/references/0_background_init.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);

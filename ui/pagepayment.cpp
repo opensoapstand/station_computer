@@ -29,7 +29,7 @@ pagePayment::pagePayment(QWidget *parent) :
 {
     // Fullscreen background setup
     ui->setupUi(this);
-    QPixmap background("/release/references/5_background_pay_qr.png");
+    QPixmap background("/home/df-admin/drinkfill/production/references/5_background_pay_qr.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
@@ -67,7 +67,7 @@ pagePayment::pagePayment(QWidget *parent) :
 
     // XXX: Comment on/off for Bypassing payment testing
         payment=false;
-
+        qDebug() << "ahoyy20" ;
         DbManager db(DB_PATH);
 
         for (int i = 1; i<db.getNumberOfProducts(); i++){
@@ -150,17 +150,17 @@ void pagePayment::resizeEvent(QResizeEvent *event){
     QString bitmap_location;
 
     if (!payment){
-        bitmap_location = "/release/references/5_background_pay_qr.png";
+        bitmap_location = "/home/df-admin/drinkfill/production/references/5_background_pay_qr.png";
     }
     else if(checkOption > 0 && checkOption <= 9) {
-        bitmap_location.append("/release/references/5_pay_page_");
+        bitmap_location.append("/home/df-admin/drinkfill/production/references/5_pay_page_");
         bitmap_location.append(drinkSize);
         bitmap_location.append("_");
         bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
         bitmap_location.append(".png");
         ui->order_drink_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
     } else {
-        bitmap_location = "/release/references/5_pay_page_l_1.png";
+        bitmap_location = "/home/df-admin/drinkfill/production/references/5_pay_page_l_1.png";
     }
 
     QPixmap background(bitmap_location);
@@ -264,7 +264,7 @@ size_t WriteCallback(char* contents, size_t size, size_t nmemb, void *userp){
 void pagePayment::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
-
+    qDebug() << "ahoyy21" ;
     DbManager db(DB_PATH);
 
     int checkOption = idlePage->userDrinkOrder->getOption();
@@ -279,17 +279,17 @@ void pagePayment::showEvent(QShowEvent *event)
     QString bitmap_location;
 
     if (!payment){
-        bitmap_location = "/release/references/5_background_pay_qr.png";
+        bitmap_location = "/home/df-admin/drinkfill/production/references/5_background_pay_qr.png";
     }
     else if(checkOption > 0 && checkOption <= 9) {
-        bitmap_location.append("/release/references/5_pay_page_");
+        bitmap_location.append("/home/df-admin/drinkfill/production/references/5_pay_page_");
         bitmap_location.append(drinkSize);
         bitmap_location.append("_");
         bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
         bitmap_location.append(".png");
         ui->order_drink_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
     } else {
-        bitmap_location = "/release/references/5_pay_page_l_1.png";
+        bitmap_location = "/home/df-admin/drinkfill/production/references/5_pay_page_l_1.png";
     }
 
     QPixmap background(bitmap_location);
@@ -347,6 +347,7 @@ void pagePayment::showEvent(QShowEvent *event)
 }
 
 void pagePayment::createOrder(){
+    qDebug() << "ahoyy22" ;
     DbManager db(DB_PATH);
 
     int checkOption = idlePage->userDrinkOrder->getOption();
@@ -390,6 +391,7 @@ void pagePayment::createOrder(){
 }
 
 void pagePayment::generateQR(){
+    qDebug() << "ahoyy23" ;
     DbManager db(DB_PATH);
 
     int checkOption = idlePage->userDrinkOrder->getOption();

@@ -102,7 +102,7 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext& context, const Q
     line_out.append(msg);
 
 
-    QFile file("/home/df-admin/drinkfill/log/soapstand_log_ui_all.txt");
+    QFile file("/home/df-admin/drinkfill/production/logging/soapstand_log_ui_all.txt");
 
     log_file = &file;
 

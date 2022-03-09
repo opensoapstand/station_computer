@@ -13,7 +13,7 @@
 #ifndef DFTYPES__H_
 #define DFTYPES__H_
 
-#define XML_SETTINGS "/release/df_settings.xml"
+// #define XML_SETTINGS "/release/df_settings.xml"
 
 #include <sqlite3.h>
 #include <stdint.h>
@@ -21,7 +21,8 @@
 #define USE_OLD_DATABASE
 
 #define PRODUCT_DISPENSERS_MAX 4
-#define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
+#define DB_PATH "/home/df-admin/drinkfill/production/db/drinkfill-sqlite.db"
+// #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 //#define DB_PATH "/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db"
 
 #define MILLIS_INIT_DUMMY 0

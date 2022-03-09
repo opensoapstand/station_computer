@@ -184,7 +184,7 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, buffer);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-        //curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 3000);
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 3000);
 
         res = curl_easy_perform(curl);
         if (res == CURLE_OPERATION_TIMEDOUT){

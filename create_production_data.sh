@@ -11,15 +11,16 @@ sudo -u df-admin mkdir production
 cd production 
 
 # create subfolders 
+sudo -u df-admin mkdir logging  
 sudo -u df-admin mkdir db
-sudo -u df-admin mkdir logging
-
-# move files to production folder
-sudo scp -r /home/df-admin/drinkfill/ui/references /home/df-admin/drinkfill/production/references
-sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db /home/df-admin/drinkfill/production/db/drinkfill-sqlite.db 
 
 sudo scp /home/df-admin/drinkfill/ui/DF_UI /home/df-admin/drinkfill/production/DF_UI
 sudo scp /home/df-admin/drinkfill/fsm/controller /home/df-admin/drinkfill/production/controller
+
+# move files to production folder
+sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db /home/df-admin/drinkfill/production/db/drinkfill-sqlite.db 
+sudo scp -r /home/df-admin/drinkfill/ui/references /home/df-admin/drinkfill/production/references
+
 
 sudo scp /home/df-admin/drinkfill/controller_soapstand.service /home/df-admin/drinkfill/production/controller_soapstand.service
 sudo scp /home/df-admin/drinkfill/controller_execute.sh /home/df-admin/drinkfill/production/controller_execute.sh

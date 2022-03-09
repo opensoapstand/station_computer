@@ -66,7 +66,6 @@ private slots:
     void onRinseTimerTick();
     void dispensing_end_admin();
     void on_abortButton_clicked();
-    void on_finish_Button_clicked();    
 
 
 private:

@@ -29,7 +29,7 @@ page_dispenser::page_dispenser(QWidget *parent) :
     this->isDispensing = false;
     ui->setupUi(this);
 
-    ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    // ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->abortButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     dispenseIdleTimer = new QTimer(this);
@@ -72,8 +72,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     // FIXME: this is a hack for size changes...
     fsmSendStartDispensing();
     
-    ui->finish_Button->setEnabled(false);
-    ui->abortButton->setEnabled(false);
+    // ui->abortButton->setEnabled(false);
 
     if(nullptr == dispenseIdleTimer){
         dispenseIdleTimer = new QTimer(this);
@@ -189,14 +188,6 @@ qDebug() << "6626622fsef" << endl;
     qDebug() << "Finished dispense admin handling";
 }
 
-
-void page_dispenser::on_finish_Button_clicked(){
-    qDebug() << "Pressed dispense complete.";
-    if(this->isDispensing){
-        force_finish_dispensing();
-    }
-}
-
 void page_dispenser::force_finish_dispensing(){
 
     fsmSendStopDispensing();
@@ -296,8 +287,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull){
         ui->widget->show();
         ui->filler->show();
 
-        ui->finish_Button->setEnabled(true);
-        ui->abortButton->setEnabled(true);
+        // ui->abortButton->setEnabled(true);
     }
 }
 
@@ -306,8 +296,6 @@ void page_dispenser::fsmReceiveTargetVolumeReached(){
         this->isDispensing = false;
         // qDebug() << "Signal: Target volume reached."  << endl;
         updateVolumeDisplayed(1.0, true); // make sure the fill bottle graphics are completed
-
-        
 
         dispensing_end_admin();
         // qDebug() << "Finish dispense end admin."  << endl;

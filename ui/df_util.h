@@ -21,6 +21,8 @@
 #define DB_PATH_CLICKS "/release/db/sqlite/clicks.db"
 #define DB_PATH_TEMPERATURE "/release/db/sqlite/temperature.db"
 
+#define ML_TO_OZ 0.033814
+
 using namespace std;
 
 typedef enum FSM_COMM {

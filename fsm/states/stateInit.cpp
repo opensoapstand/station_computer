@@ -188,6 +188,10 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
         {
             name = argv[i];
         }
+        else if (colname == "units")
+        {
+            display_unit = value;
+        }
         else if (colname == "name_receipt")
         {
             name_receipt = argv[i];

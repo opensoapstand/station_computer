@@ -11,7 +11,7 @@
 //***************************************
 
 #include "stateDispenseEnd.h"
-
+#include <cmath>
 #define DISPENSE_END_STRING "Dispense End"
 
 #define MAX_BUF 64
@@ -469,7 +469,7 @@ DF_ERROR stateDispenseEnd::print_receipt()
 
     std::string name_receipt = (productDispensers[pos].getProduct()->m_name_receipt);
     std::string plu = productDispensers[pos].getProduct()->getPLU(size);
-    std::string units = (productDispensers[pos].getProduct()->m_display_unit);
+    std::string units = (productDispensers[pos].getProduct()->getDisplayUnits());
     double price = productDispensers[pos].getProduct()->getPrice(size);
     double price_per_liter;
 
@@ -502,9 +502,12 @@ DF_ERROR stateDispenseEnd::print_receipt()
 
     // convert units
     if (units == "oz"){
-        volume_dispensed = volume_dispensed * ML_TO_OZ;
+        volume_dispensed = ceil(volume_dispensed * ML_TO_OZ);
         price_per_liter = price_per_liter/1000 / ML_TO_OZ;
     }
+
+
+    debugOutput::sendMessage("Volume dispensed for receipt:" + to_string(volume_dispensed), MSG_INFO);
 
     string base_unit = "ml";
     if (units == "ml"){
@@ -516,10 +519,11 @@ DF_ERROR stateDispenseEnd::print_receipt()
     }
     string receipt_volume_formatted = (chars_volume_formatted);
 
+    debugOutput::sendMessage("Units for receipt2:" + units, MSG_INFO);
+    debugOutput::sendMessage("Volume dispensed for receipt2:" + receipt_volume_formatted, MSG_INFO);
 
     snprintf(chars_cost, sizeof(chars_cost), "%.2f", price );
     string receipt_cost = (chars_cost);
-    
 
     snprintf(chars_price_per_liter_formatted, sizeof(chars_volume_formatted), "%.2f", price_per_liter);
     string receipt_price_per_liter = (chars_price_per_liter_formatted);

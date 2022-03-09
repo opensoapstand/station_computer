@@ -35,7 +35,7 @@ public:
     // product *productOrder;
 
 private:
-    int pos;
+    int dispenser_index;
     char size;
     dispenser *productDispensers;
 };

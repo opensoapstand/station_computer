@@ -114,7 +114,13 @@ void dispenser::initDispenser(int slot)
 // }
 DF_ERROR dispenser::setSlot(int slot)
 {
+    // first slot is 1
     this->slot = slot;
+}
+int dispenser::getSlot()
+{
+    // first slot is 1
+    return this->slot;
 }
 
 // TODO: Call this function on Dispense onEntry()
@@ -177,7 +183,7 @@ DF_ERROR dispenser::setPumpDirectionForward()
 
 bool dispenser::getDispenseButtonValue()
 {
-    the_8344->getButton();
+    the_8344->getDispenseButtonStateDebounced();
 }
 
 // Reverse pump: Turn forward pin LOW - Reverse pin HIGH
@@ -202,6 +208,7 @@ bool dispenser::isPumpEnabled()
 
 DF_ERROR dispenser::setPumpEnable(int pos)
 {
+    // first pump is 1.
     // still needs dispense button to actually get the pump to start
     debugOutput::sendMessage("-----Start Pump-----", MSG_INFO);
     the_8344->setPumpEnable(pos);
@@ -232,6 +239,10 @@ DF_ERROR dispenser::startDispense()
     }
 
     return e_ret = OK;
+}
+
+bool dispenser::getIsDispenseTargetReached(){
+    return m_pDispensedProduct->isDispenseTargetVolumeReached();
 }
 
 double dispenser::getDispensedVolume()

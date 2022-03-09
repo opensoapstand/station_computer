@@ -172,11 +172,11 @@ DF_ERROR stateManualPrinter::printTest()
    printerr.printBarcode(plu.c_str(), EAN13);
    system("echo '\n---------------------------\n\n\n' > /dev/ttyS4");
 
-   string sysstring = "echo '\n---------------------------\n\n\n" + printerstring + "' > /dev/ttyS4";
-   system(sysstring.c_str());
+   string printer_command_string = "echo '\n---------------------------\n\n\n" + printerstring + "' > /dev/ttyS4";
+   system(printer_command_string.c_str());
 
-   //  string sysstring = "echo '------------------------------\n-- Vancouver Active Tourism --\n--            2022-02-12    --\n------------------------------\n 1x Special morning activity \n 1x Batard Bakery experience \n 1x Guided bike tour to \n         Lighthouse park \n 1x Soapstand workplace demo \n Participants: Wafeltje + Lodey    \n   Grand total: Happy times <3 \n   Thank you, please come again!  \n\n\n\n' > /dev/ttyS4";
-   //  system(sysstring.c_str());
+   //  string printer_command_string = "echo '------------------------------\n-- Vancouver Active Tourism --\n--            2022-02-12    --\n------------------------------\n 1x Special morning activity \n 1x Batard Bakery experience \n 1x Guided bike tour to \n         Lighthouse park \n 1x Soapstand workplace demo \n Participants: Wafeltje + Lodey    \n   Grand total: Happy times <3 \n   Thank you, please come again!  \n\n\n\n' > /dev/ttyS4";
+   //  system(printer_command_string.c_str());
 
    //  printerr->setBarcodeHeight(100);
 }

@@ -1,10 +1,12 @@
 #include "drinkorder.h"
-#include "idle.h"
+#include "page_idle.h"
+#include "df_util.h" // lode added for settings
 
 // Ctor
 DrinkOrder::DrinkOrder()
 {
     selectedDrink = new DrinkSelection;
+    qDebug() << "ahoyy2" ;
     DbManager db(DB_PATH);
 
     DRINK1_SIZE_ML_L = db.getProductVolume(1, 'l');
@@ -17,15 +19,15 @@ DrinkOrder::DrinkOrder()
     DRINK3_SIZE_ML_S = db.getProductVolume(3, 's');
     DRINK4_SIZE_ML_S = db.getProductVolume(4, 's');
 
-    DRINK1_PRICE_L = db.getProductPrice(1, 'l');
-    DRINK2_PRICE_L = db.getProductPrice(2, 'l');
-    DRINK3_PRICE_L = db.getProductPrice(3, 'l');
-    DRINK4_PRICE_L = db.getProductPrice(4, 'l');
+    DRINK1_PRICE_LARGE = db.getProductPrice(1, 'l');
+    DRINK2_PRICE_LARGE = db.getProductPrice(2, 'l');
+    DRINK3_PRICE_LARGE = db.getProductPrice(3, 'l');
+    DRINK4_PRICE_LARGE = db.getProductPrice(4, 'l');
 
-    DRINK1_PRICE_S = db.getProductPrice(1, 's');
-    DRINK2_PRICE_S = db.getProductPrice(2, 's');
-    DRINK3_PRICE_S = db.getProductPrice(3, 's');
-    DRINK4_PRICE_S = db.getProductPrice(4, 's');
+    DRINK1_price_small = db.getProductPrice(1, 's');
+    DRINK2_price_small = db.getProductPrice(2, 's');
+    DRINK3_price_small = db.getProductPrice(3, 's');
+    DRINK4_price_small = db.getProductPrice(4, 's');
 
     db.closeDB();
 }
@@ -88,12 +90,12 @@ void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
         case(SMALL_DRINK):
             //qDebug() << "Drink 1 : Small" << endl;
             setSize(DRINK1_SIZE_ML_S);
-            setPrice(DRINK1_PRICE_S);
+            setPrice(DRINK1_price_small);
             break;
         case(LARGE_DRINK):
             //qDebug() << "Drink 1 : Large" << endl;
             setSize(DRINK1_SIZE_ML_L);
-            setPrice(DRINK1_PRICE_L);
+            setPrice(DRINK1_PRICE_LARGE);
             break;
         default:
             break;
@@ -104,12 +106,12 @@ void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
         case(SMALL_DRINK):
 //            qDebug() << "Drink 2 : Small" << endl;
             setSize(DRINK2_SIZE_ML_S);
-            setPrice(DRINK2_PRICE_S);
+            setPrice(DRINK2_price_small);
             break;
         case(LARGE_DRINK):
 //            qDebug() << "Drink 2 : Large" << endl;
             setSize(DRINK2_SIZE_ML_L);
-            setPrice(DRINK2_PRICE_L);
+            setPrice(DRINK2_PRICE_LARGE);
             break;
         default:
             break;
@@ -120,12 +122,12 @@ void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
         case(SMALL_DRINK):
 //            qDebug() << "Drink 3 : Small" << endl;
             setSize(DRINK3_SIZE_ML_S);
-            setPrice(DRINK3_PRICE_S);
+            setPrice(DRINK3_price_small);
             break;
         case(LARGE_DRINK):
 //            qDebug() << "Drink 3 : Large" << endl;
             setSize(DRINK3_SIZE_ML_L);
-            setPrice(DRINK3_PRICE_L);
+            setPrice(DRINK3_PRICE_LARGE);
             break;
         default:
             break;
@@ -136,12 +138,12 @@ void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
         case(SMALL_DRINK):
 //            qDebug() << "Drink 4 : Small" << endl;
             setSize(DRINK4_SIZE_ML_S);
-            setPrice(DRINK4_PRICE_S);
+            setPrice(DRINK4_price_small);
             break;
         case(LARGE_DRINK):
 //            qDebug() << "Drink 4 : Large" << endl;
             setSize(DRINK4_SIZE_ML_L);
-            setPrice(DRINK4_PRICE_L);
+            setPrice(DRINK4_PRICE_LARGE);
             break;
         default:
             break;
@@ -149,19 +151,19 @@ void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
         break;
     default:
         setSize(DRINK1_SIZE_ML_L);
-        setPrice(DRINK1_PRICE_L);
+        setPrice(DRINK1_PRICE_LARGE);
         break;
     }
 }
 
 // Enum search for option slot
-void DrinkOrder::setDrinkOption(DF_QT_OPTIONS sizeOption) {
+void DrinkOrder::setDrinkOption(DF_QT_OPTIONS slot) {
    // qInfo() << "Current Option" << getOption() << endl;
 
 
-    if(sizeOption >= OPTION_SLOT && sizeOption <= DRINK_SIZE_OPTIONS)
+    if(slot >= OPTION_SLOT && slot <= DRINK_SIZE_OPTIONS)
     {
-        switch (sizeOption)
+        switch (slot)
         {
         case(OPTION_SLOT_1):
             changeOption(OPTION_SLOT_1);
@@ -191,11 +193,12 @@ void DrinkOrder::setDrinkOption(DF_QT_OPTIONS sizeOption) {
 //            changeOption(OPTION_SLOT_9);
             break;
         default:
-            setSize(OPTION_SLOT);
+            //setSize(OPTION_SLOT);
+             qInfo() << "BAD OPTION" << slot << endl;
             break;
         }
     } else {
-        qInfo() << "OUT OF OPTION RANGE!" << sizeOption << endl;
+        qInfo() << "OUT OF OPTION RANGE!" << slot << endl;
     }
 }
 

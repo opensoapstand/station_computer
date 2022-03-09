@@ -34,16 +34,21 @@ class product
 public:
         product();
         // product(int slot);
-        product(int slot, string name, double nDispenseVolume, double nTargetVolume_l, double nTargetVolume_s, double calibration_const, double price_l, double price_s, bool isStillProduct, double nVolumePerTick, string nPLU_l, string nPLU_s, string paymentMethod, string name_receipt);
+        product(int slot, string name, double calibration_const, double nVolumePerTick, int dispense_speed_pwm,
+                double nVolumeTarget_s, double nVolumeTarget_m, double nVolumeTarget_l, double nVolumeTarget_c_min, double nVolumeTarget_c_max,
+                double price_small, double price_m, double price_large, double price_custom_per_liter, 
+                string nPLU_small, string nPLU_medium,  string nPLU_large, string nPLU_c,
+                string paymentMethod, string name_receipt, string display_unit);
         ~product();
 
         //getter
-        int getProductOption() { return m_nSlot; } // For IPC
-        bool getIsStillProduct();                  // For pump check
+        double getVolumePerTick();
         double getVolumeDispensed() { return m_nVolumeDispensed; }
         double getVolumeDispensedPreviously();
         double getTargetVolume(char size);
         double getPrice(char size);
+        string getDisplayUnits();
+
         string getPLU(char size);
         string getPaymentMethod() { return m_paymentMethod; }
 
@@ -54,11 +59,8 @@ public:
         DF_ERROR stopDispense();
 
         double getVolumeSinceLastPoll();
-        bool isDispenseComplete();
+        bool isDispenseTargetVolumeReached();
         bool registerFlowSensorTick();
-
-        // int getTickCount(){return m_nTickCount;};
-        // void resetTickCount(){m_nTickCount = 0;};
 
         // DB Updates
         void recordSale(int volume);
@@ -68,30 +70,48 @@ public:
         void productVolumeInfo();
 
         int getPWM();
+        int getPWMFromDB();
+        double getVolPerTickFromDB();
+        
+        double m_volumePerTick;
+        int m_nDispenseSpeedPWM;
 
         double m_nVolumeDispensedPreviously;
         double m_nVolumeTarget;
         double m_nVolumeTarget_l;            //how much to dispense (large)
+        double m_nVolumeTarget_m;            //how much to dispense (medium)
         double m_nVolumeTarget_s;            //how much to dispense (small)
+        double m_nVolumeTarget_c_min;            //custom volume dispensing: min (zero volume can be dispensed, but we will still charge for min)
+        double m_nVolumeTarget_c_max;            //custom volume dispensing: max
+
         double m_nVolumeTarget_t = 10000000; //test dispense (infinite)
         double m_nVolumeDispensed;           //how much has been dispensed in this sale
         double m_price;
-        double m_price_l;
-        double m_price_s;
+        double m_price_small;
+        double m_price_medium;
+        double m_price_large;
+        double m_price_custom_per_liter;
+
         string m_name;
+        string m_display_unit;
         string m_name_receipt;
         double m_buttonPressDuration;
-        string m_nPLU_l;
-        string m_nPLU_s;
+        string m_nPLU_small;
+        string m_nPLU_medium;
+        string m_nPLU_large;
+        string m_nPLU_custom;
         string m_paymentMethod;
-        int m_PWM;
+        // int m_PWM;
         double m_nVolumePerTick;
+        // DF_ERROR reloadProductFromDB();
 
         time_t rawtime;
         struct tm *timeinfo;
 
         char m_nStartTime[50];
 
+        void setSlot(int slot);
+        int getSlot();
 private:
         // TODO: Determine more data to modify per transaction...
         int m_nSlot;
@@ -100,10 +120,11 @@ private:
         double m_nVolumeDispensedSinceLastPoll;
         double m_calibration_const;
 
+        
+
         double m_nTickCount;
         bool valueChange;
 
-        void setSlot(int slot);
         void setProductName(string productName);
         double getVolPerTick();
 

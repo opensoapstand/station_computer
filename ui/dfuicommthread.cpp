@@ -1,4 +1,5 @@
 #include "dfuicommthread.h"
+#include "df_util.h" // lode added for settings
 
 DfUiCommThread::DfUiCommThread(qintptr ID, QObject *parent) :
     QThread(parent)
@@ -71,8 +72,8 @@ QByteArray DfUiCommThread::readyRead()
     if(Data == "MM") {
         emit MMSignal();
     }
-
-    Data.append(" Recieved");
+    Data.append(" Received");
+    qDebug()<<"Message received from FSM: " << Data << endl;
 
     socket->write(Data);
 

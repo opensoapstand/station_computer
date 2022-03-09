@@ -9,12 +9,13 @@ public:
     DbManager(const QString& path);
     ~DbManager();
     void closeDB();
+    bool isDatabaseLocked(const QSqlDatabase & db);
     bool addPageClick(const QString& page);
     QString getProductName(int slot);
     double getProductPrice(int slot, char ml);
     //double getProductTargetVolume(int slot);
     double getProductVolumePerTick(int slot);
-    bool checkLevels(int slot);
+    bool remainingVolumeIsBiggerThanLargestFixedSize(int slot);
     QString getProductReceiptName(int slot);
     QString getPaymentMethod(int slot);
     double getProductVolume(int slot, char ml);
@@ -24,7 +25,7 @@ public:
     double getFullProduct(int slot);
     int getTotalTransactions();
     int getNumberOfProducts();
-    double getRemaining(int slot);
+    double getVolumeRemaining(int slot);
     double getTotalDispensed(int slot);
     QString getLastRefill(int slot);
     double getTemperature();
@@ -34,18 +35,19 @@ public:
     QString getMachineID();
     QString getProductID(int slot);
     QString getUnits(int slot);
+    uint32_t getNumberOfRows(QString table);
 
     bool updatePaymentsDb(QString date, QString time, QString txnType, QString amount, QString cardNo, QString refNo, QString authNo, QString cardType, QString status, QString isoCode, QString hostCode, QString tvr);
-    bool updatePrice_s(int slot, double new_price);
-    bool updatePrice_l(int slot, double new_price);
+    bool updatePriceSmall(int slot, double new_price);
+    bool updatePriceLarge(int slot, double new_price);
     bool updateTargetVolume_s(int slot, double new_volume);
     bool updateTargetVolume_l(int slot, double new_volume);
     bool updateVolumePerTick(int slot, double new_volume_per_tick);
     bool updateFullVolume(int slot, double new_full_volume);
     bool updatePWM(int slot, int new_pwm);
     bool updateBuffer(int slot, double new_buffer);
-    bool updatePLU_s(int slot, QString new_plu);
-    bool updatePLU_l(int slot, QString new_plu);
+    bool updatePluSmall(int slot, QString new_plu);
+    bool updatePluLarge(int slot, QString new_plu);
 
 private:
     void emailEmpty(int slot);

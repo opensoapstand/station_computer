@@ -83,8 +83,12 @@ int main()
 
     DF_ERROR dfRet = OK;
 
+
     if (OK == initObjects())
     {
+        debugOutput::sendMessage("***************************************************************************", MSG_INFO);
+        debugOutput::sendMessage("**************************** START SOAPSTAND CONTROLLER********************", MSG_INFO);
+        debugOutput::sendMessage("***************************************************************************", MSG_INFO);
         dfRet = g_pMessaging->createThreads(kbThread, ipThread);
 
         if (OK == dfRet)

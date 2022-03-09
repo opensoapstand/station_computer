@@ -28,7 +28,7 @@ class mCommunication
 public:
     mCommunication();
     virtual ~mCommunication();
-    virtual bool init();
+    virtual bool page_init();
     virtual std::vector<uint8_t> readPacket();
     virtual std::vector<uint8_t> readForAck();
     virtual bool sendPacket(std::vector<uint8_t> fullPkt, uint pktSize);

@@ -17,7 +17,7 @@ public:
 
 signals:
     void pleaseReset();
-    void updateVolume(double dispensed);
+    void signalUpdateVolume(double dispensed, bool isFull);
     void targetHit();
     void initReady();
     void MM();

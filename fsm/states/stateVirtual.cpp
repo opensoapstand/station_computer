@@ -47,7 +47,7 @@ DF_FSM stateVirtual::getRequestedState()
 //    return m_state;
 // }
 
-// gpio *stateVirtual::getButton()
+// gpio *stateVirtual::getDispenseButtonState()
 // {
 //    return m_pButton[NUM_BUTTON];
 // }

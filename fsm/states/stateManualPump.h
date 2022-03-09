@@ -31,6 +31,7 @@ public:
     string toString();
     DF_ERROR pumpTest();
     DF_ERROR pumpFlowTest();
+    DF_ERROR customVolumeDispenseTest();
 
     DF_ERROR onEntry();
     DF_ERROR onAction();
@@ -38,8 +39,19 @@ public:
 
 private:
     dispenser *productDispensers;
-    bool isFlowTest;
+    bool isFlowTest=false;
+    bool iscustomVolumeDispenseTest=false;
+    bool dispenseButtonValueMemory=false;
+    bool dispenseButtonValue=false;
+
     uint64_t startFlowTestMillis;
+
+    uint64_t startDispensingEpochMillis;
+    uint64_t startRetractingEpochMillis;
+    bool isDispensing=false;
+    bool isRetracting=false;
+
+    uint64_t retract_time_millis;
 };
 
 #endif

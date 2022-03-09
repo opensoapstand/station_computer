@@ -1,0 +1,17 @@
+[Unit]
+Description=DF service
+StartLimitBurst=6
+StartLimitIntervalSec=10
+
+[Service]
+Requires=screen-calibration
+ExecStart=/home/df-admin/drinkfill/production/controller_execute.sh
+Type=simple
+Restart=always  #on-failure
+RestartSec=5
+User=df-admin
+
+[Install]
+WantedBy=multi-user.target
+
+

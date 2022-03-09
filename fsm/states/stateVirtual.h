@@ -39,7 +39,7 @@ public:
     virtual DF_ERROR onExit() = 0;
 
     // gpio *getSolenoid(int pos, int type);
-    // gpio *getButton();
+    // gpio *getDispenseButtonState();
 
     static product *testProducts[PRODUCT_DISPENSERS_MAX];
 

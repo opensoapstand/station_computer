@@ -85,8 +85,7 @@ public:
 
       Time_val getAveragedFlowRate(uint64_t window_length_millis);
 
-      bool getIsDispenseComplete() { return m_isDispenseDone; }
-      void setIsDispenseComplete(bool isDispenseComplete) { m_isDispenseDone = isDispenseComplete; }
+      bool getIsDispenseTargetReached();
 
       void setm_pIsDispenseDone() { *m_pIsDispensing = false; }
       void setm_pIsDispensing() { *m_pIsDispensing = true; }
@@ -101,7 +100,7 @@ public:
 
       DF_ERROR setButtonsShutdownAndMaintenance();
       DF_ERROR setSlot(int slot);
-
+      int getSlot();
       //      DF_ERROR setButtonPress(int address_num, int pin_num);
       bool reader = true;
 

@@ -44,12 +44,10 @@ DF_ERROR stateDispenseInit::onEntry()
     m_state_requested = STATE_DISPENSE_INIT;
     DF_ERROR e_ret = OK;
 
-
     size = m_pMessaging->getRequestedVolume();
     productDispensers = g_productDispensers;
 
-    pos = m_pMessaging->getProductNumber();
-    pos = pos - 1;
+    dispenser_index = m_pMessaging->getProductNumber() - 1;
 
     return e_ret;
 }
@@ -62,23 +60,18 @@ DF_ERROR stateDispenseInit::onAction()
 
     DF_ERROR e_ret = OK;
 
-    debugOutput::sendMessage("Chosen product: " + std::to_string(pos), MSG_INFO);
+    debugOutput::sendMessage("Chosen dispenser slot: " + std::to_string(  productDispensers[dispenser_index].getSlot()), MSG_INFO);
+    // debugOutput::sendMessage("Chosen dispenser slot: " + std::to_string(  productDispensers[dispenser_index].getProduct()->getTargetVolume(size)), MSG_INFO);
+    // debugOutput::sendMessage("Chosen dispenser slot: " + std::to_string(  productDispensers[dispenser_index].getProduct()->getPrice(size)), MSG_INFO);
 
-    // DO THIS IN A STATE DISPENSE_INIT
-    // TODO this should be a separate state (dispense_init)
+    productDispensers[dispenser_index].getProduct()->initDispense(
+        productDispensers[dispenser_index].getProduct()->getTargetVolume(size),
+        productDispensers[dispenser_index].getProduct()->getPrice(size));
 
-    productDispensers[pos].getProduct()->initDispense(
-        productDispensers[pos].getProduct()->getTargetVolume(size),
-        productDispensers[pos].getProduct()->getPrice(size));
+    productDispensers[dispenser_index].getProduct()->productInfo();
+    productDispensers[dispenser_index].getProduct()->productVolumeInfo();
 
-    productDispensers[pos].setIsDispenseComplete(false);
-
-    productDispensers[pos].getProduct()->productInfo();
-    productDispensers[pos].getProduct()->productVolumeInfo();
-
-    // productDispensers[pos].startDispense(
-    //     productDispensers[pos].getProduct()->getProductOption());
-    productDispensers[pos].startDispense();
+    productDispensers[dispenser_index].startDispense();
     m_state_requested = STATE_DISPENSE_IDLE;
 
     return e_ret;

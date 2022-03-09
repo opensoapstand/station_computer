@@ -26,6 +26,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
+#include "../dftypes.h"
 
 #include "../objects/debugOutput.h"
 
@@ -47,10 +48,12 @@ public:
     bool setPumpEnable(unsigned char pump_number);
     bool setPumpsDisableAll();
     unsigned short getPumpSpeed(void);
-    bool getButton(void);
+    bool getDispenseButtonStateDebounced(void);
+    bool getDispenseButtonEdge(void);
     void setDispenseButtonLight(bool poweron);
 
 private:
+    bool getDispenseButtonState(void);
     int i2c_handle = -1;
     char *i2c_bus_name;
 
@@ -60,6 +63,12 @@ private:
     void setup_i2c_bus(void);
     bool check_8344_configuration(void);
     void initialize_8344(void);
+
+    bool dispenseButtonStateMemory;
+    bool dispenseButtonIsDebounced;
+    bool dispenseButtonStateDebounced;
+    bool dispenseButtonDebounceMemory;
+
 };
 
 #endif // _DSED8344_H

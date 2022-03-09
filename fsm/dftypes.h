@@ -13,18 +13,25 @@
 #ifndef DFTYPES__H_
 #define DFTYPES__H_
 
-#define XML_SETTINGS "/release/df_settings.xml"
+// #define XML_SETTINGS "/release/df_settings.xml"
 
 #include <sqlite3.h>
 #include <stdint.h>
 
+#define USE_OLD_DATABASE
+
 #define PRODUCT_DISPENSERS_MAX 4
-#define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
+#define DB_PATH "/home/df-admin/drinkfill/production/db/drinkfill-sqlite.db"
+// #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
+//#define DB_PATH "/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db"
 
 #define MILLIS_INIT_DUMMY 0
 #define IO_PIN_FLOW_SENSOR 364
 #define IO_PIN_FLOW_SENSOR_STRING "364"
 #define RUNNING_AVERAGE_WINDOW_LENGTH 100
+#define DISPENSE_BUTTON_DEBOUNCE_MILLIS 50
+
+#define ML_TO_OZ 0.033814
 
 struct Time_val{
    uint64_t time_millis;

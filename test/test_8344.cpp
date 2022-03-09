@@ -13,7 +13,7 @@ int main (int argc, char *argv[])
     
     the_8344 = new dsed8344 ();
 
-    button_state = the_8344->getButton();
+    button_state = the_8344->getDispenseButtonState();
     printf ("Button is %s\n", (button_state ? "down" : "up"));
 
     pwm_value = 100;
@@ -32,7 +32,7 @@ int main (int argc, char *argv[])
 //            printf("here");
             printf ("Pump tach: %u\n", the_8344->getPumpTach ());
 
-            if (the_8344->getButton() != button_state)
+            if (the_8344->getDispenseButtonState() != button_state)
             {
                 button_state = !button_state;
                 printf ("Button is %s\n", (button_state ? "down" : "up"));

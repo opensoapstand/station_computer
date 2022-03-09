@@ -15,17 +15,19 @@ typedef enum DF_QT_OPTIONS {
    OPTION_SLOT_6,
    OPTION_SLOT_7,
    OPTION_SLOT_8,
-   OPTION_SLOT_9,
+   OPTION_SLOT_9
+   ,
 
    // Drink Sizes
    DRINK_SIZE_OPTIONS = 15,
    SMALL_DRINK,
 //   MEDIUM_DRINK,
-   LARGE_DRINK,
-   DRINK1,
-   DRINK2,
-   DRINK3,
-   DRINK4
+   LARGE_DRINK
+//    ,
+//    DRINK1,
+//    DRINK2,
+//    DRINK3,
+//    DRINK4
 } DF_QT_OPTION_PICKED;
 
 // Values for Selected drink.
@@ -75,17 +77,17 @@ public:
     double DRINK3_SIZE_ML_S;
     double DRINK4_SIZE_ML_S;
 
-    double DRINK1_PRICE_L;
-    double DRINK2_PRICE_L;
-    double DRINK3_PRICE_L;
-    double DRINK4_PRICE_L;
+    double DRINK1_PRICE_LARGE;
+    double DRINK2_PRICE_LARGE;
+    double DRINK3_PRICE_LARGE;
+    double DRINK4_PRICE_LARGE;
 
-    double DRINK1_PRICE_S;
-    double DRINK2_PRICE_S;
-    double DRINK3_PRICE_S;
-    double DRINK4_PRICE_S;
+    double DRINK1_price_small;
+    double DRINK2_price_small;
+    double DRINK3_price_small;
+    double DRINK4_price_small;
 
-    //constexpr static double PRICE_SMALL_TEST = 3.00;
+    //constexpr static double price_small_TEST = 3.00;
     //constexpr static double PRICE_LARGE_TEST = 4.00;
 
     // Setters and Getters

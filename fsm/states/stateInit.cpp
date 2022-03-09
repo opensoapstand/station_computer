@@ -255,7 +255,7 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
         {
             name = value;
         }
-        else if (colname == "display_unit")
+        else if (colname == "size_unit")
         {
             display_unit = value;
         }

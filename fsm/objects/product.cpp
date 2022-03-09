@@ -266,9 +266,9 @@ double product::getVolPerTickFromDB()
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
     std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
-    ;
     double vol_per_tick = stod(str);
     sqlite3_finalize(stmt);
+    
     sqlite3_close(db);
     //     cout << str << endl;
     return vol_per_tick;

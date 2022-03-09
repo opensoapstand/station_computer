@@ -167,7 +167,11 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
     }
 
     // todo Lode check with Ash
-    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume + "&display_unit=ml&price=" + price + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + EndTime + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer";
+#ifdef USE_OLD_DATABASE
+    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume + "&units=ml&price=" + price + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + EndTime + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer";
+#else
+    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume + "&size_unit=ml&price=" + price + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + EndTime + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer";
+#endif
     char buffer[1080];
     strcpy(buffer, curl_param.c_str());
 
@@ -253,7 +257,12 @@ std::string stateDispenseEnd::getProductID(int slot)
 
     debugOutput::sendMessage("Product ID getter START", MSG_INFO);
 
+#ifdef USE_OLD_DATABASE
     std::string sql_string_pid = "SELECT product_id FROM products WHERE slot=" + std::to_string(slot) + ";";
+#else
+    std::string sql_string_pid = "SELECT productId FROM products WHERE slot=" + std::to_string(slot) + ";";
+
+#endif
 
     /* Create SQL statement for transactions */
     sqlite3_prepare(db, sql_string_pid.c_str(), -1, &stmt, NULL);
@@ -322,7 +331,7 @@ std::string stateDispenseEnd::getUnitsFromDb(int slot)
 #ifdef USE_OLD_DATABASE
     std::string sql_string_units = "SELECT units FROM products WHERE slot=" + std::to_string(slot) + ";";
 #else
-    std::string sql_string_units = "SELECT display_unit FROM products WHERE slot=" + std::to_string(slot) + ";";
+    std::string sql_string_units = "SELECT size_unit FROM products WHERE slot=" + std::to_string(slot) + ";";
 
 #endif
     /* Create SQL statement for transactions */

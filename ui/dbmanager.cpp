@@ -915,7 +915,11 @@ QString DbManager::getProductID(int slot){
     QString product_id_string;
 
     {
+    #ifdef USE_OLD_DATABASE
     product_id_query.prepare("SELECT product_id FROM products WHERE slot=:slot");
+    #else
+    product_id_query.prepare("SELECT productId FROM products WHERE slot=:slot");
+    #endif
     product_id_query.bindValue(":slot", slot);
     product_id_query.exec();
 

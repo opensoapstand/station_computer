@@ -52,6 +52,7 @@ public:
 
     bool isEnough(int p);
     void MMSlot();
+    //bool slotIndexAvailable[4] = {true,true,true,true}; //;1,2,3,4
 
 private slots:
     void on_nextPageButton_clicked();
@@ -62,7 +63,6 @@ private:
     page_select_product* p_pageSelectProduct;
     page_maintenance* p_page_maintenance;
     bool p1, p2, p3, p4;
-
 
 };
 

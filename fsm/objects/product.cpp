@@ -268,7 +268,7 @@ double product::getVolPerTickFromDB()
     std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
     double vol_per_tick = stod(str);
     sqlite3_finalize(stmt);
-    
+
     sqlite3_close(db);
     //     cout << str << endl;
     return vol_per_tick;
@@ -380,6 +380,13 @@ double product::getPrice(char size)
         return m_price_custom_per_liter;
     }
 #endif
+}
+
+bool product::getIsEnabled(){
+    return this->isEnabled;
+}
+void product::setIsEnabled(bool isEnabled){
+    this->isEnabled = isEnabled;
 }
 
 string product::getDisplayUnits(){

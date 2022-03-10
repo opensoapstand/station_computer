@@ -34,6 +34,10 @@ public:
     QString getPLU(int slot, char size);
     QString getMachineID();
     QString getProductID(int slot);
+    #ifndef USE_OLD_DATABASE
+    int getSlotEnabled(int slot);
+    bool updateSlotAvailability(int slot, int isEnabled);
+    #endif
     QString getUnits(int slot);
     uint32_t getNumberOfRows(QString table);
 

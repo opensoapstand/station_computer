@@ -510,6 +510,44 @@ double DbManager::getTotalDispensed(int slot){
     return dispensed;
 }
 
+#ifndef USE_OLD_DATABASE
+int DbManager::getSlotEnabled(int slot){
+    QSqlQuery qry;
+    bool enabled;
+
+    qry.prepare("SELECT is_enabled_slot_:slot FROM machine");
+
+    qry.bindValue(":slot", slot);
+    qry.exec();
+
+    while (qry.next()) {
+        enabled = qry.value(0).toInt();
+    }
+    return enabled;
+}
+bool DbManager::updateSlotAvailability(int slot, int isEnabled){
+    QSqlQuery qry;
+    bool enabled;
+
+    qry.prepare("UPDATE machine SET is_enabled_slot_:slot=:isEnabled");
+
+    qry.bindValue(":slot", slot);
+    qry.bindValue(":isEnabled", isEnabled);
+    qry.exec();
+
+   if(qry.exec()){
+//        qDebug() << "PWM updated successfully!";
+        return true;
+    }else{
+//        qDebug() << "PWM update error: !"
+//                 << pwm_query.lastError();
+        return false;
+    
+    }
+}
+
+#endif
+
 double DbManager::getVolumeRemaining(int slot){
     QSqlQuery remaining_query;
     double remaining;

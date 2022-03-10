@@ -61,6 +61,9 @@ public:
         double getVolumeSinceLastPoll();
         bool isDispenseTargetVolumeReached();
         bool registerFlowSensorTick();
+        bool getIsEnabled();
+        void setIsEnabled(bool isEnabled);
+
 
         // DB Updates
         void recordSale(int volume);
@@ -115,6 +118,8 @@ public:
 private:
         // TODO: Determine more data to modify per transaction...
         int m_nSlot;
+
+        bool isEnabled;
 
         bool isDispenseFinished;
         double m_nVolumeDispensedSinceLastPoll;

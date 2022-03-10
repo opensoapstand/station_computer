@@ -45,6 +45,7 @@ public:
     void resizeEvent(QResizeEvent *event);
     void updateVolumeDisplayed(double dispensed, bool isFull);
     void fsmReceiveTargetVolumeReached();
+    void setSoldOutButtonText();
 
 private slots:
     void on_backButton_clicked();

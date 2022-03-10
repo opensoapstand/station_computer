@@ -218,7 +218,7 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event){
     QString bitmap_location;
 
     if(checkOption > 0 && checkOption <= 9) {
-        bitmap_location.append("/home/df-admin/drinkfill/production/references/product");
+        bitmap_location.append("/home/df-admin/production/references/product");
         bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
         bitmap_location.append(".png");
     } else {

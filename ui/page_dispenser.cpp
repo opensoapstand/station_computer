@@ -58,7 +58,7 @@ void page_dispenser::showEvent(QShowEvent *event)
 {
     this->isDispensing = false;
     qDebug()<<"Enter dispense page." << endl;
-    QPixmap background("/home/df-admin/drinkfill/production/references/5_background_dispense_instructions.png");
+    QPixmap background("/home/df-admin/production/references/5_background_dispense_instructions.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);

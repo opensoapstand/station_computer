@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
+set -e #setting stop script on error
+
 # move files to service folder
-sudo scp /home/df-admin/drinkfill/production/controller_soapstand.service /etc/systemd/system
-sudo scp /home/df-admin/drinkfill/production/ui_soapstand.service /etc/systemd/system
+sudo scp /home/df-admin/production/admin/controller_soapstand.service /etc/systemd/system
+sudo scp /home/df-admin/production/admin/ui_soapstand.service /etc/systemd/system
 
 # reload services
 sudo systemctl daemon-reload

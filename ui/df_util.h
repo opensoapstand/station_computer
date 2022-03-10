@@ -15,9 +15,9 @@
 #endif
 
 #ifdef USE_OLD_DATABASE
-#define DB_PATH "/home/df-admin/drinkfill/production/db/drinkfill-sqlite.db"
+#define DB_PATH "/home/df-admin/production/db/drinkfill-sqlite.db"
 #else
-#define DB_PATH "/home/df-admin/drinkfill/production/db/drinkfill-sqlite_newlayout.db"
+#define DB_PATH "/home/df-admin/production/db/drinkfill-sqlite_newlayout.db"
 #endif
 // #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 //#define DB_PATH "/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db"

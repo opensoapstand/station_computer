@@ -21,7 +21,7 @@
 #define USE_OLD_DATABASE
 
 #define PRODUCT_DISPENSERS_MAX 4
-#define DB_PATH "/home/df-admin/drinkfill/production/db/drinkfill-sqlite.db"
+#define DB_PATH "/home/df-admin/production/db/drinkfill-sqlite.db"
 // #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 //#define DB_PATH "/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db"
 

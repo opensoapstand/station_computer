@@ -232,7 +232,7 @@ void stateDispenseEnd::bufferCURL(std::string curl_params)
     timeinfo = localtime(&rawtime);
     strftime(filetime, 50, "%F %T", timeinfo);
     // std::string filelocation = "/home/df-admin/curlBuffer/";
-    std::string filelocation = "/home/df-admin/";
+    std::string filelocation = "/home/df-admin/production/logging/";
     std::string filetype = ".txt";
     std::string filename = filelocation + filetime + filetype;
     std::ofstream out;

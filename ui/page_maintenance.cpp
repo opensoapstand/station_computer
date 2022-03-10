@@ -17,16 +17,16 @@ page_maintenance::page_maintenance(QWidget *parent) :
 {
     // Fullscreen background setup
     ui->setupUi(this);
-    QPixmap background1("/home/df-admin/drinkfill/production/references/product1.png");
+    QPixmap background1("/home/df-admin/production/references/product1.png");
     QIcon ButtonIcon1(background1);
 
-    QPixmap background2("/home/df-admin/drinkfill/production/references/product2.png");
+    QPixmap background2("/home/df-admin/production/references/product2.png");
     QIcon ButtonIcon2(background2);
 
-    QPixmap background3("/home/df-admin/drinkfill/production/references/product3.png");
+    QPixmap background3("/home/df-admin/production/references/product3.png");
     QIcon ButtonIcon3(background3);
 
-    QPixmap background4("/home/df-admin/drinkfill/production/references/product4.png");
+    QPixmap background4("/home/df-admin/production/references/product4.png");
     QIcon ButtonIcon4(background4);
 
 

@@ -117,7 +117,7 @@ void debugOutput::sendMessage(std::string msg, MESSAGE_LEVEL lvl)
 
 	std::ofstream outfile;
 
-	string log_path = "/home/df-admin/drinkfill/production/logging/fsm_" + getCurrentDate() + ".txt";
+	string log_path = "/home/df-admin/production/logging/fsm_" + getCurrentDate() + ".txt";
 
 	outfile.open(log_path, std::ios_base::app); // append instead of overwrite // will close automatically at destruction
 

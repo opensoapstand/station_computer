@@ -10,8 +10,8 @@ sudo ./create_production_data.sh
 echo "start soapstand services"
 
 # move services to systemd/system folder
-sudo scp /home/df-admin/drinkfill/production/controller_soapstand.service /etc/systemd/system
-sudo scp /home/df-admin/drinkfill/production/ui_soapstand.service /etc/systemd/system
+sudo scp /home/df-admin/production/admin/controller_soapstand.service /etc/systemd/system
+sudo scp /home/df-admin/production/admin/ui_soapstand.service /etc/systemd/system
 
 # reload services
 sudo systemctl daemon-reload

@@ -33,7 +33,7 @@ page_help::page_help(QWidget *parent) :
     ui->previousPage_Button_2->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    QPixmap background("/home/df-admin/drinkfill/production/references/3_background_help.png");
+    QPixmap background("/home/df-admin/production/references/3_background_help.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);

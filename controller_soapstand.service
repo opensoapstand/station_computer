@@ -5,7 +5,7 @@ StartLimitIntervalSec=10
 
 [Service]
 Requires=screen-calibration
-ExecStart=/home/df-admin/drinkfill/production/controller_execute.sh
+ExecStart=/home/df-admin/production/admin/controller_execute.sh
 Type=simple
 Restart=always  #on-failure
 RestartSec=5

@@ -27,7 +27,7 @@ page_select_product::page_select_product(QWidget *parent) :
 {
     ui->setupUi(this);
     // qDebug()<< "Constructor callk"<< endl;
-    QPixmap background("/home/df-admin/drinkfill/production/references/2_background_products.png");
+    QPixmap background("/home/df-admin/production/references/2_background_products.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
@@ -96,7 +96,7 @@ void page_select_product::showEvent(QShowEvent *event)
     if (!db.remainingVolumeIsBiggerThanLargestFixedSize(1)  || !this->idlePage->isSlotAvailable(1) ){
         // Change p1 to Sold Out
 //        qDebug() << "Product 1 is Sold Out!" << endl;
-        ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(/home/df-admin/drinkfill/production/references/soldOut.png); }");
+        ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(/home/df-admin/production/references/soldOut.png); }");
     }
     else{
         ui->selection1_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
@@ -105,7 +105,7 @@ void page_select_product::showEvent(QShowEvent *event)
     if (!db.remainingVolumeIsBiggerThanLargestFixedSize(2)   || !this->idlePage->isSlotAvailable(2) ){
         // Change p2 to Sold Out
 //        qDebug() << "Product 2 is Sold Out!" << endl;
-        ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(/home/df-admin/drinkfill/production/references/soldOut.png); }");
+        ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(/home/df-admin/production/references/soldOut.png); }");
     }
     else{
         ui->selection2_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
@@ -114,7 +114,7 @@ void page_select_product::showEvent(QShowEvent *event)
     if (!db.remainingVolumeIsBiggerThanLargestFixedSize(3)   || !this->idlePage->isSlotAvailable(3) ){
         // Change p3 to Sold Out
 //        qDebug() << "Product 3 is Sold Out!" << endl;
-        ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(/home/df-admin/drinkfill/production/references/soldOut.png); }");
+        ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(/home/df-admin/production/references/soldOut.png); }");
     } 
     else{
         ui->selection3_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
@@ -123,7 +123,7 @@ void page_select_product::showEvent(QShowEvent *event)
     if (!db.remainingVolumeIsBiggerThanLargestFixedSize(4)   || !this->idlePage->isSlotAvailable(4) ){
         // Change p4 to Sold Out
 //        qDebug() << "Product 4 is Sold Out!" << endl;
-        ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(/home/df-admin/drinkfill/production/references/soldOut.png); }");
+        ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(/home/df-admin/production/references/soldOut.png); }");
     }
     else{
         ui->selection4_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");

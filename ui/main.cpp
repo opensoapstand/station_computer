@@ -42,20 +42,20 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
     Q_UNUSED(type)
     Q_UNUSED(context)
 
-    printf("%s\n", qPrintable(msg));
-    fflush(stdout);
-
-    QString line_out = "";
-
     QString time_stamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
+    QString time_stamp_time = QDateTime::currentDateTime().toString("hh:mm:ss.zzz");
     QString time_stamp_date = QDateTime::currentDateTime().toString("yyyy-MM-dd");
 
-    line_out.append(time_stamp);
-    line_out.append(" : ");
-    line_out.append(msg);
+    // print to screen
+    QString line_terminal = "";
+    line_terminal.append(time_stamp);
+    line_terminal.append(" : ");
+    line_terminal.append(msg);
+    printf("%s\n", qPrintable(line_terminal));
+    fflush(stdout);
 
     // create a new log file daily
-    QString log_file_base_path = "/home/df-admin/drinkfill/production/logging/soapstand_log_ui_%1.txt"; // https://stackoverflow.com/questions/4784155/how-to-format-a-qstring
+    QString log_file_base_path = "/home/df-admin/drinkfill/production/logging/ui_%1.txt"; // https://stackoverflow.com/questions/4784155/how-to-format-a-qstring
     QString log_file_path = QString(log_file_base_path).arg(time_stamp_date);
     QFile file(log_file_path);
     log_file = &file;
@@ -65,8 +65,13 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
         qDebug() << "Couldn't log to file!";
     }
 
+    // write to log
     if (log_file)
     {
+        QString line_out = "";
+        line_out.append(time_stamp_time);
+        line_out.append(" : ");
+        line_out.append(msg);
         // log_file->write(msg.toLatin1());
         log_file->write(line_out.toUtf8());
         log_file->write("\n");

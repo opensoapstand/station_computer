@@ -217,7 +217,7 @@ DF_ERROR dispenser::setPumpEnable(int pos)
 
 DF_ERROR dispenser::setPumpPWM(uint8_t value)
 {
-    debugOutput::sendMessage("-----Set PWM-----", MSG_INFO);
+    debugOutput::sendMessage("-----Set PWM----- " +  to_string(value), MSG_INFO);
     the_8344->setPumpPWM((unsigned char)value);
 }
 

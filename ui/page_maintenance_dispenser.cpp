@@ -63,7 +63,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
     int checkOption = this->idlePage->userDrinkOrder->getOption();
 
-    qDebug() << "call db from maintenance select dispenser page" << endl;
+    qDebug() << "*************************call db from maintenance select dispenser page" << endl;
     DbManager db(DB_PATH);
     //DbManager db_temperature(DB_PATH_TEMPERATURE);
     //db.addPageClick("PAGE_MAINTENANCE PAGE ENTERED");
@@ -210,7 +210,7 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event){
 
     int checkOption = idlePage->userDrinkOrder->getOption();
 
-    qDebug() << "call db from maintenance select dispenser page  resize event" << endl;
+    qDebug() << " ********** 666564 call db from maintenance select dispenser page  resize event" << endl;
     DbManager db(DB_PATH);
    // DbManager db_temperature(DB_PATH_TEMPERATURE);
 
@@ -227,6 +227,7 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event){
     ticks = db.getProductVolumePerTick(checkOption);
 
     ui->name->setText(db.getProductName(checkOption));
+    
     ui->price_small->setText("$"+QString::number(db.getProductPrice(checkOption, 's')));
     ui->price_large->setText("$"+QString::number(db.getProductPrice(checkOption, 'l')));
     ui->target_volume_s->setText(QString::number(db.getProductVolume(checkOption, 's')) + " " +  db.getUnits(checkOption));
@@ -539,6 +540,7 @@ void page_maintenance_dispenser::on_refillButton_clicked(){
 
 
 }
+
 #ifndef USE_OLD_DATABASE
 void page_maintenance_dispenser::on_soldOutButton_clicked(){
     DbManager db(DB_PATH);

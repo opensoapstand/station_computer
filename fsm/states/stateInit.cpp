@@ -184,6 +184,10 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
         {
             slot = atoi(argv[i]);
         }
+        else if (colname == "pwm")
+        {
+            dispense_speed_pwm = atof(value);
+        }
         else if (colname == "name")
         {
             name = argv[i];
@@ -242,7 +246,7 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
         }
         else
         {
-            debugOutput::sendMessage("unprocessed colname: " + colname, MSG_INFO); //+ std::string to_string(colname)
+            debugOutput::sendMessage("-->unprocessed colname: " + colname, MSG_INFO); //+ std::string to_string(colname)
         }
 
 #else
@@ -337,7 +341,7 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
         }
         else
         {
-            debugOutput::sendMessage("unprocessed colname: " + colname, MSG_INFO); //+ std::string to_string(colname)
+            debugOutput::sendMessage("-->unprocessed colname: " + colname, MSG_INFO); //+ std::string to_string(colname)
         }
 
 #endif

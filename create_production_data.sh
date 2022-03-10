@@ -35,4 +35,4 @@ scp /home/df-admin/drinkfill/ui_soapstand.service /home/df-admin/production/admi
 scp /home/df-admin/drinkfill/ui_execute.sh /home/df-admin/production/admin/ui_execute.sh
 scp /home/df-admin/drinkfill/soapstand_service_manager_start.sh /home/df-admin/production/admin/soapstand_service_manager_start.sh
 scp /home/df-admin/drinkfill/soapstand_service_manager_stop.sh /home/df-admin/production/admin/soapstand_service_manager_stop.sh
-
+scp /home/df-admin/drinkfill/status_services.sh /home/df-admin/production/admin/status_services.sh

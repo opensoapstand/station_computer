@@ -7,7 +7,7 @@
 #include "dfuiserver.h"
 
 // TODO: Refactor to fit with dfuicommthread
-//#define USE_OLD_DATABASE
+#define USE_OLD_DATABASE
 //#define START_FSM_FROM_UI //enabled by default (start controller from ui)
 
 #ifndef START_FSM_FROM_UI

@@ -43,6 +43,13 @@ page_idle::page_idle(QWidget *parent) :
 
 }
 
+bool page_idle::isSlotAvailable(int slot){
+    return this->slotIndexAvailable[slot - 1];
+}
+void page_idle::setSlotAvailability(int slot, bool isEnabled){
+    this->slotIndexAvailable[slot - 1] = isEnabled;
+}
+
 /*
  * Navigation to Product item
  */

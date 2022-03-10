@@ -49,10 +49,13 @@ public:
 
     DfUiCommThread* dfComm;
 
+    bool isSlotAvailable(int slot);
+    void setSlotAvailability(int slot, bool isEnabled);
+
 
     bool isEnough(int p);
     void MMSlot();
-    //bool slotIndexAvailable[4] = {true,true,true,true}; //;1,2,3,4
+    bool slotIndexAvailable[4] = {true,true,true,true}; //;1,2,3,4
 
 private slots:
     void on_nextPageButton_clicked();

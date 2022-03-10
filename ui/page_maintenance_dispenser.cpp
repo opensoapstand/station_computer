@@ -42,7 +42,9 @@ void page_maintenance_dispenser::setSoldOutButtonText(){
  DbManager db(DB_PATH);
 #ifdef USE_OLD_DATABASE
 
-    if(db.getVolumeRemaining(checkOption)>0){
+    if (this->idlePage->isSlotAvailable( this->idlePage->userDrinkOrder->getOption() )) {
+
+    //if(db.getVolumeRemaining(checkOption)>0){
 
 #else
     int slot = idlePage->userDrinkOrder->getOption();
@@ -643,7 +645,9 @@ void page_maintenance_dispenser::on_soldOutButton_clicked(){
 
     _maintainProductPageTimeoutSec=40;
 
-    if (db.getVolumeRemaining(this->idlePage->userDrinkOrder->getOption()) > 0){
+    //if (db.getVolumeRemaining(this->idlePage->userDrinkOrder->getOption()) > 0){
+    
+    if(this->idlePage->isSlotAvailable( this->idlePage->userDrinkOrder->getOption() ) ){ 
 
         // ARE YOU SURE YOU WANT TO COMPLETE?
         QMessageBox msgBox;
@@ -656,25 +660,23 @@ void page_maintenance_dispenser::on_soldOutButton_clicked(){
 
         switch(ret){
         case QMessageBox::Yes:
+        {
 //            qDebug() << "YES CLICKED" << endl;
 
-            if(db.sellout(this->idlePage->userDrinkOrder->getOption())){
+            this->idlePage->setSlotAvailability(this->idlePage->userDrinkOrder->getOption(), false); 
+
 //                qDebug() << "SOLD OUT!" << endl;
-                ui->soldOutLabel->setText("Sold Out Succesfull");
+                ui->soldOutLabel->setText("Sold Out Succesfull. Will be reset at program restart.");
                 ui->refillLabel->setText("");
                 //Update Click DB
 //                DbManager db(DB_PATH);
 //                db.addPageClick("PRODUCT SOLD OUT");
-                ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
-                ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
-                ui->soldOutButton->setText("Un-Mark as Sold Out");
-                break;
-            }
-            else{
-                ui->soldOutLabel->setText("Sold Out ERROR");
-                ui->refillLabel->setText("");
-                break;
-            }
+                // ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
+                // ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
+                // ui->soldOutButton->setText("Un-Mark as Sold Out");
+        }
+        break;
+            
 
         case QMessageBox::No:
 //            qDebug() << "No Clicked" << endl;
@@ -694,26 +696,21 @@ void page_maintenance_dispenser::on_soldOutButton_clicked(){
 
         switch(ret){
         case QMessageBox::Yes:
+        {
 //            qDebug() << "YES CLICKED" << endl;
 
-            if(db.unsellout(this->idlePage->userDrinkOrder->getOption())){
-//                qDebug() << "UN-SOLD OUT!" << endl;
+            this->idlePage->setSlotAvailability(this->idlePage->userDrinkOrder->getOption(), true); 
+
+//                qDebug() << "SOLD OUT!" << endl;
                 ui->soldOutLabel->setText("Un-Sold Out Succesfull");
                 ui->refillLabel->setText("");
                 //Update Click DB
 //                DbManager db(DB_PATH);
-//                db.addPageClick("PRODUCT UN-SOLD OUT");
-                ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
-                ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
-                ui->soldOutButton->setText("Mark as Sold Out");
-                break;
-            }
-            else{
-                ui->soldOutLabel->setText("Un-Sold Out ERROR");
-                ui->refillLabel->setText("");
-                break;
-            }
-
+//                db.addPageClick("PRODUCT SOLD OUT");
+                // ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
+                // ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(this->idlePage->userDrinkOrder->getOption())) + " " +  db.getUnits(this->idlePage->userDrinkOrder->getOption()));
+                // ui->soldOutButton->setText("Mark as Sold Out");
+        }
         case QMessageBox::No:
 //            qDebug() << "No Clicked" << endl;
             msgBox.hide();
@@ -721,6 +718,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked(){
         }
 
     }
+    setSoldOutButtonText();
 
     db.closeDB();
 

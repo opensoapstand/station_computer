@@ -37,83 +37,33 @@
 
 static QPointer<QFile> log_file = nullptr;
 
-void myMessageHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg)
+void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-    
-// https://www.qtcentre.org/threads/19534-redirect-qDebug%28%29-to-file
-	// QString txt;
-	// switch (type) {
-	// case QtDebugMsg:
-	// 	txt = QString("Debug: %1").arg(msg);
-	// 	break;
-	// case QtWarningMsg:
-	// 	txt = QString("Warning: %1").arg(msg);
-	// break;
-	// case QtCriticalMsg:
-	// 	txt = QString("Critical: %1").arg(msg);
-	// break;
-	// case QtFatalMsg:
-	// 	txt = QString("Fatal: %1").arg(msg);
-	// 	abort();
-	// }
-    
-	// QFile outFile("/home/df-admin/log/lodesnexttest.txt");
-
-    // log_file = &outFile;
-
-    // if (!log_file->open(QFile::WriteOnly | QFile::Text | QFile::Append))
-    // {
-    //     qInstallMessageHandler(nullptr);
-    //     qDebug() << "Couldn't log to file!";
-    // }
-
-
-
-	// // outFile.open(QIODevice::WriteOnly | QIODevice::Append);
-	// outFile.open(QIODevice::Append);
-	// QTextStream ts(&outFile);
-	// ts << txt << endl;
-
-    // outFile.close();
-
     Q_UNUSED(type)
     Q_UNUSED(context)
 
     printf("%s\n", qPrintable(msg));
     fflush(stdout);
 
-    
     QString line_out = "";
 
-	// using namespace std::chrono;
-    // uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    // line_out.append(QString::number(millis_since_epoch));
-    
-    // line_out.append(QString::fromStdString(lode));
-
     QString time_stamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
-
-   
-    // string time_stamp = df_util::format_string(df_util::getTimeStamp(), "%Y-%m-%dT%H:%M:%S.%ms%Z");
-    // line_out.append(QString::fromStdString(time_stamp));
+    QString time_stamp_date = QDateTime::currentDateTime().toString("yyyy-MM-dd");
 
     line_out.append(time_stamp);
-	line_out.append(" : ");
+    line_out.append(" : ");
     line_out.append(msg);
 
-
-    QFile file("/home/df-admin/drinkfill/production/logging/soapstand_log_ui_all.txt");
-
+    // create a new log file daily
+    QString log_file_base_path = "/home/df-admin/drinkfill/production/logging/soapstand_log_ui_%1.txt"; // https://stackoverflow.com/questions/4784155/how-to-format-a-qstring
+    QString log_file_path = QString(log_file_base_path).arg(time_stamp_date);
+    QFile file(log_file_path);
     log_file = &file;
-
     if (!log_file->open(QFile::WriteOnly | QFile::Text | QFile::Append))
     {
         qInstallMessageHandler(nullptr);
         qDebug() << "Couldn't log to file!";
-    }else{
-       
     }
-
 
     if (log_file)
     {
@@ -122,53 +72,7 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext& context, const Q
         log_file->write("\n");
         log_file->flush();
     }
-
 }
-
-
-// void myMessageHandler(QtMsgType type, const char *msg)
-// {
-    
-// // https://www.qtcentre.org/threads/19534-redirect-qDebug%28%29-to-file
-// 	QString txt;
-// 	switch (type) {
-// 	case QtDebugMsg:
-// 		txt = QString("Debug: %1").arg(msg);
-// 		break;
-// 	case QtWarningMsg:
-// 		txt = QString("Warning: %1").arg(msg);
-// 	break;
-// 	case QtCriticalMsg:
-// 		txt = QString("Critical: %1").arg(msg);
-// 	break;
-// 	case QtFatalMsg:
-// 		txt = QString("Fatal: %1").arg(msg);
-// 		abort();
-// 	}
-// 	QFile outFile("log");
-// 	outFile.open(QIODevice::WriteOnly | QIODevice::Append);
-// 	QTextStream ts(&outFile);
-// 	ts << txt << endl;
-// }
-
-// void messageHandler(QtMsgType type, const QMessageLogContext& context, const QString& message)
-// {
-//     //https://stackoverflow.com/questions/4954140/how-to-redirect-qdebug-qwarning-qcritical-etc-output
-//     static QMutex mutex;
-//     QMutexLocker lock(&mutex);
-
-//     LOGFILE_LOCATION = "testlode"
-//     static QFile logFile(LOGFILE_LOCATION);
-//     static bool logFileIsOpen = logFile.open(QIODevice::Append | QIODevice::Text);
-
-//     std::cerr << qPrintable(qFormatLogMessage(type, context, message)) << std::endl;
-
-//     if (logFileIsOpen) {
-//         logFile.write(qFormatLogMessage(type, context, message).toUtf8() + '\n');
-//         logFile.flush();
-//     }
-// }
-
 
 int main(int argc, char *argv[])
 {
@@ -179,7 +83,6 @@ int main(int argc, char *argv[])
     qDebug() << "****************************** START SOAPSTAND UI *************************";
     qDebug() << "***************************************************************************";
 
-
     // Fire up QT GUI Thread
     QApplication mainApp(argc, argv);
 
@@ -187,17 +90,17 @@ int main(int argc, char *argv[])
 
     // Build objects to hold navigation (pages)
     // Linking resources and Function definitions for pathing
-    page_help* helpPage = new page_help();
-    page_init* initPage = new page_init();
-    page_idle* idlePage = new page_idle();
-    page_select_product* firstSelectPage = new page_select_product();
-    pageProduct* p_pageProduct = new pageProduct();
-    pagePayment* paymentPage = new pagePayment();
-    page_dispenser* dispensingPage = new page_dispenser();
-    page_error_wifi* wifiError = new page_error_wifi();
-    pagethankyou* lastPage = new pagethankyou();
-    page_maintenance* p_page_maintenance = new page_maintenance();
-    page_maintenance_dispenser* p_page_maintenance_product = new page_maintenance_dispenser();
+    page_help *helpPage = new page_help();
+    page_init *initPage = new page_init();
+    page_idle *idlePage = new page_idle();
+    page_select_product *firstSelectPage = new page_select_product();
+    pageProduct *p_pageProduct = new pageProduct();
+    pagePayment *paymentPage = new pagePayment();
+    page_dispenser *dispensingPage = new page_dispenser();
+    page_error_wifi *wifiError = new page_error_wifi();
+    pagethankyou *lastPage = new pagethankyou();
+    page_maintenance *p_page_maintenance = new page_maintenance();
+    page_maintenance_dispenser *p_page_maintenance_product = new page_maintenance_dispenser();
 
     // TODO: Instantiate a DrinkSelection[] Array
     // TODO: Create Query to populate DrinkSelection[0-12]
@@ -210,7 +113,7 @@ int main(int argc, char *argv[])
     p_page_maintenance->setPage(idlePage, p_page_maintenance_product, firstSelectPage, p_pageProduct);
     idlePage->setPage(firstSelectPage, p_page_maintenance);
     firstSelectPage->setPage(p_pageProduct, idlePage, p_page_maintenance, helpPage);
-    p_pageProduct->setPage(firstSelectPage, dispensingPage,wifiError, idlePage, paymentPage, helpPage);
+    p_pageProduct->setPage(firstSelectPage, dispensingPage, wifiError, idlePage, paymentPage, helpPage);
     paymentPage->setPage(p_pageProduct, dispensingPage, idlePage, helpPage);
     dispensingPage->setPage(paymentPage, lastPage, idlePage);
     lastPage->setPage(dispensingPage, idlePage, paymentPage);
@@ -229,4 +132,3 @@ int main(int argc, char *argv[])
 
     return mainApp.exec();
 }
-

@@ -59,7 +59,8 @@ private slots:
     void on_applyPromo_Button_clicked();
     void on_promoCodeInput_clicked();
 
-    void set_product_label(int checkOption, char drinkSize);
+    void set_label_product(int checkOption, char drinkSize);
+    void set_label_volume(int checkOption, char drinkSize);
 
     // Set Drink Order
     void on_orderSmall_Button_clicked();

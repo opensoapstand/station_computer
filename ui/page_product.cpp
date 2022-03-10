@@ -184,7 +184,7 @@ void pageProduct::on_pagePayment_Button_clicked()
             this->hide();
         }
         else{
-            db.closeDB();
+           
             ui->totalPriceLabel->text();
             paymentPage->showFullScreen();
             this->hide();
@@ -196,6 +196,7 @@ void pageProduct::on_pagePayment_Button_clicked()
         dispensingPage->showFullScreen();
         this->hide();
     }
+     db.closeDB();
 }
 
 void pageProduct::resizeEvent(QResizeEvent *event){

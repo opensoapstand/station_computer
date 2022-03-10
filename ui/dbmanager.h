@@ -40,6 +40,7 @@ public:
     #endif
     QString getUnits(int slot);
     uint32_t getNumberOfRows(QString table);
+    bool initialize(const QString& path);
 
     bool updatePaymentsDb(QString date, QString time, QString txnType, QString amount, QString cardNo, QString refNo, QString authNo, QString cardType, QString status, QString isoCode, QString hostCode, QString tvr);
     bool updatePriceSmall(int slot, double new_price);

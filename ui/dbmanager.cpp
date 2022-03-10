@@ -21,6 +21,21 @@
 DbManager::DbManager(const QString& path)
 {
 //    qDebug() << "CREATING DB OBJECT" << endl;
+    int attempts = 10;
+
+    // while (!m_db.open() && attempts > 0)
+    // {
+    //     this->initialize(path);
+    //     if (!m_db.open()){
+    //         usleep(5);
+    //         qDebug() << "init db failed. attempt: " << attempts;
+    //         attempts --;
+    //     }
+    // }
+
+    // TAKE EXTREME CARE. DO NOT NEST DBopen en db close!!!! hard to find error:("is still in use all queries will cease to work" )
+
+    qDebug() << "db init";
     if (m_db.isOpen()){
         qDebug() << "m_db is already open. Try to close.";
         m_db.close();
@@ -28,7 +43,7 @@ DbManager::DbManager(const QString& path)
         QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
         qDebug() << "m_db was already open. Closed it first.";
     }
-
+    
     if (m_db.connectionName().isEmpty()){
         qDebug() << "connectionname is empty-->";
         m_db = QSqlDatabase::addDatabase("QSQLITE");
@@ -38,21 +53,20 @@ DbManager::DbManager(const QString& path)
         qDebug() << "m_db connectionName is NOT EMPTY";
     }
 
-    if (!m_db.open())
-    {
+
+    if (!m_db.open()){
         qDebug() << "Error: connection with database failed";
-    }
-    else
-    {
+    }else{
         qDebug() << "Database: connection ok";
     }
 
-    // while (isDatabaseLocked(m_db)){
-    //     qDebug() << "Database is locked. Wait until unlocked";
-    //     usleep(100000);
-    // }
+    while (isDatabaseLocked(m_db)){
+        qDebug() << "Database is locked. Wait until unlocked";
+        usleep(100000);
+    }
 
 }
+
 
 // DTOR
 DbManager::~DbManager(){
@@ -63,6 +77,28 @@ DbManager::~DbManager(){
         QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
     }
 }
+
+// bool DbManager::initialize(const QString& path){
+    
+//     qDebug() << "db init";
+//     if (m_db.isOpen()){
+//         qDebug() << "m_db is already open. Try to close.";
+//         m_db.close();
+//         m_db = QSqlDatabase();
+//         QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
+//         qDebug() << "m_db was already open. Closed it first.";
+//     }
+    
+//     if (m_db.connectionName().isEmpty()){
+//         qDebug() << "connectionname is empty-->";
+//         m_db = QSqlDatabase::addDatabase("QSQLITE");
+//         m_db.setDatabaseName(path);
+//         qDebug() << "m_db set connectionName";
+//     }else{
+//         qDebug() << "m_db connectionName is NOT EMPTY";
+//     }
+// }
+
 
 bool DbManager::addPageClick(const QString& page){
 
@@ -83,8 +119,10 @@ bool DbManager::isDatabaseLocked(const QSqlDatabase & db)
 
 void DbManager::closeDB(){
     if (m_db.isOpen()){
+        {
         m_db.close();
         m_db = QSqlDatabase();
+        }
         QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
     }
 }
@@ -190,7 +228,7 @@ double DbManager::getProductVolume(int slot, char size){
     QSqlQuery volume_query;
     double volume;
 
-    
+    {
 #ifdef USE_OLD_DATABASE
     if (size == 'l'){
         volume_query.prepare("SELECT volume_target_l FROM products WHERE slot=:slot");
@@ -227,7 +265,7 @@ double DbManager::getProductVolume(int slot, char size){
         volume = volume_query.value(0).toDouble();
     }
     
-
+    }
     return volume;
 }
 
@@ -235,6 +273,7 @@ double DbManager::getFullProduct(int slot){
     qDebug() << " db... getFullProduct";
     QSqlQuery full_query;
     double full;
+    {
 
 #ifdef USE_OLD_DATABASE
     full_query.prepare("SELECT full_ml FROM products WHERE slot=:slot");
@@ -250,7 +289,7 @@ double DbManager::getFullProduct(int slot){
 
         
     }
-
+    }
     return full;
 }
 
@@ -277,6 +316,7 @@ uint32_t DbManager::getNumberOfRows(QString table){
     qDebug() << " db... getNumberOfRows";
     //qDebug() << "rows: " << getNumberOfRows("products") << endl;
     QString qry = "SELECT COUNT(*) FROM ";
+    
     qry.append(table);
 
     QSqlQuery query;
@@ -287,6 +327,7 @@ uint32_t DbManager::getNumberOfRows(QString table){
     if(query.first()){
         row_count = query.value(0).toInt();
     }
+    
     return row_count;
 }
 
@@ -295,7 +336,7 @@ bool DbManager::remainingVolumeIsBiggerThanLargestFixedSize(int slot){
     qDebug() << " db... remainingVolumeIsBiggerThanLargestFixedSize";
     QSqlQuery level_query;
     double level;
-    
+    {
 #ifdef USE_OLD_DATABASE
     level_query.prepare("SELECT remaining_ml FROM products where slot=:slot");
 
@@ -333,6 +374,7 @@ bool DbManager::remainingVolumeIsBiggerThanLargestFixedSize(int slot){
             return false;
         }
     }
+    }
 
 }
 
@@ -353,7 +395,7 @@ bool DbManager::refill(int slot){
     QString sql_set_time = "UPDATE products SET last_restock=:time WHERE slot=:slot";
     
 #endif
-    
+    {
     refill_query.prepare(sql_set_vol);
     refill_query.bindValue(":slot", slot);
     if(refill_query.exec())
@@ -391,7 +433,7 @@ bool DbManager::refill(int slot){
                 << refill_query.lastError();
         success=false;
     }
-    
+}
 
     return success;
 }
@@ -500,7 +542,7 @@ double DbManager::getTotalDispensed(int slot){
     qDebug() << " db... getTotalDispensed";
     QSqlQuery dispensed_query;
     double dispensed;
-
+{
 #ifdef USE_OLD_DATABASE
     dispensed_query.prepare("SELECT total_dispensed FROM products WHERE slot=:slot");
 #else
@@ -513,6 +555,7 @@ double DbManager::getTotalDispensed(int slot){
     while (dispensed_query.next()) {
         dispensed = dispensed_query.value(0).toDouble();
     }
+}
     return dispensed;
 }
 
@@ -559,6 +602,7 @@ double DbManager::getVolumeRemaining(int slot){
     qDebug() << " db... getVolumeRemaining";
     QSqlQuery remaining_query;
     double remaining;
+    {
 
 #ifdef USE_OLD_DATABASE
     remaining_query.prepare("SELECT remaining_ml FROM products WHERE slot=:slot");
@@ -571,6 +615,7 @@ double DbManager::getVolumeRemaining(int slot){
 
     while (remaining_query.next()) {
         remaining = remaining_query.value(0).toDouble();
+    }
     }
     return remaining;
 }
@@ -626,12 +671,12 @@ int DbManager::getPWM(int slot){
 
     pwm_query.bindValue(":slot", slot);
     pwm_query.exec();
-
+    {
     while (pwm_query.next()) {
         pwm = pwm_query.value(0).toInt();
         qDebug() << "pwm" << slot << pwm << endl;
     }
-
+    }
     
     return pwm;
 }
@@ -716,7 +761,7 @@ bool DbManager::updatePriceLarge(int slot, double new_price){
         qDebug() << " db... updatePriceLarge";
     QSqlQuery update_price_query;
 
-    
+    {
 #ifdef USE_OLD_DATABASE
     update_price_query.prepare("UPDATE products SET price_l = :new_price WHERE slot = :slot");
 #else
@@ -732,6 +777,7 @@ bool DbManager::updatePriceLarge(int slot, double new_price){
 //        qDebug() << "Price update error: !"
 //                 << update_price_query.lastError();
         return false;
+    }
     }
     
 }
@@ -758,7 +804,8 @@ bool DbManager::updateTargetVolume_s(int slot, double new_volume){
 //                 << update_target_volume_query.lastError();
         return false;
     }
-    }
+  
+}
 
 }
 
@@ -815,7 +862,7 @@ bool DbManager::updateVolumePerTick(int slot, double new_volume_per_tick){
 bool DbManager::updateFullVolume(int slot, double new_full_volume){
         qDebug() << " db... updateFullVolume";
     QSqlQuery update_full_volume_query;
-
+{
 #ifdef USE_OLD_DATABASE
     update_full_volume_query.prepare("UPDATE products SET full_ml=:new_full_volume WHERE slot=:slot");
 #else
@@ -832,13 +879,14 @@ bool DbManager::updateFullVolume(int slot, double new_full_volume){
 //                 << update_full_volume_query.lastError();
         return false;
     }
+}
     
 }
 
 bool DbManager::updatePWM(int slot, int new_pwm){
         qDebug() << " db... updatePWM";
     QSqlQuery pwm_query;
-
+{
     #ifdef USE_OLD_DATABASE
     pwm_query.prepare("UPDATE products SET pwm=:new_pwm WHERE slot=:slot");
 #else
@@ -856,6 +904,7 @@ bool DbManager::updatePWM(int slot, int new_pwm){
         return false;
     
     }
+}
 }
 
 bool DbManager::updateBuffer(int slot, double new_buffer){
@@ -882,7 +931,7 @@ QString DbManager::getPLU(int slot, char size){
         qDebug() << " db... getPLU";
     QSqlQuery plu_query;
     QString plu_smalltring;
-
+{
 #ifdef USE_OLD_DATABASE
     if (size == 's'){
         plu_query.prepare("SELECT PLU_s FROM products WHERE slot=:slot");
@@ -903,13 +952,14 @@ QString DbManager::getPLU(int slot, char size){
             plu_smalltring = plu_query.value(0).toString();
 
     }
+}
     return plu_smalltring;
 }
 
 bool DbManager::updatePluSmall(int slot, QString new_plu){
         qDebug() << " db... updatePluSmall";
     QSqlQuery plu_query;
-
+{
 #ifdef USE_OLD_DATABASE
     plu_query.prepare("UPDATE products SET PLU_s=:new_plu WHERE slot=:slot");
 #else
@@ -927,6 +977,7 @@ bool DbManager::updatePluSmall(int slot, QString new_plu){
         return false;
     
     }
+}
 }
 
 bool DbManager::updatePluLarge(int slot, QString new_plu){
@@ -999,7 +1050,7 @@ QString DbManager::getUnits(int slot){
         qDebug() << " db... getUnits";
     QSqlQuery units_query;
     QString units_string;
-
+{
 #ifdef USE_OLD_DATABASE
     units_query.prepare("SELECT units FROM products WHERE slot=:slot");
 #else
@@ -1015,5 +1066,6 @@ QString DbManager::getUnits(int slot){
             //qDebug() << "Product: " << product_name << endl;
     
     }
+}
     return units_string;
 }

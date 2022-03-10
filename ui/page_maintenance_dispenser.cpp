@@ -39,7 +39,8 @@ page_maintenance_dispenser::~page_maintenance_dispenser()
 }
 
 void page_maintenance_dispenser::setSoldOutButtonText(){
- DbManager db(DB_PATH);
+//  qDebug() << "db call from soldoutbuttonsetting";
+//  DbManager db(DB_PATH) TAKE CARE!!!! DO NOT NEST DB CALLS!!!;
 #ifdef USE_OLD_DATABASE
 
     if (this->idlePage->isSlotAvailable( this->idlePage->userDrinkOrder->getOption() )) {
@@ -55,7 +56,7 @@ void page_maintenance_dispenser::setSoldOutButtonText(){
     }else{
         ui->soldOutButton->setText("Un-Mark as Sold Out");
     }
-    db.closeDB();
+    // db.closeDB();
 }
 
 void page_maintenance_dispenser::showEvent(QShowEvent *event)
@@ -206,63 +207,63 @@ void page_maintenance_dispenser::on_backButton_clicked(){
 }
 
 void page_maintenance_dispenser::resizeEvent(QResizeEvent *event){
-    QWidget::resizeEvent(event);
+//     QWidget::resizeEvent(event);
 
-    int checkOption = idlePage->userDrinkOrder->getOption();
+//     int checkOption = idlePage->userDrinkOrder->getOption();
 
-    qDebug() << " ********** 666564 call db from maintenance select dispenser page  resize event" << endl;
-    DbManager db(DB_PATH);
-   // DbManager db_temperature(DB_PATH_TEMPERATURE);
+//     qDebug() << " ********** 666564 call db from maintenance select dispenser page  resize event" << endl;
+//     DbManager db(DB_PATH);
+//    // DbManager db_temperature(DB_PATH_TEMPERATURE);
 
-    QString bitmap_location;
+//     QString bitmap_location;
 
-    if(checkOption > 0 && checkOption <= 9) {
-        bitmap_location.append("/home/df-admin/drinkfill/production/references/product");
-        bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
-        bitmap_location.append(".png");
-    } else {
-//        qDebug() << "out of range" << endl;
-    }
+//     if(checkOption > 0 && checkOption <= 9) {
+//         bitmap_location.append("/home/df-admin/drinkfill/production/references/product");
+//         bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
+//         bitmap_location.append(".png");
+//     } else {
+// //        qDebug() << "out of range" << endl;
+//     }
 
-    ticks = db.getProductVolumePerTick(checkOption);
+//     ticks = db.getProductVolumePerTick(checkOption);
 
-    ui->name->setText(db.getProductName(checkOption));
+//     ui->name->setText(db.getProductName(checkOption));
     
-    ui->price_small->setText("$"+QString::number(db.getProductPrice(checkOption, 's')));
-    ui->price_large->setText("$"+QString::number(db.getProductPrice(checkOption, 'l')));
-    ui->target_volume_s->setText(QString::number(db.getProductVolume(checkOption, 's')) + " " +  db.getUnits(checkOption));
-    ui->target_volume_l->setText(QString::number(db.getProductVolume(checkOption, 'l')) + " " +  db.getUnits(checkOption));
-    ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(checkOption)) + " " +  db.getUnits(checkOption));
-    ui->full_volume->setText(QString::number(db.getFullProduct(checkOption)) + " " +  db.getUnits(checkOption));
-    ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(checkOption)) + " " +  db.getUnits(checkOption));
-    ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(checkOption)) + " " +  db.getUnits(checkOption));
-    ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
-//    ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
-    ui->pwmLabel->setText(QString::number(round(double((db.getPWM(checkOption))*100)/255)) + "%");
-    ui->vol_dispensed_label->setText("Volume Dispensed: 0 " + db.getUnits(checkOption));
-    ui->ticksLabel->setText("Ticks: 0");
-    ui->pluLabel_s->setText(db.getPLU(checkOption, 's'));
-    ui->pluLabel_l->setText(db.getPLU(checkOption, 'l'));
+//     ui->price_small->setText("$"+QString::number(db.getProductPrice(checkOption, 's')));
+//     ui->price_large->setText("$"+QString::number(db.getProductPrice(checkOption, 'l')));
+//     ui->target_volume_s->setText(QString::number(db.getProductVolume(checkOption, 's')) + " " +  db.getUnits(checkOption));
+//     ui->target_volume_l->setText(QString::number(db.getProductVolume(checkOption, 'l')) + " " +  db.getUnits(checkOption));
+//     ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(checkOption)) + " " +  db.getUnits(checkOption));
+//     ui->full_volume->setText(QString::number(db.getFullProduct(checkOption)) + " " +  db.getUnits(checkOption));
+//     ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(checkOption)) + " " +  db.getUnits(checkOption));
+//     ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(checkOption)) + " " +  db.getUnits(checkOption));
+//     ui->lastRefillLabel->setText(db.getLastRefill(checkOption));
+// //    ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
+//     ui->pwmLabel->setText(QString::number(round(double((db.getPWM(checkOption))*100)/255)) + "%");
+//     ui->vol_dispensed_label->setText("Volume Dispensed: 0 " + db.getUnits(checkOption));
+//     ui->ticksLabel->setText("Ticks: 0");
+//     ui->pluLabel_s->setText(db.getPLU(checkOption, 's'));
+//     ui->pluLabel_l->setText(db.getPLU(checkOption, 'l'));
 
-//    ui->temperatureLabel->setText("");
+// //    ui->temperatureLabel->setText("");
 
-    // if(db.getVolumeRemaining(checkOption)>0){
-    // // if(db.getVolumeRemaining(checkOption)>0){
-    //     ui->soldOutButton->setText("Mark as Sold Out");
-    // }else{
-    //     ui->soldOutButton->setText("Un-Mark as Sold Out");
-    // }
-    setSoldOutButtonText();
+//     // if(db.getVolumeRemaining(checkOption)>0){
+//     // // if(db.getVolumeRemaining(checkOption)>0){
+//     //     ui->soldOutButton->setText("Mark as Sold Out");
+//     // }else{
+//     //     ui->soldOutButton->setText("Un-Mark as Sold Out");
+//     // }
+//     setSoldOutButtonText();
 
-    QPixmap background(bitmap_location);
-    QIcon ButtonIcon(background);
+//     QPixmap background(bitmap_location);
+//     QIcon ButtonIcon(background);
 
-    ui->image->setIcon(ButtonIcon);
-    ui->image->setIconSize(QSize(271,391));
+//     ui->image->setIcon(ButtonIcon);
+//     ui->image->setIconSize(QSize(271,391));
 
-    ui->pwmSlider->setValue(round(double((db.getPWM(checkOption))*100)/255));
+//     ui->pwmSlider->setValue(round(double((db.getPWM(checkOption))*100)/255));
 
-    db.closeDB();
+//     db.closeDB();
 
 
 }

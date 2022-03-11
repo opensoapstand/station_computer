@@ -366,7 +366,8 @@ void pagePayment::createOrder(){
     orderId = QUuid::createUuid().QUuid::toString();
     orderId = orderId.remove("{");
     orderId = orderId.remove("}");
-    QString curl_param1 = "orderId="+orderId +"&size=" + drinkSize+ "&MachineSerialNumber="+MachineSerialNumber + "&contents="+ contents + "&price="+price + "&productId=" + productId + "&quantity_requested="+quantity_requested;
+    QString curl_param1 = "orderId="+orderId +"&size=" + drinkSize+ "&MachineSerialNumber="+MachineSerialNumber + 
+        "&contents="+ contents + "&price="+price + "&productId=" + productId + "&quantity_requested="+quantity_requested;
     curl_param_array1 = curl_param1.toLocal8Bit();
     curl_data1= curl_param_array1.data();
     curl1 = curl_easy_init();

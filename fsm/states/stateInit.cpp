@@ -60,23 +60,23 @@ DF_ERROR stateInit::onEntry()
 DF_ERROR stateInit::onAction()
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
-
     e_ret = setProducts();
-
     if (OK == e_ret)
     {
         e_ret = dispenserSetup();
     }
 
-    if (nullptr != &m_state_requested && OK == e_ret)
+    if (OK == e_ret)
     {
-        if (OK == e_ret)
-        {
-            m_state_requested = STATE_IDLE;
+        m_state_requested = STATE_IDLE;
 
-            // The UI program waits for this message to move from its initializing phase to its Idle phase:
-            m_pMessaging->sendMessage("Init Ready");
-        }
+        // The UI program waits for this message to move from its initializing phase to its Idle phase:
+        m_pMessaging->sendMessage("Init Ready");
+    }
+    else
+    {
+
+        debugOutput::sendMessage("ERROR: Problems setting up the controlller.", MSG_INFO);
     }
 
     return e_ret;
@@ -93,7 +93,6 @@ DF_ERROR stateInit::dispenserSetup()
 {
     int idx;
     dispenser *productDispensers = g_productDispensers;
-
     debugOutput::sendMessage("Setting up DS-ED-8344 hardware control board.\n", MSG_INFO);
 
     // We only need one flow sensor interrupt pin since only one pump
@@ -121,6 +120,20 @@ DF_ERROR stateInit::dispenserSetup()
     return OK;
 } // End of dispenserSetup()
 
+/**/
+DF_ERROR stateInit::setProducts()
+{
+    for (int slot_index; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
+    {
+        g_productDispensers[slot_index].setSlot(slot_index + 1);
+        g_productDispensers[slot_index].setProduct(
+            new product());
+        g_productDispensers[slot_index].getProduct()->reloadParametersFromDb();
+    }
+    return OK;
+}
+/**/
+/*
 // This function (called in SetDrinks) converts the data that is in the product database to variables,
 // which are then passed to the SetDrink function to create product objects for each product.
 static int db_sql_product_callback(void *data, int argc, char **argv, char **azColName)
@@ -358,6 +371,9 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
     return 0;
 }
 
+
+
+
 DF_ERROR stateInit::setProducts()
 {
 
@@ -384,12 +400,12 @@ DF_ERROR stateInit::setProducts()
         //       fprintf(stderr, "Opened database successfully\n\n");
     }
 
-    /* Create SQL statement */
+    // Create SQL statement
     std::string sql11 = "SELECT * from products";
     char *sql = new char[sql11.length() + 1];
     strcpy(sql, sql11.c_str());
 
-    /* Execute SQL statement */
+    // Execute SQL statement
     rc = sqlite3_exec(db, sql, db_sql_product_callback, (void *)data, &zErrMsg);
 
     if (rc != SQLITE_OK)
@@ -408,3 +424,4 @@ DF_ERROR stateInit::setProducts()
 
     return OK;
 }
+/**/

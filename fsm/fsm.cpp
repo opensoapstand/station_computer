@@ -46,7 +46,7 @@ std::string stateStrings[FSM_MAX + 1] = {
 messageMediator *g_pMessaging;                         //debug through local network
 stateVirtual *g_stateArray[FSM_MAX + 1];               //an object for every state
 
-dispenser g_productDispensers[PRODUCT_DISPENSERS_MAX]; //replace the magic number
+dispenser g_productDispensers[PRODUCT_DISPENSERS_MAX];
 
 DF_ERROR initObjects();
 DF_ERROR createStateArray();

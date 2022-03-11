@@ -16,6 +16,7 @@
 #include "product.h"
 #include <stdio.h>
 #include <string>
+#include "../objects/debugOutput.h"
 
 // Default CTOR
 product::product()
@@ -427,6 +428,114 @@ string product::getPLU(char size)
 }
 
 
+
+
+
+
+
+bool product::reloadParametersFromDb(){
+    m_nSlot = slot;
+    m_name = name;
+    m_nVolumeDispensed = 0.0;
+    m_nVolumePerTick = nVolumePerTick; // m_nVolumePerTick = 6; //  6ml per tick is standard
+    m_nDispenseSpeedPWM = dispense_speed_pwm;
+    m_calibration_const = calibration_const;
+
+    m_nVolumeTarget_m = nVolumeTarget_m;
+    m_nVolumeTarget_l = nVolumeTarget_l;
+    m_nVolumeTarget_s = nVolumeTarget_s;
+    m_nVolumeTarget_c_min = nVolumeTarget_c_min;
+    m_nVolumeTarget_c_max = nVolumeTarget_c_max;
+
+    m_price_small = price_small;
+    m_price_medium = price_medium;
+    m_price_large = price_large;
+    m_price_custom_per_liter = price_custom_per_liter;
+
+    m_nPLU_small = nPLU_small;
+    m_nPLU_medium = nPLU_medium;
+    m_nPLU_large = nPLU_large;
+    m_nPLU_custom = nPLU_c;
+
+    m_paymentMethod = paymentMethod;
+    m_name_receipt = name_receipt;
+    m_display_unit = display_unit;
+    
+}
+
+bool product::reloadParametersFromDb()
+{
+
+    debugOutput::sendMessage("***************************************************************************", MSG_INFO);
+    // abandonned by Lode. What about updating the whole product properties at once when needed.
+    rc = sqlite3_open(DB_PATH, &db);
+
+    sqlite3_stmt *stmt;
+
+    //debugOutput::sendMessage("Machine ID getter START", MSG_INFO);
+
+    if (rc)
+    {
+        // fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        // TODO: Error handling here...
+    }
+    else
+    {
+        //  fprintf(stderr, "Opened database successfully\n");
+    }
+#ifdef USE_OLD_DATABASE
+    
+    string sql_string = "SELECT * FROM products;";
+    // string sql_string = "SELECT pwm FROM products WHERE slot=" + to_string(m_nSlot) + ";";
+    //string sql_string = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'products'" ;
+
+#else
+    string sql_string = "SELECT dispense_speed FROM products WHERE slot=" + to_string(m_nSlot) + ";";
+#endif
+
+    /* Create SQL statement for transactions */
+    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+
+
+    // int status = sqlite3_step(stmt);  // every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
+    // if (status != SQLITE_DONE && status !=SQLITE_ROW){
+    //     //https://www.sqlite.org/c3ref/step.html
+    //     //error!
+    //     debugOutput::sendMessage("DB PROBLEM: " + to_string(status), MSG_INFO);
+    //     return false;
+    // }
+    int pwm;
+    int status;
+    status = sqlite3_step(stmt);
+    while(status == SQLITE_ROW){
+        int columns_count = sqlite3_data_count(stmt);
+
+        for(int i=0;i<columns_count;i++){
+            pwm = sqlite3_column_int(stmt, i);
+            debugOutput::sendMessage("values " + to_string(i) + ": " + to_string(pwm), MSG_INFO);
+
+        }
+        status = sqlite3_step(stmt);
+    };  // every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
+    
+
+
+    // std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+
+    // int pwm = stod(str);
+
+
+    // int pwm = sqlite3_column_int(stmt, 0);
+    // // debugOutput debugInfo;
+
+    // // debugOutput::sendMessage("***************************************************************************", MSG_INFO);
+    // sqlite3_column_int(stmt,0);
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    //     cout << "INSIDE getPWM() and PWM is = " << str << endl;
+    return pwm;
+}
 
 // static int db_sql_product_reload_callback(void *data, int argc, char **argv, char **azColName)
 // {

@@ -360,6 +360,7 @@ DF_ERROR messageMediator::parseCommandString()
        first_char == ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY ||
        first_char == ACTION_PRINTER_PRINT_TEST ||
        first_char == ACTION_HELP ||
+       first_char == ACTION_DEBUG ||
        first_char == ACTION_MANUAL_PUMP_TEST ||
        first_char == ACTION_MANUAL_PUMP ||
        first_char == ACTION_MANUAL_PUMP_ENABLE ||

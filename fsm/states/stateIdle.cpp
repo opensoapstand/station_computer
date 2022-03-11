@@ -91,8 +91,8 @@ DF_ERROR stateIdle::onAction()
 
          if (ACTION_DEBUG == m_pMessaging->getAction())
          {
-             debugOutput::sendMessage("beffooore", MSG_INFO);
-            bool success = this->productDispensers[0].getProduct()->reloadParametersFromDb();
+             debugOutput::sendMessage("beffooore reload parameters from product1", MSG_INFO);
+             bool success = this->productDispensers[0].getProduct()->reloadParametersFromDb();
              debugOutput::sendMessage("after" + to_string(success), MSG_INFO);
          }
 

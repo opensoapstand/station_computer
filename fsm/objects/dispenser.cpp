@@ -228,8 +228,8 @@ DF_ERROR dispenser::startDispense()
     debugOutput::sendMessage("Dispense start. Triggered pump:" + to_string(this->slot), MSG_INFO);
 
     setPumpDirectionForward();
-    // setPumpPWM((uint8_t)(m_pDispensedProduct->getPWM()));
-    setPumpPWM((uint8_t)(m_pDispensedProduct->getPWMFromDB()));
+    setPumpPWM((uint8_t)(m_pDispensedProduct->getPWM()));
+    //setPumpPWM((uint8_t)(m_pDispensedProduct->getPWMFromDB()));
     
     setPumpEnable(this->slot);
 

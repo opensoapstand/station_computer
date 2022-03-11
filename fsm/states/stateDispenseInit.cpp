@@ -48,7 +48,10 @@ DF_ERROR stateDispenseInit::onEntry()
     productDispensers = g_productDispensers;
 
     dispenser_index = m_pMessaging->getProductNumber() - 1;
-
+    bool success = this->productDispensers[dispenser_index].getProduct()->reloadParametersFromDb();
+    if (!success){
+        debugOutput::sendMessage("Did not reload parameters from database", MSG_INFO);
+    }
     return e_ret;
 }
 

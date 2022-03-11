@@ -76,6 +76,7 @@ public:
         int getPWMFromDB();
         double getVolPerTickFromDB();
         bool reloadParametersFromDb();
+        bool testParametersFromDb();
         
         double m_volumePerTick;
         int m_nDispenseSpeedPWM;

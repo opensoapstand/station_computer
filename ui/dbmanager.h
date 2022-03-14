@@ -27,6 +27,7 @@ public:
     int getNumberOfProducts();
     double getVolumeRemaining(int slot);
     double getTotalDispensed(int slot);
+    double getVolumeDispensedSinceRestock(int slot);
     QString getLastRefill(int slot);
     double getTemperature();
     int getPWM(int slot);

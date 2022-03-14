@@ -91,6 +91,8 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(product_slot___)) + " " + db.getUnits(product_slot___));
     ui->full_volume->setText(QString::number(db.getFullProduct(product_slot___)) + " " + db.getUnits(product_slot___));
     ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(product_slot___)) + " " + db.getUnits(product_slot___));
+    ui->volume_dispensed_since_last_restock->setText(QString::number(db.getVolumeDispensedSinceRestock(product_slot___)) + " " + db.getUnits(product_slot___));
+
     ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(product_slot___)) + " " + db.getUnits(product_slot___));
     ui->lastRefillLabel->setText(db.getLastRefill(product_slot___));
     ui->pwmLabel->setText(QString::number(round(double((db.getPWM(product_slot___))*100)/255)) + "%");
@@ -157,6 +159,7 @@ void page_maintenance_dispenser::setPage(page_maintenance* pageMaintenance, page
     ui->full_volume->setText("");
     ui->remainingLabel->setText("");
     ui->volume_dispensed_total->setText("");
+    ui->volume_dispensed_since_last_restock->setText("");
     ui->lastRefillLabel->setText("");
     ui->testLargeButton->setVisible(false);
     ui->testSmallButton->setVisible(false);
@@ -189,6 +192,7 @@ void page_maintenance_dispenser::on_backButton_clicked(){
     ui->full_volume->setText("");
     ui->remainingLabel->setText("");
     ui->volume_dispensed_total->setText("");
+    ui->volume_dispensed_since_last_restock->setText("");
     ui->lastRefillLabel->setText("");
 
 
@@ -238,6 +242,7 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event){
     ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(product_slot___)) + " " +  db.getUnits(product_slot___));
     ui->full_volume->setText(QString::number(db.getFullProduct(product_slot___)) + " " +  db.getUnits(product_slot___));
     ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(product_slot___)) + " " +  db.getUnits(product_slot___));
+    ui->volume_dispensed_since_last_restock->setText(QString::number(db.getVolumeDispensedSinceRestock(product_slot___)) + " " + db.getUnits(product_slot___));
     ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(product_slot___)) + " " +  db.getUnits(product_slot___));
     ui->lastRefillLabel->setText(db.getLastRefill(product_slot___));
 //    ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
@@ -522,6 +527,7 @@ void page_maintenance_dispenser::on_refillButton_clicked(){
 //                DbManager db(DB_PATH);
 //                db.addPageClick("PRODUCT REFILLED");
                 ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(this->idlePage->currentProductOrder->getOrderSlot())) + " " +  db.getUnits(this->idlePage->currentProductOrder->getOrderSlot()));
+                ui->volume_dispensed_since_last_restock->setText(QString::number(db.getVolumeDispensedSinceRestock(this->idlePage->currentProductOrder->getOrderSlot())) + " " + db.getUnits(this->idlePage->currentProductOrder->getOrderSlot()));
                 ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(this->idlePage->currentProductOrder->getOrderSlot())) + " " +  db.getUnits(this->idlePage->currentProductOrder->getOrderSlot()));
                 ui->lastRefillLabel->setText(db.getLastRefill(this->idlePage->currentProductOrder->getOrderSlot()));
                 db.closeDB();

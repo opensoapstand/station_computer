@@ -385,6 +385,12 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB()
     debugOutput::sendMessage("Dispensed volume to be subtracted: " + dispensed_volume, MSG_INFO);
 
 
+
+
+
+
+
+
     sql1 = ("INSERT INTO transactions VALUES (NULL, '" + product + "', " + target_volume + ", " + price + ", '" + start_time + "', " + dispensed_volume + ", datetime('now', 'localtime'), '" + "0" + "', '" + "0" + "' );");
     //cout << sql1 << endl;
 
@@ -409,6 +415,38 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB()
             //  fprintf(stdout, "Transaction Command Executed successfully\n");
     }
 
+
+
+
+ /* Create SQL statement for product dispensed since restock */
+    
+#ifndef USE_OLD_DATABASE
+
+    std::string sql21;
+    sql21 = ("UPDATE products SET volume_dispensed_since_restock=volume_dispensed_since_restock+" + dispensed_volume + " WHERE name='" + product + "';");
+
+    char *sql_prod21 = new char[sql21.length() + 1];
+    strcpy(sql_prod21, sql21.c_str());
+
+    /* Execute SQL statement */
+    rc = sqlite3_exec(db, sql_prod21, db_sql_callback, 0, &zErrMsg);
+
+    if (rc != SQLITE_OK)
+    {
+        //        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        debugOutput::sendMessage("ERROR: SQL2 : (" + to_string(rc) + "):" + sql21, MSG_INFO);
+    
+        sqlite3_free(zErrMsg);
+    }
+    else
+    {
+        debugOutput::sendMessage("SUCCES: SQL2 : (" + to_string(rc) + ") " + sql21, MSG_INFO);
+    }
+#endif
+
+
+
+
     /* Create SQL statement for total product dispensed */
     std::string sql2;
     
@@ -427,7 +465,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB()
     if (rc != SQLITE_OK)
     {
         //        fprintf(stderr, "SQL error: %s\n", zErrMsg);
-        debugOutput::sendMessage("ERROR: SQL : " + sql2, MSG_INFO);
+        debugOutput::sendMessage("ERROR: SQL2 : (" + to_string(rc) + "):" + sql2, MSG_INFO);
     
         sqlite3_free(zErrMsg);
     }
@@ -441,7 +479,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB()
 #ifdef USE_OLD_DATABASE
     sql3 = ("UPDATE products SET remaining_ml=full_ml-total_dispensed WHERE name='" + product + "';");
 #else
-    sql3 = ("UPDATE products SET volume_remaining=volume_full-volume_dispensed_total WHERE name='" + product + "';");
+    sql3 = ("UPDATE products SET volume_remaining=volume_full-volume_dispensed_since_restock WHERE name='" + product + "';");
 
 #endif
 

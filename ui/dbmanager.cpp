@@ -418,7 +418,7 @@ bool DbManager::refill(int slot)
 
 #else
     QString sql_set_vol = "UPDATE products SET volume_remaining=volume_full WHERE slot=:slot";
-    QString sql_res_disp = "UPDATE products SET volume_dispensed_total=0 WHERE slot=:slot";
+    QString sql_res_disp = "UPDATE products SET volume_dispensed_since_restock=0 WHERE slot=:slot";
     QString sql_set_time = "UPDATE products SET last_restock=:time WHERE slot=:slot";
 
 #endif
@@ -571,6 +571,30 @@ int DbManager::getNumberOfProducts()
     return products;
 }
 
+double DbManager::getVolumeDispensedSinceRestock(int slot)
+{
+    qDebug() << " db...vol dispensed since restock";
+    QSqlQuery dispensed_query;
+    double dispensed;
+    {
+#ifdef USE_OLD_DATABASE
+        dispensed_query.prepare("SELECT total_dispensed FROM products WHERE slot=:slot");
+#else
+        dispensed_query.prepare("SELECT volume_dispensed_since_restock FROM products WHERE slot=:slot");
+#endif
+
+        dispensed_query.bindValue(":slot", slot);
+        dispensed_query.exec();
+
+        while (dispensed_query.next())
+        {
+            dispensed = dispensed_query.value(0).toDouble();
+        }
+    }
+    return dispensed;
+}
+
+
 double DbManager::getTotalDispensed(int slot)
 {
     qDebug() << " db... getTotalDispensed";
@@ -680,6 +704,7 @@ double DbManager::getVolumeRemaining(int slot)
 
 QString DbManager::getLastRefill(int slot)
 {
+    // last as in "most recent"
     qDebug() << " db... getLastRefill";
     QSqlQuery refill_date_query;
     QString refill_date_string;

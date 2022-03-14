@@ -55,7 +55,7 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
     fflush(stdout);
 
     // create a new log file daily
-    QString log_file_base_path = "/home/df-admin/production/logging/ui_%1.txt"; // https://stackoverflow.com/questions/4784155/how-to-format-a-qstring
+    QString log_file_base_path = "/home/df-admin/production/logging/ui/ui_%1.txt"; // https://stackoverflow.com/questions/4784155/how-to-format-a-qstring
     QString log_file_path = QString(log_file_base_path).arg(time_stamp_date);
     QFile file(log_file_path);
     log_file = &file;

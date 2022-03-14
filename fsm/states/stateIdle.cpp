@@ -66,7 +66,7 @@ DF_ERROR stateIdle::onAction()
          ret_msg = m_pMessaging->parseCommandString();
 
          productDispensers = g_productDispensers;
-         pos = m_pMessaging->getProductNumber();
+         pos = m_pMessaging->getRequestedSlot();
          pos = pos - 1;
 
          if (ACTION_DISPENSE == m_pMessaging->getAction())

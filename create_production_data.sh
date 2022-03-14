@@ -15,10 +15,13 @@ sudo -u df-admin mkdir /home/df-admin/production
 cd /home/df-admin/production 
 
 # create subfolders 
-sudo -u df-admin mkdir logging  
-sudo -u df-admin mkdir db
-sudo -u df-admin mkdir admin
-sudo -u df-admin mkdir bin
+sudo -u df-admin mkdir /home/df-admin/production/logging  
+sudo -u df-admin mkdir /home/df-admin/production/logging/ui  
+sudo -u df-admin mkdir /home/df-admin/production/logging/controller  
+sudo -u df-admin mkdir /home/df-admin/production/logging/transactions  
+sudo -u df-admin mkdir /home/df-admin/production/db
+sudo -u df-admin mkdir /home/df-admin/production/admin
+sudo -u df-admin mkdir /home/df-admin/production/bin
 
 # move binary files
 scp /home/df-admin/drinkfill/ui/DF_UI /home/df-admin/production/bin/DF_UI
@@ -26,6 +29,7 @@ scp /home/df-admin/drinkfill/fsm/controller /home/df-admin/production/bin/contro
 
 # move auxiliary to production folder
 sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db /home/df-admin/production/db/drinkfill-sqlite.db 
+sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite_newlayout.db /home/df-admin/production/db/drinkfill-sqlite_newlayout.db 
 scp -r /home/df-admin/drinkfill/ui/references /home/df-admin/production/references
 
 # move scripts and other administrative stuff

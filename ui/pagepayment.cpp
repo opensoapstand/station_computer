@@ -138,7 +138,7 @@ void pagePayment::resizeEvent(QResizeEvent *event){
     // FIXME: MAGIC NUMBER!!! UX410 Socket Auto Close time is 60 seconds so timer kills page GUI
 //    idlePaymentTimer->start(60000);
 
-    int checkOption = idlePage->userDrinkOrder->getOption();
+    int product_slot___ = idlePage->userDrinkOrder->getOption();
     char drinkSize;
     if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
         drinkSize = 's';
@@ -152,7 +152,7 @@ void pagePayment::resizeEvent(QResizeEvent *event){
     if (!payment){
         bitmap_location = "/home/df-admin/production/references/5_background_pay_qr.png";
     }
-    else if(checkOption > 0 && checkOption <= 9) {
+    else if(product_slot___ > 0 && product_slot___ <= 9) {
         bitmap_location.append("/home/df-admin/production/references/5_pay_page_");
         bitmap_location.append(drinkSize);
         bitmap_location.append("_");
@@ -173,10 +173,10 @@ void pagePayment::resizeEvent(QResizeEvent *event){
     ui->order_total_amount->setText("$" + QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
     ui->order_drink_amount->setText("");
 
-//    if (db.getProductVolume(checkOption, drinkSize) < 1000){
-//        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
+//    if (db.getProductVolume(product_slot___, drinkSize) < 1000){
+//        ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)) + "ml");
 //    }else{
-//        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
+//        ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)/1000) + "L");
 //    }
 
     response = false;
@@ -267,7 +267,7 @@ void pagePayment::showEvent(QShowEvent *event)
     qDebug() << "ahoyy21" ;
     DbManager db(DB_PATH);
 
-    int checkOption = idlePage->userDrinkOrder->getOption();
+    int product_slot___ = idlePage->userDrinkOrder->getOption();
     char drinkSize;
     if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
         drinkSize = 's';
@@ -281,7 +281,7 @@ void pagePayment::showEvent(QShowEvent *event)
     if (!payment){
         bitmap_location = "/home/df-admin/production/references/5_background_pay_qr.png";
     }
-    else if(checkOption > 0 && checkOption <= 9) {
+    else if(product_slot___ > 0 && product_slot___ <= 9) {
         bitmap_location.append("/home/df-admin/production/references/5_pay_page_");
         bitmap_location.append(drinkSize);
         bitmap_location.append("_");
@@ -309,10 +309,10 @@ void pagePayment::showEvent(QShowEvent *event)
     this->ui->payment_countdownLabel->setText("");
     ui->refreshLabel->hide();
 
-    if (db.getProductVolume(checkOption, drinkSize) < 1000){
-        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + " " + db.getUnits(checkOption));
+    if (db.getProductVolume(product_slot___, drinkSize) < 1000){
+        ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)) + " " + db.getUnits(product_slot___));
     }else{
-        ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
+        ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)/1000) + "L");
     }
 
     ui->order_drink_amount->setText("$"+QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2));
@@ -336,7 +336,7 @@ void pagePayment::showEvent(QShowEvent *event)
         readTimer->start();
     }
 
-    if (db.getPaymentMethod(checkOption) == "qr"){
+    if (db.getPaymentMethod(product_slot___) == "qr"){
         _paymentTimeoutSec = 444;
         db.closeDB();
         generateQR();
@@ -350,7 +350,7 @@ void pagePayment::createOrder(){
     qDebug() << "ahoyy22" ;
     DbManager db(DB_PATH);
 
-    int checkOption = idlePage->userDrinkOrder->getOption();
+    int product_slot___ = idlePage->userDrinkOrder->getOption();
     char drinkSize;
     if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
         drinkSize = 's';
@@ -359,9 +359,9 @@ void pagePayment::createOrder(){
         drinkSize = 'l';
     }
     QString MachineSerialNumber = db.getMachineID();
-    QString productId = db.getProductID(checkOption);
-    QString contents = db.getProductName(checkOption);
-    QString quantity_requested = QString::number(db.getProductVolume(checkOption, drinkSize));
+    QString productId = db.getProductID(product_slot___);
+    QString contents = db.getProductName(product_slot___);
+    QString quantity_requested = QString::number(db.getProductVolume(product_slot___, drinkSize));
     QString price = QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2);
     orderId = QUuid::createUuid().QUuid::toString();
     orderId = orderId.remove("{");
@@ -395,7 +395,7 @@ void pagePayment::generateQR(){
     qDebug() << "ahoyy23" ;
     DbManager db(DB_PATH);
 
-    int checkOption = idlePage->userDrinkOrder->getOption();
+    int product_slot___ = idlePage->userDrinkOrder->getOption();
     char drinkSize;
     if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
         drinkSize = 's';
@@ -411,7 +411,7 @@ void pagePayment::generateQR(){
 
     //QString qrdata_amount = QString::number(idlePage->userDrinkOrder->getPrice(), 'f', 2);
     // QString machine_id = db.getMachineID();
-    // QString product_id = db.getProductID(checkOption);
+    // QString product_id = db.getProductID(product_slot___);
     // order_id = QUuid::createUuid().QUuid::toString();
     // order_id = order_id.remove("{");
     // order_id = order_id.remove("}");

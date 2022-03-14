@@ -32,14 +32,14 @@ using namespace std;
 class product
 {
 public:
-        product();
-        // product(int slot);
+        //product();
+        product(int slot);
 
-        product(int slot, string name, double calibration_const, double nVolumePerTick, int dispense_speed_pwm,
-                double nVolumeTarget_s, double nVolumeTarget_m, double nVolumeTarget_l, double nVolumeTarget_c_min, double nVolumeTarget_c_max,
-                double price_small, double price_m, double price_large, double price_custom_per_liter, 
-                string nPLU_small, string nPLU_medium,  string nPLU_large, string nPLU_c,
-                string paymentMethod, string name_receipt, string display_unit);
+        // product(int slot, string name, double calibration_const, double nVolumePerTick, int dispense_speed_pwm,
+        //         double nVolumeTarget_s, double nVolumeTarget_m, double nVolumeTarget_l, double nVolumeTarget_c_min, double nVolumeTarget_c_max,
+        //         double price_small, double price_m, double price_large, double price_custom_per_liter, 
+        //         string nPLU_small, string nPLU_medium,  string nPLU_large, string nPLU_c,
+        //         string paymentMethod, string name_receipt, string display_unit);
         ~product();
 
         //getter
@@ -116,7 +116,7 @@ public:
 
         char m_nStartTime[50];
 
-        void setSlot(int slot);
+        // void setSlot(int slot); // please don't set after instantiated! 
         int getSlot();
 private:
         // TODO: Determine more data to modify per transaction...

@@ -47,9 +47,9 @@ DF_ERROR stateDispenseEnd::onEntry()
     DF_ERROR e_ret = OK;
 
     productDispensers = g_productDispensers;
-    pos = m_pMessaging->getProductNumber();
+    pos = m_pMessaging->getRequestedSlot();
     pos = pos - 1;
-    size = m_pMessaging->getRequestedVolume();
+    size = m_pMessaging->getRequestedSize();
 
     productDispensers[pos].stopDispense();
 
@@ -78,7 +78,7 @@ DF_ERROR stateDispenseEnd::onExit()
 {
     productDispensers = g_productDispensers;
     DF_ERROR e_ret = OK;
-    pos = m_pMessaging->getProductNumber();
+    pos = m_pMessaging->getRequestedSlot();
     pos = pos - 1;
 
     std::string paymentMethod = productDispensers[pos].getProduct()->getPaymentMethod();

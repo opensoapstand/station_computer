@@ -89,8 +89,8 @@ public:
 
    // dispense command 
    char getAction() { return m_requestedAction; }
-   int getProductNumber() { return m_RequestedProductIndexInt; }
-   char getRequestedVolume() { return m_requestedVolume; }
+   int getRequestedSlot() { return m_RequestedProductIndexInt; }
+   char getRequestedSize() { return m_requestedVolume; }
    int getCommandValue() { return m_commandValue; }
 
 

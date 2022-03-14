@@ -19,8 +19,10 @@
 #include "../objects/debugOutput.h"
 
 // Default CTOR
-product::product()
+product::product(int slot)
 {
+    m_nSlot = slot;
+    this->reloadParametersFromDb();
 }
 
 static int db_sql_callback(void *data, int argc, char **argv, char **azColName)
@@ -81,39 +83,39 @@ static int db_sql_callback(void *data, int argc, char **argv, char **azColName)
 // }
 
 // Test CTOR
-product::product(int slot, string name, double calibration_const, double nVolumePerTick, int dispense_speed_pwm,
-                 double nVolumeTarget_s, double nVolumeTarget_m, double nVolumeTarget_l, double nVolumeTarget_c_min, double nVolumeTarget_c_max,
-                 double price_small, double price_medium, double price_large, double price_custom_per_liter,
-                 string nPLU_small, string nPLU_medium, string nPLU_large, string nPLU_c,
-                 string paymentMethod, string name_receipt, string display_unit)
-{
-    m_nSlot = slot;
-    m_name = name;
-    m_nVolumeDispensed = 0.0;
-    m_nVolumePerTick = nVolumePerTick; // m_nVolumePerTick = 6; //  6ml per tick is standard
-    m_nDispenseSpeedPWM = dispense_speed_pwm;
-    m_calibration_const = calibration_const;
+// product::product(int slot, string name, double calibration_const, double nVolumePerTick, int dispense_speed_pwm,
+//                  double nVolumeTarget_s, double nVolumeTarget_m, double nVolumeTarget_l, double nVolumeTarget_c_min, double nVolumeTarget_c_max,
+//                  double price_small, double price_medium, double price_large, double price_custom_per_liter,
+//                  string nPLU_small, string nPLU_medium, string nPLU_large, string nPLU_c,
+//                  string paymentMethod, string name_receipt, string display_unit)
+// {
+//     m_nSlot = slot;
+//     m_name = name;
+//     m_nVolumeDispensed = 0.0;
+//     m_nVolumePerTick = nVolumePerTick; // m_nVolumePerTick = 6; //  6ml per tick is standard
+//     m_nDispenseSpeedPWM = dispense_speed_pwm;
+//     m_calibration_const = calibration_const;
 
-    m_nVolumeTarget_m = nVolumeTarget_m;
-    m_nVolumeTarget_l = nVolumeTarget_l;
-    m_nVolumeTarget_s = nVolumeTarget_s;
-    m_nVolumeTarget_c_min = nVolumeTarget_c_min;
-    m_nVolumeTarget_c_max = nVolumeTarget_c_max;
+//     m_nVolumeTarget_m = nVolumeTarget_m;
+//     m_nVolumeTarget_l = nVolumeTarget_l;
+//     m_nVolumeTarget_s = nVolumeTarget_s;
+//     m_nVolumeTarget_c_min = nVolumeTarget_c_min;
+//     m_nVolumeTarget_c_max = nVolumeTarget_c_max;
 
-    m_price_small = price_small;
-    m_price_medium = price_medium;
-    m_price_large = price_large;
-    m_price_custom_per_liter = price_custom_per_liter;
+//     m_price_small = price_small;
+//     m_price_medium = price_medium;
+//     m_price_large = price_large;
+//     m_price_custom_per_liter = price_custom_per_liter;
 
-    m_nPLU_small = nPLU_small;
-    m_nPLU_medium = nPLU_medium;
-    m_nPLU_large = nPLU_large;
-    m_nPLU_custom = nPLU_c;
+//     m_nPLU_small = nPLU_small;
+//     m_nPLU_medium = nPLU_medium;
+//     m_nPLU_large = nPLU_large;
+//     m_nPLU_custom = nPLU_c;
 
-    m_paymentMethod = paymentMethod;
-    m_name_receipt = name_receipt;
-    m_display_unit = display_unit;
-}
+//     m_paymentMethod = paymentMethod;
+//     m_name_receipt = name_receipt;
+//     m_display_unit = display_unit;
+// }
 
 // DTOR
 product::~product()
@@ -121,10 +123,10 @@ product::~product()
 }
 
 // Set the Product option slot
-void product::setSlot(int slot)
-{
-    m_nSlot = slot;
-}
+// void product::setSlot(int slot)
+// {
+//     m_nSlot = slot;
+// }
 // Set the Product option slot
 int product::getSlot()
 {
@@ -429,55 +431,257 @@ string product::getPLU(char size)
 #endif
 }
 
-#ifdef USE_OLD_DATABASE
+// #ifdef USE_OLD_DATABASE
+// bool product::reloadParametersFromDb()
+// {
+
+//     // m_nSlot = slot;
+//     //     m_name = name;
+//     //     m_nVolumeDispensed = 0.0;
+//     //     m_nVolumeTarget_l = nVolumeTarget_l;
+//     //     m_nVolumeTarget_s = nVolumeTarget_s;
+//     //     m_calibration_const = calibration_const;
+//     //     m_price_large = price_large;
+//     //     m_price_small = price_small;
+//     //     DUMMY
+//     //     m_nVolumePerTick = nVolumePerTick; // m_nVolumePerTick = 6; //  6ml per tick is standard
+//     //     m_nPLU_large = nPLU_large;
+//     //     m_nPLU_small = nPLU_small;
+//     //     STATE_DUMMY
+//     //     STATE_DUMMY
+//     //     STATE_DUMMY
+//     //     m_name_receipt = name_receipt;
+//     //     m_paymentMethod = paymentMethod;
+//     //     dumm,
+//     //     m_nDispenseSpeedPWM = dispense_speed_pwm;
+//     //     dum,    my
+//     //     dummy
+//     //     m_display_unit = display_unit;
+
+//     //     value
+
+//     rc = sqlite3_open(DB_PATH, &db);
+
+//     sqlite3_stmt *stmt;
+
+//     string sql_string = "SELECT * FROM products WHERE slot=" + to_string(m_nSlot) + ";";
+
+//     debugOutput::sendMessage("Reload parameters from database: " + sql_string, MSG_INFO);
+
+//     /* Create SQL statement for transactions */
+//     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+
+//     int status;
+//     status = sqlite3_step(stmt);
+//     while (status == SQLITE_ROW)
+//     {
+//         int columns_count = sqlite3_data_count(stmt);
+
+//         for (int column_index = 0; column_index < columns_count; column_index++)
+//         {
+
+//             switch (column_index)
+//             {
+//             case (DB_PRODUCTS_SLOT):
+//             {
+//                 if (m_nSlot != sqlite3_column_int(stmt, column_index))
+//                 {
+
+//                     debugOutput::sendMessage("DB_PRODUCTS_SLOT unexpected value. " + to_string(sqlite3_column_int(stmt, column_index)), MSG_INFO);
+//                 }
+//             }
+//             break;
+//             case (DB_PRODUCTS_NAME):
+//             {
+//                 m_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+//             }
+//             break;
+//             case (DB_PRODUCTS_VOLUME_DISPENSED):
+//             {
+//             }
+//             break;
+//             case (DB_PRODUCTS_VOLUME_TARGET_L):
+//             {
+//                 m_nVolumeTarget_l = sqlite3_column_double(stmt, column_index);
+//             }
+//             break;
+//             case (DB_PRODUCTS_VOLUME_TARGET_S):
+//             {
+//                 m_nVolumeTarget_s = sqlite3_column_double(stmt, column_index);
+//             }
+//             break;
+//             case (DB_PRODUCTS_CALIBRATION_CONST):
+//             {
+//                 m_calibration_const = sqlite3_column_double(stmt, column_index);
+//             }
+//             break;
+//             case (DB_PRODUCTS_PRICE_L):
+//             {
+//                 m_price_large = sqlite3_column_double(stmt, column_index);
+//             }
+//             break;
+//             case (DB_PRODUCTS_PRICE_S):
+//             {
+//                 m_price_small = sqlite3_column_double(stmt, column_index);
+//             }
+//             break;
+//             case (DB_PRODUCTS_IS_STILL):
+//             {
+//             }
+//             break;
+//             case (DB_PRODUCTS_VOLUME_PER_TICK):
+//             {
+//                 m_nVolumePerTick = sqlite3_column_double(stmt, column_index);
+//             }
+//             break;
+//             case (DB_PRODUCTS_PLU_L):
+//             {
+//                 m_nPLU_large = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+//             }
+//             break;
+//             case (DB_PRODUCTS_PLU_S):
+//             {
+//                 m_nPLU_small = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+//             }
+//             break;
+//             case (DB_PRODUCTS_FULL_ML):
+//             {
+//             }
+//             break;
+//             case (DB_PRODUCTS_REMAINING_ML):
+//             {
+//             }
+//             break;
+//             case (DB_PRODUCTS_TOTAL_DISPENSED):
+//             {
+//             }
+//             break;
+//             case (DB_PRODUCTS_NAME_RECEIPT):
+//             {
+//                 m_name_receipt = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+//             }
+//             break;
+//             case (DB_PRODUCTS_PAYMENT):
+//             {
+//                 m_paymentMethod = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+//             }
+//             break;
+//             case (DB_PRODUCTS_LAST_REFILL):
+//             {
+//             }
+//             break;
+//             case (DB_PRODUCTS_PWM):
+//             {
+//                 m_nDispenseSpeedPWM = sqlite3_column_int(stmt, column_index);
+                
+//             }
+//             break;
+//             case (DB_PRODUCTS_BUFFER):
+//             {
+//             }
+//             break;
+//             case (DB_PRODUCTS_PRODUCT_ID):
+//             {
+//             }
+//             break;
+//             case (DB_PRODUCTS_UNITS):
+//             {
+//                 m_display_unit = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+//             }
+//             break;
+//             default:
+//             {
+//                 debugOutput::sendMessage("Unexpected column index" + to_string(column_index), MSG_INFO);
+//             }
+//             break;
+//             }
+//         }
+//         status = sqlite3_step(stmt);
+//     }; // every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
+
+//     // std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+
+//     // int pwm = stod(str);
+
+//     // int pwm = sqlite3_column_int(stmt, 0);
+//     // // debugOutput debugInfo;
+
+//     // // debugOutput::sendMessage("***************************************************************************", MSG_INFO);
+//     // sqlite3_column_int(stmt,0);
+
+//     sqlite3_finalize(stmt);
+//     sqlite3_close(db);
+//     //     cout << "INSIDE getPWM() and PWM is = " << str << endl;
+//     return true;
+// }
+
+// #else
+
 bool product::reloadParametersFromDb()
 {
 
-    // m_nSlot = slot;
-    //     m_name = name;
-    //     m_nVolumeDispensed = 0.0;
-    //     m_nVolumeTarget_l = nVolumeTarget_l;
-    //     m_nVolumeTarget_s = nVolumeTarget_s;
-    //     m_calibration_const = calibration_const;
-    //     m_price_large = price_large;
-    //     m_price_small = price_small;
-    //     DUMMY
-    //     m_nVolumePerTick = nVolumePerTick; // m_nVolumePerTick = 6; //  6ml per tick is standard
-    //     m_nPLU_large = nPLU_large;
-    //     m_nPLU_small = nPLU_small;
-    //     STATE_DUMMY
-    //     STATE_DUMMY
-    //     STATE_DUMMY
-    //     m_name_receipt = name_receipt;
-    //     m_paymentMethod = paymentMethod;
-    //     dumm,
-    //     m_nDispenseSpeedPWM = dispense_speed_pwm;
-    //     dum,    my
-    //     dummy
-    //     m_display_unit = display_unit;
 
-    //     value
+// m_nSlot = slot;
+//     m_name = name;
+//     m_nVolumeDispensed = 0.0;
+//     m_nVolumePerTick = nVolumePerTick; // m_nVolumePerTick = 6; //  6ml per tick is standard
+//     m_nDispenseSpeedPWM = dispense_speed_pwm;
+//     m_calibration_const = calibration_const;
 
+//     m_nVolumeTarget_m = nVolumeTarget_m;
+//     m_nVolumeTarget_l = nVolumeTarget_l;
+//     m_nVolumeTarget_s = nVolumeTarget_s;
+//     m_nVolumeTarget_c_min = nVolumeTarget_c_min;
+//     m_nVolumeTarget_c_max = nVolumeTarget_c_max;
+
+//     m_price_small = price_small;
+//     m_price_medium = price_medium;
+//     m_price_large = price_large;
+//     m_price_custom_per_liter = price_custom_per_liter;
+
+//     m_nPLU_small = nPLU_small;
+//     m_nPLU_medium = nPLU_medium;
+//     m_nPLU_large = nPLU_large;
+//     m_nPLU_custom = nPLU_c;
+
+//     m_paymentMethod = paymentMethod;
+//     m_name_receipt = name_receipt;
+//     m_display_unit = display_unit;
+
+    debugOutput::sendMessage("000000 ", MSG_INFO);
     rc = sqlite3_open(DB_PATH, &db);
 
+
+    debugOutput::sendMessage("11111111 ", MSG_INFO);
+
     sqlite3_stmt *stmt;
+    debugOutput::sendMessage("22222 ", MSG_INFO);
+
+
 
     string sql_string = "SELECT * FROM products WHERE slot=" + to_string(m_nSlot) + ";";
+    debugOutput::sendMessage("33333 " + sql_string, MSG_INFO);
 
-    debugOutput::sendMessage("Reload parameters from database: " + sql_string, MSG_INFO);
+
+
 
     /* Create SQL statement for transactions */
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 
     int status;
     status = sqlite3_step(stmt);
+    
     while (status == SQLITE_ROW)
     {
+        debugOutput::sendMessage("process record: " + sql_string, MSG_INFO);
         int columns_count = sqlite3_data_count(stmt);
+        debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
 
         for (int column_index = 0; column_index < columns_count; column_index++)
         {
 
+            debugOutput::sendMessage("column index: " + to_string(column_index), MSG_INFO);
+            #ifdef USE_OLD_DATABASE
             switch (column_index)
             {
             case (DB_PRODUCTS_SLOT):
@@ -571,6 +775,7 @@ bool product::reloadParametersFromDb()
             case (DB_PRODUCTS_PWM):
             {
                 m_nDispenseSpeedPWM = sqlite3_column_int(stmt, column_index);
+                
             }
             break;
             case (DB_PRODUCTS_BUFFER):
@@ -592,287 +797,232 @@ bool product::reloadParametersFromDb()
             }
             break;
             }
+
+#else
+            //debugOutput::sendMessage("Col index: " + to_string(column_index), MSG_INFO);
+            switch (column_index)
+            {
+            case DB_PRODUCTS_PRODUCTID:
+            {
+            }
+            break;
+            case DB_PRODUCTS_SOAPSTAND_PRODUCT_SERIAL:
+            {
+            }
+            break;
+            case DB_PRODUCTS_SLOT:
+            {
+                if (m_nSlot != sqlite3_column_int(stmt, column_index))
+                {
+                    debugOutput::sendMessage("DB_PRODUCTS_SLOT unexpected value. " + to_string(sqlite3_column_int(stmt, column_index)), MSG_INFO);
+                }else{
+                    debugOutput::sendMessage("DB_PRODUCTS_SLOT slot matching. ", MSG_INFO);
+                }
+            }
+            break;
+            case DB_PRODUCTS_NAME:
+            {
+                m_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+            }
+            break;
+            case DB_PRODUCTS_SIZE_UNIT:
+            {
+                m_display_unit = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+            }
+            break;
+            case DB_PRODUCTS_CURRENCY:
+            {
+            }
+            break;
+            case DB_PRODUCTS_PAYMENT:
+            {
+                m_paymentMethod = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+            }
+            break;
+            case DB_PRODUCTS_NAME_RECEIPT:
+            {
+                m_name_receipt = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+            }
+            break;
+            case DB_PRODUCTS_DISPENSE_SPEED:
+            {
+                m_nDispenseSpeedPWM = sqlite3_column_int(stmt, column_index);
+                debugOutput::sendMessage("Speed PWM (0..255):" + to_string(m_nDispenseSpeedPWM), MSG_INFO);
+            }
+            break;
+            case DB_PRODUCTS_CALIBRATION_CONST:
+            {
+                m_calibration_const = sqlite3_column_double(stmt, column_index);
+                debugOutput::sendMessage("DB_PRODUCTS_CALIBRATION_CONST:" + to_string(m_calibration_const), MSG_INFO);
+            }
+            break;
+            case DB_PRODUCTS_VOLUME_PER_TICK:
+            {
+                m_nVolumePerTick = sqlite3_column_double(stmt, column_index);
+            }
+            break;
+            case DB_PRODUCTS_LAST_RESTOCK:
+            {
+            }
+            break;
+            case DB_PRODUCTS_VOLUME_FULL:
+            {
+            }
+            break;
+            case DB_PRODUCTS_VOLUME_REMAINING:
+            {
+            }
+            break;
+            case DB_PRODUCTS_VOLUME_DISPENSED_SINCE_RESTOCK:
+            {
+            }
+            break;
+            case DB_PRODUCTS_VOLUME_DISPENSED_TOTAL:
+            {
+            }
+            break;
+            case DB_PRODUCTS_IS_ENABLED_SMALL:
+            {
+            }
+            break;
+            case DB_PRODUCTS_IS_ENABLED_MEDIUM:
+            {
+            }
+            break;
+            case DB_PRODUCTS_IS_ENABLED_LARGE:
+            {
+            }
+            break;
+            case DB_PRODUCTS_IS_ENABLED_CUSTOM:
+            {
+            }
+            break;
+            case DB_PRODUCTS_SIZE_SMALL:
+            {
+                m_nVolumeTarget_s = sqlite3_column_double(stmt, column_index);
+                debugOutput::sendMessage("m_nVolumeTarget_s:" + to_string(m_nVolumeTarget_s), MSG_INFO);
+            }
+            break;
+            case DB_PRODUCTS_SIZE_MEDIUM:
+            {
+                m_nVolumeTarget_m = sqlite3_column_double(stmt, column_index);
+                debugOutput::sendMessage("m_nVolumeTarget_m:" + to_string(m_nVolumeTarget_m), MSG_INFO);
+            }
+            break;
+            case DB_PRODUCTS_SIZE_LARGE:
+            {
+                m_nVolumeTarget_l = sqlite3_column_double(stmt, column_index);
+                debugOutput::sendMessage("m_nVolumeTarget_l:" + to_string(m_nVolumeTarget_l), MSG_INFO);
+            }
+            break;
+            case DB_PRODUCTS_SIZE_CUSTOM_MIN:
+            {
+                m_nVolumeTarget_c_min = sqlite3_column_double(stmt, column_index);
+            }
+            break;
+            case DB_PRODUCTS_SIZE_CUSTOM_MAX:
+            {
+                m_nVolumeTarget_c_max = sqlite3_column_double(stmt, column_index);
+            }
+            break;
+            case DB_PRODUCTS_PRICE_SMALL:
+            {
+                m_price_small = sqlite3_column_double(stmt, column_index);
+            }
+            break;
+            case DB_PRODUCTS_PRICE_MEDIUM:
+            {
+                m_price_medium = sqlite3_column_double(stmt, column_index);
+            }
+            break;
+            case DB_PRODUCTS_PRICE_LARGE:
+            {
+                m_price_large = sqlite3_column_double(stmt, column_index);
+            }
+            break;
+            case DB_PRODUCTS_PRICE_CUSTOM:
+            {
+                m_price_custom_per_liter = sqlite3_column_double(stmt, column_index);
+            }
+            break;
+            case DB_PRODUCTS_PLU_SMALL:
+            {
+                m_nPLU_small = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+            }
+            break;
+            case DB_PRODUCTS_PLU_MEDIUM:
+            {
+                m_nPLU_medium = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+            }
+            break;
+            case DB_PRODUCTS_PLU_LARGE:
+            {
+                m_nPLU_large = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+            }
+            break;
+            case DB_PRODUCTS_PLU_CUSTOM:
+            {
+                m_nPLU_custom = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+            }
+            break;
+            case DB_PRODUCTS_PID_SMALL:
+            {
+            }
+            break;
+            case DB_PRODUCTS_PID_MEDIUM:
+            {
+            }
+            break;
+            case DB_PRODUCTS_PID_LARGE:
+            {
+            }
+            break;
+            case DB_PRODUCTS_PID_CUSTOM:
+            {
+            }
+            break;
+            case DB_PRODUCTS_FLAVOUR:
+            {
+            }
+            break;
+            case DB_PRODUCTS_IMAGE_URL:
+            {
+            }
+            break;
+            case DB_PRODUCTS_TYPE:
+            {
+            }
+            break;
+            case DB_PRODUCTS_INGREDIENTS:
+            {
+            }
+            break;
+            case DB_PRODUCTS_FEATURES:
+            {
+            }
+            break;
+            default:
+            {
+                debugOutput::sendMessage("Unexpected column index" + to_string(column_index), MSG_INFO);
+            }
+            break;
+            }
+        #endif
         }
-        status = sqlite3_step(stmt);
+        status = sqlite3_step(stmt); // next record
     }; // every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
 
-    // std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+    debugOutput::sendMessage("DB status: " + to_string(status), MSG_INFO);
 
-    // int pwm = stod(str);
-
-    // int pwm = sqlite3_column_int(stmt, 0);
-    // // debugOutput debugInfo;
-
-    // // debugOutput::sendMessage("***************************************************************************", MSG_INFO);
-    // sqlite3_column_int(stmt,0);
 
     sqlite3_finalize(stmt);
     sqlite3_close(db);
-    //     cout << "INSIDE getPWM() and PWM is = " << str << endl;
     return true;
 }
 
-#else
-
-// m_nSlot = slot;
-//     m_name = name;
-//     m_nVolumeDispensed = 0.0;
-//     m_nVolumePerTick = nVolumePerTick; // m_nVolumePerTick = 6; //  6ml per tick is standard
-//     m_nDispenseSpeedPWM = dispense_speed_pwm;
-//     m_calibration_const = calibration_const;
-
-//     m_nVolumeTarget_m = nVolumeTarget_m;
-//     m_nVolumeTarget_l = nVolumeTarget_l;
-//     m_nVolumeTarget_s = nVolumeTarget_s;
-//     m_nVolumeTarget_c_min = nVolumeTarget_c_min;
-//     m_nVolumeTarget_c_max = nVolumeTarget_c_max;
-
-//     m_price_small = price_small;
-//     m_price_medium = price_medium;
-//     m_price_large = price_large;
-//     m_price_custom_per_liter = price_custom_per_liter;
-
-//     m_nPLU_small = nPLU_small;
-//     m_nPLU_medium = nPLU_medium;
-//     m_nPLU_large = nPLU_large;
-//     m_nPLU_custom = nPLU_c;
-
-//     m_paymentMethod = paymentMethod;
-//     m_name_receipt = name_receipt;
-//     m_display_unit = display_unit;
-
-rc = sqlite3_open(DB_PATH, &db);
-
-sqlite3_stmt *stmt;
-
-string sql_string = "SELECT * FROM products WHERE slot=" + to_string(m_nSlot) + ";";
-
-debugOutput::sendMessage("Reload parameters from database: " + sql_string, MSG_INFO);
-
-/* Create SQL statement for transactions */
-sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
-
-int status;
-status = sqlite3_step(stmt);
-while (status == SQLITE_ROW)
-{
-    int columns_count = sqlite3_data_count(stmt);
-
-    for (int column_index = 0; column_index < columns_count; column_index++)
-    {
-
-        switch (column_index)
-        {
-        case DB_PRODUCTS_PRODUCTID:
-        {
-        }
-        break;
-        case DB_PRODUCTS_SOAPSTAND_PRODUCT_SERIAL:
-        {
-        }
-        break;
-        case DB_PRODUCTS_SLOT:
-        {
-            if (m_nSlot != sqlite3_column_int(stmt, column_index))
-            {
-
-                debugOutput::sendMessage("DB_PRODUCTS_SLOT unexpected value. " + to_string(sqlite3_column_int(stmt, column_index)), MSG_INFO);
-            }
-        }
-        break;
-        case DB_PRODUCTS_NAME:
-        {
-            m_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-        }
-        break;
-        case DB_PRODUCTS_SIZE_UNIT:
-        {
-            m_display_unit = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-        }
-        break;
-        case DB_PRODUCTS_CURRENCY:
-        {
-        }
-        break;
-        case DB_PRODUCTS_PAYMENT:
-        {
-            m_paymentMethod = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-        }
-        break;
-        case DB_PRODUCTS_NAME_RECEIPT:
-        {
-            m_name_receipt = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-        }
-        break;
-        case DB_PRODUCTS_DISPENSE_SPEED:
-        {
-            m_nDispenseSpeedPWM = sqlite3_column_int(stmt, column_index);
-        }
-        break;
-        case DB_PRODUCTS_CALIBRATION_CONST:
-        {
-            m_calibration_const = sqlite3_column_double(stmt, column_index);
-        }
-        break;
-        case DB_PRODUCTS_VOLUME_PER_TICK:
-        {
-            m_nVolumePerTick = sqlite3_column_double(stmt, column_index);
-        }
-        break;
-        case DB_PRODUCTS_LAST_RESTOCK:
-        {
-        }
-        break;
-        case DB_PRODUCTS_VOLUME_FULL:
-        {
-        }
-        break;
-        case DB_PRODUCTS_VOLUME_REMAINING:
-        {
-        }
-        break;
-        case DB_PRODUCTS_VOLUME_DISPENSED_SINCE_RESTOCK:
-        {
-        }
-        break;
-        case DB_PRODUCTS_VOLUME_DISPENSED_TOTAL:
-        {
-        }
-        break;
-        case DB_PRODUCTS_IS_ENABLED_SMALL:
-        {
-        }
-        break;
-        case DB_PRODUCTS_IS_ENABLED_MEDIUM:
-        {
-        }
-        break;
-        case DB_PRODUCTS_IS_ENABLED_LARGE:
-        {
-        }
-        break;
-        case DB_PRODUCTS_IS_ENABLED_CUSTOM:
-        {
-        }
-        break;
-        case DB_PRODUCTS_SIZE_SMALL:
-        {
-            m_nVolumeTarget_s = sqlite3_column_double(stmt, column_index);
-        }
-        break;
-        case DB_PRODUCTS_SIZE_MEDIUM:
-        {
-            m_nVolumeTarget_m = sqlite3_column_double(stmt, column_index);
-        }
-        break;
-        case DB_PRODUCTS_SIZE_LARGE:
-        {
-            m_nVolumeTarget_l = sqlite3_column_double(stmt, column_index);
-        }
-        break;
-        case DB_PRODUCTS_SIZE_CUSTOM_MIN:
-        {
-            m_nVolumeTarget_c_min = sqlite3_column_double(stmt, column_index);
-        }
-        break;
-        case DB_PRODUCTS_SIZE_CUSTOM_MAX:
-        {
-            m_nVolumeTarget_c_max = sqlite3_column_double(stmt, column_index);
-        }
-        break;
-        case DB_PRODUCTS_PRICE_SMALL:
-        {
-            m_price_small = sqlite3_column_double(stmt, column_index);
-        }
-        break;
-        case DB_PRODUCTS_PRICE_MEDIUM:
-        {
-            m_price_medium = sqlite3_column_double(stmt, column_index);
-        }
-        break;
-        case DB_PRODUCTS_PRICE_LARGE:
-        {
-            m_price_large = sqlite3_column_double(stmt, column_index);
-        }
-        break;
-        case DB_PRODUCTS_PRICE_CUSTOM:
-        {
-            m_price_custom_per_liter = sqlite3_column_double(stmt, column_index);
-        }
-        break;
-        case DB_PRODUCTS_PLU_SMALL:
-        {
-            m_nPLU_small = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-        }
-        break;
-        case DB_PRODUCTS_PLU_MEDIUM:
-        {
-            m_nPLU_medium = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-        }
-        break;
-        case DB_PRODUCTS_PLU_LARGE:
-        {
-            m_nPLU_large = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-        }
-        break;
-        case DB_PRODUCTS_PLU_CUSTOM:
-        {
-            m_nPLU_custom = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-        }
-        break;
-        case DB_PRODUCTS_PID_SMALL:
-        {
-        }
-        break;
-        case DB_PRODUCTS_PID_MEDIUM:
-        {
-        }
-        break;
-        case DB_PRODUCTS_PID_LARGE:
-        {
-        }
-        break;
-        case DB_PRODUCTS_PID_CUSTOM:
-        {
-        }
-        break;
-        case DB_PRODUCTS_FLAVOUR:
-        {
-        }
-        break;
-        case DB_PRODUCTS_IMAGE_URL:
-        {
-        }
-        break;
-        case DB_PRODUCTS_TYPE:
-        {
-        }
-        break;
-        case DB_PRODUCTS_INGREDIENTS:
-        {
-        }
-        break;
-        case DB_PRODUCTS_FEATURES:
-        {
-        }
-        break;
-        default:
-        {
-            debugOutput::sendMessage("Unexpected column index" + to_string(column_index), MSG_INFO);
-        }
-        break;
-        }
-    }
-    status = sqlite3_step(stmt);
-}; // every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
 
 
-
-sqlite3_finalize(stmt);
-sqlite3_close(db);
-return true;
-
-#endif
+// #endif
 
 bool product::testParametersFromDb()
 {

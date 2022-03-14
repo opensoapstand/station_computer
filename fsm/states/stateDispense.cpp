@@ -50,8 +50,8 @@ DF_ERROR stateDispense::onEntry()
    m_state_requested = STATE_DISPENSE;
    productDispensers = g_productDispensers;
    DF_ERROR e_ret = OK;
-   pos = m_pMessaging->getProductNumber();
-   size = m_pMessaging->getRequestedVolume();
+   pos = m_pMessaging->getRequestedSlot();
+   size = m_pMessaging->getRequestedSize();
    pos = pos - 1;
    productDispensers[pos].getProduct()->productVolumeInfo();
    return e_ret;

@@ -66,6 +66,7 @@ messageMediator::~messageMediator()
 DF_ERROR messageMediator::sendMessage(string msg)
 {
    DF_ERROR dfError = OK;
+   debugOutput::sendMessage("Send msg to UI: " + msg, MSG_INFO);
 
    try
    {

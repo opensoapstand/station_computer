@@ -60,6 +60,10 @@ DF_ERROR stateInit::onEntry()
 DF_ERROR stateInit::onAction()
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
+
+   
+    debugOutput::sendMessage("Uuuuuuse database at: " + std::to_string(1) + DB_PATH, MSG_INFO);
+
     e_ret = setProducts();
     if (OK == e_ret)
     {
@@ -72,6 +76,7 @@ DF_ERROR stateInit::onAction()
 
         // The UI program waits for this message to move from its initializing phase to its Idle phase:
         m_pMessaging->sendMessage("Init Ready");
+        
     }
     else
     {
@@ -123,12 +128,14 @@ DF_ERROR stateInit::dispenserSetup()
 /**/
 DF_ERROR stateInit::setProducts()
 {
-    for (int slot_index; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
+    for (int slot_index=0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
     {
+        debugOutput::sendMessage("Setup dispenser: " + to_string (slot_index+1), MSG_INFO);
         g_productDispensers[slot_index].setSlot(slot_index + 1);
-        g_productDispensers[slot_index].setProduct(
-            new product());
-        g_productDispensers[slot_index].getProduct()->reloadParametersFromDb();
+        debugOutput::sendMessage("slot set.", MSG_INFO);
+        g_productDispensers[slot_index].setProduct(new product(slot_index+1));
+        debugOutput::sendMessage("product set..", MSG_INFO);
+        // g_productDispensers[slot_index].getProduct()->reloadParametersFromDb();
     }
     return OK;
 }

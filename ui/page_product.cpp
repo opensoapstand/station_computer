@@ -39,11 +39,11 @@ pageProduct::pageProduct(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    int checkOption = 99;
+    int product_slot___ = 99;
 
     QString bitmap_location;
 
-    if(checkOption > 0 && checkOption <= 6) {
+    if(product_slot___ > 0 && product_slot___ <= 6) {
         bitmap_location.append("/home/df-admin/production/references/4_pay_select_page_l_");
         bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOption()));
         bitmap_location.append(".png");
@@ -200,7 +200,7 @@ void pageProduct::on_pagePayment_Button_clicked()
 }
 
 void pageProduct::resizeEvent(QResizeEvent *event){
-    int checkOption = idlePage->userDrinkOrder->getOption();
+    int product_slot___ = idlePage->userDrinkOrder->getOption();
     qDebug() << "ahoyy1" ;
     DbManager db(DB_PATH);
 
@@ -217,9 +217,9 @@ void pageProduct::resizeEvent(QResizeEvent *event){
 
     QString bitmap_location;
 
-    if(checkOption > 0 && checkOption <= 9) {
+    if(product_slot___ > 0 && product_slot___ <= 9) {
         bitmap_location.append("/home/df-admin/production/references/4_pay_select_page_l_");
-        bitmap_location.append(QString::number(checkOption));
+        bitmap_location.append(QString::number(product_slot___));
         bitmap_location.append(".png");
     } else {
         bitmap_location = "/home/df-admin/production/references/4_pay_select_page_l_1.png";
@@ -239,36 +239,36 @@ void pageProduct::resizeEvent(QResizeEvent *event){
         connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
     }
 
-    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize), 'f', 2));
+    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(product_slot___, drinkSize), 'f', 2));
     ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOption(), drinkSize), 'f', 2));
 
     // ui->totalPriceLabel->setText("$"+QString::number(idlePage->userDrinkOrder->getPrice()));
-    ui->label_price_small->setText("$"+QString::number(db.getProductPrice(checkOption, 's'), 'f', 2));
-    ui->label_price_large->setText("$"+QString::number(db.getProductPrice(checkOption, 'l'), 'f', 2));
+    ui->label_price_small->setText("$"+QString::number(db.getProductPrice(product_slot___, 's'), 'f', 2));
+    ui->label_price_large->setText("$"+QString::number(db.getProductPrice(product_slot___, 'l'), 'f', 2));
     ui->discountLabel->setText("-$0.00");
 
 
     // double v;
-    // v = db.getProductVolume(checkOption, 's');
-    // if (db.getUnits(checkOption) == "l" || db.getUnits(checkOption) == "ml"){
-    //     if (db.getProductVolume(checkOption, drinkSize) < 1000){
+    // v = db.getProductVolume(product_slot___, 's');
+    // if (db.getUnits(product_slot___) == "l" || db.getUnits(product_slot___) == "ml"){
+    //     if (db.getProductVolume(product_slot___, drinkSize) < 1000){
     //         ui->label_size_small->setText(QString::number(v) + "ml");
     //     }else{
     //         ui->label_size_small->setText(QString::number(v/1000) + "L");
     //     }
-    // }else if  (db.getUnits(checkOption) == "oz" ){
+    // }else if  (db.getUnits(product_slot___) == "oz" ){
     //         ui->label_size_small->setText(QString::number(ceil(v*ML_TO_OZ)) + "oz");
     // }
 
     
-    // v = db.getProductVolume(checkOption, 'l');
-    // if (db.getUnits(checkOption) == "l" || db.getUnits(checkOption) == "ml"){
-    //     if (db.getProductVolume(checkOption, drinkSize) < 1000){
+    // v = db.getProductVolume(product_slot___, 'l');
+    // if (db.getUnits(product_slot___) == "l" || db.getUnits(product_slot___) == "ml"){
+    //     if (db.getProductVolume(product_slot___, drinkSize) < 1000){
     //         ui->label_size_large->setText( QString::number(v) + "ml");
     //     }else{
     //         ui->label_size_large->setText(QString::number(v/1000) + "L");
     //     }
-    // }else if  (db.getUnits(checkOption) == "oz" ){
+    // }else if  (db.getUnits(product_slot___) == "oz" ){
     //         ui->label_size_large->setText(QString::number(ceil(v*ML_TO_OZ)) + "oz");
     // }
 
@@ -277,26 +277,26 @@ void pageProduct::resizeEvent(QResizeEvent *event){
 
 
 
-    // if (db.getProductVolume(checkOption, 's') < 1000){
-    //     ui->label_size_small->setText(QString::number(db.getProductVolume(checkOption, 's')) + " " + db.getUnits(checkOption));
+    // if (db.getProductVolume(product_slot___, 's') < 1000){
+    //     ui->label_size_small->setText(QString::number(db.getProductVolume(product_slot___, 's')) + " " + db.getUnits(product_slot___));
     // }else{
-    //     ui->label_size_small->setText(QString::number(db.getProductVolume(checkOption, 's')/1000) + "L");
+    //     ui->label_size_small->setText(QString::number(db.getProductVolume(product_slot___, 's')/1000) + "L");
     // }
 
-    // if (db.getProductVolume(checkOption, 'l') < 1000){
-    //     ui->label_size_large->setText(QString::number(db.getProductVolume(checkOption, 'l')) + " " + db.getUnits(checkOption));
+    // if (db.getProductVolume(product_slot___, 'l') < 1000){
+    //     ui->label_size_large->setText(QString::number(db.getProductVolume(product_slot___, 'l')) + " " + db.getUnits(product_slot___));
     // }else{
-    //     ui->label_size_large->setText(QString::number(db.getProductVolume(checkOption, 'l')/1000) + "L");
+    //     ui->label_size_large->setText(QString::number(db.getProductVolume(product_slot___, 'l')/1000) + "L");
     // }
 
-    // if (db.getUnits(checkOption) == "l" || db.getUnits(checkOption) == "ml"){
-    //     if (db.getProductVolume(checkOption, drinkSize) < 1000){
-    //         ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
+    // if (db.getUnits(product_slot___) == "l" || db.getUnits(product_slot___) == "ml"){
+    //     if (db.getProductVolume(product_slot___, drinkSize) < 1000){
+    //         ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)) + "ml");
     //     }else{
-    //         ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
+    //         ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)/1000) + "L");
     //     }
-    // }else if  (db.getUnits(checkOption) == "oz" ){
-    //         ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)*ML_TO_OZ) + "ozzz");
+    // }else if  (db.getUnits(product_slot___) == "oz" ){
+    //         ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)*ML_TO_OZ) + "ozzz");
 
     // }
 
@@ -313,12 +313,13 @@ void pageProduct::resizeEvent(QResizeEvent *event){
     
     db.closeDB();
     // do after db closed
-    set_label_product(checkOption, drinkSize);
-    set_label_volume(checkOption, drinkSize);
+    set_label_volume(ui->label_size_small, product_slot___, 's');
+    set_label_volume(ui->label_size_large, product_slot___, 'l');
+    set_label_product(product_slot___, drinkSize);
 }
 
 void pageProduct::showEvent(QShowEvent *event){
-   int checkOption = idlePage->userDrinkOrder->getOption();
+   int product_slot___ = idlePage->userDrinkOrder->getOption();
    qDebug() << "ahoyy12" ;
     DbManager db(DB_PATH);
 
@@ -332,28 +333,28 @@ void pageProduct::showEvent(QShowEvent *event){
     if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK){
         drinkSize = 'l';
     }
-    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize), 'f', 2));
-    // ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(checkOption, drinkSize), 'f', 2));
+    ui->priceLabel->setText("$"+QString::number(db.getProductPrice(product_slot___, drinkSize), 'f', 2));
+    // ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(product_slot___, drinkSize), 'f', 2));
     ui->totalPriceLabel->setText("$"+QString::number(idlePage->userDrinkOrder->getPrice()));
-    ui->label_price_small->setText("$"+QString::number(db.getProductPrice(checkOption, 's'), 'f', 2));
-    ui->label_price_large->setText("$"+QString::number(db.getProductPrice(checkOption, 'l'), 'f', 2));
+    ui->label_price_small->setText("$"+QString::number(db.getProductPrice(product_slot___, 's'), 'f', 2));
+    ui->label_price_large->setText("$"+QString::number(db.getProductPrice(product_slot___, 'l'), 'f', 2));
 
-    // if (db.getProductVolume(checkOption, 's') < 1000){
-    //     ui->label_size_small->setText(QString::number(db.getProductVolume(checkOption, 's')) + " " + db.getUnits(checkOption));
+    // if (db.getProductVolume(product_slot___, 's') < 1000){
+    //     ui->label_size_small->setText(QString::number(db.getProductVolume(product_slot___, 's')) + " " + db.getUnits(product_slot___));
     // }else{
-    //     ui->label_size_small->setText(QString::number(db.getProductVolume(checkOption, 's')/1000) + "L");
+    //     ui->label_size_small->setText(QString::number(db.getProductVolume(product_slot___, 's')/1000) + "L");
     // }
 
-    // if (db.getProductVolume(checkOption, 'l') < 1000){
-    //     ui->label_size_large->setText(QString::number(db.getProductVolume(checkOption, 'l')) + " " + db.getUnits(checkOption));
+    // if (db.getProductVolume(product_slot___, 'l') < 1000){
+    //     ui->label_size_large->setText(QString::number(db.getProductVolume(product_slot___, 'l')) + " " + db.getUnits(product_slot___));
     // }else{
-    //     ui->label_size_large->setText(QString::number(db.getProductVolume(checkOption, 'l')/1000) + "L");
+    //     ui->label_size_large->setText(QString::number(db.getProductVolume(product_slot___, 'l')/1000) + "L");
     // }
 
-    // if (db.getProductVolume(checkOption, drinkSize) < 1000){
-    //     ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) +  " " + db.getUnits(checkOption));
+    // if (db.getProductVolume(product_slot___, drinkSize) < 1000){
+    //     ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)) +  " " + db.getUnits(product_slot___));
     // }else{
-    //     ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
+    //     ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)/1000) + "L");
     // }
     ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
     ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: normal; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
@@ -364,37 +365,98 @@ void pageProduct::showEvent(QShowEvent *event){
     promoPercent = 0.0;
 
     db.closeDB();
-    set_label_product(checkOption, drinkSize);
-    set_label_volume(checkOption, drinkSize);
+    set_label_product(product_slot___, drinkSize);
+ set_label_volume(ui->label_size_small, product_slot___, 's');
+    set_label_volume(ui->label_size_large, product_slot___, 'l');
 }
 
-void pageProduct::set_label_volume(int checkOption, char drinkSize){
-     qDebug() << "ahoyefefefefy12" ;
+void pageProduct::set_label_product(int product_slot___, char drinkSize){
+    // qDebug() << "ahoyy1erer3" ;
+    // DbManager db(DB_PATH);
+
+    // if (db.getUnits(product_slot___) == "l" || db.getUnits(product_slot___) == "ml"){
+    //     if (db.getProductVolume(product_slot___, drinkSize) < 1000){
+    //         ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)) + "ml");
+    //     }else{
+    //         ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)/1000) + "L");
+    //     }
+    // }else if  (db.getUnits(product_slot___) == "oz" ){
+    //         ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(ceil(db.getProductVolume(product_slot___, drinkSize)*ML_TO_OZ)) + "oz");
+
+    // }
+    // db.closeDB();
+
+
+    qDebug() << "ahoyy1erer3" ;
     DbManager db(DB_PATH);
+    QString product_name = db.getProductName(product_slot___);
+    db.closeDB();
+
+    ui->productLabel->setText(product_name + " " + getSizeToVolume(product_slot___, drinkSize));
+    
+}
+
+void pageProduct::set_label_volume(QLabel* label, int product_slot___, char drinkSize){
+    // qDebug() << "db for label volume" ;
+    // double v;
+    // QString units;
+    // DbManager db(DB_PATH);
+    // v = db.getProductVolume(product_slot___, drinkSize);
+    // units = db.getUnits(product_slot___);
+    // db.closeDB();
+    //         // ui->label_size_small->setText(QString::number(v) + "ml");
+
+    label->setText(getSizeToVolume(product_slot___, drinkSize));
+
+    // if (units == "l" || units == "ml"){
+    //     if (v < 1000){
+    //         label->setText(QString::number(v) + "ml");
+    //     }else{
+    //         label->setText(QString::number(v/1000) + "L");
+    //     }
+    // }else if  (units == "oz" ){
+    //         label->setText(QString::number(ceil(v*ML_TO_OZ)) + "oz");
+    // }else{
+    //     qDebug() << "Unhandled unit system: " << units ; 
+    // }
+    
+    // v = db.getProductVolume(product_slot___, 'l');
+    // if (units == "l" || units == "ml"){
+    //     if (db.getProductVolume(product_slot___, drinkSize) < 1000){
+    //         ui->label_size_large->setText( QString::number(v) + "ml");
+    //     }else{
+    //         ui->label_size_large->setText(QString::number(v/1000) + "L");
+    //     }
+    // }else if  (units == "oz" ){
+    //         ui->label_size_large->setText(QString::number(ceil(v*ML_TO_OZ)) + "oz");
+    // }
+}
+
+QString pageProduct::getSizeToVolume( int product_slot___, char drinkSize){
+    qDebug() << "db for label volume" ;
     double v;
-    v = db.getProductVolume(checkOption, 's');
-    if (db.getUnits(checkOption) == "l" || db.getUnits(checkOption) == "ml"){
-        if (db.getProductVolume(checkOption, drinkSize) < 1000){
-            ui->label_size_small->setText(QString::number(v) + "ml");
+    QString units;
+    DbManager db(DB_PATH);
+    v = db.getProductVolume(product_slot___, drinkSize);
+    units = db.getUnits(product_slot___);
+    db.closeDB();
+            // ui->label_size_small->setText(QString::number(v) + "ml");
+
+    QString volume_as_string;
+
+    if (units == "l" || units == "ml"){
+        if (v < 1000){
+            volume_as_string = QString::number(v) + "ml";
         }else{
-            ui->label_size_small->setText(QString::number(v/1000) + "L");
+            volume_as_string = QString::number(v/1000) + "L";
         }
-    }else if  (db.getUnits(checkOption) == "oz" ){
-            ui->label_size_small->setText(QString::number(ceil(v*ML_TO_OZ)) + "oz");
+    }else if  (units == "oz" ){
+            volume_as_string = QString::number(ceil(v*ML_TO_OZ)) + "oz";
+    }else{
+        qDebug() << "Unhandled unit system: " << units ; 
     }
 
-    
-    v = db.getProductVolume(checkOption, 'l');
-    if (db.getUnits(checkOption) == "l" || db.getUnits(checkOption) == "ml"){
-        if (db.getProductVolume(checkOption, drinkSize) < 1000){
-            ui->label_size_large->setText( QString::number(v) + "ml");
-        }else{
-            ui->label_size_large->setText(QString::number(v/1000) + "L");
-        }
-    }else if  (db.getUnits(checkOption) == "oz" ){
-            ui->label_size_large->setText(QString::number(ceil(v*ML_TO_OZ)) + "oz");
-    }
-    db.closeDB();
+    return volume_as_string;
 }
 
 void pageProduct::onSelectTimeoutTick(){
@@ -443,11 +505,11 @@ void pageProduct::on_orderSmall_Button_clicked()
 {
     QString bitmap_location;
     
-    int checkOption = idlePage->userDrinkOrder->getOption();
+    int product_slot___ = idlePage->userDrinkOrder->getOption();
 
-    if(checkOption > 0 && checkOption <= 9) {
+    if(product_slot___ > 0 && product_slot___ <= 9) {
         bitmap_location.append("/home/df-admin/production/references/4_pay_select_page_s_");
-        bitmap_location.append(QString::number(checkOption));
+        bitmap_location.append(QString::number(product_slot___));
         bitmap_location.append(".png");
     } else {
         bitmap_location = "/home/df-admin/production/references/4_pay_select_page_s_1.png";
@@ -476,48 +538,33 @@ void pageProduct::on_orderSmall_Button_clicked()
     ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
     ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
 
-    // if (db.getProductVolume(checkOption, drinkSize) < 1000){
-    //     ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + " " + db.getUnits(checkOption));
+    // if (db.getProductVolume(product_slot___, drinkSize) < 1000){
+    //     ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)) + " " + db.getUnits(product_slot___));
     // }else{
-    //     ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
+    //     ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)/1000) + "L");
     // }
 
     db.closeDB();
     //after db closed
-    set_label_product(checkOption, drinkSize);
+    set_label_product(product_slot___, drinkSize);
 
     
     
 
 }
 
-void pageProduct::set_label_product(int checkOption, char drinkSize){
-    qDebug() << "ahoyy1erer3" ;
-    DbManager db(DB_PATH);
 
-    if (db.getUnits(checkOption) == "l" || db.getUnits(checkOption) == "ml"){
-        if (db.getProductVolume(checkOption, drinkSize) < 1000){
-            ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + "ml");
-        }else{
-            ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
-        }
-    }else if  (db.getUnits(checkOption) == "oz" ){
-            ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(ceil(db.getProductVolume(checkOption, drinkSize)*ML_TO_OZ)) + "oz");
-
-    }
-    db.closeDB();
-}
 
 // on_Large_Order button listener
 void pageProduct::on_orderBig_Button_clicked()
 {
     QString bitmap_location;
 
-    int checkOption = idlePage->userDrinkOrder->getOption();
+    int product_slot___ = idlePage->userDrinkOrder->getOption();
 
-    if(checkOption > 0 && checkOption <= 9) {
+    if(product_slot___ > 0 && product_slot___ <= 9) {
         bitmap_location.append("/home/df-admin/production/references/4_pay_select_page_l_");
-        bitmap_location.append(QString::number(checkOption));
+        bitmap_location.append(QString::number(product_slot___));
         bitmap_location.append(".png");
     } else {
         bitmap_location = "/home/df-admin/production/references/4_pay_select_page_l_1.png";
@@ -546,14 +593,14 @@ void pageProduct::on_orderBig_Button_clicked()
     ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
     ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
 
-    // if (db.getProductVolume(checkOption, drinkSize) < 1000){
-    //     ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)) + " " + db.getUnits(checkOption));
+    // if (db.getProductVolume(product_slot___, drinkSize) < 1000){
+    //     ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)) + " " + db.getUnits(product_slot___));
     // }else{
-    //     ui->productLabel->setText((db.getProductName(checkOption)) + " " + QString::number(db.getProductVolume(checkOption, drinkSize)/1000) + "L");
+    //     ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)/1000) + "L");
     // }
     db.closeDB();
     // do after db closed
-    set_label_product(checkOption, drinkSize);
+    set_label_product(product_slot___, drinkSize);
 
 }
 

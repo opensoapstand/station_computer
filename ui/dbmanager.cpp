@@ -234,7 +234,7 @@ double DbManager::getProductVolume(int slot, char size){
         volume_query.prepare("SELECT volume_target_l FROM products WHERE slot=:slot");
     }
     // else if (size == 'm'){
-    //     volume_query.prepare("SELECT volume_medium FROM products WHERE slot=:slot");
+    //     volume_query.prepare("SELECT size_medium FROM products WHERE slot=:slot");
     // }
     else if (size == 's'){
         volume_query.prepare("SELECT volume_target_s FROM products WHERE slot=:slot");
@@ -244,16 +244,16 @@ double DbManager::getProductVolume(int slot, char size){
     }
 #else
     if (size == 'l'){
-        volume_query.prepare("SELECT volume_large FROM products WHERE slot=:slot");
+        volume_query.prepare("SELECT size_large FROM products WHERE slot=:slot");
     }
     else if (size == 'm'){
-        volume_query.prepare("SELECT volume_medium FROM products WHERE slot=:slot");
+        volume_query.prepare("SELECT size_medium FROM products WHERE slot=:slot");
     }
     else if (size == 's'){
-        volume_query.prepare("SELECT volume_small FROM products WHERE slot=:slot");
+        volume_query.prepare("SELECT size_small FROM products WHERE slot=:slot");
     }
     else if (size == 'c'){
-        volume_query.prepare("SELECT volume_custom FROM products WHERE slot=:slot");
+        volume_query.prepare("SELECT size_custom FROM products WHERE slot=:slot");
     }
 
 #endif 
@@ -266,6 +266,7 @@ double DbManager::getProductVolume(int slot, char size){
     }
     
     }
+    qDebug() << " size to volume  " << size << "=" <<  volume;
     return volume;
 }
 
@@ -789,7 +790,7 @@ bool DbManager::updateTargetVolume_s(int slot, double new_volume){
 #ifdef USE_OLD_DATABASE
     update_target_volume_query.prepare("UPDATE products SET volume_target_s=:new_volume WHERE slot=:slot");
 #else
-    update_target_volume_query.prepare("UPDATE products SET volume_small=:new_volume WHERE slot=:slot");
+    update_target_volume_query.prepare("UPDATE products SET size_small=:new_volume WHERE slot=:slot");
 #endif
 
 
@@ -817,7 +818,7 @@ bool DbManager::updateTargetVolume_l(int slot, double new_volume){
 #ifdef USE_OLD_DATABASE
     update_target_volume_query.prepare("UPDATE products SET volume_target_l=:new_volume WHERE slot=:slot");
 #else
-    update_target_volume_query.prepare("UPDATE products SET volume_large=:new_volume WHERE slot=:slot");
+    update_target_volume_query.prepare("UPDATE products SET size_large=:new_volume WHERE slot=:slot");
 #endif
 
 
@@ -1054,7 +1055,7 @@ QString DbManager::getUnits(int slot){
 #ifdef USE_OLD_DATABASE
     units_query.prepare("SELECT units FROM products WHERE slot=:slot");
 #else
-    units_query.prepare("SELECT display_unit FROM products WHERE slot=:slot");
+    units_query.prepare("SELECT size_unit FROM products WHERE slot=:slot");
 #endif
 
     units_query.bindValue(":slot", slot);

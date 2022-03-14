@@ -91,11 +91,11 @@ public:
     //constexpr static double PRICE_LARGE_TEST = 4.00;
 
     // Setters and Getters
-    void setDrinkSize(DF_QT_OPTIONS sizeOption);
-    void setDrinkOption(DF_QT_OPTIONS optionSlot);
+    void setOrderSize(DF_QT_OPTIONS sizeOption);
+    void setOrderSlot(DF_QT_OPTIONS optionSlot);
 
-    int getOption() const {return m_optionNumber;}
-    double getPrice() const {return m_drinkPrice;}
+    int getOrderSlot() const {return m_optionNumber;}
+    double getOrderPrice() const {return m_drinkPrice;}
     double getSize() const {return m_drinkML;}
     DF_QT_OPTIONS getSizeOption();
 
@@ -105,7 +105,7 @@ public slots:
     void setSize(double size);
 
 signals:
-    void optionChange(int newOpt);
+    void orderSlotChange(int newOpt);
     void priceChange(double newPrice);
     void sizeChange(double newSize);
 

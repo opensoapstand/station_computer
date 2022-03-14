@@ -35,7 +35,7 @@ page_idle::page_idle(QWidget *parent) :
 
     // TODO: Hold and pass DrinkOrder Object
     userDrinkOrder = new DrinkOrder();
-    userDrinkOrder->setDrinkOption(OPTION_SLOT);
+    userDrinkOrder->setOrderSlot(OPTION_SLOT);
 
     // IPC Networking
     dfUtility = new df_util();

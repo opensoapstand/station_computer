@@ -145,8 +145,8 @@ void page_select_product::on_selection1_Button_clicked()
     if(db.remainingVolumeIsBiggerThanLargestFixedSize(1)  && this->idlePage->isSlotAvailable(1)){
         db.closeDB();
         productPageEndTimer->stop();
-        idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_1);
-        idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
+        idlePage->userDrinkOrder->setOrderSlot(OPTION_SLOT_1);
+        idlePage->userDrinkOrder->setOrderSize(LARGE_DRINK);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
         this->hide();
@@ -162,8 +162,8 @@ void page_select_product::on_selection2_Button_clicked()
     if(db.remainingVolumeIsBiggerThanLargestFixedSize(2) && this->idlePage->isSlotAvailable(2)){
         db.closeDB();
         productPageEndTimer->stop();
-        idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_2);
-        idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
+        idlePage->userDrinkOrder->setOrderSlot(OPTION_SLOT_2);
+        idlePage->userDrinkOrder->setOrderSize(LARGE_DRINK);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
         this->hide();
@@ -179,8 +179,8 @@ void page_select_product::on_selection3_Button_clicked()
     if(db.remainingVolumeIsBiggerThanLargestFixedSize(3)  && this->idlePage->isSlotAvailable(3)){
         db.closeDB();
         productPageEndTimer->stop();
-        idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_3);
-        idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
+        idlePage->userDrinkOrder->setOrderSlot(OPTION_SLOT_3);
+        idlePage->userDrinkOrder->setOrderSize(LARGE_DRINK);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
         this->hide();
@@ -197,8 +197,8 @@ void page_select_product::on_selection4_Button_clicked()
     if(db.remainingVolumeIsBiggerThanLargestFixedSize(4)  && this->idlePage->isSlotAvailable(4)){
         db.closeDB();
         productPageEndTimer->stop();
-        idlePage->userDrinkOrder->setDrinkOption(OPTION_SLOT_4);
-        idlePage->userDrinkOrder->setDrinkSize(LARGE_DRINK);
+        idlePage->userDrinkOrder->setOrderSlot(OPTION_SLOT_4);
+        idlePage->userDrinkOrder->setOrderSize(LARGE_DRINK);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
         this->hide();

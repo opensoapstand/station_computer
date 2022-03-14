@@ -55,15 +55,15 @@ DrinkOrder& DrinkOrder::operator=( const DrinkOrder& other )
 // SLOTS Section
 void DrinkOrder::changeOption(int optNumber)
 {
-    if(optNumber != getOption()) {
+    if(optNumber != getOrderSlot()) {
         m_optionNumber = optNumber;
-        emit optionChange(optNumber);
+        emit orderSlotChange(optNumber);
     }
 }
 
 void DrinkOrder::setPrice(double price)
 {
-    if(price != getPrice()) {
+    if(price != getOrderPrice()) {
         m_drinkPrice = price;
         emit priceChange(price);
     }
@@ -78,7 +78,7 @@ void DrinkOrder::setSize(double size)
 }
 
 // Enum search for drink sizes
-void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
+void DrinkOrder::setOrderSize(DF_QT_OPTIONS sizeOption) {
 
     sizeOptionSelected = sizeOption;
 
@@ -157,8 +157,8 @@ void DrinkOrder::setDrinkSize(DF_QT_OPTIONS sizeOption) {
 }
 
 // Enum search for option slot
-void DrinkOrder::setDrinkOption(DF_QT_OPTIONS slot) {
-   // qInfo() << "Current Option" << getOption() << endl;
+void DrinkOrder::setOrderSlot(DF_QT_OPTIONS slot) {
+   // qInfo() << "Current Option" << getOrderSlot() << endl;
 
 
     if(slot >= OPTION_SLOT && slot <= DRINK_SIZE_OPTIONS)

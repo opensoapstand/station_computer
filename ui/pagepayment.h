@@ -77,7 +77,7 @@ public:
     /* mpos */
     void stayAliveLogon();
     void batchClose();
-    int getPriceSelect();
+    int getOrderPriceSelect();
     void sendCommand();
 
     string getTerminalID(){

@@ -145,7 +145,7 @@ void page_dispenser::dispensing_end_admin()
     DbManager db(DB_PATH);
     qDebug() << "call db2 from dispense end" << endl;
 
-    if (volumeDispensed == 0 && (db.getPaymentMethod(idlePage->userDrinkOrder->getOption())=="tap")){
+    if (volumeDispensed == 0 && (db.getPaymentMethod(idlePage->userDrinkOrder->getOrderSlot())=="tap")){
         qDebug() << "dispense end: tap payment No volume dispensed.";
         // REVERSE PAYMENT
         com.page_init();
@@ -156,7 +156,7 @@ void page_dispenser::dispensing_end_admin()
             pktResponded.clear();
             com.flushSerial();
         }
-    }else if ((db.getPaymentMethod(idlePage->userDrinkOrder->getOption())=="tap") && volumeDispensed != 0){
+    }else if ((db.getPaymentMethod(idlePage->userDrinkOrder->getOrderSlot())=="tap") && volumeDispensed != 0){
         qDebug() << "dispense end: tap payment. Some volume dispensed.";
         QMessageBox msgBox;
         msgBox.setText("Complete!");
@@ -195,7 +195,7 @@ void page_dispenser::force_finish_dispensing(){
 }
 
 void page_dispenser::fsmSendStartDispensing(){
-    QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
+    QString command = QString::number(this->idlePage->userDrinkOrder->getOrderSlot());
 
     if(idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
         command.append('s');
@@ -218,7 +218,7 @@ void page_dispenser::fsmSendStartDispensing(){
 
 void page_dispenser::fsmSendStopDispensing(){
     this->isDispensing = false;
-    QString command = QString::number(this->idlePage->userDrinkOrder->getOption());
+    QString command = QString::number(this->idlePage->userDrinkOrder->getOrderSlot());
 
     if(idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
         command.append('s');

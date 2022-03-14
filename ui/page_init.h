@@ -42,7 +42,7 @@ public:
     ~page_init();
     void initReadySlot(void);
 
-    DrinkOrder* userDrinkOrder;
+    DrinkOrder* currentProductOrder;
     df_util* dfUtility;
 
     DfUiCommThread* dfComm;

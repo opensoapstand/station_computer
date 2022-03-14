@@ -43,7 +43,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
     if (product_slot___ > 0 && product_slot___ <= 6)
     {
         bitmap_location.append("/home/df-admin/production/references/4_pay_select_page_l_");
-        bitmap_location.append(QString::number(idlePage->userDrinkOrder->getOrderSlot()));
+        bitmap_location.append(QString::number(idlePage->currentProductOrder->getOrderSlot()));
         bitmap_location.append(".png");
     }
     else
@@ -167,7 +167,7 @@ void pageProduct::on_pagePayment_Button_clicked()
     this->stopSelectTimers();
     selectIdleTimer->stop();
 
-    if (db.getPaymentMethod(idlePage->userDrinkOrder->getOrderSlot()) == "qr" || db.getPaymentMethod(idlePage->userDrinkOrder->getOrderSlot()) == "tap")
+    if (db.getPaymentMethod(idlePage->currentProductOrder->getOrderSlot()) == "qr" || db.getPaymentMethod(idlePage->currentProductOrder->getOrderSlot()) == "tap")
     {
         CURL *curl;
         CURLcode res;
@@ -190,7 +190,7 @@ void pageProduct::on_pagePayment_Button_clicked()
             this->hide();
         }
     }
-    else if (db.getPaymentMethod(idlePage->userDrinkOrder->getOrderSlot()) == "barcode" || db.getPaymentMethod(idlePage->userDrinkOrder->getOrderSlot()) == "plu")
+    else if (db.getPaymentMethod(idlePage->currentProductOrder->getOrderSlot()) == "barcode" || db.getPaymentMethod(idlePage->currentProductOrder->getOrderSlot()) == "plu")
     {
         db.closeDB();
         dispensingPage->showEvent(dispenseEvent);
@@ -202,7 +202,7 @@ void pageProduct::on_pagePayment_Button_clicked()
 
 void pageProduct::resizeEvent(QResizeEvent *event)
 {
-    int product_slot___ = idlePage->userDrinkOrder->getOrderSlot();
+    int product_slot___ = idlePage->currentProductOrder->getOrderSlot();
     qDebug() << "ahoyy1";
     DbManager db(DB_PATH);
 
@@ -210,11 +210,11 @@ void pageProduct::resizeEvent(QResizeEvent *event)
     ui->previousPage_Button->setEnabled(true);
 
     char drinkSize;
-    if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK)
+    if (idlePage->currentProductOrder->getSizeOption() == SMALL_DRINK)
     {
         drinkSize = 's';
     }
-    if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK)
+    if (idlePage->currentProductOrder->getSizeOption() == LARGE_DRINK)
     {
         drinkSize = 'l';
     }
@@ -238,7 +238,7 @@ void pageProduct::resizeEvent(QResizeEvent *event)
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
-    idlePage->userDrinkOrder->setOrderSize(LARGE_DRINK);
+    idlePage->currentProductOrder->setOrderSize(LARGE_DRINK);
 
     if (selectIdleTimer == nullptr)
     {
@@ -248,9 +248,9 @@ void pageProduct::resizeEvent(QResizeEvent *event)
     }
 
     ui->priceLabel->setText("$" + QString::number(db.getProductPrice(product_slot___, drinkSize), 'f', 2));
-    ui->totalPriceLabel->setText("$" + QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOrderSlot(), drinkSize), 'f', 2));
+    ui->totalPriceLabel->setText("$" + QString::number(db.getProductPrice(idlePage->currentProductOrder->getOrderSlot(), drinkSize), 'f', 2));
 
-    // ui->totalPriceLabel->setText("$"+QString::number(idlePage->userDrinkOrder->getOrderPrice()));
+    // ui->totalPriceLabel->setText("$"+QString::number(idlePage->currentProductOrder->getOrderPrice()));
     ui->label_price_small->setText("$" + QString::number(db.getProductPrice(product_slot___, 's'), 'f', 2));
     ui->label_price_large->setText("$" + QString::number(db.getProductPrice(product_slot___, 'l'), 'f', 2));
     ui->discountLabel->setText("-$0.00");
@@ -274,7 +274,7 @@ void pageProduct::resizeEvent(QResizeEvent *event)
 
 void pageProduct::showEvent(QShowEvent *event)
 {
-    int product_slot___ = idlePage->userDrinkOrder->getOrderSlot();
+    int product_slot___ = idlePage->currentProductOrder->getOrderSlot();
     qDebug() << "ahoyy12";
     DbManager db(DB_PATH);
 
@@ -282,17 +282,17 @@ void pageProduct::showEvent(QShowEvent *event)
     ui->previousPage_Button->setEnabled(true);
 
     char drinkSize;
-    if (idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK)
+    if (idlePage->currentProductOrder->getSizeOption() == SMALL_DRINK)
     {
         drinkSize = 's';
     }
-    if (idlePage->userDrinkOrder->getSizeOption() == LARGE_DRINK)
+    if (idlePage->currentProductOrder->getSizeOption() == LARGE_DRINK)
     {
         drinkSize = 'l';
     }
     ui->priceLabel->setText("$" + QString::number(db.getProductPrice(product_slot___, drinkSize), 'f', 2));
     // ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(product_slot___, drinkSize), 'f', 2));
-    ui->totalPriceLabel->setText("$" + QString::number(idlePage->userDrinkOrder->getOrderPrice()));
+    ui->totalPriceLabel->setText("$" + QString::number(idlePage->currentProductOrder->getOrderPrice()));
     ui->label_price_small->setText("$" + QString::number(db.getProductPrice(product_slot___, 's'), 'f', 2));
     ui->label_price_large->setText("$" + QString::number(db.getProductPrice(product_slot___, 'l'), 'f', 2));
 
@@ -418,7 +418,7 @@ void pageProduct::on_orderSmall_Button_clicked()
 {
     QString bitmap_location;
 
-    int product_slot___ = idlePage->userDrinkOrder->getOrderSlot();
+    int product_slot___ = idlePage->currentProductOrder->getOrderSlot();
 
     if (product_slot___ > 0 && product_slot___ <= 9)
     {
@@ -437,15 +437,15 @@ void pageProduct::on_orderSmall_Button_clicked()
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
-    idlePage->userDrinkOrder->setOrderSize(SMALL_DRINK);
+    idlePage->currentProductOrder->setOrderSize(SMALL_DRINK);
     _selectIdleTimeoutSec = 140;
 
     char drinkSize = 's';
     qDebug() << "ahoyy13";
     DbManager db(DB_PATH);
 
-    ui->priceLabel->setText("$" + QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOrderSlot(), drinkSize), 'f', 2));
-    // ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOrderSlot(), drinkSize), 'f', 2));
+    ui->priceLabel->setText("$" + QString::number(db.getProductPrice(idlePage->currentProductOrder->getOrderSlot(), drinkSize), 'f', 2));
+    // ui->totalPriceLabel->setText("$"+QString::number(db.getProductPrice(idlePage->currentProductOrder->getOrderSlot(), drinkSize), 'f', 2));
     updatePriceAfterPromo(promoPercent);
     ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
     ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
@@ -462,7 +462,7 @@ void pageProduct::on_orderBig_Button_clicked()
 {
     QString bitmap_location;
 
-    int product_slot___ = idlePage->userDrinkOrder->getOrderSlot();
+    int product_slot___ = idlePage->currentProductOrder->getOrderSlot();
 
     if (product_slot___ > 0 && product_slot___ <= 9)
     {
@@ -481,7 +481,7 @@ void pageProduct::on_orderBig_Button_clicked()
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
-    idlePage->userDrinkOrder->setOrderSize(LARGE_DRINK);
+    idlePage->currentProductOrder->setOrderSize(LARGE_DRINK);
     _selectIdleTimeoutSec = 140;
     qDebug() << "ahoyy14";
    
@@ -490,7 +490,7 @@ void pageProduct::on_orderBig_Button_clicked()
 
     char drinkSize = 'l';
 
-    ui->priceLabel->setText("$" + QString::number(db.getProductPrice(idlePage->userDrinkOrder->getOrderSlot(), drinkSize), 'f', 2));
+    ui->priceLabel->setText("$" + QString::number(db.getProductPrice(idlePage->currentProductOrder->getOrderSlot(), drinkSize), 'f', 2));
     
     updatePriceAfterPromo(promoPercent);
     ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
@@ -526,7 +526,7 @@ void pageProduct::updatePriceAfterPromo(double discountPercent)
     discount = discountPercent * price / 100;
     price = (100 - discountPercent) * price / 100;
     ui->discountLabel->setText("-$" + QString::number(discount, 'f', 2));
-    idlePage->userDrinkOrder->setPrice(price);
+    idlePage->currentProductOrder->setPrice(price);
     ui->totalPriceLabel->setText("$" + QString::number(price, 'f', 2));
 }
 

@@ -93,7 +93,8 @@ void page_select_product::showEvent(QShowEvent *event)
     // qDebug() << db.getPWM(1) << endl;
     // qDebug() << "tetseitsejt ======= "<< endl;
 
-    if (!db.remainingVolumeIsBiggerThanLargestFixedSize(1)  || !this->idlePage->isSlotAvailable(1) ){
+    // if (!db.remainingVolumeIsBiggerThanLargestFixedSize(1)  || !this->idlePage->isSlotAvailable(1) ){
+    if (!db.remainingVolumeIsBiggerThanLargestFixedSize(1)  || !db.getSlotEnabled(1) ){
         // Change p1 to Sold Out
 //        qDebug() << "Product 1 is Sold Out!" << endl;
         ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(/home/df-admin/production/references/soldOut.png); }");
@@ -102,7 +103,7 @@ void page_select_product::showEvent(QShowEvent *event)
         ui->selection1_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     }
 
-    if (!db.remainingVolumeIsBiggerThanLargestFixedSize(2)   || !this->idlePage->isSlotAvailable(2) ){
+    if (!db.remainingVolumeIsBiggerThanLargestFixedSize(2)   || !db.getSlotEnabled(2) ){
         // Change p2 to Sold Out
 //        qDebug() << "Product 2 is Sold Out!" << endl;
         ui->selection2_Button->setStyleSheet("QPushButton { border-image: url(/home/df-admin/production/references/soldOut.png); }");
@@ -111,7 +112,7 @@ void page_select_product::showEvent(QShowEvent *event)
         ui->selection2_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     }
     
-    if (!db.remainingVolumeIsBiggerThanLargestFixedSize(3)   || !this->idlePage->isSlotAvailable(3) ){
+    if (!db.remainingVolumeIsBiggerThanLargestFixedSize(3)   || !db.getSlotEnabled(3) ){
         // Change p3 to Sold Out
 //        qDebug() << "Product 3 is Sold Out!" << endl;
         ui->selection3_Button->setStyleSheet("QPushButton { border-image: url(/home/df-admin/production/references/soldOut.png); }");
@@ -120,7 +121,7 @@ void page_select_product::showEvent(QShowEvent *event)
         ui->selection3_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     }
 
-    if (!db.remainingVolumeIsBiggerThanLargestFixedSize(4)   || !this->idlePage->isSlotAvailable(4) ){
+    if (!db.remainingVolumeIsBiggerThanLargestFixedSize(4)   || !db.getSlotEnabled(4) ){
         // Change p4 to Sold Out
 //        qDebug() << "Product 4 is Sold Out!" << endl;
         ui->selection4_Button->setStyleSheet("QPushButton { border-image: url(/home/df-admin/production/references/soldOut.png); }");
@@ -142,11 +143,11 @@ void page_select_product::on_selection1_Button_clicked()
 {   
     qDebug() << "ahoyy16" ;
     DbManager db(DB_PATH);
-    if(db.remainingVolumeIsBiggerThanLargestFixedSize(1)  && this->idlePage->isSlotAvailable(1)){
+    if(db.remainingVolumeIsBiggerThanLargestFixedSize(1)  && db.getSlotEnabled(1)){
         db.closeDB();
         productPageEndTimer->stop();
-        idlePage->userDrinkOrder->setOrderSlot(OPTION_SLOT_1);
-        idlePage->userDrinkOrder->setOrderSize(LARGE_DRINK);
+        idlePage->currentProductOrder->setOrderSlot(OPTION_SLOT_1);
+        idlePage->currentProductOrder->setOrderSize(LARGE_DRINK);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
         this->hide();
@@ -159,11 +160,11 @@ void page_select_product::on_selection2_Button_clicked()
 {
     qDebug() << "ahoyy17" ;
     DbManager db(DB_PATH);
-    if(db.remainingVolumeIsBiggerThanLargestFixedSize(2) && this->idlePage->isSlotAvailable(2)){
+    if(db.remainingVolumeIsBiggerThanLargestFixedSize(2) && db.getSlotEnabled(2)){
         db.closeDB();
         productPageEndTimer->stop();
-        idlePage->userDrinkOrder->setOrderSlot(OPTION_SLOT_2);
-        idlePage->userDrinkOrder->setOrderSize(LARGE_DRINK);
+        idlePage->currentProductOrder->setOrderSlot(OPTION_SLOT_2);
+        idlePage->currentProductOrder->setOrderSize(LARGE_DRINK);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
         this->hide();
@@ -176,11 +177,11 @@ void page_select_product::on_selection3_Button_clicked()
 {
     qDebug() << "ahoyy18" ;
     DbManager db(DB_PATH);
-    if(db.remainingVolumeIsBiggerThanLargestFixedSize(3)  && this->idlePage->isSlotAvailable(3)){
+    if(db.remainingVolumeIsBiggerThanLargestFixedSize(3)  && db.getSlotEnabled(3)){
         db.closeDB();
         productPageEndTimer->stop();
-        idlePage->userDrinkOrder->setOrderSlot(OPTION_SLOT_3);
-        idlePage->userDrinkOrder->setOrderSize(LARGE_DRINK);
+        idlePage->currentProductOrder->setOrderSlot(OPTION_SLOT_3);
+        idlePage->currentProductOrder->setOrderSize(LARGE_DRINK);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
         this->hide();
@@ -194,11 +195,11 @@ void page_select_product::on_selection4_Button_clicked()
 {
     qDebug() << "ahoyy19" ;
     DbManager db(DB_PATH);
-    if(db.remainingVolumeIsBiggerThanLargestFixedSize(4)  && this->idlePage->isSlotAvailable(4)){
+    if(db.remainingVolumeIsBiggerThanLargestFixedSize(4)  && db.getSlotEnabled(4)){
         db.closeDB();
         productPageEndTimer->stop();
-        idlePage->userDrinkOrder->setOrderSlot(OPTION_SLOT_4);
-        idlePage->userDrinkOrder->setOrderSize(LARGE_DRINK);
+        idlePage->currentProductOrder->setOrderSlot(OPTION_SLOT_4);
+        idlePage->currentProductOrder->setOrderSize(LARGE_DRINK);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
         this->hide();

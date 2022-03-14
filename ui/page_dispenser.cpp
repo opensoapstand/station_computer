@@ -145,7 +145,7 @@ void page_dispenser::dispensing_end_admin()
     DbManager db(DB_PATH);
     qDebug() << "call db2 from dispense end" << endl;
 
-    if (volumeDispensed == 0 && (db.getPaymentMethod(idlePage->userDrinkOrder->getOrderSlot())=="tap")){
+    if (volumeDispensed == 0 && (db.getPaymentMethod(idlePage->currentProductOrder->getOrderSlot())=="tap")){
         qDebug() << "dispense end: tap payment No volume dispensed.";
         // REVERSE PAYMENT
         com.page_init();
@@ -156,7 +156,7 @@ void page_dispenser::dispensing_end_admin()
             pktResponded.clear();
             com.flushSerial();
         }
-    }else if ((db.getPaymentMethod(idlePage->userDrinkOrder->getOrderSlot())=="tap") && volumeDispensed != 0){
+    }else if ((db.getPaymentMethod(idlePage->currentProductOrder->getOrderSlot())=="tap") && volumeDispensed != 0){
         qDebug() << "dispense end: tap payment. Some volume dispensed.";
         QMessageBox msgBox;
         msgBox.setText("Complete!");
@@ -195,9 +195,9 @@ void page_dispenser::force_finish_dispensing(){
 }
 
 void page_dispenser::fsmSendStartDispensing(){
-    QString command = QString::number(this->idlePage->userDrinkOrder->getOrderSlot());
+    QString command = QString::number(this->idlePage->currentProductOrder->getOrderSlot());
 
-    if(idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
+    if(idlePage->currentProductOrder->getSizeOption() == SMALL_DRINK){
         command.append('s');
 
     } else {
@@ -218,9 +218,9 @@ void page_dispenser::fsmSendStartDispensing(){
 
 void page_dispenser::fsmSendStopDispensing(){
     this->isDispensing = false;
-    QString command = QString::number(this->idlePage->userDrinkOrder->getOrderSlot());
+    QString command = QString::number(this->idlePage->currentProductOrder->getOrderSlot());
 
-    if(idlePage->userDrinkOrder->getSizeOption() == SMALL_DRINK){
+    if(idlePage->currentProductOrder->getSizeOption() == SMALL_DRINK){
         command.append('s');
 
     } else {
@@ -276,7 +276,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull){
         resetDispenseTimeout();
 
         volumeDispensed = dispensed;
-        double target_volume = idlePage->userDrinkOrder->getSize();
+        double target_volume = idlePage->currentProductOrder->getSize();
         double percentage = dispensed/target_volume*100;
         if (isFull){
             percentage = 100;

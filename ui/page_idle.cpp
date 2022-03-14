@@ -34,8 +34,8 @@ page_idle::page_idle(QWidget *parent) :
     ui->nextPageButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
 
     // TODO: Hold and pass DrinkOrder Object
-    userDrinkOrder = new DrinkOrder();
-    userDrinkOrder->setOrderSlot(OPTION_SLOT);
+    currentProductOrder = new DrinkOrder();
+    currentProductOrder->setOrderSlot(OPTION_SLOT);
 
     // IPC Networking
     dfUtility = new df_util();
@@ -43,12 +43,12 @@ page_idle::page_idle(QWidget *parent) :
 
 }
 
-bool page_idle::isSlotAvailable(int slot){
-    return this->slotIndexAvailable[slot - 1];
-}
-void page_idle::setSlotAvailability(int slot, bool isEnabled){
-    this->slotIndexAvailable[slot - 1] = isEnabled;
-}
+// bool page_idle::isSlotAvailable(int slot){
+//     return this->slotIndexAvailable[slot - 1];
+// }
+// void page_idle::setSlotAvailability(int slot, bool isEnabled){
+//     this->slotIndexAvailable[slot - 1] = isEnabled;
+// }
 
 /*
  * Navigation to Product item

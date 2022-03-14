@@ -231,8 +231,7 @@ void stateDispenseEnd::bufferCURL(std::string curl_params)
     time(&rawtime);
     timeinfo = localtime(&rawtime);
     strftime(filetime, 50, "%F %T", timeinfo);
-    // std::string filelocation = "/home/df-admin/curlBuffer/";
-    std::string filelocation = "/home/df-admin/production/logging/";
+    std::string filelocation = "/home/df-admin/production/logging/transactions/";
     std::string filetype = ".txt";
     std::string filename = filelocation + filetime + filetype;
     std::ofstream out;
@@ -377,11 +376,14 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB()
     if (productDispensers[pos].getProduct()->m_nVolumeDispensed <= productDispensers[pos].getProduct()->m_nVolumePerTick)
     {
         dispensed_volume = "0";
+        
     }
     else
     {
         dispensed_volume = to_string(productDispensers[pos].getProduct()->m_nVolumeDispensed);
     }
+    debugOutput::sendMessage("Dispensed volume to be subtracted: " + dispensed_volume, MSG_INFO);
+
 
     sql1 = ("INSERT INTO transactions VALUES (NULL, '" + product + "', " + target_volume + ", " + price + ", '" + start_time + "', " + dispensed_volume + ", datetime('now', 'localtime'), '" + "0" + "', '" + "0" + "' );");
     //cout << sql1 << endl;
@@ -403,7 +405,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB()
     }
     else
     {
-        debugOutput::sendMessage("SUCCES: SQL : (" + to_string(rc) + ") " + sql1, MSG_INFO);
+        debugOutput::sendMessage("SUCCES: SQL1 : (" + to_string(rc) + ") " + sql1, MSG_INFO);
             //  fprintf(stdout, "Transaction Command Executed successfully\n");
     }
 
@@ -431,7 +433,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB()
     }
     else
     {
-        //        fprintf(stdout, "Product Command Executed successfully\n");
+        debugOutput::sendMessage("SUCCES: SQL2 : (" + to_string(rc) + ") " + sql2, MSG_INFO);
     }
 
     /* Create SQL statement for product remaining */
@@ -458,7 +460,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB()
     }
     else
     {
-        //        fprintf(stdout, "Product Remaining Command Executed successfully\n");
+        debugOutput::sendMessage("SUCCES: SQL3 : (" + to_string(rc) + ") " + sql3, MSG_INFO);
     }
 
     sqlite3_close(db);

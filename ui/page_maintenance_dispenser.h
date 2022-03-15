@@ -46,8 +46,12 @@ public:
     void updateVolumeDisplayed(double dispensed, bool isFull);
     void fsmReceiveTargetVolumeReached();
     void setSoldOutButtonText();
+    void dispense_test_end(bool sendStopToController);
+    void dispense_test_start();
+    void update_dispense_stats(double dispensed);
 
 private slots:
+    void refreshLabels();
     void on_backButton_clicked();
     void on_image_clicked();
     void on_nameButton_clicked();
@@ -108,7 +112,7 @@ private:
     bool pwm;
     bool buffer;
 
-    QString units_active_pumped_product;
+    QString units_selected_product;
 //    bool plu_s;
 //    bool plu_l;
 

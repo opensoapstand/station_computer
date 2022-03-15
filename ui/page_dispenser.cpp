@@ -288,6 +288,9 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull){
         ui->filler->show();
 
         // ui->abortButton->setEnabled(true);
+    }else{
+
+       qDebug() << "Signal: volume update in dispenser while not dispensing." << endl;
     }
 }
 
@@ -299,6 +302,8 @@ void page_dispenser::fsmReceiveTargetVolumeReached(){
 
         dispensing_end_admin();
         // qDebug() << "Finish dispense end admin."  << endl;
+    }else{
+        qDebug() << "target volumne reached signal received while not dispensing.";
     }
 }
 

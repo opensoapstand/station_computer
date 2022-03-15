@@ -129,9 +129,13 @@ int main(int argc, char *argv[])
     dfUiServer.startServer();
 
     QObject::connect(&dfUiServer, &DfUiServer::pleaseReset, dispensingPage, &page_dispenser::resetDispenseTimeout);
+    
     QObject::connect(&dfUiServer, &DfUiServer::signalUpdateVolume, dispensingPage, &page_dispenser::updateVolumeDisplayed);
-    QObject::connect(&dfUiServer, &DfUiServer::signalUpdateVolume, p_page_maintenance_product, &page_maintenance_dispenser::updateVolumeDisplayed);
     QObject::connect(&dfUiServer, &DfUiServer::targetHit, dispensingPage, &page_dispenser::fsmReceiveTargetVolumeReached);
+    
+    QObject::connect(&dfUiServer, &DfUiServer::signalUpdateVolume, p_page_maintenance_product, &page_maintenance_dispenser::updateVolumeDisplayed);
+    QObject::connect(&dfUiServer, &DfUiServer::targetHit, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveTargetVolumeReached);
+    
     QObject::connect(&dfUiServer, &DfUiServer::initReady, initPage, &page_init::initReadySlot);
     QObject::connect(&dfUiServer, &DfUiServer::MM, idlePage, &page_idle::MMSlot);
 

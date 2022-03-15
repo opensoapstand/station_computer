@@ -19,9 +19,8 @@
 #include "ui_page_init.h"
 
 // CTOR
-page_init::page_init(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::page_init)
+page_init::page_init(QWidget *parent) : QWidget(parent),
+                                        ui(new Ui::page_init)
 {
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
@@ -62,7 +61,7 @@ page_init::~page_init()
 void page_init::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
-//    qDebug() << "Start init Timers" << endl;
+    //    qDebug() << "Start init Timers" << endl;
     initIdleTimer->start(1000);
 #ifdef START_FSM_FROM_UI
     start_controller = true;
@@ -70,11 +69,13 @@ void page_init::showEvent(QShowEvent *event)
     start_controller = false;
 #endif
 
-    if (start_controller){
+    if (start_controller)
+    {
         system("DISPLAY=:0 xterm -hold  /release/fsm/controller &");
         _initIdleTimeoutSec = 20;
-
-    }else{
+    }
+    else
+    {
         ui->init_label->setText("Start UI without controller.");
 #ifdef WAIT_FOR_CONTROLLER_READY
         _initIdleTimeoutSec = 20;
@@ -84,7 +85,8 @@ void page_init::showEvent(QShowEvent *event)
     }
 }
 
-void page_init::initReadySlot(void){
+void page_init::initReadySlot(void)
+{
     qDebug() << "Signal: init ready from fsm";
     initIdleTimer->stop();
     rebootTimer->stop();
@@ -93,12 +95,16 @@ void page_init::initReadySlot(void){
     qDebug() << "Init done." << endl;
 }
 
-void page_init::onInitTimeoutTick(){
-    if(-- _initIdleTimeoutSec >= 0) {
-//        qDebug() << "init: Tick Down - " << _initIdleTimeoutSec << endl;
+void page_init::onInitTimeoutTick()
+{
+    if (--_initIdleTimeoutSec >= 0)
+    {
+        //        qDebug() << "init: Tick Down - " << _initIdleTimeoutSec << endl;
         ui->init_label->setText(ui->init_label->text() + ".");
-    } else {
-//        qDebug() << "Timer Done!" << _initIdleTimeoutSec << endl;
+    }
+    else
+    {
+        //        qDebug() << "Timer Done!" << _initIdleTimeoutSec << endl;
         initIdleTimer->stop();
 
         ui->fail_label->setText("Init Timeout. No response from controller.");
@@ -110,21 +116,26 @@ void page_init::onInitTimeoutTick(){
         _rebootTimeoutSec = 5;
         rebootTimer->start(1000);
 #else
-    ui->fail_label->setText("Will start standalone mode. If controller becomes active, commands will be executed. If not, no commands will be executed.");
-    initReadySlot();
+        ui->fail_label->setText("Will start standalone mode. If controller becomes active, commands will be executed. If not, no commands will be executed.");
+
+        initReadySlot();
 #endif
     }
 }
 
-void page_init::onRebootTimeoutTick(){
-    if(-- _rebootTimeoutSec >= 0) {
+void page_init::onRebootTimeoutTick()
+{
+    if (--_rebootTimeoutSec >= 0)
+    {
         qDebug() << "init: Reboot Tick Down - " << _rebootTimeoutSec << endl;
         ui->fail_label->setText(ui->fail_label->text() + ".");
-    } else {
+    }
+    else
+    {
         qDebug() << "Reboot Timer elapsed. (should reboot computer now)" << _rebootTimeoutSec << endl;
         rebootTimer->stop();
 
-        //REBOOT!
+        // REBOOT!
         system("./release/reboot.sh");
     }
 }

@@ -1,8 +1,7 @@
 #include "dfuicommthread.h"
 #include "df_util.h" // lode added for settings
 
-DfUiCommThread::DfUiCommThread(qintptr ID, QObject *parent) :
-    QThread(parent)
+DfUiCommThread::DfUiCommThread(qintptr ID, QObject *parent) : QThread(parent)
 {
     this->socketDescriptor = ID;
 }
@@ -10,12 +9,12 @@ DfUiCommThread::DfUiCommThread(qintptr ID, QObject *parent) :
 void DfUiCommThread::run()
 {
     // thread starts here
-//    qDebug() << " Thread started";
+    //    qDebug() << " Thread started";
 
     socket = new QTcpSocket();
 
     // set the ID
-    if(!socket->setSocketDescriptor(this->socketDescriptor))
+    if (!socket->setSocketDescriptor(this->socketDescriptor))
     {
         // something's wrong, we just emit a signal
         emit error(socket->error());
@@ -29,9 +28,8 @@ void DfUiCommThread::run()
     connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::DirectConnection);
     connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
 
-
     // We'll have multiple clients, we want to know which is which
-//    qDebug() << socketDescriptor << " Client connected";
+    //    qDebug() << socketDescriptor << " Client connected";
 
     // make this thread a loop,
     // thread will stay alive so that signal/slot to function properly
@@ -46,43 +44,82 @@ QByteArray DfUiCommThread::readyRead()
     QByteArray Data = socket->readAll();
 
     // will write on server side window
-//    qDebug() << socketDescriptor << " Data in: " << Data;
+    //    qDebug() << socketDescriptor << " Data in: " << Data;
 
-    if(Data == "!") {
-//        qDebug() << "from CLEAN";
+    if (Data == "!")
+    {
+        //        qDebug() << "from CLEAN";
     }
 
-    if(Data == "Reset Timer") {
+    else if (Data == "Reset Timer")
+    {
+        // emit resetTimerSignal();
+    }
+
+    else if (Data == "Target Hit")
+    {
+        // emit targetHitSignal();
+    }
+
+    else if (Data == "Init Ready")
+    {
+        // emit initReadySignal();
+    }
+
+    else if (Data == "MM")
+    {
+        // emit MMSignal();
+    }
+    else if (strtol(Data, &pEnd, 10))
+    {
+        // double volume_dispensed = stod(Data.constData(), &sz);
+        // emit updateVolumeSignal(volume_dispensed);
+    }
+    else
+    {
+        qDebug() << "No matching command found." << Data << endl;
+    }
+
+    qDebug() << "Fsm recv: " << Data << endl;
+
+    // socket->write(Data); // THIS CAUSES THE UI TO CRASH AT TIMES.... for now, we delete it. todo. send ack to controller.
+
+    if (Data == "!")
+    {
+        //        qDebug() << "from CLEAN";
+    }
+
+    else if (Data == "Reset Timer")
+    {
         emit resetTimerSignal();
     }
 
-    if(Data == "Target Hit"){
+    else if (Data == "Target Hit")
+    {
         emit targetHitSignal();
     }
 
-    if(Data == "Init Ready") {
+    else if (Data == "Init Ready")
+    {
         emit initReadySignal();
     }
 
-    if(strtol(Data, &pEnd, 10)){ 
-       double volume_dispensed = stod(Data.constData(), &sz);
-       emit updateVolumeSignal(volume_dispensed);
-    }
-
-    if(Data == "MM") {
+    else if (Data == "MM")
+    {
         emit MMSignal();
     }
-    Data.append(" Received");
-    qDebug()<<"Message received from FSM: " << Data << endl;
-
-    socket->write(Data);
+    else if (strtol(Data, &pEnd, 10))
+    {
+        double volume_dispensed = stod(Data.constData(), &sz);
+        emit updateVolumeSignal(volume_dispensed);
+    }
 
     return Data;
 }
 
 void DfUiCommThread::disconnected()
 {
-//    qDebug() << socketDescriptor << " Disconnected";
+    //    qDebug() << socketDescriptor << " Disconnected";
     socket->deleteLater();
     exit(0);
 }

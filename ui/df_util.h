@@ -27,6 +27,7 @@
 
 #define ML_TO_OZ 0.033814
 
+#define SLOT_COUNT 4
 using namespace std;
 
 typedef enum FSM_COMM {

@@ -86,21 +86,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     //    maintainProductPageEndTimer->start(1000);
     _maintainProductPageTimeoutSec = 40;
 
-    ticks = db.getProductVolumePerTick(product_slot___);
-
-    ui->name->setText(db.getProductName(product_slot___));
-    ui->price_small->setText("$" + QString::number(db.getProductPrice(product_slot___, 's')));
-    ui->price_large->setText("$" + QString::number(db.getProductPrice(product_slot___, 'l')));
-    ui->target_volume_s->setText(QString::number(db.getProductVolume(product_slot___, 's')) + " " + db.getUnits(product_slot___));
-    ui->target_volume_l->setText(QString::number(db.getProductVolume(product_slot___, 'l')) + " " + db.getUnits(product_slot___));
-    ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(product_slot___)) + " " + db.getUnits(product_slot___));
-    ui->full_volume->setText(QString::number(db.getFullProduct(product_slot___)) + " " + db.getUnits(product_slot___));
-    ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(product_slot___)) + " " + db.getUnits(product_slot___));
-    ui->volume_dispensed_since_last_restock->setText(QString::number(db.getVolumeDispensedSinceRestock(product_slot___)) + " " + db.getUnits(product_slot___));
-
-    ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(product_slot___)) + " " + db.getUnits(product_slot___));
-    ui->lastRefillLabel->setText(db.getLastRefill(product_slot___));
-    ui->pwmLabel->setText(QString::number(round(double((db.getPWM(product_slot___)) * 100) / 255)) + "%");
+    //ticks = db.getProductVolumePerTick(product_slot___);
     update_dispense_stats(0);
     // ui->vol_dispensed_label->setText("Volume Dispensed: 0 " + db.getUnits(product_slot___));
     // ui->ticksLabel->setText("Ticks (" + QString::number(ticks) + "ml/tick): 0");
@@ -111,6 +97,10 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->numberEntry->hide();
     ui->errorLabel->setText("");
     ui->titleLabel->setText("");
+
+
+
+
 
     price_small = false;
     price_large = false;
@@ -141,10 +131,10 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
         ui->pluButton_l->setEnabled(false);
     }
 
-    ui->pwmSlider->setValue(round(double((db.getPWM(product_slot___)) * 100) / 255));
-    ui->pwmSlider->hide();
-
+    // ui->pwmSlider->setValue(round(double((db.getPWM(product_slot___)) * 100) / 255));
+   
     db.closeDB();
+    refreshLabels();
     setSoldOutButtonText();
 }
 
@@ -156,24 +146,7 @@ void page_maintenance_dispenser::setPage(page_maintenance *pageMaintenance, page
     this->p_page_maintenance = pageMaintenance;
     this->idlePage = pageIdle;
 
-    ui->name->setText("Product Name: ");
-    ui->price_small->setText("Product Price: ");
-    ui->price_large->setText("Product Price: ");
-    ui->target_volume_s->setText("Product Volume: ");
-    ui->target_volume_l->setText("Product Volume: ");
-    ui->volume_per_tick->setText("Product Volume Per Tick: ");
-    ui->refillLabel->setText("");
-    ui->soldOutLabel->setText("");
-    ui->full_volume->setText("");
-    ui->remainingLabel->setText("");
-    ui->volume_dispensed_total->setText("");
-    ui->volume_dispensed_since_last_restock->setText("");
-    ui->lastRefillLabel->setText("");
-    ui->testLargeButton->setVisible(false);
-    ui->testSmallButton->setVisible(false);
-
-    ui->temperatureButton->setVisible(false);
-    ui->temperatureLabel->setVisible(false);
+   refreshLabels();
 }
 
 void page_maintenance_dispenser::on_backButton_clicked()
@@ -189,54 +162,30 @@ void page_maintenance_dispenser::on_backButton_clicked()
     //    usleep(100);
     this->hide();
 
-    ui->name->setText("");
-    ui->price_small->setText("");
-    ui->price_large->setText("");
-    ui->target_volume_s->setText("");
-    ui->target_volume_l->setText("");
-    ui->volume_per_tick->setText("");
-    ui->refillLabel->setText("");
-    ui->soldOutLabel->setText("");
-    ui->full_volume->setText("");
-    ui->remainingLabel->setText("");
-    ui->volume_dispensed_total->setText("");
-    ui->volume_dispensed_since_last_restock->setText("");
-    ui->lastRefillLabel->setText("");
+    // ui->name->setText("");
+    // ui->price_small->setText("");
+    // ui->price_large->setText("");
+    // ui->target_volume_s->setText("");
+    // ui->target_volume_l->setText("");
+    // ui->volume_per_tick->setText("");
+    // ui->refillLabel->setText("");
+    // ui->soldOutLabel->setText("");
+    // ui->full_volume->setText("");
+    // ui->remainingLabel->setText("");
+    // ui->volume_dispensed_total->setText("");
+    // ui->volume_dispensed_since_last_restock->setText("");
+    // ui->lastRefillLabel->setText("");
 
     dispense_test_end(true);
 }
 
 void page_maintenance_dispenser::refreshLabels()
 {
-}
-
-void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
-{
-    QWidget::resizeEvent(event);
-
-    int product_slot___ = idlePage->currentProductOrder->getOrderSlot();
-
-    qDebug() << " ********** 666564 call db from maintenance select dispenser page  resize event" << endl;
+    int product_slot___ = this->idlePage->currentProductOrder->getOrderSlot();
+    qDebug() << "db... refresh labels" << endl;
     DbManager db(DB_PATH);
-    // DbManager db_temperature(DB_PATH_TEMPERATURE);
-
-    QString bitmap_location;
-
-    if (product_slot___ > 0 && product_slot___ <= 9)
-    {
-        bitmap_location.append("/home/df-admin/production/references/product");
-        bitmap_location.append(QString::number(idlePage->currentProductOrder->getOrderSlot()));
-        bitmap_location.append(".png");
-    }
-    else
-    {
-        //        qDebug() << "out of range" << endl;
-    }
-
     ticks = db.getProductVolumePerTick(product_slot___);
-
     ui->name->setText(db.getProductName(product_slot___));
-
     ui->price_small->setText("$" + QString::number(db.getProductPrice(product_slot___, 's')));
     ui->price_large->setText("$" + QString::number(db.getProductPrice(product_slot___, 'l')));
     ui->target_volume_s->setText(QString::number(db.getProductVolume(product_slot___, 's')) + " " + db.getUnits(product_slot___));
@@ -247,14 +196,79 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
     ui->volume_dispensed_since_last_restock->setText(QString::number(db.getVolumeDispensedSinceRestock(product_slot___)) + " " + db.getUnits(product_slot___));
     ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(product_slot___)) + " " + db.getUnits(product_slot___));
     ui->lastRefillLabel->setText(db.getLastRefill(product_slot___));
-    //    ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
     ui->pwmLabel->setText(QString::number(round(double((db.getPWM(product_slot___)) * 100) / 255)) + "%");
-    // ui->vol_dispensed_label->setText("Volume Dispensed: 0 " + db.getUnits(product_slot___));
-    // ui->ticksLabel->setText("Ticks: 0");
-    update_dispense_stats(0);
-
     ui->pluLabel_s->setText(db.getPLU(product_slot___, 's'));
     ui->pluLabel_l->setText(db.getPLU(product_slot___, 'l'));
+    ui->pwmSlider->setValue(round(double((db.getPWM(product_slot___)) * 100) / 255));
+     ui->pwmSlider->hide();
+
+     db.closeDB();
+
+
+    //   ui->name->setText("Product Name: ");
+    // ui->price_small->setText("Product Price: ");
+    // ui->price_large->setText("Product Price: ");
+    // ui->target_volume_s->setText("Product Volume: ");
+    // ui->target_volume_l->setText("Product Volume: ");
+    // ui->volume_per_tick->setText("Product Volume Per Tick: ");
+    // ui->refillLabel->setText("");
+    // ui->soldOutLabel->setText("");
+    // ui->full_volume->setText("");
+    // ui->remainingLabel->setText("");
+    // ui->volume_dispensed_total->setText("");
+    // ui->volume_dispensed_since_last_restock->setText("");
+    // ui->lastRefillLabel->setText("");
+    ui->testLargeButton->setVisible(false);
+    ui->testSmallButton->setVisible(false);
+
+    ui->temperatureButton->setVisible(false);
+    ui->temperatureLabel->setVisible(false);
+
+
+
+    //  ui->name->setText(db.getProductName(product_slot___));
+    // ui->price_small->setText("$" + QString::number(db.getProductPrice(product_slot___, 's')));
+    // ui->price_large->setText("$" + QString::number(db.getProductPrice(product_slot___, 'l')));
+    // ui->target_volume_s->setText(QString::number(db.getProductVolume(product_slot___, 's')) + " " + db.getUnits(product_slot___));
+    // ui->target_volume_l->setText(QString::number(db.getProductVolume(product_slot___, 'l')) + " " + db.getUnits(product_slot___));
+    // ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(product_slot___)) + " " + db.getUnits(product_slot___));
+    // ui->full_volume->setText(QString::number(db.getFullProduct(product_slot___)) + " " + db.getUnits(product_slot___));
+    // ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(product_slot___)) + " " + db.getUnits(product_slot___));
+    // ui->volume_dispensed_since_last_restock->setText(QString::number(db.getVolumeDispensedSinceRestock(product_slot___)) + " " + db.getUnits(product_slot___));
+    // ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(product_slot___)) + " " + db.getUnits(product_slot___));
+    // ui->lastRefillLabel->setText(db.getLastRefill(product_slot___));
+    // ui->pwmLabel->setText(QString::number(round(double((db.getPWM(product_slot___)) * 100) / 255)) + "%");
+    
+
+}
+
+void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
+{
+    QWidget::resizeEvent(event);
+
+    int product_slot___ = idlePage->currentProductOrder->getOrderSlot();
+
+    // DbManager db_temperature(DB_PATH_TEMPERATURE);
+
+    QString bitmap_location;
+
+    if (product_slot___ >= 1 && product_slot___ <= SLOT_COUNT)
+    {
+        qDebug() << " ********** 666564 call db from maintenance select dispenser page  resize event" << endl;
+        DbManager db(DB_PATH);
+        bitmap_location.append("/home/df-admin/production/references/product");
+        bitmap_location.append(QString::number(idlePage->currentProductOrder->getOrderSlot()));
+        bitmap_location.append(".png");
+        db.closeDB();
+    }
+    else
+    {
+        //        qDebug() << "out of range" << endl;
+    }
+
+    refreshLabels();
+    update_dispense_stats(0);
+
 
     QPixmap background(bitmap_location);
     QIcon ButtonIcon(background);
@@ -262,9 +276,7 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
     ui->image->setIcon(ButtonIcon);
     ui->image->setIconSize(QSize(271, 391));
 
-    ui->pwmSlider->setValue(round(double((db.getPWM(product_slot___)) * 100) / 255));
 
-    db.closeDB();
     setSoldOutButtonText();
 }
 
@@ -294,74 +306,6 @@ void page_maintenance_dispenser::on_pumpButton_clicked()
 
     db.closeDB();
 }
-
-// void page_maintenance_dispenser::on_testSmallButton_clicked(){
-//     int product_slot___ = idlePage->currentProductOrder->getOrderSlot();
-//     if(product_slot___ > 0 && product_slot___ <= 9) {
-//         QString command = QString::number(this->idlePage->currentProductOrder->getOrderSlot());
-//         if (!pumping){
-//             command.append("s");
-
-//            ui->vol_dispensed_label->setText("Volume Dispensed: 0ml");
-
-//            this->idlePage->dfUtility->msg = command;
-//            idlePage->dfUtility->m_IsSendingFSM = true;
-//            idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_START;
-//            idlePage->dfUtility->send_to_FSM();
-//            idlePage->dfUtility->m_IsSendingFSM = false;
-
-//            pumping = true;
-//            ui->pumpLabel->setText("ON");
-//        }
-//        else {
-//            pumping = false;
-//            ui->pumpLabel->setText("OFF");
-//            //ui->vol_dispensed_label->setText("");
-//            command = QString::number(this->idlePage->currentProductOrder->getOrderSlot());
-//            command.append("s");
-
-//            this->idlePage->dfUtility->msg = command;
-//            idlePage->dfUtility->m_IsSendingFSM = true;
-//            idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_STOP;
-//            idlePage->dfUtility->send_to_FSM();
-//            idlePage->dfUtility->m_IsSendingFSM = false;
-//        }
-//    }
-//}
-
-// void page_maintenance_dispenser::on_testLargeButton_clicked(){
-//     int product_slot___ = idlePage->currentProductOrder->getOrderSlot();
-//     if(product_slot___ > 0 && product_slot___ <= 9) {
-//         QString command = QString::number(this->idlePage->currentProductOrder->getOrderSlot());
-//         if (!pumping){
-//             command.append("l");
-
-//            ui->vol_dispensed_label->setText("Volume Dispensed: 0ml");
-
-//            this->idlePage->dfUtility->msg = command;
-//            idlePage->dfUtility->m_IsSendingFSM = true;
-//            idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_START;
-//            idlePage->dfUtility->send_to_FSM();
-//            idlePage->dfUtility->m_IsSendingFSM = false;
-
-//            pumping = true;
-//            ui->pumpLabel->setText("ON");
-//        }
-//        else {
-//            pumping = false;
-//            ui->pumpLabel->setText("OFF");
-//            //ui->vol_dispensed_label->setText("");
-//            command = QString::number(this->idlePage->currentProductOrder->getOrderSlot());
-//            command.append("l");
-
-//            this->idlePage->dfUtility->msg = command;
-//            idlePage->dfUtility->m_IsSendingFSM = true;
-//            idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_STOP;
-//            idlePage->dfUtility->send_to_FSM();
-//            idlePage->dfUtility->m_IsSendingFSM = false;
-//        }
-//    }
-//}
 
 void page_maintenance_dispenser::on_nameButton_clicked()
 {
@@ -496,7 +440,7 @@ void page_maintenance_dispenser::update_dispense_stats(double dispensed)
         ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) + this->units_selected_product);
         ui->ticksLabel->setText("Ticks (" + QString::number(ticks) + "ml/tick): " + QString::number(vol_dispensed / ticks));
     }else{
-        qDebug() << "Error: update volume received while pump not enabled in maintenance." ;
+        //qDebug() << "Error: update volume received while pump not enabled in maintenance." ;
     }
 }
 
@@ -506,7 +450,7 @@ void page_maintenance_dispenser::updateVolumeDisplayed(double dispensed, bool is
 
     // --> attention application can crash when there is content in here. combined with fsmReceiveTargetVolumeReached
     // DO THE MINIMUM HERE. NO DEBUG PRINTS. This must be an interrupt call.. probably crashes when called again before handled.
-
+ if (pumping){
     update_dispense_stats(dispensed);
     /*
         // qDebug() << "ahoyy3" ;
@@ -519,6 +463,9 @@ void page_maintenance_dispenser::updateVolumeDisplayed(double dispensed, bool is
 
         // db.closeDB();
         */
+        }else{
+        qDebug() << "Error: update volume received while pump not enabled in maintenance." ;
+    }
 }
 
 void page_maintenance_dispenser::fsmReceiveTargetVolumeReached()
@@ -1143,3 +1090,71 @@ void page_maintenance_dispenser::bufferCURL(char *curl_params)
         out.close();
     }
 }
+
+// void page_maintenance_dispenser::on_testSmallButton_clicked(){
+//     int product_slot___ = idlePage->currentProductOrder->getOrderSlot();
+//     if(product_slot___ > 0 && product_slot___ <= 9) {
+//         QString command = QString::number(this->idlePage->currentProductOrder->getOrderSlot());
+//         if (!pumping){
+//             command.append("s");
+
+//            ui->vol_dispensed_label->setText("Volume Dispensed: 0ml");
+
+//            this->idlePage->dfUtility->msg = command;
+//            idlePage->dfUtility->m_IsSendingFSM = true;
+//            idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_START;
+//            idlePage->dfUtility->send_to_FSM();
+//            idlePage->dfUtility->m_IsSendingFSM = false;
+
+//            pumping = true;
+//            ui->pumpLabel->setText("ON");
+//        }
+//        else {
+//            pumping = false;
+//            ui->pumpLabel->setText("OFF");
+//            //ui->vol_dispensed_label->setText("");
+//            command = QString::number(this->idlePage->currentProductOrder->getOrderSlot());
+//            command.append("s");
+
+//            this->idlePage->dfUtility->msg = command;
+//            idlePage->dfUtility->m_IsSendingFSM = true;
+//            idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_STOP;
+//            idlePage->dfUtility->send_to_FSM();
+//            idlePage->dfUtility->m_IsSendingFSM = false;
+//        }
+//    }
+//}
+
+// void page_maintenance_dispenser::on_testLargeButton_clicked(){
+//     int product_slot___ = idlePage->currentProductOrder->getOrderSlot();
+//     if(product_slot___ > 0 && product_slot___ <= 9) {
+//         QString command = QString::number(this->idlePage->currentProductOrder->getOrderSlot());
+//         if (!pumping){
+//             command.append("l");
+
+//            ui->vol_dispensed_label->setText("Volume Dispensed: 0ml");
+
+//            this->idlePage->dfUtility->msg = command;
+//            idlePage->dfUtility->m_IsSendingFSM = true;
+//            idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_START;
+//            idlePage->dfUtility->send_to_FSM();
+//            idlePage->dfUtility->m_IsSendingFSM = false;
+
+//            pumping = true;
+//            ui->pumpLabel->setText("ON");
+//        }
+//        else {
+//            pumping = false;
+//            ui->pumpLabel->setText("OFF");
+//            //ui->vol_dispensed_label->setText("");
+//            command = QString::number(this->idlePage->currentProductOrder->getOrderSlot());
+//            command.append("l");
+
+//            this->idlePage->dfUtility->msg = command;
+//            idlePage->dfUtility->m_IsSendingFSM = true;
+//            idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_STOP;
+//            idlePage->dfUtility->send_to_FSM();
+//            idlePage->dfUtility->m_IsSendingFSM = false;
+//        }
+//    }
+//}

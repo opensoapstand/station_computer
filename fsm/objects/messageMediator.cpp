@@ -75,13 +75,13 @@ DF_ERROR messageMediator::sendMessage(string msg)
       try
       {
          client_socket << msg;
-         client_socket >> reply;
+         //client_socket >> reply; // blocking. And we're not sending a reply from the UI anymore (it caused crashes.)
       }
       catch (SocketException &)
       {
          // TODO: Should catch no message error...
       }
-      //std::cout << "We received this response from the server:\n\"" << reply << "\"\n";
+       debugOutput::sendMessage( "We received this response from the server: " + reply, MSG_INFO);
       ;
    }
    catch (SocketException &e)
@@ -269,18 +269,18 @@ void *messageMediator::doIPThread(void *pThreadArgs)
          {
             while (true)
             {
-               debugOutput::sendMessage("char received over IP", MSG_INFO);
+               //debugOutput::sendMessage("char received over IP", MSG_INFO);
                std::string data;
                // *fsm_comm_socket >> data;
                // *fsm_comm_socket << "";
                new_sock >> data;
 
-               // AckOrNakResult = "FSM ACK";
-               sendQtACK("ACK");
+               
+               //sendQtACK("ACK");  // lode commented it out was blocking?!?! todo //// AckOrNakResult = "FSM ACK"; 
                // cout << data << endl;
                m_receiveStringBuffer = data;
                updateCmdString();
-               debugOutput::sendMessage("char received over IP" + data, MSG_INFO);
+               debugOutput::sendMessage("chars received over IP: " + data, MSG_INFO);
                // new_sock << data;
             }
 
@@ -288,6 +288,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
          }
          catch (SocketException &sock)
          {
+            debugOutput::sendMessage("Socket Transfer Exception was caught:" + sock.description(), MSG_INFO);
             //  std::cout << "Socket Transfer Exception was caught:" << sock.description() << "\nExiting.\n";
             // AckOrNakResult = "FSM NAK";
             // sendQtACK(AckOrNakResult);
@@ -296,6 +297,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
    }
    catch (SocketException &e)
    {
+      debugOutput::sendMessage("Socket Creation Exception was caught:" + e.description(), MSG_INFO);
       // std::cout << "Socket Creation Exception was caught:" << e.description() << "\nExiting.\n";
    }
 

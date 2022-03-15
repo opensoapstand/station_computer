@@ -433,15 +433,15 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
 void page_maintenance_dispenser::update_dispense_stats(double dispensed)
 {
 
-    if (pumping){
+    //if (pumping){
         double vol_dispensed = dispensed;
         // qDebug() << "Signal: updatevol in maintenance mode" + QString::number(vol_dispensed);
 
         ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) + this->units_selected_product);
         ui->ticksLabel->setText("Ticks (" + QString::number(ticks) + "ml/tick): " + QString::number(vol_dispensed / ticks));
-    }else{
+    //}else{
         //qDebug() << "Error: update volume received while pump not enabled in maintenance." ;
-    }
+    //}
 }
 
 void page_maintenance_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)

@@ -236,9 +236,9 @@ text-align: center;</string>
   <widget class="QPushButton" name="orderSmall_Button">
    <property name="geometry">
     <rect>
-     <x>564</x>
-     <y>1088</y>
-     <width>209</width>
+     <x>580</x>
+     <y>960</y>
+     <width>131</width>
      <height>126</height>
     </rect>
    </property>
@@ -252,9 +252,9 @@ text-align: center;</string>
   <widget class="QPushButton" name="orderBig_Button">
    <property name="geometry">
     <rect>
-     <x>790</x>
-     <y>1087</y>
-     <width>198</width>
+     <x>870</x>
+     <y>960</y>
+     <width>111</width>
      <height>126</height>
     </rect>
    </property>
@@ -1945,6 +1945,38 @@ color: #58595B;</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
+  <widget class="QPushButton" name="orderMedium_Button">
+   <property name="geometry">
+    <rect>
+     <x>730</x>
+     <y>960</y>
+     <width>131</width>
+     <height>126</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="orderCustom_Button">
+   <property name="geometry">
+    <rect>
+     <x>570</x>
+     <y>1100</y>
+     <width>421</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>promoInputButton</zorder>
   <zorder>promoCode</zorder>
   <zorder>promoButton</zorder>
@@ -1962,6 +1994,8 @@ color: #58595B;</string>
   <zorder>productLabel</zorder>
   <zorder>discountLabel</zorder>
   <zorder>promoKeyboard</zorder>
+  <zorder>orderMedium_Button</zorder>
+  <zorder>orderCustom_Button</zorder>
  </widget>
  <resources/>
  <connections/>

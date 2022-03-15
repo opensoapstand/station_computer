@@ -427,6 +427,8 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
         }else{
             qDebug() << "controller sent stop dispensing signal in maintenance mode.";
         }
+
+        refreshLabels();
     }
 }
 

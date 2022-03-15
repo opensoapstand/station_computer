@@ -38,6 +38,7 @@ class pageProduct : public QWidget
     Q_OBJECT
 
 public:
+    QPushButton* orderSizeButtons [4];
     explicit pageProduct(QWidget *parent = nullptr);
     void setPage(page_select_product *pageSelect, page_dispenser* page_dispenser,page_error_wifi* pageWifiError,  page_idle* pageIdle, pagePayment *pagePayment, page_help* pageHelp);
     ~pageProduct();
@@ -71,8 +72,13 @@ private slots:
     void buttonWasClicked(int);
 
 
+    void on_orderCustom_Button_clicked();
+
+    void on_orderMedium_Button_clicked();
+
 private:
     bool stopSelectTimers();
+    void reset_and_show_page_elements();
     void selectOnTick();
     void mainPage();
 

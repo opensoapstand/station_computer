@@ -140,8 +140,8 @@ void page_maintenance::on_product1_button_clicked(){
 //    qDebug() << "Product 1 button clicked" << endl;
     page_maintenanceEndTimer->stop();
 
-    idlePage->currentProductOrder->setOrderSlot(OPTION_SLOT_1);
-    idlePage->currentProductOrder->setOrderSize(LARGE_DRINK);
+    idlePage->currentProductOrder->setSelectedSlot(1);
+    idlePage->currentProductOrder->setSelectedSize(LARGE_DRINK);
 
     p_page_maintenance_product->resizeEvent(productSelection);
     p_page_maintenance_product->showFullScreen();
@@ -157,8 +157,8 @@ void page_maintenance::on_product2_button_clicked(){
 //    qDebug() << "Product 2 button clicked" << endl;
     page_maintenanceEndTimer->stop();
 
-    idlePage->currentProductOrder->setOrderSlot(OPTION_SLOT_2);
-    idlePage->currentProductOrder->setOrderSize(LARGE_DRINK);
+    idlePage->currentProductOrder->setSelectedSlot(2);
+    idlePage->currentProductOrder->setSelectedSize(LARGE_DRINK);
 
     p_page_maintenance_product->resizeEvent(productSelection);
     p_page_maintenance_product->showFullScreen();
@@ -171,8 +171,8 @@ void page_maintenance::on_product3_button_clicked(){
 //    qDebug() << "Product 3 button clicked" << endl;
     page_maintenanceEndTimer->stop();
 
-    idlePage->currentProductOrder->setOrderSlot(OPTION_SLOT_3);
-    idlePage->currentProductOrder->setOrderSize(LARGE_DRINK);
+    idlePage->currentProductOrder->setSelectedSlot(3);
+    idlePage->currentProductOrder->setSelectedSize(LARGE_DRINK);
 
     p_page_maintenance_product->resizeEvent(productSelection);
     p_page_maintenance_product->showFullScreen();
@@ -185,8 +185,8 @@ void page_maintenance::on_product4_button_clicked(){
 //    qDebug() << "Product 4 button clicked" << endl;
     page_maintenanceEndTimer->stop();
 
-    idlePage->currentProductOrder->setOrderSlot(OPTION_SLOT_4);
-    idlePage->currentProductOrder->setOrderSize(LARGE_DRINK);
+    idlePage->currentProductOrder->setSelectedSlot(4);
+    idlePage->currentProductOrder->setSelectedSize(LARGE_DRINK);
 
     p_page_maintenance_product->resizeEvent(productSelection);
     p_page_maintenance_product->showFullScreen();

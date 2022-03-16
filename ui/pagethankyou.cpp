@@ -75,7 +75,7 @@ void pagethankyou::showEvent(QShowEvent *event)
 
     // THIS WILL HAVE TO BE CHANGED SO THE SYSTEM CHECKS IF IT IS A DF / SS MACHINE
 
-    if (db.getPaymentMethod(idlePage->currentProductOrder->getOrderSlot()) == "tap"){
+    if (db.getPaymentMethod(idlePage->currentProductOrder->getSelectedSlot()) == "tap"){
         rinse=false;
         rinseTimer->start(1000);
         _rinseTimerTimeoutSec = 5;
@@ -92,7 +92,7 @@ void pagethankyou::showEvent(QShowEvent *event)
     thankYouEndTimer->start(1000);
     _thankYouTimeoutSec = 7;
 
-    if (db.getPaymentMethod(idlePage->currentProductOrder->getOrderSlot()) == "qr"){
+    if (db.getPaymentMethod(idlePage->currentProductOrder->getSelectedSlot()) == "qr"){
         db.closeDB();
         curler();
     }else{

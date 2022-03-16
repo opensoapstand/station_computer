@@ -1,3 +1,4 @@
+
 //***************************************
 //
 // page_select_product.cpp
@@ -146,8 +147,8 @@ void page_select_product::on_selection1_Button_clicked()
     if(db.remainingVolumeIsBiggerThanLargestFixedSize(1)  && db.getSlotEnabled(1)){
         db.closeDB();
         productPageEndTimer->stop();
-        idlePage->currentProductOrder->setOrderSlot(OPTION_SLOT_1);
-        idlePage->currentProductOrder->setOrderSize(LARGE_DRINK);
+        idlePage->currentProductOrder->setSelectedSlot(1);
+        idlePage->currentProductOrder->setSelectedSize(LARGE_DRINK);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
         this->hide();
@@ -163,8 +164,8 @@ void page_select_product::on_selection2_Button_clicked()
     if(db.remainingVolumeIsBiggerThanLargestFixedSize(2) && db.getSlotEnabled(2)){
         db.closeDB();
         productPageEndTimer->stop();
-        idlePage->currentProductOrder->setOrderSlot(OPTION_SLOT_2);
-        idlePage->currentProductOrder->setOrderSize(LARGE_DRINK);
+        idlePage->currentProductOrder->setSelectedSlot(2);
+        idlePage->currentProductOrder->setSelectedSize(LARGE_DRINK);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
         this->hide();
@@ -180,8 +181,9 @@ void page_select_product::on_selection3_Button_clicked()
     if(db.remainingVolumeIsBiggerThanLargestFixedSize(3)  && db.getSlotEnabled(3)){
         db.closeDB();
         productPageEndTimer->stop();
-        idlePage->currentProductOrder->setOrderSlot(OPTION_SLOT_3);
-        idlePage->currentProductOrder->setOrderSize(LARGE_DRINK);
+        idlePage->currentProductOrder->setSelectedSlot(3);
+        idlePage->currentProductOrder->setSelectedSize(LARGE_DRINK);
+
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
         this->hide();
@@ -198,8 +200,8 @@ void page_select_product::on_selection4_Button_clicked()
     if(db.remainingVolumeIsBiggerThanLargestFixedSize(4)  && db.getSlotEnabled(4)){
         db.closeDB();
         productPageEndTimer->stop();
-        idlePage->currentProductOrder->setOrderSlot(OPTION_SLOT_4);
-        idlePage->currentProductOrder->setOrderSize(LARGE_DRINK);
+        idlePage->currentProductOrder->setSelectedSlot(4);
+        idlePage->currentProductOrder->setSelectedSize(LARGE_DRINK);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
         this->hide();

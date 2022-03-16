@@ -62,7 +62,7 @@ private slots:
 
     void set_label_product(int product_slot___, char drinkSize);
     void set_label_volume(QLabel* label, int product_slot___, char drinkSize);
-    QString getSizeToVolume( int product_slot___, char drinkSize);
+    QString getSelectedVolumeToVolume( int product_slot___, char drinkSize);
 
     // Set Drink Order
     void on_orderSmall_Button_clicked();
@@ -75,7 +75,8 @@ private slots:
     void on_orderCustom_Button_clicked();
 
     void on_orderMedium_Button_clicked();
-
+    void loadOrderSize(int sizeIndex);
+   
 private:
     bool stopSelectTimers();
     void reset_and_show_page_elements();

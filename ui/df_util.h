@@ -11,6 +11,9 @@
 //#define START_FSM_FROM_UI //enabled by default (start controller from ui)
 #define CUSTOM_VOLUME_DISPENSING
 
+#define OPTION_SLOT_INVALID 0
+#define SLOT_COUNT 4
+
 
 #ifndef START_FSM_FROM_UI
 //#define WAIT_FOR_CONTROLLER_READY // will wait for response of controller before continuing.

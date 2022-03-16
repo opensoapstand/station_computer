@@ -44,13 +44,13 @@ void page_maintenance_dispenser::setSoldOutButtonText()
 
 #ifdef USE_OLD_DATABASE
 
-    if (this->idlePage->isSlotAvailable(this->idlePage->currentProductOrder->getOrderSlot()))
+    if (this->idlePage->isSlotAvailable(this->idlePage->currentProductOrder->getSelectedSlot()))
     {
 
         // if(db.getVolumeRemaining(product_slot___)>0){
 
 #else
-    int slot = idlePage->currentProductOrder->getOrderSlot();
+    int slot = idlePage->currentProductOrder->getSelectedSlot();
 
     if (db.getSlotEnabled(slot))
     {
@@ -68,11 +68,11 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 {
 
     QWidget::showEvent(event);
-    int product_slot___ = this->idlePage->currentProductOrder->getOrderSlot();
+    int product_slot___ = this->idlePage->currentProductOrder->getSelectedSlot();
 
     qDebug() << "*************************call db from maintenance select dispenser page" << endl;
     DbManager db(DB_PATH);
-    this->units_selected_product = db.getUnits(this->idlePage->currentProductOrder->getOrderSlot());
+    this->units_selected_product = db.getUnits(this->idlePage->currentProductOrder->getSelectedSlot());
     // DbManager db_temperature(DB_PATH_TEMPERATURE);
     // db.addPageClick("PAGE_MAINTENANCE PAGE ENTERED");
 
@@ -181,7 +181,7 @@ void page_maintenance_dispenser::on_backButton_clicked()
 
 void page_maintenance_dispenser::refreshLabels()
 {
-    int product_slot___ = this->idlePage->currentProductOrder->getOrderSlot();
+    int product_slot___ = this->idlePage->currentProductOrder->getSelectedSlot();
     qDebug() << "db... refresh labels" << endl;
     DbManager db(DB_PATH);
     ticks = db.getProductVolumePerTick(product_slot___);
@@ -246,7 +246,7 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
 
-    int product_slot___ = idlePage->currentProductOrder->getOrderSlot();
+    int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
 
     // DbManager db_temperature(DB_PATH_TEMPERATURE);
 
@@ -257,7 +257,7 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
         qDebug() << " ********** 666564 call db from maintenance select dispenser page  resize event" << endl;
         DbManager db(DB_PATH);
         bitmap_location.append("/home/df-admin/production/references/product");
-        bitmap_location.append(QString::number(idlePage->currentProductOrder->getOrderSlot()));
+        bitmap_location.append(QString::number(idlePage->currentProductOrder->getSelectedSlot()));
         bitmap_location.append(".png");
         db.closeDB();
     }
@@ -290,7 +290,7 @@ void page_maintenance_dispenser::on_pumpButton_clicked()
     qDebug() << "call db from maintenance on pump button c licked" << endl;
     DbManager db(DB_PATH);
 
-    int product_slot___ = idlePage->currentProductOrder->getOrderSlot();
+    int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
     if (product_slot___ > 0 && product_slot___ <= 9)
     {
 
@@ -325,7 +325,7 @@ void page_maintenance_dispenser::on_priceButton_s_clicked()
     //    ui->textEntry->setText("");
     //    ui->titleLabel->setText("New Price:");
 
-    //    ui->price_small->setText("$"+QString::number(db.getProductPrice(idlePage->currentProductOrder->getOrderSlot(), 's')));
+    //    ui->price_small->setText("$"+QString::number(db.getProductPrice(idlePage->currentProductOrder->getSelectedSlot(), 's')));
 }
 
 void page_maintenance_dispenser::on_priceButton_l_clicked()
@@ -340,7 +340,7 @@ void page_maintenance_dispenser::on_priceButton_l_clicked()
     //    ui->textEntry->setText("");
     //    ui->titleLabel->setText("New Price:");
 
-    //    ui->price_large->setText("$"+QString::number(db.getProductPrice(idlePage->currentProductOrder->getOrderSlot(), 'l')));
+    //    ui->price_large->setText("$"+QString::number(db.getProductPrice(idlePage->currentProductOrder->getSelectedSlot(), 'l')));
 }
 
 void page_maintenance_dispenser::on_target_volumeButton_s_clicked()
@@ -352,7 +352,7 @@ void page_maintenance_dispenser::on_target_volumeButton_s_clicked()
     //    ui->numberEntry->show();
     //    ui->textEntry->setText("");
     //    ui->titleLabel->setText("New Volume:");
-    //    ui->target_volume_s->setText(QString::number(db.getProductVolume(idlePage->currentProductOrder->getOrderSlot(), 's')) + "ml");
+    //    ui->target_volume_s->setText(QString::number(db.getProductVolume(idlePage->currentProductOrder->getSelectedSlot(), 's')) + "ml");
 }
 
 void page_maintenance_dispenser::on_target_volumeButton_l_clicked()
@@ -364,7 +364,7 @@ void page_maintenance_dispenser::on_target_volumeButton_l_clicked()
     //    ui->numberEntry->show();
     //    ui->textEntry->setText("");
     //    ui->titleLabel->setText("New Volume:");
-    //    ui->target_volume_l->setText(QString::number(db.getProductVolume(idlePage->currentProductOrder->getOrderSlot(), 'l')) + "ml");
+    //    ui->target_volume_l->setText(QString::number(db.getProductVolume(idlePage->currentProductOrder->getSelectedSlot(), 'l')) + "ml");
 }
 
 void page_maintenance_dispenser::on_vol_per_tickButton_clicked()
@@ -377,7 +377,7 @@ void page_maintenance_dispenser::on_vol_per_tickButton_clicked()
     ui->numberEntry->show();
     ui->textEntry->setText("");
     ui->titleLabel->setText("New Volume Per Tick:");
-    //    ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(idlePage->currentProductOrder->getOrderSlot())) + "ml");
+    //    ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(idlePage->currentProductOrder->getSelectedSlot())) + "ml");
 }
 
 void page_maintenance_dispenser::dispense_test_start()
@@ -385,7 +385,7 @@ void page_maintenance_dispenser::dispense_test_start()
     if (!pumping)
     {
         qDebug() << "Start dispense in maintenance mode. (FYI: if app crashes, it's probably about the update volume interrupts caused by the controller sending data.)";
-        QString command = QString::number(this->idlePage->currentProductOrder->getOrderSlot());
+        QString command = QString::number(this->idlePage->currentProductOrder->getSelectedSlot());
         command.append("t");
 
         update_dispense_stats(0);
@@ -417,7 +417,7 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
         if (sendStopToController)
         {
             qDebug() << "Manually finish dispense in maintenance mode.";
-            QString command = QString::number(this->idlePage->currentProductOrder->getOrderSlot());
+            QString command = QString::number(this->idlePage->currentProductOrder->getSelectedSlot());
             command.append("t");
             this->idlePage->dfUtility->msg = command;
             idlePage->dfUtility->m_IsSendingFSM = true;
@@ -459,7 +459,7 @@ void page_maintenance_dispenser::updateVolumeDisplayed(double dispensed, bool is
         // DbManager db(DB_PATH);
 
         // double vol_dispensed = dispensed;
-        // ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) + " " +  db.getUnits(this->idlePage->currentProductOrder->getOrderSlot()));
+        // ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) + " " +  db.getUnits(this->idlePage->currentProductOrder->getSelectedSlot()));
 
         // ui->ticksLabel->setText("Ticks: " + QString::number(vol_dispensed/ticks));
 
@@ -486,8 +486,8 @@ void page_maintenance_dispenser::fsmReceiveTargetVolumeReached()
 
 void page_maintenance_dispenser::on_refillButton_clicked()
 {
-    qDebug() << "refill clicked. slot: " << QString::number(this->idlePage->currentProductOrder->getOrderSlot()) << endl;
-    qDebug() << "refill clicked. size: " << QString::number(this->idlePage->currentProductOrder->getSize()) << endl;
+    qDebug() << "refill clicked. slot: " << QString::number(this->idlePage->currentProductOrder->getSelectedSlot()) << endl;
+    qDebug() << "refill clicked. size: " << QString::number(this->idlePage->currentProductOrder->getSelectedVolume()) << endl;
 
     DbManager db(DB_PATH);
     //    qDebug() << "Refill button clicked" << endl;
@@ -508,15 +508,15 @@ void page_maintenance_dispenser::on_refillButton_clicked()
     case QMessageBox::Yes:
         //            qDebug() << "YES CLICKED" << endl;
 
-        if (db.refill(this->idlePage->currentProductOrder->getOrderSlot()))
+        if (db.refill(this->idlePage->currentProductOrder->getSelectedSlot()))
         {
             ui->refillLabel->setText("Refill Succesfull");
             ui->soldOutLabel->setText("");
 
-            ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(this->idlePage->currentProductOrder->getOrderSlot())) + " " + db.getUnits(this->idlePage->currentProductOrder->getOrderSlot()));
-            ui->volume_dispensed_since_last_restock->setText(QString::number(db.getVolumeDispensedSinceRestock(this->idlePage->currentProductOrder->getOrderSlot())) + " " + db.getUnits(this->idlePage->currentProductOrder->getOrderSlot()));
-            ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(this->idlePage->currentProductOrder->getOrderSlot())) + " " + db.getUnits(this->idlePage->currentProductOrder->getOrderSlot()));
-            ui->lastRefillLabel->setText(db.getLastRefill(this->idlePage->currentProductOrder->getOrderSlot()));
+            ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(this->idlePage->currentProductOrder->getSelectedSlot())) + " " + db.getUnits(this->idlePage->currentProductOrder->getSelectedSlot()));
+            ui->volume_dispensed_since_last_restock->setText(QString::number(db.getVolumeDispensedSinceRestock(this->idlePage->currentProductOrder->getSelectedSlot())) + " " + db.getUnits(this->idlePage->currentProductOrder->getSelectedSlot()));
+            ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(this->idlePage->currentProductOrder->getSelectedSlot())) + " " + db.getUnits(this->idlePage->currentProductOrder->getSelectedSlot()));
+            ui->lastRefillLabel->setText(db.getLastRefill(this->idlePage->currentProductOrder->getSelectedSlot()));
             db.closeDB();
             curler();
             break;
@@ -541,13 +541,13 @@ void page_maintenance_dispenser::on_refillButton_clicked()
 void page_maintenance_dispenser::on_soldOutButton_clicked()
 {
     DbManager db(DB_PATH);
-    qDebug() << "soldout clicked. slot: " << QString::number(this->idlePage->currentProductOrder->getOrderSlot()) << endl;
-    qDebug() << "soldout clicked. size: " << QString::number(this->idlePage->currentProductOrder->getSize()) << endl;
+    qDebug() << "soldout clicked. slot: " << QString::number(this->idlePage->currentProductOrder->getSelectedSlot()) << endl;
+    qDebug() << "soldout clicked. size: " << QString::number(this->idlePage->currentProductOrder->getSelectedVolume()) << endl;
 
     _maintainProductPageTimeoutSec = 40;
 
-    // if (db.getVolumeRemaining(this->idlePage->currentProductOrder->getOrderSlot()) > 0){
-    if (db.getSlotEnabled(this->idlePage->currentProductOrder->getOrderSlot()))
+    // if (db.getVolumeRemaining(this->idlePage->currentProductOrder->getSelectedSlot()) > 0){
+    if (db.getSlotEnabled(this->idlePage->currentProductOrder->getSelectedSlot()))
     {
 
         // ARE YOU SURE YOU WANT TO COMPLETE?
@@ -562,7 +562,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
         switch (ret)
         {
         case QMessageBox::Yes:
-            if (db.updateSlotAvailability(this->idlePage->currentProductOrder->getOrderSlot(), 0))
+            if (db.updateSlotAvailability(this->idlePage->currentProductOrder->getSelectedSlot(), 0))
             {
                 ui->soldOutLabel->setText("Sold Out Succesfull");
                 ui->refillLabel->setText("");
@@ -595,7 +595,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
         {
         case QMessageBox::Yes:
 
-            if (db.updateSlotAvailability(this->idlePage->currentProductOrder->getOrderSlot(), 1))
+            if (db.updateSlotAvailability(this->idlePage->currentProductOrder->getSelectedSlot(), 1))
             {
                 ui->soldOutLabel->setText("Un-Sold Out Succesfull");
                 ui->refillLabel->setText("");
@@ -626,15 +626,15 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
     DbManager db(DB_PATH);
     //    qDebug() << "Sold Out button clicked" << endl;
 
-    // qDebug() << QString::number(db.getVolumeRemaining(this->idlePage->currentProductOrder->getOrderSlot());
-    qDebug() << "soldout clicked. slot: " << QString::number(this->idlePage->currentProductOrder->getOrderSlot()) << endl;
-    qDebug() << "soldout clicked. size: " << QString::number(this->idlePage->currentProductOrder->getSize()) << endl;
+    // qDebug() << QString::number(db.getVolumeRemaining(this->idlePage->currentProductOrder->getSelectedSlot());
+    qDebug() << "soldout clicked. slot: " << QString::number(this->idlePage->currentProductOrder->getSelectedSlot()) << endl;
+    qDebug() << "soldout clicked. size: " << QString::number(this->idlePage->currentProductOrder->getSelectedVolume()) << endl;
 
     _maintainProductPageTimeoutSec = 40;
 
-    // if (db.getVolumeRemaining(this->idlePage->currentProductOrder->getOrderSlot()) > 0){
+    // if (db.getVolumeRemaining(this->idlePage->currentProductOrder->getSelectedSlot()) > 0){
 
-    if (this->idlePage->isSlotAvailable(this->idlePage->currentProductOrder->getOrderSlot()))
+    if (this->idlePage->isSlotAvailable(this->idlePage->currentProductOrder->getSelectedSlot()))
     {
 
         // ARE YOU SURE YOU WANT TO COMPLETE?
@@ -652,7 +652,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
         {
             //            qDebug() << "YES CLICKED" << endl;
 
-            this->idlePage->setSlotAvailability(this->idlePage->currentProductOrder->getOrderSlot(), false);
+            this->idlePage->setSlotAvailability(this->idlePage->currentProductOrder->getSelectedSlot(), false);
 
             //                qDebug() << "SOLD OUT!" << endl;
             ui->soldOutLabel->setText("Sold Out Succesfull. Will be reset at program restart.");
@@ -660,8 +660,8 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
             // Update Click DB
             //                DbManager db(DB_PATH);
             //                db.addPageClick("PRODUCT SOLD OUT");
-            // ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(this->idlePage->currentProductOrder->getOrderSlot())) + " " +  db.getUnits(this->idlePage->currentProductOrder->getOrderSlot()));
-            // ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(this->idlePage->currentProductOrder->getOrderSlot())) + " " +  db.getUnits(this->idlePage->currentProductOrder->getOrderSlot()));
+            // ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(this->idlePage->currentProductOrder->getSelectedSlot())) + " " +  db.getUnits(this->idlePage->currentProductOrder->getSelectedSlot()));
+            // ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(this->idlePage->currentProductOrder->getSelectedSlot())) + " " +  db.getUnits(this->idlePage->currentProductOrder->getSelectedSlot()));
             // ui->soldOutButton->setText("Un-Mark as Sold Out");
         }
         break;
@@ -689,7 +689,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
         {
             //            qDebug() << "YES CLICKED" << endl;
 
-            this->idlePage->setSlotAvailability(this->idlePage->currentProductOrder->getOrderSlot(), true);
+            this->idlePage->setSlotAvailability(this->idlePage->currentProductOrder->getSelectedSlot(), true);
 
             //                qDebug() << "SOLD OUT!" << endl;
             ui->soldOutLabel->setText("Un-Sold Out Succesfull");
@@ -697,8 +697,8 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
             // Update Click DB
             //                DbManager db(DB_PATH);
             //                db.addPageClick("PRODUCT SOLD OUT");
-            // ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(this->idlePage->currentProductOrder->getOrderSlot())) + " " +  db.getUnits(this->idlePage->currentProductOrder->getOrderSlot()));
-            // ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(this->idlePage->currentProductOrder->getOrderSlot())) + " " +  db.getUnits(this->idlePage->currentProductOrder->getOrderSlot()));
+            // ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(this->idlePage->currentProductOrder->getSelectedSlot())) + " " +  db.getUnits(this->idlePage->currentProductOrder->getSelectedSlot()));
+            // ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(this->idlePage->currentProductOrder->getSelectedSlot())) + " " +  db.getUnits(this->idlePage->currentProductOrder->getSelectedSlot()));
             // ui->soldOutButton->setText("Mark as Sold Out");
         }
         case QMessageBox::No:
@@ -723,7 +723,7 @@ void page_maintenance_dispenser::on_fullButton_clicked()
     //    ui->numberEntry->show();
     //    ui->textEntry->setText("");
     //    ui->titleLabel->setText("New Full Volume:");
-    //    ui->full_volume->setText(QString::number(db.getFullProduct(idlePage->currentProductOrder->getOrderSlot())) + "ml");
+    //    ui->full_volume->setText(QString::number(db.getFullProduct(idlePage->currentProductOrder->getSelectedSlot())) + "ml");
 }
 
 void page_maintenance_dispenser::on_remainingButton_clicked()
@@ -788,7 +788,7 @@ void page_maintenance_dispenser::on_pwmButton_clicked()
     ui->textEntry->setText("");
     ui->titleLabel->setText("New Pump Speed:");
     ui->buttonPoint->hide();
-    //    ui->pwmLabel->setText(QString::number(db.getPWM(idlePage->currentProductOrder->getOrderSlot())) + "%");
+    //    ui->pwmLabel->setText(QString::number(db.getPWM(idlePage->currentProductOrder->getSelectedSlot())) + "%");
 }
 
 // void page_maintenance_dispenser::on_pluButton_s_clicked(){
@@ -800,7 +800,7 @@ void page_maintenance_dispenser::on_pwmButton_clicked()
 //     ui->textEntry->setText("");
 //     ui->titleLabel->setText("New PLU/Barcode:");
 //     ui->buttonPoint->hide();
-//     ui->pluLabel->setText(QString::number(db.getPLU(idlePage->currentProductOrder->getOrderSlot())));
+//     ui->pluLabel->setText(QString::number(db.getPLU(idlePage->currentProductOrder->getSelectedSlot())));
 
 //}
 
@@ -813,7 +813,7 @@ void page_maintenance_dispenser::on_pwmButton_clicked()
 //     ui->textEntry->setText("");
 //     ui->titleLabel->setText("New PLU/Barcode:");
 //     ui->buttonPoint->hide();
-//     ui->pluLabel->setText(QString::number(db.getPLU(idlePage->currentProductOrder->getOrderSlot())));
+//     ui->pluLabel->setText(QString::number(db.getPLU(idlePage->currentProductOrder->getSelectedSlot())));
 
 //}
 
@@ -923,7 +923,7 @@ void page_maintenance_dispenser::updateValues()
 {
     qDebug() << "ahoyy6";
     DbManager db(DB_PATH);
-    int product_slot___ = idlePage->currentProductOrder->getOrderSlot();
+    int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
 
     if (price_small)
     {
@@ -991,7 +991,7 @@ void page_maintenance_dispenser::pwmSliderMoved(int percentage)
     int value = ui->pwmSlider->value();
     //    qDebug() << "Slider Value: " << value << endl;
 
-    QString command = QString::number(this->idlePage->currentProductOrder->getOrderSlot());
+    QString command = QString::number(this->idlePage->currentProductOrder->getSelectedSlot());
     command.append("P");
     command.append(QString::number(value));
 
@@ -1016,7 +1016,7 @@ void page_maintenance_dispenser::curler()
 {
     qDebug() << "ahoyy7";
     DbManager db(DB_PATH);
-    int product_slot___ = idlePage->currentProductOrder->getOrderSlot();
+    int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
 
     QString curl_param = "pid=" + db.getProductID(product_slot___) + "&volume_full=" + QString::number(db.getFullProduct(product_slot___));
     curl_param_array = curl_param.toLocal8Bit();
@@ -1094,9 +1094,9 @@ void page_maintenance_dispenser::bufferCURL(char *curl_params)
 }
 
 // void page_maintenance_dispenser::on_testSmallButton_clicked(){
-//     int product_slot___ = idlePage->currentProductOrder->getOrderSlot();
+//     int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
 //     if(product_slot___ > 0 && product_slot___ <= 9) {
-//         QString command = QString::number(this->idlePage->currentProductOrder->getOrderSlot());
+//         QString command = QString::number(this->idlePage->currentProductOrder->getSelectedSlot());
 //         if (!pumping){
 //             command.append("s");
 
@@ -1115,7 +1115,7 @@ void page_maintenance_dispenser::bufferCURL(char *curl_params)
 //            pumping = false;
 //            ui->pumpLabel->setText("OFF");
 //            //ui->vol_dispensed_label->setText("");
-//            command = QString::number(this->idlePage->currentProductOrder->getOrderSlot());
+//            command = QString::number(this->idlePage->currentProductOrder->getSelectedSlot());
 //            command.append("s");
 
 //            this->idlePage->dfUtility->msg = command;
@@ -1128,9 +1128,9 @@ void page_maintenance_dispenser::bufferCURL(char *curl_params)
 //}
 
 // void page_maintenance_dispenser::on_testLargeButton_clicked(){
-//     int product_slot___ = idlePage->currentProductOrder->getOrderSlot();
+//     int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
 //     if(product_slot___ > 0 && product_slot___ <= 9) {
-//         QString command = QString::number(this->idlePage->currentProductOrder->getOrderSlot());
+//         QString command = QString::number(this->idlePage->currentProductOrder->getSelectedSlot());
 //         if (!pumping){
 //             command.append("l");
 
@@ -1149,7 +1149,7 @@ void page_maintenance_dispenser::bufferCURL(char *curl_params)
 //            pumping = false;
 //            ui->pumpLabel->setText("OFF");
 //            //ui->vol_dispensed_label->setText("");
-//            command = QString::number(this->idlePage->currentProductOrder->getOrderSlot());
+//            command = QString::number(this->idlePage->currentProductOrder->getSelectedSlot());
 //            command.append("l");
 
 //            this->idlePage->dfUtility->msg = command;

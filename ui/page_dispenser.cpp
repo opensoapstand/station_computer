@@ -197,7 +197,7 @@ void page_dispenser::force_finish_dispensing(){
 void page_dispenser::fsmSendStartDispensing(){
     QString command = QString::number(this->idlePage->currentProductOrder->getSelectedSlot());
 
-    if(idlePage->currentProductOrder->getSelectedSizeOption() == SMALL_DRINK){
+    if(idlePage->currentProductOrder->getSelectedSizeOption() == SIZE_SMALL_INDEX){
         command.append('s');
 
     } else {
@@ -220,7 +220,7 @@ void page_dispenser::fsmSendStopDispensing(){
     this->isDispensing = false;
     QString command = QString::number(this->idlePage->currentProductOrder->getSelectedSlot());
 
-    if(idlePage->currentProductOrder->getSelectedSizeOption() == SMALL_DRINK){
+    if(idlePage->currentProductOrder->getSelectedSizeOption() == SIZE_SMALL_INDEX){
         command.append('s');
 
     } else {

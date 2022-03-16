@@ -148,7 +148,7 @@ void page_select_product::on_selection1_Button_clicked()
         db.closeDB();
         productPageEndTimer->stop();
         idlePage->currentProductOrder->setSelectedSlot(1);
-        idlePage->currentProductOrder->setSelectedSize(LARGE_DRINK);
+        idlePage->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
         this->hide();
@@ -165,7 +165,7 @@ void page_select_product::on_selection2_Button_clicked()
         db.closeDB();
         productPageEndTimer->stop();
         idlePage->currentProductOrder->setSelectedSlot(2);
-        idlePage->currentProductOrder->setSelectedSize(LARGE_DRINK);
+        idlePage->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
         this->hide();
@@ -182,7 +182,7 @@ void page_select_product::on_selection3_Button_clicked()
         db.closeDB();
         productPageEndTimer->stop();
         idlePage->currentProductOrder->setSelectedSlot(3);
-        idlePage->currentProductOrder->setSelectedSize(LARGE_DRINK);
+        idlePage->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
 
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
@@ -201,7 +201,7 @@ void page_select_product::on_selection4_Button_clicked()
         db.closeDB();
         productPageEndTimer->stop();
         idlePage->currentProductOrder->setSelectedSlot(4);
-        idlePage->currentProductOrder->setSelectedSize(LARGE_DRINK);
+        idlePage->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
         paymentSelectPage->resizeEvent(productResize);
         paymentSelectPage->showFullScreen();
         this->hide();

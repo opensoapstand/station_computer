@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 DbManager::DbManager(const QString &path)
 {
     //    qDebug() << "CREATING DB OBJECT" << endl;

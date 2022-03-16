@@ -140,10 +140,10 @@ void pagePayment::resizeEvent(QResizeEvent *event){
 
     int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
     char drinkSize;
-    if (idlePage->currentProductOrder->getSelectedSizeOption() == SMALL_DRINK){
+    if (idlePage->currentProductOrder->getSelectedSizeOption() == SIZE_SMALL_INDEX){
         drinkSize = 's';
     }
-    if (idlePage->currentProductOrder->getSelectedSizeOption() == LARGE_DRINK){
+    if (idlePage->currentProductOrder->getSelectedSizeOption() == SIZE_LARGE_INDEX){
         drinkSize = 'l';
     }
 
@@ -269,10 +269,10 @@ void pagePayment::showEvent(QShowEvent *event)
 
     int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
     char drinkSize;
-    if (idlePage->currentProductOrder->getSelectedSizeOption() == SMALL_DRINK){
+    if (idlePage->currentProductOrder->getSelectedSizeOption() == SIZE_SMALL_INDEX){
         drinkSize = 's';
     }
-    if (idlePage->currentProductOrder->getSelectedSizeOption() == LARGE_DRINK){
+    if (idlePage->currentProductOrder->getSelectedSizeOption() == SIZE_LARGE_INDEX){
         drinkSize = 'l';
     }
 
@@ -352,10 +352,10 @@ void pagePayment::createOrder(){
 
     int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
     char drinkSize;
-    if (idlePage->currentProductOrder->getSelectedSizeOption() == SMALL_DRINK){
+    if (idlePage->currentProductOrder->getSelectedSizeOption() == SIZE_SMALL_INDEX){
         drinkSize = 's';
     }
-    if (idlePage->currentProductOrder->getSelectedSizeOption() == LARGE_DRINK){
+    if (idlePage->currentProductOrder->getSelectedSizeOption() == SIZE_LARGE_INDEX){
         drinkSize = 'l';
     }
     QString MachineSerialNumber = db.getMachineID();
@@ -397,10 +397,10 @@ void pagePayment::generateQR(){
 
     int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
     char drinkSize;
-    if (idlePage->currentProductOrder->getSelectedSizeOption() == SMALL_DRINK){
+    if (idlePage->currentProductOrder->getSelectedSizeOption() == SIZE_SMALL_INDEX){
         drinkSize = 's';
     }
-    if (idlePage->currentProductOrder->getSelectedSizeOption() == LARGE_DRINK){
+    if (idlePage->currentProductOrder->getSelectedSizeOption() == SIZE_LARGE_INDEX){
         drinkSize = 'l';
     }
     createOrder();

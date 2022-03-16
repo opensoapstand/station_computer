@@ -21,20 +21,20 @@
 //    OPTION_MAX_INVALID
 // } DF_QT_OPTION_PICKED;
 
-typedef enum DF_QT_SIZES {
-   INVALID_DRINK=0,
-   SMALL_DRINK,
-   MEDIUM_DRINK,
-   LARGE_DRINK,
-   CUSTOM_DRINK,
-   TEST_DRINK,
-   MAX_INVALID_DRINK
-//    ,
-//    DRINK1,
-//    DRINK2,
-//    DRINK3,
-//    DRINK4
-} DF_QT_SIZE_PICKED;
+// typedef enum DF_QT_SIZES {
+//    INVALID_DRINK=0,
+//    SIZE_SMALL_INDEX,
+//    MEDIUM_DRINK,
+//    SIZE_LARGE_INDEX,
+//    CUSTOM_DRINK,
+//    TEST_DRINK,
+//    MAX_INVALID_DRINK
+// //    ,
+// //    DRINK1,
+// //    DRINK2,
+// //    DRINK3,
+// //    DRINK4
+// } DF_QT_SIZE_PICKED;
 
 
 // Values for Selected drink.
@@ -97,18 +97,23 @@ public:
     //constexpr static double price_small_TEST = 3.00;
     //constexpr static double PRICE_LARGE_TEST = 4.00;
 
+
+    // static char sizeIndexToChar(int size_index);
+
     // Setters and Getters
     void setSelectedSlot(int optionSlot);
     int getSelectedSlot();
 
     // int getSelectedSlot() const {return m_selectedSlot;}
 
-    void setSelectedSize(DF_QT_SIZES sizeOption);
+    void setSelectedSize(int sizeOption);
     // double getSelectedProductPrice() const {return m_drinkPrice;}
     double getSelectedVolume();
+    QString getSelectedSizeToVolumeWithCorrectUnits();
+    QString getSizeToVolumeWithCorrectUnitsForSelectedSlot(int size);
     // double getSelectedVolume() const {return m_drinkML;}
     double getSelectedProductPrice();
-    DF_QT_SIZES getSelectedSizeOption();
+    int getSelectedSizeOption();
     char getSelectedSizeAsChar();
     bool isSelectedOrderValid();
 
@@ -126,7 +131,7 @@ signals:
 private:
     DrinkSelection *selectedDrink;
     //DF_QT_SLOTS sizeOptionSelected;
-    DF_QT_SIZES sizeOptionSelected;
+    int sizeOptionSelected;
 
     double overruledPrice;
 };

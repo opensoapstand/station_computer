@@ -3,6 +3,11 @@
 #include <sys/time.h>
 #include <stdio.h>
 
+char df_util::sizeIndexToChar(int size_index){
+    char size_to_char [SIZES_COUNT] = {'!', 's', 'm', 'l', 't', 't'};
+    return size_to_char[size_index];
+}
+
 df_util::df_util(QWidget *parent):
     QWidget(parent),
     tcpSocket(new QTcpSocket(this))

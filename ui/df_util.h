@@ -15,6 +15,17 @@
 #define SLOT_COUNT 4
 
 
+#define SIZES_COUNT 6
+
+#define SIZE_INVALID_INDEX 0
+#define SIZE_SMALL_INDEX 1
+#define SIZE_MEDIUM_INDEX 2
+#define SIZE_LARGE_INDEX 3
+#define SIZE_CUSTOM_INDEX 4
+#define SIZE_TEST_INDEX 5
+
+
+
 #ifndef START_FSM_FROM_UI
 //#define WAIT_FOR_CONTROLLER_READY // will wait for response of controller before continuing.
 #endif
@@ -49,6 +60,9 @@ class df_util : public QWidget
 public:
     explicit df_util(QWidget *parent = nullptr);
     
+    static char sizeIndexToChar(int size_index);
+
+
     // static long getTimeStamp();
     // static string format_string(long time_stamp,string fmt,int cutBack=0);
 

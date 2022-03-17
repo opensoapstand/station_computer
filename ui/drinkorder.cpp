@@ -185,6 +185,17 @@ int DrinkOrder::getSelectedSizeOption()
 //     return size_to_char[size_index];
 
 // }
+
+double DrinkOrder::getPriceForSelectedSlot(int sizeIndex){
+    qDebug() << "product db for price";
+    DbManager db(DB_PATH);
+    double price;
+    price = db.getProductVolume(getSelectedSlot(), df_util::sizeIndexToChar(sizeIndex) );
+
+    db.closeDB();
+    return price;
+}
+
 char DrinkOrder::getSelectedSizeAsChar()
 {
     // ! = invalid.

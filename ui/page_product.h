@@ -39,6 +39,9 @@ class pageProduct : public QWidget
 
 public:
     QPushButton* orderSizeButtons [4];
+    QLabel* orderSizeLabelsPrice[4];
+    QLabel* orderSizeLabelsVolume[4];
+
     explicit pageProduct(QWidget *parent = nullptr);
     void setPage(page_select_product *pageSelect, page_dispenser* page_dispenser,page_error_wifi* pageWifiError,  page_idle* pageIdle, pagePayment *pagePayment, page_help* pageHelp);
     ~pageProduct();
@@ -60,8 +63,8 @@ private slots:
     void on_applyPromo_Button_clicked();
     void on_promoCodeInput_clicked();
 
-    void set_label_product(int product_slot___);
-    void set_label_volume(QLabel* label, int product_slot___, char drinkSize);
+    void set_label_product();
+    //void set_label_volume(QLabel* label, int product_slot___, char drinkSize);
 
 
     // Set Drink Order

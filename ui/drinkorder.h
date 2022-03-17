@@ -104,6 +104,8 @@ public:
     void setSelectedSlot(int optionSlot);
     int getSelectedSlot();
 
+    double getPriceForSelectedSlot(int sizeIndex);
+
     // int getSelectedSlot() const {return m_selectedSlot;}
 
     void setSelectedSize(int sizeOption);

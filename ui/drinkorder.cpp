@@ -133,8 +133,6 @@ void DrinkOrder::setSelectedOverrulePrice(double price)
     }
 }
 
-
-
 double DrinkOrder::getPrice(int sizeIndex)
 {
     qDebug() << "product db for price";
@@ -259,5 +257,15 @@ QString DrinkOrder::getSelectedProductName()
     QString product_name = db.getProductName(getSelectedSlot());
     db.closeDB();
     return product_name;
+}
+
+QString DrinkOrder::getSelectedPaymentMethod(){
+    QString paymentMethod;
+    qDebug() << "product pyament method";
+    DbManager db(DB_PATH);
+    paymentMethod = db.getPaymentMethod(getSelectedSlot());
+    db.closeDB();
+    return paymentMethod;
+
 }
 

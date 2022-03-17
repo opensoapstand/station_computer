@@ -68,7 +68,7 @@ private slots:
     void on_orderBig_Button_clicked();
     void on_mainPage_Button_clicked();
     void onSelectTimeoutTick();
-    void buttonWasClicked(int);
+    void keyboardButtonPressed(int);
 
     void on_orderCustom_Button_clicked();
 

@@ -64,7 +64,7 @@ private slots:
     void onPage_maintenanceTimeoutTick();
     void btn_clicked();
 //    void on_buttonGroup_buttonClicked();
-    void buttonWasClicked(int);
+    void keyboardButtonPressed(int);
 
 private:
     void showEvent(QShowEvent *event);

@@ -76,6 +76,9 @@ public:
 
     void setSelectedSize(int sizeOption);
     int getSelectedSize();
+
+    bool isSelectedOrderValid();
+    
     QString getSelectedProductName();
 
     double getSelectedVolume();
@@ -87,7 +90,8 @@ public:
     double getSelectedPrice();
 
     char getSelectedSizeAsChar();
-    bool isSelectedOrderValid();
+    QString getSelectedPaymentMethod();
+    
 
 public slots:
 

@@ -51,7 +51,7 @@ page_maintenance::page_maintenance(QWidget *parent) :
     page_maintenanceEndTimer->setInterval(1000);
     connect(page_maintenanceEndTimer, SIGNAL(timeout()), this, SLOT(onPage_maintenanceTimeoutTick()));
 //    connect(ui->buttonGroup, SIGNAL(buttonClicked(QAbstractButton*)),this, SLOT(on_buttonGroup_buttonClicked()));
-    connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(buttonWasClicked(int)));
+    connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
 
 }
 
@@ -151,7 +151,7 @@ void page_maintenance::on_product1_button_clicked(){
 }
 
 //void page_maintenance::on_buttonGroup_buttonClicked(QAbstractButton*){}
-//void page_maintenance::buttonWasClicked(int){}
+//void page_maintenance::keyboardButtonPressed(int){}
 
 void page_maintenance::on_product2_button_clicked(){
 //    qDebug() << "Product 2 button clicked" << endl;
@@ -354,7 +354,7 @@ void page_maintenance::onPage_maintenanceTimeoutTick(){
     }
 }
 
-void page_maintenance::buttonWasClicked(int buttonID){
+void page_maintenance::keyboardButtonPressed(int buttonID){
 
     QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
     //qDebug() << buttonpressed->text();

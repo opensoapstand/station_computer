@@ -36,16 +36,17 @@
 // //    DRINK4
 // } DF_QT_SIZE_PICKED;
 
-
 // Values for Selected drink.
-struct DrinkSelection{
+struct DrinkSelection
+{
     int optionNumber;
     double drinkML;
     double drinkPrice;
 };
 
 // Values for labels; TODO: Can get from seeded DB
-struct QTProductFacing {
+struct QTProductFacing
+{
     int optionNumber;
     QString brandName;
     QString brandImageRef;
@@ -59,63 +60,32 @@ struct QTProductFacing {
 class DrinkOrder : public QObject
 {
     Q_OBJECT
-    int m_selectedSlot; // 
-    double m_drinkML;
-    // double m_drinkPrice;
 
 public:
     DrinkOrder();
-    DrinkOrder(const DrinkOrder& other);
+    DrinkOrder(const DrinkOrder &other);
     ~DrinkOrder();
-    DrinkOrder& operator=(const DrinkOrder& other);
+    DrinkOrder &operator=(const DrinkOrder &other);
 
     // HACK: Fixed volume reference; Need to figure out best storage location...
     constexpr static double EMPTY_SIZE_ML = 0.00;
-//    constexpr static double SMALL_SIZE_ML = 355.00;
-//    constexpr static double LARGE_SIZE_ML = 473.00;
-
-    // double DRINK1_SIZE_ML_L;
-    // double DRINK2_SIZE_ML_L;
-    // double DRINK3_SIZE_ML_L;
-    // double DRINK4_SIZE_ML_L;
-
-    // double DRINK1_SIZE_ML_S;
-    // double DRINK2_SIZE_ML_S;
-    // double DRINK3_SIZE_ML_S;
-    // double DRINK4_SIZE_ML_S;
-
-    // double DRINK1_PRICE_LARGE;
-    // double DRINK2_PRICE_LARGE;
-    // double DRINK3_PRICE_LARGE;
-    // double DRINK4_PRICE_LARGE;
-
-    // double DRINK1_price_small;
-    // double DRINK2_price_small;
-    // double DRINK3_price_small;
-    // double DRINK4_price_small;
-
-    //constexpr static double price_small_TEST = 3.00;
-    //constexpr static double PRICE_LARGE_TEST = 4.00;
-
-
-    // static char sizeIndexToChar(int size_index);
 
     // Setters and Getters
     void setSelectedSlot(int optionSlot);
     int getSelectedSlot();
 
-    double getPriceForSelectedSlot(int sizeIndex);
-
-    // int getSelectedSlot() const {return m_selectedSlot;}
-
     void setSelectedSize(int sizeOption);
-    // double getSelectedProductPrice() const {return m_drinkPrice;}
+    int getSelectedSize();
+    QString getSelectedProductName();
+
     double getSelectedVolume();
+    double getVolume(int size);
     QString getSelectedSizeToVolumeWithCorrectUnits();
     QString getSizeToVolumeWithCorrectUnitsForSelectedSlot(int size);
-    // double getSelectedVolume() const {return m_drinkML;}
-    double getSelectedProductPrice();
-    int getSelectedSizeOption();
+
+    double getPrice(int sizeIndex);
+    double getSelectedPrice();
+
     char getSelectedSizeAsChar();
     bool isSelectedOrderValid();
 
@@ -132,9 +102,8 @@ signals:
 
 private:
     DrinkSelection *selectedDrink;
-    //DF_QT_SLOTS sizeOptionSelected;
-    int sizeOptionSelected;
-
+    int selectedSize;
+    int m_selectedSlot;
     double overruledPrice;
 };
 

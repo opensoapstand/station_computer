@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 char df_util::sizeIndexToChar(int size_index){
-    char size_to_char [SIZES_COUNT] = {'!', 's', 'm', 'l', 't', 't'};
+    char size_to_char [SIZES_COUNT] = {'!', 's', 'm', 'l', 'c', 't'};
     return size_to_char[size_index];
 }
 

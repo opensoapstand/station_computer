@@ -48,10 +48,10 @@ DbManager::DbManager(const QString &path)
 
     if (m_db.connectionName().isEmpty())
     {
-        qDebug() << "connectionname is empty-->";
+        // qDebug() << "connectionname is empty-->";
         m_db = QSqlDatabase::addDatabase("QSQLITE");
         m_db.setDatabaseName(path);
-        qDebug() << "m_db set connectionName";
+        // qDebug() << "m_db set connectionName";
     }
     else
     {
@@ -64,7 +64,7 @@ DbManager::DbManager(const QString &path)
     }
     else
     {
-        qDebug() << "Database: connection ok";
+        // qDebug() << "Database: connection ok";
     }
 
     while (isDatabaseLocked(m_db))
@@ -179,7 +179,7 @@ QString DbManager::getProductReceiptName(int slot)
     return product_name;
 }
 
-double DbManager::getProductPrice(int slot, char ml)
+double DbManager::getProductPrice(int slot, char size)
 {
     qDebug() << " db... getProductPrice";
     QSqlQuery price_query;
@@ -197,14 +197,26 @@ double DbManager::getProductPrice(int slot, char ml)
             price_query.prepare("SELECT price_s FROM products WHERE slot=:slot");
         }
 #else
-        if (ml == 'l')
+      
+         if (size == 'l')
         {
             price_query.prepare("SELECT price_large FROM products WHERE slot=:slot");
         }
-        else if (ml == 's')
+        else if (size == 'm')
+        {
+            price_query.prepare("SELECT price_medium FROM products WHERE slot=:slot");
+        }
+        else if (size == 's')
         {
             price_query.prepare("SELECT price_small FROM products WHERE slot=:slot");
         }
+        else if (size == 'c')
+        {
+            price_query.prepare("SELECT price_custom FROM products WHERE slot=:slot");
+        }else{
+            qDebug() << " invalid size to volume character found.  " << size ;
+        }
+
 #endif
 
         price_query.bindValue(":slot", slot);
@@ -278,7 +290,9 @@ double DbManager::getProductVolume(int slot, char size)
         }
         else if (size == 'c')
         {
-            volume_query.prepare("SELECT size_custom FROM products WHERE slot=:slot");
+            volume_query.prepare("SELECT size_custom_max FROM products WHERE slot=:slot");
+        }else{
+            qDebug() << " invalid size to volume character found.  " << size;
         }
 
 #endif

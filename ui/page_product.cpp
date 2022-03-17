@@ -36,28 +36,26 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
 {
     ui->setupUi(this);
 
-    //default
-    idlePage->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
-
     orderSizeButtons[0] = ui->orderSmall_Button;
     orderSizeButtons[1] = ui->orderMedium_Button;
     orderSizeButtons[2] = ui->orderBig_Button;
     orderSizeButtons[3] = ui->orderCustom_Button;
 
     orderSizeLabelsPrice[0] = ui->label_price_small;
-    orderSizeLabelsPrice[1] = ui->label_price_small;
+    orderSizeLabelsPrice[1] = ui->label_price_medium;
     orderSizeLabelsPrice[2] = ui->label_price_large;
-    orderSizeLabelsPrice[3] = ui->label_price_large;
+    orderSizeLabelsPrice[3] = ui->label_price_custom;
 
     orderSizeLabelsVolume[0] = ui->label_size_small;
-    orderSizeLabelsVolume[1] = ui->label_size_small;
+    orderSizeLabelsVolume[1] = ui->label_size_medium;
     orderSizeLabelsVolume[2] = ui->label_size_large;
-    orderSizeLabelsVolume[3] = ui->label_size_large;
+    orderSizeLabelsVolume[3] = ui->label_size_custom;
 
     ui->promoInputButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-
     ui->promoCode->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->promoButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+
+
     ui->discountLabel->setText("-$0.00");
     promoPercent = 0.0;
     ui->promoCode->clear();
@@ -86,40 +84,59 @@ void pageProduct::loadOrderSize(int sizeIndex)
     // DF_QT_SIZES tmp [6] = {INVALID_DRINK, SIZE_SMALL_INDEX, MEDIUM_DRINK, SIZE_LARGE_INDEX, CUSTOM_DRINK, TEST_DRINK};
 
     selectedProductOrder->setSelectedSize(sizeIndex);
-    _selectIdleTimeoutSec = 140;
+    loadOrderSelectedSize();
+}
 
-    set_label_product();
+void pageProduct::loadOrderSelectedSize()
+{
+
+    qDebug() << "-------------------------- LOAD ORDER ----------------";
+
+    _selectIdleTimeoutSec = 140;
 
     ui->mainPage_Button->setEnabled(true);
     ui->previousPage_Button->setEnabled(true);
-    ui->priceLabel->setText("$" + QString::number(selectedProductOrder->getSelectedProductPrice(), 'f', 2));
-    ui->totalPriceLabel->setText("$" + QString::number(selectedProductOrder->getSelectedProductPrice()));
 
+    int product_sizes [4] =  {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
+
+   
     for (uint8_t i = 0; i < 4; i++)
     {
-        // orderSizeLabelsPrice[i]->setText("$" + QString::number(db.getProductPrice(product_slot___, 's'), 'f', 2));
-        QString price = QString::number(selectedProductOrder->getPriceForSelectedSlot(i + 1), 'f', 2);
+        qDebug() << "*****load size: " << i;
+        QString price = QString::number(selectedProductOrder->getPrice(product_sizes[i]), 'f', 2);
         orderSizeLabelsPrice[i]->setText("$" + price);
-
+        // orderSizeLabelsPrice[i]->raise();
+        // orderSizeLabelsVolume[i]->raise();
         orderSizeLabelsPrice[i]->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
 
-        orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits());
+        orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i]));
+        
+        if (selectedProductOrder->getSelectedSize() == product_sizes[i] ){
+            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 2px  solid #ff0000; }");
+            // orderSizeButtons[i]->setStyleSheet("background-color: red; border: 0px ");
+        }else{
+            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 2px  solid #ffffff; }");
+            // orderSizeButtons[i]->setStyleSheet("background-color: green; border: 0px ");
+
+        }
+orderSizeButtons[i]->raise();
+
+
     }
 
     ui->promoCode->clear();
     ui->promoCode->hide();
     promoPercent = 0.0;
 
-    set_label_product();
+    ui->productLabel->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits());
+    double selectedPrice = selectedProductOrder->getSelectedPrice();
+    ui->priceLabel->setText("$" + QString::number(selectedPrice, 'f', 2));
+    ui->totalPriceLabel->setText("$" + QString::number(selectedPrice)); // how to handle promo ?! todo!
+
+    qDebug() << "-------------------------- END LOAD ORDER ----------------";
 }
 void pageProduct::reset_and_show_page_elements()
 {
-    int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
-
-    if (!(product_slot___ > 0 && product_slot___ <= SLOT_COUNT))
-    {
-        qDebug() << "ERROR: NO DEFAULT order size" << endl;
-    }
 
     QString bitmap_location;
 
@@ -128,6 +145,7 @@ void pageProduct::reset_and_show_page_elements()
     uint16_t orderSizeButtons_xywh[4][4] = {{580, 960, 131, 126}, {730, 960, 131, 126}, {880, 960, 131, 126}, {570, 110, 421, 111}};
 
 #else
+    int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
     uint16_t orderSizeButtons_xywh[4][4] = {{564, 1088, 209, 126}, {1, 1, 1, 1}, {790, 1087, 198, 126}, {1, 1, 1, 1}};
     if (product_slot___ > 0 && product_slot___ <= SLOT_COUNT)
     {
@@ -144,7 +162,6 @@ void pageProduct::reset_and_show_page_elements()
 
     qDebug() << bitmap_location << endl;
     QPixmap background(bitmap_location);
-
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
@@ -157,46 +174,45 @@ void pageProduct::reset_and_show_page_elements()
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->promoKeyboard->setStyleSheet(" background-image: url(/home/df-admin/production/references/soapstand-keyboard.png); }");
 
+    loadOrderSelectedSize();
     // TODO: ADD buttons to select size/price of drink
     // ui->orderSmall_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     // ui->orderBig_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    for (int8_t i = 0; i < 4; i++)
-    {
-        orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-        orderSizeButtons[i]->move(orderSizeButtons_xywh[i][0], orderSizeButtons_xywh[i][1]);
-        orderSizeButtons[i]->resize(orderSizeButtons_xywh[i][2], orderSizeButtons_xywh[i][3]);
-    }
+    // for (int8_t i = 0; i < 4; i++)
+    // {
+    //     orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    //     orderSizeButtons[i]->move(orderSizeButtons_xywh[i][0], orderSizeButtons_xywh[i][1]);
+    //     orderSizeButtons[i]->resize(orderSizeButtons_xywh[i][2], orderSizeButtons_xywh[i][3]);
+    // }
 
- 
+    // ui->mainPage_Button->setEnabled(true);
+    // ui->previousPage_Button->setEnabled(true);
 
-    ui->mainPage_Button->setEnabled(true);
-    ui->previousPage_Button->setEnabled(true);
+    // ui->priceLabel->setText("$" + QString::number(selectedProductOrder->getSelectedPrice(), 'f', 2));
+    // ui->totalPriceLabel->setText("$" + QString::number(selectedProductOrder->getSelectedPrice(), 'f', 2));
 
-    ui->priceLabel->setText("$" + QString::number(selectedProductOrder->getSelectedProductPrice(), 'f', 2));
-    ui->totalPriceLabel->setText("$" + QString::number(selectedProductOrder->getSelectedProductPrice(), 'f', 2));
+    // for (uint8_t i = 0; i < 4; i++)
+    // {
+    //     // orderSizeLabelsPrice[i]->setText("$" + QString::number(db.getProductPrice(product_slot___, 's'), 'f', 2));
+    //     QString price = QString::number(selectedProductOrder->getPrice(i + 1), 'f', 2);
+    //     orderSizeLabelsPrice[i]->setText("$" + price);
 
-    for (uint8_t i = 0; i < 4; i++)
-    {
-        // orderSizeLabelsPrice[i]->setText("$" + QString::number(db.getProductPrice(product_slot___, 's'), 'f', 2));
-        QString price = QString::number(selectedProductOrder->getPriceForSelectedSlot(i + 1), 'f', 2);
-        orderSizeLabelsPrice[i]->setText("$" + price);
+    //     orderSizeLabelsPrice[i]->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+    //     // ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
 
-        orderSizeLabelsPrice[i]->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
-        // ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+    //     orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits());
+    // }
 
-        orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits());
-    }
+    // ui->discountLabel->setText("-$0.00");
 
-    ui->discountLabel->setText("-$0.00");
+    // ui->promoCode->clear();
+    // ui->promoCode->hide();
+    // promoPercent = 0.0;
 
-    ui->promoCode->clear();
-    ui->promoCode->hide();
-    promoPercent = 0.0;
-
-    // set_label_volume(ui->label_size_small, product_slot___, 's');
-    // set_label_volume(ui->label_size_large, product_slot___, 'l');
-    set_label_product();
+    // // set_label_volume(ui->label_size_small, product_slot___, 's');
+    // // set_label_volume(ui->label_size_large, product_slot___, 'l');
+    // set_label_product();
 }
 
 void pageProduct::resizeEvent(QResizeEvent *event)
@@ -232,7 +248,9 @@ void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_
     ui->promoCode->clear();
     ui->promoCode->hide();
     ui->discountLabel->setText("-$0.00");
+
     selectedProductOrder = idlePage->currentProductOrder;
+    selectedProductOrder->setSelectedSize(SIZE_LARGE_INDEX); // default size
 
     /*
     Stations without Promo Code
@@ -334,17 +352,6 @@ void pageProduct::showEvent(QShowEvent *event)
     // set_label_volume(ui->label_size_large, product_slot___, 'l');
 }
 
-void pageProduct::set_label_product()
-{
-    int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
-    qDebug() << "ahoyy1erer3";
-    DbManager db(DB_PATH);
-    QString product_name = db.getProductName(product_slot___);
-    db.closeDB();
-
-    ui->productLabel->setText(product_name + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits());
-}
-
 // void pageProduct::set_label_volume(QLabel *label, int product_slot___, char drinkSize)
 // {
 //     // qDebug() << "db for label volume" ;
@@ -401,6 +408,17 @@ void pageProduct::on_mainPage_Button_clicked()
     this->hide();
 }
 
+void pageProduct::on_orderCustom_Button_clicked()
+{
+    qDebug() << "button custom";
+    this->loadOrderSize(SIZE_CUSTOM_INDEX);
+}
+
+void pageProduct::on_orderMedium_Button_clicked()
+{
+    qDebug() << "button medium";
+    this->loadOrderSize(SIZE_MEDIUM_INDEX);
+}
 
 
 // on_Small_Order button listener
@@ -605,12 +623,3 @@ void pageProduct::buttonWasClicked(int buttonID)
     }
 }
 
-void pageProduct::on_orderCustom_Button_clicked()
-{
-    qDebug() << "button custom";
-}
-
-void pageProduct::on_orderMedium_Button_clicked()
-{
-    qDebug() << "button medium";
-}

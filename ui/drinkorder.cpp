@@ -52,6 +52,50 @@ DrinkOrder &DrinkOrder::operator=(const DrinkOrder &other)
     return *this;
 }
 
+char DrinkOrder::getSelectedSizeAsChar()
+{
+    // ! = invalid.
+    // t  test to fsm, but should become c for custom. we're so ready for it.
+    // t
+
+    return df_util::sizeIndexToChar(selectedSize);
+}
+
+int DrinkOrder::getSelectedSize()
+{
+    return selectedSize;
+}
+
+void DrinkOrder::setSelectedSize(int sizeOption)
+{
+    overruledPrice = INVALID_PRICE;
+    selectedSize = sizeOption;
+}
+
+int DrinkOrder::getSelectedSlot()
+{
+    return m_selectedSlot;
+}
+
+void DrinkOrder::setSelectedSlot(int slot)
+{
+
+    if (slot >= OPTION_SLOT_INVALID && slot <= SLOT_COUNT)
+    {
+
+        if (slot != getSelectedSlot())
+        {
+            overruledPrice = INVALID_PRICE;
+            m_selectedSlot = slot;
+            emit orderSlotChange(slot);
+        }
+    }
+    else
+    {
+        qInfo() << "OUT OF OPTION RANGE!" << slot;
+    }
+}
+
 // SLOTS Section
 
 bool DrinkOrder::isSelectedOrderValid()
@@ -61,7 +105,7 @@ bool DrinkOrder::isSelectedOrderValid()
         qInfo() << "ERROR: no slot set. " << m_selectedSlot;
         return false;
     }
-    if (!(sizeOptionSelected >= 0 && sizeOptionSelected <= SIZES_COUNT))
+    if (!(selectedSize >= 0 && selectedSize <= SIZES_COUNT))
     {
         qInfo() << "ERROR: no slot set. " << m_selectedSlot;
         return false;
@@ -75,6 +119,7 @@ void DrinkOrder::setSelectedOverrulePrice(double price)
 
     if (isSelectedOrderValid())
     {
+        qInfo() << "Set overrruled price.";
 
         if (price != overruledPrice)
         {
@@ -87,20 +132,37 @@ void DrinkOrder::setSelectedOverrulePrice(double price)
         qInfo() << "ERROR: no overruled price set. ";
     }
 }
-double DrinkOrder::getSelectedProductPrice()
+
+
+
+double DrinkOrder::getPrice(int sizeIndex)
+{
+    qDebug() << "product db for price";
+    DbManager db(DB_PATH);
+    double price;
+    price = db.getProductPrice(getSelectedSlot(), df_util::sizeIndexToChar(sizeIndex));
+    qDebug() << "productsize: " << df_util::sizeIndexToChar(sizeIndex) << " price: " << price;
+    db.closeDB();
+    return price;
+}
+
+
+double DrinkOrder::getSelectedPrice()
 {
     // slot and size needs to be set.
+    double price;
     if (isSelectedOrderValid())
     {
-        if (overruledPrice != 0)
+        if (overruledPrice != INVALID_PRICE)
         {
-            return overruledPrice;
+            qInfo() << "Overruled price is set.";
+            price = overruledPrice;
         }
         else
         {
             qInfo() << "db....pricess.....";
             DbManager db(DB_PATH);
-            db.getProductPrice(getSelectedSlot(), getSelectedSizeAsChar());
+            price = db.getProductPrice(getSelectedSlot(), getSelectedSizeAsChar());
             db.closeDB();
         }
     }
@@ -108,18 +170,17 @@ double DrinkOrder::getSelectedProductPrice()
     {
 
         qInfo() << "ERROR: no product set";
-        return 66.6;
+        price = 66.6;
     }
+    return price;
 }
 
 double DrinkOrder::getSelectedVolume()
 {
+    double volume;
     if (isSelectedOrderValid())
     {
-        qInfo() << "db.... vol seijsf";
-        DbManager db(DB_PATH);
-        db.getProductVolume(getSelectedSlot(), getSelectedSizeAsChar());
-        db.closeDB();
+        getVolume(getSelectedSize());
     }
     else
     {
@@ -127,236 +188,76 @@ double DrinkOrder::getSelectedVolume()
         qInfo() << "ERROR: No product set";
         return 66.6;
     }
+    return volume;
+}
+
+double DrinkOrder::getVolume(int size)
+{
+    double volume;
+    qInfo() << "db.... vol seijsf";
+    DbManager db(DB_PATH);
+    volume = db.getProductVolume(getSelectedSlot(), df_util::sizeIndexToChar(size));
+    db.closeDB();
+    return volume;
 }
 
 QString DrinkOrder::getSizeToVolumeWithCorrectUnitsForSelectedSlot(int size)
 {
     QString volume_as_string;
     double v;
+    double volume_oz;
     QString units;
 
-    //v = getSelectedVolume();
+    v = getVolume(size);
+    volume_oz = ceil(v * ML_TO_OZ);
 
-    qDebug() << "db for label volume";
+    // db.getProductVolume(getSelectedSlot(), df_util::sizeIndexToChar(size));
+
+    qDebug() << "db units for label.";
     DbManager db(DB_PATH);
-
-    db.getProductVolume(getSelectedSlot(), df_util::sizeIndexToChar(size) );
     units = db.getUnits(getSelectedSlot());
+    // qDebug() << "Units: " << units;
     db.closeDB();
 
     if (units == "l" || units == "ml")
     {
+
         if (v < 1000)
         {
-            volume_as_string = QString::number(v) + "ml";
+            volume_as_string = QString::number(v, 'f', 0) + "ml";
+            // volume_as_string = "ldoefef";
         }
         else
         {
-            volume_as_string = QString::number(v / 1000) + "L";
+            volume_as_string = QString::number(v / 1000, 'f', 2) + "L";
         }
     }
     else if (units == "oz")
     {
-        volume_as_string = QString::number(ceil(v * ML_TO_OZ)) + "oz";
+        volume_as_string = QString::number(volume_oz, 'f', 0) + "oz";
     }
     else
     {
         qDebug() << "Unhandled unit system: " << units;
     }
-
+    qDebug() << "vol: " << volume_as_string << " .. units: " << units << " vol metric: " << v << "vol oz: " << volume_oz;
     return volume_as_string;
 }
-QString DrinkOrder::getSelectedSizeToVolumeWithCorrectUnits(){
+QString DrinkOrder::getSelectedSizeToVolumeWithCorrectUnits()
+{
     // v = db.getProductVolume(product_slot___, drinkSize);
 
     // ui->label_size_small->setText(QString::number(v) + "ml");
 
-    return getSizeToVolumeWithCorrectUnitsForSelectedSlot(getSelectedSizeOption());
-
+    return getSizeToVolumeWithCorrectUnitsForSelectedSlot(getSelectedSize());
 }
 
-int DrinkOrder::getSelectedSizeOption()
+QString DrinkOrder::getSelectedProductName()
 {
-    return sizeOptionSelected;
-}
-
-// char DrinkOrder::sizeIndexToChar(int size_index){
-//     char size_to_char [SIZES_COUNT] = {'!', 's', 'm', 'l', 't', 't'};
-//     return size_to_char[size_index];
-
-// }
-
-double DrinkOrder::getPriceForSelectedSlot(int sizeIndex){
-    qDebug() << "product db for price";
+    qDebug() << "product db for name";
     DbManager db(DB_PATH);
-    double price;
-    price = db.getProductVolume(getSelectedSlot(), df_util::sizeIndexToChar(sizeIndex) );
-
+    QString product_name = db.getProductName(getSelectedSlot());
     db.closeDB();
-    return price;
+    return product_name;
 }
 
-char DrinkOrder::getSelectedSizeAsChar()
-{
-    // ! = invalid.
-    // t  test to fsm, but should become c for custom. we're so ready for it.
-    // t
-
-    return df_util::sizeIndexToChar(sizeOptionSelected);
-}
-
-// void DrinkOrder::setSize(double size)
-// {
-//     if(size != getSelectedVolume()) {
-//         m_drinkML = size;
-//         emit sizeChange(size);
-//     }
-// }
-
-// Enum search for drink sizes
-void DrinkOrder::setSelectedSize(int sizeOption)
-{
-    overruledPrice = INVALID_PRICE;
-    sizeOptionSelected = sizeOption;
-
-    //     switch (m_selectedSlot)
-    //     {
-    //     case(1):
-    //         switch (sizeOption)
-    //         {
-    //         case(SIZE_SMALL_INDEX):
-    //             //qDebug() << "Drink 1 : Small" << endl;
-    //             setSize(DRINK1_SIZE_ML_S);
-    //             setSelectedOverrulePrice(DRINK1_price_small);
-    //             break;
-    //         case(SIZE_LARGE_INDEX):
-    //             //qDebug() << "Drink 1 : Large" << endl;
-    //             setSize(DRINK1_SIZE_ML_L);
-    //             setSelectedOverrulePrice(DRINK1_PRICE_LARGE);
-    //             break;
-    //         default:
-    //             break;
-    //        }
-    //         break;
-    //     case(2):
-    //         switch (sizeOption){
-    //         case(SIZE_SMALL_INDEX):
-    // //            qDebug() << "Drink 2 : Small" << endl;
-    //             setSize(DRINK2_SIZE_ML_S);
-    //             setSelectedOverrulePrice(DRINK2_price_small);
-    //             break;
-    //         case(SIZE_LARGE_INDEX):
-    // //            qDebug() << "Drink 2 : Large" << endl;
-    //             setSize(DRINK2_SIZE_ML_L);
-    //             setSelectedOverrulePrice(DRINK2_PRICE_LARGE);
-    //             break;
-    //         default:
-    //             break;
-    //         }
-    //         break;
-    //     case(3):
-    //         switch (sizeOption){
-    //         case(SIZE_SMALL_INDEX):
-    // //            qDebug() << "Drink 3 : Small" << endl;
-    //             setSize(DRINK3_SIZE_ML_S);
-    //             setSelectedOverrulePrice(DRINK3_price_small);
-    //             break;
-    //         case(SIZE_LARGE_INDEX):
-    // //            qDebug() << "Drink 3 : Large" << endl;
-    //             setSize(DRINK3_SIZE_ML_L);
-    //             setSelectedOverrulePrice(DRINK3_PRICE_LARGE);
-    //             break;
-    //         default:
-    //             break;
-    //        }
-    //         break;
-    //     case(4):
-    //         switch (sizeOption){
-    //         case(SIZE_SMALL_INDEX):
-    // //            qDebug() << "Drink 4 : Small" << endl;
-    //             setSize(DRINK4_SIZE_ML_S);
-    //             setSelectedOverrulePrice(DRINK4_price_small);
-    //             break;
-    //         case(SIZE_LARGE_INDEX):
-    // //            qDebug() << "Drink 4 : Large" << endl;
-    //             setSize(DRINK4_SIZE_ML_L);
-    //             setSelectedOverrulePrice(DRINK4_PRICE_LARGE);
-    //             break;
-    //         default:
-    //             break;
-    //         }
-    //         break;
-    //     default:
-    //         setSize(DRINK1_SIZE_ML_L);
-    //         setSelectedOverrulePrice(DRINK1_PRICE_LARGE);
-    //         break;
-    //     }
-}
-
-// void DrinkOrder::setSelectedSlot(int optNumber)
-// {
-
-//     if(optNumber != getSelectedSlot()) {
-//         m_selectedSlot = optNumber;
-//         emit orderSlotChange(optNumber);
-//     }
-// }
-
-int DrinkOrder::getSelectedSlot()
-{
-    return m_selectedSlot;
-}
-// Enum search for option slot
-void DrinkOrder::setSelectedSlot(int slot)
-{
-    // qInfo() << "Current Option" << getSelectedSlot() << endl;
-
-    if (slot >= OPTION_SLOT_INVALID && slot <= SLOT_COUNT)
-    {
-
-        if (slot != getSelectedSlot())
-        {
-            overruledPrice = INVALID_PRICE;
-            m_selectedSlot = slot;
-            emit orderSlotChange(slot);
-        }
-        //         switch (slot)
-        //         {
-        //         case(OPTION_SLOT_1):
-        //             setSelectedSlot(OPTION_SLOT_1);
-        //             break;
-        //         case(OPTION_SLOT_2):
-        //             setSelectedSlot(OPTION_SLOT_2);
-        //             break;
-        //         case(OPTION_SLOT_3):
-        //             setSelectedSlot(OPTION_SLOT_3);
-        //             break;
-        //         case(OPTION_SLOT_4):
-        //             setSelectedSlot(OPTION_SLOT_4);
-        //             break;
-        // //        case(OPTION_SLOT_5):
-        // //            setSelectedSlot(OPTION_SLOT_5);
-        // //            break;
-        // //        case(OPTION_SLOT_6):
-        // //            setSelectedSlot(OPTION_SLOT_6);
-        // //            break;
-        // //        case(OPTION_SLOT_7):
-        // //            setSelectedSlot(OPTION_SLOT_7);
-        // //            break;
-        // //        case(OPTION_SLOT_8):
-        // //            setSelectedSlot(OPTION_SLOT_8);
-        // //            break;
-        // //        case(OPTION_SLOT_9):
-        // //            setSelectedSlot(OPTION_SLOT_9);
-        //             break;
-        //         default:
-        //             //setSize(OPTION_SLOT);
-        //              qInfo() << "BAD OPTION" << slot << endl;
-        //             break;
-        //         }
-    }
-    else
-    {
-        qInfo() << "OUT OF OPTION RANGE!" << slot;
-    }
-}

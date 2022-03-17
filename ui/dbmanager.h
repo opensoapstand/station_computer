@@ -10,18 +10,19 @@ public:
     ~DbManager();
     void closeDB();
     bool isDatabaseLocked(const QSqlDatabase & db);
+    
     bool addPageClick(const QString& page);
     QString getProductName(int slot);
-    double getProductPrice(int slot, char ml);
+    double getProductPrice(int slot, char size);
     //double getProductTargetVolume(int slot);
     double getProductVolumePerTick(int slot);
     bool remainingVolumeIsBiggerThanLargestFixedSize(int slot);
     QString getProductReceiptName(int slot);
     QString getPaymentMethod(int slot);
     double getProductVolume(int slot, char ml);
-    bool refill(int slot);
-    bool sellout(int slot);
-    bool unsellout(int slot);
+    QString getUnits(int slot);
+    
+    
     double getFullProduct(int slot);
     int getTotalTransactions();
     int getNumberOfProducts();
@@ -29,6 +30,10 @@ public:
     double getTotalDispensed(int slot);
     double getVolumeDispensedSinceRestock(int slot);
     QString getLastRefill(int slot);
+    bool refill(int slot);
+    bool sellout(int slot);
+    bool unsellout(int slot);
+    
     double getTemperature();
     int getPWM(int slot);
     double getBuffer(int slot);
@@ -39,7 +44,7 @@ public:
     int getSlotEnabled(int slot);
     bool updateSlotAvailability(int slot, int isEnabled);
     #endif
-    QString getUnits(int slot);
+    
     uint32_t getNumberOfRows(QString table);
     bool initialize(const QString& path);
 

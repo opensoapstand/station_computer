@@ -25,7 +25,6 @@
 #define SIZE_TEST_INDEX 5
 
 
-
 #ifndef START_FSM_FROM_UI
 //#define WAIT_FOR_CONTROLLER_READY // will wait for response of controller before continuing.
 #endif

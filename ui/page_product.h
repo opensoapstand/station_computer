@@ -63,10 +63,6 @@ private slots:
     void on_applyPromo_Button_clicked();
     void on_promoCodeInput_clicked();
 
-    void set_label_product();
-    //void set_label_volume(QLabel* label, int product_slot___, char drinkSize);
-
-
     // Set Drink Order
     void on_orderSmall_Button_clicked();
     void on_orderBig_Button_clicked();
@@ -74,11 +70,12 @@ private slots:
     void onSelectTimeoutTick();
     void buttonWasClicked(int);
 
-
     void on_orderCustom_Button_clicked();
 
     void on_orderMedium_Button_clicked();
     void loadOrderSize(int sizeIndex);
+    void loadOrderSelectedSize();
+
    
 private:
     bool stopSelectTimers();

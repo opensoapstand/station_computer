@@ -123,12 +123,12 @@ color: #58595B;</string>
     <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label_price_small">
+  <widget class="QLabel" name="label_price_custom">
    <property name="geometry">
     <rect>
      <x>560</x>
      <y>1155</y>
-     <width>211</width>
+     <width>321</width>
      <height>41</height>
     </rect>
    </property>
@@ -156,9 +156,9 @@ text-align: center;
   <widget class="QLabel" name="label_price_large">
    <property name="geometry">
     <rect>
-     <x>790</x>
-     <y>1155</y>
-     <width>201</width>
+     <x>860</x>
+     <y>1040</y>
+     <width>121</width>
      <height>41</height>
     </rect>
    </property>
@@ -182,12 +182,12 @@ text-align: center;</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label_size_small">
+  <widget class="QLabel" name="label_size_custom">
    <property name="geometry">
     <rect>
      <x>570</x>
      <y>1106</y>
-     <width>201</width>
+     <width>401</width>
      <height>41</height>
     </rect>
    </property>
@@ -211,10 +211,10 @@ text-align: center;
   <widget class="QLabel" name="label_size_large">
    <property name="geometry">
     <rect>
-     <x>790</x>
-     <y>1106</y>
-     <width>201</width>
-     <height>41</height>
+     <x>860</x>
+     <y>990</y>
+     <width>121</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -236,8 +236,8 @@ text-align: center;</string>
   <widget class="QPushButton" name="orderSmall_Button">
    <property name="geometry">
     <rect>
-     <x>580</x>
-     <y>960</y>
+     <x>560</x>
+     <y>970</y>
      <width>131</width>
      <height>126</height>
     </rect>
@@ -252,9 +252,9 @@ text-align: center;</string>
   <widget class="QPushButton" name="orderBig_Button">
    <property name="geometry">
     <rect>
-     <x>870</x>
-     <y>960</y>
-     <width>111</width>
+     <x>860</x>
+     <y>970</y>
+     <width>121</width>
      <height>126</height>
     </rect>
    </property>
@@ -1948,8 +1948,8 @@ color: #58595B;</string>
   <widget class="QPushButton" name="orderMedium_Button">
    <property name="geometry">
     <rect>
-     <x>730</x>
-     <y>960</y>
+     <x>710</x>
+     <y>970</y>
      <width>131</width>
      <height>126</height>
     </rect>
@@ -1964,7 +1964,7 @@ color: #58595B;</string>
   <widget class="QPushButton" name="orderCustom_Button">
    <property name="geometry">
     <rect>
-     <x>570</x>
+     <x>560</x>
      <y>1100</y>
      <width>421</width>
      <height>111</height>
@@ -1977,6 +1977,114 @@ color: #58595B;</string>
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="label_size_medium">
+   <property name="geometry">
+    <rect>
+     <x>710</x>
+     <y>990</y>
+     <width>131</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #CBA580;
+font-family: Montserrat;
+font-style: light;
+font-weight: normal;
+font-size: 20px;
+line-height: 24px;
+text-align: center;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_price_medium">
+   <property name="geometry">
+    <rect>
+     <x>710</x>
+     <y>1040</y>
+     <width>131</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(/home/df-admin/production/references/background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #3D6675;
+text-align: center;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_size_small">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>990</y>
+     <width>131</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #CBA580;
+font-family: Montserrat;
+font-style: light;
+font-weight: normal;
+font-size: 20px;
+line-height: 24px;
+text-align: center;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_price_small">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>1040</y>
+     <width>131</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(/home/df-admin/production/references/background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #3D6675;
+text-align: center;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
   <zorder>promoInputButton</zorder>
   <zorder>promoCode</zorder>
   <zorder>promoButton</zorder>
@@ -1985,10 +2093,6 @@ color: #58595B;</string>
   <zorder>mainPage_Button</zorder>
   <zorder>priceLabel</zorder>
   <zorder>totalPriceLabel</zorder>
-  <zorder>label_price_small</zorder>
-  <zorder>label_price_large</zorder>
-  <zorder>label_size_small</zorder>
-  <zorder>label_size_large</zorder>
   <zorder>orderSmall_Button</zorder>
   <zorder>orderBig_Button</zorder>
   <zorder>productLabel</zorder>
@@ -1996,6 +2100,14 @@ color: #58595B;</string>
   <zorder>promoKeyboard</zorder>
   <zorder>orderMedium_Button</zorder>
   <zorder>orderCustom_Button</zorder>
+  <zorder>label_size_medium</zorder>
+  <zorder>label_price_medium</zorder>
+  <zorder>label_size_small</zorder>
+  <zorder>label_price_small</zorder>
+  <zorder>label_price_custom</zorder>
+  <zorder>label_size_custom</zorder>
+  <zorder>label_price_large</zorder>
+  <zorder>label_size_large</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -140,10 +140,10 @@ void pagePayment::resizeEvent(QResizeEvent *event){
 
     int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
     char drinkSize;
-    if (idlePage->currentProductOrder->getSelectedSizeOption() == SIZE_SMALL_INDEX){
+    if (idlePage->currentProductOrder->getSelectedSize() == SIZE_SMALL_INDEX){
         drinkSize = 's';
     }
-    if (idlePage->currentProductOrder->getSelectedSizeOption() == SIZE_LARGE_INDEX){
+    if (idlePage->currentProductOrder->getSelectedSize() == SIZE_LARGE_INDEX){
         drinkSize = 'l';
     }
 
@@ -158,7 +158,7 @@ void pagePayment::resizeEvent(QResizeEvent *event){
         bitmap_location.append("_");
         bitmap_location.append(QString::number(idlePage->currentProductOrder->getSelectedSlot()));
         bitmap_location.append(".png");
-        ui->order_drink_amount->setText("$" + QString::number(idlePage->currentProductOrder->getSelectedProductPrice(), 'f', 2));
+        ui->order_drink_amount->setText("$" + QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2));
     } else {
         bitmap_location = "/home/df-admin/production/references/5_pay_page_l_1.png";
     }
@@ -170,7 +170,7 @@ void pagePayment::resizeEvent(QResizeEvent *event){
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
-    ui->order_total_amount->setText("$" + QString::number(idlePage->currentProductOrder->getSelectedProductPrice(), 'f', 2));
+    ui->order_total_amount->setText("$" + QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2));
     ui->order_drink_amount->setText("");
 
 //    if (db.getProductVolume(product_slot___, drinkSize) < 1000){
@@ -269,10 +269,10 @@ void pagePayment::showEvent(QShowEvent *event)
 
     int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
     char drinkSize;
-    if (idlePage->currentProductOrder->getSelectedSizeOption() == SIZE_SMALL_INDEX){
+    if (idlePage->currentProductOrder->getSelectedSize() == SIZE_SMALL_INDEX){
         drinkSize = 's';
     }
-    if (idlePage->currentProductOrder->getSelectedSizeOption() == SIZE_LARGE_INDEX){
+    if (idlePage->currentProductOrder->getSelectedSize() == SIZE_LARGE_INDEX){
         drinkSize = 'l';
     }
 
@@ -287,7 +287,7 @@ void pagePayment::showEvent(QShowEvent *event)
         bitmap_location.append("_");
         bitmap_location.append(QString::number(idlePage->currentProductOrder->getSelectedSlot()));
         bitmap_location.append(".png");
-        ui->order_drink_amount->setText("$" + QString::number(idlePage->currentProductOrder->getSelectedProductPrice(), 'f', 2));
+        ui->order_drink_amount->setText("$" + QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2));
     } else {
         bitmap_location = "/home/df-admin/production/references/5_pay_page_l_1.png";
     }
@@ -305,7 +305,7 @@ void pagePayment::showEvent(QShowEvent *event)
     paymentEndTimer->start(1000);
     _paymentTimeoutSec = 444;
 
-    ui->order_total_amount->setText("$" + QString::number(idlePage->currentProductOrder->getSelectedProductPrice(), 'f', 2));
+    ui->order_total_amount->setText("$" + QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2));
     this->ui->payment_countdownLabel->setText("");
     ui->refreshLabel->hide();
 
@@ -315,7 +315,7 @@ void pagePayment::showEvent(QShowEvent *event)
         ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)/1000) + "L");
     }
 
-    ui->order_drink_amount->setText("$"+QString::number(idlePage->currentProductOrder->getSelectedProductPrice(), 'f', 2));
+    ui->order_drink_amount->setText("$"+QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2));
 
   //  ui->payment_pass_Button->setEnabled(false);
   //  ui->payment_cancel_Button->setEnabled(false);
@@ -352,17 +352,17 @@ void pagePayment::createOrder(){
 
     int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
     char drinkSize;
-    if (idlePage->currentProductOrder->getSelectedSizeOption() == SIZE_SMALL_INDEX){
+    if (idlePage->currentProductOrder->getSelectedSize() == SIZE_SMALL_INDEX){
         drinkSize = 's';
     }
-    if (idlePage->currentProductOrder->getSelectedSizeOption() == SIZE_LARGE_INDEX){
+    if (idlePage->currentProductOrder->getSelectedSize() == SIZE_LARGE_INDEX){
         drinkSize = 'l';
     }
     QString MachineSerialNumber = db.getMachineID();
     QString productId = db.getProductID(product_slot___);
     QString contents = db.getProductName(product_slot___);
     QString quantity_requested = QString::number(db.getProductVolume(product_slot___, drinkSize));
-    QString price = QString::number(idlePage->currentProductOrder->getSelectedProductPrice(), 'f', 2);
+    QString price = QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2);
     orderId = QUuid::createUuid().QUuid::toString();
     orderId = orderId.remove("{");
     orderId = orderId.remove("}");
@@ -397,10 +397,10 @@ void pagePayment::generateQR(){
 
     int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
     char drinkSize;
-    if (idlePage->currentProductOrder->getSelectedSizeOption() == SIZE_SMALL_INDEX){
+    if (idlePage->currentProductOrder->getSelectedSize() == SIZE_SMALL_INDEX){
         drinkSize = 's';
     }
-    if (idlePage->currentProductOrder->getSelectedSizeOption() == SIZE_LARGE_INDEX){
+    if (idlePage->currentProductOrder->getSelectedSize() == SIZE_LARGE_INDEX){
         drinkSize = 'l';
     }
     createOrder();
@@ -409,7 +409,7 @@ void pagePayment::generateQR(){
     QPainter painter(&map);
 //    ui->qrCode->setPixmap(map);
 
-    //QString qrdata_amount = QString::number(idlePage->currentProductOrder->getSelectedProductPrice(), 'f', 2);
+    //QString qrdata_amount = QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2);
     // QString machine_id = db.getMachineID();
     // QString product_id = db.getProductID(product_slot___);
     // order_id = QUuid::createUuid().QUuid::toString();
@@ -744,8 +744,8 @@ void pagePayment::readTimer_loop()
 
     usleep(100);
     com.flushSerial();
-    pktToSend = paymentPacket.purchasePacket((QString::number(idlePage->currentProductOrder->getSelectedProductPrice(), 'f', 2)).QString::toStdString());
-    cout << "to PAY: " << ((QString::number(idlePage->currentProductOrder->getSelectedProductPrice(), 'f', 2)).QString::toStdString());
+    pktToSend = paymentPacket.purchasePacket((QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2)).QString::toStdString());
+    cout << "to PAY: " << ((QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2)).QString::toStdString());
 //        pktToSend = paymentPacket.purchasePacket("0.01");
 
     //this->ui->payment_countdownLabel->setText("TAP NOW");

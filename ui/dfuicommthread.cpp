@@ -45,8 +45,10 @@ QByteArray DfUiCommThread::readyRead()
 
     // will write on server side window
     //    qDebug() << socketDescriptor << " Data in: " << Data;
+    
+     qDebug() << "Message from controller: " << Data;
 
-    if (Data == "!")
+    if (Data == "Transaction End")
     {
         //        qDebug() << "from CLEAN";
     }
@@ -77,16 +79,17 @@ QByteArray DfUiCommThread::readyRead()
     }
     else
     {
-        qDebug() << "No matching command found." << Data << endl;
+        qDebug() << "No matching command found." << Data ;
     }
 
-    qDebug() << "Fsm recv: " << Data << endl;
+   
 
     // socket->write(Data); // THIS CAUSES THE UI TO CRASH AT TIMES.... for now, we delete it. todo. send ack to controller.
 
-    if (Data == "!")
+    if (Data == "Transaction End")
     {
         //        qDebug() << "from CLEAN";
+        emit transactionEndSignal();
     }
 
     else if (Data == "Reset Timer")

@@ -23,6 +23,9 @@ void DfUiServer::startServer()
 void DfUiServer::resetTimerSlot(){
     emit pleaseReset();
 }
+void DfUiServer::transactionEndSlot(){
+    emit controllerFinishedAck();
+}
 
 void DfUiServer::updateVolumeSlot(double dispensed){
     emit signalUpdateVolume(dispensed, false);
@@ -52,6 +55,7 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
     // connect signal/slot
     // once a thread is not needed, it will be beleted later
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    connect(thread, &DfUiCommThread::transactionEndSignal, this, &DfUiServer::transactionEndSlot);
     connect(thread, &DfUiCommThread::resetTimerSignal, this, &DfUiServer::resetTimerSlot);
     connect(thread, &DfUiCommThread::updateVolumeSignal, this, &DfUiServer::updateVolumeSlot);
     connect(thread, &DfUiCommThread::targetHitSignal, this, &DfUiServer::targetHitSlot);

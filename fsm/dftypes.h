@@ -19,7 +19,7 @@
 #include <stdint.h>
 
 #define PRODUCT_DISPENSERS_MAX 4
-
+#define MINIMUM_DISPENSE_VOLUME_ML 10
 // #define USE_OLD_DATABASE
 
 #ifdef USE_OLD_DATABASE

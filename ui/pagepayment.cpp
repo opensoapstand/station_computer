@@ -699,7 +699,7 @@ bool pagePayment::paymentInit()
         waitForUX410();
         isInitTerminalID = true;
         terminalID = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
-        std::cout << terminalID<<endl;
+        std::cout << terminalID;
         pktResponded.clear();
 
     }else {

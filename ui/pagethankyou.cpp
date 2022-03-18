@@ -153,6 +153,10 @@ void pagethankyou::curler(){
     }
 }
 
+void pagethankyou::controllerFinishedTransaction(){
+    qDebug() << "ack from Controller.r... r..r.r.";
+}
+
 void pagethankyou::bufferCURL(char *curl_params){
     char filetime[50];
     time(&rawtime);

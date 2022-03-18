@@ -18,6 +18,7 @@ public:
 
 signals:
     void error(QTcpSocket::SocketError socketerror);
+    void transactionEndSignal(void);
     void resetTimerSignal(void);
     void targetHitSignal(void);
     void updateVolumeSignal(double dispensed);

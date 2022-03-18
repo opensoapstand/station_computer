@@ -53,7 +53,7 @@ void transactionInfo::transactionID(std::vector<uint8_t> data)
         std::vector<uint8_t>::const_iterator last = data.begin() + index.at(i+1);
         int idx = idValue(data.at(index.at(i)+1), data.at(index.at(i)+2));
 
-        //cout << " idx: " << idx << endl;
+        //cout << " idx: " << idx ;
         std::vector<uint8_t> subVector(first, last);
 
         std::string temp = dataField(subVector);

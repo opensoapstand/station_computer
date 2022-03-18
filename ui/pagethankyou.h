@@ -37,6 +37,10 @@ public:
     void setPage(page_dispenser* page_dispenser, page_idle* pageIdle, pagePayment* pagePayment);
     ~pagethankyou();
 
+    void controllerFinishedTransaction();
+    
+
+
 private slots:
     void on_mainPage_Button_clicked();
     void onThankyouTimeoutTick();

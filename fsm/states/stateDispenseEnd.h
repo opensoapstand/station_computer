@@ -72,6 +72,8 @@ private:
     std::string getUnits(int slot);
     std::string getUnitsFromDb(int slot);
 
+    DF_ERROR handleTransaction();
+
     DF_ERROR print_text(std::string text);
 
     CURL *curl;

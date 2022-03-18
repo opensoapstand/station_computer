@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
     pagePayment *paymentPage = new pagePayment();
     page_dispenser *dispensingPage = new page_dispenser();
     page_error_wifi *wifiError = new page_error_wifi();
-    pagethankyou *lastPage = new pagethankyou();
+    pagethankyou *p_page_thank_you = new pagethankyou();
     page_maintenance *p_page_maintenance = new page_maintenance();
     page_maintenance_dispenser *p_page_maintenance_product = new page_maintenance_dispenser();
 
@@ -120,14 +120,15 @@ int main(int argc, char *argv[])
     firstSelectPage->setPage(p_pageProduct, idlePage, p_page_maintenance, helpPage);
     p_pageProduct->setPage(firstSelectPage, dispensingPage, wifiError, idlePage, paymentPage, helpPage);
     paymentPage->setPage(p_pageProduct, dispensingPage, idlePage, helpPage);
-    dispensingPage->setPage(paymentPage, lastPage, idlePage);
-    lastPage->setPage(dispensingPage, idlePage, paymentPage);
-    wifiError->setPage(paymentPage, lastPage, idlePage);
+    dispensingPage->setPage(paymentPage, p_page_thank_you, idlePage);
+    p_page_thank_you->setPage(dispensingPage, idlePage, paymentPage);
+    wifiError->setPage(paymentPage, p_page_thank_you, idlePage);
     initPage->showFullScreen();
 
     DfUiServer dfUiServer;
     dfUiServer.startServer();
 
+    QObject::connect(&dfUiServer, &DfUiServer::controllerFinishedAck, p_page_thank_you, &pagethankyou::controllerFinishedTransaction);
     QObject::connect(&dfUiServer, &DfUiServer::pleaseReset, dispensingPage, &page_dispenser::resetDispenseTimeout);
     
     QObject::connect(&dfUiServer, &DfUiServer::signalUpdateVolume, dispensingPage, &page_dispenser::updateVolumeDisplayed);

@@ -9,13 +9,16 @@ class DfUiServer : public QTcpServer
 public:
     explicit DfUiServer(QObject *parent = 0);
     void startServer();
+
     void resetTimerSlot();
+    void transactionEndSlot();
     void updateVolumeSlot(double dispensed);
     void targetHitSlot();
     void initReadySlot();
     void MMSlot();
 
 signals:
+    void controllerFinishedAck();
     void pleaseReset();
     void signalUpdateVolume(double dispensed, bool isFull);
     void targetHit();

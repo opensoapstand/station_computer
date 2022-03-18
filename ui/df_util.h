@@ -45,13 +45,16 @@
 #define SLOT_COUNT 4
 using namespace std;
 
-typedef enum FSM_COMM {
-    SEND_EMPTY = 0,
-    SEND_DISPENSE_START,
-    SEND_DISPENSE_STOP, // used to be SEND_CLEAN
-    SEND_PWM,
-    SEND_ERROR,
-} FSM_COMM;
+// typedef enum FSM_COMM {
+//     SEND_EMPTY = 0,
+//     SEND_DISPENSE_START,
+//     SEND_DISPENSE_STOP, // used to be SEND_CLEAN
+//     SEND_PWM,
+//     SEND_ERROR,
+// } FSM_COMM;
+
+#define SEND_DISPENSE_START "d"
+#define SEND_DISPENSE_STOP "f"
 
 class df_util : public QWidget
 {
@@ -65,23 +68,25 @@ public:
     // static long getTimeStamp();
     // static string format_string(long time_stamp,string fmt,int cutBack=0);
 
-    void initialize_local_db();
-    bool open_local_db();
-    bool close_local_db();
-    bool getVendorDetails();
-    QString get_local_db_max_transaction();
+    // void initialize_local_db();
+    // bool open_local_db();
+    // bool close_local_db();
+    // bool getVendorDetails();
+    // QString get_local_db_max_transaction();
+    void set_message_to_send_to_FSM(QString msg);
 
 //    void setIsSendingFSM(bool isSendingFSM){m_IsSendingFSM = isSendingFSM;};
 //    bool getIsSendingFSM(){return m_IsSendingFSM;};
 
     bool m_IsSendingFSM;
-    FSM_COMM m_fsmMsg; // Sets type of message/command
+    //FSM_COMM m_fsmMsg; // Sets type of message/command
 
-    QString msg;
+    QString send_msg;
 
     QTcpSocket *tcpSocket = nullptr;
     QDataStream in;
 
+    // void send_to_FSM();
 
 protected:
     // FSM communication
@@ -93,15 +98,13 @@ protected:
     QSqlDatabase db;
 
 public slots:
-    void send_to_FSM();
     void displayError(QAbstractSocket::SocketError socketError);
+    void send_to_FSM();
 
 private:
-    //QString local_db_path = "/home/df-admin/Project/drinkfill/db/sqlite/";
-    QString local_db_name = "drinkfill-sqlite.db";
 
-    QString remote_psql_db_path;
-    QString remote_psql_db_name;
+    // QString remote_psql_db_path;
+    // QString remote_psql_db_name;
 };
 
 #endif // DF_UTIL_H

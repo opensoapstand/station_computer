@@ -345,6 +345,10 @@ double product::getTargetVolume(char size)
     {
         return m_nVolumeTarget_l;
     }
+    else if (size == 'c')
+    {
+        return m_nVolumeTarget_c_max;
+    }
     else if (size == 't')
         return m_nVolumeTarget_c_max;
 
@@ -376,6 +380,10 @@ double product::getPrice(char size)
     else if (size == 'l')
     {
         return m_price_large;
+    }
+    else if (size == 'c')
+    {
+        return m_price_custom_per_liter;
     }
     else if (size == 't')
     {
@@ -424,6 +432,10 @@ string product::getPLU(char size)
         return m_nPLU_large;
     }
 
+    else if (size == 'c')
+    {
+        return m_nPLU_custom;
+    }
     else if (size == 't')
     {
         return m_nPLU_custom;

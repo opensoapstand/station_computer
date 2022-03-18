@@ -21,8 +21,16 @@ df_util::df_util(QWidget *parent):
  * TODO: Decouple send_to_FSM from Dispenser to here
  */
 
-void df_util::send_to_FSM()
-{
+void df_util::set_message_to_send_to_FSM(QString msg){
+    this->send_msg = msg;
+}
+
+void df_util::send_to_FSM(){
+
+// }
+// void df_util::send_to_FSM()
+// {
+    //QString msg = "fneinsef";
     tcpSocket->abort();
 
     tcpSocket->connectToHost(host,port);
@@ -33,30 +41,31 @@ void df_util::send_to_FSM()
         qDebug() << "ERROR: Failed Connection (Port ok? or Restarting the computer has worked to solve the issue in the past)" << endl;
     }
 
-    switch (m_fsmMsg) {
-    case SEND_DISPENSE_START:
-        msg.append("d");
-        msg.append(";");
-        break;
+    // switch (m_fsmMsg) {
+    // case SEND_DISPENSE_START:
+    //     msg.append("d");
+    //     msg.append(";");
+    //     break;
 
-    case SEND_DISPENSE_STOP:
-        msg.append("f");
-        msg.append(";");
-        break;
+    // case SEND_DISPENSE_STOP:
+    //     msg.append("f");
+    //     msg.append(";");
+    //     break;
 
-    case SEND_PWM:
-        msg.append(";");
+    // case SEND_PWM:
+    //     msg.append(";");
 
-    default:
-        msg.append("e");
-        msg.append(";");
-        break;
-    }
+    // default:
+    //     msg.append("e");
+    //     msg.append(";");
+    //     break;
+    // }
+    send_msg.append(";");
 
     QByteArray block;
-    qDebug()<<"send message to FSM: " <<  msg << endl;
+    qDebug()<<"send message to FSM: " <<  send_msg << endl;
     
-    block.append(msg);
+    block.append(send_msg);
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
 
@@ -94,21 +103,21 @@ void df_util::displayError(QAbstractSocket::SocketError socketError)
 {
 }
 
-void df_util::initialize_local_db() {
-}
+// void df_util::initialize_local_db() {
+// }
 
-bool df_util::open_local_db()
-{
-}
+// bool df_util::open_local_db()
+// {
+// }
 
-bool df_util::close_local_db()
-{
-}
+// bool df_util::close_local_db()
+// {
+// }
 
-bool df_util::getVendorDetails()
-{
-}
+// bool df_util::getVendorDetails()
+// {
+// }
 
-QString df_util::get_local_db_max_transaction()
-{
-}
+// QString df_util::get_local_db_max_transaction()
+// {
+// }

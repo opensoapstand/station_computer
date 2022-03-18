@@ -22,30 +22,32 @@
 #include "pagethankyou.h"
 
 // CTOR
-page_dispenser::page_dispenser(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::page_dispenser)
+page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
+                                                  ui(new Ui::page_dispenser)
 {
+    
+    
     this->isDispensing = false;
     ui->setupUi(this);
 
     // ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->abortButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
+
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
-
 }
 
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void page_dispenser::setPage(pagePayment *pagePayment, pagethankyou* pageThankYou, page_idle* pageIdle)
+void page_dispenser::setPage(pagePayment *pagePayment, pagethankyou *pageThankYou, page_idle *pageIdle)
 {
     this->thanksPage = pageThankYou;
     this->paymentPage = pagePayment;
     this->idlePage = pageIdle;
+    selectedProductOrder = idlePage->currentProductOrder;
 }
 
 // DTOR
@@ -57,7 +59,9 @@ page_dispenser::~page_dispenser()
 void page_dispenser::showEvent(QShowEvent *event)
 {
     this->isDispensing = false;
-    qDebug()<<"Enter dispense page." << endl;
+    qDebug() << "Enter dispense page." << endl;
+    qDebug() << "selected slot: " << QString::number(selectedProductOrder->getSelectedSlot());
+
     QPixmap background("/home/df-admin/production/references/5_background_dispense_instructions.png");
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
@@ -71,10 +75,11 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     // FIXME: this is a hack for size changes...
     fsmSendStartDispensing();
-    
+
     // ui->abortButton->setEnabled(false);
 
-    if(nullptr == dispenseIdleTimer){
+    if (nullptr == dispenseIdleTimer)
+    {
         dispenseIdleTimer = new QTimer(this);
         dispenseIdleTimer->setInterval(1000);
         connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
@@ -82,19 +87,20 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     dispenseIdleTimer->start(1000);
     _dispenseIdleTimeoutSec = 30;
-
+    qDebug() << "end resize idiseppsense." << endl;
 }
 
 bool page_dispenser::sendToUX410()
 {
     int waitForAck = 0;
-    while (waitForAck < 3){
+    while (waitForAck < 3)
+    {
         cout << "Wait for ACK counter: " << waitForAck << endl;
-        qDebug()<<"Wait for ACK counter: " <<  endl;
+        qDebug() << "Wait for ACK counter: " << endl;
         com.sendPacket(pktToSend, uint(pktToSend.size()));
-        std::cout<< "sendtoUX410 Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
+        std::cout << "sendtoUX410 Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
 
-        //read back what is responded
+        // read back what is responded
         pktResponded = com.readForAck();
         readPacket.packetReadFromUX(pktResponded);
         pktResponded.clear();
@@ -104,7 +110,7 @@ bool page_dispenser::sendToUX410()
         cout << readPacket << endl;
         if (readPacket.getAckOrNak() == communicationPacketField::ACK)
         {
-//            cout << readPacket << endl;
+            //            cout << readPacket << endl;
             return true;
         }
         usleep(50000);
@@ -115,15 +121,18 @@ bool page_dispenser::sendToUX410()
 bool page_dispenser::waitForUX410()
 {
     bool waitResponse = false;
-    while (!waitResponse){
-//        QCoreApplication::processEvents();
-      // cout << readPacket << endl;
-        if(pktResponded[0] != 0x02){
+    while (!waitResponse)
+    {
+        //        QCoreApplication::processEvents();
+        // cout << readPacket << endl;
+        if (pktResponded[0] != 0x02)
+        {
             pktResponded.clear();
             pktResponded = com.readPacket();
             usleep(10);
         }
-        else {
+        else
+        {
             //  pktResponded = com.readPacket();
             readPacket.packetReadFromUX(pktResponded);
             std::cout << readPacket;
@@ -145,18 +154,22 @@ void page_dispenser::dispensing_end_admin()
     DbManager db(DB_PATH);
     qDebug() << "call db2 from dispense end" << endl;
 
-    if (volumeDispensed == 0 && (db.getPaymentMethod(idlePage->currentProductOrder->getSelectedSlot())=="tap")){
+    if (volumeDispensed == 0 && (selectedProductOrder->getSelectedPaymentMethod()) == "tap")
+    {
         qDebug() << "dispense end: tap payment No volume dispensed.";
         // REVERSE PAYMENT
         com.page_init();
         pktToSend = paymentPacket.reversePurchasePacket();
-        if (sendToUX410()){
+        if (sendToUX410())
+        {
             waitForUX410();
-//            qDebug() << "Payment Reversed" << endl;
+            //            qDebug() << "Payment Reversed" << endl;
             pktResponded.clear();
             com.flushSerial();
         }
-    }else if ((db.getPaymentMethod(idlePage->currentProductOrder->getSelectedSlot())=="tap") && volumeDispensed != 0){
+    }
+    else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && volumeDispensed != 0)
+    {
         qDebug() << "dispense end: tap payment. Some volume dispensed.";
         QMessageBox msgBox;
         msgBox.setText("Complete!");
@@ -164,154 +177,157 @@ void page_dispenser::dispensing_end_admin()
         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         int ret = msgBox.exec();
 
-        switch(ret){
+        switch (ret)
+        {
         case QMessageBox::Yes:
-//            qDebug() << "This person wants their receipt emailed";
+            //            qDebug() << "This person wants their receipt emailed";
             break;
         case QMessageBox::No:
-//            qDebug() << "This person doesn't want a receipt";
+            //            qDebug() << "This person doesn't want a receipt";
             break;
         default:
             break;
         }
     }
-qDebug() << "cefesfsef" << endl;
     stopDispenseTimer();
-
-qDebug() << "cefes99999999999fsef" << endl;
-     db.closeDB();
-qDebug() << "11111111111111111fsef" << endl;
-     thanksPage->showFullScreen();
-qDebug() << "11144444fsef" << endl;
-     this->hide();
-qDebug() << "6626622fsef" << endl;
+    db.closeDB();
+    thanksPage->showFullScreen();
+    this->hide();
     qDebug() << "Finished dispense admin handling";
 }
 
-void page_dispenser::force_finish_dispensing(){
+void page_dispenser::force_finish_dispensing()
+{
 
     fsmSendStopDispensing();
     dispensing_end_admin();
 }
+void page_dispenser::startDispensing(){
+    volumeDispensed = 0;
+    targetVolume = selectedProductOrder->getSelectedVolume();
+    fsmSendStartDispensing();
+}
 
-void page_dispenser::fsmSendStartDispensing(){
-    QString command = QString::number(this->idlePage->currentProductOrder->getSelectedSlot());
+void page_dispenser::fsmSendStartDispensing()
+{
+    QString command = QString::number(selectedProductOrder->getSelectedSlot());
+    command.append(selectedProductOrder->getSelectedSizeAsChar());
+    command.append(SEND_DISPENSE_START);
 
-    if(idlePage->currentProductOrder->getSelectedSize() == SIZE_SMALL_INDEX){
-        command.append('s');
-
-    } else {
-        command.append('l');
-    }
-
-    volumeDispensed=0;
-
-    this->idlePage->dfUtility->msg = command;
 
     // Networking
     idlePage->dfUtility->m_IsSendingFSM = true;
-    idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_START;
+    idlePage->dfUtility->set_message_to_send_to_FSM(command);
     idlePage->dfUtility->send_to_FSM();
     idlePage->dfUtility->m_IsSendingFSM = false;
+
     this->isDispensing = true;
 }
 
-void page_dispenser::fsmSendStopDispensing(){
+void page_dispenser::fsmSendStopDispensing()
+{
     this->isDispensing = false;
-    QString command = QString::number(this->idlePage->currentProductOrder->getSelectedSlot());
 
-    if(idlePage->currentProductOrder->getSelectedSize() == SIZE_SMALL_INDEX){
-        command.append('s');
-
-    } else {
-        command.append('l');
-    }
-
-
-    this->idlePage->dfUtility->msg = command;
+    QString command = QString::number(this->selectedProductOrder->getSelectedSlot());
+    command.append(selectedProductOrder->getSelectedSizeAsChar());
+    command.append(SEND_DISPENSE_STOP);
     idlePage->dfUtility->m_IsSendingFSM = true;
-    idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_STOP;
-
-    // Send a Cleanse and TODO: helps FSM onExit...
+    idlePage->dfUtility->set_message_to_send_to_FSM(command);
     idlePage->dfUtility->send_to_FSM();
     idlePage->dfUtility->m_IsSendingFSM = false;
-     
 }
 
-
-void page_dispenser::onRinseTimerTick(){
+void page_dispenser::onRinseTimerTick()
+{
 }
 
-void page_dispenser::stopDispenseTimer(){
+void page_dispenser::stopDispenseTimer()
+{
     this->isDispensing = false;
-//    qDebug() << "page_dispenser: Stop Timers" << endl;
-    if(dispenseIdleTimer != nullptr){
+    //    qDebug() << "page_dispenser: Stop Timers" << endl;
+    if (dispenseIdleTimer != nullptr)
+    {
         dispenseIdleTimer->stop();
     }
     dispenseIdleTimer = nullptr;
 }
 
-void page_dispenser::onDispenseIdleTick(){
-    if(-- _dispenseIdleTimeoutSec >= 0) {
-//        qDebug() << "page_dispenser: Idle Tick Down: " << _dispenseIdleTimeoutSec << endl;
-    } else {
-//        qDebug() << "Timer Done!" << _dispenseIdleTimeoutSec << endl;
-//        dispenseIdleTimer->stop();
-        qDebug() << "Dispensing timeout. End dispensing."  << endl;
+void page_dispenser::onDispenseIdleTick()
+{
+    if (--_dispenseIdleTimeoutSec >= 0)
+    {
+        //        qDebug() << "page_dispenser: Idle Tick Down: " << _dispenseIdleTimeoutSec << endl;
+    }
+    else
+    {
+        //        qDebug() << "Timer Done!" << _dispenseIdleTimeoutSec << endl;
+        //        dispenseIdleTimer->stop();
+        qDebug() << "Dispensing timeout. End dispensing." << endl;
         force_finish_dispensing();
     }
 }
 
-double page_dispenser::getTotalDispensed(){
+double page_dispenser::getTotalDispensed()
+{
     return volumeDispensed;
 }
 
-void page_dispenser::resetDispenseTimeout(void){
+void page_dispenser::resetDispenseTimeout(void)
+{
     _dispenseIdleTimeoutSec = 30;
 }
 
-void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull){
-    if (this->isDispensing){
-        //qDebug() << "Signal: update vol in dispenser!" << endl;
+void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
+{
+    if (this->isDispensing)
+    {
+        // qDebug() << "Signal: update vol in dispenser!" << endl;
         resetDispenseTimeout();
 
         volumeDispensed = dispensed;
-        double target_volume = idlePage->currentProductOrder->getSelectedVolume();
-        double percentage = dispensed/target_volume*100;
-        if (isFull){
+        
+        double percentage = dispensed / this->targetVolume * 100;
+        if (isFull)
+        {
             percentage = 100;
         }
 
-        this->ui->filler->move(380, 590 - 3*percentage);
+        this->ui->filler->move(380, 590 - 3 * percentage);
 
         ui->widget->show();
         ui->filler->show();
 
         // ui->abortButton->setEnabled(true);
-    }else{
+    }
+    else
+    {
 
-       qDebug() << "Signal: volume update in dispenser while not dispensing." << endl;
+        qDebug() << "Signal: volume update in dispenser while not dispensing." << endl;
     }
 }
 
-void page_dispenser::fsmReceiveTargetVolumeReached(){
-    if (this->isDispensing){
+void page_dispenser::fsmReceiveTargetVolumeReached()
+{
+    if (this->isDispensing)
+    {
         this->isDispensing = false;
         // qDebug() << "Signal: Target volume reached."  << endl;
         updateVolumeDisplayed(1.0, true); // make sure the fill bottle graphics are completed
 
         dispensing_end_admin();
         // qDebug() << "Finish dispense end admin."  << endl;
-    }else{
+    }
+    else
+    {
         qDebug() << "target volumne reached signal received while not dispensing.";
     }
 }
 
-
 void page_dispenser::on_abortButton_clicked()
 {
     qDebug() << "Pressed dispense complete.";
-    if(this->isDispensing){
+    if (this->isDispensing)
+    {
         force_finish_dispensing();
     }
 }

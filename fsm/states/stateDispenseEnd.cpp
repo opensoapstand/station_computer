@@ -540,6 +540,12 @@ DF_ERROR stateDispenseEnd::print_receipt()
     {
         volume_dispensed = productDispensers[pos].getProduct()->m_nVolumeTarget_l;
     }
+    else if (size == 'c')
+    {
+        price_per_liter = productDispensers[pos].getProduct()->getPrice(size);
+        volume_dispensed = productDispensers[pos].getDispensedVolume();
+        price = price_per_liter * volume_dispensed / 1000.0;
+    }
     else if (size == 't')
     {
         price_per_liter = productDispensers[pos].getProduct()->getPrice(size);
@@ -578,7 +584,9 @@ DF_ERROR stateDispenseEnd::print_receipt()
     string receipt_price_per_liter = (chars_price_per_liter_formatted);
 
     // add base price
-    if (size == 't'){
+    if (size == 'c'){
+        receipt_volume_formatted = receipt_volume_formatted + units + " @" + receipt_price_per_liter + "$/" + base_unit ;
+    }else if (size == 't'){
         receipt_volume_formatted = receipt_volume_formatted + units + " @" + receipt_price_per_liter + "$/" + base_unit ;
     }else{
         receipt_volume_formatted += units;

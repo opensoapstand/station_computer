@@ -53,6 +53,7 @@ public:
     void fsmReceiveTargetVolumeReached();
     double getTotalDispensed();
     void force_finish_dispensing();
+    void startDispensing();
 
 public slots:
 
@@ -76,6 +77,8 @@ private:
     pagethankyou* thanksPage;
     page_idle* idlePage;
 
+    DrinkOrder* selectedProductOrder;
+
     // XXX: Remove when interrupts and flowsensors work.
 
     QString _dispenseTimeLabel;
@@ -92,6 +95,7 @@ private:
     bool rinse;
 
     double volumeDispensed;
+    double targetVolume;
 
     void stopDispenseTimer();
     bool sendToUX410();

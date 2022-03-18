@@ -86,7 +86,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     //    maintainProductPageEndTimer->start(1000);
     _maintainProductPageTimeoutSec = 40;
 
-    //ticks = db.getProductVolumePerTick(product_slot___);
+    // ticks = db.getProductVolumePerTick(product_slot___);
     update_dispense_stats(0);
     // ui->vol_dispensed_label->setText("Volume Dispensed: 0 " + db.getUnits(product_slot___));
     // ui->ticksLabel->setText("Ticks (" + QString::number(ticks) + "ml/tick): 0");
@@ -97,10 +97,6 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->numberEntry->hide();
     ui->errorLabel->setText("");
     ui->titleLabel->setText("");
-
-
-
-
 
     price_small = false;
     price_large = false;
@@ -132,7 +128,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     }
 
     // ui->pwmSlider->setValue(round(double((db.getPWM(product_slot___)) * 100) / 255));
-   
+
     db.closeDB();
     refreshLabels();
     setSoldOutButtonText();
@@ -146,7 +142,7 @@ void page_maintenance_dispenser::setPage(page_maintenance *pageMaintenance, page
     this->p_page_maintenance = pageMaintenance;
     this->idlePage = pageIdle;
 
-   refreshLabels();
+    refreshLabels();
 }
 
 void page_maintenance_dispenser::on_backButton_clicked()
@@ -200,10 +196,9 @@ void page_maintenance_dispenser::refreshLabels()
     ui->pluLabel_s->setText(db.getPLU(product_slot___, 's'));
     ui->pluLabel_l->setText(db.getPLU(product_slot___, 'l'));
     ui->pwmSlider->setValue(round(double((db.getPWM(product_slot___)) * 100) / 255));
-     ui->pwmSlider->hide();
+    ui->pwmSlider->hide();
 
-     db.closeDB();
-
+    db.closeDB();
 
     //   ui->name->setText("Product Name: ");
     // ui->price_small->setText("Product Price: ");
@@ -224,8 +219,6 @@ void page_maintenance_dispenser::refreshLabels()
     ui->temperatureButton->setVisible(false);
     ui->temperatureLabel->setVisible(false);
 
-
-
     //  ui->name->setText(db.getProductName(product_slot___));
     // ui->price_small->setText("$" + QString::number(db.getProductPrice(product_slot___, 's')));
     // ui->price_large->setText("$" + QString::number(db.getProductPrice(product_slot___, 'l')));
@@ -238,8 +231,6 @@ void page_maintenance_dispenser::refreshLabels()
     // ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(product_slot___)) + " " + db.getUnits(product_slot___));
     // ui->lastRefillLabel->setText(db.getLastRefill(product_slot___));
     // ui->pwmLabel->setText(QString::number(round(double((db.getPWM(product_slot___)) * 100) / 255)) + "%");
-    
-
 }
 
 void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
@@ -269,13 +260,11 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
     refreshLabels();
     update_dispense_stats(0);
 
-
     QPixmap background(bitmap_location);
     QIcon ButtonIcon(background);
 
     ui->image->setIcon(ButtonIcon);
     ui->image->setIconSize(QSize(271, 391));
-
 
     setSoldOutButtonText();
 }
@@ -387,14 +376,14 @@ void page_maintenance_dispenser::dispense_test_start()
         qDebug() << "Start dispense in maintenance mode. (FYI: if app crashes, it's probably about the update volume interrupts caused by the controller sending data.)";
         QString command = QString::number(this->idlePage->currentProductOrder->getSelectedSlot());
         command.append("t");
+        command.append(SEND_DISPENSE_START);
 
         update_dispense_stats(0);
-        // ui->vol_dispensed_label->setText("Volume Dispensed: 0 "); //+ db.getUnits(product_slot___));
-        // ui->ticksLabel->setText("Ticks: 0");
 
-        this->idlePage->dfUtility->msg = command;
+        // this->idlePage->dfUtility->msg = command;
         idlePage->dfUtility->m_IsSendingFSM = true;
-        idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_START;
+        // idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_START;
+        idlePage->dfUtility->set_message_to_send_to_FSM(command);
         idlePage->dfUtility->send_to_FSM();
         idlePage->dfUtility->m_IsSendingFSM = false;
 
@@ -407,7 +396,7 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
 {
     if (pumping)
     {
-        
+
         pumping = false;
 
         ui->pumpLabel->setText("Pump enabled status: OFF");
@@ -419,12 +408,16 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
             qDebug() << "Manually finish dispense in maintenance mode.";
             QString command = QString::number(this->idlePage->currentProductOrder->getSelectedSlot());
             command.append("t");
-            this->idlePage->dfUtility->msg = command;
+            command.append(SEND_DISPENSE_STOP);
+            // this->idlePage->dfUtility->msg = command;
             idlePage->dfUtility->m_IsSendingFSM = true;
-            idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_STOP;
+            // idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_STOP;
+            idlePage->dfUtility->set_message_to_send_to_FSM(command);
             idlePage->dfUtility->send_to_FSM();
             idlePage->dfUtility->m_IsSendingFSM = false;
-        }else{
+        }
+        else
+        {
             qDebug() << "controller sent stop dispensing signal in maintenance mode.";
         }
 
@@ -435,14 +428,14 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
 void page_maintenance_dispenser::update_dispense_stats(double dispensed)
 {
 
-    //if (pumping){
-        double vol_dispensed = dispensed;
-        // qDebug() << "Signal: updatevol in maintenance mode" + QString::number(vol_dispensed);
+    // if (pumping){
+    double vol_dispensed = dispensed;
+    // qDebug() << "Signal: updatevol in maintenance mode" + QString::number(vol_dispensed);
 
-        ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) + this->units_selected_product);
-        ui->ticksLabel->setText("Ticks (" + QString::number(ticks) + "ml/tick): " + QString::number(vol_dispensed / ticks));
+    ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) + this->units_selected_product);
+    ui->ticksLabel->setText("Ticks (" + QString::number(ticks) + "ml/tick): " + QString::number(vol_dispensed / ticks));
     //}else{
-        //qDebug() << "Error: update volume received while pump not enabled in maintenance." ;
+    // qDebug() << "Error: update volume received while pump not enabled in maintenance." ;
     //}
 }
 
@@ -452,21 +445,24 @@ void page_maintenance_dispenser::updateVolumeDisplayed(double dispensed, bool is
 
     // --> attention application can crash when there is content in here. combined with fsmReceiveTargetVolumeReached
     // DO THE MINIMUM HERE. NO DEBUG PRINTS. This must be an interrupt call.. probably crashes when called again before handled.
- if (pumping){
-    update_dispense_stats(dispensed);
-    /*
-        // qDebug() << "ahoyy3" ;
-        // DbManager db(DB_PATH);
+    if (pumping)
+    {
+        update_dispense_stats(dispensed);
+        /*
+            // qDebug() << "ahoyy3" ;
+            // DbManager db(DB_PATH);
 
-        // double vol_dispensed = dispensed;
-        // ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) + " " +  db.getUnits(this->idlePage->currentProductOrder->getSelectedSlot()));
+            // double vol_dispensed = dispensed;
+            // ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) + " " +  db.getUnits(this->idlePage->currentProductOrder->getSelectedSlot()));
 
-        // ui->ticksLabel->setText("Ticks: " + QString::number(vol_dispensed/ticks));
+            // ui->ticksLabel->setText("Ticks: " + QString::number(vol_dispensed/ticks));
 
-        // db.closeDB();
-        */
-        }else{
-        qDebug() << "Error: update volume received while pump not enabled in maintenance." ;
+            // db.closeDB();
+            */
+    }
+    else
+    {
+        qDebug() << "Error: update volume received while pump not enabled in maintenance.";
     }
 }
 
@@ -476,7 +472,7 @@ void page_maintenance_dispenser::fsmReceiveTargetVolumeReached()
 
     // --> attention application can crash when there is content in here. combined with updateVolumeDisplayed
     // DO THE MINIMUM HERE. NO DEBUG PRINTS. This must be an interrupt call.. probably crashes when called again before handled.
-    //qDebug() << "Signal: maintenance target hit. " << pumping;
+    // qDebug() << "Signal: maintenance target hit. " << pumping;
 
     // ui->vol_dispensed_label->setText(ui->vol_dispensed_label->text() + " - TARGET HIT!");
 
@@ -1102,9 +1098,9 @@ void page_maintenance_dispenser::bufferCURL(char *curl_params)
 
 //            ui->vol_dispensed_label->setText("Volume Dispensed: 0ml");
 
-//            this->idlePage->dfUtility->msg = command;
+//            this->idlePage->dfUtility->mswefwefg = command;
 //            idlePage->dfUtility->m_IsSendingFSM = true;
-//            idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_START;
+//            idlePage->dfUtility->m_fsmMsg = SENwefwefD_DISPENSE_START;
 //            idlePage->dfUtility->send_to_FSM();
 //            idlePage->dfUtility->m_IsSendingFSM = false;
 
@@ -1136,9 +1132,9 @@ void page_maintenance_dispenser::bufferCURL(char *curl_params)
 
 //            ui->vol_dispensed_label->setText("Volume Dispensed: 0ml");
 
-//            this->idlePage->dfUtility->msg = command;
+//            this->idlePage->dfUtility->mswfwefg = command;
 //            idlePage->dfUtility->m_IsSendingFSM = true;
-//            idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_START;
+//            idlePage->dfUtility->m_fsmMsg = SEND_DISwfewefwefPENSE_START;
 //            idlePage->dfUtility->send_to_FSM();
 //            idlePage->dfUtility->m_IsSendingFSM = false;
 

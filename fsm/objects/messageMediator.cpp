@@ -528,8 +528,14 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
          break;
 
       case REQUESTED_VOLUME_CUSTOM:
-         debugOutput::sendMessage("Requested volume custom, Size", MSG_INFO);
+         debugOutput::sendMessage("Requested volume custom Size", MSG_INFO);
          m_requestedVolume = REQUESTED_VOLUME_CUSTOM;
+         e_ret = OK;
+         break;
+
+      case REQUESTED_VOLUME_TEST:
+         debugOutput::sendMessage("Requested volume test", MSG_INFO);
+         m_requestedVolume = REQUESTED_VOLUME_TEST;
          e_ret = OK;
          break;
 

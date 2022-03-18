@@ -208,7 +208,7 @@ private:
     bool getResponse(){return response;}
 
     // **** Drink Order Reference ****
-    DrinkOrder paymentDrinkOrder;
+    // DrinkOrder paymentDrinkOrder;
 
     // Placeholder
     bool surveyBool;

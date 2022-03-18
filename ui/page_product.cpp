@@ -234,68 +234,6 @@ void pageProduct::cancelTimers()
 }
 
 /* GUI */
-void pageProduct::on_previousPage_Button_clicked()
-{
-
-    //    qDebug() << "pageProduct: Previous button" << endl;
-    while (!stopSelectTimers())
-    {
-    };
-    selectIdleTimer->stop();
-    firstProductPage->showFullScreen();
-    ui->discountLabel->setText("-$0.00");
-    ui->promoInputButton->show();
-
-    // ui->promoCode->hide();
-    // ui->promoKeyboard->hide();
-    // ui->promoInputButton->hide();
-    // ui->discountLabel->hide();
-    // ui->promoButton->hide();
-
-    usleep(100);
-    this->hide();
-}
-
-void pageProduct::on_pagePayment_Button_clicked()
-{
-    qDebug() << "pageProduct: Pay button" << endl;
-
-    ui->mainPage_Button->setEnabled(false);
-    ui->previousPage_Button->setEnabled(false);
-
-    this->stopSelectTimers();
-    selectIdleTimer->stop();
-    QString paymentMethod = selectedProductOrder->getSelectedPaymentMethod();
-
-    if (paymentMethod == "qr" || paymentMethod == "tap")
-    {
-        CURL *curl;
-        CURLcode res;
-        curl = curl_easy_init();
-
-        curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/ping");
-
-        res = curl_easy_perform(curl);
-        if (res != CURLE_OK)
-        {
-            wifiError->showEvent(wifiErrorEvent);
-            wifiError->showFullScreen();
-            this->hide();
-        }
-        else
-        {
-            ui->totalPriceLabel->text();
-            paymentPage->showFullScreen();
-            this->hide();
-        }
-    }
-    else if (paymentMethod == "barcode" || paymentMethod == "plu")
-    {
-        dispensingPage->showEvent(dispenseEvent);
-        dispensingPage->showFullScreen();
-        this->hide();
-    }
-}
 
 void pageProduct::showEvent(QShowEvent *event)
 {
@@ -310,7 +248,7 @@ void pageProduct::onSelectTimeoutTick()
     }
     else
     {
-        //        qDebug() << "Timer Done!" << _selectIdleTimeoutSec << endl;
+        //qDebug() << "Timer Done!" << _selectIdleTimeoutSec << endl;
         selectIdleTimer->stop();
 
         mainPage();
@@ -373,7 +311,7 @@ void pageProduct::on_orderSmall_Button_clicked()
 // on_Large_Order button listener
 void pageProduct::on_orderBig_Button_clicked()
 {
-    qDebug() << "button biiig";
+    qDebug() << "button big";
     this->loadOrderSize(SIZE_LARGE_INDEX);
 }
 
@@ -481,5 +419,67 @@ void pageProduct::keyboardButtonPressed(int buttonID)
     else
     {
         ui->promoCode->setText(ui->promoCode->text() + buttonText);
+    }
+}
+void pageProduct::on_previousPage_Button_clicked()
+{
+
+    //    qDebug() << "pageProduct: Previous button" << endl;
+    while (!stopSelectTimers())
+    {
+    };
+    selectIdleTimer->stop();
+    firstProductPage->showFullScreen();
+    ui->discountLabel->setText("-$0.00");
+    ui->promoInputButton->show();
+
+    // ui->promoCode->hide();
+    // ui->promoKeyboard->hide();
+    // ui->promoInputButton->hide();
+    // ui->discountLabel->hide();
+    // ui->promoButton->hide();
+
+    usleep(100);
+    this->hide();
+}
+
+void pageProduct::on_pagePayment_Button_clicked()
+{
+    qDebug() << "pageProduct: Pay button" << endl;
+
+    ui->mainPage_Button->setEnabled(false);
+    ui->previousPage_Button->setEnabled(false);
+
+    this->stopSelectTimers();
+    selectIdleTimer->stop();
+    QString paymentMethod = selectedProductOrder->getSelectedPaymentMethod();
+
+    if (paymentMethod == "qr" || paymentMethod == "tap")
+    {
+        CURL *curl;
+        CURLcode res;
+        curl = curl_easy_init();
+
+        curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/ping");
+
+        res = curl_easy_perform(curl);
+        if (res != CURLE_OK)
+        {
+            wifiError->showEvent(wifiErrorEvent);
+            wifiError->showFullScreen();
+            this->hide();
+        }
+        else
+        {
+            ui->totalPriceLabel->text();
+            paymentPage->showFullScreen();
+            this->hide();
+        }
+    }
+    else if (paymentMethod == "barcode" || paymentMethod == "plu")
+    {
+        dispensingPage->showEvent(dispenseEvent);
+        dispensingPage->showFullScreen();
+        this->hide();
     }
 }

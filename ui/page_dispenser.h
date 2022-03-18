@@ -69,6 +69,8 @@ private slots:
     void on_abortButton_clicked();
 
 
+    void on_cancelButton_clicked();
+
 private:
     bool isDispensing;
     // **** GUI *****

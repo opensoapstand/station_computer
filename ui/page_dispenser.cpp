@@ -25,14 +25,15 @@
 page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
                                                   ui(new Ui::page_dispenser)
 {
-    
-    
+
     this->isDispensing = false;
     ui->setupUi(this);
 
     // ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->abortButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    // ui->abortButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->abortButton->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
 
+    
 
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
@@ -73,10 +74,11 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     QWidget::showEvent(event);
 
-    
     startDispensing();
-
+    // ui->cancelButton->setEnabled(true);
     // ui->abortButton->setEnabled(false);
+    ui->abortButton->setText("Cancel");
+    
 
     if (nullptr == dispenseIdleTimer)
     {
@@ -150,10 +152,6 @@ void page_dispenser::dispensing_end_admin()
 {
     qDebug() << "Dispense end admin start";
     this->isDispensing = false;
-    // sleep(1);
-    // qDebug() << "call db from dispense end" << endl;
-    // DbManager db(DB_PATH);
-    // qDebug() << "call db2 from dispense end" << endl;
 
     if (volumeDispensed == 0 && (selectedProductOrder->getSelectedPaymentMethod()) == "tap")
     {
@@ -191,7 +189,6 @@ void page_dispenser::dispensing_end_admin()
         }
     }
     stopDispenseTimer();
-    // db.closeDB();
     thanksPage->showFullScreen();
     this->hide();
     qDebug() << "Finished dispense admin handling";
@@ -204,19 +201,20 @@ void page_dispenser::force_finish_dispensing()
     dispensing_end_admin();
 }
 
-void page_dispenser::startDispensing(){
+void page_dispenser::startDispensing()
+{
     volumeDispensed = 0;
     targetVolume = selectedProductOrder->getSelectedVolume();
+
     fsmSendStartDispensing();
 }
 
 void page_dispenser::fsmSendStartDispensing()
 {
-    qDebug() << "Send Start dispensing to fsm" ;
+    qDebug() << "Send Start dispensing to fsm";
     QString command = QString::number(selectedProductOrder->getSelectedSlot());
     command.append(selectedProductOrder->getSelectedSizeAsChar());
     command.append(SEND_DISPENSE_START);
-
 
     // Networking
     idlePage->dfUtility->m_IsSendingFSM = true;
@@ -229,7 +227,7 @@ void page_dispenser::fsmSendStartDispensing()
 
 void page_dispenser::fsmSendStopDispensing()
 {
-    qDebug() << "Send STOP dispensing to fsm" ;
+    qDebug() << "Send STOP dispensing to fsm";
     this->isDispensing = false;
 
     QString command = QString::number(this->selectedProductOrder->getSelectedSlot());
@@ -285,12 +283,14 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
 {
     if (this->isDispensing)
     {
+        ui->abortButton->setText("Complete");
+
         // qDebug() << "Signal: update vol in dispenser!" ;
         qDebug() << "Signal: dispensed " << dispensed << " of " << this->targetVolume;
         resetDispenseTimeout();
 
         volumeDispensed = dispensed;
-        
+
         double percentage = dispensed / this->targetVolume * 100;
         if (isFull)
         {
@@ -302,6 +302,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         ui->widget->show();
         ui->filler->show();
 
+        // ui->cancelButton->setEnabled(false);
         // ui->abortButton->setEnabled(true);
     }
     else
@@ -333,6 +334,16 @@ void page_dispenser::on_abortButton_clicked()
     qDebug() << "Pressed dispense complete.";
     if (this->isDispensing)
     {
+        force_finish_dispensing();
+    }
+}
+
+void page_dispenser::on_cancelButton_clicked()
+{
+    qDebug() << "Pressed cancel dispensing.";
+    if (this->isDispensing)
+    {
+
         force_finish_dispensing();
     }
 }

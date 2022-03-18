@@ -57,8 +57,16 @@
      <height>101</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Brevia</family>
+     <pointsize>30</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
    <property name="text">
-    <string/>
+    <string>Cancel</string>
    </property>
   </widget>
   <zorder>filler</zorder>

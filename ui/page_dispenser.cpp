@@ -203,6 +203,7 @@ void page_dispenser::force_finish_dispensing()
     fsmSendStopDispensing();
     dispensing_end_admin();
 }
+
 void page_dispenser::startDispensing(){
     volumeDispensed = 0;
     targetVolume = selectedProductOrder->getSelectedVolume();
@@ -211,7 +212,7 @@ void page_dispenser::startDispensing(){
 
 void page_dispenser::fsmSendStartDispensing()
 {
-     qDebug() << "Send Start dispensing to fsm" ;
+    qDebug() << "Send Start dispensing to fsm" ;
     QString command = QString::number(selectedProductOrder->getSelectedSlot());
     command.append(selectedProductOrder->getSelectedSizeAsChar());
     command.append(SEND_DISPENSE_START);
@@ -284,7 +285,8 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
 {
     if (this->isDispensing)
     {
-        // qDebug() << "Signal: update vol in dispenser!" << endl;
+        // qDebug() << "Signal: update vol in dispenser!" ;
+        qDebug() << "Signal: dispensed " << dispensed << " of " << this->targetVolume;
         resetDispenseTimeout();
 
         volumeDispensed = dispensed;

@@ -158,10 +158,11 @@ double DrinkOrder::getSelectedPrice()
         }
         else
         {
-            qInfo() << "db....pricess.....";
-            DbManager db(DB_PATH);
-            price = db.getProductPrice(getSelectedSlot(), getSelectedSizeAsChar());
-            db.closeDB();
+            // qInfo() << "db....pricess.....";
+            // DbManager db(DB_PATH);
+            // price = db.getProductPrice(getSelectedSlot(), getSelectedSizeAsChar());
+            // db.closeDB();
+            price = getPrice(getSelectedSize());
         }
     }
     else
@@ -178,13 +179,13 @@ double DrinkOrder::getSelectedVolume()
     double volume;
     if (isSelectedOrderValid())
     {
-        getVolume(getSelectedSize());
+        volume = getVolume(getSelectedSize());
     }
     else
     {
 
         qInfo() << "ERROR: No product set";
-        return 66.6;
+        volume = 66.6;
     }
     return volume;
 }

@@ -935,6 +935,7 @@ bool product::reloadParametersFromDb()
             case DB_PRODUCTS_SIZE_CUSTOM_MAX:
             {
                 m_nVolumeTarget_c_max = sqlite3_column_double(stmt, column_index);
+                debugOutput::sendMessage("m_nVolumeTarget_c:" + to_string(m_nVolumeTarget_c_max), MSG_INFO);
             }
             break;
             case DB_PRODUCTS_PRICE_SMALL:

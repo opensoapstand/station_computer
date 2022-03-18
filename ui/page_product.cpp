@@ -111,13 +111,11 @@ void pageProduct::loadOrderSelectedSize()
 
         if (selectedProductOrder->getSelectedSize() == product_sizes[i])
         {
-            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 5px  solid #ff0000; }");
-            // orderSizeButtons[i]->setStyleSheet("background-color: red; border: 0px ");
+            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 8px  solid #3D6675; }");
         }
         else
         {
             orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px  solid #ffffff; }");
-            // orderSizeButtons[i]->setStyleSheet("background-color: green; border: 0px ");
         }
         orderSizeButtons[i]->raise();
     }
@@ -140,7 +138,12 @@ void pageProduct::reset_and_show_page_elements()
 
 #ifdef CUSTOM_VOLUME_DISPENSING
     bitmap_location = "/home/df-admin/production/references/page_product_generic.png";
-    uint16_t orderSizeButtons_xywh[4][4] = {{580, 960, 131, 126}, {730, 960, 131, 126}, {880, 960, 131, 126}, {570, 110, 421, 111}};
+    uint16_t orderSizeButtons_xywh[4][4] = {
+        {560, 990, 135, 110},  // S
+        {706, 990, 135, 105},  // M
+        {852, 990, 135, 100},  // L
+        {560, 1100, 430, 115}   // custom
+        };
 
 #else
     int product_slot___ = selectedProductOrder->getSelectedSlot();
@@ -157,6 +160,11 @@ void pageProduct::reset_and_show_page_elements()
     }
 
 #endif
+
+    for (uint8_t i=0;i<4;i++){
+        orderSizeButtons[i]->setFixedSize(QSize(orderSizeButtons_xywh[i][2],orderSizeButtons_xywh[i][3]));
+        orderSizeButtons[i]->move(orderSizeButtons_xywh[i][0],orderSizeButtons_xywh[i][1]);
+    }
 
     qDebug() << bitmap_location << endl;
     QPixmap background(bitmap_location);

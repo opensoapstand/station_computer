@@ -128,7 +128,7 @@ color: #58595B;</string>
     <rect>
      <x>560</x>
      <y>1155</y>
-     <width>321</width>
+     <width>421</width>
      <height>41</height>
     </rect>
    </property>
@@ -212,7 +212,7 @@ text-align: center;
    <property name="geometry">
     <rect>
      <x>860</x>
-     <y>990</y>
+     <y>1000</y>
      <width>121</width>
      <height>31</height>
     </rect>
@@ -236,8 +236,8 @@ text-align: center;</string>
   <widget class="QPushButton" name="orderSmall_Button">
    <property name="geometry">
     <rect>
-     <x>560</x>
-     <y>970</y>
+     <x>570</x>
+     <y>880</y>
      <width>131</width>
      <height>126</height>
     </rect>
@@ -1981,7 +1981,7 @@ color: #58595B;</string>
    <property name="geometry">
     <rect>
      <x>710</x>
-     <y>990</y>
+     <y>1000</y>
      <width>131</width>
      <height>31</height>
     </rect>
@@ -2035,7 +2035,7 @@ text-align: center;</string>
    <property name="geometry">
     <rect>
      <x>560</x>
-     <y>990</y>
+     <y>1000</y>
      <width>131</width>
      <height>31</height>
     </rect>

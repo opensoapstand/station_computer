@@ -76,7 +76,7 @@ void page_init::showEvent(QShowEvent *event)
     }
     else
     {
-        ui->init_label->setText("Start UI without controller.");
+        ui->init_label->setText("Searching for controller.");
 #ifdef WAIT_FOR_CONTROLLER_READY
         _initIdleTimeoutSec = 20;
 #else

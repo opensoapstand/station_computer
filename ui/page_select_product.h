@@ -39,6 +39,9 @@ public:
     void setPage(pageProduct *pageSizeSelect, page_idle* pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp);
     ~page_select_product();
     void cancelTimers();
+    void select_product(int slot);
+
+    QPushButton* selectProductButtons[4];
 
 private slots:
     // **** Navigation ****
@@ -55,6 +58,7 @@ private slots:
     //void on_backButton_clicked();
     void on_p_page_maintenanceButton_pressed();
     void on_mainPage_Button_clicked();
+    void on_helpPage_Button_clicked();
 
 private:
     void showEvent(QShowEvent *event);

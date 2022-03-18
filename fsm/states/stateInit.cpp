@@ -62,12 +62,14 @@ DF_ERROR stateInit::onAction()
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
    
-    debugOutput::sendMessage("Uuuuuuse database at: " + std::to_string(1) + DB_PATH, MSG_INFO);
+    debugOutput::sendMessage("Use database at: " + std::to_string(1) + DB_PATH, MSG_INFO);
 
     e_ret = setProducts();
     if (OK == e_ret)
     {
         e_ret = dispenserSetup();
+    }else{
+        debugOutput::sendMessage("ERROR: Problems setting up the products.", MSG_INFO);
     }
 
     if (OK == e_ret)
@@ -81,7 +83,7 @@ DF_ERROR stateInit::onAction()
     else
     {
 
-        debugOutput::sendMessage("ERROR: Problems setting up the controlller.", MSG_INFO);
+        debugOutput::sendMessage("ERROR: Problems setting up the dispenser.", MSG_INFO);
     }
 
     return e_ret;

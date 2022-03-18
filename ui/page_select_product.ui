@@ -114,8 +114,21 @@
   <widget class="QPushButton" name="mainPage_Button">
    <property name="geometry">
     <rect>
-     <x>470</x>
-     <y>1770</y>
+     <x>40</x>
+     <y>30</y>
+     <width>251</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="helpPage_Button">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>1730</y>
      <width>141</width>
      <height>141</height>
     </rect>

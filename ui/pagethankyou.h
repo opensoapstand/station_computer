@@ -38,13 +38,17 @@ public:
     ~pagethankyou();
 
     void controllerFinishedTransaction();
+    void  exitPage();
+
+    bool is_controller_finished;
+    bool is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER;
     
 
 
 private slots:
     void on_mainPage_Button_clicked();
     void onThankyouTimeoutTick();
-    void onRinseTimerTick();
+    // void onRinseTimerTick();
 
 private:
     void showEvent(QShowEvent *event);

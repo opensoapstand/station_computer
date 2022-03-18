@@ -64,7 +64,7 @@ private slots:
     void fsmSendStopDispensing();
    // void onDispenseTick();
     void onDispenseIdleTick();
-    void onRinseTimerTick();
+    // void onRinseTimerTick();
     void dispensing_end_admin();
     void on_abortButton_clicked();
 

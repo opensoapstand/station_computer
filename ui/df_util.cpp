@@ -63,7 +63,7 @@ void df_util::send_to_FSM(){
     send_msg.append(";");
 
     QByteArray block;
-    qDebug()<<"send message to FSM: " <<  send_msg << endl;
+    qDebug()<<"send message to FSM: " <<  send_msg;
     
     block.append(send_msg);
     QDataStream out(&block, QIODevice::WriteOnly);

@@ -445,7 +445,7 @@ void pageProduct::on_previousPage_Button_clicked()
 
 void pageProduct::on_pagePayment_Button_clicked()
 {
-    qDebug() << "pageProduct: Pay button" << endl;
+    qDebug() << "pageProduct: Pay button";
 
     ui->mainPage_Button->setEnabled(false);
     ui->previousPage_Button->setEnabled(false);

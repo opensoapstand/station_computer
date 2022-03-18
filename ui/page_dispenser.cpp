@@ -148,7 +148,7 @@ bool page_dispenser::waitForUX410()
  */
 void page_dispenser::dispensing_end_admin()
 {
-    qDebug() << "Dispense end admin start" << endl;
+    qDebug() << "Dispense end admin start";
     this->isDispensing = false;
     // sleep(1);
     // qDebug() << "call db from dispense end" << endl;
@@ -241,9 +241,9 @@ void page_dispenser::fsmSendStopDispensing()
     idlePage->dfUtility->m_IsSendingFSM = false;
 }
 
-void page_dispenser::onRinseTimerTick()
-{
-}
+// void page_dispenser::onRinseTimerTick()
+// {
+// }
 
 void page_dispenser::stopDispenseTimer()
 {
@@ -307,7 +307,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
     else
     {
 
-        qDebug() << "Signal: volume update in dispenser while not dispensing." << endl;
+        qDebug() << "Signal: volume update in dispenser while not dispensing.";
     }
 }
 

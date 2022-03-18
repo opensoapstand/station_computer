@@ -465,7 +465,7 @@ void pageProduct::on_pagePayment_Button_clicked()
         res = curl_easy_perform(curl);
         if (res != CURLE_OK)
         {
-            wifiError->showEvent(wifiErrorEvent);
+           // wifiError->showEvent(wifiErrorEvent);
             wifiError->showFullScreen();
             this->hide();
         }
@@ -478,7 +478,7 @@ void pageProduct::on_pagePayment_Button_clicked()
     }
     else if (paymentMethod == "barcode" || paymentMethod == "plu")
     {
-        dispensingPage->showEvent(dispenseEvent);
+        //dispensingPage->showEvent(dispenseEvent); // todo Lode: this enabled together with showfullscreen calls the showEvent twice. only showevent, does not display the dispense page though.
         dispensingPage->showFullScreen();
         this->hide();
     }

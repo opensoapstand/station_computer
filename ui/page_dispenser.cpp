@@ -59,7 +59,7 @@ page_dispenser::~page_dispenser()
 void page_dispenser::showEvent(QShowEvent *event)
 {
     this->isDispensing = false;
-    qDebug() << "Enter dispense page." << endl;
+    qDebug() << ">>>>>>>>>>>> Enter dispense page. <<<<<<<<<<<<<<<<<<";
     qDebug() << "selected slot: " << QString::number(selectedProductOrder->getSelectedSlot());
 
     QPixmap background("/home/df-admin/production/references/5_background_dispense_instructions.png");
@@ -73,8 +73,8 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     QWidget::showEvent(event);
 
-    // FIXME: this is a hack for size changes...
-    fsmSendStartDispensing();
+    
+    startDispensing();
 
     // ui->abortButton->setEnabled(false);
 
@@ -87,7 +87,7 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     dispenseIdleTimer->start(1000);
     _dispenseIdleTimeoutSec = 30;
-    qDebug() << "end resize idiseppsense." << endl;
+    qDebug() << "end resize idiseppsense.";
 }
 
 bool page_dispenser::sendToUX410()
@@ -148,11 +148,12 @@ bool page_dispenser::waitForUX410()
  */
 void page_dispenser::dispensing_end_admin()
 {
+    qDebug() << "Dispense end admin start" << endl;
     this->isDispensing = false;
-    sleep(1);
-    qDebug() << "call db from dispense end" << endl;
-    DbManager db(DB_PATH);
-    qDebug() << "call db2 from dispense end" << endl;
+    // sleep(1);
+    // qDebug() << "call db from dispense end" << endl;
+    // DbManager db(DB_PATH);
+    // qDebug() << "call db2 from dispense end" << endl;
 
     if (volumeDispensed == 0 && (selectedProductOrder->getSelectedPaymentMethod()) == "tap")
     {
@@ -190,7 +191,7 @@ void page_dispenser::dispensing_end_admin()
         }
     }
     stopDispenseTimer();
-    db.closeDB();
+    // db.closeDB();
     thanksPage->showFullScreen();
     this->hide();
     qDebug() << "Finished dispense admin handling";
@@ -210,6 +211,7 @@ void page_dispenser::startDispensing(){
 
 void page_dispenser::fsmSendStartDispensing()
 {
+     qDebug() << "Send Start dispensing to fsm" ;
     QString command = QString::number(selectedProductOrder->getSelectedSlot());
     command.append(selectedProductOrder->getSelectedSizeAsChar());
     command.append(SEND_DISPENSE_START);
@@ -226,6 +228,7 @@ void page_dispenser::fsmSendStartDispensing()
 
 void page_dispenser::fsmSendStopDispensing()
 {
+    qDebug() << "Send STOP dispensing to fsm" ;
     this->isDispensing = false;
 
     QString command = QString::number(this->selectedProductOrder->getSelectedSlot());

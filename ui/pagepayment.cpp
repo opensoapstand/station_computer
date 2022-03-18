@@ -216,7 +216,7 @@ void pagePayment::on_previousPage_Button_clicked()
 void pagePayment::on_payment_bypass_Button_clicked()
 {
     stopPayTimers();
-    dispensingPage->showEvent(dispenseEvent);
+    //dispensingPage->showEvent(dispenseEvent);
     dispensingPage->showFullScreen();
     this->hide();
 }

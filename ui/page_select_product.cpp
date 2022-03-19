@@ -113,25 +113,17 @@ void page_select_product::showEvent(QShowEvent *event)
     productPageEndTimer->start(1000);
     _productPageTimeoutSec = 15;
 
-    // qDebug() << "start s---- ======= "<< endl;
-    // qDebug() << db.remainingVolumeIsBiggerThanLargestFixedSize(1) << "check levels" <<endl;
-
-    // qDebug() << db.getPWM(1) << endl;
-    // qDebug() << "tetseitsejt ======= "<< endl;
-
-    // if (!db.remainingVolumeIsBiggerThanLargestFixedSize(1)  || !this->idlePage->isSlotAvailable(1) ){
-
     qDebug() << "ahoyy15";
     DbManager db(DB_PATH);
     for (uint8_t i = 0; i < 4; i++)
     {
         if (!db.remainingVolumeIsBiggerThanLargestFixedSize(i + 1) || !db.getSlotEnabled(i + 1))
         {
-            ui->selection1_Button->setStyleSheet("QPushButton { border-image: url(/home/df-admin/production/references/soldOut.png); }");
+            selectProductButtons[i]->setStyleSheet("QPushButton { border-image: url(/home/df-admin/production/references/soldOut.png); }");
         }
         else
         {
-            ui->selection1_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+            selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
         }
     }
     db.closeDB();
@@ -180,10 +172,12 @@ void page_select_product::cancelTimers()
 
 void page_select_product::select_product(int slot)
 {
-    qDebug() << "ahoyy16";
+    qDebug() << "ahoyy16 (last call before freeze up?!)";
+    
     DbManager db(DB_PATH);
     if (db.remainingVolumeIsBiggerThanLargestFixedSize(slot) && db.getSlotEnabled(slot))
     {
+        qDebug() << "select product: "<<slot;
         db.closeDB();
         productPageEndTimer->stop();
         idlePage->currentProductOrder->setSelectedSlot(slot);
@@ -194,6 +188,7 @@ void page_select_product::select_product(int slot)
     }
     else
     {
+        qDebug() << "not enabled product: "<<slot;
         db.closeDB();
     }
 }
@@ -215,77 +210,6 @@ void page_select_product::on_selection4_Button_clicked()
 {
     select_product(4);
 }
-
-// // FIXME: This is terrible...no time to make array reference to hold button press functions
-// void page_select_product::on_selection1_Button_clicked()
-// {
-//     qDebug() << "ahoyy16" ;
-//     DbManager db(DB_PATH);
-//     if(db.remainingVolumeIsBiggerThanLargestFixedSize(1)  && db.getSlotEnabled(1)){
-//         db.closeDB();
-//         productPageEndTimer->stop();
-//         idlePage->currentProductOrder->setSelectedSlot(1);
-//         idlePage->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
-//         paymentSelectPage->resizeEvent(productResize);
-//         paymentSelectPage->showFullScreen();
-//         this->hide();
-//     }else{
-//         db.closeDB();
-//     }
-// }
-
-// void page_select_product::on_selection2_Button_clicked()
-// {
-//     qDebug() << "ahoyy17" ;
-//     DbManager db(DB_PATH);
-//     if(db.remainingVolumeIsBiggerThanLargestFixedSize(2) && db.getSlotEnabled(2)){
-//         db.closeDB();
-//         productPageEndTimer->stop();
-//         idlePage->currentProductOrder->setSelectedSlot(2);
-//         idlePage->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
-//         paymentSelectPage->resizeEvent(productResize);
-//         paymentSelectPage->showFullScreen();
-//         this->hide();
-//     }else{
-//         db.closeDB();
-//     }
-// }
-
-// void page_select_product::on_selection3_Button_clicked()
-// {
-//     qDebug() << "ahoyy18" ;
-//     DbManager db(DB_PATH);
-//     if(db.remainingVolumeIsBiggerThanLargestFixedSize(3)  && db.getSlotEnabled(3)){
-//         db.closeDB();
-//         productPageEndTimer->stop();
-//         idlePage->currentProductOrder->setSelectedSlot(3);
-//         idlePage->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
-
-//         paymentSelectPage->resizeEvent(productResize);
-//         paymentSelectPage->showFullScreen();
-//         this->hide();
-//     }else{
-//         db.closeDB();
-//     }
-
-// }
-
-// void page_select_product::on_selection4_Button_clicked()
-// {
-//     qDebug() << "ahoyy19" ;
-//     DbManager db(DB_PATH);
-//     if(db.remainingVolumeIsBiggerThanLargestFixedSize(4)  && db.getSlotEnabled(4)){
-//         db.closeDB();
-//         productPageEndTimer->stop();
-//         idlePage->currentProductOrder->setSelectedSlot(4);
-//         idlePage->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
-//         paymentSelectPage->resizeEvent(productResize);
-//         paymentSelectPage->showFullScreen();
-//         this->hide();
-//     }else{
-//         db.closeDB();
-//     }
-// }
 
 void page_select_product::onProductPageTimeoutTick()
 {

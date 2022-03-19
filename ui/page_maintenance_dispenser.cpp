@@ -55,11 +55,13 @@ void page_maintenance_dispenser::setSoldOutButtonText()
     if (db.getSlotEnabled(slot))
     {
 #endif
-        ui->soldOutButton->setText("Mark as Sold Out");
+        ui->soldOutButton->setText("Make unavailable");
+        ui->soldOutButton->setStyleSheet("QPushButton { background-color: #5E8680;  }");
     }
     else
     {
-        ui->soldOutButton->setText("Un-Mark as Sold Out");
+        ui->soldOutButton->setText("Make available");
+        ui->soldOutButton->setStyleSheet("QPushButton { background-color: #E0A0A0;  }");
     }
     db.closeDB();
 }
@@ -164,8 +166,7 @@ void page_maintenance_dispenser::on_backButton_clicked()
     // ui->target_volume_s->setText("");
     // ui->target_volume_l->setText("");
     // ui->volume_per_tick->setText("");
-    // ui->refillLabel->setText("");
-    // ui->soldOutLabel->setText("");
+    // ui->infoLabel->setText("");
     // ui->full_volume->setText("");
     // ui->remainingLabel->setText("");
     // ui->volume_dispensed_total->setText("");
@@ -197,6 +198,7 @@ void page_maintenance_dispenser::refreshLabels()
     ui->pluLabel_l->setText(db.getPLU(product_slot___, 'l'));
     ui->pwmSlider->setValue(round(double((db.getPWM(product_slot___)) * 100) / 255));
     ui->pwmSlider->hide();
+    ui->infoLabel->setText("");
 
     db.closeDB();
 
@@ -206,8 +208,6 @@ void page_maintenance_dispenser::refreshLabels()
     // ui->target_volume_s->setText("Product Volume: ");
     // ui->target_volume_l->setText("Product Volume: ");
     // ui->volume_per_tick->setText("Product Volume Per Tick: ");
-    // ui->refillLabel->setText("");
-    // ui->soldOutLabel->setText("");
     // ui->full_volume->setText("");
     // ui->remainingLabel->setText("");
     // ui->volume_dispensed_total->setText("");
@@ -237,25 +237,18 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
 
-    int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
+    int slot = idlePage->currentProductOrder->getSelectedSlot();
 
     // DbManager db_temperature(DB_PATH_TEMPERATURE);
 
     QString bitmap_location;
 
-    if (product_slot___ >= 1 && product_slot___ <= SLOT_COUNT)
-    {
-        qDebug() << " ********** 666564 call db from maintenance select dispenser page  resize event" << endl;
-        DbManager db(DB_PATH);
-        bitmap_location.append("/home/df-admin/production/references/product");
-        bitmap_location.append(QString::number(idlePage->currentProductOrder->getSelectedSlot()));
-        bitmap_location.append(".png");
-        db.closeDB();
-    }
-    else
-    {
-        //        qDebug() << "out of range" << endl;
-    }
+    qDebug() << " ********** 666564 call db from maintenance select dispenser page  resize event" << endl;
+    DbManager db(DB_PATH);
+    bitmap_location.append("/home/df-admin/production/references/product");
+    bitmap_location.append(QString::number(idlePage->currentProductOrder->getSelectedSlot()));
+    bitmap_location.append(".png");
+    db.closeDB();
 
     refreshLabels();
     update_dispense_stats(0);
@@ -506,8 +499,7 @@ void page_maintenance_dispenser::on_refillButton_clicked()
 
         if (db.refill(this->idlePage->currentProductOrder->getSelectedSlot()))
         {
-            ui->refillLabel->setText("Refill Succesfull");
-            ui->soldOutLabel->setText("");
+            ui->infoLabel->setText("Refill Succesfull");
 
             ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(this->idlePage->currentProductOrder->getSelectedSlot())) + " " + db.getUnits(this->idlePage->currentProductOrder->getSelectedSlot()));
             ui->volume_dispensed_since_last_restock->setText(QString::number(db.getVolumeDispensedSinceRestock(this->idlePage->currentProductOrder->getSelectedSlot())) + " " + db.getUnits(this->idlePage->currentProductOrder->getSelectedSlot()));
@@ -519,8 +511,7 @@ void page_maintenance_dispenser::on_refillButton_clicked()
         }
         else
         {
-            ui->refillLabel->setText("Refill ERROR");
-            ui->soldOutLabel->setText("");
+            ui->infoLabel->setText("Refill ERROR");
             db.closeDB();
             break;
         }
@@ -536,9 +527,10 @@ void page_maintenance_dispenser::on_refillButton_clicked()
 #ifndef USE_OLD_DATABASE
 void page_maintenance_dispenser::on_soldOutButton_clicked()
 {
+    qDebug() << "soldout clicked. slot: " << QString::number(this->idlePage->currentProductOrder->getSelectedSlot());
+    qDebug() << "soldout clicked. size: " << QString::number(this->idlePage->currentProductOrder->getSelectedVolume());
+
     DbManager db(DB_PATH);
-    qDebug() << "soldout clicked. slot: " << QString::number(this->idlePage->currentProductOrder->getSelectedSlot()) << endl;
-    qDebug() << "soldout clicked. size: " << QString::number(this->idlePage->currentProductOrder->getSelectedVolume()) << endl;
 
     _maintainProductPageTimeoutSec = 40;
 
@@ -549,7 +541,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
         // ARE YOU SURE YOU WANT TO COMPLETE?
         QMessageBox msgBox;
         msgBox.setWindowFlags(Qt::FramelessWindowHint);
-        msgBox.setText("<p align=center>Are you sure you want to mark as Sold out???</p>");
+        msgBox.setText("<p align=center>Are you sure you want to Disable product?</p>");
         msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-width: 300px; min-height: 300px;}");
 
         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
@@ -558,22 +550,24 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
         switch (ret)
         {
         case QMessageBox::Yes:
-            if (db.updateSlotAvailability(this->idlePage->currentProductOrder->getSelectedSlot(), 0))
-            {
-                ui->soldOutLabel->setText("Sold Out Succesfull");
-                ui->refillLabel->setText("");
-                break;
-            }
-            else
-            {
-                ui->soldOutLabel->setText("Sold Out ERROR");
-                ui->refillLabel->setText("");
-                break;
-            }
+        {
+            QString infoLabelText = "Set Disabled Succesful";
+            bool success = db.updateSlotAvailability(this->idlePage->currentProductOrder->getSelectedSlot(), 0);
 
+            if (!success)
+            {
+                infoLabelText = "Set Disabled ERROR";
+            }
+            ui->infoLabel->setText(infoLabelText);
+
+            
+            break;
+        }
         case QMessageBox::No:
+        {
             msgBox.hide();
             break;
+        }
         }
     }
     else
@@ -581,7 +575,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
         // ARE YOU SURE YOU WANT TO COMPLETE?
         QMessageBox msgBox;
         msgBox.setWindowFlags(Qt::FramelessWindowHint);
-        msgBox.setText("<p align=center>Are you sure you want to un-mark product as sold out???</p>");
+        msgBox.setText("<p align=center>Are you sure you want to Enable Product?</p>");
         msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-width: 300px; min-height: 300px;}");
 
         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
@@ -590,24 +584,23 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
         switch (ret)
         {
         case QMessageBox::Yes:
+        {
+            QString infoLabelText = "Set Enabled Succesful";
+            bool success = db.updateSlotAvailability(this->idlePage->currentProductOrder->getSelectedSlot(), 1);
 
-            if (db.updateSlotAvailability(this->idlePage->currentProductOrder->getSelectedSlot(), 1))
+            if (!success)
             {
-                ui->soldOutLabel->setText("Un-Sold Out Succesfull");
-                ui->refillLabel->setText("");
-                break;
+                infoLabelText = "Set Enabled ERROR";
             }
-            else
-            {
-                ui->soldOutLabel->setText("Un-Sold Out ERROR");
-                ui->refillLabel->setText("");
-                break;
-            }
+            ui->infoLabel->setText(infoLabelText);
 
+            break;
+        }
         case QMessageBox::No:
-            //            qDebug() << "No Clicked" << endl;
+        {
             msgBox.hide();
             break;
+        }
         }
     }
 
@@ -651,8 +644,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
             this->idlePage->setSlotAvailability(this->idlePage->currentProductOrder->getSelectedSlot(), false);
 
             //                qDebug() << "SOLD OUT!" << endl;
-            ui->soldOutLabel->setText("Sold Out Succesfull. Will be reset at program restart.");
-            ui->refillLabel->setText("");
+            ui->infoLabel->setText("Sold Out Succesfull. Will be reset at program restart.");
             // Update Click DB
             //                DbManager db(DB_PATH);
             //                db.addPageClick("PRODUCT SOLD OUT");
@@ -688,8 +680,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
             this->idlePage->setSlotAvailability(this->idlePage->currentProductOrder->getSelectedSlot(), true);
 
             //                qDebug() << "SOLD OUT!" << endl;
-            ui->soldOutLabel->setText("Un-Sold Out Succesfull");
-            ui->refillLabel->setText("");
+            ui->infoLabel->setText("Un-Sold Out Succesfull");
             // Update Click DB
             //                DbManager db(DB_PATH);
             //                db.addPageClick("PRODUCT SOLD OUT");

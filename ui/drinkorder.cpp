@@ -63,6 +63,7 @@ char DrinkOrder::getSelectedSizeAsChar()
 
 int DrinkOrder::getSelectedSize()
 {
+    //e.g. SIZE_SMALL_INDEX
     return selectedSize;
 }
 

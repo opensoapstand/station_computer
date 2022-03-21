@@ -30,6 +30,16 @@
 using json = nlohmann::json;
 double promoPercent = 0.0;
 
+uint16_t orderSizeButtons_xywh_generic_product_page[4][4] = {
+    {560, 990, 135, 110}, // S
+    {706, 990, 135, 105}, // M
+    {852, 990, 135, 100}, // L
+    {560, 1100, 430, 115} // custom
+};
+
+uint16_t orderSizeButtons_xywh_static_product_page[4][4] = {{564, 1088, 209, 126}, {1, 1, 1, 1}, {790, 1087, 198, 126}, {1, 1, 1, 1}};
+// uint16_t orderSizeButtons_xywh_static_product_page[4][4] = {{560, 1155, 211, 41}, {1, 1, 1, 1}, {790, 1155, 201, 41}, {1, 1, 1, 1}};
+
 // CTOR
 pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
                                             ui(new Ui::pageProduct)
@@ -85,7 +95,7 @@ void pageProduct::loadOrderSize(int sizeIndex)
     selectedProductOrder->setSelectedSize(sizeIndex);
     loadOrderSelectedSize();
 }
-
+#ifdef GENERIC_PRODUCT_SELECT
 void pageProduct::loadOrderSelectedSize()
 {
 
@@ -131,23 +141,151 @@ void pageProduct::loadOrderSelectedSize()
 
     qDebug() << "-------------------------- END LOAD ORDER ----------------";
 }
+#else
+void pageProduct::loadOrderSelectedSize()
+{
+
+    qDebug() << "-------------------------- LOAD ORDER ----------------";
+
+    _selectIdleTimeoutSec = 140;
+
+    ui->mainPage_Button->setEnabled(true);
+    ui->previousPage_Button->setEnabled(true);
+
+    int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
+
+    int product_slot___ = selectedProductOrder->getSelectedSlot();
+
+    QString bitmap_location;
+
+    if (product_slot___ > 0 && product_slot___ <= SLOT_COUNT)
+    {
+
+        if (selectedProductOrder->getSelectedSize() == SIZE_SMALL_INDEX)
+        {
+            bitmap_location.append("/home/df-admin/production/references/4_pay_select_page_s_");
+        }
+        else
+        {
+            bitmap_location.append("/home/df-admin/production/references/4_pay_select_page_l_");
+        }
+
+        bitmap_location.append(QString::number(selectedProductOrder->getSelectedSlot()));
+        bitmap_location.append(".png");
+    }
+    else
+    {
+        bitmap_location = "/home/df-admin/production/references/4_pay_select_page_l_1.png";
+    }
+    qDebug() << bitmap_location << endl;
+    QPixmap background(bitmap_location);
+    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Background, background);
+    this->setPalette(palette);
+
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        qDebug() << "*****load size: " << i;
+        QString price = QString::number(selectedProductOrder->getPrice(product_sizes[i]), 'f', 2);
+        orderSizeLabelsPrice[i]->setText("$" + price);
+        // orderSizeLabelsPrice[i]->raise();
+        // orderSizeLabelsVolume[i]->raise();
+        orderSizeLabelsPrice[i]->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+        orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i]));
+
+        if (selectedProductOrder->getSelectedSize() == product_sizes[i])
+        {
+            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+        }
+        else
+        {
+            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+        }
+        orderSizeButtons[i]->raise();
+    }
+
+    if (selectedProductOrder->getSelectedSize() == SIZE_SMALL_INDEX)
+    {
+        ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+        ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+        ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
+        ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
+    }
+    else
+    {
+
+        ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+        ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+        ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
+        ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
+
+    }
+
+    ui->label_price_small->move(560, 1155);
+    ui->label_price_large->move(790, 1155);
+    ui->label_size_small->move(570, 1106);
+    ui->label_size_large->move(790, 1106);
+    ui->label_size_medium->hide();
+    ui->label_price_medium->hide();
+    ui->label_price_custom->hide();
+    ui->label_size_custom->hide();
+
+    // ui->label_price_large->setStyleSheet("color: #FFFFFF;");
+    // ui->label_price_small->setStyleSheet("color: #FFFFFF;");
+    // ui->label_price_large->setStyleSheet(QLatin1String("color: #FFFFFF;\n"
+    //     "font-family: Montserrat;\n"
+    //     "font-style: light;\n"
+    //     "font-weight: normal;\n"
+    //     "font-size: 20px;\n"
+    //     "line-height: 24px;\n"
+    //     "text-align: center;\n"
+    //     ""));
+    // ui->label_price_small->setStyleSheet(QLatin1String("color: #FFFFFF;\n"
+    //     "font-family: Montserrat;\n"
+    //     "font-style: light;\n"
+    //     "font-weight: normal;\n"
+    //     "font-size: 20px;\n"
+    //     "line-height: 24px;\n"
+    //     "text-align: center;\n"
+    //     ""));
+
+    ui->promoCode->clear();
+    ui->promoCode->hide();
+    promoPercent = 0.0;
+
+    ui->productLabel->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits());
+    double selectedPrice = selectedProductOrder->getSelectedPrice();
+    ui->priceLabel->setText("$" + QString::number(selectedPrice, 'f', 2));
+    ui->totalPriceLabel->setText("$" + QString::number(selectedPrice)); // how to handle promo ?! todo!
+
+    qDebug() << "-------------------------- END LOAD ORDER ----------------";
+}
+
+#endif
+
 void pageProduct::reset_and_show_page_elements()
 {
 
     QString bitmap_location;
 
-#ifdef CUSTOM_VOLUME_DISPENSING
+#ifdef GENERIC_PRODUCT_SELECT
     bitmap_location = "/home/df-admin/production/references/page_product_generic.png";
-    uint16_t orderSizeButtons_xywh[4][4] = {
-        {560, 990, 135, 110},  // S
-        {706, 990, 135, 105},  // M
-        {852, 990, 135, 100},  // L
-        {560, 1100, 430, 115}   // custom
-        };
+    // uint16_t orderSizeButtons_xywh[4][4] = {
+    //     {560, 990, 135, 110},  // S
+    //     {706, 990, 135, 105},  // M
+    //     {852, 990, 135, 100},  // L
+    //     {560, 1100, 430, 115}   // custom
+    //     };
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        orderSizeButtons[i]->setFixedSize(QSize(orderSizeButtons_xywh_generic_product_page[i][2], orderSizeButtons_xywh_generic_product_page[i][3]));
+        orderSizeButtons[i]->move(orderSizeButtons_xywh_generic_product_page[i][0], orderSizeButtons_xywh_generic_product_page[i][1]);
+    }
 
 #else
     int product_slot___ = selectedProductOrder->getSelectedSlot();
-    uint16_t orderSizeButtons_xywh[4][4] = {{564, 1088, 209, 126}, {1, 1, 1, 1}, {790, 1087, 198, 126}, {1, 1, 1, 1}};
+    // uint16_t orderSizeButtons_xywh[4][4] = {{564, 1088, 209, 126}, {1, 1, 1, 1}, {790, 1087, 198, 126}, {1, 1, 1, 1}};
     if (product_slot___ > 0 && product_slot___ <= SLOT_COUNT)
     {
         bitmap_location.append("/home/df-admin/production/references/4_pay_select_page_l_");
@@ -158,13 +296,13 @@ void pageProduct::reset_and_show_page_elements()
     {
         bitmap_location = "/home/df-admin/production/references/4_pay_select_page_l_1.png";
     }
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        orderSizeButtons[i]->setFixedSize(QSize(orderSizeButtons_xywh_static_product_page[i][2], orderSizeButtons_xywh_static_product_page[i][3]));
+        orderSizeButtons[i]->move(orderSizeButtons_xywh_static_product_page[i][0], orderSizeButtons_xywh_static_product_page[i][1]);
+    }
 
 #endif
-
-    for (uint8_t i=0;i<4;i++){
-        orderSizeButtons[i]->setFixedSize(QSize(orderSizeButtons_xywh[i][2],orderSizeButtons_xywh[i][3]));
-        orderSizeButtons[i]->move(orderSizeButtons_xywh[i][0],orderSizeButtons_xywh[i][1]);
-    }
 
     qDebug() << bitmap_location << endl;
     QPixmap background(bitmap_location);
@@ -256,7 +394,7 @@ void pageProduct::onSelectTimeoutTick()
     }
     else
     {
-        //qDebug() << "Timer Done!" << _selectIdleTimeoutSec << endl;
+        // qDebug() << "Timer Done!" << _selectIdleTimeoutSec << endl;
         selectIdleTimer->stop();
 
         mainPage();
@@ -473,7 +611,7 @@ void pageProduct::on_pagePayment_Button_clicked()
         res = curl_easy_perform(curl);
         if (res != CURLE_OK)
         {
-           // wifiError->showEvent(wifiErrorEvent);
+            // wifiError->showEvent(wifiErrorEvent);
             wifiError->showFullScreen();
             this->hide();
         }
@@ -486,7 +624,7 @@ void pageProduct::on_pagePayment_Button_clicked()
     }
     else if (paymentMethod == "barcode" || paymentMethod == "plu")
     {
-        //dispensingPage->showEvent(dispenseEvent); // todo Lode: this enabled together with showfullscreen calls the showEvent twice. only showevent, does not display the dispense page though.
+        // dispensingPage->showEvent(dispenseEvent); // todo Lode: this enabled together with showfullscreen calls the showEvent twice. only showevent, does not display the dispense page though.
         dispensingPage->showFullScreen();
         this->hide();
     }

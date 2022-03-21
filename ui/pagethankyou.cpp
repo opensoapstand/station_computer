@@ -27,6 +27,7 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
 
     /*hacky transparent button*/
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+
     ui->rinse_label->setText("<p align=center>Water rinse coming in<br>5</p>");
     ui->rinse_label->hide();
 

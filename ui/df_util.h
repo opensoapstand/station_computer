@@ -9,7 +9,8 @@
 // TODO: Refactor to fit with dfuicommthread
 // #define USE_OLD_DATABASE
 //#define START_FSM_FROM_UI //enabled by default (start controller from ui)
-#define CUSTOM_VOLUME_DISPENSING
+
+// #define GENERIC_PRODUCT_SELECT
 
 #define OPTION_SLOT_INVALID 0
 #define SLOT_COUNT 4

@@ -29,6 +29,7 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
     maintainProductPageEndTimer->setInterval(1000);
     connect(maintainProductPageEndTimer, SIGNAL(timeout()), this, SLOT(onMaintainProductPageTimeoutTick()));
     connect(ui->pwmSlider, SIGNAL(valueChanged(int)), this, SLOT(pwmSliderMoved(int)));
+    ui->refillButton->setStyleSheet("QPushButton {font-size: 36px;}");
 }
 
 // DTOR
@@ -55,13 +56,13 @@ void page_maintenance_dispenser::setSoldOutButtonText()
     if (db.getSlotEnabled(slot))
     {
 #endif
-        ui->soldOutButton->setText("Make unavailable");
-        ui->soldOutButton->setStyleSheet("QPushButton { background-color: #5E8680;  }");
+        ui->soldOutButton->setText("Make \n unavailable");
+        ui->soldOutButton->setStyleSheet("QPushButton { background-color: #5E8680;font-size: 36px; }");
     }
     else
     {
-        ui->soldOutButton->setText("Make available");
-        ui->soldOutButton->setStyleSheet("QPushButton { background-color: #E0A0A0;  }");
+        ui->soldOutButton->setText("Make \n available");
+        ui->soldOutButton->setStyleSheet("QPushButton { background-color: #E0A0A0;font-size: 36px;  }");
     }
     db.closeDB();
 }
@@ -560,7 +561,6 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
             }
             ui->infoLabel->setText(infoLabelText);
 
-            
             break;
         }
         case QMessageBox::No:

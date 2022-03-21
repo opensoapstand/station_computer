@@ -29,8 +29,9 @@ class page_dispenser;
 class page_error_wifi;
 class page_help;
 
-namespace Ui {
-class pageProduct;
+namespace Ui
+{
+    class pageProduct;
 }
 
 class pageProduct : public QWidget
@@ -38,12 +39,12 @@ class pageProduct : public QWidget
     Q_OBJECT
 
 public:
-    QPushButton* orderSizeButtons [4];
-    QLabel* orderSizeLabelsPrice[4];
-    QLabel* orderSizeLabelsVolume[4];
+    QPushButton *orderSizeButtons[4];
+    QLabel *orderSizeLabelsPrice[4];
+    QLabel *orderSizeLabelsVolume[4];
 
     explicit pageProduct(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser* page_dispenser,page_error_wifi* pageWifiError,  page_idle* pageIdle, pagePayment *pagePayment, page_help* pageHelp);
+    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, pagePayment *pagePayment, page_help *pageHelp);
     ~pageProduct();
 
     void resizeEvent(QResizeEvent *event);
@@ -51,7 +52,6 @@ public:
 
     void cancelTimers();
     void updatePriceAfterPromo(double promoPercent);
-    
 
 signals:
     void paymentTotal(string, string, string);
@@ -76,7 +76,6 @@ private slots:
     void loadOrderSize(int sizeIndex);
     void loadOrderSelectedSize();
 
-   
 private:
     bool stopSelectTimers();
     void reset_and_show_page_elements();
@@ -85,24 +84,21 @@ private:
 
     std::string readBuffer;
     Ui::pageProduct *ui;
-    page_select_product* firstProductPage;
-    pagePayment* paymentPage;
-    page_idle* idlePage;
-    page_dispenser* dispensingPage;
-    page_error_wifi* wifiError;
-    page_help* helpPage;
+    page_select_product *firstProductPage;
+    pagePayment *paymentPage;
+    page_idle *idlePage;
+    page_dispenser *dispensingPage;
+    page_error_wifi *wifiError;
+    page_help *helpPage;
+    
+    DrinkOrder *selectedProductOrder;
 
-
-    DrinkOrder* selectedProductOrder;
-
-
-    QTimer* selectIdleTimer;
+    QTimer *selectIdleTimer;
     int _selectIdleTimeoutSec;
 
     QResizeEvent *pageProductResize;
     QShowEvent *dispenseEvent;
     QShowEvent *wifiErrorEvent;
-
 };
 
 #endif // PAYSELECT_H

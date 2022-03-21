@@ -392,17 +392,17 @@ void pagePayment::createOrder(){
 }
 
 void pagePayment::generateQR(){
-    qDebug() << "ahoyy23" ;
-    DbManager db(DB_PATH);
+    // qDebug() << "ahoyy23" ;
+    // DbManager db(DB_PATH);
 
-    int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
-    char drinkSize;
-    if (idlePage->currentProductOrder->getSelectedSize() == SIZE_SMALL_INDEX){
-        drinkSize = 's';
-    }
-    if (idlePage->currentProductOrder->getSelectedSize() == SIZE_LARGE_INDEX){
-        drinkSize = 'l';
-    }
+    // int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
+    // char drinkSize;
+    // if (idlePage->currentProductOrder->getSelectedSize() == SIZE_SMALL_INDEX){
+    //     drinkSize = 's';
+    // }
+    // if (idlePage->currentProductOrder->getSelectedSize() == SIZE_LARGE_INDEX){
+    //     drinkSize = 'l';
+    // }
     createOrder();
     QPixmap map(360,360);
     map.fill(QColor("black"));
@@ -430,8 +430,8 @@ void pagePayment::generateQR(){
     _qrTimeOutSec=5;
     qrTimer->start(1000);
 
-    db.closeDB();
 
+    // db.closeDB();
 }
 
 void pagePayment::curler(){

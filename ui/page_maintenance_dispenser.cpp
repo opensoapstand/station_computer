@@ -193,8 +193,8 @@ void page_maintenance_dispenser::refreshLabels()
     ui->price_small->setText("$" + QString::number(selectedProductOrder->getPrice(SIZE_SMALL_INDEX)));
     ui->price_large->setText("$" + QString::number(selectedProductOrder->getPrice(SIZE_LARGE_INDEX)));
 
-    ui->target_volume_s->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_SMALL_INDEX,false));
-    ui->target_volume_l->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_LARGE_INDEX,false));
+    ui->target_volume_s->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_SMALL_INDEX, false));
+    ui->target_volume_l->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_LARGE_INDEX, false));
 
     ui->full_volume->setText(selectedProductOrder->getFullVolumeCorrectUnits());
     ui->volume_dispensed_total->setText(selectedProductOrder->getTotalDispensedCorrectUnits());
@@ -202,57 +202,23 @@ void page_maintenance_dispenser::refreshLabels()
     ui->remainingLabel->setText(selectedProductOrder->getVolumeRemainingCorrectUnits());
     ui->pwmLabel->setText(QString::number(selectedProductOrder->getSelectedDispenseSpeedPercentage()) + "%");
 
-    // ui->price_small->setText("$" + QString::number(db.getProductPrice(product_slot___, 's')));
-    // ui->price_large->setText("$" + QString::number(db.getProductPrice(product_slot___, 'l')));
-
-    // ui->target_volume_s->setText(QString::number(db.getProductVolume(product_slot___, 's')) + " " + db.getUnits(product_slot___));
-    // ui->target_volume_l->setText(QString::number(db.getProductVolume(product_slot___, 'l')) + " " + db.getUnits(product_slot___));
-    // ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(product_slot___)) + " " + db.getUnits(product_slot___));
-    // ui->volume_dispensed_since_last_restock->setText(QString::number(db.getVolumeDispensedSinceRestock(product_slot___)) + " " + db.getUnits(product_slot___));
-    // ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(product_slot___)) + " " + db.getUnits(product_slot___));
-    // ui->pwmLabel->setText(QString::number(selectedProductOrder->getSelectedDispenseSpeedPercentage()) + "%");
-
     int product_slot___ = selectedProductOrder->getSelectedSlot();
     qDebug() << "db... refresh labels" << endl;
     DbManager db(DB_PATH);
     ui->lastRefillLabel->setText(db.getLastRefill(product_slot___));
     ui->pluLabel_s->setText(db.getPLU(product_slot___, 's'));
     ui->pluLabel_l->setText(db.getPLU(product_slot___, 'l'));
-    // ui->pwmSlider->setValue(round(double((db.getPWM(product_slot___)) * 100) / 255));
     ui->pwmSlider->hide();
 
     db.closeDB();
 
     ui->infoLabel->setText("");
-    //   ui->name->setText("Product Name: ");
-    // ui->price_small->setText("Product Price: ");
-    // ui->price_large->setText("Product Price: ");
-    // ui->target_volume_s->setText("Product Volume: ");
-    // ui->target_volume_l->setText("Product Volume: ");
-    // ui->volume_per_tick->setText("Product Volume Per Tick: ");
-    // ui->full_volume->setText("");
-    // ui->remainingLabel->setText("");
-    // ui->volume_dispensed_total->setText("");
-    // ui->volume_dispensed_since_last_restock->setText("");
-    // ui->lastRefillLabel->setText("");
+
     ui->testLargeButton->setVisible(false);
     ui->testSmallButton->setVisible(false);
 
     ui->temperatureButton->setVisible(false);
     ui->temperatureLabel->setVisible(false);
-
-    //  ui->name->setText(db.getProductName(product_slot___));
-    // ui->price_small->setText("$" + QString::number(db.getProductPrice(product_slot___, 's')));
-    // ui->price_large->setText("$" + QString::number(db.getProductPrice(product_slot___, 'l')));
-    // ui->target_volume_s->setText(QString::number(db.getProductVolume(product_slot___, 's')) + " " + db.getUnits(product_slot___));
-    // ui->target_volume_l->setText(QString::number(db.getProductVolume(product_slot___, 'l')) + " " + db.getUnits(product_slot___));
-    // ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(product_slot___)) + " " + db.getUnits(product_slot___));
-    // ui->full_volume->setText(QString::number(db.getFullProduct(product_slot___)) + " " + db.getUnits(product_slot___));
-    // ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(product_slot___)) + " " + db.getUnits(product_slot___));
-    // ui->volume_dispensed_since_last_restock->setText(QString::number(db.getVolumeDispensedSinceRestock(product_slot___)) + " " + db.getUnits(product_slot___));
-    // ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(product_slot___)) + " " + db.getUnits(product_slot___));
-    // ui->lastRefillLabel->setText(db.getLastRefill(product_slot___));
-    // ui->pwmLabel->setText(QString::number(round(double((db.getPWM(product_slot___)) * 100) / 255)) + "%");
 }
 
 void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
@@ -448,18 +414,18 @@ void page_maintenance_dispenser::update_dispense_stats(double dispensed)
     double vol_dispensed = dispensed;
     // qDebug() << "Signal: updatevol in maintenance mode" + QString::number(vol_dispensed);
 
-
-    if (this->units_selected_product == "oz"){
-        // 
-        ui->ticksLabel->setText("Ticks (" + QString::number(df_util::convertMlToOz(volume_per_tick_buffer), 'f', 2) + "oz/tick): " + QString::number(df_util::convertMlToOz(vol_dispensed / volume_per_tick_buffer),'f', 2));
-        ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(df_util::convertMlToOz(vol_dispensed),'f', 2) + "oz");
-
-    }else{
+    if (this->units_selected_product == "oz")
+    {
+        //
+        ui->ticksLabel->setText("Ticks (" + QString::number(df_util::convertMlToOz(volume_per_tick_buffer), 'f', 2) + "oz/tick): " + QString::number(df_util::convertMlToOz(vol_dispensed / volume_per_tick_buffer), 'f', 2));
+        ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(df_util::convertMlToOz(vol_dispensed), 'f', 2) + "oz");
+    }
+    else
+    {
         ui->ticksLabel->setText("Ticks (" + QString::number(volume_per_tick_buffer) + "ml/tick): " + QString::number(vol_dispensed / volume_per_tick_buffer));
         ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) + "ml");
-
     }
-    
+
     //}else{
     // qDebug() << "Error: update volume received while pump not enabled in maintenance." ;
     //}
@@ -535,10 +501,6 @@ void page_maintenance_dispenser::on_refillButton_clicked()
 
         if (success)
         {
-            // ui->volume_dispensed_total->setText(selectedProductOrder->getTotalDispensedCorrectUnits());
-            // ui->volume_dispensed_since_last_restock->setText(selectedProductOrder->getVolumeDispensedSinceRestockCorrectUnits());
-            // ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(this->idlePage->currentProductOrder->getSelectedSlot())) + " " + db.getUnits(this->idlePage->currentProductOrder->getSelectedSlot()));
-            // ui->lastRefillLabel->setText(db.getLastRefill(this->idlePage->currentProductOrder->getSelectedSlot()));
 
             curler();
             refreshLabels();
@@ -569,7 +531,6 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
     _maintainProductPageTimeoutSec = 40;
     bool success;
 
-    // if (db.getVolumeRemaining(this->idlePage->currentProductOrder->getSelectedSlot()) > 0){
     DbManager db(DB_PATH);
     success = db.getSlotEnabled(selectedProductOrder->getSelectedSlot());
     db.closeDB();
@@ -655,13 +616,9 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
     DbManager db(DB_PATH);
     //    qDebug() << "Sold Out button clicked" << endl;
 
-    // qDebug() << QString::number(db.getVolumeRemaining(this->idlePage->currentProductOrder->getSelectedSlot());
     qDebug() << "soldout clicked. slot: " << QString::number(this->idlePage->currentProductOrder->getSelectedSlot()) << endl;
-    qDebug() << "soldout clicked. size: " << QString::number(this->idlePage->currentProductOrder->getSelectedVolume()) << endl;
 
     _maintainProductPageTimeoutSec = 40;
-
-    // if (db.getVolumeRemaining(this->idlePage->currentProductOrder->getSelectedSlot()) > 0){
 
     if (this->idlePage->isSlotAvailable(this->idlePage->currentProductOrder->getSelectedSlot()))
     {
@@ -721,12 +678,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
 
             //                qDebug() << "SOLD OUT!" << endl;
             ui->infoLabel->setText("Un-Sold Out Succesfull");
-            // Update Click DB
-            //                DbManager db(DB_PATH);
-            //                db.addPageClick("PRODUCT SOLD OUT");
-            // ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(this->idlePage->currentProductOrder->getSelectedSlot())) + " " +  db.getUnits(this->idlePage->currentProductOrder->getSelectedSlot()));
-            // ui->remainingLabel->setText(QString::number(db.getVolumeRemaining(this->idlePage->currentProductOrder->getSelectedSlot())) + " " +  db.getUnits(this->idlePage->currentProductOrder->getSelectedSlot()));
-            // ui->soldOutButton->setText("Mark as Sold Out");
+         
         }
         case QMessageBox::No:
             //            qDebug() << "No Clicked" << endl;
@@ -746,11 +698,6 @@ void page_maintenance_dispenser::on_fullButton_clicked()
     //    qDebug() << "Full Volume button clicked" << endl;
     full = true;
     _maintainProductPageTimeoutSec = 40;
-    //    DbManager db(DB_PATH);
-    //    ui->numberEntry->show();
-    //    ui->textEntry->setText("");
-    //    ui->titleLabel->setText("New Full Volume:");
-    //    ui->full_volume->setText(QString::number(db.getFullProduct(idlePage->currentProductOrder->getSelectedSlot())) + "ml");
 }
 
 void page_maintenance_dispenser::on_remainingButton_clicked()
@@ -774,10 +721,7 @@ void page_maintenance_dispenser::on_lastRefillButton_clicked()
 void page_maintenance_dispenser::on_temperatureButton_clicked()
 {
     //    qDebug() << "Temperature button clicked" << endl;
-    //    DbManager db_temperature(DB_PATH_TEMPERATURE);
-    //    ui->temperatureLabel->setText(QString::number(db_temperature.getTemperature()) + " degrees Celcius");
     _maintainProductPageTimeoutSec = 40;
-    //    db_temperature.closeDB();
 }
 
 void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()

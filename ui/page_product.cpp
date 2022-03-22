@@ -121,7 +121,7 @@ void pageProduct::loadOrderSelectedSize()
         // orderSizeLabelsVolume[i]->raise();
         orderSizeLabelsPrice[i]->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
 
-        orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i]));
+        orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i],true));
 
         if (selectedProductOrder->getSelectedSize() == product_sizes[i])
         {
@@ -196,7 +196,7 @@ void pageProduct::loadOrderSelectedSize()
         // orderSizeLabelsPrice[i]->raise();
         // orderSizeLabelsVolume[i]->raise();
         orderSizeLabelsPrice[i]->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
-        orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i]));
+        orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i], true));
 
         if (selectedProductOrder->getSelectedSize() == product_sizes[i])
         {

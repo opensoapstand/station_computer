@@ -102,7 +102,7 @@ public:
     double inputTextToMlConvertUnits(QString inputValueAsText);
     QString getUnitsForSelectedSlot();
     QString getSelectedSizeToVolume(QString units);
-    QString getSizeToVolumeWithCorrectUnitsForSelectedSlot(int size);
+    QString getSizeToVolumeWithCorrectUnitsForSelectedSlot(int size, bool roundValue);
 
     double getPrice(int sizeIndex);
     void setPriceSelected(int size, double price);

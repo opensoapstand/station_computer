@@ -215,7 +215,7 @@ QString DrinkOrder::getVolumePerTickAsStringForSelectedSlot()
     double vol_per_tick = getVolumePerTickForSelectedSlot();
     QString units = getUnitsForSelectedSlot();
 
-    return df_util::getConvertedStringVolumeFromMl(vol_per_tick, units);
+    return df_util::getConvertedStringVolumeFromMl(vol_per_tick, units, false);
 }
 
 double DrinkOrder::getVolumePerTickForSelectedSlot()
@@ -265,7 +265,7 @@ QString DrinkOrder::getVolumeRemainingCorrectUnits(){
     db.closeDB();
     
     QString units = getUnitsForSelectedSlot();
-    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units);
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units,false);
 
     return volume_as_string;
     
@@ -280,7 +280,7 @@ QString DrinkOrder::getVolumeDispensedSinceRestockCorrectUnits(){
     db.closeDB();
     
     QString units = getUnitsForSelectedSlot();
-    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units);
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units,false);
 
     return volume_as_string;
 
@@ -293,12 +293,12 @@ QString DrinkOrder::getTotalDispensedCorrectUnits(){
     db.closeDB();
     
     QString units = getUnitsForSelectedSlot();
-    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units);
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units,false);
 
     return volume_as_string;
 }
 
-QString DrinkOrder::getSizeToVolumeWithCorrectUnitsForSelectedSlot(int size)
+QString DrinkOrder::getSizeToVolumeWithCorrectUnitsForSelectedSlot(int size, bool roundValue)
 {
     QString volume_as_string;
     double v;
@@ -307,7 +307,7 @@ QString DrinkOrder::getSizeToVolumeWithCorrectUnitsForSelectedSlot(int size)
 
     v = getVolume(size);
     units = getUnitsForSelectedSlot();
-    volume_as_string = df_util::getConvertedStringVolumeFromMl(v, units);
+    volume_as_string = df_util::getConvertedStringVolumeFromMl(v, units,roundValue);
     return volume_as_string;
 }
 
@@ -331,9 +331,9 @@ QString DrinkOrder::getFullVolumeCorrectUnits()
 
     double volume = db.getFullProduct(getSelectedSlot());
     db.closeDB();
-    
+
     QString units = getUnitsForSelectedSlot();
-    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units);
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units,false);
 
     return volume_as_string;
 }
@@ -352,7 +352,7 @@ QString DrinkOrder::getSelectedSizeToVolumeWithCorrectUnits()
 
     // ui->label_size_small->setText(QString::number(v) + "ml");
 
-    return getSizeToVolumeWithCorrectUnitsForSelectedSlot(getSelectedSize());
+    return getSizeToVolumeWithCorrectUnitsForSelectedSlot(getSelectedSize(),true);
 }
 
 QString DrinkOrder::getSelectedProductName()

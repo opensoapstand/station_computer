@@ -66,7 +66,7 @@ public:
     static double convertMlToOz(double vol_ml);
     static double convertOzToMl(double vol_oz);
     static char sizeIndexToChar(int size_index);
-    static QString getConvertedStringVolumeFromMl(double volumeMilliLiter, QString units);
+    static QString getConvertedStringVolumeFromMl(double volumeMilliLiter, QString units, bool roundNumber);
     
 
     // static long getTimeStamp();

@@ -12,7 +12,7 @@ char df_util::sizeIndexToChar(int size_index)
 
 double df_util::convertMlToOz(double vol_ml)
 {
-    return vol_ml * ML_TO_OZ;
+    return (double)vol_ml * (double)ML_TO_OZ * 1.0;
 }
 
 double df_util::convertOzToMl(double vol_oz)
@@ -20,7 +20,7 @@ double df_util::convertOzToMl(double vol_oz)
     return vol_oz / ML_TO_OZ;
 }
 
-QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString units)
+QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString units, bool roundNumber)
 {
     QString volume_as_string;
     // switch (units){
@@ -51,7 +51,13 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
     //     // qDebug() << "vol: " << volume_as_string << " .. units: " << units << " vol metric: " << v << "vol oz: " << volume_oz;
     // };
 
-    double volume_oz = ceil(convertMlToOz(volumeMilliLiter));
+    double volume_oz = convertMlToOz(volumeMilliLiter);
+
+    if (roundNumber)
+    {
+        volume_oz = ceil(volume_oz);
+    }
+    // double volume_oz = ceil(convertMlToOz(volumeMilliLiter));
 
     if (units == "l" || units == "ml")
     {
@@ -67,7 +73,12 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
     }
     else if (units == "oz")
     {
-        volume_as_string = QString::number(volume_oz, 'f', 0) + "oz";
+        int decimals = 2;
+        if (roundNumber)
+        {
+            decimals = 0;
+        }
+        volume_as_string = QString::number(volume_oz, 'f', decimals) + "oz";
     }
     else
     {

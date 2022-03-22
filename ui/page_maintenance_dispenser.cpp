@@ -193,8 +193,8 @@ void page_maintenance_dispenser::refreshLabels()
     ui->price_small->setText("$" + QString::number(selectedProductOrder->getPrice(SIZE_SMALL_INDEX)));
     ui->price_large->setText("$" + QString::number(selectedProductOrder->getPrice(SIZE_LARGE_INDEX)));
 
-    ui->target_volume_s->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_SMALL_INDEX));
-    ui->target_volume_l->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_LARGE_INDEX));
+    ui->target_volume_s->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_SMALL_INDEX,false));
+    ui->target_volume_l->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_LARGE_INDEX,false));
 
     ui->full_volume->setText(selectedProductOrder->getFullVolumeCorrectUnits());
     ui->volume_dispensed_total->setText(selectedProductOrder->getTotalDispensedCorrectUnits());
@@ -307,7 +307,7 @@ void page_maintenance_dispenser::on_pumpButton_clicked()
             dispense_test_end(true);
         }
     }
-    
+
     refreshLabels(); // fsm did not yet respond at this time. wait for feedback.
     db.closeDB();
 }
@@ -391,7 +391,7 @@ void page_maintenance_dispenser::dispense_test_start()
     {
         qDebug() << "Start dispense in maintenance mode. (FYI: if app crashes, it's probably about the update volume interrupts caused by the controller sending data.)";
         QString command = QString::number(this->idlePage->currentProductOrder->getSelectedSlot());
-        command.append("t");  // 't' 
+        command.append("t"); // 't'
         command.append(SEND_DISPENSE_START);
 
         update_dispense_stats(0);
@@ -448,8 +448,18 @@ void page_maintenance_dispenser::update_dispense_stats(double dispensed)
     double vol_dispensed = dispensed;
     // qDebug() << "Signal: updatevol in maintenance mode" + QString::number(vol_dispensed);
 
-    ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) + this->units_selected_product);
-    ui->ticksLabel->setText("Ticks (" + QString::number(volume_per_tick_buffer) + "ml/tick): " + QString::number(vol_dispensed / volume_per_tick_buffer));
+
+    if (this->units_selected_product == "oz"){
+        // 
+        ui->ticksLabel->setText("Ticks (" + QString::number(df_util::convertMlToOz(volume_per_tick_buffer), 'f', 2) + "oz/tick): " + QString::number(df_util::convertMlToOz(vol_dispensed / volume_per_tick_buffer),'f', 2));
+        ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(df_util::convertMlToOz(vol_dispensed),'f', 2) + "oz");
+
+    }else{
+        ui->ticksLabel->setText("Ticks (" + QString::number(volume_per_tick_buffer) + "ml/tick): " + QString::number(vol_dispensed / volume_per_tick_buffer));
+        ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) + "ml");
+
+    }
+    
     //}else{
     // qDebug() << "Error: update volume received while pump not enabled in maintenance." ;
     //}
@@ -553,7 +563,8 @@ void page_maintenance_dispenser::on_refillButton_clicked()
 void page_maintenance_dispenser::on_soldOutButton_clicked()
 {
     qDebug() << "soldout clicked. slot: " << QString::number(this->idlePage->currentProductOrder->getSelectedSlot());
-    qDebug() << "soldout clicked. size: " << QString::number(this->idlePage->currentProductOrder->getSelectedVolume());
+
+    // qDebug() << "soldout clicked. size: " << QString::number(this->idlePage->currentProductOrder->getSelectedVolume());
 
     _maintainProductPageTimeoutSec = 40;
     bool success;
@@ -580,7 +591,10 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
         case QMessageBox::Yes:
         {
             QString infoLabelText = "Set Disabled Succesful";
-            bool success = db.updateSlotAvailability(this->idlePage->currentProductOrder->getSelectedSlot(), 0);
+
+            DbManager db2(DB_PATH);
+            bool success = db2.updateSlotAvailability(selectedProductOrder->getSelectedSlot(), 0);
+            db2.closeDB();
 
             if (!success)
             {
@@ -613,8 +627,9 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
         case QMessageBox::Yes:
         {
             QString infoLabelText = "Set Enabled Succesful";
-            bool success = db.updateSlotAvailability(this->idlePage->currentProductOrder->getSelectedSlot(), 1);
-
+            DbManager db3(DB_PATH);
+            bool success = db3.updateSlotAvailability(this->idlePage->currentProductOrder->getSelectedSlot(), 1);
+            db3.closeDB();
             if (!success)
             {
                 infoLabelText = "Set Enabled ERROR";
@@ -952,19 +967,14 @@ void page_maintenance_dispenser::updateValues()
     {
         // db.updateTargetVolume_s(product_slot___, text_entered.toDouble());
         selectedProductOrder->setVolumeForSelected(text_entered, SIZE_SMALL_INDEX);
-        // ui->target_volume_s->setText( selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_SMALL_INDEX) );
     }
     else if (target_l)
     {
         selectedProductOrder->setVolumeForSelected(text_entered, SIZE_LARGE_INDEX);
-        // db.updateTargetVolume_l(product_slot___, text_entered.toDouble());
-        // ui->target_volume_l->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_LARGE_INDEX));
     }
     else if (vol_per_tick)
     {
         selectedProductOrder->setVolumePerTickForSelectedSlot(text_entered);
-        // ui->volume_per_tick->setText(selectedProductOrder->getVolumePerTickAsStringForSelectedSlot());
-        // volume_per_tick_buffer = selectedProductOrder->getVolumePerTickForSelectedSlot();
     }
     else if (full)
     {

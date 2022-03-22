@@ -15,7 +15,6 @@
 #define OPTION_SLOT_INVALID 0
 #define SLOT_COUNT 4
 
-
 #define SIZES_COUNT 6
 
 #define SIZE_INVALID_INDEX 0
@@ -24,7 +23,6 @@
 #define SIZE_LARGE_INDEX 3
 #define SIZE_CUSTOM_INDEX 4
 #define SIZE_TEST_INDEX 5
-
 
 #ifndef START_FSM_FROM_UI
 //#define WAIT_FOR_CONTROLLER_READY // will wait for response of controller before continuing.
@@ -37,6 +35,8 @@
 #endif
 // #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 //#define DB_PATH "/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db"
+
+#define ENABLE_COUPON   // Petros stations have no coupon
 
 #define DB_PATH_CLICKS "/release/db/sqlite/clicks.db"
 #define DB_PATH_TEMPERATURE "/release/db/sqlite/temperature.db"
@@ -62,9 +62,12 @@ class df_util : public QWidget
     Q_OBJECT
 public:
     explicit df_util(QWidget *parent = nullptr);
-    
-    static char sizeIndexToChar(int size_index);
 
+    static double convertMlToOz(double vol_ml);
+    static double convertOzToMl(double vol_oz);
+    static char sizeIndexToChar(int size_index);
+    static QString getConvertedStringVolumeFromMl(double volumeMilliLiter, QString units);
+    
 
     // static long getTimeStamp();
     // static string format_string(long time_stamp,string fmt,int cutBack=0);
@@ -76,11 +79,11 @@ public:
     // QString get_local_db_max_transaction();
     void set_message_to_send_to_FSM(QString msg);
 
-//    void setIsSendingFSM(bool isSendingFSM){m_IsSendingFSM = isSendingFSM;};
-//    bool getIsSendingFSM(){return m_IsSendingFSM;};
+    //    void setIsSendingFSM(bool isSendingFSM){m_IsSendingFSM = isSendingFSM;};
+    //    bool getIsSendingFSM(){return m_IsSendingFSM;};
 
     bool m_IsSendingFSM;
-    //FSM_COMM m_fsmMsg; // Sets type of message/command
+    // FSM_COMM m_fsmMsg; // Sets type of message/command
 
     QString send_msg;
 
@@ -93,7 +96,7 @@ protected:
     // FSM communication
 
     // TODO: move host and port to XML
-    const char* host = "localhost";
+    const char *host = "localhost";
     int port = 1234;
 
     QSqlDatabase db;
@@ -103,7 +106,6 @@ public slots:
     void send_to_FSM();
 
 private:
-
     // QString remote_psql_db_path;
     // QString remote_psql_db_name;
 };

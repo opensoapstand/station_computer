@@ -22,6 +22,9 @@ sudo -u df-admin mkdir /home/df-admin/production/logging/transactions
 sudo -u df-admin mkdir /home/df-admin/production/db
 sudo -u df-admin mkdir /home/df-admin/production/admin
 sudo -u df-admin mkdir /home/df-admin/production/bin
+sudo -u df-admin mkdir /home/df-admin/production/references
+
+sudo chmod 777 /home/df-admin/production/references
 
 # move binary files
 scp /home/df-admin/drinkfill/ui/DF_UI /home/df-admin/production/bin/DF_UI

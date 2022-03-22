@@ -49,6 +49,7 @@ public:
     void dispense_test_end(bool sendStopToController);
     void dispense_test_start();
     void update_dispense_stats(double dispensed);
+    DrinkOrder* selectedProductOrder;
 
 private slots:
     void refreshLabels();
@@ -116,7 +117,7 @@ private:
 //    bool plu_s;
 //    bool plu_l;
 
-    double ticks;
+    double volume_per_tick_buffer;
 
     void updateValues();
     void curler();

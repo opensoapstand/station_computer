@@ -1,3 +1,4 @@
+
 #include "page_maintenance_dispenser.h"
 #include "ui_page_maintenance_dispenser.h"
 #include "page_idle.h"
@@ -144,6 +145,7 @@ void page_maintenance_dispenser::setPage(page_maintenance *pageMaintenance, page
 {
     this->p_page_maintenance = pageMaintenance;
     this->idlePage = pageIdle;
+    selectedProductOrder = idlePage->currentProductOrder;
 
     refreshLabels();
 }
@@ -179,16 +181,17 @@ void page_maintenance_dispenser::on_backButton_clicked()
 
 void page_maintenance_dispenser::refreshLabels()
 {
-    int product_slot___ = this->idlePage->currentProductOrder->getSelectedSlot();
+    int  product_slot___ = selectedProductOrder->getSelectedSlot();
     qDebug() << "db... refresh labels" << endl;
     DbManager db(DB_PATH);
-    ticks = db.getProductVolumePerTick(product_slot___);
+    volume_per_tick_buffer = db.getProductVolumePerTick(product_slot___);
+
     ui->name->setText(db.getProductName(product_slot___));
     ui->price_small->setText("$" + QString::number(db.getProductPrice(product_slot___, 's')));
     ui->price_large->setText("$" + QString::number(db.getProductPrice(product_slot___, 'l')));
     ui->target_volume_s->setText(QString::number(db.getProductVolume(product_slot___, 's')) + " " + db.getUnits(product_slot___));
     ui->target_volume_l->setText(QString::number(db.getProductVolume(product_slot___, 'l')) + " " + db.getUnits(product_slot___));
-    ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(product_slot___)) + " " + db.getUnits(product_slot___));
+    ui->volume_per_tick->setText(selectedProductOrder->getVolumePerTickAsStringForSelectedSlot());
     ui->full_volume->setText(QString::number(db.getFullProduct(product_slot___)) + " " + db.getUnits(product_slot___));
     ui->volume_dispensed_total->setText(QString::number(db.getTotalDispensed(product_slot___)) + " " + db.getUnits(product_slot___));
     ui->volume_dispensed_since_last_restock->setText(QString::number(db.getVolumeDispensedSinceRestock(product_slot___)) + " " + db.getUnits(product_slot___));
@@ -427,7 +430,7 @@ void page_maintenance_dispenser::update_dispense_stats(double dispensed)
     // qDebug() << "Signal: updatevol in maintenance mode" + QString::number(vol_dispensed);
 
     ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(vol_dispensed) + this->units_selected_product);
-    ui->ticksLabel->setText("Ticks (" + QString::number(ticks) + "ml/tick): " + QString::number(vol_dispensed / ticks));
+    ui->ticksLabel->setText("Ticks (" + QString::number(volume_per_tick_buffer) + "ml/tick): " + QString::number(vol_dispensed / volume_per_tick_buffer));
     //}else{
     // qDebug() << "Error: update volume received while pump not enabled in maintenance." ;
     //}
@@ -910,8 +913,8 @@ void page_maintenance_dispenser::updateValues()
 {
     qDebug() << "ahoyy6";
     DbManager db(DB_PATH);
-    int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
-
+    int product_slot___ = selectedProductOrder->getSelectedSlot();
+    
     if (price_small)
     {
         db.updatePriceSmall(product_slot___, text_entered.toDouble());
@@ -925,23 +928,26 @@ void page_maintenance_dispenser::updateValues()
     else if (target_s)
     {
         db.updateTargetVolume_s(product_slot___, text_entered.toDouble());
-        ui->target_volume_s->setText(QString::number(db.getProductVolume(product_slot___, 's')) + " " + db.getUnits(product_slot___));
+        ui->target_volume_s->setText( selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_SMALL_INDEX) );
     }
     else if (target_l)
     {
         db.updateTargetVolume_l(product_slot___, text_entered.toDouble());
-        ui->target_volume_l->setText(QString::number(db.getProductVolume(product_slot___, 'l')) + " " + db.getUnits(product_slot___));
+        ui->target_volume_l->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_LARGE_INDEX));
     }
     else if (vol_per_tick)
     {
+        qDebug() << "Update volume per tick";
         db.updateVolumePerTick(product_slot___, text_entered.toDouble());
-        ui->volume_per_tick->setText(QString::number(db.getProductVolumePerTick(product_slot___)) + " " + db.getUnits(product_slot___));
-        ticks = db.getProductVolumePerTick(product_slot___);
+        ui->volume_per_tick->setText(selectedProductOrder->getVolumePerTickAsStringForSelectedSlot());
+        volume_per_tick_buffer = selectedProductOrder->getVolumePerTickForSelectedSlot();
     }
     else if (full)
     {
-        db.updateFullVolume(product_slot___, text_entered.toDouble());
-        ui->full_volume->setText(QString::number(db.getFullProduct(product_slot___)) + db.getUnits(product_slot___));
+        selectedProductOrder->setFullVolumeCorrectUnits(text_entered);
+
+        //double full_volume = db.getFullProduct(product_slot___);
+        ui->full_volume->setText(selectedProductOrder->getFullVolumeCorrectUnits());
     }
     else if (pwm)
     {

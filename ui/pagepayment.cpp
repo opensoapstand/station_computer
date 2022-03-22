@@ -263,9 +263,7 @@ size_t WriteCallback(char* contents, size_t size, size_t nmemb, void *userp){
 
 void pagePayment::showEvent(QShowEvent *event)
 {
-    QWidget::showEvent(event);
-    qDebug() << "ahoyy21" ;
-    DbManager db(DB_PATH);
+   
 
     int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
     char drinkSize;
@@ -309,11 +307,17 @@ void pagePayment::showEvent(QShowEvent *event)
     this->ui->payment_countdownLabel->setText("");
     ui->refreshLabel->hide();
 
+    QWidget::showEvent(event);
+    qDebug() << "ahoyy21" ;
+    DbManager db(DB_PATH);
+
     if (db.getProductVolume(product_slot___, drinkSize) < 1000){
         ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)) + " " + db.getUnits(product_slot___));
     }else{
         ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)/1000) + "L");
     }
+
+     db.closeDB();
 
     ui->order_drink_amount->setText("$"+QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2));
 
@@ -336,12 +340,13 @@ void pagePayment::showEvent(QShowEvent *event)
         readTimer->start();
     }
 
-    if (db.getPaymentMethod(product_slot___) == "qr"){
-        _paymentTimeoutSec = 444;
-        db.closeDB();
+    qDebug() << "ahoyy245" ;
+    DbManager db2(DB_PATH);
+    QString payment_method = db2.getPaymentMethod(product_slot___);
+    db2.closeDB();
+
+    if (payment_method == "qr"){
         generateQR();
-    }else{
-        db.closeDB();
     }
 
 }
@@ -418,6 +423,7 @@ void pagePayment::generateQR(){
     //qDebug() << "ORDER ID: " << order_id << endl;
     // QString qrdata = "https://soapstandportal.com/payment?mid="+machine_id+"&pid="+product_id+"&size="+drinkSize+"&oid="+order_id;
    QString qrdata = "https://soapstandportal.com/paymentTest?oid="+orderId;
+
 
     paintQR(painter, QSize(360,360), qrdata, QColor("white"));
     ui->qrCode->setPixmap(map);

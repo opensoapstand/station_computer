@@ -63,7 +63,7 @@ char DrinkOrder::getSelectedSizeAsChar()
 
 int DrinkOrder::getSelectedSize()
 {
-    //e.g. SIZE_SMALL_INDEX
+    // e.g. SIZE_SMALL_INDEX
     return selectedSize;
 }
 
@@ -145,7 +145,6 @@ double DrinkOrder::getPrice(int sizeIndex)
     return price;
 }
 
-
 double DrinkOrder::getSelectedPrice()
 {
     // slot and size needs to be set.
@@ -191,6 +190,37 @@ double DrinkOrder::getSelectedVolume()
     return volume;
 }
 
+QString DrinkOrder::getUnitsForSelectedSlot()
+{
+
+    qDebug() << "db units for label.";
+    QString units;
+    DbManager db(DB_PATH);
+    units = db.getUnits(getSelectedSlot());
+    // qDebug() << "Units: " << units;
+    db.closeDB();
+    return units;
+}
+
+QString DrinkOrder::getVolumePerTickAsStringForSelectedSlot()
+{
+    double vol_per_tick = getVolumePerTickForSelectedSlot();
+    QString units = getUnitsForSelectedSlot();
+
+    return df_util::getConvertedStringVolumeFromMl(vol_per_tick, units);
+}
+
+double DrinkOrder::getVolumePerTickForSelectedSlot()
+{
+    // ticks = db.getProductVolumePerTick(product_slot___);
+    qInfo() << "db.... vol per tick";
+    DbManager db(DB_PATH);
+    double ml_per_tick = db.getProductVolumePerTick(getSelectedSlot());
+
+    db.closeDB();
+    return ml_per_tick;
+}
+
 double DrinkOrder::getVolume(int size)
 {
     double volume;
@@ -209,40 +239,45 @@ QString DrinkOrder::getSizeToVolumeWithCorrectUnitsForSelectedSlot(int size)
     QString units;
 
     v = getVolume(size);
-    volume_oz = ceil(v * ML_TO_OZ);
+    units = getUnitsForSelectedSlot();
+    volume_as_string = df_util::getConvertedStringVolumeFromMl(v, units);
+    return volume_as_string;
+}
 
-    // db.getProductVolume(getSelectedSlot(), df_util::sizeIndexToChar(size));
-
-    qDebug() << "db units for label.";
-    DbManager db(DB_PATH);
-    units = db.getUnits(getSelectedSlot());
-    // qDebug() << "Units: " << units;
-    db.closeDB();
-
-    if (units == "l" || units == "ml")
+double DrinkOrder::inputTextToMlConvertUnits(QString inputValueAsText)
+{
+    if (getUnitsForSelectedSlot() == "oz")
     {
-
-        if (v < 1000)
-        {
-            volume_as_string = QString::number(v, 'f', 0) + "ml";
-            // volume_as_string = "ldoefef";
-        }
-        else
-        {
-            volume_as_string = QString::number(v / 1000, 'f', 2) + "L";
-        }
-    }
-    else if (units == "oz")
-    {
-        volume_as_string = QString::number(volume_oz, 'f', 0) + "oz";
+        return df_util::convertOzToMl(inputValueAsText.toDouble());
     }
     else
     {
-        qDebug() << "Unhandled unit system: " << units;
+        return inputValueAsText.toDouble();
     }
-    qDebug() << "vol: " << volume_as_string << " .. units: " << units << " vol metric: " << v << "vol oz: " << volume_oz;
+}
+
+QString DrinkOrder::getFullVolumeCorrectUnits()
+{
+
+    qDebug() << "db.... get full volume ";
+    DbManager db(DB_PATH);
+
+    double volume = db.getFullProduct(getSelectedSlot());
+    QString units = getUnitsForSelectedSlot();
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units);
+
+    db.closeDB();
     return volume_as_string;
 }
+
+void DrinkOrder::setFullVolumeCorrectUnits(QString inputFullValue)
+{
+    qDebug() << "db.... for write full vol";
+    DbManager db(DB_PATH);
+    db.updateFullVolume(getSelectedSlot(), inputTextToMlConvertUnits(inputFullValue));
+    db.closeDB();
+}
+
 QString DrinkOrder::getSelectedSizeToVolumeWithCorrectUnits()
 {
     // v = db.getProductVolume(product_slot___, drinkSize);
@@ -261,13 +296,12 @@ QString DrinkOrder::getSelectedProductName()
     return product_name;
 }
 
-QString DrinkOrder::getSelectedPaymentMethod(){
+QString DrinkOrder::getSelectedPaymentMethod()
+{
     QString paymentMethod;
     qDebug() << "product pyament method";
     DbManager db(DB_PATH);
     paymentMethod = db.getPaymentMethod(getSelectedSlot());
     db.closeDB();
     return paymentMethod;
-
 }
-

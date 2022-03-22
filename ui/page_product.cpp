@@ -73,11 +73,15 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
     ui->promoInputButton->show();
 
     /*Stations without coupon code */
-    // ui->promoCode->hide();
-    // ui->promoKeyboard->hide();
-    // ui->promoInputButton->hide();
-    // ui->discountLabel->hide();
-    // ui->promoButton->hide();
+    #ifdef ENABLE_COUPON
+
+    #else
+    ui->promoCode->hide();
+    ui->promoKeyboard->hide();
+    ui->promoInputButton->hide();
+    ui->discountLabel->hide();
+    ui->promoButton->hide();
+    #endif
 
     {
         selectIdleTimer = new QTimer(this);
@@ -361,11 +365,15 @@ void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_
     /*
     Stations without Promo Code
     */
-    // ui->promoCode->hide();
-    // ui->promoKeyboard->hide();
-    // ui->promoInputButton->hide();
-    // ui->discountLabel->hide();
-    // ui->promoButton->hide();
+    #ifdef ENABLE_COUPON
+
+    #else
+    ui->promoCode->hide();
+    ui->promoKeyboard->hide();
+    ui->promoInputButton->hide();
+    ui->discountLabel->hide();
+    ui->promoButton->hide();
+    #endif
 }
 
 // DTOR
@@ -579,12 +587,15 @@ void pageProduct::on_previousPage_Button_clicked()
     ui->discountLabel->setText("-$0.00");
     ui->promoInputButton->show();
 
-    // ui->promoCode->hide();
-    // ui->promoKeyboard->hide();
-    // ui->promoInputButton->hide();
-    // ui->discountLabel->hide();
-    // ui->promoButton->hide();
+    #ifdef ENABLE_COUPON
 
+    #else
+    ui->promoCode->hide();
+    ui->promoKeyboard->hide();
+    ui->promoInputButton->hide();
+    ui->discountLabel->hide();
+    ui->promoButton->hide();
+    #endif
     usleep(100);
     this->hide();
 }

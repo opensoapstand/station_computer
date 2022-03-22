@@ -88,7 +88,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     }
 
     dispenseIdleTimer->start(1000);
-    _dispenseIdleTimeoutSec = 30;
+    _dispenseIdleTimeoutSec = 120;
     qDebug() << "end resize idiseppsense.";
 }
 

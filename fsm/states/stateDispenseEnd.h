@@ -63,7 +63,7 @@ private:
 
     char now[50];
 
-    DF_ERROR dispenseEndUpdateDB();
+    DF_ERROR dispenseEndUpdateDB(bool test_transaction);
     DF_ERROR sendTransactionToCloud();
     DF_ERROR print_receipt();
     std::string getMachineID();

@@ -1,3 +1,4 @@
+
 //***************************************
 //
 // dbmanager.cpp
@@ -837,46 +838,42 @@ bool DbManager::updatePaymentsDb(QString date, QString time, QString txnType, QS
     return success;
 }
 
-bool DbManager::updatePriceSmall(int slot, double new_price)
+bool DbManager::updatePrice(int slot, int size, double new_price)
 {
     qDebug() << " db... updatePriceSmall";
     QSqlQuery update_price_query;
 
     {
+
+        switch (size){
+
+            case SIZE_SMALL_INDEX:
+            {
 #ifdef USE_OLD_DATABASE
         update_price_query.prepare("UPDATE products SET price_s = :new_price WHERE slot = :slot");
 #else
         update_price_query.prepare("UPDATE products SET price_small = :new_price WHERE slot = :slot");
 #endif
-        update_price_query.bindValue(":new_price", new_price);
-        update_price_query.bindValue(":slot", slot);
-
-        if (update_price_query.exec())
-        {
-            //        qDebug() << "Price updated successfully!";
-            return true;
-        }
-        else
-        {
-            //        qDebug() << "Price update error: !"
-            //                 << update_price_query.lastQuery()
-            //                 << update_price_query.lastError();
-            return false;
-        }
-    }
-}
-
-bool DbManager::updatePriceLarge(int slot, double new_price)
-{
-    qDebug() << " db... updatePriceLarge";
-    QSqlQuery update_price_query;
-
-    {
+            }
+            break;
+            
+            case SIZE_LARGE_INDEX:
+            {
 #ifdef USE_OLD_DATABASE
         update_price_query.prepare("UPDATE products SET price_l = :new_price WHERE slot = :slot");
 #else
         update_price_query.prepare("UPDATE products SET price_large = :new_price WHERE slot = :slot");
 #endif
+            }
+            break;
+            default:
+            {
+
+            }
+            break;
+
+        }
+
         update_price_query.bindValue(":new_price", new_price);
         update_price_query.bindValue(":slot", slot);
 
@@ -887,52 +884,160 @@ bool DbManager::updatePriceLarge(int slot, double new_price)
         }
         else
         {
-            //        qDebug() << "Price update error: !"
-            //                 << update_price_query.lastError();
+                   qDebug() << "Price update error: !"
+                            << update_price_query.lastQuery()
+                            << update_price_query.lastError();
             return false;
         }
     }
 }
 
-bool DbManager::updateTargetVolume_s(int slot, double new_volume)
-{
-    qDebug() << " db... updateTargetVolume_s";
-    QSqlQuery update_target_volume_query;
-    {
-#ifdef USE_OLD_DATABASE
-        update_target_volume_query.prepare("UPDATE products SET volume_target_s=:new_volume WHERE slot=:slot");
-#else
-        update_target_volume_query.prepare("UPDATE products SET size_small=:new_volume WHERE slot=:slot");
-#endif
+// bool DbManager::updatePriceSmall(int slot, double new_price)
+// {
+//     qDebug() << " db... updatePriceSmall";
+//     QSqlQuery update_price_query;
 
-        update_target_volume_query.bindValue(":new_volume", new_volume);
-        update_target_volume_query.bindValue(":slot", slot);
+//     {
+// #ifdef USE_OLD_DATABASE
+//         update_price_query.prepare("UPDATE products SET price_s = :new_price WHERE slot = :slot");
+// #else
+//         update_price_query.prepare("UPDATE products SET price_small = :new_price WHERE slot = :slot");
+// #endif
+//         update_price_query.bindValue(":new_price", new_price);
+//         update_price_query.bindValue(":slot", slot);
 
-        if (update_target_volume_query.exec())
-        {
-            //        qDebug() << "Target Volume updated successfully!";
-            return true;
-        }
-        else
-        {
-            //        qDebug() << "Target volume update error: !"
-            //                 << update_target_volume_query.lastError();
-            return false;
-        }
-    }
-}
+//         if (update_price_query.exec())
+//         {
+//             //        qDebug() << "Price updated successfully!";
+//             return true;
+//         }
+//         else
+//         {
+//             //        qDebug() << "Price update error: !"
+//             //                 << update_price_query.lastQuery()
+//             //                 << update_price_query.lastError();
+//             return false;
+//         }
+//     }
+// }
 
-bool DbManager::updateTargetVolume_l(int slot, double new_volume)
+// bool DbManager::updatePriceLarge(int slot, double new_price)
+// {
+//     qDebug() << " db... updatePriceLarge";
+//     QSqlQuery update_price_query;
+
+//     {
+// #ifdef USE_OLD_DATABASE
+//         update_price_query.prepare("UPDATE products SET price_l = :new_price WHERE slot = :slot");
+// #else
+//         update_price_query.prepare("UPDATE products SET price_large = :new_price WHERE slot = :slot");
+// #endif
+//         update_price_query.bindValue(":new_price", new_price);
+//         update_price_query.bindValue(":slot", slot);
+
+//         if (update_price_query.exec())
+//         {
+//             //        qDebug() << "Price updated successfully!";
+//             return true;
+//         }
+//         else
+//         {
+//             //        qDebug() << "Price update error: !"
+//             //                 << update_price_query.lastError();
+//             return false;
+//         }
+//     }
+// }
+
+// bool DbManager::updateTargetVolume_s(int slot, double new_volume)
+// {
+//     qDebug() << " db... updateTargetVolume_s";
+//     QSqlQuery update_target_volume_query;
+//     {
+// #ifdef USE_OLD_DATABASE
+//         update_target_volume_query.prepare("UPDATE products SET volume_target_s=:new_volume WHERE slot=:slot");
+// #else
+//         update_target_volume_query.prepare("UPDATE products SET size_small=:new_volume WHERE slot=:slot");
+// #endif
+
+//         update_target_volume_query.bindValue(":new_volume", new_volume);
+//         update_target_volume_query.bindValue(":slot", slot);
+
+//         if (update_target_volume_query.exec())
+//         {
+//             //        qDebug() << "Target Volume updated successfully!";
+//             return true;
+//         }
+//         else
+//         {
+//             //        qDebug() << "Target volume update error: !"
+//             //                 << update_target_volume_query.lastError();
+//             return false;
+//         }
+//     }
+// }
+
+// bool DbManager::updateTargetVolume_l(int slot, double new_volume)
+// {
+//     qDebug() << " db... updateTargetVolume_l";
+//     QSqlQuery update_target_volume_query;
+
+//     {
+// #ifdef USE_OLD_DATABASE
+//         update_target_volume_query.prepare("UPDATE products SET volume_target_l=:new_volume WHERE slot=:slot");
+// #else
+//         update_target_volume_query.prepare("UPDATE products SET size_large=:new_volume WHERE slot=:slot");
+// #endif
+
+//         update_target_volume_query.bindValue(":new_volume", new_volume);
+
+//         update_target_volume_query.bindValue(":slot", slot);
+
+//         if (update_target_volume_query.exec())
+//         {
+//             //        qDebug() << "Target Volume updated successfully!";
+//             return true;
+//         }
+//         else
+//         {
+//             //        qDebug() << "Target volume update error: !"
+//             //                 << update_target_volume_query.lastError();
+//             return false;
+//         }
+//     }
+// }
+bool DbManager::updateTargetVolume(int slot, int size, double new_volume)
 {
     qDebug() << " db... updateTargetVolume_l";
     QSqlQuery update_target_volume_query;
 
     {
+
+    switch (size){
+        case SIZE_SMALL_INDEX:
+        {
+#ifdef USE_OLD_DATABASE
+        update_target_volume_query.prepare("UPDATE products SET volume_target_s=:new_volume WHERE slot=:slot");
+#else
+        update_target_volume_query.prepare("UPDATE products SET size_small=:new_volume WHERE slot=:slot");
+#endif
+        }
+        break;
+        case SIZE_LARGE_INDEX:
+        {
 #ifdef USE_OLD_DATABASE
         update_target_volume_query.prepare("UPDATE products SET volume_target_l=:new_volume WHERE slot=:slot");
 #else
         update_target_volume_query.prepare("UPDATE products SET size_large=:new_volume WHERE slot=:slot");
 #endif
+        }
+        break;
+        default:
+        {
+            qDebug()<< "size not handled... " << size ;
+        }
+    }
+    
 
         update_target_volume_query.bindValue(":new_volume", new_volume);
 
@@ -945,8 +1050,8 @@ bool DbManager::updateTargetVolume_l(int slot, double new_volume)
         }
         else
         {
-            //        qDebug() << "Target volume update error: !"
-            //                 << update_target_volume_query.lastError();
+            qDebug() << "Target volume update error: !"
+                             << update_target_volume_query.lastError();
             return false;
         }
     }

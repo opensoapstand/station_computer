@@ -296,6 +296,7 @@ bool product::isDispenseTargetVolumeReached()
     if (m_nVolumeTarget <= m_nVolumeDispensed)
     {
         // cout << "Target HIT!" << endl;
+        debugOutput::sendMessage("Target volume reached: " + to_string(m_nVolumeTarget), MSG_INFO);
         bRet = true;
     }
     return bRet;
@@ -350,7 +351,13 @@ double product::getTargetVolume(char size)
         return m_nVolumeTarget_c_max;
     }
     else if (size == 't')
+    {
         return m_nVolumeTarget_c_max;
+    }
+    else
+    {
+        debugOutput::sendMessage("Unknown volume parameter: " + size, MSG_INFO);
+    }
 
 #endif
 }
@@ -388,6 +395,10 @@ double product::getPrice(char size)
     else if (size == 't')
     {
         return m_price_custom_per_liter;
+    }
+    else
+    {
+        debugOutput::sendMessage("Unknown volume parameter for price: " + size, MSG_INFO);
     }
 #endif
 }
@@ -439,6 +450,10 @@ string product::getPLU(char size)
     else if (size == 't')
     {
         return m_nPLU_custom;
+    }
+    else
+    {
+        debugOutput::sendMessage("Unknown volume parameter for plu: " + size, MSG_INFO);
     }
 #endif
 }
@@ -585,7 +600,7 @@ string product::getPLU(char size)
 //             case (DB_PRODUCTS_PWM):
 //             {
 //                 m_nDispenseSpeedPWM = sqlite3_column_int(stmt, column_index);
-                
+
 //             }
 //             break;
 //             case (DB_PRODUCTS_BUFFER):
@@ -632,57 +647,50 @@ string product::getPLU(char size)
 bool product::reloadParametersFromDb()
 {
 
+    // m_nSlot = slot;
+    //     m_name = name;
+    //     m_nVolumeDispensed = 0.0;
+    //     m_nVolumePerTick = nVolumePerTick; // m_nVolumePerTick = 6; //  6ml per tick is standard
+    //     m_nDispenseSpeedPWM = dispense_speed_pwm;
+    //     m_calibration_const = calibration_const;
 
-// m_nSlot = slot;
-//     m_name = name;
-//     m_nVolumeDispensed = 0.0;
-//     m_nVolumePerTick = nVolumePerTick; // m_nVolumePerTick = 6; //  6ml per tick is standard
-//     m_nDispenseSpeedPWM = dispense_speed_pwm;
-//     m_calibration_const = calibration_const;
+    //     m_nVolumeTarget_m = nVolumeTarget_m;
+    //     m_nVolumeTarget_l = nVolumeTarget_l;
+    //     m_nVolumeTarget_s = nVolumeTarget_s;
+    //     m_nVolumeTarget_c_min = nVolumeTarget_c_min;
+    //     m_nVolumeTarget_c_max = nVolumeTarget_c_max;
 
-//     m_nVolumeTarget_m = nVolumeTarget_m;
-//     m_nVolumeTarget_l = nVolumeTarget_l;
-//     m_nVolumeTarget_s = nVolumeTarget_s;
-//     m_nVolumeTarget_c_min = nVolumeTarget_c_min;
-//     m_nVolumeTarget_c_max = nVolumeTarget_c_max;
+    //     m_price_small = price_small;
+    //     m_price_medium = price_medium;
+    //     m_price_large = price_large;
+    //     m_price_custom_per_liter = price_custom_per_liter;
 
-//     m_price_small = price_small;
-//     m_price_medium = price_medium;
-//     m_price_large = price_large;
-//     m_price_custom_per_liter = price_custom_per_liter;
+    //     m_nPLU_small = nPLU_small;
+    //     m_nPLU_medium = nPLU_medium;
+    //     m_nPLU_large = nPLU_large;
+    //     m_nPLU_custom = nPLU_c;
 
-//     m_nPLU_small = nPLU_small;
-//     m_nPLU_medium = nPLU_medium;
-//     m_nPLU_large = nPLU_large;
-//     m_nPLU_custom = nPLU_c;
-
-//     m_paymentMethod = paymentMethod;
-//     m_name_receipt = name_receipt;
-//     m_display_unit = display_unit;
+    //     m_paymentMethod = paymentMethod;
+    //     m_name_receipt = name_receipt;
+    //     m_display_unit = display_unit;
 
     debugOutput::sendMessage("000000 ", MSG_INFO);
     rc = sqlite3_open(DB_PATH, &db);
-
 
     debugOutput::sendMessage("11111111 ", MSG_INFO);
 
     sqlite3_stmt *stmt;
     debugOutput::sendMessage("22222 ", MSG_INFO);
 
-
-
     string sql_string = "SELECT * FROM products WHERE slot=" + to_string(m_nSlot) + ";";
     debugOutput::sendMessage("33333 " + sql_string, MSG_INFO);
-
-
-
 
     /* Create SQL statement for transactions */
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 
     int status;
     status = sqlite3_step(stmt);
-    
+
     while (status == SQLITE_ROW)
     {
         debugOutput::sendMessage("process record: " + sql_string, MSG_INFO);
@@ -693,7 +701,7 @@ bool product::reloadParametersFromDb()
         {
 
             debugOutput::sendMessage("column index: " + to_string(column_index), MSG_INFO);
-            #ifdef USE_OLD_DATABASE
+#ifdef USE_OLD_DATABASE
             switch (column_index)
             {
             case (DB_PRODUCTS_SLOT):
@@ -787,7 +795,6 @@ bool product::reloadParametersFromDb()
             case (DB_PRODUCTS_PWM):
             {
                 m_nDispenseSpeedPWM = sqlite3_column_int(stmt, column_index);
-                
             }
             break;
             case (DB_PRODUCTS_BUFFER):
@@ -811,7 +818,7 @@ bool product::reloadParametersFromDb()
             }
 
 #else
-            //debugOutput::sendMessage("Col index: " + to_string(column_index), MSG_INFO);
+            // debugOutput::sendMessage("Col index: " + to_string(column_index), MSG_INFO);
             switch (column_index)
             {
             case DB_PRODUCTS_PRODUCTID:
@@ -827,7 +834,9 @@ bool product::reloadParametersFromDb()
                 if (m_nSlot != sqlite3_column_int(stmt, column_index))
                 {
                     debugOutput::sendMessage("DB_PRODUCTS_SLOT unexpected value. " + to_string(sqlite3_column_int(stmt, column_index)), MSG_INFO);
-                }else{
+                }
+                else
+                {
                     debugOutput::sendMessage("DB_PRODUCTS_SLOT slot matching. ", MSG_INFO);
                 }
             }
@@ -1020,20 +1029,17 @@ bool product::reloadParametersFromDb()
             }
             break;
             }
-        #endif
+#endif
         }
         status = sqlite3_step(stmt); // next record
-    }; // every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
+    };                               // every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
 
     debugOutput::sendMessage("DB status: " + to_string(status), MSG_INFO);
-
 
     sqlite3_finalize(stmt);
     sqlite3_close(db);
     return true;
 }
-
-
 
 // #endif
 

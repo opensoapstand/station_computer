@@ -71,7 +71,9 @@ DF_ERROR stateDispenseEnd::onAction()
     // REQUESTED_VOLUME_CUSTOM is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
     if (size == REQUESTED_VOLUME_TEST)
     {
-        debugOutput::sendMessage("Test Dispensing. No transaction will be made.", MSG_INFO);
+        
+        debugOutput::sendMessage("Test dispensing. ("+ to_string(productDispensers[pos].getProduct()->getVolumeDispensed())+"ml). No transaction will be made.", MSG_INFO);
+        dispenseEndUpdateDB(true);
     }
     else if (!is_valid_dispense)
     {
@@ -95,6 +97,19 @@ DF_ERROR stateDispenseEnd::onAction()
 
 DF_ERROR stateDispenseEnd::handleTransaction()
 {
+    debugOutput::sendMessage("Update database:", MSG_INFO);
+    dispenseEndUpdateDB(false);
+
+#define ENABLE_TRANSACTION_TO_CLOUD
+#ifdef ENABLE_TRANSACTION_TO_CLOUD
+
+        debugOutput::sendMessage("Send transaction to cloud:", MSG_INFO);
+        sendTransactionToCloud();
+#else
+
+        debugOutput::sendMessage("NOT SENDING transaction to cloud:", MSG_INFO);
+#endif
+
     debugOutput::sendMessage("Handle transaction.", MSG_INFO);
     DF_ERROR e_ret = OK;
 
@@ -114,23 +129,13 @@ DF_ERROR stateDispenseEnd::handleTransaction()
         // debugOutput::sendMessage("Pin -> " + to_string(productDispensers[pos].getI2CPin(PRODUCT)), MSG_INFO);
     }
 
-    debugOutput::sendMessage("Update database:", MSG_INFO);
-    dispenseEndUpdateDB();
 
     if (paymentMethod == "barcode" || paymentMethod == "plu")
     {
         debugOutput::sendMessage("Printing receipt:", MSG_INFO);
         print_receipt();
 
-#define ENABLE_TRANSACTION_TO_CLOUD
-#ifdef ENABLE_TRANSACTION_TO_CLOUD
 
-        debugOutput::sendMessage("Send transaction to cloud:", MSG_INFO);
-        sendTransactionToCloud();
-#else
-
-        debugOutput::sendMessage("NOT SENDING transaction to cloud:", MSG_INFO);
-#endif
     }
 
     return e_ret;
@@ -370,7 +375,7 @@ std::string stateDispenseEnd::getUnitsFromDb(int slot)
 }
 
 // This function updates the local SQLite3 database with the transaction data, as well as updates the total product remaining locally
-DF_ERROR stateDispenseEnd::dispenseEndUpdateDB()
+DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool test_transaction)
 {
     char *zErrMsg = 0;
 
@@ -381,19 +386,28 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB()
 
     if (rc)
     {
-        //       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
         // TODO: Error handling here...
     }
     else
     {
         //       fprintf(stderr, "Opened database successfully\n");
     }
-
+     std::string price;
     /* Create SQL statement for transactions */
+    
+    if (test_transaction){
+        price = "0";
+
+    }else{
+        price = to_string(productDispensers[pos].getProduct()->getPrice(size));
+
+    }
+
+
+
     std::string sql1;
     std::string product = (productDispensers[pos].getProduct()->m_name).c_str();
     std::string target_volume = to_string(productDispensers[pos].getProduct()->getTargetVolume(size));
-    std::string price = to_string(productDispensers[pos].getProduct()->getPrice(size));
     std::string start_time = (productDispensers[pos].getProduct()->m_nStartTime);
     std::string dispensed_volume;
     debugOutput::sendMessage("update DB. dispense end: vol dispensed: " + to_string(productDispensers[pos].getProduct()->getVolumeDispensed()), MSG_INFO);

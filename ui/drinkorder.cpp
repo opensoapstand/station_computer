@@ -134,9 +134,17 @@ void DrinkOrder::setSelectedOverrulePrice(double price)
     }
 }
 
+void DrinkOrder::setPriceSelected(int size, double price)
+{
+    qDebug() << "db... set product price";
+    DbManager db(DB_PATH);
+    db.updatePrice(getSelectedSlot(), size, price);
+    db.closeDB();
+}
+
 double DrinkOrder::getPrice(int sizeIndex)
 {
-    qDebug() << "product db for price";
+    qDebug() << "db... get product price";
     DbManager db(DB_PATH);
     double price;
     price = db.getProductPrice(getSelectedSlot(), df_util::sizeIndexToChar(sizeIndex));
@@ -221,6 +229,17 @@ double DrinkOrder::getVolumePerTickForSelectedSlot()
     return ml_per_tick;
 }
 
+void DrinkOrder::setVolumePerTickForSelectedSlot(QString volumePerTickInput)
+{
+    // ticks = db.getProductVolumePerTick(product_slot___);
+    double ml_per_tick = inputTextToMlConvertUnits(volumePerTickInput);
+    qInfo() << "db.... vol per tick";
+    DbManager db(DB_PATH);
+    db.updateVolumePerTick(getSelectedSlot(), ml_per_tick);
+
+    db.closeDB();
+}
+
 double DrinkOrder::getVolume(int size)
 {
     double volume;
@@ -229,6 +248,54 @@ double DrinkOrder::getVolume(int size)
     volume = db.getProductVolume(getSelectedSlot(), df_util::sizeIndexToChar(size));
     db.closeDB();
     return volume;
+}
+void DrinkOrder::setVolumeForSelected(QString volumeInput, int size)
+{
+    double volume = inputTextToMlConvertUnits(volumeInput);
+    qInfo() << "db.... volume set";
+    DbManager db(DB_PATH);
+    db.updateTargetVolume(getSelectedSlot(), size, volume);
+    db.closeDB();
+}
+
+QString DrinkOrder::getVolumeRemainingCorrectUnits(){
+    qInfo() << "db.... volume dispensed since last restock";
+    DbManager db(DB_PATH);
+    double volume = db.getVolumeRemaining(getSelectedSlot());
+    db.closeDB();
+    
+    QString units = getUnitsForSelectedSlot();
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units);
+
+    return volume_as_string;
+    
+
+}
+
+QString DrinkOrder::getVolumeDispensedSinceRestockCorrectUnits(){
+    
+    qInfo() << "db.... volume dispensed since last restock";
+    DbManager db(DB_PATH);
+    double volume = db.getVolumeDispensedSinceRestock(getSelectedSlot());
+    db.closeDB();
+    
+    QString units = getUnitsForSelectedSlot();
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units);
+
+    return volume_as_string;
+
+}
+
+QString DrinkOrder::getTotalDispensedCorrectUnits(){
+     qInfo() << "db.... volume dispensed";
+    DbManager db(DB_PATH);
+    double volume = db.getTotalDispensed(getSelectedSlot());
+    db.closeDB();
+    
+    QString units = getUnitsForSelectedSlot();
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units);
+
+    return volume_as_string;
 }
 
 QString DrinkOrder::getSizeToVolumeWithCorrectUnitsForSelectedSlot(int size)
@@ -263,10 +330,11 @@ QString DrinkOrder::getFullVolumeCorrectUnits()
     DbManager db(DB_PATH);
 
     double volume = db.getFullProduct(getSelectedSlot());
+    db.closeDB();
+    
     QString units = getUnitsForSelectedSlot();
     QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units);
 
-    db.closeDB();
     return volume_as_string;
 }
 
@@ -304,4 +372,25 @@ QString DrinkOrder::getSelectedPaymentMethod()
     paymentMethod = db.getPaymentMethod(getSelectedSlot());
     db.closeDB();
     return paymentMethod;
+}
+
+int DrinkOrder::getSelectedDispenseSpeedPercentage()
+{
+    int pwm;
+
+    qInfo() << "db.... pwm speed";
+    DbManager db(DB_PATH);
+    pwm = db.getPWM(getSelectedSlot());
+    db.closeDB();
+
+    return (int)round((double(pwm) * 100) / 255);
+}
+void DrinkOrder::setSelectedDispenseSpeedPercentage(int percentage)
+{
+    int pwm = (int)round((percentage * 255) / 100);
+
+    qInfo() << "db.... pwm speed set";
+    DbManager db(DB_PATH);
+    db.updatePWM(getSelectedSlot(), pwm);
+    db.closeDB();
 }

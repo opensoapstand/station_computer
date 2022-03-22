@@ -174,7 +174,7 @@ void pagethankyou::curler()
 
 void pagethankyou::controllerFinishedTransaction()
 {
-    qDebug() << "Controller finished its part.";
+    qDebug() << "Controller msg: All done for transaction.";
     is_controller_finished = true;
     thankYouEndTimer->start(1000);
     _thankYouTimeoutSec = 7;

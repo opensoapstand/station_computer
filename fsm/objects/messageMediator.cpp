@@ -402,7 +402,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
    if (isdigit(sCommand[0]))
    {
       productChar = sCommand[0];
-      debugOutput::sendMessage("digit", MSG_INFO);
+      debugOutput::sendMessage("parsed digit", MSG_INFO);
    }
 
    if (sCommand.size() > 1)
@@ -416,7 +416,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
             actionChar = sCommand[i];
          }
 
-         if (sCommand[i] == REQUESTED_VOLUME_1 || sCommand[i] == REQUESTED_VOLUME_2 || sCommand[i] == REQUESTED_VOLUME_3 ||sCommand[i] == REQUESTED_VOLUME_CUSTOM)
+         if (sCommand[i] == REQUESTED_VOLUME_1 || sCommand[i] == REQUESTED_VOLUME_2 || sCommand[i] == REQUESTED_VOLUME_3 ||sCommand[i] == REQUESTED_VOLUME_CUSTOM || sCommand[i] == REQUESTED_VOLUME_TEST)
          {
             volumeChar = (sCommand[i]);
          }
@@ -460,43 +460,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
    }
    }
 
-   if (!isalpha(actionChar))
-   {
-      debugOutput::sendMessage("Irrelevant input .. ", MSG_INFO);
-   }
-   else if (actionChar == ACTION_DUMMY)
-   {
-      debugOutput::sendMessage("No action provided ", MSG_INFO);
-   }
-   else
-   {
-      // TODO: Parse and save a reference for command string
 
-      switch (actionChar)
-      {
-      case ACTION_DISPENSE:
-         debugOutput::sendMessage("Action: Dispense", MSG_INFO);
-         // m_nSolenoid = PRODUCT;
-         m_requestedAction = ACTION_DISPENSE;
-         e_ret = OK;
-         break;
-
-      case PWM_CHAR:
-         debugOutput::sendMessage("Action: PWM", MSG_INFO);
-         m_requestedAction = PWM_CHAR;
-         e_ret = OK;
-         break;
-
-      case ACTION_DISPENSE_END:
-         debugOutput::sendMessage("Action: End Dispense", MSG_INFO);
-         m_requestedAction = ACTION_DISPENSE_END;
-         e_ret = OK;
-         break;
-
-      default:
-         break;
-      }
-   }
 
    if (!isalpha(volumeChar))
    {
@@ -540,9 +504,50 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
          break;
 
       default:
+         debugOutput::sendMessage("Unknown volume received.... " + to_string(volumeChar), MSG_INFO);
          break;
       }
    }
+
+
+   if (!isalpha(actionChar))
+   {
+      debugOutput::sendMessage("Irrelevant input .. ", MSG_INFO);
+   }
+   else if (actionChar == ACTION_DUMMY)
+   {
+      debugOutput::sendMessage("No action provided ", MSG_INFO);
+   }
+   else
+   {
+      // TODO: Parse and save a reference for command string
+
+      switch (actionChar)
+      {
+      case ACTION_DISPENSE:
+         debugOutput::sendMessage("Action: Dispense", MSG_INFO);
+         // m_nSolenoid = PRODUCT;
+         m_requestedAction = ACTION_DISPENSE;
+         e_ret = OK;
+         break;
+
+      case PWM_CHAR:
+         debugOutput::sendMessage("Action: PWM", MSG_INFO);
+         m_requestedAction = PWM_CHAR;
+         e_ret = OK;
+         break;
+
+      case ACTION_DISPENSE_END:
+         debugOutput::sendMessage("Action: End Dispense", MSG_INFO);
+         m_requestedAction = ACTION_DISPENSE_END;
+         e_ret = OK;
+         break;
+
+      default:
+         break;
+      }
+   }
+
 
    return e_ret;
 }

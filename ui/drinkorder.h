@@ -76,6 +76,11 @@ public:
 
 
     QString getFullVolumeCorrectUnits();
+
+    QString getVolumeRemainingCorrectUnits();
+    QString getTotalDispensedCorrectUnits();
+    QString getVolumeDispensedSinceRestockCorrectUnits();
+
     void setFullVolumeCorrectUnits(QString inputFullValue);
 
     void setSelectedSize(int sizeOption);
@@ -89,8 +94,10 @@ public:
     double getVolume(int size);
     QString getSelectedSizeToVolumeWithCorrectUnits();
 
+    void setVolumeForSelected(QString volumeInput, int size);
     QString getVolumePerTickAsStringForSelectedSlot();
     double getVolumePerTickForSelectedSlot();
+    void setVolumePerTickForSelectedSlot(QString volumePerTickInput);
     
     double inputTextToMlConvertUnits(QString inputValueAsText);
     QString getUnitsForSelectedSlot();
@@ -98,7 +105,11 @@ public:
     QString getSizeToVolumeWithCorrectUnitsForSelectedSlot(int size);
 
     double getPrice(int sizeIndex);
+    void setPriceSelected(int size, double price);
     double getSelectedPrice();
+
+    int getSelectedDispenseSpeedPercentage();
+    void setSelectedDispenseSpeedPercentage(int percentage);
 
     char getSelectedSizeAsChar();
     QString getSelectedPaymentMethod();

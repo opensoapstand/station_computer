@@ -49,10 +49,12 @@ public:
     bool initialize(const QString& path);
 
     bool updatePaymentsDb(QString date, QString time, QString txnType, QString amount, QString cardNo, QString refNo, QString authNo, QString cardType, QString status, QString isoCode, QString hostCode, QString tvr);
-    bool updatePriceSmall(int slot, double new_price);
-    bool updatePriceLarge(int slot, double new_price);
-    bool updateTargetVolume_s(int slot, double new_volume);
-    bool updateTargetVolume_l(int slot, double new_volume);
+    // bool updatePriceSmall(int slot, double new_price);
+    // bool updatePriceLarge(int slot, double new_price);
+    bool updatePrice(int slot, int size, double new_price);
+    // bool updateTargetVolume_s(int slot, double new_volume);
+    // bool updateTargetVolume_l(int slot, double new_volume);
+    bool updateTargetVolume(int slot, int size, double new_volume);
     bool updateVolumePerTick(int slot, double new_volume_per_tick);
     bool updateFullVolume(int slot, double new_full_volume);
     bool updatePWM(int slot, int new_pwm);

@@ -66,7 +66,11 @@ DF_ERROR stateDispenseInit::onAction()
 
     DF_ERROR e_ret = OK;
 
-    debugOutput::sendMessage("Chosen dispenser slot: " + std::to_string(  productDispensers[dispenser_index].getSlot()), MSG_INFO);
+    debugOutput::sendMessage("Chosen dispenser slot: " + 
+        std::to_string(  productDispensers[dispenser_index].getSlot()) + 
+        " target volume: " + 
+        std::to_string(productDispensers[dispenser_index].getProduct()->getTargetVolume(size)) 
+        , MSG_INFO);
     // debugOutput::sendMessage("Chosen dispenser slot: " + std::to_string(  productDispensers[dispenser_index].getProduct()->getTargetVolume(size)), MSG_INFO);
     // debugOutput::sendMessage("Chosen dispenser slot: " + std::to_string(  productDispensers[dispenser_index].getProduct()->getPrice(size)), MSG_INFO);
 

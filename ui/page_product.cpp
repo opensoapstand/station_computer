@@ -533,6 +533,7 @@ void pageProduct::on_applyPromo_Button_clicked()
                     new_percent = coupon_obj["discount_amount"];
                     updatePriceAfterPromo(new_percent);
                     promoPercent = new_percent;
+                    qDebug() << "Apply coupon percentage: " << promoPercent;
                 }
                 else
                 {
@@ -614,6 +615,7 @@ void pageProduct::couponHandler()
 
     if (coupons_enabled)
     {
+        qDebug() << "Coupons are enabled for this machine.";
     }
     else
     {

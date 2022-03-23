@@ -115,10 +115,10 @@ size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
 void pagethankyou::curler()
 {
     QString order_id = this->paymentPage->getOID();
-    double dispensed = this->p_page_dispense->getTotalDispensed();
+    QString dispensed_correct_units = this->p_page_dispense->getMostRecentDispensed();
     //    qDebug() << "I'm in Thank You Page and the OID is: " << order_id << " and the total dispensed is: " << dispensed << endl;
 
-    QString curl_param = "oid=" + order_id + "&dispensed_amount=" + QString::number(dispensed, 'f', 2);
+    QString curl_param = "oid=" + order_id + "&dispensed_amount=" + dispensed_correct_units;
     curl_param_array = curl_param.toLocal8Bit();
     curl_data = curl_param_array.data();
 

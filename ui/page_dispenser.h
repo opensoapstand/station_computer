@@ -51,7 +51,7 @@ public:
     void updateVolumeDisplayed(double dispensed, bool isFull );
     void volumeDispensedLabel(QLabel* label);
     void fsmReceiveTargetVolumeReached();
-    double getTotalDispensed();
+    QString getMostRecentDispensed();
     void force_finish_dispensing();
     void startDispensing();
 

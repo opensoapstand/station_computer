@@ -269,9 +269,12 @@ void page_dispenser::onDispenseIdleTick()
     }
 }
 
-double page_dispenser::getTotalDispensed()
+QString page_dispenser::getMostRecentDispensed()
 {
-    return volumeDispensed;
+    QString units = selectedProductOrder->getUnitsForSelectedSlot();
+
+    return df_util::getConvertedStringVolumeFromMl(volumeDispensed, units, false, false);
+    //return volumeDispensed;
 }
 
 void page_dispenser::resetDispenseTimeout(void)

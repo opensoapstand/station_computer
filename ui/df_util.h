@@ -11,6 +11,7 @@
 //#define START_FSM_FROM_UI //enabled by default (start controller from ui)
 
 // #define GENERIC_PRODUCT_SELECT
+#define ENABLE_COUPON   // Petros stations have no coupon
 
 #define OPTION_SLOT_INVALID 0
 #define SLOT_COUNT 4
@@ -36,14 +37,13 @@
 // #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 //#define DB_PATH "/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db"
 
-#define ENABLE_COUPON   // Petros stations have no coupon
 
 #define DB_PATH_CLICKS "/release/db/sqlite/clicks.db"
 #define DB_PATH_TEMPERATURE "/release/db/sqlite/temperature.db"
 
 #define ML_TO_OZ 0.033814
 
-#define SLOT_COUNT 4
+
 using namespace std;
 
 // typedef enum FSM_COMM {

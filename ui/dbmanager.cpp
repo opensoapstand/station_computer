@@ -19,7 +19,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 DbManager::DbManager(const QString &path)
 {
     //    qDebug() << "CREATING DB OBJECT" << endl;
@@ -198,8 +197,8 @@ double DbManager::getProductPrice(int slot, char size)
             price_query.prepare("SELECT price_s FROM products WHERE slot=:slot");
         }
 #else
-      
-         if (size == 'l')
+
+        if (size == 'l')
         {
             price_query.prepare("SELECT price_large FROM products WHERE slot=:slot");
         }
@@ -214,8 +213,10 @@ double DbManager::getProductPrice(int slot, char size)
         else if (size == 'c')
         {
             price_query.prepare("SELECT price_custom FROM products WHERE slot=:slot");
-        }else{
-            qDebug() << " invalid size to volume character found.  " << size ;
+        }
+        else
+        {
+            qDebug() << " invalid size to volume character found.  " << size;
         }
 
 #endif
@@ -292,7 +293,9 @@ double DbManager::getProductVolume(int slot, char size)
         else if (size == 'c')
         {
             volume_query.prepare("SELECT size_custom_max FROM products WHERE slot=:slot");
-        }else{
+        }
+        else
+        {
             qDebug() << " invalid size to volume character found.  " << size;
         }
 
@@ -610,7 +613,6 @@ double DbManager::getVolumeDispensedSinceRestock(int slot)
     return dispensed;
 }
 
-
 double DbManager::getTotalDispensed(int slot)
 {
     qDebug() << " db... getTotalDispensed";
@@ -664,6 +666,26 @@ int DbManager::getSlotEnabled(int slot)
 
     return enabled;
 }
+
+bool DbManager::getCouponsEnabled()
+{
+    qDebug() << " db... check coupon enabled";
+    QSqlQuery qry;
+    bool is_enabled;
+
+    {
+
+        qry.prepare("SELECT coupons_enabled FROM machine");
+        qry.exec();
+
+        while (qry.next())
+        {
+            is_enabled = (qry.value(0).toInt() == 1);
+        }
+    }
+    return is_enabled;
+}
+
 bool DbManager::updateSlotAvailability(int slot, int isEnabled)
 {
     QSqlQuery qry;
@@ -845,33 +867,32 @@ bool DbManager::updatePrice(int slot, int size, double new_price)
 
     {
 
-        switch (size){
+        switch (size)
+        {
 
-            case SIZE_SMALL_INDEX:
-            {
+        case SIZE_SMALL_INDEX:
+        {
 #ifdef USE_OLD_DATABASE
-        update_price_query.prepare("UPDATE products SET price_s = :new_price WHERE slot = :slot");
+            update_price_query.prepare("UPDATE products SET price_s = :new_price WHERE slot = :slot");
 #else
-        update_price_query.prepare("UPDATE products SET price_small = :new_price WHERE slot = :slot");
+            update_price_query.prepare("UPDATE products SET price_small = :new_price WHERE slot = :slot");
 #endif
-            }
-            break;
-            
-            case SIZE_LARGE_INDEX:
-            {
+        }
+        break;
+
+        case SIZE_LARGE_INDEX:
+        {
 #ifdef USE_OLD_DATABASE
-        update_price_query.prepare("UPDATE products SET price_l = :new_price WHERE slot = :slot");
+            update_price_query.prepare("UPDATE products SET price_l = :new_price WHERE slot = :slot");
 #else
-        update_price_query.prepare("UPDATE products SET price_large = :new_price WHERE slot = :slot");
+            update_price_query.prepare("UPDATE products SET price_large = :new_price WHERE slot = :slot");
 #endif
-            }
-            break;
-            default:
-            {
-
-            }
-            break;
-
+        }
+        break;
+        default:
+        {
+        }
+        break;
         }
 
         update_price_query.bindValue(":new_price", new_price);
@@ -884,9 +905,9 @@ bool DbManager::updatePrice(int slot, int size, double new_price)
         }
         else
         {
-                   qDebug() << "Price update error: !"
-                            << update_price_query.lastQuery()
-                            << update_price_query.lastError();
+            qDebug() << "Price update error: !"
+                     << update_price_query.lastQuery()
+                     << update_price_query.lastError();
             return false;
         }
     }
@@ -1013,31 +1034,31 @@ bool DbManager::updateTargetVolume(int slot, int size, double new_volume)
 
     {
 
-    switch (size){
+        switch (size)
+        {
         case SIZE_SMALL_INDEX:
         {
 #ifdef USE_OLD_DATABASE
-        update_target_volume_query.prepare("UPDATE products SET volume_target_s=:new_volume WHERE slot=:slot");
+            update_target_volume_query.prepare("UPDATE products SET volume_target_s=:new_volume WHERE slot=:slot");
 #else
-        update_target_volume_query.prepare("UPDATE products SET size_small=:new_volume WHERE slot=:slot");
+            update_target_volume_query.prepare("UPDATE products SET size_small=:new_volume WHERE slot=:slot");
 #endif
         }
         break;
         case SIZE_LARGE_INDEX:
         {
 #ifdef USE_OLD_DATABASE
-        update_target_volume_query.prepare("UPDATE products SET volume_target_l=:new_volume WHERE slot=:slot");
+            update_target_volume_query.prepare("UPDATE products SET volume_target_l=:new_volume WHERE slot=:slot");
 #else
-        update_target_volume_query.prepare("UPDATE products SET size_large=:new_volume WHERE slot=:slot");
+            update_target_volume_query.prepare("UPDATE products SET size_large=:new_volume WHERE slot=:slot");
 #endif
         }
         break;
         default:
         {
-            qDebug()<< "size not handled... " << size ;
+            qDebug() << "size not handled... " << size;
         }
-    }
-    
+        }
 
         update_target_volume_query.bindValue(":new_volume", new_volume);
 
@@ -1051,7 +1072,7 @@ bool DbManager::updateTargetVolume(int slot, int size, double new_volume)
         else
         {
             qDebug() << "Target volume update error: !"
-                             << update_target_volume_query.lastError();
+                     << update_target_volume_query.lastError();
             return false;
         }
     }

@@ -79,7 +79,7 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
 void page_select_product::setPage(pageProduct *pageSizeSelect, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp)
 {
     // this->selection_PageTwo = pageTwoProducts;
-    this->paymentSelectPage = pageSizeSelect;
+    this->p_page_product = pageSizeSelect;
     this->idlePage = pageIdle;
     this->p_page_maintenance = pageMaintenance;
     this->helpPage = pageHelp;
@@ -182,8 +182,8 @@ void page_select_product::select_product(int slot)
         productPageEndTimer->stop();
         idlePage->currentProductOrder->setSelectedSlot(slot);
         idlePage->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
-        paymentSelectPage->resizeEvent(productResize);
-        paymentSelectPage->showFullScreen();
+        //p_page_product->resizeEvent(productResize);
+        p_page_product->showFullScreen();
         this->hide();
     }
     else

@@ -93,7 +93,7 @@ public:
     double getSelectedVolume();
     double getVolume(int size);
 
-    void setVolumeForSelected(QString volumeInput, int size);
+    void setSizeToVolumeForSelected(QString volumeInput, int size);
     QString getVolumePerTickAsStringForSelectedSlot();
     double getVolumePerTickForSelectedSlot();
     void setVolumePerTickForSelectedSlot(QString volumePerTickInput);
@@ -101,8 +101,8 @@ public:
     double inputTextToMlConvertUnits(QString inputValueAsText);
     QString getUnitsForSelectedSlot();
     QString getSelectedSizeToVolume(QString units);
-    QString getSelectedSizeToVolumeWithCorrectUnits();
-    QString getSizeToVolumeWithCorrectUnitsForSelectedSlot(int size, bool roundValue);
+    QString getSelectedSizeToVolumeWithCorrectUnits(bool addUnits);
+    QString getSizeToVolumeWithCorrectUnitsForSelectedSlot(int size, bool roundValue, bool addUnits);
 
     double getPrice(int sizeIndex);
     void setPriceSelected(int size, double price);

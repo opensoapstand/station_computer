@@ -54,7 +54,7 @@ private:
     void showEvent(QShowEvent *event);
 
     Ui::pagethankyou *ui;
-    page_dispenser* dispensingPage;
+    page_dispenser* p_page_dispense;
     page_idle* idlePage;
     pagePayment* paymentPage;
 

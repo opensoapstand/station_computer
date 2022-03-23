@@ -64,7 +64,7 @@ private:
     void showEvent(QShowEvent *event);
     Ui::page_select_product *ui;
     // productPage_2 *selection_PageTwo;
-    pageProduct *paymentSelectPage;
+    pageProduct *p_page_product;
     page_idle* idlePage;
 
     QResizeEvent *productResize;

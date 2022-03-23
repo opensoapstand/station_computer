@@ -46,7 +46,7 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
 void pagethankyou::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, pagePayment *pagePayment)
 {
     this->idlePage = pageIdle;
-    this->dispensingPage = page_dispenser;
+    this->p_page_dispense = page_dispenser;
     this->paymentPage = pagePayment;
 }
 
@@ -115,7 +115,7 @@ size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
 void pagethankyou::curler()
 {
     QString order_id = this->paymentPage->getOID();
-    double dispensed = this->dispensingPage->getTotalDispensed();
+    double dispensed = this->p_page_dispense->getTotalDispensed();
     //    qDebug() << "I'm in Thank You Page and the OID is: " << order_id << " and the total dispensed is: " << dispensed << endl;
 
     QString curl_param = "oid=" + order_id + "&dispensed_amount=" + QString::number(dispensed, 'f', 2);

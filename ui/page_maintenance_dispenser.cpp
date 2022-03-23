@@ -194,8 +194,8 @@ void page_maintenance_dispenser::refreshLabels()
     ui->price_small->setText("$" + QString::number(selectedProductOrder->getPrice(SIZE_SMALL_INDEX)));
     ui->price_large->setText("$" + QString::number(selectedProductOrder->getPrice(SIZE_LARGE_INDEX)));
 
-    ui->target_volume_s->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_SMALL_INDEX, false));
-    ui->target_volume_l->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_LARGE_INDEX, false));
+    ui->target_volume_s->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_SMALL_INDEX, false, true));
+    ui->target_volume_l->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_LARGE_INDEX, false, true));
 
     ui->full_volume->setText(selectedProductOrder->getFullVolumeCorrectUnits());
     ui->volume_dispensed_total->setText(selectedProductOrder->getTotalDispensedCorrectUnits());
@@ -911,11 +911,11 @@ void page_maintenance_dispenser::updateValues()
     else if (target_s)
     {
         // db.updateTargetVolume_s(product_slot___, text_entered.toDouble());
-        selectedProductOrder->setVolumeForSelected(text_entered, SIZE_SMALL_INDEX);
+        selectedProductOrder->setSizeToVolumeForSelected(text_entered, SIZE_SMALL_INDEX);
     }
     else if (target_l)
     {
-        selectedProductOrder->setVolumeForSelected(text_entered, SIZE_LARGE_INDEX);
+        selectedProductOrder->setSizeToVolumeForSelected(text_entered, SIZE_LARGE_INDEX);
     }
     else if (vol_per_tick)
     {

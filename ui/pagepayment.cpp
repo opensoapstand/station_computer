@@ -129,7 +129,7 @@ void pagePayment::stopPayTimers(){
 void pagePayment::setPage(pageProduct *pageSizeSelect, page_dispenser* page_dispenser, page_idle* pageIdle, page_help* pageHelp)
 {
     this->p_pageProduct = pageSizeSelect;
-    this->dispensingPage = page_dispenser;
+    this->p_page_dispense = page_dispenser;
     this->idlePage = pageIdle;
     this->helpPage = pageHelp;
 }
@@ -216,8 +216,8 @@ void pagePayment::on_previousPage_Button_clicked()
 void pagePayment::on_payment_bypass_Button_clicked()
 {
     stopPayTimers();
-    //dispensingPage->showEvent(dispenseEvent);
-    dispensingPage->showFullScreen();
+    //p_page_dispense->showEvent(dispenseEvent);
+    p_page_dispense->showFullScreen();
     this->hide();
 }
 
@@ -319,7 +319,7 @@ void pagePayment::showEvent(QShowEvent *event)
     // }
 
     //  db.closeDB();
-     ui->productLabel->setText(idlePage->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits());
+     ui->productLabel->setText(idlePage->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true));
 
     ui->order_drink_amount->setText("$"+QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2));
 
@@ -358,17 +358,25 @@ void pagePayment::createOrder(){
     DbManager db(DB_PATH);
 
     int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
-    char drinkSize;
-    if (idlePage->currentProductOrder->getSelectedSize() == SIZE_SMALL_INDEX){
-        drinkSize = 's';
-    }
-    if (idlePage->currentProductOrder->getSelectedSize() == SIZE_LARGE_INDEX){
-        drinkSize = 'l';
-    }
+    // char drinkSize;
+    // if (idlePage->currentProductOrder->getSelectedSize() == SIZE_SMALL_INDEX){
+    //     drinkSize = 's';
+    // }
+    // if (idlePage->currentProductOrder->getSelectedSize() == SIZE_LARGE_INDEX){
+    //     drinkSize = 'l';
+    // }
     QString MachineSerialNumber = db.getMachineID();
     QString productId = db.getProductID(product_slot___);
     QString contents = db.getProductName(product_slot___);
-    QString quantity_requested = QString::number(db.getProductVolume(product_slot___, drinkSize));
+    db.closeDB();
+    
+    // QString quantity_requested = QString::number(db.getProductVolume(product_slot___, drinkSize));
+    QString quantity_requested = idlePage->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(false);
+    
+
+    char drinkSize = idlePage->currentProductOrder->getSelectedSizeAsChar();
+
+
     QString price = QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2);
     orderId = QUuid::createUuid().QUuid::toString();
     orderId = orderId.remove("{");
@@ -394,7 +402,6 @@ void pagePayment::createOrder(){
     _qrTimeOutSec=5;
     qrTimer->start(1000);
 
-    db.closeDB();
     }
 }
 

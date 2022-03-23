@@ -73,15 +73,16 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
     ui->promoInputButton->show();
 
     /*Stations without coupon code */
-    #ifdef ENABLE_COUPON
+    // #ifdef ENABLE_COUPON
 
-    #else
-    ui->promoCode->hide();
-    ui->promoKeyboard->hide();
-    ui->promoInputButton->hide();
-    ui->discountLabel->hide();
-    ui->promoButton->hide();
-    #endif
+    // #else
+    //     ui->promoCode->hide();
+    //     ui->promoKeyboard->hide();
+    //     ui->promoInputButton->hide();
+    //     ui->discountLabel->hide();
+    //     ui->promoButton->hide();
+    // #endif
+    couponHandler();
 
     {
         selectIdleTimer = new QTimer(this);
@@ -121,7 +122,7 @@ void pageProduct::loadOrderSelectedSize()
         // orderSizeLabelsVolume[i]->raise();
         orderSizeLabelsPrice[i]->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
 
-        orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i],true));
+        orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i], true, true));
 
         if (selectedProductOrder->getSelectedSize() == product_sizes[i])
         {
@@ -138,7 +139,7 @@ void pageProduct::loadOrderSelectedSize()
     ui->promoCode->hide();
     promoPercent = 0.0;
 
-    ui->productLabel->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits());
+    ui->productLabel->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true));
     double selectedPrice = selectedProductOrder->getSelectedPrice();
     ui->priceLabel->setText("$" + QString::number(selectedPrice, 'f', 2));
     ui->totalPriceLabel->setText("$" + QString::number(selectedPrice)); // how to handle promo ?! todo!
@@ -196,7 +197,7 @@ void pageProduct::loadOrderSelectedSize()
         // orderSizeLabelsPrice[i]->raise();
         // orderSizeLabelsVolume[i]->raise();
         orderSizeLabelsPrice[i]->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
-        orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i], true));
+        orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i], true,true));
 
         if (selectedProductOrder->getSelectedSize() == product_sizes[i])
         {
@@ -223,7 +224,6 @@ void pageProduct::loadOrderSelectedSize()
         ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
         ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
         ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
-
     }
 
     ui->label_price_small->move(560, 1155);
@@ -258,7 +258,7 @@ void pageProduct::loadOrderSelectedSize()
     ui->promoCode->hide();
     promoPercent = 0.0;
 
-    ui->productLabel->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits());
+    ui->productLabel->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true));
     double selectedPrice = selectedProductOrder->getSelectedPrice();
     ui->priceLabel->setText("$" + QString::number(selectedPrice, 'f', 2));
     ui->totalPriceLabel->setText("$" + QString::number(selectedPrice)); // how to handle promo ?! todo!
@@ -352,7 +352,7 @@ void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_
     this->firstProductPage = pageSelect;
     this->paymentPage = pagePayment;
     this->idlePage = pageIdle;
-    this->dispensingPage = page_dispenser;
+    this->p_page_dispense = page_dispenser;
     this->helpPage = pageHelp;
     this->wifiError = pageWifiError;
     ui->promoCode->clear();
@@ -365,15 +365,16 @@ void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_
     /*
     Stations without Promo Code
     */
-    #ifdef ENABLE_COUPON
+    // #ifdef ENABLE_COUPON
 
-    #else
-    ui->promoCode->hide();
-    ui->promoKeyboard->hide();
-    ui->promoInputButton->hide();
-    ui->discountLabel->hide();
-    ui->promoButton->hide();
-    #endif
+    // #else
+    //     ui->promoCode->hide();
+    //     ui->promoKeyboard->hide();
+    //     ui->promoInputButton->hide();
+    //     ui->discountLabel->hide();
+    //     ui->promoButton->hide();
+    // #endif
+    couponHandler();
 }
 
 // DTOR
@@ -518,7 +519,7 @@ void pageProduct::on_applyPromo_Button_clicked()
         if (res != CURLE_OK)
         {
             ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
-            qDebug() << "Invalid Coupon" << endl;
+            qDebug() << "Invalid Coupon curl problem: " << res ;
         }
         else
         {
@@ -535,13 +536,13 @@ void pageProduct::on_applyPromo_Button_clicked()
                 }
                 else
                 {
-                    qDebug() << "Invalid Coupon" << endl;
+                    qDebug() << "Invalid Coupon";
                     ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #75756f;border-color:#f44336;");
                 }
             }
             else
             {
-                qDebug() << "Invalid Coupon" << endl;
+                qDebug() << "Invalid Coupon http 200 response";
                 ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
             }
         }
@@ -587,17 +588,42 @@ void pageProduct::on_previousPage_Button_clicked()
     ui->discountLabel->setText("-$0.00");
     ui->promoInputButton->show();
 
-    #ifdef ENABLE_COUPON
+    // #ifdef ENABLE_COUPON
 
-    #else
-    ui->promoCode->hide();
-    ui->promoKeyboard->hide();
-    ui->promoInputButton->hide();
-    ui->discountLabel->hide();
-    ui->promoButton->hide();
-    #endif
+    // #else
+    //     ui->promoCode->hide();
+    //     ui->promoKeyboard->hide();
+    //     ui->promoInputButton->hide();
+    //     ui->discountLabel->hide();
+    //     ui->promoButton->hide();
+    // #endif
+
+    couponHandler();
+
     usleep(100);
     this->hide();
+}
+
+void pageProduct::couponHandler()
+{
+    qDebug() << "db for coupons";
+    DbManager db(DB_PATH);
+    bool coupons_enabled = db.getCouponsEnabled();
+
+    db.closeDB();
+
+    if (coupons_enabled)
+    {
+    }
+    else
+    {
+        qDebug() << "Coupons are disabled for this machine.";
+        ui->promoCode->hide();
+        ui->promoKeyboard->hide();
+        ui->promoInputButton->hide();
+        ui->discountLabel->hide();
+        ui->promoButton->hide();
+    }
 }
 
 void pageProduct::on_pagePayment_Button_clicked()
@@ -635,8 +661,8 @@ void pageProduct::on_pagePayment_Button_clicked()
     }
     else if (paymentMethod == "barcode" || paymentMethod == "plu")
     {
-        // dispensingPage->showEvent(dispenseEvent); // todo Lode: this enabled together with showfullscreen calls the showEvent twice. only showevent, does not display the dispense page though.
-        dispensingPage->showFullScreen();
+        // p_page_dispense->showEvent(dispenseEvent); // todo Lode: this enabled together with showfullscreen calls the showEvent twice. only showevent, does not display the dispense page though.
+        p_page_dispense->showFullScreen();
         this->hide();
     }
 }

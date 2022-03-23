@@ -34,7 +34,7 @@ double df_util::convertOzToMl(double vol_oz)
     return vol_oz / ML_TO_OZ;
 }
 
-QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString units, bool roundNumber)
+QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString units, bool roundNumber, bool addUnits)
 {
     QString volume_as_string;
     // switch (units){
@@ -84,26 +84,42 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
 
         if (volumeMilliLiter < 1000)
         {
-            volume_as_string = QString::number(volumeMilliLiter, 'f', decimals) + "ml";
+            QString units_string = "";
+            if (addUnits){
+                units_string = "ml";
+            }
+            volume_as_string = QString::number(volumeMilliLiter, 'f', decimals) + units_string;
         }
         else
         {
-            volume_as_string = QString::number(volumeMilliLiter / 1000, 'f', 2) + "L";
+             QString units_string = "";
+            if (addUnits){
+                units_string = "L";
+            }
+            volume_as_string = QString::number(volumeMilliLiter / 1000, 'f', 2) + units_string;
         }
     }
     else if (units == "oz")
     {
+         QString units_string = "";
+            if (addUnits){
+                units_string = "oz";
+            }
         int decimals = 2;
         if (roundNumber)
         {
             decimals = 0;
         }
-        volume_as_string = QString::number(volume_oz, 'f', decimals) + "oz";
+        volume_as_string = QString::number(volume_oz, 'f', decimals) + units_string;
     }
     else
     {
+         QString units_string = "";
+            if (addUnits){
+                units_string = "oz";
+            }
         qDebug() << "Unhandled unit system: " << units;
-        volume_as_string = QString::number(volumeMilliLiter, 'f', 0) + "ml";
+        volume_as_string = QString::number(volumeMilliLiter, 'f', 0) + units_string;
     }
 
     qDebug() << "vol: " << volume_as_string << " .. units: " << units << " vol metric: " << volumeMilliLiter << "vol oz: " << volume_oz;

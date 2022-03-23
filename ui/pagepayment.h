@@ -135,7 +135,7 @@ private:
     // **** GUI ****
     Ui::pagePayment *ui;
     pageProduct* p_pageProduct;
-    page_dispenser* dispensingPage;
+    page_dispenser* p_page_dispense;
     page_idle* idlePage;
     page_help* helpPage;
 

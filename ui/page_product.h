@@ -52,6 +52,7 @@ public:
 
     void cancelTimers();
     void updatePriceAfterPromo(double promoPercent);
+    void couponHandler();
 
 signals:
     void paymentTotal(string, string, string);
@@ -87,7 +88,7 @@ private:
     page_select_product *firstProductPage;
     pagePayment *paymentPage;
     page_idle *idlePage;
-    page_dispenser *dispensingPage;
+    page_dispenser *p_page_dispense;
     page_error_wifi *wifiError;
     page_help *helpPage;
     

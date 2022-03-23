@@ -393,7 +393,8 @@ void pagePayment::createOrder()
 
     // QString quantity_requested = QString::number(db.getProductVolume(product_slot___, drinkSize));
     QString quantity_requested = idlePage->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(false);
-
+    
+    qDebug()<< "Volume requested for soapstandportal : " << quantity_requested; 
     char drinkSize = idlePage->currentProductOrder->getSelectedSizeAsChar();
 
     QString price = QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2);

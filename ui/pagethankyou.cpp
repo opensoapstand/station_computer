@@ -121,6 +121,7 @@ void pagethankyou::curler()
     QString curl_param = "oid=" + order_id + "&dispensed_amount=" + dispensed_correct_units;
     curl_param_array = curl_param.toLocal8Bit();
     curl_data = curl_param_array.data();
+    qDebug()<< "Volume dispensed for soapstandportal : " << dispensed_correct_units; 
 
     curl = curl_easy_init();
     if (!curl)

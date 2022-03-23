@@ -22,6 +22,10 @@
 #define MINIMUM_DISPENSE_VOLUME_ML 10
 // #define USE_OLD_DATABASE
 
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#define PETROS_EXCEPTION
+
 #ifdef USE_OLD_DATABASE
    #define DB_PATH "/home/df-admin/production/db/drinkfill-sqlite.db"
    // #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"

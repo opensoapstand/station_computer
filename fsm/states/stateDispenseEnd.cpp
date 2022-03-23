@@ -209,6 +209,8 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
     }
     else
     {
+
+        #ifndef PETROS_EXCEPTION
         debugOutput::sendMessage("cURL init success", MSG_INFO);
 
         curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/pushPrinterOrder");
@@ -250,6 +252,8 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
             readBuffer = "";
             curl_easy_cleanup(curl);
         }
+        #endif
+        
     }
 }
 

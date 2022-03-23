@@ -226,10 +226,15 @@ void pageProduct::loadOrderSelectedSize()
         ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
     }
 
-    ui->label_price_small->move(560, 1155);
-    ui->label_price_large->move(790, 1155);
-    ui->label_size_small->move(570, 1106);
-    ui->label_size_large->move(790, 1106);
+    ui->label_price_small->move(600, 1155);
+    ui->label_price_large->move(830, 1155);
+
+    ui->label_size_small->move(600, 1106);
+    ui->label_size_large->move(830, 1106);
+    // ui->label_price_small->move(560, 1155);
+    // ui->label_price_large->move(790, 1155);
+    // ui->label_size_small->move(570, 1106);
+    // ui->label_size_large->move(790, 1106);
     ui->label_size_medium->hide();
     ui->label_price_medium->hide();
     ui->label_price_custom->hide();

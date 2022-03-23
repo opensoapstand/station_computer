@@ -77,6 +77,7 @@ using namespace std;
 #define PRODUCT_4_IMAGE "/home/df-admin/production/references/product4.png"
 #define PAGE_THANK_YOU_BACKGROUND "/home/df-admin/production/references/7_background_thank_you.png"
 #define PAGE_WIFI_ERROR_BACKGROUND "/home/df-admin/production/references/oops.png"
+#define BOTTLE_FILL_FOR_ANIMATION "/home/df-admin/production/references/bottle_fill_for_animation.png"
 // #define PAGE_PRODUCT_BACKGROUND "/home/df-admin/production/references/page_product_generic.png" // todo
 // #define PAGE_PRODUCT_BACKGROUND "/home/df-admin/production/references/page_select_product_generic.png" // todo
 

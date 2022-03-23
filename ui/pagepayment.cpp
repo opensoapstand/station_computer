@@ -27,7 +27,7 @@ pagePayment::pagePayment(QWidget *parent) : QWidget(parent),
 {
     // Fullscreen background setup
     ui->setupUi(this);
-    QPixmap background("/home/df-admin/production/references/5_background_pay_qr.png");
+    QPixmap background(PAGE_QR_PAY_BACKGROUND);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
@@ -183,7 +183,7 @@ void pagePayment::resizeEvent(QResizeEvent *event)
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
-    ui->order_total_amount->setText("$" + QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2));
+    ui->order_total_amount->setText("Total: $" + QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2));
     ui->order_drink_amount->setText("");
 
     //    if (db.getProductVolume(product_slot___, drinkSize) < 1000){
@@ -323,7 +323,7 @@ void pagePayment::showEvent(QShowEvent *event)
     paymentEndTimer->start(1000);
     _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
 
-    ui->order_total_amount->setText("$" + QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2));
+    ui->order_total_amount->setText("Total: $" + QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2));
     this->ui->payment_countdownLabel->setText("");
     ui->refreshLabel->hide();
 
@@ -412,7 +412,7 @@ void pagePayment::createOrder()
     else
     {
         //        qDebug() << "cURL page_init success" << endl;
-        curl_easy_setopt(curl1, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/createOrderInDbTest");
+        curl_easy_setopt(curl1, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/createOrderInDb");
         curl_easy_setopt(curl1, CURLOPT_POSTFIELDS, curl_param_array1.data());
         curl_easy_setopt(curl1, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl1, CURLOPT_WRITEDATA, &readBuffer);

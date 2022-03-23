@@ -151,6 +151,9 @@ int main(int argc, char *argv[])
     df_util::fileExists(PRODUCT_4_IMAGE);
     df_util::fileExists(PAGE_THANK_YOU_BACKGROUND);
     df_util::fileExists(PAGE_WIFI_ERROR_BACKGROUND);
+    df_util::fileExists(BOTTLE_FILL_FOR_ANIMATION);
+
+
  
     QObject::connect(&dfUiServer, &DfUiServer::controllerFinishedAck, p_page_thank_you, &pagethankyou::controllerFinishedTransaction);
     QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_maintenance, &page_maintenance::printerStatusFeedback);

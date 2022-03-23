@@ -19,7 +19,7 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
                                               ui(new Ui::pagethankyou)
 {
     ui->setupUi(this);
-    QPixmap background("/home/df-admin/production/references/7_background_thank_you.png");
+    QPixmap background(PAGE_THANK_YOU_BACKGROUND);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);

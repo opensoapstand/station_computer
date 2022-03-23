@@ -23,7 +23,6 @@ sudo -u df-admin mkdir /home/df-admin/production/db
 sudo -u df-admin mkdir /home/df-admin/production/admin
 sudo -u df-admin mkdir /home/df-admin/production/bin
 sudo -u df-admin mkdir /home/df-admin/production/references
-
 sudo chmod 777 /home/df-admin/production/references
 
 # move binary files
@@ -33,7 +32,7 @@ scp /home/df-admin/drinkfill/fsm/controller /home/df-admin/production/bin/contro
 # move auxiliary to production folder
 sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db /home/df-admin/production/db/drinkfill-sqlite.db 
 sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite_newlayout.db /home/df-admin/production/db/drinkfill-sqlite_newlayout.db 
-scp -r /home/df-admin/drinkfill/ui/references /home/df-admin/production/references
+scp -r /home/df-admin/drinkfill/ui/references /home/df-admin/production
 
 # move scripts and other administrative stuff
 scp /home/df-admin/drinkfill/controller_soapstand.service /home/df-admin/production/admin/controller_soapstand.service

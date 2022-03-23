@@ -274,7 +274,7 @@ void pageProduct::reset_and_show_page_elements()
     QString bitmap_location;
 
 #ifdef GENERIC_PRODUCT_SELECT
-    bitmap_location = "/home/df-admin/production/references/page_product_generic.png";
+    bitmap_location = PAGE_PRODUCT_BACKGROUND;
     // uint16_t orderSizeButtons_xywh[4][4] = {
     //     {560, 990, 135, 110},  // S
     //     {706, 990, 135, 105},  // M

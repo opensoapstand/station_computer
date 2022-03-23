@@ -30,6 +30,9 @@ public:
     stateManualPrinter(messageMediator *message); //debug through local network
     ~stateManualPrinter();
 
+    sqlite3 *db;
+    int rc;
+
     string toString();
     DF_ERROR printTest();
     DF_ERROR displayPrinterStatus();

@@ -25,7 +25,7 @@ page_idle::page_idle(QWidget *parent) :
 {
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
-    QPixmap background("/home/df-admin/production/references/1_background_welcome.png");
+    QPixmap background(PAGE_IDLE_BACKGROUND);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);

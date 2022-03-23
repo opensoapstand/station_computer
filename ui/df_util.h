@@ -54,8 +54,37 @@ using namespace std;
 //     SEND_ERROR,
 // } FSM_COMM;
 
+
+#define PAGE_INIT_BACKGROUND "/home/df-admin/production/references/0_background_init.png"
+#define PAGE_IDLE_BACKGROUND "/home/df-admin/production/references/1_background_welcome.png"
+#define PAGE_SELECT_PRODUCT_BACKGROUND "/home/df-admin/production/references/2_background_products.png"
+#define PAGE_HELP_BACKGROUND "/home/df-admin/production/references/3_background_help.png"
+#define PAGE_PRODUCT_1_BACKGROUND "/home/df-admin/production/references/4_pay_select_page_l_1.png"
+#define PAGE_PRODUCT_2_BACKGROUND "/home/df-admin/production/references/4_pay_select_page_l_2.png"
+#define PAGE_PRODUCT_3_BACKGROUND "/home/df-admin/production/references/4_pay_select_page_l_3.png"
+#define PAGE_PRODUCT_4_BACKGROUND "/home/df-admin/production/references/4_pay_select_page_l_4.png"
+#define PAGE_PRODUCT_1_BACKGROUND "/home/df-admin/production/references/4_pay_select_page_s_1.png"
+#define PAGE_PRODUCT_2_BACKGROUND "/home/df-admin/production/references/4_pay_select_page_s_2.png"
+#define PAGE_PRODUCT_3_BACKGROUND "/home/df-admin/production/references/4_pay_select_page_s_3.png"
+#define PAGE_PRODUCT_4_BACKGROUND "/home/df-admin/production/references/4_pay_select_page_s_4.png"
+#define PAGE_DISPENSE_BACKGROUND "/home/df-admin/production/references/5_background_dispense_instructions.png"
+#define PRODUCT_1_IMAGE "/home/df-admin/production/references/product1.png"
+#define PRODUCT_2_IMAGE "/home/df-admin/production/references/product2.png"
+#define PRODUCT_3_IMAGE "/home/df-admin/production/references/product3.png"
+#define PRODUCT_4_IMAGE "/home/df-admin/production/references/product4.png"
+#define PAGE_THANK_YOU_BACKGROUND "/home/df-admin/production/references/7_background_thank_you.png"
+#define PAGE_WIFI_ERROR_BACKGROUND "/home/df-admin/production/references/oops.png"
+// #define PAGE_PRODUCT_BACKGROUND "/home/df-admin/production/references/page_product_generic.png" // todo
+// #define PAGE_PRODUCT_BACKGROUND "/home/df-admin/production/references/page_select_product_generic.png" // todo
+
+#define TRANSPARENT_BACKGROUND "/home/df-admin/production/references/background.png"
+
+// #define PAGE_PRODUCTS_BACKGROUND 
+
+
 #define SEND_DISPENSE_START "d"
 #define SEND_DISPENSE_STOP "f"
+
 
 class df_util : public QWidget
 {
@@ -63,6 +92,7 @@ class df_util : public QWidget
 public:
     explicit df_util(QWidget *parent = nullptr);
 
+    static bool fileExists(QString path);
     static double convertMlToOz(double vol_ml);
     static double convertOzToMl(double vol_oz);
     static char sizeIndexToChar(int size_index);

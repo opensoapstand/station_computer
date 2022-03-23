@@ -2,6 +2,20 @@
 #include "includefiles.h"
 #include <sys/time.h>
 #include <stdio.h>
+#include <QFileInfo>
+
+bool df_util::fileExists(QString path)
+{
+    // check if path exists and if yes: Is it a file and no directory?
+    // https://stackoverflow.com/questions/10273816/how-to-check-whether-file-exists-in-qt-in-c
+    bool exists = QFileInfo::exists(path) && QFileInfo(path).isFile();
+
+    if (!exists){
+        qDebug()<< "File not found: " << path;
+    }
+
+    return exists;
+}
 
 char df_util::sizeIndexToChar(int size_index)
 {

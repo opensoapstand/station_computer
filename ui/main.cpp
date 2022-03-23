@@ -35,6 +35,7 @@
 #include <QGuiApplication>
 #include <QQmlEngine>
 
+
 static QPointer<QFile> log_file = nullptr;
 
 void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
@@ -128,6 +129,28 @@ int main(int argc, char *argv[])
     DfUiServer dfUiServer;
     dfUiServer.startServer();
 
+    qDebug()<< "Check background images.... (all paths resolved if nothing shows up).";
+
+    df_util::fileExists(PAGE_INIT_BACKGROUND);
+    df_util::fileExists(PAGE_IDLE_BACKGROUND);
+    df_util::fileExists(PAGE_SELECT_PRODUCT_BACKGROUND);
+    df_util::fileExists(PAGE_HELP_BACKGROUND);
+    df_util::fileExists(PAGE_PRODUCT_1_BACKGROUND);
+    df_util::fileExists(PAGE_PRODUCT_2_BACKGROUND);
+    df_util::fileExists(PAGE_PRODUCT_3_BACKGROUND);
+    df_util::fileExists(PAGE_PRODUCT_4_BACKGROUND);
+    df_util::fileExists(PAGE_PRODUCT_1_BACKGROUND);
+    df_util::fileExists(PAGE_PRODUCT_2_BACKGROUND);
+    df_util::fileExists(PAGE_PRODUCT_3_BACKGROUND);
+    df_util::fileExists(PAGE_PRODUCT_4_BACKGROUND);
+    df_util::fileExists(PAGE_DISPENSE_BACKGROUND);
+    df_util::fileExists(PRODUCT_1_IMAGE);
+    df_util::fileExists(PRODUCT_2_IMAGE);
+    df_util::fileExists(PRODUCT_3_IMAGE);
+    df_util::fileExists(PRODUCT_4_IMAGE);
+    df_util::fileExists(PAGE_THANK_YOU_BACKGROUND);
+    df_util::fileExists(PAGE_WIFI_ERROR_BACKGROUND);
+ 
     QObject::connect(&dfUiServer, &DfUiServer::controllerFinishedAck, p_page_thank_you, &pagethankyou::controllerFinishedTransaction);
     QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_maintenance, &page_maintenance::printerStatusFeedback);
     QObject::connect(&dfUiServer, &DfUiServer::pleaseReset, dispensingPage, &page_dispenser::resetDispenseTimeout);

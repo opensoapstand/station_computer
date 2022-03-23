@@ -150,7 +150,7 @@ void pagePayment::resizeEvent(QResizeEvent *event){
     QString bitmap_location;
 
     if (!payment){
-        bitmap_location = "/home/df-admin/production/references/5_background_pay_qr.png";
+        bitmap_location = PAGE_QR_PAY_BACKGROUND;
     }
     else if(product_slot___ > 0 && product_slot___ <= 9) {
         bitmap_location.append("/home/df-admin/production/references/5_pay_page_");
@@ -308,16 +308,18 @@ void pagePayment::showEvent(QShowEvent *event)
     ui->refreshLabel->hide();
 
     QWidget::showEvent(event);
-    qDebug() << "ahoyy21" ;
-    DbManager db(DB_PATH);
 
-    if (db.getProductVolume(product_slot___, drinkSize) < 1000){
-        ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)) + " " + db.getUnits(product_slot___));
-    }else{
-        ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)/1000) + "L");
-    }
+    // qDebug() << "ahoyy21" ;
+    // DbManager db(DB_PATH);
 
-     db.closeDB();
+    // if (db.getProductVolume(product_slot___, drinkSize) < 1000){
+    //     ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)) + " " + db.getUnits(product_slot___));
+    // }else{
+    //     ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)/1000) + "L");
+    // }
+
+    //  db.closeDB();
+     ui->productLabel->setText(idlePage->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits());
 
     ui->order_drink_amount->setText("$"+QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2));
 

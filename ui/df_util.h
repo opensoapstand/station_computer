@@ -68,6 +68,7 @@ using namespace std;
 #define PAGE_PRODUCT_3_BACKGROUND "/home/df-admin/production/references/4_pay_select_page_s_3.png"
 #define PAGE_PRODUCT_4_BACKGROUND "/home/df-admin/production/references/4_pay_select_page_s_4.png"
 #define PAGE_DISPENSE_BACKGROUND "/home/df-admin/production/references/5_background_dispense_instructions.png"
+#define PAGE_QR_PAY_BACKGROUND "/home/df-admin/production/references/5_background_pay_qr.png"
 #define PRODUCT_1_IMAGE "/home/df-admin/production/references/product1.png"
 #define PRODUCT_2_IMAGE "/home/df-admin/production/references/product2.png"
 #define PRODUCT_3_IMAGE "/home/df-admin/production/references/product3.png"

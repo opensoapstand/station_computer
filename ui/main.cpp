@@ -144,6 +144,7 @@ int main(int argc, char *argv[])
     df_util::fileExists(PAGE_PRODUCT_3_BACKGROUND);
     df_util::fileExists(PAGE_PRODUCT_4_BACKGROUND);
     df_util::fileExists(PAGE_DISPENSE_BACKGROUND);
+    df_util::fileExists(PAGE_QR_PAY_BACKGROUND);
     df_util::fileExists(PRODUCT_1_IMAGE);
     df_util::fileExists(PRODUCT_2_IMAGE);
     df_util::fileExists(PRODUCT_3_IMAGE);

@@ -174,7 +174,7 @@
     <string>Back</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="label_title">
    <property name="geometry">
     <rect>
      <x>250</x>
@@ -244,7 +244,7 @@
     <string>Wifi Name</string>
    </property>
   </widget>
-<widget class="QLabel" name="wifi_ip_address">
+  <widget class="QLabel" name="wifi_ip_address">
    <property name="geometry">
     <rect>
      <x>320</x>
@@ -1379,6 +1379,77 @@
    </property>
    <property name="text">
     <string>Machine ID: </string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="printer_isOnline_label">
+   <property name="geometry">
+    <rect>
+     <x>830</x>
+     <y>1160</y>
+     <width>161</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>.</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="printer_hasPaper_label">
+   <property name="geometry">
+    <rect>
+     <x>830</x>
+     <y>1130</y>
+     <width>151</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>.</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="printer_test_button">
+   <property name="geometry">
+    <rect>
+     <x>640</x>
+     <y>1160</y>
+     <width>161</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Print Test Receipt</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>640</x>
+     <y>1100</y>
+     <width>111</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Receipt Printer</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="printer_check_status">
+   <property name="geometry">
+    <rect>
+     <x>640</x>
+     <y>1130</y>
+     <width>161</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Check status</string>
    </property>
   </widget>
  </widget>

@@ -19,6 +19,7 @@
 #include "../fsm.h"
 #include "../objects/product.h"
 
+
 #include "../../library/printer/Adafruit_Thermal.h"
 #include <string>
 
@@ -33,6 +34,7 @@ public:
     DF_ERROR printTest();
     DF_ERROR displayPrinterStatus();
     DF_ERROR displayPrinterReachable();
+    DF_ERROR sendPrinterStatus();
 
     DF_ERROR onEntry();
     DF_ERROR onAction();

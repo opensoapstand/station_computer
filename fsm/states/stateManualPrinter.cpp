@@ -47,6 +47,7 @@ DF_ERROR stateManualPrinter::onEntry()
    DF_ERROR e_ret = OK;
    debugOutput::sendMessage("Test printer manually.", MSG_INFO);
    printerr.connectToPrinter();
+   b_isContinuouslyChecking = false;
    return e_ret;
 }
 
@@ -65,6 +66,12 @@ DF_ERROR stateManualPrinter::onAction()
          debugOutput::sendMessage("Exit printer status test", MSG_INFO);
 
          m_state_requested = STATE_IDLE;
+      }
+      if (ACTION_PRINTER_SEND_STATUS == m_pMessaging->getAction())
+      {
+         debugOutput::sendMessage("Printer status requested by UI", MSG_INFO);
+         sendPrinterStatus();
+         m_state_requested = STATE_IDLE; // return after finished.
       }
 
       // If ACTION_DISPENSE is received, enter Dispense state, else, stay in Idle state
@@ -137,6 +144,33 @@ DF_ERROR stateManualPrinter::onAction()
    e_ret = OK;
 
    return e_ret;
+}
+
+
+DF_ERROR stateManualPrinter::sendPrinterStatus()
+{
+   
+   bool isOnline = printerr.testComms();
+   bool hasPaper = printerr.hasPaper();
+   string statusString;
+   if (isOnline){
+      if (hasPaper){
+         statusString = "printerstatus11";
+      }else{
+         statusString = "printerstatus10";
+
+      }
+   }else{
+         statusString = "printerstatus00";
+   }
+
+   #ifndef USE_OLD_DATABASE
+   
+   #endif
+   
+   
+   m_pMessaging->sendMessage(statusString);
+   
 }
 
 DF_ERROR stateManualPrinter::displayPrinterStatus()

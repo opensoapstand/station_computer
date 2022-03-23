@@ -43,6 +43,8 @@ class page_maintenance : public QWidget
 public:
     explicit page_maintenance(QWidget *parent = nullptr);
     void setPage(page_idle* pageIdle, page_maintenance_dispenser* pageMaintain, page_select_product *p_pageProduct, pageProduct* pagePaySelect);
+
+    void printerStatusFeedback(bool isOnline, bool hasPaper);
     ~page_maintenance();
     int getSelection();
 
@@ -65,6 +67,10 @@ private slots:
     void btn_clicked();
 //    void on_buttonGroup_buttonClicked();
     void keyboardButtonPressed(int);
+
+    void on_printer_test_button_clicked();
+
+    void on_printer_check_status_clicked();
 
 private:
     void showEvent(QShowEvent *event);

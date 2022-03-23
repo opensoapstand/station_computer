@@ -360,6 +360,7 @@ DF_ERROR messageMediator::parseCommandString()
        first_char == ACTION_MANUAL_PRINTER ||
        first_char == ACTION_QUIT ||
        first_char == ACTION_PRINTER_CHECK_STATUS ||
+       first_char == ACTION_PRINTER_SEND_STATUS ||
        first_char == ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY ||
        first_char == ACTION_PRINTER_PRINT_TEST ||
        first_char == ACTION_HELP ||

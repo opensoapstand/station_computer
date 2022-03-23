@@ -38,6 +38,9 @@ void DfUiServer::targetHitSlot(){
 void DfUiServer::initReadySlot(){
     emit initReady();
 }
+void DfUiServer::printerStatusSlot(bool isOnline, bool hasPaper){
+    emit printerStatus(isOnline, hasPaper);
+}
 
 void DfUiServer::MMSlot(){
     emit MM();
@@ -60,6 +63,7 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
     connect(thread, &DfUiCommThread::updateVolumeSignal, this, &DfUiServer::updateVolumeSlot);
     connect(thread, &DfUiCommThread::targetHitSignal, this, &DfUiServer::targetHitSlot);
     connect(thread, &DfUiCommThread::initReadySignal, this, &DfUiServer::initReadySlot);
+    connect(thread, &DfUiCommThread::printerStatusSignal, this, &DfUiServer::printerStatusSlot);
     connect(thread, &DfUiCommThread::MMSignal, this, &DfUiServer::MMSlot);
 
     thread->start();

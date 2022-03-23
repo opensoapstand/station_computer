@@ -61,6 +61,8 @@ page_maintenance::~page_maintenance()
     delete ui;
 }
 
+
+
 void page_maintenance::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
@@ -431,4 +433,68 @@ void page_maintenance::keyboardButtonPressed(int buttonID){
     else{
         ui->keyboardTextEntry->setText(ui->keyboardTextEntry->text() + buttonText);
     }
+}
+
+void page_maintenance::on_printer_test_button_clicked()
+{
+  
+  qDebug() << "Send test printer to controller";
+    QString command = "p";
+
+    // Networking
+    idlePage->dfUtility->m_IsSendingFSM = true;
+    idlePage->dfUtility->set_message_to_send_to_FSM(command);
+    idlePage->dfUtility->send_to_FSM();
+    idlePage->dfUtility->m_IsSendingFSM = false;
+
+    usleep(50000);
+
+    
+    command = "l";
+
+    // Networking
+    idlePage->dfUtility->m_IsSendingFSM = true;
+    idlePage->dfUtility->set_message_to_send_to_FSM(command);
+    idlePage->dfUtility->send_to_FSM();
+    idlePage->dfUtility->m_IsSendingFSM = false;
+
+}
+
+void page_maintenance::printerStatusFeedback(bool isOnline, bool hasPaper){
+    qDebug() << "Feeback received . printer";
+
+    QString printerStatus = "Printer is offline";
+    if (isOnline){
+        printerStatus = "Printer is online";
+    }
+    
+    QString printerHasPaper = "No paper detected.";
+    if (hasPaper){
+        printerHasPaper = "Paper ok";
+    }
+    ui->printer_isOnline_label->setText(printerStatus);
+    ui->printer_hasPaper_label->setText(printerHasPaper);
+}
+
+void page_maintenance::on_printer_check_status_clicked()
+{
+  qDebug() << "Send test printer to controller";
+    QString command = "p";
+
+    // Networking
+    idlePage->dfUtility->m_IsSendingFSM = true;
+    idlePage->dfUtility->set_message_to_send_to_FSM(command);
+    idlePage->dfUtility->send_to_FSM();
+    idlePage->dfUtility->m_IsSendingFSM = false;
+
+    usleep(50000);
+
+    
+    command = "a";
+
+    // Networking
+    idlePage->dfUtility->m_IsSendingFSM = true;
+    idlePage->dfUtility->set_message_to_send_to_FSM(command);
+    idlePage->dfUtility->send_to_FSM();
+    idlePage->dfUtility->m_IsSendingFSM = false;
 }

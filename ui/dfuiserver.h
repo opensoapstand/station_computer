@@ -13,11 +13,13 @@ public:
     void resetTimerSlot();
     void transactionEndSlot();
     void updateVolumeSlot(double dispensed);
+    void printerStatusSlot(bool isOnline, bool hasPaper);
     void targetHitSlot();
     void initReadySlot();
     void MMSlot();
 
 signals:
+    void printerStatus(bool isOnline, bool hasPaper);
     void controllerFinishedAck();
     void pleaseReset();
     void signalUpdateVolume(double dispensed, bool isFull);

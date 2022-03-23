@@ -183,6 +183,7 @@ void page_maintenance_dispenser::on_backButton_clicked()
 
 void page_maintenance_dispenser::refreshLabels()
 {
+    ui->pwmSlider->hide();
 
     volume_per_tick_buffer = selectedProductOrder->getVolumePerTickForSelectedSlot();
 
@@ -208,7 +209,7 @@ void page_maintenance_dispenser::refreshLabels()
     ui->lastRefillLabel->setText(db.getLastRefill(product_slot___));
     ui->pluLabel_s->setText(db.getPLU(product_slot___, 's'));
     ui->pluLabel_l->setText(db.getPLU(product_slot___, 'l'));
-    ui->pwmSlider->hide();
+    
 
     db.closeDB();
 

@@ -62,7 +62,7 @@ void packetFromUX410::sortPacket(std::vector<uint8_t> packetRead)
 {
     uint i = 0;
 
-//    if (communicationPacketField::ACK !=packetRead[i]) //check if ACK is not recieved
+//    if (communicationPacketField::ACK !=packetRead[i]) //check if ACK is not received
 //    //if (communicationPacketField::ACK == packetRead[i]
 //    {
 //        while(packetRead[i] != communicationPacketField::ETX) //find the position for full packet
@@ -76,7 +76,7 @@ void packetFromUX410::sortPacket(std::vector<uint8_t> packetRead)
 //        }
 //        i += 2; //to skip LRC and to start the packet from (STX) 0x02
 //    }
-//    else {  //ACK is recieved
+//    else {  //ACK is received
 //        i++; //to start the packet from (STX) 0x02
 //    }
 
@@ -119,7 +119,7 @@ packetResponse packetFromUX410::getPacket()
 
 std::ostream &operator <<(std::ostream &out, const packetFromUX410 &pkt)
 {
-    out << "Recieved Packet: ";
+    out << "Received Packet: ";
     out << std::hex <<  int(pkt.packetToSort.STX) << " ";
     out << std::hex << int(pkt.packetToSort.dataLen[0]) << " ";
     out << std::hex << int(pkt.packetToSort.dataLen[1]) << " ";

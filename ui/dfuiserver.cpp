@@ -1,6 +1,6 @@
 #include "dfuiserver.h"
 #include "dfuicommthread.h"
-
+#include "df_util.h" // lode added for settings
 DfUiServer::DfUiServer(QObject *parent) :
     QTcpServer(parent)
 {
@@ -23,9 +23,12 @@ void DfUiServer::startServer()
 void DfUiServer::resetTimerSlot(){
     emit pleaseReset();
 }
+void DfUiServer::transactionEndSlot(){
+    emit controllerFinishedAck();
+}
 
 void DfUiServer::updateVolumeSlot(double dispensed){
-    emit updateVolume(dispensed);
+    emit signalUpdateVolume(dispensed, false);
 }
 
 void DfUiServer::targetHitSlot(){
@@ -34,6 +37,9 @@ void DfUiServer::targetHitSlot(){
 
 void DfUiServer::initReadySlot(){
     emit initReady();
+}
+void DfUiServer::printerStatusSlot(bool isOnline, bool hasPaper){
+    emit printerStatus(isOnline, hasPaper);
 }
 
 void DfUiServer::MMSlot(){
@@ -52,10 +58,12 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
     // connect signal/slot
     // once a thread is not needed, it will be beleted later
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    connect(thread, &DfUiCommThread::transactionEndSignal, this, &DfUiServer::transactionEndSlot);
     connect(thread, &DfUiCommThread::resetTimerSignal, this, &DfUiServer::resetTimerSlot);
     connect(thread, &DfUiCommThread::updateVolumeSignal, this, &DfUiServer::updateVolumeSlot);
     connect(thread, &DfUiCommThread::targetHitSignal, this, &DfUiServer::targetHitSlot);
     connect(thread, &DfUiCommThread::initReadySignal, this, &DfUiServer::initReadySlot);
+    connect(thread, &DfUiCommThread::printerStatusSignal, this, &DfUiServer::printerStatusSlot);
     connect(thread, &DfUiCommThread::MMSignal, this, &DfUiServer::MMSlot);
 
     thread->start();

@@ -66,6 +66,7 @@ messageMediator::~messageMediator()
 DF_ERROR messageMediator::sendMessage(string msg)
 {
    DF_ERROR dfError = OK;
+   debugOutput::sendMessage("Send msg to UI: " + msg, MSG_INFO);
 
    try
    {
@@ -74,13 +75,13 @@ DF_ERROR messageMediator::sendMessage(string msg)
       try
       {
          client_socket << msg;
-         client_socket >> reply;
+         //client_socket >> reply; // blocking. And we're not sending a reply from the UI anymore (it caused crashes.)
       }
       catch (SocketException &)
       {
          // TODO: Should catch no message error...
       }
-      //std::cout << "We received this response from the server:\n\"" << reply << "\"\n";
+       debugOutput::sendMessage( "We received this response from the server: " + reply, MSG_INFO);
       ;
    }
    catch (SocketException &e)
@@ -268,18 +269,18 @@ void *messageMediator::doIPThread(void *pThreadArgs)
          {
             while (true)
             {
-               debugOutput::sendMessage("char received over IP", MSG_INFO);
+               //debugOutput::sendMessage("char received over IP", MSG_INFO);
                std::string data;
                // *fsm_comm_socket >> data;
                // *fsm_comm_socket << "";
                new_sock >> data;
 
-               // AckOrNakResult = "FSM ACK";
-               sendQtACK("ACK");
+               
+               //sendQtACK("ACK");  // lode commented it out was blocking?!?! todo //// AckOrNakResult = "FSM ACK"; 
                // cout << data << endl;
                m_receiveStringBuffer = data;
                updateCmdString();
-               debugOutput::sendMessage("char received over IP" + data, MSG_INFO);
+               debugOutput::sendMessage("chars received over IP: " + data, MSG_INFO);
                // new_sock << data;
             }
 
@@ -287,6 +288,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
          }
          catch (SocketException &sock)
          {
+            debugOutput::sendMessage("Socket Transfer Exception was caught:" + sock.description(), MSG_INFO);
             //  std::cout << "Socket Transfer Exception was caught:" << sock.description() << "\nExiting.\n";
             // AckOrNakResult = "FSM NAK";
             // sendQtACK(AckOrNakResult);
@@ -295,6 +297,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
    }
    catch (SocketException &e)
    {
+      debugOutput::sendMessage("Socket Creation Exception was caught:" + e.description(), MSG_INFO);
       // std::cout << "Socket Creation Exception was caught:" << e.description() << "\nExiting.\n";
    }
 
@@ -357,9 +360,11 @@ DF_ERROR messageMediator::parseCommandString()
        first_char == ACTION_MANUAL_PRINTER ||
        first_char == ACTION_QUIT ||
        first_char == ACTION_PRINTER_CHECK_STATUS ||
+       first_char == ACTION_PRINTER_SEND_STATUS ||
        first_char == ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY ||
        first_char == ACTION_PRINTER_PRINT_TEST ||
        first_char == ACTION_HELP ||
+       first_char == ACTION_DEBUG ||
        first_char == ACTION_MANUAL_PUMP_TEST ||
        first_char == ACTION_MANUAL_PUMP ||
        first_char == ACTION_MANUAL_PUMP_ENABLE ||
@@ -398,7 +403,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
    if (isdigit(sCommand[0]))
    {
       productChar = sCommand[0];
-      debugOutput::sendMessage("digit", MSG_INFO);
+      debugOutput::sendMessage("parsed digit", MSG_INFO);
    }
 
    if (sCommand.size() > 1)
@@ -412,7 +417,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
             actionChar = sCommand[i];
          }
 
-         if (sCommand[i] == REQUESTED_VOLUME_1 || sCommand[i] == REQUESTED_VOLUME_2 || sCommand[i] == REQUESTED_VOLUME_3 ||sCommand[i] == REQUESTED_VOLUME_CUSTOM)
+         if (sCommand[i] == REQUESTED_VOLUME_1 || sCommand[i] == REQUESTED_VOLUME_2 || sCommand[i] == REQUESTED_VOLUME_3 ||sCommand[i] == REQUESTED_VOLUME_CUSTOM || sCommand[i] == REQUESTED_VOLUME_TEST)
          {
             volumeChar = (sCommand[i]);
          }
@@ -456,6 +461,56 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
    }
    }
 
+
+
+   if (!isalpha(volumeChar))
+   {
+      // e_ret = ERROR_NETW_NO_POSITION;
+   }
+   else if (volumeChar == REQUESTED_VOLUME_DUMMY)
+   {
+      debugOutput::sendMessage("No Requested volume provided", MSG_INFO);
+   }
+   else
+   {
+      switch (volumeChar)
+      {
+      case REQUESTED_VOLUME_1:
+         debugOutput::sendMessage("Requested volume 1, Small Size", MSG_INFO);
+         m_requestedVolume = REQUESTED_VOLUME_1;
+         e_ret = OK;
+         break;
+
+      case REQUESTED_VOLUME_2:
+         debugOutput::sendMessage("Requested volume 2, Medium Size", MSG_INFO);
+         m_requestedVolume = REQUESTED_VOLUME_2;
+         e_ret = OK;
+         break;
+      case REQUESTED_VOLUME_3:
+         debugOutput::sendMessage("Requested volume 3, Large Size", MSG_INFO);
+         m_requestedVolume = REQUESTED_VOLUME_3;
+         e_ret = OK;
+         break;
+
+      case REQUESTED_VOLUME_CUSTOM:
+         debugOutput::sendMessage("Requested volume custom Size", MSG_INFO);
+         m_requestedVolume = REQUESTED_VOLUME_CUSTOM;
+         e_ret = OK;
+         break;
+
+      case REQUESTED_VOLUME_TEST:
+         debugOutput::sendMessage("Requested volume test", MSG_INFO);
+         m_requestedVolume = REQUESTED_VOLUME_TEST;
+         e_ret = OK;
+         break;
+
+      default:
+         debugOutput::sendMessage("Unknown volume received.... " + to_string(volumeChar), MSG_INFO);
+         break;
+      }
+   }
+
+
    if (!isalpha(actionChar))
    {
       debugOutput::sendMessage("Irrelevant input .. ", MSG_INFO);
@@ -494,45 +549,6 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
       }
    }
 
-   if (!isalpha(volumeChar))
-   {
-      // e_ret = ERROR_NETW_NO_POSITION;
-   }
-   else if (volumeChar == REQUESTED_VOLUME_DUMMY)
-   {
-      debugOutput::sendMessage("No Requested volume provided", MSG_INFO);
-   }
-   else
-   {
-      switch (volumeChar)
-      {
-      case REQUESTED_VOLUME_1:
-         debugOutput::sendMessage("Requested volume 1, Small Size", MSG_INFO);
-         m_requestedVolume = REQUESTED_VOLUME_1;
-         e_ret = OK;
-         break;
-
-      case REQUESTED_VOLUME_2:
-         debugOutput::sendMessage("Requested volume 2, Medium Size", MSG_INFO);
-         m_requestedVolume = REQUESTED_VOLUME_2;
-         e_ret = OK;
-         break;
-      case REQUESTED_VOLUME_3:
-         debugOutput::sendMessage("Requested volume 3, Large Size", MSG_INFO);
-         m_requestedVolume = REQUESTED_VOLUME_3;
-         e_ret = OK;
-         break;
-
-      case REQUESTED_VOLUME_CUSTOM:
-         debugOutput::sendMessage("Requested volume custom, Size", MSG_INFO);
-         m_requestedVolume = REQUESTED_VOLUME_CUSTOM;
-         e_ret = OK;
-         break;
-
-      default:
-         break;
-      }
-   }
 
    return e_ret;
 }

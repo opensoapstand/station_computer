@@ -42,9 +42,9 @@ DF_ERROR stateDispenseIdle::onEntry()
 
     productDispensers = g_productDispensers;
 
-    pos = m_pMessaging->getProductNumber();
+    pos = m_pMessaging->getRequestedSlot();
     pos = pos - 1;
-    size = m_pMessaging->getRequestedVolume();
+    size = m_pMessaging->getRequestedSize();
     return e_ret;
 }
 

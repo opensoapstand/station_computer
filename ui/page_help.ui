@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>page_help</class>
+ <widget class="QWidget" name="page_help">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1080</width>
+    <height>1920</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QPushButton" name="previousPage_Button">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>1760</y>
+     <width>171</width>
+     <height>151</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="refreshButton">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>-6</y>
+     <width>1081</width>
+     <height>1931</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url(/home/df-admin/production/references/background.png);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="previousPage_Button_2">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>40</y>
+     <width>181</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="refreshLabel">
+   <property name="geometry">
+    <rect>
+     <x>640</x>
+     <y>20</y>
+     <width>421</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #58595B;
+font-family: Montserrat;
+font-style: light;
+font-weight: normal;
+font-size: 23px;
+line-height: 29px;</string>
+   </property>
+   <property name="text">
+    <string> 
+Tap on screen to keep page open.</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <zorder>refreshButton</zorder>
+  <zorder>previousPage_Button_2</zorder>
+  <zorder>previousPage_Button</zorder>
+  <zorder>refreshLabel</zorder>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

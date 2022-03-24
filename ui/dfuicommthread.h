@@ -7,7 +7,7 @@
 
 #include "df_util.h"
 
-class dispensePage;
+class page_dispenser;
 
 class DfUiCommThread : public QThread
 {
@@ -18,9 +18,11 @@ public:
 
 signals:
     void error(QTcpSocket::SocketError socketerror);
+    void transactionEndSignal(void);
     void resetTimerSignal(void);
     void targetHitSignal(void);
     void updateVolumeSignal(double dispensed);
+    void printerStatusSignal(bool isOnline, bool hasPaper);
     void initReadySignal(void);
     void MMSignal(void);
 

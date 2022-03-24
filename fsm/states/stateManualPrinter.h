@@ -19,6 +19,7 @@
 #include "../fsm.h"
 #include "../objects/product.h"
 
+
 #include "../../library/printer/Adafruit_Thermal.h"
 #include <string>
 
@@ -29,10 +30,14 @@ public:
     stateManualPrinter(messageMediator *message); //debug through local network
     ~stateManualPrinter();
 
+    sqlite3 *db;
+    int rc;
+
     string toString();
     DF_ERROR printTest();
     DF_ERROR displayPrinterStatus();
     DF_ERROR displayPrinterReachable();
+    DF_ERROR sendPrinterStatus();
 
     DF_ERROR onEntry();
     DF_ERROR onAction();

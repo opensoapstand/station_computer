@@ -27,7 +27,7 @@ stateDispense::stateDispense()
 // CTOR Linked to IPC
 stateDispense::stateDispense(messageMediator *message)
 {
-   //debugOutput::sendMessage("stateDispense(messageMediator * message)", MSG_INFO);
+   // debugOutput::sendMessage("stateDispense(messageMediator * message)", MSG_INFO);
 }
 
 // DTOR
@@ -50,8 +50,8 @@ DF_ERROR stateDispense::onEntry()
    m_state_requested = STATE_DISPENSE;
    productDispensers = g_productDispensers;
    DF_ERROR e_ret = OK;
-   pos = m_pMessaging->getProductNumber();
-   size = m_pMessaging->getRequestedVolume();
+   pos = m_pMessaging->getRequestedSlot();
+   size = m_pMessaging->getRequestedSize();
    pos = pos - 1;
    productDispensers[pos].getProduct()->productVolumeInfo();
    return e_ret;
@@ -104,13 +104,13 @@ DF_ERROR stateDispense::onAction()
    // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
    m_pMessaging->sendMessage(to_string(productDispensers[pos].getProduct()->getVolumeDispensed()));
 
-   debugOutput::sendMessage("debug. targets s,m,l,c:" + 
-      to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_s) + 
-      "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_m) + 
-      "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_l) + 
-      "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_c_max) + 
-      ", Vol dispensed: " + to_string(productDispensers[pos].getDispensedVolume()) 
-      ,MSG_INFO);
+   debugOutput::sendMessage("debug. targets s,m,l,c:" +
+                                to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_s) +
+                                "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_m) +
+                                "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_l) +
+                                "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_c_max) +
+                                ", Vol dispensed: " + to_string(productDispensers[pos].getDispensedVolume()),
+                            MSG_INFO);
 
    if (productDispensers[pos].getProduct()->getVolumeDispensedPreviously() == productDispensers[pos].getProduct()->getVolumeDispensed())
    {

@@ -66,7 +66,7 @@ DF_ERROR stateIdle::onAction()
          ret_msg = m_pMessaging->parseCommandString();
 
          productDispensers = g_productDispensers;
-         pos = m_pMessaging->getProductNumber();
+         pos = m_pMessaging->getRequestedSlot();
          pos = pos - 1;
 
          if (ACTION_DISPENSE == m_pMessaging->getAction())
@@ -89,9 +89,16 @@ DF_ERROR stateIdle::onAction()
             m_state_requested = STATE_END;
          }
 
+         if (ACTION_DEBUG == m_pMessaging->getAction())
+         {
+             debugOutput::sendMessage("beffooore reload parameters from product1", MSG_INFO);
+             bool success = this->productDispensers[0].getProduct()->reloadParametersFromDb();
+             debugOutput::sendMessage("after" + to_string(success), MSG_INFO);
+         }
+
          if (ACTION_HELP == m_pMessaging->getAction())
          {
-            debugOutput::sendMessage("\n Idle State. Available Commands: \n q: Quit(in independent mode)\n p: Test printer\n m: Test pumps \n [1..4]d[l,s,t]: Enter dispense mode. [product number]d[size] \n [1..4]f[l,s,t]: If dispensing: to End Dispensing [product number]f[size]", MSG_INFO);
+            debugOutput::sendMessage("\n Idle State. Available Commands: \n q: Quit(in independent mode)\n p: Test printer\n m: Test pumps\n b: Specific debug \n [1..4]d[l,s,t]: Enter dispense mode. [product number]d[size] \n [1..4]f[l,s,t]: If dispensing: to End Dispensing [product number]f[size]", MSG_INFO);
          }
       }
       else

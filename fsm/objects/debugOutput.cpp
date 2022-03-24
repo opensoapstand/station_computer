@@ -18,6 +18,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <chrono>
+#include <fstream>
+#include <ctime>
+
+#include <sstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -47,39 +52,82 @@ bool debugOutput::setMessageLevel(MESSAGE_LEVEL dbgLvl)
 	return dbg_ret;
 }
 
-/* 
-* !!! this is not threadsafe at the moment
-* Has issues spitting out raw addresses; cout on next line for this.
-*/
-void debugOutput::sendMessage(std::string msg, MESSAGE_LEVEL lvl)
+/*
+ * !!! this is not threadsafe at the moment
+ * Has issues spitting out raw addresses; cout on next line for this.
+ */
+
+// Get current date/time, format is YYYY-MM-DD.HH:mm:ss
+string debugOutput::getCurrentDateTime()
 {
+	time_t now = time(0);
+	struct tm tstruct;
+	char buf[80];
+	tstruct = *localtime(&now);
+	// Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
+	// for more information about date/time format
+	// strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", &tstruct);
 
 	using namespace std::chrono;
-    uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+	uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+	uint64_t millis = millis_since_epoch % 1000;
+
+	strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", &tstruct);
+	string timeStr = std::string(buf);
+
+	string returnString = timeStr + "." + std::to_string(millis);
+	return returnString;
+}
+
+string debugOutput::getCurrentDate()
+{
+	time_t now = time(0);
+	struct tm tstruct;
+	char buf[80];
+	tstruct = *localtime(&now);
+	// Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
+	// for more information about date/time format
+	strftime(buf, sizeof(buf), "%Y-%m-%d", &tstruct);
+
+	return buf;
+}
+
+string debugOutput::getCurrentTime()
+{
+	time_t now = time(0);
+	struct tm tstruct;
+	char buf[80];
+	tstruct = *localtime(&now);
+	// Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
+	// for more information about date/time format
+	using namespace std::chrono;
+	uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+	uint64_t millis = millis_since_epoch % 1000;
+
+	strftime(buf, sizeof(buf), "%H:%M:%S", &tstruct);
+	string timeStr = std::string(buf);
+
+	string returnString = timeStr + "." + std::to_string(millis);
+	return returnString;
+}
+
+void debugOutput::sendMessage(std::string msg, MESSAGE_LEVEL lvl)
+{
+	// https://stackoverflow.com/questions/2393345/how-to-append-text-to-a-text-file-in-c
+
+	std::ofstream outfile;
+
+	string log_path = "/home/df-admin/production/logging/controller/controller_" + getCurrentDate() + ".txt";
+
+	outfile.open(log_path, std::ios_base::app); // append instead of overwrite // will close automatically at destruction
+
+	using namespace std::chrono;
+	uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
 	if (lvl >= debugOutput::m_dbgLvl)
 	{
-		// original. outputting this might lead to segmentation errors
-		cerr << m_lvlArray[lvl] + " " + to_string(millis_since_epoch) + " : " + msg << endl;
-		
-		//	cout << lvl << endl;
-		//sprintf("tetst",);
-		//cout << m_lvlArray[lvl] + ": " + msg << endl;
 
-		// 	//https://stackoverflow.com/questions/9469790/execution-of-printf-and-segmentation-fault
-		// 	// debugOutput::sendMessage("oddyseyx86GPIO::setPinAsInputElseOutput ", MSG_INFO);
-		//     std::string msg = m_lvlArray[lvl] + ":" + msg;
-
-		// 	//https://stackoverflow.com/questions/7352099/stdstring-to-char/7352131
-		// 	//std::string str = "string";
-		// 	char *cstr = new char[msg.length() + 1];
-		// 	strcpy(cstr, msg.c_str());
-
-		// 	printf("%s",cstr);
-		// 	delete [] cstr;
-
-		//     // printf("%s",name);
-		//    //printf("%s",msg);
-		// 	fflush(stdout);
+		cerr << getCurrentDateTime() + " " + m_lvlArray[lvl] + ": " + msg << endl;
+		outfile << getCurrentTime() + " " + m_lvlArray[lvl] + ": " + msg << endl;
 	}
 }

@@ -142,9 +142,15 @@ DF_ERROR stateManualPump::onAction()
       if (ACTION_HELP == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("help\nAvailable printer test commands: \n \
-            t: test pump1 \n a: flow measuring test \n \
+            t: test pump1 \n \
+            a: flow measuring test \n \
             g: custom volume dispense model test \n \
-            e: enable pump1 \n d: disable pump1\n \
+               (please note: the machine will dispense some seconds and will then \n \
+               automatically revert for some time. Set the reverting time during the testing with \n \
+               ixxx;  where xxx is in milliseconds. e.g. i200;  will revert the pump for 200ms \n \
+               the pump speed cannot be set during this test) \n \
+            e: enable pump1 \n \
+            d: disable pump1\n \
             f: direction forward pump1 \n r: direction reverse pump1\n ixxx: set pwm pump1 [0..255]\nq: quit ",
                                   MSG_INFO);
       }

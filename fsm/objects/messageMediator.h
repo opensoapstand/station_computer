@@ -49,19 +49,22 @@
 #define ACTION_MANUAL_PUMP_PWM_SET 'i'
 
 #define ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY 'V'
+#define ACTION_PRINTER_SEND_STATUS 'a'
 #define ACTION_PRINTER_CHECK_STATUS 'v'
 #define ACTION_PRINTER_PRINT_TEST 'l'
 #define ACTION_PRINTER_REACHABLE 'r'
 #define ACTION_MANUAL_PUMP_FLOW_TEST_TOGGLE 'a'
 #define ACTION_MANUAL_PUMP_CUSTOM_VOLUME_TEST_TOGGLE 'g'
 #define ACTION_HELP 'h'
+#define ACTION_DEBUG 'b'
 
 #define PRODUCT_DUMMY 'z'
 
 #define REQUESTED_VOLUME_1 's'
 #define REQUESTED_VOLUME_2 'm'
 #define REQUESTED_VOLUME_3 'l'
-#define REQUESTED_VOLUME_CUSTOM 't'
+#define REQUESTED_VOLUME_CUSTOM 'c'
+#define REQUESTED_VOLUME_TEST 't'
 
 #define REQUESTED_VOLUME_DUMMY '0'
 
@@ -88,8 +91,8 @@ public:
 
    // dispense command 
    char getAction() { return m_requestedAction; }
-   int getProductNumber() { return m_RequestedProductIndexInt; }
-   char getRequestedVolume() { return m_requestedVolume; }
+   int getRequestedSlot() { return m_RequestedProductIndexInt; }
+   char getRequestedSize() { return m_requestedVolume; }
    int getCommandValue() { return m_commandValue; }
 
 

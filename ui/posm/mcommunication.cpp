@@ -28,7 +28,7 @@ mCommunication::mCommunication(){
 mCommunication::~mCommunication() {
 }
 
-bool mCommunication::init(){
+bool mCommunication::page_init(){
 
     bool bRet = false;
 
@@ -97,7 +97,7 @@ std::vector<uint8_t> mCommunication::readPacket(){
         return pktRead;
     }
 //    else if (int(buffer[2]) < readSize) {
-//        std::cout << "buffer[2] = " << int(buffer[3]) << " readSzie: " << readSize << endl;
+//        std::cout << "buffer[2] = " << int(buffer[3]) << " readSzie: " << readSize ;
 //        readPacket();
 //    }
     else{

@@ -44,11 +44,17 @@ DF_ERROR stateDispenseInit::onEntry()
     m_state_requested = STATE_DISPENSE_INIT;
     DF_ERROR e_ret = OK;
 
-    size = m_pMessaging->getRequestedVolume();
     productDispensers = g_productDispensers;
 
-    dispenser_index = m_pMessaging->getProductNumber() - 1;
+    size = m_pMessaging->getRequestedSize();
+    dispenser_index = m_pMessaging->getRequestedSlot() - 1;
+    
+    debugOutput::sendMessage("dispense init, we (re)load parameters from database.", MSG_INFO);
 
+    bool success = this->productDispensers[dispenser_index].getProduct()->reloadParametersFromDb();
+    if (!success){
+        debugOutput::sendMessage("Did not reload parameters from database", MSG_INFO);
+    }
     return e_ret;
 }
 
@@ -60,7 +66,11 @@ DF_ERROR stateDispenseInit::onAction()
 
     DF_ERROR e_ret = OK;
 
-    debugOutput::sendMessage("Chosen dispenser slot: " + std::to_string(  productDispensers[dispenser_index].getSlot()), MSG_INFO);
+    debugOutput::sendMessage("Chosen dispenser slot: " + 
+        std::to_string(  productDispensers[dispenser_index].getSlot()) + 
+        " target volume: " + 
+        std::to_string(productDispensers[dispenser_index].getProduct()->getTargetVolume(size)) 
+        , MSG_INFO);
     // debugOutput::sendMessage("Chosen dispenser slot: " + std::to_string(  productDispensers[dispenser_index].getProduct()->getTargetVolume(size)), MSG_INFO);
     // debugOutput::sendMessage("Chosen dispenser slot: " + std::to_string(  productDispensers[dispenser_index].getProduct()->getPrice(size)), MSG_INFO);
 

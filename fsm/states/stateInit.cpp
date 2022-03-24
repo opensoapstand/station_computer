@@ -37,7 +37,7 @@ stateInit::stateInit(messageMediator *message)
 // DTOR
 stateInit::~stateInit()
 {
-    //delete stuff
+    // delete stuff
 }
 
 // Overload for Debugger output
@@ -48,7 +48,7 @@ string stateInit::toString()
 
 /*
  * Initialize FSM State
-*/
+ */
 DF_ERROR stateInit::onEntry()
 {
     m_state_requested = STATE_INIT;
@@ -61,22 +61,29 @@ DF_ERROR stateInit::onAction()
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
-    e_ret = setProducts();
+   
+    debugOutput::sendMessage("Use database at: " + std::to_string(1) + DB_PATH, MSG_INFO);
 
+    e_ret = setProducts();
     if (OK == e_ret)
     {
         e_ret = dispenserSetup();
+    }else{
+        debugOutput::sendMessage("ERROR: Problems setting up the products.", MSG_INFO);
     }
 
-    if (nullptr != &m_state_requested && OK == e_ret)
+    if (OK == e_ret)
     {
-        if (OK == e_ret)
-        {
-            m_state_requested = STATE_IDLE;
+        m_state_requested = STATE_IDLE;
 
-            // The UI program waits for this message to move from its initializing phase to its Idle phase:
-            m_pMessaging->sendMessage("Init Ready");
-        }
+        // The UI program waits for this message to move from its initializing phase to its Idle phase:
+        m_pMessaging->sendMessage("Init Ready");
+        
+    }
+    else
+    {
+
+        debugOutput::sendMessage("ERROR: Problems setting up the dispenser.", MSG_INFO);
     }
 
     return e_ret;
@@ -93,7 +100,6 @@ DF_ERROR stateInit::dispenserSetup()
 {
     int idx;
     dispenser *productDispensers = g_productDispensers;
-
     debugOutput::sendMessage("Setting up DS-ED-8344 hardware control board.\n", MSG_INFO);
 
     // We only need one flow sensor interrupt pin since only one pump
@@ -121,8 +127,24 @@ DF_ERROR stateInit::dispenserSetup()
     return OK;
 } // End of dispenserSetup()
 
+/**/
+DF_ERROR stateInit::setProducts()
+{
+    for (int slot_index=0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
+    {
+        debugOutput::sendMessage("Setup dispenser: " + to_string (slot_index+1), MSG_INFO);
+        g_productDispensers[slot_index].setSlot(slot_index + 1);
+        debugOutput::sendMessage("slot set.", MSG_INFO);
+        g_productDispensers[slot_index].setProduct(new product(slot_index+1));
+        debugOutput::sendMessage("product set..", MSG_INFO);
+        // g_productDispensers[slot_index].getProduct()->reloadParametersFromDb();
+    }
+    return OK;
+}
+/**/
+/*
 // This function (called in SetDrinks) converts the data that is in the product database to variables,
-//which are then passed to the SetDrink function to create product objects for each product.
+// which are then passed to the SetDrink function to create product objects for each product.
 static int db_sql_product_callback(void *data, int argc, char **argv, char **azColName)
 {
     // callback is called for every record.
@@ -166,7 +188,7 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
     debugOutput::sendMessage("-------------------Set product values from database:", MSG_INFO);
     for (i = 0; i < argc; i++)
     {
-        //printf("%s = %s\n", azColName[i], argv[i]);
+        // printf("%s = %s\n", azColName[i], argv[i]);
         std::string colname = azColName[i];
 
         char *value = argv[i];
@@ -179,6 +201,77 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
         }
 
         debugOutput::sendMessage("colname,value :" + colname + "," + value, MSG_INFO); //+ std::string to_string(colname)
+#ifdef USE_OLD_DATABASE
+        if (colname == "slot")
+        {
+            slot = atoi(argv[i]);
+        }
+        else if (colname == "pwm")
+        {
+            dispense_speed_pwm = atof(value);
+        }
+        else if (colname == "name")
+        {
+            name = argv[i];
+        }
+        else if (colname == "units")
+        {
+            display_unit = value;
+        }
+        else if (colname == "name_receipt")
+        {
+            name_receipt = argv[i];
+        }
+        else if (colname == "volume_dispensed")
+        {
+            volume_dispensed = atof(argv[i]);
+        }
+        else if (colname == "volume_target_l")
+        {
+            volume_large = atof(argv[i]);
+        }
+        else if (colname == "volume_target_s")
+        {
+            volume_small = atof(argv[i]);
+        }
+        else if (colname == "calibration_const")
+        {
+            calibration_const = atof(argv[i]);
+        }
+        else if (colname == "price_l")
+        {
+            price_large = atof(argv[i]);
+        }
+        else if (colname == "price_s")
+        {
+            price_small = atof(argv[i]);
+        }
+        else if (colname == "is_still")
+        {
+            is_still = atoi(argv[i]);
+        }
+        else if (colname == "volume_per_tick")
+        {
+            volume_per_tick = atof(argv[i]);
+        }
+        else if (colname == "PLU_l")
+        {
+            plu_large = argv[i];
+        }
+        else if (colname == "PLU_s")
+        {
+            plu_small = argv[i];
+        }
+        else if (colname == "payment")
+        {
+            paymentMethod = argv[i];
+        }
+        else
+        {
+            debugOutput::sendMessage("-->unprocessed colname: " + colname, MSG_INFO); //+ std::string to_string(colname)
+        }
+
+#else
 
         if (colname == "slot")
         {
@@ -188,7 +281,7 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
         {
             name = value;
         }
-        else if (colname == "display_unit")
+        else if (colname == "size_unit")
         {
             display_unit = value;
         }
@@ -270,10 +363,13 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
         }
         else
         {
-            debugOutput::sendMessage("unprocessed colname: " + colname, MSG_INFO); //+ std::string to_string(colname)
+            debugOutput::sendMessage("-->unprocessed colname: " + colname, MSG_INFO); //+ std::string to_string(colname)
         }
+
+#endif
     }
-    g_productDispensers[slot - 1].setSlot(slot);
+
+    g_productDispensers[slot-1].setSlot(slot);
     g_productDispensers[slot - 1].setProduct(
         new product(slot, name, calibration_const, volume_per_tick, dispense_speed_pwm,
                     volume_small, volume_medium, volume_large, volume_target_custom_min, volume_target_custom_max,
@@ -283,6 +379,9 @@ static int db_sql_product_callback(void *data, int argc, char **argv, char **azC
 
     return 0;
 }
+
+
+
 
 DF_ERROR stateInit::setProducts()
 {
@@ -310,12 +409,12 @@ DF_ERROR stateInit::setProducts()
         //       fprintf(stderr, "Opened database successfully\n\n");
     }
 
-    /* Create SQL statement */
+    // Create SQL statement
     std::string sql11 = "SELECT * from products";
     char *sql = new char[sql11.length() + 1];
     strcpy(sql, sql11.c_str());
 
-    /* Execute SQL statement */
+    // Execute SQL statement
     rc = sqlite3_exec(db, sql, db_sql_product_callback, (void *)data, &zErrMsg);
 
     if (rc != SQLITE_OK)
@@ -334,3 +433,4 @@ DF_ERROR stateInit::setProducts()
 
     return OK;
 }
+/**/

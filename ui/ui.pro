@@ -6,28 +6,27 @@ CONFIG += \
     c++11
 
 FORMS += \
-    dispensepage.ui \
-    wifiErrorPage.ui \
-    idle.ui \
-    paypage.ui \
-    payselect.ui \
-    productpage_1.ui \
-    productpage_2.ui \
-    thankyoupage.ui \
-    maintenancePage.ui \
-    maintain_product.ui \
-    init.ui \
-    help.ui \
+    page_dispenser.ui \
+    page_error_wifi.ui \
+    page_idle.ui \
+    pagepayment.ui \
+    page_product.ui \
+    page_select_product.ui \
+    pagethankyou.ui \
+    page_maintenance.ui \
+    page_maintenance_dispenser.ui \
+    page_init.ui \
+    page_help.ui \
     keyboard.ui
 
 HEADERS += \
     dfuicommthread.h \
     dfuiserver.h \
-    dispensepage.h \
-    idle.h \
+    page_dispenser.h \
+    page_idle.h \
     includefiles.h \
-    paypage.h \
-    payselect.h \
+    pagepayment.h \
+    page_product.h \
     posm/enums.h \
     posm/lrcgenerator.h \
     posm/mcommunication.h \
@@ -37,26 +36,25 @@ HEADERS += \
     posm/paymentdatabase.h \
     posm/transactionPackets.h \
     posm/transactioninfo.h \
-    productpage_1.h \
-    productpage_2.h \
-    thankyoupage.h \
+    page_select_product.h \
+    pagethankyou.h \
     df_util.h \
     drinkorder.h \
     dbmanager.h \
-    maintenancePage.h \
-    maintain_product.h \
-    wifiErrorPage.h \
-    init.h \
-    help.h
+    page_maintenance.h \
+    page_maintenance_dispenser.h \
+    page_error_wifi.h \
+    page_init.h \
+    page_help.h
 
 SOURCES += \
     dfuicommthread.cpp \
     dfuiserver.cpp \
-    dispensepage.cpp \
-    idle.cpp \
+    page_dispenser.cpp \
+    page_idle.cpp \
     main.cpp \
-    paypage.cpp \
-    payselect.cpp \
+    pagepayment.cpp \
+    page_product.cpp \
     posm/lrcgenerator.cpp \
     posm/mcommunication.cpp \
     posm/packetfromecr.cpp \
@@ -65,17 +63,16 @@ SOURCES += \
     posm/paymentdatabase.cpp \
     posm/transactionPackets.cpp \
     posm/transactioninfo.cpp \
-    productpage_1.cpp \
-    productpage_2.cpp \
-    thankyoupage.cpp \
+    page_select_product.cpp \
+    pagethankyou.cpp \
     df_util.cpp \
     drinkorder.cpp \
     dbmanager.cpp \
-    maintenance.cpp \
-    wifiErrorPage.cpp \
-    maintain_product.cpp \
-    init.cpp \
-    help.cpp \
+    page_maintenance.cpp \
+    page_error_wifi.cpp \
+    page_maintenance_dispenser.cpp \
+    page_init.cpp \
+    page_help.cpp \
     ../library/qr/qrcodegen.cpp
 
 RESOURCES += \

@@ -63,14 +63,16 @@ private:
 
     char now[50];
 
-    DF_ERROR updateDB();
-    DF_ERROR sendDbToCloud();
+    DF_ERROR dispenseEndUpdateDB(bool test_transaction);
+    DF_ERROR sendTransactionToCloud();
     DF_ERROR print_receipt();
     std::string getMachineID();
     std::string getProductID(int slot);
     void bufferCURL(std::string curl_params);
     std::string getUnits(int slot);
     std::string getUnitsFromDb(int slot);
+
+    DF_ERROR handleTransaction();
 
     DF_ERROR print_text(std::string text);
 

@@ -47,6 +47,7 @@ DF_ERROR stateManualPrinter::onEntry()
    DF_ERROR e_ret = OK;
    debugOutput::sendMessage("Test printer manually.", MSG_INFO);
    printerr.connectToPrinter();
+   b_isContinuouslyChecking = false;
    return e_ret;
 }
 
@@ -65,6 +66,12 @@ DF_ERROR stateManualPrinter::onAction()
          debugOutput::sendMessage("Exit printer status test", MSG_INFO);
 
          m_state_requested = STATE_IDLE;
+      }
+      if (ACTION_PRINTER_SEND_STATUS == m_pMessaging->getAction())
+      {
+         debugOutput::sendMessage("Printer status requested by UI", MSG_INFO);
+         sendPrinterStatus();
+         m_state_requested = STATE_IDLE; // return after finished.
       }
 
       // If ACTION_DISPENSE is received, enter Dispense state, else, stay in Idle state
@@ -98,18 +105,18 @@ DF_ERROR stateManualPrinter::onAction()
    if (b_isContinuouslyChecking)
    {
       displayPrinterStatus();
-      //usleep(50000);	// 50 ms	between actions
+      // usleep(50000);	// 50 ms	between actions
    }
 
-   //m_state = STATE_MANUAL_PRINTER;
+   // m_state = STATE_MANUAL_PRINTER;
 
    // printerr.feed(1);
    // printerr.connectToPrinter();
-   //printerr.cancelCustomCharacters();
+   // printerr.cancelCustomCharacters();
 
    // char tmpTest;
-   //waitSerial++;
-   //tmpTest = printerr.testComms(waitSerial);
+   // waitSerial++;
+   // tmpTest = printerr.testComms(waitSerial);
 
    // std::string c3(1,tmpTest);
 
@@ -137,6 +144,60 @@ DF_ERROR stateManualPrinter::onAction()
    e_ret = OK;
 
    return e_ret;
+}
+
+DF_ERROR stateManualPrinter::sendPrinterStatus()
+{
+
+   bool isOnline = printerr.testComms();
+   bool hasPaper = printerr.hasPaper();
+   string statusString;
+   if (isOnline)
+   {
+      if (hasPaper)
+      {
+         statusString = "printerstatus11";
+      }
+      else
+      {
+         statusString = "printerstatus10";
+      }
+   }
+   else
+   {
+      statusString = "printerstatus00";
+   }
+
+   m_pMessaging->sendMessage(statusString);
+
+#ifndef USE_OLD_DATABASE
+
+   char *zErrMsg = 0;
+
+   // FIXME: DB needs fully qualified link to find...obscure with XML loading.
+   rc = sqlite3_open(DB_PATH, &db);
+
+   std::string sql21;
+   sql21 = ("UPDATE machine SET receipt_printer_is_online=" + to_string(isOnline) + ",receipt_printer_has_paper=" + to_string(hasPaper) + ";"); // omit where cause --> all rows will be updated.
+
+   char *sql_prod21 = new char[sql21.length() + 1];
+   strcpy(sql_prod21, sql21.c_str());
+
+   /* Execute SQL statement */
+   rc = sqlite3_exec(db, sql_prod21, NULL, 0, &zErrMsg);
+
+   if (rc != SQLITE_OK)
+   {
+      //        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+      debugOutput::sendMessage("ERROR: SQL2 : (" + to_string(rc) + "):" + sql21, MSG_INFO);
+
+      sqlite3_free(zErrMsg);
+   }
+   else
+   {
+      debugOutput::sendMessage("SUCCES: SQL2 : (" + to_string(rc) + ") " + sql21, MSG_INFO);
+   }
+#endif
 }
 
 DF_ERROR stateManualPrinter::displayPrinterStatus()
@@ -188,9 +249,9 @@ DF_ERROR stateManualPrinter::onExit()
    b_isContinuouslyChecking = false;
 
    // printerr.connectToPrinter();
-   //printTest();
+   // printTest();
    // printerr.testPage();
-   //usleep(500000);
+   // usleep(500000);
    printerr.disconnectPrinter();
    DF_ERROR e_ret = OK;
    return e_ret;

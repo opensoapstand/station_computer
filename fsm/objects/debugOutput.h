@@ -39,6 +39,9 @@ public:
 	static void sendMessage(string msg, MESSAGE_LEVEL lvl);
 
 	static MESSAGE_LEVEL m_dbgLvl;
+	static string getCurrentDateTime();
+	static string getCurrentDate();
+	static string getCurrentTime();
 
 protected:
 };

@@ -18,7 +18,7 @@
 
 //#include "database_logger.h"
 
-#include "../paypage.h"
+#include "../pagepayment.h"
 //extern std::string merchantName;
 //extern std::string merchantAddress;
 //extern std::string terminalID;
@@ -53,7 +53,7 @@ void transactionInfo::transactionID(std::vector<uint8_t> data)
         std::vector<uint8_t>::const_iterator last = data.begin() + index.at(i+1);
         int idx = idValue(data.at(index.at(i)+1), data.at(index.at(i)+2));
 
-        //cout << " idx: " << idx << endl;
+        //cout << " idx: " << idx ;
         std::vector<uint8_t> subVector(first, last);
 
         std::string temp = dataField(subVector);
@@ -226,7 +226,7 @@ void transactionInfo::makeReceipt(string terminalID, string merchantName, string
     merchantReceipt.close();
 
     merchantReceipt.flush();
-
+    qDebug() << "ahoyy25" ;
     DbManager db(DB_PATH);
     db.updatePaymentsDb(QString::fromStdString(purchaseDate.substr(0,8)), QString::fromStdString(purchaseDate.substr(9)), QString::fromStdString(txnType), QString::fromStdString(purchaseAmount), QString::fromStdString(lastFourChar), QString::fromStdString(ref), QString::fromStdString(getTransactionInfo(TXN_FIDs::APPROVAL_CODE)), QString::fromStdString(cardType), QString::fromStdString(getTransactionInfo(TXN_FIDs::TXN_FINAL_DISP)), QString::fromStdString(getTransactionInfo(TXN_FIDs::ISO_CODE)), QString::fromStdString(getTransactionInfo(TXN_FIDs::HOST_CODE)), QString::fromStdString(getTransactionInfo(TXN_FIDs::TVR_AFTER_ARPC)));
 

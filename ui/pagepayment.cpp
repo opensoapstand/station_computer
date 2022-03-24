@@ -27,7 +27,7 @@ pagePayment::pagePayment(QWidget *parent) : QWidget(parent),
 {
     // Fullscreen background setup
     ui->setupUi(this);
-    QPixmap background(PAGE_QR_PAY_BACKGROUND);
+    QPixmap background(PAGE_QR_PAY_BACKGROUND_PATH);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
@@ -63,7 +63,8 @@ pagePayment::pagePayment(QWidget *parent) : QWidget(parent),
     connect(qrTimer, SIGNAL(timeout()), this, SLOT(qrTimeout()));
 
     // XXX: Comment on/off for Bypassing payment testing
-    payment = false;
+    tap_payment = false;
+
     qDebug() << "ahoyy20";
     DbManager db(DB_PATH);
 
@@ -71,7 +72,7 @@ pagePayment::pagePayment(QWidget *parent) : QWidget(parent),
     {
         if (db.getPaymentMethod(i) == "tap")
         {
-            payment = true;
+            tap_payment = true;
             ui->payment_bypass_Button->setEnabled(false);
         }
         else
@@ -79,7 +80,7 @@ pagePayment::pagePayment(QWidget *parent) : QWidget(parent),
             ui->payment_bypass_Button->setEnabled(false);
         }
     }
-    if (payment)
+    if (tap_payment)
     {
         while (!paymentInit())
             ;
@@ -158,22 +159,26 @@ void pagePayment::resizeEvent(QResizeEvent *event)
 
     QString bitmap_location;
 
-    if (!payment)
+    if (!tap_payment)
     {
-        bitmap_location = PAGE_QR_PAY_BACKGROUND;
+        bitmap_location = PAGE_QR_PAY_BACKGROUND_PATH;
     }
-    else if (product_slot___ > 0 && product_slot___ <= 9)
-    {
-        bitmap_location.append("/home/df-admin/production/references/5_pay_page_");
-        bitmap_location.append(drinkSize);
-        bitmap_location.append("_");
-        bitmap_location.append(QString::number(idlePage->currentProductOrder->getSelectedSlot()));
-        bitmap_location.append(".png");
-        ui->order_drink_amount->setText("$" + QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2));
-    }
-    else
-    {
-        bitmap_location = "/home/df-admin/production/references/5_pay_page_l_1.png";
+    // else if (product_slot___ > 0 && product_slot___ <= 9)
+    // {
+    //     bitmap_location.append("/home/df-admin/production/references/5_pay_page_");
+    //     bitmap_location.append(drinkSize);
+    //     bitmap_location.append("_");
+    //     bitmap_location.append(QString::number(idlePage->currentProductOrder->getSelectedSlot()));
+    //     bitmap_location.append(".png");
+    //     ui->order_drink_amount->setText("$" + QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2));
+    // }
+    // else
+    // {
+    //     bitmap_location = "/home/df-admin/production/references/5_pay_page_l_1.png";
+    // }
+
+    else{
+        qDebug("ERROR: No tap payment available yet.");
     }
 
     QPixmap background(bitmap_location);
@@ -218,7 +223,7 @@ void pagePayment::on_previousPage_Button_clicked()
     stopPayTimers();
     response = true;
     readTimer->stop();
-    if (payment)
+    if (tap_payment)
     {
         cancelPayment();
     }
@@ -245,7 +250,7 @@ void pagePayment::on_mainPage_Button_clicked()
     stopPayTimers();
     response = true;
     readTimer->stop();
-    if (payment)
+    if (tap_payment)
     {
         cancelPayment();
     }
@@ -292,7 +297,7 @@ void pagePayment::showEvent(QShowEvent *event)
 
     QString bitmap_location;
 
-    if (!payment)
+    if (!tap_payment)
     {
         bitmap_location = "/home/df-admin/production/references/5_background_pay_qr.png";
     }
@@ -346,7 +351,7 @@ void pagePayment::showEvent(QShowEvent *event)
     //  ui->payment_pass_Button->setEnabled(false);
     //  ui->payment_cancel_Button->setEnabled(false);
 
-    if (payment)
+    if (tap_payment)
     {
         pktResponded = com.readForAck();
         readPacket.packetReadFromUX(pktResponded);
@@ -579,7 +584,7 @@ void pagePayment::idlePaymentTimeout()
     stopPayTimers();
     response = true;
     readTimer->stop();
-    if (payment)
+    if (tap_payment)
     {
         cancelPayment();
     }

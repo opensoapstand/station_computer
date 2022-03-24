@@ -120,6 +120,7 @@ void pageProduct::loadOrderSelectedSize()
         orderSizeLabelsPrice[i]->setText("$" + price);
         // orderSizeLabelsPrice[i]->raise();
         // orderSizeLabelsVolume[i]->raise();
+        QString transparent_path = FULL_TRANSPARENT_IMAGE_PATH;
         orderSizeLabelsPrice[i]->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
 
         orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i], true, true));
@@ -150,125 +151,115 @@ void pageProduct::loadOrderSelectedSize()
 void pageProduct::loadOrderSelectedSize()
 {
 
-    qDebug() << "-------------------------- LOAD ORDER ----------------";
+qDebug() << "-------------------------- LOAD ORDER ----------------";
 
-    _selectIdleTimeoutSec = 140;
+_selectIdleTimeoutSec = 140;
 
-    ui->mainPage_Button->setEnabled(true);
-    ui->previousPage_Button->setEnabled(true);
+ui->mainPage_Button->setEnabled(true);
+ui->previousPage_Button->setEnabled(true);
 
-    int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
+int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
 
-    int product_slot___ = selectedProductOrder->getSelectedSlot();
+QString bitmap_location;
+if (selectedProductOrder->getSelectedSize() == SIZE_SMALL_INDEX)
+{
+    bitmap_location.append("/home/df-admin/production/references/4_pay_select_page_s_");
+}
+else
+{
+    bitmap_location.append("/home/df-admin/production/references/4_pay_select_page_l_");
+}
 
-    QString bitmap_location;
+bitmap_location.append(QString::number(selectedProductOrder->getSelectedSlot()));
+bitmap_location.append(".png");
 
-    if (product_slot___ > 0 && product_slot___ <= SLOT_COUNT)
+
+qDebug() << bitmap_location << endl;
+QPixmap background(bitmap_location);
+background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+QPalette palette;
+palette.setBrush(QPalette::Background, background);
+this->setPalette(palette);
+
+QString transparent_path = FULL_TRANSPARENT_IMAGE_PATH;
+for (uint8_t i = 0; i < 4; i++)
+{
+    qDebug() << "*****load size: " << i;
+    QString price = QString::number(selectedProductOrder->getPrice(product_sizes[i]), 'f', 2);
+    orderSizeLabelsPrice[i]->setText("$" + price);
+    orderSizeLabelsPrice[i]->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+    orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i], true, true));
+
+    if (selectedProductOrder->getSelectedSize() == product_sizes[i])
     {
-
-        if (selectedProductOrder->getSelectedSize() == SIZE_SMALL_INDEX)
-        {
-            bitmap_location.append("/home/df-admin/production/references/4_pay_select_page_s_");
-        }
-        else
-        {
-            bitmap_location.append("/home/df-admin/production/references/4_pay_select_page_l_");
-        }
-
-        bitmap_location.append(QString::number(selectedProductOrder->getSelectedSlot()));
-        bitmap_location.append(".png");
+        orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     }
     else
     {
-        bitmap_location = "/home/df-admin/production/references/4_pay_select_page_l_1.png";
+        orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     }
-    qDebug() << bitmap_location << endl;
-    QPixmap background(bitmap_location);
-    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-    QPalette palette;
-    palette.setBrush(QPalette::Background, background);
-    this->setPalette(palette);
+    orderSizeButtons[i]->raise();
+}
 
-    for (uint8_t i = 0; i < 4; i++)
-    {
-        qDebug() << "*****load size: " << i;
-        QString price = QString::number(selectedProductOrder->getPrice(product_sizes[i]), 'f', 2);
-        orderSizeLabelsPrice[i]->setText("$" + price);
-        // orderSizeLabelsPrice[i]->raise();
-        // orderSizeLabelsVolume[i]->raise();
-        orderSizeLabelsPrice[i]->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
-        orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i], true,true));
+if (selectedProductOrder->getSelectedSize() == SIZE_SMALL_INDEX)
+{
+    ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+    ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+    ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
+    ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
+}
+else
+{
 
-        if (selectedProductOrder->getSelectedSize() == product_sizes[i])
-        {
-            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-        }
-        else
-        {
-            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-        }
-        orderSizeButtons[i]->raise();
-    }
+    ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+    ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+    ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
+    ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
+}
 
-    if (selectedProductOrder->getSelectedSize() == SIZE_SMALL_INDEX)
-    {
-        ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
-        ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
-        ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
-        ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
-    }
-    else
-    {
+ui->label_price_small->move(600, 1155);
+ui->label_price_large->move(830, 1155);
 
-        ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
-        ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
-        ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
-        ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
-    }
+ui->label_size_small->move(600, 1106);
+ui->label_size_large->move(830, 1106);
+// ui->label_price_small->move(560, 1155);
+// ui->label_price_large->move(790, 1155);
+// ui->label_size_small->move(570, 1106);
+// ui->label_size_large->move(790, 1106);
+ui->label_size_medium->hide();
+ui->label_price_medium->hide();
+ui->label_price_custom->hide();
+ui->label_size_custom->hide();
 
-    ui->label_price_small->move(600, 1155);
-    ui->label_price_large->move(830, 1155);
+// ui->label_price_large->setStyleSheet("color: #FFFFFF;");
+// ui->label_price_small->setStyleSheet("color: #FFFFFF;");
+// ui->label_price_large->setStyleSheet(QLatin1String("color: #FFFFFF;\n"
+//     "font-family: Montserrat;\n"
+//     "font-style: light;\n"
+//     "font-weight: normal;\n"
+//     "font-size: 20px;\n"
+//     "line-height: 24px;\n"
+//     "text-align: center;\n"
+//     ""));
+// ui->label_price_small->setStyleSheet(QLatin1String("color: #FFFFFF;\n"
+//     "font-family: Montserrat;\n"
+//     "font-style: light;\n"
+//     "font-weight: normal;\n"
+//     "font-size: 20px;\n"
+//     "line-height: 24px;\n"
+//     "text-align: center;\n"
+//     ""));
 
-    ui->label_size_small->move(600, 1106);
-    ui->label_size_large->move(830, 1106);
-    // ui->label_price_small->move(560, 1155);
-    // ui->label_price_large->move(790, 1155);
-    // ui->label_size_small->move(570, 1106);
-    // ui->label_size_large->move(790, 1106);
-    ui->label_size_medium->hide();
-    ui->label_price_medium->hide();
-    ui->label_price_custom->hide();
-    ui->label_size_custom->hide();
+ui->promoCode->clear();
+ui->promoCode->hide();
+promoPercent = 0.0;
 
-    // ui->label_price_large->setStyleSheet("color: #FFFFFF;");
-    // ui->label_price_small->setStyleSheet("color: #FFFFFF;");
-    // ui->label_price_large->setStyleSheet(QLatin1String("color: #FFFFFF;\n"
-    //     "font-family: Montserrat;\n"
-    //     "font-style: light;\n"
-    //     "font-weight: normal;\n"
-    //     "font-size: 20px;\n"
-    //     "line-height: 24px;\n"
-    //     "text-align: center;\n"
-    //     ""));
-    // ui->label_price_small->setStyleSheet(QLatin1String("color: #FFFFFF;\n"
-    //     "font-family: Montserrat;\n"
-    //     "font-style: light;\n"
-    //     "font-weight: normal;\n"
-    //     "font-size: 20px;\n"
-    //     "line-height: 24px;\n"
-    //     "text-align: center;\n"
-    //     ""));
+ui->productLabel->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true));
+double selectedPrice = selectedProductOrder->getSelectedPrice();
+ui->priceLabel->setText("$" + QString::number(selectedPrice, 'f', 2));
+ui->totalPriceLabel->setText("$" + QString::number(selectedPrice)); // how to handle promo ?! todo!
 
-    ui->promoCode->clear();
-    ui->promoCode->hide();
-    promoPercent = 0.0;
-
-    ui->productLabel->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true));
-    double selectedPrice = selectedProductOrder->getSelectedPrice();
-    ui->priceLabel->setText("$" + QString::number(selectedPrice, 'f', 2));
-    ui->totalPriceLabel->setText("$" + QString::number(selectedPrice)); // how to handle promo ?! todo!
-
-    qDebug() << "-------------------------- END LOAD ORDER ----------------";
+qDebug() << "-------------------------- END LOAD ORDER ----------------";
 }
 
 #endif
@@ -279,7 +270,7 @@ void pageProduct::reset_and_show_page_elements()
     QString bitmap_location;
 
 #ifdef GENERIC_PRODUCT_SELECT
-    bitmap_location = PAGE_PRODUCT_BACKGROUND;
+    bitmap_location = PAGE_PRODUCT_BACKGROUND_PATH;
     // uint16_t orderSizeButtons_xywh[4][4] = {
     //     {560, 990, 135, 110},  // S
     //     {706, 990, 135, 105},  // M
@@ -325,7 +316,8 @@ void pageProduct::reset_and_show_page_elements()
     ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->pagePayment_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->promoKeyboard->setStyleSheet(" background-image: url(/home/df-admin/production/references/soapstand-keyboard.png); }");
+
+    ui->promoKeyboard->setStyleSheet(" background-image: url(); }");
 
     loadOrderSelectedSize();
 }
@@ -524,7 +516,7 @@ void pageProduct::on_applyPromo_Button_clicked()
         if (res != CURLE_OK)
         {
             ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
-            qDebug() << "Invalid Coupon curl problem: " << res ;
+            qDebug() << "Invalid Coupon curl problem: " << res;
         }
         else
         {

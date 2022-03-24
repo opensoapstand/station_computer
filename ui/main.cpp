@@ -112,6 +112,35 @@ int main(int argc, char *argv[])
     // TODO: Create Query to populate DrinkSelection[0-12]
     // TODO: Instantiate a DrinkOrder Object
 
+    qDebug()<< "Check image paths.... (all paths resolved if nothing shows up).";
+
+    df_util::fileExists(PAGE_INIT_BACKGROUND_PATH);
+    df_util::fileExists(PAGE_IDLE_BACKGROUND_PATH);
+    df_util::fileExists(PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
+    df_util::fileExists(PAGE_HELP_BACKGROUND_PATH);
+    df_util::fileExists(PAGE_PRODUCT_1_L_BACKGROUND_PATH);
+    df_util::fileExists(PAGE_PRODUCT_2_L_BACKGROUND_PATH);
+    df_util::fileExists(PAGE_PRODUCT_3_L_BACKGROUND_PATH);
+    df_util::fileExists(PAGE_PRODUCT_4_L_BACKGROUND_PATH);
+    df_util::fileExists(PAGE_PRODUCT_1_S_BACKGROUND_PATH);
+    df_util::fileExists(PAGE_PRODUCT_2_S_BACKGROUND_PATH);
+    df_util::fileExists(PAGE_PRODUCT_3_S_BACKGROUND_PATH);
+    df_util::fileExists(PAGE_PRODUCT_4_S_BACKGROUND_PATH);
+    df_util::fileExists(PAGE_DISPENSE_BACKGROUND_PATH);
+    df_util::fileExists(PAGE_QR_PAY_BACKGROUND_PATH);
+    df_util::fileExists(PRODUCT_1_IMAGE_PATH);
+    df_util::fileExists(PRODUCT_2_IMAGE_PATH);
+    df_util::fileExists(PRODUCT_3_IMAGE_PATH);
+    df_util::fileExists(PRODUCT_4_IMAGE_PATH);
+    df_util::fileExists(PAGE_THANK_YOU_BACKGROUND_PATH);
+    df_util::fileExists(PAGE_WIFI_ERROR_BACKGROUND_PATH);
+    df_util::fileExists(BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH);
+    df_util::fileExists(SOLD_OUT_IMAGE_PATH);
+    df_util::fileExists(KEYBOARD_IMAGE_PATH);
+    df_util::fileExists(FULL_TRANSPARENT_IMAGE_PATH);
+
+
+
     // Page pathing references to function calls.
     helpPage->setPage(firstSelectPage, p_pageProduct, idlePage, paymentPage);
     initPage->setPage(idlePage);
@@ -128,31 +157,6 @@ int main(int argc, char *argv[])
 
     DfUiServer dfUiServer;
     dfUiServer.startServer();
-
-    qDebug()<< "Check background images.... (all paths resolved if nothing shows up).";
-
-    df_util::fileExists(PAGE_INIT_BACKGROUND);
-    df_util::fileExists(PAGE_IDLE_BACKGROUND);
-    df_util::fileExists(PAGE_SELECT_PRODUCT_BACKGROUND);
-    df_util::fileExists(PAGE_HELP_BACKGROUND);
-    df_util::fileExists(PAGE_PRODUCT_1_BACKGROUND);
-    df_util::fileExists(PAGE_PRODUCT_2_BACKGROUND);
-    df_util::fileExists(PAGE_PRODUCT_3_BACKGROUND);
-    df_util::fileExists(PAGE_PRODUCT_4_BACKGROUND);
-    df_util::fileExists(PAGE_PRODUCT_1_BACKGROUND);
-    df_util::fileExists(PAGE_PRODUCT_2_BACKGROUND);
-    df_util::fileExists(PAGE_PRODUCT_3_BACKGROUND);
-    df_util::fileExists(PAGE_PRODUCT_4_BACKGROUND);
-    df_util::fileExists(PAGE_DISPENSE_BACKGROUND);
-    df_util::fileExists(PAGE_QR_PAY_BACKGROUND);
-    df_util::fileExists(PRODUCT_1_IMAGE);
-    df_util::fileExists(PRODUCT_2_IMAGE);
-    df_util::fileExists(PRODUCT_3_IMAGE);
-    df_util::fileExists(PRODUCT_4_IMAGE);
-    df_util::fileExists(PAGE_THANK_YOU_BACKGROUND);
-    df_util::fileExists(PAGE_WIFI_ERROR_BACKGROUND);
-    df_util::fileExists(BOTTLE_FILL_FOR_ANIMATION);
-
 
  
     QObject::connect(&dfUiServer, &DfUiServer::controllerFinishedAck, p_page_thank_you, &pagethankyou::controllerFinishedTransaction);

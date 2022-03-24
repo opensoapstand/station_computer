@@ -24,7 +24,7 @@ page_init::page_init(QWidget *parent) : QWidget(parent),
 {
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
-    QPixmap background(PAGE_INIT_BACKGROUND);
+    QPixmap background(PAGE_INIT_BACKGROUND_PATH);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);

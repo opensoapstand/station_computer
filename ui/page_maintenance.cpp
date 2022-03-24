@@ -17,16 +17,16 @@ page_maintenance::page_maintenance(QWidget *parent) :
 {
     // Fullscreen background setup
     ui->setupUi(this);
-    QPixmap background1(PRODUCT_1_IMAGE);
+    QPixmap background1(PRODUCT_1_IMAGE_PATH);
     QIcon ButtonIcon1(background1);
 
-    QPixmap background2(PRODUCT_2_IMAGE);
+    QPixmap background2(PRODUCT_2_IMAGE_PATH);
     QIcon ButtonIcon2(background2);
 
-    QPixmap background3(PRODUCT_3_IMAGE);
+    QPixmap background3(PRODUCT_3_IMAGE_PATH);
     QIcon ButtonIcon3(background3);
 
-    QPixmap background4(PRODUCT_4_IMAGE);
+    QPixmap background4(PRODUCT_4_IMAGE_PATH);
     QIcon ButtonIcon4(background4);
 
 

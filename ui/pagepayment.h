@@ -224,7 +224,7 @@ private:
     QShowEvent *dispenseEvent;
 
     bool response;
-    bool payment;
+    bool tap_payment;
 
     void QRgen();
     void printQr(const QrCode &qr);

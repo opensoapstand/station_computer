@@ -63,7 +63,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     qDebug() << ">>>>>>>>>>>> Enter dispense page. <<<<<<<<<<<<<<<<<<";
     qDebug() << "selected slot: " << QString::number(selectedProductOrder->getSelectedSlot());
 
-    QPixmap background(PAGE_DISPENSE_BACKGROUND);
+    QPixmap background(PAGE_DISPENSE_BACKGROUND_PATH);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);

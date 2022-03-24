@@ -64,20 +64,27 @@ DF_ERROR stateDispenseEnd::onAction()
     DF_ERROR e_ret = OK;
 
     productDispensers[pos].stopDispense();
+    
+    // 
+    usleep(100000);
+    m_pMessaging->sendMessage(to_string(productDispensers[pos].getProduct()->getVolumeDispensed()));
+    if (productDispensers[pos].getIsDispenseTargetReached())
+    {
+        m_pMessaging->sendMessage("Target Hit");
+    }
 
-    // productDispensers[pos].getProduct()->getTargetVolume(size);
     bool is_valid_dispense = productDispensers[pos].getProduct()->getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML;
 
     // REQUESTED_VOLUME_CUSTOM is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
     if (size == REQUESTED_VOLUME_TEST)
     {
-        
-        debugOutput::sendMessage("Test dispensing. ("+ to_string(productDispensers[pos].getProduct()->getVolumeDispensed())+"ml). No transaction will be made.", MSG_INFO);
+
+        debugOutput::sendMessage("Test dispensing. (" + to_string(productDispensers[pos].getProduct()->getVolumeDispensed()) + "ml). No transaction will be made.", MSG_INFO);
         dispenseEndUpdateDB(true);
     }
     else if (!is_valid_dispense)
     {
-        debugOutput::sendMessage("No minimum quantity of product dispensed ("+ to_string(productDispensers[pos].getProduct()->getVolumeDispensed())+"ml). No transaction will be made.", MSG_INFO);
+        debugOutput::sendMessage("No minimum quantity of product dispensed (" + to_string(productDispensers[pos].getProduct()->getVolumeDispensed()) + "ml). No transaction will be made.", MSG_INFO);
     }
     else
     {
@@ -88,8 +95,7 @@ DF_ERROR stateDispenseEnd::onAction()
     // TODO: Log events to DB
 
     // TODO: Send a complete ACK back to QT
-    
-    
+
     m_pMessaging->sendMessage("Transaction End");
 
     return e_ret;
@@ -103,11 +109,11 @@ DF_ERROR stateDispenseEnd::handleTransaction()
 #define ENABLE_TRANSACTION_TO_CLOUD
 #ifdef ENABLE_TRANSACTION_TO_CLOUD
 
-        debugOutput::sendMessage("Send transaction to cloud:", MSG_INFO);
-        sendTransactionToCloud();
+    debugOutput::sendMessage("Send transaction to cloud:", MSG_INFO);
+    sendTransactionToCloud();
 #else
 
-        debugOutput::sendMessage("NOT SENDING transaction to cloud:", MSG_INFO);
+    debugOutput::sendMessage("NOT SENDING transaction to cloud:", MSG_INFO);
 #endif
 
     debugOutput::sendMessage("Handle transaction.", MSG_INFO);
@@ -129,13 +135,10 @@ DF_ERROR stateDispenseEnd::handleTransaction()
         // debugOutput::sendMessage("Pin -> " + to_string(productDispensers[pos].getI2CPin(PRODUCT)), MSG_INFO);
     }
 
-
     if (paymentMethod == "barcode" || paymentMethod == "plu")
     {
         debugOutput::sendMessage("Printing receipt:", MSG_INFO);
         print_receipt();
-
-
     }
 
     return e_ret;
@@ -210,7 +213,7 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
     else
     {
 
-        #ifndef PETROS_EXCEPTION
+#ifndef PETROS_EXCEPTION
         debugOutput::sendMessage("cURL init success", MSG_INFO);
 
         curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/pushPrinterOrder");
@@ -252,8 +255,7 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
             readBuffer = "";
             curl_easy_cleanup(curl);
         }
-        #endif
-        
+#endif
     }
 }
 
@@ -396,18 +398,17 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool test_transaction)
     {
         //       fprintf(stderr, "Opened database successfully\n");
     }
-     std::string price;
+    std::string price;
     /* Create SQL statement for transactions */
-    
-    if (test_transaction){
+
+    if (test_transaction)
+    {
         price = "0";
-
-    }else{
-        price = to_string(productDispensers[pos].getProduct()->getPrice(size));
-
     }
-
-
+    else
+    {
+        price = to_string(productDispensers[pos].getProduct()->getPrice(size));
+    }
 
     std::string sql1;
     std::string product = (productDispensers[pos].getProduct()->m_name).c_str();

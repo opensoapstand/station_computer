@@ -72,8 +72,8 @@ DF_ERROR stateDispense::onAction()
       m_pMessaging->parseCommandString();
    }
 
-   // if (nullptr != &m_state_requested) // TODO: Do a Check if Button is Pressed
-   // {
+   // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
+   m_pMessaging->sendMessage(to_string(productDispensers[pos].getProduct()->getVolumeDispensed()));
 
    // Check if UI has sent a ACTION_DISPENSE_END to finish the transaction, or, if dispensing is complete
    if (m_pMessaging->getAction() == ACTION_DISPENSE_END)
@@ -86,13 +86,8 @@ DF_ERROR stateDispense::onAction()
    if (productDispensers[pos].getIsDispenseTargetReached())
    {
       debugOutput::sendMessage("Stop dispensing. Requested volume reached.", MSG_INFO);
-      // productDispensers[pos].setIsDispenseComplete(true);
-
-      // Send message to the UI that the target volume has been reached
-      // TODO: Figure out a Cancel/completed volume from IPC if volume is hit
-
-      // Logic compare present and last 3 states for volume..continue
-      m_pMessaging->sendMessage("Target Hit");
+  
+      // m_pMessaging->sendMessage("Target Hit");
 
       m_state_requested = STATE_DISPENSE_END;
       return e_ret = OK;
@@ -100,10 +95,6 @@ DF_ERROR stateDispense::onAction()
 
    // TODO: Do a check if Pumps are operational
    // send IPC if pump fails
-
-   // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
-   m_pMessaging->sendMessage(to_string(productDispensers[pos].getProduct()->getVolumeDispensed()));
-
    debugOutput::sendMessage("debug. targets s,m,l,c:" +
                                 to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_s) +
                                 "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_m) +
@@ -123,9 +114,11 @@ DF_ERROR stateDispense::onAction()
       productDispensers[pos].getProduct()->m_nVolumeDispensedPreviously = productDispensers[pos].getProduct()->getVolumeDispensed();
    }
 
+
    usleep(500000);
+
    e_ret = OK;
-   // }
+  
    return e_ret;
 }
 

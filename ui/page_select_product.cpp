@@ -99,8 +99,8 @@ page_select_product::~page_select_product()
 
 void page_select_product::showEvent(QShowEvent *event)
 {
+    qDebug() << "Page_select_product: showEvent";
     QWidget::showEvent(event);
-
     maintenanceCounter = 0;
 
     if (productPageEndTimer == nullptr)
@@ -113,7 +113,7 @@ void page_select_product::showEvent(QShowEvent *event)
     productPageEndTimer->start(1000);
     _productPageTimeoutSec = 15;
 
-    qDebug() << "ahoyy15";
+    qDebug() << "db check eneabled";
     DbManager db(DB_PATH);
     for (uint8_t i = 0; i < 4; i++)
     {
@@ -149,6 +149,7 @@ void page_select_product::select_product(int slot)
         idlePage->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
         //p_page_product->resizeEvent(productResize);
         p_page_product->showFullScreen();
+        
         this->hide();
     }
     else

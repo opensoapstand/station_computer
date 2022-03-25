@@ -81,7 +81,8 @@ using namespace std;
 #define SOLD_OUT_IMAGE_PATH "/home/df-admin/production/references/soldOut.png"
 #define KEYBOARD_IMAGE_PATH "/home/df-admin/production/references/soapstand-keyboard.png"
 #define FULL_TRANSPARENT_IMAGE_PATH "/home/df-admin/production/references/background.png"
-// #define PAGE_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/page_product_generic.png" // todo
+#define PAGE_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/page_product_generic.png"
+// #define PAGE_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_1.png"
 // #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/page_select_product_generic.png" // todo
 
 

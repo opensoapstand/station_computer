@@ -49,10 +49,15 @@ public:
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
+    void paintEvent(QPaintEvent *event);
 
     void cancelTimers();
     void updatePriceAfterPromo(double promoPercent);
     void couponHandler();
+    void coupon_disable();
+    void coupon_input_show();
+    void coupon_input_hide();
+    void coupon_input_reset();
 
 signals:
     void paymentTotal(string, string, string);
@@ -85,7 +90,7 @@ private:
 
     std::string readBuffer;
     Ui::pageProduct *ui;
-    page_select_product *firstProductPage;
+    page_select_product *p_page_select_product;
     pagePayment *paymentPage;
     page_idle *idlePage;
     page_dispenser *p_page_dispense;

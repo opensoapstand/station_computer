@@ -49,6 +49,7 @@ public:
         double getTargetVolume(char size);
         double getPrice(char size);
         string getDisplayUnits();
+        double convertVolumeMetricToDisplayUnits(double volume);
 
         string getPLU(char size);
         string getPaymentMethod() { return m_paymentMethod; }

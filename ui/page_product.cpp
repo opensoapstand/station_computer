@@ -83,6 +83,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
     //     ui->promoButton->hide();
     // #endif
     couponHandler();
+    // coupon_input_hide();
 
     {
         selectIdleTimer = new QTimer(this);
@@ -93,176 +94,108 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
         connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
     }
 }
-void pageProduct::loadOrderSize(int sizeIndex)
+
+/*
+ * Page Tracking reference to Select Drink, Payment Page and Idle page
+ */
+void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, pagePayment *pagePayment, page_help *pageHelp)
 {
-    // DF_QT_SIZES tmp [6] = {INVALID_DRINK, SIZE_SMALL_INDEX, MEDIUM_DRINK, SIZE_LARGE_INDEX, CUSTOM_DRINK, TEST_DRINK};
-
-    selectedProductOrder->setSelectedSize(sizeIndex);
-    loadOrderSelectedSize();
-}
-#ifdef GENERIC_PRODUCT_SELECT
-void pageProduct::loadOrderSelectedSize()
-{
-
-    qDebug() << "-------------------------- LOAD ORDER ----------------";
-
-    _selectIdleTimeoutSec = 140;
-
-    ui->mainPage_Button->setEnabled(true);
-    ui->previousPage_Button->setEnabled(true);
-
-    int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
-
-    for (uint8_t i = 0; i < 4; i++)
-    {
-        qDebug() << "*****load size: " << i;
-        QString price = QString::number(selectedProductOrder->getPrice(product_sizes[i]), 'f', 2);
-        orderSizeLabelsPrice[i]->setText("$" + price);
-        // orderSizeLabelsPrice[i]->raise();
-        // orderSizeLabelsVolume[i]->raise();
-        QString transparent_path = FULL_TRANSPARENT_IMAGE_PATH;
-        orderSizeLabelsPrice[i]->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
-
-        orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i], true, true));
-
-        if (selectedProductOrder->getSelectedSize() == product_sizes[i])
-        {
-            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 8px  solid #3D6675; }");
-        }
-        else
-        {
-            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px  solid #ffffff; }");
-        }
-        orderSizeButtons[i]->raise();
-    }
+    this->p_page_select_product = pageSelect;
+    this->paymentPage = pagePayment;
+    this->idlePage = pageIdle;
+    this->p_page_dispense = page_dispenser;
+    this->helpPage = pageHelp;
+    this->wifiError = pageWifiError;
+   
 
     ui->promoCode->clear();
     ui->promoCode->hide();
-    promoPercent = 0.0;
+    ui->discountLabel->setText("-$0.00");
 
-    ui->productLabel->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true));
-    double selectedPrice = selectedProductOrder->getSelectedPrice();
-    ui->priceLabel->setText("$" + QString::number(selectedPrice, 'f', 2));
-    ui->totalPriceLabel->setText("$" + QString::number(selectedPrice)); // how to handle promo ?! todo!
 
-    qDebug() << "-------------------------- END LOAD ORDER ----------------";
-}
-#else
-void pageProduct::loadOrderSelectedSize()
-{
+    selectedProductOrder = idlePage->currentProductOrder;
+    selectedProductOrder->setSelectedSize(SIZE_LARGE_INDEX); // default size
 
-qDebug() << "-------------------------- LOAD ORDER ----------------";
+    /*
+    Stations without Promo Code
+    */
+    // #ifdef ENABLE_COUPON
 
-_selectIdleTimeoutSec = 140;
-
-ui->mainPage_Button->setEnabled(true);
-ui->previousPage_Button->setEnabled(true);
-
-int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
-
-QString bitmap_location;
-if (selectedProductOrder->getSelectedSize() == SIZE_SMALL_INDEX)
-{
-    bitmap_location.append("/home/df-admin/production/references/4_pay_select_page_s_");
-}
-else
-{
-    bitmap_location.append("/home/df-admin/production/references/4_pay_select_page_l_");
+    // #else
+    //     ui->promoCode->hide();
+    //     ui->promoKeyboard->hide();
+    //     ui->promoInputButton->hide();
+    //     ui->discountLabel->hide();
+    //     ui->promoButton->hide();
+    // #endif
+    couponHandler();
+    // coupon_input_hide();
+    
 }
 
-bitmap_location.append(QString::number(selectedProductOrder->getSelectedSlot()));
-bitmap_location.append(".png");
-
-
-qDebug() << bitmap_location << endl;
-QPixmap background(bitmap_location);
-background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-QPalette palette;
-palette.setBrush(QPalette::Background, background);
-this->setPalette(palette);
-
-QString transparent_path = FULL_TRANSPARENT_IMAGE_PATH;
-for (uint8_t i = 0; i < 4; i++)
+// DTOR
+pageProduct::~pageProduct()
 {
-    qDebug() << "*****load size: " << i;
-    QString price = QString::number(selectedProductOrder->getPrice(product_sizes[i]), 'f', 2);
-    orderSizeLabelsPrice[i]->setText("$" + price);
-    orderSizeLabelsPrice[i]->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
-    orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i], true, true));
+    delete ui;
+}
 
-    if (selectedProductOrder->getSelectedSize() == product_sizes[i])
+void pageProduct::cancelTimers()
+{
+    selectIdleTimer->stop();
+}
+
+/* GUI */
+
+void pageProduct::showEvent(QShowEvent *event)
+{
+    qDebug() << "\n---Page_product: showEvent(will not display elements)";
+    selectedProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
+    QWidget::showEvent(event);
+    
+    // loadOrderSize(SIZE_LARGE_INDEX);
+   
+}
+
+void pageProduct::paintEvent(QPaintEvent *event){
+    qDebug() << "Page_product: PaintEvent";
+    QWidget::paintEvent(event);
+} 
+
+void pageProduct::resizeEvent(QResizeEvent *event)
+{
+    qDebug() << "\n---Page_product: resizeEvent";
+    QWidget::resizeEvent(event);
+    reset_and_show_page_elements();
+    // reset_and_show_page_elements();
+
+    // if (selectIdleTimer == nullptr)
+    // {
+
+    // selectIdleTimer = new QTimer(this);
+    // selectIdleTimer->setInterval(40);
+    // connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
+
+    // }
+
+    //    qDebug() << "Start pageProduct Timers" << endl;
+
+    // do after db closed
+}
+
+void pageProduct::onSelectTimeoutTick()
+{
+    if (--_selectIdleTimeoutSec >= 0)
     {
-        orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+        //        qDebug() << "pageProduct: Tick Down - " << _selectIdleTimeoutSec << endl;
     }
     else
     {
-        orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+        // qDebug() << "Timer Done!" << _selectIdleTimeoutSec << endl;
+        selectIdleTimer->stop();
+
+        mainPage();
     }
-    orderSizeButtons[i]->raise();
 }
-
-if (selectedProductOrder->getSelectedSize() == SIZE_SMALL_INDEX)
-{
-    ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
-    ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
-    ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
-    ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
-}
-else
-{
-
-    ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
-    ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
-    ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
-    ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
-}
-
-ui->label_price_small->move(600, 1155);
-ui->label_price_large->move(830, 1155);
-
-ui->label_size_small->move(600, 1106);
-ui->label_size_large->move(830, 1106);
-// ui->label_price_small->move(560, 1155);
-// ui->label_price_large->move(790, 1155);
-// ui->label_size_small->move(570, 1106);
-// ui->label_size_large->move(790, 1106);
-ui->label_size_medium->hide();
-ui->label_price_medium->hide();
-ui->label_price_custom->hide();
-ui->label_size_custom->hide();
-
-// ui->label_price_large->setStyleSheet("color: #FFFFFF;");
-// ui->label_price_small->setStyleSheet("color: #FFFFFF;");
-// ui->label_price_large->setStyleSheet(QLatin1String("color: #FFFFFF;\n"
-//     "font-family: Montserrat;\n"
-//     "font-style: light;\n"
-//     "font-weight: normal;\n"
-//     "font-size: 20px;\n"
-//     "line-height: 24px;\n"
-//     "text-align: center;\n"
-//     ""));
-// ui->label_price_small->setStyleSheet(QLatin1String("color: #FFFFFF;\n"
-//     "font-family: Montserrat;\n"
-//     "font-style: light;\n"
-//     "font-weight: normal;\n"
-//     "font-size: 20px;\n"
-//     "line-height: 24px;\n"
-//     "text-align: center;\n"
-//     ""));
-
-ui->promoCode->clear();
-ui->promoCode->hide();
-promoPercent = 0.0;
-
-ui->productLabel->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true));
-double selectedPrice = selectedProductOrder->getSelectedPrice();
-ui->priceLabel->setText("$" + QString::number(selectedPrice, 'f', 2));
-ui->totalPriceLabel->setText("$" + QString::number(selectedPrice)); // how to handle promo ?! todo!
-
-qDebug() << "-------------------------- END LOAD ORDER ----------------";
-}
-
-#endif
 
 void pageProduct::reset_and_show_page_elements()
 {
@@ -317,95 +250,187 @@ void pageProduct::reset_and_show_page_elements()
     ui->pagePayment_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    ui->promoKeyboard->setStyleSheet(" background-image: url(); }");
 
+    QString keyboard = KEYBOARD_IMAGE_PATH;
+    QString keyboard_style_sheet = " background-image: url(" + keyboard + "); }";
+    ui->promoKeyboard->setStyleSheet(keyboard_style_sheet);
+
+    loadOrderSelectedSize();
+
+    selectIdleTimer->start(1000);
+    _selectIdleTimeoutSec = 400;
+}
+
+void pageProduct::loadOrderSize(int sizeIndex)
+{
+    // DF_QT_SIZES tmp [6] = {INVALID_DRINK, SIZE_SMALL_INDEX, MEDIUM_DRINK, SIZE_LARGE_INDEX, CUSTOM_DRINK, TEST_DRINK};
+
+    selectedProductOrder->setSelectedSize(sizeIndex);
     loadOrderSelectedSize();
 }
 
-void pageProduct::resizeEvent(QResizeEvent *event)
+#ifdef GENERIC_PRODUCT_SELECT
+void pageProduct::loadOrderSelectedSize()
 {
 
-    reset_and_show_page_elements();
+    qDebug() << "-------------------------- LOAD ORDER ----------------";
 
-    if (selectIdleTimer == nullptr)
+    _selectIdleTimeoutSec = 140;
+
+    ui->mainPage_Button->setEnabled(true);
+    ui->previousPage_Button->setEnabled(true);
+
+    int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
+
+    for (uint8_t i = 0; i < 4; i++)
     {
-        selectIdleTimer = new QTimer(this);
-        selectIdleTimer->setInterval(40);
-        connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
+        qDebug() << "*****load size: " << i;
+        QString price = QString::number(selectedProductOrder->getPrice(product_sizes[i]), 'f', 2);
+        orderSizeLabelsPrice[i]->setText("$" + price);
+        // orderSizeLabelsPrice[i]->raise();
+        // orderSizeLabelsVolume[i]->raise();
+        QString transparent_path = FULL_TRANSPARENT_IMAGE_PATH;
+        orderSizeLabelsPrice[i]->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+
+        orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i], true, true));
+
+        if (selectedProductOrder->getSelectedSize() == product_sizes[i])
+        {
+            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 8px  solid #3D6675; }");
+        }
+        else
+        {
+            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px  solid #ffffff; }");
+        }
+        orderSizeButtons[i]->raise();
     }
 
-    //    qDebug() << "Start pageProduct Timers" << endl;
-    selectIdleTimer->start(1000);
-    _selectIdleTimeoutSec = 400;
-
-    // do after db closed
-}
-
-/*
- * Page Tracking reference to Select Drink, Payment Page and Idle page
- */
-void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, pagePayment *pagePayment, page_help *pageHelp)
-{
-    this->firstProductPage = pageSelect;
-    this->paymentPage = pagePayment;
-    this->idlePage = pageIdle;
-    this->p_page_dispense = page_dispenser;
-    this->helpPage = pageHelp;
-    this->wifiError = pageWifiError;
     ui->promoCode->clear();
     ui->promoCode->hide();
-    ui->discountLabel->setText("-$0.00");
+    promoPercent = 0.0;
 
-    selectedProductOrder = idlePage->currentProductOrder;
-    selectedProductOrder->setSelectedSize(SIZE_LARGE_INDEX); // default size
+    ui->productLabel->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true));
+    double selectedPrice = selectedProductOrder->getSelectedPrice();
+    ui->priceLabel->setText("$" + QString::number(selectedPrice, 'f', 2));
+    ui->totalPriceLabel->setText("$" + QString::number(selectedPrice)); // how to handle promo ?! todo!
 
-    /*
-    Stations without Promo Code
-    */
-    // #ifdef ENABLE_COUPON
-
-    // #else
-    //     ui->promoCode->hide();
-    //     ui->promoKeyboard->hide();
-    //     ui->promoInputButton->hide();
-    //     ui->discountLabel->hide();
-    //     ui->promoButton->hide();
-    // #endif
-    couponHandler();
+    qDebug() << "-------------------------- END LOAD ORDER ----------------";
 }
-
-// DTOR
-pageProduct::~pageProduct()
+#else
+void pageProduct::loadOrderSelectedSize()
 {
-    delete ui;
-}
 
-void pageProduct::cancelTimers()
-{
-    selectIdleTimer->stop();
-}
+    qDebug() << "-------------------------- LOAD ORDER ----------------";
 
-/* GUI */
+    _selectIdleTimeoutSec = 140;
 
-void pageProduct::showEvent(QShowEvent *event)
-{
-    loadOrderSize(SIZE_LARGE_INDEX);
-}
+    ui->mainPage_Button->setEnabled(true);
+    ui->previousPage_Button->setEnabled(true);
 
-void pageProduct::onSelectTimeoutTick()
-{
-    if (--_selectIdleTimeoutSec >= 0)
+    int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
+
+    QString bitmap_location;
+    if (selectedProductOrder->getSelectedSize() == SIZE_SMALL_INDEX)
     {
-        //        qDebug() << "pageProduct: Tick Down - " << _selectIdleTimeoutSec << endl;
+        bitmap_location.append("/home/df-admin/production/references/4_pay_select_page_s_");
     }
     else
     {
-        // qDebug() << "Timer Done!" << _selectIdleTimeoutSec << endl;
-        selectIdleTimer->stop();
-
-        mainPage();
+        bitmap_location.append("/home/df-admin/production/references/4_pay_select_page_l_");
     }
+
+    bitmap_location.append(QString::number(selectedProductOrder->getSelectedSlot()));
+    bitmap_location.append(".png");
+
+    qDebug() << bitmap_location << endl;
+    QPixmap background(bitmap_location);
+    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Background, background);
+    this->setPalette(palette);
+
+    QString transparent_path = FULL_TRANSPARENT_IMAGE_PATH;
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        qDebug() << "*****load size: " << i;
+        QString price = QString::number(selectedProductOrder->getPrice(product_sizes[i]), 'f', 2);
+        orderSizeLabelsPrice[i]->setText("$" + price);
+        orderSizeLabelsPrice[i]->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+        orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i], true, true));
+
+        if (selectedProductOrder->getSelectedSize() == product_sizes[i])
+        {
+            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+        }
+        else
+        {
+            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+        }
+        orderSizeButtons[i]->raise();
+    }
+
+    if (selectedProductOrder->getSelectedSize() == SIZE_SMALL_INDEX)
+    {
+        ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+        ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+        ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
+        ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
+    }
+    else
+    {
+
+        ui->label_price_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+        ui->label_price_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+        ui->label_size_large->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #D2E4CD;");
+        ui->label_size_small->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: semibold; font-weight: semibold; font-size: 20px; line-height: 24px; color: #5E8500;");
+    }
+
+    ui->label_price_small->move(600, 1155);
+    ui->label_price_large->move(830, 1155);
+
+    ui->label_size_small->move(600, 1106);
+    ui->label_size_large->move(830, 1106);
+    // ui->label_price_small->move(560, 1155);
+    // ui->label_price_large->move(790, 1155);
+    // ui->label_size_small->move(570, 1106);
+    // ui->label_size_large->move(790, 1106);
+    ui->label_size_medium->hide();
+    ui->label_price_medium->hide();
+    ui->label_price_custom->hide();
+    ui->label_size_custom->hide();
+
+    // ui->label_price_large->setStyleSheet("color: #FFFFFF;");
+    // ui->label_price_small->setStyleSheet("color: #FFFFFF;");
+    // ui->label_price_large->setStyleSheet(QLatin1String("color: #FFFFFF;\n"
+    //     "font-family: Montserrat;\n"
+    //     "font-style: light;\n"
+    //     "font-weight: normal;\n"
+    //     "font-size: 20px;\n"
+    //     "line-height: 24px;\n"
+    //     "text-align: center;\n"
+    //     ""));
+    // ui->label_price_small->setStyleSheet(QLatin1String("color: #FFFFFF;\n"
+    //     "font-family: Montserrat;\n"
+    //     "font-style: light;\n"
+    //     "font-weight: normal;\n"
+    //     "font-size: 20px;\n"
+    //     "line-height: 24px;\n"
+    //     "text-align: center;\n"
+    //     ""));
+
+    ui->promoCode->clear();
+    ui->promoCode->hide();
+    promoPercent = 0.0;
+
+    ui->productLabel->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true));
+    double selectedPrice = selectedProductOrder->getSelectedPrice();
+    ui->priceLabel->setText("$" + QString::number(selectedPrice, 'f', 2));
+    ui->totalPriceLabel->setText("$" + QString::number(selectedPrice)); // how to handle promo ?! todo!
+
+    qDebug() << "-------------------------- END LOAD ORDER ----------------";
 }
+
+#endif
 
 bool pageProduct::stopSelectTimers()
 {
@@ -473,14 +498,8 @@ size_t WriteCallback_coupon(char *contents, size_t size, size_t nmemb, void *use
     return size * nmemb;
 }
 
-void pageProduct::on_promoCodeInput_clicked()
-{
-    QObject *button = QObject::sender();
-    ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
-    // ui->promoInputButton->hide();
-    ui->promoKeyboard->show();
-    ui->promoCode->show();
-}
+
+
 
 void pageProduct::updatePriceAfterPromo(double discountPercent)
 {
@@ -582,7 +601,8 @@ void pageProduct::on_previousPage_Button_clicked()
     {
     };
     selectIdleTimer->stop();
-    firstProductPage->showFullScreen();
+    p_page_select_product->showFullScreen();
+    
     ui->discountLabel->setText("-$0.00");
     ui->promoInputButton->show();
 
@@ -602,9 +622,38 @@ void pageProduct::on_previousPage_Button_clicked()
     this->hide();
 }
 
+void pageProduct::coupon_disable(){
+    ui->promoCode->hide();
+    ui->promoKeyboard->hide();
+    ui->promoInputButton->hide();
+    ui->discountLabel->hide();
+    ui->promoButton->hide();
+}
+void pageProduct::coupon_input_show(){
+
+}
+void pageProduct::coupon_input_hide(){
+    ui->promoKeyboard->hide();   
+
+}
+void pageProduct::coupon_input_reset(){
+    
+}
+void pageProduct::on_promoCodeInput_clicked()
+{
+    QObject *button = QObject::sender();
+    ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
+    // ui->promoInputButton->hide();
+    ui->promoKeyboard->show();
+    qDebug()<<"show promo keyboard.";
+    ui->promoCode->show();
+}
 void pageProduct::couponHandler()
 {
     qDebug() << "db for coupons";
+
+
+
     DbManager db(DB_PATH);
     bool coupons_enabled = db.getCouponsEnabled();
 
@@ -613,15 +662,23 @@ void pageProduct::couponHandler()
     if (coupons_enabled)
     {
         qDebug() << "Coupons are enabled for this machine.";
+        ui->promoInputButton->show();
+
+
+        
+    // ui->promoCode->clear();
+    // ui->promoCode->hide();
+    // ui->discountLabel->setText("-$0.00");
+ 
+ 
+    // promoPercent = 0.0;
+   
+
     }
     else
     {
         qDebug() << "Coupons are disabled for this machine.";
-        ui->promoCode->hide();
-        ui->promoKeyboard->hide();
-        ui->promoInputButton->hide();
-        ui->discountLabel->hide();
-        ui->promoButton->hide();
+        coupon_disable();
     }
 }
 

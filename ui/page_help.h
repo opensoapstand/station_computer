@@ -52,7 +52,7 @@ private:
     //void helpOnTick();
 
     Ui::page_help *ui;
-    page_select_product* firstProductPage;
+    page_select_product* p_page_select_product;
     pagePayment* paymentPage;
     page_idle* idlePage;
     pageProduct* selectPage;

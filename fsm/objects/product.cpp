@@ -417,6 +417,15 @@ string product::getDisplayUnits()
     return m_display_unit;
 }
 
+double product::convertVolumeMetricToDisplayUnits(double volume)
+{
+    if (getDisplayUnits() == "oz"){
+
+        return volume * ML_TO_OZ;
+    }
+    return volume;
+}
+
 string product::getPLU(char size)
 {
 #ifdef USE_OLD_DATABASE

@@ -73,7 +73,7 @@ void page_help::setPage(page_select_product *pageSelect, pageProduct* pageProduc
     this->idlePage = pageIdle;
     this->paymentPage = pagePayment;
     this->selectPage = pageProduct;
-    this->firstProductPage = pageSelect;
+    this->p_page_select_product = pageSelect;
 }
 
 void page_help::on_previousPage_Button_clicked(){

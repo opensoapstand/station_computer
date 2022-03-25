@@ -49,7 +49,7 @@ public:
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
-    void paintEvent(QPaintEvent *event);
+    // void paintEvent(QPaintEvent *event);
 
     void cancelTimers();
     void updatePriceAfterPromo(double promoPercent);

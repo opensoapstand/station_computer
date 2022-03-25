@@ -152,14 +152,15 @@ void pageProduct::showEvent(QShowEvent *event)
     selectedProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
     QWidget::showEvent(event);
     
-    // loadOrderSize(SIZE_LARGE_INDEX);
-   
+    loadOrderSize(SIZE_LARGE_INDEX);
+    
+    reset_and_show_page_elements();
 }
 
-void pageProduct::paintEvent(QPaintEvent *event){
-    qDebug() << "Page_product: PaintEvent";
-    QWidget::paintEvent(event);
-} 
+// void pageProduct::paintEvent(QPaintEvent *event){
+//     qDebug() << "Page_product: PaintEvent";
+//     QWidget::paintEvent(event);
+// } 
 
 void pageProduct::resizeEvent(QResizeEvent *event)
 {

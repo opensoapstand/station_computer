@@ -55,6 +55,7 @@ using namespace std;
 // } FSM_COMM;
 #define QR_PAGE_TIMEOUT_SECONDS 420
 #define QR_PAGE_TIMEOUT_WARNING_SECONDS 120
+#define PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS 600
 
 
 #define PAGE_INIT_BACKGROUND_PATH "/home/df-admin/production/references/0_background_init.png"

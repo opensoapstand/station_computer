@@ -88,7 +88,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     }
 
     //    maintainProductPageEndTimer->start(1000);
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
     // ticks = db.getProductVolumePerTick(product_slot___);
     update_dispense_stats(0);
@@ -253,12 +253,12 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
 
 void page_maintenance_dispenser::on_image_clicked()
 {
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_pumpButton_clicked()
 {
-    qDebug() << "call db from maintenance on pump button c licked" << endl;
+    qDebug() << "call db from maintenance on pump button clicked" << endl;
     DbManager db(DB_PATH);
 
     int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
@@ -282,7 +282,7 @@ void page_maintenance_dispenser::on_pumpButton_clicked()
 void page_maintenance_dispenser::on_nameButton_clicked()
 {
     //    qDebug() << "Name button clicked" << endl;
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_priceButton_s_clicked()
@@ -291,7 +291,7 @@ void page_maintenance_dispenser::on_priceButton_s_clicked()
     price_small = true;
     //    DbManager db(DB_PATH);
 
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
     //    ui->numberEntry->show();
     //    ui->textEntry->setText("");
@@ -306,7 +306,7 @@ void page_maintenance_dispenser::on_priceButton_l_clicked()
     price_large = true;
     //    DbManager db(DB_PATH);
 
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
     //    ui->numberEntry->show();
     //    ui->textEntry->setText("");
@@ -319,7 +319,7 @@ void page_maintenance_dispenser::on_target_volumeButton_s_clicked()
 {
     //    qDebug() << "Target Volume button clicked" << endl;
     target_s = true;
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
     //    DbManager db(DB_PATH);
     //    ui->numberEntry->show();
     //    ui->textEntry->setText("");
@@ -331,7 +331,7 @@ void page_maintenance_dispenser::on_target_volumeButton_l_clicked()
 {
     //    qDebug() << "Target Volume button clicked" << endl;
     target_l = true;
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
     //    DbManager db(DB_PATH);
     //    ui->numberEntry->show();
     //    ui->textEntry->setText("");
@@ -344,7 +344,7 @@ void page_maintenance_dispenser::on_vol_per_tickButton_clicked()
 
     //    qDebug() << "Volume Per Tick button clicked" << endl;
     vol_per_tick = true;
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
     //    DbManager db(DB_PATH);
     ui->numberEntry->show();
     ui->textEntry->setText("");
@@ -480,7 +480,7 @@ void page_maintenance_dispenser::on_refillButton_clicked()
 
     //    qDebug() << "Refill button clicked" << endl;
 
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
     // ARE YOU SURE YOU WANT TO COMPLETE?
     QMessageBox msgBox;
@@ -529,7 +529,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
 
     // qDebug() << "soldout clicked. size: " << QString::number(this->idlePage->currentProductOrder->getSelectedVolume());
 
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
     bool success;
 
     DbManager db(DB_PATH);
@@ -619,7 +619,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
 
     qDebug() << "soldout clicked. slot: " << QString::number(this->idlePage->currentProductOrder->getSelectedSlot()) << endl;
 
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
     if (this->idlePage->isSlotAvailable(this->idlePage->currentProductOrder->getSelectedSlot()))
     {
@@ -698,31 +698,31 @@ void page_maintenance_dispenser::on_fullButton_clicked()
 {
     //    qDebug() << "Full Volume button clicked" << endl;
     full = true;
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_remainingButton_clicked()
 {
     //    qDebug() << "Remaining button clicked" << endl;
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_dispensedButton_clicked()
 {
     //    qDebug() << "Remaining button clicked" << endl;
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_lastRefillButton_clicked()
 {
     //    qDebug() << "Last Refill button clicked" << endl;
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_temperatureButton_clicked()
 {
     //    qDebug() << "Temperature button clicked" << endl;
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
@@ -754,7 +754,7 @@ void page_maintenance_dispenser::on_pwmButton_clicked()
 {
     //    qDebug() << "Remaining button clicked" << endl;
     pwm = true;
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
     //    DbManager db(DB_PATH);
     ui->numberEntry->show();
     ui->textEntry->setText("");
@@ -766,7 +766,7 @@ void page_maintenance_dispenser::on_pwmButton_clicked()
 // void page_maintenance_dispenser::on_pluButton_s_clicked(){
 //     qDebug() << "PLU Button clicked" << endl;
 //     plu_small=true;
-//     _maintainProductPageTimeoutSec=40;
+//     _maintainProductPageTimeoutSec=PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 //     DbManager db(DB_PATH);
 //     ui->numberEntry->show();
 //     ui->textEntry->setText("");
@@ -779,7 +779,7 @@ void page_maintenance_dispenser::on_pwmButton_clicked()
 // void page_maintenance_dispenser::on_pluButton_l_clicked(){
 //     qDebug() << "PLU Button clicked" << endl;
 //     plu_large=true;
-//     _maintainProductPageTimeoutSec=40;
+//     _maintainProductPageTimeoutSec=PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 //     DbManager db(DB_PATH);
 //     ui->numberEntry->show();
 //     ui->textEntry->setText("");

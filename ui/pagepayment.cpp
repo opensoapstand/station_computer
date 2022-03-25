@@ -411,12 +411,15 @@ void pagePayment::createOrder()
     curl_param_array1 = curl_param1.toLocal8Bit();
     curl_data1 = curl_param_array1.data();
     curl1 = curl_easy_init();
+   
     if (!curl1)
     {
         //        qDebug() << "cURL failed to page_init" << endl;
+         qDebug() << "URL Failed to send : " + curl_param1 + "to: " + "https://soapstandportal.com/api/machine_data/createOrderInDb";
     }
     else
     {
+        qDebug() << "URL Successfully sent : "  + curl_param1 + "to: " + "https://soapstandportal.com/api/machine_data/createOrderInDb";
         //        qDebug() << "cURL page_init success" << endl;
         curl_easy_setopt(curl1, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/createOrderInDb");
         curl_easy_setopt(curl1, CURLOPT_POSTFIELDS, curl_param_array1.data());

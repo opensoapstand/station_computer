@@ -209,7 +209,6 @@ void page_maintenance_dispenser::refreshLabels()
     ui->lastRefillLabel->setText(db.getLastRefill(product_slot___));
     ui->pluLabel_s->setText(db.getPLU(product_slot___, 's'));
     ui->pluLabel_l->setText(db.getPLU(product_slot___, 'l'));
-    
 
     db.closeDB();
 
@@ -362,13 +361,7 @@ void page_maintenance_dispenser::dispense_test_start()
         command.append(SEND_DISPENSE_START);
 
         update_dispense_stats(0);
-
-        // this->idlePage->dfUtility->msg = command;
-        idlePage->dfUtility->m_IsSendingFSM = true;
-        // idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_START;
-        idlePage->dfUtility->set_message_to_send_to_FSM(command);
-        idlePage->dfUtility->send_to_FSM();
-        idlePage->dfUtility->m_IsSendingFSM = false;
+        idlePage->dfUtility->send_command_to_FSM(command);
 
         pumping = true;
         ui->pumpLabel->setText("Pump enabled status: ON");
@@ -392,12 +385,7 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
             QString command = QString::number(this->idlePage->currentProductOrder->getSelectedSlot());
             command.append("t"); //'t'
             command.append(SEND_DISPENSE_STOP);
-            // this->idlePage->dfUtility->msg = command;
-            idlePage->dfUtility->m_IsSendingFSM = true;
-            // idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_STOP;
-            idlePage->dfUtility->set_message_to_send_to_FSM(command);
-            idlePage->dfUtility->send_to_FSM();
-            idlePage->dfUtility->m_IsSendingFSM = false;
+            idlePage->dfUtility->send_command_to_FSM(command);
         }
         else
         {
@@ -679,7 +667,6 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
 
             //                qDebug() << "SOLD OUT!" << endl;
             ui->infoLabel->setText("Un-Sold Out Succesfull");
-         
         }
         case QMessageBox::No:
             //            qDebug() << "No Clicked" << endl;

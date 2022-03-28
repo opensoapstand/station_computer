@@ -216,11 +216,7 @@ void page_dispenser::fsmSendStartDispensing()
     command.append(selectedProductOrder->getSelectedSizeAsChar());
     command.append(SEND_DISPENSE_START);
 
-    // Networking
-    idlePage->dfUtility->m_IsSendingFSM = true;
-    idlePage->dfUtility->set_message_to_send_to_FSM(command);
-    idlePage->dfUtility->send_to_FSM();
-    idlePage->dfUtility->m_IsSendingFSM = false;
+    idlePage->dfUtility->send_command_to_FSM(command);
 
     this->isDispensing = true;
 }
@@ -233,10 +229,7 @@ void page_dispenser::fsmSendStopDispensing()
     QString command = QString::number(this->selectedProductOrder->getSelectedSlot());
     command.append(selectedProductOrder->getSelectedSizeAsChar());
     command.append(SEND_DISPENSE_STOP);
-    idlePage->dfUtility->m_IsSendingFSM = true;
-    idlePage->dfUtility->set_message_to_send_to_FSM(command);
-    idlePage->dfUtility->send_to_FSM();
-    idlePage->dfUtility->m_IsSendingFSM = false;
+    idlePage->dfUtility->send_command_to_FSM(command);
 }
 
 // void page_dispenser::onRinseTimerTick()

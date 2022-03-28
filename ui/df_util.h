@@ -112,6 +112,8 @@ public:
     // bool close_local_db();
     // bool getVendorDetails();
     // QString get_local_db_max_transaction();
+    // void send_command_to_FSM();
+    void send_command_to_FSM(QString command);
     void set_message_to_send_to_FSM(QString msg);
 
     //    void setIsSendingFSM(bool isSendingFSM){m_IsSendingFSM = isSendingFSM;};

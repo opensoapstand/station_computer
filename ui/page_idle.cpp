@@ -112,6 +112,7 @@ bool page_idle::isEnough(int p){
             return p4;
             break;
     }
+    return false;
 }
 
 void page_idle::MMSlot(){

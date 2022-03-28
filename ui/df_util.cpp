@@ -10,8 +10,9 @@ bool df_util::fileExists(QString path)
     // https://stackoverflow.com/questions/10273816/how-to-check-whether-file-exists-in-qt-in-c
     bool exists = QFileInfo::exists(path) && QFileInfo(path).isFile();
 
-    if (!exists){
-        qDebug()<< "File not found: " << path;
+    if (!exists)
+    {
+        qDebug() << "File not found: " << path;
     }
 
     return exists;
@@ -85,15 +86,17 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
         if (volumeMilliLiter < 1000)
         {
             QString units_string = "";
-            if (addUnits){
+            if (addUnits)
+            {
                 units_string = "ml";
             }
             volume_as_string = QString::number(volumeMilliLiter, 'f', decimals) + units_string;
         }
         else
         {
-             QString units_string = "";
-            if (addUnits){
+            QString units_string = "";
+            if (addUnits)
+            {
                 units_string = "L";
             }
             volume_as_string = QString::number(volumeMilliLiter / 1000, 'f', 2) + units_string;
@@ -101,10 +104,11 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
     }
     else if (units == "oz")
     {
-         QString units_string = "";
-            if (addUnits){
-                units_string = "oz";
-            }
+        QString units_string = "";
+        if (addUnits)
+        {
+            units_string = "oz";
+        }
         int decimals = 2;
         if (roundNumber)
         {
@@ -114,10 +118,11 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
     }
     else
     {
-         QString units_string = "";
-            if (addUnits){
-                units_string = "oz";
-            }
+        QString units_string = "";
+        if (addUnits)
+        {
+            units_string = "oz";
+        }
         qDebug() << "Unhandled unit system: " << units;
         volume_as_string = QString::number(volumeMilliLiter, 'f', 0) + units_string;
     }
@@ -137,6 +142,22 @@ df_util::df_util(QWidget *parent) : QWidget(parent),
 /*
  * TODO: Decouple send_to_FSM from Dispenser to here
  */
+
+// void df_util::send_command_to_FSM()
+// {
+//     QString command = "l";
+//     m_IsSendingFSM = true;
+//     set_message_to_send_to_FSM(command);
+//     send_to_FSM();
+//     m_IsSendingFSM = false;
+// }
+void df_util::send_command_to_FSM(QString command)
+{
+    m_IsSendingFSM = true;
+    set_message_to_send_to_FSM(command);
+    send_to_FSM();
+    m_IsSendingFSM = false;
+}
 
 void df_util::set_message_to_send_to_FSM(QString msg)
 {

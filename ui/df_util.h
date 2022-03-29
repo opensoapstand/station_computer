@@ -36,7 +36,11 @@
 #endif
 // #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 //#define DB_PATH "/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db"
-
+ 
+#define TRANSACTION_DISPENSE_END_OFFINE_PATH "/home/df-admin/production/logging/transactions/failed_curl_transaction_dispense_end_%1.txt"
+#define TRANSACTIONS_RESTOCK_OFFINE_PATH "/home/df-admin/production/logging/transactions/failed_curl_transaction_restock_%1.txt"
+//  QString log_file_base_path = "/home/df-admin/production/logging/ui/ui_%1.txt"; // https://stackoverflow.com/questions/4784155/how-to-format-a-qstring
+//     QString log_file_path = QString(log_file_base_path).arg(time_stamp_date);
 
 #define DB_PATH_CLICKS "/release/db/sqlite/clicks.db"
 #define DB_PATH_TEMPERATURE "/release/db/sqlite/temperature.db"
@@ -56,6 +60,8 @@ using namespace std;
 #define QR_PAGE_TIMEOUT_SECONDS 420
 #define QR_PAGE_TIMEOUT_WARNING_SECONDS 120
 #define PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS 600
+#define SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS 3000
+#define QR_PROCESSED_PERIODICAL_CHECK_SECONDS 5
 
 
 #define PAGE_INIT_BACKGROUND_PATH "/home/df-admin/production/references/0_background_init.png"
@@ -103,6 +109,7 @@ public:
     static char sizeIndexToChar(int size_index);
     static QString getConvertedStringVolumeFromMl(double volumeMilliLiter, QString units, bool roundNumber, bool addUnits);
     
+    void write_to_file_timestamped(QString basePath, QString data);
 
     // static long getTimeStamp();
     // static string format_string(long time_stamp,string fmt,int cutBack=0);

@@ -60,7 +60,7 @@ pagePayment::pagePayment(QWidget *parent) : QWidget(parent),
     connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
 
     qrTimer = new QTimer(this);
-    connect(qrTimer, SIGNAL(timeout()), this, SLOT(qrTimeout()));
+    connect(qrTimer, SIGNAL(timeout()), this, SLOT(qrProcessedPeriodicalCheck()));
 
     // XXX: Comment on/off for Bypassing payment testing
     tap_payment = false;
@@ -163,21 +163,9 @@ void pagePayment::resizeEvent(QResizeEvent *event)
     {
         bitmap_location = PAGE_QR_PAY_BACKGROUND_PATH;
     }
-    // else if (product_slot___ > 0 && product_slot___ <= 9)
-    // {
-    //     bitmap_location.append("/home/df-admin/production/references/5_pay_page_");
-    //     bitmap_location.append(drinkSize);
-    //     bitmap_location.append("_");
-    //     bitmap_location.append(QString::number(idlePage->currentProductOrder->getSelectedSlot()));
-    //     bitmap_location.append(".png");
-    //     ui->order_drink_amount->setText("$" + QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2));
-    // }
-    // else
-    // {
-    //     bitmap_location = "/home/df-admin/production/references/5_pay_page_l_1.png";
-    // }
 
-    else{
+    else
+    {
         qDebug("ERROR: No tap payment available yet.");
     }
 
@@ -234,6 +222,11 @@ void pagePayment::on_previousPage_Button_clicked()
 }
 
 void pagePayment::on_payment_bypass_Button_clicked()
+{
+    proceed_to_dispense();
+}
+
+void pagePayment::proceed_to_dispense()
 {
     stopPayTimers();
     // p_page_dispense->showEvent(dispenseEvent);
@@ -380,26 +373,19 @@ void pagePayment::showEvent(QShowEvent *event)
 
 void pagePayment::createOrder()
 {
-    qDebug() << "ahoyy22";
-    DbManager db(DB_PATH);
+    // qDebug() << "ahoyy22";
+    // DbManager db(DB_PATH);
 
-    int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
-    // char drinkSize;
-    // if (idlePage->currentProductOrder->getSelectedSize() == SIZE_SMALL_INDEX){
-    //     drinkSize = 's';
-    // }
-    // if (idlePage->currentProductOrder->getSelectedSize() == SIZE_LARGE_INDEX){
-    //     drinkSize = 'l';
-    // }
-    QString MachineSerialNumber = db.getMachineID();
-    QString productId = db.getProductID(product_slot___);
-    QString contents = db.getProductName(product_slot___);
-    db.closeDB();
+    // int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
 
-    // QString quantity_requested = QString::number(db.getProductVolume(product_slot___, drinkSize));
+    QString MachineSerialNumber = idlePage->currentProductOrder->getMachineId();
+    QString productId = idlePage->currentProductOrder->getSelectedProductId();
+    QString contents = idlePage->currentProductOrder->getSelectedProductName();
+    // db.closeDB();
+
     QString quantity_requested = idlePage->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(false);
-    
-    qDebug()<< "Volume requested for soapstandportal : " << quantity_requested; 
+
+    // qDebug() << "Volume requested for soapstandportal : " << quantity_requested;
     char drinkSize = idlePage->currentProductOrder->getSelectedSizeAsChar();
 
     QString price = QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2);
@@ -408,46 +394,39 @@ void pagePayment::createOrder()
     orderId = orderId.remove("}");
     QString curl_param1 = "orderId=" + orderId + "&size=" + drinkSize + "&MachineSerialNumber=" + MachineSerialNumber +
                           "&contents=" + contents + "&price=" + price + "&productId=" + productId + "&quantity_requested=" + quantity_requested;
-    curl_param_array1 = curl_param1.toLocal8Bit();
-    curl_data1 = curl_param_array1.data();
+    
     curl1 = curl_easy_init();
-   
+
     if (!curl1)
     {
-        //        qDebug() << "cURL failed to page_init" << endl;
-         qDebug() << "URL Failed to send : " + curl_param1 + "to: " + "https://soapstandportal.com/api/machine_data/createOrderInDb";
+        qDebug() << "pagepayement cURL Failed to init : " + curl_param1 + "to: " + "https://soapstandportal.com/api/machine_data/createOrderInDb";
+        return;
+    }
+  
+    curl_easy_setopt(curl1, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/createOrderInDb");
+    curl_easy_setopt(curl1, CURLOPT_POSTFIELDS, curl_param_array1.data());
+    curl_easy_setopt(curl1, CURLOPT_WRITEFUNCTION, WriteCallback);
+    curl_easy_setopt(curl1, CURLOPT_WRITEDATA, &readBuffer);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
+
+    res1 = curl_easy_perform(curl1);
+    if (res1 != CURLE_OK)
+    {
+        qDebug() << "Problem at sending QR code request. error code: " + QString::number(res1);
     }
     else
     {
-        qDebug() << "URL Successfully sent : "  + curl_param1 + "to: " + "https://soapstandportal.com/api/machine_data/createOrderInDb";
-        //        qDebug() << "cURL page_init success" << endl;
-        curl_easy_setopt(curl1, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/createOrderInDb");
-        curl_easy_setopt(curl1, CURLOPT_POSTFIELDS, curl_param_array1.data());
-        curl_easy_setopt(curl1, CURLOPT_WRITEFUNCTION, WriteCallback);
-        curl_easy_setopt(curl1, CURLOPT_WRITEDATA, &readBuffer);
-        //        qDebug() << "Curl Setup done" << endl;
-
-        res1 = curl_easy_perform(curl1);
-
-        _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
-        _qrTimeOutSec = 5;
-        qrTimer->start(1000);
+        qDebug() << "QR order request sent to soapstandportal (" + curl_param1 + ")";
     }
+    _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
+    _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
+    qrTimer->start(1000);
+
 }
 
 void pagePayment::generateQR()
 {
-    // qDebug() << "ahoyy23" ;
-    // DbManager db(DB_PATH);
 
-    // int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
-    // char drinkSize;
-    // if (idlePage->currentProductOrder->getSelectedSize() == SIZE_SMALL_INDEX){
-    //     drinkSize = 's';
-    // }
-    // if (idlePage->currentProductOrder->getSelectedSize() == SIZE_LARGE_INDEX){
-    //     drinkSize = 'l';
-    // }
     createOrder();
     QPixmap map(360, 360);
     map.fill(QColor("black"));
@@ -467,70 +446,67 @@ void pagePayment::generateQR()
     paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
     ui->qrCode->setPixmap(map);
 
-    QString curl_param = "oid=" + orderId;
-    curl_param_array = curl_param.toLocal8Bit();
-    curl_data = curl_param_array.data();
+    // QString curl_param = "oid=" + orderId;
+    // curl_param_array = curl_param.toLocal8Bit();
+    // curl_data = curl_param_array.data();
 
     _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
-    _qrTimeOutSec = 5;
-    qrTimer->start(1000);
 
-    // db.closeDB();
+    _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
+    qrTimer->start(1000);
 }
 
-void pagePayment::curler()
+void pagePayment::isQrProcessedCheckOnline()
 {
 
     curl = curl_easy_init();
     if (!curl)
     {
-        //        qDebug() << "cURL failed to page_init" << endl;
+        qDebug() << "cURL failed to page_init";
+        return;
+    }
+
+    curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/check_order_status");
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
+
+    res = curl_easy_perform(curl);
+
+    if (res != CURLE_OK)
+    {
+        // string test = std::string(curl_easy_strerror(res));
+        qDebug() << "cURL fail at pagepayment. Error code: " + QString::number(res);
+        curl_easy_cleanup(curl);
     }
     else
     {
-        //        qDebug() << "cURL page_init success" << endl;
-        curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/check_order_status");
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-        //        qDebug() << "Curl Setup done" << endl;
+        curl_easy_cleanup(curl);
+        readBuffer = "";
 
-        res = curl_easy_perform(curl);
-
-        if (res != CURLE_OK)
+        if (readBuffer == "true")
         {
-            //            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
-            curl_easy_cleanup(curl);
+            proceed_to_dispense();
         }
         else
         {
-            //            qDebug() << "CURL SUCCESS!" << endl;
-            if (readBuffer == "true")
-            {
-                curl_easy_cleanup(curl);
-                readBuffer = "";
-                on_payment_bypass_Button_clicked();
-            }
-            else
-            {
-                curl_easy_cleanup(curl);
-                readBuffer = "";
-            }
+            qDebug() << "Wait for QR processed. Nothing received";
         }
     }
+
 }
 
-void pagePayment::qrTimeout()
+void pagePayment::qrProcessedPeriodicalCheck()
 {
-    if (--_qrTimeOutSec >= 0)
+    if (--_qrProcessedPeriodicalCheckSec >= 0)
     {
-        //        qDebug() << "PayPaeg: QR Timer Tick" << _qrTimeOutSec << endl;
     }
     else
     {
-        //        qDebug() << "QR Timer Done!" << endl << "Checking API endpoint now..." << endl;
-        curler();
-        _qrTimeOutSec = 5;
+        qDebug() << "QR Timer Timed out. Checking API endpoint now...";
+        isQrProcessedCheckOnline();
+        _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
     }
 }
 

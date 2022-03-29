@@ -120,8 +120,8 @@ private:
     double volume_per_tick_buffer;
 
     void updateValues();
-    void curler();
-    void bufferCURL(char *curl_params);
+    void sendRestockToCloud();
+    void restockTransactionToFile(char *curl_params);
     time_t rawtime;
     struct tm * timeinfo;
     CURL *curl;

@@ -139,7 +139,6 @@ void DbManager::closeDB()
 
 QString DbManager::getProductName(int slot)
 {
-    qDebug() << " db... getProductName";
     QSqlQuery product_query;
     QString product_name;
 
@@ -1274,7 +1273,6 @@ bool DbManager::updatePluLarge(int slot, QString new_plu)
 
 QString DbManager::getMachineID()
 {
-    qDebug() << " db... getMachineID";
     QSqlQuery mid_query;
     QString mid_string;
 
@@ -1292,7 +1290,6 @@ QString DbManager::getMachineID()
 
 QString DbManager::getProductID(int slot)
 {
-    qDebug() << " db... getProductID";
     QSqlQuery product_id_query;
     QString product_id_string;
 

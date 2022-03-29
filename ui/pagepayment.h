@@ -97,9 +97,9 @@ public:
     }
 
     QTimer *readTimer;
-    char * curl_data;
-    char * curl_data1;
-    char * curlOrderdata;
+    // char * curl_data;
+    // char * curl_data1;
+    // char * curlOrderdata;
 
 private slots:
 
@@ -109,6 +109,7 @@ private slots:
     // Navigation
     void on_previousPage_Button_clicked();
     void on_payment_bypass_Button_clicked();
+    void proceed_to_dispense();
      void on_mainPage_Button_clicked();
     //void on_payment_pass_Button_clicked();
     //void on_payment_cancel_Button_clicked();
@@ -124,7 +125,7 @@ private slots:
     void idlePaymentTimeout();
     void on_refreshButton_clicked();
 
-    void qrTimeout();
+    void qrProcessedPeriodicalCheck();
 
 
 protected:
@@ -217,7 +218,7 @@ private:
     int _paymentTimeoutSec;
     QTimer* paymentEndTimer;
 
-    int _qrTimeOutSec;
+    int _qrProcessedPeriodicalCheckSec;
     QTimer* qrTimer;
 
     QResizeEvent *pageProductResize;
@@ -231,25 +232,25 @@ private:
     std::string toSvgString(const QrCode &qr, int border);
     void paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg);
 
-    QString order_id;
+    // QString order_id;
     QString orderId;
-    CURL *curl;
-    CURL *curl1;
 
+    CURL *curl;
     CURLcode res;
+    QByteArray curl_param_array;
+   
     CURLcode res1;
+    CURL *curl1;
+    QByteArray curl_param_array1;
 
     //size_t WriteCallback(char* contents, size_t size, size_t nmemb, void *userp);
     std::string readBuffer;
 
 
-    void curler();
+    void isQrProcessedCheckOnline();
     void generateQR();
     void createOrder();
-    QByteArray curl_param_array;
-    QByteArray curl_param_array1;
-    QByteArray createOrderParamsArray;
-
+    
 };
 
 #endif // PAGEPAYMENT_H

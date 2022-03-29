@@ -75,7 +75,11 @@ public:
     int getSelectedSlot();
 
 
-    QString getFullVolumeCorrectUnits();
+    QString getSelectedProductId();
+    // QString getSelectedProductName();
+    QString getMachineId();
+
+    QString getFullVolumeCorrectUnits(bool addUnits);
 
     QString getVolumeRemainingCorrectUnits();
     QString getTotalDispensedCorrectUnits();

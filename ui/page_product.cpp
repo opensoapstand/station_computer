@@ -106,12 +106,10 @@ void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_
     this->p_page_dispense = page_dispenser;
     this->helpPage = pageHelp;
     this->wifiError = pageWifiError;
-   
 
     ui->promoCode->clear();
     ui->promoCode->hide();
     ui->discountLabel->setText("-$0.00");
-
 
     selectedProductOrder = idlePage->currentProductOrder;
     selectedProductOrder->setSelectedSize(SIZE_LARGE_INDEX); // default size
@@ -130,7 +128,6 @@ void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_
     // #endif
     couponHandler();
     // coupon_input_hide();
-    
 }
 
 // DTOR
@@ -151,16 +148,16 @@ void pageProduct::showEvent(QShowEvent *event)
     qDebug() << "\n---Page_product: showEvent(will not display elements)";
     selectedProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
     QWidget::showEvent(event);
-    
+
     loadOrderSize(SIZE_LARGE_INDEX);
-    
+
     reset_and_show_page_elements();
 }
 
 // void pageProduct::paintEvent(QPaintEvent *event){
 //     qDebug() << "Page_product: PaintEvent";
 //     QWidget::paintEvent(event);
-// } 
+// }
 
 void pageProduct::resizeEvent(QResizeEvent *event)
 {
@@ -250,7 +247,6 @@ void pageProduct::reset_and_show_page_elements()
     ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->pagePayment_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-
 
     QString keyboard = KEYBOARD_IMAGE_PATH;
     QString keyboard_style_sheet = " background-image: url(" + keyboard + "); }";
@@ -499,9 +495,6 @@ size_t WriteCallback_coupon(char *contents, size_t size, size_t nmemb, void *use
     return size * nmemb;
 }
 
-
-
-
 void pageProduct::updatePriceAfterPromo(double discountPercent)
 {
     double discount;
@@ -527,7 +520,12 @@ void pageProduct::on_applyPromo_Button_clicked()
     {
         readBuffer.clear();
         curl = curl_easy_init();
-
+        if (!curl)
+        {
+            qDebug() << "Pageproduct: apply promo cURL failed init";
+            return;
+        }
+        
         curl_easy_setopt(curl, CURLOPT_URL, ("https://soapstandportal.com/api/coupon/find/" + promocode).toUtf8().constData());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback_coupon);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
@@ -536,7 +534,7 @@ void pageProduct::on_applyPromo_Button_clicked()
         if (res != CURLE_OK)
         {
             ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
-            qDebug() << "Invalid Coupon curl problem: " << res;
+            qDebug() << "Invalid Coupon curl problem. error code: " << res;
         }
         else
         {
@@ -603,7 +601,7 @@ void pageProduct::on_previousPage_Button_clicked()
     };
     selectIdleTimer->stop();
     p_page_select_product->showFullScreen();
-    
+
     ui->discountLabel->setText("-$0.00");
     ui->promoInputButton->show();
 
@@ -623,22 +621,23 @@ void pageProduct::on_previousPage_Button_clicked()
     this->hide();
 }
 
-void pageProduct::coupon_disable(){
+void pageProduct::coupon_disable()
+{
     ui->promoCode->hide();
     ui->promoKeyboard->hide();
     ui->promoInputButton->hide();
     ui->discountLabel->hide();
     ui->promoButton->hide();
 }
-void pageProduct::coupon_input_show(){
-
+void pageProduct::coupon_input_show()
+{
 }
-void pageProduct::coupon_input_hide(){
-    ui->promoKeyboard->hide();   
-
+void pageProduct::coupon_input_hide()
+{
+    ui->promoKeyboard->hide();
 }
-void pageProduct::coupon_input_reset(){
-    
+void pageProduct::coupon_input_reset()
+{
 }
 void pageProduct::on_promoCodeInput_clicked()
 {
@@ -646,14 +645,12 @@ void pageProduct::on_promoCodeInput_clicked()
     ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
     // ui->promoInputButton->hide();
     ui->promoKeyboard->show();
-    qDebug()<<"show promo keyboard.";
+    qDebug() << "show promo keyboard.";
     ui->promoCode->show();
 }
 void pageProduct::couponHandler()
 {
     qDebug() << "db for coupons";
-
-
 
     DbManager db(DB_PATH);
     bool coupons_enabled = db.getCouponsEnabled();
@@ -665,16 +662,11 @@ void pageProduct::couponHandler()
         qDebug() << "Coupons are enabled for this machine.";
         ui->promoInputButton->show();
 
+        // ui->promoCode->clear();
+        // ui->promoCode->hide();
+        // ui->discountLabel->setText("-$0.00");
 
-        
-    // ui->promoCode->clear();
-    // ui->promoCode->hide();
-    // ui->discountLabel->setText("-$0.00");
- 
- 
-    // promoPercent = 0.0;
-   
-
+        // promoPercent = 0.0;
     }
     else
     {
@@ -700,11 +692,21 @@ void pageProduct::on_pagePayment_Button_clicked()
         CURLcode res;
         curl = curl_easy_init();
 
+        if (!curl)
+        {
+            qDebug() << "Pageproduct: cURL failed init";
+            return;
+        }
+
+
         curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/ping");
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
 
         res = curl_easy_perform(curl);
         if (res != CURLE_OK)
         {
+            qDebug() << "Failed to reach soapstandportal. error code: " + QString::number(res);
+
             // wifiError->showEvent(wifiErrorEvent);
             wifiError->showFullScreen();
             this->hide();

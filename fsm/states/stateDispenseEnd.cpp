@@ -64,14 +64,14 @@ DF_ERROR stateDispenseEnd::onAction()
     DF_ERROR e_ret = OK;
 
     productDispensers[pos].stopDispense();
-    
+
     // give time to settle down
     usleep(100000);
 
     // send dispensed volume to ui (will be used to write to portal)
     m_pMessaging->sendMessage(to_string(productDispensers[pos].getProduct()->getVolumeDispensed()));
 
-   if (productDispensers[pos].getIsDispenseTargetReached())
+    if (productDispensers[pos].getIsDispenseTargetReached())
     {
         m_pMessaging->sendMessage("Target Hit");
     }
@@ -108,7 +108,6 @@ DF_ERROR stateDispenseEnd::handleTransaction()
 {
     debugOutput::sendMessage("Update database:", MSG_INFO);
     dispenseEndUpdateDB(false);
-
 
 #ifdef ENABLE_TRANSACTION_TO_CLOUD
 
@@ -177,6 +176,8 @@ size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
 DF_ERROR stateDispenseEnd::sendTransactionToCloud()
 {
 
+    DF_ERROR e_ret = OK;
+
     std::string product = (productDispensers[pos].getProduct()->m_name);
     std::string target_volume = to_string(productDispensers[pos].getProduct()->getTargetVolume(size));
     std::string price = to_string(productDispensers[pos].getProduct()->getPrice(size));
@@ -197,16 +198,16 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
     }
     else
     {
-        double dv = productDispensers[pos].getProduct()->m_nVolumeDispensed ;
+        double dv = productDispensers[pos].getProduct()->m_nVolumeDispensed;
         dv = productDispensers[pos].getProduct()->convertVolumeMetricToDisplayUnits(dv);
-        dispensed_volume_units_converted =  to_string(dv);
+        dispensed_volume_units_converted = to_string(dv);
     }
 
     // todo Lode check with Ash
 #ifdef USE_OLD_DATABASE
-    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&units="+units+"&price=" + price + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + EndTime + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer";
+    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&units=" + units + "&price=" + price + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + EndTime + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer";
 #else
-    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit="+ units +"&price=" + price + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + EndTime + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer";
+    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit=" + units + "&price=" + price + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + EndTime + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer";
 #endif
     char buffer[1080];
     strcpy(buffer, curl_param.c_str());
@@ -215,54 +216,50 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
     if (!curl)
     {
         debugOutput::sendMessage("cURL failed to init", MSG_INFO);
+        return e_ret;
+    }
+    
+
+    debugOutput::sendMessage("cURL init success", MSG_INFO);
+
+    curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/pushPrinterOrder");
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, buffer);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
+
+    res = curl_easy_perform(curl);
+    if (res == CURLE_OPERATION_TIMEDOUT)
+    {
+        debugOutput::sendMessage("sendTransactionToCloud: CURL timed out (" + to_string(CURLOPT_TIMEOUT_MS) + "ms). err: " + to_string(res) + " Will buffer!", MSG_INFO);
+        bufferCURL(curl_param);
+        curl_easy_cleanup(curl);
+    }
+    else if (res != CURLE_OK)
+    {
+        debugOutput::sendMessage("sendTransactionToCloud: CURL fail. err: " + to_string(res) + " Will buffer!", MSG_INFO);
+        bufferCURL(curl_param);
+        curl_easy_cleanup(curl);
     }
     else
     {
-
-
-        debugOutput::sendMessage("cURL init success", MSG_INFO);
-
-        curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/pushPrinterOrder");
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, buffer);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 3000);
-
-        res = curl_easy_perform(curl);
-        if (res == CURLE_OPERATION_TIMEDOUT)
+        if (readBuffer == "true")
         {
-            debugOutput::sendMessage("CURL timed out (" + to_string(CURLOPT_TIMEOUT_MS) + "ms). err: " + to_string(res) + " Will buffer!", MSG_INFO);
-            bufferCURL(curl_param);
-            curl_easy_cleanup(curl);
-            debugOutput::sendMessage("CURL error handled correctly.", MSG_INFO);
-        }
-        else if (res != CURLE_OK)
-        {
-            //            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
-            //            std::cout << "Curl didn't work, I need to buffer cURL" << endl;
-            debugOutput::sendMessage("CURL fail. err: " + to_string(res) + " Will buffer!", MSG_INFO);
-            bufferCURL(curl_param);
-            curl_easy_cleanup(curl);
-            debugOutput::sendMessage("CURL error handled correctly.", MSG_INFO);
+            debugOutput::sendMessage("sendTransactionToCloud: CURL succes.", MSG_INFO);
+            
         }
         else
         {
-            if (readBuffer == "true")
-            {
-                debugOutput::sendMessage("CURL succes.", MSG_INFO);
-                //                std::cout << "Curl worked!" << endl;
-            }
-            else
-            {
-                debugOutput::sendMessage("CURL readbuffer fail.", MSG_INFO);
-                //                std::cout << "Curl didn't work, I need to buffer cURL" << endl;
-                bufferCURL(curl_param);
-            }
-            readBuffer = "";
-            curl_easy_cleanup(curl);
+            debugOutput::sendMessage("sendTransactionToCloud: CURL readbuffer fail.", MSG_INFO);
+            //                std::cout << "Curl didn't work, I need to buffer cURL" << endl;
+            bufferCURL(curl_param);
         }
-
+        readBuffer = "";
+        curl_easy_cleanup(curl);
     }
+
+    return e_ret;
+
 }
 
 // TODO: Figure out when/how to send all the bufferred curl data to the cloud (fixed with AWS IoT?)
@@ -421,7 +418,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool test_transaction)
     std::string target_volume = to_string(productDispensers[pos].getProduct()->getTargetVolume(size));
     std::string start_time = (productDispensers[pos].getProduct()->m_nStartTime);
     std::string dispensed_volume;
-    
+
     debugOutput::sendMessage("update DB. dispense end: vol dispensed: " + to_string(productDispensers[pos].getProduct()->getVolumeDispensed()), MSG_INFO);
 
     if (productDispensers[pos].getProduct()->m_nVolumeDispensed <= productDispensers[pos].getProduct()->m_nVolumePerTick)
@@ -556,8 +553,6 @@ DF_ERROR stateDispenseEnd::print_receipt()
     double price = productDispensers[pos].getProduct()->getPrice(size);
     double price_per_liter;
 
-
-
     double volume_dispensed;
 
     if (size == 's')
@@ -583,28 +578,27 @@ DF_ERROR stateDispenseEnd::print_receipt()
         // price=price/100;
 
         // string.Format("{0:f3}", price);
-        //std::string test =std::format("{4:f3}", price);
-        if (plu.size() != 6 ){
+        // std::string test =std::format("{4:f3}", price);
+        if (plu.size() != 6)
+        {
             // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
             debugOutput::sendMessage("ERROR custom plu length must be of length six : " + plu, MSG_INFO);
-
         }
 
         snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%5.2f", price);
         string plu_dynamic_price = (chars_plu_dynamic_formatted);
         string plu_dynamic_formatted = plu + "01" + plu_dynamic_price;
 
-        //3.14 --> " 3.14" --> " 314" --> "0314"
+        // 3.14 --> " 3.14" --> " 314" --> "0314"
         std::string toReplace(".");
         size_t pos = plu_dynamic_formatted.find(toReplace);
         plu_dynamic_formatted.replace(pos, toReplace.length(), "");
-        
+
         std::string toReplace2(" ");
         pos = plu_dynamic_formatted.find(toReplace2);
         plu_dynamic_formatted.replace(pos, toReplace2.length(), "0");
 
         plu = plu_dynamic_formatted;
-
     }
     else if (size == 't')
     {
@@ -621,7 +615,7 @@ DF_ERROR stateDispenseEnd::print_receipt()
     if (units == "oz")
     {
         // volume_dispensed = ceil(volume_dispensed * ML_TO_OZ);
-        volume_dispensed = ceil (productDispensers[pos].getProduct()->convertVolumeMetricToDisplayUnits(volume_dispensed));
+        volume_dispensed = ceil(productDispensers[pos].getProduct()->convertVolumeMetricToDisplayUnits(volume_dispensed));
         price_per_liter = price_per_liter / 1000 / ML_TO_OZ;
     }
 

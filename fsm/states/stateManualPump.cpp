@@ -257,7 +257,7 @@ DF_ERROR stateManualPump::customVolumeDispenseTest()
 
    dispenseButtonValueMemory = dispenseButtonValue;
 
-   // 2. detect pail empty
+   // 2. detect container empty
    // if motor running and flow sensor dispensing.
 }
 

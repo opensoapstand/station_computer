@@ -186,6 +186,31 @@ bool dispenser::getDispenseButtonValue()
     the_8344->getDispenseButtonStateDebounced();
 }
 
+void dispenser::dispenseButtonTimingreset()
+{
+    dispense_button_total_pressed_millis = 0;
+}
+
+uint64_t dispenser::dispenseButtonTimingUpdate()
+{
+    // CAUTION: rudimentary. Will not detect intermitting keypresses between calls. So, check frequently.
+
+    using namespace std::chrono;
+    uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    if (getDispenseButtonValue())
+    {
+        uint64_t interval = now - dispense_button_time_at_last_check_epoch;
+        dispense_button_total_pressed_millis += interval;
+    }
+    else
+    {
+        // do nothing;
+    }
+    dispense_button_time_at_last_check_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    debugOutput::sendMessage("Total time dispense button pressed millis : " + to_string(dispense_button_total_pressed_millis), MSG_INFO);
+    return dispense_button_total_pressed_millis;
+}
+
 // Reverse pump: Turn forward pin LOW - Reverse pin HIGH
 DF_ERROR dispenser::setPumpDirectionReverse()
 {
@@ -210,7 +235,7 @@ DF_ERROR dispenser::setPumpEnable(int pos)
 {
     // first pump is 1.
     // still needs dispense button to actually get the pump to start
-    debugOutput::sendMessage("-----Start Pump-----", MSG_INFO);
+    debugOutput::sendMessage("-----Enable Pump-----", MSG_INFO);
     the_8344->setPumpEnable(pos);
     m_isPumpEnabled = true;
 }
@@ -221,12 +246,13 @@ DF_ERROR dispenser::setPumpPWM(uint8_t value)
     the_8344->setPumpPWM((unsigned char)value);
 }
 
-// Disenses products by turning Solenoid Signal to HIGH then to LOW
 DF_ERROR dispenser::startDispense()
 {
     using namespace std::chrono;
-    dispense_cycle_pump_running_time_millis = 0;
     dispense_start_timestamp_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    dispenseButtonTimingreset();
+
+    previous_dispense_state = FLOW_STATE_UNAVAILABLE;
 
     DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
     debugOutput::sendMessage("Dispense start. Triggered pump:" + to_string(this->slot), MSG_INFO);
@@ -439,31 +465,47 @@ Dispense_behaviour dispenser::getDispenseStatus()
     using namespace std::chrono;
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     uint64_t dispense_time_millis = millis_since_epoch - dispense_start_timestamp_epoch;
-    Time_val avg_1s = getAveragedFlowRate(1000);
-    debugOutput::sendMessage("Dispense flowRate 1s avg [V/s]: " + to_string(avg_1s.value) + ". avg time millis: " + to_string(avg_1s.time_millis) + "dispense time: " + to_string(dispense_time_millis), MSG_INFO);
+
+    Time_val avg = getAveragedFlowRate(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS);
+
+    uint64_t relative_dispense_time = avg.time_millis - dispense_start_timestamp_epoch;
+    debugOutput::sendMessage("Dispense flowRate 1s avg [V/s]: " + to_string(avg.value) + ". avg time millis: " + to_string(relative_dispense_time) + "dispense time: " + to_string(dispense_time_millis), MSG_INFO);
     updateRunningAverageWindow();
-    if (avg_1s.time_millis < 1000)
+
+    Dispense_behaviour state;
+
+    if (relative_dispense_time < EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS)
     {
-        return FLOW_STATE_UNAVAILABLE;
+        state = FLOW_STATE_UNAVAILABLE;
     }
 
-    if (avg_1s.value > EMPTY_PAIL_DETECTION_FLOW_THRESHOLD_ML_PER_S)
+    if (avg.value > EMPTY_CONTAINER_DETECTION_FLOW_THRESHOLD_ML_PER_S)
     {
-        return FLOW_STATE_DISPENSING;
+        state = FLOW_STATE_DISPENSING;
     }
     else
     {
         // todo: dispensing does not equal motor on!! time pump ON time.
         debugOutput::sendMessage("ERROR: todo. Now shortcut, assume pumping all the time during dispensing.", MSG_INFO);
-        if (dispense_time_millis > 10000)
+
+        if (previous_dispense_state == FLOW_STATE_DISPENSING)
         {
-            return FLOW_STATE_PAIL_EMPTY;
+            // once it was dispensing, empty dispenser is detected immediatly if no product flows.
         }
         else
         {
-            return FLOW_STATE_ATTEMTPING_TO_PRIME;
+            if (dispenseButtonTimingUpdate() > EMPTY_CONTAINER_DETECTION_MAXIMUM_PRIME_TIME_MILLIS)
+            {
+                state = FLOW_STATE_CONTAINER_EMPTY;
+            }
+            else
+            {
+                state = FLOW_STATE_ATTEMTPING_TO_PRIME;
+            }
         }
     }
+    previous_dispense_state = state;
+    return state;
 }
 
 DF_ERROR dispenser::stopDispense()

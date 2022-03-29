@@ -121,12 +121,14 @@ DF_ERROR stateDispense::onAction()
    // }
 
    Dispense_behaviour status = productDispensers[pos].getDispenseStatus();
-   if(status  == FLOW_STATE_PAIL_EMPTY){
-         debugOutput::sendMessage("*******************PAIL EMPTY**********************", MSG_INFO);
+   if(status  == FLOW_STATE_CONTAINER_EMPTY){
+         debugOutput::sendMessage("*******************CONTAINER EMPTY**********************", MSG_INFO);
+         m_state_requested = STATE_DISPENSE_END;
+
    }else{
          debugOutput::sendMessage("------ status: " + to_string(status), MSG_INFO);
    };
-   
+
    usleep(500000);
 
    e_ret = OK;

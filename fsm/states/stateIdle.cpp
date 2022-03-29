@@ -48,10 +48,6 @@ DF_ERROR stateIdle::onEntry()
    return e_ret;
 }
 
-/*
-* Advances State: If IP Thread detects STATE_DISPENSE
-* command then advance to STATE_DISPENSE_IDLE
-*/
 DF_ERROR stateIdle::onAction()
 {
    DF_ERROR e_ret = ERROR_BAD_PARAMS;

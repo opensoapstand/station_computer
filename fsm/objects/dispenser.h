@@ -23,8 +23,8 @@
 #include "product.h"
 // #include <stdint.h>
 // Total Number of Devices
-#define NUM_SOLENOID 3 //12v for drink,water, and air
-#define NUM_PUMP 2     //forward and reverse pin
+#define NUM_SOLENOID 3 // 12v for drink,water, and air
+#define NUM_PUMP 2     // forward and reverse pin
 #define NUM_FLOWSENSOR 1
 #define NUM_BUTTON 1
 
@@ -57,21 +57,21 @@ public:
 
       void initDispenser(int slot);
 
-      //private variable setters
-      // DF_ERROR setSolenoid(int mcpAddress, int pin, int pos);
+      // private variable setters
+      //  DF_ERROR setSolenoid(int mcpAddress, int pin, int pos);
       DF_ERROR setPump(int mcpAddress, int pin, int position);
       DF_ERROR setFlowsensor(int pinint, int pos);
 
       DF_ERROR startDispense();
       DF_ERROR stopDispense();
 
-      unsigned short getPumpSpeed(); 
-      bool isPumpEnabled(); 
-      DF_ERROR setPumpDirectionForward(); 
-      DF_ERROR setPumpDirectionReverse(); 
-      DF_ERROR setPumpsDisableAll();    
-      DF_ERROR setPumpEnable(int pos);    
-      DF_ERROR setPumpPWM(uint8_t value);    
+      unsigned short getPumpSpeed();
+      bool isPumpEnabled();
+      DF_ERROR setPumpDirectionForward();
+      DF_ERROR setPumpDirectionReverse();
+      DF_ERROR setPumpsDisableAll();
+      DF_ERROR setPumpEnable(int pos);
+      DF_ERROR setPumpPWM(uint8_t value);
       bool getDispenseButtonValue();
       double getDispensedVolume();
 
@@ -82,15 +82,13 @@ public:
       Time_val getDispensedVolumeNow();
       DF_ERROR updateRunningAverageWindow();
 
-
       Time_val getAveragedFlowRate(uint64_t window_length_millis);
 
       bool getIsDispenseTargetReached();
       Dispense_behaviour getDispenseStatus();
 
-      uint64_t dispense_cycle_pump_running_time_millis;
-      uint64_t dispense_start_timestamp_epoch;
-
+      void dispenseButtonTimingreset();
+      uint64_t dispenseButtonTimingUpdate();
 
 
       // void setm_pIsDispenseDone() { *m_pIsDispensing = false; }
@@ -118,8 +116,16 @@ public:
 private:
       // We only want to create one instance of the class that controls
       // the actual hardware, so declare this static.
-      
+
       static dsed8344 *the_8344;
+
+      uint64_t dispense_cycle_pump_running_time_millis;
+      uint64_t dispense_start_timestamp_epoch;
+
+      uint64_t dispense_button_time_at_last_check_epoch;
+      uint64_t dispense_button_total_pressed_millis;
+
+      Dispense_behaviour previous_dispense_state;
 
       int slot;
       Time_val flowRateBuffer[RUNNING_AVERAGE_WINDOW_LENGTH];
@@ -128,7 +134,6 @@ private:
       uint64_t millisAtLastCheck;
       double previousDispensedVolume;
       unsigned char pump_position;
-      
 
       bool m_isDispenseDone; // XXX: Remove later.
       bool m_isStill;
@@ -144,9 +149,9 @@ private:
 
       // Pointers to Addresses set in State Init
 
-      gpio *m_pSolenoid[NUM_SOLENOID]; //air,product, and water solenoid control
+      gpio *m_pSolenoid[NUM_SOLENOID]; // air,product, and water solenoid control
       gpio *m_pFlowsenor[NUM_FLOWSENSOR];
-      gpio *m_pPump[NUM_PUMP]; //forward and reverse pin control
+      gpio *m_pPump[NUM_PUMP]; // forward and reverse pin control
       gpio *m_pPowerOff[1];
       gpio *m_pMM[1];
       gpio *m_pPWRorMM[1];

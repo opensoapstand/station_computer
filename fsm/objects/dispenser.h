@@ -86,10 +86,16 @@ public:
       Time_val getAveragedFlowRate(uint64_t window_length_millis);
 
       bool getIsDispenseTargetReached();
+      Dispense_behaviour getDispenseStatus();
 
-      void setm_pIsDispenseDone() { *m_pIsDispensing = false; }
-      void setm_pIsDispensing() { *m_pIsDispensing = true; }
-      void setm_pRestartDispense() { *m_pIsDispensing = false; }
+      uint64_t dispense_cycle_pump_running_time_millis;
+      uint64_t dispense_start_timestamp_epoch;
+
+
+
+      // void setm_pIsDispenseDone() { *m_pIsDispensing = false; }
+      // void setm_pIsDispensing() { *m_pIsDispensing = true; }
+      // void setm_pRestartDispense() { *m_pIsDispensing = false; }
 
       product *getProduct();
 

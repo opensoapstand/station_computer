@@ -103,18 +103,30 @@ DF_ERROR stateDispense::onAction()
                                 ", Vol dispensed: " + to_string(productDispensers[pos].getDispensedVolume()),
                             MSG_INFO);
 
-   if (productDispensers[pos].getProduct()->getVolumeDispensedPreviously() == productDispensers[pos].getProduct()->getVolumeDispensed())
-   {
-      // no dispensing detected since the last check
-      m_state_requested = STATE_DISPENSE_IDLE;
-   }
-   else
-   {
+   // if (productDispensers[pos].getProduct()->getVolumeDispensedPreviously() == productDispensers[pos].getProduct()->getVolumeDispensed())
+   // {
+   //    // no dispensing detected since the last check
+   //    m_state_requested = STATE_DISPENSE_IDLE;
+   // }
+   // else
+   // {
       // continue dispensing
       productDispensers[pos].getProduct()->m_nVolumeDispensedPreviously = productDispensers[pos].getProduct()->getVolumeDispensed();
-   }
+   // }
 
+   // check for button pressed
+   // if (productDispensers[0].getDispenseButtonValue())
+   // {
+   //    productDispensers[pos].getDispenseStatus();
+   // }
 
+   Dispense_behaviour status = productDispensers[pos].getDispenseStatus();
+   if(status  == FLOW_STATE_PAIL_EMPTY){
+         debugOutput::sendMessage("*******************PAIL EMPTY**********************", MSG_INFO);
+   }else{
+         debugOutput::sendMessage("------ status: " + to_string(status), MSG_INFO);
+   };
+   
    usleep(500000);
 
    e_ret = OK;

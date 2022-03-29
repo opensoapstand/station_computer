@@ -92,10 +92,8 @@ using namespace std;
 // #define PAGE_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_1.png"
 // #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/page_select_product_generic.png" // todo
 
-
 #define SEND_DISPENSE_START "d"
 #define SEND_DISPENSE_STOP "f"
-
 
 class df_util : public QWidget
 {

@@ -180,7 +180,7 @@ DF_ERROR stateManualPump::onAction()
 
          // flow rate windowed avg
          productDispensers[0].updateRunningAverageWindow();
-         Time_val avg_1s = productDispensers[0].getAveragedFlowRate(2000);
+         Time_val avg_1s = productDispensers[0].getAveragedFlowRate(1000);
          debugOutput::sendMessage("Dispense flowRate 1s avg [V/s]: " + to_string(avg_1s.value), MSG_INFO);
          usleep(500000);
       }

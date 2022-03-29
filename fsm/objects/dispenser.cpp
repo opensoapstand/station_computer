@@ -29,8 +29,8 @@ dsed8344 *dispenser::the_8344 = nullptr;
 // CTOR
 dispenser::dispenser()
 {
-    //default constructor to set all pin to nullptr
-    //debugOutput::sendMessage("dispenser", MSG_INFO);
+    // default constructor to set all pin to nullptr
+    // debugOutput::sendMessage("dispenser", MSG_INFO);
 
     // TODO: Need to build Product Object reference
     // m_pDispensedProduct = nullptr;
@@ -165,7 +165,7 @@ DF_ERROR dispenser::setButtonsShutdownAndMaintenance()
 // TODO: Call this function on Dispense onEntry()
 DF_ERROR dispenser::setPump(int mcpAddress, int pin, int position)
 {
-    DF_ERROR e_ret = ERROR_BAD_PARAMS; //reset variable
+    DF_ERROR e_ret = ERROR_BAD_PARAMS; // reset variable
 
     // Save the pump number of this instance
     pump_position = (unsigned char)(position + 1);
@@ -217,20 +217,24 @@ DF_ERROR dispenser::setPumpEnable(int pos)
 
 DF_ERROR dispenser::setPumpPWM(uint8_t value)
 {
-    debugOutput::sendMessage("-----Set PWM----- " +  to_string(value), MSG_INFO);
+    debugOutput::sendMessage("-----Set PWM----- " + to_string(value), MSG_INFO);
     the_8344->setPumpPWM((unsigned char)value);
 }
 
 // Disenses products by turning Solenoid Signal to HIGH then to LOW
 DF_ERROR dispenser::startDispense()
 {
+    using namespace std::chrono;
+    dispense_cycle_pump_running_time_millis = 0;
+    dispense_start_timestamp_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
     DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
     debugOutput::sendMessage("Dispense start. Triggered pump:" + to_string(this->slot), MSG_INFO);
 
     setPumpDirectionForward();
     setPumpPWM((uint8_t)(m_pDispensedProduct->getPWM()));
-    //setPumpPWM((uint8_t)(m_pDispensedProduct->getPWMFromDB()));
-    
+    // setPumpPWM((uint8_t)(m_pDispensedProduct->getPWMFromDB()));
+
     setPumpEnable(this->slot);
 
     flowRateBufferIndex = 0;
@@ -243,7 +247,8 @@ DF_ERROR dispenser::startDispense()
     return e_ret = OK;
 }
 
-bool dispenser::getIsDispenseTargetReached(){
+bool dispenser::getIsDispenseTargetReached()
+{
     return m_pDispensedProduct->isDispenseTargetVolumeReached();
 }
 
@@ -429,6 +434,38 @@ DF_ERROR dispenser::updateRunningAverageWindow()
 
 // }
 
+Dispense_behaviour dispenser::getDispenseStatus()
+{
+    using namespace std::chrono;
+    uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    uint64_t dispense_time_millis = millis_since_epoch - dispense_start_timestamp_epoch;
+    Time_val avg_1s = getAveragedFlowRate(1000);
+    debugOutput::sendMessage("Dispense flowRate 1s avg [V/s]: " + to_string(avg_1s.value) + ". avg time millis: " + to_string(avg_1s.time_millis) + "dispense time: " + to_string(dispense_time_millis), MSG_INFO);
+    updateRunningAverageWindow();
+    if (avg_1s.time_millis < 1000)
+    {
+        return FLOW_STATE_UNAVAILABLE;
+    }
+
+    if (avg_1s.value > EMPTY_PAIL_DETECTION_FLOW_THRESHOLD_ML_PER_S)
+    {
+        return FLOW_STATE_DISPENSING;
+    }
+    else
+    {
+        // todo: dispensing does not equal motor on!! time pump ON time.
+        debugOutput::sendMessage("ERROR: todo. Now shortcut, assume pumping all the time during dispensing.", MSG_INFO);
+        if (dispense_time_millis > 10000)
+        {
+            return FLOW_STATE_PAIL_EMPTY;
+        }
+        else
+        {
+            return FLOW_STATE_ATTEMTPING_TO_PRIME;
+        }
+    }
+}
+
 DF_ERROR dispenser::stopDispense()
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
@@ -498,13 +535,13 @@ product *dispenser::getProduct()
 /* ------Getters, Setters and Utilities------ */
 int dispenser::getI2CAddress(int pos)
 {
-    //return m_pSolenoid[pos]->getMCPAddress();
+    // return m_pSolenoid[pos]->getMCPAddress();
 }
 
 int dispenser::getI2CPin(int pos)
 {
     debugOutput::sendMessage("getI2C Error!", MSG_ERROR);
-    //return m_pSolenoid[pos]->getMCPPin();
+    // return m_pSolenoid[pos]->getMCPPin();
 }
 
 DF_ERROR dispenser::setProduct(product *product)

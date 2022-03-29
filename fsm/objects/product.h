@@ -43,9 +43,18 @@ public:
         ~product();
 
         //getter
-        double getVolumePerTick();
         double getVolumeDispensed() { return m_nVolumeDispensed; }
         double getVolumeDispensedPreviously();
+        // Interrupt Helpers
+        DF_ERROR initDispense(int nVolumeToDispense, double nPrice);
+        DF_ERROR stopDispense();
+
+        double getVolumeSinceLastPoll();
+        bool isDispenseTargetVolumeReached();
+        bool registerFlowSensorTick();
+        
+        double getVolumePerTick();
+        
         double getTargetVolume(char size);
         double getPrice(char size);
         string getDisplayUnits();
@@ -56,13 +65,6 @@ public:
 
         //void setTargetVolume(double nVolumeTarget){m_nVolumeTarget = nVolumeTarget;};
 
-        // Interrupt Helpers
-        DF_ERROR initDispense(int nVolumeToDispense, double nPrice);
-        DF_ERROR stopDispense();
-
-        double getVolumeSinceLastPoll();
-        bool isDispenseTargetVolumeReached();
-        bool registerFlowSensorTick();
         bool getIsEnabled();
         void setIsEnabled(bool isEnabled);
 
@@ -121,18 +123,14 @@ public:
         int getSlot();
 private:
         // TODO: Determine more data to modify per transaction...
-        int m_nSlot;
-
-        bool isEnabled;
-
         bool isDispenseFinished;
         double m_nVolumeDispensedSinceLastPoll;
-        double m_calibration_const;
-
-        
-
         double m_nTickCount;
-        bool valueChange;
+
+        int m_nSlot;
+        bool isEnabled;
+
+        double m_calibration_const;
 
         void setProductName(string productName);
         double getVolPerTick();

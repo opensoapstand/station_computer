@@ -58,8 +58,6 @@ DF_ERROR stateDispense::onEntry()
    return e_ret;
 }
 
-
-
 /*
  * Checks state of FSM; Accepts incomming string to process for
  * Air, Water and Product.  Sends signal to Solenoids to Dispense,
@@ -89,7 +87,7 @@ DF_ERROR stateDispense::onAction()
    if (productDispensers[pos].getIsDispenseTargetReached())
    {
       debugOutput::sendMessage("Stop dispensing. Requested volume reached.", MSG_INFO);
-  
+
       // m_pMessaging->sendMessage("Target Hit");
 
       m_state_requested = STATE_DISPENSE_END;
@@ -106,36 +104,23 @@ DF_ERROR stateDispense::onAction()
                                 ", Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()),
                             MSG_INFO);
 
-   // if (productDispensers[pos].getVolumeDispensedPreviously() == productDispensers[pos].getVolumeDispensed())
-   // {
-   //    // no dispensing detected since the last check
-   //    m_state_requested = STATE_DISPENSE_IDLE;
-   // }
-   // else
-   // {
-      // continue dispensing
-      productDispensers[pos].setVolumeDispensedPreviously(productDispensers[pos].getVolumeDispensed());
-   // }
-
-   // check for button pressed
-   // if (productDispensers[0].getDispenseButtonValue())
-   // {
-   //    productDispensers[pos].getDispenseStatus();
-   // }
+   productDispensers[pos].setVolumeDispensedPreviously(productDispensers[pos].getVolumeDispensed());
 
    Dispense_behaviour status = productDispensers[pos].getDispenseStatus();
-   if(status  == FLOW_STATE_CONTAINER_EMPTY){
-         debugOutput::sendMessage("*******************CONTAINER EMPTY**********************", MSG_INFO);
-         m_state_requested = STATE_DISPENSE_END;
-
-   }else{
-         debugOutput::sendMessage("------ status: " + to_string(status), MSG_INFO);
+   if (status == FLOW_STATE_CONTAINER_EMPTY)
+   {
+      debugOutput::sendMessage("*******************CONTAINER EMPTY**********************", MSG_INFO);
+      m_state_requested = STATE_DISPENSE_END;
+   }
+   else
+   {
+      debugOutput::sendMessage("------ status: " + to_string(status), MSG_INFO);
    };
 
    usleep(500000);
 
    e_ret = OK;
-  
+
    return e_ret;
 }
 

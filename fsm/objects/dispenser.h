@@ -118,7 +118,7 @@ public:
 
       // double getVolumeSinceLastPoll();
       bool isDispenseTargetVolumeReached();
-      //bool registerFlowSensorTick();
+      // bool registerFlowSensorTick();
 
       string getDispenseStartTime();
 
@@ -133,14 +133,13 @@ private:
       double m_nTickCount;
       double m_nVolumeTarget;
       char m_nStartTime[50];
-      
+
       double m_price;
-      
-        time_t rawtime;
-        struct tm *timeinfo;
 
+      time_t rawtime;
+      struct tm *timeinfo;
 
-      //double m_nVolumeDispensed; // how much has been dispensed in this sale
+      // double m_nVolumeDispensed; // how much has been dispensed in this sale
       double m_nVolumeDispensedPreviously;
 
       // We only want to create one instance of the class that controls

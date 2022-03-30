@@ -75,17 +75,18 @@ double product::getVolumePerTick()
 bool product::registerFlowSensorTick()
 {
     //    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
-    
+
     m_nVolumeDispensed += getVolumePerTick();
-    //m_nVolumeDispensed += 100.0;
+    // m_nVolumeDispensed += 100.0;
 }
-double product::getVolumeDispensed(){
+double product::getVolumeDispensed()
+{
     return m_nVolumeDispensed;
 }
-void product::resetVolumeDispensed(){
+void product::resetVolumeDispensed()
+{
     m_nVolumeDispensed = 0;
 }
-
 
 int product::getPWM()
 {
@@ -165,7 +166,6 @@ double product::getVolPerTickFromDB()
     //     cout << str << endl;
     return vol_per_tick;
 }
-
 
 void product::productInfo()
 {
@@ -284,7 +284,8 @@ string product::getDisplayUnits()
 
 double product::convertVolumeMetricToDisplayUnits(double volume)
 {
-    if (getDisplayUnits() == "oz"){
+    if (getDisplayUnits() == "oz")
+    {
 
         return volume * ML_TO_OZ;
     }

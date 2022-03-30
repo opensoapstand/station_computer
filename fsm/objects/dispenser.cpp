@@ -113,17 +113,6 @@ dispenser::~dispenser()
 //     return OK;
 // }
 
-
-
-
-
-
-
-
-
-
-
-
 // // TODO: Function name is inaccurate...deduct sale would be better
 // void dispenser::recordSale(int volume)
 // {
@@ -150,54 +139,37 @@ dispenser::~dispenser()
 
 //     return temp;
 // }
+/* ------Getters, Setters and Utilities------ */
 
-string dispenser::getDispenseStartTime(){
-    return m_nStartTime;
-}
-
-void dispenser::setVolumeDispensedPreviously(double volume){
-    m_nVolumeDispensedPreviously = volume;
-}
-double dispenser::getVolumeDispensedPreviously()
+DF_ERROR dispenser::setSlot(int slot)
 {
-    return m_nVolumeDispensedPreviously;
+    // first slot is 1
+    this->slot = slot;
 }
 
-// DF_ERROR dispenser::stopDispense()
-// {
-//     DF_ERROR dfRet = ERROR_BAD_PARAMS;
-
-//     //    m_nVolumeDispensed = 0;
-//     m_nVolumeDispensedSinceLastPoll = 0;
-//     m_nVolumeDispensedPreviously = 0;
-
-//     return dfRet;
-// }
-
-// VolumeDispense check!
-
-bool dispenser::getIsDispenseTargetReached()
+int dispenser::getSlot()
 {
-    bool bRet = false;
+    // first slot is 1
+    return this->slot;
+}
 
-    if (m_nVolumeTarget <= getVolumeDispensed())
+product *dispenser::getProduct()
+{
+    return m_pDispensedProduct;
+}
+
+DF_ERROR dispenser::setProduct(product *product)
+{
+    if (product != nullptr)
     {
-        // cout << "Target HIT!" << endl;
-        debugOutput::sendMessage("Target volume reached: " + to_string(m_nVolumeTarget), MSG_INFO);
-        bRet = true;
+        m_pDispensedProduct = product;
     }
-    return bRet;
+    else
+    {
+        debugOutput::sendMessage("Set Product Error!", MSG_ERROR);
+    }
 }
 
-void dispenser::resetVolumeDispensed(){
-    // m_nVolumeDispensed = 0;
-    getProduct()->resetVolumeDispensed();
-}
-double dispenser::getVolumeDispensed()
-{
-    // return m_nVolumeDispensed;
-    return getProduct()->getVolumeDispensed();
-}
 // Reset values onEntry()
 DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 // DF_ERROR dispenser::initDispense(int nVolumeToDispense)
@@ -205,12 +177,8 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 
     DF_ERROR dfRet = ERROR_BAD_PARAMS;
     m_nVolumeTarget = nVolumeToDispense;
-    
-    
-    
+
     m_price = nPrice;
-
-
 
     resetVolumeDispensed();
     m_nVolumeDispensedPreviously = 0;
@@ -226,40 +194,66 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 
     return dfRet;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-DF_ERROR dispenser::setSlot(int slot)
+DF_ERROR dispenser::stopDispense()
 {
-    // first slot is 1
-    this->slot = slot;
+    DF_ERROR e_ret = ERROR_BAD_PARAMS;
+    the_8344->setPumpsDisableAll();
+    debugOutput::sendMessage("Pump disabled", MSG_INFO);
+
+    m_isDispenseDone = true;
+
+    m_nVolumeDispensedSinceLastPoll = 0;
+    m_nVolumeDispensedPreviously = 0;
+
+    return e_ret = OK;
 }
-int dispenser::getSlot()
+string dispenser::getDispenseStartTime()
 {
-    // first slot is 1
-    return this->slot;
+    return m_nStartTime;
+}
+
+void dispenser::setVolumeDispensedPreviously(double volume)
+{
+    m_nVolumeDispensedPreviously = volume;
+}
+double dispenser::getVolumeDispensedPreviously()
+{
+    return m_nVolumeDispensedPreviously;
+}
+
+bool dispenser::getIsDispenseTargetReached()
+{
+    bool bRet = false;
+
+    if (m_nVolumeTarget <= getVolumeDispensed())
+    {
+        // cout << "Target HIT!" << endl;
+        debugOutput::sendMessage("Target volume reached: " + to_string(m_nVolumeTarget), MSG_INFO);
+        bRet = true;
+    }
+    return bRet;
+}
+
+void dispenser::resetVolumeDispensed()
+{
+    // m_nVolumeDispensed = 0;
+    getProduct()->resetVolumeDispensed();
+}
+double dispenser::getVolumeDispensed()
+{
+    // return m_nVolumeDispensed;
+    return getProduct()->getVolumeDispensed();
+}
+
+int dispenser::getI2CAddress(int pos)
+{
+    // return m_pSolenoid[pos]->getMCPAddress();
+}
+
+int dispenser::getI2CPin(int pos)
+{
+    debugOutput::sendMessage("getI2C Error!", MSG_ERROR);
+    // return m_pSolenoid[pos]->getMCPPin();
 }
 
 // TODO: Call this function on Dispense onEntry()
@@ -411,9 +405,6 @@ DF_ERROR dispenser::startDispense()
 
     return e_ret = OK;
 }
-
-
-
 
 unsigned short dispenser::getPumpSpeed()
 {
@@ -638,97 +629,4 @@ Dispense_behaviour dispenser::getDispenseStatus()
     }
     previous_dispense_state = state;
     return state;
-}
-
-DF_ERROR dispenser::stopDispense()
-{
-    DF_ERROR e_ret = ERROR_BAD_PARAMS;
-    the_8344->setPumpsDisableAll();
-    debugOutput::sendMessage("Pump disabled", MSG_INFO);
-
-    // XXX: Disable Button - Linked thru State Virtual
-    // e_ret = disconnectButton();
-    m_isDispenseDone = true;
-
-    m_nVolumeDispensedSinceLastPoll = 0;
-    m_nVolumeDispensedPreviously = 0;
-    
-    return e_ret = OK;
-}
-
-// DF_ERROR dispenser::connectButton()
-// {
-//     return OK;
-//     // return m_pButton[0]->writePin(HIGH);
-// }
-
-// DF_ERROR dispenser::disconnectButton()
-// {
-//     return OK;
-//     // return m_pButton[0]->writePin(LOW);
-// }
-
-// // Cleans the nozzle by dispensing Water followed by Air
-// DF_ERROR dispenser::cleanNozzle(int posW, int posA){
-//     DF_ERROR e_ret = ERROR_BAD_PARAMS;
-
-//     if(posW != WATER && posA != AIR) {
-//         e_ret = ERROR_ELEC_PIN_CLEAN;
-//         return e_ret;
-//     }
-
-//     // Flush the lines with water
-//     debugOutput::sendMessage("Water Cleanse", MSG_INFO);
-//     //m_pSolenoid[posW]->writePin(HIGH);
-//     sleep(CLEAN_WATER_TIME);
-//     //m_pSolenoid[posW]->writePin(LOW);
-
-//     // Flush the lines with Air
-//     debugOutput::sendMessage("Air Release", MSG_INFO);
-//     //m_pSolenoid[posA]->writePin(HIGH);
-//     sleep(CLEAN_AIR_TIME);
-//     //m_pSolenoid[posA]->writePin(LOW);
-
-//     return e_ret = OK;
-// }
-
-product *dispenser::getProduct()
-{
-    return m_pDispensedProduct;
-}
-
-// Timer based
-// DF_ERROR dispenser::testSolenoidDispense(int pos)
-// {
-//     DF_ERROR e_ret = ERROR_BAD_PARAMS;
-
-//     //m_pSolenoid[pos]->writePin(HIGH);
-//     sleep(TEST_ACTIVATION_TIME);
-//     //m_pSolenoid[pos]->writePin(LOW);
-
-//     return e_ret = OK;
-// }
-
-/* ------Getters, Setters and Utilities------ */
-int dispenser::getI2CAddress(int pos)
-{
-    // return m_pSolenoid[pos]->getMCPAddress();
-}
-
-int dispenser::getI2CPin(int pos)
-{
-    debugOutput::sendMessage("getI2C Error!", MSG_ERROR);
-    // return m_pSolenoid[pos]->getMCPPin();
-}
-
-DF_ERROR dispenser::setProduct(product *product)
-{
-    if (product != nullptr)
-    {
-        m_pDispensedProduct = product;
-    }
-    else
-    {
-        debugOutput::sendMessage("Set Product Error!", MSG_ERROR);
-    }
 }

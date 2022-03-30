@@ -41,13 +41,15 @@ public:
     // gpio *getSolenoid(int pos, int type);
     // gpio *getDispenseButtonState();
 
-    static product *testProducts[PRODUCT_DISPENSERS_MAX];
+    //static product *testProducts[PRODUCT_DISPENSERS_MAX];
 
 protected:
     // DF_FSM m_state;
     DF_FSM m_state_requested;
     gpio *m_pButton[NUM_BUTTON];
     messageMediator *m_pMessaging;
+
+    order selectedOrder;
 
     // Unique Reference to selected Product
     unique_ptr<product> selectedProductPtr;

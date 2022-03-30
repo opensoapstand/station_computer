@@ -53,10 +53,12 @@ DF_ERROR stateDispense::onEntry()
    pos = m_pMessaging->getRequestedSlot();
    size = m_pMessaging->getRequestedSize();
    pos = pos - 1;
-   
+
    productDispensers[pos].getProduct()->productVolumeInfo();
    return e_ret;
 }
+
+
 
 /*
  * Checks state of FSM; Accepts incomming string to process for
@@ -74,7 +76,7 @@ DF_ERROR stateDispense::onAction()
    }
 
    // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
-   m_pMessaging->sendMessage(to_string(productDispensers[pos].getProduct()->getVolumeDispensed()));
+   m_pMessaging->sendMessage(to_string(productDispensers[pos].getVolumeDispensed()));
 
    // Check if UI has sent a ACTION_DISPENSE_END to finish the transaction, or, if dispensing is complete
    if (m_pMessaging->getAction() == ACTION_DISPENSE_END)
@@ -101,10 +103,10 @@ DF_ERROR stateDispense::onAction()
                                 "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_m) +
                                 "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_l) +
                                 "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_c_max) +
-                                ", Vol dispensed: " + to_string(productDispensers[pos].getDispensedVolume()),
+                                ", Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()),
                             MSG_INFO);
 
-   // if (productDispensers[pos].getProduct()->getVolumeDispensedPreviously() == productDispensers[pos].getProduct()->getVolumeDispensed())
+   // if (productDispensers[pos].getVolumeDispensedPreviously() == productDispensers[pos].getVolumeDispensed())
    // {
    //    // no dispensing detected since the last check
    //    m_state_requested = STATE_DISPENSE_IDLE;
@@ -112,7 +114,7 @@ DF_ERROR stateDispense::onAction()
    // else
    // {
       // continue dispensing
-      productDispensers[pos].getProduct()->m_nVolumeDispensedPreviously = productDispensers[pos].getProduct()->getVolumeDispensed();
+      productDispensers[pos].setVolumeDispensedPreviously(productDispensers[pos].getVolumeDispensed());
    // }
 
    // check for button pressed

@@ -171,7 +171,7 @@ DF_ERROR stateManualPump::onAction()
       {
          debugOutput::sendMessage("----------------Dispense button pressed.----------", MSG_INFO);
 
-         double volume = productDispensers[0].getDispensedVolume();
+         double volume = productDispensers[0].getVolumeDispensed();
          debugOutput::sendMessage("Dispensed volume [total]: " + to_string(volume), MSG_INFO);
 
          // instant flow rate
@@ -263,7 +263,7 @@ DF_ERROR stateManualPump::customVolumeDispenseTest()
 
 DF_ERROR stateManualPump::pumpFlowTest()
 {
-      // double volume = productDispensers[0].getDispensedVolume();
+      // double volume = productDispensers[0].getVolumeDispensed();
       // debugOutput::sendMessage("Dispense flowRate test. millis/totalvolumne/avgSinceLastcall/02s avg/05s avg/1s avg, " + to_string(volume),MSG_INFO);
       // debugOutput::sendMessage("volume per tick " + to_string(productDispensers[0].getProduct()->getVolumePerTick() ), MSG_INFO);
            
@@ -280,7 +280,7 @@ DF_ERROR stateManualPump::pumpFlowTest()
       Time_val avg_05s = productDispensers[0].getAveragedFlowRate(500);
       Time_val avg_1s = productDispensers[0].getAveragedFlowRate(1000);
 
-      double totalVolume = productDispensers[0].getDispensedVolume();
+      double totalVolume = productDispensers[0].getVolumeDispensed();
       debugOutput::sendMessage("Dispense flowRate test. millis/totalvolumne/avgSinceLastcall/02s avg/05s avg/1s avg, " +
                                    // debugOutput::sendMessage("Dispense flowRate test. millis/instant/1s/5s avg, " +
                                    to_string(avg_1s.time_millis - startFlowTestMillis) + "," +

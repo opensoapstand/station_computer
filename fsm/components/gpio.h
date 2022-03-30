@@ -17,7 +17,7 @@
 
 #include "../dftypes.h"
 #include "../objects/debugOutput.h"
-#include "../objects/product.h"
+#include "../objects/product.h"  // lode uncomment
 
 class gpio
 {
@@ -37,7 +37,8 @@ public:
 	virtual int getMCPPin(){};
 
 	// Functions for Threaded GPIO Interrupts
-	void registerProduct(product *pProduct) { m_pProduct = pProduct; }
+	void registerProduct(product *pDispenser) { m_pDispenser = pDispenser; } //UNCOMMENT LODE
+
 	void startListener_flowsensor();
 	void startListener_buttons_powerAndMaintenance();
 	void startButtonListener();
@@ -52,7 +53,7 @@ protected:
 	bool m_i2c;
 
 	// Interrupt Function Definition
-	product *m_pProduct;
+	product *m_pDispenser; //UNCOMMENT LODE
 	virtual void monitorGPIO_Flowsensor() = 0;
 	virtual void monitorGPIO_Buttons_powerAndMaintenance() = 0;
 	std::thread *gpioThread;

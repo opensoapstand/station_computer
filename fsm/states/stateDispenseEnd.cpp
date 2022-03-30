@@ -69,25 +69,25 @@ DF_ERROR stateDispenseEnd::onAction()
     usleep(100000);
 
     // send dispensed volume to ui (will be used to write to portal)
-    m_pMessaging->sendMessage(to_string(productDispensers[pos].getProduct()->getVolumeDispensed()));
+    m_pMessaging->sendMessage(to_string(productDispensers[pos].getVolumeDispensed()));
 
     if (productDispensers[pos].getIsDispenseTargetReached())
     {
         m_pMessaging->sendMessage("Target Hit");
     }
 
-    bool is_valid_dispense = productDispensers[pos].getProduct()->getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML;
+    bool is_valid_dispense = productDispensers[pos].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML;
 
     // REQUESTED_VOLUME_CUSTOM is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
     if (size == REQUESTED_VOLUME_TEST)
     {
 
-        debugOutput::sendMessage("Test dispensing. (" + to_string(productDispensers[pos].getProduct()->getVolumeDispensed()) + "ml). No transaction will be made.", MSG_INFO);
+        debugOutput::sendMessage("Test dispensing. (" + to_string(productDispensers[pos].getVolumeDispensed()) + "ml). No transaction will be made.", MSG_INFO);
         dispenseEndUpdateDB(true);
     }
     else if (!is_valid_dispense)
     {
-        debugOutput::sendMessage("No minimum quantity of product dispensed (" + to_string(productDispensers[pos].getProduct()->getVolumeDispensed()) + "ml). No transaction will be made.", MSG_INFO);
+        debugOutput::sendMessage("No minimum quantity of product dispensed (" + to_string(productDispensers[pos].getVolumeDispensed()) + "ml). No transaction will be made.", MSG_INFO);
     }
     else
     {
@@ -181,7 +181,7 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
     std::string product = (productDispensers[pos].getProduct()->m_name);
     std::string target_volume = to_string(productDispensers[pos].getProduct()->getTargetVolume(size));
     std::string price = to_string(productDispensers[pos].getProduct()->getPrice(size));
-    std::string start_time = (productDispensers[pos].getProduct()->m_nStartTime);
+    std::string start_time = productDispensers[pos].getDispenseStartTime();
     std::string machine_id = getMachineID();
     std::string pid = getProductID(pos + 1);
     std::string units = productDispensers[pos].getProduct()->getDisplayUnits();
@@ -192,13 +192,13 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
     std::string readBuffer;
     std::string dispensed_volume_units_converted;
 
-    if (productDispensers[pos].getProduct()->m_nVolumeDispensed == productDispensers[pos].getProduct()->m_nVolumePerTick)
+    if (productDispensers[pos].getVolumeDispensed() == productDispensers[pos].getProduct()->getVolumePerTick())
     {
         dispensed_volume_units_converted = "0";
     }
     else
     {
-        double dv = productDispensers[pos].getProduct()->m_nVolumeDispensed;
+        double dv = productDispensers[pos].getVolumeDispensed();
         dv = productDispensers[pos].getProduct()->convertVolumeMetricToDisplayUnits(dv);
         dispensed_volume_units_converted = to_string(dv);
     }
@@ -416,18 +416,18 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool test_transaction)
     std::string sql1;
     std::string product = (productDispensers[pos].getProduct()->m_name).c_str();
     std::string target_volume = to_string(productDispensers[pos].getProduct()->getTargetVolume(size));
-    std::string start_time = (productDispensers[pos].getProduct()->m_nStartTime);
+    std::string start_time = (productDispensers[pos].getDispenseStartTime());
     std::string dispensed_volume;
 
-    debugOutput::sendMessage("update DB. dispense end: vol dispensed: " + to_string(productDispensers[pos].getProduct()->getVolumeDispensed()), MSG_INFO);
+    debugOutput::sendMessage("update DB. dispense end: vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()), MSG_INFO);
 
-    if (productDispensers[pos].getProduct()->m_nVolumeDispensed <= productDispensers[pos].getProduct()->m_nVolumePerTick)
+    if (productDispensers[pos].getVolumeDispensed() <= productDispensers[pos].getProduct()->getVolumePerTick())
     {
         dispensed_volume = "0";
     }
     else
     {
-        dispensed_volume = to_string(productDispensers[pos].getProduct()->m_nVolumeDispensed);
+        dispensed_volume = to_string(productDispensers[pos].getVolumeDispensed());
     }
     debugOutput::sendMessage("Dispensed volume to be subtracted: " + dispensed_volume, MSG_INFO);
 
@@ -570,7 +570,7 @@ DF_ERROR stateDispenseEnd::print_receipt()
     else if (size == 'c')
     {
         price_per_liter = productDispensers[pos].getProduct()->getPrice(size);
-        volume_dispensed = productDispensers[pos].getDispensedVolume();
+        volume_dispensed = productDispensers[pos].getVolumeDispensed();
         price = price_per_liter * volume_dispensed / 1000.0;
         //@Andi, how do we go higher than 9.99?
 
@@ -603,7 +603,7 @@ DF_ERROR stateDispenseEnd::print_receipt()
     else if (size == 't')
     {
         price_per_liter = productDispensers[pos].getProduct()->getPrice(size);
-        volume_dispensed = productDispensers[pos].getDispensedVolume();
+        volume_dispensed = productDispensers[pos].getVolumeDispensed();
         price = price_per_liter * volume_dispensed / 1000.0;
     }
     else

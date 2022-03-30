@@ -21,7 +21,7 @@ gpio::gpio()
         m_input = false;
         m_i2c = false; //no i2c chip associate with it
         gpioThread = nullptr;
-        m_pProduct = nullptr;
+        // m_pDispenser = nullptr; // UNCOMMENT LODE
 }
 
 // DTOR
@@ -37,7 +37,8 @@ void gpio::startListener_flowsensor()
         debugOutput::sendMessage("-----startListener_flowsensor-----", MSG_INFO);
         DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
-        if ((nullptr == gpioThread) && (nullptr != m_pProduct))
+        // if ((nullptr == gpioThread) && (nullptr != m_pDispenser)) // UNCOMMENT LODE
+        if ((nullptr == gpioThread) )
         {
                 gpioThread = new std::thread(&gpio::listener_flowsensor, this);
                 df_ret = OK;
@@ -53,7 +54,7 @@ void gpio::startListener_buttons_powerAndMaintenance()
         debugOutput::sendMessage("-----startListener_buttons_powerAndMaintenance-----", MSG_INFO);
         DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
-        //        if ((nullptr ==  gpioThread) && (nullptr != m_pProduct)){
+        //        if ((nullptr ==  gpioThread) && (nullptr != m_pDispenser)){
         gpioThread = new std::thread(&gpio::listener_buttons_powerAndMaintenance, this);
         df_ret = OK;
         //        } else {

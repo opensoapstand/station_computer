@@ -71,64 +71,26 @@ double product::getVolumePerTick()
 {
     return m_nVolumePerTick;
 }
+
 bool product::registerFlowSensorTick()
 {
     //    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
-    m_nVolumeDispensed += m_nVolumePerTick;
+    m_nVolumeDispensed += getVolumePerTick();
 }
 
-// TODO: Function name is inaccurate...deduct sale would be better
-void product::recordSale(int volume)
-{
-    // TODO: SQLite database Update.
+double product::getVolumeDispensed(){
+    return m_nVolumeDispensed;
 }
-
-// TODO: This function could live somewhere else...linked to future maintenance.
-void product::refill(int volume)
-{
-    // TODO: SQLite database Update.
-}
-
-double product::getVolumeSinceLastPoll()
-{
-    int temp = m_nVolumeDispensedSinceLastPoll;
-
-    m_nVolumeDispensed += m_nVolumeDispensedSinceLastPoll;
-
-    return temp;
-}
-
-double product::getVolumeDispensedPreviously()
-{
-    return m_nVolumeDispensedPreviously;
-}
-
-// Reset values onEntry()
-DF_ERROR product::initDispense(int nVolumeToDispense, double nPrice)
-{
-
-    DF_ERROR dfRet = ERROR_BAD_PARAMS;
-    m_nVolumeTarget = nVolumeToDispense;
-    m_price = nPrice;
+void product::resetVolumeDispensed(){
     m_nVolumeDispensed = 0;
-    m_nVolumeDispensedPreviously = 0;
-    m_nVolumeDispensedSinceLastPoll = 0;
-    // m_nVolumePerTick = getVolPerTick();
-    // m_PWM = getPWM();
-
-    // Set Start Time
-    time(&rawtime);
-    timeinfo = localtime(&rawtime);
-
-    strftime(m_nStartTime, 50, "%F %T", timeinfo);
-
-    return dfRet;
 }
+
 
 int product::getPWM()
 {
     return m_nDispenseSpeedPWM;
 }
+
 int product::getPWMFromDB()
 {
     // abandonned by Lode. What about updating the whole product properties at once when needed.
@@ -203,30 +165,6 @@ double product::getVolPerTickFromDB()
     return vol_per_tick;
 }
 
-DF_ERROR product::stopDispense()
-{
-    DF_ERROR dfRet = ERROR_BAD_PARAMS;
-
-    //    m_nVolumeDispensed = 0;
-    m_nVolumeDispensedSinceLastPoll = 0;
-    m_nVolumeDispensedPreviously = 0;
-
-    return dfRet;
-}
-
-// VolumeDispense check!
-bool product::isDispenseTargetVolumeReached()
-{
-    bool bRet = false;
-
-    if (m_nVolumeTarget <= m_nVolumeDispensed)
-    {
-        // cout << "Target HIT!" << endl;
-        debugOutput::sendMessage("Target volume reached: " + to_string(m_nVolumeTarget), MSG_INFO);
-        bRet = true;
-    }
-    return bRet;
-}
 
 void product::productInfo()
 {

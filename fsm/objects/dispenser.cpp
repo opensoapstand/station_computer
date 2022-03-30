@@ -101,9 +101,9 @@ dispenser::~dispenser()
 }
 
 // TODO: Check and remove; stateinit should handle productDispensers
-void dispenser::initDispenser(int slot)
-{
-}
+// void dispenser::initDispenser(int slot)
+// {
+// }
 
 // TODO: Call this function on Dispense onEntry()
 // DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
@@ -112,6 +112,145 @@ void dispenser::initDispenser(int slot)
 
 //     return OK;
 // }
+
+
+
+
+
+
+
+
+
+
+
+
+// // TODO: Function name is inaccurate...deduct sale would be better
+// void dispenser::recordSale(int volume)
+// {
+//     // TODO: SQLite database Update.
+// }
+
+// TODO: This function could live somewhere else...linked to future maintenance.
+// void dispenser::refill(int volume)
+// {
+//     // TODO: SQLite database Update.
+// }
+
+// bool dispenser::registerFlowSensorTick()
+// {
+//     //    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
+//     m_nVolumeDispensed += m_pDispensedProduct->getVolumePerTick();
+// }
+
+// double dispenser::getVolumeSinceLastPoll()
+// {
+//     int temp = m_nVolumeDispensedSinceLastPoll;
+
+//     m_nVolumeDispensed += m_nVolumeDispensedSinceLastPoll;
+
+//     return temp;
+// }
+
+string dispenser::getDispenseStartTime(){
+    return m_nStartTime;
+}
+
+void dispenser::setVolumeDispensedPreviously(double volume){
+    m_nVolumeDispensedPreviously = volume;
+}
+double dispenser::getVolumeDispensedPreviously()
+{
+    return m_nVolumeDispensedPreviously;
+}
+
+// DF_ERROR dispenser::stopDispense()
+// {
+//     DF_ERROR dfRet = ERROR_BAD_PARAMS;
+
+//     //    m_nVolumeDispensed = 0;
+//     m_nVolumeDispensedSinceLastPoll = 0;
+//     m_nVolumeDispensedPreviously = 0;
+
+//     return dfRet;
+// }
+
+// VolumeDispense check!
+
+bool dispenser::getIsDispenseTargetReached()
+{
+    bool bRet = false;
+
+    if (m_nVolumeTarget <= getVolumeDispensed())
+    {
+        // cout << "Target HIT!" << endl;
+        debugOutput::sendMessage("Target volume reached: " + to_string(m_nVolumeTarget), MSG_INFO);
+        bRet = true;
+    }
+    return bRet;
+}
+
+void dispenser::resetVolumeDispensed(){
+    // m_nVolumeDispensed = 0;
+    getProduct()->resetVolumeDispensed();
+}
+double dispenser::getVolumeDispensed()
+{
+    // return m_nVolumeDispensed;
+    return getProduct()->getVolumeDispensed();
+}
+// Reset values onEntry()
+DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
+// DF_ERROR dispenser::initDispense(int nVolumeToDispense)
+{
+
+    DF_ERROR dfRet = ERROR_BAD_PARAMS;
+    m_nVolumeTarget = nVolumeToDispense;
+    
+    
+    
+    m_price = nPrice;
+
+
+
+    resetVolumeDispensed();
+    m_nVolumeDispensedPreviously = 0;
+    m_nVolumeDispensedSinceLastPoll = 0;
+    // m_nVolumePerTick = getVolPerTick();
+    // m_PWM = getPWM();
+
+    // Set Start Time
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+
+    strftime(m_nStartTime, 50, "%F %T", timeinfo);
+
+    return dfRet;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 DF_ERROR dispenser::setSlot(int slot)
 {
     // first slot is 1
@@ -138,7 +277,7 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
         // Instantiate, set input, spin up a flowsensor thread.
         m_pFlowsenor[pos] = new oddyseyx86GPIO(pin);
         m_pFlowsenor[pos]->setPinAsInputElseOutput(true);
-        m_pFlowsenor[pos]->registerProduct(m_pDispensedProduct);
+        //m_pFlowsenor[pos]->registerProduct(m_pDispensedProduct); // LODE UNCOMMENT
         m_pFlowsenor[pos]->startListener_flowsensor();
         e_ret = OK;
     }
@@ -273,15 +412,8 @@ DF_ERROR dispenser::startDispense()
     return e_ret = OK;
 }
 
-bool dispenser::getIsDispenseTargetReached()
-{
-    return m_pDispensedProduct->isDispenseTargetVolumeReached();
-}
 
-double dispenser::getDispensedVolume()
-{
-    return m_pDispensedProduct->getVolumeDispensed();
-}
+
 
 unsigned short dispenser::getPumpSpeed()
 {
@@ -292,7 +424,7 @@ double dispenser::getVolumeDeltaAndReset()
 {
     // will get volumeDelta since last call of this function
 
-    double currentVolume = getDispensedVolume();
+    double currentVolume = getVolumeDispensed();
     double deltaVolume = currentVolume - previousDispensedVolume;
     previousDispensedVolume = currentVolume;
     return deltaVolume;
@@ -321,10 +453,10 @@ double dispenser::getInstantFlowRate()
     return flowRate;
 }
 
-Time_val dispenser::getDispensedVolumeNow()
+Time_val dispenser::getVolumeDispensedNow()
 {
     Time_val tv;
-    tv.value = getDispensedVolume();
+    tv.value = getVolumeDispensed();
     using namespace std::chrono;
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
@@ -431,7 +563,7 @@ DF_ERROR dispenser::updateRunningAverageWindow()
 {
     DF_ERROR e_ret;
 
-    Time_val tv = getDispensedVolumeNow();
+    Time_val tv = getVolumeDispensedNow();
 
     flowRateBuffer[flowRateBufferIndex].time_millis = tv.time_millis;
     flowRateBuffer[flowRateBufferIndex].value = tv.value;
@@ -518,6 +650,9 @@ DF_ERROR dispenser::stopDispense()
     // e_ret = disconnectButton();
     m_isDispenseDone = true;
 
+    m_nVolumeDispensedSinceLastPoll = 0;
+    m_nVolumeDispensedPreviously = 0;
+    
     return e_ret = OK;
 }
 

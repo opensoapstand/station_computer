@@ -55,7 +55,7 @@ public:
       dispenser(gpio *buttonReference);
       ~dispenser();
 
-      void initDispenser(int slot);
+      // void initDispenser(int slot);
 
       // private variable setters
       //  DF_ERROR setSolenoid(int mcpAddress, int pin, int pos);
@@ -63,7 +63,7 @@ public:
       DF_ERROR setFlowsensor(int pinint, int pos);
 
       DF_ERROR startDispense();
-      DF_ERROR stopDispense();
+      // DF_ERROR stopDispense();
 
       unsigned short getPumpSpeed();
       bool isPumpEnabled();
@@ -73,13 +73,14 @@ public:
       DF_ERROR setPumpEnable(int pos);
       DF_ERROR setPumpPWM(uint8_t value);
       bool getDispenseButtonValue();
-      double getDispensedVolume();
+      double getVolumeDispensed();
+      void resetVolumeDispensed();
 
       double getVolumeDeltaAndReset();
       // DF_ERROR updateVolumeDelta();
       double getInstantFlowRate();
 
-      Time_val getDispensedVolumeNow();
+      Time_val getVolumeDispensedNow();
       DF_ERROR updateRunningAverageWindow();
 
       Time_val getAveragedFlowRate(uint64_t window_length_millis);
@@ -89,7 +90,6 @@ public:
 
       void dispenseButtonTimingreset();
       uint64_t dispenseButtonTimingUpdate();
-
 
       // void setm_pIsDispenseDone() { *m_pIsDispensing = false; }
       // void setm_pIsDispensing() { *m_pIsDispensing = true; }
@@ -108,12 +108,41 @@ public:
       //      DF_ERROR setButtonPress(int address_num, int pin_num);
       bool reader = true;
 
+      // double getVolumeDispensed();
+      double getVolumeDispensedPreviously();
+      void setVolumeDispensedPreviously(double volume);
+      // Interrupt Helpers
+
+      DF_ERROR initDispense(int nVolumeToDispense, double nPrice);
+      DF_ERROR stopDispense();
+
+      // double getVolumeSinceLastPoll();
+      bool isDispenseTargetVolumeReached();
+      //bool registerFlowSensorTick();
+
+      string getDispenseStartTime();
+
       //      double getButtonPressDuration();
       //      int getButtonPressTimes();
       //      void resetButtonPressTimes();
       //      void resetButtonPressDuration();
 
 private:
+      bool isDispenseFinished;
+      double m_nVolumeDispensedSinceLastPoll;
+      double m_nTickCount;
+      double m_nVolumeTarget;
+      char m_nStartTime[50];
+      
+      double m_price;
+      
+        time_t rawtime;
+        struct tm *timeinfo;
+
+
+      //double m_nVolumeDispensed; // how much has been dispensed in this sale
+      double m_nVolumeDispensedPreviously;
+
       // We only want to create one instance of the class that controls
       // the actual hardware, so declare this static.
 

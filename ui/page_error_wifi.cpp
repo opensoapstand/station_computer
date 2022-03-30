@@ -55,7 +55,7 @@ page_error_wifi::~page_error_wifi()
 
 void page_error_wifi::showEvent(QShowEvent *event)
 {
-    QPixmap background(PAGE_WIFI_ERROR_BACKGROUND);
+    QPixmap background(PAGE_WIFI_ERROR_BACKGROUND_PATH);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);

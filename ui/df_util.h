@@ -36,7 +36,11 @@
 #endif
 // #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 //#define DB_PATH "/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db"
-
+ 
+#define TRANSACTION_DISPENSE_END_OFFINE_PATH "/home/df-admin/production/logging/transactions/failed_curl_transaction_dispense_end_%1.txt"
+#define TRANSACTIONS_RESTOCK_OFFINE_PATH "/home/df-admin/production/logging/transactions/failed_curl_transaction_restock_%1.txt"
+//  QString log_file_base_path = "/home/df-admin/production/logging/ui/ui_%1.txt"; // https://stackoverflow.com/questions/4784155/how-to-format-a-qstring
+//     QString log_file_path = QString(log_file_base_path).arg(time_stamp_date);
 
 #define DB_PATH_CLICKS "/release/db/sqlite/clicks.db"
 #define DB_PATH_TEMPERATURE "/release/db/sqlite/temperature.db"
@@ -55,35 +59,38 @@ using namespace std;
 // } FSM_COMM;
 #define QR_PAGE_TIMEOUT_SECONDS 420
 #define QR_PAGE_TIMEOUT_WARNING_SECONDS 120
+#define PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS 600
+#define SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS 3000
+#define QR_PROCESSED_PERIODICAL_CHECK_SECONDS 5
 
 
-#define PAGE_INIT_BACKGROUND "/home/df-admin/production/references/0_background_init.png"
-#define PAGE_IDLE_BACKGROUND "/home/df-admin/production/references/1_background_welcome.png"
-#define PAGE_SELECT_PRODUCT_BACKGROUND "/home/df-admin/production/references/2_background_products.png"
-#define PAGE_HELP_BACKGROUND "/home/df-admin/production/references/3_background_help.png"
-#define PAGE_PRODUCT_1_BACKGROUND "/home/df-admin/production/references/4_pay_select_page_l_1.png"
-#define PAGE_PRODUCT_2_BACKGROUND "/home/df-admin/production/references/4_pay_select_page_l_2.png"
-#define PAGE_PRODUCT_3_BACKGROUND "/home/df-admin/production/references/4_pay_select_page_l_3.png"
-#define PAGE_PRODUCT_4_BACKGROUND "/home/df-admin/production/references/4_pay_select_page_l_4.png"
-#define PAGE_PRODUCT_1_BACKGROUND "/home/df-admin/production/references/4_pay_select_page_s_1.png"
-#define PAGE_PRODUCT_2_BACKGROUND "/home/df-admin/production/references/4_pay_select_page_s_2.png"
-#define PAGE_PRODUCT_3_BACKGROUND "/home/df-admin/production/references/4_pay_select_page_s_3.png"
-#define PAGE_PRODUCT_4_BACKGROUND "/home/df-admin/production/references/4_pay_select_page_s_4.png"
-#define PAGE_DISPENSE_BACKGROUND "/home/df-admin/production/references/5_background_dispense_instructions.png"
-#define PAGE_QR_PAY_BACKGROUND "/home/df-admin/production/references/5_background_pay_qr.png"
-#define PRODUCT_1_IMAGE "/home/df-admin/production/references/product1.png"
-#define PRODUCT_2_IMAGE "/home/df-admin/production/references/product2.png"
-#define PRODUCT_3_IMAGE "/home/df-admin/production/references/product3.png"
-#define PRODUCT_4_IMAGE "/home/df-admin/production/references/product4.png"
-#define PAGE_THANK_YOU_BACKGROUND "/home/df-admin/production/references/7_background_thank_you.png"
-#define PAGE_WIFI_ERROR_BACKGROUND "/home/df-admin/production/references/oops.png"
-#define BOTTLE_FILL_FOR_ANIMATION "/home/df-admin/production/references/bottle_fill_for_animation.png"
-// #define PAGE_PRODUCT_BACKGROUND "/home/df-admin/production/references/page_product_generic.png" // todo
-// #define PAGE_PRODUCT_BACKGROUND "/home/df-admin/production/references/page_select_product_generic.png" // todo
-
-#define TRANSPARENT_BACKGROUND "/home/df-admin/production/references/background.png"
-
-// #define PAGE_PRODUCTS_BACKGROUND 
+#define PAGE_INIT_BACKGROUND_PATH "/home/df-admin/production/references/0_background_init.png"
+#define PAGE_IDLE_BACKGROUND_PATH "/home/df-admin/production/references/1_background_welcome.png"
+#define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/2_background_products.png"
+#define PAGE_HELP_BACKGROUND_PATH "/home/df-admin/production/references/3_background_help.png"
+#define PAGE_PRODUCT_1_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_1.png"
+#define PAGE_PRODUCT_2_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_2.png"
+#define PAGE_PRODUCT_3_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_3.png"
+#define PAGE_PRODUCT_4_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_4.png"
+#define PAGE_PRODUCT_1_S_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_1.png"
+#define PAGE_PRODUCT_2_S_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_2.png"
+#define PAGE_PRODUCT_3_S_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_3.png"
+#define PAGE_PRODUCT_4_S_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_4.png"
+#define PAGE_DISPENSE_BACKGROUND_PATH "/home/df-admin/production/references/5_background_dispense_instructions.png"
+#define PAGE_QR_PAY_BACKGROUND_PATH "/home/df-admin/production/references/5_background_pay_qr.png"
+#define PRODUCT_1_IMAGE_PATH "/home/df-admin/production/references/product1.png"
+#define PRODUCT_2_IMAGE_PATH "/home/df-admin/production/references/product2.png"
+#define PRODUCT_3_IMAGE_PATH "/home/df-admin/production/references/product3.png"
+#define PRODUCT_4_IMAGE_PATH "/home/df-admin/production/references/product4.png"
+#define PAGE_THANK_YOU_BACKGROUND_PATH "/home/df-admin/production/references/7_background_thank_you.png"
+#define PAGE_WIFI_ERROR_BACKGROUND_PATH "/home/df-admin/production/references/oops.png"
+#define BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH "/home/df-admin/production/references/bottle_fill_for_animation.png"
+#define SOLD_OUT_IMAGE_PATH "/home/df-admin/production/references/soldOut.png"
+#define KEYBOARD_IMAGE_PATH "/home/df-admin/production/references/soapstand-keyboard.png"
+#define FULL_TRANSPARENT_IMAGE_PATH "/home/df-admin/production/references/background.png"
+#define PAGE_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/page_product_generic.png"
+// #define PAGE_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_1.png"
+// #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/page_select_product_generic.png" // todo
 
 
 #define SEND_DISPENSE_START "d"
@@ -102,6 +109,7 @@ public:
     static char sizeIndexToChar(int size_index);
     static QString getConvertedStringVolumeFromMl(double volumeMilliLiter, QString units, bool roundNumber, bool addUnits);
     
+    void write_to_file_timestamped(QString basePath, QString data);
 
     // static long getTimeStamp();
     // static string format_string(long time_stamp,string fmt,int cutBack=0);
@@ -111,6 +119,8 @@ public:
     // bool close_local_db();
     // bool getVendorDetails();
     // QString get_local_db_max_transaction();
+    // void send_command_to_FSM();
+    void send_command_to_FSM(QString command);
     void set_message_to_send_to_FSM(QString msg);
 
     //    void setIsSendingFSM(bool isSendingFSM){m_IsSendingFSM = isSendingFSM;};

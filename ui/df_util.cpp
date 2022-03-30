@@ -4,14 +4,17 @@
 #include <stdio.h>
 #include <QFileInfo>
 
+static QPointer<QFile> file_out = nullptr;
+
 bool df_util::fileExists(QString path)
 {
     // check if path exists and if yes: Is it a file and no directory?
     // https://stackoverflow.com/questions/10273816/how-to-check-whether-file-exists-in-qt-in-c
     bool exists = QFileInfo::exists(path) && QFileInfo(path).isFile();
 
-    if (!exists){
-        qDebug()<< "File not found: " << path;
+    if (!exists)
+    {
+        qDebug() << "File not found: " << path;
     }
 
     return exists;
@@ -85,15 +88,17 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
         if (volumeMilliLiter < 1000)
         {
             QString units_string = "";
-            if (addUnits){
+            if (addUnits)
+            {
                 units_string = "ml";
             }
             volume_as_string = QString::number(volumeMilliLiter, 'f', decimals) + units_string;
         }
         else
         {
-             QString units_string = "";
-            if (addUnits){
+            QString units_string = "";
+            if (addUnits)
+            {
                 units_string = "L";
             }
             volume_as_string = QString::number(volumeMilliLiter / 1000, 'f', 2) + units_string;
@@ -101,10 +106,11 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
     }
     else if (units == "oz")
     {
-         QString units_string = "";
-            if (addUnits){
-                units_string = "oz";
-            }
+        QString units_string = "";
+        if (addUnits)
+        {
+            units_string = "oz";
+        }
         int decimals = 2;
         if (roundNumber)
         {
@@ -114,10 +120,11 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
     }
     else
     {
-         QString units_string = "";
-            if (addUnits){
-                units_string = "oz";
-            }
+        QString units_string = "";
+        if (addUnits)
+        {
+            units_string = "oz";
+        }
         qDebug() << "Unhandled unit system: " << units;
         volume_as_string = QString::number(volumeMilliLiter, 'f', 0) + units_string;
     }
@@ -138,10 +145,75 @@ df_util::df_util(QWidget *parent) : QWidget(parent),
  * TODO: Decouple send_to_FSM from Dispenser to here
  */
 
+// void df_util::send_command_to_FSM()
+// {
+//     QString command = "l";
+//     m_IsSendingFSM = true;
+//     set_message_to_send_to_FSM(command);
+//     send_to_FSM();
+//     m_IsSendingFSM = false;
+// }
+void df_util::send_command_to_FSM(QString command)
+{
+    m_IsSendingFSM = true;
+    set_message_to_send_to_FSM(command);
+    send_to_FSM();
+    m_IsSendingFSM = false;
+}
+
 void df_util::set_message_to_send_to_FSM(QString msg)
 {
     this->send_msg = msg;
 }
+
+void df_util::write_to_file_timestamped(QString basePath, QString data)
+{
+    // provide basepath wiht %1 in it for the timestamp to be added.
+    QString time_stamp = QDateTime::currentDateTime().toString("yyyy-MM-dd-hh.mm.ss");
+    QString log_file_path = QString(basePath).arg(time_stamp);
+
+    QFile file(log_file_path);
+    // file.open(QIODevice::WriteOnly | QIODevice::Text );
+    file.open(QIODevice::Append| QIODevice::Text );
+    QTextStream out(&file);
+    out << data;
+    // optional, as QFile destructor will already do it:
+    file.close(); 
+  
+
+/*
+-------------" << basePath;
+
+    // QFile file(log_file_path);
+    // file_out = &file;
+
+
+    QFile file(log_file_path);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream out(&file);
+    out << data;
+
+    // optional, as QFile destructor will already do it:
+    file.close(); 
+
+
+    // QFile file(log_file_path);
+    // if (file.open(QIODevice::ReadWrite)) {
+    //     QTextStream stream(&file);
+    //     stream << data << endl;
+    // }
+
+
+    // if (!file_out->open(QFile::WriteOnly | QFile::Text | QFile::Append))
+    // {
+    //     // QTextStream stream(file_out);
+    //     // stream << data << endl;
+    // }
+
+*/
+}
+
+
 
 void df_util::send_to_FSM()
 {

@@ -33,7 +33,7 @@ page_help::page_help(QWidget *parent) :
     ui->previousPage_Button_2->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    QPixmap background(PAGE_HELP_BACKGROUND);
+    QPixmap background(PAGE_HELP_BACKGROUND_PATH);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
@@ -73,7 +73,7 @@ void page_help::setPage(page_select_product *pageSelect, pageProduct* pageProduc
     this->idlePage = pageIdle;
     this->paymentPage = pagePayment;
     this->selectPage = pageProduct;
-    this->firstProductPage = pageSelect;
+    this->p_page_select_product = pageSelect;
 }
 
 void page_help::on_previousPage_Button_clicked(){

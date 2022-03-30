@@ -250,8 +250,6 @@ void DrinkOrder::setVolumePerTickForSelectedSlot(QString volumePerTickInput)
     db.closeDB();
 }
 
-
-
 void DrinkOrder::setSizeToVolumeForSelected(QString volumeInput, int size)
 {
     double volume = inputTextToMlConvertUnits(volumeInput);
@@ -282,7 +280,7 @@ QString DrinkOrder::getVolumeDispensedSinceRestockCorrectUnits()
     db.closeDB();
 
     QString units = getUnitsForSelectedSlot();
-    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units, false,true);
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units, false, true);
 
     return volume_as_string;
 }
@@ -295,7 +293,7 @@ QString DrinkOrder::getTotalDispensedCorrectUnits()
     db.closeDB();
 
     QString units = getUnitsForSelectedSlot();
-    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units, false,true);
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units, false, true);
 
     return volume_as_string;
 }
@@ -325,7 +323,36 @@ double DrinkOrder::inputTextToMlConvertUnits(QString inputValueAsText)
     }
 }
 
-QString DrinkOrder::getFullVolumeCorrectUnits()
+QString DrinkOrder::getSelectedProductName()
+{
+    qDebug() << "product db for name";
+    DbManager db(DB_PATH);
+    QString product_name = db.getProductName(getSelectedSlot());
+    db.closeDB();
+    return product_name;
+}
+
+
+QString DrinkOrder::getMachineId(){
+
+    qDebug() << " db... getMachineID";
+
+    DbManager db(DB_PATH);
+    QString idString = db.getMachineID();
+    db.closeDB();
+    return idString;
+}
+
+QString DrinkOrder::getSelectedProductId()
+{
+    qDebug() << "db.... get productId ";
+    DbManager db(DB_PATH);
+    QString idString = db.getProductID(getSelectedSlot());
+    db.closeDB();
+    return idString;
+}
+
+QString DrinkOrder::getFullVolumeCorrectUnits(bool addUnits)
 {
 
     qDebug() << "db.... get full volume ";
@@ -335,7 +362,7 @@ QString DrinkOrder::getFullVolumeCorrectUnits()
     db.closeDB();
 
     QString units = getUnitsForSelectedSlot();
-    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units, false, true);
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units, false, addUnits);
 
     return volume_as_string;
 }
@@ -357,14 +384,6 @@ QString DrinkOrder::getSelectedSizeToVolumeWithCorrectUnits(bool addUnits)
     return getSizeToVolumeWithCorrectUnitsForSelectedSlot(getSelectedSize(), true, addUnits);
 }
 
-QString DrinkOrder::getSelectedProductName()
-{
-    qDebug() << "product db for name";
-    DbManager db(DB_PATH);
-    QString product_name = db.getProductName(getSelectedSlot());
-    db.closeDB();
-    return product_name;
-}
 
 QString DrinkOrder::getSelectedPaymentMethod()
 {

@@ -86,6 +86,7 @@ DF_ERROR stateIdle::onAction()
 
          if (ACTION_QUIT == m_pMessaging->getAction())
          {
+            debugOutput::sendMessage("Request application exit.", MSG_INFO);
             m_state_requested = STATE_END;
          }
 

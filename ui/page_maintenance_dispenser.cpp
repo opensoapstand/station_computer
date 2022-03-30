@@ -88,7 +88,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     }
 
     //    maintainProductPageEndTimer->start(1000);
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
     // ticks = db.getProductVolumePerTick(product_slot___);
     update_dispense_stats(0);
@@ -197,7 +197,7 @@ void page_maintenance_dispenser::refreshLabels()
     ui->target_volume_s->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_SMALL_INDEX, false, true));
     ui->target_volume_l->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_LARGE_INDEX, false, true));
 
-    ui->full_volume->setText(selectedProductOrder->getFullVolumeCorrectUnits());
+    ui->full_volume->setText(selectedProductOrder->getFullVolumeCorrectUnits(true));
     ui->volume_dispensed_total->setText(selectedProductOrder->getTotalDispensedCorrectUnits());
     ui->volume_dispensed_since_last_restock->setText(selectedProductOrder->getVolumeDispensedSinceRestockCorrectUnits());
     ui->remainingLabel->setText(selectedProductOrder->getVolumeRemainingCorrectUnits());
@@ -209,7 +209,6 @@ void page_maintenance_dispenser::refreshLabels()
     ui->lastRefillLabel->setText(db.getLastRefill(product_slot___));
     ui->pluLabel_s->setText(db.getPLU(product_slot___, 's'));
     ui->pluLabel_l->setText(db.getPLU(product_slot___, 'l'));
-    
 
     db.closeDB();
 
@@ -253,12 +252,12 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
 
 void page_maintenance_dispenser::on_image_clicked()
 {
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_pumpButton_clicked()
 {
-    qDebug() << "call db from maintenance on pump button c licked" << endl;
+    qDebug() << "call db from maintenance on pump button clicked" << endl;
     DbManager db(DB_PATH);
 
     int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
@@ -282,7 +281,7 @@ void page_maintenance_dispenser::on_pumpButton_clicked()
 void page_maintenance_dispenser::on_nameButton_clicked()
 {
     //    qDebug() << "Name button clicked" << endl;
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_priceButton_s_clicked()
@@ -291,7 +290,7 @@ void page_maintenance_dispenser::on_priceButton_s_clicked()
     price_small = true;
     //    DbManager db(DB_PATH);
 
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
     //    ui->numberEntry->show();
     //    ui->textEntry->setText("");
@@ -306,7 +305,7 @@ void page_maintenance_dispenser::on_priceButton_l_clicked()
     price_large = true;
     //    DbManager db(DB_PATH);
 
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
     //    ui->numberEntry->show();
     //    ui->textEntry->setText("");
@@ -319,7 +318,7 @@ void page_maintenance_dispenser::on_target_volumeButton_s_clicked()
 {
     //    qDebug() << "Target Volume button clicked" << endl;
     target_s = true;
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
     //    DbManager db(DB_PATH);
     //    ui->numberEntry->show();
     //    ui->textEntry->setText("");
@@ -331,7 +330,7 @@ void page_maintenance_dispenser::on_target_volumeButton_l_clicked()
 {
     //    qDebug() << "Target Volume button clicked" << endl;
     target_l = true;
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
     //    DbManager db(DB_PATH);
     //    ui->numberEntry->show();
     //    ui->textEntry->setText("");
@@ -344,7 +343,7 @@ void page_maintenance_dispenser::on_vol_per_tickButton_clicked()
 
     //    qDebug() << "Volume Per Tick button clicked" << endl;
     vol_per_tick = true;
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
     //    DbManager db(DB_PATH);
     ui->numberEntry->show();
     ui->textEntry->setText("");
@@ -358,17 +357,11 @@ void page_maintenance_dispenser::dispense_test_start()
     {
         qDebug() << "Start dispense in maintenance mode. (FYI: if app crashes, it's probably about the update volume interrupts caused by the controller sending data.)";
         QString command = QString::number(this->idlePage->currentProductOrder->getSelectedSlot());
-        command.append("t"); // 't'
+        command.append("t");
         command.append(SEND_DISPENSE_START);
 
         update_dispense_stats(0);
-
-        // this->idlePage->dfUtility->msg = command;
-        idlePage->dfUtility->m_IsSendingFSM = true;
-        // idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_START;
-        idlePage->dfUtility->set_message_to_send_to_FSM(command);
-        idlePage->dfUtility->send_to_FSM();
-        idlePage->dfUtility->m_IsSendingFSM = false;
+        idlePage->dfUtility->send_command_to_FSM(command);
 
         pumping = true;
         ui->pumpLabel->setText("Pump enabled status: ON");
@@ -379,25 +372,16 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
 {
     if (pumping)
     {
-
         pumping = false;
-
         ui->pumpLabel->setText("Pump enabled status: OFF");
-
-        // ui->vol_dispensed_label->setText("");
 
         if (sendStopToController)
         {
             qDebug() << "Manually finish dispense in maintenance mode.";
             QString command = QString::number(this->idlePage->currentProductOrder->getSelectedSlot());
-            command.append("t"); //'t'
+            command.append("t");
             command.append(SEND_DISPENSE_STOP);
-            // this->idlePage->dfUtility->msg = command;
-            idlePage->dfUtility->m_IsSendingFSM = true;
-            // idlePage->dfUtility->m_fsmMsg = SEND_DISPENSE_STOP;
-            idlePage->dfUtility->set_message_to_send_to_FSM(command);
-            idlePage->dfUtility->send_to_FSM();
-            idlePage->dfUtility->m_IsSendingFSM = false;
+            idlePage->dfUtility->send_command_to_FSM(command);
         }
         else
         {
@@ -480,7 +464,7 @@ void page_maintenance_dispenser::on_refillButton_clicked()
 
     //    qDebug() << "Refill button clicked" << endl;
 
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
     // ARE YOU SURE YOU WANT TO COMPLETE?
     QMessageBox msgBox;
@@ -495,15 +479,13 @@ void page_maintenance_dispenser::on_refillButton_clicked()
     {
     case QMessageBox::Yes:
     {
-        //            qDebug() << "YES CLICKED" << endl;
         DbManager db(DB_PATH);
         success = db.refill(selectedProductOrder->getSelectedSlot());
         db.closeDB();
 
         if (success)
         {
-
-            curler();
+            sendRestockToCloud();
             refreshLabels();
             ui->infoLabel->setText("Refill Succesfull");
         }
@@ -515,7 +497,6 @@ void page_maintenance_dispenser::on_refillButton_clicked()
     break;
     case QMessageBox::No:
     {
-        //            qDebug() << "No Clicked" << endl;
         msgBox.hide();
     }
     break;
@@ -529,7 +510,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
 
     // qDebug() << "soldout clicked. size: " << QString::number(this->idlePage->currentProductOrder->getSelectedVolume());
 
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
     bool success;
 
     DbManager db(DB_PATH);
@@ -619,7 +600,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
 
     qDebug() << "soldout clicked. slot: " << QString::number(this->idlePage->currentProductOrder->getSelectedSlot()) << endl;
 
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
     if (this->idlePage->isSlotAvailable(this->idlePage->currentProductOrder->getSelectedSlot()))
     {
@@ -679,7 +660,6 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
 
             //                qDebug() << "SOLD OUT!" << endl;
             ui->infoLabel->setText("Un-Sold Out Succesfull");
-         
         }
         case QMessageBox::No:
             //            qDebug() << "No Clicked" << endl;
@@ -698,31 +678,31 @@ void page_maintenance_dispenser::on_fullButton_clicked()
 {
     //    qDebug() << "Full Volume button clicked" << endl;
     full = true;
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_remainingButton_clicked()
 {
     //    qDebug() << "Remaining button clicked" << endl;
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_dispensedButton_clicked()
 {
     //    qDebug() << "Remaining button clicked" << endl;
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_lastRefillButton_clicked()
 {
     //    qDebug() << "Last Refill button clicked" << endl;
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_temperatureButton_clicked()
 {
     //    qDebug() << "Temperature button clicked" << endl;
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
@@ -754,7 +734,7 @@ void page_maintenance_dispenser::on_pwmButton_clicked()
 {
     //    qDebug() << "Remaining button clicked" << endl;
     pwm = true;
-    _maintainProductPageTimeoutSec = 40;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
     //    DbManager db(DB_PATH);
     ui->numberEntry->show();
     ui->textEntry->setText("");
@@ -766,7 +746,7 @@ void page_maintenance_dispenser::on_pwmButton_clicked()
 // void page_maintenance_dispenser::on_pluButton_s_clicked(){
 //     qDebug() << "PLU Button clicked" << endl;
 //     plu_small=true;
-//     _maintainProductPageTimeoutSec=40;
+//     _maintainProductPageTimeoutSec=PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 //     DbManager db(DB_PATH);
 //     ui->numberEntry->show();
 //     ui->textEntry->setText("");
@@ -779,7 +759,7 @@ void page_maintenance_dispenser::on_pwmButton_clicked()
 // void page_maintenance_dispenser::on_pluButton_l_clicked(){
 //     qDebug() << "PLU Button clicked" << endl;
 //     plu_large=true;
-//     _maintainProductPageTimeoutSec=40;
+//     _maintainProductPageTimeoutSec=PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 //     DbManager db(DB_PATH);
 //     ui->numberEntry->show();
 //     ui->textEntry->setText("");
@@ -925,8 +905,6 @@ void page_maintenance_dispenser::updateValues()
     {
         selectedProductOrder->setFullVolumeCorrectUnits(text_entered);
 
-        // double full_volume = db.getFullProduct(product_slot___);
-        //  ui->full_volume->setText(selectedProductOrder->getFullVolumeCorrectUnits());
     }
     else if (pwm)
     {
@@ -985,85 +963,78 @@ size_t WriteCallback3(char *contents, size_t size, size_t nmemb, void *userp)
     return size * nmemb;
 }
 
-void page_maintenance_dispenser::curler()
+void page_maintenance_dispenser::sendRestockToCloud()
 {
-    qDebug() << "ahoyy7";
-    DbManager db(DB_PATH);
-    int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
+    QString curl_param = "pid=" + idlePage->currentProductOrder->getSelectedProductId() + "&volume_full=" + idlePage->currentProductOrder->getFullVolumeCorrectUnits(false);
+    // QString curl_param = "pid=" + db.getProductID(product_slot___) + "&volume_full=" + QString::number(db.getFullProduct(product_slot___));
 
-    QString curl_param = "pid=" + db.getProductID(product_slot___) + "&volume_full=" + QString::number(db.getFullProduct(product_slot___));
     curl_param_array = curl_param.toLocal8Bit();
     curl_data = curl_param_array.data();
 
     curl = curl_easy_init();
     if (!curl)
     {
-        //        qDebug() << "cURL failed to page_init" << endl;
+        qDebug() << "cURL failed to page_init at thank you end";
+        restockTransactionToFile(curl_data);
+        return;
+    }
+
+    curl_easy_setopt(curl, CURLOPT_URL, "http://Drinkfill-env.eba-qatmjpdr.us-east-2.elasticbeanstalk.com/api/machine_data/resetStock");
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback3);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
+
+    res = curl_easy_perform(curl);
+
+
+    // error code 6 (cannot resolve host) showed up when not connected to wifi. Make distinct!
+    if (res != CURLE_OK)
+    {
+        qDebug() << "pagemaintenancedispenser. cURL fail. (6=could not resolve host (no internet)) Error code: " + QString::number(res);
+        curl_easy_cleanup(curl);
+
+        restockTransactionToFile(curl_data);
     }
     else
     {
-        //        qDebug() << "cURL page_init success" << endl;
+        qDebug() << "pagemaintenancedispenser. cURL success.";
 
-        curl_easy_setopt(curl, CURLOPT_URL, "http://Drinkfill-env.eba-qatmjpdr.us-east-2.elasticbeanstalk.com/api/machine_data/resetStock");
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback3);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-        //        qDebug() << "Curl Setup done" << endl;
-
-        res = curl_easy_perform(curl);
-
-        if (res != CURLE_OK)
+        // readbuffer is a string. "true" or "false"
+        if (readBuffer == "true")
         {
-            //            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
-            curl_easy_cleanup(curl);
-            bufferCURL(curl_data);
+            // return data
         }
-        else
-        {
-            //            qDebug() << "CURL SUCCESS!" << endl;
-            //            std::cout <<"Here's the output:\n" << readBuffer << endl;
-            if (readBuffer == "true")
-            {
-                curl_easy_cleanup(curl);
-                readBuffer = "";
-            }
-            else if (readBuffer == "false")
-            {
-                // TODO: Curl Buffer here but not sure of return state (currently false)
-                curl_easy_cleanup(curl);
-                readBuffer = "";
-            }
-            else
-            {
-                curl_easy_cleanup(curl);
-                readBuffer = "";
-            }
-        }
+        curl_easy_cleanup(curl);
+        readBuffer = "";
     }
-    db.closeDB();
+
 }
 
-void page_maintenance_dispenser::bufferCURL(char *curl_params)
+void page_maintenance_dispenser::restockTransactionToFile(char *curl_params)
 {
-    char filetime[50];
-    time(&rawtime);
-    timeinfo = localtime(&rawtime);
-    strftime(filetime, 50, "%F %T", timeinfo);
-    std::string filelocation = "/home/df-admin/curlBuffer/";
-    std::string filetype = "_MM.txt";
-    std::string filename = filelocation + filetime + filetype;
-    //    std::cout << "filename is: " << filename << endl;
-    std::ofstream out;
-    out.open(filename);
-    if (!out.is_open())
-    {
-        //        std::cout << "Cannot open output file!";
-    }
-    else
-    {
-        out << curl_params;
-        out.close();
-    }
+    qDebug() << "Write Restock transaction to file ";
+    QString data_out = curl_params;
+    idlePage->dfUtility->write_to_file_timestamped(TRANSACTIONS_RESTOCK_OFFINE_PATH, data_out);
+    // char filetime[50];
+    // time(&rawtime);
+    // timeinfo = localtime(&rawtime);
+    // strftime(filetime, 50, "%F %T", timeinfo);
+    // std::string filelocation = "/home/df-admin/curlBuffer/";
+    // std::string filetype = "_MM.txt";
+    // std::string filename = filelocation + filetime + filetype;
+    // //    std::cout << "filename is: " << filename << endl;
+    // std::ofstream out;
+    // out.open(filename);
+    // if (!out.is_open())
+    // {
+    //     //        std::cout << "Cannot open output file!";
+    // }
+    // else
+    // {
+    //     out << curl_params;
+    //     out.close();
+    // }
 }
 
 // void page_maintenance_dispenser::on_testSmallButton_clicked(){

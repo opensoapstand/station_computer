@@ -75,8 +75,12 @@ private:
     time_t rawtime;
     struct tm * timeinfo;
 
-    void curler();
-    void bufferCURL(char *curl_params);
+    void sendDispenseEndToCloud();
+    void transactionToFile(char *curl_params);
+
+    
+    bool exitIsForceable; // avoid being stuck if internet fails.
+
 
 };
 

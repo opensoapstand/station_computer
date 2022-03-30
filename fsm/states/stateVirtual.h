@@ -49,7 +49,7 @@ protected:
     gpio *m_pButton[NUM_BUTTON];
     messageMediator *m_pMessaging;
 
-    order selectedOrder;
+    // product_order* m_selectedOrder;
 
     // Unique Reference to selected Product
     unique_ptr<product> selectedProductPtr;

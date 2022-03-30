@@ -39,7 +39,7 @@ int messageMediator::m_RequestedProductIndexInt;
 int messageMediator::m_nSolenoid;
 char messageMediator::m_requestedAction;
 int messageMediator::m_commandValue;
-char messageMediator::m_requestedVolume;
+char messageMediator::m_requestedSize;
 double messageMediator::m_nVolumeTarget;
 
 // CTOR
@@ -328,6 +328,10 @@ void messageMediator::clearCommandString()
    m_bCommandStringReceived = false;
 }
 
+void messageMediator::setRequestedSize(char size){
+   m_requestedSize = size;
+}
+
 DF_ERROR messageMediator::parseCommandString()
 {
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
@@ -397,7 +401,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
 
    char productChar = PRODUCT_DUMMY;
    char actionChar = ACTION_DUMMY;
-   char volumeChar = REQUESTED_VOLUME_DUMMY;
+   char volumeChar = SIZE_DUMMY;
 
    // if (isdigit(sCommand[0]))
    if (isdigit(sCommand[0]))
@@ -417,7 +421,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
             actionChar = sCommand[i];
          }
 
-         if (sCommand[i] == REQUESTED_VOLUME_1 || sCommand[i] == REQUESTED_VOLUME_2 || sCommand[i] == REQUESTED_VOLUME_3 ||sCommand[i] == REQUESTED_VOLUME_CUSTOM || sCommand[i] == REQUESTED_VOLUME_TEST)
+         if (sCommand[i] == SIZE_SMALL || sCommand[i] == SIZE_MEDIUM || sCommand[i] == SIZE_LARGE ||sCommand[i] == SIZE_CUSTOM || sCommand[i] == SIZE_TEST)
          {
             volumeChar = (sCommand[i]);
          }
@@ -467,7 +471,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
    {
       // e_ret = ERROR_NETW_NO_POSITION;
    }
-   else if (volumeChar == REQUESTED_VOLUME_DUMMY)
+   else if (volumeChar == SIZE_DUMMY)
    {
       debugOutput::sendMessage("No Requested volume provided", MSG_INFO);
    }
@@ -475,32 +479,32 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
    {
       switch (volumeChar)
       {
-      case REQUESTED_VOLUME_1:
+      case SIZE_SMALL:
          debugOutput::sendMessage("Requested volume 1, Small Size", MSG_INFO);
-         m_requestedVolume = REQUESTED_VOLUME_1;
+         m_requestedSize = SIZE_SMALL;
          e_ret = OK;
          break;
 
-      case REQUESTED_VOLUME_2:
+      case SIZE_MEDIUM:
          debugOutput::sendMessage("Requested volume 2, Medium Size", MSG_INFO);
-         m_requestedVolume = REQUESTED_VOLUME_2;
+         m_requestedSize = SIZE_MEDIUM;
          e_ret = OK;
          break;
-      case REQUESTED_VOLUME_3:
+      case SIZE_LARGE:
          debugOutput::sendMessage("Requested volume 3, Large Size", MSG_INFO);
-         m_requestedVolume = REQUESTED_VOLUME_3;
+         m_requestedSize = SIZE_LARGE;
          e_ret = OK;
          break;
 
-      case REQUESTED_VOLUME_CUSTOM:
+      case SIZE_CUSTOM:
          debugOutput::sendMessage("Requested volume custom Size", MSG_INFO);
-         m_requestedVolume = REQUESTED_VOLUME_CUSTOM;
+         m_requestedSize = SIZE_CUSTOM;
          e_ret = OK;
          break;
 
-      case REQUESTED_VOLUME_TEST:
+      case SIZE_TEST:
          debugOutput::sendMessage("Requested volume test", MSG_INFO);
-         m_requestedVolume = REQUESTED_VOLUME_TEST;
+         m_requestedSize = SIZE_TEST;
          e_ret = OK;
          break;
 

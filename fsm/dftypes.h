@@ -54,6 +54,11 @@ typedef enum Dispense_behaviour
    FLOW_STATE_CONTAINER_EMPTY
 }Dispense_behaviour;
 
+struct product_order{
+   int slot;
+   char size;
+};
+typedef struct product_order product_order;
 
 struct Time_val
 {

@@ -111,6 +111,10 @@ DF_ERROR stateDispense::onAction()
    {
       debugOutput::sendMessage("*******************CONTAINER EMPTY**********************", MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
+      
+      // experimental, convert to custom volume dispensing.
+      m_pMessaging->setRequestedSize(SIZE_CUSTOM);
+
    }
    else
    {

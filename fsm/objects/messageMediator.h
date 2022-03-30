@@ -60,13 +60,13 @@
 
 #define PRODUCT_DUMMY 'z'
 
-#define REQUESTED_VOLUME_1 's'
-#define REQUESTED_VOLUME_2 'm'
-#define REQUESTED_VOLUME_3 'l'
-#define REQUESTED_VOLUME_CUSTOM 'c'
-#define REQUESTED_VOLUME_TEST 't'
+#define SIZE_SMALL 's'
+#define SIZE_MEDIUM 'm'
+#define SIZE_LARGE 'l'
+#define SIZE_CUSTOM 'c'
+#define SIZE_TEST 't'
 
-#define REQUESTED_VOLUME_DUMMY '0'
+#define SIZE_DUMMY '0'
 
 #define PWM_CHAR 'P'
 
@@ -92,8 +92,10 @@ public:
    // dispense command 
    char getAction() { return m_requestedAction; }
    int getRequestedSlot() { return m_RequestedProductIndexInt; }
-   char getRequestedSize() { return m_requestedVolume; }
+   char getRequestedSize() { return m_requestedSize; }
    int getCommandValue() { return m_commandValue; }
+   void setRequestedSize(char size);
+   
 
 
 
@@ -114,7 +116,7 @@ private:
    static int m_nSolenoid;
    static char m_requestedAction;
    static double m_nVolumeTarget;
-   static char m_requestedVolume;
+   static char m_requestedSize;
    static int m_commandValue;
 
    static DF_ERROR sendProgress(int percentComplete);

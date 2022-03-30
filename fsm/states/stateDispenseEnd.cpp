@@ -78,8 +78,8 @@ DF_ERROR stateDispenseEnd::onAction()
 
     bool is_valid_dispense = productDispensers[pos].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML;
 
-    // REQUESTED_VOLUME_CUSTOM is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
-    if (size == REQUESTED_VOLUME_TEST)
+    // SIZE_CUSTOM is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
+    if (size == SIZE_TEST)
     {
 
         debugOutput::sendMessage("Test dispensing. (" + to_string(productDispensers[pos].getVolumeDispensed()) + "ml). No transaction will be made.", MSG_INFO);

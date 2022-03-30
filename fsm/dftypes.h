@@ -44,6 +44,12 @@
 
 #define ML_TO_OZ 0.033814
 
+#define SIZE_INDEX_SMALL 0
+#define SIZE_INDEX_MEDIUM 1
+#define SIZE_INDEX_LARGE 2
+#define SIZE_INDEX_CUSTOM 3
+ 
+
 typedef enum Dispense_behaviour
 {
    FLOW_STATE_UNAVAILABLE = 0,

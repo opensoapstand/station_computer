@@ -91,6 +91,9 @@ public:
         double m_price_large;
         double m_price_custom_per_liter;
 
+        bool isEnabledSizes[4];
+        chartodododo sizes_index_to_char[];
+
         string m_name;
         string m_display_unit;
         string m_name_receipt;

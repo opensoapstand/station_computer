@@ -104,6 +104,22 @@ DF_ERROR stateDispenseEnd::onAction()
     return e_ret;
 }
 
+double stateDispenseEnd::setFinalMetrics()
+{
+    // check requested volume versus dispensed volume.
+    
+    char size = m_pMessaging->getRequestedSize();
+    double v_disp = productDispensers[pos].getVolumeDispensed();
+
+    if (size == SIZE_INVOLUNTARY_END){
+        // go down to next next allowed volume
+        
+
+    }
+
+        double v_target = productDispensers[pos].getVolumeDispensed();
+}
+
 DF_ERROR stateDispenseEnd::handleTransaction()
 {
     debugOutput::sendMessage("Update database:", MSG_INFO);

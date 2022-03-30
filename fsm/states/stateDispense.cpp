@@ -113,7 +113,8 @@ DF_ERROR stateDispense::onAction()
       m_state_requested = STATE_DISPENSE_END;
       
       // experimental, convert to custom volume dispensing.
-      m_pMessaging->setRequestedSize(SIZE_CUSTOM);
+
+      m_pMessaging->setRequestedSize(SIZE_INVOLUNTARY_END);
 
    }
    else

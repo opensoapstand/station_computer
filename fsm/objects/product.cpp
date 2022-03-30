@@ -186,6 +186,20 @@ void product::productVolumeInfo()
     //	cout << "Dispensed so far: " << m_nVolumeDispensed << endl;
 }
 
+char product::getClosestLowerTargetVolume(double volume){
+
+    int i=3;
+
+    while ( i>=0 && !isEnabledSizes[i]){
+        i--;
+    }
+    if (i<0){
+        return SIZE_TEST;
+    }
+    
+    double targetVolume = getTarg
+}
+
 double product::getTargetVolume(char size)
 {
 #ifdef USE_OLD_DATABASE
@@ -521,6 +535,9 @@ string product::getPLU(char size)
 
 bool product::reloadParametersFromDb()
 {
+    for (uint8_t i=0;i<4;i++){
+        isEnabledSizes[i] = false;
+    }
 
     // m_nSlot = slot;
     //     m_name = name;
@@ -779,17 +796,21 @@ bool product::reloadParametersFromDb()
             break;
             case DB_PRODUCTS_IS_ENABLED_SMALL:
             {
+                isEnabledSizes[SIZE_INDEX_SMALL] = true;
             }
             break;
             case DB_PRODUCTS_IS_ENABLED_MEDIUM:
             {
+                isEnabledSizes[SIZE_INDEX_MEDIUM] = true;
             }
             break;
             case DB_PRODUCTS_IS_ENABLED_LARGE:
             {
+                isEnabledSizes[SIZE_INDEX_LARGE] = true;
             }
             break;
             case DB_PRODUCTS_IS_ENABLED_CUSTOM:
+                isEnabledSizes[SIZE_INDEX_CUSTOM] = true;
             {
             }
             break;

@@ -75,9 +75,10 @@ double product::getVolumePerTick()
 bool product::registerFlowSensorTick()
 {
     //    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
+    
     m_nVolumeDispensed += getVolumePerTick();
+    //m_nVolumeDispensed += 100.0;
 }
-
 double product::getVolumeDispensed(){
     return m_nVolumeDispensed;
 }

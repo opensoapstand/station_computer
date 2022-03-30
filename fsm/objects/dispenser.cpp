@@ -277,7 +277,7 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
         // Instantiate, set input, spin up a flowsensor thread.
         m_pFlowsenor[pos] = new oddyseyx86GPIO(pin);
         m_pFlowsenor[pos]->setPinAsInputElseOutput(true);
-        //m_pFlowsenor[pos]->registerProduct(m_pDispensedProduct); // LODE UNCOMMENT
+        m_pFlowsenor[pos]->registerProduct(m_pDispensedProduct); // LODE UNCOMMENT
         m_pFlowsenor[pos]->startListener_flowsensor();
         e_ret = OK;
     }

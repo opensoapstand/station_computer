@@ -238,55 +238,6 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
         return df_ret;
 }
 
-//void oddyseyx86GPIO::monitorGPIO_Flowsensor()
-//{
-//    int fd;
-//    char local_buffer[16];
-//    struct pollfd pfd;
-
-//    string GPIO = std::to_string(m_nPin);
-//    string command("/sys/class/gpio/gpio");
-//    command += GPIO;
-//    command += "/edge";
-//    //debugOutput::sendMessage(command.c_str(), MSG_INFO);
-
-//    // Set the pin to interrupt
-//    fd = open(command.c_str(), O_WRONLY);
-//    write(fd, "rising", 6);
-//    close(fd);
-
-//    command = "/sys/class/gpio/gpio" + GPIO + "/value";
-//    fd = open(command.c_str(), O_RDONLY);
-
-//    pfd.fd = fd;
-//    pfd.events = POLLPRI | POLLERR;
-
-//    // Clear out any old interrupts
-//    lseek(fd, 0, SEEK_SET);
-//    read (fd, local_buffer, sizeof(local_buffer));
-
-//    // Block waiting for the interrupt
-//    int ret = poll(&pfd, 1, 5000);
-
-//    if (0 == ret)
-//    {
-//        //debugOutput::sendMessage("gpioTimeout", MSG_INFO);
-//    }
-//    else
-//    {
-//        //debugOutput::sendMessage("FLOW TICK", MSG_INFO);
-//        m_pDispenser->registerFlowSensorTick(); //trigger the callback
-//    }
-
-//    close(fd);
-
-//    return;
-//}
-
-// Threaded function call to monitor Odyssecy GPIO pin activity.
-
-// Threaded function call to monitor Odyssecy GPIO pin activity.
-
 void oddyseyx86GPIO::monitorGPIO_Flowsensor()
 {
         //debugOutput::sendMessage("monitorGPIO_Flowsensor", MSG_INFO);  //nuke this later it will cause so much spam

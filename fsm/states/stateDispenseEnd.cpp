@@ -109,15 +109,6 @@ DF_ERROR stateDispenseEnd::handleTransaction()
     debugOutput::sendMessage("Update database:", MSG_INFO);
     dispenseEndUpdateDB(false);
 
-#ifdef ENABLE_TRANSACTION_TO_CLOUD
-
-    debugOutput::sendMessage("Send transaction to cloud:", MSG_INFO);
-    sendTransactionToCloud();
-#else
-
-    debugOutput::sendMessage("NOT SENDING transaction to cloud:", MSG_INFO);
-#endif
-
     debugOutput::sendMessage("Handle transaction.", MSG_INFO);
     DF_ERROR e_ret = OK;
 
@@ -125,6 +116,18 @@ DF_ERROR stateDispenseEnd::handleTransaction()
 
     // Currently only Drinkfill used the tap method of payment, so this checks if it is a tap payment system and runs the cleaning cycle if it is...
     // TODO: Change this to just check if the system is Soapstand or Drinkfill instead of payment system!
+    if (paymentMethod == "qr")
+    {
+#ifdef ENABLE_TRANSACTION_TO_CLOUD
+
+        debugOutput::sendMessage("Send transaction to cloud for QR:", MSG_INFO);
+        sendTransactionToCloud();
+#else
+
+        debugOutput::sendMessage("NOT SENDING transaction to cloud for QR:", MSG_INFO);
+#endif
+    }
+    
     if (paymentMethod == "tap")
     {
         // sleep(5);
@@ -141,6 +144,9 @@ DF_ERROR stateDispenseEnd::handleTransaction()
     {
         debugOutput::sendMessage("Printing receipt:", MSG_INFO);
         print_receipt();
+
+        debugOutput::sendMessage("Send transaction to cloud:", MSG_INFO);
+        sendTransactionToCloud();
     }
 
     return e_ret;
@@ -215,10 +221,9 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
     curl = curl_easy_init();
     if (!curl)
     {
-        debugOutput::sendMessage("cURL failed to init", MSG_INFO);
+        debugOutput::sendMessage("ERROR: cURL failed to init", MSG_INFO);
         return e_ret;
     }
-    
 
     debugOutput::sendMessage("cURL init success", MSG_INFO);
 
@@ -246,7 +251,6 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
         if (readBuffer == "true")
         {
             debugOutput::sendMessage("sendTransactionToCloud: CURL succes.", MSG_INFO);
-            
         }
         else
         {
@@ -259,7 +263,6 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
     }
 
     return e_ret;
-
 }
 
 // TODO: Figure out when/how to send all the bufferred curl data to the cloud (fixed with AWS IoT?)
@@ -582,7 +585,7 @@ DF_ERROR stateDispenseEnd::print_receipt()
         if (plu.size() != 6)
         {
             // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
-            debugOutput::sendMessage("ERROR custom plu length must be of length six : " + plu, MSG_INFO);
+            debugOutput::sendMessage("ERROR custom barcode length must be of length six : " + plu, MSG_INFO);
         }
 
         snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%5.2f", price);
@@ -664,19 +667,33 @@ DF_ERROR stateDispenseEnd::print_receipt()
 
     print_text(name_receipt + "\nPrice: $" + receipt_cost + " \nVolume: " + receipt_volume_formatted + "\nTime: " + now);
 
-    if (plu.size() != 13 && plu.size() != 12)
+    std::string paymentMethod = productDispensers[pos].getProduct()->getPaymentMethod();
+
+    if (paymentMethod == "barcode")
     {
-        // EAN13 codes need to be 13 digits, or else no barcode will be printed. If 12 dgits are provided, the last digit (checksum?!) is automatically generated
-        debugOutput::sendMessage("ERROR: bar code invalid (" + plu + "). EAN13, Should be 13 digits" + to_string(plu.size()), MSG_INFO);
-        print_text("\nPLU: " + plu + " (No barcode available)");
+
+        if (plu.size() != 13 && plu.size() != 12)
+        {
+            // EAN13 codes need to be 13 digits, or else no barcode will be printed. If 12 dgits are provided, the last digit (checksum?!) is automatically generated
+            debugOutput::sendMessage("ERROR: bar code invalid (" + plu + "). EAN13, Should be 13 digits" + to_string(plu.size()), MSG_INFO);
+            print_text("\nPLU: " + plu + " (No barcode available)");
+        }
+        else
+        {
+            Adafruit_Thermal *printerr = new Adafruit_Thermal();
+            printerr->connectToPrinter();
+            printerr->setBarcodeHeight(100);
+            printerr->printBarcode(plu.c_str(), EAN13);
+            printerr->disconnectPrinter();
+        }
+    }
+    else if (paymentMethod == "plu")
+    {
+        print_text("PLU: " + plu);
     }
     else
     {
-        Adafruit_Thermal *printerr = new Adafruit_Thermal();
-        printerr->connectToPrinter();
-        printerr->setBarcodeHeight(100);
-        printerr->printBarcode(plu.c_str(), EAN13);
-        printerr->disconnectPrinter();
+        debugOutput::sendMessage("ERROR: Not a valid payment method" + paymentMethod, MSG_INFO);
     }
 
     print_text("\n\n\n");

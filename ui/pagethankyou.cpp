@@ -137,24 +137,27 @@ void pagethankyou::sendDispenseEndToCloud()
 
     if (res != CURLE_OK)
     {
-        qDebug() << "pagethankyou. cURL fail. Error code: " + QString::number(res);
-        curl_easy_cleanup(curl);
+        qDebug() << "ERROR: Transaction NOT sent to cloud. cURL fail. Error code: " + QString::number(res);
+       
 
         transactionToFile(curl_data);
         is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
     }
     else
     {
-        qDebug() << "pagethankyou. cURL success.";
+        QString feedback = QString::fromUtf8(readBuffer.c_str());
+        qDebug() << "Transaction sent to cloud. cURL success. Server feedback readbuffer: " << feedback;
 
         // readbuffer is a string. "true" or "false"
-        if (readBuffer == "true")
+        if (readBuffer == "true" || "Order Completed")
         {
             // return data
+            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
         }
-        curl_easy_cleanup(curl);
-        readBuffer = "";
+       
     }
+    curl_easy_cleanup(curl);
+    readBuffer = "";
 }
 
 void pagethankyou::controllerFinishedTransaction()

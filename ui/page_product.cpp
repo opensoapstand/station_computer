@@ -306,7 +306,7 @@ void pageProduct::loadOrderSelectedSize()
     ui->promoCode->hide();
     promoPercent = 0.0;
 
-    ui->productLabel->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true));
+    ui->productLabel->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
     double selectedPrice = selectedProductOrder->getSelectedPrice();
     ui->priceLabel->setText("$" + QString::number(selectedPrice, 'f', 2));
     ui->totalPriceLabel->setText("$" + QString::number(selectedPrice)); // how to handle promo ?! todo!
@@ -419,7 +419,7 @@ void pageProduct::loadOrderSelectedSize()
     ui->promoCode->hide();
     promoPercent = 0.0;
 
-    ui->productLabel->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true));
+    ui->productLabel->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
     double selectedPrice = selectedProductOrder->getSelectedPrice();
     ui->priceLabel->setText("$" + QString::number(selectedPrice, 'f', 2));
     ui->totalPriceLabel->setText("$" + QString::number(selectedPrice)); // how to handle promo ?! todo!
@@ -525,7 +525,7 @@ void pageProduct::on_applyPromo_Button_clicked()
             qDebug() << "Pageproduct: apply promo cURL failed init";
             return;
         }
-        
+
         curl_easy_setopt(curl, CURLOPT_URL, ("https://soapstandportal.com/api/coupon/find/" + promocode).toUtf8().constData());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback_coupon);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
@@ -698,14 +698,13 @@ void pageProduct::on_pagePayment_Button_clicked()
             return;
         }
 
-
         curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/ping");
         curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
 
         res = curl_easy_perform(curl);
         if (res != CURLE_OK)
         {
-            qDebug() << "Failed to reach soapstandportal. error code: " + QString::number(res);
+            qDebug() << "ERROR: Failed to reach soapstandportal. error code: " + QString::number(res);
 
             // wifiError->showEvent(wifiErrorEvent);
             wifiError->showFullScreen();
@@ -713,10 +712,15 @@ void pageProduct::on_pagePayment_Button_clicked()
         }
         else
         {
+            QString feedback = QString::fromUtf8(readBuffer.c_str());
+            qDebug() << "Server feedback readbuffer: " << feedback;
+
             ui->totalPriceLabel->text();
             paymentPage->showFullScreen();
             this->hide();
         }
+        curl_easy_cleanup(curl);
+        readBuffer = "";
     }
     else if (paymentMethod == "barcode" || paymentMethod == "plu")
     {

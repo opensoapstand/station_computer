@@ -88,8 +88,8 @@ void pagethankyou::showEvent(QShowEvent *event)
     //     _thankYouTimeoutSec = 5;
     //     ui->mainPage_Button->setEnabled(true);
     // }
-sendDispenseEndToCloud();
-    if (paymentMethod == "qr")
+    
+    if (paymentMethod == "qr" || paymentMethod == "tap")
     {
         sendDispenseEndToCloud();
     }
@@ -125,9 +125,9 @@ void pagethankyou::sendDispenseEndToCloud()
         qDebug() << "pagethankyou: cURL failed to init. parameters:" + curl_param;
         transactionToFile(curl_data);
         is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
-        return ;
+        return;
     }
-   
+
     curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/updateOrder");
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback2);
@@ -137,26 +137,27 @@ void pagethankyou::sendDispenseEndToCloud()
 
     if (res != CURLE_OK)
     {
-        qDebug() << "pagethankyou. cURL fail. Error code: " + QString::number(res);
-        curl_easy_cleanup(curl);
+        qDebug() << "ERROR: Transaction NOT sent to cloud. cURL fail. Error code: " + QString::number(res);
+       
 
         transactionToFile(curl_data);
         is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
     }
     else
     {
-        qDebug() << "pagethankyou. cURL success.";
-        
+        QString feedback = QString::fromUtf8(readBuffer.c_str());
+        qDebug() << "Transaction sent to cloud. cURL success. Server feedback readbuffer: " << feedback;
+
         // readbuffer is a string. "true" or "false"
-        if (readBuffer == "true")
+        if (readBuffer == "true" || "Order Completed")
         {
             // return data
+            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
         }
-        curl_easy_cleanup(curl);
-        readBuffer = "";
+       
     }
-
-    
+    curl_easy_cleanup(curl);
+    readBuffer = "";
 }
 
 void pagethankyou::controllerFinishedTransaction()
@@ -199,8 +200,9 @@ void pagethankyou::exitPage()
         idlePage->showFullScreen();
         this->hide();
 
-        if (exitIsForceable){
-            qDebug()<< "ERROR?!:Forced exit. controller ok?: " << is_controller_finished << " is payment finished?:" << is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER;
+        if (exitIsForceable)
+        {
+            qDebug() << "ERROR?!:Forced exit. controller ok?: " << is_controller_finished << " is payment finished?:" << is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER;
         }
     }
     else
@@ -211,7 +213,5 @@ void pagethankyou::exitPage()
 
         thankYouEndTimer->start(1000);
         _thankYouTimeoutSec = 7;
-        
     }
 }
-

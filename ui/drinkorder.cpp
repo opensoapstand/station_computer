@@ -375,13 +375,13 @@ void DrinkOrder::setFullVolumeCorrectUnits(QString inputFullValue)
     db.closeDB();
 }
 
-QString DrinkOrder::getSelectedSizeToVolumeWithCorrectUnits(bool addUnits)
+QString DrinkOrder::getSelectedSizeToVolumeWithCorrectUnits(bool round, bool addUnits)
 {
     // v = db.getProductVolume(product_slot___, drinkSize);
 
     // ui->label_size_small->setText(QString::number(v) + "ml");
 
-    return getSizeToVolumeWithCorrectUnitsForSelectedSlot(getSelectedSize(), true, addUnits);
+    return getSizeToVolumeWithCorrectUnitsForSelectedSlot(getSelectedSize(), round, addUnits);
 }
 
 

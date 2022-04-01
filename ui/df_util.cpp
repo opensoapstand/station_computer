@@ -85,7 +85,7 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
             decimals = 0;
         }
 
-        if (volumeMilliLiter < 1000)
+        if (volumeMilliLiter < 1000 || (!roundNumber))
         {
             QString units_string = "";
             if (addUnits)

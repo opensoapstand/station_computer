@@ -135,6 +135,7 @@ void pagePayment::stopPayTimers()
  */
 void pagePayment::setPage(pageProduct *pageSizeSelect, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
 {
+    tmpCounter = 0;
     this->p_pageProduct = pageSizeSelect;
     this->p_page_dispense = page_dispenser;
     this->idlePage = pageIdle;
@@ -184,7 +185,7 @@ void pagePayment::resizeEvent(QResizeEvent *event)
     //    }else{
     //        ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)/1000) + "L");
     //    }
-    ui->productLabel->setText(idlePage->currentProductOrder->getSelectedProductName() + " " + idlePage->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true));
+    ui->productLabel->setText(idlePage->currentProductOrder->getSelectedProductName() + " " + idlePage->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
 
     response = false;
     ui->refreshLabel->hide();
@@ -337,7 +338,7 @@ void pagePayment::showEvent(QShowEvent *event)
     // }
 
     //  db.closeDB();
-    ui->productLabel->setText(idlePage->currentProductOrder->getSelectedProductName() + " " + idlePage->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true));
+    ui->productLabel->setText(idlePage->currentProductOrder->getSelectedProductName() + " " + idlePage->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
 
     ui->order_drink_amount->setText("$" + QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2));
 
@@ -367,67 +368,15 @@ void pagePayment::showEvent(QShowEvent *event)
 
     if (payment_method == "qr")
     {
-        generateQR();
+        setupQrOrder();
     }
 }
 
-void pagePayment::createOrder()
-{
-    // qDebug() << "ahoyy22";
-    // DbManager db(DB_PATH);
-
-    // int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
-
-    QString MachineSerialNumber = idlePage->currentProductOrder->getMachineId();
-    QString productId = idlePage->currentProductOrder->getSelectedProductId();
-    QString contents = idlePage->currentProductOrder->getSelectedProductName();
-    // db.closeDB();
-
-    QString quantity_requested = idlePage->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(false);
-
-    // qDebug() << "Volume requested for soapstandportal : " << quantity_requested;
-    char drinkSize = idlePage->currentProductOrder->getSelectedSizeAsChar();
-
-    QString price = QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2);
-    orderId = QUuid::createUuid().QUuid::toString();
-    orderId = orderId.remove("{");
-    orderId = orderId.remove("}");
-    QString curl_param1 = "orderId=" + orderId + "&size=" + drinkSize + "&MachineSerialNumber=" + MachineSerialNumber +
-                          "&contents=" + contents + "&price=" + price + "&productId=" + productId + "&quantity_requested=" + quantity_requested;
-    
-    curl1 = curl_easy_init();
-
-    if (!curl1)
-    {
-        qDebug() << "pagepayement cURL Failed to init : " + curl_param1 + "to: " + "https://soapstandportal.com/api/machine_data/createOrderInDb";
-        return;
-    }
-  
-    curl_easy_setopt(curl1, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/createOrderInDb");
-    curl_easy_setopt(curl1, CURLOPT_POSTFIELDS, curl_param_array1.data());
-    curl_easy_setopt(curl1, CURLOPT_WRITEFUNCTION, WriteCallback);
-    curl_easy_setopt(curl1, CURLOPT_WRITEDATA, &readBuffer);
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
-
-    res1 = curl_easy_perform(curl1);
-    if (res1 != CURLE_OK)
-    {
-        qDebug() << "Problem at sending QR code request. error code: " + QString::number(res1);
-    }
-    else
-    {
-        qDebug() << "QR order request sent to soapstandportal (" + curl_param1 + ")";
-    }
-    _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
-    _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
-    qrTimer->start(1000);
-
-}
-
-void pagePayment::generateQR()
+void pagePayment::setupQrOrder()
 {
 
-    createOrder();
+    createQrOrder();
+
     QPixmap map(360, 360);
     map.fill(QColor("black"));
     QPainter painter(&map);
@@ -456,6 +405,59 @@ void pagePayment::generateQR()
     qrTimer->start(1000);
 }
 
+void pagePayment::createQrOrder()
+{
+    // an order Id is generated locally and the order is sent to the cloud.
+
+    qDebug() << "Create order in the cloud";
+    QString MachineSerialNumber = idlePage->currentProductOrder->getMachineId();
+    QString productId = idlePage->currentProductOrder->getSelectedProductId();
+    QString contents = idlePage->currentProductOrder->getSelectedProductName();
+    QString quantity_requested = idlePage->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(false, false);
+    char drinkSize = idlePage->currentProductOrder->getSelectedSizeAsChar();
+    QString price = QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2);
+
+    orderId = QUuid::createUuid().QUuid::toString();
+    orderId = orderId.remove("{");
+    orderId = orderId.remove("}");
+
+    QString curl_order_parameters_string = "orderId=" + orderId + "&size=" + drinkSize + "&MachineSerialNumber=" + MachineSerialNumber +
+                                           "&contents=" + contents + "&price=" + price + "&productId=" + productId + "&quantity_requested=" + quantity_requested;
+
+    curl_order_parameters = curl_order_parameters_string.toLocal8Bit();
+
+    curl1 = curl_easy_init();
+
+    if (!curl1)
+    {
+        qDebug() << "pagepayement cURL Failed to init : " + curl_order_parameters_string + "to: " + "https://soapstandportal.com/api/machine_data/createOrderInDb";
+        return;
+    }
+
+    curl_easy_setopt(curl1, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/createOrderInDb");
+    curl_easy_setopt(curl1, CURLOPT_POSTFIELDS, curl_order_parameters.data());
+    curl_easy_setopt(curl1, CURLOPT_WRITEFUNCTION, WriteCallback);
+    curl_easy_setopt(curl1, CURLOPT_WRITEDATA, &readBuffer);
+    curl_easy_setopt(curl1, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
+
+    res1 = curl_easy_perform(curl1);
+    if (res1 != CURLE_OK)
+    {
+        qDebug() << "ERROR: Problem at create order in the cloud request. error code: " + QString::number(res1);
+    }
+    else
+    {
+        QString feedback = QString::fromUtf8(readBuffer.c_str());
+        qDebug() << "create order in the cloud request sent to soapstandportal (" + curl_order_parameters_string + "). Server feedback: " << feedback;
+    }
+    curl_easy_cleanup(curl1);
+    readBuffer = "";
+
+    _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
+    _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
+    qrTimer->start(1000);
+}
+
 void pagePayment::isQrProcessedCheckOnline()
 {
 
@@ -466,27 +468,32 @@ void pagePayment::isQrProcessedCheckOnline()
         return;
     }
 
+    QString curl_param = "oid=" + orderId;
+    curl_param_array = curl_param.toLocal8Bit();
+
     curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/check_order_status");
+
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
     curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
 
     res = curl_easy_perform(curl);
+    qDebug() << "Send check qr status for order " << orderId;
 
     if (res != CURLE_OK)
     {
         // string test = std::string(curl_easy_strerror(res));
-        qDebug() << "cURL fail at pagepayment. Error code: " + QString::number(res);
-        curl_easy_cleanup(curl);
+        qDebug() << "ERROR: cURL fail at pagepayment. Error code: " + QString::number(res);
     }
     else
     {
-        curl_easy_cleanup(curl);
-        readBuffer = "";
+        QString feedback = QString::fromUtf8(readBuffer.c_str());
+        qDebug() << "curl success. Server feedback readbuffer: " << feedback;
 
         if (readBuffer == "true")
         {
+            qDebug() << "QR processed. It's time to dispense.";
             proceed_to_dispense();
         }
         else
@@ -494,7 +501,8 @@ void pagePayment::isQrProcessedCheckOnline()
             qDebug() << "Wait for QR processed. Nothing received";
         }
     }
-
+    curl_easy_cleanup(curl);
+    readBuffer = "";
 }
 
 void pagePayment::qrProcessedPeriodicalCheck()
@@ -504,7 +512,7 @@ void pagePayment::qrProcessedPeriodicalCheck()
     }
     else
     {
-        qDebug() << "QR Timer Timed out. Checking API endpoint now...";
+        qDebug() << "Periodical check timer trigger. Check API endpoint for handled QR transaction.";
         isQrProcessedCheckOnline();
         _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
     }

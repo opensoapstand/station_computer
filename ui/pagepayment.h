@@ -241,15 +241,17 @@ private:
    
     CURLcode res1;
     CURL *curl1;
-    QByteArray curl_param_array1;
+    QByteArray curl_order_parameters;
 
     //size_t WriteCallback(char* contents, size_t size, size_t nmemb, void *userp);
     std::string readBuffer;
 
 
+    int tmpCounter ;
+
     void isQrProcessedCheckOnline();
-    void generateQR();
-    void createOrder();
+    void setupQrOrder();
+    void createQrOrder();
     
 };
 

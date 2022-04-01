@@ -904,7 +904,6 @@ void page_maintenance_dispenser::updateValues()
     else if (full)
     {
         selectedProductOrder->setFullVolumeCorrectUnits(text_entered);
-
     }
     else if (pwm)
     {
@@ -987,28 +986,26 @@ void page_maintenance_dispenser::sendRestockToCloud()
 
     res = curl_easy_perform(curl);
 
-
     // error code 6 (cannot resolve host) showed up when not connected to wifi. Make distinct!
     if (res != CURLE_OK)
     {
         qDebug() << "pagemaintenancedispenser. cURL fail. (6=could not resolve host (no internet)) Error code: " + QString::number(res);
-        curl_easy_cleanup(curl);
-
         restockTransactionToFile(curl_data);
     }
     else
     {
-        qDebug() << "pagemaintenancedispenser. cURL success.";
+
+        QString feedback = QString::fromUtf8(readBuffer.c_str());
+        qDebug() << "ERROR: pagemaintenancedispenser cURL success. Server feedback readbuffer: " << feedback;
 
         // readbuffer is a string. "true" or "false"
         if (readBuffer == "true")
         {
             // return data
         }
-        curl_easy_cleanup(curl);
-        readBuffer = "";
     }
-
+    curl_easy_cleanup(curl);
+    readBuffer = "";
 }
 
 void page_maintenance_dispenser::restockTransactionToFile(char *curl_params)

@@ -72,7 +72,7 @@ QByteArray DfUiCommThread::readyRead()
     {
         // emit MMSignal();
     }
-    else if (strtol(Data, &pEnd, 10))
+    else if (strtol(Data, &pEnd, 10) || (Data[0] == '0' && Data[1]=='.'))
     {
         // double volume_dispensed = stod(Data.constData(), &sz);
         // emit updateVolumeSignal(volume_dispensed);
@@ -109,7 +109,7 @@ QByteArray DfUiCommThread::readyRead()
     {
         emit MMSignal();
     }
-    else if (strtol(Data, &pEnd, 10))
+    else if (strtol(Data, &pEnd, 10) || (Data[0] == '0' && Data[1]=='.'))
     {
         double volume_dispensed = stod(Data.constData(), &sz);
         emit updateVolumeSignal(volume_dispensed);

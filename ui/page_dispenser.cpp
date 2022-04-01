@@ -325,6 +325,23 @@ void page_dispenser::fsmReceiveTargetVolumeReached()
     }
 }
 
+void page_dispenser::fsmReceiveNoFlowAbort()
+{
+    if (this->isDispensing)
+    {
+        this->isDispensing = false;
+        // qDebug() << "Signal: Target volume reached."  << endl;
+        updateVolumeDisplayed(1.0, true); // make sure the fill bottle graphics are completed
+
+        dispensing_end_admin();
+        // qDebug() << "Finish dispense end admin."  << endl;
+    }
+    else
+    {
+        qDebug() << "No flow abort received while not dispensing.";
+    }
+}
+
 void page_dispenser::on_abortButton_clicked()
 {
     qDebug() << "Pressed dispense complete.";

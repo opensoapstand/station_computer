@@ -34,6 +34,9 @@ void DfUiServer::updateVolumeSlot(double dispensed){
 void DfUiServer::targetHitSlot(){
     emit targetHit();
 }
+void DfUiServer::noFlowAbortSlot(){
+    emit noFlowAbort();
+}
 
 void DfUiServer::initReadySlot(){
     emit initReady();
@@ -61,7 +64,8 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
     connect(thread, &DfUiCommThread::transactionEndSignal, this, &DfUiServer::transactionEndSlot);
     connect(thread, &DfUiCommThread::resetTimerSignal, this, &DfUiServer::resetTimerSlot);
     connect(thread, &DfUiCommThread::updateVolumeSignal, this, &DfUiServer::updateVolumeSlot);
-    connect(thread, &DfUiCommThread::targetHitSignal, this, &DfUiServer::targetHitSlot);
+    connect(thread, &DfUiCommThread::targetHitSignal, this, &DfUiServer::noFlowAbortSlot);
+    connect(thread, &DfUiCommThread::noFlowAbortSignal, this, &DfUiServer::targetHitSlot);
     connect(thread, &DfUiCommThread::initReadySignal, this, &DfUiServer::initReadySlot);
     connect(thread, &DfUiCommThread::printerStatusSignal, this, &DfUiServer::printerStatusSlot);
     connect(thread, &DfUiCommThread::MMSignal, this, &DfUiServer::MMSlot);

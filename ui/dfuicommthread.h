@@ -21,6 +21,7 @@ signals:
     void transactionEndSignal(void);
     void resetTimerSignal(void);
     void targetHitSignal(void);
+    void noFlowAbortSignal(void);
     void updateVolumeSignal(double dispensed);
     void printerStatusSignal(bool isOnline, bool hasPaper);
     void initReadySignal(void);

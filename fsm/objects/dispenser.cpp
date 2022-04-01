@@ -614,6 +614,7 @@ Dispense_behaviour dispenser::getDispenseStatus()
         if (previous_dispense_state == FLOW_STATE_DISPENSING)
         {
             // once it was dispensing, empty dispenser is detected immediatly if no product flows.
+            
         }
         else
         {

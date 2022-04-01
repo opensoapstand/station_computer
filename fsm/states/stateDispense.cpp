@@ -109,6 +109,8 @@ DF_ERROR stateDispense::onAction()
    Dispense_behaviour status = productDispensers[pos].getDispenseStatus();
    if (status == FLOW_STATE_CONTAINER_EMPTY)
    {
+
+      m_pMessaging->sendMessage("No flow abort");
       debugOutput::sendMessage("*******************CONTAINER EMPTY**********************", MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
       

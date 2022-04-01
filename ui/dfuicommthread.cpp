@@ -50,27 +50,23 @@ QByteArray DfUiCommThread::readyRead()
 
     if (Data == "Transaction End")
     {
-        //        qDebug() << "from CLEAN";
+    }else  if (Data == "No flow abort")
+    {
     }
-
     else if (Data == "Reset Timer")
     {
-        // emit resetTimerSignal();
     }
 
     else if (Data == "Target Hit")
     {
-        // emit targetHitSignal();
     }
 
     else if (Data == "Init Ready")
     {
-        // emit initReadySignal();
     }
 
     else if (Data == "MM")
     {
-        // emit MMSignal();
     }
     else if (strtol(Data, &pEnd, 10) || (Data[0] == '0' && Data[1]=='.'))
     {
@@ -94,7 +90,10 @@ QByteArray DfUiCommThread::readyRead()
     {
         emit resetTimerSignal();
     }
-
+else  if (Data == "No flow abort")
+{
+    emit noFlowAbortSignal();
+}
     else if (Data == "Target Hit")
     {
         emit targetHitSignal();

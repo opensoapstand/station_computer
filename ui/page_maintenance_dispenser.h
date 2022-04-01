@@ -45,6 +45,7 @@ public:
     void resizeEvent(QResizeEvent *event);
     void updateVolumeDisplayed(double dispensed, bool isFull);
     void fsmReceiveTargetVolumeReached();
+    void fsmReceiveNoFlowAbort();
     void setSoldOutButtonText();
     void dispense_test_end(bool sendStopToController);
     void dispense_test_start();

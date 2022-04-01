@@ -59,6 +59,8 @@ public:
         bool getIsEnabled();
         void setIsEnabled(bool isEnabled);
 
+        bool getIsSizeEnabled(char size);
+        // char getClosestLowerTargetVolume(double volume);
         // DB Updates
         // void recordSale(int volume);
         // void refill(int volume);
@@ -74,6 +76,9 @@ public:
 
         double getVolumeDispensed();
         void resetVolumeDispensed();
+
+        int sizeCharToSizeIndex(char size);
+        char sizeIndexToSizeChar(int sizeIndex);
 
         double m_volumePerTick;
         int m_nDispenseSpeedPWM;
@@ -92,7 +97,8 @@ public:
         double m_price_custom_per_liter;
 
         bool isEnabledSizes[4];
-        chartodododo sizes_index_to_char[];
+
+        char sizeIndexToChar[4] = SIZE_INDEX_TO_CHAR_ARRAY;
 
         string m_name;
         string m_display_unit;

@@ -49,7 +49,7 @@ DF_ERROR stateDispenseEnd::onEntry()
     productDispensers = g_productDispensers;
     pos = m_pMessaging->getRequestedSlot();
     pos = pos - 1;
-    size = m_pMessaging->getRequestedSize();
+    // size = m_pMessaging->getRequestedSize();
 
     return e_ret;
 }
@@ -76,10 +76,12 @@ DF_ERROR stateDispenseEnd::onAction()
         m_pMessaging->sendMessage("Target Hit");
     }
 
+    adjustSizeToDispensedVolume();
+
     bool is_valid_dispense = productDispensers[pos].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML;
 
     // SIZE_CUSTOM is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
-    if (size == SIZE_TEST)
+    if (m_pMessaging->getRequestedSize() == SIZE_TEST)
     {
 
         debugOutput::sendMessage("Test dispensing. (" + to_string(productDispensers[pos].getVolumeDispensed()) + "ml). No transaction will be made.", MSG_INFO);
@@ -104,20 +106,77 @@ DF_ERROR stateDispenseEnd::onAction()
     return e_ret;
 }
 
-double stateDispenseEnd::setFinalMetrics()
+void stateDispenseEnd::adjustSizeToDispensedVolume()
 {
     // check requested volume versus dispensed volume.
-    
-    char size = m_pMessaging->getRequestedSize();
-    double v_disp = productDispensers[pos].getVolumeDispensed();
-
-    if (size == SIZE_INVOLUNTARY_END){
+    if (m_pMessaging->getRequestedSize() == SIZE_INVOLUNTARY_END)
+    {
         // go down to next next allowed volume
-        
 
+        if (productDispensers[pos].getProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR))
+        {
+            m_pMessaging->setRequestedSize(SIZE_CUSTOM_CHAR);
+            debugOutput::sendMessage("Empty container detected, change to custom volume.", MSG_INFO);
+        }
+        else
+        {
+            char new_size = dispensedVolumeToSmallestFixedSize();
+            m_pMessaging->setRequestedSize(new_size);
+            debugOutput::sendMessage("Empty container detected, change to next lowest size: " + to_string(new_size), MSG_INFO);
+        }
     }
+    else if (m_pMessaging->getRequestedSize() == SIZE_CUSTOM_CHAR)
+    {
+        // debugOutput::sendMessage("custom volume dispensing.... ", MSG_INFO);
+    }
+    else
+    {
 
-        double v_target = productDispensers[pos].getVolumeDispensed();
+// WARNING: if enabled, customers can cheat. e.g. they can dispense 1.4L for a 1.5 liter dispense request. And then only pay for the next smaller volume (e.g. medium =1L)
+// --> I would advise against enabling it.
+//#define ENABLE_CUSTOMERS_CAN_PAY_FOR_LESS_THAN_THEY_DISPENSE
+#ifdef ENABLE_CUSTOMERS_CAN_PAY_FOR_LESS_THAN_THEY_DISPENSE
+        debugOutput::sendMessage("Normal fixed price dispensing. Will take the lowest fixed size compared to the actual dispensed volume.", MSG_INFO);
+        char new_size = dispensedVolumeToSmallestFixedSize();
+        m_pMessaging->setRequestedSize(new_size);
+#endif
+    }
+}
+
+char stateDispenseEnd::dispensedVolumeToSmallestFixedSize()
+{
+    // check real dispensed volume compared to available fixed sizes.
+    // if dispensed volume is lower than small size, will return "SIZE_SMALLER_THAN_SMALL"
+
+    double dispensed_volume = productDispensers[pos].getVolumeDispensed();
+
+    char sizes_big_to_small[3] = {SIZE_LARGE_CHAR, SIZE_MEDIUM_CHAR, SIZE_SMALL_CHAR};
+    char fixed_size;
+    double fixed_volume;
+    char lowest_fixed_size = SIZE_SMALLER_THAN_SMALL;
+    for (int i = 0; i < 3; i++)
+    {
+        fixed_size = sizes_big_to_small[i];
+        if (productDispensers[pos].getProduct()->getIsSizeEnabled(fixed_size))
+        {
+            // debugOutput::sendMessage("check volume (dispensed vs target volume)" + to_string(fixed_size), MSG_INFO);
+            // as long as the fixed volume is higher than the dispensed volume, go to next lowest size
+            fixed_volume = productDispensers[pos].getProduct()->getTargetVolume(fixed_size);
+
+            lowest_fixed_size = fixed_size;
+            // debugOutput::sendMessage("lloooowest: " + to_string(lowest_fixed_size), MSG_INFO);
+            if (dispensed_volume >= fixed_volume)
+            {
+                break;
+            }
+        }
+    }
+    if (lowest_fixed_size == SIZE_SMALLER_THAN_SMALL)
+    {
+        debugOutput::sendMessage("WARNING: SIZE SMALLER THAN SMALL DETECTED", MSG_INFO);
+        // lowest_fixed_size =SIZE_SMALL_CHAR;
+    }
+    return lowest_fixed_size;
 }
 
 DF_ERROR stateDispenseEnd::handleTransaction()
@@ -195,8 +254,8 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
     DF_ERROR e_ret = OK;
 
     std::string product = (productDispensers[pos].getProduct()->m_name);
-    std::string target_volume = to_string(productDispensers[pos].getProduct()->getTargetVolume(size));
-    std::string price = to_string(productDispensers[pos].getProduct()->getPrice(size));
+    std::string target_volume = to_string(productDispensers[pos].getProduct()->getTargetVolume(m_pMessaging->getRequestedSize()));
+    std::string price = to_string(productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize()));
     std::string start_time = productDispensers[pos].getDispenseStartTime();
     std::string machine_id = getMachineID();
     std::string pid = getProductID(pos + 1);
@@ -234,7 +293,6 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
         debugOutput::sendMessage("cURL failed to init", MSG_INFO);
         return e_ret;
     }
-    
 
     debugOutput::sendMessage("cURL init success", MSG_INFO);
 
@@ -262,7 +320,6 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
         if (readBuffer == "true")
         {
             debugOutput::sendMessage("sendTransactionToCloud: CURL succes.", MSG_INFO);
-            
         }
         else
         {
@@ -275,7 +332,6 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
     }
 
     return e_ret;
-
 }
 
 // TODO: Figure out when/how to send all the bufferred curl data to the cloud (fixed with AWS IoT?)
@@ -426,12 +482,12 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool test_transaction)
     }
     else
     {
-        price = to_string(productDispensers[pos].getProduct()->getPrice(size));
+        price = to_string(productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize()));
     }
 
     std::string sql1;
     std::string product = (productDispensers[pos].getProduct()->m_name).c_str();
-    std::string target_volume = to_string(productDispensers[pos].getProduct()->getTargetVolume(size));
+    std::string target_volume = to_string(productDispensers[pos].getProduct()->getTargetVolume(m_pMessaging->getRequestedSize()));
     std::string start_time = (productDispensers[pos].getDispenseStartTime());
     std::string dispensed_volume;
 
@@ -564,28 +620,30 @@ DF_ERROR stateDispenseEnd::print_receipt()
     string cost = (chars_cost);
 
     std::string name_receipt = (productDispensers[pos].getProduct()->m_name_receipt);
-    std::string plu = productDispensers[pos].getProduct()->getPLU(size);
+    std::string plu = productDispensers[pos].getProduct()->getPLU(m_pMessaging->getRequestedSize());
     std::string units = (productDispensers[pos].getProduct()->getDisplayUnits());
-    double price = productDispensers[pos].getProduct()->getPrice(size);
+    double price = productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize());
     double price_per_liter;
 
     double volume_dispensed;
 
-    if (size == 's')
+    debugOutput::sendMessage("aiisisixs  s=" + to_string(SIZE_SMALL_CHAR) + "l=" + to_string(SIZE_LARGE_CHAR) + "set: " + to_string(m_pMessaging->getRequestedSize()), MSG_INFO);
+
+    if (m_pMessaging->getRequestedSize() == 's')
     {
         volume_dispensed = productDispensers[pos].getProduct()->m_nVolumeTarget_s;
     }
-    else if (size == 'm')
+    else if (m_pMessaging->getRequestedSize() == 'm')
     {
         volume_dispensed = productDispensers[pos].getProduct()->m_nVolumeTarget_m;
     }
-    else if (size == 'l')
+    else if (m_pMessaging->getRequestedSize() == 'l')
     {
         volume_dispensed = productDispensers[pos].getProduct()->m_nVolumeTarget_l;
     }
-    else if (size == 'c')
+    else if (m_pMessaging->getRequestedSize() == 'c')
     {
-        price_per_liter = productDispensers[pos].getProduct()->getPrice(size);
+        price_per_liter = productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize());
         volume_dispensed = productDispensers[pos].getVolumeDispensed();
         price = price_per_liter * volume_dispensed / 1000.0;
         //@Andi, how do we go higher than 9.99?
@@ -616,15 +674,15 @@ DF_ERROR stateDispenseEnd::print_receipt()
 
         plu = plu_dynamic_formatted;
     }
-    else if (size == 't')
+    else if (m_pMessaging->getRequestedSize() == 't')
     {
-        price_per_liter = productDispensers[pos].getProduct()->getPrice(size);
+        price_per_liter = productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize());
         volume_dispensed = productDispensers[pos].getVolumeDispensed();
         price = price_per_liter * volume_dispensed / 1000.0;
     }
     else
     {
-        debugOutput::sendMessage("invalid size provided" + size, MSG_INFO);
+        debugOutput::sendMessage("invalid size provided" + m_pMessaging->getRequestedSize(), MSG_INFO);
     }
 
     // convert units
@@ -660,11 +718,11 @@ DF_ERROR stateDispenseEnd::print_receipt()
     string receipt_price_per_liter = (chars_price_per_liter_formatted);
 
     // add base price
-    if (size == 'c')
+    if (m_pMessaging->getRequestedSize() == 'c')
     {
         receipt_volume_formatted = receipt_volume_formatted + units + " @" + receipt_price_per_liter + "$/" + base_unit;
     }
-    else if (size == 't')
+    else if (m_pMessaging->getRequestedSize() == 't')
     {
         receipt_volume_formatted = receipt_volume_formatted + units + " @" + receipt_price_per_liter + "$/" + base_unit;
     }

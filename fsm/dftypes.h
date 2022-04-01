@@ -48,6 +48,18 @@
 #define SIZE_INDEX_MEDIUM 1
 #define SIZE_INDEX_LARGE 2
 #define SIZE_INDEX_CUSTOM 3
+
+#define SIZE_SMALL_CHAR 's'
+#define SIZE_MEDIUM_CHAR 'm'
+#define SIZE_LARGE_CHAR 'l'
+#define SIZE_CUSTOM_CHAR 'c'
+#define SIZE_TEST 't'
+#define SIZE_DUMMY 'x'
+#define SIZE_SMALLER_THAN_SMALL '0'
+#define SIZE_INVOLUNTARY_END 'i' // hack to accomodate for empty container or dispense timeout
+
+
+#define SIZE_INDEX_TO_CHAR_ARRAY {SIZE_SMALL_CHAR,SIZE_MEDIUM_CHAR,SIZE_LARGE_CHAR, SIZE_CUSTOM_CHAR}
  
 
 typedef enum Dispense_behaviour

@@ -186,19 +186,22 @@ void product::productVolumeInfo()
     //	cout << "Dispensed so far: " << m_nVolumeDispensed << endl;
 }
 
-char product::getClosestLowerTargetVolume(double volume){
+// char product::getClosestLowerTargetVolume(double volume)
+// {
 
-    int i=3;
+//     int i = 3;
 
-    while ( i>=0 && !isEnabledSizes[i]){
-        i--;
-    }
-    if (i<0){
-        return SIZE_TEST;
-    }
-    
-    double targetVolume = getTarg
-}
+//     while (i >= 0 && !isEnabledSizes[i])
+//     {
+//         i--;
+//     }
+//     if (i < 0)
+//     {
+//         return SIZE_TEST;
+//     }
+
+//     double targetVolume = getTarg
+// }
 
 double product::getTargetVolume(char size)
 {
@@ -289,6 +292,41 @@ bool product::getIsEnabled()
 void product::setIsEnabled(bool isEnabled)
 {
     this->isEnabled = isEnabled;
+}
+bool product::getIsSizeEnabled(char size)
+{
+    return isEnabledSizes[sizeCharToSizeIndex(size)];
+}
+
+char product::sizeIndexToSizeChar(int sizeIndex)
+{
+    return sizeIndexToChar[sizeIndex];
+}
+int product::sizeCharToSizeIndex(char size)
+{
+
+    int size_index;
+    switch (size)
+    {
+    case SIZE_SMALL_CHAR:
+        size_index = SIZE_INDEX_SMALL;
+        break;
+    case SIZE_MEDIUM_CHAR:
+        size_index = SIZE_INDEX_MEDIUM;
+        break;
+    case SIZE_LARGE_CHAR:
+        size_index = SIZE_INDEX_LARGE;
+        break;
+    case SIZE_CUSTOM_CHAR:
+        size_index = SIZE_INDEX_CUSTOM;
+        break;
+    default:
+        debugOutput::sendMessage("ERROR Unknown size char: " + size, MSG_INFO);
+        size_index = 666;
+        break;
+    }
+    debugOutput::sendMessage("aefasefasefasefasefasef size char: " + to_string(size_index), MSG_INFO);
+    return size_index;
 }
 
 string product::getDisplayUnits()
@@ -535,7 +573,8 @@ string product::getPLU(char size)
 
 bool product::reloadParametersFromDb()
 {
-    for (uint8_t i=0;i<4;i++){
+    for (uint8_t i = 0; i < 4; i++)
+    {
         isEnabledSizes[i] = false;
     }
 
@@ -566,16 +605,9 @@ bool product::reloadParametersFromDb()
     //     m_name_receipt = name_receipt;
     //     m_display_unit = display_unit;
 
-    debugOutput::sendMessage("000000 ", MSG_INFO);
     rc = sqlite3_open(DB_PATH, &db);
-
-    debugOutput::sendMessage("11111111 ", MSG_INFO);
-
     sqlite3_stmt *stmt;
-    debugOutput::sendMessage("22222 ", MSG_INFO);
-
     string sql_string = "SELECT * FROM products WHERE slot=" + to_string(m_nSlot) + ";";
-    debugOutput::sendMessage("33333 " + sql_string, MSG_INFO);
 
     /* Create SQL statement for transactions */
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
@@ -587,12 +619,12 @@ bool product::reloadParametersFromDb()
     {
         debugOutput::sendMessage("process record: " + sql_string, MSG_INFO);
         int columns_count = sqlite3_data_count(stmt);
-        debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
+        // debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
 
         for (int column_index = 0; column_index < columns_count; column_index++)
         {
 
-            debugOutput::sendMessage("column index: " + to_string(column_index), MSG_INFO);
+            // debugOutput::sendMessage("column index: " + to_string(column_index), MSG_INFO);
 #ifdef USE_OLD_DATABASE
             switch (column_index)
             {
@@ -796,22 +828,22 @@ bool product::reloadParametersFromDb()
             break;
             case DB_PRODUCTS_IS_ENABLED_SMALL:
             {
-                isEnabledSizes[SIZE_INDEX_SMALL] = true;
+                isEnabledSizes[SIZE_INDEX_SMALL] = sqlite3_column_int(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_IS_ENABLED_MEDIUM:
             {
-                isEnabledSizes[SIZE_INDEX_MEDIUM] = true;
+                isEnabledSizes[SIZE_INDEX_MEDIUM] = sqlite3_column_int(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_IS_ENABLED_LARGE:
             {
-                isEnabledSizes[SIZE_INDEX_LARGE] = true;
+                isEnabledSizes[SIZE_INDEX_LARGE] = sqlite3_column_int(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_IS_ENABLED_CUSTOM:
-                isEnabledSizes[SIZE_INDEX_CUSTOM] = true;
             {
+                isEnabledSizes[SIZE_INDEX_CUSTOM] = sqlite3_column_int(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_SIZE_SMALL:

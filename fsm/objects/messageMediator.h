@@ -60,13 +60,6 @@
 
 #define PRODUCT_DUMMY 'z'
 
-#define SIZE_SMALL_CHAR 's'
-#define SIZE_MEDIUM_CHAR 'm'
-#define SIZE_LARGE_CHAR 'l'
-#define SIZE_CUSTOM_CHAR 'c'
-#define SIZE_TEST 't'
-#define SIZE_DUMMY '0'
-#define SIZE_INVOLUNTARY_END 'i' // hack to accomodate for empty container or dispense timeout
 
 #define PWM_CHAR 'P'
 

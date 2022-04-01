@@ -100,6 +100,7 @@ public:
 
         char sizeIndexToChar[4] = SIZE_INDEX_TO_CHAR_ARRAY;
 
+        // string m_soapstand_product_serial;
         string m_name;
         string m_display_unit;
         string m_name_receipt;

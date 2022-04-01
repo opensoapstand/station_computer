@@ -653,15 +653,17 @@ DF_ERROR stateDispenseEnd::print_receipt()
 
         // string.Format("{0:f3}", price);
         // std::string test =std::format("{4:f3}", price);
-        if (plu.size() != 6)
+        if (plu.size() != 8)
         {
             // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
-            debugOutput::sendMessage("ERROR custom plu length must be of length six : " + plu, MSG_INFO);
+            debugOutput::sendMessage("ERROR custom plu length must be of length eight. (standard drinkfill preamble(627987) + 2digit product code) : " + plu, MSG_INFO);
+            string fake_plu = "66666666";
+            plu = fake_plu;
         }
 
         snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%5.2f", price);
         string plu_dynamic_price = (chars_plu_dynamic_formatted);
-        string plu_dynamic_formatted = plu + "01" + plu_dynamic_price;
+        string plu_dynamic_formatted = plu + plu_dynamic_price;
 
         // 3.14 --> " 3.14" --> " 314" --> "0314"
         std::string toReplace(".");

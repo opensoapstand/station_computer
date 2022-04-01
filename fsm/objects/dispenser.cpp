@@ -322,9 +322,10 @@ bool dispenser::getDispenseButtonValue()
 void dispenser::dispenseButtonTimingreset()
 {
     dispense_button_total_pressed_millis = 0;
+    dispense_button_current_press_millis = 0;
 }
 
-uint64_t dispenser::dispenseButtonTimingUpdate()
+void dispenser::dispenseButtonTimingUpdate()
 {
     // CAUTION: rudimentary. Will not detect intermitting keypresses between calls. So, check frequently.
 
@@ -334,14 +335,23 @@ uint64_t dispenser::dispenseButtonTimingUpdate()
     {
         uint64_t interval = now - dispense_button_time_at_last_check_epoch;
         dispense_button_total_pressed_millis += interval;
+        dispense_button_current_press_millis += interval;
     }
     else
     {
+        dispense_button_current_press_millis = 0;
         // do nothing;
     }
     dispense_button_time_at_last_check_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    debugOutput::sendMessage("Total time dispense button pressed millis : " + to_string(dispense_button_total_pressed_millis), MSG_INFO);
+    debugOutput::sendMessage("Button press millis. Total:" + to_string(dispense_button_total_pressed_millis) + " Current press:" + to_string(dispense_button_current_press_millis), MSG_INFO);
+    //return dispense_button_total_pressed_millis;
+}
+
+uint64_t dispenser::getButtonPressedTotalMillis(){
     return dispense_button_total_pressed_millis;
+}
+uint64_t dispenser::getButtonPressedCurrentPressMillis(){
+    return dispense_button_current_press_millis;
 }
 
 // Reverse pump: Turn forward pin LOW - Reverse pin HIGH
@@ -591,13 +601,27 @@ Dispense_behaviour dispenser::getDispenseStatus()
 
     Time_val avg = getAveragedFlowRate(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS);
 
-    uint64_t relative_dispense_time = avg.time_millis - dispense_start_timestamp_epoch;
-    debugOutput::sendMessage("Dispense flowRate 1s avg [V/s]: " + to_string(avg.value) + ". avg time millis: " + to_string(relative_dispense_time) + "dispense time: " + to_string(dispense_time_millis), MSG_INFO);
+   uint64_t relative_dispense_time = avg.time_millis - dispense_start_timestamp_epoch;
+    // debugOutput::sendMessage("Dispense flowRate 1s avg [V/s]: " + to_string(avg.value) + ". avg time millis: " + to_string(relative_dispense_time) + "dispense time: " + to_string(dispense_time_millis), MSG_INFO);
+
+    debugOutput::sendMessage("Dispense flowRate " + to_string(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) + "ms avg [V/s]: " + to_string(avg.value) + ". Time dispensing: " + to_string(relative_dispense_time) + "Dispense state time: " + to_string(dispense_time_millis), MSG_INFO);
+
     updateRunningAverageWindow();
+
+    dispenseButtonTimingUpdate();
 
     Dispense_behaviour state;
 
-    if (relative_dispense_time < EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS)
+    // CAUTION: we are not using motor speed feedback. Button press assumes motor running.
+
+    // 
+    // if (relative_dispense_time < EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS 
+    //     ||  getButtonPressedCurrentPressMillis() < 3*EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS 
+    //     )
+    // {
+
+    // at each button press, the average flow needs to ramp up again. --> not available
+    if (getButtonPressedCurrentPressMillis() < 3 * EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS)
     {
         state = FLOW_STATE_UNAVAILABLE;
     }
@@ -614,11 +638,11 @@ Dispense_behaviour dispenser::getDispenseStatus()
         if (previous_dispense_state == FLOW_STATE_DISPENSING)
         {
             // once it was dispensing, empty dispenser is detected immediatly if no product flows.
-            
+            // but, if the button was release and repressed, the average will not be correct --> take into account. at top level (FLOW_STATE_UNAVAILABLE) 
         }
         else
         {
-            if (dispenseButtonTimingUpdate() > EMPTY_CONTAINER_DETECTION_MAXIMUM_PRIME_TIME_MILLIS)
+            if (getButtonPressedTotalMillis() > EMPTY_CONTAINER_DETECTION_MAXIMUM_PRIME_TIME_MILLIS)
             {
                 state = FLOW_STATE_CONTAINER_EMPTY;
             }

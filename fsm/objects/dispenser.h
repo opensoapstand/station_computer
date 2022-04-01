@@ -89,7 +89,9 @@ public:
       Dispense_behaviour getDispenseStatus();
 
       void dispenseButtonTimingreset();
-      uint64_t dispenseButtonTimingUpdate();
+      void dispenseButtonTimingUpdate();
+      uint64_t getButtonPressedTotalMillis();
+      uint64_t getButtonPressedCurrentPressMillis();
 
       // void setm_pIsDispenseDone() { *m_pIsDispensing = false; }
       // void setm_pIsDispensing() { *m_pIsDispensing = true; }
@@ -151,7 +153,8 @@ private:
       uint64_t dispense_start_timestamp_epoch;
 
       uint64_t dispense_button_time_at_last_check_epoch;
-      uint64_t dispense_button_total_pressed_millis;
+      uint64_t dispense_button_total_pressed_millis; // culmination of all button press times
+      uint64_t dispense_button_current_press_millis; // time of this single press
 
       Dispense_behaviour previous_dispense_state;
 

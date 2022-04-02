@@ -14,7 +14,7 @@ bool df_util::fileExists(QString path)
 
     if (!exists)
     {
-        qDebug() << "File not found: " << path;
+        qDebug() << "WARNING: File not found: " << path;
     }
 
     return exists;

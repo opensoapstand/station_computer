@@ -22,6 +22,7 @@
 page_idle::page_idle(QWidget *parent) : QWidget(parent),
                                         ui(new Ui::page_idle)
 {
+     
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
     QPixmap background(PAGE_IDLE_BACKGROUND_PATH);
@@ -35,13 +36,14 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 
     // customer logo
     QString logo_folder = LOGO_FOLDER_PATH;
-    QString logo_path = logo_folder + "C-1_logo_white.png";
+    QString logo_path = logo_folder + "C-2_logo_white.png";
     QPixmap image_logo(logo_path);
+    df_util::fileExists(logo_path);
 
     int w = ui->logo_label->width();
     int h = ui->logo_label->height();
 
-    // set a scaled pixmap to a w x h window keeping its aspect ratio 
+    // // set a scaled pixmap to a w x h window keeping its aspect ratio 
     ui->logo_label->setPixmap(image_logo.scaled(w,h,Qt::KeepAspectRatio));
     // ui->logo_label->show();
     // ui->logo_label->raise();

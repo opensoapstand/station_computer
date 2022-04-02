@@ -139,8 +139,6 @@ int main(int argc, char *argv[])
     df_util::fileExists(KEYBOARD_IMAGE_PATH);
     df_util::fileExists(FULL_TRANSPARENT_IMAGE_PATH);
 
-
-
     // Page pathing references to function calls.
     helpPage->setPage(firstSelectPage, p_pageProduct, idlePage, paymentPage);
     initPage->setPage(idlePage);
@@ -153,11 +151,11 @@ int main(int argc, char *argv[])
     p_page_dispense->setPage(paymentPage, p_page_thank_you, idlePage);
     p_page_thank_you->setPage(p_page_dispense, idlePage, paymentPage);
     wifiError->setPage(paymentPage, p_page_thank_you, idlePage);
+    
     initPage->showFullScreen();
 
     DfUiServer dfUiServer;
     dfUiServer.startServer();
-
  
     QObject::connect(&dfUiServer, &DfUiServer::controllerFinishedAck, p_page_thank_you, &pagethankyou::controllerFinishedTransaction);
     QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_maintenance, &page_maintenance::printerStatusFeedback);

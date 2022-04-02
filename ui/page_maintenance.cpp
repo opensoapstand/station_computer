@@ -32,7 +32,7 @@ page_maintenance::page_maintenance(QWidget *parent) : QWidget(parent),
     QPalette palette;
     palette.setBrush(QPalette::Background, Qt::white);
     this->setPalette(palette);
-
+   
     ui->product1_button->setIcon(ButtonIcon1);
     ui->product1_button->setIconSize(QSize(241, 381));
 

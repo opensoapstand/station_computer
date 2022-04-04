@@ -16,8 +16,8 @@
   <widget class="QPushButton" name="nextPageButton">
    <property name="geometry">
     <rect>
-     <x>280</x>
-     <y>-600</y>
+     <x>0</x>
+     <y>0</y>
      <width>1081</width>
      <height>1921</height>
     </rect>
@@ -55,10 +55,10 @@ text-transform: lowercase;</string>
   <widget class="QLabel" name="logo_label">
    <property name="geometry">
     <rect>
-     <x>480</x>
-     <y>1610</y>
-     <width>141</width>
-     <height>121</height>
+     <x>410</x>
+     <y>1580</y>
+     <width>221</width>
+     <height>211</height>
     </rect>
    </property>
    <property name="text">

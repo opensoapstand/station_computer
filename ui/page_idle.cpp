@@ -22,7 +22,10 @@
 page_idle::page_idle(QWidget *parent) : QWidget(parent),
                                         ui(new Ui::page_idle)
 {
-     
+      // IPC Networking
+    dfUtility = new df_util();
+    // dfUtility->m_IsSendingFSM = false;
+
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
     QPixmap background(PAGE_IDLE_BACKGROUND_PATH);
@@ -34,27 +37,23 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 
     ui->nextPageButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");          // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
 
-    // customer logo
-    QString logo_folder = LOGO_FOLDER_PATH;
-    QString logo_path = logo_folder + "C-2_logo_white.png";
-    QPixmap image_logo(logo_path);
-    df_util::fileExists(logo_path);
+   
+    // QPixmap image_logo(logo_path);
+    // df_util::fileExists(logo_path);
 
-    int w = ui->logo_label->width();
-    int h = ui->logo_label->height();
+    // int w = ui->logo_label->width();
+    // int h = ui->logo_label->height();
 
-    // // set a scaled pixmap to a w x h window keeping its aspect ratio 
-    ui->logo_label->setPixmap(image_logo.scaled(w,h,Qt::KeepAspectRatio));
-    // ui->logo_label->show();
-    // ui->logo_label->raise();
+    // // // set a scaled pixmap to a w x h window keeping its aspect ratio 
+    // ui->logo_label->setPixmap(image_logo.scaled(w,h,Qt::KeepAspectRatio));
+    // // ui->logo_label->show();
+    // // ui->logo_label->raise();
 
     // TODO: Hold and pass DrinkOrder Object
     currentProductOrder = new DrinkOrder();
     currentProductOrder->setSelectedSlot(OPTION_SLOT_INVALID);
 
-    // IPC Networking
-    dfUtility = new df_util();
-    dfUtility->m_IsSendingFSM = false;
+   
 }
 
 // bool page_idle::isSlotAvailable(int slot){
@@ -72,6 +71,11 @@ void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pa
     // Chained to KB Listener
     this->p_pageSelectProduct = p_pageProduct;
     this->p_page_maintenance = pageMaintenance;
+
+    QString logo_folder = LOGO_FOLDER_PATH;
+    QString logo_path = logo_folder + "C-2_logo_white.png";
+    addPictureToLabel( ui->logo_label, logo_path);
+  
 }
 
 // DTOR
@@ -85,6 +89,8 @@ void page_idle::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
     //    DbManager db(DB_PATH);
     // ui->savedBottles_label->setText("THANKS TO YOU, THIS MACHINE HAS SAVED<br>OVER " + QString::number(db.getTotalTransactions()) + " PLASTIC CONTAINERS<br>FROM THE LANDFILL");
+       // customer logo
+    
 }
 
 /*
@@ -135,4 +141,23 @@ void page_idle::MMSlot()
     p_page_maintenance->showFullScreen();
     this->hide();
     this->p_pageSelectProduct->hide();
+}
+
+
+
+void page_idle::addPictureToLabel(QLabel* label, QString picturePath)
+
+{
+    //  QString logo_folder = LOGO_FOLDER_PATH;
+    // QString logo_path = logo_folder + "C-2_logo_white.png";
+    df_util::fileExists(picturePath);
+    QPixmap picture(picturePath);
+
+    int w = label->width();
+    int h = label->height();
+  
+
+    // // set a scaled pixmap to a w x h window keeping its aspect ratio 
+   label->setPixmap(picture.scaled(w,h,Qt::KeepAspectRatio));
+
 }

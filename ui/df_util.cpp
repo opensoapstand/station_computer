@@ -20,6 +20,8 @@ bool df_util::fileExists(QString path)
     return exists;
 }
 
+
+
 char df_util::sizeIndexToChar(int size_index)
 {
     char size_to_char[SIZES_COUNT] = {'!', 's', 'm', 'l', 'c', 't'}; // last c "test mode should become a t"

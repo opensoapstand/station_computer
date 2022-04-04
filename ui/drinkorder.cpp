@@ -250,7 +250,7 @@ void DrinkOrder::setVolumePerTickForSelectedSlot(QString volumePerTickInput)
     db.closeDB();
 }
 
-void DrinkOrder::setSizeToVolumeForSelected(QString volumeInput, int size)
+void DrinkOrder::setSizeToVolumeForSelectedSlot(QString volumeInput, int size)
 {
     double volume = inputTextToMlConvertUnits(volumeInput);
     qInfo() << "db.... volume set";
@@ -323,13 +323,19 @@ double DrinkOrder::inputTextToMlConvertUnits(QString inputValueAsText)
     }
 }
 
-QString DrinkOrder::getSelectedProductName()
+QString DrinkOrder::getProductName(int slot)
 {
-    qDebug() << "product db for name";
+qDebug() << "product db for name";
     DbManager db(DB_PATH);
-    QString product_name = db.getProductName(getSelectedSlot());
+    QString product_name = db.getProductName(slot);
     db.closeDB();
     return product_name;
+
+}
+
+QString DrinkOrder::getSelectedProductName()
+{
+   return  getProductName(getSelectedSlot());
 }
 
 

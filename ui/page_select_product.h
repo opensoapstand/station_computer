@@ -42,6 +42,10 @@ public:
     void select_product(int slot);
 
     QPushButton* selectProductButtons[4];
+    QLabel* selectProductPhotoLabels[4];
+    QLabel* selectProductNameLabels[4];
+    QLabel* selectProductIconLabels[4];
+    QLabel* selectProductTypeLabels[4];
 
 private slots:
     // **** Navigation ****
@@ -65,7 +69,7 @@ private:
     Ui::page_select_product *ui;
     // productPage_2 *selection_PageTwo;
     pageProduct *p_page_product;
-    page_idle* idlePage;
+    page_idle* p_page_idle;
 
     QResizeEvent *productResize;
 

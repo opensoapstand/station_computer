@@ -43,9 +43,11 @@ public:
     void setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance);
     ~page_idle();
     void showEvent(QShowEvent *event);
+    void addPictureToLabel(QLabel* label, QString picturePath);
 
     DrinkOrder* currentProductOrder;
     df_util* dfUtility;
+    
 
     DfUiCommThread* dfComm;
 

@@ -898,11 +898,11 @@ void page_maintenance_dispenser::updateValues()
     else if (target_s)
     {
         // db.updateTargetVolume_s(product_slot___, text_entered.toDouble());
-        selectedProductOrder->setSizeToVolumeForSelected(text_entered, SIZE_SMALL_INDEX);
+        selectedProductOrder->setSizeToVolumeForSelectedSlot(text_entered, SIZE_SMALL_INDEX);
     }
     else if (target_l)
     {
-        selectedProductOrder->setSizeToVolumeForSelected(text_entered, SIZE_LARGE_INDEX);
+        selectedProductOrder->setSizeToVolumeForSelectedSlot(text_entered, SIZE_LARGE_INDEX);
     }
     else if (vol_per_tick)
     {

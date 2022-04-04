@@ -93,11 +93,12 @@ public:
     bool isSelectedOrderValid();
     
     QString getSelectedProductName();
+    QString getProductName(int slot);
 
     double getSelectedVolume();
     double getVolume(int size);
 
-    void setSizeToVolumeForSelected(QString volumeInput, int size);
+    void setSizeToVolumeForSelectedSlot(QString volumeInput, int size);
     QString getVolumePerTickAsStringForSelectedSlot();
     double getVolumePerTickForSelectedSlot();
     void setVolumePerTickForSelectedSlot(QString volumePerTickInput);

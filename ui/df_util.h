@@ -65,9 +65,15 @@ using namespace std;
 
 
 #define PAGE_INIT_BACKGROUND_PATH "/home/df-admin/production/references/0_background_init.png"
-#define PAGE_IDLE_BACKGROUND_PATH "/home/df-admin/production/references/1_background_welcome.png"
-#define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/2_background_products.png"
+#define PAGE_IDLE_BACKGROUND_PATH "/home/df-admin/production/references/templates/default/1_welcome_panel.png"
+// #define PAGE_IDLE_BACKGROUND_PATH "/home/df-admin/production/references/1_background_welcome.png"
+#define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/templates/default/2_soap_page_1.png"
+// #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/2_background_products.png"
 #define PAGE_HELP_BACKGROUND_PATH "/home/df-admin/production/references/3_background_help.png"
+#define PRODUCT_1_PICTURE_PATH "/home/df-admin/production/references/products/P-3.png"
+#define PRODUCT_2_PICTURE_PATH "/home/df-admin/production/references/products/P-6.png"
+#define PRODUCT_3_PICTURE_PATH "/home/df-admin/production/references/products/P-8.png"
+#define PRODUCT_4_PICTURE_PATH "/home/df-admin/production/references/products/P-9.png"
 #define PAGE_PRODUCT_1_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_1.png"
 #define PAGE_PRODUCT_2_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_2.png"
 #define PAGE_PRODUCT_3_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_3.png"
@@ -89,6 +95,13 @@ using namespace std;
 #define KEYBOARD_IMAGE_PATH "/home/df-admin/production/references/soapstand-keyboard.png"
 #define FULL_TRANSPARENT_IMAGE_PATH "/home/df-admin/production/references/background.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/page_product_generic.png"
+
+
+#define ICON_TYPE_CONCENTRATE_PATH "/home/df-admin/production/references/templates/default/Soapstand_UI-concentrate-icon.png"
+#define ICON_TYPE_ALL_PURPOSE_PATH "/home/df-admin/production/references/templates/default/Soapstand-UI-icon-all-purposs.png"
+#define ICON_TYPE_DISH_PATH "/home/df-admin/production/references/templates/default/Soapstand-UI-icon-dish.png"
+#define ICON_TYPE_HAND_PATH "/home/df-admin/production/references/templates/default/Soapstand-UI-icon-hand-soap.png"
+#define ICON_TYPE_LAUNDRY_PATH "/home/df-admin/production/references/templates/default/Soapstand-UI-icon-laundry.png"
                          
 #define LOGO_FOLDER_PATH "/home/df-admin/production/references/logos/"
 //#define LOGO_FOLDER_PATH "/home/df-admin/drinkfill/ui/references/logos/"

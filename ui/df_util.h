@@ -14,7 +14,7 @@
 #define ENABLE_COUPON   // Petros stations have no coupon
 
 #define OPTION_SLOT_INVALID 0
-#define SLOT_COUNT 4
+#define SLOT_COUNT 4  // number of products
 
 #define SIZES_COUNT 6
 
@@ -70,10 +70,12 @@ using namespace std;
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/templates/default/2_soap_page_1.png"
 // #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/2_background_products.png"
 #define PAGE_HELP_BACKGROUND_PATH "/home/df-admin/production/references/3_background_help.png"
-#define PRODUCT_1_PICTURE_PATH "/home/df-admin/production/references/products/P-3.png"
-#define PRODUCT_2_PICTURE_PATH "/home/df-admin/production/references/products/P-6.png"
-#define PRODUCT_3_PICTURE_PATH "/home/df-admin/production/references/products/P-8.png"
-#define PRODUCT_4_PICTURE_PATH "/home/df-admin/production/references/products/P-9.png"
+// #define PRODUCT_1_PICTURE_PATH "/home/df-admin/production/references/products/P-3.png"
+// #define PRODUCT_2_PICTURE_PATH "/home/df-admin/production/references/products/P-6.png"
+// #define PRODUCT_3_PICTURE_PATH "/home/df-admin/production/references/products/P-8.png"
+// #define PRODUCT_4_PICTURE_PATH "/home/df-admin/production/references/products/P-9.png"
+#define PRODUCT_PICTURES_ROOT_PATH "/home/df-admin/production/references/products/%1.png"
+
 #define PAGE_PRODUCT_1_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_1.png"
 #define PAGE_PRODUCT_2_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_2.png"
 #define PAGE_PRODUCT_3_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_3.png"

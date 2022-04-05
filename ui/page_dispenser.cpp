@@ -60,7 +60,7 @@ page_dispenser::~page_dispenser()
 void page_dispenser::showEvent(QShowEvent *event)
 {
     this->isDispensing = false;
-    qDebug() << ">>>>>>>>>>>> Enter dispense page. <<<<<<<<<<<<<<<<<<";
+   qDebug() << "<<<<<<<Page Enter: Dispenser >>>>>>>>>";
     qDebug() << "selected slot: " << QString::number(selectedProductOrder->getSelectedSlot());
 
     QPixmap background(PAGE_DISPENSE_BACKGROUND_PATH);

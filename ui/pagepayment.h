@@ -203,7 +203,7 @@ private:
     std::vector<uint8_t> pktResponded;
     std::string productSelectedPrice;
     bool sendToUX410();
-    bool paymentInit();
+    bool tap_init();
     bool waitForUX410();
     void cancelPayment();
     bool getResponse(){return response;}

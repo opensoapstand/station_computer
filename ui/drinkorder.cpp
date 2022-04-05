@@ -323,23 +323,37 @@ double DrinkOrder::inputTextToMlConvertUnits(QString inputValueAsText)
     }
 }
 
+QString DrinkOrder::getProductDrinkfillSerial(int slot)
+{
+    qDebug() << "product db for drinkfill id";
+    DbManager db(DB_PATH);
+    QString serial = db.getProductDrinkfillSerial(slot);
+    db.closeDB();
+    return serial;
+}
+
+QString DrinkOrder::getProductPicturePath(int slot)
+{
+    QString serial = getProductDrinkfillSerial(slot);
+    return  QString(PRODUCT_PICTURES_ROOT_PATH).arg(serial);
+}
+
 QString DrinkOrder::getProductName(int slot)
 {
-qDebug() << "product db for name";
+    qDebug() << "product db for name";
     DbManager db(DB_PATH);
     QString product_name = db.getProductName(slot);
     db.closeDB();
     return product_name;
-
 }
 
 QString DrinkOrder::getSelectedProductName()
 {
-   return  getProductName(getSelectedSlot());
+    return getProductName(getSelectedSlot());
 }
 
-
-QString DrinkOrder::getMachineId(){
+QString DrinkOrder::getMachineId()
+{
 
     qDebug() << " db... getMachineID";
 
@@ -389,7 +403,6 @@ QString DrinkOrder::getSelectedSizeToVolumeWithCorrectUnits(bool round, bool add
 
     return getSizeToVolumeWithCorrectUnitsForSelectedSlot(getSelectedSize(), round, addUnits);
 }
-
 
 QString DrinkOrder::getSelectedPaymentMethod()
 {

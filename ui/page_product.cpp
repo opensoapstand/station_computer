@@ -145,7 +145,7 @@ void pageProduct::cancelTimers()
 
 void pageProduct::showEvent(QShowEvent *event)
 {
-    qDebug() << "\n---Page_product: showEvent(will not display elements)";
+    qDebug() << "<<<<<<<Page Enter: Product >>>>>>>>>";
     selectedProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
     QWidget::showEvent(event);
 
@@ -208,7 +208,7 @@ void pageProduct::reset_and_show_page_elements()
     //     {852, 990, 135, 100},  // L
     //     {560, 1100, 430, 115}   // custom
     //     };
-    for (uint8_t i = 0; i < 4; i++)
+    for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
         orderSizeButtons[i]->setFixedSize(QSize(orderSizeButtons_xywh_generic_product_page[i][2], orderSizeButtons_xywh_generic_product_page[i][3]));
         orderSizeButtons[i]->move(orderSizeButtons_xywh_generic_product_page[i][0], orderSizeButtons_xywh_generic_product_page[i][1]);
@@ -227,7 +227,7 @@ void pageProduct::reset_and_show_page_elements()
     {
         bitmap_location = "/home/df-admin/production/references/4_pay_select_page_l_1.png";
     }
-    for (uint8_t i = 0; i < 4; i++)
+    for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
         orderSizeButtons[i]->setFixedSize(QSize(orderSizeButtons_xywh_static_product_page[i][2], orderSizeButtons_xywh_static_product_page[i][3]));
         orderSizeButtons[i]->move(orderSizeButtons_xywh_static_product_page[i][0], orderSizeButtons_xywh_static_product_page[i][1]);
@@ -279,7 +279,7 @@ void pageProduct::loadOrderSelectedSize()
 
     int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
 
-    for (uint8_t i = 0; i < 4; i++)
+    for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
         qDebug() << "*****load size: " << i;
         QString price = QString::number(selectedProductOrder->getPrice(product_sizes[i]), 'f', 2);
@@ -347,7 +347,7 @@ void pageProduct::loadOrderSelectedSize()
     this->setPalette(palette);
 
     QString transparent_path = FULL_TRANSPARENT_IMAGE_PATH;
-    for (uint8_t i = 0; i < 4; i++)
+    for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
         qDebug() << "*****load size: " << i;
         QString price = QString::number(selectedProductOrder->getPrice(product_sizes[i]), 'f', 2);

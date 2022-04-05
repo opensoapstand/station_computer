@@ -137,6 +137,25 @@ void DbManager::closeDB()
     }
 }
 
+QString DbManager::getProductDrinkfillSerial(int slot)
+{
+    QSqlQuery qry;
+    QString val;
+
+    {
+        qry.prepare("SELECT soapstand_product_serial FROM products WHERE slot=:slot");
+        qry.bindValue(":slot", slot);
+        qry.exec();
+
+        while (qry.next())
+        {
+            val = qry.value(0).toString();
+        }
+    }
+
+    return val;
+}
+
 QString DbManager::getProductName(int slot)
 {
     QSqlQuery product_query;
@@ -589,8 +608,6 @@ int DbManager::getNumberOfProducts()
     return products;
 }
 
-
-
 double DbManager::getVolumeDispensedSinceRestock(int slot)
 {
     qDebug() << " db...vol dispensed since restock";
@@ -670,12 +687,9 @@ int DbManager::getSlotEnabled(int slot)
 
 bool DbManager::getCouponsEnabled()
 {
-    qDebug() << " db... check coupon enabled";
     QSqlQuery qry;
     bool is_enabled;
-
     {
-
         qry.prepare("SELECT coupons_enabled FROM machine");
         qry.exec();
 

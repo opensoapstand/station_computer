@@ -94,6 +94,8 @@ public:
     
     QString getSelectedProductName();
     QString getProductName(int slot);
+    QString getProductDrinkfillSerial(int slot);
+    QString getProductPicturePath(int slot);
 
     double getSelectedVolume();
     double getVolume(int size);

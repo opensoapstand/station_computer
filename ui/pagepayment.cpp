@@ -63,12 +63,11 @@ pagePayment::pagePayment(QWidget *parent) : QWidget(parent),
     connect(qrTimer, SIGNAL(timeout()), this, SLOT(qrProcessedPeriodicalCheck()));
 
     // XXX: Comment on/off for Bypassing payment testing
+    qDebug() << "constructor Payment page. Check for tap.";
     tap_payment = false;
-
-    qDebug() << "ahoyy20";
     DbManager db(DB_PATH);
-
-    for (int i = 1; i < db.getNumberOfProducts(); i++)
+    
+    for (int i = 0; i < SLOT_COUNT; i++)
     {
         if (db.getPaymentMethod(i) == "tap")
         {
@@ -80,12 +79,12 @@ pagePayment::pagePayment(QWidget *parent) : QWidget(parent),
             ui->payment_bypass_Button->setEnabled(false);
         }
     }
+    db.closeDB();
     if (tap_payment)
     {
-        while (!paymentInit())
+        while (!tap_init())
             ;
     }
-    db.closeDB();
 }
 
 void pagePayment::stopPayTimers()
@@ -277,6 +276,7 @@ size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
 
 void pagePayment::showEvent(QShowEvent *event)
 {
+    qDebug() << "<<<<<<<Page Enter: Payment >>>>>>>>>";
 
     int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
     char drinkSize;
@@ -661,7 +661,7 @@ bool pagePayment::sendToUX410()
     return false;
 }
 
-bool pagePayment::paymentInit()
+bool pagePayment::tap_init()
 {
     paymentConnected = com.page_init();
 

@@ -70,6 +70,7 @@ void page_maintenance_dispenser::setSoldOutButtonText()
 
 void page_maintenance_dispenser::showEvent(QShowEvent *event)
 {
+    qDebug() << "<<<<<<<Page Enter: maintenance dispense >>>>>>>>>";
 
     QWidget::showEvent(event);
     int product_slot___ = this->idlePage->currentProductOrder->getSelectedSlot();
@@ -144,12 +145,12 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 void page_maintenance_dispenser::setPage(page_maintenance *pageMaintenance, page_idle *pageIdle)
 {
 
-    qDebug() << "<<<<<<<Page Enter: maintenance dispense >>>>>>>>>";
+    
     this->p_page_maintenance = pageMaintenance;
     this->idlePage = pageIdle;
     selectedProductOrder = idlePage->currentProductOrder;
 
-    refreshLabels();
+    //refreshLabels();
 }
 
 void page_maintenance_dispenser::on_backButton_clicked()
@@ -231,12 +232,12 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
 
     QString bitmap_location;
 
-    qDebug() << " ********** 666564 call db from maintenance select dispenser page  resize event" << endl;
-    DbManager db(DB_PATH);
+    // qDebug() << " ********** 666564 call db from maintenance select dispenser page  resize event" << endl;
+    // DbManager db(DB_PATH);
     bitmap_location.append("/home/df-admin/production/references/product");
     bitmap_location.append(QString::number(idlePage->currentProductOrder->getSelectedSlot()));
     bitmap_location.append(".png");
-    db.closeDB();
+    // db.closeDB();
 
     refreshLabels();
     update_dispense_stats(0);
@@ -258,7 +259,7 @@ void page_maintenance_dispenser::on_image_clicked()
 void page_maintenance_dispenser::on_pumpButton_clicked()
 {
     qDebug() << "call db from maintenance on pump button clicked" << endl;
-    DbManager db(DB_PATH);
+    // DbManager db(DB_PATH);
 
     int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
     if (product_slot___ > 0 && product_slot___ <= 9)
@@ -275,7 +276,7 @@ void page_maintenance_dispenser::on_pumpButton_clicked()
     }
 
     refreshLabels(); // fsm did not yet respond at this time. wait for feedback.
-    db.closeDB();
+    // db.closeDB();
 }
 
 void page_maintenance_dispenser::on_nameButton_clicked()

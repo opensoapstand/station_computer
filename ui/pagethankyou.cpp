@@ -56,6 +56,7 @@ pagethankyou::~pagethankyou()
 
 void pagethankyou::showEvent(QShowEvent *event)
 {
+    qDebug() << "<<<<<<<Page Enter: Thank you >>>>>>>>>";
     QWidget::showEvent(event);
     qDebug() << "ahoyy24";
     DbManager db(DB_PATH);

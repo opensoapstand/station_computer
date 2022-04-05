@@ -114,20 +114,23 @@ void page_select_product::displayProducts()
 {
 
     QString product_type_icons[5] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH};
-    QString product_pictures[4] = {PRODUCT_1_PICTURE_PATH, PRODUCT_2_PICTURE_PATH, PRODUCT_3_PICTURE_PATH, PRODUCT_4_PICTURE_PATH};
-    for (uint8_t i = 0; i < 4; i++)
+   
+    
+    for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
+       
         selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
         selectProductButtons[i]->raise();
-        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], product_pictures[i]);
+        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(i+1));
         selectProductPhotoLabels[i]->setStyleSheet("QLabel{border: 1px solid black;}");
 
         qDebug() << "db product details:";
         DbManager db(DB_PATH);
         QString product_type = db.getProductType(i + 1);
+        db.closeDB();
+
         QString name = p_page_idle->currentProductOrder->getProductName(i + 1);
 
-        db.closeDB();
 
         selectProductNameLabels[i]->setText(name);
         selectProductNameLabels[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
@@ -180,7 +183,7 @@ void page_select_product::displayProducts()
 
 void page_select_product::showEvent(QShowEvent *event)
 {
-    qDebug() << "Page_select_product: showEvent";
+    qDebug() << "<<<<<<<Page Enter: Select Product >>>>>>>>>";
     QWidget::showEvent(event);
     maintenanceCounter = 0;
 
@@ -198,7 +201,7 @@ void page_select_product::showEvent(QShowEvent *event)
 
     qDebug() << "db check if product is enabled";
     DbManager db(DB_PATH);
-    for (uint8_t i = 0; i < 4; i++)
+    for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
         if (!db.remainingVolumeIsBiggerThanLargestFixedSize(i + 1) || !db.getSlotEnabled(i + 1))
         {

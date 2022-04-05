@@ -60,6 +60,7 @@ page_init::~page_init()
 
 void page_init::showEvent(QShowEvent *event)
 {
+    qDebug() << "<<<<<<<Page Enter: Init >>>>>>>>>";
     QWidget::showEvent(event);
     //    qDebug() << "Start init Timers" << endl;
     initIdleTimer->start(1000);

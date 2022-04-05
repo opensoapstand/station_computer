@@ -63,6 +63,7 @@ public:
     bool updatePluSmall(int slot, QString new_plu);
     bool updatePluLarge(int slot, QString new_plu);
     QString getProductType(int slot);
+    QString getProductDrinkfillSerial(int slot);
 
 
 private:

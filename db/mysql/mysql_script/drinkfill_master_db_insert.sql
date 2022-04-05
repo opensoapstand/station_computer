@@ -5,7 +5,7 @@
 // insert to the database table structures with keys to define relationships
 //
 // created: 27-04-2020
-// by: Jason Wang
+// by: Lode Ameije & Ash Singla
 //
 // copyright 2022 by Drinkfill Beverages Ltd
 // all rights reservedname

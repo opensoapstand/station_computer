@@ -349,9 +349,11 @@ void stateDispenseEnd::bufferCURL(std::string curl_params)
     strftime(filetime, 50, "%F %T", timeinfo);
     std::string filelocation = "/home/df-admin/production/logging/transactions/";
     std::string filetype = ".txt";
-    std::string filename = filelocation + filetime + filetype;
+    // std::string filename = filelocation + filetime + filetype;
+    std::string filename = filelocation + "missingTransactions" + filetype;
+
     std::ofstream out;
-    out.open(filename);
+    out.open(filename,std::ios_base::app);
     if (!out.is_open())
     {
         debugOutput::sendMessage("Cannot open output file at " + filename + " content: " + curl_params, MSG_INFO);
@@ -359,7 +361,7 @@ void stateDispenseEnd::bufferCURL(std::string curl_params)
     }
     else
     {
-        out << curl_params;
+        out << curl_params << '\n';
         out.close();
     }
 }

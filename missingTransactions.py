@@ -22,7 +22,6 @@ def pushTransaction():
     #Open the file and read the file line by line
     with open(filename,'r') as file1:
         transactions = file1.readlines()
-        print(transactions)
         while transactions:
             transaction = convertStringToDictionary(transactions[0].strip())
             if transaction:

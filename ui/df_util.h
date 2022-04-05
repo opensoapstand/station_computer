@@ -70,10 +70,6 @@ using namespace std;
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/templates/default/2_soap_page_1.png"
 // #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/2_background_products.png"
 #define PAGE_HELP_BACKGROUND_PATH "/home/df-admin/production/references/3_background_help.png"
-// #define PRODUCT_1_PICTURE_PATH "/home/df-admin/production/references/products/P-3.png"
-// #define PRODUCT_2_PICTURE_PATH "/home/df-admin/production/references/products/P-6.png"
-// #define PRODUCT_3_PICTURE_PATH "/home/df-admin/production/references/products/P-8.png"
-// #define PRODUCT_4_PICTURE_PATH "/home/df-admin/production/references/products/P-9.png"
 #define PRODUCT_PICTURES_ROOT_PATH "/home/df-admin/production/references/products/%1.png"
 
 #define PAGE_PRODUCT_1_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_1.png"
@@ -84,6 +80,7 @@ using namespace std;
 #define PAGE_PRODUCT_2_S_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_2.png"
 #define PAGE_PRODUCT_3_S_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_3.png"
 #define PAGE_PRODUCT_4_S_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_4.png"
+
 #define PAGE_DISPENSE_BACKGROUND_PATH "/home/df-admin/production/references/5_background_dispense_instructions.png"
 #define PAGE_QR_PAY_BACKGROUND_PATH "/home/df-admin/production/references/5_background_pay_qr.png"
 #define PRODUCT_1_IMAGE_PATH "/home/df-admin/production/references/product1.png"
@@ -96,7 +93,9 @@ using namespace std;
 #define SOLD_OUT_IMAGE_PATH "/home/df-admin/production/references/soldOut.png"
 #define KEYBOARD_IMAGE_PATH "/home/df-admin/production/references/soapstand-keyboard.png"
 #define FULL_TRANSPARENT_IMAGE_PATH "/home/df-admin/production/references/background.png"
-#define PAGE_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/page_product_generic.png"
+
+#define PAGE_PRODUCT_BACKGROUND_PATH "/ghome/df-admin/production/references/page_product_generic.png"
+//#define PAGE_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_1.png"
 
 
 #define ICON_TYPE_CONCENTRATE_PATH "/home/df-admin/production/references/templates/default/Soapstand_UI-concentrate-icon.png"

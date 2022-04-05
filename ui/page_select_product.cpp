@@ -96,58 +96,6 @@ void page_select_product::setPage(pageProduct *pageSizeSelect, page_idle *pageId
     this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
     this->helpPage = pageHelp;
-    QString product_type_icons[5] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH};
-
-    QString product_pictures[4] = {PRODUCT_1_PICTURE_PATH, PRODUCT_2_PICTURE_PATH, PRODUCT_3_PICTURE_PATH, PRODUCT_4_PICTURE_PATH};
-
-    // QPixmap buttonBackground;
-    // QIcon buttonIcon;
-    for (uint8_t i = 0; i < 4; i++)
-    {
-        selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-        selectProductButtons[i]->raise();
-        // buttonBackground.load(product_pictures[i]);
-        // buttonIcon.addPixmap(buttonBackground);
-        // selectProductButtons[i]->setIcon(buttonIcon);
-        // selectProductButtons[i]->setIconSize(QSize(241, 381));
-        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], product_pictures[i]);
-        selectProductPhotoLabels[i]->setStyleSheet("QLabel{border: 1px solid black;}");
-
-        selectProductNameLabels[i]->setText("NAME " + QString::number(i));
-        selectProductNameLabels[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
-
-        QString product_type = "dish";
-
-        QString icon_path = "not found";
-        if (product_type == "dish")
-        {
-            icon_path = ICON_TYPE_DISH_PATH;
-        }
-        else
-        {
-            icon_path = ICON_TYPE_DISH_PATH;
-        }
-        // switch (product_type){
-        //     case (QString("dish")):{
-        //         icon_path = ICON_TYPE_DISH_PATH;
-        //         break;
-        //     }
-        //     default:
-        //     {
-        //         icon_path = ICON_TYPE_DISH_PATH;
-        //         break;
-        //     }
-
-        // }
-
-        qDebug() << icon_path;
-        p_page_idle->addPictureToLabel(selectProductIconLabels[i], icon_path);
-
-        selectProductTypeLabels[i]->setText("TYPE");
-        selectProductTypeLabels[i]->setStyleSheet("QLabel{font-family: 'Brevia';font-style: normal;font-weight: 700;font-size: 30px;line-height: 41px;qproperty-alignment: AlignCenter;text-transform: uppercase;color: #5E8580;}");
-
-        selectProductIconLabels[i]->setText(""); // icon should not display text.
-    }
 }
 
 // DTOR
@@ -162,11 +110,81 @@ page_select_product::~page_select_product()
 //     this->hide();
 // }
 
+void page_select_product::displayProducts()
+{
+
+    QString product_type_icons[5] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH};
+    QString product_pictures[4] = {PRODUCT_1_PICTURE_PATH, PRODUCT_2_PICTURE_PATH, PRODUCT_3_PICTURE_PATH, PRODUCT_4_PICTURE_PATH};
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+        selectProductButtons[i]->raise();
+        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], product_pictures[i]);
+        selectProductPhotoLabels[i]->setStyleSheet("QLabel{border: 1px solid black;}");
+
+        qDebug() << "db product details:";
+        DbManager db(DB_PATH);
+        QString product_type = db.getProductType(i + 1);
+        QString name = p_page_idle->currentProductOrder->getProductName(i + 1);
+
+        db.closeDB();
+
+        selectProductNameLabels[i]->setText(name);
+        selectProductNameLabels[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
+
+        QString icon_path = "not found";
+        if (product_type == "Dish")
+        {
+            icon_path = ICON_TYPE_DISH_PATH;
+        }
+        else if (product_type == "Hand")
+        {
+            icon_path = ICON_TYPE_HAND_PATH;
+        }
+        else if (product_type == "Laundry")
+        {
+            icon_path = ICON_TYPE_LAUNDRY_PATH;
+        }
+        else if (product_type == "All Purpose")
+        {
+            icon_path = ICON_TYPE_ALL_PURPOSE_PATH;
+        }
+        else if (product_type == "Contentrate")
+        {
+            icon_path = ICON_TYPE_CONCENTRATE_PATH;
+        }
+        else
+        {
+            icon_path = "Product/type/for/icon/not/found.aiaiai";
+        }
+        // switch (product_type){
+        //     case (QString("dish")):{
+        //         icon_path = ICON_TYPE_DISH_PATH;
+        //         break;
+        //     }
+        //     default:
+        //     {
+        //         icon_path = ICON_TYPE_DISH_PATH;
+        //         break;
+        //     }
+        // }
+
+        p_page_idle->addPictureToLabel(selectProductIconLabels[i], icon_path);
+
+        selectProductTypeLabels[i]->setText(product_type);
+        selectProductTypeLabels[i]->setStyleSheet("QLabel{font-family: 'Brevia';font-style: normal;font-weight: 700;font-size: 30px;line-height: 41px;qproperty-alignment: AlignCenter;text-transform: uppercase;color: #5E8580;}");
+
+        selectProductIconLabels[i]->setText(""); // icon should not display text.
+    }
+}
+
 void page_select_product::showEvent(QShowEvent *event)
 {
     qDebug() << "Page_select_product: showEvent";
     QWidget::showEvent(event);
     maintenanceCounter = 0;
+
+    displayProducts();
 
     if (productPageEndTimer == nullptr)
     {
@@ -178,7 +196,7 @@ void page_select_product::showEvent(QShowEvent *event)
     productPageEndTimer->start(1000);
     _productPageTimeoutSec = 15;
 
-    qDebug() << "db check eneabled";
+    qDebug() << "db check if product is enabled";
     DbManager db(DB_PATH);
     for (uint8_t i = 0; i < 4; i++)
     {

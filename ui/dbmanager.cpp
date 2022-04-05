@@ -589,6 +589,8 @@ int DbManager::getNumberOfProducts()
     return products;
 }
 
+
+
 double DbManager::getVolumeDispensedSinceRestock(int slot)
 {
     qDebug() << " db...vol dispensed since restock";
@@ -1286,6 +1288,30 @@ QString DbManager::getMachineID()
         }
     }
     return mid_string;
+}
+
+QString DbManager::getProductType(int slot)
+{
+    QSqlQuery product_type_query;
+    QString product_type_string;
+
+    {
+#ifdef USE_OLD_DATABASE
+        product_type_query.prepare("SELECT type FROM products WHERE slot=:slot");
+#else
+        product_type_query.prepare("SELECT type FROM products WHERE slot=:slot");
+#endif
+        product_type_query.bindValue(":slot", slot);
+        product_type_query.exec();
+
+        while (product_type_query.next())
+        {
+            product_type_string = product_type_query.value(0).toString();
+
+            // qDebug() << "Product: " << product_name << endl;
+        }
+    }
+    return product_type_string;
 }
 
 QString DbManager::getProductID(int slot)

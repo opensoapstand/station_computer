@@ -72,9 +72,7 @@ void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pa
     this->p_pageSelectProduct = p_pageProduct;
     this->p_page_maintenance = pageMaintenance;
 
-    QString logo_folder = LOGO_FOLDER_PATH;
-    QString logo_path = logo_folder + "C-2_logo_white.png";
-    addPictureToLabel( ui->logo_label, logo_path);
+   
   
 }
 
@@ -90,6 +88,10 @@ void page_idle::showEvent(QShowEvent *event)
     //    DbManager db(DB_PATH);
     // ui->savedBottles_label->setText("THANKS TO YOU, THIS MACHINE HAS SAVED<br>OVER " + QString::number(db.getTotalTransactions()) + " PLASTIC CONTAINERS<br>FROM THE LANDFILL");
        // customer logo
+
+    QString logo_folder = LOGO_FOLDER_PATH;
+    QString logo_path = logo_folder + "C-2_logo_white.png";
+    addPictureToLabel( ui->logo_label, logo_path);
     
 }
 

@@ -62,6 +62,8 @@ public:
     bool updateBuffer(int slot, double new_buffer);
     bool updatePluSmall(int slot, QString new_plu);
     bool updatePluLarge(int slot, QString new_plu);
+    QString getProductType(int slot);
+
 
 private:
     void emailEmpty(int slot);

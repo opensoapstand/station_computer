@@ -40,6 +40,8 @@ public:
     ~page_select_product();
     void cancelTimers();
     void select_product(int slot);
+    void displayProducts();
+    
 
     QPushButton* selectProductButtons[4];
     QLabel* selectProductPhotoLabels[4];

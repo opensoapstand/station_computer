@@ -4,7 +4,7 @@
 // database connection and data collection
 //
 // created: 15-OCT-2019
-// by: Jason Wang
+// by: Lode Ameije & Ash Singla
 //
 //
 // copyright 2019 by drinkfill

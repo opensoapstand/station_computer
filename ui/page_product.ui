@@ -61,10 +61,10 @@ line-height: 29px;</string>
   <widget class="QPushButton" name="mainPage_Button">
    <property name="geometry">
     <rect>
-     <x>480</x>
-     <y>1776</y>
-     <width>141</width>
-     <height>141</height>
+     <x>472</x>
+     <y>1777</y>
+     <width>125</width>
+     <height>125</height>
     </rect>
    </property>
    <property name="text">
@@ -236,10 +236,10 @@ text-align: center;</string>
   <widget class="QPushButton" name="orderSmall_Button">
    <property name="geometry">
     <rect>
-     <x>570</x>
-     <y>880</y>
-     <width>131</width>
-     <height>126</height>
+     <x>564</x>
+     <y>996</y>
+     <width>130</width>
+     <height>100</height>
     </rect>
    </property>
    <property name="autoFillBackground">
@@ -252,10 +252,10 @@ text-align: center;</string>
   <widget class="QPushButton" name="orderBig_Button">
    <property name="geometry">
     <rect>
-     <x>860</x>
-     <y>970</y>
-     <width>121</width>
-     <height>126</height>
+     <x>858</x>
+     <y>996</y>
+     <width>130</width>
+     <height>100</height>
     </rect>
    </property>
    <property name="text">
@@ -1948,10 +1948,10 @@ color: #58595B;</string>
   <widget class="QPushButton" name="orderMedium_Button">
    <property name="geometry">
     <rect>
-     <x>710</x>
-     <y>970</y>
-     <width>131</width>
-     <height>126</height>
+     <x>711</x>
+     <y>996</y>
+     <width>130</width>
+     <height>100</height>
     </rect>
    </property>
    <property name="autoFillBackground">
@@ -1964,10 +1964,10 @@ color: #58595B;</string>
   <widget class="QPushButton" name="orderCustom_Button">
    <property name="geometry">
     <rect>
-     <x>560</x>
-     <y>1100</y>
-     <width>421</width>
-     <height>111</height>
+     <x>563</x>
+     <y>1113</y>
+     <width>424</width>
+     <height>100</height>
     </rect>
    </property>
    <property name="autoFillBackground">
@@ -2195,7 +2195,6 @@ color: #58595B;
   <zorder>orderBig_Button</zorder>
   <zorder>label_invoice_name</zorder>
   <zorder>label_invoice_discount_amount</zorder>
-  <zorder>promoKeyboard</zorder>
   <zorder>orderMedium_Button</zorder>
   <zorder>orderCustom_Button</zorder>
   <zorder>label_size_medium</zorder>
@@ -2212,6 +2211,7 @@ color: #58595B;
   <zorder>label_invoice_discount_name</zorder>
   <zorder>label_product_photo</zorder>
   <zorder>label_product_ingredients_title</zorder>
+  <zorder>promoKeyboard</zorder>
  </widget>
  <resources/>
  <connections/>

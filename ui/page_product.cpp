@@ -8,8 +8,8 @@
 // Allows navigation to First product page
 // payment page and page_idle page
 //
-// created: 16-07-2020
-// by: Jason Wang
+// created: 05-04-2022
+// by: Lode Ameije & Ash Singla
 //
 // copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved

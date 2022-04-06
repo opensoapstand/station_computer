@@ -5,7 +5,7 @@
 // System level child class of GPIO
 //
 // created: 19-06-2020
-// by: Jason Wang
+// by: Lode Ameije & Ash Singla
 //
 // copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved

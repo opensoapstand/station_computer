@@ -267,11 +267,11 @@ void page_select_product::onProductPageTimeoutTick()
 {
     if (--_productPageTimeoutSec >= 0)
     {
-        // qDebug() << "Tick Down: " << _productPageTimeoutSec << endl;
+        // qDebug() << "Tick Down: " << _productPageTimeoutSec;
     }
     else
     {
-        // qDebug() << "Timer Done!" << _productPageTimeoutSec << endl;
+        // qDebug() << "Timer Done!" << _productPageTimeoutSec;
         mainPage();
     }
 }
@@ -296,7 +296,7 @@ void page_select_product::on_p_page_maintenanceButton_pressed()
 
 void page_select_product::on_mainPage_Button_clicked()
 {
-    qDebug() << "Back to Main Page Button pressed" << endl;
+    qDebug() << "Back to Main Page Button pressed";
     mainPage();
 }
 

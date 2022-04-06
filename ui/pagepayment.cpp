@@ -66,7 +66,7 @@ pagePayment::pagePayment(QWidget *parent) : QWidget(parent),
     qDebug() << "constructor Payment page. Check for tap.";
     tap_payment = false;
     DbManager db(DB_PATH);
-    
+
     for (int i = 0; i < SLOT_COUNT; i++)
     {
         if (db.getPaymentMethod(i) == "tap")
@@ -206,8 +206,6 @@ void pagePayment::displayPaymentPending(bool isVisible)
 // Navigation: Back to Drink Size Selection
 void pagePayment::on_previousPage_Button_clicked()
 {
-
-    //    qDebug() << "pagePayment: previous button" << endl;
     stopPayTimers();
     response = true;
     readTimer->stop();

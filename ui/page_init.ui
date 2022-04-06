@@ -19,9 +19,9 @@
   <widget class="QLabel" name="init_label">
    <property name="geometry">
     <rect>
-     <x>270</x>
+     <x>30</x>
      <y>1190</y>
-     <width>531</width>
+     <width>951</width>
      <height>111</height>
     </rect>
    </property>
@@ -35,6 +35,9 @@
    </property>
    <property name="text">
     <string>Initializing</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="fail_label">

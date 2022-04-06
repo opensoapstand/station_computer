@@ -22,6 +22,7 @@ public:
     double getProductVolume(int slot, char ml);
     QString getUnits(int slot);
     
+    QString getCustomerId();
     
     double getFullProduct(int slot);
     int getTotalTransactions();

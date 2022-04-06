@@ -719,6 +719,22 @@ bool DbManager::getCouponsEnabled()
     return is_enabled;
 }
 
+QString DbManager::getCustomerId()
+{
+    QSqlQuery qry;
+    QString val;
+    {
+        qry.prepare("SELECT soapstand_customer_id FROM machine");
+        qry.exec();
+
+        while (qry.next())
+        {
+            val = qry.value(0).toString();
+        }
+    }
+    return val;
+}
+
 bool DbManager::updateSlotAvailability(int slot, int isEnabled)
 {
     QSqlQuery qry;

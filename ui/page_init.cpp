@@ -77,7 +77,7 @@ void page_init::showEvent(QShowEvent *event)
     }
     else
     {
-        ui->init_label->setText("Searching for controller.");
+        ui->init_label->setText("Wait for controller signal.");
 #ifdef WAIT_FOR_CONTROLLER_READY
         _initIdleTimeoutSec = 20;
 #else
@@ -93,7 +93,7 @@ void page_init::initReadySlot(void)
     rebootTimer->stop();
     p_page_idle->showFullScreen();
     this->hide();
-    qDebug() << "Init done." << endl;
+    qDebug() << "Init done.";
 }
 
 void page_init::onInitTimeoutTick()

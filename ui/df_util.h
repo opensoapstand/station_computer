@@ -103,8 +103,8 @@ using namespace std;
 #define ICON_TYPE_HAND_PATH "/home/df-admin/production/references/templates/default/Soapstand-UI-icon-hand-soap.png"
 #define ICON_TYPE_LAUNDRY_PATH "/home/df-admin/production/references/templates/default/Soapstand-UI-icon-laundry.png"
                          
-#define LOGO_FOLDER_PATH "/home/df-admin/production/references/logos/"
-//#define LOGO_FOLDER_PATH "/home/df-admin/drinkfill/ui/references/logos/"
+#define COMPANY_LOGO_PATH "/home/df-admin/production/references/logos/%1_logo_white.png"
+//#define COMPANY_LOGO_PATH "/home/df-admin/drinkfill/ui/references/logos/"
 // #define PAGE_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_1.png"
 // #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/page_select_product_generic.png" // todo
 

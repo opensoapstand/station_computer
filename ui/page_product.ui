@@ -100,9 +100,9 @@ color: #58595B;</string>
   <widget class="QLabel" name="label_invoice_price_total">
    <property name="geometry">
     <rect>
-     <x>810</x>
+     <x>770</x>
      <y>1450</y>
-     <width>121</width>
+     <width>161</width>
      <height>41</height>
     </rect>
    </property>
@@ -1847,6 +1847,7 @@ outline: none;
      <string notr="true">buttonGroup</string>
     </attribute>
    </widget>
+   <zorder>p</zorder>
    <zorder>num1</zorder>
    <zorder>num2</zorder>
    <zorder>num3</zorder>
@@ -1882,7 +1883,6 @@ outline: none;
    <zorder>b</zorder>
    <zorder>n</zorder>
    <zorder>m</zorder>
-   <zorder>p</zorder>
    <zorder>backspace</zorder>
    <zorder>done</zorder>
   </widget>

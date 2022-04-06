@@ -21,4 +21,4 @@ sudo systemctl start controller_soapstand.service
 sudo ./status_services.sh
 
 #missing Transactions
-sudo ./scheduler.sh
+source ./scheduler.sh

@@ -100,9 +100,9 @@ color: #58595B;</string>
   <widget class="QLabel" name="label_invoice_price_total">
    <property name="geometry">
     <rect>
-     <x>810</x>
+     <x>770</x>
      <y>1450</y>
-     <width>121</width>
+     <width>161</width>
      <height>41</height>
     </rect>
    </property>
@@ -127,7 +127,7 @@ color: #58595B;</string>
    <property name="geometry">
     <rect>
      <x>560</x>
-     <y>1155</y>
+     <y>1160</y>
      <width>421</width>
      <height>41</height>
     </rect>
@@ -186,7 +186,7 @@ text-align: center;</string>
    <property name="geometry">
     <rect>
      <x>570</x>
-     <y>1106</y>
+     <y>1110</y>
      <width>401</width>
      <height>41</height>
     </rect>
@@ -1847,6 +1847,7 @@ outline: none;
      <string notr="true">buttonGroup</string>
     </attribute>
    </widget>
+   <zorder>p</zorder>
    <zorder>num1</zorder>
    <zorder>num2</zorder>
    <zorder>num3</zorder>
@@ -1882,7 +1883,6 @@ outline: none;
    <zorder>b</zorder>
    <zorder>n</zorder>
    <zorder>m</zorder>
-   <zorder>p</zorder>
    <zorder>backspace</zorder>
    <zorder>done</zorder>
   </widget>
@@ -2088,10 +2088,10 @@ text-align: center;</string>
   <widget class="QLabel" name="label_product_title">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>240</y>
-     <width>861</width>
-     <height>71</height>
+     <x>94</x>
+     <y>336</y>
+     <width>877</width>
+     <height>104</height>
     </rect>
    </property>
    <property name="text">
@@ -2101,10 +2101,10 @@ text-align: center;</string>
   <widget class="QLabel" name="label_product_description">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>320</y>
-     <width>901</width>
-     <height>291</height>
+     <x>95</x>
+     <y>474</y>
+     <width>894</width>
+     <height>252</height>
     </rect>
    </property>
    <property name="text">
@@ -2114,14 +2114,17 @@ text-align: center;</string>
   <widget class="QLabel" name="label_product_ingredients">
    <property name="geometry">
     <rect>
-     <x>510</x>
-     <y>460</y>
-     <width>361</width>
-     <height>371</height>
+     <x>564</x>
+     <y>813</y>
+     <width>425</width>
+     <height>319</height>
     </rect>
    </property>
    <property name="text">
     <string>TextLabel</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
    </property>
   </widget>
   <widget class="QLabel" name="label_invoice_discount_name">
@@ -2130,10 +2133,10 @@ text-align: center;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>1400</y>
-     <width>651</width>
-     <height>31</height>
+     <x>187</x>
+     <y>1364</y>
+     <width>740</width>
+     <height>29</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -2160,23 +2163,26 @@ color: #58595B;
   <widget class="QLabel" name="label_product_photo">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>550</y>
-     <width>411</width>
-     <height>391</height>
+     <x>94</x>
+     <y>763</y>
+     <width>450</width>
+     <height>450</height>
     </rect>
    </property>
    <property name="text">
     <string>picture</string>
    </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+   </property>
   </widget>
   <widget class="QLabel" name="label_product_ingredients_title">
    <property name="geometry">
     <rect>
-     <x>510</x>
-     <y>570</y>
+     <x>564</x>
+     <y>763</y>
      <width>351</width>
-     <height>41</height>
+     <height>50</height>
     </rect>
    </property>
    <property name="text">
@@ -2207,10 +2213,10 @@ color: #58595B;
   <zorder>label_size_large</zorder>
   <zorder>label_product_title</zorder>
   <zorder>label_product_description</zorder>
-  <zorder>label_product_ingredients</zorder>
   <zorder>label_invoice_discount_name</zorder>
   <zorder>label_product_photo</zorder>
   <zorder>label_product_ingredients_title</zorder>
+  <zorder>label_product_ingredients</zorder>
   <zorder>promoKeyboard</zorder>
  </widget>
  <resources/>

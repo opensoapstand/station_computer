@@ -67,7 +67,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
 
     QString css_title = "QLabel{"
                         "position: absolute;"
-                        "width: 894px;"
+                        "width: 877px;"
                         "height: 104px;"
                         "left: 94px;"
                         "top: 336px;"
@@ -85,7 +85,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
                               "position: absolute;"
                               "width: 894px;"
                               "height: 252px;"
-                              "left: 94px;"
+                              "left: 95px;"
                               "top: 474px;"
                               "font-family: 'Montserrat';"
                               "font-style: normal;"
@@ -95,13 +95,13 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
                               "color: #58595B;"
                               "}";
     ui->label_product_description->setStyleSheet(css_description);
-
+    ui->label_product_description->setWordWrap(true);
     QString css_ingredients = "QLabel{"
                               "position: absolute;"
-                              "width: 423px;"
+                              "width: 425px;"
                               "height: 319px;"
                               "left: 564px;"
-                              "top: 763px;"
+                              "top: 813px;"
                               "font-family: 'Montserrat';"
                               "font-style: normal;"
                               "font-weight: 400;"
@@ -111,10 +111,11 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
                               "}";
 
     ui->label_product_ingredients->setStyleSheet(css_ingredients);
+    ui->label_product_ingredients->setWordWrap(true);
     QString css_ingredients_title = "QLabel{"
                                     "font-weight: bold;"
                                     "position: absolute;"
-                                    "width: 423px;"
+                                    "width: 425px;"
                                     "height: 319px;"
                                     "left: 564px;"
                                     "top: 763px;"

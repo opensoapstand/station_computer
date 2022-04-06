@@ -53,7 +53,7 @@ private slots:
 
 private:
     Ui::page_init *ui;
-    page_idle* idlePage;
+    page_idle* p_page_idle;
     QTimer* initIdleTimer;
     int _initIdleTimeoutSec;
     QTimer* rebootTimer;

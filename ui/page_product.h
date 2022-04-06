@@ -92,7 +92,7 @@ private:
     Ui::pageProduct *ui;
     page_select_product *p_page_select_product;
     pagePayment *paymentPage;
-    page_idle *idlePage;
+    page_idle *p_page_idle;
     page_dispenser *p_page_dispense;
     page_error_wifi *wifiError;
     page_help *helpPage;

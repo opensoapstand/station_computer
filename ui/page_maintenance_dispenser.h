@@ -97,7 +97,7 @@ private:
     void showEvent(QShowEvent *event);
     Ui::page_maintenance_dispenser *ui;
     page_maintenance* p_page_maintenance;
-    page_idle* idlePage;
+    page_idle* p_page_idle;
 
     bool pumping = false;
 

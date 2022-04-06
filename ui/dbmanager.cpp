@@ -156,6 +156,24 @@ QString DbManager::getProductDrinkfillSerial(int slot)
     return val;
 }
 
+void DbManager::getProductProperties(int slot, QString*name, QString *description, QString *features,  QString *ingredients)
+{
+    QSqlQuery qry;
+    {
+        qry.prepare("SELECT name,description,features,ingredients FROM products WHERE slot=:slot");
+        qry.bindValue(":slot", slot);
+        qry.exec();
+
+        while (qry.next())
+        {
+            *name = qry.value(0).toString();
+            *description = qry.value(1).toString();
+            *features = qry.value(2).toString();
+            *ingredients = qry.value(3).toString();
+        }
+    }
+}
+
 QString DbManager::getProductName(int slot)
 {
     QSqlQuery product_query;

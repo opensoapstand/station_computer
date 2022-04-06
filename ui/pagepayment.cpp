@@ -137,7 +137,7 @@ void pagePayment::setPage(pageProduct *pageSizeSelect, page_dispenser *page_disp
     tmpCounter = 0;
     this->p_pageProduct = pageSizeSelect;
     this->p_page_dispense = page_dispenser;
-    this->idlePage = pageIdle;
+    this->p_page_idle = pageIdle;
     this->helpPage = pageHelp;
 }
 
@@ -146,13 +146,13 @@ void pagePayment::resizeEvent(QResizeEvent *event)
     // FIXME: MAGIC NUMBER!!! UX410 Socket Auto Close time is 60 seconds so timer kills page GUI
     //    idlePaymentTimer->start(60000);
 
-    int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
+    int product_slot___ = p_page_idle->currentProductOrder->getSelectedSlot();
     char drinkSize;
-    if (idlePage->currentProductOrder->getSelectedSize() == SIZE_SMALL_INDEX)
+    if (p_page_idle->currentProductOrder->getSelectedSize() == SIZE_SMALL_INDEX)
     {
         drinkSize = 's';
     }
-    if (idlePage->currentProductOrder->getSelectedSize() == SIZE_LARGE_INDEX)
+    if (p_page_idle->currentProductOrder->getSelectedSize() == SIZE_LARGE_INDEX)
     {
         drinkSize = 'l';
     }
@@ -176,7 +176,7 @@ void pagePayment::resizeEvent(QResizeEvent *event)
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
-    ui->order_total_amount->setText("Total: $" + QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2));
+    ui->order_total_amount->setText("Total: $" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
     ui->order_drink_amount->setText("");
 
     //    if (db.getProductVolume(product_slot___, drinkSize) < 1000){
@@ -184,7 +184,7 @@ void pagePayment::resizeEvent(QResizeEvent *event)
     //    }else{
     //        ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)/1000) + "L");
     //    }
-    ui->productLabel->setText(idlePage->currentProductOrder->getSelectedProductName() + " " + idlePage->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
+    ui->productLabel->setText(p_page_idle->currentProductOrder->getSelectedProductName() + " " + p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
 
     response = false;
     ui->refreshLabel->hide();
@@ -278,13 +278,13 @@ void pagePayment::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<<Page Enter: Payment >>>>>>>>>";
 
-    int product_slot___ = idlePage->currentProductOrder->getSelectedSlot();
+    int product_slot___ = p_page_idle->currentProductOrder->getSelectedSlot();
     char drinkSize;
-    if (idlePage->currentProductOrder->getSelectedSize() == SIZE_SMALL_INDEX)
+    if (p_page_idle->currentProductOrder->getSelectedSize() == SIZE_SMALL_INDEX)
     {
         drinkSize = 's';
     }
-    if (idlePage->currentProductOrder->getSelectedSize() == SIZE_LARGE_INDEX)
+    if (p_page_idle->currentProductOrder->getSelectedSize() == SIZE_LARGE_INDEX)
     {
         drinkSize = 'l';
     }
@@ -300,9 +300,9 @@ void pagePayment::showEvent(QShowEvent *event)
         bitmap_location.append("/home/df-admin/production/references/5_pay_page_");
         bitmap_location.append(drinkSize);
         bitmap_location.append("_");
-        bitmap_location.append(QString::number(idlePage->currentProductOrder->getSelectedSlot()));
+        bitmap_location.append(QString::number(p_page_idle->currentProductOrder->getSelectedSlot()));
         bitmap_location.append(".png");
-        ui->order_drink_amount->setText("$" + QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2));
+        ui->order_drink_amount->setText("$" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
     }
     else
     {
@@ -322,7 +322,7 @@ void pagePayment::showEvent(QShowEvent *event)
     paymentEndTimer->start(1000);
     _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
 
-    ui->order_total_amount->setText("Total: $" + QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2));
+    ui->order_total_amount->setText("Total: $" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
     this->ui->payment_countdownLabel->setText("");
     ui->refreshLabel->hide();
 
@@ -338,9 +338,9 @@ void pagePayment::showEvent(QShowEvent *event)
     // }
 
     //  db.closeDB();
-    ui->productLabel->setText(idlePage->currentProductOrder->getSelectedProductName() + " " + idlePage->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
+    ui->productLabel->setText(p_page_idle->currentProductOrder->getSelectedProductName() + " " + p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
 
-    ui->order_drink_amount->setText("$" + QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2));
+    ui->order_drink_amount->setText("$" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
 
     //  ui->payment_pass_Button->setEnabled(false);
     //  ui->payment_cancel_Button->setEnabled(false);
@@ -382,7 +382,7 @@ void pagePayment::setupQrOrder()
     QPainter painter(&map);
     //    ui->qrCode->setPixmap(map);
 
-    // QString qrdata_amount = QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2);
+    // QString qrdata_amount = QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2);
     //  QString machine_id = db.getMachineID();
     //  QString product_id = db.getProductID(product_slot___);
     //  order_id = QUuid::createUuid().QUuid::toString();
@@ -410,12 +410,12 @@ void pagePayment::createQrOrder()
     // an order Id is generated locally and the order is sent to the cloud.
 
     qDebug() << "Create order in the cloud";
-    QString MachineSerialNumber = idlePage->currentProductOrder->getMachineId();
-    QString productId = idlePage->currentProductOrder->getSelectedProductId();
-    QString contents = idlePage->currentProductOrder->getSelectedProductName();
-    QString quantity_requested = idlePage->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(false, false);
-    char drinkSize = idlePage->currentProductOrder->getSelectedSizeAsChar();
-    QString price = QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2);
+    QString MachineSerialNumber = p_page_idle->currentProductOrder->getMachineId();
+    QString productId = p_page_idle->currentProductOrder->getSelectedProductId();
+    QString contents = p_page_idle->currentProductOrder->getSelectedProductName();
+    QString quantity_requested = p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(false, false);
+    char drinkSize = p_page_idle->currentProductOrder->getSelectedSizeAsChar();
+    QString price = QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2);
 
     orderId = QUuid::createUuid().QUuid::toString();
     orderId = orderId.remove("{");
@@ -576,7 +576,7 @@ void pagePayment::idlePaymentTimeout()
         cancelPayment();
     }
 
-    idlePage->showFullScreen();
+    p_page_idle->showFullScreen();
     //    usleep(100);
     this->hide();
 }
@@ -816,8 +816,8 @@ void pagePayment::readTimer_loop()
 
     usleep(100);
     com.flushSerial();
-    pktToSend = paymentPacket.purchasePacket((QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2)).QString::toStdString());
-    cout << "to PAY: " << ((QString::number(idlePage->currentProductOrder->getSelectedPrice(), 'f', 2)).QString::toStdString());
+    pktToSend = paymentPacket.purchasePacket((QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2)).QString::toStdString());
+    cout << "to PAY: " << ((QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2)).QString::toStdString());
     //        pktToSend = paymentPacket.purchasePacket("0.01");
 
     // this->ui->payment_countdownLabel->setText("TAP NOW");

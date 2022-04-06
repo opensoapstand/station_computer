@@ -71,7 +71,7 @@ line-height: 29px;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="priceLabel">
+  <widget class="QLabel" name="label_invoice_price">
    <property name="geometry">
     <rect>
      <x>810</x>
@@ -97,7 +97,7 @@ color: #58595B;</string>
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="totalPriceLabel">
+  <widget class="QLabel" name="label_invoice_price_total">
    <property name="geometry">
     <rect>
      <x>810</x>
@@ -1886,7 +1886,7 @@ outline: none;
    <zorder>backspace</zorder>
    <zorder>done</zorder>
   </widget>
-  <widget class="QLabel" name="productLabel">
+  <widget class="QLabel" name="label_invoice_name">
    <property name="geometry">
     <rect>
      <x>190</x>
@@ -1916,7 +1916,7 @@ color: #58595B;
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="discountLabel">
+  <widget class="QLabel" name="label_invoice_discount_amount">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -2085,18 +2085,116 @@ text-align: center;</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
+  <widget class="QLabel" name="label_product_title">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>240</y>
+     <width>861</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_product_description">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>320</y>
+     <width>901</width>
+     <height>291</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_product_ingredients">
+   <property name="geometry">
+    <rect>
+     <x>510</x>
+     <y>460</y>
+     <width>361</width>
+     <height>371</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_invoice_discount_name">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>1400</y>
+     <width>651</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">position: absolute;
+height: 29px;
+left: 17.31%;
+right: 43.8%;
+top: calc(50% - 29px/2 + 389.5px);
+
+font-family: Montserrat;
+font-style: normal;
+font-weight: normal;
+font-size: 24px;
+line-height: 29px;
+
+color: #58595B;
+
+</string>
+   </property>
+   <property name="text">
+    <string>Discount</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_product_photo">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>550</y>
+     <width>411</width>
+     <height>391</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>picture</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_product_ingredients_title">
+   <property name="geometry">
+    <rect>
+     <x>510</x>
+     <y>570</y>
+     <width>351</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Ingredients:</string>
+   </property>
+  </widget>
   <zorder>promoInputButton</zorder>
   <zorder>promoCode</zorder>
   <zorder>promoButton</zorder>
   <zorder>previousPage_Button</zorder>
   <zorder>pagePayment_Button</zorder>
   <zorder>mainPage_Button</zorder>
-  <zorder>priceLabel</zorder>
-  <zorder>totalPriceLabel</zorder>
+  <zorder>label_invoice_price</zorder>
+  <zorder>label_invoice_price_total</zorder>
   <zorder>orderSmall_Button</zorder>
   <zorder>orderBig_Button</zorder>
-  <zorder>productLabel</zorder>
-  <zorder>discountLabel</zorder>
+  <zorder>label_invoice_name</zorder>
+  <zorder>label_invoice_discount_amount</zorder>
   <zorder>promoKeyboard</zorder>
   <zorder>orderMedium_Button</zorder>
   <zorder>orderCustom_Button</zorder>
@@ -2108,6 +2206,12 @@ text-align: center;</string>
   <zorder>label_size_custom</zorder>
   <zorder>label_price_large</zorder>
   <zorder>label_size_large</zorder>
+  <zorder>label_product_title</zorder>
+  <zorder>label_product_description</zorder>
+  <zorder>label_product_ingredients</zorder>
+  <zorder>label_invoice_discount_name</zorder>
+  <zorder>label_product_photo</zorder>
+  <zorder>label_product_ingredients_title</zorder>
  </widget>
  <resources/>
  <connections/>

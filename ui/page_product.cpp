@@ -65,25 +65,89 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
     ui->promoCode->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->promoButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    ui->discountLabel->setText("-$0.00");
+    QString css_title = "QLabel{"
+                        "position: absolute;"
+                        "width: 894px;"
+                        "height: 104px;"
+                        "left: 94px;"
+                        "top: 336px;"
+                        "font-family: 'Montserrat';"
+                        "font-style: normal;"
+                        "font-weight: 600;"
+                        "font-size: 48px;"
+                        "line-height: 52px;"
+                        "text-transform: capitalize;"
+                        "color: #5E8580;"
+                        "}";
+    ui->label_product_title->setStyleSheet(css_title);
+
+    QString css_description = "QLabel{"
+                              "position: absolute;"
+                              "width: 894px;"
+                              "height: 252px;"
+                              "left: 94px;"
+                              "top: 474px;"
+                              "font-family: 'Montserrat';"
+                              "font-style: normal;"
+                              "font-weight: 400;"
+                              "font-size: 28px;"
+                              "line-height: 36px;"
+                              "color: #58595B;"
+                              "}";
+    ui->label_product_description->setStyleSheet(css_description);
+
+    QString css_ingredients = "QLabel{"
+                              "position: absolute;"
+                              "width: 423px;"
+                              "height: 319px;"
+                              "left: 564px;"
+                              "top: 763px;"
+                              "font-family: 'Montserrat';"
+                              "font-style: normal;"
+                              "font-weight: 400;"
+                              "font-size: 18px;"
+                              "line-height: 28px;"
+                              "color: #58595B;"
+                              "}";
+
+    ui->label_product_ingredients->setStyleSheet(css_ingredients);
+    QString css_ingredients_title = "QLabel{"
+                                    "font-weight: bold;"
+                                    "position: absolute;"
+                                    "width: 423px;"
+                                    "height: 319px;"
+                                    "left: 564px;"
+                                    "top: 763px;"
+                                    "font-family: 'Montserrat';"
+                                    "font-style: normal;"
+                                    "font-size: 18px;"
+                                    "line-height: 28px;"
+                                    "color: #58595B;"
+                                    "}";
+    ui->label_product_ingredients_title->setStyleSheet(css_ingredients_title);
+
+    QString css_discount_name = "QLabel{"
+                                "font-family: 'Montserrat';"
+                                "font-style: normal;"
+                                "font-weight: 400;"
+                                "font-size: 24px;"
+                                "line-height: 29px;"
+                                "color: #58595B;"
+                                "}";
+    ui->label_invoice_discount_name->setStyleSheet(css_discount_name);
+
+    ui->label_product_photo->setStyleSheet("QLabel{border: 1px solid black;}");
+
+    ui->label_invoice_discount_amount->hide();
+    ui->label_invoice_discount_name->hide();
+
     promoPercent = 0.0;
     ui->promoCode->clear();
     ui->promoCode->hide();
     ui->promoKeyboard->hide();
     ui->promoInputButton->show();
 
-    /*Stations without coupon code */
-    // #ifdef ENABLE_COUPON
-
-    // #else
-    //     ui->promoCode->hide();
-    //     ui->promoKeyboard->hide();
-    //     ui->promoInputButton->hide();
-    //     ui->discountLabel->hide();
-    //     ui->promoButton->hide();
-    // #endif
     couponHandler();
-    // coupon_input_hide();
 
     {
         selectIdleTimer = new QTimer(this);
@@ -102,32 +166,20 @@ void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_
 {
     this->p_page_select_product = pageSelect;
     this->paymentPage = pagePayment;
-    this->idlePage = pageIdle;
+    this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
     this->helpPage = pageHelp;
     this->wifiError = pageWifiError;
 
     ui->promoCode->clear();
     ui->promoCode->hide();
-    ui->discountLabel->setText("-$0.00");
+    ui->label_invoice_discount_amount->hide();
+    ui->label_invoice_discount_name->hide();
 
-    selectedProductOrder = idlePage->currentProductOrder;
+    selectedProductOrder = p_page_idle->currentProductOrder;
     selectedProductOrder->setSelectedSize(SIZE_LARGE_INDEX); // default size
 
-    /*
-    Stations without Promo Code
-    */
-    // #ifdef ENABLE_COUPON
-
-    // #else
-    //     ui->promoCode->hide();
-    //     ui->promoKeyboard->hide();
-    //     ui->promoInputButton->hide();
-    //     ui->discountLabel->hide();
-    //     ui->promoButton->hide();
-    // #endif
     couponHandler();
-    // coupon_input_hide();
 }
 
 // DTOR
@@ -197,6 +249,13 @@ void pageProduct::onSelectTimeoutTick()
 
 void pageProduct::reset_and_show_page_elements()
 {
+    selectedProductOrder->loadSelectedProductProperties();
+
+    ui->label_product_title->setText(selectedProductOrder->getLoadedProductName());
+    ui->label_product_ingredients->setText(selectedProductOrder->getLoadedProductIngredients());
+    ui->label_product_description->setText(selectedProductOrder->getLoadedProductDescription());
+
+    p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->currentProductOrder->getSelectedProductPicturePath());
 
     QString bitmap_location;
 
@@ -283,21 +342,36 @@ void pageProduct::loadOrderSelectedSize()
     {
         qDebug() << "*****load size: " << i;
         QString price = QString::number(selectedProductOrder->getPrice(product_sizes[i]), 'f', 2);
-        orderSizeLabelsPrice[i]->setText("$" + price);
         // orderSizeLabelsPrice[i]->raise();
         // orderSizeLabelsVolume[i]->raise();
         QString transparent_path = FULL_TRANSPARENT_IMAGE_PATH;
         orderSizeLabelsPrice[i]->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
 
-        orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i], true, true));
-
-        if (selectedProductOrder->getSelectedSize() == product_sizes[i])
+        if (product_sizes[i] == SIZE_CUSTOM_INDEX)
         {
-            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 8px  solid #3D6675; }");
+            orderSizeLabelsVolume[i]->setText("Custom Volume.");
+            QString units = selectedProductOrder->getUnitsForSelectedSlot();
+            if (units == "ml")
+            {
+                units = "L";
+            }
+            orderSizeLabelsPrice[i]->setText("$" + price + "/" + units);
         }
         else
         {
-            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px  solid #ffffff; }");
+            orderSizeLabelsPrice[i]->setText("$" + price);
+            orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i], true, true));
+        }
+
+        if (selectedProductOrder->getSelectedSize() == product_sizes[i])
+        {
+            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 2px  solid #3D6675; }");
+            // orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: rgba(0.25, 0.3, 0.5 , 0.2); border: 8px  solid #3D6675; }");
+        }
+        else
+        {
+            // orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 1px  solid #3D6675; }");
+            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: rgba(0.25, 0.3, 0.5 , 0.2); border: 1px  solid #3D6675; }");
         }
         orderSizeButtons[i]->raise();
     }
@@ -305,11 +379,26 @@ void pageProduct::loadOrderSelectedSize()
     ui->promoCode->clear();
     ui->promoCode->hide();
     promoPercent = 0.0;
+    double selectedPrice = selectedProductOrder->getSelectedPriceCorrected();
 
-    ui->productLabel->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
-    double selectedPrice = selectedProductOrder->getSelectedPrice();
-    ui->priceLabel->setText("$" + QString::number(selectedPrice, 'f', 2));
-    ui->totalPriceLabel->setText("$" + QString::number(selectedPrice)); // how to handle promo ?! todo!
+    if (selectedProductOrder->getSelectedSize() == SIZE_CUSTOM_INDEX)
+    {
+        QString unitsInvoice = selectedProductOrder->getUnitsForSelectedSlot();
+        if (unitsInvoice == "ml")
+        {
+            unitsInvoice = "L";
+        }
+        ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName());
+        ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2) + "/" + unitsInvoice);
+        ui->label_invoice_price_total->setText("$" + QString::number(selectedPrice, 'f', 2) + "/" + unitsInvoice); // how to handle promo ?! todo!
+    }
+    else
+    {
+
+        ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
+        ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2));
+        ui->label_invoice_price_total->setText("$" + QString::number(selectedPrice, 'f', 2)); // how to handle promo ?! todo!
+    }
 
     qDebug() << "-------------------------- END LOAD ORDER ----------------";
 }
@@ -419,10 +508,10 @@ void pageProduct::loadOrderSelectedSize()
     ui->promoCode->hide();
     promoPercent = 0.0;
 
-    ui->productLabel->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
-    double selectedPrice = selectedProductOrder->getSelectedPrice();
-    ui->priceLabel->setText("$" + QString::number(selectedPrice, 'f', 2));
-    ui->totalPriceLabel->setText("$" + QString::number(selectedPrice)); // how to handle promo ?! todo!
+    ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
+    double selectedPrice = selectedProductOrder->getSelectedPriceCorrected();
+    ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2));
+    ui->label_invoice_price_total->setText("$" + QString::number(selectedPrice)); // how to handle promo ?! todo!
 
     qDebug() << "-------------------------- END LOAD ORDER ----------------";
 }
@@ -449,7 +538,7 @@ void pageProduct::mainPage()
     //    qDebug() << "pageProduct: mainPage button" << endl;
     this->stopSelectTimers();
     selectIdleTimer->stop();
-    idlePage->showFullScreen();
+    p_page_idle->showFullScreen();
     //    usleep(100);
     this->hide();
 }
@@ -498,14 +587,19 @@ size_t WriteCallback_coupon(char *contents, size_t size, size_t nmemb, void *use
 void pageProduct::updatePriceAfterPromo(double discountPercent)
 {
     double discount;
-    QString old_price = (ui->priceLabel->text()).split("$")[1];
-    double price = old_price.toDouble();
+    // QString normal_price = (ui->label_invoice_price->text()).split("$")[1];
+    // double price = normal_price.toDouble();
+
+    double  price = selectedProductOrder->getPrice(selectedProductOrder->getSelectedSize());
+
     discount = discountPercent * price / 100;
     price = (100 - discountPercent) * price / 100;
-    ui->discountLabel->setText("-$" + QString::number(discount, 'f', 2));
+    ui->label_invoice_discount_amount->setText("-$" + QString::number(discount, 'f', 2));
+    ui->label_invoice_discount_amount->show();
+    ui->label_invoice_discount_name->show();
 
     selectedProductOrder->setSelectedOverrulePrice(price);
-    ui->totalPriceLabel->setText("$" + QString::number(price, 'f', 2));
+    ui->label_invoice_price_total->setText("$" + QString::number(price, 'f', 2));
 }
 
 void pageProduct::on_applyPromo_Button_clicked()
@@ -513,6 +607,7 @@ void pageProduct::on_applyPromo_Button_clicked()
 
     QString promocode = ui->promoCode->text();
     ui->promoKeyboard->hide();
+
     CURL *curl;
     CURLcode res;
     long http_code = 0;
@@ -602,18 +697,10 @@ void pageProduct::on_previousPage_Button_clicked()
     selectIdleTimer->stop();
     p_page_select_product->showFullScreen();
 
-    ui->discountLabel->setText("-$0.00");
+    ui->label_invoice_discount_amount->hide();
+    ui->label_invoice_discount_name->hide();
+
     ui->promoInputButton->show();
-
-    // #ifdef ENABLE_COUPON
-
-    // #else
-    //     ui->promoCode->hide();
-    //     ui->promoKeyboard->hide();
-    //     ui->promoInputButton->hide();
-    //     ui->discountLabel->hide();
-    //     ui->promoButton->hide();
-    // #endif
 
     couponHandler();
 
@@ -626,7 +713,8 @@ void pageProduct::coupon_disable()
     ui->promoCode->hide();
     ui->promoKeyboard->hide();
     ui->promoInputButton->hide();
-    ui->discountLabel->hide();
+    ui->label_invoice_discount_amount->hide();
+    ui->label_invoice_discount_name->hide();
     ui->promoButton->hide();
 }
 void pageProduct::coupon_input_show()
@@ -661,12 +749,6 @@ void pageProduct::couponHandler()
     {
         qDebug() << "Coupons are enabled for this machine.";
         ui->promoInputButton->show();
-
-        // ui->promoCode->clear();
-        // ui->promoCode->hide();
-        // ui->discountLabel->setText("-$0.00");
-
-        // promoPercent = 0.0;
     }
     else
     {
@@ -715,7 +797,7 @@ void pageProduct::on_pagePayment_Button_clicked()
             QString feedback = QString::fromUtf8(readBuffer.c_str());
             qDebug() << "Server feedback readbuffer: " << feedback;
 
-            ui->totalPriceLabel->text();
+            ui->label_invoice_price_total->text();
             paymentPage->showFullScreen();
             this->hide();
         }

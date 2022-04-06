@@ -49,7 +49,7 @@ page_init::page_init(QWidget *parent) : QWidget(parent),
 void page_init::setPage(page_idle *pageIdle)
 {
     // Chained to KB Listener
-    this->idlePage = pageIdle;
+    this->p_page_idle = pageIdle;
 }
 
 // DTOR
@@ -91,7 +91,7 @@ void page_init::initReadySlot(void)
     qDebug() << "Signal: init ready from fsm";
     initIdleTimer->stop();
     rebootTimer->stop();
-    idlePage->showFullScreen();
+    p_page_idle->showFullScreen();
     this->hide();
     qDebug() << "Init done." << endl;
 }

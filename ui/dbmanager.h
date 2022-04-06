@@ -64,6 +64,7 @@ public:
     bool updatePluLarge(int slot, QString new_plu);
     QString getProductType(int slot);
     QString getProductDrinkfillSerial(int slot);
+    void getProductProperties(int slot, QString*name, QString *description, QString *features,  QString *ingredients);
 
 
 private:

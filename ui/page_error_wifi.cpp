@@ -44,7 +44,7 @@ void page_error_wifi::setPage(pagePayment *pagePayment, pagethankyou* pageThankY
 {
     this->thanksPage = pageThankYou;
     this->paymentPage = pagePayment;
-    this->idlePage = pageIdle;
+    this->p_page_idle = pageIdle;
 }
 
 // DTOR
@@ -76,7 +76,7 @@ void page_error_wifi::showEvent(QShowEvent *event)
     }
 
     timeoutTimer->start(1000);
-    _goToIdlePageTimeoutSec = 10;
+    _goTop_page_idleTimeoutSec = 10;
 }
 
 
@@ -92,7 +92,7 @@ void page_error_wifi::on_wifi_ack_Button_clicked()
     //stopDispenseTimer();
      db.closeDB();
 
-     idlePage->showFullScreen();
+     p_page_idle->showFullScreen();
      this->hide();
 }
 
@@ -107,10 +107,10 @@ void page_error_wifi::on_wifi_ack_Button_clicked()
 
 
 void page_error_wifi::onTimeOutTick(){
-    if(-- _goToIdlePageTimeoutSec >= 0) {
-//        qDebug() << "page_dispenser: Idle Tick Down: " << _goToIdlePageTimeoutSec << endl;
+    if(-- _goTop_page_idleTimeoutSec >= 0) {
+//        qDebug() << "page_dispenser: Idle Tick Down: " << _goTop_page_idleTimeoutSec << endl;
     } else {
-//        qDebug() << "Timer Done!" << _goToIdlePageTimeoutSec << endl;
+//        qDebug() << "Timer Done!" << _goTop_page_idleTimeoutSec << endl;
         qDebug() << "Show wifi error timed out. " << endl;
         timeoutTimer->stop();
         

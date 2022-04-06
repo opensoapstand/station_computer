@@ -47,8 +47,8 @@ void page_dispenser::setPage(pagePayment *pagePayment, pagethankyou *pageThankYo
 {
     this->thanksPage = pageThankYou;
     this->paymentPage = pagePayment;
-    this->idlePage = pageIdle;
-    selectedProductOrder = idlePage->currentProductOrder;
+    this->p_page_idle = pageIdle;
+    selectedProductOrder = p_page_idle->currentProductOrder;
 }
 
 // DTOR
@@ -216,7 +216,7 @@ void page_dispenser::fsmSendStartDispensing()
     command.append(selectedProductOrder->getSelectedSizeAsChar());
     command.append(SEND_DISPENSE_START);
 
-    idlePage->dfUtility->send_command_to_FSM(command);
+    p_page_idle->dfUtility->send_command_to_FSM(command);
 
     this->isDispensing = true;
 }
@@ -229,7 +229,7 @@ void page_dispenser::fsmSendStopDispensing()
     QString command = QString::number(this->selectedProductOrder->getSelectedSlot());
     command.append(selectedProductOrder->getSelectedSizeAsChar());
     command.append(SEND_DISPENSE_STOP);
-    idlePage->dfUtility->send_command_to_FSM(command);
+    p_page_idle->dfUtility->send_command_to_FSM(command);
 }
 
 // void page_dispenser::onRinseTimerTick()

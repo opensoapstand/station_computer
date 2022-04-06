@@ -144,6 +144,7 @@ void DrinkOrder::setPriceSelected(int size, double price)
 
 double DrinkOrder::getPrice(int sizeIndex)
 {
+    // always from database
     qDebug() << "db... get product price";
     DbManager db(DB_PATH);
     double price;
@@ -153,7 +154,7 @@ double DrinkOrder::getPrice(int sizeIndex)
     return price;
 }
 
-double DrinkOrder::getSelectedPrice()
+double DrinkOrder::getSelectedPriceCorrected()
 {
     // slot and size needs to be set.
     double price;
@@ -166,10 +167,6 @@ double DrinkOrder::getSelectedPrice()
         }
         else
         {
-            // qInfo() << "db....pricess.....";
-            // DbManager db(DB_PATH);
-            // price = db.getProductPrice(getSelectedSlot(), getSelectedSizeAsChar());
-            // db.closeDB();
             price = getPrice(getSelectedSize());
         }
     }
@@ -332,10 +329,44 @@ QString DrinkOrder::getProductDrinkfillSerial(int slot)
     return serial;
 }
 
+void DrinkOrder::loadSelectedProductProperties()
+{
+    loadProductProperties(getSelectedSlot());
+}
+
+void DrinkOrder::loadProductProperties(int slot)
+{
+    qDebug() << "db load product properties";
+    DbManager db(DB_PATH);
+
+    db.getProductProperties(slot, &m_name, &m_description, &m_features, &m_ingredients);
+    db.closeDB();
+}
+QString DrinkOrder::getLoadedProductIngredients()
+{
+    return m_ingredients;
+}
+QString DrinkOrder::getLoadedProductFeatures()
+{
+    return m_features;
+}
+QString DrinkOrder::getLoadedProductName()
+{
+    return m_name;
+}
+QString DrinkOrder::getLoadedProductDescription()
+{
+    return m_description;
+}
+
+QString DrinkOrder::getSelectedProductPicturePath()
+{
+    return getProductPicturePath(getSelectedSlot());
+}
 QString DrinkOrder::getProductPicturePath(int slot)
 {
     QString serial = getProductDrinkfillSerial(slot);
-    return  QString(PRODUCT_PICTURES_ROOT_PATH).arg(serial);
+    return QString(PRODUCT_PICTURES_ROOT_PATH).arg(serial);
 }
 
 QString DrinkOrder::getProductName(int slot)

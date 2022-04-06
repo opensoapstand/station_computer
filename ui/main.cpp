@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
     // Linking resources and Function definitions for pathing
     page_help *helpPage = new page_help();
     page_init *initPage = new page_init();
-    page_idle *idlePage = new page_idle();
+    page_idle *p_page_idle = new page_idle();
     page_select_product *firstSelectPage = new page_select_product();
     pageProduct *p_pageProduct = new pageProduct();
     pagePayment *paymentPage = new pagePayment();
@@ -140,17 +140,17 @@ int main(int argc, char *argv[])
     df_util::fileExists(FULL_TRANSPARENT_IMAGE_PATH);
 
     // Page pathing references to function calls.
-    helpPage->setPage(firstSelectPage, p_pageProduct, idlePage, paymentPage);
-    initPage->setPage(idlePage);
-    p_page_maintenance_product->setPage(p_page_maintenance, idlePage);
-    p_page_maintenance->setPage(idlePage, p_page_maintenance_product, firstSelectPage, p_pageProduct);
-    idlePage->setPage(firstSelectPage, p_page_maintenance);
-    firstSelectPage->setPage(p_pageProduct, idlePage, p_page_maintenance, helpPage);
-    p_pageProduct->setPage(firstSelectPage, p_page_dispense, wifiError, idlePage, paymentPage, helpPage);
-    paymentPage->setPage(p_pageProduct, p_page_dispense, idlePage, helpPage);
-    p_page_dispense->setPage(paymentPage, p_page_thank_you, idlePage);
-    p_page_thank_you->setPage(p_page_dispense, idlePage, paymentPage);
-    wifiError->setPage(paymentPage, p_page_thank_you, idlePage);
+    helpPage->setPage(firstSelectPage, p_pageProduct, p_page_idle, paymentPage);
+    initPage->setPage(p_page_idle);
+    p_page_maintenance_product->setPage(p_page_maintenance, p_page_idle);
+    p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product, firstSelectPage, p_pageProduct);
+    p_page_idle->setPage(firstSelectPage, p_page_maintenance);
+    firstSelectPage->setPage(p_pageProduct, p_page_idle, p_page_maintenance, helpPage);
+    p_pageProduct->setPage(firstSelectPage, p_page_dispense, wifiError, p_page_idle, paymentPage, helpPage);
+    paymentPage->setPage(p_pageProduct, p_page_dispense, p_page_idle, helpPage);
+    p_page_dispense->setPage(paymentPage, p_page_thank_you, p_page_idle);
+    p_page_thank_you->setPage(p_page_dispense, p_page_idle, paymentPage);
+    wifiError->setPage(paymentPage, p_page_thank_you, p_page_idle);
     
     initPage->showFullScreen();
 
@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
     QObject::connect(&dfUiServer, &DfUiServer::noFlowAbort, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveNoFlowAbort);
     
     QObject::connect(&dfUiServer, &DfUiServer::initReady, initPage, &page_init::initReadySlot);
-    QObject::connect(&dfUiServer, &DfUiServer::MM, idlePage, &page_idle::MMSlot);
+    QObject::connect(&dfUiServer, &DfUiServer::MM, p_page_idle, &page_idle::MMSlot);
 
     return mainApp.exec();
 }

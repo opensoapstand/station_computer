@@ -78,7 +78,7 @@ private:
     Ui::page_dispenser *ui;
     pagePayment* paymentPage;
     pagethankyou* thanksPage;
-    page_idle* idlePage;
+    page_idle* p_page_idle;
 
     DrinkOrder* selectedProductOrder;
 

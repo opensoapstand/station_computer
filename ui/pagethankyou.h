@@ -55,7 +55,7 @@ private:
 
     Ui::pagethankyou *ui;
     page_dispenser* p_page_dispense;
-    page_idle* idlePage;
+    page_idle* p_page_idle;
     pagePayment* paymentPage;
 
     int _thankYouTimeoutSec;

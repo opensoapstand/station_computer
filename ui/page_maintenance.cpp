@@ -118,7 +118,7 @@ void page_maintenance::showEvent(QShowEvent *event)
  */
 void page_maintenance::setPage(page_idle *pageIdle, page_maintenance_dispenser *pageMaintain, page_select_product *p_pageProduct, pageProduct *pagePaySelect)
 {
-    this->idlePage = pageIdle;
+    this->p_page_idle = pageIdle;
     this->p_page_maintenance_product = pageMaintain;
     this->p_pageSelectProduct = p_pageProduct;
     this->p_pageProduct = pagePaySelect;
@@ -129,7 +129,7 @@ void page_maintenance::on_backButton_clicked()
     //    qDebug() << "Back button clicked" << endl;
 
     page_maintenanceEndTimer->stop();
-    idlePage->showFullScreen();
+    p_page_idle->showFullScreen();
     //    usleep(100);
     this->hide();
 }
@@ -139,8 +139,8 @@ void page_maintenance::on_product1_button_clicked()
     //    qDebug() << "Product 1 button clicked" << endl;
     page_maintenanceEndTimer->stop();
 
-    idlePage->currentProductOrder->setSelectedSlot(1);
-    idlePage->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
+    p_page_idle->currentProductOrder->setSelectedSlot(1);
+    p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
 
     p_page_maintenance_product->resizeEvent(productSelection);
     p_page_maintenance_product->showFullScreen();
@@ -156,8 +156,8 @@ void page_maintenance::on_product2_button_clicked()
     //    qDebug() << "Product 2 button clicked" << endl;
     page_maintenanceEndTimer->stop();
 
-    idlePage->currentProductOrder->setSelectedSlot(2);
-    idlePage->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
+    p_page_idle->currentProductOrder->setSelectedSlot(2);
+    p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
 
     p_page_maintenance_product->resizeEvent(productSelection);
     p_page_maintenance_product->showFullScreen();
@@ -170,8 +170,8 @@ void page_maintenance::on_product3_button_clicked()
     //    qDebug() << "Product 3 button clicked" << endl;
     page_maintenanceEndTimer->stop();
 
-    idlePage->currentProductOrder->setSelectedSlot(3);
-    idlePage->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
+    p_page_idle->currentProductOrder->setSelectedSlot(3);
+    p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
 
     p_page_maintenance_product->resizeEvent(productSelection);
     p_page_maintenance_product->showFullScreen();
@@ -184,8 +184,8 @@ void page_maintenance::on_product4_button_clicked()
     //    qDebug() << "Product 4 button clicked" << endl;
     page_maintenanceEndTimer->stop();
 
-    idlePage->currentProductOrder->setSelectedSlot(4);
-    idlePage->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
+    p_page_idle->currentProductOrder->setSelectedSlot(4);
+    p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
 
     p_page_maintenance_product->resizeEvent(productSelection);
     p_page_maintenance_product->showFullScreen();
@@ -356,7 +356,7 @@ void page_maintenance::onPage_maintenanceTimeoutTick()
         //        qDebug() << "Page_page_maintenance Timer Done!" << _page_maintenanceTimeoutSec << endl;
 
         page_maintenanceEndTimer->stop();
-        idlePage->showFullScreen();
+        p_page_idle->showFullScreen();
         //        usleep(100);
         this->hide();
     }
@@ -466,11 +466,11 @@ void page_maintenance::on_printer_test_button_clicked()
 
     // Send to fsm
 
-    idlePage->dfUtility->send_command_to_FSM("p");
+    p_page_idle->dfUtility->send_command_to_FSM("p");
     usleep(50000);
-    idlePage->dfUtility->send_command_to_FSM("l");
+    p_page_idle->dfUtility->send_command_to_FSM("l");
     usleep(50000);
-    idlePage->dfUtility->send_command_to_FSM("q");
+    p_page_idle->dfUtility->send_command_to_FSM("q");
 }
 
 void page_maintenance::printerStatusFeedback(bool isOnline, bool hasPaper)
@@ -495,9 +495,9 @@ void page_maintenance::printerStatusFeedback(bool isOnline, bool hasPaper)
 void page_maintenance::on_printer_check_status_clicked()
 {
     qDebug() << "Send test printer to controller";
-    idlePage->dfUtility->send_command_to_FSM("p");
+    p_page_idle->dfUtility->send_command_to_FSM("p");
     usleep(50000);
-    idlePage->dfUtility->send_command_to_FSM("a");
+    p_page_idle->dfUtility->send_command_to_FSM("a");
 //     usleep(50000);
-//     idlePage->dfUtility->send_command_to_FSM("q"); // go back to fsm idle state is done in controller
+//     p_page_idle->dfUtility->send_command_to_FSM("q"); // go back to fsm idle state is done in controller
 }

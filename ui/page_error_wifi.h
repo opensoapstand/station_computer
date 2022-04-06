@@ -57,7 +57,7 @@ private:
     Ui::page_error_wifi *ui;
     pagePayment* paymentPage;
     pagethankyou* thanksPage;
-    page_idle* idlePage;
+    page_idle* p_page_idle;
 
     // XXX: Remove when interrupts and flowsensors work.
 
@@ -65,7 +65,7 @@ private:
     //int _dispenseTimeoutSec;
     // QTimer *dispenseEndTimer;
 
-    int _goToIdlePageTimeoutSec;
+    int _goTop_page_idleTimeoutSec;
     QTimer *timeoutTimer;
 
     void stopDispenseTimer();

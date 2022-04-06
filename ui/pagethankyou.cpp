@@ -43,7 +43,7 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
  */
 void pagethankyou::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, pagePayment *pagePayment)
 {
-    this->idlePage = pageIdle;
+    this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
     this->paymentPage = pagePayment;
 }
@@ -60,7 +60,7 @@ void pagethankyou::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
     qDebug() << "ahoyy24";
     DbManager db(DB_PATH);
-    QString paymentMethod = db.getPaymentMethod(idlePage->currentProductOrder->getSelectedSlot());
+    QString paymentMethod = db.getPaymentMethod(p_page_idle->currentProductOrder->getSelectedSlot());
     db.closeDB();
 
     thankYouEndTimer = new QTimer(this);
@@ -172,7 +172,7 @@ void pagethankyou::controllerFinishedTransaction()
 void pagethankyou::transactionToFile(char *curl_params)
 {
     QString data_out = curl_params;
-    idlePage->dfUtility->write_to_file_timestamped(TRANSACTION_DISPENSE_END_OFFINE_PATH, data_out);
+    p_page_idle->dfUtility->write_to_file_timestamped(TRANSACTION_DISPENSE_END_OFFINE_PATH, data_out);
 }
 
 void pagethankyou::onThankyouTimeoutTick()
@@ -198,7 +198,7 @@ void pagethankyou::exitPage()
     if ((is_controller_finished && is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER) || exitIsForceable)
     {
         thankYouEndTimer->stop();
-        idlePage->showFullScreen();
+        p_page_idle->showFullScreen();
         this->hide();
 
         if (exitIsForceable)

@@ -137,7 +137,7 @@ private:
     Ui::pagePayment *ui;
     pageProduct* p_pageProduct;
     page_dispenser* p_page_dispense;
-    page_idle* idlePage;
+    page_idle* p_page_idle;
     page_help* helpPage;
 
     const QString TAP_READY_LABEL = "Ready for Tap";

@@ -10,7 +10,7 @@
 // #define USE_OLD_DATABASE
 //#define START_FSM_FROM_UI //enabled by default (start controller from ui)
 
-// #define GENERIC_PRODUCT_SELECT
+#define GENERIC_PRODUCT_SELECT
 #define ENABLE_COUPON   // Petros stations have no coupon
 
 #define OPTION_SLOT_INVALID 0
@@ -94,9 +94,8 @@ using namespace std;
 #define KEYBOARD_IMAGE_PATH "/home/df-admin/production/references/soapstand-keyboard.png"
 #define FULL_TRANSPARENT_IMAGE_PATH "/home/df-admin/production/references/background.png"
 
-#define PAGE_PRODUCT_BACKGROUND_PATH "/ghome/df-admin/production/references/page_product_generic.png"
-//#define PAGE_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_1.png"
-
+// #define PAGE_PRODUCT_BACKGROUND_PATH "/ghome/df-admin/production/references/page_product_generic.png"
+#define PAGE_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/templates/default/4_pay_select_page_s_1.png"
 
 #define ICON_TYPE_CONCENTRATE_PATH "/home/df-admin/production/references/templates/default/Soapstand_UI-concentrate-icon.png"
 #define ICON_TYPE_ALL_PURPOSE_PATH "/home/df-admin/production/references/templates/default/Soapstand-UI-icon-all-purposs.png"

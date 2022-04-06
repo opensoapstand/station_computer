@@ -74,7 +74,6 @@ public:
     void setSelectedSlot(int optionSlot);
     int getSelectedSlot();
 
-
     QString getSelectedProductId();
     // QString getSelectedProductName();
     QString getMachineId();
@@ -91,11 +90,20 @@ public:
     int getSelectedSize();
 
     bool isSelectedOrderValid();
-    
+
     QString getSelectedProductName();
     QString getProductName(int slot);
     QString getProductDrinkfillSerial(int slot);
+
+    void loadSelectedProductProperties();
+    void loadProductProperties(int slot);
+    QString getLoadedProductName();
+    QString getLoadedProductDescription();
+    QString getLoadedProductIngredients();
+    QString getLoadedProductFeatures();
+
     QString getProductPicturePath(int slot);
+    QString getSelectedProductPicturePath();
 
     double getSelectedVolume();
     double getVolume(int size);
@@ -104,7 +112,7 @@ public:
     QString getVolumePerTickAsStringForSelectedSlot();
     double getVolumePerTickForSelectedSlot();
     void setVolumePerTickForSelectedSlot(QString volumePerTickInput);
-    
+
     double inputTextToMlConvertUnits(QString inputValueAsText);
     QString getUnitsForSelectedSlot();
     QString getSelectedSizeToVolume(QString units);
@@ -113,14 +121,13 @@ public:
 
     double getPrice(int sizeIndex);
     void setPriceSelected(int size, double price);
-    double getSelectedPrice();
+    double getSelectedPriceCorrected();
 
     int getSelectedDispenseSpeedPercentage();
     void setSelectedDispenseSpeedPercentage(int percentage);
 
     char getSelectedSizeAsChar();
     QString getSelectedPaymentMethod();
-    
 
 public slots:
 
@@ -134,6 +141,11 @@ signals:
     void sizeChange(double newSize);
 
 private:
+    QString m_ingredients;
+    QString m_features;
+    QString m_name;
+    QString m_description;
+
     DrinkSelection *selectedDrink;
     int selectedSize;
     int m_selectedSlot;

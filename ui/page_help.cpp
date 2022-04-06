@@ -71,7 +71,7 @@ void page_help::showEvent(QShowEvent *event)
  */
 void page_help::setPage(page_select_product *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, pagePayment *pagePayment)
 {
-    this->idlePage = pageIdle;
+    this->p_page_idle = pageIdle;
     this->paymentPage = pagePayment;
     this->selectPage = pageProduct;
     this->p_page_select_product = pageSelect;
@@ -79,13 +79,13 @@ void page_help::setPage(page_select_product *pageSelect, pageProduct* pageProduc
 
 void page_help::on_previousPage_Button_clicked(){
     helpIdleTimer->stop();
-    idlePage->showFullScreen();
+    p_page_idle->showFullScreen();
     this->hide();
 }
 
 void page_help::on_previousPage_Button_2_clicked(){
     helpIdleTimer->stop();
-    idlePage->showFullScreen();
+    p_page_idle->showFullScreen();
     this->hide();
 }
 
@@ -96,7 +96,7 @@ void page_help::onHelpTimeoutTick(){
 //        qDebug() << "Help Timer Done!" << _helpIdleTimeoutSec << endl;
 
         helpIdleTimer->stop();
-        idlePage->showFullScreen();
+        p_page_idle->showFullScreen();
         this->hide();
     }
     if(_helpIdleTimeoutSec<10){

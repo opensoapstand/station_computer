@@ -112,16 +112,17 @@ page_select_product::~page_select_product()
 
 void page_select_product::displayProducts()
 {
-
-    QString product_type_icons[5] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH};
-   
-    
     for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
-       
         selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
         selectProductButtons[i]->raise();
-        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(i+1));
+    }
+#ifdef ENABLE_DYNAMIC_UI
+    QString product_type_icons[5] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH};
+    for (uint8_t i = 0; i < SLOT_COUNT; i++)
+    {
+
+        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(i + 1));
         selectProductPhotoLabels[i]->setStyleSheet("QLabel{border: 1px solid black;}");
 
         qDebug() << "db product details:";
@@ -130,7 +131,6 @@ void page_select_product::displayProducts()
         db.closeDB();
 
         QString name = p_page_idle->currentProductOrder->getProductName(i + 1);
-
 
         selectProductNameLabels[i]->setText(name);
         selectProductNameLabels[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
@@ -179,6 +179,15 @@ void page_select_product::displayProducts()
 
         selectProductIconLabels[i]->setText(""); // icon should not display text.
     }
+#else
+    for (uint8_t i = 0; i < SLOT_COUNT; i++)
+    {
+        selectProductPhotoLabels[i]->hide();
+        selectProductNameLabels[i]->hide();
+        selectProductIconLabels[i]->hide();
+        selectProductTypeLabels[i]->hide();
+
+#endif
 }
 
 void page_select_product::showEvent(QShowEvent *event)

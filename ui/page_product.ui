@@ -2088,10 +2088,10 @@ text-align: center;</string>
   <widget class="QLabel" name="label_product_title">
    <property name="geometry">
     <rect>
-     <x>94</x>
-     <y>336</y>
-     <width>877</width>
-     <height>104</height>
+     <x>90</x>
+     <y>326</y>
+     <width>881</width>
+     <height>131</height>
     </rect>
    </property>
    <property name="text">

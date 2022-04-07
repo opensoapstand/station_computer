@@ -153,6 +153,7 @@ private:
     int selectedSize;
     int m_selectedSlot;
     double overruledPrice;
+    float price_reduction_ratio;
 };
 
 #endif // DRINKORDER_H

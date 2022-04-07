@@ -10,7 +10,7 @@
 // #define USE_OLD_DATABASE
 //#define START_FSM_FROM_UI //enabled by default (start controller from ui)
 
-#define GENERIC_PRODUCT_SELECT
+#define ENABLE_DYNAMIC_UI
 #define ENABLE_COUPON   // Petros stations have no coupon
 
 #define OPTION_SLOT_INVALID 0
@@ -63,42 +63,24 @@ using namespace std;
 #define SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS 3000
 #define QR_PROCESSED_PERIODICAL_CHECK_SECONDS 5
 
+ 
 
-#define PAGE_INIT_BACKGROUND_PATH           "/home/df-admin/production/references/templates/nada/background_init.png"
+#define PRODUCT_PICTURES_ROOT_PATH "/home/df-admin/production/references/products/%1.jpeg"
+
+#ifdef ENABLE_DYNAMIC_UI
+
+
 #define PAGE_IDLE_BACKGROUND_PATH           "/home/df-admin/production/references/templates/nada/background_welcome.png"
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/templates/nada/background_product_select.png"
 #define PAGE_HELP_BACKGROUND_PATH           "/home/df-admin/production/references/templates/nada/background_help.png"
-#define PAGE_PRODUCT_BACKGROUND_PATH        "/home/df-admin/production/references/templates/nada/background_product.png"
+#define PAGE_PRODUCT_BACKGROUND_PATH        "/home/df-admin/production/references/templates/nada/background_product_quantity.png"
 #define PAGE_DISPENSE_BACKGROUND_PATH       "/home/df-admin/production/references/templates/nada/background_dispense_instructions.png"
 #define PAGE_THANK_YOU_BACKGROUND_PATH      "/home/df-admin/production/references/templates/nada/background_thank_you.png"
 #define PAGE_QR_PAY_BACKGROUND_PATH         "/home/df-admin/production/references/templates/nada/background_pay_qr.png"
 
 #define PAGE_WIFI_ERROR_BACKGROUND_PATH     "/home/df-admin/production/references/oops.png"
-// #define PAGE_IDLE_BACKGROUND_PATH "/home/df-admin/production/references/templates/nada/1_welcome_panel.png"
-// #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/templates/nada/2_soap_page_1.png"
 
 
-// #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/templates/nada/2_drink_page_1.png"
-// #define PAGE_HELP_BACKGROUND_PATH "/home/df-admin/production/references/templates/nada/3_help_page.png"
-
-// #define PAGE_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/templates/nada/4_pay_select_page_s_3-1.png"
-// #define PAGE_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/templates/nada/4_pay_select_page_s_1.png"
-// #define PAGE_DISPENSE_BACKGROUND_PATH "/home/df-admin/production/references/templates/nada/5_dispense_page_before.png"
-
-// #define PAGE_THANK_YOU_BACKGROUND_PATH "/home/df-admin/production/references/templates/nada/7_thank_you_page.png"
-
-
-
-#define PRODUCT_PICTURES_ROOT_PATH "/home/df-admin/production/references/products/%1.jpeg"
-
-// #define PAGE_PRODUCT_1_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_1.png"
-// #define PAGE_PRODUCT_2_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_2.png"
-// #define PAGE_PRODUCT_3_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_3.png"
-// #define PAGE_PRODUCT_4_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_4.png"
-// #define PAGE_PRODUCT_1_S_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_1.png"
-// #define PAGE_PRODUCT_2_S_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_2.png"
-// #define PAGE_PRODUCT_3_S_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_3.png"
-// #define PAGE_PRODUCT_4_S_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_4.png"
 
 #define PRODUCT_1_IMAGE_PATH "/home/df-admin/production/references/product1.png"
 #define PRODUCT_2_IMAGE_PATH "/home/df-admin/production/references/product2.png"
@@ -122,6 +104,44 @@ using namespace std;
 //#define COMPANY_LOGO_PATH "/home/df-admin/drinkfill/ui/references/logos/"
 // #define PAGE_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_1.png"
 // #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/page_select_product_generic.png" // todo
+
+
+
+
+#else
+
+
+
+
+#define PAGE_IDLE_BACKGROUND_PATH "/home/df-admin/production/references/1_background_welcome.png"
+#define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/2_background_products.png"
+#define PAGE_HELP_BACKGROUND_PATH "/home/df-admin/production/references/3_background_help.png"
+#define PAGE_PRODUCT_1_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_1.png"
+#define PAGE_PRODUCT_2_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_2.png"
+#define PAGE_PRODUCT_3_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_3.png"
+#define PAGE_PRODUCT_4_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_4.png"
+#define PAGE_PRODUCT_1_S_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_1.png"
+#define PAGE_PRODUCT_2_S_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_2.png"
+#define PAGE_PRODUCT_3_S_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_3.png"
+#define PAGE_PRODUCT_4_S_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_4.png"
+#define PAGE_DISPENSE_BACKGROUND_PATH "/home/df-admin/production/references/5_background_dispense_instructions.png"
+#define PAGE_QR_PAY_BACKGROUND_PATH "/home/df-admin/production/references/5_background_pay_qr.png"
+#define PRODUCT_1_IMAGE_PATH "/home/df-admin/production/references/product1.png"
+#define PRODUCT_2_IMAGE_PATH "/home/df-admin/production/references/product2.png"
+#define PRODUCT_3_IMAGE_PATH "/home/df-admin/production/references/product3.png"
+#define PRODUCT_4_IMAGE_PATH "/home/df-admin/production/references/product4.png"
+#define PAGE_THANK_YOU_BACKGROUND_PATH "/home/df-admin/production/references/7_background_thank_you.png"
+#define PAGE_WIFI_ERROR_BACKGROUND_PATH "/home/df-admin/production/references/oops.png"
+#define BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH "/home/df-admin/production/references/bottle_fill_for_animation.png"
+#define SOLD_OUT_IMAGE_PATH "/home/df-admin/production/references/soldOut.png"
+#define KEYBOARD_IMAGE_PATH "/home/df-admin/production/references/soapstand-keyboard.png"
+#define FULL_TRANSPARENT_IMAGE_PATH "/home/df-admin/production/references/background.png"
+#define PAGE_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/page_product_generic.png"
+
+
+#endif
+
+#define PAGE_INIT_BACKGROUND_PATH "/home/df-admin/production/references/0_background_init.png"
 
 #define SEND_DISPENSE_START "d"
 #define SEND_DISPENSE_STOP "f"

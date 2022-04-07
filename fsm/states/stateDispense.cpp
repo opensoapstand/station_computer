@@ -107,22 +107,26 @@ DF_ERROR stateDispense::onAction()
    productDispensers[pos].setVolumeDispensedPreviously(productDispensers[pos].getVolumeDispensed());
 
    Dispense_behaviour status = productDispensers[pos].getDispenseStatus();
+
+#ifdef ENABLE_EMPTY_CONTAINER_DETECTION
    if (status == FLOW_STATE_CONTAINER_EMPTY)
    {
 
       m_pMessaging->sendMessage("No flow abort");
       debugOutput::sendMessage("*******************CONTAINER EMPTY**********************", MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
-      
+
       // experimental, convert to custom volume dispensing.
 
       m_pMessaging->setRequestedSize(SIZE_INVOLUNTARY_END);
-
    }
    else
    {
       debugOutput::sendMessage("------ status: " + to_string(status), MSG_INFO);
    };
+#else
+   debugOutput::sendMessage("------ status: " + to_string(status), MSG_INFO);
+#endif
 
    usleep(500000);
 

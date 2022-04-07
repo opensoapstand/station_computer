@@ -61,7 +61,7 @@ page_maintenance::~page_maintenance()
 void page_maintenance::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
-    qDebug() << "<<<<<<<Page Enter: maintenance >>>>>>>>>";
+    qDebug() << "<<<<<<< PPage Enter: maintenance >>>>>>>>>";
     DbManager db(DB_PATH);
     //    db.addPageClick("PAGE_PAGE_MAINTENANCE PAGE ENTERED");
 

@@ -183,7 +183,7 @@ void page_select_product::displayProducts()
 
 void page_select_product::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<<Page Enter: Select Product >>>>>>>>>";
+    qDebug() << "<<<<<<< Page Enter: Select Product >>>>>>>>>";
     QWidget::showEvent(event);
     maintenanceCounter = 0;
 

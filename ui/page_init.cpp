@@ -60,7 +60,7 @@ page_init::~page_init()
 
 void page_init::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<<Page Enter: Init >>>>>>>>>";
+    qDebug() << "<<<<<<< PPage Enter: Init >>>>>>>>>";
     QWidget::showEvent(event);
     //    qDebug() << "Start init Timers" << endl;
     initIdleTimer->start(1000);
@@ -93,7 +93,6 @@ void page_init::initReadySlot(void)
     rebootTimer->stop();
     p_page_idle->showFullScreen();
     this->hide();
-    qDebug() << "Init done.";
 }
 
 void page_init::onInitTimeoutTick()

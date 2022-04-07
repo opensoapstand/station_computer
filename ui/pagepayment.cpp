@@ -274,7 +274,7 @@ size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
 
 void pagePayment::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<<Page Enter: Payment >>>>>>>>>";
+    qDebug() << "<<<<<<< Page Enter: Payment >>>>>>>>>";
 
     int product_slot___ = p_page_idle->currentProductOrder->getSelectedSlot();
     char drinkSize;

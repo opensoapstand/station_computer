@@ -101,6 +101,7 @@ public:
     QString getLoadedProductDescription();
     QString getLoadedProductIngredients();
     QString getLoadedProductFeatures();
+    bool getLoadedProductSizeEnabled(int size);
 
     QString getProductPicturePath(int slot);
     QString getSelectedProductPicturePath();
@@ -145,6 +146,8 @@ private:
     QString m_features;
     QString m_name;
     QString m_description;
+    bool m_isEnabledSizes [4];
+
 
     DrinkSelection *selectedDrink;
     int selectedSize;

@@ -31,8 +31,8 @@ using json = nlohmann::json;
 double promoPercent = 0.0;
 
 uint16_t orderSizeButtons_xywh_generic_product_page[4][4] = {
-    {560, 990, 135, 110}, // S
-    {706, 990, 135, 105}, // M
+    {560, 990, 135, 100}, // S
+    {706, 990, 135, 100}, // M
     {852, 990, 135, 100}, // L
     {560, 1100, 430, 115} // custom
 };
@@ -60,6 +60,11 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
     orderSizeLabelsVolume[1] = ui->label_size_medium;
     orderSizeLabelsVolume[2] = ui->label_size_large;
     orderSizeLabelsVolume[3] = ui->label_size_custom;
+    
+    orderSizeBackgroundLabels[0] = ui->label_background_small;
+    orderSizeBackgroundLabels[1] = ui->label_background_medium;
+    orderSizeBackgroundLabels[2] = ui->label_background_large;
+    orderSizeBackgroundLabels[3] = ui->label_background_custom;
 
     ui->promoInputButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->promoCode->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
@@ -198,7 +203,7 @@ void pageProduct::cancelTimers()
 
 void pageProduct::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<<Page Enter: Product >>>>>>>>>";
+    qDebug() << "<<<<<<< Page Enter: Product >>>>>>>>>";
     selectedProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
     QWidget::showEvent(event);
 
@@ -217,20 +222,6 @@ void pageProduct::resizeEvent(QResizeEvent *event)
     qDebug() << "\n---Page_product: resizeEvent";
     QWidget::resizeEvent(event);
     reset_and_show_page_elements();
-    // reset_and_show_page_elements();
-
-    // if (selectIdleTimer == nullptr)
-    // {
-
-    // selectIdleTimer = new QTimer(this);
-    // selectIdleTimer->setInterval(40);
-    // connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
-
-    // }
-
-    //    qDebug() << "Start pageProduct Timers" << endl;
-
-    // do after db closed
 }
 
 void pageProduct::onSelectTimeoutTick()
@@ -270,8 +261,24 @@ void pageProduct::reset_and_show_page_elements()
     //     };
     for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
-        orderSizeButtons[i]->setFixedSize(QSize(orderSizeButtons_xywh_generic_product_page[i][2], orderSizeButtons_xywh_generic_product_page[i][3]));
-        orderSizeButtons[i]->move(orderSizeButtons_xywh_generic_product_page[i][0], orderSizeButtons_xywh_generic_product_page[i][1]);
+        if (selectedProductOrder->getLoadedProductSizeEnabled(i)){
+            orderSizeButtons[i]->show();
+
+            orderSizeButtons[i]->setFixedSize(QSize(orderSizeButtons_xywh_generic_product_page[i][2], orderSizeButtons_xywh_generic_product_page[i][3]));
+            orderSizeButtons[i]->move(orderSizeButtons_xywh_generic_product_page[i][0], orderSizeButtons_xywh_generic_product_page[i][1]);
+
+            orderSizeBackgroundLabels[i]->setFixedSize(QSize(orderSizeButtons_xywh_generic_product_page[i][2], orderSizeButtons_xywh_generic_product_page[i][3]));
+            orderSizeBackgroundLabels[i]->move(orderSizeButtons_xywh_generic_product_page[i][0], orderSizeButtons_xywh_generic_product_page[i][1]);
+            orderSizeBackgroundLabels[i]->lower();
+            orderSizeBackgroundLabels[i]->setStyleSheet("QLabel { background-color: red; border: 0px }");
+            qDebug()<<"Product size index enabled: "<<i;
+
+
+
+        }else{
+            qDebug()<<"Product size index NOT enabled: "<<i;
+            orderSizeButtons[i]->hide();
+        }
     }
 
 #else
@@ -341,40 +348,45 @@ void pageProduct::loadOrderSelectedSize()
 
     for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
-        qDebug() << "*****load size: " << i;
-        QString price = QString::number(selectedProductOrder->getPrice(product_sizes[i]), 'f', 2);
-        // orderSizeLabelsPrice[i]->raise();
-        // orderSizeLabelsVolume[i]->raise();
-        QString transparent_path = FULL_TRANSPARENT_IMAGE_PATH;
-        orderSizeLabelsPrice[i]->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+        
+        if (selectedProductOrder->getLoadedProductSizeEnabled(i)){
+            qDebug() << "*****load size: " << i;
 
-        if (product_sizes[i] == SIZE_CUSTOM_INDEX)
-        {
-            orderSizeLabelsVolume[i]->setText("Custom Volume.");
-            QString units = selectedProductOrder->getUnitsForSelectedSlot();
-            if (units == "ml")
+            orderSizeLabelsPrice[i]->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;");
+            orderSizeBackgroundLabels[i]->setStyleSheet("QLabel { background-color: #FFFFFF; border: 0px }");
+            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 1px  solid #3D6675; }");
+                // orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 1px  solid #3D6675; }");
+                //orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: rgba(0.25, 0.3, 0.5 , 0.2); border: 1px  solid #3D6675; }");
+
+            QString price = QString::number(selectedProductOrder->getPrice(product_sizes[i]), 'f', 2);
+            QString transparent_path = FULL_TRANSPARENT_IMAGE_PATH;
+
+            if (product_sizes[i] == SIZE_CUSTOM_INDEX)
             {
-                units = "L";
+                orderSizeLabelsVolume[i]->setText("Custom Volume.");
+                QString units = selectedProductOrder->getUnitsForSelectedSlot();
+                if (units == "ml")
+                {
+                    units = "L";
+                }
+                orderSizeLabelsPrice[i]->setText("$" + price + "/" + units);
             }
-            orderSizeLabelsPrice[i]->setText("$" + price + "/" + units);
-        }
-        else
-        {
-            orderSizeLabelsPrice[i]->setText("$" + price);
-            orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i], true, true));
-        }
+            else
+            {
+                orderSizeLabelsPrice[i]->setText("$" + price);
+                orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i], true, true));
+            }
 
-        if (selectedProductOrder->getSelectedSize() == product_sizes[i])
-        {
-            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 2px  solid #3D6675; }");
-            // orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: rgba(0.25, 0.3, 0.5 , 0.2); border: 8px  solid #3D6675; }");
+            if (selectedProductOrder->getSelectedSize() == product_sizes[i])
+            {
+                orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 1px  solid #3D6675; }");
+                //orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 2px  solid #3D6675; }");
+                // orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: rgba(0.25, 0.3, 0.5 , 0.2); border: 8px  solid #3D6675; }");
+                orderSizeBackgroundLabels[i]->setStyleSheet("QLabel { background-color: #5E8580; border: 0px }");
+                orderSizeLabelsPrice[i]->setStyleSheet("font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;");
+            }
+            orderSizeButtons[i]->raise();
         }
-        else
-        {
-            // orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 1px  solid #3D6675; }");
-            orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: rgba(0.25, 0.3, 0.5 , 0.2); border: 1px  solid #3D6675; }");
-        }
-        orderSizeButtons[i]->raise();
     }
 
     ui->promoCode->clear();

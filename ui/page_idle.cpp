@@ -84,7 +84,7 @@ page_idle::~page_idle()
 
 void page_idle::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<<Page Enter: idle >>>>>>>>>";
+    qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
     QWidget::showEvent(event);
     //    DbManager db(DB_PATH);
     // ui->savedBottles_label->setText("THANKS TO YOU, THIS MACHINE HAS SAVED<br>OVER " + QString::number(db.getTotalTransactions()) + " PLASTIC CONTAINERS<br>FROM THE LANDFILL");
@@ -118,7 +118,7 @@ void page_idle::on_nextPageButton_clicked()
     // it's staying in the background to counter a hack UBC students found (when changing screens and tapping during the swap, they could get a hold of the machine)
     // Tapping on on the desktop wallpaper minimizes the application.
     // If the idle page is not hidden, and always on the background, there is never a wall paper showing. Effectively preventing this vulnerability to be exploited.
-    this->hide();
+    //this->hide();
 }
 
 bool page_idle::isEnough(int p)

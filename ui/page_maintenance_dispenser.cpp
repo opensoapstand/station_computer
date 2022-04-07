@@ -70,7 +70,7 @@ void page_maintenance_dispenser::setSoldOutButtonText()
 
 void page_maintenance_dispenser::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<<Page Enter: maintenance dispense >>>>>>>>>";
+    qDebug() << "<<<<<<< PPPage Enter: maintenance dispense >>>>>>>>>";
 
     QWidget::showEvent(event);
     int product_slot___ = this->p_page_idle->currentProductOrder->getSelectedSlot();

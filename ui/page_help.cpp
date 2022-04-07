@@ -52,7 +52,7 @@ page_help::~page_help()
 
 void page_help::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<<Page Enter: Help >>>>>>>>>";
+    qDebug() << "<<<<<<< PPPage Enter: Help >>>>>>>>>";
     QWidget::showEvent(event);
 
     if(helpIdleTimer == nullptr){

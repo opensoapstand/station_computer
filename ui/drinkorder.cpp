@@ -339,13 +339,24 @@ void DrinkOrder::loadProductProperties(int slot)
     qDebug() << "db load product properties";
     DbManager db(DB_PATH);
 
-    db.getProductProperties(slot, &m_name, &m_description, &m_features, &m_ingredients);
+    bool m_isEnabledSmall;
+    bool m_isEnabledMedium;
+    bool m_isEnabledLarge;
+    bool m_isEnabledCustom;
+
+    db.getProductProperties(slot, &m_name, &m_description, &m_features, &m_ingredients, m_isEnabledSizes);
     db.closeDB();
 }
+
+bool DrinkOrder::getLoadedProductSizeEnabled(int size){
+    return m_isEnabledSizes[size];
+}
+
 QString DrinkOrder::getLoadedProductIngredients()
 {
     return m_ingredients;
 }
+
 QString DrinkOrder::getLoadedProductFeatures()
 {
     return m_features;

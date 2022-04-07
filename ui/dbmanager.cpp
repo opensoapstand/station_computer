@@ -156,11 +156,12 @@ QString DbManager::getProductDrinkfillSerial(int slot)
     return val;
 }
 
-void DbManager::getProductProperties(int slot, QString*name, QString *description, QString *features,  QString *ingredients)
+void DbManager::getProductProperties(int slot, QString*name, QString *description, QString *features,  QString *ingredients, bool* isSizeEnabled)
+// void DbManager::getProductProperties(int slot, QString*name, QString *description, QString *features,  QString *ingredients, bool* isEnabledSmall,bool* isEnabledMedium,bool* isEnabledLarge,bool* isEnabledCustom)
 {
     QSqlQuery qry;
     {
-        qry.prepare("SELECT name,description,features,ingredients FROM products WHERE slot=:slot");
+        qry.prepare("SELECT name,description,features,ingredients,is_enabled_small,is_enabled_medium,is_enabled_large,is_enabled_custom FROM products WHERE slot=:slot");
         qry.bindValue(":slot", slot);
         qry.exec();
 
@@ -170,6 +171,10 @@ void DbManager::getProductProperties(int slot, QString*name, QString *descriptio
             *description = qry.value(1).toString();
             *features = qry.value(2).toString();
             *ingredients = qry.value(3).toString();
+            isSizeEnabled[0] = qry.value(4).toInt();
+            isSizeEnabled[1] = qry.value(5).toInt();
+            isSizeEnabled[2] = qry.value(6).toInt();
+            isSizeEnabled[3] = qry.value(7).toInt();
         }
     }
 }

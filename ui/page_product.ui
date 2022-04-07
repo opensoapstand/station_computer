@@ -2102,7 +2102,7 @@ text-align: center;</string>
    <property name="geometry">
     <rect>
      <x>95</x>
-     <y>474</y>
+     <y>430</y>
      <width>894</width>
      <height>252</height>
     </rect>
@@ -2189,6 +2189,58 @@ color: #58595B;
     <string>Ingredients:</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label_background_small">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>230</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_background_medium">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>230</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_background_large">
+   <property name="geometry">
+    <rect>
+     <x>500</x>
+     <y>240</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_background_custom">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>280</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>promoInputButton</zorder>
   <zorder>promoCode</zorder>
   <zorder>promoButton</zorder>
@@ -2218,6 +2270,10 @@ color: #58595B;
   <zorder>label_product_ingredients_title</zorder>
   <zorder>label_product_ingredients</zorder>
   <zorder>promoKeyboard</zorder>
+  <zorder>label_background_small</zorder>
+  <zorder>label_background_medium</zorder>
+  <zorder>label_background_large</zorder>
+  <zorder>label_background_custom</zorder>
  </widget>
  <resources/>
  <connections/>

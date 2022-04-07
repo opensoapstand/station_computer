@@ -42,6 +42,7 @@ public:
     QPushButton *orderSizeButtons[4];
     QLabel *orderSizeLabelsPrice[4];
     QLabel *orderSizeLabelsVolume[4];
+    QLabel *orderSizeBackgroundLabels[4];
 
     explicit pageProduct(QWidget *parent = nullptr);
     void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, pagePayment *pagePayment, page_help *pageHelp);

@@ -6,7 +6,9 @@
 DrinkOrder::DrinkOrder()
 {
     selectedDrink = new DrinkSelection;
-    overruledPrice = INVALID_PRICE;
+    // overruledPrice = INVALID_PRICE;
+    m_discount_percentage_fraction = 0.0;
+
     // qDebug() << "ahoyy2" ;
     // DbManager db(DB_PATH);
 
@@ -69,7 +71,8 @@ int DrinkOrder::getSelectedSize()
 
 void DrinkOrder::setSelectedSize(int sizeOption)
 {
-    overruledPrice = INVALID_PRICE;
+    // overruledPrice = INVALID_PRICE;
+    // m_discount_percentage_fraction = 0.0;
     selectedSize = sizeOption;
 }
 
@@ -86,7 +89,8 @@ void DrinkOrder::setSelectedSlot(int slot)
 
         if (slot != getSelectedSlot())
         {
-            overruledPrice = INVALID_PRICE;
+            // overruledPrice = INVALID_PRICE;
+            // m_discount_percentage_fraction = 0.0;
             m_selectedSlot = slot;
             emit orderSlotChange(slot);
         }
@@ -115,23 +119,36 @@ bool DrinkOrder::isSelectedOrderValid()
     return true;
 }
 
-void DrinkOrder::setSelectedOverrulePrice(double price)
+double DrinkOrder::getDiscount()
 {
+    qDebug() << "--------=========" << QString::number(getSelectedPriceCorrected());
+    return getPrice(getSelectedSize()) - getSelectedPriceCorrected();
+}
 
-    if (isSelectedOrderValid())
-    {
-        qInfo() << "Set overrruled price.";
+double DrinkOrder::getDiscountPercentageFraction()
+{
+    return m_discount_percentage_fraction;
+}
+void DrinkOrder::setDiscountPercentageFraction(double percentageFraction)
+{
+    // ratio = percentage / 100;
+    qDebug() << "Set discount percentage fraction: " << QString::number(percentageFraction, 'f', 3);
+    m_discount_percentage_fraction = percentageFraction;
+    
+    // if (isSelectedOrderValid())
+    // {
+    //     qInfo() << "Set overrruled price.";
 
-        if (price != overruledPrice)
-        {
-            overruledPrice = price;
-            emit priceChange(overruledPrice);
-        }
-    }
-    else
-    {
-        qInfo() << "ERROR: no overruled price set. ";
-    }
+    //     if (price != overruledPrice)
+    //     {
+    //         overruledPrice = price;
+    //         emit priceChange(overruledPrice);
+    //     }
+    // }
+    // else
+    // {
+    //     qInfo() << "ERROR: no overruled price set. ";
+    // }
 }
 
 void DrinkOrder::setPriceSelected(int size, double price)
@@ -154,21 +171,26 @@ double DrinkOrder::getPrice(int sizeIndex)
     return price;
 }
 
+double DrinkOrder::getSelectedPrice(){
+    return getPrice(getSelectedSize());
+}
 double DrinkOrder::getSelectedPriceCorrected()
 {
     // slot and size needs to be set.
     double price;
     if (isSelectedOrderValid())
     {
-        if (overruledPrice != INVALID_PRICE)
-        {
-            qInfo() << "Overruled price is set.";
-            price = overruledPrice;
-        }
-        else
-        {
-            price = getPrice(getSelectedSize());
-        }
+        // if (overruledPrice != INVALID_PRICE)
+        // {
+        //     qInfo() << "Overruled price is set.";
+        //     price = overruledPrice;
+        // }
+        // else
+        // {
+        //     price = getPrice(getSelectedSize());
+        // }
+
+        price = getPrice(getSelectedSize()) * (1.0 - m_discount_percentage_fraction);
     }
     else
     {
@@ -348,7 +370,8 @@ void DrinkOrder::loadProductProperties(int slot)
     db.closeDB();
 }
 
-bool DrinkOrder::getLoadedProductSizeEnabled(int size){
+bool DrinkOrder::getLoadedProductSizeEnabled(int size)
+{
     return m_isEnabledSizes[size];
 }
 

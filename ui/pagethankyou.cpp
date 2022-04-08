@@ -69,6 +69,9 @@ void pagethankyou::showEvent(QShowEvent *event)
 
     // THIS WILL HAVE TO BE CHANGED SO THE SYSTEM CHECKS IF IT IS A DF / SS MACHINE
 
+    // reset promovalue
+    p_page_idle->currentProductOrder->setDiscountPercentageFraction(0.0);
+
     // ui->rinse_label->hide();
     ui->mainPage_Button->setEnabled(true);
     is_controller_finished = false;

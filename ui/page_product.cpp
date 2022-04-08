@@ -345,7 +345,6 @@ void pageProduct::loadOrderSelectedSize()
 {
 
     qDebug() << "-------------------------- LOAD ORDER ----------------";
-
     _selectIdleTimeoutSec = 140;
 
     ui->mainPage_Button->setEnabled(true);
@@ -400,7 +399,19 @@ void pageProduct::loadOrderSelectedSize()
     ui->promoCode->clear();
     ui->promoCode->hide();
     promoPercent = 0.0;
-    double selectedPrice = selectedProductOrder->getSelectedPriceCorrected();
+    
+    if (selectedProductOrder->getDiscountPercentageFraction() > 0.0){
+        ui->label_invoice_discount_amount->show();
+        ui->label_invoice_discount_name->show();
+
+    }else{
+        ui->label_invoice_discount_amount->hide();
+        ui->label_invoice_discount_name->hide();
+    }
+
+    double selectedPrice = selectedProductOrder->getSelectedPrice();
+    double discount = selectedProductOrder->getDiscount();
+    double selectedPriceCorrected = selectedProductOrder->getSelectedPriceCorrected();
 
     if (selectedProductOrder->getSelectedSize() == SIZE_CUSTOM_INDEX)
     {
@@ -411,14 +422,19 @@ void pageProduct::loadOrderSelectedSize()
         }
         ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName());
         ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2) + "/" + unitsInvoice);
-        ui->label_invoice_price_total->setText("$" + QString::number(selectedPrice, 'f', 2) + "/" + unitsInvoice); // how to handle promo ?! todo!
+
+        ui->label_invoice_discount_amount->setText("-$" + QString::number(discount, 'f', 2));
+
+        ui->label_invoice_price_total->setText("$" + QString::number(selectedPriceCorrected, 'f', 2) + "/" + unitsInvoice); // how to handle promo ?! todo!
     }
     else
     {
 
         ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
         ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2));
-        ui->label_invoice_price_total->setText("$" + QString::number(selectedPrice, 'f', 2)); // how to handle promo ?! todo!
+        ui->label_invoice_discount_amount->setText("-$" + QString::number(discount, 'f', 2));
+
+        ui->label_invoice_price_total->setText("$" + QString::number(selectedPriceCorrected, 'f', 2)); // how to handle promo ?! todo!
     }
 
     qDebug() << "-------------------------- END LOAD ORDER ----------------";
@@ -532,6 +548,7 @@ void pageProduct::loadOrderSelectedSize()
     ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
     double selectedPrice = selectedProductOrder->getSelectedPriceCorrected();
     ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2));
+     ui->label_invoice_discount_amount->setText("-$" + QString::number(selectedProductOrder->getDiscount(), 'f', 2));
     ui->label_invoice_price_total->setText("$" + QString::number(selectedPrice)); // how to handle promo ?! todo!
 
     qDebug() << "-------------------------- END LOAD ORDER ----------------";
@@ -607,20 +624,19 @@ size_t WriteCallback_coupon(char *contents, size_t size, size_t nmemb, void *use
 
 void pageProduct::updatePriceAfterPromo(double discountPercent)
 {
-    double discount;
     // QString normal_price = (ui->label_invoice_price->text()).split("$")[1];
     // double price = normal_price.toDouble();
+    selectedProductOrder->setDiscountPercentageFraction(discountPercent / 100);
 
-    double price = selectedProductOrder->getPrice(selectedProductOrder->getSelectedSize());
+    // ui->label_invoice_discount_amount->show();
+    // ui->label_invoice_discount_name->show();
 
-    discount = discountPercent * price / 100;
-    price = (100 - discountPercent) * price / 100;
-    ui->label_invoice_discount_amount->setText("-$" + QString::number(discount, 'f', 2));
-    ui->label_invoice_discount_amount->show();
-    ui->label_invoice_discount_name->show();
-
-    selectedProductOrder->setSelectedOverrulePrice(price);
-    ui->label_invoice_price_total->setText("$" + QString::number(price, 'f', 2));
+    // double discount;
+    // discount = selectedProductOrder->getDiscountPercentageFraction() * selectedProductOrder->getPrice(selectedProductOrder->getSelectedSize());
+    // ui->label_invoice_discount_amount->setText("-$" + QString::number(discount, 'f', 2));
+    
+    // ui->label_invoice_discount_amount->setText("-$" + QString::number(selectedProductOrder->getDiscount(), 'f', 2));
+    // ui->label_invoice_price_total->setText("$" + QString::number(selectedProductOrder->getSelectedPriceCorrected(), 'f', 2));
 }
 
 void pageProduct::on_applyPromo_Button_clicked()
@@ -662,9 +678,11 @@ void pageProduct::on_applyPromo_Button_clicked()
                 if (coupon_obj["active"])
                 {
                     new_percent = coupon_obj["discount_amount"];
-                    updatePriceAfterPromo(new_percent);
+                    
+                    selectedProductOrder->setDiscountPercentageFraction((new_percent*1.0) / 100);
                     promoPercent = new_percent;
                     qDebug() << "Apply coupon percentage: " << promoPercent;
+                    loadOrderSelectedSize();
                 }
                 else
                 {
@@ -819,6 +837,7 @@ void pageProduct::on_pagePayment_Button_clicked()
             qDebug() << "Server feedback readbuffer: " << feedback;
 
             ui->label_invoice_price_total->text();
+
             paymentPage->showFullScreen();
             this->hide();
         }

@@ -635,8 +635,6 @@ DF_ERROR stateDispenseEnd::print_receipt()
 
     double volume_dispensed;
 
-    debugOutput::sendMessage("aiisisixs  s=" + to_string(SIZE_SMALL_CHAR) + "l=" + to_string(SIZE_LARGE_CHAR) + "set: " + to_string(m_pMessaging->getRequestedSize()), MSG_INFO);
-
     if (m_pMessaging->getRequestedSize() == 's')
     {
         volume_dispensed = productDispensers[pos].getProduct()->m_nVolumeTarget_s;

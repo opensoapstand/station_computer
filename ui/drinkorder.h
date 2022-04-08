@@ -3,7 +3,7 @@
 
 #include "df_util.h"
 
-#define INVALID_PRICE -666
+// #define INVALID_PRICE -666
 
 // TODO: Remove and direct link to dftypes.h and debug value headers in FSM
 // typedef enum DF_QT_SLOTS {
@@ -121,8 +121,10 @@ public:
     QString getSizeToVolumeWithCorrectUnitsForSelectedSlot(int size, bool roundValue, bool addUnits);
 
     double getPrice(int sizeIndex);
+    double getDiscount();
     void setPriceSelected(int size, double price);
     double getSelectedPriceCorrected();
+    double getSelectedPrice();
 
     int getSelectedDispenseSpeedPercentage();
     void setSelectedDispenseSpeedPercentage(int percentage);
@@ -130,10 +132,11 @@ public:
     char getSelectedSizeAsChar();
     QString getSelectedPaymentMethod();
 
+    double getDiscountPercentageFraction();
 public slots:
 
     // void setSelectedSlot(int optNumber);
-    void setSelectedOverrulePrice(double price);
+    void setDiscountPercentageFraction(double percentageFraction);
     // void setSize(double size);
 
 signals:
@@ -153,7 +156,7 @@ private:
     int selectedSize;
     int m_selectedSlot;
     double overruledPrice;
-    float price_reduction_ratio;
+    double m_discount_percentage_fraction;
 };
 
 #endif // DRINKORDER_H

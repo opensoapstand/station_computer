@@ -79,12 +79,14 @@ void page_help::setPage(page_select_product *pageSelect, pageProduct* pageProduc
 
 void page_help::on_previousPage_Button_clicked(){
     helpIdleTimer->stop();
+    // qDebug() << "help3 to idle";
     p_page_idle->showFullScreen();
     this->hide();
 }
 
 void page_help::on_previousPage_Button_2_clicked(){
     helpIdleTimer->stop();
+    // qDebug() << "help2 to idle";
     p_page_idle->showFullScreen();
     this->hide();
 }
@@ -96,6 +98,7 @@ void page_help::onHelpTimeoutTick(){
 //        qDebug() << "Help Timer Done!" << _helpIdleTimeoutSec << endl;
 
         helpIdleTimer->stop();
+        // qDebug() << "help to idle";
         p_page_idle->showFullScreen();
         this->hide();
     }

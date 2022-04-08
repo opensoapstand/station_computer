@@ -36,6 +36,8 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
     thankYouEndTimer = new QTimer(this);
     thankYouEndTimer->setInterval(1000);
     connect(thankYouEndTimer, SIGNAL(timeout()), this, SLOT(onThankyouTimeoutTick()));
+
+    is_in_state_thank_you = false;
 }
 
 /*
@@ -63,6 +65,8 @@ void pagethankyou::showEvent(QShowEvent *event)
     QString paymentMethod = db.getPaymentMethod(p_page_idle->currentProductOrder->getSelectedSlot());
     db.closeDB();
 
+    is_in_state_thank_you = true;
+
     thankYouEndTimer = new QTimer(this);
     thankYouEndTimer->setInterval(1000);
     connect(thankYouEndTimer, SIGNAL(timeout()), this, SLOT(onThankyouTimeoutTick()));
@@ -89,7 +93,7 @@ void pagethankyou::showEvent(QShowEvent *event)
     // }else{
     //     ui->rinse_label->hide();
     //     thankYouEndTimer->start(1000);
-    //     _thankYouTimeoutSec = 5;
+    //     _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     //     ui->mainPage_Button->setEnabled(true);
     // }
     
@@ -166,10 +170,15 @@ void pagethankyou::sendDispenseEndToCloud()
 
 void pagethankyou::controllerFinishedTransaction()
 {
-    qDebug() << "Controller msg: All done for transaction.";
-    is_controller_finished = true;
-    thankYouEndTimer->start(1000);
-    _thankYouTimeoutSec = 7;
+    if (is_in_state_thank_you){
+        qDebug() << "Thank you page: Controller msg: All done for transaction.";
+        is_controller_finished = true;
+        thankYouEndTimer->start(1000);
+        _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
+
+    }else{
+        
+    }
 }
 
 void pagethankyou::transactionToFile(char *curl_params)
@@ -201,6 +210,7 @@ void pagethankyou::exitPage()
     if ((is_controller_finished && is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER) || exitIsForceable)
     {
         thankYouEndTimer->stop();
+        // qDebug() << "thank you to idle";
         p_page_idle->showFullScreen();
         this->hide();
 
@@ -216,6 +226,6 @@ void pagethankyou::exitPage()
         ui->rinse_label->show();
 
         thankYouEndTimer->start(1000);
-        _thankYouTimeoutSec = 7;
+        _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     }
 }

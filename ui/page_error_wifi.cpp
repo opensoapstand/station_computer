@@ -91,7 +91,7 @@ void page_error_wifi::on_wifi_ack_Button_clicked()
 
     //stopDispenseTimer();
      db.closeDB();
-
+    // qDebug() << "error to idle";
      p_page_idle->showFullScreen();
      this->hide();
 }

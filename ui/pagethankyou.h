@@ -81,6 +81,8 @@ private:
     
     bool exitIsForceable; // avoid being stuck if internet fails.
 
+    bool is_in_state_thank_you;
+
 
 };
 

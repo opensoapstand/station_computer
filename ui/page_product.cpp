@@ -576,6 +576,7 @@ void pageProduct::mainPage()
     //    qDebug() << "pageProduct: mainPage button" << endl;
     this->stopSelectTimers();
     selectIdleTimer->stop();
+    // qDebug() << "product to idle";
     p_page_idle->showFullScreen();
     //    usleep(100);
     this->hide();

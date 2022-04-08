@@ -573,7 +573,7 @@ void pagePayment::idlePaymentTimeout()
     {
         cancelPayment();
     }
-
+    // qDebug() << "payment to idle";
     p_page_idle->showFullScreen();
     //    usleep(100);
     this->hide();

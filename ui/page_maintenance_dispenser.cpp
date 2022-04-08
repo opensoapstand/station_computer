@@ -722,17 +722,17 @@ void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
     }
     else
     {
-        //        qDebug() << "Maintain Product Timer Done!" << _maintainProductPageTimeoutSec << endl;
+        qDebug() << "Maintenance dispenser page timeout";
 
         // Update Click DB
         qDebug() << "ahoyy5";
         DbManager db(DB_PATH);
-        //        db.addPageClick("MAINTAIN PRODUCT PAGE TIME OUT");
-
         dispense_test_end(true);
 
         db.closeDB();
+
         maintainProductPageEndTimer->stop();
+        // qDebug() << "maintenance dispenser to idle";
         p_page_idle->showFullScreen();
         this->hide();
     }

@@ -288,6 +288,7 @@ void page_select_product::onProductPageTimeoutTick()
 void page_select_product::mainPage()
 {
     productPageEndTimer->stop();
+    // qDebug() << "select product to idle";
     p_page_idle->showFullScreen();
     this->hide();
 }

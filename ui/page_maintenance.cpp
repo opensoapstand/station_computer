@@ -73,7 +73,7 @@ void page_maintenance::showEvent(QShowEvent *event)
     }
 
     // page_maintenanceEndTimer->start(1000);
-    _page_maintenanceTimeoutSec = 30;
+    _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
 
     ui->product1_label->setText(db.getProductName(1));
     ui->product2_label->setText(db.getProductName(2));
@@ -129,6 +129,7 @@ void page_maintenance::on_backButton_clicked()
     //    qDebug() << "Back button clicked" << endl;
 
     page_maintenanceEndTimer->stop();
+    // qDebug() << "maintenance2 to idle";
     p_page_idle->showFullScreen();
     //    usleep(100);
     this->hide();
@@ -221,7 +222,7 @@ void page_maintenance::on_product4_button_clicked()
 void page_maintenance::on_wifiButton_clicked()
 {
     //    qDebug() << "WiFi button clicked" << endl;
-    _page_maintenanceTimeoutSec = 30;
+    _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
     ui->wifiTable->setRowCount(0);
 
     // OPEN LIST OF WIFI CONNECTIONS AVAILABLE, AS BUTTONS, WHEN YOU CLICK ON A BUTTON, OPEN PASSWORD ENTRY
@@ -315,7 +316,7 @@ void page_maintenance::btn_clicked()
 {
     QObject *button = QObject::sender();
     //    qDebug() << "btn clicked -> " << button->objectName();
-    _page_maintenanceTimeoutSec = 30;
+    _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
     // OPEN ON-SCREEN KEYBOARD FOR PASSWORD ENTRY
 
     ui->keyboard_2->show();
@@ -356,6 +357,7 @@ void page_maintenance::onPage_maintenanceTimeoutTick()
         //        qDebug() << "Page_page_maintenance Timer Done!" << _page_maintenanceTimeoutSec << endl;
 
         page_maintenanceEndTimer->stop();
+        // qDebug() << "maintenance to idle";
         p_page_idle->showFullScreen();
         //        usleep(100);
         this->hide();

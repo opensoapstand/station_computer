@@ -68,6 +68,7 @@ void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pa
     // Chained to KB Listener
     this->p_pageSelectProduct = p_pageProduct;
     this->p_page_maintenance = pageMaintenance;
+    
 }
 
 // DTOR
@@ -80,12 +81,13 @@ void page_idle::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
     QWidget::showEvent(event);
+
+      // reset promovalue
+    currentProductOrder->setDiscountPercentageFraction(0.0);
+
     //    DbManager db(DB_PATH);
     // ui->savedBottles_label->setText("THANKS TO YOU, THIS MACHINE HAS SAVED<br>OVER " + QString::number(db.getTotalTransactions()) + " PLASTIC CONTAINERS<br>FROM THE LANDFILL");
-    // customer logo
 
-    // QString logo_folder = COMPANY_LOGO_PATH;
-    // QString logo_path = logo_folder + "C-2_logo_white.png";
 #ifdef ENABLE_DYNAMIC_UI
     DbManager db(DB_PATH);
     QString id = db.getCustomerId();

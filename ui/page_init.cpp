@@ -91,6 +91,7 @@ void page_init::initReadySlot(void)
     qDebug() << "Signal: init ready from fsm";
     initIdleTimer->stop();
     rebootTimer->stop();
+    // qDebug() << "init to idle";
     p_page_idle->showFullScreen();
     this->hide();
 }

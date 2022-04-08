@@ -78,7 +78,7 @@
     <string>Product Target Volume: </string>
    </property>
   </widget>
-  <widget class="QPushButton" name="image">
+  <widget class="QPushButton" name="productPhotoButton">
    <property name="geometry">
     <rect>
      <x>40</x>
@@ -819,9 +819,9 @@ last restock</string>
    <property name="geometry">
     <rect>
      <x>590</x>
-     <y>360</y>
-     <width>67</width>
-     <height>17</height>
+     <y>346</y>
+     <width>341</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">

@@ -182,6 +182,7 @@ void page_select_product::displayProducts()
         selectProductNameLabels[i]->hide();
         selectProductIconLabels[i]->hide();
         selectProductTypeLabels[i]->hide();
+    }
 
 #endif
 }

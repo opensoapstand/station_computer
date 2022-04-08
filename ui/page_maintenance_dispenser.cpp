@@ -145,12 +145,11 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 void page_maintenance_dispenser::setPage(page_maintenance *pageMaintenance, page_idle *pageIdle)
 {
 
-    
     this->p_page_maintenance = pageMaintenance;
     this->p_page_idle = pageIdle;
     selectedProductOrder = p_page_idle->currentProductOrder;
 
-    //refreshLabels();
+    // refreshLabels();
 }
 
 void page_maintenance_dispenser::on_backButton_clicked()
@@ -230,24 +229,28 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
 
     // DbManager db_temperature(DB_PATH_TEMPERATURE);
 
+#ifdef ENABLE_DYNAMIC_UI
+    QString p = p_page_idle->currentProductOrder->getProductPicturePath(p_page_idle->currentProductOrder->getSelectedSlot());
+    p_page_idle->dfUtility->fileExists(p);
+    QPixmap im(p);
+    QIcon qi(im);
+    ui->productPhotoButton->setIcon(qi);
+    ui->productPhotoButton->setIconSize(QSize(271, 391));
+#else
     QString bitmap_location;
 
-    // qDebug() << " ********** 666564 call db from maintenance select dispenser page  resize event" << endl;
-    // DbManager db(DB_PATH);
     bitmap_location.append("/home/df-admin/production/references/product");
     bitmap_location.append(QString::number(p_page_idle->currentProductOrder->getSelectedSlot()));
     bitmap_location.append(".png");
-    // db.closeDB();
-
-    refreshLabels();
-    update_dispense_stats(0);
 
     QPixmap background(bitmap_location);
     QIcon ButtonIcon(background);
 
-    ui->image->setIcon(ButtonIcon);
-    ui->image->setIconSize(QSize(271, 391));
-
+    ui->productPhotoButton->setIcon(ButtonIcon);
+    ui->productPhotoButton->setIconSize(QSize(271, 391));
+#endif
+    refreshLabels();
+    update_dispense_stats(0);
     setSoldOutButtonText();
 }
 
@@ -462,7 +465,6 @@ void page_maintenance_dispenser::fsmReceiveNoFlowAbort()
     // gets called from the controller.
     // dispense_test_end(false);
     qDebug() << "Received no flow from controller. , will not take any action";
-
 }
 
 void page_maintenance_dispenser::on_refillButton_clicked()

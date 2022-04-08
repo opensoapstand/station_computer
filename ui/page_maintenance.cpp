@@ -14,8 +14,53 @@ int selection = 0;
 page_maintenance::page_maintenance(QWidget *parent) : QWidget(parent),
                                                       ui(new Ui::page_maintenance)
 {
+
+    QPalette palette;
+    palette.setBrush(QPalette::Background, Qt::white);
+    this->setPalette(palette);
+
     // Fullscreen background setup
     ui->setupUi(this);
+
+    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+
+    page_maintenanceEndTimer = new QTimer(this);
+    page_maintenanceEndTimer->setInterval(1000);
+    connect(page_maintenanceEndTimer, SIGNAL(timeout()), this, SLOT(onPage_maintenanceTimeoutTick()));
+    //    connect(ui->buttonGroup, SIGNAL(buttonClicked(QAbstractButton*)),this, SLOT(on_buttonGroup_buttonClicked()));
+    connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
+
+    product_buttons[0] = ui->product1_button;
+    product_buttons[1] = ui->product2_button;
+    product_buttons[2] = ui->product3_button;
+    product_buttons[3] = ui->product4_button;
+}
+
+// DTOR
+page_maintenance::~page_maintenance()
+{
+    delete ui;
+}
+
+void page_maintenance::showEvent(QShowEvent *event)
+{
+    //    db.addPageClick("PAGE_PAGE_MAINTENANCE PAGE ENTERED");
+    QWidget::showEvent(event);
+    qDebug() << "<<<<<<< PPage Enter: maintenance >>>>>>>>>";
+
+#ifdef ENABLE_DYNAMIC_UI
+
+    for (int i = 0; i < SLOT_COUNT; i++)
+    {
+        QString p = p_page_idle->currentProductOrder->getProductPicturePath(i + 1);
+        p_page_idle->dfUtility->fileExists(p);
+        QPixmap im(p);
+        QIcon qi(im);
+        product_buttons[i]->setIcon(qi);
+        product_buttons[i]->setIconSize(QSize(241, 381));
+    }
+
+#else
     QPixmap background1(PRODUCT_1_IMAGE_PATH);
     QIcon ButtonIcon1(background1);
 
@@ -28,11 +73,6 @@ page_maintenance::page_maintenance(QWidget *parent) : QWidget(parent),
     QPixmap background4(PRODUCT_4_IMAGE_PATH);
     QIcon ButtonIcon4(background4);
 
-    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-    QPalette palette;
-    palette.setBrush(QPalette::Background, Qt::white);
-    this->setPalette(palette);
-   
     ui->product1_button->setIcon(ButtonIcon1);
     ui->product1_button->setIconSize(QSize(241, 381));
 
@@ -45,25 +85,7 @@ page_maintenance::page_maintenance(QWidget *parent) : QWidget(parent),
     ui->product4_button->setIcon(ButtonIcon4);
     ui->product4_button->setIconSize(QSize(241, 381));
 
-    page_maintenanceEndTimer = new QTimer(this);
-    page_maintenanceEndTimer->setInterval(1000);
-    connect(page_maintenanceEndTimer, SIGNAL(timeout()), this, SLOT(onPage_maintenanceTimeoutTick()));
-    //    connect(ui->buttonGroup, SIGNAL(buttonClicked(QAbstractButton*)),this, SLOT(on_buttonGroup_buttonClicked()));
-    connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
-}
-
-// DTOR
-page_maintenance::~page_maintenance()
-{
-    delete ui;
-}
-
-void page_maintenance::showEvent(QShowEvent *event)
-{
-    QWidget::showEvent(event);
-    qDebug() << "<<<<<<< PPage Enter: maintenance >>>>>>>>>";
-    DbManager db(DB_PATH);
-    //    db.addPageClick("PAGE_PAGE_MAINTENANCE PAGE ENTERED");
+#endif
 
     if (page_maintenanceEndTimer == nullptr)
     {
@@ -75,10 +97,13 @@ void page_maintenance::showEvent(QShowEvent *event)
     // page_maintenanceEndTimer->start(1000);
     _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
 
+    qDebug() << "db for product name";
+    DbManager db(DB_PATH);
     ui->product1_label->setText(db.getProductName(1));
     ui->product2_label->setText(db.getProductName(2));
     ui->product3_label->setText(db.getProductName(3));
     ui->product4_label->setText(db.getProductName(4));
+    db.closeDB();
     ui->machineLabel->setText("Machine ID: " + db.getMachineID());
 
     QProcess process;
@@ -109,8 +134,6 @@ void page_maintenance::showEvent(QShowEvent *event)
 
     p_pageSelectProduct->cancelTimers();
     p_pageProduct->cancelTimers();
-
-    db.closeDB();
 }
 
 /*
@@ -500,6 +523,6 @@ void page_maintenance::on_printer_check_status_clicked()
     p_page_idle->dfUtility->send_command_to_FSM("p");
     usleep(50000);
     p_page_idle->dfUtility->send_command_to_FSM("a");
-//     usleep(50000);
-//     p_page_idle->dfUtility->send_command_to_FSM("q"); // go back to fsm idle state is done in controller
+    //     usleep(50000);
+    //     p_page_idle->dfUtility->send_command_to_FSM("q"); // go back to fsm idle state is done in controller
 }

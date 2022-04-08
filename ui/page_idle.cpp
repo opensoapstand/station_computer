@@ -173,7 +173,13 @@ void page_idle::setTemplateFolder(QString rootPath, QString templateFolder){
 }
 
 void page_idle::setBackgroundPictureFromTemplateToPage(QWidget* page, QString imageName ){
+
+
+    #ifdef ENABLE_DYNAMIC_UI
     QPixmap background(getTemplatePathFromName(imageName));
+    #else
+    QPixmap background(imageName);
+    #endif
     background = background.scaled(page->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);

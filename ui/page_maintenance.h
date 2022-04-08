@@ -81,7 +81,7 @@ private:
     pageProduct* p_pageProduct;
 
     QResizeEvent *productSelection;
-
+    QPushButton* product_buttons[4];
     int _page_maintenanceTimeoutSec;
     QTimer* page_maintenanceEndTimer;
 

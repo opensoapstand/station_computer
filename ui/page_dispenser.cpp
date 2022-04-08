@@ -72,11 +72,15 @@ void page_dispenser::showEvent(QShowEvent *event)
     // palette.setBrush(QPalette::Background, background);
     // this->setPalette(palette);
 
-    p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
 
+#ifdef ENABLE_DYNAMIC_UI
+    p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
+#else
+    p_page_idle->addPictureToLabel(ui->dispense_bottle_label, PAGE_DISPENSE_BACKGROUND_PATH);
+
+#endif
     ui->dispense_bottle_label->hide();
     ui->fill_animation_label->hide();
-
 
     startDispensing();
     ui->abortButton->setText("Cancel");
@@ -113,7 +117,6 @@ bool page_dispenser::sendToUX410()
         cout << readPacket << endl;
         if (readPacket.getAckOrNak() == communicationPacketField::ACK)
         {
-            //            cout << readPacket << endl;
             return true;
         }
         usleep(50000);

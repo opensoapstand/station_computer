@@ -62,8 +62,8 @@ void page_error_wifi::showEvent(QShowEvent *event)
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
 
-    ui->widget->hide();
-    ui->filler->hide();
+    // ui->widget->hide();
+    // ui->fill_animation_label->hide();
 
     QWidget::showEvent(event);
 

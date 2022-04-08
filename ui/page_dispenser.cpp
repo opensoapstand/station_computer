@@ -60,24 +60,26 @@ page_dispenser::~page_dispenser()
 void page_dispenser::showEvent(QShowEvent *event)
 {
     this->isDispensing = false;
-   qDebug() << "<<<<<<< PPPPPage Enter: Dispenser >>>>>>>>>";
+   qDebug() << "<<<<<<< Page Enter: Dispenser >>>>>>>>>";
     qDebug() << "selected slot: " << QString::number(selectedProductOrder->getSelectedSlot());
 
-    QPixmap background(PAGE_DISPENSE_BACKGROUND_PATH);
+    QPixmap background(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
-
-    ui->widget->hide();
-    ui->filler->hide();
+     
+    p_page_idle->addPictureToLabel(ui->dispense_bottle_label,PAGE_DISPENSE_BACKGROUND_PATH );
+    ui->dispense_bottle_label->hide();
+    ui->fill_animation_label->hide();
 
     QWidget::showEvent(event);
 
+
+
     startDispensing();
-    // ui->cancelButton->setEnabled(true);
-    // ui->abortButton->setEnabled(false);
     ui->abortButton->setText("Cancel");
+    ui->abortButton->raise();
     
 
     if (nullptr == dispenseIdleTimer)
@@ -89,7 +91,7 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     dispenseIdleTimer->start(1000);
     _dispenseIdleTimeoutSec = 120;
-    qDebug() << "end resize idiseppsense.";
+    
 }
 
 bool page_dispenser::sendToUX410()
@@ -279,7 +281,9 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
 {
     if (this->isDispensing)
     {
-        ui->abortButton->setText("Complete");
+        // if (dispensed > 0.01){
+            ui->abortButton->setText("Complete");
+        // }
 
         // qDebug() << "Signal: update vol in dispenser!" ;
         qDebug() << "Signal: dispensed " << dispensed << " of " << this->targetVolume;
@@ -293,13 +297,15 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
             percentage = 100;
         }
 
-        this->ui->filler->move(380, 590 - 3 * percentage);
+#ifdef ENABLE_DYNAMIC_UI
+        this->ui->fill_animation_label->move(380, 900 - 3 * percentage);
+#else
+        this->ui->fill_animation_label->move(380, 590 - 3 * percentage);
+#endif
 
-        ui->widget->show();
-        ui->filler->show();
+        ui->dispense_bottle_label->show();
+        ui->fill_animation_label->show();
 
-        // ui->cancelButton->setEnabled(false);
-        // ui->abortButton->setEnabled(true);
     }
     else
     {

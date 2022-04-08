@@ -74,7 +74,10 @@ DF_ERROR stateDispense::onAction()
    }
 
    // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
-   m_pMessaging->sendMessage(to_string(productDispensers[pos].getVolumeDispensed()));
+
+   if(productDispensers[pos].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML){
+      m_pMessaging->sendMessage(to_string(productDispensers[pos].getVolumeDispensed()));
+   }
 
    // Check if UI has sent a ACTION_DISPENSE_END to finish the transaction, or, if dispensing is complete
    if (m_pMessaging->getAction() == ACTION_DISPENSE_END)

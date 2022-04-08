@@ -19,7 +19,7 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QLabel" name="widget">
+  <widget class="QLabel" name="dispense_bottle_label">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -32,13 +32,13 @@
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;/home/df-admin/production/references/6_background_dispense.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
-  <widget class="QLabel" name="filler">
+  <widget class="QLabel" name="fill_animation_label">
    <property name="geometry">
     <rect>
      <x>380</x>
-     <y>590</y>
+     <y>889</y>
      <width>301</width>
-     <height>970</height>
+     <height>671</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -52,7 +52,7 @@
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>1440</y>
+     <y>1510</y>
      <width>261</width>
      <height>101</height>
     </rect>
@@ -69,8 +69,8 @@
     <string>Cancel</string>
    </property>
   </widget>
-  <zorder>filler</zorder>
-  <zorder>widget</zorder>
+  <zorder>fill_animation_label</zorder>
+  <zorder>dispense_bottle_label</zorder>
   <zorder>abortButton</zorder>
  </widget>
  <resources/>

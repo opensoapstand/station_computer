@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
     // df_util::fileExists(PAGE_PRODUCT_2_S_BACKGROUND_PATH);
     // df_util::fileExists(PAGE_PRODUCT_3_S_BACKGROUND_PATH);
     // df_util::fileExists(PAGE_PRODUCT_4_S_BACKGROUND_PATH);
-    df_util::fileExists(PAGE_DISPENSE_BACKGROUND_PATH);
+    df_util::fileExists(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
     df_util::fileExists(PAGE_QR_PAY_BACKGROUND_PATH);
     // df_util::fileExists(PRODUCT_1_IMAGE_PATH);
     // df_util::fileExists(PRODUCT_2_IMAGE_PATH);

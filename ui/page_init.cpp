@@ -24,11 +24,7 @@ page_init::page_init(QWidget *parent) : QWidget(parent),
 {
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
-    QPixmap background(PAGE_INIT_BACKGROUND_PATH);
-    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-    QPalette palette;
-    palette.setBrush(QPalette::Background, background);
-    this->setPalette(palette);
+   
 
     // IPC Networking
     dfUtility = new df_util();
@@ -62,6 +58,13 @@ void page_init::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< PPage Enter: Init >>>>>>>>>";
     QWidget::showEvent(event);
+
+     QPixmap background(PAGE_INIT_BACKGROUND_PATH);
+    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Background, background);
+    this->setPalette(palette);
+    
     //    qDebug() << "Start init Timers" << endl;
     initIdleTimer->start(1000);
 #ifdef START_FSM_FROM_UI

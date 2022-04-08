@@ -28,12 +28,10 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
-    QPixmap background(PAGE_IDLE_BACKGROUND_PATH);
-    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+    // QPixmap background(PAGE_IDLE_BACKGROUND_PATH);
+    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
 
-    QPalette palette;
-    palette.setBrush(QPalette::Background, background);
-    this->setPalette(palette);
+    
 
     ui->nextPageButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
 
@@ -81,6 +79,9 @@ void page_idle::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
     QWidget::showEvent(event);
+
+    setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH );
+
 
       // reset promovalue
     currentProductOrder->setDiscountPercentageFraction(0.0);
@@ -141,7 +142,7 @@ bool page_idle::isEnough(int p)
 
 void page_idle::MMSlot()
 {
-    qDebug() << "Signal: Enter maintenance mode" << endl;
+    qDebug() << "Signal: Enter maintenance mode";
     p_page_maintenance->showFullScreen();
     this->hide();
     this->p_pageSelectProduct->hide();
@@ -158,4 +159,29 @@ void page_idle::addPictureToLabel(QLabel *label, QString picturePath)
 
     // // set a scaled pixmap to a w x h window keeping its aspect ratio
     label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio));
+}
+ QString page_idle::getTemplateFolder(){
+    return m_templatePath;
+ }
+ QString page_idle::getTemplatePathFromName(QString backgroundPictureName){
+     return m_templatePath + backgroundPictureName;
+ }
+
+void page_idle::setTemplateFolder(QString rootPath, QString templateFolder){
+    m_templatePath = rootPath + templateFolder + "/";
+    qDebug() << "Template path set to: " + m_templatePath;
+}
+
+void page_idle::setBackgroundPictureFromTemplateToPage(QWidget* page, QString imageName ){
+    QPixmap background(getTemplatePathFromName(imageName));
+    background = background.scaled(page->size(), Qt::IgnoreAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Background, background);
+    page->setPalette(palette);
+
+    // QPixmap background(getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
+    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+    // QPalette palette;
+    // palette.setBrush(QPalette::Background, background);
+    // this->setPalette(palette);
 }

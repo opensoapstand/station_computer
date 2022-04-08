@@ -67,7 +67,7 @@ public:
     QString getProductDrinkfillSerial(int slot);
     // void getProductProperties(int slot, QString*name, QString *description, QString *features,  QString *ingredients);
     void getProductProperties(int slot, QString*name, QString *description, QString *features,  QString *ingredients, bool* isSizeEnabled);
-
+    QString getTemplateName();
 
 private:
     void emailEmpty(int slot);

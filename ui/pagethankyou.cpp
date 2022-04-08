@@ -21,12 +21,7 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
                                               ui(new Ui::pagethankyou)
 {
     ui->setupUi(this);
-    QPixmap background(PAGE_THANK_YOU_BACKGROUND_PATH);
-    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-    QPalette palette;
-    palette.setBrush(QPalette::Background, background);
-    this->setPalette(palette);
-
+   
     /*hacky transparent button*/
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
@@ -59,7 +54,18 @@ pagethankyou::~pagethankyou()
 void pagethankyou::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: Thank you >>>>>>>>>";
+
     QWidget::showEvent(event);
+    
+     // QPixmap background(PAGE_THANK_YOU_BACKGROUND_PATH);
+    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+    // QPalette palette;
+    // palette.setBrush(QPalette::Background, background);
+    // this->setPalette(palette);
+
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_THANK_YOU_BACKGROUND_PATH);
+
+
     qDebug() << "ahoyy24";
     DbManager db(DB_PATH);
     QString paymentMethod = db.getPaymentMethod(p_page_idle->currentProductOrder->getSelectedSlot());
@@ -96,7 +102,7 @@ void pagethankyou::showEvent(QShowEvent *event)
     //     _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     //     ui->mainPage_Button->setEnabled(true);
     // }
-    
+
     if (paymentMethod == "qr" || paymentMethod == "tap")
     {
         sendDispenseEndToCloud();
@@ -146,7 +152,6 @@ void pagethankyou::sendDispenseEndToCloud()
     if (res != CURLE_OK)
     {
         qDebug() << "ERROR: Transaction NOT sent to cloud. cURL fail. Error code: " + QString::number(res);
-       
 
         transactionToFile(curl_data);
         is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
@@ -162,7 +167,6 @@ void pagethankyou::sendDispenseEndToCloud()
             // return data
             is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
         }
-       
     }
     curl_easy_cleanup(curl);
     readBuffer = "";
@@ -170,14 +174,15 @@ void pagethankyou::sendDispenseEndToCloud()
 
 void pagethankyou::controllerFinishedTransaction()
 {
-    if (is_in_state_thank_you){
+    if (is_in_state_thank_you)
+    {
         qDebug() << "Thank you page: Controller msg: All done for transaction.";
         is_controller_finished = true;
         thankYouEndTimer->start(1000);
         _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
-
-    }else{
-        
+    }
+    else
+    {
     }
 }
 

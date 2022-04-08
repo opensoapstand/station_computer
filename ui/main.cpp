@@ -112,8 +112,26 @@ int main(int argc, char *argv[])
     // TODO: Create Query to populate DrinkSelection[0-12]
     // TODO: Instantiate a DrinkOrder Object
 
-    qDebug()<< "Check image paths.... (all paths resolved if nothing shows up).";
 
+
+    // 1. db manager get template
+    // 2. get template files 
+    // 3. test files exisitng
+    // 4. set files 
+    qDebug()<< "db init for template path";
+      DbManager db(DB_PATH);
+    QString template_folder = db.getTemplateName();
+    db.closeDB();
+
+    if (template_folder == ""){
+        template_folder = "default";
+    }
+    qDebug()<< "template folder " << template_folder;
+
+    p_page_idle->setTemplateFolder(TEMPLATES_ROOT_PATH, template_folder);
+    df_util::fileExists(p_page_idle->getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
+
+    qDebug()<< "Check image paths.... (all paths resolved if nothing shows up).";
     df_util::fileExists(PAGE_INIT_BACKGROUND_PATH);
     df_util::fileExists(PAGE_IDLE_BACKGROUND_PATH);
     df_util::fileExists(PAGE_SELECT_PRODUCT_BACKGROUND_PATH);

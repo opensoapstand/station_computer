@@ -44,6 +44,10 @@ public:
     ~page_idle();
     void showEvent(QShowEvent *event);
     void addPictureToLabel(QLabel* label, QString picturePath);
+    QString getTemplateFolder();
+    void setTemplateFolder(QString rootPath, QString templateFolder);
+    QString getTemplatePathFromName(QString backgroundPictureName);
+    void setBackgroundPictureFromTemplateToPage(QWidget* page, QString imageName );
 
     DrinkOrder* currentProductOrder;
     df_util* dfUtility;
@@ -64,6 +68,7 @@ private slots:
 //    void on_savedBottles_label_clicked();
 
 private:
+    QString m_templatePath;
     Ui::page_idle *ui;
     page_select_product* p_pageSelectProduct;
     page_maintenance* p_page_maintenance;

@@ -33,11 +33,7 @@ page_help::page_help(QWidget *parent) :
     ui->previousPage_Button_2->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    QPixmap background(PAGE_HELP_BACKGROUND_PATH);
-    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-    QPalette palette;
-    palette.setBrush(QPalette::Background, background);
-    this->setPalette(palette);
+    
 
     helpIdleTimer = new QTimer(this);
     helpIdleTimer->setInterval(1000);
@@ -54,6 +50,14 @@ void page_help::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< PPPage Enter: Help >>>>>>>>>";
     QWidget::showEvent(event);
+
+    // QPixmap background(PAGE_HELP_BACKGROUND_PATH);
+    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+    // QPalette palette;
+    // palette.setBrush(QPalette::Background, background);
+    // this->setPalette(palette);
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_PATH);
+    
 
     if(helpIdleTimer == nullptr){
         helpIdleTimer = new QTimer(this);

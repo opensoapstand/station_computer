@@ -56,16 +56,16 @@ page_error_wifi::~page_error_wifi()
 void page_error_wifi::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< PPPage Enter: Wifi >>>>>>>>>";
-    QPixmap background(PAGE_WIFI_ERROR_BACKGROUND_PATH);
-    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-    QPalette palette;
-    palette.setBrush(QPalette::Background, background);
-    this->setPalette(palette);
-
-    // ui->widget->hide();
-    // ui->fill_animation_label->hide();
-
+    
     QWidget::showEvent(event);
+
+    // QPixmap background(PAGE_WIFI_ERROR_BACKGROUND_PATH);
+    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+    // QPalette palette;
+    // palette.setBrush(QPalette::Background, background);
+    // this->setPalette(palette);
+
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_WIFI_ERROR_BACKGROUND_PATH);
 
     ui->wifi_ack_Button->setEnabled(false);
 

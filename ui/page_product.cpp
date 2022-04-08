@@ -240,9 +240,8 @@ void pageProduct::reset_and_show_page_elements()
 
     selectedProductOrder->loadSelectedProductProperties();
 
-    QString bitmap_location;
-
 #ifdef ENABLE_DYNAMIC_UI
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_PRODUCT_BACKGROUND_PATH);
 
     ui->label_product_photo->setStyleSheet("QLabel{border: 1px solid black;}");
     ui->label_product_title->setText(selectedProductOrder->getLoadedProductName());
@@ -251,7 +250,7 @@ void pageProduct::reset_and_show_page_elements()
 
     p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->currentProductOrder->getSelectedProductPicturePath());
 
-    bitmap_location = PAGE_PRODUCT_BACKGROUND_PATH;
+    // bitmap_location = PAGE_PRODUCT_BACKGROUND_PATH;
     // uint16_t orderSizeButtons_xywh[4][4] = {
     //     {560, 990, 135, 110},  // S
     //     {706, 990, 135, 105},  // M
@@ -281,6 +280,7 @@ void pageProduct::reset_and_show_page_elements()
     }
 
 #else
+    QString bitmap_location;
     ui->label_product_ingredients->hide();
     ui->label_product_ingredients_title->hide();
     ui->label_product_title->hide();
@@ -304,15 +304,13 @@ void pageProduct::reset_and_show_page_elements()
         orderSizeButtons[i]->setFixedSize(QSize(orderSizeButtons_xywh_static_product_page[i][2], orderSizeButtons_xywh_static_product_page[i][3]));
         orderSizeButtons[i]->move(orderSizeButtons_xywh_static_product_page[i][0], orderSizeButtons_xywh_static_product_page[i][1]);
     }
-
-#endif
-
     qDebug() << bitmap_location << endl;
     QPixmap background(bitmap_location);
     background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
     this->setPalette(palette);
+#endif
 
     // ordersize buttons
     /* Hacky transparent button */

@@ -27,12 +27,8 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
                                                             ui(new Ui::page_select_product)
 {
     ui->setupUi(this);
-    // qDebug()<< "Constructor callk"<< endl;
-    QPixmap background(PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
-    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-    QPalette palette;
-    palette.setBrush(QPalette::Background, background);
-    this->setPalette(palette);
+  
+    
 
     ui->p_page_maintenanceButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     selectProductButtons[0] = ui->selection1_Button;
@@ -195,6 +191,15 @@ void page_select_product::showEvent(QShowEvent *event)
     qDebug() << "<<<<<<< Page Enter: Select Product >>>>>>>>>";
     QWidget::showEvent(event);
     maintenanceCounter = 0;
+
+      // qDebug()<< "Constructor callk"<< endl;
+    // QPixmap background(PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
+    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+    // QPalette palette;
+    // palette.setBrush(QPalette::Background, background);
+    // this->setPalette(palette);
+
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH );
 
     displayProducts();
 

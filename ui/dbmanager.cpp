@@ -724,6 +724,22 @@ bool DbManager::getCouponsEnabled()
     return is_enabled;
 }
 
+
+QString DbManager::getTemplateName(){
+    QSqlQuery qry;
+    QString val;
+    {
+        qry.prepare("SELECT template FROM machine");
+        qry.exec();
+
+        while (qry.next())
+        {
+            val = qry.value(0).toString();
+        }
+    }
+    return val;
+}
+
 QString DbManager::getCustomerId()
 {
     QSqlQuery qry;

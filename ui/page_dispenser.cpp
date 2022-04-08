@@ -33,8 +33,6 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     // ui->abortButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->abortButton->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
 
-    
-
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
@@ -60,27 +58,29 @@ page_dispenser::~page_dispenser()
 void page_dispenser::showEvent(QShowEvent *event)
 {
     this->isDispensing = false;
-   qDebug() << "<<<<<<< Page Enter: Dispenser >>>>>>>>>";
-    qDebug() << "selected slot: " << QString::number(selectedProductOrder->getSelectedSlot());
-
-    QPixmap background(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
-    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-    QPalette palette;
-    palette.setBrush(QPalette::Background, background);
-    this->setPalette(palette);
-     
-    p_page_idle->addPictureToLabel(ui->dispense_bottle_label,PAGE_DISPENSE_BACKGROUND_PATH );
-    ui->dispense_bottle_label->hide();
-    ui->fill_animation_label->hide();
-
+    qDebug() << "<<<<<<< Page Enter: Dispenser >>>>>>>>>";
+    
     QWidget::showEvent(event);
 
+    qDebug() << "selected slot: " << QString::number(selectedProductOrder->getSelectedSlot());
+
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
+
+    // QPixmap background(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
+    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+    // QPalette palette;
+    // palette.setBrush(QPalette::Background, background);
+    // this->setPalette(palette);
+
+    p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
+
+    ui->dispense_bottle_label->hide();
+    ui->fill_animation_label->hide();
 
 
     startDispensing();
     ui->abortButton->setText("Cancel");
     ui->abortButton->raise();
-    
 
     if (nullptr == dispenseIdleTimer)
     {
@@ -91,7 +91,6 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     dispenseIdleTimer->start(1000);
     _dispenseIdleTimeoutSec = 120;
-    
 }
 
 bool page_dispenser::sendToUX410()
@@ -269,7 +268,7 @@ QString page_dispenser::getMostRecentDispensed()
     QString units = selectedProductOrder->getUnitsForSelectedSlot();
 
     return df_util::getConvertedStringVolumeFromMl(volumeDispensed, units, false, false);
-    //return volumeDispensed;
+    // return volumeDispensed;
 }
 
 void page_dispenser::resetDispenseTimeout(void)
@@ -282,7 +281,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
     if (this->isDispensing)
     {
         // if (dispensed > 0.01){
-            ui->abortButton->setText("Complete");
+        ui->abortButton->setText("Complete");
         // }
 
         // qDebug() << "Signal: update vol in dispenser!" ;
@@ -305,7 +304,6 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
 
         ui->dispense_bottle_label->show();
         ui->fill_animation_label->show();
-
     }
     else
     {

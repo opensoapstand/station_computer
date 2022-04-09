@@ -76,6 +76,7 @@ using namespace std;
 #ifdef ENABLE_DYNAMIC_UI
 
 #define PAGE_IDLE_BACKGROUND_PATH                       "background_welcome.png"
+// #define PAGE_IDLE_BACKGROUND_PATH                       "background_message.png"
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
 #define PAGE_HELP_BACKGROUND_PATH                       "background_help.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"
@@ -85,20 +86,11 @@ using namespace std;
 #define PAGE_QR_PAY_BACKGROUND_PATH                     "background_pay_qr.png"
 
 #define PAGE_WIFI_ERROR_BACKGROUND_PATH                 "/home/df-admin/production/references/oops.png"
+#define BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH            "/home/df-admin/production/references/bottle_fill_for_animation.png"
 
-
-
-// #define PRODUCT_1_IMAGE_PATH "/home/df-admin/production/references/product1.png"
-// #define PRODUCT_2_IMAGE_PATH "/home/df-admin/production/references/product2.png"
-// #define PRODUCT_3_IMAGE_PATH "/home/df-admin/production/references/product3.png"
-// #define PRODUCT_4_IMAGE_PATH "/home/df-admin/production/references/product4.png"
-
-#define BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH "/home/df-admin/production/references/bottle_fill_for_animation.png"
 #define SOLD_OUT_IMAGE_PATH "/home/df-admin/production/references/soldOut.png"
 #define KEYBOARD_IMAGE_PATH "/home/df-admin/production/references/soapstand-keyboard.png"
 #define FULL_TRANSPARENT_IMAGE_PATH "/home/df-admin/production/references/background.png"
-
-// #define PAGE_PRODUCT_BACKGROUND_PATH "/ghome/df-admin/production/references/page_product_generic.png"
 
 #define ICON_TYPE_CONCENTRATE_PATH "/home/df-admin/production/references/Soapstand_UI-concentrate-icon.png"
 #define ICON_TYPE_ALL_PURPOSE_PATH "/home/df-admin/production/references/Soapstand-UI-icon-all-purposs.png"
@@ -107,17 +99,8 @@ using namespace std;
 #define ICON_TYPE_LAUNDRY_PATH "/home/df-admin/production/references/Soapstand-UI-icon-laundry.png"
                          
 #define COMPANY_LOGO_PATH "/home/df-admin/production/references/logos/%1_logo_white.png"
-//#define COMPANY_LOGO_PATH "/home/df-admin/drinkfill/ui/references/logos/"
-// #define PAGE_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_1.png"
-// #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/page_select_product_generic.png" // todo
-
-
-
 
 #else
-
-
-
 
 #define PAGE_IDLE_BACKGROUND_PATH "/home/df-admin/production/references/1_background_welcome.png"
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/2_background_products.png"

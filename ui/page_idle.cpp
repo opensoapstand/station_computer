@@ -31,8 +31,6 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     // QPixmap background(PAGE_IDLE_BACKGROUND_PATH);
     // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
 
-    
-
     ui->nextPageButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
 
     // QPixmap image_logo(logo_path);
@@ -66,7 +64,6 @@ void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pa
     // Chained to KB Listener
     this->p_pageSelectProduct = p_pageProduct;
     this->p_page_maintenance = pageMaintenance;
-    
 }
 
 // DTOR
@@ -80,10 +77,26 @@ void page_idle::showEvent(QShowEvent *event)
     qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
     QWidget::showEvent(event);
 
-    setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH );
+    setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
 
+    ui->welcome_message_label->setText("tap to explore our <br>soap selections");
 
-      // reset promovalue
+    ui->welcome_message_label->setStyleSheet(
+        "QLabel {"
+
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 700;"
+        "font-size: 85px;"
+        "line-height: 99px;"
+        "text-align: center;"
+        "letter-spacing: 1.5px;"
+        "text-transform: lowercase;"
+        "color: #FFFFFF;"
+        "qproperty-alignment: AlignCenter"
+        "}");
+
+    // reset promovalue
     currentProductOrder->setDiscountPercentageFraction(0.0);
 
     //    DbManager db(DB_PATH);
@@ -160,26 +173,29 @@ void page_idle::addPictureToLabel(QLabel *label, QString picturePath)
     // // set a scaled pixmap to a w x h window keeping its aspect ratio
     label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio));
 }
- QString page_idle::getTemplateFolder(){
+QString page_idle::getTemplateFolder()
+{
     return m_templatePath;
- }
- QString page_idle::getTemplatePathFromName(QString backgroundPictureName){
-     return m_templatePath + backgroundPictureName;
- }
+}
+QString page_idle::getTemplatePathFromName(QString backgroundPictureName)
+{
+    return m_templatePath + backgroundPictureName;
+}
 
-void page_idle::setTemplateFolder(QString rootPath, QString templateFolder){
+void page_idle::setTemplateFolder(QString rootPath, QString templateFolder)
+{
     m_templatePath = rootPath + templateFolder + "/";
     qDebug() << "Template path set to: " + m_templatePath;
 }
 
-void page_idle::setBackgroundPictureFromTemplateToPage(QWidget* page, QString imageName ){
+void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName)
+{
 
-
-    #ifdef ENABLE_DYNAMIC_UI
+#ifdef ENABLE_DYNAMIC_UI
     QPixmap background(getTemplatePathFromName(imageName));
-    #else
+#else
     QPixmap background(imageName);
-    #endif
+#endif
     background = background.scaled(page->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);

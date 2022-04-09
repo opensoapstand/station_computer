@@ -132,29 +132,36 @@ void page_select_product::displayProducts()
         selectProductNameLabels[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
 
         QString icon_path = "not found";
+        QString type_text;
         if (product_type == "Dish")
         {
             icon_path = ICON_TYPE_DISH_PATH;
+            type_text = "DISH SOAP";
         }
         else if (product_type == "Hand")
         {
             icon_path = ICON_TYPE_HAND_PATH;
+            type_text = "HAND SOAP";
         }
         else if (product_type == "Laundry")
         {
             icon_path = ICON_TYPE_LAUNDRY_PATH;
+            type_text = "LAUNDRY DETERGENT";
         }
         else if (product_type == "All Purpose")
         {
             icon_path = ICON_TYPE_ALL_PURPOSE_PATH;
+            type_text = "ALL PURPOSE CLEANSER";
         }
         else if (product_type == "Contentrate")
         {
             icon_path = ICON_TYPE_CONCENTRATE_PATH;
+            type_text = "CONCENTRATE";
         }
         else
         {
             icon_path = "Product/type/for/icon/not/found.aiaiai";
+            type_text = "UNAVAILABLE";
         }
         // switch (product_type){
         //     case (QString("dish")):{
@@ -170,7 +177,7 @@ void page_select_product::displayProducts()
 
         p_page_idle->addPictureToLabel(selectProductIconLabels[i], icon_path);
 
-        selectProductTypeLabels[i]->setText(product_type);
+        selectProductTypeLabels[i]->setText(type_text);
         selectProductTypeLabels[i]->setStyleSheet("QLabel{font-family: 'Brevia';font-style: normal;font-weight: 700;font-size: 30px;line-height: 41px;qproperty-alignment: AlignCenter;text-transform: uppercase;color: #5E8580;}");
 
         selectProductIconLabels[i]->setText(""); // icon should not display text.

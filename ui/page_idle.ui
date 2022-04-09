@@ -65,6 +65,19 @@ text-transform: lowercase;</string>
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="welcome_message_label">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>600</y>
+     <width>981</width>
+     <height>481</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

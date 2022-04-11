@@ -15,11 +15,11 @@
 // CTOR
 gpio::gpio()
 {
-        //m_nAddress = -1; //set negative one for illegal i2c address
-        m_nPin = -1; //set negative one for illegal pin address
+        // m_nAddress = -1; //set negative one for illegal i2c address
+        m_nPin = -1; // set negative one for illegal pin address
         m_stop = false;
         m_input = false;
-        m_i2c = false; //no i2c chip associate with it
+        m_i2c = false; // no i2c chip associate with it
         gpioThread = nullptr;
         // m_pDispenser = nullptr; // UNCOMMENT LODE
 }
@@ -27,7 +27,7 @@ gpio::gpio()
 // DTOR
 gpio::~gpio()
 {
-        //kill thread!
+        // kill thread!
         this->stopListener_flowsensor();
 }
 
@@ -38,7 +38,7 @@ void gpio::startListener_flowsensor()
         DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
         // if ((nullptr == gpioThread) && (nullptr != m_pDispenser)) // UNCOMMENT LODE
-        if ((nullptr == gpioThread) )
+        if ((nullptr == gpioThread))
         {
                 gpioThread = new std::thread(&gpio::listener_flowsensor, this);
                 df_ret = OK;
@@ -62,10 +62,10 @@ void gpio::startListener_buttons_powerAndMaintenance()
         //        }
 }
 
-//void gpio::startButtonListener()
+// void gpio::startButtonListener()
 //{
-//        debugOutput::sendMessage("-----startListener-----", MSG_INFO);
-//        DF_ERROR df_ret = ERROR_BAD_PARAMS;
+//         debugOutput::sendMessage("-----startListener-----", MSG_INFO);
+//         DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
 //        if ((nullptr ==  gpioThread)){
 //                gpioThread = new std::thread(&gpio::listener, this);
@@ -81,7 +81,7 @@ void gpio::startListener_buttons_powerAndMaintenance()
 // std::thread gpio::listener()
 void gpio::listener_flowsensor()
 {
-        //cout << "Spin up GPIO Thread" << endl;
+        // cout << "Spin up GPIO Thread" << endl;
         DF_ERROR df_ret = ERROR_BAD_PARAMS;
         m_stop = false;
 
@@ -89,10 +89,11 @@ void gpio::listener_flowsensor()
         {
                 monitorGPIO_Flowsensor();
                 //                monitorGPIO_Buttons_powerAndMaintenance();
+                usleep(1000);
         }
 
-        m_stop = true; //reset
-                       // return;
+        m_stop = true; // reset
+                       //  return;
 }
 
 void gpio::listener_buttons_powerAndMaintenance()
@@ -105,8 +106,9 @@ void gpio::listener_buttons_powerAndMaintenance()
         {
                 //            monitorGPIO_Flowsensor();
                 monitorGPIO_Buttons_powerAndMaintenance();
+                usleep(1000);
         }
 
-        m_stop = true; //reset
-                       // return;
+        m_stop = true; // reset
+                       //  return;
 }

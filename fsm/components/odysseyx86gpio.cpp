@@ -333,7 +333,7 @@ void oddyseyx86GPIO::monitorGPIO_Buttons_powerAndMaintenance()
                 if ((c == '1') && (compareChar2 != c))
                 {
                         debugOutput::sendMessage("Power button pushed", MSG_INFO);
-                        usleep(1000000);
+                        usleep(1000000); // todo: why one second?!?!?! lode
                         if (readButtonPin(341))
                         {
                                 debugOutput::sendMessage("POWER OFF\n", MSG_INFO);

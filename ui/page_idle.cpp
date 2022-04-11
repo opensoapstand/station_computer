@@ -124,6 +124,7 @@ void page_idle::showEvent(QShowEvent *event)
 
 void page_idle::on_nextPageButton_clicked()
 {
+    qDebug() << "Proceed to next page button clicked. ";
     p_pageSelectProduct->showFullScreen();
 
     // DO NOT HIDE IDLE PAGE

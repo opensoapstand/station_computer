@@ -52,8 +52,8 @@ DF_ERROR stateIdle::onAction()
 {
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
-   if (nullptr != &m_state_requested)
-   {
+   // if (nullptr != &m_state_requested)
+   // {
 
       // Check if Command String is ready
       if (m_pMessaging->isCommandStringReadyToBeParsed())
@@ -75,23 +75,23 @@ DF_ERROR stateIdle::onAction()
             m_state_requested = STATE_DISPENSE_INIT;
          }
 
-         if (ACTION_MANUAL_PRINTER == m_pMessaging->getAction())
+         else if (ACTION_MANUAL_PRINTER == m_pMessaging->getAction())
          {
             m_state_requested = STATE_MANUAL_PRINTER;
          }
          
-         if (ACTION_MANUAL_PUMP == m_pMessaging->getAction())
+         else if (ACTION_MANUAL_PUMP == m_pMessaging->getAction())
          {
             m_state_requested = STATE_MANUAL_PUMP;
          }
 
-         if (ACTION_QUIT == m_pMessaging->getAction())
+         else if (ACTION_QUIT == m_pMessaging->getAction())
          {
             debugOutput::sendMessage("Request application exit.", MSG_INFO);
             m_state_requested = STATE_END;
          }
 
-         if (ACTION_DEBUG == m_pMessaging->getAction())
+         else if (ACTION_DEBUG == m_pMessaging->getAction())
          {
             productDispensers = g_productDispensers;
              debugOutput::sendMessage("beffooore reload parameters from product1", MSG_INFO);
@@ -99,8 +99,11 @@ DF_ERROR stateIdle::onAction()
              debugOutput::sendMessage("after" + to_string(success), MSG_INFO);
          }
 
-         if (ACTION_HELP == m_pMessaging->getAction())
+         else if (ACTION_HELP == m_pMessaging->getAction())
          {
+            debugOutput::sendMessage("\n Idle State. Available Commands: \n q: Quit(in independent mode)\n p: Test printer\n m: Test pumps\n b: Specific debug \n [1..4]d[l,s,t]: Enter dispense mode. [product number]d[size] \n [1..4]f[l,s,t]: If dispensing: to End Dispensing [product number]f[size]", MSG_INFO);
+         }else{
+            debugOutput::sendMessage("Unrecognize received message/command. ", MSG_INFO);
             debugOutput::sendMessage("\n Idle State. Available Commands: \n q: Quit(in independent mode)\n p: Test printer\n m: Test pumps\n b: Specific debug \n [1..4]d[l,s,t]: Enter dispense mode. [product number]d[size] \n [1..4]f[l,s,t]: If dispensing: to End Dispensing [product number]f[size]", MSG_INFO);
          }
       }
@@ -109,7 +112,8 @@ DF_ERROR stateIdle::onAction()
          m_state_requested = STATE_IDLE;
       }
       e_ret = OK;
-   }
+   // }
+   // usleep(1000000);
    return e_ret;
 }
 

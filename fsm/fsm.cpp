@@ -148,6 +148,10 @@ DF_ERROR stateLoop()
         {
             dfRet = ERROR_END;
         }
+
+        // debugOutput::sendMessage("sleoeep" + to_string(fsmState), MSG_STATE);
+        usleep(1000);
+
     }
     debugOutput::sendMessage("State machine ENDED. ", MSG_INFO);
     return dfRet;

@@ -33,6 +33,9 @@
 #define DB_PATH "/home/df-admin/production/db/drinkfill-sqlite_newlayout.db"
 #endif
 
+#define CYCLIC_PUMP_TEST_ON_CYCLE_MILLIS 30000
+#define CYCLIC_PUMP_TEST_OFF_CYCLE_MILLIS 30000
+
 #define MILLIS_INIT_DUMMY 0
 #define IO_PIN_FLOW_SENSOR 364
 #define IO_PIN_FLOW_SENSOR_STRING "364"
@@ -60,9 +63,10 @@
 #define SIZE_SMALLER_THAN_SMALL '0'
 #define SIZE_INVOLUNTARY_END 'i' // hack to accomodate for empty container or dispense timeout
 
-
-#define SIZE_INDEX_TO_CHAR_ARRAY {SIZE_SMALL_CHAR,SIZE_MEDIUM_CHAR,SIZE_LARGE_CHAR, SIZE_CUSTOM_CHAR}
- 
+#define SIZE_INDEX_TO_CHAR_ARRAY                                           \
+   {                                                                       \
+      SIZE_SMALL_CHAR, SIZE_MEDIUM_CHAR, SIZE_LARGE_CHAR, SIZE_CUSTOM_CHAR \
+   }
 
 typedef enum Dispense_behaviour
 {
@@ -72,9 +76,10 @@ typedef enum Dispense_behaviour
    FLOW_STATE_NOT_PUMPING_NOT_DISPENSING,
    FLOW_STATE_ATTEMTPING_TO_PRIME,
    FLOW_STATE_CONTAINER_EMPTY
-}Dispense_behaviour;
+} Dispense_behaviour;
 
-struct product_order{
+struct product_order
+{
    int slot;
    char size;
 };

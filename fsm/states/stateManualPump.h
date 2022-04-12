@@ -30,6 +30,7 @@ public:
 
     string toString();
     DF_ERROR pumpTest();
+    DF_ERROR pumpCyclicTest();
     DF_ERROR pumpFlowTest();
     DF_ERROR customVolumeDispenseTest();
 
@@ -50,6 +51,14 @@ private:
     uint64_t startRetractingEpochMillis;
     bool isDispensing=false;
     bool isRetracting=false;
+
+    int pump_test_cycle_count;
+    bool isCyclicTesting;
+    bool isCyclicTestingPumpOn;
+    uint64_t cyclicTestPeriodStartEpochMillis;
+    uint64_t logSampleStartEpochMillis;
+
+
 
     uint64_t retract_time_millis;
 };

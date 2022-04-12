@@ -28,10 +28,14 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
+
     // QPixmap background(PAGE_IDLE_BACKGROUND_PATH);
     // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
 
-    ui->nextPageButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    ui->testButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    ui->testButton->raise();
+    ui->toSelectProductPageButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    ui->toSelectProductPageButton->raise();
 
     // QPixmap image_logo(logo_path);
     // df_util::fileExists(logo_path);
@@ -64,6 +68,7 @@ void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pa
     // Chained to KB Listener
     this->p_pageSelectProduct = p_pageProduct;
     this->p_page_maintenance = pageMaintenance;
+    setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
 }
 
 // DTOR
@@ -77,10 +82,7 @@ void page_idle::showEvent(QShowEvent *event)
     qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
     QWidget::showEvent(event);
 
-    setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
-
     ui->welcome_message_label->setText("tap to explore our <br>soap selections");
-
     ui->welcome_message_label->setStyleSheet(
         "QLabel {"
 
@@ -93,38 +95,20 @@ void page_idle::showEvent(QShowEvent *event)
         "letter-spacing: 1.5px;"
         "text-transform: lowercase;"
         "color: #FFFFFF;"
-        "qproperty-alignment: AlignCenter"
+        "qproperty-alignment: AlignCenter;"
         "}");
 
     // reset promovalue
     currentProductOrder->setDiscountPercentageFraction(0.0);
 
-    //    DbManager db(DB_PATH);
-    // ui->savedBottles_label->setText("THANKS TO YOU, THIS MACHINE HAS SAVED<br>OVER " + QString::number(db.getTotalTransactions()) + " PLASTIC CONTAINERS<br>FROM THE LANDFILL");
-
-
     addCompanyLogoToLabel(ui->logo_label);
-// #ifdef ENABLE_DYNAMIC_UI
-//     DbManager db(DB_PATH);
-//     QString id = db.getCustomerId();
-//     db.closeDB();
-//     if (id.at(0) == 'C')
-//     {
-//         QString logo_path = QString(COMPANY_LOGO_PATH).arg(id);
-//         addPictureToLabel(ui->logo_label, logo_path);
-//     }
-//     else
-//     {
-//         qDebug() << "WARNING: invalid customer ID. Should like C-1, C-374, ... . Provided id: " << id;
-//     }
-// #endif
 }
 
 /*
  * Screen click shows product page as full screen and hides page_idle screen
  */
 
-void page_idle::on_nextPageButton_clicked()
+void page_idle::on_toSelectProductPageButton_clicked()
 {
     qDebug() << "Proceed to next page button clicked. ";
     p_pageSelectProduct->showFullScreen();
@@ -134,6 +118,13 @@ void page_idle::on_nextPageButton_clicked()
     // Tapping on on the desktop wallpaper minimizes the application.
     // If the idle page is not hidden, and always on the background, there is never a wall paper showing. Effectively preventing this vulnerability to be exploited.
     // this->hide();
+}
+
+void page_idle::on_testButton_clicked()
+{
+    ui->testButton->setText(ui->testButton->text() + ".");
+    qDebug() << "test buttonproceeed clicked.. ";
+    p_pageSelectProduct->showFullScreen();
 }
 
 bool page_idle::isEnough(int p)
@@ -164,8 +155,8 @@ void page_idle::MMSlot()
     this->p_pageSelectProduct->hide();
 }
 
-
-void page_idle::addCompanyLogoToLabel(QLabel *label){
+void page_idle::addCompanyLogoToLabel(QLabel *label)
+{
 #ifdef ENABLE_DYNAMIC_UI
     DbManager db(DB_PATH);
     QString id = db.getCustomerId();
@@ -209,22 +200,29 @@ void page_idle::setTemplateFolder(QString rootPath, QString templateFolder)
     qDebug() << "Template path set to: " + m_templatePath;
 }
 
-void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName)
+void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QString imageName)
 {
-
+    QString image_path = imageName;
 #ifdef ENABLE_DYNAMIC_UI
-    QPixmap background(getTemplatePathFromName(imageName));
+    image_path = getTemplatePathFromName(imageName);
+#endif
+#define USE_PIXMAP
+#ifdef USE_PIXMAP
+#ifdef ENABLE_DYNAMIC_UI
+
+    QPixmap background(image_path);
 #else
     QPixmap background(imageName);
 #endif
-    background = background.scaled(page->size(), Qt::IgnoreAspectRatio);
+
+    background = background.scaled(p_widget->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
-    page->setPalette(palette);
+    p_widget->setPalette(palette);
 
-    // QPixmap background(getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
-    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-    // QPalette palette;
-    // palette.setBrush(QPalette::Background, background);
-    // this->setPalette(palette);
+#else
+
+    p_widget->setStyleSheet("QWidget { border-image: url(" + image_path + "); }");
+    // p_widget->setStyleSheet("background-image: url("+ image_path +")");
+#endif
 }

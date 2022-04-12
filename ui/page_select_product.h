@@ -68,6 +68,7 @@ private slots:
 
 private:
     void showEvent(QShowEvent *event);
+    void resizeEvent(QResizeEvent *event);
     Ui::page_select_product *ui;
     // productPage_2 *selection_PageTwo;
     pageProduct *p_page_product;

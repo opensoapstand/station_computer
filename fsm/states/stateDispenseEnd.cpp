@@ -202,7 +202,7 @@ DF_ERROR stateDispenseEnd::handleTransaction()
         debugOutput::sendMessage("NOT SENDING transaction to cloud for QR:", MSG_INFO);
 #endif
     }
-    
+
     if (paymentMethod == "tap")
     {
         // sleep(5);
@@ -353,7 +353,7 @@ void stateDispenseEnd::bufferCURL(std::string curl_params)
     std::string filename = filelocation + "missingTransactions" + filetype;
 
     std::ofstream out;
-    out.open(filename,std::ios_base::app);
+    out.open(filename, std::ios_base::app);
     if (!out.is_open())
     {
         debugOutput::sendMessage("Cannot open output file at " + filename + " content: " + curl_params, MSG_INFO);
@@ -651,7 +651,7 @@ DF_ERROR stateDispenseEnd::print_receipt()
     {
         price_per_ml = productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize());
         volume_dispensed = productDispensers[pos].getVolumeDispensed();
-        price = price_per_ml * volume_dispensed ;
+        price = price_per_ml * volume_dispensed;
         //@Andi, how do we go higher than 9.99?
 
         // price = ceil(price * 100);
@@ -698,7 +698,7 @@ DF_ERROR stateDispenseEnd::print_receipt()
     {
         // volume_dispensed = ceil(volume_dispensed * ML_TO_OZ);
         volume_dispensed = ceil(productDispensers[pos].getProduct()->convertVolumeMetricToDisplayUnits(volume_dispensed));
-        price_per_ml = price_per_ml  / ML_TO_OZ;
+        price_per_ml = price_per_ml / ML_TO_OZ;
     }
 
     debugOutput::sendMessage("Volume dispensed for receipt:" + to_string(volume_dispensed), MSG_INFO);
@@ -714,9 +714,9 @@ DF_ERROR stateDispenseEnd::print_receipt()
         base_unit = "oz";
         snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.1f", volume_dispensed);
     }
-        else if (units == "g")
+    else if (units == "g")
     {
-        base_unit = "g";
+        base_unit = "kg";
         snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", volume_dispensed);
     }
     string receipt_volume_formatted = (chars_volume_formatted);
@@ -727,20 +727,32 @@ DF_ERROR stateDispenseEnd::print_receipt()
     snprintf(chars_cost, sizeof(chars_cost), "%.2f", price);
     string receipt_cost = (chars_cost);
 
-    snprintf(chars_price_per_ml_formatted, sizeof(chars_volume_formatted), "%.2f", price_per_ml);
-    string receipt_price_per_ml = (chars_price_per_ml_formatted);
-
+    double price_per_unit;
     // add base price
-    if (m_pMessaging->getRequestedSize() == 'c')
+    if (m_pMessaging->getRequestedSize() == 'c' || m_pMessaging->getRequestedSize() == 't')
     {
-        receipt_volume_formatted = receipt_volume_formatted + units + " @" + receipt_price_per_ml + "$/" + base_unit;
+        if (units == "ml")
+        {
+            price_per_unit = price_per_ml * 1000;
+        }
+        else if (units == "g")
+        {
+            price_per_unit = price_per_ml * 1000;
+            // receipt_price_per_ml = receipt_price_per_ml * 1000;
+        }
+
+        snprintf(chars_price_per_ml_formatted, sizeof(chars_volume_formatted), "%.2f", price_per_unit);
+        string receipt_price_per_unit = (chars_price_per_ml_formatted);
+
+        receipt_volume_formatted = receipt_volume_formatted + units + " @" + receipt_price_per_unit + "$/" + base_unit;
     }
-    else if (m_pMessaging->getRequestedSize() == 't')
-    {
-        receipt_volume_formatted = receipt_volume_formatted + units + " @" + receipt_price_per_ml + "$/" + base_unit;
-    }
+    // else if (m_pMessaging->getRequestedSize() == 't')
+    // {
+    //     receipt_volume_formatted = receipt_volume_formatted + units + " @" + receipt_price_per_ml + "$/" + base_unit;
+    // }
     else
     {
+
         receipt_volume_formatted += units;
     }
 

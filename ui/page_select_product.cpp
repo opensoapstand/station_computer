@@ -27,8 +27,7 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
                                                             ui(new Ui::page_select_product)
 {
     ui->setupUi(this);
-  
-    
+
 
     ui->p_page_maintenanceButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     selectProductButtons[0] = ui->selection1_Button;
@@ -92,6 +91,7 @@ void page_select_product::setPage(pageProduct *pageSizeSelect, page_idle *pageId
     this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
     this->helpPage = pageHelp;
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
 }
 
 // DTOR
@@ -100,11 +100,52 @@ page_select_product::~page_select_product()
     delete ui;
 }
 
-// void page_select_product::on_nextPageButton_clicked()
-//{
-//     selection_PageTwo->showFullScreen();
-//     this->hide();
-// }
+void page_select_product::showEvent(QShowEvent *event)
+{
+    qDebug() << "<<<<<<< Page Enter: Select Product >>>>>>>>>";
+    QWidget::showEvent(event);
+    qDebug() << "sel 1";
+    maintenanceCounter = 0;
+/**/
+   
+    qDebug() << "sel 2";
+   
+
+    displayProducts();
+
+    if (productPageEndTimer == nullptr)
+    {
+        productPageEndTimer = new QTimer(this);
+        productPageEndTimer->setInterval(1000);
+        connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
+    }
+
+    productPageEndTimer->start(1000);
+    _productPageTimeoutSec = 15;
+
+    qDebug() << "db check if product is enabled";
+    DbManager db(DB_PATH);
+    for (uint8_t i = 0; i < SLOT_COUNT; i++)
+    {
+        if (!db.remainingVolumeIsBiggerThanLargestFixedSize(i + 1) || !db.getSlotEnabled(i + 1))
+        {
+            QString path = SOLD_OUT_IMAGE_PATH;
+            selectProductButtons[i]->setStyleSheet("QPushButton { border-image: url(" + path + "); }");
+        }
+        else
+        {
+            selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+        }
+    }
+    db.closeDB();
+    /**/
+}
+void page_select_product::resizeEvent(QResizeEvent *event)
+{
+    // qDebug() << "resize sel before ffffsdfsdf";
+    QWidget::resizeEvent(event);
+    // qDebug() << "resize sel after ffffsdfsdf";
+}
 
 void page_select_product::displayProducts()
 {
@@ -194,50 +235,6 @@ void page_select_product::displayProducts()
 #endif
 }
 
-void page_select_product::showEvent(QShowEvent *event)
-{
-    qDebug() << "<<<<<<< Page Enter: Select Product >>>>>>>>>";
-    QWidget::showEvent(event);
-    maintenanceCounter = 0;
-
-      // qDebug()<< "Constructor callk"<< endl;
-    // QPixmap background(PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
-    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-    // QPalette palette;
-    // palette.setBrush(QPalette::Background, background);
-    // this->setPalette(palette);
-
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH );
-
-    displayProducts();
-
-    if (productPageEndTimer == nullptr)
-    {
-        productPageEndTimer = new QTimer(this);
-        productPageEndTimer->setInterval(1000);
-        connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
-    }
-
-    productPageEndTimer->start(1000);
-    _productPageTimeoutSec = 15;
-
-    qDebug() << "db check if product is enabled";
-    DbManager db(DB_PATH);
-    for (uint8_t i = 0; i < SLOT_COUNT; i++)
-    {
-        if (!db.remainingVolumeIsBiggerThanLargestFixedSize(i + 1) || !db.getSlotEnabled(i + 1))
-        {
-            QString path = SOLD_OUT_IMAGE_PATH;
-            selectProductButtons[i]->setStyleSheet("QPushButton { border-image: url(" + path + "); }");
-        }
-        else
-        {
-            selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-        }
-    }
-    db.closeDB();
-}
-
 void page_select_product::cancelTimers()
 {
     productPageEndTimer->stop();
@@ -319,8 +316,9 @@ void page_select_product::on_p_page_maintenanceButton_pressed()
 
 void page_select_product::on_mainPage_Button_clicked()
 {
-    qDebug() << "Back to Main Page Button pressed";
+    qDebug() << "Back to Idle Page Button pressed";
     mainPage();
+    qDebug() << "idle loaded.";
 }
 
 void page_select_product::on_helpPage_Button_clicked()

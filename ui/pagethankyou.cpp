@@ -21,12 +21,12 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
                                               ui(new Ui::pagethankyou)
 {
     ui->setupUi(this);
-   
+
     /*hacky transparent button*/
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    // ui->rinse_label->setText("<p align=center>Water rinse coming in<br>5</p>");
-    // ui->rinse_label->hide();
+    // ui->extra_message_label->setText("<p align=center>Water rinse coming in<br>5</p>");
+    ui->extra_message_label->hide();
 
     thankYouEndTimer = new QTimer(this);
     thankYouEndTimer->setInterval(1000);
@@ -56,8 +56,8 @@ void pagethankyou::showEvent(QShowEvent *event)
     qDebug() << "<<<<<<< Page Enter: Thank you >>>>>>>>>";
 
     QWidget::showEvent(event);
-    
-     // QPixmap background(PAGE_THANK_YOU_BACKGROUND_PATH);
+
+    // QPixmap background(PAGE_THANK_YOU_BACKGROUND_PATH);
     // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     // QPalette palette;
     // palette.setBrush(QPalette::Background, background);
@@ -77,13 +77,27 @@ void pagethankyou::showEvent(QShowEvent *event)
         "letter-spacing: 1.5px;"
         "text-transform: lowercase;"
         "color: #FFFFFF;"
-        "qproperty-alignment: AlignCenter"
+        "qproperty-alignment: AlignCenter;"
+        "}");
+    ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.");
+
+    ui->thank_you_subtitle_message_label->setStyleSheet(
+        "QLabel {"
+        "font-family: 'Montserrat';"
+        "font-style: normal;"
+        "font-weight: 600;"
+        "font-size: 36px;"
+        "line-height: 44px;"
+        "text-align: center;"
+        "letter-spacing: 1.5px;"
+        "text-transform: lowercase;"
+        "color: #FFFFFF;"
+        "qproperty-alignment: AlignCenter;"
         "}");
 
-    p_page_idle-> addCompanyLogoToLabel(ui->thank_you_logo_label);
+    p_page_idle->addCompanyLogoToLabel(ui->thank_you_logo_label);
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_THANK_YOU_BACKGROUND_PATH);
-
 
     qDebug() << "ahoyy24";
     DbManager db(DB_PATH);
@@ -101,7 +115,7 @@ void pagethankyou::showEvent(QShowEvent *event)
     // reset promovalue
     p_page_idle->currentProductOrder->setDiscountPercentageFraction(0.0);
 
-    // ui->rinse_label->hide();
+    // ui->extra_message_label->hide();
     ui->mainPage_Button->setEnabled(true);
     is_controller_finished = false;
     is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
@@ -116,7 +130,7 @@ void pagethankyou::showEvent(QShowEvent *event)
         is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
     }
 
-    // ui->rinse_label->hide();
+    // ui->extra_message_label->hide();
 }
 
 size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
@@ -226,12 +240,14 @@ void pagethankyou::exitPage()
         {
             qDebug() << "ERROR?!:Forced exit. controller ok?: " << is_controller_finished << " is payment finished?:" << is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER;
         }
+        // ui->thank_you_message_label->setText("Finishing<br>transaction");
     }
     else
     {
 
-        // ui->rinse_label->setText("<p align=center><br>Waiting for end<br>of transaction...</p>");
-        // ui->rinse_label->show();
+        // ui->extra_message_label->setText("<p align=center><br>Waiting for end<br>of transaction...</p>");
+        // ui->extra_message_label->show();
+        ui->thank_you_message_label->setText("Finishing<br>transaction");
 
         thankYouEndTimer->start(1000);
         _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;

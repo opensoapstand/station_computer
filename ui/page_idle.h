@@ -65,8 +65,10 @@ public:
     // bool slotIndexAvailable[4] = {true,true,true,true}; //;1,2,3,4
 
 private slots:
-    void on_nextPageButton_clicked();
+    void on_toSelectProductPageButton_clicked();
 //    void on_savedBottles_label_clicked();
+
+    void on_testButton_clicked();
 
 private:
     QString m_templatePath;

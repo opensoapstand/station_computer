@@ -32,11 +32,11 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="rinse_label">
+  <widget class="QLabel" name="extra_message_label">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>490</y>
+     <x>150</x>
+     <y>330</y>
      <width>791</width>
      <height>481</height>
     </rect>
@@ -71,9 +71,9 @@ text-transform: uppercase;
    <property name="geometry">
     <rect>
      <x>110</x>
-     <y>930</y>
+     <y>860</y>
      <width>841</width>
-     <height>201</height>
+     <height>271</height>
     </rect>
    </property>
    <property name="text">
@@ -91,6 +91,19 @@ text-transform: uppercase;
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="thank_you_subtitle_message_label">
+   <property name="geometry">
+    <rect>
+     <x>36</x>
+     <y>1056</y>
+     <width>1001</width>
+     <height>331</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
    </property>
   </widget>
  </widget>

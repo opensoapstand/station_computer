@@ -749,7 +749,7 @@ DF_ERROR stateDispenseEnd::print_receipt()
 
     strftime(now, 50, "%F %T", timeinfo);
 
-    print_text(name_receipt + "\nPrice: $" + receipt_cost + " \nVolume: " + receipt_volume_formatted + "\nTime: " + now);
+    print_text(name_receipt + "\nPrice: $" + receipt_cost + " \nQuantity: " + receipt_volume_formatted + "\nTime: " + now);
 
     std::string paymentMethod = productDispensers[pos].getProduct()->getPaymentMethod();
 

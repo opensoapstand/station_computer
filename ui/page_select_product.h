@@ -48,7 +48,8 @@ public:
     QLabel* selectProductNameLabels[4];
     QLabel* selectProductIconLabels[4];
     QLabel* selectProductTypeLabels[4];
-
+    QLabel* selectProductPhotoLabelsText[4];
+    
 private slots:
     // **** Navigation ****
     //void on_nextPageButton_clicked();

@@ -526,7 +526,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
     DbManager db(DB_PATH);
     success = db.getSlotEnabled(selectedProductOrder->getSelectedSlot());
     db.closeDB();
-
+    QString infoLabelText="";
     if (success)
     {
 
@@ -543,10 +543,30 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
         {
         case QMessageBox::Yes:
         {
-            QString infoLabelText = "Set Disabled Succesful";
+            QMessageBox msgBox2;
+            msgBox2.setWindowFlags(Qt::FramelessWindowHint);
+            msgBox2.setText("<p align=center>Is this product coming soon?</p>");
+            msgBox2.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-width: 300px; min-height: 300px;}");
+
+            msgBox2.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+            int ret2 = msgBox2.exec();
+            switch(ret2)
+            {
+                case QMessageBox::Yes:
+                    {
+                         infoLabelText = "Coming Soon";
+                    }
+                break;
+                case QMessageBox::No:
+                {
+                         infoLabelText = "Sold Out";
+                } 
+                break;
+            }
+            
 
             DbManager db2(DB_PATH);
-            bool success = db2.updateSlotAvailability(selectedProductOrder->getSelectedSlot(), 0);
+            bool success = db2.updateSlotAvailability(selectedProductOrder->getSelectedSlot(), 0, infoLabelText);
             db2.closeDB();
 
             if (!success)
@@ -581,7 +601,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
         {
             QString infoLabelText = "Set Enabled Succesful";
             DbManager db3(DB_PATH);
-            bool success = db3.updateSlotAvailability(this->p_page_idle->currentProductOrder->getSelectedSlot(), 1);
+            bool success = db3.updateSlotAvailability(this->p_page_idle->currentProductOrder->getSelectedSlot(), 1, "");
             db3.closeDB();
             if (!success)
             {

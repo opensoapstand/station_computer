@@ -46,6 +46,9 @@
      <height>300</height>
     </size>
    </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 44px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;</string>
+   </property>
    <property name="text">
     <string/>
    </property>
@@ -62,8 +65,26 @@
      <height>651</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+     <pointsize>-1</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 92px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;</string>
+   </property>
    <property name="text">
     <string/>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>20</width>
+     <height>52</height>
+    </size>
    </property>
   </widget>
   <widget class="QPushButton" name="p_page_maintenanceButton">
@@ -91,6 +112,18 @@
      <height>651</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+     <pointsize>-1</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 44px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;</string>
+   </property>
    <property name="text">
     <string/>
    </property>
@@ -106,6 +139,18 @@
      <width>491</width>
      <height>651</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+     <pointsize>-1</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 44px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;</string>
    </property>
    <property name="text">
     <string/>
@@ -146,8 +191,24 @@
      <height>450</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>48</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <property name="text">
     <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QLabel" name="product_2_photo_label">
@@ -159,8 +220,27 @@
      <height>450</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>48</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <property name="text">
     <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QLabel" name="product_3_photo_label">
@@ -172,8 +252,27 @@
      <height>450</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>48</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <property name="text">
     <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QLabel" name="product_4_photo_label">
@@ -185,8 +284,27 @@
      <height>450</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>48</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <property name="text">
     <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QLabel" name="product_1_name_label">
@@ -345,6 +463,171 @@
     <string>TextLabel</string>
    </property>
   </widget>
+  <widget class="QLabel" name="product_photo_label_text_2">
+   <property name="geometry">
+    <rect>
+     <x>850</x>
+     <y>300</y>
+     <width>450</width>
+     <height>450</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>46</pointsize>
+    </font>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="product_1_photo_label_text">
+   <property name="geometry">
+    <rect>
+     <x>53</x>
+     <y>334</y>
+     <width>450</width>
+     <height>450</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>48</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:#707173;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="product_2_photo_label_text">
+   <property name="geometry">
+    <rect>
+     <x>562</x>
+     <y>334</y>
+     <width>450</width>
+     <height>450</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>48</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:#707173;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="product_4_photo_label_text">
+   <property name="geometry">
+    <rect>
+     <x>570</x>
+     <y>1030</y>
+     <width>450</width>
+     <height>450</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>48</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:#707173;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="product_3_photo_label_text">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>1030</y>
+     <width>450</width>
+     <height>450</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>48</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:#707173;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <zorder>selection2_Button</zorder>
+  <zorder>product_2_photo_label</zorder>
+  <zorder>product_2_photo_label_text</zorder>
+  <zorder>selection1_Button</zorder>
+  <zorder>product_1_photo_label</zorder>
+  <zorder>product_1_photo_label_text</zorder>
+  <zorder>p_page_maintenanceButton</zorder>
+  <zorder>selection3_Button</zorder>
+  <zorder>selection4_Button</zorder>
+  <zorder>mainPage_Button</zorder>
+  <zorder>helpPage_Button</zorder>
+  <zorder>product_3_photo_label</zorder>
+  <zorder>product_4_photo_label</zorder>
+  <zorder>product_1_name_label</zorder>
+  <zorder>product_2_name_label</zorder>
+  <zorder>product_3_name_label</zorder>
+  <zorder>product_4_name_label</zorder>
+  <zorder>product_1_icon_label</zorder>
+  <zorder>product_2_icon_label</zorder>
+  <zorder>product_3_icon_label</zorder>
+  <zorder>product_4_icon_label</zorder>
+  <zorder>product_3_type_label</zorder>
+  <zorder>product_2_type_label</zorder>
+  <zorder>product_4_type_label</zorder>
+  <zorder>product_1_type_label</zorder>
+  <zorder>product_photo_label_text_2</zorder>
+  <zorder>product_4_photo_label_text</zorder>
+  <zorder>product_3_photo_label_text</zorder>
  </widget>
  <resources/>
  <connections/>

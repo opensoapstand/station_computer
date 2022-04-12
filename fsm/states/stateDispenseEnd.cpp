@@ -623,7 +623,7 @@ DF_ERROR stateDispenseEnd::print_receipt()
     // printerr.connectToPrinter();
     char chars_cost[MAX_BUF];
     char chars_volume_formatted[MAX_BUF];
-    char chars_price_per_liter_formatted[MAX_BUF];
+    char chars_price_per_ml_formatted[MAX_BUF];
     char chars_plu_dynamic_formatted[MAX_BUF];
     string cost = (chars_cost);
 
@@ -631,7 +631,7 @@ DF_ERROR stateDispenseEnd::print_receipt()
     std::string plu = productDispensers[pos].getProduct()->getPLU(m_pMessaging->getRequestedSize());
     std::string units = (productDispensers[pos].getProduct()->getDisplayUnits());
     double price = productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize());
-    double price_per_liter;
+    double price_per_ml;
 
     double volume_dispensed;
 
@@ -649,9 +649,9 @@ DF_ERROR stateDispenseEnd::print_receipt()
     }
     else if (m_pMessaging->getRequestedSize() == 'c')
     {
-        price_per_liter = productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize());
+        price_per_ml = productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize());
         volume_dispensed = productDispensers[pos].getVolumeDispensed();
-        price = price_per_liter * volume_dispensed / 1000.0;
+        price = price_per_ml * volume_dispensed ;
         //@Andi, how do we go higher than 9.99?
 
         // price = ceil(price * 100);
@@ -684,9 +684,9 @@ DF_ERROR stateDispenseEnd::print_receipt()
     }
     else if (m_pMessaging->getRequestedSize() == 't')
     {
-        price_per_liter = productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize());
+        price_per_ml = productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize());
         volume_dispensed = productDispensers[pos].getVolumeDispensed();
-        price = price_per_liter * volume_dispensed / 1000.0;
+        price = price_per_ml * volume_dispensed;
     }
     else
     {
@@ -698,7 +698,7 @@ DF_ERROR stateDispenseEnd::print_receipt()
     {
         // volume_dispensed = ceil(volume_dispensed * ML_TO_OZ);
         volume_dispensed = ceil(productDispensers[pos].getProduct()->convertVolumeMetricToDisplayUnits(volume_dispensed));
-        price_per_liter = price_per_liter / 1000 / ML_TO_OZ;
+        price_per_ml = price_per_ml  / ML_TO_OZ;
     }
 
     debugOutput::sendMessage("Volume dispensed for receipt:" + to_string(volume_dispensed), MSG_INFO);
@@ -714,6 +714,11 @@ DF_ERROR stateDispenseEnd::print_receipt()
         base_unit = "oz";
         snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.1f", volume_dispensed);
     }
+        else if (units == "g")
+    {
+        base_unit = "g";
+        snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", volume_dispensed);
+    }
     string receipt_volume_formatted = (chars_volume_formatted);
 
     debugOutput::sendMessage("Units for receipt2:" + units, MSG_INFO);
@@ -722,17 +727,17 @@ DF_ERROR stateDispenseEnd::print_receipt()
     snprintf(chars_cost, sizeof(chars_cost), "%.2f", price);
     string receipt_cost = (chars_cost);
 
-    snprintf(chars_price_per_liter_formatted, sizeof(chars_volume_formatted), "%.2f", price_per_liter);
-    string receipt_price_per_liter = (chars_price_per_liter_formatted);
+    snprintf(chars_price_per_ml_formatted, sizeof(chars_volume_formatted), "%.2f", price_per_ml);
+    string receipt_price_per_ml = (chars_price_per_ml_formatted);
 
     // add base price
     if (m_pMessaging->getRequestedSize() == 'c')
     {
-        receipt_volume_formatted = receipt_volume_formatted + units + " @" + receipt_price_per_liter + "$/" + base_unit;
+        receipt_volume_formatted = receipt_volume_formatted + units + " @" + receipt_price_per_ml + "$/" + base_unit;
     }
     else if (m_pMessaging->getRequestedSize() == 't')
     {
-        receipt_volume_formatted = receipt_volume_formatted + units + " @" + receipt_price_per_liter + "$/" + base_unit;
+        receipt_volume_formatted = receipt_volume_formatted + units + " @" + receipt_price_per_ml + "$/" + base_unit;
     }
     else
     {

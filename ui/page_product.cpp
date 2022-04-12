@@ -361,22 +361,30 @@ void pageProduct::loadOrderSelectedSize()
             // orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 1px  solid #3D6675; }");
             // orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: rgba(0.25, 0.3, 0.5 , 0.2); border: 1px  solid #3D6675; }");
 
-            QString price = QString::number(selectedProductOrder->getPrice(product_sizes[i]), 'f', 2);
+            double price = selectedProductOrder->getPrice(product_sizes[i]);
             QString transparent_path = FULL_TRANSPARENT_IMAGE_PATH;
 
             if (product_sizes[i] == SIZE_CUSTOM_INDEX)
             {
-                orderSizeLabelsVolume[i]->setText("Custom Volume.");
+                orderSizeLabelsVolume[i]->setText("Custom Volume");
                 QString units = selectedProductOrder->getUnitsForSelectedSlot();
                 if (units == "ml")
                 {
                     units = "L";
+                    price = price * 1000;
                 }
-                orderSizeLabelsPrice[i]->setText("$" + price + "/" + units);
+                else if (units == "g")
+                {
+                    units = "kg";
+                    price = price * 1000;
+                }
+                // QString display_price = ;
+                orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + units);
             }
             else
             {
-                orderSizeLabelsPrice[i]->setText("$" + price);
+                // QString display_price = QString::number(price), 'f', 2);
+                orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2));
                 orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i], true, true));
             }
 
@@ -413,10 +421,22 @@ void pageProduct::loadOrderSelectedSize()
     if (selectedProductOrder->getSelectedSize() == SIZE_CUSTOM_INDEX)
     {
         QString unitsInvoice = selectedProductOrder->getUnitsForSelectedSlot();
+
         if (unitsInvoice == "ml")
         {
             unitsInvoice = "L";
+            selectedPrice = selectedPrice * 1000;
+            selectedPriceCorrected = selectedPriceCorrected * 1000;
+            discount = discount * 1000;
         }
+        else if (unitsInvoice == "g")
+        {
+            unitsInvoice = "kg";
+            selectedPrice = selectedPrice * 1000;
+            selectedPriceCorrected = selectedPriceCorrected * 1000;
+            discount = discount * 1000;
+        }
+
         ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName());
         ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2) + "/" + unitsInvoice);
 

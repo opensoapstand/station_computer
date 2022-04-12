@@ -53,7 +53,7 @@ public:
     // void paintEvent(QPaintEvent *event);
 
     void cancelTimers();
-    void updatePriceAfterPromo(double promoPercent);
+    // void updatePriceAfterPromo(double promoPercent);
     void couponHandler();
     void coupon_disable();
     void coupon_input_show();

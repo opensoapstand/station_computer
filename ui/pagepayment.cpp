@@ -174,11 +174,6 @@ void pagePayment::resizeEvent(QResizeEvent *event)
     ui->order_total_amount->setText("Total: $" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
     ui->order_drink_amount->setText("");
 
-    //    if (db.getProductVolume(product_slot___, drinkSize) < 1000){
-    //        ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)) + "ml");
-    //    }else{
-    //        ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)/1000) + "L");
-    //    }
     ui->productLabel->setText(p_page_idle->currentProductOrder->getSelectedProductName() + " " + p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
 
     response = false;
@@ -331,16 +326,7 @@ void pagePayment::showEvent(QShowEvent *event)
 
     QWidget::showEvent(event);
 
-    // qDebug() << "ahoyy21" ;
-    // DbManager db(DB_PATH);
-
-    // if (db.getProductVolume(product_slot___, drinkSize) < 1000){
-    //     ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)) + " " + db.getUnits(product_slot___));
-    // }else{
-    //     ui->productLabel->setText((db.getProductName(product_slot___)) + " " + QString::number(db.getProductVolume(product_slot___, drinkSize)/1000) + "L");
-    // }
-
-    //  db.closeDB();
+   
     ui->productLabel->setText(p_page_idle->currentProductOrder->getSelectedProductName() + " " + p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
 
     ui->order_drink_amount->setText("$" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));

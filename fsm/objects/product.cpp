@@ -336,12 +336,21 @@ string product::getDisplayUnits()
 
 double product::convertVolumeMetricToDisplayUnits(double volume)
 {
+    double converted_volume;
+    
     if (getDisplayUnits() == "oz")
     {
 
-        return volume * ML_TO_OZ;
+        converted_volume = volume * ML_TO_OZ;
     }
-    return volume;
+    else if (getDisplayUnits() == "g")
+    {
+
+        converted_volume = volume * 1;
+    }else{
+        converted_volume = volume;
+    }
+    return converted_volume;
 }
 
 string product::getPLU(char size)

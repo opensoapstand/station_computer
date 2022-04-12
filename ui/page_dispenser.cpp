@@ -284,7 +284,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
     if (this->isDispensing)
     {
         // if (dispensed > 0.01){
-        ui->abortButton->setText("Complete");
+        ui->abortButton->setText("complete");
         // }
 
         // qDebug() << "Signal: update vol in dispenser!" ;

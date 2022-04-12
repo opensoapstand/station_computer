@@ -44,6 +44,7 @@ public:
     ~page_idle();
     void showEvent(QShowEvent *event);
     void addPictureToLabel(QLabel* label, QString picturePath);
+    void addCompanyLogoToLabel(QLabel *label);
     QString getTemplateFolder();
     void setTemplateFolder(QString rootPath, QString templateFolder);
     QString getTemplatePathFromName(QString backgroundPictureName);

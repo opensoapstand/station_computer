@@ -25,8 +25,8 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
     /*hacky transparent button*/
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    ui->rinse_label->setText("<p align=center>Water rinse coming in<br>5</p>");
-    ui->rinse_label->hide();
+    // ui->rinse_label->setText("<p align=center>Water rinse coming in<br>5</p>");
+    // ui->rinse_label->hide();
 
     thankYouEndTimer = new QTimer(this);
     thankYouEndTimer->setInterval(1000);
@@ -63,6 +63,25 @@ void pagethankyou::showEvent(QShowEvent *event)
     // palette.setBrush(QPalette::Background, background);
     // this->setPalette(palette);
 
+    ui->thank_you_message_label->setText("Thank you!");
+
+    ui->thank_you_message_label->setStyleSheet(
+        "QLabel {"
+
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 700;"
+        "font-size: 85px;"
+        "line-height: 99px;"
+        "text-align: center;"
+        "letter-spacing: 1.5px;"
+        "text-transform: lowercase;"
+        "color: #FFFFFF;"
+        "qproperty-alignment: AlignCenter"
+        "}");
+
+    p_page_idle-> addCompanyLogoToLabel(ui->thank_you_logo_label);
+
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_THANK_YOU_BACKGROUND_PATH);
 
 
@@ -88,21 +107,6 @@ void pagethankyou::showEvent(QShowEvent *event)
     is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
     exitIsForceable = false;
 
-    // if (paymentMethod == "tap"){
-    //     rinse=false;
-    //     rinseTimer->start(1000);
-    //     _rinseTimerTimeoutSec = 5;
-    //     ui->rinse_label->setText("<p align=center>Water rinse coming in<br><br>5</p>");
-    //     ui->rinse_label->show();
-    //     ui->mainPage_Button->setEnabled(false);
-
-    // }else{
-    //     ui->rinse_label->hide();
-    //     thankYouEndTimer->start(1000);
-    //     _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
-    //     ui->mainPage_Button->setEnabled(true);
-    // }
-
     if (paymentMethod == "qr" || paymentMethod == "tap")
     {
         sendDispenseEndToCloud();
@@ -112,8 +116,7 @@ void pagethankyou::showEvent(QShowEvent *event)
         is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
     }
 
-    ui->rinse_label->hide();
-    // ui->rinse_label->show();
+    // ui->rinse_label->hide();
 }
 
 size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
@@ -227,8 +230,8 @@ void pagethankyou::exitPage()
     else
     {
 
-        ui->rinse_label->setText("<p align=center><br>Waiting for end<br>of transaction...</p>");
-        ui->rinse_label->show();
+        // ui->rinse_label->setText("<p align=center><br>Waiting for end<br>of transaction...</p>");
+        // ui->rinse_label->show();
 
         thankYouEndTimer->start(1000);
         _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;

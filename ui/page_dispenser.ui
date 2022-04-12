@@ -69,23 +69,9 @@
     <string>Cancel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>370</x>
-     <y>90</y>
-     <width>67</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
   <zorder>fill_animation_label</zorder>
   <zorder>dispense_bottle_label</zorder>
   <zorder>abortButton</zorder>
-  <zorder>label</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -102,20 +102,22 @@ void page_idle::showEvent(QShowEvent *event)
     //    DbManager db(DB_PATH);
     // ui->savedBottles_label->setText("THANKS TO YOU, THIS MACHINE HAS SAVED<br>OVER " + QString::number(db.getTotalTransactions()) + " PLASTIC CONTAINERS<br>FROM THE LANDFILL");
 
-#ifdef ENABLE_DYNAMIC_UI
-    DbManager db(DB_PATH);
-    QString id = db.getCustomerId();
-    db.closeDB();
-    if (id.at(0) == 'C')
-    {
-        QString logo_path = QString(COMPANY_LOGO_PATH).arg(id);
-        addPictureToLabel(ui->logo_label, logo_path);
-    }
-    else
-    {
-        qDebug() << "WARNING: invalid customer ID. Should like C-1, C-374, ... . Provided id: " << id;
-    }
-#endif
+
+    addCompanyLogoToLabel(ui->logo_label);
+// #ifdef ENABLE_DYNAMIC_UI
+//     DbManager db(DB_PATH);
+//     QString id = db.getCustomerId();
+//     db.closeDB();
+//     if (id.at(0) == 'C')
+//     {
+//         QString logo_path = QString(COMPANY_LOGO_PATH).arg(id);
+//         addPictureToLabel(ui->logo_label, logo_path);
+//     }
+//     else
+//     {
+//         qDebug() << "WARNING: invalid customer ID. Should like C-1, C-374, ... . Provided id: " << id;
+//     }
+// #endif
 }
 
 /*
@@ -160,6 +162,24 @@ void page_idle::MMSlot()
     p_page_maintenance->showFullScreen();
     this->hide();
     this->p_pageSelectProduct->hide();
+}
+
+
+void page_idle::addCompanyLogoToLabel(QLabel *label){
+#ifdef ENABLE_DYNAMIC_UI
+    DbManager db(DB_PATH);
+    QString id = db.getCustomerId();
+    db.closeDB();
+    if (id.at(0) == 'C')
+    {
+        QString logo_path = QString(COMPANY_LOGO_PATH).arg(id);
+        addPictureToLabel(label, logo_path);
+    }
+    else
+    {
+        qDebug() << "WARNING: invalid customer ID. Should like C-1, C-374, ... . Provided id: " << id;
+    }
+#endif
 }
 
 void page_idle::addPictureToLabel(QLabel *label, QString picturePath)

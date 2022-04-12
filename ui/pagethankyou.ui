@@ -16,10 +16,10 @@
   <widget class="QPushButton" name="mainPage_Button">
    <property name="geometry">
     <rect>
-     <x>0</x>
+     <x>-1</x>
      <y>0</y>
-     <width>1080</width>
-     <height>1920</height>
+     <width>1081</width>
+     <height>1921</height>
     </rect>
    </property>
    <property name="autoFillBackground">
@@ -65,6 +65,32 @@ text-transform: uppercase;
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="thank_you_message_label">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>930</y>
+     <width>841</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="thank_you_logo_label">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>1600</y>
+     <width>191</width>
+     <height>211</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>

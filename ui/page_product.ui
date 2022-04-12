@@ -100,9 +100,9 @@ color: #58595B;</string>
   <widget class="QLabel" name="label_invoice_price_total">
    <property name="geometry">
     <rect>
-     <x>770</x>
+     <x>730</x>
      <y>1450</y>
-     <width>161</width>
+     <width>201</width>
      <height>41</height>
     </rect>
    </property>

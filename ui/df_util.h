@@ -69,20 +69,21 @@ using namespace std;
 
 #define TEMPLATES_ROOT_PATH "/home/df-admin/production/references/templates/"
 
-#define PRODUCT_PICTURES_ROOT_PATH "/home/df-admin/production/references/products/%1.jpeg"
+#define PRODUCT_PICTURES_ROOT_PATH "/home/df-admin/production/references/products/%1.png"
 
 
 
 #ifdef ENABLE_DYNAMIC_UI
 
-#define PAGE_IDLE_BACKGROUND_PATH                       "background_welcome.png"
-// #define PAGE_IDLE_BACKGROUND_PATH                       "background_message.png"
+// #define PAGE_IDLE_BACKGROUND_PATH                       "background_welcome.png"
+#define PAGE_IDLE_BACKGROUND_PATH                       "background_message.png"
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
 #define PAGE_HELP_BACKGROUND_PATH                       "background_help.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH      "background_dispense_instructions.png"
 #define PAGE_DISPENSE_BACKGROUND_PATH                   "background_dispense.png"
-#define PAGE_THANK_YOU_BACKGROUND_PATH                  "background_thank_you.png"
+// #define PAGE_THANK_YOU_BACKGROUND_PATH                  "background_thank_you.png"
+#define PAGE_THANK_YOU_BACKGROUND_PATH                  "background_message.png"
 #define PAGE_QR_PAY_BACKGROUND_PATH                     "background_pay_qr.png"
 
 #define PAGE_WIFI_ERROR_BACKGROUND_PATH                 "/home/df-admin/production/references/oops.png"

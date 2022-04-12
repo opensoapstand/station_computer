@@ -133,6 +133,7 @@ void pagethankyou::showEvent(QShowEvent *event)
     }
 
     // ui->extra_message_label->hide();
+    p_page_idle->addPictureToLabel(ui->drinkfill_logo_label2,DRINKFILL_LOGO_VERTICAL_PATH);
 }
 
 size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)

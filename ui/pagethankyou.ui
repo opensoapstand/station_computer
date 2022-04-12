@@ -97,13 +97,26 @@ text-transform: uppercase;
    <property name="geometry">
     <rect>
      <x>36</x>
-     <y>826</y>
+     <y>786</y>
      <width>1001</width>
-     <height>561</height>
+     <height>551</height>
     </rect>
    </property>
    <property name="text">
     <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="drinkfill_logo_label2">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>50</y>
+     <width>471</width>
+     <height>331</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>

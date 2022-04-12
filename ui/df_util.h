@@ -100,6 +100,8 @@ using namespace std;
 #define ICON_TYPE_LAUNDRY_PATH "/home/df-admin/production/references/Soapstand-UI-icon-laundry.png"
                          
 #define COMPANY_LOGO_PATH "/home/df-admin/production/references/logos/%1_logo_white.png"
+#define DRINKFILL_LOGO_VERTICAL_PATH "/home/df-admin/production/references/logos/Soapstand-logo-white-vertical.png"
+#define DRINKFILL_LOGO_HORIZONTAL_PATH "/home/df-admin/production/references/logos/Soapstand-logo-white-horizontal.png"
 
 #else
 

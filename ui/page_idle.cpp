@@ -102,6 +102,8 @@ void page_idle::showEvent(QShowEvent *event)
     currentProductOrder->setDiscountPercentageFraction(0.0);
 
     addCompanyLogoToLabel(ui->logo_label);
+
+    addPictureToLabel(ui->drinkfill_logo_label,DRINKFILL_LOGO_VERTICAL_PATH);
 }
 
 /*

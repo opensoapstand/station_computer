@@ -117,6 +117,8 @@ void pagethankyou::showEvent(QShowEvent *event)
 
     // ui->extra_message_label->hide();
     ui->mainPage_Button->setEnabled(true);
+    ui->mainPage_Button->raise();
+
     is_controller_finished = false;
     is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
     exitIsForceable = false;
@@ -223,6 +225,7 @@ void pagethankyou::onThankyouTimeoutTick()
 
 void pagethankyou::on_mainPage_Button_clicked()
 {
+     qDebug() << "main page button clicked.";
     exitPage();
 }
 

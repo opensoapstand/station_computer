@@ -83,7 +83,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->fill_animation_label->hide();
 
     startDispensing();
-    ui->abortButton->setText("Cancel");
+    ui->abortButton->setText("cancel");
     ui->abortButton->raise();
 
     if (nullptr == dispenseIdleTimer)

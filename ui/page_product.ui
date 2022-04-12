@@ -45,7 +45,7 @@ line-height: 29px;</string>
   <widget class="QPushButton" name="pagePayment_Button">
    <property name="geometry">
     <rect>
-     <x>187</x>
+     <x>170</x>
      <y>1520</y>
      <width>740</width>
      <height>92</height>
@@ -75,7 +75,7 @@ line-height: 29px;</string>
    <property name="geometry">
     <rect>
      <x>810</x>
-     <y>1320</y>
+     <y>1340</y>
      <width>111</width>
      <height>29</height>
     </rect>
@@ -192,7 +192,7 @@ text-align: center;</string>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">color: #CBA580;
+    <string notr="true">color: #5E8680;
 font-family: Montserrat;
 font-style: light;
 font-weight: normal;
@@ -218,7 +218,7 @@ text-align: center;
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">color: #CBA580;
+    <string notr="true">color: #5E8680;
 font-family: Montserrat;
 font-style: light;
 font-weight: normal;
@@ -284,8 +284,8 @@ text-align: center;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>1267</y>
+     <x>174</x>
+     <y>1275</y>
      <width>526</width>
      <height>37</height>
     </rect>
@@ -1847,6 +1847,7 @@ outline: none;
      <string notr="true">buttonGroup</string>
     </attribute>
    </widget>
+   <zorder>q</zorder>
    <zorder>p</zorder>
    <zorder>num1</zorder>
    <zorder>num2</zorder>
@@ -1858,7 +1859,6 @@ outline: none;
    <zorder>num8</zorder>
    <zorder>num9</zorder>
    <zorder>num0</zorder>
-   <zorder>q</zorder>
    <zorder>w</zorder>
    <zorder>e</zorder>
    <zorder>r</zorder>
@@ -1889,8 +1889,8 @@ outline: none;
   <widget class="QLabel" name="label_invoice_name">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>1320</y>
+     <x>170</x>
+     <y>1340</y>
      <width>651</width>
      <height>31</height>
     </rect>
@@ -1923,7 +1923,7 @@ color: #58595B;
    <property name="geometry">
     <rect>
      <x>830</x>
-     <y>1355</y>
+     <y>1370</y>
      <width>111</width>
      <height>29</height>
     </rect>
@@ -1987,7 +1987,7 @@ color: #58595B;</string>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">color: #CBA580;
+    <string notr="true">color: #5E8680;
 font-family: Montserrat;
 font-style: light;
 font-weight: normal;
@@ -2041,7 +2041,7 @@ text-align: center;</string>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">color: #CBA580;
+    <string notr="true">color: #5E8680;
 font-family: Montserrat;
 font-style: light;
 font-weight: normal;
@@ -2134,7 +2134,7 @@ text-align: center;</string>
    <property name="geometry">
     <rect>
      <x>187</x>
-     <y>1364</y>
+     <y>1380</y>
      <width>740</width>
      <height>29</height>
     </rect>
@@ -2268,12 +2268,12 @@ color: #58595B;
   <zorder>label_invoice_discount_name</zorder>
   <zorder>label_product_photo</zorder>
   <zorder>label_product_ingredients_title</zorder>
-  <zorder>label_product_ingredients</zorder>
-  <zorder>promoKeyboard</zorder>
   <zorder>label_background_small</zorder>
   <zorder>label_background_medium</zorder>
   <zorder>label_background_large</zorder>
   <zorder>label_background_custom</zorder>
+  <zorder>promoKeyboard</zorder>
+  <zorder>label_product_ingredients</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -768,7 +768,7 @@ void pageProduct::on_previousPage_Button_clicked()
 
     ui->promoInputButton->show();
 
-    couponHandler();
+    // couponHandler();
 
     usleep(100);
     this->hide();
@@ -874,6 +874,12 @@ void pageProduct::on_pagePayment_Button_clicked()
     else if (paymentMethod == "barcode" || paymentMethod == "plu")
     {
         // p_page_dispense->showEvent(dispenseEvent); // todo Lode: this enabled together with showfullscreen calls the showEvent twice. only showevent, does not display the dispense page though.
+        p_page_dispense->showFullScreen();
+        this->hide();
+    }
+    else
+    {
+        qDebug() << "WARNING: No payment method detected.";
         p_page_dispense->showFullScreen();
         this->hide();
     }

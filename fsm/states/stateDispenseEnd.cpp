@@ -193,17 +193,9 @@ DF_ERROR stateDispenseEnd::handleTransaction()
     // TODO: Change this to just check if the system is Soapstand or Drinkfill instead of payment system!
     if (paymentMethod == "qr")
     {
-#ifdef ENABLE_TRANSACTION_TO_CLOUD
+         debugOutput::sendMessage("QR payment. No payment action in controller", MSG_INFO);
 
-        debugOutput::sendMessage("Send transaction to cloud for QR:", MSG_INFO);
-        sendTransactionToCloud();
-#else
-
-        debugOutput::sendMessage("NOT SENDING transaction to cloud for QR:", MSG_INFO);
-#endif
-    }
-
-    if (paymentMethod == "tap")
+    }else if (paymentMethod == "tap")
     {
         // sleep(5);
 
@@ -214,15 +206,27 @@ DF_ERROR stateDispenseEnd::handleTransaction()
         // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
         // debugOutput::sendMessage("Pin -> " + to_string(productDispensers[pos].getI2CPin(PRODUCT)), MSG_INFO);
     }
-
-    if (paymentMethod == "barcode" || paymentMethod == "plu")
+    else if (paymentMethod == "barcode" || paymentMethod == "plu")
     {
         debugOutput::sendMessage("Printing receipt:", MSG_INFO);
         print_receipt();
 
-        debugOutput::sendMessage("Send transaction to cloud:", MSG_INFO);
-        sendTransactionToCloud();
     }
+    else
+    {
+        debugOutput::sendMessage("WARNING: No payment method detected.", MSG_INFO);
+
+    }
+
+#ifdef ENABLE_TRANSACTION_TO_CLOUD
+
+        debugOutput::sendMessage("Send transaction to cloud", MSG_INFO);
+        sendTransactionToCloud();
+#else
+
+        debugOutput::sendMessage("NOT SENDING transaction to cloud.", MSG_INFO);
+#endif
+
 
     return e_ret;
 }

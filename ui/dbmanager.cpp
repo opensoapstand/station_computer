@@ -708,6 +708,37 @@ int DbManager::getSlotEnabled(int slot)
     return enabled;
 }
 
+QString DbManager::getStatusText(int slot)
+{
+    QSqlQuery qry;
+    QString val;
+
+
+    QString qry_qstr = QString("SELECT status_text_slot_%1 FROM machine").arg(slot);
+
+    // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
+    string qry_string = qry_qstr.toUtf8().constData();
+    qry.prepare(qry_string.c_str());
+    qry.bindValue(":slot", slot);
+
+    qry.exec();
+    if (qry.exec())
+    {
+    }
+    else
+    {
+        qDebug() << "Failed to check slot available." << qry_qstr;
+    }
+
+    while (qry.next())
+    {
+        qDebug() << qry.value(0);
+        val = qry.value(0).toString();
+    }
+
+    return val;
+}
+
 bool DbManager::getCouponsEnabled()
 {
     QSqlQuery qry;
@@ -756,19 +787,18 @@ QString DbManager::getCustomerId()
     return val;
 }
 
-bool DbManager::updateSlotAvailability(int slot, int isEnabled)
+bool DbManager::updateSlotAvailability(int slot, int isEnabled, QString status_text)
 {
     QSqlQuery qry;
-    bool enabled;
+    bool enabled;   
 
     // QString qry_qstr = QString("UPDATE machine SET is_enabled_slot_%1=0").arg(QString::number(slot), QString::number(isEnabled));
-    QString qry_qstr = QString("UPDATE machine SET is_enabled_slot_%1=").arg(QString::number(slot)) + QString::number(isEnabled);
-
+    QString qry_qstr = QString("UPDATE machine SET status_text_slot_%1='").arg(QString::number(slot)) +status_text +  QString("',is_enabled_slot_%1=").arg(QString::number(slot)) + QString::number(isEnabled);
+    qDebug() << qry_qstr << endl;
     string qry_string = qry_qstr.toUtf8().constData(); // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
     qry.prepare(qry_string.c_str());
     qry.bindValue(":slot", slot);
-
-    qry.bindValue(":slot", slot);
+    qry.bindValue(":status_text", status_text);
     qry.bindValue(":isEnabled", isEnabled);
     qry.exec();
 

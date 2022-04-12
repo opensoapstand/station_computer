@@ -40,6 +40,11 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
     selectProductPhotoLabels[2] = ui->product_3_photo_label;
     selectProductPhotoLabels[3] = ui->product_4_photo_label;
 
+    selectProductPhotoLabelsText[0] = ui->product_1_photo_label_text;
+    selectProductPhotoLabelsText[1] = ui->product_2_photo_label_text;
+    selectProductPhotoLabelsText[2] = ui->product_3_photo_label_text;
+    selectProductPhotoLabelsText[3] = ui->product_4_photo_label_text;
+
     selectProductNameLabels[0] = ui->product_1_name_label;
     selectProductNameLabels[1] = ui->product_2_name_label;
     selectProductNameLabels[2] = ui->product_3_name_label;
@@ -130,10 +135,13 @@ void page_select_product::showEvent(QShowEvent *event)
         if (!db.remainingVolumeIsBiggerThanLargestFixedSize(i + 1) || !db.getSlotEnabled(i + 1))
         {
             QString path = SOLD_OUT_IMAGE_PATH;
-            selectProductButtons[i]->setStyleSheet("QPushButton { border-image: url(" + path + "); }");
+            selectProductPhotoLabelsText[i]->setText(db.getStatusText(i + 1));
+            selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
         }
         else
         {
+            selectProductPhotoLabelsText[i]->setText("");
+            selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,0);}");
             selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
         }
     }

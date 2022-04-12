@@ -370,6 +370,7 @@ DF_ERROR messageMediator::parseCommandString()
        first_char == ACTION_HELP ||
        first_char == ACTION_DEBUG ||
        first_char == ACTION_MANUAL_PUMP_TEST ||
+       first_char == ACTION_TOGGLE_CYCLIC_PUMP_TEST ||
        first_char == ACTION_MANUAL_PUMP ||
        first_char == ACTION_MANUAL_PUMP_ENABLE ||
        first_char == ACTION_MANUAL_PUMP_DISABLE ||

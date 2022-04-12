@@ -28,6 +28,7 @@ stateManualPump::stateManualPump()
 // CTOR Linked to IP Thread Socket Listener
 stateManualPump::stateManualPump(messageMediator *message)
 {
+   isCyclicTesting = false;
 }
 
 // DTOR
@@ -79,6 +80,21 @@ DF_ERROR stateManualPump::onAction()
       {
          debugOutput::sendMessage("Do pump test", MSG_INFO);
          pumpTest();
+      }
+      if (ACTION_TOGGLE_CYCLIC_PUMP_TEST == m_pMessaging->getAction())
+      {
+         isCyclicTesting = !isCyclicTesting;
+         debugOutput::sendMessage("Toggle cyclic pump test" + to_string(isCyclicTesting), MSG_INFO);
+
+         if (isCyclicTesting)
+         {
+            isCyclicTestingPumpOn = false;
+            using namespace std::chrono;
+            uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+            cyclicTestPeriodStartEpochMillis = now - CYCLIC_PUMP_TEST_OFF_CYCLE_MILLIS - 10; // make sure it's expired.
+         }else{
+            productDispensers[0].setPumpsDisableAll();
+         }
       }
 
       if (ACTION_MANUAL_PUMP_ENABLE == m_pMessaging->getAction())
@@ -151,12 +167,17 @@ DF_ERROR stateManualPump::onAction()
                the pump speed cannot be set during this test) \n \
             e: enable pump1 \n \
             d: disable pump1\n \
+            c: toggle cyclic ON/OFF pump1 (keep button pressed)\n \
             f: direction forward pump1 \n r: direction reverse pump1\n ixxx: set pwm pump1 [0..255]\nq: quit ",
                                   MSG_INFO);
       }
    }
-
-   if (isFlowTest)
+   if (isCyclicTesting)
+   {
+      pumpCyclicTest();
+      pumpFlowTest();
+   }
+   else if (isFlowTest)
    {
       pumpFlowTest();
    }
@@ -222,7 +243,7 @@ DF_ERROR stateManualPump::customVolumeDispenseTest()
    {
       debugOutput::sendMessage("Start Dispensing", MSG_INFO);
 
-      //productDispensers[0].setPumpPWM(125);
+      // productDispensers[0].setPumpPWM(125);
 
       isDispensing = true;
       using namespace std::chrono;
@@ -239,7 +260,7 @@ DF_ERROR stateManualPump::customVolumeDispenseTest()
       debugOutput::sendMessage("End Dispensing. Activate retract millis: " + to_string(retract_time_millis), MSG_INFO);
 
       isDispensing = false;
-      //productDispensers[0].setPumpsDisableAll();
+      // productDispensers[0].setPumpsDisableAll();
       productDispensers[0].setPumpDirectionReverse();
       productDispensers[0].setPumpEnable(1);
       using namespace std::chrono;
@@ -263,13 +284,13 @@ DF_ERROR stateManualPump::customVolumeDispenseTest()
 
 DF_ERROR stateManualPump::pumpFlowTest()
 {
-      // double volume = productDispensers[0].getVolumeDispensed();
-      // debugOutput::sendMessage("Dispense flowRate test. millis/totalvolumne/avgSinceLastcall/02s avg/05s avg/1s avg, " + to_string(volume),MSG_INFO);
-      // debugOutput::sendMessage("volume per tick " + to_string(productDispensers[0].getProduct()->getVolumePerTick() ), MSG_INFO);
-           
+   // double volume = productDispensers[0].getVolumeDispensed();
+   // debugOutput::sendMessage("Dispense flowRate test. millis/totalvolumne/avgSinceLastcall/02s avg/05s avg/1s avg, " + to_string(volume),MSG_INFO);
+   // debugOutput::sendMessage("volume per tick " + to_string(productDispensers[0].getProduct()->getVolumePerTick() ), MSG_INFO);
+
    if (productDispensers[0].getDispenseButtonValue() & productDispensers[0].isPumpEnabled())
    {
-      
+
       // instant flow rate
       double flowRate = productDispensers[0].getInstantFlowRate();
 
@@ -304,6 +325,40 @@ DF_ERROR stateManualPump::pumpFlowTest()
       //                          MSG_INFO);
    }
    usleep(50000);
+}
+
+DF_ERROR stateManualPump::pumpCyclicTest()
+{
+
+   using namespace std::chrono;
+   uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+   // }
+
+   if (isCyclicTestingPumpOn)
+   {
+      // check for end of ON cycle
+      if (cyclicTestPeriodStartEpochMillis + CYCLIC_PUMP_TEST_ON_CYCLE_MILLIS < now)
+      {
+         cyclicTestPeriodStartEpochMillis =  now; //  + 2 * OFF_CYCLE_MILLIS
+         productDispensers[0].setPumpsDisableAll();
+         isCyclicTestingPumpOn = false;
+         cyclicTestPeriodStartEpochMillis = now;
+      }
+   }
+   else
+   {
+      // check for end of OFF cycle
+      if (cyclicTestPeriodStartEpochMillis + CYCLIC_PUMP_TEST_OFF_CYCLE_MILLIS < now)
+      {
+         debugOutput::sendMessage("\n******************************\n******PUMP CYCLING TESTING******\n*****************\n  cycle: " + to_string(pump_test_cycle_count) , MSG_INFO);
+         pump_test_cycle_count ++;
+         productDispensers[0].setPumpDirectionForward();
+         productDispensers[0].setPumpPWM(255);
+         productDispensers[0].setPumpEnable(1); // POS is 1->4! index is 0->3
+         isCyclicTestingPumpOn = true;
+         cyclicTestPeriodStartEpochMillis = now;
+      }
+   }
 }
 
 DF_ERROR stateManualPump::pumpTest()

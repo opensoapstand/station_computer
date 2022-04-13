@@ -124,10 +124,10 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
 
     QString css_description = "QLabel{"
                               "position: absolute;"
-                              "width: 894px;"
-                              "height: 252px;"
-                              "left: 95px;"
-                              "top: 474px;"
+                            //   "width: 894px;"
+                            //   "height: 252px;"
+                            //   "left: 95px;"
+                            //   "top: 474px;"
                               "font-family: 'Montserrat';"
                               "font-style: normal;"
                               "font-weight: 400;"
@@ -136,6 +136,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
                               "color: #58595B;"
                               "}";
     ui->label_product_description->setStyleSheet(css_description);
+
     ui->label_product_description->setWordWrap(true);
 
     QString css_ingredients = "QLabel{"

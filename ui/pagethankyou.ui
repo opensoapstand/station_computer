@@ -71,7 +71,7 @@ text-transform: uppercase;
    <property name="geometry">
     <rect>
      <x>110</x>
-     <y>700</y>
+     <y>850</y>
      <width>841</width>
      <height>211</height>
     </rect>

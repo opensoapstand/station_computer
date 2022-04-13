@@ -2101,14 +2101,17 @@ text-align: center;</string>
   <widget class="QLabel" name="label_product_description">
    <property name="geometry">
     <rect>
-     <x>95</x>
-     <y>430</y>
-     <width>894</width>
-     <height>252</height>
+     <x>88</x>
+     <y>491</y>
+     <width>901</width>
+     <height>141</height>
     </rect>
    </property>
    <property name="text">
     <string>TextLabel</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
    </property>
   </widget>
   <widget class="QLabel" name="label_product_ingredients">

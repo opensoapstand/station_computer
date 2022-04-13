@@ -28,7 +28,6 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
 {
     ui->setupUi(this);
 
-
     ui->p_page_maintenanceButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     selectProductButtons[0] = ui->selection1_Button;
     selectProductButtons[1] = ui->selection2_Button;
@@ -109,12 +108,7 @@ void page_select_product::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: Select Product >>>>>>>>>";
     QWidget::showEvent(event);
-    qDebug() << "sel 1";
     maintenanceCounter = 0;
-/**/
-   
-    qDebug() << "sel 2";
-   
 
     displayProducts();
 
@@ -132,10 +126,15 @@ void page_select_product::showEvent(QShowEvent *event)
     DbManager db(DB_PATH);
     for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
-        if (!db.remainingVolumeIsBiggerThanLargestFixedSize(i + 1) || !db.getSlotEnabled(i + 1))
+        QString path = SOLD_OUT_IMAGE_PATH;
+        if (!db.getSlotEnabled(i + 1))
         {
-            QString path = SOLD_OUT_IMAGE_PATH;
             selectProductPhotoLabelsText[i]->setText(db.getStatusText(i + 1));
+            selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
+        }
+        else if (!db.remainingVolumeIsBiggerThanLargestFixedSize(i + 1))
+        {
+            selectProductPhotoLabelsText[i]->setText("Sold out");
             selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
         }
         else
@@ -326,7 +325,6 @@ void page_select_product::on_mainPage_Button_clicked()
 {
     qDebug() << "Back to Idle Page Button pressed";
     mainPage();
-    qDebug() << "idle loaded.";
 }
 
 void page_select_product::on_helpPage_Button_clicked()

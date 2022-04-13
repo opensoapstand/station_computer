@@ -114,6 +114,7 @@ void page_idle::on_toSelectProductPageButton_clicked()
 {
     qDebug() << "Proceed to next page button clicked. ";
     p_pageSelectProduct->showFullScreen();
+    this->lower();
 
     // DO NOT HIDE IDLE PAGE
     // it's staying in the background to counter a hack UBC students found (when changing screens and tapping during the swap, they could get a hold of the machine)

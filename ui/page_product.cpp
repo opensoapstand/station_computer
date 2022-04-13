@@ -29,14 +29,25 @@
 
 using json = nlohmann::json;
 
-uint16_t orderSizeButtons_xywh_generic_product_page[4][4] = {
+uint16_t orderSizeButtons_xywh_dynamic_ui_all_sizes_available[4][4] = {
     {560, 990, 135, 100}, // S
     {706, 990, 135, 100}, // M
     {852, 990, 135, 100}, // L
     {560, 1100, 430, 115} // custom
 };
 
-uint16_t orderSizeButtons_xywh_static_product_page[4][4] = {{564, 1088, 209, 126}, {1, 1, 1, 1}, {790, 1087, 198, 126}, {1, 1, 1, 1}};
+uint16_t orderSizeButtons_xywh_dynamic_ui_small_and_large_available[4][4] = {
+    {564, 1088, 209, 126}, // S
+    {1, 1, 1, 1},          // M
+    {790, 1087, 198, 126}, // L
+    {1, 1, 1, 1}           // custom
+};
+
+uint16_t orderSizeButtons_xywh_static_product_page[4][4] = {
+    {564, 1088, 209, 126},
+    {1, 1, 1, 1},
+    {790, 1087, 198, 126},
+    {1, 1, 1, 1}};
 // uint16_t orderSizeButtons_xywh_static_product_page[4][4] = {{560, 1155, 211, 41}, {1, 1, 1, 1}, {790, 1155, 201, 41}, {1, 1, 1, 1}};
 
 // CTOR
@@ -100,6 +111,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
                               "}";
     ui->label_product_description->setStyleSheet(css_description);
     ui->label_product_description->setWordWrap(true);
+
     QString css_ingredients = "QLabel{"
                               "position: absolute;"
                               "width: 425px;"
@@ -113,9 +125,9 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
                               "line-height: 28px;"
                               "color: #58595B;"
                               "}";
-
     ui->label_product_ingredients->setStyleSheet(css_ingredients);
     ui->label_product_ingredients->setWordWrap(true);
+
     QString css_ingredients_title = "QLabel{"
                                     "font-weight: bold;"
                                     "position: absolute;"
@@ -140,9 +152,9 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
                                 "color: #58595B;"
                                 "}";
     ui->label_invoice_discount_name->setStyleSheet(css_discount_name);
+    ui->label_invoice_discount_name->hide();
 
     ui->label_invoice_discount_amount->hide();
-    ui->label_invoice_discount_name->hide();
 
     ui->promoCode->clear();
     ui->promoCode->hide();
@@ -257,17 +269,35 @@ void pageProduct::reset_and_show_page_elements()
     //     {852, 990, 135, 100},  // L
     //     {560, 1100, 430, 115}   // custom
     //     };
+
+    uint8_t available_sizes_signature = 0;
+
+
+    uint16_t (*size_and_positions)[4];
+    for (uint8_t i = 0; i < SLOT_COUNT; i++)
+    {
+        available_sizes_signature |= selectedProductOrder->getLoadedProductSizeEnabled(i) <<i;
+    }
+
+    
+    if (available_sizes_signature == 5){
+        // only small and large available
+        size_and_positions = orderSizeButtons_xywh_dynamic_ui_small_and_large_available;
+    }else{
+        size_and_positions = orderSizeButtons_xywh_dynamic_ui_all_sizes_available;
+    }
+
     for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
         if (selectedProductOrder->getLoadedProductSizeEnabled(i))
         {
             orderSizeButtons[i]->show();
 
-            orderSizeButtons[i]->setFixedSize(QSize(orderSizeButtons_xywh_generic_product_page[i][2], orderSizeButtons_xywh_generic_product_page[i][3]));
-            orderSizeButtons[i]->move(orderSizeButtons_xywh_generic_product_page[i][0], orderSizeButtons_xywh_generic_product_page[i][1]);
+            orderSizeButtons[i]->setFixedSize(QSize(size_and_positions[i][2], size_and_positions[i][3]));
+            orderSizeButtons[i]->move(size_and_positions[i][0], size_and_positions[i][1]);
 
-            orderSizeBackgroundLabels[i]->setFixedSize(QSize(orderSizeButtons_xywh_generic_product_page[i][2], orderSizeButtons_xywh_generic_product_page[i][3]));
-            orderSizeBackgroundLabels[i]->move(orderSizeButtons_xywh_generic_product_page[i][0], orderSizeButtons_xywh_generic_product_page[i][1]);
+            orderSizeBackgroundLabels[i]->setFixedSize(QSize(size_and_positions[i][2], size_and_positions[i][3]));
+            orderSizeBackgroundLabels[i]->move(size_and_positions[i][0], size_and_positions[i][1]);
             orderSizeBackgroundLabels[i]->lower();
             orderSizeBackgroundLabels[i]->setStyleSheet("QLabel { background-color: red; border: 0px }");
             qDebug() << "Product size index enabled: " << i;

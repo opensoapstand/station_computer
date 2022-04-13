@@ -60,8 +60,9 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
     selectProductTypeLabels[3] = ui->product_4_type_label;
 
     ui->helpPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
 
-    ui->mainPage_Button->setStyleSheet("QPushButton { color:#003840;background-color: #FFFFFF; box-sizing: border-box;border-radius: 20px;}"); // border: 1px solid #3D6675;
+    // ui->mainPage_Button->setStyleSheet("QPushButton { color:#003840;background-color: #FFFFFF; box-sizing: border-box;border-radius: 20px;}"); // border: 1px solid #3D6675;
 
     // font-family: 'Brevia';
     // font-style: normal;
@@ -77,8 +78,8 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
     font.setPointSize(20);
     font.setBold(true);
     font.setWeight(75);
-    ui->mainPage_Button->setFont(font);
-    ui->mainPage_Button->setText("<- HOME");
+    //ui->mainPage_Button->setFont(font);
+    //ui->mainPage_Button->setText("<- HOME");
 
     productPageEndTimer = new QTimer(this);
     productPageEndTimer->setInterval(1000);

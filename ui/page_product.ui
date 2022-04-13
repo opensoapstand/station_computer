@@ -75,7 +75,7 @@ line-height: 29px;</string>
    <property name="geometry">
     <rect>
      <x>810</x>
-     <y>1340</y>
+     <y>1370</y>
      <width>111</width>
      <height>29</height>
     </rect>
@@ -1890,7 +1890,7 @@ outline: none;
    <property name="geometry">
     <rect>
      <x>170</x>
-     <y>1340</y>
+     <y>1370</y>
      <width>651</width>
      <height>31</height>
     </rect>

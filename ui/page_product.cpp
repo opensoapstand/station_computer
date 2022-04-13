@@ -36,6 +36,32 @@ uint16_t orderSizeButtons_xywh_dynamic_ui_all_sizes_available[4][4] = {
     {560, 1100, 430, 115} // custom
 };
 
+uint16_t orderSizeVolumeLabels_xy_dynamic_ui_all_sizes_available[4][2] = {
+    {560, 1000}, // S vol
+    {710, 1000}, // M vol
+    {860, 1000}, // L vol
+    {570, 1110} // custom col
+};
+uint16_t orderSizePriceLabels_xy_dynamic_ui_all_sizes_available[8][2] = {
+    {560, 1040}, // S price
+    {710, 1040}, // M price
+    {860, 1040}, // L price
+    {560, 1160} // custom price
+};
+
+uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_and_large_available[8][2] = {
+    {605, 1110}, // S vol
+    {1, 1}, // M vol
+    {825, 1110}, // L vol
+    {1, 1} // custom col
+};
+uint16_t orderSizePriceLabels_xy_dynamic_ui_small_and_large_available[8][2] = {
+    {605, 1150}, // S price
+    {1, 1}, // M price
+    {825, 1150}, // L price
+    {1, 1} // custom price
+};
+
 uint16_t orderSizeButtons_xywh_dynamic_ui_small_and_large_available[4][4] = {
     {564, 1088, 209, 126}, // S
     {1, 1, 1, 1},          // M
@@ -273,18 +299,23 @@ void pageProduct::reset_and_show_page_elements()
     uint8_t available_sizes_signature = 0;
 
 
-    uint16_t (*size_and_positions)[4];
+    uint16_t (*xywh_size_buttons)[4];
+    uint16_t (*xy_size_labels_volume)[2];
+    uint16_t (*xy_size_labels_price)[2];
     for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
         available_sizes_signature |= selectedProductOrder->getLoadedProductSizeEnabled(i) <<i;
     }
-
     
     if (available_sizes_signature == 5){
         // only small and large available
-        size_and_positions = orderSizeButtons_xywh_dynamic_ui_small_and_large_available;
+        xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_small_and_large_available;
+        xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_small_and_large_available;
+        xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_small_and_large_available;
     }else{
-        size_and_positions = orderSizeButtons_xywh_dynamic_ui_all_sizes_available;
+        xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_all_sizes_available;
+        xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_all_sizes_available;
+        xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_all_sizes_available;
     }
 
     for (uint8_t i = 0; i < SLOT_COUNT; i++)
@@ -293,13 +324,17 @@ void pageProduct::reset_and_show_page_elements()
         {
             orderSizeButtons[i]->show();
 
-            orderSizeButtons[i]->setFixedSize(QSize(size_and_positions[i][2], size_and_positions[i][3]));
-            orderSizeButtons[i]->move(size_and_positions[i][0], size_and_positions[i][1]);
+            orderSizeButtons[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3]));
+            orderSizeButtons[i]->move(xywh_size_buttons[i][0], xywh_size_buttons[i][1]);
 
-            orderSizeBackgroundLabels[i]->setFixedSize(QSize(size_and_positions[i][2], size_and_positions[i][3]));
-            orderSizeBackgroundLabels[i]->move(size_and_positions[i][0], size_and_positions[i][1]);
+            orderSizeBackgroundLabels[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3]));
+            orderSizeBackgroundLabels[i]->move(xywh_size_buttons[i][0], xywh_size_buttons[i][1]);
             orderSizeBackgroundLabels[i]->lower();
             orderSizeBackgroundLabels[i]->setStyleSheet("QLabel { background-color: red; border: 0px }");
+
+            orderSizeLabelsPrice[i]->move(xy_size_labels_price[i][0],xy_size_labels_price[i][1]);
+            orderSizeLabelsVolume[i]->move(xy_size_labels_volume[i][0],xy_size_labels_volume[i][1]);
+
             qDebug() << "Product size index enabled: " << i;
         }
         else

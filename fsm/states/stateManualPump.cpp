@@ -92,7 +92,9 @@ DF_ERROR stateManualPump::onAction()
             using namespace std::chrono;
             uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
             cyclicTestPeriodStartEpochMillis = now - CYCLIC_PUMP_TEST_OFF_CYCLE_MILLIS - 10; // make sure it's expired.
-         }else{
+         }
+         else
+         {
             productDispensers[0].setPumpsDisableAll();
          }
       }
@@ -339,7 +341,7 @@ DF_ERROR stateManualPump::pumpCyclicTest()
       // check for end of ON cycle
       if (cyclicTestPeriodStartEpochMillis + CYCLIC_PUMP_TEST_ON_CYCLE_MILLIS < now)
       {
-         cyclicTestPeriodStartEpochMillis =  now; //  + 2 * OFF_CYCLE_MILLIS
+         cyclicTestPeriodStartEpochMillis = now; //  + 2 * OFF_CYCLE_MILLIS
          productDispensers[0].setPumpsDisableAll();
          isCyclicTestingPumpOn = false;
          cyclicTestPeriodStartEpochMillis = now;
@@ -350,10 +352,14 @@ DF_ERROR stateManualPump::pumpCyclicTest()
       // check for end of OFF cycle
       if (cyclicTestPeriodStartEpochMillis + CYCLIC_PUMP_TEST_OFF_CYCLE_MILLIS < now)
       {
-         debugOutput::sendMessage("\n******************************\n******PUMP CYCLING TESTING******\n*****************\n  cycle: " + to_string(pump_test_cycle_count) , MSG_INFO);
-         pump_test_cycle_count ++;
+         debugOutput::sendMessage("\n******************************\n******PUMP CYCLING TESTING******\n*****************\n  cycle: " + to_string(pump_test_cycle_count), MSG_INFO);
+         pump_test_cycle_count++;
          productDispensers[0].setPumpDirectionForward();
-         productDispensers[0].setPumpPWM(255);
+         // this->productDispensers[0].getPumpSpeed();
+         // productDispensers[0].setPumpPWM(255);
+         int speed = productDispensers[0].getProduct()->getPWMFromDB();
+
+         debugOutput::sendMessage("Pump speed for test: " + to_string(speed), MSG_INFO);
          productDispensers[0].setPumpEnable(1); // POS is 1->4! index is 0->3
          isCyclicTestingPumpOn = true;
          cyclicTestPeriodStartEpochMillis = now;

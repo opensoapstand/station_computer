@@ -90,7 +90,6 @@ void pagethankyou::showEvent(QShowEvent *event)
         "line-height: 44px;"
         "text-align: center;"
         "letter-spacing: 1.5px;"
-        "text-transform: lowercase;"
         "color: #FFFFFF;"
         "qproperty-alignment: AlignCenter;"
         "}");

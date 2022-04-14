@@ -108,6 +108,7 @@ page_select_product::~page_select_product()
 void page_select_product::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: Select Product >>>>>>>>>";
+    this->lower();
     QWidget::showEvent(event);
     maintenanceCounter = 0;
 
@@ -146,7 +147,8 @@ void page_select_product::showEvent(QShowEvent *event)
         }
     }
     db.closeDB();
-    /**/
+    this->raise();
+   
 }
 void page_select_product::resizeEvent(QResizeEvent *event)
 {
@@ -260,7 +262,7 @@ void page_select_product::select_product(int slot)
         productPageEndTimer->stop();
         p_page_idle->currentProductOrder->setSelectedSlot(slot);
         p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
-        // p_page_product->resizeEvent(productResize);
+        this->raise();
         p_page_product->showFullScreen();
 
         this->hide();
@@ -307,6 +309,7 @@ void page_select_product::mainPage()
 {
     productPageEndTimer->stop();
     // qDebug() << "select product to idle";
+    this->raise();
     p_page_idle->showFullScreen();
     this->hide();
 }

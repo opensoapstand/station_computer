@@ -79,6 +79,7 @@ page_idle::~page_idle()
 
 void page_idle::showEvent(QShowEvent *event)
 {
+    this->lower();
     qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
     QWidget::showEvent(event);
 
@@ -104,6 +105,7 @@ void page_idle::showEvent(QShowEvent *event)
     addCompanyLogoToLabel(ui->logo_label);
 
     addPictureToLabel(ui->drinkfill_logo_label,DRINKFILL_LOGO_VERTICAL_PATH);
+    this->raise();
 }
 
 /*
@@ -113,8 +115,9 @@ void page_idle::showEvent(QShowEvent *event)
 void page_idle::on_toSelectProductPageButton_clicked()
 {
     qDebug() << "Proceed to next page button clicked. ";
+    this->raise();
     p_pageSelectProduct->showFullScreen();
-    this->lower();
+    //this->lower();
 
     // DO NOT HIDE IDLE PAGE
     // it's staying in the background to counter a hack UBC students found (when changing screens and tapping during the swap, they could get a hold of the machine)

@@ -35,6 +35,27 @@ uint16_t orderSizeButtons_xywh_dynamic_ui_all_sizes_available[4][4] = {
     {852, 990, 135, 100}, // L
     {560, 1100, 430, 115} // custom
 };
+uint16_t orderSizeButtons_xywh_dynamic_ui_small_and_large_available[4][4] = {
+    {564, 1088, 209, 126}, // S
+    {1, 1, 1, 1},          // M
+    {790, 1087, 198, 126}, // L
+    {1, 1, 1, 1}           // custom
+};
+// uint16_t orderSizeButtons_xywh_dynamic_ui_small_large_custom_available[4][4] = {
+//     {564, 1088, 209, 126}, // S
+//     {1, 1, 1, 1},          // M
+//     {790, 1087, 198, 126}, // L
+//     {560, 1100, 430, 115} // custom
+// };
+
+uint16_t orderSizeButtons_xywh_static_product_page[4][4] = {
+    {564, 1088, 209, 126},
+    {1, 1, 1, 1},
+    {790, 1087, 198, 126},
+    {1, 1, 1, 1}};
+
+
+
 
 uint16_t orderSizeVolumeLabels_xy_dynamic_ui_all_sizes_available[4][2] = {
     {560, 1000}, // S vol
@@ -49,6 +70,7 @@ uint16_t orderSizePriceLabels_xy_dynamic_ui_all_sizes_available[8][2] = {
     {560, 1160} // custom price
 };
 
+
 uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_and_large_available[8][2] = {
     {605, 1110}, // S vol
     {1, 1}, // M vol
@@ -62,18 +84,7 @@ uint16_t orderSizePriceLabels_xy_dynamic_ui_small_and_large_available[8][2] = {
     {1, 1} // custom price
 };
 
-uint16_t orderSizeButtons_xywh_dynamic_ui_small_and_large_available[4][4] = {
-    {564, 1088, 209, 126}, // S
-    {1, 1, 1, 1},          // M
-    {790, 1087, 198, 126}, // L
-    {1, 1, 1, 1}           // custom
-};
 
-uint16_t orderSizeButtons_xywh_static_product_page[4][4] = {
-    {564, 1088, 209, 126},
-    {1, 1, 1, 1},
-    {790, 1087, 198, 126},
-    {1, 1, 1, 1}};
 // uint16_t orderSizeButtons_xywh_static_product_page[4][4] = {{560, 1155, 211, 41}, {1, 1, 1, 1}, {790, 1155, 201, 41}, {1, 1, 1, 1}};
 
 // CTOR
@@ -282,7 +293,7 @@ void pageProduct::reset_and_show_page_elements()
 #ifdef ENABLE_DYNAMIC_UI
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_PRODUCT_BACKGROUND_PATH);
 
-    ui->label_product_photo->setStyleSheet("QLabel{border: 1px solid #5E8680; border-radius:5px;}");
+    ui->label_product_photo->setStyleSheet("QLabel{border: 1px solid #5E8680;}");
     p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->currentProductOrder->getSelectedProductPicturePath());
 
     ui->label_product_title->setText(selectedProductOrder->getLoadedProductName());

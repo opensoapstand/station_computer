@@ -38,7 +38,7 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
     selectProductPhotoLabels[1] = ui->product_2_photo_label;
     selectProductPhotoLabels[2] = ui->product_3_photo_label;
     selectProductPhotoLabels[3] = ui->product_4_photo_label;
-    
+
     selectProductOverlayLabels[0] = ui->product_1_overlay_label;
     selectProductOverlayLabels[1] = ui->product_2_overlay_label;
     selectProductOverlayLabels[2] = ui->product_3_overlay_label;
@@ -83,8 +83,8 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
     font.setPointSize(20);
     font.setBold(true);
     font.setWeight(75);
-    //ui->mainPage_Button->setFont(font);
-    //ui->mainPage_Button->setText("<- HOME");
+    // ui->mainPage_Button->setFont(font);
+    // ui->mainPage_Button->setText("<- HOME");
 
     productPageEndTimer = new QTimer(this);
     productPageEndTimer->setInterval(1000);
@@ -153,7 +153,6 @@ void page_select_product::showEvent(QShowEvent *event)
     // }
     // db.closeDB();
     this->raise();
-   
 }
 void page_select_product::resizeEvent(QResizeEvent *event)
 {
@@ -164,14 +163,9 @@ void page_select_product::resizeEvent(QResizeEvent *event)
 
 void page_select_product::displayProducts()
 {
-    for (uint8_t i = 0; i < SLOT_COUNT; i++)
-    {
-        selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-        selectProductButtons[i]->raise();
-    }
 #ifdef ENABLE_DYNAMIC_UI
     QString product_type_icons[5] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH};
-    
+
     bool product_slot_enabled;
     bool product_sold_out;
     QString product_type;
@@ -190,7 +184,7 @@ void page_select_product::displayProducts()
         product_type = db.getProductType(i + 1);
         product_slot_enabled = db.getSlotEnabled(i + 1);
         product_sold_out = !(db.remainingVolumeIsBiggerThanLargestFixedSize(i + 1));
-        product_status_text  = db.getStatusText(i + 1);
+        product_status_text = db.getStatusText(i + 1);
         db.closeDB();
 
         product_name = p_page_idle->currentProductOrder->getProductName(i + 1);
@@ -234,27 +228,30 @@ void page_select_product::displayProducts()
         p_page_idle->addPictureToLabel(selectProductIconLabels[i], icon_path);
         selectProductIconLabels[i]->setText(""); // icon should not display text.
 
+        selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
         selectProductOverlayLabels[i]->raise();
         selectProductPhotoLabelsText[i]->raise();
-            selectProductOverlayLabels[i]->setText("");
+        selectProductButtons[i]->raise();
 
-        // overlay product status 
+        selectProductOverlayLabels[i]->setText("");
+
+        // overlay product status
         if (!product_slot_enabled)
         {
             selectProductPhotoLabelsText[i]->setText(product_status_text);
-            selectProductOverlayLabels[i]->setStyleSheet("text-transform: uppercase;background-color: rgba(255,255,255,170);");
+            selectProductOverlayLabels[i]->setStyleSheet("background-color: rgba(255,255,255,170);");
             selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
         }
         else if (product_sold_out)
         {
             selectProductPhotoLabelsText[i]->setText("Sold out");
-            // selectProductOverlayLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
+            selectProductOverlayLabels[i]->setStyleSheet("background-color: transparent;");
             selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
         }
         else
         {
             selectProductPhotoLabelsText[i]->setText("");
-            // selectProductOverlayLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,0);}");
+            selectProductOverlayLabels[i]->setStyleSheet("background-color: transparent;");
             selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,0);}");
             selectProductButtons[i]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
         }
@@ -265,6 +262,8 @@ void page_select_product::displayProducts()
 #else
     for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
+        selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+        selectProductButtons[i]->raise();
         selectProductPhotoLabels[i]->hide();
         selectProductNameLabels[i]->hide();
         selectProductIconLabels[i]->hide();

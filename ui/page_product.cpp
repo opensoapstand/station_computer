@@ -45,7 +45,7 @@ uint16_t orderSizeButtons_xywh_dynamic_ui_small_large_custom_available[4][4] = {
     {564, 990, 209, 100}, // S
     {1, 1, 1, 1},          // M
     {790, 990, 198, 100}, // L
-    {560, 1100, 430, 115} // custom
+    {564, 1100, 424, 113} // custom
 };
 
 uint16_t orderSizeButtons_xywh_static_product_page[4][4] = {

@@ -176,7 +176,7 @@ void page_select_product::displayProducts()
     {
 
         // display product picture
-        selectProductPhotoLabels[i]->setStyleSheet("QLabel{border: 1px solid black;}");
+        selectProductPhotoLabels[i]->setStyleSheet("border: 1px solid black;");
         p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(i + 1));
 
         qDebug() << "db product details:";
@@ -241,19 +241,19 @@ void page_select_product::displayProducts()
         {
             selectProductPhotoLabelsText[i]->setText(product_status_text);
             selectProductOverlayLabels[i]->setStyleSheet("background-color: rgba(255,255,255,170);");
-            selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
+            // selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
         }
         else if (product_sold_out)
         {
             selectProductPhotoLabelsText[i]->setText("Sold out");
             selectProductOverlayLabels[i]->setStyleSheet("background-color: transparent;");
-            selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
+            // selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
         }
         else
         {
             selectProductPhotoLabelsText[i]->setText("");
             selectProductOverlayLabels[i]->setStyleSheet("background-color: transparent;");
-            selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,0);}");
+            // selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,0);}");
             selectProductButtons[i]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
         }
 

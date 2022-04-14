@@ -45,6 +45,7 @@ public:
 
     QPushButton* selectProductButtons[4];
     QLabel* selectProductPhotoLabels[4];
+    QLabel* selectProductOverlayLabels[4];
     QLabel* selectProductNameLabels[4];
     QLabel* selectProductIconLabels[4];
     QLabel* selectProductTypeLabels[4];

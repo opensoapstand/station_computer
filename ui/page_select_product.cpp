@@ -38,6 +38,11 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
     selectProductPhotoLabels[1] = ui->product_2_photo_label;
     selectProductPhotoLabels[2] = ui->product_3_photo_label;
     selectProductPhotoLabels[3] = ui->product_4_photo_label;
+    
+    selectProductOverlayLabels[0] = ui->product_1_overlay_label;
+    selectProductOverlayLabels[1] = ui->product_2_overlay_label;
+    selectProductOverlayLabels[2] = ui->product_3_overlay_label;
+    selectProductOverlayLabels[3] = ui->product_4_overlay_label;
 
     selectProductPhotoLabelsText[0] = ui->product_1_photo_label_text;
     selectProductPhotoLabelsText[1] = ui->product_2_photo_label_text;
@@ -124,29 +129,29 @@ void page_select_product::showEvent(QShowEvent *event)
     productPageEndTimer->start(1000);
     _productPageTimeoutSec = 15;
 
-    qDebug() << "db check if product is enabled";
-    DbManager db(DB_PATH);
-    for (uint8_t i = 0; i < SLOT_COUNT; i++)
-    {
-        QString path = SOLD_OUT_IMAGE_PATH;
-        if (!db.getSlotEnabled(i + 1))
-        {
-            selectProductPhotoLabelsText[i]->setText(db.getStatusText(i + 1));
-            selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
-        }
-        else if (!db.remainingVolumeIsBiggerThanLargestFixedSize(i + 1))
-        {
-            selectProductPhotoLabelsText[i]->setText("Sold out");
-            selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
-        }
-        else
-        {
-            selectProductPhotoLabelsText[i]->setText("");
-            selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,0);}");
-            selectProductButtons[i]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
-        }
-    }
-    db.closeDB();
+    // qDebug() << "db check if product is enabled";
+    // DbManager db(DB_PATH);
+    // for (uint8_t i = 0; i < SLOT_COUNT; i++)
+    // {
+    //     QString path = SOLD_OUT_IMAGE_PATH;
+    //     if (!db.getSlotEnabled(i + 1))
+    //     {
+    //         selectProductPhotoLabelsText[i]->setText(db.getStatusText(i + 1));
+    //         selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
+    //     }
+    //     else if (!db.remainingVolumeIsBiggerThanLargestFixedSize(i + 1))
+    //     {
+    //         selectProductPhotoLabelsText[i]->setText("Sold out");
+    //         selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
+    //     }
+    //     else
+    //     {
+    //         selectProductPhotoLabelsText[i]->setText("");
+    //         selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,0);}");
+    //         selectProductButtons[i]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
+    //     }
+    // }
+    // db.closeDB();
     this->raise();
    
 }
@@ -166,22 +171,34 @@ void page_select_product::displayProducts()
     }
 #ifdef ENABLE_DYNAMIC_UI
     QString product_type_icons[5] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH};
+    
+    bool product_slot_enabled;
+    bool product_sold_out;
+    QString product_type;
+    QString product_name;
+    QString product_status_text;
+
     for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
 
+        // display product picture
         selectProductPhotoLabels[i]->setStyleSheet("QLabel{border: 1px solid black;}");
         p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(i + 1));
 
         qDebug() << "db product details:";
         DbManager db(DB_PATH);
-        QString product_type = db.getProductType(i + 1);
+        product_type = db.getProductType(i + 1);
+        product_slot_enabled = db.getSlotEnabled(i + 1);
+        product_sold_out = !(db.remainingVolumeIsBiggerThanLargestFixedSize(i + 1));
+        product_status_text  = db.getStatusText(i + 1);
         db.closeDB();
 
-        QString name = p_page_idle->currentProductOrder->getProductName(i + 1);
+        product_name = p_page_idle->currentProductOrder->getProductName(i + 1);
 
-        selectProductNameLabels[i]->setText(name);
+        selectProductNameLabels[i]->setText(product_name);
         selectProductNameLabels[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
 
+        // display product type icon  picture
         QString icon_path = "not found";
         QString type_text;
         if (product_type == "Dish")
@@ -214,24 +231,36 @@ void page_select_product::displayProducts()
             icon_path = "Product/type/for/icon/not/found.aiaiai";
             type_text = "UNAVAILABLE";
         }
-        // switch (product_type){
-        //     case (QString("dish")):{
-        //         icon_path = ICON_TYPE_DISH_PATH;
-        //         break;
-        //     }
-        //     default:
-        //     {
-        //         icon_path = ICON_TYPE_DISH_PATH;
-        //         break;
-        //     }
-        // }
-
         p_page_idle->addPictureToLabel(selectProductIconLabels[i], icon_path);
+        selectProductIconLabels[i]->setText(""); // icon should not display text.
+
+        selectProductOverlayLabels[i]->raise();
+        selectProductPhotoLabelsText[i]->raise();
+            selectProductOverlayLabels[i]->setText("");
+
+        // overlay product status 
+        if (!product_slot_enabled)
+        {
+            selectProductPhotoLabelsText[i]->setText(product_status_text);
+            selectProductOverlayLabels[i]->setStyleSheet("text-transform: uppercase;background-color: rgba(255,255,255,170);");
+            selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
+        }
+        else if (product_sold_out)
+        {
+            selectProductPhotoLabelsText[i]->setText("Sold out");
+            // selectProductOverlayLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
+            selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
+        }
+        else
+        {
+            selectProductPhotoLabelsText[i]->setText("");
+            // selectProductOverlayLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,0);}");
+            selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,0);}");
+            selectProductButtons[i]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
+        }
 
         selectProductTypeLabels[i]->setText(type_text);
         selectProductTypeLabels[i]->setStyleSheet("QLabel{font-family: 'Brevia';font-style: normal;font-weight: 700;font-size: 30px;line-height: 41px;qproperty-alignment: AlignCenter;text-transform: uppercase;color: #5E8580;}");
-
-        selectProductIconLabels[i]->setText(""); // icon should not display text.
     }
 #else
     for (uint8_t i = 0; i < SLOT_COUNT; i++)

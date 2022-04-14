@@ -600,6 +600,58 @@
     <bool>true</bool>
    </property>
   </widget>
+  <widget class="QLabel" name="product_1_overlay_label">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>290</y>
+     <width>491</width>
+     <height>661</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="product_2_overlay_label">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>290</y>
+     <width>491</width>
+     <height>661</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="product_4_overlay_label">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>990</y>
+     <width>491</width>
+     <height>661</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="product_3_overlay_label">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>990</y>
+     <width>491</width>
+     <height>661</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>selection2_Button</zorder>
   <zorder>product_2_photo_label</zorder>
   <zorder>product_2_photo_label_text</zorder>
@@ -628,6 +680,10 @@
   <zorder>product_photo_label_text_2</zorder>
   <zorder>product_4_photo_label_text</zorder>
   <zorder>product_3_photo_label_text</zorder>
+  <zorder>product_1_overlay_label</zorder>
+  <zorder>product_2_overlay_label</zorder>
+  <zorder>product_4_overlay_label</zorder>
+  <zorder>product_3_overlay_label</zorder>
  </widget>
  <resources/>
  <connections/>

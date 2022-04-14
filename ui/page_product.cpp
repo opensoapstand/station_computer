@@ -282,7 +282,7 @@ void pageProduct::reset_and_show_page_elements()
 #ifdef ENABLE_DYNAMIC_UI
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_PRODUCT_BACKGROUND_PATH);
 
-    ui->label_product_photo->setStyleSheet("QLabel{border: 1px solid black;}");
+    ui->label_product_photo->setStyleSheet("QLabel{border: 1px solid #5E8680; border-radius:5px;}");
     p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->currentProductOrder->getSelectedProductPicturePath());
 
     ui->label_product_title->setText(selectedProductOrder->getLoadedProductName());

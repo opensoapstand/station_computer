@@ -74,9 +74,9 @@ line-height: 29px;</string>
   <widget class="QLabel" name="label_invoice_price">
    <property name="geometry">
     <rect>
-     <x>810</x>
+     <x>770</x>
      <y>1370</y>
-     <width>111</width>
+     <width>141</width>
      <height>29</height>
     </rect>
    </property>
@@ -101,8 +101,8 @@ color: #58595B;</string>
    <property name="geometry">
     <rect>
      <x>730</x>
-     <y>1450</y>
-     <width>201</width>
+     <y>1470</y>
+     <width>181</width>
      <height>41</height>
     </rect>
    </property>

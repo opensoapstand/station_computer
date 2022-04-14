@@ -97,15 +97,15 @@ void page_maintenance::showEvent(QShowEvent *event)
     // page_maintenanceEndTimer->start(1000);
     _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
 
-    qDebug() << "db for product name";
+    qDebug() << "db for names and id";
     DbManager db(DB_PATH);
     ui->product1_label->setText(db.getProductName(1));
     ui->product2_label->setText(db.getProductName(2));
     ui->product3_label->setText(db.getProductName(3));
     ui->product4_label->setText(db.getProductName(4));
-    db.closeDB();
     ui->machineLabel->setText("Machine ID: " + db.getMachineID());
-
+    db.closeDB();
+    
     QProcess process;
 
     process.start("iwgetid -r");

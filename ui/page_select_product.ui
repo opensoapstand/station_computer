@@ -603,10 +603,10 @@
   <widget class="QLabel" name="product_1_overlay_label">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>290</y>
-     <width>491</width>
-     <height>661</height>
+     <x>53</x>
+     <y>334</y>
+     <width>450</width>
+     <height>450</height>
     </rect>
    </property>
    <property name="text">
@@ -616,10 +616,10 @@
   <widget class="QLabel" name="product_2_overlay_label">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>290</y>
-     <width>491</width>
-     <height>661</height>
+     <x>562</x>
+     <y>334</y>
+     <width>450</width>
+     <height>450</height>
     </rect>
    </property>
    <property name="text">
@@ -629,10 +629,10 @@
   <widget class="QLabel" name="product_4_overlay_label">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>990</y>
-     <width>491</width>
-     <height>661</height>
+     <x>562</x>
+     <y>1032</y>
+     <width>450</width>
+     <height>450</height>
     </rect>
    </property>
    <property name="text">
@@ -642,10 +642,10 @@
   <widget class="QLabel" name="product_3_overlay_label">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>990</y>
-     <width>491</width>
-     <height>661</height>
+     <x>53</x>
+     <y>1032</y>
+     <width>450</width>
+     <height>450</height>
     </rect>
    </property>
    <property name="text">

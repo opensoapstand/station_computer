@@ -230,6 +230,7 @@ void page_select_product::displayProducts()
 
         selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
         selectProductOverlayLabels[i]->raise();
+        selectProductIconLabels[i]->raise();
         selectProductPhotoLabelsText[i]->raise();
         selectProductButtons[i]->raise();
 

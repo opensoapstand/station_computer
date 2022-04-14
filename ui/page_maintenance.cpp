@@ -34,6 +34,11 @@ page_maintenance::page_maintenance(QWidget *parent) : QWidget(parent),
     product_buttons[1] = ui->product2_button;
     product_buttons[2] = ui->product3_button;
     product_buttons[3] = ui->product4_button;
+
+    product_overlay_labels[0] = ui->product1_overlay_label;
+    product_overlay_labels[1] = ui->product2_overlay_label;
+    product_overlay_labels[2] = ui->product3_overlay_label;
+    product_overlay_labels[3] = ui->product4_overlay_label;
 }
 
 // DTOR
@@ -58,6 +63,7 @@ void page_maintenance::showEvent(QShowEvent *event)
         QIcon qi(im);
         product_buttons[i]->setIcon(qi);
         product_buttons[i]->setIconSize(QSize(241, 381));
+        product_overlay_labels[i]->hide();
     }
 
 #else

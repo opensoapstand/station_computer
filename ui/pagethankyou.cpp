@@ -243,7 +243,6 @@ void pagethankyou::exitPage()
         {
             qDebug() << "ERROR?!:Forced exit. controller ok?: " << is_controller_finished << " is payment finished?:" << is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER;
         }
-        // ui->thank_you_message_label->setText("Finishing<br>transaction");
     }
     else
     {
@@ -251,6 +250,7 @@ void pagethankyou::exitPage()
         // ui->extra_message_label->setText("<p align=center><br>Waiting for end<br>of transaction...</p>");
         // ui->extra_message_label->show();
         ui->thank_you_message_label->setText("Finishing<br>transaction");
+        ui->thank_you_subtitle_message_label->hide();
 
         thankYouEndTimer->start(1000);
         _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;

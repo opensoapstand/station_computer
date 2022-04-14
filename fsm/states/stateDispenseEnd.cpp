@@ -193,9 +193,9 @@ DF_ERROR stateDispenseEnd::handleTransaction()
     // TODO: Change this to just check if the system is Soapstand or Drinkfill instead of payment system!
     if (paymentMethod == "qr")
     {
-         debugOutput::sendMessage("QR payment. No payment action in controller", MSG_INFO);
-
-    }else if (paymentMethod == "tap")
+        debugOutput::sendMessage("QR payment. No payment action in controller", MSG_INFO);
+    }
+    else if (paymentMethod == "tap")
     {
         // sleep(5);
 
@@ -206,27 +206,24 @@ DF_ERROR stateDispenseEnd::handleTransaction()
         // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
         // debugOutput::sendMessage("Pin -> " + to_string(productDispensers[pos].getI2CPin(PRODUCT)), MSG_INFO);
     }
-    else if (paymentMethod == "barcode" || paymentMethod == "plu")
+    else if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2" || paymentMethod == "plu")
     {
         debugOutput::sendMessage("Printing receipt:", MSG_INFO);
         print_receipt();
-
     }
     else
     {
         debugOutput::sendMessage("WARNING: No payment method detected.", MSG_INFO);
-
     }
 
 #ifdef ENABLE_TRANSACTION_TO_CLOUD
 
-        debugOutput::sendMessage("Send transaction to cloud", MSG_INFO);
-        sendTransactionToCloud();
+    debugOutput::sendMessage("Send transaction to cloud", MSG_INFO);
+    sendTransactionToCloud();
 #else
 
-        debugOutput::sendMessage("NOT SENDING transaction to cloud.", MSG_INFO);
+    debugOutput::sendMessage("NOT SENDING transaction to cloud.", MSG_INFO);
 #endif
-
 
     return e_ret;
 }
@@ -624,6 +621,9 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool test_transaction)
 // This function prints the receipts by calling a system function (could be done better)
 DF_ERROR stateDispenseEnd::print_receipt()
 {
+
+    std::string paymentMethod = productDispensers[pos].getProduct()->getPaymentMethod();
+
     // printerr.connectToPrinter();
     char chars_cost[MAX_BUF];
     char chars_volume_formatted[MAX_BUF];
@@ -653,36 +653,53 @@ DF_ERROR stateDispenseEnd::print_receipt()
     }
     else if (m_pMessaging->getRequestedSize() == 'c')
     {
+
         price_per_ml = productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize());
         volume_dispensed = productDispensers[pos].getVolumeDispensed();
         price = price_per_ml * volume_dispensed;
-        //@Andi, how do we go higher than 9.99?
 
-        // price = ceil(price * 100);
-        // price=price/100;
-
-        // string.Format("{0:f3}", price);
-        // std::string test =std::format("{4:f3}", price);
-        if (plu.size() != 8)
+        if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13")
         {
-            // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
-            debugOutput::sendMessage("ERROR custom plu length must be of length eight. (standard drinkfill preamble(627987) + 2digit product code) : " + plu, MSG_INFO);
-            string fake_plu = "66666666";
-            plu = fake_plu;
+            if (plu.size() != 8)
+            {
+                // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
+                debugOutput::sendMessage("ERROR custom plu length must be of length eight. (standard drinkfill preamble(627987) + 2digit product code) : " + plu, MSG_INFO);
+                string fake_plu = "66666666";
+                plu = fake_plu;
+            }
+
+            snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%5.2f", price);
+        }
+        else if (paymentMethod == "barcode_EAN-2")
+        {
+            if (plu.size() != 7)
+            {
+                // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
+                debugOutput::sendMessage("ERROR custom plu length must be of length seven. provided: " + plu, MSG_INFO);
+                string fake_plu = "6666666";
+                plu = fake_plu;
+            }
+
+            snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%6.2f", price);
         }
 
-        snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%5.2f", price);
         string plu_dynamic_price = (chars_plu_dynamic_formatted);
         string plu_dynamic_formatted = plu + plu_dynamic_price;
-
         // 3.14 --> " 3.14" --> " 314" --> "0314"
         std::string toReplace(".");
         size_t pos = plu_dynamic_formatted.find(toReplace);
-        plu_dynamic_formatted.replace(pos, toReplace.length(), "");
+        if (pos != -1)
+        {
+
+            plu_dynamic_formatted.replace(pos, toReplace.length(), "");
+        }
 
         std::string toReplace2(" ");
         pos = plu_dynamic_formatted.find(toReplace2);
-        plu_dynamic_formatted.replace(pos, toReplace2.length(), "0");
+        while (pos != -1){
+            plu_dynamic_formatted.replace(pos, toReplace2.length(), "0");
+            pos = plu_dynamic_formatted.find(toReplace2);
+        }
 
         plu = plu_dynamic_formatted;
     }
@@ -696,7 +713,6 @@ DF_ERROR stateDispenseEnd::print_receipt()
     {
         debugOutput::sendMessage("invalid size provided" + m_pMessaging->getRequestedSize(), MSG_INFO);
     }
-
     // convert units
     if (units == "oz")
     {
@@ -767,9 +783,7 @@ DF_ERROR stateDispenseEnd::print_receipt()
 
     print_text(name_receipt + "\nPrice: $" + receipt_cost + " \nQuantity: " + receipt_volume_formatted + "\nTime: " + now);
 
-    std::string paymentMethod = productDispensers[pos].getProduct()->getPaymentMethod();
-
-    if (paymentMethod == "barcode")
+    if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2")
     {
 
         if (plu.size() != 13 && plu.size() != 12)
@@ -787,6 +801,7 @@ DF_ERROR stateDispenseEnd::print_receipt()
             printerr->disconnectPrinter();
         }
     }
+
     else if (paymentMethod == "plu")
     {
         print_text("PLU: " + plu);

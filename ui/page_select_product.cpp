@@ -142,7 +142,7 @@ void page_select_product::showEvent(QShowEvent *event)
         {
             selectProductPhotoLabelsText[i]->setText("");
             selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,0);}");
-            selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+            selectProductButtons[i]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
         }
     }
     db.closeDB();
@@ -167,8 +167,8 @@ void page_select_product::displayProducts()
     for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
 
-        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(i + 1));
         selectProductPhotoLabels[i]->setStyleSheet("QLabel{border: 1px solid black;}");
+        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(i + 1));
 
         qDebug() << "db product details:";
         DbManager db(DB_PATH);

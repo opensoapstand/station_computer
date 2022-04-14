@@ -283,11 +283,12 @@ void pageProduct::reset_and_show_page_elements()
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_PRODUCT_BACKGROUND_PATH);
 
     ui->label_product_photo->setStyleSheet("QLabel{border: 1px solid black;}");
+    p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->currentProductOrder->getSelectedProductPicturePath());
+
     ui->label_product_title->setText(selectedProductOrder->getLoadedProductName());
     ui->label_product_ingredients->setText(selectedProductOrder->getLoadedProductIngredients());
     ui->label_product_description->setText(selectedProductOrder->getLoadedProductDescription());
 
-    p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->currentProductOrder->getSelectedProductPicturePath());
 
     // bitmap_location = PAGE_PRODUCT_BACKGROUND_PATH;
     // uint16_t orderSizeButtons_xywh[4][4] = {

@@ -67,6 +67,8 @@ DF_ERROR stateDispenseInit::onAction()
 
     DF_ERROR e_ret = OK;
 
+    this->productDispensers[dispenser_index].loadEmptyContainerDetectionEnabledFromDb();
+
     debugOutput::sendMessage("Chosen dispenser slot: " +
                                  std::to_string(productDispensers[dispenser_index].getSlot()) +
                                  " target volume: " +

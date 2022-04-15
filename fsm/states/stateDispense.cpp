@@ -111,7 +111,12 @@ DF_ERROR stateDispense::onAction()
 
    Dispense_behaviour status = productDispensers[pos].getDispenseStatus();
 
-#ifdef ENABLE_EMPTY_CONTAINER_DETECTION
+// #ifdef ENABLE_EMPTY_CONTAINER_DETECTION
+
+if (productDispensers[pos].getEmptyContainerDetectionEnabled()){
+
+
+
    if (status == FLOW_STATE_CONTAINER_EMPTY)
    {
 
@@ -127,9 +132,10 @@ DF_ERROR stateDispense::onAction()
    {
       debugOutput::sendMessage("------ status: " + to_string(status), MSG_INFO);
    };
-#else
-   debugOutput::sendMessage("------ status: " + to_string(status), MSG_INFO);
-#endif
+}
+// #else
+//    debugOutput::sendMessage("------ status: " + to_string(status), MSG_INFO);
+// #endif
 
    usleep(500000);
 

@@ -432,9 +432,7 @@ std::string stateDispenseEnd::getUnits(int slot)
 std::string stateDispenseEnd::getUnitsFromDb(int slot)
 {
     rc = sqlite3_open(DB_PATH, &db);
-
     sqlite3_stmt *stmt;
-
     debugOutput::sendMessage("Units getter START", MSG_INFO);
 
     if (rc)
@@ -457,10 +455,9 @@ std::string stateDispenseEnd::getUnitsFromDb(int slot)
     sqlite3_prepare(db, sql_string_units.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
     std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
-    ;
+    
     sqlite3_finalize(stmt);
     sqlite3_close(db);
-    //     cout << str << endl;
     return str;
 }
 
@@ -696,7 +693,8 @@ DF_ERROR stateDispenseEnd::print_receipt()
 
         std::string toReplace2(" ");
         pos = plu_dynamic_formatted.find(toReplace2);
-        while (pos != -1){
+        while (pos != -1)
+        {
             plu_dynamic_formatted.replace(pos, toReplace2.length(), "0");
             pos = plu_dynamic_formatted.find(toReplace2);
         }

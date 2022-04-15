@@ -156,7 +156,7 @@ QString DbManager::getProductDrinkfillSerial(int slot)
     return val;
 }
 
-void DbManager::getProductProperties(int slot, QString*name, QString *description, QString *features,  QString *ingredients, bool* isSizeEnabled)
+void DbManager::getProductProperties(int slot, QString *name, QString *description, QString *features, QString *ingredients, bool *isSizeEnabled)
 // void DbManager::getProductProperties(int slot, QString*name, QString *description, QString *features,  QString *ingredients, bool* isEnabledSmall,bool* isEnabledMedium,bool* isEnabledLarge,bool* isEnabledCustom)
 {
     QSqlQuery qry;
@@ -713,7 +713,6 @@ QString DbManager::getStatusText(int slot)
     QSqlQuery qry;
     QString val;
 
-
     QString qry_qstr = QString("SELECT status_text_slot_%1 FROM machine").arg(slot);
 
     // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
@@ -739,6 +738,43 @@ QString DbManager::getStatusText(int slot)
     return val;
 }
 
+bool DbManager::getEmptyContainerDetectionEnabled()
+{
+    QSqlQuery qry;
+    bool is_enabled;
+    {
+        qry.prepare("SELECT is_enabled_empty_container_detection FROM machine");
+        qry.exec();
+
+        while (qry.next())
+        {
+            is_enabled = (qry.value(0).toInt() == 1);
+        }
+    }
+    return is_enabled;
+}
+
+bool DbManager::setEmptyContainerDetectionEnabled(int isEnabled)
+{
+    QSqlQuery qry;
+    bool enabled;
+
+    QString qry_qstr = QString("UPDATE machine SET is_enabled_empty_container_detection=%1").arg(QString::number(isEnabled));
+    string qry_string = qry_qstr.toUtf8().constData(); // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
+    qry.prepare(qry_string.c_str());
+    qry.exec();
+
+    if (qry.exec())
+    {
+        return true;
+    }
+    else
+    {
+        qDebug() << "Failed to set empty container enabled." << qry_qstr;
+        return false;
+    }
+}
+
 bool DbManager::getCouponsEnabled()
 {
     QSqlQuery qry;
@@ -755,8 +791,8 @@ bool DbManager::getCouponsEnabled()
     return is_enabled;
 }
 
-
-QString DbManager::getTemplateName(){
+QString DbManager::getTemplateName()
+{
     QSqlQuery qry;
     QString val;
     {
@@ -790,10 +826,10 @@ QString DbManager::getCustomerId()
 bool DbManager::updateSlotAvailability(int slot, int isEnabled, QString status_text)
 {
     QSqlQuery qry;
-    bool enabled;   
+    bool enabled;
 
     // QString qry_qstr = QString("UPDATE machine SET is_enabled_slot_%1=0").arg(QString::number(slot), QString::number(isEnabled));
-    QString qry_qstr = QString("UPDATE machine SET status_text_slot_%1='").arg(QString::number(slot)) +status_text +  QString("',is_enabled_slot_%1=").arg(QString::number(slot)) + QString::number(isEnabled);
+    QString qry_qstr = QString("UPDATE machine SET status_text_slot_%1='").arg(QString::number(slot)) + status_text + QString("',is_enabled_slot_%1=").arg(QString::number(slot)) + QString::number(isEnabled);
     qDebug() << qry_qstr << endl;
     string qry_string = qry_qstr.toUtf8().constData(); // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
     qry.prepare(qry_string.c_str());

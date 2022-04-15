@@ -344,13 +344,15 @@ void dispenser::dispenseButtonTimingUpdate()
     }
     dispense_button_time_at_last_check_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     debugOutput::sendMessage("Button press millis. Total:" + to_string(dispense_button_total_pressed_millis) + " Current press:" + to_string(dispense_button_current_press_millis), MSG_INFO);
-    //return dispense_button_total_pressed_millis;
+    // return dispense_button_total_pressed_millis;
 }
 
-uint64_t dispenser::getButtonPressedTotalMillis(){
+uint64_t dispenser::getButtonPressedTotalMillis()
+{
     return dispense_button_total_pressed_millis;
 }
-uint64_t dispenser::getButtonPressedCurrentPressMillis(){
+uint64_t dispenser::getButtonPressedCurrentPressMillis()
+{
     return dispense_button_current_press_millis;
 }
 
@@ -419,6 +421,33 @@ DF_ERROR dispenser::startDispense()
 unsigned short dispenser::getPumpSpeed()
 {
     the_8344->getPumpSpeed();
+}
+
+void dispenser::loadEmptyContainerDetectionEnabledFromDb()
+{
+
+#ifdef USE_OLD_DATABASE
+    m_isEmptyContainerDetectionEnabled = false;
+#else
+
+    rc = sqlite3_open(DB_PATH, &db);
+    sqlite3_stmt *stmt;
+    string sql_string = "SELECT is_enabled_empty_container_detection FROM machine";
+    /* Create SQL statement for transactions */
+    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+    sqlite3_step(stmt);
+    std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+    int val = stod(str);
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    //     cout << "INSIDE getPWM() and PWM is = " << str << endl;
+    m_isEmptyContainerDetectionEnabled = val;
+#endif
+}
+
+bool dispenser::getEmptyContainerDetectionEnabled()
+{
+    return m_isEmptyContainerDetectionEnabled;
 }
 
 double dispenser::getVolumeDeltaAndReset()
@@ -601,7 +630,7 @@ Dispense_behaviour dispenser::getDispenseStatus()
 
     Time_val avg = getAveragedFlowRate(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS);
 
-   uint64_t relative_dispense_time = avg.time_millis - dispense_start_timestamp_epoch;
+    uint64_t relative_dispense_time = avg.time_millis - dispense_start_timestamp_epoch;
     // debugOutput::sendMessage("Dispense flowRate 1s avg [V/s]: " + to_string(avg.value) + ". avg time millis: " + to_string(relative_dispense_time) + "dispense time: " + to_string(dispense_time_millis), MSG_INFO);
 
     debugOutput::sendMessage("Dispense flowRate " + to_string(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) + "ms avg [V/s]: " + to_string(avg.value) + ". Time dispensing: " + to_string(relative_dispense_time) + "Dispense state time: " + to_string(dispense_time_millis), MSG_INFO);
@@ -614,9 +643,9 @@ Dispense_behaviour dispenser::getDispenseStatus()
 
     // CAUTION: we are not using motor speed feedback. Button press assumes motor running.
 
-    // 
-    // if (relative_dispense_time < EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS 
-    //     ||  getButtonPressedCurrentPressMillis() < 3*EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS 
+    //
+    // if (relative_dispense_time < EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS
+    //     ||  getButtonPressedCurrentPressMillis() < 3*EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS
     //     )
     // {
 
@@ -638,7 +667,7 @@ Dispense_behaviour dispenser::getDispenseStatus()
         if (previous_dispense_state == FLOW_STATE_DISPENSING)
         {
             // once it was dispensing, empty dispenser is detected immediatly if no product flows.
-            // but, if the button was release and repressed, the average will not be correct --> take into account. at top level (FLOW_STATE_UNAVAILABLE) 
+            // but, if the button was release and repressed, the average will not be correct --> take into account. at top level (FLOW_STATE_UNAVAILABLE)
         }
         else
         {

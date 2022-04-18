@@ -425,23 +425,25 @@ unsigned short dispenser::getPumpSpeed()
 
 void dispenser::loadEmptyContainerDetectionEnabledFromDb()
 {
+    // val 0 = empty container detection not enabled
+    // val 1 = empty container detection enabled
 
 #ifdef USE_OLD_DATABASE
     m_isEmptyContainerDetectionEnabled = false;
 #else
-
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT has_empty_detection FROM machine";
     /* Create SQL statement for transactions */
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
-    std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
-    int val = stod(str);
+
+    int val = sqlite3_column_int(stmt, 0);
+   
     sqlite3_finalize(stmt);
     sqlite3_close(db);
-    //     cout << "INSIDE getPWM() and PWM is = " << str << endl;
-    m_isEmptyContainerDetectionEnabled = val;
+    m_isEmptyContainerDetectionEnabled = (val != 0);
+    
 #endif
 }
 

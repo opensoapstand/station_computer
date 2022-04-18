@@ -961,6 +961,10 @@ bool product::reloadParametersFromDb()
             {
             }
             break;
+            case DB_PRODUCTS_DESCRIPTION:
+            {
+            }
+            break;
             default:
             {
                 debugOutput::sendMessage("Unexpected column index" + to_string(column_index), MSG_INFO);

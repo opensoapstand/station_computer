@@ -495,21 +495,23 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool test_transaction)
     std::string product = (productDispensers[pos].getProduct()->m_name).c_str();
     std::string target_volume = to_string(productDispensers[pos].getProduct()->getTargetVolume(m_pMessaging->getRequestedSize()));
     std::string start_time = (productDispensers[pos].getDispenseStartTime());
-    std::string dispensed_volume;
+    std::string dispensed_volume_str;
 
     debugOutput::sendMessage("update DB. dispense end: vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()), MSG_INFO);
+    double dispensed_volume = productDispensers[pos].getVolumeDispensed();
 
-    if (productDispensers[pos].getVolumeDispensed() <= productDispensers[pos].getProduct()->getVolumePerTick())
+    if ( dispensed_volume <= productDispensers[pos].getProduct()->getVolumePerTick())
     {
-        dispensed_volume = "0";
+        dispensed_volume_str = "0";
     }
     else
     {
-        dispensed_volume = to_string(productDispensers[pos].getVolumeDispensed());
+        dispensed_volume_str = to_string(dispensed_volume);
     }
-    debugOutput::sendMessage("Dispensed volume to be subtracted: " + dispensed_volume, MSG_INFO);
+    
+    debugOutput::sendMessage("Dispensed volume to be subtracted: " + dispensed_volume_str, MSG_INFO);
 
-    sql1 = ("INSERT INTO transactions VALUES (NULL, '" + product + "', " + target_volume + ", " + price + ", '" + start_time + "', " + dispensed_volume + ", datetime('now', 'localtime'), '" + "0" + "', '" + "0" + "' );");
+    sql1 = ("INSERT INTO transactions VALUES (NULL, '" + product + "', " + target_volume + ", " + price + ", '" + start_time + "', " + dispensed_volume_str + ", datetime('now', 'localtime'), '" + "0" + "', '" + "0" + "' );");
     // cout << sql1 << endl;
 
     char *sql_trans = new char[sql1.length() + 1];
@@ -538,7 +540,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool test_transaction)
 #ifndef USE_OLD_DATABASE
 
     std::string sql21;
-    sql21 = ("UPDATE products SET volume_dispensed_since_restock=volume_dispensed_since_restock+" + dispensed_volume + " WHERE name='" + product + "';");
+    sql21 = ("UPDATE products SET volume_dispensed_since_restock=volume_dispensed_since_restock+" + dispensed_volume_str + " WHERE name='" + product + "';");
 
     char *sql_prod21 = new char[sql21.length() + 1];
     strcpy(sql_prod21, sql21.c_str());
@@ -563,9 +565,9 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool test_transaction)
     std::string sql2;
 
 #ifdef USE_OLD_DATABASE
-    sql2 = ("UPDATE products SET total_dispensed=total_dispensed+" + dispensed_volume + " WHERE name='" + product + "';");
+    sql2 = ("UPDATE products SET total_dispensed=total_dispensed+" + dispensed_volume_str + " WHERE name='" + product + "';");
 #else
-    sql2 = ("UPDATE products SET volume_dispensed_total=volume_dispensed_total+" + dispensed_volume + " WHERE name='" + product + "';");
+    sql2 = ("UPDATE products SET volume_dispensed_total=volume_dispensed_total+" + dispensed_volume_str + " WHERE name='" + product + "';");
 
 #endif
     char *sql_prod = new char[sql2.length() + 1];
@@ -603,7 +605,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool test_transaction)
 
     if (rc != SQLITE_OK)
     {
-        //        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        // fprintf(stderr, "SQL error: %s\n", zErrMsg);
         debugOutput::sendMessage("ERROR: SQL : " + sql3, MSG_INFO);
         sqlite3_free(zErrMsg);
     }

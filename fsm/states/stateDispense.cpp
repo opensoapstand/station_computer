@@ -97,9 +97,62 @@ DF_ERROR stateDispense::onAction()
       return e_ret = OK;
    }
 
+  
+
+   productDispensers[pos].setVolumeDispensedPreviously(productDispensers[pos].getVolumeDispensed());
+
+
+// #ifdef ENABLE_EMPTY_CONTAINER_DETECTION
+
+if (productDispensers[pos].getEmptyContainerDetectionEnabled()){
+
+   Dispense_behaviour status = productDispensers[pos].getDispenseStatus();
+
+   
+   if (status == FLOW_STATE_CONTAINER_EMPTY)
+   {
+
+      m_pMessaging->sendMessage("No flow abort"); // send to UI
+      debugOutput::sendMessage("******************* EMPTY CONTAINER DETECTED **********************", MSG_INFO);
+      m_state_requested = STATE_DISPENSE_END;
+
+      // experimental, convert to custom volume dispensing.
+
+      m_pMessaging->setRequestedSize(SIZE_INVOLUNTARY_END);
+   }
+   else if (status == FLOW_STATE_DISPENSING)
+   {
+         debugOutput::sendMessage("debug. targets s,m,l,c_max:" +
+                                to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_s) +
+                                "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_m) +
+                                "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_l) +
+                                "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_c_max) +
+                                ", Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()),
+                            MSG_INFO);
+   }else if (status == FLOW_STATE_ATTEMTPING_TO_PRIME)
+   {
+         debugOutput::sendMessage("No flow during pumping. Priming? Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()),
+                            MSG_INFO);
+   }else if (status == FLOW_STATE_PUMPING_NOT_DISPENSING)
+   {
+         debugOutput::sendMessage("No flow detected during pumping. Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()),
+                            MSG_INFO);
+   }else if (status == FLOW_STATE_NOT_PUMPING_NOT_DISPENSING)
+   {
+         debugOutput::sendMessage("Wait for button press.           Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()),
+                            MSG_INFO);
+   }else if (status == FLOW_STATE_UNAVAILABLE)
+   {
+         debugOutput::sendMessage("No flow data yet (init).         Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()),
+                            MSG_INFO);
+   }else{
+      debugOutput::sendMessage("Dispense status unknow: " + to_string(status), MSG_INFO);
+   };
+
+}else{
    // TODO: Do a check if Pumps are operational
    // send IPC if pump fails
-   debugOutput::sendMessage("debug. targets s,m,l,c:" +
+   debugOutput::sendMessage("debug. targets s,m,l,c_max:" +
                                 to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_s) +
                                 "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_m) +
                                 "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_l) +
@@ -107,35 +160,7 @@ DF_ERROR stateDispense::onAction()
                                 ", Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()),
                             MSG_INFO);
 
-   productDispensers[pos].setVolumeDispensedPreviously(productDispensers[pos].getVolumeDispensed());
-
-   Dispense_behaviour status = productDispensers[pos].getDispenseStatus();
-
-// #ifdef ENABLE_EMPTY_CONTAINER_DETECTION
-
-if (productDispensers[pos].getEmptyContainerDetectionEnabled()){
-
-
-
-   if (status == FLOW_STATE_CONTAINER_EMPTY)
-   {
-
-      m_pMessaging->sendMessage("No flow abort");
-      debugOutput::sendMessage("*******************CONTAINER EMPTY**********************", MSG_INFO);
-      m_state_requested = STATE_DISPENSE_END;
-
-      // experimental, convert to custom volume dispensing.
-
-      m_pMessaging->setRequestedSize(SIZE_INVOLUNTARY_END);
-   }
-   else
-   {
-      debugOutput::sendMessage("------ status: " + to_string(status), MSG_INFO);
-   };
 }
-// #else
-//    debugOutput::sendMessage("------ status: " + to_string(status), MSG_INFO);
-// #endif
 
    usleep(500000);
 
@@ -143,6 +168,8 @@ if (productDispensers[pos].getEmptyContainerDetectionEnabled()){
 
    return e_ret;
 }
+
+
 
 // Actions on leaving Dispense state
 DF_ERROR stateDispense::onExit()

@@ -160,6 +160,7 @@ typedef struct Time_val Time_val;
 #define DB_PRODUCTS_TYPE 39
 #define DB_PRODUCTS_INGREDIENTS 40
 #define DB_PRODUCTS_FEATURES 41
+#define DB_PRODUCTS_DESCRIPTION 42
 
 #endif
 

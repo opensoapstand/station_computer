@@ -125,7 +125,7 @@ public:
       // bool registerFlowSensorTick();
 
       string getDispenseStartTime();
-      void loadEmptyContainerDetectionExxxxxxxxxxxxxxxxxxxxnabledFromDb();
+      void loadEmptyContainerDetectionEnabledFromDb();
       bool getEmptyContainerDetectionEnabled();
 
       //      double getButtonPressDuration();

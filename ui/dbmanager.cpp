@@ -743,7 +743,7 @@ bool DbManager::getEmptyContainerDetectionEnabled()
     QSqlQuery qry;
     bool is_enabled;
     {
-        qry.prepare("SELECT is_enabled_empty_container_detection FROM machine");
+        qry.prepare("SELECT has_empty_detection FROM machine");
         qry.exec();
 
         while (qry.next())
@@ -759,7 +759,7 @@ bool DbManager::setEmptyContainerDetectionEnabled(int isEnabled)
     QSqlQuery qry;
     bool enabled;
 
-    QString qry_qstr = QString("UPDATE machine SET is_enabled_empty_container_detection=%1").arg(QString::number(isEnabled));
+    QString qry_qstr = QString("UPDATE machine SET has_empty_detection=%1").arg(QString::number(isEnabled));
     string qry_string = qry_qstr.toUtf8().constData(); // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
     qry.prepare(qry_string.c_str());
     qry.exec();

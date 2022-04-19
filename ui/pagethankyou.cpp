@@ -95,7 +95,6 @@ void pagethankyou::showEvent(QShowEvent *event)
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_THANK_YOU_BACKGROUND_PATH);
 
-    
     qDebug() << "ahoyy24";
     DbManager db(DB_PATH);
     QString paymentMethod = db.getPaymentMethod(p_page_idle->currentProductOrder->getSelectedSlot());
@@ -112,7 +111,7 @@ void pagethankyou::showEvent(QShowEvent *event)
         ui->thank_you_message_label->setText("Don't forget<br>your receipt!");
         ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.<br>Thank you.");
     }
-    
+
     is_in_state_thank_you = true;
 
     thankYouEndTimer = new QTimer(this);
@@ -212,6 +211,7 @@ void pagethankyou::controllerFinishedTransaction()
     }
     else
     {
+        qDebug() << "WARNING: Transaction end received while not in thank you page.";
     }
 }
 

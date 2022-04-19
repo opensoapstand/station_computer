@@ -229,7 +229,7 @@ double product::getTargetVolume(char size)
     {
         return m_nVolumeTarget_c_max;
     }
-    else if (size == SIZE_INVOLUNTARY_END_CHAR)
+    else if (size == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
     {
         return 666.0;
     }
@@ -275,7 +275,7 @@ double product::getPrice(char size)
     {
         return m_price_custom_per_liter;
     }
-    else if (size == SIZE_INVOLUNTARY_END_CHAR)
+    else if (size == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
     {
         return m_price_custom_per_liter;
     }

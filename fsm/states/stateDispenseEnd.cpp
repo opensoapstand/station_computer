@@ -49,14 +49,10 @@ DF_ERROR stateDispenseEnd::onEntry()
     productDispensers = g_productDispensers;
     pos = m_pMessaging->getRequestedSlot();
     pos = pos - 1;
-    // size = m_pMessaging->getRequestedSize();
 
     return e_ret;
 }
 
-/*
- *
- */
 DF_ERROR stateDispenseEnd::onAction()
 {
     debugOutput::sendMessage("onAction Dispense End...", MSG_STATE);
@@ -76,32 +72,47 @@ DF_ERROR stateDispenseEnd::onAction()
         m_pMessaging->sendMessage("Target Hit");
     }
 
+    // handle empty container detection
+    bool isContainerEmpty = false;
+    if (m_pMessaging->getRequestedSize() == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
+    {
+        isContainerEmpty = true;
+    }
     adjustSizeToDispensedVolume();
 
+    // handle minimum dispensing
     bool is_valid_dispense = productDispensers[pos].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML;
 
     // SIZE_CUSTOM is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
     if (m_pMessaging->getRequestedSize() == SIZE_TEST_CHAR)
     {
 
-        debugOutput::sendMessage("Test dispensing. (" + to_string(productDispensers[pos].getVolumeDispensed()) + "ml). No transaction will be made.", MSG_INFO);
-        dispenseEndUpdateDB(true);
+        debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(productDispensers[pos].getVolumeDispensed()) + "ml).", MSG_INFO);
+        dispenseEndUpdateDB(isContainerEmpty);
     }
     else if (!is_valid_dispense)
     {
-        debugOutput::sendMessage("No minimum quantity of product dispensed (" + to_string(productDispensers[pos].getVolumeDispensed()) + "ml). No transaction will be made.", MSG_INFO);
+        debugOutput::sendMessage("Not a transaction: No minimum quantity of product dispensed (" + to_string(productDispensers[pos].getVolumeDispensed()) + "ml). ", MSG_INFO);
     }
     else
     {
-        e_ret = handleTransaction();
+        debugOutput::sendMessage("Normal transaction.", MSG_INFO);
+        dispenseEndUpdateDB(isContainerEmpty);
+
+        e_ret = handleTransactionPayment();
+
+#ifdef ENABLE_TRANSACTION_TO_CLOUD
+
+        sendTransactionToCloud();
+#else
+
+        debugOutput::sendMessage("NOT SENDING transaction to cloud.", MSG_INFO);
+#endif
     }
 
     m_state_requested = STATE_IDLE;
-    // TODO: Log events to DB
 
-    // TODO: Send a complete ACK back to QT
-
-    m_pMessaging->sendMessage("Transaction End");
+    m_pMessaging->sendMessage("Transaction End"); // send to UI
 
     return e_ret;
 }
@@ -109,7 +120,7 @@ DF_ERROR stateDispenseEnd::onAction()
 void stateDispenseEnd::adjustSizeToDispensedVolume()
 {
     // check requested volume versus dispensed volume.
-    if (m_pMessaging->getRequestedSize() == SIZE_INVOLUNTARY_END_CHAR)
+    if (m_pMessaging->getRequestedSize() == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
     {
         // go down to next next allowed volume
 
@@ -179,12 +190,10 @@ char stateDispenseEnd::dispensedVolumeToSmallestFixedSize()
     return lowest_fixed_size;
 }
 
-DF_ERROR stateDispenseEnd::handleTransaction()
+DF_ERROR stateDispenseEnd::handleTransactionPayment()
 {
-    debugOutput::sendMessage("Update database:", MSG_INFO);
-    dispenseEndUpdateDB(false);
 
-    debugOutput::sendMessage("Handle transaction.", MSG_INFO);
+    debugOutput::sendMessage("Transaction payment", MSG_INFO);
     DF_ERROR e_ret = OK;
 
     std::string paymentMethod = productDispensers[pos].getProduct()->getPaymentMethod();
@@ -215,16 +224,6 @@ DF_ERROR stateDispenseEnd::handleTransaction()
     {
         debugOutput::sendMessage("WARNING: No payment method detected.", MSG_INFO);
     }
-
-#ifdef ENABLE_TRANSACTION_TO_CLOUD
-
-    debugOutput::sendMessage("Send transaction to cloud", MSG_INFO);
-    sendTransactionToCloud();
-#else
-
-    debugOutput::sendMessage("NOT SENDING transaction to cloud.", MSG_INFO);
-#endif
-
     return e_ret;
 }
 
@@ -483,8 +482,48 @@ std::string stateDispenseEnd::getUnitsFromDb(int slot)
     return str;
 }
 
+DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement)
+{
+
+    // FIXME: DB needs fully qualified link to find...obscure with XML loading.
+    char *zErrMsg = 0;
+    rc = sqlite3_open(DB_PATH, &db);
+
+    if (rc)
+    {
+        // TODO: Error handling here...
+        debugOutput::sendMessage("ERROR: DB could not be opened. " + sqlStatement, MSG_INFO);
+    }
+    else
+    {
+    }
+
+    /* Create SQL statement for transactions */
+    // std::string sql1;
+    // sql1 = ("INSERT INTO transactions VALUES (NULL, '" + product_name + "', " + target_volume + ", " + price_string + ", '" + start_time + "', " + dispensed_volume_str + ", datetime('now', 'localtime'), '" + "0" + "', '" + "0" + "' );");
+
+    char *sql_trans = new char[sqlStatement.length() + 1];
+    strcpy(sql_trans, sqlStatement.c_str());
+
+    /* Execute SQL statement */
+    rc = sqlite3_exec(db, sql_trans, db_sql_callback, 0, &zErrMsg);
+
+    if (rc != SQLITE_OK)
+    {
+        // INCORPORATE: zErrMsg !!!
+        debugOutput::sendMessage("ERROR: SQL : (err number " + to_string(rc) + ") " + sqlStatement, MSG_INFO);
+        sqlite3_free(zErrMsg);
+    }
+    else
+    {
+        debugOutput::sendMessage("SUCCES: SQL : (" + to_string(rc) + ") " + sqlStatement, MSG_INFO);
+    }
+
+    sqlite3_close(db);
+}
+
 // This function updates the local SQLite3 database with the transaction data, as well as updates the total product remaining locally
-DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool test_transaction)
+DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool is_container_empty)
 {
     char *zErrMsg = 0;
     std::string product_name = (productDispensers[pos].getProduct()->m_name).c_str();
@@ -504,10 +543,18 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool test_transaction)
     double updated_volume_dispensed_since_last_restock = volume_dispensed_since_last_restock + dispensed_volume;
     double updated_volume_remaining = volume_remaining_at_start - dispensed_volume;
 
-    if (updated_volume_remaining < 0)
+    if (is_container_empty)
     {
+        updated_volume_remaining = 0;
+        debugOutput::sendMessage("WARNING: Empty container detected. Will set remaining volume to zero.", MSG_INFO);
+    }
+    else if (updated_volume_remaining < 0)
+    {
+        // anomaly: calculated lower than 0 volume. Which is clearly wrong. So, artificially increase volume.
         // should be set to smallest fixed volume?!
-        updated_volume_remaining = 500; // anomaly: calculated lower than 0 volume. Which is clearly wrong. So, artificially increase volume.
+
+        //updated_volume_remaining = productDispensers[pos].getProduct()->getTargetVolume(SIZE_SMALL_CHAR); // error: todo: small volume might not be active.
+        updated_volume_remaining = 500;
         debugOutput::sendMessage("WARNING: Remaining Volume negative anomaly. Increase remaining volume with 500ml. ", MSG_INFO);
     }
 
@@ -528,124 +575,38 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool test_transaction)
 
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
     debugOutput::sendMessage("update DB. dispense end: vol dispensed: " + to_string(dispensed_volume), MSG_INFO);
-    rc = sqlite3_open(DB_PATH, &db);
-
-    debugOutput::sendMessage("DB Update START", MSG_INFO);
-
-    if (rc)
-    {
-        // TODO: Error handling here...
-    }
 
     /* Create SQL statement for transactions */
     debugOutput::sendMessage("Dispensed volume to be subtracted: " + dispensed_volume_str, MSG_INFO);
 
     std::string sql1;
     sql1 = ("INSERT INTO transactions VALUES (NULL, '" + product_name + "', " + target_volume + ", " + price_string + ", '" + start_time + "', " + dispensed_volume_str + ", datetime('now', 'localtime'), '" + "0" + "', '" + "0" + "' );");
-    // cout << sql1 << endl;
-
-    char *sql_trans = new char[sql1.length() + 1];
-    strcpy(sql_trans, sql1.c_str());
-
-    /* Execute SQL statement */
-    rc = sqlite3_exec(db, sql_trans, db_sql_callback, 0, &zErrMsg);
-
-    if (rc != SQLITE_OK)
-    {
-
-        // fprintf(stderr, "SQL error: %s\n", zErrMsg);
-
-        // INCORPORATE: zErrMsg !!!
-        debugOutput::sendMessage("ERROR: SQL : (err number " + to_string(rc) + ") " + sql1, MSG_INFO);
-        sqlite3_free(zErrMsg);
-    }
-    else
-    {
-        debugOutput::sendMessage("SUCCES: SQL1 : (" + to_string(rc) + ") " + sql1, MSG_INFO);
-        //  fprintf(stdout, "Transaction Command Executed successfully\n");
-    }
+    databaseUpdateSql(sql1);
 
     /* Create SQL statement for product dispensed since restock */
-
 #ifndef USE_OLD_DATABASE
-
     std::string sql21;
     sql21 = ("UPDATE products SET volume_dispensed_since_restock=volume_dispensed_since_restock+" + dispensed_volume_str + " WHERE name='" + product_name + "';");
-
-    char *sql_prod21 = new char[sql21.length() + 1];
-    strcpy(sql_prod21, sql21.c_str());
-
-    /* Execute SQL statement */
-    rc = sqlite3_exec(db, sql_prod21, db_sql_callback, 0, &zErrMsg);
-
-    if (rc != SQLITE_OK)
-    {
-        //        fprintf(stderr, "SQL error: %s\n", zErrMsg);
-        debugOutput::sendMessage("ERROR: SQL2 : (" + to_string(rc) + "):" + sql21, MSG_INFO);
-
-        sqlite3_free(zErrMsg);
-    }
-    else
-    {
-        debugOutput::sendMessage("SUCCES: SQL2 : (" + to_string(rc) + ") " + sql21, MSG_INFO);
-    }
+    databaseUpdateSql(sql21);
 #endif
 
     /* Create SQL statement for total product dispensed */
     std::string sql2;
-
 #ifdef USE_OLD_DATABASE
     sql2 = ("UPDATE products SET total_dispensed=total_dispensed+" + dispensed_volume_str + " WHERE name='" + product + "';");
 #else
     sql2 = ("UPDATE products SET volume_dispensed_total=volume_dispensed_total+" + dispensed_volume_str + " WHERE name='" + product_name + "';");
-
 #endif
-    char *sql_prod = new char[sql2.length() + 1];
-    strcpy(sql_prod, sql2.c_str());
-
-    /* Execute SQL statement */
-    rc = sqlite3_exec(db, sql_prod, db_sql_callback, 0, &zErrMsg);
-
-    if (rc != SQLITE_OK)
-    {
-        //        fprintf(stderr, "SQL error: %s\n", zErrMsg);
-        debugOutput::sendMessage("ERROR: SQL2 : (" + to_string(rc) + "):" + sql2, MSG_INFO);
-
-        sqlite3_free(zErrMsg);
-    }
-    else
-    {
-        debugOutput::sendMessage("SUCCES: SQL2 : (" + to_string(rc) + ") " + sql2, MSG_INFO);
-    }
+    databaseUpdateSql(sql2);
 
     /* Create SQL statement for product remaining */
     std::string sql3;
 #ifdef USE_OLD_DATABASE
     sql3 = ("UPDATE products SET remaining_ml=full_ml-total_dispensed WHERE name='" + product + "';");
 #else
-    // sql3 = ("UPDATE products SET volume_remaining=volume_full-volume_dispensed_since_restock WHERE name='" + product + "';");
     sql3 = ("UPDATE products SET volume_remaining=" + to_string(updated_volume_remaining) + " WHERE name='" + product_name + "';");
-
 #endif
-
-    char *sql_prod2 = new char[sql3.length() + 1];
-    strcpy(sql_prod2, sql3.c_str());
-
-    /* Execute SQL statement */
-    rc = sqlite3_exec(db, sql_prod2, db_sql_callback, 0, &zErrMsg);
-
-    if (rc != SQLITE_OK)
-    {
-        // fprintf(stderr, "SQL error: %s\n", zErrMsg);
-        debugOutput::sendMessage("ERROR: SQL : " + sql3, MSG_INFO);
-        sqlite3_free(zErrMsg);
-    }
-    else
-    {
-        debugOutput::sendMessage("SUCCES: SQL3 : (" + to_string(rc) + ") " + sql3, MSG_INFO);
-    }
-
-    sqlite3_close(db);
+    databaseUpdateSql(sql3);
 }
 
 double stateDispenseEnd::getFinalPrice()

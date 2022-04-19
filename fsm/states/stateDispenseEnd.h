@@ -67,7 +67,7 @@ private:
 
     char now[50];
 
-    DF_ERROR dispenseEndUpdateDB(bool test_transaction);
+    DF_ERROR dispenseEndUpdateDB(bool is_container_empty);
     DF_ERROR sendTransactionToCloud();
     DF_ERROR print_receipt();
     std::string getMachineID();
@@ -79,7 +79,9 @@ private:
 
     double getFinalPrice();
 
-    DF_ERROR handleTransaction();
+    DF_ERROR handleTransactionPayment();
+    DF_ERROR dispenseEndUpdateTransactionDB();
+    DF_ERROR databaseUpdateSql(string sqlStatement);
 
     DF_ERROR print_text(std::string text);
 

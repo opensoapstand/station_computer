@@ -16,7 +16,8 @@ public:
     double getProductPrice(int slot, char size);
     //double getProductTargetVolume(int slot);
     double getProductVolumePerTick(int slot);
-    bool remainingVolumeIsBiggerThanLargestFixedSize(int slot);
+    // bool remainingVolumeIsBiggerThanLargestFixedSize(int slot);
+    bool isProductVolumeInContainer(int slot);
     QString getProductReceiptName(int slot);
     QString getPaymentMethod(int slot);
     double getProductVolume(int slot, char ml);

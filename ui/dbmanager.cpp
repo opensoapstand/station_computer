@@ -419,51 +419,62 @@ uint32_t DbManager::getNumberOfRows(QString table)
     return row_count;
 }
 
-bool DbManager::remainingVolumeIsBiggerThanLargestFixedSize(int slot)
-{
-    qDebug() << " db... remainingVolumeIsBiggerThanLargestFixedSize";
-    QSqlQuery level_query;
-    double level;
-    {
-#ifdef USE_OLD_DATABASE
-        level_query.prepare("SELECT remaining_ml FROM products where slot=:slot");
+bool DbManager::isProductVolumeInContainer(int slot){
+    if (getEmptyContainerDetectionEnabled()){
+        return getVolumeRemaining(slot) > 0;
 
-#else
-        level_query.prepare("SELECT volume_remaining FROM products where slot=:slot");
-#endif
+    }else{
+        return getVolumeRemaining(slot) > getProductVolume(slot, 'l');
 
-        level_query.bindValue(":slot", slot);
-        level_query.exec();
-
-        if (!level_query.exec())
-        {
-            qDebug() << "ERROR: SQL query not successful: " << level_query.lastError() << endl;
-            return false;
-        }
-
-        // if(level_query.first()){
-        //     // takes first row
-        //     qDebug() << "aeijfaijf" << level_query.value(0) << endl;
-        // }
-
-        // CHECK IF things still work if first is skipped....
-        while (level_query.next())
-        {
-
-            level = level_query.value(0).toDouble();
-
-            if (level > getProductVolume(slot, 'l'))
-            {
-                return true;
-            }
-            else
-            {
-                qDebug() << level << "Remaining volume lower than biggest dispense size." << endl;
-                return false;
-            }
-        }
     }
 }
+
+
+// bool DbManager::remainingVolumeIsBiggerThanLargestFixedSize(int slot)
+// {
+// //     qDebug() << " db... remainingVolumeIsBiggerThanLargestFixedSize";
+// //     QSqlQuery level_query;
+// //     double level;
+// //     {
+// // #ifdef USE_OLD_DATABASE
+// //         level_query.prepare("SELECT remaining_ml FROM products where slot=:slot");
+
+// // #else
+// //         level_query.prepare("SELECT volume_remaining FROM products where slot=:slot");
+// // #endif
+
+// //         level_query.bindValue(":slot", slot);
+// //         level_query.exec();
+
+// //         if (!level_query.exec())
+// //         {
+// //             qDebug() << "ERROR: SQL query not successful: " << level_query.lastError() << endl;
+// //             return false;
+// //         }
+
+// //         // if(level_query.first()){
+// //         //     // takes first row
+// //         //     qDebug() << "aeijfaijf" << level_query.value(0) << endl;
+// //         // }
+
+// //         // CHECK IF things still work if first is skipped....
+// //         while (level_query.next())
+// //         {
+
+// //             level = level_query.value(0).toDouble();
+
+// //             if (level > getProductVolume(slot, 'l'))
+// //             {
+// //                 return true;
+// //             }
+// //             else
+// //             {
+// //                 qDebug() << level << "Remaining volume lower than biggest dispense size." << endl;
+// //                 return false;
+// //             }
+// //         }
+// //     }
+// }
 
 bool DbManager::refill(int slot)
 {

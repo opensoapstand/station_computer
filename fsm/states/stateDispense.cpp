@@ -118,7 +118,7 @@ if (productDispensers[pos].getEmptyContainerDetectionEnabled()){
 
       // experimental, convert to custom volume dispensing.
 
-      m_pMessaging->setRequestedSize(SIZE_INVOLUNTARY_END);
+      m_pMessaging->setRequestedSize(SIZE_INVOLUNTARY_END_CHAR);
    }
    else if (status == FLOW_STATE_DISPENSING)
    {

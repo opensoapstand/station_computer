@@ -81,7 +81,7 @@ DF_ERROR stateDispenseEnd::onAction()
     bool is_valid_dispense = productDispensers[pos].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML;
 
     // SIZE_CUSTOM is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
-    if (m_pMessaging->getRequestedSize() == SIZE_TEST)
+    if (m_pMessaging->getRequestedSize() == SIZE_TEST_CHAR)
     {
 
         debugOutput::sendMessage("Test dispensing. (" + to_string(productDispensers[pos].getVolumeDispensed()) + "ml). No transaction will be made.", MSG_INFO);
@@ -109,7 +109,7 @@ DF_ERROR stateDispenseEnd::onAction()
 void stateDispenseEnd::adjustSizeToDispensedVolume()
 {
     // check requested volume versus dispensed volume.
-    if (m_pMessaging->getRequestedSize() == SIZE_INVOLUNTARY_END)
+    if (m_pMessaging->getRequestedSize() == SIZE_INVOLUNTARY_END_CHAR)
     {
         // go down to next next allowed volume
 
@@ -392,11 +392,7 @@ std::string stateDispenseEnd::getProductID(int slot)
     return str;
 }
 
-
-
-//
-
-// std::string stateDispenseEnd::getProductData(int slot)
+// void stateDispenseEnd::loadProductData(int slot)
 // {
 //     rc = sqlite3_open(DB_PATH, &db);
 
@@ -414,7 +410,6 @@ std::string stateDispenseEnd::getProductID(int slot)
 //     sqlite3_finalize(stmt);
 //     sqlite3_close(db);
 //     return str;
-
 
 //     sqlite3_column_double
 // }
@@ -482,7 +477,7 @@ std::string stateDispenseEnd::getUnitsFromDb(int slot)
     sqlite3_prepare(db, sql_string_units.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
     std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
-    
+
     sqlite3_finalize(stmt);
     sqlite3_close(db);
     return str;
@@ -492,8 +487,47 @@ std::string stateDispenseEnd::getUnitsFromDb(int slot)
 DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool test_transaction)
 {
     char *zErrMsg = 0;
+    std::string product_name = (productDispensers[pos].getProduct()->m_name).c_str();
+    std::string target_volume;
+
+    std::string start_time = (productDispensers[pos].getDispenseStartTime());
+    std::string dispensed_volume_str;
+
+    double price;
+    std::string price_string;
+
+    double dispensed_volume = productDispensers[pos].getVolumeDispensed();
+    double volume_remaining_at_start = productDispensers[pos].getProduct()->getVolumeRemaining();
+    double volume_full = productDispensers[pos].getProduct()->getVolumeFull();
+    double volume_dispensed_since_last_restock = productDispensers[pos].getProduct()->getVolumeDispensedSinceLastRestock();
+
+    double updated_volume_dispensed_since_last_restock = volume_dispensed_since_last_restock + dispensed_volume;
+    double updated_volume_remaining = volume_remaining_at_start - dispensed_volume;
+
+    if (updated_volume_remaining < 0)
+    {
+        // should be set to smallest fixed volume?!
+        updated_volume_remaining = 500; // anomaly: calculated lower than 0 volume. Which is clearly wrong. So, artificially increase volume.
+        debugOutput::sendMessage("WARNING: Remaining Volume negative anomaly. Increase remaining volume with 500ml. ", MSG_INFO);
+    }
+
+    target_volume = to_string(productDispensers[pos].getProduct()->getTargetVolume(m_pMessaging->getRequestedSize()));
+    char size = m_pMessaging->getRequestedSize();
+
+    if (dispensed_volume <= productDispensers[pos].getProduct()->getVolumePerTick())
+    {
+        dispensed_volume_str = "0";
+    }
+    else
+    {
+        dispensed_volume_str = to_string(dispensed_volume);
+    }
+
+    price = getFinalPrice();
+    price_string = to_string(price);
 
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
+    debugOutput::sendMessage("update DB. dispense end: vol dispensed: " + to_string(dispensed_volume), MSG_INFO);
     rc = sqlite3_open(DB_PATH, &db);
 
     debugOutput::sendMessage("DB Update START", MSG_INFO);
@@ -502,43 +536,12 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool test_transaction)
     {
         // TODO: Error handling here...
     }
-    else
-    {
-        //       fprintf(stderr, "Opened database successfully\n");
-    }
-    std::string price;
+
     /* Create SQL statement for transactions */
-
-    if (test_transaction)
-    {
-        price = "0";
-    }
-    else
-    {
-        price = to_string(productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize()));
-    }
-
-    std::string sql1;
-    std::string product = (productDispensers[pos].getProduct()->m_name).c_str();
-    std::string target_volume = to_string(productDispensers[pos].getProduct()->getTargetVolume(m_pMessaging->getRequestedSize()));
-    std::string start_time = (productDispensers[pos].getDispenseStartTime());
-    std::string dispensed_volume_str;
-
-    debugOutput::sendMessage("update DB. dispense end: vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()), MSG_INFO);
-    double dispensed_volume = productDispensers[pos].getVolumeDispensed();
-
-    if ( dispensed_volume <= productDispensers[pos].getProduct()->getVolumePerTick())
-    {
-        dispensed_volume_str = "0";
-    }
-    else
-    {
-        dispensed_volume_str = to_string(dispensed_volume);
-    }
-    
     debugOutput::sendMessage("Dispensed volume to be subtracted: " + dispensed_volume_str, MSG_INFO);
 
-    sql1 = ("INSERT INTO transactions VALUES (NULL, '" + product + "', " + target_volume + ", " + price + ", '" + start_time + "', " + dispensed_volume_str + ", datetime('now', 'localtime'), '" + "0" + "', '" + "0" + "' );");
+    std::string sql1;
+    sql1 = ("INSERT INTO transactions VALUES (NULL, '" + product_name + "', " + target_volume + ", " + price_string + ", '" + start_time + "', " + dispensed_volume_str + ", datetime('now', 'localtime'), '" + "0" + "', '" + "0" + "' );");
     // cout << sql1 << endl;
 
     char *sql_trans = new char[sql1.length() + 1];
@@ -567,7 +570,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool test_transaction)
 #ifndef USE_OLD_DATABASE
 
     std::string sql21;
-    sql21 = ("UPDATE products SET volume_dispensed_since_restock=volume_dispensed_since_restock+" + dispensed_volume_str + " WHERE name='" + product + "';");
+    sql21 = ("UPDATE products SET volume_dispensed_since_restock=volume_dispensed_since_restock+" + dispensed_volume_str + " WHERE name='" + product_name + "';");
 
     char *sql_prod21 = new char[sql21.length() + 1];
     strcpy(sql_prod21, sql21.c_str());
@@ -594,7 +597,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool test_transaction)
 #ifdef USE_OLD_DATABASE
     sql2 = ("UPDATE products SET total_dispensed=total_dispensed+" + dispensed_volume_str + " WHERE name='" + product + "';");
 #else
-    sql2 = ("UPDATE products SET volume_dispensed_total=volume_dispensed_total+" + dispensed_volume_str + " WHERE name='" + product + "';");
+    sql2 = ("UPDATE products SET volume_dispensed_total=volume_dispensed_total+" + dispensed_volume_str + " WHERE name='" + product_name + "';");
 
 #endif
     char *sql_prod = new char[sql2.length() + 1];
@@ -620,7 +623,8 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool test_transaction)
 #ifdef USE_OLD_DATABASE
     sql3 = ("UPDATE products SET remaining_ml=full_ml-total_dispensed WHERE name='" + product + "';");
 #else
-    sql3 = ("UPDATE products SET volume_remaining=volume_full-volume_dispensed_since_restock WHERE name='" + product + "';");
+    // sql3 = ("UPDATE products SET volume_remaining=volume_full-volume_dispensed_since_restock WHERE name='" + product + "';");
+    sql3 = ("UPDATE products SET volume_remaining=" + to_string(updated_volume_remaining) + " WHERE name='" + product_name + "';");
 
 #endif
 
@@ -644,6 +648,33 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool test_transaction)
     sqlite3_close(db);
 }
 
+double stateDispenseEnd::getFinalPrice()
+{
+    // for fixed prices: will return fixed price
+    // for custom volumes: will return price calculated from dispensed volume
+    char size = m_pMessaging->getRequestedSize();
+    double price_per_ml;
+    double volume_dispensed;
+    double price;
+
+    if (size == SIZE_CUSTOM_CHAR)
+    {
+        price_per_ml = productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize());
+        volume_dispensed = productDispensers[pos].getVolumeDispensed();
+        price = price_per_ml * volume_dispensed;
+    }
+    else if (size == SIZE_TEST_CHAR)
+    {
+        price = 0;
+    }
+    else
+    {
+        price = productDispensers[pos].getProduct()->getPrice(size);
+    }
+
+    return price;
+}
+
 // This function prints the receipts by calling a system function (could be done better)
 DF_ERROR stateDispenseEnd::print_receipt()
 {
@@ -660,7 +691,7 @@ DF_ERROR stateDispenseEnd::print_receipt()
     std::string name_receipt = (productDispensers[pos].getProduct()->m_name_receipt);
     std::string plu = productDispensers[pos].getProduct()->getPLU(m_pMessaging->getRequestedSize());
     std::string units = (productDispensers[pos].getProduct()->getDisplayUnits());
-    double price = productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize());
+    double price = getFinalPrice();
     double price_per_ml;
 
     double volume_dispensed;
@@ -682,7 +713,6 @@ DF_ERROR stateDispenseEnd::print_receipt()
 
         price_per_ml = productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize());
         volume_dispensed = productDispensers[pos].getVolumeDispensed();
-        price = price_per_ml * volume_dispensed;
 
         if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13")
         {
@@ -734,7 +764,6 @@ DF_ERROR stateDispenseEnd::print_receipt()
     {
         price_per_ml = productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize());
         volume_dispensed = productDispensers[pos].getVolumeDispensed();
-        price = price_per_ml * volume_dispensed;
     }
     else
     {

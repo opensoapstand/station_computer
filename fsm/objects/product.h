@@ -75,10 +75,18 @@ public:
         bool testParametersFromDb();
 
         double getVolumeDispensed();
+
         void resetVolumeDispensed();
 
         int sizeCharToSizeIndex(char size);
         char sizeIndexToSizeChar(int sizeIndex);
+
+        bool registerFlowSensorTick();
+        int getSlot();
+
+        double getVolumeRemaining();
+        double getVolumeDispensedSinceLastRestock();
+        double getVolumeFull();
 
         double m_volumePerTick;
         int m_nDispenseSpeedPWM;
@@ -113,19 +121,21 @@ public:
         // int m_PWM;
         // DF_ERROR reloadProductFromDB();
 
-        bool registerFlowSensorTick();
 
         // void setSlot(int slot); // please don't set after instantiated!
-        int getSlot();
 
         double m_nVolumeDispensed;
 
-private:
         double m_nVolumePerTick;
         // TODO: Determine more data to modify per transaction...
 
+        double m_nVolumeRemaining;
+        double m_nVolumeFull;
+        double m_nVolumeDispensedSinceRestock;
+
         int m_nSlot;
         bool isEnabled;
+private:
 
         double m_calibration_const;
 

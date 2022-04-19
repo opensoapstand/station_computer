@@ -46,6 +46,7 @@
 #define DB_PATH_TEMPERATURE "/release/db/sqlite/temperature.db"
 
 #define ML_TO_OZ 0.033814
+#define VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G 2999.0
 
 
 using namespace std;

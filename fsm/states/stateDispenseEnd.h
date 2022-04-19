@@ -75,6 +75,10 @@ private:
     std::string getUnits(int slot);
     std::string getUnitsFromDb(int slot);
 
+    void loadProductData(int slot);
+
+    double getFinalPrice();
+
     DF_ERROR handleTransaction();
 
     DF_ERROR print_text(std::string text);

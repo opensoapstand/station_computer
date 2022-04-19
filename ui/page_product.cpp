@@ -257,11 +257,8 @@ void pageProduct::setDefaultSize()
     for (uint8_t i = 0; i < 4; i++)
     {
         int size = product_sizes[i];
-        qDebug() << "++++++++++++++++++++++++++ product: " << size;
         if (selectedProductOrder->getLoadedProductSizeEnabled(size))
         {
-
-            qDebug() << "**********yes " << size;
             selectedProductOrder->setSelectedSize(size); // default size
         }
     }
@@ -458,9 +455,14 @@ void pageProduct::loadOrderSelectedSize()
 
     for (uint8_t i = 0; i < 4; i++)
     {
+        orderSizeLabelsPrice[i]->hide();
+        orderSizeLabelsVolume[i]->hide();
 
         if (selectedProductOrder->getLoadedProductSizeEnabled(product_sizes[i]))
         {
+
+            orderSizeLabelsPrice[i]->show();
+            orderSizeLabelsVolume[i]->show();
             orderSizeLabelsVolume[i]->setStyleSheet("QLabel {font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: normal; font-size: 24px; line-height: 44px; color: #5E8580;}");
             orderSizeLabelsPrice[i]->setStyleSheet("QLabel {font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;}");
             orderSizeBackgroundLabels[i]->setStyleSheet("QLabel { background-color: #FFFFFF; border: 0px }");
@@ -478,10 +480,19 @@ void pageProduct::loadOrderSelectedSize()
                     units = "L";
                     price = price * 1000;
                 }
+
                 else if (units == "g")
                 {
-                    units = "100g";
-                    price = price * 100;
+                    if (selectedProductOrder->getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
+                    {
+                        units = "100g";
+                        price = price * 100;
+                    }
+                    else
+                    {
+                        units = "kg";
+                        price = price * 1000;
+                    }
                 }
                 orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + units);
             }
@@ -533,10 +544,20 @@ void pageProduct::loadOrderSelectedSize()
         }
         else if (unitsInvoice == "g")
         {
-            unitsInvoice = "100g";
-            selectedPrice = selectedPrice * 100;
-            selectedPriceCorrected = selectedPriceCorrected * 100;
-            discount = discount * 100;
+            if (selectedProductOrder->getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
+            {
+                unitsInvoice = "100g";
+                selectedPrice = selectedPrice * 100;
+                selectedPriceCorrected = selectedPriceCorrected * 100;
+                discount = discount * 100;
+            }
+            else
+            {
+                unitsInvoice = "kg";
+                selectedPrice = selectedPrice * 1000;
+                selectedPriceCorrected = selectedPriceCorrected * 1000;
+                discount = discount * 1000;
+            }
         }
 
         ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName());

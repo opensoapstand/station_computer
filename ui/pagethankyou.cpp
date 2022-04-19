@@ -241,7 +241,6 @@ void pagethankyou::on_mainPage_Button_clicked()
 
 void pagethankyou::exitPage()
 {
-
     if ((is_controller_finished && is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER) || exitIsForceable)
     {
         thankYouEndTimer->stop();
@@ -256,7 +255,6 @@ void pagethankyou::exitPage()
     }
     else
     {
-
         // ui->extra_message_label->setText("<p align=center><br>Waiting for end<br>of transaction...</p>");
         // ui->extra_message_label->show();
         ui->thank_you_message_label->setText("Finishing<br>transaction");

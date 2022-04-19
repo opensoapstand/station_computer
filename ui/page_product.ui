@@ -2117,8 +2117,8 @@ text-align: center;</string>
   <widget class="QLabel" name="label_product_ingredients">
    <property name="geometry">
     <rect>
-     <x>564</x>
-     <y>813</y>
+     <x>560</x>
+     <y>800</y>
      <width>425</width>
      <height>319</height>
     </rect>
@@ -2182,7 +2182,7 @@ color: #58595B;
   <widget class="QLabel" name="label_product_ingredients_title">
    <property name="geometry">
     <rect>
-     <x>564</x>
+     <x>560</x>
      <y>763</y>
      <width>351</width>
      <height>50</height>
@@ -2190,6 +2190,9 @@ color: #58595B;
    </property>
    <property name="text">
     <string>Ingredients:</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
    </property>
   </widget>
   <widget class="QLabel" name="label_background_small">

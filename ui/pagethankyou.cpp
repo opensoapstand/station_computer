@@ -63,8 +63,6 @@ void pagethankyou::showEvent(QShowEvent *event)
     // palette.setBrush(QPalette::Background, background);
     // this->setPalette(palette);
 
-    ui->thank_you_message_label->setText("Thank you!");
-
     ui->thank_you_message_label->setStyleSheet(
         "QLabel {"
 
@@ -79,7 +77,6 @@ void pagethankyou::showEvent(QShowEvent *event)
         "color: #FFFFFF;"
         "qproperty-alignment: AlignCenter;"
         "}");
-    ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.");
 
     ui->thank_you_subtitle_message_label->setStyleSheet(
         "QLabel {"
@@ -98,11 +95,24 @@ void pagethankyou::showEvent(QShowEvent *event)
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_THANK_YOU_BACKGROUND_PATH);
 
+    
     qDebug() << "ahoyy24";
     DbManager db(DB_PATH);
     QString paymentMethod = db.getPaymentMethod(p_page_idle->currentProductOrder->getSelectedSlot());
     db.closeDB();
 
+    if (paymentMethod == "qr" || paymentMethod == "tap")
+    {
+        ui->thank_you_message_label->setText("Thank you!");
+        ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.");
+    }
+    else
+    {
+
+        ui->thank_you_message_label->setText("Don't forget<br>your receipt!");
+        ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.<br>Thank you.");
+    }
+    
     is_in_state_thank_you = true;
 
     thankYouEndTimer = new QTimer(this);
@@ -132,7 +142,7 @@ void pagethankyou::showEvent(QShowEvent *event)
     }
 
     // ui->extra_message_label->hide();
-    p_page_idle->addPictureToLabel(ui->drinkfill_logo_label2,DRINKFILL_LOGO_VERTICAL_PATH);
+    p_page_idle->addPictureToLabel(ui->drinkfill_logo_label2, DRINKFILL_LOGO_VERTICAL_PATH);
 }
 
 size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
@@ -225,7 +235,7 @@ void pagethankyou::onThankyouTimeoutTick()
 
 void pagethankyou::on_mainPage_Button_clicked()
 {
-     qDebug() << "main page button clicked.";
+    qDebug() << "main page button clicked.";
     exitPage();
 }
 

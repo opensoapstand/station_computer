@@ -237,7 +237,8 @@ void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_
     ui->label_invoice_discount_name->hide();
 
     selectedProductOrder = p_page_idle->currentProductOrder;
-    selectedProductOrder->setSelectedSize(SIZE_LARGE_INDEX); // default size
+
+    // setDefaultSize();
 
     couponHandler();
 }
@@ -246,6 +247,24 @@ void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_
 pageProduct::~pageProduct()
 {
     delete ui;
+}
+
+void pageProduct::setDefaultSize()
+{
+
+    bool default_size_set = false;
+
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        int size = product_sizes[i];
+        qDebug() << "++++++++++++++++++++++++++ product: " << size;
+        if (selectedProductOrder->getLoadedProductSizeEnabled(size))
+        {
+
+            qDebug() << "**********yes " << size;
+            selectedProductOrder->setSelectedSize(size); // default size
+        }
+    }
 }
 
 void pageProduct::cancelTimers()
@@ -258,11 +277,9 @@ void pageProduct::cancelTimers()
 void pageProduct::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: Product >>>>>>>>>";
-    selectedProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
     QWidget::showEvent(event);
-
-    loadOrderSize(SIZE_LARGE_INDEX);
-
+    setDefaultSize();
+    loadOrderSelectedSize();
     reset_and_show_page_elements();
 }
 
@@ -321,19 +338,19 @@ void pageProduct::reset_and_show_page_elements()
     uint16_t(*xywh_size_buttons)[4];
     uint16_t(*xy_size_labels_volume)[2];
     uint16_t(*xy_size_labels_price)[2];
-    for (uint8_t i = 0; i < SLOT_COUNT; i++)
+    for (uint8_t i = 0; i < 4; i++)
     {
-        available_sizes_signature |= selectedProductOrder->getLoadedProductSizeEnabled(i) << i;
+        available_sizes_signature |= selectedProductOrder->getLoadedProductSizeEnabled(product_sizes[i]) << i;
     }
 
-    if (available_sizes_signature == 5)
+    if (available_sizes_signature == 10)
     {
         // only small and large available
         xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_small_and_large_available;
         xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_small_and_large_available;
         xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_small_and_large_available;
     }
-    else if (available_sizes_signature == 13)
+    else if (available_sizes_signature == 26)
     {
         xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_small_large_custom_available;
         xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_small_large_custom_available;
@@ -346,9 +363,9 @@ void pageProduct::reset_and_show_page_elements()
         xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_all_sizes_available;
     }
 
-    for (uint8_t i = 0; i < SLOT_COUNT; i++)
+    for (uint8_t i = 0; i < 4; i++)
     {
-        if (selectedProductOrder->getLoadedProductSizeEnabled(i))
+        if (selectedProductOrder->getLoadedProductSizeEnabled(product_sizes[i]))
         {
             orderSizeButtons[i]->show();
 
@@ -439,12 +456,10 @@ void pageProduct::loadOrderSelectedSize()
     ui->mainPage_Button->setEnabled(true);
     ui->previousPage_Button->setEnabled(true);
 
-    int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
-
-    for (uint8_t i = 0; i < SLOT_COUNT; i++)
+    for (uint8_t i = 0; i < 4; i++)
     {
 
-        if (selectedProductOrder->getLoadedProductSizeEnabled(i))
+        if (selectedProductOrder->getLoadedProductSizeEnabled(product_sizes[i]))
         {
             orderSizeLabelsVolume[i]->setStyleSheet("QLabel {font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: normal; font-size: 24px; line-height: 44px; color: #5E8580;}");
             orderSizeLabelsPrice[i]->setStyleSheet("QLabel {font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;}");
@@ -465,8 +480,8 @@ void pageProduct::loadOrderSelectedSize()
                 }
                 else if (units == "g")
                 {
-                    units = "kg";
-                    price = price * 1000;
+                    units = "100g";
+                    price = price * 100;
                 }
                 orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + units);
             }
@@ -518,10 +533,10 @@ void pageProduct::loadOrderSelectedSize()
         }
         else if (unitsInvoice == "g")
         {
-            unitsInvoice = "kg";
-            selectedPrice = selectedPrice * 1000;
-            selectedPriceCorrected = selectedPriceCorrected * 1000;
-            discount = discount * 1000;
+            unitsInvoice = "100g";
+            selectedPrice = selectedPrice * 100;
+            selectedPriceCorrected = selectedPriceCorrected * 100;
+            discount = discount * 100;
         }
 
         ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName());

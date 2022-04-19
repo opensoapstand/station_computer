@@ -171,10 +171,10 @@ void DbManager::getProductProperties(int slot, QString *name, QString *descripti
             *description = qry.value(1).toString();
             *features = qry.value(2).toString();
             *ingredients = qry.value(3).toString();
-            isSizeEnabled[0] = qry.value(4).toInt();
-            isSizeEnabled[1] = qry.value(5).toInt();
-            isSizeEnabled[2] = qry.value(6).toInt();
-            isSizeEnabled[3] = qry.value(7).toInt();
+            isSizeEnabled[1] = qry.value(4).toInt(); // small is index 1!!
+            isSizeEnabled[2] = qry.value(5).toInt();
+            isSizeEnabled[3] = qry.value(6).toInt();
+            isSizeEnabled[4] = qry.value(7).toInt();
         }
     }
 }

@@ -392,6 +392,33 @@ std::string stateDispenseEnd::getProductID(int slot)
     return str;
 }
 
+
+
+//
+
+// std::string stateDispenseEnd::getProductData(int slot)
+// {
+//     rc = sqlite3_open(DB_PATH, &db);
+
+//     sqlite3_stmt *stmt;
+
+//     debugOutput::sendMessage("Product ID getter START", MSG_INFO);
+
+//     std::string sql_string_pid = "SELECT productId FROM products WHERE slot=" + std::to_string(slot) + ";";
+
+//     /* Create SQL statement for transactions */
+//     sqlite3_prepare(db, sql_string_pid.c_str(), -1, &stmt, NULL);
+//     sqlite3_step(stmt);
+//     std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+//     ;
+//     sqlite3_finalize(stmt);
+//     sqlite3_close(db);
+//     return str;
+
+
+//     sqlite3_column_double
+// }
+
 std::string stateDispenseEnd::getMachineID()
 {
 
@@ -736,7 +763,7 @@ DF_ERROR stateDispenseEnd::print_receipt()
     }
     else if (units == "g")
     {
-        base_unit = "kg";
+        base_unit = "100g";
         snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", volume_dispensed);
     }
     string receipt_volume_formatted = (chars_volume_formatted);
@@ -751,13 +778,13 @@ DF_ERROR stateDispenseEnd::print_receipt()
     // add base price
     if (m_pMessaging->getRequestedSize() == 'c' || m_pMessaging->getRequestedSize() == 't')
     {
-        if (units == "ml")
+        if (base_unit == "l")
         {
             price_per_unit = price_per_ml * 1000;
         }
-        else if (units == "g")
+        else if (base_unit == "100g")
         {
-            price_per_unit = price_per_ml * 1000;
+            price_per_unit = price_per_ml * 100;
             // receipt_price_per_ml = receipt_price_per_ml * 1000;
         }
 

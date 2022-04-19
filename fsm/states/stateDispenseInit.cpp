@@ -67,7 +67,6 @@ DF_ERROR stateDispenseInit::onAction()
 {
 
     DF_ERROR e_ret = OK;
-debugOutput::sendMessage("..............111111111111", MSG_INFO);
     this->productDispensers[dispenser_index].loadEmptyContainerDetectionEnabledFromDb();
 
     debugOutput::sendMessage("Chosen dispenser slot: " +
@@ -75,7 +74,6 @@ debugOutput::sendMessage("..............111111111111", MSG_INFO);
                                  " target volume: " +
                                  std::to_string(productDispensers[dispenser_index].getProduct()->getTargetVolume(size)),
                              MSG_INFO);
-                             debugOutput::sendMessage("22222222222", MSG_INFO);
     // debugOutput::sendMessage("+++++++++++++++++++++++++++++++++++ " + std::to_string( m_selectedOrder->size) + "sloottt: " + std::to_string( m_selectedOrder->slot), MSG_INFO);
     //debugOutput::sendMessage("Chosen dispenser slot: " + std::to_string(  productDispensers[dispenser_index].getProduct()->getTargetVolume(size)), MSG_INFO);
     // debugOutput::sendMessage("Chosen dispenser slot: " + std::to_string(  productDispensers[dispenser_index].getProduct()->getPrice(size)), MSG_INFO);

@@ -127,9 +127,9 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
             QString units_string = "";
             if (addUnits)
             {
-                units_string = "kg";
+                units_string = "100g";
             }
-            volume_as_string = QString::number(volumeMilliLiter / 1000, 'f', 2) + units_string;
+            volume_as_string = QString::number(volumeMilliLiter / 100, 'f', 2) + units_string;
         }
       
     }

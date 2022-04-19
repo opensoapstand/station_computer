@@ -71,21 +71,24 @@ text-transform: uppercase;
    <property name="geometry">
     <rect>
      <x>110</x>
-     <y>850</y>
+     <y>590</y>
      <width>841</width>
-     <height>211</height>
+     <height>471</height>
     </rect>
    </property>
    <property name="text">
     <string>TextLabel</string>
    </property>
+   <property name="alignment">
+    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+   </property>
   </widget>
   <widget class="QLabel" name="thank_you_logo_label">
    <property name="geometry">
     <rect>
-     <x>480</x>
-     <y>1600</y>
-     <width>191</width>
+     <x>370</x>
+     <y>1580</y>
+     <width>351</width>
      <height>211</height>
     </rect>
    </property>
@@ -97,9 +100,9 @@ text-transform: uppercase;
    <property name="geometry">
     <rect>
      <x>36</x>
-     <y>786</y>
+     <y>826</y>
      <width>1001</width>
-     <height>551</height>
+     <height>511</height>
     </rect>
    </property>
    <property name="text">

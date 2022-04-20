@@ -70,7 +70,7 @@ void pagethankyou::showEvent(QShowEvent *event)
         "font-style: normal;"
         "font-weight: 700;"
         "font-size: 85px;"
-        "line-height: 99px;"
+        "line-height: 95px;"
         "text-align: center;"
         "letter-spacing: 1.5px;"
         "text-transform: lowercase;"
@@ -108,8 +108,8 @@ void pagethankyou::showEvent(QShowEvent *event)
     else
     {
 
-        ui->thank_you_message_label->setText("Don't forget<br>your receipt!");
-        ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.<br>Thank you.");
+        ui->thank_you_message_label->setText("Please take <br>your receipt!");
+        ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!");
     }
 
     is_in_state_thank_you = true;

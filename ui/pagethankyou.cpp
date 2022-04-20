@@ -245,6 +245,7 @@ void pagethankyou::exitPage()
     {
         thankYouEndTimer->stop();
         // qDebug() << "thank you to idle";
+        is_in_state_thank_you = false;
         p_page_idle->showFullScreen();
         this->hide();
 

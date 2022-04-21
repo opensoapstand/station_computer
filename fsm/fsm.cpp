@@ -87,7 +87,7 @@ int main()
     if (OK == initObjects())
     {
         debugOutput::sendMessage("***************************************************************************", MSG_INFO);
-        debugOutput::sendMessage("****** SOAPSTAND CONTROLLER v2022-04-19 ***********************************", MSG_INFO);
+        debugOutput::sendMessage("****** SOAPSTAND CONTROLLER v2022-04-20 ***********************************", MSG_INFO);
         debugOutput::sendMessage("***************************************************************************", MSG_INFO);
         dfRet = g_pMessaging->createThreads(kbThread, ipThread);
 

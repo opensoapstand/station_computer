@@ -2,6 +2,7 @@
 
 #include "dsed8344.h"
 #include <chrono>
+#include <cmath>
 
 #define DEFAULT_I2C_BUS "/dev/i2c-1"
 
@@ -95,12 +96,46 @@ dsed8344::~dsed8344(void)
 
 unsigned char dsed8344::getPumpPWM(void)
 {
-    return ReadByte(MAX31760_ADDRESS, 0x50); // PWM value
+    if (max31760_pwm_found)
+    {
+        return ReadByte(MAX31760_ADDRESS, 0x50); // PWM value
+    }
+
+    if (pic_pwm_found)
+    {
+        float f_value;
+
+        // Rescale so the PIC values match the old MAX31760 values.
+        // The PIC takes PWM values in the 0-100 range.
+        f_value = (float)ReadByte(PIC_ADDRESS, 0x00); // PWM value
+        f_value = floor(f_value * 2.55);
+
+        return ((unsigned char)f_value);
+    }
+
+    return 0;
+
 } // End of getPumpRPM()
 
 bool dsed8344::setPumpPWM(uint8_t pwm_val)
 {
-    return SendByte(MAX31760_ADDRESS, 0x50, pwm_val); // PWM value
+    {
+        return SendByte(MAX31760_ADDRESS, 0x50, pwm_val); // PWM value
+    }
+
+    if (pic_pwm_found)
+    {
+        float f_value;
+
+        // Rescale so the PIC values match the old MAX31760 values.
+        // The PIC takes PWM values in the 0-100 range.
+
+        f_value = (float)pwm_val;
+        f_value = floor(f_value / 100);
+
+        return SendByte(PIC_ADDRESS, 0x00, (unsigned char)f_value); // PWM value
+    }
+
 } // End of setPumpPWM()
 
 bool dsed8344::setPumpDirectionForwardElseReverse(bool direction)
@@ -172,9 +207,17 @@ bool dsed8344::setPumpsDisableAll()
 
 unsigned short dsed8344::getPumpSpeed(void)
 {
-    // 2 byte value. standstill is max 65535 , lower is faster. (about 200 is max?! (tested with an idle pump))
-    return ((ReadByte(MAX31760_ADDRESS, 0x52) << 8) |
-            ReadByte(MAX31760_ADDRESS, 0x53));
+    if (max31760_pwm_found)
+    {
+        // 2 byte value. standstill is max 65535 , lower is faster. (about 200 is max?! (tested with an idle pump))
+        return ((ReadByte(MAX31760_ADDRESS, 0x52) << 8) |
+                ReadByte(MAX31760_ADDRESS, 0x53));
+    }
+
+    if (pic_pwm_found)
+    {
+        return (ReadByte(PIC_ADDRESS, 0x01));
+    }
 
 } // End of getPumpSpeed()
 
@@ -186,33 +229,36 @@ bool dsed8344::getDispenseButtonState(void)
 bool dsed8344::getDispenseButtonEdge(void)
 {
     bool edge = false;
-    
+
     bool state = getDispenseButtonState();
-    if (state != dispenseButtonStateMemory){
+    if (state != dispenseButtonStateMemory)
+    {
         edge = true;
     }
     dispenseButtonStateMemory = state;
     return edge;
 } // End of getDispenseButtonState()
 
-
-bool dsed8344::getDispenseButtonStateDebounced(){
+bool dsed8344::getDispenseButtonStateDebounced()
+{
     // as this is not in a separate thread, we'll need to call it some times...
-	using namespace std::chrono;
+    using namespace std::chrono;
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    if (getDispenseButtonEdge()){
+    if (getDispenseButtonEdge())
+    {
         dispenseButtonDebounceMemory = millis_since_epoch;
         dispenseButtonIsDebounced = false;
         // debugOutput::sendMessage("edge detected!" + std::to_string(dispenseButtonDebounceMemory), MSG_INFO);
     }
 
-    if (millis_since_epoch - dispenseButtonDebounceMemory > DISPENSE_BUTTON_DEBOUNCE_MILLIS && ! dispenseButtonIsDebounced){
+    if (millis_since_epoch - dispenseButtonDebounceMemory > DISPENSE_BUTTON_DEBOUNCE_MILLIS && !dispenseButtonIsDebounced)
+    {
         dispenseButtonIsDebounced = true;
         // debugOutput::sendMessage("commit edge to state" + std::to_string(millis_since_epoch - dispenseButtonDebounceMemory), MSG_INFO);
         dispenseButtonStateDebounced = dispenseButtonStateMemory;
-    } 
+    }
 
-    return dispenseButtonStateDebounced;    
+    return dispenseButtonStateDebounced;
 }
 
 void dsed8344::setDispenseButtonLight(bool poweron)
@@ -376,19 +422,28 @@ bool dsed8344::check_8344_configuration(void)
                 debugOutput::sendMessage("Pump control impossible.", MSG_ERROR);
                 return false;
             }
+            // if (i2c_probe_address == MAX31760_ADDRESS)
+            // {
+            //     std::string message("MAX31760 not found on I2C bus ");
+            //     message.append(i2c_bus_name);
+            //     debugOutput::sendMessage(message, MSG_ERROR);
+            //     debugOutput::sendMessage("Pump control impossible.", MSG_ERROR);
+            //     return false;
+            // }
+            if (i2c_probe_address == PIC_ADDRESS)
+            {
+                pic_pwm_found = true;
+            }
             if (i2c_probe_address == MAX31760_ADDRESS)
             {
-                std::string message("MAX31760 not found on I2C bus ");
-                message.append(i2c_bus_name);
-                debugOutput::sendMessage(message, MSG_ERROR);
-                debugOutput::sendMessage("Pump control impossible.", MSG_ERROR);
-                return false;
+                max31760_pwm_found = true;
             }
         }
         else
         {
             if ((i2c_probe_address != PCA9534_ADDRESS) &&
-                (i2c_probe_address != MAX31760_ADDRESS))
+                (i2c_probe_address != MAX31760_ADDRESS) &&
+                (i2c_probe_address != PIC_ADDRESS))
             {
                 std::string message("Unknown device found on I2C bus ");
                 message.append(i2c_bus_name);
@@ -398,6 +453,23 @@ bool dsed8344::check_8344_configuration(void)
         }
     }
 
+    if (!pic_pwm_found && !max31760_pwm_found)
+    {
+        std::string message("No PWM generator found on I2C bus ");
+        message.append(i2c_bus_name);
+        debugOutput::sendMessage(message, MSG_ERROR);
+        debugOutput::sendMessage("Pump control impossible.", MSG_ERROR);
+        return false;
+    }
+
+    if (pic_pwm_found && max31760_pwm_found)
+    {
+        std::string message("Two PWM generators found on I2C bus ");
+        message.append(i2c_bus_name);
+        debugOutput::sendMessage(message, MSG_ERROR);
+        debugOutput::sendMessage("Pump control impossible.", MSG_ERROR);
+        return false;
+    }
     return true;
 
 } // End of check_8344_configuration()
@@ -414,19 +486,47 @@ void dsed8344::initialize_8344(void)
     // Temperature alerts masked
     // PWM frequency 25 kHz
     // PWM polarity negative (100% setting is low)
-    SendByte(MAX31760_ADDRESS, 0x00, 0b10011100);
+    // SendByte(MAX31760_ADDRESS, 0x00, 0b10011100);
 
     // Set direct fan control
-    SendByte(MAX31760_ADDRESS, 0x01, 0b00010001);
+    // SendByte(MAX31760_ADDRESS, 0x01, 0b00010001);
 
     // Set ramp to immediate
     // Enable TACH1 input
-    SendByte(MAX31760_ADDRESS, 0x02, 0b00110001);
+    // SendByte(MAX31760_ADDRESS, 0x02, 0b00110001);
+
+    if (max31760_pwm_found)
+    {
+        // Initialize the MAX31760
+
+        // Temperature alerts masked
+        // PWM frequency 25 kHz
+        // PWM polarity negative (100% setting is low)
+        SendByte(MAX31760_ADDRESS, 0x00, 0b10011100);
+
+        // Set direct fan control
+        SendByte(MAX31760_ADDRESS, 0x01, 0b00010001);
+
+        // Set ramp to immediate
+        // Enable TACH1 input
+        SendByte(MAX31760_ADDRESS, 0x02, 0b00110001);
+
+        // Disable all alerts
+        SendByte(MAX31760_ADDRESS, 0x04, 0b11111111);
+
+        // Set PWM value
+        SendByte(MAX31760_ADDRESS, 0x50, 0x80);
+    }
+    if (pic_pwm_found)
+    {
+        // Set PWM value
+        SendByte(PIC_ADDRESS, 0x00, 50);
+    }
 
     // Disable all alerts
-    SendByte(MAX31760_ADDRESS, 0x04, 0b11111111);
+    // SendByte(MAX31760_ADDRESS, 0x04, 0b11111111);
 
     // Set PWM value
-    SendByte(MAX31760_ADDRESS, 0x50, 0x80);
+    // SendByte(MAX31760_ADDRESS, 0x50, 0x80);
 
 } // End of initialize_8344 ()

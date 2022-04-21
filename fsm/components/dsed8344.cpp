@@ -404,16 +404,18 @@ void dsed8344::setup_i2c_bus(void)
 bool dsed8344::check_8344_configuration(void)
 {
     unsigned char i2c_probe_address;
+    bool config_valid = true;
 
     for (i2c_probe_address = 0x03; i2c_probe_address <= 0x77; i2c_probe_address++)
     {
-        debugOutput::sendMessage("address to look at: " + to_string(i2c_probe_address), MSG_INFO);
-        // Go through all the devices
+        // Go through all the addresses
+
         if (!set_i2c_address(i2c_probe_address))
         {
+            std::string message("Error with i2c protocol");
             return false;
         }
-        
+
         if (i2c_smbus_read_byte(i2c_handle) < 0)
         {
             // error, check which device has error
@@ -423,7 +425,8 @@ bool dsed8344::check_8344_configuration(void)
                 message.append(i2c_bus_name);
                 debugOutput::sendMessage(message, MSG_ERROR);
                 debugOutput::sendMessage("Pump control impossible.", MSG_ERROR);
-                return false;
+                config_valid = false;
+                // return false;
             }
             // if (i2c_probe_address == MAX31760_ADDRESS)
             // {
@@ -433,25 +436,30 @@ bool dsed8344::check_8344_configuration(void)
             //     debugOutput::sendMessage("Pump control impossible.", MSG_ERROR);
             //     return false;
             // }
-            if (i2c_probe_address == PIC_ADDRESS)
-            {
-                pic_pwm_found = true;
-            }
-            if (i2c_probe_address == MAX31760_ADDRESS)
-            {
-                max31760_pwm_found = true;
-            }
         }
         else
         {
-            if ((i2c_probe_address != PCA9534_ADDRESS) &&
-                (i2c_probe_address != MAX31760_ADDRESS) &&
-                (i2c_probe_address != PIC_ADDRESS))
+            if (i2c_probe_address == PCA9534_ADDRESS)
+            {
+                debugOutput::sendMessage("PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
+            }
+            else if (i2c_probe_address == PIC_ADDRESS)
+            {
+                pic_pwm_found = true;
+                debugOutput::sendMessage("PIC found on I2C bus for motor PWM and speed feedback", MSG_INFO);
+            }
+            else if (i2c_probe_address == MAX31760_ADDRESS)
+            {
+                max31760_pwm_found = true;
+                debugOutput::sendMessage("MAX31760 found on I2C bus for PWM and speed feedback", MSG_INFO);
+            }
+            else
             {
                 std::string message("Unknown device found on I2C bus ");
                 message.append(i2c_bus_name);
                 debugOutput::sendMessage(message, MSG_ERROR);
-                return false;
+                // return false;
+                config_valid = false;
             }
         }
     }
@@ -462,7 +470,8 @@ bool dsed8344::check_8344_configuration(void)
         message.append(i2c_bus_name);
         debugOutput::sendMessage(message, MSG_ERROR);
         debugOutput::sendMessage("Pump control impossible.", MSG_ERROR);
-        return false;
+        config_valid = false;
+        // return false;
     }
 
     if (pic_pwm_found && max31760_pwm_found)
@@ -471,9 +480,11 @@ bool dsed8344::check_8344_configuration(void)
         message.append(i2c_bus_name);
         debugOutput::sendMessage(message, MSG_ERROR);
         debugOutput::sendMessage("Pump control impossible.", MSG_ERROR);
-        return false;
+        config_valid = false;
+        // return false;
     }
-    return true;
+    // return true;
+    return config_valid;
 
 } // End of check_8344_configuration()
 

@@ -30,10 +30,9 @@
 
 #include "../objects/debugOutput.h"
 
-#define PCA9534_ADDRESS  0b0100000
-#define PIC_ADDRESS      0b0110000
+#define PCA9534_ADDRESS 0b0100000
 #define MAX31760_ADDRESS 0b1010000
-#define DS2485Q_ADDRESS  0b1000000
+#define DS2485Q_ADDRESS 0b1000000
 #define MCP3424T_ADDRESS 0b1101000
 
 class dsed8344
@@ -57,9 +56,6 @@ private:
     bool getDispenseButtonState(void);
     int i2c_handle = -1;
     char *i2c_bus_name;
-
-    bool pic_pwm_found = false;
-    bool max31760_pwm_found = false;
 
     bool SendByte(unsigned char address, unsigned char reg, unsigned char byte);
     unsigned char ReadByte(unsigned char address, unsigned char reg);

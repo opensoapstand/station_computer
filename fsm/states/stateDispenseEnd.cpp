@@ -261,7 +261,10 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
 
     std::string product = (productDispensers[pos].getProduct()->m_name);
     std::string target_volume = to_string(productDispensers[pos].getProduct()->getTargetVolume(m_pMessaging->getRequestedSize()));
-    std::string price = to_string(productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize()));
+    
+    double price = getFinalPrice();
+    std::string price_string = to_string(price);
+    // std::string price = to_string(productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize()));
     std::string start_time = productDispensers[pos].getDispenseStartTime();
     std::string machine_id = getMachineID();
     std::string pid = getProductID(pos + 1);
@@ -286,9 +289,9 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
 
     // todo Lode check with Ash
 #ifdef USE_OLD_DATABASE
-    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&units=" + units + "&price=" + price + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + EndTime + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer";
+    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&units=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + EndTime + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer";
 #else
-    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit=" + units + "&price=" + price + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + EndTime + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer";
+    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + EndTime + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer";
 #endif
     char buffer[1080];
     strcpy(buffer, curl_param.c_str());

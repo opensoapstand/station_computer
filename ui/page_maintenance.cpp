@@ -93,6 +93,10 @@ void page_maintenance::showEvent(QShowEvent *event)
 
 #endif
 
+   
+
+    // ui->enable_empty_container_checkBox->setChecked(true);
+
     if (page_maintenanceEndTimer == nullptr)
     {
         page_maintenanceEndTimer = new QTimer(this);
@@ -105,13 +109,14 @@ void page_maintenance::showEvent(QShowEvent *event)
 
     qDebug() << "db for names and id";
     DbManager db(DB_PATH);
+    ui->enable_empty_container_checkBox->setChecked(db.getEmptyContainerDetectionEnabled());
     ui->product1_label->setText(db.getProductName(1));
     ui->product2_label->setText(db.getProductName(2));
     ui->product3_label->setText(db.getProductName(3));
     ui->product4_label->setText(db.getProductName(4));
     ui->machineLabel->setText("Machine ID: " + db.getMachineID());
     db.closeDB();
-    
+
     QProcess process;
 
     process.start("iwgetid -r");
@@ -531,4 +536,30 @@ void page_maintenance::on_printer_check_status_clicked()
     p_page_idle->dfUtility->send_command_to_FSM("a");
     //     usleep(50000);
     //     p_page_idle->dfUtility->send_command_to_FSM("q"); // go back to fsm idle state is done in controller
+}
+
+void page_maintenance::on_enable_empty_container_checkBox_stateChanged(int arg1)
+{
+
+    int checked;
+    if (arg1 == 0)
+    {
+        checked = 0;
+        // ui->enable_empty_container_checkBox->setChecked(db.setEmptyContainerDetectionEnabled(0));
+    }
+    else if (arg1 == 2)
+    {
+        checked = 1;
+    }
+    else
+    {
+        qDebug() << "ERROR: set empty pail detection, but unknown state: " << arg1;
+        return;
+    }
+    qDebug() << "Empty container detection enabled?" << checked;
+
+    qDebug() << "db for empty container check enable.";
+    DbManager db(DB_PATH);
+    ui->enable_empty_container_checkBox->setChecked(db.setEmptyContainerDetectionEnabled(checked));
+    db.closeDB();
 }

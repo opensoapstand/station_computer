@@ -186,22 +186,15 @@ void product::productVolumeInfo()
     //	cout << "Dispensed so far: " << m_nVolumeDispensed << endl;
 }
 
-// char product::getClosestLowerTargetVolume(double volume)
-// {
-
-//     int i = 3;
-
-//     while (i >= 0 && !isEnabledSizes[i])
-//     {
-//         i--;
-//     }
-//     if (i < 0)
-//     {
-//         return SIZE_TEST;
-//     }
-
-//     double targetVolume = getTarg
-// }
+double product::getVolumeFull(){
+    return m_nVolumeFull;
+}
+double product::getVolumeRemaining(){
+    return m_nVolumeRemaining;
+}
+double product::getVolumeDispensedSinceLastRestock(){
+    return m_nVolumeDispensedSinceRestock;
+}
 
 double product::getTargetVolume(char size)
 {
@@ -235,6 +228,10 @@ double product::getTargetVolume(char size)
     else if (size == 't')
     {
         return m_nVolumeTarget_c_max;
+    }
+    else if (size == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
+    {
+        return 666.0;
     }
     else
     {
@@ -278,9 +275,14 @@ double product::getPrice(char size)
     {
         return m_price_custom_per_liter;
     }
+    else if (size == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
+    {
+        return m_price_custom_per_liter;
+    }
     else
     {
-        debugOutput::sendMessage("Unknown volume parameter for price: " + size, MSG_INFO);
+        debugOutput::sendMessage("ERROR: Unknown volume parameter for price: " + size, MSG_INFO);
+         return 666;
     }
 #endif
 }
@@ -337,7 +339,7 @@ string product::getDisplayUnits()
 double product::convertVolumeMetricToDisplayUnits(double volume)
 {
     double converted_volume;
-    
+
     if (getDisplayUnits() == "oz")
     {
 
@@ -347,7 +349,9 @@ double product::convertVolumeMetricToDisplayUnits(double volume)
     {
 
         converted_volume = volume * 1;
-    }else{
+    }
+    else
+    {
         converted_volume = volume;
     }
     return converted_volume;
@@ -818,14 +822,18 @@ bool product::reloadParametersFromDb()
             break;
             case DB_PRODUCTS_LAST_RESTOCK:
             {
+
+                m_nVolumeDispensedSinceRestock = sqlite3_column_double(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_VOLUME_FULL:
             {
+                m_nVolumeFull = sqlite3_column_double(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_VOLUME_REMAINING:
             {
+                m_nVolumeRemaining = sqlite3_column_double(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_VOLUME_DISPENSED_SINCE_RESTOCK:
@@ -958,6 +966,10 @@ bool product::reloadParametersFromDb()
             }
             break;
             case DB_PRODUCTS_FEATURES:
+            {
+            }
+            break;
+            case DB_PRODUCTS_DESCRIPTION:
             {
             }
             break;

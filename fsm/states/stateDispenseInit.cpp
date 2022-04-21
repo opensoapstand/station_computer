@@ -56,6 +56,7 @@ DF_ERROR stateDispenseInit::onEntry()
     {
         debugOutput::sendMessage("Did not reload parameters from database", MSG_INFO);
     }
+    
     return e_ret;
 }
 
@@ -66,6 +67,7 @@ DF_ERROR stateDispenseInit::onAction()
 {
 
     DF_ERROR e_ret = OK;
+    this->productDispensers[dispenser_index].loadEmptyContainerDetectionEnabledFromDb();
 
     debugOutput::sendMessage("Chosen dispenser slot: " +
                                  std::to_string(productDispensers[dispenser_index].getSlot()) +

@@ -43,7 +43,7 @@
 #define DISPENSE_BUTTON_DEBOUNCE_MILLIS 50
 
 #define SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS 3000
-#define EMPTY_CONTAINER_DETECTION_FLOW_THRESHOLD_ML_PER_S 10 // at 2l/min we have 33ml/s
+#define EMPTY_CONTAINER_DETECTION_FLOW_THRESHOLD_ML_PER_S 15 // at 2l/min we have 33ml/s
 #define EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS 1000
 #define EMPTY_CONTAINER_DETECTION_MAXIMUM_PRIME_TIME_MILLIS 7000
 
@@ -58,10 +58,10 @@
 #define SIZE_MEDIUM_CHAR 'm'
 #define SIZE_LARGE_CHAR 'l'
 #define SIZE_CUSTOM_CHAR 'c'
-#define SIZE_TEST 't'
+#define SIZE_TEST_CHAR 't'
 #define SIZE_DUMMY 'x'
 #define SIZE_SMALLER_THAN_SMALL '0'
-#define SIZE_INVOLUNTARY_END 'i' // hack to accomodate for empty container or dispense timeout
+#define SIZE_EMPTY_CONTAINER_DETECTED_CHAR 'i' // hack to accomodate for empty container or dispense timeout
 
 #define SIZE_INDEX_TO_CHAR_ARRAY                                           \
    {                                                                       \
@@ -160,6 +160,7 @@ typedef struct Time_val Time_val;
 #define DB_PRODUCTS_TYPE 39
 #define DB_PRODUCTS_INGREDIENTS 40
 #define DB_PRODUCTS_FEATURES 41
+#define DB_PRODUCTS_DESCRIPTION 42
 
 #endif
 

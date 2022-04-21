@@ -46,6 +46,7 @@
 #define DB_PATH_TEMPERATURE "/release/db/sqlite/temperature.db"
 
 #define ML_TO_OZ 0.033814
+#define VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G 2999.0
 
 
 using namespace std;
@@ -99,7 +100,7 @@ using namespace std;
                          
 #define COMPANY_LOGO_PATH "/home/df-admin/production/references/logos/%1_logo_white.png"
 #define DRINKFILL_LOGO_VERTICAL_PATH "/home/df-admin/production/references/logos/Soapstand-logo-white-vertical.png"
-#define DRINKFILL_LOGO_HORIZONTAL_PATH "/home/df-admin/production/references/logos/Soapstand-logo-white-horizontal.png"
+// #define DRINKFILL_LOGO_HORIZONTAL_PATH "/home/df-admin/production/references/logos/Soapstand-logo-white-horizontal.png"
 
 #else
 

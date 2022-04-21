@@ -21,6 +21,8 @@
 #include "../components/dsed8344.h"
 #include "../components/odysseyx86gpio.h"
 #include "product.h"
+#include <sqlite3.h>
+
 // #include <stdint.h>
 // Total Number of Devices
 #define NUM_SOLENOID 3 // 12v for drink,water, and air
@@ -123,6 +125,8 @@ public:
       // bool registerFlowSensorTick();
 
       string getDispenseStartTime();
+      void loadEmptyContainerDetectionEnabledFromDb();
+      bool getEmptyContainerDetectionEnabled();
 
       //      double getButtonPressDuration();
       //      int getButtonPressTimes();
@@ -166,6 +170,9 @@ private:
       double previousDispensedVolume;
       unsigned char pump_position;
 
+      bool m_isEmptyContainerDetectionEnabled;
+
+
       bool m_isDispenseDone; // XXX: Remove later.
       bool m_isStill;
 
@@ -173,6 +180,10 @@ private:
       bool *m_pIsDispensing;
 
       bool m_isDispenseNew;
+
+      sqlite3 *db;
+        int rc;
+
 
       product *m_pDispensedProduct;
 

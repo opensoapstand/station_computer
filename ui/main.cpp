@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
     qInstallMessageHandler(myMessageHandler); // Install the handler
 
     qDebug() << "***************************************************************************";
-    qDebug() << "********** START SOAPSTAND UI v2022-04-13 *********************************";
+    qDebug() << "********** START SOAPSTAND UI v2022-04-20 *********************************";
     qDebug() << "***************************************************************************";
 
     // Fire up QT GUI Thread

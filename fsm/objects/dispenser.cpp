@@ -344,13 +344,15 @@ void dispenser::dispenseButtonTimingUpdate()
     }
     dispense_button_time_at_last_check_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     debugOutput::sendMessage("Button press millis. Total:" + to_string(dispense_button_total_pressed_millis) + " Current press:" + to_string(dispense_button_current_press_millis), MSG_INFO);
-    //return dispense_button_total_pressed_millis;
+    // return dispense_button_total_pressed_millis;
 }
 
-uint64_t dispenser::getButtonPressedTotalMillis(){
+uint64_t dispenser::getButtonPressedTotalMillis()
+{
     return dispense_button_total_pressed_millis;
 }
-uint64_t dispenser::getButtonPressedCurrentPressMillis(){
+uint64_t dispenser::getButtonPressedCurrentPressMillis()
+{
     return dispense_button_current_press_millis;
 }
 
@@ -419,6 +421,35 @@ DF_ERROR dispenser::startDispense()
 unsigned short dispenser::getPumpSpeed()
 {
     the_8344->getPumpSpeed();
+}
+
+void dispenser::loadEmptyContainerDetectionEnabledFromDb()
+{
+    // val 0 = empty container detection not enabled
+    // val 1 = empty container detection enabled
+
+#ifdef USE_OLD_DATABASE
+    m_isEmptyContainerDetectionEnabled = false;
+#else
+    rc = sqlite3_open(DB_PATH, &db);
+    sqlite3_stmt *stmt;
+    string sql_string = "SELECT has_empty_detection FROM machine";
+    /* Create SQL statement for transactions */
+    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+    sqlite3_step(stmt);
+
+    int val = sqlite3_column_int(stmt, 0);
+   
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    m_isEmptyContainerDetectionEnabled = (val != 0);
+    
+#endif
+}
+
+bool dispenser::getEmptyContainerDetectionEnabled()
+{
+    return m_isEmptyContainerDetectionEnabled;
 }
 
 double dispenser::getVolumeDeltaAndReset()
@@ -595,63 +626,72 @@ DF_ERROR dispenser::updateRunningAverageWindow()
 
 Dispense_behaviour dispenser::getDispenseStatus()
 {
+    // CAUTION: we are not using motor speed feedback. Button press assumes motor running.
+    // todo: button press does not necessarily mean pump is on. We should work with pump speed feedback
+
+    updateRunningAverageWindow();
+    dispenseButtonTimingUpdate();
+
     using namespace std::chrono;
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     uint64_t dispense_time_millis = millis_since_epoch - dispense_start_timestamp_epoch;
-
     Time_val avg = getAveragedFlowRate(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS);
-
-   uint64_t relative_dispense_time = avg.time_millis - dispense_start_timestamp_epoch;
-    // debugOutput::sendMessage("Dispense flowRate 1s avg [V/s]: " + to_string(avg.value) + ". avg time millis: " + to_string(relative_dispense_time) + "dispense time: " + to_string(dispense_time_millis), MSG_INFO);
-
-    debugOutput::sendMessage("Dispense flowRate " + to_string(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) + "ms avg [V/s]: " + to_string(avg.value) + ". Time dispensing: " + to_string(relative_dispense_time) + "Dispense state time: " + to_string(dispense_time_millis), MSG_INFO);
-
-    updateRunningAverageWindow();
-
-    dispenseButtonTimingUpdate();
+    debugOutput::sendMessage("Dispense flowRate " + to_string(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) + "ms avg [V/s]: " + to_string(avg.value) + " Dispense state time: " + to_string(dispense_time_millis), MSG_INFO);
 
     Dispense_behaviour state;
 
-    // CAUTION: we are not using motor speed feedback. Button press assumes motor running.
-
-    // 
-    // if (relative_dispense_time < EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS 
-    //     ||  getButtonPressedCurrentPressMillis() < 3*EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS 
-    //     )
-    // {
-
-    // at each button press, the average flow needs to ramp up again. --> not available
-    if (getButtonPressedCurrentPressMillis() < 3 * EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS)
+    if (!getDispenseButtonValue())
     {
+
+        state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
+    }
+    else if (getButtonPressedCurrentPressMillis() < 3 * EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS)
+    {
+        // button pressed (aka pumping)
+
+        // at each button press, the average flow needs to ramp up again. --> not available
         state = FLOW_STATE_UNAVAILABLE;
     }
-
-    if (avg.value > EMPTY_CONTAINER_DETECTION_FLOW_THRESHOLD_ML_PER_S)
+    else if (avg.value > EMPTY_CONTAINER_DETECTION_FLOW_THRESHOLD_ML_PER_S)
     {
+        // button pressed (aka pumping)
+        // init time long enough for valid data
+
         state = FLOW_STATE_DISPENSING;
+    }
+
+    else if (previous_dispense_state == FLOW_STATE_DISPENSING)
+    {
+        // button pressed (aka pumping)
+        // init time long enough for valid data
+        // no flow detected
+
+        // once it was dispensing, empty dispenser is detected immediatly if no product flows.
+        // bugfix: if the button was release and repressed, the average was not correct at restart
+        //          --> take into account. at top level (FLOW_STATE_UNAVAILABLE)
+        state = FLOW_STATE_CONTAINER_EMPTY;
+    }
+    else if (getButtonPressedTotalMillis() > EMPTY_CONTAINER_DETECTION_MAXIMUM_PRIME_TIME_MILLIS)
+    {
+        // button pressed (aka pumping)
+        // init time long enough for valid data
+        // no flow detected
+        // previous state was not dispensing
+
+        // pump
+        state = FLOW_STATE_CONTAINER_EMPTY;
     }
     else
     {
-        // todo: dispensing does not equal motor on!! time pump ON time.
-        debugOutput::sendMessage("ERROR: todo. Now shortcut, assume pumping all the time during dispensing.", MSG_INFO);
+        // button pressed (aka pumping)
+        // init time long enough for valid data
+        // no flow detected
+        // previous state was not dispensing
+        // pumping time has exceeded set value
 
-        if (previous_dispense_state == FLOW_STATE_DISPENSING)
-        {
-            // once it was dispensing, empty dispenser is detected immediatly if no product flows.
-            // but, if the button was release and repressed, the average will not be correct --> take into account. at top level (FLOW_STATE_UNAVAILABLE) 
-        }
-        else
-        {
-            if (getButtonPressedTotalMillis() > EMPTY_CONTAINER_DETECTION_MAXIMUM_PRIME_TIME_MILLIS)
-            {
-                state = FLOW_STATE_CONTAINER_EMPTY;
-            }
-            else
-            {
-                state = FLOW_STATE_ATTEMTPING_TO_PRIME;
-            }
-        }
+        state = FLOW_STATE_ATTEMTPING_TO_PRIME;
     }
+
     previous_dispense_state = state;
     return state;
 }

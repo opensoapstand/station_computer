@@ -55,9 +55,9 @@ text-transform: lowercase;</string>
   <widget class="QLabel" name="logo_label">
    <property name="geometry">
     <rect>
-     <x>410</x>
+     <x>370</x>
      <y>1580</y>
-     <width>221</width>
+     <width>351</width>
      <height>211</height>
     </rect>
    </property>

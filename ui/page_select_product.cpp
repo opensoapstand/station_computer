@@ -183,7 +183,7 @@ void page_select_product::displayProducts()
         DbManager db(DB_PATH);
         product_type = db.getProductType(i + 1);
         product_slot_enabled = db.getSlotEnabled(i + 1);
-        product_sold_out = !(db.remainingVolumeIsBiggerThanLargestFixedSize(i + 1));
+        product_sold_out = !(db.isProductVolumeInContainer(i + 1));
         product_status_text = db.getStatusText(i + 1);
         db.closeDB();
 
@@ -284,10 +284,14 @@ void page_select_product::select_product(int slot)
     qDebug() << "ahoyy16 (last call before freeze up?!)";
 
     DbManager db(DB_PATH);
-    if (db.remainingVolumeIsBiggerThanLargestFixedSize(slot) && db.getSlotEnabled(slot))
+    bool product_not_sold_out = (db.isProductVolumeInContainer(slot));
+    bool product_slot_enabled = db.getSlotEnabled(slot);
+
+    db.closeDB();
+
+    if (product_not_sold_out && product_slot_enabled)
     {
         qDebug() << "select product: " << slot;
-        db.closeDB();
         productPageEndTimer->stop();
         p_page_idle->currentProductOrder->setSelectedSlot(slot);
         p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
@@ -299,7 +303,6 @@ void page_select_product::select_product(int slot)
     else
     {
         qDebug() << "not enabled product: " << slot;
-        db.closeDB();
     }
 }
 

@@ -72,6 +72,8 @@ private slots:
 
     void on_printer_check_status_clicked();
 
+    void on_enable_empty_container_checkBox_stateChanged(int arg1);
+
 private:
     void showEvent(QShowEvent *event);
     Ui::page_maintenance *ui;

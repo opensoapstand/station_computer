@@ -20,8 +20,6 @@ bool df_util::fileExists(QString path)
     return exists;
 }
 
-
-
 char df_util::sizeIndexToChar(int size_index)
 {
     char size_to_char[SIZES_COUNT] = {'!', 's', 'm', 'l', 'c', 't'}; // last c "test mode should become a t"
@@ -38,7 +36,6 @@ double df_util::convertOzToMl(double vol_oz)
 {
     return vol_oz / ML_TO_OZ;
 }
-
 
 QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString units, bool roundNumber, bool addUnits)
 {
@@ -107,13 +104,14 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
             volume_as_string = QString::number(volumeMilliLiter / 1000, 'f', 2) + units_string;
         }
     }
-    else if (units == "g"){
+    else if (units == "g")
+    {
         int decimals = 2;
         if (roundNumber)
         {
             decimals = 0;
         }
-     if (volumeMilliLiter < 1000 || (!roundNumber))
+        if (volumeMilliLiter < 1000 || (!roundNumber))
         {
             QString units_string = "";
             if (addUnits)
@@ -122,6 +120,15 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
             }
             volume_as_string = QString::number(volumeMilliLiter, 'f', decimals) + units_string;
         }
+        // else if (volumeMilliLiter == 2999.0)
+        // {
+        //     QString units_string = "";
+        //     if (addUnits)
+        //     {
+        //         units_string = "100g";
+        //     }
+        //     volume_as_string = QString::number(volumeMilliLiter / 100, 'f', 2) + units_string;
+        // }
         else
         {
             QString units_string = "";
@@ -131,7 +138,6 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
             }
             volume_as_string = QString::number(volumeMilliLiter / 1000, 'f', 2) + units_string;
         }
-      
     }
     else if (units == "oz")
     {
@@ -203,46 +209,43 @@ void df_util::write_to_file_timestamped(QString basePath, QString data)
 
     QFile file(log_file_path);
     // file.open(QIODevice::WriteOnly | QIODevice::Text );
-    file.open(QIODevice::Append| QIODevice::Text );
+    file.open(QIODevice::Append | QIODevice::Text);
     QTextStream out(&file);
     out << data;
     // optional, as QFile destructor will already do it:
-    file.close(); 
-  
+    file.close();
 
-/*
--------------" << basePath;
+    /*
+    -------------" << basePath;
 
-    // QFile file(log_file_path);
-    // file_out = &file;
-
-
-    QFile file(log_file_path);
-    file.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream out(&file);
-    out << data;
-
-    // optional, as QFile destructor will already do it:
-    file.close(); 
+        // QFile file(log_file_path);
+        // file_out = &file;
 
 
-    // QFile file(log_file_path);
-    // if (file.open(QIODevice::ReadWrite)) {
-    //     QTextStream stream(&file);
-    //     stream << data << endl;
-    // }
+        QFile file(log_file_path);
+        file.open(QIODevice::WriteOnly | QIODevice::Text);
+        QTextStream out(&file);
+        out << data;
+
+        // optional, as QFile destructor will already do it:
+        file.close();
 
 
-    // if (!file_out->open(QFile::WriteOnly | QFile::Text | QFile::Append))
-    // {
-    //     // QTextStream stream(file_out);
-    //     // stream << data << endl;
-    // }
+        // QFile file(log_file_path);
+        // if (file.open(QIODevice::ReadWrite)) {
+        //     QTextStream stream(&file);
+        //     stream << data << endl;
+        // }
 
-*/
+
+        // if (!file_out->open(QFile::WriteOnly | QFile::Text | QFile::Append))
+        // {
+        //     // QTextStream stream(file_out);
+        //     // stream << data << endl;
+        // }
+
+    */
 }
-
-
 
 void df_util::send_to_FSM()
 {

@@ -166,9 +166,9 @@ void page_dispenser::dispensing_end_admin()
         if (sendToUX410())
         {
             waitForUX410();
-            //            qDebug() << "Payment Reversed" << endl;
+            qDebug() << "Tap Payment Reversed";
             pktResponded.clear();
-            com.flushSerial();
+            com.flushSerial(); 
         }
     }
     else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && volumeDispensed != 0)

@@ -311,7 +311,7 @@ DF_ERROR dispenser::setPump(int mcpAddress, int pin, int position)
 DF_ERROR dispenser::setPumpDirectionForward()
 {
     debugOutput::sendMessage("-----FORWARD Pump-----", MSG_INFO);
-    the_8344->setPumpDirectionForwardElseReverse(true);
+    the_8344->setPumpDirection(true);
 }
 
 bool dispenser::getDispenseButtonValue()
@@ -360,7 +360,7 @@ uint64_t dispenser::getButtonPressedCurrentPressMillis()
 DF_ERROR dispenser::setPumpDirectionReverse()
 {
     debugOutput::sendMessage("-----REVERSE Pump-----", MSG_INFO);
-    the_8344->setPumpDirectionForwardElseReverse(false);
+    the_8344->setPumpDirection(false);
 }
 
 // Stops pumping: Turn forward pin LOW - Reverse pin LOW

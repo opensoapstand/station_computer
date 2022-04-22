@@ -45,7 +45,7 @@ public:
 
     unsigned char getPumpPWM(void);
     bool setPumpPWM(uint8_t pwm_val);
-    bool setPumpDirectionForwardElseReverse(bool direction);
+    bool setPumpDirection(bool forwardElseReverse);
     bool setPumpEnable(unsigned char pump_number);
     bool setPumpsDisableAll();
     unsigned short getPumpSpeed(void);

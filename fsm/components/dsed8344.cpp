@@ -138,7 +138,7 @@ bool dsed8344::setPumpPWM(uint8_t pwm_val)
 
 } // End of setPumpPWM()
 
-bool dsed8344::setPumpDirectionForwardElseReverse(bool direction)
+bool dsed8344::setPumpDirection(bool forwardElseReverse)
 {
     unsigned char pwm_value;
     unsigned char reg_value;
@@ -151,7 +151,7 @@ bool dsed8344::setPumpDirectionForwardElseReverse(bool direction)
 
     // Set the direction
     reg_value = ReadByte(PCA9534_ADDRESS, 0x01);
-    if (direction)
+    if (forwardElseReverse)
     {
         reg_value = reg_value | 0b00100000;
     }

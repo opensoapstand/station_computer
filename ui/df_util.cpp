@@ -120,7 +120,7 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
             }
             volume_as_string = QString::number(volumeMilliLiter, 'f', decimals) + units_string;
         }
-        // else if (volumeMilliLiter == 2999.0)
+        // else if (volumeMilliLiter == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
         // {
         //     QString units_string = "";
         //     if (addUnits)

@@ -205,7 +205,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
     ui->promoCode->clear();
     ui->promoCode->hide();
     ui->promoKeyboard->hide();
-    ui->promoInputButton->show();
+   
 
     couponHandler();
 
@@ -340,14 +340,14 @@ void pageProduct::reset_and_show_page_elements()
         available_sizes_signature |= selectedProductOrder->getLoadedProductSizeEnabled(product_sizes[i]) << i;
     }
 
-    if (available_sizes_signature == 10)
-    {
+    if (available_sizes_signature == 5) //10
+    { 
         // only small and large available
         xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_small_and_large_available;
         xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_small_and_large_available;
         xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_small_and_large_available;
     }
-    else if (available_sizes_signature == 26)
+    else if (available_sizes_signature == 13) //26
     {
         xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_small_large_custom_available;
         xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_small_large_custom_available;
@@ -943,17 +943,19 @@ void pageProduct::couponHandler()
 
     DbManager db(DB_PATH);
     bool coupons_enabled = db.getCouponsEnabled();
-
     db.closeDB();
 
     if (coupons_enabled)
     {
         qDebug() << "Coupons are enabled for this machine.";
         ui->promoInputButton->show();
+        ui->promoInputButton->setEnabled(true);
+        
     }
     else
     {
         qDebug() << "Coupons are disabled for this machine.";
+        ui->promoInputButton->setEnabled(false);
         coupon_disable();
     }
 }

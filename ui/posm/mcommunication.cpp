@@ -149,6 +149,7 @@ std::vector<uint8_t> mCommunication::readForAck()
     //tcflush(fd, TCIOFLUSH);
     //tcflush(fd, TCIOFLUSH);
     int readcount = 0;
+
     while (readcount < 3){
         if (readSize == -1){
             readSize = read(fd, buffer, 1);
@@ -163,11 +164,13 @@ std::vector<uint8_t> mCommunication::readForAck()
 
     if (readSize == -1)
     {
+        std::cout << "Read failed -1";
         pktRead.clear();
         pktRead.push_back(0xFF);
         return pktRead;
     }
     else{
+        std::cout << "read size" << readSize << endl;
         pktRead.reserve(uint(readSize));
         for (int i = 0; i < readSize; i++){ //store read bytes into vector
             pktRead.push_back(buffer[i]);

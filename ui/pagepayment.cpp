@@ -779,7 +779,7 @@ bool pagePayment::waitForUX410()
         {
             pktResponded.clear();
             pktResponded = com.readPacket();
-            usleep(10);
+            usleep(1000);
         }
         else
         {
@@ -803,8 +803,8 @@ void pagePayment::readTimer_loop()
     pktResponded.clear();
     // com.clearBuffer();
 
-    usleep(100);
     com.flushSerial();
+    cout << p_page_idle->currentProductOrder->getSelectedPriceCorrected() << endl;
     pktToSend = paymentPacket.purchasePacket((QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2)).QString::toStdString());
     cout << "to PAY: " << ((QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2)).QString::toStdString());
     //        pktToSend = paymentPacket.purchasePacket("0.01");
@@ -825,7 +825,7 @@ void pagePayment::readTimer_loop()
             if (pktResponded[0] != 0x02)
             {
                 //       qDebug() << "Reading TAP Packet" << endl;
-                cout << readPacket << endl;
+                // cout << readPacket << endl;
 
                 // std::cout<< "ReadTimer Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
 
@@ -834,7 +834,7 @@ void pagePayment::readTimer_loop()
                 // cout << "MISS: pktResponded: " << to_string(pktResponded[0]) << endl;
                 pktResponded.clear();
                 pktResponded = com.readPacket();
-                usleep(100);
+                usleep(10000);
                 response = getResponse();
 
                 //        com.sendAck();

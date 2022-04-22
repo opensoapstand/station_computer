@@ -36,9 +36,13 @@
 #endif
 // #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 //#define DB_PATH "/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db"
- 
-#define TRANSACTION_DISPENSE_END_OFFINE_PATH "/home/df-admin/production/logging/transactions/failed_curl_transaction_dispense_end_%1.txt"
-#define TRANSACTIONS_RESTOCK_OFFINE_PATH "/home/df-admin/production/logging/transactions/failed_curl_transaction_restock_%1.txt"
+
+
+// send all transaction to the 
+#define TRANSACTION_DISPENSE_END_OFFINE_PATH "/home/df-admin/production/logging/transactions/failed_curl_transaction_dispense_end.txt"
+#define TRANSACTIONS_RESTOCK_OFFINE_PATH "/home/df-admin/production/logging/transactions/failed_curl_transaction_restock.txt"
+
+// #define TRANSACTIONS_RESTOCK_OFFINE_PATH "/home/df-admin/production/logging/transactions/failed_curl_transaction_restock%1.txt"
 //  QString log_file_base_path = "/home/df-admin/production/logging/ui/ui_%1.txt"; // https://stackoverflow.com/questions/4784155/how-to-format-a-qstring
 //     QString log_file_path = QString(log_file_base_path).arg(time_stamp_date);
 
@@ -46,6 +50,7 @@
 #define DB_PATH_TEMPERATURE "/release/db/sqlite/temperature.db"
 
 #define ML_TO_OZ 0.033814
+#define OZ_TO_ML 29.5735
 #define VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G 2999.0
 
 
@@ -151,6 +156,7 @@ public:
     static QString getConvertedStringVolumeFromMl(double volumeMilliLiter, QString units, bool roundNumber, bool addUnits);
     
     void write_to_file_timestamped(QString basePath, QString data);
+    void write_to_file(QString path, QString data);
 
     // static long getTimeStamp();
     // static string format_string(long time_stamp,string fmt,int cutBack=0);

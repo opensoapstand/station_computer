@@ -1008,7 +1008,7 @@ void page_maintenance_dispenser::sendRestockToCloud()
         return;
     }
 
-    curl_easy_setopt(curl, CURLOPT_URL, "http://Drinkfill-env.eba-qatmjpdr.us-east-2.elasticbeanstalk.com/api/machine_data/resetStock");
+    curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/resetStock");
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback3);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
@@ -1016,11 +1016,16 @@ void page_maintenance_dispenser::sendRestockToCloud()
 
     res = curl_easy_perform(curl);
 
+
+    // delete
+    restockTransactionToFile(curl_data);
     // error code 6 (cannot resolve host) showed up when not connected to wifi. Make distinct!
     if (res != CURLE_OK)
     {
         qDebug() << "pagemaintenancedispenser. cURL fail. (6=could not resolve host (no internet)) Error code: " + QString::number(res);
         restockTransactionToFile(curl_data);
+
+
     }
     else
     {
@@ -1042,7 +1047,8 @@ void page_maintenance_dispenser::restockTransactionToFile(char *curl_params)
 {
     qDebug() << "Write Restock transaction to file ";
     QString data_out = curl_params;
-    p_page_idle->dfUtility->write_to_file_timestamped(TRANSACTIONS_RESTOCK_OFFINE_PATH, data_out);
+    //p_page_idle->dfUtility->write_to_file_timestamped(TRANSACTIONS_RESTOCK_OFFINE_PATH, data_out);
+    p_page_idle->dfUtility->write_to_file(TRANSACTIONS_RESTOCK_OFFINE_PATH, data_out);
     // char filetime[50];
     // time(&rawtime);
     // timeinfo = localtime(&rawtime);

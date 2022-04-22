@@ -494,6 +494,11 @@ void pageProduct::loadOrderSelectedSize()
                         price = price * 1000;
                     }
                 }
+                else if (units == "oz")
+                {
+                    units = "oz";
+                    price = price * OZ_TO_ML;
+                }
                 orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + units);
             }
             else
@@ -558,6 +563,13 @@ void pageProduct::loadOrderSelectedSize()
                 selectedPriceCorrected = selectedPriceCorrected * 1000;
                 discount = discount * 1000;
             }
+        }
+        else if (unitsInvoice == "oz")
+        {
+            unitsInvoice = "oz";
+            selectedPrice = selectedPrice * OZ_TO_ML;
+            selectedPriceCorrected = selectedPriceCorrected * OZ_TO_ML;
+            discount = discount * OZ_TO_ML;
         }
 
         ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName());

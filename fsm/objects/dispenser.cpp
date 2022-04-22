@@ -323,6 +323,7 @@ void dispenser::dispenseButtonTimingreset()
 {
     dispense_button_total_pressed_millis = 0;
     dispense_button_current_press_millis = 0;
+    dispense_button_time_at_last_check_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
 
 void dispenser::dispenseButtonTimingUpdate()

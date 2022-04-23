@@ -103,7 +103,18 @@ DF_ERROR stateDispenseEnd::onAction()
 
 #ifdef ENABLE_TRANSACTION_TO_CLOUD
 
-        sendTransactionToCloud();
+        std::string paymentMethod = productDispensers[pos].getProduct()->getPaymentMethod();
+
+        // Currently only Drinkfill used the tap method of payment, so this checks if it is a tap payment system and runs the cleaning cycle if it is...
+        // TODO: Change this to just check if the system is Soapstand or Drinkfill instead of payment system!
+        if (paymentMethod == "qr" || paymentMethod == "tap")
+        {
+        }
+        else
+        {
+
+            sendTransactionToCloud();
+        }
 #else
 
         debugOutput::sendMessage("NOT SENDING transaction to cloud.", MSG_INFO);
@@ -261,7 +272,7 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
 
     std::string product = (productDispensers[pos].getProduct()->m_name);
     std::string target_volume = to_string(productDispensers[pos].getProduct()->getTargetVolume(m_pMessaging->getRequestedSize()));
-    
+
     double price = getFinalPrice();
     std::string price_string = to_string(price);
     // std::string price = to_string(productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize()));
@@ -556,7 +567,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool is_container_empty)
         // anomaly: calculated lower than 0 volume. Which is clearly wrong. So, artificially increase volume.
         // should be set to smallest fixed volume?!
 
-        //updated_volume_remaining = productDispensers[pos].getProduct()->getTargetVolume(SIZE_SMALL_CHAR); // error: todo: small volume might not be active.
+        // updated_volume_remaining = productDispensers[pos].getProduct()->getTargetVolume(SIZE_SMALL_CHAR); // error: todo: small volume might not be active.
         updated_volume_remaining = 500;
         debugOutput::sendMessage("WARNING: Remaining Volume negative anomaly. Increase remaining volume with 500ml. ", MSG_INFO);
     }

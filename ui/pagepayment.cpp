@@ -27,7 +27,7 @@ pagePayment::pagePayment(QWidget *parent) : QWidget(parent),
 {
     // Fullscreen background setup
     ui->setupUi(this);
-   
+
     ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->payment_bypass_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
@@ -266,15 +266,13 @@ void pagePayment::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: Payment >>>>>>>>>";
 
-     // QPixmap background(PAGE_QR_PAY_BACKGROUND_PATH);
+    // QPixmap background(PAGE_QR_PAY_BACKGROUND_PATH);
     // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     // QPalette palette;
     // palette.setBrush(QPalette::Background, background);
     // this->setPalette(palette);
-    
+
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
-
-
 
     int product_slot___ = p_page_idle->currentProductOrder->getSelectedSlot();
     char drinkSize;
@@ -326,7 +324,6 @@ void pagePayment::showEvent(QShowEvent *event)
 
     QWidget::showEvent(event);
 
-   
     ui->productLabel->setText(p_page_idle->currentProductOrder->getSelectedProductName() + " " + p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
 
     ui->order_drink_amount->setText("$" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
@@ -400,9 +397,12 @@ void pagePayment::createQrOrder()
 
     qDebug() << "Create order in the cloud";
     QString MachineSerialNumber = p_page_idle->currentProductOrder->getMachineId();
+    QString productUnits = p_page_idle->currentProductOrder->getUnitsForSelectedSlot();
     QString productId = p_page_idle->currentProductOrder->getSelectedProductId();
     QString contents = p_page_idle->currentProductOrder->getSelectedProductName();
     QString quantity_requested = p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(false, false);
+    qDebug() << "************quantity to send to cloud: " + quantity_requested;
+
     char drinkSize = p_page_idle->currentProductOrder->getSelectedSizeAsChar();
     QString price = QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2);
 
@@ -410,8 +410,10 @@ void pagePayment::createQrOrder()
     orderId = orderId.remove("{");
     orderId = orderId.remove("}");
 
+
     QString curl_order_parameters_string = "orderId=" + orderId + "&size=" + drinkSize + "&MachineSerialNumber=" + MachineSerialNumber +
-                                           "&contents=" + contents + "&price=" + price + "&productId=" + productId + "&quantity_requested=" + quantity_requested;
+                                           "&contents=" + contents + "&price=" + price + "&productId=" + productId + "&quantity_requested=" + quantity_requested
+                                           + "&size_unit=" + productUnits;
 
     curl_order_parameters = curl_order_parameters_string.toLocal8Bit();
 

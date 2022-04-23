@@ -405,9 +405,9 @@ void page_maintenance_dispenser::update_dispense_stats(double dispensed)
 
     if (this->units_selected_product == "oz")
     {
-        //
-        ui->ticksLabel->setText("Ticks (" + QString::number(df_util::convertMlToOz(volume_per_tick_buffer), 'f', 2) + "oz/tick): " + QString::number(df_util::convertMlToOz(vol_dispensed / volume_per_tick_buffer), 'f', 2));
-        ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(df_util::convertMlToOz(vol_dispensed), 'f', 2) + "oz");
+        ui->ticksLabel->setText("Ticks (" + QString::number(df_util::convertMlToOz(volume_per_tick_buffer), 'f', 2) + "oz/tick): " + QString::number(vol_dispensed / volume_per_tick_buffer));
+        // ui->vol_dispensed_label->setText("Volume Dispensed: " + QString::number(df_util::convertMlToOz(vol_dispensed), 'f', 2) + "oz");
+        ui->vol_dispensed_label->setText("Volume Dispensed: " + df_util::getConvertedStringVolumeFromMl(vol_dispensed, "oz", false, true));
     }
     else
     {
@@ -1016,9 +1016,6 @@ void page_maintenance_dispenser::sendRestockToCloud()
 
     res = curl_easy_perform(curl);
 
-
-    // delete
-    restockTransactionToFile(curl_data);
     // error code 6 (cannot resolve host) showed up when not connected to wifi. Make distinct!
     if (res != CURLE_OK)
     {

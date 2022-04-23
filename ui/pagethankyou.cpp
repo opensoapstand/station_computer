@@ -178,7 +178,7 @@ void pagethankyou::sendDispenseEndToCloud()
     res = curl_easy_perform(curl);
     
     //temp debug
-    transactionToFile(curl_data);
+    // transactionToFile(curl_data);
     
     
     if (res != CURLE_OK)

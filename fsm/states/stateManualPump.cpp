@@ -375,6 +375,11 @@ DF_ERROR stateManualPump::pumpTest()
    productDispensers[0].setPumpPWM(125);
    productDispensers[0].setPumpEnable(1); // POS is 1->4! index is 0->3
    usleep(1000000);                       // press button to have the pump pumping.
+    productDispensers[0].setPumpDirectionForward();
+   productDispensers[0].setPumpPWM(255);
+   productDispensers[0].setPumpEnable(1); // POS is 1->4! index is 0->3
+   usleep(1000000);                       // press
+
    productDispensers[0].setPumpsDisableAll();
 
    productDispensers[0].setPumpDirectionReverse();

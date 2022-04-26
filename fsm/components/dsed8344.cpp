@@ -119,21 +119,34 @@ unsigned char dsed8344::getPumpPWM(void)
 
 bool dsed8344::setPumpPWM(uint8_t pwm_val)
 {
+    if (max31760_pwm_found)
     {
         return SendByte(MAX31760_ADDRESS, 0x50, pwm_val); // PWM value
-    }
-
-    if (pic_pwm_found)
+    }else if (pic_pwm_found)
     {
         float f_value;
 
         // Rescale so the PIC values match the old MAX31760 values.
-        // The PIC takes PWM values in the 0-100 range.
+        // The PIC takes PWM values in the [0-100] range. (includes 100)
 
+        // f_value = (float)pwm_val;
+        // f_value = floor(f_value / 100);
+
+        // return SendByte(PIC_ADDRESS, 0x00, (unsigned char)f_value); // PWM value
         f_value = (float)pwm_val;
-        f_value = floor(f_value / 100);
+        f_value = floor(f_value / 2.55);
+        unsigned char pwm_value = (unsigned char ) f_value; // invert speed. pwm is inverted.
+        if (pwm_value > 100){
+            debugOutput::sendMessage("Speed invalid. Will set to max. Please provide argument in [0..255] interval. Provided: " + to_string(pwm_val), MSG_WARNING);    
+            pwm_value = 100;
+        }
 
-        return SendByte(PIC_ADDRESS, 0x00, (unsigned char)f_value); // PWM value
+        //pwm_value = 100 - pwm_value; // invert speed. pwm is inverted.
+
+        debugOutput::sendMessage("Motor speed set to: " + to_string(pwm_value), MSG_WARNING);
+        return SendByte(PIC_ADDRESS, 0x00, pwm_value); // PWM value
+    }else{
+        debugOutput::sendMessage("No motor speed controller found to set PWM.", MSG_WARNING);
     }
 
 } // End of setPumpPWM()
@@ -146,26 +159,42 @@ bool dsed8344::setPumpDirection(bool forwardElseReverse)
     // Set the RPM to zero to make sure any running pumps stop.
     // Changing the direction without stopping the pump can damage the
     // pump.
-    pwm_value = getPumpPWM();
-    setPumpPWM(0);
 
-    // Set the direction
     reg_value = ReadByte(PCA9534_ADDRESS, 0x01);
-    if (forwardElseReverse)
-    {
-        reg_value = reg_value | 0b00100000;
-    }
-    else
-    {
-        reg_value = reg_value & 0b11011111;
-    }
-    SendByte(PCA9534_ADDRESS, 0x01, reg_value);
 
-    // Restore the pump RPM value
-    setPumpPWM(pwm_value);
+    // bit 5 = 1 = forward
+
+    // check if direction is different from set direction
+    bool read_direction_is_forward = (reg_value & 0b00100000) > 0;
+    bool direction_changed = read_direction_is_forward != forwardElseReverse;
+
+    if (direction_changed){
+        //debugOutput::sendMessage("dir changed.....", MSG_INFO);
+        pwm_value = getPumpPWM();
+
+        setPumpPWM(0);
+        usleep(100000); // wait for pump to stop
+
+        // Set the direction
+        if (forwardElseReverse)
+        {
+            reg_value = reg_value | 0b00100000;
+        }
+        else
+        {
+            reg_value = reg_value & 0b11011111;
+        }
+        SendByte(PCA9534_ADDRESS, 0x01, reg_value);
+
+        // Restore the pump RPM value
+        setPumpPWM(pwm_value);
+     }else{
+       debugOutput::sendMessage("No change in dir.....", MSG_INFO);
+
+     }
 
     return true;
-} // End of seyPumpDirection()
+} // End of setPumpDirection()
 
 bool dsed8344::setPumpEnable(unsigned char pump_number)
 {

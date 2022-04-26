@@ -57,6 +57,7 @@ public:
       dispenser(gpio *buttonReference);
       ~dispenser();
 
+      DF_ERROR setup();
       // void initDispenser(int slot);
 
       // private variable setters

@@ -55,12 +55,6 @@ dsed8344::dsed8344(void)
 
 #endif
 
-    setup_i2c_bus();
-
-    dispenseButtonStateMemory = false;
-    dispenseButtonStateDebounced = false;
-    dispenseButtonIsDebounced = true;
-
 } // End of dsed8344() constructor
 
 // Constructor where you can specify the name of the I2C bus
@@ -94,6 +88,18 @@ dsed8344::~dsed8344(void)
 // Public methods
 ///////////////////////////////////////////////////////////////////////////
 
+void dsed8344::setup(){
+
+    if (! is_initialized){
+
+        setup_i2c_bus();
+
+        dispenseButtonStateMemory = false;
+        dispenseButtonStateDebounced = false;
+        dispenseButtonIsDebounced = true;
+        is_initialized = true;
+    }
+}
 unsigned char dsed8344::getPumpPWM(void)
 {
     if (max31760_pwm_found)

@@ -45,7 +45,8 @@ double messageMediator::m_nVolumeTarget;
 // CTOR
 messageMediator::messageMediator()
 {
-   debugOutput::sendMessage("------messageMediator------", MSG_INFO);
+
+   debugOutput::sendMessage("Init messageMediator...", MSG_INFO);
    // TODO: Initialize with Pointer reference to socket...
    // new_sock = new ServerSocket();
    m_fExitThreads = false;
@@ -57,7 +58,7 @@ messageMediator::~messageMediator()
 {
    debugOutput::sendMessage("~messageMediator", MSG_INFO);
 
-   //terminate the threads
+   // terminate the threads
    m_fExitThreads = true;
 }
 
@@ -75,13 +76,13 @@ DF_ERROR messageMediator::sendMessage(string msg)
       try
       {
          client_socket << msg;
-         //client_socket >> reply; // blocking. And we're not sending a reply from the UI anymore (it caused crashes.)
+         // client_socket >> reply; // blocking. And we're not sending a reply from the UI anymore (it caused crashes.)
       }
       catch (SocketException &)
       {
          // TODO: Should catch no message error...
       }
-       debugOutput::sendMessage( "We received this response from the server: " + reply, MSG_INFO);
+      debugOutput::sendMessage("We received this response from the server: " + reply, MSG_INFO);
       ;
    }
    catch (SocketException &e)
@@ -269,15 +270,14 @@ void *messageMediator::doIPThread(void *pThreadArgs)
          {
             while (true)
             {
-               //debugOutput::sendMessage("char received over IP", MSG_INFO);
+               // debugOutput::sendMessage("char received over IP", MSG_INFO);
                std::string data;
                // *fsm_comm_socket >> data;
                // *fsm_comm_socket << "";
                new_sock >> data;
 
-               
-               //sendQtACK("ACK");  // lode commented it out was blocking?!?! todo //// AckOrNakResult = "FSM ACK"; 
-               // cout << data << endl;
+               // sendQtACK("ACK");  // lode commented it out was blocking?!?! todo //// AckOrNakResult = "FSM ACK";
+               //  cout << data << endl;
                m_receiveStringBuffer = data;
                updateCmdString();
                debugOutput::sendMessage("chars received over IP: " + data, MSG_INFO);
@@ -328,7 +328,8 @@ void messageMediator::clearCommandString()
    m_bCommandStringReceived = false;
 }
 
-void messageMediator::setRequestedSize(char size){
+void messageMediator::setRequestedSize(char size)
+{
    m_requestedSize = size;
 }
 
@@ -422,7 +423,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
             actionChar = sCommand[i];
          }
 
-         if (sCommand[i] == SIZE_SMALL_CHAR || sCommand[i] == SIZE_MEDIUM_CHAR || sCommand[i] == SIZE_LARGE_CHAR ||sCommand[i] == SIZE_CUSTOM_CHAR || sCommand[i] == SIZE_TEST_CHAR)
+         if (sCommand[i] == SIZE_SMALL_CHAR || sCommand[i] == SIZE_MEDIUM_CHAR || sCommand[i] == SIZE_LARGE_CHAR || sCommand[i] == SIZE_CUSTOM_CHAR || sCommand[i] == SIZE_TEST_CHAR)
          {
             volumeChar = (sCommand[i]);
          }
@@ -465,8 +466,6 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
       break;
    }
    }
-
-
 
    if (!isalpha(volumeChar))
    {
@@ -515,7 +514,6 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
       }
    }
 
-
    if (!isalpha(actionChar))
    {
       debugOutput::sendMessage("Irrelevant input .. ", MSG_INFO);
@@ -553,7 +551,6 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
          break;
       }
    }
-
 
    return e_ret;
 }

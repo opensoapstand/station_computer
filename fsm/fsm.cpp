@@ -43,8 +43,8 @@ std::string stateStrings[FSM_MAX + 1] = {
     "STATE_END",
     "FSM_MAX"};
 
-messageMediator *g_pMessaging;                         //debug through local network
-stateVirtual *g_stateArray[FSM_MAX + 1];               //an object for every state
+messageMediator *g_pMessaging;           // debug through local network
+stateVirtual *g_stateArray[FSM_MAX + 1]; // an object for every state
 
 dispenser g_productDispensers[PRODUCT_DISPENSERS_MAX];
 
@@ -55,7 +55,7 @@ DF_ERROR stateLoop();
 /*
  * Instantiate Array to hold objects specfic to states (DF_FSM)
  * XXX: Reminder to instantiate new states here!
-*/
+ */
 DF_ERROR createStateArray()
 {
     DF_ERROR dfRet = ERROR_PTHREADS;
@@ -82,13 +82,13 @@ int main()
     pthread_t ipThread, kbThread;
 
     DF_ERROR dfRet = OK;
-
+    debugOutput::sendMessage("***************************************************************************", MSG_INFO);
+    debugOutput::sendMessage("****** SOAPSTAND CONTROLLER v2022-04-26 ***********************************", MSG_INFO);
+    debugOutput::sendMessage("***************************************************************************", MSG_INFO);
 
     if (OK == initObjects())
     {
-        debugOutput::sendMessage("***************************************************************************", MSG_INFO);
-        debugOutput::sendMessage("****** SOAPSTAND CONTROLLER v2022-04-20 ***********************************", MSG_INFO);
-        debugOutput::sendMessage("***************************************************************************", MSG_INFO);
+
         dfRet = g_pMessaging->createThreads(kbThread, ipThread);
 
         if (OK == dfRet)
@@ -102,7 +102,7 @@ int main()
 
 /*
  * Poll for State changes: States outlined in DF_FSM
-*/
+ */
 
 DF_ERROR stateLoop()
 {
@@ -110,7 +110,7 @@ DF_ERROR stateLoop()
     DF_FSM fsmState = STATE_INIT;
     DF_FSM previousState = STATE_DUMMY;
 
-    while (OK == dfRet) //while no error has occurred
+    while (OK == dfRet) // while no error has occurred
     {
         if (fsmState == STATE_DUMMY)
         {
@@ -151,60 +151,14 @@ DF_ERROR stateLoop()
 
         // debugOutput::sendMessage("sleoeep" + to_string(fsmState), MSG_STATE);
         usleep(1000);
-
     }
     debugOutput::sendMessage("State machine ENDED. ", MSG_INFO);
     return dfRet;
 }
 
-// DF_ERROR stateLoop()
-// {
-//     DF_ERROR dfRet = OK;
-//     DF_FSM fsmState = STATE_INIT;
-//     // DF_FSM fsmRequestedState = STATE_INIT;
-//     // DF_FSM fsmState = START;
-//     // DF_FSM fsmRequestedState = STATE_INIT;
-//     DF_FSM previousState = START;
-
-//     while (OK == dfRet) //while no error has occurred
-//     {
-
-//         //if (fsmState != START){
-//         //     fsmRequestedState = g_stateArray[fsmState]->getRequestedState();
-//         // }else{
-//         //     fsmRequestedState = STATE_INIT;
-//         // }
-
-//         // state change, deal with new state
-//         if (fsmState != fsmRequestedState)
-//         {
-//             debugOutput::sendMessage("coming from: " + stateStrings[fsmState], MSG_STATE);
-//             debugOutput::sendMessage("new state: " + stateStrings[fsmRequestedState], MSG_STATE);
-//             fsmState = fsmRequestedState;
-//             dfRet = g_stateArray[fsmState]->onEntry();
-//         }
-
-//         // state not changed
-//         if (OK == dfRet)
-//         {
-//             dfRet = g_stateArray[fsmState]->onAction();
-//             fsmRequestedState = g_stateArray[fsmState]->getRequestedState();
-//             // debugOutput::sendMessage("tmplodee", MSG_INFO);
-//             // debugOutput::sendMessage( std::to_string(fsmRequestedState), MSG_INFO);
-//             // deal with end of state if state changed
-//             if ((OK == dfRet) && (fsmRequestedState != fsmState))
-//             {
-//                 dfRet = g_stateArray[fsmState]->onExit();
-//             }
-//         }
-//     }
-//     debugOutput::sendMessage("Problem with state machine", MSG_INFO);
-//     return dfRet;
-// }
-
 /*
  * Mutex Setting; Spin up Threads
-*/
+ */
 DF_ERROR initObjects()
 {
     DF_ERROR dfRet = OK;
@@ -212,11 +166,16 @@ DF_ERROR initObjects()
     g_pMessaging = NULL;
     g_pMessaging = new messageMediator();
 
+    for (int i = 0; i < PRODUCT_DISPENSERS_MAX; i++)
+    {
+        g_productDispensers[i].setup();
+    }
+
     dfRet = createStateArray();
     if (OK != dfRet)
     {
         // TODO: DB function to check/create DB
-        //next
+        // next
     }
     return dfRet;
 }

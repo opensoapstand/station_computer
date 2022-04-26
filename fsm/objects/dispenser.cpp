@@ -44,7 +44,13 @@ dispenser::dispenser()
         the_8344 = new dsed8344();
     }
 
+}
+
+DF_ERROR dispenser::setup(){
     // Set the pump PWM value to a nominal value
+    
+    the_8344->setup();
+    
     the_8344->setPumpPWM(DEFAULT_PUMP_PWM);
     the_8344->setDispenseButtonLight(false);
 
@@ -61,6 +67,7 @@ dispenser::dispenser()
 
     millisAtLastCheck = MILLIS_INIT_DUMMY;
     previousDispensedVolume = 0;
+
 }
 
 /*

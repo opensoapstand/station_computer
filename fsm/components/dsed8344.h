@@ -52,9 +52,11 @@ public:
     bool getDispenseButtonStateDebounced(void);
     bool getDispenseButtonEdge(void);
     void setDispenseButtonLight(bool poweron);
+    void setup(void);
 
 private:
     bool getDispenseButtonState(void);
+    bool is_initialized;
     int i2c_handle = -1;
     char *i2c_bus_name;
 

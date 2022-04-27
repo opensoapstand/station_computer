@@ -133,6 +133,7 @@ public:
         double m_nVolumeFull;
         double m_nVolumeDispensedSinceRestock;
 
+        double m_concentration_multiplier; // some products are concentrated. In that case, we don't dispense the advertised volume. i.e. 1L of 10x concentrate --> dispense 100ml, 900ml of water needs to be added afterwards.
         int m_nSlot;
         bool isEnabled;
 private:

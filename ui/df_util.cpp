@@ -204,47 +204,30 @@ void df_util::set_message_to_send_to_FSM(QString msg)
 void df_util::write_to_file_timestamped(QString basePath, QString data)
 {
     // provide basepath wiht %1 in it for the timestamp to be added.
-    QString time_stamp = QDateTime::currentDateTime().toString("yyyy-MM-dd-hh.mm.ss");
+    QString time_stamp = QDateTime::currentDateTime().toString("_yyyy-MM-dd-hh.mm.ss");
     QString log_file_path = QString(basePath).arg(time_stamp);
 
-    QFile file(log_file_path);
+    // QFile file(log_file_path);
+    // // file.open(QIODevice::WriteOnly | QIODevice::Text );
+    // file.open(QIODevice::Append | QIODevice::Text);
+    // QTextStream out(&file);
+    // out << data;
+    // // optional, as QFile destructor will already do it:
+    // file.close();
+
+}
+
+void df_util::write_to_file(QString path, QString data)
+{
+    // will append to file if exists.
+
+    QFile file(path);
     // file.open(QIODevice::WriteOnly | QIODevice::Text );
     file.open(QIODevice::Append | QIODevice::Text);
     QTextStream out(&file);
-    out << data;
+    out << data << "\n";
     // optional, as QFile destructor will already do it:
     file.close();
-
-    /*
-    -------------" << basePath;
-
-        // QFile file(log_file_path);
-        // file_out = &file;
-
-
-        QFile file(log_file_path);
-        file.open(QIODevice::WriteOnly | QIODevice::Text);
-        QTextStream out(&file);
-        out << data;
-
-        // optional, as QFile destructor will already do it:
-        file.close();
-
-
-        // QFile file(log_file_path);
-        // if (file.open(QIODevice::ReadWrite)) {
-        //     QTextStream stream(&file);
-        //     stream << data << endl;
-        // }
-
-
-        // if (!file_out->open(QFile::WriteOnly | QFile::Text | QFile::Append))
-        // {
-        //     // QTextStream stream(file_out);
-        //     // stream << data << endl;
-        // }
-
-    */
 }
 
 void df_util::send_to_FSM()

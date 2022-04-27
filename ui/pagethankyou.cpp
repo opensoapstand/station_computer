@@ -176,7 +176,11 @@ void pagethankyou::sendDispenseEndToCloud()
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
     curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
     res = curl_easy_perform(curl);
-
+    
+    //temp debug
+    // transactionToFile(curl_data);
+    
+    
     if (res != CURLE_OK)
     {
         qDebug() << "ERROR: Transaction NOT sent to cloud. cURL fail. Error code: " + QString::number(res);
@@ -218,7 +222,8 @@ void pagethankyou::controllerFinishedTransaction()
 void pagethankyou::transactionToFile(char *curl_params)
 {
     QString data_out = curl_params;
-    p_page_idle->dfUtility->write_to_file_timestamped(TRANSACTION_DISPENSE_END_OFFINE_PATH, data_out);
+    // p_page_idle->dfUtility->write_to_file_timestamped(TRANSACTION_DISPENSE_END_OFFINE_PATH, data_out);
+    p_page_idle->dfUtility->write_to_file(TRANSACTION_DISPENSE_END_OFFINE_PATH, data_out);
 }
 
 void pagethankyou::onThankyouTimeoutTick()

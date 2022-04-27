@@ -74,9 +74,10 @@ double product::getVolumePerTick()
 
 bool product::registerFlowSensorTick()
 {
+    // tick from flowsensor interrupt will increase dispensed volume.
     //    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
 
-    m_nVolumeDispensed += getVolumePerTick();
+    m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
     // m_nVolumeDispensed += 100.0;
 }
 double product::getVolumeDispensed()
@@ -803,6 +804,16 @@ bool product::reloadParametersFromDb()
                 m_name_receipt = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
             }
             break;
+            case DB_PRODUCTS_CONCENTRATION_MULTIPLIER:
+            {
+                m_concentration_multiplier =  sqlite3_column_double(stmt, column_index);
+                
+                if (m_concentration_multiplier < 0.00000001){
+                    debugOutput::sendMessage("Concentration multiplier was not set. Will default to 1. Was:" + to_string(m_concentration_multiplier), MSG_INFO);
+                    m_concentration_multiplier = 1.0;
+                }
+            }
+            break;
             case DB_PRODUCTS_DISPENSE_SPEED:
             {
                 m_nDispenseSpeedPWM = sqlite3_column_int(stmt, column_index);
@@ -973,6 +984,7 @@ bool product::reloadParametersFromDb()
             {
             }
             break;
+            
             default:
             {
                 debugOutput::sendMessage("Unexpected column index" + to_string(column_index), MSG_INFO);

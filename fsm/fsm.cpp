@@ -88,7 +88,6 @@ int main()
 
     if (OK == initObjects())
     {
-
         dfRet = g_pMessaging->createThreads(kbThread, ipThread);
 
         if (OK == dfRet)

@@ -330,6 +330,8 @@ void dispenser::dispenseButtonTimingreset()
 {
     dispense_button_total_pressed_millis = 0;
     dispense_button_current_press_millis = 0;
+    using namespace std::chrono;
+    dispense_button_time_at_last_check_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
 
 void dispenser::dispenseButtonTimingUpdate()
@@ -446,11 +448,11 @@ void dispenser::loadEmptyContainerDetectionEnabledFromDb()
     sqlite3_step(stmt);
 
     int val = sqlite3_column_int(stmt, 0);
-   
+
     sqlite3_finalize(stmt);
     sqlite3_close(db);
     m_isEmptyContainerDetectionEnabled = (val != 0);
-    
+
 #endif
 }
 

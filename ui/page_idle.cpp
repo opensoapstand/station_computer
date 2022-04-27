@@ -206,11 +206,20 @@ void page_idle::setTemplateFolder(QString rootPath, QString templateFolder)
     qDebug() << "Template path set to: " + m_templatePath;
 }
 
+QString page_idle::getDefaultTemplatePathFromName(QString backgroundPictureName)
+{
+    QString template_root_path = TEMPLATES_ROOT_PATH;
+    return  template_root_path + TEMPLATES_DEFAULT_NAME + "/" + backgroundPictureName;
+}
+
 void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QString imageName)
 {
     QString image_path = imageName;
 #ifdef ENABLE_DYNAMIC_UI
     image_path = getTemplatePathFromName(imageName);
+    if (! df_util::fileExists(image_path)){
+        image_path = getDefaultTemplatePathFromName(imageName);
+    }
 #endif
 #define USE_PIXMAP
 #ifdef USE_PIXMAP

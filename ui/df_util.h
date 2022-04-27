@@ -74,6 +74,7 @@ using namespace std;
  
 
 #define TEMPLATES_ROOT_PATH "/home/df-admin/production/references/templates/"
+#define TEMPLATES_DEFAULT_NAME "default"
 
 #define PRODUCT_PICTURES_ROOT_PATH "/home/df-admin/production/references/products/%1.png"
 
@@ -105,7 +106,6 @@ using namespace std;
                          
 #define COMPANY_LOGO_PATH "/home/df-admin/production/references/logos/%1_logo_white.png"
 #define DRINKFILL_LOGO_VERTICAL_PATH "/home/df-admin/production/references/logos/Soapstand-logo-white-vertical.png"
-// #define DRINKFILL_LOGO_HORIZONTAL_PATH "/home/df-admin/production/references/logos/Soapstand-logo-white-horizontal.png"
 
 #else
 

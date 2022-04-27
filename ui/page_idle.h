@@ -48,6 +48,7 @@ public:
     QString getTemplateFolder();
     void setTemplateFolder(QString rootPath, QString templateFolder);
     QString getTemplatePathFromName(QString backgroundPictureName);
+    QString getDefaultTemplatePathFromName(QString backgroundPictureName);
     void setBackgroundPictureFromTemplateToPage(QWidget* page, QString imageName );
 
     DrinkOrder* currentProductOrder;

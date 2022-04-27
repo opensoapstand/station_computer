@@ -82,8 +82,10 @@ int main()
     pthread_t ipThread, kbThread;
 
     DF_ERROR dfRet = OK;
+
+    std::string version = CONTROLLER_VERSION;
     debugOutput::sendMessage("***************************************************************************", MSG_INFO);
-    debugOutput::sendMessage("****** SOAPSTAND CONTROLLER v2022-04-26 ***********************************", MSG_INFO);
+    debugOutput::sendMessage("****** SOAPSTAND CONTROLLER v" + version + " ***********************************", MSG_INFO);
     debugOutput::sendMessage("***************************************************************************", MSG_INFO);
 
     if (OK == initObjects())

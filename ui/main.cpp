@@ -14,7 +14,8 @@
 // all rights reserved
 //***************************************
 
-#define UI_VERSION "0.1.4"
+
+
 #include "page_help.h"
 #include "page_init.h"
 #include "page_idle.h"
@@ -84,9 +85,10 @@ int main(int argc, char *argv[])
 {
     // set up logging
     qInstallMessageHandler(myMessageHandler); // Install the handler
+    QString title = QString("********** START SOAPSTAND UI v%1 *********************************").arg(QString(UI_VERSION));
 
     qDebug() << "***************************************************************************";
-    qDebug() << "********** START SOAPSTAND UI v2022-04-26 *********************************";
+    qDebug() << title;
     qDebug() << "***************************************************************************";
 
     // Fire up QT GUI Thread

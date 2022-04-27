@@ -39,6 +39,9 @@ page_maintenance::page_maintenance(QWidget *parent) : QWidget(parent),
     product_overlay_labels[1] = ui->product2_overlay_label;
     product_overlay_labels[2] = ui->product3_overlay_label;
     product_overlay_labels[3] = ui->product4_overlay_label;
+
+    QString title = QString("Soapstand UI v%1").arg(UI_VERSION);
+    ui->label_ui_version->setText(title);
 }
 
 // DTOR
@@ -92,8 +95,6 @@ void page_maintenance::showEvent(QShowEvent *event)
     ui->product4_button->setIconSize(QSize(241, 381));
 
 #endif
-
-   
 
     // ui->enable_empty_container_checkBox->setChecked(true);
 

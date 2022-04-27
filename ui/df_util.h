@@ -10,6 +10,8 @@
 // #define USE_OLD_DATABASE
 //#define START_FSM_FROM_UI //enabled by default (start controller from ui)
 
+#define UI_VERSION "1.0.1"
+
 #define ENABLE_DYNAMIC_UI
 #define ENABLE_COUPON   // Petros stations have no coupon
 

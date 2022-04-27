@@ -130,14 +130,18 @@ DF_ERROR stateInit::dispenserSetup()
 /**/
 DF_ERROR stateInit::setProducts()
 {
+
     for (int slot_index=0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
     {
         debugOutput::sendMessage("Setup dispenser: " + to_string (slot_index+1), MSG_INFO);
         g_productDispensers[slot_index].setSlot(slot_index + 1);
         debugOutput::sendMessage("slot set.", MSG_INFO);
         g_productDispensers[slot_index].setProduct(new product(slot_index+1));
+
         debugOutput::sendMessage("product set..", MSG_INFO);
-        // g_productDispensers[slot_index].getProduct()->reloadParametersFromDb();
+        g_productDispensers[slot_index].getProduct()->isDbValid();
+
+
     }
     return OK;
 }

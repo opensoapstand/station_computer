@@ -75,6 +75,7 @@ public:
         bool testParametersFromDb();
 
         double getVolumeDispensed();
+        bool isDbValid();
 
         void resetVolumeDispensed();
 

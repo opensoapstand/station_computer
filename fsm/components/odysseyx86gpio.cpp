@@ -347,7 +347,7 @@ void oddyseyx86GPIO::monitorGPIO_Buttons_powerAndMaintenance()
                         }
                         else
                         {
-                                debugOutput::sendMessage("Nothing", MSG_INFO);
+                                debugOutput::sendMessage("Invalid press. Ghost button ?! Buttons not connected?", MSG_INFO);
                         }
                         usleep(5000); // Sleep to make sure debug gets chance to print
                 }

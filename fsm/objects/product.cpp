@@ -187,13 +187,16 @@ void product::productVolumeInfo()
     //	cout << "Dispensed so far: " << m_nVolumeDispensed << endl;
 }
 
-double product::getVolumeFull(){
+double product::getVolumeFull()
+{
     return m_nVolumeFull;
 }
-double product::getVolumeRemaining(){
+double product::getVolumeRemaining()
+{
     return m_nVolumeRemaining;
 }
-double product::getVolumeDispensedSinceLastRestock(){
+double product::getVolumeDispensedSinceLastRestock()
+{
     return m_nVolumeDispensedSinceRestock;
 }
 
@@ -283,7 +286,7 @@ double product::getPrice(char size)
     else
     {
         debugOutput::sendMessage("ERROR: Unknown volume parameter for price: " + size, MSG_INFO);
-         return 666;
+        return 666;
     }
 #endif
 }
@@ -584,40 +587,77 @@ string product::getPLU(char size)
 // }
 
 // #else
+bool product::isDbValid()
+{
+    // string table_products_columns[TABLE_PRODUCTS_COLUMN_COUNT] = {"productId", "soapstand_product_serial", "slot", "name", "size_unit", "currency", "payment", "name_receipt", "concentrate_multiplier","dispense_speed", "calibration_const", "volume_per_tick", "last_restock", "volume_full", "volume_remaining", "volume_dispensed_since_restock", "volume_dispensed_total", "is_enabled_small", "is_enabled_medium", "is_enabled_large", "is_enabled_custom", "size_small", "size_medium", "size_large", "size_custom_min", "size_custom_max", "price_small", "price_medium", "price_large", "price_custom", "plu_small", "plu_medium", "plu_large", "plu_custom", "pid_small", "pid_medium", "pid_large", "pid_custom", "flavour", "image_url", "type", "ingredients", "features", "description"};
+    bool is_valid = true;
 
+    rc = sqlite3_open(DB_PATH, &db);
+    sqlite3_stmt *stmt;
+    string sql_string = "PRAGMA table_info(products);";
+
+    /* Create SQL statement for transactions */
+    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+    // sqlite3_step(stmt);
+    // std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+
+    int status;
+    status = sqlite3_step(stmt);
+    int row = 0;
+    // debugOutput::sendMessage("process record: " + sql_string, MSG_INFO);
+    while (status == SQLITE_ROW && is_valid)
+    {
+        //int columns_count = sqlite3_data_count(stmt);
+        // debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
+
+        // for (int column_index = 0; column_index < columns_count; column_index++)
+        int columns_count = 3;
+        for (int column_index = 0; column_index < columns_count; column_index++)
+        {
+
+            // debugOutput::sendMessage("column index: " + to_string(column_index), MSG_INFO);
+
+            switch (column_index)
+            {
+            case (1):
+            {
+
+                string column_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+                // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
+                // debugOutput::sendMessage("should be: " + table_products_columns[row], MSG_INFO);
+
+                if (!column_name.compare(table_products_columns[row]))
+                {
+                    //debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
+                }
+                else
+                {
+                    debugOutput::sendMessage("ERROR: Corrupt database. Column name=" + column_name + " while it should be: "+ table_products_columns[row], MSG_ERROR);
+                    is_valid = false;
+                }
+                break;
+            }
+            default:
+            {
+            }
+            break;
+            }
+        }
+
+        status = sqlite3_step(stmt); // next record, every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
+        row++;
+    };
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return is_valid;
+}
 bool product::reloadParametersFromDb()
 {
     for (uint8_t i = 0; i < 4; i++)
     {
         isEnabledSizes[i] = false;
     }
-
-    // m_nSlot = slot;
-    //     m_name = name;
-    //     m_nVolumeDispensed = 0.0;
-    //     m_nVolumePerTick = nVolumePerTick; // m_nVolumePerTick = 6; //  6ml per tick is standard
-    //     m_nDispenseSpeedPWM = dispense_speed_pwm;
-    //     m_calibration_const = calibration_const;
-
-    //     m_nVolumeTarget_m = nVolumeTarget_m;
-    //     m_nVolumeTarget_l = nVolumeTarget_l;
-    //     m_nVolumeTarget_s = nVolumeTarget_s;
-    //     m_nVolumeTarget_c_min = nVolumeTarget_c_min;
-    //     m_nVolumeTarget_c_max = nVolumeTarget_c_max;
-
-    //     m_price_small = price_small;
-    //     m_price_medium = price_medium;
-    //     m_price_large = price_large;
-    //     m_price_custom_per_liter = price_custom_per_liter;
-
-    //     m_nPLU_small = nPLU_small;
-    //     m_nPLU_medium = nPLU_medium;
-    //     m_nPLU_large = nPLU_large;
-    //     m_nPLU_custom = nPLU_c;
-
-    //     m_paymentMethod = paymentMethod;
-    //     m_name_receipt = name_receipt;
-    //     m_display_unit = display_unit;
 
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
@@ -806,9 +846,10 @@ bool product::reloadParametersFromDb()
             break;
             case DB_PRODUCTS_CONCENTRATION_MULTIPLIER:
             {
-                m_concentration_multiplier =  sqlite3_column_double(stmt, column_index);
-                
-                if (m_concentration_multiplier < 0.00000001){
+                m_concentration_multiplier = sqlite3_column_double(stmt, column_index);
+
+                if (m_concentration_multiplier < 0.00000001)
+                {
                     debugOutput::sendMessage("Concentration multiplier was not set. Will default to 1. Was:" + to_string(m_concentration_multiplier), MSG_INFO);
                     m_concentration_multiplier = 1.0;
                 }
@@ -984,7 +1025,7 @@ bool product::reloadParametersFromDb()
             {
             }
             break;
-            
+
             default:
             {
                 debugOutput::sendMessage("Unexpected column index" + to_string(column_index), MSG_INFO);

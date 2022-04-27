@@ -104,7 +104,7 @@ void page_idle::showEvent(QShowEvent *event)
 
     addCompanyLogoToLabel(ui->logo_label);
 
-    addPictureToLabel(ui->drinkfill_logo_label,DRINKFILL_LOGO_VERTICAL_PATH);
+    addPictureToLabel(ui->drinkfill_logo_label, DRINKFILL_LOGO_VERTICAL_PATH);
     this->raise();
 }
 
@@ -117,7 +117,7 @@ void page_idle::on_toSelectProductPageButton_clicked()
     qDebug() << "Proceed to next page button clicked. ";
     this->raise();
     p_pageSelectProduct->showFullScreen();
-    //this->lower();
+    // this->lower();
 
     // DO NOT HIDE IDLE PAGE
     // it's staying in the background to counter a hack UBC students found (when changing screens and tapping during the swap, they could get a hold of the machine)
@@ -197,7 +197,14 @@ QString page_idle::getTemplateFolder()
 }
 QString page_idle::getTemplatePathFromName(QString backgroundPictureName)
 {
-    return m_templatePath + backgroundPictureName;
+    QString image_path = m_templatePath + backgroundPictureName;
+
+    if (!df_util::fileExists(image_path))
+    {
+        qDebug() << "File not found in template folder, will revert to default template: " + image_path;
+        image_path = getDefaultTemplatePathFromName(backgroundPictureName);
+    }
+    return image_path;
 }
 
 void page_idle::setTemplateFolder(QString rootPath, QString templateFolder)
@@ -209,7 +216,7 @@ void page_idle::setTemplateFolder(QString rootPath, QString templateFolder)
 QString page_idle::getDefaultTemplatePathFromName(QString backgroundPictureName)
 {
     QString template_root_path = TEMPLATES_ROOT_PATH;
-    return  template_root_path + TEMPLATES_DEFAULT_NAME + "/" + backgroundPictureName;
+    return template_root_path + TEMPLATES_DEFAULT_NAME + "/" + backgroundPictureName;
 }
 
 void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QString imageName)
@@ -217,9 +224,11 @@ void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QStrin
     QString image_path = imageName;
 #ifdef ENABLE_DYNAMIC_UI
     image_path = getTemplatePathFromName(imageName);
-    if (! df_util::fileExists(image_path)){
-        image_path = getDefaultTemplatePathFromName(imageName);
-    }
+    // if (! df_util::fileExists(image_path)){
+
+    //     image_path = getDefaultTemplatePathFromName(imageName);
+    //     qDebug() << "File not found in template folder, will revert to default template: " + image_path;
+    // }
 #endif
 #define USE_PIXMAP
 #ifdef USE_PIXMAP

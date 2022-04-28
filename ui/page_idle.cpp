@@ -106,6 +106,7 @@ void page_idle::showEvent(QShowEvent *event)
 
     addPictureToLabel(ui->drinkfill_logo_label, DRINKFILL_LOGO_VERTICAL_PATH);
     this->raise();
+    m_transitioning = false;
 }
 
 /*
@@ -115,8 +116,14 @@ void page_idle::showEvent(QShowEvent *event)
 void page_idle::on_toSelectProductPageButton_clicked()
 {
     qDebug() << "Proceed to next page button clicked. ";
-    this->raise();
-    p_pageSelectProduct->showFullScreen();
+
+    if (!m_transitioning)
+    {
+        m_transitioning = true;
+        this->raise();
+        p_pageSelectProduct->showFullScreen();
+        m_transitioning = false;
+    }
     // this->lower();
 
     // DO NOT HIDE IDLE PAGE

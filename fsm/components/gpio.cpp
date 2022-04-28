@@ -34,7 +34,7 @@ gpio::~gpio()
 // kick off a listener_flowsensor
 void gpio::startListener_flowsensor()
 {
-        debugOutput::sendMessage("-----startListener_flowsensor-----", MSG_INFO);
+        debugOutput::sendMessage("Thread init: Flowsensor tick listener", MSG_INFO);
         DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
         // if ((nullptr == gpioThread) && (nullptr != m_pDispenser)) // UNCOMMENT LODE
@@ -51,7 +51,7 @@ void gpio::startListener_flowsensor()
 
 void gpio::startListener_buttons_powerAndMaintenance()
 {
-        debugOutput::sendMessage("-----startListener_buttons_powerAndMaintenance-----", MSG_INFO);
+        debugOutput::sendMessage("Thread init: Maintenance Button and Shutdown Button listener", MSG_INFO);
         DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
         //        if ((nullptr ==  gpioThread) && (nullptr != m_pDispenser)){
@@ -88,7 +88,6 @@ void gpio::listener_flowsensor()
         while (!m_stop)
         {
                 monitorGPIO_Flowsensor();
-                //                monitorGPIO_Buttons_powerAndMaintenance();
                 usleep(1000);
         }
 
@@ -104,7 +103,6 @@ void gpio::listener_buttons_powerAndMaintenance()
 
         while (!m_stop)
         {
-                //            monitorGPIO_Flowsensor();
                 monitorGPIO_Buttons_powerAndMaintenance();
                 usleep(1000);
         }

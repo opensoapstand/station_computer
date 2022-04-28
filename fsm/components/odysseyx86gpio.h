@@ -28,7 +28,7 @@ public:
 	~oddyseyx86GPIO();
 
 	//setter
-	DF_ERROR setFlowPin(int pinNumber);
+	// DF_ERROR setFlowPin(int pinNumber);
 
 	//
 	DF_ERROR setPinAsInputElseOutput(bool input);

@@ -113,17 +113,17 @@ oddyseyx86GPIO::~oddyseyx86GPIO()
         return;
 }
 
-// Setter for flow sensor on Odyssey GPIO Pin
-DF_ERROR oddyseyx86GPIO::setFlowPin(int pinNumber)
-{
-        DF_ERROR df_Ret = ERROR_BAD_PARAMS;
+// // Setter for flow sensor on Odyssey GPIO Pin
+// DF_ERROR oddyseyx86GPIO::setFlowPin(int pinNumber)
+// {
+//         DF_ERROR df_Ret = ERROR_BAD_PARAMS;
 
-        //may need a set of array for avilable x86 pins to verify
-        m_nPin = pinNumber;
-        df_Ret = OK;
+//         //may need a set of array for avilable x86 pins to verify
+//         m_nPin = pinNumber;
+//         df_Ret = OK;
 
-        return df_Ret;
-}
+//         return df_Ret;
+// }
 
 // Setter for Direction of flow sensor on Odyssey GPIO Pin
 // Writes "in" into a GPIO direction file while

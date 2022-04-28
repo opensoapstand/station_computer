@@ -98,18 +98,23 @@ void pagethankyou::showEvent(QShowEvent *event)
     qDebug() << "ahoyy24";
     DbManager db(DB_PATH);
     QString paymentMethod = db.getPaymentMethod(p_page_idle->currentProductOrder->getSelectedSlot());
+    bool hasReceiptPrinter = db.hasReceiptPrinter();
     db.closeDB();
 
-    if (paymentMethod == "qr" || paymentMethod == "tap")
+    if (hasReceiptPrinter)
+    {
+        ui->thank_you_message_label->setText("Please take <br>your receipt!");
+        ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!");
+    }
+    else if (paymentMethod == "qr" || paymentMethod == "tap")
     {
         ui->thank_you_message_label->setText("Thank you!");
         ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.");
-    }
-    else
-    {
 
-        ui->thank_you_message_label->setText("Please take <br>your receipt!");
-        ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!");
+    }else{
+        ui->thank_you_message_label->setText("Thank you!");
+        ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.");
+
     }
 
     is_in_state_thank_you = true;
@@ -177,8 +182,6 @@ void pagethankyou::sendDispenseEndToCloud()
     curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
     res = curl_easy_perform(curl);
     
-    //temp debug
-    // transactionToFile(curl_data);
     
     
     if (res != CURLE_OK)

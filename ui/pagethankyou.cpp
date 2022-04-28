@@ -110,11 +110,11 @@ void pagethankyou::showEvent(QShowEvent *event)
     {
         ui->thank_you_message_label->setText("Thank you!");
         ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.");
-
-    }else{
+    }
+    else
+    {
         ui->thank_you_message_label->setText("Thank you!");
         ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.");
-
     }
 
     is_in_state_thank_you = true;
@@ -181,9 +181,7 @@ void pagethankyou::sendDispenseEndToCloud()
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
     curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
     res = curl_easy_perform(curl);
-    
-    
-    
+
     if (res != CURLE_OK)
     {
         qDebug() << "ERROR: Transaction NOT sent to cloud. cURL fail. Error code: " + QString::number(res);

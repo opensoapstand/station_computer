@@ -80,7 +80,7 @@ DF_ERROR stateManualPump::onAction()
       else if ('1' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Enable dispenser pump " + to_string(m_active_pump_index + 1) + "(press dispense button to make pump actually work)", MSG_INFO);
-         productDispensers[m_active_pump_index].setPumpEnable(m_active_pump_index + 1); // POS is 1->4! index is 0->3
+         productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
       }
 
       else if ('2' == m_pMessaging->getAction())
@@ -158,7 +158,7 @@ DF_ERROR stateManualPump::onAction()
       else if ('7' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("HACKHACK HAKC", MSG_INFO);
-         productDispensers[m_active_pump_index].testHandsfreeDispensing();
+         productDispensers[m_active_pump_index].reversePumpForSetTimeMillis(500);
          
       }
       else if ('9' == m_pMessaging->getAction())
@@ -167,7 +167,7 @@ DF_ERROR stateManualPump::onAction()
          if (isFlowTest){
             using namespace std::chrono;
             startFlowTestMillis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-            productDispensers[m_active_pump_index].setPumpEnable(m_active_pump_index + 1);
+            productDispensers[m_active_pump_index].setPumpEnable();
             debugOutput::sendMessage("Flow measuring test. Keep dispense button pushed during test. Will display test data in csv format.", MSG_INFO);
 
          }else{
@@ -283,7 +283,7 @@ DF_ERROR stateManualPump::customVolumeDispenseTest()
       startDispensingEpochMillis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
       productDispensers[m_active_pump_index].setPumpDirectionForward();
-      productDispensers[m_active_pump_index].setPumpEnable(m_active_pump_index + 1);
+      productDispensers[m_active_pump_index].setPumpEnable();
    }
 
    using namespace std::chrono;
@@ -295,7 +295,7 @@ DF_ERROR stateManualPump::customVolumeDispenseTest()
       isDispensing = false;
       // productDispensers[m_active_pump_index].setPumpsDisableAll();
       productDispensers[m_active_pump_index].setPumpDirectionReverse();
-      productDispensers[m_active_pump_index].setPumpEnable(m_active_pump_index + 1);
+      productDispensers[m_active_pump_index].setPumpEnable();
       using namespace std::chrono;
       startRetractingEpochMillis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
       isRetracting = true;
@@ -391,7 +391,7 @@ DF_ERROR stateManualPump::pumpCyclicTest()
          int speed = productDispensers[m_active_pump_index].getProduct()->getPWMFromDB();
 
          debugOutput::sendMessage("Pump speed for test: " + to_string(speed), MSG_INFO);
-         productDispensers[m_active_pump_index].setPumpEnable(m_active_pump_index + 1); // POS is 1->4! index is 0->3
+         productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
          isCyclicTestingPumpOn = true;
          cyclicTestPeriodStartEpochMillis = now;
       }
@@ -404,18 +404,18 @@ DF_ERROR stateManualPump::pumpTest()
 
    productDispensers[m_active_pump_index].setPumpDirectionForward();
    productDispensers[m_active_pump_index].setPumpPWM(125);
-   productDispensers[m_active_pump_index].setPumpEnable(m_active_pump_index + 1); // POS is 1->4! index is 0->3
+   productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
    usleep(1000000);                                         // press button to have the pump pumping.
    productDispensers[m_active_pump_index].setPumpDirectionForward();
    productDispensers[m_active_pump_index].setPumpPWM(255);
-   productDispensers[m_active_pump_index].setPumpEnable(m_active_pump_index + 1); // POS is 1->4! index is 0->3
+   productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
    usleep(1000000);                                         // press
 
    productDispensers[m_active_pump_index].setPumpsDisableAll();
 
    productDispensers[m_active_pump_index].setPumpDirectionReverse();
    productDispensers[m_active_pump_index].setPumpPWM(125);
-   productDispensers[m_active_pump_index].setPumpEnable(m_active_pump_index + 1); // POS is 1->4! index is 0->3
+   productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
    usleep(1000000);                                         // press button to have the pump pumping.
    productDispensers[m_active_pump_index].setPumpsDisableAll();
 }

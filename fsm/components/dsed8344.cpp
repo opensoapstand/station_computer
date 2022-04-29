@@ -88,9 +88,11 @@ dsed8344::~dsed8344(void)
 // Public methods
 ///////////////////////////////////////////////////////////////////////////
 
-void dsed8344::setup(){
+void dsed8344::setup()
+{
 
-    if (! is_initialized){
+    if (!is_initialized)
+    {
 
         setup_i2c_bus();
 
@@ -128,7 +130,8 @@ bool dsed8344::setPumpPWM(uint8_t pwm_val)
     if (max31760_pwm_found)
     {
         return SendByte(MAX31760_ADDRESS, 0x50, pwm_val); // PWM value
-    }else if (pic_pwm_found)
+    }
+    else if (pic_pwm_found)
     {
         float f_value;
 
@@ -141,17 +144,20 @@ bool dsed8344::setPumpPWM(uint8_t pwm_val)
         // return SendByte(PIC_ADDRESS, 0x00, (unsigned char)f_value); // PWM value
         f_value = (float)pwm_val;
         f_value = floor(f_value / 2.55);
-        unsigned char pwm_value = (unsigned char ) f_value; // invert speed. pwm is inverted.
-        if (pwm_value > 100){
-            debugOutput::sendMessage("Speed invalid. Will set to max. Please provide argument in [0..255] interval. Provided: " + to_string(pwm_val), MSG_WARNING);    
+        unsigned char pwm_value = (unsigned char)f_value; // invert speed. pwm is inverted.
+        if (pwm_value > 100)
+        {
+            debugOutput::sendMessage("Speed invalid. Will set to max. Please provide argument in [0..255] interval. Provided: " + to_string(pwm_val), MSG_WARNING);
             pwm_value = 100;
         }
 
-        //pwm_value = 100 - pwm_value; // invert speed. pwm is inverted.
+        // pwm_value = 100 - pwm_value; // invert speed. pwm is inverted.
 
         debugOutput::sendMessage("Motor speed set to: " + to_string(pwm_value), MSG_WARNING);
         return SendByte(PIC_ADDRESS, 0x00, pwm_value); // PWM value
-    }else{
+    }
+    else
+    {
         debugOutput::sendMessage("No motor speed controller found to set PWM.", MSG_WARNING);
     }
 
@@ -174,8 +180,9 @@ bool dsed8344::setPumpDirection(bool forwardElseReverse)
     bool read_direction_is_forward = (reg_value & 0b00100000) > 0;
     bool direction_changed = read_direction_is_forward != forwardElseReverse;
 
-    if (direction_changed){
-        //debugOutput::sendMessage("dir changed.....", MSG_INFO);
+    if (direction_changed)
+    {
+        // debugOutput::sendMessage("dir changed.....", MSG_INFO);
         pwm_value = getPumpPWM();
 
         setPumpPWM(0);
@@ -194,10 +201,11 @@ bool dsed8344::setPumpDirection(bool forwardElseReverse)
 
         // Restore the pump RPM value
         setPumpPWM(pwm_value);
-     }else{
-       debugOutput::sendMessage("No change in dir.....", MSG_INFO);
-
-     }
+    }
+    else
+    {
+        debugOutput::sendMessage("No change in dir.....", MSG_INFO);
+    }
 
     return true;
 } // End of setPumpDirection()
@@ -229,17 +237,27 @@ bool dsed8344::setPumpEnable(unsigned char pump_number)
     return true;
 } // End setPumpEnable()
 
-void dsed8344::buttonLessReverseHack(){
-    unsigned char  reg_value = ReadByte(PCA9534_ADDRESS, 0x03);
+void dsed8344::virtualButtonPressHack()
+{
+    // WARNING: This overrides the physical dispense button. As such, there is no fail safe mechanism.
+    // If the program crashes while the button is pressed, it might keep on dispensing *forever*.
+    
+    unsigned char reg_value = ReadByte(PCA9534_ADDRESS, 0x03);
     reg_value = reg_value & 0b01111111;
-    SendByte(PCA9534_ADDRESS, 0x03, reg_value); // Enable outputs
+    SendByte(PCA9534_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
 
     reg_value = ReadByte(PCA9534_ADDRESS, 0x01);
-    reg_value = reg_value | 0b10000000;
-    SendByte(PCA9534_ADDRESS, 0x01, reg_value); 
-    setPumpEnable(1);
-
+    reg_value = reg_value & 0b01111111; // virtual button press 
+    SendByte(PCA9534_ADDRESS, 0x01, reg_value);
 }
+
+void dsed8344::virtualButtonUnpressHack()
+{
+    unsigned char reg_value = ReadByte(PCA9534_ADDRESS, 0x03);
+    reg_value = reg_value | 0b10000000;
+    SendByte(PCA9534_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+}
+
 
 bool dsed8344::setPumpsDisableAll()
 {
@@ -473,16 +491,7 @@ bool dsed8344::check_8344_configuration(void)
                 debugOutput::sendMessage(message, MSG_ERROR);
                 debugOutput::sendMessage("Pump control impossible.", MSG_ERROR);
                 config_valid = false;
-                // return false;
             }
-            // if (i2c_probe_address == MAX31760_ADDRESS)
-            // {
-            //     std::string message("MAX31760 not found on I2C bus ");
-            //     message.append(i2c_bus_name);
-            //     debugOutput::sendMessage(message, MSG_ERROR);
-            //     debugOutput::sendMessage("Pump control impossible.", MSG_ERROR);
-            //     return false;
-            // }
         }
         else
         {
@@ -505,7 +514,6 @@ bool dsed8344::check_8344_configuration(void)
                 std::string message("Unknown device found on I2C bus ");
                 message.append(i2c_bus_name);
                 debugOutput::sendMessage(message, MSG_ERROR);
-                // return false;
                 config_valid = false;
             }
         }
@@ -518,7 +526,6 @@ bool dsed8344::check_8344_configuration(void)
         debugOutput::sendMessage(message, MSG_ERROR);
         debugOutput::sendMessage("Pump control impossible.", MSG_ERROR);
         config_valid = false;
-        // return false;
     }
 
     if (pic_pwm_found && max31760_pwm_found)
@@ -528,9 +535,7 @@ bool dsed8344::check_8344_configuration(void)
         debugOutput::sendMessage(message, MSG_ERROR);
         debugOutput::sendMessage("Pump control impossible.", MSG_ERROR);
         config_valid = false;
-        // return false;
     }
-    // return true;
     return config_valid;
 
 } // End of check_8344_configuration()
@@ -541,20 +546,6 @@ void dsed8344::initialize_8344(void)
     // Initialize the PCA9534
     SendByte(PCA9534_ADDRESS, 0x01, 0b11000000); // Output pin values
     SendByte(PCA9534_ADDRESS, 0x03, 0b10011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
-
-    // Initialize the MAX31760
-
-    // Temperature alerts masked
-    // PWM frequency 25 kHz
-    // PWM polarity negative (100% setting is low)
-    // SendByte(MAX31760_ADDRESS, 0x00, 0b10011100);
-
-    // Set direct fan control
-    // SendByte(MAX31760_ADDRESS, 0x01, 0b00010001);
-
-    // Set ramp to immediate
-    // Enable TACH1 input
-    // SendByte(MAX31760_ADDRESS, 0x02, 0b00110001);
 
     if (max31760_pwm_found)
     {
@@ -583,11 +574,5 @@ void dsed8344::initialize_8344(void)
         // Set PWM value
         SendByte(PIC_ADDRESS, 0x00, 50);
     }
-
-    // Disable all alerts
-    // SendByte(MAX31760_ADDRESS, 0x04, 0b11111111);
-
-    // Set PWM value
-    // SendByte(MAX31760_ADDRESS, 0x50, 0x80);
 
 } // End of initialize_8344 ()

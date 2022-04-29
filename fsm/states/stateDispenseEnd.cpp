@@ -60,6 +60,7 @@ DF_ERROR stateDispenseEnd::onAction()
     DF_ERROR e_ret = OK;
 
     productDispensers[pos].stopDispense();
+    productDispensers[pos].reversePumpForSetTimeMillis(500);
 
     // give time to settle down
     usleep(100000);

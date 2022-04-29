@@ -73,7 +73,7 @@ public:
       DF_ERROR setPumpDirectionForward();
       DF_ERROR setPumpDirectionReverse();
       DF_ERROR setPumpsDisableAll();
-      DF_ERROR setPumpEnable(int pos);
+      DF_ERROR setPumpEnable();
       DF_ERROR setPumpPWM(uint8_t value);
       bool getDispenseButtonValue();
       double getVolumeDispensed();
@@ -86,7 +86,7 @@ public:
       Time_val getVolumeDispensedNow();
       DF_ERROR updateRunningAverageWindow();
 
-      void testHandsfreeDispensing();
+      void reversePumpForSetTimeMillis(int millis);
 
       Time_val getAveragedFlowRate(uint64_t window_length_millis);
 

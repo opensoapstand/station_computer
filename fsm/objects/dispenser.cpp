@@ -268,7 +268,7 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
     // *m_pIsDispensing = false;
-    std::string msg = "-----dispenser::setFlowsensor-----Position: " + std::to_string(pos) + " (pin: " + std::to_string(pin) + ")";
+    std::string msg = "Dispenser::setFlowsensor. Position: " + std::to_string(pos) + " (pin: " + std::to_string(pin) + ")";
     // debugOutput::sendMessage("-----dispenser::setFlowsensor-----", MSG_INFO);
     debugOutput::sendMessage(msg, MSG_INFO);
 
@@ -316,7 +316,7 @@ DF_ERROR dispenser::setPump(int mcpAddress, int pin, int position)
 // Reverse pump: Turn forward pin HIGH - Reverse pin LOW
 DF_ERROR dispenser::setPumpDirectionForward()
 {
-    debugOutput::sendMessage("-----FORWARD Pump-----", MSG_INFO);
+    debugOutput::sendMessage("Pump direction: Forward.", MSG_INFO);
     the_8344->setPumpDirection(true);
 }
 
@@ -367,30 +367,29 @@ uint64_t dispenser::getButtonPressedCurrentPressMillis()
 // Reverse pump: Turn forward pin LOW - Reverse pin HIGH
 DF_ERROR dispenser::setPumpDirectionReverse()
 {
-    debugOutput::sendMessage("-----REVERSE Pump-----", MSG_INFO);
+    debugOutput::sendMessage("Pump direction: reverse", MSG_INFO);
     the_8344->setPumpDirection(false);
 }
 
 // Stops pumping: Turn forward pin LOW - Reverse pin LOW
 DF_ERROR dispenser::setPumpsDisableAll()
 {
-    debugOutput::sendMessage("-----Stop Pump-----", MSG_INFO);
+    debugOutput::sendMessage("Pump disable: all.", MSG_INFO);
     the_8344->setPumpsDisableAll();
     m_isPumpEnabled = false;
 }
 
-void dispenser::testHandsfreeDispensing()
+void dispenser::reversePumpForSetTimeMillis(int millis)
 {
-     the_8344->buttonLessReverseHack(); 
-
-    // Set pump direction to reverse
-    // Set IO7 to high
-    // Set IO7 to output
-    // Set IO7 to low  // Pump is now running!
-    // Wait for however long you want to run the pump
-    // Set IO7 to high  // Pump stops
-    // Set IO7 to input
-    // Set pump direction to forward
+     debugOutput::sendMessage("Pump auto reverse. Reverse time millis: " + to_string(millis), MSG_INFO);
+    usleep(200000); // give pump time to stop
+    setPumpDirectionReverse();
+    setPumpEnable();
+    the_8344->virtualButtonPressHack();
+    usleep(millis * 1000);
+    the_8344->virtualButtonUnpressHack();
+    setPumpsDisableAll();
+    setPumpDirectionForward();
 }
 
 bool dispenser::isPumpEnabled()
@@ -398,18 +397,18 @@ bool dispenser::isPumpEnabled()
     return m_isPumpEnabled;
 }
 
-DF_ERROR dispenser::setPumpEnable(int pos)
+DF_ERROR dispenser::setPumpEnable()
 {
     // first pump is 1.
     // still needs dispense button to actually get the pump to start
-    debugOutput::sendMessage("-----Enable Pump-----", MSG_INFO);
-    the_8344->setPumpEnable(pos);
+    debugOutput::sendMessage("Pump enable position: " + to_string(this->slot), MSG_INFO);
+    the_8344->setPumpEnable(this->slot); // pump 1 to 4 
     m_isPumpEnabled = true;
 }
 
 DF_ERROR dispenser::setPumpPWM(uint8_t value)
 {
-    debugOutput::sendMessage("-----Set PWM----- " + to_string(value), MSG_INFO);
+    debugOutput::sendMessage("Pump set speed. PWM [0..255]: " + to_string(value), MSG_INFO);
     the_8344->setPumpPWM((unsigned char)value);
 }
 
@@ -428,7 +427,7 @@ DF_ERROR dispenser::startDispense()
     setPumpPWM((uint8_t)(m_pDispensedProduct->getPWM()));
     // setPumpPWM((uint8_t)(m_pDispensedProduct->getPWMFromDB()));
 
-    setPumpEnable(this->slot);
+    setPumpEnable();
 
     flowRateBufferIndex = 0;
     for (uint16_t i = 0; i < RUNNING_AVERAGE_WINDOW_LENGTH; i++)

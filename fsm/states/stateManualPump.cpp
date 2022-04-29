@@ -155,6 +155,12 @@ DF_ERROR stateManualPump::onAction()
          debugOutput::sendMessage("Do pump test", MSG_INFO);
          pumpTest();
       }
+      else if ('7' == m_pMessaging->getAction())
+      {
+         debugOutput::sendMessage("HACKHACK HAKC", MSG_INFO);
+         productDispensers[m_active_pump_index].testHandsfreeDispensing();
+         
+      }
       else if ('9' == m_pMessaging->getAction())
       {
          isFlowTest = !isFlowTest;
@@ -165,7 +171,7 @@ DF_ERROR stateManualPump::onAction()
             debugOutput::sendMessage("Flow measuring test. Keep dispense button pushed during test. Will display test data in csv format.", MSG_INFO);
 
          }else{
-            debugOutput::sendMessage("End of flow measuring.");
+            debugOutput::sendMessage("End of flow measuring.", MSG_INFO);
             productDispensers[m_active_pump_index].setPumpsDisableAll();
          }
       }
@@ -190,6 +196,7 @@ DF_ERROR stateManualPump::onAction()
                                                       "   ixxx;  where xxx is in milliseconds. e.g. i200;  will revert the pump for 200ms\n"
                                                       "   the pump speed cannot be set during this test)\n"
                                                       "6: Toggle endurance test. Active pump toggle cyclic ON/OFF (keep button pressed)\n"
+                                                      "7: Reverse hack\n"
                                                       "8: Run pump routine (hold dispense button for it to work)\n"
                                                       "9: Toggle flow measuring test\n",
              MSG_INFO);

@@ -53,6 +53,7 @@ public:
     bool getDispenseButtonEdge(void);
     void setDispenseButtonLight(bool poweron);
     void setup(void);
+    void buttonLessReverseHack(void);
 
 private:
     bool getDispenseButtonState(void);

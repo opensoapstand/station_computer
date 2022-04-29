@@ -86,6 +86,8 @@ public:
       Time_val getVolumeDispensedNow();
       DF_ERROR updateRunningAverageWindow();
 
+      void testHandsfreeDispensing();
+
       Time_val getAveragedFlowRate(uint64_t window_length_millis);
 
       bool getIsDispenseTargetReached();

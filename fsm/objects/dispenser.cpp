@@ -43,14 +43,14 @@ dispenser::dispenser()
     {
         the_8344 = new dsed8344();
     }
-
 }
 
-DF_ERROR dispenser::setup(){
+DF_ERROR dispenser::setup()
+{
     // Set the pump PWM value to a nominal value
-    
+
     the_8344->setup();
-    
+
     the_8344->setPumpPWM(DEFAULT_PUMP_PWM);
     the_8344->setDispenseButtonLight(false);
 
@@ -67,7 +67,6 @@ DF_ERROR dispenser::setup(){
 
     millisAtLastCheck = MILLIS_INIT_DUMMY;
     previousDispensedVolume = 0;
-
 }
 
 /*
@@ -378,6 +377,20 @@ DF_ERROR dispenser::setPumpsDisableAll()
     debugOutput::sendMessage("-----Stop Pump-----", MSG_INFO);
     the_8344->setPumpsDisableAll();
     m_isPumpEnabled = false;
+}
+
+void dispenser::testHandsfreeDispensing()
+{
+     the_8344->buttonLessReverseHack(); 
+
+    // Set pump direction to reverse
+    // Set IO7 to high
+    // Set IO7 to output
+    // Set IO7 to low  // Pump is now running!
+    // Wait for however long you want to run the pump
+    // Set IO7 to high  // Pump stops
+    // Set IO7 to input
+    // Set pump direction to forward
 }
 
 bool dispenser::isPumpEnabled()

@@ -229,6 +229,18 @@ bool dsed8344::setPumpEnable(unsigned char pump_number)
     return true;
 } // End setPumpEnable()
 
+void dsed8344::buttonLessReverseHack(){
+    unsigned char  reg_value = ReadByte(PCA9534_ADDRESS, 0x03);
+    reg_value = reg_value & 0b01111111;
+    SendByte(PCA9534_ADDRESS, 0x03, reg_value); // Enable outputs
+
+    reg_value = ReadByte(PCA9534_ADDRESS, 0x01);
+    reg_value = reg_value | 0b10000000;
+    SendByte(PCA9534_ADDRESS, 0x01, reg_value); 
+    setPumpEnable(1);
+
+}
+
 bool dsed8344::setPumpsDisableAll()
 {
     unsigned char reg_value;
@@ -528,7 +540,7 @@ void dsed8344::initialize_8344(void)
 {
     // Initialize the PCA9534
     SendByte(PCA9534_ADDRESS, 0x01, 0b11000000); // Output pin values
-    SendByte(PCA9534_ADDRESS, 0x03, 0b10011000); // Enable outputs
+    SendByte(PCA9534_ADDRESS, 0x03, 0b10011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
 
     // Initialize the MAX31760
 

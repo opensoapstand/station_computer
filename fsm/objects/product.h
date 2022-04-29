@@ -88,9 +88,13 @@ public:
         double getVolumeRemaining();
         double getVolumeDispensedSinceLastRestock();
         double getVolumeFull();
+        double getThresholdFlow();
+        int getRetractionTimeMillis();
 
         double m_volumePerTick;
         int m_nDispenseSpeedPWM;
+        double m_nThresholdFlow;
+        int m_nRetractionTimeMillis;
 
         double m_nVolumeTarget_l;     // how much to dispense (large)
         double m_nVolumeTarget_m;     // how much to dispense (medium)

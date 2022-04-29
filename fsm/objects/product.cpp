@@ -88,6 +88,14 @@ void product::resetVolumeDispensed()
 {
     m_nVolumeDispensed = 0;
 }
+double product::getThresholdFlow()
+{
+    return m_nThresholdFlow;
+}
+int product::getRetractionTimeMillis()
+{
+    return m_nRetractionTimeMillis;
+}
 
 int product::getPWM()
 {
@@ -589,7 +597,7 @@ string product::getPLU(char size)
 // #else
 bool product::isDbValid()
 {
-    string table_products_columns[TABLE_PRODUCTS_COLUMN_COUNT] = {"productId", "soapstand_product_serial", "slot", "name", "size_unit", "currency", "payment", "name_receipt", "concentrate_multiplier","dispense_speed", "calibration_const", "volume_per_tick", "last_restock", "volume_full", "volume_remaining", "volume_dispensed_since_restock", "volume_dispensed_total", "is_enabled_small", "is_enabled_medium", "is_enabled_large", "is_enabled_custom", "size_small", "size_medium", "size_large", "size_custom_min", "size_custom_max", "price_small", "price_medium", "price_large", "price_custom", "plu_small", "plu_medium", "plu_large", "plu_custom", "pid_small", "pid_medium", "pid_large", "pid_custom", "flavour", "image_url", "type", "ingredients", "features", "description"};
+    string table_products_columns[TABLE_PRODUCTS_COLUMN_COUNT] = {"productId", "soapstand_product_serial", "slot", "name", "size_unit", "currency", "payment", "name_receipt", "concentrate_multiplier", "dispense_speed", "threshold_flow", "retraction_time", "calibration_const", "volume_per_tick", "last_restock", "volume_full", "volume_remaining", "volume_dispensed_since_restock", "volume_dispensed_total", "is_enabled_small", "is_enabled_medium", "is_enabled_large", "is_enabled_custom", "size_small", "size_medium", "size_large", "size_custom_min", "size_custom_max", "price_small", "price_medium", "price_large", "price_custom", "plu_small", "plu_medium", "plu_large", "plu_custom", "pid_small", "pid_medium", "pid_large", "pid_custom", "flavour", "image_url", "type", "ingredients", "features", "description"};
     bool is_valid = true;
 
     rc = sqlite3_open(DB_PATH, &db);
@@ -605,10 +613,10 @@ bool product::isDbValid()
     status = sqlite3_step(stmt);
     int row = 0;
     // debugOutput::sendMessage("process record: " + sql_string, MSG_INFO);
-    while (status == SQLITE_ROW && is_valid)
+    while (status == SQLITE_ROW)
     {
-        //int columns_count = sqlite3_data_count(stmt);
-        // debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
+        // int columns_count = sqlite3_data_count(stmt);
+        //  debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
 
         // for (int column_index = 0; column_index < columns_count; column_index++)
         int columns_count = 3;
@@ -628,11 +636,11 @@ bool product::isDbValid()
 
                 if (!column_name.compare(table_products_columns[row]))
                 {
-                    //debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
+                    // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
                 }
                 else
                 {
-                    debugOutput::sendMessage("ERROR: Corrupt database. Column name=" + column_name + " while it should be: "+ table_products_columns[row], MSG_ERROR);
+                    debugOutput::sendMessage("ERROR: Corrupt database. Column name=" + column_name + " while it should be: " + table_products_columns[row], MSG_ERROR);
                     is_valid = false;
                 }
                 break;
@@ -654,9 +662,16 @@ bool product::isDbValid()
 }
 bool product::reloadParametersFromDb()
 {
+
     for (uint8_t i = 0; i < 4; i++)
     {
         isEnabledSizes[i] = false;
+    }
+    bool valid = isDbValid();
+    if (!valid)
+    {
+        debugOutput::sendMessage("ABORT: Unexpected database layout.", MSG_ERROR);
+        return false;
     }
 
     rc = sqlite3_open(DB_PATH, &db);
@@ -859,6 +874,17 @@ bool product::reloadParametersFromDb()
             {
                 m_nDispenseSpeedPWM = sqlite3_column_int(stmt, column_index);
                 debugOutput::sendMessage("Speed PWM (0..255):" + to_string(m_nDispenseSpeedPWM), MSG_INFO);
+            }
+            break;
+            case DB_PRODUCTS_THRESHOLD_FLOW:
+            {
+                m_nThresholdFlow = sqlite3_column_double(stmt, column_index);
+                debugOutput::sendMessage("Flow threshold: " + to_string(m_nThresholdFlow), MSG_INFO);
+            }
+            break;
+            case DB_PRODUCTS_RETRACTION_TIME:
+            {
+                m_nRetractionTimeMillis = sqlite3_column_int(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_CALIBRATION_CONST:

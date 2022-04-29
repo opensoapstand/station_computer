@@ -381,15 +381,22 @@ DF_ERROR dispenser::setPumpsDisableAll()
 
 void dispenser::reversePumpForSetTimeMillis(int millis)
 {
-     debugOutput::sendMessage("Pump auto reverse. Reverse time millis: " + to_string(millis), MSG_INFO);
-    usleep(200000); // give pump time to stop
-    setPumpDirectionReverse();
-    setPumpEnable();
-    the_8344->virtualButtonPressHack();
-    usleep(millis * 1000);
-    the_8344->virtualButtonUnpressHack();
-    setPumpsDisableAll();
-    setPumpDirectionForward();
+
+    if (millis > 0){
+
+        debugOutput::sendMessage("Pump auto retraction. Reverse time millis: " + to_string(millis), MSG_INFO);
+        usleep(200000); // give pump time to stop
+        setPumpDirectionReverse();
+        setPumpEnable();
+        the_8344->virtualButtonPressHack();
+        usleep(millis * 1000);
+        the_8344->virtualButtonUnpressHack();
+        setPumpsDisableAll();
+        setPumpDirectionForward();
+    }else{
+
+        debugOutput::sendMessage("Pump auto retraction disabled. Reverse time millis: " + to_string(millis), MSG_INFO);
+    }
 }
 
 bool dispenser::isPumpEnabled()
@@ -402,7 +409,7 @@ DF_ERROR dispenser::setPumpEnable()
     // first pump is 1.
     // still needs dispense button to actually get the pump to start
     debugOutput::sendMessage("Pump enable position: " + to_string(this->slot), MSG_INFO);
-    the_8344->setPumpEnable(this->slot); // pump 1 to 4 
+    the_8344->setPumpEnable(this->slot); // pump 1 to 4
     m_isPumpEnabled = true;
 }
 
@@ -673,7 +680,7 @@ Dispense_behaviour dispenser::getDispenseStatus()
         // at each button press, the average flow needs to ramp up again. --> not available
         state = FLOW_STATE_UNAVAILABLE;
     }
-    else if (avg.value > EMPTY_CONTAINER_DETECTION_FLOW_THRESHOLD_ML_PER_S)
+    else if (avg.value > getProduct()->getThresholdFlow())
     {
         // button pressed (aka pumping)
         // init time long enough for valid data

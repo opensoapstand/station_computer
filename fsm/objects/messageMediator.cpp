@@ -341,45 +341,59 @@ DF_ERROR messageMediator::parseCommandString()
    char first_char = sCommand[0];
 
    // m_commandValue = std::stoi( sCommand );
-   // debugOutput::sendMessage("temptgmpemtpm" + m_commandValue, MSG_INFO);
+   debugOutput::sendMessage("command length:" + to_string(sCommand.length()), MSG_INFO);
 
-   if (
-       first_char == '1' ||
-       first_char == '2' ||
-       first_char == '3' ||
-       first_char == '4')
+   if (sCommand.length() == 3)
+   //  first_char == '1' ||
+   //  first_char == '2' ||
+   //  first_char == '3' ||
+   //  first_char == '4')
+
    {
       // check for dispensing command
       e_ret = parseDispenseCommand(sCommand);
    }
    else if (
        // other commands
-       first_char == ACTION_MANUAL_PUMP_PWM_SET)
+       first_char == ACTION_MANUAL_PUMP_PWM_SET ||
+       first_char == ACTION_MANUAL_PUMP_SET)
    {
       m_requestedAction = first_char;
       std::string number = sCommand.substr(1, sCommand.size());
       m_commandValue = std::stoi(number);
    }
    else if (
-       // other commands
-       first_char == ACTION_MANUAL_PRINTER ||
-       first_char == ACTION_QUIT ||
-       first_char == ACTION_PRINTER_CHECK_STATUS ||
-       first_char == ACTION_PRINTER_SEND_STATUS ||
-       first_char == ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY ||
-       first_char == ACTION_PRINTER_PRINT_TEST ||
-       first_char == ACTION_HELP ||
-       first_char == ACTION_DEBUG ||
-       first_char == ACTION_MANUAL_PUMP_TEST ||
-       first_char == ACTION_TOGGLE_CYCLIC_PUMP_TEST ||
-       first_char == ACTION_MANUAL_PUMP ||
-       first_char == ACTION_MANUAL_PUMP_ENABLE ||
-       first_char == ACTION_MANUAL_PUMP_DISABLE ||
-       first_char == ACTION_MANUAL_PUMP_DIRECTION_FORWARD ||
-       first_char == ACTION_MANUAL_PUMP_DIRECTION_REVERSE ||
-       first_char == ACTION_MANUAL_PUMP_FLOW_TEST_TOGGLE ||
-       first_char == ACTION_MANUAL_PUMP_CUSTOM_VOLUME_TEST_TOGGLE ||
-       first_char == ACTION_PRINTER_REACHABLE)
+       // single digit commands
+       first_char == '0' ||
+       first_char == '1' ||
+       first_char == '2' ||
+       first_char == '3' ||
+       first_char == '4' ||
+       first_char == '5' ||
+       first_char == '6' ||
+       first_char == '7' ||
+       first_char == '8' ||
+       first_char == '9' ||
+
+       //  first_char == ACTION_MANUAL_PRINTER ||
+       //  first_char == ACTION_PRINTER_CHECK_STATUS ||
+       first_char == ACTION_UI_COMMAND_PRINTER_SEND_STATUS ||
+       first_char == ACTION_UI_COMMAND_PRINTER_MENU ||
+       //  first_char == ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY ||
+       //  first_char == ACTION_PRINTER_PRINT_TEST ||
+       //  first_char == ACTION_HELP ||
+       //  first_char == ACTION_DEBUG ||
+       //  first_char == ACTION_MANUAL_PUMP_TEST ||
+       //  first_char == ACTION_TOGGLE_CYCLIC_PUMP_TEST ||
+       //  first_char == ACTION_MANUAL_PUMP ||
+       //  first_char == ACTION_MANUAL_PUMP_ENABLE ||
+       //  first_char == ACTION_MANUAL_PUMP_DISABLE ||
+       //  first_char == ACTION_MANUAL_PUMP_DIRECTION_FORWARD ||
+       //  first_char == ACTION_MANUAL_PUMP_DIRECTION_REVERSE ||
+       //  first_char == ACTION_MANUAL_PUMP_FLOW_TEST_TOGGLE ||
+       //  first_char == ACTION_MANUAL_PUMP_CUSTOM_VOLUME_TEST_TOGGLE ||
+       //  first_char == ACTION_PRINTER_REACHABLE
+       first_char == ACTION_QUIT)
    {
       m_requestedAction = first_char;
    }

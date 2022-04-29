@@ -61,13 +61,13 @@ DF_ERROR stateManualPrinter::onAction()
       DF_ERROR ret_msg;
       ret_msg = m_pMessaging->parseCommandString();
 
-      if (ACTION_QUIT == m_pMessaging->getAction())
+      if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Exit printer status test", MSG_INFO);
 
          m_state_requested = STATE_IDLE;
       }
-      if (ACTION_PRINTER_SEND_STATUS == m_pMessaging->getAction())
+      else if ( ACTION_UI_COMMAND_PRINTER_SEND_STATUS == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Printer status requested by UI", MSG_INFO);
          sendPrinterStatus();
@@ -75,30 +75,37 @@ DF_ERROR stateManualPrinter::onAction()
       }
 
       // If ACTION_DISPENSE is received, enter Dispense state, else, stay in Idle state
-      if (ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY == m_pMessaging->getAction())
+      else if ('2' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Toggle Continuous Printer display status", MSG_INFO);
          b_isContinuouslyChecking = !b_isContinuouslyChecking;
       }
 
-      if (ACTION_PRINTER_CHECK_STATUS == m_pMessaging->getAction())
+      else if ('3' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Get Printer display status", MSG_INFO);
          displayPrinterStatus();
       }
-      if (ACTION_PRINTER_PRINT_TEST == m_pMessaging->getAction())
+      else if ('1' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Do test print", MSG_INFO);
          printTest();
       }
-      if (ACTION_PRINTER_REACHABLE == m_pMessaging->getAction())
+      else if ('4' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Is Printer reachable?", MSG_INFO);
          displayPrinterReachable();
       }
-      if (ACTION_HELP == m_pMessaging->getAction())
+      else 
       {
-         debugOutput::sendMessage("help\nAvailable printer test commands: \n l: test print\n V: printer status toggle continuous mode\n v:printer status \n q:quit test mode \n r: Printer reachable", MSG_INFO);
+         debugOutput::sendMessage("---Receipt printer menu---"
+         "Available printer test commands: \n"
+         " 0: Exit printer menu \n"
+         " 1: Test print\n"
+         " 2: Printer status toggle continuous mode\n"
+         " 3: Printer status \n"
+         " 4: Check printer connected\n"
+         " h: Display this help menu", MSG_INFO);
       }
    }
 

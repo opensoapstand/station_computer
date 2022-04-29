@@ -505,7 +505,7 @@ void page_maintenance::on_printer_test_button_clicked()
 
     p_page_idle->dfUtility->send_command_to_FSM("p");
     usleep(50000);
-    p_page_idle->dfUtility->send_command_to_FSM("l");
+    p_page_idle->dfUtility->send_command_to_FSM("1");
     usleep(50000);
     p_page_idle->dfUtility->send_command_to_FSM("q");
 }
@@ -535,8 +535,8 @@ void page_maintenance::on_printer_check_status_clicked()
     p_page_idle->dfUtility->send_command_to_FSM("p");
     usleep(50000);
     p_page_idle->dfUtility->send_command_to_FSM("a");
-    //     usleep(50000);
-    //     p_page_idle->dfUtility->send_command_to_FSM("q"); // go back to fsm idle state is done in controller
+    // usleep(50000);
+    // p_page_idle->dfUtility->send_command_to_FSM("q"); // go back to fsm idle state is done in controller
 }
 
 void page_maintenance::on_enable_empty_container_checkBox_stateChanged(int arg1)

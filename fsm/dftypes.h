@@ -18,7 +18,7 @@
 #include <sqlite3.h>
 #include <stdint.h>
 
-#define CONTROLLER_VERSION "1.0.1"
+#define CONTROLLER_VERSION "1.0.2"
 
 #define PRODUCT_DISPENSERS_MAX 4
 #define MINIMUM_DISPENSE_VOLUME_ML 10

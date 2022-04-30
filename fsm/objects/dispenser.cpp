@@ -233,8 +233,6 @@ bool dispenser::getIsDispenseTargetReached()
 
     if (m_nVolumeTarget <= getVolumeDispensed())
     {
-        // cout << "Target HIT!" << endl;
-        debugOutput::sendMessage("Target volume reached: " + to_string(m_nVolumeTarget), MSG_INFO);
         bRet = true;
     }
     return bRet;
@@ -387,12 +385,14 @@ void dispenser::reversePumpForSetTimeMillis(int millis)
         debugOutput::sendMessage("Pump auto retraction. Reverse time millis: " + to_string(millis), MSG_INFO);
         usleep(200000); // give pump time to stop
         setPumpDirectionReverse();
+        setPumpPWM(255); // quick retract
         setPumpEnable();
         the_8344->virtualButtonPressHack();
         usleep(millis * 1000);
         the_8344->virtualButtonUnpressHack();
         setPumpsDisableAll();
         setPumpDirectionForward();
+        setPumpPWM((uint8_t)(m_pDispensedProduct->getPWM()));
     }else{
 
         debugOutput::sendMessage("Pump auto retraction disabled. Reverse time millis: " + to_string(millis), MSG_INFO);
@@ -664,7 +664,7 @@ Dispense_behaviour dispenser::getDispenseStatus()
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     uint64_t dispense_time_millis = millis_since_epoch - dispense_start_timestamp_epoch;
     Time_val avg = getAveragedFlowRate(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS);
-    debugOutput::sendMessage("Dispense flowRate " + to_string(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) + "ms avg [V/s]: " + to_string(avg.value) + " Dispense state time: " + to_string(dispense_time_millis), MSG_INFO);
+    debugOutput::sendMessage("Dispense flowRate " + to_string(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) + "ms avg [ml/s]: " + to_string(avg.value) + " Dispense state time: " + to_string(dispense_time_millis), MSG_INFO);
 
     Dispense_behaviour state;
 

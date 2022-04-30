@@ -175,7 +175,6 @@ private:
 
       bool m_isEmptyContainerDetectionEnabled;
 
-
       bool m_isDispenseDone; // XXX: Remove later.
       bool m_isStill;
 
@@ -185,8 +184,7 @@ private:
       bool m_isDispenseNew;
 
       sqlite3 *db;
-        int rc;
-
+      int rc;
 
       product *m_pDispensedProduct;
 

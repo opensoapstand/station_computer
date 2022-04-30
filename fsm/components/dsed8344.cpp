@@ -144,17 +144,17 @@ bool dsed8344::setPumpPWM(uint8_t pwm_val)
         // return SendByte(PIC_ADDRESS, 0x00, (unsigned char)f_value); // PWM value
         f_value = (float)pwm_val;
         f_value = floor(f_value / 2.55);
-        unsigned char pwm_value = (unsigned char)f_value; // invert speed. pwm is inverted.
-        if (pwm_value > 100)
+        unsigned char speed_percentage = (unsigned char)f_value; // invert speed. pwm is inverted.
+        if (speed_percentage > 100)
         {
             debugOutput::sendMessage("Speed invalid. Will set to max. Please provide argument in [0..255] interval. Provided: " + to_string(pwm_val), MSG_WARNING);
-            pwm_value = 100;
+            speed_percentage = 100;
         }
 
-        // pwm_value = 100 - pwm_value; // invert speed. pwm is inverted.
+        // speed_percentage = 100 - speed_percentage; // invert speed. pwm is inverted.
 
-        debugOutput::sendMessage("Motor speed set to: " + to_string(pwm_value), MSG_WARNING);
-        return SendByte(PIC_ADDRESS, 0x00, pwm_value); // PWM value
+        debugOutput::sendMessage("Motor speed set to (percentage): " + to_string(speed_percentage), MSG_INFO);
+        return SendByte(PIC_ADDRESS, 0x00, speed_percentage); // PWM value
     }
     else
     {
@@ -204,7 +204,11 @@ bool dsed8344::setPumpDirection(bool forwardElseReverse)
     }
     else
     {
-        debugOutput::sendMessage("No change in dir.....", MSG_INFO);
+        if (forwardElseReverse){
+            debugOutput::sendMessage("Direction not changed (forward).", MSG_INFO);
+        }else{
+            debugOutput::sendMessage("Direction not changed (reverse).", MSG_INFO);
+        }
     }
 
     return true;
@@ -241,7 +245,7 @@ void dsed8344::virtualButtonPressHack()
 {
     // WARNING: This overrides the physical dispense button. As such, there is no fail safe mechanism.
     // If the program crashes while the button is pressed, it might keep on dispensing *forever*.
-    
+
     unsigned char reg_value = ReadByte(PCA9534_ADDRESS, 0x03);
     reg_value = reg_value & 0b01111111;
     SendByte(PCA9534_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)

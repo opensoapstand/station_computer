@@ -204,7 +204,11 @@ bool dsed8344::setPumpDirection(bool forwardElseReverse)
     }
     else
     {
-        debugOutput::sendMessage("No change in dir.....", MSG_INFO);
+        if (forwardElseReverse){
+            debugOutput::sendMessage("Direction not changed (forward).", MSG_INFO);
+        }else{
+            debugOutput::sendMessage("Direction not changed (reverse).", MSG_INFO);
+        }
     }
 
     return true;
@@ -241,7 +245,7 @@ void dsed8344::virtualButtonPressHack()
 {
     // WARNING: This overrides the physical dispense button. As such, there is no fail safe mechanism.
     // If the program crashes while the button is pressed, it might keep on dispensing *forever*.
-    
+
     unsigned char reg_value = ReadByte(PCA9534_ADDRESS, 0x03);
     reg_value = reg_value & 0b01111111;
     SendByte(PCA9534_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)

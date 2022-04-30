@@ -67,7 +67,7 @@ messageMediator::~messageMediator()
 DF_ERROR messageMediator::sendMessage(string msg)
 {
    DF_ERROR dfError = OK;
-   debugOutput::sendMessage("Send msg to UI: " + msg, MSG_INFO);
+   debugOutput::sendMessage("Send msg to UI (don't wait for reply): " + msg, MSG_INFO);
 
    try
    {
@@ -82,7 +82,7 @@ DF_ERROR messageMediator::sendMessage(string msg)
       {
          // TODO: Should catch no message error...
       }
-      debugOutput::sendMessage("We received this response from the server: " + reply, MSG_INFO);
+      //debugOutput::sendMessage("We received this response from the server: " + reply, MSG_INFO);
       ;
    }
    catch (SocketException &e)

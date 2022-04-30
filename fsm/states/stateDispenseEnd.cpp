@@ -62,8 +62,8 @@ DF_ERROR stateDispenseEnd::onAction()
     productDispensers[pos].stopDispense();
     productDispensers[pos].reversePumpForSetTimeMillis(productDispensers[pos].getProduct()->getRetractionTimeMillis());
 
-    // give time to settle down
-    usleep(100000);
+    // // give time to settle down
+    // usleep(100000);
 
     // send dispensed volume to ui (will be used to write to portal)
     m_pMessaging->sendMessage(to_string(productDispensers[pos].getVolumeDispensed()));
@@ -79,17 +79,19 @@ DF_ERROR stateDispenseEnd::onAction()
     {
         isContainerEmpty = true;
     }
+
+    // adjust to nearest lower fixed volume if less dispensed than requested
     adjustSizeToDispensedVolume();
 
     // handle minimum dispensing
     bool is_valid_dispense = productDispensers[pos].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML;
 
-    // SIZE_CUSTOM is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
+    // SIZE_TEST_CHAR is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
     if (m_pMessaging->getRequestedSize() == SIZE_TEST_CHAR)
     {
 
         debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(productDispensers[pos].getVolumeDispensed()) + "ml).", MSG_INFO);
-        dispenseEndUpdateDB(isContainerEmpty);
+        dispenseEndUpdateDB(isContainerEmpty); // update the db dispense statistics
     }
     else if (!is_valid_dispense)
     {
@@ -106,10 +108,9 @@ DF_ERROR stateDispenseEnd::onAction()
 
         std::string paymentMethod = productDispensers[pos].getProduct()->getPaymentMethod();
 
-        // Currently only Drinkfill used the tap method of payment, so this checks if it is a tap payment system and runs the cleaning cycle if it is...
-        // TODO: Change this to just check if the system is Soapstand or Drinkfill instead of payment system!
         if (paymentMethod == "qr" || paymentMethod == "tap")
         {
+            // these transactions are dealt with in the UI
         }
         else
         {

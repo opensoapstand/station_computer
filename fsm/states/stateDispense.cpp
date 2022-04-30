@@ -90,17 +90,12 @@ DF_ERROR stateDispense::onAction()
 
    if (productDispensers[pos].getIsDispenseTargetReached())
    {
-      debugOutput::sendMessage("Stop dispensing. Requested volume reached.", MSG_INFO);
-
-      // m_pMessaging->sendMessage("Target Hit");
-
+      debugOutput::sendMessage("Stop dispensing. Requested volume reached. " + to_string(productDispensers[pos].getVolumeDispensed()), MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
       return e_ret = OK;
    }
 
    productDispensers[pos].setVolumeDispensedPreviously(productDispensers[pos].getVolumeDispensed());
-
-   // #ifdef ENABLE_EMPTY_CONTAINER_DETECTION
 
    if (productDispensers[pos].getEmptyContainerDetectionEnabled())
    {
@@ -110,11 +105,9 @@ DF_ERROR stateDispense::onAction()
       if (status == FLOW_STATE_CONTAINER_EMPTY)
       {
 
-         m_pMessaging->sendMessage("No flow abort"); // send to UI
          debugOutput::sendMessage("******************* EMPTY CONTAINER DETECTED **********************", MSG_INFO);
+         m_pMessaging->sendMessage("No flow abort"); // send to UI
          m_state_requested = STATE_DISPENSE_END;
-
-         // experimental, convert to custom volume dispensing.
 
          m_pMessaging->setRequestedSize(SIZE_EMPTY_CONTAINER_DETECTED_CHAR);
       }
@@ -166,6 +159,7 @@ DF_ERROR stateDispense::onAction()
                                MSG_INFO);
    }
 
+   // periodic delay
    usleep(500000);
 
    e_ret = OK;

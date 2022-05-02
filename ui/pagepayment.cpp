@@ -929,7 +929,7 @@ void pagePayment::readTimer_loop()
                         pktResponded = com.readPacket();
                         usleep(100);
                         response = getResponse();
-                        // readTimer->start(1000);
+                        readTimer->start(1000);
                     }
                 }
 

@@ -208,12 +208,12 @@ void page_select_product::displayProducts()
         else if (product_type == "Laundry")
         {
             icon_path = ICON_TYPE_LAUNDRY_PATH;
-            type_text = "LAUNDRY DETERGENT";
+            type_text = "LAUNDRY";
         }
         else if (product_type == "All Purpose")
         {
             icon_path = ICON_TYPE_ALL_PURPOSE_PATH;
-            type_text = "ALL PURPOSE CLEANSER";
+            type_text = "CLEANER ";
         }
         else if (product_type == "Contentrate")
         {

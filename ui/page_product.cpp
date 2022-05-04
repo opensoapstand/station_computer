@@ -208,6 +208,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
    
 
     couponHandler();
+    qDebug() << "9999999999";
 
     {
         selectIdleTimer = new QTimer(this);
@@ -241,6 +242,7 @@ void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_
     // setDefaultSize();
 
     couponHandler();
+    qDebug() << "6666666";
 }
 
 // DTOR

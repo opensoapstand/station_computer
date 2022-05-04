@@ -231,7 +231,7 @@ double product::getTargetVolume(char size)
     }
     else if (size == 't')
     {
-        return m_nVolumeTarget_c_max;
+        return TEST_DISPENSE_TARGET_VOLUME;
     }
     else if (size == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
     {

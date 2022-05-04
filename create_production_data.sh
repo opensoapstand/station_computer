@@ -2,9 +2,10 @@
 
 echo "create backup"
 BKP_FOLDER=production_bkp"$(date +%Y%m%d-%H%M%S)"
+BKP_PATH=/home/df-admin/production_archive/$BKP_FOLDER
 mkdir -p /home/df-admin/production_archive
 mv /home/df-admin/production /home/df-admin/production_archive
-mv /home/df-admin/production_archive/production /home/df-admin/production_archive/$BKP_FOLDER
+mv /home/df-admin/production_archive/production $BKP_PATH
 
 echo "create soapstand production content"
 # delete production folder to start anew
@@ -31,8 +32,6 @@ scp /home/df-admin/drinkfill/ui/DF_UI /home/df-admin/production/bin/DF_UI
 scp /home/df-admin/drinkfill/fsm/controller /home/df-admin/production/bin/controller
 
 # move auxiliary to production folder
-sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db /home/df-admin/production/db/drinkfill-sqlite.db 
-sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite_newlayout.db /home/df-admin/production/db/drinkfill-sqlite_newlayout.db 
 sudo -u df-admin scp -r /home/df-admin/drinkfill/ui/references /home/df-admin/production
 
 # move scripts and other administrative stuff
@@ -48,3 +47,14 @@ scp /home/df-admin/drinkfill/screenshotbot.sh /home/df-admin/production/admin/sc
 scp /home/df-admin/drinkfill/screenshotbot_sequence_printer.txt /home/df-admin/production/admin/screenshotbot_sequence_printer.txt
 scp /home/df-admin/drinkfill/screenshotbot_sequence_qr.txt /home/df-admin/production/admin/screenshotbot_sequence_qr.txt
 scp /home/df-admin/drinkfill/missingTransactions.py /home/df-admin/production/admin/missingTransactions.py
+
+# ask for db to be written. By default: NO! 
+read -p "Copy database? [y] for yes. [enter,anykey] for no:" -n 1 -r
+echo    # (optional) move to a new line
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite_newlayout.db /home/df-admin/production/db/drinkfill-sqlite_newlayout.db 
+else
+    sudo -u df-admin rm -r /home/df-admin/production/db
+    sudo -u df-admin scp -r $BKP_PATH/db /home/df-admin/production
+fi

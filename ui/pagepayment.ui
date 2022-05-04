@@ -30,6 +30,9 @@
    </property>
   </widget>
   <widget class="QPushButton" name="mainPage_Button">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>460</x>
@@ -158,8 +161,8 @@ color: #58595B;</string>
     <rect>
      <x>180</x>
      <y>1310</y>
-     <width>650</width>
-     <height>41</height>
+     <width>641</width>
+     <height>81</height>
     </rect>
    </property>
    <property name="styleSheet">

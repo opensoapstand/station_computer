@@ -56,18 +56,18 @@ pagePayment::pagePayment(QWidget *parent) : QWidget(parent),
 
     qrTimer = new QTimer(this);
     connect(qrTimer, SIGNAL(timeout()), this, SLOT(qrProcessedPeriodicalCheck()));
-
-    if (getPaymentMethod() == "tap")
-    {
-        ui->payment_bypass_Button->setEnabled(false);
-        while (!tap_init())
-            ;
-    }
-    else
-    {
-        ui->payment_bypass_Button->setEnabled(false);
-    }
-
+    // qDebug() << "----------=======================sssssssss= fefefefijfeij";
+    // QString tap = "tap";
+    // if (getPaymentMethod() == tap)
+    // {
+    //     ui->payment_bypass_Button->setEnabled(false);
+    //     while (!tap_init())
+    //         ;
+    // }
+    // else
+    // {
+    //     ui->payment_bypass_Button->setEnabled(false);
+    // }
     // XXX: Comment on/off for Bypassing payment testing
     // qDebug() << "constructor Payment page. Check for tap.";
     // tap_payment = false;
@@ -75,7 +75,7 @@ pagePayment::pagePayment(QWidget *parent) : QWidget(parent),
 
     // for (int i = 0; i < SLOT_COUNT; i++)
     // {
-    //     if (db.getPaymentMethod(i) == "tap")
+        //  if (db.getPaymentMethod(i) == "tap")
     //     {
     //         tap_payment = true;
     //         ui->payment_bypass_Button->setEnabled(false);
@@ -147,35 +147,6 @@ void pagePayment::setPage(pageProduct *pageSizeSelect, page_dispenser *page_disp
     this->helpPage = pageHelp;
 }
 
-void pagePayment::resizeEvent(QResizeEvent *event)
-{
-    QString bitmap_location;
-
-    if (getPaymentMethod() == "tap")
-    {
-        bitmap_location = PAGE_QR_PAY_BACKGROUND_PATH;
-    }
-    else
-    {
-        qDebug("ERROR: No tap payment available yet.");
-    }
-
-    QPixmap background(bitmap_location);
-    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-
-    QPalette palette;
-    palette.setBrush(QPalette::Background, background);
-    this->setPalette(palette);
-
-    ui->order_total_amount->setText("Total: $" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
-    ui->order_drink_amount->setText("");
-
-    ui->productLabel->setText(p_page_idle->currentProductOrder->getSelectedProductName() + " " + p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
-
-    response = false;
-    ui->refreshLabel->hide();
-}
-
 // DTOR
 pagePayment::~pagePayment()
 {
@@ -231,57 +202,97 @@ size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
 
 QString pagePayment::getPaymentMethod()
 {
-    int product_slot___ = p_page_idle->currentProductOrder->getSelectedSlot();
     qDebug() << "ahoyy245";
+    int product_slot___ = p_page_idle->currentProductOrder->getSelectedSlot();
     DbManager db2(DB_PATH);
     QString payment_method = db2.getPaymentMethod(product_slot___);
     db2.closeDB();
     return payment_method;
 }
 
+void pagePayment::resizeEvent(QResizeEvent *event)
+{
+    // QString bitmap_location;
+
+    // if (getPaymentMethod() == "tap")
+    // {
+    //     bitmap_location = PAGE_QR_PAY_BACKGROUND_PATH;
+    // }
+    // else
+    // {
+    //     qDebug("ERROR: No tap payment available yet.");
+    // }
+
+    // QPixmap background(bitmap_location);
+    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+
+    // QPalette palette;
+    // palette.setBrush(QPalette::Background, background);
+    // this->setPalette(palette);
+
+    // ui->order_total_amount->setText("Total: $" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
+    // ui->order_drink_amount->setText("");
+
+    // ui->productLabel->setText(p_page_idle->currentProductOrder->getSelectedProductName() + " " + p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
+
+    // response = false;
+    // ui->refreshLabel->hide();
+}
+
 void pagePayment::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: Payment >>>>>>>>>";
+    QWidget::showEvent(event);
 
     // QPixmap background(PAGE_QR_PAY_BACKGROUND_PATH);
     // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     // QPalette palette;
     // palette.setBrush(QPalette::Background, background);
     // this->setPalette(palette);
+    
+    if (getPaymentMethod() == "tap")
+    {
+        qDebug()<< "Init tap";
+        ui->payment_bypass_Button->setEnabled(false);
+        while (!tap_init())
+            ;
+    }
+    else
+    {
+        ui->payment_bypass_Button->setEnabled(false);
+    }
+
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
 
-    QString bitmap_location;
+    // QString bitmap_location;
 
-    bitmap_location = "/home/df-admin/production/references/5_background_pay_qr.png";
+    // bitmap_location = "/home/df-admin/production/references/5_background_pay_qr.png";
 
-    QPixmap background(bitmap_location);
-    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+    // QPixmap background(bitmap_location);
+    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
 
-    QPalette palette;
-    palette.setBrush(QPalette::Background, background);
-    this->setPalette(palette);
+    // QPalette palette;
+    // palette.setBrush(QPalette::Background, background);
+    // this->setPalette(palette);
 
     paymentEndTimer = new QTimer(this);
     paymentEndTimer->setInterval(1000);
     connect(paymentEndTimer, SIGNAL(timeout()), this, SLOT(onTimeoutTick()));
     paymentEndTimer->start(1000);
-    _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
-
-    ui->order_total_amount->setText("Total: $" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
+    _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
     this->ui->payment_countdownLabel->setText("");
+
     ui->refreshLabel->hide();
 
-    QWidget::showEvent(event);
-
     ui->productLabel->setText(p_page_idle->currentProductOrder->getSelectedProductName() + " " + p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
-
     ui->order_drink_amount->setText("$" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
+    ui->order_total_amount->setText("Total: $" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
 
     QString payment_method = getPaymentMethod();
-
     if (payment_method == "tap")
     {
+        qDebug()<< "Prepare tap order";
         pktResponded = com.readForAck();
         readPacket.packetReadFromUX(pktResponded);
         pktResponded.clear();
@@ -332,7 +343,7 @@ void pagePayment::setupQrOrder()
     // curl_param_array = curl_param.toLocal8Bit();
     // curl_data = curl_param_array.data();
 
-    _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
+    _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
 
     _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
     qrTimer->start(1000);
@@ -389,7 +400,7 @@ void pagePayment::createQrOrder()
     curl_easy_cleanup(curl1);
     readBuffer = "";
 
-    _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
+    _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
     _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
     qrTimer->start(1000);
 }
@@ -457,24 +468,24 @@ void pagePayment::qrProcessedPeriodicalCheck()
 void pagePayment::on_refreshButton_clicked()
 {
     ui->refreshLabel->hide();
-    _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
+    _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
 }
 
 // XXX: Remove this when interrupts and flow sensors work!
 void pagePayment::onTimeoutTick()
 {
-    if (--_paymentTimeoutSec >= 0)
+    if (--_pageTimeoutCounterSecondsLeft >= 0)
     {
 
-        QString label_text = "Transaction will be cancelled in " + QString::number(_paymentTimeoutSec) + "s.\nTOUCH THE SCREEN\n if you need more time \n";
+        QString label_text = "Transaction will be cancelled in " + QString::number(_pageTimeoutCounterSecondsLeft) + "s.\nTOUCH THE SCREEN\n if you need more time \n";
         ui->refreshLabel->setText(label_text);
     }
     else
     {
-        //        qDebug() << "Timer Done!" << _paymentTimeoutSec << endl;
+        //        qDebug() << "Timer Done!" << _pageTimeoutCounterSecondsLeft << endl;
         idlePaymentTimeout();
     }
-    if (_paymentTimeoutSec < QR_PAGE_TIMEOUT_WARNING_SECONDS)
+    if (_pageTimeoutCounterSecondsLeft < QR_PAGE_TIMEOUT_WARNING_SECONDS)
     {
         ui->refreshLabel->show();
     }
@@ -505,7 +516,7 @@ void pagePayment::declineTimer_start()
 // Navigation: Back to Drink Size Selection
 void pagePayment::on_previousPage_Button_clicked()
 {
-    cancelPayment();
+    resetPaymentPage();
     // stopPayTimers();
     // response = true;
     // readTimer->stop();
@@ -521,7 +532,7 @@ void pagePayment::on_previousPage_Button_clicked()
 
 void pagePayment::on_mainPage_Button_clicked()
 {
-    cancelPayment();
+    resetPaymentPage();
     // stopPayTimers();
     // response = true;
     // readTimer->stop();
@@ -535,7 +546,7 @@ void pagePayment::on_mainPage_Button_clicked()
 
 void pagePayment::idlePaymentTimeout()
 {
-    cancelPayment();
+    resetPaymentPage();
     // stopPayTimers();
     // response = true;
     // readTimer->stop();

@@ -215,7 +215,7 @@ private:
     bool surveyBool;
 
     QString _paymentTimeLabel;
-    int _paymentTimeoutSec;
+    int _pageTimeoutCounterSecondsLeft;
     QTimer* paymentEndTimer;
 
     int _qrProcessedPeriodicalCheckSec;

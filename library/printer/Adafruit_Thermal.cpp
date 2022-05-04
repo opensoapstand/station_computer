@@ -693,16 +693,7 @@ void  Adafruit_Thermal::connectToPrinter() {
 }
 
 bool Adafruit_Thermal::testComms() {
-  //serialPort.SetEcho(true);
-
-  // std::string a3(1,ASCII_ESC);
-  // serialPort.Write(a3);
-  // std::string b3(1,'v');
-  // serialPort.Write(b3);
-  // std::string c3(1,'n');
-  // serialPort.Write(c3);
-  //timeoutSet(3 * BYTE_TIME);
-  //timeoutWait();
+  // first requst not valid?!
 
   std::string command(1,ASCII_ESC);
   command.push_back('v');

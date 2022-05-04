@@ -225,12 +225,15 @@ private:
     QShowEvent *dispenseEvent;
 
     bool response;
-    bool tap_payment;
+    // bool tap_payment;
 
     void QRgen();
     void printQr(const QrCode &qr);
     std::string toSvgString(const QrCode &qr, int border);
     void paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg);
+    void resetPaymentPage();
+    QString getPaymentMethod();
+
 
     // QString order_id;
     QString orderId;

@@ -70,6 +70,7 @@ DF_ERROR stateManualPrinter::onAction()
       else if ( ACTION_UI_COMMAND_PRINTER_SEND_STATUS == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Printer status requested by UI", MSG_INFO);
+         sendPrinterStatus(); // first call after startup returns always online
          sendPrinterStatus();
          m_state_requested = STATE_IDLE; // return after finished.
       }
@@ -209,13 +210,24 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
 
 DF_ERROR stateManualPrinter::displayPrinterStatus()
 {
-   if (printerr.hasPaper())
+   bool isOnline = printerr.testComms(); // first call return always "online"
+   isOnline = printerr.testComms();
+
+   if (isOnline)
    {
-      debugOutput::sendMessage("has paper", MSG_INFO);
+
+      if (printerr.hasPaper())
+      {
+         debugOutput::sendMessage("Printer online, has paper.", MSG_INFO);
+      }
+      else
+      {
+         debugOutput::sendMessage("Printer online, no paper.", MSG_INFO);
+      }
    }
    else
    {
-      debugOutput::sendMessage("has NO paper----------------------------------------", MSG_INFO);
+      debugOutput::sendMessage("Printer not online.", MSG_INFO);
    }
 }
 DF_ERROR stateManualPrinter::displayPrinterReachable()
@@ -233,14 +245,14 @@ DF_ERROR stateManualPrinter::displayPrinterReachable()
 DF_ERROR stateManualPrinter::printTest()
 {
 
-   string printerstring = "lodelode";
+   string printerstring = "Soapstand receipt printer test.";
    string plu = "978020137962";
 
    // Adafruit_Thermal printerr;
    printerr.printBarcode(plu.c_str(), EAN13);
-   system("echo '\n---------------------------\n\n\n' > /dev/ttyS4");
+   system("echo '\n---------------------------\n' > /dev/ttyS4");
 
-   string printer_command_string = "echo '\n---------------------------\n\n\n" + printerstring + "' > /dev/ttyS4";
+   string printer_command_string = "echo '\n---------------------------\n" + printerstring + "' > /dev/ttyS4";
    system(printer_command_string.c_str());
 
    //  string printer_command_string = "echo '------------------------------\n-- Vancouver Active Tourism --\n--            2022-02-12    --\n------------------------------\n 1x Special morning activity \n 1x Batard Bakery experience \n 1x Guided bike tour to \n         Lighthouse park \n 1x Soapstand workplace demo \n Participants: Wafeltje + Lodey    \n   Grand total: Happy times <3 \n   Thank you, please come again!  \n\n\n\n' > /dev/ttyS4";

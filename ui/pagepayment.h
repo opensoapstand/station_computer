@@ -215,7 +215,7 @@ private:
     bool surveyBool;
 
     QString _paymentTimeLabel;
-    int _paymentTimeoutSec;
+    int _pageTimeoutCounterSecondsLeft;
     QTimer* paymentEndTimer;
 
     int _qrProcessedPeriodicalCheckSec;
@@ -225,12 +225,15 @@ private:
     QShowEvent *dispenseEvent;
 
     bool response;
-    bool tap_payment;
+    // bool tap_payment;
 
     void QRgen();
     void printQr(const QrCode &qr);
     std::string toSvgString(const QrCode &qr, int border);
     void paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg);
+    void resetPaymentPage();
+    QString getPaymentMethod();
+
 
     // QString order_id;
     QString orderId;

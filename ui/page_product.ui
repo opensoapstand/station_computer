@@ -2091,7 +2091,7 @@ text-align: center;</string>
      <x>90</x>
      <y>326</y>
      <width>881</width>
-     <height>131</height>
+     <height>121</height>
     </rect>
    </property>
    <property name="text">
@@ -2102,10 +2102,18 @@ text-align: center;</string>
    <property name="geometry">
     <rect>
      <x>88</x>
-     <y>491</y>
+     <y>461</y>
      <width>901</width>
-     <height>141</height>
+     <height>271</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+     <pointsize>-1</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
    </property>
    <property name="text">
     <string>TextLabel</string>

@@ -39,8 +39,7 @@ scp /home/df-admin/drinkfill/controller_soapstand.service /home/df-admin/product
 scp /home/df-admin/drinkfill/controller_execute.sh /home/df-admin/production/admin/controller_execute.sh
 scp /home/df-admin/drinkfill/ui_soapstand.service /home/df-admin/production/admin/ui_soapstand.service
 scp /home/df-admin/drinkfill/ui_execute.sh /home/df-admin/production/admin/ui_execute.sh
-scp /home/df-admin/drinkfill/soapstand_service_manager_start.sh /home/df-admin/production/admin/soapstand_service_manager_start.sh
-scp /home/df-admin/drinkfill/soapstand_service_manager_stop.sh /home/df-admin/production/admin/soapstand_service_manager_stop.sh
+scp /home/df-admin/drinkfill/service_manager.sh /home/df-admin/production/admin/service_manager.sh
 scp /home/df-admin/drinkfill/status_services.sh /home/df-admin/production/admin/status_services.sh
 scp /home/df-admin/drinkfill/scheduler.sh /home/df-admin/production/admin/scheduler.sh
 scp /home/df-admin/drinkfill/screenshotbot.sh /home/df-admin/production/admin/screenshotbot.sh

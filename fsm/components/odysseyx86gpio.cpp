@@ -42,12 +42,12 @@ oddyseyx86GPIO::oddyseyx86GPIO()
 {
 }
 
-//oddyseyx86GPIO::oddyseyx86GPIO(messageMediator * message)
+// oddyseyx86GPIO::oddyseyx86GPIO(messageMediator * message)
 //{
-//   //debugOutput::sendMessage("stateDispense(messageMediator * message)", MSG_INFO);
-//}
+//    //debugOutput::sendMessage("stateDispense(messageMediator * message)", MSG_INFO);
+// }
 
-/* 
+/*
  * CTOR with Pin reference
  * Typically for Initializing sensors directly...Flow Sensors for now.
  * SEE Manual, Use last three digits to initialize class
@@ -134,25 +134,25 @@ DF_ERROR oddyseyx86GPIO::setPinAsInputElseOutput(bool input)
         std::string msg = "oddyseyx86GPIO::setPinAsInputElseOutput " + std::to_string(m_nPin);
         debugOutput::sendMessage(msg, MSG_INFO);
 
-        //debugOutput::sendMessage("oddyseyx86GPIO::setPinAsInputElseOutput ", MSG_INFO);
+        // debugOutput::sendMessage("oddyseyx86GPIO::setPinAsInputElseOutput ", MSG_INFO);
         DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
         int fd, len;
         char syscode;
         char buf[MAX_BUF];
-        //char buf2[MAX_BUF];
+        // char buf2[MAX_BUF];
 
-        //Composes a string with the same text that would be printed if format was used on printf, but instead of being printed,
-        //the content is stored as a C string in the buffer pointed by s
+        // Composes a string with the same text that would be printed if format was used on printf, but instead of being printed,
+        // the content is stored as a C string in the buffer pointed by s
         len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/direction", m_nPin);
-        //len2 = snprintf(buf2, sizeof(buf2), SYSFS_GPIO_DIR "/gpio%d/edge", m_nPin);
+        // len2 = snprintf(buf2, sizeof(buf2), SYSFS_GPIO_DIR "/gpio%d/edge", m_nPin);
 
         fd = open(buf, O_WRONLY);
-        //fd2 = open(buf2, O_WRONLY);
+        // fd2 = open(buf2, O_WRONLY);
         if (fd >= 0)
         {
                 if (INPUT == input)
                 {
-                        //cout << "direction input set" << endl;
+                        // cout << "direction input set" << endl;
                         write(fd, "in", 3);
                         // cout << "edge set" << endl;
                         // write(fd2, "rising", 7);
@@ -191,12 +191,12 @@ DF_ERROR oddyseyx86GPIO::readPin(bool *level)
 
                         if (ch != '0')
                         {
-                                //cout << "ON" << endl;
+                                // cout << "ON" << endl;
                                 *level = true;
                         }
                         else
                         {
-                                //cout << "OFF" << endl;
+                                // cout << "OFF" << endl;
                                 *level = false;
                         }
 
@@ -240,13 +240,13 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
 
 void oddyseyx86GPIO::monitorGPIO_Flowsensor()
 {
-        //debugOutput::sendMessage("monitorGPIO_Flowsensor", MSG_INFO);  //nuke this later it will cause so much spam
+        // debugOutput::sendMessage("monitorGPIO_Flowsensor", MSG_INFO);  //nuke this later it will cause so much spam
         int fd, len;
         char buf[MAX_BUF];
         char compareChar;
         struct pollfd pfd;
 
-        //string GPIO = std::to_string(m_nPin);
+        // string GPIO = std::to_string(m_nPin);
         string GPIO = IO_PIN_FLOW_SENSOR_STRING;
         string command("/sys/class/gpio/gpio");
         command += GPIO;
@@ -269,7 +269,7 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor()
 
         if (0 == ret)
         {
-                //debugOutput::sendMessage("gpioTimeout", MSG_INFO);
+                // debugOutput::sendMessage("gpioTimeout", MSG_INFO);
         }
         else
         {
@@ -278,12 +278,9 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor()
                         //                        debugOutput::sendMessage("HIGH Triggered Flow", MSG_INFO);
                         //  usleep(500000);						// Sleep to make sure debug gets chance to print
 
-
-
                         m_pDispenser->registerFlowSensorTick(); // UNCOMMENT LODE  //trigger the callback
 
-
-                                                            //                        cout << "Registered Tick" << endl;
+                        //                        cout << "Registered Tick" << endl;
                 }
                 else if (('0' == c) && (compareChar == '1'))
                 {
@@ -326,7 +323,7 @@ void oddyseyx86GPIO::monitorGPIO_Buttons_powerAndMaintenance()
 
         if (0 == ret)
         {
-                //debugOutput::sendMessage("gpioTimeout", MSG_INFO);
+                // debugOutput::sendMessage("gpioTimeout", MSG_INFO);
         }
         else
         {

@@ -80,6 +80,10 @@ bool product::registerFlowSensorTick()
     m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
     // m_nVolumeDispensed += 100.0;
 }
+void product::setVolumeDispensed(double volume)
+{
+    m_nVolumeDispensed = volume;
+}
 double product::getVolumeDispensed()
 {
     return m_nVolumeDispensed;

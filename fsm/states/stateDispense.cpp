@@ -54,6 +54,8 @@ DF_ERROR stateDispense::onEntry()
    size = m_pMessaging->getRequestedSize();
    pos = pos - 1;
 
+   productDispensers[pos].resetDispenseButton();
+
    productDispensers[pos].getProduct()->productVolumeInfo();
    return e_ret;
 }
@@ -63,14 +65,37 @@ DF_ERROR stateDispense::onEntry()
  * Air, Water and Product.  Sends signal to Solenoids to Dispense,
  * Based on string command
  */
+DF_ERROR stateDispense::retractProduct()
+{
+   DF_ERROR e_ret = OK;
+   productDispensers[pos].reversePumpForSetTimeMillis(productDispensers[pos].getProduct()->getRetractionTimeMillis());
+   return e_ret;
+}
+
 DF_ERROR stateDispense::onAction()
 {
    productDispensers = g_productDispensers;
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
+   // periodic delay to slow down refreshing
+   usleep(250000);
+   productDispensers[pos].refresh();
+
    if (m_pMessaging->isCommandStringReadyToBeParsed())
    {
       m_pMessaging->parseCommandString();
+   }
+
+   if (productDispensers[pos].getDispenseButtonEdgePositive())
+   {
+      debugOutput::sendMessage("button press", MSG_INFO);
+      productDispensers[pos].preparePumpForDispenseTrigger();
+   }
+
+   if (productDispensers[pos].getDispenseButtonEdgeNegative())
+   {
+      debugOutput::sendMessage("button release", MSG_INFO);
+      retractProduct();
    }
 
    // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
@@ -92,10 +117,15 @@ DF_ERROR stateDispense::onAction()
    {
       debugOutput::sendMessage("Stop dispensing. Requested volume reached. " + to_string(productDispensers[pos].getVolumeDispensed()), MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
+      retractProduct();
       return e_ret = OK;
    }
 
    productDispensers[pos].setVolumeDispensedPreviously(productDispensers[pos].getVolumeDispensed());
+
+   if (productDispensers[pos].getDispenseButtonValue())
+   {
+   }
 
    if (productDispensers[pos].getEmptyContainerDetectionEnabled())
    {
@@ -107,6 +137,7 @@ DF_ERROR stateDispense::onAction()
 
          debugOutput::sendMessage("******************* EMPTY CONTAINER DETECTED **********************", MSG_INFO);
          m_pMessaging->sendMessage("No flow abort"); // send to UI
+         retractProduct();
          m_state_requested = STATE_DISPENSE_END;
 
          m_pMessaging->setRequestedSize(SIZE_EMPTY_CONTAINER_DETECTED_CHAR);
@@ -158,9 +189,6 @@ DF_ERROR stateDispense::onAction()
                                    ", Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()),
                                MSG_INFO);
    }
-
-   // periodic delay
-   usleep(500000);
 
    e_ret = OK;
 

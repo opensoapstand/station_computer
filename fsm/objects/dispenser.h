@@ -58,15 +58,17 @@ public:
       ~dispenser();
 
       DF_ERROR setup();
+      void refresh();
       // void initDispenser(int slot);
 
-      // private variable setters
-      //  DF_ERROR setSolenoid(int mcpAddress, int pin, int pos);
+      product *getProduct();
+      DF_ERROR setProduct(product *product);
+
+      DF_ERROR setButtonsShutdownAndMaintenance();
+      DF_ERROR setSlot(int slot);
+      int getSlot();
       DF_ERROR setPump(int mcpAddress, int pin, int position);
       DF_ERROR setFlowsensor(int pinint, int pos);
-
-      DF_ERROR startDispense();
-      // DF_ERROR stopDispense();
 
       unsigned short getPumpSpeed();
       bool isPumpEnabled();
@@ -75,24 +77,31 @@ public:
       DF_ERROR setPumpsDisableAll();
       DF_ERROR setPumpEnable();
       DF_ERROR setPumpPWM(uint8_t value);
-      bool getDispenseButtonValue();
-      double getVolumeDispensed();
-      void resetVolumeDispensed();
-
-      double getVolumeDeltaAndReset();
-      // DF_ERROR updateVolumeDelta();
-      double getInstantFlowRate();
-
-      Time_val getVolumeDispensedNow();
-      DF_ERROR updateRunningAverageWindow();
+      DF_ERROR preparePumpForDispenseTrigger();
 
       void reversePumpForSetTimeMillis(int millis);
 
+      DF_ERROR startDispense();
+      DF_ERROR initDispense(int nVolumeToDispense, double nPrice);
+      DF_ERROR stopDispense();
+      string getDispenseStartTime();
+      Dispense_behaviour getDispenseStatus();
+      bool getIsDispenseTargetReached();
+
+      void subtractFromVolumeDispensed(double volume_to_distract);
+      double getVolumeDispensed();
+      void resetVolumeDispensed();
+      Time_val getVolumeDispensedNow();
+      double getVolumeDeltaAndReset();
+
+      double getInstantFlowRate();
+      DF_ERROR updateRunningAverageWindow();
       Time_val getAveragedFlowRate(uint64_t window_length_millis);
 
-      bool getIsDispenseTargetReached();
-      Dispense_behaviour getDispenseStatus();
-
+      void resetDispenseButton();
+      bool getDispenseButtonValue();
+      bool getDispenseButtonEdgeNegative();
+      bool getDispenseButtonEdgePositive();
       void dispenseButtonTimingreset();
       void dispenseButtonTimingUpdate();
       uint64_t getButtonPressedTotalMillis();
@@ -102,41 +111,22 @@ public:
       // void setm_pIsDispensing() { *m_pIsDispensing = true; }
       // void setm_pRestartDispense() { *m_pIsDispensing = false; }
 
-      product *getProduct();
+      // bool reader = true;
 
-      DF_ERROR setProduct(product *product);
-
-      int getI2CAddress(int pos);
-      int getI2CPin(int pos);
-
-      DF_ERROR setButtonsShutdownAndMaintenance();
-      DF_ERROR setSlot(int slot);
-      int getSlot();
-      //      DF_ERROR setButtonPress(int address_num, int pin_num);
-      bool reader = true;
-
-      // double getVolumeDispensed();
       double getVolumeDispensedPreviously();
       void setVolumeDispensedPreviously(double volume);
       // Interrupt Helpers
-
-      DF_ERROR initDispense(int nVolumeToDispense, double nPrice);
-      DF_ERROR stopDispense();
-
       // double getVolumeSinceLastPoll();
-      bool isDispenseTargetVolumeReached();
       // bool registerFlowSensorTick();
 
-      string getDispenseStartTime();
       void loadEmptyContainerDetectionEnabledFromDb();
       bool getEmptyContainerDetectionEnabled();
 
-      //      double getButtonPressDuration();
-      //      int getButtonPressTimes();
-      //      void resetButtonPressTimes();
-      //      void resetButtonPressDuration();
-
 private:
+      bool dispenseButtonValueMemory;
+      bool dispenseButtonValueEdgePositive;
+      bool dispenseButtonValueEdgeNegative;
+
       bool isDispenseFinished;
       double m_nVolumeDispensedSinceLastPoll;
       double m_nTickCount;

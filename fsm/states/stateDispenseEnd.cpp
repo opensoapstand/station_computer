@@ -53,6 +53,10 @@ DF_ERROR stateDispenseEnd::onEntry()
     return e_ret;
 }
 
+// void stateDispenseEnd::retractProductFromSpout(){
+//     productDispensers[pos].reversePumpForSetTimeMillis(productDispensers[pos].getProduct()->getRetractionTimeMillis());
+// }
+
 DF_ERROR stateDispenseEnd::onAction()
 {
     debugOutput::sendMessage("onAction Dispense End...", MSG_STATE);
@@ -60,7 +64,9 @@ DF_ERROR stateDispenseEnd::onAction()
     DF_ERROR e_ret = OK;
 
     productDispensers[pos].stopDispense();
-    productDispensers[pos].reversePumpForSetTimeMillis(productDispensers[pos].getProduct()->getRetractionTimeMillis());
+
+    // handle minimum dispensing
+    bool is_valid_dispense = productDispensers[pos].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML;
 
     // // give time to settle down
     // usleep(100000);
@@ -70,6 +76,7 @@ DF_ERROR stateDispenseEnd::onAction()
 
     if (productDispensers[pos].getIsDispenseTargetReached())
     {
+        //    retractProductFromSpout();
         m_pMessaging->sendMessage("Target Hit");
     }
 
@@ -77,15 +84,12 @@ DF_ERROR stateDispenseEnd::onAction()
     bool isContainerEmpty = false;
     if (m_pMessaging->getRequestedSize() == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
     {
+        // retractProductFromSpout();
         isContainerEmpty = true;
     }
 
     // adjust to nearest lower fixed volume if less dispensed than requested
     adjustSizeToDispensedVolume();
-
-    // handle minimum dispensing
-    bool is_valid_dispense = productDispensers[pos].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML;
-
     // SIZE_TEST_CHAR is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
     if (m_pMessaging->getRequestedSize() == SIZE_TEST_CHAR)
     {
@@ -723,7 +727,6 @@ DF_ERROR stateDispenseEnd::print_receipt()
         size_t pos = plu_dynamic_formatted.find(toReplace);
         if (pos != -1)
         {
-
             plu_dynamic_formatted.replace(pos, toReplace.length(), "");
         }
 

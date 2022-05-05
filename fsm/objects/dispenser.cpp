@@ -243,21 +243,17 @@ void dispenser::resetVolumeDispensed()
     // m_nVolumeDispensed = 0;
     getProduct()->resetVolumeDispensed();
 }
+
+void dispenser::subtractFromVolumeDispensed(double volume_to_distract){
+    double volume = getProduct()->getVolumeDispensed();
+    getProduct()->setVolumeDispensed(volume - volume_to_distract);
+    
+}
+
 double dispenser::getVolumeDispensed()
 {
     // return m_nVolumeDispensed;
     return getProduct()->getVolumeDispensed();
-}
-
-int dispenser::getI2CAddress(int pos)
-{
-    // return m_pSolenoid[pos]->getMCPAddress();
-}
-
-int dispenser::getI2CPin(int pos)
-{
-    debugOutput::sendMessage("getI2C Error!", MSG_ERROR);
-    // return m_pSolenoid[pos]->getMCPPin();
 }
 
 // TODO: Call this function on Dispense onEntry()
@@ -316,6 +312,43 @@ DF_ERROR dispenser::setPumpDirectionForward()
 {
     debugOutput::sendMessage("Pump direction: Forward.", MSG_INFO);
     the_8344->setPumpDirection(true);
+}
+
+//  dispenseButtonValue = productDispensers[m_active_pump_index].getDispenseButtonValue();
+
+//    if (!dispenseButtonValue && dispenseButtonValueMemory)
+//    {
+//       debugOutput::sendMessage("Dispense Button negative Edge.", MSG_INFO);
+//    }
+
+//    if (dispenseButtonValue && !dispenseButtonValueMemory)
+//    {
+//       debugOutput::sendMessage("Start Dispensing", MSG_INFO);
+
+//       // productDispensers[m_active_pump_index].setPumpPWM(125);
+
+void dispenser::refresh()
+{
+    // periodical polling refresh  (because the dispense button has no interrupt trigger (i2c))
+    bool egde = dispenseButtonValueMemory != getDispenseButtonValue();
+    dispenseButtonValueEdgePositive = getDispenseButtonValue() && egde;
+    dispenseButtonValueEdgeNegative = (!getDispenseButtonValue()) && egde;
+    dispenseButtonValueMemory = getDispenseButtonValue();
+}
+
+void dispenser::resetDispenseButton()
+{
+    dispenseButtonValueMemory = false;
+}
+
+bool dispenser::getDispenseButtonEdgeNegative()
+{
+    return dispenseButtonValueEdgeNegative;
+}
+
+bool dispenser::getDispenseButtonEdgePositive()
+{
+    return dispenseButtonValueEdgePositive;
 }
 
 bool dispenser::getDispenseButtonValue()
@@ -379,22 +412,35 @@ DF_ERROR dispenser::setPumpsDisableAll()
 
 void dispenser::reversePumpForSetTimeMillis(int millis)
 {
-
-    if (millis > 0){
+    if (millis > 0)
+    {
+        // get volume before
+        double volume_before = getVolumeDispensed();
 
         debugOutput::sendMessage("Pump auto retraction. Reverse time millis: " + to_string(millis), MSG_INFO);
-        usleep(200000); // give pump time to stop
+        usleep(100000); // give pump time to stop
         setPumpDirectionReverse();
-        setPumpPWM(255); // quick retract
+        // setPumpPWM(255); // quick retract
         setPumpEnable();
         the_8344->virtualButtonPressHack();
+        // ideally, a certain volume is retracted. --> on-time depends on speed
         usleep(millis * 1000);
         the_8344->virtualButtonUnpressHack();
         setPumpsDisableAll();
         setPumpDirectionForward();
-        setPumpPWM((uint8_t)(m_pDispensedProduct->getPWM()));
-    }else{
+        // setPumpPWM((uint8_t)(m_pDispensedProduct->getPWM()));
 
+        // get volume after
+        double volume_after = getVolumeDispensed();
+
+        // vol diff
+        double volume_diff = volume_after - volume_before;
+        debugOutput::sendMessage("ERROR: volume change not yet taken into account... Volume reversed:  " + to_string(volume_diff), MSG_WARNING);
+
+        subtractFromVolumeDispensed(volume_diff);
+    }
+    else
+    {
         debugOutput::sendMessage("Pump auto retraction disabled. Reverse time millis: " + to_string(millis), MSG_INFO);
     }
 }
@@ -419,6 +465,15 @@ DF_ERROR dispenser::setPumpPWM(uint8_t value)
     the_8344->setPumpPWM((unsigned char)value);
 }
 
+DF_ERROR dispenser::preparePumpForDispenseTrigger()
+{
+    DF_ERROR e_ret;
+    setPumpDirectionForward();
+    setPumpPWM((uint8_t)(m_pDispensedProduct->getPWM()));
+    setPumpEnable();
+    return e_ret = OK;
+}
+
 DF_ERROR dispenser::startDispense()
 {
     using namespace std::chrono;
@@ -430,11 +485,12 @@ DF_ERROR dispenser::startDispense()
     DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
     debugOutput::sendMessage("Dispense start. Triggered pump:" + to_string(this->slot), MSG_INFO);
 
-    setPumpDirectionForward();
-    setPumpPWM((uint8_t)(m_pDispensedProduct->getPWM()));
-    // setPumpPWM((uint8_t)(m_pDispensedProduct->getPWMFromDB()));
+    // setPumpDirectionForward();
+    // setPumpPWM((uint8_t)(m_pDispensedProduct->getPWM()));
+    // // setPumpPWM((uint8_t)(m_pDispensedProduct->getPWMFromDB()));
 
-    setPumpEnable();
+    // setPumpEnable();
+    preparePumpForDispenseTrigger();
 
     flowRateBufferIndex = 0;
     for (uint16_t i = 0; i < RUNNING_AVERAGE_WINDOW_LENGTH; i++)

@@ -28,6 +28,8 @@ public:
 
     string toString();
 
+    DF_ERROR retractProduct();
+
     DF_ERROR onEntry();
     DF_ERROR onAction();
     DF_ERROR onExit();

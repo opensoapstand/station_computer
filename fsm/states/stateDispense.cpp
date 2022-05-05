@@ -144,7 +144,7 @@ DF_ERROR stateDispense::onAction()
       {
 
          debugOutput::sendMessage("******************* EMPTY CONTAINER DETECTED **********************", MSG_INFO);
-         // usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
+         usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
          m_pMessaging->sendMessage("No flow abort"); // send to UI
          rectractProductBlocking();
          m_state_requested = STATE_DISPENSE_END;

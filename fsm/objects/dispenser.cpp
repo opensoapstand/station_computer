@@ -244,10 +244,10 @@ void dispenser::resetVolumeDispensed()
     getProduct()->resetVolumeDispensed();
 }
 
-void dispenser::subtractFromVolumeDispensed(double volume_to_distract){
+void dispenser::subtractFromVolumeDispensed(double volume_to_distract)
+{
     double volume = getProduct()->getVolumeDispensed();
     getProduct()->setVolumeDispensed(volume - volume_to_distract);
-    
 }
 
 double dispenser::getVolumeDispensed()
@@ -450,6 +450,38 @@ bool dispenser::isPumpEnabled()
     return m_isPumpEnabled;
 }
 
+DF_ERROR dispenser::pumpSlowStart(bool forwardElseReverse)
+{
+    
+    debugOutput::sendMessage("Pump slow start.", MSG_INFO);
+    the_8344->setPumpDirection(forwardElseReverse);
+    usleep(10000); // make sure direction is set well
+    setPumpEnable();
+    uint8_t target_pwm = (uint8_t)(m_pDispensedProduct->getPWM());
+    for (int i = 0; i <= target_pwm; i++)
+    {
+        pwm_actual_set_speed = i;
+        setPumpPWM(i);
+        usleep(4000); // one second ramp up to full speed --> 255 steps ==> 4ms per step.
+    }
+}
+
+DF_ERROR dispenser::pumpSlowStop()
+{
+
+    debugOutput::sendMessage("Pump slow stop.", MSG_INFO);
+    the_8344->virtualButtonPressHack();
+
+    //uint8_t start_pwm = (uint8_t)(m_pDispensedProduct->getPWM());
+    for (int i = pwm_actual_set_speed; i > 0; i--)
+    {
+        setPumpPWM(i);
+        usleep(4000); // one second ramp up to full speed --> 255 steps ==> 4ms per step.
+    }
+    the_8344->virtualButtonUnpressHack();
+    setPumpsDisableAll();
+}
+
 DF_ERROR dispenser::setPumpEnable()
 {
     // first pump is 1.
@@ -485,12 +517,7 @@ DF_ERROR dispenser::startDispense()
     DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
     debugOutput::sendMessage("Dispense start. Triggered pump:" + to_string(this->slot), MSG_INFO);
 
-    // setPumpDirectionForward();
-    // setPumpPWM((uint8_t)(m_pDispensedProduct->getPWM()));
-    // // setPumpPWM((uint8_t)(m_pDispensedProduct->getPWMFromDB()));
-
-    // setPumpEnable();
-    preparePumpForDispenseTrigger();
+    // preparePumpForDispenseTrigger();
 
     flowRateBufferIndex = 0;
     for (uint16_t i = 0; i < RUNNING_AVERAGE_WINDOW_LENGTH; i++)

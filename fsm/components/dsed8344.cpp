@@ -292,40 +292,52 @@ unsigned short dsed8344::getPumpSpeed(void)
 
 bool dsed8344::getDispenseButtonState(void)
 {
-    return ((ReadByte(PCA9534_ADDRESS, 0x00) & 0x80) ? false : true);
+
+    bool isPressed = ((ReadByte(PCA9534_ADDRESS, 0x00) & 0x80) ? false : true);
+
+
+    return isPressed;
+
 } // End of getDispenseButtonState()
 
 bool dsed8344::getDispenseButtonEdge(void)
 {
-    bool edge = false;
-
-    bool state = getDispenseButtonState();
-    if (state != dispenseButtonStateMemory)
-    {
-        edge = true;
-    }
-    dispenseButtonStateMemory = state;
-    return edge;
+   
 } // End of getDispenseButtonState()
 
 bool dsed8344::getDispenseButtonStateDebounced()
 {
     // as this is not in a separate thread, we'll need to call it some times...
+    // up edge: state wait for debouncing. 
+    // down edge: instant react. Because the PWM is hardware disconnected right away. We don't want jitter on that (aka disable right away when negative edge is detected). 
     using namespace std::chrono;
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    if (getDispenseButtonEdge())
+
+    bool state = getDispenseButtonState();
+
+    if (state != dispenseButtonStateMemory)
     {
         dispenseButtonDebounceMemory = millis_since_epoch;
         dispenseButtonIsDebounced = false;
         // debugOutput::sendMessage("edge detected!" + std::to_string(dispenseButtonDebounceMemory), MSG_INFO);
     }
 
-    if (millis_since_epoch - dispenseButtonDebounceMemory > DISPENSE_BUTTON_DEBOUNCE_MILLIS && !dispenseButtonIsDebounced)
-    {
+    if (state){
+        // up edge wait for stable
+        if (millis_since_epoch - dispenseButtonDebounceMemory > DISPENSE_BUTTON_DEBOUNCE_MILLIS && !dispenseButtonIsDebounced)
+        {
+            dispenseButtonIsDebounced = true;
+            // debugOutput::sendMessage("commit edge to state" + std::to_string(millis_since_epoch - dispenseButtonDebounceMemory), MSG_INFO);
+            dispenseButtonStateDebounced = true;
+        }
+
+    }else{
+        // down edge do not wait for stable
         dispenseButtonIsDebounced = true;
-        // debugOutput::sendMessage("commit edge to state" + std::to_string(millis_since_epoch - dispenseButtonDebounceMemory), MSG_INFO);
-        dispenseButtonStateDebounced = dispenseButtonStateMemory;
+        dispenseButtonStateDebounced = false;
     }
+
+    dispenseButtonStateMemory = state;
 
     return dispenseButtonStateDebounced;
 }

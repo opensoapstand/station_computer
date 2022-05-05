@@ -81,6 +81,12 @@ public:
 
       void reversePumpForSetTimeMillis(int millis);
 
+
+      DF_ERROR pumpSlowStart(bool forwardElseReverse);
+
+      DF_ERROR pumpSlowStop();
+
+
       DF_ERROR startDispense();
       DF_ERROR initDispense(int nVolumeToDispense, double nPrice);
       DF_ERROR stopDispense();
@@ -191,6 +197,9 @@ private:
 
       // Button reference m_pButton[1] in stateVirtual; IPC shared due to Arduino!
       gpio *m_pButton[NUM_BUTTON];
+
+
+      uint8_t pwm_actual_set_speed;
 };
 
 #endif

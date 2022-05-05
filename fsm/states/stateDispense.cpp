@@ -78,7 +78,7 @@ DF_ERROR stateDispense::onAction()
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
    // periodic delay to slow down refreshing
-   usleep(250000);
+   // usleep(250000);
    productDispensers[pos].refresh();
 
    if (m_pMessaging->isCommandStringReadyToBeParsed())
@@ -89,13 +89,16 @@ DF_ERROR stateDispense::onAction()
    if (productDispensers[pos].getDispenseButtonEdgePositive())
    {
       debugOutput::sendMessage("button press", MSG_INFO);
-      productDispensers[pos].preparePumpForDispenseTrigger();
+      //productDispensers[pos].preparePumpForDispenseTrigger();
+      
+      productDispensers[pos].pumpSlowStart(true);
    }
 
    if (productDispensers[pos].getDispenseButtonEdgeNegative())
    {
       debugOutput::sendMessage("button release", MSG_INFO);
-      retractProduct();
+      productDispensers[pos].pumpSlowStop();
+      // retractProduct();
    }
 
    // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)

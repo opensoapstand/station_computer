@@ -47,7 +47,7 @@
 #define SLOW_START_INCREASE_PERIOD_MILLIS 2
 #define SLOW_STOP_PERIOD_MILLIS 1
 
-#define DISPENSE_STATUS_UPDATE_DELTA_MILLIS 1000000 //period of which controller can send status to ui and logging and terminal
+#define DISPENSE_STATUS_UPDATE_DELTA_MILLIS 1000 //period of which controller can send status to ui and logging and terminal
 
 #define SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS 3000
 //#define EMPTY_CONTAINER_DETECTION_FLOW_THRESHOLD_ML_PER_S 15 // reference: at 2l/min we have 33ml/s

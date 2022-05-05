@@ -552,7 +552,7 @@ DF_ERROR dispenser::pumpSlowStopBlocking()
     the_8344->virtualButtonPressHack();
 
     // uint8_t start_pwm = (uint8_t)(m_pDispensedProduct->getPWM());
-    for (int i = pwm_actual_set_speed; i > 0; i--)
+    for (int i = pwm_actual_set_speed; i >= 0; --i)
     {
         setPumpPWM(i, false);
         usleep(SLOW_STOP_PERIOD_MILLIS * 1000); // one second ramp up to full speed --> 255 steps ==> 4ms per step.

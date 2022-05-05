@@ -55,6 +55,7 @@ public:
     void setup(void);
     void virtualButtonPressHack(void);
     void virtualButtonUnpressHack(void);
+    void dispenseButtonRefresh();
 
 private:
     bool getDispenseButtonState(void);
@@ -75,7 +76,7 @@ private:
     bool dispenseButtonStateMemory;
     bool dispenseButtonIsDebounced;
     bool dispenseButtonStateDebounced;
-    bool dispenseButtonDebounceMemory;
+    uint64_t dispenseButtonDebounceStartEpoch;
 
 };
 

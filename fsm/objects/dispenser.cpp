@@ -67,6 +67,7 @@ DF_ERROR dispenser::setup()
 
     millisAtLastCheck = MILLIS_INIT_DUMMY;
     previousDispensedVolume = 0;
+    isPumpSoftStarting = false;
 }
 
 /*
@@ -98,6 +99,9 @@ dispenser::~dispenser()
 
     delete the_8344;
     the_8344 = nullptr;
+
+    using namespace std::chrono;
+    previous_status_update_allowed_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
     // delete [] m_pDispensedProduct;
 
@@ -329,11 +333,47 @@ DF_ERROR dispenser::setPumpDirectionForward()
 
 void dispenser::refresh()
 {
+
+    the_8344->dispenseButtonRefresh();
+
     // periodical polling refresh  (because the dispense button has no interrupt trigger (i2c))
     bool egde = dispenseButtonValueMemory != getDispenseButtonValue();
     dispenseButtonValueEdgePositive = getDispenseButtonValue() && egde;
     dispenseButtonValueEdgeNegative = (!getDispenseButtonValue()) && egde;
     dispenseButtonValueMemory = getDispenseButtonValue();
+
+    // status update time
+    using namespace std::chrono;
+    uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    if (previous_status_update_allowed_epoch + DISPENSE_STATUS_UPDATE_DELTA_MILLIS < now)
+    {
+        previous_status_update_allowed_epoch = now;
+        isStatusUpdateSendAndPrintAllowed = true;
+    }
+    else
+    {
+        isStatusUpdateSendAndPrintAllowed = false;
+    }
+}
+
+bool dispenser::getIsStatusUpdateAllowed()
+{
+    return isStatusUpdateSendAndPrintAllowed;
+}
+
+// void dispenser::sendToUiIfAllowed(string message){
+//     // only use this for updates that would happen at every stateDispense refresh cycle.
+//      m_pMessaging->sendMessage(message);
+// }
+
+void dispenser::logUpdateIfAllowed(string message)
+{
+    // only use this for updates that would happen at every stateDispense refresh cycle.
+    if (isStatusUpdateSendAndPrintAllowed)
+    {
+        debugOutput::sendMessage(message,
+                                 MSG_INFO);
+    }
 }
 
 void dispenser::resetDispenseButton()
@@ -382,8 +422,7 @@ void dispenser::dispenseButtonTimingUpdate()
         // do nothing;
     }
     dispense_button_time_at_last_check_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    debugOutput::sendMessage("Button press millis. Total:" + to_string(dispense_button_total_pressed_millis) + " Current press:" + to_string(dispense_button_current_press_millis), MSG_INFO);
-    // return dispense_button_total_pressed_millis;
+    logUpdateIfAllowed("Button press millis. Total:" + to_string(dispense_button_total_pressed_millis) + " Current press:" + to_string(dispense_button_current_press_millis));
 }
 
 uint64_t dispenser::getButtonPressedTotalMillis()
@@ -408,6 +447,7 @@ DF_ERROR dispenser::setPumpsDisableAll()
     debugOutput::sendMessage("Pump disable: all.", MSG_INFO);
     the_8344->setPumpsDisableAll();
     m_isPumpEnabled = false;
+    isPumpSoftStarting = false;
 }
 
 void dispenser::reversePumpForSetTimeMillis(int millis)
@@ -450,34 +490,74 @@ bool dispenser::isPumpEnabled()
     return m_isPumpEnabled;
 }
 
-DF_ERROR dispenser::pumpSlowStart(bool forwardElseReverse)
+DF_ERROR dispenser::pumpSlowStartHandler()
 {
-    
-    debugOutput::sendMessage("Pump slow start.", MSG_INFO);
-    the_8344->setPumpDirection(forwardElseReverse);
-    usleep(10000); // make sure direction is set well
-    setPumpEnable();
-    uint8_t target_pwm = (uint8_t)(m_pDispensedProduct->getPWM());
-    for (int i = 0; i <= target_pwm; i++)
+
+    if (isPumpSoftStarting)
     {
-        pwm_actual_set_speed = i;
-        setPumpPWM(i);
-        usleep(4000); // one second ramp up to full speed --> 255 steps ==> 4ms per step.
+        uint8_t target_pwm = (uint8_t)(m_pDispensedProduct->getPWM());
+
+        if (pwm_actual_set_speed < target_pwm)
+        {
+            using namespace std::chrono;
+            uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
+            uint64_t delta = now - slowStartMostRecentIncreaseEpoch;
+            // debugOutput::sendMessage("delta: " + to_string(now), MSG_INFO);
+            // debugOutput::sendMessage("delta: " + to_string(slowStartMostRecentIncreaseEpoch), MSG_INFO);
+            // debugOutput::sendMessage("delta: " + to_string(delta), MSG_INFO);
+
+            while (delta > SLOW_START_INCREASE_PERIOD_MILLIS)
+            {
+                delta = delta - SLOW_START_INCREASE_PERIOD_MILLIS;
+                pwm_actual_set_speed++;
+                setPumpPWM(pwm_actual_set_speed, false);
+            }
+            slowStartMostRecentIncreaseEpoch = now- delta; // if increments are a less than SLOW_START_INCREASE_PERIOD_MILLIS, they need to increment ...
+        }
+        else
+        {
+            isPumpSoftStarting = false;
+        }
     }
 }
 
-DF_ERROR dispenser::pumpSlowStop()
+DF_ERROR dispenser::pumpSlowStart(bool forwardElseReverse)
 {
 
-    debugOutput::sendMessage("Pump slow stop.", MSG_INFO);
+    using namespace std::chrono;
+    slowStartMostRecentIncreaseEpoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
+    uint8_t target_pwm = (uint8_t)(m_pDispensedProduct->getPWM());
+    debugOutput::sendMessage("Pump slow start. from " + to_string(pwm_actual_set_speed) + " to " + to_string(target_pwm), MSG_INFO);
+    the_8344->setPumpDirection(forwardElseReverse);
+    usleep(10000); // make sure direction is set well
+    setPumpEnable();
+    setPumpPWM(0, false);
+
+    // for (int i = pwm_actual_set_speed; i <= target_pwm; i++)
+    // {
+    //     pwm_actual_set_speed = i;
+    //     setPumpPWM(i, false);
+    //     usleep(4000); // one second ramp up to full speed --> 255 steps ==> 4ms per step.
+    // }
+
+    isPumpSoftStarting = true;
+}
+
+DF_ERROR dispenser::pumpSlowStopBlocking()
+{
+    isPumpSoftStarting = false;
+    debugOutput::sendMessage("Pump slow stop. from " + to_string(pwm_actual_set_speed) + " to " + to_string(0), MSG_INFO);
     the_8344->virtualButtonPressHack();
 
-    //uint8_t start_pwm = (uint8_t)(m_pDispensedProduct->getPWM());
+    // uint8_t start_pwm = (uint8_t)(m_pDispensedProduct->getPWM());
     for (int i = pwm_actual_set_speed; i > 0; i--)
     {
-        setPumpPWM(i);
-        usleep(4000); // one second ramp up to full speed --> 255 steps ==> 4ms per step.
+        setPumpPWM(i, false);
+        usleep(SLOW_STOP_PERIOD_MILLIS * 1000); // one second ramp up to full speed --> 255 steps ==> 4ms per step.
     }
+    pwm_actual_set_speed= 0;
     the_8344->virtualButtonUnpressHack();
     setPumpsDisableAll();
 }
@@ -491,20 +571,23 @@ DF_ERROR dispenser::setPumpEnable()
     m_isPumpEnabled = true;
 }
 
-DF_ERROR dispenser::setPumpPWM(uint8_t value)
+DF_ERROR dispenser::setPumpPWM(uint8_t value, bool enableLog)
 {
-    debugOutput::sendMessage("Pump set speed. PWM [0..255]: " + to_string(value), MSG_INFO);
+    if (enableLog)
+    {
+        debugOutput::sendMessage("Pump set speed. PWM [0..255]: " + to_string(value), MSG_INFO);
+    }
     the_8344->setPumpPWM((unsigned char)value);
 }
 
-DF_ERROR dispenser::preparePumpForDispenseTrigger()
-{
-    DF_ERROR e_ret;
-    setPumpDirectionForward();
-    setPumpPWM((uint8_t)(m_pDispensedProduct->getPWM()));
-    setPumpEnable();
-    return e_ret = OK;
-}
+// DF_ERROR dispenser::preparePumpForDispenseTrigger()
+// {
+//     DF_ERROR e_ret;
+//     setPumpDirectionForward();
+//     setPumpPWM((uint8_t)(m_pDispensedProduct->getPWM()), true);
+//     setPumpEnable();
+//     return e_ret = OK;
+// }
 
 DF_ERROR dispenser::startDispense()
 {
@@ -515,7 +598,7 @@ DF_ERROR dispenser::startDispense()
     previous_dispense_state = FLOW_STATE_UNAVAILABLE;
 
     DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
-    debugOutput::sendMessage("Dispense start. Triggered pump:" + to_string(this->slot), MSG_INFO);
+    debugOutput::sendMessage("Dispense start at slot " + to_string(this->slot), MSG_INFO);
 
     // preparePumpForDispenseTrigger();
 
@@ -556,6 +639,8 @@ void dispenser::loadEmptyContainerDetectionEnabledFromDb()
     m_isEmptyContainerDetectionEnabled = (val != 0);
 
 #endif
+
+    debugOutput::sendMessage("Empty container detection enabled? : " + to_string(m_isEmptyContainerDetectionEnabled), MSG_INFO);
 }
 
 bool dispenser::getEmptyContainerDetectionEnabled()
@@ -747,7 +832,9 @@ Dispense_behaviour dispenser::getDispenseStatus()
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     uint64_t dispense_time_millis = millis_since_epoch - dispense_start_timestamp_epoch;
     Time_val avg = getAveragedFlowRate(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS);
-    debugOutput::sendMessage("Dispense flowRate " + to_string(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) + "ms avg [ml/s]: " + to_string(avg.value) + " Dispense state time: " + to_string(dispense_time_millis), MSG_INFO);
+
+    // restricted status update
+    logUpdateIfAllowed("Dispense flowRate " + to_string(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) + "ms avg [ml/s]: " + to_string(avg.value) + " Dispense state time: " + to_string(dispense_time_millis));
 
     Dispense_behaviour state;
 

@@ -204,9 +204,12 @@ bool dsed8344::setPumpDirection(bool forwardElseReverse)
     }
     else
     {
-        if (forwardElseReverse){
+        if (forwardElseReverse)
+        {
             debugOutput::sendMessage("Direction not changed (forward).", MSG_INFO);
-        }else{
+        }
+        else
+        {
             debugOutput::sendMessage("Direction not changed (reverse).", MSG_INFO);
         }
     }
@@ -251,7 +254,7 @@ void dsed8344::virtualButtonPressHack()
     SendByte(PCA9534_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
 
     reg_value = ReadByte(PCA9534_ADDRESS, 0x01);
-    reg_value = reg_value & 0b01111111; // virtual button press 
+    reg_value = reg_value & 0b01111111; // virtual button press
     SendByte(PCA9534_ADDRESS, 0x01, reg_value);
 }
 
@@ -261,7 +264,6 @@ void dsed8344::virtualButtonUnpressHack()
     reg_value = reg_value | 0b10000000;
     SendByte(PCA9534_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
 }
-
 
 bool dsed8344::setPumpsDisableAll()
 {
@@ -295,49 +297,56 @@ bool dsed8344::getDispenseButtonState(void)
 
     bool isPressed = ((ReadByte(PCA9534_ADDRESS, 0x00) & 0x80) ? false : true);
 
-
     return isPressed;
 
 } // End of getDispenseButtonState()
 
 bool dsed8344::getDispenseButtonEdge(void)
 {
-   
-} // End of getDispenseButtonState()
 
-bool dsed8344::getDispenseButtonStateDebounced()
+} // End of getDispenseButtonState()
+void dsed8344::dispenseButtonRefresh()
 {
     // as this is not in a separate thread, we'll need to call it some times...
-    // up edge: state wait for debouncing. 
-    // down edge: instant react. Because the PWM is hardware disconnected right away. We don't want jitter on that (aka disable right away when negative edge is detected). 
+    // up edge: state wait for debouncing.
+    // down edge: instant react. Because the PWM is hardware disconnected right away. We don't want jitter on that (aka disable right away when negative edge is detected).
     using namespace std::chrono;
-    uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    uint64_t now_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
     bool state = getDispenseButtonState();
 
     if (state != dispenseButtonStateMemory)
     {
-        dispenseButtonDebounceMemory = millis_since_epoch;
+        dispenseButtonDebounceStartEpoch = now_epoch;
         dispenseButtonIsDebounced = false;
-        // debugOutput::sendMessage("edge detected!" + std::to_string(dispenseButtonDebounceMemory), MSG_INFO);
+        // debugOutput::sendMessage("edge detected!" + std::to_string(dispenseButtonDebounceStartEpoch) + "state: " + std::to_string(state), MSG_INFO);
     }
 
-    if (state){
-        // up edge wait for stable
-        if (millis_since_epoch - dispenseButtonDebounceMemory > DISPENSE_BUTTON_DEBOUNCE_MILLIS && !dispenseButtonIsDebounced)
+    if (!dispenseButtonIsDebounced)
+    {
+        if (state)
         {
-            dispenseButtonIsDebounced = true;
-            // debugOutput::sendMessage("commit edge to state" + std::to_string(millis_since_epoch - dispenseButtonDebounceMemory), MSG_INFO);
-            dispenseButtonStateDebounced = true;
+            // up edge wait for stable
+            if ((now_epoch > (dispenseButtonDebounceStartEpoch + DISPENSE_BUTTON_DEBOUNCE_MILLIS)) && !dispenseButtonIsDebounced && state != dispenseButtonStateDebounced)
+            {
+                dispenseButtonIsDebounced = true;
+                // debugOutput::sendMessage("commit edge to state" + std::to_string(millis_since_epoch - dispenseButtonDebounceStartEpoch), MSG_INFO);
+                // debugOutput::sendMessage("debounced" + to_string(state), MSG_INFO);
+                dispenseButtonStateDebounced = state;
+            }
         }
-
-    }else{
-        // down edge do not wait for stable
-        dispenseButtonIsDebounced = true;
-        dispenseButtonStateDebounced = false;
+        else
+        {
+            // down edge do not wait for stable
+            dispenseButtonIsDebounced = true;
+            dispenseButtonStateDebounced = state;
+        }
     }
 
     dispenseButtonStateMemory = state;
+}
+bool dsed8344::getDispenseButtonStateDebounced()
+{
 
     return dispenseButtonStateDebounced;
 }

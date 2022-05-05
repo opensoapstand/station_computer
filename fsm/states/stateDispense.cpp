@@ -90,14 +90,17 @@ DF_ERROR stateDispense::onAction()
    {
       debugOutput::sendMessage("button press", MSG_INFO);
       //productDispensers[pos].preparePumpForDispenseTrigger();
-      
       productDispensers[pos].pumpSlowStart(true);
    }
+
+
+      productDispensers[pos].pumpSlowStartHandler();
+
 
    if (productDispensers[pos].getDispenseButtonEdgeNegative())
    {
       debugOutput::sendMessage("button release", MSG_INFO);
-      productDispensers[pos].pumpSlowStop();
+      productDispensers[pos].pumpSlowStopBlocking();
       // retractProduct();
    }
 
@@ -105,7 +108,9 @@ DF_ERROR stateDispense::onAction()
 
    if (productDispensers[pos].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML)
    {
-      m_pMessaging->sendMessage(to_string(productDispensers[pos].getVolumeDispensed()));
+      if (productDispensers[pos].getIsStatusUpdateAllowed()){
+         m_pMessaging->sendMessage(to_string(productDispensers[pos].getVolumeDispensed()));
+      }
    }
 
    // Check if UI has sent a ACTION_DISPENSE_END to finish the transaction, or, if dispensing is complete
@@ -147,33 +152,29 @@ DF_ERROR stateDispense::onAction()
       }
       else if (status == FLOW_STATE_DISPENSING)
       {
-         debugOutput::sendMessage("debug. targets s,m,l,c_max:" +
+         productDispensers[pos].logUpdateIfAllowed("debug. targets s,m,l,c_max:" +
                                       to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_s) +
                                       "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_m) +
                                       "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_l) +
                                       "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_c_max) +
-                                      ", Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()),
-                                  MSG_INFO);
+                                      ", Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()));
       }
       else if (status == FLOW_STATE_ATTEMTPING_TO_PRIME)
       {
-         debugOutput::sendMessage("No flow during pumping. Priming? Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()),
-                                  MSG_INFO);
+         productDispensers[pos].logUpdateIfAllowed("No flow during pumping. Priming? Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()));
       }
       else if (status == FLOW_STATE_PUMPING_NOT_DISPENSING)
       {
-         debugOutput::sendMessage("No flow detected during pumping. Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()),
-                                  MSG_INFO);
+         productDispensers[pos].logUpdateIfAllowed("No flow detected during pumping. Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()));
       }
       else if (status == FLOW_STATE_NOT_PUMPING_NOT_DISPENSING)
       {
-         debugOutput::sendMessage("Wait for button press.           Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()),
-                                  MSG_INFO);
+         productDispensers[pos].logUpdateIfAllowed("Wait for button press.           Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()));
+                                  
       }
       else if (status == FLOW_STATE_UNAVAILABLE)
       {
-         debugOutput::sendMessage("No flow data yet (init).         Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()),
-                                  MSG_INFO);
+         productDispensers[pos].logUpdateIfAllowed("No flow data yet (init).         Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()));
       }
       else
       {
@@ -184,13 +185,12 @@ DF_ERROR stateDispense::onAction()
    {
       // TODO: Do a check if Pumps are operational
       // send IPC if pump fails
-      debugOutput::sendMessage("debug. targets s,m,l,c_max:" +
+      productDispensers[pos].logUpdateIfAllowed("debug. targets s,m,l,c_max:" +
                                    to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_s) +
                                    "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_m) +
                                    "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_l) +
                                    "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_c_max) +
-                                   ", Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()),
-                               MSG_INFO);
+                                   ", Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()));
    }
 
    e_ret = OK;

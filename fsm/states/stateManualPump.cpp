@@ -54,7 +54,7 @@ DF_ERROR stateManualPump::onEntry()
    m_active_pump_index = 0; // pump 1 is activated by default
    debugOutput::sendMessage("Pump testing. Active dispenser pump: " + to_string(m_active_pump_index + 1), MSG_INFO);
    productDispensers[m_active_pump_index].setPumpDirectionForward();
-   productDispensers[m_active_pump_index].setPumpPWM(255);
+   productDispensers[m_active_pump_index].setPumpPWM(255, true);
 
    isFlowTest = false;
    return e_ret;
@@ -122,7 +122,7 @@ DF_ERROR stateManualPump::onAction()
          {
             // float PWM_value_byte = 3.12345;
             debugOutput::sendMessage("PWM value to set (should be in range [0..255]): " + to_string((uint8_t)val), MSG_INFO);
-            productDispensers[m_active_pump_index].setPumpPWM((uint8_t)val);
+            productDispensers[m_active_pump_index].setPumpPWM((uint8_t)val, true);
          }
       }
 
@@ -276,7 +276,7 @@ DF_ERROR stateManualPump::customVolumeDispenseTest()
    {
       debugOutput::sendMessage("Start Dispensing", MSG_INFO);
 
-      // productDispensers[m_active_pump_index].setPumpPWM(125);
+      // productDispensers[m_active_pump_index].setPumpPWM(125, true);
 
       isDispensing = true;
       using namespace std::chrono;
@@ -387,7 +387,7 @@ DF_ERROR stateManualPump::pumpCyclicTest()
          pump_test_cycle_count++;
          productDispensers[m_active_pump_index].setPumpDirectionForward();
          // this->productDispensers[m_active_pump_index].getPumpSpeed();
-         // productDispensers[m_active_pump_index].setPumpPWM(255);
+         // productDispensers[m_active_pump_index].setPumpPWM(255, true);
          int speed = productDispensers[m_active_pump_index].getProduct()->getPWMFromDB();
 
          debugOutput::sendMessage("Pump speed for test: " + to_string(speed), MSG_INFO);
@@ -403,18 +403,18 @@ DF_ERROR stateManualPump::pumpTest()
    debugOutput::sendMessage("pump pump", MSG_INFO);
 
    productDispensers[m_active_pump_index].setPumpDirectionForward();
-   productDispensers[m_active_pump_index].setPumpPWM(125);
+   productDispensers[m_active_pump_index].setPumpPWM(125, true);
    productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
    usleep(1000000);                                         // press button to have the pump pumping.
    productDispensers[m_active_pump_index].setPumpDirectionForward();
-   productDispensers[m_active_pump_index].setPumpPWM(255);
+   productDispensers[m_active_pump_index].setPumpPWM(255, true);
    productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
    usleep(1000000);                                         // press
 
    productDispensers[m_active_pump_index].setPumpsDisableAll();
 
    productDispensers[m_active_pump_index].setPumpDirectionReverse();
-   productDispensers[m_active_pump_index].setPumpPWM(125);
+   productDispensers[m_active_pump_index].setPumpPWM(125, true);
    productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
    usleep(1000000);                                         // press button to have the pump pumping.
    productDispensers[m_active_pump_index].setPumpsDisableAll();

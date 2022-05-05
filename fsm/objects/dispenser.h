@@ -76,15 +76,16 @@ public:
       DF_ERROR setPumpDirectionReverse();
       DF_ERROR setPumpsDisableAll();
       DF_ERROR setPumpEnable();
-      DF_ERROR setPumpPWM(uint8_t value);
+      DF_ERROR setPumpPWM(uint8_t value, bool enableLog);
       DF_ERROR preparePumpForDispenseTrigger();
 
       void reversePumpForSetTimeMillis(int millis);
 
 
       DF_ERROR pumpSlowStart(bool forwardElseReverse);
+      DF_ERROR pumpSlowStartHandler();
 
-      DF_ERROR pumpSlowStop();
+      DF_ERROR pumpSlowStopBlocking();
 
 
       DF_ERROR startDispense();
@@ -127,11 +128,17 @@ public:
 
       void loadEmptyContainerDetectionEnabledFromDb();
       bool getEmptyContainerDetectionEnabled();
+      void sendToUiIfAllowed(string message);
+      void logUpdateIfAllowed(string message);
+
+      bool getIsStatusUpdateAllowed();
 
 private:
       bool dispenseButtonValueMemory;
       bool dispenseButtonValueEdgePositive;
       bool dispenseButtonValueEdgeNegative;
+
+      bool isPumpSoftStarting;
 
       bool isDispenseFinished;
       double m_nVolumeDispensedSinceLastPoll;
@@ -158,6 +165,12 @@ private:
       uint64_t dispense_button_time_at_last_check_epoch;
       uint64_t dispense_button_total_pressed_millis; // culmination of all button press times
       uint64_t dispense_button_current_press_millis; // time of this single press
+
+      uint64_t previous_status_update_allowed_epoch;
+
+      uint64_t slowStartMostRecentIncreaseEpoch;
+      
+      bool isStatusUpdateSendAndPrintAllowed;
 
       Dispense_behaviour previous_dispense_state;
 

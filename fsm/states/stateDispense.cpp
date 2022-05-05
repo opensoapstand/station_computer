@@ -65,7 +65,7 @@ DF_ERROR stateDispense::onEntry()
  * Air, Water and Product.  Sends signal to Solenoids to Dispense,
  * Based on string command
  */
-DF_ERROR stateDispense::retractProduct()
+DF_ERROR stateDispense::rectractProductBlocking()
 {
    DF_ERROR e_ret = OK;
    productDispensers[pos].reversePumpForSetTimeMillis(productDispensers[pos].getProduct()->getRetractionTimeMillis());
@@ -101,7 +101,7 @@ DF_ERROR stateDispense::onAction()
    {
       debugOutput::sendMessage("button release", MSG_INFO);
       productDispensers[pos].pumpSlowStopBlocking();
-      // retractProduct();
+      rectractProductBlocking();
    }
 
    // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
@@ -125,7 +125,7 @@ DF_ERROR stateDispense::onAction()
    {
       debugOutput::sendMessage("Stop dispensing. Requested volume reached. " + to_string(productDispensers[pos].getVolumeDispensed()), MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
-      retractProduct();
+      rectractProductBlocking();
       return e_ret = OK;
    }
 
@@ -144,8 +144,9 @@ DF_ERROR stateDispense::onAction()
       {
 
          debugOutput::sendMessage("******************* EMPTY CONTAINER DETECTED **********************", MSG_INFO);
+         // usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
          m_pMessaging->sendMessage("No flow abort"); // send to UI
-         retractProduct();
+         rectractProductBlocking();
          m_state_requested = STATE_DISPENSE_END;
 
          m_pMessaging->setRequestedSize(SIZE_EMPTY_CONTAINER_DETECTED_CHAR);

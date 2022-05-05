@@ -28,7 +28,7 @@ public:
 
     string toString();
 
-    DF_ERROR retractProduct();
+    DF_ERROR rectractProductBlocking();
 
     DF_ERROR onEntry();
     DF_ERROR onAction();

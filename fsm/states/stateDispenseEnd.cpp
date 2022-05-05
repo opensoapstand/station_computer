@@ -53,7 +53,7 @@ DF_ERROR stateDispenseEnd::onEntry()
     return e_ret;
 }
 
-// void stateDispenseEnd::retractProductFromSpout(){
+// void stateDispenseEnd::rectractProductBlockingFromSpout(){
 //     productDispensers[pos].reversePumpForSetTimeMillis(productDispensers[pos].getProduct()->getRetractionTimeMillis());
 // }
 
@@ -72,19 +72,22 @@ DF_ERROR stateDispenseEnd::onAction()
     // usleep(100000);
 
     // send dispensed volume to ui (will be used to write to portal)
+    // usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
     m_pMessaging->sendMessage(to_string(productDispensers[pos].getVolumeDispensed()));
 
     if (productDispensers[pos].getIsDispenseTargetReached())
     {
-        //    retractProductFromSpout();
+        //    rectractProductBlockingFromSpout();
+        // usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
         m_pMessaging->sendMessage("Target Hit");
+        
     }
 
     // handle empty container detection
     bool isContainerEmpty = false;
     if (m_pMessaging->getRequestedSize() == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
     {
-        // retractProductFromSpout();
+        // rectractProductBlockingFromSpout();
         isContainerEmpty = true;
     }
 
@@ -128,7 +131,7 @@ DF_ERROR stateDispenseEnd::onAction()
     }
 
     m_state_requested = STATE_IDLE;
-
+    // usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
     m_pMessaging->sendMessage("Transaction End"); // send to UI
 
     return e_ret;

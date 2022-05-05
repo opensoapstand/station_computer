@@ -458,15 +458,35 @@ void dispenser::reversePumpForSetTimeMillis(int millis)
         double volume_before = getVolumeDispensed();
 
         debugOutput::sendMessage("Pump auto retraction. Reverse time millis: " + to_string(millis), MSG_INFO);
-        usleep(100000); // give pump time to stop
-        setPumpDirectionReverse();
+        // usleep(100000); // give pump time to stop
+        // setPumpDirectionReverse();
+
         // setPumpPWM(255); // quick retract
-        setPumpEnable();
+        // setPumpEnable();
+        pumpSlowStart(false);
+
         the_8344->virtualButtonPressHack();
         // ideally, a certain volume is retracted. --> on-time depends on speed
-        usleep(millis * 1000);
-        the_8344->virtualButtonUnpressHack();
-        setPumpsDisableAll();
+
+        using namespace std::chrono;
+        uint64_t retraction_start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+        bool retraction_done = false;
+        while (!retraction_done)
+        {
+            uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+            if (now - retraction_start > millis)
+            {
+                retraction_done = true;
+            }
+            pumpSlowStartHandler();
+        }
+
+        // usleep(millis * 1000);
+        //the_8344->virtualButtonUnpressHack(); // not needed because of slow stop.
+
+        pumpSlowStopBlocking();
+
+        // setPumpsDisableAll();
         setPumpDirectionForward();
         // setPumpPWM((uint8_t)(m_pDispensedProduct->getPWM()));
 
@@ -513,7 +533,7 @@ DF_ERROR dispenser::pumpSlowStartHandler()
                 pwm_actual_set_speed++;
                 setPumpPWM(pwm_actual_set_speed, false);
             }
-            slowStartMostRecentIncreaseEpoch = now- delta; // if increments are a less than SLOW_START_INCREASE_PERIOD_MILLIS, they need to increment ...
+            slowStartMostRecentIncreaseEpoch = now - delta; // if increments are a less than SLOW_START_INCREASE_PERIOD_MILLIS, they need to increment ...
         }
         else
         {
@@ -557,7 +577,7 @@ DF_ERROR dispenser::pumpSlowStopBlocking()
         setPumpPWM(i, false);
         usleep(SLOW_STOP_PERIOD_MILLIS * 1000); // one second ramp up to full speed --> 255 steps ==> 4ms per step.
     }
-    pwm_actual_set_speed= 0;
+    pwm_actual_set_speed = 0;
     the_8344->virtualButtonUnpressHack();
     setPumpsDisableAll();
 }

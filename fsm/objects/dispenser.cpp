@@ -68,6 +68,7 @@ DF_ERROR dispenser::setup()
     millisAtLastCheck = MILLIS_INIT_DUMMY;
     previousDispensedVolume = 0;
     isPumpSoftStarting = false;
+    pwm_actual_set_speed = 0;
 }
 
 /*
@@ -191,8 +192,8 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
     m_price = nPrice;
 
     resetVolumeDispensed();
-    m_nVolumeDispensedPreviously = 0;
-    m_nVolumeDispensedSinceLastPoll = 0;
+    // m_nVolumeDispensedPreviously = 0;
+    // m_nVolumeDispensedSinceLastPoll = 0;
     // m_nVolumePerTick = getVolPerTick();
     // m_PWM = getPWM();
 
@@ -204,32 +205,33 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 
     return dfRet;
 }
-DF_ERROR dispenser::stopDispense()
-{
-    DF_ERROR e_ret = ERROR_BAD_PARAMS;
-    the_8344->setPumpsDisableAll();
-    debugOutput::sendMessage("Pump disabled", MSG_INFO);
+// DF_ERROR dispenser::stopDispense()
+// {
+//     DF_ERROR e_ret = ERROR_BAD_PARAMS;
+//     // the_8344->setPumpsDisableAll();
+//     // debugOutput::sendMessage("All Pumps disabled", MSG_INFO);
+//     setPumpsDisableAll();
 
-    m_isDispenseDone = true;
+//     // m_isDispenseDone = true;
 
-    m_nVolumeDispensedSinceLastPoll = 0;
-    m_nVolumeDispensedPreviously = 0;
+//     // m_nVolumeDispensedSinceLastPoll = 0;
+//     // m_nVolumeDispensedPreviously = 0;
 
-    return e_ret = OK;
-}
+//     return e_ret = OK;
+// }
 string dispenser::getDispenseStartTime()
 {
     return m_nStartTime;
 }
 
-void dispenser::setVolumeDispensedPreviously(double volume)
-{
-    m_nVolumeDispensedPreviously = volume;
-}
-double dispenser::getVolumeDispensedPreviously()
-{
-    return m_nVolumeDispensedPreviously;
-}
+// void dispenser::setVolumeDispensedPreviously(double volume)
+// {
+//     m_nVolumeDispensedPreviously = volume;
+// }
+// double dispenser::getVolumeDispensedPreviously()
+// {
+//     return m_nVolumeDispensedPreviously;
+// }
 
 bool dispenser::getIsDispenseTargetReached()
 {
@@ -448,6 +450,7 @@ DF_ERROR dispenser::setPumpsDisableAll()
     the_8344->setPumpsDisableAll();
     m_isPumpEnabled = false;
     isPumpSoftStarting = false;
+    pwm_actual_set_speed = 0;
 }
 
 void dispenser::reversePumpForSetTimeMillis(int millis)
@@ -482,7 +485,7 @@ void dispenser::reversePumpForSetTimeMillis(int millis)
         }
 
         // usleep(millis * 1000);
-        //the_8344->virtualButtonUnpressHack(); // not needed because of slow stop.
+        // the_8344->virtualButtonUnpressHack(); // not needed because of slow stop.
 
         pumpSlowStopBlocking();
 
@@ -495,13 +498,13 @@ void dispenser::reversePumpForSetTimeMillis(int millis)
 
         // vol diff
         double volume_diff = volume_after - volume_before;
-        debugOutput::sendMessage("ERROR: volume change not yet taken into account... Volume reversed:  " + to_string(volume_diff), MSG_WARNING);
 
         subtractFromVolumeDispensed(volume_diff);
+        debugOutput::sendMessage("Retraction done. WARNING: check volume change correction. Volume reversed:  " + to_string(volume_diff), MSG_INFO);
     }
     else
     {
-        debugOutput::sendMessage("Pump auto retraction disabled. Reverse time millis: " + to_string(millis), MSG_INFO);
+        debugOutput::sendMessage("Rectraction done. Pump auto retraction disabled. Reverse time millis: " + to_string(millis), MSG_INFO);
     }
 }
 

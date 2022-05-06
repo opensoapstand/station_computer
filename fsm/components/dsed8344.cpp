@@ -129,7 +129,7 @@ bool dsed8344::setPumpPWM(uint8_t pwm_val)
 {
     if (max31760_pwm_found)
     {
-        debugOutput::sendMessage("Motor speed set to (pwm byte): " + to_string(pwm_val), MSG_INFO);
+        //debugOutput::sendMessage("Motor speed set to (pwm byte): " + to_string(pwm_val), MSG_INFO);
         return SendByte(MAX31760_ADDRESS, 0x50, pwm_val); // PWM value
     }
     else if (pic_pwm_found)
@@ -154,7 +154,7 @@ bool dsed8344::setPumpPWM(uint8_t pwm_val)
 
         // speed_percentage = 100 - speed_percentage; // invert speed. pwm is inverted.
 
-        debugOutput::sendMessage("Motor speed set to (percentage): " + to_string(speed_percentage), MSG_INFO);
+        //debugOutput::sendMessage("Motor speed set to (percentage): " + to_string(speed_percentage), MSG_INFO);
         return SendByte(PIC_ADDRESS, 0x00, speed_percentage); // PWM value
     }
     else

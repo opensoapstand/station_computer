@@ -90,7 +90,7 @@ public:
 
       DF_ERROR startDispense();
       DF_ERROR initDispense(int nVolumeToDispense, double nPrice);
-      DF_ERROR stopDispense();
+      // DF_ERROR stopDispense();
       string getDispenseStartTime();
       Dispense_behaviour getDispenseStatus();
       bool getIsDispenseTargetReached();
@@ -120,8 +120,8 @@ public:
 
       // bool reader = true;
 
-      double getVolumeDispensedPreviously();
-      void setVolumeDispensedPreviously(double volume);
+      // double getVolumeDispensedPreviously();
+      // void setVolumeDispensedPreviously(double volume);
       // Interrupt Helpers
       // double getVolumeSinceLastPoll();
       // bool registerFlowSensorTick();
@@ -141,7 +141,7 @@ private:
       bool isPumpSoftStarting;
 
       bool isDispenseFinished;
-      double m_nVolumeDispensedSinceLastPoll;
+      // double m_nVolumeDispensedSinceLastPoll;
       double m_nTickCount;
       double m_nVolumeTarget;
       char m_nStartTime[50];
@@ -152,7 +152,7 @@ private:
       struct tm *timeinfo;
 
       // double m_nVolumeDispensed; // how much has been dispensed in this sale
-      double m_nVolumeDispensedPreviously;
+      // double m_nVolumeDispensedPreviously;
 
       // We only want to create one instance of the class that controls
       // the actual hardware, so declare this static.
@@ -184,7 +184,7 @@ private:
 
       bool m_isEmptyContainerDetectionEnabled;
 
-      bool m_isDispenseDone; // XXX: Remove later.
+      // bool m_isDispenseDone; // XXX: Remove later.
       bool m_isStill;
 
       bool m_isPumpEnabled;

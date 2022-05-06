@@ -88,7 +88,7 @@ DF_ERROR stateDispense::onAction()
 
    if (productDispensers[pos].getDispenseButtonEdgePositive())
    {
-      debugOutput::sendMessage("button press", MSG_INFO);
+      debugOutput::sendMessage("Dispense button pressed edge", MSG_INFO);
       //productDispensers[pos].preparePumpForDispenseTrigger();
       productDispensers[pos].pumpSlowStart(true);
    }
@@ -99,7 +99,7 @@ DF_ERROR stateDispense::onAction()
 
    if (productDispensers[pos].getDispenseButtonEdgeNegative())
    {
-      debugOutput::sendMessage("button release", MSG_INFO);
+      debugOutput::sendMessage("Dispense button released edge", MSG_INFO);
       productDispensers[pos].pumpSlowStopBlocking();
       rectractProductBlocking();
    }
@@ -118,6 +118,7 @@ DF_ERROR stateDispense::onAction()
    {
       debugOutput::sendMessage("Stop dispensing (stop command received)", MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
+      productDispensers[pos].pumpSlowStopBlocking();
       return e_ret = OK;
    }
 
@@ -125,15 +126,12 @@ DF_ERROR stateDispense::onAction()
    {
       debugOutput::sendMessage("Stop dispensing. Requested volume reached. " + to_string(productDispensers[pos].getVolumeDispensed()), MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
+      productDispensers[pos].pumpSlowStopBlocking();
       rectractProductBlocking();
       return e_ret = OK;
    }
 
-   productDispensers[pos].setVolumeDispensedPreviously(productDispensers[pos].getVolumeDispensed());
-
-   if (productDispensers[pos].getDispenseButtonValue())
-   {
-   }
+   // productDispensers[pos].setVolumeDispensedPreviously(productDispensers[pos].getVolumeDispensed());
 
    if (productDispensers[pos].getEmptyContainerDetectionEnabled())
    {
@@ -146,6 +144,7 @@ DF_ERROR stateDispense::onAction()
          debugOutput::sendMessage("******************* EMPTY CONTAINER DETECTED **********************", MSG_INFO);
          usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
          m_pMessaging->sendMessage("No flow abort"); // send to UI
+         productDispensers[pos].pumpSlowStopBlocking();
          rectractProductBlocking();
          m_state_requested = STATE_DISPENSE_END;
 
@@ -202,6 +201,7 @@ DF_ERROR stateDispense::onAction()
 // Actions on leaving Dispense state
 DF_ERROR stateDispense::onExit()
 {
+   productDispensers[pos].setPumpsDisableAll();
    DF_ERROR e_ret = OK;
    return e_ret;
 }

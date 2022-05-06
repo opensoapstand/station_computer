@@ -44,8 +44,8 @@
 #define RUNNING_AVERAGE_WINDOW_LENGTH 100
 #define DISPENSE_BUTTON_DEBOUNCE_MILLIS 50
 
-#define SLOW_START_INCREASE_PERIOD_MILLIS 2
-#define SLOW_STOP_PERIOD_MILLIS 1
+#define SLOW_START_INCREASE_PERIOD_MILLIS 2 // set to 0 for instant start
+#define SLOW_STOP_PERIOD_MILLIS 1 // set to 0 for instant stop
 
 #define DISPENSE_STATUS_UPDATE_DELTA_MILLIS 500 //period of which controller can send status to ui and logging and terminal
 

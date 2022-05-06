@@ -557,7 +557,7 @@ DF_ERROR dispenser::pumpSlowStart(bool forwardElseReverse)
     setPumpEnable();
     if (SLOW_START_INCREASE_PERIOD_MILLIS == 0)
     {
-        debugOutput::sendMessage("Pump instant start");
+        debugOutput::sendMessage("Pump instant start", MSG_INFO);
         setPumpPWM(target_pwm, true);
         isPumpSoftStarting = false;
     }

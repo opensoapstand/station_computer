@@ -343,7 +343,7 @@ int product::sizeCharToSizeIndex(char size)
         size_index = 666;
         break;
     }
-    debugOutput::sendMessage("aefasefasefasefasefasef size char: " + to_string(size_index), MSG_INFO);
+    // debugOutput::sendMessage("aefasefasefasefasefasef size char: " + to_string(size_index), MSG_INFO);
     return size_index;
 }
 

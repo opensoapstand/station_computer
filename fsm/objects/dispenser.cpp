@@ -552,36 +552,53 @@ DF_ERROR dispenser::pumpSlowStart(bool forwardElseReverse)
     slowStartMostRecentIncreaseEpoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
     uint8_t target_pwm = (uint8_t)(m_pDispensedProduct->getPWM());
-    debugOutput::sendMessage("Pump slow start. from " + to_string(pwm_actual_set_speed) + " to " + to_string(target_pwm), MSG_INFO);
     the_8344->setPumpDirection(forwardElseReverse);
     usleep(10000); // make sure direction is set well
     setPumpEnable();
-    setPumpPWM(0, false);
+    if (SLOW_START_INCREASE_PERIOD_MILLIS == 0)
+    {
+        debugOutput::sendMessage("Pump instant start");
+        setPumpPWM(target_pwm, true);
+        isPumpSoftStarting = false;
+    }
+    else
+    {
 
-    // for (int i = pwm_actual_set_speed; i <= target_pwm; i++)
-    // {
-    //     pwm_actual_set_speed = i;
-    //     setPumpPWM(i, false);
-    //     usleep(4000); // one second ramp up to full speed --> 255 steps ==> 4ms per step.
-    // }
-
-    isPumpSoftStarting = true;
+        debugOutput::sendMessage("Pump slow start. from " + to_string(pwm_actual_set_speed) + " to " + to_string(target_pwm), MSG_INFO);
+        setPumpPWM(0, false);
+        isPumpSoftStarting = true;
+    }
 }
 
 DF_ERROR dispenser::pumpSlowStopBlocking()
 {
     isPumpSoftStarting = false;
-    debugOutput::sendMessage("Pump slow stop. from " + to_string(pwm_actual_set_speed) + " to " + to_string(0), MSG_INFO);
-    the_8344->virtualButtonPressHack();
-
-    // uint8_t start_pwm = (uint8_t)(m_pDispensedProduct->getPWM());
-    for (int i = pwm_actual_set_speed; i >= 0; --i)
+    if (pwm_actual_set_speed > 0)
     {
-        setPumpPWM(i, false);
-        usleep(SLOW_STOP_PERIOD_MILLIS * 1000); // one second ramp up to full speed --> 255 steps ==> 4ms per step.
+        if (SLOW_STOP_PERIOD_MILLIS == 0)
+        {
+            debugOutput::sendMessage("Pump instant stop", MSG_INFO);
+            // no slow stop
+        }
+        else
+        {
+            debugOutput::sendMessage("Pump slow stop. from " + to_string(pwm_actual_set_speed) + " to " + to_string(0), MSG_INFO);
+            the_8344->virtualButtonPressHack();
+
+            // uint8_t start_pwm = (uint8_t)(m_pDispensedProduct->getPWM());
+            for (int i = pwm_actual_set_speed; i >= 0; --i)
+            {
+                setPumpPWM(i, false);
+                usleep(SLOW_STOP_PERIOD_MILLIS * 1000); // one second ramp up to full speed --> 255 steps ==> 4ms per step.
+            }
+            pwm_actual_set_speed = 0;
+            the_8344->virtualButtonUnpressHack();
+        }
     }
-    pwm_actual_set_speed = 0;
-    the_8344->virtualButtonUnpressHack();
+    else
+    {
+        debugOutput::sendMessage("Pump was already stopped.", MSG_INFO);
+    }
     setPumpsDisableAll();
 }
 

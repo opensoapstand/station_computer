@@ -89,12 +89,11 @@ DF_ERROR stateDispense::onAction()
    if (productDispensers[pos].getDispenseButtonEdgePositive())
    {
       debugOutput::sendMessage("Dispense button pressed edge", MSG_INFO);
-      //productDispensers[pos].preparePumpForDispenseTrigger();
       productDispensers[pos].pumpSlowStart(true);
    }
 
 
-      productDispensers[pos].pumpSlowStartHandler();
+   productDispensers[pos].pumpSlowStartHandler();
 
 
    if (productDispensers[pos].getDispenseButtonEdgeNegative())

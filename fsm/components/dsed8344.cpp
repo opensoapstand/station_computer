@@ -296,7 +296,7 @@ unsigned short dsed8344::getPumpSpeed(void)
 bool dsed8344::getDispenseButtonState(void)
 {
 
-    bool isPressed = ((ReadByte(PCA9534_ADDRESS, 0x00) & 0x80) ? false : true);
+    bool isPressed = ((ReadByte(PCA9534_ADDRESS, 0x00) & 0x80) ? false : true); // low = pressed
 
     return isPressed;
 

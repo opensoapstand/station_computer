@@ -483,9 +483,9 @@ void dispenser::reversePumpForSetTimeMillis(int millis)
             }
             pumpSlowStartHandler();
         }
-
+ 
         // usleep(millis * 1000);
-        // the_8344->virtualButtonUnpressHack(); // not needed because of slow stop.
+        the_8344->virtualButtonUnpressHack(); // needed! To have the button pressing sequence right. (fake button presses can mess the button detection up)
 
         pumpSlowStopBlocking();
 
@@ -500,11 +500,11 @@ void dispenser::reversePumpForSetTimeMillis(int millis)
         double volume_diff = volume_after - volume_before;
 
         subtractFromVolumeDispensed(volume_diff);
-        debugOutput::sendMessage("Retraction done. WARNING: check volume change correction. Volume reversed:  " + to_string(volume_diff), MSG_INFO);
+        debugOutput::sendMessage("Retraction done. WARNING: check volume change correction subtraction. Volume reversed:  " + to_string(volume_diff), MSG_INFO);
     }
     else
     {
-        debugOutput::sendMessage("Rectraction done. Pump auto retraction disabled. Reverse time millis: " + to_string(millis), MSG_INFO);
+        debugOutput::sendMessage("Rectraction disabled. ms:" + to_string(millis), MSG_INFO);
     }
 }
 
@@ -591,7 +591,6 @@ DF_ERROR dispenser::pumpSlowStopBlocking()
                 setPumpPWM(i, false);
                 usleep(SLOW_STOP_PERIOD_MILLIS * 1000); // one second ramp up to full speed --> 255 steps ==> 4ms per step.
             }
-            pwm_actual_set_speed = 0;
             the_8344->virtualButtonUnpressHack();
         }
     }

@@ -247,7 +247,8 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor()
         struct pollfd pfd;
 
         // string GPIO = std::to_string(m_nPin);
-        string GPIO = IO_PIN_FLOW_SENSOR_STRING;
+        //string GPIO = IO_PIN_FLOW_SENSOR_STRING;
+        string GPIO = "" + to_string(IO_PIN_FLOW_SENSOR);
         string command("/sys/class/gpio/gpio");
         command += GPIO;
         command += "/edge";
@@ -301,10 +302,13 @@ void oddyseyx86GPIO::monitorGPIO_Buttons_powerAndMaintenance()
 
         struct pollfd pfd;
 
-        string GPIO = ("391");
+        //string GPIO = "391";
+        string GPIO = "" + to_string(IO_PIN_BUTTON_MAINTENANCE_SHUTDOWN_EDGE_DETECTOR);
         string command("/sys/class/gpio/gpio");
         command += GPIO;
         command += "/edge";
+
+        //debugOutput::sendMessage("++++++++++++++++++" + command, MSG_INFO);
 
         // set the pin to interrupt
         fd = open(command.c_str(), O_WRONLY);
@@ -331,12 +335,12 @@ void oddyseyx86GPIO::monitorGPIO_Buttons_powerAndMaintenance()
                 {
                         debugOutput::sendMessage("Power button pushed", MSG_INFO);
                         usleep(1000000); // todo: why one second?!?!?! lode
-                        if (readButtonPin(341))
+                        if (readButtonPin(IO_PIN_BUTTON_SHUTDOWN))
                         {
                                 debugOutput::sendMessage("POWER OFF\n", MSG_INFO);
                                 system("echo D@nkF1ll$ | sudo -S shutdown -h now");
                         }
-                        else if (readButtonPin(340))
+                        else if (readButtonPin(IO_PIN_BUTTON_MAINTENANCE))
                         {
                                 debugOutput::sendMessage("MM\n", MSG_INFO);
                                 // ENTER MAINTENANCE MODE!

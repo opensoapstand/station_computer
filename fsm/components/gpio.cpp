@@ -104,7 +104,7 @@ void gpio::listener_buttons_powerAndMaintenance()
         while (!m_stop)
         {
                 monitorGPIO_Buttons_powerAndMaintenance();
-                usleep(1000);
+                usleep(100000);
         }
 
         m_stop = true; // reset

@@ -292,9 +292,10 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
 DF_ERROR dispenser::setButtonsShutdownAndMaintenance()
 {
 
-    m_pPWRorMM[0] = new oddyseyx86GPIO(391);
-    m_pPowerOff[0] = new oddyseyx86GPIO(340);
-    m_pMM[0] = new oddyseyx86GPIO(341);
+    m_pPWRorMM[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_MAINTENANCE_SHUTDOWN_EDGE_DETECTOR);
+    m_pPowerOff[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_MAINTENANCE);
+    m_pMM[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_SHUTDOWN);
+
     m_pPWRorMM[0]->setPinAsInputElseOutput(true);
     m_pPowerOff[0]->setPinAsInputElseOutput(true);
     m_pMM[0]->setPinAsInputElseOutput(true);

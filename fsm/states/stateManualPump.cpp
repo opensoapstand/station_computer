@@ -157,7 +157,6 @@ DF_ERROR stateManualPump::onAction()
       }
       else if ('7' == m_pMessaging->getAction())
       {
-         debugOutput::sendMessage("HACKHACK HAKC", MSG_INFO);
          productDispensers[m_active_pump_index].reversePumpForSetTimeMillis(500);
          
       }

@@ -456,17 +456,13 @@ DF_ERROR dispenser::setPumpsDisableAll()
 
 void dispenser::reversePumpForSetTimeMillis(int millis)
 {
+#ifdef ENABLE_PUMP_RETRACT
     if (millis > 0)
     {
         // get volume before
         double volume_before = getVolumeDispensed();
 
         debugOutput::sendMessage("Pump auto retraction. Reverse time millis: " + to_string(millis), MSG_INFO);
-        // usleep(100000); // give pump time to stop
-        // setPumpDirectionReverse();
-
-        // setPumpPWM(255); // quick retract
-        // setPumpEnable();
         pumpSlowStart(false);
 
         the_8344->virtualButtonPressHack();
@@ -484,7 +480,7 @@ void dispenser::reversePumpForSetTimeMillis(int millis)
             }
             pumpSlowStartHandler();
         }
- 
+
         // usleep(millis * 1000);
         the_8344->virtualButtonUnpressHack(); // needed! To have the button pressing sequence right. (fake button presses can mess the button detection up)
 
@@ -507,6 +503,7 @@ void dispenser::reversePumpForSetTimeMillis(int millis)
     {
         debugOutput::sendMessage("Rectraction disabled. ms:" + to_string(millis), MSG_INFO);
     }
+#endif
 }
 
 bool dispenser::isPumpEnabled()
@@ -549,6 +546,13 @@ DF_ERROR dispenser::pumpSlowStartHandler()
 DF_ERROR dispenser::pumpSlowStart(bool forwardElseReverse)
 {
 
+#ifndef ENABLE_PUMP_RETRACT
+    if (!forwardElseReverse)
+    {
+        debugOutput::sendMessage("Pump Backwards !!!!! Please ensure no checkvalve is present.", MSG_WARNING);
+    }
+#endif
+
     using namespace std::chrono;
     slowStartMostRecentIncreaseEpoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
@@ -576,7 +580,7 @@ DF_ERROR dispenser::pumpSlowStopBlocking()
     isPumpSoftStarting = false;
     if (pwm_actual_set_speed > 0)
     {
-        if (SLOW_STOP_PERIOD_MILLIS == 0 || !getPumpSlowStartStopEnabled() )
+        if (SLOW_STOP_PERIOD_MILLIS == 0 || !getPumpSlowStartStopEnabled())
         {
             debugOutput::sendMessage("Pump instant stop", MSG_INFO);
             // no slow stop
@@ -657,7 +661,6 @@ unsigned short dispenser::getPumpSpeed()
     the_8344->getPumpSpeed();
 }
 
-
 void dispenser::loadPumpRampingEnabledFromDb()
 {
     // val 0 = pump slow start stop not enabled
@@ -678,7 +681,7 @@ void dispenser::loadPumpRampingEnabledFromDb()
     sqlite3_finalize(stmt);
     sqlite3_close(db);
     m_isPumpSlowStartStopEnabled = (val != 0);
-    
+
 #endif
 
     debugOutput::sendMessage("Empty container detection enabled? : " + to_string(m_isPumpSlowStartStopEnabled), MSG_INFO);

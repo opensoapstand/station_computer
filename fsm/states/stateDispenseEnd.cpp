@@ -53,10 +53,6 @@ DF_ERROR stateDispenseEnd::onEntry()
     return e_ret;
 }
 
-// void stateDispenseEnd::rectractProductBlockingFromSpout(){
-//     productDispensers[pos].reversePumpForSetTimeMillis(productDispensers[pos].getProduct()->getRetractionTimeMillis());
-// }
-
 DF_ERROR stateDispenseEnd::onAction()
 {
     debugOutput::sendMessage("onAction Dispense End...", MSG_STATE);

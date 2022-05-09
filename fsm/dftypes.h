@@ -24,6 +24,7 @@
 #define MINIMUM_DISPENSE_VOLUME_ML 10
 // #define USE_OLD_DATABASE
 #define ENABLE_TRANSACTION_TO_CLOUD
+// #define ENABLE_PUMP_RETRACT
 
 #ifdef USE_OLD_DATABASE
 #define DB_PATH "/home/df-admin/production/db/drinkfill-sqlite.db"

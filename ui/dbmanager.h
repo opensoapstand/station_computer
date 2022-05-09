@@ -59,6 +59,9 @@ public:
     bool getCouponsEnabled();
     bool getEmptyContainerDetectionEnabled();
     bool setEmptyContainerDetectionEnabled(int isEnabled);
+    bool getPumpRampingEnabled();
+    bool setPumpRampingEnabled(int isEnabled);
+
     // bool updateTargetVolume_s(int slot, double new_volume);
     // bool updateTargetVolume_l(int slot, double new_volume);
     bool updateTargetVolume(int slot, int size, double new_volume);

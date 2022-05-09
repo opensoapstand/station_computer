@@ -127,7 +127,9 @@ public:
       // bool registerFlowSensorTick();
 
       void loadEmptyContainerDetectionEnabledFromDb();
+      void loadPumpRampingEnabledFromDb();
       bool getEmptyContainerDetectionEnabled();
+      bool getPumpSlowStartStopEnabled();
       void sendToUiIfAllowed(string message);
       void logUpdateIfAllowed(string message);
 
@@ -182,7 +184,8 @@ private:
       double previousDispensedVolume;
       unsigned char pump_position;
 
-      bool m_isEmptyContainerDetectionEnabled;
+      bool m_isEmptyContainerDetectionEnabled = false;
+      bool m_isPumpSlowStartStopEnabled = false;
 
       // bool m_isDispenseDone; // XXX: Remove later.
       bool m_isStill;

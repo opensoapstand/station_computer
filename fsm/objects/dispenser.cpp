@@ -556,7 +556,7 @@ DF_ERROR dispenser::pumpSlowStart(bool forwardElseReverse)
     the_8344->setPumpDirection(forwardElseReverse);
     usleep(10000); // make sure direction is set well
     setPumpEnable();
-    if (SLOW_START_INCREASE_PERIOD_MILLIS == 0)
+    if (SLOW_START_INCREASE_PERIOD_MILLIS == 0 || !getPumpSlowStartStopEnabled())
     {
         debugOutput::sendMessage("Pump instant start", MSG_INFO);
         setPumpPWM(target_pwm, true);
@@ -576,7 +576,7 @@ DF_ERROR dispenser::pumpSlowStopBlocking()
     isPumpSoftStarting = false;
     if (pwm_actual_set_speed > 0)
     {
-        if (SLOW_STOP_PERIOD_MILLIS == 0)
+        if (SLOW_STOP_PERIOD_MILLIS == 0 || !getPumpSlowStartStopEnabled() )
         {
             debugOutput::sendMessage("Pump instant stop", MSG_INFO);
             // no slow stop
@@ -655,6 +655,38 @@ DF_ERROR dispenser::startDispense()
 unsigned short dispenser::getPumpSpeed()
 {
     the_8344->getPumpSpeed();
+}
+
+
+void dispenser::loadPumpRampingEnabledFromDb()
+{
+    // val 0 = pump slow start stop not enabled
+    // val 1 = pump slow start, slow stop enabled (with hardwired ramp up / ramp down time)
+
+#ifdef USE_OLD_DATABASE
+    m_isPumpSlowStartStopEnabled = false;
+#else
+    rc = sqlite3_open(DB_PATH, &db);
+    sqlite3_stmt *stmt;
+    string sql_string = "SELECT has_pump_ramping FROM machine";
+    /* Create SQL statement for transactions */
+    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+    sqlite3_step(stmt);
+
+    int val = sqlite3_column_int(stmt, 0);
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    m_isPumpSlowStartStopEnabled = (val != 0);
+    
+#endif
+
+    debugOutput::sendMessage("Empty container detection enabled? : " + to_string(m_isPumpSlowStartStopEnabled), MSG_INFO);
+}
+
+bool dispenser::getPumpSlowStartStopEnabled()
+{
+    return m_isPumpSlowStartStopEnabled;
 }
 
 void dispenser::loadEmptyContainerDetectionEnabledFromDb()

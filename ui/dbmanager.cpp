@@ -749,6 +749,43 @@ QString DbManager::getStatusText(int slot)
     return val;
 }
 
+bool DbManager::getPumpRampingEnabled()
+{
+    QSqlQuery qry;
+    bool is_enabled;
+    {
+        qry.prepare("SELECT has_pump_ramping FROM machine");
+        qry.exec();
+
+        while (qry.next())
+        {
+            is_enabled = (qry.value(0).toInt() == 1);
+        }
+    }
+    return is_enabled;
+}
+
+bool DbManager::setPumpRampingEnabled(int isEnabled)
+{
+    QSqlQuery qry;
+    bool enabled;
+
+    QString qry_qstr = QString("UPDATE machine SET has_pump_ramping=%1").arg(QString::number(isEnabled));
+    string qry_string = qry_qstr.toUtf8().constData(); // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
+    qry.prepare(qry_string.c_str());
+    qry.exec();
+
+    if (qry.exec())
+    {
+        return true;
+    }
+    else
+    {
+        qDebug() << "Failed to set pump ramping value." << qry_qstr;
+        return false;
+    }
+}
+
 bool DbManager::getEmptyContainerDetectionEnabled()
 {
     QSqlQuery qry;
@@ -781,7 +818,7 @@ bool DbManager::setEmptyContainerDetectionEnabled(int isEnabled)
     }
     else
     {
-        qDebug() << "Failed to set empty container enabled." << qry_qstr;
+        qDebug() << "Failed to set empty container value." << qry_qstr;
         return false;
     }
 }

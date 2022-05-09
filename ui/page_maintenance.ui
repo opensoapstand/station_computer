@@ -1504,30 +1504,17 @@
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>630</x>
-     <y>1360</y>
-     <width>201</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Enable empty pail detection</string>
-   </property>
-  </widget>
   <widget class="QCheckBox" name="enable_empty_container_checkBox">
    <property name="geometry">
     <rect>
-     <x>850</x>
-     <y>1360</y>
+     <x>630</x>
+     <y>1350</y>
      <width>251</width>
      <height>23</height>
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>Enable empty stock detection</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_ui_version">
@@ -1541,6 +1528,19 @@
    </property>
    <property name="text">
     <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="enable_pump_ramping_checkBox">
+   <property name="geometry">
+    <rect>
+     <x>630</x>
+     <y>1380</y>
+     <width>291</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Enable pump ramp up / ramp down</string>
    </property>
   </widget>
  </widget>

@@ -101,7 +101,7 @@ do
             sudo scp /home/df-admin/production/admin/ui_soapstand.service /etc/systemd/system
             
             #missing Transactions 
-            # could be done as a service: run python ~/production/admin/missingTransactions.py every hour
+            # could be done as a service: run python ~/production/admin/missingTransactions.py hourly
             crontab -l | grep -q 'missingTransactions.py' && echo 'Missing transactions handler scheduler not reloaded: already exists'  \
             || crontab -l > mycron 
             echo "0 * * * *  python ~/production/admin/missingTransactions.py" >> mycron 

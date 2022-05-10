@@ -21,7 +21,7 @@ echo "----------------------------------------"
 ./status_services.sh
 
 PS3='Please enter your choice: '
-options=("Status" "Start" "Stop" "Restart" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data" "(Re)load services from production" "Quit")
+options=("Status" "Start" "Stop" "Restart" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data" "(Re)load services from production" "Setup rtunnel" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -49,6 +49,12 @@ do
         "Disable Autostart")
             sudo systemctl disable ui_soapstand.service
             sudo systemctl disable controller_soapstand.service
+            ;;
+        "Setup rtunnel")
+            sudo nano /etc/systemd/system/rtunnel.service
+            sudo systemctl daemon-reload
+            sudo service rtunnel restart
+            echo "retunnel restarted done"
             ;;
         "Copy binary files to production folder")
             echo "Copy soapstand application to production folder" 
@@ -110,7 +116,7 @@ do
 
             # reload services
             sudo systemctl daemon-reload
-            echo 'All done'
+            echo 'All done. (note: rtunnel.service is not copied automatically.)'
             ;;
         "Quit")
             break

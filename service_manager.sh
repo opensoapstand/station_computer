@@ -1,12 +1,12 @@
 #!/bin/bash
 #set -e #setting stop script on error
 
-echo "----------------------------------------"
-echo "  Drinkfill Soapstand service manager for:"
-echo "        - controller_soapstand.service"
-echo "        - ui_soapstand.service "
-echo "  by Lode 2022-05-03"
-echo "----------------------------------------"
+# echo "----------------------------------------"
+# echo "  Drinkfill Soapstand service manager for:"
+# echo "        - controller_soapstand.service"
+# echo "        - ui_soapstand.service "
+# echo "  by Lode 2022-05-03"
+# echo "----------------------------------------"
 
 # echo "Status report"
 # echo "controller:"
@@ -21,10 +21,14 @@ echo "----------------------------------------"
 ./status_services.sh
 
 PS3='Please enter your choice: '
-options=("Status" "Start" "Stop" "Restart" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data" "(Re)load services from production" "Setup rtunnel" "Quit")
+options=("Station info" "Status" "Start" "Stop" "Restart" "Run Screenshotbot" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data" "(Re)load services from production" "Setup rtunnel" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
+        "Station info")
+            test=$(sqlite3 /home/df-admin/production/db/drinkfill-sqlite_newlayout.db "select machine_id from machine;")
+            echo "Machine id: $test"
+            ;;
         "Status")
             ./status_services.sh
             ;;
@@ -35,6 +39,9 @@ do
         "Stop")
             sudo systemctl stop ui_soapstand
             sudo systemctl stop controller_soapstand
+            ;;
+        "Run Screenshotbot")
+            ./Screenshotbot.sh
             ;;
         "Restart")
             sudo systemctl stop ui_soapstand

@@ -10,7 +10,9 @@ echo "|-----Screenshotbot v1.0 2022-05-02----------------------|"
 echo "| Lode's screenshot sequence capture bot                 |"
 echo "| This is with mouse automation and uses a sequence file.|"
 echo "| The application should be active and in idle screen.   |"
+echo "| requires: xdotool and scrot (sudo apt-get install xx ) |"
 echo "|--------------------------------------------------------|"
+
 options=("Has printer" "Has qr" "Quit")
 select opt in "${options[@]}"
 do

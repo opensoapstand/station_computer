@@ -192,7 +192,7 @@ scp_unit_aws_db () {
 
 echo 'At AWS: Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 PS3='Choose option(digit + enter):'
-options=("Station log in" "Stations status" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Quit")
+options=("Station log in" "Show Station Descriptions" "Stations status" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -202,6 +202,9 @@ do
         # "cd into Station AWS folder")
         #     cd_into_station_AWS_folder
         #     ;;
+        "Show Station Descriptions")
+            get_choice_from_names
+            ;;
         "Stations status")
             netstat -tulpn | grep LISTEN 
             ;;

@@ -43,6 +43,7 @@ scp /home/df-admin/drinkfill/service_manager.sh /home/df-admin/production/admin/
 scp /home/df-admin/drinkfill/status_services.sh /home/df-admin/production/admin/status_services.sh
 scp /home/df-admin/drinkfill/scheduler.sh /home/df-admin/production/admin/scheduler.sh
 scp /home/df-admin/drinkfill/screenshotbot.sh /home/df-admin/production/admin/screenshotbot.sh
+scp /home/df-admin/drinkfill/aws_operations.sh /home/df-admin/production/admin/aws_operations.sh
 scp /home/df-admin/drinkfill/screenshotbot_sequence_printer.txt /home/df-admin/production/admin/screenshotbot_sequence_printer.txt
 scp /home/df-admin/drinkfill/screenshotbot_sequence_qr.txt /home/df-admin/production/admin/screenshotbot_sequence_qr.txt
 scp /home/df-admin/drinkfill/missingTransactions.py /home/df-admin/production/admin/missingTransactions.py

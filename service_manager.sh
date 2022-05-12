@@ -26,8 +26,13 @@ select opt in "${options[@]}"
 do
     case $opt in
         "Station info")
-            test=$(sqlite3 /home/df-admin/production/db/drinkfill-sqlite_newlayout.db "select machine_id from machine;")
-            echo "Machine id: $test"
+            db_path=/home/df-admin/production/db/drinkfill-sqlite_newlayout.db
+            if [[ -f "$db_path" ]]; then
+                station_id=$(sqlite3 $db_path "select machine_id from machine;")
+                echo "Machine id: $station_id"
+            else
+                echo "Database not found at $db_path"
+            fi
             ;;
         "Status")
             ./status_services.sh
@@ -41,7 +46,7 @@ do
             sudo systemctl stop controller_soapstand
             ;;
         "Run Screenshotbot")
-            ./Screenshotbot.sh
+            ./screenshotbot.sh
             ;;
         "Restart")
             sudo systemctl stop ui_soapstand

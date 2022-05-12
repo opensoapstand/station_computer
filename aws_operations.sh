@@ -10,15 +10,19 @@
 
 echo 'Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 
-
 PS3='Choose option(digit + enter):'
 options=( "Station info" "AWS log in" "AWS run station operations" "upload to AWS home folder" "upload to AWS station folder" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
         "Station info")
-            station_id=$(sqlite3 /home/df-admin/production/db/drinkfill-sqlite_newlayout.db "select machine_id from machine;")
-            echo "Machine id: $station_id"
+            db_path=/home/df-admin/production/db/drinkfill-sqlite_newlayout.db
+            if [[ -f "$db_path" ]]; then
+                station_id=$(sqlite3 $db_path "select machine_id from machine;")
+                echo "Machine id: $station_id"
+            else
+                echo "Database not found at $db_path"
+            fi
             ;;
 
         "AWS log in")
@@ -33,7 +37,6 @@ do
              cmd=( ssh -tt -i DrinkfillAWS.pem ubuntu@ec2-44-225-153-121.us-west-2.compute.amazonaws.com "bash stations_operations.sh" )
             "${cmd[@]}"
             ;;
-
         "upload to AWS home folder")
             read -e -p "Enter filename (like in normal terminal. e.g. use tab for completion): " file
             ls -l "$file"

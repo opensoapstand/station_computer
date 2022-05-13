@@ -89,13 +89,17 @@ ssh_into_station () {
     # echo $choice_index
 
     # menu index is linked to station number
-    station_number=$(($choice_index + 1))
+    # station_number=$(($choice_index + 1))
 
-    station_name=$(printf "SS-%07d" $station_number)
-    # echo $station_name
-    port=$(printf "43%03d" $station_number)
+    # station_name=$(printf "SS-%07d" $station_number)
+    # # echo $station_name
+    # port=$(printf "43%03d" $station_number)
+    station_id="${station_ids[$choice_index]}"
+    station_description="${station_descriptions[$choice_index]}"
+    port="${station_ports[$choice_index]}"
+
     # echo $port
-    echo "Log into $station_name (port: $port)"
+    echo "Log into $station_description Station. (id: $station_id, port: $port)"
     # https://stackoverflow.com/questions/7114990/pseudo-terminal-will-not-be-allocated-because-stdin-is-not-a-terminal
     cmd=( ssh -tt df-admin@localhost -p $port )
     printf -v cmd_str '%q ' "${cmd[@]}"

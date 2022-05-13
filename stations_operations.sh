@@ -129,11 +129,12 @@ scp_transfer () {
     read -p "Enter file/folder name will append to /home/df-admin/production/" path
 
     full_source_path="/home/df-admin/$1$path"
-    full_destination_path="/home/df-admin"
-    aws_path="/home/ubuntu/Stations/$source_id/$path"
+    full_destination_path="/home/df-admin/$2"
+    aws_station_path="/home/ubuntu/Stations/$source_id"
+    aws_file_path="/home/ubuntu/Stations/$source_id/$path"
 
-    cmd1=( scp -r -P $source_port df-admin@localhost:$full_source_path $aws_path )
-    cmd2=( scp -r -P $destination_port $aws_path df-admin@localhost:$full_destination_path )
+    cmd1=( scp -r -P $source_port df-admin@localhost:$full_source_path $aws_station_path )
+    cmd2=( scp -r -P $destination_port $aws_file_path df-admin@localhost:$full_destination_path )
     printf -v cmd1_str '%q ' "${cmd1[@]}"
     printf -v cmd2_str '%q ' "${cmd2[@]}"
     
@@ -143,11 +144,12 @@ scp_transfer () {
     echo "$cmd2_str"
     
     continu_or_exit
-    if [[ -f "$aws_path" ]]; then
-        mv -r "$aws_path" "$aws_path_bkp"
-        echo "Backup made in AWS ($aws_path)"
+    if [[ -f "$aws_file_path" ]]; then
+        mv -r "$aws_file_path" "$aws_file_path_bkp"
+        echo "Backup made in AWS ($aws_file_path)"
     fi
     "${cmd1[@]}"
+    echo "part 1 done"
     "${cmd2[@]}"
 }
 
@@ -251,6 +253,7 @@ do
         #     cd_into_station_AWS_folder
         #     ;;
         "Show Station Descriptions")
+            echo "List for display purposes. Chosing a station will have no effect."
             get_choice_from_names
             ;;
         "Stations status")

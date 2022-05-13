@@ -55,7 +55,6 @@ do
             cd /home/df-admin/Downloads
             scp -r -i DrinkfillAWS.pem "$full_path" ubuntu@ec2-44-225-153-121.us-west-2.compute.amazonaws.com:/home/ubuntu/Stations/$station_id
             ;;
-         
         "Quit") 
             break
             ;;

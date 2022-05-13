@@ -9,7 +9,8 @@
 # -----------------------------------
 # DO NOT ADD SPACES TO THE ELEMENTS, it causes a mess when looping over it (treats space as array delimiter in some cases).#
 station_descriptions=("SS-DEV-LODE" "SS-DEV-ASH" "SS-0000003" "SS-0000004" "EEFC" "UBC" "Ruddy" "Re-Up" "SS-0000009" "Pomme" "Petros11" "Petros12" "Petros13" "Petros14" "SS-0000015" "SS-0000016" "SS-0000017" "Choices" "Stongs" "FamousFoods" "SS-0000021" "Nada" "Petros23" "Petros24" "Petros25" "Petros26");
-# station_ids=("SS-DEV-LODE" "SS-DEV-ASH" "SS-0000003" "SS-0000004" "SS-0000005" "SS-0000006" "SS-0000007" "SS-0000008" "SS-0000009" "SS-0000010" "SS-0000011" "SS-0000012" "SS-0000013" "SS-0000014" "SS-0000015" "SS-0000016" "SS-0000017" "SS-0000018" "SS-0000019" "SS-0000020" "SS-0000021" "SS-0000023" "SS-0000024" "SS-0000025" "SS-0000026");
+station_ids=("SS-DEV-LODE" "SS-DEV-ASH" "SS-0000003" "SS-0000004" "SS-0000005" "SS-0000006" "SS-0000007" "SS-0000008" "SS-0000009" "SS-0000010" "SS-0000011" "SS-0000012" "SS-0000013" "SS-0000014" "SS-0000015" "SS-0000016" "SS-0000017" "SS-0000018" "SS-0000019" "SS-0000020" "SS-0000021" "SS-0000023" "SS-0000024" "SS-0000025" "SS-0000026");
+station_ports=("44444" "44001" "43003" "43004" "43005" "43006" "43007" "43008" "43009" "43010" "43011" "43012" "43013" "43014" "43015" "43016" "43017" "43018" "43019" "43020" "43021" "43023" "43024" "43025" "43026");
 # -----------------------------------
 
 # https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_10_02.html
@@ -104,7 +105,54 @@ ssh_into_station () {
     "${cmd[@]}"
 }
 
-scp_unit_aws_db () {
+scp_transfer () {
+    # arg $1 : source folder. "" is home folder, "production/" is production folder
+    # arg $2 : destination folder. "" is home folder, "production/" is production folder
+    # ask for init station
+    # ask for dest station
+    # ask for file/folder (you'll have to know no autofill available)
+    
+    echo "Choose source station:"
+    get_choice_from_names
+    choice_index=$?
+    source_id="${station_ids[$choice_index]}"
+    source_description="${station_descriptions[$choice_index]}"
+    source_port="${station_ports[$choice_index]}"
+
+    echo "Choose destination station:"
+    get_choice_from_names
+    choice_index=$?
+    destination_id="${station_ids[$choice_index]}"
+    destination_description="${station_descriptions[$choice_index]}"
+    destination_port="${station_ports[$choice_index]}"
+
+    read -p "Enter file/folder name will append to /home/df-admin/production/" path
+
+    full_source_path="/home/df-admin/$1$path"
+    full_destination_path="/home/df-admin"
+    aws_path="/home/ubuntu/Stations/$source_id/$path"
+
+    cmd1=( scp -r -P $source_port df-admin@localhost:$full_source_path $aws_path )
+    cmd2=( scp -r -P $destination_port $aws_path df-admin@localhost:$full_destination_path )
+    printf -v cmd1_str '%q ' "${cmd1[@]}"
+    printf -v cmd2_str '%q ' "${cmd2[@]}"
+    
+    # confirm_execute "$cmd_str"
+    echo "Lined up commands: "
+    echo "$cmd1_str"
+    echo "$cmd2_str"
+    
+    continu_or_exit
+    if [[ -f "$aws_path" ]]; then
+        mv -r "$aws_path" "$aws_path_bkp"
+        echo "Backup made in AWS ($aws_path)"
+    fi
+    "${cmd1[@]}"
+    "${cmd2[@]}"
+}
+
+
+scp_transfer_db () {
     # arguments:
     # echo $1 #action
     # echo $2 #if action == to_dev or from_dev  : developer station name
@@ -192,7 +240,7 @@ scp_unit_aws_db () {
 
 echo 'At AWS: Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 PS3='Choose option(digit + enter):'
-options=("Station log in" "Show Station Descriptions" "Stations status" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Quit")
+options=("Station log in" "Show Station Descriptions" "Stations status" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -208,23 +256,35 @@ do
         "Stations status")
             netstat -tulpn | grep LISTEN 
             ;;
+        "Station/production/x to Station/production/x")
+            scp_transfer "production/" "production/"
+            ;;
+        "Station/production/x to Station/home/x")
+            scp_transfer "production/" ""
+            ;;
+        "Station/home/x to Station/production/x")
+            scp_transfer "" "production/"
+            ;;
+        "Station/home/x to Station/home/x")
+            scp_transfer "" ""
+            ;;
         "Station to AWS DB")
-            scp_unit_aws_db "to_aws"
+            scp_transfer_db "to_aws"
             ;;
         "AWS to Station DB")
-            scp_unit_aws_db "to_unit"
+            scp_transfer_db "to_unit"
             ;;
         "Station to Lode DB")
-            scp_unit_aws_db "to_dev" "SS-DEV-LODE" "44444"
+            scp_transfer_db "to_dev" "SS-DEV-LODE" "44444"
             ;;
         "Lode to Station DB")
-            scp_unit_aws_db "from_dev" "SS-DEV-LODE" "44444"
+            scp_transfer_db "from_dev" "SS-DEV-LODE" "44444"
             ;;
         "Station to Ash DB")
-            scp_unit_aws_db "to_dev" "SS-DEV-ASH" "43081"
+            scp_transfer_db "to_dev" "SS-DEV-ASH" "43081"
             ;;
         "Ash to Station DB")
-            scp_unit_aws_db "from_dev" "SS-DEV-ASH" "43081"
+            scp_transfer_db "from_dev" "SS-DEV-ASH" "43081"
             ;;
         "Quit") 
             break

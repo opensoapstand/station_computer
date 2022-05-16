@@ -81,12 +81,18 @@ DF_ERROR stateManualPump::onAction()
       {
          debugOutput::sendMessage("Enable dispenser pump " + to_string(m_active_pump_index + 1) + "(press dispense button to make pump actually work)", MSG_INFO);
          productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
+#ifdef ENABLE_MULTI_BUTTON
+         productDispensers[m_active_pump_index].setDispenseButtonLight(m_active_pump_index + 1, true);
+#endif
       }
 
       else if ('2' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Disable dispenser pump " + to_string(m_active_pump_index + 1), MSG_INFO);
          productDispensers[m_active_pump_index].setPumpsDisableAll();
+#ifdef ENABLE_MULTI_BUTTON
+         productDispensers[m_active_pump_index].setDispenseButtonLight(m_active_pump_index + 1, false);
+#endif
       }
       else if ('3' == m_pMessaging->getAction())
       {
@@ -158,18 +164,19 @@ DF_ERROR stateManualPump::onAction()
       else if ('7' == m_pMessaging->getAction())
       {
          productDispensers[m_active_pump_index].reversePumpForSetTimeMillis(500);
-         
       }
       else if ('9' == m_pMessaging->getAction())
       {
          isFlowTest = !isFlowTest;
-         if (isFlowTest){
+         if (isFlowTest)
+         {
             using namespace std::chrono;
             startFlowTestMillis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
             productDispensers[m_active_pump_index].setPumpEnable();
             debugOutput::sendMessage("Flow measuring test. Keep dispense button pushed during test. Will display test data in csv format.", MSG_INFO);
-
-         }else{
+         }
+         else
+         {
             debugOutput::sendMessage("End of flow measuring.", MSG_INFO);
             productDispensers[m_active_pump_index].setPumpsDisableAll();
          }
@@ -204,9 +211,9 @@ DF_ERROR stateManualPump::onAction()
    if (isCyclicTesting)
    {
       pumpCyclicTest();
-      if(isFlowTest){
+      if (isFlowTest)
+      {
          pumpFlowTest();
-
       }
    }
    else if (isFlowTest)
@@ -404,18 +411,18 @@ DF_ERROR stateManualPump::pumpTest()
    productDispensers[m_active_pump_index].setPumpDirectionForward();
    productDispensers[m_active_pump_index].setPumpPWM(125, true);
    productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
-   usleep(1000000);                                         // press button to have the pump pumping.
+   usleep(1000000);                                        // press button to have the pump pumping.
    productDispensers[m_active_pump_index].setPumpDirectionForward();
    productDispensers[m_active_pump_index].setPumpPWM(255, true);
    productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
-   usleep(1000000);                                         // press
+   usleep(1000000);                                        // press
 
    productDispensers[m_active_pump_index].setPumpsDisableAll();
 
    productDispensers[m_active_pump_index].setPumpDirectionReverse();
    productDispensers[m_active_pump_index].setPumpPWM(125, true);
    productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
-   usleep(1000000);                                         // press button to have the pump pumping.
+   usleep(1000000);                                        // press button to have the pump pumping.
    productDispensers[m_active_pump_index].setPumpsDisableAll();
 }
 

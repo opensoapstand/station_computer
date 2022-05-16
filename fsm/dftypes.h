@@ -25,6 +25,7 @@
 // #define USE_OLD_DATABASE
 #define ENABLE_TRANSACTION_TO_CLOUD
 // #define ENABLE_PUMP_RETRACT
+#define ENABLE_MULTI_BUTTON
 
 #ifdef USE_OLD_DATABASE
 #define DB_PATH "/home/df-admin/production/db/drinkfill-sqlite.db"

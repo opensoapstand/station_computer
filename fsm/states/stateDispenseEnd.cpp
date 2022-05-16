@@ -59,7 +59,7 @@ DF_ERROR stateDispenseEnd::onAction()
 
     DF_ERROR e_ret = OK;
 
-    //productDispensers[pos].stopDispense();
+    productDispensers[pos].stopDispense();
 
     // handle minimum dispensing
     bool is_valid_dispense = productDispensers[pos].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML;

@@ -52,7 +52,12 @@ DF_ERROR dispenser::setup()
     the_8344->setup();
 
     the_8344->setPumpPWM(DEFAULT_PUMP_PWM);
+#ifdef ENABLE_MULTI_BUTTON
+    setAllDispenseButtonLightsOff();
+
+#else
     the_8344->setDispenseButtonLight(false);
+#endif
 
     for (int i = 0; i < NUM_SOLENOID; i++)
         m_pSolenoid[i] = nullptr;
@@ -152,6 +157,56 @@ dispenser::~dispenser()
 // }
 /* ------Getters, Setters and Utilities------ */
 
+#ifdef ENABLE_MULTI_BUTTON
+void dispenser::setAllDispenseButtonLightsOff()
+{
+    for (int slot = 1; slot < 5; slot++)
+    {
+        setDispenseButtonLight(slot, false);
+    }
+}
+
+void dispenser::setDispenseButtonLight(int slot, bool enableElseDisable)
+{
+    // output has to be set low for light to be on.     
+
+    switch (slot)
+    {
+
+    case 1:
+    {
+        // has a mosfet in between
+        // the_8344->setPCA9534Output(6, enableElseDisable);
+        // the_8344->setDispenseButtonLight(enableElseDisable);
+        the_8344->setPCA9534Output(6, !enableElseDisable);
+        break;
+    }
+    case 2:
+    {
+        the_8344->setPCA9534Output(3, !enableElseDisable);
+
+        break;
+    }
+    case 3:
+    {
+
+        the_8344->setPCA9534Output(4, !enableElseDisable);
+        break;
+    }
+    case 4:
+    {
+        // work on the gpio of the linux board directly.
+
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+}
+#endif
+
 DF_ERROR dispenser::setSlot(int slot)
 {
     // first slot is 1
@@ -192,6 +247,10 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
     m_price = nPrice;
 
     resetVolumeDispensed();
+
+    setAllDispenseButtonLightsOff();
+    setDispenseButtonLight(getSlot(), true);
+
     // m_nVolumeDispensedPreviously = 0;
     // m_nVolumeDispensedSinceLastPoll = 0;
     // m_nVolumePerTick = getVolPerTick();
@@ -205,8 +264,9 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 
     return dfRet;
 }
-// DF_ERROR dispenser::stopDispense()
-// {
+DF_ERROR dispenser::stopDispense()
+{
+    setAllDispenseButtonLightsOff();
 //     DF_ERROR e_ret = ERROR_BAD_PARAMS;
 //     // the_8344->setPumpsDisableAll();
 //     // debugOutput::sendMessage("All Pumps disabled", MSG_INFO);
@@ -218,7 +278,7 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 //     // m_nVolumeDispensedPreviously = 0;
 
 //     return e_ret = OK;
-// }
+}
 string dispenser::getDispenseStartTime()
 {
     return m_nStartTime;
@@ -452,6 +512,7 @@ DF_ERROR dispenser::setPumpsDisableAll()
     m_isPumpEnabled = false;
     isPumpSoftStarting = false;
     pwm_actual_set_speed = 0;
+
 }
 
 void dispenser::reversePumpForSetTimeMillis(int millis)

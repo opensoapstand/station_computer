@@ -56,6 +56,7 @@ public:
     void virtualButtonPressHack(void);
     void virtualButtonUnpressHack(void);
     void dispenseButtonRefresh();
+    void setPCA9534Output(int posIndex, bool onElseOff);
 
 private:
     bool getDispenseButtonState(void);

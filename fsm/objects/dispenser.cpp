@@ -51,9 +51,11 @@ DF_ERROR dispenser::setup()
 
     the_8344->setup();
 
+    // debugOutput::sendMessage("settuuup ", MSG_INFO);
     the_8344->setPumpPWM(DEFAULT_PUMP_PWM);
 #ifdef ENABLE_MULTI_BUTTON
     setAllDispenseButtonLightsOff();
+    // debugOutput::sendMessage("ewfiwej ", MSG_INFO);
 
 #else
     the_8344->setDispenseButtonLight(false);
@@ -64,11 +66,11 @@ DF_ERROR dispenser::setup()
 
     m_pFlowsenor[NUM_FLOWSENSOR] = nullptr;
 
-    for (int i = 0; i < NUM_PUMP; i++)
-    {
+    // for (int i = 0; i < NUM_PUMP; i++)
+    // {
 
-        m_pPump[i] = nullptr;
-    }
+    //     m_pPump[i] = nullptr;
+    // }
 
     millisAtLastCheck = MILLIS_INIT_DUMMY;
     previousDispensedVolume = 0;
@@ -168,7 +170,8 @@ void dispenser::setAllDispenseButtonLightsOff()
 
 void dispenser::setDispenseButtonLight(int slot, bool enableElseDisable)
 {
-    // output has to be set low for light to be on.     
+    // output has to be set low for light to be on.
+   // m_pDispenseButton4[0]->test();
 
     switch (slot)
     {
@@ -176,8 +179,6 @@ void dispenser::setDispenseButtonLight(int slot, bool enableElseDisable)
     case 1:
     {
         // has a mosfet in between
-        // the_8344->setPCA9534Output(6, enableElseDisable);
-        // the_8344->setDispenseButtonLight(enableElseDisable);
         the_8344->setPCA9534Output(6, !enableElseDisable);
         break;
     }
@@ -189,18 +190,33 @@ void dispenser::setDispenseButtonLight(int slot, bool enableElseDisable)
     }
     case 3:
     {
-
         the_8344->setPCA9534Output(4, !enableElseDisable);
+        // m_pDispenseButton4[0]->writePin(!enableElseDisable);
+        // m_pDispenseButton4[0]->writePin(true);
         break;
     }
     case 4:
     {
         // work on the gpio of the linux board directly.
+        // has a level shifter 3.3v to 5v 
+
+        if (getSlot() == 4){
+            m_pDispenseButton4[0]->writePin(!enableElseDisable);
+            // debugOutput::sendMessage("yyyyyyyyyyyyyye", MSG_ERROR);
+
+        }
+        // supertest(!enableElseDisable);
+
+
+
+        
+        debugOutput::sendMessage("yyyyyyyyyyyyyyaaaaa", MSG_ERROR);
 
         break;
     }
     default:
     {
+        debugOutput::sendMessage("Slot not found for setting dispense button light.", MSG_ERROR);
         break;
     }
     }
@@ -248,8 +264,9 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 
     resetVolumeDispensed();
 
-    setAllDispenseButtonLightsOff();
+    // setAllDispenseButtonLightsOff();
     setDispenseButtonLight(getSlot(), true);
+    
 
     // m_nVolumeDispensedPreviously = 0;
     // m_nVolumeDispensedSinceLastPoll = 0;
@@ -267,17 +284,17 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 DF_ERROR dispenser::stopDispense()
 {
     setAllDispenseButtonLightsOff();
-//     DF_ERROR e_ret = ERROR_BAD_PARAMS;
-//     // the_8344->setPumpsDisableAll();
-//     // debugOutput::sendMessage("All Pumps disabled", MSG_INFO);
-//     setPumpsDisableAll();
+    //     DF_ERROR e_ret = ERROR_BAD_PARAMS;
+    //     // the_8344->setPumpsDisableAll();
+    //     // debugOutput::sendMessage("All Pumps disabled", MSG_INFO);
+    //     setPumpsDisableAll();
 
-//     // m_isDispenseDone = true;
+    //     // m_isDispenseDone = true;
 
-//     // m_nVolumeDispensedSinceLastPoll = 0;
-//     // m_nVolumeDispensedPreviously = 0;
+    //     // m_nVolumeDispensedSinceLastPoll = 0;
+    //     // m_nVolumeDispensedPreviously = 0;
 
-//     return e_ret = OK;
+    //     return e_ret = OK;
 }
 string dispenser::getDispenseStartTime()
 {
@@ -323,13 +340,13 @@ double dispenser::getVolumeDispensed()
 }
 
 // TODO: Call this function on Dispense onEntry()
-DF_ERROR dispenser::setFlowsensor(int pin, int pos)
+DF_ERROR dispenser::initFlowsensorIO(int pin, int pos)
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
     // *m_pIsDispensing = false;
-    std::string msg = "Dispenser::setFlowsensor. Position: " + std::to_string(pos) + " (pin: " + std::to_string(pin) + ")";
-    // debugOutput::sendMessage("-----dispenser::setFlowsensor-----", MSG_INFO);
+    std::string msg = "Dispenser::initFlowsensorIO. Position: " + std::to_string(pos) + " (pin: " + std::to_string(pin) + ")";
+    // debugOutput::sendMessage("-----dispenser::initFlowsensorIO-----", MSG_INFO);
     debugOutput::sendMessage(msg, MSG_INFO);
 
     if ((pos >= 0) && (pos < 4))
@@ -349,17 +366,30 @@ DF_ERROR dispenser::setFlowsensor(int pin, int pos)
     return e_ret;
 }
 
-DF_ERROR dispenser::setButtonsShutdownAndMaintenance()
+DF_ERROR dispenser::initDispenseButton4Light()
 {
 
-    m_pPWRorMM[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_MAINTENANCE_SHUTDOWN_EDGE_DETECTOR);
-    m_pPowerOff[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_MAINTENANCE);
-    m_pMM[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_SHUTDOWN);
+    m_pDispenseButton4[0]= new oddyseyx86GPIO(IO_PIN_BUTTON_4);
+    m_pDispenseButton4[0]->setPinAsInputElseOutput(false);
+    m_pDispenseButton4[0]->test();
+}
+DF_ERROR dispenser::supertest(bool onElseOff)
+{
 
-    m_pPWRorMM[0]->setPinAsInputElseOutput(true);
-    m_pPowerOff[0]->setPinAsInputElseOutput(true);
-    m_pMM[0]->setPinAsInputElseOutput(true);
-    m_pPWRorMM[0]->startListener_buttons_powerAndMaintenance();
+    m_pDispenseButton4[0]->writePin(onElseOff);
+}
+
+DF_ERROR dispenser::initButtonsShutdownAndMaintenance()
+{
+
+    m_pPowerOffOrMaintenanceModeButtonPressed[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_MAINTENANCE_SHUTDOWN_EDGE_DETECTOR);
+    m_pButtonPowerOff[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_MAINTENANCE);
+    m_pButtonDisplayMaintenanceMode[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_SHUTDOWN);
+
+    m_pPowerOffOrMaintenanceModeButtonPressed[0]->setPinAsInputElseOutput(true);
+    m_pButtonPowerOff[0]->setPinAsInputElseOutput(true);
+    m_pButtonDisplayMaintenanceMode[0]->setPinAsInputElseOutput(true);
+    m_pPowerOffOrMaintenanceModeButtonPressed[0]->startListener_buttons_powerAndMaintenance();
 }
 
 // TODO: Call this function on Dispense onEntry()
@@ -512,7 +542,6 @@ DF_ERROR dispenser::setPumpsDisableAll()
     m_isPumpEnabled = false;
     isPumpSoftStarting = false;
     pwm_actual_set_speed = 0;
-
 }
 
 void dispenser::reversePumpForSetTimeMillis(int millis)

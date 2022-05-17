@@ -108,10 +108,10 @@ DF_ERROR stateInit::dispenserSetup()
 #ifndef __arm__
     for (idx = 0; idx < 4; idx++)
     {
-        productDispensers[idx].setFlowsensor(IO_PIN_FLOW_SENSOR, idx);
+        productDispensers[idx].initFlowsensorIO(IO_PIN_FLOW_SENSOR, idx);
     }
 #else
-    productDispensers[0].setFlowsensor(17, 0);
+    productDispensers[0].initFlowsensorIO(17, 0);
 #endif
 
     // Set up the four pumps
@@ -120,7 +120,8 @@ DF_ERROR stateInit::dispenserSetup()
         productDispensers[idx].setPump(0, 0, idx);
     }
 
-    productDispensers[0].setButtonsShutdownAndMaintenance(); // todo: this is a hack for the maintenance and power button. It should not be part of the dispenser class
+    productDispensers[0].initButtonsShutdownAndMaintenance(); // todo: this is a hack for the maintenance and power button. It should not be part of the dispenser class
+    productDispensers[3].initDispenseButton4Light();
 
     debugOutput::sendMessage("Dispenser intialized.", MSG_INFO);
 

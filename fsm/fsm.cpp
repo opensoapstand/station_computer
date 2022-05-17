@@ -90,6 +90,7 @@ int main()
 
     if (OK == initObjects())
     {
+        debugOutput::sendMessage("Init objects done", MSG_INFO);
         dfRet = g_pMessaging->createThreads(kbThread, ipThread);
 
         if (OK == dfRet)
@@ -171,10 +172,12 @@ DF_ERROR initObjects()
     {
         g_productDispensers[i].setup();
     }
+    debugOutput::sendMessage("Dispensers set up. ", MSG_INFO);
 
     dfRet = createStateArray();
     if (OK != dfRet)
     {
+        debugOutput::sendMessage("Error at set up.", MSG_ERROR);
         // TODO: DB function to check/create DB
         // next
     }

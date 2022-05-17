@@ -64,11 +64,14 @@ public:
       product *getProduct();
       DF_ERROR setProduct(product *product);
 
-      DF_ERROR setButtonsShutdownAndMaintenance();
+      DF_ERROR initButtonsShutdownAndMaintenance();
       DF_ERROR setSlot(int slot);
       int getSlot();
       DF_ERROR setPump(int mcpAddress, int pin, int position);
-      DF_ERROR setFlowsensor(int pinint, int pos);
+      DF_ERROR initFlowsensorIO(int pinint, int pos);
+      DF_ERROR initDispenseButton4Light();
+
+      DF_ERROR supertest(bool onElseOff);
 
       unsigned short getPumpSpeed();
       bool isPumpEnabled();
@@ -207,10 +210,11 @@ private:
 
       gpio *m_pSolenoid[NUM_SOLENOID]; // air,product, and water solenoid control
       gpio *m_pFlowsenor[NUM_FLOWSENSOR];
-      gpio *m_pPump[NUM_PUMP]; // forward and reverse pin control
-      gpio *m_pPowerOff[1];
-      gpio *m_pMM[1];
-      gpio *m_pPWRorMM[1];
+      // gpio *m_pPump[NUM_PUMP]; // forward and reverse pin control
+      gpio *m_pButtonPowerOff[1];
+      gpio *m_pButtonDisplayMaintenanceMode[1];
+      gpio *m_pPowerOffOrMaintenanceModeButtonPressed[1];
+      gpio *m_pDispenseButton4[1];
 
       // Button reference m_pButton[1] in stateVirtual; IPC shared due to Arduino!
       gpio *m_pButton[NUM_BUTTON];

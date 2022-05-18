@@ -87,13 +87,14 @@ std::vector<uint8_t> mCommunication::readPacket(){
     std::vector<uint8_t> pktRead;
     //tcflush(fd, TCIOFLUSH);
     //tcflush(fd, TCIOFLUSH);
-
+    
     readSize = read(fd, buffer, MAX_SIZE);
-
+    
     if (readSize == -1)
     {
         pktRead.clear();
         pktRead.push_back(0xFF);
+        std::cout << "Packet read failed...\n";
         return pktRead;
     }
 //    else if (int(buffer[2]) < readSize) {

@@ -19,7 +19,6 @@
 
 packetFromECR::packetFromECR()
 {
-
 }
 
 void packetFromECR::setPacketDataLen()

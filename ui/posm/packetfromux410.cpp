@@ -35,6 +35,11 @@ packetFromUX410::packetFromUX410()
 
 void packetFromUX410::packetReadFromUX(std::vector<uint8_t> curPacket)
 {
+    std::cout<< "Received packet (size" << curPacket.size() << ") : \n";
+    for (int i=0;i< curPacket.size(); i++){
+        std::cout << std::to_string(curPacket[i]) << " ";
+    }
+     
     if(0xFF == curPacket[0] && 1 == curPacket.size())
     {
 
@@ -44,6 +49,7 @@ void packetFromUX410::packetReadFromUX(std::vector<uint8_t> curPacket)
     else if(1 == curPacket.size())
     {
        checkAckOrNak(curPacket[0]); //store if the packet sent is Ack or NAk
+
     }
     else
     {

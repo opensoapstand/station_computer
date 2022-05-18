@@ -171,7 +171,7 @@ void dispenser::setAllDispenseButtonLightsOff()
 void dispenser::setDispenseButtonLight(int slot, bool enableElseDisable)
 {
     // output has to be set low for light to be on.
-   // m_pDispenseButton4[0]->test();
+    // m_pDispenseButton4[0]->test();
 
     switch (slot)
     {
@@ -185,29 +185,22 @@ void dispenser::setDispenseButtonLight(int slot, bool enableElseDisable)
     case 2:
     {
         the_8344->setPCA9534Output(3, !enableElseDisable);
-
         break;
     }
     case 3:
     {
         the_8344->setPCA9534Output(4, !enableElseDisable);
-        // m_pDispenseButton4[0]->writePin(!enableElseDisable);
-        // m_pDispenseButton4[0]->writePin(true);
         break;
     }
     case 4:
     {
         // work on the gpio of the linux board directly.
-        // has a level shifter 3.3v to 5v 
+        // has a level shifter 3.3v to 5v
 
-        if (getSlot() == 4){
+        if (getSlot() == 4)
+        {
             m_pDispenseButton4[0]->writePin(!enableElseDisable);
-            // debugOutput::sendMessage("yyyyyyyyyyyyyye", MSG_ERROR);
         }
-        // supertest(!enableElseDisable);
-        
-        debugOutput::sendMessage("yyyyyyyyyyyyyyaaaaa", MSG_ERROR);
-
         break;
     }
     default:
@@ -262,7 +255,6 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 
     // setAllDispenseButtonLightsOff();
     setDispenseButtonLight(getSlot(), true);
-    
 
     // m_nVolumeDispensedPreviously = 0;
     // m_nVolumeDispensedSinceLastPoll = 0;
@@ -364,7 +356,7 @@ DF_ERROR dispenser::initFlowsensorIO(int pin, int pos)
 
 DF_ERROR dispenser::initDispenseButton4Light()
 {
-    m_pDispenseButton4[0]= new oddyseyx86GPIO(IO_PIN_BUTTON_4);
+    m_pDispenseButton4[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_4);
     m_pDispenseButton4[0]->setPinAsInputElseOutput(false);
 }
 
@@ -541,54 +533,57 @@ DF_ERROR dispenser::setPumpsDisableAll()
 
 void dispenser::reversePumpForSetTimeMillis(int millis)
 {
-#ifdef ENABLE_PUMP_RETRACT
-    if (millis > 0)
+
+    if (getPumpReversalEnabled())
     {
-        // get volume before
-        double volume_before = getVolumeDispensed();
 
-        debugOutput::sendMessage("Pump auto retraction. Reverse time millis: " + to_string(millis), MSG_INFO);
-        pumpSlowStart(false);
-
-        the_8344->virtualButtonPressHack();
-        // ideally, a certain volume is retracted. --> on-time depends on speed
-
-        using namespace std::chrono;
-        uint64_t retraction_start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-        bool retraction_done = false;
-        while (!retraction_done)
+        if (millis > 0)
         {
-            uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-            if (now - retraction_start > millis)
+            // get volume before
+            double volume_before = getVolumeDispensed();
+
+            debugOutput::sendMessage("Pump auto retraction. Reverse time millis: " + to_string(millis), MSG_INFO);
+            pumpSlowStart(false);
+
+            the_8344->virtualButtonPressHack();
+            // ideally, a certain volume is retracted. --> on-time depends on speed
+
+            using namespace std::chrono;
+            uint64_t retraction_start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+            bool retraction_done = false;
+            while (!retraction_done)
             {
-                retraction_done = true;
+                uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+                if (now - retraction_start > millis)
+                {
+                    retraction_done = true;
+                }
+                pumpSlowStartHandler();
             }
-            pumpSlowStartHandler();
+
+            // usleep(millis * 1000);
+            the_8344->virtualButtonUnpressHack(); // needed! To have the button pressing sequence right. (fake button presses can mess the button detection up)
+
+            pumpSlowStopBlocking();
+
+            // setPumpsDisableAll();
+            setPumpDirectionForward();
+            // setPumpPWM((uint8_t)(m_pDispensedProduct->getPWM()));
+
+            // get volume after
+            double volume_after = getVolumeDispensed();
+
+            // vol diff
+            double volume_diff = volume_after - volume_before;
+
+            subtractFromVolumeDispensed(volume_diff);
+            debugOutput::sendMessage("Retraction done. WARNING: check volume change correction subtraction. Volume reversed:  " + to_string(volume_diff), MSG_INFO);
         }
-
-        // usleep(millis * 1000);
-        the_8344->virtualButtonUnpressHack(); // needed! To have the button pressing sequence right. (fake button presses can mess the button detection up)
-
-        pumpSlowStopBlocking();
-
-        // setPumpsDisableAll();
-        setPumpDirectionForward();
-        // setPumpPWM((uint8_t)(m_pDispensedProduct->getPWM()));
-
-        // get volume after
-        double volume_after = getVolumeDispensed();
-
-        // vol diff
-        double volume_diff = volume_after - volume_before;
-
-        subtractFromVolumeDispensed(volume_diff);
-        debugOutput::sendMessage("Retraction done. WARNING: check volume change correction subtraction. Volume reversed:  " + to_string(volume_diff), MSG_INFO);
+        else
+        {
+            debugOutput::sendMessage("Rectraction disabled. ms:" + to_string(millis), MSG_INFO);
+        }
     }
-    else
-    {
-        debugOutput::sendMessage("Rectraction disabled. ms:" + to_string(millis), MSG_INFO);
-    }
-#endif
 }
 
 bool dispenser::isPumpEnabled()
@@ -631,12 +626,13 @@ DF_ERROR dispenser::pumpSlowStartHandler()
 DF_ERROR dispenser::pumpSlowStart(bool forwardElseReverse)
 {
 
-#ifndef ENABLE_PUMP_RETRACT
-    if (!forwardElseReverse)
+    if (!forwardElseReverse && !getPumpReversalEnabled())
     {
-        debugOutput::sendMessage("Pump Backwards !!!!! Please ensure no checkvalve is present.", MSG_WARNING);
+        debugOutput::sendMessage("Pump reversal not allowed. Will not execute command.", MSG_WARNING);
+        DF_ERROR e_ret = OK;
+
+        return e_ret;
     }
-#endif
 
     using namespace std::chrono;
     slowStartMostRecentIncreaseEpoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
@@ -744,6 +740,37 @@ DF_ERROR dispenser::startDispense()
 unsigned short dispenser::getPumpSpeed()
 {
     the_8344->getPumpSpeed();
+}
+
+void dispenser::loadPumpReversalEnabledFromDb()
+{
+    // val 0 = pump reversal not enabled
+    // val 1 = pump reversal enabled. Will take retraction time from products
+
+#ifdef USE_OLD_DATABASE
+    m_isPumpSlowStartStopEnabled = false;
+#else
+    rc = sqlite3_open(DB_PATH, &db);
+    sqlite3_stmt *stmt;
+    string sql_string = "SELECT enable_pump_reversal FROM machine";
+    /* Create SQL statement for transactions */
+    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+    sqlite3_step(stmt);
+
+    int val = sqlite3_column_int(stmt, 0);
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    m_isPumpReversalEnabled = (val != 0);
+
+#endif
+
+    debugOutput::sendMessage("Pump reversal enabled? : " + to_string(m_isPumpReversalEnabled), MSG_INFO);
+}
+
+bool dispenser::getPumpReversalEnabled()
+{
+    return m_isPumpReversalEnabled;
 }
 
 void dispenser::loadPumpRampingEnabledFromDb()

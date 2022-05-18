@@ -131,6 +131,8 @@ public:
       // bool registerFlowSensorTick();
 
       void loadEmptyContainerDetectionEnabledFromDb();
+      void loadPumpReversalEnabledFromDb();
+      bool getPumpReversalEnabled();
       void loadPumpRampingEnabledFromDb();
       bool getEmptyContainerDetectionEnabled();
       bool getPumpSlowStartStopEnabled();
@@ -190,9 +192,10 @@ private:
 
       bool m_isEmptyContainerDetectionEnabled = false;
       bool m_isPumpSlowStartStopEnabled = false;
+      bool m_isPumpReversalEnabled = false;
 
       // bool m_isDispenseDone; // XXX: Remove later.
-      bool m_isStill;
+      // bool m_isStill;
 
       bool m_isPumpEnabled;
       bool *m_pIsDispensing;

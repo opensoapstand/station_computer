@@ -60,15 +60,13 @@ DF_ERROR stateDispenseInit::onEntry()
     return e_ret;
 }
 
-/*
- *
- */
 DF_ERROR stateDispenseInit::onAction()
 {
 
     DF_ERROR e_ret = OK;
     this->productDispensers[dispenser_index].loadEmptyContainerDetectionEnabledFromDb();
     this->productDispensers[dispenser_index].loadPumpRampingEnabledFromDb();
+    this->productDispensers[dispenser_index].loadPumpReversalEnabledFromDb();
 
     debugOutput::sendMessage("Chosen dispenser slot: " +
                                  std::to_string(productDispensers[dispenser_index].getSlot()) +

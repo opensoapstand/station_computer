@@ -203,12 +203,8 @@ void dispenser::setDispenseButtonLight(int slot, bool enableElseDisable)
         if (getSlot() == 4){
             m_pDispenseButton4[0]->writePin(!enableElseDisable);
             // debugOutput::sendMessage("yyyyyyyyyyyyyye", MSG_ERROR);
-
         }
         // supertest(!enableElseDisable);
-
-
-
         
         debugOutput::sendMessage("yyyyyyyyyyyyyyaaaaa", MSG_ERROR);
 
@@ -368,11 +364,10 @@ DF_ERROR dispenser::initFlowsensorIO(int pin, int pos)
 
 DF_ERROR dispenser::initDispenseButton4Light()
 {
-
     m_pDispenseButton4[0]= new oddyseyx86GPIO(IO_PIN_BUTTON_4);
     m_pDispenseButton4[0]->setPinAsInputElseOutput(false);
-    m_pDispenseButton4[0]->test();
 }
+
 DF_ERROR dispenser::supertest(bool onElseOff)
 {
 

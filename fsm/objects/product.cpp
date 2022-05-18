@@ -678,6 +678,7 @@ bool product::reloadParametersFromDb()
         return false;
     }
 
+    debugOutput::sendMessage("*** WARNING: No NULL values allowed in text fields. ***", MSG_ERROR);
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT * FROM products WHERE slot=" + to_string(m_nSlot) + ";";

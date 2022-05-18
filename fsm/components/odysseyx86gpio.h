@@ -34,9 +34,6 @@ public:
 	DF_ERROR setPinAsInputElseOutput(bool input);
 	DF_ERROR readPin(bool *level);
 	DF_ERROR writePin(bool level);
-	void test();
-
-	//bool reader = true;
 
 protected:
 	void monitorGPIO_Flowsensor();

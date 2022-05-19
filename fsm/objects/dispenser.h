@@ -211,7 +211,7 @@ private:
 
       // Pointers to Addresses set in State Init
 
-      gpio *m_pSolenoid[NUM_SOLENOID]; // air,product, and water solenoid control
+      // gpio *m_pSolenoid[NUM_SOLENOID]; // air,product, and water solenoid control
       gpio *m_pFlowsenor[NUM_FLOWSENSOR];
       // gpio *m_pPump[NUM_PUMP]; // forward and reverse pin control
       gpio *m_pButtonPowerOff[1];

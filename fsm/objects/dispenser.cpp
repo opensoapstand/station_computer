@@ -55,14 +55,12 @@ DF_ERROR dispenser::setup()
     the_8344->setPumpPWM(DEFAULT_PUMP_PWM);
 #ifdef ENABLE_MULTI_BUTTON
     setAllDispenseButtonLightsOff();
-    // debugOutput::sendMessage("ewfiwej ", MSG_INFO);
-
 #else
     the_8344->setSingleDispenseButtonLight(false);
 #endif
 
-    for (int i = 0; i < NUM_SOLENOID; i++)
-        m_pSolenoid[i] = nullptr;
+    // for (int i = 0; i < NUM_SOLENOID; i++)
+    //     m_pSolenoid[i] = nullptr;
 
     m_pFlowsenor[NUM_FLOWSENSOR] = nullptr;
 
@@ -83,7 +81,6 @@ dispenser::dispenser(gpio *ButtonReference)
 {
 
     // NOT USED. To be reimplemented maybe.
-
 
     //default constructor to set all pin to nullptr
     //debugOutput::sendMessage("dispenser", MSG_INFO);
@@ -112,7 +109,6 @@ dispenser::~dispenser()
     previous_status_update_allowed_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
     // delete [] m_pDispensedProduct;
-
     // delete [] m_pSolenoid;
     // delete [] m_pFlowsenor;
     // delete [] m_pPump;

@@ -81,18 +81,20 @@ DF_ERROR stateManualPump::onAction()
       {
          debugOutput::sendMessage("Enable dispenser pump " + to_string(m_active_pump_index + 1) + "(press dispense button to make pump actually work)", MSG_INFO);
          productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
-#ifdef ENABLE_MULTI_BUTTON
-         productDispensers[m_active_pump_index].setMultiDispenseButtonLight(m_active_pump_index + 1, true);
-#endif
+         if (productDispensers[m_active_pump_index].getMultiDispenseButtonEnabled())
+         {
+            productDispensers[m_active_pump_index].setMultiDispenseButtonLight(m_active_pump_index + 1, true);
+         }
       }
 
       else if ('2' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Disable dispenser pump " + to_string(m_active_pump_index + 1), MSG_INFO);
          productDispensers[m_active_pump_index].setPumpsDisableAll();
-#ifdef ENABLE_MULTI_BUTTON
-         productDispensers[m_active_pump_index].setMultiDispenseButtonLight(m_active_pump_index + 1, false);
-#endif
+         if (productDispensers[m_active_pump_index].getMultiDispenseButtonEnabled())
+         {
+            productDispensers[m_active_pump_index].setMultiDispenseButtonLight(m_active_pump_index + 1, false);
+         }
       }
       else if ('3' == m_pMessaging->getAction())
       {

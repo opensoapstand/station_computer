@@ -602,11 +602,11 @@ void dsed8344::initialize_8344(void)
 
     SendByte(PCA9534_ADDRESS, 0x01, 0b11100000); // Output pin values
 
-#ifdef ENABLE_MULTI_BUTTON
-    SendByte(PCA9534_ADDRESS, 0x03, 0b10000000); // Enable outputs
-#else
-    SendByte(PCA9534_ADDRESS, 0x03, 0b10011000); // Enable outputs
-#endif
+// #ifdef ENABLE_MULTI_BUTTON
+    SendByte(PCA9534_ADDRESS, 0x03, 0b10000000); // 0 = output
+// #else
+    // SendByte(PCA9534_ADDRESS, 0x03, 0b10011000); 
+// #endif
 
     if (max31760_pwm_found)
     {

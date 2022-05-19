@@ -53,11 +53,6 @@ DF_ERROR dispenser::setup()
 
     // debugOutput::sendMessage("settuuup ", MSG_INFO);
     the_8344->setPumpPWM(DEFAULT_PUMP_PWM);
-#ifdef ENABLE_MULTI_BUTTON
-    setAllDispenseButtonLightsOff();
-#else
-    the_8344->setSingleDispenseButtonLight(false);
-#endif
 
     // for (int i = 0; i < NUM_SOLENOID; i++)
     //     m_pSolenoid[i] = nullptr;
@@ -155,7 +150,7 @@ dispenser::~dispenser()
 // }
 /* ------Getters, Setters and Utilities------ */
 
-#ifdef ENABLE_MULTI_BUTTON
+// #ifdef ENABLE_MULTI_BUTTON
 void dispenser::setAllDispenseButtonLightsOff()
 {
     for (int slot = 1; slot < 5; slot++)
@@ -195,7 +190,7 @@ void dispenser::setMultiDispenseButtonLight(int slot, bool enableElseDisable)
 
         if (getSlot() == 4)
         {
-            m_pDispenseButton4[0]->writePin(!enableElseDisable);
+           m_pDispenseButton4[0]->writePin(!enableElseDisable);
         }
         break;
     }
@@ -206,7 +201,7 @@ void dispenser::setMultiDispenseButtonLight(int slot, bool enableElseDisable)
     }
     }
 }
-#endif
+// #endif
 
 DF_ERROR dispenser::setSlot(int slot)
 {
@@ -237,6 +232,27 @@ DF_ERROR dispenser::setProduct(product *product)
     }
 }
 
+DF_ERROR dispenser::loadGeneralProperties()
+{
+
+    debugOutput::sendMessage("Load general properties9999999", MSG_INFO);
+    loadEmptyContainerDetectionEnabledFromDb();
+    loadPumpRampingEnabledFromDb();
+    loadPumpReversalEnabledFromDb();
+    loadMultiDispenseButtonEnabledFromDb();
+
+    if (getMultiDispenseButtonEnabled())
+    {
+    //    setAllDispenseButtonLightsOff();
+    }
+    else
+    {
+        the_8344->setSingleDispenseButtonLight(false);
+    }
+    
+    debugOutput::sendMessage("END Load general properties9999999", MSG_INFO);
+}
+
 // Reset values onEntry()
 DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 // DF_ERROR dispenser::initDispense(int nVolumeToDispense)
@@ -249,11 +265,11 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 
     resetVolumeDispensed();
 
-#ifdef ENABLE_MULTI_BUTTON
-    setAllDispenseButtonLightsOff();
-    setMultiDispenseButtonLight(getSlot(), true);
-
-#endif
+    if (getMultiDispenseButtonEnabled())
+    {
+        // setAllDispenseButtonLightsOff();
+        setMultiDispenseButtonLight(getSlot(), true);
+    }
 
     // m_nVolumeDispensedPreviously = 0;
     // m_nVolumeDispensedSinceLastPoll = 0;
@@ -270,9 +286,10 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 }
 DF_ERROR dispenser::stopDispense()
 {
-#ifdef ENABLE_MULTI_BUTTON
-    setAllDispenseButtonLightsOff();
-#endif
+    if (getMultiDispenseButtonEnabled())
+    {
+        setAllDispenseButtonLightsOff();
+    }
     //     DF_ERROR e_ret = ERROR_BAD_PARAMS;
     //     // the_8344->setPumpsDisableAll();
     //     // debugOutput::sendMessage("All Pumps disabled", MSG_INFO);
@@ -359,12 +376,6 @@ DF_ERROR dispenser::initDispenseButton4Light()
 {
     m_pDispenseButton4[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_4);
     m_pDispenseButton4[0]->setPinAsInputElseOutput(false);
-}
-
-DF_ERROR dispenser::supertest(bool onElseOff)
-{
-
-    m_pDispenseButton4[0]->writePin(onElseOff);
 }
 
 DF_ERROR dispenser::initButtonsShutdownAndMaintenance()
@@ -754,6 +765,50 @@ DF_ERROR dispenser::startDispense()
 unsigned short dispenser::getPumpSpeed()
 {
     the_8344->getPumpSpeed();
+}
+
+void dispenser::loadMultiDispenseButtonEnabledFromDb()
+{
+    // val 0 = pump reversal not enabled
+    // val 1 = pump reversal enabled. Will take retraction time from products
+
+#ifdef USE_OLD_DATABASE
+    m_isPumpSlowStartStopEnabled = false;
+#else
+    rc = sqlite3_open(DB_PATH, &db);
+    sqlite3_stmt *stmt;
+    string sql_string = "SELECT dispense_buttons_count FROM machine";
+    /* Create SQL statement for transactions */
+    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+    sqlite3_step(stmt);
+
+    int val = sqlite3_column_int(stmt, 0);
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+
+    if (val == 1)
+    {
+        m_isMultiButtonEnabled = false;
+    }
+    else if (val == 4)
+    {
+        m_isMultiButtonEnabled = true;
+    }
+    else
+    {
+        m_isMultiButtonEnabled = false;
+        debugOutput::sendMessage("ASSERT Error: unimplemented number of dispense buttons. Default to single dispense button. ", MSG_ERROR);
+    }
+
+#endif
+
+    debugOutput::sendMessage("Multiple dispense buttons enabled? : " + to_string(m_isMultiButtonEnabled), MSG_INFO);
+}
+
+bool dispenser::getMultiDispenseButtonEnabled()
+{
+    return m_isMultiButtonEnabled;
 }
 
 void dispenser::loadPumpReversalEnabledFromDb()

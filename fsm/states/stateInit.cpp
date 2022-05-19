@@ -114,17 +114,24 @@ DF_ERROR stateInit::dispenserSetup()
     productDispensers[0].initFlowsensorIO(17, 0);
 #endif
 
-    // Set up the four pumps
+    // Set up the four dispensers
     for (idx = 0; idx < 4; idx++)
     {
         productDispensers[idx].setPump(0, 0, idx);
+        productDispensers[idx].loadGeneralProperties();
     }
 
     productDispensers[0].initButtonsShutdownAndMaintenance(); // todo: this is a hack for the maintenance and power button. It should not be part of the dispenser class
-#ifdef ENABLE_MULTI_BUTTON
-    productDispensers[3].initDispenseButton4Light(); // THE DISPENSER SLOT MUST REPRESENT THE BUTTON. It's dirty and I know it.
-    productDispensers[3].setAllDispenseButtonLightsOff();
-#endif 
+
+    // #ifdef ENABLE_MULTI_BUTTON
+
+    // needs to be set up only once. Dispener index is only important for the button 4 index.
+    if (productDispensers[3].getMultiDispenseButtonEnabled())
+    {
+        productDispensers[3].initDispenseButton4Light(); // THE DISPENSER SLOT MUST REPRESENT THE BUTTON. It's dirty and I know it.
+        productDispensers[3].setAllDispenseButtonLightsOff();
+    }
+    // #endif
 
     debugOutput::sendMessage("Dispenser intialized.", MSG_INFO);
 

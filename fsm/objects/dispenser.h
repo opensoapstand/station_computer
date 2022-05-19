@@ -63,15 +63,13 @@ public:
 
       product *getProduct();
       DF_ERROR setProduct(product *product);
-
       DF_ERROR initButtonsShutdownAndMaintenance();
       DF_ERROR setSlot(int slot);
       int getSlot();
+
       DF_ERROR setPump(int mcpAddress, int pin, int position);
       DF_ERROR initFlowsensorIO(int pinint, int pos);
       DF_ERROR initDispenseButton4Light();
-
-      DF_ERROR supertest(bool onElseOff);
 
       unsigned short getPumpSpeed();
       bool isPumpEnabled();
@@ -130,6 +128,10 @@ public:
       // double getVolumeSinceLastPoll();
       // bool registerFlowSensorTick();
 
+      DF_ERROR loadGeneralProperties();
+
+      void loadMultiDispenseButtonEnabledFromDb();
+      bool getMultiDispenseButtonEnabled();
       void loadEmptyContainerDetectionEnabledFromDb();
       void loadPumpReversalEnabledFromDb();
       bool getPumpReversalEnabled();
@@ -193,6 +195,7 @@ private:
       bool m_isEmptyContainerDetectionEnabled = false;
       bool m_isPumpSlowStartStopEnabled = false;
       bool m_isPumpReversalEnabled = false;
+      bool m_isMultiButtonEnabled = false;
 
       // bool m_isDispenseDone; // XXX: Remove later.
       // bool m_isStill;

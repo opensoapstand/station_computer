@@ -64,9 +64,11 @@ DF_ERROR stateDispenseInit::onAction()
 {
 
     DF_ERROR e_ret = OK;
-    this->productDispensers[dispenser_index].loadEmptyContainerDetectionEnabledFromDb();
-    this->productDispensers[dispenser_index].loadPumpRampingEnabledFromDb();
-    this->productDispensers[dispenser_index].loadPumpReversalEnabledFromDb();
+    // this->productDispensers[dispenser_index].loadEmptyContainerDetectionEnabledFromDb();
+    // this->productDispensers[dispenser_index].loadPumpRampingEnabledFromDb();
+    // this->productDispensers[dispenser_index].loadPumpReversalEnabledFromDb();
+    // this->productDispensers[dispenser_index].loadMultiDispenseButtonEnabledFromDb();
+    this->productDispensers[dispenser_index].loadGeneralProperties();
 
     debugOutput::sendMessage("Chosen dispenser slot: " +
                                  std::to_string(productDispensers[dispenser_index].getSlot()) +

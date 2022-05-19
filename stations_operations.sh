@@ -170,30 +170,32 @@ scp_transfer_db () {
     # echo $choice_index
 
     # menu index is linked to station number
-    station_number=$(($choice_index + 1))
+    # station_number=$(($choice_index + 1))
     # echo $station_number
 
-    station_name=$(printf "SS-%07d" $station_number)
+    station_id="${station_ids[$choice_index]}"
+   
     # echo $station_name
-    port=$(printf "43%03d" $station_number)
+    # port=$(printf "43%03d" $station_number)
+    port="${station_ports[$choice_index]}"
     # echo $port
 
     if [[ $1 = "to_aws" ]]
     then
         # run command https://stackoverflow.com/questions/2005192/how-to-execute-a-bash-command-stored-as-a-string-with-quotes-and-asterisk
-        cmd=( scp -P $port df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout.db Stations/$station_name )
+        cmd=( scp -P $port df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout.db Stations/$station_id )
         printf -v cmd_str '%q ' "${cmd[@]}"
         echo "Lined up command: "
         echo "$cmd_str"
         continu_or_exit
-        mv Stations/$station_name/drinkfill-sqlite_newlayout.db Stations/$station_name/drinkfill-sqlite_newlayout_bkp.db
+        mv Stations/$station_id/drinkfill-sqlite_newlayout.db Stations/$station_id/drinkfill-sqlite_newlayout_bkp.db
         # printf -v cmd_str '%q ' "${cmd[@]}"
         "${cmd[@]}"
        
     elif [[ $1 = "to_unit" ]]
     then
         # run command https://stackoverflow.com/questions/2005192/how-to-execute-a-bash-command-stored-as-a-string-with-quotes-and-asterisk
-        cmd=( scp -P $port Stations/$station_name/drinkfill-sqlite_newlayout.db df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout.db )
+        cmd=( scp -P $port Stations/$station_id/drinkfill-sqlite_newlayout.db df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout.db )
         printf -v cmd_str '%q ' "${cmd[@]}"
         echo "Lined up command: "        
         echo "$cmd_str"
@@ -206,7 +208,7 @@ scp_transfer_db () {
     then
         # run command https://stackoverflow.com/questions/2005192/how-to-execute-a-bash-command-stored-as-a-string-with-quotes-and-asterisk
         cmd1=( scp -P $port df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout.db Stations/$2/drinkfill-sqlite_newlayout_fromUnit.db )
-        cmd2=( scp -P $3 Stations/$2/drinkfill-sqlite_newlayout_fromUnit.db df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout_$station_name.db )
+        cmd2=( scp -P $3 Stations/$2/drinkfill-sqlite_newlayout_fromUnit.db df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout_$station_id.db )
         printf -v cmd1_str '%q ' "${cmd1[@]}"
         printf -v cmd2_str '%q ' "${cmd2[@]}"
         
@@ -223,7 +225,7 @@ scp_transfer_db () {
     elif [[ $1 = "from_dev" ]]
     then
         # run command https://stackoverflow.com/questions/2005192/how-to-execute-a-bash-command-stored-as-a-string-with-quotes-and-asterisk
-        cmd1=( scp -P $3 df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout_$station_name.db Stations/$2/drinkfill-sqlite_newlayout_toUnit.db )
+        cmd1=( scp -P $3 df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout_$station_id.db Stations/$2/drinkfill-sqlite_newlayout_toUnit.db )
         cmd2=( scp -P $port Stations/$2/drinkfill-sqlite_newlayout_toUnit.db df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout.db )
         printf -v cmd1_str '%q ' "${cmd1[@]}"
         printf -v cmd2_str '%q ' "${cmd2[@]}"
@@ -246,7 +248,7 @@ scp_transfer_db () {
 
 echo 'At AWS: Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 PS3='Choose option(digit + enter):'
-options=("Station log in" "Show Station Descriptions" "Stations status" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Quit")
+options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB")
 select opt in "${options[@]}"
 do
     case $opt in

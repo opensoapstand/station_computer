@@ -11,7 +11,7 @@
 echo 'Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 
 PS3='Choose option(digit + enter):'
-options=( "Station info" "AWS log in" "AWS run station operations" "upload to AWS home folder" "upload to AWS station folder" "Quit")
+options=("Quit" "Station info" "AWS log in" "AWS run station operations" "upload to AWS home folder" "upload to AWS station folder")
 select opt in "${options[@]}"
 do
     case $opt in

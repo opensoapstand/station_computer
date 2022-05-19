@@ -51,7 +51,7 @@ public:
     unsigned short getPumpSpeed(void);
     bool getDispenseButtonStateDebounced(void);
     bool getDispenseButtonEdge(void);
-    void setDispenseButtonLight(bool poweron);
+    void setSingleDispenseButtonLight(bool poweron);
     void setup(void);
     void virtualButtonPressHack(void);
     void virtualButtonUnpressHack(void);

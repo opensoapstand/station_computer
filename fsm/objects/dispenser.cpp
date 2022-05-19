@@ -58,7 +58,7 @@ DF_ERROR dispenser::setup()
     // debugOutput::sendMessage("ewfiwej ", MSG_INFO);
 
 #else
-    the_8344->setDispenseButtonLight(false);
+    the_8344->setSingleDispenseButtonLight(false);
 #endif
 
     for (int i = 0; i < NUM_SOLENOID; i++)
@@ -164,11 +164,11 @@ void dispenser::setAllDispenseButtonLightsOff()
 {
     for (int slot = 1; slot < 5; slot++)
     {
-        setDispenseButtonLight(slot, false);
+        setMultiDispenseButtonLight(slot, false);
     }
 }
 
-void dispenser::setDispenseButtonLight(int slot, bool enableElseDisable)
+void dispenser::setMultiDispenseButtonLight(int slot, bool enableElseDisable)
 {
     // output has to be set low for light to be on.
     // m_pDispenseButton4[0]->test();
@@ -253,8 +253,11 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 
     resetVolumeDispensed();
 
-    // setAllDispenseButtonLightsOff();
-    setDispenseButtonLight(getSlot(), true);
+#ifdef ENABLE_MULTI_BUTTON
+    setAllDispenseButtonLightsOff();
+    setMultiDispenseButtonLight(getSlot(), true);
+
+#endif
 
     // m_nVolumeDispensedPreviously = 0;
     // m_nVolumeDispensedSinceLastPoll = 0;
@@ -271,7 +274,9 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 }
 DF_ERROR dispenser::stopDispense()
 {
+#ifdef ENABLE_MULTI_BUTTON
     setAllDispenseButtonLightsOff();
+#endif
     //     DF_ERROR e_ret = ERROR_BAD_PARAMS;
     //     // the_8344->setPumpsDisableAll();
     //     // debugOutput::sendMessage("All Pumps disabled", MSG_INFO);
@@ -517,6 +522,13 @@ uint64_t dispenser::getButtonPressedCurrentPressMillis()
 // Reverse pump: Turn forward pin LOW - Reverse pin HIGH
 DF_ERROR dispenser::setPumpDirectionReverse()
 {
+    DF_ERROR e_ret = OK;
+    if (!getPumpReversalEnabled())
+    {
+        debugOutput::sendMessage("Pump reversal not allowed. Will not execute command.", MSG_WARNING);
+
+        return e_ret;
+    }
     debugOutput::sendMessage("Pump direction: reverse", MSG_INFO);
     the_8344->setPumpDirection(false);
 }
@@ -533,10 +545,8 @@ DF_ERROR dispenser::setPumpsDisableAll()
 
 void dispenser::reversePumpForSetTimeMillis(int millis)
 {
-
     if (getPumpReversalEnabled())
     {
-
         if (millis > 0)
         {
             // get volume before
@@ -638,7 +648,15 @@ DF_ERROR dispenser::pumpSlowStart(bool forwardElseReverse)
     slowStartMostRecentIncreaseEpoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
     uint8_t target_pwm = (uint8_t)(m_pDispensedProduct->getPWM());
-    the_8344->setPumpDirection(forwardElseReverse);
+
+    if (forwardElseReverse)
+    {
+        setPumpDirectionForward();
+    }
+    else
+    {
+        setPumpDirectionReverse();
+    }
     usleep(10000); // make sure direction is set well
     setPumpEnable();
     if (SLOW_START_INCREASE_PERIOD_MILLIS == 0 || !getPumpSlowStartStopEnabled())

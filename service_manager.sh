@@ -21,7 +21,7 @@
 ./status_services.sh
 
 PS3='Please enter your choice: '
-options=("Station info" "Status" "Start" "Stop" "Restart" "Run Screenshotbot" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data" "(Re)load services from production" "Setup rtunnel" "Quit")
+options=("Station info" "Status" "Start" "Stop" "Restart" "Screenshotbot execute" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data" "(Re)load services from production" "Setup rtunnel" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -45,7 +45,7 @@ do
             sudo systemctl stop ui_soapstand
             sudo systemctl stop controller_soapstand
             ;;
-        "Run Screenshotbot")
+        "Screenshotbot execute")
             ./screenshotbot.sh
             ;;
         "Restart")

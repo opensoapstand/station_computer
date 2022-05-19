@@ -81,7 +81,7 @@ public:
       DF_ERROR setPumpEnable();
       DF_ERROR setPumpPWM(uint8_t value, bool enableLog);
       DF_ERROR preparePumpForDispenseTrigger();
-      void setDispenseButtonLight(int slot, bool enableElseDisable);
+      void setMultiDispenseButtonLight(int slot, bool enableElseDisable);
       void setAllDispenseButtonLightsOff();
       void reversePumpForSetTimeMillis(int millis);
 

@@ -370,7 +370,7 @@ void dsed8344::setPCA9534Output(int posIndex, bool onElseOff)
 
     SendByte(PCA9534_ADDRESS, 0x01, reg_value);
 }
-void dsed8344::setDispenseButtonLight(bool poweron)
+void dsed8344::setSingleDispenseButtonLight(bool poweron)
 
 {
     setPCA9534Output(6, poweron);
@@ -387,7 +387,7 @@ void dsed8344::setDispenseButtonLight(bool poweron)
     // }
     // SendByte(PCA9534_ADDRESS, 0x01, reg_value);
 
-} // End of setDispenseButtonLight()
+} // End of setSingleDispenseButtonLight()
 
 ///////////////////////////////////////////////////////////////////////////
 // Private methods

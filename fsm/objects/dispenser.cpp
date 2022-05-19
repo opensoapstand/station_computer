@@ -852,7 +852,7 @@ void dispenser::loadPumpRampingEnabledFromDb()
 #else
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
-    string sql_string = "SELECT has_pump_ramping FROM machine";
+    string sql_string = "SELECT enable_pump_ramping FROM machine";
     /* Create SQL statement for transactions */
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);

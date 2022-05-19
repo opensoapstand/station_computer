@@ -575,14 +575,66 @@ void pagePayment::idlePaymentTimeout()
 void pagePayment::stayAliveLogon()
 {
     com.flushSerial();
+    
     /*logon packet to send*/
-    pktToSend = paymentPacket.ppPosGetConfigPkt(StatusType::GetLanStatus);
+    pktToSend = paymentPacket.ppPosGetConfigPkt(StatusType::GetLanInfo);
     if (sendToUX410())
     {
         waitForUX410();
     }
 
     pktResponded.clear();
+
+    com.flushSerial();
+    
+    /*logon packet to send*/    
+
+    pktToSend = paymentPacket.createTestPacket(0x00);
+    if (sendToUX410())
+    {
+        waitForUX410();
+    }
+
+    pktResponded.clear();
+
+    com.flushSerial();
+    /*logon packet to send*/
+//     uint8_t sendData[] = {0x02, 0x00,0x04,0x02,0x0D,0x00,0x01,0x03,0x0A };
+//     int n = sizeof(sendData) / sizeof(sendData[0]);
+//     pktToSend.clear();
+//     std::cout<< "custom array" << endl;
+//     // // pktToSend.assign(std::begin(sendData), std::end(sendData));
+//     //     for (int i: sendData) {
+//     //     std::cout << i << " ";
+//     // }
+//     // std::vector<uint8_t> dest(sendData, sendData + n);
+//     // for (int i=0; i<dest.size(); i++){
+//     //     pktToSend.push_back(dest[i]);
+//     //     std::cout<< dest[i];
+
+//     // }
+//     std::cout<< "Size  "<< n << endl;
+
+//     std::cout<< "Array sent to UX" << endl;
+
+//    for (int i: sendData) {
+//         pktToSend.push_back(i);
+//     }
+//     for (int j: pktToSend) {
+//         std::cout<< j << "  ";
+//         qDebug()<< j;
+//     }
+    
+//     if (sendToUX410())
+//     {
+//         waitForUX410();
+//     }
+    
+//     pktResponded.clear();
+
+//     com.flushSerial();
+    
+    
 }
 
 void pagePayment::batchClose()
@@ -660,9 +712,10 @@ bool pagePayment::tap_init()
         sleep(1);
     }
 
-    // This is super shitty - there must be a better way to find out when the green light starts flashing on the UX420
-    sleep(35);
-
+    // This is super shitty - there must be a better way to find out when the green light starts flashing on the UX420 but it was 35
+    sleep(5);
+    stayAliveLogon();
+    cout << "_----_-----__------_-----";
     /*Cancel any previous payment*/
     cout << "Sending Cancel payment packet..." << endl;
     pktToSend = paymentPacket.purchaseCancelPacket();
@@ -678,6 +731,7 @@ bool pagePayment::tap_init()
         return false;
     }
     com.flushSerial();
+    cout << "-----------------------------------------------" << endl;
 
     /*batch close packet to send*/
     cout << "Sending Batch close packet..." << endl;
@@ -694,6 +748,7 @@ bool pagePayment::tap_init()
         return false;
     }
     com.flushSerial();
+    cout << "-----------------------------------------------" << endl;
 
     /*logon packet to send*/
     cout << "Sending Logon packet..." << endl;
@@ -710,6 +765,7 @@ bool pagePayment::tap_init()
         return false;
     }
     com.flushSerial();
+    cout << "-----------------------------------------------" << endl;
 
     /*getConfiguration packet to send*/
     cout << "Sending Merchant Name query..." << endl;
@@ -728,6 +784,7 @@ bool pagePayment::tap_init()
         return false;
     }
     com.flushSerial();
+    cout << "-----------------------------------------------" << endl;
 
     /*getConfiguration packet to send*/
     cout << "Sending Merchant Address query..." << endl;
@@ -746,6 +803,7 @@ bool pagePayment::tap_init()
         return false;
     }
     com.flushSerial();
+    cout << "-----------------------------------------------" << endl;
 
     /*getConfiguration packet to send*/
     cout << "Sending PTID query..." << endl;

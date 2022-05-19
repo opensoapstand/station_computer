@@ -105,7 +105,7 @@ std::vector<uint8_t> mCommunication::readPacket(){
         pktRead.reserve(uint(readSize));
         for (long i = 0; i < readSize; i++){ //store read bytes into vector
             pktRead.push_back(buffer[i]);
-            std::cout << "buffer[" << i << "i] = " << int(buffer[i]) << " \n";
+            // std::cout << "buffer[" << i << "] = " << int(buffer[i]) << " \n";
         }
 
 //        std::cout << "buffer1 + buffer2 = " << (int(buffer[1]) + int(buffer[2])) << "\n" << "readSize-3 = " << readSize-0x05 << "\n" << "readSize = " << readSize << "\n";
@@ -125,7 +125,7 @@ std::vector<uint8_t> mCommunication::readPacket(){
                 pktRead.reserve(uint(readSize2));
                 for (long i = 0; i < readSize2; i++){ //store read bytes into vector
                     pktRead.push_back(buffer[i]);
-                    std::cout << "buffer[" << i << "i] = " << int(buffer[i]) << " \n";
+                    // std::cout << "buffer[" << i << "i] = " << int(buffer[i]) << " \n";
                 }
         }
 
@@ -146,8 +146,8 @@ std::vector<uint8_t> mCommunication::readForAck()
     uint8_t buffer[1] = {};
     long int readSize = -1;
     std::vector<uint8_t> pktRead;
-    //tcflush(fd, TCIOFLUSH);
-    //tcflush(fd, TCIOFLUSH);
+    // tcflush(fd, TCIOFLUSH);
+    // tcflush(fd, TCIOFLUSH);
     int readcount = 0;
 
     while (readcount < 3){
@@ -158,7 +158,7 @@ std::vector<uint8_t> mCommunication::readForAck()
         if (readSize != -1){
             break;
         }
-        usleep(500000);
+        usleep(50000);
     }
 
 

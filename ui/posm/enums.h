@@ -245,7 +245,8 @@ enum API_ID
     PpPosSafInitialize   = 0x0005,
     PpPosSetComPort      = 0x0006,
     PpPosGetMerchantData = 0x0007,
-    PpDvcReset           = 0x0092
+    PpDvcReset           = 0x0092,
+    PpDummy              = 0x9999
 };
 
 //Status Type for the PpPOsStatus command

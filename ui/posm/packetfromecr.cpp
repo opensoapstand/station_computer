@@ -117,8 +117,11 @@ std::vector<uint8_t> packetFromECR::constructPartialPacket(uint len)
     pkt.push_back(currentPacket.dataLen[1]); i++;
     pkt.push_back(currentPacket.parentID); i++;
     pkt.push_back(currentPacket.classID);  i++;
+    if(currentPacket.APIID[0]!=0x99){
+
     pkt.push_back(currentPacket.APIID[0]); i++;
     pkt.push_back(currentPacket.APIID[1]); i++;
+    }
 
     int j = 0;
     for(; i < len; i++)

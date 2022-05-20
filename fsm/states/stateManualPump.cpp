@@ -43,7 +43,6 @@ string stateManualPump::toString()
    return STRING_STATE_MANUAL_PUMP;
 }
 
-// Sets a looped Idle state
 DF_ERROR stateManualPump::onEntry()
 {
    m_state_requested = STATE_MANUAL_PUMP;
@@ -57,6 +56,9 @@ DF_ERROR stateManualPump::onEntry()
    productDispensers[m_active_pump_index].setPumpPWM(255, true);
 
    isFlowTest = false;
+   isCyclicTesting = false;
+   iscustomVolumeDispenseTest = false;
+   isCyclicTestingPumpOn = false;
    return e_ret;
 }
 
@@ -144,7 +146,7 @@ DF_ERROR stateManualPump::onAction()
       else if ('6' == m_pMessaging->getAction())
       {
          isCyclicTesting = !isCyclicTesting;
-         debugOutput::sendMessage("Toggle cyclic pump test" + to_string(isCyclicTesting), MSG_INFO);
+         debugOutput::sendMessage("Toggle cyclic pump test. Enabled?: " + to_string(isCyclicTesting), MSG_INFO);
 
          if (isCyclicTesting)
          {
@@ -175,11 +177,11 @@ DF_ERROR stateManualPump::onAction()
             using namespace std::chrono;
             startFlowTestMillis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
             productDispensers[m_active_pump_index].setPumpEnable();
-            debugOutput::sendMessage("Flow measuring test. Keep dispense button pushed during test. Will display test data in csv format.", MSG_INFO);
+            debugOutput::sendMessage("Flow measuring test enabled: True. Can be combined with cyclic test, if not, keep dispense button pressed. Will display test data in csv format.", MSG_INFO);
          }
          else
          {
-            debugOutput::sendMessage("End of flow measuring.", MSG_INFO);
+            debugOutput::sendMessage("Flow measuring test enabled: False.", MSG_INFO);
             productDispensers[m_active_pump_index].setPumpsDisableAll();
          }
       }

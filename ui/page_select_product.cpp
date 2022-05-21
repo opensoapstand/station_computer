@@ -174,20 +174,22 @@ void page_select_product::displayProducts()
 
     for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
+        uint8_t slot = i+1;
 
         // display product picture
         selectProductPhotoLabels[i]->setStyleSheet("border: 1px solid black;");
-        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(i + 1));
+        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(slot));
 
-        qDebug() << "db product details:";
+        qDebug() << "db (re)load product details:";
         DbManager db(DB_PATH);
-        product_type = db.getProductType(i + 1);
-        product_slot_enabled = db.getSlotEnabled(i + 1);
-        product_sold_out = !(db.isProductVolumeInContainer(i + 1));
-        product_status_text = db.getStatusText(i + 1);
+        product_type = db.getProductType(slot);
+        product_slot_enabled = db.getSlotEnabled(slot);
+        product_sold_out = !(db.isProductVolumeInContainer(slot));
+        product_status_text = db.getStatusText(slot);
         db.closeDB();
+        qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << ", product set as not available?: " << product_sold_out << " Status text: " << product_status_text;
 
-        product_name = p_page_idle->currentProductOrder->getProductName(i + 1);
+        product_name = p_page_idle->currentProductOrder->getProductName(slot);
 
         selectProductNameLabels[i]->setText(product_name);
         selectProductNameLabels[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
@@ -222,7 +224,7 @@ void page_select_product::displayProducts()
         }
         else
         {
-            icon_path = "Product/type/for/icon/not/found.aiaiai";
+            icon_path = "Product/type/for/icon/not/found.aiaiai. Is the slot set correctly in database?";
             type_text = "UNAVAILABLE";
         }
         p_page_idle->addPictureToLabel(selectProductIconLabels[i], icon_path);

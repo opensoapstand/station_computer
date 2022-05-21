@@ -59,6 +59,12 @@ DF_ERROR stateManualPump::onEntry()
    isCyclicTesting = false;
    iscustomVolumeDispenseTest = false;
    isCyclicTestingPumpOn = false;
+   triggerOutputData = false;
+
+   using namespace std::chrono;
+   uint64_t millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+   most_recent_data_output_epoch = millis_epoch;
+
    return e_ret;
 }
 
@@ -116,6 +122,8 @@ DF_ERROR stateManualPump::onAction()
          int val = m_pMessaging->getCommandValue();
          debugOutput::sendMessage("Value is pump number 1,2,3 or 4 :" + to_string((uint8_t)val), MSG_INFO);
          m_active_pump_index = ((uint8_t)val) - 1;
+
+         productDispensers[m_active_pump_index].resetVolumeDispensed();
       }
       else if (ACTION_MANUAL_PUMP_PWM_SET == m_pMessaging->getAction())
       {
@@ -138,6 +146,7 @@ DF_ERROR stateManualPump::onAction()
 
       else if ('5' == m_pMessaging->getAction())
       {
+         productDispensers[m_active_pump_index].resetVolumeDispensed();
          dispenseButtonValueMemory = false;
          iscustomVolumeDispenseTest = !iscustomVolumeDispenseTest;
          debugOutput::sendMessage("Custom volume dispense pump model test active? : " + to_string(iscustomVolumeDispenseTest), MSG_INFO);
@@ -145,6 +154,7 @@ DF_ERROR stateManualPump::onAction()
 
       else if ('6' == m_pMessaging->getAction())
       {
+         productDispensers[m_active_pump_index].resetVolumeDispensed();
          isCyclicTesting = !isCyclicTesting;
          debugOutput::sendMessage("Toggle cyclic pump test. Enabled?: " + to_string(isCyclicTesting), MSG_INFO);
 
@@ -162,6 +172,7 @@ DF_ERROR stateManualPump::onAction()
       }
       else if ('8' == m_pMessaging->getAction())
       {
+         productDispensers[m_active_pump_index].resetVolumeDispensed();
          debugOutput::sendMessage("Do pump test", MSG_INFO);
          pumpTest();
       }
@@ -184,6 +195,7 @@ DF_ERROR stateManualPump::onAction()
             debugOutput::sendMessage("Flow measuring test enabled: False.", MSG_INFO);
             productDispensers[m_active_pump_index].setPumpsDisableAll();
          }
+         productDispensers[m_active_pump_index].resetVolumeDispensed();
       }
 
       else
@@ -212,10 +224,26 @@ DF_ERROR stateManualPump::onAction()
              MSG_INFO);
       }
    }
+
+   using namespace std::chrono;
+   uint64_t millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+   if (most_recent_data_output_epoch + MOTOR_TEST_DATA_OUTPUT_INTERVA_MILLIS < millis_epoch)
+   {
+debugOutput::sendMessage("output trigger..", MSG_INFO);
+      triggerOutputData = true;
+      most_recent_data_output_epoch = millis_epoch;
+
+   }
+   else
+   {
+      triggerOutputData = false;
+   }
+
    if (isCyclicTesting)
    {
+
       pumpCyclicTest();
-      if (isFlowTest)
+      if (isFlowTest && isCyclicTestingPumpOn)
       {
          pumpFlowTest();
       }
@@ -233,20 +261,24 @@ DF_ERROR stateManualPump::onAction()
 
       if (productDispensers[m_active_pump_index].getDispenseButtonValue())
       {
-         debugOutput::sendMessage("----------------Dispense button pressed.----------", MSG_INFO);
 
          double volume = productDispensers[m_active_pump_index].getVolumeDispensed();
-         debugOutput::sendMessage("Dispensed volume [total]: " + to_string(volume), MSG_INFO);
 
          // instant flow rate
          double flowRate = productDispensers[m_active_pump_index].getInstantFlowRate();
-         debugOutput::sendMessage("Dispense flowRate [V/s]: " + to_string(flowRate), MSG_INFO);
 
          // flow rate windowed avg
          productDispensers[m_active_pump_index].updateRunningAverageWindow();
          Time_val avg_1s = productDispensers[m_active_pump_index].getAveragedFlowRate(1000);
+
+         if (triggerOutputData)
+         {
+         debugOutput::sendMessage("----------------Dispense button pressed.----------", MSG_INFO);
+         debugOutput::sendMessage("Dispensed volume [total]: " + to_string(volume), MSG_INFO);
+         debugOutput::sendMessage("Dispense flowRate [V/s]: " + to_string(flowRate), MSG_INFO);
          debugOutput::sendMessage("Dispense flowRate 1s avg [V/s]: " + to_string(avg_1s.value), MSG_INFO);
-         usleep(500000);
+         }
+         // usleep(500000);
       }
 
       if (productDispensers[m_active_pump_index].isPumpEnabled() && productDispensers[m_active_pump_index].getDispenseButtonValue())
@@ -327,47 +359,33 @@ DF_ERROR stateManualPump::customVolumeDispenseTest()
 
 DF_ERROR stateManualPump::pumpFlowTest()
 {
-   // double volume = productDispensers[m_active_pump_index].getVolumeDispensed();
-   // debugOutput::sendMessage("Dispense flowRate test. millis/totalvolumne/avgSinceLastcall/02s avg/05s avg/1s avg, " + to_string(volume),MSG_INFO);
-   // debugOutput::sendMessage("volume per tick " + to_string(productDispensers[m_active_pump_index].getProduct()->getVolumePerTick() ), MSG_INFO);
+   // if (productDispensers[m_active_pump_index].getDispenseButtonValue() & productDispensers[m_active_pump_index].isPumpEnabled())
+   // {
 
-   if (productDispensers[m_active_pump_index].getDispenseButtonValue() & productDispensers[m_active_pump_index].isPumpEnabled())
+   // instant flow rate
+   double flowRate = productDispensers[m_active_pump_index].getInstantFlowRate();
+
+   // flow rate windowed avg
+   productDispensers[m_active_pump_index].updateRunningAverageWindow();
+   Time_val avg_02s = productDispensers[m_active_pump_index].getAveragedFlowRate(200);
+   Time_val avg_05s = productDispensers[m_active_pump_index].getAveragedFlowRate(500);
+   Time_val avg_1s = productDispensers[m_active_pump_index].getAveragedFlowRate(1000);
+
+   double totalVolume = productDispensers[m_active_pump_index].getVolumeDispensed();
+   if (triggerOutputData)
    {
 
-      // instant flow rate
-      double flowRate = productDispensers[m_active_pump_index].getInstantFlowRate();
-
-      // flow rate windowed avg
-
-      productDispensers[m_active_pump_index].updateRunningAverageWindow();
-      Time_val avg_02s = productDispensers[m_active_pump_index].getAveragedFlowRate(200);
-      Time_val avg_05s = productDispensers[m_active_pump_index].getAveragedFlowRate(500);
-      Time_val avg_1s = productDispensers[m_active_pump_index].getAveragedFlowRate(1000);
-
-      double totalVolume = productDispensers[m_active_pump_index].getVolumeDispensed();
-      debugOutput::sendMessage("Dispense flowRate test. millis/totalvolumne/avgSinceLastcall/02s avg/05s avg/1s avg, " +
-                                   // debugOutput::sendMessage("Dispense flowRate test. millis/instant/1s/5s avg, " +
+      debugOutput::sendMessage("Dispense flowRate test. millis/totalvolumne/avgSinceLastcall/01s avg/02s avg/5s avg, " +
                                    to_string(avg_1s.time_millis - startFlowTestMillis) + "," +
                                    to_string(totalVolume) + "," +
                                    to_string(flowRate) + "," +
+                                   to_string(avg_1s.value) + "," +
                                    to_string(avg_02s.value) + "," +
-                                   to_string(avg_05s.value) + "," +
-                                   to_string(avg_1s.value)
-                               //+ "," + to_string(avg_5s.value)
-                               ,
-                               MSG_INFO);
-
-      // debugOutput::sendMessage("Dispense flowRate test. millis/totalvolumne/avgSinceLastcall/1s avg, " +
-      //                              // debugOutput::sendMessage("Dispense flowRate test. millis/instant/1s/5s avg, " +
-      //                              to_string(avg_1s.time_millis - startFlowTestMillis) + "," +
-      //                              to_string(totalVolume) + "," +
-      //                              to_string(flowRate) + "," +
-      //                              to_string(avg_1s.value)
-      //                          //+ "," + to_string(avg_5s.value)
-      //                          ,
-      //                          MSG_INFO);
+                                   to_string(avg_05s.value)
+                               ,MSG_INFO);
    }
-   usleep(50000);
+   // }
+   //usleep(50000);
 }
 
 DF_ERROR stateManualPump::pumpCyclicTest()

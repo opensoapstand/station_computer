@@ -1508,8 +1508,6 @@ QString DbManager::getProductType(int slot)
         while (product_type_query.next())
         {
             product_type_string = product_type_query.value(0).toString();
-
-            // qDebug() << "Product: " << product_name << endl;
         }
     }
     return product_type_string;

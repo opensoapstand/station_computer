@@ -235,7 +235,7 @@ DF_ERROR dispenser::setProduct(product *product)
 DF_ERROR dispenser::loadGeneralProperties()
 {
 
-    debugOutput::sendMessage("Load general properties9999999", MSG_INFO);
+    debugOutput::sendMessage("Load general properties:", MSG_INFO);
     loadEmptyContainerDetectionEnabledFromDb();
     loadPumpRampingEnabledFromDb();
     loadPumpReversalEnabledFromDb();
@@ -249,8 +249,7 @@ DF_ERROR dispenser::loadGeneralProperties()
     {
         the_8344->setSingleDispenseButtonLight(false);
     }
-    
-    debugOutput::sendMessage("END Load general properties9999999", MSG_INFO);
+    resetVolumeDispensed();
 }
 
 // Reset values onEntry()

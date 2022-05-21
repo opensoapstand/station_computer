@@ -47,6 +47,7 @@ private:
 
     uint64_t startFlowTestMillis;
 
+    uint64_t most_recent_data_output_epoch;
     uint64_t startDispensingEpochMillis;
     uint64_t startRetractingEpochMillis;
     bool isDispensing=false;
@@ -55,6 +56,8 @@ private:
     int pump_test_cycle_count;
     bool isCyclicTesting;
     bool isCyclicTestingPumpOn;
+
+    bool triggerOutputData;
 
     int m_active_pump_index;
     uint64_t cyclicTestPeriodStartEpochMillis;

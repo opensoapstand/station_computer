@@ -34,6 +34,7 @@
 #define DB_PATH "/home/df-admin/production/db/drinkfill-sqlite_newlayout.db"
 #endif
 
+#define MOTOR_TEST_DATA_OUTPUT_INTERVA_MILLIS 1000
 #define CYCLIC_PUMP_TEST_ON_CYCLE_MILLIS 30000
 #define CYCLIC_PUMP_TEST_OFF_CYCLE_MILLIS 30000
 

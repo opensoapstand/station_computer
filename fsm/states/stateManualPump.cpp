@@ -229,7 +229,6 @@ DF_ERROR stateManualPump::onAction()
    uint64_t millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
    if (most_recent_data_output_epoch + MOTOR_TEST_DATA_OUTPUT_INTERVA_MILLIS < millis_epoch)
    {
-debugOutput::sendMessage("output trigger..", MSG_INFO);
       triggerOutputData = true;
       most_recent_data_output_epoch = millis_epoch;
 
@@ -375,7 +374,7 @@ DF_ERROR stateManualPump::pumpFlowTest()
    if (triggerOutputData)
    {
 
-      debugOutput::sendMessage("Dispense flowRate test. millis/totalvolumne/avgSinceLastcall/01s avg/02s avg/5s avg, " +
+      debugOutput::sendMessage("millis/totalvol/avgSinceLastcall/avg1s/avg2s/avg5s, " +
                                    to_string(avg_1s.time_millis - startFlowTestMillis) + "," +
                                    to_string(totalVolume) + "," +
                                    to_string(flowRate) + "," +

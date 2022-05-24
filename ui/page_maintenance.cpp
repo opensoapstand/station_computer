@@ -109,6 +109,9 @@ void page_maintenance::showEvent(QShowEvent *event)
     DbManager db(DB_PATH);
     ui->enable_empty_container_checkBox->setChecked(db.getEmptyContainerDetectionEnabled());
     ui->enable_pump_ramping_checkBox->setChecked(db.getPumpRampingEnabled());
+    // qDebug()<<"ramping?"<<db.getPumpRampingEnabled();
+    // ui->enable_pump_ramping_checkBox->setChecked(true);
+
     ui->product1_label->setText(db.getProductName(1));
     ui->product2_label->setText(db.getProductName(2));
     ui->product3_label->setText(db.getProductName(3));
@@ -539,22 +542,28 @@ void page_maintenance::on_printer_check_status_clicked()
 
 void page_maintenance::on_enable_pump_ramping_checkBox_clicked(bool checked)
 {
+   //qDebug() << "test ramp clicked" << checked;
     DbManager db(DB_PATH);
+    // qDebug() << "test empty db: " << db.getPumpRampingEnabled();
     if (checked != db.getPumpRampingEnabled())
     {
         qDebug() << "Write to db: Pump ramping enabled?" << checked;
-        ui->enable_pump_ramping_checkBox->setChecked(db.setPumpRampingEnabled(checked));
+        db.setPumpRampingEnabled(checked);
+        ui->enable_pump_ramping_checkBox->setChecked(db.getPumpRampingEnabled());
     }
     db.closeDB();
 }
 
 void page_maintenance::on_enable_empty_container_checkBox_clicked(bool checked)
 {
+    // qDebug() << "test empty clicked" << checked;
     DbManager db(DB_PATH);
+    // qDebug() << "test empty db: " << db.getEmptyContainerDetectionEnabled();
     if (checked != db.getEmptyContainerDetectionEnabled())
     {
         qDebug() << "Empty container detection enabled?" << checked;
-        ui->enable_empty_container_checkBox->setChecked(db.setEmptyContainerDetectionEnabled(checked));
+        db.setEmptyContainerDetectionEnabled(checked);
+        ui->enable_empty_container_checkBox->setChecked(db.getEmptyContainerDetectionEnabled());
     }
     db.closeDB();
 }

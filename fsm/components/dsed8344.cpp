@@ -315,6 +315,9 @@ void dsed8344::dispenseButtonRefresh()
     uint64_t now_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
     bool state = getDispenseButtonState();
+    // if (state){
+    //     debugOutput::sendMessage("bbbutuuotnt", MSG_INFO);
+    // }
 
     if (state != dispenseButtonStateMemory)
     {

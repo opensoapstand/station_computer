@@ -100,6 +100,7 @@ public:
       void subtractFromVolumeDispensed(double volume_to_distract);
       double getVolumeDispensed();
       void resetVolumeDispensed();
+      void initFlowRateCalculation();
       Time_val getVolumeDispensedNow();
       double getVolumeDeltaAndReset();
 

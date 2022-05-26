@@ -751,12 +751,7 @@ DF_ERROR dispenser::startDispense()
 
     // preparePumpForDispenseTrigger();
 
-    flowRateBufferIndex = 0;
-    for (uint16_t i = 0; i < RUNNING_AVERAGE_WINDOW_LENGTH; i++)
-    {
-        flowRateBuffer[i].time_millis = MILLIS_INIT_DUMMY;
-        flowRateBuffer[i].value = 0;
-    }
+    initFlowRateCalculation();
 
     return e_ret = OK;
 }
@@ -913,6 +908,14 @@ double dispenser::getVolumeDeltaAndReset()
     return deltaVolume;
 }
 
+void dispenser::initFlowRateCalculation(){
+     flowRateBufferIndex = 0;
+    for (uint16_t i = 0; i < RUNNING_AVERAGE_WINDOW_LENGTH; i++)
+    {
+        flowRateBuffer[i].time_millis = MILLIS_INIT_DUMMY;
+        flowRateBuffer[i].value = 0;
+    }
+}
 double dispenser::getInstantFlowRate()
 {
 
@@ -987,6 +990,7 @@ Time_val dispenser::getAveragedFlowRate(uint64_t window_length_millis)
     }
 
     uint64_t delta_t = most_recent_millis - earliest_millis;
+    // WARNING: check here if buffer length is enough to accomodate for requested length. 
     // debugOutput::sendMessage("Avg flow rate delta t: " + to_string(delta_t), MSG_INFO);
     // debugOutput::sendMessage("Avg flow rate most recent t: " + to_string(most_recent_millis), MSG_INFO);
     // debugOutput::sendMessage("Avg flow rate earliest t: " + to_string(earliest_millis), MSG_INFO);

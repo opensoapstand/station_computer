@@ -17,7 +17,8 @@ FORMS += \
     page_maintenance_dispenser.ui \
     page_init.ui \
     page_help.ui \
-    keyboard.ui
+    keyboard.ui \
+    page_transactions.ui
 
 HEADERS += \
     dfuicommthread.h \
@@ -45,7 +46,8 @@ HEADERS += \
     page_maintenance_dispenser.h \
     page_error_wifi.h \
     page_init.h \
-    page_help.h
+    page_help.h \
+    page_transactions.h
 
 SOURCES += \
     dfuicommthread.cpp \
@@ -73,7 +75,8 @@ SOURCES += \
     page_maintenance_dispenser.cpp \
     page_init.cpp \
     page_help.cpp \
-    ../library/qr/qrcodegen.cpp
+    ../library/qr/qrcodegen.cpp \
+    page_transactions.cpp
 
 RESOURCES += \
     src.qrc

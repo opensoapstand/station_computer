@@ -55,7 +55,7 @@ page_error_wifi::~page_error_wifi()
 
 void page_error_wifi::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< PPPage Enter: Wifi >>>>>>>>>";
+    qDebug() << "<<<<<<< Page Enter: (Wifi) error >>>>>>>>>";
     
     QWidget::showEvent(event);
 
@@ -65,15 +65,20 @@ void page_error_wifi::showEvent(QShowEvent *event)
     // palette.setBrush(QPalette::Background, background);
     // this->setPalette(palette);
 
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_WIFI_ERROR_BACKGROUND_PATH);
+    // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
+    // p_page_idle->setBackgroundPictureFromTemplateToPage(this, ERROR_MESSAGE_PATH);
+    QString image_path = p_page_idle->getTemplatePathFromName(ERROR_MESSAGE_PATH);
+    p_page_idle->addPictureToLabel(ui->error_message_label, image_path);
+
 
     ui->wifi_ack_Button->setEnabled(false);
 
-      if(nullptr == timeoutTimer){
-        timeoutTimer = new QTimer(this);
-        timeoutTimer->setInterval(1000);
-        connect(timeoutTimer, SIGNAL(timeout()), this, SLOT(onTimeOutTick()));
-    }
+    //   if(nullptr == timeoutTimer){
+        // timeoutTimer = new QTimer(this);
+        // timeoutTimer->setInterval(1000);
+        // connect(timeoutTimer, SIGNAL(timeout()), this, SLOT(onTimeOutTick()));
+    // }
 
     timeoutTimer->start(1000);
     _goTop_page_idleTimeoutSec = 10;
@@ -86,33 +91,33 @@ void page_error_wifi::showEvent(QShowEvent *event)
  */
 void page_error_wifi::on_wifi_ack_Button_clicked()
 {
-    qDebug() << "call db from wifi error page" << endl;
-    DbManager db(DB_PATH);
+    // qDebug() << "Call db from wifi error page";
+    // DbManager db(DB_PATH);
 
-    //stopDispenseTimer();
-     db.closeDB();
+    // //stopDispenseTimer();
+    //  db.closeDB();
     // qDebug() << "error to idle";
-     p_page_idle->showFullScreen();
-     this->hide();
 }
 
 
-// void page_error_wifi::stopDispenseTimer(){
-// //    qDebug() << "page_error_wifi: Stop Timers" << endl;
-//     if(timeoutTimer != nullptr){
-//         timeoutTimer->stop();
-//     }
-//     timeoutTimer = nullptr;
+void page_error_wifi::exit_page(){
+//    qDebug() << "page_error_wifi: Stop Timers";
+    // if(timeoutTimer != nullptr){
+    timeoutTimer->stop();
 // }
+    p_page_idle->showFullScreen();
+    this->hide();
+}
 
 
 void page_error_wifi::onTimeOutTick(){
     if(-- _goTop_page_idleTimeoutSec >= 0) {
-//        qDebug() << "page_dispenser: Idle Tick Down: " << _goTop_page_idleTimeoutSec << endl;
+        // qDebug() << "page_dispenser: Idle Tick Down: " << _goTop_page_idleTimeoutSec;
     } else {
-//        qDebug() << "Timer Done!" << _goTop_page_idleTimeoutSec << endl;
-        qDebug() << "Show wifi error timed out. " << endl;
-        timeoutTimer->stop();
+//        qDebug() << "Timer Done!" << _goTop_page_idleTimeoutSec;
+        qDebug() << "Show wifi error timed out. ";
+        // timeoutTimer->stop();
+        exit_page();
         
     }
 }

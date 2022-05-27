@@ -42,6 +42,7 @@ public:
     void setPage(pagePayment* pagePayment, pagethankyou* pageThankYou, page_idle* pageIdle);
     ~page_error_wifi();
     void showEvent(QShowEvent *event);
+    void exit_page();
     // void fsmReceiveTargetVolumeReached();
 
 public slots:

@@ -92,8 +92,9 @@ using namespace std;
 #define PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH      "background_dispense_instructions.png"
 #define PAGE_DISPENSE_BACKGROUND_PATH                   "background_dispense.png"
 #define PAGE_QR_PAY_BACKGROUND_PATH                     "background_QR-pay.png"
+#define ERROR_MESSAGE_PATH                              "error_message.png"
 
-#define PAGE_WIFI_ERROR_BACKGROUND_PATH                 "/home/df-admin/production/references/oops.png"
+// #define PAGE_WIFI_ERROR_BACKGROUND_PATH                 "/home/df-admin/production/references/oops.png"
 #define BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH            "/home/df-admin/production/references/bottle_fill_for_animation.png"
 
 #define SOLD_OUT_IMAGE_PATH "/home/df-admin/production/references/soldOut.png"

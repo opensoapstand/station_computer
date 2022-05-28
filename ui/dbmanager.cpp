@@ -419,16 +419,17 @@ uint32_t DbManager::getNumberOfRows(QString table)
     return row_count;
 }
 
-bool DbManager::isProductVolumeInContainer(int slot){
-    if (getEmptyContainerDetectionEnabled()){
+bool DbManager::isProductVolumeInContainer(int slot)
+{
+    if (getEmptyContainerDetectionEnabled())
+    {
         return getVolumeRemaining(slot) > 0;
-
-    }else{
+    }
+    else
+    {
         return getVolumeRemaining(slot) > getProductVolume(slot, 'l');
-
     }
 }
-
 
 // bool DbManager::remainingVolumeIsBiggerThanLargestFixedSize(int slot)
 // {
@@ -747,6 +748,35 @@ QString DbManager::getStatusText(int slot)
     }
 
     return val;
+}
+
+bool DbManager::getRecentTransactions(QString values[][5], int count)
+{
+    // get number of most recent transactions
+    QSqlQuery qry;
+    // bool is_enabled;
+    {
+        // std::string sql_statement =  "SELECT id,end_time,quantity_dispensed,price,product FROM transactions ORDER BY id DESC LIMIT " + to_string(count);
+        // qry.prepare(sql_statement.c_str());
+        // qry.prepare(sql_statement.c_str());
+
+        qry.prepare("SELECT id,end_time,quantity_dispensed,price,product FROM transactions ORDER BY id DESC LIMIT :count");
+        qry.bindValue(":count", count);
+
+        
+        qry.exec();
+        int i = 0;
+        while (qry.next())
+        {
+            for (uint8_t j = 0; j < 5; j++)
+            {
+                values[i][j] = qry.value(j).toString();
+                 qDebug() << "db bdafes: " << i  << " : " << values[i][j];
+            }
+            i++;
+        }
+    }
+    return true;
 }
 
 bool DbManager::getPumpRampingEnabled()
@@ -1456,11 +1486,10 @@ bool DbManager::updatePluLarge(int slot, QString new_plu)
     }
 }
 
-
 bool DbManager::hasReceiptPrinter()
 {
     QSqlQuery qry;
-    bool  is_enabled;
+    bool is_enabled;
 
     {
         qry.prepare("SELECT has_receipt_printer FROM machine");

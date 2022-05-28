@@ -48,7 +48,7 @@ page_help::~page_help()
 
 void page_help::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< PPPage Enter: Help >>>>>>>>>";
+    qDebug() << "<<<<<<< Page Enter: Help >>>>>>>>>";
     QWidget::showEvent(event);
 
     // QPixmap background(PAGE_HELP_BACKGROUND_PATH);
@@ -73,12 +73,13 @@ void page_help::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference
  */
-void page_help::setPage(page_select_product *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, pagePayment *pagePayment)
+void page_help::setPage(page_select_product *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, pagePayment *pagePayment, page_transactions *pageTransactions)
 {
     this->p_page_idle = pageIdle;
     this->paymentPage = pagePayment;
     this->selectPage = pageProduct;
     this->p_page_select_product = pageSelect;
+    this->p_page_transactions = pageTransactions;
 }
 
 void page_help::on_previousPage_Button_clicked(){
@@ -114,4 +115,10 @@ void page_help::onHelpTimeoutTick(){
 void page_help::on_refreshButton_clicked(){
     _helpIdleTimeoutSec = 60;
     ui->refreshLabel->hide();
+}
+
+void page_help::on_transactions_Button_clicked()
+{
+    p_page_transactions->showFullScreen();
+    this->hide();
 }

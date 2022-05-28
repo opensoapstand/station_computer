@@ -86,10 +86,24 @@ Tap on screen to keep page open.</string>
     <bool>true</bool>
    </property>
   </widget>
+  <widget class="QPushButton" name="transactions_Button">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>1760</y>
+     <width>161</width>
+     <height>151</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>View Transactions</string>
+   </property>
+  </widget>
   <zorder>refreshButton</zorder>
   <zorder>previousPage_Button_2</zorder>
   <zorder>previousPage_Button</zorder>
   <zorder>refreshLabel</zorder>
+  <zorder>transactions_Button</zorder>
  </widget>
  <resources/>
  <connections/>

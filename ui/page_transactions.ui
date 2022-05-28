@@ -6,13 +6,63 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>804</width>
-    <height>682</height>
+    <width>1080</width>
+    <height>1920</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <widget class="QPushButton" name="back_Button">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>50</y>
+     <width>89</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Back</string>
+   </property>
+  </widget>
+  <widget class="QListWidget" name="transactions_List">
+   <property name="geometry">
+    <rect>
+     <x>5</x>
+     <y>430</y>
+     <width>1071</width>
+     <height>901</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Courier</family>
+     <pointsize>14</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="horizontalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOff</enum>
+   </property>
+   <property name="alternatingRowColors">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="print_Button">
+   <property name="geometry">
+    <rect>
+     <x>118</x>
+     <y>1400</y>
+     <width>191</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Print Selected Receipt</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

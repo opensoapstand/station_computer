@@ -130,17 +130,20 @@ void page_transactions::populateTransactionsTable()
 
 void page_transactions::deleteAllListItems()
 {
-        for (uint16_t i = 0; i < ui->transactions_List->count(); i++)
-        {
-            QListWidgetItem *it = ui->transactions_List->takeItem(ui->transactions_List->currentRow());
-            delete it;
-        }
+        // for (uint16_t i = 0; i < ui->transactions_List->count(); i++)
+        // {
+        //     QListWidgetItem *it = ui->transactions_List->takeItem(ui->transactions_List->currentRow());
+        //     delete it;
+        // }
+        ui->transactions_List->clear();
 }
 
 void page_transactions::populateList()
 {
         deleteAllListItems();
-        ui->transactions_List->addItem("Dispense time     \t Volume [ml]      \t Price \t Name");
+
+        // DO NOT ADD HEADER IN TABLE. It can be selected and causes a crash.
+        // ui->transactions_List->addItem("Dispense time     \t Volume [ml]      \t Price \t Name");
         // populate the items of the list
         for (int i = 0; i < transaction_count; i++)
         {
@@ -184,6 +187,6 @@ void page_transactions::on_print_Button_clicked(bool checked)
         qDebug() << selectedRow.row();
         // rowIndex = (selectedRow.row()).toInt();
 
-        QString transactionIndex = recent_transactions[rowIndex - 1][0];
+        QString transactionIndex = recent_transactions[rowIndex][0];
         qDebug() << "selected row: " << rowIndex << " has dispense index: " + transactionIndex;
 }

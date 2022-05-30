@@ -38,7 +38,8 @@ public:
     DF_ERROR displayPrinterStatus();
     DF_ERROR displayPrinterReachable();
     DF_ERROR sendPrinterStatus();
-
+    DF_ERROR printTransaction(int transactionNumber);
+    
     DF_ERROR onEntry();
     DF_ERROR onAction();
     DF_ERROR onExit();

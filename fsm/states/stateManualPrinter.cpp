@@ -97,6 +97,11 @@ DF_ERROR stateManualPrinter::onAction()
          debugOutput::sendMessage("Is Printer reachable?", MSG_INFO);
          displayPrinterReachable();
       }
+      else if ('5' == m_pMessaging->getAction())
+      {
+         debugOutput::sendMessage("Print transaction?", MSG_INFO);
+         printTransaction(959);
+      }
       else 
       {
          debugOutput::sendMessage("---Receipt printer menu---"
@@ -106,6 +111,7 @@ DF_ERROR stateManualPrinter::onAction()
          " 2: Printer status toggle continuous mode\n"
          " 3: Printer status \n"
          " 4: Check printer connected\n"
+         " 5: Print transaction 959\n"
          " h: Display this help menu", MSG_INFO);
       }
    }
@@ -154,6 +160,76 @@ DF_ERROR stateManualPrinter::onAction()
    return e_ret;
 }
 
+DF_ERROR stateManualPrinter::printTransaction(int transactionNumber){
+   // gets transaction data from db.
+   char *zErrMsg = 0;
+   rc = sqlite3_open(DB_PATH, &db);
+   sqlite3_stmt *stmt;
+   std::string sql_string;
+
+
+   //-------------------------------------------------
+   sql_string = ("SELECT product,price,quantity_dispensed FROM transactions WHERE id=" + to_string(transactionNumber));
+
+    /* Create SQL statement for transactions */
+    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+
+   int status;
+   status = sqlite3_step(stmt);
+
+   string product;
+   double price;
+   double quantity_dispensed;
+   if (status == SQLITE_ROW){
+      product = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+      price = sqlite3_column_double(stmt, 1);
+      quantity_dispensed = sqlite3_column_double(stmt, 2);
+   }
+
+   if (rc != SQLITE_OK)
+   {
+      debugOutput::sendMessage("ERROR: SQL transaction retrieval : (" + to_string(rc) + "):" + sql_string, MSG_INFO);
+
+      sqlite3_free(zErrMsg);
+   }
+   else
+   {
+      debugOutput::sendMessage("SUCCES: SQL transaction retrieval : (" + to_string(rc) + ") " + sql_string, MSG_INFO);
+   }
+
+   debugOutput::sendMessage("----------------: " + product , MSG_INFO);
+   debugOutput::sendMessage("----------------: " + to_string(price) , MSG_INFO);
+   debugOutput::sendMessage("----------------: " + to_string(quantity_dispensed) , MSG_INFO);
+
+   //-------------------------------------------------
+
+
+   sql_string = ("SELECT slot FROM products WHERE name='" + product + "';");
+
+   /* Create SQL statement for transactions */
+    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+
+   
+   status = sqlite3_step(stmt);
+
+   int slot;
+   if (status == SQLITE_ROW){
+      slot = sqlite3_column_int(stmt, 0);
+   }
+   if (rc != SQLITE_OK)
+   {
+      debugOutput::sendMessage("ERROR: SQL transaction retrieval : (" + to_string(rc) + "):" + sql_string, MSG_INFO);
+
+      sqlite3_free(zErrMsg);
+   }
+   else
+   {
+      debugOutput::sendMessage("SUCCES: SQL transaction retrieval : (" + to_string(rc) + ") " + sql_string, MSG_INFO);
+   }
+
+   debugOutput::sendMessage("slot ----------------: " + to_string(slot) , MSG_INFO);
+}
+
 DF_ERROR stateManualPrinter::sendPrinterStatus()
 {
 
@@ -182,7 +258,6 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
 
    char *zErrMsg = 0;
 
-   // FIXME: DB needs fully qualified link to find...obscure with XML loading.
    rc = sqlite3_open(DB_PATH, &db);
 
    std::string sql21;
@@ -206,6 +281,7 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
       debugOutput::sendMessage("SUCCES: SQL2 : (" + to_string(rc) + ") " + sql21, MSG_INFO);
    }
 #endif
+sqlite3_close(db);
 }
 
 DF_ERROR stateManualPrinter::displayPrinterStatus()

@@ -234,7 +234,7 @@ DF_ERROR stateDispenseEnd::handleTransactionPayment()
     else if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2" || paymentMethod == "plu")
     {
         debugOutput::sendMessage("Printing receipt:", MSG_INFO);
-        print_receipt();
+        setup_and_print_receipt();
     }
     else
     {
@@ -656,7 +656,7 @@ double stateDispenseEnd::getFinalPrice()
 }
 
 // This function prints the receipts by calling a system function (could be done better)
-DF_ERROR stateDispenseEnd::print_receipt()
+DF_ERROR stateDispenseEnd::setup_and_print_receipt()
 {
 
     std::string paymentMethod = productDispensers[pos].getProduct()->getPaymentMethod();
@@ -816,7 +816,25 @@ DF_ERROR stateDispenseEnd::print_receipt()
 
     strftime(now, 50, "%F %T", timeinfo);
 
-    print_text(name_receipt + "\nPrice: $" + receipt_cost + " \nQuantity: " + receipt_volume_formatted + "\nTime: " + now);
+
+    print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod,plu);
+
+
+}
+
+// DF_ERROR stateDispenseEnd::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, char* time_stamp){
+
+
+// }
+
+
+
+
+DF_ERROR stateDispenseEnd::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, char* time_stamp, string units, string paymentMethod, string plu){
+
+
+
+    print_text(name_receipt + "\nPrice: $" + receipt_cost + " \nQuantity: " + receipt_volume_formatted + "\nTime: " + time_stamp);
 
     if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2")
     {
@@ -845,9 +863,204 @@ DF_ERROR stateDispenseEnd::print_receipt()
     {
         debugOutput::sendMessage("ERROR: Not a valid payment method" + paymentMethod, MSG_INFO);
     }
-
     print_text("\n\n\n");
+
 }
+
+
+// // This function prints the receipts by calling a system function (could be done better)
+// DF_ERROR stateDispenseEnd::print_receipt()
+// {
+
+//     std::string paymentMethod = productDispensers[pos].getProduct()->getPaymentMethod();
+
+//     // printerr.connectToPrinter();
+//     char chars_cost[MAX_BUF];
+//     char chars_volume_formatted[MAX_BUF];
+//     char chars_price_per_ml_formatted[MAX_BUF];
+//     char chars_plu_dynamic_formatted[MAX_BUF];
+//     string cost = (chars_cost);
+
+//     std::string name_receipt = (productDispensers[pos].getProduct()->m_name_receipt);
+//     std::string plu = productDispensers[pos].getProduct()->getPLU(m_pMessaging->getRequestedSize());
+//     std::string units = (productDispensers[pos].getProduct()->getDisplayUnits());
+//     double price = getFinalPrice();
+//     double price_per_ml;
+
+//     double volume_dispensed;
+
+//     if (m_pMessaging->getRequestedSize() == 's')
+//     {
+//         volume_dispensed = productDispensers[pos].getProduct()->m_nVolumeTarget_s;
+//     }
+//     else if (m_pMessaging->getRequestedSize() == 'm')
+//     {
+//         volume_dispensed = productDispensers[pos].getProduct()->m_nVolumeTarget_m;
+//     }
+//     else if (m_pMessaging->getRequestedSize() == 'l')
+//     {
+//         volume_dispensed = productDispensers[pos].getProduct()->m_nVolumeTarget_l;
+//     }
+//     else if (m_pMessaging->getRequestedSize() == 'c')
+//     {
+
+//         price_per_ml = productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize());
+//         volume_dispensed = productDispensers[pos].getVolumeDispensed();
+
+//         if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13")
+//         {
+//             if (plu.size() != 8)
+//             {
+//                 // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
+//                 debugOutput::sendMessage("ERROR custom plu length must be of length eight. (standard drinkfill preamble(627987) + 2digit product code) : " + plu, MSG_INFO);
+//                 string fake_plu = "66666666";
+//                 plu = fake_plu;
+//             }
+
+//             snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%5.2f", price);
+//         }
+//         else if (paymentMethod == "barcode_EAN-2")
+//         {
+//             if (plu.size() != 7)
+//             {
+//                 // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
+//                 debugOutput::sendMessage("ERROR custom plu length must be of length seven. provided: " + plu, MSG_INFO);
+//                 string fake_plu = "6666666";
+//                 plu = fake_plu;
+//             }
+
+//             snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%6.2f", price);
+//         }
+
+//         string plu_dynamic_price = (chars_plu_dynamic_formatted);
+//         string plu_dynamic_formatted = plu + plu_dynamic_price;
+//         // 3.14 --> " 3.14" --> " 314" --> "0314"
+//         std::string toReplace(".");
+//         size_t pos = plu_dynamic_formatted.find(toReplace);
+//         if (pos != -1)
+//         {
+//             plu_dynamic_formatted.replace(pos, toReplace.length(), "");
+//         }
+
+//         std::string toReplace2(" ");
+//         pos = plu_dynamic_formatted.find(toReplace2);
+//         while (pos != -1)
+//         {
+//             plu_dynamic_formatted.replace(pos, toReplace2.length(), "0");
+//             pos = plu_dynamic_formatted.find(toReplace2);
+//         }
+
+//         plu = plu_dynamic_formatted;
+//     }
+//     else if (m_pMessaging->getRequestedSize() == 't')
+//     {
+//         price_per_ml = productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize());
+//         volume_dispensed = productDispensers[pos].getVolumeDispensed();
+//     }
+//     else
+//     {
+//         debugOutput::sendMessage("invalid size provided" + m_pMessaging->getRequestedSize(), MSG_INFO);
+//     }
+//     // convert units
+//     if (units == "oz")
+//     {
+//         // volume_dispensed = ceil(volume_dispensed * ML_TO_OZ);
+//         volume_dispensed = ceil(productDispensers[pos].getProduct()->convertVolumeMetricToDisplayUnits(volume_dispensed));
+//         price_per_ml = price_per_ml / ML_TO_OZ;
+//     }
+
+//     debugOutput::sendMessage("Volume dispensed for receipt:" + to_string(volume_dispensed), MSG_INFO);
+
+//     string base_unit = "ml";
+//     if (units == "ml")
+//     {
+//         base_unit = "l";
+//         snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", volume_dispensed);
+//     }
+//     else if (units == "oz")
+//     {
+//         base_unit = "oz";
+//         snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.1f", volume_dispensed);
+//     }
+//     else if (units == "g")
+//     {
+//         base_unit = "100g";
+//         snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", volume_dispensed);
+//     }
+//     string receipt_volume_formatted = (chars_volume_formatted);
+
+//     debugOutput::sendMessage("Units for receipt2:" + units, MSG_INFO);
+//     debugOutput::sendMessage("Volume dispensed for receipt2:" + receipt_volume_formatted, MSG_INFO);
+
+//     snprintf(chars_cost, sizeof(chars_cost), "%.2f", price);
+//     string receipt_cost = (chars_cost);
+
+//     double price_per_unit;
+//     // add base price
+//     if (m_pMessaging->getRequestedSize() == 'c' || m_pMessaging->getRequestedSize() == 't')
+//     {
+//         if (base_unit == "l")
+//         {
+//             price_per_unit = price_per_ml * 1000;
+//         }
+//         else if (base_unit == "100g")
+//         {
+//             price_per_unit = price_per_ml * 100;
+//             // receipt_price_per_ml = receipt_price_per_ml * 1000;
+//         }
+
+//         snprintf(chars_price_per_ml_formatted, sizeof(chars_volume_formatted), "%.2f", price_per_unit);
+//         string receipt_price_per_unit = (chars_price_per_ml_formatted);
+
+//         receipt_volume_formatted = receipt_volume_formatted + units + " @" + receipt_price_per_unit + "$/" + base_unit;
+//     }
+//     // else if (m_pMessaging->getRequestedSize() == 't')
+//     // {
+//     //     receipt_volume_formatted = receipt_volume_formatted + units + " @" + receipt_price_per_ml + "$/" + base_unit;
+//     // }
+//     else
+//     {
+
+//         receipt_volume_formatted += units;
+//     }
+
+//     time(&rawtime);
+//     timeinfo = localtime(&rawtime);
+
+//     strftime(now, 50, "%F %T", timeinfo);
+
+//     print_text(name_receipt + "\nPrice: $" + receipt_cost + " \nQuantity: " + receipt_volume_formatted + "\nTime: " + now);
+
+//     if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2")
+//     {
+
+//         if (plu.size() != 13 && plu.size() != 12)
+//         {
+//             // EAN13 codes need to be 13 digits, or else no barcode will be printed. If 12 dgits are provided, the last digit (checksum?!) is automatically generated
+//             debugOutput::sendMessage("ERROR: bar code invalid (" + plu + "). EAN13, Should be 13 digits" + to_string(plu.size()), MSG_INFO);
+//             print_text("\nPLU: " + plu + " (No barcode available)");
+//         }
+//         else
+//         {
+//             Adafruit_Thermal *printerr = new Adafruit_Thermal();
+//             printerr->connectToPrinter();
+//             printerr->setBarcodeHeight(100);
+//             printerr->printBarcode(plu.c_str(), EAN13);
+//             printerr->disconnectPrinter();
+//         }
+//     }
+
+//     else if (paymentMethod == "plu")
+//     {
+//         print_text("PLU: " + plu);
+//     }
+//     else
+//     {
+//         debugOutput::sendMessage("ERROR: Not a valid payment method" + paymentMethod, MSG_INFO);
+//     }
+
+//     print_text("\n\n\n");
+// }
 
 DF_ERROR stateDispenseEnd::print_text(string text)
 {

@@ -69,7 +69,11 @@ private:
 
     DF_ERROR dispenseEndUpdateDB(bool is_container_empty);
     DF_ERROR sendTransactionToCloud();
-    DF_ERROR print_receipt();
+    DF_ERROR setup_and_print_receipt();
+    // DF_ERROR print_receipt();
+
+    DF_ERROR print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, char* time_stamp, string units, string paymentMethod, string plu);
+
     std::string getMachineID();
     std::string getProductID(int slot);
     std::string getUnits(int slot);

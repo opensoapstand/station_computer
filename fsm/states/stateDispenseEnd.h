@@ -15,7 +15,8 @@
 
 #include "../dftypes.h"
 #include "../objects/messageMediator.h"
-#include "../../library/printer/Adafruit_Thermal.h"
+#include "../objects/machine.h"
+// #include "../../library/printer/Adafruit_Thermal.h"
 #include "../components/gpio.h"
 #include "../../library/qr/qrcodegen.hpp"
 #include <climits>
@@ -72,8 +73,9 @@ private:
     DF_ERROR setup_and_print_receipt();
     // DF_ERROR print_receipt();
 
-    DF_ERROR print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, char* time_stamp, string units, string paymentMethod, string plu);
-
+    // DF_ERROR print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted,string time_stamp, string units, string paymentMethod, string plu);
+    // DF_ERROR setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp);
+    
     std::string getMachineID();
     std::string getProductID(int slot);
     std::string getUnits(int slot);

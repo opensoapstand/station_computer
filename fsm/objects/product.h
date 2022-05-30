@@ -51,7 +51,7 @@ public:
         string getDisplayUnits();
         double convertVolumeMetricToDisplayUnits(double volume);
 
-        string getPLU(char size);
+        string getBasePLU(char size);
         string getPaymentMethod() { return m_paymentMethod; }
 
         // void setTargetVolume(double nVolumeTarget){m_nVolumeTarget = nVolumeTarget;};

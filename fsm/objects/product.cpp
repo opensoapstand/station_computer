@@ -374,7 +374,7 @@ double product::convertVolumeMetricToDisplayUnits(double volume)
     return converted_volume;
 }
 
-string product::getPLU(char size)
+string product::getBasePLU(char size)
 {
 #ifdef USE_OLD_DATABASE
     if (size == 's')

@@ -17,6 +17,8 @@
 
 #define STRING_STATE_MANUAL_PRINTER "Manual Printer"
 
+#define MAX_BUF 64
+
 // Default CTOR
 stateManualPrinter::stateManualPrinter()
 {
@@ -48,6 +50,8 @@ DF_ERROR stateManualPrinter::onEntry()
    debugOutput::sendMessage("Test printer manually.", MSG_INFO);
    printerr.connectToPrinter();
    b_isContinuouslyChecking = false;
+   productDispensers = g_productDispensers;
+
    return e_ret;
 }
 
@@ -169,7 +173,7 @@ DF_ERROR stateManualPrinter::printTransaction(int transactionNumber){
 
 
    //-------------------------------------------------
-   sql_string = ("SELECT product,price,quantity_dispensed FROM transactions WHERE id=" + to_string(transactionNumber));
+   sql_string = ("SELECT product,price,quantity_dispensed,end_time FROM transactions WHERE id=" + to_string(transactionNumber));
 
     /* Create SQL statement for transactions */
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
@@ -180,10 +184,12 @@ DF_ERROR stateManualPrinter::printTransaction(int transactionNumber){
    string product;
    double price;
    double quantity_dispensed;
+   string end_time;
    if (status == SQLITE_ROW){
       product = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
       price = sqlite3_column_double(stmt, 1);
       quantity_dispensed = sqlite3_column_double(stmt, 2);
+      end_time = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 3)));;
    }
 
    if (rc != SQLITE_OK)
@@ -200,6 +206,7 @@ DF_ERROR stateManualPrinter::printTransaction(int transactionNumber){
    debugOutput::sendMessage("----------------: " + product , MSG_INFO);
    debugOutput::sendMessage("----------------: " + to_string(price) , MSG_INFO);
    debugOutput::sendMessage("----------------: " + to_string(quantity_dispensed) , MSG_INFO);
+   debugOutput::sendMessage("----------------: " + end_time , MSG_INFO);
 
    //-------------------------------------------------
 
@@ -228,6 +235,8 @@ DF_ERROR stateManualPrinter::printTransaction(int transactionNumber){
    }
 
    debugOutput::sendMessage("slot ----------------: " + to_string(slot) , MSG_INFO);
+
+   setup_receipt_from_data_and_slot(slot, quantity_dispensed, quantity_dispensed, price, end_time);
 }
 
 DF_ERROR stateManualPrinter::sendPrinterStatus()
@@ -351,3 +360,73 @@ DF_ERROR stateManualPrinter::onExit()
    DF_ERROR e_ret = OK;
    return e_ret;
 }
+
+DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp){
+    std::string name_receipt = (productDispensers[slot-1].getProduct()->m_name_receipt);
+   //  std::string plu = productDispensers[slot-1].getProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
+   string plu = productDispensers[slot-1].getFinalPLU(SIZE_CUSTOM_CHAR, price);
+
+
+    std::string units = (productDispensers[slot-1].getProduct()->getDisplayUnits());
+    std::string paymentMethod = productDispensers[slot-1].getProduct()->getPaymentMethod();
+
+
+    char chars_cost[MAX_BUF];
+    // char chars_volume_formatted[MAX_BUF];
+    // char chars_price_per_ml_formatted[MAX_BUF];
+   //  char chars_plu_dynamic_formatted[MAX_BUF];
+
+    // string cost = (chars_cost);
+
+    string receipt_volume_formatted = "---";
+
+    snprintf(chars_cost, sizeof(chars_cost), "%.2f", price);
+    string receipt_cost = (chars_cost);
+
+   machine tmp;
+   tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod,plu);
+}
+
+
+
+
+// DF_ERROR stateManualPrinter::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string units, string paymentMethod, string plu){
+//     print_text(name_receipt + "\nPrice: $" + receipt_cost + " \nQuantity: " + receipt_volume_formatted + "\nTime: " + time_stamp);
+
+//     if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2")
+//     {
+
+//         if (plu.size() != 13 && plu.size() != 12)
+//         {
+//             // EAN13 codes need to be 13 digits, or else no barcode will be printed. If 12 dgits are provided, the last digit (checksum?!) is automatically generated
+//             debugOutput::sendMessage("ERROR: bar code invalid (" + plu + "). EAN13, Should be 13 digits" + to_string(plu.size()), MSG_INFO);
+//             print_text("\nPLU: " + plu + " (No barcode available)");
+//         }
+//         else
+//         {
+//             Adafruit_Thermal *printerr = new Adafruit_Thermal();
+//             printerr->connectToPrinter();
+//             printerr->setBarcodeHeight(100);
+//             printerr->printBarcode(plu.c_str(), EAN13);
+//             printerr->disconnectPrinter();
+//         }
+//     }
+
+//     else if (paymentMethod == "plu")
+//     {
+//         print_text("PLU: " + plu);
+//     }
+//     else
+//     {
+//         debugOutput::sendMessage("ERROR: Not a valid payment method" + paymentMethod, MSG_INFO);
+//     }
+//     print_text("\n\n\n");
+
+// }
+
+// DF_ERROR stateManualPrinter::print_text(string text)
+// {
+//     string printerstring = text;
+//     string printer_command_string = "echo '\n" + printerstring + "' > /dev/ttyS4";
+//     system(printer_command_string.c_str());
+// }

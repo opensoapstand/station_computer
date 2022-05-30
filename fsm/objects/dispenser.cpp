@@ -24,6 +24,8 @@
 #define CLEAN_WATER_TIME 1
 #define CLEAN_AIR_TIME 1
 
+#define MAX_BUF 64
+
 dsed8344 *dispenser::the_8344 = nullptr;
 
 // CTOR
@@ -151,6 +153,61 @@ dispenser::~dispenser()
 /* ------Getters, Setters and Utilities------ */
 
 // #ifdef ENABLE_MULTI_BUTTON
+string dispenser::getFinalPLU(char size, double price){
+
+
+    string base_plu = getProduct()->getBasePLU(size);
+     char chars_plu_dynamic_formatted[MAX_BUF];
+    
+    std::string paymentMethod = getProduct()->getPaymentMethod();
+
+     if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13")
+        {
+            if (base_plu.size() != 8)
+            {
+                // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
+                debugOutput::sendMessage("ERROR custom plu length must be of length eight. (standard drinkfill preamble(627987) + 2digit product code) : " + base_plu, MSG_INFO);
+                string fake_plu = "66666666";
+                base_plu = fake_plu;
+            }
+
+            snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%5.2f", price);
+        }
+        else if (paymentMethod == "barcode_EAN-2")
+        {
+            if (base_plu.size() != 7)
+            {
+                // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
+                debugOutput::sendMessage("ERROR custom plu length must be of length seven. provided: " + base_plu, MSG_INFO);
+                string fake_plu = "6666666";
+                base_plu = fake_plu;
+            }
+
+            snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%6.2f", price);
+        }
+
+
+        string plu_dynamic_price = (chars_plu_dynamic_formatted);
+        string plu_dynamic_formatted = base_plu + plu_dynamic_price;
+        // 3.14 --> " 3.14" --> " 314" --> "0314"
+        std::string toReplace(".");
+        size_t pos = plu_dynamic_formatted.find(toReplace);
+        if (pos != -1)
+        {
+            plu_dynamic_formatted.replace(pos, toReplace.length(), "");
+        }
+
+        std::string toReplace2(" ");
+        pos = plu_dynamic_formatted.find(toReplace2);
+        while (pos != -1)
+        {
+            plu_dynamic_formatted.replace(pos, toReplace2.length(), "0");
+            pos = plu_dynamic_formatted.find(toReplace2);
+        }
+
+        return plu_dynamic_formatted;
+}
+
 void dispenser::setAllDispenseButtonLightsOff()
 {
     for (int slot = 1; slot < 5; slot++)

@@ -659,17 +659,17 @@ double stateDispenseEnd::getFinalPrice()
 DF_ERROR stateDispenseEnd::setup_and_print_receipt()
 {
 
-    std::string paymentMethod = productDispensers[pos].getProduct()->getPaymentMethod();
 
     // printerr.connectToPrinter();
     char chars_cost[MAX_BUF];
     char chars_volume_formatted[MAX_BUF];
     char chars_price_per_ml_formatted[MAX_BUF];
-    char chars_plu_dynamic_formatted[MAX_BUF];
+   
     string cost = (chars_cost);
 
+    std::string paymentMethod = productDispensers[pos].getProduct()->getPaymentMethod();
     std::string name_receipt = (productDispensers[pos].getProduct()->m_name_receipt);
-    std::string plu = productDispensers[pos].getProduct()->getPLU(m_pMessaging->getRequestedSize());
+    
     std::string units = (productDispensers[pos].getProduct()->getDisplayUnits());
     double price = getFinalPrice();
     double price_per_ml;
@@ -693,51 +693,7 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
 
         price_per_ml = productDispensers[pos].getProduct()->getPrice(m_pMessaging->getRequestedSize());
         volume_dispensed = productDispensers[pos].getVolumeDispensed();
-
-        if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13")
-        {
-            if (plu.size() != 8)
-            {
-                // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
-                debugOutput::sendMessage("ERROR custom plu length must be of length eight. (standard drinkfill preamble(627987) + 2digit product code) : " + plu, MSG_INFO);
-                string fake_plu = "66666666";
-                plu = fake_plu;
-            }
-
-            snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%5.2f", price);
-        }
-        else if (paymentMethod == "barcode_EAN-2")
-        {
-            if (plu.size() != 7)
-            {
-                // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
-                debugOutput::sendMessage("ERROR custom plu length must be of length seven. provided: " + plu, MSG_INFO);
-                string fake_plu = "6666666";
-                plu = fake_plu;
-            }
-
-            snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%6.2f", price);
-        }
-
-        string plu_dynamic_price = (chars_plu_dynamic_formatted);
-        string plu_dynamic_formatted = plu + plu_dynamic_price;
-        // 3.14 --> " 3.14" --> " 314" --> "0314"
-        std::string toReplace(".");
-        size_t pos = plu_dynamic_formatted.find(toReplace);
-        if (pos != -1)
-        {
-            plu_dynamic_formatted.replace(pos, toReplace.length(), "");
-        }
-
-        std::string toReplace2(" ");
-        pos = plu_dynamic_formatted.find(toReplace2);
-        while (pos != -1)
-        {
-            plu_dynamic_formatted.replace(pos, toReplace2.length(), "0");
-            pos = plu_dynamic_formatted.find(toReplace2);
-        }
-
-        plu = plu_dynamic_formatted;
+   
     }
     else if (m_pMessaging->getRequestedSize() == 't')
     {
@@ -748,6 +704,10 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
     {
         debugOutput::sendMessage("invalid size provided" + m_pMessaging->getRequestedSize(), MSG_INFO);
     }
+
+
+    std::string plu = productDispensers[pos].getFinalPLU(m_pMessaging->getRequestedSize(), price);
+
     // convert units
     if (units == "oz")
     {
@@ -816,56 +776,70 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
 
     strftime(now, 50, "%F %T", timeinfo);
 
-
-    print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod,plu);
-
-
+    machine tmp;
+    tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod,plu);
 }
 
-// DF_ERROR stateDispenseEnd::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, char* time_stamp){
+// DF_ERROR stateDispenseEnd::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp){
+//     std::string name_receipt = (productDispensers[pos].getProduct()->m_name_receipt);
+//     std::string plu = productDispensers[pos].getProduct()->getBasePLU(m_pMessaging->getRequestedSize());
+//     std::string units = (productDispensers[pos].getProduct()->getDisplayUnits());
+//     std::string paymentMethod = productDispensers[pos].getProduct()->getPaymentMethod();
 
 
+//     char chars_cost[MAX_BUF];
+//     // char chars_volume_formatted[MAX_BUF];
+//     // char chars_price_per_ml_formatted[MAX_BUF];
+//     char chars_plu_dynamic_formatted[MAX_BUF];
+
+
+//     // string cost = (chars_cost);
+
+//     string receipt_volume_formatted = "---";
+
+//     snprintf(chars_cost, sizeof(chars_cost), "%.2f", price);
+//     string receipt_cost = (chars_cost);
+
+
+//     print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod,plu);
 // }
 
 
 
 
-DF_ERROR stateDispenseEnd::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, char* time_stamp, string units, string paymentMethod, string plu){
+// DF_ERROR stateDispenseEnd::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string units, string paymentMethod, string plu){
+//     print_text(name_receipt + "\nPrice: $" + receipt_cost + " \nQuantity: " + receipt_volume_formatted + "\nTime: " + time_stamp);
 
+//     if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2")
+//     {
 
+//         if (plu.size() != 13 && plu.size() != 12)
+//         {
+//             // EAN13 codes need to be 13 digits, or else no barcode will be printed. If 12 dgits are provided, the last digit (checksum?!) is automatically generated
+//             debugOutput::sendMessage("ERROR: bar code invalid (" + plu + "). EAN13, Should be 13 digits" + to_string(plu.size()), MSG_INFO);
+//             print_text("\nPLU: " + plu + " (No barcode available)");
+//         }
+//         else
+//         {
+//             Adafruit_Thermal *printerr = new Adafruit_Thermal();
+//             printerr->connectToPrinter();
+//             printerr->setBarcodeHeight(100);
+//             printerr->printBarcode(plu.c_str(), EAN13);
+//             printerr->disconnectPrinter();
+//         }
+//     }
 
-    print_text(name_receipt + "\nPrice: $" + receipt_cost + " \nQuantity: " + receipt_volume_formatted + "\nTime: " + time_stamp);
+//     else if (paymentMethod == "plu")
+//     {
+//         print_text("PLU: " + plu);
+//     }
+//     else
+//     {
+//         debugOutput::sendMessage("ERROR: Not a valid payment method" + paymentMethod, MSG_INFO);
+//     }
+//     print_text("\n\n\n");
 
-    if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2")
-    {
-
-        if (plu.size() != 13 && plu.size() != 12)
-        {
-            // EAN13 codes need to be 13 digits, or else no barcode will be printed. If 12 dgits are provided, the last digit (checksum?!) is automatically generated
-            debugOutput::sendMessage("ERROR: bar code invalid (" + plu + "). EAN13, Should be 13 digits" + to_string(plu.size()), MSG_INFO);
-            print_text("\nPLU: " + plu + " (No barcode available)");
-        }
-        else
-        {
-            Adafruit_Thermal *printerr = new Adafruit_Thermal();
-            printerr->connectToPrinter();
-            printerr->setBarcodeHeight(100);
-            printerr->printBarcode(plu.c_str(), EAN13);
-            printerr->disconnectPrinter();
-        }
-    }
-
-    else if (paymentMethod == "plu")
-    {
-        print_text("PLU: " + plu);
-    }
-    else
-    {
-        debugOutput::sendMessage("ERROR: Not a valid payment method" + paymentMethod, MSG_INFO);
-    }
-    print_text("\n\n\n");
-
-}
+// }
 
 
 // // This function prints the receipts by calling a system function (could be done better)
@@ -882,7 +856,7 @@ DF_ERROR stateDispenseEnd::print_receipt(string name_receipt, string receipt_cos
 //     string cost = (chars_cost);
 
 //     std::string name_receipt = (productDispensers[pos].getProduct()->m_name_receipt);
-//     std::string plu = productDispensers[pos].getProduct()->getPLU(m_pMessaging->getRequestedSize());
+//     std::string plu = productDispensers[pos].getProduct()->getBasePLU(m_pMessaging->getRequestedSize());
 //     std::string units = (productDispensers[pos].getProduct()->getDisplayUnits());
 //     double price = getFinalPrice();
 //     double price_per_ml;

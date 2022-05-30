@@ -63,6 +63,7 @@ public:
 
       product *getProduct();
       DF_ERROR setProduct(product *product);
+      string getFinalPLU(char size, double price);
       DF_ERROR initButtonsShutdownAndMaintenance();
       DF_ERROR setSlot(int slot);
       int getSlot();

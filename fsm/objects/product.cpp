@@ -213,6 +213,25 @@ double product::getVolumeDispensedSinceLastRestock()
     return m_nVolumeDispensedSinceRestock;
 }
 
+
+char product::getSizeCharFromTargetVolume(double volume)
+{
+    // this is a necessary evil as in transactions, the requested volume is not stored as char
+    // #define VOLUME_MARGIN 0.1
+    if (volume ==  m_nVolumeTarget_s){
+        return 's';
+    }else if (volume ==  m_nVolumeTarget_m){
+        return 'm';
+    }else if (volume ==  m_nVolumeTarget_l){
+        return 'l';
+    }else if (volume ==  m_nVolumeTarget_c_max){
+        return 'c';
+    }else {
+        debugOutput::sendMessage("Get size from volume, not found, will default to custom dispense for volume " + to_string(volume), MSG_INFO);
+        return 'c';
+    }
+
+}
 double product::getTargetVolume(char size)
 {
 #ifdef USE_OLD_DATABASE

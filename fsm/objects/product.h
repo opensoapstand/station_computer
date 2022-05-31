@@ -47,6 +47,7 @@ public:
         double getVolumePerTick();
 
         double getTargetVolume(char size);
+        char getSizeCharFromTargetVolume(double volume);
         double getPrice(char size);
         string getDisplayUnits();
         double convertVolumeMetricToDisplayUnits(double volume);

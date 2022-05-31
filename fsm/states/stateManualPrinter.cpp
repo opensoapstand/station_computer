@@ -364,6 +364,8 @@ DF_ERROR stateManualPrinter::onExit()
 DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp){
     std::string name_receipt = (productDispensers[slot-1].getProduct()->m_name_receipt);
    //  std::string plu = productDispensers[slot-1].getProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
+
+   char size = productDispensers[slot-1].getProduct()->getSizeCharFromTargetVolume(volume_requested);
    string plu = productDispensers[slot-1].getFinalPLU(SIZE_CUSTOM_CHAR, price);
 
 
@@ -372,13 +374,20 @@ DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double v
 
 
     char chars_cost[MAX_BUF];
-    // char chars_volume_formatted[MAX_BUF];
+    char chars_volume_formatted[MAX_BUF];
     // char chars_price_per_ml_formatted[MAX_BUF];
    //  char chars_plu_dynamic_formatted[MAX_BUF];
 
     // string cost = (chars_cost);
 
-    string receipt_volume_formatted = "---";
+
+
+   snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.2f", productDispensers[slot-1].getProduct()->getTargetVolume(size));
+    string vol = (chars_volume_formatted);
+    string receipt_volume_formatted =  vol + "ml";
+   //  string receipt_volume_formatted = to_string(chars_volume_formatted) + "ml";
+
+
 
     snprintf(chars_cost, sizeof(chars_cost), "%.2f", price);
     string receipt_cost = (chars_cost);
@@ -386,8 +395,6 @@ DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double v
    machine tmp;
    tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod,plu);
 }
-
-
 
 
 // DF_ERROR stateManualPrinter::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string units, string paymentMethod, string plu){

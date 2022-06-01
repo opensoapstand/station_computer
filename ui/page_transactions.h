@@ -34,7 +34,7 @@ private:
    
     Ui::page_transactions *ui;
     void showEvent(QShowEvent *event);
-    QString recent_transactions[10][5];
+    QString recent_transactions[TRANSACTION_HISTORY_COUNT][5];
 
     page_idle *p_page_idle;
 

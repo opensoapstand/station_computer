@@ -750,7 +750,7 @@ QString DbManager::getStatusText(int slot)
     return val;
 }
 
-bool DbManager::getRecentTransactions(QString values[][5], int count)
+bool DbManager::getRecentTransactions(QString values[][5], int count, int* count_retreived)
 {
     // get number of most recent transactions
     QSqlQuery qry;
@@ -763,7 +763,7 @@ bool DbManager::getRecentTransactions(QString values[][5], int count)
         qry.prepare("SELECT id,end_time,quantity_dispensed,price,product FROM transactions ORDER BY id DESC LIMIT :count");
         qry.bindValue(":count", count);
 
-        
+         qDebug() << " db retreive transactions: " << count;
         qry.exec();
         int i = 0;
         while (qry.next())
@@ -774,6 +774,7 @@ bool DbManager::getRecentTransactions(QString values[][5], int count)
                  qDebug() << "db bdafes: " << i  << " : " << values[i][j];
             }
             i++;
+            *count_retreived = i;
         }
     }
     return true;

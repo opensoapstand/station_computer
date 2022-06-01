@@ -77,7 +77,7 @@ using namespace std;
 
 #define TEMPLATES_ROOT_PATH "/home/df-admin/production/references/templates/"
 #define TEMPLATES_DEFAULT_NAME "default"
-#define TRANSACTION_HISTORY_COUNT 10
+#define TRANSACTION_HISTORY_COUNT 15
 
 #define PRODUCT_PICTURES_ROOT_PATH "/home/df-admin/production/references/products/%1.png"
 

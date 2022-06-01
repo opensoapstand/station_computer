@@ -68,6 +68,7 @@ void page_transactions::showEvent(QShowEvent *event)
         idleTimer->start(1000);
         _idleTimeoutSec = 60;
         populateTransactionsTable();
+        qDebug() << "done talbe";
 }
 
 void page_transactions::onIdleTimeoutTick()
@@ -88,7 +89,11 @@ void page_transactions::populateTransactionsTable()
 {
         DbManager db(DB_PATH);
 
-        db.getRecentTransactions(recent_transactions, transaction_count);
+        transaction_count = TRANSACTION_HISTORY_COUNT;
+        int retrieved_count;
+        db.getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
+
+        transaction_count = retrieved_count;
         // for (uint8_t i = 0; i < count; i++)
         // {
         //     qDebug() << recent_transactions[i][0];
@@ -103,6 +108,7 @@ void page_transactions::populateTransactionsTable()
         db.closeDB();
 
         populateList();
+        qDebug() << "feijaiejf";
 
         // table
         // ui->transactions_Table->setRowCount(10);
@@ -167,6 +173,7 @@ void page_transactions::populateList()
                 ui->transactions_List->addItem(rowItem);
                 // ui->transactions_List->addItem( recent_transactions[i][0] + "\t:\t" +  recent_transactions[i][2] + "\t" + recent_transactions[i][3] + "\t" + recent_transactions[i][1]);
         }
+          qDebug() << "iiieeij";
 }
 void page_transactions::exitPage()
 {

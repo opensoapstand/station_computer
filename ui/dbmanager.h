@@ -18,7 +18,7 @@ public:
     double getProductVolumePerTick(int slot);
     // bool remainingVolumeIsBiggerThanLargestFixedSize(int slot);
     bool isProductVolumeInContainer(int slot);
-    bool getRecentTransactions(QString values[][5], int count);
+    bool getRecentTransactions(QString values[][5], int count, int* count_retreived);
     bool hasReceiptPrinter();
     QString getProductReceiptName(int slot);
     QString getPaymentMethod(int slot);

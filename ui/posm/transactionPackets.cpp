@@ -102,8 +102,10 @@ std::vector<uint8_t> transactionPacket::purchasePacket(std::string amount)
 
     packet.setPacketData(dataPacket, sizeof (dataPacket));      //tagID(50) + dataPacket
 
-    //ETX is 0x03                                               //03
+    //ETX is 0x03    
+                                               //03
     packet.setPacketDataLen();                                  //00 0B
+    // packet.setPacketDataLenPur();                                  //00 0B
     packet.setPacketLRC();                                      //LRC
 
     return packet.getPacket();

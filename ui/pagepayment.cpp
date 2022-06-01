@@ -53,7 +53,7 @@ pagePayment::pagePayment(QWidget *parent) : QWidget(parent),
     // Idle Payment reset
     idlePaymentTimer = new QTimer(this);
     connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
-
+    idlePaymentTimer->start(60000);
     qrTimer = new QTimer(this);
     connect(qrTimer, SIGNAL(timeout()), this, SLOT(qrProcessedPeriodicalCheck()));
 
@@ -345,9 +345,9 @@ void pagePayment::showEvent(QShowEvent *event)
         {
             timerEnabled = true;
         }
-        cancelPayment();
-        com.flushSerial();
-        readTimer->start();
+        // cancelPayment();
+        // com.flushSerial();
+        readTimer->start(10);
     }
 
     qDebug() << "ahoyy245";
@@ -574,10 +574,20 @@ void pagePayment::idlePaymentTimeout()
 
 void pagePayment::stayAliveLogon()
 {
-    com.flushSerial();
+    
+    // /*logon packet to send*/
+    // pktToSend = paymentPacket.ppPosGetConfigPkt(StatusType::GetLanStatus);
+    // if (sendToUX410())
+    // {
+    //     waitForUX410();
+    // }
+
+    // pktResponded.clear();
+
+    // com.flushSerial();
     
     /*logon packet to send*/
-    pktToSend = paymentPacket.ppPosGetConfigPkt(StatusType::GetLanInfo);
+    pktToSend = paymentPacket.ppPosStatusCheckPkt(0x01);
     if (sendToUX410())
     {
         waitForUX410();
@@ -586,53 +596,6 @@ void pagePayment::stayAliveLogon()
     pktResponded.clear();
 
     com.flushSerial();
-    
-    /*logon packet to send*/    
-
-    pktToSend = paymentPacket.createTestPacket(0x00);
-    if (sendToUX410())
-    {
-        waitForUX410();
-    }
-
-    pktResponded.clear();
-
-    com.flushSerial();
-    /*logon packet to send*/
-//     uint8_t sendData[] = {0x02, 0x00,0x04,0x02,0x0D,0x00,0x01,0x03,0x0A };
-//     int n = sizeof(sendData) / sizeof(sendData[0]);
-//     pktToSend.clear();
-//     std::cout<< "custom array" << endl;
-//     // // pktToSend.assign(std::begin(sendData), std::end(sendData));
-//     //     for (int i: sendData) {
-//     //     std::cout << i << " ";
-//     // }
-//     // std::vector<uint8_t> dest(sendData, sendData + n);
-//     // for (int i=0; i<dest.size(); i++){
-//     //     pktToSend.push_back(dest[i]);
-//     //     std::cout<< dest[i];
-
-//     // }
-//     std::cout<< "Size  "<< n << endl;
-
-//     std::cout<< "Array sent to UX" << endl;
-
-//    for (int i: sendData) {
-//         pktToSend.push_back(i);
-//     }
-//     for (int j: pktToSend) {
-//         std::cout<< j << "  ";
-//         qDebug()<< j;
-//     }
-    
-//     if (sendToUX410())
-//     {
-//         waitForUX410();
-//     }
-    
-//     pktResponded.clear();
-
-//     com.flushSerial();
     
     
 }
@@ -666,38 +629,37 @@ bool pagePayment::sendToUX410()
         waitForAck++;
 
         // if(isReadyForTap) {
-        cout << "Waiting for TAP" << endl;
+        cout << "\nWaiting for TAP" << endl;
         if (readPacket.getAckOrNak() == communicationPacketField::ACK)
         {
-            // cout << readPacket << endl;
             return true;
         }
         // }
-        usleep(50000);
+        // usleep(500000);
 
-        //        if(isInitCancelled) {
-        //            return true;
-        //        }
+            //    if(isInitCancelled) {
+            //        return true;
+            //    }
 
-        //        if(isInitBatched) {
-        //            return true;
-        //        }
+            //    if(isInitBatched) {
+            //        return true;
+            //    }
 
-        //        if(isInitLogin) {
-        //            return true;
-        //        }
+            //    if(isInitLogin) {
+            //        return true;
+            //    }
 
-        //        if(isInitMerchant) {
-        //            return true;
-        //        }
+            //    if(isInitMerchant) {
+            //        return true;
+            //    }
 
-        //        if(isInitAddress) {
-        //            return true;
-        //        }
+            //    if(isInitAddress) {
+            //        return true;
+            //    }
 
-        //        if(isInitTerminalID) {
-        //            return true;
-        //        }
+            //    if(isInitTerminalID) {
+            //        return true;
+            //    }
     }
     return false;
 }
@@ -714,7 +676,6 @@ bool pagePayment::tap_init()
 
     // This is super shitty - there must be a better way to find out when the green light starts flashing on the UX420 but it was 35
     sleep(35);
-    // stayAliveLogon();
     cout << "_----_-----__------_-----";
     /*Cancel any previous payment*/
     cout << "Sending Cancel payment packet..." << endl;
@@ -766,6 +727,7 @@ bool pagePayment::tap_init()
     }
     com.flushSerial();
     cout << "-----------------------------------------------" << endl;
+    // stayAliveLogon();
 
     /*getConfiguration packet to send*/
     cout << "Sending Merchant Name query..." << endl;
@@ -837,7 +799,7 @@ bool pagePayment::waitForUX410()
         {
             pktResponded.clear();
             pktResponded = com.readPacket();
-            usleep(1000);
+            usleep(10);
         }
         else
         {
@@ -868,11 +830,11 @@ void pagePayment::readTimer_loop()
     //        pktToSend = paymentPacket.purchasePacket("0.01");
 
     // this->ui->payment_countdownLabel->setText("TAP NOW");
-    response = getResponse();
+    // response = getResponse();
 
     if (sendToUX410())
     {
-        //        waitForUX410();
+        waitForUX410();
 
         while (!response)
         {
@@ -892,7 +854,7 @@ void pagePayment::readTimer_loop()
                 // cout << "MISS: pktResponded: " << to_string(pktResponded[0]) << endl;
                 pktResponded.clear();
                 pktResponded = com.readPacket();
-                usleep(10000);
+                usleep(10);
                 response = getResponse();
 
                 //        com.sendAck();
@@ -903,7 +865,7 @@ void pagePayment::readTimer_loop()
             {
                 pktResponded.clear();
                 pktResponded = com.readPacket();
-                usleep(100);
+                // usleep(100);
                 response = getResponse();
                 // cancelPayment();
                 // readTimer->start(1000);
@@ -917,7 +879,7 @@ void pagePayment::readTimer_loop()
                     cout << "HIT: pktResponded: " << to_string(pktResponded[0]) << endl;
 
                     // this->ui->payment_countdownLabel->setText("Processing...");
-                    QCoreApplication::processEvents();
+                    // QCoreApplication::processEvents();
 
                     //        qDebug() << "Check TAP Packet; Sending" << endl;
 
@@ -934,7 +896,7 @@ void pagePayment::readTimer_loop()
                         this->ui->payment_countdownLabel->setText("Approved");
                         paymentPktInfo.transactionID(readPacket.getPacket().data);
                         paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
-                        QCoreApplication::processEvents();
+                        // QCoreApplication::processEvents();
                         sleep(2);
                         response = true;
                         on_payment_bypass_Button_clicked();
@@ -985,9 +947,9 @@ void pagePayment::readTimer_loop()
                     {
                         pktResponded.clear();
                         pktResponded = com.readPacket();
-                        usleep(100);
+                        sleep(5);
                         response = getResponse();
-                        readTimer->start(1000);
+                        readTimer->start(10);
                     }
                 }
 

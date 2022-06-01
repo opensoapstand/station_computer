@@ -31,7 +31,6 @@ mCommunication::~mCommunication() {
 bool mCommunication::page_init(){
 
     bool bRet = false;
-
     fd = open(MONERIS_PORT ,O_RDWR | O_NOCTTY| O_NDELAY);
     /* O_RDWR Read/Write access to serial port           */
     /* O_NOCTTY - No terminal will control the process   */
@@ -45,7 +44,6 @@ bool mCommunication::page_init(){
     else {
 
         //set the serial port setting for MONERIS h/w
-
         struct termios SerialPortSettings;	/* Create the structure                          */
 
         tcgetattr(fd, &SerialPortSettings);	/* Get the current attributes of the Serial port */
@@ -66,7 +64,6 @@ bool mCommunication::page_init(){
         SerialPortSettings.c_cc[VTIME]  =  5;                  // 0.5 seconds read timeout
         /* Make raw */
         cfmakeraw(&SerialPortSettings);
-
         if((tcsetattr(fd,TCSANOW,&SerialPortSettings)) != 0) {
         } else {
             tcflush(fd,TCIOFLUSH);
@@ -87,7 +84,7 @@ std::vector<uint8_t> mCommunication::readPacket(){
     std::vector<uint8_t> pktRead;
     //tcflush(fd, TCIOFLUSH);
     //tcflush(fd, TCIOFLUSH);
-
+    
     readSize = read(fd, buffer, MAX_SIZE);
 
     if (readSize == -1)
@@ -170,7 +167,6 @@ std::vector<uint8_t> mCommunication::readForAck()
         return pktRead;
     }
     else{
-        std::cout << "read size" << readSize << endl;
         pktRead.reserve(uint(readSize));
         for (int i = 0; i < readSize; i++){ //store read bytes into vector
             pktRead.push_back(buffer[i]);

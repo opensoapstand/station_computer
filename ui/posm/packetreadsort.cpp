@@ -27,6 +27,7 @@ packetReadSort::~packetReadSort()
 
 void packetReadSort::sortPacket(packetResponse readPacket)
 {
+    std::cout<< readPacket.status << endl;
     packetToSort = readPacket;
     if (packetToSort.status == communicationPacketField::NAK){
 

@@ -41,7 +41,7 @@ public:
     DF_ERROR displayPrinterStatus();
     DF_ERROR displayPrinterReachable();
     DF_ERROR sendPrinterStatus();
-    DF_ERROR printTransaction(int transactionNumber);
+    void printTransaction(int transactionNumber);
 
     DF_ERROR setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp);
     DF_ERROR print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string units, string paymentMethod, string plu);

@@ -19,7 +19,6 @@ public:
     void setPage(page_idle *pageIdle);
 
     QTimer *idleTimer;
-    void onIdleTimeoutTick();
      void exitPage();
      void populateList();
     void populateTransactionsTable();
@@ -27,6 +26,7 @@ public:
 
 private slots:
     void on_back_Button_clicked();
+    void onIdleTimeoutTick();
 
     void on_print_Button_clicked(bool checked);
 

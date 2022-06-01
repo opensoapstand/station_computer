@@ -4,41 +4,41 @@
 page_transactions::page_transactions(QWidget *parent) : QWidget(parent),
                                                         ui(new Ui::page_transactions)
 {
-    ui->setupUi(this);
-    idleTimer = new QTimer(this);
-    idleTimer->setInterval(1000);
-    connect(idleTimer, SIGNAL(timeout()), this, SLOT(onIdleTimeoutTick()));
-    transaction_count = TRANSACTION_HISTORY_COUNT;
+        ui->setupUi(this);
+        idleTimer = new QTimer(this);
+        idleTimer->setInterval(1000);
+        connect(idleTimer, SIGNAL(timeout()), this, SLOT(onIdleTimeoutTick()));
+        transaction_count = TRANSACTION_HISTORY_COUNT;
 
-// ui->transactions_List->setStyleSheet("QListWidget{  background:transparent; }QListWidget::item{background:green;}");
-ui->transactions_List->setStyleSheet("QListWidget{  background:transparent; }QListWidget::item{background-color: #5E8580;}");
+        // ui->transactions_List->setStyleSheet("QListWidget{  background:transparent; }QListWidget::item{background:green;}");
+        ui->transactions_List->setStyleSheet("QListWidget{  background:transparent; }QListWidget::item{background-color: #5E8580;}");
 
-// ui->transactions_List->setStyleSheet(
-//     "QlistWidget::item:selected {
-//     background:
-//     transparent; }
-//     QListWidget::item:selected {
-//     border:
-//         1px solid red; }"
-// )
+        // ui->transactions_List->setStyleSheet(
+        //     "QlistWidget::item:selected {
+        //     background:
+        //     transparent; }
+        //     QListWidget::item:selected {
+        //     border:
+        //         1px solid red; }"
+        // )
 
-// It paints the border, but renders the text foreground color black. If I change it to:
-// self.listWidgetRepo.setStyleSheet("""
-// QListWidget::item:selected {
-//     foreground:
-//         green;
-//         QListWidget::item : selected
-//         {
-//         background:
-//             transparent;
-//         }
-//         QListWidget::item : selected
-//         {
-//         border:
-//             1px solid red;
-//         }
-//         ""
-//         ")
+        // It paints the border, but renders the text foreground color black. If I change it to:
+        // self.listWidgetRepo.setStyleSheet("""
+        // QListWidget::item:selected {
+        //     foreground:
+        //         green;
+        //         QListWidget::item : selected
+        //         {
+        //         background:
+        //             transparent;
+        //         }
+        //         QListWidget::item : selected
+        //         {
+        //         border:
+        //             1px solid red;
+        //         }
+        //         ""
+        //         ")
 }
 
 void page_transactions::setPage(page_idle *pageIdle)
@@ -58,9 +58,15 @@ void page_transactions::showEvent(QShowEvent *event)
 
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TRANSACTIONS_BACKGROUND_PATH);
 
+        if (idleTimer == nullptr)
+        {
+                idleTimer = new QTimer(this);
+                idleTimer->setInterval(1000);
+                connect(idleTimer, SIGNAL(timeout()), this, SLOT(onIdleTimeoutTick()));
+        }
+
         idleTimer->start(1000);
         _idleTimeoutSec = 60;
-        // ui->refreshLabel->hide();
         populateTransactionsTable();
 }
 
@@ -68,13 +74,13 @@ void page_transactions::onIdleTimeoutTick()
 {
         if (--_idleTimeoutSec >= 0)
         {
-            qDebug() << "transactions  Tick Down: " << _idleTimeoutSec;
+                qDebug() << "transactions  Tick Down: " << _idleTimeoutSec;
         }
         else
         {
-            qDebug() << "transactions Timer Done!" << _idleTimeoutSec;
+                qDebug() << "transactions Timer Done!" << _idleTimeoutSec;
 
-            exitPage();
+                exitPage();
         }
 }
 
@@ -147,19 +153,19 @@ void page_transactions::populateList()
         // populate the items of the list
         for (int i = 0; i < transaction_count; i++)
         {
-            QString rowItem;
-            // paddedString = originalString.leftJustified(4, ' ');
-            for (int j = 1; j < 5; j++)
-            {
-                rowItem += recent_transactions[i][j].rightJustified(8, ' ') + "\t";
-            }
+                QString rowItem;
+                // paddedString = originalString.leftJustified(4, ' ');
+                for (int j = 1; j < 5; j++)
+                {
+                        rowItem += recent_transactions[i][j].rightJustified(8, ' ') + "\t";
+                }
 
-            // get rid of last tab
-            int pos = rowItem.lastIndexOf(QChar('\t'));
-            qDebug() << rowItem.left(pos);
+                // get rid of last tab
+                int pos = rowItem.lastIndexOf(QChar('\t'));
+                qDebug() << rowItem.left(pos);
 
-            ui->transactions_List->addItem(rowItem);
-            // ui->transactions_List->addItem( recent_transactions[i][0] + "\t:\t" +  recent_transactions[i][2] + "\t" + recent_transactions[i][3] + "\t" + recent_transactions[i][1]);
+                ui->transactions_List->addItem(rowItem);
+                // ui->transactions_List->addItem( recent_transactions[i][0] + "\t:\t" +  recent_transactions[i][2] + "\t" + recent_transactions[i][3] + "\t" + recent_transactions[i][1]);
         }
 }
 void page_transactions::exitPage()
@@ -175,11 +181,11 @@ void page_transactions::on_back_Button_clicked()
 
 void page_transactions::on_print_Button_clicked(bool checked)
 {
-        
+
         // Get the pointer to the currently selected item.
 
-
-        if(ui->transactions_List->selectedItems().size() != 0){
+        if (ui->transactions_List->selectedItems().size() != 0)
+        {
 
                 QListWidgetItem *item = ui->transactions_List->currentItem();
 
@@ -187,24 +193,20 @@ void page_transactions::on_print_Button_clicked(bool checked)
                 // item->setTextColor(Qt::white);
                 item->setBackgroundColor(Qt::green);
                 _idleTimeoutSec = 60;
-                qDebug() << "selected 2222 ";
                 QModelIndex selectedRow = ui->transactions_List->selectionModel()->selectedIndexes()[0];
                 int rowIndex = selectedRow.row();
-                qDebug() << selectedRow.row();
-                qDebug() << "selected 333 ";
-                // rowIndex = (selectedRow.row()).toInt();
-
                 QString transactionIndex = recent_transactions[rowIndex][0];
-                qDebug() << "selected row: " << rowIndex << " has dispense index: " + transactionIndex;
+                qDebug() << "Selected row: " << rowIndex << " with dispense index: " + transactionIndex << ". Send to receipt printer.";
 
-
-
-                qDebug() << "Send test transaction id printer to controller";
                 p_page_idle->dfUtility->send_command_to_FSM("p");
                 usleep(50000);
                 QString command = "t" + transactionIndex;
                 p_page_idle->dfUtility->send_command_to_FSM(command);
-        }else{
+                usleep(50000);
+                p_page_idle->dfUtility->send_command_to_FSM("q");
+        }
+        else
+        {
                 qDebug() << "No transaction selected";
         }
 }

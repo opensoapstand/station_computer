@@ -71,7 +71,7 @@ DF_ERROR stateManualPrinter::onAction()
 
          m_state_requested = STATE_IDLE;
       }
-      else if ( ACTION_UI_COMMAND_PRINTER_SEND_STATUS == m_pMessaging->getAction())
+      else if (ACTION_UI_COMMAND_PRINTER_SEND_STATUS == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Printer status requested by UI", MSG_INFO);
          sendPrinterStatus(); // first call after startup returns always online
@@ -101,7 +101,8 @@ DF_ERROR stateManualPrinter::onAction()
          debugOutput::sendMessage("Is Printer reachable?", MSG_INFO);
          displayPrinterReachable();
       }
-      else if (ACTION_PRINT_TRANSACTION == m_pMessaging->getAction()){
+      else if (ACTION_PRINT_TRANSACTION == m_pMessaging->getAction())
+      {
          // ACTION_TRANSACTION_ID
          int id = m_pMessaging->getCommandValue();
          debugOutput::sendMessage("Print id : " + to_string(id), MSG_INFO);
@@ -112,17 +113,18 @@ DF_ERROR stateManualPrinter::onAction()
          debugOutput::sendMessage("Print transaction?", MSG_INFO);
          printTransaction(959);
       }
-      else 
+      else
       {
          debugOutput::sendMessage("---Receipt printer menu---"
-         "Available printer test commands: \n"
-         " 0: Exit printer menu \n"
-         " 1: Test print\n"
-         " 2: Printer status toggle continuous mode\n"
-         " 3: Printer status \n"
-         " 4: Check printer connected\n"
-         " 5: Print transaction 959\n"
-         " h: Display this help menu", MSG_INFO);
+                                  "Available printer test commands: \n"
+                                  " 0: Exit printer menu \n"
+                                  " 1: Test print\n"
+                                  " 2: Printer status toggle continuous mode\n"
+                                  " 3: Printer status \n"
+                                  " 4: Check printer connected\n"
+                                  " 5: Print transaction 959\n"
+                                  " h: Display this help menu",
+                                  MSG_INFO);
       }
    }
 
@@ -170,19 +172,19 @@ DF_ERROR stateManualPrinter::onAction()
    return e_ret;
 }
 
-DF_ERROR stateManualPrinter::printTransaction(int transactionNumber){
+void stateManualPrinter::printTransaction(int transactionNumber)
+{
    // gets transaction data from db.
    char *zErrMsg = 0;
    rc = sqlite3_open(DB_PATH, &db);
    sqlite3_stmt *stmt;
    std::string sql_string;
 
-
    //-------------------------------------------------
    sql_string = ("SELECT product,price,quantity_dispensed,end_time FROM transactions WHERE id=" + to_string(transactionNumber));
 
-    /* Create SQL statement for transactions */
-    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+   /* Create SQL statement for transactions */
+   sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 
    int status;
    status = sqlite3_step(stmt);
@@ -191,11 +193,27 @@ DF_ERROR stateManualPrinter::printTransaction(int transactionNumber){
    double price;
    double quantity_dispensed;
    string end_time;
-   if (status == SQLITE_ROW){
+   if (status == SQLITE_ROW)
+   {
       product = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
       price = sqlite3_column_double(stmt, 1);
       quantity_dispensed = sqlite3_column_double(stmt, 2);
-      end_time = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 3)));;
+      end_time = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 3)));
+      ;
+   }
+   else if (status == SQLITE_DONE)
+   {
+      debugOutput::sendMessage("ERROR: transaction not found. Id: " + to_string(transactionNumber), MSG_INFO);
+      sqlite3_finalize(stmt);
+      sqlite3_close(db);
+      return;
+   }
+   else
+   {
+      debugOutput::sendMessage("ERROR retrieving transaction Id: " + to_string(transactionNumber), MSG_INFO);
+      sqlite3_finalize(stmt);
+      sqlite3_close(db);
+      return;
    }
 
    if (rc != SQLITE_OK)
@@ -209,24 +227,25 @@ DF_ERROR stateManualPrinter::printTransaction(int transactionNumber){
       debugOutput::sendMessage("SUCCES: SQL transaction retrieval : (" + to_string(rc) + ") " + sql_string, MSG_INFO);
    }
 
-   debugOutput::sendMessage("----------------: " + product , MSG_INFO);
-   debugOutput::sendMessage("----------------: " + to_string(price) , MSG_INFO);
-   debugOutput::sendMessage("----------------: " + to_string(quantity_dispensed) , MSG_INFO);
-   debugOutput::sendMessage("----------------: " + end_time , MSG_INFO);
+   debugOutput::sendMessage("----------------: " + product, MSG_INFO);
+   debugOutput::sendMessage("----------------: " + to_string(price), MSG_INFO);
+   debugOutput::sendMessage("----------------: " + to_string(quantity_dispensed), MSG_INFO);
+   debugOutput::sendMessage("----------------: " + end_time, MSG_INFO);
+   sqlite3_finalize(stmt);
+   sqlite3_close(db);
 
    //-------------------------------------------------
-
-
+   rc = sqlite3_open(DB_PATH, &db);
    sql_string = ("SELECT slot FROM products WHERE name='" + product + "';");
 
    /* Create SQL statement for transactions */
-    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+   sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 
-   
    status = sqlite3_step(stmt);
 
    int slot;
-   if (status == SQLITE_ROW){
+   if (status == SQLITE_ROW)
+   {
       slot = sqlite3_column_int(stmt, 0);
    }
    if (rc != SQLITE_OK)
@@ -240,8 +259,9 @@ DF_ERROR stateManualPrinter::printTransaction(int transactionNumber){
       debugOutput::sendMessage("SUCCES: SQL transaction retrieval : (" + to_string(rc) + ") " + sql_string, MSG_INFO);
    }
 
-   debugOutput::sendMessage("slot ----------------: " + to_string(slot) , MSG_INFO);
-
+   debugOutput::sendMessage("slot ----------------: " + to_string(slot), MSG_INFO);
+   sqlite3_finalize(stmt);
+   sqlite3_close(db);
    setup_receipt_from_data_and_slot(slot, quantity_dispensed, quantity_dispensed, price, end_time);
 }
 
@@ -296,7 +316,7 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
       debugOutput::sendMessage("SUCCES: SQL2 : (" + to_string(rc) + ") " + sql21, MSG_INFO);
    }
 #endif
-sqlite3_close(db);
+   sqlite3_close(db);
 }
 
 DF_ERROR stateManualPrinter::displayPrinterStatus()
@@ -367,41 +387,35 @@ DF_ERROR stateManualPrinter::onExit()
    return e_ret;
 }
 
-DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp){
-    std::string name_receipt = (productDispensers[slot-1].getProduct()->m_name_receipt);
+DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp)
+{
+   std::string name_receipt = (productDispensers[slot - 1].getProduct()->m_name_receipt);
    //  std::string plu = productDispensers[slot-1].getProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
 
-   char size = productDispensers[slot-1].getProduct()->getSizeCharFromTargetVolume(volume_requested);
-   string plu = productDispensers[slot-1].getFinalPLU(SIZE_CUSTOM_CHAR, price);
+   char size = productDispensers[slot - 1].getProduct()->getSizeCharFromTargetVolume(volume_requested);
+   string plu = productDispensers[slot - 1].getFinalPLU(SIZE_CUSTOM_CHAR, price);
 
+   std::string units = (productDispensers[slot - 1].getProduct()->getDisplayUnits());
+   std::string paymentMethod = productDispensers[slot - 1].getProduct()->getPaymentMethod();
 
-    std::string units = (productDispensers[slot-1].getProduct()->getDisplayUnits());
-    std::string paymentMethod = productDispensers[slot-1].getProduct()->getPaymentMethod();
-
-
-    char chars_cost[MAX_BUF];
-    char chars_volume_formatted[MAX_BUF];
-    // char chars_price_per_ml_formatted[MAX_BUF];
+   char chars_cost[MAX_BUF];
+   char chars_volume_formatted[MAX_BUF];
+   // char chars_price_per_ml_formatted[MAX_BUF];
    //  char chars_plu_dynamic_formatted[MAX_BUF];
 
-    // string cost = (chars_cost);
+   // string cost = (chars_cost);
 
-
-
-   snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.2f", productDispensers[slot-1].getProduct()->getTargetVolume(size));
-    string vol = (chars_volume_formatted);
-    string receipt_volume_formatted =  vol + "ml";
+   snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.2f", productDispensers[slot - 1].getProduct()->getTargetVolume(size));
+   string vol = (chars_volume_formatted);
+   string receipt_volume_formatted = vol + "ml";
    //  string receipt_volume_formatted = to_string(chars_volume_formatted) + "ml";
 
-
-
-    snprintf(chars_cost, sizeof(chars_cost), "%.2f", price);
-    string receipt_cost = (chars_cost);
+   snprintf(chars_cost, sizeof(chars_cost), "%.2f", price);
+   string receipt_cost = (chars_cost);
 
    machine tmp;
-   tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod,plu);
+   tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu);
 }
-
 
 // DF_ERROR stateManualPrinter::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string units, string paymentMethod, string plu){
 //     print_text(name_receipt + "\nPrice: $" + receipt_cost + " \nQuantity: " + receipt_volume_formatted + "\nTime: " + time_stamp);

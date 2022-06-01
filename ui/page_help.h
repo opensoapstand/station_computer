@@ -52,8 +52,6 @@ private slots:
 
 private:
     void showEvent(QShowEvent *event);
-    //bool stopHelpTimers();
-    //void helpOnTick();
 
     Ui::page_help *ui;
     page_select_product* p_page_select_product;

@@ -98,9 +98,9 @@ void page_help::on_previousPage_Button_2_clicked(){
 
 void page_help::onHelpTimeoutTick(){
     if(-- _helpIdleTimeoutSec >= 0) {
-//        qDebug() << "Help Tick Down: " << _helpIdleTimeoutSec << endl;
+       qDebug() << "Help Tick Down: " << _helpIdleTimeoutSec;
     } else {
-//        qDebug() << "Help Timer Done!" << _helpIdleTimeoutSec << endl;
+       qDebug() << "Help Timer Done!" << _helpIdleTimeoutSec;
 
         helpIdleTimer->stop();
         // qDebug() << "help to idle";
@@ -119,6 +119,7 @@ void page_help::on_refreshButton_clicked(){
 
 void page_help::on_transactions_Button_clicked()
 {
+    helpIdleTimer->stop();
     p_page_transactions->showFullScreen();
     this->hide();
 }

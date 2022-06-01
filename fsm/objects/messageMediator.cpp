@@ -356,7 +356,9 @@ DF_ERROR messageMediator::parseCommandString()
    else if (
        // other commands
        first_char == ACTION_MANUAL_PUMP_PWM_SET ||
-       first_char == ACTION_MANUAL_PUMP_SET)
+       first_char == ACTION_MANUAL_PUMP_SET ||
+       first_char == ACTION_PRINT_TRANSACTION
+       )
    {
       m_requestedAction = first_char;
       std::string number = sCommand.substr(1, sCommand.size());

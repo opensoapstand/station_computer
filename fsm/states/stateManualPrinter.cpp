@@ -101,6 +101,12 @@ DF_ERROR stateManualPrinter::onAction()
          debugOutput::sendMessage("Is Printer reachable?", MSG_INFO);
          displayPrinterReachable();
       }
+      else if (ACTION_PRINT_TRANSACTION == m_pMessaging->getAction()){
+         // ACTION_TRANSACTION_ID
+         int id = m_pMessaging->getCommandValue();
+         debugOutput::sendMessage("Print id : " + to_string(id), MSG_INFO);
+         printTransaction(id);
+      }
       else if ('5' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Print transaction?", MSG_INFO);

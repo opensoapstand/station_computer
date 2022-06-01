@@ -175,18 +175,36 @@ void page_transactions::on_back_Button_clicked()
 
 void page_transactions::on_print_Button_clicked(bool checked)
 {
+        
         // Get the pointer to the currently selected item.
-        QListWidgetItem *item = ui->transactions_List->currentItem();
 
-        // Set the text color and its background color using the pointer to the item.
-        // item->setTextColor(Qt::white);
-        item->setBackgroundColor(Qt::green);
-        _idleTimeoutSec = 60;
-        QModelIndex selectedRow = ui->transactions_List->selectionModel()->selectedIndexes()[0];
-        int rowIndex = selectedRow.row();
-        qDebug() << selectedRow.row();
-        // rowIndex = (selectedRow.row()).toInt();
 
-        QString transactionIndex = recent_transactions[rowIndex][0];
-        qDebug() << "selected row: " << rowIndex << " has dispense index: " + transactionIndex;
+        if(ui->transactions_List->selectedItems().size() != 0){
+
+                QListWidgetItem *item = ui->transactions_List->currentItem();
+
+                // Set the text color and its background color using the pointer to the item.
+                // item->setTextColor(Qt::white);
+                item->setBackgroundColor(Qt::green);
+                _idleTimeoutSec = 60;
+                qDebug() << "selected 2222 ";
+                QModelIndex selectedRow = ui->transactions_List->selectionModel()->selectedIndexes()[0];
+                int rowIndex = selectedRow.row();
+                qDebug() << selectedRow.row();
+                qDebug() << "selected 333 ";
+                // rowIndex = (selectedRow.row()).toInt();
+
+                QString transactionIndex = recent_transactions[rowIndex][0];
+                qDebug() << "selected row: " << rowIndex << " has dispense index: " + transactionIndex;
+
+
+
+                qDebug() << "Send test transaction id printer to controller";
+                p_page_idle->dfUtility->send_command_to_FSM("p");
+                usleep(50000);
+                QString command = "t" + transactionIndex;
+                p_page_idle->dfUtility->send_command_to_FSM(command);
+        }else{
+                qDebug() << "No transaction selected";
+        }
 }

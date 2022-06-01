@@ -10,35 +10,32 @@ page_transactions::page_transactions(QWidget *parent) : QWidget(parent),
         connect(idleTimer, SIGNAL(timeout()), this, SLOT(onIdleTimeoutTick()));
         transaction_count = TRANSACTION_HISTORY_COUNT;
 
+        // set up back button
+        QFont font;
+        font.setFamily(QStringLiteral("Brevia"));
+        font.setPointSize(20);
+        font.setBold(true);
+        font.setWeight(75);
+
+        ui->back_Button->setStyleSheet("QPushButton { color:#FFFFFF; background-color: transparent; border: 0px }");
+        ui->back_Button->setFont(font);
+        ui->back_Button->setText("<- Back");
+
+        // set up print button
+
+        font.setFamily(QStringLiteral("Brevia"));
+        font.setPointSize(20);
+        font.setBold(true);
+        font.setWeight(75);
+
+        // ui->print_Button->setStyleSheet("QPushButton { color:#FFFFFF; background-color: transparent; border: 0px }");
+        ui->print_Button->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
+
+        ui->print_Button->setFont(font);
+        ui->print_Button->setText("Print Selected Receipt");
+
         // ui->transactions_List->setStyleSheet("QListWidget{  background:transparent; }QListWidget::item{background:green;}");
         ui->transactions_List->setStyleSheet("QListWidget{  background:transparent; }QListWidget::item{background-color: #5E8580;}");
-
-        // ui->transactions_List->setStyleSheet(
-        //     "QlistWidget::item:selected {
-        //     background:
-        //     transparent; }
-        //     QListWidget::item:selected {
-        //     border:
-        //         1px solid red; }"
-        // )
-
-        // It paints the border, but renders the text foreground color black. If I change it to:
-        // self.listWidgetRepo.setStyleSheet("""
-        // QListWidget::item:selected {
-        //     foreground:
-        //         green;
-        //         QListWidget::item : selected
-        //         {
-        //         background:
-        //             transparent;
-        //         }
-        //         QListWidget::item : selected
-        //         {
-        //         border:
-        //             1px solid red;
-        //         }
-        //         ""
-        //         ")
 }
 
 void page_transactions::setPage(page_idle *pageIdle)
@@ -155,7 +152,7 @@ void page_transactions::populateList()
         deleteAllListItems();
 
         // DO NOT ADD HEADER IN TABLE. It can be selected and causes a crash.
-        // ui->transactions_List->addItem("Dispense time     \t Volume [ml]      \t Price \t Name");
+        ui->transactions_List->addItem("Dispense time     \t Volume [ml]      \t Price \t Name");
         // populate the items of the list
         for (int i = 0; i < transaction_count; i++)
         {
@@ -173,7 +170,6 @@ void page_transactions::populateList()
                 ui->transactions_List->addItem(rowItem);
                 // ui->transactions_List->addItem( recent_transactions[i][0] + "\t:\t" +  recent_transactions[i][2] + "\t" + recent_transactions[i][3] + "\t" + recent_transactions[i][1]);
         }
-          qDebug() << "iiieeij";
 }
 void page_transactions::exitPage()
 {
@@ -190,7 +186,6 @@ void page_transactions::on_print_Button_clicked(bool checked)
 {
 
         // Get the pointer to the currently selected item.
-
         if (ui->transactions_List->selectedItems().size() != 0)
         {
 
@@ -202,15 +197,21 @@ void page_transactions::on_print_Button_clicked(bool checked)
                 _idleTimeoutSec = 60;
                 QModelIndex selectedRow = ui->transactions_List->selectionModel()->selectedIndexes()[0];
                 int rowIndex = selectedRow.row();
-                QString transactionIndex = recent_transactions[rowIndex][0];
-                qDebug() << "Selected row: " << rowIndex << " with dispense index: " + transactionIndex << ". Send to receipt printer.";
 
-                p_page_idle->dfUtility->send_command_to_FSM("p");
-                usleep(50000);
-                QString command = "t" + transactionIndex;
-                p_page_idle->dfUtility->send_command_to_FSM(command);
-                usleep(50000);
-                p_page_idle->dfUtility->send_command_to_FSM("q");
+                if (rowIndex != 0)
+                {
+                        // first row is header
+
+                        QString transactionIndex = recent_transactions[rowIndex-1][0];
+                        qDebug() << "Selected row: " << rowIndex << " with dispense index: " + transactionIndex << ". Send to receipt printer.";
+
+                        p_page_idle->dfUtility->send_command_to_FSM("p");
+                        usleep(50000);
+                        QString command = "t" + transactionIndex;
+                        p_page_idle->dfUtility->send_command_to_FSM(command);
+                        usleep(50000);
+                        p_page_idle->dfUtility->send_command_to_FSM("q");
+                }
         }
         else
         {

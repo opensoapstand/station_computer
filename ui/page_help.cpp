@@ -33,7 +33,17 @@ page_help::page_help(QWidget *parent) :
     ui->previousPage_Button_2->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    
+    // view transactions button
+    QFont font;
+    font.setFamily(QStringLiteral("Brevia"));
+    font.setPointSize(20);
+    // font.setBold(true);
+    // font.setWeight(75);
+    font.setWeight(50);
+    ui->transactions_Button->setStyleSheet("QPushButton { color:#003840; background-color: transparent; border: 0px }");
+    // ui->transactions_Button->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
+    ui->transactions_Button->setFont(font);
+    ui->transactions_Button->setText("Transaction History ->");
 
     helpIdleTimer = new QTimer(this);
     helpIdleTimer->setInterval(1000);

@@ -22,14 +22,16 @@ def pushTransaction():
     #Open the file and read the file line by line
     with open(filename,'r') as file1:
         transactions = file1.readlines()
+        i = 0
         while transactions:
-            transaction = convertStringToDictionary(transactions[0].strip())
+            transaction = convertStringToDictionary(transactions[i].strip())
             if transaction:
                 x = requests.post(url, transaction)
                 if x.text:
                     transactions.pop()
                 else:
                     break
+            i+=1
 
     #Empty the file if all the records are successful
     open(filename,'w').close()

@@ -65,7 +65,21 @@ void page_transactions::showEvent(QShowEvent *event)
         idleTimer->start(1000);
         _idleTimeoutSec = 60;
         populateTransactionsTable();
-        qDebug() << "done talbe";
+
+        qDebug() << "db for receipt printer check";
+        DbManager db(DB_PATH);
+        QString paymentMethod = db.getPaymentMethod(p_page_idle->currentProductOrder->getSelectedSlot());
+        bool hasReceiptPrinter = db.hasReceiptPrinter();
+        db.closeDB();
+
+        if (hasReceiptPrinter)
+        {
+                ui->print_Button->show();
+        }
+        else
+        {
+                ui->print_Button->hide();
+        }
 }
 
 void page_transactions::onIdleTimeoutTick()
@@ -77,7 +91,6 @@ void page_transactions::onIdleTimeoutTick()
         else
         {
                 qDebug() << "transactions Timer Done!" << _idleTimeoutSec;
-
                 exitPage();
         }
 }
@@ -91,59 +104,13 @@ void page_transactions::populateTransactionsTable()
         db.getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
 
         transaction_count = retrieved_count;
-        // for (uint8_t i = 0; i < count; i++)
-        // {
-        //     qDebug() << recent_transactions[i][0];
-        // }
-
-        //     if (checked != db.getPumpRampingEnabled())
-        //     {
-        //         qDebug() << "Write to db: Pump ramping enabled?" << checked;
-        //         db.setPumpRampingEnabled(checked);
-        //         ui->enable_pump_ramping_checkBox->setChecked(db.getPumpRampingEnabled());
-        //     }
         db.closeDB();
 
         populateList();
-        qDebug() << "feijaiejf";
-
-        // table
-        // ui->transactions_Table->setRowCount(10);
-        // ui->transactions_Table->setColumnCount(4);
-
-        // QTableWidgetItem *itemTitle0 = new QTableWidgetItem(tr("%1").arg("Dispense Time"));
-        // QTableWidgetItem *itemTitle1 = new QTableWidgetItem(tr("%1").arg("Name"));
-        // QTableWidgetItem *itemTitle2 = new QTableWidgetItem(tr("%1").arg("Volume [ml]"));
-        // QTableWidgetItem *itemTitle3 = new QTableWidgetItem(tr("%1").arg("Price"));
-        // ui->transactions_Table->setItem(0, 0, itemTitle0);
-        // ui->transactions_Table->setItem(0, 1, itemTitle1);
-        // ui->transactions_Table->setItem(0, 2, itemTitle2);
-        // ui->transactions_Table->setItem(0, 3, itemTitle3);
-
-        // // populate the items of the list
-        // for (int i = 1; i < (count+1); i++)
-        // {
-        //     for (int j = 0; j < 4; j++)
-        //     {
-        //         QTableWidgetItem *newItem = new QTableWidgetItem(tr("%1").arg(recent_transactions[i][j]));
-
-        //         ui->transactions_Table->setItem(i, j, newItem);
-        //     }
-        // }
-
-        // QHeaderView* header =  ui->transactions_Table->horizontalHeader();
-        // header->setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents);
-
-        // list
 }
 
 void page_transactions::deleteAllListItems()
 {
-        // for (uint16_t i = 0; i < ui->transactions_List->count(); i++)
-        // {
-        //     QListWidgetItem *it = ui->transactions_List->takeItem(ui->transactions_List->currentRow());
-        //     delete it;
-        // }
         ui->transactions_List->clear();
 }
 
@@ -151,13 +118,13 @@ void page_transactions::populateList()
 {
         deleteAllListItems();
 
-        // DO NOT ADD HEADER IN TABLE. It can be selected and causes a crash.
-        ui->transactions_List->addItem("Dispense time     \t Volume [ml]      \t Price \t Name");
+        // header is the first row. (caution: It messes up the indexing a little bit)
+        ui->transactions_List->addItem("Dispense time     \t Volume [ml]     Price     Name");
+       
         // populate the items of the list
         for (int i = 0; i < transaction_count; i++)
         {
                 QString rowItem;
-                // paddedString = originalString.leftJustified(4, ' ');
                 for (int j = 1; j < 5; j++)
                 {
                         rowItem += recent_transactions[i][j].rightJustified(8, ' ') + "\t";
@@ -168,7 +135,6 @@ void page_transactions::populateList()
                 qDebug() << rowItem.left(pos);
 
                 ui->transactions_List->addItem(rowItem);
-                // ui->transactions_List->addItem( recent_transactions[i][0] + "\t:\t" +  recent_transactions[i][2] + "\t" + recent_transactions[i][3] + "\t" + recent_transactions[i][1]);
         }
 }
 void page_transactions::exitPage()
@@ -202,7 +168,7 @@ void page_transactions::on_print_Button_clicked(bool checked)
                 {
                         // first row is header
 
-                        QString transactionIndex = recent_transactions[rowIndex-1][0];
+                        QString transactionIndex = recent_transactions[rowIndex - 1][0];
                         qDebug() << "Selected row: " << rowIndex << " with dispense index: " + transactionIndex << ". Send to receipt printer.";
 
                         p_page_idle->dfUtility->send_command_to_FSM("p");

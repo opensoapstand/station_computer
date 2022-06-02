@@ -400,7 +400,7 @@ std::string stateDispenseEnd::getProductID(int slot)
 
 #endif
 
-    /* Create SQL statement for transactions */
+    
     sqlite3_prepare(db, sql_string_pid.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
     std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
@@ -420,7 +420,7 @@ std::string stateDispenseEnd::getProductID(int slot)
 
 //     std::string sql_string_pid = "SELECT productId FROM products WHERE slot=" + std::to_string(slot) + ";";
 
-//     /* Create SQL statement for transactions */
+//     
 //     sqlite3_prepare(db, sql_string_pid.c_str(), -1, &stmt, NULL);
 //     sqlite3_step(stmt);
 //     std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
@@ -451,7 +451,7 @@ std::string stateDispenseEnd::getMachineID()
         //       fprintf(stderr, "Opened database successfully\n");
     }
 
-    /* Create SQL statement for transactions */
+    
     sqlite3_prepare(db, "SELECT machine_id FROM machine;", -1, &stmt, NULL);
     sqlite3_step(stmt);
     std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
@@ -491,7 +491,7 @@ std::string stateDispenseEnd::getUnitsFromDb(int slot)
     std::string sql_string_units = "SELECT size_unit FROM products WHERE slot=" + std::to_string(slot) + ";";
 
 #endif
-    /* Create SQL statement for transactions */
+    
     sqlite3_prepare(db, sql_string_units.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
     std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
@@ -516,10 +516,6 @@ DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement)
     else
     {
     }
-
-    /* Create SQL statement for transactions */
-    // std::string sql1;
-    // sql1 = ("INSERT INTO transactions VALUES (NULL, '" + product_name + "', " + target_volume + ", " + price_string + ", '" + start_time + "', " + dispensed_volume_str + ", datetime('now', 'localtime'), '" + "0" + "', '" + "0" + "' );");
 
     char *sql_trans = new char[sqlStatement.length() + 1];
     strcpy(sql_trans, sqlStatement.c_str());
@@ -594,11 +590,10 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool is_container_empty)
 
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
     debugOutput::sendMessage("update DB. dispense end: vol dispensed: " + to_string(dispensed_volume), MSG_INFO);
-
-    /* Create SQL statement for transactions */
     debugOutput::sendMessage("Dispensed volume to be subtracted: " + dispensed_volume_str, MSG_INFO);
 
     std::string sql1;
+    // transaction id: null: will auto increment. 
     sql1 = ("INSERT INTO transactions VALUES (NULL, '" + product_name + "', " + target_volume + ", " + price_string + ", '" + start_time + "', " + dispensed_volume_str + ", datetime('now', 'localtime'), '" + "0" + "', '" + "0" + "' );");
     databaseUpdateSql(sql1);
 

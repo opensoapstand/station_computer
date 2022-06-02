@@ -181,9 +181,7 @@ void stateManualPrinter::printTransaction(int transactionNumber)
    std::string sql_string;
 
    //-------------------------------------------------
-   sql_string = ("SELECT product,price,quantity_dispensed,end_time FROM transactions WHERE id=" + to_string(transactionNumber));
-
-   /* Create SQL statement for transactions */
+   sql_string = ("SELECT product,price,quantity_dispensed,quantity_requested,end_time FROM transactions WHERE id=" + to_string(transactionNumber));
    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 
    int status;
@@ -192,13 +190,15 @@ void stateManualPrinter::printTransaction(int transactionNumber)
    string product;
    double price;
    double quantity_dispensed;
+   double quantity_requested;
    string end_time;
    if (status == SQLITE_ROW)
    {
       product = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
       price = sqlite3_column_double(stmt, 1);
       quantity_dispensed = sqlite3_column_double(stmt, 2);
-      end_time = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 3)));
+      quantity_requested = sqlite3_column_double(stmt, 3);
+      end_time = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 4)));
       ;
    }
    else if (status == SQLITE_DONE)
@@ -230,6 +230,7 @@ void stateManualPrinter::printTransaction(int transactionNumber)
    debugOutput::sendMessage("----------------: " + product, MSG_INFO);
    debugOutput::sendMessage("----------------: " + to_string(price), MSG_INFO);
    debugOutput::sendMessage("----------------: " + to_string(quantity_dispensed), MSG_INFO);
+   debugOutput::sendMessage("----------------: " + to_string(quantity_requested), MSG_INFO);
    debugOutput::sendMessage("----------------: " + end_time, MSG_INFO);
    sqlite3_finalize(stmt);
    sqlite3_close(db);
@@ -238,7 +239,7 @@ void stateManualPrinter::printTransaction(int transactionNumber)
    rc = sqlite3_open(DB_PATH, &db);
    sql_string = ("SELECT slot FROM products WHERE name='" + product + "';");
 
-   /* Create SQL statement for transactions */
+   
    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 
    status = sqlite3_step(stmt);
@@ -262,7 +263,7 @@ void stateManualPrinter::printTransaction(int transactionNumber)
    debugOutput::sendMessage("slot ----------------: " + to_string(slot), MSG_INFO);
    sqlite3_finalize(stmt);
    sqlite3_close(db);
-   setup_receipt_from_data_and_slot(slot, quantity_dispensed, quantity_dispensed, price, end_time);
+   setup_receipt_from_data_and_slot(slot, quantity_dispensed, quantity_requested, price, end_time);
 }
 
 DF_ERROR stateManualPrinter::sendPrinterStatus()
@@ -393,7 +394,7 @@ DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double v
    //  std::string plu = productDispensers[slot-1].getProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
 
    char size = productDispensers[slot - 1].getProduct()->getSizeCharFromTargetVolume(volume_requested);
-   string plu = productDispensers[slot - 1].getFinalPLU(SIZE_CUSTOM_CHAR, price);
+   string plu = productDispensers[slot - 1].getFinalPLU(size, price);
 
    std::string units = (productDispensers[slot - 1].getProduct()->getDisplayUnits());
    std::string paymentMethod = productDispensers[slot - 1].getProduct()->getPaymentMethod();

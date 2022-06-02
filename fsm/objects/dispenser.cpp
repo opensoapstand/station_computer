@@ -162,29 +162,32 @@ string dispenser::getFinalPLU(char size, double price){
     std::string paymentMethod = getProduct()->getPaymentMethod();
 
      if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13")
+    {
+        if (base_plu.size() != 8)
         {
-            if (base_plu.size() != 8)
-            {
-                // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
-                debugOutput::sendMessage("ERROR custom plu length must be of length eight. (standard drinkfill preamble(627987) + 2digit product code) : " + base_plu, MSG_INFO);
-                string fake_plu = "66666666";
-                base_plu = fake_plu;
-            }
-
-            snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%5.2f", price);
+            // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
+            debugOutput::sendMessage("ERROR custom plu length must be of length eight. (standard drinkfill preamble(627987) + 2digit product code) : " + base_plu, MSG_INFO);
+            string fake_plu = "66666666";
+            base_plu = fake_plu;
         }
-        else if (paymentMethod == "barcode_EAN-2")
+
+        snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%5.2f", price);
+    }
+    else if (paymentMethod == "barcode_EAN-2")
+    {
+        if (base_plu.size() != 7)
         {
-            if (base_plu.size() != 7)
-            {
-                // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
-                debugOutput::sendMessage("ERROR custom plu length must be of length seven. provided: " + base_plu, MSG_INFO);
-                string fake_plu = "6666666";
-                base_plu = fake_plu;
-            }
-
-            snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%6.2f", price);
+            // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
+            debugOutput::sendMessage("ERROR custom plu length must be of length seven. provided: " + base_plu, MSG_INFO);
+            string fake_plu = "6666666";
+            base_plu = fake_plu;
         }
+
+        snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%6.2f", price);
+    }
+    else if (paymentMethod == "plu"){
+        return base_plu;
+    }
 
 
         string plu_dynamic_price = (chars_plu_dynamic_formatted);
@@ -829,7 +832,6 @@ void dispenser::loadMultiDispenseButtonEnabledFromDb()
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT dispense_buttons_count FROM machine";
-    /* Create SQL statement for transactions */
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
 
@@ -873,7 +875,7 @@ void dispenser::loadPumpReversalEnabledFromDb()
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT enable_pump_reversal FROM machine";
-    /* Create SQL statement for transactions */
+    
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
 
@@ -904,7 +906,7 @@ void dispenser::loadPumpRampingEnabledFromDb()
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT enable_pump_ramping FROM machine";
-    /* Create SQL statement for transactions */
+    
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
 
@@ -935,7 +937,7 @@ void dispenser::loadEmptyContainerDetectionEnabledFromDb()
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT has_empty_detection FROM machine";
-    /* Create SQL statement for transactions */
+    
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
 

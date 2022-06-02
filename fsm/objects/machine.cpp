@@ -58,6 +58,7 @@ void machine::print_receipt(string name_receipt, string receipt_cost, string rec
 
     else if (paymentMethod == "plu")
     {
+        debugOutput::sendMessage("PLU:" + plu,  MSG_INFO);
         print_text("PLU: " + plu);
     }
     else

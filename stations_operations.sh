@@ -10,7 +10,7 @@
 # DO NOT ADD SPACES TO THE ELEMENTS, it causes a mess when looping over it (treats space as array delimiter in some cases).#
 station_descriptions=("SS-DEV-LODE" "SS-DEV-ASH" "SS-DEV-SHOP" "SS-0000004" "EEFC" "UBC" "Ruddy" "Re-Up" "SS-0000009" "Pomme" "Petros11" "Petros12" "Petros13" "Petros14" "SS-0000015" "SS-0000016" "SS-0000017" "Choices" "Stongs" "FamousFoods" "SS-0000021" "Nada" "Petros23" "Petros24" "Petros25" "Petros26");
 station_ids=("SS-DEV-LODE" "SS-DEV-003" "SS-0000003" "SS-0000004" "SS-0000005" "SS-0000006" "SS-0000007" "SS-0000008" "SS-0000009" "SS-0000010" "SS-0000011" "SS-0000012" "SS-0000013" "SS-0000014" "SS-0000015" "SS-0000016" "SS-0000017" "SS-0000018" "SS-0000019" "SS-0000020" "SS-0000021" "SS-0000022" "SS-0000023" "SS-0000024" "SS-0000025" "SS-0000026");
-station_ports=("44444" "43081" "44003" "43004" "43005" "43006" "43007" "43008" "43009" "43010" "43011" "43012" "43013" "43014" "43015" "43016" "43017" "43018" "43019" "43020" "43021" "43022" "43023" "43024" "43025" "43026");
+station_ports=("44444" "43081" "44.0003" "43004" "43005" "43006" "43007" "43008" "43009" "43010" "43011" "43012" "43013" "43014" "43015" "43016" "43017" "43018" "43019" "43020" "43021" "43022" "43023" "43024" "43025" "43026");
 # -----------------------------------
 
 # https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_10_02.html
@@ -133,17 +133,31 @@ scp_transfer () {
     read -p "Enter file/folder name will append to /home/df-admin/production/" path
 
     full_source_path="/home/df-admin/$1$path"
-    full_destination_path="/home/df-admin/$2"
+
+    # check for empty (which is home folder, in that case, we create a folder with the id of the source)
+    if [ -z "$2" ]
+    then
+        
+        cmd0=(ssh -p $destination_port df-admin@localhost mkdir $source_id) 
+        full_destination_path="/home/df-admin/$source_id/"
+    else
+        
+        cmd0=""
+        full_destination_path="/home/df-admin/$2"
+    fi
+
     aws_station_path="/home/ubuntu/Stations/$source_id"
     aws_file_path="/home/ubuntu/Stations/$source_id/$path"
 
     cmd1=( scp -r -P $source_port df-admin@localhost:$full_source_path $aws_station_path )
     cmd2=( scp -r -P $destination_port $aws_file_path df-admin@localhost:$full_destination_path )
+    printf -v cmd0_str '%q ' "${cmd0[@]}"
     printf -v cmd1_str '%q ' "${cmd1[@]}"
     printf -v cmd2_str '%q ' "${cmd2[@]}"
     
     # confirm_execute "$cmd_str"
     echo "Lined up commands: "
+    echo "$cmd0_str"
     echo "$cmd1_str"
     echo "$cmd2_str"
     
@@ -152,9 +166,11 @@ scp_transfer () {
         mv -r "$aws_file_path" "$aws_file_path_bkp"
         echo "Backup made in AWS ($aws_file_path)"
     fi
+    "${cmd0[@]}"
     "${cmd1[@]}"
-    echo "part 1 done"
+    echo "station to AWS done"
     "${cmd2[@]}"
+    echo "AWS to station done"
 }
 
 

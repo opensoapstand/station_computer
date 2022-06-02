@@ -131,7 +131,7 @@ int product::getPWMFromDB()
 #else
     string sql_string = "SELECT dispense_speed FROM products WHERE slot=" + to_string(m_nSlot) + ";";
 #endif
-    /* Create SQL statement for transactions */
+    
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
     std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
@@ -169,7 +169,7 @@ double product::getVolPerTickFromDB()
     }
 
     string sql_string = "SELECT volume_per_tick FROM products WHERE slot=" + to_string(m_nSlot) + ";";
-    /* Create SQL statement for transactions */
+    
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
     std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
@@ -471,7 +471,7 @@ string product::getBasePLU(char size)
 
 //     debugOutput::sendMessage("Reload parameters from database: " + sql_string, MSG_INFO);
 
-//     /* Create SQL statement for transactions */
+//     
 //     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 
 //     int status;
@@ -628,7 +628,7 @@ bool product::isDbValid()
     sqlite3_stmt *stmt;
     string sql_string = "PRAGMA table_info(products);";
 
-    /* Create SQL statement for transactions */
+    
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     // sqlite3_step(stmt);
     // std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
@@ -703,7 +703,7 @@ bool product::reloadParametersFromDb()
     sqlite3_stmt *stmt;
     string sql_string = "SELECT * FROM products WHERE slot=" + to_string(m_nSlot) + ";";
 
-    /* Create SQL statement for transactions */
+    
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 
     int status;
@@ -1127,7 +1127,7 @@ bool product::testParametersFromDb()
     string sql_string = "SELECT dispense_speed FROM products WHERE slot=" + to_string(m_nSlot) + ";";
 #endif
 
-    /* Create SQL statement for transactions */
+    
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 
     // int status = sqlite3_step(stmt);  // every sqlite3_step returns a row. if it returns 0, it's run over all the rows.

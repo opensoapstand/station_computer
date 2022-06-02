@@ -47,8 +47,6 @@ public:
 
     dispenser *productDispensers;
 
-
-
     DF_ERROR onEntry();
     DF_ERROR onAction();
     DF_ERROR onExit();
@@ -56,9 +54,9 @@ public:
 private:
     char dispensedVolumeToSmallestFixedSize();
     void adjustSizeToDispensedVolume();
-    int pos;
+    int pos_index;
+    int slot;
     char command;
-    // char size;
 
     sqlite3 *db;
     int rc;

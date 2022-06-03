@@ -330,7 +330,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
         return e_ret;
     }
 
-    debugOutput::sendMessage("cURL init success", MSG_INFO);
+    debugOutput::sendMessage("cURL init success. Will send: https://soapstandportal.com/api/machine_data/pushPrinterOrder?" + curl_param, MSG_INFO);
 
     curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/pushPrinterOrder");
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, buffer);

@@ -30,6 +30,8 @@
 #include "objects/dispenser.h"
 #include "objects/messageMediator.h"
 
+#include "objects/machine.h"
+
 std::string stateStrings[FSM_MAX + 1] = {
     "STATE_DUMMY",
     "STATE_INIT",
@@ -87,6 +89,9 @@ int main()
     debugOutput::sendMessage("***************************************************************************", MSG_INFO);
     debugOutput::sendMessage("****** SOAPSTAND CONTROLLER v" + version + " ***********************************", MSG_INFO);
     debugOutput::sendMessage("***************************************************************************", MSG_INFO);
+    
+    machine test;
+    test.testtest();
 
     if (OK == initObjects())
     {

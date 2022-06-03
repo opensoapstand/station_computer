@@ -24,6 +24,8 @@
 #define CLEAN_WATER_TIME 1
 #define CLEAN_AIR_TIME 1
 
+#define MAX_BUF 64
+
 dsed8344 *dispenser::the_8344 = nullptr;
 
 // CTOR
@@ -71,6 +73,33 @@ DF_ERROR dispenser::setup()
     pwm_actual_set_speed = 0;
 }
 
+void dispenser::refresh()
+{
+
+    the_8344->dispenseButtonRefresh();
+
+    // periodical polling refresh  (because the dispense button has no interrupt trigger (i2c))
+    bool egde = dispenseButtonValueMemory != getDispenseButtonValue();
+    dispenseButtonValueEdgePositive = getDispenseButtonValue() && egde;
+    dispenseButtonValueEdgeNegative = (!getDispenseButtonValue()) && egde;
+    dispenseButtonValueMemory = getDispenseButtonValue();
+
+    // status update time
+    using namespace std::chrono;
+    uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    if (previous_status_update_allowed_epoch + DISPENSE_STATUS_UPDATE_DELTA_MILLIS < now)
+    {
+        previous_status_update_allowed_epoch = now;
+        isStatusUpdateSendAndPrintAllowed = true;
+    }
+    else
+    {
+        isStatusUpdateSendAndPrintAllowed = false;
+    }
+
+    dispenseButtonTimingUpdate();
+
+}
 /*
 dispenser::dispenser(gpio *ButtonReference)
 {
@@ -151,6 +180,64 @@ dispenser::~dispenser()
 /* ------Getters, Setters and Utilities------ */
 
 // #ifdef ENABLE_MULTI_BUTTON
+string dispenser::getFinalPLU(char size, double price){
+
+
+    string base_plu = getProduct()->getBasePLU(size);
+     char chars_plu_dynamic_formatted[MAX_BUF];
+    
+    std::string paymentMethod = getProduct()->getPaymentMethod();
+
+     if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13")
+    {
+        if (base_plu.size() != 8)
+        {
+            // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
+            debugOutput::sendMessage("ERROR custom plu length must be of length eight. (standard drinkfill preamble(627987) + 2digit product code) : " + base_plu, MSG_INFO);
+            string fake_plu = "66666666";
+            base_plu = fake_plu;
+        }
+
+        snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%5.2f", price);
+    }
+    else if (paymentMethod == "barcode_EAN-2")
+    {
+        if (base_plu.size() != 7)
+        {
+            // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
+            debugOutput::sendMessage("ERROR custom plu length must be of length seven. provided: " + base_plu, MSG_INFO);
+            string fake_plu = "6666666";
+            base_plu = fake_plu;
+        }
+
+        snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%6.2f", price);
+    }
+    else if (paymentMethod == "plu"){
+        return base_plu;
+    }
+
+
+        string plu_dynamic_price = (chars_plu_dynamic_formatted);
+        string plu_dynamic_formatted = base_plu + plu_dynamic_price;
+        // 3.14 --> " 3.14" --> " 314" --> "0314"
+        std::string toReplace(".");
+        size_t pos = plu_dynamic_formatted.find(toReplace);
+        if (pos != -1)
+        {
+            plu_dynamic_formatted.replace(pos, toReplace.length(), "");
+        }
+
+        std::string toReplace2(" ");
+        pos = plu_dynamic_formatted.find(toReplace2);
+        while (pos != -1)
+        {
+            plu_dynamic_formatted.replace(pos, toReplace2.length(), "0");
+            pos = plu_dynamic_formatted.find(toReplace2);
+        }
+
+        return plu_dynamic_formatted;
+}
+
 void dispenser::setAllDispenseButtonLightsOff()
 {
     for (int slot = 1; slot < 5; slot++)
@@ -278,7 +365,6 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
     // Set Start Time
     time(&rawtime);
     timeinfo = localtime(&rawtime);
-
     strftime(m_nStartTime, 50, "%F %T", timeinfo);
 
     return dfRet;
@@ -289,6 +375,12 @@ DF_ERROR dispenser::stopDispense()
     {
         setAllDispenseButtonLightsOff();
     }
+
+    // Set End time
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+    strftime(m_nEndTime, 50, "%F %T", timeinfo);
+
     //     DF_ERROR e_ret = ERROR_BAD_PARAMS;
     //     // the_8344->setPumpsDisableAll();
     //     // debugOutput::sendMessage("All Pumps disabled", MSG_INFO);
@@ -304,6 +396,10 @@ DF_ERROR dispenser::stopDispense()
 string dispenser::getDispenseStartTime()
 {
     return m_nStartTime;
+}
+string dispenser::getDispenseEndTime()
+{
+    return m_nEndTime;
 }
 
 // void dispenser::setVolumeDispensedPreviously(double volume)
@@ -336,6 +432,10 @@ void dispenser::subtractFromVolumeDispensed(double volume_to_distract)
 {
     double volume = getProduct()->getVolumeDispensed();
     getProduct()->setVolumeDispensed(volume - volume_to_distract);
+}
+
+double dispenser::getVolumeRemaining(){
+    return getProduct()->getVolumeRemaining();
 }
 
 double dispenser::getVolumeDispensed()
@@ -422,30 +522,6 @@ DF_ERROR dispenser::setPumpDirectionForward()
 
 //       // productDispensers[m_active_pump_index].setPumpPWM(125);
 
-void dispenser::refresh()
-{
-
-    the_8344->dispenseButtonRefresh();
-
-    // periodical polling refresh  (because the dispense button has no interrupt trigger (i2c))
-    bool egde = dispenseButtonValueMemory != getDispenseButtonValue();
-    dispenseButtonValueEdgePositive = getDispenseButtonValue() && egde;
-    dispenseButtonValueEdgeNegative = (!getDispenseButtonValue()) && egde;
-    dispenseButtonValueMemory = getDispenseButtonValue();
-
-    // status update time
-    using namespace std::chrono;
-    uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    if (previous_status_update_allowed_epoch + DISPENSE_STATUS_UPDATE_DELTA_MILLIS < now)
-    {
-        previous_status_update_allowed_epoch = now;
-        isStatusUpdateSendAndPrintAllowed = true;
-    }
-    else
-    {
-        isStatusUpdateSendAndPrintAllowed = false;
-    }
-}
 
 bool dispenser::getIsStatusUpdateAllowed()
 {
@@ -491,8 +567,14 @@ void dispenser::dispenseButtonTimingreset()
 {
     dispense_button_total_pressed_millis = 0;
     dispense_button_current_press_millis = 0;
+    dispense_button_press_count_during_dispensing = 0;
     using namespace std::chrono;
     dispense_button_time_at_last_check_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+}
+
+
+void dispenser::addDispenseButtonPress(){
+    dispense_button_press_count_during_dispensing++;
 }
 
 void dispenser::dispenseButtonTimingUpdate()
@@ -501,6 +583,7 @@ void dispenser::dispenseButtonTimingUpdate()
 
     using namespace std::chrono;
     uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    
     if (getDispenseButtonValue())
     {
         uint64_t interval = now - dispense_button_time_at_last_check_epoch;
@@ -513,7 +596,11 @@ void dispenser::dispenseButtonTimingUpdate()
         // do nothing;
     }
     dispense_button_time_at_last_check_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    logUpdateIfAllowed("Button press millis. Total:" + to_string(dispense_button_total_pressed_millis) + " Current press:" + to_string(dispense_button_current_press_millis));
+    
+}
+
+int dispenser::getDispenseButtonPressesDuringDispensing(){
+    return dispense_button_press_count_during_dispensing;
 }
 
 uint64_t dispenser::getButtonPressedTotalMillis()
@@ -772,7 +859,6 @@ void dispenser::loadMultiDispenseButtonEnabledFromDb()
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT dispense_buttons_count FROM machine";
-    /* Create SQL statement for transactions */
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
 
@@ -816,7 +902,7 @@ void dispenser::loadPumpReversalEnabledFromDb()
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT enable_pump_reversal FROM machine";
-    /* Create SQL statement for transactions */
+    
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
 
@@ -847,7 +933,7 @@ void dispenser::loadPumpRampingEnabledFromDb()
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT enable_pump_ramping FROM machine";
-    /* Create SQL statement for transactions */
+    
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
 
@@ -878,7 +964,7 @@ void dispenser::loadEmptyContainerDetectionEnabledFromDb()
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT has_empty_detection FROM machine";
-    /* Create SQL statement for transactions */
+    
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
 
@@ -1085,7 +1171,8 @@ Dispense_behaviour dispenser::getDispenseStatus()
     // todo: button press does not necessarily mean pump is on. We should work with pump speed feedback
 
     updateRunningAverageWindow();
-    dispenseButtonTimingUpdate();
+    // dispenseButtonTimingUpdate();
+    logUpdateIfAllowed("Button press millis. Total:" + to_string(dispense_button_total_pressed_millis) + " Current press:" + to_string(dispense_button_current_press_millis));
 
     using namespace std::chrono;
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();

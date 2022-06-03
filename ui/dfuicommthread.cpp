@@ -50,7 +50,8 @@ QByteArray DfUiCommThread::readyRead()
 
     if (Data == "Transaction End")
     {
-    }else  if (Data == "No flow abort")
+    }
+    else if (Data == "No flow abort")
     {
     }
     else if (Data == "Reset Timer")
@@ -68,14 +69,14 @@ QByteArray DfUiCommThread::readyRead()
     else if (Data == "MM")
     {
     }
-    else if (strtol(Data, &pEnd, 10) || (Data[0] == '0' && Data[1]=='.'))
+    else if (strtol(Data, &pEnd, 10) || (Data[0] == '0' && Data[1] == '.'))
     {
         // double volume_dispensed = stod(Data.constData(), &sz);
         // emit updateVolumeSignal(volume_dispensed);
     }
     else
     {
-          qDebug() << "No matching command found." << Data;
+        qDebug() << "No matching command found." << Data;
     }
 
     // socket->write(Data); // THIS CAUSES THE UI TO CRASH AT TIMES.... for now, we delete it. todo. send ack to controller.
@@ -90,10 +91,10 @@ QByteArray DfUiCommThread::readyRead()
     {
         emit resetTimerSignal();
     }
-else  if (Data == "No flow abort")
-{
-    emit noFlowAbortSignal();
-}
+    else if (Data == "No flow abort")
+    {
+        emit noFlowAbortSignal();
+    }
     else if (Data == "Target Hit")
     {
         emit targetHitSignal();
@@ -108,11 +109,13 @@ else  if (Data == "No flow abort")
     {
         emit MMSignal();
     }
-    else if (strtol(Data, &pEnd, 10) || (Data[0] == '0' && Data[1]=='.'))
+    else if (strtol(Data, &pEnd, 10) || (Data[0] == '0' && Data[1] == '.'))
     {
         double volume_dispensed = stod(Data.constData(), &sz);
         emit updateVolumeSignal(volume_dispensed);
-    }else{
+    }
+    else
+    {
 
         // QByteArray data;
         // QString DataAsString = QString(data);

@@ -47,11 +47,13 @@ public:
         double getVolumePerTick();
 
         double getTargetVolume(char size);
+        char getSizeCharFromTargetVolume(double volume);
         double getPrice(char size);
         string getDisplayUnits();
         double convertVolumeMetricToDisplayUnits(double volume);
 
-        string getPLU(char size);
+        string getBasePLU(char size);
+        string getProductId();
         string getPaymentMethod() { return m_paymentMethod; }
 
         // void setTargetVolume(double nVolumeTarget){m_nVolumeTarget = nVolumeTarget;};
@@ -116,6 +118,8 @@ public:
 
         // string m_soapstand_product_serial;
         string m_name;
+        string m_dispenser_id;
+        string m_soapstand_product_serial;
         string m_display_unit;
         string m_name_receipt;
         // double m_buttonPressDuration;

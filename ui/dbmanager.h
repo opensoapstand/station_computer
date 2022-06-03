@@ -6,26 +6,27 @@
 class DbManager
 {
 public:
-    DbManager(const QString& path);
+    DbManager(const QString &path);
     ~DbManager();
     void closeDB();
-    bool isDatabaseLocked(const QSqlDatabase & db);
-    
-    bool addPageClick(const QString& page);
+    bool isDatabaseLocked(const QSqlDatabase &db);
+
+    bool addPageClick(const QString &page);
     QString getProductName(int slot);
     double getProductPrice(int slot, char size);
-    //double getProductTargetVolume(int slot);
+    // double getProductTargetVolume(int slot);
     double getProductVolumePerTick(int slot);
     // bool remainingVolumeIsBiggerThanLargestFixedSize(int slot);
     bool isProductVolumeInContainer(int slot);
+    bool getRecentTransactions(QString values[][5], int count, int* count_retreived);
     bool hasReceiptPrinter();
     QString getProductReceiptName(int slot);
     QString getPaymentMethod(int slot);
     double getProductVolume(int slot, char ml);
     QString getUnits(int slot);
-    
+
     QString getCustomerId();
-    
+
     double getFullProduct(int slot);
     int getTotalTransactions();
     int getNumberOfProducts();
@@ -36,21 +37,21 @@ public:
     bool refill(int slot);
     bool sellout(int slot);
     bool unsellout(int slot);
-    
+
     double getTemperature();
     int getPWM(int slot);
     double getBuffer(int slot);
     QString getPLU(int slot, char size);
     QString getMachineID();
     QString getProductID(int slot);
-    #ifndef USE_OLD_DATABASE
+#ifndef USE_OLD_DATABASE
     int getSlotEnabled(int slot);
     QString getStatusText(int slot);
     bool updateSlotAvailability(int slot, int isEnabled, QString status_text);
-    #endif
-    
+#endif
+
     uint32_t getNumberOfRows(QString table);
-    bool initialize(const QString& path);
+    bool initialize(const QString &path);
 
     bool updatePaymentsDb(QString date, QString time, QString txnType, QString amount, QString cardNo, QString refNo, QString authNo, QString cardType, QString status, QString isoCode, QString hostCode, QString tvr);
     // bool updatePriceSmall(int slot, double new_price);
@@ -74,7 +75,7 @@ public:
     QString getProductType(int slot);
     QString getProductDrinkfillSerial(int slot);
     // void getProductProperties(int slot, QString*name, QString *description, QString *features,  QString *ingredients);
-    void getProductProperties(int slot, QString*name, QString *description, QString *features,  QString *ingredients, bool* isSizeEnabled);
+    void getProductProperties(int slot, QString *name, QString *description, QString *features, QString *ingredients, bool *isSizeEnabled);
     QString getTemplateName();
 
 private:

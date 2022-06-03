@@ -77,6 +77,7 @@ using namespace std;
 
 #define TEMPLATES_ROOT_PATH "/home/df-admin/production/references/templates/"
 #define TEMPLATES_DEFAULT_NAME "default"
+#define TRANSACTION_HISTORY_COUNT 15
 
 #define PRODUCT_PICTURES_ROOT_PATH "/home/df-admin/production/references/products/%1.png"
 
@@ -86,6 +87,7 @@ using namespace std;
 
 #define PAGE_IDLE_BACKGROUND_PATH                       "background_message.png"
 #define PAGE_THANK_YOU_BACKGROUND_PATH                  "background_message.png"
+#define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_message.png"
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
 #define PAGE_HELP_BACKGROUND_PATH                       "background_help.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"

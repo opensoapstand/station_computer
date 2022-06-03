@@ -464,7 +464,7 @@ void page_maintenance_dispenser::fsmReceiveNoFlowAbort()
 {
     // gets called from the controller.
     // dispense_test_end(false);
-    qDebug() << "Received no flow from controller. , will not take any action";
+    qDebug() << "Received no flow from controller (in maintenance mode). Will not take any action";
 }
 
 void page_maintenance_dispenser::on_refillButton_clicked()

@@ -16,6 +16,7 @@
 
 
 
+#include "page_transactions.h"
 #include "page_help.h"
 #include "page_init.h"
 #include "page_idle.h"
@@ -101,6 +102,7 @@ int main(int argc, char *argv[])
     page_help *helpPage = new page_help();
     page_init *initPage = new page_init();
     page_idle *p_page_idle = new page_idle();
+    page_transactions *p_page_transactions = new page_transactions();
     page_select_product *firstSelectPage = new page_select_product();
     pageProduct *p_pageProduct = new pageProduct();
     pagePayment *paymentPage = new pagePayment();
@@ -148,7 +150,8 @@ int main(int argc, char *argv[])
     df_util::fileExists(FULL_TRANSPARENT_IMAGE_PATH);
 
     // Page pathing references to function calls.
-    helpPage->setPage(firstSelectPage, p_pageProduct, p_page_idle, paymentPage);
+    helpPage->setPage(firstSelectPage, p_pageProduct, p_page_idle, paymentPage, p_page_transactions);
+    p_page_transactions->setPage(p_page_idle);
     initPage->setPage(p_page_idle);
     p_page_maintenance_product->setPage(p_page_maintenance, p_page_idle);
     p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product, firstSelectPage, p_pageProduct);

@@ -61,8 +61,8 @@
   <widget class="QLabel" name="refreshLabel">
    <property name="geometry">
     <rect>
-     <x>640</x>
-     <y>20</y>
+     <x>50</x>
+     <y>150</y>
      <width>421</width>
      <height>91</height>
     </rect>
@@ -86,10 +86,24 @@ Tap on screen to keep page open.</string>
     <bool>true</bool>
    </property>
   </widget>
+  <widget class="QPushButton" name="transactions_Button">
+   <property name="geometry">
+    <rect>
+     <x>700</x>
+     <y>40</y>
+     <width>361</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>View Transactions</string>
+   </property>
+  </widget>
   <zorder>refreshButton</zorder>
   <zorder>previousPage_Button_2</zorder>
   <zorder>previousPage_Button</zorder>
   <zorder>refreshLabel</zorder>
+  <zorder>transactions_Button</zorder>
  </widget>
  <resources/>
  <connections/>

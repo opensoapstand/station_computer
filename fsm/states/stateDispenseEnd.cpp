@@ -100,7 +100,7 @@ DF_ERROR stateDispenseEnd::onAction()
     if (m_pMessaging->getRequestedSize() == SIZE_TEST_CHAR)
     {
         debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(productDispensers[pos_index].getVolumeDispensed()) + "ml).", MSG_INFO);
-        dispenseEndUpdateDB( updated_volume_remaining); // update the db dispense statistics
+        dispenseEndUpdateDB(updated_volume_remaining); // update the db dispense statistics
     }
     else if (!is_valid_dispense)
     {
@@ -111,7 +111,7 @@ DF_ERROR stateDispenseEnd::onAction()
         e_ret = handleTransactionPayment();
 
         debugOutput::sendMessage("Normal transaction.", MSG_INFO);
-        dispenseEndUpdateDB( updated_volume_remaining);
+        dispenseEndUpdateDB(updated_volume_remaining);
 
         bool success = false;
 #ifdef ENABLE_TRANSACTION_TO_CLOUD
@@ -356,10 +356,10 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
             debugOutput::sendMessage("sendTransactionToCloud: CURL succes.", MSG_INFO);
 
             // set transaction as processed in database.
-            // get transaction 
-
-            // modify
-            
+            std::string sql;
+            std::string start_time = productDispensers[pos_index].getDispenseStartTime();
+            sql = ("UPDATE transactions SET processed_by_backend=1 WHERE start_time='" + start_time + "';");
+            databaseUpdateSql(sql);
         }
         else
         {
@@ -368,7 +368,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
         }
         readBuffer = "";
     }
-
+  
     curl_easy_cleanup(curl);
 
     return e_ret;
@@ -609,7 +609,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(double updated_volume_remaining)
     std::string sql1;
     // transaction id: null: will auto increment.
     // value(text): datetime('now', 'localtime') // sql for adding automatic timestamp.
-    sql1 = ("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,slot,button_duration,button_times,processed_by_backend,product_id) VALUES ('" + product_name + "'," + target_volume + "," + price_string + ",'" + start_time + "'," + dispensed_volume_str + ",'" + end_time + "'," + to_string(updated_volume_remaining) + "," + to_string(slot) + "," + button_press_duration + "," + dispense_button_count + "," + to_string(false) + ",'"+product_id+"');");
+    sql1 = ("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,slot,button_duration,button_times,processed_by_backend,product_id) VALUES ('" + product_name + "'," + target_volume + "," + price_string + ",'" + start_time + "'," + dispensed_volume_str + ",'" + end_time + "'," + to_string(updated_volume_remaining) + "," + to_string(slot) + "," + button_press_duration + "," + dispense_button_count + "," + to_string(false) + ",'" + product_id + "');");
 
     databaseUpdateSql(sql1);
 

@@ -129,36 +129,11 @@ void page_select_product::showEvent(QShowEvent *event)
     productPageEndTimer->start(1000);
     _productPageTimeoutSec = 15;
 
-    // qDebug() << "db check if product is enabled";
-    // DbManager db(DB_PATH);
-    // for (uint8_t i = 0; i < SLOT_COUNT; i++)
-    // {
-    //     QString path = SOLD_OUT_IMAGE_PATH;
-    //     if (!db.getSlotEnabled(i + 1))
-    //     {
-    //         selectProductPhotoLabelsText[i]->setText(db.getStatusText(i + 1));
-    //         selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
-    //     }
-    //     else if (!db.remainingVolumeIsBiggerThanLargestFixedSize(i + 1))
-    //     {
-    //         selectProductPhotoLabelsText[i]->setText("Sold out");
-    //         selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
-    //     }
-    //     else
-    //     {
-    //         selectProductPhotoLabelsText[i]->setText("");
-    //         selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,0);}");
-    //         selectProductButtons[i]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
-    //     }
-    // }
-    // db.closeDB();
     this->raise();
 }
 void page_select_product::resizeEvent(QResizeEvent *event)
 {
-    // qDebug() << "resize sel before ffffsdfsdf";
     QWidget::resizeEvent(event);
-    // qDebug() << "resize sel after ffffsdfsdf";
 }
 
 void page_select_product::displayProducts()
@@ -283,7 +258,7 @@ void page_select_product::cancelTimers()
 
 void page_select_product::select_product(int slot)
 {
-    qDebug() << "ahoyy16 (last call before freeze up?!)";
+    qDebug() << "db open16 (last call before freeze up?!)";
 
     DbManager db(DB_PATH);
     bool product_not_sold_out = (db.isProductVolumeInContainer(slot));

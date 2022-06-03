@@ -9,7 +9,7 @@ DrinkOrder::DrinkOrder()
     // overruledPrice = INVALID_PRICE;
     m_discount_percentage_fraction = 0.0;
 
-    // qDebug() << "ahoyy2" ;
+    // qDebug() << "db open2" ;
     // DbManager db(DB_PATH);
 
     // DRINK1_SIZE_ML_L = db.getProductVolume(1, 'l');

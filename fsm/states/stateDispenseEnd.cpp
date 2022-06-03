@@ -196,7 +196,6 @@ char stateDispenseEnd::dispensedVolumeToSmallestFixedSize()
             fixed_volume = productDispensers[pos_index].getProduct()->getTargetVolume(fixed_size);
 
             lowest_fixed_size = fixed_size;
-            // debugOutput::sendMessage("lloooowest: " + to_string(lowest_fixed_size), MSG_INFO);
             if (dispensed_volume >= fixed_volume)
             {
                 break;
@@ -206,7 +205,6 @@ char stateDispenseEnd::dispensedVolumeToSmallestFixedSize()
     if (lowest_fixed_size == SIZE_SMALLER_THAN_SMALL)
     {
         debugOutput::sendMessage("WARNING: SIZE SMALLER THAN SMALL DETECTED", MSG_INFO);
-        // lowest_fixed_size =SIZE_SMALL_CHAR;
     }
     return lowest_fixed_size;
 }
@@ -273,6 +271,10 @@ size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
     return size * nmemb;
 }
 
+
+
+
+
 // This function sends the transaction details to the cloud using libcurl, if it fails, it stores the data to be sent in the write_curl_to_file function
 // TODO: This will be replaced with an AWS IoT method!
 bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
@@ -296,25 +298,24 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     std::string pid = getProductID(slot);
     std::string units = productDispensers[pos_index].getProduct()->getDisplayUnits();
     std::string readBuffer;
-    std::string dispensed_volume_units_converted;
     std::string volume_remaining_units_converted_string;
-    double volume_remaining_converted;
 
-    if (productDispensers[pos_index].getVolumeDispensed() == productDispensers[pos_index].getProduct()->getVolumePerTick())
+    double volume_remaining_converted;
+    std::string dispensed_volume_units_converted;
+    double dispensed_volume = ceil(productDispensers[pos_index].getVolumeDispensed());
+    if (dispensed_volume <= productDispensers[pos_index].getProduct()->getVolumePerTick())
     {
         dispensed_volume_units_converted = "0";
     }
     else
     {
-        double dv = productDispensers[pos_index].getVolumeDispensed();
-        dv = productDispensers[pos_index].getProduct()->convertVolumeMetricToDisplayUnits(dv);
+        double dv = productDispensers[pos_index].getProduct()->convertVolumeMetricToDisplayUnits(dispensed_volume);
         dispensed_volume_units_converted = to_string(dv);
     }
 
     volume_remaining_converted = productDispensers[pos_index].getProduct()->convertVolumeMetricToDisplayUnits(volume_remaining);
     volume_remaining_units_converted_string = to_string(volume_remaining_converted);
-
-    // todo Lode check with Ash
+    
 #ifdef USE_OLD_DATABASE
     std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&units=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + end_time + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer";
 #else
@@ -424,28 +425,6 @@ std::string stateDispenseEnd::getProductID(int slot)
     sqlite3_close(db);
     return str;
 }
-
-// void stateDispenseEnd::loadProductData(int slot)
-// {
-//     rc = sqlite3_open(DB_PATH, &db);
-
-//     sqlite3_stmt *stmt;
-
-//     debugOutput::sendMessage("Product ID getter START", MSG_INFO);
-
-//     std::string sql_string_pid = "SELECT productId FROM products WHERE slot=" + std::to_string(slot) + ";";
-
-//
-//     sqlite3_prepare(db, sql_string_pid.c_str(), -1, &stmt, NULL);
-//     sqlite3_step(stmt);
-//     std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
-//     ;
-//     sqlite3_finalize(stmt);
-//     sqlite3_close(db);
-//     return str;
-
-//     sqlite3_column_double
-// }
 
 std::string stateDispenseEnd::getMachineID()
 {
@@ -563,31 +542,17 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(double updated_volume_remaining)
     std::string start_time = (productDispensers[pos_index].getDispenseStartTime());
     std::string end_time = (productDispensers[pos_index].getDispenseEndTime());
     std::string product_id = (productDispensers[pos_index].getProduct()->getProductId());
-    std::string dispensed_volume_str;
 
     double price;
     std::string price_string;
 
-    double dispensed_volume = ceil(productDispensers[pos_index].getVolumeDispensed());
-
-    // if (is_container_empty)
-    // {
-    //     updated_volume_remaining = 0;
-    //     debugOutput::sendMessage("WARNING: Empty container detected. Will set remaining volume to zero.", MSG_INFO);
-    // }
-    // else if (updated_volume_remaining < 0)
-    // {
-    //     // anomaly: calculated lower than 0 volume. Which is clearly wrong. So, artificially increase volume.
-    //     // should be set to smallest fixed volume?!
-
-    //     // updated_volume_remaining = productDispensers[pos_index].getProduct()->getTargetVolume(SIZE_SMALL_CHAR); // error: todo: small volume might not be active.
-    //     updated_volume_remaining = 500;
-    //     debugOutput::sendMessage("WARNING: Remaining Volume negative anomaly. Increase remaining volume with 500ml. ", MSG_INFO);
-    // }
-
+    
     target_volume = to_string(ceil(productDispensers[pos_index].getProduct()->getTargetVolume(m_pMessaging->getRequestedSize())));
     char size = m_pMessaging->getRequestedSize();
 
+
+    std::string dispensed_volume_str;
+    double dispensed_volume = ceil(productDispensers[pos_index].getVolumeDispensed());
     if (dispensed_volume <= productDispensers[pos_index].getProduct()->getVolumePerTick())
     {
         dispensed_volume_str = "0";

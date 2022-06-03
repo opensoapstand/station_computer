@@ -430,7 +430,7 @@ void page_maintenance_dispenser::updateVolumeDisplayed(double dispensed, bool is
     {
         update_dispense_stats(dispensed);
         /*
-            // qDebug() << "ahoyy3" ;
+            // qDebug() << "db open3" ;
             // DbManager db(DB_PATH);
 
             // double vol_dispensed = dispensed;
@@ -624,7 +624,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
 #else
 void page_maintenance_dispenser::on_soldOutButton_clicked()
 {
-    qDebug() << "ahoyy4";
+    qDebug() << "db open4";
     DbManager db(DB_PATH);
     //    qDebug() << "Sold Out button clicked" << endl;
 
@@ -747,7 +747,7 @@ void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
         qDebug() << "Maintenance dispenser page timeout";
 
         // Update Click DB
-        qDebug() << "ahoyy5";
+        qDebug() << "db open5";
         DbManager db(DB_PATH);
         dispense_test_end(true);
 
@@ -903,7 +903,7 @@ void page_maintenance_dispenser::on_buttonCancel_clicked()
 
 void page_maintenance_dispenser::updateValues()
 {
-    // qDebug() << "ahoyy6";
+    // qDebug() << "db open6";
     // DbManager db(DB_PATH);
     // int product_slot___ = selectedProductOrder->getSelectedSlot();
 

@@ -95,7 +95,7 @@ void pagethankyou::showEvent(QShowEvent *event)
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_THANK_YOU_BACKGROUND_PATH);
 
-    qDebug() << "ahoyy24";
+    qDebug() << "db open24";
     DbManager db(DB_PATH);
     QString paymentMethod = db.getPaymentMethod(p_page_idle->currentProductOrder->getSelectedSlot());
     bool hasReceiptPrinter = db.hasReceiptPrinter();

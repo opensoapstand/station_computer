@@ -202,7 +202,7 @@ size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
 
 QString pagePayment::getPaymentMethod()
 {
-    qDebug() << "ahoyy245";
+    qDebug() << "db open245";
     int product_slot___ = p_page_idle->currentProductOrder->getSelectedSlot();
     DbManager db2(DB_PATH);
     QString payment_method = db2.getPaymentMethod(product_slot___);

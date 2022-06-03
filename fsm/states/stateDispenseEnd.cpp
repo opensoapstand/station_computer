@@ -49,7 +49,7 @@ DF_ERROR stateDispenseEnd::onEntry()
     productDispensers = g_productDispensers;
     slot = m_pMessaging->getRequestedSlot();
     pos_index = slot - 1;
-    
+
     return e_ret;
 }
 
@@ -81,6 +81,20 @@ DF_ERROR stateDispenseEnd::onAction()
         isContainerEmpty = true;
     }
 
+
+// std::string volume_remaining = to_string(productDispensers[pos_index].getVolumeRemaining());
+    char EndTime[50];
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+    strftime(EndTime, 50, "%F %T", timeinfo);
+    std::string end_time = std::string(EndTime);
+
+    double dispensed_volume = productDispensers[pos_index].getVolumeDispensed();
+    double volume_remaining_at_start = ceil(productDispensers[pos_index].getProduct()->getVolumeRemaining());
+    double updated_volume_remaining = ceil(volume_remaining_at_start - dispensed_volume);
+
+
+
     // adjust to nearest lower fixed volume if less dispensed than requested
     adjustSizeToDispensedVolume();
 
@@ -88,7 +102,7 @@ DF_ERROR stateDispenseEnd::onAction()
     if (m_pMessaging->getRequestedSize() == SIZE_TEST_CHAR)
     {
         debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(productDispensers[pos_index].getVolumeDispensed()) + "ml).", MSG_INFO);
-        dispenseEndUpdateDB(isContainerEmpty); // update the db dispense statistics
+        dispenseEndUpdateDB(isContainerEmpty, updated_volume_remaining, end_time, false); // update the db dispense statistics
     }
     else if (!is_valid_dispense)
     {
@@ -96,11 +110,9 @@ DF_ERROR stateDispenseEnd::onAction()
     }
     else
     {
-        debugOutput::sendMessage("Normal transaction.", MSG_INFO);
-        dispenseEndUpdateDB(isContainerEmpty);
-
         e_ret = handleTransactionPayment();
 
+         bool success = false;
 #ifdef ENABLE_TRANSACTION_TO_CLOUD
 
         std::string paymentMethod = productDispensers[pos_index].getProduct()->getPaymentMethod();
@@ -112,12 +124,14 @@ DF_ERROR stateDispenseEnd::onAction()
         else
         {
 
-            sendTransactionToCloud();
+           success = sendTransactionToCloud(end_time, updated_volume_remaining);
         }
 #else
 
         debugOutput::sendMessage("NOT SENDING transaction to cloud.", MSG_INFO);
 #endif
+        debugOutput::sendMessage("Normal transaction.", MSG_INFO);
+        dispenseEndUpdateDB(isContainerEmpty, updated_volume_remaining, end_time, success);
     }
 
     m_state_requested = STATE_IDLE;
@@ -262,29 +276,33 @@ size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
     return size * nmemb;
 }
 
-// This function sends the transaction details to the cloud using libcurl, if it fails, it stores the data to be sent in the bufferCurl function
+// This function sends the transaction details to the cloud using libcurl, if it fails, it stores the data to be sent in the write_curl_to_file function
 // TODO: This will be replaced with an AWS IoT method!
-DF_ERROR stateDispenseEnd::sendTransactionToCloud()
+bool stateDispenseEnd::sendTransactionToCloud(string endtime, double volume_remaining)
 {
-
     DF_ERROR e_ret = OK;
 
-    std::string product = (productDispensers[pos_index].getProduct()->m_name);
-    std::string target_volume = to_string(productDispensers[pos_index].getProduct()->getTargetVolume(m_pMessaging->getRequestedSize()));
+    // std::string volume_remaining = to_string(productDispensers[pos_index].getVolumeRemaining());
+    // char EndTime[50];
+    // time(&rawtime);
+    // timeinfo = localtime(&rawtime);
+    // strftime(EndTime, 50, "%F %T", timeinfo);
+    
 
+
+    std::string start_time = productDispensers[pos_index].getDispenseStartTime();
     double price = getFinalPrice();
     std::string price_string = to_string(price);
-    // std::string price = to_string(productDispensers[pos_index].getProduct()->getPrice(m_pMessaging->getRequestedSize()));
-    std::string start_time = productDispensers[pos_index].getDispenseStartTime();
+
+    std::string target_volume = to_string(productDispensers[pos_index].getProduct()->getTargetVolume(m_pMessaging->getRequestedSize()));
+    std::string product = (productDispensers[pos_index].getProduct()->m_name);
     std::string machine_id = getMachineID();
     std::string pid = getProductID(slot);
     std::string units = productDispensers[pos_index].getProduct()->getDisplayUnits();
-    char EndTime[50];
-    time(&rawtime);
-    timeinfo = localtime(&rawtime);
-    strftime(EndTime, 50, "%F %T", timeinfo);
     std::string readBuffer;
     std::string dispensed_volume_units_converted;
+    std::string volume_remaining_units_converted_string;
+    double volume_remaining_converted;
 
     if (productDispensers[pos_index].getVolumeDispensed() == productDispensers[pos_index].getProduct()->getVolumePerTick())
     {
@@ -297,11 +315,14 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
         dispensed_volume_units_converted = to_string(dv);
     }
 
+    volume_remaining_converted = productDispensers[pos_index].getProduct()->convertVolumeMetricToDisplayUnits(volume_remaining);
+    volume_remaining_units_converted_string = to_string(volume_remaining_converted);
+
     // todo Lode check with Ash
 #ifdef USE_OLD_DATABASE
-    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&units=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + EndTime + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer";
+    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&units=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + endtime + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer";
 #else
-    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + EndTime + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer";
+    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + endtime + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer&volume_remaining_ml=" + to_string(volume_remaining) + "&quantity_dispensed_ml=" + to_string(productDispensers[pos_index].getVolumeDispensed()) + "&volume_remaining=" + volume_remaining_units_converted_string;
 #endif
     char buffer[1080];
     strcpy(buffer, curl_param.c_str());
@@ -325,36 +346,39 @@ DF_ERROR stateDispenseEnd::sendTransactionToCloud()
     if (res == CURLE_OPERATION_TIMEDOUT)
     {
         debugOutput::sendMessage("sendTransactionToCloud: CURL timed out (" + to_string(CURLOPT_TIMEOUT_MS) + "ms). err: " + to_string(res) + " Will buffer!", MSG_INFO);
-        bufferCURL(curl_param);
-        curl_easy_cleanup(curl);
+        write_curl_to_file(curl_param);
     }
     else if (res != CURLE_OK)
     {
         debugOutput::sendMessage("sendTransactionToCloud: CURL fail. err: " + to_string(res) + " Will buffer!", MSG_INFO);
-        bufferCURL(curl_param);
-        curl_easy_cleanup(curl);
+        write_curl_to_file(curl_param);
     }
     else
     {
         if (readBuffer == "true")
         {
             debugOutput::sendMessage("sendTransactionToCloud: CURL succes.", MSG_INFO);
+
+            // set transaction as processed in database.
+
         }
         else
         {
             debugOutput::sendMessage("sendTransactionToCloud: CURL readbuffer fail.", MSG_INFO);
-            //                std::cout << "Curl didn't work, I need to buffer cURL" << endl;
-            bufferCURL(curl_param);
+            write_curl_to_file(curl_param);
         }
         readBuffer = "";
-        curl_easy_cleanup(curl);
     }
+
+    curl_easy_cleanup(curl);
+
 
     return e_ret;
 }
 
 // TODO: Figure out when/how to send all the bufferred curl data to the cloud (fixed with AWS IoT?)
-void stateDispenseEnd::bufferCURL(std::string curl_params)
+
+void stateDispenseEnd::write_curl_to_file(std::string curl_params)
 {
     char filetime[50];
     time(&rawtime);
@@ -530,25 +554,30 @@ DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement)
 }
 
 // This function updates the local SQLite3 database with the transaction data, as well as updates the total product remaining locally
-DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool is_container_empty)
+
+DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool is_container_empty, double updated_volume_remaining, string end_time, bool sent_to_cloud)
 {
     char *zErrMsg = 0;
     std::string product_name = (productDispensers[pos_index].getProduct()->m_name).c_str();
     std::string target_volume;
-
+    std::string button_press_duration = to_string(productDispensers[pos_index].getButtonPressedTotalMillis());
+    std::string dispense_button_count = to_string(productDispensers[pos_index].getDispenseButtonPressesDuringDispensing());
     std::string start_time = (productDispensers[pos_index].getDispenseStartTime());
     std::string dispensed_volume_str;
 
     double price;
     std::string price_string;
 
-    double dispensed_volume = productDispensers[pos_index].getVolumeDispensed();
-    double volume_remaining_at_start = productDispensers[pos_index].getProduct()->getVolumeRemaining();
-    double volume_full = productDispensers[pos_index].getProduct()->getVolumeFull();
-    double volume_dispensed_since_last_restock = productDispensers[pos_index].getProduct()->getVolumeDispensedSinceLastRestock();
+    // char chars_cost[MAX_BUF];
+    // char chars_volume_formatted[MAX_BUF];
+    // char chars_price_per_ml_formatted[MAX_BUF];
 
-    double updated_volume_dispensed_since_last_restock = volume_dispensed_since_last_restock + dispensed_volume;
-    double updated_volume_remaining = volume_remaining_at_start - dispensed_volume;
+    // snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", volume_dispensed);
+    // }
+    // string receipt_volume_formatted = (chars_volume_formatted);
+
+    double dispensed_volume = ceil(productDispensers[pos_index].getVolumeDispensed());
+
 
     if (is_container_empty)
     {
@@ -565,7 +594,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool is_container_empty)
         debugOutput::sendMessage("WARNING: Remaining Volume negative anomaly. Increase remaining volume with 500ml. ", MSG_INFO);
     }
 
-    target_volume = to_string(productDispensers[pos_index].getProduct()->getTargetVolume(m_pMessaging->getRequestedSize()));
+    target_volume = to_string(ceil(productDispensers[pos_index].getProduct()->getTargetVolume(m_pMessaging->getRequestedSize())));
     char size = m_pMessaging->getRequestedSize();
 
     if (dispensed_volume <= productDispensers[pos_index].getProduct()->getVolumePerTick())
@@ -576,7 +605,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool is_container_empty)
     {
         dispensed_volume_str = to_string(dispensed_volume);
     }
-
+    
     price = getFinalPrice();
     price_string = to_string(price);
 
@@ -584,9 +613,13 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool is_container_empty)
     debugOutput::sendMessage("update DB. dispense end: vol dispensed: " + to_string(dispensed_volume), MSG_INFO);
     debugOutput::sendMessage("Dispensed volume to be subtracted: " + dispensed_volume_str, MSG_INFO);
 
+    // std::string s = std::format("{:.2f}", 3.14159265359); // s == "3.14"
+
     std::string sql1;
     // transaction id: null: will auto increment.
-    sql1 = ("INSERT INTO transactions VALUES (NULL, '" + product_name + "', " + target_volume + ", " + price_string + ", '" + start_time + "', " + dispensed_volume_str + ", datetime('now', 'localtime'), '" + "0" + "', '" + "0" + "' );");
+    // value(text): datetime('now', 'localtime') // sql for adding automatic timestamp.
+    sql1 = ("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,slot,button_duration,button_times,processed_by_backend) VALUES ('" + product_name + "'," + target_volume + "," + price_string + ",'" + start_time + "'," + dispensed_volume_str + ",'"+end_time+"'," + to_string(updated_volume_remaining) + "," + to_string(slot) + ","+button_press_duration+","+dispense_button_count+","+to_string(sent_to_cloud)+");");
+
     databaseUpdateSql(sql1);
 
     /* Create SQL statement for product dispensed since restock */
@@ -613,6 +646,9 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool is_container_empty)
     sql3 = ("UPDATE products SET volume_remaining=" + to_string(updated_volume_remaining) + " WHERE name='" + product_name + "';");
 #endif
     databaseUpdateSql(sql3);
+
+    // reload (changed) db values
+    productDispensers[pos_index].getProduct()->reloadParametersFromDb();
 }
 
 double stateDispenseEnd::getFinalPrice()

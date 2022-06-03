@@ -401,10 +401,6 @@ DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double v
 
    char chars_cost[MAX_BUF];
    char chars_volume_formatted[MAX_BUF];
-   // char chars_price_per_ml_formatted[MAX_BUF];
-   //  char chars_plu_dynamic_formatted[MAX_BUF];
-
-   // string cost = (chars_cost);
 
    snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.2f", productDispensers[slot - 1].getProduct()->getTargetVolume(size));
    string vol = (chars_volume_formatted);

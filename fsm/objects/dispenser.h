@@ -100,6 +100,7 @@ public:
 
       void subtractFromVolumeDispensed(double volume_to_distract);
       double getVolumeDispensed();
+      double getVolumeRemaining();
       void resetVolumeDispensed();
       void initFlowRateCalculation();
       Time_val getVolumeDispensedNow();
@@ -115,6 +116,7 @@ public:
       bool getDispenseButtonEdgePositive();
       void dispenseButtonTimingreset();
       void dispenseButtonTimingUpdate();
+      int getDispenseButtonPressesDuringDispensing();
       uint64_t getButtonPressedTotalMillis();
       uint64_t getButtonPressedCurrentPressMillis();
 
@@ -177,6 +179,8 @@ private:
       uint64_t dispense_button_time_at_last_check_epoch;
       uint64_t dispense_button_total_pressed_millis; // culmination of all button press times
       uint64_t dispense_button_current_press_millis; // time of this single press
+
+      int dispense_button_press_count_during_dispensing;
 
       uint64_t previous_status_update_allowed_epoch;
 

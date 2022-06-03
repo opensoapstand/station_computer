@@ -213,7 +213,6 @@ double product::getVolumeDispensedSinceLastRestock()
     return m_nVolumeDispensedSinceRestock;
 }
 
-
 char product::getSizeCharFromTargetVolume(double volume)
 {
     // this is a necessary evil as in transactions, the requested volume is not stored as char

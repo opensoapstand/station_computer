@@ -66,8 +66,8 @@ private:
 
     char now[50];
 
-    DF_ERROR dispenseEndUpdateDB(bool is_container_empty);
-    DF_ERROR sendTransactionToCloud();
+    DF_ERROR dispenseEndUpdateDB(bool is_container_empty, double updated_volume_remaining, string end_time, bool sent_to_cloud);
+    bool sendTransactionToCloud(string endtime, double volume_remaining);
     DF_ERROR setup_and_print_receipt();
     // DF_ERROR print_receipt();
 
@@ -89,7 +89,7 @@ private:
 
     DF_ERROR print_text(std::string text);
 
-    void bufferCURL(std::string curl_params);
+    void write_curl_to_file(std::string curl_params);
     CURL *curl;
     CURLcode res;
     char *curl_data;

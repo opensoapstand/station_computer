@@ -398,6 +398,10 @@ void dispenser::subtractFromVolumeDispensed(double volume_to_distract)
     getProduct()->setVolumeDispensed(volume - volume_to_distract);
 }
 
+double dispenser::getVolumeRemaining(){
+    return getProduct()->getVolumeRemaining();
+}
+
 double dispenser::getVolumeDispensed()
 {
     // return m_nVolumeDispensed;
@@ -551,6 +555,7 @@ void dispenser::dispenseButtonTimingreset()
 {
     dispense_button_total_pressed_millis = 0;
     dispense_button_current_press_millis = 0;
+    dispense_button_press_count_during_dispensing = 1;
     using namespace std::chrono;
     dispense_button_time_at_last_check_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
@@ -561,6 +566,11 @@ void dispenser::dispenseButtonTimingUpdate()
 
     using namespace std::chrono;
     uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
+    if (getDispenseButtonEdgePositive()){
+        debugOutput::sendMessage("99999999999999999999999999999999999999", MSG_INFO);
+        dispense_button_press_count_during_dispensing++;
+    }
     if (getDispenseButtonValue())
     {
         uint64_t interval = now - dispense_button_time_at_last_check_epoch;
@@ -574,6 +584,11 @@ void dispenser::dispenseButtonTimingUpdate()
     }
     dispense_button_time_at_last_check_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     logUpdateIfAllowed("Button press millis. Total:" + to_string(dispense_button_total_pressed_millis) + " Current press:" + to_string(dispense_button_current_press_millis));
+}
+
+int dispenser::getDispenseButtonPressesDuringDispensing(){
+     debugOutput::sendMessage("yooooooooooooooooooooooooooooooooooooo" + to_string(dispense_button_press_count_during_dispensing), MSG_WARNING);
+    return dispense_button_press_count_during_dispensing;
 }
 
 uint64_t dispenser::getButtonPressedTotalMillis()

@@ -90,6 +90,7 @@ DF_ERROR stateDispense::onAction()
    {
       debugOutput::sendMessage("Dispense button pressed edge", MSG_INFO);
       productDispensers[pos].pumpSlowStart(true);
+      productDispensers[pos].addDispenseButtonPress();
    }
 
 
@@ -129,8 +130,6 @@ DF_ERROR stateDispense::onAction()
       rectractProductBlocking();
       return e_ret = OK;
    }
-
-   // productDispensers[pos].setVolumeDispensedPreviously(productDispensers[pos].getVolumeDispensed());
 
    if (productDispensers[pos].getEmptyContainerDetectionEnabled())
    {

@@ -73,6 +73,33 @@ DF_ERROR dispenser::setup()
     pwm_actual_set_speed = 0;
 }
 
+void dispenser::refresh()
+{
+
+    the_8344->dispenseButtonRefresh();
+
+    // periodical polling refresh  (because the dispense button has no interrupt trigger (i2c))
+    bool egde = dispenseButtonValueMemory != getDispenseButtonValue();
+    dispenseButtonValueEdgePositive = getDispenseButtonValue() && egde;
+    dispenseButtonValueEdgeNegative = (!getDispenseButtonValue()) && egde;
+    dispenseButtonValueMemory = getDispenseButtonValue();
+
+    // status update time
+    using namespace std::chrono;
+    uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    if (previous_status_update_allowed_epoch + DISPENSE_STATUS_UPDATE_DELTA_MILLIS < now)
+    {
+        previous_status_update_allowed_epoch = now;
+        isStatusUpdateSendAndPrintAllowed = true;
+    }
+    else
+    {
+        isStatusUpdateSendAndPrintAllowed = false;
+    }
+
+    dispenseButtonTimingUpdate();
+
+}
 /*
 dispenser::dispenser(gpio *ButtonReference)
 {
@@ -338,7 +365,6 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
     // Set Start Time
     time(&rawtime);
     timeinfo = localtime(&rawtime);
-
     strftime(m_nStartTime, 50, "%F %T", timeinfo);
 
     return dfRet;
@@ -349,6 +375,12 @@ DF_ERROR dispenser::stopDispense()
     {
         setAllDispenseButtonLightsOff();
     }
+
+    // Set End time
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+    strftime(m_nEndTime, 50, "%F %T", timeinfo);
+
     //     DF_ERROR e_ret = ERROR_BAD_PARAMS;
     //     // the_8344->setPumpsDisableAll();
     //     // debugOutput::sendMessage("All Pumps disabled", MSG_INFO);
@@ -364,6 +396,10 @@ DF_ERROR dispenser::stopDispense()
 string dispenser::getDispenseStartTime()
 {
     return m_nStartTime;
+}
+string dispenser::getDispenseEndTime()
+{
+    return m_nEndTime;
 }
 
 // void dispenser::setVolumeDispensedPreviously(double volume)
@@ -486,30 +522,6 @@ DF_ERROR dispenser::setPumpDirectionForward()
 
 //       // productDispensers[m_active_pump_index].setPumpPWM(125);
 
-void dispenser::refresh()
-{
-
-    the_8344->dispenseButtonRefresh();
-
-    // periodical polling refresh  (because the dispense button has no interrupt trigger (i2c))
-    bool egde = dispenseButtonValueMemory != getDispenseButtonValue();
-    dispenseButtonValueEdgePositive = getDispenseButtonValue() && egde;
-    dispenseButtonValueEdgeNegative = (!getDispenseButtonValue()) && egde;
-    dispenseButtonValueMemory = getDispenseButtonValue();
-
-    // status update time
-    using namespace std::chrono;
-    uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    if (previous_status_update_allowed_epoch + DISPENSE_STATUS_UPDATE_DELTA_MILLIS < now)
-    {
-        previous_status_update_allowed_epoch = now;
-        isStatusUpdateSendAndPrintAllowed = true;
-    }
-    else
-    {
-        isStatusUpdateSendAndPrintAllowed = false;
-    }
-}
 
 bool dispenser::getIsStatusUpdateAllowed()
 {
@@ -555,9 +567,14 @@ void dispenser::dispenseButtonTimingreset()
 {
     dispense_button_total_pressed_millis = 0;
     dispense_button_current_press_millis = 0;
-    dispense_button_press_count_during_dispensing = 1;
+    dispense_button_press_count_during_dispensing = 0;
     using namespace std::chrono;
     dispense_button_time_at_last_check_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+}
+
+
+void dispenser::addDispenseButtonPress(){
+    dispense_button_press_count_during_dispensing++;
 }
 
 void dispenser::dispenseButtonTimingUpdate()
@@ -566,11 +583,7 @@ void dispenser::dispenseButtonTimingUpdate()
 
     using namespace std::chrono;
     uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-
-    if (getDispenseButtonEdgePositive()){
-        debugOutput::sendMessage("99999999999999999999999999999999999999", MSG_INFO);
-        dispense_button_press_count_during_dispensing++;
-    }
+    
     if (getDispenseButtonValue())
     {
         uint64_t interval = now - dispense_button_time_at_last_check_epoch;
@@ -583,11 +596,10 @@ void dispenser::dispenseButtonTimingUpdate()
         // do nothing;
     }
     dispense_button_time_at_last_check_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    logUpdateIfAllowed("Button press millis. Total:" + to_string(dispense_button_total_pressed_millis) + " Current press:" + to_string(dispense_button_current_press_millis));
+    
 }
 
 int dispenser::getDispenseButtonPressesDuringDispensing(){
-     debugOutput::sendMessage("yooooooooooooooooooooooooooooooooooooo" + to_string(dispense_button_press_count_during_dispensing), MSG_WARNING);
     return dispense_button_press_count_during_dispensing;
 }
 
@@ -1159,7 +1171,8 @@ Dispense_behaviour dispenser::getDispenseStatus()
     // todo: button press does not necessarily mean pump is on. We should work with pump speed feedback
 
     updateRunningAverageWindow();
-    dispenseButtonTimingUpdate();
+    // dispenseButtonTimingUpdate();
+    logUpdateIfAllowed("Button press millis. Total:" + to_string(dispense_button_total_pressed_millis) + " Current press:" + to_string(dispense_button_current_press_millis));
 
     using namespace std::chrono;
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();

@@ -131,7 +131,7 @@ int product::getPWMFromDB()
 #else
     string sql_string = "SELECT dispense_speed FROM products WHERE slot=" + to_string(m_nSlot) + ";";
 #endif
-    
+
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
     std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
@@ -169,7 +169,7 @@ double product::getVolPerTickFromDB()
     }
 
     string sql_string = "SELECT volume_per_tick FROM products WHERE slot=" + to_string(m_nSlot) + ";";
-    
+
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
     std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
@@ -217,19 +217,27 @@ char product::getSizeCharFromTargetVolume(double volume)
 {
     // this is a necessary evil as in transactions, the requested volume is not stored as char
     // #define VOLUME_MARGIN 0.1
-    if (volume ==  m_nVolumeTarget_s){
+    if (volume == m_nVolumeTarget_s)
+    {
         return 's';
-    }else if (volume ==  m_nVolumeTarget_m){
+    }
+    else if (volume == m_nVolumeTarget_m)
+    {
         return 'm';
-    }else if (volume ==  m_nVolumeTarget_l){
+    }
+    else if (volume == m_nVolumeTarget_l)
+    {
         return 'l';
-    }else if (volume ==  m_nVolumeTarget_c_max){
+    }
+    else if (volume == m_nVolumeTarget_c_max)
+    {
         return 'c';
-    }else {
+    }
+    else
+    {
         debugOutput::sendMessage("Get size from volume, not found, will default to custom dispense for volume " + to_string(volume), MSG_INFO);
         return 'c';
     }
-
 }
 double product::getTargetVolume(char size)
 {
@@ -392,6 +400,11 @@ double product::convertVolumeMetricToDisplayUnits(double volume)
     return converted_volume;
 }
 
+string product::getProductId()
+{
+    return m_soapstand_product_serial;
+}
+
 string product::getBasePLU(char size)
 {
 #ifdef USE_OLD_DATABASE
@@ -470,7 +483,7 @@ string product::getBasePLU(char size)
 
 //     debugOutput::sendMessage("Reload parameters from database: " + sql_string, MSG_INFO);
 
-//     
+//
 //     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 
 //     int status;
@@ -627,7 +640,6 @@ bool product::isDbValid()
     sqlite3_stmt *stmt;
     string sql_string = "PRAGMA table_info(products);";
 
-    
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     // sqlite3_step(stmt);
     // std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
@@ -702,7 +714,6 @@ bool product::reloadParametersFromDb()
     sqlite3_stmt *stmt;
     string sql_string = "SELECT * FROM products WHERE slot=" + to_string(m_nSlot) + ";";
 
-    
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 
     int status;
@@ -840,11 +851,12 @@ bool product::reloadParametersFromDb()
             {
             case DB_PRODUCTS_PRODUCTID:
             {
+                m_dispenser_id = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
             }
             break;
             case DB_PRODUCTS_SOAPSTAND_PRODUCT_SERIAL:
             {
-                // m_soapstand_product_serial = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+                m_soapstand_product_serial = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
             }
             break;
             case DB_PRODUCTS_SLOT:
@@ -1126,7 +1138,6 @@ bool product::testParametersFromDb()
     string sql_string = "SELECT dispense_speed FROM products WHERE slot=" + to_string(m_nSlot) + ";";
 #endif
 
-    
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 
     // int status = sqlite3_step(stmt);  // every sqlite3_step returns a row. if it returns 0, it's run over all the rows.

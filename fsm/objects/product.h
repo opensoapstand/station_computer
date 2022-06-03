@@ -53,6 +53,7 @@ public:
         double convertVolumeMetricToDisplayUnits(double volume);
 
         string getBasePLU(char size);
+        string getProductId();
         string getPaymentMethod() { return m_paymentMethod; }
 
         // void setTargetVolume(double nVolumeTarget){m_nVolumeTarget = nVolumeTarget;};
@@ -117,6 +118,8 @@ public:
 
         // string m_soapstand_product_serial;
         string m_name;
+        string m_dispenser_id;
+        string m_soapstand_product_serial;
         string m_display_unit;
         string m_name_receipt;
         // double m_buttonPressDuration;

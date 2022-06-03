@@ -91,10 +91,12 @@ public:
       DF_ERROR pumpSlowStopBlocking();
 
 
+      void addDispenseButtonPress();
       DF_ERROR startDispense();
       DF_ERROR initDispense(int nVolumeToDispense, double nPrice);
       DF_ERROR stopDispense();
       string getDispenseStartTime();
+      string getDispenseEndTime();
       Dispense_behaviour getDispenseStatus();
       bool getIsDispenseTargetReached();
 
@@ -159,6 +161,7 @@ private:
       double m_nTickCount;
       double m_nVolumeTarget;
       char m_nStartTime[50];
+      char m_nEndTime[50];
 
       double m_price;
 

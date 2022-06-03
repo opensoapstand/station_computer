@@ -66,8 +66,8 @@ private:
 
     char now[50];
 
-    DF_ERROR dispenseEndUpdateDB(bool is_container_empty, double updated_volume_remaining, string end_time, bool sent_to_cloud);
-    bool sendTransactionToCloud(string endtime, double volume_remaining);
+    DF_ERROR dispenseEndUpdateDB(double updated_volume_remaining);
+    bool sendTransactionToCloud(double volume_remaining);
     DF_ERROR setup_and_print_receipt();
     // DF_ERROR print_receipt();
 

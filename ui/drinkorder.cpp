@@ -71,6 +71,7 @@ int DrinkOrder::getSelectedSize()
 
 void DrinkOrder::setSelectedSize(int sizeOption)
 {
+    // index!!!!  e.g. 0=small
     // overruledPrice = INVALID_PRICE;
     // m_discount_percentage_fraction = 0.0;
     selectedSize = sizeOption;
@@ -121,7 +122,7 @@ bool DrinkOrder::isSelectedOrderValid()
 
 double DrinkOrder::getDiscount()
 {
-    qDebug() << "--------=========" << QString::number(getSelectedPriceCorrected());
+    //qDebug() << "--------=========" << QString::number(getSelectedPriceCorrected());
     return getPrice(getSelectedSize()) - getSelectedPriceCorrected();
 }
 
@@ -372,6 +373,7 @@ void DrinkOrder::loadProductProperties(int slot)
 
 bool DrinkOrder::getLoadedProductSizeEnabled(int size)
 {
+    // caution!:  provide size index (0=small, ...)
     return m_isEnabledSizes[size];
 }
 

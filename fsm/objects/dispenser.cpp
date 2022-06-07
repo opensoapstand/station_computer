@@ -178,8 +178,7 @@ dispenser::~dispenser()
 //     return temp;
 // }
 /* ------Getters, Setters and Utilities------ */
-
-// #ifdef ENABLE_MULTI_BUTTON
+ 
 string dispenser::getFinalPLU(char size, double price){
 
 
@@ -288,7 +287,6 @@ void dispenser::setMultiDispenseButtonLight(int slot, bool enableElseDisable)
     }
     }
 }
-// #endif
 
 DF_ERROR dispenser::setSlot(int slot)
 {

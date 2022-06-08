@@ -21,3 +21,13 @@ echo -e "ui                  |$active  \t|$enabled"
 active=$(systemctl is-active ui_soapstand.service)
 enabled=$(systemctl is-enabled ui_soapstand.service)
 echo -e "reversed ssh tunnel |$active  \t|$enabled"
+
+db_path=/home/df-admin/production/db/drinkfill-sqlite_newlayout.db
+if [[ -f "$db_path" ]]; then
+    station_id=$(sqlite3 $db_path "select machine_id from machine;")
+    software_version=$(sqlite3 $db_path "select software_version from machine;")
+    location=$(sqlite3 $db_path "select location from machine;")
+    printf "Machine id : $station_id @ $location\nSoftware   : v$software_version\n"
+else
+    echo "Database not found at $db_path"
+fi

@@ -8,6 +8,8 @@
 # Place and run in Station. In /home/df-admin/drinkfill               #
 #######################################################################
 
+./status_services.sh
+
 echo 'Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 
 PS3='Choose option(digit + enter):'
@@ -16,14 +18,8 @@ select opt in "${options[@]}"
 do
     case $opt in
         "Station info")
-            db_path=/home/df-admin/production/db/drinkfill-sqlite_newlayout.db
-            if [[ -f "$db_path" ]]; then
-                station_id=$(sqlite3 $db_path "select machine_id from machine;")
-                echo "Machine id: $station_id"
-            else
-                echo "Database not found at $db_path"
-            fi
-            ;;
+           ./status_services.sh
+           ;;
 
         "AWS log in")
             cd /home/df-admin/Downloads

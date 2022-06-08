@@ -8,9 +8,9 @@
 
 # -----------------------------------
 # DO NOT ADD SPACES TO THE ELEMENTS, it causes a mess when looping over it (treats space as array delimiter in some cases).#
-station_descriptions=("SS-DEV-LODE" "SS-DEV-ASH" "SS-DEV-SHOP" "SS-0000004" "EEFC" "UBC" "Ruddy" "Re-Up" "SS-0000009" "Pomme" "Petros11" "Petros12" "Petros13" "Petros14" "SS-0000015" "SS-0000016" "SS-0000017" "Choices" "Stongs" "FamousFoods" "SS-0000021" "Nada" "Petros23" "Petros24" "Petros25" "Petros26");
-station_ids=("SS-DEV-LODE" "SS-DEV-003" "SS-0000003" "SS-0000004" "SS-0000005" "SS-0000006" "SS-0000007" "SS-0000008" "SS-0000009" "SS-0000010" "SS-0000011" "SS-0000012" "SS-0000013" "SS-0000014" "SS-0000015" "SS-0000016" "SS-0000017" "SS-0000018" "SS-0000019" "SS-0000020" "SS-0000021" "SS-0000022" "SS-0000023" "SS-0000024" "SS-0000025" "SS-0000026");
-station_ports=("44444" "43081" "44.0003" "43004" "43005" "43006" "43007" "43008" "43009" "43010" "43011" "43012" "43013" "43014" "43015" "43016" "43017" "43018" "43019" "43020" "43021" "43022" "43023" "43024" "43025" "43026");
+station_descriptions=("SS-DEV-LODE" "SS-DEV-ASH" "SS-DEV-SHOP" "SS-DEV-SHOPFRAME" "EEFC" "UBC" "Ruddy" "Re-Up" "SS-0000009" "Pomme" "Petros11" "Petros12" "Petros13" "Petros14" "SS-0000015" "SS-0000016" "SS-0000017" "Choices" "Stongs" "FamousFoods" "SS-0000021" "Nada" "Petros23" "Petros24" "Petros25" "Petros26");
+station_ids=("SS-DEV-LODE" "SS-DEV-ASH" "SS-DEV-SHOP" "SS-DEV-SHOPFRAME" "SS-0000005" "SS-0000006" "SS-0000007" "SS-0000008" "SS-0000009" "SS-0000010" "SS-0000011" "SS-0000012" "SS-0000013" "SS-0000014" "SS-0000015" "SS-0000016" "SS-0000017" "SS-0000018" "SS-0000019" "SS-0000020" "SS-0000021" "SS-0000022" "SS-0000023" "SS-0000024" "SS-0000025" "SS-0000026");
+station_ports=("44444" "43081" "44001" "44003" "43005" "43006" "43007" "43008" "43009" "43010" "43011" "43012" "43013" "43014" "43015" "43016" "43017" "43018" "43019" "43020" "43021" "43022" "43023" "43024" "43025" "43026");
 # -----------------------------------
 
 # https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_10_02.html
@@ -107,6 +107,31 @@ ssh_into_station () {
     echo "$cmd_str"
     # printf -v cmd_str '%q ' "${cmd[@]}"
     "${cmd[@]}"
+}
+
+scp_aws_transfer(){
+    echo "Choose destination station:"
+    get_choice_from_names
+    choice_index=$?
+    destination_id="${station_ids[$choice_index]}"
+    destination_description="${station_descriptions[$choice_index]}"
+    destination_port="${station_ports[$choice_index]}"
+
+    read -e -p "Enter filename (like in normal terminal. e.g. use tab for completion): " file
+    ls -l "$file"
+    full_path="/home/ubuntu"/"$file"
+    echo full_path
+    cd /home/df-admin/Downloads
+    # scp -r -i DrinkfillAWS.pem "$full_path" ubuntu@ec2-44-225-153-121.us-west-2.compute.amazonaws.com:/home/ubuntu
+    
+    cmd0=(scp -r -P $destination_port "$full_path"  df-admin@localhost:/home/df-admin) 
+    printf -v cmd0_str '%q ' "${cmd0[@]}"
+    
+    # confirm_execute "$cmd_str"
+    echo "Lined up commands: "
+    echo "$cmd0_str"
+    continu_or_exit
+    "${cmd0[@]}"
 }
 
 scp_transfer () {
@@ -264,7 +289,7 @@ scp_transfer_db () {
 
 echo 'At AWS: Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 PS3='Choose option(digit + enter):'
-options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB")
+options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -292,6 +317,9 @@ do
             ;;
         "Station/home/x to Station/home/x")
             scp_transfer "" ""
+            ;;
+        "AWS to Station/home/x")
+            scp_aws_transfer
             ;;
         "Station to AWS DB")
             scp_transfer_db "to_aws"

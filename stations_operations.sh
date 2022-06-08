@@ -121,7 +121,7 @@ scp_aws_transfer(){
     ls -l "$file"
     full_path="/home/ubuntu"/"$file"
     echo full_path
-    cd /home/df-admin/Downloads
+    # cd /home/df-admin/Downloads
     # scp -r -i DrinkfillAWS.pem "$full_path" ubuntu@ec2-44-225-153-121.us-west-2.compute.amazonaws.com:/home/ubuntu
     
     cmd0=(scp -r -P $destination_port "$full_path"  df-admin@localhost:/home/df-admin) 

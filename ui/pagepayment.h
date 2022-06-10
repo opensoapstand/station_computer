@@ -67,6 +67,7 @@ public:
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
+    bool exitConfirm();
 
     // **** Control Functions ****
     bool setpaymentProcess(bool status);

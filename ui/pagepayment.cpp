@@ -75,7 +75,7 @@ pagePayment::pagePayment(QWidget *parent) : QWidget(parent),
 
     // for (int i = 0; i < SLOT_COUNT; i++)
     // {
-        //  if (db.getPaymentMethod(i) == "tap")
+    //  if (db.getPaymentMethod(i) == "tap")
     //     {
     //         tap_payment = true;
     //         ui->payment_bypass_Button->setEnabled(false);
@@ -249,10 +249,10 @@ void pagePayment::showEvent(QShowEvent *event)
     // QPalette palette;
     // palette.setBrush(QPalette::Background, background);
     // this->setPalette(palette);
-    
+
     if (getPaymentMethod() == "tap")
     {
-        qDebug()<< "Init tap";
+        qDebug() << "Init tap";
         ui->payment_bypass_Button->setEnabled(false);
         while (!tap_init())
             ;
@@ -261,7 +261,6 @@ void pagePayment::showEvent(QShowEvent *event)
     {
         ui->payment_bypass_Button->setEnabled(false);
     }
-
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
 
@@ -292,7 +291,7 @@ void pagePayment::showEvent(QShowEvent *event)
     QString payment_method = getPaymentMethod();
     if (payment_method == "tap")
     {
-        qDebug()<< "Prepare tap order";
+        qDebug() << "Prepare tap order";
         pktResponded = com.readForAck();
         readPacket.packetReadFromUX(pktResponded);
         pktResponded.clear();
@@ -513,35 +512,54 @@ void pagePayment::declineTimer_start()
 {
 }
 
+bool pagePayment::exitConfirm()
+{
+
+    // ARE YOU SURE YOU WANT TO COMPLETE?
+    QMessageBox msgBox;
+    msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+
+    // msgBox.setText("<p align=center>Are you sure you want to cancel your transaction? It can take up to 30 seconds for dispensing to start after a payment is completed. </p>");
+    msgBox.setText("<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>");
+    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
+
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    int ret = msgBox.exec();
+    bool success;
+    switch (ret)
+    {
+    case QMessageBox::Yes:
+    {
+        resetPaymentPage();
+        return true;
+    }
+    break;
+    case QMessageBox::No:
+    {
+        return false;
+    }
+    break;
+    }
+}
+
 // Navigation: Back to Drink Size Selection
 void pagePayment::on_previousPage_Button_clicked()
 {
-    resetPaymentPage();
-    // stopPayTimers();
-    // response = true;
-    // readTimer->stop();
-    // if (tap_payment)
-    // {
-    //     cancelPayment();
-    // }
-    p_pageProduct->resizeEvent(pageProductResize);
-    p_pageProduct->showFullScreen();
-    // //    usleep(100);
-    this->hide();
+    if (exitConfirm())
+    {
+        // p_pageProduct->resizeEvent(pageProductResize);
+        p_pageProduct->showFullScreen();
+        this->hide();
+    }
 }
 
 void pagePayment::on_mainPage_Button_clicked()
 {
-    resetPaymentPage();
-    // stopPayTimers();
-    // response = true;
-    // readTimer->stop();
-    // if (tap_payment)
-    // {
-    //     cancelPayment();
-    // }
-    helpPage->showFullScreen();
-    this->hide();
+    if (exitConfirm())
+    {
+        helpPage->showFullScreen();
+        this->hide();
+    }
 }
 
 void pagePayment::idlePaymentTimeout()

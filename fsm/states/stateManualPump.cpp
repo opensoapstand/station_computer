@@ -224,7 +224,7 @@ DF_ERROR stateManualPump::onAction()
                                                       "   automatically revert for some time. Set the reverting time during the testing with\n"
                                                       "   ixxx;  where xxx is in milliseconds. e.g. i200;  will revert the pump for 200ms\n"
                                                       "   the pump speed cannot be set during this test)\n"
-                                                      "6: Toggle endurance test. Active pump toggle cyclic ON/OFF (keep button pressed)\n"
+                                                      "6: Toggle endurance test. Active pump toggle cyclic ON/OFF (WARNING: Will pump autonomously WITHOUT dispense button pressed)\n"
                                                       "7: Reverse hack\n"
                                                       "8: Run pump routine (hold dispense button for it to work)\n"
                                                       "9: Toggle flow measuring test\n",
@@ -405,13 +405,17 @@ DF_ERROR stateManualPump::pumpCyclicTest()
    uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
    // }
 
+
    if (isCyclicTestingPumpOn)
    {
       // check for end of ON cycle
       if (cyclicTestPeriodStartEpochMillis + CYCLIC_PUMP_TEST_ON_CYCLE_MILLIS < now)
       {
          cyclicTestPeriodStartEpochMillis = now; //  + 2 * OFF_CYCLE_MILLIS
-         productDispensers[m_active_pump_index].setPumpsDisableAll();
+         // productDispensers[m_active_pump_index].setPumpsDisableAll();
+
+         productDispensers[m_active_pump_index].pumpSlowStopBlocking();
+
          isCyclicTestingPumpOn = false;
          cyclicTestPeriodStartEpochMillis = now;
       }
@@ -421,18 +425,30 @@ DF_ERROR stateManualPump::pumpCyclicTest()
       // check for end of OFF cycle
       if (cyclicTestPeriodStartEpochMillis + CYCLIC_PUMP_TEST_OFF_CYCLE_MILLIS < now)
       {
+        
          debugOutput::sendMessage("\n******************************\n******PUMP CYCLING TESTING******\n*****************\n  cycle: " + to_string(pump_test_cycle_count), MSG_INFO);
          pump_test_cycle_count++;
-         productDispensers[m_active_pump_index].setPumpDirectionForward();
-         // this->productDispensers[m_active_pump_index].getPumpSpeed();
-         // productDispensers[m_active_pump_index].setPumpPWM(255, true);
+
+         productDispensers[m_active_pump_index].the_8344->virtualButtonPressHack();
+
+         // productDispensers[m_active_pump_index].setPumpDirectionForward();
+         
+         
          int speed = productDispensers[m_active_pump_index].getProduct()->getPWMFromDB();
 
          debugOutput::sendMessage("Pump speed for test: " + to_string(speed), MSG_INFO);
-         productDispensers[m_active_pump_index].setPumpPWM(speed, true);
-         productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
+         // productDispensers[m_active_pump_index].setPumpPWM(speed, true);
+         //productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
+
+
+         productDispensers[m_active_pump_index].pumpSlowStart(true);
+
+
          isCyclicTestingPumpOn = true;
          cyclicTestPeriodStartEpochMillis = now;
+
+
+
       }
    }
 }

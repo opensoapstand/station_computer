@@ -149,6 +149,7 @@ public:
 
       bool getIsStatusUpdateAllowed();
 
+      static dsed8344 *the_8344;
 private:
       bool dispenseButtonValueMemory;
       bool dispenseButtonValueEdgePositive;
@@ -174,7 +175,6 @@ private:
       // We only want to create one instance of the class that controls
       // the actual hardware, so declare this static.
 
-      static dsed8344 *the_8344;
 
       uint64_t dispense_cycle_pump_running_time_millis;
       uint64_t dispense_start_timestamp_epoch;

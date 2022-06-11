@@ -94,7 +94,7 @@ DF_ERROR stateDispense::onAction()
    }
 
 
-   productDispensers[pos].pumpSlowStartHandler();
+   // productDispensers[pos].pumpSlowStartHandler();
 
 
    if (productDispensers[pos].getDispenseButtonEdgeNegative())

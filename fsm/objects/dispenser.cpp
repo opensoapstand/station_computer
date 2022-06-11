@@ -98,6 +98,7 @@ void dispenser::refresh()
     }
 
     dispenseButtonTimingUpdate();
+    pumpSlowStartHandler();
 
 }
 /*

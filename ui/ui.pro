@@ -9,7 +9,7 @@ FORMS += \
     page_dispenser.ui \
     page_error_wifi.ui \
     page_idle.ui \
-    pagepayment.ui \
+    page_payment.ui \
     page_product.ui \
     page_select_product.ui \
     pagethankyou.ui \
@@ -26,7 +26,7 @@ HEADERS += \
     page_dispenser.h \
     page_idle.h \
     includefiles.h \
-    pagepayment.h \
+    page_payment.h \
     page_product.h \
     posm/enums.h \
     posm/lrcgenerator.h \
@@ -55,7 +55,7 @@ SOURCES += \
     page_dispenser.cpp \
     page_idle.cpp \
     main.cpp \
-    pagepayment.cpp \
+    page_payment.cpp \
     page_product.cpp \
     posm/lrcgenerator.cpp \
     posm/mcommunication.cpp \

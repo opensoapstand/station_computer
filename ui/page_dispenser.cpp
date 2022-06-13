@@ -41,10 +41,10 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void page_dispenser::setPage(pagePayment *pagePayment, pagethankyou *pageThankYou, page_idle *pageIdle)
+void page_dispenser::setPage(page_payment *page_payment, pagethankyou *pageThankYou, page_idle *pageIdle)
 {
     this->thanksPage = pageThankYou;
-    this->paymentPage = pagePayment;
+    this->paymentPage = page_payment;
     this->p_page_idle = pageIdle;
     selectedProductOrder = p_page_idle->currentProductOrder;
 }

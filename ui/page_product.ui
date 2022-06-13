@@ -42,7 +42,7 @@ line-height: 29px;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="pagePayment_Button">
+  <widget class="QPushButton" name="page_payment_Button">
    <property name="geometry">
     <rect>
      <x>170</x>
@@ -2259,7 +2259,7 @@ color: #58595B;
   <zorder>promoCode</zorder>
   <zorder>promoButton</zorder>
   <zorder>previousPage_Button</zorder>
-  <zorder>pagePayment_Button</zorder>
+  <zorder>page_payment_Button</zorder>
   <zorder>mainPage_Button</zorder>
   <zorder>label_invoice_price</zorder>
   <zorder>label_invoice_price_total</zorder>

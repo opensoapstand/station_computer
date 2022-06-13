@@ -22,7 +22,7 @@
 #include "page_idle.h"
 #include "page_select_product.h"
 #include "page_product.h"
-#include "pagepayment.h"
+#include "page_payment.h"
 #include "page_dispenser.h"
 #include "page_error_wifi.h"
 #include "pagethankyou.h"
@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
     page_transactions *p_page_transactions = new page_transactions();
     page_select_product *firstSelectPage = new page_select_product();
     pageProduct *p_pageProduct = new pageProduct();
-    pagePayment *paymentPage = new pagePayment();
+    page_payment *paymentPage = new page_payment();
     page_dispenser *p_page_dispense = new page_dispenser();
     page_error_wifi *wifiError = new page_error_wifi();
     pagethankyou *p_page_thank_you = new pagethankyou();

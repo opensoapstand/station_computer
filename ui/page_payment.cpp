@@ -1,6 +1,6 @@
 //***************************************
 //
-// pagepayment.cpp
+// page_payment.cpp
 // GUI class while machine is processing
 // payment.
 //
@@ -14,16 +14,16 @@
 // all rights reserved
 //***************************************
 
-#include "pagepayment.h"
-#include "ui_pagepayment.h"
+#include "page_payment.h"
+#include "ui_page_payment.h"
 
 #include "page_product.h"
 #include "page_dispenser.h"
 #include "page_idle.h"
 
 // CTOR
-pagePayment::pagePayment(QWidget *parent) : QWidget(parent),
-                                            ui(new Ui::pagePayment)
+page_payment::page_payment(QWidget *parent) : QWidget(parent),
+                                            ui(new Ui::page_payment)
 {
     // Fullscreen background setup
     ui->setupUi(this);
@@ -93,10 +93,10 @@ pagePayment::pagePayment(QWidget *parent) : QWidget(parent),
     // }
 }
 
-void pagePayment::stopPayTimers()
+void page_payment::stopPayTimers()
 {
     //    readTimer->stop();
-    //    qDebug() << "pagePayment: Stop Timers" << endl;
+    //    qDebug() << "page_payment: Stop Timers" << endl;
     if (paymentProgressTimer != nullptr)
     {
         //        qDebug() << "cancel payment progress Timer" << endl;
@@ -132,13 +132,13 @@ void pagePayment::stopPayTimers()
         //        qDebug() << "cancel qrTimer" << endl;
         qrTimer->stop();
     }
-    //    qDebug() << "pagePayment: Stopped Timers" << endl;
+    //    qDebug() << "page_payment: Stopped Timers" << endl;
 }
 
 /*
  * Page Tracking reference
  */
-void pagePayment::setPage(pageProduct *pageSizeSelect, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
+void page_payment::setPage(pageProduct *pageSizeSelect, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
 {
     tmpCounter = 0;
     this->p_pageProduct = pageSizeSelect;
@@ -148,7 +148,7 @@ void pagePayment::setPage(pageProduct *pageSizeSelect, page_dispenser *page_disp
 }
 
 // DTOR
-pagePayment::~pagePayment()
+page_payment::~page_payment()
 {
     delete ui;
 }
@@ -156,16 +156,16 @@ pagePayment::~pagePayment()
 /* ----- GUI ----- */
 
 // Labels and button for tapping payment
-void pagePayment::displayPaymentPending(bool isVisible)
+void page_payment::displayPaymentPending(bool isVisible)
 {
 }
 
-void pagePayment::on_payment_bypass_Button_clicked()
+void page_payment::on_payment_bypass_Button_clicked()
 {
     proceed_to_dispense();
 }
 
-void pagePayment::proceed_to_dispense()
+void page_payment::proceed_to_dispense()
 {
     stopPayTimers();
     // p_page_dispense->showEvent(dispenseEvent);
@@ -173,12 +173,12 @@ void pagePayment::proceed_to_dispense()
     this->hide();
 }
 
-void pagePayment::updateTotals(string drinkDescription, string drinkAmount, string orderTotal)
+void page_payment::updateTotals(string drinkDescription, string drinkAmount, string orderTotal)
 {
 }
 
 /*Cancel any previous payment*/
-void pagePayment::cancelPayment()
+void page_payment::cancelPayment()
 {
 
     com.flushSerial();
@@ -200,7 +200,7 @@ size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
     return size * nmemb;
 }
 
-QString pagePayment::getPaymentMethod()
+QString page_payment::getPaymentMethod()
 {
     qDebug() << "db open245";
     int product_slot___ = p_page_idle->currentProductOrder->getSelectedSlot();
@@ -210,7 +210,7 @@ QString pagePayment::getPaymentMethod()
     return payment_method;
 }
 
-void pagePayment::resizeEvent(QResizeEvent *event)
+void page_payment::resizeEvent(QResizeEvent *event)
 {
     // QString bitmap_location;
 
@@ -239,7 +239,7 @@ void pagePayment::resizeEvent(QResizeEvent *event)
     // ui->refreshLabel->hide();
 }
 
-void pagePayment::showEvent(QShowEvent *event)
+void page_payment::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: Payment >>>>>>>>>";
     QWidget::showEvent(event);
@@ -315,7 +315,7 @@ void pagePayment::showEvent(QShowEvent *event)
     }
 }
 
-void pagePayment::setupQrOrder()
+void page_payment::setupQrOrder()
 {
 
     createQrOrder();
@@ -348,7 +348,7 @@ void pagePayment::setupQrOrder()
     qrTimer->start(1000);
 }
 
-void pagePayment::createQrOrder()
+void page_payment::createQrOrder()
 {
     // an order Id is generated locally and the order is sent to the cloud.
 
@@ -404,7 +404,7 @@ void pagePayment::createQrOrder()
     qrTimer->start(1000);
 }
 
-void pagePayment::isQrProcessedCheckOnline()
+void page_payment::isQrProcessedCheckOnline()
 {
 
     curl = curl_easy_init();
@@ -430,7 +430,7 @@ void pagePayment::isQrProcessedCheckOnline()
     if (res != CURLE_OK)
     {
         // string test = std::string(curl_easy_strerror(res));
-        qDebug() << "ERROR: cURL fail at pagepayment. Error code: " + QString::number(res);
+        qDebug() << "ERROR: cURL fail at page_payment. Error code: " + QString::number(res);
     }
     else
     {
@@ -451,7 +451,7 @@ void pagePayment::isQrProcessedCheckOnline()
     readBuffer = "";
 }
 
-void pagePayment::qrProcessedPeriodicalCheck()
+void page_payment::qrProcessedPeriodicalCheck()
 {
     if (--_qrProcessedPeriodicalCheckSec >= 0)
     {
@@ -464,14 +464,14 @@ void pagePayment::qrProcessedPeriodicalCheck()
     }
 }
 
-void pagePayment::on_refreshButton_clicked()
+void page_payment::on_refreshButton_clicked()
 {
     ui->refreshLabel->hide();
     _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
 }
 
 // XXX: Remove this when interrupts and flow sensors work!
-void pagePayment::onTimeoutTick()
+void page_payment::onTimeoutTick()
 {
     if (--_pageTimeoutCounterSecondsLeft >= 0)
     {
@@ -490,29 +490,29 @@ void pagePayment::onTimeoutTick()
     }
 }
 
-bool pagePayment::setpaymentProcess(bool status)
+bool page_payment::setpaymentProcess(bool status)
 {
     return (paymentProcessing = status);
 }
 
-void pagePayment::setProgressLabel(QLabel *label, int dot)
+void page_payment::setProgressLabel(QLabel *label, int dot)
 {
 }
 
 // Local storge for now.  Will need to refactor logger to do a nightly push to AWS
-void pagePayment::storePaymentEvent(QSqlDatabase db, QString event)
+void page_payment::storePaymentEvent(QSqlDatabase db, QString event)
 {
 }
 
-void pagePayment::progressStatusLabel()
+void page_payment::progressStatusLabel()
 {
 }
 
-void pagePayment::declineTimer_start()
+void page_payment::declineTimer_start()
 {
 }
 
-bool pagePayment::exitConfirm()
+bool page_payment::exitConfirm()
 {
 
     // ARE YOU SURE YOU WANT TO COMPLETE?
@@ -543,7 +543,7 @@ bool pagePayment::exitConfirm()
 }
 
 // Navigation: Back to Drink Size Selection
-void pagePayment::on_previousPage_Button_clicked()
+void page_payment::on_previousPage_Button_clicked()
 {
     if (exitConfirm())
     {
@@ -553,7 +553,7 @@ void pagePayment::on_previousPage_Button_clicked()
     }
 }
 
-void pagePayment::on_mainPage_Button_clicked()
+void page_payment::on_mainPage_Button_clicked()
 {
     if (exitConfirm())
     {
@@ -562,7 +562,7 @@ void pagePayment::on_mainPage_Button_clicked()
     }
 }
 
-void pagePayment::idlePaymentTimeout()
+void page_payment::idlePaymentTimeout()
 {
     resetPaymentPage();
     // stopPayTimers();
@@ -577,7 +577,7 @@ void pagePayment::idlePaymentTimeout()
     // //    usleep(100);
     this->hide();
 }
-void pagePayment::resetPaymentPage()
+void page_payment::resetPaymentPage()
 {
 
     stopPayTimers();
@@ -591,7 +591,7 @@ void pagePayment::resetPaymentPage()
 
 /* ----- Payment ----- */
 
-void pagePayment::stayAliveLogon()
+void page_payment::stayAliveLogon()
 {
     com.flushSerial();
     /*logon packet to send*/
@@ -604,7 +604,7 @@ void pagePayment::stayAliveLogon()
     pktResponded.clear();
 }
 
-void pagePayment::batchClose()
+void page_payment::batchClose()
 {
     com.flushSerial();
     /*logon packet to send*/
@@ -617,7 +617,7 @@ void pagePayment::batchClose()
     pktResponded.clear();
 }
 
-bool pagePayment::sendToUX410()
+bool page_payment::sendToUX410()
 {
     int waitForAck = 0;
     while (waitForAck < 3)
@@ -669,7 +669,7 @@ bool pagePayment::sendToUX410()
     return false;
 }
 
-bool pagePayment::tap_init()
+bool page_payment::tap_init()
 {
     paymentConnected = com.page_init();
 
@@ -787,7 +787,7 @@ bool pagePayment::tap_init()
     return true;
 }
 
-bool pagePayment::waitForUX410()
+bool page_payment::waitForUX410()
 {
     bool waitResponse = false;
     while (!waitResponse)
@@ -812,7 +812,7 @@ bool pagePayment::waitForUX410()
     return waitResponse;
 }
 
-void pagePayment::readTimer_loop()
+void page_payment::readTimer_loop()
 {
     //    qDebug() << "readingTimer_loop" << endl;
     // cout << "start loop pktResponded: " << to_string(pktResponded[0]) << endl;
@@ -990,7 +990,7 @@ void pagePayment::readTimer_loop()
     }
 }
 
-std::string pagePayment::toSvgString(const QrCode &qr, int border)
+std::string page_payment::toSvgString(const QrCode &qr, int border)
 {
     if (border < 0)
         throw std::domain_error("Border must be non-negative");
@@ -1022,7 +1022,7 @@ std::string pagePayment::toSvgString(const QrCode &qr, int border)
 }
 
 // Prints the given QrCode object to the console.
-void pagePayment::printQr(const QrCode &qr)
+void page_payment::printQr(const QrCode &qr)
 {
     int border = 4;
     for (int y = -border; y < qr.getSize() + border; y++)
@@ -1036,7 +1036,7 @@ void pagePayment::printQr(const QrCode &qr)
     std::cout << std::endl;
 }
 
-void pagePayment::QRgen()
+void page_payment::QRgen()
 {
 
     QPixmap map(400, 400);
@@ -1046,7 +1046,7 @@ void pagePayment::QRgen()
     ui->qrCode->setPixmap(map);
 }
 
-void pagePayment::paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg)
+void page_payment::paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg)
 {
     // NOTE: At this point you will use the API to get the encoding and format you want, instead of my hardcoded stuff:
     qrcodegen::QrCode qr = qrcodegen::QrCode::encodeText(data.toUtf8().constData(), qrcodegen::QrCode::Ecc::HIGHH);

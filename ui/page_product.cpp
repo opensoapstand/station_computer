@@ -21,7 +21,7 @@
 #include <string>
 #include <cmath>
 
-#include "pagepayment.h"
+#include "page_payment.h"
 #include "page_select_product.h"
 #include "page_idle.h"
 #include <curl/curl.h>
@@ -239,10 +239,10 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, pagePayment *pagePayment, page_help *pageHelp)
+void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_payment *page_payment, page_help *pageHelp)
 {
     this->p_page_select_product = pageSelect;
-    this->paymentPage = pagePayment;
+    this->paymentPage = page_payment;
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
     this->helpPage = pageHelp;
@@ -453,7 +453,7 @@ void pageProduct::reset_and_show_page_elements()
     // ordersize buttons
     /* Hacky transparent button */
     ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->pagePayment_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->page_payment_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     QString keyboard = KEYBOARD_IMAGE_PATH;
@@ -996,7 +996,7 @@ void pageProduct::couponHandler()
     }
 }
 
-void pageProduct::on_pagePayment_Button_clicked()
+void pageProduct::on_page_payment_Button_clicked()
 {
     qDebug() << "pageProduct: Pay button";
 

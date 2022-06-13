@@ -38,11 +38,11 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void pagethankyou::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, pagePayment *pagePayment)
+void pagethankyou::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, page_payment *page_payment)
 {
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
-    this->paymentPage = pagePayment;
+    this->paymentPage = page_payment;
 }
 
 // DTOR

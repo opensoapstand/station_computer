@@ -22,7 +22,7 @@
 
 class page_dispenser;
 class page_idle;
-class pagePayment;
+class page_payment;
 
 namespace Ui {
 class pagethankyou;
@@ -34,7 +34,7 @@ class pagethankyou : public QWidget
 
 public:
     explicit pagethankyou(QWidget *parent = nullptr);
-    void setPage(page_dispenser* page_dispenser, page_idle* pageIdle, pagePayment* pagePayment);
+    void setPage(page_dispenser* page_dispenser, page_idle* pageIdle, page_payment* page_payment);
     ~pagethankyou();
 
     void controllerFinishedTransaction();
@@ -56,7 +56,7 @@ private:
     Ui::pagethankyou *ui;
     page_dispenser* p_page_dispense;
     page_idle* p_page_idle;
-    pagePayment* paymentPage;
+    page_payment* paymentPage;
 
     int _thankYouTimeoutSec;
     QTimer* thankYouEndTimer;

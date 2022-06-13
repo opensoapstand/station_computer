@@ -1,6 +1,6 @@
 //***************************************
 //
-// pagepayment.h
+// page_payment.h
 // GUI class while machine is processing
 // payment.
 //
@@ -14,8 +14,8 @@
 // all rights reserved
 //***************************************
 
-#ifndef PAGEPAYMENT_H
-#define PAGEPAYMENT_H
+#ifndef PAGE_PAYMENT_H
+#define PAGE_PAYMENT_H
 
 #include "df_util.h"
 #include "drinkorder.h"
@@ -46,21 +46,21 @@ class page_idle;
 class page_help;
 
 namespace Ui {
-class pagePayment;
+class page_payment;
 }
 
 using namespace std;
 using namespace qrcodegen;
 
-class pagePayment : public QWidget
+class page_payment : public QWidget
 {
     Q_OBJECT
 
 public:
     // **** GUI Setup ****
-    explicit pagePayment(QWidget *parent = nullptr);
+    explicit page_payment(QWidget *parent = nullptr);
     void setPage(pageProduct* pageSizeSelect, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp);
-    ~pagePayment();
+    ~page_payment();
     void setProgressLabel(QLabel* label, int dot);
     // TODO: Figure out better Style Setup.
     void labelSetup(QLabel *label, int fontSize);
@@ -135,7 +135,7 @@ protected:
 
 private:
     // **** GUI ****
-    Ui::pagePayment *ui;
+    Ui::page_payment *ui;
     pageProduct* p_pageProduct;
     page_dispenser* p_page_dispense;
     page_idle* p_page_idle;
@@ -259,4 +259,4 @@ private:
     
 };
 
-#endif // PAGEPAYMENT_H
+#endif // PAGE_PAYMENT_H

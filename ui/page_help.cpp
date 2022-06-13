@@ -17,7 +17,7 @@
 #include "df_util.h"
 #include "page_select_product.h"
 #include "page_product.h"
-#include "pagepayment.h"
+#include "page_payment.h"
 #include "page_idle.h"
 
 
@@ -83,10 +83,10 @@ void page_help::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference
  */
-void page_help::setPage(page_select_product *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, pagePayment *pagePayment, page_transactions *pageTransactions)
+void page_help::setPage(page_select_product *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, page_payment *page_payment, page_transactions *pageTransactions)
 {
     this->p_page_idle = pageIdle;
-    this->paymentPage = pagePayment;
+    this->paymentPage = page_payment;
     this->selectPage = pageProduct;
     this->p_page_select_product = pageSelect;
     this->p_page_transactions = pageTransactions;

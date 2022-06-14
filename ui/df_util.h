@@ -93,24 +93,25 @@ using namespace std;
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH      "background_dispense_instructions.png"
 #define PAGE_DISPENSE_BACKGROUND_PATH                   "background_dispense.png"
-#define PAGE_QR_PAY_BACKGROUND_PATH                     "background_QR-pay.png"
+#define PAGE_QR_PAY_BACKGROUND_PATH                     "background_generic_white.png"
 #define ERROR_MESSAGE_PATH                              "error_message.png"
 
 // #define PAGE_WIFI_ERROR_BACKGROUND_PATH                 "/home/df-admin/production/references/oops.png"
 #define BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH            "/home/df-admin/production/references/bottle_fill_for_animation.png"
 
-#define SOLD_OUT_IMAGE_PATH "/home/df-admin/production/references/soldOut.png"
-#define KEYBOARD_IMAGE_PATH "/home/df-admin/production/references/soapstand-keyboard.png"
-#define FULL_TRANSPARENT_IMAGE_PATH "/home/df-admin/production/references/background.png"
+#define SOLD_OUT_IMAGE_PATH                         "/home/df-admin/production/references/soldOut.png"
+#define KEYBOARD_IMAGE_PATH                         "/home/df-admin/production/references/soapstand-keyboard.png"
+#define FULL_TRANSPARENT_IMAGE_PATH                 "/home/df-admin/production/references/background.png"
 
-#define ICON_TYPE_CONCENTRATE_PATH "/home/df-admin/production/references/Soapstand_UI-concentrate-icon.png"
-#define ICON_TYPE_ALL_PURPOSE_PATH "/home/df-admin/production/references/Soapstand-UI-icon-all-purposs.png"
-#define ICON_TYPE_DISH_PATH "/home/df-admin/production/references/Soapstand-UI-icon-dish.png"
-#define ICON_TYPE_HAND_PATH "/home/df-admin/production/references/Soapstand-UI-icon-hand-soap.png"
-#define ICON_TYPE_LAUNDRY_PATH "/home/df-admin/production/references/Soapstand-UI-icon-laundry.png"
+#define ICON_TYPE_CONCENTRATE_PATH                  "/home/df-admin/production/references/Soapstand_UI-concentrate-icon.png"
+#define ICON_TYPE_ALL_PURPOSE_PATH                  "/home/df-admin/production/references/Soapstand-UI-icon-all-purposs.png"
+#define ICON_TYPE_DISH_PATH                         "/home/df-admin/production/references/Soapstand-UI-icon-dish.png"
+#define ICON_TYPE_HAND_PATH                         "/home/df-admin/production/references/Soapstand-UI-icon-hand-soap.png"
+#define ICON_TYPE_LAUNDRY_PATH                      "/home/df-admin/production/references/Soapstand-UI-icon-laundry.png"
                          
-#define COMPANY_LOGO_PATH "/home/df-admin/production/references/logos/%1_logo_white.png"
-#define DRINKFILL_LOGO_VERTICAL_PATH "/home/df-admin/production/references/logos/Soapstand-logo-white-vertical.png"
+#define DRINKFILL_LOGO_ANIMATED_PATH                "/home/df-admin/production/references/logos/Soapstand-logo-animated-spin.gif"
+#define COMPANY_LOGO_PATH                           "/home/df-admin/production/references/logos/%1_logo_white.png"
+#define DRINKFILL_LOGO_VERTICAL_PATH                 "/home/df-admin/production/references/logos/Soapstand-logo-white-vertical.png"
 
 #else
 

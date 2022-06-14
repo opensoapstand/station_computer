@@ -38,6 +38,8 @@
 #include <vector>
 #include <QPainter>
 #include <QUuid>
+
+#include <QMovie>
 #include <curl/curl.h>
 
 class pageProduct;
@@ -48,6 +50,12 @@ class page_help;
 namespace Ui {
 class page_payment;
 }
+
+typedef enum StatePayment{
+    s_init,
+    s_payment_processing,
+    s_payment_done
+}StatePayment;
 
 using namespace std;
 using namespace qrcodegen;
@@ -101,6 +109,7 @@ public:
     // char * curl_data;
     // char * curl_data1;
     // char * curlOrderdata;
+    StatePayment state_payment;
 
 private slots:
 
@@ -228,7 +237,8 @@ private:
     bool response;
     // bool tap_payment;
 
-    void QRgen();
+    void testQRgen();
+
     void printQr(const QrCode &qr);
     std::string toSvgString(const QrCode &qr, int border);
     void paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg);
@@ -255,7 +265,7 @@ private:
 
     void isQrProcessedCheckOnline();
     void setupQrOrder();
-    void createQrOrder();
+    void createOrderIdAndSendToBackend();
     
 };
 

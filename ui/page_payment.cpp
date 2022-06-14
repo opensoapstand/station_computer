@@ -23,7 +23,7 @@
 
 // CTOR
 page_payment::page_payment(QWidget *parent) : QWidget(parent),
-                                            ui(new Ui::page_payment)
+                                              ui(new Ui::page_payment)
 {
     // Fullscreen background setup
     ui->setupUi(this);
@@ -34,6 +34,84 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
     ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     ui->payment_bypass_Button->setEnabled(false);
+
+    state_payment = s_init;
+
+    ui->title_Label->setText("pay by phone");
+    QString css_title = "QLabel{"
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 500;"
+        "font-size: 64px;"
+        "line-height: 86px;"
+        "text-align: center;"
+        "text-transform: lowercase;"
+        "color: #003840;"
+        "text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);"
+        "}";
+    ui->title_Label->setStyleSheet(css_title);
+
+    ui->scan_Label->setText(
+            "Scan to Pay");
+    QString css_scan = "QLabel{"
+        "text-align: center;"
+        "font-family: 'Montserrat';"
+        "font-style: normal;"
+        "font-weight: 600;"
+        "font-size: 48px;"
+        "color: #5E8580;"
+            "} .tab {"
+            "display: inline-block;"
+            "margin-left: 40px;"
+        "}";
+    ui->scan_Label->setStyleSheet(css_scan);
+
+    ui->steps_Label->setText(
+            "<style>"
+                "li:{margin-top:10px;}"
+            "</style>"
+            "<ol>"
+            "<li><span class='tab'></span>Scan QR code with phone camera<br></li>"
+            "<li><span class='tab'></span>Click to open the link that appears<br></li>"
+            "<li><span class='tab'></span>Follow payment instructions on phone<br></li>"
+            "<li><span class='tab'></span>The station will proceed after payment<br></li>"
+            "<li><span class='tab'></span>Refill your soap!</li>"
+            "</ol>"
+            );
+    QString css_steps = "QLabel{"
+            "position: absolute;"
+            "width: 777px;"
+            "height: 306px;"
+            "left: 143px;"
+            "top: 1029px;"
+            "font-family: 'Montserrat';"
+            "font-style: normal;"
+            "font-weight: 600;"
+            "font-size: 36px;"
+            "line-height: 51px;"
+            "color: #003840;"
+            "}";
+    ui->steps_Label->setStyleSheet(css_steps);
+
+    ui->processing_Label->setText(
+            "it can take a few moment for the station to<br>continue after your payment is confirmed"
+            );
+    QString css_processing = "QLabel{"
+            "position: absolute;"
+            "width: 777px;"
+            "height: 306px;"
+            "left: 143px;"
+            "top: 1029px;"
+            "font-family: 'Montserrat';"
+            "font-style: normal;"
+            "font-weight: 600;"
+            "font-size: 36px;"
+            "line-height: 51px;"
+            "color: #003840;"
+            "}";
+    ui->processing_Label->setStyleSheet(css_processing);
+
+    ui->order_total_amount->hide();
 
     // **** Timer and Slot Setup ****
 
@@ -56,7 +134,15 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
 
     qrTimer = new QTimer(this);
     connect(qrTimer, SIGNAL(timeout()), this, SLOT(qrProcessedPeriodicalCheck()));
-    // qDebug() << "----------=======================sssssssss= fefefefijfeij";
+
+
+    // // need to install a plugin to get animated gifs to play
+    // QString gif_path = DRINKFILL_LOGO_ANIMATED_PATH;
+    // QMovie *movie = new QMovie(gif_path);
+    // ui->animated_Label->setMovie(movie);
+    // movie->start();
+
+
     // QString tap = "tap";
     // if (getPaymentMethod() == tap)
     // {
@@ -250,6 +336,21 @@ void page_payment::showEvent(QShowEvent *event)
     // palette.setBrush(QPalette::Background, background);
     // this->setPalette(palette);
 
+    state_payment = s_init;
+    ui->qrCode->show();
+    ui->productLabel->show();
+    ui->order_drink_amount->show();
+    // ui->order_total_amount->show();
+    ui->steps_Label->show();
+            
+    ui->processing_Label->hide();
+    
+
+
+     ui->title_Label->setText("pay by phone");
+     ui->scan_Label->setText("Scan to Pay");
+
+
     if (getPaymentMethod() == "tap")
     {
         qDebug() << "Init tap";
@@ -318,29 +419,18 @@ void page_payment::showEvent(QShowEvent *event)
 void page_payment::setupQrOrder()
 {
 
-    createQrOrder();
+    createOrderIdAndSendToBackend();
 
     QPixmap map(360, 360);
     map.fill(QColor("black"));
     QPainter painter(&map);
-    //    ui->qrCode->setPixmap(map);
 
-    // QString qrdata_amount = QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2);
-    //  QString machine_id = db.getMachineID();
-    //  QString product_id = db.getProductID(product_slot___);
-    //  order_id = QUuid::createUuid().QUuid::toString();
-    //  order_id = order_id.remove("{");
-    //  order_id = order_id.remove("}");
-    // qDebug() << "ORDER ID: " << order_id << endl;
-    //  QString qrdata = "https://soapstandportal.com/payment?mid="+machine_id+"&pid="+product_id+"&size="+drinkSize+"&oid="+order_id;
+    // build up qr content (link)
     QString qrdata = "https://soapstandportal.com/payment?oid=" + orderId;
 
+    // create qr code graphics
     paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
     ui->qrCode->setPixmap(map);
-
-    // QString curl_param = "oid=" + orderId;
-    // curl_param_array = curl_param.toLocal8Bit();
-    // curl_data = curl_param_array.data();
 
     _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
 
@@ -348,25 +438,25 @@ void page_payment::setupQrOrder()
     qrTimer->start(1000);
 }
 
-void page_payment::createQrOrder()
+void page_payment::createOrderIdAndSendToBackend()
 {
     // an order Id is generated locally and the order is sent to the cloud.
 
-    qDebug() << "Create order in the cloud";
+    qDebug() << "Get cloud to create an order and retrieve the order id";
     QString MachineSerialNumber = p_page_idle->currentProductOrder->getMachineId();
     QString productUnits = p_page_idle->currentProductOrder->getUnitsForSelectedSlot();
     QString productId = p_page_idle->currentProductOrder->getSelectedProductId();
     QString contents = p_page_idle->currentProductOrder->getSelectedProductName();
     QString quantity_requested = p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(false, false);
-    qDebug() << "************quantity to send to cloud: " + quantity_requested;
-
     char drinkSize = p_page_idle->currentProductOrder->getSelectedSizeAsChar();
     QString price = QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2);
 
+    // create a unique order id locally
     orderId = QUuid::createUuid().QUuid::toString();
     orderId = orderId.remove("{");
     orderId = orderId.remove("}");
 
+    // send order details to backend
     QString curl_order_parameters_string = "orderId=" + orderId + "&size=" + drinkSize + "&MachineSerialNumber=" + MachineSerialNumber +
                                            "&contents=" + contents + "&price=" + price + "&productId=" + productId + "&quantity_requested=" + quantity_requested + "&size_unit=" + productUnits;
 
@@ -441,10 +531,32 @@ void page_payment::isQrProcessedCheckOnline()
         {
             qDebug() << "QR processed. It's time to dispense.";
             proceed_to_dispense();
+            state_payment = s_payment_done;
+        }
+        else if (readBuffer == "Not paid")
+        {
+            qDebug() << "Initial page, user has not yet scanned qr code (or it is scanned, but not yet confirmed by backed)";
+            // do nothing
+            state_payment = s_init;
+        }
+        else if (readBuffer == "In progress")
+        {
+            qDebug() << "Wait for QR processed. User must have finished transaction to continue.";
+            // user scanned qr code and is processing transaction. Delete qr code and make it harder for user to leave page.
+            state_payment = s_payment_processing;
+            ui->qrCode->hide();
+            ui->productLabel->hide();
+            ui->order_drink_amount->hide();
+            ui->order_total_amount->hide();
+            ui->steps_Label->hide();
+            
+            ui->processing_Label->show();
+            ui->scan_Label->setText("Please finalize transaction");
+            ui->title_Label->setText("almost there");
         }
         else
         {
-            qDebug() << "Wait for QR processed. Nothing received";
+            qDebug() << "ASSERT ERROR: Unknown message from Server";
         }
     }
     curl_easy_cleanup(curl);
@@ -514,31 +626,37 @@ void page_payment::declineTimer_start()
 
 bool page_payment::exitConfirm()
 {
-
-    // ARE YOU SURE YOU WANT TO COMPLETE?
-    QMessageBox msgBox;
-    msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
-
-    // msgBox.setText("<p align=center>Are you sure you want to cancel your transaction? It can take up to 30 seconds for dispensing to start after a payment is completed. </p>");
-    msgBox.setText("<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>");
-    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
-
-    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-    int ret = msgBox.exec();
-    bool success;
-    switch (ret)
+    if (state_payment == s_payment_processing || state_payment == s_payment_done)
     {
-    case QMessageBox::Yes:
+        // ARE YOU SURE YOU WANT TO COMPLETE?
+        QMessageBox msgBox;
+        msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+
+        // msgBox.setText("<p align=center>Are you sure you want to cancel your transaction? It can take up to 30 seconds for dispensing to start after a payment is completed. </p>");
+        msgBox.setText("<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>");
+        msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
+
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        int ret = msgBox.exec();
+        bool success;
+        switch (ret)
+        {
+        case QMessageBox::Yes:
+        {
+            resetPaymentPage();
+            return true;
+        }
+        break;
+        case QMessageBox::No:
+        {
+            return false;
+        }
+        break;
+        }
+    }
+    else
     {
-        resetPaymentPage();
         return true;
-    }
-    break;
-    case QMessageBox::No:
-    {
-        return false;
-    }
-    break;
     }
 }
 
@@ -1036,7 +1154,7 @@ void page_payment::printQr(const QrCode &qr)
     std::cout << std::endl;
 }
 
-void page_payment::QRgen()
+void page_payment::testQRgen()
 {
 
     QPixmap map(400, 400);

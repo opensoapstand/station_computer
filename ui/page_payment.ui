@@ -48,8 +48,8 @@
   <widget class="QLabel" name="order_total_amount">
    <property name="geometry">
     <rect>
-     <x>700</x>
-     <y>1440</y>
+     <x>880</x>
+     <y>1640</y>
      <width>231</width>
      <height>41</height>
     </rect>
@@ -85,8 +85,8 @@ color: #58595B;</string>
   <widget class="QLabel" name="order_drink_amount">
    <property name="geometry">
     <rect>
-     <x>700</x>
-     <y>1310</y>
+     <x>750</x>
+     <y>1470</y>
      <width>221</width>
      <height>41</height>
     </rect>
@@ -159,9 +159,9 @@ color: #58595B;</string>
   <widget class="QLabel" name="productLabel">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>1310</y>
-     <width>641</width>
+     <x>100</x>
+     <y>1470</y>
+     <width>521</width>
      <height>81</height>
     </rect>
    </property>
@@ -172,14 +172,14 @@ font-size: 24px;
 color: #58595B;</string>
    </property>
    <property name="text">
-    <string/>
+    <string>order summary</string>
    </property>
   </widget>
   <widget class="QLabel" name="qrCode">
    <property name="geometry">
     <rect>
-     <x>350</x>
-     <y>600</y>
+     <x>370</x>
+     <y>530</y>
      <width>360</width>
      <height>360</height>
     </rect>
@@ -197,8 +197,8 @@ color: #58595B;</string>
   <widget class="QLabel" name="refreshLabel">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>230</y>
+     <x>100</x>
+     <y>0</y>
      <width>861</width>
      <height>421</height>
     </rect>
@@ -245,6 +245,83 @@ line-height: 29px;</string>
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="processing_Label">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>690</y>
+     <width>871</width>
+     <height>251</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>processing label</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="steps_Label">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>940</y>
+     <width>881</width>
+     <height>501</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>steps</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="title_Label">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>170</y>
+     <width>561</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>title</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="scan_Label">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>390</y>
+     <width>901</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>scan label</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="animated_Label">
+   <property name="geometry">
+    <rect>
+     <x>356</x>
+     <y>1170</y>
+     <width>331</width>
+     <height>251</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>animated logo</string>
+   </property>
+  </widget>
   <zorder>refreshButton</zorder>
   <zorder>previousPage_Button</zorder>
   <zorder>mainPage_Button</zorder>
@@ -255,6 +332,11 @@ line-height: 29px;</string>
   <zorder>productLabel</zorder>
   <zorder>qrCode</zorder>
   <zorder>refreshLabel</zorder>
+  <zorder>processing_Label</zorder>
+  <zorder>steps_Label</zorder>
+  <zorder>title_Label</zorder>
+  <zorder>scan_Label</zorder>
+  <zorder>animated_Label</zorder>
  </widget>
  <resources/>
  <connections/>

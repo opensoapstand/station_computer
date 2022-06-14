@@ -14,8 +14,8 @@
 
 LRCgenerator::LRCgenerator(std::vector<uint8_t> packet, uint packetSize)
 {
+    
     uint8_t lrcResult  = packet[0]; //Initializes the first byte as LRC;
-
     if (packetSize<2){
         LRC = lrcResult;
     }
@@ -42,7 +42,8 @@ LRCgenerator::LRCgenerator(std::vector<uint8_t> packet, uint packetSize)
 
             i++;
         }
-
+        printf("LRC result:  ");
+        printf("%d", lrcResult);
         LRC = lrcResult;
     }
 }

@@ -9,7 +9,6 @@
 // copyright 2019 by drinkfill
 // all rights reserved
 //***************************************
-
 #include "packetfromux410.h"
 #include "enums.h"
 #include "lrcgenerator.h"
@@ -35,22 +34,26 @@ packetFromUX410::packetFromUX410()
 
 void packetFromUX410::packetReadFromUX(std::vector<uint8_t> curPacket)
 {
-    std::cout<< "Packet read size" << curPacket.size() << endl;
+    std::cout<< "Received packet (size" << curPacket.size() << ") : \n";
+    for (int i=0;i< curPacket.size(); i++){
+        std::cout << std::to_string(curPacket[i]) << " ";
+    }
+     
     if(0xFF == curPacket[0] && 1 == curPacket.size())
     {
+
         uint16_t combineLength = convertFrom8To16(packetToSort.dataLen[0], packetToSort.dataLen[1]) + 2;
         constructPartialPacket(combineLength);
     }
     else if(1 == curPacket.size())
     {
-
        checkAckOrNak(curPacket[0]); //store if the packet sent is Ack or NAk
+
     }
     else
     {
-
         sortPacket(curPacket);
-        // usleep(50000);
+        usleep(500000);
         uint16_t combineLength = convertFrom8To16(packetToSort.dataLen[0], packetToSort.dataLen[1]) + 2;
         constructPartialPacket(combineLength);
 
@@ -91,7 +94,6 @@ void packetFromUX410::sortPacket(std::vector<uint8_t> packetRead)
     packetToSort.APIID[0] = packetRead[i]; i++;
     packetToSort.APIID[1] = packetRead[i]; i++;
     packetToSort.status = packetRead[i]; i++;
-    std::cout<< packetToSort.status << endl;
 
     packetToSort.data.clear();
     for(int j = 0; j < (convertFrom8To16(packetToSort.dataLen[0], packetToSort.dataLen[1])-5); j++)
@@ -112,7 +114,6 @@ void packetFromUX410::checkAckOrNak(uint8_t AKNK)
 
 uint8_t packetFromUX410::getAckOrNak()
 {
-   
     return AckorNak;
 }
 

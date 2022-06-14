@@ -575,19 +575,8 @@ void pagePayment::idlePaymentTimeout()
 void pagePayment::stayAliveLogon()
 {
     
-    // /*logon packet to send*/
-    // pktToSend = paymentPacket.ppPosGetConfigPkt(StatusType::GetLanStatus);
-    // if (sendToUX410())
-    // {
-    //     waitForUX410();
-    // }
-
-    // pktResponded.clear();
-
-    // com.flushSerial();
-    
-    /*logon packet to send*/
-    pktToSend = paymentPacket.ppPosStatusCheckPkt(0x01);
+    cout << "Getting Lan Info" << endl;
+    pktToSend = paymentPacket.ppPosStatusCheckPkt(StatusType::GetLanInfo);
     if (sendToUX410())
     {
         waitForUX410();
@@ -596,6 +585,17 @@ void pagePayment::stayAliveLogon()
     pktResponded.clear();
 
     com.flushSerial();
+    
+    // /*logon packet to send*/
+    // pktToSend = paymentPacket.ppPosStatusCheckPkt(0x01);
+    // if (sendToUX410())
+    // {
+    //     waitForUX410();
+    // }
+
+    // pktResponded.clear();
+
+    // com.flushSerial();
     
     
 }
@@ -621,7 +621,7 @@ bool pagePayment::sendToUX410()
         cout << "Wait for ACK counter: " << waitForAck << endl;
         com.sendPacket(pktToSend, uint(pktToSend.size()));
         std::cout << "sendtoUX410 Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
-
+        sleep(1);
         // read back what is responded
         pktResponded = com.readForAck();
         readPacket.packetReadFromUX(pktResponded);
@@ -630,6 +630,7 @@ bool pagePayment::sendToUX410()
 
         // if(isReadyForTap) {
         cout << "\nWaiting for TAP" << endl;
+        cout<< readPacket.getAckOrNak();
         if (readPacket.getAckOrNak() == communicationPacketField::ACK)
         {
             return true;
@@ -677,6 +678,8 @@ bool pagePayment::tap_init()
     // This is super shitty - there must be a better way to find out when the green light starts flashing on the UX420 but it was 35
     sleep(35);
     cout << "_----_-----__------_-----";
+    stayAliveLogon();
+    
     /*Cancel any previous payment*/
     cout << "Sending Cancel payment packet..." << endl;
     pktToSend = paymentPacket.purchaseCancelPacket();
@@ -710,7 +713,7 @@ bool pagePayment::tap_init()
     }
     com.flushSerial();
     cout << "-----------------------------------------------" << endl;
-
+    
     /*logon packet to send*/
     cout << "Sending Logon packet..." << endl;
     pktToSend = paymentPacket.logonPacket();
@@ -750,13 +753,15 @@ bool pagePayment::tap_init()
 
     /*getConfiguration packet to send*/
     cout << "Sending Merchant Address query..." << endl;
-    pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::MERCH_ADDR);
+    pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::URL1);
     if (sendToUX410())
     {
         cout << "Receiving Merchant Address" << endl;
         waitForUX410();
         isInitAddress = true;
-        merchantAddress = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
+        // merchantAddress = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
+        merchantAddress = paymentPktInfo.dataField(readPacket.getPacket().data);
+
         std::cout << merchantAddress << endl;
         pktResponded.clear();
     }
@@ -793,7 +798,8 @@ bool pagePayment::waitForUX410()
     bool waitResponse = false;
     while (!waitResponse)
     {
-        //        QCoreApplication::processEvents();
+        // sleep(1);
+            //    QCoreApplication::processEvents();
         // cout << readPacket << endl;
         if (pktResponded[0] != 0x02)
         {

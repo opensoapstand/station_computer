@@ -104,6 +104,7 @@ bool page_dispenser::sendToUX410()
     {
         cout << "Wait for ACK counter: " << waitForAck << endl;
         qDebug() << "Wait for ACK counter: " << endl;
+        // sleep(1);
         com.sendPacket(pktToSend, uint(pktToSend.size()));
         std::cout << "sendtoUX410 Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
 
@@ -131,6 +132,7 @@ bool page_dispenser::waitForUX410()
     {
         //        QCoreApplication::processEvents();
         // cout << readPacket << endl;
+        // sleep(1);
         if (pktResponded[0] != 0x02)
         {
             pktResponded.clear();

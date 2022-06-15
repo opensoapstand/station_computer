@@ -114,12 +114,13 @@ bool page_dispenser::sendToUX410()
         pktResponded.clear();
         waitForAck++;
 
-        cout << "Waiting for TAP" << endl;
+        cout << "Waiting for TAP in dispenser" << endl;
         cout << readPacket << endl;
         if (readPacket.getAckOrNak() == communicationPacketField::ACK)
         {
             return true;
         }
+
         usleep(50000);
     }
     return false;

@@ -676,8 +676,10 @@ bool pagePayment::tap_init()
     }
 
     // This is super shitty - there must be a better way to find out when the green light starts flashing on the UX420 but it was 35
-    sleep(35);
+    // sleep(35);
+
     cout << "_----_-----__------_-----";
+   
     stayAliveLogon();
     
     /*Cancel any previous payment*/

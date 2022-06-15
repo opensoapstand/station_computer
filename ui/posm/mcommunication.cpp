@@ -36,7 +36,6 @@ bool mCommunication::page_init(){
     /* O_NOCTTY - No terminal will control the process   */
     /* O_NDELAY -Non Blocking Mode,Does not care about-  */
     /* -the status of DCD line,Open() returns immediatly */
-
     if(fd == -1) {
         qDebug() << "Serial (mpos) Status: "<< "Failed";
         return bRet;
@@ -66,8 +65,9 @@ bool mCommunication::page_init(){
         cfmakeraw(&SerialPortSettings);
         if((tcsetattr(fd,TCSANOW,&SerialPortSettings)) != 0) {
         } else {
-            tcflush(fd,TCIOFLUSH);
 
+            tcflush(fd,TCIOFLUSH);
+            
             bRet = true;
         }
         qDebug() << "Serial (mpos) Status: "<< "Success";
@@ -91,7 +91,7 @@ std::vector<uint8_t> mCommunication::readPacket(){
     {
         pktRead.clear();
         pktRead.push_back(0xFF);
-        std::cout << "Packet read failed...\n";
+        // std::cout << "Packet read failed...\n";
         return pktRead;
     }
 //    else if (int(buffer[2]) < readSize) {
@@ -146,17 +146,17 @@ std::vector<uint8_t> mCommunication::readForAck()
     std::vector<uint8_t> pktRead;
     // tcflush(fd, TCIOFLUSH);
     // tcflush(fd, TCIOFLUSH);
+    qDebug() << fd ;
     int readcount = 0;
-
     while (readcount < 3){
         if (readSize == -1){
             readSize = read(fd, buffer, 1);
-            readcount ++;
+            readcount++;
         }
         if (readSize != -1){
             break;
         }
-        usleep(50000);
+        usleep(500000);
     }
 
 

@@ -88,7 +88,7 @@ std::vector<uint8_t> transactionPacket::batchClosePkt()
  * Return: High Level ACK
  * ------> • Reader is activated && Wait for Card tapped by user
 */
-std::vector<uint8_t> transactionPacket::purchasePacket(std::string amount)
+std::vector<uint8_t> transactionPacket::apurchasePacket(std::string amount)
 {
     transactionAmount(TxnType::Purchase,amount);
     uint8_t dataPacket[7] = {};

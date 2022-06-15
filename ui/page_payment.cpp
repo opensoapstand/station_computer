@@ -94,7 +94,7 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
     ui->steps_Label->setStyleSheet(css_steps);
 
     ui->processing_Label->setText(
-            "it can take a few moment for the station to<br>continue after your payment is confirmed"
+            "it can take a few moments for the station to<br>continue after your payment is confirmed"
             );
     QString css_processing = "QLabel{"
             "position: absolute;"

@@ -944,7 +944,7 @@ void dispenser::loadPumpRampingEnabledFromDb()
 
 #endif
 
-    debugOutput::sendMessage("Pump ramping enabled? : " + to_string(m_isPumpSlowStartStopEnabled), MSG_INFO);
+    debugOutput::sendMessage("Pump ramping enabled? : " + to_string(m_isPumpSlowStartStopEnabled) + "(val: " + to_string(val) + ")", MSG_INFO);
 }
 
 bool dispenser::getPumpSlowStartStopEnabled()

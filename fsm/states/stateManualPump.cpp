@@ -46,6 +46,7 @@ string stateManualPump::toString()
 DF_ERROR stateManualPump::onEntry()
 {
    m_state_requested = STATE_MANUAL_PUMP;
+   m_state_auto_pump = AUTO_PUMP_STATE_IDLE;
    DF_ERROR e_ret = OK;
    productDispensers = g_productDispensers;
 
@@ -103,7 +104,7 @@ DF_ERROR stateManualPump::onAction()
          debugOutput::sendMessage("Disable dispenser pump " + to_string(m_active_pump_index + 1), MSG_INFO);
          productDispensers[m_active_pump_index].setPumpsDisableAll();
          productDispensers[m_active_pump_index].stopDispense();
-         
+
          if (productDispensers[m_active_pump_index].getMultiDispenseButtonEnabled())
          {
             productDispensers[m_active_pump_index].setMultiDispenseButtonLight(m_active_pump_index + 1, false);
@@ -118,6 +119,70 @@ DF_ERROR stateManualPump::onAction()
       {
          debugOutput::sendMessage("Direction backward pump " + to_string(m_active_pump_index + 1), MSG_INFO);
          productDispensers[m_active_pump_index].setPumpDirectionReverse();
+      }
+
+      else if ('5' == m_pMessaging->getAction())
+      {
+         productDispensers[m_active_pump_index].resetVolumeDispensed();
+         dispenseButtonValueMemory = false;
+         iscustomVolumeDispenseTest = !iscustomVolumeDispenseTest;
+         debugOutput::sendMessage("Custom volume dispense pump model test active? : " + to_string(iscustomVolumeDispenseTest), MSG_INFO);
+      }
+
+      else if ('6' == m_pMessaging->getAction())
+      {
+         productDispensers[m_active_pump_index].resetVolumeDispensed();
+         isCyclicTesting = !isCyclicTesting;
+         debugOutput::sendMessage("Toggle cyclic pump test. Enabled?: " + to_string(isCyclicTesting), MSG_INFO);
+
+         if (isCyclicTesting)
+         {
+            productDispensers[m_active_pump_index].initFlowRateCalculation();
+            isCyclicTestingPumpOn = false;
+            using namespace std::chrono;
+            uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+            cyclicTestPeriodStartEpochMillis = now - CYCLIC_PUMP_TEST_OFF_CYCLE_MILLIS - 10; // make sure it's expired.
+         }
+         else
+         {
+            productDispensers[m_active_pump_index].setPumpsDisableAll();
+         }
+      }
+      else if ('7' == m_pMessaging->getAction())
+      {
+         productDispensers[m_active_pump_index].reversePumpForSetTimeMillis(500);
+      }
+      else if ('8' == m_pMessaging->getAction())
+      {
+         
+         // Pump specific test
+         // productDispensers[m_active_pump_index].resetVolumeDispensed();
+         // debugOutput::sendMessage("Do pump test", MSG_INFO);
+         // pumpTest();
+         
+         // auto pump test
+         productDispensers[m_active_pump_index].resetVolumeDispensed();
+         m_state_auto_pump = AUTO_PUMP_STATE_INIT;
+         
+      }
+
+      else if ('9' == m_pMessaging->getAction())
+      {
+         isFlowTest = !isFlowTest;
+         if (isFlowTest)
+         {
+            productDispensers[m_active_pump_index].initFlowRateCalculation();
+            using namespace std::chrono;
+            startFlowTestMillis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+            productDispensers[m_active_pump_index].setPumpEnable();
+            debugOutput::sendMessage("Flow measuring test enabled: True. Can be combined with cyclic test, if not, keep dispense button pressed. Will display test data in csv format.", MSG_INFO);
+         }
+         else
+         {
+            debugOutput::sendMessage("Flow measuring test enabled: False.", MSG_INFO);
+            productDispensers[m_active_pump_index].setPumpsDisableAll();
+         }
+         productDispensers[m_active_pump_index].resetVolumeDispensed();
       }
 
       else if (ACTION_MANUAL_PUMP_SET == m_pMessaging->getAction())
@@ -148,63 +213,6 @@ DF_ERROR stateManualPump::onAction()
             productDispensers[m_active_pump_index].setPumpPWM((uint8_t)val, true);
          }
       }
-
-      else if ('5' == m_pMessaging->getAction())
-      {
-         productDispensers[m_active_pump_index].resetVolumeDispensed();
-         dispenseButtonValueMemory = false;
-         iscustomVolumeDispenseTest = !iscustomVolumeDispenseTest;
-         debugOutput::sendMessage("Custom volume dispense pump model test active? : " + to_string(iscustomVolumeDispenseTest), MSG_INFO);
-      }
-
-      else if ('6' == m_pMessaging->getAction())
-      {
-         productDispensers[m_active_pump_index].resetVolumeDispensed();
-         isCyclicTesting = !isCyclicTesting;
-         debugOutput::sendMessage("Toggle cyclic pump test. Enabled?: " + to_string(isCyclicTesting), MSG_INFO);
-
-         if (isCyclicTesting)
-         {
-            productDispensers[m_active_pump_index].initFlowRateCalculation();
-            isCyclicTestingPumpOn = false;
-            using namespace std::chrono;
-            uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-            cyclicTestPeriodStartEpochMillis = now - CYCLIC_PUMP_TEST_OFF_CYCLE_MILLIS - 10; // make sure it's expired.
-         }
-         else
-         {
-            productDispensers[m_active_pump_index].setPumpsDisableAll();
-         }
-      }
-      else if ('8' == m_pMessaging->getAction())
-      {
-         productDispensers[m_active_pump_index].resetVolumeDispensed();
-         debugOutput::sendMessage("Do pump test", MSG_INFO);
-         pumpTest();
-      }
-      else if ('7' == m_pMessaging->getAction())
-      {
-         productDispensers[m_active_pump_index].reversePumpForSetTimeMillis(500);
-      }
-      else if ('9' == m_pMessaging->getAction())
-      {
-         isFlowTest = !isFlowTest;
-         if (isFlowTest)
-         {
-            productDispensers[m_active_pump_index].initFlowRateCalculation();
-            using namespace std::chrono;
-            startFlowTestMillis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-            productDispensers[m_active_pump_index].setPumpEnable();
-            debugOutput::sendMessage("Flow measuring test enabled: True. Can be combined with cyclic test, if not, keep dispense button pressed. Will display test data in csv format.", MSG_INFO);
-         }
-         else
-         {
-            debugOutput::sendMessage("Flow measuring test enabled: False.", MSG_INFO);
-            productDispensers[m_active_pump_index].setPumpsDisableAll();
-         }
-         productDispensers[m_active_pump_index].resetVolumeDispensed();
-      }
-
       else
       {
          debugOutput::sendMessage(
@@ -238,7 +246,6 @@ DF_ERROR stateManualPump::onAction()
    {
       triggerOutputData = true;
       most_recent_data_output_epoch = millis_epoch;
-
    }
    else
    {
@@ -247,7 +254,11 @@ DF_ERROR stateManualPump::onAction()
 
    // debugOutput::sendMessage("******", MSG_INFO);
 
-   if (isCyclicTesting)
+   if (m_state_auto_pump != AUTO_PUMP_STATE_IDLE)
+   {
+      autoPumpSetQuantityTest();
+   }
+   else if (isCyclicTesting)
    {
       pumpCyclicTest();
       if (isFlowTest && isCyclicTestingPumpOn)
@@ -282,14 +293,14 @@ DF_ERROR stateManualPump::onAction()
 
          if (triggerOutputData)
          {
-         debugOutput::sendMessage("----------------Dispense button pressed.----------", MSG_INFO);
-         debugOutput::sendMessage("Dispensed volume [total]: " + to_string(volume), MSG_INFO);
-         debugOutput::sendMessage("Dispense flowRate [V/s]: " + to_string(flowRate), MSG_INFO);
-         debugOutput::sendMessage("Dispense flowRate 1s avg [V/s]: " + to_string(avg_1s.value), MSG_INFO);
+            debugOutput::sendMessage("----------------Dispense button pressed.----------", MSG_INFO);
+            debugOutput::sendMessage("Dispensed volume [total]: " + to_string(volume), MSG_INFO);
+            debugOutput::sendMessage("Dispense flowRate [V/s]: " + to_string(flowRate), MSG_INFO);
+            debugOutput::sendMessage("Dispense flowRate 1s avg [V/s]: " + to_string(avg_1s.value), MSG_INFO);
          }
          // usleep(500000);
 
-         if (productDispensers[m_active_pump_index].isPumpEnabled() )
+         if (productDispensers[m_active_pump_index].isPumpEnabled())
          {
             unsigned short speed = productDispensers[m_active_pump_index].getPumpSpeed();
             string value = std::to_string(speed);
@@ -391,11 +402,11 @@ DF_ERROR stateManualPump::pumpFlowTest()
                                    to_string(flowRate) + "," +
                                    to_string(avg_1s.value) + "," +
                                    to_string(avg_02s.value) + "," +
-                                   to_string(avg_05s.value)
-                               ,MSG_INFO);
+                                   to_string(avg_05s.value),
+                               MSG_INFO);
    }
    // }
-   //usleep(50000);
+   // usleep(50000);
 }
 
 DF_ERROR stateManualPump::pumpCyclicTest()
@@ -404,7 +415,6 @@ DF_ERROR stateManualPump::pumpCyclicTest()
    using namespace std::chrono;
    uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
    // }
-
 
    if (isCyclicTestingPumpOn)
    {
@@ -425,32 +435,58 @@ DF_ERROR stateManualPump::pumpCyclicTest()
       // check for end of OFF cycle
       if (cyclicTestPeriodStartEpochMillis + CYCLIC_PUMP_TEST_OFF_CYCLE_MILLIS < now)
       {
-        
+
          debugOutput::sendMessage("\n******************************\n******PUMP CYCLING TESTING******\n*****************\n  cycle: " + to_string(pump_test_cycle_count), MSG_INFO);
          pump_test_cycle_count++;
 
          productDispensers[m_active_pump_index].the_8344->virtualButtonPressHack();
 
          // productDispensers[m_active_pump_index].setPumpDirectionForward();
-         
-         
+
          int speed = productDispensers[m_active_pump_index].getProduct()->getPWMFromDB();
 
          debugOutput::sendMessage("Pump speed for test: " + to_string(speed), MSG_INFO);
          // productDispensers[m_active_pump_index].setPumpPWM(speed, true);
-         //productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
-
+         // productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
 
          productDispensers[m_active_pump_index].pumpSlowStart(true);
 
-
          isCyclicTestingPumpOn = true;
          cyclicTestPeriodStartEpochMillis = now;
-
-
-
       }
    }
+}
+
+DF_ERROR stateManualPump::autoPumpSetQuantityTest()
+{
+   using namespace std::chrono;
+   uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
+   if (m_state_auto_pump == AUTO_PUMP_STATE_IDLE)
+   {
+   }
+   else if (m_state_auto_pump == AUTO_PUMP_STATE_INIT)
+   {
+      productDispensers[m_active_pump_index].the_8344->virtualButtonPressHack();
+      int speed = productDispensers[m_active_pump_index].getProduct()->getPWMFromDB();
+      debugOutput::sendMessage("Pump auto start: " + to_string(speed), MSG_INFO);
+      productDispensers[m_active_pump_index].pumpSlowStart(true);
+      isCyclicTestingPumpOn = true;
+      cyclicTestPeriodStartEpochMillis = now;
+      m_state_auto_pump = AUTO_PUMP_STATE_PUMPING;
+   }
+   else if (m_state_auto_pump == AUTO_PUMP_STATE_PUMPING)
+   {
+      double totalVolume = productDispensers[m_active_pump_index].getVolumeDispensed();
+      if (totalVolume > 500)
+      {
+         productDispensers[m_active_pump_index].pumpSlowStopBlocking();
+         m_state_auto_pump = AUTO_PUMP_STATE_IDLE;
+      }
+   }
+   // else if (m_state_auto_pump == STATE_FINISHED)
+   // {
+   // }
 }
 
 DF_ERROR stateManualPump::pumpTest()

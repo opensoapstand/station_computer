@@ -735,7 +735,10 @@ DF_ERROR dispenser::pumpSlowStart(bool forwardElseReverse)
 
         return e_ret;
     }
-
+    
+    // // set set speed to zero, as there is no real speed feedback, we can't guarantee a claimed initial set speed to be true
+    // pumpSlowStopBlocking();
+    
     using namespace std::chrono;
     slowStartMostRecentIncreaseEpoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 

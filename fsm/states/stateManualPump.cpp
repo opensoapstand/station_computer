@@ -162,8 +162,13 @@ DF_ERROR stateManualPump::onAction()
          
          // auto pump test
          productDispensers[m_active_pump_index].resetVolumeDispensed();
-         m_state_auto_pump = AUTO_PUMP_STATE_INIT;
-         
+
+         if(m_state_auto_pump == AUTO_PUMP_STATE_IDLE)
+         {
+            m_state_auto_pump = AUTO_PUMP_STATE_INIT;
+         }else{
+            m_state_auto_pump = AUTO_PUMP_STATE_FINISHED;
+         }
       }
 
       else if ('9' == m_pMessaging->getAction())
@@ -234,7 +239,8 @@ DF_ERROR stateManualPump::onAction()
                                                       "   the pump speed cannot be set during this test)\n"
                                                       "6: Toggle endurance test. Active pump toggle cyclic ON/OFF (WARNING: Will pump autonomously WITHOUT dispense button pressed)\n"
                                                       "7: Reverse hack\n"
-                                                      "8: Run pump routine (hold dispense button for it to work)\n"
+                                                      "8: Autofill 500ml . (WARNING: will pump without dispense button press)\n"
+                                                      // "8: Run pump routine (hold dispense button for it to work)\n"
                                                       "9: Toggle flow measuring test\n",
              MSG_INFO);
       }
@@ -471,7 +477,6 @@ DF_ERROR stateManualPump::autoPumpSetQuantityTest()
       int speed = productDispensers[m_active_pump_index].getProduct()->getPWMFromDB();
       debugOutput::sendMessage("Pump auto start: " + to_string(speed), MSG_INFO);
       productDispensers[m_active_pump_index].pumpSlowStart(true);
-      isCyclicTestingPumpOn = true;
       cyclicTestPeriodStartEpochMillis = now;
       m_state_auto_pump = AUTO_PUMP_STATE_PUMPING;
    }
@@ -480,13 +485,17 @@ DF_ERROR stateManualPump::autoPumpSetQuantityTest()
       double totalVolume = productDispensers[m_active_pump_index].getVolumeDispensed();
       if (totalVolume > 500)
       {
-         productDispensers[m_active_pump_index].pumpSlowStopBlocking();
-         m_state_auto_pump = AUTO_PUMP_STATE_IDLE;
+         m_state_auto_pump = AUTO_PUMP_STATE_FINISHED;
+         debugOutput::sendMessage("Pump auto requested volume reached.", MSG_INFO);
       }
    }
-   // else if (m_state_auto_pump == STATE_FINISHED)
-   // {
-   // }
+   else if (m_state_auto_pump == AUTO_PUMP_STATE_FINISHED)
+   {
+         debugOutput::sendMessage("Pump auto finished.", MSG_INFO);
+      productDispensers[m_active_pump_index].pumpSlowStopBlocking();
+     productDispensers[m_active_pump_index].the_8344->virtualButtonUnpressHack();
+      m_state_auto_pump = AUTO_PUMP_STATE_IDLE;
+   }
 }
 
 DF_ERROR stateManualPump::pumpTest()

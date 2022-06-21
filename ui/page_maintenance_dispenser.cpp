@@ -23,8 +23,9 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
     palette.setBrush(QPalette::Background, Qt::white);
     this->setPalette(palette);
 
-    ui->pumpLabel->setText("OFF");
+    ui->pumpLabel->setText("Pump manual mode OFF.");
     ui->pumpButton->setText("ENABLE PUMP");
+    ui->pumpButton->setStyleSheet("QPushButton { background-color: #AAAAAA;font-size: 20px;  }");
     // ui->pwmSlider->setTracking(true);
 
     maintainProductPageEndTimer = new QTimer(this);
@@ -369,8 +370,9 @@ void page_maintenance_dispenser::dispense_test_start()
         p_page_idle->dfUtility->send_command_to_FSM(command);
 
         pumping = true;
-        ui->pumpLabel->setText("Pump enabled status: ON");
+        ui->pumpLabel->setText("Manual Pump ready. Press dispense button.");
         ui->pumpButton->setText("DISABLE PUMP");
+        ui->pumpButton->setStyleSheet("QPushButton { background-color: #E0A0A0;font-size: 20px;  }");
     }
 }
 
@@ -379,8 +381,9 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
     if (pumping)
     {
         pumping = false;
-        ui->pumpLabel->setText("Pump enabled status: OFF");
+        ui->pumpLabel->setText("Pump manual mode OFF.");
         ui->pumpButton->setText("ENABLE PUMP");
+        ui->pumpButton->setStyleSheet("QPushButton { background-color: #AAAAAA;font-size: 20px;  }");
 
         if (sendStopToController)
         {
@@ -420,6 +423,7 @@ void page_maintenance_dispenser::autoDispenseStart(int size)
     if (!pumping)
     {
         ui->pumpButton->setText("DISABLE PUMP");
+        ui->pumpButton->setStyleSheet("QPushButton { background-color: #E0A0A0;font-size: 20px;  }");
         qDebug() << "Autofill small quantity pressed.";
         QString command = QString::number(this->p_page_idle->currentProductOrder->getSelectedSlot());
 

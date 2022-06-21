@@ -828,17 +828,43 @@ last restock</string>
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="autoDispenseSmallButton">
    <property name="geometry">
     <rect>
      <x>50</x>
      <y>1240</y>
-     <width>281</width>
-     <height>61</height>
+     <width>191</width>
+     <height>171</height>
     </rect>
    </property>
    <property name="text">
-    <string>coming up: Auto Dispense Small </string>
+    <string>Auto Dispense Small </string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="autoDispenseMedium">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>1240</y>
+     <width>191</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Auto Dispense Medium</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="autoDispenseLarge">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>1240</y>
+     <width>191</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Auto Dispense Large </string>
    </property>
   </widget>
  </widget>

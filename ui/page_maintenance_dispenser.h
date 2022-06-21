@@ -93,7 +93,11 @@ private slots:
 
     void pwmSliderMoved(int percentage);
 
-    void on_pushButton_clicked();
+    void on_autoDispenseLarge_clicked();
+
+    void on_autoDispenseMedium_clicked();
+
+    void on_autoDispenseSmallButton_clicked();
 
 private:
     void showEvent(QShowEvent *event);
@@ -124,6 +128,7 @@ private:
 
     void updateValues();
     void sendRestockToCloud();
+    void autoDispenseStart(int size);
     void restockTransactionToFile(char *curl_params);
     time_t rawtime;
     struct tm * timeinfo;

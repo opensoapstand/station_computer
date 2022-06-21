@@ -64,8 +64,12 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
     connect(thread, &DfUiCommThread::transactionEndSignal, this, &DfUiServer::transactionEndSlot);
     connect(thread, &DfUiCommThread::resetTimerSignal, this, &DfUiServer::resetTimerSlot);
     connect(thread, &DfUiCommThread::updateVolumeSignal, this, &DfUiServer::updateVolumeSlot);
-    connect(thread, &DfUiCommThread::targetHitSignal, this, &DfUiServer::noFlowAbortSlot);
-    connect(thread, &DfUiCommThread::noFlowAbortSignal, this, &DfUiServer::targetHitSlot);
+
+    connect(thread, &DfUiCommThread::noFlowAbortSignal, this, &DfUiServer::noFlowAbortSlot);
+    connect(thread, &DfUiCommThread::targetHitSignal, this, &DfUiServer::targetHitSlot);
+    // connect(thread, &DfUiCommThread::targetHitSignal, this, &DfUiServer::noFlowAbortSlot);
+    // connect(thread, &DfUiCommThread::noFlowAbortSignal, this, &DfUiServer::targetHitSlot);
+
     connect(thread, &DfUiCommThread::initReadySignal, this, &DfUiServer::initReadySlot);
     connect(thread, &DfUiCommThread::printerStatusSignal, this, &DfUiServer::printerStatusSlot);
     connect(thread, &DfUiCommThread::MMSignal, this, &DfUiServer::MMSlot);

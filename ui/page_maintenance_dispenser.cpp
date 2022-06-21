@@ -1134,3 +1134,19 @@ void page_maintenance_dispenser::restockTransactionToFile(char *curl_params)
 //        }
 //    }
 //}
+
+void page_maintenance_dispenser::on_pushButton_clicked()
+{
+  if (!pumping)
+    {
+        qDebug() << "TEST AUTOFILL SMALL QUANTITY";
+        QString command = QString::number(this->p_page_idle->currentProductOrder->getSelectedSlot());
+        command.append("s");
+        command.append(SEND_DISPENSE_AUTOFILL);
+
+        update_dispense_stats(0);
+        p_page_idle->dfUtility->send_command_to_FSM(command);
+
+        pumping = true;
+    }
+}

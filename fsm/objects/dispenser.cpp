@@ -838,8 +838,6 @@ DF_ERROR dispenser::startDispense()
     DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
     debugOutput::sendMessage("Dispense start at slot " + to_string(this->slot), MSG_INFO);
 
-    // preparePumpForDispenseTrigger();
-
     initFlowRateCalculation();
 
     return e_ret = OK;

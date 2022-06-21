@@ -93,6 +93,8 @@ private slots:
 
     void pwmSliderMoved(int percentage);
 
+    void on_pushButton_clicked();
+
 private:
     void showEvent(QShowEvent *event);
     Ui::page_maintenance_dispenser *ui;

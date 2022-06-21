@@ -782,8 +782,8 @@
   <widget class="QSlider" name="pwmSlider">
    <property name="geometry">
     <rect>
-     <x>520</x>
-     <y>1130</y>
+     <x>610</x>
+     <y>1140</y>
      <width>31</width>
      <height>381</height>
     </rect>
@@ -826,6 +826,19 @@ last restock</string>
    </property>
    <property name="text">
     <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>1240</y>
+     <width>281</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>coming up: Auto Dispense Small </string>
    </property>
   </widget>
  </widget>

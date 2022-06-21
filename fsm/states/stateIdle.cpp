@@ -61,17 +61,8 @@ DF_ERROR stateIdle::onAction()
          DF_ERROR ret_msg;
          ret_msg = m_pMessaging->parseCommandString();
 
-         pos = m_pMessaging->getRequestedSlot();
-         pos = pos - 1;
-
-         if (ACTION_DISPENSE == m_pMessaging->getAction())
+         if (ACTION_DISPENSE == m_pMessaging->getAction() || ACTION_AUTOFILL == m_pMessaging->getAction())
          {
-            //  debugOutput::sendMessage("yoooooo", MSG_INFO);
-            // m_selectedOrder.size = 'f';//m_pMessaging->getRequestedSize();
-            // debugOutput::sendMessage("dwdwiieieiej", MSG_INFO);
-            // m_selectedOrder.slot = 1; m_pMessaging->getRequestedSlot();
-            // debugOutput::sendMessage("iieieiej", MSG_INFO);
-
             m_state_requested = STATE_DISPENSE_INIT;
          }
 

@@ -629,7 +629,6 @@ bool pagePayment::sendToUX410()
         waitForAck++;
 
         // if(isReadyForTap) {
-        cout << "\nWaiting for TAP" << endl;
         cout<< readPacket.getAckOrNak();
         if (readPacket.getAckOrNak() == communicationPacketField::ACK)
         {
@@ -676,7 +675,7 @@ bool pagePayment::tap_init()
     }
 
     // This is super shitty - there must be a better way to find out when the green light starts flashing on the UX420 but it was 35
-    // sleep(35);
+    sleep(35);
 
     cout << "_----_-----__------_-----";
    
@@ -732,7 +731,6 @@ bool pagePayment::tap_init()
     }
     com.flushSerial();
     cout << "-----------------------------------------------" << endl;
-    // stayAliveLogon();
 
     /*getConfiguration packet to send*/
     cout << "Sending Merchant Name query..." << endl;
@@ -838,7 +836,7 @@ void pagePayment::readTimer_loop()
     //        pktToSend = paymentPacket.purchasePacket("0.01");
 
     // this->ui->payment_countdownLabel->setText("TAP NOW");
-    // response = getResponse();
+    response = getResponse();
 
     if (sendToUX410())
     {
@@ -905,7 +903,6 @@ void pagePayment::readTimer_loop()
                         paymentPktInfo.transactionID(readPacket.getPacket().data);
                         paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
                         // QCoreApplication::processEvents();
-                        sleep(2);
                         response = true;
                         on_payment_bypass_Button_clicked();
                         //            mainPage->getSurveyPage()->resetSurveyFilled(); //reset the coupon discount

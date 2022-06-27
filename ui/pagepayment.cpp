@@ -53,7 +53,7 @@ pagePayment::pagePayment(QWidget *parent) : QWidget(parent),
     // Idle Payment reset
     idlePaymentTimer = new QTimer(this);
     connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
-    idlePaymentTimer->start(60000);
+    // idlePaymentTimer->start(60000);
     qrTimer = new QTimer(this);
     connect(qrTimer, SIGNAL(timeout()), this, SLOT(qrProcessedPeriodicalCheck()));
 
@@ -84,44 +84,44 @@ pagePayment::pagePayment(QWidget *parent) : QWidget(parent),
 
 void pagePayment::stopPayTimers()
 {
-    //    readTimer->stop();
-    //    qDebug() << "pagePayment: Stop Timers" << endl;
+       readTimer->stop();
+       qDebug() << "pagePayment: Stop Timers" << endl;
     if (paymentProgressTimer != nullptr)
     {
-        //        qDebug() << "cancel payment progress Timer" << endl;
+               qDebug() << "cancel payment progress Timer" << endl;
         paymentProgressTimer->stop();
     }
 
     if (declineTimer != nullptr)
     {
-        //        qDebug() << "cancel decline Timer" << endl;
+               qDebug() << "cancel decline Timer" << endl;
         declineTimer->stop();
     }
 
     if (idlePaymentTimer != nullptr)
     {
-        //        qDebug() << "cancel page_idle payment Timer" << endl;
+               qDebug() << "cancel page_idle payment Timer" << endl;
         idlePaymentTimer->stop();
     }
 
     if (paymentEndTimer != nullptr)
     {
-        //        qDebug() << "cancel page_idle payment END Timer" << endl;
+               qDebug() << "cancel page_idle payment END Timer" << endl;
         paymentEndTimer->stop();
     }
 
     if (readTimer != nullptr)
     {
-        //        qDebug() << "cancel readTimer" << endl;
+               qDebug() << "cancel readTimer" << endl;
         readTimer->stop();
     }
 
     if (qrTimer != nullptr)
     {
-        //        qDebug() << "cancel qrTimer" << endl;
+               qDebug() << "cancel qrTimer" << endl;
         qrTimer->stop();
     }
-    //    qDebug() << "pagePayment: Stopped Timers" << endl;
+       qDebug() << "pagePayment: Stopped Timers" << endl;
 }
 
 /*
@@ -245,12 +245,10 @@ void pagePayment::cancelPayment()
 
     com.flushSerial();
     /*Cancel any previous payment*/
-    // if(purchaseEnable){
     pktToSend = paymentPacket.purchaseCancelPacket();
     if (sendToUX410())
     {
         waitForUX410();
-        // If this is not commented out, the GUI crashes! (But it was uncommented when I found it...)
         pktResponded.clear();
     }
     com.flushSerial();
@@ -265,16 +263,8 @@ size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
 void pagePayment::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: Payment >>>>>>>>>";
-
-     // QPixmap background(PAGE_QR_PAY_BACKGROUND_PATH);
-    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-    // QPalette palette;
-    // palette.setBrush(QPalette::Background, background);
-    // this->setPalette(palette);
     
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
-
-
 
     int product_slot___ = p_page_idle->currentProductOrder->getSelectedSlot();
     char drinkSize;
@@ -331,8 +321,6 @@ void pagePayment::showEvent(QShowEvent *event)
 
     ui->order_drink_amount->setText("$" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
 
-    //  ui->payment_pass_Button->setEnabled(false);
-    //  ui->payment_cancel_Button->setEnabled(false);
 
     if (tap_payment)
     {
@@ -345,8 +333,6 @@ void pagePayment::showEvent(QShowEvent *event)
         {
             timerEnabled = true;
         }
-        // cancelPayment();
-        // com.flushSerial();
         readTimer->start(10);
     }
 
@@ -369,25 +355,10 @@ void pagePayment::setupQrOrder()
     QPixmap map(360, 360);
     map.fill(QColor("black"));
     QPainter painter(&map);
-    //    ui->qrCode->setPixmap(map);
-
-    // QString qrdata_amount = QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2);
-    //  QString machine_id = db.getMachineID();
-    //  QString product_id = db.getProductID(product_slot___);
-    //  order_id = QUuid::createUuid().QUuid::toString();
-    //  order_id = order_id.remove("{");
-    //  order_id = order_id.remove("}");
-    // qDebug() << "ORDER ID: " << order_id << endl;
-    //  QString qrdata = "https://soapstandportal.com/payment?mid="+machine_id+"&pid="+product_id+"&size="+drinkSize+"&oid="+order_id;
     QString qrdata = "https://soapstandportal.com/payment?oid=" + orderId;
 
     paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
     ui->qrCode->setPixmap(map);
-
-    // QString curl_param = "oid=" + orderId;
-    // curl_param_array = curl_param.toLocal8Bit();
-    // curl_data = curl_param_array.data();
-
     _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
 
     _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
@@ -524,7 +495,6 @@ void pagePayment::onTimeoutTick()
     }
     else
     {
-        //        qDebug() << "Timer Done!" << _paymentTimeoutSec << endl;
         idlePaymentTimeout();
     }
     if (_paymentTimeoutSec < QR_PAGE_TIMEOUT_WARNING_SECONDS)
@@ -564,7 +534,7 @@ void pagePayment::idlePaymentTimeout()
     {
         cancelPayment();
     }
-    // qDebug() << "payment to idle";
+    qDebug() << "payment to idle";
     p_page_idle->showFullScreen();
     //    usleep(100);
     this->hide();
@@ -585,17 +555,6 @@ void pagePayment::stayAliveLogon()
     pktResponded.clear();
 
     com.flushSerial();
-    
-    // /*logon packet to send*/
-    // pktToSend = paymentPacket.ppPosStatusCheckPkt(0x01);
-    // if (sendToUX410())
-    // {
-    //     waitForUX410();
-    // }
-
-    // pktResponded.clear();
-
-    // com.flushSerial();
     
     
 }
@@ -634,32 +593,6 @@ bool pagePayment::sendToUX410()
         {
             return true;
         }
-        // }
-        // usleep(500000);
-
-            //    if(isInitCancelled) {
-            //        return true;
-            //    }
-
-            //    if(isInitBatched) {
-            //        return true;
-            //    }
-
-            //    if(isInitLogin) {
-            //        return true;
-            //    }
-
-            //    if(isInitMerchant) {
-            //        return true;
-            //    }
-
-            //    if(isInitAddress) {
-            //        return true;
-            //    }
-
-            //    if(isInitTerminalID) {
-            //        return true;
-            //    }
     }
     return false;
 }
@@ -821,21 +754,9 @@ bool pagePayment::waitForUX410()
 
 void pagePayment::readTimer_loop()
 {
-    //    qDebug() << "readingTimer_loop" << endl;
-    // cout << "start loop pktResponded: " << to_string(pktResponded[0]) << endl;
-
-    // response = false;
-    // pktResponded = com.readPacket();
-    pktResponded.clear();
-    // com.clearBuffer();
-
-    com.flushSerial();
     cout << p_page_idle->currentProductOrder->getSelectedPriceCorrected() << endl;
     pktToSend = paymentPacket.purchasePacket((QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2)).QString::toStdString());
     cout << "to PAY: " << ((QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2)).QString::toStdString());
-    //        pktToSend = paymentPacket.purchasePacket("0.01");
-
-    // this->ui->payment_countdownLabel->setText("TAP NOW");
     response = getResponse();
 
     if (sendToUX410())
@@ -850,22 +771,13 @@ void pagePayment::readTimer_loop()
 
             if (pktResponded[0] != 0x02)
             {
-                //       qDebug() << "Reading TAP Packet" << endl;
-                // cout << readPacket << endl;
-
-                // std::cout<< "ReadTimer Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
-
-                // This breaks the polling loop!
-                //        pktResponded = com.readPacket();
-                // cout << "MISS: pktResponded: " << to_string(pktResponded[0]) << endl;
                 pktResponded.clear();
                 pktResponded = com.readPacket();
                 usleep(10);
                 response = getResponse();
 
-                //        com.sendAck();
-                // cout << "Polling Timer" << endl;
-                // readTimer->start(1000);
+                cout << "Polling Timer" << endl;
+                readTimer->start(1000);
             }
             else if (pktResponded[10] == 0x33)
             {
@@ -873,8 +785,6 @@ void pagePayment::readTimer_loop()
                 pktResponded = com.readPacket();
                 // usleep(100);
                 response = getResponse();
-                // cancelPayment();
-                // readTimer->start(1000);
             }
             else
             {
@@ -884,12 +794,6 @@ void pagePayment::readTimer_loop()
 
                     cout << "HIT: pktResponded: " << to_string(pktResponded[0]) << endl;
 
-                    // this->ui->payment_countdownLabel->setText("Processing...");
-                    // QCoreApplication::processEvents();
-
-                    //        qDebug() << "Check TAP Packet; Sending" << endl;
-
-                    // com.sendAck();
                     readPacket.packetReadFromUX(pktResponded);
                     std::cout << readPacket;
                     com.sendAck();
@@ -902,10 +806,8 @@ void pagePayment::readTimer_loop()
                         this->ui->payment_countdownLabel->setText("Approved");
                         paymentPktInfo.transactionID(readPacket.getPacket().data);
                         paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
-                        // QCoreApplication::processEvents();
                         response = true;
                         on_payment_bypass_Button_clicked();
-                        //            mainPage->getSurveyPage()->resetSurveyFilled(); //reset the coupon discount
                     }
                     else if (pktResponded[19] == 0x44)
                     { // Host Response 44 = D "Declined"
@@ -916,23 +818,11 @@ void pagePayment::readTimer_loop()
                         paymentPktInfo.transactionID(readPacket.getPacket().data);
                         paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
                         pktResponded.clear();
-                        QCoreApplication::processEvents();
+                        // QCoreApplication::processEvents();
                         sleep(3);
                         idlePaymentTimeout();
-                        // sleep(5);
-                        //            on_mainPage_Button_clicked();
                     }
-                    /* else if (pktResponded[10] == 0x33){
-                         pktResponded.clear();
-                         pktResponded = com.readPacket();
-                         usleep(100);
-                         response = getResponse();
-                         this->ui->payment_countdownLabel->setText("Try again");
-                         //        com.sendAck();
-                         //cout << "Polling Timer" << endl;
-                         readTimer->start(1000);
-
-                     }*/
+                   
                     else if (pktResponded[19] == 0x4e)
                     {
                         purchaseEnable = false;
@@ -944,9 +834,7 @@ void pagePayment::readTimer_loop()
                         QCoreApplication::processEvents();
                         sleep(3);
                         idlePaymentTimeout();
-                        // this->ui->payment_countdownLabel->setText("Hmm...");
-                        // sleep(5);
-                        // on_mainPage_Button_clicked();
+                     
                     }
                     else
                     {
@@ -958,40 +846,6 @@ void pagePayment::readTimer_loop()
                     }
                 }
 
-                //        readPacket.packetReadFromUX(pktResponded);
-                //        std::cout << readPacket;
-
-                //        if (purchaseEnable == true){
-                //            //once purchase successed create a receipt and store into database
-                //            paymentPktInfo.transactionID(readPacket.getPacket().data);
-                //            paymentPktInfo.makeReceipt(mainPage->getDatabase());
-
-                //            paymentProcessing = false;
-                //            progressLoopCounter = 0;
-                //        }
-                //        timerEnabled = false;
-            }
-
-            //    if (timerEnabled == false){
-            //        qDebug() << "Timer has been disabled" << endl;
-            //        //        if (purchaseEnable == false){
-            //        //            pageNumber = 0;
-            //        //            mainPage->getSurveyPage()->resetSurveyFilled(); //reset the coupon discount
-            //        //        }
-            //        readTimer->stop();
-            //        purchaseEnable = false;
-            //    }
-
-            //    if (pktResponded.size() > 100)
-            //    {
-            //        if (progressLoopCounter == 0){
-            // //           ui->payment_processLabel->setText(TAP_PROCESSING_LABEL);
-            //            //            ui->payment_declineLabel->hide();
-            //            paymentProcessing = true;
-            //            paymentProgressTimer->start();
-            //        }
-            //    }
-            //        }
         }
     }
 }

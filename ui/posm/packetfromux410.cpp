@@ -52,6 +52,7 @@ void packetFromUX410::packetReadFromUX(std::vector<uint8_t> curPacket)
     }
     else
     {
+        std::cout << "In else condition" << endl;
         sortPacket(curPacket);
         usleep(500000);
         uint16_t combineLength = convertFrom8To16(packetToSort.dataLen[0], packetToSort.dataLen[1]) + 2;

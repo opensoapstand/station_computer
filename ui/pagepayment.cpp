@@ -818,7 +818,7 @@ void pagePayment::readTimer_loop()
                         purchaseEnable = true;
                         approved = true;
                         cout << "Approval Packet 41" << endl;
-                        this->ui->payment_countdownLabel->setText("Approved");
+                        // this->ui->payment_countdownLabel->setText("Approved");
                         paymentPktInfo.transactionID(readPacket.getPacket().data);
                         paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
                         response = true;
@@ -829,7 +829,7 @@ void pagePayment::readTimer_loop()
                         purchaseEnable = true;
                         approved = false;
                         cout << "Declined Packet 32" << endl;
-                        this->ui->payment_countdownLabel->setText("Declined");
+                        // this->ui->payment_countdownLabel->setText("Declined");
                         paymentPktInfo.transactionID(readPacket.getPacket().data);
                         paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
                         pktResponded.clear();
@@ -863,6 +863,7 @@ void pagePayment::readTimer_loop()
 
         }
     }
+}
 }
 
 std::string pagePayment::toSvgString(const QrCode &qr, int border)

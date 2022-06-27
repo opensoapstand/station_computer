@@ -132,8 +132,8 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
     idlePaymentTimer = new QTimer(this);
     connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
 
-    qrTimer = new QTimer(this);
-    connect(qrTimer, SIGNAL(timeout()), this, SLOT(qrProcessedPeriodicalCheck()));
+    qrPeriodicalCheckTimer = new QTimer(this);
+    connect(qrPeriodicalCheckTimer, SIGNAL(timeout()), this, SLOT(qrProcessedPeriodicalCheck()));
 
 
     // // need to install a plugin to get animated gifs to play
@@ -213,10 +213,10 @@ void page_payment::stopPayTimers()
         readTimer->stop();
     }
 
-    if (qrTimer != nullptr)
+    if (qrPeriodicalCheckTimer != nullptr)
     {
-        //        qDebug() << "cancel qrTimer" << endl;
-        qrTimer->stop();
+        // qDebug() << "*************************cancel qrPeriodicalCheckTimer" << endl;
+        qrPeriodicalCheckTimer->stop();
     }
     //    qDebug() << "page_payment: Stopped Timers" << endl;
 }
@@ -435,7 +435,7 @@ void page_payment::setupQrOrder()
     _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
 
     _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
-    qrTimer->start(1000);
+    qrPeriodicalCheckTimer->start(1000);
 }
 
 void page_payment::createOrderIdAndSendToBackend()
@@ -491,7 +491,7 @@ void page_payment::createOrderIdAndSendToBackend()
 
     _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
     _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
-    qrTimer->start(1000);
+    qrPeriodicalCheckTimer->start(1000);
 }
 
 void page_payment::isQrProcessedCheckOnline()
@@ -628,11 +628,10 @@ bool page_payment::exitConfirm()
 {
     if (state_payment == s_payment_processing || state_payment == s_payment_done)
     {
-        // ARE YOU SURE YOU WANT TO COMPLETE?
+        // ARE YOU SURE YOU WANT TO EXIT?
         QMessageBox msgBox;
         msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
 
-        // msgBox.setText("<p align=center>Are you sure you want to cancel your transaction? It can take up to 30 seconds for dispensing to start after a payment is completed. </p>");
         msgBox.setText("<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>");
         msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
 
@@ -656,6 +655,8 @@ bool page_payment::exitConfirm()
     }
     else
     {
+        // exit, no questions asked.
+        resetPaymentPage();
         return true;
     }
 }
@@ -683,16 +684,7 @@ void page_payment::on_mainPage_Button_clicked()
 void page_payment::idlePaymentTimeout()
 {
     resetPaymentPage();
-    // stopPayTimers();
-    // response = true;
-    // readTimer->stop();
-    // if (tap_payment)
-    // {
-    //     cancelPayment();
-    // }
-    // // qDebug() << "payment to idle";
     p_page_idle->showFullScreen();
-    // //    usleep(100);
     this->hide();
 }
 void page_payment::resetPaymentPage()

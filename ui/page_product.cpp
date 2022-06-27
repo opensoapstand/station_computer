@@ -140,7 +140,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
     orderSizeBackgroundLabels[3] = ui->label_background_custom;
 
     ui->promoInputButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->promoCode->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->promoCodeTextbox->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->promoButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     QString css_title = "QLabel{"
@@ -217,11 +217,10 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
                                 "}";
     ui->label_invoice_discount_name->setStyleSheet(css_discount_name);
     ui->label_invoice_discount_name->hide();
-
     ui->label_invoice_discount_amount->hide();
 
-    ui->promoCode->clear();
-    ui->promoCode->hide();
+    ui->promoCodeTextbox->clear();
+    ui->promoCodeTextbox->hide();
     ui->promoKeyboard->hide();
 
     couponHandler();
@@ -248,8 +247,8 @@ void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_
     this->helpPage = pageHelp;
     this->wifiError = pageWifiError;
 
-    ui->promoCode->clear();
-    ui->promoCode->hide();
+    ui->promoCodeTextbox->clear();
+    ui->promoCodeTextbox->hide();
     ui->label_invoice_discount_amount->hide();
     ui->label_invoice_discount_name->hide();
 
@@ -274,7 +273,7 @@ void pageProduct::setDefaultSize()
         int size = product_sizes[i];
         if (selectedProductOrder->getLoadedProductSizeEnabled(size))
         {
-            selectedProductOrder->setSelectedSize(product_sizes[i]); 
+            selectedProductOrder->setSelectedSize(product_sizes[i]);
         }
     }
 }
@@ -327,8 +326,6 @@ void pageProduct::onSelectTimeoutTick()
 
 void pageProduct::reset_and_show_page_elements()
 {
-
-    
 
 #ifdef ENABLE_DYNAMIC_UI
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_PRODUCT_BACKGROUND_PATH);
@@ -545,7 +542,7 @@ void pageProduct::loadOrderSelectedSize()
             // selected size styling
             if (selectedProductOrder->getSelectedSize() == product_sizes[i])
             {
-                //qDebug() << "SSSSSSSEEEEEEEEEEELLLLLLLLLLEECTED" << product_sizes[i];
+
                 orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 1px  solid #3D6675; }");
                 orderSizeLabelsVolume[i]->setStyleSheet("QLabel { font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: normal; font-size: 24px; line-height: 44px; color: #FFFFFF; }");
                 orderSizeLabelsPrice[i]->setStyleSheet("QLabel {font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;}");
@@ -555,8 +552,8 @@ void pageProduct::loadOrderSelectedSize()
         }
     }
 
-    ui->promoCode->clear();
-    ui->promoCode->hide();
+    ui->promoCodeTextbox->clear();
+    ui->promoCodeTextbox->hide();
 
     if (selectedProductOrder->getDiscountPercentageFraction() > 0.0)
     {
@@ -730,8 +727,8 @@ void pageProduct::loadOrderSelectedSize()
     //     "text-align: center;\n"
     //     ""));
 
-    ui->promoCode->clear();
-    ui->promoCode->hide();
+    ui->promoCodeTextbox->clear();
+    ui->promoCodeTextbox->hide();
 
     if (selectedProductOrder->getDiscountPercentageFraction() > 0.0)
     {
@@ -842,7 +839,7 @@ size_t WriteCallback_coupon(char *contents, size_t size, size_t nmemb, void *use
 void pageProduct::on_applyPromo_Button_clicked()
 {
 
-    QString promocode = ui->promoCode->text();
+    QString promocode = ui->promoCodeTextbox->text();
     ui->promoKeyboard->hide();
 
     CURL *curl;
@@ -865,7 +862,7 @@ void pageProduct::on_applyPromo_Button_clicked()
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
         if (res != CURLE_OK)
         {
-            ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
+            ui->promoCodeTextbox->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
             qDebug() << "Invalid Coupon curl problem. error code: " << res;
         }
         else
@@ -886,13 +883,13 @@ void pageProduct::on_applyPromo_Button_clicked()
                 else
                 {
                     qDebug() << "Invalid Coupon";
-                    ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #75756f;border-color:#f44336;");
+                    ui->promoCodeTextbox->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #75756f;border-color:#f44336;");
                 }
             }
             else
             {
                 qDebug() << "Invalid Coupon http 200 response";
-                ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
+                ui->promoCodeTextbox->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
             }
         }
     }
@@ -906,23 +903,23 @@ void pageProduct::keyboardButtonPressed(int buttonID)
 
     if (buttonText == "backspace")
     {
-        ui->promoCode->backspace();
+        ui->promoCodeTextbox->backspace();
     }
     else if (buttonText == "done")
     {
-        if (ui->promoCode->text() == "")
+        if (ui->promoCodeTextbox->text() == "")
         {
-            ui->promoCode->hide();
+            ui->promoCodeTextbox->hide();
         }
         ui->promoKeyboard->hide();
     }
     else if (buttonText.mid(0, 3) == "num")
     {
-        ui->promoCode->setText(ui->promoCode->text() + buttonText.mid(3, 1));
+        ui->promoCodeTextbox->setText(ui->promoCodeTextbox->text() + buttonText.mid(3, 1));
     }
     else
     {
-        ui->promoCode->setText(ui->promoCode->text() + buttonText);
+        ui->promoCodeTextbox->setText(ui->promoCodeTextbox->text() + buttonText);
     }
 }
 void pageProduct::on_previousPage_Button_clicked()
@@ -948,7 +945,7 @@ void pageProduct::on_previousPage_Button_clicked()
 
 void pageProduct::coupon_disable()
 {
-    ui->promoCode->hide();
+    ui->promoCodeTextbox->hide();
     ui->promoKeyboard->hide();
     ui->promoInputButton->hide();
     ui->label_invoice_discount_amount->hide();
@@ -958,21 +955,24 @@ void pageProduct::coupon_disable()
 void pageProduct::coupon_input_show()
 {
 }
+
 void pageProduct::coupon_input_hide()
 {
     ui->promoKeyboard->hide();
 }
+
 void pageProduct::coupon_input_reset()
 {
 }
+
 void pageProduct::on_promoCodeInput_clicked()
 {
     QObject *button = QObject::sender();
-    ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
+    ui->promoCodeTextbox->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
     // ui->promoInputButton->hide();
     ui->promoKeyboard->show();
     qDebug() << "show promo keyboard.";
-    ui->promoCode->show();
+    ui->promoCodeTextbox->show();
 }
 void pageProduct::couponHandler()
 {

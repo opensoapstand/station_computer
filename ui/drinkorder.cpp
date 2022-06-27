@@ -123,6 +123,8 @@ bool DrinkOrder::isSelectedOrderValid()
 double DrinkOrder::getDiscount()
 {
     //qDebug() << "--------=========" << QString::number(getSelectedPriceCorrected());
+
+    // the discount is the original price minus the discounted price
     return getPrice(getSelectedSize()) - getSelectedPriceCorrected();
 }
 

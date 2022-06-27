@@ -67,17 +67,6 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
     ui->helpPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
 
-    // ui->mainPage_Button->setStyleSheet("QPushButton { color:#003840;background-color: #FFFFFF; box-sizing: border-box;border-radius: 20px;}"); // border: 1px solid #3D6675;
-
-    // font-family: 'Brevia';
-    // font-style: normal;
-    // font-weight: 700;
-    // font-size: 24px;
-    // line-height: 32px;
-    // text-transform: uppercase;
-
-    // color: #003840;
-
     QFont font;
     font.setFamily(QStringLiteral("Brevia"));
     font.setPointSize(20);
@@ -101,6 +90,9 @@ void page_select_product::setPage(pageProduct *pageSizeSelect, page_idle *pageId
     this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
     this->helpPage = pageHelp;
+    
+    selectedProductOrder = p_page_idle->currentProductOrder;
+
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
 }
 
@@ -317,7 +309,8 @@ void page_select_product::onProductPageTimeoutTick()
 void page_select_product::mainPage()
 {
     productPageEndTimer->stop();
-    // qDebug() << "select product to idle";
+    qDebug() << "exit sleect product page for main page";
+    selectedProductOrder->setDiscountPercentageFraction(0.0);
     this->raise();
     p_page_idle->showFullScreen();
     this->hide();

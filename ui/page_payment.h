@@ -229,7 +229,7 @@ private:
     QTimer* paymentEndTimer;
 
     int _qrProcessedPeriodicalCheckSec;
-    QTimer* qrTimer;
+    QTimer* qrPeriodicalCheckTimer;
 
     QResizeEvent *pageProductResize;
     QShowEvent *dispenseEvent;

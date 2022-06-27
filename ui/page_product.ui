@@ -74,10 +74,10 @@ line-height: 29px;</string>
   <widget class="QLabel" name="label_invoice_price">
    <property name="geometry">
     <rect>
-     <x>770</x>
+     <x>830</x>
      <y>1370</y>
-     <width>141</width>
-     <height>29</height>
+     <width>111</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -102,7 +102,7 @@ color: #58595B;</string>
     <rect>
      <x>630</x>
      <y>1470</y>
-     <width>281</width>
+     <width>311</width>
      <height>41</height>
     </rect>
    </property>
@@ -284,10 +284,10 @@ text-align: center;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>174</x>
-     <y>1275</y>
-     <width>526</width>
-     <height>37</height>
+     <x>189</x>
+     <y>1287</y>
+     <width>521</width>
+     <height>35</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -312,10 +312,10 @@ text-align: center;</string>
   <widget class="QPushButton" name="promoInputButton">
    <property name="geometry">
     <rect>
-     <x>187</x>
-     <y>1270</y>
-     <width>542</width>
-     <height>44</height>
+     <x>178</x>
+     <y>1277</y>
+     <width>551</width>
+     <height>51</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -344,7 +344,7 @@ text-align: center;</string>
    <property name="geometry">
     <rect>
      <x>120</x>
-     <y>1310</y>
+     <y>1330</y>
      <width>841</width>
      <height>320</height>
     </rect>
@@ -1889,9 +1889,9 @@ outline: none;
   <widget class="QLabel" name="label_invoice_name">
    <property name="geometry">
     <rect>
-     <x>170</x>
+     <x>186</x>
      <y>1370</y>
-     <width>651</width>
+     <width>641</width>
      <height>31</height>
     </rect>
    </property>
@@ -1923,9 +1923,9 @@ color: #58595B;
    <property name="geometry">
     <rect>
      <x>830</x>
-     <y>1370</y>
+     <y>1400</y>
      <width>111</width>
-     <height>29</height>
+     <height>41</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -1942,7 +1942,7 @@ color: #58595B;</string>
     <string>$ 0.00</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignCenter</set>
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
   <widget class="QPushButton" name="orderMedium_Button">
@@ -2144,10 +2144,10 @@ text-align: center;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>187</x>
-     <y>1380</y>
-     <width>740</width>
-     <height>29</height>
+     <x>186</x>
+     <y>1400</y>
+     <width>641</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="styleSheet">

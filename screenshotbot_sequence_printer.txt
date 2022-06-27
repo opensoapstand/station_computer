@@ -1,0 +1,34 @@
+# products page
+175 550 products.jpg
+# help page
+546 1808 help.jpg
+#idle page
+140 80 idle.jpg
+
+#back to products page
+140 80
+
+# get all products
+175 550 product_1.jpg
+140 80
+750 550 product_2.jpg
+140 80
+250 1200 product_3.jpg
+140 80
+800 1250 product_4.jpg
+
+# check product page functionality
+606 1091 product_size_sl_s.jpg
+784 1091 product_size_sl_l.jpg
+606 1064 product_size_smlc_s.jpg
+784 1064 product_size_smlc_m.jpg
+952 1064 product_size_smlc_l.jpg
+780 1200 product_size_smlc_c.jpg
+
+# next button from product page
+561 1590 dispense_instructions.jpg
+563 1562
+561 1590 thank_you_cancel.jpg
+140 80
+
+

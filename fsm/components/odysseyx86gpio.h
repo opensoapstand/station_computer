@@ -28,14 +28,14 @@ public:
 	~oddyseyx86GPIO();
 
 	//setter
-	DF_ERROR setFlowPin(int pinNumber);
+	// DF_ERROR setFlowPin(int pinNumber);
 
 	//
 	DF_ERROR setPinAsInputElseOutput(bool input);
 	DF_ERROR readPin(bool *level);
 	DF_ERROR writePin(bool level);
 
-	bool reader = true;
+	//bool reader = true;
 
 protected:
 	void monitorGPIO_Flowsensor();

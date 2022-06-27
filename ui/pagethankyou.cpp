@@ -70,7 +70,7 @@ void pagethankyou::showEvent(QShowEvent *event)
         "font-style: normal;"
         "font-weight: 700;"
         "font-size: 85px;"
-        "line-height: 99px;"
+        "line-height: 95px;"
         "text-align: center;"
         "letter-spacing: 1.5px;"
         "text-transform: lowercase;"
@@ -95,24 +95,28 @@ void pagethankyou::showEvent(QShowEvent *event)
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_THANK_YOU_BACKGROUND_PATH);
 
-    
     qDebug() << "ahoyy24";
     DbManager db(DB_PATH);
     QString paymentMethod = db.getPaymentMethod(p_page_idle->currentProductOrder->getSelectedSlot());
+    bool hasReceiptPrinter = db.hasReceiptPrinter();
     db.closeDB();
 
-    if (paymentMethod == "qr" || paymentMethod == "tap")
+    if (hasReceiptPrinter)
+    {
+        ui->thank_you_message_label->setText("Please take <br>your receipt!");
+        ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!");
+    }
+    else if (paymentMethod == "qr" || paymentMethod == "tap")
     {
         ui->thank_you_message_label->setText("Thank you!");
         ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.");
     }
     else
     {
-
-        ui->thank_you_message_label->setText("Don't forget<br>your receipt!");
-        ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.<br>Thank you.");
+        ui->thank_you_message_label->setText("Thank you!");
+        ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.");
     }
-    
+
     is_in_state_thank_you = true;
 
     thankYouEndTimer = new QTimer(this);
@@ -212,13 +216,15 @@ void pagethankyou::controllerFinishedTransaction()
     }
     else
     {
+        qDebug() << "WARNING: Transaction end received while not in thank you page.";
     }
 }
 
 void pagethankyou::transactionToFile(char *curl_params)
 {
     QString data_out = curl_params;
-    p_page_idle->dfUtility->write_to_file_timestamped(TRANSACTION_DISPENSE_END_OFFINE_PATH, data_out);
+    // p_page_idle->dfUtility->write_to_file_timestamped(TRANSACTION_DISPENSE_END_OFFINE_PATH, data_out);
+    p_page_idle->dfUtility->write_to_file(TRANSACTION_DISPENSE_END_OFFINE_PATH, data_out);
 }
 
 void pagethankyou::onThankyouTimeoutTick()
@@ -241,11 +247,11 @@ void pagethankyou::on_mainPage_Button_clicked()
 
 void pagethankyou::exitPage()
 {
-
     if ((is_controller_finished && is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER) || exitIsForceable)
     {
         thankYouEndTimer->stop();
         // qDebug() << "thank you to idle";
+        is_in_state_thank_you = false;
         p_page_idle->showFullScreen();
         this->hide();
 
@@ -256,7 +262,6 @@ void pagethankyou::exitPage()
     }
     else
     {
-
         // ui->extra_message_label->setText("<p align=center><br>Waiting for end<br>of transaction...</p>");
         // ui->extra_message_label->show();
         ui->thank_you_message_label->setText("Finishing<br>transaction");

@@ -61,44 +61,52 @@ DF_ERROR stateManualPrinter::onAction()
       DF_ERROR ret_msg;
       ret_msg = m_pMessaging->parseCommandString();
 
-      if (ACTION_QUIT == m_pMessaging->getAction())
+      if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Exit printer status test", MSG_INFO);
 
          m_state_requested = STATE_IDLE;
       }
-      if (ACTION_PRINTER_SEND_STATUS == m_pMessaging->getAction())
+      else if ( ACTION_UI_COMMAND_PRINTER_SEND_STATUS == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Printer status requested by UI", MSG_INFO);
+         sendPrinterStatus(); // first call after startup returns always online
          sendPrinterStatus();
          m_state_requested = STATE_IDLE; // return after finished.
       }
 
       // If ACTION_DISPENSE is received, enter Dispense state, else, stay in Idle state
-      if (ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY == m_pMessaging->getAction())
+      else if ('2' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Toggle Continuous Printer display status", MSG_INFO);
          b_isContinuouslyChecking = !b_isContinuouslyChecking;
       }
 
-      if (ACTION_PRINTER_CHECK_STATUS == m_pMessaging->getAction())
+      else if ('3' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Get Printer display status", MSG_INFO);
          displayPrinterStatus();
       }
-      if (ACTION_PRINTER_PRINT_TEST == m_pMessaging->getAction())
+      else if ('1' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Do test print", MSG_INFO);
          printTest();
       }
-      if (ACTION_PRINTER_REACHABLE == m_pMessaging->getAction())
+      else if ('4' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Is Printer reachable?", MSG_INFO);
          displayPrinterReachable();
       }
-      if (ACTION_HELP == m_pMessaging->getAction())
+      else 
       {
-         debugOutput::sendMessage("help\nAvailable printer test commands: \n l: test print\n V: printer status toggle continuous mode\n v:printer status \n q:quit test mode \n r: Printer reachable", MSG_INFO);
+         debugOutput::sendMessage("---Receipt printer menu---"
+         "Available printer test commands: \n"
+         " 0: Exit printer menu \n"
+         " 1: Test print\n"
+         " 2: Printer status toggle continuous mode\n"
+         " 3: Printer status \n"
+         " 4: Check printer connected\n"
+         " h: Display this help menu", MSG_INFO);
       }
    }
 
@@ -202,13 +210,24 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
 
 DF_ERROR stateManualPrinter::displayPrinterStatus()
 {
-   if (printerr.hasPaper())
+   bool isOnline = printerr.testComms(); // first call return always "online"
+   isOnline = printerr.testComms();
+
+   if (isOnline)
    {
-      debugOutput::sendMessage("has paper", MSG_INFO);
+
+      if (printerr.hasPaper())
+      {
+         debugOutput::sendMessage("Printer online, has paper.", MSG_INFO);
+      }
+      else
+      {
+         debugOutput::sendMessage("Printer online, no paper.", MSG_INFO);
+      }
    }
    else
    {
-      debugOutput::sendMessage("has NO paper----------------------------------------", MSG_INFO);
+      debugOutput::sendMessage("Printer not online.", MSG_INFO);
    }
 }
 DF_ERROR stateManualPrinter::displayPrinterReachable()
@@ -226,14 +245,14 @@ DF_ERROR stateManualPrinter::displayPrinterReachable()
 DF_ERROR stateManualPrinter::printTest()
 {
 
-   string printerstring = "lodelode";
+   string printerstring = "Soapstand receipt printer test.";
    string plu = "978020137962";
 
    // Adafruit_Thermal printerr;
    printerr.printBarcode(plu.c_str(), EAN13);
-   system("echo '\n---------------------------\n\n\n' > /dev/ttyS4");
+   system("echo '\n---------------------------\n' > /dev/ttyS4");
 
-   string printer_command_string = "echo '\n---------------------------\n\n\n" + printerstring + "' > /dev/ttyS4";
+   string printer_command_string = "echo '\n---------------------------\n" + printerstring + "' > /dev/ttyS4";
    system(printer_command_string.c_str());
 
    //  string printer_command_string = "echo '------------------------------\n-- Vancouver Active Tourism --\n--            2022-02-12    --\n------------------------------\n 1x Special morning activity \n 1x Batard Bakery experience \n 1x Guided bike tour to \n         Lighthouse park \n 1x Soapstand workplace demo \n Participants: Wafeltje + Lodey    \n   Grand total: Happy times <3 \n   Thank you, please come again!  \n\n\n\n' > /dev/ttyS4";

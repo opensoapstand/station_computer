@@ -14,7 +14,8 @@
 // all rights reserved
 //***************************************
 
-#define UI_VERSION "0.1.4"
+
+
 #include "page_help.h"
 #include "page_init.h"
 #include "page_idle.h"
@@ -84,9 +85,10 @@ int main(int argc, char *argv[])
 {
     // set up logging
     qInstallMessageHandler(myMessageHandler); // Install the handler
+    QString title = QString("********** START SOAPSTAND UI v%1 *********************************").arg(QString(UI_VERSION));
 
     qDebug() << "***************************************************************************";
-    qDebug() << "********** START SOAPSTAND UI v2022-04-13 *********************************";
+    qDebug() << title;
     qDebug() << "***************************************************************************";
 
     // Fire up QT GUI Thread
@@ -136,20 +138,8 @@ int main(int argc, char *argv[])
     df_util::fileExists(PAGE_IDLE_BACKGROUND_PATH);
     df_util::fileExists(PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
     df_util::fileExists(PAGE_HELP_BACKGROUND_PATH);
-    // df_util::fileExists(PAGE_PRODUCT_1_L_BACKGROUND_PATH);
-    // df_util::fileExists(PAGE_PRODUCT_2_L_BACKGROUND_PATH);
-    // df_util::fileExists(PAGE_PRODUCT_3_L_BACKGROUND_PATH);
-    // df_util::fileExists(PAGE_PRODUCT_4_L_BACKGROUND_PATH);
-    // df_util::fileExists(PAGE_PRODUCT_1_S_BACKGROUND_PATH);
-    // df_util::fileExists(PAGE_PRODUCT_2_S_BACKGROUND_PATH);
-    // df_util::fileExists(PAGE_PRODUCT_3_S_BACKGROUND_PATH);
-    // df_util::fileExists(PAGE_PRODUCT_4_S_BACKGROUND_PATH);
     df_util::fileExists(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
     df_util::fileExists(PAGE_QR_PAY_BACKGROUND_PATH);
-    // df_util::fileExists(PRODUCT_1_IMAGE_PATH);
-    // df_util::fileExists(PRODUCT_2_IMAGE_PATH);
-    // df_util::fileExists(PRODUCT_3_IMAGE_PATH);
-    // df_util::fileExists(PRODUCT_4_IMAGE_PATH);
     df_util::fileExists(PAGE_THANK_YOU_BACKGROUND_PATH);
     df_util::fileExists(PAGE_WIFI_ERROR_BACKGROUND_PATH);
     df_util::fileExists(BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH);

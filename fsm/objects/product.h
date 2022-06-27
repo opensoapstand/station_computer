@@ -75,13 +75,27 @@ public:
         bool testParametersFromDb();
 
         double getVolumeDispensed();
+        void setVolumeDispensed(double volume);
+        bool isDbValid();
+
         void resetVolumeDispensed();
 
         int sizeCharToSizeIndex(char size);
         char sizeIndexToSizeChar(int sizeIndex);
 
+        bool registerFlowSensorTick();
+        int getSlot();
+
+        double getVolumeRemaining();
+        double getVolumeDispensedSinceLastRestock();
+        double getVolumeFull();
+        double getThresholdFlow();
+        int getRetractionTimeMillis();
+
         double m_volumePerTick;
         int m_nDispenseSpeedPWM;
+        double m_nThresholdFlow;
+        int m_nRetractionTimeMillis;
 
         double m_nVolumeTarget_l;     // how much to dispense (large)
         double m_nVolumeTarget_m;     // how much to dispense (medium)
@@ -113,19 +127,22 @@ public:
         // int m_PWM;
         // DF_ERROR reloadProductFromDB();
 
-        bool registerFlowSensorTick();
 
         // void setSlot(int slot); // please don't set after instantiated!
-        int getSlot();
 
         double m_nVolumeDispensed;
 
-private:
         double m_nVolumePerTick;
         // TODO: Determine more data to modify per transaction...
 
+        double m_nVolumeRemaining;
+        double m_nVolumeFull;
+        double m_nVolumeDispensedSinceRestock;
+
+        double m_concentration_multiplier; // some products are concentrated. In that case, we don't dispense the advertised volume. i.e. 1L of 10x concentrate --> dispense 100ml, 900ml of water needs to be added afterwards.
         int m_nSlot;
         bool isEnabled;
+private:
 
         double m_calibration_const;
 

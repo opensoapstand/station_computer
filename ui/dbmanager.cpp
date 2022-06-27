@@ -419,51 +419,62 @@ uint32_t DbManager::getNumberOfRows(QString table)
     return row_count;
 }
 
-bool DbManager::remainingVolumeIsBiggerThanLargestFixedSize(int slot)
-{
-    qDebug() << " db... remainingVolumeIsBiggerThanLargestFixedSize";
-    QSqlQuery level_query;
-    double level;
-    {
-#ifdef USE_OLD_DATABASE
-        level_query.prepare("SELECT remaining_ml FROM products where slot=:slot");
+bool DbManager::isProductVolumeInContainer(int slot){
+    if (getEmptyContainerDetectionEnabled()){
+        return getVolumeRemaining(slot) > 0;
 
-#else
-        level_query.prepare("SELECT volume_remaining FROM products where slot=:slot");
-#endif
+    }else{
+        return getVolumeRemaining(slot) > getProductVolume(slot, 'l');
 
-        level_query.bindValue(":slot", slot);
-        level_query.exec();
-
-        if (!level_query.exec())
-        {
-            qDebug() << "ERROR: SQL query not successful: " << level_query.lastError() << endl;
-            return false;
-        }
-
-        // if(level_query.first()){
-        //     // takes first row
-        //     qDebug() << "aeijfaijf" << level_query.value(0) << endl;
-        // }
-
-        // CHECK IF things still work if first is skipped....
-        while (level_query.next())
-        {
-
-            level = level_query.value(0).toDouble();
-
-            if (level > getProductVolume(slot, 'l'))
-            {
-                return true;
-            }
-            else
-            {
-                qDebug() << level << "Remaining volume lower than biggest dispense size." << endl;
-                return false;
-            }
-        }
     }
 }
+
+
+// bool DbManager::remainingVolumeIsBiggerThanLargestFixedSize(int slot)
+// {
+// //     qDebug() << " db... remainingVolumeIsBiggerThanLargestFixedSize";
+// //     QSqlQuery level_query;
+// //     double level;
+// //     {
+// // #ifdef USE_OLD_DATABASE
+// //         level_query.prepare("SELECT remaining_ml FROM products where slot=:slot");
+
+// // #else
+// //         level_query.prepare("SELECT volume_remaining FROM products where slot=:slot");
+// // #endif
+
+// //         level_query.bindValue(":slot", slot);
+// //         level_query.exec();
+
+// //         if (!level_query.exec())
+// //         {
+// //             qDebug() << "ERROR: SQL query not successful: " << level_query.lastError() << endl;
+// //             return false;
+// //         }
+
+// //         // if(level_query.first()){
+// //         //     // takes first row
+// //         //     qDebug() << "aeijfaijf" << level_query.value(0) << endl;
+// //         // }
+
+// //         // CHECK IF things still work if first is skipped....
+// //         while (level_query.next())
+// //         {
+
+// //             level = level_query.value(0).toDouble();
+
+// //             if (level > getProductVolume(slot, 'l'))
+// //             {
+// //                 return true;
+// //             }
+// //             else
+// //             {
+// //                 qDebug() << level << "Remaining volume lower than biggest dispense size." << endl;
+// //                 return false;
+// //             }
+// //         }
+// //     }
+// }
 
 bool DbManager::refill(int slot)
 {
@@ -738,6 +749,43 @@ QString DbManager::getStatusText(int slot)
     return val;
 }
 
+bool DbManager::getPumpRampingEnabled()
+{
+    QSqlQuery qry;
+    bool is_enabled;
+    {
+        qry.prepare("SELECT has_pump_ramping FROM machine");
+        qry.exec();
+
+        while (qry.next())
+        {
+            is_enabled = (qry.value(0).toInt() == 1);
+        }
+    }
+    return is_enabled;
+}
+
+bool DbManager::setPumpRampingEnabled(int isEnabled)
+{
+    QSqlQuery qry;
+    bool enabled;
+
+    QString qry_qstr = QString("UPDATE machine SET has_pump_ramping=%1").arg(QString::number(isEnabled));
+    string qry_string = qry_qstr.toUtf8().constData(); // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
+    qry.prepare(qry_string.c_str());
+    qry.exec();
+
+    if (qry.exec())
+    {
+        return true;
+    }
+    else
+    {
+        qDebug() << "Failed to set pump ramping value." << qry_qstr;
+        return false;
+    }
+}
+
 bool DbManager::getEmptyContainerDetectionEnabled()
 {
     QSqlQuery qry;
@@ -770,7 +818,7 @@ bool DbManager::setEmptyContainerDetectionEnabled(int isEnabled)
     }
     else
     {
-        qDebug() << "Failed to set empty container enabled." << qry_qstr;
+        qDebug() << "Failed to set empty container value." << qry_qstr;
         return false;
     }
 }
@@ -1406,6 +1454,24 @@ bool DbManager::updatePluLarge(int slot, QString new_plu)
             return false;
         }
     }
+}
+
+
+bool DbManager::hasReceiptPrinter()
+{
+    QSqlQuery qry;
+    bool  is_enabled;
+
+    {
+        qry.prepare("SELECT has_receipt_printer FROM machine");
+        qry.exec();
+
+        while (qry.next())
+        {
+            is_enabled = (qry.value(0).toInt() == 1);
+        }
+    }
+    return is_enabled;
 }
 
 QString DbManager::getMachineID()

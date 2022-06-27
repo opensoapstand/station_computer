@@ -16,7 +16,9 @@ public:
     double getProductPrice(int slot, char size);
     //double getProductTargetVolume(int slot);
     double getProductVolumePerTick(int slot);
-    bool remainingVolumeIsBiggerThanLargestFixedSize(int slot);
+    // bool remainingVolumeIsBiggerThanLargestFixedSize(int slot);
+    bool isProductVolumeInContainer(int slot);
+    bool hasReceiptPrinter();
     QString getProductReceiptName(int slot);
     QString getPaymentMethod(int slot);
     double getProductVolume(int slot, char ml);
@@ -57,6 +59,9 @@ public:
     bool getCouponsEnabled();
     bool getEmptyContainerDetectionEnabled();
     bool setEmptyContainerDetectionEnabled(int isEnabled);
+    bool getPumpRampingEnabled();
+    bool setPumpRampingEnabled(int isEnabled);
+
     // bool updateTargetVolume_s(int slot, double new_volume);
     // bool updateTargetVolume_l(int slot, double new_volume);
     bool updateTargetVolume(int slot, int size, double new_volume);

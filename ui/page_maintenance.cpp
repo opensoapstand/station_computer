@@ -39,6 +39,9 @@ page_maintenance::page_maintenance(QWidget *parent) : QWidget(parent),
     product_overlay_labels[1] = ui->product2_overlay_label;
     product_overlay_labels[2] = ui->product3_overlay_label;
     product_overlay_labels[3] = ui->product4_overlay_label;
+
+    QString title = QString("Soapstand UI v%1").arg(UI_VERSION);
+    ui->label_ui_version->setText(title);
 }
 
 // DTOR
@@ -92,11 +95,6 @@ void page_maintenance::showEvent(QShowEvent *event)
     ui->product4_button->setIconSize(QSize(241, 381));
 
 #endif
-
-   
-
-    // ui->enable_empty_container_checkBox->setChecked(true);
-
     if (page_maintenanceEndTimer == nullptr)
     {
         page_maintenanceEndTimer = new QTimer(this);
@@ -110,6 +108,7 @@ void page_maintenance::showEvent(QShowEvent *event)
     qDebug() << "db for names and id";
     DbManager db(DB_PATH);
     ui->enable_empty_container_checkBox->setChecked(db.getEmptyContainerDetectionEnabled());
+    ui->enable_pump_ramping_checkBox->setChecked(db.getPumpRampingEnabled());
     ui->product1_label->setText(db.getProductName(1));
     ui->product2_label->setText(db.getProductName(2));
     ui->product3_label->setText(db.getProductName(3));
@@ -504,7 +503,7 @@ void page_maintenance::on_printer_test_button_clicked()
 
     p_page_idle->dfUtility->send_command_to_FSM("p");
     usleep(50000);
-    p_page_idle->dfUtility->send_command_to_FSM("l");
+    p_page_idle->dfUtility->send_command_to_FSM("1");
     usleep(50000);
     p_page_idle->dfUtility->send_command_to_FSM("q");
 }
@@ -534,32 +533,28 @@ void page_maintenance::on_printer_check_status_clicked()
     p_page_idle->dfUtility->send_command_to_FSM("p");
     usleep(50000);
     p_page_idle->dfUtility->send_command_to_FSM("a");
-    //     usleep(50000);
-    //     p_page_idle->dfUtility->send_command_to_FSM("q"); // go back to fsm idle state is done in controller
+    // usleep(50000);
+    // p_page_idle->dfUtility->send_command_to_FSM("q"); // go back to fsm idle state is done in controller
 }
 
-void page_maintenance::on_enable_empty_container_checkBox_stateChanged(int arg1)
+void page_maintenance::on_enable_pump_ramping_checkBox_clicked(bool checked)
 {
-
-    int checked;
-    if (arg1 == 0)
-    {
-        checked = 0;
-        // ui->enable_empty_container_checkBox->setChecked(db.setEmptyContainerDetectionEnabled(0));
-    }
-    else if (arg1 == 2)
-    {
-        checked = 1;
-    }
-    else
-    {
-        qDebug() << "ERROR: set empty pail detection, but unknown state: " << arg1;
-        return;
-    }
-    qDebug() << "Empty container detection enabled?" << checked;
-
-    qDebug() << "db for empty container check enable.";
     DbManager db(DB_PATH);
-    ui->enable_empty_container_checkBox->setChecked(db.setEmptyContainerDetectionEnabled(checked));
+    if (checked != db.getPumpRampingEnabled())
+    {
+        qDebug() << "Write to db: Pump ramping enabled?" << checked;
+        ui->enable_pump_ramping_checkBox->setChecked(db.setPumpRampingEnabled(checked));
+    }
+    db.closeDB();
+}
+
+void page_maintenance::on_enable_empty_container_checkBox_clicked(bool checked)
+{
+    DbManager db(DB_PATH);
+    if (checked != db.getEmptyContainerDetectionEnabled())
+    {
+        qDebug() << "Empty container detection enabled?" << checked;
+        ui->enable_empty_container_checkBox->setChecked(db.setEmptyContainerDetectionEnabled(checked));
+    }
     db.closeDB();
 }

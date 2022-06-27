@@ -150,7 +150,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
                               "font-family: 'Montserrat';"
                               "font-style: normal;"
                               "font-weight: 400;"
-                              "font-size: 28px;"
+                              "font-size: 24px;"
                               "line-height: 36px;"
                               "color: #58595B;"
                               "}";
@@ -205,9 +205,10 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
     ui->promoCode->clear();
     ui->promoCode->hide();
     ui->promoKeyboard->hide();
-    ui->promoInputButton->show();
+   
 
     couponHandler();
+    qDebug() << "9999999999";
 
     {
         selectIdleTimer = new QTimer(this);
@@ -241,6 +242,7 @@ void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_
     // setDefaultSize();
 
     couponHandler();
+    qDebug() << "6666666";
 }
 
 // DTOR
@@ -257,11 +259,8 @@ void pageProduct::setDefaultSize()
     for (uint8_t i = 0; i < 4; i++)
     {
         int size = product_sizes[i];
-        qDebug() << "++++++++++++++++++++++++++ product: " << size;
         if (selectedProductOrder->getLoadedProductSizeEnabled(size))
         {
-
-            qDebug() << "**********yes " << size;
             selectedProductOrder->setSelectedSize(size); // default size
         }
     }
@@ -343,14 +342,14 @@ void pageProduct::reset_and_show_page_elements()
         available_sizes_signature |= selectedProductOrder->getLoadedProductSizeEnabled(product_sizes[i]) << i;
     }
 
-    if (available_sizes_signature == 10)
-    {
+    if (available_sizes_signature == 5) //10
+    { 
         // only small and large available
         xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_small_and_large_available;
         xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_small_and_large_available;
         xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_small_and_large_available;
     }
-    else if (available_sizes_signature == 26)
+    else if (available_sizes_signature == 13) //26
     {
         xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_small_large_custom_available;
         xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_small_large_custom_available;
@@ -458,9 +457,14 @@ void pageProduct::loadOrderSelectedSize()
 
     for (uint8_t i = 0; i < 4; i++)
     {
+        orderSizeLabelsPrice[i]->hide();
+        orderSizeLabelsVolume[i]->hide();
 
         if (selectedProductOrder->getLoadedProductSizeEnabled(product_sizes[i]))
         {
+
+            orderSizeLabelsPrice[i]->show();
+            orderSizeLabelsVolume[i]->show();
             orderSizeLabelsVolume[i]->setStyleSheet("QLabel {font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: normal; font-size: 24px; line-height: 44px; color: #5E8580;}");
             orderSizeLabelsPrice[i]->setStyleSheet("QLabel {font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;}");
             orderSizeBackgroundLabels[i]->setStyleSheet("QLabel { background-color: #FFFFFF; border: 0px }");
@@ -478,10 +482,24 @@ void pageProduct::loadOrderSelectedSize()
                     units = "L";
                     price = price * 1000;
                 }
+
                 else if (units == "g")
                 {
-                    units = "100g";
-                    price = price * 100;
+                    if (selectedProductOrder->getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
+                    {
+                        units = "100g";
+                        price = price * 100;
+                    }
+                    else
+                    {
+                        units = "kg";
+                        price = price * 1000;
+                    }
+                }
+                else if (units == "oz")
+                {
+                    units = "oz";
+                    price = price * OZ_TO_ML;
                 }
                 orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + units);
             }
@@ -533,10 +551,27 @@ void pageProduct::loadOrderSelectedSize()
         }
         else if (unitsInvoice == "g")
         {
-            unitsInvoice = "100g";
-            selectedPrice = selectedPrice * 100;
-            selectedPriceCorrected = selectedPriceCorrected * 100;
-            discount = discount * 100;
+            if (selectedProductOrder->getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
+            {
+                unitsInvoice = "100g";
+                selectedPrice = selectedPrice * 100;
+                selectedPriceCorrected = selectedPriceCorrected * 100;
+                discount = discount * 100;
+            }
+            else
+            {
+                unitsInvoice = "kg";
+                selectedPrice = selectedPrice * 1000;
+                selectedPriceCorrected = selectedPriceCorrected * 1000;
+                discount = discount * 1000;
+            }
+        }
+        else if (unitsInvoice == "oz")
+        {
+            unitsInvoice = "oz";
+            selectedPrice = selectedPrice * OZ_TO_ML;
+            selectedPriceCorrected = selectedPriceCorrected * OZ_TO_ML;
+            discount = discount * OZ_TO_ML;
         }
 
         ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName());
@@ -910,17 +945,19 @@ void pageProduct::couponHandler()
 
     DbManager db(DB_PATH);
     bool coupons_enabled = db.getCouponsEnabled();
-
     db.closeDB();
 
     if (coupons_enabled)
     {
         qDebug() << "Coupons are enabled for this machine.";
         ui->promoInputButton->show();
+        ui->promoInputButton->setEnabled(true);
+        
     }
     else
     {
         qDebug() << "Coupons are disabled for this machine.";
+        ui->promoInputButton->setEnabled(false);
         coupon_disable();
     }
 }

@@ -45,7 +45,8 @@ double messageMediator::m_nVolumeTarget;
 // CTOR
 messageMediator::messageMediator()
 {
-   debugOutput::sendMessage("------messageMediator------", MSG_INFO);
+
+   debugOutput::sendMessage("Init messageMediator...", MSG_INFO);
    // TODO: Initialize with Pointer reference to socket...
    // new_sock = new ServerSocket();
    m_fExitThreads = false;
@@ -57,7 +58,7 @@ messageMediator::~messageMediator()
 {
    debugOutput::sendMessage("~messageMediator", MSG_INFO);
 
-   //terminate the threads
+   // terminate the threads
    m_fExitThreads = true;
 }
 
@@ -66,7 +67,7 @@ messageMediator::~messageMediator()
 DF_ERROR messageMediator::sendMessage(string msg)
 {
    DF_ERROR dfError = OK;
-   debugOutput::sendMessage("Send msg to UI: " + msg, MSG_INFO);
+   debugOutput::sendMessage("Send msg to UI (don't wait for reply): " + msg, MSG_INFO);
 
    try
    {
@@ -75,13 +76,13 @@ DF_ERROR messageMediator::sendMessage(string msg)
       try
       {
          client_socket << msg;
-         //client_socket >> reply; // blocking. And we're not sending a reply from the UI anymore (it caused crashes.)
+         // client_socket >> reply; // blocking. And we're not sending a reply from the UI anymore (it caused crashes.)
       }
       catch (SocketException &)
       {
          // TODO: Should catch no message error...
       }
-       debugOutput::sendMessage( "We received this response from the server: " + reply, MSG_INFO);
+      //debugOutput::sendMessage("We received this response from the server: " + reply, MSG_INFO);
       ;
    }
    catch (SocketException &e)
@@ -269,15 +270,14 @@ void *messageMediator::doIPThread(void *pThreadArgs)
          {
             while (true)
             {
-               //debugOutput::sendMessage("char received over IP", MSG_INFO);
+               // debugOutput::sendMessage("char received over IP", MSG_INFO);
                std::string data;
                // *fsm_comm_socket >> data;
                // *fsm_comm_socket << "";
                new_sock >> data;
 
-               
-               //sendQtACK("ACK");  // lode commented it out was blocking?!?! todo //// AckOrNakResult = "FSM ACK"; 
-               // cout << data << endl;
+               // sendQtACK("ACK");  // lode commented it out was blocking?!?! todo //// AckOrNakResult = "FSM ACK";
+               //  cout << data << endl;
                m_receiveStringBuffer = data;
                updateCmdString();
                debugOutput::sendMessage("chars received over IP: " + data, MSG_INFO);
@@ -328,7 +328,8 @@ void messageMediator::clearCommandString()
    m_bCommandStringReceived = false;
 }
 
-void messageMediator::setRequestedSize(char size){
+void messageMediator::setRequestedSize(char size)
+{
    m_requestedSize = size;
 }
 
@@ -340,45 +341,59 @@ DF_ERROR messageMediator::parseCommandString()
    char first_char = sCommand[0];
 
    // m_commandValue = std::stoi( sCommand );
-   // debugOutput::sendMessage("temptgmpemtpm" + m_commandValue, MSG_INFO);
+   debugOutput::sendMessage("command length:" + to_string(sCommand.length()), MSG_INFO);
 
-   if (
-       first_char == '1' ||
-       first_char == '2' ||
-       first_char == '3' ||
-       first_char == '4')
+   if (sCommand.length() == 3)
+   //  first_char == '1' ||
+   //  first_char == '2' ||
+   //  first_char == '3' ||
+   //  first_char == '4')
+
    {
       // check for dispensing command
       e_ret = parseDispenseCommand(sCommand);
    }
    else if (
        // other commands
-       first_char == ACTION_MANUAL_PUMP_PWM_SET)
+       first_char == ACTION_MANUAL_PUMP_PWM_SET ||
+       first_char == ACTION_MANUAL_PUMP_SET)
    {
       m_requestedAction = first_char;
       std::string number = sCommand.substr(1, sCommand.size());
       m_commandValue = std::stoi(number);
    }
    else if (
-       // other commands
-       first_char == ACTION_MANUAL_PRINTER ||
-       first_char == ACTION_QUIT ||
-       first_char == ACTION_PRINTER_CHECK_STATUS ||
-       first_char == ACTION_PRINTER_SEND_STATUS ||
-       first_char == ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY ||
-       first_char == ACTION_PRINTER_PRINT_TEST ||
-       first_char == ACTION_HELP ||
-       first_char == ACTION_DEBUG ||
-       first_char == ACTION_MANUAL_PUMP_TEST ||
-       first_char == ACTION_TOGGLE_CYCLIC_PUMP_TEST ||
-       first_char == ACTION_MANUAL_PUMP ||
-       first_char == ACTION_MANUAL_PUMP_ENABLE ||
-       first_char == ACTION_MANUAL_PUMP_DISABLE ||
-       first_char == ACTION_MANUAL_PUMP_DIRECTION_FORWARD ||
-       first_char == ACTION_MANUAL_PUMP_DIRECTION_REVERSE ||
-       first_char == ACTION_MANUAL_PUMP_FLOW_TEST_TOGGLE ||
-       first_char == ACTION_MANUAL_PUMP_CUSTOM_VOLUME_TEST_TOGGLE ||
-       first_char == ACTION_PRINTER_REACHABLE)
+       // single digit commands
+       first_char == '0' ||
+       first_char == '1' ||
+       first_char == '2' ||
+       first_char == '3' ||
+       first_char == '4' ||
+       first_char == '5' ||
+       first_char == '6' ||
+       first_char == '7' ||
+       first_char == '8' ||
+       first_char == '9' ||
+
+       //  first_char == ACTION_MANUAL_PRINTER ||
+       //  first_char == ACTION_PRINTER_CHECK_STATUS ||
+       first_char == ACTION_UI_COMMAND_PRINTER_SEND_STATUS ||
+       first_char == ACTION_UI_COMMAND_PRINTER_MENU ||
+       //  first_char == ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY ||
+       //  first_char == ACTION_PRINTER_PRINT_TEST ||
+       //  first_char == ACTION_HELP ||
+       //  first_char == ACTION_DEBUG ||
+       //  first_char == ACTION_MANUAL_PUMP_TEST ||
+       //  first_char == ACTION_TOGGLE_CYCLIC_PUMP_TEST ||
+       //  first_char == ACTION_MANUAL_PUMP ||
+       //  first_char == ACTION_MANUAL_PUMP_ENABLE ||
+       //  first_char == ACTION_MANUAL_PUMP_DISABLE ||
+       //  first_char == ACTION_MANUAL_PUMP_DIRECTION_FORWARD ||
+       //  first_char == ACTION_MANUAL_PUMP_DIRECTION_REVERSE ||
+       //  first_char == ACTION_MANUAL_PUMP_FLOW_TEST_TOGGLE ||
+       //  first_char == ACTION_MANUAL_PUMP_CUSTOM_VOLUME_TEST_TOGGLE ||
+       //  first_char == ACTION_PRINTER_REACHABLE
+       first_char == ACTION_QUIT)
    {
       m_requestedAction = first_char;
    }
@@ -422,7 +437,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
             actionChar = sCommand[i];
          }
 
-         if (sCommand[i] == SIZE_SMALL_CHAR || sCommand[i] == SIZE_MEDIUM_CHAR || sCommand[i] == SIZE_LARGE_CHAR ||sCommand[i] == SIZE_CUSTOM_CHAR || sCommand[i] == SIZE_TEST)
+         if (sCommand[i] == SIZE_SMALL_CHAR || sCommand[i] == SIZE_MEDIUM_CHAR || sCommand[i] == SIZE_LARGE_CHAR || sCommand[i] == SIZE_CUSTOM_CHAR || sCommand[i] == SIZE_TEST_CHAR)
          {
             volumeChar = (sCommand[i]);
          }
@@ -466,8 +481,6 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
    }
    }
 
-
-
    if (!isalpha(volumeChar))
    {
       // e_ret = ERROR_NETW_NO_POSITION;
@@ -503,9 +516,9 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
          e_ret = OK;
          break;
 
-      case SIZE_TEST:
+      case SIZE_TEST_CHAR:
          debugOutput::sendMessage("Requested volume test", MSG_INFO);
-         m_requestedSize = SIZE_TEST;
+         m_requestedSize = SIZE_TEST_CHAR;
          e_ret = OK;
          break;
 
@@ -514,7 +527,6 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
          break;
       }
    }
-
 
    if (!isalpha(actionChar))
    {
@@ -553,7 +565,6 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
          break;
       }
    }
-
 
    return e_ret;
 }

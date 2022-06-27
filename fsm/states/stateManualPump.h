@@ -55,6 +55,8 @@ private:
     int pump_test_cycle_count;
     bool isCyclicTesting;
     bool isCyclicTestingPumpOn;
+
+    int m_active_pump_index;
     uint64_t cyclicTestPeriodStartEpochMillis;
     uint64_t logSampleStartEpochMillis;
 

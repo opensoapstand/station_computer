@@ -30,9 +30,10 @@
 
 #include "../objects/debugOutput.h"
 
-#define PCA9534_ADDRESS 0b0100000
+#define PCA9534_ADDRESS  0b0100000
+#define PIC_ADDRESS      0b0110000
 #define MAX31760_ADDRESS 0b1010000
-#define DS2485Q_ADDRESS 0b1000000
+#define DS2485Q_ADDRESS  0b1000000
 #define MCP3424T_ADDRESS 0b1101000
 
 class dsed8344
@@ -44,18 +45,26 @@ public:
 
     unsigned char getPumpPWM(void);
     bool setPumpPWM(uint8_t pwm_val);
-    bool setPumpDirectionForwardElseReverse(bool direction);
+    bool setPumpDirection(bool forwardElseReverse);
     bool setPumpEnable(unsigned char pump_number);
     bool setPumpsDisableAll();
     unsigned short getPumpSpeed(void);
     bool getDispenseButtonStateDebounced(void);
     bool getDispenseButtonEdge(void);
     void setDispenseButtonLight(bool poweron);
+    void setup(void);
+    void virtualButtonPressHack(void);
+    void virtualButtonUnpressHack(void);
+    void dispenseButtonRefresh();
 
 private:
     bool getDispenseButtonState(void);
+    bool is_initialized;
     int i2c_handle = -1;
     char *i2c_bus_name;
+
+    bool pic_pwm_found = false;
+    bool max31760_pwm_found = false;
 
     bool SendByte(unsigned char address, unsigned char reg, unsigned char byte);
     unsigned char ReadByte(unsigned char address, unsigned char reg);
@@ -67,7 +76,7 @@ private:
     bool dispenseButtonStateMemory;
     bool dispenseButtonIsDebounced;
     bool dispenseButtonStateDebounced;
-    bool dispenseButtonDebounceMemory;
+    uint64_t dispenseButtonDebounceStartEpoch;
 
 };
 

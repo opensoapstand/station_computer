@@ -74,10 +74,15 @@ double product::getVolumePerTick()
 
 bool product::registerFlowSensorTick()
 {
+    // tick from flowsensor interrupt will increase dispensed volume.
     //    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
 
-    m_nVolumeDispensed += getVolumePerTick();
+    m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
     // m_nVolumeDispensed += 100.0;
+}
+void product::setVolumeDispensed(double volume)
+{
+    m_nVolumeDispensed = volume;
 }
 double product::getVolumeDispensed()
 {
@@ -86,6 +91,14 @@ double product::getVolumeDispensed()
 void product::resetVolumeDispensed()
 {
     m_nVolumeDispensed = 0;
+}
+double product::getThresholdFlow()
+{
+    return m_nThresholdFlow;
+}
+int product::getRetractionTimeMillis()
+{
+    return m_nRetractionTimeMillis;
 }
 
 int product::getPWM()
@@ -186,22 +199,18 @@ void product::productVolumeInfo()
     //	cout << "Dispensed so far: " << m_nVolumeDispensed << endl;
 }
 
-// char product::getClosestLowerTargetVolume(double volume)
-// {
-
-//     int i = 3;
-
-//     while (i >= 0 && !isEnabledSizes[i])
-//     {
-//         i--;
-//     }
-//     if (i < 0)
-//     {
-//         return SIZE_TEST;
-//     }
-
-//     double targetVolume = getTarg
-// }
+double product::getVolumeFull()
+{
+    return m_nVolumeFull;
+}
+double product::getVolumeRemaining()
+{
+    return m_nVolumeRemaining;
+}
+double product::getVolumeDispensedSinceLastRestock()
+{
+    return m_nVolumeDispensedSinceRestock;
+}
 
 double product::getTargetVolume(char size)
 {
@@ -234,7 +243,11 @@ double product::getTargetVolume(char size)
     }
     else if (size == 't')
     {
-        return m_nVolumeTarget_c_max;
+        return TEST_DISPENSE_TARGET_VOLUME;
+    }
+    else if (size == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
+    {
+        return 666.0;
     }
     else
     {
@@ -278,9 +291,14 @@ double product::getPrice(char size)
     {
         return m_price_custom_per_liter;
     }
+    else if (size == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
+    {
+        return m_price_custom_per_liter;
+    }
     else
     {
-        debugOutput::sendMessage("Unknown volume parameter for price: " + size, MSG_INFO);
+        debugOutput::sendMessage("ERROR: Unknown volume parameter for price: " + size, MSG_INFO);
+        return 666;
     }
 #endif
 }
@@ -325,7 +343,7 @@ int product::sizeCharToSizeIndex(char size)
         size_index = 666;
         break;
     }
-    debugOutput::sendMessage("aefasefasefasefasefasef size char: " + to_string(size_index), MSG_INFO);
+    // debugOutput::sendMessage("aefasefasefasefasefasef size char: " + to_string(size_index), MSG_INFO);
     return size_index;
 }
 
@@ -337,7 +355,7 @@ string product::getDisplayUnits()
 double product::convertVolumeMetricToDisplayUnits(double volume)
 {
     double converted_volume;
-    
+
     if (getDisplayUnits() == "oz")
     {
 
@@ -347,7 +365,9 @@ double product::convertVolumeMetricToDisplayUnits(double volume)
     {
 
         converted_volume = volume * 1;
-    }else{
+    }
+    else
+    {
         converted_volume = volume;
     }
     return converted_volume;
@@ -579,40 +599,84 @@ string product::getPLU(char size)
 // }
 
 // #else
+bool product::isDbValid()
+{
+    string table_products_columns[TABLE_PRODUCTS_COLUMN_COUNT] = {"productId", "soapstand_product_serial", "slot", "name", "size_unit", "currency", "payment", "name_receipt", "concentrate_multiplier", "dispense_speed", "threshold_flow", "retraction_time", "calibration_const", "volume_per_tick", "last_restock", "volume_full", "volume_remaining", "volume_dispensed_since_restock", "volume_dispensed_total", "is_enabled_small", "is_enabled_medium", "is_enabled_large", "is_enabled_custom", "size_small", "size_medium", "size_large", "size_custom_min", "size_custom_max", "price_small", "price_medium", "price_large", "price_custom", "plu_small", "plu_medium", "plu_large", "plu_custom", "pid_small", "pid_medium", "pid_large", "pid_custom", "flavour", "image_url", "type", "ingredients", "features", "description"};
+    bool is_valid = true;
 
+    rc = sqlite3_open(DB_PATH, &db);
+    sqlite3_stmt *stmt;
+    string sql_string = "PRAGMA table_info(products);";
+
+    /* Create SQL statement for transactions */
+    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+    // sqlite3_step(stmt);
+    // std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+
+    int status;
+    status = sqlite3_step(stmt);
+    int row = 0;
+    // debugOutput::sendMessage("process record: " + sql_string, MSG_INFO);
+    while (status == SQLITE_ROW)
+    {
+        // int columns_count = sqlite3_data_count(stmt);
+        //  debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
+
+        // for (int column_index = 0; column_index < columns_count; column_index++)
+        int columns_count = 3;
+        for (int column_index = 0; column_index < columns_count; column_index++)
+        {
+
+            // debugOutput::sendMessage("column index: " + to_string(column_index), MSG_INFO);
+
+            switch (column_index)
+            {
+            case (1):
+            {
+
+                string column_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+                // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
+                // debugOutput::sendMessage("should be: " + table_products_columns[row], MSG_INFO);
+
+                if (!column_name.compare(table_products_columns[row]))
+                {
+                    // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
+                }
+                else
+                {
+                    debugOutput::sendMessage("ERROR: Corrupt database. Column name=" + column_name + " while it should be: " + table_products_columns[row], MSG_ERROR);
+                    is_valid = false;
+                }
+                break;
+            }
+            default:
+            {
+            }
+            break;
+            }
+        }
+
+        status = sqlite3_step(stmt); // next record, every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
+        row++;
+    };
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return is_valid;
+}
 bool product::reloadParametersFromDb()
 {
+
     for (uint8_t i = 0; i < 4; i++)
     {
         isEnabledSizes[i] = false;
     }
-
-    // m_nSlot = slot;
-    //     m_name = name;
-    //     m_nVolumeDispensed = 0.0;
-    //     m_nVolumePerTick = nVolumePerTick; // m_nVolumePerTick = 6; //  6ml per tick is standard
-    //     m_nDispenseSpeedPWM = dispense_speed_pwm;
-    //     m_calibration_const = calibration_const;
-
-    //     m_nVolumeTarget_m = nVolumeTarget_m;
-    //     m_nVolumeTarget_l = nVolumeTarget_l;
-    //     m_nVolumeTarget_s = nVolumeTarget_s;
-    //     m_nVolumeTarget_c_min = nVolumeTarget_c_min;
-    //     m_nVolumeTarget_c_max = nVolumeTarget_c_max;
-
-    //     m_price_small = price_small;
-    //     m_price_medium = price_medium;
-    //     m_price_large = price_large;
-    //     m_price_custom_per_liter = price_custom_per_liter;
-
-    //     m_nPLU_small = nPLU_small;
-    //     m_nPLU_medium = nPLU_medium;
-    //     m_nPLU_large = nPLU_large;
-    //     m_nPLU_custom = nPLU_c;
-
-    //     m_paymentMethod = paymentMethod;
-    //     m_name_receipt = name_receipt;
-    //     m_display_unit = display_unit;
+    bool valid = isDbValid();
+    if (!valid)
+    {
+        debugOutput::sendMessage("ABORT: Unexpected database layout.", MSG_ERROR);
+        return false;
+    }
 
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
@@ -799,10 +863,32 @@ bool product::reloadParametersFromDb()
                 m_name_receipt = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
             }
             break;
+            case DB_PRODUCTS_CONCENTRATION_MULTIPLIER:
+            {
+                m_concentration_multiplier = sqlite3_column_double(stmt, column_index);
+
+                if (m_concentration_multiplier < 0.00000001)
+                {
+                    debugOutput::sendMessage("Concentration multiplier was not set. Will default to 1. Was:" + to_string(m_concentration_multiplier), MSG_INFO);
+                    m_concentration_multiplier = 1.0;
+                }
+            }
+            break;
             case DB_PRODUCTS_DISPENSE_SPEED:
             {
                 m_nDispenseSpeedPWM = sqlite3_column_int(stmt, column_index);
                 debugOutput::sendMessage("Speed PWM (0..255):" + to_string(m_nDispenseSpeedPWM), MSG_INFO);
+            }
+            break;
+            case DB_PRODUCTS_THRESHOLD_FLOW:
+            {
+                m_nThresholdFlow = sqlite3_column_double(stmt, column_index);
+                debugOutput::sendMessage("Flow threshold: " + to_string(m_nThresholdFlow), MSG_INFO);
+            }
+            break;
+            case DB_PRODUCTS_RETRACTION_TIME:
+            {
+                m_nRetractionTimeMillis = sqlite3_column_int(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_CALIBRATION_CONST:
@@ -818,14 +904,18 @@ bool product::reloadParametersFromDb()
             break;
             case DB_PRODUCTS_LAST_RESTOCK:
             {
+
+                m_nVolumeDispensedSinceRestock = sqlite3_column_double(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_VOLUME_FULL:
             {
+                m_nVolumeFull = sqlite3_column_double(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_VOLUME_REMAINING:
             {
+                m_nVolumeRemaining = sqlite3_column_double(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_VOLUME_DISPENSED_SINCE_RESTOCK:
@@ -965,6 +1055,7 @@ bool product::reloadParametersFromDb()
             {
             }
             break;
+
             default:
             {
                 debugOutput::sendMessage("Unexpected column index" + to_string(column_index), MSG_INFO);

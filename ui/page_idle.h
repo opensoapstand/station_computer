@@ -48,6 +48,7 @@ public:
     QString getTemplateFolder();
     void setTemplateFolder(QString rootPath, QString templateFolder);
     QString getTemplatePathFromName(QString backgroundPictureName);
+    QString getDefaultTemplatePathFromName(QString backgroundPictureName);
     void setBackgroundPictureFromTemplateToPage(QWidget* page, QString imageName );
 
     DrinkOrder* currentProductOrder;
@@ -62,6 +63,7 @@ public:
 
     bool isEnough(int p);
     void MMSlot();
+    bool m_transitioning = false;
     // bool slotIndexAvailable[4] = {true,true,true,true}; //;1,2,3,4
 
 private slots:

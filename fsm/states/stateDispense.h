@@ -35,7 +35,9 @@ public:
     DF_ERROR onExit();
 
 private:
-    int pos;
+    int slot;
+    int pos_index;
+
     dispenser *productDispensers;
     bool flushCommand;
     char size;

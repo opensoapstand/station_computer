@@ -23,7 +23,9 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
     palette.setBrush(QPalette::Background, Qt::white);
     this->setPalette(palette);
 
-    ui->pumpLabel->setText("OFF");
+    ui->pumpLabel->setText("Pump manual mode OFF.");
+    ui->pumpButton->setText("ENABLE PUMP");
+    ui->pumpButton->setStyleSheet("QPushButton { background-color: #AAAAAA;font-size: 20px;  }");
     // ui->pwmSlider->setTracking(true);
 
     maintainProductPageEndTimer = new QTimer(this);
@@ -368,7 +370,9 @@ void page_maintenance_dispenser::dispense_test_start()
         p_page_idle->dfUtility->send_command_to_FSM(command);
 
         pumping = true;
-        ui->pumpLabel->setText("Pump enabled status: ON");
+        ui->pumpLabel->setText("Manual Pump ready. Press dispense button.");
+        ui->pumpButton->setText("DISABLE PUMP");
+        ui->pumpButton->setStyleSheet("QPushButton { background-color: #E0A0A0;font-size: 20px;  }");
     }
 }
 
@@ -377,7 +381,9 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
     if (pumping)
     {
         pumping = false;
-        ui->pumpLabel->setText("Pump enabled status: OFF");
+        ui->pumpLabel->setText("Pump manual mode OFF.");
+        ui->pumpButton->setText("ENABLE PUMP");
+        ui->pumpButton->setStyleSheet("QPushButton { background-color: #AAAAAA;font-size: 20px;  }");
 
         if (sendStopToController)
         {
@@ -393,6 +399,66 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
         }
 
         refreshLabels();
+    }
+}
+
+void page_maintenance_dispenser::on_autoDispenseLarge_clicked()
+{
+    autoDispenseStart(SIZE_LARGE_INDEX);
+}
+
+void page_maintenance_dispenser::on_autoDispenseMedium_clicked()
+{
+    autoDispenseStart(SIZE_MEDIUM_INDEX);
+}
+
+void page_maintenance_dispenser::on_autoDispenseSmallButton_clicked()
+{
+    autoDispenseStart(SIZE_SMALL_INDEX);
+}
+
+void page_maintenance_dispenser::autoDispenseStart(int size)
+{
+
+    if (!pumping)
+    {
+        ui->pumpButton->setText("DISABLE PUMP");
+        ui->pumpButton->setStyleSheet("QPushButton { background-color: #E0A0A0;font-size: 20px;  }");
+        qDebug() << "Autofill small quantity pressed.";
+        QString command = QString::number(this->p_page_idle->currentProductOrder->getSelectedSlot());
+
+        switch (size)
+        {
+        case SIZE_SMALL_INDEX:
+        {
+            command.append("s");
+        }
+        break;
+        case SIZE_MEDIUM_INDEX:
+        {
+            command.append("m");
+        }
+        break;
+        case SIZE_LARGE_INDEX:
+        {
+            command.append("l");
+        }
+        break;
+        default:
+        {
+            qDebug() << "ERROR: size type not specified. will chose small size.";
+            command.append("s");
+        }
+        break;
+        }
+        command.append(SEND_DISPENSE_AUTOFILL);
+
+        update_dispense_stats(0);
+        p_page_idle->dfUtility->send_command_to_FSM(command);
+
+        pumping = true;
+    }else{
+
     }
 }
 
@@ -430,7 +496,7 @@ void page_maintenance_dispenser::updateVolumeDisplayed(double dispensed, bool is
     {
         update_dispense_stats(dispensed);
         /*
-            // qDebug() << "ahoyy3" ;
+            // qDebug() << "db open3" ;
             // DbManager db(DB_PATH);
 
             // double vol_dispensed = dispensed;
@@ -453,7 +519,7 @@ void page_maintenance_dispenser::fsmReceiveTargetVolumeReached()
 
     // --> attention application can crash when there is content in here. combined with updateVolumeDisplayed
     // DO THE MINIMUM HERE. NO DEBUG PRINTS. This must be an interrupt call.. probably crashes when called again before handled.
-    // qDebug() << "Signal: maintenance target hit. " << pumping;
+    qDebug() << "Signal: maintenance target hit. *********************" << pumping;
 
     // ui->vol_dispensed_label->setText(ui->vol_dispensed_label->text() + " - TARGET HIT!");
 
@@ -464,7 +530,7 @@ void page_maintenance_dispenser::fsmReceiveNoFlowAbort()
 {
     // gets called from the controller.
     // dispense_test_end(false);
-    qDebug() << "Received no flow from controller. , will not take any action";
+    qDebug() << "Received no flow from controller (in maintenance mode). Will not take any action";
 }
 
 void page_maintenance_dispenser::on_refillButton_clicked()
@@ -526,7 +592,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
     DbManager db(DB_PATH);
     success = db.getSlotEnabled(selectedProductOrder->getSelectedSlot());
     db.closeDB();
-    QString infoLabelText="";
+    QString infoLabelText = "";
     if (success)
     {
 
@@ -550,20 +616,19 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
 
             msgBox2.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
             int ret2 = msgBox2.exec();
-            switch(ret2)
+            switch (ret2)
             {
-                case QMessageBox::Yes:
-                    {
-                         infoLabelText = "Coming Soon";
-                    }
-                break;
-                case QMessageBox::No:
-                {
-                         infoLabelText = "Sold Out";
-                } 
-                break;
+            case QMessageBox::Yes:
+            {
+                infoLabelText = "Coming Soon";
             }
-            
+            break;
+            case QMessageBox::No:
+            {
+                infoLabelText = "Sold Out";
+            }
+            break;
+            }
 
             DbManager db2(DB_PATH);
             bool success = db2.updateSlotAvailability(selectedProductOrder->getSelectedSlot(), 0, infoLabelText);
@@ -624,7 +689,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
 #else
 void page_maintenance_dispenser::on_soldOutButton_clicked()
 {
-    qDebug() << "ahoyy4";
+    qDebug() << "db open4";
     DbManager db(DB_PATH);
     //    qDebug() << "Sold Out button clicked" << endl;
 
@@ -747,7 +812,7 @@ void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
         qDebug() << "Maintenance dispenser page timeout";
 
         // Update Click DB
-        qDebug() << "ahoyy5";
+        qDebug() << "db open5";
         DbManager db(DB_PATH);
         dispense_test_end(true);
 
@@ -903,7 +968,7 @@ void page_maintenance_dispenser::on_buttonCancel_clicked()
 
 void page_maintenance_dispenser::updateValues()
 {
-    // qDebug() << "ahoyy6";
+    // qDebug() << "db open6";
     // DbManager db(DB_PATH);
     // int product_slot___ = selectedProductOrder->getSelectedSlot();
 
@@ -1021,8 +1086,6 @@ void page_maintenance_dispenser::sendRestockToCloud()
     {
         qDebug() << "pagemaintenancedispenser. cURL fail. (6=could not resolve host (no internet)) Error code: " + QString::number(res);
         restockTransactionToFile(curl_data);
-
-
     }
     else
     {
@@ -1044,7 +1107,7 @@ void page_maintenance_dispenser::restockTransactionToFile(char *curl_params)
 {
     qDebug() << "Write Restock transaction to file ";
     QString data_out = curl_params;
-    //p_page_idle->dfUtility->write_to_file_timestamped(TRANSACTIONS_RESTOCK_OFFINE_PATH, data_out);
+    // p_page_idle->dfUtility->write_to_file_timestamped(TRANSACTIONS_RESTOCK_OFFINE_PATH, data_out);
     p_page_idle->dfUtility->write_to_file(TRANSACTIONS_RESTOCK_OFFINE_PATH, data_out);
     // char filetime[50];
     // time(&rawtime);

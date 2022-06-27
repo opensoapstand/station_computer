@@ -21,18 +21,12 @@
 ./status_services.sh
 
 PS3='Please enter your choice: '
-options=("Station info" "Status" "Start" "Stop" "Restart" "Run Screenshotbot" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data" "(Re)load services from production" "Setup rtunnel" "Quit")
+options=("Quit" "Station info" "Status" "Start" "Stop" "Restart" "Screenshotbot execute" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data" "(Re)load services from production" "Setup rtunnel")
 select opt in "${options[@]}"
 do
     case $opt in
         "Station info")
-            db_path=/home/df-admin/production/db/drinkfill-sqlite_newlayout.db
-            if [[ -f "$db_path" ]]; then
-                station_id=$(sqlite3 $db_path "select machine_id from machine;")
-                echo "Machine id: $station_id"
-            else
-                echo "Database not found at $db_path"
-            fi
+            ./status_services.sh
             ;;
         "Status")
             ./status_services.sh
@@ -45,7 +39,7 @@ do
             sudo systemctl stop ui_soapstand
             sudo systemctl stop controller_soapstand
             ;;
-        "Run Screenshotbot")
+        "Screenshotbot execute")
             ./screenshotbot.sh
             ;;
         "Restart")

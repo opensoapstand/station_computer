@@ -129,7 +129,7 @@ bool dsed8344::setPumpPWM(uint8_t pwm_val)
 {
     if (max31760_pwm_found)
     {
-        //debugOutput::sendMessage("Motor speed set to (pwm byte): " + to_string(pwm_val), MSG_INFO);
+        // debugOutput::sendMessage("Motor speed set to (pwm byte): " + to_string(pwm_val), MSG_INFO);
         return SendByte(MAX31760_ADDRESS, 0x50, pwm_val); // PWM value
     }
     else if (pic_pwm_found)
@@ -154,7 +154,7 @@ bool dsed8344::setPumpPWM(uint8_t pwm_val)
 
         // speed_percentage = 100 - speed_percentage; // invert speed. pwm is inverted.
 
-        //debugOutput::sendMessage("Motor speed set to (percentage): " + to_string(speed_percentage), MSG_INFO);
+        // debugOutput::sendMessage("Motor speed set to (percentage): " + to_string(speed_percentage), MSG_INFO);
         return SendByte(PIC_ADDRESS, 0x00, speed_percentage); // PWM value
     }
     else
@@ -315,6 +315,9 @@ void dsed8344::dispenseButtonRefresh()
     uint64_t now_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
     bool state = getDispenseButtonState();
+    // if (state){
+    //     debugOutput::sendMessage("bbbutuuotnt", MSG_INFO);
+    // }
 
     if (state != dispenseButtonStateMemory)
     {
@@ -346,28 +349,48 @@ void dsed8344::dispenseButtonRefresh()
 
     dispenseButtonStateMemory = state;
 }
+
 bool dsed8344::getDispenseButtonStateDebounced()
 {
 
     return dispenseButtonStateDebounced;
 }
 
-void dsed8344::setDispenseButtonLight(bool poweron)
+void dsed8344::setPCA9534Output(int posIndex, bool onElseOff)
 {
     unsigned char reg_value;
 
     reg_value = ReadByte(PCA9534_ADDRESS, 0x01);
-    if (poweron)
+
+    if (onElseOff)
     {
-        reg_value = reg_value | 0b01000000;
+        reg_value = reg_value | (1UL << posIndex);
     }
     else
     {
-        reg_value = reg_value & 0b10111111;
+        reg_value = reg_value & ~(1UL << posIndex);
     }
-    SendByte(PCA9534_ADDRESS, 0x01, reg_value);
 
-} // End of setDispenseButtonLight()
+    SendByte(PCA9534_ADDRESS, 0x01, reg_value);
+}
+void dsed8344::setSingleDispenseButtonLight(bool poweron)
+
+{
+    setPCA9534Output(6, poweron);
+    // unsigned char reg_value;
+
+    // reg_value = ReadByte(PCA9534_ADDRESS, 0x01);
+    // if (poweron)
+    // {
+    //     reg_value = reg_value | 0b01000000;
+    // }
+    // else
+    // {
+    //     reg_value = reg_value & 0b10111111;
+    // }
+    // SendByte(PCA9534_ADDRESS, 0x01, reg_value);
+
+} // End of setSingleDispenseButtonLight()
 
 ///////////////////////////////////////////////////////////////////////////
 // Private methods
@@ -570,8 +593,23 @@ bool dsed8344::check_8344_configuration(void)
 void dsed8344::initialize_8344(void)
 {
     // Initialize the PCA9534
-    SendByte(PCA9534_ADDRESS, 0x01, 0b11000000); // Output pin values
-    SendByte(PCA9534_ADDRESS, 0x03, 0b10011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+
+    // 0bxxxxxxxx
+    //          x // output 1:enable selected pump 0:disable all pumps
+    //        xx  // output select pump. 00:pump1 , 01:2, 10:3, 11:4
+    //       x    // output if multibutton: enable button x (low=active)
+    //      x     // output if multibutton: enable button x (low=active)
+    //     x      // output: pump direction
+    //    x       // output: button light , if multibutton: enable button x (low=active)
+    //   x        // input: button in.
+
+    SendByte(PCA9534_ADDRESS, 0x01, 0b11100000); // Output pin values
+
+// #ifdef ENABLE_MULTI_BUTTON
+    SendByte(PCA9534_ADDRESS, 0x03, 0b10000000); // 0 = output
+// #else
+    // SendByte(PCA9534_ADDRESS, 0x03, 0b10011000); 
+// #endif
 
     if (max31760_pwm_found)
     {

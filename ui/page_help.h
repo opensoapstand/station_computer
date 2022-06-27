@@ -17,13 +17,15 @@
 #include "df_util.h"
 #include "page_select_product.h"
 #include "page_product.h"
-#include "pagepayment.h"
+#include "page_transactions.h"
+#include "page_payment.h"
 #include "page_idle.h"
 
 class page_select_product;
-class pagePayment;
+class page_payment;
 class page_idle;
 class pageProduct;
+class page_transactions;
 
 namespace Ui {
 class page_help;
@@ -35,7 +37,7 @@ class page_help : public QWidget
 
 public:
     explicit page_help(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, pagePayment *pagePayment);
+    void setPage(page_select_product *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, page_payment *page_payment, page_transactions *pageTransactions);
     ~page_help();
     QTimer* helpIdleTimer;
 
@@ -46,16 +48,17 @@ private slots:
     void on_refreshButton_clicked();
     void onHelpTimeoutTick();
 
+    void on_transactions_Button_clicked();
+
 private:
     void showEvent(QShowEvent *event);
-    //bool stopHelpTimers();
-    //void helpOnTick();
 
     Ui::page_help *ui;
     page_select_product* p_page_select_product;
-    pagePayment* paymentPage;
+    page_payment* paymentPage;
     page_idle* p_page_idle;
     pageProduct* selectPage;
+    page_transactions* p_page_transactions;
 
     int _helpIdleTimeoutSec;
 

@@ -49,8 +49,8 @@
         <file>page_idle.h</file>
         <file>includefiles.h</file>
         <file>main.cpp</file>
-        <file>pagepayment.cpp</file>
-        <file>pagepayment.h</file>
+        <file>page_payment.cpp</file>
+        <file>page_payment.h</file>
         <file>page_product.cpp</file>
         <file>page_product.h</file>
         <file>page_select_product.cpp</file>
@@ -62,7 +62,7 @@
         <file>ui_page_idle.h</file>
         <file>ui_page_maintenance_dispenser.h</file>
         <file>ui_page_maintenance.h</file>
-        <file>ui_pagepayment.h</file>
+        <file>ui_page_payment.h</file>
         <file>ui_page_product.h</file>
         <file>ui_page_select_product.h</file>
         <file>ui_pagethankyou.h</file>

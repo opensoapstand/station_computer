@@ -10,7 +10,7 @@
 // #define USE_OLD_DATABASE
 //#define START_FSM_FROM_UI //enabled by default (start controller from ui)
 
-#define UI_VERSION "1.0.4+fridge"
+#define UI_VERSION "1.0.8+"
 
 #define ENABLE_DYNAMIC_UI
 #define ENABLE_COUPON   // Petros stations have no coupon
@@ -77,6 +77,7 @@ using namespace std;
 
 #define TEMPLATES_ROOT_PATH "/home/df-admin/production/references/templates/"
 #define TEMPLATES_DEFAULT_NAME "default"
+#define TRANSACTION_HISTORY_COUNT 15
 
 #define PRODUCT_PICTURES_ROOT_PATH "/home/df-admin/production/references/products/%1.png"
 
@@ -86,28 +87,31 @@ using namespace std;
 
 #define PAGE_IDLE_BACKGROUND_PATH                       "background_message.png"
 #define PAGE_THANK_YOU_BACKGROUND_PATH                  "background_message.png"
+#define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_message.png"
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
 #define PAGE_HELP_BACKGROUND_PATH                       "background_help.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH      "background_dispense_instructions.png"
 #define PAGE_DISPENSE_BACKGROUND_PATH                   "background_dispense.png"
-#define PAGE_QR_PAY_BACKGROUND_PATH                     "background_QR-pay.png"
+#define PAGE_QR_PAY_BACKGROUND_PATH                     "background_generic_white.png"
+#define ERROR_MESSAGE_PATH                              "error_message.png"
 
-#define PAGE_WIFI_ERROR_BACKGROUND_PATH                 "/home/df-admin/production/references/oops.png"
+// #define PAGE_WIFI_ERROR_BACKGROUND_PATH                 "/home/df-admin/production/references/oops.png"
 #define BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH            "/home/df-admin/production/references/bottle_fill_for_animation.png"
 
-#define SOLD_OUT_IMAGE_PATH "/home/df-admin/production/references/soldOut.png"
-#define KEYBOARD_IMAGE_PATH "/home/df-admin/production/references/soapstand-keyboard.png"
-#define FULL_TRANSPARENT_IMAGE_PATH "/home/df-admin/production/references/background.png"
+#define SOLD_OUT_IMAGE_PATH                         "/home/df-admin/production/references/soldOut.png"
+#define KEYBOARD_IMAGE_PATH                         "/home/df-admin/production/references/soapstand-keyboard.png"
+#define FULL_TRANSPARENT_IMAGE_PATH                 "/home/df-admin/production/references/background.png"
 
-#define ICON_TYPE_CONCENTRATE_PATH "/home/df-admin/production/references/Soapstand_UI-concentrate-icon.png"
-#define ICON_TYPE_ALL_PURPOSE_PATH "/home/df-admin/production/references/Soapstand-UI-icon-all-purposs.png"
-#define ICON_TYPE_DISH_PATH "/home/df-admin/production/references/Soapstand-UI-icon-dish.png"
-#define ICON_TYPE_HAND_PATH "/home/df-admin/production/references/Soapstand-UI-icon-hand-soap.png"
-#define ICON_TYPE_LAUNDRY_PATH "/home/df-admin/production/references/Soapstand-UI-icon-laundry.png"
+#define ICON_TYPE_CONCENTRATE_PATH                  "/home/df-admin/production/references/Soapstand_UI-concentrate-icon.png"
+#define ICON_TYPE_ALL_PURPOSE_PATH                  "/home/df-admin/production/references/Soapstand-UI-icon-all-purposs.png"
+#define ICON_TYPE_DISH_PATH                         "/home/df-admin/production/references/Soapstand-UI-icon-dish.png"
+#define ICON_TYPE_HAND_PATH                         "/home/df-admin/production/references/Soapstand-UI-icon-hand-soap.png"
+#define ICON_TYPE_LAUNDRY_PATH                      "/home/df-admin/production/references/Soapstand-UI-icon-laundry.png"
                          
-#define COMPANY_LOGO_PATH "/home/df-admin/production/references/logos/%1_logo_white.png"
-#define DRINKFILL_LOGO_VERTICAL_PATH "/home/df-admin/production/references/logos/Soapstand-logo-white-vertical.png"
+#define DRINKFILL_LOGO_ANIMATED_PATH                "/home/df-admin/production/references/logos/Soapstand-logo-animated-spin.gif"
+#define COMPANY_LOGO_PATH                           "/home/df-admin/production/references/logos/%1_logo_white.png"
+#define DRINKFILL_LOGO_VERTICAL_PATH                 "/home/df-admin/production/references/logos/Soapstand-logo-white-vertical.png"
 
 #else
 
@@ -144,6 +148,7 @@ using namespace std;
 
 #define SEND_DISPENSE_START "d"
 #define SEND_DISPENSE_STOP "f"
+#define SEND_DISPENSE_AUTOFILL "a"
 
 class df_util : public QWidget
 {

@@ -356,7 +356,9 @@ DF_ERROR messageMediator::parseCommandString()
    else if (
        // other commands
        first_char == ACTION_MANUAL_PUMP_PWM_SET ||
-       first_char == ACTION_MANUAL_PUMP_SET)
+       first_char == ACTION_MANUAL_PUMP_SET ||
+       first_char == ACTION_PRINT_TRANSACTION
+       )
    {
       m_requestedAction = first_char;
       std::string number = sCommand.substr(1, sCommand.size());
@@ -432,7 +434,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
       // FIXME: Need a better string parser...
       for (std::string::size_type i = 0; i < sCommand.size(); ++i)
       {
-         if ((sCommand[i] == ACTION_DISPENSE_END) || (sCommand[i] == ACTION_DISPENSE) || sCommand[i] == PWM_CHAR)
+         if ((sCommand[i] == ACTION_DISPENSE_END) || (sCommand[i] == ACTION_DISPENSE) || (sCommand[i] == ACTION_AUTOFILL) || sCommand[i] == PWM_CHAR) 
          {
             actionChar = sCommand[i];
          }
@@ -546,6 +548,12 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
          debugOutput::sendMessage("Action: Dispense", MSG_INFO);
          // m_nSolenoid = PRODUCT;
          m_requestedAction = ACTION_DISPENSE;
+         e_ret = OK;
+         break;
+      case ACTION_AUTOFILL:
+         debugOutput::sendMessage("Action: Auto fill", MSG_INFO);
+         // m_nSolenoid = PRODUCT;
+         m_requestedAction = ACTION_AUTOFILL;
          e_ret = OK;
          break;
 

@@ -16,12 +16,13 @@
 
 
 
+#include "page_transactions.h"
 #include "page_help.h"
 #include "page_init.h"
 #include "page_idle.h"
 #include "page_select_product.h"
 #include "page_product.h"
-#include "pagepayment.h"
+#include "page_payment.h"
 #include "page_dispenser.h"
 #include "page_error_wifi.h"
 #include "pagethankyou.h"
@@ -101,9 +102,10 @@ int main(int argc, char *argv[])
     page_help *helpPage = new page_help();
     page_init *initPage = new page_init();
     page_idle *p_page_idle = new page_idle();
+    page_transactions *p_page_transactions = new page_transactions();
     page_select_product *firstSelectPage = new page_select_product();
     pageProduct *p_pageProduct = new pageProduct();
-    pagePayment *paymentPage = new pagePayment();
+    page_payment *paymentPage = new page_payment();
     page_dispenser *p_page_dispense = new page_dispenser();
     page_error_wifi *wifiError = new page_error_wifi();
     pagethankyou *p_page_thank_you = new pagethankyou();
@@ -141,14 +143,15 @@ int main(int argc, char *argv[])
     df_util::fileExists(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
     df_util::fileExists(PAGE_QR_PAY_BACKGROUND_PATH);
     df_util::fileExists(PAGE_THANK_YOU_BACKGROUND_PATH);
-    df_util::fileExists(PAGE_WIFI_ERROR_BACKGROUND_PATH);
+    // df_util::fileExists(PAGE_WIFI_ERROR_BACKGROUND_PATH);
     df_util::fileExists(BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH);
     df_util::fileExists(SOLD_OUT_IMAGE_PATH);
     df_util::fileExists(KEYBOARD_IMAGE_PATH);
     df_util::fileExists(FULL_TRANSPARENT_IMAGE_PATH);
 
     // Page pathing references to function calls.
-    helpPage->setPage(firstSelectPage, p_pageProduct, p_page_idle, paymentPage);
+    helpPage->setPage(firstSelectPage, p_pageProduct, p_page_idle, paymentPage, p_page_transactions);
+    p_page_transactions->setPage(p_page_idle);
     initPage->setPage(p_page_idle);
     p_page_maintenance_product->setPage(p_page_maintenance, p_page_idle);
     p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product, firstSelectPage, p_pageProduct);

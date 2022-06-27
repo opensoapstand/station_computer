@@ -30,6 +30,8 @@
 #include "objects/dispenser.h"
 #include "objects/messageMediator.h"
 
+#include "objects/machine.h"
+
 std::string stateStrings[FSM_MAX + 1] = {
     "STATE_DUMMY",
     "STATE_INIT",
@@ -87,9 +89,13 @@ int main()
     debugOutput::sendMessage("***************************************************************************", MSG_INFO);
     debugOutput::sendMessage("****** SOAPSTAND CONTROLLER v" + version + " ***********************************", MSG_INFO);
     debugOutput::sendMessage("***************************************************************************", MSG_INFO);
+    
+    machine test;
+    test.testtest();
 
     if (OK == initObjects())
     {
+        debugOutput::sendMessage("Init objects done", MSG_INFO);
         dfRet = g_pMessaging->createThreads(kbThread, ipThread);
 
         if (OK == dfRet)
@@ -171,10 +177,12 @@ DF_ERROR initObjects()
     {
         g_productDispensers[i].setup();
     }
+    debugOutput::sendMessage("Dispensers set up. ", MSG_INFO);
 
     dfRet = createStateArray();
     if (OK != dfRet)
     {
+        debugOutput::sendMessage("Error at set up.", MSG_ERROR);
         // TODO: DB function to check/create DB
         // next
     }

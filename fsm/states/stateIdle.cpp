@@ -55,71 +55,65 @@ DF_ERROR stateIdle::onAction()
    // if (nullptr != &m_state_requested)
    // {
 
-      // Check if Command String is ready
-      if (m_pMessaging->isCommandStringReadyToBeParsed())
+   // Check if Command String is ready
+   if (m_pMessaging->isCommandStringReadyToBeParsed())
+   {
+      DF_ERROR ret_msg;
+      ret_msg = m_pMessaging->parseCommandString();
+
+      if (ACTION_DISPENSE == m_pMessaging->getAction() || ACTION_AUTOFILL == m_pMessaging->getAction())
       {
-         DF_ERROR ret_msg;
-         ret_msg = m_pMessaging->parseCommandString();
+         m_state_requested = STATE_DISPENSE_INIT;
+      }
 
-         pos = m_pMessaging->getRequestedSlot();
-         pos = pos - 1;
+      else if ('1' == m_pMessaging->getAction() || ACTION_UI_COMMAND_PRINTER_MENU == m_pMessaging->getAction())
+      {
+         m_state_requested = STATE_MANUAL_PRINTER;
+      }
 
-         if (ACTION_DISPENSE == m_pMessaging->getAction())
-         {
-            //  debugOutput::sendMessage("yoooooo", MSG_INFO);
-            // m_selectedOrder.size = 'f';//m_pMessaging->getRequestedSize();
-            // debugOutput::sendMessage("dwdwiieieiej", MSG_INFO);
-            // m_selectedOrder.slot = 1; m_pMessaging->getRequestedSlot();
-            // debugOutput::sendMessage("iieieiej", MSG_INFO);
+      else if ('2' == m_pMessaging->getAction())
+      {
+         m_state_requested = STATE_MANUAL_PUMP;
+      }
 
-            m_state_requested = STATE_DISPENSE_INIT;
-         }
+      else if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
+      {
+         debugOutput::sendMessage("Request application exit.", MSG_INFO);
+         m_state_requested = STATE_END;
+      }
 
-         else if ('1' == m_pMessaging->getAction() || ACTION_UI_COMMAND_PRINTER_MENU == m_pMessaging->getAction())
-         {
-            m_state_requested = STATE_MANUAL_PRINTER;
-         }
-         
-         else if ('2' == m_pMessaging->getAction())
-         {
-            m_state_requested = STATE_MANUAL_PUMP;
-         }
-
-         else if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
-         {
-            debugOutput::sendMessage("Request application exit.", MSG_INFO);
-            m_state_requested = STATE_END;
-         }
-
-         else if ('3' == m_pMessaging->getAction())
-         {
-            productDispensers = g_productDispensers;
-             debugOutput::sendMessage("beffooore reload parameters from product1", MSG_INFO);
-             bool success = this->productDispensers[0].getProduct()->reloadParametersFromDb();
-             debugOutput::sendMessage("after" + to_string(success), MSG_INFO);
+      else if ('3' == m_pMessaging->getAction())
+      {
+         productDispensers = g_productDispensers;
+         debugOutput::sendMessage("beffooore reload parameters from product1", MSG_INFO);
+         bool success = this->productDispensers[0].getProduct()->reloadParametersFromDb();
+         debugOutput::sendMessage("after" + to_string(success), MSG_INFO);
          // }
 
          // else if ('4' == m_pMessaging->getAction())
          // {
          //    debugOutput::sendMessage("\n Idle State. Available Commands: \n 0: Quit (or Restart if set as service),\n 1: Test printer\n 2: Test pumps\n 3: Specific debug \n [1..4]d[l,s,t]: Enter dispense mode. [product number]d[size] \n [1..4]f[l,s,t]: If dispensing: to End Dispensing [product number]f[size]", MSG_INFO);
-         }else{
-            debugOutput::sendMessage("---Main Menu---\n"
-            " Controller Idle State. Available Commands (enter command digit followed by a semicolon e.g. h;[ENTER] )\n"
-            " 0: Quit(in independent mode)\n"
-            " 1: Test printer\n"
-            " 2: Test pumps\n"
-            " 3: Specific debug \n"
-            " [1..4]d[l,s,t]: Enter dispense mode. [product number]d[size] e.g. 1ld;\n"
-            " [1..4]f[l,s,t]: If dispensing: to End Dispensing [product number]f[size] e.g. 1lf;\n"
-            " h: Display this help message"
-            "", MSG_INFO);
-         }
       }
       else
       {
-         m_state_requested = STATE_IDLE;
+         debugOutput::sendMessage("---Main Menu---\n"
+                                  " Controller Idle State. Available Commands (enter command digit followed by a semicolon e.g. h;[ENTER] )\n"
+                                  " 0: Quit(in independent mode)\n"
+                                  " 1: Test printer\n"
+                                  " 2: Test pumps\n"
+                                  " 3: Specific debug \n"
+                                  " [1..4]d[l,s,t]: Enter dispense mode. [product number]d[size] e.g. 1ld;\n"
+                                  " [1..4]f[l,s,t]: If dispensing: to End Dispensing [product number]f[size] e.g. 1lf;\n"
+                                  " h: Display this help message"
+                                  "",
+                                  MSG_INFO);
       }
-      e_ret = OK;
+   }
+   else
+   {
+      m_state_requested = STATE_IDLE;
+   }
+   e_ret = OK;
    // }
    // usleep(1000000);
    return e_ret;

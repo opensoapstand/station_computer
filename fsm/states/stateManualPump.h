@@ -20,7 +20,13 @@
 #include "../objects/product.h"
 
 #include <string>
-
+typedef enum state_auto_pump
+{
+   AUTO_PUMP_STATE_IDLE,
+   AUTO_PUMP_STATE_INIT,
+   AUTO_PUMP_STATE_PUMPING,
+   AUTO_PUMP_STATE_FINISHED
+} state_auto_pump;
 class stateManualPump : public stateVirtual
 {
 public:
@@ -30,6 +36,7 @@ public:
 
     string toString();
     DF_ERROR pumpTest();
+    DF_ERROR autoPumpSetQuantityTest();
     DF_ERROR pumpCyclicTest();
     DF_ERROR pumpFlowTest();
     DF_ERROR customVolumeDispenseTest();
@@ -47,6 +54,7 @@ private:
 
     uint64_t startFlowTestMillis;
 
+    uint64_t most_recent_data_output_epoch;
     uint64_t startDispensingEpochMillis;
     uint64_t startRetractingEpochMillis;
     bool isDispensing=false;
@@ -56,11 +64,13 @@ private:
     bool isCyclicTesting;
     bool isCyclicTestingPumpOn;
 
+    bool triggerOutputData;
+
     int m_active_pump_index;
     uint64_t cyclicTestPeriodStartEpochMillis;
     uint64_t logSampleStartEpochMillis;
 
-
+    state_auto_pump m_state_auto_pump;
 
     uint64_t retract_time_millis;
 };

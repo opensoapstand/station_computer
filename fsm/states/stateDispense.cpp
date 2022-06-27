@@ -50,25 +50,27 @@ DF_ERROR stateDispense::onEntry()
    m_state_requested = STATE_DISPENSE;
    productDispensers = g_productDispensers;
    DF_ERROR e_ret = OK;
-   pos = m_pMessaging->getRequestedSlot();
+   slot = m_pMessaging->getRequestedSlot();
    size = m_pMessaging->getRequestedSize();
-   pos = pos - 1;
+   pos_index = slot - 1;
 
-   productDispensers[pos].resetDispenseButton();
+   productDispensers[pos_index].resetDispenseButton();
 
-   productDispensers[pos].getProduct()->productVolumeInfo();
+   productDispensers[pos_index].getProduct()->productVolumeInfo();
+
+   if (m_pMessaging->getAction() == ACTION_AUTOFILL)
+   {
+      productDispensers[pos_index].the_8344->virtualButtonPressHack();
+      productDispensers[pos_index].pumpSlowStart(true);
+   }
+
    return e_ret;
 }
 
-/*
- * Checks state of FSM; Accepts incomming string to process for
- * Air, Water and Product.  Sends signal to Solenoids to Dispense,
- * Based on string command
- */
 DF_ERROR stateDispense::rectractProductBlocking()
 {
    DF_ERROR e_ret = OK;
-   productDispensers[pos].reversePumpForSetTimeMillis(productDispensers[pos].getProduct()->getRetractionTimeMillis());
+   productDispensers[pos_index].reversePumpForSetTimeMillis(productDispensers[pos_index].getProduct()->getRetractionTimeMillis());
    return e_ret;
 }
 
@@ -79,36 +81,37 @@ DF_ERROR stateDispense::onAction()
 
    // periodic delay to slow down refreshing
    // usleep(250000);
-   productDispensers[pos].refresh();
+   productDispensers[pos_index].refresh();
 
    if (m_pMessaging->isCommandStringReadyToBeParsed())
    {
       m_pMessaging->parseCommandString();
    }
 
-   if (productDispensers[pos].getDispenseButtonEdgePositive())
+   if (m_pMessaging->getAction() != ACTION_AUTOFILL)
    {
-      debugOutput::sendMessage("Dispense button pressed edge", MSG_INFO);
-      productDispensers[pos].pumpSlowStart(true);
-   }
+      if (productDispensers[pos_index].getDispenseButtonEdgePositive())
+      {
+         debugOutput::sendMessage("Dispense button pressed edge", MSG_INFO);
+         productDispensers[pos_index].pumpSlowStart(true);
+         productDispensers[pos_index].addDispenseButtonPress();
+      }
 
-
-   productDispensers[pos].pumpSlowStartHandler();
-
-
-   if (productDispensers[pos].getDispenseButtonEdgeNegative())
-   {
-      debugOutput::sendMessage("Dispense button released edge", MSG_INFO);
-      productDispensers[pos].pumpSlowStopBlocking();
-      rectractProductBlocking();
+      if (productDispensers[pos_index].getDispenseButtonEdgeNegative())
+      {
+         debugOutput::sendMessage("Dispense button released edge", MSG_INFO);
+         productDispensers[pos_index].pumpSlowStopBlocking();
+         rectractProductBlocking();
+      }
    }
 
    // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
 
-   if (productDispensers[pos].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML)
+   if (productDispensers[pos_index].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML)
    {
-      if (productDispensers[pos].getIsStatusUpdateAllowed()){
-         m_pMessaging->sendMessage(to_string(productDispensers[pos].getVolumeDispensed()));
+      if (productDispensers[pos_index].getIsStatusUpdateAllowed())
+      {
+         m_pMessaging->sendMessage(to_string(productDispensers[pos_index].getVolumeDispensed()));
       }
    }
 
@@ -117,33 +120,31 @@ DF_ERROR stateDispense::onAction()
    {
       debugOutput::sendMessage("Stop dispensing (stop command received)", MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
-      productDispensers[pos].pumpSlowStopBlocking();
+      productDispensers[pos_index].pumpSlowStopBlocking();
       return e_ret = OK;
    }
 
-   if (productDispensers[pos].getIsDispenseTargetReached())
+   if (productDispensers[pos_index].getIsDispenseTargetReached())
    {
-      debugOutput::sendMessage("Stop dispensing. Requested volume reached. " + to_string(productDispensers[pos].getVolumeDispensed()), MSG_INFO);
+      debugOutput::sendMessage("Stop dispensing. Requested volume reached. " + to_string(productDispensers[pos_index].getVolumeDispensed()), MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
-      productDispensers[pos].pumpSlowStopBlocking();
+      productDispensers[pos_index].pumpSlowStopBlocking();
       rectractProductBlocking();
       return e_ret = OK;
    }
 
-   // productDispensers[pos].setVolumeDispensedPreviously(productDispensers[pos].getVolumeDispensed());
-
-   if (productDispensers[pos].getEmptyContainerDetectionEnabled())
+   if (productDispensers[pos_index].getEmptyContainerDetectionEnabled())
    {
 
-      Dispense_behaviour status = productDispensers[pos].getDispenseStatus();
+      Dispense_behaviour status = productDispensers[pos_index].getDispenseStatus();
 
       if (status == FLOW_STATE_CONTAINER_EMPTY)
       {
 
          debugOutput::sendMessage("******************* EMPTY CONTAINER DETECTED **********************", MSG_INFO);
-         usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
+         usleep(100000);                             // send message delay (pause from previous message) desperate attempt to prevent crashes
          m_pMessaging->sendMessage("No flow abort"); // send to UI
-         productDispensers[pos].pumpSlowStopBlocking();
+         productDispensers[pos_index].pumpSlowStopBlocking();
          rectractProductBlocking();
          m_state_requested = STATE_DISPENSE_END;
 
@@ -151,29 +152,28 @@ DF_ERROR stateDispense::onAction()
       }
       else if (status == FLOW_STATE_DISPENSING)
       {
-         productDispensers[pos].logUpdateIfAllowed("debug. targets s,m,l,c_max:" +
-                                      to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_s) +
-                                      "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_m) +
-                                      "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_l) +
-                                      "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_c_max) +
-                                      ", Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()));
+         productDispensers[pos_index].logUpdateIfAllowed("debug. targets s,m,l,c_max:" +
+                                                         to_string(productDispensers[pos_index].getProduct()->m_nVolumeTarget_s) +
+                                                         "," + to_string(productDispensers[pos_index].getProduct()->m_nVolumeTarget_m) +
+                                                         "," + to_string(productDispensers[pos_index].getProduct()->m_nVolumeTarget_l) +
+                                                         "," + to_string(productDispensers[pos_index].getProduct()->m_nVolumeTarget_c_max) +
+                                                         ", Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
       }
       else if (status == FLOW_STATE_ATTEMTPING_TO_PRIME)
       {
-         productDispensers[pos].logUpdateIfAllowed("No flow during pumping. Priming? Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()));
+         productDispensers[pos_index].logUpdateIfAllowed("No flow during pumping. Priming? Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
       }
       else if (status == FLOW_STATE_PUMPING_NOT_DISPENSING)
       {
-         productDispensers[pos].logUpdateIfAllowed("No flow detected during pumping. Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()));
+         productDispensers[pos_index].logUpdateIfAllowed("No flow detected during pumping. Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
       }
       else if (status == FLOW_STATE_NOT_PUMPING_NOT_DISPENSING)
       {
-         productDispensers[pos].logUpdateIfAllowed("Wait for button press.           Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()));
-                                  
+         productDispensers[pos_index].logUpdateIfAllowed("Wait for button press.           Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
       }
       else if (status == FLOW_STATE_UNAVAILABLE)
       {
-         productDispensers[pos].logUpdateIfAllowed("No flow data yet (init).         Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()));
+         productDispensers[pos_index].logUpdateIfAllowed("No flow data yet (init).         Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
       }
       else
       {
@@ -184,12 +184,12 @@ DF_ERROR stateDispense::onAction()
    {
       // TODO: Do a check if Pumps are operational
       // send IPC if pump fails
-      productDispensers[pos].logUpdateIfAllowed("debug. targets s,m,l,c_max:" +
-                                   to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_s) +
-                                   "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_m) +
-                                   "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_l) +
-                                   "," + to_string(productDispensers[pos].getProduct()->m_nVolumeTarget_c_max) +
-                                   ", Vol dispensed: " + to_string(productDispensers[pos].getVolumeDispensed()));
+      productDispensers[pos_index].logUpdateIfAllowed("debug. targets s,m,l,c_max:" +
+                                                      to_string(productDispensers[pos_index].getProduct()->m_nVolumeTarget_s) +
+                                                      "," + to_string(productDispensers[pos_index].getProduct()->m_nVolumeTarget_m) +
+                                                      "," + to_string(productDispensers[pos_index].getProduct()->m_nVolumeTarget_l) +
+                                                      "," + to_string(productDispensers[pos_index].getProduct()->m_nVolumeTarget_c_max) +
+                                                      ", Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
    }
 
    e_ret = OK;
@@ -200,7 +200,9 @@ DF_ERROR stateDispense::onAction()
 // Actions on leaving Dispense state
 DF_ERROR stateDispense::onExit()
 {
-   productDispensers[pos].setPumpsDisableAll();
+   productDispensers[pos_index].setPumpsDisableAll();
+
+   productDispensers[pos_index].the_8344->virtualButtonUnpressHack();
    DF_ERROR e_ret = OK;
    return e_ret;
 }

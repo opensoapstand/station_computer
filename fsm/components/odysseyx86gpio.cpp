@@ -128,6 +128,7 @@ oddyseyx86GPIO::~oddyseyx86GPIO()
 // Setter for Direction of flow sensor on Odyssey GPIO Pin
 // Writes "in" into a GPIO direction file while
 // reading input and "out" otherwise.
+
 DF_ERROR oddyseyx86GPIO::setPinAsInputElseOutput(bool input)
 {
         // debugOutput::sendMessage("oddyseyx86GPIO::setPinAsInputElseOutput ", MSG_INFO);

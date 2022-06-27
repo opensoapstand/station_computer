@@ -17,7 +17,7 @@
 #include "df_util.h"
 #include "page_select_product.h"
 #include "page_product.h"
-#include "pagepayment.h"
+#include "page_payment.h"
 #include "page_idle.h"
 
 
@@ -33,7 +33,17 @@ page_help::page_help(QWidget *parent) :
     ui->previousPage_Button_2->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    
+    // view transactions button
+    QFont font;
+    font.setFamily(QStringLiteral("Brevia"));
+    font.setPointSize(20);
+    // font.setBold(true);
+    // font.setWeight(75);
+    font.setWeight(50);
+    ui->transactions_Button->setStyleSheet("QPushButton { color:#003840; background-color: transparent; border: 0px }");
+    // ui->transactions_Button->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
+    ui->transactions_Button->setFont(font);
+    ui->transactions_Button->setText("Transaction History ->");
 
     helpIdleTimer = new QTimer(this);
     helpIdleTimer->setInterval(1000);
@@ -48,7 +58,7 @@ page_help::~page_help()
 
 void page_help::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< PPPage Enter: Help >>>>>>>>>";
+    qDebug() << "<<<<<<< Page Enter: Help >>>>>>>>>";
     QWidget::showEvent(event);
 
     // QPixmap background(PAGE_HELP_BACKGROUND_PATH);
@@ -73,12 +83,13 @@ void page_help::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference
  */
-void page_help::setPage(page_select_product *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, pagePayment *pagePayment)
+void page_help::setPage(page_select_product *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, page_payment *page_payment, page_transactions *pageTransactions)
 {
     this->p_page_idle = pageIdle;
-    this->paymentPage = pagePayment;
+    this->paymentPage = page_payment;
     this->selectPage = pageProduct;
     this->p_page_select_product = pageSelect;
+    this->p_page_transactions = pageTransactions;
 }
 
 void page_help::on_previousPage_Button_clicked(){
@@ -97,9 +108,9 @@ void page_help::on_previousPage_Button_2_clicked(){
 
 void page_help::onHelpTimeoutTick(){
     if(-- _helpIdleTimeoutSec >= 0) {
-//        qDebug() << "Help Tick Down: " << _helpIdleTimeoutSec << endl;
+       qDebug() << "Help Tick Down: " << _helpIdleTimeoutSec;
     } else {
-//        qDebug() << "Help Timer Done!" << _helpIdleTimeoutSec << endl;
+       qDebug() << "Help Timer Done!" << _helpIdleTimeoutSec;
 
         helpIdleTimer->stop();
         // qDebug() << "help to idle";
@@ -114,4 +125,11 @@ void page_help::onHelpTimeoutTick(){
 void page_help::on_refreshButton_clicked(){
     _helpIdleTimeoutSec = 60;
     ui->refreshLabel->hide();
+}
+
+void page_help::on_transactions_Button_clicked()
+{
+    helpIdleTimer->stop();
+    p_page_transactions->showFullScreen();
+    this->hide();
 }

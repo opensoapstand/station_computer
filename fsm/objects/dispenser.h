@@ -63,12 +63,14 @@ public:
 
       product *getProduct();
       DF_ERROR setProduct(product *product);
-
-      DF_ERROR setButtonsShutdownAndMaintenance();
+      string getFinalPLU(char size, double price);
+      DF_ERROR initButtonsShutdownAndMaintenance();
       DF_ERROR setSlot(int slot);
       int getSlot();
+
       DF_ERROR setPump(int mcpAddress, int pin, int position);
-      DF_ERROR setFlowsensor(int pinint, int pos);
+      DF_ERROR initFlowsensorIO(int pinint, int pos);
+      DF_ERROR initDispenseButton4Light();
 
       unsigned short getPumpSpeed();
       bool isPumpEnabled();
@@ -78,7 +80,8 @@ public:
       DF_ERROR setPumpEnable();
       DF_ERROR setPumpPWM(uint8_t value, bool enableLog);
       DF_ERROR preparePumpForDispenseTrigger();
-
+      void setMultiDispenseButtonLight(int slot, bool enableElseDisable);
+      void setAllDispenseButtonLightsOff();
       void reversePumpForSetTimeMillis(int millis);
 
 
@@ -88,16 +91,20 @@ public:
       DF_ERROR pumpSlowStopBlocking();
 
 
+      void addDispenseButtonPress();
       DF_ERROR startDispense();
       DF_ERROR initDispense(int nVolumeToDispense, double nPrice);
-      // DF_ERROR stopDispense();
+      DF_ERROR stopDispense();
       string getDispenseStartTime();
+      string getDispenseEndTime();
       Dispense_behaviour getDispenseStatus();
       bool getIsDispenseTargetReached();
 
       void subtractFromVolumeDispensed(double volume_to_distract);
       double getVolumeDispensed();
+      double getVolumeRemaining();
       void resetVolumeDispensed();
+      void initFlowRateCalculation();
       Time_val getVolumeDispensedNow();
       double getVolumeDeltaAndReset();
 
@@ -111,6 +118,7 @@ public:
       bool getDispenseButtonEdgePositive();
       void dispenseButtonTimingreset();
       void dispenseButtonTimingUpdate();
+      int getDispenseButtonPressesDuringDispensing();
       uint64_t getButtonPressedTotalMillis();
       uint64_t getButtonPressedCurrentPressMillis();
 
@@ -126,7 +134,13 @@ public:
       // double getVolumeSinceLastPoll();
       // bool registerFlowSensorTick();
 
+      DF_ERROR loadGeneralProperties();
+
+      void loadMultiDispenseButtonEnabledFromDb();
+      bool getMultiDispenseButtonEnabled();
       void loadEmptyContainerDetectionEnabledFromDb();
+      void loadPumpReversalEnabledFromDb();
+      bool getPumpReversalEnabled();
       void loadPumpRampingEnabledFromDb();
       bool getEmptyContainerDetectionEnabled();
       bool getPumpSlowStartStopEnabled();
@@ -135,6 +149,7 @@ public:
 
       bool getIsStatusUpdateAllowed();
 
+      static dsed8344 *the_8344;
 private:
       bool dispenseButtonValueMemory;
       bool dispenseButtonValueEdgePositive;
@@ -147,6 +162,7 @@ private:
       double m_nTickCount;
       double m_nVolumeTarget;
       char m_nStartTime[50];
+      char m_nEndTime[50];
 
       double m_price;
 
@@ -159,7 +175,6 @@ private:
       // We only want to create one instance of the class that controls
       // the actual hardware, so declare this static.
 
-      static dsed8344 *the_8344;
 
       uint64_t dispense_cycle_pump_running_time_millis;
       uint64_t dispense_start_timestamp_epoch;
@@ -167,6 +182,8 @@ private:
       uint64_t dispense_button_time_at_last_check_epoch;
       uint64_t dispense_button_total_pressed_millis; // culmination of all button press times
       uint64_t dispense_button_current_press_millis; // time of this single press
+
+      int dispense_button_press_count_during_dispensing;
 
       uint64_t previous_status_update_allowed_epoch;
 
@@ -186,9 +203,11 @@ private:
 
       bool m_isEmptyContainerDetectionEnabled = false;
       bool m_isPumpSlowStartStopEnabled = false;
+      bool m_isPumpReversalEnabled = false;
+      bool m_isMultiButtonEnabled = false;
 
       // bool m_isDispenseDone; // XXX: Remove later.
-      bool m_isStill;
+      // bool m_isStill;
 
       bool m_isPumpEnabled;
       bool *m_pIsDispensing;
@@ -204,12 +223,13 @@ private:
 
       // Pointers to Addresses set in State Init
 
-      gpio *m_pSolenoid[NUM_SOLENOID]; // air,product, and water solenoid control
+      // gpio *m_pSolenoid[NUM_SOLENOID]; // air,product, and water solenoid control
       gpio *m_pFlowsenor[NUM_FLOWSENSOR];
-      gpio *m_pPump[NUM_PUMP]; // forward and reverse pin control
-      gpio *m_pPowerOff[1];
-      gpio *m_pMM[1];
-      gpio *m_pPWRorMM[1];
+      // gpio *m_pPump[NUM_PUMP]; // forward and reverse pin control
+      gpio *m_pButtonPowerOff[1];
+      gpio *m_pButtonDisplayMaintenanceMode[1];
+      gpio *m_pPowerOffOrMaintenanceModeButtonPressed[1];
+      gpio *m_pDispenseButton4[1];
 
       // Button reference m_pButton[1] in stateVirtual; IPC shared due to Arduino!
       gpio *m_pButton[NUM_BUTTON];

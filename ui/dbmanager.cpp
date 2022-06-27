@@ -419,16 +419,17 @@ uint32_t DbManager::getNumberOfRows(QString table)
     return row_count;
 }
 
-bool DbManager::isProductVolumeInContainer(int slot){
-    if (getEmptyContainerDetectionEnabled()){
+bool DbManager::isProductVolumeInContainer(int slot)
+{
+    if (getEmptyContainerDetectionEnabled())
+    {
         return getVolumeRemaining(slot) > 0;
-
-    }else{
+    }
+    else
+    {
         return getVolumeRemaining(slot) > getProductVolume(slot, 'l');
-
     }
 }
-
 
 // bool DbManager::remainingVolumeIsBiggerThanLargestFixedSize(int slot)
 // {
@@ -749,12 +750,42 @@ QString DbManager::getStatusText(int slot)
     return val;
 }
 
+bool DbManager::getRecentTransactions(QString values[][5], int count, int* count_retreived)
+{
+    // get number of most recent transactions
+    QSqlQuery qry;
+    // bool is_enabled;
+    {
+        // std::string sql_statement =  "SELECT id,end_time,quantity_dispensed,price,product FROM transactions ORDER BY id DESC LIMIT " + to_string(count);
+        // qry.prepare(sql_statement.c_str());
+        // qry.prepare(sql_statement.c_str());
+
+        qry.prepare("SELECT id,end_time,quantity_dispensed,price,product FROM transactions ORDER BY id DESC LIMIT :count");
+        qry.bindValue(":count", count);
+
+         qDebug() << " db retreive transactions: " << count;
+        qry.exec();
+        int i = 0;
+        while (qry.next())
+        {
+            for (uint8_t j = 0; j < 5; j++)
+            {
+                values[i][j] = qry.value(j).toString();
+                 qDebug() << "db bdafes: " << i  << " : " << values[i][j];
+            }
+            i++;
+            *count_retreived = i;
+        }
+    }
+    return true;
+}
+
 bool DbManager::getPumpRampingEnabled()
 {
     QSqlQuery qry;
     bool is_enabled;
     {
-        qry.prepare("SELECT has_pump_ramping FROM machine");
+        qry.prepare("SELECT enable_pump_ramping FROM machine");
         qry.exec();
 
         while (qry.next())
@@ -770,7 +801,7 @@ bool DbManager::setPumpRampingEnabled(int isEnabled)
     QSqlQuery qry;
     bool enabled;
 
-    QString qry_qstr = QString("UPDATE machine SET has_pump_ramping=%1").arg(QString::number(isEnabled));
+    QString qry_qstr = QString("UPDATE machine SET enable_pump_ramping=%1").arg(QString::number(isEnabled));
     string qry_string = qry_qstr.toUtf8().constData(); // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
     qry.prepare(qry_string.c_str());
     qry.exec();
@@ -1456,11 +1487,10 @@ bool DbManager::updatePluLarge(int slot, QString new_plu)
     }
 }
 
-
 bool DbManager::hasReceiptPrinter()
 {
     QSqlQuery qry;
-    bool  is_enabled;
+    bool is_enabled;
 
     {
         qry.prepare("SELECT has_receipt_printer FROM machine");
@@ -1508,8 +1538,6 @@ QString DbManager::getProductType(int slot)
         while (product_type_query.next())
         {
             product_type_string = product_type_query.value(0).toString();
-
-            // qDebug() << "Product: " << product_name << endl;
         }
     }
     return product_type_string;

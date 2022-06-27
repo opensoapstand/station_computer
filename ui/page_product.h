@@ -23,7 +23,7 @@
 #include "page_help.h"
 
 class page_select_product;
-class pagePayment;
+class page_payment;
 class page_idle;
 class page_dispenser;
 class page_error_wifi;
@@ -45,7 +45,7 @@ public:
     QLabel *orderSizeBackgroundLabels[4];
 
     explicit pageProduct(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, pagePayment *pagePayment, page_help *pageHelp);
+    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_payment *page_payment, page_help *pageHelp);
     ~pageProduct();
 
     void resizeEvent(QResizeEvent *event);
@@ -66,7 +66,7 @@ signals:
 private slots:
     // **** Navigation ****
     void on_previousPage_Button_clicked();
-    void on_pagePayment_Button_clicked();
+    void on_page_payment_Button_clicked();
     void on_applyPromo_Button_clicked();
     void on_promoCodeInput_clicked();
 
@@ -94,7 +94,7 @@ private:
     std::string readBuffer;
     Ui::pageProduct *ui;
     page_select_product *p_page_select_product;
-    pagePayment *paymentPage;
+    page_payment *paymentPage;
     page_idle *p_page_idle;
     page_dispenser *p_page_dispense;
     page_error_wifi *wifiError;

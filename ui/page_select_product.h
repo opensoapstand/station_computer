@@ -86,6 +86,9 @@ private:
     page_help* helpPage;
 
     int maintenanceCounter;
+
+    DrinkOrder *selectedProductOrder;
+
 };
 
 #endif // page_select_product_H

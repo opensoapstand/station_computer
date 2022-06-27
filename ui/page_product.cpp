@@ -21,7 +21,7 @@
 #include <string>
 #include <cmath>
 
-#include "pagepayment.h"
+#include "page_payment.h"
 #include "page_select_product.h"
 #include "page_idle.h"
 #include <curl/curl.h>
@@ -35,6 +35,12 @@ uint16_t orderSizeButtons_xywh_dynamic_ui_all_sizes_available[4][4] = {
     {706, 990, 135, 100}, // M
     {852, 990, 135, 100}, // L
     {560, 1100, 430, 115} // custom
+};
+uint16_t orderSizeButtons_xywh_dynamic_ui_small_available[4][4] = {
+    {564, 1088, 209, 126}, // S
+    {1, 1, 1, 1},          // M
+    {1, 1, 1, 1},          // L
+    {1, 1, 1, 1}           // custom
 };
 uint16_t orderSizeButtons_xywh_dynamic_ui_small_and_large_available[4][4] = {
     {564, 1088, 209, 126}, // S
@@ -82,6 +88,12 @@ uint16_t orderSizePriceLabels_xy_dynamic_ui_small_large_custom_available[8][2] =
     {560, 1160}  // custom price
 };
 
+uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_available[8][2] = {
+    {605, 1110}, // S vol
+    {1, 1},      // M vol
+    {1, 1},      // L vol
+    {1, 1}       // custom col
+};
 uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_and_large_available[8][2] = {
     {605, 1110}, // S vol
     {1, 1},      // M vol
@@ -92,6 +104,12 @@ uint16_t orderSizePriceLabels_xy_dynamic_ui_small_and_large_available[8][2] = {
     {605, 1150}, // S price
     {1, 1},      // M price
     {825, 1150}, // L price
+    {1, 1}       // custom price
+};
+uint16_t orderSizePriceLabels_xy_dynamic_ui_small_available[8][2] = {
+    {605, 1150}, // S price
+    {1, 1},      // M price
+    {1, 1},      // L price
     {1, 1}       // custom price
 };
 
@@ -122,7 +140,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
     orderSizeBackgroundLabels[3] = ui->label_background_custom;
 
     ui->promoInputButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->promoCode->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->promoCodeTextbox->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->promoButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     QString css_title = "QLabel{"
@@ -199,16 +217,13 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
                                 "}";
     ui->label_invoice_discount_name->setStyleSheet(css_discount_name);
     ui->label_invoice_discount_name->hide();
-
     ui->label_invoice_discount_amount->hide();
 
-    ui->promoCode->clear();
-    ui->promoCode->hide();
+    ui->promoCodeTextbox->clear();
+    ui->promoCodeTextbox->hide();
     ui->promoKeyboard->hide();
-   
 
     couponHandler();
-    qDebug() << "9999999999";
 
     {
         selectIdleTimer = new QTimer(this);
@@ -223,26 +238,23 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, pagePayment *pagePayment, page_help *pageHelp)
+void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_payment *page_payment, page_help *pageHelp)
 {
     this->p_page_select_product = pageSelect;
-    this->paymentPage = pagePayment;
+    this->paymentPage = page_payment;
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
     this->helpPage = pageHelp;
     this->wifiError = pageWifiError;
 
-    ui->promoCode->clear();
-    ui->promoCode->hide();
+    ui->promoCodeTextbox->clear();
+    ui->promoCodeTextbox->hide();
     ui->label_invoice_discount_amount->hide();
     ui->label_invoice_discount_name->hide();
 
     selectedProductOrder = p_page_idle->currentProductOrder;
 
-    // setDefaultSize();
-
     couponHandler();
-    qDebug() << "6666666";
 }
 
 // DTOR
@@ -261,7 +273,7 @@ void pageProduct::setDefaultSize()
         int size = product_sizes[i];
         if (selectedProductOrder->getLoadedProductSizeEnabled(size))
         {
-            selectedProductOrder->setSelectedSize(size); // default size
+            selectedProductOrder->setSelectedSize(product_sizes[i]);
         }
     }
 }
@@ -277,8 +289,10 @@ void pageProduct::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: Product >>>>>>>>>";
     QWidget::showEvent(event);
+    selectedProductOrder->loadSelectedProductProperties();
     setDefaultSize();
     loadOrderSelectedSize();
+
     reset_and_show_page_elements();
 }
 
@@ -290,8 +304,9 @@ void pageProduct::showEvent(QShowEvent *event)
 void pageProduct::resizeEvent(QResizeEvent *event)
 {
     qDebug() << "\n---Page_product: resizeEvent";
-    QWidget::resizeEvent(event);
-    reset_and_show_page_elements();
+    // QWidget::resizeEvent(event);
+    // selectedProductOrder->loadSelectedProductProperties();
+    // reset_and_show_page_elements();
 }
 
 void pageProduct::onSelectTimeoutTick()
@@ -311,8 +326,6 @@ void pageProduct::onSelectTimeoutTick()
 
 void pageProduct::reset_and_show_page_elements()
 {
-
-    selectedProductOrder->loadSelectedProductProperties();
 
 #ifdef ENABLE_DYNAMIC_UI
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_PRODUCT_BACKGROUND_PATH);
@@ -337,29 +350,42 @@ void pageProduct::reset_and_show_page_elements()
     uint16_t(*xywh_size_buttons)[4];
     uint16_t(*xy_size_labels_volume)[2];
     uint16_t(*xy_size_labels_price)[2];
+
+    // create signature by sizes availability
     for (uint8_t i = 0; i < 4; i++)
     {
         available_sizes_signature |= selectedProductOrder->getLoadedProductSizeEnabled(product_sizes[i]) << i;
     }
 
-    if (available_sizes_signature == 5) //10
-    { 
+    if (available_sizes_signature == 1)
+    {
+        // only small available
+        xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_small_available;
+        xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_small_available;
+        xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_small_and_large_available;
+    }
+    else if (available_sizes_signature == 5)
+    {
         // only small and large available
         xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_small_and_large_available;
         xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_small_and_large_available;
         xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_small_and_large_available;
     }
-    else if (available_sizes_signature == 13) //26
+    else if (available_sizes_signature == 13)
     {
         xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_small_large_custom_available;
         xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_small_large_custom_available;
         xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_small_large_custom_available;
     }
-    else
+    else if (available_sizes_signature == 15)
     {
         xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_all_sizes_available;
         xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_all_sizes_available;
         xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_all_sizes_available;
+    }
+    else
+    {
+        qDebug() << "ERROR: Product signature SIZES not available (limited combinations of size buttons available to be set in database) signature: " << available_sizes_signature;
     }
 
     for (uint8_t i = 0; i < 4; i++)
@@ -424,7 +450,7 @@ void pageProduct::reset_and_show_page_elements()
     // ordersize buttons
     /* Hacky transparent button */
     ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->pagePayment_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->page_payment_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     QString keyboard = KEYBOARD_IMAGE_PATH;
@@ -459,12 +485,16 @@ void pageProduct::loadOrderSelectedSize()
     {
         orderSizeLabelsPrice[i]->hide();
         orderSizeLabelsVolume[i]->hide();
+        orderSizeBackgroundLabels[i]->hide();
+        orderSizeButtons[i]->hide();
 
         if (selectedProductOrder->getLoadedProductSizeEnabled(product_sizes[i]))
         {
 
             orderSizeLabelsPrice[i]->show();
             orderSizeLabelsVolume[i]->show();
+            orderSizeBackgroundLabels[i]->show();
+            orderSizeButtons[i]->show();
             orderSizeLabelsVolume[i]->setStyleSheet("QLabel {font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: normal; font-size: 24px; line-height: 44px; color: #5E8580;}");
             orderSizeLabelsPrice[i]->setStyleSheet("QLabel {font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;}");
             orderSizeBackgroundLabels[i]->setStyleSheet("QLabel { background-color: #FFFFFF; border: 0px }");
@@ -509,8 +539,10 @@ void pageProduct::loadOrderSelectedSize()
                 orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i], true, true));
             }
 
+            // selected size styling
             if (selectedProductOrder->getSelectedSize() == product_sizes[i])
             {
+
                 orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 1px  solid #3D6675; }");
                 orderSizeLabelsVolume[i]->setStyleSheet("QLabel { font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: normal; font-size: 24px; line-height: 44px; color: #FFFFFF; }");
                 orderSizeLabelsPrice[i]->setStyleSheet("QLabel {font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #FFFFFF;}");
@@ -520,8 +552,8 @@ void pageProduct::loadOrderSelectedSize()
         }
     }
 
-    ui->promoCode->clear();
-    ui->promoCode->hide();
+    ui->promoCodeTextbox->clear();
+    ui->promoCodeTextbox->hide();
 
     if (selectedProductOrder->getDiscountPercentageFraction() > 0.0)
     {
@@ -695,8 +727,8 @@ void pageProduct::loadOrderSelectedSize()
     //     "text-align: center;\n"
     //     ""));
 
-    ui->promoCode->clear();
-    ui->promoCode->hide();
+    ui->promoCodeTextbox->clear();
+    ui->promoCodeTextbox->hide();
 
     if (selectedProductOrder->getDiscountPercentageFraction() > 0.0)
     {
@@ -807,7 +839,7 @@ size_t WriteCallback_coupon(char *contents, size_t size, size_t nmemb, void *use
 void pageProduct::on_applyPromo_Button_clicked()
 {
 
-    QString promocode = ui->promoCode->text();
+    QString promocode = ui->promoCodeTextbox->text();
     ui->promoKeyboard->hide();
 
     CURL *curl;
@@ -830,7 +862,7 @@ void pageProduct::on_applyPromo_Button_clicked()
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
         if (res != CURLE_OK)
         {
-            ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
+            ui->promoCodeTextbox->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
             qDebug() << "Invalid Coupon curl problem. error code: " << res;
         }
         else
@@ -851,13 +883,13 @@ void pageProduct::on_applyPromo_Button_clicked()
                 else
                 {
                     qDebug() << "Invalid Coupon";
-                    ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #75756f;border-color:#f44336;");
+                    ui->promoCodeTextbox->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #75756f;border-color:#f44336;");
                 }
             }
             else
             {
                 qDebug() << "Invalid Coupon http 200 response";
-                ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
+                ui->promoCodeTextbox->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
             }
         }
     }
@@ -871,23 +903,23 @@ void pageProduct::keyboardButtonPressed(int buttonID)
 
     if (buttonText == "backspace")
     {
-        ui->promoCode->backspace();
+        ui->promoCodeTextbox->backspace();
     }
     else if (buttonText == "done")
     {
-        if (ui->promoCode->text() == "")
+        if (ui->promoCodeTextbox->text() == "")
         {
-            ui->promoCode->hide();
+            ui->promoCodeTextbox->hide();
         }
         ui->promoKeyboard->hide();
     }
     else if (buttonText.mid(0, 3) == "num")
     {
-        ui->promoCode->setText(ui->promoCode->text() + buttonText.mid(3, 1));
+        ui->promoCodeTextbox->setText(ui->promoCodeTextbox->text() + buttonText.mid(3, 1));
     }
     else
     {
-        ui->promoCode->setText(ui->promoCode->text() + buttonText);
+        ui->promoCodeTextbox->setText(ui->promoCodeTextbox->text() + buttonText);
     }
 }
 void pageProduct::on_previousPage_Button_clicked()
@@ -913,7 +945,7 @@ void pageProduct::on_previousPage_Button_clicked()
 
 void pageProduct::coupon_disable()
 {
-    ui->promoCode->hide();
+    ui->promoCodeTextbox->hide();
     ui->promoKeyboard->hide();
     ui->promoInputButton->hide();
     ui->label_invoice_discount_amount->hide();
@@ -923,21 +955,24 @@ void pageProduct::coupon_disable()
 void pageProduct::coupon_input_show()
 {
 }
+
 void pageProduct::coupon_input_hide()
 {
     ui->promoKeyboard->hide();
 }
+
 void pageProduct::coupon_input_reset()
 {
 }
+
 void pageProduct::on_promoCodeInput_clicked()
 {
     QObject *button = QObject::sender();
-    ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
+    ui->promoCodeTextbox->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
     // ui->promoInputButton->hide();
     ui->promoKeyboard->show();
     qDebug() << "show promo keyboard.";
-    ui->promoCode->show();
+    ui->promoCodeTextbox->show();
 }
 void pageProduct::couponHandler()
 {
@@ -952,7 +987,6 @@ void pageProduct::couponHandler()
         qDebug() << "Coupons are enabled for this machine.";
         ui->promoInputButton->show();
         ui->promoInputButton->setEnabled(true);
-        
     }
     else
     {
@@ -962,7 +996,7 @@ void pageProduct::couponHandler()
     }
 }
 
-void pageProduct::on_pagePayment_Button_clicked()
+void pageProduct::on_page_payment_Button_clicked()
 {
     qDebug() << "pageProduct: Pay button";
 

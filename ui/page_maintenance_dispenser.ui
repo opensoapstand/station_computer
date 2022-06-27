@@ -661,7 +661,7 @@
     <rect>
      <x>40</x>
      <y>1130</y>
-     <width>191</width>
+     <width>341</width>
      <height>20</height>
     </rect>
    </property>
@@ -782,8 +782,8 @@
   <widget class="QSlider" name="pwmSlider">
    <property name="geometry">
     <rect>
-     <x>520</x>
-     <y>1130</y>
+     <x>610</x>
+     <y>1140</y>
      <width>31</width>
      <height>381</height>
     </rect>
@@ -826,6 +826,45 @@ last restock</string>
    </property>
    <property name="text">
     <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="autoDispenseSmallButton">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>1240</y>
+     <width>191</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Auto Dispense Small </string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="autoDispenseMedium">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>1240</y>
+     <width>191</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Auto Dispense Medium</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="autoDispenseLarge">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>1240</y>
+     <width>191</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Auto Dispense Large </string>
    </property>
   </widget>
  </widget>

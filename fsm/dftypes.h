@@ -18,13 +18,13 @@
 #include <sqlite3.h>
 #include <stdint.h>
 
-#define CONTROLLER_VERSION "1.0.4+fridge"
+#define CONTROLLER_VERSION "1.0.8+"
 
 #define PRODUCT_DISPENSERS_MAX 4
 #define MINIMUM_DISPENSE_VOLUME_ML 10
 // #define USE_OLD_DATABASE
 #define ENABLE_TRANSACTION_TO_CLOUD
-// #define ENABLE_PUMP_RETRACT
+//#define ENABLE_MULTI_BUTTON
 
 #ifdef USE_OLD_DATABASE
 #define DB_PATH "/home/df-admin/production/db/drinkfill-sqlite.db"
@@ -34,6 +34,8 @@
 #define DB_PATH "/home/df-admin/production/db/drinkfill-sqlite_newlayout.db"
 #endif
 
+#define MOTOR_TEST_DATA_OUTPUT_INTERVAL_MILLIS 1000
+// #define MOTOR_TEST_DATA_OUTPUT_INTERVAL_MILLIS 1000
 #define CYCLIC_PUMP_TEST_ON_CYCLE_MILLIS 30000
 #define CYCLIC_PUMP_TEST_OFF_CYCLE_MILLIS 30000
 
@@ -42,8 +44,10 @@
 #define IO_PIN_BUTTON_SHUTDOWN 341
 #define IO_PIN_BUTTON_MAINTENANCE_SHUTDOWN_EDGE_DETECTOR 391
 #define IO_PIN_FLOW_SENSOR 364
+#define IO_PIN_BUTTON_4 410
+
 // #define IO_PIN_FLOW_SENSOR_STRING "364"
-#define RUNNING_AVERAGE_WINDOW_LENGTH 100
+#define RUNNING_AVERAGE_WINDOW_LENGTH 10000
 #define DISPENSE_BUTTON_DEBOUNCE_MILLIS 50
 
 #define SLOW_START_INCREASE_PERIOD_MILLIS 2 // set to 0 for instant start
@@ -70,6 +74,7 @@
 #define SIZE_LARGE_CHAR 'l'
 #define SIZE_CUSTOM_CHAR 'c'
 #define SIZE_TEST_CHAR 't'
+#define SIZE_AUTO_CHAR 'a'
 #define SIZE_DUMMY 'x'
 #define SIZE_SMALLER_THAN_SMALL '0'
 #define SIZE_EMPTY_CONTAINER_DETECTED_CHAR 'i' // hack to accomodate for empty container or dispense timeout

@@ -15,7 +15,7 @@ def convertStringToDictionary(stringObj):
 
 #Declare file name
 filename = 'logging/transactions/missingTransactions.txt'
-url = 'https://soapstandportal.com/api/machine_data/pushPrinterOrder'
+url = 'https://soapstandportal.com/api/order/addMissingTransactions'
 pingUrl = 'https://soapstandportal.com/api/machine_data/ping'
 
 def pushTransaction():
@@ -27,9 +27,7 @@ def pushTransaction():
             if transaction:
                 x = requests.post(url, transaction)
                 if x.text:
-                    transactions.pop()
-                else:
-                    break
+                    transactions.pop(0)
 
     #Empty the file if all the records are successful
     open(filename,'w').close()

@@ -38,11 +38,11 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void pagethankyou::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, pagePayment *pagePayment)
+void pagethankyou::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, page_payment *page_payment)
 {
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
-    this->paymentPage = pagePayment;
+    this->paymentPage = page_payment;
 }
 
 // DTOR
@@ -95,7 +95,7 @@ void pagethankyou::showEvent(QShowEvent *event)
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_THANK_YOU_BACKGROUND_PATH);
 
-    qDebug() << "ahoyy24";
+    qDebug() << "db open24";
     DbManager db(DB_PATH);
     QString paymentMethod = db.getPaymentMethod(p_page_idle->currentProductOrder->getSelectedSlot());
     bool hasReceiptPrinter = db.hasReceiptPrinter();

@@ -24,7 +24,7 @@
 #include "pagethankyou.h"
 
 
-class pagePayment;
+class page_payment;
 class pagethankyou;
 class page_idle;
 
@@ -39,9 +39,10 @@ class page_error_wifi : public QWidget
 public:
     // **** GUI ****
     explicit page_error_wifi(QWidget *parent = nullptr);
-    void setPage(pagePayment* pagePayment, pagethankyou* pageThankYou, page_idle* pageIdle);
+    void setPage(page_payment* page_payment, pagethankyou* pageThankYou, page_idle* pageIdle);
     ~page_error_wifi();
     void showEvent(QShowEvent *event);
+    void exit_page();
     // void fsmReceiveTargetVolumeReached();
 
 public slots:
@@ -55,7 +56,7 @@ private slots:
 private:
     // **** GUI *****
     Ui::page_error_wifi *ui;
-    pagePayment* paymentPage;
+    page_payment* paymentPage;
     pagethankyou* thanksPage;
     page_idle* p_page_idle;
 

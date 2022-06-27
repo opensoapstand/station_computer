@@ -8,9 +8,9 @@
 
 # -----------------------------------
 # DO NOT ADD SPACES TO THE ELEMENTS, it causes a mess when looping over it (treats space as array delimiter in some cases).#
-station_descriptions=("SS-DEV-LODE" "SS-DEV-ASH" "SS-0000003" "SS-0000004" "EEFC" "UBC" "Ruddy" "Re-Up" "SS-0000009" "Pomme" "Petros11" "Petros12" "Petros13" "Petros14" "SS-0000015" "SS-0000016" "SS-0000017" "Choices" "Stongs" "FamousFoods" "SS-0000021" "Nada" "Petros23" "Petros24" "Petros25" "Petros26");
-station_ids=("SS-DEV-LODE" "SS-DEV-003" "SS-0000003" "SS-0000004" "SS-0000005" "SS-0000006" "SS-0000007" "SS-0000008" "SS-0000009" "SS-0000010" "SS-0000011" "SS-0000012" "SS-0000013" "SS-0000014" "SS-0000015" "SS-0000016" "SS-0000017" "SS-0000018" "SS-0000019" "SS-0000020" "SS-0000021" "SS-0000022" "SS-0000023" "SS-0000024" "SS-0000025" "SS-0000026");
-station_ports=("44444" "43081" "43003" "43004" "43005" "43006" "43007" "43008" "43009" "43010" "43011" "43012" "43013" "43014" "43015" "43016" "43017" "43018" "43019" "43020" "43021" "43022" "43023" "43024" "43025" "43026");
+station_descriptions=("SS-DEV-LODE" "SS-DEV-ASH" "SS-DEV-SHOP" "SS-DEV-SHOPFRAME" "EEFC" "UBC" "Ruddy" "Re-Up" "SS-0000009" "Pomme" "Petros11" "Petros12" "Petros13" "Petros14" "SS-0000015" "SS-0000016" "SS-0000017" "Choices" "Stongs" "FamousFoods" "SS-0000021" "Nada" "Petros23" "Petros24" "Petros25" "Petros26");
+station_ids=("SS-DEV-LODE" "SS-DEV-ASH" "SS-DEV-SHOP" "SS-DEV-SHOPFRAME" "SS-0000005" "SS-0000006" "SS-0000007" "SS-0000008" "SS-0000009" "SS-0000010" "SS-0000011" "SS-0000012" "SS-0000013" "SS-0000014" "SS-0000015" "SS-0000016" "SS-0000017" "SS-0000018" "SS-0000019" "SS-0000020" "SS-0000021" "SS-0000022" "SS-0000023" "SS-0000024" "SS-0000025" "SS-0000026");
+station_ports=("44444" "43081" "44001" "44003" "43005" "43006" "43007" "43008" "43009" "43010" "43011" "43012" "43013" "43014" "43015" "43016" "43017" "43018" "43019" "43020" "43021" "43022" "43023" "43024" "43025" "43026");
 # -----------------------------------
 
 # https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_10_02.html
@@ -109,6 +109,31 @@ ssh_into_station () {
     "${cmd[@]}"
 }
 
+scp_aws_transfer(){
+    echo "Choose destination station:"
+    get_choice_from_names
+    choice_index=$?
+    destination_id="${station_ids[$choice_index]}"
+    destination_description="${station_descriptions[$choice_index]}"
+    destination_port="${station_ports[$choice_index]}"
+
+    read -e -p "Enter filename (like in normal terminal. e.g. use tab for completion): " file
+    ls -l "$file"
+    full_path="/home/ubuntu"/"$file"
+    echo full_path
+    # cd /home/df-admin/Downloads
+    # scp -r -i DrinkfillAWS.pem "$full_path" ubuntu@ec2-44-225-153-121.us-west-2.compute.amazonaws.com:/home/ubuntu
+    
+    cmd0=(scp -r -P $destination_port "$full_path"  df-admin@localhost:/home/df-admin) 
+    printf -v cmd0_str '%q ' "${cmd0[@]}"
+    
+    # confirm_execute "$cmd_str"
+    echo "Lined up commands: "
+    echo "$cmd0_str"
+    continu_or_exit
+    "${cmd0[@]}"
+}
+
 scp_transfer () {
     # arg $1 : source folder. "" is home folder, "production/" is production folder
     # arg $2 : destination folder. "" is home folder, "production/" is production folder
@@ -133,17 +158,31 @@ scp_transfer () {
     read -p "Enter file/folder name will append to /home/df-admin/production/" path
 
     full_source_path="/home/df-admin/$1$path"
-    full_destination_path="/home/df-admin/$2"
+
+    # check for empty (which is home folder, in that case, we create a folder with the id of the source)
+    if [ -z "$2" ]
+    then
+        
+        cmd0=(ssh -p $destination_port df-admin@localhost mkdir $source_id) 
+        full_destination_path="/home/df-admin/$source_id/"
+    else
+        
+        cmd0=""
+        full_destination_path="/home/df-admin/$2"
+    fi
+
     aws_station_path="/home/ubuntu/Stations/$source_id"
     aws_file_path="/home/ubuntu/Stations/$source_id/$path"
 
     cmd1=( scp -r -P $source_port df-admin@localhost:$full_source_path $aws_station_path )
     cmd2=( scp -r -P $destination_port $aws_file_path df-admin@localhost:$full_destination_path )
+    printf -v cmd0_str '%q ' "${cmd0[@]}"
     printf -v cmd1_str '%q ' "${cmd1[@]}"
     printf -v cmd2_str '%q ' "${cmd2[@]}"
     
     # confirm_execute "$cmd_str"
     echo "Lined up commands: "
+    echo "$cmd0_str"
     echo "$cmd1_str"
     echo "$cmd2_str"
     
@@ -152,9 +191,11 @@ scp_transfer () {
         mv -r "$aws_file_path" "$aws_file_path_bkp"
         echo "Backup made in AWS ($aws_file_path)"
     fi
+    "${cmd0[@]}"
     "${cmd1[@]}"
-    echo "part 1 done"
+    echo "station to AWS done"
     "${cmd2[@]}"
+    echo "AWS to station done"
 }
 
 
@@ -170,30 +211,32 @@ scp_transfer_db () {
     # echo $choice_index
 
     # menu index is linked to station number
-    station_number=$(($choice_index + 1))
+    # station_number=$(($choice_index + 1))
     # echo $station_number
 
-    station_name=$(printf "SS-%07d" $station_number)
+    station_id="${station_ids[$choice_index]}"
+   
     # echo $station_name
-    port=$(printf "43%03d" $station_number)
+    # port=$(printf "43%03d" $station_number)
+    port="${station_ports[$choice_index]}"
     # echo $port
 
     if [[ $1 = "to_aws" ]]
     then
         # run command https://stackoverflow.com/questions/2005192/how-to-execute-a-bash-command-stored-as-a-string-with-quotes-and-asterisk
-        cmd=( scp -P $port df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout.db Stations/$station_name )
+        cmd=( scp -P $port df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout.db Stations/$station_id )
         printf -v cmd_str '%q ' "${cmd[@]}"
         echo "Lined up command: "
         echo "$cmd_str"
         continu_or_exit
-        mv Stations/$station_name/drinkfill-sqlite_newlayout.db Stations/$station_name/drinkfill-sqlite_newlayout_bkp.db
+        mv Stations/$station_id/drinkfill-sqlite_newlayout.db Stations/$station_id/drinkfill-sqlite_newlayout_bkp.db
         # printf -v cmd_str '%q ' "${cmd[@]}"
         "${cmd[@]}"
        
     elif [[ $1 = "to_unit" ]]
     then
         # run command https://stackoverflow.com/questions/2005192/how-to-execute-a-bash-command-stored-as-a-string-with-quotes-and-asterisk
-        cmd=( scp -P $port Stations/$station_name/drinkfill-sqlite_newlayout.db df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout.db )
+        cmd=( scp -P $port Stations/$station_id/drinkfill-sqlite_newlayout.db df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout.db )
         printf -v cmd_str '%q ' "${cmd[@]}"
         echo "Lined up command: "        
         echo "$cmd_str"
@@ -206,7 +249,7 @@ scp_transfer_db () {
     then
         # run command https://stackoverflow.com/questions/2005192/how-to-execute-a-bash-command-stored-as-a-string-with-quotes-and-asterisk
         cmd1=( scp -P $port df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout.db Stations/$2/drinkfill-sqlite_newlayout_fromUnit.db )
-        cmd2=( scp -P $3 Stations/$2/drinkfill-sqlite_newlayout_fromUnit.db df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout_$station_name.db )
+        cmd2=( scp -P $3 Stations/$2/drinkfill-sqlite_newlayout_fromUnit.db df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout_$station_id.db )
         printf -v cmd1_str '%q ' "${cmd1[@]}"
         printf -v cmd2_str '%q ' "${cmd2[@]}"
         
@@ -223,7 +266,7 @@ scp_transfer_db () {
     elif [[ $1 = "from_dev" ]]
     then
         # run command https://stackoverflow.com/questions/2005192/how-to-execute-a-bash-command-stored-as-a-string-with-quotes-and-asterisk
-        cmd1=( scp -P $3 df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout_$station_name.db Stations/$2/drinkfill-sqlite_newlayout_toUnit.db )
+        cmd1=( scp -P $3 df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout_$station_id.db Stations/$2/drinkfill-sqlite_newlayout_toUnit.db )
         cmd2=( scp -P $port Stations/$2/drinkfill-sqlite_newlayout_toUnit.db df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout.db )
         printf -v cmd1_str '%q ' "${cmd1[@]}"
         printf -v cmd2_str '%q ' "${cmd2[@]}"
@@ -246,7 +289,7 @@ scp_transfer_db () {
 
 echo 'At AWS: Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 PS3='Choose option(digit + enter):'
-options=("Station log in" "Show Station Descriptions" "Stations status" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Quit")
+options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -274,6 +317,9 @@ do
             ;;
         "Station/home/x to Station/home/x")
             scp_transfer "" ""
+            ;;
+        "AWS to Station/home/x")
+            scp_aws_transfer
             ;;
         "Station to AWS DB")
             scp_transfer_db "to_aws"

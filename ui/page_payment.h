@@ -1,6 +1,6 @@
 //***************************************
 //
-// pagepayment.h
+// page_payment.h
 // GUI class while machine is processing
 // payment.
 //
@@ -14,8 +14,8 @@
 // all rights reserved
 //***************************************
 
-#ifndef PAGEPAYMENT_H
-#define PAGEPAYMENT_H
+#ifndef PAGE_PAYMENT_H
+#define PAGE_PAYMENT_H
 
 #include "df_util.h"
 #include "drinkorder.h"
@@ -38,6 +38,8 @@
 #include <vector>
 #include <QPainter>
 #include <QUuid>
+
+#include <QMovie>
 #include <curl/curl.h>
 
 class pageProduct;
@@ -46,27 +48,34 @@ class page_idle;
 class page_help;
 
 namespace Ui {
-class pagePayment;
+class page_payment;
 }
+
+typedef enum StatePayment{
+    s_init,
+    s_payment_processing,
+    s_payment_done
+}StatePayment;
 
 using namespace std;
 using namespace qrcodegen;
 
-class pagePayment : public QWidget
+class page_payment : public QWidget
 {
     Q_OBJECT
 
 public:
     // **** GUI Setup ****
-    explicit pagePayment(QWidget *parent = nullptr);
+    explicit page_payment(QWidget *parent = nullptr);
     void setPage(pageProduct* pageSizeSelect, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp);
-    ~pagePayment();
+    ~page_payment();
     void setProgressLabel(QLabel* label, int dot);
     // TODO: Figure out better Style Setup.
     void labelSetup(QLabel *label, int fontSize);
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
+    bool exitConfirm();
 
     // **** Control Functions ****
     bool setpaymentProcess(bool status);
@@ -100,6 +109,7 @@ public:
     // char * curl_data;
     // char * curl_data1;
     // char * curlOrderdata;
+    StatePayment state_payment;
 
 private slots:
 
@@ -134,7 +144,7 @@ protected:
 
 private:
     // **** GUI ****
-    Ui::pagePayment *ui;
+    Ui::page_payment *ui;
     pageProduct* p_pageProduct;
     page_dispenser* p_page_dispense;
     page_idle* p_page_idle;
@@ -219,7 +229,7 @@ private:
     QTimer* paymentEndTimer;
 
     int _qrProcessedPeriodicalCheckSec;
-    QTimer* qrTimer;
+    QTimer* qrPeriodicalCheckTimer;
 
     QResizeEvent *pageProductResize;
     QShowEvent *dispenseEvent;
@@ -227,7 +237,8 @@ private:
     bool response;
     // bool tap_payment;
 
-    void QRgen();
+    void testQRgen();
+
     void printQr(const QrCode &qr);
     std::string toSvgString(const QrCode &qr, int border);
     void paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg);
@@ -254,8 +265,8 @@ private:
 
     void isQrProcessedCheckOnline();
     void setupQrOrder();
-    void createQrOrder();
+    void createOrderIdAndSendToBackend();
     
 };
 
-#endif // PAGEPAYMENT_H
+#endif // PAGE_PAYMENT_H

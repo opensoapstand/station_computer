@@ -67,17 +67,6 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
     ui->helpPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
 
-    // ui->mainPage_Button->setStyleSheet("QPushButton { color:#003840;background-color: #FFFFFF; box-sizing: border-box;border-radius: 20px;}"); // border: 1px solid #3D6675;
-
-    // font-family: 'Brevia';
-    // font-style: normal;
-    // font-weight: 700;
-    // font-size: 24px;
-    // line-height: 32px;
-    // text-transform: uppercase;
-
-    // color: #003840;
-
     QFont font;
     font.setFamily(QStringLiteral("Brevia"));
     font.setPointSize(20);
@@ -101,6 +90,9 @@ void page_select_product::setPage(pageProduct *pageSizeSelect, page_idle *pageId
     this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
     this->helpPage = pageHelp;
+    
+    selectedProductOrder = p_page_idle->currentProductOrder;
+
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
 }
 
@@ -129,36 +121,11 @@ void page_select_product::showEvent(QShowEvent *event)
     productPageEndTimer->start(1000);
     _productPageTimeoutSec = 15;
 
-    // qDebug() << "db check if product is enabled";
-    // DbManager db(DB_PATH);
-    // for (uint8_t i = 0; i < SLOT_COUNT; i++)
-    // {
-    //     QString path = SOLD_OUT_IMAGE_PATH;
-    //     if (!db.getSlotEnabled(i + 1))
-    //     {
-    //         selectProductPhotoLabelsText[i]->setText(db.getStatusText(i + 1));
-    //         selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
-    //     }
-    //     else if (!db.remainingVolumeIsBiggerThanLargestFixedSize(i + 1))
-    //     {
-    //         selectProductPhotoLabelsText[i]->setText("Sold out");
-    //         selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
-    //     }
-    //     else
-    //     {
-    //         selectProductPhotoLabelsText[i]->setText("");
-    //         selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,0);}");
-    //         selectProductButtons[i]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
-    //     }
-    // }
-    // db.closeDB();
     this->raise();
 }
 void page_select_product::resizeEvent(QResizeEvent *event)
 {
-    // qDebug() << "resize sel before ffffsdfsdf";
     QWidget::resizeEvent(event);
-    // qDebug() << "resize sel after ffffsdfsdf";
 }
 
 void page_select_product::displayProducts()
@@ -174,20 +141,22 @@ void page_select_product::displayProducts()
 
     for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
+        uint8_t slot = i+1;
 
         // display product picture
         selectProductPhotoLabels[i]->setStyleSheet("border: 1px solid black;");
-        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(i + 1));
+        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(slot));
 
-        qDebug() << "db product details:";
+        qDebug() << "db (re)load product details:";
         DbManager db(DB_PATH);
-        product_type = db.getProductType(i + 1);
-        product_slot_enabled = db.getSlotEnabled(i + 1);
-        product_sold_out = !(db.isProductVolumeInContainer(i + 1));
-        product_status_text = db.getStatusText(i + 1);
+        product_type = db.getProductType(slot);
+        product_slot_enabled = db.getSlotEnabled(slot);
+        product_sold_out = !(db.isProductVolumeInContainer(slot));
+        product_status_text = db.getStatusText(slot);
         db.closeDB();
+        qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << ", product set as not available?: " << product_sold_out << " Status text: " << product_status_text;
 
-        product_name = p_page_idle->currentProductOrder->getProductName(i + 1);
+        product_name = p_page_idle->currentProductOrder->getProductName(slot);
 
         selectProductNameLabels[i]->setText(product_name);
         selectProductNameLabels[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
@@ -222,7 +191,7 @@ void page_select_product::displayProducts()
         }
         else
         {
-            icon_path = "Product/type/for/icon/not/found.aiaiai";
+            icon_path = "Product/type/for/icon/not/found.aiaiai. Is the slot set correctly in database?";
             type_text = "UNAVAILABLE";
         }
         p_page_idle->addPictureToLabel(selectProductIconLabels[i], icon_path);
@@ -281,7 +250,7 @@ void page_select_product::cancelTimers()
 
 void page_select_product::select_product(int slot)
 {
-    qDebug() << "ahoyy16 (last call before freeze up?!)";
+    qDebug() << "db open16 (last call before freeze up?!)";
 
     DbManager db(DB_PATH);
     bool product_not_sold_out = (db.isProductVolumeInContainer(slot));
@@ -340,7 +309,8 @@ void page_select_product::onProductPageTimeoutTick()
 void page_select_product::mainPage()
 {
     productPageEndTimer->stop();
-    // qDebug() << "select product to idle";
+    qDebug() << "exit sleect product page for main page";
+    selectedProductOrder->setDiscountPercentageFraction(0.0);
     this->raise();
     p_page_idle->showFullScreen();
     this->hide();

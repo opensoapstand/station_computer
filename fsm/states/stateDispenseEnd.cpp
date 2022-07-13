@@ -299,6 +299,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     std::string units = productDispensers[pos_index].getProduct()->getDisplayUnits();
     std::string readBuffer;
     std::string volume_remaining_units_converted_string;
+    std::string coupon = m_pMessaging->getPromoCode();
 
     double volume_remaining_converted;
     std::string dispensed_volume_units_converted;
@@ -319,7 +320,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
 #ifdef USE_OLD_DATABASE
     std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&units=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + end_time + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer";
 #else
-    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + end_time + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer&volume_remaining_ml=" + to_string(volume_remaining) + "&quantity_dispensed_ml=" + to_string(productDispensers[pos_index].getVolumeDispensed()) + "&volume_remaining=" + volume_remaining_units_converted_string;
+    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + end_time + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer&volume_remaining_ml=" + to_string(volume_remaining) + "&quantity_dispensed_ml=" + to_string(productDispensers[pos_index].getVolumeDispensed()) + "&volume_remaining=" + volume_remaining_units_converted_string +"&coupon="+ coupon;
 #endif
     char buffer[1080];
     strcpy(buffer, curl_param.c_str());
@@ -628,7 +629,8 @@ double stateDispenseEnd::getFinalPrice()
     }
     else
     {
-        price = productDispensers[pos_index].getProduct()->getPrice(size);
+        // price = productDispensers[pos_index].getProduct()->getPrice(size);
+        price = m_pMessaging->getRequestedPrice();
     }
 
     return price;
@@ -753,7 +755,10 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
     strftime(now, 50, "%F %T", timeinfo);
 
     machine tmp;
-    tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod, plu);
+    // receipt_cost = m_pMessaging->getRequestedPrice();
+    string promoCode = m_pMessaging->getPromoCode();
+    debugOutput::sendMessage("Price changed to " + receipt_cost, MSG_INFO);
+    tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod, plu, promoCode);
 }
 
 DF_ERROR stateDispenseEnd::print_text(string text)

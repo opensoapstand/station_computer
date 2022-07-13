@@ -8,6 +8,7 @@ DrinkOrder::DrinkOrder()
     selectedDrink = new DrinkSelection;
     // overruledPrice = INVALID_PRICE;
     m_discount_percentage_fraction = 0.0;
+    m_promoCode = "";
 
     // qDebug() << "db open2" ;
     // DbManager db(DB_PATH);
@@ -132,6 +133,12 @@ double DrinkOrder::getDiscountPercentageFraction()
 {
     return m_discount_percentage_fraction;
 }
+
+QString DrinkOrder::getPromoCode()
+{
+    return m_promoCode;
+}
+
 void DrinkOrder::setDiscountPercentageFraction(double percentageFraction)
 {
     // ratio = percentage / 100;
@@ -152,6 +159,13 @@ void DrinkOrder::setDiscountPercentageFraction(double percentageFraction)
     // {
     //     qInfo() << "ERROR: no overruled price set. ";
     // }
+}
+
+void DrinkOrder::setPromoCode(QString promoCode)
+{
+    // ratio = percentage / 100;
+    qDebug() << "Set Promo Code: " << promoCode;
+    m_promoCode = promoCode;
 }
 
 void DrinkOrder::setPriceSelected(int size, double price)

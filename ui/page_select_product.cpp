@@ -309,7 +309,7 @@ void page_select_product::onProductPageTimeoutTick()
 void page_select_product::mainPage()
 {
     productPageEndTimer->stop();
-    qDebug() << "exit sleect product page for main page";
+    qDebug() << "exit select product page for main page";
     selectedProductOrder->setDiscountPercentageFraction(0.0);
     this->raise();
     p_page_idle->showFullScreen();

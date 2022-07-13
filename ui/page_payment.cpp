@@ -134,14 +134,14 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
 
     qrPeriodicalCheckTimer = new QTimer(this);
     connect(qrPeriodicalCheckTimer, SIGNAL(timeout()), this, SLOT(qrProcessedPeriodicalCheck()));
-
+    // while(!tap_init());
 
     // // need to install a plugin to get animated gifs to play
     // QString gif_path = DRINKFILL_LOGO_ANIMATED_PATH;
     // QMovie *movie = new QMovie(gif_path);
     // ui->animated_Label->setMovie(movie);
     // movie->start();
-     while (!tap_init());
+    //  while (!tap_init());
             
     
     // QString tap = "tap";
@@ -356,7 +356,7 @@ void page_payment::showEvent(QShowEvent *event)
         qDebug() << "Init tap";
         ui->payment_bypass_Button->setEnabled(false);
         // while (!tap_init())
-        //     ;
+            // ;
     }
     else
     {
@@ -767,11 +767,27 @@ bool page_payment::tap_init()
     }
 
     // This is super shitty - there must be a better way to find out when the green light starts flashing on the UX420 but it was 35
-    sleep(35);
+    // sleep(35);
 
     cout << "_----_-----__------_-----";
    
-    stayAliveLogon();
+    // stayAliveLogon();
+      cout << "Sending Device Reset packet..." << endl;
+    pktToSend = paymentPacket.resetDevice();
+    if (sendToUX410())
+    {
+        cout << "Receiving Device Reset response" << endl;
+        isInitBatched = true;
+        waitForUX410();
+        pktResponded.clear();
+    }
+    else
+    {
+        return false;
+    }
+    com.flushSerial();
+    cout << "-----------------------------------------------" << endl;
+    
     
     /*Cancel any previous payment*/
     cout << "Sending Cancel payment packet..." << endl;
@@ -790,22 +806,23 @@ bool page_payment::tap_init()
     com.flushSerial();
     cout << "-----------------------------------------------" << endl;
 
+
     /*batch close packet to send*/
-    cout << "Sending Batch close packet..." << endl;
-    pktToSend = paymentPacket.batchClosePkt();
-    if (sendToUX410())
-    {
-        cout << "Receiving Batch Close response" << endl;
-        isInitBatched = true;
-        waitForUX410();
-        pktResponded.clear();
-    }
-    else
-    {
-        return false;
-    }
-    com.flushSerial();
-    cout << "-----------------------------------------------" << endl;
+    // cout << "Sending Batch close packet..." << endl;
+    // pktToSend = paymentPacket.batchClosePkt();
+    // if (sendToUX410())
+    // {
+    //     cout << "Receiving Batch Close response" << endl;
+    //     isInitBatched = true;
+    //     waitForUX410();
+    //     pktResponded.clear();
+    // }
+    // else
+    // {
+    //     return false;
+    // }
+    // com.flushSerial();
+    // cout << "-----------------------------------------------" << endl;
     
     /*logon packet to send*/
     cout << "Sending Logon packet..." << endl;

@@ -875,7 +875,7 @@ void pageProduct::on_applyPromo_Button_clicked()
                 if (coupon_obj["active"])
                 {
                     new_percent = coupon_obj["discount_amount"];
-
+                    selectedProductOrder->setPromoCode(promocode);
                     selectedProductOrder->setDiscountPercentageFraction((new_percent * 1.0) / 100);
                     qDebug() << "Apply coupon percentage: " << new_percent;
                     loadOrderSelectedSize();

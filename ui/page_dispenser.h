@@ -53,6 +53,8 @@ public:
     void fsmReceiveTargetVolumeReached();
     void fsmReceiveNoFlowAbort();
     QString getMostRecentDispensed();
+    QString getPromoCodeUsed();
+
     void force_finish_dispensing();
     void startDispensing();
 
@@ -62,6 +64,9 @@ public slots:
 private slots:
     // **** Navigation ****
     void fsmSendStartDispensing();
+    void fsmSendPrice();
+    void fsmSendPromo();
+
     void fsmSendStopDispensing();
    // void onDispenseTick();
     void onDispenseIdleTick();

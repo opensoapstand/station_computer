@@ -30,7 +30,7 @@ class machine
 public:
     void testtest();
     void print_text(string text);
-    void print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string units, string paymentMethod, string plu);
+    void print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string units, string paymentMethod, string plu, string promoCode);
 };
 
 #endif

@@ -42,6 +42,9 @@ public:
     void transactionAmount(char type, std::string amount);
     packetFromECR getSendPacket();
 
+    std::vector<uint8_t> createTestPacket(int tag);
+
+
 private:
     packetFromECR packet;
     uint8_t convertedAmount[7];

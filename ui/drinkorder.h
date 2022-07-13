@@ -73,7 +73,7 @@ public:
     // Setters and Getters
     void setSelectedSlot(int optionSlot);
     int getSelectedSlot();
-
+    void setPromoCode(QString promoCode);
     QString getSelectedProductId();
     // QString getSelectedProductName();
     QString getMachineId();
@@ -133,6 +133,7 @@ public:
     QString getSelectedPaymentMethod();
 
     double getDiscountPercentageFraction();
+    QString getPromoCode();
 public slots:
 
     // void setSelectedSlot(int optNumber);
@@ -157,6 +158,7 @@ private:
     int m_selectedSlot;
     double overruledPrice;
     double m_discount_percentage_fraction;
+    QString m_promoCode;
 };
 
 #endif // DRINKORDER_H

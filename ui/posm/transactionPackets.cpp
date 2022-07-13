@@ -102,9 +102,12 @@ std::vector<uint8_t> transactionPacket::purchasePacket(std::string amount)
 
     packet.setPacketData(dataPacket, sizeof (dataPacket));      //tagID(50) + dataPacket
 
-    //ETX is 0x03                                               //03
+    //ETX is 0x03    
+                                               //03
     packet.setPacketDataLen();                                  //00 0B
+    // packet.setPacketDataLenPur();                                  //00 0D
     packet.setPacketLRC();                                      //LRC
+    // packet.setPacketLRCPur();                                      //LRC
 
     return packet.getPacket();
 }
@@ -241,6 +244,27 @@ std::vector<uint8_t> transactionPacket::ppPosGetConfigPkt(int tag)
 
     return packet.getPacket();
 }
+
+
+
+
+std::vector<uint8_t> transactionPacket::createTestPacket(int tag)
+{    
+    // uint8_t dataPacket[] = {uint8_t(0x00), 0x00, 0xFF}; //tag id for infomation requested
+    uint8_t dataPacket[] = {0x00, 0x02, 0x00}; //tag id for infomation requested
+                                            //enum TxnTyp
+    //STX is 0x02                                               //02
+    //parentID is fixed 0x02                                    //02
+    packet.setPacketClassID(0x0D);   //0D
+    packet.setPacketApiID(API_ID::PpDummy);              //00 04
+    packet.setPacketData(dataPacket, sizeof (dataPacket));      //
+    //ETX is 0x03                                               //03
+    packet.setPacketDataLen();                                  //LEN
+    packet.setPacketLRC();                                      //LRC
+
+    return packet.getPacket();
+}
+
 
 void transactionPacket::transactionAmount(char type, std::string amount)
 {

@@ -411,7 +411,9 @@ DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double v
    string receipt_cost = (chars_cost);
 
    machine tmp;
-   tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu);
+   receipt_cost = m_pMessaging->getRequestedPrice();
+
+   tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu,"");
 }
 
 // DF_ERROR stateManualPrinter::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string units, string paymentMethod, string plu){

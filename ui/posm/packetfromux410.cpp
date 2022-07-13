@@ -9,7 +9,6 @@
 // copyright 2019 by drinkfill
 // all rights reserved
 //***************************************
-
 #include "packetfromux410.h"
 #include "enums.h"
 #include "lrcgenerator.h"
@@ -35,6 +34,11 @@ packetFromUX410::packetFromUX410()
 
 void packetFromUX410::packetReadFromUX(std::vector<uint8_t> curPacket)
 {
+    std::cout<< "Received packet (size" << curPacket.size() << ") : \n";
+    for (int i=0;i< curPacket.size(); i++){
+        std::cout << std::to_string(curPacket[i]) << " ";
+    }
+     
     if(0xFF == curPacket[0] && 1 == curPacket.size())
     {
 
@@ -44,9 +48,11 @@ void packetFromUX410::packetReadFromUX(std::vector<uint8_t> curPacket)
     else if(1 == curPacket.size())
     {
        checkAckOrNak(curPacket[0]); //store if the packet sent is Ack or NAk
+
     }
     else
     {
+        std::cout << "In else condition" << endl;
         sortPacket(curPacket);
         usleep(500000);
         uint16_t combineLength = convertFrom8To16(packetToSort.dataLen[0], packetToSort.dataLen[1]) + 2;

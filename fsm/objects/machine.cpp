@@ -34,10 +34,16 @@ void machine::testtest(){
 
 
 
-void machine::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string units, string paymentMethod, string plu){
+void machine::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string units, string paymentMethod, string plu, string promoCode){
     print_text(name_receipt + "\nPrice: $" + receipt_cost + " \nQuantity: " + receipt_volume_formatted + "\nTime: " + time_stamp);
-
-    if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2")
+    debugOutput::sendMessage("Price" + receipt_cost, MSG_INFO);
+    if (receipt_cost == "0.00"){
+        debugOutput::sendMessage("Free Order", MSG_INFO);
+        print_text("Promo Used: " + promoCode);
+        print_text("Enjoy your free product!");
+        print_text("Thank you for supporting \npackage-free!");
+    }
+    else if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2")
     {
 
         if (plu.size() != 13 && plu.size() != 12)

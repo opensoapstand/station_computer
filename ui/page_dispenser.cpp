@@ -104,6 +104,7 @@ bool page_dispenser::sendToUX410()
     {
         cout << "Wait for ACK counter: " << waitForAck << endl;
         qDebug() << "Wait for ACK counter: " << endl;
+        // sleep(1);
         com.sendPacket(pktToSend, uint(pktToSend.size()));
         std::cout << "sendtoUX410 Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
 
@@ -113,12 +114,13 @@ bool page_dispenser::sendToUX410()
         pktResponded.clear();
         waitForAck++;
 
-        cout << "Waiting for TAP" << endl;
+        cout << "Waiting for TAP in dispenser" << endl;
         cout << readPacket << endl;
         if (readPacket.getAckOrNak() == communicationPacketField::ACK)
         {
             return true;
         }
+
         usleep(50000);
     }
     return false;
@@ -131,6 +133,7 @@ bool page_dispenser::waitForUX410()
     {
         //        QCoreApplication::processEvents();
         // cout << readPacket << endl;
+        // sleep(1);
         if (pktResponded[0] != 0x02)
         {
             pktResponded.clear();
@@ -200,7 +203,6 @@ void page_dispenser::dispensing_end_admin()
 
 void page_dispenser::force_finish_dispensing()
 {
-
     fsmSendStopDispensing();
     dispensing_end_admin();
 }
@@ -223,6 +225,11 @@ void page_dispenser::fsmSendStartDispensing()
     p_page_idle->dfUtility->send_command_to_FSM(command);
 
     this->isDispensing = true;
+    sleep(1);
+    fsmSendPrice();
+    sleep(1);
+    fsmSendPromo();
+
 }
 
 void page_dispenser::fsmSendStopDispensing()
@@ -235,6 +242,26 @@ void page_dispenser::fsmSendStopDispensing()
     command.append(SEND_DISPENSE_STOP);
     p_page_idle->dfUtility->send_command_to_FSM(command);
 }
+
+void page_dispenser::fsmSendPrice()
+{
+    qDebug() << "Send Price to fsm";
+    std::string prefix = "$";
+    QString command = QString::fromStdString(prefix);
+    command.append(QString::number(this->selectedProductOrder->getSelectedPriceCorrected()));
+    p_page_idle->dfUtility->send_command_to_FSM(command);
+}
+
+
+void page_dispenser::fsmSendPromo()
+{
+    qDebug() << "Send Promo to fsm";
+    std::string prefix = "Promo:";
+    QString command = QString::fromStdString(prefix);
+    command.append(this->selectedProductOrder->getPromoCode());
+    p_page_idle->dfUtility->send_command_to_FSM(command);
+}
+
 
 // void page_dispenser::onRinseTimerTick()
 // {
@@ -272,6 +299,13 @@ QString page_dispenser::getMostRecentDispensed()
 
     return df_util::getConvertedStringVolumeFromMl(volumeDispensed, units, false, false);
     // return volumeDispensed;
+}
+
+QString page_dispenser::getPromoCodeUsed()
+{
+    QString promoCode = selectedProductOrder->getPromoCode();
+
+    return promoCode;
 }
 
 void page_dispenser::resetDispenseTimeout(void)
@@ -322,7 +356,6 @@ void page_dispenser::fsmReceiveTargetVolumeReached()
         this->isDispensing = false;
         // qDebug() << "Signal: Target volume reached."  << endl;
         updateVolumeDisplayed(1.0, true); // make sure the fill bottle graphics are completed
-
         dispensing_end_admin();
         // qDebug() << "Finish dispense end admin."  << endl;
     }

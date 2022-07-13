@@ -127,7 +127,6 @@ void pagethankyou::showEvent(QShowEvent *event)
 
     // reset promovalue
     p_page_idle->currentProductOrder->setDiscountPercentageFraction(0.0);
-
     // ui->extra_message_label->hide();
     ui->mainPage_Button->setEnabled(true);
     ui->mainPage_Button->raise();
@@ -159,10 +158,11 @@ void pagethankyou::sendDispenseEndToCloud()
 {
     QString order_id = this->paymentPage->getOID();
     QString dispensed_correct_units = this->p_page_dispense->getMostRecentDispensed();
-
+    QString promoCode = this->p_page_dispense->getPromoCodeUsed();
     qDebug() << "Send data at finish of order : " << order_id << ". Total dispensed: " << this->p_page_dispense->getMostRecentDispensed() << "corrected units send to soapstandportal: " << dispensed_correct_units;
 
-    QString curl_param = "oid=" + order_id + "&dispensed_amount=" + dispensed_correct_units;
+    QString curl_param = "oid=" + order_id + "&dispensed_amount=" + dispensed_correct_units+"&coupon=" + promoCode;
+    qDebug() << "Curl params" << curl_param << endl;
     curl_param_array = curl_param.toLocal8Bit();
     curl_data = curl_param_array.data();
 
@@ -252,6 +252,8 @@ void pagethankyou::exitPage()
         thankYouEndTimer->stop();
         // qDebug() << "thank you to idle";
         is_in_state_thank_you = false;
+        p_page_idle->currentProductOrder->setPromoCode("");
+
         p_page_idle->showFullScreen();
         this->hide();
 

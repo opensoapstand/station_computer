@@ -34,10 +34,13 @@ class packetFromECR
 public:
     packetFromECR();
     void setPacketDataLen();
+    void setPacketDataLenPur();
     void setPacketClassID(uint8_t id);
     void setPacketApiID(uint16_t id);
     void setPacketData(uint8_t *data, int packetSize);
     void setPacketLRC();
+    void setPacketLRCPur();
+
     std::vector<uint8_t> getPacket();
 
     friend std::ostream & operator << (std::ostream &out, const packetFromECR &pkt);

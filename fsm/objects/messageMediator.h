@@ -78,8 +78,14 @@ public:
    char getRequestedSize() { return m_requestedSize; }
    int getCommandValue() { return m_commandValue; }
    void setRequestedSize(char size);
-   
 
+
+
+   double getRequestedPrice() { 
+      return m_requestedDiscountPrice;}
+
+   string getPromoCode() { 
+      return m_promoCode;}
 
 
    // static ServerSocket *fsm_comm_socket;
@@ -101,6 +107,8 @@ private:
    static double m_nVolumeTarget;
    static char m_requestedSize;
    static int m_commandValue;
+   static double m_requestedDiscountPrice;
+   static string m_promoCode;
 
    static DF_ERROR sendProgress(int percentComplete);
    static DF_ERROR sendQtACK(string AckOrNak);

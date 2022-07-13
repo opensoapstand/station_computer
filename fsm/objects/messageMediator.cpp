@@ -41,6 +41,8 @@ char messageMediator::m_requestedAction;
 int messageMediator::m_commandValue;
 char messageMediator::m_requestedSize;
 double messageMediator::m_nVolumeTarget;
+double messageMediator::m_requestedDiscountPrice;
+string messageMediator::m_promoCode;
 
 // CTOR
 messageMediator::messageMediator()
@@ -398,6 +400,15 @@ DF_ERROR messageMediator::parseCommandString()
        first_char == ACTION_QUIT)
    {
       m_requestedAction = first_char;
+   }
+   else if (first_char=='$'){
+      double price = std::stod(sCommand.substr(1, sCommand.size()));
+      m_requestedDiscountPrice = price;
+   }
+   else if(sCommand.length() > 5){
+      std::string promoCode = sCommand.substr(6, sCommand.size());
+      debugOutput::sendMessage(promoCode, MSG_INFO);
+      m_promoCode = promoCode;
    }
    else
    {

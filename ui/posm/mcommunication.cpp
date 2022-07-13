@@ -31,13 +31,11 @@ mCommunication::~mCommunication() {
 bool mCommunication::page_init(){
 
     bool bRet = false;
-
     fd = open(MONERIS_PORT ,O_RDWR | O_NOCTTY| O_NDELAY);
     /* O_RDWR Read/Write access to serial port           */
     /* O_NOCTTY - No terminal will control the process   */
     /* O_NDELAY -Non Blocking Mode,Does not care about-  */
     /* -the status of DCD line,Open() returns immediatly */
-
     if(fd == -1) {
         qDebug() << "Serial (mpos) Status: "<< "Failed";
         return bRet;
@@ -45,7 +43,6 @@ bool mCommunication::page_init(){
     else {
 
         //set the serial port setting for MONERIS h/w
-
         struct termios SerialPortSettings;	/* Create the structure                          */
 
         tcgetattr(fd, &SerialPortSettings);	/* Get the current attributes of the Serial port */
@@ -66,11 +63,11 @@ bool mCommunication::page_init(){
         SerialPortSettings.c_cc[VTIME]  =  5;                  // 0.5 seconds read timeout
         /* Make raw */
         cfmakeraw(&SerialPortSettings);
-
         if((tcsetattr(fd,TCSANOW,&SerialPortSettings)) != 0) {
         } else {
-            tcflush(fd,TCIOFLUSH);
 
+            tcflush(fd,TCIOFLUSH);
+            
             bRet = true;
         }
         qDebug() << "Serial (mpos) Status: "<< "Success";
@@ -87,13 +84,14 @@ std::vector<uint8_t> mCommunication::readPacket(){
     std::vector<uint8_t> pktRead;
     //tcflush(fd, TCIOFLUSH);
     //tcflush(fd, TCIOFLUSH);
-
+    
     readSize = read(fd, buffer, MAX_SIZE);
-
+    
     if (readSize == -1)
     {
         pktRead.clear();
         pktRead.push_back(0xFF);
+        // std::cout << "Packet read failed...\n";
         return pktRead;
     }
 //    else if (int(buffer[2]) < readSize) {
@@ -105,7 +103,7 @@ std::vector<uint8_t> mCommunication::readPacket(){
         pktRead.reserve(uint(readSize));
         for (long i = 0; i < readSize; i++){ //store read bytes into vector
             pktRead.push_back(buffer[i]);
-            std::cout << "buffer[" << i << "i] = " << int(buffer[i]) << " \n";
+            // std::cout << "buffer[" << i << "] = " << int(buffer[i]) << " \n";
         }
 
 //        std::cout << "buffer1 + buffer2 = " << (int(buffer[1]) + int(buffer[2])) << "\n" << "readSize-3 = " << readSize-0x05 << "\n" << "readSize = " << readSize << "\n";
@@ -125,7 +123,7 @@ std::vector<uint8_t> mCommunication::readPacket(){
                 pktRead.reserve(uint(readSize2));
                 for (long i = 0; i < readSize2; i++){ //store read bytes into vector
                     pktRead.push_back(buffer[i]);
-                    std::cout << "buffer[" << i << "i] = " << int(buffer[i]) << " \n";
+                    // std::cout << "buffer[" << i << "i] = " << int(buffer[i]) << " \n";
                 }
         }
 
@@ -146,13 +144,14 @@ std::vector<uint8_t> mCommunication::readForAck()
     uint8_t buffer[1] = {};
     long int readSize = -1;
     std::vector<uint8_t> pktRead;
-    //tcflush(fd, TCIOFLUSH);
-    //tcflush(fd, TCIOFLUSH);
+    // tcflush(fd, TCIOFLUSH);
+    // tcflush(fd, TCIOFLUSH);
+    qDebug() << fd ;
     int readcount = 0;
     while (readcount < 3){
         if (readSize == -1){
             readSize = read(fd, buffer, 1);
-            readcount ++;
+            readcount++;
         }
         if (readSize != -1){
             break;
@@ -163,6 +162,7 @@ std::vector<uint8_t> mCommunication::readForAck()
 
     if (readSize == -1)
     {
+        std::cout << "Read failed -1";
         pktRead.clear();
         pktRead.push_back(0xFF);
         return pktRead;

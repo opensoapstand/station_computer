@@ -21,7 +21,7 @@
 ./status_services.sh
 
 PS3='Please enter your choice: '
-options=("Quit" "Station info" "Status" "Start" "Stop" "Restart" "Screenshotbot execute" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data" "(Re)load services from production" "Setup rtunnel")
+options=("Quit" "Station info" "Status" "Start" "Stop" "Restart" "Screenshotbot execute" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data" "(Re)load services from production" "Setup rtunnel" "Setup Ubuntu")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -55,6 +55,10 @@ do
         "Disable Autostart")
             sudo systemctl disable ui_soapstand.service
             sudo systemctl disable controller_soapstand.service
+            ;;
+        "Setup Ubuntu")
+            echo "Will disable window transition animations. Please disable animations when running Drinkfill UI."
+            gsettings set org.gnome.desktop.interface enable-animations false
             ;;
         "Setup rtunnel")
             sudo nano /etc/systemd/system/rtunnel.service

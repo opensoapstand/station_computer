@@ -1543,6 +1543,19 @@
     <string>Enable pump ramp up / ramp down</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="generalSettings_button">
+   <property name="geometry">
+    <rect>
+     <x>818</x>
+     <y>40</y>
+     <width>171</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>General Settings</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

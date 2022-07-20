@@ -23,10 +23,12 @@
 #include "page_idle.h"
 #include "dfuicommthread.h"
 #include "page_maintenance_dispenser.h"
+#include "page_maintenance_general.h"
 #include "page_select_product.h"
 
 class page_idle;
 class page_maintenance_dispenser;
+class page_maintenance_general;
 class page_select_product;
 class pageProduct;
 
@@ -42,7 +44,7 @@ class page_maintenance : public QWidget
 
 public:
     explicit page_maintenance(QWidget *parent = nullptr);
-    void setPage(page_idle* pageIdle, page_maintenance_dispenser* pageMaintain, page_select_product *p_pageProduct, pageProduct* pagePaySelect);
+    void setPage(page_idle* pageIdle, page_maintenance_dispenser* p_pageMaintenanceDispenser, page_maintenance_general* p_pageMaintenanceGeneral, page_select_product *p_pageProduct, pageProduct* pagePaySelect);
 
     void printerStatusFeedback(bool isOnline, bool hasPaper);
     ~page_maintenance();
@@ -78,11 +80,14 @@ private slots:
     void on_enable_empty_container_checkBox_clicked(bool checked);
 
 
+    void on_generalSettings_button_clicked();
+
 private:
     void showEvent(QShowEvent *event);
     Ui::page_maintenance *ui;
     page_idle* p_page_idle;
     page_maintenance_dispenser* p_page_maintenance_product;
+    page_maintenance_general* p_page_maintenance_general;
     page_select_product* p_pageSelectProduct;
     pageProduct* p_pageProduct;
 

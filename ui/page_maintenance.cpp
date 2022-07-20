@@ -152,22 +152,25 @@ void page_maintenance::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference
  */
-void page_maintenance::setPage(page_idle *pageIdle, page_maintenance_dispenser *pageMaintain, page_select_product *p_pageProduct, pageProduct *pagePaySelect)
+void page_maintenance::setPage(page_idle *pageIdle, page_maintenance_dispenser *p_pageMaintenanceDispenser, page_maintenance_general *p_pageMaintenanceGeneral, page_select_product *p_pageProduct, pageProduct *pagePaySelect)
 {
     this->p_page_idle = pageIdle;
-    this->p_page_maintenance_product = pageMaintain;
+    this->p_page_maintenance_product = p_pageMaintenanceDispenser;
+    this->p_page_maintenance_general = p_pageMaintenanceGeneral;
     this->p_pageSelectProduct = p_pageProduct;
     this->p_pageProduct = pagePaySelect;
+}
+void page_maintenance::on_generalSettings_button_clicked()
+{
+    page_maintenanceEndTimer->stop();
+    p_page_maintenance_general->showFullScreen();
+    this->hide();
 }
 
 void page_maintenance::on_backButton_clicked()
 {
-    //    qDebug() << "Back button clicked" << endl;
-
     page_maintenanceEndTimer->stop();
-    // qDebug() << "maintenance2 to idle";
     p_page_idle->showFullScreen();
-    //    usleep(100);
     this->hide();
 }
 
@@ -567,3 +570,5 @@ void page_maintenance::on_enable_empty_container_checkBox_clicked(bool checked)
     }
     db.closeDB();
 }
+
+

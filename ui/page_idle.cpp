@@ -123,15 +123,16 @@ void page_idle::on_toSelectProductPageButton_clicked()
         m_transitioning = true;
         this->raise();
         p_pageSelectProduct->showFullScreen();
-        m_transitioning = false;
-    }
     // this->lower();
 
-    // DO NOT HIDE IDLE PAGE
-    // it's staying in the background to counter a hack UBC students found (when changing screens and tapping during the swap, they could get a hold of the machine)
-    // Tapping on on the desktop wallpaper minimizes the application.
-    // If the idle page is not hidden, and always on the background, there is never a wall paper showing. Effectively preventing this vulnerability to be exploited.
-    // this->hide();
+        // DO NOT HIDE IDLE PAGE
+        // it's staying in the background to counter a hack UBC students found (when changing screens and tapping during the swap, they could get a hold of the machine)
+        // Tapping on on the desktop wallpaper minimizes the application.
+        // If the idle page is not hidden, and always on the background, there is never a wall paper showing. Effectively preventing this vulnerability to be exploited.
+        this->hide();
+        
+        m_transitioning = false;
+    }
 }
 
 void page_idle::on_testButton_clicked()

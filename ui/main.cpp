@@ -30,6 +30,7 @@
 #include "df_util.h"
 #include "page_maintenance.h"
 #include "page_maintenance_dispenser.h"
+#include "page_maintenance_general.h"
 #include <QCoreApplication>
 #include <QGuiApplication>
 #include <QKeyEvent>
@@ -111,6 +112,7 @@ int main(int argc, char *argv[])
     pagethankyou *p_page_thank_you = new pagethankyou();
     page_maintenance *p_page_maintenance = new page_maintenance();
     page_maintenance_dispenser *p_page_maintenance_product = new page_maintenance_dispenser();
+    page_maintenance_general *p_page_maintenance_general = new page_maintenance_general();
 
     // TODO: Instantiate a DrinkSelection[] Array
     // TODO: Create Query to populate DrinkSelection[0-12]
@@ -154,7 +156,8 @@ int main(int argc, char *argv[])
     p_page_transactions->setPage(p_page_idle);
     initPage->setPage(p_page_idle);
     p_page_maintenance_product->setPage(p_page_maintenance, p_page_idle);
-    p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product, firstSelectPage, p_pageProduct);
+    p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle);
+    p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product,  p_page_maintenance_general, firstSelectPage, p_pageProduct);
     p_page_idle->setPage(firstSelectPage, p_page_maintenance);
     firstSelectPage->setPage(p_pageProduct, p_page_idle, p_page_maintenance, helpPage);
     p_pageProduct->setPage(firstSelectPage, p_page_dispense, wifiError, p_page_idle, paymentPage, helpPage);

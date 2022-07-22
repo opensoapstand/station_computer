@@ -45,9 +45,21 @@ public:
     void resizeEvent(QResizeEvent *event);
     void on_backButton_clicked();
     void refreshLabels();
-  
+    void printerStatusFeedback(bool isOnline, bool hasPaper);
+
 
 private slots:
+
+    void on_back_Button_clicked();
+
+    void on_minimize_Button_clicked();
+
+    void on_reboot_Button_clicked();
+
+    void on_shutdown_Button_clicked();
+
+    void on_printer_test_button_clicked();
+    void on_printer_check_status_clicked();
 
 private:
     void showEvent(QShowEvent *event);

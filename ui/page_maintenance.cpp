@@ -54,7 +54,10 @@ void page_maintenance::showEvent(QShowEvent *event)
 {
     //    db.addPageClick("PAGE_PAGE_MAINTENANCE PAGE ENTERED");
     QWidget::showEvent(event);
-    qDebug() << "<<<<<<< PPage Enter: maintenance >>>>>>>>>";
+    qDebug() << "<<<<<<< Page Enter: maintenance >>>>>>>>>";
+
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH);
+
 
 #ifdef ENABLE_DYNAMIC_UI
 
@@ -163,15 +166,17 @@ void page_maintenance::setPage(page_idle *pageIdle, page_maintenance_dispenser *
 void page_maintenance::on_generalSettings_button_clicked()
 {
     page_maintenanceEndTimer->stop();
-    p_page_maintenance_general->showFullScreen();
-    this->hide();
+    // p_page_maintenance_general->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_maintenance_general);
 }
 
 void page_maintenance::on_backButton_clicked()
 {
     page_maintenanceEndTimer->stop();
-    p_page_idle->showFullScreen();
-    this->hide();
+    // p_page_idle->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_idle);
 }
 
 void page_maintenance::on_product1_button_clicked()
@@ -183,9 +188,9 @@ void page_maintenance::on_product1_button_clicked()
     p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
 
     p_page_maintenance_product->resizeEvent(productSelection);
-    p_page_maintenance_product->showFullScreen();
-    //    usleep(100);
-    this->hide();
+    // p_page_maintenance_product->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_maintenance_product);
 }
 
 // void page_maintenance::on_buttonGroup_buttonClicked(QAbstractButton*){}
@@ -200,9 +205,9 @@ void page_maintenance::on_product2_button_clicked()
     p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
 
     p_page_maintenance_product->resizeEvent(productSelection);
-    p_page_maintenance_product->showFullScreen();
-    //    usleep(100);
-    this->hide();
+    // p_page_maintenance_product->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_maintenance_product);
 }
 
 void page_maintenance::on_product3_button_clicked()
@@ -214,9 +219,9 @@ void page_maintenance::on_product3_button_clicked()
     p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
 
     p_page_maintenance_product->resizeEvent(productSelection);
-    p_page_maintenance_product->showFullScreen();
-    //    usleep(100);
-    this->hide();
+    // p_page_maintenance_product->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_maintenance_product);
 }
 
 void page_maintenance::on_product4_button_clicked()
@@ -228,9 +233,9 @@ void page_maintenance::on_product4_button_clicked()
     p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
 
     p_page_maintenance_product->resizeEvent(productSelection);
-    p_page_maintenance_product->showFullScreen();
-    //    usleep(100);
-    this->hide();
+    // p_page_maintenance_product->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_maintenance_product);
 }
 
 // void page_maintenance::on_product5_button_clicked(){
@@ -397,9 +402,9 @@ void page_maintenance::onPage_maintenanceTimeoutTick()
 
         page_maintenanceEndTimer->stop();
         // qDebug() << "maintenance to idle";
-        p_page_idle->showFullScreen();
-        //        usleep(100);
-        this->hide();
+         // p_page_maintenance_product->showFullScreen();
+        // this->hide();
+        p_page_idle->pageTransition(this, p_page_idle);
     }
 }
 
@@ -500,48 +505,6 @@ void page_maintenance::keyboardButtonPressed(int buttonID)
     }
 }
 
-void page_maintenance::on_printer_test_button_clicked()
-{
-
-    qDebug() << "Send test printer to controller";
-
-    // Send to fsm
-
-    p_page_idle->dfUtility->send_command_to_FSM("p");
-    usleep(50000);
-    p_page_idle->dfUtility->send_command_to_FSM("1");
-    usleep(50000);
-    p_page_idle->dfUtility->send_command_to_FSM("q");
-}
-
-void page_maintenance::printerStatusFeedback(bool isOnline, bool hasPaper)
-{
-    qDebug() << "Feeback received . printer";
-
-    QString printerStatus = "Printer is offline";
-    if (isOnline)
-    {
-        printerStatus = "Printer is online";
-    }
-
-    QString printerHasPaper = "No paper detected.";
-    if (hasPaper)
-    {
-        printerHasPaper = "Paper ok";
-    }
-    ui->printer_isOnline_label->setText(printerStatus);
-    ui->printer_hasPaper_label->setText(printerHasPaper);
-}
-
-void page_maintenance::on_printer_check_status_clicked()
-{
-    qDebug() << "Send test printer to controller";
-    p_page_idle->dfUtility->send_command_to_FSM("p");
-    usleep(50000);
-    p_page_idle->dfUtility->send_command_to_FSM("a");
-    // usleep(50000);
-    // p_page_idle->dfUtility->send_command_to_FSM("q"); // go back to fsm idle state is done in controller
-}
 
 void page_maintenance::on_enable_pump_ramping_checkBox_clicked(bool checked)
 {

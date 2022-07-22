@@ -56,7 +56,7 @@ page_init::~page_init()
 
 void page_init::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< PPage Enter: Init >>>>>>>>>";
+    qDebug() << "<<<<<<< Page Enter: Init >>>>>>>>>";
     QWidget::showEvent(event);
 
      QPixmap background(PAGE_INIT_BACKGROUND_PATH);
@@ -95,8 +95,9 @@ void page_init::initReadySlot(void)
     initIdleTimer->stop();
     rebootTimer->stop();
     // qDebug() << "init to idle";
-    p_page_idle->showFullScreen();
-    this->hide();
+    // p_page_idle->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_idle);
 }
 
 void page_init::onInitTimeoutTick()

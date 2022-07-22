@@ -140,8 +140,9 @@ void page_transactions::populateList()
 void page_transactions::exitPage()
 {
         idleTimer->stop();
-        p_page_idle->showFullScreen();
-        this->hide();
+        // p_page_idle->showFullScreen();
+        // this->hide();
+        p_page_idle->pageTransition(this, p_page_idle);
 }
 void page_transactions::on_back_Button_clicked()
 {

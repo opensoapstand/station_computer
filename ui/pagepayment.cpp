@@ -141,7 +141,7 @@ void pagePayment::setPage(pageProduct *pageSizeSelect, page_dispenser *page_disp
     this->p_pageProduct = pageSizeSelect;
     this->p_page_dispense = page_dispenser;
     this->p_page_idle = pageIdle;
-    this->helpPage = pageHelp;
+    this->p_page_help = pageHelp;
 }
 
 // DTOR
@@ -166,8 +166,9 @@ void pagePayment::proceed_to_dispense()
 {
     stopPayTimers();
     // p_page_dispense->showEvent(dispenseEvent);
-    p_page_dispense->showFullScreen();
-    this->hide();
+    // p_page_dispense->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_dispense);
 }
 
 void pagePayment::updateTotals(string drinkDescription, string drinkAmount, string orderTotal)
@@ -509,9 +510,9 @@ void pagePayment::on_previousPage_Button_clicked()
     //     cancelPayment();
     // }
     p_pageProduct->resizeEvent(pageProductResize);
-    p_pageProduct->showFullScreen();
-    // //    usleep(100);
-    this->hide();
+    // p_pageProduct->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_pageProduct);
 }
 
 void pagePayment::on_mainPage_Button_clicked()
@@ -524,8 +525,9 @@ void pagePayment::on_mainPage_Button_clicked()
     // {
     //     cancelPayment();
     // }
-    helpPage->showFullScreen();
-    this->hide();
+    // p_page_help->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_help);
 }
 
 void pagePayment::idlePaymentTimeout()
@@ -539,9 +541,10 @@ void pagePayment::idlePaymentTimeout()
     //     cancelPayment();
     // }
     // // qDebug() << "payment to idle";
-    p_page_idle->showFullScreen();
-    // //    usleep(100);
-    this->hide();
+    // p_page_idle->showFullScreen();
+    // // //    usleep(100);
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_idle);
 }
 void pagePayment::resetPaymentPage()
 {

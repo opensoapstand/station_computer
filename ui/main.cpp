@@ -14,8 +14,6 @@
 // all rights reserved
 //***************************************
 
-
-
 #include "page_transactions.h"
 #include "page_help.h"
 #include "page_init.h"
@@ -100,7 +98,7 @@ int main(int argc, char *argv[])
 
     // Build objects to hold navigation (pages)
     // Linking resources and Function definitions for pathing
-    page_help *helpPage = new page_help();
+    page_help *p_page_help = new page_help();
     page_init *initPage = new page_init();
     page_idle *p_page_idle = new page_idle();
     page_transactions *p_page_transactions = new page_transactions();
@@ -108,7 +106,7 @@ int main(int argc, char *argv[])
     pageProduct *p_pageProduct = new pageProduct();
     page_payment *paymentPage = new page_payment();
     page_dispenser *p_page_dispense = new page_dispenser();
-    page_error_wifi *wifiError = new page_error_wifi();
+    page_error_wifi *p_page_wifi_error = new page_error_wifi();
     pagethankyou *p_page_thank_you = new pagethankyou();
     page_maintenance *p_page_maintenance = new page_maintenance();
     page_maintenance_dispenser *p_page_maintenance_product = new page_maintenance_dispenser();
@@ -144,6 +142,7 @@ int main(int argc, char *argv[])
     df_util::fileExists(PAGE_HELP_BACKGROUND_PATH);
     df_util::fileExists(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
     df_util::fileExists(PAGE_QR_PAY_BACKGROUND_PATH);
+    df_util::fileExists(PAGE_MAINTENANCE_BACKGROUND_PATH);
     df_util::fileExists(PAGE_THANK_YOU_BACKGROUND_PATH);
     // df_util::fileExists(PAGE_WIFI_ERROR_BACKGROUND_PATH);
     df_util::fileExists(BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH);
@@ -152,19 +151,19 @@ int main(int argc, char *argv[])
     df_util::fileExists(FULL_TRANSPARENT_IMAGE_PATH);
 
     // Page pathing references to function calls.
-    helpPage->setPage(firstSelectPage, p_pageProduct, p_page_idle, paymentPage, p_page_transactions);
+    p_page_help->setPage(firstSelectPage, p_pageProduct, p_page_idle, paymentPage, p_page_transactions);
     p_page_transactions->setPage(p_page_idle);
     initPage->setPage(p_page_idle);
     p_page_maintenance_product->setPage(p_page_maintenance, p_page_idle);
     p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle);
     p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product,  p_page_maintenance_general, firstSelectPage, p_pageProduct);
     p_page_idle->setPage(firstSelectPage, p_page_maintenance);
-    firstSelectPage->setPage(p_pageProduct, p_page_idle, p_page_maintenance, helpPage);
-    p_pageProduct->setPage(firstSelectPage, p_page_dispense, wifiError, p_page_idle, paymentPage, helpPage);
-    paymentPage->setPage(p_pageProduct, p_page_dispense, p_page_idle, helpPage);
+    firstSelectPage->setPage(p_pageProduct, p_page_idle, p_page_maintenance, p_page_help);
+    p_pageProduct->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentPage, p_page_help);
+    paymentPage->setPage(p_pageProduct, p_page_dispense, p_page_idle, p_page_help);
     p_page_dispense->setPage(paymentPage, p_page_thank_you, p_page_idle);
     p_page_thank_you->setPage(p_page_dispense, p_page_idle, paymentPage);
-    wifiError->setPage(paymentPage, p_page_thank_you, p_page_idle);
+    p_page_wifi_error->setPage(paymentPage, p_page_thank_you, p_page_idle);
     
     initPage->showFullScreen();
 
@@ -172,7 +171,7 @@ int main(int argc, char *argv[])
     dfUiServer.startServer();
  
     QObject::connect(&dfUiServer, &DfUiServer::controllerFinishedAck, p_page_thank_you, &pagethankyou::controllerFinishedTransaction);
-    QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_maintenance, &page_maintenance::printerStatusFeedback);
+    QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_maintenance_general, &page_maintenance_general::printerStatusFeedback);
     QObject::connect(&dfUiServer, &DfUiServer::pleaseReset, p_page_dispense, &page_dispenser::resetDispenseTimeout);
     
     QObject::connect(&dfUiServer, &DfUiServer::signalUpdateVolume, p_page_dispense, &page_dispenser::updateVolumeDisplayed);
@@ -186,6 +185,6 @@ int main(int argc, char *argv[])
     
     QObject::connect(&dfUiServer, &DfUiServer::initReady, initPage, &page_init::initReadySlot);
     QObject::connect(&dfUiServer, &DfUiServer::MM, p_page_idle, &page_idle::MMSlot);
-
+    
     return mainApp.exec();
 }

@@ -83,7 +83,7 @@ private:
 
     page_maintenance* p_page_maintenance;
 
-    page_help* helpPage;
+    page_help* p_page_help;
 
     int maintenanceCounter;
 

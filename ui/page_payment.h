@@ -148,7 +148,7 @@ private:
     pageProduct* p_pageProduct;
     page_dispenser* p_page_dispense;
     page_idle* p_page_idle;
-    page_help* helpPage;
+    page_help* p_page_help;
 
     const QString TAP_READY_LABEL = "Ready for Tap";
     const QString TAP_PROCESSING_LABEL = "Processing";

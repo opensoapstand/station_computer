@@ -95,16 +95,21 @@ void page_help::setPage(page_select_product *pageSelect, pageProduct* pageProduc
 void page_help::on_previousPage_Button_clicked(){
     helpIdleTimer->stop();
     // qDebug() << "help3 to idle";
-    p_page_idle->showFullScreen();
-    this->hide();
+    // p_page_idle->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_idle);
 }
 
 void page_help::on_previousPage_Button_2_clicked(){
     helpIdleTimer->stop();
     // qDebug() << "help2 to idle";
-    p_page_idle->showFullScreen();
-    this->hide();
+    // p_page_idle->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_idle);
+    
 }
+
+
 
 void page_help::onHelpTimeoutTick(){
     if(-- _helpIdleTimeoutSec >= 0) {
@@ -114,9 +119,11 @@ void page_help::onHelpTimeoutTick(){
 
         helpIdleTimer->stop();
         // qDebug() << "help to idle";
-        p_page_idle->showFullScreen();
-        this->hide();
+        // p_page_idle->showFullScreen();
+        // this->hide();
+        p_page_idle->pageTransition(this, p_page_idle);
     }
+
     if(_helpIdleTimeoutSec<10){
         ui->refreshLabel->show();
     }
@@ -130,6 +137,7 @@ void page_help::on_refreshButton_clicked(){
 void page_help::on_transactions_Button_clicked()
 {
     helpIdleTimer->stop();
-    p_page_transactions->showFullScreen();
-    this->hide();
+    // p_page_transactions->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_transactions);
 }

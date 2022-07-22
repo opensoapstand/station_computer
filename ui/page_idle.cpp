@@ -107,7 +107,7 @@ void page_idle::showEvent(QShowEvent *event)
 
     addPictureToLabel(ui->drinkfill_logo_label, DRINKFILL_LOGO_VERTICAL_PATH);
     this->raise();
-    m_transitioning = false;
+    //m_transitioning = false;
 }
 
 /*
@@ -117,29 +117,30 @@ void page_idle::showEvent(QShowEvent *event)
 void page_idle::on_toSelectProductPageButton_clicked()
 {
     qDebug() << "Proceed to next page button clicked. ";
+    this->pageTransition(this,p_pageSelectProduct);
 
-    if (!m_transitioning)
-    {
-        m_transitioning = true;
-        this->raise();
-        p_pageSelectProduct->showFullScreen();
-    // this->lower();
+    // // if (!m_transitioning)
+    // // {
+    // //     m_transitioning = true;
+    //     this->raise();
+    //     p_pageSelectProduct->showFullScreen();
+    // // this->lower();
 
-        // DO NOT HIDE IDLE PAGE
-        // it's staying in the background to counter a hack UBC students found (when changing screens and tapping during the swap, they could get a hold of the machine)
-        // Tapping on on the desktop wallpaper minimizes the application.
-        // If the idle page is not hidden, and always on the background, there is never a wall paper showing. Effectively preventing this vulnerability to be exploited.
-        this->hide();
+    //     // DO NOT HIDE IDLE PAGE
+    //     // it's staying in the background to counter a hack UBC students found (when changing screens and tapping during the swap, they could get a hold of the machine)
+    //     // Tapping on on the desktop wallpaper minimizes the application.
+    //     // If the idle page is not hidden, and always on the background, there is never a wall paper showing. Effectively preventing this vulnerability to be exploited.
+    //     this->hide();
         
-        m_transitioning = false;
-    }
+    //     // m_transitioning = false;
+    // }
 }
 
 void page_idle::on_testButton_clicked()
 {
-    ui->testButton->setText(ui->testButton->text() + ".");
+    // ui->testButton->setText(ui->testButton->text() + ".");
     qDebug() << "test buttonproceeed clicked.. ";
-    p_pageSelectProduct->showFullScreen();
+    // p_pageSelectProduct->showFullScreen();
 }
 
 bool page_idle::isEnough(int p)
@@ -165,9 +166,11 @@ bool page_idle::isEnough(int p)
 void page_idle::MMSlot()
 {
     qDebug() << "Signal: Enter maintenance mode";
-    p_page_maintenance->showFullScreen();
-    this->hide();
+    // p_page_maintenance->showFullScreen();
+    // this->hide();
     this->p_pageSelectProduct->hide();
+    this->pageTransition(this, p_page_maintenance);
+    
 }
 
 void page_idle::addCompanyLogoToLabel(QLabel *label)
@@ -231,6 +234,16 @@ QString page_idle::getDefaultTemplatePathFromName(QString backgroundPictureName)
 {
     QString template_root_path = TEMPLATES_ROOT_PATH;
     return template_root_path + TEMPLATES_DEFAULT_NAME + "/" + backgroundPictureName;
+}
+
+void page_idle::pageTransition(QWidget* pageToHide, QWidget* pageToShow){
+    // page transition effects are not part of QT but of the operating system! 
+    // search for ubuntu tweaks program to set animations to "off"
+    
+    //pageToHide->raise();
+    pageToShow->showFullScreen();
+    usleep(200000);
+    pageToHide->hide();
 }
 
 void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QString imageName)

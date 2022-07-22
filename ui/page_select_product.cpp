@@ -89,7 +89,7 @@ void page_select_product::setPage(pageProduct *pageSizeSelect, page_idle *pageId
     this->p_page_product = pageSizeSelect;
     this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
-    this->helpPage = pageHelp;
+    this->p_page_help = pageHelp;
     
     selectedProductOrder = p_page_idle->currentProductOrder;
 
@@ -264,10 +264,11 @@ void page_select_product::select_product(int slot)
         productPageEndTimer->stop();
         p_page_idle->currentProductOrder->setSelectedSlot(slot);
         p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
-        this->raise();
-        p_page_product->showFullScreen();
-
-        this->hide();
+        // //this->raise();
+        // p_page_product->showFullScreen();
+        // usleep(200000);
+        // this->hide();
+        p_page_idle->pageTransition(this, p_page_product);
     }
     else
     {
@@ -312,8 +313,9 @@ void page_select_product::mainPage()
     qDebug() << "exit select product page for main page";
     selectedProductOrder->setDiscountPercentageFraction(0.0);
     this->raise();
-    p_page_idle->showFullScreen();
-    this->hide();
+    // p_page_idle->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_idle);
 }
 
 void page_select_product::on_p_page_maintenanceButton_pressed()
@@ -322,8 +324,9 @@ void page_select_product::on_p_page_maintenanceButton_pressed()
     if (maintenanceCounter > 15)
     {
         productPageEndTimer->stop();
-        p_page_maintenance->showFullScreen();
-        this->hide();
+        // p_page_maintenance->showFullScreen();
+        // this->hide();
+        p_page_idle->pageTransition(this, p_page_maintenance);
     }
 }
 
@@ -336,6 +339,7 @@ void page_select_product::on_mainPage_Button_clicked()
 void page_select_product::on_helpPage_Button_clicked()
 {
     productPageEndTimer->stop();
-    helpPage->showFullScreen();
-    this->hide();
+    // p_page_help->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_help);
 }

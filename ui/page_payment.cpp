@@ -232,7 +232,7 @@ void page_payment::setPage(pageProduct *pageSizeSelect, page_dispenser *page_dis
     this->p_pageProduct = pageSizeSelect;
     this->p_page_dispense = page_dispenser;
     this->p_page_idle = pageIdle;
-    this->helpPage = pageHelp;
+    this->p_page_help = pageHelp;
 }
 
 // DTOR
@@ -257,8 +257,9 @@ void page_payment::proceed_to_dispense()
 {
     stopPayTimers();
     // p_page_dispense->showEvent(dispenseEvent);
-    p_page_dispense->showFullScreen();
-    this->hide();
+    // p_page_dispense->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_dispense);
 }
 
 void page_payment::updateTotals(string drinkDescription, string drinkAmount, string orderTotal)
@@ -344,11 +345,9 @@ void page_payment::showEvent(QShowEvent *event)
     ui->steps_Label->show();
             
     ui->processing_Label->hide();
-    
 
-
-     ui->title_Label->setText("pay by phone");
-     ui->scan_Label->setText("Scan to Pay");
+    ui->title_Label->setText("pay by phone");
+    ui->scan_Label->setText("Scan to Pay");
 
 
     if (getPaymentMethod() == "tap")
@@ -667,8 +666,9 @@ void page_payment::on_previousPage_Button_clicked()
     if (exitConfirm())
     {
         // p_pageProduct->resizeEvent(pageProductResize);
-        p_pageProduct->showFullScreen();
-        this->hide();
+        // p_pageProduct->showFullScreen();
+        // this->hide();
+        p_page_idle->pageTransition(this, p_pageProduct);
     }
 }
 
@@ -676,16 +676,18 @@ void page_payment::on_mainPage_Button_clicked()
 {
     if (exitConfirm())
     {
-        helpPage->showFullScreen();
-        this->hide();
+        // p_page_help->showFullScreen();
+        // this->hide();
+        p_page_idle->pageTransition(this, p_page_help);
     }
 }
 
 void page_payment::idlePaymentTimeout()
 {
     resetPaymentPage();
-    p_page_idle->showFullScreen();
-    this->hide();
+    // p_page_idle->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_idle);
 }
 void page_payment::resetPaymentPage()
 {

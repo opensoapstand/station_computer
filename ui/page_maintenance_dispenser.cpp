@@ -72,7 +72,7 @@ void page_maintenance_dispenser::setSoldOutButtonText()
 
 void page_maintenance_dispenser::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< PPPage Enter: maintenance dispense >>>>>>>>>";
+    qDebug() << "<<<<<<< PPage Enter: maintenance dispense >>>>>>>>>";
 
     QWidget::showEvent(event);
     int product_slot___ = this->p_page_idle->currentProductOrder->getSelectedSlot();
@@ -163,9 +163,9 @@ void page_maintenance_dispenser::on_backButton_clicked()
     //    db.addPageClick("MAINTAIN PRODUCT PAGE EXITED");
 
     maintainProductPageEndTimer->stop();
-    p_page_maintenance->showFullScreen();
-    //    usleep(100);
-    this->hide();
+    // p_page_maintenance->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_maintenance);
 
     // ui->name->setText("");
     // ui->price_small->setText("");
@@ -820,8 +820,9 @@ void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
 
         maintainProductPageEndTimer->stop();
         // qDebug() << "maintenance dispenser to idle";
-        p_page_idle->showFullScreen();
-        this->hide();
+        // p_page_idle->showFullScreen();
+        // this->hide();
+        p_page_idle->pageTransition(this, p_page_idle);
     }
 }
 

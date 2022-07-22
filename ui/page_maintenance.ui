@@ -164,14 +164,14 @@
   <widget class="QPushButton" name="backButton">
    <property name="geometry">
     <rect>
-     <x>790</x>
-     <y>1670</y>
-     <width>271</width>
-     <height>211</height>
+     <x>10</x>
+     <y>10</y>
+     <width>151</width>
+     <height>61</height>
     </rect>
    </property>
    <property name="text">
-    <string>Back</string>
+    <string>&lt;-- Back</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_title">
@@ -1366,8 +1366,8 @@
   <widget class="QLabel" name="machineLabel">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>20</y>
+     <x>260</x>
+     <y>10</y>
      <width>391</width>
      <height>51</height>
     </rect>
@@ -1379,77 +1379,6 @@
    </property>
    <property name="text">
     <string>Machine ID: </string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="printer_isOnline_label">
-   <property name="geometry">
-    <rect>
-     <x>820</x>
-     <y>1260</y>
-     <width>161</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>.</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="printer_hasPaper_label">
-   <property name="geometry">
-    <rect>
-     <x>820</x>
-     <y>1290</y>
-     <width>151</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>.</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="printer_test_button">
-   <property name="geometry">
-    <rect>
-     <x>630</x>
-     <y>1290</y>
-     <width>161</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Print Test</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>630</x>
-     <y>1230</y>
-     <width>111</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>Receipt Printer</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="printer_check_status">
-   <property name="geometry">
-    <rect>
-     <x>630</x>
-     <y>1260</y>
-     <width>161</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Check status</string>
    </property>
   </widget>
   <widget class="QLabel" name="product1_overlay_label">
@@ -1520,8 +1449,8 @@
   <widget class="QLabel" name="label_ui_version">
    <property name="geometry">
     <rect>
-     <x>650</x>
-     <y>1140</y>
+     <x>310</x>
+     <y>70</y>
      <width>351</width>
      <height>17</height>
     </rect>

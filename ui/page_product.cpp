@@ -244,8 +244,8 @@ void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_
     this->paymentPage = page_payment;
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
-    this->helpPage = pageHelp;
-    this->wifiError = pageWifiError;
+    this->p_page_help = pageHelp;
+    this->p_page_wifi_error = pageWifiError;
 
     ui->promoCode->clear();
     ui->promoCode->hide();
@@ -773,9 +773,9 @@ void pageProduct::mainPage()
     this->stopSelectTimers();
     selectIdleTimer->stop();
     // qDebug() << "product to idle";
-    p_page_idle->showFullScreen();
-    //    usleep(100);
-    this->hide();
+    // p_page_idle->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_idle);
 }
 
 void pageProduct::on_mainPage_Button_clicked()
@@ -783,8 +783,9 @@ void pageProduct::on_mainPage_Button_clicked()
     //    qDebug() << "pageProduct: helpPage button" << endl;
     this->stopSelectTimers();
     selectIdleTimer->stop();
-    helpPage->showFullScreen();
-    this->hide();
+    // p_page_help->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_help);
 }
 
 void pageProduct::on_orderCustom_Button_clicked()
@@ -930,7 +931,6 @@ void pageProduct::on_previousPage_Button_clicked()
     {
     };
     selectIdleTimer->stop();
-    p_page_select_product->showFullScreen();
 
     ui->label_invoice_discount_amount->hide();
     ui->label_invoice_discount_name->hide();
@@ -939,8 +939,9 @@ void pageProduct::on_previousPage_Button_clicked()
 
     // couponHandler();
 
-    usleep(100);
-    this->hide();
+    // p_page_select_product->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_select_product);
 }
 
 void pageProduct::coupon_disable()
@@ -1027,9 +1028,10 @@ void pageProduct::on_page_payment_Button_clicked()
         {
             qDebug() << "ERROR: Failed to reach soapstandportal. error code: " + QString::number(res);
 
-            // wifiError->showEvent(wifiErrorEvent);
-            wifiError->showFullScreen();
-            this->hide();
+            // p_page_wifi_error->showEvent(wifiErrorEvent);
+            // p_page_wifi_error->showFullScreen();
+            // this->hide();
+            p_page_idle->pageTransition(this, p_page_wifi_error);
         }
         else
         {
@@ -1038,8 +1040,9 @@ void pageProduct::on_page_payment_Button_clicked()
 
             ui->label_invoice_price_total->text();
 
-            paymentPage->showFullScreen();
-            this->hide();
+            // paymentPage->showFullScreen();
+            // this->hide();
+            p_page_idle->pageTransition(this, paymentPage);
         }
         curl_easy_cleanup(curl);
         readBuffer = "";
@@ -1048,13 +1051,15 @@ void pageProduct::on_page_payment_Button_clicked()
     else if (paymentMethod == "barcode" || paymentMethod == "plu")
     {
         // p_page_dispense->showEvent(dispenseEvent); // todo Lode: this enabled together with showfullscreen calls the showEvent twice. only showevent, does not display the dispense page though.
-        p_page_dispense->showFullScreen();
-        this->hide();
+        // p_page_dispense->showFullScreen();
+        // this->hide();
+        p_page_idle->pageTransition(this, p_page_dispense);
     }
     else
     {
         qDebug() << "WARNING: No payment method detected.";
-        p_page_dispense->showFullScreen();
-        this->hide();
+        // p_page_dispense->showFullScreen();
+        // this->hide();
+        p_page_idle->pageTransition(this, p_page_dispense);
     }
 }

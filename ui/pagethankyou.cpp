@@ -254,8 +254,9 @@ void pagethankyou::exitPage()
         is_in_state_thank_you = false;
         p_page_idle->currentProductOrder->setPromoCode("");
 
-        p_page_idle->showFullScreen();
-        this->hide();
+        // p_page_idle->showFullScreen();
+        // this->hide();
+        p_page_idle->pageTransition(this, p_page_idle);
 
         if (exitIsForceable)
         {

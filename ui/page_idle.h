@@ -50,6 +50,7 @@ public:
     QString getTemplatePathFromName(QString backgroundPictureName);
     QString getDefaultTemplatePathFromName(QString backgroundPictureName);
     void setBackgroundPictureFromTemplateToPage(QWidget* page, QString imageName );
+    void pageTransition(QWidget* pageToHide, QWidget* pageToShow);
 
     DrinkOrder* currentProductOrder;
     df_util* dfUtility;

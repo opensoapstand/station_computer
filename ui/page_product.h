@@ -97,8 +97,8 @@ private:
     page_payment *paymentPage;
     page_idle *p_page_idle;
     page_dispenser *p_page_dispense;
-    page_error_wifi *wifiError;
-    page_help *helpPage;
+    page_error_wifi *p_page_wifi_error;
+    page_help *p_page_help;
     
     DrinkOrder *selectedProductOrder;
 

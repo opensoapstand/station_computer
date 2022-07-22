@@ -32,17 +32,153 @@
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="previousPage_Button_2">
+  <widget class="QPushButton" name="back_Button">
    <property name="geometry">
     <rect>
      <x>60</x>
      <y>40</y>
-     <width>181</width>
-     <height>81</height>
+     <width>101</width>
+     <height>51</height>
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>&lt;-- back</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="minimize_Button">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>1020</y>
+     <width>221</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Minimize Application</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="reboot_Button">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>1090</y>
+     <width>221</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Restart Station</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="shutdown_Button">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>1160</y>
+     <width>221</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Shut down Station</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="printer_test_button">
+   <property name="geometry">
+    <rect>
+     <x>670</x>
+     <y>370</y>
+     <width>161</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Print Test</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="printer_hasPaper_label">
+   <property name="geometry">
+    <rect>
+     <x>860</x>
+     <y>370</y>
+     <width>151</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>.</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="printer_check_status">
+   <property name="geometry">
+    <rect>
+     <x>670</x>
+     <y>340</y>
+     <width>161</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Check status</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="printer_isOnline_label">
+   <property name="geometry">
+    <rect>
+     <x>860</x>
+     <y>340</y>
+     <width>161</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>.</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>670</x>
+     <y>310</y>
+     <width>111</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Receipt Printer</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="enable_pump_ramping_checkBox">
+   <property name="geometry">
+    <rect>
+     <x>790</x>
+     <y>790</y>
+     <width>291</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Enable pump ramp up / ramp down</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="enable_empty_container_checkBox">
+   <property name="geometry">
+    <rect>
+     <x>790</x>
+     <y>760</y>
+     <width>251</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Enable empty stock detection</string>
    </property>
   </widget>
  </widget>

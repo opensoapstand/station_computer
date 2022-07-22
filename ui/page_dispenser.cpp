@@ -196,8 +196,9 @@ void page_dispenser::dispensing_end_admin()
         }
     }
     stopDispenseTimer();
-    thanksPage->showFullScreen();
-    this->hide();
+    // thanksPage->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, thanksPage);
     qDebug() << "Finished dispense admin handling";
 }
 

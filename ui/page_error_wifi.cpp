@@ -105,8 +105,9 @@ void page_error_wifi::exit_page(){
     // if(timeoutTimer != nullptr){
     timeoutTimer->stop();
 // }
-    p_page_idle->showFullScreen();
-    this->hide();
+    // p_page_idle->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_idle);
 }
 
 

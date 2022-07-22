@@ -158,8 +158,8 @@
   <widget class="QCheckBox" name="enable_pump_ramping_checkBox">
    <property name="geometry">
     <rect>
-     <x>790</x>
-     <y>790</y>
+     <x>670</x>
+     <y>560</y>
      <width>291</width>
      <height>23</height>
     </rect>
@@ -171,8 +171,8 @@
   <widget class="QCheckBox" name="enable_empty_container_checkBox">
    <property name="geometry">
     <rect>
-     <x>790</x>
-     <y>760</y>
+     <x>670</x>
+     <y>530</y>
      <width>251</width>
      <height>23</height>
     </rect>

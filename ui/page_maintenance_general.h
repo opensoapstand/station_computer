@@ -61,6 +61,10 @@ private slots:
     void on_printer_test_button_clicked();
     void on_printer_check_status_clicked();
 
+    void on_enable_pump_ramping_checkBox_clicked(bool checked);
+    void on_enable_empty_container_checkBox_clicked(bool checked);
+
+
 private:
     void showEvent(QShowEvent *event);
     Ui::page_maintenance_general *ui;

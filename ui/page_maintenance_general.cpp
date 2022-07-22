@@ -39,7 +39,11 @@ page_maintenance_general::~page_maintenance_general()
 void page_maintenance_general::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: maintenance general machine settings >>>>>>>>>";
+    DbManager db(DB_PATH);
+    ui->enable_empty_container_checkBox->setChecked(db.getEmptyContainerDetectionEnabled());
+    ui->enable_pump_ramping_checkBox->setChecked(db.getPumpRampingEnabled());
   
+    db.closeDB();
 }
 
 /*
@@ -108,6 +112,37 @@ void page_maintenance_general::on_printer_check_status_clicked()
     // usleep(50000);
     // p_page_idle->dfUtility->send_command_to_FSM("q"); // go back to fsm idle state is done in controller
 }
+
+
+
+void page_maintenance_general::on_enable_pump_ramping_checkBox_clicked(bool checked)
+{
+   //qDebug() << "test ramp clicked" << checked;
+    DbManager db(DB_PATH);
+    // qDebug() << "test empty db: " << db.getPumpRampingEnabled();
+    if (checked != db.getPumpRampingEnabled())
+    {
+        qDebug() << "Write to db: Pump ramping enabled?" << checked;
+        db.setPumpRampingEnabled(checked);
+        ui->enable_pump_ramping_checkBox->setChecked(db.getPumpRampingEnabled());
+    }
+    db.closeDB();
+}
+
+void page_maintenance_general::on_enable_empty_container_checkBox_clicked(bool checked)
+{
+    // qDebug() << "test empty clicked" << checked;
+    DbManager db(DB_PATH);
+    // qDebug() << "test empty db: " << db.getEmptyContainerDetectionEnabled();
+    if (checked != db.getEmptyContainerDetectionEnabled())
+    {
+        qDebug() << "Empty container detection enabled?" << checked;
+        db.setEmptyContainerDetectionEnabled(checked);
+        ui->enable_empty_container_checkBox->setChecked(db.getEmptyContainerDetectionEnabled());
+    }
+    db.closeDB();
+}
+
 
 
 void page_maintenance_general::on_back_Button_clicked()

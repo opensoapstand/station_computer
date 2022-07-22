@@ -110,8 +110,8 @@ void page_maintenance::showEvent(QShowEvent *event)
 
     qDebug() << "db for names and id";
     DbManager db(DB_PATH);
-    ui->enable_empty_container_checkBox->setChecked(db.getEmptyContainerDetectionEnabled());
-    ui->enable_pump_ramping_checkBox->setChecked(db.getPumpRampingEnabled());
+    // ui->enable_empty_container_checkBox->setChecked(db.getEmptyContainerDetectionEnabled());
+    // ui->enable_pump_ramping_checkBox->setChecked(db.getPumpRampingEnabled());
     // qDebug()<<"ramping?"<<db.getPumpRampingEnabled();
     // ui->enable_pump_ramping_checkBox->setChecked(true);
 
@@ -504,34 +504,4 @@ void page_maintenance::keyboardButtonPressed(int buttonID)
         ui->keyboardTextEntry->setText(ui->keyboardTextEntry->text() + buttonText);
     }
 }
-
-
-void page_maintenance::on_enable_pump_ramping_checkBox_clicked(bool checked)
-{
-   //qDebug() << "test ramp clicked" << checked;
-    DbManager db(DB_PATH);
-    // qDebug() << "test empty db: " << db.getPumpRampingEnabled();
-    if (checked != db.getPumpRampingEnabled())
-    {
-        qDebug() << "Write to db: Pump ramping enabled?" << checked;
-        db.setPumpRampingEnabled(checked);
-        ui->enable_pump_ramping_checkBox->setChecked(db.getPumpRampingEnabled());
-    }
-    db.closeDB();
-}
-
-void page_maintenance::on_enable_empty_container_checkBox_clicked(bool checked)
-{
-    // qDebug() << "test empty clicked" << checked;
-    DbManager db(DB_PATH);
-    // qDebug() << "test empty db: " << db.getEmptyContainerDetectionEnabled();
-    if (checked != db.getEmptyContainerDetectionEnabled())
-    {
-        qDebug() << "Empty container detection enabled?" << checked;
-        db.setEmptyContainerDetectionEnabled(checked);
-        ui->enable_empty_container_checkBox->setChecked(db.getEmptyContainerDetectionEnabled());
-    }
-    db.closeDB();
-}
-
 

@@ -73,8 +73,6 @@ private slots:
 
     // void on_enable_empty_container_checkBox_stateChanged(int arg1);
     // void on_enable_pump_ramping_checkBox_stateChanged(int arg1);
-    void on_enable_pump_ramping_checkBox_clicked(bool checked);
-    void on_enable_empty_container_checkBox_clicked(bool checked);
 
 
     void on_generalSettings_button_clicked();

@@ -181,6 +181,19 @@
     <string>Enable empty stock detection</string>
    </property>
   </widget>
+  <widget class="QLineEdit" name="test_lineEdit">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>920</y>
+     <width>113</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>yoo</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

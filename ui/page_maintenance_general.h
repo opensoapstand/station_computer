@@ -65,6 +65,8 @@ private slots:
     void on_enable_empty_container_checkBox_clicked(bool checked);
 
 
+    void on_test_lineEdit_textChanged(const QString &arg1);
+
 private:
     void showEvent(QShowEvent *event);
     Ui::page_maintenance_general *ui;

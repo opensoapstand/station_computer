@@ -20,12 +20,14 @@
 #include "page_transactions.h"
 #include "page_payment.h"
 #include "page_idle.h"
+#include "page_maintenance.h"
 
 class page_select_product;
 class page_payment;
 class page_idle;
 class pageProduct;
 class page_transactions;
+class page_maintenance;
 
 namespace Ui {
 class page_help;
@@ -37,7 +39,7 @@ class page_help : public QWidget
 
 public:
     explicit page_help(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, page_payment *page_payment, page_transactions *pageTransactions);
+    void setPage(page_select_product *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, page_payment *page_payment, page_transactions *pageTransactions, page_maintenance* pageMaintenance);
     ~page_help();
     QTimer* helpIdleTimer;
 
@@ -50,6 +52,10 @@ private slots:
 
     void on_transactions_Button_clicked();
 
+    void keyboardButtonPressed(int);
+
+    void on_maintenance_page_Button_clicked();
+
 private:
     void showEvent(QShowEvent *event);
 
@@ -59,6 +65,7 @@ private:
     page_idle* p_page_idle;
     pageProduct* selectPage;
     page_transactions* p_page_transactions;
+    page_maintenance* p_page_maintenance;
 
     int _helpIdleTimeoutSec;
 

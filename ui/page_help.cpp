@@ -48,6 +48,9 @@ page_help::page_help(QWidget *parent) :
     helpIdleTimer = new QTimer(this);
     helpIdleTimer->setInterval(1000);
     connect(helpIdleTimer, SIGNAL(timeout()), this, SLOT(onHelpTimeoutTick()));
+    
+    connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
+    ui->keyboardTextEntry->setText("LODE");
 }
 
 // DTOR
@@ -78,25 +81,24 @@ void page_help::showEvent(QShowEvent *event)
     helpIdleTimer->start(1000);
     _helpIdleTimeoutSec = 60;
     ui->refreshLabel->hide();
+    ui->keyboard_3->hide();
 }
 
 /*
  * Page Tracking reference
  */
-void page_help::setPage(page_select_product *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, page_payment *page_payment, page_transactions *pageTransactions)
+void page_help::setPage(page_select_product *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, page_payment *page_payment, page_transactions *pageTransactions, page_maintenance* pageMaintenance)
 {
     this->p_page_idle = pageIdle;
     this->paymentPage = page_payment;
     this->selectPage = pageProduct;
     this->p_page_select_product = pageSelect;
     this->p_page_transactions = pageTransactions;
+    this->p_page_maintenance = pageMaintenance;
 }
 
 void page_help::on_previousPage_Button_clicked(){
     helpIdleTimer->stop();
-    // qDebug() << "help3 to idle";
-    // p_page_idle->showFullScreen();
-    // this->hide();
     p_page_idle->pageTransition(this, p_page_idle);
 }
 
@@ -106,14 +108,11 @@ void page_help::on_previousPage_Button_2_clicked(){
     // p_page_idle->showFullScreen();
     // this->hide();
     p_page_idle->pageTransition(this, p_page_idle);
-    
 }
-
-
 
 void page_help::onHelpTimeoutTick(){
     if(-- _helpIdleTimeoutSec >= 0) {
-       qDebug() << "Help Tick Down: " << _helpIdleTimeoutSec;
+      // qDebug() << "Help Tick Down: " << _helpIdleTimeoutSec;
     } else {
        qDebug() << "Help Timer Done!" << _helpIdleTimeoutSec;
 
@@ -140,4 +139,112 @@ void page_help::on_transactions_Button_clicked()
     // p_page_transactions->showFullScreen();
     // this->hide();
     p_page_idle->pageTransition(this, p_page_transactions);
+}
+
+
+void page_help::on_maintenance_page_Button_clicked()
+{
+    helpIdleTimer->stop();
+    // p_page_idle->pageTransition(this, p_page_maintenance);
+    ui->keyboard_3->show();
+}
+
+
+void page_help::keyboardButtonPressed(int buttonID)
+{
+    qDebug()<<"Butttton pressed";
+
+    QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
+    // qDebug() << buttonpressed->text();
+    QString buttonText = buttonpressed->text();
+
+    if (buttonText == "Cancel")
+    {
+        ui->keyboard_3->hide();
+        ui->keyboardTextEntry->setText("");        
+    }
+    else if (buttonText == "CAPS")
+    {
+        foreach (QAbstractButton *button, ui->buttonGroup->buttons())
+        {
+            if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace")
+            {
+                // qDebug() << "doing nothing";
+            }
+            else
+            {
+                button->setText(button->text().toLower());
+            }
+        }
+    }
+    else if (buttonText == "caps")
+    {
+        foreach (QAbstractButton *button, ui->buttonGroup->buttons())
+        {
+            if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace")
+            {
+                // doing nothing
+            }
+            else
+            {
+                button->setText(button->text().toUpper());
+            }
+        }
+    }
+    else if (buttonText == "Backspace")
+    {
+        ui->keyboardTextEntry->backspace();
+    }
+    else if (buttonText == "Clear")
+    {
+        ui->keyboardTextEntry->setText("");
+    }
+    else if (buttonText == "Done")
+    {
+        qDebug() << "DONE CLICKED";
+        // QString password = ui->keyboardTextEntry->text();
+        // //        qDebug() << "Password: " << password;
+        // // ATTEMPT nmcli connection
+
+        // QString connect_string = "nmcli dev wifi connect '" + ui->wifiPassLabel->text() + "' password '" + ui->keyboardTextEntry->text() + "'";
+        // QByteArray ba = connect_string.toLocal8Bit();
+        // const char *c_str = ba.data();
+        // //        qDebug() << c_str;
+        // system(c_str);
+
+        // ui->d->hide();
+
+        // QProcess process;
+        // process.start("iwgetid -r");
+        // process.waitForFinished(-1);
+        // QString stdout = process.readAllStandardOutput();
+        // ui->wifi_name->setText("Wifi Name: " + stdout);
+
+        // process.start("hostname -I");
+        // process.waitForFinished(-1);
+        // stdout = process.readAllStandardOutput();
+        // ui->wifi_ip_address->setText("Wifi IP Address: " + stdout);
+
+        // process.start("nmcli -t -f STATE general");
+        // process.waitForFinished(-1);
+        // stdout = process.readAllStandardOutput();
+        // ui->wifi_status->setText("Wifi State: " + stdout);
+
+        // process.start("nmcli networking connectivity");
+        // process.waitForFinished(-1);
+        // stdout = process.readAllStandardOutput();
+        // ui->wifi_internet->setText("Wifi Connectivity: " + stdout);
+    }
+    else if (buttonText == "Space")
+    {
+        ui->keyboardTextEntry->setText(ui->keyboardTextEntry->text() + " ");
+    }
+    else if (buttonText == "&&")
+    {
+        ui->keyboardTextEntry->setText(ui->keyboardTextEntry->text() + "&");
+    }
+    else
+    {
+        ui->keyboardTextEntry->setText(ui->keyboardTextEntry->text() + buttonText);
+    }
 }

@@ -150,6 +150,7 @@ void page_maintenance::showEvent(QShowEvent *event)
 
     p_pageSelectProduct->cancelTimers();
     p_pageProduct->cancelTimers();
+     qDebug() << "End maintenance load";
 }
 
 /*
@@ -411,6 +412,7 @@ void page_maintenance::onPage_maintenanceTimeoutTick()
 void page_maintenance::keyboardButtonPressed(int buttonID)
 {
 
+    qDebug() << "button press maintenance mooode.....";
     QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
     // qDebug() << buttonpressed->text();
     QString buttonText = buttonpressed->text();

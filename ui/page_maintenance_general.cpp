@@ -171,3 +171,8 @@ void page_maintenance_general::on_shutdown_Button_clicked()
 {
 
 }
+
+void page_maintenance_general::on_test_lineEdit_textChanged(const QString &arg1)
+{
+
+}

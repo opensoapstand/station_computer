@@ -138,9 +138,7 @@ void page_idle::on_toSelectProductPageButton_clicked()
 
 void page_idle::on_testButton_clicked()
 {
-    // ui->testButton->setText(ui->testButton->text() + ".");
     qDebug() << "test buttonproceeed clicked.. ";
-    // p_pageSelectProduct->showFullScreen();
 }
 
 bool page_idle::isEnough(int p)
@@ -242,7 +240,7 @@ void page_idle::pageTransition(QWidget* pageToHide, QWidget* pageToShow){
     
     //pageToHide->raise();
     pageToShow->showFullScreen();
-    usleep(200000);
+   usleep(100000);
     pageToHide->hide();
 }
 

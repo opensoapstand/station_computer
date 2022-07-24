@@ -50,7 +50,7 @@ page_help::page_help(QWidget *parent) :
     connect(helpIdleTimer, SIGNAL(timeout()), this, SLOT(onHelpTimeoutTick()));
     
     connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
-    ui->keyboardTextEntry->setText("LODE");
+    //ui->keyboardTextEntry->setText("LODE");
 }
 
 // DTOR
@@ -246,5 +246,12 @@ void page_help::keyboardButtonPressed(int buttonID)
     else
     {
         ui->keyboardTextEntry->setText(ui->keyboardTextEntry->text() + buttonText);
+    }
+
+    if (ui->keyboardTextEntry->text() == "123"){
+        qDebug()<< "password correct";
+        p_page_idle->pageTransition(this, p_page_maintenance);
+        ui->keyboard_3->hide();
+        ui->keyboardTextEntry->setText("");
     }
 }

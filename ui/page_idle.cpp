@@ -117,7 +117,8 @@ void page_idle::showEvent(QShowEvent *event)
 void page_idle::on_toSelectProductPageButton_clicked()
 {
     qDebug() << "Proceed to next page button clicked. ";
-    this->pageTransition(this,p_pageSelectProduct);
+    // this->pageTransition(this,p_pageSelectProduct);
+        p_pageSelectProduct->showFullScreen();
 
     // // if (!m_transitioning)
     // // {
@@ -238,9 +239,9 @@ void page_idle::pageTransition(QWidget* pageToHide, QWidget* pageToShow){
     // page transition effects are not part of QT but of the operating system! 
     // search for ubuntu tweaks program to set animations to "off"
     
-    //pageToHide->raise();
+    // pageToHide->raise();
     pageToShow->showFullScreen();
-   usleep(100000);
+    usleep(200000);
     pageToHide->hide();
 }
 

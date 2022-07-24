@@ -260,10 +260,10 @@
   <widget class="QTableWidget" name="wifiTable">
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>1100</y>
+     <x>50</x>
+     <y>1070</y>
      <width>501</width>
-     <height>551</height>
+     <height>121</height>
     </rect>
    </property>
    <attribute name="horizontalHeaderDefaultSectionSize">

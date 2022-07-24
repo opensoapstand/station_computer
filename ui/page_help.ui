@@ -122,7 +122,7 @@ Tap on screen to keep page open.</string>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color:red;</string>
+    <string notr="true">background-color:white;</string>
    </property>
    <layout class="QGridLayout" name="keyboard">
     <item row="0" column="0" colspan="12">

@@ -67,6 +67,11 @@ private slots:
 
     void on_test_lineEdit_textChanged(const QString &arg1);
 
+    void btn_clicked();
+    void keyboardButtonPressed(int);
+    void on_wifiButton_clicked();
+    // void onPage_maintenanceTimeoutTick();
+
 private:
     void showEvent(QShowEvent *event);
     Ui::page_maintenance_general *ui;

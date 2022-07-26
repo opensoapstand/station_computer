@@ -65,7 +65,6 @@ bool mCommunication::page_init(){
         cfmakeraw(&SerialPortSettings);
         if((tcsetattr(fd,TCSANOW,&SerialPortSettings)) != 0) {
         } else {
-
             tcflush(fd,TCIOFLUSH);
             
             bRet = true;
@@ -86,7 +85,6 @@ std::vector<uint8_t> mCommunication::readPacket(){
     //tcflush(fd, TCIOFLUSH);
     
     readSize = read(fd, buffer, MAX_SIZE);
-    
     if (readSize == -1)
     {
         pktRead.clear();
@@ -94,10 +92,6 @@ std::vector<uint8_t> mCommunication::readPacket(){
         // std::cout << "Packet read failed...\n";
         return pktRead;
     }
-//    else if (int(buffer[2]) < readSize) {
-//        std::cout << "buffer[2] = " << int(buffer[3]) << " readSzie: " << readSize ;
-//        readPacket();
-//    }
     else{
 
         pktRead.reserve(uint(readSize));
@@ -105,21 +99,14 @@ std::vector<uint8_t> mCommunication::readPacket(){
             pktRead.push_back(buffer[i]);
             // std::cout << "buffer[" << i << "] = " << int(buffer[i]) << " \n";
         }
-
-//        std::cout << "buffer1 + buffer2 = " << (int(buffer[1]) + int(buffer[2])) << "\n" << "readSize-3 = " << readSize-0x05 << "\n" << "readSize = " << readSize << "\n";
-
-//        std::cout << "pktRead.end()[-2]= " << pktRead.end()[-2] << "\n";
         while ((pktRead.end()[-2] != 0x03) && ((int(buffer[1]) + int(buffer[2])) != readSize-0x05)){
-//            std::cout << "True\n";
             readSize2 = read(fd, buffer, MAX_SIZE);
             if (readSize2 == -1)
             {
-//                std::cout << "readSize2 = -1\n";
                 pktRead.clear();
                 pktRead.push_back(0xFF);
                 return pktRead;
             }else {
-//
                 pktRead.reserve(uint(readSize2));
                 for (long i = 0; i < readSize2; i++){ //store read bytes into vector
                     pktRead.push_back(buffer[i]);
@@ -146,11 +133,11 @@ std::vector<uint8_t> mCommunication::readForAck()
     std::vector<uint8_t> pktRead;
     // tcflush(fd, TCIOFLUSH);
     // tcflush(fd, TCIOFLUSH);
-    qDebug() << fd ;
     int readcount = 0;
     while (readcount < 3){
         if (readSize == -1){
             readSize = read(fd, buffer, 1);
+
             readcount++;
         }
         if (readSize != -1){
@@ -162,18 +149,20 @@ std::vector<uint8_t> mCommunication::readForAck()
 
     if (readSize == -1)
     {
-        std::cout << "Read failed -1";
+        std::cout << "Read failed -1" << endl;
         pktRead.clear();
         pktRead.push_back(0xFF);
         return pktRead;
     }
     else{
+        // std::cout << "Read size" << readSize;
         pktRead.reserve(uint(readSize));
         for (int i = 0; i < readSize; i++){ //store read bytes into vector
+            // std::cout << buffer[i];
             pktRead.push_back(buffer[i]);
         }
-
- //       tcflush(fd, TCIOFLUSH);
+        // std::cout << pktRead[0];
+    //    tcflush(fd, TCIOFLUSH);
         return pktRead;
     }
 }

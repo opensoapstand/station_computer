@@ -247,7 +247,7 @@ void page_payment::cancelPayment()
     pktToSend = paymentPacket.purchaseCancelPacket();
     if (sendToUX410())
     {
-        // waitForUX410();
+        waitForUX410();
         // pktResponded.clear();
     }
     com.flushSerial();
@@ -639,15 +639,15 @@ void page_payment::idlePaymentTimeout()
 }
 void page_payment::resetPaymentPage()
 {
-
-    stopPayTimers();
-    response = true;
-    readTimer->stop();
-    qDebug() << "Cancelled";
     if (getPaymentMethod() == "tap")
     {
         cancelPayment();
     }
+    stopPayTimers();
+    response = true;
+    readTimer->stop();
+    qDebug() << "Cancelled";
+    
 }
 
 /* ----- Payment ----- */

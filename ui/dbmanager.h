@@ -24,7 +24,7 @@ public:
     QString getPaymentMethod(int slot);
     double getProductVolume(int slot, char ml);
     QString getUnits(int slot);
-
+    QString getMaintenanceAdminPassword();
     QString getCustomerId();
 
     double getFullProduct(int slot);

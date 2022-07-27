@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
     df_util::fileExists(p_page_idle->getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
 
     qDebug()<< "Check image paths.... (all paths resolved if nothing shows up).";
-    df_util::fileExists(PAGE_INIT_BACKGROUND_PATH);
+    df_util::fileExists(PAGE_INIT_BACKGROUND_IMAGE_PATH);
     df_util::fileExists(PAGE_IDLE_BACKGROUND_PATH);
     df_util::fileExists(PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
     df_util::fileExists(PAGE_HELP_BACKGROUND_PATH);

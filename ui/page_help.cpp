@@ -70,6 +70,10 @@ void page_help::showEvent(QShowEvent *event)
     // palette.setBrush(QPalette::Background, background);
     // this->setPalette(palette);
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_PATH);
+
+    DbManager db(DB_PATH);
+    maintenance_pwd = db.getMaintenanceAdminPassword();
+    db.closeDB();
     
 
     if(helpIdleTimer == nullptr){
@@ -248,7 +252,13 @@ void page_help::keyboardButtonPressed(int buttonID)
         ui->keyboardTextEntry->setText(ui->keyboardTextEntry->text() + buttonText);
     }
 
-    if (ui->keyboardTextEntry->text() == "123"){
+    QString textEntry = ui->keyboardTextEntry->text();
+    int isEqual = QString::compare(textEntry, maintenance_pwd, Qt::CaseInsensitive);
+    qDebug() << isEqual << "iiiijijjijj";
+    qDebug() << textEntry << "iiiijijjijj";
+    qDebug() << maintenance_pwd << "iiiijijjijj";
+    if (isEqual!= -1){
+    // if (maintenance_pwd == textEntry){
         qDebug()<< "password correct";
         p_page_idle->pageTransition(this, p_page_maintenance);
         ui->keyboard_3->hide();

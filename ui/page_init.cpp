@@ -59,12 +59,16 @@ void page_init::showEvent(QShowEvent *event)
     qDebug() << "<<<<<<< Page Enter: Init >>>>>>>>>";
     QWidget::showEvent(event);
 
-     QPixmap background(PAGE_INIT_BACKGROUND_PATH);
-    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-    QPalette palette;
-    palette.setBrush(QPalette::Background, background);
-    this->setPalette(palette);
+    // QPixmap background(PAGE_INIT_BACKGROUND_IMAGE_PATH);
+    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+    // QPalette palette;
+    // palette.setBrush(QPalette::Background, background);
+    // this->setPalette(palette);
     
+    
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_INIT_BACKGROUND_IMAGE_PATH);
+
+
     //    qDebug() << "Start init Timers" << endl;
     initIdleTimer->start(1000);
 #ifdef START_FSM_FROM_UI

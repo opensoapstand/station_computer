@@ -47,6 +47,16 @@ void page_dispenser::setPage(page_payment *page_payment, pagethankyou *pageThank
     this->paymentPage = page_payment;
     this->p_page_idle = pageIdle;
     selectedProductOrder = p_page_idle->currentProductOrder;
+
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
+
+    // QPixmap background(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
+    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+    // QPalette palette;
+    // palette.setBrush(QPalette::Background, background);
+    // this->setPalette(palette);
+
+
 }
 
 // DTOR
@@ -64,13 +74,6 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     qDebug() << "selected slot: " << QString::number(selectedProductOrder->getSelectedSlot());
 
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
-
-    // QPixmap background(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
-    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-    // QPalette palette;
-    // palette.setBrush(QPalette::Background, background);
-    // this->setPalette(palette);
 
 
 #ifdef ENABLE_DYNAMIC_UI

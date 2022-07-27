@@ -253,6 +253,7 @@ void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_
     ui->label_invoice_discount_name->hide();
 
     selectedProductOrder = p_page_idle->currentProductOrder;
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_PRODUCT_BACKGROUND_PATH);
 
     couponHandler();
 }
@@ -289,10 +290,11 @@ void pageProduct::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: Product >>>>>>>>>";
     QWidget::showEvent(event);
+        
+    
     selectedProductOrder->loadSelectedProductProperties();
     setDefaultSize();
     loadOrderSelectedSize();
-
     reset_and_show_page_elements();
 }
 
@@ -328,7 +330,7 @@ void pageProduct::reset_and_show_page_elements()
 {
 
 #ifdef ENABLE_DYNAMIC_UI
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_PRODUCT_BACKGROUND_PATH);
+
 
     ui->label_product_photo->setStyleSheet("QLabel{border: 1px solid #5E8680;}");
     p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->currentProductOrder->getSelectedProductPicturePath());
@@ -1047,7 +1049,6 @@ void pageProduct::on_page_payment_Button_clicked()
         curl_easy_cleanup(curl);
         readBuffer = "";
     }
-    
     else if (paymentMethod == "barcode" || paymentMethod == "plu")
     {
         // p_page_dispense->showEvent(dispenseEvent); // todo Lode: this enabled together with showfullscreen calls the showEvent twice. only showevent, does not display the dispense page though.

@@ -238,15 +238,18 @@ QString page_idle::getDefaultTemplatePathFromName(QString backgroundPictureName)
 void page_idle::pageTransition(QWidget* pageToHide, QWidget* pageToShow){
     // page transition effects are not part of QT but of the operating system! 
     // search for ubuntu tweaks program to set animations to "off"
-    
+    qDebug()<<"---------page transistion";
     // pageToHide->raise();
     pageToShow->showFullScreen();
-    usleep(200000);
+    // usleep(200000);
     pageToHide->hide();
 }
 
 void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QString imageName)
 {
+    // on Page: if called from setPage: will not scale
+    // on Page: if called from showEvent: will scale to screen
+
     QString image_path = imageName;
 #ifdef ENABLE_DYNAMIC_UI
     image_path = getTemplatePathFromName(imageName);
@@ -265,10 +268,17 @@ void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QStrin
     QPixmap background(imageName);
 #endif
 
-    background = background.scaled(p_widget->size(), Qt::IgnoreAspectRatio);
+    //background = background.scaled(p_widget->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
     p_widget->setPalette(palette);
+
+
+        // QPixmap background(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
+    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+    // QPalette palette;
+    // palette.setBrush(QPalette::Background, background);
+    // this->setPalette(palette);
 
 #else
 

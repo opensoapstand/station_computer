@@ -21,6 +21,7 @@
 #include "page_payment.h"
 #include "page_idle.h"
 #include "page_maintenance.h"
+#include "dbmanager.h"
 
 class page_select_product;
 class page_payment;
@@ -70,6 +71,7 @@ private:
     int _helpIdleTimeoutSec;
 
     QResizeEvent *helpResize;
+    QString maintenance_pwd;
 
 };
 

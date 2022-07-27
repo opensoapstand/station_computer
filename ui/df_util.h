@@ -100,6 +100,9 @@ using namespace std;
 // #define PAGE_WIFI_ERROR_BACKGROUND_PATH                 "/home/df-admin/production/references/oops.png"
 #define BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH            "/home/df-admin/production/references/bottle_fill_for_animation.png"
 
+#define PAGE_INIT_BACKGROUND_IMAGE_PATH                 "background_message.png"
+
+
 #define SOLD_OUT_IMAGE_PATH                         "/home/df-admin/production/references/soldOut.png"
 #define KEYBOARD_IMAGE_PATH                         "/home/df-admin/production/references/soapstand-keyboard.png"
 #define FULL_TRANSPARENT_IMAGE_PATH                 "/home/df-admin/production/references/background.png"
@@ -145,7 +148,8 @@ using namespace std;
 
 #endif
 
-#define PAGE_INIT_BACKGROUND_PATH "/home/df-admin/production/references/0_background_init.png"
+// #define PAGE_INIT_BACKGROUND_IMAGE_PATH "/home/df-admin/production/references/0_background_init.png"
+// 
 
 #define SEND_DISPENSE_START "d"
 #define SEND_DISPENSE_STOP "f"

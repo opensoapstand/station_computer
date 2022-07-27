@@ -1520,6 +1520,22 @@ QString DbManager::getMachineID()
     }
     return mid_string;
 }
+QString DbManager::getMaintenanceAdminPassword()
+{
+    QSqlQuery mid_query;
+    QString mid_string;
+
+    {
+        mid_query.prepare("SELECT maintenance_pwd FROM machine");
+        mid_query.exec();
+
+        while (mid_query.next())
+        {
+            mid_string = mid_query.value(0).toString();
+        }
+    }
+    return mid_string;
+}
 
 QString DbManager::getProductType(int slot)
 {

@@ -142,6 +142,17 @@ void pagePayment::setPage(pageProduct *pageSizeSelect, page_dispenser *page_disp
     this->p_page_dispense = page_dispenser;
     this->p_page_idle = pageIdle;
     this->p_page_help = pageHelp;
+
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
+
+    // QString bitmap_location;
+
+    // bitmap_location = "/home/df-admin/production/references/5_background_pay_qr.png";
+
+    // QPixmap background(bitmap_location);
+    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+
+
 }
 
 // DTOR
@@ -259,14 +270,6 @@ void pagePayment::showEvent(QShowEvent *event)
     }
 
 
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
-
-    // QString bitmap_location;
-
-    // bitmap_location = "/home/df-admin/production/references/5_background_pay_qr.png";
-
-    // QPixmap background(bitmap_location);
-    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
 
     // QPalette palette;
     // palette.setBrush(QPalette::Background, background);

@@ -54,7 +54,7 @@ void page_maintenance::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
     qDebug() << "<<<<<<< Page Enter: maintenance >>>>>>>>>";
 
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH);
+    
 
 
 #ifdef ENABLE_DYNAMIC_UI
@@ -138,6 +138,9 @@ void page_maintenance::setPage(page_idle *pageIdle, page_maintenance_dispenser *
     this->p_page_maintenance_general = p_pageMaintenanceGeneral;
     this->p_pageSelectProduct = p_pageProduct;
     this->p_pageProduct = pagePaySelect;
+
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH);
+    
 }
 
 void page_maintenance::onPage_maintenanceTimeoutTick()

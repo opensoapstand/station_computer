@@ -235,7 +235,7 @@ private:
     QShowEvent *dispenseEvent;
 
     bool response;
-    // bool tap_payment;
+    bool tap_payment;
 
     void testQRgen();
 

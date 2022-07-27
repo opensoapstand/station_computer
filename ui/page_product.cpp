@@ -460,7 +460,6 @@ void pageProduct::reset_and_show_page_elements()
     ui->promoKeyboard->setStyleSheet(keyboard_style_sheet);
 
     loadOrderSelectedSize();
-
     selectIdleTimer->start(1000);
     _selectIdleTimeoutSec = 400;
 }
@@ -882,6 +881,7 @@ void pageProduct::on_applyPromo_Button_clicked()
                     selectedProductOrder->setDiscountPercentageFraction((new_percent * 1.0) / 100);
                     qDebug() << "Apply coupon percentage: " << new_percent;
                     loadOrderSelectedSize();
+                    qDebug() << "Promo";
                 }
                 else
                 {

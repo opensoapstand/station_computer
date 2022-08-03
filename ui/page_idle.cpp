@@ -117,8 +117,8 @@ void page_idle::showEvent(QShowEvent *event)
 void page_idle::on_toSelectProductPageButton_clicked()
 {
     qDebug() << "Proceed to next page button clicked. ";
-    // this->pageTransition(this,p_pageSelectProduct);
-        p_pageSelectProduct->showFullScreen();
+    this->pageTransition(this,p_pageSelectProduct);
+    // p_pageSelectProduct->showFullScreen();
 
     // // if (!m_transitioning)
     // // {

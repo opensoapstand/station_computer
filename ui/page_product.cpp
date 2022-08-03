@@ -402,7 +402,7 @@ void pageProduct::reset_and_show_page_elements()
             orderSizeBackgroundLabels[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3]));
             orderSizeBackgroundLabels[i]->move(xywh_size_buttons[i][0], xywh_size_buttons[i][1]);
             orderSizeBackgroundLabels[i]->lower();
-            orderSizeBackgroundLabels[i]->setStyleSheet("QLabel { background-color: red; border: 0px }");
+            orderSizeBackgroundLabels[i]->setStyleSheet("QLabel { background-color: transparent; border: 0px }");
 
             orderSizeLabelsPrice[i]->move(xy_size_labels_price[i][0], xy_size_labels_price[i][1]);
             orderSizeLabelsVolume[i]->move(xy_size_labels_volume[i][0], xy_size_labels_volume[i][1]);
@@ -453,6 +453,8 @@ void pageProduct::reset_and_show_page_elements()
     /* Hacky transparent button */
     ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->page_payment_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    // ui->page_payment_Button->setStyleSheet("QPushButton { background-color: red; border: 0px };QPushButton:pressed { background-color: green; border: 10px }");
+    
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     QString keyboard = KEYBOARD_IMAGE_PATH;

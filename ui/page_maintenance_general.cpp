@@ -30,7 +30,7 @@ page_maintenance_general::page_maintenance_general(QWidget *parent) : QWidget(pa
     // connect(ui->pwmSlider, SIGNAL(valueChanged(int)), this, SLOT(pwmSliderMoved(int)));
 
     connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
-
+        
 
 }
 
@@ -88,6 +88,9 @@ void page_maintenance_general::setPage(page_maintenance *pageMaintenance, page_i
     this->p_page_idle = pageIdle;
 
     // refreshLabels();
+    // ui->minimize_Button->setStyleSheet("QPushButton { background-color: 0x88448811; border: 5px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    ui->minimize_Button->setStyleSheet("QPushButton {}"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    
 }
 
 void page_maintenance_general::refreshLabels()
@@ -186,27 +189,42 @@ void page_maintenance_general::on_back_Button_clicked()
 
 void page_maintenance_general::on_minimize_Button_clicked()
 {
+    qDebug()<<"Maintenance Minimize button pressed.";
     this->showMinimized();
 }
 
 void page_maintenance_general::on_reboot_Button_clicked()
 {
+    qDebug()<<"Maintenance Reboot button pressed.";
     // QProcess process;
     // process.start("reboot now");
     // process.waitForFinished(-1);
     // QString stdout = process.readAllStandardOutput();
     // qDebug()<<"reboot test finished.";
- qApp->exit();
+    //qApp->exit();
+    QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
+    system(qPrintable(command));
 }
 
 void page_maintenance_general::on_shutdown_Button_clicked()
 {
+    qDebug()<<"Maintenance Shutdown button pressed.";
+    // QProcess shellCommand;   
+    // shellCommand.start("shutdown -r 0");
+    // // shellCommand.start("sudo -u df-admin systemctl poweroff");
+    // // process.start("sudo -u df-admin shutdown -n now");
+    // // process.waitForFinished(-1); // waits forever
+    // shellCommand.waitForFinished();   //  is hitting the default 30 seconds timeout. Use 
 
+    // QProcess::startDetached("/usr/sbin/reboot");
+    // QString command = "sudo -u df-admin systemctl poweroff";
+    // QString command = "sudo -u df-admin shutdown -r 0";
+    QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -h 0";
+    system(qPrintable(command));
 }
 
 void page_maintenance_general::on_test_lineEdit_textChanged(const QString &arg1)
 {
-
 }
 
 void page_maintenance_general::btn_clicked()

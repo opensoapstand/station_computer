@@ -145,7 +145,6 @@ void page_help::on_transactions_Button_clicked()
     p_page_idle->pageTransition(this, p_page_transactions);
 }
 
-
 void page_help::on_maintenance_page_Button_clicked()
 {
     helpIdleTimer->stop();
@@ -153,13 +152,11 @@ void page_help::on_maintenance_page_Button_clicked()
     ui->keyboard_3->show();
 }
 
-
 void page_help::keyboardButtonPressed(int buttonID)
 {
-    qDebug()<<"Butttton pressed";
+    qDebug()<<"maintenance password Keyboard Button pressed";
 
     QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
-    // qDebug() << buttonpressed->text();
     QString buttonText = buttonpressed->text();
 
     if (buttonText == "Cancel")
@@ -206,38 +203,6 @@ void page_help::keyboardButtonPressed(int buttonID)
     else if (buttonText == "Done")
     {
         qDebug() << "DONE CLICKED";
-        // QString password = ui->keyboardTextEntry->text();
-        // //        qDebug() << "Password: " << password;
-        // // ATTEMPT nmcli connection
-
-        // QString connect_string = "nmcli dev wifi connect '" + ui->wifiPassLabel->text() + "' password '" + ui->keyboardTextEntry->text() + "'";
-        // QByteArray ba = connect_string.toLocal8Bit();
-        // const char *c_str = ba.data();
-        // //        qDebug() << c_str;
-        // system(c_str);
-
-        // ui->d->hide();
-
-        // QProcess process;
-        // process.start("iwgetid -r");
-        // process.waitForFinished(-1);
-        // QString stdout = process.readAllStandardOutput();
-        // ui->wifi_name->setText("Wifi Name: " + stdout);
-
-        // process.start("hostname -I");
-        // process.waitForFinished(-1);
-        // stdout = process.readAllStandardOutput();
-        // ui->wifi_ip_address->setText("Wifi IP Address: " + stdout);
-
-        // process.start("nmcli -t -f STATE general");
-        // process.waitForFinished(-1);
-        // stdout = process.readAllStandardOutput();
-        // ui->wifi_status->setText("Wifi State: " + stdout);
-
-        // process.start("nmcli networking connectivity");
-        // process.waitForFinished(-1);
-        // stdout = process.readAllStandardOutput();
-        // ui->wifi_internet->setText("Wifi Connectivity: " + stdout);
     }
     else if (buttonText == "Space")
     {
@@ -253,13 +218,14 @@ void page_help::keyboardButtonPressed(int buttonID)
     }
 
     QString textEntry = ui->keyboardTextEntry->text();
+    
     int isEqual = QString::compare(textEntry, maintenance_pwd, Qt::CaseInsensitive);
-    qDebug() << isEqual << "iiiijijjijj";
-    qDebug() << textEntry << "iiiijijjijj";
-    qDebug() << maintenance_pwd << "iiiijijjijj";
+    // qDebug() << isEqual << "iiiijijjijj";
+    // qDebug() << textEntry << "iiiijijjijj";
+    // qDebug() << maintenance_pwd << "iiiijijjijj";
     if (isEqual!= -1){
-    // if (maintenance_pwd == textEntry){
-        qDebug()<< "password correct";
+        usleep(100000);
+        qDebug()<< "Password correct. Will open maintenance page";
         p_page_idle->pageTransition(this, p_page_maintenance);
         ui->keyboard_3->hide();
         ui->keyboardTextEntry->setText("");

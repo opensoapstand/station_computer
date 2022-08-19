@@ -56,9 +56,12 @@ do
             sudo systemctl disable ui_soapstand.service
             sudo systemctl disable controller_soapstand.service
             ;;
-        "Setup Ubuntu")
-            echo "Will disable window transition animations. Please disable animations when running Drinkfill UI."
+        "Setup Ubuntu for drinkfill UI")
+            echo "Screen setup for Drinkfill UI: - disable window transition animations. - set window vertical"
+            echo "     - disable window transition animations."
             gsettings set org.gnome.desktop.interface enable-animations false
+            echo "     - set window vertical"
+            xrandr -display :0.0 -o right
             ;;
         "Setup rtunnel")
             sudo nano /etc/systemd/system/rtunnel.service

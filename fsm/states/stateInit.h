@@ -60,7 +60,10 @@ private:
     sqlite3 *db;
     int rc;
 
-
+    gpio* pin_vpp;
+    gpio* pin_pgc;
+    gpio* pin_pgd;
+    
     int slot;
     string name;
     double volume_dispensed;

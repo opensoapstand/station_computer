@@ -242,6 +242,7 @@ void dispenser::setAllDispenseButtonLightsOff()
 {
     for (int slot = 1; slot < 5; slot++)
     {
+        debugOutput::sendMessage("slot light off: " + to_string(slot), MSG_INFO);
         setMultiDispenseButtonLight(slot, false);
     }
 }
@@ -250,7 +251,7 @@ void dispenser::setMultiDispenseButtonLight(int slot, bool enableElseDisable)
 {
     // output has to be set low for light to be on.
     // m_pDispenseButton4[0]->test();
-
+    debugOutput::sendMessage("slot light: " + to_string(slot) + "on else off: " + to_string(enableElseDisable), MSG_INFO);
     switch (slot)
     {
 
@@ -322,10 +323,16 @@ DF_ERROR dispenser::loadGeneralProperties()
 {
 
     debugOutput::sendMessage("Load general properties:", MSG_INFO);
+    // ******* Sleep time between DB calls solved inconsistend readings from db!!!****
+    usleep(20000);
     loadEmptyContainerDetectionEnabledFromDb();
+    usleep(20000);
     loadPumpRampingEnabledFromDb();
+    usleep(20000);
     loadPumpReversalEnabledFromDb();
+    usleep(20000);
     loadMultiDispenseButtonEnabledFromDb();
+    usleep(20000);
 
     if (getMultiDispenseButtonEnabled())
     {
@@ -370,6 +377,7 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 }
 DF_ERROR dispenser::stopDispense()
 {
+    debugOutput::sendMessage("stop dispense actions...", MSG_INFO);
     if (getMultiDispenseButtonEnabled())
     {
         setAllDispenseButtonLightsOff();
@@ -866,7 +874,7 @@ void dispenser::loadMultiDispenseButtonEnabledFromDb()
 
     sqlite3_finalize(stmt);
     sqlite3_close(db);
-
+    // val = 4;
     if (val == 1)
     {
         m_isMultiButtonEnabled = false;
@@ -878,7 +886,7 @@ void dispenser::loadMultiDispenseButtonEnabledFromDb()
     else
     {
         m_isMultiButtonEnabled = false;
-        debugOutput::sendMessage("ASSERT Error: unimplemented number of dispense buttons. Default to single dispense button. ", MSG_ERROR);
+        debugOutput::sendMessage("ASSERT Error: unimplemented number of dispense buttons. Default to single dispense button. Buttons indicated in db:" + to_string(m_isMultiButtonEnabled), MSG_ERROR);
     }
 
 #endif

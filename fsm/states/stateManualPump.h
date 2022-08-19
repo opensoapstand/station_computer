@@ -38,6 +38,8 @@ public:
     DF_ERROR pumpTest();
     DF_ERROR autoPumpSetQuantityTest();
     DF_ERROR pumpCyclicTest();
+    DF_ERROR pumpCyclicTestCycleStart();
+    DF_ERROR pumpCyclicTestCycleFinish();
     DF_ERROR pumpFlowTest();
     DF_ERROR customVolumeDispenseTest();
 

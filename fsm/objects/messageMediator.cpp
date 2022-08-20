@@ -264,29 +264,31 @@ void *messageMediator::doIPThread(void *pThreadArgs)
 
       while (!m_fExitThreads)
       {
+         {
          ServerSocket new_sock;
          fsm_comm_server.accept(new_sock);
          debugOutput::sendMessage("new sock (UIDDFIJDF)", MSG_INFO);
 
          try
          {
-            while (true)
-            {
-               // debugOutput::sendMessage("char received over IP", MSG_INFO);
+            // while (true)
+            // {
+               //// debugOutput::sendMessage("char received over IP", MSG_INFO);
                std::string data;
-               // *fsm_comm_socket >> data;
-               // *fsm_comm_socket << "";
+               //// *fsm_comm_socket >> data;
+               //// *fsm_comm_socket << "";
                new_sock >> data;
 
-               // sendQtACK("ACK");  // lode commented it out was blocking?!?! todo //// AckOrNakResult = "FSM ACK";
-               //  cout << data << endl;
+               //// sendQtACK("ACK");  // lode commented it out was blocking?!?! todo //// AckOrNakResult = "FSM ACK";
+              // //  cout << data << endl;
                m_receiveStringBuffer = data;
                updateCmdString();
-               debugOutput::sendMessage("chars received over IP: " + data, MSG_INFO);
-               // new_sock << data;
-            }
+               // debugOutput::sendMessage("chars received over IP: " + data, MSG_INFO);
+               //// new_sock << data;
+            // }
+            
 
-            new_sock << "Hi Back";
+            // new_sock << "Hi Back";
          }
          catch (SocketException &sock)
          {
@@ -294,6 +296,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
             //  std::cout << "Socket Transfer Exception was caught:" << sock.description() << "\nExiting.\n";
             // AckOrNakResult = "FSM NAK";
             // sendQtACK(AckOrNakResult);
+         }
          }
       }
    }

@@ -203,6 +203,21 @@ void page_help::keyboardButtonPressed(int buttonID)
     else if (buttonText == "Done")
     {
         qDebug() << "DONE CLICKED";
+         QString textEntry = ui->keyboardTextEntry->text();
+    
+        int isEqual = QString::compare(textEntry, maintenance_pwd, Qt::CaseInsensitive);
+
+        // if (isEqual != -1 && isEqual != 3){
+        if (isEqual == 0){
+            
+            ui->keyboardTextEntry->setText("");
+            usleep(100000);
+            qDebug()<< "Password correct. Will open maintenance page";
+            qDebug()<< isEqual;
+            p_page_idle->pageTransition(this, p_page_maintenance);
+            ui->keyboard_3->hide();
+            
+        }
     }
     else if (buttonText == "Space")
     {
@@ -217,17 +232,5 @@ void page_help::keyboardButtonPressed(int buttonID)
         ui->keyboardTextEntry->setText(ui->keyboardTextEntry->text() + buttonText);
     }
 
-    QString textEntry = ui->keyboardTextEntry->text();
-    
-    int isEqual = QString::compare(textEntry, maintenance_pwd, Qt::CaseInsensitive);
-    // qDebug() << isEqual << "iiiijijjijj";
-    // qDebug() << textEntry << "iiiijijjijj";
-    // qDebug() << maintenance_pwd << "iiiijijjijj";
-    if (isEqual!= -1){
-        usleep(100000);
-        qDebug()<< "Password correct. Will open maintenance page";
-        p_page_idle->pageTransition(this, p_page_maintenance);
-        ui->keyboard_3->hide();
-        ui->keyboardTextEntry->setText("");
-    }
+   
 }

@@ -26,6 +26,7 @@ signals:
     void printerStatusSignal(bool isOnline, bool hasPaper);
     void initReadySignal(void);
     void MMSignal(void);
+    void dispenseButtonPressedSignal(void);
 
 public slots:
     QByteArray readyRead();

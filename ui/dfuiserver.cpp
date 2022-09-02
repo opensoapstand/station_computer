@@ -44,6 +44,9 @@ void DfUiServer::initReadySlot(){
 void DfUiServer::printerStatusSlot(bool isOnline, bool hasPaper){
     emit printerStatus(isOnline, hasPaper);
 }
+void DfUiServer::dispenseButtonPressedSlot(){
+    emit dispenseButtonPressedSignal();
+}
 
 void DfUiServer::MMSlot(){
     emit MM();
@@ -67,12 +70,14 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
 
     connect(thread, &DfUiCommThread::noFlowAbortSignal, this, &DfUiServer::noFlowAbortSlot);
     connect(thread, &DfUiCommThread::targetHitSignal, this, &DfUiServer::targetHitSlot);
+    
     // connect(thread, &DfUiCommThread::targetHitSignal, this, &DfUiServer::noFlowAbortSlot);
     // connect(thread, &DfUiCommThread::noFlowAbortSignal, this, &DfUiServer::targetHitSlot);
 
     connect(thread, &DfUiCommThread::initReadySignal, this, &DfUiServer::initReadySlot);
     connect(thread, &DfUiCommThread::printerStatusSignal, this, &DfUiServer::printerStatusSlot);
     connect(thread, &DfUiCommThread::MMSignal, this, &DfUiServer::MMSlot);
+    connect(thread, &DfUiCommThread::dispenseButtonPressedSignal, this, &DfUiServer::dispenseButtonPressedSlot);
 
     thread->start();
 }

@@ -867,6 +867,19 @@ last restock</string>
     <string>Auto Dispense Large </string>
    </property>
   </widget>
+  <widget class="QLabel" name="dispense_button_presses_label">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>1080</y>
+     <width>221</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Button presses:</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

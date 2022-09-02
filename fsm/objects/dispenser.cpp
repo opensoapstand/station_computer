@@ -53,19 +53,9 @@ DF_ERROR dispenser::setup()
 
     the_8344->setup();
 
-    // debugOutput::sendMessage("settuuup ", MSG_INFO);
     the_8344->setPumpPWM(DEFAULT_PUMP_PWM);
 
-    // for (int i = 0; i < NUM_SOLENOID; i++)
-    //     m_pSolenoid[i] = nullptr;
-
     m_pFlowsenor[NUM_FLOWSENSOR] = nullptr;
-
-    // for (int i = 0; i < NUM_PUMP; i++)
-    // {
-
-    //     m_pPump[i] = nullptr;
-    // }
 
     millisAtLastCheck = MILLIS_INIT_DUMMY;
     previousDispensedVolume = 0;

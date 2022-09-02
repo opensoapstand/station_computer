@@ -45,6 +45,7 @@ public:
     void resizeEvent(QResizeEvent *event);
     void updateVolumeDisplayed(double dispensed, bool isFull);
     void fsmReceiveTargetVolumeReached();
+    void fsmReceiveDispenseButtonPressed();
     void fsmReceiveNoFlowAbort();
     void setSoldOutButtonText();
     void dispense_test_end(bool sendStopToController);
@@ -100,6 +101,7 @@ private slots:
     void on_autoDispenseSmallButton_clicked();
 
 private:
+    void setButtonPressCountLabel(bool init);
     void showEvent(QShowEvent *event);
     Ui::page_maintenance_dispenser *ui;
     page_maintenance* p_page_maintenance;
@@ -119,6 +121,8 @@ private:
     bool full;
     bool pwm;
     bool buffer;
+
+    uint16_t button_press_count;
 
     QString units_selected_product;
 //    bool plu_s;

@@ -690,6 +690,54 @@ double DbManager::getTotalDispensed(int slot)
 }
 
 #ifndef USE_OLD_DATABASE
+
+
+int DbManager::getDispenseButtonCount()
+{
+    // QSqlQuery qry;
+    int count;
+
+    // QString qry_qstr = QString("SELECT dispense_buttons_count FROM machine");
+
+
+    QSqlQuery mid_query;
+    QString mid_string;
+
+    {
+        mid_query.prepare("SELECT dispense_buttons_count FROM machine");
+        mid_query.exec();
+
+        while (mid_query.next())
+        {
+            count = mid_query.value(0).toInt();
+        }
+    }
+    return count;
+
+    // // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
+    // string qry_string = qry_qstr.toUtf8().constData();
+    // qry.prepare(qry_string.c_str());
+
+    // qry.exec();
+    // if (qry.exec())
+    // {
+    // }
+    // else
+    // {
+    //     qDebug() << "Failed to check slot available." << qry_qstr;
+    // }
+
+    // while (qry.next())
+    //     qDebug() << qry.value(0);
+    // {
+    //     count = qry.value(0).toInt();
+    // }
+
+    // return count;
+}
+
+
+
 int DbManager::getSlotEnabled(int slot)
 {
     QSqlQuery qry;

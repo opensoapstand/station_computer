@@ -92,6 +92,7 @@ using namespace std;
 #define PAGE_HELP_BACKGROUND_PATH                       "background_help.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH      "background_dispense_instructions.png"
+#define PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH      "background_dispense_instructions_multispout.png"
 #define PAGE_DISPENSE_BACKGROUND_PATH                   "background_dispense.png"
 #define PAGE_QR_PAY_BACKGROUND_PATH                     "background_generic_white.png"
 #define PAGE_MAINTENANCE_BACKGROUND_PATH                "background_generic_white_empty.png"

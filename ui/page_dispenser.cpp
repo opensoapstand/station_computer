@@ -48,7 +48,7 @@ void page_dispenser::setPage(page_payment *page_payment, pagethankyou *pageThank
     this->p_page_idle = pageIdle;
     selectedProductOrder = p_page_idle->currentProductOrder;
 
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
+    // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
 
     // QPixmap background(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
     // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
@@ -74,7 +74,19 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     qDebug() << "selected slot: " << QString::number(selectedProductOrder->getSelectedSlot());
 
+    qDebug() << "db check dispense buttons count:";
+    DbManager db(DB_PATH);
+    
+    int button_count = db.getDispenseButtonCount();
+    db.closeDB();
 
+    if (button_count==1){
+        // single spout 
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
+    }else{
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
+
+    }
 
 #ifdef ENABLE_DYNAMIC_UI
     p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));

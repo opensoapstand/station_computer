@@ -29,7 +29,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;/home/df-admin/production/references/6_background_dispense.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="fill_animation_label">

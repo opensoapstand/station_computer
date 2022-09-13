@@ -40,6 +40,7 @@ public:
 
     double getTemperature();
     int getPWM(int slot);
+    int getDispenseButtonCount();
     double getBuffer(int slot);
     QString getPLU(int slot, char size);
     QString getMachineID();

@@ -262,7 +262,7 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
         write(fd, "in", 3);
         close(fd);
 
-        debugOutput::sendMessage("Setup flow input listener" + to_string(*abortLoop), MSG_INFO);
+        // debugOutput::sendMessage("Setup flow input listener" + to_string(*abortLoop), MSG_INFO);
 
         while (!*abortLoop)
         {
@@ -288,12 +288,12 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
 
                 if (flowsensor_state_memory != flowsensor_state_char)
                 {
-                        debugOutput::sendMessage(to_string(now - flowsensor_most_recent_edge_millis), MSG_INFO);
+                        // debugOutput::sendMessage(to_string(now - flowsensor_most_recent_edge_millis), MSG_INFO);
                         // debugOutput::sendMessage(to_string((now - flowsensor_most_recent_edge_millis) > 30ULL), MSG_INFO);
                         flowsensor_most_recent_edge_millis = now;
                 }
 
-                if ((now - flowsensor_most_recent_edge_millis) > 10ULL)
+                if ((now - flowsensor_most_recent_edge_millis) > FLOWSENSOR_DEJITTER_MILLIS)
                 {
                         if (flowsensor_state_char == '1')
                         {
@@ -310,13 +310,13 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
                 if (flowsensor_stable_state_memory != flowsensor_stable_state)
                 {
                         // stable edge
-                        // debugOutput::sendMessage("Stable edge trigger", MSG_INFO);
+                        // debugOutput::sendMessage("Stable edge", MSG_INFO);
 
                         if (flowsensor_stable_state)
                         {
                                 // pos edge
                                 m_pDispenser->registerFlowSensorTick(); // trigger the callback
-                                //debugOutput::sendMessage("FLOW TICK", MSG_INFO);
+                                // debugOutput::sendMessage("FLOW TICK", MSG_INFO);
                         }
                         else
                         {
@@ -324,7 +324,6 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
                         }
                 }
                 flowsensor_stable_state_memory = flowsensor_stable_state;
-
         }
 
         return;

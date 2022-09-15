@@ -88,6 +88,11 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
         system(command_edg.c_str());
         system(command_val.c_str());
 
+        using namespace std::chrono;
+        uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+        flowsensor_most_recent_edge_millis = now;
+        flowsensor_stable_state = false;
+
         /* -------------------------------------------------------------------------------------- */
 
         return;
@@ -239,59 +244,89 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
         return df_ret;
 }
 
-void oddyseyx86GPIO::monitorGPIO_Flowsensor()
+void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
 {
         // debugOutput::sendMessage("monitorGPIO_Flowsensor", MSG_INFO);  //nuke this later it will cause so much spam
         int fd, len;
         char buf[MAX_BUF];
-        char compareChar;
+        // char flowsensor_state_memory;
         struct pollfd pfd;
 
-        // string GPIO = std::to_string(m_nPin);
-        //string GPIO = IO_PIN_FLOW_SENSOR_STRING;
         string GPIO = "" + to_string(IO_PIN_FLOW_SENSOR);
         string command("/sys/class/gpio/gpio");
         command += GPIO;
-        command += "/edge";
+        // command += "/edge";
 
-        // set the pin to interrupt
+        // input
         fd = open(command.c_str(), O_WRONLY);
-        write(fd, "rising", 4);
+        write(fd, "in", 3);
         close(fd);
 
-        command = "/sys/class/gpio/gpio" + GPIO + "/value";
-        fd = open(command.c_str(), O_RDONLY);
-        pfd.fd = fd;
-        pfd.events = POLLPRI | POLLERR;
+        debugOutput::sendMessage("Setup flow input listener" + to_string(*abortLoop), MSG_INFO);
 
-        lseek(fd, 0, SEEK_SET);
-        int ret = poll(&pfd, 1, 100000);
-        char c;
-        read(fd, &c, 1);
-
-        if (0 == ret)
+        while (!*abortLoop)
         {
-                // debugOutput::sendMessage("gpioTimeout", MSG_INFO);
-        }
-        else
-        {
-                if (('1' == c) && (compareChar == '0'))
-                {
-                        //                        debugOutput::sendMessage("HIGH Triggered Flow", MSG_INFO);
-                        //  usleep(500000);						// Sleep to make sure debug gets chance to print
+                usleep(1000);
 
-                        m_pDispenser->registerFlowSensorTick(); // UNCOMMENT LODE  //trigger the callback
+                char flowsensor_state_char;
 
-                        //                        cout << "Registered Tick" << endl;
-                }
-                else if (('0' == c) && (compareChar == '1'))
+                command = "/sys/class/gpio/gpio" + GPIO + "/value";
+                fd = open(command.c_str(), O_RDONLY);
+
+                if (fd >= 0)
                 {
-                        //                         debugOutput::sendMessage("LOW Triggered Flow", MSG_INFO);
-                        //   usleep(500000); // Sleep to make sure debug gets chance to print
+                        read(fd, &flowsensor_state_char, 1);
+                        close(fd);
                 }
-                compareChar = c;
+                else
+                {
+                        debugOutput::sendMessage("gpio PROBLEM (timeout?!)", MSG_ERROR);
+                }
+
+                using namespace std::chrono;
+                uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
+                if (flowsensor_state_memory != flowsensor_state_char)
+                {
+                        debugOutput::sendMessage(to_string(now - flowsensor_most_recent_edge_millis), MSG_INFO);
+                        // debugOutput::sendMessage(to_string((now - flowsensor_most_recent_edge_millis) > 30ULL), MSG_INFO);
+                        flowsensor_most_recent_edge_millis = now;
+                }
+
+                if ((now - flowsensor_most_recent_edge_millis) > 10ULL)
+                {
+                        if (flowsensor_state_char == '1')
+                        {
+                                flowsensor_stable_state = true;
+                        }
+                        else
+                        {
+                                flowsensor_stable_state = false;
+                        }
+                }
+
+                flowsensor_state_memory = flowsensor_state_char;
+
+                if (flowsensor_stable_state_memory != flowsensor_stable_state)
+                {
+                        // stable edge
+                        // debugOutput::sendMessage("Stable edge trigger", MSG_INFO);
+
+                        if (flowsensor_stable_state)
+                        {
+                                // pos edge
+                                m_pDispenser->registerFlowSensorTick(); // trigger the callback
+                                //debugOutput::sendMessage("FLOW TICK", MSG_INFO);
+                        }
+                        else
+                        {
+                                // neg edge
+                        }
+                }
+                flowsensor_stable_state_memory = flowsensor_stable_state;
+
         }
-        close(fd);
+
         return;
 }
 
@@ -303,13 +338,13 @@ void oddyseyx86GPIO::monitorGPIO_Buttons_powerAndMaintenance()
 
         struct pollfd pfd;
 
-        //string GPIO = "391";
+        // string GPIO = "391";
         string GPIO = "" + to_string(IO_PIN_BUTTON_MAINTENANCE_SHUTDOWN_EDGE_DETECTOR);
         string command("/sys/class/gpio/gpio");
         command += GPIO;
         command += "/edge";
 
-        //debugOutput::sendMessage("++++++++++++++++++" + command, MSG_INFO);
+        // debugOutput::sendMessage("++++++++++++++++++" + command, MSG_INFO);
 
         // set the pin to interrupt
         fd = open(command.c_str(), O_WRONLY);
@@ -332,7 +367,7 @@ void oddyseyx86GPIO::monitorGPIO_Buttons_powerAndMaintenance()
         }
         else
         {
-                if ((c == '1') && (compareChar2 != c))
+                if ((c == '1') && (button_state_memory != c))
                 {
                         debugOutput::sendMessage("Power button pushed", MSG_INFO);
                         usleep(1000000); // todo: why one second?!?!?! lode
@@ -354,7 +389,7 @@ void oddyseyx86GPIO::monitorGPIO_Buttons_powerAndMaintenance()
                         usleep(5000); // Sleep to make sure debug gets chance to print
                 }
         }
-        compareChar2 = c;
+        button_state_memory = c;
         close(fd);
         return;
 }

@@ -36,7 +36,7 @@ public:
 	DF_ERROR writePin(bool level);
 
 protected:
-	void monitorGPIO_Flowsensor();
+	void monitorGPIO_Flowsensor(bool* abortLoop);
 	void monitorGPIO_Buttons_powerAndMaintenance();
 	string command_to_string(string cmd);
 	messageMediator *m_pMessaging;
@@ -46,7 +46,14 @@ private:
 
 	double tickcounter;
 
-	char compareChar2;
+	char flowsensor_state_memory;
+	char button_state_memory;
+	bool flowsensor_stable_edge;
+	bool flowsensor_stable_state;
+	bool flowsensor_stable_state_memory;
+
+	uint64_t flowsensor_most_recent_edge_millis;
+
 
 	bool readButtonPin(int pin);
 };

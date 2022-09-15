@@ -55,7 +55,7 @@ protected:
 
 	// Interrupt Function Definition
 	product* m_pDispenser; //UNCOMMENT LODE
-	virtual void monitorGPIO_Flowsensor() = 0;
+	virtual void monitorGPIO_Flowsensor(bool* abortLoop) = 0;
 	virtual void monitorGPIO_Buttons_powerAndMaintenance() = 0;
 	std::thread *gpioThread;
 };

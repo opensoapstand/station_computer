@@ -1655,3 +1655,4 @@ QString DbManager::getUnits(int slot)
     }
     return units_string;
 }
+ 

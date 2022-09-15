@@ -85,11 +85,11 @@ void gpio::listener_flowsensor()
         DF_ERROR df_ret = ERROR_BAD_PARAMS;
         m_stop = false;
 
-        while (!m_stop)
-        {
-                monitorGPIO_Flowsensor();
-                usleep(1000);
-        }
+        // while (!m_stop)
+        // {
+                monitorGPIO_Flowsensor(&m_stop);
+        //         usleep(1000);
+        // }
 
         m_stop = true; // reset
                        //  return;

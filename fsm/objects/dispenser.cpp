@@ -454,6 +454,7 @@ DF_ERROR dispenser::initFlowsensorIO(int pin, int pos)
     if ((pos >= 0) && (pos < 4))
     {
         // Instantiate, set input, spin up a flowsensor thread.
+        // gets created at every instance. Which is not ok as there is only one pin that gets looked at multiple times. Hence, if there are four slots, for every tick, things will get triggered four times (even an edge) because it's processed four times (but seems to work)
         m_pFlowsenor[pos] = new oddyseyx86GPIO(pin);
         m_pFlowsenor[pos]->setPinAsInputElseOutput(true);
         m_pFlowsenor[pos]->registerProduct(m_pDispensedProduct);

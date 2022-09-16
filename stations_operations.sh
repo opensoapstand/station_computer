@@ -8,9 +8,9 @@
 
 # -----------------------------------
 # DO NOT ADD SPACES TO THE ELEMENTS, it causes a mess when looping over it (treats space as array delimiter in some cases).#
-station_descriptions=("SS-DEV-LODE" "SS-DEV-ASH" "SS-DEV-SHOP" "SS-DEV-SHOPFRAME" "EEFC" "UBC" "Ruddy" "Re-Up" "SS-0000009" "Pomme" "Petros11" "Petros12" "Petros13" "Petros14" "SS-0000015" "SS-0000016" "SS-0000017" "Choices" "Stongs" "FamousFoods" "SS-0000021" "Nada" "Petros23" "Petros24" "Petros25" "Petros26");
-station_ids=("SS-DEV-LODE" "SS-DEV-ASH" "SS-DEV-SHOP" "SS-DEV-SHOPFRAME" "SS-0000005" "SS-0000006" "SS-0000007" "SS-0000008" "SS-0000009" "SS-0000010" "SS-0000011" "SS-0000012" "SS-0000013" "SS-0000014" "SS-0000015" "SS-0000016" "SS-0000017" "SS-0000018" "SS-0000019" "SS-0000020" "SS-0000021" "SS-0000022" "SS-0000023" "SS-0000024" "SS-0000025" "SS-0000026");
-station_ports=("44444" "43081" "44001" "44003" "43005" "43006" "43007" "43008" "43009" "43010" "43011" "43012" "43013" "43014" "43015" "43016" "43017" "43018" "43019" "43020" "43021" "43022" "43023" "43024" "43025" "43026");
+station_descriptions=("SS-DEV-LODE" "SS-DEV-ASH" "SS-DEV-SHOP" "SS-DEV-SHOPFRAME" "EEFC" "UBC" "Ruddy" "Re-Up" "SS-0000009" "Pomme" "Petros11" "Petros12" "Petros13" "Petros14" "SS-0000015" "SS-0000016" "SS-0000017" "Choices" "Stongs" "FamousFoods" "SS-0000021" "Nada" "Petros23" "Petros24" "Petros25" "Petros26" "Petros27" "Petros28" "Petros29" "Petros30" "Petros31" "Petros32" "Petros33" "Petros34" "Petros35" "Petros36" "Petros37" "Petros38" "Petros39" "Petros40" "Petros41");
+station_ids=("SS-DEV-LODE" "SS-DEV-ASH" "SS-DEV-SHOP" "SS-DEV-SHOPFRAME" "SS-0000005" "SS-0000006" "SS-0000007" "SS-0000008" "SS-0000009" "SS-0000010" "SS-0000011" "SS-0000012" "SS-0000013" "SS-0000014" "SS-0000015" "SS-0000016" "SS-0000017" "SS-0000018" "SS-0000019" "SS-0000020" "SS-0000021" "SS-0000022" "SS-0000023" "SS-0000024" "SS-0000025" "SS-0000026" "SS-0000027" "SS-0000028" "SS-0000029" "SS-0000030" "SS-0000031" "SS-0000032" "SS-0000033" "SS-0000034" "SS-0000035" "SS-0000036" "SS-0000037" "SS-0000038" "SS-0000039" "SS-0000040" "SS-0000041" );
+station_ports=("44444" "43081" "44001" "44003" "43005" "43006" "43007" "43008" "43009" "43010" "43011" "43012" "43013" "43014" "43015" "43016" "43017" "43018" "43019" "43020" "43021" "43022" "43023" "43024" "43025" "43026" "43027" "43028" "43029" "43030" "43031" "43032" "43033" "43034" "43035" "43036" "43037" "43038" "43039" "43040" "43041");
 # -----------------------------------
 
 # https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_10_02.html

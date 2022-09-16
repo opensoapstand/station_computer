@@ -322,7 +322,7 @@ void page_select_product::mainPage()
 void page_select_product::on_p_page_maintenanceButton_pressed()
 {
     maintenanceCounter++;
-    if (maintenanceCounter > 15)
+    if (maintenanceCounter > 50)
     {
         productPageEndTimer->stop();
         // p_page_maintenance->showFullScreen();

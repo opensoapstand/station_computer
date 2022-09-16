@@ -316,7 +316,7 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
                         {
                                 // pos edge
                                 m_pDispenser->registerFlowSensorTick(); // trigger the callback
-                                // debugOutput::sendMessage("FLOW TICK", MSG_INFO);
+                                //debugOutput::sendMessage("FLOW TICK", MSG_INFO);
                         }
                         else
                         {

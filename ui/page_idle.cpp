@@ -83,7 +83,7 @@ void page_idle::showEvent(QShowEvent *event)
     qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
     QWidget::showEvent(event);
 
-    ui->welcome_message_label->setText("tap to explore our <br>soap selections");
+    ui->welcome_message_label->setText("refill soap here! <br>tap to start");
     ui->welcome_message_label->setStyleSheet(
         "QLabel {"
 

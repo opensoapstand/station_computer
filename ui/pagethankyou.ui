@@ -26,7 +26,7 @@
     <bool>false</bool>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-image: url(/home/df-admin/production/references/7_background_thank_you.png);</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>

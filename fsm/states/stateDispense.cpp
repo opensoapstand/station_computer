@@ -102,6 +102,7 @@ DF_ERROR stateDispense::onAction()
       {
          debugOutput::sendMessage("Dispense button released edge", MSG_INFO);
          productDispensers[pos_index].pumpSlowStopBlocking();
+
          rectractProductBlocking();
       }
    }

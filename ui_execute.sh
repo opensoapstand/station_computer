@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-sleep 7
+# SS0.9 (portrait left) and SS1.0 (portrait right) have different screen orientations. 
+# sleep 7
 # set screen orientation (settings are not saved at reboot)
-DISPLAY=:0 xrandr -o right
+# DISPLAY=:0 xrandr -o right
 
 while true
 	do

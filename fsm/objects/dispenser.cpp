@@ -174,7 +174,7 @@ string dispenser::getFinalPLU(char size, double price){
 
 
     string base_plu = getProduct()->getBasePLU(size);
-     char chars_plu_dynamic_formatted[MAX_BUF];
+    char chars_plu_dynamic_formatted[MAX_BUF];
     
     std::string paymentMethod = getProduct()->getPaymentMethod();
 
@@ -209,6 +209,7 @@ string dispenser::getFinalPLU(char size, double price){
 
         string plu_dynamic_price = (chars_plu_dynamic_formatted);
         string plu_dynamic_formatted = base_plu + plu_dynamic_price;
+        
         // 3.14 --> " 3.14" --> " 314" --> "0314"
         std::string toReplace(".");
         size_t pos = plu_dynamic_formatted.find(toReplace);

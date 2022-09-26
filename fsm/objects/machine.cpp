@@ -69,20 +69,18 @@ void machine::print_receipt(string name_receipt, string receipt_cost, string rec
         if (plu.size() != 13 && plu.size() != 12)
         {
             // EAN13 codes need to be 13 digits, or else no barcode will be printed. If 12 dgits are provided, the last digit (checksum?!) is automatically generated
-            debugOutput::sendMessage("PLU as barcode:" + plu,  MSG_INFO);
+            debugOutput::sendMessage("PLU without barcode:" + plu,  MSG_INFO);
             print_text("PLU: " + plu);
         }
         else
         {
-            debugOutput::sendMessage("PLU without barcode:" + plu,  MSG_INFO);
+            debugOutput::sendMessage("PLU as barcode:" + plu,  MSG_INFO);
             Adafruit_Thermal *printerr = new Adafruit_Thermal();
             printerr->connectToPrinter();
             printerr->setBarcodeHeight(100);
             printerr->printBarcode(plu.c_str(), EAN13);
             printerr->disconnectPrinter();
         }
-
-
     }
     else
     {

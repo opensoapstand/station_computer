@@ -88,6 +88,7 @@ public:
         void addMaintenancePwdToMachineTable();
         bool isMaintenancePwdInMachineTable();
         void executeSQLStatement(string sql_string);
+        void syncSoftwareVersionWithDb();
         bool registerFlowSensorTick();
         int getSlot();
 

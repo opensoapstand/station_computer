@@ -633,14 +633,13 @@ string product::getBasePLU(char size)
 // #else
 
 void product::syncSoftwareVersionWithDb(){
-
     string sql_string = "UPDATE machine SET software_version=\"" + std::string(CONTROLLER_VERSION) + "\";";
     executeSQLStatement(sql_string);
-
 }
 
 void product::addMaintenancePwdToMachineTable(){
     executeSQLStatement("ALTER TABLE machine ADD maintenance_pwd TEXT");
+    executeSQLStatement("UPDATE machine SET maintenance_pwd=\"soap\";");
 }
 
 void product::executeSQLStatement(string sql_string){

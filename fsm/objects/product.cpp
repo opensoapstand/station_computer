@@ -631,6 +631,95 @@ string product::getBasePLU(char size)
 // }
 
 // #else
+
+
+
+void product::addMaintenancePwdToMachineTable(){
+    executeSQLStatement("ALTER TABLE machine ADD maintenance_pwd TEXT");
+    executeSQLStatement("UPDATE machine SET maintenance_pwd=\"soap\";");
+}
+
+void product::executeSQLStatement(string sql_string){
+
+    rc = sqlite3_open(DB_PATH, &db);
+    sqlite3_stmt *stmt;
+    //string sql_string = "ALTER TABLE machine ADD maintenance_pwd TEXT";
+    // string sql_string = "ALTER TABLE machine ADD maintenance_pwd TEXT;UPDATE machine SET maintenance_pwd=\"soap\";";
+
+    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+    int status;
+    status = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    
+}   
+
+bool product::isMaintenancePwdInMachineTable(){
+    bool contains_column_maintenance_pwd = false;
+
+    rc = sqlite3_open(DB_PATH, &db);
+    sqlite3_stmt *stmt;
+    string sql_string = "PRAGMA table_info(machine);";
+
+    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+    // sqlite3_step(stmt);
+    // std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+
+    int status;
+    status = sqlite3_step(stmt);
+    int row = 0;
+    // debugOutput::sendMessage("process record: " + sql_string, MSG_INFO);
+    while (status == SQLITE_ROW)
+    {
+        // int columns_count = sqlite3_data_count(stmt);
+        //  debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
+
+        // for (int column_index = 0; column_index < columns_count; column_index++)
+        int columns_count = 3;
+        for (int column_index = 0; column_index < columns_count; column_index++)
+        {
+            // for every row, go over all the the items (0=cid, 1=name, 2=type,3=notnull,...)
+
+            // debugOutput::sendMessage("column index: " + to_string(column_index), MSG_INFO);
+
+            switch (column_index)
+            {
+            case (1):
+            {
+                // 
+
+                string column_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+                // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
+                // debugOutput::sendMessage("should be: " + table_products_columns[row], MSG_INFO);
+
+                if (!column_name.compare("maintenance_pwd"))
+                {
+                    // FOUND returns 0 
+                    // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
+                    contains_column_maintenance_pwd = true;
+                }
+                
+                break;
+            }
+            default:
+            {
+            }
+            break;
+            }
+        }
+
+        status = sqlite3_step(stmt); // next record, every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
+        row++;
+    };
+    sqlite3_finalize(stmt);
+
+
+    
+    sqlite3_close(db);
+    return contains_column_maintenance_pwd;
+}
+
+
 bool product::isDbValid()
 {
     string table_products_columns[TABLE_PRODUCTS_COLUMN_COUNT] = {"productId", "soapstand_product_serial", "slot", "name", "size_unit", "currency", "payment", "name_receipt", "concentrate_multiplier", "dispense_speed", "threshold_flow", "retraction_time", "calibration_const", "volume_per_tick", "last_restock", "volume_full", "volume_remaining", "volume_dispensed_since_restock", "volume_dispensed_total", "is_enabled_small", "is_enabled_medium", "is_enabled_large", "is_enabled_custom", "size_small", "size_medium", "size_large", "size_custom_min", "size_custom_max", "price_small", "price_medium", "price_large", "price_custom", "plu_small", "plu_medium", "plu_large", "plu_custom", "pid_small", "pid_medium", "pid_large", "pid_custom", "flavour", "image_url", "type", "ingredients", "features", "description"};
@@ -657,6 +746,7 @@ bool product::isDbValid()
         int columns_count = 3;
         for (int column_index = 0; column_index < columns_count; column_index++)
         {
+            // for every row, go over all the the items (0=cid, 1=name, 2=type,3=notnull,...)
 
             // debugOutput::sendMessage("column index: " + to_string(column_index), MSG_INFO);
 
@@ -664,6 +754,7 @@ bool product::isDbValid()
             {
             case (1):
             {
+                // 
 
                 string column_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
                 // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
@@ -703,10 +794,16 @@ bool product::reloadParametersFromDb()
         isEnabledSizes[i] = false;
     }
     bool valid = isDbValid();
+
     if (!valid)
     {
         debugOutput::sendMessage("ABORT: Unexpected database layout.", MSG_ERROR);
         return false;
+    }
+
+    if (!isMaintenancePwdInMachineTable()){
+        debugOutput::sendMessage("ERROR: Unexpected database layout, will add maintentance_pwd to end of table", MSG_ERROR);
+        addMaintenancePwdToMachineTable();
     }
 
     debugOutput::sendMessage("*** WARNING: No NULL values allowed in text fields. ***", MSG_ERROR);

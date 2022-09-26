@@ -354,6 +354,7 @@ double DbManager::getProductVolume(int slot, char size)
     return volume;
 }
 
+
 double DbManager::getFullProduct(int slot)
 {
     qDebug() << " db... getFullProduct";

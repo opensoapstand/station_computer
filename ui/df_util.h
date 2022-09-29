@@ -36,6 +36,21 @@
 #else
 #define DB_PATH "/home/df-admin/production/db/drinkfill-sqlite_newlayout.db"
 #endif
+
+#define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv"  // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file
+#define CSV_PRODUCT_COL_ID 0
+#define CSV_PRODUCT_COL_NAME 1
+#define CSV_PRODUCT_COL_TYPE 2
+#define CSV_PRODUCT_COL_SUPPLIER 3
+#define CSV_PRODUCT_COL_BRAND 4
+#define CSV_PRODUCT_COL_INGREDIENTS 5
+#define CSV_PRODUCT_COL_LOCATION 6
+#define CSV_PRODUCT_COL_NAME_UI 7
+#define CSV_PRODUCT_COL_DESCRIPTION_UI 8
+#define CSV_PRODUCT_COL_FEATURES_UI 9
+#define CSV_PRODUCT_COL_INGREDIENTS_UI 10
+#define CSV_PRODUCT_COL_NOTES 11
+
 // #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 //#define DB_PATH "/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db"
 

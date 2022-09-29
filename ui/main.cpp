@@ -91,6 +91,7 @@ int main(int argc, char *argv[])
     qDebug() << "***************************************************************************";
     qDebug() << title;
     qDebug() << "***************************************************************************";
+    
 
     // Fire up QT GUI Thread
     QApplication mainApp(argc, argv);

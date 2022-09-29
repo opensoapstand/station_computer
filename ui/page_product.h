@@ -80,8 +80,8 @@ private slots:
     void on_orderCustom_Button_clicked();
 
     void on_orderMedium_Button_clicked();
-    void loadOrderSize(int sizeIndex);
-    void loadOrderSelectedSize();
+    void loadProductBySize(int sizeIndex);
+    void loadProdSpecs();
 
 private:
     int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};

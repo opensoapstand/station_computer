@@ -294,7 +294,7 @@ void pageProduct::showEvent(QShowEvent *event)
     
     selectedProductOrder->loadSelectedProductProperties();
     setDefaultSize();
-    loadOrderSelectedSize();
+    loadProdSpecs();
     reset_and_show_page_elements();
 }
 
@@ -461,24 +461,24 @@ void pageProduct::reset_and_show_page_elements()
     QString keyboard_style_sheet = " background-image: url(" + keyboard + "); }";
     ui->promoKeyboard->setStyleSheet(keyboard_style_sheet);
 
-    loadOrderSelectedSize();
+    loadProdSpecs();
     selectIdleTimer->start(1000);
     _selectIdleTimeoutSec = 400;
 }
 
-void pageProduct::loadOrderSize(int sizeIndex)
+void pageProduct::loadProductBySize(int sizeIndex)
 {
     // DF_QT_SIZES tmp [6] = {INVALID_DRINK, SIZE_SMALL_INDEX, MEDIUM_DRINK, SIZE_LARGE_INDEX, CUSTOM_DRINK, TEST_DRINK};
 
     selectedProductOrder->setSelectedSize(sizeIndex);
-    loadOrderSelectedSize();
+    loadProdSpecs();
 }
 
 #ifdef ENABLE_DYNAMIC_UI
-void pageProduct::loadOrderSelectedSize()
+void pageProduct::loadProdSpecs()
 {
 
-    qDebug() << "-------------------------- LOAD ORDER ----------------";
+    qDebug() << "-------------------------- LOAD PRODUCT ----------------";
     _selectIdleTimeoutSec = 140;
 
     ui->mainPage_Button->setEnabled(true);
@@ -626,10 +626,10 @@ void pageProduct::loadOrderSelectedSize()
         ui->label_invoice_price_total->setText("$" + QString::number(selectedPriceCorrected, 'f', 2)); // how to handle promo ?! todo!
     }
 
-    qDebug() << "-------------------------- END LOAD ORDER ----------------";
+    qDebug() << "-------------------------- END LOAD PRODUCT ----------------";
 }
 #else
-void pageProduct::loadOrderSelectedSize()
+void pageProduct::loadProdSpecs()
 {
 
     qDebug() << "-------------------------- LOAD ORDER ----------------";
@@ -794,27 +794,27 @@ void pageProduct::on_mainPage_Button_clicked()
 void pageProduct::on_orderCustom_Button_clicked()
 {
     qDebug() << "button custom";
-    this->loadOrderSize(SIZE_CUSTOM_INDEX);
+    this->loadProductBySize(SIZE_CUSTOM_INDEX);
 }
 
 void pageProduct::on_orderMedium_Button_clicked()
 {
     qDebug() << "button medium";
-    this->loadOrderSize(SIZE_MEDIUM_INDEX);
+    this->loadProductBySize(SIZE_MEDIUM_INDEX);
 }
 
 // on_Small_Order button listener
 void pageProduct::on_orderSmall_Button_clicked()
 {
     qDebug() << "button small";
-    this->loadOrderSize(SIZE_SMALL_INDEX);
+    this->loadProductBySize(SIZE_SMALL_INDEX);
 }
 
 // on_Large_Order button listener
 void pageProduct::on_orderBig_Button_clicked()
 {
     qDebug() << "button big";
-    this->loadOrderSize(SIZE_LARGE_INDEX);
+    this->loadProductBySize(SIZE_LARGE_INDEX);
 }
 
 size_t WriteCallback_coupon(char *contents, size_t size, size_t nmemb, void *userp)
@@ -882,7 +882,7 @@ void pageProduct::on_applyPromo_Button_clicked()
                     selectedProductOrder->setPromoCode(promocode);
                     selectedProductOrder->setDiscountPercentageFraction((new_percent * 1.0) / 100);
                     qDebug() << "Apply coupon percentage: " << new_percent;
-                    loadOrderSelectedSize();
+                    loadProdSpecs();
                     qDebug() << "Promo";
                 }
                 else

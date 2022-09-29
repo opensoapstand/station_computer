@@ -42,6 +42,59 @@ DrinkOrder::DrinkOrder(const DrinkOrder &other) : QObject(nullptr)
     selectedDrink = new DrinkSelection(*other.selectedDrink);
 }
 
+int readCsvFile(){
+
+    #define CSV_PRODUCT_COL_ID 0
+    #define CSV_PRODUCT_COL_NAME 1
+    #define CSV_PRODUCT_COL_TYPE 2
+    #define CSV_PRODUCT_COL_SUPPLIER 3
+    #define CSV_PRODUCT_COL_BRAND 4
+    #define CSV_PRODUCT_COL_INGREDIENTS 5
+    #define CSV_PRODUCT_COL_LOCATION 6
+    #define CSV_PRODUCT_COL_NAME_UI 7
+    #define CSV_PRODUCT_COL_DESCRIPTION_UI 8
+    #define CSV_PRODUCT_COL_FEATURES_UI 9
+    #define CSV_PRODUCT_COL_INGREDIENTS_UI 10
+    #define CSV_PRODUCT_COL_NOTES 11
+
+    QFile file("/home/df-admin/production/references/products/product_details.tsv");
+    // QFile file("/home/df-admin/production/references/products/product_details.txt");
+    if(!file.open(QIODevice::ReadOnly)) {
+        // QMessageBox::information(0, "error", file.errorString());
+        qDebug()<< "ERROR Opening product details file";
+    }
+
+    QTextStream in(&file);
+    qDebug() << "---------------000000000000000000099999999999999999999999999999999999999999999999999999999999";
+
+    while(!in.atEnd()) {
+        QString line = in.readLine();    
+
+        QStringList fields = line.split("\t");
+        
+        // qDebug() << fields.join("---");
+
+
+    qDebug() << fields[CSV_PRODUCT_COL_ID];
+    qDebug() << fields[CSV_PRODUCT_COL_NAME];
+    qDebug() << fields[CSV_PRODUCT_COL_TYPE];
+    qDebug() << fields[CSV_PRODUCT_COL_SUPPLIER];
+    qDebug() << fields[CSV_PRODUCT_COL_BRAND];
+    qDebug() << fields[CSV_PRODUCT_COL_INGREDIENTS];
+    qDebug() << fields[CSV_PRODUCT_COL_LOCATION];
+    qDebug() << fields[CSV_PRODUCT_COL_NAME_UI];
+    qDebug() << fields[CSV_PRODUCT_COL_DESCRIPTION_UI ];
+    qDebug() << fields[CSV_PRODUCT_COL_FEATURES_UI];
+    qDebug() << fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
+    qDebug() << fields[CSV_PRODUCT_COL_NOTES];
+
+        //model->appendRow(fields);    
+    }
+
+    file.close();
+
+}
+
 // Dtor
 DrinkOrder::~DrinkOrder()
 {
@@ -370,6 +423,7 @@ QString DrinkOrder::getProductDrinkfillSerial(int slot)
 
 void DrinkOrder::loadSelectedProductProperties()
 {
+    readCsvFile();
     loadProductProperties(getSelectedSlot());
 }
 
@@ -423,6 +477,8 @@ QString DrinkOrder::getProductPicturePath(int slot)
 
 QString DrinkOrder::getProductName(int slot)
 {
+
+
     qDebug() << "product db for name";
     DbManager db(DB_PATH);
     QString product_name = db.getProductName(slot);

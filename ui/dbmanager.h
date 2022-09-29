@@ -76,7 +76,7 @@ public:
     QString getProductType(int slot);
     QString getProductDrinkfillSerial(int slot);
     // void getProductProperties(int slot, QString*name, QString *description, QString *features,  QString *ingredients);
-    void getProductProperties(int slot, QString *name, QString *description, QString *features, QString *ingredients, bool *isSizeEnabled);
+    void getProductProperties(int slot, QString *product_id, bool *isSizeEnabled);
     QString getTemplateName();
 
 private:

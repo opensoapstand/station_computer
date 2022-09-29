@@ -205,15 +205,14 @@ void page_help::keyboardButtonPressed(int buttonID)
         qDebug() << "DONE CLICKED";
          QString textEntry = ui->keyboardTextEntry->text();
     
-        int isEqual = QString::compare(textEntry, maintenance_pwd, Qt::CaseInsensitive);
+        int compareResult = QString::compare(textEntry, maintenance_pwd, Qt::CaseInsensitive);
 
-        // if (isEqual != -1 && isEqual != 3){
-        if (isEqual == 0){
+        if (compareResult == 0){
             
             ui->keyboardTextEntry->setText("");
             usleep(100000);
             qDebug()<< "Password correct. Will open maintenance page";
-            qDebug()<< isEqual;
+            qDebug()<< compareResult;
             p_page_idle->pageTransition(this, p_page_maintenance);
             ui->keyboard_3->hide();
             

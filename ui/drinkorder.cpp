@@ -75,18 +75,77 @@ int readCsvFile(){
         // qDebug() << fields.join("---");
 
 
-    qDebug() << fields[CSV_PRODUCT_COL_ID];
-    qDebug() << fields[CSV_PRODUCT_COL_NAME];
-    qDebug() << fields[CSV_PRODUCT_COL_TYPE];
-    qDebug() << fields[CSV_PRODUCT_COL_SUPPLIER];
-    qDebug() << fields[CSV_PRODUCT_COL_BRAND];
-    qDebug() << fields[CSV_PRODUCT_COL_INGREDIENTS];
-    qDebug() << fields[CSV_PRODUCT_COL_LOCATION];
-    qDebug() << fields[CSV_PRODUCT_COL_NAME_UI];
-    qDebug() << fields[CSV_PRODUCT_COL_DESCRIPTION_UI ];
-    qDebug() << fields[CSV_PRODUCT_COL_FEATURES_UI];
-    qDebug() << fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
-    qDebug() << fields[CSV_PRODUCT_COL_NOTES];
+        // qDebug() << fields[CSV_PRODUCT_COL_ID];
+        // qDebug() << fields[CSV_PRODUCT_COL_NAME];
+        // qDebug() << fields[CSV_PRODUCT_COL_TYPE];
+        // qDebug() << fields[CSV_PRODUCT_COL_SUPPLIER];
+        // qDebug() << fields[CSV_PRODUCT_COL_BRAND];
+        // qDebug() << fields[CSV_PRODUCT_COL_INGREDIENTS];
+        // qDebug() << fields[CSV_PRODUCT_COL_LOCATION];
+        // qDebug() << fields[CSV_PRODUCT_COL_NAME_UI];
+        // qDebug() << fields[CSV_PRODUCT_COL_DESCRIPTION_UI ];
+        // qDebug() << fields[CSV_PRODUCT_COL_FEATURES_UI];
+        // qDebug() << fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
+        // qDebug() << fields[CSV_PRODUCT_COL_NOTES];
+
+        //model->appendRow(fields);    
+    }
+
+    file.close();
+
+}
+
+void DrinkOrder::loadProductPropertiesFromCsv(QString product_id){
+
+    #define CSV_PRODUCT_COL_ID 0
+    #define CSV_PRODUCT_COL_NAME 1
+    #define CSV_PRODUCT_COL_TYPE 2
+    #define CSV_PRODUCT_COL_SUPPLIER 3
+    #define CSV_PRODUCT_COL_BRAND 4
+    #define CSV_PRODUCT_COL_INGREDIENTS 5
+    #define CSV_PRODUCT_COL_LOCATION 6
+    #define CSV_PRODUCT_COL_NAME_UI 7
+    #define CSV_PRODUCT_COL_DESCRIPTION_UI 8
+    #define CSV_PRODUCT_COL_FEATURES_UI 9
+    #define CSV_PRODUCT_COL_INGREDIENTS_UI 10
+    #define CSV_PRODUCT_COL_NOTES 11
+
+    QFile file("/home/df-admin/production/references/products/product_details.tsv");
+    // QFile file("/home/df-admin/production/references/products/product_details.txt");
+    if(!file.open(QIODevice::ReadOnly)) {
+        // QMessageBox::information(0, "error", file.errorString());
+        qDebug()<< "ERROR Opening product details file";
+    }
+
+    QTextStream in(&file);
+    qDebug() << "---------------000000000000000000099999999999999999999999999999999999999999999999999999999999";
+
+    while(!in.atEnd()) {
+        QString line = in.readLine();    
+
+        QStringList fields = line.split("\t");
+
+        
+        int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], product_id, Qt::CaseSensitive);
+        if (compareResult == 0){
+            m_name = fields[CSV_PRODUCT_COL_NAME_UI];
+            m_description = fields[CSV_PRODUCT_COL_DESCRIPTION_UI ];
+            m_features = fields[CSV_PRODUCT_COL_FEATURES_UI];
+            m_ingredients = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
+            break;
+        }
+        
+        // qDebug() << fields.join("---");
+
+
+        // qDebug() << fields[CSV_PRODUCT_COL_NAME];
+        // qDebug() << fields[CSV_PRODUCT_COL_TYPE];
+        // qDebug() << fields[CSV_PRODUCT_COL_SUPPLIER];
+        // qDebug() << fields[CSV_PRODUCT_COL_BRAND];
+        // qDebug() << fields[CSV_PRODUCT_COL_INGREDIENTS];
+        // qDebug() << fields[CSV_PRODUCT_COL_LOCATION];
+
+        // qDebug() << fields[CSV_PRODUCT_COL_NOTES];
 
         //model->appendRow(fields);    
     }
@@ -423,11 +482,13 @@ QString DrinkOrder::getProductDrinkfillSerial(int slot)
 
 void DrinkOrder::loadSelectedProductProperties()
 {
-    readCsvFile();
-    loadProductProperties(getSelectedSlot());
+    // readCsvFile();
+    loadProductPropertiesFromDb(getSelectedSlot());
+    loadProductPropertiesFromCsv(m_product_id);
 }
 
-void DrinkOrder::loadProductProperties(int slot)
+
+void DrinkOrder::loadProductPropertiesFromDb(int slot)
 {
     qDebug() << "db load product properties";
     DbManager db(DB_PATH);
@@ -437,9 +498,15 @@ void DrinkOrder::loadProductProperties(int slot)
     bool m_isEnabledLarge;
     bool m_isEnabledCustom;
 
-    db.getProductProperties(slot, &m_name, &m_description, &m_features, &m_ingredients, m_isEnabledSizes);
+    // db.getProductProperties(slot, &m_name, &m_description, &m_features, &m_ingredients, m_isEnabledSizes);
+    
+    db.getProductProperties(slot, &m_product_id, m_isEnabledSizes);
+
+
     db.closeDB();
 }
+
+
 
 bool DrinkOrder::getLoadedProductSizeEnabled(int size)
 {

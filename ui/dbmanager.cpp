@@ -156,25 +156,26 @@ QString DbManager::getProductDrinkfillSerial(int slot)
     return val;
 }
 
-void DbManager::getProductProperties(int slot, QString *name, QString *description, QString *features, QString *ingredients, bool *isSizeEnabled)
+void DbManager::getProductProperties(int slot, QString *product_id, bool *isSizeEnabled)
 // void DbManager::getProductProperties(int slot, QString*name, QString *description, QString *features,  QString *ingredients, bool* isEnabledSmall,bool* isEnabledMedium,bool* isEnabledLarge,bool* isEnabledCustom)
 {
     QSqlQuery qry;
     {
-        qry.prepare("SELECT name,description,features,ingredients,is_enabled_small,is_enabled_medium,is_enabled_large,is_enabled_custom FROM products WHERE slot=:slot");
+        qry.prepare("SELECT soapstand_product_serial, is_enabled_small,is_enabled_medium,is_enabled_large,is_enabled_custom FROM products WHERE slot=:slot");
+        // qry.prepare("SELECT name,description,features,ingredients,is_enabled_small,is_enabled_medium,is_enabled_large,is_enabled_custom FROM products WHERE slot=:slot");
         qry.bindValue(":slot", slot);
         qry.exec();
 
         while (qry.next())
         {
-            *name = qry.value(0).toString();
-            *description = qry.value(1).toString();
-            *features = qry.value(2).toString();
-            *ingredients = qry.value(3).toString();
-            isSizeEnabled[1] = qry.value(4).toInt(); // small is index 1!!
-            isSizeEnabled[2] = qry.value(5).toInt();
-            isSizeEnabled[3] = qry.value(6).toInt();
-            isSizeEnabled[4] = qry.value(7).toInt();
+            *product_id = qry.value(0).toString();
+            // *description = qry.value(1).toString();
+            // *features = qry.value(2).toString();
+            // *ingredients = qry.value(3).toString();
+            isSizeEnabled[1] = qry.value(1).toInt(); // small is index 1!!
+            isSizeEnabled[2] = qry.value(2).toInt();
+            isSizeEnabled[3] = qry.value(3).toInt();
+            isSizeEnabled[4] = qry.value(4).toInt();
         }
     }
 }

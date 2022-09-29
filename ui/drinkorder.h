@@ -95,8 +95,10 @@ public:
     QString getProductName(int slot);
     QString getProductDrinkfillSerial(int slot);
 
+    void loadProductPropertiesFromCsv(QString product_id);
+
     void loadSelectedProductProperties();
-    void loadProductProperties(int slot);
+    void loadProductPropertiesFromDb(int slot);
     QString getLoadedProductName();
     QString getLoadedProductDescription();
     QString getLoadedProductIngredients();
@@ -150,6 +152,7 @@ private:
     QString m_features;
     QString m_name;
     QString m_description;
+    QString m_product_id;
     bool m_isEnabledSizes [4];
 
 

@@ -907,8 +907,8 @@ bool product::reloadParametersFromDb()
             {
             }
             break;
-            case (DB_PRODUCTS_NAME_RECEIPT):
             {
+            case (DB_PRODUCTS_NAME_RECEIPT):
                 m_name_receipt = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
             }
             break;

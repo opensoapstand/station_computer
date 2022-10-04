@@ -37,35 +37,22 @@
 // } DF_QT_SIZE_PICKED;
 
 // Values for Selected drink.
-struct DrinkSelection
+struct ProductProperties
 {
     int optionNumber;
     double drinkML;
     double drinkPrice;
 };
 
-// Values for labels; TODO: Can get from seeded DB
-struct QTProductFacing
-{
-    int optionNumber;
-    QString brandName;
-    QString brandImageRef;
-    QString drinkType;
-    QString drinkFlavor;
-    QString drinkImageRef;
-    QString drinkSubtitle;
-    QString drinktDescription;
-};
 
-class DrinkOrder : public QObject
+class Product : public QObject
 {
     Q_OBJECT
 
 public:
-    DrinkOrder();
-    DrinkOrder(const DrinkOrder &other);
-    ~DrinkOrder();
-    DrinkOrder &operator=(const DrinkOrder &other);
+    Product();
+    ~Product();
+    // DrinkOrder &operator=(const DrinkOrder &other);
 
     // HACK: Fixed volume reference; Need to figure out best storage location...
     constexpr static double EMPTY_SIZE_ML = 0.00;
@@ -152,13 +139,12 @@ private:
     QString m_features;
     QString m_name;
     QString m_name_ui;
-    
     QString m_description;
     QString m_product_id;
     bool m_isEnabledSizes [4];
 
 
-    DrinkSelection *selectedDrink;
+    ProductProperties *selectedProduct;
     int selectedSize;
     int m_selectedSlot;
     double overruledPrice;

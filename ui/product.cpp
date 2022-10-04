@@ -1,13 +1,11 @@
-#include "drinkorder.h"
-#include "page_idle.h"
-#include "df_util.h" // lode added for settings
 #include "product.h"
-
+#include "df_util.h" // lode added for settings
+#include "dbmanager.h"
 
 // Ctor
-DrinkOrder::DrinkOrder()
+Product::Product()
 {
-    selectedDrink = new DrinkSelection;
+    selectedProduct = new ProductProperties;
     // overruledPrice = INVALID_PRICE;
     m_discount_percentage_fraction = 0.0;
     m_promoCode = "";
@@ -15,16 +13,12 @@ DrinkOrder::DrinkOrder()
 }
 
 // Ctor Object Copy
-DrinkOrder::DrinkOrder(const DrinkOrder &other) : QObject(nullptr)
-{
-    selectedDrink = new DrinkSelection(*other.selectedDrink);
-}
-
-// void DrinkOrder::loadProductPropertiesFromProductsFile(QString product_id, string ){
-
+// Product::Product(const DrinkOrder &other) : QObject(nullptr)
+// {
+//     selectedDrink = new DrinkSelection(*other.selectedDrink);
 // }
 
-void DrinkOrder::loadProductPropertiesFromProductsFile(QString product_id){
+void Product::loadProductPropertiesFromProductsFile(QString product_id){
 
     // files as .csv or better .tsv (tabs as separator is easier the escaping comma's when needed in the text)
 
@@ -58,19 +52,12 @@ void DrinkOrder::loadProductPropertiesFromProductsFile(QString product_id){
 }
 
 // Dtor
-DrinkOrder::~DrinkOrder()
+Product::~Product()
 {
-    delete selectedDrink;
 }
 
-// Object Reassignment
-DrinkOrder &DrinkOrder::operator=(const DrinkOrder &other)
-{
-    *selectedDrink = *other.selectedDrink;
-    return *this;
-}
 
-char DrinkOrder::getSelectedSizeAsChar()
+char Product::getSelectedSizeAsChar()
 {
     // ! = invalid.
     // t  test to fsm, but should become c for custom. we're so ready for it.
@@ -79,13 +66,13 @@ char DrinkOrder::getSelectedSizeAsChar()
     return df_util::sizeIndexToChar(selectedSize);
 }
 
-int DrinkOrder::getSelectedSize()
+int Product::getSelectedSize()
 {
     // e.g. SIZE_SMALL_INDEX
     return selectedSize;
 }
 
-void DrinkOrder::setSelectedSize(int sizeOption)
+void Product::setSelectedSize(int sizeOption)
 {
     // index!!!!  e.g. 0=small
     // overruledPrice = INVALID_PRICE;
@@ -93,12 +80,12 @@ void DrinkOrder::setSelectedSize(int sizeOption)
     selectedSize = sizeOption;
 }
 
-int DrinkOrder::getSelectedSlot()
+int Product::getSelectedSlot()
 {
     return m_selectedSlot;
 }
 
-void DrinkOrder::setSelectedSlot(int slot)
+void Product::setSelectedSlot(int slot)
 {
 
     if (slot >= OPTION_SLOT_INVALID && slot <= SLOT_COUNT)
@@ -120,7 +107,7 @@ void DrinkOrder::setSelectedSlot(int slot)
 
 // SLOTS Section
 
-bool DrinkOrder::isSelectedOrderValid()
+bool Product::isSelectedOrderValid()
 {
     if (!(m_selectedSlot >= OPTION_SLOT_INVALID && m_selectedSlot <= SLOT_COUNT))
     {
@@ -136,7 +123,7 @@ bool DrinkOrder::isSelectedOrderValid()
     return true;
 }
 
-double DrinkOrder::getDiscount()
+double Product::getDiscount()
 {
     //qDebug() << "--------=========" << QString::number(getSelectedPriceCorrected());
 
@@ -144,17 +131,17 @@ double DrinkOrder::getDiscount()
     return getPrice(getSelectedSize()) - getSelectedPriceCorrected();
 }
 
-double DrinkOrder::getDiscountPercentageFraction()
+double Product::getDiscountPercentageFraction()
 {
     return m_discount_percentage_fraction;
 }
 
-QString DrinkOrder::getPromoCode()
+QString Product::getPromoCode()
 {
     return m_promoCode;
 }
 
-void DrinkOrder::setDiscountPercentageFraction(double percentageFraction)
+void Product::setDiscountPercentageFraction(double percentageFraction)
 {
     // ratio = percentage / 100;
     qDebug() << "Set discount percentage fraction: " << QString::number(percentageFraction, 'f', 3);
@@ -176,14 +163,14 @@ void DrinkOrder::setDiscountPercentageFraction(double percentageFraction)
     // }
 }
 
-void DrinkOrder::setPromoCode(QString promoCode)
+void Product::setPromoCode(QString promoCode)
 {
     // ratio = percentage / 100;
     qDebug() << "Set Promo Code: " << promoCode;
     m_promoCode = promoCode;
 }
 
-void DrinkOrder::setPriceSelected(int size, double price)
+void Product::setPriceSelected(int size, double price)
 {
     qDebug() << "db... set product price";
     DbManager db(DB_PATH);
@@ -191,7 +178,7 @@ void DrinkOrder::setPriceSelected(int size, double price)
     db.closeDB();
 }
 
-double DrinkOrder::getPrice(int sizeIndex)
+double Product::getPrice(int sizeIndex)
 {
     // always from database
     qDebug() << "db... get product price";
@@ -203,10 +190,10 @@ double DrinkOrder::getPrice(int sizeIndex)
     return price;
 }
 
-double DrinkOrder::getSelectedPrice(){
+double Product::getSelectedPrice(){
     return getPrice(getSelectedSize());
 }
-double DrinkOrder::getSelectedPriceCorrected()
+double Product::getSelectedPriceCorrected()
 {
     // slot and size needs to be set.
     double price;
@@ -233,7 +220,7 @@ double DrinkOrder::getSelectedPriceCorrected()
     return price;
 }
 
-double DrinkOrder::getVolume(int size)
+double Product::getVolume(int size)
 {
     double volume;
     qInfo() << "db.... vol seijsf";
@@ -243,7 +230,7 @@ double DrinkOrder::getVolume(int size)
     return volume;
 }
 
-double DrinkOrder::getSelectedVolume()
+double Product::getSelectedVolume()
 {
     double volume;
     if (isSelectedOrderValid())
@@ -259,7 +246,7 @@ double DrinkOrder::getSelectedVolume()
     return volume;
 }
 
-QString DrinkOrder::getUnitsForSelectedSlot()
+QString Product::getUnitsForSelectedSlot()
 {
 
     qDebug() << "db units for label.";
@@ -271,7 +258,7 @@ QString DrinkOrder::getUnitsForSelectedSlot()
     return units;
 }
 
-QString DrinkOrder::getVolumePerTickAsStringForSelectedSlot()
+QString Product::getVolumePerTickAsStringForSelectedSlot()
 {
     double vol_per_tick = getVolumePerTickForSelectedSlot();
     QString units = getUnitsForSelectedSlot();
@@ -279,7 +266,7 @@ QString DrinkOrder::getVolumePerTickAsStringForSelectedSlot()
     return df_util::getConvertedStringVolumeFromMl(vol_per_tick, units, false, true);
 }
 
-double DrinkOrder::getVolumePerTickForSelectedSlot()
+double Product::getVolumePerTickForSelectedSlot()
 {
     // ticks = db.getProductVolumePerTick(product_slot___);
     qInfo() << "db.... vol per tick";
@@ -290,7 +277,7 @@ double DrinkOrder::getVolumePerTickForSelectedSlot()
     return ml_per_tick;
 }
 
-void DrinkOrder::setVolumePerTickForSelectedSlot(QString volumePerTickInput)
+void Product::setVolumePerTickForSelectedSlot(QString volumePerTickInput)
 {
     // ticks = db.getProductVolumePerTick(product_slot___);
     double ml_per_tick = inputTextToMlConvertUnits(volumePerTickInput);
@@ -301,7 +288,7 @@ void DrinkOrder::setVolumePerTickForSelectedSlot(QString volumePerTickInput)
     db.closeDB();
 }
 
-void DrinkOrder::setSizeToVolumeForSelectedSlot(QString volumeInput, int size)
+void Product::setSizeToVolumeForSelectedSlot(QString volumeInput, int size)
 {
     double volume = inputTextToMlConvertUnits(volumeInput);
     qInfo() << "db.... volume set";
@@ -310,7 +297,7 @@ void DrinkOrder::setSizeToVolumeForSelectedSlot(QString volumeInput, int size)
     db.closeDB();
 }
 
-QString DrinkOrder::getVolumeRemainingCorrectUnits()
+QString Product::getVolumeRemainingCorrectUnits()
 {
     qInfo() << "db.... volume dispensed since last restock";
     DbManager db(DB_PATH);
@@ -323,7 +310,7 @@ QString DrinkOrder::getVolumeRemainingCorrectUnits()
     return volume_as_string;
 }
 
-QString DrinkOrder::getVolumeDispensedSinceRestockCorrectUnits()
+QString Product::getVolumeDispensedSinceRestockCorrectUnits()
 {
     qInfo() << "db.... volume dispensed since last restock";
     DbManager db(DB_PATH);
@@ -336,7 +323,7 @@ QString DrinkOrder::getVolumeDispensedSinceRestockCorrectUnits()
     return volume_as_string;
 }
 
-QString DrinkOrder::getTotalDispensedCorrectUnits()
+QString Product::getTotalDispensedCorrectUnits()
 {
     qInfo() << "db.... volume dispensed";
     DbManager db(DB_PATH);
@@ -349,7 +336,7 @@ QString DrinkOrder::getTotalDispensedCorrectUnits()
     return volume_as_string;
 }
 
-QString DrinkOrder::getSizeToVolumeWithCorrectUnitsForSelectedSlot(int size, bool roundValue, bool addUnits)
+QString Product::getSizeToVolumeWithCorrectUnitsForSelectedSlot(int size, bool roundValue, bool addUnits)
 {
     QString volume_as_string;
     double v;
@@ -362,7 +349,7 @@ QString DrinkOrder::getSizeToVolumeWithCorrectUnitsForSelectedSlot(int size, boo
     return volume_as_string;
 }
 
-double DrinkOrder::inputTextToMlConvertUnits(QString inputValueAsText)
+double Product::inputTextToMlConvertUnits(QString inputValueAsText)
 {
     if (getUnitsForSelectedSlot() == "oz")
     {
@@ -374,7 +361,7 @@ double DrinkOrder::inputTextToMlConvertUnits(QString inputValueAsText)
     }
 }
 
-QString DrinkOrder::getProductDrinkfillSerial(int slot)
+QString Product::getProductDrinkfillSerial(int slot)
 {
     qDebug() << "product db for drinkfill id";
     DbManager db(DB_PATH);
@@ -383,14 +370,14 @@ QString DrinkOrder::getProductDrinkfillSerial(int slot)
     return serial;
 }
 
-void DrinkOrder::loadSelectedProductProperties()
+void Product::loadSelectedProductProperties()
 {
     loadProductPropertiesFromDb(getSelectedSlot());
     loadProductPropertiesFromProductsFile(m_product_id);
 }
 
 
-void DrinkOrder::loadProductPropertiesFromDb(int slot)
+void Product::loadProductPropertiesFromDb(int slot)
 {
     qDebug() << "db load product properties";
     DbManager db(DB_PATH);
@@ -410,43 +397,43 @@ void DrinkOrder::loadProductPropertiesFromDb(int slot)
 
 
 
-bool DrinkOrder::getLoadedProductSizeEnabled(int size)
+bool Product::getLoadedProductSizeEnabled(int size)
 {
     // caution!:  provide size index (0=small, ...)
     return m_isEnabledSizes[size];
 }
 
-QString DrinkOrder::getLoadedProductIngredients()
+QString Product::getLoadedProductIngredients()
 {
     return m_ingredients;
 }
 
-QString DrinkOrder::getLoadedProductFeatures()
+QString Product::getLoadedProductFeatures()
 {
     return m_features;
 }
-QString DrinkOrder::getLoadedProductName()
+QString Product::getLoadedProductName()
 {
     return m_name;
 }
-QString DrinkOrder::getLoadedProductDescription()
+QString Product::getLoadedProductDescription()
 {
     return m_description;
 }
 
-QString DrinkOrder::getSelectedProductPicturePath()
+QString Product::getSelectedProductPicturePath()
 {
     
     //return QString(PRODUCT_PICTURES_ROOT_PATH).arg(m_product_id);
     return getProductPicturePath(getSelectedSlot());
 }
-QString DrinkOrder::getProductPicturePath(int slot)
+QString Product::getProductPicturePath(int slot)
 {
     QString serial = getProductDrinkfillSerial(slot);
     return QString(PRODUCT_PICTURES_ROOT_PATH).arg(serial);
 }
 
-QString DrinkOrder::getProductName(int slot)
+QString Product::getProductName(int slot)
 {
     // qDebug() << "product db for name";
     // DbManager db(DB_PATH);
@@ -454,24 +441,21 @@ QString DrinkOrder::getProductName(int slot)
     // db.closeDB();
     // return product_name;
     
-
-    // PROBLEM: SELECT PRODUCT VS PRODUCT
-
-    qDebug() << "product db for name";
-    DbManager db(DB_PATH);
-    QString product_name = db.getProductName(slot);
-    db.closeDB();
-    return product_name;
-    // return m_name;
+    // qDebug() << "product db for name";
+    // DbManager db(DB_PATH);
+    // QString product_name = db.getProductName(slot);
+    // db.closeDB();
+    // return product_name;
+    return m_name;
     //QString product_id = getProductDrinkfillSerial(slot);
 }
 
-QString DrinkOrder::getSelectedProductName()
+QString Product::getSelectedProductName()
 {
     return getProductName(getSelectedSlot());
 }
 
-QString DrinkOrder::getMachineId()
+QString Product::getMachineId()
 {
 
     qDebug() << " db... getMachineID";
@@ -482,7 +466,7 @@ QString DrinkOrder::getMachineId()
     return idString;
 }
 
-QString DrinkOrder::getSelectedProductId()
+QString Product::getSelectedProductId()
 {
     qDebug() << "db.... get productId ";
     DbManager db(DB_PATH);
@@ -491,7 +475,7 @@ QString DrinkOrder::getSelectedProductId()
     return idString;
 }
 
-QString DrinkOrder::getFullVolumeCorrectUnits(bool addUnits)
+QString Product::getFullVolumeCorrectUnits(bool addUnits)
 {
 
     qDebug() << "db.... get full volume ";
@@ -506,7 +490,7 @@ QString DrinkOrder::getFullVolumeCorrectUnits(bool addUnits)
     return volume_as_string;
 }
 
-void DrinkOrder::setFullVolumeCorrectUnits(QString inputFullValue)
+void Product::setFullVolumeCorrectUnits(QString inputFullValue)
 {
     qDebug() << "db.... for write full vol";
     DbManager db(DB_PATH);
@@ -514,7 +498,7 @@ void DrinkOrder::setFullVolumeCorrectUnits(QString inputFullValue)
     db.closeDB();
 }
 
-QString DrinkOrder::getSelectedSizeToVolumeWithCorrectUnits(bool round, bool addUnits)
+QString Product::getSelectedSizeToVolumeWithCorrectUnits(bool round, bool addUnits)
 {
     // v = db.getProductVolume(product_slot___, drinkSize);
 
@@ -523,7 +507,7 @@ QString DrinkOrder::getSelectedSizeToVolumeWithCorrectUnits(bool round, bool add
     return getSizeToVolumeWithCorrectUnitsForSelectedSlot(getSelectedSize(), round, addUnits);
 }
 
-QString DrinkOrder::getSelectedPaymentMethod()
+QString Product::getSelectedPaymentMethod()
 {
     QString paymentMethod;
     qDebug() << "product pyament method";
@@ -533,7 +517,7 @@ QString DrinkOrder::getSelectedPaymentMethod()
     return paymentMethod;
 }
 
-int DrinkOrder::getSelectedDispenseSpeedPercentage()
+int Product::getSelectedDispenseSpeedPercentage()
 {
     int pwm;
 
@@ -544,7 +528,7 @@ int DrinkOrder::getSelectedDispenseSpeedPercentage()
 
     return (int)round((double(pwm) * 100) / 255);
 }
-void DrinkOrder::setSelectedDispenseSpeedPercentage(int percentage)
+void Product::setSelectedDispenseSpeedPercentage(int percentage)
 {
     int pwm = (int)round((percentage * 255) / 100);
 

@@ -648,7 +648,7 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
     string cost = (chars_cost);
 
     std::string paymentMethod = productDispensers[pos_index].getProduct()->getPaymentMethod();
-    std::string name_receipt = (productDispensers[pos_index].getProduct()->m_name_receipt);
+    std::string name_receipt = (productDispensers[pos_index].getProduct()->getProductName());
 
     std::string units = (productDispensers[pos_index].getProduct()->getDisplayUnits());
     double price = getFinalPrice();

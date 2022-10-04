@@ -473,14 +473,11 @@ QString DrinkOrder::getProductName(int slot)
     
     qDebug() << "product db for name";
     DbManager db(DB_PATH);
-    // QString product_name = db.getProductName(slot);
+    QString product_name = db.getProductName(slot);
     db.closeDB();
     return product_name;
     
-    
-    
     QString product_id = getProductDrinkfillSerial(slot);
-    
 }
 
 QString DrinkOrder::getSelectedProductName()

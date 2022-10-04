@@ -390,7 +390,7 @@ DF_ERROR stateManualPrinter::onExit()
 
 DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp)
 {
-   std::string name_receipt = (productDispensers[slot - 1].getProduct()->m_name_receipt);
+   std::string name_receipt = (productDispensers[slot - 1].getProduct()->getProductName());
    //  std::string plu = productDispensers[slot-1].getProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
 
    char size = productDispensers[slot - 1].getProduct()->getSizeCharFromTargetVolume(volume_requested);

@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <string>
 #include "../objects/debugOutput.h"
+#include <fstream>
 
 // Default CTOR
 product::product(int slot)
@@ -59,13 +60,54 @@ int product::getSlot()
     return m_nSlot;
 }
 
+
+void product::loadProductPropertiesFromCsv(string product_id){
+    // Create an input filestream
+    std::ifstream products_file(PRODUCT_DETAILS_TSV_PATH);
+
+    if(!products_file.is_open()){
+        debugOutput::sendMessage("Products file path could not be opened: " + std::string(PRODUCT_DETAILS_TSV_PATH) , MSG_ERROR);
+        return;
+    }
+
+    std::string line;
+
+    while (std::getline(products_file, line)) {
+        std::string delimiter = "\t";
+        size_t pos = 0;
+        uint8_t token_index=0;
+        std::string token;
+        while ((pos = line.find(delimiter)) != std::string::npos) {
+            token = line.substr(0, pos);
+            m_product_properties[token_index] = token;
+            token_index ++;
+            line.erase(0, pos + delimiter.length());
+        }
+
+        // for (uint8_t i=0;i<token_index;i++){
+        //     debugOutput::sendMessage(split_line[i] , MSG_INFO);
+
+        // }
+        // debugOutput::sendMessage(m_product_properties[CSV_PRODUCT_COL_ID] , MSG_INFO);
+        // debugOutput::sendMessage(m_product_properties[CSV_PRODUCT_COL_NAME_UI] , MSG_INFO);
+
+        bool stringsAreDifferent;
+        stringsAreDifferent = m_product_properties[CSV_PRODUCT_COL_ID].compare(product_id);
+        if (!(stringsAreDifferent)){
+           debugOutput::sendMessage("Product found in products file and loaded: " + m_product_properties[CSV_PRODUCT_COL_ID] + " " + m_product_properties[CSV_PRODUCT_COL_NAME] , MSG_INFO); 
+           return;
+        }
+    }
+    debugOutput::sendMessage("Product not found in products file: " + product_id, MSG_ERROR);
+}
+
 // Set the Product Name
 // TODO: Redefine function prototype, no argument.
-void product::setProductName(string productName)
-{
-    // TODO: SQLite database Query could be better option.
-    m_name = productName;
-}
+// void product::setProductName(string productName)
+// {
+//     // TODO: SQLite database Query could be better option.
+//     m_name = productName;
+// }
 
 double product::getVolumePerTick()
 {
@@ -789,6 +831,11 @@ bool product::isDbValid()
     sqlite3_close(db);
     return is_valid;
 }
+
+string product::getProductName(){
+    return m_product_properties[CSV_PRODUCT_COL_NAME];
+}
+
 bool product::reloadParametersFromDb()
 {
 
@@ -993,7 +1040,9 @@ bool product::reloadParametersFromDb()
             break;
             case DB_PRODUCTS_NAME_RECEIPT:
             {
-                m_name_receipt = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+                // GET FROM products csv!!!
+                //m_name_receipt = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+                
             }
             break;
             case DB_PRODUCTS_CONCENTRATION_MULTIPLIER:
@@ -1178,13 +1227,16 @@ bool product::reloadParametersFromDb()
             break;
             case DB_PRODUCTS_INGREDIENTS:
             {
+                // GET FROM products csv!!!
             }
             break;
             case DB_PRODUCTS_FEATURES:
+                // GET FROM products csv!!!
             {
             }
             break;
             case DB_PRODUCTS_DESCRIPTION:
+                // GET FROM products csv!!!
             {
             }
             break;
@@ -1204,6 +1256,9 @@ bool product::reloadParametersFromDb()
 
     sqlite3_finalize(stmt);
     sqlite3_close(db);
+
+
+    loadProductPropertiesFromCsv(m_soapstand_product_serial);
     return true;
 }
 

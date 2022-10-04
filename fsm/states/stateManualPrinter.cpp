@@ -290,7 +290,7 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
 
    m_pMessaging->sendMessage(statusString);
 
-#ifndef USE_OLD_DATABASE
+
 
    char *zErrMsg = 0;
 
@@ -316,7 +316,7 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
    {
       debugOutput::sendMessage("SUCCES: SQL2 : (" + to_string(rc) + ") " + sql21, MSG_INFO);
    }
-#endif
+
    sqlite3_close(db);
 }
 

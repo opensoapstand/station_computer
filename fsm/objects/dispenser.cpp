@@ -853,9 +853,6 @@ void dispenser::loadMultiDispenseButtonEnabledFromDb()
     // val 0 = pump reversal not enabled
     // val 1 = pump reversal enabled. Will take retraction time from products
 
-#ifdef USE_OLD_DATABASE
-    m_isPumpSlowStartStopEnabled = false;
-#else
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT dispense_buttons_count FROM machine";
@@ -881,8 +878,6 @@ void dispenser::loadMultiDispenseButtonEnabledFromDb()
         debugOutput::sendMessage("ASSERT Error: unimplemented number of dispense buttons. Default to single dispense button. Buttons indicated in db:" + to_string(m_isMultiButtonEnabled), MSG_ERROR);
     }
 
-#endif
-
     debugOutput::sendMessage("Multiple dispense buttons enabled? : " + to_string(m_isMultiButtonEnabled), MSG_INFO);
 }
 
@@ -896,9 +891,6 @@ void dispenser::loadPumpReversalEnabledFromDb()
     // val 0 = pump reversal not enabled
     // val 1 = pump reversal enabled. Will take retraction time from products
 
-#ifdef USE_OLD_DATABASE
-    m_isPumpSlowStartStopEnabled = false;
-#else
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT enable_pump_reversal FROM machine";
@@ -912,7 +904,6 @@ void dispenser::loadPumpReversalEnabledFromDb()
     sqlite3_close(db);
     m_isPumpReversalEnabled = (val != 0);
 
-#endif
 
     debugOutput::sendMessage("Pump reversal enabled? : " + to_string(m_isPumpReversalEnabled), MSG_INFO);
 }
@@ -927,9 +918,6 @@ void dispenser::loadPumpRampingEnabledFromDb()
     // val 0 = pump slow start stop not enabled
     // val 1 = pump slow start, slow stop enabled (with hardwired ramp up / ramp down time)
 
-#ifdef USE_OLD_DATABASE
-    m_isPumpSlowStartStopEnabled = false;
-#else
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT enable_pump_ramping FROM machine";
@@ -943,7 +931,6 @@ void dispenser::loadPumpRampingEnabledFromDb()
     sqlite3_close(db);
     m_isPumpSlowStartStopEnabled = (val != 0);
 
-#endif
 
     debugOutput::sendMessage("Pump ramping enabled? : " + to_string(m_isPumpSlowStartStopEnabled) + "(val: " + to_string(val) + ")", MSG_INFO);
 }
@@ -958,9 +945,6 @@ void dispenser::loadEmptyContainerDetectionEnabledFromDb()
     // val 0 = empty container detection not enabled
     // val 1 = empty container detection enabled
 
-#ifdef USE_OLD_DATABASE
-    m_isEmptyContainerDetectionEnabled = false;
-#else
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT has_empty_detection FROM machine";
@@ -973,8 +957,6 @@ void dispenser::loadEmptyContainerDetectionEnabledFromDb()
     sqlite3_finalize(stmt);
     sqlite3_close(db);
     m_isEmptyContainerDetectionEnabled = (val != 0);
-
-#endif
 
     debugOutput::sendMessage("Empty container detection enabled? : " + to_string(m_isEmptyContainerDetectionEnabled), MSG_INFO);
 }

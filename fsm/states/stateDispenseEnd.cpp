@@ -317,11 +317,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     volume_remaining_converted = productDispensers[pos_index].getProduct()->convertVolumeMetricToDisplayUnits(volume_remaining);
     volume_remaining_units_converted_string = to_string(volume_remaining_converted);
     
-#ifdef USE_OLD_DATABASE
-    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&units=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + end_time + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer";
-#else
     std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + end_time + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer&volume_remaining_ml=" + to_string(volume_remaining) + "&quantity_dispensed_ml=" + to_string(productDispensers[pos_index].getVolumeDispensed()) + "&volume_remaining=" + volume_remaining_units_converted_string +"&coupon="+ coupon;
-#endif
     char buffer[1080];
     strcpy(buffer, curl_param.c_str());
 
@@ -411,12 +407,7 @@ std::string stateDispenseEnd::getProductID(int slot)
 
     debugOutput::sendMessage("Product ID getter START", MSG_INFO);
 
-#ifdef USE_OLD_DATABASE
-    std::string sql_string_pid = "SELECT product_id FROM products WHERE slot=" + std::to_string(slot) + ";";
-#else
     std::string sql_string_pid = "SELECT productId FROM products WHERE slot=" + std::to_string(slot) + ";";
-
-#endif
 
     sqlite3_prepare(db, sql_string_pid.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
@@ -479,12 +470,7 @@ std::string stateDispenseEnd::getUnitsFromDb(int slot)
         //       fprintf(stderr, "Opened database successfully\n");
     }
 
-#ifdef USE_OLD_DATABASE
-    std::string sql_string_units = "SELECT units FROM products WHERE slot=" + std::to_string(slot) + ";";
-#else
     std::string sql_string_units = "SELECT size_unit FROM products WHERE slot=" + std::to_string(slot) + ";";
-
-#endif
 
     sqlite3_prepare(db, sql_string_units.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
@@ -579,29 +565,15 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(double updated_volume_remaining)
 
     databaseUpdateSql(sql1);
 
-    /* Create SQL statement for product dispensed since restock */
-#ifndef USE_OLD_DATABASE
-    std::string sql21;
-    sql21 = ("UPDATE products SET volume_dispensed_since_restock=volume_dispensed_since_restock+" + dispensed_volume_str + " WHERE name='" + product_name + "';");
-    databaseUpdateSql(sql21);
-#endif
 
     /* Create SQL statement for total product dispensed */
     std::string sql2;
-#ifdef USE_OLD_DATABASE
-    sql2 = ("UPDATE products SET total_dispensed=total_dispensed+" + dispensed_volume_str + " WHERE name='" + product + "';");
-#else
     sql2 = ("UPDATE products SET volume_dispensed_total=volume_dispensed_total+" + dispensed_volume_str + " WHERE name='" + product_name + "';");
-#endif
     databaseUpdateSql(sql2);
 
     /* Create SQL statement for product remaining */
     std::string sql3;
-#ifdef USE_OLD_DATABASE
-    sql3 = ("UPDATE products SET remaining_ml=full_ml-total_dispensed WHERE name='" + product + "';");
-#else
     sql3 = ("UPDATE products SET volume_remaining=" + to_string(updated_volume_remaining) + " WHERE name='" + product_name + "';");
-#endif
     databaseUpdateSql(sql3);
 
     // reload (changed) db values

@@ -56,7 +56,6 @@ Product::~Product()
 {
 }
 
-
 char Product::getSelectedSizeAsChar()
 {
     // ! = invalid.
@@ -87,10 +86,8 @@ int Product::getSelectedSlot()
 
 void Product::setSelectedSlot(int slot)
 {
-
     if (slot >= OPTION_SLOT_INVALID && slot <= SLOT_COUNT)
     {
-
         if (slot != getSelectedSlot())
         {
             // overruledPrice = INVALID_PRICE;
@@ -123,61 +120,6 @@ bool Product::isSelectedOrderValid()
     return true;
 }
 
-double Product::getDiscount()
-{
-    //qDebug() << "--------=========" << QString::number(getSelectedPriceCorrected());
-
-    // the discount is the original price minus the discounted price
-    return getPrice(getSelectedSize()) - getSelectedPriceCorrected();
-}
-
-double Product::getDiscountPercentageFraction()
-{
-    return m_discount_percentage_fraction;
-}
-
-QString Product::getPromoCode()
-{
-    return m_promoCode;
-}
-
-void Product::setDiscountPercentageFraction(double percentageFraction)
-{
-    // ratio = percentage / 100;
-    qDebug() << "Set discount percentage fraction: " << QString::number(percentageFraction, 'f', 3);
-    m_discount_percentage_fraction = percentageFraction;
-    
-    // if (isSelectedOrderValid())
-    // {
-    //     qInfo() << "Set overrruled price.";
-
-    //     if (price != overruledPrice)
-    //     {
-    //         overruledPrice = price;
-    //         emit priceChange(overruledPrice);
-    //     }
-    // }
-    // else
-    // {
-    //     qInfo() << "ERROR: no overruled price set. ";
-    // }
-}
-
-void Product::setPromoCode(QString promoCode)
-{
-    // ratio = percentage / 100;
-    qDebug() << "Set Promo Code: " << promoCode;
-    m_promoCode = promoCode;
-}
-
-void Product::setPriceSelected(int size, double price)
-{
-    qDebug() << "db... set product price";
-    DbManager db(DB_PATH);
-    db.updatePrice(getSelectedSlot(), size, price);
-    db.closeDB();
-}
-
 double Product::getPrice(int sizeIndex)
 {
     // always from database
@@ -192,32 +134,6 @@ double Product::getPrice(int sizeIndex)
 
 double Product::getSelectedPrice(){
     return getPrice(getSelectedSize());
-}
-double Product::getSelectedPriceCorrected()
-{
-    // slot and size needs to be set.
-    double price;
-    if (isSelectedOrderValid())
-    {
-        // if (overruledPrice != INVALID_PRICE)
-        // {
-        //     qInfo() << "Overruled price is set.";
-        //     price = overruledPrice;
-        // }
-        // else
-        // {
-        //     price = getPrice(getSelectedSize());
-        // }
-
-        price = getPrice(getSelectedSize()) * (1.0 - m_discount_percentage_fraction);
-    }
-    else
-    {
-
-        qInfo() << "ERROR: no product set";
-        price = 66.6;
-    }
-    return price;
 }
 
 double Product::getVolume(int size)

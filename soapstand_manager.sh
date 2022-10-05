@@ -60,8 +60,6 @@ do
             echo "Screen setup for Drinkfill UI: - disable window transition animations. - set window vertical"
             echo "     - disable window transition animations."
             gsettings set org.gnome.desktop.interface enable-animations false
-            echo "     - set window vertical"
-            xrandr -display :0.0 -o right
             ;;
         "Setup rtunnel")
             sudo nano /etc/systemd/system/rtunnel.service

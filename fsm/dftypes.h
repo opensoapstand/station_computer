@@ -20,19 +20,28 @@
 
 #define CONTROLLER_VERSION "1.1.0+"
 
+
+
+#define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv"  // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file
+#define CSV_PRODUCT_COL_ID 0
+#define CSV_PRODUCT_COL_NAME 1
+#define CSV_PRODUCT_COL_TYPE 2
+#define CSV_PRODUCT_COL_SUPPLIER 3
+#define CSV_PRODUCT_COL_BRAND 4
+#define CSV_PRODUCT_COL_INGREDIENTS 5
+#define CSV_PRODUCT_COL_LOCATION 6
+#define CSV_PRODUCT_COL_NAME_UI 7
+#define CSV_PRODUCT_COL_DESCRIPTION_UI 8
+#define CSV_PRODUCT_COL_FEATURES_UI 9
+#define CSV_PRODUCT_COL_INGREDIENTS_UI 10
+#define CSV_PRODUCT_COL_NOTES 11
+
 #define PRODUCT_DISPENSERS_MAX 4
 #define MINIMUM_DISPENSE_VOLUME_ML 10
-// #define USE_OLD_DATABASE
 #define ENABLE_TRANSACTION_TO_CLOUD
 //#define ENABLE_MULTI_BUTTON
 
-#ifdef USE_OLD_DATABASE
-#define DB_PATH "/home/df-admin/production/db/drinkfill-sqlite.db"
-// #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
-//#define DB_PATH "/home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite.db"
-#else
 #define DB_PATH "/home/df-admin/production/db/drinkfill-sqlite_newlayout.db"
-#endif
 
 #define MOTOR_TEST_DATA_OUTPUT_INTERVAL_MILLIS 1000
 // #define MOTOR_TEST_DATA_OUTPUT_INTERVAL_MILLIS 1000
@@ -114,32 +123,6 @@ struct Time_val
 };
 typedef struct Time_val Time_val;
 
-#ifdef USE_OLD_DATABASE
-#define DB_PRODUCTS_SLOT 0
-#define DB_PRODUCTS_NAME 1
-#define DB_PRODUCTS_VOLUME_DISPENSED 2
-#define DB_PRODUCTS_VOLUME_TARGET_L 3
-#define DB_PRODUCTS_VOLUME_TARGET_S 4
-#define DB_PRODUCTS_CALIBRATION_CONST 5
-#define DB_PRODUCTS_PRICE_L 6
-#define DB_PRODUCTS_PRICE_S 7
-#define DB_PRODUCTS_IS_STILL 8
-#define DB_PRODUCTS_VOLUME_PER_TICK 9
-#define DB_PRODUCTS_PLU_L 10
-#define DB_PRODUCTS_PLU_S 11
-#define DB_PRODUCTS_FULL_ML 12
-#define DB_PRODUCTS_REMAINING_ML 13
-#define DB_PRODUCTS_TOTAL_DISPENSED 14
-#define DB_PRODUCTS_NAME_RECEIPT 15
-#define DB_PRODUCTS_PAYMENT 16
-#define DB_PRODUCTS_LAST_REFILL 17
-#define DB_PRODUCTS_PWM 18
-#define DB_PRODUCTS_BUFFER 19
-#define DB_PRODUCTS_PRODUCT_ID 20
-#define DB_PRODUCTS_UNITS 21
-
-#else
-
 
 #define TABLE_PRODUCTS_COLUMN_COUNT 46
 
@@ -191,7 +174,6 @@ typedef struct Time_val Time_val;
 #define DB_PRODUCTS_FEATURES 44
 #define DB_PRODUCTS_DESCRIPTION 45
 
-#endif
 
 typedef enum DF_FSM
 {

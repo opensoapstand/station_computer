@@ -91,15 +91,16 @@ public:
 
     bool isSelectedOrderValid();
 
-    QString getSelectedProductName();
     QString getProductName(int slot);
+    QString getProductType(int slot);
     QString getProductDrinkfillSerial(int slot);
 
-    void loadSelectedProductPropertiesFromCsv();
-    void getProductPropertiesFromCsv(QString product_id, QString * name_ui, QString* description_ui, QString* features_ui, QString* ingredients_ui);
+    void loadSelectedProductPropertiesFromProductsFile();
+    void getProductPropertiesFromProductsFile(QString product_id, QString * name_ui, QString* product_type, QString* description_ui, QString* features_ui, QString* ingredients_ui);
 
     void loadSelectedProductProperties();
     void loadProductPropertiesFromDb(int slot);
+    QString getSelectedProductName();
     QString getLoadedProductName();
     QString getLoadedProductDescription();
     QString getLoadedProductIngredients();
@@ -150,6 +151,9 @@ signals:
 
 private:
     QString m_ingredients_ui;
+    QString m_product_type;
+    
+
     QString m_features_ui;
     QString m_name_ui;
     QString m_description_ui;

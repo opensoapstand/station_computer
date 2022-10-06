@@ -49,7 +49,8 @@ HEADERS += \
     page_error_wifi.h \
     page_init.h \
     page_help.h \
-    page_transactions.h
+    page_transactions.h \
+    product.h
 
 SOURCES += \
     dfuicommthread.cpp \
@@ -79,7 +80,8 @@ SOURCES += \
     page_init.cpp \
     page_help.cpp \
     ../library/qr/qrcodegen.cpp \
-    page_transactions.cpp
+    page_transactions.cpp \
+    product.cpp
 
 RESOURCES += \
     src.qrc

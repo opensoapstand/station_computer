@@ -1,6 +1,8 @@
 #include "drinkorder.h"
 #include "page_idle.h"
 #include "df_util.h" // lode added for settings
+// #include "product.h"
+
 
 // Ctor
 DrinkOrder::DrinkOrder()
@@ -10,30 +12,6 @@ DrinkOrder::DrinkOrder()
     m_discount_percentage_fraction = 0.0;
     m_promoCode = "";
 
-    // qDebug() << "db open2" ;
-    // DbManager db(DB_PATH);
-
-    // DRINK1_SIZE_ML_L = db.getProductVolume(1, 'l');
-    // DRINK2_SIZE_ML_L = db.getProductVolume(2, 'l');
-    // DRINK3_SIZE_ML_L = db.getProductVolume(3, 'l');
-    // DRINK4_SIZE_ML_L = db.getProductVolume(4, 'l');
-
-    // DRINK1_SIZE_ML_S = db.getProductVolume(1, 's');
-    // DRINK2_SIZE_ML_S = db.getProductVolume(2, 's');
-    // DRINK3_SIZE_ML_S = db.getProductVolume(3, 's');
-    // DRINK4_SIZE_ML_S = db.getProductVolume(4, 's');
-
-    // DRINK1_PRICE_LARGE = db.getProductPrice(1, 'l');
-    // DRINK2_PRICE_LARGE = db.getProductPrice(2, 'l');
-    // DRINK3_PRICE_LARGE = db.getProductPrice(3, 'l');
-    // DRINK4_PRICE_LARGE = db.getProductPrice(4, 'l');
-
-    // DRINK1_price_small = db.getProductPrice(1, 's');
-    // DRINK2_price_small = db.getProductPrice(2, 's');
-    // DRINK3_price_small = db.getProductPrice(3, 's');
-    // DRINK4_price_small = db.getProductPrice(4, 's');
-
-    // db.closeDB();
 }
 
 // Ctor Object Copy
@@ -372,7 +350,7 @@ QString DrinkOrder::getProductDrinkfillSerial(int slot)
 void DrinkOrder::loadSelectedProductProperties()
 {
     loadProductPropertiesFromDb(getSelectedSlot());
-    loadSelectedProductPropertiesFromCsv();
+    loadSelectedProductPropertiesFromProductsFile();
 }
 
 
@@ -386,19 +364,17 @@ void DrinkOrder::loadProductPropertiesFromDb(int slot)
     bool m_isEnabledLarge;
     bool m_isEnabledCustom;
 
-    // db.getProductProperties(slot, &m_name, &m_description, &m_features_ui_ui, &m_ingredients_ui, m_isEnabledSizes);
-    
     db.getProductProperties(slot, &m_product_id, m_isEnabledSizes);
 
 
     db.closeDB();
 }
 
-void DrinkOrder::loadSelectedProductPropertiesFromCsv( ){
-    getProductPropertiesFromCsv(m_product_id, &m_name_ui, &m_description_ui, &m_features_ui, &m_ingredients_ui);
+void DrinkOrder::loadSelectedProductPropertiesFromProductsFile( ){
+    getProductPropertiesFromProductsFile(m_product_id, &m_name_ui, &m_product_type, &m_description_ui, &m_features_ui, &m_ingredients_ui);
 }
 
-void DrinkOrder::getProductPropertiesFromCsv(QString product_id, QString * name_ui, QString* description_ui, QString* features_ui, QString* ingredients_ui){
+void DrinkOrder::getProductPropertiesFromProductsFile(QString product_id, QString * name_ui, QString* product_type, QString* description_ui, QString* features_ui, QString* ingredients_ui){
 
     QFile file(PRODUCT_DETAILS_TSV_PATH);
     if(!file.open(QIODevice::ReadOnly)) {
@@ -417,6 +393,7 @@ void DrinkOrder::getProductPropertiesFromCsv(QString product_id, QString * name_
         int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], product_id, Qt::CaseSensitive);
         if (compareResult == 0){
             *name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
+            *product_type = fields[CSV_PRODUCT_COL_TYPE];
             *description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI ];
             *features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
             *ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
@@ -425,8 +402,6 @@ void DrinkOrder::getProductPropertiesFromCsv(QString product_id, QString * name_
     }
     file.close();
 }
-
-
 
 bool DrinkOrder::getLoadedProductSizeEnabled(int size)
 {
@@ -464,6 +439,19 @@ QString DrinkOrder::getProductPicturePath(int slot)
     return QString(PRODUCT_PICTURES_ROOT_PATH).arg(serial);
 }
 
+QString DrinkOrder::getProductType(int slot)
+{
+    QString product_id = getProductDrinkfillSerial(slot);
+    QString name_ui;
+    QString product_type;
+    QString description_ui;
+    QString features_ui;
+    QString ingredients_ui;
+
+    getProductPropertiesFromProductsFile(product_id, &name_ui, &product_type, &description_ui, &features_ui, &ingredients_ui);
+    return product_type;
+}
+
 QString DrinkOrder::getProductName(int slot)
 {
     // qDebug() << "product db for name";
@@ -483,11 +471,12 @@ QString DrinkOrder::getProductName(int slot)
     QString product_id = getProductDrinkfillSerial(slot);
 
     QString name_ui;
+    QString product_type;
     QString description_ui;
     QString features_ui;
     QString ingredients_ui;
 
-    getProductPropertiesFromCsv(product_id, &name_ui, &description_ui, &features_ui, &ingredients_ui);
+    getProductPropertiesFromProductsFile(product_id, &name_ui, &product_type, &description_ui, &features_ui, &ingredients_ui);
     return name_ui;
 }
 

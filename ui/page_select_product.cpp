@@ -149,13 +149,14 @@ void page_select_product::displayProducts()
 
         qDebug() << "db (re)load product details:";
         DbManager db(DB_PATH);
-        product_type = db.getProductType(slot);
+        // product_type = db.getProductType(slot);
         product_slot_enabled = db.getSlotEnabled(slot);
         product_sold_out = !(db.isProductVolumeInContainer(slot));
         product_status_text = db.getStatusText(slot);
         db.closeDB();
         qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << ", product set as not available?: " << product_sold_out << " Status text: " << product_status_text;
 
+        product_type = p_page_idle->currentProductOrder->getProductType(slot);
         product_name = p_page_idle->currentProductOrder->getProductName(slot);
 
         selectProductNameLabels[i]->setText(product_name);
@@ -191,9 +192,11 @@ void page_select_product::displayProducts()
         }
         else
         {
-            icon_path = "Product/type/for/icon/not/found.aiaiai. Is the slot set correctly in database?";
-            type_text = "UNAVAILABLE";
+            icon_path = "NOT A VALID PRODUCT TYPE";
+            type_text = product_type;
+            qDebug() << "Product type not found for UI text and icon. Is the slot set correctly in database?";
         }
+
         p_page_idle->addPictureToLabel(selectProductIconLabels[i], icon_path);
         selectProductIconLabels[i]->setText(""); // icon should not display text.
 

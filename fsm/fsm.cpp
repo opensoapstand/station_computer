@@ -85,11 +85,13 @@ int main()
 
     DF_ERROR dfRet = OK;
 
+    // __cplusplus  // uncomment and hover over it to check the cpp version used. https://stackoverflow.com/questions/2324658/how-to-determine-the-version-of-the-c-standard-used-by-the-compiler
+    
     std::string version = CONTROLLER_VERSION;
     debugOutput::sendMessage("***************************************************************************", MSG_INFO);
     debugOutput::sendMessage("****** SOAPSTAND CONTROLLER v" + version + " ***********************************", MSG_INFO);
     debugOutput::sendMessage("***************************************************************************", MSG_INFO);
-    
+
     machine test;
     test.testtest();
 

@@ -51,7 +51,7 @@ public:
         double getPrice(char size);
         string getDisplayUnits();
         double convertVolumeMetricToDisplayUnits(double volume);
-
+        string getProductName();
         string getBasePLU(char size);
         string getProductId();
         string getPaymentMethod() { return m_paymentMethod; }
@@ -120,18 +120,23 @@ public:
 
         char sizeIndexToChar[4] = SIZE_INDEX_TO_CHAR_ARRAY;
 
+
+
+        string m_product_properties[100];
         // string m_soapstand_product_serial;
         string m_name;
         string m_dispenser_id;
         string m_soapstand_product_serial;
         string m_display_unit;
-        string m_name_receipt;
+        // string m_name_receipt;
         // double m_buttonPressDuration;
         string m_nPLU_small;
         string m_nPLU_medium;
         string m_nPLU_large;
         string m_nPLU_custom;
         string m_paymentMethod;
+
+
         // int m_PWM;
         // DF_ERROR reloadProductFromDB();
 
@@ -150,11 +155,12 @@ public:
         double m_concentration_multiplier; // some products are concentrated. In that case, we don't dispense the advertised volume. i.e. 1L of 10x concentrate --> dispense 100ml, 900ml of water needs to be added afterwards.
         int m_nSlot;
         bool isEnabled;
+        void loadProductPropertiesFromCsv(string product_id);
 private:
 
         double m_calibration_const;
 
-        void setProductName(string productName);
+        // void setProductName(string productName);
         double getVolPerTick();
 
         sqlite3 *db;

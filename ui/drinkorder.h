@@ -95,7 +95,8 @@ public:
     QString getProductName(int slot);
     QString getProductDrinkfillSerial(int slot);
 
-    void loadProductPropertiesFromCsv(QString product_id);
+    void loadSelectedProductPropertiesFromCsv();
+    void getProductPropertiesFromCsv(QString product_id, QString * name_ui, QString* description_ui, QString* features_ui, QString* ingredients_ui);
 
     void loadSelectedProductProperties();
     void loadProductPropertiesFromDb(int slot);
@@ -148,10 +149,10 @@ signals:
     void sizeChange(double newSize);
 
 private:
-    QString m_ingredients;
-    QString m_features;
-    QString m_name;
-    QString m_description;
+    QString m_ingredients_ui;
+    QString m_features_ui;
+    QString m_name_ui;
+    QString m_description_ui;
     QString m_product_id;
     bool m_isEnabledSizes [4];
 

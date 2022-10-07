@@ -34,18 +34,19 @@ do
             "${cmd[@]}"
             ;;
         "upload to AWS home folder")
-            read -e -p "Enter filename (like in normal terminal. e.g. use tab for completion): " file
-            ls -l "$file"
-            full_path="$(pwd)"/"$file"
-            echo full_path
+            read -e -p "Enter filename (like in normal terminal but typ /home/df-admin (not~), use tab for completion): " file
+            # ls -l "$file"
+            # //full_path="$(pwd)"/"$file"
+            full_path="$file"
+            echo $full_path
             cd /home/df-admin/Downloads
             scp -r -i DrinkfillAWS.pem "$full_path" ubuntu@ec2-44-225-153-121.us-west-2.compute.amazonaws.com:/home/ubuntu
             ;;
         "upload to AWS station folder")
-            read -e -p "Enter filename (like in normal terminal. e.g. use tab for completion): " file
-            ls -l "$file"
-            full_path="$(pwd)"/"$file"
-            echo full_path
+            read -e -p "Enter filename (like in normal terminal but typ /home/df-admin (not~), use tab for completion): " file
+            full_path="$file"
+            echo $full_path
+            # ls -l "$file"
             station_id=$(sqlite3 /home/df-admin/production/db/drinkfill-sqlite_newlayout.db "select machine_id from machine;")
 
             cd /home/df-admin/Downloads

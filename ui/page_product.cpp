@@ -42,16 +42,25 @@ uint16_t orderSizeButtons_xywh_dynamic_ui_small_available[4][4] = {
     {1, 1, 1, 1},          // L
     {1, 1, 1, 1}           // custom
 };
+
+uint16_t orderSizeButtons_xywh_dynamic_ui_small_large_custom_available[4][4] = {
+    {564, 990, 209, 100}, // S
+     {1, 1, 1, 1}, 
+    {790, 990, 198, 100}, // L
+    {564, 1100, 424, 113} // custom
+ };
+ 
+
 uint16_t orderSizeButtons_xywh_dynamic_ui_small_and_large_available[4][4] = {
     {564, 1088, 209, 126}, // S
     {1, 1, 1, 1},          // M
     {790, 1087, 198, 126}, // L
     {1, 1, 1, 1}           // custom
 };
-uint16_t orderSizeButtons_xywh_dynamic_ui_small_large_custom_available[4][4] = {
-    {564, 990, 209, 100}, // S
+uint16_t orderSizeButtons_xywh_dynamic_ui_custom_available[4][4] = {
+     {1, 1, 1, 1}, 
     {1, 1, 1, 1},         // M
-    {790, 990, 198, 100}, // L
+     {1, 1, 1, 1}, 
     {564, 1100, 424, 113} // custom
 };
 
@@ -86,6 +95,19 @@ uint16_t orderSizePriceLabels_xy_dynamic_ui_small_large_custom_available[8][2] =
     {1, 1},      // M price
     {825, 1040}, // L price
     {560, 1160}  // custom price
+};
+uint16_t orderSizePriceLabels_xy_dynamic_ui_custom_available[8][2] = {
+   {1, 1}, // S price
+    {1, 1},      // M price
+   {1, 1}, // L price
+    {560, 1160}  // custom price
+};
+
+uint16_t orderSizeVolumeLabels_xy_dynamic_ui_custom_available[8][2] = {
+    {1, 1}, // S vol
+    {1, 1},      // M vol
+    {1, 1},      // L vol
+    {570, 1110}  // custom col
 };
 
 uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_available[8][2] = {
@@ -378,6 +400,13 @@ void pageProduct::reset_and_show_page_elements()
         xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_small_large_custom_available;
         xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_small_large_custom_available;
         xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_small_large_custom_available;
+    }
+    else if (available_sizes_signature == 8)
+    {
+        // only custom 
+        xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_custom_available;
+        xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_custom_available;
+        xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_custom_available;
     }
     else if (available_sizes_signature == 15)
     {

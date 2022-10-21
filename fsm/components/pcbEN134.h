@@ -37,8 +37,14 @@
 
 #define PCA9534_TMP_SLOT2_ADDRESS  PCA9534_ADDRESS_SLOT_2
 
-
+#define PCA9534_PIN_OUT_SOLENOID 0
+#define PCA9534_PIN_OUT_PUMP_ENABLE 1
+#define PCA9534_PIN_OUT_PUMP_DIR 2
+#define PCA9534_PIN_IN_PUMP_FAULT 3
+#define PCA9534_PIN_IN_BUTTON 4
 #define PCA9534_PIN_OUT_BUTTON_LED_LOW_IS_ON 5
+#define PCA9534_PIN_IN_FLOW_SENSOR_TICKS 6
+#define PCA9534_PIN_OUT_FLOW_SENSOR_ENABLE 7
 
 #define PIC_ADDRESS      0b0110000
 #define MAX31760_ADDRESS 0b1010000
@@ -69,7 +75,7 @@ public:
     void virtualButtonUnpressHack(void);
     void dispenseButtonRefresh();
     void setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff);
-
+    
 private:
     bool getDispenseButtonState(void);
     bool is_initialized;
@@ -78,7 +84,7 @@ private:
 
     bool pic_pwm_found = false;
     
-    uint8_t slot_addresses [4] = {PCA9534_ADDRESS_SLOT_1, PCA9534_ADDRESS_SLOT_2, PCA9534_ADDRESS_SLOT_3, PCA9534_ADDRESS_SLOT_4};
+    uint8_t get_PCA9534_address_from_slot(uint8_t slot);
 
     bool SendByte(unsigned char address, unsigned char reg, unsigned char byte);
     unsigned char ReadByte(unsigned char address, unsigned char reg);

@@ -498,6 +498,22 @@ void pcbEN134::setup_i2c_bus(void)
 } // End of setup_i2c_bus()
 
 ///////////////////////////////////////////////////////////////////////////
+uint8_t pcbEN134::get_PCA9534_address_from_slot(uint8_t slot){
+    if (slot == 0){
+        debugOutput::sendMessage("ASSERT ERROR: slot numbers start at 1", MSG_ERROR);
+    }
+
+    uint8_t slot_index = slot - 1;
+    #if SLOT_COUNT == 4
+        uint8_t slot_addresses [4] = {PCA9534_ADDRESS_SLOT_1, PCA9534_ADDRESS_SLOT_2, PCA9534_ADDRESS_SLOT_3, PCA9534_ADDRESS_SLOT_4};
+        
+    #elif SLOT_COUNT == 8
+        debugOutput::sendMessage("NOT SET YET FOR MORE THAN 4 PUMPS", MSG_ERROR);
+      //  uint8_t slot_addresses [8] = {PCA9534_ADDRESS_SLOT_1, PCA9534_ADDRESS_SLOT_2, PCA9534_ADDRESS_SLOT_3, PCA9534_ADDRESS_SLOT_4};
+    #endif
+    return slot_addresses [slot_index];
+}
+
 bool pcbEN134::check_8344_configuration(void)
 {
     unsigned char i2c_probe_address;
@@ -593,9 +609,11 @@ bool pcbEN134::check_8344_configuration(void)
 void pcbEN134::initialize_8344(void)
 {
     // Initialize the PCA9534
-
-    SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, 0b11100000); // Output pin values
-    SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03, 0b10000000); // 0 = output
+    for (uint8_t i=0;i<SLOT_COUNT;i++){
+        // SendByte(get_PCA9534_address_from_slot(i), 0x01, 0b00000000); // Output pin values register (has no influence on input values)
+        SendByte(get_PCA9534_address_from_slot(i), 0x01, 0b00000100); // Output pin values register (has no influence on input values)
+        SendByte(get_PCA9534_address_from_slot(i), 0x03, 0b00011010); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+    }
 
     // Set PWM value
     SendByte(PIC_ADDRESS, 0x00, 50);

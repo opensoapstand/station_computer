@@ -1,6 +1,6 @@
 
 
-#include "dsed8344.h"
+#include "pcbEN134.h"
 #include <chrono>
 #include <cmath>
 
@@ -9,7 +9,7 @@
 #define __USE_SMBUS_I2C_LIBRARY__ 1
 
 // Constructor that works out the name of the I2C bus
-dsed8344::dsed8344(void)
+pcbEN134::pcbEN134(void)
 {
 
 #ifdef __arm__
@@ -17,7 +17,7 @@ dsed8344::dsed8344(void)
     i2c_bus_name = (char *)calloc(strlen(DEFAULT_I2C_BUS) + 1, sizeof(char));
     if (i2c_bus_name == NULL)
     {
-        debugOutput::sendMessage("dsed8344: Unable to allocate memory.", MSG_ERROR);
+        debugOutput::sendMessage("pcbEN134: Unable to allocate memory.", MSG_ERROR);
         return;
     }
     strcpy(i2c_bus_name, DEFAULT_I2C_BUS);
@@ -46,7 +46,7 @@ dsed8344::dsed8344(void)
     i2c_bus_name = (char *)calloc(strlen(path) + 5, sizeof(char));
     if (i2c_bus_name == NULL)
     {
-        debugOutput::sendMessage("dsed8344: Unable to allocate memory.", MSG_ERROR);
+        debugOutput::sendMessage("pcbEN134: Unable to allocate memory.", MSG_ERROR);
         return;
     }
     strcpy(i2c_bus_name, "/dev/");
@@ -55,16 +55,16 @@ dsed8344::dsed8344(void)
 
 #endif
 
-} // End of dsed8344() constructor
+} // End of pcbEN134() constructor
 
 // Constructor where you can specify the name of the I2C bus
-dsed8344::dsed8344(const char *bus)
+pcbEN134::pcbEN134(const char *bus)
 {
     // Make a copy of the bus name for later use
     i2c_bus_name = (char *)calloc(strlen(bus) + 1, sizeof(char));
     if (i2c_bus_name == NULL)
     {
-        debugOutput::sendMessage("dsed8344: Unable to allocate memory.", MSG_ERROR);
+        debugOutput::sendMessage("pcbEN134: Unable to allocate memory.", MSG_ERROR);
         close(i2c_handle);
         return;
     }
@@ -75,20 +75,20 @@ dsed8344::dsed8344(const char *bus)
     dispenseButtonStateDebounced = false;
     dispenseButtonIsDebounced = true;
 
-} // End of dsed8344() constructor
+} // End of pcbEN134() constructor
 
 // Destructor
-dsed8344::~dsed8344(void)
+pcbEN134::~pcbEN134(void)
 {
     free(i2c_bus_name);
     close(i2c_handle);
-} // End of dsed8344() destructor
+} // End of pcbEN134() destructor
 
 ///////////////////////////////////////////////////////////////////////////
 // Public methods
 ///////////////////////////////////////////////////////////////////////////
 
-void dsed8344::setup()
+void pcbEN134::setup()
 {
 
     if (!is_initialized)
@@ -102,12 +102,8 @@ void dsed8344::setup()
         is_initialized = true;
     }
 }
-unsigned char dsed8344::getPumpPWM(void)
+unsigned char pcbEN134::getPumpPWM(void)
 {
-    if (max31760_pwm_found)
-    {
-        return ReadByte(MAX31760_ADDRESS, 0x50); // PWM value
-    }
 
     if (pic_pwm_found)
     {
@@ -125,14 +121,10 @@ unsigned char dsed8344::getPumpPWM(void)
 
 } // End of getPumpRPM()
 
-bool dsed8344::setPumpPWM(uint8_t pwm_val)
+bool pcbEN134::setPumpPWM(uint8_t pwm_val)
 {
-    if (max31760_pwm_found)
-    {
-        // debugOutput::sendMessage("Motor speed set to (pwm byte): " + to_string(pwm_val), MSG_INFO);
-        return SendByte(MAX31760_ADDRESS, 0x50, pwm_val); // PWM value
-    }
-    else if (pic_pwm_found)
+
+    if (pic_pwm_found)
     {
         float f_value;
 
@@ -164,7 +156,7 @@ bool dsed8344::setPumpPWM(uint8_t pwm_val)
 
 } // End of setPumpPWM()
 
-bool dsed8344::setPumpDirection(bool forwardElseReverse)
+bool pcbEN134::setPumpDirection(uint8_t slot, bool forwardElseReverse)
 {
     unsigned char pwm_value;
     unsigned char reg_value;
@@ -173,7 +165,7 @@ bool dsed8344::setPumpDirection(bool forwardElseReverse)
     // Changing the direction without stopping the pump can damage the
     // pump.
 
-    reg_value = ReadByte(PCA9534_ADDRESS, 0x01);
+    reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01);
 
     // bit 5 = 1 = forward
 
@@ -198,7 +190,7 @@ bool dsed8344::setPumpDirection(bool forwardElseReverse)
         {
             reg_value = reg_value & 0b11011111;
         }
-        SendByte(PCA9534_ADDRESS, 0x01, reg_value);
+        SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, reg_value);
 
         // Restore the pump RPM value
         setPumpPWM(pwm_value);
@@ -218,11 +210,11 @@ bool dsed8344::setPumpDirection(bool forwardElseReverse)
     return true;
 } // End of setPumpDirection()
 
-bool dsed8344::setPumpEnable(unsigned char pump_number)
+bool pcbEN134::setPumpEnable(unsigned char pump_number)
 {
     unsigned char reg_value;
 
-    reg_value = ReadByte(PCA9534_ADDRESS, 0x01);
+    reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01);
     switch (pump_number)
     {
     case 1:
@@ -240,73 +232,57 @@ bool dsed8344::setPumpEnable(unsigned char pump_number)
     default:
         return false;
     }
-    SendByte(PCA9534_ADDRESS, 0x01, reg_value);
+    SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, reg_value);
 
     return true;
 } // End setPumpEnable()
 
-void dsed8344::virtualButtonPressHack()
+void pcbEN134::virtualButtonPressHack()
 {
     // WARNING: This overrides the physical dispense button. As such, there is no fail safe mechanism.
     // If the program crashes while the button is pressed, it might keep on dispensing *forever*.
 
-    unsigned char reg_value = ReadByte(PCA9534_ADDRESS, 0x03);
+    unsigned char reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03);
     reg_value = reg_value & 0b01111111;
-    SendByte(PCA9534_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+    SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
 
-    reg_value = ReadByte(PCA9534_ADDRESS, 0x01);
+    reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01);
     reg_value = reg_value & 0b01111111; // virtual button press
-    SendByte(PCA9534_ADDRESS, 0x01, reg_value);
+    SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, reg_value);
 }
 
-void dsed8344::virtualButtonUnpressHack()
+void pcbEN134::virtualButtonUnpressHack()
 {
-    unsigned char reg_value = ReadByte(PCA9534_ADDRESS, 0x03);
+    unsigned char reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03);
     reg_value = reg_value | 0b10000000;
-    SendByte(PCA9534_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+    SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
 }
 
-bool dsed8344::setPumpsDisableAll()
+bool pcbEN134::setPumpsDisableAll()
 {
     unsigned char reg_value;
 
-    reg_value = ReadByte(PCA9534_ADDRESS, 0x01);
+    reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01);
     reg_value = reg_value & 0b11111000;
-    SendByte(PCA9534_ADDRESS, 0x01, reg_value);
+    SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, reg_value);
 
     return true;
 } // End setPumpsDisableAll()
 
-unsigned short dsed8344::getPumpSpeed(void)
-{
-    if (max31760_pwm_found)
-    {
-        // 2 byte value. standstill is max 65535 , lower is faster. (about 200 is max?! (tested with an idle pump))
-        return ((ReadByte(MAX31760_ADDRESS, 0x52) << 8) |
-                ReadByte(MAX31760_ADDRESS, 0x53));
-    }
-
-    if (pic_pwm_found)
-    {
-        return (ReadByte(PIC_ADDRESS, 0x01));
-    }
-
-} // End of getPumpSpeed()
-
-bool dsed8344::getDispenseButtonState(void)
+bool pcbEN134::getDispenseButtonState(void)
 {
 
-    bool isPressed = ((ReadByte(PCA9534_ADDRESS, 0x00) & 0x80) ? false : true); // low = pressed
+    bool isPressed = ((ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x00) & 0x80) ? false : true); // low = pressed
 
     return isPressed;
 
 } // End of getDispenseButtonState()
 
-bool dsed8344::getDispenseButtonEdge(void)
+bool pcbEN134::getDispenseButtonEdge(void)
 {
 
 } // End of getDispenseButtonState()
-void dsed8344::dispenseButtonRefresh()
+void pcbEN134::dispenseButtonRefresh()
 {
     // as this is not in a separate thread, we'll need to call it some times...
     // up edge: state wait for debouncing.
@@ -350,17 +326,17 @@ void dsed8344::dispenseButtonRefresh()
     dispenseButtonStateMemory = state;
 }
 
-bool dsed8344::getDispenseButtonStateDebounced()
+bool pcbEN134::getDispenseButtonStateDebounced()
 {
 
     return dispenseButtonStateDebounced;
 }
 
-void dsed8344::setPCA9534Output(int posIndex, bool onElseOff)
+void pcbEN134::setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff)
 {
     unsigned char reg_value;
 
-    reg_value = ReadByte(PCA9534_ADDRESS, 0x01);
+    reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01);
 
     if (onElseOff)
     {
@@ -371,15 +347,22 @@ void dsed8344::setPCA9534Output(int posIndex, bool onElseOff)
         reg_value = reg_value & ~(1UL << posIndex);
     }
 
-    SendByte(PCA9534_ADDRESS, 0x01, reg_value);
+    SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, reg_value);
 }
-void dsed8344::setSingleDispenseButtonLight(bool poweron)
 
+void pcbEN134::setSingleDispenseButtonLight(uint8_t slot, bool poweron)
 {
-    setPCA9534Output(6, poweron);
+    if (poweron)
+    {
+        setPCA9534Output(slot, PCA9534_PIN_OUT_BUTTON_LED_LOW_IS_ON, false);
+    }
+    else
+    {
+        setPCA9534Output(slot, PCA9534_PIN_OUT_BUTTON_LED_LOW_IS_ON, true);
+    }
     // unsigned char reg_value;
 
-    // reg_value = ReadByte(PCA9534_ADDRESS, 0x01);
+    // reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01);
     // if (poweron)
     // {
     //     reg_value = reg_value | 0b01000000;
@@ -388,14 +371,14 @@ void dsed8344::setSingleDispenseButtonLight(bool poweron)
     // {
     //     reg_value = reg_value & 0b10111111;
     // }
-    // SendByte(PCA9534_ADDRESS, 0x01, reg_value);
+    // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, reg_value);
 
 } // End of setSingleDispenseButtonLight()
 
 ///////////////////////////////////////////////////////////////////////////
 // Private methods
 ///////////////////////////////////////////////////////////////////////////
-bool dsed8344::SendByte(unsigned char address, unsigned char reg, unsigned char byte)
+bool pcbEN134::SendByte(unsigned char address, unsigned char reg, unsigned char byte)
 {
 
 #ifdef __USE_SMBUS_I2C_LIBRARY__
@@ -427,7 +410,7 @@ bool dsed8344::SendByte(unsigned char address, unsigned char reg, unsigned char 
 } // End of SendByte()
 
 ///////////////////////////////////////////////////////////////////////////
-unsigned char dsed8344::ReadByte(unsigned char address, unsigned char reg)
+unsigned char pcbEN134::ReadByte(unsigned char address, unsigned char reg)
 {
     unsigned char buffer[2];
 
@@ -462,7 +445,7 @@ unsigned char dsed8344::ReadByte(unsigned char address, unsigned char reg)
 } // End of ReadByte()
 
 ///////////////////////////////////////////////////////////////////////////
-bool dsed8344::set_i2c_address(unsigned char address)
+bool pcbEN134::set_i2c_address(unsigned char address)
 {
     if (ioctl(i2c_handle, I2C_SLAVE, address) < 0)
     {
@@ -481,7 +464,7 @@ bool dsed8344::set_i2c_address(unsigned char address)
 } // End of set_i2c_address()
 
 ///////////////////////////////////////////////////////////////////////////
-void dsed8344::setup_i2c_bus(void)
+void pcbEN134::setup_i2c_bus(void)
 {
     // Get a handle to the bus device if we haven't already
     if (i2c_handle < 0)
@@ -489,7 +472,7 @@ void dsed8344::setup_i2c_bus(void)
         i2c_handle = open(i2c_bus_name, O_RDWR);
         if (i2c_handle < 0)
         {
-            std::string message("dsed8344: Error opening");
+            std::string message("pcbEN134: Error opening");
             message.append(i2c_bus_name);
             debugOutput::sendMessage(message, MSG_ERROR);
             return;
@@ -498,7 +481,7 @@ void dsed8344::setup_i2c_bus(void)
 
     if (!check_8344_configuration())
     {
-        std::string message("dsed8344: I2C bus ");
+        std::string message("pcbEN134: I2C bus ");
         message.append(i2c_bus_name);
         message.append(" has a problem.");
         debugOutput::sendMessage(message, MSG_ERROR);
@@ -515,16 +498,20 @@ void dsed8344::setup_i2c_bus(void)
 } // End of setup_i2c_bus()
 
 ///////////////////////////////////////////////////////////////////////////
-bool dsed8344::check_8344_configuration(void)
+bool pcbEN134::check_8344_configuration(void)
 {
     unsigned char i2c_probe_address;
     bool config_valid = true;
 
+#if SLOT_COUNT == 4
+    bool slot_pca9534_found[SLOT_COUNT] = {false, false, false, false};
+#elif SLOT_COUNT == 8
+    bool slot_pca9534_found[SLOT_COUNT] = {false, false, false, false, false, false, false, false};
+#endif
+
     for (i2c_probe_address = 0x03; i2c_probe_address <= 0x77; i2c_probe_address++)
     {
         // Go through all the addresses
-
-       //debugOutput::sendMessage(to_string(i2c_probe_address), MSG_INFO);
 
         if (!set_i2c_address(i2c_probe_address))
         {
@@ -535,7 +522,7 @@ bool dsed8344::check_8344_configuration(void)
         if (i2c_smbus_read_byte(i2c_handle) < 0)
         {
             // error, check which device has error
-            if (i2c_probe_address == PCA9534_ADDRESS)
+            if (i2c_probe_address == PCA9534_TMP_SLOT2_ADDRESS)
             {
                 std::string message("PCA9534 not found on I2C bus ");
                 message.append(i2c_bus_name);
@@ -546,19 +533,30 @@ bool dsed8344::check_8344_configuration(void)
         }
         else
         {
-            if (i2c_probe_address == PCA9534_ADDRESS)
+            if (i2c_probe_address == PCA9534_ADDRESS_SLOT_1)
             {
-                debugOutput::sendMessage("PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
+                debugOutput::sendMessage("Slot 1 PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
+                slot_pca9534_found[0] = true;
+            }
+            else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_2)
+            {
+                debugOutput::sendMessage("Slot 2 PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
+                slot_pca9534_found[1] = true;
+            }
+            else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_3)
+            {
+                debugOutput::sendMessage("Slot 3 PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
+                slot_pca9534_found[2] = true;
+            }
+            else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_4)
+            {
+                debugOutput::sendMessage("Slot 4 PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
+                slot_pca9534_found[3] = true;
             }
             else if (i2c_probe_address == PIC_ADDRESS)
             {
                 pic_pwm_found = true;
                 debugOutput::sendMessage("PIC found on I2C bus for motor PWM and speed feedback", MSG_INFO);
-            }
-            else if (i2c_probe_address == MAX31760_ADDRESS)
-            {
-                max31760_pwm_found = true;
-                debugOutput::sendMessage("MAX31760 found on I2C bus for PWM and speed feedback", MSG_INFO);
             }
             else
             {
@@ -570,7 +568,15 @@ bool dsed8344::check_8344_configuration(void)
         }
     }
 
-    if (!pic_pwm_found && !max31760_pwm_found)
+    for (uint8_t i = 0; i < SLOT_COUNT; i++)
+    {
+        if (!slot_pca9534_found[i])
+        {
+            debugOutput::sendMessage("No controller found for slot" + to_string(i + 1), MSG_ERROR);
+        }
+    }
+
+    if (!pic_pwm_found)
     {
         std::string message("No PWM generator found on I2C bus ");
         message.append(i2c_bus_name);
@@ -579,66 +585,19 @@ bool dsed8344::check_8344_configuration(void)
         config_valid = false;
     }
 
-    if (pic_pwm_found && max31760_pwm_found)
-    {
-        std::string message("Two PWM generators found on I2C bus ");
-        message.append(i2c_bus_name);
-        debugOutput::sendMessage(message, MSG_ERROR);
-        debugOutput::sendMessage("Pump control impossible.", MSG_ERROR);
-        config_valid = false;
-    }
     return config_valid;
 
 } // End of check_8344_configuration()
 
 ///////////////////////////////////////////////////////////////////////////
-void dsed8344::initialize_8344(void)
+void pcbEN134::initialize_8344(void)
 {
     // Initialize the PCA9534
 
-    // 0bxxxxxxxx
-    //          x // output 1:enable selected pump 0:disable all pumps
-    //        xx  // output select pump. 00:pump1 , 01:2, 10:3, 11:4
-    //       x    // output if multibutton: enable button x (low=active)
-    //      x     // output if multibutton: enable button x (low=active)
-    //     x      // output: pump direction
-    //    x       // output: button light , if multibutton: enable button x (low=active)
-    //   x        // input: button in.
+    SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, 0b11100000); // Output pin values
+    SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03, 0b10000000); // 0 = output
 
-    SendByte(PCA9534_ADDRESS, 0x01, 0b11100000); // Output pin values
-
-// #ifdef ENABLE_MULTI_BUTTON
-    SendByte(PCA9534_ADDRESS, 0x03, 0b10000000); // 0 = output
-// #else
-    // SendByte(PCA9534_ADDRESS, 0x03, 0b10011000); 
-// #endif
-
-    if (max31760_pwm_found)
-    {
-        // Initialize the MAX31760
-
-        // Temperature alerts masked
-        // PWM frequency 25 kHz
-        // PWM polarity negative (100% setting is low)
-        SendByte(MAX31760_ADDRESS, 0x00, 0b10011100);
-
-        // Set direct fan control
-        SendByte(MAX31760_ADDRESS, 0x01, 0b00010001);
-
-        // Set ramp to immediate
-        // Enable TACH1 input
-        SendByte(MAX31760_ADDRESS, 0x02, 0b00110001);
-
-        // Disable all alerts
-        SendByte(MAX31760_ADDRESS, 0x04, 0b11111111);
-
-        // Set PWM value
-        SendByte(MAX31760_ADDRESS, 0x50, 0x80);
-    }
-    if (pic_pwm_found)
-    {
-        // Set PWM value
-        SendByte(PIC_ADDRESS, 0x00, 50);
-    }
+    // Set PWM value
+    SendByte(PIC_ADDRESS, 0x00, 50);
 
 } // End of initialize_8344 ()

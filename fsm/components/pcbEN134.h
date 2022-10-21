@@ -1,5 +1,5 @@
-#ifndef _DSED8344_H
-#define _DSED8344_H
+#ifndef _pcbEN134_H
+#define _pcbEN134_H
 
 #include <cstddef>
 #include <cstdint>
@@ -29,36 +29,46 @@
 #include "../dftypes.h"
 
 #include "../objects/debugOutput.h"
+#define SLOT_COUNT 4 
+#define PCA9534_ADDRESS_SLOT_1  0b0100000
+#define PCA9534_ADDRESS_SLOT_2  0b0100001
+#define PCA9534_ADDRESS_SLOT_3  0b0100010
+#define PCA9534_ADDRESS_SLOT_4  0b0100011
 
-#define PCA9534_ADDRESS  0b0100000
+#define PCA9534_TMP_SLOT2_ADDRESS  PCA9534_ADDRESS_SLOT_2
+
+
+#define PCA9534_PIN_OUT_BUTTON_LED_LOW_IS_ON 5
+
 #define PIC_ADDRESS      0b0110000
 #define MAX31760_ADDRESS 0b1010000
 #define DS2485Q_ADDRESS  0b1000000
 #define MCP3424T_ADDRESS 0b1101000
 
-class dsed8344
+class pcbEN134
 {
 public:
-    dsed8344(void);
-    dsed8344(const char *);
-    ~dsed8344();
+    pcbEN134(void);
+    pcbEN134(const char *);
+    ~pcbEN134();
+
+    void setup(void);
 
     unsigned char getPumpPWM(void);
     bool setPumpPWM(uint8_t pwm_val);
-    bool setPumpDirection(bool forwardElseReverse);
+    bool setPumpDirection(uint8_t slot, bool forwardElseReverse);
+
     bool setPumpEnable(unsigned char pump_number);
     bool setPumpsDisableAll();
-    unsigned short getPumpSpeed(void);
+
+
     bool getDispenseButtonStateDebounced(void);
     bool getDispenseButtonEdge(void);
-    void setSingleDispenseButtonLight(bool poweron);
-    void setup(void);
+    void setSingleDispenseButtonLight(uint8_t slot, bool poweron);
     void virtualButtonPressHack(void);
     void virtualButtonUnpressHack(void);
     void dispenseButtonRefresh();
-    void setPCA9534Output(int posIndex, bool onElseOff);
-
-    
+    void setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff);
 
 private:
     bool getDispenseButtonState(void);
@@ -67,7 +77,8 @@ private:
     char *i2c_bus_name;
 
     bool pic_pwm_found = false;
-    bool max31760_pwm_found = false;
+    
+    uint8_t slot_addresses [4] = {PCA9534_ADDRESS_SLOT_1, PCA9534_ADDRESS_SLOT_2, PCA9534_ADDRESS_SLOT_3, PCA9534_ADDRESS_SLOT_4};
 
     bool SendByte(unsigned char address, unsigned char reg, unsigned char byte);
     unsigned char ReadByte(unsigned char address, unsigned char reg);
@@ -83,4 +94,4 @@ private:
 
 };
 
-#endif // _DSED8344_H
+#endif // _pcbEN134_H

@@ -90,8 +90,8 @@ private:
     unsigned char ReadByte(unsigned char address, unsigned char reg);
     bool set_i2c_address(unsigned char address);
     void setup_i2c_bus(void);
-    bool check_8344_configuration(void);
-    void initialize_8344(void);
+    bool check_pcb_configuration(void);
+    void initialize_pcb(void);
 
     bool dispenseButtonStateMemory;
     bool dispenseButtonIsDebounced;

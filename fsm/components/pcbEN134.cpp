@@ -334,9 +334,10 @@ bool pcbEN134::getDispenseButtonStateDebounced()
 
 void pcbEN134::setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff)
 {
+    // slot starts at 1!
     unsigned char reg_value;
 
-    reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01);
+    reg_value = ReadByte(get_PCA9534_address_from_slot(slot), 0x01);
 
     if (onElseOff)
     {
@@ -346,8 +347,10 @@ void pcbEN134::setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff)
     {
         reg_value = reg_value & ~(1UL << posIndex);
     }
+     debugOutput::sendMessage("value to be sent: " + to_string(reg_value) + " to address: " + to_string(get_PCA9534_address_from_slot(slot)), MSG_ERROR);
+     
 
-    SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, reg_value);
+    SendByte(get_PCA9534_address_from_slot(slot), 0x01, reg_value);
 }
 
 void pcbEN134::setSingleDispenseButtonLight(uint8_t slot, bool poweron)
@@ -479,7 +482,7 @@ void pcbEN134::setup_i2c_bus(void)
         }
     }
 
-    if (!check_8344_configuration())
+    if (!check_pcb_configuration())
     {
         std::string message("pcbEN134: I2C bus ");
         message.append(i2c_bus_name);
@@ -491,7 +494,7 @@ void pcbEN134::setup_i2c_bus(void)
     debugOutput::sendMessage("I2C bus configuration appears correct.", MSG_INFO);
 
     // Everything checks out so get it all set up
-    initialize_8344();
+    initialize_pcb();
 
     debugOutput::sendMessage("Initialized I2C bus components.", MSG_INFO);
 
@@ -514,7 +517,7 @@ uint8_t pcbEN134::get_PCA9534_address_from_slot(uint8_t slot){
     return slot_addresses [slot_index];
 }
 
-bool pcbEN134::check_8344_configuration(void)
+bool pcbEN134::check_pcb_configuration(void)
 {
     unsigned char i2c_probe_address;
     bool config_valid = true;
@@ -528,6 +531,7 @@ bool pcbEN134::check_8344_configuration(void)
     for (i2c_probe_address = 0x03; i2c_probe_address <= 0x77; i2c_probe_address++)
     {
         // Go through all the addresses
+       debugOutput::sendMessage("will test i2c address: " + to_string(i2c_probe_address), MSG_INFO);
 
         if (!set_i2c_address(i2c_probe_address))
         {
@@ -603,19 +607,23 @@ bool pcbEN134::check_8344_configuration(void)
 
     return config_valid;
 
-} // End of check_8344_configuration()
+} // End of check_pcb_configuration()
 
 ///////////////////////////////////////////////////////////////////////////
-void pcbEN134::initialize_8344(void)
+void pcbEN134::initialize_pcb(void)
 {
     // Initialize the PCA9534
     for (uint8_t i=0;i<SLOT_COUNT;i++){
+        SendByte(get_PCA9534_address_from_slot(i), 0x01, 0b00100000); // Output pin values register (has no influence on input values)
         // SendByte(get_PCA9534_address_from_slot(i), 0x01, 0b00000000); // Output pin values register (has no influence on input values)
-        SendByte(get_PCA9534_address_from_slot(i), 0x01, 0b00000100); // Output pin values register (has no influence on input values)
         SendByte(get_PCA9534_address_from_slot(i), 0x03, 0b00011010); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
     }
 
+
+    // SendByte(get_PCA9534_address_from_slot(2), 0x01, 0b00100000); // Output pin values register (has no influence on input values)
+     setSingleDispenseButtonLight(2, true);
+    //  setSingleDispenseButtonLight(2, false);
     // Set PWM value
     SendByte(PIC_ADDRESS, 0x00, 50);
 
-} // End of initialize_8344 ()
+} // End of initialize_pcb ()

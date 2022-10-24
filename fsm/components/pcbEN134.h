@@ -68,8 +68,9 @@ public:
     bool setPumpsDisableAll();
 
 
-    bool getDispenseButtonStateDebounced(void);
-    bool getDispenseButtonEdge(void);
+    bool getDispenseButtonStateDebounced(uint8_t slot);
+    bool getDispenseButtonEdge(uint8_t slot);
+    
     void setSingleDispenseButtonLight(uint8_t slot, bool poweron);
     void virtualButtonPressHack(void);
     void virtualButtonUnpressHack(void);
@@ -77,7 +78,7 @@ public:
     void setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff);
     
 private:
-    bool getDispenseButtonState(void);
+    bool getDispenseButtonState(uint8_t slot);
     bool is_initialized;
     int i2c_handle = -1;
     char *i2c_bus_name;
@@ -93,10 +94,10 @@ private:
     bool check_pcb_configuration(void);
     void initialize_pcb(void);
 
-    bool dispenseButtonStateMemory;
-    bool dispenseButtonIsDebounced;
-    bool dispenseButtonStateDebounced;
-    uint64_t dispenseButtonDebounceStartEpoch;
+    bool dispenseButtonStateMemory [SLOT_COUNT];
+    bool dispenseButtonIsDebounced [SLOT_COUNT];
+    bool dispenseButtonStateDebounced [SLOT_COUNT];
+    uint64_t dispenseButtonDebounceStartEpoch [SLOT_COUNT];
 
 };
 

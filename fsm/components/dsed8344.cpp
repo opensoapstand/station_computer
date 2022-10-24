@@ -71,9 +71,12 @@ dsed8344::dsed8344(const char *bus)
     strcpy(i2c_bus_name, bus);
 
     setup_i2c_bus();
-    dispenseButtonStateMemory = false;
-    dispenseButtonStateDebounced = false;
-    dispenseButtonIsDebounced = true;
+    for (uint8_t i = 0; i < SLOT_COUNT; i++)
+    {
+        dispenseButtonStateMemory[i] = false;
+        dispenseButtonStateDebounced[i] = false;
+        dispenseButtonIsDebounced[i] = true;
+    }
 
 } // End of dsed8344() constructor
 
@@ -96,9 +99,12 @@ void dsed8344::setup()
 
         setup_i2c_bus();
 
-        dispenseButtonStateMemory = false;
-        dispenseButtonStateDebounced = false;
-        dispenseButtonIsDebounced = true;
+     for (uint8_t i = 0; i < SLOT_COUNT; i++)
+    {
+        dispenseButtonStateMemory[i] = false;
+        dispenseButtonStateDebounced[i] = false;
+        dispenseButtonIsDebounced[i] = true;
+    }
         is_initialized = true;
     }
 }
@@ -524,7 +530,7 @@ bool dsed8344::check_8344_configuration(void)
     {
         // Go through all the addresses
 
-       //debugOutput::sendMessage(to_string(i2c_probe_address), MSG_INFO);
+        // debugOutput::sendMessage(to_string(i2c_probe_address), MSG_INFO);
 
         if (!set_i2c_address(i2c_probe_address))
         {
@@ -607,11 +613,11 @@ void dsed8344::initialize_8344(void)
 
     SendByte(PCA9534_ADDRESS, 0x01, 0b11100000); // Output pin values
 
-// #ifdef ENABLE_MULTI_BUTTON
+    // #ifdef ENABLE_MULTI_BUTTON
     SendByte(PCA9534_ADDRESS, 0x03, 0b10000000); // 0 = output
-// #else
-    // SendByte(PCA9534_ADDRESS, 0x03, 0b10011000); 
-// #endif
+                                                 // #else
+    // SendByte(PCA9534_ADDRESS, 0x03, 0b10011000);
+    // #endif
 
     if (max31760_pwm_found)
     {

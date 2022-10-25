@@ -107,17 +107,19 @@ void page_help::setPage(page_select_product *pageSelect, pageProduct *pageProduc
 
 void page_help::on_previousPage_Button_clicked()
 {
-    helpIdleTimer->stop();
-    p_page_idle->pageTransition(this, p_page_idle);
+    exit_page();
 }
 
 void page_help::on_previousPage_Button_2_clicked()
 {
-    helpIdleTimer->stop();
-    // qDebug() << "help2 to idle";
-    // p_page_idle->showFullScreen();
-    // this->hide();
+    exit_page();
+}
+
+void page_help::exit_page(){
+    helpIdleTimer->stop()   ;
     p_page_idle->pageTransition(this, p_page_idle);
+    ui->keyboardTextEntry->setText("");
+
 }
 
 void page_help::onHelpTimeoutTick()
@@ -130,11 +132,7 @@ void page_help::onHelpTimeoutTick()
     {
         qDebug() << "Help Timer Done!" << _helpIdleTimeoutSec;
 
-        helpIdleTimer->stop();
-        // qDebug() << "help to idle";
-        // p_page_idle->showFullScreen();
-        // this->hide();
-        p_page_idle->pageTransition(this, p_page_idle);
+        exit_page();
     }
 
     if (_helpIdleTimeoutSec < 10)

@@ -129,6 +129,8 @@ unsigned char pcbEN134::getPumpPWM(void)
 
 bool pcbEN134::setPumpPWM(uint8_t pwm_val)
 {
+    // pump speed is set globally. Not set per slot!
+    // pwm_val = byte value max = 255
 
     if (pic_pwm_found)
     {
@@ -144,16 +146,7 @@ bool pcbEN134::setPumpPWM(uint8_t pwm_val)
         f_value = (float)pwm_val;
         f_value = floor(f_value / 2.55);
         unsigned char speed_percentage = (unsigned char)f_value; // invert speed. pwm is inverted.
-        if (speed_percentage > 100)
-        {
-            debugOutput::sendMessage("Speed invalid. Will set to max. Please provide argument in [0..255] interval. Provided: " + to_string(pwm_val), MSG_WARNING);
-            speed_percentage = 100;
-        }
-
-        // speed_percentage = 100 - speed_percentage; // invert speed. pwm is inverted.
-
-        // debugOutput::sendMessage("Motor speed set to (percentage): " + to_string(speed_percentage), MSG_INFO);
-        return SendByte(PIC_ADDRESS, 0x00, speed_percentage); // PWM value
+        setPumpSpeedPercentage((uint8_t)speed_percentage);
     }
     else
     {
@@ -162,87 +155,98 @@ bool pcbEN134::setPumpPWM(uint8_t pwm_val)
 
 } // End of setPumpPWM()
 
-bool pcbEN134::setPumpDirection(uint8_t slot, bool forwardElseReverse)
+bool pcbEN134::setPumpSpeedPercentage(uint8_t speed_percentage)
 {
-    unsigned char pwm_value;
-    unsigned char reg_value;
-
-    // Set the RPM to zero to make sure any running pumps stop.
-    // Changing the direction without stopping the pump can damage the
-    // pump.
-
-    reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01);
-
-    // bit 5 = 1 = forward
-
-    // check if direction is different from set direction
-    bool read_direction_is_forward = (reg_value & 0b00100000) > 0;
-    bool direction_changed = read_direction_is_forward != forwardElseReverse;
-
-    if (direction_changed)
+    if (speed_percentage > 100)
     {
-        // debugOutput::sendMessage("dir changed.....", MSG_INFO);
-        pwm_value = getPumpPWM();
-
-        setPumpPWM(0);
-        usleep(100000); // wait for pump to stop
-
-        // Set the direction
-        if (forwardElseReverse)
-        {
-            reg_value = reg_value | 0b00100000;
-        }
-        else
-        {
-            reg_value = reg_value & 0b11011111;
-        }
-        SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, reg_value);
-
-        // Restore the pump RPM value
-        setPumpPWM(pwm_value);
+        debugOutput::sendMessage("Speed invalid. Will set to max. Please provide argument in [0..100] interval. Provided: " + to_string(speed_percentage), MSG_WARNING);
+        speed_percentage = 100;
     }
-    else
-    {
-        if (forwardElseReverse)
-        {
-            debugOutput::sendMessage("Direction not changed (forward).", MSG_INFO);
-        }
-        else
-        {
-            debugOutput::sendMessage("Direction not changed (reverse).", MSG_INFO);
-        }
-    }
+    return SendByte(PIC_ADDRESS, 0x00, speed_percentage); // PWM value
+}
 
-    return true;
-} // End of setPumpDirection()
+// bool pcbEN134::setPumpDirection(uint8_t slot, bool forwardElseReverse)
+// {
+//     unsigned char pwm_value;
+//     unsigned char reg_value;
 
-bool pcbEN134::setPumpEnable(unsigned char pump_number)
+//     // Set the RPM to zero to make sure any running pumps stop.
+//     // Changing the direction without stopping the pump can damage the
+//     // pump.
+
+//     reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01);
+
+//     // bit 5 = 1 = forward
+
+//     // check if direction is different from set direction
+//     bool read_direction_is_forward = (reg_value & 0b00100000) > 0;
+//     bool direction_changed = read_direction_is_forward != forwardElseReverse;
+
+//     if (direction_changed)
+//     {
+//         // debugOutput::sendMessage("dir changed.....", MSG_INFO);
+//         pwm_value = getPumpPWM();
+
+//         setPumpPWM(0);
+//         usleep(100000); // wait for pump to stop
+
+//         // Set the direction
+//         if (forwardElseReverse)
+//         {
+//             reg_value = reg_value | 0b00100000;
+//         }
+//         else
+//         {
+//             reg_value = reg_value & 0b11011111;
+//         }
+//         SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, reg_value);
+
+//         // Restore the pump RPM value
+//         setPumpPWM(pwm_value);
+//     }
+//     else
+//     {
+//         if (forwardElseReverse)
+//         {
+//             debugOutput::sendMessage("Direction not changed (forward).", MSG_INFO);
+//         }
+//         else
+//         {
+//             debugOutput::sendMessage("Direction not changed (reverse).", MSG_INFO);
+//         }
+//     }
+
+//     return true;
+// } // End of setPumpDirection()
+
+bool pcbEN134::setPumpEnableState(uint8_t slot, bool enabledElseDisabled)
 {
-    unsigned char reg_value;
-
-    reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01);
-    switch (pump_number)
-    {
-    case 1:
-        reg_value = reg_value | 0b00000001;
-        break;
-    case 2:
-        reg_value = reg_value | 0b00000101;
-        break;
-    case 3:
-        reg_value = reg_value | 0b00000011;
-        break;
-    case 4:
-        reg_value = reg_value | 0b00000111;
-        break;
-    default:
-        return false;
-    }
-    SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, reg_value);
-
-    return true;
+    setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, enabledElseDisabled);
 } // End setPumpEnable()
 
+bool pcbEN134::setPumpDirection(uint8_t slot, bool forwardElseReverse)
+{
+    // remember rotating or not.
+    setPumpsDisableAll();
+    usleep(1000000);
+    setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_DIR, forwardElseReverse);
+} // End setPumpEnable()
+
+bool pcbEN134::setPumpsDisableAll()
+{
+    uint8_t reg_value;
+
+    // reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01);
+    // reg_value = reg_value & 0b11111000;
+    // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, reg_value);
+
+    // return true;
+    for (uint8_t slot = 1; slot <= SLOT_COUNT; slot++)
+    {
+        setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, false);
+    }
+
+} // End setPumpsDisableAll()
 void pcbEN134::virtualButtonPressHack()
 {
     // // WARNING: This overrides the physical dispense button. As such, there is no fail safe mechanism.
@@ -264,23 +268,12 @@ void pcbEN134::virtualButtonUnpressHack()
     // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
 }
 
-bool pcbEN134::setPumpsDisableAll()
-{
-    // unsigned char reg_value;
-
-    // reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01);
-    // reg_value = reg_value & 0b11111000;
-    // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, reg_value);
-
-    // return true;
-} // End setPumpsDisableAll()
-
 bool pcbEN134::getDispenseButtonState(uint8_t slot)
 {
 
     // bool isPressed = ((ReadByte(PCA9534_PIN_IN_BUTTON, 0x00) & 0x80) ? false : true); // low = pressed
     // bool isPressed = (ReadByte(get_PCA9534_address_from_slot(slot), 0x00) & PCA9534_PIN_IN_BUTTON) ;
-    bool val = (ReadByte(get_PCA9534_address_from_slot(slot), 0x00) & (1<<PCA9534_PIN_IN_BUTTON)) ;
+    bool val = (ReadByte(get_PCA9534_address_from_slot(slot), 0x00) & (1 << PCA9534_PIN_IN_BUTTON));
 
     bool isPressed = !val;
 
@@ -290,8 +283,9 @@ bool pcbEN134::getDispenseButtonState(uint8_t slot)
 
 bool pcbEN134::getDispenseButtonEdge(uint8_t slot)
 {
-
+    return positive_edge_detected[slot - 1];
 } // End of getDispenseButtonState()
+
 void pcbEN134::dispenseButtonRefresh()
 {
     // as this is not in a separate thread, we'll need to call it some times...
@@ -315,6 +309,8 @@ void pcbEN134::dispenseButtonRefresh()
             debugOutput::sendMessage("edge detected!" + std::to_string(dispenseButtonDebounceStartEpoch[slot_index]) + "state: " + std::to_string(state), MSG_INFO);
         }
 
+        positive_edge_detected[slot_index] = false;
+
         if (!dispenseButtonIsDebounced[slot_index])
         {
             if (state)
@@ -322,10 +318,12 @@ void pcbEN134::dispenseButtonRefresh()
                 // up edge wait for stable
                 if ((now_epoch > (dispenseButtonDebounceStartEpoch[slot_index] + DISPENSE_BUTTON_DEBOUNCE_MILLIS)) && !dispenseButtonIsDebounced[slot_index] && state != dispenseButtonStateDebounced[slot_index])
                 {
+                    // stable up edge detected
                     dispenseButtonIsDebounced[slot_index] = true;
-                    //debugOutput::sendMessage("commit edge to state" + std::to_string(millis_since_epoch - dispenseButtonDebounceStartEpoch), MSG_INFO);
+                    // debugOutput::sendMessage("commit edge to state" + std::to_string(millis_since_epoch - dispenseButtonDebounceStartEpoch), MSG_INFO);
                     debugOutput::sendMessage("debounced" + to_string(state), MSG_INFO);
                     dispenseButtonStateDebounced[slot_index] = state;
+                   positive_edge_detected[slot_index] = true;
                 }
             }
             else
@@ -361,7 +359,7 @@ void pcbEN134::setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff)
     {
         reg_value = reg_value & ~(1UL << posIndex);
     }
-    debugOutput::sendMessage("value to be sent: " + to_string(reg_value) + " to address: " + to_string(get_PCA9534_address_from_slot(slot)), MSG_ERROR);
+    // debugOutput::sendMessage("value to be sent: " + to_string(reg_value) + " to address: " + to_string(get_PCA9534_address_from_slot(slot)), MSG_INFO);
 
     SendByte(get_PCA9534_address_from_slot(slot), 0x01, reg_value);
 }
@@ -376,18 +374,6 @@ void pcbEN134::setSingleDispenseButtonLight(uint8_t slot, bool poweron)
     {
         setPCA9534Output(slot, PCA9534_PIN_OUT_BUTTON_LED_LOW_IS_ON, true);
     }
-    // unsigned char reg_value;
-
-    // reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01);
-    // if (poweron)
-    // {
-    //     reg_value = reg_value | 0b01000000;
-    // }
-    // else
-    // {
-    //     reg_value = reg_value & 0b10111111;
-    // }
-    // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, reg_value);
 
 } // End of setSingleDispenseButtonLight()
 
@@ -632,24 +618,39 @@ void pcbEN134::initialize_pcb(void)
     {
         SendByte(get_PCA9534_address_from_slot(slot), 0x01, 0b00100000); // Output pin values register (has no influence on input values)
         // SendByte(get_PCA9534_address_from_slot(i), 0x01, 0b00000000); // Output pin values register (has no influence on input values)
-        SendByte(get_PCA9534_address_from_slot(slot), 0x03, 0b00011010); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+        SendByte(get_PCA9534_address_from_slot(slot), 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
     }
 
     // SendByte(get_PCA9534_address_from_slot(2), 0x01, 0b00100000); // Output pin values register (has no influence on input values)
     setSingleDispenseButtonLight(2, true);
     //  setSingleDispenseButtonLight(2, false);
     // Set PWM value
-    SendByte(PIC_ADDRESS, 0x00, 50);
+    // SendByte(PIC_ADDRESS, 0x00, 50);
+    setPumpPWM(0);
 
+    setPumpDirection(2, false);
+    tmptest = 0;
     while (true)
     {
-        usleep(1000000);
+        usleep(1000);
         dispenseButtonRefresh();
         // usleep(50000);
-        for (uint8_t buttonindex = 0; buttonindex < SLOT_COUNT; buttonindex++)
+        for (uint8_t slot = 1; slot <= SLOT_COUNT; slot++)
         {
-            debugOutput::sendMessage("button state: " + to_string(buttonindex) + " " + to_string(getDispenseButtonStateDebounced(buttonindex + 1)), MSG_INFO);
-            debugOutput::sendMessage("button state: " + to_string(buttonindex) + " " + to_string(getDispenseButtonState(buttonindex + 1)), MSG_INFO);
+            // debugOutput::sendMessage("button state: " + to_string(slot) + " " + to_string(getDispenseButtonStateDebounced(slot)), MSG_INFO);
+            // debugOutput::sendMessage("button state: " + to_string(slot) + " " + to_string(getDispenseButtonState(slot)), MSG_INFO);
+
+            setPumpEnableState(slot, getDispenseButtonStateDebounced(slot));
+
+            if (getDispenseButtonEdge(slot))
+            {
+                tmptest++;
+                if (tmptest>100){
+                    tmptest = 0;
+                }
+                debugOutput::sendMessage("Pump speed percentage:" + to_string(tmptest), MSG_INFO);
+                setPumpSpeedPercentage(tmptest);
+            }
         }
     };
 

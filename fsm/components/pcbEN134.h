@@ -62,9 +62,10 @@ public:
 
     unsigned char getPumpPWM(void);
     bool setPumpPWM(uint8_t pwm_val);
-    bool setPumpDirection(uint8_t slot, bool forwardElseReverse);
+    bool setPumpSpeedPercentage(uint8_t speed_percentage);
 
-    bool setPumpEnable(unsigned char pump_number);
+    bool setPumpDirection(uint8_t slot, bool forwardElseReverse);
+    bool setPumpEnableState(uint8_t slot, bool enabledElseDisabled);
     bool setPumpsDisableAll();
 
 
@@ -97,7 +98,9 @@ private:
     bool dispenseButtonStateMemory [SLOT_COUNT];
     bool dispenseButtonIsDebounced [SLOT_COUNT];
     bool dispenseButtonStateDebounced [SLOT_COUNT];
+    bool positive_edge_detected[SLOT_COUNT];
     uint64_t dispenseButtonDebounceStartEpoch [SLOT_COUNT];
+    uint8_t tmptest;
 
 };
 

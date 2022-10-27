@@ -20,36 +20,38 @@ int main (int argc, char *argv[])
 
     pcb->setup();
 
-//     pwm_value = 100;
-    
-//     the_8344->setPumpPWM (pwm_value);
-//     the_8344->setPumpDirection (true);
-//     the_8344->setButtonPower(false);
+    // SendByte(get_PCA9534_address_from_slot(2), 0x01, 0b00100000); // Output pin values register (has no influence on input values)
+    pcb->setSingleDispenseButtonLight(2, true);
+    //  setSingleDispenseButtonLight(2, false);
+    // Set PWM value
+    // SendByte(PIC_ADDRESS, 0x00, 50);
+    pcb->setPumpPWM(0);
 
-//     for (pump_number=1; pump_number<=4; pump_number++)
-//     {
-//         printf ("Testing pump %d.\n", pump_number);
+    pcb->setPumpDirection(2, false);
+    pcb->flowSensorEnable(2);
+    uint8_t tmptest;
+    while (true)
+    {
+        usleep(100);
+        pcb->dispenseButtonRefresh();
+        pcb->flowSensorRefresh();
+        // usleep(50000);
+        for (uint8_t slot = 1; slot <= SLOT_COUNT; slot++)
+        {
+            // debugOutput::sendMessage("button state: " + to_string(slot) + " " + to_string(getDispenseButtonStateDebounced(slot)), MSG_INFO);
+            // debugOutput::sendMessage("button state: " + to_string(slot) + " " + to_string(getDispenseButtonState(slot)), MSG_INFO);
 
-//         the_8344->startPump(pump_number);
-//         for (count=0; count<255; count++)
-//         {
-// //            printf("here");
-//             printf ("Pump tach: %u\n", the_8344->getPumpTach ());
+            pcb->setPumpEnableState(slot, pcb->getDispenseButtonStateDebounced(slot));
 
-//             if (the_8344->getDispenseButtonState() != button_state)
-//             {
-//                 button_state = !button_state;
-//                 printf ("Button is %s\n", (button_state ? "down" : "up"));
-//             }
-//             usleep (10000);
-
-//             pwm_value += 1;
-//             the_8344->setPumpPWM (pwm_value);
-//             printf ("PWM: %d, ", the_8344->getPumpPWM());
-
-//         }
-
-
-//     }
-//     the_8344->stopPump();
+            if (pcb->getDispenseButtonEdge(slot))
+            {
+                tmptest++;
+                if (tmptest>100){
+                    tmptest = 0;
+                }
+                debugOutput::sendMessage("Pump speed percentage:" + to_string(tmptest), MSG_INFO);
+                pcb->setPumpSpeedPercentage(tmptest);
+            }
+        }
+    };
 }  // End of main()

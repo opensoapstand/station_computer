@@ -77,6 +77,11 @@ public:
     void virtualButtonUnpressHack(void);
     void dispenseButtonRefresh();
     void setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff);
+
+    void flowSensorEnable(uint8_t slot);
+    void flowSensorsDisableAll();
+    void flowSensorRefresh();
+
     
 private:
     bool getDispenseButtonState(uint8_t slot);
@@ -94,14 +99,19 @@ private:
     void setup_i2c_bus(void);
     bool check_pcb_configuration(void);
     void initialize_pcb(void);
+    bool getPCA9534Input(uint8_t slot, int posIndex);
 
     bool dispenseButtonStateMemory [SLOT_COUNT];
     bool dispenseButtonIsDebounced [SLOT_COUNT];
     bool dispenseButtonStateDebounced [SLOT_COUNT];
     bool positive_edge_detected[SLOT_COUNT];
     uint64_t dispenseButtonDebounceStartEpoch [SLOT_COUNT];
-    uint8_t tmptest;
+    
+    uint64_t flowSensorTickReceivedEpoch [SLOT_COUNT];
+    bool flowSensorStateMemory[SLOT_COUNT];
 
+   
 };
+
 
 #endif // _pcbEN134_H

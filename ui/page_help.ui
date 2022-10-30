@@ -55,7 +55,7 @@
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>&lt;-- back</string>
    </property>
   </widget>
   <widget class="QLabel" name="refreshLabel">

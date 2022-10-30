@@ -35,84 +35,7 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
 
     ui->payment_bypass_Button->setEnabled(false);
 
-    state_payment = s_init;
-    tap_payment = false;
-
-    ui->title_Label->setText("pay by phone");
-    QString css_title = "QLabel{"
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 500;"
-        "font-size: 64px;"
-        "line-height: 86px;"
-        "text-align: center;"
-        "text-transform: lowercase;"
-        "color: #003840;"
-        "text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);"
-        "}";
-    ui->title_Label->setStyleSheet(css_title);
-
-    ui->scan_Label->setText(
-            "Scan to Pay");
-    QString css_scan = "QLabel{"
-        "text-align: center;"
-        "font-family: 'Montserrat';"
-        "font-style: normal;"
-        "font-weight: 600;"
-        "font-size: 48px;"
-        "color: #5E8580;"
-            "} .tab {"
-            "display: inline-block;"
-            "margin-left: 40px;"
-        "}";
-    ui->scan_Label->setStyleSheet(css_scan);
-
-    ui->steps_Label->setText(
-            "<style>"
-                "li:{margin-top:10px;}"
-            "</style>"
-            "<ol>"
-            "<li><span class='tab'></span>Scan QR code with phone camera<br></li>"
-            "<li><span class='tab'></span>Click to open the link that appears<br></li>"
-            "<li><span class='tab'></span>Follow payment instructions on phone<br></li>"
-            "<li><span class='tab'></span>The station will proceed after payment<br></li>"
-            "<li><span class='tab'></span>Refill your soap!</li>"
-            "</ol>"
-            );
-    QString css_steps = "QLabel{"
-            "position: absolute;"
-            "width: 777px;"
-            "height: 306px;"
-            "left: 143px;"
-            "top: 1029px;"
-            "font-family: 'Montserrat';"
-            "font-style: normal;"
-            "font-weight: 600;"
-            "font-size: 36px;"
-            "line-height: 51px;"
-            "color: #003840;"
-            "}";
-    ui->steps_Label->setStyleSheet(css_steps);
-
-    ui->processing_Label->setText(
-            "it can take a few moments for the station to<br>continue after your payment is confirmed"
-            );
-    QString css_processing = "QLabel{"
-            "position: absolute;"
-            "width: 777px;"
-            "height: 306px;"
-            "left: 143px;"
-            "top: 1029px;"
-            "font-family: 'Montserrat';"
-            "font-style: normal;"
-            "font-weight: 600;"
-            "font-size: 36px;"
-            "line-height: 51px;"
-            "color: #003840;"
-            "}";
-    ui->processing_Label->setStyleSheet(css_processing);
-
-    ui->order_total_amount->hide();
+   
 
     // **** Timer and Slot Setup ****
 
@@ -140,13 +63,93 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
         {
             tap_payment = true;
             ui->payment_bypass_Button->setEnabled(false);
-            ui->qrCode->setText("Tap Now");
-            ui->scan_Label->setText("Tap your card to Pay");
+            ui->title_Label->hide();
+            ui->steps_Label->hide();
+            ui->qrCode->hide();
+            ui->scan_Label->hide();
         }
         else
         {
             ui->payment_bypass_Button->setEnabled(false);
-        }
+             state_payment = s_init;
+                tap_payment = false;
+
+                ui->title_Label->setText("pay by phone");
+                QString css_title = "QLabel{"
+                    "font-family: 'Brevia';"
+                    "font-style: normal;"
+                    "font-weight: 500;"
+                    "font-size: 64px;"
+                    "line-height: 86px;"
+                    "text-align: center;"
+                    "text-transform: lowercase;"
+                    "color: #003840;"
+                    "text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);"
+                    "}";
+                ui->title_Label->setStyleSheet(css_title);
+
+                ui->scan_Label->setText(
+                        "Scan to Pay");
+                QString css_scan = "QLabel{"
+                    "text-align: center;"
+                    "font-family: 'Montserrat';"
+                    "font-style: normal;"
+                    "font-weight: 600;"
+                    "font-size: 48px;"
+                    "color: #5E8580;"
+                        "} .tab {"
+                        "display: inline-block;"
+                        "margin-left: 40px;"
+                    "}";
+                ui->scan_Label->setStyleSheet(css_scan);
+
+                ui->steps_Label->setText(
+                        "<style>"
+                            "li:{margin-top:10px;}"
+                        "</style>"
+                        "<ol>"
+                        "<li><span class='tab'></span>Scan QR code with phone camera<br></li>"
+                        "<li><span class='tab'></span>Click to open the link that appears<br></li>"
+                        "<li><span class='tab'></span>Follow payment instructions on phone<br></li>"
+                        "<li><span class='tab'></span>The station will proceed after payment<br></li>"
+                        "<li><span class='tab'></span>Refill your soap!</li>"
+                        "</ol>"
+                        );
+                QString css_steps = "QLabel{"
+                        "position: absolute;"
+                        "width: 777px;"
+                        "height: 306px;"
+                        "left: 143px;"
+                        "top: 1029px;"
+                        "font-family: 'Montserrat';"
+                        "font-style: normal;"
+                        "font-weight: 600;"
+                        "font-size: 36px;"
+                        "line-height: 51px;"
+                        "color: #003840;"
+                        "}";
+                ui->steps_Label->setStyleSheet(css_steps);
+
+                ui->processing_Label->setText(
+                        "it can take a few moments for the station to<br>continue after your payment is confirmed"
+                        );
+                QString css_processing = "QLabel{"
+                        "position: absolute;"
+                        "width: 777px;"
+                        "height: 306px;"
+                        "left: 143px;"
+                        "top: 1029px;"
+                        "font-family: 'Montserrat';"
+                        "font-style: normal;"
+                        "font-weight: 600;"
+                        "font-size: 36px;"
+                        "line-height: 51px;"
+                        "color: #003840;"
+                        "}";
+                    ui->processing_Label->setStyleSheet(css_processing);
+                    }
+                ui->order_total_amount->hide();
+
     db.closeDB();
     if (tap_payment)
     {
@@ -304,26 +307,41 @@ void page_payment::showEvent(QShowEvent *event)
     qDebug() << "<<<<<<< Page Enter: Payment >>>>>>>>>";
     QWidget::showEvent(event);
     state_payment = s_init;
-    ui->qrCode->show();
-    ui->productLabel->show();
-    ui->order_drink_amount->show();
+    
     // ui->order_total_amount->show();
-    ui->steps_Label->show();
-    ui->processing_Label->hide();
-     ui->title_Label->setText("pay by phone");
-     ui->scan_Label->setText("Scan to Pay");
+    
+     
 
     if (getPaymentMethod() == "tap")
     {
         qDebug() << "Init tap";
         ui->payment_bypass_Button->setEnabled(false);
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
+        ui->qrCode->hide();
+        ui->productLabel->hide();
+        ui->order_drink_amount->hide();
+        ui->order_total_amount->hide();
+        ui->steps_Label->hide();
+        ui->processing_Label->hide();
+
     }
     else
     {
+        ui->qrCode->show();
+        ui->productLabel->show();
+        ui->order_drink_amount->show();
+        ui->title_Label->setText("pay by phone");
+        ui->scan_Label->setText("Scan to Pay");
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
         ui->payment_bypass_Button->setEnabled(false);
+        ui->productLabel->setText(p_page_idle->currentProductOrder->getSelectedProductName() + " " + p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
+        ui->order_drink_amount->setText("$" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
+        ui->order_total_amount->setText("Total: $" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
+        ui->steps_Label->show();
+        ui->processing_Label->hide();
     }
 
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
+    // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
     paymentEndTimer = new QTimer(this);
     paymentEndTimer->setInterval(1000);
     connect(paymentEndTimer, SIGNAL(timeout()), this, SLOT(onTimeoutTick()));
@@ -333,10 +351,7 @@ void page_payment::showEvent(QShowEvent *event)
 
     ui->refreshLabel->hide();
 
-    ui->productLabel->setText(p_page_idle->currentProductOrder->getSelectedProductName() + " " + p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
-    ui->order_drink_amount->setText("$" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
-    ui->order_total_amount->setText("Total: $" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
-
+    
     QString payment_method = getPaymentMethod();
     if (payment_method == "tap")
     {
@@ -345,7 +360,7 @@ void page_payment::showEvent(QShowEvent *event)
         readPacket.packetReadFromUX(pktResponded);
         pktResponded.clear();
         response = false;
-
+        qDebug() << "Acknowledgement received";
         if (readPacket.getAckOrNak() == communicationPacketField::ACK)
         {
             timerEnabled = true;
@@ -691,11 +706,11 @@ bool page_payment::sendToUX410()
     int waitForAck = 0;
     while (waitForAck < 3)
     {
-        // std::cout << "Wait for ACK counter: " << waitForAck << endl;
-        // std::cout << "sendtoUX410 Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
+        std::cout << "Wait for ACK counter: " << waitForAck << endl;
+        std::cout << "sendtoUX410 Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
         // std::cout << "Packet to send size :" << pktToSend.size() << "\n";
         com.sendPacket(pktToSend, uint(pktToSend.size()));
-
+        sleep(1);
         // read back what is responded
         pktResponded = com.readForAck();
         readPacket.packetReadFromUX(pktResponded);
@@ -721,7 +736,7 @@ bool page_payment::tap_init()
         sleep(1);
     }
 
-    sleep(35);
+    // sleep(35);
 
     cout << "_----_-----__------_-----";
    
@@ -846,18 +861,20 @@ bool page_payment::waitForUX410()
     bool waitResponse = false;
     while (!waitResponse)
     {
+        usleep(100);
         QCoreApplication::processEvents();
         if (pktResponded[0] != 0x02)
         {
             pktResponded.clear();
             pktResponded = com.readPacket();
-            usleep(10);
+            sleep(1);
         }
         else
         {
             readPacket.packetReadFromUX(pktResponded);
             com.sendAck();
             waitResponse = true;
+            sleep(1);
         }
     }
     return waitResponse;
@@ -869,10 +886,13 @@ void page_payment::readTimer_loop()
     pktToSend = paymentPacket.purchasePacket((QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2)).QString::toStdString());
     cout << "to PAY: " << ((QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2)).QString::toStdString());
     response = getResponse();
+    //qDebug() << "In read timer";
 
     if (sendToUX410())
-    {
+    {   
+        //qDebug() << "After send";
         waitForUX410();
+        //qDebug() << "After wait";
         while (!response)
         {
             response = getResponse();

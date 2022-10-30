@@ -112,7 +112,7 @@ using namespace std;
 #define PAGE_QR_PAY_BACKGROUND_PATH                     "background_generic_white.png"
 #define PAGE_MAINTENANCE_BACKGROUND_PATH                "background_generic_white_empty.png"
 #define ERROR_MESSAGE_PATH                              "error_message.png"
-
+#define PAGE_TAP_PAY                                    "Tap-38.png"
 // #define PAGE_WIFI_ERROR_BACKGROUND_PATH                 "/home/df-admin/production/references/oops.png"
 #define BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH            "/home/df-admin/production/references/bottle_fill_for_animation.png"
 
@@ -149,6 +149,7 @@ using namespace std;
 #define PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH "/home/df-admin/production/references/5_background_dispense_instructions.png"
 #define PAGE_DISPENSE_BACKGROUND_PATH       "/home/df-admin/production/references/background_dispense.png"
 #define PAGE_QR_PAY_BACKGROUND_PATH "/home/df-admin/production/references/5_background_pay_qr.png"
+#define PAGE_TAP_PAY                      "/home/df-admin/production/references/Tap-38.png"
 #define PRODUCT_1_IMAGE_PATH "/home/df-admin/production/references/product1.png"
 #define PRODUCT_2_IMAGE_PATH "/home/df-admin/production/references/product2.png"
 #define PRODUCT_3_IMAGE_PATH "/home/df-admin/production/references/product3.png"

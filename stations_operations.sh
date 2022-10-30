@@ -173,7 +173,6 @@ scp_transfer () {
 
     aws_station_path="/home/ubuntu/Stations/$source_id"
     aws_file_path="/home/ubuntu/Stations/$source_id/$path"
-
     cmd1=( scp -r -P $source_port df-admin@localhost:$full_source_path $aws_station_path )
     cmd2=( scp -r -P $destination_port $aws_file_path df-admin@localhost:$full_destination_path )
     printf -v cmd0_str '%q ' "${cmd0[@]}"

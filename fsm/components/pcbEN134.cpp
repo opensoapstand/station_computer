@@ -4,100 +4,102 @@
 #include <chrono>
 #include <cmath>
 
-#define DEFAULT_I2C_BUS "/dev/i2c-1"
+// #define DEFAULT_I2C_BUS "/dev/i2c-1"
 
-#define __USE_SMBUS_I2C_LIBRARY__ 1
+// #define __USE_SMBUS_I2C_LIBRARY__ 1
 
 // Constructor that works out the name of the I2C bus
 pcbEN134::pcbEN134(void)
 {
 
-#ifdef __arm__
+// #ifdef __arm__
 
-    i2c_bus_name = (char *)calloc(strlen(DEFAULT_I2C_BUS) + 1, sizeof(char));
-    if (i2c_bus_name == NULL)
-    {
-        debugOutput::sendMessage("pcbEN134: Unable to allocate memory.", MSG_ERROR);
-        return;
-    }
-    strcpy(i2c_bus_name, DEFAULT_I2C_BUS);
+//     i2c_bus_name = (char *)calloc(strlen(DEFAULT_I2C_BUS) + 1, sizeof(char));
+//     if (i2c_bus_name == NULL)
+//     {
+//         debugOutput::sendMessage("pcbEN134: Unable to allocate memory.", MSG_ERROR);
+//         return;
+//     }
+//     strcpy(i2c_bus_name, DEFAULT_I2C_BUS);
 
-#else
+// #else
 
-    FILE *fp;
-    char path[1035];
+//     FILE *fp;
+//     char path[1035];
 
-    // Open the command for reading.
-    fp = popen("/bin/ls /sys/bus/pci/devices/*/i2c_designware.1/ | /bin/grep i2c", "r");
-    if (fp == NULL)
-    {
-        debugOutput::sendMessage("Failed to run command.\n", MSG_ERROR);
-        return;
-    }
+//     // Open the command for reading.
+//     fp = popen("/bin/ls /sys/bus/pci/devices/*/i2c_designware.1/ | /bin/grep i2c", "r");
+//     if (fp == NULL)
+//     {
+//         debugOutput::sendMessage("Failed to run command.\n", MSG_ERROR);
+//         return;
+//     }
 
-    // Read the output of the command from the pipe
-    if (fgets(path, sizeof(path), fp) == NULL)
-    {
-        debugOutput::sendMessage("Failed to get I2C bus name.\n", MSG_ERROR);
-        return;
-    }
-    pclose(fp);
+//     // Read the output of the command from the pipe
+//     if (fgets(path, sizeof(path), fp) == NULL)
+//     {
+//         debugOutput::sendMessage("Failed to get I2C bus name.\n", MSG_ERROR);
+//         return;
+//     }
+//     pclose(fp);
 
-    i2c_bus_name = (char *)calloc(strlen(path) + 5, sizeof(char));
-    if (i2c_bus_name == NULL)
-    {
-        debugOutput::sendMessage("pcbEN134: Unable to allocate memory.", MSG_ERROR);
-        return;
-    }
-    strcpy(i2c_bus_name, "/dev/");
-    strcpy(i2c_bus_name + 5, path);
-    i2c_bus_name[strlen(i2c_bus_name) - 1] = 0;
+//     i2c_bus_name = (char *)calloc(strlen(path) + 5, sizeof(char));
+//     if (i2c_bus_name == NULL)
+//     {
+//         debugOutput::sendMessage("pcbEN134: Unable to allocate memory.", MSG_ERROR);
+//         return;
+//     }
+//     strcpy(i2c_bus_name, "/dev/");
+//     strcpy(i2c_bus_name + 5, path);
+//     i2c_bus_name[strlen(i2c_bus_name) - 1] = 0;
 
-#endif
+// #endif
 
 } // End of pcbEN134() constructor
 
 // Constructor where you can specify the name of the I2C bus
 pcbEN134::pcbEN134(const char *bus)
 {
-    // Make a copy of the bus name for later use
-    i2c_bus_name = (char *)calloc(strlen(bus) + 1, sizeof(char));
-    if (i2c_bus_name == NULL)
-    {
-        debugOutput::sendMessage("pcbEN134: Unable to allocate memory.", MSG_ERROR);
-        close(i2c_handle);
-        return;
-    }
-    strcpy(i2c_bus_name, bus);
+    // // Make a copy of the bus name for later use
+    // i2c_bus_name = (char *)calloc(strlen(bus) + 1, sizeof(char));
+    // if (i2c_bus_name == NULL)
+    // {
+    //     debugOutput::sendMessage("pcbEN134: Unable to allocate memory.", MSG_ERROR);
+    //     close(i2c_handle);
+    //     return;
+    // }
+    // strcpy(i2c_bus_name, bus);
 
-    setup_i2c_bus();
-    for (uint8_t i = 0; i < SLOT_COUNT; i++)
-    {
-        dispenseButtonStateMemory[i] = false;
-        dispenseButtonStateDebounced[i] = false;
-        dispenseButtonIsDebounced[i] = true;
-    }
+    // setup_i2c_bus();
+    // for (uint8_t i = 0; i < SLOT_COUNT; i++)
+    // {
+    //     dispenseButtonStateMemory[i] = false;
+    //     dispenseButtonStateDebounced[i] = false;
+    //     dispenseButtonIsDebounced[i] = true;
+    // }
 
 } // End of pcbEN134() constructor
 
 // Destructor
 pcbEN134::~pcbEN134(void)
 {
-    free(i2c_bus_name);
-    close(i2c_handle);
+    // free(i2c_bus_name);
+    // close(i2c_handle);
 } // End of pcbEN134() destructor
 
 ///////////////////////////////////////////////////////////////////////////
 // Public methods
 ///////////////////////////////////////////////////////////////////////////
 
-void pcbEN134::setup()
+void pcbEN134::setup(uint8_t slot_count)
 {
 
-    if (!is_initialized)
-    {
+    this->slot_count = slot_count;
 
-        setup_i2c_bus();
+    // if (!is_initialized)
+    // {
+
+    //     setup_i2c_bus();
 
         for (uint8_t i = 0; i < SLOT_COUNT; i++)
         {
@@ -105,33 +107,33 @@ void pcbEN134::setup()
             dispenseButtonStateDebounced[i] = false;
             dispenseButtonIsDebounced[i] = true;
         }
-        is_initialized = true;
-    }
+        // is_initialized = true;
+    // }
 }
 
-bool pcbEN134::getPCA9534Input(uint8_t slot, int posIndex){
-    return (ReadByte(get_PCA9534_address_from_slot(slot), 0x00) & (1 << posIndex));
-}
+// bool pcbEN134::getPCA9534Input(uint8_t slot, int posIndex){
+//     return (ReadByte(get_PCA9534_address_from_slot(slot), 0x00) & (1 << posIndex));
+// }
 
-void pcbEN134::setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff)
-{
-    // slot starts at 1!
-    unsigned char reg_value;
+// void pcbEN134::setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff)
+// {
+//     // slot starts at 1!
+//     unsigned char reg_value;
 
-    reg_value = ReadByte(get_PCA9534_address_from_slot(slot), 0x01);
+//     reg_value = ReadByte(get_PCA9534_address_from_slot(slot), 0x01);
 
-    if (onElseOff)
-    {
-        reg_value = reg_value | (1UL << posIndex);
-    }
-    else
-    {
-        reg_value = reg_value & ~(1UL << posIndex);
-    }
-    // debugOutput::sendMessage("value to be sent: " + to_string(reg_value) + " to address: " + to_string(get_PCA9534_address_from_slot(slot)), MSG_INFO);
+//     if (onElseOff)
+//     {
+//         reg_value = reg_value | (1UL << posIndex);
+//     }
+//     else
+//     {
+//         reg_value = reg_value & ~(1UL << posIndex);
+//     }
+//     // debugOutput::sendMessage("value to be sent: " + to_string(reg_value) + " to address: " + to_string(get_PCA9534_address_from_slot(slot)), MSG_INFO);
 
-    SendByte(get_PCA9534_address_from_slot(slot), 0x01, reg_value);
-}
+//     SendByte(get_PCA9534_address_from_slot(slot), 0x01, reg_value);
+// }
 
 
 // ///////////////////////////////////////////////////////////////////////////
@@ -256,83 +258,83 @@ void pcbEN134::setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff)
 
 // } // End of setup_i2c_bus()
 
-///////////////////////////////////////////////////////////////////////////
-uint8_t pcbEN134::get_PCA9534_address_from_slot(uint8_t slot)
-{
-    if (slot == 0)
-    {
-        debugOutput::sendMessage("ASSERT ERROR: slot numbers start at 1", MSG_ERROR);
-    }
+// ///////////////////////////////////////////////////////////////////////////
+// uint8_t pcbEN134::get_PCA9534_address_from_slot(uint8_t slot)
+// {
+//     if (slot == 0)
+//     {
+//         debugOutput::sendMessage("ASSERT ERROR: slot numbers start at 1", MSG_ERROR);
+//     }
 
-    uint8_t slot_index = slot - 1;
-#if SLOT_COUNT == 4
-    uint8_t slot_addresses[4] = {PCA9534_ADDRESS_SLOT_1, PCA9534_ADDRESS_SLOT_2, PCA9534_ADDRESS_SLOT_3, PCA9534_ADDRESS_SLOT_4};
+//     uint8_t slot_index = slot - 1;
+// #if SLOT_COUNT == 4
+//     uint8_t slot_addresses[4] = {PCA9534_ADDRESS_SLOT_1, PCA9534_ADDRESS_SLOT_2, PCA9534_ADDRESS_SLOT_3, PCA9534_ADDRESS_SLOT_4};
 
-#elif SLOT_COUNT == 8
-    debugOutput::sendMessage("NOT SET YET FOR MORE THAN 4 PUMPS", MSG_ERROR);
-    //  uint8_t slot_addresses [8] = {PCA9534_ADDRESS_SLOT_1, PCA9534_ADDRESS_SLOT_2, PCA9534_ADDRESS_SLOT_3, PCA9534_ADDRESS_SLOT_4};
-#endif
-    return slot_addresses[slot_index];
-}
+// #elif SLOT_COUNT == 8
+//     debugOutput::sendMessage("NOT SET YET FOR MORE THAN 4 PUMPS", MSG_ERROR);
+//     //  uint8_t slot_addresses [8] = {PCA9534_ADDRESS_SLOT_1, PCA9534_ADDRESS_SLOT_2, PCA9534_ADDRESS_SLOT_3, PCA9534_ADDRESS_SLOT_4};
+// #endif
+//     return slot_addresses[slot_index];
+// }
 
-bool pcbEN134::check_pcb_configuration(void)
-{
-    unsigned char i2c_probe_address;
-    bool config_valid = true;
+// bool pcbEN134::check_pcb_configuration(void)
+// {
+//     unsigned char i2c_probe_address;
+//     bool config_valid = true;
 
-#if SLOT_COUNT == 4
-    bool slot_pca9534_found[SLOT_COUNT] = {false, false, false, false};
-#elif SLOT_COUNT == 8
-    bool slot_pca9534_found[SLOT_COUNT] = {false, false, false, false, false, false, false, false};
-#endif
+// #if SLOT_COUNT == 4
+//     bool slot_pca9534_found[SLOT_COUNT] = {false, false, false, false};
+// #elif SLOT_COUNT == 8
+//     bool slot_pca9534_found[SLOT_COUNT] = {false, false, false, false, false, false, false, false};
+// #endif
 
-    for (i2c_probe_address = 0x03; i2c_probe_address <= 0x77; i2c_probe_address++)
-    {
-        // Go through all the addresses
-        debugOutput::sendMessage("will test i2c address: " + to_string(i2c_probe_address), MSG_INFO);
+//     for (i2c_probe_address = 0x03; i2c_probe_address <= 0x77; i2c_probe_address++)
+//     {
+//         // Go through all the addresses
+//         debugOutput::sendMessage("will test i2c address: " + to_string(i2c_probe_address), MSG_INFO);
 
-        if (!set_i2c_address(i2c_probe_address))
-        {
-            std::string message("Error with i2c protocol");
-            return false;
-        }
+//         if (!set_i2c_address(i2c_probe_address))
+//         {
+//             std::string message("Error with i2c protocol");
+//             return false;
+//         }
 
-        if (i2c_smbus_read_byte(i2c_handle) < 0)
-        {
-            // // error, check which device has error
-            // if (i2c_probe_address == PCA9534_TMP_SLOT2_ADDRESS)
-            // {
-            //     std::string message("PCA9534 not found on I2C bus ");
-            //     message.append(i2c_bus_name);
-            //     debugOutput::sendMessage(message, MSG_ERROR);
-            //     debugOutput::sendMessage("Pump control impossible.", MSG_ERROR);
-            //     config_valid = false;
-            // }
-        }
-        else
-        {
-            if (i2c_probe_address == PCA9534_ADDRESS_SLOT_1)
-            {
-                debugOutput::sendMessage("Slot 1 PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
-                slot_pca9534_found[0] = true;
-            }
-            else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_2)
-            {
-                debugOutput::sendMessage("Slot 2 PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
-                slot_pca9534_found[1] = true;
-            }
-            else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_3)
-            {
-                debugOutput::sendMessage("Slot 3 PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
-                slot_pca9534_found[2] = true;
-            }
-            else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_4)
-            {
-                debugOutput::sendMessage("Slot 4 PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
-                slot_pca9534_found[3] = true;
-            }
-            else if (i2c_probe_address == PIC_ADDRESS)
-            {
+//         if (i2c_smbus_read_byte(i2c_handle) < 0)
+//         {
+//             // // error, check which device has error
+//             // if (i2c_probe_address == PCA9534_TMP_SLOT2_ADDRESS)
+//             // {
+//             //     std::string message("PCA9534 not found on I2C bus ");
+//             //     message.append(i2c_bus_name);
+//             //     debugOutput::sendMessage(message, MSG_ERROR);
+//             //     debugOutput::sendMessage("Pump control impossible.", MSG_ERROR);
+//             //     config_valid = false;
+//             // }
+//         }
+//         else
+//         {
+//             if (i2c_probe_address == PCA9534_ADDRESS_SLOT_1)
+//             {
+//                 debugOutput::sendMessage("Slot 1 PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
+//                 slot_pca9534_found[0] = true;
+//             }
+//             else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_2)
+//             {
+//                 debugOutput::sendMessage("Slot 2 PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
+//                 slot_pca9534_found[1] = true;
+//             }
+//             else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_3)
+//             {
+//                 debugOutput::sendMessage("Slot 3 PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
+//                 slot_pca9534_found[2] = true;
+//             }
+//             else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_4)
+//             {
+//                 debugOutput::sendMessage("Slot 4 PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
+//                 slot_pca9534_found[3] = true;
+//             }
+//             else if (i2c_probe_address == PIC_ADDRESS)
+//             {
                 pic_pwm_found = true;
                 debugOutput::sendMessage("PIC found on I2C bus for motor PWM and speed feedback", MSG_INFO);
             }

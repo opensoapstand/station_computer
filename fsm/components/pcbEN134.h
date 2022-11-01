@@ -29,13 +29,13 @@
 #include "../dftypes.h"
 
 #include "../objects/debugOutput.h"
-#define SLOT_COUNT 4 
-#define PCA9534_ADDRESS_SLOT_1  0b0100000
-#define PCA9534_ADDRESS_SLOT_2  0b0100001
-#define PCA9534_ADDRESS_SLOT_3  0b0100010
-#define PCA9534_ADDRESS_SLOT_4  0b0100011
+// #define SLOT_COUNT 4
+// #define PCA9534_ADDRESS_SLOT_1  0b0100000
+// #define PCA9534_ADDRESS_SLOT_2  0b0100001
+// #define PCA9534_ADDRESS_SLOT_3  0b0100010
+// #define PCA9534_ADDRESS_SLOT_4  0b0100011
 
-#define PCA9534_TMP_SLOT2_ADDRESS  PCA9534_ADDRESS_SLOT_2
+#define PCA9534_TMP_SLOT2_ADDRESS PCA9534_ADDRESS_SLOT_2
 
 #define PCA9534_PIN_OUT_SOLENOID 0
 #define PCA9534_PIN_OUT_PUMP_ENABLE 1
@@ -46,10 +46,10 @@
 #define PCA9534_PIN_IN_FLOW_SENSOR_TICKS 6
 #define PCA9534_PIN_OUT_FLOW_SENSOR_ENABLE 7
 
-#define PIC_ADDRESS      0b0110000
-#define MAX31760_ADDRESS 0b1010000
-#define DS2485Q_ADDRESS  0b1000000
-#define MCP3424T_ADDRESS 0b1101000
+// #define PIC_ADDRESS      0b0110000
+// #define MAX31760_ADDRESS 0b1010000
+// #define DS2485Q_ADDRESS  0b1000000
+// #define MCP3424T_ADDRESS 0b1101000
 
 class pcbEN134
 {
@@ -58,7 +58,7 @@ public:
     pcbEN134(const char *);
     ~pcbEN134();
 
-    void setup(void);
+    void setup(uint8_t slot_count);
 
     void setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff);
 
@@ -72,7 +72,7 @@ public:
 
     bool getDispenseButtonStateDebounced(uint8_t slot);
     bool getDispenseButtonEdge(uint8_t slot);
-    
+
     void setSingleDispenseButtonLight(uint8_t slot, bool poweron);
     void virtualButtonPressHack(void);
     void virtualButtonUnpressHack(void);
@@ -84,18 +84,15 @@ public:
 
     void setSolenoid(uint8_t slot, bool onElseOff);
 
-
-
-
-
 private:
+    uint8_t slot_count;
     bool getDispenseButtonState(uint8_t slot);
     bool is_initialized;
     int i2c_handle = -1;
     char *i2c_bus_name;
 
     bool pic_pwm_found = false;
-    
+
     uint8_t get_PCA9534_address_from_slot(uint8_t slot);
 
     bool SendByte(unsigned char address, unsigned char reg, unsigned char byte);
@@ -106,17 +103,14 @@ private:
     void initialize_pcb(void);
     bool getPCA9534Input(uint8_t slot, int posIndex);
 
-    bool dispenseButtonStateMemory [SLOT_COUNT];
-    bool dispenseButtonIsDebounced [SLOT_COUNT];
-    bool dispenseButtonStateDebounced [SLOT_COUNT];
+    bool dispenseButtonStateMemory[SLOT_COUNT];
+    bool dispenseButtonIsDebounced[SLOT_COUNT];
+    bool dispenseButtonStateDebounced[SLOT_COUNT];
     bool positive_edge_detected[SLOT_COUNT];
-    uint64_t dispenseButtonDebounceStartEpoch [SLOT_COUNT];
-    
-    uint64_t flowSensorTickReceivedEpoch [SLOT_COUNT];
+    uint64_t dispenseButtonDebounceStartEpoch[SLOT_COUNT];
+
+    uint64_t flowSensorTickReceivedEpoch[SLOT_COUNT];
     bool flowSensorStateMemory[SLOT_COUNT];
-
-   
 };
-
 
 #endif // _pcbEN134_H

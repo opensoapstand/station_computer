@@ -60,6 +60,8 @@ public:
 
     void setup(void);
 
+    void setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff);
+
     unsigned char getPumpPWM(void);
     bool setPumpPWM(uint8_t pwm_val);
     bool setPumpSpeedPercentage(uint8_t speed_percentage);
@@ -68,7 +70,6 @@ public:
     bool setPumpEnableState(uint8_t slot, bool enabledElseDisabled);
     bool setPumpsDisableAll();
 
-
     bool getDispenseButtonStateDebounced(uint8_t slot);
     bool getDispenseButtonEdge(uint8_t slot);
     
@@ -76,13 +77,17 @@ public:
     void virtualButtonPressHack(void);
     void virtualButtonUnpressHack(void);
     void dispenseButtonRefresh();
-    void setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff);
 
     void flowSensorEnable(uint8_t slot);
     void flowSensorsDisableAll();
     void flowSensorRefresh();
 
-    
+    void setSolenoid(uint8_t slot, bool onElseOff);
+
+
+
+
+
 private:
     bool getDispenseButtonState(uint8_t slot);
     bool is_initialized;

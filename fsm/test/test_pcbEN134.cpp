@@ -2,21 +2,20 @@
 #include "../objects/debugOutput.h"
 #include "../components/pcbEN134.h"
 
-
-int main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 
-        pcbEN134 *pcb;
-//     dsed8344 *the_8344;
-//     unsigned char pump_number;
-//     bool button_state;
-//     unsigned int count;
-//     unsigned char pwm_value;
-    
-     pcb = new pcbEN134 ();
+    pcbEN134 *pcb;
+    //     dsed8344 *the_8344;
+    //     unsigned char pump_number;
+    //     bool button_state;
+    //     unsigned int count;
+    //     unsigned char pwm_value;
 
-//     button_state = the_8344->getDispenseButtonState();
-//     printf ("Button is %s\n", (true ? "down" : "up"));
+    pcb = new pcbEN134();
+
+    //     button_state = the_8344->getDispenseButtonState();
+    //     printf ("Button is %s\n", (true ? "down" : "up"));
 
     pcb->setup();
 
@@ -30,6 +29,8 @@ int main (int argc, char *argv[])
     pcb->setPumpDirection(2, false);
     pcb->flowSensorEnable(2);
     uint8_t tmptest;
+    pcb->getDispenseButtonStateDebounced(2);
+    // pcb->setSolenoid(2,true);
     while (true)
     {
         usleep(100);
@@ -46,12 +47,27 @@ int main (int argc, char *argv[])
             if (pcb->getDispenseButtonEdge(slot))
             {
                 tmptest++;
-                if (tmptest>100){
+                if (tmptest > 100)
+                {
                     tmptest = 0;
                 }
                 debugOutput::sendMessage("Pump speed percentage:" + to_string(tmptest), MSG_INFO);
                 pcb->setPumpSpeedPercentage(tmptest);
             }
+
+           
+            // pcb->setSolenoid(slot, pcb->getDispenseButtonStateDebounced(slot));
+
+
+           
         }
+         if (pcb->getDispenseButtonStateDebounced(2)){
+                pcb->setSolenoid(2,true);
+                usleep(25000);
+                pcb->setSolenoid(2,false);
+                usleep(25000);
+
+            }
     };
-}  // End of main()
+
+} // End of main()

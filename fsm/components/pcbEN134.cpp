@@ -735,20 +735,12 @@ void pcbEN134::flowSensorRefresh(){
 
 
 
+///////////////////////////////////////////////////////////////////////////
+// SOLENOID FUNCTIONS
+///////////////////////////////////////////////////////////////////////////
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-//------------------------------------
-
+void pcbEN134::setSolenoid(uint8_t slot, bool onElseOff){
+    setPCA9534Output(slot, PCA9534_PIN_OUT_SOLENOID, onElseOff);
+}

@@ -134,127 +134,127 @@ void pcbEN134::setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff)
 }
 
 
-///////////////////////////////////////////////////////////////////////////
-// Private methods
-///////////////////////////////////////////////////////////////////////////
-bool pcbEN134::SendByte(unsigned char address, unsigned char reg, unsigned char byte)
-{
+// ///////////////////////////////////////////////////////////////////////////
+// // Private methods
+// ///////////////////////////////////////////////////////////////////////////
+// bool pcbEN134::SendByte(unsigned char address, unsigned char reg, unsigned char byte)
+// {
 
-#ifdef __USE_SMBUS_I2C_LIBRARY__
-    set_i2c_address(address);
-    i2c_smbus_write_byte_data(i2c_handle, reg, byte);
-#else
-    struct i2c_rdwr_ioctl_data packets;
-    struct i2c_msg messages[2];
-    unsigned char buffer[2];
+// #ifdef __USE_SMBUS_I2C_LIBRARY__
+//     set_i2c_address(address);
+//     i2c_smbus_write_byte_data(i2c_handle, reg, byte);
+// #else
+//     struct i2c_rdwr_ioctl_data packets;
+//     struct i2c_msg messages[2];
+//     unsigned char buffer[2];
 
-    buffer[0] = reg;
-    buffer[1] = byte;
+//     buffer[0] = reg;
+//     buffer[1] = byte;
 
-    messages[0].addr = address;
-    messages[0].flags = 0;
-    messages[0].len = 2;
-    messages[0].buf = (char *)buffer;
+//     messages[0].addr = address;
+//     messages[0].flags = 0;
+//     messages[0].len = 2;
+//     messages[0].buf = (char *)buffer;
 
-    packets.msgs = messages;
-    packets.nmsgs = 1;
-    if (ioctl(i2c_handle, I2C_RDWR, &packets) < 0)
-    {
-        debugOutput::sendMessage(strerror(errno), MSG_ERROR);
-        return false;
-    }
-#endif
+//     packets.msgs = messages;
+//     packets.nmsgs = 1;
+//     if (ioctl(i2c_handle, I2C_RDWR, &packets) < 0)
+//     {
+//         debugOutput::sendMessage(strerror(errno), MSG_ERROR);
+//         return false;
+//     }
+// #endif
 
-    return true;
-} // End of SendByte()
+//     return true;
+// } // End of SendByte()
 
-///////////////////////////////////////////////////////////////////////////
-unsigned char pcbEN134::ReadByte(unsigned char address, unsigned char reg)
-{
-    unsigned char buffer[2];
+// ///////////////////////////////////////////////////////////////////////////
+// unsigned char pcbEN134::ReadByte(unsigned char address, unsigned char reg)
+// {
+//     unsigned char buffer[2];
 
-#ifdef __USE_SMBUS_I2C_LIBRARY__
-    set_i2c_address(address);
-    buffer[1] = i2c_smbus_read_byte_data(i2c_handle, reg);
-#else
-    struct i2c_rdwr_ioctl_data packets;
-    struct i2c_msg messages[2];
+// #ifdef __USE_SMBUS_I2C_LIBRARY__
+//     set_i2c_address(address);
+//     buffer[1] = i2c_smbus_read_byte_data(i2c_handle, reg);
+// #else
+//     struct i2c_rdwr_ioctl_data packets;
+//     struct i2c_msg messages[2];
 
-    buffer[0] = reg;
+//     buffer[0] = reg;
 
-    messages[0].addr = address;
-    messages[0].flags = 0;
-    messages[0].len = 1;
-    messages[0].buf = (char *)buffer;
+//     messages[0].addr = address;
+//     messages[0].flags = 0;
+//     messages[0].len = 1;
+//     messages[0].buf = (char *)buffer;
 
-    messages[1].addr = address;
-    messages[1].flags = I2C_M_RD;
-    messages[1].len = 1;
-    messages[1].buf = (char *)&(buffer[1]);
+//     messages[1].addr = address;
+//     messages[1].flags = I2C_M_RD;
+//     messages[1].len = 1;
+//     messages[1].buf = (char *)&(buffer[1]);
 
-    packets.msgs = messages;
-    packets.nmsgs = 2;
-    if (ioctl(i2c_handle, I2C_RDWR, &packets) < 0)
-    {
-        debugOutput::sendMessage(strerror(errno), MSG_ERROR);
-        return false;
-    }
-#endif
-    return buffer[1];
-} // End of ReadByte()
+//     packets.msgs = messages;
+//     packets.nmsgs = 2;
+//     if (ioctl(i2c_handle, I2C_RDWR, &packets) < 0)
+//     {
+//         debugOutput::sendMessage(strerror(errno), MSG_ERROR);
+//         return false;
+//     }
+// #endif
+//     return buffer[1];
+// } // End of ReadByte()
 
-///////////////////////////////////////////////////////////////////////////
-bool pcbEN134::set_i2c_address(unsigned char address)
-{
-    if (ioctl(i2c_handle, I2C_SLAVE, address) < 0)
-    {
-        if (errno == EBUSY)
-        {
-            debugOutput::sendMessage("I2C bus busy.  Is something else running?", MSG_INFO);
-        }
-        else
-        {
-            debugOutput::sendMessage("Could not set I2C address to " + to_string(address), MSG_ERROR);
-            return false;
-        }
-    }
+// ///////////////////////////////////////////////////////////////////////////
+// bool pcbEN134::set_i2c_address(unsigned char address)
+// {
+//     if (ioctl(i2c_handle, I2C_SLAVE, address) < 0)
+//     {
+//         if (errno == EBUSY)
+//         {
+//             debugOutput::sendMessage("I2C bus busy.  Is something else running?", MSG_INFO);
+//         }
+//         else
+//         {
+//             debugOutput::sendMessage("Could not set I2C address to " + to_string(address), MSG_ERROR);
+//             return false;
+//         }
+//     }
 
-    return true;
-} // End of set_i2c_address()
+//     return true;
+// } // End of set_i2c_address()
 
-///////////////////////////////////////////////////////////////////////////
-void pcbEN134::setup_i2c_bus(void)
-{
-    // Get a handle to the bus device if we haven't already
-    if (i2c_handle < 0)
-    {
-        i2c_handle = open(i2c_bus_name, O_RDWR);
-        if (i2c_handle < 0)
-        {
-            std::string message("pcbEN134: Error opening");
-            message.append(i2c_bus_name);
-            debugOutput::sendMessage(message, MSG_ERROR);
-            return;
-        }
-    }
+// ///////////////////////////////////////////////////////////////////////////
+// void pcbEN134::setup_i2c_bus(void)
+// {
+//     // Get a handle to the bus device if we haven't already
+//     if (i2c_handle < 0)
+//     {
+//         i2c_handle = open(i2c_bus_name, O_RDWR);
+//         if (i2c_handle < 0)
+//         {
+//             std::string message("pcbEN134: Error opening");
+//             message.append(i2c_bus_name);
+//             debugOutput::sendMessage(message, MSG_ERROR);
+//             return;
+//         }
+//     }
 
-    if (!check_pcb_configuration())
-    {
-        std::string message("pcbEN134: I2C bus ");
-        message.append(i2c_bus_name);
-        message.append(" has a problem.");
-        debugOutput::sendMessage(message, MSG_ERROR);
-        return;
-    }
+//     if (!check_pcb_configuration())
+//     {
+//         std::string message("pcbEN134: I2C bus ");
+//         message.append(i2c_bus_name);
+//         message.append(" has a problem.");
+//         debugOutput::sendMessage(message, MSG_ERROR);
+//         return;
+//     }
 
-    debugOutput::sendMessage("I2C bus configuration appears correct.", MSG_INFO);
+//     debugOutput::sendMessage("I2C bus configuration appears correct.", MSG_INFO);
 
-    // Everything checks out so get it all set up
-    initialize_pcb();
+//     // Everything checks out so get it all set up
+//     initialize_pcb();
 
-    debugOutput::sendMessage("Initialized I2C bus components.", MSG_INFO);
+//     debugOutput::sendMessage("Initialized I2C bus components.", MSG_INFO);
 
-} // End of setup_i2c_bus()
+// } // End of setup_i2c_bus()
 
 ///////////////////////////////////////////////////////////////////////////
 uint8_t pcbEN134::get_PCA9534_address_from_slot(uint8_t slot)

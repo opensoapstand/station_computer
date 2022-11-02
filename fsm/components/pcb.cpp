@@ -691,6 +691,7 @@ void pcb::flowSensorsDisableAll()
         for (uint8_t slot = 1; slot <= 4; slot++)
         {
             setPCA9534Output(slot, PCA9534_PIN_OUT_FLOW_SENSOR_ENABLE, false);
+            flow_sensor_pulses[slot-1] = 0;
         }
     }
     break;
@@ -699,6 +700,7 @@ void pcb::flowSensorsDisableAll()
         for (uint8_t slot = 1; slot <= 8; slot++)
         {
             setPCA9534Output(slot, PCA9534_PIN_OUT_FLOW_SENSOR_ENABLE, false);
+            flow_sensor_pulses[slot-1] = 0;
         }
     };
     break;
@@ -769,7 +771,8 @@ void pcb::refreshFlowSensor(uint8_t slot)
 
         if (flowSensorStateMemory[slot_index] != state)
         {
-            debugOutput::sendMessage("Flow edge detected at slot" + to_string(slot), MSG_INFO);
+            flow_sensor_pulses[slot_index]++;
+            debugOutput::sendMessage("Flow sensor at slot" + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses[slot_index]), MSG_INFO);
             flowSensorTickReceivedEpoch[slot_index] = now_epoch_millis;
         }
         flowSensorStateMemory[slot_index] = state;

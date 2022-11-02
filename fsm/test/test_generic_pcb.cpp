@@ -88,7 +88,6 @@ int main(int argc, char *argv[])
         break;
         case (dispense_pump_delay):
         {
-            debugOutput::sendMessage("In delay", MSG_INFO);
             if (!connected_pcb->getDispenseButtonStateDebounced(active_slot))
             {
                 debugOutput::sendMessage("Button depressed before pump start", MSG_INFO);

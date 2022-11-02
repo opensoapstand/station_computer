@@ -120,9 +120,10 @@ private:
 
     void refreshFlowSensor(uint8_t slot);
 
-    uint64_t flowSensorTickReceivedEpoch [SLOT_COUNT];
-    bool flowSensorStateMemory[SLOT_COUNT];
+    uint64_t flowSensorTickReceivedEpoch [MAX_SLOT_COUNT];
+    bool flowSensorStateMemory[MAX_SLOT_COUNT];
     
+    uint64_t flow_sensor_pulses[MAX_SLOT_COUNT];
 
     bool is_initialized;
     int i2c_handle = -1;

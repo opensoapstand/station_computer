@@ -84,43 +84,6 @@ pcb::~pcb(void)
 // Private methods
 ///////////////////////////////////////////////////////////////////////////
 
-void pcb::refresh()
-{
-    usleep(100);
-    dispenseButtonRefresh();
-    // flowSensorRefresh();
-}
-void pcb::setup()
-{
-
-    if (!is_initialized)
-    {
-
-        setup_i2c_bus();
-        for (uint8_t i = 0; i < MAX_SLOT_COUNT; i++)
-        {
-            dispenseButtonStateMemory[i] = false;
-            dispenseButtonStateDebounced[i] = false;
-            dispenseButtonIsDebounced[i] = true;
-        }
-        is_initialized = true;
-    }
-
-    if (!check_pcb_version())
-    {
-        std::string message("pcbEN134: I2C bus ");
-        // message.append(i2c_bus_name);
-        message.append(" has a problem.");
-        debugOutput::sendMessage(message, MSG_ERROR);
-        return;
-    }
-
-    // set values to default
-    initialize_pcb();
-
-    
-}
-
 bool pcb::SendByte(unsigned char address, unsigned char reg, unsigned char byte)
 {
 
@@ -222,7 +185,6 @@ void pcb::setup_i2c_bus(void)
         }
     }
 
-
     debugOutput::sendMessage("I2C bus configuration appears correct.", MSG_INFO);
     debugOutput::sendMessage("Initialized I2C bus components.", MSG_INFO);
 } // End of setup_i2c_bus()
@@ -268,21 +230,52 @@ uint8_t pcb::get_PCA9534_address_from_slot(uint8_t slot)
 }
 
 ////////////////////////
+
+void pcb::refresh()
+{
+    usleep(100);
+    dispenseButtonRefresh();
+    refreshFlowSensors();
+}
+void pcb::setup()
+{
+
+    if (!is_initialized)
+    {
+
+        setup_i2c_bus();
+        for (uint8_t i = 0; i < MAX_SLOT_COUNT; i++)
+        {
+            dispenseButtonStateMemory[i] = false;
+            dispenseButtonStateDebounced[i] = false;
+            dispenseButtonIsDebounced[i] = true;
+        }
+        is_initialized = true;
+    }
+
+    if (!check_pcb_version())
+    {
+        std::string message("pcbEN134: I2C bus ");
+        // message.append(i2c_bus_name);
+        message.append(" has a problem.");
+        debugOutput::sendMessage(message, MSG_ERROR);
+        return;
+    }
+
+    // set values to default
+    initialize_pcb();
+}
+
 bool pcb::check_pcb_version(void)
 {
     unsigned char i2c_probe_address;
     bool config_valid = true;
 
-    // #if SLOT_COUNT == 4
-    //     bool slot_pca9534_found[SLOT_COUNT] = {false, false, false, false};
-    // #el
-    // if MAX_SLOT_COUNT == 8
-    bool slot_pca9534_found[MAX_SLOT_COUNT];
+    
     for (uint8_t i = 0; i < MAX_SLOT_COUNT; i++)
     {
         slot_pca9534_found[i] = false;
     }
-    // #endif
 
     for (i2c_probe_address = 0x03; i2c_probe_address <= 0x77; i2c_probe_address++)
     {
@@ -468,7 +461,8 @@ void pcb::initialize_pcb()
         }
 
         setPumpsDisableAll();
-        for (uint8_t slot=1;slot<=4;slot++){
+        for (uint8_t slot = 1; slot <= 4; slot++)
+        {
             setSolenoid(slot, false);
             setSingleDispenseButtonLight(slot, false);
         }
@@ -476,14 +470,15 @@ void pcb::initialize_pcb()
     break;
     case (EN134_8SLOTS):
     {
-         // Initialize the PCA9534
+        // Initialize the PCA9534
         for (uint8_t slot = 1; slot <= 8; slot++)
         {
             SendByte(get_PCA9534_address_from_slot(slot), 0x01, 0b00100000); // Output pin values register (has no influence on input values)
             SendByte(get_PCA9534_address_from_slot(slot), 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
         }
         setPumpsDisableAll();
-         for (uint8_t slot=1;slot<=8;slot++){
+        for (uint8_t slot = 1; slot <= 8; slot++)
+        {
             setSolenoid(slot, false);
             setSingleDispenseButtonLight(slot, false);
         }
@@ -497,6 +492,13 @@ void pcb::initialize_pcb()
     }
 }
 
+bool pcb::isSlotAvailable(uint8_t slot){
+    if (slot == 0){
+        debugOutput::sendMessage("Slot numbering starts at 1", MSG_ERROR);
+    }
+
+    return slot_pca9534_found[slot - 1];
+}
 ///////////////////////////////////////////////////////////////////////////
 // BUTTON FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////
@@ -573,15 +575,17 @@ bool pcb::getDispenseButtonState(uint8_t slot)
 
 bool pcb::getDispenseButtonEdge(uint8_t slot)
 {
-    return ( positive_edge_detected[slot - 1] || negative_edge_detected[slot - 1]);
+    return (positive_edge_detected[slot - 1] || negative_edge_detected[slot - 1]);
 } // End of getDispenseButtonState()
+
 bool pcb::getDispenseButtonEdgePositive(uint8_t slot)
 {
-    return ( positive_edge_detected[slot - 1] );
+    return (positive_edge_detected[slot - 1]);
 } // End of getDispenseButtonState()
+
 bool pcb::getDispenseButtonEdgeNegative(uint8_t slot)
 {
-    return ( negative_edge_detected[slot - 1] );
+    return (negative_edge_detected[slot - 1]);
 } // End of getDispenseButtonState()
 
 void pcb::dispenseButtonRefresh()
@@ -596,9 +600,6 @@ void pcb::dispenseButtonRefresh()
         using namespace std::chrono;
         uint64_t now_epoch_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
         bool state = getDispenseButtonState(slot_index + 1);
-        // if (state){
-        //     debugOutput::sendMessage("bbbutuuotnt", MSG_INFO);
-        // }
 
         if (state != dispenseButtonStateMemory[slot_index])
         {
@@ -610,62 +611,22 @@ void pcb::dispenseButtonRefresh()
         positive_edge_detected[slot_index] = false;
         negative_edge_detected[slot_index] = false;
 
-        // if (!dispenseButtonIsDebounced[slot_index])
-        // {
-        //     if (state)
-        //     {
-                // up edge wait for stable
-                if ((now_epoch_millis > (dispenseButtonDebounceStartEpoch[slot_index] + DISPENSE_BUTTON_DEBOUNCE_MILLIS)) 
-                    && !dispenseButtonIsDebounced[slot_index] 
-                    && state != dispenseButtonStateDebounced[slot_index])
-                {
-                    // stable up edge detected
-                    dispenseButtonIsDebounced[slot_index] = true;
-                    // debugOutput::sendMessage("commit edge to state" + std::to_string(millis_since_epoch - dispenseButtonDebounceStartEpoch), MSG_INFO);
-                    debugOutput::sendMessage("debounced" + to_string(state), MSG_INFO);
-                    dispenseButtonStateDebounced[slot_index] = state;
-                    if (state){
-                    positive_edge_detected[slot_index] = true;
-
-                    }else{
-                    negative_edge_detected[slot_index] = true;
-
-                    }
-                }
-        //     }
-        //     else
-        //     {
-        //         // down edge do not wait for stable
-        //         dispenseButtonIsDebounced[slot_index] = true;
-        //         dispenseButtonStateDebounced[slot_index] = state;
-        //         negative_edge_detected[slot_index] = true;
-        //     }
-        // }
-        // if (!dispenseButtonIsDebounced[slot_index])
-        // {
-        //     if (state)
-        //     {
-        //         // up edge wait for stable
-        //         if ((now_epoch_millis > (dispenseButtonDebounceStartEpoch[slot_index] + DISPENSE_BUTTON_DEBOUNCE_MILLIS)) 
-        //             && !dispenseButtonIsDebounced[slot_index] 
-        //             && state != dispenseButtonStateDebounced[slot_index])
-        //         {
-        //             // stable up edge detected
-        //             dispenseButtonIsDebounced[slot_index] = true;
-        //             // debugOutput::sendMessage("commit edge to state" + std::to_string(millis_since_epoch - dispenseButtonDebounceStartEpoch), MSG_INFO);
-        //             debugOutput::sendMessage("debounced" + to_string(state), MSG_INFO);
-        //             dispenseButtonStateDebounced[slot_index] = state;
-        //             positive_edge_detected[slot_index] = true;
-        //         }
-        //     }
-        //     else
-        //     {
-        //         // down edge do not wait for stable
-        //         dispenseButtonIsDebounced[slot_index] = true;
-        //         dispenseButtonStateDebounced[slot_index] = state;
-        //         negative_edge_detected[slot_index] = true;
-        //     }
-        // }
+        // up edge wait for stable
+        if ((now_epoch_millis > (dispenseButtonDebounceStartEpoch[slot_index] + DISPENSE_BUTTON_DEBOUNCE_MILLIS)) && !dispenseButtonIsDebounced[slot_index] && state != dispenseButtonStateDebounced[slot_index])
+        {
+            // stable up edge detected
+            dispenseButtonIsDebounced[slot_index] = true;
+            debugOutput::sendMessage("debounced" + to_string(state), MSG_INFO);
+            dispenseButtonStateDebounced[slot_index] = state;
+            if (state)
+            {
+                positive_edge_detected[slot_index] = true;
+            }
+            else
+            {
+                negative_edge_detected[slot_index] = true;
+            }
+        }
 
         dispenseButtonStateMemory[slot_index] = state;
     }
@@ -675,6 +636,144 @@ bool pcb::getDispenseButtonStateDebounced(uint8_t slot)
 {
 
     return dispenseButtonStateDebounced[slot - 1];
+}
+
+///////////////////////////////////////////////////////////////////////////
+// FLOW SENSOR FUNCTIONS
+///////////////////////////////////////////////////////////////////////////
+
+void pcb::flowSensorEnable(uint8_t slot)
+{
+
+    switch (pcb_version)
+    {
+
+    case (DSED8344_NO_PIC):
+    {
+    };
+    break;
+    case (DSED8344_PIC):
+    {
+    };
+    break;
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
+        flowSensorsDisableAll();
+        setPCA9534Output(slot, PCA9534_PIN_OUT_FLOW_SENSOR_ENABLE, true);
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Error PCB NOT VALID!!", MSG_ERROR);
+    }
+    break;
+    }
+
+    // Only one sensor can be enabled at a time to be safe (it causes the pulses to be combined from all sensors to a separate input in the Odyssey.)
+}
+
+void pcb::flowSensorsDisableAll()
+{
+    switch (pcb_version)
+    {
+
+    case (DSED8344_NO_PIC):
+    {
+    };
+    break;
+    case (DSED8344_PIC):
+    {
+    };
+    break;
+    case (EN134_4SLOTS):
+    {
+        for (uint8_t slot = 1; slot <= 4; slot++)
+        {
+            setPCA9534Output(slot, PCA9534_PIN_OUT_FLOW_SENSOR_ENABLE, false);
+        }
+    }
+    break;
+    case (EN134_8SLOTS):
+    {
+        for (uint8_t slot = 1; slot <= 8; slot++)
+        {
+            setPCA9534Output(slot, PCA9534_PIN_OUT_FLOW_SENSOR_ENABLE, false);
+        }
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Error PCB NOT VALID!!", MSG_ERROR);
+    }
+    break;
+    }
+}
+
+void pcb::refreshFlowSensors()
+{
+    // this is only need if flow rates are read from the PCA9534.
+    // there is a specific line that goes the the Odyssey as an interrupt (which is how the soapstand app traditionally worked)
+    // then, the reading of the register is not needed
+
+    switch (pcb_version)
+    {
+
+    case (DSED8344_NO_PIC):
+    {
+    };
+    break;
+    case (DSED8344_PIC):
+    {
+    };
+    break;
+    case (EN134_4SLOTS):
+    {
+        for (uint8_t slot = 1; slot <= 4; slot++)
+        {
+            refreshFlowSensor(slot);
+        }
+    };
+    break;
+    case (EN134_8SLOTS):
+    {
+        for (uint8_t slot = 1; slot <= 8; slot++)
+        {
+            refreshFlowSensor(slot);
+        }
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Error PCB NOT VALID!!", MSG_ERROR);
+    }
+    break;
+    }
+}
+
+void pcb::refreshFlowSensor(uint8_t slot)
+{
+    if (slot == 0)
+    {
+        debugOutput::sendMessage("Slot error! Starts at 1!", MSG_ERROR);
+    }
+    uint8_t slot_index = slot - 1;
+
+    using namespace std::chrono;
+    uint64_t now_epoch_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
+    bool state = getPCA9534Input(slot, PCA9534_PIN_IN_FLOW_SENSOR_TICKS);
+
+    if (now_epoch_millis > (flowSensorTickReceivedEpoch[slot_index] + FLOW_SENSOR_DEBOUNCE_MILLIS))
+    {
+
+        if (flowSensorStateMemory[slot_index] != state)
+        {
+            debugOutput::sendMessage("Flow edge detected at slot" + to_string(slot), MSG_INFO);
+            flowSensorTickReceivedEpoch[slot_index] = now_epoch_millis;
+        }
+        flowSensorStateMemory[slot_index] = state;
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -889,6 +988,8 @@ void pcb::setSolenoid(uint8_t slot, bool onElseOff)
     break;
     }
 }
+
+
 
 // switch (pcb_version)
 // {

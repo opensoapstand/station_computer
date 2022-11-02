@@ -74,7 +74,7 @@ public:
     void refresh();
     void initialize_pcb(void);
     bool check_pcb_version(void);
-
+    bool isSlotAvailable(uint8_t slot);
 
     unsigned char getPumpPWM();
     bool setPumpPWM(uint8_t pwm_val);
@@ -94,7 +94,14 @@ public:
 
     void setSolenoid(uint8_t slot, bool onElseOff);
 
+    void refreshFlowSensors();
+    void flowSensorEnable(uint8_t slot);
+    void flowSensorsDisableAll();
+
 private:
+
+    bool slot_pca9534_found[MAX_SLOT_COUNT];
+
     bool set_i2c_address(unsigned char address);
     void setup_i2c_bus(void);
     unsigned char ReadByte(unsigned char address, unsigned char reg);
@@ -110,6 +117,12 @@ private:
     bool positive_edge_detected[MAX_SLOT_COUNT];
     bool negative_edge_detected[MAX_SLOT_COUNT];
     uint64_t dispenseButtonDebounceStartEpoch[MAX_SLOT_COUNT];
+
+    void refreshFlowSensor(uint8_t slot);
+
+    uint64_t flowSensorTickReceivedEpoch [SLOT_COUNT];
+    bool flowSensorStateMemory[SLOT_COUNT];
+    
 
     bool is_initialized;
     int i2c_handle = -1;

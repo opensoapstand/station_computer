@@ -55,10 +55,10 @@ class pcbEN134
 {
 public:
     pcbEN134(void);
-    pcbEN134(const char *);
+    // pcbEN134(const char *);
     ~pcbEN134();
 
-    void setup(uint8_t slot_count);
+    void setup(uint8_t slot_count, uint8_t* PCA9534_addresses);
 
     void setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff);
 
@@ -86,6 +86,8 @@ public:
 
 private:
     uint8_t slot_count;
+    uint8_t slot_addresses[8];
+
     bool getDispenseButtonState(uint8_t slot);
     bool is_initialized;
     int i2c_handle = -1;

@@ -84,6 +84,8 @@ public:
 
     bool getDispenseButtonStateDebounced(uint8_t slot);
     bool getDispenseButtonEdge(uint8_t slot);
+    bool getDispenseButtonEdgePositive(uint8_t slot);
+    bool getDispenseButtonEdgeNegative(uint8_t slot);
     void setSingleDispenseButtonLight(uint8_t slot, bool onElseOff);
     void virtualButtonPressHack(void);
     void virtualButtonUnpressHack(void);
@@ -106,6 +108,7 @@ private:
     bool dispenseButtonIsDebounced[MAX_SLOT_COUNT];
     bool dispenseButtonStateDebounced[MAX_SLOT_COUNT];
     bool positive_edge_detected[MAX_SLOT_COUNT];
+    bool negative_edge_detected[MAX_SLOT_COUNT];
     uint64_t dispenseButtonDebounceStartEpoch[MAX_SLOT_COUNT];
 
     bool is_initialized;

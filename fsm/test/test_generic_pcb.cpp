@@ -19,18 +19,36 @@ int main(int argc, char *argv[])
     while (true)
     {
         connected_pcb->refresh();
-        if (connected_pcb->getDispenseButtonStateDebounced(2))
+        if (connected_pcb->getDispenseButtonEdgePositive(2))
         {
             connected_pcb->setPumpEnable(2);
-            connected_pcb->setSingleDispenseButtonLight(2, true);
+            connected_pcb->setSingleDispenseButtonLight(2,true);
             connected_pcb->setSolenoid(2, true);
         }
-        else
+        if (connected_pcb->getDispenseButtonEdgeNegative(2))
         {
-            connected_pcb->setSingleDispenseButtonLight(2, false);
-            connected_pcb->setSolenoid(2, false);
             connected_pcb->setPumpsDisableAll();
+            connected_pcb->setSingleDispenseButtonLight(2,false);
+            connected_pcb->setSolenoid(2, false);
         }
+        // else
+        // {
+        //     connected_pcb->setSingleDispenseButtonLight(2, false);
+        //     // connected_pcb->setSolenoid(2, false);
+        //     // connected_pcb->setPumpsDisableAll();
+        // }
+        // if (connected_pcb->getDispenseButtonEdge(2))
+        // {
+        //     // connected_pcb->setPumpEnable(2);
+        //     connected_pcb->setSingleDispenseButtonLight(2, true);
+        //     // connected_pcb->setSolenoid(2, true);
+        // }
+        // // else
+        // // {
+        // //     connected_pcb->setSingleDispenseButtonLight(2, false);
+        // //     // connected_pcb->setSolenoid(2, false);
+        // //     // connected_pcb->setPumpsDisableAll();
+        // // }
     }
 
     // connected_pcb->initialize_pcb();

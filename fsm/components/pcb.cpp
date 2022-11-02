@@ -446,6 +446,7 @@ bool pcb::check_pcb_version(void)
 void pcb::initialize_pcb()
 {
     // set initial values. depending on pcb version
+
     switch (pcb_version)
     {
 
@@ -459,6 +460,13 @@ void pcb::initialize_pcb()
     break;
     case (EN134_4SLOTS):
     {
+        // Initialize the PCA9534
+        for (uint8_t slot = 1; slot <= 4; slot++)
+        {
+            SendByte(get_PCA9534_address_from_slot(slot), 0x01, 0b00100000); // Output pin values register (has no influence on input values)
+            SendByte(get_PCA9534_address_from_slot(slot), 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+        }
+
         setPumpsDisableAll();
         for (uint8_t slot=1;slot<=4;slot++){
             setSolenoid(slot, false);
@@ -468,6 +476,12 @@ void pcb::initialize_pcb()
     break;
     case (EN134_8SLOTS):
     {
+         // Initialize the PCA9534
+        for (uint8_t slot = 1; slot <= 8; slot++)
+        {
+            SendByte(get_PCA9534_address_from_slot(slot), 0x01, 0b00100000); // Output pin values register (has no influence on input values)
+            SendByte(get_PCA9534_address_from_slot(slot), 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+        }
         setPumpsDisableAll();
          for (uint8_t slot=1;slot<=8;slot++){
             setSolenoid(slot, false);
@@ -506,6 +520,7 @@ void pcb::setSingleDispenseButtonLight(uint8_t slot, bool onElseOff)
     {
         if (onElseOff)
         {
+            debugOutput::sendMessage("SET LIGJTHJTHT ONN", MSG_ERROR);
             setPCA9534Output(slot, PCA9534_PIN_OUT_BUTTON_LED_LOW_IS_ON, false);
         }
         else
@@ -558,7 +573,15 @@ bool pcb::getDispenseButtonState(uint8_t slot)
 
 bool pcb::getDispenseButtonEdge(uint8_t slot)
 {
-    return positive_edge_detected[slot - 1];
+    return ( positive_edge_detected[slot - 1] || negative_edge_detected[slot - 1]);
+} // End of getDispenseButtonState()
+bool pcb::getDispenseButtonEdgePositive(uint8_t slot)
+{
+    return ( positive_edge_detected[slot - 1] );
+} // End of getDispenseButtonState()
+bool pcb::getDispenseButtonEdgeNegative(uint8_t slot)
+{
+    return ( negative_edge_detected[slot - 1] );
 } // End of getDispenseButtonState()
 
 void pcb::dispenseButtonRefresh()
@@ -585,29 +608,64 @@ void pcb::dispenseButtonRefresh()
         }
 
         positive_edge_detected[slot_index] = false;
+        negative_edge_detected[slot_index] = false;
 
-        if (!dispenseButtonIsDebounced[slot_index])
-        {
-            if (state)
-            {
+        // if (!dispenseButtonIsDebounced[slot_index])
+        // {
+        //     if (state)
+        //     {
                 // up edge wait for stable
-                if ((now_epoch_millis > (dispenseButtonDebounceStartEpoch[slot_index] + DISPENSE_BUTTON_DEBOUNCE_MILLIS)) && !dispenseButtonIsDebounced[slot_index] && state != dispenseButtonStateDebounced[slot_index])
+                if ((now_epoch_millis > (dispenseButtonDebounceStartEpoch[slot_index] + DISPENSE_BUTTON_DEBOUNCE_MILLIS)) 
+                    && !dispenseButtonIsDebounced[slot_index] 
+                    && state != dispenseButtonStateDebounced[slot_index])
                 {
                     // stable up edge detected
                     dispenseButtonIsDebounced[slot_index] = true;
                     // debugOutput::sendMessage("commit edge to state" + std::to_string(millis_since_epoch - dispenseButtonDebounceStartEpoch), MSG_INFO);
                     debugOutput::sendMessage("debounced" + to_string(state), MSG_INFO);
                     dispenseButtonStateDebounced[slot_index] = state;
+                    if (state){
                     positive_edge_detected[slot_index] = true;
+
+                    }else{
+                    negative_edge_detected[slot_index] = true;
+
+                    }
                 }
-            }
-            else
-            {
-                // down edge do not wait for stable
-                dispenseButtonIsDebounced[slot_index] = true;
-                dispenseButtonStateDebounced[slot_index] = state;
-            }
-        }
+        //     }
+        //     else
+        //     {
+        //         // down edge do not wait for stable
+        //         dispenseButtonIsDebounced[slot_index] = true;
+        //         dispenseButtonStateDebounced[slot_index] = state;
+        //         negative_edge_detected[slot_index] = true;
+        //     }
+        // }
+        // if (!dispenseButtonIsDebounced[slot_index])
+        // {
+        //     if (state)
+        //     {
+        //         // up edge wait for stable
+        //         if ((now_epoch_millis > (dispenseButtonDebounceStartEpoch[slot_index] + DISPENSE_BUTTON_DEBOUNCE_MILLIS)) 
+        //             && !dispenseButtonIsDebounced[slot_index] 
+        //             && state != dispenseButtonStateDebounced[slot_index])
+        //         {
+        //             // stable up edge detected
+        //             dispenseButtonIsDebounced[slot_index] = true;
+        //             // debugOutput::sendMessage("commit edge to state" + std::to_string(millis_since_epoch - dispenseButtonDebounceStartEpoch), MSG_INFO);
+        //             debugOutput::sendMessage("debounced" + to_string(state), MSG_INFO);
+        //             dispenseButtonStateDebounced[slot_index] = state;
+        //             positive_edge_detected[slot_index] = true;
+        //         }
+        //     }
+        //     else
+        //     {
+        //         // down edge do not wait for stable
+        //         dispenseButtonIsDebounced[slot_index] = true;
+        //         dispenseButtonStateDebounced[slot_index] = state;
+        //         negative_edge_detected[slot_index] = true;
+        //     }
+        // }
 
         dispenseButtonStateMemory[slot_index] = state;
     }

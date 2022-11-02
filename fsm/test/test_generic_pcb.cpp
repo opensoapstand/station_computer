@@ -21,13 +21,15 @@ int main(int argc, char *argv[])
         connected_pcb->refresh();
         if (connected_pcb->getDispenseButtonEdgePositive(2))
         {
-            connected_pcb->setPumpEnable(2);
-            connected_pcb->setSingleDispenseButtonLight(2,true);
             connected_pcb->setSolenoid(2, true);
+            usleep(1000000); // first release the fluidic line before pumping
+            connected_pcb->setPumpEnable(2);
+            connected_pcb->setSingleDispenseButtonLight(2,connected_pcb->getDispenseButtonStateDebounced(2));
         }
         if (connected_pcb->getDispenseButtonEdgeNegative(2))
         {
             connected_pcb->setPumpsDisableAll();
+            usleep(1000000);// stop pumping before closing off fluidic line
             connected_pcb->setSingleDispenseButtonLight(2,false);
             connected_pcb->setSolenoid(2, false);
         }

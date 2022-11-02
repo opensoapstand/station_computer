@@ -45,9 +45,11 @@ int main(int argc, char *argv[])
             if (pcb->getDispenseButtonStateDebounced(slot)){
                 pcb->setSolenoid(slot, true);
                 pcb->setPumpEnableState(slot, true);
+                 debugOutput::sendMessage("Press", MSG_INFO);
             }else{
                 pcb->setPumpEnableState(slot, false);
                  pcb->setSolenoid(slot, false);
+                 debugOutput::sendMessage("NO Press", MSG_INFO);
 
             }
 

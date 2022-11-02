@@ -42,7 +42,14 @@ int main(int argc, char *argv[])
             // debugOutput::sendMessage("button state: " + to_string(slot) + " " + to_string(getDispenseButtonStateDebounced(slot)), MSG_INFO);
             // debugOutput::sendMessage("button state: " + to_string(slot) + " " + to_string(getDispenseButtonState(slot)), MSG_INFO);
 
-            pcb->setPumpEnableState(slot, pcb->getDispenseButtonStateDebounced(slot));
+            if (pcb->getDispenseButtonStateDebounced(slot)){
+                pcb->setSolenoid(slot, true);
+                pcb->setPumpEnableState(slot, true);
+            }else{
+                pcb->setPumpEnableState(slot, false);
+                 pcb->setSolenoid(slot, false);
+
+            }
 
             // if (pcb->getDispenseButtonEdge(slot))
             // {
@@ -57,13 +64,13 @@ int main(int argc, char *argv[])
 
             // pcb->setSolenoid(slot, pcb->getDispenseButtonStateDebounced(slot));
         }
-        if (pcb->getDispenseButtonStateDebounced(2))
-        {
-            pcb->setSolenoid(2, true);
-            usleep(25000);
-            pcb->setSolenoid(2, false);
-            usleep(25000);
-        }
+        // if (pcb->getDispenseButtonStateDebounced(2))
+        // {
+        //     pcb->setSolenoid(2, true);
+        //     usleep(25000);
+        //     pcb->setSolenoid(2, false);
+        //     usleep(25000);
+        // }
     };
 
 } // End of main()

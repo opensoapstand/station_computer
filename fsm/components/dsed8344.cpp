@@ -99,12 +99,7 @@ void dsed8344::setup()
 
         setup_i2c_bus();
 
-     for (uint8_t i = 0; i < SLOT_COUNT; i++)
-    {
-        dispenseButtonStateMemory[i] = false;
-        dispenseButtonStateDebounced[i] = false;
-        dispenseButtonIsDebounced[i] = true;
-    }
+ 
         is_initialized = true;
     }
 }

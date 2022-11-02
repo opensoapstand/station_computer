@@ -90,6 +90,12 @@ pcb::~pcb(void)
 // Private methods
 ///////////////////////////////////////////////////////////////////////////
 
+void pcb::refresh()
+{
+    usleep(100);
+    dispenseButtonRefresh();
+    //flowSensorRefresh();
+}
 void pcb::setup()
 {
 
@@ -97,7 +103,12 @@ void pcb::setup()
     {
 
         setup_i2c_bus();
-
+        for (uint8_t i = 0; i < MAX_SLOT_COUNT; i++)
+        {
+            dispenseButtonStateMemory[i] = false;
+            dispenseButtonStateDebounced[i] = false;
+            dispenseButtonIsDebounced[i] = true;
+        }
         is_initialized = true;
     }
 }
@@ -255,7 +266,6 @@ uint8_t pcb::get_PCA9534_address_from_slot(uint8_t slot)
     uint8_t slot_addresses[MAX_SLOT_COUNT] = {PCA9534_ADDRESS_SLOT_1, PCA9534_ADDRESS_SLOT_2, PCA9534_ADDRESS_SLOT_3, PCA9534_ADDRESS_SLOT_4, DUMMY_ADDRESS, DUMMY_ADDRESS, DUMMY_ADDRESS, DUMMY_ADDRESS};
     return slot_addresses[slot_index];
 }
-
 
 ////////////////////////
 bool pcb::check_pcb_version(void)
@@ -464,6 +474,142 @@ void pcb::initialize_pcb()
 }
 
 ///////////////////////////////////////////////////////////////////////////
+// BUTTON FUNCTIONS
+///////////////////////////////////////////////////////////////////////////
+
+void pcb::setSingleDispenseButtonLight(uint8_t slot, bool onElseOff)
+{
+
+    switch (pcb_version)
+    {
+
+    case (DSED8344_NO_PIC):
+    {
+    };
+    break;
+    case (DSED8344_PIC):
+    {
+    };
+    break;
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
+        if (onElseOff)
+        {
+            setPCA9534Output(slot, PCA9534_PIN_OUT_BUTTON_LED_LOW_IS_ON, false);
+        }
+        else
+        {
+            setPCA9534Output(slot, PCA9534_PIN_OUT_BUTTON_LED_LOW_IS_ON, true);
+        }
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Error PCB NOT VALID!!", MSG_ERROR);
+    }
+    break;
+    }
+
+} // End of setSingleDispenseButtonLight()
+void pcb::virtualButtonPressHack()
+{
+    // // WARNING: This overrides the physical dispense button. As such, there is no fail safe mechanism.
+    // // If the program crashes while the button is pressed, it might keep on dispensing *forever*.
+
+    // unsigned char reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03);
+    // reg_value = reg_value & 0b01111111;
+    // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+
+    // reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01);
+    // reg_value = reg_value & 0b01111111; // virtual button press
+    // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, reg_value);
+}
+
+void pcb::virtualButtonUnpressHack()
+{
+    // unsigned char reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03);
+    // reg_value = reg_value | 0b10000000;
+    // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+}
+
+bool pcb::getDispenseButtonState(uint8_t slot)
+{
+
+    // bool isPressed = ((ReadByte(PCA9534_PIN_IN_BUTTON, 0x00) & 0x80) ? false : true); // low = pressed
+    // bool isPressed = (ReadByte(get_PCA9534_address_from_slot(slot), 0x00) & PCA9534_PIN_IN_BUTTON) ;
+    bool val = (ReadByte(get_PCA9534_address_from_slot(slot), 0x00) & (1 << PCA9534_PIN_IN_BUTTON));
+
+    bool isPressed = !val;
+
+    return isPressed;
+
+} // End of getDispenseButtonState()
+
+bool pcb::getDispenseButtonEdge(uint8_t slot)
+{
+    return positive_edge_detected[slot - 1];
+} // End of getDispenseButtonState()
+
+void pcb::dispenseButtonRefresh()
+{
+    // as this is not in a separate thread, we'll need to call it some times...
+    // up edge: state wait for debouncing.
+    // down edge: instant react. Because the PWM is hardware disconnected right away. We don't want jitter on that (aka disable right away when negative edge is detected).
+
+    for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    {
+
+        using namespace std::chrono;
+        uint64_t now_epoch_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+        bool state = getDispenseButtonState(slot_index + 1);
+        // if (state){
+        //     debugOutput::sendMessage("bbbutuuotnt", MSG_INFO);
+        // }
+
+        if (state != dispenseButtonStateMemory[slot_index])
+        {
+            dispenseButtonDebounceStartEpoch[slot_index] = now_epoch_millis;
+            dispenseButtonIsDebounced[slot_index] = false;
+            debugOutput::sendMessage("edge detected!" + std::to_string(dispenseButtonDebounceStartEpoch[slot_index]) + "state: " + std::to_string(state), MSG_INFO);
+        }
+
+        positive_edge_detected[slot_index] = false;
+
+        if (!dispenseButtonIsDebounced[slot_index])
+        {
+            if (state)
+            {
+                // up edge wait for stable
+                if ((now_epoch_millis > (dispenseButtonDebounceStartEpoch[slot_index] + DISPENSE_BUTTON_DEBOUNCE_MILLIS)) && !dispenseButtonIsDebounced[slot_index] && state != dispenseButtonStateDebounced[slot_index])
+                {
+                    // stable up edge detected
+                    dispenseButtonIsDebounced[slot_index] = true;
+                    // debugOutput::sendMessage("commit edge to state" + std::to_string(millis_since_epoch - dispenseButtonDebounceStartEpoch), MSG_INFO);
+                    debugOutput::sendMessage("debounced" + to_string(state), MSG_INFO);
+                    dispenseButtonStateDebounced[slot_index] = state;
+                    positive_edge_detected[slot_index] = true;
+                }
+            }
+            else
+            {
+                // down edge do not wait for stable
+                dispenseButtonIsDebounced[slot_index] = true;
+                dispenseButtonStateDebounced[slot_index] = state;
+            }
+        }
+
+        dispenseButtonStateMemory[slot_index] = state;
+    }
+}
+
+bool pcb::getDispenseButtonStateDebounced(uint8_t slot)
+{
+
+    return dispenseButtonStateDebounced[slot - 1];
+}
+
+///////////////////////////////////////////////////////////////////////////
 // PUMP FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////
 
@@ -561,18 +707,26 @@ bool pcb::setPumpsDisableAll()
     {
         unsigned char reg_value;
 
-        reg_value = ReadByte(PCA9534_ADDRESS, 0x01);
+        reg_value = ReadByte(get_PCA9534_address_from_slot(1), 0x01);
         reg_value = reg_value & 0b11111000;
-        SendByte(PCA9534_ADDRESS, 0x01, reg_value);
+        SendByte(get_PCA9534_address_from_slot(1), 0x01, reg_value);
 
         return true;
     };
     break;
     case (EN134_4SLOTS):
+    {
+        uint8_t reg_value;
+        for (uint8_t slot = 1; slot <= 4; slot++)
+        {
+            setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, false);
+        }
+    };
+    break;
     case (EN134_8SLOTS):
     {
         uint8_t reg_value;
-        for (uint8_t slot = 1; slot <= this->slot_count; slot++)
+        for (uint8_t slot = 1; slot <= 8; slot++)
         {
             setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, false);
         }
@@ -589,7 +743,7 @@ bool pcb::setPumpsDisableAll()
 
 bool pcb::setPumpEnable(uint8_t slot)
 {
-    // slot = pump_number 
+    // slot = pump_number
 
     switch (pcb_version)
     {

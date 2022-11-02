@@ -71,8 +71,24 @@ public:
     pcb(const char *);
     ~pcb();
     void setup();
+    void refresh();
     void initialize_pcb(void);
     bool check_pcb_version(void);
+
+
+    unsigned char getPumpPWM();
+    bool setPumpPWM(uint8_t pwm_val);
+    bool setPumpSpeedPercentage(uint8_t speed_percentage);
+    bool setPumpsDisableAll();
+    bool setPumpEnable(uint8_t slot);
+
+    bool getDispenseButtonStateDebounced(uint8_t slot);
+    bool getDispenseButtonEdge(uint8_t slot);
+    void setSingleDispenseButtonLight(uint8_t slot, bool onElseOff);
+    void virtualButtonPressHack(void);
+    void virtualButtonUnpressHack(void);
+    void dispenseButtonRefresh();
+    bool getDispenseButtonState(uint8_t slot);
 
 private:
     bool set_i2c_address(unsigned char address);
@@ -84,11 +100,11 @@ private:
     void setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff);
     uint8_t get_PCA9534_address_from_slot(uint8_t slot);
 
-    unsigned char getPumpPWM();
-    bool setPumpPWM(uint8_t pwm_val);
-    bool setPumpSpeedPercentage(uint8_t speed_percentage);
-     bool setPumpsDisableAll();
-      bool setPumpEnable(uint8_t slot);
+    bool dispenseButtonStateMemory[MAX_SLOT_COUNT];
+    bool dispenseButtonIsDebounced[MAX_SLOT_COUNT];
+    bool dispenseButtonStateDebounced[MAX_SLOT_COUNT];
+    bool positive_edge_detected[MAX_SLOT_COUNT];
+    uint64_t dispenseButtonDebounceStartEpoch[MAX_SLOT_COUNT];
 
     bool is_initialized;
     int i2c_handle = -1;

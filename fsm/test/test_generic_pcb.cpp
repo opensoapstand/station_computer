@@ -13,14 +13,22 @@ int main(int argc, char *argv[])
     //     unsigned char pwm_value;
 
     connected_pcb = new pcb();
-    
+
     connected_pcb->setup();
+    connected_pcb->setSingleDispenseButtonLight(2, false);
+    while (true)
+    {
+        connected_pcb->refresh();
+        if (connected_pcb->getDispenseButtonStateDebounced(2))
+        {
 
-    
+            connected_pcb->setPumpEnable(2);
+        }
+        else
+        {
+            connected_pcb->setPumpsDisableAll();
+        }
+    }
 
-
-
-   // connected_pcb->initialize_pcb();
-
-
+    // connected_pcb->initialize_pcb();
 }

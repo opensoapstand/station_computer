@@ -70,12 +70,6 @@ pcb::pcb(const char *bus)
     strcpy(i2c_bus_name, bus);
 
     setup_i2c_bus();
-    // for (uint8_t i = 0; i < SLOT_COUNT; i++)
-    // {
-    //     dispenseButtonStateMemory[i] = false;
-    //     dispenseButtonStateDebounced[i] = false;
-    //     dispenseButtonIsDebounced[i] = true;
-    // }
 
 } // End of pcb() constructor
 
@@ -94,7 +88,7 @@ void pcb::refresh()
 {
     usleep(100);
     dispenseButtonRefresh();
-    //flowSensorRefresh();
+    // flowSensorRefresh();
 }
 void pcb::setup()
 {
@@ -111,6 +105,20 @@ void pcb::setup()
         }
         is_initialized = true;
     }
+
+    if (!check_pcb_version())
+    {
+        std::string message("pcbEN134: I2C bus ");
+        // message.append(i2c_bus_name);
+        message.append(" has a problem.");
+        debugOutput::sendMessage(message, MSG_ERROR);
+        return;
+    }
+
+    // set values to default
+    initialize_pcb();
+
+    
 }
 
 bool pcb::SendByte(unsigned char address, unsigned char reg, unsigned char byte)
@@ -214,14 +222,6 @@ void pcb::setup_i2c_bus(void)
         }
     }
 
-    if (!check_pcb_version())
-    {
-        std::string message("pcbEN134: I2C bus ");
-        // message.append(i2c_bus_name);
-        message.append(" has a problem.");
-        debugOutput::sendMessage(message, MSG_ERROR);
-        return;
-    }
 
     debugOutput::sendMessage("I2C bus configuration appears correct.", MSG_INFO);
     debugOutput::sendMessage("Initialized I2C bus components.", MSG_INFO);
@@ -459,10 +459,20 @@ void pcb::initialize_pcb()
     break;
     case (EN134_4SLOTS):
     {
+        setPumpsDisableAll();
+        for (uint8_t slot=1;slot<=4;slot++){
+            setSolenoid(slot, false);
+            setSingleDispenseButtonLight(slot, false);
+        }
     };
     break;
     case (EN134_8SLOTS):
     {
+        setPumpsDisableAll();
+         for (uint8_t slot=1;slot<=8;slot++){
+            setSolenoid(slot, false);
+            setSingleDispenseButtonLight(slot, false);
+        }
     };
     break;
     default:
@@ -791,6 +801,36 @@ bool pcb::setPumpEnable(uint8_t slot)
     }
 
 } // End setPumpEnable()
+
+///////////////////////////////////////////////////////////////////////////
+// SOLENOID FUNCTIONS
+///////////////////////////////////////////////////////////////////////////
+
+void pcb::setSolenoid(uint8_t slot, bool onElseOff)
+{
+
+    switch (pcb_version)
+    {
+
+    case (DSED8344_NO_PIC):
+    case (DSED8344_PIC):
+    {
+        debugOutput::sendMessage("No solenoid used in pcb. ", MSG_INFO);
+    };
+    break;
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
+        setPCA9534Output(slot, PCA9534_PIN_OUT_SOLENOID, onElseOff);
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Error PCB NOT VALID!!", MSG_ERROR);
+    }
+    break;
+    }
+}
 
 // switch (pcb_version)
 // {

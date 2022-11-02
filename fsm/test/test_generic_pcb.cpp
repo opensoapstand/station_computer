@@ -15,18 +15,21 @@ int main(int argc, char *argv[])
     connected_pcb = new pcb();
 
     connected_pcb->setup();
-    connected_pcb->setSingleDispenseButtonLight(2, false);
+    connected_pcb->setPumpPWM(0);
+    connected_pcb->setPumpEnable(2);
     while (true)
     {
         connected_pcb->refresh();
         if (connected_pcb->getDispenseButtonStateDebounced(2))
         {
-
-            connected_pcb->setPumpEnable(2);
+            connected_pcb->setSingleDispenseButtonLight(2, true);
+            connected_pcb->setSolenoid(2, true);
         }
         else
         {
-            connected_pcb->setPumpsDisableAll();
+            connected_pcb->setSingleDispenseButtonLight(2, false);
+            connected_pcb->setSolenoid(2, false);
+            // connected_pcb->setPumpsDisableAll();
         }
     }
 

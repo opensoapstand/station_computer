@@ -90,6 +90,8 @@ public:
     void dispenseButtonRefresh();
     bool getDispenseButtonState(uint8_t slot);
 
+    void setSolenoid(uint8_t slot, bool onElseOff);
+
 private:
     bool set_i2c_address(unsigned char address);
     void setup_i2c_bus(void);

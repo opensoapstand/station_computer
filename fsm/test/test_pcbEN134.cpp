@@ -44,30 +44,26 @@ int main(int argc, char *argv[])
 
             pcb->setPumpEnableState(slot, pcb->getDispenseButtonStateDebounced(slot));
 
-            if (pcb->getDispenseButtonEdge(slot))
-            {
-                tmptest++;
-                if (tmptest > 100)
-                {
-                    tmptest = 0;
-                }
-                debugOutput::sendMessage("Pump speed percentage:" + to_string(tmptest), MSG_INFO);
-                pcb->setPumpSpeedPercentage(tmptest);
-            }
+            // if (pcb->getDispenseButtonEdge(slot))
+            // {
+            //     tmptest++;
+            //     if (tmptest > 100)
+            //     {
+            //         tmptest = 0;
+            //     }
+            //     debugOutput::sendMessage("Pump speed percentage:" + to_string(tmptest), MSG_INFO);
+            //     pcb->setPumpSpeedPercentage(tmptest);
+            // }
 
-           
             // pcb->setSolenoid(slot, pcb->getDispenseButtonStateDebounced(slot));
-
-
-           
         }
-         if (pcb->getDispenseButtonStateDebounced(2)){
-                pcb->setSolenoid(2,true);
-                usleep(25000);
-                pcb->setSolenoid(2,false);
-                usleep(25000);
-
-            }
+        if (pcb->getDispenseButtonStateDebounced(2))
+        {
+            pcb->setSolenoid(2, true);
+            usleep(25000);
+            pcb->setSolenoid(2, false);
+            usleep(25000);
+        }
     };
 
 } // End of main()

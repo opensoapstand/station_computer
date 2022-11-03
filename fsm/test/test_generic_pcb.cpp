@@ -13,12 +13,14 @@ enum Dispense_state
     dispense_start_pumping,
     dispense_pumping,
     dispense_end_pumping,
+    dispense_end_backtrack_delay,
     dispense_end_solenoid_delay
 };
 Dispense_state dispense_state;
 
 #define PUMP_START_DELAY_MILLIS 50
 #define SOLENOID_STOP_DELAY_MILLIS 50
+#define PUMP_BACKTRACK_TIME_MILLIS 50
 
 int main(int argc, char *argv[])
 {
@@ -32,6 +34,7 @@ int main(int argc, char *argv[])
     bool dispenseCycleStarted = false;
     uint64_t pump_start_delay_start_epoch;
     uint64_t solenoid_stop_delay_start_epoch;
+    uint64_t pump_backtrack_start_epoch;
     uint8_t active_slot;
 
     dispense_state = dispense_setup;
@@ -53,6 +56,7 @@ int main(int argc, char *argv[])
             {
                 if (connected_pcb->isSlotAvailable(slot))
                 {
+                    connected_pcb->setPumpDirection(slot, true);
                     connected_pcb->setSingleDispenseButtonLight(slot, false);
                     connected_pcb->setSolenoid(slot, false);
                 }
@@ -102,7 +106,8 @@ int main(int argc, char *argv[])
         break;
         case (dispense_start_pumping):
         {
-
+            connected_pcb->setPumpDirection(active_slot, true);
+            connected_pcb->setPumpSpeedPercentage(90);
             connected_pcb->setPumpEnable(active_slot);
             dispense_state = dispense_pumping;
         };
@@ -111,13 +116,26 @@ int main(int argc, char *argv[])
         {
             if (!connected_pcb->getDispenseButtonStateDebounced(active_slot))
             {
-                dispense_state = dispense_end_pumping;
+                dispense_state = dispense_end_backtrack_delay;
+                connected_pcb->setPumpsDisableAll();
+                connected_pcb->setPumpDirection(active_slot, false);
+                connected_pcb->setPumpEnable(active_slot);
+                pump_backtrack_start_epoch = now_epoch_millis;
+            }
+        };
+        break;
+        case (dispense_end_backtrack_delay):
+        {
+            if (now_epoch_millis > (pump_backtrack_start_epoch + PUMP_BACKTRACK_TIME_MILLIS))
+            {
+                pump_backtrack_start_epoch = dispense_end_pumping;
             }
         };
         break;
         case (dispense_end_pumping):
         {
             connected_pcb->setPumpsDisableAll();
+            connected_pcb->setPumpDirection(active_slot, true);
             solenoid_stop_delay_start_epoch = now_epoch_millis;
             dispense_state = dispense_end_solenoid_delay;
         };

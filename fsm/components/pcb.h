@@ -81,6 +81,7 @@ public:
     bool setPumpSpeedPercentage(uint8_t speed_percentage);
     bool setPumpsDisableAll();
     bool setPumpEnable(uint8_t slot);
+    bool setPumpDirection(uint8_t slot, bool forwardElseReverse);
 
     bool getDispenseButtonStateDebounced(uint8_t slot);
     bool getDispenseButtonEdge(uint8_t slot);

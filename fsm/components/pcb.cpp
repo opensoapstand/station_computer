@@ -962,6 +962,15 @@ bool pcb::setPumpEnable(uint8_t slot)
 
 } // End setPumpEnable()
 
+bool pcb::setPumpDirection(uint8_t slot, bool forwardElseReverse)
+{
+    // remember rotating or not.
+    setPumpsDisableAll();
+    //usleep(1000000);
+    setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_DIR, forwardElseReverse);
+} // End setPumpEnable()
+
+
 ///////////////////////////////////////////////////////////////////////////
 // SOLENOID FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////

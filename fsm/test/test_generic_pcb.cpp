@@ -17,8 +17,8 @@ enum Dispense_state
 };
 Dispense_state dispense_state;
 
-#define PUMP_START_DELAY_MILLIS 1000
-#define SOLENOID_STOP_DELAY_MILLIS 1000
+#define PUMP_START_DELAY_MILLIS 50
+#define SOLENOID_STOP_DELAY_MILLIS 50
 
 int main(int argc, char *argv[])
 {

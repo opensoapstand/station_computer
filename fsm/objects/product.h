@@ -86,7 +86,9 @@ public:
         char sizeIndexToSizeChar(int sizeIndex);
 
         void addMaintenancePwdToMachineTable();
+        void addShowTransactionsToMachineTable();
         bool isMaintenancePwdInMachineTable();
+        bool isShowTransactionsInMachineTable();
         void executeSQLStatement(string sql_string);
         void syncSoftwareVersionWithDb();
         bool registerFlowSensorTick();

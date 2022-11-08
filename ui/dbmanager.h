@@ -20,6 +20,7 @@ public:
     bool isProductVolumeInContainer(int slot);
     bool getRecentTransactions(QString values[][5], int count, int* count_retreived);
     bool hasReceiptPrinter();
+    bool showTransactions();
     QString getProductReceiptName(int slot);
     QString getPaymentMethod(int slot);
     double getProductVolume(int slot, char ml);

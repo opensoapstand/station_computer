@@ -5,8 +5,8 @@
 //  page_help and contactact info
 //
 //
-// created: 28-05-2021
-// by: Paddy Riley
+// updated: 08-11-2022
+// by: Ash Singla & Lode Ameije
 //
 // copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
@@ -41,6 +41,13 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     // ui->transactions_Button->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
     ui->transactions_Button->setFont(font);
     ui->transactions_Button->setText("Transaction History ->");
+    DbManager db(DB_PATH);
+    bool showTransactions = db.showTransactions();
+    db.closeDB();
+    if(!showTransactions){
+        ui->transactions_Button->hide();
+    }
+
   
     ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");

@@ -1587,6 +1587,7 @@ QString DbManager::getMaintenanceAdminPassword()
     return mid_string;
 }
 
+
 QString DbManager::getProductType(int slot)
 {
     QSqlQuery product_type_query;
@@ -1608,6 +1609,24 @@ QString DbManager::getProductType(int slot)
     }
     return product_type_string;
 }
+
+bool DbManager::showTransactions()
+{
+    QSqlQuery qry;
+    bool is_enabled;
+
+    {
+        qry.prepare("SELECT show_transactions FROM machine");
+        qry.exec();
+
+        while (qry.next())
+        {
+            is_enabled = (qry.value(0).toInt() == 1);
+        }
+    }
+    return is_enabled;
+}
+
 
 QString DbManager::getProductID(int slot)
 {

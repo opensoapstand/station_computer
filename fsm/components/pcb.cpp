@@ -522,7 +522,7 @@ void pcb::setSingleDispenseButtonLight(uint8_t slot, bool onElseOff)
     {
         if (onElseOff)
         {
-            debugOutput::sendMessage("SET LIGJTHJTHT ONN", MSG_ERROR);
+            debugOutput::sendMessage("Set button light on", MSG_INFO);
             setPCA9534Output(slot, PCA9534_PIN_OUT_BUTTON_LED_LOW_IS_ON, false);
         }
         else
@@ -960,15 +960,17 @@ bool pcb::setPumpEnable(uint8_t slot)
     break;
     }
 
-} // End setPumpEnable()
+} 
 
 bool pcb::setPumpDirection(uint8_t slot, bool forwardElseReverse)
 {
     // remember rotating or not.
     setPumpsDisableAll();
     //usleep(1000000);
-    setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_DIR, forwardElseReverse);
-} // End setPumpEnable()
+    bool reverseElseForward = !forwardElseReverse;
+
+    setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_DIR, reverseElseForward);
+} 
 
 
 ///////////////////////////////////////////////////////////////////////////

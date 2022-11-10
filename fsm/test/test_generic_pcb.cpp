@@ -7,6 +7,7 @@ enum Dispense_state
 {
 
     dispense_setup,
+    dispense_init,
     dispense_idle,
     dispense_activate_solenoid,
     dispense_pump_delay,
@@ -14,13 +15,19 @@ enum Dispense_state
     dispense_pumping,
     dispense_end_pumping,
     dispense_end_backtrack_delay,
-    dispense_end_solenoid_delay
+    dispense_end_solenoid_delay,
+    dispense_auto_end_of_cycle_delay
 };
 Dispense_state dispense_state;
 
 #define PUMP_START_DELAY_MILLIS 50
+#define PUMP_BACKTRACK_TIME_MILLIS 0
 #define SOLENOID_STOP_DELAY_MILLIS 50
-#define PUMP_BACKTRACK_TIME_MILLIS 50
+
+#define AUTO_DISPENSE_ENABLED true
+#define AUTO_DISPENSE_SLOT 2
+#define AUTO_DISPENSE_DELAY_BETWEEN_CYCLES_MS 3000
+#define AUTO_DISPENSE_CYCLE_LENGTH_MS 3000
 
 int main(int argc, char *argv[])
 {
@@ -32,9 +39,14 @@ int main(int argc, char *argv[])
     connected_pcb->setPumpPWM(0);
 
     bool dispenseCycleStarted = false;
+    uint64_t dispense_cycle_count = 0;
+    uint64_t total_ticks_count = 0;
+
     uint64_t pump_start_delay_start_epoch;
     uint64_t solenoid_stop_delay_start_epoch;
     uint64_t pump_backtrack_start_epoch;
+    uint64_t auto_dispense_start_epoch;
+    uint64_t auto_dispense_stop_epoch;
     uint8_t active_slot;
 
     dispense_state = dispense_setup;
@@ -61,22 +73,74 @@ int main(int argc, char *argv[])
                     connected_pcb->setSolenoid(slot, false);
                 }
             };
-            dispense_state = dispense_idle;
-            break;
-        }
-        case (dispense_idle):
-        {
-            for (uint8_t slot = 1; slot <= 4; slot++)
+
+            if (AUTO_DISPENSE_ENABLED)
             {
-                if (connected_pcb->isSlotAvailable(slot))
+                // only start
+                for (uint8_t slot = 1; slot <= 4; slot++)
+                {
+
+                    connected_pcb->getDispenseButtonEdgePositive(slot);
+                }
+                dispense_state = dispense_init;
+            }
+            else
+            {
+                dispense_state = dispense_init;
+            }
+        }
+        break;
+        case (dispense_init):
+        {
+
+            if (AUTO_DISPENSE_ENABLED)
+            {
+                // only start auto cycling if a button is pressed once
+                for (uint8_t slot = 1; slot <= 4; slot++)
                 {
 
                     if (connected_pcb->getDispenseButtonEdgePositive(slot))
                     {
+                        debugOutput::sendMessage("Will initialize auto dispensing at " + to_string(slot), MSG_INFO);
                         active_slot = slot;
-                        dispense_state = dispense_activate_solenoid;
+                        dispense_state = dispense_idle;
                     }
                 }
+            }
+            else
+            {
+                dispense_state = dispense_idle;
+            }
+        }
+        break;
+        case (dispense_idle):
+        {
+            bool next_step = false;
+
+            if (AUTO_DISPENSE_ENABLED)
+            {
+                next_step = true;
+            }
+            else
+            {
+                for (uint8_t slot = 1; slot <= 4; slot++)
+                {
+                    if (connected_pcb->isSlotAvailable(slot))
+                    {
+                        if (connected_pcb->getDispenseButtonEdgePositive(slot))
+                        {
+                            next_step = true;
+                            active_slot = slot;
+                        }
+                    }
+                }
+            }
+
+            if (next_step)
+            {
+                dispense_state = dispense_activate_solenoid;
+                debugOutput::sendMessage("Start of dispense cycle " + to_string(dispense_cycle_count), MSG_INFO);
+                dispense_cycle_count++;
             }
         };
         break;
@@ -92,12 +156,19 @@ int main(int argc, char *argv[])
         break;
         case (dispense_pump_delay):
         {
-            if (!connected_pcb->getDispenseButtonStateDebounced(active_slot))
+            if (AUTO_DISPENSE_ENABLED)
             {
-                debugOutput::sendMessage("Button depressed before pump start", MSG_INFO);
-                dispense_state = dispense_setup;
             }
-            else if (now_epoch_millis > (pump_start_delay_start_epoch + PUMP_START_DELAY_MILLIS))
+            else
+            {
+                if (!connected_pcb->getDispenseButtonStateDebounced(active_slot))
+                {
+                    debugOutput::sendMessage("Button depressed before pump start", MSG_INFO);
+                    dispense_state = dispense_setup;
+                }
+            }
+            
+            if (now_epoch_millis > (pump_start_delay_start_epoch + PUMP_START_DELAY_MILLIS))
             {
                 debugOutput::sendMessage("Delay done.", MSG_INFO);
                 dispense_state = dispense_start_pumping;
@@ -106,21 +177,50 @@ int main(int argc, char *argv[])
         break;
         case (dispense_start_pumping):
         {
+            debugOutput::sendMessage("Start pump.", MSG_INFO);
             connected_pcb->setPumpDirection(active_slot, true);
-            connected_pcb->setPumpSpeedPercentage(90);
+            // connected_pcb->setPumpSpeedPercentage(90);
             connected_pcb->setPumpEnable(active_slot);
             dispense_state = dispense_pumping;
+            auto_dispense_start_epoch = now_epoch_millis;
         };
         break;
         case (dispense_pumping):
         {
-            if (!connected_pcb->getDispenseButtonStateDebounced(active_slot))
+
+            bool next_state = false;
+            if (AUTO_DISPENSE_ENABLED)
             {
-                dispense_state = dispense_end_backtrack_delay;
+                if (now_epoch_millis > (auto_dispense_start_epoch + AUTO_DISPENSE_CYCLE_LENGTH_MS))
+                {
+                    debugOutput::sendMessage("Auto Dispense. End of dispense cycle.", MSG_INFO);
+                    next_state = true;
+                }
+            }
+            else
+            {
+
+                if (!connected_pcb->getDispenseButtonStateDebounced(active_slot))
+                {
+                    debugOutput::sendMessage("Button release. Stop dispensing.", MSG_INFO);
+                    next_state = true;
+                }
+            }
+
+            if (next_state)
+            {
                 connected_pcb->setPumpsDisableAll();
-                connected_pcb->setPumpDirection(active_slot, false);
-                connected_pcb->setPumpEnable(active_slot);
-                pump_backtrack_start_epoch = now_epoch_millis;
+                if (PUMP_BACKTRACK_TIME_MILLIS != 0)
+                {
+                    connected_pcb->setPumpDirection(active_slot, false);
+                    connected_pcb->setPumpEnable(active_slot);
+                    dispense_state = dispense_end_backtrack_delay;
+                    pump_backtrack_start_epoch = now_epoch_millis;
+                }
+                else
+                {
+                    dispense_state = dispense_end_pumping;
+                }
             }
         };
         break;
@@ -128,32 +228,56 @@ int main(int argc, char *argv[])
         {
             if (now_epoch_millis > (pump_backtrack_start_epoch + PUMP_BACKTRACK_TIME_MILLIS))
             {
-                pump_backtrack_start_epoch = dispense_end_pumping;
+                debugOutput::sendMessage("End of backtrack delay", MSG_INFO);
+                dispense_state = dispense_end_pumping;
             }
         };
         break;
         case (dispense_end_pumping):
         {
+            debugOutput::sendMessage("Disable pumps. Start solenoid delay", MSG_INFO);
             connected_pcb->setPumpsDisableAll();
             connected_pcb->setPumpDirection(active_slot, true);
+
             solenoid_stop_delay_start_epoch = now_epoch_millis;
             dispense_state = dispense_end_solenoid_delay;
         };
         break;
         case (dispense_end_solenoid_delay):
         {
-            if (connected_pcb->getDispenseButtonStateDebounced(active_slot))
+            if (AUTO_DISPENSE_ENABLED)
             {
-                // restart pump at user press.
-                connected_pcb->setPumpEnable(active_slot);
-                dispense_state = dispense_pumping;
+                dispense_state = dispense_auto_end_of_cycle_delay;
+                debugOutput::sendMessage("Wait for auto dispense restart.", MSG_INFO);
+                auto_dispense_stop_epoch = now_epoch_millis;
             }
-            else if (now_epoch_millis > (solenoid_stop_delay_start_epoch + SOLENOID_STOP_DELAY_MILLIS))
+            else
             {
-                // connected_pcb->setSolenoid(active_slot, false);
-                // connected_pcb->flowSensorsDisableAll();
-                // connected_pcb->setSingleDispenseButtonLight(active_slot, false);
-                dispense_state = dispense_setup;
+
+                if (connected_pcb->getDispenseButtonStateDebounced(active_slot))
+                {
+                    debugOutput::sendMessage("Restart dispensing", MSG_INFO);
+                    // restart pump at user press.
+                    connected_pcb->setPumpEnable(active_slot);
+                    dispense_state = dispense_pumping;
+                }
+                else if (now_epoch_millis > (solenoid_stop_delay_start_epoch + SOLENOID_STOP_DELAY_MILLIS))
+                {
+                    debugOutput::sendMessage("End of solenoid delay", MSG_INFO);
+                    // connected_pcb->setSolenoid(active_slot, false);
+                    // connected_pcb->flowSensorsDisableAll();
+                    // connected_pcb->setSingleDispenseButtonLight(active_slot, false);
+                    dispense_state = dispense_setup;
+                }
+            }
+        };
+        break;
+        case (dispense_auto_end_of_cycle_delay):
+        {
+            if (now_epoch_millis > (auto_dispense_stop_epoch + AUTO_DISPENSE_DELAY_BETWEEN_CYCLES_MS))
+            {
+                debugOutput::sendMessage("End of auto dispense cycle", MSG_INFO);
+                dispense_state = dispense_idle;
             }
         };
         break;
@@ -163,24 +287,5 @@ int main(int argc, char *argv[])
             debugOutput::sendMessage("Error Unknown dispense state!", MSG_ERROR);
         };
         }
-        // connected_pcb->refresh();
-        // if (connected_pcb->getDispenseButtonEdgePositive(2))
-        // {
-        //     connected_pcb->setSolenoid(2, true);
-        //     usleep(1000000); // first release the fluidic line before pumping
-        //     connected_pcb->setPumpEnable(2);
-        //     connected_pcb->setSingleDispenseButtonLight(2,connected_pcb->getDispenseButtonStateDebounced(2));
-        //     connected_pcb->flowSensorEnable(2);
-        // }
-        // if (connected_pcb->getDispenseButtonEdgeNegative(2))
-        // {
-        //     connected_pcb->flowSensorsDisableAll();
-        //     connected_pcb->setPumpsDisableAll();
-        //     usleep(1000000);// stop pumping before closing off fluidic line
-        //     connected_pcb->setSingleDispenseButtonLight(2,false);
-        //     connected_pcb->setSolenoid(2, false);
-        // }
     }
-
-    // connected_pcb->initialize_pcb();
 }

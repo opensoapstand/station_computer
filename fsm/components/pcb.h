@@ -94,13 +94,14 @@ public:
     bool getDispenseButtonState(uint8_t slot);
 
     void setSolenoid(uint8_t slot, bool onElseOff);
-
+    uint64_t getFlowSensorTotalPulses(uint8_t slot);
+    uint64_t getFlowSensorPulsesSinceEnabling(uint8_t slot);
+    void resetFlowSensorTotalPulses(uint8_t slot);
     void refreshFlowSensors();
     void flowSensorEnable(uint8_t slot);
     void flowSensorsDisableAll();
 
 private:
-
     bool slot_pca9534_found[MAX_SLOT_COUNT];
 
     bool set_i2c_address(unsigned char address);
@@ -121,10 +122,11 @@ private:
 
     void refreshFlowSensor(uint8_t slot);
 
-    uint64_t flowSensorTickReceivedEpoch [MAX_SLOT_COUNT];
+    uint64_t flowSensorTickReceivedEpoch[MAX_SLOT_COUNT];
     bool flowSensorStateMemory[MAX_SLOT_COUNT];
-    
-    uint64_t flow_sensor_pulses[MAX_SLOT_COUNT];
+
+    uint64_t flow_sensor_total_pulses[MAX_SLOT_COUNT];
+    uint64_t flow_sensor_pulses_since_enable[MAX_SLOT_COUNT];
 
     bool is_initialized;
     int i2c_handle = -1;

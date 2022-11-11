@@ -271,7 +271,6 @@ bool pcb::check_pcb_version(void)
     unsigned char i2c_probe_address;
     bool config_valid = true;
 
-    
     for (uint8_t i = 0; i < MAX_SLOT_COUNT; i++)
     {
         slot_pca9534_found[i] = false;
@@ -492,8 +491,10 @@ void pcb::initialize_pcb()
     }
 }
 
-bool pcb::isSlotAvailable(uint8_t slot){
-    if (slot == 0){
+bool pcb::isSlotAvailable(uint8_t slot)
+{
+    if (slot == 0)
+    {
         debugOutput::sendMessage("Slot numbering starts at 1", MSG_ERROR);
     }
 
@@ -575,17 +576,38 @@ bool pcb::getDispenseButtonState(uint8_t slot)
 
 bool pcb::getDispenseButtonEdge(uint8_t slot)
 {
-    return (positive_edge_detected[slot - 1] || negative_edge_detected[slot - 1]);
+    if (isSlotAvailable(slot))
+    {
+        return (positive_edge_detected[slot - 1] || negative_edge_detected[slot - 1]);
+    }
+    else
+    {
+        return false;
+    }
 } // End of getDispenseButtonState()
 
 bool pcb::getDispenseButtonEdgePositive(uint8_t slot)
 {
-    return (positive_edge_detected[slot - 1]);
+    if (isSlotAvailable(slot))
+    {
+        return (positive_edge_detected[slot - 1]);
+    }
+    else
+    {
+        return false;
+    }
 } // End of getDispenseButtonState()
 
 bool pcb::getDispenseButtonEdgeNegative(uint8_t slot)
 {
-    return (negative_edge_detected[slot - 1]);
+    if (isSlotAvailable(slot))
+    {
+        return (negative_edge_detected[slot - 1]);
+    }
+    else
+    {
+        return false;
+    }
 } // End of getDispenseButtonState()
 
 void pcb::dispenseButtonRefresh()
@@ -596,7 +618,6 @@ void pcb::dispenseButtonRefresh()
 
     for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
-
         using namespace std::chrono;
         uint64_t now_epoch_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
         bool state = getDispenseButtonState(slot_index + 1);
@@ -691,7 +712,8 @@ void pcb::flowSensorsDisableAll()
         for (uint8_t slot = 1; slot <= 4; slot++)
         {
             setPCA9534Output(slot, PCA9534_PIN_OUT_FLOW_SENSOR_ENABLE, false);
-            flow_sensor_pulses[slot-1] = 0;
+            flow_sensor_pulses_since_enable[slot - 1] = 0;
+            
         }
     }
     break;
@@ -700,7 +722,7 @@ void pcb::flowSensorsDisableAll()
         for (uint8_t slot = 1; slot <= 8; slot++)
         {
             setPCA9534Output(slot, PCA9534_PIN_OUT_FLOW_SENSOR_ENABLE, false);
-            flow_sensor_pulses[slot-1] = 0;
+            flow_sensor_pulses_since_enable[slot - 1] = 0;
         }
     };
     break;
@@ -753,6 +775,22 @@ void pcb::refreshFlowSensors()
     }
 }
 
+void pcb::resetFlowSensorTotalPulses(uint8_t slot)
+{
+    uint8_t slot_index = slot - 1;
+    flow_sensor_total_pulses[slot_index] = 0;
+}
+
+uint64_t pcb::getFlowSensorPulsesSinceEnabling(uint8_t slot){
+    uint8_t slot_index = slot - 1;
+    return flow_sensor_pulses_since_enable[slot_index];
+
+}
+uint64_t pcb::getFlowSensorTotalPulses(uint8_t slot)
+{
+    uint8_t slot_index = slot - 1;
+    return flow_sensor_total_pulses[slot_index];
+}
 void pcb::refreshFlowSensor(uint8_t slot)
 {
     if (slot == 0)
@@ -771,8 +809,9 @@ void pcb::refreshFlowSensor(uint8_t slot)
 
         if (flowSensorStateMemory[slot_index] != state)
         {
-            flow_sensor_pulses[slot_index]++;
-            debugOutput::sendMessage("Flow sensor at slot" + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses[slot_index]), MSG_INFO);
+            flow_sensor_total_pulses[slot_index]++;
+            flow_sensor_pulses_since_enable[slot_index]++;
+            debugOutput::sendMessage("Flow sensor at slot" + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses_since_enable[slot_index]), MSG_INFO);
             flowSensorTickReceivedEpoch[slot_index] = now_epoch_millis;
         }
         flowSensorStateMemory[slot_index] = state;
@@ -959,19 +998,17 @@ bool pcb::setPumpEnable(uint8_t slot)
     }
     break;
     }
-
-} 
+}
 
 bool pcb::setPumpDirection(uint8_t slot, bool forwardElseReverse)
 {
     // remember rotating or not.
     setPumpsDisableAll();
-    //usleep(1000000);
+    // usleep(1000000);
     bool reverseElseForward = !forwardElseReverse;
 
     setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_DIR, reverseElseForward);
-} 
-
+}
 
 ///////////////////////////////////////////////////////////////////////////
 // SOLENOID FUNCTIONS
@@ -1002,8 +1039,6 @@ void pcb::setSolenoid(uint8_t slot, bool onElseOff)
     break;
     }
 }
-
-
 
 // switch (pcb_version)
 // {

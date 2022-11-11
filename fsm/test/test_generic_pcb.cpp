@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 
     bool dispenseCycleStarted = false;
     uint64_t dispense_cycle_count = 0;
-    uint64_t total_ticks_count = 0;
+    uint64_t total_flow_pulses_count = 0;
 
     uint64_t pump_start_delay_start_epoch;
     uint64_t solenoid_stop_delay_start_epoch;
@@ -76,13 +76,15 @@ int main(int argc, char *argv[])
 
             if (AUTO_DISPENSE_ENABLED)
             {
-                // only start
-                for (uint8_t slot = 1; slot <= 4; slot++)
-                {
+                // // only start
+                // for (uint8_t slot = 1; slot <= 4; slot++)
+                // {
 
-                    connected_pcb->getDispenseButtonEdgePositive(slot);
-                }
+                //     if (connected_pcb->getDispenseButtonEdgePositive(slot))
+                //     {
                 dispense_state = dispense_init;
+                //     }
+                // }
             }
             else
             {
@@ -139,7 +141,10 @@ int main(int argc, char *argv[])
             if (next_step)
             {
                 dispense_state = dispense_activate_solenoid;
-                debugOutput::sendMessage("Start of dispense cycle " + to_string(dispense_cycle_count), MSG_INFO);
+                total_flow_pulses_count = connected_pcb->getFlowSensorTotalPulses(active_slot);
+               
+                debugOutput::sendMessage("---- Start of dispense cycle " + to_string(dispense_cycle_count) + "---- . Total number of flow sensor pulses since program start: " + to_string(total_flow_pulses_count), MSG_INFO);
+                // connected_pcb->resetFlowSensorTotalPulses(active_slot);
                 dispense_cycle_count++;
             }
         };
@@ -167,7 +172,7 @@ int main(int argc, char *argv[])
                     dispense_state = dispense_setup;
                 }
             }
-            
+
             if (now_epoch_millis > (pump_start_delay_start_epoch + PUMP_START_DELAY_MILLIS))
             {
                 debugOutput::sendMessage("Delay done.", MSG_INFO);
@@ -245,29 +250,37 @@ int main(int argc, char *argv[])
         break;
         case (dispense_end_solenoid_delay):
         {
-            if (AUTO_DISPENSE_ENABLED)
+
+            if (!AUTO_DISPENSE_ENABLED && connected_pcb->getDispenseButtonStateDebounced(active_slot))
             {
-                dispense_state = dispense_auto_end_of_cycle_delay;
-                debugOutput::sendMessage("Wait for auto dispense restart.", MSG_INFO);
-                auto_dispense_stop_epoch = now_epoch_millis;
+                debugOutput::sendMessage("Restart dispensing", MSG_INFO);
+                // restart pump at user press.
+                connected_pcb->setPumpEnable(active_slot);
+                dispense_state = dispense_pumping;
             }
-            else
+
+            if (now_epoch_millis > (solenoid_stop_delay_start_epoch + SOLENOID_STOP_DELAY_MILLIS))
             {
 
-                if (connected_pcb->getDispenseButtonStateDebounced(active_slot))
+                connected_pcb->setSolenoid(active_slot, false);
+                uint64_t cycle_pulses;
+                cycle_pulses = connected_pcb->getFlowSensorPulsesSinceEnabling(active_slot);
+               
+                debugOutput::sendMessage("End of dispensing. This cycle flow sensor pulses count: " + to_string(cycle_pulses), MSG_INFO);
+                connected_pcb->flowSensorsDisableAll();
+                connected_pcb->setPumpDirection(active_slot, true);
+                connected_pcb->setSingleDispenseButtonLight(active_slot, false);
+                if (AUTO_DISPENSE_ENABLED)
                 {
-                    debugOutput::sendMessage("Restart dispensing", MSG_INFO);
-                    // restart pump at user press.
-                    connected_pcb->setPumpEnable(active_slot);
-                    dispense_state = dispense_pumping;
+
+                    dispense_state = dispense_auto_end_of_cycle_delay;
+                    debugOutput::sendMessage("Wait for auto dispense restart.", MSG_INFO);
+                    auto_dispense_stop_epoch = now_epoch_millis;
                 }
-                else if (now_epoch_millis > (solenoid_stop_delay_start_epoch + SOLENOID_STOP_DELAY_MILLIS))
+                else
                 {
                     debugOutput::sendMessage("End of solenoid delay", MSG_INFO);
-                    // connected_pcb->setSolenoid(active_slot, false);
-                    // connected_pcb->flowSensorsDisableAll();
-                    // connected_pcb->setSingleDispenseButtonLight(active_slot, false);
-                    dispense_state = dispense_setup;
+                    dispense_state = dispense_idle;
                 }
             }
         };

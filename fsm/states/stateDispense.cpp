@@ -81,7 +81,7 @@ DF_ERROR stateDispense::onAction()
 
    // periodic delay to slow down refreshing
    // usleep(250000);
-   productDispensers[pos_index].refresh();
+   // productDispensers[pos_index].refresh();
 
    if (m_pMessaging->isCommandStringReadyToBeParsed())
    {

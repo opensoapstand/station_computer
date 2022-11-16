@@ -86,7 +86,7 @@ int main()
     DF_ERROR dfRet = OK;
 
     // __cplusplus  // uncomment and hover over it to check the cpp version used. https://stackoverflow.com/questions/2324658/how-to-determine-the-version-of-the-c-standard-used-by-the-compiler
-    
+
     std::string version = CONTROLLER_VERSION;
     debugOutput::sendMessage("***************************************************************************", MSG_INFO);
     debugOutput::sendMessage("****** SOAPSTAND CONTROLLER v" + version + " ***********************************", MSG_INFO);
@@ -121,12 +121,11 @@ DF_ERROR stateLoop()
 
     while (OK == dfRet) // while no error has occurred
     {
-    
-       for (uint8_t slot_index=0;slot_index<PRODUCT_DISPENSERS_MAX;slot_index++){
-
-        g_productDispensers[slot_index].refresh();
-       }
-    //    productDispensers[pos_index].refresh();
+        // the pcb inputs are not interrupt driven. So, periodical updates are required
+        for (uint8_t slot_index = 0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
+        {
+            g_productDispensers[slot_index].refresh();
+        }
 
         if (fsmState == STATE_DUMMY)
         {
@@ -165,7 +164,6 @@ DF_ERROR stateLoop()
             dfRet = ERROR_END;
         }
 
-        
         usleep(1000); // micros! 1 ms delay to slow down refresh rate
     }
     debugOutput::sendMessage("State machine ENDED. ", MSG_INFO);

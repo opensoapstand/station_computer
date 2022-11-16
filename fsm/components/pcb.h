@@ -55,12 +55,12 @@
 #define DS2485Q_ADDRESS 0b1000000
 #define MCP3424T_ADDRESS 0b1101000
 
-enum pcb_version
+enum PcbVersion
 {
     INVALID,
-    DSED8344_NO_PIC,
-    DSED8344_PIC,
-    EN134_4SLOTS,
+    DSED8344_NO_PIC, // pre v3 board for 4 slots, but 1 button
+    DSED8344_PIC, // modified v3 version for 4 buttons. It has never been deployed without the modification
+    EN134_4SLOTS, 
     EN134_8SLOTS
 };
 
@@ -73,7 +73,8 @@ public:
     void setup();
     void refresh();
     void initialize_pcb(void);
-    bool check_pcb_version(void);
+    bool define_pcb_version(void);
+    PcbVersion get_pcb_version(void);
     bool isSlotAvailable(uint8_t slot);
 
     unsigned char getPumpPWM();
@@ -81,15 +82,16 @@ public:
     bool setPumpSpeedPercentage(uint8_t speed_percentage);
     bool setPumpsDisableAll();
     bool setPumpEnable(uint8_t slot);
+    void pumpRefresh();
     bool setPumpDirection(uint8_t slot, bool forwardElseReverse);
 
+    void setSingleDispenseButtonLight(uint8_t slot, bool onElseOff);
     bool getDispenseButtonStateDebounced(uint8_t slot);
     bool getDispenseButtonEdge(uint8_t slot);
     bool getDispenseButtonEdgePositive(uint8_t slot);
     bool getDispenseButtonEdgeNegative(uint8_t slot);
-    void setSingleDispenseButtonLight(uint8_t slot, bool onElseOff);
-    void virtualButtonPressHack(void);
-    void virtualButtonUnpressHack(void);
+    void virtualButtonPressHack(uint8_t slot);
+    void virtualButtonUnpressHack(uint8_t slot);
     void dispenseButtonRefresh();
     bool getDispenseButtonState(uint8_t slot);
 
@@ -120,6 +122,8 @@ private:
     bool negative_edge_detected[MAX_SLOT_COUNT];
     uint64_t dispenseButtonDebounceStartEpoch[MAX_SLOT_COUNT];
 
+    bool pumpEnabled[MAX_SLOT_COUNT]; // in SED8433 this is not needed(pump ON =  pump enable  with button hardwired on pcb ). in EN-134: this enable high AND button press -> pump ON
+    // bool pumpEnabledMemory[MAX_SLOT_COUNT];
     void refreshFlowSensor(uint8_t slot);
 
     uint64_t flowSensorTickReceivedEpoch[MAX_SLOT_COUNT];
@@ -135,7 +139,7 @@ private:
     bool pic_pwm_found = false;
     bool max31760_pwm_found = false;
 
-    enum pcb_version pcb_version;
+    enum PcbVersion pcb_version;
 };
 
 #endif

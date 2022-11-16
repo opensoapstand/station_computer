@@ -71,12 +71,12 @@ dsed8344::dsed8344(const char *bus)
     strcpy(i2c_bus_name, bus);
 
     setup_i2c_bus();
-    for (uint8_t i = 0; i < SLOT_COUNT; i++)
-    {
-        dispenseButtonStateMemory[i] = false;
-        dispenseButtonStateDebounced[i] = false;
-        dispenseButtonIsDebounced[i] = true;
-    }
+    // for (uint8_t i = 0; i < 4; i++)
+    // {
+        dispenseButtonStateMemory = false;
+        dispenseButtonStateDebounced = false;
+        dispenseButtonIsDebounced = true;
+    // }
 
 } // End of dsed8344() constructor
 

@@ -18,7 +18,7 @@
 
 #include "../dftypes.h"
 #include "../components/gpio.h"
-#include "../components/dsed8344.h"
+#include "../components/pcb.h"
 #include "../components/odysseyx86gpio.h"
 #include "product.h"
 #include <sqlite3.h>
@@ -149,7 +149,7 @@ public:
 
       bool getIsStatusUpdateAllowed();
 
-      static dsed8344 *the_8344;
+      static pcb *the_pcb;
 private:
       bool dispenseButtonValueMemory;
       bool dispenseButtonValueEdgePositive;

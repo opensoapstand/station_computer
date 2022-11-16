@@ -86,7 +86,7 @@ DF_ERROR stateManualPump::onAction()
          debugOutput::sendMessage("Exit pump test", MSG_INFO);
          productDispensers[m_active_pump_index].setPumpsDisableAll();
          productDispensers[m_active_pump_index].setAllDispenseButtonLightsOff();
-         productDispensers[m_active_pump_index].the_8344->virtualButtonUnpressHack();
+         productDispensers[m_active_pump_index].the_pcb->virtualButtonUnpressHack(m_active_pump_index + 1);
 
          m_state_requested = STATE_IDLE;
       }
@@ -159,19 +159,21 @@ DF_ERROR stateManualPump::onAction()
       }
       else if ('8' == m_pMessaging->getAction())
       {
-         
+
          // Pump specific test
          // productDispensers[m_active_pump_index].resetVolumeDispensed();
          // debugOutput::sendMessage("Do pump test", MSG_INFO);
          // pumpTest();
-         
+
          // auto pump test
          productDispensers[m_active_pump_index].resetVolumeDispensed();
 
-         if(m_state_auto_pump == AUTO_PUMP_STATE_IDLE)
+         if (m_state_auto_pump == AUTO_PUMP_STATE_IDLE)
          {
             m_state_auto_pump = AUTO_PUMP_STATE_INIT;
-         }else{
+         }
+         else
+         {
             m_state_auto_pump = AUTO_PUMP_STATE_FINISHED;
          }
       }
@@ -263,10 +265,7 @@ DF_ERROR stateManualPump::onAction()
    {
       triggerOutputData = false;
    }
-   
-   
-   
-   
+
    // debugOutput::sendMessage("******", MSG_INFO);
 
    if (m_state_auto_pump != AUTO_PUMP_STATE_IDLE)
@@ -298,7 +297,6 @@ DF_ERROR stateManualPump::onAction()
       if (productDispensers[m_active_pump_index].getDispenseButtonValue())
       {
          // debugOutput::sendMessage("button: " + to_string(productDispensers[m_active_pump_index].getDispenseButtonValue()), MSG_INFO);
-   
 
          double volume = productDispensers[m_active_pump_index].getVolumeDispensed();
 
@@ -315,8 +313,8 @@ DF_ERROR stateManualPump::onAction()
             debugOutput::sendMessage("Dispensed volume [total]: " + to_string(volume), MSG_INFO);
             debugOutput::sendMessage("Dispense flowRate [V/s]: " + to_string(flowRate), MSG_INFO);
             debugOutput::sendMessage("Dispense flowRate 1s avg [V/s]: " + to_string(avg_1s.value), MSG_INFO);
-         
-         // usleep(500000);
+
+            // usleep(500000);
 
             if (productDispensers[m_active_pump_index].isPumpEnabled())
             {
@@ -330,7 +328,7 @@ DF_ERROR stateManualPump::onAction()
 
                debugOutput::sendMessage("Millis since epoch: " + to_string(millis_since_epoch), MSG_INFO);
 
-            // usleep(500000);
+               // usleep(500000);
             }
          }
          // debugOutput::sendMessage("d", MSG_INFO);
@@ -432,22 +430,22 @@ DF_ERROR stateManualPump::pumpCyclicTestCycleStart()
 {
    pump_test_cycle_count++;
 
-      productDispensers[m_active_pump_index].the_8344->virtualButtonPressHack();
+   productDispensers[m_active_pump_index].the_pcb->virtualButtonPressHack(m_active_pump_index + 1);
 
-      // productDispensers[m_active_pump_index].setPumpDirectionForward();
+   // productDispensers[m_active_pump_index].setPumpDirectionForward();
 
-      int speed = productDispensers[m_active_pump_index].getProduct()->getPWMFromDB();
+   int speed = productDispensers[m_active_pump_index].getProduct()->getPWMFromDB();
 
-      debugOutput::sendMessage("Pump speed for test: " + to_string(speed), MSG_INFO);
+   debugOutput::sendMessage("Pump speed for test: " + to_string(speed), MSG_INFO);
 
-      productDispensers[m_active_pump_index].pumpSlowStart(true);
+   productDispensers[m_active_pump_index].pumpSlowStart(true);
 
-      isCyclicTestingPumpOn = true;
+   isCyclicTestingPumpOn = true;
 }
 
 DF_ERROR stateManualPump::pumpCyclicTestCycleFinish()
 {
-   productDispensers[m_active_pump_index].the_8344->virtualButtonUnpressHack();
+   productDispensers[m_active_pump_index].the_pcb->virtualButtonUnpressHack(m_active_pump_index + 1);
    productDispensers[m_active_pump_index].pumpSlowStopBlocking();
    isCyclicTestingPumpOn = false;
 }
@@ -541,7 +539,7 @@ DF_ERROR stateManualPump::autoPumpSetQuantityTest()
    }
    else if (m_state_auto_pump == AUTO_PUMP_STATE_INIT)
    {
-      productDispensers[m_active_pump_index].the_8344->virtualButtonPressHack();
+      productDispensers[m_active_pump_index].the_pcb->virtualButtonPressHack(m_active_pump_index + 1);
       int speed = productDispensers[m_active_pump_index].getProduct()->getPWMFromDB();
       debugOutput::sendMessage("Pump auto start: " + to_string(speed), MSG_INFO);
       productDispensers[m_active_pump_index].pumpSlowStart(true);
@@ -559,9 +557,9 @@ DF_ERROR stateManualPump::autoPumpSetQuantityTest()
    }
    else if (m_state_auto_pump == AUTO_PUMP_STATE_FINISHED)
    {
-         debugOutput::sendMessage("Pump auto finished.", MSG_INFO);
+      debugOutput::sendMessage("Pump auto finished.", MSG_INFO);
       productDispensers[m_active_pump_index].pumpSlowStopBlocking();
-     productDispensers[m_active_pump_index].the_8344->virtualButtonUnpressHack();
+      productDispensers[m_active_pump_index].the_pcb->virtualButtonUnpressHack(m_active_pump_index + 1);
       m_state_auto_pump = AUTO_PUMP_STATE_IDLE;
    }
 }

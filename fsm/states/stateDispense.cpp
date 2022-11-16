@@ -60,7 +60,7 @@ DF_ERROR stateDispense::onEntry()
 
    if (m_pMessaging->getAction() == ACTION_AUTOFILL)
    {
-      productDispensers[pos_index].the_8344->virtualButtonPressHack();
+      productDispensers[pos_index].the_pcb->virtualButtonPressHack(this->slot);
       productDispensers[pos_index].pumpSlowStart(true);
    }
 
@@ -204,7 +204,7 @@ DF_ERROR stateDispense::onExit()
 {
    productDispensers[pos_index].setPumpsDisableAll();
 
-   productDispensers[pos_index].the_8344->virtualButtonUnpressHack();
+   productDispensers[pos_index].the_pcb->virtualButtonUnpressHack(this->slot);
    DF_ERROR e_ret = OK;
    return e_ret;
 }

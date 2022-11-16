@@ -69,6 +69,7 @@ private:
     bool triggerOutputData;
 
     int m_active_pump_index;
+    
     uint64_t cyclicTestPeriodStartEpochMillis;
     uint64_t logSampleStartEpochMillis;
 

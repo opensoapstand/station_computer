@@ -121,6 +121,13 @@ DF_ERROR stateLoop()
 
     while (OK == dfRet) // while no error has occurred
     {
+    
+       for (uint8_t slot_index=0;slot_index<PRODUCT_DISPENSERS_MAX;slot_index++){
+
+        g_productDispensers[slot_index].refresh();
+       }
+    //    productDispensers[pos_index].refresh();
+
         if (fsmState == STATE_DUMMY)
         {
             debugOutput::sendMessage("ERROR STATE " + fsmState, MSG_STATE);

@@ -56,18 +56,21 @@
 #define MCP3424T_ADDRESS 0b1101000
 
 #define PUMP_START_DELAY_MILLIS 500
-// #define PUMP_BACKTRACK_TIME_MILLIS 0
+#define PUMP_STOP_BEFORE_BACKTRACK_TIME_MILLIS 300
+#define PUMP_BACKTRACK_TIME_MILLIS 1000
 #define SOLENOID_STOP_DELAY_MILLIS 500
+
+#define SLOT_ENABLED_BLINK_BUTTON_ON_MILLIS 200
+#define SLOT_ENABLED_BLINK_BUTTON_OFF_MILLIS 500
 
 enum PcbVersion
 {
     INVALID,
     DSED8344_NO_PIC, // pre v3 board for 4 slots, but 1 button
-    DSED8344_PIC, // modified v3 version for 4 buttons. It has never been deployed without the modification
-    EN134_4SLOTS, 
+    DSED8344_PIC,    // modified v3 version for 4 buttons. It has never been deployed without the modification
+    EN134_4SLOTS,
     EN134_8SLOTS
 };
-
 
 enum PumpSolenoidInteractionState
 {
@@ -75,7 +78,9 @@ enum PumpSolenoidInteractionState
     state_slot_enabled,
     state_button_pressed,
     state_pumping,
-    state_button_released,
+    state_button_released_pump_stopped,
+    state_pump_stopped_before_backtrack,
+    state_pump_backtracking,
     state_stop_solenoid
     // dispense_setup,
     // dispense_init,
@@ -89,8 +94,6 @@ enum PumpSolenoidInteractionState
     // dispense_end_solenoid_delay,
     // dispense_auto_end_of_cycle_delay
 };
-
-
 
 class pcb
 {
@@ -132,6 +135,7 @@ public:
     void flowSensorsDisableAll();
 
 private:
+    void EN134_PumpCycle_refresh(uint8_t slots);
     bool slot_pca9534_found[MAX_SLOT_COUNT];
 
     bool set_i2c_address(unsigned char address);
@@ -170,9 +174,13 @@ private:
     bool max31760_pwm_found = false;
 
     uint64_t pump_start_delay_start_epoch[MAX_SLOT_COUNT];
+    uint64_t pump_stop_before_backtrack_delay_start_epoch[MAX_SLOT_COUNT];
+    uint64_t pump_backtrack_start_epoch[MAX_SLOT_COUNT];
     uint64_t solenoid_stop_delay_start_epoch[MAX_SLOT_COUNT];
     enum PcbVersion pcb_version;
-    PumpSolenoidInteractionState pumpCycle_state [MAX_SLOT_COUNT];
+    PumpSolenoidInteractionState pumpCycle_state[MAX_SLOT_COUNT];
+    uint64_t button_light_blink_period_start_millis[MAX_SLOT_COUNT];
+    bool button_light_blink_on_else_off[MAX_SLOT_COUNT];
 };
 
 #endif

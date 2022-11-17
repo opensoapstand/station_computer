@@ -55,6 +55,10 @@
 #define DS2485Q_ADDRESS 0b1000000
 #define MCP3424T_ADDRESS 0b1101000
 
+#define PUMP_START_DELAY_MILLIS 500
+// #define PUMP_BACKTRACK_TIME_MILLIS 0
+#define SOLENOID_STOP_DELAY_MILLIS 500
+
 enum PcbVersion
 {
     INVALID,
@@ -63,6 +67,30 @@ enum PcbVersion
     EN134_4SLOTS, 
     EN134_8SLOTS
 };
+
+
+enum PumpSolenoidInteractionState
+{
+    state_idle,
+    state_slot_enabled,
+    state_button_pressed,
+    state_pumping,
+    state_button_released,
+    state_stop_solenoid
+    // dispense_setup,
+    // dispense_init,
+    // dispense_idle,
+    // dispense_activate_solenoid,
+    // dispense_pump_delay,
+    // dispense_start_pumping,
+    // dispense_pumping,
+    // dispense_end_pumping,
+    // dispense_end_backtrack_delay,
+    // dispense_end_solenoid_delay,
+    // dispense_auto_end_of_cycle_delay
+};
+
+
 
 class pcb
 {
@@ -122,8 +150,8 @@ private:
     bool negative_edge_detected[MAX_SLOT_COUNT];
     uint64_t dispenseButtonDebounceStartEpoch[MAX_SLOT_COUNT];
 
-    bool pumpEnabled[MAX_SLOT_COUNT]; // in SED8433 this is not needed(pump ON =  pump enable  with button hardwired on pcb ). in EN-134: this enable high AND button press -> pump ON
-    // bool pumpEnabledMemory[MAX_SLOT_COUNT];
+    bool slotEnabled[MAX_SLOT_COUNT]; // in SED8433 this is not needed(pump ON =  pump enable  with button hardwired on pcb ). in EN-134: this enable high AND button press -> pump ON
+    // bool slotEnabledMemory[MAX_SLOT_COUNT];
     void refreshFlowSensor(uint8_t slot);
 
     uint64_t flowSensorTickReceivedEpoch[MAX_SLOT_COUNT];
@@ -132,6 +160,8 @@ private:
     uint64_t flow_sensor_total_pulses[MAX_SLOT_COUNT];
     uint64_t flow_sensor_pulses_since_enable[MAX_SLOT_COUNT];
 
+    uint64_t button_[MAX_SLOT_COUNT];
+
     bool is_initialized;
     int i2c_handle = -1;
     char *i2c_bus_name;
@@ -139,7 +169,10 @@ private:
     bool pic_pwm_found = false;
     bool max31760_pwm_found = false;
 
+    uint64_t pump_start_delay_start_epoch[MAX_SLOT_COUNT];
+    uint64_t solenoid_stop_delay_start_epoch[MAX_SLOT_COUNT];
     enum PcbVersion pcb_version;
+    PumpSolenoidInteractionState pumpCycle_state [MAX_SLOT_COUNT];
 };
 
 #endif

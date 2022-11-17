@@ -73,7 +73,7 @@ public:
       DF_ERROR initDispenseButton4Light();
 
       unsigned short getPumpSpeed();
-      bool isPumpEnabled();
+      bool isSlotEnabled();
       DF_ERROR setPumpDirectionForward();
       DF_ERROR setPumpDirectionReverse();
       DF_ERROR setPumpsDisableAll();
@@ -146,7 +146,9 @@ public:
       bool getPumpSlowStartStopEnabled();
       void sendToUiIfAllowed(string message);
       void logUpdateIfAllowed(string message);
-
+      
+      void setSolenoid(bool openElseClosed);
+      
       bool getIsStatusUpdateAllowed();
 
       static pcb *the_pcb;
@@ -209,7 +211,7 @@ private:
       // bool m_isDispenseDone; // XXX: Remove later.
       // bool m_isStill;
 
-      bool m_isPumpEnabled;
+      bool m_isSlotEnabled;
       bool *m_pIsDispensing;
 
       bool m_isDispenseNew;

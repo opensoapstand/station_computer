@@ -621,6 +621,10 @@ uint64_t dispenser::getButtonPressedCurrentPressMillis()
     return dispense_button_current_press_millis;
 }
 
+void dispenser::setSolenoid(bool openElseClosed){
+    the_pcb->setSolenoid(this->slot, openElseClosed);
+}
+
 // Reverse pump: Turn forward pin LOW - Reverse pin HIGH
 DF_ERROR dispenser::setPumpDirectionReverse()
 {
@@ -640,7 +644,7 @@ DF_ERROR dispenser::setPumpsDisableAll()
 {
     debugOutput::sendMessage("Pump disable: all.", MSG_INFO);
     the_pcb->setPumpsDisableAll();
-    m_isPumpEnabled = false;
+    m_isSlotEnabled = false;
     isPumpSoftStarting = false;
     pwm_actual_set_speed = 0;
 }
@@ -698,9 +702,9 @@ void dispenser::reversePumpForSetTimeMillis(int millis)
     }
 }
 
-bool dispenser::isPumpEnabled()
+bool dispenser::isSlotEnabled()
 {
-    return m_isPumpEnabled;
+    return m_isSlotEnabled;
 }
 
 DF_ERROR dispenser::pumpSlowStartHandler()
@@ -816,7 +820,7 @@ DF_ERROR dispenser::setPumpEnable()
     // still needs dispense button to actually get the pump to start
     debugOutput::sendMessage("Pump enable position: " + to_string(this->slot), MSG_INFO);
     the_pcb->setPumpEnable(this->slot); // pump 1 to 4
-    m_isPumpEnabled = true;
+    m_isSlotEnabled = true;
 }
 
 DF_ERROR dispenser::setPumpPWM(uint8_t value, bool enableLog)

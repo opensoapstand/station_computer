@@ -100,11 +100,13 @@ DF_ERROR stateManualPump::onAction()
          {
             productDispensers[m_active_pump_index].setMultiDispenseButtonLight(m_active_pump_index + 1, true);
          }
+         // productDispensers[m_active_pump_index].setSolenoid(true); // should be done at button press. 
       }
 
       else if ('2' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Disable dispenser pump " + to_string(m_active_pump_index + 1), MSG_INFO);
+         // productDispensers[m_active_pump_index].setSolenoid(false); // should be done at button press. 
          productDispensers[m_active_pump_index].setPumpsDisableAll();
          productDispensers[m_active_pump_index].stopDispense();
 
@@ -316,7 +318,7 @@ DF_ERROR stateManualPump::onAction()
 
             // usleep(500000);
 
-            if (productDispensers[m_active_pump_index].isPumpEnabled())
+            if (productDispensers[m_active_pump_index].isSlotEnabled())
             {
                unsigned short speed = productDispensers[m_active_pump_index].getPumpSpeed();
                string value = std::to_string(speed);
@@ -397,7 +399,7 @@ DF_ERROR stateManualPump::customVolumeDispenseTest()
 
 DF_ERROR stateManualPump::pumpFlowTest()
 {
-   // if (productDispensers[m_active_pump_index].getDispenseButtonValue() & productDispensers[m_active_pump_index].isPumpEnabled())
+   // if (productDispensers[m_active_pump_index].getDispenseButtonValue() & productDispensers[m_active_pump_index].isSlotEnabled())
    // {
 
    // instant flow rate

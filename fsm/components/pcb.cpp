@@ -250,6 +250,8 @@ void pcb::setup()
             dispenseButtonStateMemory[i] = false;
             dispenseButtonStateDebounced[i] = false;
             dispenseButtonIsDebounced[i] = true;
+
+            pumpCycle_state[i] = state_idle;
         }
         is_initialized = true;
     }
@@ -930,35 +932,111 @@ void pcb::pumpRefresh()
     }
     case (EN134_4SLOTS):
     {
-        for (uint8_t slot = 1; slot <= 4; slot++)
+
+        for (uint8_t slot_index = 0; slot_index < 4; slot_index++)
         {
-            if (getDispenseButtonEdgePositive(slot) && pumpEnabled[slot - 1])
+            uint8_t slot = slot_index + 1;
+            using namespace std::chrono;
+            uint64_t now_epoch_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+            switch (pumpCycle_state[slot_index])
             {
-                debugOutput::sendMessage("Pump ON", MSG_ERROR);
-                setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, true);
+
+            case state_idle:
+            {
+                if (slotEnabled[slot_index])
+                {
+                    pumpCycle_state[slot_index] = state_slot_enabled;
+                }
             }
-            if (getDispenseButtonEdgeNegative(slot) && pumpEnabled[slot - 1])
+            break;
+            case state_slot_enabled:
             {
-                debugOutput::sendMessage("Pump OFF", MSG_ERROR);
-                setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, false);
+                if (!slotEnabled[slot_index])
+                {
+                    pumpCycle_state[slot_index] = state_idle;
+                }
+
+                if (getDispenseButtonEdgePositive(slot))
+                {
+                    pumpCycle_state[slot_index] = state_button_pressed;
+                    pump_start_delay_start_epoch[slot_index] = now_epoch_millis;
+                    setSolenoid(slot, true);
+                }
+            }
+            break;
+            case state_button_pressed:
+            {
+                // todo: wait state. handle releasing button/ losing slot enable
+                if (now_epoch_millis > (pump_start_delay_start_epoch[slot_index] + PUMP_START_DELAY_MILLIS))
+                {
+                    pumpCycle_state[slot_index] = state_pumping;
+                    setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, true);
+                }
+            }
+            break;
+            case state_pumping:
+            {
+                if (getDispenseButtonEdgeNegative(slot))
+                {
+                    setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, false);
+                    pumpCycle_state[slot_index] = state_button_released;
+                    solenoid_stop_delay_start_epoch[slot_index] = now_epoch_millis;
+                }
+            }
+            break;
+            case state_button_released:
+            {
+                // todo: wait state. handle releasing button/ losing slot enable
+                if (now_epoch_millis > (solenoid_stop_delay_start_epoch[slot_index] + SOLENOID_STOP_DELAY_MILLIS))
+                {
+                    pumpCycle_state[slot_index] = state_slot_enabled;
+                    setSolenoid(slot, false);
+                }
+            }
+            default:
+            {
+                break;
+            }
             }
         }
+
+        // for (uint8_t slot = 1; slot <= 4; slot++)
+        // {
+        //     if (getDispenseButtonEdgePositive(slot) && slotEnabled[slot - 1])
+        //     {
+        //         debugOutput::sendMessage("Pump ON", MSG_INFO);
+        //         setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, true);
+        //         // setSolenoid(slot, true);
+        //     }
+        //     if (getDispenseButtonEdgeNegative(slot) && slotEnabled[slot - 1])
+        //     {
+        //         debugOutput::sendMessage("Pump OFF", MSG_INFO);
+        //         setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, false);
+        //         // setSolenoid(slot, false);
+        //     }
+        // }
+
+        // pumpCycle_state
     }
     break;
 
     case (EN134_8SLOTS):
     {
-        for (uint8_t slot = 1; slot <= 8; slot++)
-        {
-            if (getDispenseButtonEdgePositive(slot) && pumpEnabled[slot - 1])
-            {
-                setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, true);
-            }
-            if (getDispenseButtonEdgeNegative(slot) && pumpEnabled[slot - 1])
-            {
-                setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, false);
-            }
-        }
+        // for (uint8_t slot = 1; slot <= 8; slot++)
+        // {
+        //     if (getDispenseButtonEdgePositive(slot) && slotEnabled[slot - 1])
+        //     {
+        //         debugOutput::sendMessage("Pump ON", MSG_INFO);
+        //         setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, true);
+        //         // setSolenoid(slot, true);
+        //     }
+        //     if (getDispenseButtonEdgeNegative(slot) && slotEnabled[slot - 1])
+        //     {
+        //         debugOutput::sendMessage("Pump OFF", MSG_INFO);
+        //         setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, false);
+        //         // setSolenoid(slot, false);
+        //     }
+        // }
     };
     break;
     default:
@@ -1076,7 +1154,7 @@ bool pcb::setPumpsDisableAll()
         for (uint8_t slot = 1; slot <= 4; slot++)
         {
             setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, false);
-            pumpEnabled[slot - 1] = false;
+            slotEnabled[slot - 1] = false;
         }
     };
     break;
@@ -1086,7 +1164,7 @@ bool pcb::setPumpsDisableAll()
         for (uint8_t slot = 1; slot <= 8; slot++)
         {
             setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, false);
-            pumpEnabled[slot - 1] = false;
+            slotEnabled[slot - 1] = false;
         }
     };
     break;
@@ -1141,7 +1219,7 @@ bool pcb::setPumpEnable(uint8_t slot)
     case (EN134_4SLOTS):
     case (EN134_8SLOTS):
     {
-        pumpEnabled[slot_index] = true;
+        slotEnabled[slot_index] = true;
     };
     break;
     default:
@@ -1168,7 +1246,6 @@ bool pcb::setPumpDirection(uint8_t slot, bool forwardElseReverse)
 
 void pcb::setSolenoid(uint8_t slot, bool onElseOff)
 {
-
     switch (pcb_version)
     {
 

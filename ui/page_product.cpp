@@ -1075,7 +1075,13 @@ void pageProduct::on_page_payment_Button_clicked()
 
             // paymentPage->showFullScreen();
             // this->hide();
+            if(selectedProductOrder->getSelectedPriceCorrected() < 0.1){
+                p_page_idle->pageTransition(this, p_page_dispense);
+            }
+            else{
             p_page_idle->pageTransition(this, paymentPage);
+
+            }
         }
         curl_easy_cleanup(curl);
         readBuffer = "";

@@ -568,12 +568,12 @@ void pcb::setSingleDispenseButtonLight(uint8_t slot, bool onElseOff)
     {
         if (onElseOff)
         {
-            debugOutput::sendMessage("Set button light on", MSG_INFO);
+            // debugOutput::sendMessage("Set button light on", MSG_INFO);
             setPCA9534Output(slot, PCA9534_PIN_OUT_BUTTON_LED_LOW_IS_ON, false);
         }
         else
         {
-            debugOutput::sendMessage("Set button light off", MSG_INFO);
+            // debugOutput::sendMessage("Set button light off", MSG_INFO);
             setPCA9534Output(slot, PCA9534_PIN_OUT_BUTTON_LED_LOW_IS_ON, true);
         }
     };
@@ -953,6 +953,7 @@ void pcb::pumpRefresh()
 
 void pcb::EN134_PumpCycle_refresh(uint8_t slots)
 {
+    // low level state machine, to prevent damage to the solenoid. i.e. do not run pump with closed solenoid.
 
     for (uint8_t slot_index = 0; slot_index < 4; slot_index++)
     {
@@ -962,6 +963,14 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
         switch (pumpCycle_state[slot_index])
         {
 
+        case state_init:
+        {
+            setSolenoid(slot, false);
+            setSingleDispenseButtonLight(slot, false);
+            setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, false);
+            pumpCycle_state[slot_index] = state_idle;
+        }
+        break;
         case state_idle:
         {
             if (slotEnabled[slot_index])
@@ -1000,18 +1009,23 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
                 }
             }
 
-            if (getDispenseButtonEdgePositive(slot))
+            if (getDispenseButtonStateDebounced(slot))
             {
                 pumpCycle_state[slot_index] = state_button_pressed;
                 pump_start_delay_start_epoch[slot_index] = now_epoch_millis;
                 setSolenoid(slot, true);
-                setSingleDispenseButtonLight(slot,true);
+                setSingleDispenseButtonLight(slot, true);
             }
         }
         break;
         case state_button_pressed:
         {
-            // todo: wait state. handle releasing button/ losing slot enable
+            // wait state. handle releasing button/ losing slot enable
+            if (!getDispenseButtonStateDebounced(slot) || !slotEnabled[slot_index])
+            {
+                pumpCycle_state[slot_index] = state_init;
+            }
+
             if (now_epoch_millis > (pump_start_delay_start_epoch[slot_index] + PUMP_START_DELAY_MILLIS))
             {
                 pumpCycle_state[slot_index] = state_pumping;
@@ -1021,17 +1035,26 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
         break;
         case state_pumping:
         {
-            if (getDispenseButtonEdgeNegative(slot))
+            if (!getDispenseButtonStateDebounced(slot) || !slotEnabled[slot_index])
             {
-                setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, false); // stop pump
-                pumpCycle_state[slot_index] = state_button_released_pump_stopped;
-                pump_stop_before_backtrack_delay_start_epoch[slot_index] = now_epoch_millis;
+
+                if (PUMP_BACKTRACK_TIME_MILLIS > 0)
+                {
+                    // only chose this path if there is any backtracking at all.
+
+                    setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, false); // stop pump
+                    pumpCycle_state[slot_index] = state_button_released_pump_stopped;
+                    pump_stop_before_backtrack_delay_start_epoch[slot_index] = now_epoch_millis;
+                }
+                else
+                {
+                    pumpCycle_state[slot_index] = state_stop_pump;
+                }
             }
         }
         break;
         case state_button_released_pump_stopped:
         {
-            // todo: wait state. handle releasing button/ losing slot enable
             if (now_epoch_millis > (pump_stop_before_backtrack_delay_start_epoch[slot_index] + PUMP_STOP_BEFORE_BACKTRACK_TIME_MILLIS))
             {
                 pumpCycle_state[slot_index] = state_pump_backtracking;
@@ -1043,24 +1066,38 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
         break;
         case state_pump_backtracking:
         {
-            // todo: wait state. handle releasing button/ losing slot enable
+
             if (now_epoch_millis > (pump_backtrack_start_epoch[slot_index] + PUMP_BACKTRACK_TIME_MILLIS))
             {
-                pumpCycle_state[slot_index] = state_stop_solenoid;
-                setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, false);
+
                 setPumpDirection(slot, true);
+
+                pumpCycle_state[slot_index] = state_stop_pump;
             }
         }
         break;
 
-        case state_stop_solenoid:
+        case state_stop_pump:
         {
-            // todo: wait state. handle releasing button/ losing slot enable
+            pumpCycle_state[slot_index] = state_wait_solenoid_delay;
+            setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, false);
+            solenoid_stop_delay_start_epoch[slot_index] = now_epoch_millis;
+        }
+        break;
+
+        case state_wait_solenoid_delay:
+        {
+            if (getDispenseButtonStateDebounced(slot))
+            {
+                pumpCycle_state[slot_index] = state_pumping;
+                setPCA9534Output(slot, PCA9534_PIN_OUT_PUMP_ENABLE, true);
+            }
+
             if (now_epoch_millis > (solenoid_stop_delay_start_epoch[slot_index] + SOLENOID_STOP_DELAY_MILLIS))
             {
                 pumpCycle_state[slot_index] = state_slot_enabled;
                 setSolenoid(slot, false);
-                setSingleDispenseButtonLight(slot,false);
+                setSingleDispenseButtonLight(slot, false);
             }
         }
         default:
@@ -1132,7 +1169,7 @@ bool pcb::setPumpPWM(uint8_t pwm_val)
         // return SendByte(PIC_ADDRESS, 0x00, (unsigned char)f_value); // PWM value
         f_value = (float)pwm_val;
         f_value = floor(f_value / 2.55);
-        unsigned char speed_percentage = (unsigned char)f_value; // invert speed. pwm is inverted.
+        unsigned char speed_percentage = 100 - (unsigned char)f_value; // invert speed. pwm is inverted.
         setPumpSpeedPercentage((uint8_t)speed_percentage);
     };
     break;

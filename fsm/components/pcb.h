@@ -56,8 +56,8 @@
 #define MCP3424T_ADDRESS 0b1101000
 
 #define PUMP_START_DELAY_MILLIS 500
-#define PUMP_STOP_BEFORE_BACKTRACK_TIME_MILLIS 300
-#define PUMP_BACKTRACK_TIME_MILLIS 1000
+#define PUMP_STOP_BEFORE_BACKTRACK_TIME_MILLIS 0
+#define PUMP_BACKTRACK_TIME_MILLIS 0
 #define SOLENOID_STOP_DELAY_MILLIS 500
 
 #define SLOT_ENABLED_BLINK_BUTTON_ON_MILLIS 200
@@ -74,6 +74,7 @@ enum PcbVersion
 
 enum PumpSolenoidInteractionState
 {
+    state_init,
     state_idle,
     state_slot_enabled,
     state_button_pressed,
@@ -81,7 +82,8 @@ enum PumpSolenoidInteractionState
     state_button_released_pump_stopped,
     state_pump_stopped_before_backtrack,
     state_pump_backtracking,
-    state_stop_solenoid
+    state_stop_pump,
+    state_wait_solenoid_delay
     // dispense_setup,
     // dispense_init,
     // dispense_idle,

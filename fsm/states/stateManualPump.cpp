@@ -100,7 +100,7 @@ DF_ERROR stateManualPump::onAction()
          {
             productDispensers[m_active_pump_index].setMultiDispenseButtonLight(m_active_pump_index + 1, true);
          }
-         // productDispensers[m_active_pump_index].setSolenoid(true); // should be done at button press. 
+          
       }
 
       else if ('2' == m_pMessaging->getAction())

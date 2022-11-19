@@ -270,7 +270,7 @@ void pcb::setup()
     initialize_pcb();
 }
 
-PcbVersion pcb::get_pcb_version(void)
+pcb::PcbVersion pcb::get_pcb_version(void)
 {
     return pcb_version;
 }

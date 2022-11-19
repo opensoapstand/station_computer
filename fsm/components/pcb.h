@@ -63,43 +63,32 @@
 #define SLOT_ENABLED_BLINK_BUTTON_ON_MILLIS 200
 #define SLOT_ENABLED_BLINK_BUTTON_OFF_MILLIS 500
 
-enum PcbVersion
-{
-    INVALID,
-    DSED8344_NO_PIC, // pre v3 board for 4 slots, but 1 button
-    DSED8344_PIC,    // modified v3 version for 4 buttons. It has never been deployed without the modification
-    EN134_4SLOTS,
-    EN134_8SLOTS
-};
-
-enum PumpSolenoidInteractionState
-{
-    state_init,
-    state_idle,
-    state_slot_enabled,
-    state_button_pressed,
-    state_pumping,
-    state_button_released_pump_stopped,
-    state_pump_stopped_before_backtrack,
-    state_pump_backtracking,
-    state_stop_pump,
-    state_wait_solenoid_delay
-    // dispense_setup,
-    // dispense_init,
-    // dispense_idle,
-    // dispense_activate_solenoid,
-    // dispense_pump_delay,
-    // dispense_start_pumping,
-    // dispense_pumping,
-    // dispense_end_pumping,
-    // dispense_end_backtrack_delay,
-    // dispense_end_solenoid_delay,
-    // dispense_auto_end_of_cycle_delay
-};
-
 class pcb
 {
 public:
+    enum PumpSolenoidInteractionState
+    {
+        state_init,
+        state_idle,
+        state_slot_enabled,
+        state_button_pressed,
+        state_pumping,
+        state_button_released_pump_stopped,
+        state_pump_stopped_before_backtrack,
+        state_pump_backtracking,
+        state_stop_pump,
+        state_wait_solenoid_delay
+    };
+
+    enum PcbVersion
+    {
+        INVALID,
+        DSED8344_NO_PIC, // pre v3 board for 4 slots, but 1 button
+        DSED8344_PIC,    // modified v3 version for 4 buttons. It has never been deployed without the modification
+        EN134_4SLOTS,
+        EN134_8SLOTS
+    };
+
     pcb(void);
     pcb(const char *);
     ~pcb();
@@ -107,7 +96,7 @@ public:
     void refresh();
     void initialize_pcb(void);
     bool define_pcb_version(void);
-    PcbVersion get_pcb_version(void);
+    PcbVersion get_pcb_version();
     bool isSlotAvailable(uint8_t slot);
 
     unsigned char getPumpPWM();
@@ -135,6 +124,7 @@ public:
     void refreshFlowSensors();
     void flowSensorEnable(uint8_t slot);
     void flowSensorsDisableAll();
+    // PcbVersion enum PcbVersion;
 
 private:
     void EN134_PumpCycle_refresh(uint8_t slots);

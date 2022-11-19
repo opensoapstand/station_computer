@@ -89,7 +89,6 @@ void dispenser::refresh()
 
     dispenseButtonTimingUpdate();
     pumpSlowStartHandler();
-
 }
 /*
 dispenser::dispenser(gpio *ButtonReference)
@@ -169,16 +168,16 @@ dispenser::~dispenser()
 //     return temp;
 // }
 /* ------Getters, Setters and Utilities------ */
- 
-string dispenser::getFinalPLU(char size, double price){
 
+string dispenser::getFinalPLU(char size, double price)
+{
 
     string base_plu = getProduct()->getBasePLU(size);
     char chars_plu_dynamic_formatted[MAX_BUF];
-    
+
     std::string paymentMethod = getProduct()->getPaymentMethod();
 
-     if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13")
+    if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13")
     {
         if (base_plu.size() != 8)
         {
@@ -202,31 +201,31 @@ string dispenser::getFinalPLU(char size, double price){
 
         snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%6.2f", price);
     }
-    else if (paymentMethod == "plu"){
+    else if (paymentMethod == "plu")
+    {
         return base_plu;
     }
 
+    string plu_dynamic_price = (chars_plu_dynamic_formatted);
+    string plu_dynamic_formatted = base_plu + plu_dynamic_price;
 
-        string plu_dynamic_price = (chars_plu_dynamic_formatted);
-        string plu_dynamic_formatted = base_plu + plu_dynamic_price;
-        
-        // 3.14 --> " 3.14" --> " 314" --> "0314"
-        std::string toReplace(".");
-        size_t pos = plu_dynamic_formatted.find(toReplace);
-        if (pos != -1)
-        {
-            plu_dynamic_formatted.replace(pos, toReplace.length(), "");
-        }
+    // 3.14 --> " 3.14" --> " 314" --> "0314"
+    std::string toReplace(".");
+    size_t pos = plu_dynamic_formatted.find(toReplace);
+    if (pos != -1)
+    {
+        plu_dynamic_formatted.replace(pos, toReplace.length(), "");
+    }
 
-        std::string toReplace2(" ");
+    std::string toReplace2(" ");
+    pos = plu_dynamic_formatted.find(toReplace2);
+    while (pos != -1)
+    {
+        plu_dynamic_formatted.replace(pos, toReplace2.length(), "0");
         pos = plu_dynamic_formatted.find(toReplace2);
-        while (pos != -1)
-        {
-            plu_dynamic_formatted.replace(pos, toReplace2.length(), "0");
-            pos = plu_dynamic_formatted.find(toReplace2);
-        }
+    }
 
-        return plu_dynamic_formatted;
+    return plu_dynamic_formatted;
 }
 
 void dispenser::setAllDispenseButtonLightsOff()
@@ -241,16 +240,14 @@ void dispenser::setAllDispenseButtonLightsOff()
 void dispenser::setMultiDispenseButtonLight(int slot, bool enableElseDisable)
 {
     // output has to be set low for light to be on.
-    // m_pDispenseButton4[0]->test();
     debugOutput::sendMessage("slot light: " + to_string(slot) + "on else off: " + to_string(enableElseDisable), MSG_INFO);
-    // pcb::pcb_version tmp;
-    // tmp = pcb::DSED8344_PIC;
-    // pcb::pcb_version::DSED8344_PIC;
-    // if(( the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC) && this->slot == 4){
-    if(( the_pcb->get_pcb_version() == 2 ) && this->slot == 4){
-         m_pDispenseButton4[0]->writePin(!enableElseDisable);
-    }else{
-        this->the_pcb->setSingleDispenseButtonLight(slot,enableElseDisable);
+    if ((the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC) && this->slot == 4)
+    {
+        m_pDispenseButton4[0]->writePin(!enableElseDisable);
+    }
+    else
+    {
+        this->the_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
     }
 
     // switch (slot)
@@ -337,7 +334,7 @@ DF_ERROR dispenser::loadGeneralProperties()
 
     if (getMultiDispenseButtonEnabled())
     {
-    //    setAllDispenseButtonLightsOff();
+        //    setAllDispenseButtonLightsOff();
     }
     else
     {
@@ -358,16 +355,21 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 
     resetVolumeDispensed();
 
-    if (getMultiDispenseButtonEnabled())
+    // if (the_pcb->get_pcb_version() == 2){
+    if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC)
     {
-        // setAllDispenseButtonLightsOff();
-        setMultiDispenseButtonLight(getSlot(), true);
+        if (getMultiDispenseButtonEnabled())
+        {
+            setMultiDispenseButtonLight(getSlot(), true);
+        }
     }
-
-    // m_nVolumeDispensedPreviously = 0;
-    // m_nVolumeDispensedSinceLastPoll = 0;
-    // m_nVolumePerTick = getVolPerTick();
-    // m_PWM = getPWM();
+    else if (the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS)
+    {
+        setPumpEnable();
+    }
+    else
+    {
+    }
 
     // Set Start Time
     time(&rawtime);
@@ -384,22 +386,12 @@ DF_ERROR dispenser::stopDispense()
         setAllDispenseButtonLightsOff();
     }
 
+    the_pcb->flowSensorsDisableAll();
+
     // Set End time
     time(&rawtime);
     timeinfo = localtime(&rawtime);
     strftime(m_nEndTime, 50, "%F %T", timeinfo);
-
-    //     DF_ERROR e_ret = ERROR_BAD_PARAMS;
-    //     // the_8344->setPumpsDisableAll();
-    //     // debugOutput::sendMessage("All Pumps disabled", MSG_INFO);
-    //     setPumpsDisableAll();
-
-    //     // m_isDispenseDone = true;
-
-    //     // m_nVolumeDispensedSinceLastPoll = 0;
-    //     // m_nVolumeDispensedPreviously = 0;
-
-    //     return e_ret = OK;
 }
 string dispenser::getDispenseStartTime()
 {
@@ -442,7 +434,8 @@ void dispenser::subtractFromVolumeDispensed(double volume_to_distract)
     getProduct()->setVolumeDispensed(volume - volume_to_distract);
 }
 
-double dispenser::getVolumeRemaining(){
+double dispenser::getVolumeRemaining()
+{
     return getProduct()->getVolumeRemaining();
 }
 
@@ -515,7 +508,7 @@ DF_ERROR dispenser::setPump(int mcpAddress, int pin, int position)
 DF_ERROR dispenser::setPumpDirectionForward()
 {
     debugOutput::sendMessage("Pump direction: Forward.", MSG_INFO);
-    the_pcb->setPumpDirection( this->slot,true);
+    the_pcb->setPumpDirection(this->slot, true);
 }
 
 //  dispenseButtonValue = productDispensers[m_active_pump_index].getDispenseButtonValue();
@@ -530,7 +523,6 @@ DF_ERROR dispenser::setPumpDirectionForward()
 //       debugOutput::sendMessage("Start Dispensing", MSG_INFO);
 
 //       // productDispensers[m_active_pump_index].setPumpPWM(125);
-
 
 bool dispenser::getIsStatusUpdateAllowed()
 {
@@ -581,8 +573,8 @@ void dispenser::dispenseButtonTimingreset()
     dispense_button_time_at_last_check_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
 
-
-void dispenser::addDispenseButtonPress(){
+void dispenser::addDispenseButtonPress()
+{
     dispense_button_press_count_during_dispensing++;
 }
 
@@ -592,7 +584,7 @@ void dispenser::dispenseButtonTimingUpdate()
 
     using namespace std::chrono;
     uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    
+
     if (getDispenseButtonValue())
     {
         uint64_t interval = now - dispense_button_time_at_last_check_epoch;
@@ -605,10 +597,10 @@ void dispenser::dispenseButtonTimingUpdate()
         // do nothing;
     }
     dispense_button_time_at_last_check_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    
 }
 
-int dispenser::getDispenseButtonPressesDuringDispensing(){
+int dispenser::getDispenseButtonPressesDuringDispensing()
+{
     return dispense_button_press_count_during_dispensing;
 }
 
@@ -621,7 +613,8 @@ uint64_t dispenser::getButtonPressedCurrentPressMillis()
     return dispense_button_current_press_millis;
 }
 
-void dispenser::setSolenoid(bool openElseClosed){
+void dispenser::setSolenoid(bool openElseClosed)
+{
     the_pcb->setSolenoid(this->slot, openElseClosed);
 }
 
@@ -749,10 +742,10 @@ DF_ERROR dispenser::pumpSlowStart(bool forwardElseReverse)
 
         return e_ret;
     }
-    
+
     // // set set speed to zero, as there is no real speed feedback, we can't guarantee a claimed initial set speed to be true
     // pumpSlowStopBlocking();
-    
+
     using namespace std::chrono;
     slowStartMostRecentIncreaseEpoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
@@ -846,6 +839,9 @@ DF_ERROR dispenser::startDispense()
     using namespace std::chrono;
     dispense_start_timestamp_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     dispenseButtonTimingreset();
+    
+    this->the_pcb->flowSensorEnable(slot);
+    this->the_pcb->resetFlowSensorTotalPulses(slot);
 
     previous_dispense_state = FLOW_STATE_UNAVAILABLE;
 
@@ -908,7 +904,7 @@ void dispenser::loadPumpReversalEnabledFromDb()
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT enable_pump_reversal FROM machine";
-    
+
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
 
@@ -917,7 +913,6 @@ void dispenser::loadPumpReversalEnabledFromDb()
     sqlite3_finalize(stmt);
     sqlite3_close(db);
     m_isPumpReversalEnabled = (val != 0);
-
 
     debugOutput::sendMessage("Pump reversal enabled? : " + to_string(m_isPumpReversalEnabled), MSG_INFO);
 }
@@ -935,7 +930,7 @@ void dispenser::loadPumpRampingEnabledFromDb()
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT enable_pump_ramping FROM machine";
-    
+
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
 
@@ -944,7 +939,6 @@ void dispenser::loadPumpRampingEnabledFromDb()
     sqlite3_finalize(stmt);
     sqlite3_close(db);
     m_isPumpSlowStartStopEnabled = (val != 0);
-
 
     debugOutput::sendMessage("Pump ramping enabled? : " + to_string(m_isPumpSlowStartStopEnabled) + "(val: " + to_string(val) + ")", MSG_INFO);
 }
@@ -962,7 +956,7 @@ void dispenser::loadEmptyContainerDetectionEnabledFromDb()
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT has_empty_detection FROM machine";
-    
+
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     sqlite3_step(stmt);
 
@@ -990,8 +984,9 @@ double dispenser::getVolumeDeltaAndReset()
     return deltaVolume;
 }
 
-void dispenser::initFlowRateCalculation(){
-     flowRateBufferIndex = 0;
+void dispenser::initFlowRateCalculation()
+{
+    flowRateBufferIndex = 0;
     for (uint16_t i = 0; i < RUNNING_AVERAGE_WINDOW_LENGTH; i++)
     {
         flowRateBuffer[i].time_millis = MILLIS_INIT_DUMMY;
@@ -1072,7 +1067,7 @@ Time_val dispenser::getAveragedFlowRate(uint64_t window_length_millis)
     }
 
     uint64_t delta_t = most_recent_millis - earliest_millis;
-    // WARNING: check here if buffer length is enough to accomodate for requested length. 
+    // WARNING: check here if buffer length is enough to accomodate for requested length.
     // debugOutput::sendMessage("Avg flow rate delta t: " + to_string(delta_t), MSG_INFO);
     // debugOutput::sendMessage("Avg flow rate most recent t: " + to_string(most_recent_millis), MSG_INFO);
     // debugOutput::sendMessage("Avg flow rate earliest t: " + to_string(earliest_millis), MSG_INFO);

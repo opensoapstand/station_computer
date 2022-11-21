@@ -191,24 +191,24 @@ void page_dispenser::dispensing_end_admin()
     }
     else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && volumeDispensed != 0)
     {
-        qDebug() << "dispense end: tap payment. Some volume dispensed.";
-        QMessageBox msgBox;
-        msgBox.setText("Complete!");
-        msgBox.setInformativeText("Would you like your receipt emailed to you?");
-        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-        int ret = msgBox.exec();
+        // qDebug() << "dispense end: tap payment. Some volume dispensed.";
+        // QMessageBox msgBox;
+        // msgBox.setText("Complete!");
+        // msgBox.setInformativeText("Would you like your receipt emailed to you?");
+        // msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        // int ret = msgBox.exec();
 
-        switch (ret)
-        {
-        case QMessageBox::Yes:
-            //            qDebug() << "This person wants their receipt emailed";
-            break;
-        case QMessageBox::No:
-            //            qDebug() << "This person doesn't want a receipt";
-            break;
-        default:
-            break;
-        }
+        // switch (ret)
+        // {
+        // case QMessageBox::Yes:
+        //     //            qDebug() << "This person wants their receipt emailed";
+        //     break;
+        // case QMessageBox::No:
+        //     //            qDebug() << "This person doesn't want a receipt";
+        //     break;
+        // default:
+        //     break;
+        // }
     }
     stopDispenseTimer();
     // thanksPage->showFullScreen();

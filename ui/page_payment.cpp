@@ -355,6 +355,7 @@ void page_payment::showEvent(QShowEvent *event)
     QString payment_method = getPaymentMethod();
     if (payment_method == "tap")
     {
+        createOrderIdAndSendToBackend();
         qDebug() << "Prepare tap order";
         pktResponded = com.readForAck();
         readPacket.packetReadFromUX(pktResponded);

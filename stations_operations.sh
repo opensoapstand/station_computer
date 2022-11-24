@@ -163,7 +163,7 @@ scp_transfer () {
     if [ -z "$2" ]
     then
         
-        cmd0=(ssh -p $destination_port df-admin@localhost mkdir $source_id) 
+        cmd0=(ssh -p $destination_port df-admin@localhost mkdir -p $source_id) 
         full_destination_path="/home/df-admin/$source_id/"
     else
         
@@ -197,6 +197,73 @@ scp_transfer () {
     echo "AWS to station done"
 }
 
+remote_mkdir(){
+
+    echo "Choose station:"
+    read -p "Enter port (e.g. 43023)" destination_port
+    read -p "Enter file/folder name will append to /home/df-admin/" path
+    cmd0=(ssh -p $destination_port df-admin@localhost mkdir -p $path) 
+    printf -v cmd0_str '%q ' "${cmd0[@]}"
+    echo "$cmd0_str"
+    "${cmd0[@]}"
+}
+
+scp_transfer_manual_ports () {
+    # arg $1 : source folder. "" is home folder, "production/" is production folder
+    # arg $2 : destination folder. "" is home folder, "production/" is production folder
+    # ask for init station
+    # ask for dest station
+    # ask for file/folder (you'll have to know no autofill available)
+    
+    echo "Choose source station:"
+    read -p "Enter source port" source_port
+    source_id=$source_port
+    
+    echo "Choose destination station:"
+    read -p "Enter destination port" destination_port
+    destination_id=$destination_port
+
+    read -p "Enter file/folder name will append to /home/df-admin/production/" path
+
+    full_source_path="/home/df-admin/$1$path"
+
+    # check for empty (which is home folder, in that case, we create a folder with the id of the source)
+    if [ -z "$2" ]
+    then
+        
+        cmd0=(ssh -p $destination_port df-admin@localhost mkdir $source_id) 
+        full_destination_path="/home/df-admin/$source_id/"
+    else
+        
+        cmd0=""
+        full_destination_path="/home/df-admin/$2"
+    fi
+
+    aws_station_path="/home/ubuntu/Stations/$source_id"
+    aws_file_path="/home/ubuntu/Stations/$source_id/$path"
+    cmd1=( scp -r -P $source_port df-admin@localhost:$full_source_path $aws_station_path )
+    cmd2=( scp -r -P $destination_port $aws_file_path df-admin@localhost:$full_destination_path )
+    printf -v cmd0_str '%q ' "${cmd0[@]}"
+    printf -v cmd1_str '%q ' "${cmd1[@]}"
+    printf -v cmd2_str '%q ' "${cmd2[@]}"
+    
+    # confirm_execute "$cmd_str"
+    echo "Lined up commands: "
+    echo "$cmd0_str"
+    echo "$cmd1_str"
+    echo "$cmd2_str"
+    
+    continu_or_exit
+    if [[ -f "$aws_file_path" ]]; then
+        mv -r "$aws_file_path" "$aws_file_path_bkp"
+        echo "Backup made in AWS ($aws_file_path)"
+    fi
+    "${cmd0[@]}"
+    "${cmd1[@]}"
+    echo "station to AWS done"
+    "${cmd2[@]}"
+    echo "AWS to station done"
+}
 
 scp_transfer_db () {
     # arguments:
@@ -288,7 +355,7 @@ scp_transfer_db () {
 
 echo 'At AWS: Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 PS3='Choose option(digit + enter):'
-options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB")
+options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Manualport/production/x to Manualport/home/x" "Station mkdir")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -337,6 +404,12 @@ do
             ;;
         "Ash to Station DB")
             scp_transfer_db "from_dev" "SS-DEV-ASH" "43081"
+            ;;
+        "Manualport/production/x to Manualport/home/x")
+            scp_transfer_manual_ports "production/" ""
+            ;;
+        "Station mkdir")
+            remote_mkdir 
             ;;
         "Quit") 
             break

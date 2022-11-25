@@ -18,7 +18,11 @@
 #include <sqlite3.h>
 #include <stdint.h>
 
+<<<<<<< HEAD
 #define CONTROLLER_VERSION "1.4.0+"
+=======
+#define CONTROLLER_VERSION "1.3.0+"
+>>>>>>> 93937d840b087a4b8ad9c7a1ab6f57bbce0e679d
 
 
 

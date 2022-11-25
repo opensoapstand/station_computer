@@ -730,14 +730,26 @@ bool page_payment::sendToUX410()
 bool page_payment::tap_init()
 {
     paymentConnected = com.page_init();
-
+    int paymentConnectionFailed = 0;
     while (!paymentConnected)
     {
+        
         paymentConnected = com.page_init();
         sleep(1);
+        paymentConnectionFailed+=1;
+        if(paymentConnectionFailed==15){
+            DbManager db3(DB_PATH);
+            db3.updateTapToQR();
+            QString payment_method = db3.getPaymentMethod(1);
+            qDebug() << "Payment method" << payment_method;
+            db3.closeDB();
+            qDebug() << "Change the db to QR";
+            exit(1);
+            // system("sudo systemctl restart ui_soapstand");
+        }
     }
 
-    // sleep(35);
+    sleep(35);
 
     cout << "_----_-----__------_-----";
    

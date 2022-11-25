@@ -408,9 +408,9 @@ DF_ERROR messageMediator::parseCommandString()
       double price = std::stod(sCommand.substr(1, sCommand.size()));
       m_requestedDiscountPrice = price;
    }
-   else if(sCommand.length() > 5){
+   else if(sCommand.find("Promo") != string::npos){
       std::string promoCode = sCommand.substr(6, sCommand.size());
-      debugOutput::sendMessage(promoCode, MSG_INFO);
+      // debugOutput::sendMessage(promoCode, MSG_INFO);
       m_promoCode = promoCode;
    }
    else

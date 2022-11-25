@@ -229,6 +229,8 @@ void page_dispenser::startDispensing()
     targetVolume = selectedProductOrder->getSelectedVolume();
 
     fsmSendStartDispensing();
+    fsmSendPrice();
+    fsmSendPromo();
 }
 
 void page_dispenser::fsmSendStartDispensing()
@@ -241,10 +243,7 @@ void page_dispenser::fsmSendStartDispensing()
     p_page_idle->dfUtility->send_command_to_FSM(command);
 
     this->isDispensing = true;
-    sleep(1);
-    fsmSendPrice();
-    sleep(1);
-    fsmSendPromo();
+    
 
 }
 

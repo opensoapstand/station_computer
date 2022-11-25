@@ -113,6 +113,8 @@ bool DbManager::addPageClick(const QString &page)
     return true;
 }
 
+
+
 bool DbManager::isDatabaseLocked(const QSqlDatabase &db)
 {
     // https://stackoverflow.com/questions/57744538/determine-whether-sqlite-database-is-locked
@@ -154,6 +156,15 @@ QString DbManager::getProductDrinkfillSerial(int slot)
     }
 
     return val;
+}
+
+void DbManager::updateTapToQR(){
+    
+    QSqlQuery qry;
+    {
+        qry.prepare("UPDATE products SET payment=\"qr\";");
+        qry.exec();
+    }
 }
 
 void DbManager::getProductProperties(int slot, QString *product_id, bool *isSizeEnabled)

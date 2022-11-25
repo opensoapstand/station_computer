@@ -144,6 +144,7 @@ void page_maintenance_general::on_printer_check_status_clicked()
     p_page_idle->dfUtility->send_command_to_FSM("p");
     usleep(50000);
     p_page_idle->dfUtility->send_command_to_FSM("a");
+    usleep(50000);
     // usleep(50000);
     // p_page_idle->dfUtility->send_command_to_FSM("q"); // go back to fsm idle state is done in controller
 }

@@ -1548,6 +1548,24 @@ bool DbManager::updatePluLarge(int slot, QString new_plu)
     }
 }
 
+void DbManager::printerStatus(bool* isOnline, bool* hasPaper ){
+    QSqlQuery qry;
+    // bool is_online = false;
+    // bool has_paper = false;
+
+    {
+        qry.prepare("SELECT receipt_printer_is_online,receipt_printer_has_paper FROM machine");
+        qry.exec();
+
+        while (qry.next())
+        {
+            *isOnline = (qry.value(0).toInt() == 1);
+            *hasPaper = (qry.value(1).toInt() == 1);
+        }
+
+    }
+}
+
 bool DbManager::hasReceiptPrinter()
 {
     QSqlQuery qry;

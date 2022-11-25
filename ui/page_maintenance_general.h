@@ -47,6 +47,8 @@ public:
     void refreshLabels();
     void printerStatusFeedback(bool isOnline, bool hasPaper);
 
+    void on_printer_check_status_clicked();
+    void on_printer_test_button_clicked();
 
 private slots:
 
@@ -58,8 +60,6 @@ private slots:
 
     void on_shutdown_Button_clicked();
 
-    void on_printer_test_button_clicked();
-    void on_printer_check_status_clicked();
 
     void on_enable_pump_ramping_checkBox_clicked(bool checked);
     void on_enable_empty_container_checkBox_clicked(bool checked);

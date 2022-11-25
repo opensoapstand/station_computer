@@ -22,6 +22,7 @@
 #include "dfuicommthread.h"
 #include "dbmanager.h"
 #include "page_maintenance.h"
+#include "page_maintenance_general.h"
 
 // #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 // #define DB_PATH_CLICKS "/release/db/sqlite/clicks.db"
@@ -29,6 +30,7 @@
 
 class page_maintenance;
 class page_select_product;
+class page_maintenance_general;
 
 namespace Ui {
 class page_idle;
@@ -40,7 +42,8 @@ class page_idle : public QWidget
 
 public:
     explicit page_idle(QWidget *parent = nullptr);
-    void setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance);
+    void setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral);
+    
     ~page_idle();
     void showEvent(QShowEvent *event);
     void addPictureToLabel(QLabel* label, QString picturePath);
@@ -78,6 +81,7 @@ private:
     Ui::page_idle *ui;
     page_select_product* p_pageSelectProduct;
     page_maintenance* p_page_maintenance;
+    page_maintenance_general* p_page_maintenance_general;
     bool p1, p2, p3, p4;
 
 };

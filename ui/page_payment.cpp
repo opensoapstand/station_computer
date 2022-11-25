@@ -456,7 +456,7 @@ void page_payment::createOrderIdAndSendToBackend()
 
     _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
     _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
-    qrPeriodicalCheckTimer->start(1000);
+    // qrPeriodicalCheckTimer->start(1000);
 }
 
 void page_payment::isQrProcessedCheckOnline()

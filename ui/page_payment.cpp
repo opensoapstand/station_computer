@@ -441,14 +441,20 @@ void page_payment::createOrderIdAndSendToBackend()
     curl_easy_setopt(curl1, CURLOPT_WRITEDATA, &readBuffer);
     curl_easy_setopt(curl1, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
 
-    res1 = curl_easy_perform(curl1);
-    if (res1 != CURLE_OK)
+    int createOrderInDbAttempts = 0;
+    QString feedback;
+    do{
+        res1 = curl_easy_perform(curl1);
+        feedback= QString::fromUtf8(readBuffer.c_str());
+        createOrderInDbAttempts +=1;
+    }
+    while(feedback != true && createOrderInDbAttempts <= 3);    
+    if (feedback != true)
     {
         qDebug() << "ERROR: Problem at create order in the cloud request. error code: " + QString::number(res1);
     }
     else
     {
-        QString feedback = QString::fromUtf8(readBuffer.c_str());
         qDebug() << "create order in the cloud request sent to soapstandportal (" + curl_order_parameters_string + "). Server feedback: " << feedback;
     }
     curl_easy_cleanup(curl1);
@@ -737,7 +743,7 @@ bool page_payment::tap_init()
         paymentConnected = com.page_init();
         sleep(1);
         paymentConnectionFailed+=1;
-        if(paymentConnectionFailed==15){
+        if(paymentConnectionFailed==50){
             DbManager db3(DB_PATH);
             db3.updateTapToQR();
             QString payment_method = db3.getPaymentMethod(1);
@@ -745,11 +751,10 @@ bool page_payment::tap_init()
             db3.closeDB();
             qDebug() << "Change the db to QR";
             exit(1);
-            // system("sudo systemctl restart ui_soapstand");
         }
     }
 
-    sleep(35);
+    // sleep(35);
 
     cout << "_----_-----__------_-----";
    

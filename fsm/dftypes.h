@@ -18,12 +18,7 @@
 #include <sqlite3.h>
 #include <stdint.h>
 
-<<<<<<< HEAD
 #define CONTROLLER_VERSION "1.4.0+"
-=======
-#define CONTROLLER_VERSION "1.3.0+"
->>>>>>> 93937d840b087a4b8ad9c7a1ab6f57bbce0e679d
-
 
 
 #define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv"  // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file

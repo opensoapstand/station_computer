@@ -269,6 +269,7 @@ void stateManualPrinter::printTransaction(int transactionNumber)
 DF_ERROR stateManualPrinter::sendPrinterStatus()
 {
 
+   // every couple of commands, the printer spits out a bit of paper (about every 16 commands... ) No clue why.
    bool isOnline = printerr.testComms();
    bool hasPaper = printerr.hasPaper();
    string statusString;
@@ -287,9 +288,6 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
    {
       statusString = "printerstatus00";
    }
-
-   m_pMessaging->sendMessage(statusString);
-
 
 
    char *zErrMsg = 0;
@@ -318,6 +316,8 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
    }
 
    sqlite3_close(db);
+
+   // m_pMessaging->sendMessage(statusString); // commented out. Let's communicate by setting the db fields only
 }
 
 DF_ERROR stateManualPrinter::displayPrinterStatus()

@@ -121,7 +121,7 @@ void page_maintenance_general::on_printer_test_button_clicked()
 
 void page_maintenance_general::printerStatusFeedback(bool isOnline, bool hasPaper)
 {
-    qDebug() << "Feeback received . printer";
+    qDebug() << "Maintenance general. Receipt printer Feedback from FSM.";
 
     QString printerStatus = "Printer is offline";
     if (isOnline)
@@ -138,15 +138,44 @@ void page_maintenance_general::printerStatusFeedback(bool isOnline, bool hasPape
     ui->printer_hasPaper_label->setText(printerHasPaper);
 }
 
-void page_maintenance_general::on_printer_check_status_clicked()
-{
+void page_maintenance_general::send_check_printer_status_command(){
     qDebug() << "Send test printer to controller";
     p_page_idle->dfUtility->send_command_to_FSM("p");
     usleep(50000);
     p_page_idle->dfUtility->send_command_to_FSM("a");
     usleep(50000);
+}
+
+void page_maintenance_general::on_printer_check_status_clicked()
+{
+    qDebug() << "Maintenance general. yoooo.";
+   send_check_printer_status_command();
     // usleep(50000);
     // p_page_idle->dfUtility->send_command_to_FSM("q"); // go back to fsm idle state is done in controller
+
+    DbManager db(DB_PATH);
+    bool isPrinterOnline = false;
+    bool hasPrinterPaper = false;
+    bool hasReceiptPrinter = db.hasReceiptPrinter();
+    db.printerStatus(&isPrinterOnline, &hasPrinterPaper);
+    db.closeDB();
+
+    qDebug() << "Maintenance general. Receipt printer Feedback from FSM.";
+
+    QString printerStatus = "Printer is offline";
+    if (isPrinterOnline)
+    {
+        printerStatus = "Printer is online";
+    }
+
+    QString printerHasPaper = "No paper detected.";
+    if (hasPrinterPaper)
+    {
+        printerHasPaper = "Paper ok";
+    }
+    ui->printer_isOnline_label->setText(printerStatus);
+    ui->printer_hasPaper_label->setText(printerHasPaper);
+
 }
 
 

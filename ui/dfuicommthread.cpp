@@ -48,39 +48,39 @@ QByteArray DfUiCommThread::readyRead()
 
     qDebug() << "Message from controller: " << Data;
 
-    if (Data == "Transaction End")
-    {
-    }
-    else if (Data == "No flow abort")
-    {
-    }
-    else if (Data == "Reset Timer")
-    {
-    }
+    // if (Data == "Transaction End")
+    // {
+    // }
+    // else if (Data == "No flow abort")
+    // {
+    // }
+    // else if (Data == "Reset Timer")
+    // {
+    // }
 
-    else if (Data == "Target Hit")
-    {
-    }
+    // else if (Data == "Target Hit")
+    // {
+    // }
 
-    else if (Data == "Init Ready")
-    {
-    }
+    // else if (Data == "Init Ready")
+    // {
+    // }
 
-    else if (Data == "MM")
-    {
-    }
-    else if (Data == "Dispense Button Pos Edge")
-    {
-    }
-    else if (strtol(Data, &pEnd, 10) || (Data[0] == '0' && Data[1] == '.'))
-    {
-        // double volume_dispensed = stod(Data.constData(), &sz);
-        // emit updateVolumeSignal(volume_dispensed);
-    }
-    else
-    {
-        qDebug() << "No matching command found." << Data;
-    }
+    // else if (Data == "MM")
+    // {
+    // }
+    // else if (Data == "Dispense Button Pos Edge")
+    // {
+    // }
+    // else if (strtol(Data, &pEnd, 10) || (Data[0] == '0' && Data[1] == '.'))
+    // {
+    //     // double volume_dispensed = stod(Data.constData(), &sz);
+    //     // emit updateVolumeSignal(volume_dispensed);
+    // }
+    // else
+    // {
+    //     qDebug() << "No matching command found." << Data;
+    // }
 
     // socket->write(Data); // THIS CAUSES THE UI TO CRASH AT TIMES.... for now, we delete it. todo. send ack to controller.
 
@@ -121,27 +121,25 @@ QByteArray DfUiCommThread::readyRead()
         double volume_dispensed = stod(Data.constData(), &sz);
         emit updateVolumeSignal(volume_dispensed);
     }
+
+    // QByteArray data;
+    // QString DataAsString = QString(data);
+
+    // if (Data.contains("printerstatus") != std::string::npos)
+    else if (Data.contains("printerstatus"))
+
+    {
+        // std::cout << "found!" << '\n';
+        bool isOnline = Data.at(13) == '1';
+        bool hasPaper = Data.at(14) == '1';
+        emit printerStatusSignal(isOnline, hasPaper);
+    }
     else
     {
-
-        // QByteArray data;
-        // QString DataAsString = QString(data);
-
-        // if (Data.contains("printerstatus") != std::string::npos)
-        if (Data.contains("printerstatus"))
-
-        {
-            // std::cout << "found!" << '\n';
-            bool isOnline = Data.at(13) == '1';
-            bool hasPaper = Data.at(14) == '1';
-            emit printerStatusSignal(isOnline, hasPaper);
-        }
-        else
-        {
-            qDebug() << "No matching command found." << Data;
-        }
+        qDebug() << "Non actionable message from fsm received: " << Data;
     }
 
+    qDebug() << "detetetej meee";
     return Data;
 }
 

@@ -107,15 +107,25 @@ void page_idle::showEvent(QShowEvent *event)
 
     addCompanyLogoToLabel(ui->logo_label);
 
+    checkReceiptPrinterStatus();
+
+    addPictureToLabel(ui->drinkfill_logo_label, DRINKFILL_LOGO_VERTICAL_PATH);
+    this->raise();
+    // m_transitioning = false;
+}
+
+void page_idle::checkReceiptPrinterStatus(){
+    this->p_page_maintenance_general->send_check_printer_status_command();
+    // this->p_page_maintenance_general->on_printer_check_status_clicked();
+    usleep(50000);
+    
     DbManager db(DB_PATH);
     bool isPrinterOnline = false;
     bool hasPrinterPaper = false;
     bool hasReceiptPrinter = db.hasReceiptPrinter();
     db.printerStatus(&isPrinterOnline, &hasPrinterPaper);
-
     db.closeDB();
     
-
     if (hasReceiptPrinter)
     {
         ui->printer_status_label->raise();
@@ -131,14 +141,7 @@ void page_idle::showEvent(QShowEvent *event)
     }else{
         ui->printer_status_label->hide();
     }
-    
-
-
-    addPictureToLabel(ui->drinkfill_logo_label, DRINKFILL_LOGO_VERTICAL_PATH);
-    this->raise();
-    // m_transitioning = false;
 }
-
 /*
  * Screen click shows product page as full screen and hides page_idle screen
  */
@@ -175,7 +178,7 @@ void page_idle::showEvent(QShowEvent *event)
 void page_idle::on_toSelectProductPageButton_clicked()
 {
     qDebug() << "Proceed to next page button clicked. ";
-    this->p_page_maintenance_general->on_printer_check_status_clicked();
+    
     this->pageTransition(this, p_pageSelectProduct);
     
 

@@ -49,6 +49,7 @@ public:
 
     void on_printer_check_status_clicked();
     void on_printer_test_button_clicked();
+    void send_check_printer_status_command();
 
 private slots:
 

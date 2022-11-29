@@ -77,6 +77,7 @@ private slots:
     void on_testButton_clicked();
 
 private:
+    void checkReceiptPrinterStatus();
     QString m_templatePath;
     Ui::page_idle *ui;
     page_select_product* p_pageSelectProduct;

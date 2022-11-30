@@ -233,10 +233,14 @@ uint8_t pcb::get_PCA9534_address_from_slot(uint8_t slot)
 
 void pcb::refresh()
 {
+
     usleep(100);
-    dispenseButtonRefresh();
-    refreshFlowSensors();
-    pumpRefresh();
+    if (get_pcb_version() != INVALID){
+
+        dispenseButtonRefresh();
+        refreshFlowSensors();
+        pumpRefresh();
+    }
 }
 void pcb::setup()
 {
@@ -251,7 +255,7 @@ void pcb::setup()
             dispenseButtonStateDebounced[i] = false;
             dispenseButtonIsDebounced[i] = true;
 
-            pumpCycle_state[i] = state_idle;
+            pumpCycle_state[i] = state_init;
             button_light_blink_on_else_off[i] = true;
         }
         is_initialized = true;
@@ -494,7 +498,7 @@ void pcb::initialize_pcb()
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!", MSG_ERROR);
+        debugOutput::sendMessage("Error PCB NOT VALID!!1", MSG_ERROR);
     }
     break;
     }
@@ -580,7 +584,7 @@ void pcb::setSingleDispenseButtonLight(uint8_t slot, bool onElseOff)
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!", MSG_ERROR);
+        debugOutput::sendMessage("Error PCB NOT VALID!!2", MSG_ERROR);
     }
     break;
     }
@@ -616,7 +620,7 @@ void pcb::virtualButtonPressHack(uint8_t slot)
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!", MSG_ERROR);
+        debugOutput::sendMessage("Error PCB NOT VALID!!3", MSG_ERROR);
     }
     break;
     }
@@ -644,7 +648,7 @@ void pcb::virtualButtonUnpressHack(uint8_t slot)
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!", MSG_ERROR);
+        debugOutput::sendMessage("Error PCB NOT VALID!!4", MSG_ERROR);
     }
     break;
     }
@@ -701,7 +705,7 @@ bool pcb::getDispenseButtonEdgeNegative(uint8_t slot)
 
 void pcb::dispenseButtonRefresh()
 {
-    // as this is not in a separate thread, we'll need to call it some times...
+    // as this is not in a separate thread, we'll need to call it periodically...
     // up edge: state wait for debouncing.
     // down edge: instant react. Because the PWM is hardware disconnected right away. We don't want jitter on that (aka disable right away when negative edge is detected).
 
@@ -785,7 +789,7 @@ void pcb::flowSensorEnable(uint8_t slot)
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!", MSG_ERROR);
+        debugOutput::sendMessage("Error PCB NOT VALID!!5", MSG_ERROR);
     }
     break;
     }
@@ -826,7 +830,7 @@ void pcb::flowSensorsDisableAll()
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!", MSG_ERROR);
+        debugOutput::sendMessage("Error PCB NOT VALID!!6", MSG_ERROR);
     }
     break;
     }
@@ -867,7 +871,7 @@ void pcb::refreshFlowSensors()
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!", MSG_ERROR);
+        debugOutput::sendMessage("Error PCB NOT VALID!!7", MSG_ERROR);
     }
     break;
     }
@@ -945,7 +949,7 @@ void pcb::pumpRefresh()
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!", MSG_ERROR);
+        debugOutput::sendMessage("Error PCB NOT VALID!!8", MSG_ERROR);
     }
     break;
     }
@@ -960,6 +964,7 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
         uint8_t slot = slot_index + 1;
         using namespace std::chrono;
         uint64_t now_epoch_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+        
         switch (pumpCycle_state[slot_index])
         {
 
@@ -1015,6 +1020,7 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
                 pump_start_delay_start_epoch[slot_index] = now_epoch_millis;
                 setSolenoid(slot, true);
                 setSingleDispenseButtonLight(slot, true);
+                
             }
         }
         break;
@@ -1135,7 +1141,7 @@ unsigned char pcb::getPumpPWM()
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!", MSG_ERROR);
+        debugOutput::sendMessage("Error PCB NOT VALID!!9", MSG_ERROR);
         return 0;
     }
     break;
@@ -1175,7 +1181,7 @@ bool pcb::setPumpPWM(uint8_t pwm_val)
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!", MSG_ERROR);
+        debugOutput::sendMessage("Error PCB NOT VALID!!10", MSG_ERROR);
     }
     break;
     }
@@ -1231,7 +1237,7 @@ bool pcb::setPumpsDisableAll()
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!", MSG_ERROR);
+        debugOutput::sendMessage("Error PCB NOT VALID!!11", MSG_ERROR);
     }
     break;
     }
@@ -1280,12 +1286,13 @@ bool pcb::setPumpEnable(uint8_t slot)
     case (EN134_4SLOTS):
     case (EN134_8SLOTS):
     {
+        debugOutput::sendMessage("enable pump " + to_string(slot), MSG_INFO);
         slotEnabled[slot_index] = true;
     };
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!", MSG_ERROR);
+        debugOutput::sendMessage("Error PCB NOT VALID!!12", MSG_ERROR);
     }
     break;
     }
@@ -1326,7 +1333,7 @@ void pcb::setSolenoid(uint8_t slot, bool onElseOff)
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!", MSG_ERROR);
+        debugOutput::sendMessage("Error PCB NOT VALID!!13", MSG_ERROR);
     }
     break;
     }
@@ -1353,7 +1360,7 @@ void pcb::setSolenoid(uint8_t slot, bool onElseOff)
 // break;
 // default:
 // {
-//     debugOutput::sendMessage("Error PCB NOT VALID!!", MSG_ERROR);
+//     debugOutput::sendMessage("Error PCB NOT VALID!!14", MSG_ERROR);
 // }
 // break;
 // }

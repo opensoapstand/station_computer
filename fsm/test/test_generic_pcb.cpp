@@ -24,12 +24,12 @@ Dispense_state dispense_state;
 #define PUMP_BACKTRACK_TIME_MILLIS 0
 #define SOLENOID_STOP_DELAY_MILLIS 50
 
-#define AUTO_DISPENSE_ENABLED true
-#define AUTO_DISPENSE_SLOT 4
+#define AUTO_DISPENSE_ENABLED false
+#define AUTO_DISPENSE_SLOT 2
 #define AUTO_DISPENSE_DELAY_BETWEEN_CYCLES_MS 3000
 #define AUTO_DISPENSE_CYCLE_LENGTH_MS 3000
 
-int main(int argc, char *argv[])
+void board_test()
 {
 
     pcb *connected_pcb;
@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
             {
                 dispense_state = dispense_activate_solenoid;
                 total_flow_pulses_count = connected_pcb->getFlowSensorTotalPulses(active_slot);
-               
+
                 debugOutput::sendMessage("---- Start of dispense cycle " + to_string(dispense_cycle_count) + "---- . Total number of flow sensor pulses since program start: " + to_string(total_flow_pulses_count), MSG_INFO);
                 // connected_pcb->resetFlowSensorTotalPulses(active_slot);
                 dispense_cycle_count++;
@@ -265,7 +265,7 @@ int main(int argc, char *argv[])
                 connected_pcb->setSolenoid(active_slot, false);
                 uint64_t cycle_pulses;
                 cycle_pulses = connected_pcb->getFlowSensorPulsesSinceEnabling(active_slot);
-               
+
                 debugOutput::sendMessage("End of dispensing. This cycle flow sensor pulses count: " + to_string(cycle_pulses), MSG_INFO);
                 connected_pcb->flowSensorsDisableAll();
                 connected_pcb->setPumpDirection(active_slot, true);
@@ -301,4 +301,37 @@ int main(int argc, char *argv[])
         };
         }
     }
+}
+
+void motor_test()
+{
+    pcb *connected_pcb;
+    connected_pcb = new pcb();
+
+#define SLOT 2
+    connected_pcb->setup();
+    connected_pcb->setPumpPWM(240);
+    connected_pcb->setPumpDirection(SLOT, false);
+    connected_pcb->setPumpEnable(SLOT);
+    connected_pcb->setSolenoid(SLOT, true);
+    connected_pcb->setSingleDispenseButtonLight(SLOT, true);
+    debugOutput::sendMessage("started. press button to stop", MSG_INFO);
+    while (true)
+    {
+        connected_pcb->refresh();
+        // if (connected_pcb->getDispenseButtonEdgePositive(SLOT))
+        // {
+        //     connected_pcb->setPumpsDisableAll();
+        //     connected_pcb->setSolenoid(SLOT, false);
+        //     debugOutput::sendMessage("button pressed. finish up", MSG_INFO);
+        //     connected_pcb->setSingleDispenseButtonLight(SLOT, false);
+        //     return;
+        // }
+    }
+    debugOutput::sendMessage("end", MSG_INFO);
+}
+int main(int argc, char *argv[])
+{
+    // board_test();
+    motor_test();
 }

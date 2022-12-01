@@ -21,7 +21,7 @@ enum Dispense_state
 Dispense_state dispense_state;
 
 #define PUMP_START_DELAY_MILLIS 50
-#define PUMP_BACKTRACK_TIME_MILLIS 100
+#define PUMP_BACKTRACK_TIME_MILLIS 1000
 #define SOLENOID_STOP_DELAY_MILLIS 50
 
 #define AUTO_DISPENSE_ENABLED false
@@ -36,7 +36,7 @@ void board_test()
     connected_pcb = new pcb();
 
     connected_pcb->setup();
-    connected_pcb->setPumpPWM(0);
+    connected_pcb->setPumpPWM(255);
 
     bool dispenseCycleStarted = false;
     uint64_t dispense_cycle_count = 0;
@@ -308,16 +308,21 @@ void motor_test()
     pcb *connected_pcb;
     connected_pcb = new pcb();
 
-#define SLOT 2
+#define SLOT 4
     connected_pcb->setup();
     connected_pcb->setPumpPWM(240);
-    connected_pcb->setPumpDirection(SLOT, false);
+    connected_pcb->setPumpDirection(SLOT, true);
     connected_pcb->setPumpEnable(SLOT);
     connected_pcb->setSolenoid(SLOT, true);
     connected_pcb->setSingleDispenseButtonLight(SLOT, true);
-    debugOutput::sendMessage("started. press button to stop", MSG_INFO);
-    while (true)
+//    debugOutput::sendMessage("started. press button to stop", MSG_INFO);
+        using namespace std::chrono;
+        uint64_t start_millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+uint64_t now = start_millis_epoch;
+	
+    while (now < start_millis_epoch + 5000)
     {
+        now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
         connected_pcb->refresh();
         // if (connected_pcb->getDispenseButtonEdgePositive(SLOT))
         // {
@@ -332,6 +337,6 @@ void motor_test()
 }
 int main(int argc, char *argv[])
 {
-    board_test();
-    //motor_test();
+    //board_test();
+    motor_test();
 }

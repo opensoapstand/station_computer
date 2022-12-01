@@ -1246,7 +1246,7 @@ bool pcb::setPumpsDisableAll()
 
 bool pcb::setPumpEnable(uint8_t slot)
 {
-    // in 8344 versions: do not take into account button press, it is hardwire on the pcb
+    // in 8344 versions: do not take into account button press, it is hardwired on the pcb
     // in EN-134 version: enable = motor runs at set speed.
     // --> motor enable should be depending on button press.
     // slot = pump_number
@@ -1286,7 +1286,7 @@ bool pcb::setPumpEnable(uint8_t slot)
     case (EN134_4SLOTS):
     case (EN134_8SLOTS):
     {
-        debugOutput::sendMessage("enable pump " + to_string(slot), MSG_INFO);
+        debugOutput::sendMessage("Enable pump " + to_string(slot), MSG_INFO);
         slotEnabled[slot_index] = true;
     };
     break;

@@ -21,11 +21,11 @@ enum Dispense_state
 Dispense_state dispense_state;
 
 #define PUMP_START_DELAY_MILLIS 50
-#define PUMP_BACKTRACK_TIME_MILLIS 0
+#define PUMP_BACKTRACK_TIME_MILLIS 100
 #define SOLENOID_STOP_DELAY_MILLIS 50
 
 #define AUTO_DISPENSE_ENABLED false
-#define AUTO_DISPENSE_SLOT 2
+#define AUTO_DISPENSE_SLOT 4
 #define AUTO_DISPENSE_DELAY_BETWEEN_CYCLES_MS 3000
 #define AUTO_DISPENSE_CYCLE_LENGTH_MS 3000
 
@@ -332,6 +332,6 @@ void motor_test()
 }
 int main(int argc, char *argv[])
 {
-    // board_test();
-    motor_test();
+    board_test();
+    //motor_test();
 }

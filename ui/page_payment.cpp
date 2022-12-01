@@ -435,7 +435,7 @@ void page_payment::createOrderIdAndSendToBackend()
         return;
     }
 
-    curl_easy_setopt(curl1, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/createOrderInDb");
+    curl_easy_setopt(curl1, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/createOrderInD");
     curl_easy_setopt(curl1, CURLOPT_POSTFIELDS, curl_order_parameters.data());
     curl_easy_setopt(curl1, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl1, CURLOPT_WRITEDATA, &readBuffer);
@@ -448,8 +448,8 @@ void page_payment::createOrderIdAndSendToBackend()
         feedback= QString::fromUtf8(readBuffer.c_str());
         createOrderInDbAttempts +=1;
     }
-    while(feedback != true && createOrderInDbAttempts <= 3);    
-    if (feedback != true)
+    while(feedback != "true" && createOrderInDbAttempts <= 3);    
+    if (feedback != "true")
     {
         qDebug() << "ERROR: Problem at create order in the cloud request. error code: " + QString::number(res1);
     }
@@ -459,6 +459,7 @@ void page_payment::createOrderIdAndSendToBackend()
     }
     curl_easy_cleanup(curl1);
     readBuffer = "";
+    feedback = "";
 
     _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
     _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;

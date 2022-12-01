@@ -238,7 +238,7 @@ QString page_idle::getDefaultTemplatePathFromName(QString backgroundPictureName)
 void page_idle::pageTransition(QWidget* pageToHide, QWidget* pageToShow){
     // page transition effects are not part of QT but of the operating system! 
     // search for ubuntu tweaks program to set animations to "off"
-    qDebug()<<"---------page transistion";
+    qDebug()<<"---------page transition";
     // pageToHide->raise();
     pageToShow->showFullScreen();
     // usleep(200000);

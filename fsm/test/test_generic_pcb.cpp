@@ -337,6 +337,6 @@ uint64_t now = start_millis_epoch;
 }
 int main(int argc, char *argv[])
 {
-    //board_test();
-    motor_test();
+    board_test();
+    //motor_test();
 }

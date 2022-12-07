@@ -446,6 +446,7 @@ void page_maintenance_dispenser::updateVolumeDisplayed(double dispensed, bool is
     if (pumping)
     {
         update_dispense_stats(dispensed);
+        qDebug() << "vol tijetij 789";
     }
     else
     {
@@ -472,8 +473,10 @@ void page_maintenance_dispenser::fsmReceiveTargetVolumeReached()
     // gets called from the controller.
 
     // --> attention application can crash when there is content in here. combined with updateVolumeDisplayed
+    
+    
     // DO THE MINIMUM HERE. NO DEBUG PRINTS. This must be an interrupt call.. probably crashes when called again before handled.
-    qDebug() << "Signal: maintenance target hit. *********************" << pumping;
+    //qDebug() << "Signal: maintenance target hit. *********************" << pumping;
 
     // maximum custom dispense volume applies here. controller stops at it when reached.
     dispense_test_end(false);
@@ -764,11 +767,10 @@ void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
         qDebug() << "Maintenance dispenser page timeout";
 
         // Update Click DB
-        qDebug() << "db open5";
-        DbManager db(DB_PATH);
+        //qDebug() << "db open5";
+        //DbManager db(DB_PATH);
         dispense_test_end(true);
-
-        db.closeDB();
+        //db.closeDB();
 
         maintainProductPageEndTimer->stop();
         p_page_idle->pageTransition(this, p_page_idle);

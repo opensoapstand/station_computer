@@ -119,7 +119,8 @@ QByteArray DfUiCommThread::readyRead()
     else if (strtol(Data, &pEnd, 10) || (Data[0] == '0' && Data[1] == '.'))
     {
         double volume_dispensed = stod(Data.constData(), &sz);
-        emit updateVolumeSignal(volume_dispensed);
+        emit updateVolumeSignal(volume_dispensed); // induced crash at cancel dispense.
+        //qDebug() << "vol tijetij89";
     }
 
     // QByteArray data;
@@ -139,7 +140,7 @@ QByteArray DfUiCommThread::readyRead()
         qDebug() << "Non actionable message from fsm received: " << Data;
     }
 
-    qDebug() << "detetetej meee";
+    qDebug() << "end of received msg handler detetetej meee";
     return Data;
 }
 

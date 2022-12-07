@@ -317,7 +317,7 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
 
    sqlite3_close(db);
 
-   // m_pMessaging->sendMessage(statusString); // commented out. Let's communicate by setting the db fields only
+   // m_pMessaging->sendMessageOverIP(statusString); // commented out. Let's communicate by setting the db fields only
 }
 
 DF_ERROR stateManualPrinter::displayPrinterStatus()

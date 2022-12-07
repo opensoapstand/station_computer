@@ -61,7 +61,7 @@ public:
 
    DF_ERROR createThreads(pthread_t &kbThread, pthread_t &ipThread);
 
-   DF_ERROR sendMessage(string msg);
+   DF_ERROR sendMessageOverIP(string msg);
 
    string getProcessString();
    DF_ERROR parseCommandString();
@@ -89,8 +89,11 @@ public:
 
 
    // static ServerSocket *fsm_comm_socket;
+   // bool m_handlingRequest;
+   // bool isBusySendingMessage();
 
 private:
+
    int messageIP;
    static bool m_fExitThreads;
 

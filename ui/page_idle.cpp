@@ -119,6 +119,7 @@ void page_idle::checkReceiptPrinterStatus(){
     // this->p_page_maintenance_general->on_printer_check_status_clicked();
     usleep(50000);
     
+    qDebug() << "db idle check printer";
     DbManager db(DB_PATH);
     bool isPrinterOnline = false;
     bool hasPrinterPaper = false;
@@ -238,9 +239,11 @@ void page_idle::MMSlot()
 void page_idle::addCompanyLogoToLabel(QLabel *label)
 {
 #ifdef ENABLE_DYNAMIC_UI
+    qDebug() << "db init company logo";
     DbManager db(DB_PATH);
     QString id = db.getCustomerId();
     db.closeDB();
+    qDebug() << "db closed";
     if (id.at(0) == 'C')
     {
         QString logo_path = QString(COMPANY_LOGO_PATH).arg(id);

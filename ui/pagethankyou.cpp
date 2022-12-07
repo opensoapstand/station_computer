@@ -100,6 +100,7 @@ void pagethankyou::showEvent(QShowEvent *event)
     QString paymentMethod = db.getPaymentMethod(p_page_idle->currentProductOrder->getSelectedSlot());
     bool hasReceiptPrinter = db.hasReceiptPrinter();
     db.closeDB();
+    qDebug() << "db close24";
 
     if (hasReceiptPrinter)
     {
@@ -120,7 +121,10 @@ void pagethankyou::showEvent(QShowEvent *event)
     is_in_state_thank_you = true;
 
     thankYouEndTimer = new QTimer(this);
+    qDebug() << "before signal intervalwewe";
     thankYouEndTimer->setInterval(1000);
+    qDebug() << "after testset";
+   
     connect(thankYouEndTimer, SIGNAL(timeout()), this, SLOT(onThankyouTimeoutTick()));
 
     // THIS WILL HAVE TO BE CHANGED SO THE SYSTEM CHECKS IF IT IS A DF / SS MACHINE
@@ -146,6 +150,9 @@ void pagethankyou::showEvent(QShowEvent *event)
 
     // ui->extra_message_label->hide();
     p_page_idle->addPictureToLabel(ui->drinkfill_logo_label2, DRINKFILL_LOGO_VERTICAL_PATH);
+
+    // set maximum page show time here. 
+    _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
 }
 
 size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
@@ -209,9 +216,9 @@ void pagethankyou::controllerFinishedTransaction()
 {
     if (is_in_state_thank_you)
     {
-        qDebug() << "Thank you page: Controller msg: All done for transaction.";
+        //qDebug() << "Thank you page: Controller msg: All done for transaction.";
         is_controller_finished = true;
-        thankYouEndTimer->start(1000);
+        thankYouEndTimer->start(1000); // argument = interval
         _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     }
     else
@@ -234,8 +241,9 @@ void pagethankyou::onThankyouTimeoutTick()
     }
     else
     {
-        exitPage();
+        qDebug() << "tahanksyou timeout";
         exitIsForceable = true;
+        exitPage();
     }
 }
 
@@ -250,7 +258,11 @@ void pagethankyou::exitPage()
     if ((is_controller_finished && is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER) || exitIsForceable)
     {
         thankYouEndTimer->stop();
-        // qDebug() << "thank you to idle";
+        if (exitIsForceable)
+        {
+            qDebug() << "ERROR?!:Forced exit. did controller send end of transaction?: " << is_controller_finished << " is payment finished?:" << is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER;
+        }
+      
         is_in_state_thank_you = false;
         p_page_idle->currentProductOrder->setPromoCode("");
 
@@ -258,19 +270,24 @@ void pagethankyou::exitPage()
         // this->hide();
         p_page_idle->pageTransition(this, p_page_idle);
 
-        if (exitIsForceable)
-        {
-            qDebug() << "ERROR?!:Forced exit. controller ok?: " << is_controller_finished << " is payment finished?:" << is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER;
-        }
     }
-    else
-    {
-        // ui->extra_message_label->setText("<p align=center><br>Waiting for end<br>of transaction...</p>");
-        // ui->extra_message_label->show();
+    else if (!thankYouEndTimer->isActive()){
+        // if not authorized to exit page, a timer will start ticking to force exit if needed. 
+
+        _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
+        thankYouEndTimer->start(1000);
         ui->thank_you_message_label->setText("Finishing<br>transaction");
         ui->thank_you_subtitle_message_label->hide();
 
-        thankYouEndTimer->start(1000);
-        _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
+        // is_in_state_thank_you = false;
+        // p_page_idle->currentProductOrder->setPromoCode("");
+
+        // // p_page_idle->showFullScreen();
+        // // this->hide();
+        // p_page_idle->pageTransition(this, p_page_idle);
+
+
+    }else{
+        qDebug() << "Transaction not finished. Wait for conditions set or timeout.";
     }
 }

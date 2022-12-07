@@ -86,7 +86,7 @@ DF_ERROR stateInit::onAction()
         m_state_requested = STATE_IDLE;
 
         // The UI program waits for this message to move from its initializing phase to its Idle phase:
-        m_pMessaging->sendMessage("Init Ready");
+        m_pMessaging->sendMessageOverIP("Init Ready");
     }
     else
     {

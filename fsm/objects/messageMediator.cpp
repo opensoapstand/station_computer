@@ -53,6 +53,7 @@ messageMediator::messageMediator()
    // new_sock = new ServerSocket();
    m_fExitThreads = false;
    // m_pKBThread = -1;
+   
 }
 
 // DTOR
@@ -66,32 +67,78 @@ messageMediator::~messageMediator()
 
 // Sends a message string to QT through a socket
 // IPC on Local network
-DF_ERROR messageMediator::sendMessage(string msg)
+// FSM is client, UI is server
+// bool messageMediator::isBusySendingMessage(){
+//    // return this->m_handlingRequest;
+//    return false;
+// }
+
+DF_ERROR messageMediator::sendMessageOverIP(string msg)
 {
    DF_ERROR dfError = OK;
    debugOutput::sendMessage("Send msg to UI (don't wait for reply): " + msg, MSG_INFO);
+   
+   int attempts = 20;
+   bool done = false;
+   
+   while (attempts > 0 && !done)
+   {
 
-   try
-   {
-      ClientSocket client_socket("localhost", 1235);
-      std::string reply;
-      try
-      {
-         client_socket << msg;
-         // client_socket >> reply; // blocking. And we're not sending a reply from the UI anymore (it caused crashes.)
-      }
-      catch (SocketException &)
-      {
-         // TODO: Should catch no message error...
-      }
-      //debugOutput::sendMessage("We received this response from the server: " + reply, MSG_INFO);
-      ;
+      // if (false)
+      // {
+      //    debugOutput::sendMessage("Will not send to UI. Busy handling previous request. " + msg, MSG_INFO);
+      //    usleep(10000);
+      //    attempts--;
+      // }
+      // else
+      // {
+
+         
+
+         // m_handlingRequest = true;
+
+         //usleep(10000);
+         try
+         {
+            // ClientSocket client_socket("localhost", 0); // with port 1235, once in a while error :'Could not bind to port", makes UI crash. //https://stackoverflow.com/questions/29866083/tcp-socket-cannot-bind-to-port-in-use
+            //  ClientSocket client_socket("localhost", 1235);
+            ClientSocket client_socket("localhost", 8645);
+
+            std::string reply;
+            try
+            {
+               client_socket << msg;
+               
+               // client_socket >> reply; // blocking. And we're not sending a reply from the UI anymore (it caused crashes.)
+               done = true;
+            }
+            catch (SocketException &)
+            {
+               // TODO: Should catch no message error...
+               debugOutput::sendMessage("Error sending to UI " + reply, MSG_ERROR);
+               usleep(10000);
+               attempts--;
+            }
+            // debugOutput::sendMessage("We received this response from the server: " + reply, MSG_INFO);
+            ;
+         }
+         catch (SocketException &e)
+         {
+            //  std::cout << "Connection Exception was caught:" << e.description() << "\n";
+            debugOutput::sendMessage("Error opening socket to send to UI " + e.description(), MSG_ERROR);
+            usleep(10000);
+            attempts--;
+         }
+      // }
    }
-   catch (SocketException &e)
+
+   if (attempts <= 0)
    {
-      //  std::cout << "Connection Exception was caught:" << e.description() << "\n";
+      debugOutput::sendMessage("Give up on communication. Amount of attempts exhausted. ", MSG_INFO);
    }
-   dfError = ERROR_PTHREADS_IPTHREAD_NAK;
+
+   //dfError = ERROR_PTHREADS_IPTHREAD_NAK;
+   // m_handlingRequest = false;
 
    return dfError;
 }
@@ -217,6 +264,7 @@ DF_ERROR messageMediator::updateCmdString()
 }
 
 // Loop for threaded listening for console input
+// KB = keyboard
 void *messageMediator::doKBThread(void *pThreadArgs)
 {
    debugOutput::sendMessage("Start up infinite keyboard input listener (doKBThread).", MSG_INFO);
@@ -265,14 +313,14 @@ void *messageMediator::doIPThread(void *pThreadArgs)
       while (!m_fExitThreads)
       {
          {
-         ServerSocket new_sock;
-         fsm_comm_server.accept(new_sock);
-         debugOutput::sendMessage("new sock (UIDDFIJDF)", MSG_INFO);
+            ServerSocket new_sock;
+            fsm_comm_server.accept(new_sock);
+            debugOutput::sendMessage("new sock (UIDDFIJDF)", MSG_INFO);
 
-         try
-         {
-            // while (true)
-            // {
+            try
+            {
+               // while (true)
+               // {
                //// debugOutput::sendMessage("char received over IP", MSG_INFO);
                std::string data;
                //// *fsm_comm_socket >> data;
@@ -280,23 +328,22 @@ void *messageMediator::doIPThread(void *pThreadArgs)
                new_sock >> data;
 
                //// sendQtACK("ACK");  // lode commented it out was blocking?!?! todo //// AckOrNakResult = "FSM ACK";
-              // //  cout << data << endl;
+               // //  cout << data << endl;
                m_receiveStringBuffer = data;
                updateCmdString();
                // debugOutput::sendMessage("chars received over IP: " + data, MSG_INFO);
                //// new_sock << data;
-            // }
-            
+               // }
 
-            // new_sock << "Hi Back";
-         }
-         catch (SocketException &sock)
-         {
-            debugOutput::sendMessage("Socket Transfer Exception was caught:" + sock.description(), MSG_INFO);
-            //  std::cout << "Socket Transfer Exception was caught:" << sock.description() << "\nExiting.\n";
-            // AckOrNakResult = "FSM NAK";
-            // sendQtACK(AckOrNakResult);
-         }
+               // new_sock << "Hi Back";
+            }
+            catch (SocketException &sock)
+            {
+               debugOutput::sendMessage("Socket Transfer Exception was caught:" + sock.description(), MSG_INFO);
+               //  std::cout << "Socket Transfer Exception was caught:" << sock.description() << "\nExiting.\n";
+               // AckOrNakResult = "FSM NAK";
+               // sendQtACK(AckOrNakResult);
+            }
          }
       }
    }
@@ -362,8 +409,7 @@ DF_ERROR messageMediator::parseCommandString()
        // other commands
        first_char == ACTION_MANUAL_PUMP_PWM_SET ||
        first_char == ACTION_MANUAL_PUMP_SET ||
-       first_char == ACTION_PRINT_TRANSACTION
-       )
+       first_char == ACTION_PRINT_TRANSACTION)
    {
       m_requestedAction = first_char;
       std::string number = sCommand.substr(1, sCommand.size());
@@ -404,11 +450,13 @@ DF_ERROR messageMediator::parseCommandString()
    {
       m_requestedAction = first_char;
    }
-   else if (first_char=='$'){
+   else if (first_char == '$')
+   {
       double price = std::stod(sCommand.substr(1, sCommand.size()));
       m_requestedDiscountPrice = price;
    }
-   else if(sCommand.find("Promo") != string::npos){
+   else if (sCommand.find("Promo") != string::npos)
+   {
       std::string promoCode = sCommand.substr(6, sCommand.size());
       // debugOutput::sendMessage(promoCode, MSG_INFO);
       m_promoCode = promoCode;
@@ -448,7 +496,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
       // FIXME: Need a better string parser...
       for (std::string::size_type i = 0; i < sCommand.size(); ++i)
       {
-         if ((sCommand[i] == ACTION_DISPENSE_END) || (sCommand[i] == ACTION_DISPENSE) || (sCommand[i] == ACTION_AUTOFILL) || sCommand[i] == PWM_CHAR) 
+         if ((sCommand[i] == ACTION_DISPENSE_END) || (sCommand[i] == ACTION_DISPENSE) || (sCommand[i] == ACTION_AUTOFILL) || sCommand[i] == PWM_CHAR)
          {
             actionChar = sCommand[i];
          }

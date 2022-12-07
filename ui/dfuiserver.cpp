@@ -1,54 +1,65 @@
 #include "dfuiserver.h"
 #include "dfuicommthread.h"
 #include "df_util.h" // lode added for settings
-DfUiServer::DfUiServer(QObject *parent) :
-    QTcpServer(parent)
+
+DfUiServer::DfUiServer(QObject *parent) : QTcpServer(parent)
 {
 }
 
 void DfUiServer::startServer()
 {
-    int port = 1235;
+    // int port = 1235;
+    int port = 8645;
+    busyHandlingRequest = false;
 
-    if(!this->listen(QHostAddress::Any, port))
+    if (!this->listen(QHostAddress::Any, port))
     {
-//        qDebug() << "Could not start server";
+        qDebug() << "Server: Could not start server";
     }
     else
     {
-//        qDebug() << "Listening to port " << port << "...";
+        qDebug() << "Server: Listening for fsm messages on port " << port << "...";
     }
 }
 
-void DfUiServer::resetTimerSlot(){
+void DfUiServer::resetTimerSlot()
+{
     emit pleaseReset();
 }
-void DfUiServer::transactionEndSlot(){
+void DfUiServer::transactionEndSlot()
+{
     emit controllerFinishedAck();
 }
 
-void DfUiServer::updateVolumeSlot(double dispensed){
+void DfUiServer::updateVolumeSlot(double dispensed)
+{
     emit signalUpdateVolume(dispensed, false);
 }
 
-void DfUiServer::targetHitSlot(){
+void DfUiServer::targetHitSlot()
+{
     emit targetHit();
 }
-void DfUiServer::noFlowAbortSlot(){
+void DfUiServer::noFlowAbortSlot()
+{
     emit noFlowAbort();
 }
 
-void DfUiServer::initReadySlot(){
+void DfUiServer::initReadySlot()
+{
     emit initReady();
 }
-void DfUiServer::printerStatusSlot(bool isOnline, bool hasPaper){
+void DfUiServer::printerStatusSlot(bool isOnline, bool hasPaper)
+{
     emit printerStatus(isOnline, hasPaper);
 }
-void DfUiServer::dispenseButtonPressedSlot(){
+void DfUiServer::dispenseButtonPressedSlot()
+{
     emit dispenseButtonPressedSignal();
 }
 
-void DfUiServer::MMSlot(){
+void DfUiServer::MMSlot()
+{
     emit MM();
 }
 
@@ -56,8 +67,19 @@ void DfUiServer::MMSlot(){
 void DfUiServer::incomingConnection(qintptr socketDescriptor)
 {
     // We have a new connection
-//    qDebug() << socketDescriptor << " Connecting...";
 
+    // In this setup, there are too many ways of crashing when multiple requests are handled at the same time, do not allow for it.
+    if (busyHandlingRequest)
+    {
+
+        qDebug() << "UI still handling a previous request. Will not allow parallel requests. Wait till unblocked and try again.....";
+        return;
+    }
+    else
+    {
+        qDebug() << "Incoming request accepted.*************";
+    }
+    busyHandlingRequest = true;
     // Every new connection will be run in a newly created thread
     DfUiCommThread *thread = new DfUiCommThread(socketDescriptor, this);
 
@@ -70,7 +92,7 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
 
     connect(thread, &DfUiCommThread::noFlowAbortSignal, this, &DfUiServer::noFlowAbortSlot);
     connect(thread, &DfUiCommThread::targetHitSignal, this, &DfUiServer::targetHitSlot);
-    
+
     // connect(thread, &DfUiCommThread::targetHitSignal, this, &DfUiServer::noFlowAbortSlot);
     // connect(thread, &DfUiCommThread::noFlowAbortSignal, this, &DfUiServer::targetHitSlot);
 
@@ -80,6 +102,5 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
     connect(thread, &DfUiCommThread::dispenseButtonPressedSignal, this, &DfUiServer::dispenseButtonPressedSlot);
 
     thread->start();
+    busyHandlingRequest = false;
 }
-
-

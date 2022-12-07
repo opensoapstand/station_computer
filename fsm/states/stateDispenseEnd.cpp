@@ -66,12 +66,13 @@ DF_ERROR stateDispenseEnd::onAction()
 
     // send dispensed volume to ui (will be used to write to portal)
     usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
-    m_pMessaging->sendMessage(to_string(productDispensers[pos_index].getVolumeDispensed()));
+    //debugOutput::sendMessage("tododododo send volume update. ", MSG_STATE);
+    m_pMessaging->sendMessageOverIP(to_string(productDispensers[pos_index].getVolumeDispensed()));
 
     if (productDispensers[pos_index].getIsDispenseTargetReached())
     {
         usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
-        m_pMessaging->sendMessage("Target Hit");
+        m_pMessaging->sendMessageOverIP("Target Hit");
     }
 
     double dispensed_volume = productDispensers[pos_index].getVolumeDispensed();
@@ -132,8 +133,9 @@ DF_ERROR stateDispenseEnd::onAction()
     }
 
     m_state_requested = STATE_IDLE;
-    usleep(100000);                               // send message delay (pause from previous message) desperate attempt to prevent crashes
-    m_pMessaging->sendMessage("Transaction End"); // send to UI
+    usleep(3000000);                               // send message delay (pause from previous message) desperate attempt to prevent crashes
+    m_pMessaging->sendMessageOverIP("Transaction End"); // send to UI
+
 
     return e_ret;
 }

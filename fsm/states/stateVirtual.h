@@ -42,12 +42,14 @@ public:
     // gpio *getDispenseButtonState();
 
     //static product *testProducts[PRODUCT_DISPENSERS_MAX];
+    
+    messageMediator *m_pMessaging;
 
 protected:
     // DF_FSM m_state;
     DF_FSM m_state_requested;
     gpio *m_pButton[NUM_BUTTON];
-    messageMediator *m_pMessaging;
+
 
     // product_order* m_selectedOrder;
 

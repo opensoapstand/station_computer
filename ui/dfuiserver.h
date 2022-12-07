@@ -34,6 +34,9 @@ signals:
 protected:
     void incomingConnection(qintptr socketDescriptor);
 
+private:
+    bool busyHandlingRequest;
+
 };
 
 #endif // DFUISERVER_H

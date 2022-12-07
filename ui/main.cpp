@@ -171,6 +171,7 @@ int main(int argc, char *argv[])
     
     initPage->showFullScreen();
 
+    // listen for fsm messages
     DfUiServer dfUiServer;
     dfUiServer.startServer();
  

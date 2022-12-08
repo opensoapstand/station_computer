@@ -10,6 +10,7 @@ class DfUiServer : public QTcpServer
 public:
     explicit DfUiServer(QObject *parent = 0);
     void startServer();
+    void closeServer();
 
     void resetTimerSlot();
     void transactionEndSlot();
@@ -23,7 +24,6 @@ public:
     void messageHandlerFinishedSlot();
 
     bool busyHandlingRequest;
-    int requestCounter;
 
 signals:
     void printerStatus(bool isOnline, bool hasPaper);

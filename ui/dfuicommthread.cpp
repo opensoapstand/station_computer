@@ -46,7 +46,7 @@ QByteArray DfUiCommThread::readyRead()
     // will write on server side window
     //    qDebug() << socketDescriptor << " Data in: " << Data;
 
-    qDebug() << "Message from controller: " << Data;
+    qDebug() << "Process received message : " << Data;
 
     // if (Data == "Transaction End")
     // {

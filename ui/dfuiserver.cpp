@@ -11,7 +11,6 @@ void DfUiServer::startServer()
     // int port = 1235;
     int port = 8645;
     busyHandlingRequest = false;
-    requestCounter = 0;
 
     if (!this->listen(QHostAddress::Any, port))
     {
@@ -19,8 +18,14 @@ void DfUiServer::startServer()
     }
     else
     {
-        qDebug() << "Server: Listening for fsm messages on port " << port << "...";
+        qDebug() << "Server: Listening. Ready for fsm messages on port " << port << "...";
     }
+}
+
+void DfUiServer::closeServer()
+{
+    this->close();
+    qDebug() << "Server: Stopped listening. Will not receive new fsm messages. ";
 }
 
 void DfUiServer::resetTimerSlot()
@@ -60,8 +65,11 @@ void DfUiServer::dispenseButtonPressedSlot()
 }
 void DfUiServer::messageHandlerFinishedSlot()
 {
-    requestCounter--;
-    qDebug() << "Message fully handled. Ready to receive new commands. counter should be zero now: " << requestCounter;
+    //qDebug() << "Message fully handled. Ready to receive new commands.";
+    busyHandlingRequest = false;
+    // this->resumeAccepting();
+
+    startServer(); // task
 }
 
 void DfUiServer::MMSlot()
@@ -73,21 +81,29 @@ void DfUiServer::MMSlot()
 void DfUiServer::incomingConnection(qintptr socketDescriptor)
 {
     // We have a new connection
-    requestCounter++;
     // In this setup, there are too many ways of crashing when multiple requests are handled at the same time, do not allow for it.
-    if (requestCounter > 1)
+    if (busyHandlingRequest)
     {
 
-        requestCounter--;
-        qDebug() << "UI still handling a previous request. Will not allow parallel requests. Wait till unblocked and try again....." << requestCounter;
+        qDebug() << "WARNING: Incoming message neglected. UI still handling a previous request. Will not allow parallel requests. Wait till unblocked and try again.....";
         return;
     }
     else
     {
-        // qDebug() << "request counter: " << requestCounter;
         // qDebug() << "Incoming request accepted.*************";
+        busyHandlingRequest = true;
+        // this->pauseAccepting(); // controller does not get error when trying to connect
+
+
+        // this turns out to be the most solid solution. Stop the server. Start up again when command finished. 
+        closeServer(); // closes server. controller gets error when trying to connect
+        
+        // following works well, but controller needs a blocking routine to catch feedback. --> should be in different thread --> concurrency problems.
+        // QTcpSocket* socket = new QTcpSocket();
+        // socket->setSocketDescriptor(socketDescriptor);
+        // socket->write("accepted"); 
+        
     }
-    busyHandlingRequest = true;
     // Every new connection will be run in a newly created thread
     DfUiCommThread *messageHandlerThread = new DfUiCommThread(socketDescriptor, this);
 
@@ -110,8 +126,10 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
     connect(messageHandlerThread, &DfUiCommThread::MMSignal, this, &DfUiServer::MMSlot);
     connect(messageHandlerThread, &DfUiCommThread::dispenseButtonPressedSignal, this, &DfUiServer::dispenseButtonPressedSlot);
 
-    messageHandlerThread->start(); // reminder: this is non blocking! It start a thread (which is executed independently) and moves on right away
-    busyHandlingRequest = false;
-
+    // send message to controller that acknowledges receipt?!
    
+
+    messageHandlerThread->start(); // reminder: this is non blocking! It starts a thread (which is executed independently) and moves on right away
+    
+  
 }

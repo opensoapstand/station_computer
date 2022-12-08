@@ -110,7 +110,18 @@ DF_ERROR messageMediator::sendMessageOverIP(string msg)
                client_socket << msg;
                
                // client_socket >> reply; // blocking. And we're not sending a reply from the UI anymore (it caused crashes.)
+               //usleep(10000);
+               
+               //client_socket >> reply;
+               //debugOutput::sendMessage("REPLY from UI" + reply, MSG_INFO);
+
                done = true;
+               // if (reply.compare("accepted") == 0){
+
+               //    debugOutput::sendMessage("Message sent and accepted by UI", MSG_INFO);
+               // }else{
+               //    debugOutput::sendMessage("waiting for reply", MSG_INFO);
+               // }
             }
             catch (SocketException &)
             {
@@ -125,7 +136,7 @@ DF_ERROR messageMediator::sendMessageOverIP(string msg)
          catch (SocketException &e)
          {
             //  std::cout << "Connection Exception was caught:" << e.description() << "\n";
-            debugOutput::sendMessage("Error opening socket to send to UI " + e.description(), MSG_ERROR);
+            debugOutput::sendMessage("UI server not reachable (UI not running? or Still processing previous message?).  " + e.description(), MSG_ERROR);
             usleep(100000);
             attempts--;
          }

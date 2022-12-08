@@ -78,7 +78,7 @@ DF_ERROR stateInit::onAction()
     }
     else
     {
-        debugOutput::sendMessage("ERROR: Problems setting up the products.", MSG_INFO);
+        debugOutput::sendMessage("ERROR: Problems setting up the products.", MSG_ERROR);
     }
 
     if (OK == e_ret)
@@ -87,11 +87,12 @@ DF_ERROR stateInit::onAction()
 
         // The UI program waits for this message to move from its initializing phase to its Idle phase:
         m_pMessaging->sendMessageOverIP("Init Ready");
+        debugOutput::sendMessage("Finished controller init.", MSG_INFO);
     }
     else
     {
 
-        debugOutput::sendMessage("ERROR: Problems setting up the dispenser.", MSG_INFO);
+        debugOutput::sendMessage("ERROR: Problems setting up the dispenser.", MSG_ERROR);
     }
 
     return e_ret;

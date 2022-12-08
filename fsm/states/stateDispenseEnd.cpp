@@ -133,7 +133,7 @@ DF_ERROR stateDispenseEnd::onAction()
     }
 
     m_state_requested = STATE_IDLE;
-    usleep(3000000);                               // send message delay (pause from previous message) desperate attempt to prevent crashes
+    // usleep(3000000);                               // send message delay (pause from previous message) desperate attempt to prevent crashes
     m_pMessaging->sendMessageOverIP("Transaction End"); // send to UI
 
 

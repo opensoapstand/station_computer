@@ -113,6 +113,11 @@ DF_ERROR stateManualPrinter::onAction()
          debugOutput::sendMessage("Print transaction?", MSG_INFO);
          printTransaction(959);
       }
+      else if ('6' == m_pMessaging->getAction())
+      {
+         debugOutput::sendMessage("Test send OK to UI", MSG_INFO);
+         m_pMessaging->sendMessageOverIP("OK");
+      }
       else
       {
          debugOutput::sendMessage("---Receipt printer menu---"

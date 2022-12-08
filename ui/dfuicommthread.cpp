@@ -107,6 +107,11 @@ QByteArray DfUiCommThread::readyRead()
     {
         emit initReadySignal();
     }
+    else if (Data == "OK")
+    {
+        //emit initReadySignal();
+        usleep(3000000);
+    }
 
     else if (Data == "MM")
     {
@@ -140,7 +145,7 @@ QByteArray DfUiCommThread::readyRead()
         qDebug() << "Non actionable message from fsm received: " << Data;
     }
 
-    qDebug() << "end of received msg handler detetetej meee";
+    emit messageHandlerFinishedSignal();
     return Data;
 }
 

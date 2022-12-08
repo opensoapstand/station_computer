@@ -78,7 +78,7 @@ DF_ERROR messageMediator::sendMessageOverIP(string msg)
    DF_ERROR dfError = OK;
    debugOutput::sendMessage("Send msg to UI (don't wait for reply): " + msg, MSG_INFO);
    
-   int attempts = 20;
+   int attempts = 200;
    bool done = false;
    
    while (attempts > 0 && !done)
@@ -126,7 +126,7 @@ DF_ERROR messageMediator::sendMessageOverIP(string msg)
          {
             //  std::cout << "Connection Exception was caught:" << e.description() << "\n";
             debugOutput::sendMessage("Error opening socket to send to UI " + e.description(), MSG_ERROR);
-            usleep(10000);
+            usleep(100000);
             attempts--;
          }
       // }

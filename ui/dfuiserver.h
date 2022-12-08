@@ -3,6 +3,7 @@
 
 #include <QTcpServer>
 
+    
 class DfUiServer : public QTcpServer
 {
     Q_OBJECT
@@ -19,6 +20,10 @@ public:
     void noFlowAbortSlot();
     void initReadySlot();
     void MMSlot();
+    void messageHandlerFinishedSlot();
+
+    bool busyHandlingRequest;
+    int requestCounter;
 
 signals:
     void printerStatus(bool isOnline, bool hasPaper);
@@ -35,7 +40,7 @@ protected:
     void incomingConnection(qintptr socketDescriptor);
 
 private:
-    bool busyHandlingRequest;
+    
 
 };
 

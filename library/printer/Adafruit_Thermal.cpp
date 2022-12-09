@@ -35,10 +35,8 @@
 // operation, a few rare specimens instead work at 9600.  If so, change
 // this constant.  This will NOT make printing slower!  The physical
 // print and feed mechanisms are the bottleneck, not the port speed.
-// #define BAUDRATE                                                               \
-//   19200 //!< How many bits per second the serial port should transfer
-#define BAUDRATE                                                               \
-  9600 // setting before lode came along
+// #define BAUDRATE  19200 //!< How many bits per second the serial port should transfer
+ #define BAUDRATE 9600 // setting before lode came along
 
 // ASCII codes used by some of the printer config commands:
 #define ASCII_TAB '\t' //!< Horizontal tab
@@ -692,8 +690,13 @@ void  Adafruit_Thermal::connectToPrinter() {
   serialPort.Open();
 }
 
-bool Adafruit_Thermal::testComms() {
+char Adafruit_Thermal::testCommschar() {
+
+  // WILL CRASH AT TIMES WHEN NO PRINTER CONNECTED. RETURNS EMPTY STRING 
+
   // first requst not valid?!
+
+  writeBytes(ASCII_ESC,'@'); //if omitted, after about 8 hasPaper calls, some chars are printed.
 
   std::string command(1,ASCII_ESC);
   command.push_back('v');
@@ -705,14 +708,45 @@ bool Adafruit_Thermal::testComms() {
   std::string readVal = "-";
 
 
+  // usleep(waitMillis*1000);
+
+   //while (readVal[0] == '-'){
+  serialPort.Read(readVal); // also, you can add time out!! (blocking, non blocking,.... timeoutms)
+  std::string defaultVal = "-";
+
+  // return readVal.length()>0 && !(readVal.compare(defaultVal));
+  return readVal.at(0); 
+
+}
+
+bool Adafruit_Thermal::testComms() {
+  // first requst not valid?!
+
+  writeBytes(ASCII_ESC,'@'); //if omitted, after about 8 hasPaper calls, some chars are printed.
+
+  std::string command(1,ASCII_ESC);
+  command.push_back('v');
+  command.push_back('n');
+  serialPort.Write(command);
+  
+  // usleep(10000);
+
+  std::string readVal = "-";
 
 
   // usleep(waitMillis*1000);
 
    //while (readVal[0] == '-'){
   serialPort.Read(readVal); // also, you can add time out!! (blocking, non blocking,.... timeoutms)
-    
-  return readVal.length()>0;
+  
+  // return readVal.length()>0 && !(readVal.compare(defaultVal));
+  if (readVal.length()>0){
+    return readVal.at(0) == ' ' || readVal.at(0) == 36 ;   
+
+  }else{
+    return false;
+  }
+
 }
 // char Adafruit_Thermal::cancelCustomCharacters() {
 //   serialPort.SetEcho(true);
@@ -742,10 +776,19 @@ bool Adafruit_Thermal::hasPaper() {
   
   // serialPort.Write(c3);
 
-  std::string command(1,ASCII_ESC);
-  command.push_back('v');
-  command.push_back('n');
-  serialPort.Write(command);
+
+
+
+  writeBytes(ASCII_ESC,'@'); //if omitted, after about 8 hasPaper calls, some chars are printed.
+  writeBytes(ASCII_ESC,'v','n');
+  // // working
+  // std::string command(1,ASCII_ESC);
+  // command.push_back('v');
+  // command.push_back('n');
+  // serialPort.Write(command);
+
+
+
 
   // std::string readVal = "D"; // let's default to a status with the 0x04 bit enabled. 
   std::string readVal = "p"; // let's default to a status with the 0x04 bit enabled. 

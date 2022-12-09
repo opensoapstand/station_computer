@@ -136,7 +136,10 @@ DF_ERROR stateManualPrinter::onAction()
    if (b_isContinuouslyChecking)
    {
       displayPrinterStatus();
-      // usleep(50000);	// 50 ms	between actions
+      // printerr.flush();
+      // printerr.offline();
+      // printerr.online();
+      usleep(500000);
    }
 
    // m_state = STATE_MANUAL_PRINTER;
@@ -244,7 +247,6 @@ void stateManualPrinter::printTransaction(int transactionNumber)
    rc = sqlite3_open(DB_PATH, &db);
    sql_string = ("SELECT slot FROM products WHERE name='" + product + "';");
 
-   
    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 
    status = sqlite3_step(stmt);
@@ -274,7 +276,6 @@ void stateManualPrinter::printTransaction(int transactionNumber)
 DF_ERROR stateManualPrinter::sendPrinterStatus()
 {
 
-   // every couple of commands, the printer spits out a bit of paper (about every 16 commands... ) No clue why.
    bool isOnline = printerr.testComms();
    bool hasPaper = printerr.hasPaper();
    string statusString;
@@ -293,7 +294,6 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
    {
       statusString = "printerstatus00";
    }
-
 
    char *zErrMsg = 0;
 
@@ -327,6 +327,8 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
 
 DF_ERROR stateManualPrinter::displayPrinterStatus()
 {
+
+   // debugOutput::sendMessage("printenrnenrnerrrrrr-: " + to_string(printerr.testCommschar()), MSG_INFO);
    bool isOnline = printerr.testComms(); // first call return always "online"
    isOnline = printerr.testComms();
 
@@ -341,6 +343,8 @@ DF_ERROR stateManualPrinter::displayPrinterStatus()
       {
          debugOutput::sendMessage("Printer online, no paper.", MSG_INFO);
       }
+
+      // debugOutput::sendMessage("Printer online.", MSG_INFO);
    }
    else
    {
@@ -371,6 +375,8 @@ DF_ERROR stateManualPrinter::printTest()
 
    string printer_command_string = "echo '\n---------------------------\n" + printerstring + "' > /dev/ttyS4";
    system(printer_command_string.c_str());
+
+   printerr.testPage();
 
    //  string printer_command_string = "echo '------------------------------\n-- Vancouver Active Tourism --\n--            2022-02-12    --\n------------------------------\n 1x Special morning activity \n 1x Batard Bakery experience \n 1x Guided bike tour to \n         Lighthouse park \n 1x Soapstand workplace demo \n Participants: Wafeltje + Lodey    \n   Grand total: Happy times <3 \n   Thank you, please come again!  \n\n\n\n' > /dev/ttyS4";
    //  system(printer_command_string.c_str());
@@ -418,7 +424,7 @@ DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double v
    machine tmp;
    receipt_cost = m_pMessaging->getRequestedPrice();
 
-   tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu,"");
+   tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu, "");
 }
 
 // DF_ERROR stateManualPrinter::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string units, string paymentMethod, string plu){

@@ -17,6 +17,7 @@
 #include "page_idle.h"
 #include "ui_page_idle.h"
 #include "page_maintenance.h"
+#include "page_maintenance_general.h"
 
 // CTOR
 page_idle::page_idle(QWidget *parent) : QWidget(parent),
@@ -63,11 +64,12 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 /*
  * Navigation to Product item
  */
-void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance)
+void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral)
 {
     // Chained to KB Listener
     this->p_pageSelectProduct = p_pageProduct;
     this->p_page_maintenance = pageMaintenance;
+    this->p_page_maintenance_general = pageMaintenanceGeneral;
     setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
 }
 
@@ -105,19 +107,91 @@ void page_idle::showEvent(QShowEvent *event)
 
     addCompanyLogoToLabel(ui->logo_label);
 
+    checkReceiptPrinterStatus();
+
     addPictureToLabel(ui->drinkfill_logo_label, DRINKFILL_LOGO_VERTICAL_PATH);
     this->raise();
-    //m_transitioning = false;
+    // m_transitioning = false;
 }
 
+void page_idle::checkReceiptPrinterStatus()
+{
+    this->p_page_maintenance_general->send_check_printer_status_command();
+    // this->p_page_maintenance_general->on_printer_check_status_clicked();
+    // usleep(50000);
+
+    // qDebug() << "db idle check printer";
+    // DbManager db(DB_PATH);
+    // bool isPrinterOnline = false;
+    // bool hasPrinterPaper = false;
+    // bool hasReceiptPrinter = db.hasReceiptPrinter();
+    // db.printerStatus(&isPrinterOnline, &hasPrinterPaper);
+    // db.closeDB();
+
+    // if (hasReceiptPrinter)
+    // {
+    //     ui->printer_status_label->raise();
+    //     if (!isPrinterOnline)
+    //     {
+    //         ui->printer_status_label->setText("Error: Receipt Printer offline.");
+    //         ui->printer_status_label->show();
+    //     }
+    //     else if (!hasPrinterPaper)
+    //     {
+    //         ui->printer_status_label->setText("Error: Receipt printer empty or improperly loaded.");
+    //         ui->printer_status_label->show();
+    //     }
+    //     else
+    //     {
+    //         ui->printer_status_label->hide();
+    //     }
+    // }
+    // else
+    // {
+    //     ui->printer_status_label->hide();
+    // }
+}
 /*
  * Screen click shows product page as full screen and hides page_idle screen
  */
 
+// void page_idle::checkReceiptPrinter()
+// {
+//     p_page_idle->dfUtility->send_command_to_FSM("p");
+//     usleep(50000);
+//     p_page_idle->dfUtility->send_command_to_FSM("1");
+//     usleep(50000);
+//     p_page_idle->dfUtility->send_command_to_FSM("q");
+// }
+
+void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
+{
+    qDebug() << "Printer feedback received from fsm";
+
+    if (!isOnline)
+    {
+        ui->printer_status_label->raise();
+        ui->printer_status_label->setText("Error: Receipt Printer offline.");
+        ui->printer_status_label->show();
+    }
+    else if (!hasPaper)
+    {
+        ui->printer_status_label->raise();
+        ui->printer_status_label->setText("Error: Receipt printer empty or improperly loaded.");
+        ui->printer_status_label->show();
+    }
+    else
+    {
+        ui->printer_status_label->hide();
+    }
+}
+
 void page_idle::on_toSelectProductPageButton_clicked()
 {
     qDebug() << "Proceed to next page button clicked. ";
-    this->pageTransition(this,p_pageSelectProduct);
+
+    this->pageTransition(this, p_pageSelectProduct);
+
     // p_pageSelectProduct->showFullScreen();
 
     // // if (!m_transitioning)
@@ -132,7 +206,7 @@ void page_idle::on_toSelectProductPageButton_clicked()
     //     // Tapping on on the desktop wallpaper minimizes the application.
     //     // If the idle page is not hidden, and always on the background, there is never a wall paper showing. Effectively preventing this vulnerability to be exploited.
     //     this->hide();
-        
+
     //     // m_transitioning = false;
     // }
 }
@@ -169,15 +243,16 @@ void page_idle::MMSlot()
     // this->hide();
     this->p_pageSelectProduct->hide();
     this->pageTransition(this, p_page_maintenance);
-    
 }
 
 void page_idle::addCompanyLogoToLabel(QLabel *label)
 {
 #ifdef ENABLE_DYNAMIC_UI
+    qDebug() << "db init company logo";
     DbManager db(DB_PATH);
     QString id = db.getCustomerId();
     db.closeDB();
+    qDebug() << "db closed";
     if (id.at(0) == 'C')
     {
         QString logo_path = QString(COMPANY_LOGO_PATH).arg(id);
@@ -214,8 +289,9 @@ QString page_idle::getTemplatePathFromName(QString backgroundPictureName)
     {
         QString image_default_path = getDefaultTemplatePathFromName(backgroundPictureName);
         qDebug() << "File not found in template folder: " + image_path + ". Default template path: " + image_default_path;
-        if (!df_util::fileExists(image_default_path)){
-            qDebug() << "File not found in default template folder (will use path anyways...): " + image_default_path; 
+        if (!df_util::fileExists(image_default_path))
+        {
+            qDebug() << "File not found in default template folder (will use path anyways...): " + image_default_path;
         }
         image_path = image_default_path;
     }
@@ -235,10 +311,15 @@ QString page_idle::getDefaultTemplatePathFromName(QString backgroundPictureName)
     return template_root_path + TEMPLATES_DEFAULT_NAME + "/" + backgroundPictureName;
 }
 
-void page_idle::pageTransition(QWidget* pageToHide, QWidget* pageToShow){
-    // page transition effects are not part of QT but of the operating system! 
+void page_idle::pageTransition(QWidget *pageToHide, QWidget *pageToShow)
+{
+    // page transition effects are not part of QT but of the operating system!
     // search for ubuntu tweaks program to set animations to "off"
+<<<<<<< HEAD
     qDebug()<<"---------page transition";
+=======
+    qDebug() << "---------page transistion";
+>>>>>>> lode-printer
     // pageToHide->raise();
     pageToShow->showFullScreen();
     // usleep(200000);
@@ -268,13 +349,12 @@ void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QStrin
     QPixmap background(imageName);
 #endif
 
-    //background = background.scaled(p_widget->size(), Qt::IgnoreAspectRatio);
+    // background = background.scaled(p_widget->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
     p_widget->setPalette(palette);
 
-
-        // QPixmap background(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
+    // QPixmap background(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
     // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     // QPalette palette;
     // palette.setBrush(QPalette::Background, background);

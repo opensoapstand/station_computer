@@ -529,7 +529,7 @@ bool dispenser::getIsStatusUpdateAllowed()
 
 // void dispenser::sendToUiIfAllowed(string message){
 //     // only use this for updates that would happen at every stateDispense refresh cycle.
-//      m_pMessaging->sendMessage(message);
+//      m_pMessaging->sendMessageOverIP(message);
 // }
 
 void dispenser::logUpdateIfAllowed(string message)

@@ -27,7 +27,8 @@ stateVirtual::stateVirtual(messageMediator *message)
    }
    //m_state = START;
 
-   m_pMessaging = message;
+   m_pMessaging = message; // linking of the message sender (TCP/IP)
+
 }
 
 stateVirtual::~stateVirtual()

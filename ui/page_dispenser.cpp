@@ -330,6 +330,8 @@ void page_dispenser::resetDispenseTimeout(void)
 
 void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
 {
+    //  qDebug() << "vol dispesnne " << dispensed;
+    //  qDebug() << "vol is fulll  " << isFull;
     if (this->isDispensing)
     {
         // if (dispensed > 0.01){
@@ -359,7 +361,6 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
     }
     else
     {
-
         qDebug() << "Signal: volume update in dispenser while not dispensing.";
     }
 }

@@ -27,6 +27,7 @@ signals:
     void initReadySignal(void);
     void MMSignal(void);
     void dispenseButtonPressedSignal(void);
+    void messageHandlerFinishedSignal(void);
 
 public slots:
     QByteArray readyRead();

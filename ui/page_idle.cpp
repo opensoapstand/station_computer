@@ -114,34 +114,42 @@ void page_idle::showEvent(QShowEvent *event)
     // m_transitioning = false;
 }
 
-void page_idle::checkReceiptPrinterStatus(){
+void page_idle::checkReceiptPrinterStatus()
+{
     this->p_page_maintenance_general->send_check_printer_status_command();
     // this->p_page_maintenance_general->on_printer_check_status_clicked();
-    usleep(50000);
-    
-    qDebug() << "db idle check printer";
-    DbManager db(DB_PATH);
-    bool isPrinterOnline = false;
-    bool hasPrinterPaper = false;
-    bool hasReceiptPrinter = db.hasReceiptPrinter();
-    db.printerStatus(&isPrinterOnline, &hasPrinterPaper);
-    db.closeDB();
-    
-    if (hasReceiptPrinter)
-    {
-        ui->printer_status_label->raise();
-        if (!isPrinterOnline){
-            ui->printer_status_label->setText("Error: Receipt Printer offline.");
-            ui->printer_status_label->show();
-        }else if (!hasPrinterPaper){
-            ui->printer_status_label->setText("Error: Receipt printer empty or improperly loaded.");
-            ui->printer_status_label->show();
-        }else{
-            ui->printer_status_label->hide();
-        }
-    }else{
-        ui->printer_status_label->hide();
-    }
+    // usleep(50000);
+
+    // qDebug() << "db idle check printer";
+    // DbManager db(DB_PATH);
+    // bool isPrinterOnline = false;
+    // bool hasPrinterPaper = false;
+    // bool hasReceiptPrinter = db.hasReceiptPrinter();
+    // db.printerStatus(&isPrinterOnline, &hasPrinterPaper);
+    // db.closeDB();
+
+    // if (hasReceiptPrinter)
+    // {
+    //     ui->printer_status_label->raise();
+    //     if (!isPrinterOnline)
+    //     {
+    //         ui->printer_status_label->setText("Error: Receipt Printer offline.");
+    //         ui->printer_status_label->show();
+    //     }
+    //     else if (!hasPrinterPaper)
+    //     {
+    //         ui->printer_status_label->setText("Error: Receipt printer empty or improperly loaded.");
+    //         ui->printer_status_label->show();
+    //     }
+    //     else
+    //     {
+    //         ui->printer_status_label->hide();
+    //     }
+    // }
+    // else
+    // {
+    //     ui->printer_status_label->hide();
+    // }
 }
 /*
  * Screen click shows product page as full screen and hides page_idle screen
@@ -156,32 +164,33 @@ void page_idle::checkReceiptPrinterStatus(){
 //     p_page_idle->dfUtility->send_command_to_FSM("q");
 // }
 
-// void page_maintenance_general::printerStatusFeedback(bool isOnline, bool hasPaper)
-// {
-//     qDebug() << "Feeback received yoooooo . printer";
+void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
+{
+    qDebug() << "Printer feedback received from fsm";
 
-//     QString printerStatus = "Printer is offline";
-//     if (isOnline)
-//     {
-//         printerStatus = "Printer is online";
-//     }
-
-//     QString printerHasPaper = "No paper detected.";
-//     if (hasPaper)
-//     {
-//         printerHasPaper = "Paper ok";
-//     }
-//     ui->printer_isOnline_label->setText(printerStatus);
-//     ui->printer_hasPaper_label->setText(printerHasPaper);
-// }
-
+    if (!isOnline)
+    {
+        ui->printer_status_label->raise();
+        ui->printer_status_label->setText("Error: Receipt Printer offline.");
+        ui->printer_status_label->show();
+    }
+    else if (!hasPaper)
+    {
+        ui->printer_status_label->raise();
+        ui->printer_status_label->setText("Error: Receipt printer empty or improperly loaded.");
+        ui->printer_status_label->show();
+    }
+    else
+    {
+        ui->printer_status_label->hide();
+    }
+}
 
 void page_idle::on_toSelectProductPageButton_clicked()
 {
     qDebug() << "Proceed to next page button clicked. ";
-    
+
     this->pageTransition(this, p_pageSelectProduct);
-    
 
     // p_pageSelectProduct->showFullScreen();
 

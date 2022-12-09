@@ -322,14 +322,12 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
 
    sqlite3_close(db);
 
-   // m_pMessaging->sendMessageOverIP(statusString); // commented out. Let's communicate by setting the db fields only
+   m_pMessaging->sendMessageOverIP(statusString); // commented out. Let's communicate by setting the db fields only
 }
 
 DF_ERROR stateManualPrinter::displayPrinterStatus()
 {
-
-   // debugOutput::sendMessage("printenrnenrnerrrrrr-: " + to_string(printerr.testCommschar()), MSG_INFO);
-   bool isOnline = printerr.testComms(); // first call return always "online"
+   bool isOnline = printerr.testComms(); // first call returns always "online"
    isOnline = printerr.testComms();
 
    if (isOnline)
@@ -343,8 +341,6 @@ DF_ERROR stateManualPrinter::displayPrinterStatus()
       {
          debugOutput::sendMessage("Printer online, no paper.", MSG_INFO);
       }
-
-      // debugOutput::sendMessage("Printer online.", MSG_INFO);
    }
    else
    {
@@ -371,12 +367,12 @@ DF_ERROR stateManualPrinter::printTest()
 
    // Adafruit_Thermal printerr;
    printerr.printBarcode(plu.c_str(), EAN13);
-   system("echo '\n---------------------------\n' > /dev/ttyS4");
+   //system("echo '\n---------------------------\n' > /dev/ttyS4");
 
    string printer_command_string = "echo '\n---------------------------\n" + printerstring + "' > /dev/ttyS4";
    system(printer_command_string.c_str());
 
-   printerr.testPage();
+   // printerr.testPage();
 
    //  string printer_command_string = "echo '------------------------------\n-- Vancouver Active Tourism --\n--            2022-02-12    --\n------------------------------\n 1x Special morning activity \n 1x Batard Bakery experience \n 1x Guided bike tour to \n         Lighthouse park \n 1x Soapstand workplace demo \n Participants: Wafeltje + Lodey    \n   Grand total: Happy times <3 \n   Thank you, please come again!  \n\n\n\n' > /dev/ttyS4";
    //  system(printer_command_string.c_str());

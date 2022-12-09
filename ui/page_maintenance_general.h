@@ -73,6 +73,11 @@ private slots:
     void on_wifiButton_clicked();
     // void onPage_maintenanceTimeoutTick();
 
+    void on_printer_check_status_button_clicked();
+
+    void on_printer_test_print_button_clicked();
+
+
 private:
     void showEvent(QShowEvent *event);
     Ui::page_maintenance_general *ui;

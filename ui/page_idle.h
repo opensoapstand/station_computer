@@ -63,6 +63,7 @@ public:
 
     // bool isSlotAvailable(int slot);
     // void setSlotAvailability(int slot, bool isEnabled);
+    void printerStatusFeedback(bool isOnline, bool hasPaper);
 
 
     bool isEnough(int p);

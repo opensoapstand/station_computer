@@ -15,7 +15,7 @@
 
 // CTOR
 page_maintenance_general::page_maintenance_general(QWidget *parent) : QWidget(parent),
-                                                                          ui(new Ui::page_maintenance_general)
+                                                                      ui(new Ui::page_maintenance_general)
 {
     // Fullscreen background setup
     ui->setupUi(this);
@@ -30,8 +30,6 @@ page_maintenance_general::page_maintenance_general(QWidget *parent) : QWidget(pa
     // connect(ui->pwmSlider, SIGNAL(valueChanged(int)), this, SLOT(pwmSliderMoved(int)));
 
     connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
-        
-
 }
 
 // DTOR
@@ -43,14 +41,12 @@ page_maintenance_general::~page_maintenance_general()
 void page_maintenance_general::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: maintenance general machine settings >>>>>>>>>";
+    qDebug() << "db for maintenance general";
     DbManager db(DB_PATH);
     ui->enable_empty_container_checkBox->setChecked(db.getEmptyContainerDetectionEnabled());
     ui->enable_pump_ramping_checkBox->setChecked(db.getPumpRampingEnabled());
-  
     db.closeDB();
 
-
-    
     QProcess process;
 
     process.start("iwgetid -r");
@@ -90,33 +86,29 @@ void page_maintenance_general::setPage(page_maintenance *pageMaintenance, page_i
     // refreshLabels();
     // ui->minimize_Button->setStyleSheet("QPushButton { background-color: 0x88448811; border: 5px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->minimize_Button->setStyleSheet("QPushButton {}"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-    
 }
 
 void page_maintenance_general::refreshLabels()
 {
-    
 }
 
 void page_maintenance_general::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
-
 }
-
 
 void page_maintenance_general::on_printer_test_button_clicked()
 {
 
-    qDebug() << "Send test printer to controller";
+    // qDebug() << "Send test printer to controller";
 
-    // Send to fsm
+    // // Send to fsm
 
-    p_page_idle->dfUtility->send_command_to_FSM("p");
-    usleep(50000);
-    p_page_idle->dfUtility->send_command_to_FSM("1");
-    usleep(50000);
-    p_page_idle->dfUtility->send_command_to_FSM("q");
+    // p_page_idle->dfUtility->send_command_to_FSM("p");
+    // usleep(50000);
+    // p_page_idle->dfUtility->send_command_to_FSM("1");
+    // usleep(50000);
+    // p_page_idle->dfUtility->send_command_to_FSM("q");
 }
 
 void page_maintenance_general::printerStatusFeedback(bool isOnline, bool hasPaper)
@@ -138,51 +130,37 @@ void page_maintenance_general::printerStatusFeedback(bool isOnline, bool hasPape
     ui->printer_hasPaper_label->setText(printerHasPaper);
 }
 
-void page_maintenance_general::send_check_printer_status_command(){
-    qDebug() << "Send test printer to controller";
+void page_maintenance_general::send_check_printer_status_command()
+{
+    qDebug() << "Send check printer status to controller";
     p_page_idle->dfUtility->send_command_to_FSM("p");
     usleep(50000);
     p_page_idle->dfUtility->send_command_to_FSM("a");
     usleep(50000);
 }
-
-void page_maintenance_general::on_printer_check_status_clicked()
+void page_maintenance_general::on_printer_check_status_button_clicked()
 {
-    qDebug() << "Maintenance general. yoooo.";
-   send_check_printer_status_command();
-    // usleep(50000);
-    // p_page_idle->dfUtility->send_command_to_FSM("q"); // go back to fsm idle state is done in controller
-
-    DbManager db(DB_PATH);
-    bool isPrinterOnline = false;
-    bool hasPrinterPaper = false;
-    bool hasReceiptPrinter = db.hasReceiptPrinter();
-    db.printerStatus(&isPrinterOnline, &hasPrinterPaper);
-    db.closeDB();
-
-    qDebug() << "Maintenance general. Receipt printer Feedback from FSM.";
-
-    QString printerStatus = "Printer is offline";
-    if (isPrinterOnline)
-    {
-        printerStatus = "Printer is online";
-    }
-
-    QString printerHasPaper = "No paper detected.";
-    if (hasPrinterPaper)
-    {
-        printerHasPaper = "Paper ok";
-    }
-    ui->printer_isOnline_label->setText(printerStatus);
-    ui->printer_hasPaper_label->setText(printerHasPaper);
-
+    //qDebug() << "Maintenance general. yoooo.";
+    send_check_printer_status_command();
 }
 
+void page_maintenance_general::on_printer_test_print_button_clicked()
+{
+    qDebug() << "Send test printer to controller";
+
+    // Send to fsm
+
+    p_page_idle->dfUtility->send_command_to_FSM("p");
+    usleep(50000);
+    p_page_idle->dfUtility->send_command_to_FSM("1");
+    usleep(50000);
+    p_page_idle->dfUtility->send_command_to_FSM("q");
+}
 
 
 void page_maintenance_general::on_enable_pump_ramping_checkBox_clicked(bool checked)
 {
-   //qDebug() << "test ramp clicked" << checked;
+    // qDebug() << "test ramp clicked" << checked;
     DbManager db(DB_PATH);
     // qDebug() << "test empty db: " << db.getPumpRampingEnabled();
     if (checked != db.getPumpRampingEnabled())
@@ -208,8 +186,6 @@ void page_maintenance_general::on_enable_empty_container_checkBox_clicked(bool c
     db.closeDB();
 }
 
-
-
 void page_maintenance_general::on_back_Button_clicked()
 {
     // p_page_maintenance->showFullScreen();
@@ -219,32 +195,32 @@ void page_maintenance_general::on_back_Button_clicked()
 
 void page_maintenance_general::on_minimize_Button_clicked()
 {
-    qDebug()<<"Maintenance Minimize button pressed.";
+    qDebug() << "Maintenance Minimize button pressed.";
     this->showMinimized();
 }
 
 void page_maintenance_general::on_reboot_Button_clicked()
 {
-    qDebug()<<"Maintenance Reboot button pressed.";
+    qDebug() << "Maintenance Reboot button pressed.";
     // QProcess process;
     // process.start("reboot now");
     // process.waitForFinished(-1);
     // QString stdout = process.readAllStandardOutput();
     // qDebug()<<"reboot test finished.";
-    //qApp->exit();
+    // qApp->exit();
     QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
     system(qPrintable(command));
 }
 
 void page_maintenance_general::on_shutdown_Button_clicked()
 {
-    qDebug()<<"Maintenance Shutdown button pressed.";
-    // QProcess shellCommand;   
+    qDebug() << "Maintenance Shutdown button pressed.";
+    // QProcess shellCommand;
     // shellCommand.start("shutdown -r 0");
     // // shellCommand.start("sudo -u df-admin systemctl poweroff");
     // // process.start("sudo -u df-admin shutdown -n now");
     // // process.waitForFinished(-1); // waits forever
-    // shellCommand.waitForFinished();   //  is hitting the default 30 seconds timeout. Use 
+    // shellCommand.waitForFinished();   //  is hitting the default 30 seconds timeout. Use
 
     // QProcess::startDetached("/usr/sbin/reboot");
     // QString command = "sudo -u df-admin systemctl poweroff";
@@ -261,9 +237,9 @@ void page_maintenance_general::btn_clicked()
 {
     QObject *button = QObject::sender();
     //    qDebug() << "btn clicked -> " << button->objectName();
-    
+
     // _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
-    
+
     // OPEN ON-SCREEN KEYBOARD FOR PASSWORD ENTRY
 
     ui->keyboard_2->show();
@@ -389,7 +365,6 @@ void page_maintenance_general::keyboardButtonPressed(int buttonID)
         ui->keyboardTextEntry->setText(ui->keyboardTextEntry->text() + buttonText);
     }
 }
-
 
 void page_maintenance_general::on_wifiButton_clicked()
 {

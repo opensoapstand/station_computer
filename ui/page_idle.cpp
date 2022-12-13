@@ -19,6 +19,10 @@
 #include "page_maintenance.h"
 #include "page_maintenance_general.h"
 
+#include <QMediaPlayer>
+#include <QGraphicsVideoItem>
+#include <QMainWindow>
+
 // CTOR
 page_idle::page_idle(QWidget *parent) : QWidget(parent),
                                         ui(new Ui::page_idle)
@@ -52,6 +56,10 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     // TODO: Hold and pass DrinkOrder Object
     currentProductOrder = new DrinkOrder();
     currentProductOrder->setSelectedSlot(OPTION_SLOT_INVALID);
+
+    video_label = new QLabel(this);
+    video_label->setObjectName(QStringLiteral("video testset"));
+    video_label->setGeometry(QRect(300, 136, 391, 31));
 }
 
 // bool page_idle::isSlotAvailable(int slot){
@@ -81,6 +89,7 @@ page_idle::~page_idle()
 
 void page_idle::showEvent(QShowEvent *event)
 {
+
     this->lower();
     qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
     QWidget::showEvent(event);
@@ -110,8 +119,44 @@ void page_idle::showEvent(QShowEvent *event)
     checkReceiptPrinterStatus();
 
     addPictureToLabel(ui->drinkfill_logo_label, DRINKFILL_LOGO_VERTICAL_PATH);
-    this->raise();
+
     // m_transitioning = false;
+
+    // player = new QMediaPlayer(this);
+
+    // QGraphicsVideoItem *item = new QGraphicsVideoItem;
+    // player->setVideoOutput(item);
+    // graphicsView->scene()->addItem(item);
+    // graphicsView->show();
+
+    // player->setMedia(QUrl("http://example.com/myclip4.ogv"));
+    // player->play();
+
+    QMainWindow w;
+
+    QVideoWidget videoWidget(ui->video_player);
+    // ui->video_player
+    // w.setCentralWidget(&videoWidget);
+
+    QMediaPlayer *player = new QMediaPlayer(ui->media_player);
+
+    ui->media_player->show();
+    ui->media_player->raise();
+
+    player->setMedia(QUrl::fromLocalFile("/home/df-admin/production/references/media/ttt.mp4"));
+    player->setVideoOutput(&videoWidget);
+
+    // w.show();
+    video_label->setText("lode was here. And Ash too");
+    video_label->raise();
+    video_label->show();
+    
+
+    qDebug() << "Video processed";
+
+
+    player->play();
+    this->raise();
 }
 
 void page_idle::checkReceiptPrinterStatus()
@@ -315,7 +360,7 @@ void page_idle::pageTransition(QWidget *pageToHide, QWidget *pageToShow)
 {
     // page transition effects are not part of QT but of the operating system!
     // search for ubuntu tweaks program to set animations to "off"
-    qDebug()<<"---------page transition";
+    qDebug() << "---------page transition";
     // pageToHide->raise();
     pageToShow->showFullScreen();
     // usleep(200000);

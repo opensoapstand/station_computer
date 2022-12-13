@@ -722,7 +722,7 @@ char Adafruit_Thermal::testCommschar() {
 bool Adafruit_Thermal::testComms() {
   // first requst not valid?!
 
-  writeBytes(ASCII_ESC,'@'); //if omitted, after about 8 hasPaper calls, some chars are printed.
+  writeBytes(ASCII_ESC,'@'); //reset command. if omitted, after about 8 hasPaper calls, some chars are printed.
 
   std::string command(1,ASCII_ESC);
   command.push_back('v');

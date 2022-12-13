@@ -23,6 +23,8 @@
 #include "dbmanager.h"
 #include "page_maintenance.h"
 #include "page_maintenance_general.h"
+#include <QMediaPlayer>
+#include <QGraphicsVideoItem>
 
 // #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 // #define DB_PATH_CLICKS "/release/db/sqlite/clicks.db"
@@ -71,6 +73,10 @@ public:
     bool m_transitioning = false;
     // bool slotIndexAvailable[4] = {true,true,true,true}; //;1,2,3,4
 
+
+    QLabel *video_label;
+
+
 private slots:
     void on_toSelectProductPageButton_clicked();
 //    void on_savedBottles_label_clicked();
@@ -85,6 +91,9 @@ private:
     page_maintenance* p_page_maintenance;
     page_maintenance_general* p_page_maintenance_general;
     bool p1, p2, p3, p4;
+
+    QMediaPlayer* player;
+    // QVideoWidget* videoWidget();
 
 };
 

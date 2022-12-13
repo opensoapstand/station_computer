@@ -120,10 +120,10 @@ text-transform: lowercase;</string>
   <widget class="QWidget" name="video_player" native="true">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>60</y>
-     <width>171</width>
-     <height>121</height>
+     <x>0</x>
+     <y>0</y>
+     <width>1080</width>
+     <height>1920</height>
     </rect>
    </property>
   </widget>

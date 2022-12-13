@@ -57,9 +57,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     currentProductOrder = new DrinkOrder();
     currentProductOrder->setSelectedSlot(OPTION_SLOT_INVALID);
 
-    video_label = new QLabel(this);
-    video_label->setObjectName(QStringLiteral("video testset"));
-    video_label->setGeometry(QRect(300, 136, 391, 31));
+    
 }
 
 // bool page_idle::isSlotAvailable(int slot){
@@ -79,6 +77,8 @@ void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pa
     this->p_page_maintenance = pageMaintenance;
     this->p_page_maintenance_general = pageMaintenanceGeneral;
     setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
+
+
 }
 
 // DTOR
@@ -132,30 +132,44 @@ void page_idle::showEvent(QShowEvent *event)
     // player->setMedia(QUrl("http://example.com/myclip4.ogv"));
     // player->play();
 
-    QMainWindow w;
+    // QMainWindow w;
+    videoWidget = new QVideoWidget(ui->video_player);
+    QMediaPlayer *player = new QMediaPlayer(this);
 
-    QVideoWidget videoWidget(ui->video_player);
+
+    // test text label
+    video_label = new QLabel(this);
+    // video_label = new QLabel(ui->video_player);
+    video_label->setObjectName(QStringLiteral("video testset"));
+    video_label->setGeometry(QRect(0, 0, 100, 31));
+    video_label->setText("lode was here. And Ash too");
+    video_label->raise();
+    video_label->show();
+
+    
+    
     // ui->video_player
     // w.setCentralWidget(&videoWidget);
 
-    QMediaPlayer *player = new QMediaPlayer(ui->media_player);
 
     ui->media_player->show();
     ui->media_player->raise();
 
     player->setMedia(QUrl::fromLocalFile("/home/df-admin/production/references/media/ttt.mp4"));
-    player->setVideoOutput(&videoWidget);
+    player->setVideoOutput(videoWidget);
 
+    player->play();
     // w.show();
-    video_label->setText("lode was here. And Ash too");
-    video_label->raise();
-    video_label->show();
+    // ui->video_player->raise();
+    ui->video_player->show();
     
 
     qDebug() << "Video processed";
+    qDebug() << "Video player is fullscreen? : " << videoWidget->isFullScreen();
+    videoWidget->setFullScreen(true);
+    qDebug() << "Video player is fullscreen? : " << videoWidget->isFullScreen();
+    
 
-
-    player->play();
     this->raise();
 }
 

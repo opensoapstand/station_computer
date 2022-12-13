@@ -75,6 +75,9 @@ public:
 
 
     QLabel *video_label;
+    QVideoWidget* videoWidget;
+    QMediaPlayer* player;
+
 
 
 private slots:
@@ -92,9 +95,8 @@ private:
     page_maintenance_general* p_page_maintenance_general;
     bool p1, p2, p3, p4;
 
-    QMediaPlayer* player;
-    // QVideoWidget* videoWidget();
-
+    
+    
 };
 
 #endif // IDLE_H

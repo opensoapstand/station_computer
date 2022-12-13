@@ -58,6 +58,8 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     currentProductOrder->setSelectedSlot(OPTION_SLOT_INVALID);
 
     
+
+    
 }
 
 // bool page_idle::isSlotAvailable(int slot){
@@ -76,8 +78,7 @@ void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pa
     this->p_pageSelectProduct = p_pageProduct;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_maintenance_general = pageMaintenanceGeneral;
-    setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
-
+    //setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
 
 }
 
@@ -133,10 +134,12 @@ void page_idle::showEvent(QShowEvent *event)
     // player->play();
 
     // QMainWindow w;
-    videoWidget = new QVideoWidget(ui->video_player);
+   
+    QVideoWidget *videoWidget = new QVideoWidget(ui->video_player);
     QMediaPlayer *player = new QMediaPlayer(this);
 
-
+    videoWidget->setGeometry(QRect(0, 0, 1000, 1000));
+    
     // test text label
     video_label = new QLabel(this);
     // video_label = new QLabel(ui->video_player);
@@ -158,17 +161,23 @@ void page_idle::showEvent(QShowEvent *event)
     player->setMedia(QUrl::fromLocalFile("/home/df-admin/production/references/media/ttt.mp4"));
     player->setVideoOutput(videoWidget);
 
-    player->play();
-    // w.show();
-    // ui->video_player->raise();
-    ui->video_player->show();
-    
 
-    qDebug() << "Video processed";
+    // #define VIDEO_IN_WIDGET
+    player->play();
+
+    #ifdef VIDEO_IN_WIDGET
+    // helpful?! https://stackoverflow.com/questions/65910004/qvideowidget-doesnt-display-frames
+
+    videoWidget->show(); // needed to display in non full screen.
+    // ui->video_player->raise();
+    // ui->video_player->show();
+    
+    #else
     qDebug() << "Video player is fullscreen? : " << videoWidget->isFullScreen();
     videoWidget->setFullScreen(true);
-    qDebug() << "Video player is fullscreen? : " << videoWidget->isFullScreen();
     
+    #endif
+    qDebug() << "Video player. Is fullscreen? : " << videoWidget->isFullScreen();
 
     this->raise();
 }

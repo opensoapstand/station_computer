@@ -315,11 +315,11 @@ void motor_test()
     connected_pcb->setPumpEnable(SLOT);
     connected_pcb->setSolenoid(SLOT, true);
     connected_pcb->setSingleDispenseButtonLight(SLOT, true);
-//    debugOutput::sendMessage("started. press button to stop", MSG_INFO);
-        using namespace std::chrono;
-        uint64_t start_millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-uint64_t now = start_millis_epoch;
-	
+    //    debugOutput::sendMessage("started. press button to stop", MSG_INFO);
+    using namespace std::chrono;
+    uint64_t start_millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    uint64_t now = start_millis_epoch;
+
     while (now < start_millis_epoch + 5000)
     {
         now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
@@ -335,8 +335,29 @@ uint64_t now = start_millis_epoch;
     }
     debugOutput::sendMessage("end", MSG_INFO);
 }
+
+void init_test()
+{
+    pcb *connected_pcb;
+    connected_pcb = new pcb();
+
+    connected_pcb->setup();
+
+    using namespace std::chrono;
+    uint64_t start_millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    uint64_t now = start_millis_epoch;
+
+    while (now < start_millis_epoch + 5000)
+    {
+        now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+        connected_pcb->refresh();
+    }
+    debugOutput::sendMessage("end", MSG_INFO);
+}
+
 int main(int argc, char *argv[])
 {
-    //board_test();
-    motor_test();
+    // board_test();
+    //  motor_test();
+    init_test();
 }

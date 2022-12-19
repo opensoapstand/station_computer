@@ -125,6 +125,7 @@ public:
     void flowSensorEnable(uint8_t slot);
     void flowSensorsDisableAll();
     // PcbVersion enum PcbVersion;
+    enum PcbVersion pcb_version;
 
 private:
     void EN134_PumpCycle_refresh(uint8_t slots);
@@ -169,7 +170,7 @@ private:
     uint64_t pump_stop_before_backtrack_delay_start_epoch[MAX_SLOT_COUNT];
     uint64_t pump_backtrack_start_epoch[MAX_SLOT_COUNT];
     uint64_t solenoid_stop_delay_start_epoch[MAX_SLOT_COUNT];
-    enum PcbVersion pcb_version;
+
     PumpSolenoidInteractionState pumpCycle_state[MAX_SLOT_COUNT];
     uint64_t button_light_blink_period_start_millis[MAX_SLOT_COUNT];
     bool button_light_blink_on_else_off[MAX_SLOT_COUNT];

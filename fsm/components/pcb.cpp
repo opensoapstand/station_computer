@@ -235,7 +235,8 @@ void pcb::refresh()
 {
 
     usleep(100);
-    if (get_pcb_version() != INVALID){
+    if (get_pcb_version() != INVALID)
+    {
 
         dispenseButtonRefresh();
         refreshFlowSensors();
@@ -279,6 +280,7 @@ pcb::PcbVersion pcb::get_pcb_version(void)
     return pcb_version;
 }
 
+
 bool pcb::define_pcb_version(void)
 {
     unsigned char i2c_probe_address;
@@ -292,12 +294,11 @@ bool pcb::define_pcb_version(void)
     for (i2c_probe_address = 0x03; i2c_probe_address <= 0x77; i2c_probe_address++)
     {
         // Go through all the addresses
-        debugOutput::sendMessage("will test i2c address: " + to_string(i2c_probe_address), MSG_INFO);
+        debugOutput::sendMessage("Check I2C address " + to_string(i2c_probe_address), MSG_INFO);
 
         if (!set_i2c_address(i2c_probe_address))
         {
-            std::string message("Error with i2c protocol");
-            // return false;
+            debugOutput::sendMessage("Error with i2c protocol", MSG_INFO);
         }
 
         if (i2c_smbus_read_byte(i2c_handle) < 0)
@@ -353,14 +354,17 @@ bool pcb::define_pcb_version(void)
             }
         }
     }
-
+    
     if (max31760_pwm_found)
     {
         // definitely 8344
+        debugOutput::sendMessage("max31760 found. Definitely DSED8344 board.", MSG_INFO);
         pcb_version = DSED8344_NO_PIC;
     }
     else if (pic_pwm_found)
     {
+        debugOutput::sendMessage("PCB has PIC. Refine pcb type... ", MSG_INFO);
+
         if (slot_pca9534_found[4] || slot_pca9534_found[5] || slot_pca9534_found[6] || slot_pca9534_found[7])
         {
             // for sure 8 slots board
@@ -374,16 +378,17 @@ bool pcb::define_pcb_version(void)
         }
         else if (slot_pca9534_found[0])
         {
-            //
-            pcb_version = DSED8344_NO_PIC;
+            pcb_version = DSED8344_PIC;
         }
         else
         {
+            debugOutput::sendMessage("No pca9534 I/O expanders found. Impossible to determine board type.", MSG_INFO);
             pcb_version = INVALID;
         }
     }
     else
     {
+        debugOutput::sendMessage("No pca9534 I/O expanders found. Impossible to determine board type.", MSG_INFO);
         pcb_version = INVALID;
     }
 
@@ -534,6 +539,7 @@ void pcb::setSingleDispenseButtonLight(uint8_t slot, bool onElseOff)
 
         case 1:
         {
+            debugOutput::sendMessage("9999999999999999999999999999lode", MSG_ERROR);
             // has a mosfet in between
             setPCA9534Output(slot, 6, !onElseOff);
             break;
@@ -964,7 +970,7 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
         uint8_t slot = slot_index + 1;
         using namespace std::chrono;
         uint64_t now_epoch_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-        
+
         switch (pumpCycle_state[slot_index])
         {
 
@@ -1020,7 +1026,6 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
                 pump_start_delay_start_epoch[slot_index] = now_epoch_millis;
                 setSolenoid(slot, true);
                 setSingleDispenseButtonLight(slot, true);
-                
             }
         }
         break;

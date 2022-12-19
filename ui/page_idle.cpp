@@ -22,7 +22,7 @@
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
 #include <QMainWindow>
-
+//    #define PLAY_VIDEO
 // CTOR
 page_idle::page_idle(QWidget *parent) : QWidget(parent),
                                         ui(new Ui::page_idle)
@@ -78,8 +78,9 @@ void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pa
     this->p_pageSelectProduct = p_pageProduct;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_maintenance_general = pageMaintenanceGeneral;
-    //setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
-
+       #ifndef PLAY_VIDEO
+    setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
+    #endif
 }
 
 // DTOR
@@ -134,7 +135,8 @@ void page_idle::showEvent(QShowEvent *event)
     // player->play();
 
     // QMainWindow w;
-   
+   //#define PLAY_VIDEO
+   #ifdef PLAY_VIDEO
     QVideoWidget *videoWidget = new QVideoWidget(ui->video_player);
     QMediaPlayer *player = new QMediaPlayer(this);
 
@@ -178,7 +180,7 @@ void page_idle::showEvent(QShowEvent *event)
     
     #endif
     qDebug() << "Video player. Is fullscreen? : " << videoWidget->isFullScreen();
-
+#endif
     this->raise();
 }
 

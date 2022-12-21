@@ -30,7 +30,7 @@
 
 #include "../objects/debugOutput.h"
 
-#include "pcbEN134.h"
+// #include "pcbEN134.h"
 
 #define MAX_SLOT_COUNT 8
 #define PCA9534_ADDRESS_SLOT_1 0b0100000
@@ -41,14 +41,22 @@
 
 #define PCA9534_TMP_SLOT2_ADDRESS PCA9534_ADDRESS_SLOT_2
 
-#define PCA9534_PIN_OUT_SOLENOID 0
-#define PCA9534_PIN_OUT_PUMP_ENABLE 1
-#define PCA9534_PIN_OUT_PUMP_DIR 2
-#define PCA9534_PIN_IN_PUMP_FAULT 3
-#define PCA9534_PIN_IN_BUTTON 4
-#define PCA9534_PIN_OUT_BUTTON_LED_LOW_IS_ON 5
-#define PCA9534_PIN_IN_FLOW_SENSOR_TICKS 6
-#define PCA9534_PIN_OUT_FLOW_SENSOR_ENABLE 7
+#define PCA9534_DSED8344_PIN_IN_BUTTON 7
+#define PCA9534_DSED8344_PIN_IN_BUTTON 7
+#define PCA9534_DSED8344_PIN_IN_BUTTON 7
+#define PCA9534_DSED8344_PIN_IN_BUTTON 7
+#define PCA9534_DSED8344_PIN_IN_BUTTON 7
+#define PCA9534_DSED8344_PIN_IN_BUTTON 7
+
+
+#define PCA9534_EN134_PIN_OUT_SOLENOID 0
+#define PCA9534_EN134_PIN_OUT_PUMP_ENABLE 1
+#define PCA9534_EN134_PIN_OUT_PUMP_DIR 2
+#define PCA9534_EN134_PIN_IN_PUMP_FAULT 3
+#define PCA9534_EN134_PIN_IN_BUTTON 4
+#define PCA9534_EN134_PIN_OUT_BUTTON_LED_LOW_IS_ON 5
+#define PCA9534_EN134_PIN_IN_FLOW_SENSOR_TICKS 6
+#define PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE 7
 
 #define PIC_ADDRESS 0b0110000
 #define MAX31760_ADDRESS 0b1010000
@@ -83,8 +91,8 @@ public:
     enum PcbVersion
     {
         INVALID,
-        DSED8344_NO_PIC, // pre v3 board for 4 slots, but 1 button
-        DSED8344_PIC,    // modified v3 version for 4 buttons. It has never been deployed without the modification
+        DSED8344_NO_PIC, // pre v3 board for 4 slots, with 1 button
+        DSED8344_PIC_MULTIBUTTON,    // modified v3 version for 4 buttons. It has never been deployed without the modification!!
         EN134_4SLOTS,
         EN134_8SLOTS
     };
@@ -93,7 +101,7 @@ public:
     pcb(const char *);
     ~pcb();
     void setup();
-    void refresh();
+    void pcb_refresh();
     void initialize_pcb(void);
     bool define_pcb_version(void);
     PcbVersion get_pcb_version();
@@ -115,6 +123,7 @@ public:
     void virtualButtonPressHack(uint8_t slot);
     void virtualButtonUnpressHack(uint8_t slot);
     void dispenseButtonRefresh();
+    void dispenseButtonRefreshPerSlot(uint8_t slot);
     bool getDispenseButtonState(uint8_t slot);
 
     void setSolenoid(uint8_t slot, bool onElseOff);

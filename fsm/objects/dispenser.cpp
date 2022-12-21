@@ -66,7 +66,7 @@ DF_ERROR dispenser::setup()
 void dispenser::refresh()
 {
 
-    the_pcb->refresh();
+    the_pcb->pcb_refresh();
 
     // periodical polling refresh  (because the dispense button has no interrupt trigger (i2c))
     bool egde = dispenseButtonValueMemory != getDispenseButtonValue();
@@ -241,7 +241,7 @@ void dispenser::setMultiDispenseButtonLight(int slot, bool enableElseDisable)
 {
     // output has to be set low for light to be on.
     debugOutput::sendMessage("slot light: " + to_string(slot) + "on else off: " + to_string(enableElseDisable), MSG_INFO);
-    if ((the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC) && this->slot == 4)
+    if ((the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON) && this->slot == 4)
     {
         m_pDispenseButton4[0]->writePin(!enableElseDisable);
     }
@@ -356,10 +356,12 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
     resetVolumeDispensed();
 
     // if (the_pcb->get_pcb_version() == 2){
-    if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC)
+    if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON)
     {
+        debugOutput::sendMessage("88888888888888888888888", MSG_INFO);
         if (getMultiDispenseButtonEnabled())
         {
+        debugOutput::sendMessage("333333333333333333333333333333", MSG_INFO);
             setMultiDispenseButtonLight(getSlot(), true);
         }
     }

@@ -133,7 +133,7 @@ DF_ERROR stateInit::dispenserSetup()
 
     // #ifdef ENABLE_MULTI_BUTTON
 
-    // needs to be set up only once. Dispener index is only important for the button 4 index.
+    // needs to be set up only once. Dispenser index is only important for the button 4 index.
     if (productDispensers[3].getMultiDispenseButtonEnabled())
     {
         productDispensers[3].initDispenseButton4Light(); // THE DISPENSER SLOT MUST REPRESENT THE BUTTON. It's dirty and I know it.

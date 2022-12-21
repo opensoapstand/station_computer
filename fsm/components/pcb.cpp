@@ -982,6 +982,7 @@ uint64_t pcb::getFlowSensorPulsesSinceEnabling(uint8_t slot)
 }
 uint64_t pcb::getFlowSensorTotalPulses(uint8_t slot)
 {
+    // warning: the flow sensor ticks also come in straight to the Odyssey IO. The controller handles the volume calculation from there not from here. The advantage: no missed pulses (interrupt per pulse),the disadvantage: every slot uses the same pin. 
     uint8_t slot_index = slot - 1;
     return flow_sensor_total_pulses[slot_index];
 }

@@ -69,7 +69,7 @@ public:
       int getSlot();
 
       DF_ERROR setPump(int mcpAddress, int pin, int position);
-      DF_ERROR initFlowsensorIO(int pinint, int pos);
+      DF_ERROR initGlobalFlowsensorIO(int pinint, int pos);
       DF_ERROR initDispenseButton4Light();
 
       unsigned short getPumpSpeed();

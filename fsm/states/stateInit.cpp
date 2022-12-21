@@ -116,10 +116,10 @@ DF_ERROR stateInit::dispenserSetup()
 #ifndef __arm__
     for (idx = 0; idx < 4; idx++)
     {
-        productDispensers[idx].initFlowsensorIO(IO_PIN_FLOW_SENSOR, idx);
+        productDispensers[idx].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR, idx);
     }
 #else
-    productDispensers[0].initFlowsensorIO(17, 0);
+    productDispensers[0].initGlobalFlowsensorIO(17, 0);
 #endif
 
     // Set up the four dispensers

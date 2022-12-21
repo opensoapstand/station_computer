@@ -38,7 +38,7 @@ public:
 	virtual int getMCPPin(){};
 
 	// Functions for Threaded GPIO Interrupts
-	void registerProduct(product *pDispenser) { m_pDispenser = pDispenser; } //UNCOMMENT LODE
+	void registerProduct(product *pDispenser) { m_pDispenser = pDispenser; } 
 
 	void startListener_flowsensor();
 	void startListener_buttons_powerAndMaintenance();

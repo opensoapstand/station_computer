@@ -448,13 +448,13 @@ double dispenser::getVolumeDispensed()
 }
 
 // TODO: Call this function on Dispense onEntry()
-DF_ERROR dispenser::initFlowsensorIO(int pin, int pos)
+DF_ERROR dispenser::initGlobalFlowsensorIO(int pin, int pos)
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
     // *m_pIsDispensing = false;
-    std::string msg = "Dispenser::initFlowsensorIO. Position: " + std::to_string(pos) + " (pin: " + std::to_string(pin) + ")";
-    // debugOutput::sendMessage("-----dispenser::initFlowsensorIO-----", MSG_INFO);
+    std::string msg = "Dispenser::initGlobalFlowsensorIO. Position: " + std::to_string(pos) + " (pin: " + std::to_string(pin) + ")";
+    // debugOutput::sendMessage("-----dispenser::initGlobalFlowsensorIO-----", MSG_INFO);
     debugOutput::sendMessage(msg, MSG_INFO);
 
     if ((pos >= 0) && (pos < 4))

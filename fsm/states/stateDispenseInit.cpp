@@ -82,6 +82,8 @@ DF_ERROR stateDispenseInit::onAction()
 
     productDispensers[dispenser_index].startDispense();
     
+
+    
     m_state_requested = STATE_DISPENSE;
     return e_ret;
 }

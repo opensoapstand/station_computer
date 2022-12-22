@@ -358,12 +358,11 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
     // if (the_pcb->get_pcb_version() == 2){
     if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON)
     {
-        debugOutput::sendMessage("88888888888888888888888", MSG_INFO);
         if (getMultiDispenseButtonEnabled())
         {
-        debugOutput::sendMessage("333333333333333333333333333333", MSG_INFO);
             setMultiDispenseButtonLight(getSlot(), true);
         }
+        setPumpEnable(); // Added at time of EN-134 integration. Why did things work earlier onwards?
     }
     else if (the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS)
     {

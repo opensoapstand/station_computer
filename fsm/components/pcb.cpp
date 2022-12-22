@@ -1254,6 +1254,7 @@ bool pcb::setPumpPWM(uint8_t pwm_val)
     break;
     case (DSED8344_PIC_MULTIBUTTON):
     {
+        debugOutput::sendMessage("incoming=================" + std::to_string(pwm_val) , MSG_ERROR);
         float f_value;
 
         // Rescale so the PIC values match the old MAX31760 values.
@@ -1266,7 +1267,10 @@ bool pcb::setPumpPWM(uint8_t pwm_val)
         f_value = (float)pwm_val;
         f_value = floor(f_value / 2.55);
         unsigned char speed_percentage = (unsigned char)f_value;
-        setPumpSpeedPercentage((uint8_t)speed_percentage);
+        uint8_t inverted_percentage = 100 - (uint8_t)speed_percentage ;
+        setPumpSpeedPercentage(inverted_percentage);
+        debugOutput::sendMessage("afeiujjjijiefj=================" + std::to_string(speed_percentage) , MSG_ERROR);
+        debugOutput::sendMessage("afeiujjjijiefj  inverted ==" + std::to_string(inverted_percentage) , MSG_ERROR);
     };
     case (EN134_4SLOTS):
     case (EN134_8SLOTS):

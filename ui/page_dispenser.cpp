@@ -20,7 +20,9 @@
 #include "includefiles.h"
 #include "page_idle.h"
 #include "pagethankyou.h"
+#include "page_product.h"
 
+extern QString transactionLogging;
 // CTOR
 page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
                                                   ui(new Ui::page_dispenser)
@@ -36,6 +38,7 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
+    
 }
 
 /*
@@ -77,6 +80,9 @@ void page_dispenser::showEvent(QShowEvent *event)
     qDebug() << "db check dispense buttons count:";
     DbManager db(DB_PATH);
     
+    transactionLogging +="\n Dispense Page Shown to the user";
+    qDebug() << transactionLogging;
+
     int button_count = db.getDispenseButtonCount();
     db.closeDB();
 
@@ -372,6 +378,7 @@ void page_dispenser::fsmReceiveTargetVolumeReached()
         this->isDispensing = false;
         // qDebug() << "Signal: Target volume reached."  << endl;
         updateVolumeDisplayed(1.0, true); // make sure the fill bottle graphics are completed
+        transactionLogging += "\n Target Volume Reached";
         dispensing_end_admin();
         // qDebug() << "Finish dispense end admin."  << endl;
     }
@@ -401,6 +408,7 @@ void page_dispenser::fsmReceiveNoFlowAbort()
 void page_dispenser::on_abortButton_clicked()
 {
     qDebug() << "Pressed dispense complete.";
+    transactionLogging += "\n Customer pressed complete button on screen";
     if (this->isDispensing)
     {
         force_finish_dispensing();
@@ -412,7 +420,7 @@ void page_dispenser::on_cancelButton_clicked()
     qDebug() << "Pressed cancel dispensing.";
     if (this->isDispensing)
     {
-
+        transactionLogging += "\n Customer pressed Cancel button on screen";
         force_finish_dispensing();
     }
 }

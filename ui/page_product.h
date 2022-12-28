@@ -59,7 +59,7 @@ public:
     void coupon_input_show();
     void coupon_input_hide();
     void coupon_input_reset();
-
+    
 signals:
     void paymentTotal(string, string, string);
 

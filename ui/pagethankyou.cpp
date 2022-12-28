@@ -13,8 +13,9 @@
 
 #include "pagethankyou.h"
 #include "ui_pagethankyou.h"
-
+#include "page_product.h"
 // static QPointer<QFile> log_file = nullptr;
+extern QString transactionLogging;
 
 // CTOR
 pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
@@ -167,8 +168,10 @@ void pagethankyou::sendDispenseEndToCloud()
     QString dispensed_correct_units = this->p_page_dispense->getMostRecentDispensed();
     QString promoCode = this->p_page_dispense->getPromoCodeUsed();
     qDebug() << "Send data at finish of order : " << order_id << ". Total dispensed: " << this->p_page_dispense->getMostRecentDispensed() << "corrected units send to soapstandportal: " << dispensed_correct_units;
-
-    QString curl_param = "oid=" + order_id + "&dispensed_amount=" + dispensed_correct_units+"&coupon=" + promoCode;
+    if(dispensed_correct_units== 0){
+        transactionLogging += "\n Volume dispensed 0. Issue occured at Hardware or User error";
+    }
+    QString curl_param = "oid=" + order_id + "&dispensed_amount=" + dispensed_correct_units+"&coupon=" + promoCode+ "&logging="+transactionLogging;
     qDebug() << "Curl params" << curl_param << endl;
     curl_param_array = curl_param.toLocal8Bit();
     curl_data = curl_param_array.data();

@@ -13,7 +13,9 @@
 #ifndef FSM__H_
 #define FSM__H_
 #include "objects/dispenser.h"
+#include "objects/machine.h"
 
 extern dispenser g_productDispensers[PRODUCT_DISPENSERS_MAX];
+extern machine g_machine;
 
 #endif

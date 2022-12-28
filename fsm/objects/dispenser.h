@@ -57,7 +57,7 @@ public:
       dispenser(gpio *buttonReference);
       ~dispenser();
 
-      DF_ERROR setup();
+      DF_ERROR setup(pcb* pcb);
       void refresh();
       // void initDispenser(int slot);
 
@@ -151,7 +151,8 @@ public:
       
       bool getIsStatusUpdateAllowed();
 
-      static pcb *the_pcb;
+      // static pcb *the_pcb;
+      pcb* the_pcb;
 private:
       bool dispenseButtonValueMemory;
       bool dispenseButtonValueEdgePositive;

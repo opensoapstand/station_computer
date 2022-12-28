@@ -24,6 +24,7 @@
 #include "../objects/messageMediator.h"
 #include "stateVirtual.h"
 #include "../../library/tinyxml/tinyxml.h"
+#include "../objects/machine.h"
 
 class stateInit : public stateVirtual
 {

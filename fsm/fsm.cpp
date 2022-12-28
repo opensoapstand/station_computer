@@ -49,6 +49,7 @@ messageMediator *g_pMessaging;           // debug through local network
 stateVirtual *g_stateArray[FSM_MAX + 1]; // an object for every state
 
 dispenser g_productDispensers[PRODUCT_DISPENSERS_MAX];
+machine g_machine;
 
 DF_ERROR initObjects();
 DF_ERROR createStateArray();
@@ -92,8 +93,8 @@ int main()
     debugOutput::sendMessage("****** SOAPSTAND CONTROLLER v" + version + " ***********************************", MSG_INFO);
     debugOutput::sendMessage("***************************************************************************", MSG_INFO);
 
-    machine test;
-    test.testtest();
+    // machine test;
+    // test.testtest();
 
     if (OK == initObjects())
     {
@@ -185,10 +186,14 @@ DF_ERROR initObjects()
     g_pMessaging = NULL;
     g_pMessaging = new messageMediator();
 
+    g_machine.setup();
+    debugOutput::sendMessage("Machine set up. ", MSG_INFO);
+    
     for (int i = 0; i < PRODUCT_DISPENSERS_MAX; i++)
     {
-        g_productDispensers[i].setup();
+        g_productDispensers[i].setup(g_machine.getPcb());
     }
+
     debugOutput::sendMessage("Dispensers set up. ", MSG_INFO);
 
     dfRet = createStateArray();

@@ -16,7 +16,7 @@
 #include "dispenser.h"
 #include <chrono>
 
-#define DEFAULT_PUMP_PWM 0x80
+
 
 #define ACTIVATION_TIME 5
 #define TEST_ACTIVATION_TIME 3
@@ -26,7 +26,7 @@
 
 #define MAX_BUF 64
 
-pcb *dispenser::the_pcb = nullptr;
+// pcb *dispenser::the_pcb = nullptr;
 
 // CTOR
 dispenser::dispenser()
@@ -41,17 +41,18 @@ dispenser::dispenser()
     // do it here.  Note that the pointer is declared as static so we
     // will only ever create one pcb() class no matter how many
     // times we create a dispenser() class.
-    if (the_pcb == nullptr)
-    {
-        the_pcb = new pcb();
-    }
+    // if (the_pcb == nullptr)
+    // {
+    //     the_pcb = new pcb();
+    // }
 }
 
-DF_ERROR dispenser::setup()
+DF_ERROR dispenser::setup(pcb* pcbtest)
 {
     // Set the pump PWM value to a nominal value
 
-    the_pcb->setup();
+    // the_pcb->setup();
+    the_pcb = pcbtest;
 
     the_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
 

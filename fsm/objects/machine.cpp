@@ -26,13 +26,41 @@
 #include <iomanip>
 
 using namespace std;
+// pcb *machine::control_pcb = nullptr;
 
-void machine::testtest(){
-// nothing here.
-    debugOutput::sendMessage("*** global machine test message", MSG_INFO);
+void machine::setup(){
+    // if ((the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON) && this->slot == 4)
+    // {
+    //     m_pDispenseButton4[0]->writePin(!enableElseDisable);
+    // }
+    // else
+    // {
+    //     this->the_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
+    // }
+    //  if (control_pcb == nullptr)
+    // {
+        control_pcb = new pcb();
+    // }
+
+    control_pcb->setup();
+    control_pcb->setPumpPWM(DEFAULT_PUMP_PWM); 
+
 }
 
+pcb* machine::getPcb(){
+    return control_pcb;
+}
+// void machine::testtest(){
+// // nothing here.
+//     debugOutput::sendMessage("*** global machine test message", MSG_INFO);
+// }
 
+void machine::enablePcb24V(){
+    
+    switch_24V = new oddyseyx86GPIO(IO_PIN_ENABLE_24V);
+    switch_24V->setPinAsInputElseOutput(false);
+    switch_24V->writePin(true);
+}
 
 void machine::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string units, string paymentMethod, string plu, string promoCode){
     print_text(name_receipt + "\nPrice: $" + receipt_cost + " \nQuantity: " + receipt_volume_formatted + "\nTime: " + time_stamp);

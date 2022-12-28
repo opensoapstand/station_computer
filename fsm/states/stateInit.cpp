@@ -22,6 +22,7 @@
 #include <string>
 #include "../fsm.h"
 
+
 #define INIT_STRING "Init"
 
 // Default Ctor
@@ -108,7 +109,10 @@ DF_ERROR stateInit::dispenserSetup()
 {
     int idx;
     dispenser *productDispensers = g_productDispensers;
-    debugOutput::sendMessage("Setting up DS-ED-8344 hardware control board.\n", MSG_INFO);
+    debugOutput::sendMessage("Setting up control board.", MSG_INFO);
+    machine testmachine = g_machine;
+
+
 
     // We only need one flow sensor interrupt pin since only one pump
     // is ever active at a time.  The flow sensors are all connected
@@ -134,11 +138,25 @@ DF_ERROR stateInit::dispenserSetup()
     // #ifdef ENABLE_MULTI_BUTTON
 
     // needs to be set up only once. Dispenser index is only important for the button 4 index.
-    if (productDispensers[3].getMultiDispenseButtonEnabled())
+    
+    if (testmachine.control_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON )  //&& this->slot == 4
     {
-        productDispensers[3].initDispenseButton4Light(); // THE DISPENSER SLOT MUST REPRESENT THE BUTTON. It's dirty and I know it.
-        productDispensers[3].setAllDispenseButtonLightsOff();
+        if (productDispensers[3].getMultiDispenseButtonEnabled())
+        {
+            productDispensers[3].initDispenseButton4Light(); // THE DISPENSER SLOT MUST REPRESENT THE BUTTON. It's dirty and I know it.
+            productDispensers[3].setAllDispenseButtonLightsOff();
+        }
     }
+    else if (testmachine.control_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || testmachine.control_pcb->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS  )
+    {
+        testmachine.enablePcb24V();
+
+    }else{
+        debugOutput::sendMessage(" Unknown PCB (OLD?).", MSG_ERROR);
+    }
+
+
+    
     // #endif
 
     debugOutput::sendMessage("Dispenser intialized.", MSG_INFO);

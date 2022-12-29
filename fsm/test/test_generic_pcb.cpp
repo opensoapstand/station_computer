@@ -25,7 +25,7 @@ Dispense_state dispense_state;
 #define SOLENOID_STOP_DELAY_MILLIS 50
 
 #define AUTO_DISPENSE_ENABLED false
-#define AUTO_DISPENSE_SLOT 4
+#define AUTO_DISPENSE_SLOT 1
 #define AUTO_DISPENSE_DELAY_BETWEEN_CYCLES_MS 3000
 #define AUTO_DISPENSE_CYCLE_LENGTH_MS 3000
 
@@ -55,7 +55,7 @@ void board_test()
     {
         using namespace std::chrono;
         uint64_t now_epoch_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-        connected_pcb->refresh();
+        connected_pcb->pcb_refresh();
 
         switch (dispense_state)
         {
@@ -308,9 +308,9 @@ void motor_test()
     pcb *connected_pcb;
     connected_pcb = new pcb();
 
-#define SLOT 4
+#define SLOT 1
     connected_pcb->setup();
-    connected_pcb->setPumpPWM(240);
+    connected_pcb->setPumpPWM(10);
     connected_pcb->setPumpDirection(SLOT, true);
     connected_pcb->setPumpEnable(SLOT);
     connected_pcb->setSolenoid(SLOT, true);
@@ -323,7 +323,7 @@ void motor_test()
     while (now < start_millis_epoch + 5000)
     {
         now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-        connected_pcb->refresh();
+        connected_pcb->pcb_refresh();
         // if (connected_pcb->getDispenseButtonEdgePositive(SLOT))
         // {
         //     connected_pcb->setPumpsDisableAll();
@@ -350,14 +350,14 @@ void init_test()
     while (now < start_millis_epoch + 5000)
     {
         now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-        connected_pcb->refresh();
+        connected_pcb->pcb_refresh();
     }
     debugOutput::sendMessage("end", MSG_INFO);
 }
 
 int main(int argc, char *argv[])
 {
-    // board_test();
-    //  motor_test();
-    init_test();
+    board_test();
+    // motor_test();
+    //init_test();
 }

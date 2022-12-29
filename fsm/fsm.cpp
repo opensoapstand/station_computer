@@ -187,7 +187,7 @@ DF_ERROR initObjects()
     g_pMessaging = new messageMediator();
 
     g_machine.setup();
-    debugOutput::sendMessage("Machine set up. ", MSG_INFO);
+    debugOutput::sendMessage("Machine set up.", MSG_INFO);
     
     for (int i = 0; i < PRODUCT_DISPENSERS_MAX; i++)
     {

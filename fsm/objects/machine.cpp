@@ -45,6 +45,10 @@ void machine::setup(){
     control_pcb->setup();
     control_pcb->setPumpPWM(DEFAULT_PUMP_PWM); 
 
+    switch_24V = new oddyseyx86GPIO(IO_PIN_ENABLE_24V);
+    switch_24V->setPinAsInputElseOutput(false);
+
+
 }
 
 pcb* machine::getPcb(){
@@ -57,8 +61,7 @@ pcb* machine::getPcb(){
 
 void machine::enablePcb24V(){
     
-    switch_24V = new oddyseyx86GPIO(IO_PIN_ENABLE_24V);
-    switch_24V->setPinAsInputElseOutput(false);
+   
     switch_24V->writePin(true);
 }
 

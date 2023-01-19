@@ -13,6 +13,7 @@
 
 #include "pagethankyou.h"
 #include "ui_pagethankyou.h"
+#include "page_sendFeeback.h"
 
 // static QPointer<QFile> log_file = nullptr;
 
@@ -62,11 +63,12 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void pagethankyou::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, page_payment *page_payment)
+void pagethankyou::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, page_payment *page_payment, page_sendFeedback *page_sendFeedback)
 {
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
     this->paymentPage = page_payment;
+    this->p_page_sendFeedback = page_sendFeedback;
 }
 
 // DTOR

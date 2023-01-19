@@ -17,13 +17,14 @@
 #include "df_util.h"
 #include "page_idle.h"
 #include "page_dispenser.h"
+#include "page_sendFeedback.h"
 #include <curl/curl.h>
 #include <ctime>
 
 class page_dispenser;
 class page_idle;
 class page_payment;
-
+class page_sendFeedback;
 
 namespace Ui {
 class pagethankyou;
@@ -35,7 +36,7 @@ class pagethankyou : public QWidget
 
 public:
     explicit pagethankyou(QWidget *parent = nullptr);
-    void setPage(page_dispenser* page_dispenser, page_idle* pageIdle, page_payment* page_payment);
+    void setPage(page_dispenser* page_dispenser, page_idle* pageIdle, page_payment* page_payment, page_sendFeedback *page_sendFeedback);
     ~pagethankyou();
 
     void controllerFinishedTransaction();

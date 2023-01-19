@@ -22,6 +22,7 @@ FORMS += \
     page_init.ui \
     page_help.ui \
     keyboard.ui \
+    page_sendFeedback.ui \
     page_transactions.ui \
     page_maintenance_general.ui
 
@@ -54,8 +55,9 @@ HEADERS += \
     page_error_wifi.h \
     page_init.h \
     page_help.h \
+    page_sendFeedback.h  \
     page_transactions.h \
-    product.h
+    product.h 
 
 SOURCES += \
     dfuicommthread.cpp \
@@ -75,6 +77,7 @@ SOURCES += \
     posm/transactionPackets.cpp \
     posm/transactioninfo.cpp \
     page_select_product.cpp \
+    page_sendFeedback.cpp \
     pagethankyou.cpp \
     df_util.cpp \
     drinkorder.cpp \

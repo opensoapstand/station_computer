@@ -199,6 +199,7 @@ bool pcb::getPCA9534Input(uint8_t slot, int posIndex)
 void pcb::setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff)
 {
     // slot starts at 1!
+    
     unsigned char reg_value;
 
     reg_value = ReadByte(get_PCA9534_address_from_slot(slot), 0x01);
@@ -240,7 +241,7 @@ void pcb::pcb_refresh()
 
         dispenseButtonRefresh();
         refreshFlowSensors();
-        pumpRefresh();
+        //independentDispensingRefresh(); // ATTENTION:  this is the state machine. involves more than just pumps....
     }
 }
 void pcb::setup()
@@ -487,8 +488,8 @@ void pcb::initialize_pcb()
         // Initialize the PCA9534
         for (uint8_t slot = 1; slot <= 4; slot++)
         {
-            SendByte(get_PCA9534_address_from_slot(1), 0x01, 0b00100000); // Output pin values register (has no influence on input values)
-            SendByte(get_PCA9534_address_from_slot(1), 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+            SendByte(get_PCA9534_address_from_slot(slot), 0x01, 0b00100000); // Output pin values register (has no influence on input values)
+            SendByte(get_PCA9534_address_from_slot(slot), 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
         }
 
         setPumpsDisableAll();
@@ -592,12 +593,12 @@ void pcb::setSingleDispenseButtonLight(uint8_t slot, bool onElseOff)
     {
         if (onElseOff)
         {
-            // debugOutput::sendMessage("Set button light on", MSG_INFO);
+            // debugOutput::sendMessage("Set button light on: " + to_string(slot), MSG_INFO);
             setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_BUTTON_LED_LOW_IS_ON, false);
         }
         else
         {
-            // debugOutput::sendMessage("Set button light off", MSG_INFO);
+            // debugOutput::sendMessage("Set button light off: " + to_string(slot), MSG_INFO);
             setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_BUTTON_LED_LOW_IS_ON, true);
         }
     };
@@ -1017,7 +1018,7 @@ void pcb::refreshFlowSensor(uint8_t slot)
 // PUMP FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////
 
-void pcb::pumpRefresh()
+void pcb::independentDispensingRefresh()
 {
     switch (pcb_version)
     {

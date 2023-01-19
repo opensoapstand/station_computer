@@ -29,6 +29,43 @@ Dispense_state dispense_state;
 #define AUTO_DISPENSE_DELAY_BETWEEN_CYCLES_MS 3000
 #define AUTO_DISPENSE_CYCLE_LENGTH_MS 3000
 
+void pwm_test()
+{
+    pcb *connected_pcb;
+    connected_pcb = new pcb();
+    bool edge = true;
+    connected_pcb->setup();
+    while (true)
+    {
+
+        using namespace std::chrono;
+        uint64_t now_epoch_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
+        uint64_t pulse_2s_period = now_epoch_millis % 2000;
+
+        if (pulse_2s_period > 1000)
+        {
+            if (edge){
+                debugOutput::sendMessage("255", MSG_INFO);
+                edge = false;
+            connected_pcb->setPumpPWM(255);
+            }
+        }
+        else
+        {
+            if (!edge){
+                debugOutput::sendMessage("0", MSG_INFO);
+                edge = true;
+            connected_pcb->setPumpPWM(0);
+            }
+             
+
+        }
+        connected_pcb->pcb_refresh();
+        
+    }
+}
+
 void board_test()
 {
 
@@ -36,7 +73,7 @@ void board_test()
     connected_pcb = new pcb();
 
     connected_pcb->setup();
-    connected_pcb->setPumpPWM(255);
+    connected_pcb->setPumpPWM(200); //255 is max speed
 
     bool dispenseCycleStarted = false;
     uint64_t dispense_cycle_count = 0;
@@ -56,6 +93,7 @@ void board_test()
         using namespace std::chrono;
         uint64_t now_epoch_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
         connected_pcb->pcb_refresh();
+        connected_pcb->independentDispensingRefresh();
 
         switch (dispense_state)
         {
@@ -308,9 +346,9 @@ void motor_test()
     pcb *connected_pcb;
     connected_pcb = new pcb();
 
-#define SLOT 1
+#define SLOT 2
     connected_pcb->setup();
-    connected_pcb->setPumpPWM(10);
+    connected_pcb->setPumpPWM(100);
     connected_pcb->setPumpDirection(SLOT, true);
     connected_pcb->setPumpEnable(SLOT);
     connected_pcb->setSolenoid(SLOT, true);
@@ -355,9 +393,25 @@ void init_test()
     debugOutput::sendMessage("end", MSG_INFO);
 }
 
+void button_lights_on(){
+     pcb *connected_pcb;
+    connected_pcb = new pcb();
+
+    connected_pcb->setup();
+    debugOutput::sendMessage("Slot light on.", MSG_INFO);
+        connected_pcb->setSingleDispenseButtonLight(2, true);
+    // for (int slot =1;slot<=4;slot++){
+    //     debugOutput::sendMessage("Slot light on.", MSG_INFO);
+    //      connected_pcb->setSingleDispenseButtonLight(slot, true);
+    // }
+    //connected_pcb->pcb_refresh();
+}
+
 int main(int argc, char *argv[])
 {
+    // pwm_test();
     board_test();
     // motor_test();
-    //init_test();
+    // init_test();
+    // button_lights_on();
 }

@@ -42,11 +42,6 @@
 #define PCA9534_TMP_SLOT2_ADDRESS PCA9534_ADDRESS_SLOT_2
 
 #define PCA9534_DSED8344_PIN_IN_BUTTON 7
-#define PCA9534_DSED8344_PIN_IN_BUTTON 7
-#define PCA9534_DSED8344_PIN_IN_BUTTON 7
-#define PCA9534_DSED8344_PIN_IN_BUTTON 7
-#define PCA9534_DSED8344_PIN_IN_BUTTON 7
-#define PCA9534_DSED8344_PIN_IN_BUTTON 7
 
 
 #define PCA9534_EN134_PIN_OUT_SOLENOID 0
@@ -112,7 +107,7 @@ public:
     bool setPumpSpeedPercentage(uint8_t speed_percentage);
     bool setPumpsDisableAll();
     bool setPumpEnable(uint8_t slot);
-    void pumpRefresh();
+    void independentDispensingRefresh();
     bool setPumpDirection(uint8_t slot, bool forwardElseReverse);
 
     void setSingleDispenseButtonLight(uint8_t slot, bool onElseOff);

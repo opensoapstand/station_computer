@@ -23,6 +23,8 @@
 
 #include "page_payment.h"
 #include "page_select_product.h"
+#include "page_productOverview.h"
+
 #include "page_idle.h"
 #include <curl/curl.h>
 #include <json.hpp>
@@ -260,7 +262,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_payment *page_payment, page_help *pageHelp)
+void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_payment *page_payment, page_help *pageHelp, pageProductOverview *page_Overview)
 {
     this->p_page_select_product = pageSelect;
     this->paymentPage = page_payment;
@@ -268,6 +270,8 @@ void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_
     this->p_page_dispense = page_dispenser;
     this->p_page_help = pageHelp;
     this->p_page_wifi_error = pageWifiError;
+    this->p_page_overview = page_Overview;
+
 
     ui->promoCode->clear();
     ui->promoCode->hide();
@@ -1073,7 +1077,7 @@ void pageProduct::on_page_payment_Button_clicked()
 
             ui->label_invoice_price_total->text();
             if(selectedProductOrder->getSelectedPriceCorrected() < 0.1){
-                p_page_idle->pageTransition(this, p_page_dispense);
+                p_page_idle->pageTransition(this, p_page_overview);
             }
             else{
             p_page_idle->pageTransition(this, paymentPage);
@@ -1088,13 +1092,13 @@ void pageProduct::on_page_payment_Button_clicked()
         // p_page_dispense->showEvent(dispenseEvent); // todo Lode: this enabled together with showfullscreen calls the showEvent twice. only showevent, does not display the dispense page though.
         // p_page_dispense->showFullScreen();
         // this->hide();
-        p_page_idle->pageTransition(this, p_page_dispense);
+        p_page_idle->pageTransition(this, p_page_overview);
     }
     else
     {
         qDebug() << "WARNING: No payment method detected.";
         // p_page_dispense->showFullScreen();
         // this->hide();
-        p_page_idle->pageTransition(this, p_page_dispense);
+        p_page_idle->pageTransition(this, p_page_overview);
     }
 }

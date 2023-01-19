@@ -14,15 +14,15 @@
 // all rights reserved
 //***************************************
 
-#ifndef PAYSELECT_H
-#define PAYSELECT_H
+#ifndef OVERVIEW_H
+#define OVERVIEW_H
 
 #include "df_util.h"
 #include "page_dispenser.h"
-#include "page_productOverview.h"
-
 #include "page_error_wifi.h"
 #include "page_help.h"
+#include "page_product.h"
+
 
 class page_select_product;
 class page_payment;
@@ -30,14 +30,13 @@ class page_idle;
 class page_dispenser;
 class page_error_wifi;
 class page_help;
-class pageProductOverview;
-
+class pageProduct;
 namespace Ui
 {
-    class pageProduct;
+    class pageProductOverview;
 }
 
-class pageProduct : public QWidget
+class pageProductOverview : public QWidget
 {
     Q_OBJECT
 
@@ -47,9 +46,9 @@ public:
     QLabel *orderSizeLabelsVolume[4];
     QLabel *orderSizeBackgroundLabels[4];
 
-    explicit pageProduct(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_payment *page_payment, page_help *pageHelp, pageProductOverview *page_Overview);
-    ~pageProduct();
+    explicit pageProductOverview(QWidget *parent = nullptr);
+    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_payment *page_payment, page_help *pageHelp, pageProduct *page_product);
+    ~pageProductOverview();
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
@@ -62,7 +61,7 @@ public:
     void coupon_input_show();
     void coupon_input_hide();
     void coupon_input_reset();
-    
+
 signals:
     void paymentTotal(string, string, string);
 
@@ -74,18 +73,9 @@ private slots:
     void on_promoCodeInput_clicked();
 
     // Set Drink Order
-    void on_orderSmall_Button_clicked();
-    void on_orderBig_Button_clicked();
     void on_mainPage_Button_clicked();
     void onSelectTimeoutTick();
     void keyboardButtonPressed(int);
-
-    void on_orderCustom_Button_clicked();
-
-    void on_orderMedium_Button_clicked();
-    void loadProductBySize(int sizeIndex);
-    void loadProdSpecs();
-
 private:
     int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
     bool stopSelectTimers();
@@ -95,21 +85,20 @@ private:
     void mainPage();
 
     std::string readBuffer;
-    Ui::pageProduct *ui;
+    Ui::pageProductOverview *ui;
     page_select_product *p_page_select_product;
     page_payment *paymentPage;
     page_idle *p_page_idle;
     page_dispenser *p_page_dispense;
     page_error_wifi *p_page_wifi_error;
     page_help *p_page_help;
-    pageProductOverview *p_page_overview;
-
+    pageProduct *p_page_product;
     DrinkOrder *selectedProductOrder;
 
     QTimer *selectIdleTimer;
     int _selectIdleTimeoutSec;
 
-    QResizeEvent *pageProductResize;
+    QResizeEvent *pageProductOverviewResize;
     QShowEvent *dispenseEvent;
     QShowEvent *wifiErrorEvent;
 };

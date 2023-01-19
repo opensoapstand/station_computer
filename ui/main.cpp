@@ -23,6 +23,7 @@
 #include "page_payment.h"
 #include "page_dispenser.h"
 #include "page_error_wifi.h"
+#include "page_productOverview.h"
 #include "pagethankyou.h"
 #include <QApplication>
 #include "df_util.h"
@@ -110,6 +111,7 @@ int main(int argc, char *argv[])
     page_dispenser *p_page_dispense = new page_dispenser();
     page_error_wifi *p_page_wifi_error = new page_error_wifi();
     pagethankyou *p_page_thank_you = new pagethankyou();
+    pageProductOverview *p_pageProductOverview = new pageProductOverview();
     page_maintenance *p_page_maintenance = new page_maintenance();
     page_maintenance_dispenser *p_page_maintenance_product = new page_maintenance_dispenser();
     page_maintenance_general *p_page_maintenance_general = new page_maintenance_general();
@@ -163,9 +165,10 @@ int main(int argc, char *argv[])
     p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product,  p_page_maintenance_general, firstSelectPage, p_pageProduct);
     p_page_idle->setPage(firstSelectPage, p_page_maintenance, p_page_maintenance_general);
     firstSelectPage->setPage(p_pageProduct, p_page_idle, p_page_maintenance, p_page_help);
-    p_pageProduct->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentPage, p_page_help);
+    p_pageProduct->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentPage, p_page_help,p_pageProductOverview);
     paymentPage->setPage(p_pageProduct, p_page_dispense, p_page_idle, p_page_help);
     p_page_dispense->setPage(paymentPage, p_page_thank_you, p_page_idle);
+    p_pageProductOverview->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentPage, p_page_help, p_pageProduct);
     p_page_thank_you->setPage(p_page_dispense, p_page_idle, paymentPage);
     p_page_wifi_error->setPage(paymentPage, p_page_thank_you, p_page_idle);
     

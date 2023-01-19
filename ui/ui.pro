@@ -17,6 +17,7 @@ FORMS += \
     page_select_product.ui \
     pagethankyou.ui \
     page_maintenance.ui \
+    page_productOverview.ui \
     page_maintenance_dispenser.ui \
     page_init.ui \
     page_help.ui \
@@ -35,6 +36,7 @@ HEADERS += \
     posm/enums.h \
     posm/lrcgenerator.h \
     posm/mcommunication.h \
+    page_productOverview.h \
     posm/packetfromecr.h \
     posm/packetfromux410.h \
     posm/packetreadsort.h \
@@ -65,6 +67,7 @@ SOURCES += \
     page_product.cpp \
     posm/lrcgenerator.cpp \
     posm/mcommunication.cpp \
+    page_productOverview.cpp \
     posm/packetfromecr.cpp \
     posm/packetfromux410.cpp \
     posm/packetreadsort.cpp \

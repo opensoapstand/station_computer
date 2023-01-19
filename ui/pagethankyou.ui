@@ -16,17 +16,17 @@
   <widget class="QPushButton" name="mainPage_Button">
    <property name="geometry">
     <rect>
-     <x>-1</x>
-     <y>0</y>
-     <width>1081</width>
-     <height>1921</height>
+     <x>20</x>
+     <y>30</y>
+     <width>10</width>
+     <height>10</height>
     </rect>
    </property>
    <property name="autoFillBackground">
     <bool>false</bool>
    </property>
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">background-image: url(/home/df-admin/production/references/7_background_thank_you.png);</string>
    </property>
    <property name="text">
     <string/>
@@ -120,6 +120,156 @@ text-transform: uppercase;
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="notifyUs_Button">
+   <property name="geometry">
+    <rect>
+     <x>463</x>
+     <y>1470</y>
+     <width>121</width>
+     <height>35</height>
+    </rect>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777214</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <property name="toolTipDuration">
+    <number>-10</number>
+   </property>
+   <property name="text">
+    <string>Notify Us</string>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../../production/references/helpButton.png</normaloff>../../production/references/helpButton.png</iconset>
+   </property>
+  </widget>
+  <widget class="QDialogButtonBox" name="popup">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>580</y>
+     <width>600</width>
+     <height>1000</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>500</width>
+     <height>1000</height>
+    </size>
+   </property>
+   <property name="baseSize">
+    <size>
+     <width>500</width>
+     <height>1000</height>
+    </size>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::ActionsContextMenu</enum>
+   </property>
+   <property name="centerButtons">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="selectProblem_Label">
+   <property name="geometry">
+    <rect>
+     <x>580</x>
+     <y>620</y>
+     <width>387</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>50</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="option1_Button">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>740</y>
+     <width>341</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="option2_Button">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>800</y>
+     <width>341</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="option3_Button">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>860</y>
+     <width>341</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="option4_Button">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>920</y>
+     <width>341</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="option5_Button">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>980</y>
+     <width>341</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
    </property>
   </widget>
  </widget>

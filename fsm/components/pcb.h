@@ -109,6 +109,8 @@ public:
     bool setPumpEnable(uint8_t slot);
     void independentDispensingRefresh();
     bool setPumpDirection(uint8_t slot, bool forwardElseReverse);
+    bool startPump(uint8_t slot);
+    bool stopPump(uint8_t slot);
 
     void setSingleDispenseButtonLight(uint8_t slot, bool onElseOff);
     bool getDispenseButtonStateDebounced(uint8_t slot);

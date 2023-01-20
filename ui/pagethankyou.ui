@@ -18,8 +18,8 @@
     <rect>
      <x>20</x>
      <y>30</y>
-     <width>10</width>
-     <height>10</height>
+     <width>1080</width>
+     <height>300</height>
     </rect>
    </property>
    <property name="autoFillBackground">

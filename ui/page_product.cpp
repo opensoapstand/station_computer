@@ -247,6 +247,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
     ui->promoCode->hide();
     ui->promoKeyboard->hide();
     transactionLogging = "Product Size Selection";
+
     couponHandler();
 
     {

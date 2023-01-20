@@ -77,6 +77,7 @@ private:
     page_dispenser* p_page_dispense;
     page_idle* p_page_idle;
     page_payment* paymentPage;
+    page_sendFeedback* p_page_sendFeedback;
 
     QDialog* popup;
     

@@ -15,8 +15,8 @@
 // all rights reserved
 //***************************************
 
-#include "page_productOverview.h"
-#include "ui_page_productOverview.h"
+#include "page_sendFeedback.h"
+#include "ui_page_sendFeedback.h"
 #include <iostream>
 #include <string>
 #include <cmath>
@@ -272,11 +272,7 @@ void page_sendFeedback::on_mainPage_Button_clicked()
 }
 
 
-size_t WriteCallback_coupon1(char *contents, size_t size, size_t nmemb, void *userp)
-{
-    ((std::string *)userp)->append((char *)contents, size * nmemb);
-    return size * nmemb;
-}
+
 
 // void page_sendFeedback::updatePriceAfterPromo(double discountPercent)
 // {
@@ -294,71 +290,6 @@ size_t WriteCallback_coupon1(char *contents, size_t size, size_t nmemb, void *us
 //     ui->label_invoice_discount_amount->setText("-$" + QString::number(selectedProductOrder->getDiscount(), 'f', 2));
 //     ui->label_invoice_price_total->setText("$" + QString::number(selectedProductOrder->getSelectedPriceCorrected(), 'f', 2));
 // }
-
-void page_sendFeedback::on_applyPromo_Button_clicked()
-{
-
-    QString promocode = ui->promoCode->text();
-    ui->promoKeyboard->hide();
-
-    CURL *curl;
-    CURLcode res;
-    long http_code = 0;
-    if (promocode != "")
-    {
-        readBuffer.clear();
-        curl = curl_easy_init();
-        if (!curl)
-        {
-            qDebug() << "page_sendFeedback: apply promo cURL failed init";
-            return;
-        }
-
-        curl_easy_setopt(curl, CURLOPT_URL, ("https://soapstandportal.com/api/coupon/find/" + promocode).toUtf8().constData());
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback_coupon1);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-        res = curl_easy_perform(curl);
-        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-        if (res != CURLE_OK)
-        {
-            ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
-            qDebug() << "Invalid Coupon curl problem. error code: " << res;
-        }
-        else
-        {
-            int new_percent;
-
-            if (http_code == 200)
-            {
-                json coupon_obj = json::parse(readBuffer);
-                if (coupon_obj["active"])
-                {
-                    new_percent = coupon_obj["discount_amount"];
-                    selectedProductOrder->setPromoCode(promocode);
-                    selectedProductOrder->setDiscountPercentageFraction((new_percent * 1.0) / 100);
-                    qDebug() << "Apply coupon percentage: " << new_percent;
-                    // loadProdSpecs();
-                    qDebug() << "Promo";
-                    ui->label_invoice_discount_amount->show();
-                    ui->label_discount_tag->show();
-                    ui->label_invoice_price->setText("$" + QString::number(selectedProductOrder->getSelectedPriceCorrected(), 'f', 2));
-                    ui->label_invoice_discount_amount->setText("-$" + QString::number(selectedProductOrder->getDiscount(), 'f', 2));
-                    // ui->label_invoice_price_total->setText("$" + QString::number(selectedProductOrder->getSelectedPriceCorrected(), 'f', 2)); // how to handle promo ?! todo!
-                }
-                else
-                {
-                    qDebug() << "Invalid Coupon";
-                    ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #75756f;border-color:#f44336;");
-                }
-            }
-            else
-            {
-                qDebug() << "Invalid Coupon http 200 response";
-                ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
-            }
-        }
-    }
-}
 
 void page_sendFeedback::keyboardButtonPressed(int buttonID)
 {
@@ -399,122 +330,79 @@ void page_sendFeedback::on_previousPage_Button_clicked()
     p_page_idle->pageTransition(this, p_page_product);
 }
 
-void page_sendFeedback::coupon_disable()
-{
-    ui->promoCode->hide();
-    ui->promoKeyboard->hide();
-    ui->promoInputButton->hide();
-    ui->label_invoice_discount_amount->hide();
-    ui->label_invoice_discount_name->hide();
-    ui->label_discount_tag->hide();
-    ui->promoButton->hide();
-}
-void page_sendFeedback::coupon_input_show()
-{
-}
-
-void page_sendFeedback::coupon_input_hide()
-{
-    ui->promoKeyboard->hide();
-}
-
-void page_sendFeedback::coupon_input_reset()
-{
-}
 
 void page_sendFeedback::on_promoCodeInput_clicked()
 {
-    QObject *button = QObject::sender();
-    ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
-    // ui->promoInputButton->hide();
-    ui->promoKeyboard->show();
-    qDebug() << "show promo keyboard.";
-    ui->promoCode->show();
-}
-void page_sendFeedback::couponHandler()
-{
-    qDebug() << "db for coupons";
-
-    DbManager db(DB_PATH);
-    bool coupons_enabled = db.getCouponsEnabled();
-    db.closeDB();
-
-    if (coupons_enabled)
-    {
-        qDebug() << "Coupons are enabled for this machine.";
-        ui->promoInputButton->show();
-        ui->promoInputButton->setEnabled(true);
-    }
-    else
-    {
-        qDebug() << "Coupons are disabled for this machine.";
-        ui->promoInputButton->setEnabled(false);
-        coupon_disable();
-    }
+    // QObject *button = QObject::sender();
+    // ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
+    // // ui->promoInputButton->hide();
+    // ui->promoKeyboard->show();
+    // qDebug() << "show promo keyboard.";
+    // ui->promoCode->show();
 }
 
 void page_sendFeedback::on_page_payment_Button_clicked()
 {
-    qDebug() << "page_sendFeedback: Pay button";
+    // qDebug() << "page_sendFeedback: Pay button";
 
-    ui->mainPage_Button->setEnabled(false);
-    ui->previousPage_Button->setEnabled(false);
+    // ui->mainPage_Button->setEnabled(false);
+    // ui->previousPage_Button->setEnabled(false);
 
-    this->stopSelectTimers();
-    selectIdleTimer->stop();
-    QString paymentMethod = selectedProductOrder->getSelectedPaymentMethod();
+    // this->stopSelectTimers();
+    // selectIdleTimer->stop();
+    // QString paymentMethod = selectedProductOrder->getSelectedPaymentMethod();
 
-    if (paymentMethod == "qr" || paymentMethod == "tap")
-    {
-        CURL *curl;
-        CURLcode res;
-        curl = curl_easy_init();
+    // if (paymentMethod == "qr" || paymentMethod == "tap")
+    // {
+    //     CURL *curl;
+    //     CURLcode res;
+    //     curl = curl_easy_init();
 
-        if (!curl)
-        {
-            qDebug() << "page_sendFeedback: cURL failed init";
-            return;
-        }
+    //     if (!curl)
+    //     {
+    //         qDebug() << "page_sendFeedback: cURL failed init";
+    //         return;
+    //     }
 
-        curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/ping");
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
+    //     curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/ping");
+    //     curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
 
-        res = curl_easy_perform(curl);
-        if (res != CURLE_OK)
-        {
-            qDebug() << "ERROR: Failed to reach soapstandportal. error code: " + QString::number(res);
+    //     res = curl_easy_perform(curl);
+    //     if (res != CURLE_OK)
+    //     {
+    //         qDebug() << "ERROR: Failed to reach soapstandportal. error code: " + QString::number(res);
 
-            // p_page_wifi_error->showEvent(wifiErrorEvent);
-            // p_page_wifi_error->showFullScreen();
-            // this->hide();
-            p_page_idle->pageTransition(this, p_page_wifi_error);
-        }
-        else
-        {
-            QString feedback = QString::fromUtf8(readBuffer.c_str());
-            qDebug() << "Server feedback readbuffer: " << feedback;
+    //         // p_page_wifi_error->showEvent(wifiErrorEvent);
+    //         // p_page_wifi_error->showFullScreen();
+    //         // this->hide();
+    //         p_page_idle->pageTransition(this, p_page_wifi_error);
+    //     }
+    //     else
+    //     {
+    //         QString feedback = QString::fromUtf8(readBuffer.c_str());
+    //         qDebug() << "Server feedback readbuffer: " << feedback;
 
-            ui->label_invoice_price->text();
+    //         ui->label_invoice_price->text();
 
-            // paymentPage->showFullScreen();
-            // this->hide();
-            p_page_idle->pageTransition(this, paymentPage);
-        }
-        curl_easy_cleanup(curl);
-        readBuffer = "";
-    }
-    else if (paymentMethod == "barcode" || paymentMethod == "plu")
-    {
-        // p_page_dispense->showEvent(dispenseEvent); // todo Lode: this enabled together with showfullscreen calls the showEvent twice. only showevent, does not display the dispense page though.
-        // p_page_dispense->showFullScreen();
-        // this->hide();
-        p_page_idle->pageTransition(this, p_page_dispense);
-    }
-    else
-    {
-        qDebug() << "WARNING: No payment method detected.";
-        // p_page_dispense->showFullScreen();
-        // this->hide();
-        p_page_idle->pageTransition(this, p_page_dispense);
-    }
+    //         // paymentPage->showFullScreen();
+    //         // this->hide();
+    //         p_page_idle->pageTransition(this, paymentPage);
+    //     }
+    //     curl_easy_cleanup(curl);
+    //     readBuffer = "";
+    // }
+    // else if (paymentMethod == "barcode" || paymentMethod == "plu")
+    // {
+    //     // p_page_dispense->showEvent(dispenseEvent); // todo Lode: this enabled together with showfullscreen calls the showEvent twice. only showevent, does not display the dispense page though.
+    //     // p_page_dispense->showFullScreen();
+    //     // this->hide();
+    //     p_page_idle->pageTransition(this, p_page_dispense);
+    // }
+    // else
+    // {
+    //     qDebug() << "WARNING: No payment method detected.";
+    //     // p_page_dispense->showFullScreen();
+    //     // this->hide();
+    //     p_page_idle->pageTransition(this, p_page_dispense);
+    // }
 }

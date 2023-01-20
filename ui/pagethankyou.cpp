@@ -13,7 +13,7 @@
 
 #include "pagethankyou.h"
 #include "ui_pagethankyou.h"
-#include "page_sendFeeback.h"
+#include "page_sendFeedback.h"
 
 // static QPointer<QFile> log_file = nullptr;
 

@@ -64,7 +64,6 @@ private slots:
     // **** Navigation ****
     void on_previousPage_Button_clicked();
     void on_page_payment_Button_clicked();
-    void on_applyPromo_Button_clicked();
     void on_promoCodeInput_clicked();
 
     // Set Drink Order

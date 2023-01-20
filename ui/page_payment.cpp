@@ -340,6 +340,7 @@ void page_payment::showEvent(QShowEvent *event)
         ui->order_total_amount->setText("Total: $" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
         ui->steps_Label->show();
         ui->processing_Label->hide();
+        transactionLogging += "\n 2: QR code - True";
     }
 
     // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
@@ -422,7 +423,6 @@ void page_payment::createOrderIdAndSendToBackend()
     orderId = orderId.remove("{");
     orderId = orderId.remove("}");
     
-    transactionLogging +=  "\n Order request sent to the Backend";
     // send order details to backend
     QString curl_order_parameters_string = "orderId=" + orderId + "&size=" + drinkSize + "&MachineSerialNumber=" + MachineSerialNumber +
                                            "&contents=" + contents + "&price=" + price + "&productId=" + productId + "&quantity_requested=" + quantity_requested + "&size_unit=" + productUnits \
@@ -503,7 +503,7 @@ void page_payment::isQrProcessedCheckOnline()
 
         if (readBuffer == "true")
         {
-            transactionLogging += "\n Order Paid and ready to Dispense";
+            transactionLogging += "\n 4: Order Paid - True";
             qDebug() << "QR processed. It's time to dispense.";
             proceed_to_dispense();
             state_payment = s_payment_done;
@@ -516,6 +516,7 @@ void page_payment::isQrProcessedCheckOnline()
         }
         else if (readBuffer == "In progress")
         {
+            transactionLogging += "\n 3: QR Scanned - True";
             qDebug() << "Wait for QR processed. User must have finished transaction to continue.";
             // user scanned qr code and is processing transaction. Delete qr code and make it harder for user to leave page.
             state_payment = s_payment_processing;
@@ -568,7 +569,7 @@ void page_payment::onTimeoutTick()
     else
     {
                qDebug() << "Timer Done!" << _pageTimeoutCounterSecondsLeft << endl;
-                transactionLogging +="\n User didn't scan the code and the timer is expiring";
+                transactionLogging +="\n 5: Timeout - True";
 
         idlePaymentTimeout();
     }

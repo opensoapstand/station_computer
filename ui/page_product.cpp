@@ -246,7 +246,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
     ui->promoCode->clear();
     ui->promoCode->hide();
     ui->promoKeyboard->hide();
-    transactionLogging = "Product Size Selection";
+    // transactionLogging = "Product Size Selection";
 
     couponHandler();
 
@@ -258,6 +258,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
         connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
         connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
     }
+    transactionLogging = "";
 }
 
 /*
@@ -366,8 +367,6 @@ void pageProduct::reset_and_show_page_elements()
     ui->label_product_ingredients->setText(selectedProductOrder->getLoadedProductIngredients());
     ui->label_product_description->setText(selectedProductOrder->getLoadedProductDescription());
 
-    // transactionLogging += "\n Selected Product Name: " + selectedProductOrder->getLoadedProductName();
-    transactionLogging += "\n Selected Product Slot: "+ QString::number(selectedProductOrder->getSelectedSlot());
     // bitmap_location = PAGE_PRODUCT_BACKGROUND_PATH;
     // uint16_t orderSizeButtons_xywh[4][4] = {
     //     {560, 990, 135, 110},  // S
@@ -900,7 +899,7 @@ void pageProduct::on_applyPromo_Button_clicked()
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
         res = curl_easy_perform(curl);
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-        transactionLogging += "\n Customer Applied Promo Code: " + promocode;
+        transactionLogging += "\n 1: Promo Code - " + promocode;
         if (res != CURLE_OK)
         {
             ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");

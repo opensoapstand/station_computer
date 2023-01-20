@@ -80,8 +80,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     qDebug() << "db check dispense buttons count:";
     DbManager db(DB_PATH);
     
-    transactionLogging +="\n Dispense Page Shown to the user";
-    qDebug() << transactionLogging;
+    transactionLogging +="\n 6: Station Unlocked - True";
 
     int button_count = db.getDispenseButtonCount();
     db.closeDB();
@@ -336,8 +335,7 @@ void page_dispenser::resetDispenseTimeout(void)
 
 void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
 {
-    //  qDebug() << "vol dispesnne " << dispensed;
-    //  qDebug() << "vol is fulll  " << isFull;
+
     if (this->isDispensing)
     {
         // if (dispensed > 0.01){
@@ -378,7 +376,7 @@ void page_dispenser::fsmReceiveTargetVolumeReached()
         this->isDispensing = false;
         // qDebug() << "Signal: Target volume reached."  << endl;
         updateVolumeDisplayed(1.0, true); // make sure the fill bottle graphics are completed
-        transactionLogging += "\n Target Volume Reached";
+        transactionLogging += "\n 8: Target Reached - True";
         dispensing_end_admin();
         // qDebug() << "Finish dispense end admin."  << endl;
     }
@@ -408,7 +406,7 @@ void page_dispenser::fsmReceiveNoFlowAbort()
 void page_dispenser::on_abortButton_clicked()
 {
     qDebug() << "Pressed dispense complete.";
-    transactionLogging += "\n Customer pressed complete button on screen";
+    transactionLogging += "\n 7: Complete Button - True";
     if (this->isDispensing)
     {
         force_finish_dispensing();
@@ -420,7 +418,7 @@ void page_dispenser::on_cancelButton_clicked()
     qDebug() << "Pressed cancel dispensing.";
     if (this->isDispensing)
     {
-        transactionLogging += "\n Customer pressed Cancel button on screen";
+        transactionLogging += "\n 7: Cancel Button - True";
         force_finish_dispensing();
     }
 }

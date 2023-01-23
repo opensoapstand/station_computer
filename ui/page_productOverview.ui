@@ -237,10 +237,10 @@ text-align: center;</string>
   <widget class="QPushButton" name="promoButton">
    <property name="geometry">
     <rect>
-     <x>797</x>
-     <y>1146</y>
-     <width>188</width>
-     <height>44</height>
+     <x>815</x>
+     <y>775</y>
+     <width>150</width>
+     <height>46</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -256,10 +256,10 @@ text-align: center;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>1148</y>
-     <width>550</width>
-     <height>36</height>
+     <x>94</x>
+     <y>775</y>
+     <width>800</width>
+     <height>46</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -284,10 +284,10 @@ text-align: center;</string>
   <widget class="QPushButton" name="promoInputButton">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>1148</y>
-     <width>550</width>
-     <height>37</height>
+     <x>94</x>
+     <y>775</y>
+     <width>781</width>
+     <height>46</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -2103,8 +2103,6 @@ font-weight:bold;</string>
   <zorder>label_payment_page</zorder>
   <zorder>label_invoice_price</zorder>
   <zorder>promoCode</zorder>
-  <zorder>promoInputButton</zorder>
-  <zorder>promoButton</zorder>
   <zorder>previousPage_Button</zorder>
   <zorder>page_payment_Button</zorder>
   <zorder>mainPage_Button</zorder>
@@ -2121,6 +2119,8 @@ font-weight:bold;</string>
   <zorder>promoKeyboard</zorder>
   <zorder>label_discount_tag</zorder>
   <zorder>selectProductPage_Button</zorder>
+  <zorder>promoInputButton</zorder>
+  <zorder>promoButton</zorder>
  </widget>
  <resources/>
  <connections/>

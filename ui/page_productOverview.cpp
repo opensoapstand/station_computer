@@ -35,9 +35,9 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
 {
     ui->setupUi(this);
 
-    ui->promoInputButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->promoCode->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->promoButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->promoInputButton->setStyleSheet("QPushButton { border: 1px solid #5E8580}");
+    ui->promoCode->setStyleSheet("QPushButton { background-color: transparent; border: 1px solid #5E8580 }");
+    //ui->promoButton->setStyleSheet("QPushButton { background-color: transparent; border: 1px solid #5E8580}");
 
     QString css_title = "QLabel{"
                         "position: absolute;"
@@ -100,9 +100,27 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
 "color: #003840;"
 "text-align: center;"
 "qproperty-alignment: AlignCenter;"
-"border: 2px solid black;"
+"border: 2px solid #5E8580;"
 "}");
 ui->label_price_large->setText("selected Volume");
+
+    ui->promoButton->setStyleSheet(
+"QPushButton {"
+"font-family: 'Brevia';"
+"font-style: normal;"
+"font-weight: 75;"
+"font-size: 32px;"
+"line-height: 99px;"
+"letter-spacing: 1.5px;"
+"text-transform: lowercase;"
+"background-color: #5E8580;" 
+"border: 1px solid #3D6675;" 
+"color: #FFFFFF;"
+"text-align: center;"
+"qproperty-alignment: AlignCenter;"
+"border: 1px solid #5E8580;"
+"}");
+ui->promoButton->setText("Apply");
 
 
     QString css_discount_name = "QLabel{"
@@ -114,11 +132,12 @@ ui->label_price_large->setText("selected Volume");
                                 "color: #58595B;"
                                 "}";
     ui->label_invoice_discount_name->setStyleSheet(css_discount_name);
-    ui->label_invoice_discount_name->hide();
-    ui->label_invoice_discount_amount->hide();
-    ui->label_discount_tag->hide();
+    ui->label_invoice_discount_name->show();
+    ui->label_invoice_discount_amount->show();
+    ui->label_discount_tag->show();
     ui->promoCode->clear();
-    ui->promoCode->hide();
+    ui->promoCode->show();
+    ui->promoButton->show();
     ui->promoKeyboard->hide();
 
     couponHandler();
@@ -229,7 +248,7 @@ void pageProductOverview::onSelectTimeoutTick()
 void pageProductOverview::reset_and_show_page_elements()
 {
     QString bitmap_location;
-    ui->label_product_photo->setStyleSheet("QLabel{border: 2px solid black;}");
+    ui->label_product_photo->setStyleSheet("QLabel{border: 2px solid #5E8580;}");
     //ui->label_product_title->setText(selectedProductOrder->getSelectedProductName());
     //ui->label_product_description->setText(selectedProductOrder->getLoadedProductDescription());
     p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->currentProductOrder->getSelectedProductPicturePath());
@@ -437,13 +456,13 @@ void pageProductOverview::on_previousPage_Button_clicked()
 
 void pageProductOverview::coupon_disable()
 {
-    ui->promoCode->hide();
-    ui->promoKeyboard->hide();
-    ui->promoInputButton->hide();
-    ui->label_invoice_discount_amount->hide();
-    ui->label_invoice_discount_name->hide();
-    ui->label_discount_tag->hide();
-    ui->promoButton->hide();
+    //ui->promoCode->hide();
+    //ui->promoKeyboard->hide();
+    //ui->promoInputButton->show();
+    //ui->label_invoice_discount_amount->hide();
+    //ui->label_invoice_discount_name->hide();
+    //ui->label_discount_tag->hide();
+    //ui->promoButton->hide();
 }
 void pageProductOverview::coupon_input_show()
 {
@@ -462,7 +481,7 @@ void pageProductOverview::on_promoCodeInput_clicked()
 {
     QObject *button = QObject::sender();
     ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
-    // ui->promoInputButton->hide();
+    ui->promoInputButton->show();
     ui->promoKeyboard->show();
     qDebug() << "show promo keyboard.";
     ui->promoCode->show();
@@ -484,7 +503,7 @@ void pageProductOverview::couponHandler()
     else
     {
         qDebug() << "Coupons are disabled for this machine.";
-        ui->promoInputButton->setEnabled(false);
+        ui->promoInputButton->setEnabled(true);
         coupon_disable();
     }
 }

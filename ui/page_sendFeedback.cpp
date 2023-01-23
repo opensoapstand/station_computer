@@ -68,6 +68,23 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     //                           "color: #438080;"
     //                           "}";
     // ui->label_product_description->setStyleSheet(css_description);
+     ui->previousPage_Button->setStyleSheet("QPushButton { color:#555555; background-color: transparent; border: 0px }");
+        ui->previousPage_Button->setStyleSheet(
+"QPushButton {"
+
+"font-family: 'Brevia';"
+"font-style: normal;"
+"font-weight: 75;"
+"font-size: 32px;"
+"line-height: 99px;"
+"letter-spacing: 1.5px;"
+"text-transform: lowercase;"
+"color: #003840;"
+"text-align: center;"
+"qproperty-alignment: AlignCenter;"
+"border: none;"
+"}");
+        ui->previousPage_Button->setText("<-Back");
 
     // ui->label_product_description->setWordWrap(true);
 

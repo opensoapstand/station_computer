@@ -32,10 +32,10 @@ line-height: 29px;</string>
   <widget class="QPushButton" name="previousPage_Button">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>36</y>
-     <width>281</width>
-     <height>100</height>
+     <x>91</x>
+     <y>61</y>
+     <width>159</width>
+     <height>32</height>
     </rect>
    </property>
    <property name="text">
@@ -2130,7 +2130,6 @@ font-weight:bold;</string>
   <zorder>promoInputButton</zorder>
   <zorder>label_product_description</zorder>
   <zorder>promoButton</zorder>
-  <zorder>previousPage_Button</zorder>
   <zorder>page_payment_Button</zorder>
   <zorder>mainPage_Button</zorder>
   <zorder>label_invoice_price_total</zorder>
@@ -2146,6 +2145,7 @@ font-weight:bold;</string>
   <zorder>label_product_photo</zorder>
   <zorder>promoKeyboard</zorder>
   <zorder>label_discount_tag</zorder>
+  <zorder>previousPage_Button</zorder>
  </widget>
  <resources/>
  <connections/>

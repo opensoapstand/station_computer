@@ -265,34 +265,34 @@ void pagethankyou::sendDispenseEndToCloud()
 }
 
 
-void pagethankyou::showPopup()
+// void pagethankyou::showPopup()
 
-{
-    qDebug() << "IN SHow popup";
-    //popup
-    ui->popup = new QDialogButtonBox();
-    ui->popup->setWindowTitle("Help");
-    ui->popup->setFixedSize(700,500);
-    ui->popup->show();
-    ui->selectProblem_Label->setVisible(true);
-    ui->option1_Button->setVisible(true);
-    ui->option2_Button->setVisible(true);
-    ui->option3_Button->setVisible(true);
-    ui->option4_Button->setVisible(true);
-    ui->option5_Button->setVisible(true);
+// {
+//     qDebug() << "IN SHow popup";
+//     //popup
+//     ui->popup = new QDialogButtonBox();
+//     ui->popup->setWindowTitle("Help");
+//     ui->popup->setFixedSize(700,500);
+//     ui->popup->show();
+//     ui->selectProblem_Label->setVisible(true);
+//     ui->option1_Button->setVisible(true);
+//     ui->option2_Button->setVisible(true);
+//     ui->option3_Button->setVisible(true);
+//     ui->option4_Button->setVisible(true);
+//     ui->option5_Button->setVisible(true);
 
-    // show the window
-    popup->exec();
-    //adding buttons for help options in the popup
-    ui->selectProblem_Label->setVisible(true);
-    ui->option1_Button->setVisible(true);
-    ui->option2_Button->setVisible(true);
-    ui->option3_Button->setVisible(true);
-    ui->option4_Button->setVisible(true);
-    ui->option5_Button->setVisible(true);
+//     // show the window
+//     popup->exec();
+//     //adding buttons for help options in the popup
+//     ui->selectProblem_Label->setVisible(true);
+//     ui->option1_Button->setVisible(true);
+//     ui->option2_Button->setVisible(true);
+//     ui->option3_Button->setVisible(true);
+//     ui->option4_Button->setVisible(true);
+//     ui->option5_Button->setVisible(true);
      
         
-}
+// }
 
 
 void pagethankyou::controllerFinishedTransaction()
@@ -365,60 +365,18 @@ void pagethankyou::exitPage()
         _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     }
 }
-     void pagethankyou::handleFirstOptionClick()
-{
-    ui->option1_Button->setStyleSheet("border: 2px solid blue;");
-}
 
-    void pagethankyou::handleSecondOptionClick()
-{
-    ui->option2_Button->setStyleSheet("border: 2px solid blue;");
-}
-
-    void pagethankyou::handleThirdOptionClick()
-{
-    ui->option3_Button->setStyleSheet("border: 2px solid blue;");
-}
-
-    void pagethankyou::handleFourthOptionClick()
-{
-    ui->option4_Button->setStyleSheet("border: 2px solid blue;");
-}
-
-
-    void pagethankyou::handleFifthOptionClick()
-{
-    ui->option5_Button->setStyleSheet("border: 2px solid blue;");
-}
-
-    void pagethankyou::handleFirstOptionRelease()
-{
-    ui->option1_Button->setStyleSheet("border: none;");
-}
-
-    void pagethankyou::handleSecondOptionRelease()
-{
-    ui->option2_Button->setStyleSheet("border: none;");
-}
-
-    void pagethankyou::handleThirdOptionRelease()
-{
-    ui->option3_Button->setStyleSheet("border: none;");
-}
-
-    void pagethankyou::handleFourthOptionRelease()
-{
-    ui->option4_Button->setStyleSheet("border: none;");
-}
-
-    void pagethankyou::handleFifthOptionRelease()
-{
-    ui->option5_Button->setStyleSheet("border: none;");
-}
 
 
 void pagethankyou::on_notifyUs_Button_clicked()
 {
+
+     qDebug() << "Transition to Help Page";
+    thankYouEndTimer->stop();
+    // p_page_help->showFullScreen();
+    // this->hide();
+    p_page_idle->pageTransition(this, p_page_sendFeedback);
+}
 // connect(ui->notifyUs_Button, SIGNAL(clicked()), this, SLOT(showPopup()));
 
 // showPopup();
@@ -427,118 +385,84 @@ void pagethankyou::on_notifyUs_Button_clicked()
     // notifyUsPage->show();
     // new UI for popup with buttons and labels
 
-    QVBoxLayout* layout = new QVBoxLayout();
-    
-    //revert
-    QDialog* dialog = new QDialog(this);
-    
-    //to remove title bar
-    dialog->setWindowFlags(Qt::CustomizeWindowHint);
-    dialog->setLayout(layout);
-    dialog->resize(900,1000);
-    
-
-
-    //     QDialogButtonBox* buttonBox = new QDialogButtonBox();
-
-        QLabel* selectProblem_Label = new QLabel("Select problems from the option below");
-        selectProblem_Label->setAlignment(Qt::AlignCenter);
-       // selectProblem_Label->setAttribute(Qt::WA_TransparentForMouseEvents);
-        
-        // QPushButton* option1_Button = buttonBox->addButton("No product dispensed", QDialogButtonBox::AcceptRole);
-        // QPushButton* option2_Button = buttonBox->addButton("Less Volume dispensed", QDialogButtonBox::AcceptRole);
-        // QPushButton* option3_Button = buttonBox->addButton("Wrong Product dispensed", QDialogButtonBox::AcceptRole);
-        // QPushButton* option4_Button = buttonBox->addButton("Charged more than once", QDialogButtonBox::AcceptRole);
-        // QPushButton* option5_Button = buttonBox->addButton("Screen was Frozen", QDialogButtonBox::AcceptRole);
-
-        //test
-        //to create a QDialogButtonBox with a "Send" button
-        QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok);
-
-        QButtonGroup *group = new QButtonGroup(this);
-        QPushButton* option1_Button = new QPushButton("No product dispensed");
-        QPushButton* option2_Button = new QPushButton("Less Volume dispensed");
-        QPushButton* option3_Button = new QPushButton("Wrong Product dispensed");
-        QPushButton* option4_Button = new QPushButton("Charged more than once");
-        QPushButton* option5_Button = new QPushButton("Screen was Frozen");
-        QPushButton* send_Button = new QPushButton("Send");
-        layout->addWidget(selectProblem_Label);
-        layout->addWidget(option1_Button);
-        layout->addWidget(option2_Button);
-        layout->addWidget(option3_Button);
-        layout->addWidget(option4_Button);
-        layout->addWidget(option5_Button);
-        layout->addWidget(send_Button);
-        option1_Button->setAutoFillBackground(true);
-        option2_Button->setAutoFillBackground(true);
-        option3_Button->setAutoFillBackground(true);
-        option4_Button->setAutoFillBackground(true);
-        option5_Button->setAutoFillBackground(true);
-
-        option1_Button->setCheckable(true);
-        group->addButton(option1_Button);
-        option2_Button->setCheckable(true);
-        group->addButton(option2_Button);
-        option3_Button->setCheckable(true);
-        group->addButton(option3_Button);
-        option3_Button->setCheckable(true);
-        group->addButton(option3_Button);
-        option4_Button->setCheckable(true);
-        group->addButton(option4_Button);
-        option5_Button->setCheckable(true);
-        group->addButton(option5_Button);
-
-        
-
-        dialog->setStyleSheet("background-color: rgba(94, 133, 128, 0.983); border-radius: 30px; border: 2px solid black;");
-        selectProblem_Label->setFixedHeight(40);
-        selectProblem_Label->setStyleSheet("border: none; font-family: 'Brevia'; font-style: normal; font-weight: 85; font-size: 40px; line-height: 70px; letter-spacing: 1.5px;");        
-        option1_Button->setStyleSheet("font-family: 'Brevia'; font-style: normal; font-weight: 75; font-size: 32px; line-height: 99px; letter-spacing: 1.5px; border-radius:25px; border: 2px solid black; background-color: white;");
-        option2_Button->setStyleSheet("font-family: 'Brevia'; font-style: normal; font-weight: 75; font-size: 32px; line-height: 99px; letter-spacing: 1.5px; border-radius:25px; border: 2px solid black; background-color: white;");
-        option3_Button->setStyleSheet("font-family: 'Brevia'; font-style: normal; font-weight: 75; font-size: 32px; line-height: 99px; letter-spacing: 1.5px; border-radius:25px; border: 2px solid black; background-color: white;");
-        option4_Button->setStyleSheet("font-family: 'Brevia'; font-style: normal; font-weight: 75; font-size: 32px; line-height: 99px; letter-spacing: 1.5px; border-radius:25px; border: 2px solid black; background-color: white;");
-        option5_Button->setStyleSheet("font-family: 'Brevia'; font-style: normal; font-weight: 75; font-size: 32px; line-height: 99px; letter-spacing: 1.5px; border-radius:25px; border: 2px solid black; background-color: white;");
-        send_Button->setStyleSheet("font-family: 'Brevia'; font-style: normal; font-weight: 75; font-size: 32px; line-height: 50px; letter-spacing: 1.5px; border-radius:25px; border: 2px solid black; background-color: white;");
-
-        option1_Button->setMinimumHeight(100);
-        option2_Button->setMinimumHeight(100);
-        option3_Button->setMinimumHeight(100);
-        option4_Button->setMinimumHeight(100);
-        option5_Button->setMinimumHeight(100);
-
-        
-
-        
-
-
-
-
-
-                    
-        //test
-
-    //revert
-    // buttonBox->addWidget(selectProblem_Label);
     // QVBoxLayout* layout = new QVBoxLayout();
-    // layout->addWidget(buttonBox);
+    
+    // //revert
+    // QDialog* dialog = new QDialog(this);
+    
+    // //to remove title bar
+    // dialog->setWindowFlags(Qt::CustomizeWindowHint);
     // dialog->setLayout(layout);
-
-    // connect(firstOptionButton, &QPushButton::clicked, this, &pagethankyou::handleFirstOptionClick);
-    // connect(secondOptionButton, &QPushButton::clicked, this, &pagethankyou::handleSecondOptionClick);
-    // connect(thirdOptionButton, &QPushButton::clicked, this, &pagethankyou::handleThirdOptionClick);
-    // connect(fourthOptionButton, &QPushButton::clicked, this, &pagethankyou::handleFourthOptionClick);
-    // connect(fifthOptionButton, &QPushButton::clicked, this, &pagethankyou::handleFifthOptionClick);
+    // dialog->resize(900,1000);
     
-    // connect(firstOptionButton, &QPushButton::released, this, &pagethankyou::handleFirstOptionRelease);
-    // connect(secondOptionButton, &QPushButton::released, this, &pagethankyou::handleSecondOptionRelease);
-    // connect(thirdOptionButton, &QPushButton::released, this, &pagethankyou::handleThirdOptionRelease);
-    // connect(fourthOptionButton, &QPushButton::released, this, &pagethankyou::handleFourthOptionRelease);
-    // connect(fifthOptionButton, &QPushButton::released, this, &pagethankyou::handleFifthOptionRelease);
-  
-    dialog->show();
-    dialog->exec();
-   
 
-    
-}
+
+    // //     QDialogButtonBox* buttonBox = new QDialogButtonBox();
+
+    //     QLabel* selectProblem_Label = new QLabel("Select problems from the option below");
+    //     selectProblem_Label->setAlignment(Qt::AlignCenter);
+    //    // selectProblem_Label->setAttribute(Qt::WA_TransparentForMouseEvents);
+        
+    //     // QPushButton* option1_Button = buttonBox->addButton("No product dispensed", QDialogButtonBox::AcceptRole);
+    //     // QPushButton* option2_Button = buttonBox->addButton("Less Volume dispensed", QDialogButtonBox::AcceptRole);
+    //     // QPushButton* option3_Button = buttonBox->addButton("Wrong Product dispensed", QDialogButtonBox::AcceptRole);
+    //     // QPushButton* option4_Button = buttonBox->addButton("Charged more than once", QDialogButtonBox::AcceptRole);
+    //     // QPushButton* option5_Button = buttonBox->addButton("Screen was Frozen", QDialogButtonBox::AcceptRole);
+
+    //     //test
+    //     //to create a QDialogButtonBox with a "Send" button
+    //     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok);
+
+    //     QButtonGroup *group = new QButtonGroup(this);
+    //     QPushButton* option1_Button = new QPushButton("No product dispensed");
+    //     QPushButton* option2_Button = new QPushButton("Less Volume dispensed");
+    //     QPushButton* option3_Button = new QPushButton("Wrong Product dispensed");
+    //     QPushButton* option4_Button = new QPushButton("Charged more than once");
+    //     QPushButton* option5_Button = new QPushButton("Screen was Frozen");
+    //     QPushButton* send_Button = new QPushButton("Send");
+    //     layout->addWidget(selectProblem_Label);
+    //     layout->addWidget(option1_Button);
+    //     layout->addWidget(option2_Button);
+    //     layout->addWidget(option3_Button);
+    //     layout->addWidget(option4_Button);
+    //     layout->addWidget(option5_Button);
+    //     layout->addWidget(send_Button);
+    //     option1_Button->setAutoFillBackground(true);
+    //     option2_Button->setAutoFillBackground(true);
+    //     option3_Button->setAutoFillBackground(true);
+    //     option4_Button->setAutoFillBackground(true);
+    //     option5_Button->setAutoFillBackground(true);
+
+    //     option1_Button->setCheckable(true);
+    //     group->addButton(option1_Button);
+    //     option2_Button->setCheckable(true);
+    //     group->addButton(option2_Button);
+    //     option3_Button->setCheckable(true);
+    //     group->addButton(option3_Button);
+    //     option3_Button->setCheckable(true);
+    //     group->addButton(option3_Button);
+    //     option4_Button->setCheckable(true);
+    //     group->addButton(option4_Button);
+    //     option5_Button->setCheckable(true);
+    //     group->addButton(option5_Button);
+
+        
+
+    //     dialog->setStyleSheet("background-color: rgba(94, 133, 128, 0.983); border-radius: 30px; border: 2px solid black;");
+    //     selectProblem_Label->setFixedHeight(40);
+    //     selectProblem_Label->setStyleSheet("border: none; font-family: 'Brevia'; font-style: normal; font-weight: 85; font-size: 40px; line-height: 70px; letter-spacing: 1.5px;");        
+    //     option1_Button->setStyleSheet("font-family: 'Brevia'; font-style: normal; font-weight: 75; font-size: 32px; line-height: 99px; letter-spacing: 1.5px; border-radius:25px; border: 2px solid black; background-color: white;");
+    //     option2_Button->setStyleSheet("font-family: 'Brevia'; font-style: normal; font-weight: 75; font-size: 32px; line-height: 99px; letter-spacing: 1.5px; border-radius:25px; border: 2px solid black; background-color: white;");
+    //     option3_Button->setStyleSheet("font-family: 'Brevia'; font-style: normal; font-weight: 75; font-size: 32px; line-height: 99px; letter-spacing: 1.5px; border-radius:25px; border: 2px solid black; background-color: white;");
+    //     option4_Button->setStyleSheet("font-family: 'Brevia'; font-style: normal; font-weight: 75; font-size: 32px; line-height: 99px; letter-spacing: 1.5px; border-radius:25px; border: 2px solid black; background-color: white;");
+    //     option5_Button->setStyleSheet("font-family: 'Brevia'; font-style: normal; font-weight: 75; font-size: 32px; line-height: 99px; letter-spacing: 1.5px; border-radius:25px; border: 2px solid black; background-color: white;");
+    //     send_Button->setStyleSheet("font-family: 'Brevia'; font-style: normal; font-weight: 75; font-size: 32px; line-height: 50px; letter-spacing: 1.5px; border-radius:25px; border: 2px solid black; background-color: white;");
+
+    //     option1_Button->setMinimumHeight(100);
+    //     option2_Button->setMinimumHeight(100);
+    //     option3_Button->setMinimumHeight(100);
+    //     option4_Button->setMinimumHeight(100);
+    //     option5_Button->setMinimumHeight(100);
+
+
  

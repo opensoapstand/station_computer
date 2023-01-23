@@ -46,18 +46,18 @@ public:
     bool is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER;
 
 public slots:
-    void showPopup();
-    void handleFirstOptionClick();
-    void handleSecondOptionClick();
-    void handleThirdOptionClick();
-    void handleFourthOptionClick();
-    void handleFifthOptionClick();
+    // void showPopup();
+    // void handleFirstOptionClick();
+    // void handleSecondOptionClick();
+    // void handleThirdOptionClick();
+    // void handleFourthOptionClick();
+    // void handleFifthOptionClick();
     
-    void handleFirstOptionRelease();
-    void handleSecondOptionRelease();
-    void handleThirdOptionRelease();
-    void handleFourthOptionRelease();
-    void handleFifthOptionRelease();
+    // void handleFirstOptionRelease();
+    // void handleSecondOptionRelease();
+    // void handleThirdOptionRelease();
+    // void handleFourthOptionRelease();
+    // void handleFifthOptionRelease();
 private slots:
     void on_mainPage_Button_clicked();
     void onThankyouTimeoutTick();

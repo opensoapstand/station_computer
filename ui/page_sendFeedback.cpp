@@ -33,7 +33,9 @@ using json = nlohmann::json;
 page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                                             ui(new Ui::page_sendFeedback)
 {
+    qDebug()<< "IN send feedback";
     ui->setupUi(this);
+    connect(ui->previousPage_Button, SIGNAL(clicked()), this, SLOT(on_previousPage_Button_clicked()));
 
     // ui->promoInputButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     // ui->promoCode->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
@@ -129,13 +131,13 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
  */
 void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_payment *page_payment, page_help *pageHelp, pageProduct *page_product, pagethankyou *page_thankyou )
 {
-    // this->p_page_select_product = pageSelect;
-    // this->paymentPage = page_payment;
-    // this->p_page_idle = pageIdle;
-    // this->p_page_dispense = page_dispenser;
-    // this->p_page_help = pageHelp;
-    // this->p_page_wifi_error = pageWifiError;
-    // this->p_page_product = page_product;
+    this->p_page_select_product = pageSelect;
+    this->paymentPage = page_payment;
+    this->p_page_idle = pageIdle;
+    this->p_page_dispense = page_dispenser;
+    this->p_page_help = pageHelp;
+    this->p_page_wifi_error = pageWifiError;
+    this->p_page_product = page_product;
     // ui->promoCode->clear();
     // ui->promoCode->hide();
     // ui->label_invoice_discount_amount->hide();
@@ -179,8 +181,8 @@ void page_sendFeedback::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
         
     
-    selectedProductOrder->loadSelectedProductProperties();
-    reset_and_show_page_elements();
+    // selectedProductOrder->loadSelectedProductProperties();
+    // reset_and_show_page_elements();
 }
 
 
@@ -189,7 +191,7 @@ void page_sendFeedback::resizeEvent(QResizeEvent *event)
     qDebug() << "\n---Page_product Overview: resizeEvent";
     // QWidget::resizeEvent(event);
     // selectedProductOrder->loadSelectedProductProperties();
-    reset_and_show_page_elements();
+    // reset_and_show_page_elements();
 }
 
 void page_sendFeedback::onSelectTimeoutTick()

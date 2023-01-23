@@ -11,10 +11,10 @@ about_command = '<TRANSACTION> \
 def connect_device():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((HOST,PORT))
-        s.send(about_command.encode('UTF-8'))
-        data = s.recv(1024)
+        s.send(register_device())
+        data = s.recv(2048)
 
-    print(f"Received {data!r}")
+        print(f"Received {data!r}")
 
 
 def start_session():
@@ -27,15 +27,12 @@ def start_session():
                     </TRANSACTION>'
     return start_command.encode('UTF-8')
 
-def register_device(counter):
-    if counter=='':
-        counter = 1
+def register_device():
+
     register_command = '<TRANSACTION> \
-                        <FUNCTION_TYPE>SESSION</FUNCTION_TYPE> \
-                        <COMMAND>START</COMMAND>\
-                        <COUNTER>'+ str(counter) + '</COUNTER>\
-                        <MAC> ... </MAC>\
-                        <MAC_LABEL>REG2</MAC_LABEL>\
+                        <FUNCTION_TYPE>SECURITY</FUNCTION_TYPE> \
+                        <COMMAND>REGISTER</COMMAND>\
+                        <ENTRY_CODE>'+ str(12345678) + '</ENTRY_CODE>\
                     </TRANSACTION>'
     return register_command.encode('UTF-8')
 

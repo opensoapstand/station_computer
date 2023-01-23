@@ -46,7 +46,7 @@ line-height: 29px;</string>
    <property name="geometry">
     <rect>
      <x>345</x>
-     <y>1468</y>
+     <y>1541</y>
      <width>397</width>
      <height>92</height>
     </rect>
@@ -237,7 +237,7 @@ text-align: center;</string>
   <widget class="QPushButton" name="promoButton">
    <property name="geometry">
     <rect>
-     <x>815</x>
+     <x>825</x>
      <y>775</y>
      <width>150</width>
      <height>46</height>
@@ -286,7 +286,7 @@ text-align: center;</string>
     <rect>
      <x>94</x>
      <y>775</y>
-     <width>781</width>
+     <width>702</width>
      <height>46</height>
     </rect>
    </property>
@@ -316,7 +316,7 @@ text-align: center;</string>
    <property name="geometry">
     <rect>
      <x>120</x>
-     <y>1330</y>
+     <y>1290</y>
      <width>841</width>
      <height>320</height>
     </rect>
@@ -2104,7 +2104,6 @@ font-weight:bold;</string>
   <zorder>label_invoice_price</zorder>
   <zorder>promoCode</zorder>
   <zorder>previousPage_Button</zorder>
-  <zorder>page_payment_Button</zorder>
   <zorder>mainPage_Button</zorder>
   <zorder>label_invoice_price_total</zorder>
   <zorder>label_invoice_name</zorder>
@@ -2121,6 +2120,7 @@ font-weight:bold;</string>
   <zorder>selectProductPage_Button</zorder>
   <zorder>promoInputButton</zorder>
   <zorder>promoButton</zorder>
+  <zorder>page_payment_Button</zorder>
  </widget>
  <resources/>
  <connections/>

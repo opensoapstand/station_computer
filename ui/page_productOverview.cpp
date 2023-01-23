@@ -37,6 +37,7 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
 
     ui->promoInputButton->setStyleSheet("QPushButton { border: 1px solid #5E8580}");
     ui->promoCode->setStyleSheet("QPushButton { background-color: transparent; border: 1px solid #5E8580 }");
+    ui->page_payment_Button->show();
     //ui->promoButton->setStyleSheet("QPushButton { background-color: transparent; border: 1px solid #5E8580}");
 
     QString css_title = "QLabel{"
@@ -118,9 +119,25 @@ ui->label_price_large->setText("selected Volume");
 "color: #FFFFFF;"
 "text-align: center;"
 "qproperty-alignment: AlignCenter;"
-"border: 1px solid #5E8580;"
 "}");
 ui->promoButton->setText("Apply");
+
+ui->page_payment_Button->setStyleSheet(
+"QPushButton {"
+"font-family: 'Brevia';"
+"font-style: normal;"
+"font-weight: 75;"
+"font-size: 48px;"
+"line-height: 99px;"
+"letter-spacing: 1.5px;"
+"background-color: #5E8580;" 
+"border: 1px solid #3D6675;" 
+"border-radius: 17px"
+"color: #FFFFFF;"
+"text-align: center;"
+"qproperty-alignment: AlignCenter;"
+"}");
+ui->page_payment_Button->setText("Pay");
 
 
     QString css_discount_name = "QLabel{"
@@ -274,7 +291,22 @@ void pageProductOverview::reset_and_show_page_elements()
     ui->mainPage_Button->setEnabled(true);
     /* Hacky transparent button */
     ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->page_payment_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+   ui->page_payment_Button->setStyleSheet(
+"QPushButton {"
+"font-family: 'Brevia';"
+"font-style: normal;"
+"font-weight: 75;"
+"font-size: 48px;"
+"line-height: 99px;"
+"letter-spacing: 1.5px;"
+"background-color: #5E8580;" 
+"border: 1px solid #3D6675;" 
+"border-radius: 17px"
+"color: #FFFFFF;"
+"text-align: center;"
+"qproperty-alignment: AlignCenter;"
+"}");
+ui->page_payment_Button->setText("Pay");
     // ui->page_payment_Button->setStyleSheet("QPushButton { background-color: red; border: 0px };QPushButton:pressed { background-color: green; border: 10px }");
     
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");

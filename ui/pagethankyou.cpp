@@ -36,7 +36,8 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
 
     // ui->extra_message_label->setText("<p align=center>Water rinse coming in<br>5</p>");
     ui->extra_message_label->hide();
-    
+    connect(ui->notifyUs_Button, SIGNAL(clicked()), this, SLOT(on_notifyUs_Button_clicked()));
+
 //    //connect the in-pop-up buttons with their slots
 //     connect(ui->option1_Button, &QPushButton::clicked, this, &pagethankyou::option1Clicked);
 //     connect(ui->option2_Button, &QPushButton::clicked, this, &pagethankyou::option2Clicked);
@@ -120,19 +121,19 @@ void pagethankyou::showEvent(QShowEvent *event)
 
         ui->notifyUs_Button->setStyleSheet("QPushButton { color:#555555; background-image: url(:/home/df-admin/production/references/helpButton.png); border: px }");
         ui->notifyUs_Button->setStyleSheet(
-"QPushButton {"
+                "QPushButton {"
 
-"font-family: 'Brevia';"
-"font-style: normal;"
-"font-weight: 75;"
-"font-size: 32px;"
-"line-height: 99px;"
-"letter-spacing: 1.5px;"
-"color: #FFFFFF;"
-"text-align: center;"
-"qproperty-alignment: AlignCenter;"
-"border: none;"
-"}");
+                "font-family: 'Brevia';"
+                "font-style: normal;"
+                "font-weight: 75;"
+                "font-size: 32px;"
+                "line-height: 99px;"
+                "letter-spacing: 1.5px;"
+                "color: #FFFFFF;"
+                "text-align: center;"
+                "qproperty-alignment: AlignCenter;"
+                "border: none;"
+                "}");
         ui->notifyUs_Button->setText("Help");
         QPixmap pixmap(":/home/df-admin/production/references/helpButton.png");
         ui->notifyUs_Button->setIcon(pixmap);
@@ -371,13 +372,12 @@ void pagethankyou::exitPage()
 void pagethankyou::on_notifyUs_Button_clicked()
 {
 
-     qDebug() << "Transition to Help Page";
+    qDebug() << "Transition to Help Page";
     thankYouEndTimer->stop();
     // p_page_help->showFullScreen();
     // this->hide();
     p_page_idle->pageTransition(this, p_page_sendFeedback);
 }
-// connect(ui->notifyUs_Button, SIGNAL(clicked()), this, SLOT(showPopup()));
 
 // showPopup();
 

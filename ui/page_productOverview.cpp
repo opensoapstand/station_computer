@@ -53,7 +53,7 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
                         "text-transform: capitalize;"
                         "color: #438080;"
                         "}";
-    ui->label_product_title->setStyleSheet(css_title);
+  //  ui->label_product_title->setStyleSheet(css_title);
     QString css_description = "QLabel{"
                               "position: absolute;"
                               //   "width: 894px;"
@@ -67,9 +67,42 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
                               "line-height: 36px;"
                               "color: #438080;"
                               "}";
-    ui->label_product_description->setStyleSheet(css_description);
 
-    ui->label_product_description->setWordWrap(true);
+    ui->selectProductPage_Button->setStyleSheet("QPushButton { color:#555555; background-color: transparent; border: 0px }");
+        ui->selectProductPage_Button->setStyleSheet(
+"QPushButton {"
+
+"font-family: 'Brevia';"
+"font-style: normal;"
+"font-weight: 75;"
+"font-size: 32px;"
+"line-height: 99px;"
+"letter-spacing: 1.5px;"
+"text-transform: lowercase;"
+"color: #003840;"
+"text-align: center;"
+"qproperty-alignment: AlignCenter;"
+"border: none;"
+"}");
+        ui->selectProductPage_Button->setText("<-Products");
+    //ui->label_product_description->setStyleSheet(css_description);
+
+    //ui->label_product_description->setWordWrap(true);
+    ui->label_price_large->setStyleSheet(
+"QLabel {"
+"font-family: 'Brevia';"
+"font-style: normal;"
+"font-weight: 75;"
+"font-size: 32px;"
+"line-height: 99px;"
+"letter-spacing: 1.5px;"
+"text-transform: lowercase;"
+"color: #003840;"
+"text-align: center;"
+"qproperty-alignment: AlignCenter;"
+"border: 2px solid black;"
+"}");
+ui->label_price_large->setText("selected Volume");
 
 
     QString css_discount_name = "QLabel{"
@@ -196,9 +229,9 @@ void pageProductOverview::onSelectTimeoutTick()
 void pageProductOverview::reset_and_show_page_elements()
 {
     QString bitmap_location;
-    ui->label_product_photo->setStyleSheet("QLabel{border: 0px solid black;}");
-    ui->label_product_title->setText(selectedProductOrder->getSelectedProductName());
-    ui->label_product_description->setText(selectedProductOrder->getLoadedProductDescription());
+    ui->label_product_photo->setStyleSheet("QLabel{border: 2px solid black;}");
+    //ui->label_product_title->setText(selectedProductOrder->getSelectedProductName());
+    //ui->label_product_description->setText(selectedProductOrder->getLoadedProductDescription());
     p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->currentProductOrder->getSelectedProductPicturePath());
     ui->label_selected_price->setText("$" + QString::number(selectedProductOrder->getSelectedPrice(), 'f', 2));
     qDebug () << "SElected size" << selectedProductOrder->getSelectedVolume();

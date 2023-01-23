@@ -137,10 +137,10 @@ color: #58595B;</string>
   <widget class="QLabel" name="label_selected_volume">
    <property name="geometry">
     <rect>
-     <x>668</x>
-     <y>805</y>
-     <width>317</width>
-     <height>35</height>
+     <x>578</x>
+     <y>444</y>
+     <width>393</width>
+     <height>73</height>
     </rect>
    </property>
    <property name="font">
@@ -175,10 +175,10 @@ text-align: center;
   <widget class="QLabel" name="label_price_large">
    <property name="geometry">
     <rect>
-     <x>706</x>
-     <y>30</y>
-     <width>150</width>
-     <height>35</height>
+     <x>538</x>
+     <y>256</y>
+     <width>444</width>
+     <height>450</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -1976,43 +1976,6 @@ border-radius:10px;</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label_product_title">
-   <property name="geometry">
-    <rect>
-     <x>99</x>
-     <y>261</y>
-     <width>870</width>
-     <height>102</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_product_description">
-   <property name="geometry">
-    <rect>
-     <x>97</x>
-     <y>399</y>
-     <width>884</width>
-     <height>102</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Montserrat</family>
-     <pointsize>-1</pointsize>
-     <weight>50</weight>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_invoice_discount_name">
    <property name="enabled">
     <bool>true</bool>
@@ -2049,10 +2012,10 @@ color: #58595B;
   <widget class="QLabel" name="label_product_photo">
    <property name="geometry">
     <rect>
-     <x>185</x>
-     <y>631</y>
-     <width>450</width>
-     <height>400</height>
+     <x>94</x>
+     <y>256</y>
+     <width>444</width>
+     <height>450</height>
     </rect>
    </property>
    <property name="text">
@@ -2124,11 +2087,23 @@ font-weight:bold;</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
+  <widget class="QPushButton" name="selectProductPage_Button">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>30</y>
+     <width>251</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
   <zorder>label_payment_page</zorder>
   <zorder>label_invoice_price</zorder>
   <zorder>promoCode</zorder>
   <zorder>promoInputButton</zorder>
-  <zorder>label_product_description</zorder>
   <zorder>promoButton</zorder>
   <zorder>previousPage_Button</zorder>
   <zorder>page_payment_Button</zorder>
@@ -2141,11 +2116,11 @@ font-weight:bold;</string>
   <zorder>label_selected_volume</zorder>
   <zorder>label_price_large</zorder>
   <zorder>label_selected_price</zorder>
-  <zorder>label_product_title</zorder>
   <zorder>label_invoice_discount_name</zorder>
   <zorder>label_product_photo</zorder>
   <zorder>promoKeyboard</zorder>
   <zorder>label_discount_tag</zorder>
+  <zorder>selectProductPage_Button</zorder>
  </widget>
  <resources/>
  <connections/>

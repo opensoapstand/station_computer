@@ -63,7 +63,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 "font-family: 'Brevia';"
 "font-style: normal;"
 "font-weight: 75;"
-"font-size: 32px;"
+"font-size: 55px;"
 "line-height: 99px;"
 "letter-spacing: 1.5px;"
 "color: #003840;"
@@ -72,6 +72,9 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 "border: none;"
 "}");
         ui->label_select_problem->setText("Select problem from the options below");
+        ui->label_select_problem->setWordWrap(true);
+        
+
 
         ui->label_problem_options->setStyleSheet("background-color: #8EAAA6; border-radius: 10px;");
 
@@ -83,13 +86,14 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 "font-size: 32px;"
 "line-height: 99px;"
 "letter-spacing: 1.5px;"
-"text-transform: lowercase;"
 "color: #FFFFFF;"
 "text-align: center;"
 "qproperty-alignment: AlignCenter;"
 "border: none;"
 "}");
         ui->never_dispensed_Button->setText("The station never dispensed soap");
+
+        
         ui->charged_more_Button->setStyleSheet("QPushButton {"
 
 "font-family: 'Brevia';"
@@ -98,13 +102,14 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 "font-size: 32px;"
 "line-height: 99px;"
 "letter-spacing: 1.5px;"
-"text-transform: lowercase;"
 "color: #FFFFFF;"
-"text-align: center;"
+"text-align: left;"
 "qproperty-alignment: AlignCenter;"
 "border: none;"
 "}");
-        ui->charged_more_Button->setText("The station never dispensed soap");
+        ui->charged_more_Button->setText("The station charged me more for my amount");
+ 
+
         ui->too_slow_Button->setStyleSheet("QPushButton {"
 
 "font-family: 'Brevia';"
@@ -113,13 +118,13 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 "font-size: 32px;"
 "line-height: 99px;"
 "letter-spacing: 1.5px;"
-"text-transform: lowercase;"
 "color: #FFFFFF;"
-"text-align: center;"
+"text-align: left;"
 "qproperty-alignment: AlignCenter;"
 "border: none;"
 "}");
-        ui->too_slow_Button->setText("The station never dispensed soap");
+        ui->too_slow_Button->setText("The station is too slow ");
+      
         ui->multiple_charges_Button->setStyleSheet("QPushButton {"
 
 "font-family: 'Brevia';"
@@ -128,13 +133,30 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 "font-size: 32px;"
 "line-height: 99px;"
 "letter-spacing: 1.5px;"
-"text-transform: lowercase;"
 "color: #FFFFFF;"
-"text-align: center;"
+"text-align: left;"
 "qproperty-alignment: AlignCenter;"
 "border: none;"
 "}");
-        ui->multiple_charges_Button->setText("The station never dispensed soap");
+        ui->multiple_charges_Button->setText("I got charged more than once");
+
+        ui->send_Button->setStyleSheet(
+"QPushButton {"
+"font-family: 'Brevia';"
+"font-style: normal;"
+"font-weight: 75;"
+"font-size: 48px;"
+"line-height: 99px;"
+"letter-spacing: 1.5px;"
+"background-color: #5E8580;" 
+"border: 1px solid #3D6675;" 
+"border-radius: 17px"
+"color: #FFFFFF;"
+"text-align: center;"
+"qproperty-alignment: AlignCenter;"
+"}");
+ui->send_Button->setText("Send");
+
 
 
 }

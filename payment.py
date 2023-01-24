@@ -32,7 +32,9 @@ def register_device():
     register_command = '<TRANSACTION> \
                         <FUNCTION_TYPE>SECURITY</FUNCTION_TYPE> \
                         <COMMAND>REGISTER</COMMAND>\
-                        <ENTRY_CODE>'+ str(12345678) + '</ENTRY_CODE>\
+                        <ENTRY_CODE>1234</ENTRY_CODE>\
+                        <KEY> </KEY> \
+                        <REG_VER> 1 </ REG_VER> \
                     </TRANSACTION>'
     return register_command.encode('UTF-8')
 

@@ -69,9 +69,37 @@
     <string>Cancel</string>
    </property>
   </widget>
+  <widget class="QLabel" name="volumeDispensedLabel">
+   <property name="geometry">
+    <rect>
+     <x>940</x>
+     <y>830</y>
+     <width>81</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>0.0</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>730</x>
+     <y>830</y>
+     <width>171</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Volume dispensed:</string>
+   </property>
+  </widget>
   <zorder>fill_animation_label</zorder>
   <zorder>dispense_bottle_label</zorder>
   <zorder>abortButton</zorder>
+  <zorder>volumeDispensedLabel</zorder>
+  <zorder>label_2</zorder>
  </widget>
  <resources/>
  <connections/>

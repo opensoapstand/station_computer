@@ -316,7 +316,7 @@ void page_dispenser::onDispenseIdleTick()
 QString page_dispenser::getMostRecentDispensed()
 {
     QString units = selectedProductOrder->getUnitsForSelectedSlot();
-
+    
     return df_util::getConvertedStringVolumeFromMl(volumeDispensed, units, false, false);
     // return volumeDispensed;
 }
@@ -341,6 +341,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         // if (dispensed > 0.01){
         ui->abortButton->setText("complete");
         // }
+        ui->volumeDispensedLabel->setText(QString::number(dispensed));
 
         // qDebug() << "Signal: update vol in dispenser!" ;
         qDebug() << "Signal: dispensed " << dispensed << " of " << this->targetVolume;

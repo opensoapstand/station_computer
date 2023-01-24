@@ -41,18 +41,19 @@ int main(int argc, char *argv[])
         {
             // debugOutput::sendMessage("button state: " + to_string(slot) + " " + to_string(getDispenseButtonStateDebounced(slot)), MSG_INFO);
             // debugOutput::sendMessage("button state: " + to_string(slot) + " " + to_string(getDispenseButtonState(slot)), MSG_INFO);
+        if (pcb->getDispenseButtonEdge(slot)){
 
+        
             if (pcb->getDispenseButtonStateDebounced(slot)){
                 pcb->setSolenoid(slot, true);
                 pcb->setPumpEnableState(slot, true);
-                 debugOutput::sendMessage("Press", MSG_INFO);
+                 debugOutput::sendMessage("Press: " + to_string(slot), MSG_INFO);
             }else{
                 pcb->setPumpEnableState(slot, false);
                  pcb->setSolenoid(slot, false);
-                 debugOutput::sendMessage("NO Press", MSG_INFO);
-
+                debugOutput::sendMessage("No Press: " + to_string(slot), MSG_INFO);
             }
-
+        }
             // if (pcb->getDispenseButtonEdge(slot))
             // {
             //     tmptest++;

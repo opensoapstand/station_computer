@@ -20,12 +20,12 @@ enum Dispense_state
 };
 Dispense_state dispense_state;
 
-#define PUMP_START_DELAY_MILLIS 50
+#define PUMP_START_DELAY_MILLIS 500
 #define PUMP_BACKTRACK_TIME_MILLIS 1000
 #define SOLENOID_STOP_DELAY_MILLIS 50
 
 #define AUTO_DISPENSE_ENABLED false
-#define AUTO_DISPENSE_SLOT 1
+#define AUTO_DISPENSE_SLOT 2
 #define AUTO_DISPENSE_DELAY_BETWEEN_CYCLES_MS 3000
 #define AUTO_DISPENSE_CYCLE_LENGTH_MS 3000
 
@@ -72,7 +72,7 @@ void board_test()
     connected_pcb = new pcb();
 
     connected_pcb->setup();
-    connected_pcb->setPumpPWM(200); // 255 is max speed
+    connected_pcb->setPumpPWM(230); // 255 is max speed
 
     bool dispenseCycleStarted = false;
     uint64_t dispense_cycle_count = 0;
@@ -223,6 +223,7 @@ void board_test()
             connected_pcb->setPumpDirection(active_slot, true);
             // connected_pcb->setPumpSpeedPercentage(90);
             connected_pcb->setPumpEnable(active_slot);
+            connected_pcb->startPump(active_slot);
             dispense_state = dispense_pumping;
             auto_dispense_start_epoch = now_epoch_millis;
         };
@@ -252,10 +253,13 @@ void board_test()
             if (next_state)
             {
                 connected_pcb->setPumpsDisableAll();
+                connected_pcb->stopPump(active_slot);
                 if (PUMP_BACKTRACK_TIME_MILLIS != 0)
                 {
                     connected_pcb->setPumpDirection(active_slot, false);
                     connected_pcb->setPumpEnable(active_slot);
+                    connected_pcb->startPump(active_slot);
+
                     dispense_state = dispense_end_backtrack_delay;
                     pump_backtrack_start_epoch = now_epoch_millis;
                 }
@@ -279,6 +283,7 @@ void board_test()
         {
             debugOutput::sendMessage("Disable pumps. Start solenoid delay", MSG_INFO);
             connected_pcb->setPumpsDisableAll();
+            connected_pcb->stopPump(active_slot);
             connected_pcb->setPumpDirection(active_slot, true);
 
             solenoid_stop_delay_start_epoch = now_epoch_millis;
@@ -293,6 +298,8 @@ void board_test()
                 debugOutput::sendMessage("Restart dispensing", MSG_INFO);
                 // restart pump at user press.
                 connected_pcb->setPumpEnable(active_slot);
+                connected_pcb->startPump(active_slot);
+
                 dispense_state = dispense_pumping;
             }
 
@@ -341,18 +348,20 @@ void board_test()
 }
 
 void motor_test()
+// void motor_test(int slot, int speedpwm)
 {
     pcb *connected_pcb;
     connected_pcb = new pcb();
 
 #define SLOT 2
     connected_pcb->setup();
-    connected_pcb->setPumpPWM(100);
+    connected_pcb->setPumpPWM(255);
     connected_pcb->setPumpDirection(SLOT, true);
+    // connected_pcb->setPumpDirection(SLOT, false);
     connected_pcb->setPumpEnable(SLOT);
-    //connected_pcb->setSolenoid(SLOT, true);
-    //connected_pcb->setSingleDispenseButtonLight(SLOT, true);
-    //    debugOutput::sendMessage("started. press button to stop", MSG_INFO);
+    // connected_pcb->setSolenoid(SLOT, true);
+    // connected_pcb->setSingleDispenseButtonLight(SLOT, true);
+    //     debugOutput::sendMessage("started. press button to stop", MSG_INFO);
     using namespace std::chrono;
     uint64_t start_millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     uint64_t now = start_millis_epoch;
@@ -363,6 +372,69 @@ void motor_test()
     {
         now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
         connected_pcb->pcb_refresh();
+        // if (connected_pcb->getDispenseButtonEdgePositive(SLOT))
+        // {
+        //     connected_pcb->setPumpsDisableAll();
+        //     connected_pcb->setSolenoid(SLOT, false);
+        //     debugOutput::sendMessage("button pressed. finish up", MSG_INFO);
+        //     connected_pcb->setSingleDispenseButtonLight(SLOT, false);
+        //     return;
+        // }
+    }
+    connected_pcb->stopPump(SLOT);
+    debugOutput::sendMessage("end", MSG_INFO);
+}
+
+void motor_test_ramp_up()
+// void motor_test(int slot, int speedpwm)
+{
+    pcb *connected_pcb;
+    connected_pcb = new pcb();
+
+#define SLOT 2
+    connected_pcb->setup();
+
+    connected_pcb->setPumpDirection(SLOT, true);
+    connected_pcb->setPumpEnable(SLOT);
+
+    connected_pcb->startPump(SLOT);
+    using namespace std::chrono;
+
+    uint64_t start_millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    uint64_t now = start_millis_epoch;
+
+    // for (int i = 0;i<255;i++){
+    for (int i = 255; i > 0; i-=10)
+    {
+        connected_pcb->pcb_refresh();
+        start_millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
+        connected_pcb->setPumpPWM(i);
+
+        if (connected_pcb->getDispenseButtonState(SLOT))
+        {
+            while (now < start_millis_epoch + 300)
+            {
+                now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+            }
+            connected_pcb->pcb_refresh();
+        }
+        else
+        {
+            while (!connected_pcb->getDispenseButtonEdgePositive(SLOT))
+            {
+                connected_pcb->pcb_refresh();
+            };
+        }
+    }
+
+    start_millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    now = start_millis_epoch;
+    while (now < start_millis_epoch + 2000)
+    {
+        connected_pcb->pcb_refresh();
+        now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
         // if (connected_pcb->getDispenseButtonEdgePositive(SLOT))
         // {
         //     connected_pcb->setPumpsDisableAll();
@@ -413,7 +485,11 @@ int main(int argc, char *argv[])
 {
     // pwm_test();
     // board_test();
-    motor_test();
+    debugOutput::sendMessage(to_string(argc), MSG_INFO);
+
+    // motor_test(argv[1], argv[2]);
+    // motor_test();
+    motor_test_ramp_up();
     // init_test();
-    //test_button_lights(false);
+    // test_button_lights(false);
 }

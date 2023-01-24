@@ -1307,6 +1307,7 @@ bool pcb::setPumpSpeedPercentage(uint8_t speed_percentage)
         debugOutput::sendMessage("Speed invalid. Will set to max. Please provide argument in [0..100] interval. Provided: " + to_string(speed_percentage), MSG_WARNING);
         speed_percentage = 100;
     }
+    debugOutput::sendMessage("Speed percentage set: " + to_string(speed_percentage), MSG_INFO);
     return SendByte(PIC_ADDRESS, 0x00, speed_percentage); // PWM value
 }
 
@@ -1373,7 +1374,7 @@ bool pcb::setPumpEnable(uint8_t slot)
 
         unsigned char reg_value;
 
-        reg_value = ReadByte(get_PCA9534_address_from_slot(1), 0x01);
+        reg_value = ReadByte(get_PCA9534_address_from_slot(1), 0x01); // slot 1 because there is only one PCA9534
         switch (slot)
         {
         case 1:
@@ -1391,7 +1392,7 @@ bool pcb::setPumpEnable(uint8_t slot)
         default:
             return false;
         }
-        SendByte(get_PCA9534_address_from_slot(1), 0x01, reg_value);
+        SendByte(get_PCA9534_address_from_slot(1), 0x01, reg_value); // slot 1 because there is only one PCA9534
 
         return true;
     };

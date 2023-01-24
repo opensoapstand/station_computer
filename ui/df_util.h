@@ -116,7 +116,7 @@ using namespace std;
 #define PAGE_TAP_PAY                                    "Tap-38.png"
 // #define PAGE_WIFI_ERROR_BACKGROUND_PATH                 "/home/df-admin/production/references/oops.png"
 #define BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH            "/home/df-admin/production/references/bottle_fill_for_animation.png"
-
+#define PAGE_SEND_FEEDBACK_PATH                         "background_sendFeedback_page.png"
 #define PAGE_INIT_BACKGROUND_IMAGE_PATH                 "background_message.png"
 
 

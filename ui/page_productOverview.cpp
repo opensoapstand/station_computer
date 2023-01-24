@@ -38,7 +38,6 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
     ui->promoInputButton->setStyleSheet("QPushButton { border: 1px solid #5E8580}");
     ui->promoCode->setStyleSheet("QPushButton { background-color: transparent; border: 1px solid #5E8580 }");
     ui->page_payment_Button->show();
-    //ui->promoButton->setStyleSheet("QPushButton { background-color: transparent; border: 1px solid #5E8580}");
 
     QString css_title = "QLabel{"
                         "position: absolute;"

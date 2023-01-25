@@ -1023,19 +1023,19 @@ void pageProduct::couponHandler()
     DbManager db(DB_PATH);
     bool coupons_enabled = db.getCouponsEnabled();
     db.closeDB();
-
-    if (coupons_enabled)
-    {
-        qDebug() << "Coupons are enabled for this machine.";
-        ui->promoInputButton->show();
-        ui->promoInputButton->setEnabled(true);
-    }
-    else
-    {
-        qDebug() << "Coupons are disabled for this machine.";
-        ui->promoInputButton->setEnabled(false);
-        coupon_disable();
-    }
+    coupon_disable();
+    // if (coupons_enabled)
+    // {
+    //     qDebug() << "Coupons are enabled for this machine.";
+    //     ui->promoInputButton->show();
+    //     ui->promoInputButton->setEnabled(true);
+    // }
+    // else
+    // {
+    //     qDebug() << "Coupons are disabled for this machine.";
+    //     ui->promoInputButton->setEnabled(false);
+    //     coupon_disable();
+    // }
 }
 
 void pageProduct::on_page_payment_Button_clicked()

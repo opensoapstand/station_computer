@@ -71,7 +71,7 @@ private slots:
     void on_page_payment_Button_clicked();
     void on_applyPromo_Button_clicked();
     void on_promoCodeInput_clicked();
-
+    void on_selectProductPage_Button_clicked();
     // Set Drink Order
     void on_mainPage_Button_clicked();
     void onSelectTimeoutTick();

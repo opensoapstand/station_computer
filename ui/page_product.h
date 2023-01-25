@@ -56,12 +56,6 @@ public:
     // void paintEvent(QPaintEvent *event);
 
     void cancelTimers();
-    // void updatePriceAfterPromo(double promoPercent);
-    void couponHandler();
-    void coupon_disable();
-    void coupon_input_show();
-    void coupon_input_hide();
-    void coupon_input_reset();
     
 signals:
     void paymentTotal(string, string, string);
@@ -70,15 +64,12 @@ private slots:
     // **** Navigation ****
     void on_previousPage_Button_clicked();
     void on_page_payment_Button_clicked();
-    void on_applyPromo_Button_clicked();
-    void on_promoCodeInput_clicked();
-
+    void on_back_Button_clicked();
     // Set Drink Order
     void on_orderSmall_Button_clicked();
     void on_orderBig_Button_clicked();
     void on_mainPage_Button_clicked();
     void onSelectTimeoutTick();
-    void keyboardButtonPressed(int);
 
     void on_orderCustom_Button_clicked();
 

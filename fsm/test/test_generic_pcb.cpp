@@ -20,8 +20,8 @@ enum Dispense_state
 };
 Dispense_state dispense_state;
 
-#define PUMP_START_DELAY_MILLIS 500
-#define PUMP_BACKTRACK_TIME_MILLIS 1000
+#define PUMP_START_DELAY_MILLIS 50
+#define PUMP_BACKTRACK_TIME_MILLIS 50
 #define SOLENOID_STOP_DELAY_MILLIS 50
 
 #define AUTO_DISPENSE_ENABLED false
@@ -72,7 +72,7 @@ void board_test()
     connected_pcb = new pcb();
 
     connected_pcb->setup();
-    connected_pcb->setPumpPWM(230); // 255 is max speed
+    connected_pcb->setPumpPWM(255); // 255 is max speed
 
     bool dispenseCycleStarted = false;
     uint64_t dispense_cycle_count = 0;
@@ -484,12 +484,12 @@ void test_button_lights(bool onElseOff)
 int main(int argc, char *argv[])
 {
     // pwm_test();
-    // board_test();
+    board_test();
     debugOutput::sendMessage(to_string(argc), MSG_INFO);
 
     // motor_test(argv[1], argv[2]);
     // motor_test();
-    motor_test_ramp_up();
+    // motor_test_ramp_up();
     // init_test();
     // test_button_lights(false);
 }

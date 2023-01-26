@@ -164,7 +164,7 @@ ui->checkBox_5->setIconSize(size);
         ui->screen_frozen_Button->setText("Screen was frozen");
 
         ui->label_send->setStyleSheet(
-"QPushButton {"
+"QLabel{"
 "font-family: 'Brevia';"
 "font-style: normal;"
 "font-weight: 75;"

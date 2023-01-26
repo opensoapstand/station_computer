@@ -34,7 +34,17 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     // ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     // ui->abortButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->abortButton->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
-
+    QString volumeDispensedStylesheet = "QLabel {"
+            "font-family: 'Montserrat';"
+            "font-style: normal;"
+            "font-weight: 600;"
+            "font-size: 28px;"
+            "line-height: 40px;"
+            "letter-spacing: 0px;"
+            "color: #58595B;"
+            "}";
+    ui->volumeDispensedLabel->setStyleSheet(volumeDispensedStylesheet);
+    ui->label_2->setStyleSheet(volumeDispensedStylesheet);
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));

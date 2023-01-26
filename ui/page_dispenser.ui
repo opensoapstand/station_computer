@@ -72,9 +72,9 @@
   <widget class="QLabel" name="volumeDispensedLabel">
    <property name="geometry">
     <rect>
-     <x>940</x>
-     <y>830</y>
-     <width>81</width>
+     <x>800</x>
+     <y>1620</y>
+     <width>171</width>
      <height>71</height>
     </rect>
    </property>
@@ -86,8 +86,8 @@
    <property name="geometry">
     <rect>
      <x>730</x>
-     <y>830</y>
-     <width>171</width>
+     <y>1520</y>
+     <width>281</width>
      <height>71</height>
     </rect>
    </property>

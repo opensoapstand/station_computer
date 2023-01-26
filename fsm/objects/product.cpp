@@ -704,7 +704,7 @@ bool product::reloadParametersFromDb()
         addShowTransactionsToMachineTable();
     }
 
-    debugOutput::sendMessage("*** WARNING: No NULL values allowed in text fields. ***", MSG_ERROR);
+    debugOutput::sendMessage("*** WARNING: Please note that no NULL values allowed in text fields. ***", MSG_INFO);
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT * FROM products WHERE slot=" + to_string(m_nSlot) + ";";

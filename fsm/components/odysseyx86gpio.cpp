@@ -277,6 +277,7 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
                 {
                         read(fd, &flowsensor_state_char, 1);
                         close(fd);
+                        
                 }
                 else
                 {
@@ -291,6 +292,8 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
                         // debugOutput::sendMessage(to_string(now - flowsensor_most_recent_edge_millis), MSG_INFO);
                         // debugOutput::sendMessage(to_string((now - flowsensor_most_recent_edge_millis) > 30ULL), MSG_INFO);
                         flowsensor_most_recent_edge_millis = now;
+                        //debugOutput::sendMessage("chara relfeiejf", MSG_INFO);
+                        
                 }
 
                 if ((now - flowsensor_most_recent_edge_millis) > FLOWSENSOR_DEJITTER_MILLIS)

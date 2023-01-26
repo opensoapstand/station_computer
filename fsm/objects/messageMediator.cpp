@@ -136,20 +136,16 @@ DF_ERROR messageMediator::sendMessageOverIP(string msg)
          catch (SocketException &e)
          {
             //  std::cout << "Connection Exception was caught:" << e.description() << "\n";
-            debugOutput::sendMessage("UI server not reachable (UI not running? or Still processing previous message?).  " + e.description(), MSG_ERROR);
+            debugOutput::sendMessage("UI server not reachable (UI not running? or Still processing previous message?).  " + e.description() + " Attempts left: " +to_string(attempts), MSG_ERROR);
             usleep(100000);
             attempts--;
          }
-      // }
    }
 
    if (attempts <= 0)
    {
       debugOutput::sendMessage("Give up on communication. Amount of attempts exhausted. ", MSG_INFO);
    }
-
-   //dfError = ERROR_PTHREADS_IPTHREAD_NAK;
-   // m_handlingRequest = false;
 
    return dfError;
 }

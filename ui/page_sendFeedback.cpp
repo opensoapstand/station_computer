@@ -162,7 +162,8 @@ ui->checkBox_5->setIconSize(size);
 "border: none;"
 "}");
         ui->screen_frozen_Button->setText("Screen was frozen");
-
+        ui->label_send->show();
+        ui->send_Button->hide();
         ui->label_send->setStyleSheet(
 "QLabel{"
 "font-family: 'Brevia';"

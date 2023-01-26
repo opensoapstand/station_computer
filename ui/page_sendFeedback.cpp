@@ -54,24 +54,23 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 "qproperty-alignment: AlignCenter;"
 "border: none;"
 "}");
-        ui->previousPage_Button->setText("<-Back");
+        // ui->previousPage_Button->setText("<-Back");
         ui->mainPage_Button->hide();
         
         ui->label_select_problem->setStyleSheet("QLabel { color:#555555; ; border: 1px }");
         ui->label_select_problem->setStyleSheet(
-"QLabel {"
-
-"font-family: 'Brevia';"
-"font-style: normal;"
-"font-weight: 75;"
-"font-size: 55px;"
-"line-height: 99px;"
-"letter-spacing: 1.5px;"
-"color: #003840;"
-"text-align: center;"
-"qproperty-alignment: AlignCenter;"
-"border: none;"
-"}");
+                "QLabel {"
+                "font-family: 'Brevia';"
+                "font-style: normal;"
+                "font-weight: 75;"
+                "font-size: 55px;"
+                "line-height: 99px;"
+                "letter-spacing: 1.5px;"
+                "color: #003840;"
+                "text-align: center;"
+                "qproperty-alignment: AlignCenter;"
+                "border: none;"
+                "}");
         ui->label_select_problem->setText("Select problem(s) from the options below");
         ui->label_select_problem->setWordWrap(true);
         
@@ -134,53 +133,49 @@ ui->checkBox_3->setIconSize(size);
 ui->checkBox_4->setIconSize(size);
 ui->checkBox_5->setIconSize(size);
         ui->multiple_charges_Button->setStyleSheet("QPushButton {"
-
-"font-family: 'Brevia';"
-"font-style: normal;"
-"font-weight: 75;"
-"font-size: 32px;"
-"line-height: 99px;"
-"letter-spacing: 1.5px;"
-"color: #FFFFFF;"
-"text-align: left;"
-"qproperty-alignment: AlignCenter;"
-"border: none;"
+            "font-family: 'Brevia';"
+            "font-style: normal;"
+            "font-weight: 75;"
+            "font-size: 32px;"
+            "line-height: 99px;"
+            "letter-spacing: 1.5px;"
+            "color: #FFFFFF;"
+            "text-align: left;"
+            "qproperty-alignment: AlignCenter;"
+            "border: none;"
 "}");
         ui->multiple_charges_Button->setText("I got charged more than once");
 
         ui->screen_frozen_Button->setStyleSheet("QPushButton {"
-
-"font-family: 'Brevia';"
-"font-style: normal;"
-"font-weight: 75;"
-"font-size: 32px;"
-"line-height: 99px;"
-"letter-spacing: 1.5px;"
-"color: #FFFFFF;"
-"text-align: left;"
-"qproperty-alignment: AlignCenter;"
-"border: none;"
+            "font-family: 'Brevia';"
+            "font-style: normal;"
+            "font-weight: 75;"
+            "font-size: 32px;"
+            "line-height: 99px;"
+            "letter-spacing: 1.5px;"
+            "color: #FFFFFF;"
+            "text-align: left;"
+            "qproperty-alignment: AlignCenter;"
+            "border: none;"
 "}");
         ui->screen_frozen_Button->setText("Screen was frozen");
 
-        ui->label_send->setStyleSheet(
-"QLabel{"
-"font-family: 'Brevia';"
-"font-style: normal;"
-"font-weight: 75;"
-"font-size: 48px;"
-"line-height: 99px;"
-"letter-spacing: 1.5px;"
-"background-color: #5E8580;" 
-"border: 1px solid #3D6675;" 
-"border-radius: 17px"
-"color: #FFFFFF;"
-"text-align: center;"
-"qproperty-alignment: AlignCenter;"
-"}");
-ui->label_send->setText("Send");
-
-
+        ui->label_send->setStyleSheet("QLabel{"
+            "font-family: 'Brevia';"
+            "font-style: normal;"
+            "font-weight: 75;"
+            "font-size: 48px;"
+            "line-height: 99px;"
+            "letter-spacing: 1.5px;"
+            "background-color: #5E8580;" 
+            "border: 1px solid #3D6675;" 
+            "border-radius: 17px"
+            "color: #FFFFFF;"
+            "text-align: center;"
+            "qproperty-alignment: AlignCenter;"
+            "}");
+        ui->label_send->setText("Send");
+        ui->send_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
 }
     
@@ -204,6 +199,7 @@ void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser 
 
     // selectedProductOrder = p_page_idle->currentProductOrder;
      p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_PATH);
+    ui->send_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     // couponHandler();
 }
@@ -235,7 +231,7 @@ void page_sendFeedback::setDefaultSize()
 
 void page_sendFeedback::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< Page Enter: Product Overview>>>>>>>>>";
+    qDebug() << "<<<<<<< Page Enter: Send Feedback>>>>>>>>>";
     QWidget::showEvent(event);
         
     
@@ -246,7 +242,7 @@ void page_sendFeedback::showEvent(QShowEvent *event)
 
 void page_sendFeedback::resizeEvent(QResizeEvent *event)
 {
-    qDebug() << "\n---Page_product Overview: resizeEvent";
+    qDebug() << "\n---Page Send Feedback: resizeEvent";
     // QWidget::resizeEvent(event);
     // selectedProductOrder->loadSelectedProductProperties();
     // reset_and_show_page_elements();

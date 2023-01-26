@@ -196,6 +196,17 @@ ui->page_payment_Button->setText("Pay");
     ui->promoButton->show();
     ui->promoKeyboard->hide();
 
+    ui->label_total->setStyleSheet(
+        "QLabel {"
+"font-family: 'Montserrat';"
+"font-style: normal;"
+"font-weight: 600;"
+"font-size: 36px;"
+"line-height: 40px;"
+"letter-spacing: 0px;"
+"color: #58595B;"
+"}");
+ui->label_total->setText("Total");
     couponHandler();
 
     {

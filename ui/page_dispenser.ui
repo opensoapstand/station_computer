@@ -51,8 +51,8 @@
   <widget class="QPushButton" name="abortButton">
    <property name="geometry">
     <rect>
-     <x>770</x>
-     <y>1560</y>
+     <x>380</x>
+     <y>1450</y>
      <width>261</width>
      <height>101</height>
     </rect>
@@ -66,7 +66,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Cancel</string>
+    <string>Complete</string>
    </property>
   </widget>
   <widget class="QLabel" name="volumeDispensedLabel">

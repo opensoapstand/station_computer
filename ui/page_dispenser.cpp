@@ -103,7 +103,22 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->fill_animation_label->hide();
 
     startDispensing();
-    ui->abortButton->setText("cancel");
+    ui->abortButton->setText("Complete");
+    ui->abortButton->setStyleSheet(
+"QPushButton {"
+"font-family: 'Brevia';"
+"font-style: normal;"
+"font-weight: 75;"
+"font-size: 48px;"
+"line-height: 99px;"
+"letter-spacing: 1.5px;"
+"background-color: #5E8580;" 
+"border: 1px solid #3D6675;" 
+"border-radius: 27px"
+"color: #FFFFFF;"
+"text-align: center;"
+"qproperty-alignment: AlignCenter;"
+"}");
     ui->abortButton->raise();
 
     if (nullptr == dispenseIdleTimer)

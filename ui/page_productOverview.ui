@@ -45,9 +45,9 @@ line-height: 29px;</string>
   <widget class="QPushButton" name="page_payment_Button">
    <property name="geometry">
     <rect>
-     <x>345</x>
+     <x>188</x>
      <y>1541</y>
-     <width>397</width>
+     <width>740</width>
      <height>92</height>
     </rect>
    </property>
@@ -286,8 +286,8 @@ text-align: center;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>150</y>
+     <x>107</x>
+     <y>920</y>
      <width>841</width>
      <height>320</height>
     </rect>
@@ -1553,7 +1553,7 @@ outline: none;
    <widget class="QPushButton" name="v">
     <property name="geometry">
      <rect>
-      <x>330</x>
+      <x>310</x>
       <y>260</y>
       <width>62</width>
       <height>62</height>
@@ -1594,7 +1594,7 @@ outline: none;
    <widget class="QPushButton" name="b">
     <property name="geometry">
      <rect>
-      <x>400</x>
+      <x>385</x>
       <y>260</y>
       <width>62</width>
       <height>62</height>
@@ -1635,7 +1635,7 @@ outline: none;
    <widget class="QPushButton" name="n">
     <property name="geometry">
      <rect>
-      <x>470</x>
+      <x>462</x>
       <y>260</y>
       <width>62</width>
       <height>62</height>
@@ -1676,7 +1676,7 @@ outline: none;
    <widget class="QPushButton" name="m">
     <property name="geometry">
      <rect>
-      <x>550</x>
+      <x>540</x>
       <y>260</y>
       <width>62</width>
       <height>62</height>
@@ -1865,7 +1865,7 @@ color: #58595B;
    </property>
    <property name="geometry">
     <rect>
-     <x>804</x>
+     <x>800</x>
      <y>1160</y>
      <width>150</width>
      <height>80</height>
@@ -1931,7 +1931,7 @@ color: #58595B;
     </rect>
    </property>
    <property name="text">
-    <string>picture</string>
+    <string/>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -2009,6 +2009,9 @@ font-weight:bold;</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_pay">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>188</x>
@@ -2018,7 +2021,7 @@ font-weight:bold;</string>
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="label_invoice_box">
@@ -2057,14 +2060,17 @@ text-align: center;</string>
   <widget class="QLabel" name="label_gif">
    <property name="geometry">
     <rect>
-     <x>266</x>
-     <y>606</y>
-     <width>585</width>
-     <height>569</height>
+     <x>540</x>
+     <y>960</y>
+     <width>200</width>
+     <height>200</height>
     </rect>
    </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="label_total">
@@ -2077,9 +2083,11 @@ text-align: center;</string>
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
    </property>
   </widget>
+  <zorder>label_pay</zorder>
+  <zorder>page_payment_Button</zorder>
   <zorder>label_invoice_box</zorder>
   <zorder>label_payment_page</zorder>
   <zorder>label_invoice_price</zorder>
@@ -2092,16 +2100,14 @@ text-align: center;</string>
   <zorder>label_selected_volume</zorder>
   <zorder>label_selected_price</zorder>
   <zorder>label_invoice_discount_name</zorder>
-  <zorder>label_product_photo</zorder>
-  <zorder>promoKeyboard</zorder>
   <zorder>label_discount_tag</zorder>
   <zorder>selectProductPage_Button</zorder>
-  <zorder>page_payment_Button</zorder>
-  <zorder>label_pay</zorder>
-  <zorder>label_gif</zorder>
   <zorder>promoInputButton</zorder>
   <zorder>promoButton</zorder>
   <zorder>label_total</zorder>
+  <zorder>promoKeyboard</zorder>
+  <zorder>label_product_photo</zorder>
+  <zorder>label_gif</zorder>
  </widget>
  <resources/>
  <connections/>

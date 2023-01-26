@@ -6,7 +6,8 @@ CONFIG += \
     c++11
 
 QT += multimedia \ 
-    multimediawidgets
+    multimediawidgets \
+    widgets 
 
 FORMS += \
     page_dispenser.ui \

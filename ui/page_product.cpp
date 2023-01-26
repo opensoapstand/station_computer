@@ -863,61 +863,8 @@ void pageProduct::on_page_payment_Button_clicked()
     ui->previousPage_Button->setEnabled(false);
 
     this->stopSelectTimers();
-    // selectIdleTimer->stop();
-    QString paymentMethod = selectedProductOrder->getSelectedPaymentMethod();
-
-    if (paymentMethod == "qr" || paymentMethod == "tap")
-    {
-        CURL *curl;
-        CURLcode res;
-        curl = curl_easy_init();
-
-        if (!curl)
-        {
-            qDebug() << "Pageproduct: cURL failed init";
-            return;
-        }
-
-        curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/ping");
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
-
-        res = curl_easy_perform(curl);
-        if (res != CURLE_OK)
-        {
-            qDebug() << "ERROR: Failed to reach soapstandportal. error code: " + QString::number(res);
-            p_page_idle->pageTransition(this, p_page_wifi_error);
-        }
-        else
-        {
-            QString feedback = QString::fromUtf8(readBuffer.c_str());
-            qDebug() << "Server feedback readbuffer: " << feedback;
-
-            // ui->label_invoice_price_total->text();
-            if(selectedProductOrder->getSelectedPriceCorrected() < 0.1){
-                p_page_idle->pageTransition(this, p_page_overview);
-            }
-            else{
-            p_page_idle->pageTransition(this, paymentPage);
-
-            }
-        }
-        curl_easy_cleanup(curl);
-        readBuffer = "";
-    }
-    else if (paymentMethod == "barcode" || paymentMethod == "plu")
-    {
-        // p_page_dispense->showEvent(dispenseEvent); // todo Lode: this enabled together with showfullscreen calls the showEvent twice. only showevent, does not display the dispense page though.
-        // p_page_dispense->showFullScreen();
-        // this->hide();
-        p_page_idle->pageTransition(this, p_page_overview);
-    }
-    else
-    {
-        qDebug() << "WARNING: No payment method detected.";
-        // p_page_dispense->showFullScreen();
-        // this->hide();
-        p_page_idle->pageTransition(this, p_page_overview);
-    }
+    p_page_idle->pageTransition(this, p_page_overview);
+    
 }
 
 void pageProduct::on_back_Button_clicked()

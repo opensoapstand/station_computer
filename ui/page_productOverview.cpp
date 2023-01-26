@@ -26,7 +26,7 @@
 #include "page_idle.h"
 #include <curl/curl.h>
 #include <json.hpp>
-
+#include <QMovie>
 using json = nlohmann::json;
 
 // CTOR
@@ -39,7 +39,7 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
     ui->promoInputButton->setText("Discount code");
     ui->promoCode->setStyleSheet("QPushButton { background-color: transparent; border: 1px solid #5E8580 }");
     ui->page_payment_Button->show();
-
+    ui->label_gif->hide();
     QString css_title = "QLabel{"
                         "position: absolute;"
                         "width: 870px;"
@@ -118,7 +118,6 @@ ui->label_invoice_price->setStyleSheet(orderOverviewStyle);
 ui->label_discount_tag->setStyleSheet(orderOverviewStyle);
 ui->label_discount_tag->setText("Discount");
 ui->label_invoice_discount_amount->setStyleSheet(orderOverviewStyle);
-
 ui->label_invoice_box->setStyleSheet(
 "QLabel {"
 
@@ -143,22 +142,22 @@ ui->label_invoice_box->setStyleSheet(
 "}");
 ui->promoButton->setText("Apply");
 
-ui->page_payment_Button->setStyleSheet(
-"QPushButton {"
-"font-family: 'Brevia';"
-"font-style: normal;"
-"font-weight: 75;"
-"font-size: 48px;"
-"line-height: 99px;"
-"letter-spacing: 1.5px;"
-"background-color: #5E8580;" 
-"border: 1px solid #3D6675;" 
-"border-radius: 17px"
-"color: #FFFFFF;"
-"text-align: center;"
-"qproperty-alignment: AlignCenter;"
-"}");
-ui->page_payment_Button->setText("Pay");
+// ui->page_payment_Button->setStyleSheet(
+// "QPushButton {"
+// "font-family: 'Brevia';"
+// "font-style: normal;"
+// "font-weight: 75;"
+// "font-size: 48px;"
+// "line-height: 99px;"
+// "letter-spacing: 1.5px;"
+// "background-color: #5E8580;" 
+// "border: 1px solid #3D6675;" 
+// "border-radius: 32px"
+// "color: #FFFFFF;"
+// "text-align: center;"
+// "qproperty-alignment: AlignCenter;"
+// "}");
+// ui->page_payment_Button->setText("Pay");
 
  ui->label_pay->setStyleSheet(
                 "QLabel {"
@@ -217,6 +216,21 @@ ui->label_total->setText("Total");
         connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
         connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
     }
+
+    QMovie *movie = new QMovie("/home/df-admin/drinkfill/ui/loading.gif");
+    ui->label_gif->setMovie(movie);
+    movie->start();
+    ui->label_gif->setStyleSheet(
+                            "QLabel {"
+                    "font-family: 'Montserrat';"
+                    "font-style: normal;"
+                    "font-weight: 600;"
+                    "font-size: 36px;"
+                    "line-height: 40px;"
+                    "letter-spacing: 0px;"
+                    "color: #58595B;"
+                    "}");
+    ui->label_gif->hide();
     // QString paymentMethod = selectedProductOrder->getSelectedPaymentMethod();
     // if(paymentMethod== "qr" || paymentMethod=="tap"){
     //     ui->label_payment_page->setText("Pay Now");
@@ -243,7 +257,7 @@ void pageProductOverview::setPage(page_select_product *pageSelect, page_dispense
     ui->label_invoice_discount_amount->hide();
     ui->label_invoice_discount_name->hide();
     ui->label_discount_tag->hide();
-
+    ui->label_gif->hide();
     selectedProductOrder = p_page_idle->currentProductOrder;
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_ORDER_OVERVIEW_PATH);
@@ -323,6 +337,8 @@ void pageProductOverview::reset_and_show_page_elements()
     ui->label_selected_price->setText("$" + QString::number(selectedProductOrder->getSelectedPrice(), 'f', 2));
     qDebug () << "SElected size" << selectedProductOrder->getSelectedVolume();
     ui->label_invoice_price->setText("$" + QString::number(selectedProductOrder->getSelectedPrice(), 'f', 2));
+    ui->label_invoice_price_total->setText("$" + QString::number(selectedProductOrder->getSelectedPriceCorrected(), 'f', 2));
+
     QString selected_volume;
     if(selectedProductOrder->getUnitsForSelectedSlot()== "oz"){
         selected_volume= QString::number(ceil((double)selectedProductOrder->getSelectedVolume() * (double)ML_TO_OZ * 1.0));   
@@ -345,22 +361,7 @@ void pageProductOverview::reset_and_show_page_elements()
     ui->mainPage_Button->setEnabled(true);
     /* Hacky transparent button */
     ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-   ui->page_payment_Button->setStyleSheet(
-"QPushButton {"
-"font-family: 'Brevia';"
-"font-style: normal;"
-"font-weight: 75;"
-"font-size: 48px;"
-"line-height: 99px;"
-"letter-spacing: 1.5px;"
-"background-color: #5E8580;" 
-"border: 1px solid #3D6675;" 
-"border-radius: 17px"
-"color: #FFFFFF;"
-"text-align: center;"
-"qproperty-alignment: AlignCenter;"
-"}");
-ui->page_payment_Button->setText("Pay");
+   ui->page_payment_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     // ui->page_payment_Button->setStyleSheet("QPushButton { background-color: red; border: 0px };QPushButton:pressed { background-color: green; border: 10px }");
     
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
@@ -441,7 +442,7 @@ void pageProductOverview::on_applyPromo_Button_clicked()
 
     QString promocode = ui->promoCode->text();
     ui->promoKeyboard->hide();
-
+    ui->label_gif->show();
     CURL *curl;
     CURLcode res;
     long http_code = 0;
@@ -500,6 +501,7 @@ void pageProductOverview::on_applyPromo_Button_clicked()
                 ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
             }
         }
+        
     }
 }
 
@@ -600,7 +602,7 @@ void pageProductOverview::couponHandler()
 void pageProductOverview::on_page_payment_Button_clicked()
 {
     qDebug() << "pageProductOverview: Pay button";
-
+    
     ui->mainPage_Button->setEnabled(false);
     ui->previousPage_Button->setEnabled(false);
 
@@ -659,6 +661,7 @@ void pageProductOverview::on_page_payment_Button_clicked()
         qDebug() << "WARNING: No payment method detected.";
         // p_page_dispense->showFullScreen();
         // this->hide();
+        
         p_page_idle->pageTransition(this, p_page_dispense);
     }
 }

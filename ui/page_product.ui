@@ -406,8 +406,8 @@ text-align: center;</string>
   <widget class="QLabel" name="label_product_photo">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>690</y>
+     <x>94</x>
+     <y>700</y>
      <width>450</width>
      <height>450</height>
     </rect>

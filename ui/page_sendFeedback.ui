@@ -221,7 +221,7 @@ text-align: center;
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">QCheckBox::indicator{width:45px;height:45px;};</string>
+    <string notr="true">QCheckBox::indicator{color: red; width:45px;height:45px;};</string>
    </property>
    <property name="text">
     <string/>
@@ -376,7 +376,4 @@ text-align: center;
  </widget>
  <resources/>
  <connections/>
- <buttongroups>
-  <buttongroup name="buttonGroup"/>
- </buttongroups>
 </ui>

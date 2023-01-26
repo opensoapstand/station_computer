@@ -141,7 +141,7 @@ ui->label_invoice_box->setStyleSheet(
 "qproperty-alignment: AlignCenter;"
 "}");
 ui->promoButton->setText("Apply");
-
+ui->promoButton->hide();
 // ui->page_payment_Button->setStyleSheet(
 // "QPushButton {"
 // "font-family: 'Brevia';"
@@ -192,7 +192,7 @@ ui->promoButton->setText("Apply");
     ui->label_discount_tag->show();
     ui->promoCode->clear();
     ui->promoCode->show();
-    ui->promoButton->show();
+    // ui->promoButton->show();
     ui->promoKeyboard->hide();
 
     ui->label_total->setStyleSheet(

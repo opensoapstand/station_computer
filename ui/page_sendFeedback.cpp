@@ -35,25 +35,25 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 {
     qDebug()<< "IN send feedback";
     ui->setupUi(this);
-    connect(ui->previousPage_Button, SIGNAL(clicked()), this, SLOT(on_previousPage_Button_clicked()));
+    // connect(ui->previousPage_Button, SIGNAL(clicked()), this, SLOT(on_previousPage_Button_clicked()));
 
     
      ui->previousPage_Button->setStyleSheet("QPushButton { color:#555555; background-color: transparent; border: 0px }");
-        ui->previousPage_Button->setStyleSheet(
-"QPushButton {"
+    ui->previousPage_Button->setStyleSheet(
+                "QPushButton {"
 
-"font-family: 'Brevia';"
-"font-style: normal;"
-"font-weight: 75;"
-"font-size: 32px;"
-"line-height: 99px;"
-"letter-spacing: 1.5px;"
-"text-transform: lowercase;"
-"color: #003840;"
-"text-align: center;"
-"qproperty-alignment: AlignCenter;"
-"border: none;"
-"}");
+                "font-family: 'Brevia';"
+                "font-style: normal;"
+                "font-weight: 75;"
+                "font-size: 32px;"
+                "line-height: 99px;"
+                "letter-spacing: 1.5px;"
+                "text-transform: lowercase;"
+                "color: #003840;"
+                "text-align: center;"
+                "qproperty-alignment: AlignCenter;"
+                "border: none;"
+                "}");
         // ui->previousPage_Button->setText("<-Back");
         ui->mainPage_Button->hide();
         
@@ -225,8 +225,6 @@ void page_sendFeedback::setDefaultSize()
         }
     }
 }
-
-
 
 /* GUI */
 

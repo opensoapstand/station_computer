@@ -652,6 +652,19 @@
     <string>TextLabel</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label_pick_soap">
+   <property name="geometry">
+    <rect>
+     <x>311</x>
+     <y>178</y>
+     <width>478</width>
+     <height>86</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>selection2_Button</zorder>
   <zorder>product_2_photo_label</zorder>
   <zorder>product_2_photo_label_text</zorder>
@@ -684,6 +697,7 @@
   <zorder>product_2_overlay_label</zorder>
   <zorder>product_4_overlay_label</zorder>
   <zorder>product_3_overlay_label</zorder>
+  <zorder>label_pick_soap</zorder>
  </widget>
  <resources/>
  <connections/>

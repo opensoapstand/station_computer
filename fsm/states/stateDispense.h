@@ -28,6 +28,8 @@ public:
 
     string toString();
 
+    void startPumping();
+    void stopPumping();
     DF_ERROR rectractProductBlocking();
 
     DF_ERROR onEntry();

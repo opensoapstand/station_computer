@@ -95,16 +95,7 @@ DF_ERROR stateDispense::onAction()
          debugOutput::sendMessage("Dispense button pressed edge", MSG_INFO);
          m_pMessaging->sendMessage("Dispense Button Pos Edge"); // send to UI
 
-         if (productDispensers[pos_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
-         {
-
-            productDispensers[pos_index].the_pcb->startPump(slot);
-            productDispensers[pos_index].the_pcb->setSolenoid(slot, true);
-         }
-         else
-         {
-            productDispensers[pos_index].pumpSlowStart(true);
-         }
+         startPumping();
 
          productDispensers[pos_index].addDispenseButtonPress();
       }
@@ -113,16 +104,7 @@ DF_ERROR stateDispense::onAction()
       {
          debugOutput::sendMessage("Dispense button released edge", MSG_INFO);
 
-         if (productDispensers[pos_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
-         {
-            productDispensers[pos_index].the_pcb->stopPump(slot);
-            productDispensers[pos_index].the_pcb->setSolenoid(slot, false);
-         }
-         else
-         {
-            productDispensers[pos_index].pumpSlowStopBlocking();
-            rectractProductBlocking();
-         }
+         stopPumping();
       }
    }
 
@@ -149,16 +131,7 @@ DF_ERROR stateDispense::onAction()
    {
       debugOutput::sendMessage("Stop dispensing. Requested volume reached. " + to_string(productDispensers[pos_index].getVolumeDispensed()), MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
-      if (productDispensers[pos_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
-      {
-         productDispensers[pos_index].the_pcb->stopPump(slot);
-         productDispensers[pos_index].the_pcb->setSolenoid(slot, false);
-      }
-      else
-      {
-         productDispensers[pos_index].pumpSlowStopBlocking();
-         rectractProductBlocking();
-      }
+      stopPumping();
       return e_ret = OK;
    }
 
@@ -173,16 +146,7 @@ DF_ERROR stateDispense::onAction()
          debugOutput::sendMessage("******************* EMPTY CONTAINER DETECTED **********************", MSG_INFO);
          usleep(100000);                             // send message delay (pause from previous message) desperate attempt to prevent crashes
          m_pMessaging->sendMessage("No flow abort"); // send to UI
-         if (productDispensers[pos_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
-         {
-            productDispensers[pos_index].the_pcb->stopPump(slot);
-            productDispensers[pos_index].the_pcb->setSolenoid(slot, false);
-         }
-         else
-         {
-            productDispensers[pos_index].pumpSlowStopBlocking();
-            rectractProductBlocking();
-         }
+         stopPumping();
          m_state_requested = STATE_DISPENSE_END;
 
          m_pMessaging->setRequestedSize(SIZE_EMPTY_CONTAINER_DETECTED_CHAR);
@@ -232,6 +196,36 @@ DF_ERROR stateDispense::onAction()
    e_ret = OK;
 
    return e_ret;
+}
+
+void stateDispense::startPumping()
+{
+   if (productDispensers[pos_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
+   {
+      productDispensers[pos_index].the_pcb->setPumpSpeedPercentage(0);
+      productDispensers[pos_index].the_pcb->setPumpDirection(slot, true);
+
+      productDispensers[pos_index].the_pcb->startPump(slot);
+      productDispensers[pos_index].the_pcb->setSolenoid(slot, true);
+   }
+   else
+   {
+      productDispensers[pos_index].pumpSlowStart(true);
+   }
+}
+
+void stateDispense::stopPumping()
+{
+   if (productDispensers[pos_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
+   {
+      productDispensers[pos_index].the_pcb->stopPump(slot);
+      productDispensers[pos_index].the_pcb->setSolenoid(slot, false);
+   }
+   else
+   {
+      productDispensers[pos_index].pumpSlowStopBlocking();
+      rectractProductBlocking();
+   }
 }
 
 // Actions on leaving Dispense state

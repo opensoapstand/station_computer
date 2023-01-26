@@ -2054,6 +2054,19 @@ text-align: center;</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
+  <widget class="QLabel" name="label_gif">
+   <property name="geometry">
+    <rect>
+     <x>266</x>
+     <y>606</y>
+     <width>585</width>
+     <height>569</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>label_invoice_box</zorder>
   <zorder>label_payment_page</zorder>
   <zorder>label_invoice_price</zorder>
@@ -2074,6 +2087,7 @@ text-align: center;</string>
   <zorder>promoButton</zorder>
   <zorder>page_payment_Button</zorder>
   <zorder>label_pay</zorder>
+  <zorder>label_gif</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -179,7 +179,6 @@ ui->page_payment_Button->setText("Pay");
                 ui->label_pay->setText("Pay");
 
 
-
     QString css_discount_name = "QLabel{"
                                 "font-family: 'Montserrat';"
                                 "font-style: normal;"

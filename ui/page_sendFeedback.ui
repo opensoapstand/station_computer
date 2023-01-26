@@ -32,10 +32,10 @@ line-height: 29px;</string>
   <widget class="QPushButton" name="previousPage_Button">
    <property name="geometry">
     <rect>
-     <x>91</x>
-     <y>61</y>
-     <width>159</width>
-     <height>32</height>
+     <x>68</x>
+     <y>1757</y>
+     <width>118</width>
+     <height>118</height>
     </rect>
    </property>
    <property name="text">
@@ -45,7 +45,7 @@ line-height: 29px;</string>
   <widget class="QPushButton" name="send_Button">
    <property name="geometry">
     <rect>
-     <x>320</x>
+     <x>290</x>
      <y>1424</y>
      <width>438</width>
      <height>95</height>
@@ -1699,9 +1699,9 @@ outline: none;
   <widget class="QLabel" name="label_problem_options">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>430</y>
-     <width>924</width>
+     <x>142</x>
+     <y>496</y>
+     <width>780</width>
      <height>924</height>
     </rect>
    </property>
@@ -1726,7 +1726,7 @@ outline: none;
    <property name="geometry">
     <rect>
      <x>274</x>
-     <y>605</y>
+     <y>634</y>
      <width>576</width>
      <height>45</height>
     </rect>
@@ -1739,7 +1739,7 @@ outline: none;
    <property name="geometry">
     <rect>
      <x>274</x>
-     <y>763</y>
+     <y>769</y>
      <width>576</width>
      <height>78</height>
     </rect>
@@ -1752,7 +1752,7 @@ outline: none;
    <property name="geometry">
     <rect>
      <x>274</x>
-     <y>953</y>
+     <y>1037</y>
      <width>576</width>
      <height>78</height>
     </rect>
@@ -1765,7 +1765,7 @@ outline: none;
    <property name="geometry">
     <rect>
      <x>274</x>
-     <y>1143</y>
+     <y>903</y>
      <width>576</width>
      <height>78</height>
     </rect>
@@ -1774,56 +1774,88 @@ outline: none;
     <string>PushButton</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBox">
+  <widget class="QCheckBox" name="checkBox_1">
    <property name="geometry">
     <rect>
-     <x>220</x>
-     <y>620</y>
-     <width>92</width>
-     <height>23</height>
+     <x>160</x>
+     <y>625</y>
+     <width>64</width>
+     <height>64</height>
     </rect>
    </property>
    <property name="text">
-    <string>CheckBox</string>
+    <string/>
    </property>
   </widget>
   <widget class="QCheckBox" name="checkBox_2">
    <property name="geometry">
     <rect>
-     <x>230</x>
-     <y>800</y>
-     <width>92</width>
-     <height>23</height>
+     <x>160</x>
+     <y>758</y>
+     <width>64</width>
+     <height>64</height>
     </rect>
    </property>
    <property name="text">
-    <string>CheckBox</string>
+    <string/>
    </property>
   </widget>
   <widget class="QCheckBox" name="checkBox_3">
    <property name="geometry">
     <rect>
-     <x>230</x>
-     <y>980</y>
-     <width>92</width>
-     <height>23</height>
+     <x>160</x>
+     <y>891</y>
+     <width>64</width>
+     <height>64</height>
     </rect>
    </property>
    <property name="text">
-    <string>CheckBox</string>
+    <string/>
    </property>
   </widget>
   <widget class="QCheckBox" name="checkBox_4">
    <property name="geometry">
     <rect>
-     <x>230</x>
-     <y>1170</y>
-     <width>92</width>
-     <height>23</height>
+     <x>160</x>
+     <y>1024</y>
+     <width>64</width>
+     <height>64</height>
     </rect>
    </property>
    <property name="text">
-    <string>CheckBox</string>
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="screen_frozen_Button">
+   <property name="geometry">
+    <rect>
+     <x>274</x>
+     <y>1172</y>
+     <width>576</width>
+     <height>78</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_5">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>1157</y>
+     <width>64</width>
+     <height>64</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>16</width>
+     <height>16</height>
+    </size>
    </property>
   </widget>
   <zorder>mainPage_Button</zorder>
@@ -1838,10 +1870,12 @@ outline: none;
   <zorder>never_dispensed_Button</zorder>
   <zorder>multiple_charges_Button</zorder>
   <zorder>charged_more_Button</zorder>
-  <zorder>checkBox</zorder>
+  <zorder>checkBox_1</zorder>
   <zorder>checkBox_2</zorder>
   <zorder>checkBox_3</zorder>
   <zorder>checkBox_4</zorder>
+  <zorder>screen_frozen_Button</zorder>
+  <zorder>checkBox_5</zorder>
  </widget>
  <resources/>
  <connections/>

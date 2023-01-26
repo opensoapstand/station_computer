@@ -71,7 +71,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 "qproperty-alignment: AlignCenter;"
 "border: none;"
 "}");
-        ui->label_select_problem->setText("Select problem from the options below");
+        ui->label_select_problem->setText("Select problem(s) from the options below");
         ui->label_select_problem->setWordWrap(true);
         
 
@@ -139,6 +139,21 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 "border: none;"
 "}");
         ui->multiple_charges_Button->setText("I got charged more than once");
+
+        ui->screen_frozen_Button->setStyleSheet("QPushButton {"
+
+"font-family: 'Brevia';"
+"font-style: normal;"
+"font-weight: 75;"
+"font-size: 32px;"
+"line-height: 99px;"
+"letter-spacing: 1.5px;"
+"color: #FFFFFF;"
+"text-align: left;"
+"qproperty-alignment: AlignCenter;"
+"border: none;"
+"}");
+        ui->screen_frozen_Button->setText("Screen was frozen");
 
         ui->send_Button->setStyleSheet(
 "QPushButton {"

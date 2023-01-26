@@ -93,10 +93,9 @@ DF_ERROR stateDispense::onAction()
       if (productDispensers[pos_index].getDispenseButtonEdgePositive())
       {
          debugOutput::sendMessage("Dispense button pressed edge", MSG_INFO);
-         m_pMessaging->sendMessage("Dispense Button Pos Edge"); // send to UI
+         m_pMessaging->sendMessageOverIP("Dispense Button Pos Edge"); // send to UI
 
          startPumping();
-
          productDispensers[pos_index].addDispenseButtonPress();
       }
 
@@ -114,7 +113,7 @@ DF_ERROR stateDispense::onAction()
    {
       if (productDispensers[pos_index].getIsStatusUpdateAllowed())
       {
-         m_pMessaging->sendMessage(to_string(productDispensers[pos_index].getVolumeDispensed()));
+         m_pMessaging->sendMessageOverIP(to_string(productDispensers[pos_index].getVolumeDispensed()));
       }
    }
 
@@ -145,7 +144,7 @@ DF_ERROR stateDispense::onAction()
 
          debugOutput::sendMessage("******************* EMPTY CONTAINER DETECTED **********************", MSG_INFO);
          usleep(100000);                             // send message delay (pause from previous message) desperate attempt to prevent crashes
-         m_pMessaging->sendMessage("No flow abort"); // send to UI
+         m_pMessaging->sendMessageOverIP("No flow abort"); // send to UI
          stopPumping();
          m_state_requested = STATE_DISPENSE_END;
 

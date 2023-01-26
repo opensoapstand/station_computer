@@ -45,7 +45,7 @@ line-height: 29px;</string>
   <widget class="QPushButton" name="page_payment_Button">
    <property name="geometry">
     <rect>
-     <x>170</x>
+     <x>187</x>
      <y>1520</y>
      <width>740</width>
      <height>92</height>
@@ -2286,8 +2286,8 @@ color: #58595B;
   <zorder>label_background_medium</zorder>
   <zorder>label_background_large</zorder>
   <zorder>label_background_custom</zorder>
-  <zorder>promoKeyboard</zorder>
   <zorder>label_product_ingredients</zorder>
+  <zorder>promoKeyboard</zorder>
  </widget>
  <resources/>
  <connections/>

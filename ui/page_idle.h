@@ -22,6 +22,9 @@
 #include "dfuicommthread.h"
 #include "dbmanager.h"
 #include "page_maintenance.h"
+#include "page_maintenance_general.h"
+#include <QMediaPlayer>
+#include <QGraphicsVideoItem>
 
 // #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 // #define DB_PATH_CLICKS "/release/db/sqlite/clicks.db"
@@ -29,6 +32,7 @@
 
 class page_maintenance;
 class page_select_product;
+class page_maintenance_general;
 
 namespace Ui {
 class page_idle;
@@ -40,7 +44,8 @@ class page_idle : public QWidget
 
 public:
     explicit page_idle(QWidget *parent = nullptr);
-    void setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance);
+    void setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral);
+    
     ~page_idle();
     void showEvent(QShowEvent *event);
     void addPictureToLabel(QLabel* label, QString picturePath);
@@ -60,12 +65,20 @@ public:
 
     // bool isSlotAvailable(int slot);
     // void setSlotAvailability(int slot, bool isEnabled);
+    void printerStatusFeedback(bool isOnline, bool hasPaper);
 
 
     bool isEnough(int p);
     void MMSlot();
     bool m_transitioning = false;
     // bool slotIndexAvailable[4] = {true,true,true,true}; //;1,2,3,4
+
+
+    QLabel *video_label;
+    QVideoWidget* videoWidget;
+    QMediaPlayer* player;
+
+
 
 private slots:
     void on_toSelectProductPageButton_clicked();
@@ -74,12 +87,16 @@ private slots:
     void on_testButton_clicked();
 
 private:
+    void checkReceiptPrinterStatus();
     QString m_templatePath;
     Ui::page_idle *ui;
     page_select_product* p_pageSelectProduct;
     page_maintenance* p_page_maintenance;
+    page_maintenance_general* p_page_maintenance_general;
     bool p1, p2, p3, p4;
 
+    
+    
 };
 
 #endif // IDLE_H

@@ -5,6 +5,9 @@ TARGET = DF_UI
 CONFIG += \
     c++11
 
+QT += multimedia \ 
+    multimediawidgets
+
 FORMS += \
     page_dispenser.ui \
     page_error_wifi.ui \

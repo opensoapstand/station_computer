@@ -458,6 +458,10 @@ void product::addMaintenancePwdToMachineTable(){
     executeSQLStatement("UPDATE machine SET maintenance_pwd=\"soap\";");
 }
 
+void product::addShowTransactionsToMachineTable(){
+    executeSQLStatement("ALTER TABLE machine ADD show_transactions INTEGER");
+    executeSQLStatement("UPDATE machine SET show_transactions=0;");
+}
 void product::executeSQLStatement(string sql_string){
 
     rc = sqlite3_open(DB_PATH, &db);
@@ -538,6 +542,71 @@ bool product::isMaintenancePwdInMachineTable(){
     return contains_column_maintenance_pwd;
 }
 
+
+bool product::isShowTransactionsInMachineTable(){
+    bool contains_column_show_transactions = false;
+
+    rc = sqlite3_open(DB_PATH, &db);
+    sqlite3_stmt *stmt;
+    string sql_string = "PRAGMA table_info(machine);";
+
+    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+    // sqlite3_step(stmt);
+    // std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+
+    int status;
+    status = sqlite3_step(stmt);
+    int row = 0;
+    // debugOutput::sendMessage("process record: " + sql_string, MSG_INFO);
+    while (status == SQLITE_ROW)
+    {
+        // int columns_count = sqlite3_data_count(stmt);
+        //  debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
+
+        // for (int column_index = 0; column_index < columns_count; column_index++)
+        int columns_count = 3;
+        for (int column_index = 0; column_index < columns_count; column_index++)
+        {
+            // for every row, go over all the the items (0=cid, 1=name, 2=type,3=notnull,...)
+
+            // debugOutput::sendMessage("column index: " + to_string(column_index), MSG_INFO);
+
+            switch (column_index)
+            {
+            case (1):
+            {
+                // 
+
+                string column_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+                // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
+                // debugOutput::sendMessage("should be: " + table_products_columns[row], MSG_INFO);
+
+                if (!column_name.compare("show_transactions"))
+                {
+                    // FOUND returns 0 
+                    // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
+                    contains_column_show_transactions = true;
+                }
+                
+                break;
+            }
+            default:
+            {
+            }
+            break;
+            }
+        }
+
+        status = sqlite3_step(stmt); // next record, every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
+        row++;
+    };
+    sqlite3_finalize(stmt);
+
+
+    
+    sqlite3_close(db);
+    return contains_column_show_transactions;
+}
 
 bool product::isDbValid()
 {
@@ -629,6 +698,10 @@ bool product::reloadParametersFromDb()
     if (!isMaintenancePwdInMachineTable()){
         debugOutput::sendMessage("ERROR: Unexpected database layout, will add maintentance_pwd to end of table", MSG_ERROR);
         addMaintenancePwdToMachineTable();
+    }
+     if (!isShowTransactionsInMachineTable()){
+        debugOutput::sendMessage("ERROR: Unexpected database layout, will add maintentance_pwd to end of table", MSG_ERROR);
+        addShowTransactionsToMachineTable();
     }
 
     debugOutput::sendMessage("*** WARNING: No NULL values allowed in text fields. ***", MSG_ERROR);

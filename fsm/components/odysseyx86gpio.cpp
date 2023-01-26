@@ -379,7 +379,7 @@ void oddyseyx86GPIO::monitorGPIO_Buttons_powerAndMaintenance()
                         {
                                 debugOutput::sendMessage("MM\n", MSG_INFO);
                                 // ENTER MAINTENANCE MODE!
-                                m_pMessaging->sendMessage("MM");
+                                m_pMessaging->sendMessageOverIP("MM");
                         }
                         else
                         {

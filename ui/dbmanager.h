@@ -20,6 +20,8 @@ public:
     bool isProductVolumeInContainer(int slot);
     bool getRecentTransactions(QString values[][5], int count, int* count_retreived);
     bool hasReceiptPrinter();
+    void printerStatus(bool* isOnline, bool* hasPaper );
+    bool showTransactions();
     QString getProductReceiptName(int slot);
     QString getPaymentMethod(int slot);
     double getProductVolume(int slot, char ml);
@@ -78,7 +80,7 @@ public:
     // void getProductProperties(int slot, QString*name, QString *description, QString *features,  QString *ingredients);
     void getProductProperties(int slot, QString *product_id, bool *isSizeEnabled);
     QString getTemplateName();
-
+    void updateTapToQR();
 private:
     void emailEmpty(int slot);
     QSqlDatabase m_db;

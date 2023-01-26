@@ -191,24 +191,24 @@ void page_dispenser::dispensing_end_admin()
     }
     else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && volumeDispensed != 0)
     {
-        qDebug() << "dispense end: tap payment. Some volume dispensed.";
-        QMessageBox msgBox;
-        msgBox.setText("Complete!");
-        msgBox.setInformativeText("Would you like your receipt emailed to you?");
-        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-        int ret = msgBox.exec();
+        // qDebug() << "dispense end: tap payment. Some volume dispensed.";
+        // QMessageBox msgBox;
+        // msgBox.setText("Complete!");
+        // msgBox.setInformativeText("Would you like your receipt emailed to you?");
+        // msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        // int ret = msgBox.exec();
 
-        switch (ret)
-        {
-        case QMessageBox::Yes:
-            //            qDebug() << "This person wants their receipt emailed";
-            break;
-        case QMessageBox::No:
-            //            qDebug() << "This person doesn't want a receipt";
-            break;
-        default:
-            break;
-        }
+        // switch (ret)
+        // {
+        // case QMessageBox::Yes:
+        //     //            qDebug() << "This person wants their receipt emailed";
+        //     break;
+        // case QMessageBox::No:
+        //     //            qDebug() << "This person doesn't want a receipt";
+        //     break;
+        // default:
+        //     break;
+        // }
     }
     stopDispenseTimer();
     // thanksPage->showFullScreen();
@@ -229,6 +229,8 @@ void page_dispenser::startDispensing()
     targetVolume = selectedProductOrder->getSelectedVolume();
 
     fsmSendStartDispensing();
+    fsmSendPrice();
+    fsmSendPromo();
 }
 
 void page_dispenser::fsmSendStartDispensing()
@@ -241,10 +243,7 @@ void page_dispenser::fsmSendStartDispensing()
     p_page_idle->dfUtility->send_command_to_FSM(command);
 
     this->isDispensing = true;
-    sleep(1);
-    fsmSendPrice();
-    sleep(1);
-    fsmSendPromo();
+    
 
 }
 
@@ -331,6 +330,8 @@ void page_dispenser::resetDispenseTimeout(void)
 
 void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
 {
+    //  qDebug() << "vol dispesnne " << dispensed;
+    //  qDebug() << "vol is fulll  " << isFull;
     if (this->isDispensing)
     {
         // if (dispensed > 0.01){
@@ -360,7 +361,6 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
     }
     else
     {
-
         qDebug() << "Signal: volume update in dispenser while not dispensing.";
     }
 }

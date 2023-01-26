@@ -1038,7 +1038,7 @@ void pageProduct::on_page_payment_Button_clicked()
     ui->previousPage_Button->setEnabled(false);
 
     this->stopSelectTimers();
-    selectIdleTimer->stop();
+    // selectIdleTimer->stop();
     QString paymentMethod = selectedProductOrder->getSelectedPaymentMethod();
 
     if (paymentMethod == "qr" || paymentMethod == "tap")
@@ -1060,10 +1060,6 @@ void pageProduct::on_page_payment_Button_clicked()
         if (res != CURLE_OK)
         {
             qDebug() << "ERROR: Failed to reach soapstandportal. error code: " + QString::number(res);
-
-            // p_page_wifi_error->showEvent(wifiErrorEvent);
-            // p_page_wifi_error->showFullScreen();
-            // this->hide();
             p_page_idle->pageTransition(this, p_page_wifi_error);
         }
         else
@@ -1072,10 +1068,13 @@ void pageProduct::on_page_payment_Button_clicked()
             qDebug() << "Server feedback readbuffer: " << feedback;
 
             ui->label_invoice_price_total->text();
-
-            // paymentPage->showFullScreen();
-            // this->hide();
+            if(selectedProductOrder->getSelectedPriceCorrected() < 0.1){
+                p_page_idle->pageTransition(this, p_page_dispense);
+            }
+            else{
             p_page_idle->pageTransition(this, paymentPage);
+
+            }
         }
         curl_easy_cleanup(curl);
         readBuffer = "";

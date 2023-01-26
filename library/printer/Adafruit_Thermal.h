@@ -367,6 +367,7 @@ public:
     void cancelCustomCharacters();
     void connectToPrinter();
     void disconnectPrinter();
+    char testCommschar();
     bool testComms();
 
 private:

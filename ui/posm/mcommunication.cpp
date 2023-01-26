@@ -20,6 +20,9 @@
 #define  MAX_SIZE 1024
 
 #include <QDebug>
+#include <errno.h>
+#include <sys/stat.h>
+
 
 mCommunication::mCommunication(){
     fd = -1;
@@ -31,7 +34,10 @@ mCommunication::~mCommunication() {
 bool mCommunication::page_init(){
 
     bool bRet = false;
+  
     fd = open(MONERIS_PORT ,O_RDWR | O_NOCTTY| O_NDELAY);
+
+
     /* O_RDWR Read/Write access to serial port           */
     /* O_NOCTTY - No terminal will control the process   */
     /* O_NDELAY -Non Blocking Mode,Does not care about-  */
@@ -64,9 +70,9 @@ bool mCommunication::page_init(){
         /* Make raw */
         cfmakeraw(&SerialPortSettings);
         if((tcsetattr(fd,TCSANOW,&SerialPortSettings)) != 0) {
+            std::cout << "Some error occured";
         } else {
             tcflush(fd,TCIOFLUSH);
-            
             bRet = true;
         }
         qDebug() << "Serial (mpos) Status: "<< "Success";
@@ -127,25 +133,24 @@ void mCommunication::clearBuffer(){
 
 std::vector<uint8_t> mCommunication::readForAck()
 {
-
     uint8_t buffer[1] = {};
     long int readSize = -1;
     std::vector<uint8_t> pktRead;
-    // tcflush(fd, TCIOFLUSH);
-    // tcflush(fd, TCIOFLUSH);
     int readcount = 0;
     while (readcount < 3){
         if (readSize == -1){
             readSize = read(fd, buffer, 1);
-
             readcount++;
         }
+        
+
         if (readSize != -1){
             break;
         }
         usleep(500000);
     }
 
+    std::cout << "\n"<<strerror(errno) << "\n";
 
     if (readSize == -1)
     {
@@ -171,19 +176,18 @@ bool mCommunication::sendPacket(std::vector<uint8_t> fullPkt, uint pktSize){ //S
     bool bRet = false;
     long int writeSize =  -1;
     char sendBuffer[MAX_SIZE]={};
-
     for (uint i = 0; i < pktSize; ++i){
         sendBuffer[i] = char(fullPkt[i]);
         }
-
     writeSize= write(fd, sendBuffer, pktSize);
-    //writeSize =write(fd, &fullPkt, fullPkt.size());
-    //tcflush(fd, TCIOFLUSH);
-    //qDebug() <<writeSize<<"\n";
-    if (-1 != writeSize)
+    if(errno){
+        std::cout << "Error " << strerror(errno);
+    }
+    if (-1 != writeSize){
         bRet = true;
+    }
 
-    //usleep();
+    usleep(1000);
     return bRet;
 }
 
@@ -205,7 +209,6 @@ void mCommunication::flushSerial()
 bool mCommunication::closeCom()
 {
     close(fd);
-
     return true;
 }
 

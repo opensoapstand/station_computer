@@ -145,6 +145,7 @@ int main(int argc, char *argv[])
     df_util::fileExists(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
     df_util::fileExists(PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
     df_util::fileExists(PAGE_QR_PAY_BACKGROUND_PATH);
+    df_util::fileExists(PAGE_TAP_PAY);
     df_util::fileExists(PAGE_MAINTENANCE_BACKGROUND_PATH);
     df_util::fileExists(PAGE_THANK_YOU_BACKGROUND_PATH);
     // df_util::fileExists(PAGE_WIFI_ERROR_BACKGROUND_PATH);
@@ -160,7 +161,7 @@ int main(int argc, char *argv[])
     p_page_maintenance_product->setPage(p_page_maintenance, p_page_idle);
     p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle);
     p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product,  p_page_maintenance_general, firstSelectPage, p_pageProduct);
-    p_page_idle->setPage(firstSelectPage, p_page_maintenance);
+    p_page_idle->setPage(firstSelectPage, p_page_maintenance, p_page_maintenance_general);
     firstSelectPage->setPage(p_pageProduct, p_page_idle, p_page_maintenance, p_page_help);
     p_pageProduct->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentPage, p_page_help);
     paymentPage->setPage(p_pageProduct, p_page_dispense, p_page_idle, p_page_help);
@@ -170,11 +171,13 @@ int main(int argc, char *argv[])
     
     initPage->showFullScreen();
 
+    // listen for fsm messages
     DfUiServer dfUiServer;
     dfUiServer.startServer();
  
     QObject::connect(&dfUiServer, &DfUiServer::controllerFinishedAck, p_page_thank_you, &pagethankyou::controllerFinishedTransaction);
     QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_maintenance_general, &page_maintenance_general::printerStatusFeedback);
+    QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_idle, &page_idle::printerStatusFeedback);
     QObject::connect(&dfUiServer, &DfUiServer::pleaseReset, p_page_dispense, &page_dispenser::resetDispenseTimeout);
     
     QObject::connect(&dfUiServer, &DfUiServer::signalUpdateVolume, p_page_dispense, &page_dispenser::updateVolumeDisplayed);

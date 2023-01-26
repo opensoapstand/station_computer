@@ -120,9 +120,6 @@ void page_maintenance::showEvent(QShowEvent *event)
     ui->machineLabel->setText("Machine ID: " + db.getMachineID());
     db.closeDB();
 
-
-
-
     p_pageSelectProduct->cancelTimers();
     p_pageProduct->cancelTimers();
      qDebug() << "End maintenance load";

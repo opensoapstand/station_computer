@@ -104,6 +104,48 @@ text-transform: lowercase;</string>
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="printer_status_label">
+   <property name="geometry">
+    <rect>
+     <x>666</x>
+     <y>136</y>
+     <width>391</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="video_player" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1080</width>
+     <height>1920</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QWidget" name="media_player" native="true">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>570</y>
+     <width>331</width>
+     <height>221</height>
+    </rect>
+   </property>
+  </widget>
+  <zorder>toSelectProductPageButton</zorder>
+  <zorder>savedBottles_label</zorder>
+  <zorder>logo_label</zorder>
+  <zorder>welcome_message_label</zorder>
+  <zorder>testButton</zorder>
+  <zorder>drinkfill_logo_label</zorder>
+  <zorder>printer_status_label</zorder>
+  <zorder>media_player</zorder>
+  <zorder>video_player</zorder>
  </widget>
  <resources/>
  <connections/>

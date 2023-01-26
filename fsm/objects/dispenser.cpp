@@ -368,6 +368,8 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
     else if (the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS)
     {
         setPumpEnable();
+        this->the_pcb->setSingleDispenseButtonLight(getSlot(), true);
+
     }
     else
     {
@@ -383,10 +385,10 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 DF_ERROR dispenser::stopDispense()
 {
     debugOutput::sendMessage("stop dispense actions...", MSG_INFO);
-    if (getMultiDispenseButtonEnabled())
-    {
+    // if (getMultiDispenseButtonEnabled())
+    // {
         setAllDispenseButtonLightsOff();
-    }
+    // }
 
     the_pcb->flowSensorsDisableAll();
 
@@ -862,8 +864,7 @@ unsigned short dispenser::getPumpSpeed()
 
 void dispenser::loadMultiDispenseButtonEnabledFromDb()
 {
-    // val 0 = pump reversal not enabled
-    // val 1 = pump reversal enabled. Will take retraction time from products
+    
 
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;

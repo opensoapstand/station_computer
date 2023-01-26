@@ -46,7 +46,7 @@ line-height: 29px;</string>
    <property name="geometry">
     <rect>
      <x>290</x>
-     <y>1424</y>
+     <y>1390</y>
      <width>438</width>
      <height>95</height>
     </rect>
@@ -1686,8 +1686,8 @@ outline: none;
   <widget class="QLabel" name="label_select_problem">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>233</y>
+     <x>0</x>
+     <y>220</y>
      <width>1075</width>
      <height>242</height>
     </rect>
@@ -1700,7 +1700,7 @@ outline: none;
    <property name="geometry">
     <rect>
      <x>142</x>
-     <y>496</y>
+     <y>456</y>
      <width>780</width>
      <height>924</height>
     </rect>
@@ -1725,7 +1725,7 @@ outline: none;
   <widget class="QPushButton" name="never_dispensed_Button">
    <property name="geometry">
     <rect>
-     <x>274</x>
+     <x>264</x>
      <y>634</y>
      <width>576</width>
      <height>45</height>
@@ -1791,7 +1791,7 @@ outline: none;
    <property name="geometry">
     <rect>
      <x>160</x>
-     <y>758</y>
+     <y>770</y>
      <width>64</width>
      <height>64</height>
     </rect>
@@ -1804,7 +1804,7 @@ outline: none;
    <property name="geometry">
     <rect>
      <x>160</x>
-     <y>891</y>
+     <y>903</y>
      <width>64</width>
      <height>64</height>
     </rect>
@@ -1817,7 +1817,7 @@ outline: none;
    <property name="geometry">
     <rect>
      <x>160</x>
-     <y>1024</y>
+     <y>1036</y>
      <width>64</width>
      <height>64</height>
     </rect>
@@ -1843,7 +1843,7 @@ outline: none;
    <property name="geometry">
     <rect>
      <x>160</x>
-     <y>1157</y>
+     <y>1169</y>
      <width>64</width>
      <height>64</height>
     </rect>
@@ -1856,6 +1856,19 @@ outline: none;
      <width>16</width>
      <height>16</height>
     </size>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_send">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>1390</y>
+     <width>438</width>
+     <height>95</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
    </property>
   </widget>
   <zorder>mainPage_Button</zorder>
@@ -1876,6 +1889,7 @@ outline: none;
   <zorder>checkBox_4</zorder>
   <zorder>screen_frozen_Button</zorder>
   <zorder>checkBox_5</zorder>
+  <zorder>label_send</zorder>
  </widget>
  <resources/>
  <connections/>

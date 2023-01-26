@@ -55,6 +55,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 "border: none;"
 "}");
         ui->previousPage_Button->setText("<-Back");
+        ui->mainPage_Button->hide();
         
         ui->label_select_problem->setStyleSheet("QLabel { color:#555555; ; border: 1px }");
         ui->label_select_problem->setStyleSheet(
@@ -125,6 +126,13 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 "}");
         ui->too_slow_Button->setText("The station is too slow ");
       
+
+QSize size(30, 30);
+ui->checkBox_1->setIconSize(size);
+ui->checkBox_2->setIconSize(size);
+ui->checkBox_3->setIconSize(size);
+ui->checkBox_4->setIconSize(size);
+ui->checkBox_5->setIconSize(size);
         ui->multiple_charges_Button->setStyleSheet("QPushButton {"
 
 "font-family: 'Brevia';"
@@ -155,7 +163,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 "}");
         ui->screen_frozen_Button->setText("Screen was frozen");
 
-        ui->send_Button->setStyleSheet(
+        ui->label_send->setStyleSheet(
 "QPushButton {"
 "font-family: 'Brevia';"
 "font-style: normal;"
@@ -170,7 +178,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 "text-align: center;"
 "qproperty-alignment: AlignCenter;"
 "}");
-ui->send_Button->setText("Send");
+ui->label_send->setText("Send");
 
 
 

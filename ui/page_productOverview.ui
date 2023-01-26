@@ -2083,11 +2083,11 @@ text-align: center;</string>
   <zorder>promoKeyboard</zorder>
   <zorder>label_discount_tag</zorder>
   <zorder>selectProductPage_Button</zorder>
-  <zorder>promoInputButton</zorder>
-  <zorder>promoButton</zorder>
   <zorder>page_payment_Button</zorder>
   <zorder>label_pay</zorder>
   <zorder>label_gif</zorder>
+  <zorder>promoInputButton</zorder>
+  <zorder>promoButton</zorder>
  </widget>
  <resources/>
  <connections/>

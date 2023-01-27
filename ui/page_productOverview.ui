@@ -229,7 +229,7 @@ text-align: center;</string>
     <rect>
      <x>94</x>
      <y>775</y>
-     <width>800</width>
+     <width>881</width>
      <height>46</height>
     </rect>
    </property>
@@ -2086,6 +2086,7 @@ text-align: center;</string>
     <string/>
    </property>
   </widget>
+  <zorder>promoButton</zorder>
   <zorder>label_pay</zorder>
   <zorder>page_payment_Button</zorder>
   <zorder>label_invoice_box</zorder>
@@ -2103,7 +2104,6 @@ text-align: center;</string>
   <zorder>label_discount_tag</zorder>
   <zorder>selectProductPage_Button</zorder>
   <zorder>promoInputButton</zorder>
-  <zorder>promoButton</zorder>
   <zorder>label_total</zorder>
   <zorder>promoKeyboard</zorder>
   <zorder>label_product_photo</zorder>

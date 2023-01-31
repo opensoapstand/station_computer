@@ -217,7 +217,7 @@ ui->label_total->setText("Total");
         connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
     }
 
-    QMovie *movie = new QMovie("/home/df-admin/drinkfill/ui/loading.gif");
+    QMovie *movie = new QMovie("/home/df-admin/drinkfill/ui/soapstandspinner.gif");
     ui->label_gif->setMovie(movie);
     movie->start();
     ui->label_gif->setStyleSheet(

@@ -247,7 +247,11 @@ void page_sendFeedback::on_mainPage_Button_clicked()
     p_page_idle->pageTransition(this, p_page_help);
 }
 
-
+size_t WriteCallbackFeedback(char *contents, size_t size, size_t nmemb, void *userp)
+{
+    ((std::string *)userp)->append((char *)contents, size * nmemb);
+    return size * nmemb;
+}
 
 void page_sendFeedback::on_send_Button_clicked()
 {   
@@ -269,5 +273,30 @@ void page_sendFeedback::on_send_Button_clicked()
         problemList << ui->checkBox_5_Label->text();
     }
     qDebug() << problemList;
+    QString problems = problemList.join(",");
+    QString MachineSerialNumber = p_page_idle->currentProductOrder->getMachineId();
+    QString curl_param = "problems="+problems+"&MachineSerialNumber=" + MachineSerialNumber;
+    qDebug() << "Curl params" << curl_param << endl;
+    curl_param_array = curl_param.toLocal8Bit();
+    qDebug() << curl_param_array;
+    curl = curl_easy_init();
+    if (!curl)
+    {
+        qDebug() << "pagethankyou: cURL failed to init. parameters:" + curl_param;
+        
+        return;
+    }
+
+    curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/alert/sendFeedbackEmail");
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallbackFeedback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
+    res = curl_easy_perform(curl);
+
+    if (res != CURLE_OK)
+    {
+        qDebug() << "ERROR: Transaction NOT sent to cloud. cURL fail. Error code: " + QString::number(res);
+    }
     qDebug() << "Send button stores values" << endl;
 }

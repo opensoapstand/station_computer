@@ -24,6 +24,8 @@
 #include "pagethankyou.h"
 #include "page_help.h"
 #include "page_product.h"
+#include <curl/curl.h>
+
 
 
 class page_select_product;
@@ -98,6 +100,11 @@ private:
     QResizeEvent *page_sendFeedbackResize;
     QShowEvent *dispenseEvent;
     QShowEvent *wifiErrorEvent;
+
+    CURL *curl;
+    CURLcode res;
+    QByteArray curl_param_array;
+    QString MachineSerialNumber;
 };
 
 #endif // PAYSELECT_H

@@ -2060,7 +2060,7 @@ text-align: center;</string>
   <widget class="QLabel" name="label_gif">
    <property name="geometry">
     <rect>
-     <x>540</x>
+     <x>440</x>
      <y>960</y>
      <width>200</width>
      <height>200</height>

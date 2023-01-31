@@ -1,41 +1,109 @@
 import socket
-import rsa
+import base64
+import hmac
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_v1_5
+from lxml import etree
+import time
+import signal
+
 HOST = '192.168.1.78'
 PORT = 5015
-MAC = 'PY5WznnkiyHZrNssL9rti/r4eot48ycc/sPyGNG0bMhbQKhOHziZy7ABLR1Hfrs3wCcBcCiww8mc5siAZJUUyurLsZiNbCxnDjPM7u3pFpH4vZD/0dWw9lujxtYJft27ef5ja01Lnp0VbWrOUiBH31b269JPNhQ+2OWFrT2qhZnpooY/TPAVRIs6NRl6YPy7hsNNMKBoKJ1WWkRezlflK2XGzf2V25JlvvZILS2WmG4+hy2iUQhfZDStFH+LJ079GhccbHfKNWRA/QsTJAqYxtB1DCmVEzCeUoDnhNn2fGkuKyMU+029W6LLGk4L9c2BcjZZwxWo5o5oVV6H5O+A4A=='
-MAC_LABEL = 'P_5H9NRT'
+encrypted_mac = 'CSpa8GKq4wLVHbRMxj+1zkOQxIOixYbbOPNsWe8qtoSVcTnHsI+kcjCWf+twCvNfuHpEWSwjloyzdQYI6hq/ekEZlyjkpdGvR7+NGOP84aTRXMl+CpBI1rxN4fBOHTaqwpWvYWiLpuXx1sVrzR2GyooI/IT+o3qony2idfLmByrK9flbgRUXU2671KUmmaFdhvS0UudUmDkYUfV6+glN4BPDGLdoTlyoD268p6bfQy2KOcBjP2/SSGL738PGxNdMSZ4vxbCVe4M2vbCL9edO7p2BKOE59xhncmHRnNBQyu+k4TpfQYnQt6iHz4t0itog7fLRE1TAaiSCytgbpxZgYw=='
+MAC_LABEL = 'P_49S1XT'
 
-def register_device():
+
+def generate_rsa_keys():
+    # Generate the key and write to a file
+    key = RSA.generate(2048)
+    private_key = key.exportKey(format="DER")
+    public_key = key.publickey().exportKey(format="DER")
+    pubkey_b64 = base64.b64encode(public_key).decode()
+
+    with open("private_key.der", "wb") as key_file:
+        key_file.write(private_key)
+
+    with open("public_key.der", "w") as key_file:
+        key_file.write(pubkey_b64)
+    return pubkey_b64
+
+def create_counter_mac(counter):
+    #Decode MAC to base 64
+    macKeyBase64decoded = base64.b64decode(encrypted_mac)
+    #Set the counter value
+    encoded_counter = bytes(counter, 'utf-8')
+    # Read the private key file
+    with open("private_key.der", "rb") as key_file:
+        key_data = key_file.read()
+    # Import the private key
+    private_key = RSA.importKey(key_data)
+    #Decrypt Mac key
+    cipher = PKCS1_v1_5.new(private_key)
+    macKeyDecrypted = cipher.decrypt(macKeyBase64decoded, None)
+
+    signing_key = hmac.new(macKeyDecrypted, digestmod='sha256')
+    # Update the HMAC object with the bytes of the data
+    signing_key.update(encoded_counter)
+
+    counter_mac = signing_key.digest()
+    counter_mac = base64.b64encode(counter_mac).decode()
+    return counter_mac
+
+def get_next_counter_and_mac(active_socket):
+    active_socket.send(get_counter(encrypted_mac,MAC_LABEL))
+    data = active_socket.recv(2048)
+    data = data.decode()
+    root = etree.XML(data)
+    counter_val = root.find('./COUNTER')
+    counter_val = int(counter_val.text) +1
+    counter_mac = create_counter_mac(str(counter_val))
+    return str(counter_val), counter_mac
+
+
+def register_device(public_key):
     register_command = '<TRANSACTION> \
                         <FUNCTION_TYPE>SECURITY</FUNCTION_TYPE> \
                         <COMMAND>REGISTER</COMMAND>\
-                        <ENTRY_CODE>1234</ENTRY_CODE>\
-                         <KEY>MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqEL8EhIr8+JHrtM80MwrnAucWQ967u+uswgEYoPQEFQa/yjWCtii5LbfwSG20LHiNX+uhbZrLIvg7oSRqQztNXebt30Nsrs69xUbOf62qM4J3wHUc95SA33Lo6eo36haITq0M7GPBIOU9QZFBjHoCT9I1eeyragivShg67zBKwQCYRC2BKuxeVid9xvCY/bU+YXBXlNbumVY9fv/WhqO/hkMv+95JR5OhlKyEEg/13KKyjE17f6h//FRPKrmv1APDSOMpOuoxQzV6zRfLZycpnRr2PVqgf2fq0fa+1KH6cgiAblwOqhQyUoQKH7QhRQ97HpQh0FCpONznFts131UPQIDAQAB</KEY> \
-                        <REG_VER> 1 </ REG_VER> \
+                        <ENTRY_CODE>9134</ENTRY_CODE>\
+                        <KEY>'+public_key+'</KEY> \
+                    </TRANSACTION>'
+    return register_command.encode('UTF-8')
+
+def unregisterall():
+    register_command = '<TRANSACTION> \
+                        <FUNCTION_TYPE>SECURITY</FUNCTION_TYPE> \
+                        <COMMAND>UNREGISTERALL</COMMAND>\
                     </TRANSACTION>'
     return register_command.encode('UTF-8')
 
 
-
-
-
-def start_session():
+def start_session(counter_val, mac_key):
     start_command = '<TRANSACTION> \
-                        <FUNCTION_TYPE>SESSION</FUNCTION_TYPE> \
-                        <COMMAND>START</COMMAND>\
-                        <COUNTER>1</COUNTER>\
-                        <MAC_LABEL>REG1</MAC_LABEL>\
+                    <FUNCTION_TYPE>SESSION</FUNCTION_TYPE>\
+                    <COMMAND>START</COMMAND>\
+                    <BUSINESSDATE>20230128</BUSINESSDATE>\
+                    <SWIPE_AHEAD>1</SWIPE_AHEAD>\
+                    <TRAINING_MODE>0</TRAINING_MODE>\
+                    <INVOICE>123456</INVOICE>\
+                    <COUNTER>'+counter_val+'</COUNTER> \
+                    <MAC>'+mac_key+'</MAC> \
+                    <MAC_LABEL>'+MAC_LABEL+'</MAC_LABEL>\
+                    <POS_IP>\
+                    </POS_IP>\
+                    <POS_PORT>5017</POS_PORT>\
+                    <NOTIFY_SCA_EVENTS>FALSE</NOTIFY_SCA_EVENTS>\
                     </TRANSACTION>'
     return start_command.encode('UTF-8')
 
-def finish_session():
+def finish_session(counter_val, counter_mac):
     finish_command = '<TRANSACTION> \
                         <FUNCTION_TYPE>SESSION</FUNCTION_TYPE> \
                         <COMMAND>FINISH</COMMAND>\
-                        <COUNTER>1</COUNTER>\
-                        <MAC> ... </MAC>\
-                        <MAC_LABEL>REG2</MAC_LABEL>\
+                        <COUNTER>'+counter_val+'</COUNTER>\
+                        <MAC>'+counter_mac+'</MAC>\
+                        <MAC_LABEL>'+MAC_LABEL+'</MAC_LABEL>\
                     </TRANSACTION>'
+    return finish_command.encode('UTF-8')
 
 def cancel_transaction():
     cancel_command = '<TRANSACTION> \
@@ -43,14 +111,16 @@ def cancel_transaction():
                         <COMMAND>CANCEL</COMMAND> \
                     </TRANSACTION>'
 
-def authorization(amount):
+def authorization(amount,counter_val,counter_mac):
     auth_command = '<TRANSACTION> \
                         <FUNCTION_TYPE>PAYMENT</FUNCTION_TYPE> \
                         <COMMAND>CAPTURE</COMMAND> \
-                        <COUNTER>1</COUNTER>\
-                        <MAC>………..</MAC>\
-                        <MAC_LABEL>REG_2</MAC_LABEL> \
+                        <COUNTER>'+counter_val+'</COUNTER>\
+                        <MAC>'+counter_mac+'</MAC>\
+                        <MAC_LABEL>'+MAC_LABEL+'</MAC_LABEL> \
                         <TRANS_AMOUNT>'+amount+'</TRANS_AMOUNT>\
+                        <MANUAL_ENTRY>FALSE</MANUAL_ENTRY>\
+                        <FORCE_FLAG>FALSE</FORCE_FLAG> \
                         <ENCRYPT>TRUE</ENCRYPT>\
                     </TRANSACTION>'
     return auth_command.encode('UTF-8')
@@ -65,36 +135,35 @@ def get_counter(mac, mac_label):
                         </TRANSACTION>'
     return get_counter_command.encode('UTF-8')
 
-#  <MAC>jbO3+7XRKTMW4y5c1OIcb38VZRSQTtozkDfQPKu4h9xO2Qyfrse8gyeyEN90MzAmaKA6RYjLeGAILviv9OB+m378XmjRq3n4fvqCPDVsDbzldkJqnZS3h5m7UfKiWLO+0wnURKguiQcMnBFAj5n9uYREnO1yBA+a802y2nJQlCbi8zlXYZfJ8cisLOOhIjH+SThHnRhkGpxjAPAicFnFhgLYSjsu6xw9eJ1pMGYMSCl6/8Resuw238iOPiH4KXBp15VD3bsiZiLcNcBWKzKiuOl7ah9G8AuHjikEnU1ZdxVWCDS2MMjXJBQmRkzmvHB+lA3F7amvWp67dTccfZ+kEg==</MAC> \
-#                         <MAC_LABEL>P_CWSE2Q</MAC_LABEL> \
 def TEST_MAC(counter,mac,mac_label):
     command = '<TRANSACTION> \
                     <FUNCTION_TYPE>SECURITY</FUNCTION_TYPE> \
                     <COMMAND>TEST_MAC</COMMAND> \
-                    <COUNTER>'+ str(counter)+'</COUNTER> \
-                    <MAC>' + mac + '</MAC>\
                     <MAC_LABEL>'+mac_label+'</MAC_LABEL> \
+                    <COUNTER>'+ counter+'</COUNTER> \
+                    <MAC>'+mac+'</MAC> \
                 </TRANSACTION>'
     return command.encode('UTF-8')
 
 about_command = '<TRANSACTION> \
                     <FUNCTION_TYPE>CONFIGURE</FUNCTION_TYPE> \
                         <COMMAND>ABOUT</COMMAND> \
-                        <MAC>jbO3+7XRKTMW4y5c1OIcb38VZRSQTtozkDfQPKu4h9xO2Qyfrse8gyeyEN90MzAmaKA6RYjLeGAILviv9OB+m378XmjRq3n4fvqCPDVsDbzldkJqnZS3h5m7UfKiWLO+0wnURKguiQcMnBFAj5n9uYREnO1yBA+a802y2nJQlCbi8zlXYZfJ8cisLOOhIjH+SThHnRhkGpxjAPAicFnFhgLYSjsu6xw9eJ1pMGYMSCl6/8Resuw238iOPiH4KXBp15VD3bsiZiLcNcBWKzKiuOl7ah9G8AuHjikEnU1ZdxVWCDS2MMjXJBQmRkzmvHB+lA3F7amvWp67dTccfZ+kEg==</MAC> \
-                        <MAC_LABEL>P_CWSE2Q</MAC_LABEL> \
+                        <MAC>'+encrypted_mac+'</MAC> \
+                        <MAC_LABEL>'+MAC_LABEL+'</MAC_LABEL> \
                     </TRANSACTION>'
 
 
 def connect_device():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((HOST,PORT))
-        # s.send(get_counter('P_CWSE2Q', 'jbO3+7XRKTMW4y5c1OIcb38VZRSQTtozkDfQPKu4h9xO2Qyfrse8gyeyEN90MzAmaKA6RYjLeGAILviv9OB+m378XmjRq3n4fvqCPDVsDbzldkJqnZS3h5m7UfKiWLO+0wnURKguiQcMnBFAj5n9uYREnO1yBA+a802y2nJQlCbi8zlXYZfJ8cisLOOhIjH+SThHnRhkGpxjAPAicFnFhgLYSjsu6xw9eJ1pMGYMSCl6/8Resuw238iOPiH4KXBp15VD3bsiZiLcNcBWKzKiuOl7ah9G8AuHjikEnU1ZdxVWCDS2MMjXJBQmRkzmvHB+lA3F7amvWp67dTccfZ+kEg=='))
-        # s.send(get_counter(MAC,MAC_LABEL))
-        s.send(TEST_MAC(1,MAC,MAC_LABEL))
-        data = s.recv(2048)
-        
+        # counter_val, counter_mac = get_next_counter_and_mac(s)
+        # s.send(start_session(counter_val,counter_mac))
+        # counter_val, counter_mac = get_next_counter_and_mac(s)
+        # s.send(authorization('1.00', counter_val, counter_mac))
+        # s.send(finish_session(counter_val,counter_mac))
+        data2 = s.recv(2048)
 
-        print(f"Received {data!r}")
-
+        print(data2)
 
 connect_device()
+

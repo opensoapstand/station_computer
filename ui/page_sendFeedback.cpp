@@ -306,3 +306,54 @@ void page_sendFeedback::on_mainPage_Button_clicked()
 }
 
 
+
+void page_sendFeedback::on_checkBox_1_clicked()
+{
+ // Get the state of the checkbox
+    bool state = ui->checkBox_1->isChecked();
+    // Set the state of the checkbox
+    ui->checkBox_1->setChecked(!state);
+}
+
+void page_sendFeedback::on_checkBox_2_clicked()
+{
+ // Get the state of the checkbox
+    bool state = ui->checkBox_2->isChecked();
+    // Set the state of the checkbox
+    ui->checkBox_2->setChecked(!state);
+}
+
+void page_sendFeedback::on_checkBox_3_clicked()
+{
+ // Get the state of the checkbox
+    bool state = ui->checkBox_3->isChecked();
+    // Set the state of the checkbox
+    ui->checkBox_3->setChecked(!state);
+}
+void page_sendFeedback::on_checkBox_4_clicked()
+{
+ // Get the state of the checkbox
+    bool state = ui->checkBox_4->isChecked();
+    // Set the state of the checkbox
+    ui->checkBox_4->setChecked(!state);
+}
+
+void page_sendFeedback::on_checkBox_5_clicked()
+{
+ // Get the state of the checkbox
+    bool state = ui->checkBox_5->isChecked();
+    // Set the state of the checkbox
+    ui->checkBox_5->setChecked(!state);
+}
+
+
+
+
+void page_sendFeedback::on_send_Button_clicked()
+{
+    bool checkbox1_state = ui->checkBox_1->isChecked();
+    bool checkbox2_state = ui->checkBox_2->isChecked();
+    bool checkbox3_state = ui->checkBox_3->isChecked();
+    bool checkbox4_state = ui->checkBox_4->isChecked();
+    bool checkbox5_state = ui->checkBox_5->isChecked();
+}

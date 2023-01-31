@@ -69,6 +69,13 @@ private slots:
     // Set Drink Order
     void on_mainPage_Button_clicked();
     void onSelectTimeoutTick();
+    void on_checkBox_1_clicked();
+    void on_checkBox_2_clicked();
+    void on_checkBox_3_clicked();
+    void on_checkBox_4_clicked();
+    void on_checkBox_5_clicked();
+    void on_send_Button_clicked();
+    
     // void keyboardButtonPressed(int);
 private:
     int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};

@@ -159,7 +159,7 @@ text-align: center;
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="never_dispensed_Button">
+  <widget class="QPushButton" name="checkBox_1_Label">
    <property name="geometry">
     <rect>
      <x>264</x>
@@ -169,10 +169,10 @@ text-align: center;
     </rect>
    </property>
    <property name="text">
-    <string>PushButton</string>
+    <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="charged_more_Button">
+  <widget class="QPushButton" name="checkBox_2_Label">
    <property name="geometry">
     <rect>
      <x>274</x>
@@ -182,10 +182,10 @@ text-align: center;
     </rect>
    </property>
    <property name="text">
-    <string>PushButton</string>
+    <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="too_slow_Button">
+  <widget class="QPushButton" name="checkBox_4_Label">
    <property name="geometry">
     <rect>
      <x>274</x>
@@ -195,10 +195,10 @@ text-align: center;
     </rect>
    </property>
    <property name="text">
-    <string>PushButton</string>
+    <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="multiple_charges_Button">
+  <widget class="QPushButton" name="checkBox_3_Label">
    <property name="geometry">
     <rect>
      <x>274</x>
@@ -208,7 +208,7 @@ text-align: center;
     </rect>
    </property>
    <property name="text">
-    <string>PushButton</string>
+    <string/>
    </property>
   </widget>
   <widget class="QCheckBox" name="checkBox_1">
@@ -287,7 +287,7 @@ text-align: center;
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="screen_frozen_Button">
+  <widget class="QPushButton" name="checkBox_5_Label">
    <property name="geometry">
     <rect>
      <x>274</x>
@@ -297,7 +297,7 @@ text-align: center;
     </rect>
    </property>
    <property name="text">
-    <string>PushButton</string>
+    <string/>
    </property>
   </widget>
   <widget class="QCheckBox" name="checkBox_5">
@@ -363,14 +363,14 @@ text-align: center;
   <zorder>label_select_problem</zorder>
   <zorder>previousPage_Button</zorder>
   <zorder>label_still_cant_find_it</zorder>
-  <zorder>too_slow_Button</zorder>
-  <zorder>never_dispensed_Button</zorder>
-  <zorder>multiple_charges_Button</zorder>
-  <zorder>charged_more_Button</zorder>
+  <zorder>checkBox_4_Label</zorder>
+  <zorder>checkBox_1_Label</zorder>
+  <zorder>checkBox_3_Label</zorder>
+  <zorder>checkBox_2_Label</zorder>
   <zorder>checkBox_2</zorder>
   <zorder>checkBox_3</zorder>
   <zorder>checkBox_4</zorder>
-  <zorder>screen_frozen_Button</zorder>
+  <zorder>checkBox_5_Label</zorder>
   <zorder>checkBox_5</zorder>
   <zorder>checkBox_1</zorder>
  </widget>

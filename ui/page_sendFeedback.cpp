@@ -35,10 +35,8 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 {
     qDebug()<< "IN send feedback";
     ui->setupUi(this);
-    // connect(ui->previousPage_Button, SIGNAL(clicked()), this, SLOT(on_previousPage_Button_clicked()));
-
     
-     ui->previousPage_Button->setStyleSheet("QPushButton { color:#555555; background-color: transparent; border: 0px }");
+    ui->previousPage_Button->setStyleSheet("QPushButton { color:#555555; background-color: transparent; border: 0px }");
     ui->previousPage_Button->setStyleSheet(
                 "QPushButton {"
 
@@ -73,94 +71,41 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                 "}");
         ui->label_select_problem->setText("Select problem(s) from the options below");
         ui->label_select_problem->setWordWrap(true);
-        
-
-
         ui->label_problem_options->setStyleSheet("background-color: #5E8680; border-radius: 10px;");
-
-        ui->never_dispensed_Button->setStyleSheet("QPushButton {"
-
-"font-family: 'Brevia';"
-"font-style: normal;"
-"font-weight: 75;"
-"font-size: 32px;"
-"line-height: 99px;"
-"letter-spacing: 1.5px;"
-"color: #FFFFFF;"
-"text-align: center;"
-"qproperty-alignment: AlignCenter;"
-"border: none;"
-"}");
-        ui->never_dispensed_Button->setText("The station never dispensed soap");
-
-        
-        ui->charged_more_Button->setStyleSheet("QPushButton {"
-
-"font-family: 'Brevia';"
-"font-style: normal;"
-"font-weight: 75;"
-"font-size: 32px;"
-"line-height: 99px;"
-"letter-spacing: 1.5px;"
-"color: #FFFFFF;"
-"text-align: left;"
-"qproperty-alignment: AlignCenter;"
-"border: none;"
-"}");
-        ui->charged_more_Button->setText("The station charged me more for my amount");
+        QString checkBoxLabelStyling = ("QPushButton {""font-family: 'Brevia';"
+                                    "font-style: normal;"
+                                    "font-weight: 75;"
+                                    "font-size: 32px;"
+                                    "line-height: 99px;"
+                                    "letter-spacing: 1.5px;"
+                                    "color: #FFFFFF;"
+                                    "text-align: left;"
+                                    "qproperty-alignment: AlignCenter;"
+                                    "border: none;"
+                                    "}");
+    
+        ui->checkBox_1_Label->setStyleSheet(checkBoxLabelStyling);
+        ui->checkBox_1_Label->setText("The station never dispensed soap");
+       
+        ui->checkBox_2_Label->setStyleSheet(checkBoxLabelStyling);
+        ui->checkBox_2_Label->setText("The station charged me more for my amount");
  
+        ui->checkBox_3_Label->setStyleSheet(checkBoxLabelStyling);
+        ui->checkBox_3_Label->setText("The station is too slow ");
 
-        ui->too_slow_Button->setStyleSheet("QPushButton {"
+        ui->checkBox_4_Label->setStyleSheet(checkBoxLabelStyling);
+        ui->checkBox_4_Label->setText("I got charged more than once");
 
-"font-family: 'Brevia';"
-"font-style: normal;"
-"font-weight: 75;"
-"font-size: 32px;"
-"line-height: 99px;"
-"letter-spacing: 1.5px;"
-"color: #FFFFFF;"
-"text-align: left;"
-"qproperty-alignment: AlignCenter;"
-"border: none;"
-"}");
-        ui->too_slow_Button->setText("The station is too slow ");
-      
+        ui->checkBox_5_Label->setStyleSheet(checkBoxLabelStyling);
+        ui->checkBox_5_Label->setText("Screen was frozen");
 
-QSize size(30, 30);
-ui->checkBox_1->setIconSize(size);
-ui->checkBox_2->setIconSize(size);
-ui->checkBox_3->setIconSize(size);
-ui->checkBox_4->setIconSize(size);
-ui->checkBox_5->setIconSize(size);
-        ui->multiple_charges_Button->setStyleSheet("QPushButton {"
-            "font-family: 'Brevia';"
-            "font-style: normal;"
-            "font-weight: 75;"
-            "font-size: 32px;"
-            "line-height: 99px;"
-            "letter-spacing: 1.5px;"
-            "color: #FFFFFF;"
-            "text-align: left;"
-            "qproperty-alignment: AlignCenter;"
-            "border: none;"
-"}");
-        ui->multiple_charges_Button->setText("I got charged more than once");
-
-        ui->screen_frozen_Button->setStyleSheet("QPushButton {"
-            "font-family: 'Brevia';"
-            "font-style: normal;"
-            "font-weight: 75;"
-            "font-size: 32px;"
-            "line-height: 99px;"
-            "letter-spacing: 1.5px;"
-            "color: #FFFFFF;"
-            "text-align: left;"
-            "qproperty-alignment: AlignCenter;"
-            "border: none;"
-"}");
-        ui->screen_frozen_Button->setText("Screen was frozen");
-
-         ui->label_send->setStyleSheet("QLabel {"
+        QSize size(30, 30);
+        ui->checkBox_1->setIconSize(size);
+        ui->checkBox_2->setIconSize(size);
+        ui->checkBox_3->setIconSize(size);
+        ui->checkBox_4->setIconSize(size);
+        ui->checkBox_5->setIconSize(size);
+        ui->label_send->setStyleSheet("QLabel {"
             "font-family: 'Brevia';"
             "font-style: normal;"
             "font-weight: 75;"
@@ -271,10 +216,8 @@ void page_sendFeedback::reset_and_show_page_elements()
 
 bool page_sendFeedback::stopSelectTimers()
 {
-    //    qDebug() << "Stop page_sendFeedback Timers" << endl;
     if (selectIdleTimer != nullptr)
     {
-        // qDebug() << "Enter Stop" << endl;
         selectIdleTimer->stop();
         return true;
     }
@@ -286,7 +229,7 @@ bool page_sendFeedback::stopSelectTimers()
 
 void page_sendFeedback::mainPage()
 {
-    //    qDebug() << "page_sendFeedback: mainPage button" << endl;
+    qDebug() << "page_sendFeedback: mainPage button" << endl;
     this->stopSelectTimers();
     selectIdleTimer->stop();
     // qDebug() << "product to idle";
@@ -297,7 +240,6 @@ void page_sendFeedback::mainPage()
 
 void page_sendFeedback::on_mainPage_Button_clicked()
 {
-    //    qDebug() << "page_sendFeedback: helpPage button" << endl;
     this->stopSelectTimers();
     selectIdleTimer->stop();
     // p_page_help->showFullScreen();
@@ -307,74 +249,25 @@ void page_sendFeedback::on_mainPage_Button_clicked()
 
 
 
-void page_sendFeedback::on_checkBox_1_clicked()
-{
- // Get the state of the checkbox
-    bool state = ui->checkBox_1->isChecked();
-    // Set the state of the checkbox
-    ui->checkBox_1->setChecked(!state);
-    if (ui->checkBox_1->checkState() == Qt::Checked)
-        ui->checkBox_1->setCheckState(Qt::Unchecked);
-    else
-        ui->checkBox_1->setCheckState(Qt::Checked);
-}
-
-void page_sendFeedback::on_checkBox_2_clicked()
-{
- // Get the state of the checkbox
-    bool state = ui->checkBox_2->isChecked();
-    // Set the state of the checkbox
-    ui->checkBox_2->setChecked(!state);
-    if (ui->checkBox_2->checkState() == Qt::Checked)
-        ui->checkBox_2->setCheckState(Qt::Unchecked);
-    else
-        ui->checkBox_2->setCheckState(Qt::Checked);
-}
-
-void page_sendFeedback::on_checkBox_3_clicked()
-{
- // Get the state of the checkbox
-    bool state = ui->checkBox_3->isChecked();
-    // Set the state of the checkbox
-    ui->checkBox_3->setChecked(!state);
-    if (ui->checkBox_3->checkState() == Qt::Checked)
-        ui->checkBox_3->setCheckState(Qt::Unchecked);
-    else
-        ui->checkBox_3->setCheckState(Qt::Checked);
-}
-void page_sendFeedback::on_checkBox_4_clicked()
-{
- // Get the state of the checkbox
-    bool state = ui->checkBox_4->isChecked();
-    // Set the state of the checkbox
-    ui->checkBox_4->setChecked(!state);
-    if (ui->checkBox_4->checkState() == Qt::Checked)
-        ui->checkBox_4->setCheckState(Qt::Unchecked);
-    else
-        ui->checkBox_4->setCheckState(Qt::Checked);
-}
-
-void page_sendFeedback::on_checkBox_5_clicked()
-{
- // Get the state of the checkbox
-    bool state = ui->checkBox_5->isChecked();
-    // Set the state of the checkbox
-    ui->checkBox_5->setChecked(!state);
-    if (ui->checkBox_5->checkState() == Qt::Checked)
-        ui->checkBox_5->setCheckState(Qt::Unchecked);
-    else
-        ui->checkBox_5->setCheckState(Qt::Checked);
-}
-
-
 void page_sendFeedback::on_send_Button_clicked()
 {   
-     qDebug() << "Send button pressed" << endl;
-    bool checkbox1_state = ui->checkBox_1->isChecked();
-    bool checkbox2_state = ui->checkBox_2->isChecked();
-    bool checkbox3_state = ui->checkBox_3->isChecked();
-    bool checkbox4_state = ui->checkBox_4->isChecked();
-    bool checkbox5_state = ui->checkBox_5->isChecked();
-
+    qDebug() << "Send button pressed";
+    QStringList problemList;
+    if(ui->checkBox_1->isChecked()){
+        problemList << ui->checkBox_1_Label->text();
+    }
+    if(ui->checkBox_2->isChecked()){
+        problemList << ui->checkBox_2_Label->text();
+    }
+    if(ui->checkBox_3->isChecked()){
+        problemList << ui->checkBox_3_Label->text();
+    }
+    if(ui->checkBox_4->isChecked()){
+        problemList << ui->checkBox_4_Label->text();
+    }
+    if(ui->checkBox_5->isChecked()){
+        problemList << ui->checkBox_5_Label->text();
+    }
+    qDebug() << problemList;
     qDebug() << "Send button stores values" << endl;
 }

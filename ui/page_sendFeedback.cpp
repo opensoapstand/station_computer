@@ -313,6 +313,10 @@ void page_sendFeedback::on_checkBox_1_clicked()
     bool state = ui->checkBox_1->isChecked();
     // Set the state of the checkbox
     ui->checkBox_1->setChecked(!state);
+    if (ui->checkBox_1->checkState() == Qt::Checked)
+        ui->checkBox_1->setCheckState(Qt::Unchecked);
+    else
+        ui->checkBox_1->setCheckState(Qt::Checked);
 }
 
 void page_sendFeedback::on_checkBox_2_clicked()
@@ -321,6 +325,10 @@ void page_sendFeedback::on_checkBox_2_clicked()
     bool state = ui->checkBox_2->isChecked();
     // Set the state of the checkbox
     ui->checkBox_2->setChecked(!state);
+    if (ui->checkBox_2->checkState() == Qt::Checked)
+        ui->checkBox_2->setCheckState(Qt::Unchecked);
+    else
+        ui->checkBox_2->setCheckState(Qt::Checked);
 }
 
 void page_sendFeedback::on_checkBox_3_clicked()
@@ -329,6 +337,10 @@ void page_sendFeedback::on_checkBox_3_clicked()
     bool state = ui->checkBox_3->isChecked();
     // Set the state of the checkbox
     ui->checkBox_3->setChecked(!state);
+    if (ui->checkBox_3->checkState() == Qt::Checked)
+        ui->checkBox_3->setCheckState(Qt::Unchecked);
+    else
+        ui->checkBox_3->setCheckState(Qt::Checked);
 }
 void page_sendFeedback::on_checkBox_4_clicked()
 {
@@ -336,6 +348,10 @@ void page_sendFeedback::on_checkBox_4_clicked()
     bool state = ui->checkBox_4->isChecked();
     // Set the state of the checkbox
     ui->checkBox_4->setChecked(!state);
+    if (ui->checkBox_4->checkState() == Qt::Checked)
+        ui->checkBox_4->setCheckState(Qt::Unchecked);
+    else
+        ui->checkBox_4->setCheckState(Qt::Checked);
 }
 
 void page_sendFeedback::on_checkBox_5_clicked()
@@ -344,16 +360,21 @@ void page_sendFeedback::on_checkBox_5_clicked()
     bool state = ui->checkBox_5->isChecked();
     // Set the state of the checkbox
     ui->checkBox_5->setChecked(!state);
+    if (ui->checkBox_5->checkState() == Qt::Checked)
+        ui->checkBox_5->setCheckState(Qt::Unchecked);
+    else
+        ui->checkBox_5->setCheckState(Qt::Checked);
 }
 
 
-
-
 void page_sendFeedback::on_send_Button_clicked()
-{
+{   
+     qDebug() << "Send button pressed" << endl;
     bool checkbox1_state = ui->checkBox_1->isChecked();
     bool checkbox2_state = ui->checkBox_2->isChecked();
     bool checkbox3_state = ui->checkBox_3->isChecked();
     bool checkbox4_state = ui->checkBox_4->isChecked();
     bool checkbox5_state = ui->checkBox_5->isChecked();
+
+    qDebug() << "Send button stores values" << endl;
 }

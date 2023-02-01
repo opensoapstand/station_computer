@@ -227,11 +227,13 @@ void page_dispenser::startDispensing()
 {
     volumeDispensed = 0;
     targetVolume = selectedProductOrder->getSelectedVolume();
-
-    fsmSendStartDispensing();
+        
+    // fsmSendStartDispensing();
     fsmSendPrice();
     fsmSendPromo();
+    fsmSendStartDispensing();
 }
+
 
 void page_dispenser::fsmSendStartDispensing()
 {

@@ -513,7 +513,7 @@ DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement)
     }
     else
     {
-        debugOutput::sendMessage("SUCCES: SQL : (" + to_string(rc) + ") " + sqlStatement, MSG_INFO);
+        debugOutput::sendMessage("SUCCESS: SQL : (" + to_string(rc) + ") " + sqlStatement, MSG_INFO);
     }
 
     sqlite3_close(db);

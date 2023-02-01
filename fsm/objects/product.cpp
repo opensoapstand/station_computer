@@ -736,6 +736,7 @@ bool product::reloadParametersFromDb()
             case DB_PRODUCTS_SOAPSTAND_PRODUCT_SERIAL:
             {
                 m_soapstand_product_serial = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+                debugOutput::sendMessage("m_soapstand_product_serial:" + m_soapstand_product_serial, MSG_INFO);
             }
             break;
             case DB_PRODUCTS_SLOT:
@@ -986,7 +987,6 @@ bool product::reloadParametersFromDb()
 
     sqlite3_finalize(stmt);
     sqlite3_close(db);
-
 
     loadProductPropertiesFromCsv(m_soapstand_product_serial);
     return true;

@@ -253,11 +253,11 @@ DF_ERROR messageMediator::updateCmdString(char key)
 DF_ERROR messageMediator::updateCmdString()
 {
    DF_ERROR df_ret = ERROR_BAD_PARAMS;
-   debugOutput::sendMessage("Process string..." + m_receiveStringBuffer, MSG_INFO);
+   debugOutput::sendMessage("Process received message: " + m_receiveStringBuffer, MSG_INFO);
 
    if (!m_processCommand.empty())
    {
-      debugOutput::sendMessage("Flush old command..." + m_processCommand, MSG_INFO);
+      debugOutput::sendMessage("Flush previous message from buffer. Old: " + m_processCommand, MSG_INFO);
       m_processCommand.clear();
       debugOutput::sendMessage(m_processCommand, MSG_INFO);
    }
@@ -409,6 +409,7 @@ DF_ERROR messageMediator::parseCommandString()
    //  first_char == '4')
 
    {
+      // length 3 command is always a dispense instruction. This is annoying, but it's grown organically like that. 
       // check for dispensing command
       e_ret = parseDispenseCommand(sCommand);
    }

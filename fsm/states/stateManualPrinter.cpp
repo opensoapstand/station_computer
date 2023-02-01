@@ -232,7 +232,7 @@ void stateManualPrinter::printTransaction(int transactionNumber)
    }
    else
    {
-      debugOutput::sendMessage("SUCCES: SQL transaction retrieval : (" + to_string(rc) + ") " + sql_string, MSG_INFO);
+      debugOutput::sendMessage("SUCCESS: SQL transaction retrieval : (" + to_string(rc) + ") " + sql_string, MSG_INFO);
    }
 
    debugOutput::sendMessage("----------------: " + product, MSG_INFO);
@@ -264,7 +264,7 @@ void stateManualPrinter::printTransaction(int transactionNumber)
    }
    else
    {
-      debugOutput::sendMessage("SUCCES: SQL transaction retrieval : (" + to_string(rc) + ") " + sql_string, MSG_INFO);
+      debugOutput::sendMessage("SUCCESS: SQL transaction retrieval : (" + to_string(rc) + ") " + sql_string, MSG_INFO);
    }
 
    debugOutput::sendMessage("slot ----------------: " + to_string(slot), MSG_INFO);
@@ -317,7 +317,7 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
    }
    else
    {
-      debugOutput::sendMessage("SUCCES: SQL2 : (" + to_string(rc) + ") " + sql21, MSG_INFO);
+      debugOutput::sendMessage("SUCCESS: SQL2 : (" + to_string(rc) + ") " + sql21, MSG_INFO);
    }
 
    sqlite3_close(db);

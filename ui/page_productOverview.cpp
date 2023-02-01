@@ -142,6 +142,22 @@ ui->label_invoice_box->setStyleSheet(
 "}");
 ui->promoButton->setText("Apply");
 ui->promoButton->hide();
+
+
+ui->label_discount_code->setStyleSheet(
+"QLabel {"
+"font-family: 'Montserrat';"
+"font-style: normal;"
+"font-weight: 75;"
+"font-size: 24px;"
+"line-height: 99px;"
+"letter-spacing: 1.5px;"
+"text-transform: lowercase;"  
+"color: #9F9F9F;"
+"text-align: center;"
+"qproperty-alignment: AlignCenter;"
+"}");
+ui->label_discount_code->setText("Discount code");
 // ui->page_payment_Button->setStyleSheet(
 // "QPushButton {"
 // "font-family: 'Brevia';"
@@ -572,6 +588,7 @@ void pageProductOverview::on_promoCodeInput_clicked()
 {
     QObject *button = QObject::sender();
     ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
+    ui->label_discount_code->hide();
     ui->promoInputButton->show();
     ui->promoKeyboard->show();
     qDebug() << "show promo keyboard.";

@@ -2086,6 +2086,32 @@ text-align: center;</string>
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="label_discount_code">
+   <property name="geometry">
+    <rect>
+     <x>103</x>
+     <y>784</y>
+     <width>185</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>1920</y>
+     <width>101</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>promoButton</zorder>
   <zorder>label_pay</zorder>
   <zorder>page_payment_Button</zorder>
@@ -2108,6 +2134,8 @@ text-align: center;</string>
   <zorder>promoKeyboard</zorder>
   <zorder>label_product_photo</zorder>
   <zorder>label_gif</zorder>
+  <zorder>label_discount_code</zorder>
+  <zorder>label</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -35,6 +35,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 {
     qDebug()<< "IN send feedback";
     ui->setupUi(this);
+
     
     ui->previousPage_Button->setStyleSheet("QPushButton { color:#555555; background-color: transparent; border: 0px }");
     ui->previousPage_Button->setStyleSheet(
@@ -99,12 +100,15 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
         ui->checkBox_5_Label->setStyleSheet(checkBoxLabelStyling);
         ui->checkBox_5_Label->setText("Screen was frozen");
 
+        
+
         QSize size(30, 30);
         ui->checkBox_1->setIconSize(size);
         ui->checkBox_2->setIconSize(size);
         ui->checkBox_3->setIconSize(size);
         ui->checkBox_4->setIconSize(size);
         ui->checkBox_5->setIconSize(size);
+
         ui->label_send->setStyleSheet("QLabel {"
             "font-family: 'Brevia';"
             "font-style: normal;"
@@ -147,6 +151,7 @@ void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser 
      p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_PATH);
     ui->send_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
+
     // couponHandler();
 }
 
@@ -180,7 +185,7 @@ void page_sendFeedback::showEvent(QShowEvent *event)
         
     
     // selectedProductOrder->loadSelectedProductProperties();
-    // reset_and_show_page_elements();
+    reset_and_show_page_elements();
 }
 
 
@@ -209,7 +214,12 @@ void page_sendFeedback::onSelectTimeoutTick()
 
 void page_sendFeedback::reset_and_show_page_elements()
 {
-    
+    ui->checkBox_1->setCheckState(Qt::Unchecked);
+    ui->checkBox_2->setCheckState(Qt::Unchecked);
+    ui->checkBox_3->setCheckState(Qt::Unchecked);
+    ui->checkBox_4->setCheckState(Qt::Unchecked);
+    ui->checkBox_5->setCheckState(Qt::Unchecked);
+ 
 }
 
 
@@ -255,6 +265,19 @@ size_t WriteCallbackFeedback(char *contents, size_t size, size_t nmemb, void *us
 
 void page_sendFeedback::on_send_Button_clicked()
 {   
+    QVBoxLayout* layout = new QVBoxLayout();
+    
+    //revert
+    QDialog* dialog = new QDialog(this);
+    QTimer *timer = new QTimer(dialog);
+    timer->setSingleShot(true);
+    timer->start(3000);
+
+    QObject::connect(timer, &QTimer::timeout, dialog, &QDialog::close);
+    
+    //to remove title bar
+    dialog->setWindowFlags(Qt::CustomizeWindowHint);
+    dialog->setLayout(layout);
     qDebug() << "Send button pressed";
     QStringList problemList;
     if(ui->checkBox_1->isChecked()){
@@ -274,6 +297,8 @@ void page_sendFeedback::on_send_Button_clicked()
     }
     qDebug() << problemList;
     QString problems = problemList.join(",");
+    if(problems.length() != 0)
+    {
     QString MachineSerialNumber = p_page_idle->currentProductOrder->getMachineId();
     QString curl_param = "problems="+problems+"&MachineSerialNumber=" + MachineSerialNumber;
     qDebug() << "Curl params" << curl_param << endl;
@@ -299,4 +324,22 @@ void page_sendFeedback::on_send_Button_clicked()
         qDebug() << "ERROR: Transaction NOT sent to cloud. cURL fail. Error code: " + QString::number(res);
     }
     qDebug() << "Send button stores values" << endl;
+    
+    dialog->move(0,0);
+    dialog->resize(1080,1920);
+    dialog->setStyleSheet("background-image:  url(/home/df-admin/drinkfill/ui/3_help_page.png);");
+    dialog->show();
+    dialog->exec();
+    }
+   
+
+       qDebug() << "After sleep" << endl;
+    // while (!stopSelectTimers())
+    // {
+    // };
+    // selectIdleTimer->stop();
+    dialog->close();
+    dialog->hide();
+    p_page_idle->pageTransition(this, p_page_idle);
+
 }

@@ -158,22 +158,7 @@ ui->label_discount_code->setStyleSheet(
 "qproperty-alignment: AlignCenter;"
 "}");
 ui->label_discount_code->setText("Discount code");
-// ui->page_payment_Button->setStyleSheet(
-// "QPushButton {"
-// "font-family: 'Brevia';"
-// "font-style: normal;"
-// "font-weight: 75;"
-// "font-size: 48px;"
-// "line-height: 99px;"
-// "letter-spacing: 1.5px;"
-// "background-color: #5E8580;" 
-// "border: 1px solid #3D6675;" 
-// "border-radius: 32px"
-// "color: #FFFFFF;"
-// "text-align: center;"
-// "qproperty-alignment: AlignCenter;"
-// "}");
-// ui->page_payment_Button->setText("Pay");
+
 
  ui->label_pay->setStyleSheet(
                 "QLabel {"
@@ -245,6 +230,9 @@ ui->label_total->setText("Total");
                     "line-height: 40px;"
                     "letter-spacing: 0px;"
                     "color: #58595B;"
+                    "padding: 3px;"
+                    "border:8px solid #248C8C;"
+                    "border-radius: 20px;"
                     "}");
     ui->label_gif->hide();
     // QString paymentMethod = selectedProductOrder->getSelectedPaymentMethod();
@@ -458,14 +446,17 @@ void pageProductOverview::on_applyPromo_Button_clicked()
 
     QString promocode = ui->promoCode->text();
     ui->promoKeyboard->hide();
-    ui->label_gif->show();
+    
     CURL *curl;
     CURLcode res;
     long http_code = 0;
     if (promocode != "")
-    {
+    {   qDebug()<< "Before label gif";
+        ui->label_gif->show();
         readBuffer.clear();
         curl = curl_easy_init();
+            {   qDebug()<< "Before label gif";
+
         if (!curl)
         {
             qDebug() << "pageProductOverview: apply promo cURL failed init";
@@ -485,6 +476,7 @@ void pageProductOverview::on_applyPromo_Button_clicked()
         else
         {
             int new_percent;
+            ui->label_gif->hide();
 
             if (http_code == 200)
             {
@@ -513,12 +505,14 @@ void pageProductOverview::on_applyPromo_Button_clicked()
             }
             else
             {
+                ui->label_gif->hide();
                 qDebug() << "Invalid Coupon http 200 response";
                 ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
             }
         }
         
     }
+}
 }
 
 void pageProductOverview::keyboardButtonPressed(int buttonID)
@@ -692,3 +686,5 @@ void pageProductOverview::on_selectProductPage_Button_clicked()
     selectIdleTimer->stop();
     p_page_idle->pageTransition(this, p_page_product);
 }
+
+

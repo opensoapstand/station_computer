@@ -32,8 +32,8 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     ui->setupUi(this);
 
     // ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    // ui->abortButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->abortButton->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
+    ui->abortButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    // ui->abortButton->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
     QString volumeDispensedStylesheet = "QLabel {"
             "font-family: 'Montserrat';"
             "font-style: normal;"
@@ -113,8 +113,8 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->fill_animation_label->hide();
 
     startDispensing();
-    ui->abortButton->setText("Complete");
-    ui->abortButton->setStyleSheet("border-radius: 27px;");
+    // ui->abortButton->setText("Complete");
+    // ui->abortButton->setStyleSheet("border-radius: 27px;");
     ui->abortButton->raise();
 
     if (nullptr == dispenseIdleTimer)
@@ -350,7 +350,26 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
     if (this->isDispensing)
     {
         // if (dispensed > 0.01){
-        ui->abortButton->setText("complete");
+            ui->label_abort->setStyleSheet(
+                "QLabel {"
+
+                "font-family: 'Brevia';"
+                "font-style: normal;"
+                "font-weight: 75;"
+                "background-color: #5E8580;"
+                "font-size: 16px;"
+                "text-align: centre;"
+                "line-height: auto;"
+                "letter-spacing: 0px;"
+                "qproperty-alignment: AlignCenter;"
+                "border-radius: 20px;"
+                "color: #FFFFFF;"
+                "border: none;"
+                "}");        
+                ui->label_abort->setText("Complete");
+                // ui->label_abort->raise();
+        
+        
         // }
         ui->volumeDispensedLabel->setText(QString::number(dispensed));
 

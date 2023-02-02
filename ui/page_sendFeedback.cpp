@@ -148,7 +148,7 @@ void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser 
     // ui->label_discount_tag->hide();
 
     // selectedProductOrder = p_page_idle->currentProductOrder;
-     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_PATH);
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_PATH);
     ui->send_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
 
@@ -333,13 +333,10 @@ void page_sendFeedback::on_send_Button_clicked()
     }
    
 
-       qDebug() << "After sleep" << endl;
     // while (!stopSelectTimers())
     // {
     // };
     // selectIdleTimer->stop();
-    dialog->close();
-    dialog->hide();
     p_page_idle->pageTransition(this, p_page_idle);
 
 }

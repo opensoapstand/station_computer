@@ -83,16 +83,17 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                                     "text-align: left;"
                                     "qproperty-alignment: AlignCenter;"
                                     "border: none;"
+                                    "wordWrap:true;"
                                     "}");
     
         ui->checkBox_1_Label->setStyleSheet(checkBoxLabelStyling);
         ui->checkBox_1_Label->setText("The station never dispensed soap");
        
         ui->checkBox_2_Label->setStyleSheet(checkBoxLabelStyling);
-        ui->checkBox_2_Label->setText("The station charged me more for my amount");
+        ui->checkBox_2_Label->setText("The station charged more amount");
  
         ui->checkBox_3_Label->setStyleSheet(checkBoxLabelStyling);
-        ui->checkBox_3_Label->setText("The station is too slow ");
+        ui->checkBox_3_Label->setText("The station is too slow");
 
         ui->checkBox_4_Label->setStyleSheet(checkBoxLabelStyling);
         ui->checkBox_4_Label->setText("I got charged more than once");

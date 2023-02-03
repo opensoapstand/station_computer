@@ -113,8 +113,8 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->fill_animation_label->hide();
 
     startDispensing();
-    // ui->abortButton->setText("Complete");
-    // ui->abortButton->setStyleSheet("border-radius: 27px;");
+    ui->abortButton->setText("Complete");
+    ui->abortButton->setStyleSheet("border-radius: 27px;font-size:42px;");
     ui->abortButton->raise();
 
     if (nullptr == dispenseIdleTimer)

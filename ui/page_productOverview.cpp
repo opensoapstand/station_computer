@@ -39,7 +39,7 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
     ui->promoInputButton->setText("Discount code");
     ui->promoCode->setStyleSheet("QPushButton { background-color: transparent; border: 1px solid #5E8580 }");
     ui->page_payment_Button->show();
-    ui->label_gif->hide();
+    // ui->label_gif->hide();
     QString css_title = "QLabel{"
                         "position: absolute;"
                         "width: 870px;"
@@ -212,15 +212,13 @@ ui->label_total->setText("Total");
     {
         selectIdleTimer = new QTimer(this);
         selectIdleTimer->setInterval(40);
-        connect(ui->promoButton, SIGNAL(clicked()), this, SLOT(on_applyPromo_Button_clicked()));
+        // connect(ui->promoButton, SIGNAL(clicked()), this, SLOT(on_applyPromo_Button_clicked()));
         connect(ui->promoInputButton, SIGNAL(clicked()), this, SLOT(on_promoCodeInput_clicked()));
         connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
         connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
     }
 
-    QMovie *movie = new QMovie("/home/df-admin/drinkfill/ui/soapstandspinner.gif");
-    ui->label_gif->setMovie(movie);
-    movie->start();
+    
     ui->label_gif->setStyleSheet(
                             "QLabel {"
                     "font-family: 'Montserrat';"
@@ -445,24 +443,26 @@ void pageProductOverview::on_applyPromo_Button_clicked()
 {
 
     QString promocode = ui->promoCode->text();
-    ui->promoKeyboard->hide();
+    QMovie *movie = new QMovie("/home/df-admin/drinkfill/ui/soapstandspinner.gif");
+    ui->label_gif->setMovie(movie);
+    movie->start();
+    // ui->promoKeyboard->hide();
     
     CURL *curl;
     CURLcode res;
     long http_code = 0;
     if (promocode != "")
-    {   qDebug()<< "Before label gif";
+    {   
         ui->label_gif->show();
         readBuffer.clear();
         curl = curl_easy_init();
-            {   qDebug()<< "Before label gif";
+            {   
 
         if (!curl)
         {
             qDebug() << "pageProductOverview: apply promo cURL failed init";
             return;
         }
-
         curl_easy_setopt(curl, CURLOPT_URL, ("https://soapstandportal.com/api/coupon/find/" + promocode).toUtf8().constData());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback_coupon1);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
@@ -505,14 +505,15 @@ void pageProductOverview::on_applyPromo_Button_clicked()
             }
             else
             {
-                ui->label_gif->hide();
                 qDebug() << "Invalid Coupon http 200 response";
                 ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
             }
         }
         
     }
-}
+}       
+       
+
 }
 
 void pageProductOverview::keyboardButtonPressed(int buttonID)
@@ -527,11 +528,11 @@ void pageProductOverview::keyboardButtonPressed(int buttonID)
     }
     else if (buttonText == "done")
     {
+        ui->promoKeyboard->hide();
         if (ui->promoCode->text() == "")
         {
             ui->promoCode->hide();
         }
-        ui->promoKeyboard->hide();
         on_applyPromo_Button_clicked();
     }
     else if (buttonText.mid(0, 3) == "num")

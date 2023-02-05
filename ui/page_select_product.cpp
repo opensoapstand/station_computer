@@ -82,6 +82,23 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
 "}");
                 ui->label_pick_soap->setText("Pick your soap");
 
+                ui->label_notify_us->setStyleSheet(
+"QLabel {"
+
+"font-family: 'Brevia';"
+"font-style: normal;"
+"font-weight: 75;"
+"font-size: 20px;"
+"line-height: 99px;"
+"letter-spacing: px;"
+"color: #FFFFFF;"
+"text-align: center;"
+"qproperty-alignment: AlignCenter;"
+"border: none;"
+"}");
+                ui->label_notify_us->setText("Notify Us");
+
+
     QFont font;
     font.setFamily(QStringLiteral("Brevia"));
     font.setPointSize(20);

@@ -72,7 +72,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                 "}");
         ui->label_select_problem->setText("Select problem(s) from the options below");
         ui->label_select_problem->setWordWrap(true);
-        ui->label_problem_options->setStyleSheet("background-color: #5E8680; border-radius: 10px;");
+        ui->label_problem_options->setStyleSheet("background-color: #5E8680; border-radius: 30px;");
         QString checkBoxLabelStyling = ("QPushButton {""font-family: 'Brevia';"
                                     "font-style: normal;"
                                     "font-weight: 75;"
@@ -121,7 +121,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
             "color: #FFFFFF;"
             "text-align: center;"
             "qproperty-alignment: AlignCenter;"
-            "border-radius: 20px;"
+            "border-radius: 30px;"
             "padding: 10px;"
             "border: 2px solid #004D54;"
 "}");

@@ -265,6 +265,21 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
                                     "color: #58595B;"
                                     "}";
     ui->label_product_ingredients_title->setStyleSheet(css_ingredients_title);
+    ui->label_notify_us->setStyleSheet(
+"QLabel {"
+
+"font-family: 'Brevia';"
+"font-style: normal;"
+"font-weight: 75;"
+"font-size: 20px;"
+"line-height: 99px;"
+"letter-spacing: px;"
+"color: #FFFFFF;"
+"text-align: center;"
+"qproperty-alignment: AlignCenter;"
+"border: none;"
+"}");
+                ui->label_notify_us->setText("Notify Us");
 
 
 

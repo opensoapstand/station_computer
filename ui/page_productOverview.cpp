@@ -143,6 +143,22 @@ ui->label_invoice_box->setStyleSheet(
 ui->promoButton->setText("Apply");
 ui->promoButton->hide();
 
+ ui->label_notify_us->setStyleSheet(
+"QLabel {"
+
+"font-family: 'Brevia';"
+"font-style: normal;"
+"font-weight: 75;"
+"font-size: 20px;"
+"line-height: 99px;"
+"letter-spacing: px;"
+"color: #FFFFFF;"
+"text-align: center;"
+"qproperty-alignment: AlignCenter;"
+"border: none;"
+"}");
+                ui->label_notify_us->setText("Notify Us");
+
 
 ui->label_discount_code->setStyleSheet(
 "QLabel {"

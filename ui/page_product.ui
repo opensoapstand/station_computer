@@ -513,6 +513,19 @@ text-align: center;</string>
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="label_notify_us">
+   <property name="geometry">
+    <rect>
+     <x>488</x>
+     <y>1878</y>
+     <width>116</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>page_payment_Button</zorder>
   <zorder>previousPage_Button</zorder>
   <zorder>mainPage_Button</zorder>
@@ -539,6 +552,7 @@ text-align: center;</string>
   <zorder>label_product_ingredients</zorder>
   <zorder>label_select_quantity</zorder>
   <zorder>back_Button</zorder>
+  <zorder>label_notify_us</zorder>
  </widget>
  <resources/>
  <connections/>

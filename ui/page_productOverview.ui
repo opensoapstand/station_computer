@@ -2099,6 +2099,19 @@ text-align: center;</string>
     <string>TextLabel</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label_notify_us">
+   <property name="geometry">
+    <rect>
+     <x>488</x>
+     <y>1878</y>
+     <width>116</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>label_discount_code</zorder>
   <zorder>promoButton</zorder>
   <zorder>label_pay</zorder>
@@ -2122,6 +2135,7 @@ text-align: center;</string>
   <zorder>promoKeyboard</zorder>
   <zorder>label_product_photo</zorder>
   <zorder>label_gif</zorder>
+  <zorder>label_notify_us</zorder>
  </widget>
  <resources/>
  <connections/>

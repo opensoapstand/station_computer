@@ -53,6 +53,8 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                 "qproperty-alignment: AlignCenter;"
                 "border: none;"
                 "}");
+
+
         // ui->previousPage_Button->setText("<-Back");
         ui->mainPage_Button->hide();
         
@@ -85,6 +87,37 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                                     "border: none;"
                                     "wordWrap:true;"
                                     "}");
+
+        ui->label_still_cant_find->setStyleSheet(
+                "QLabel {"
+                "font-family: 'Brevia';"
+                "font-style: normal;"
+                "font-weight: 75;"
+                "font-size: 43px;"
+                "line-height: 99px;"
+                "letter-spacing: 1.5px;"
+                "color: #438080;"
+                "text-align: center;"
+                "qproperty-alignment: AlignCenter;"
+                "border: none;"
+                "}");
+        ui->label_still_cant_find->setText("Still can't find it?");
+
+        ui->label_email->setStyleSheet(
+                "QLabel {"
+                "font-family: 'Montserrat';"
+                "font-style: normal;"
+                "font-weight: 75;"
+                "font-size: 35px;"
+                "line-height: 99px;"
+                "letter-spacing: 1.5px;"
+                "color: #024B51;"
+                "text-align: center;"
+                "qproperty-alignment: AlignCenter;"
+                "border: none;"
+                "wordWrap:true;"
+                "}");
+        ui->label_email->setText("Email us at: sales@soapstand.com");
     
         ui->checkBox_1_Label->setStyleSheet(checkBoxLabelStyling);
         ui->checkBox_1_Label->setText("The station never dispensed soap");
@@ -125,8 +158,27 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
             "padding: 10px;"
             "border: 2px solid #004D54;"
 "}");
+
         ui->label_send->setText("SEND");
         ui->send_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+        
+        ui->label_send->setStyleSheet("QLabel {"
+            "font-family: 'Brevia';"
+            "font-style: normal;"
+            "font-weight: 75;"
+            "font-size: 35px;"
+            "line-height: 99px;"
+            "letter-spacing: 1.5px;"
+            "background-color: #5E8680;"
+            "color: #FFFFFF;"
+            "text-align: center;"
+            "qproperty-alignment: AlignCenter;"
+            "border-radius: 30px;"
+            "padding: 10px;"
+            "border: 2px solid #004D54;"
+"}");
+
+        ui->label_send->setText("SEND");
 
 }
     

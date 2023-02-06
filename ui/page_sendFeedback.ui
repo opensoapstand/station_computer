@@ -355,6 +355,32 @@ text-align: center;
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
+  <widget class="QLabel" name="label_still_cant_find">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>1599</y>
+     <width>627</width>
+     <height>75</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_email">
+   <property name="geometry">
+    <rect>
+     <x>369</x>
+     <y>1676</y>
+     <width>456</width>
+     <height>114</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>label_send</zorder>
   <zorder>send_Button</zorder>
   <zorder>label_problem_options</zorder>
@@ -373,6 +399,8 @@ text-align: center;
   <zorder>checkBox_5_Label</zorder>
   <zorder>checkBox_5</zorder>
   <zorder>checkBox_1</zorder>
+  <zorder>label_still_cant_find</zorder>
+  <zorder>label_email</zorder>
  </widget>
  <resources/>
  <connections/>

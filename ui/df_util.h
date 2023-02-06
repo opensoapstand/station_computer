@@ -106,6 +106,7 @@ using namespace std;
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
 #define PAGE_HELP_BACKGROUND_PATH                       "background_help.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"
+#define PAGE_ORDER_OVERVIEW_PATH                        "order_overview.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH      "background_dispense_instructions.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH      "background_dispense_instructions_multispout.png"
 #define PAGE_DISPENSE_BACKGROUND_PATH                   "background_dispense.png"
@@ -115,7 +116,7 @@ using namespace std;
 #define PAGE_TAP_PAY                                    "Tap-38.png"
 // #define PAGE_WIFI_ERROR_BACKGROUND_PATH                 "/home/df-admin/production/references/oops.png"
 #define BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH            "/home/df-admin/production/references/bottle_fill_for_animation.png"
-
+#define PAGE_SEND_FEEDBACK_PATH                         "background_sendFeedback_page.png"
 #define PAGE_INIT_BACKGROUND_IMAGE_PATH                 "background_message.png"
 
 

@@ -20,7 +20,9 @@
 #include "includefiles.h"
 #include "page_idle.h"
 #include "pagethankyou.h"
+#include "page_product.h"
 
+extern QString transactionLogging;
 // CTOR
 page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
                                                   ui(new Ui::page_dispenser)
@@ -30,12 +32,23 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     ui->setupUi(this);
 
     // ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    // ui->abortButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->abortButton->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
-
+    ui->abortButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    // ui->abortButton->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
+    QString volumeDispensedStylesheet = "QLabel {"
+            "font-family: 'Montserrat';"
+            "font-style: normal;"
+            "font-weight: 600;"
+            "font-size: 28px;"
+            "line-height: 40px;"
+            "letter-spacing: 0px;"
+            "color: #58595B;"
+            "}";
+    ui->volumeDispensedLabel->setStyleSheet(volumeDispensedStylesheet);
+    ui->label_2->setStyleSheet(volumeDispensedStylesheet);
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
+    
 }
 
 /*
@@ -77,6 +90,8 @@ void page_dispenser::showEvent(QShowEvent *event)
     qDebug() << "db check dispense buttons count:";
     DbManager db(DB_PATH);
     
+    transactionLogging +="\n 6: Station Unlocked - True";
+
     int button_count = db.getDispenseButtonCount();
     db.closeDB();
 
@@ -98,7 +113,8 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->fill_animation_label->hide();
 
     startDispensing();
-    ui->abortButton->setText("cancel");
+    ui->abortButton->setText("Complete");
+    ui->abortButton->setStyleSheet("border-radius: 27px;font-size:42px;");
     ui->abortButton->raise();
 
     if (nullptr == dispenseIdleTimer)
@@ -313,7 +329,7 @@ void page_dispenser::onDispenseIdleTick()
 QString page_dispenser::getMostRecentDispensed()
 {
     QString units = selectedProductOrder->getUnitsForSelectedSlot();
-
+    
     return df_util::getConvertedStringVolumeFromMl(volumeDispensed, units, false, false);
     // return volumeDispensed;
 }
@@ -332,13 +348,32 @@ void page_dispenser::resetDispenseTimeout(void)
 
 void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
 {
-    //  qDebug() << "vol dispesnne " << dispensed;
-    //  qDebug() << "vol is fulll  " << isFull;
+
     if (this->isDispensing)
     {
         // if (dispensed > 0.01){
-        ui->abortButton->setText("complete");
+            ui->label_abort->setStyleSheet(
+                "QLabel {"
+
+                "font-family: 'Brevia';"
+                "font-style: normal;"
+                "font-weight: 75;"
+                "background-color: #5E8580;"
+                "font-size: 16px;"
+                "text-align: centre;"
+                "line-height: auto;"
+                "letter-spacing: 0px;"
+                "qproperty-alignment: AlignCenter;"
+                "border-radius: 20px;"
+                "color: #FFFFFF;"
+                "border: none;"
+                "}");        
+                ui->label_abort->setText("Complete");
+                // ui->label_abort->raise();
+        
+        
         // }
+        ui->volumeDispensedLabel->setText(QString::number(dispensed));
 
         // qDebug() << "Signal: update vol in dispenser!" ;
         qDebug() << "Signal: dispensed " << dispensed << " of " << this->targetVolume;
@@ -374,6 +409,7 @@ void page_dispenser::fsmReceiveTargetVolumeReached()
         this->isDispensing = false;
         // qDebug() << "Signal: Target volume reached."  << endl;
         updateVolumeDisplayed(1.0, true); // make sure the fill bottle graphics are completed
+        transactionLogging += "\n 8: Target Reached - True";
         dispensing_end_admin();
         // qDebug() << "Finish dispense end admin."  << endl;
     }
@@ -403,6 +439,7 @@ void page_dispenser::fsmReceiveNoFlowAbort()
 void page_dispenser::on_abortButton_clicked()
 {
     qDebug() << "Pressed dispense complete.";
+    transactionLogging += "\n 7: Complete Button - True";
     if (this->isDispensing)
     {
         force_finish_dispensing();
@@ -414,7 +451,7 @@ void page_dispenser::on_cancelButton_clicked()
     qDebug() << "Pressed cancel dispensing.";
     if (this->isDispensing)
     {
-
+        transactionLogging += "\n 7: Cancel Button - True";
         force_finish_dispensing();
     }
 }

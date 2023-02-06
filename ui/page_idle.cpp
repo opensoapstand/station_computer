@@ -117,8 +117,14 @@ void page_idle::showEvent(QShowEvent *event)
     currentProductOrder->setPromoCode("");
 
     addCompanyLogoToLabel(ui->logo_label);
-
-    checkReceiptPrinterStatus();
+     DbManager db(DB_PATH);
+    QString paymentMethod = db.getPaymentMethod(1);
+    qDebug()<< paymentMethod;
+    if(paymentMethod== "plu"|| paymentMethod=="barcode"){
+        checkReceiptPrinterStatus();
+    }
+    db.closeDB();
+    qDebug() << "db closed";
 
     addPictureToLabel(ui->drinkfill_logo_label, DRINKFILL_LOGO_VERTICAL_PATH);
 

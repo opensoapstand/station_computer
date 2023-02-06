@@ -96,6 +96,9 @@ DF_ERROR stateManualPump::onAction()
          debugOutput::sendMessage("Enable dispenser pump " + to_string(m_active_pump_index + 1) + "(press dispense button to make pump actually work)", MSG_INFO);
          productDispensers[m_active_pump_index].startDispense();
          productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
+         if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS ){
+            productDispensers[m_active_pump_index].the_pcb->startPump(m_active_pump_index+1);
+         }
          if (productDispensers[m_active_pump_index].getMultiDispenseButtonEnabled())
          {
             productDispensers[m_active_pump_index].setMultiDispenseButtonLight(m_active_pump_index + 1, true);
@@ -109,6 +112,10 @@ DF_ERROR stateManualPump::onAction()
          // productDispensers[m_active_pump_index].setSolenoid(false); // should be done at button press. 
          productDispensers[m_active_pump_index].setPumpsDisableAll();
          productDispensers[m_active_pump_index].stopDispense();
+
+         if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS ){
+            productDispensers[m_active_pump_index].the_pcb->stopPump(m_active_pump_index+1);
+         }
 
          if (productDispensers[m_active_pump_index].getMultiDispenseButtonEnabled())
          {

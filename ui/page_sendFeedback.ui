@@ -358,7 +358,7 @@ text-align: center;
   <widget class="QLabel" name="label_still_cant_find">
    <property name="geometry">
     <rect>
-     <x>290</x>
+     <x>210</x>
      <y>1599</y>
      <width>627</width>
      <height>75</height>
@@ -371,9 +371,9 @@ text-align: center;
   <widget class="QLabel" name="label_email">
    <property name="geometry">
     <rect>
-     <x>369</x>
+     <x>240</x>
      <y>1676</y>
-     <width>456</width>
+     <width>600</width>
      <height>114</height>
     </rect>
    </property>

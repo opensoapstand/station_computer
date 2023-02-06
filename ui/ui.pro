@@ -6,7 +6,8 @@ CONFIG += \
     c++11
 
 QT += multimedia \ 
-    multimediawidgets
+    multimediawidgets \
+    widgets 
 
 FORMS += \
     page_dispenser.ui \
@@ -17,10 +18,12 @@ FORMS += \
     page_select_product.ui \
     pagethankyou.ui \
     page_maintenance.ui \
+    page_productOverview.ui \
     page_maintenance_dispenser.ui \
     page_init.ui \
     page_help.ui \
     keyboard.ui \
+    page_sendFeedback.ui \
     page_transactions.ui \
     page_maintenance_general.ui
 
@@ -35,6 +38,7 @@ HEADERS += \
     posm/enums.h \
     posm/lrcgenerator.h \
     posm/mcommunication.h \
+    page_productOverview.h \
     posm/packetfromecr.h \
     posm/packetfromux410.h \
     posm/packetreadsort.h \
@@ -52,8 +56,9 @@ HEADERS += \
     page_error_wifi.h \
     page_init.h \
     page_help.h \
+    page_sendFeedback.h  \
     page_transactions.h \
-    product.h
+    product.h 
 
 SOURCES += \
     dfuicommthread.cpp \
@@ -65,6 +70,7 @@ SOURCES += \
     page_product.cpp \
     posm/lrcgenerator.cpp \
     posm/mcommunication.cpp \
+    page_productOverview.cpp \
     posm/packetfromecr.cpp \
     posm/packetfromux410.cpp \
     posm/packetreadsort.cpp \
@@ -72,6 +78,7 @@ SOURCES += \
     posm/transactionPackets.cpp \
     posm/transactioninfo.cpp \
     page_select_product.cpp \
+    page_sendFeedback.cpp \
     pagethankyou.cpp \
     df_util.cpp \
     drinkorder.cpp \

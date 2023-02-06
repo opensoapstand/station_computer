@@ -1199,6 +1199,9 @@ Tap on screen to keep page open.</string>
         <height>50</height>
        </size>
       </property>
+      <property name="echoMode">
+       <enum>QLineEdit::Password</enum>
+      </property>
      </widget>
     </item>
    </layout>

@@ -21,6 +21,7 @@
 #include "page_dispenser.h"
 #include "page_idle.h"
 
+extern QString transactionLogging;
 // CTOR
 page_payment::page_payment(QWidget *parent) : QWidget(parent),
                                               ui(new Ui::page_payment)
@@ -34,9 +35,8 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
     ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     ui->payment_bypass_Button->setEnabled(false);
-
-   
-
+    
+    
     // **** Timer and Slot Setup ****
 
     // Payment Tap Ready
@@ -156,6 +156,7 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
         while (!tap_init());
 
     }
+   
 }
 
 void page_payment::stopPayTimers()
@@ -339,6 +340,7 @@ void page_payment::showEvent(QShowEvent *event)
         ui->order_total_amount->setText("Total: $" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
         ui->steps_Label->show();
         ui->processing_Label->hide();
+        transactionLogging += "\n 2: QR code - True";
     }
 
     // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
@@ -420,11 +422,11 @@ void page_payment::createOrderIdAndSendToBackend()
     orderId = QUuid::createUuid().QUuid::toString();
     orderId = orderId.remove("{");
     orderId = orderId.remove("}");
-
+    
     // send order details to backend
     QString curl_order_parameters_string = "orderId=" + orderId + "&size=" + drinkSize + "&MachineSerialNumber=" + MachineSerialNumber +
-                                           "&contents=" + contents + "&price=" + price + "&productId=" + productId + "&quantity_requested=" + quantity_requested + "&size_unit=" + productUnits;
-
+                                           "&contents=" + contents + "&price=" + price + "&productId=" + productId + "&quantity_requested=" + quantity_requested + "&size_unit=" + productUnits \
+                                            + "&logging=" + transactionLogging;
     curl_order_parameters = curl_order_parameters_string.toLocal8Bit();
 
     curl1 = curl_easy_init();
@@ -501,6 +503,7 @@ void page_payment::isQrProcessedCheckOnline()
 
         if (readBuffer == "true")
         {
+            transactionLogging += "\n 4: Order Paid - True";
             qDebug() << "QR processed. It's time to dispense.";
             proceed_to_dispense();
             state_payment = s_payment_done;
@@ -513,6 +516,7 @@ void page_payment::isQrProcessedCheckOnline()
         }
         else if (readBuffer == "In progress")
         {
+            transactionLogging += "\n 3: QR Scanned - True";
             qDebug() << "Wait for QR processed. User must have finished transaction to continue.";
             // user scanned qr code and is processing transaction. Delete qr code and make it harder for user to leave page.
             state_payment = s_payment_processing;
@@ -559,13 +563,14 @@ void page_payment::onTimeoutTick()
 {
     if (--_pageTimeoutCounterSecondsLeft >= 0)
     {
-
         QString label_text = "Transaction will be cancelled in " + QString::number(_pageTimeoutCounterSecondsLeft) + "s.\nTOUCH THE SCREEN\n if you need more time \n";
         ui->refreshLabel->setText(label_text);
     }
     else
     {
                qDebug() << "Timer Done!" << _pageTimeoutCounterSecondsLeft << endl;
+                transactionLogging +="\n 5: Timeout - True";
+
         idlePaymentTimeout();
     }
     if (_pageTimeoutCounterSecondsLeft < QR_PAGE_TIMEOUT_WARNING_SECONDS)

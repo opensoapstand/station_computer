@@ -51,8 +51,8 @@
   <widget class="QPushButton" name="abortButton">
    <property name="geometry">
     <rect>
-     <x>770</x>
-     <y>1560</y>
+     <x>390</x>
+     <y>1580</y>
      <width>261</width>
      <height>101</height>
     </rect>
@@ -60,18 +60,69 @@
    <property name="font">
     <font>
      <family>Brevia</family>
-     <pointsize>30</pointsize>
+     <pointsize>9</pointsize>
      <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
    <property name="text">
-    <string>Cancel</string>
+    <string/>
+   </property>
+   <property name="flat">
+    <bool>false</bool>
    </property>
   </widget>
+  <widget class="QLabel" name="volumeDispensedLabel">
+   <property name="geometry">
+    <rect>
+     <x>800</x>
+     <y>1620</y>
+     <width>171</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>0.0</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>730</x>
+     <y>1520</y>
+     <width>281</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Volume dispensed:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_abort">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>1580</y>
+     <width>261</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <zorder>abortButton</zorder>
+  <zorder>label_abort</zorder>
   <zorder>fill_animation_label</zorder>
   <zorder>dispense_bottle_label</zorder>
-  <zorder>abortButton</zorder>
+  <zorder>volumeDispensedLabel</zorder>
+  <zorder>label_2</zorder>
  </widget>
  <resources/>
  <connections/>

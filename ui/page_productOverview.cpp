@@ -365,7 +365,7 @@ void pageProductOverview::reset_and_show_page_elements()
         selected_volume = QString::number(selectedProductOrder->getSelectedVolume());   
 
     }
-        ui->label_selected_volume->setText(selected_volume + " " + selectedProductOrder->getUnitsForSelectedSlot());
+        ui->label_selected_volume->setText(selected_volume  + " " + selectedProductOrder->getUnitsForSelectedSlot() + "(max)");
         ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName());
         // ui->label_price_large->setText(selected_volume + " " + selectedProductOrder->getUnitsForSelectedSlot());
 

@@ -66,6 +66,38 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
 
     ui->helpPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    ui->label_pick_soap->setStyleSheet(
+"QLabel {"
+
+"font-family: 'Brevia';"
+"font-style: normal;"
+"font-weight: 75;"
+"font-size: 64px;"
+"line-height: 99px;"
+"letter-spacing: px;"
+"color: #003840;"
+"text-align: center;"
+"qproperty-alignment: AlignCenter;"
+"border: none;"
+"}");
+                ui->label_pick_soap->setText("Pick your soap");
+
+                ui->label_notify_us->setStyleSheet(
+"QLabel {"
+
+"font-family: 'Brevia';"
+"font-style: normal;"
+"font-weight: 75;"
+"font-size: 20px;"
+"line-height: 99px;"
+"letter-spacing: px;"
+"color: #FFFFFF;"
+"text-align: center;"
+"qproperty-alignment: AlignCenter;"
+"border: none;"
+"}");
+                ui->label_notify_us->setText("Notify Us");
+
 
     QFont font;
     font.setFamily(QStringLiteral("Brevia"));

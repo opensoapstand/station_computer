@@ -114,7 +114,7 @@ text-transform: lowercase;</string>
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string></string>
    </property>
   </widget>
   <widget class="QWidget" name="video_player" native="true">

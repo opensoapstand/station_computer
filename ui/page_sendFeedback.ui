@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>page_sendFeedback</class>
+ <widget class="QWidget" name="page_sendFeedback">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1125</width>
+    <height>1920</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>Montserrat</family>
+    <pointsize>-1</pointsize>
+    <weight>50</weight>
+    <bold>false</bold>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">color: #FFFFFF;
+font-family: Montserrat;
+font-style: light;
+font-weight: normal;
+font-size: 23px;
+line-height: 29px;</string>
+  </property>
+  <widget class="QPushButton" name="previousPage_Button">
+   <property name="geometry">
+    <rect>
+     <x>68</x>
+     <y>1757</y>
+     <width>118</width>
+     <height>118</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="send_Button">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>1390</y>
+     <width>438</width>
+     <height>95</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+     <pointsize>-1</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="mainPage_Button">
+   <property name="geometry">
+    <rect>
+     <x>472</x>
+     <y>1777</y>
+     <width>125</width>
+     <height>125</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_selected_volume">
+   <property name="geometry">
+    <rect>
+     <x>668</x>
+     <y>805</y>
+     <width>317</width>
+     <height>35</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+     <pointsize>-1</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+font-style: normal;
+font-weight: normal;
+font-size: 20px;
+line-height: 40px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_select_problem">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>220</y>
+     <width>1075</width>
+     <height>242</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_problem_options">
+   <property name="geometry">
+    <rect>
+     <x>142</x>
+     <y>456</y>
+     <width>780</width>
+     <height>924</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_still_cant_find_it">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>1599</y>
+     <width>627</width>
+     <height>75</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="checkBox_1_Label">
+   <property name="geometry">
+    <rect>
+     <x>264</x>
+     <y>634</y>
+     <width>576</width>
+     <height>45</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="checkBox_2_Label">
+   <property name="geometry">
+    <rect>
+     <x>274</x>
+     <y>769</y>
+     <width>576</width>
+     <height>78</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="checkBox_4_Label">
+   <property name="geometry">
+    <rect>
+     <x>274</x>
+     <y>1037</y>
+     <width>576</width>
+     <height>78</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="checkBox_3_Label">
+   <property name="geometry">
+    <rect>
+     <x>274</x>
+     <y>903</y>
+     <width>576</width>
+     <height>78</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_1">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>625</y>
+     <width>64</width>
+     <height>64</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QCheckBox::indicator{color: red; width:45px;height:45px;};</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>30</width>
+     <height>30</height>
+    </size>
+   </property>
+   <property name="shortcut">
+    <string>Backspace</string>
+   </property>
+   <property name="tristate">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_2">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>770</y>
+     <width>64</width>
+     <height>64</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QCheckBox::indicator{width:45px;height:45px;};</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_3">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>903</y>
+     <width>64</width>
+     <height>64</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QCheckBox::indicator{width:45px;height:45px;};</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_4">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>1036</y>
+     <width>64</width>
+     <height>64</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QCheckBox::indicator{width:45px;height:45px;};</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="checkBox_5_Label">
+   <property name="geometry">
+    <rect>
+     <x>274</x>
+     <y>1172</y>
+     <width>576</width>
+     <height>78</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_5">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>1169</y>
+     <width>64</width>
+     <height>64</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QCheckBox::indicator{width:45px;height:45px;};</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>16</width>
+     <height>16</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_send">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>1424</y>
+     <width>438</width>
+     <height>95</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+     <pointsize>-1</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_still_cant_find">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>1599</y>
+     <width>627</width>
+     <height>75</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_email">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>1676</y>
+     <width>600</width>
+     <height>114</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <zorder>label_send</zorder>
+  <zorder>send_Button</zorder>
+  <zorder>label_problem_options</zorder>
+  <zorder>mainPage_Button</zorder>
+  <zorder>label_selected_volume</zorder>
+  <zorder>label_select_problem</zorder>
+  <zorder>previousPage_Button</zorder>
+  <zorder>label_still_cant_find_it</zorder>
+  <zorder>checkBox_4_Label</zorder>
+  <zorder>checkBox_1_Label</zorder>
+  <zorder>checkBox_3_Label</zorder>
+  <zorder>checkBox_2_Label</zorder>
+  <zorder>checkBox_2</zorder>
+  <zorder>checkBox_3</zorder>
+  <zorder>checkBox_4</zorder>
+  <zorder>checkBox_5_Label</zorder>
+  <zorder>checkBox_5</zorder>
+  <zorder>checkBox_1</zorder>
+  <zorder>label_still_cant_find</zorder>
+  <zorder>label_email</zorder>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -566,7 +566,7 @@ void pageProduct::loadProdSpecs()
 
             if (product_sizes[i] == SIZE_CUSTOM_INDEX)
             {
-                orderSizeLabelsVolume[i]->setText("Custom Volume");
+                orderSizeLabelsVolume[i]->setText("Custom Volume(max)");
                 QString units = selectedProductOrder->getUnitsForSelectedSlot();
                 if (units == "ml")
                 {

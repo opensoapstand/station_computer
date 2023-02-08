@@ -231,8 +231,9 @@ void stateDispense::stopPumping()
 DF_ERROR stateDispense::onExit()
 {
    productDispensers[pos_index].setPumpsDisableAll();
-
    productDispensers[pos_index].the_pcb->virtualButtonUnpressHack(this->slot);
+   productDispensers[pos_index].the_pcb->setSingleDispenseButtonLight(this->slot,false);
+  
    DF_ERROR e_ret = OK;
    return e_ret;
 }

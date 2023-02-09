@@ -1998,9 +1998,9 @@ font-weight:bold;</string>
   <widget class="QPushButton" name="selectProductPage_Button">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>100</x>
      <y>30</y>
-     <width>251</width>
+     <width>351</width>
      <height>61</height>
     </rect>
    </property>

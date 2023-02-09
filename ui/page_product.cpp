@@ -47,23 +47,22 @@ uint16_t orderSizeButtons_xywh_dynamic_ui_small_available[4][4] = {
 
 uint16_t orderSizeButtons_xywh_dynamic_ui_small_large_custom_available[4][4] = {
     {564, 990, 209, 100}, // S
-     {1, 1, 1, 1}, 
+    {1, 1, 1, 1},
     {790, 990, 198, 100}, // L
     {564, 1100, 424, 113} // custom
- };
- 
+};
 
 uint16_t orderSizeButtons_xywh_dynamic_ui_small_and_large_available[4][4] = {
-    {567, 1024, 198 , 126}, // S
+    {567, 1024, 198, 126}, // S
     {1, 1, 1, 1},          // M
     {788, 1024, 198, 126}, // L
     {1, 1, 1, 1}           // custom
 };
 uint16_t orderSizeButtons_xywh_dynamic_ui_custom_available[4][4] = {
-     {1, 1, 1, 1}, 
-    {1, 1, 1, 1},         // M
-     {1, 1, 1, 1}, 
-    {564, 1100, 424, 113} // custom
+    {1, 1, 1, 1},
+    {1, 1, 1, 1}, // M
+    {1, 1, 1, 1},
+    {564, 1037, 424, 113} // custom
 };
 
 // labels of volume and price are different (and annoying)
@@ -99,17 +98,17 @@ uint16_t orderSizePriceLabels_xy_dynamic_ui_small_large_custom_available[8][2] =
     {560, 1160}  // custom price
 };
 uint16_t orderSizePriceLabels_xy_dynamic_ui_custom_available[8][2] = {
-   {1, 1}, // S price
-    {1, 1},      // M price
-   {1, 1}, // L price
-    {560, 1160}  // custom price
+    {1, 1},     // S price
+    {1, 1},     // M price
+    {1, 1},     // L price
+    {560, 1097} // custom price
 };
 
 uint16_t orderSizeVolumeLabels_xy_dynamic_ui_custom_available[8][2] = {
-    {1, 1}, // S vol
-    {1, 1},      // M vol
-    {1, 1},      // L vol
-    {570, 1110}  // custom col
+    {1, 1},     // S vol
+    {1, 1},     // M vol
+    {1, 1},     // L vol
+    {570, 1047} // custom col
 };
 
 uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_available[8][2] = {
@@ -179,29 +178,28 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
                         "}";
     ui->label_product_title->setStyleSheet(css_title);
 
-     QFont font;
-        font.setFamily(QStringLiteral("Brevia"));
-        font.setPointSize(20);
-        font.setBold(true);
-        font.setWeight(200);
+    QFont font;
+    font.setFamily(QStringLiteral("Brevia"));
+    font.setPointSize(20);
+    font.setBold(true);
+    font.setWeight(200);
 
-        ui->back_Button->setStyleSheet(
-"QPushButton {"
+    ui->back_Button->setStyleSheet(
+        "QPushButton {"
 
-"font-family: 'Brevia';"
-"font-style: normal;"
-"font-weight: 75;"
-"font-size: 32px;"
-"line-height: 99px;"
-"letter-spacing: 1.5px;"
-"text-transform: lowercase;"
-"color: #003840;"
-"text-align: center;"
-"qproperty-alignment: AlignCenter;"
-"border: none;"
-"}");
-                ui->back_Button->setText("<- Products");
-
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 75;"
+        "font-size: 32px;"
+        "line-height: 99px;"
+        "letter-spacing: 1.5px;"
+        "text-transform: lowercase;"
+        "color: #003840;"
+        "text-align: center;"
+        "qproperty-alignment: AlignCenter;"
+        "border: none;"
+        "}");
+    ui->back_Button->setText("<- Products");
 
     QString css_description = "QLabel{"
                               "position: absolute;"
@@ -218,20 +216,19 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
                               "}";
     ui->label_product_description->setStyleSheet(css_description);
 
-    
-        ui->label_select_quantity->setStyleSheet(
-                "QLabel {"
+    ui->label_select_quantity->setStyleSheet(
+        "QLabel {"
 
-                "font-family: 'Brevia';"
-                "font-style: normal;"
-                "font-weight: 200;"
-                "font-size: 36px;"
-                "line-height: auto;"
-                "letter-spacing: 0px;"
-                "color: #58595B;"
-                "border: none;"
-                "}");
-        ui->label_select_quantity->setText("Select Quantity");
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 200;"
+        "font-size: 36px;"
+        "line-height: auto;"
+        "letter-spacing: 0px;"
+        "color: #58595B;"
+        "border: none;"
+        "}");
+    ui->label_select_quantity->setText("Select Quantity");
 
     ui->label_product_description->setWordWrap(true);
 
@@ -266,24 +263,20 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
                                     "}";
     ui->label_product_ingredients_title->setStyleSheet(css_ingredients_title);
     ui->label_notify_us->setStyleSheet(
-"QLabel {"
+        "QLabel {"
 
-"font-family: 'Brevia';"
-"font-style: normal;"
-"font-weight: 75;"
-"font-size: 20px;"
-"line-height: 99px;"
-"letter-spacing: px;"
-"color: #FFFFFF;"
-"text-align: center;"
-"qproperty-alignment: AlignCenter;"
-"border: none;"
-"}");
-                ui->label_notify_us->setText("Notify Us");
-
-
-
-
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 75;"
+        "font-size: 20px;"
+        "line-height: 99px;"
+        "letter-spacing: px;"
+        "color: #FFFFFF;"
+        "text-align: center;"
+        "qproperty-alignment: AlignCenter;"
+        "border: none;"
+        "}");
+    ui->label_notify_us->setText("Notify Us");
 
     {
         selectIdleTimer = new QTimer(this);
@@ -306,10 +299,8 @@ void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_
     this->p_page_wifi_error = pageWifiError;
     this->p_page_overview = page_Overview;
 
-
     selectedProductOrder = p_page_idle->currentProductOrder;
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_PRODUCT_BACKGROUND_PATH);
-
 }
 
 // DTOR
@@ -344,8 +335,7 @@ void pageProduct::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: Product >>>>>>>>>";
     QWidget::showEvent(event);
-        
-    
+
     selectedProductOrder->loadSelectedProductProperties();
     setDefaultSize();
     loadProdSpecs();
@@ -384,7 +374,6 @@ void pageProduct::reset_and_show_page_elements()
 {
 
 #ifdef ENABLE_DYNAMIC_UI
-
 
     ui->label_product_photo->setStyleSheet("QLabel{border: 1px solid #5E8680;}");
     p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->currentProductOrder->getSelectedProductPicturePath());
@@ -435,7 +424,7 @@ void pageProduct::reset_and_show_page_elements()
     }
     else if (available_sizes_signature == 8)
     {
-        // only custom 
+        // only custom
         xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_custom_available;
         xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_custom_available;
         xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_custom_available;
@@ -515,9 +504,8 @@ void pageProduct::reset_and_show_page_elements()
     ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->page_payment_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     // ui->page_payment_Button->setStyleSheet("QPushButton { background-color: red; border: 0px };QPushButton:pressed { background-color: green; border: 10px }");
-    
-    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
+    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     loadProdSpecs();
     selectIdleTimer->start(1000);
@@ -566,7 +554,7 @@ void pageProduct::loadProdSpecs()
 
             if (product_sizes[i] == SIZE_CUSTOM_INDEX)
             {
-                orderSizeLabelsVolume[i]->setText("Custom Volume(max)");
+                orderSizeLabelsVolume[i]->setText("Custom Volume");
                 QString units = selectedProductOrder->getUnitsForSelectedSlot();
                 if (units == "ml")
                 {
@@ -613,64 +601,66 @@ void pageProduct::loadProdSpecs()
         }
     }
 
-
-
     double selectedPrice = selectedProductOrder->getSelectedPrice();
     double discount = selectedProductOrder->getDiscount();
     double selectedPriceCorrected = selectedProductOrder->getSelectedPriceCorrected();
+    //double selectedPrice;
+    // double discount;
+    // double selectedPriceCorrected;
 
     if (selectedProductOrder->getSelectedSize() == SIZE_CUSTOM_INDEX)
     {
-        QString unitsInvoice = selectedProductOrder->getUnitsForSelectedSlot();
+        // QString unitsInvoice;
+        // selectedProductOrder->getCustomPriceDetails(&unitsInvoice, &selectedPrice, &discount, &selectedPriceCorrected);
+    //     QString unitsInvoice = selectedProductOrder->getUnitsForSelectedSlot();
 
-        if (unitsInvoice == "ml")
-        {
-            unitsInvoice = "L";
-            selectedPrice = selectedPrice * 1000;
-            selectedPriceCorrected = selectedPriceCorrected * 1000;
-            discount = discount * 1000;
-        }
-        else if (unitsInvoice == "g")
-        {
-            if (selectedProductOrder->getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
-            {
-                unitsInvoice = "100g";
-                selectedPrice = selectedPrice * 100;
-                selectedPriceCorrected = selectedPriceCorrected * 100;
-                discount = discount * 100;
-            }
-            else
-            {
-                unitsInvoice = "kg";
-                selectedPrice = selectedPrice * 1000;
-                selectedPriceCorrected = selectedPriceCorrected * 1000;
-                discount = discount * 1000;
-            }
-        }
-        else if (unitsInvoice == "oz")
-        {
-            unitsInvoice = "oz";
-            selectedPrice = selectedPrice * OZ_TO_ML;
-            selectedPriceCorrected = selectedPriceCorrected * OZ_TO_ML;
-            discount = discount * OZ_TO_ML;
-        }
+    //     if (unitsInvoice == "ml")
+    //     {
+    //         unitsInvoice = "L";
+    //         selectedPrice = selectedPrice * 1000;
+    //         selectedPriceCorrected = selectedPriceCorrected * 1000;
+    //         discount = discount * 1000;
+    //     }
+    //     else if (unitsInvoice == "g")
+    //     {
+    //         if (selectedProductOrder->getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
+    //         {
+    //             unitsInvoice = "100g";
+    //             selectedPrice = selectedPrice * 100;
+    //             selectedPriceCorrected = selectedPriceCorrected * 100;
+    //             discount = discount * 100;
+    //         }
+    //         else
+    //         {
+    //             unitsInvoice = "kg";
+    //             selectedPrice = selectedPrice * 1000;
+    //             selectedPriceCorrected = selectedPriceCorrected * 1000;
+    //             discount = discount * 1000;
+    //         }
+    //     }
+    //     else if (unitsInvoice == "oz")
+    //     {
+    //         unitsInvoice = "oz";
+    //         selectedPrice = selectedPrice * OZ_TO_ML;
+    //         selectedPriceCorrected = selectedPriceCorrected * OZ_TO_ML;
+    //         discount = discount * OZ_TO_ML;
+    //     }
 
-        // ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName());
-        // ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2) + "/" + unitsInvoice);
+    // ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName());
+    // ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2) + "/" + unitsInvoice);
 
+    // ui->label_invoice_price_total->setText("$" + QString::number(selectedPriceCorrected, 'f', 2) + "/" + unitsInvoice); // how to handle promo ?! todo!
+}
+else
+{
 
-        // ui->label_invoice_price_total->setText("$" + QString::number(selectedPriceCorrected, 'f', 2) + "/" + unitsInvoice); // how to handle promo ?! todo!
-    }
-    else
-    {
+    // ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
+    // ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2));
 
-        // ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
-        // ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2));
+    // ui->label_invoice_price_total->setText("$" + QString::number(selectedPriceCorrected, 'f', 2)); // how to handle promo ?! todo!
+}
 
-        // ui->label_invoice_price_total->setText("$" + QString::number(selectedPriceCorrected, 'f', 2)); // how to handle promo ?! todo!
-    }
-
-    qDebug() << "-------------------------- END LOAD PRODUCT ----------------";
+qDebug() << "-------------------------- END LOAD PRODUCT ----------------";
 }
 #else
 void pageProduct::loadProdSpecs()
@@ -774,7 +764,6 @@ void pageProduct::loadProdSpecs()
     //     "text-align: center;\n"
     //     ""));
 
-
     ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
     double selectedPrice = selectedProductOrder->getSelectedPriceCorrected();
     ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2));
@@ -825,14 +814,14 @@ void pageProduct::on_orderCustom_Button_clicked()
 {
     qDebug() << "button custom";
     this->loadProductBySize(SIZE_CUSTOM_INDEX);
-     on_page_payment_Button_clicked();
+    on_page_payment_Button_clicked();
 }
 
 void pageProduct::on_orderMedium_Button_clicked()
 {
     qDebug() << "button medium";
     this->loadProductBySize(SIZE_MEDIUM_INDEX);
-     on_page_payment_Button_clicked();
+    on_page_payment_Button_clicked();
 }
 
 // on_Small_Order button listener
@@ -840,7 +829,7 @@ void pageProduct::on_orderSmall_Button_clicked()
 {
     qDebug() << "button small";
     this->loadProductBySize(SIZE_SMALL_INDEX);
-     on_page_payment_Button_clicked();
+    on_page_payment_Button_clicked();
 }
 
 // on_Large_Order button listener
@@ -868,8 +857,6 @@ void pageProduct::on_previousPage_Button_clicked()
     p_page_idle->pageTransition(this, p_page_select_product);
 }
 
-
-
 void pageProduct::on_page_payment_Button_clicked()
 {
     qDebug() << "pageProduct: Pay button";
@@ -879,7 +866,6 @@ void pageProduct::on_page_payment_Button_clicked()
 
     this->stopSelectTimers();
     p_page_idle->pageTransition(this, p_page_overview);
-    
 }
 
 void pageProduct::on_back_Button_clicked()
@@ -890,5 +876,4 @@ void pageProduct::on_back_Button_clicked()
     };
     selectIdleTimer->stop();
     p_page_idle->pageTransition(this, p_page_select_product);
-
 }

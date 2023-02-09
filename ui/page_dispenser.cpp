@@ -113,7 +113,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->fill_animation_label->hide();
 
     startDispensing();
-    ui->abortButton->setText("Complete");
+    ui->abortButton->setText("Complete666");
     ui->abortButton->setStyleSheet("border-radius: 27px;font-size:42px;");
     ui->abortButton->raise();
 
@@ -368,7 +368,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
                 "color: #FFFFFF;"
                 "border: none;"
                 "}");        
-                ui->label_abort->setText("Complete");
+                ui->label_abort->setText("Complete333");
                 // ui->label_abort->raise();
         
         

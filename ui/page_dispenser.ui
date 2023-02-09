@@ -51,10 +51,10 @@
   <widget class="QPushButton" name="abortButton">
    <property name="geometry">
     <rect>
-     <x>390</x>
-     <y>1580</y>
-     <width>261</width>
-     <height>101</height>
+     <x>340</x>
+     <y>1380</y>
+     <width>400</width>
+     <height>131</height>
     </rect>
    </property>
    <property name="font">
@@ -72,38 +72,25 @@
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="volumeDispensedLabel">
+  <widget class="QLabel" name="label_volume_dispensed">
    <property name="geometry">
     <rect>
-     <x>800</x>
-     <y>1620</y>
-     <width>171</width>
+     <x>340</x>
+     <y>1530</y>
+     <width>400</width>
      <height>71</height>
     </rect>
    </property>
    <property name="text">
-    <string>0.0</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>730</x>
-     <y>1520</y>
-     <width>281</width>
-     <height>71</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Volume dispensed:</string>
+    <string>Volume dispensed</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_abort">
    <property name="geometry">
     <rect>
-     <x>390</x>
-     <y>1580</y>
-     <width>261</width>
+     <x>340</x>
+     <y>1380</y>
+     <width>400</width>
      <height>101</height>
     </rect>
    </property>
@@ -117,12 +104,25 @@
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="volumeDispensedLabel">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>1620</y>
+     <width>400</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>0.0</string>
+   </property>
+  </widget>
   <zorder>abortButton</zorder>
   <zorder>label_abort</zorder>
   <zorder>fill_animation_label</zorder>
   <zorder>dispense_bottle_label</zorder>
+  <zorder>label_volume_dispensed</zorder>
   <zorder>volumeDispensedLabel</zorder>
-  <zorder>label_2</zorder>
  </widget>
  <resources/>
  <connections/>

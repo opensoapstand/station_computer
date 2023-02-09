@@ -83,6 +83,7 @@ public:
     QString getVolumeRemainingCorrectUnits();
     QString getTotalDispensedCorrectUnits();
     QString getVolumeDispensedSinceRestockCorrectUnits();
+    void getCustomPriceDetails(QString *unitsInvoice, double *selectedPriceP, double *discountP, double *selectedPriceCorrectedP);
 
     void setFullVolumeCorrectUnits(QString inputFullValue);
 

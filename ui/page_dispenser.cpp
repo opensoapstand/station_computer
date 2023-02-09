@@ -32,19 +32,42 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     ui->setupUi(this);
 
     // ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->abortButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->abortButton->setStyleSheet("QPushButton { color:#5E8580; background-color: transparent; border: 5px;border-color:#5E8580; }");
+    ui->label_abort->setStyleSheet(
+        "QLabel {"
+
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 100;"
+        "background-color: #5E8580;"
+        "font-size: 42px;"
+        "text-align: centre;"
+        "line-height: auto;"
+        "letter-spacing: 0px;"
+        "qproperty-alignment: AlignCenter;"
+        "border-radius: 20px;"
+        "color: white;"
+        "border: none;"
+        "}");
+    ui->label_abort->setText("Complete");
     // ui->abortButton->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
     QString volumeDispensedStylesheet = "QLabel {"
-            "font-family: 'Montserrat';"
-            "font-style: normal;"
-            "font-weight: 600;"
-            "font-size: 28px;"
-            "line-height: 40px;"
-            "letter-spacing: 0px;"
-            "color: #58595B;"
-            "}";
+
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 100;"
+        "font-size: 42px;"
+        "text-align: centre;"
+        "line-height: auto;"
+        "letter-spacing: 0px;"
+        "qproperty-alignment: AlignCenter;"
+        "border-radius: 20px;"
+        "color: #5e8580;"
+        "border: none;"
+        "}";
     ui->volumeDispensedLabel->setStyleSheet(volumeDispensedStylesheet);
-    ui->label_2->setStyleSheet(volumeDispensedStylesheet);
+
+    ui->label_volume_dispensed->setStyleSheet(volumeDispensedStylesheet);
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
@@ -93,6 +116,8 @@ void page_dispenser::showEvent(QShowEvent *event)
     transactionLogging +="\n 6: Station Unlocked - True";
 
     int button_count = db.getDispenseButtonCount();
+    updateVolumeDispensedLabel(0.0);
+
     db.closeDB();
 
     if (button_count==1){
@@ -113,8 +138,10 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->fill_animation_label->hide();
 
     startDispensing();
-    ui->abortButton->setText("Complete");
-    ui->abortButton->setStyleSheet("border-radius: 27px;font-size:42px;");
+    // ui->abortButton->setText("Complete");
+    // ui->abortButton->setStyleSheet("border-radius: 27px;font-size:42px;");
+
+    
     ui->abortButton->raise();
 
     if (nullptr == dispenseIdleTimer)
@@ -126,6 +153,25 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     dispenseIdleTimer->start(1000);
     _dispenseIdleTimeoutSec = 120;
+}
+
+
+void page_dispenser::updateVolumeDispensedLabel(double dispensed){
+    QString dispensedVolumeUnitsCorrected;
+    QString units = selectedProductOrder->getUnitsForSelectedSlot();
+    if (units == "oz")
+    {
+        dispensedVolumeUnitsCorrected = QString::number(ceil(dispensed * (double)ML_TO_OZ * 1.0) );
+
+    }
+    else
+    {
+        dispensedVolumeUnitsCorrected = QString::number(ceil(dispensed ));
+    }
+
+    ui->volumeDispensedLabel->setText(dispensedVolumeUnitsCorrected + " " + units);
+   
+
 }
 
 bool page_dispenser::sendToUX410()
@@ -352,28 +398,28 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
     if (this->isDispensing)
     {
         // if (dispensed > 0.01){
-            ui->label_abort->setStyleSheet(
-                "QLabel {"
+            // ui->label_abort->setStyleSheet(
+            //     "QLabel {"
 
-                "font-family: 'Brevia';"
-                "font-style: normal;"
-                "font-weight: 75;"
-                "background-color: #5E8580;"
-                "font-size: 16px;"
-                "text-align: centre;"
-                "line-height: auto;"
-                "letter-spacing: 0px;"
-                "qproperty-alignment: AlignCenter;"
-                "border-radius: 20px;"
-                "color: #FFFFFF;"
-                "border: none;"
-                "}");        
-                ui->label_abort->setText("Complete");
-                // ui->label_abort->raise();
+            //     "font-family: 'Brevia';"
+            //     "font-style: normal;"
+            //     "font-weight: 75;"
+            //     "background-color: #5E8580;"
+            //     "font-size: 16px;"
+            //     "text-align: centre;"
+            //     "line-height: auto;"
+            //     "letter-spacing: 0px;"
+            //     "qproperty-alignment: AlignCenter;"
+            //     "border-radius: 20px;"
+            //     "color: #FFFFFF;"
+            //     "border: none;"
+            //     "}");        
+            //     ui->label_abort->setText("Complete333");
+                ui->label_abort->raise();
         
         
         // }
-        ui->volumeDispensedLabel->setText(QString::number(dispensed));
+        updateVolumeDispensedLabel(dispensed);
 
         // qDebug() << "Signal: update vol in dispenser!" ;
         qDebug() << "Signal: dispensed " << dispensed << " of " << this->targetVolume;

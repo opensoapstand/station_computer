@@ -25,9 +25,9 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
     ui->setupUi(this);
 
     // popup
-    popup = new QDialog(this);
-    ui->popup->setFixedSize(500, 100);
-    popup->setWindowTitle("Help");
+    // popup = new QDialog(this);
+    // ui->popup->setFixedSize(500, 100);
+    // popup->setWindowTitle("Help");
 
     /*hacky transparent button*/
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
@@ -102,29 +102,44 @@ void pagethankyou::showEvent(QShowEvent *event)
         "qproperty-alignment: AlignCenter;"
         "}");
 
-    ui->notifyUs_Button->setStyleSheet("QPushButton { color:#555555; background-image: url(:/home/df-admin/production/references/helpButton.png); border: px }");
-    ui->notifyUs_Button->setStyleSheet(
-        "QPushButton {"
+    // ui->notifyUs_Button->setStyleSheet("QPushButton { color:#555555; background-image: url(:/home/df-admin/production/references/helpButton.png); border: px }");
+    // ui->notifyUs_Button->setStyleSheet(
+    //     "QPushButton {"
 
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "color: #FFFFFF;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
-    ui->notifyUs_Button->setText("Help");
-    QPixmap pixmap(":/home/df-admin/production/references/helpButton.png");
-    ui->notifyUs_Button->setIcon(pixmap);
+    //     "font-family: 'Brevia';"
+    //     "font-style: normal;"
+    //     "font-weight: 75;"
+    //     "font-size: 32px;"
+    //     "line-height: 99px;"
+    //     "letter-spacing: 1.5px;"
+    //     "color: #FFFFFF;"
+    //     "text-align: center;"
+    //     "qproperty-alignment: AlignCenter;"
+    //     "border: none;"
+    //     "}");
+    // ui->notifyUs_Button->setText("Help");
+
+    // QPixmap pixmap(":/home/df-admin/production/references/helpButton.png");
+    // ui->notifyUs_Button->setIcon(pixmap);
+
+    ui->mainPage_Button->setEnabled(true);
+    ui->mainPage_Button->raise();
+
+    QFont font;
+    font.setFamily(QStringLiteral("Brevia"));
+    font.setPointSize(20);
+    // font.setBold(true);
+    // font.setWeight(75);
+    font.setWeight(50);
+    ui->notifyUs_Button->setStyleSheet("QPushButton { color:#003840; background-color: #FFFFFF; border: 0px ; text-align: centre;border-radius: 20px;border: none;}");
+    ui->notifyUs_Button->setFont(font);
+    ui->notifyUs_Button->setText("Provide Feedback");
+    ui->notifyUs_Button->raise();
 
     // popup
-    ui->popup = new QDialogButtonBox(this);
-    ui->popup->setWindowTitle("Pop-up Window");
-    ui->popup->setFixedSize(400, 200);
+    // ui->popup = new QDialogButtonBox(this);
+    // ui->popup->setWindowTitle("Pop-up Window");
+    // ui->popup->setFixedSize(400, 200);
 
     p_page_idle->addCompanyLogoToLabel(ui->thank_you_logo_label);
 
@@ -163,8 +178,6 @@ void pagethankyou::showEvent(QShowEvent *event)
     // reset promovalue
     p_page_idle->currentProductOrder->setDiscountPercentageFraction(0.0);
     // ui->extra_message_label->hide();
-    ui->mainPage_Button->setEnabled(true);
-    ui->mainPage_Button->raise();
 
     is_controller_finished = false;
     is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;

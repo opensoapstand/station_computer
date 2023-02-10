@@ -61,10 +61,10 @@ line-height: 29px;</string>
   <widget class="QPushButton" name="mainPage_Button">
    <property name="geometry">
     <rect>
-     <x>472</x>
-     <y>1777</y>
-     <width>125</width>
-     <height>125</height>
+     <x>422</x>
+     <y>1741</y>
+     <width>221</width>
+     <height>171</height>
     </rect>
    </property>
    <property name="text">

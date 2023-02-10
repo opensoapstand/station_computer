@@ -262,13 +262,13 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
     if (!isOnline)
     {
         ui->printer_status_label->raise();
-        ui->printer_status_label->setText("Assitance needed\nReceipt Printer offline.");
+        ui->printer_status_label->setText("Assistance needed\nReceipt Printer offline.");
         ui->printer_status_label->show();
     }
     else if (!hasPaper)
     {
         ui->printer_status_label->raise();
-        ui->printer_status_label->setText("Assitance needed\nReceipt printer empty or improperly loaded.");
+        ui->printer_status_label->setText("Assistance needed\nReceipt printer empty or improperly loaded.");
         ui->printer_status_label->show();
     }
     else

@@ -22,6 +22,7 @@
 #include "page_idle.h"
 #include "page_maintenance.h"
 #include "dbmanager.h"
+#include "page_sendFeedback.h"
 
 class page_select_product;
 class page_payment;
@@ -40,7 +41,7 @@ class page_help : public QWidget
 
 public:
     explicit page_help(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, page_payment *page_payment, page_transactions *pageTransactions, page_maintenance* pageMaintenance);
+    void setPage(page_select_product *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, page_payment *page_payment, page_transactions *pageTransactions, page_maintenance* pageMaintenance, page_sendFeedback *pageFeedback);
     ~page_help();
     QTimer* helpIdleTimer;
 
@@ -58,6 +59,8 @@ private slots:
 
     void on_maintenance_page_Button_clicked();
 
+    void on_feedback_Button_clicked();
+
 private:
     void showEvent(QShowEvent *event);
 
@@ -65,6 +68,7 @@ private:
     page_select_product* p_page_select_product;
     page_payment* paymentPage;
     page_idle* p_page_idle;
+    page_sendFeedback* p_page_feedback;
     pageProduct* selectPage;
     page_transactions* p_page_transactions;
     page_maintenance* p_page_maintenance;

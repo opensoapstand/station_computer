@@ -19,10 +19,10 @@
   <widget class="QPushButton" name="previousPage_Button">
    <property name="geometry">
     <rect>
-     <x>450</x>
-     <y>1760</y>
-     <width>171</width>
-     <height>151</height>
+     <x>420</x>
+     <y>1740</y>
+     <width>211</width>
+     <height>171</height>
     </rect>
    </property>
    <property name="text">
@@ -102,9 +102,9 @@ Tap on screen to keep page open.</string>
   <widget class="QPushButton" name="maintenance_page_Button">
    <property name="geometry">
     <rect>
-     <x>958</x>
-     <y>1834</y>
-     <width>71</width>
+     <x>810</x>
+     <y>1800</y>
+     <width>221</width>
      <height>71</height>
     </rect>
    </property>
@@ -1206,6 +1206,19 @@ Tap on screen to keep page open.</string>
     </item>
    </layout>
   </widget>
+  <widget class="QPushButton" name="feedback_Button">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>1800</y>
+     <width>221</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </widget>
   <zorder>refreshButton</zorder>
   <zorder>previousPage_Button_2</zorder>
   <zorder>previousPage_Button</zorder>
@@ -1213,6 +1226,7 @@ Tap on screen to keep page open.</string>
   <zorder>transactions_Button</zorder>
   <zorder>maintenance_page_Button</zorder>
   <zorder>keyboard_3</zorder>
+  <zorder>feedback_Button</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -41,6 +41,15 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     // ui->transactions_Button->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
     ui->transactions_Button->setFont(font);
     ui->transactions_Button->setText("Transaction History ->");
+    
+    ui->maintenance_page_Button->setStyleSheet("QPushButton { color:#003840; background-color: #FFFFFF; border: 0px ; text-align: centre;border-radius: 20px;border: none;}");
+    ui->maintenance_page_Button->setFont(font);
+    ui->maintenance_page_Button->setText("Settings");
+
+    ui->feedback_Button->setStyleSheet("QPushButton { color:#003840; background-color: #FFFFFF; border: 0px ; text-align: centre;border-radius: 20px;border: none;}");
+    ui->feedback_Button->setFont(font);
+    ui->feedback_Button->setText("Contact Us");
+    
     DbManager db(DB_PATH);
     bool showTransactions = db.showTransactions();
     db.closeDB();
@@ -97,14 +106,16 @@ void page_help::showEvent(QShowEvent *event)
     _helpIdleTimeoutSec = 60;
     ui->refreshLabel->hide();
     ui->keyboard_3->hide();
+
 }
 
 /*
  * Page Tracking reference
  */
-void page_help::setPage(page_select_product *pageSelect, pageProduct *pageProduct, page_idle *pageIdle, page_payment *page_payment, page_transactions *pageTransactions, page_maintenance *pageMaintenance)
+void page_help::setPage(page_select_product *pageSelect, pageProduct *pageProduct, page_idle *pageIdle, page_payment *page_payment, page_transactions *pageTransactions, page_maintenance *pageMaintenance, page_sendFeedback *pageFeedback)
 {
     this->p_page_idle = pageIdle;
+    this->p_page_feedback = pageFeedback;
     this->paymentPage = page_payment;
     this->selectPage = pageProduct;
     this->p_page_select_product = pageSelect;
@@ -247,4 +258,11 @@ void page_help::keyboardButtonPressed(int buttonID)
     {
         ui->keyboardTextEntry->setText(ui->keyboardTextEntry->text() + buttonText);
     }
+}
+
+void page_help::on_feedback_Button_clicked()
+{
+    helpIdleTimer->stop()   ;
+   
+    p_page_idle->pageTransition(this, p_page_feedback);
 }

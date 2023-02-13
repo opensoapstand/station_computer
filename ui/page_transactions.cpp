@@ -78,7 +78,8 @@ void page_transactions::showEvent(QShowEvent *event)
         }
         else
         {
-                ui->print_Button->hide();
+                ui->print_Button->show();
+                // ui->print_Button->hide();
         }
 }
 

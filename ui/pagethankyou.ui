@@ -125,10 +125,10 @@ text-transform: uppercase;
   <widget class="QPushButton" name="notifyUs_Button">
    <property name="geometry">
     <rect>
-     <x>463</x>
-     <y>1470</y>
-     <width>121</width>
-     <height>35</height>
+     <x>350</x>
+     <y>1404</y>
+     <width>380</width>
+     <height>101</height>
     </rect>
    </property>
    <property name="maximumSize">
@@ -141,7 +141,7 @@ text-transform: uppercase;
     <number>-10</number>
    </property>
    <property name="text">
-    <string>Notify Us</string>
+    <string>Help</string>
    </property>
    <property name="icon">
     <iconset>

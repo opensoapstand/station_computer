@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
     df_util::fileExists(FULL_TRANSPARENT_IMAGE_PATH);
 
     // Page pathing references to function calls.
-    p_page_help->setPage(firstSelectPage, p_pageProduct, p_page_idle, paymentPage, p_page_transactions, p_page_maintenance);
+    p_page_help->setPage(firstSelectPage, p_pageProduct, p_page_idle, paymentPage, p_page_transactions, p_page_maintenance, p_page_sendFeedback);
     p_page_transactions->setPage(p_page_idle);
     initPage->setPage(p_page_idle);
     p_page_maintenance_product->setPage(p_page_maintenance, p_page_idle);

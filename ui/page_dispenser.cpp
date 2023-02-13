@@ -441,6 +441,8 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
 
         ui->dispense_bottle_label->show();
         ui->fill_animation_label->show();
+        ui->abortButton->raise();
+
     }
     else
     {

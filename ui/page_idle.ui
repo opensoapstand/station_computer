@@ -107,10 +107,10 @@ text-transform: lowercase;</string>
   <widget class="QLabel" name="printer_status_label">
    <property name="geometry">
     <rect>
-     <x>666</x>
-     <y>136</y>
-     <width>391</width>
-     <height>31</height>
+     <x>50</x>
+     <y>1050</y>
+     <width>980</width>
+     <height>120</height>
     </rect>
    </property>
    <property name="text">

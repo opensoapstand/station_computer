@@ -72,10 +72,10 @@ line-height: 29px;</string>
   <widget class="QPushButton" name="mainPage_Button">
    <property name="geometry">
     <rect>
-     <x>472</x>
-     <y>1777</y>
-     <width>125</width>
-     <height>125</height>
+     <x>446</x>
+     <y>1727</y>
+     <width>211</width>
+     <height>191</height>
     </rect>
    </property>
    <property name="text">
@@ -1998,9 +1998,9 @@ font-weight:bold;</string>
   <widget class="QPushButton" name="selectProductPage_Button">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>100</x>
      <y>30</y>
-     <width>251</width>
+     <width>351</width>
      <height>61</height>
     </rect>
    </property>

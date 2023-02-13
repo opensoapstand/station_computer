@@ -172,10 +172,10 @@
   <widget class="QPushButton" name="helpPage_Button">
    <property name="geometry">
     <rect>
-     <x>472</x>
-     <y>1772</y>
-     <width>125</width>
-     <height>125</height>
+     <x>446</x>
+     <y>1732</y>
+     <width>201</width>
+     <height>181</height>
     </rect>
    </property>
    <property name="text">

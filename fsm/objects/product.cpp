@@ -60,27 +60,30 @@ int product::getSlot()
     return m_nSlot;
 }
 
-
-void product::loadProductPropertiesFromCsv(string product_id){
+void product::loadProductPropertiesFromCsv(string product_id)
+{
     // Create an input filestream
     std::ifstream products_file(PRODUCT_DETAILS_TSV_PATH);
 
-    if(!products_file.is_open()){
-        debugOutput::sendMessage("Products file path could not be opened: " + std::string(PRODUCT_DETAILS_TSV_PATH) , MSG_ERROR);
+    if (!products_file.is_open())
+    {
+        debugOutput::sendMessage("Products file path could not be opened: " + std::string(PRODUCT_DETAILS_TSV_PATH), MSG_ERROR);
         return;
     }
 
     std::string line;
 
-    while (std::getline(products_file, line)) {
+    while (std::getline(products_file, line))
+    {
         std::string delimiter = "\t";
         size_t pos = 0;
-        uint8_t token_index=0;
+        uint8_t token_index = 0;
         std::string token;
-        while ((pos = line.find(delimiter)) != std::string::npos) {
+        while ((pos = line.find(delimiter)) != std::string::npos)
+        {
             token = line.substr(0, pos);
             m_product_properties[token_index] = token;
-            token_index ++;
+            token_index++;
             line.erase(0, pos + delimiter.length());
         }
 
@@ -93,9 +96,10 @@ void product::loadProductPropertiesFromCsv(string product_id){
 
         bool stringsAreDifferent;
         stringsAreDifferent = m_product_properties[CSV_PRODUCT_COL_ID].compare(product_id);
-        if (!(stringsAreDifferent)){
-           debugOutput::sendMessage("Product found in products file and loaded: " + m_product_properties[CSV_PRODUCT_COL_ID] + " " + m_product_properties[CSV_PRODUCT_COL_NAME] , MSG_INFO); 
-           return;
+        if (!(stringsAreDifferent))
+        {
+            debugOutput::sendMessage("Product found in products file and loaded: " + m_product_properties[CSV_PRODUCT_COL_ID] + " " + m_product_properties[CSV_PRODUCT_COL_NAME], MSG_INFO);
+            return;
         }
     }
     debugOutput::sendMessage("Product not found in products file: " + product_id, MSG_ERROR);
@@ -306,7 +310,6 @@ double product::getTargetVolume(char size)
     {
         debugOutput::sendMessage("Unknown volume parameter: " + size, MSG_INFO);
     }
-
 }
 
 double product::getPrice(char size)
@@ -447,37 +450,40 @@ string product::getBasePLU(char size)
     }
 }
 
-
-void product::syncSoftwareVersionWithDb(){
+void product::syncSoftwareVersionWithDb()
+{
     string sql_string = "UPDATE machine SET software_version=\"" + std::string(CONTROLLER_VERSION) + "\";";
     executeSQLStatement(sql_string);
 }
 
-void product::addMaintenancePwdToMachineTable(){
+void product::addMaintenancePwdToMachineTable()
+{
     executeSQLStatement("ALTER TABLE machine ADD maintenance_pwd TEXT");
     executeSQLStatement("UPDATE machine SET maintenance_pwd=\"soap\";");
 }
 
-void product::addShowTransactionsToMachineTable(){
+void product::addShowTransactionsToMachineTable()
+{
     executeSQLStatement("ALTER TABLE machine ADD show_transactions INTEGER");
     executeSQLStatement("UPDATE machine SET show_transactions=0;");
 }
-void product::executeSQLStatement(string sql_string){
+void product::executeSQLStatement(string sql_string)
+{
 
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
-    //string sql_string = "ALTER TABLE machine ADD maintenance_pwd TEXT";
-    // string sql_string = "ALTER TABLE machine ADD maintenance_pwd TEXT;UPDATE machine SET maintenance_pwd=\"soap\";";
+    // string sql_string = "ALTER TABLE machine ADD maintenance_pwd TEXT";
+    //  string sql_string = "ALTER TABLE machine ADD maintenance_pwd TEXT;UPDATE machine SET maintenance_pwd=\"soap\";";
 
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     int status;
     status = sqlite3_step(stmt);
     sqlite3_finalize(stmt);
     sqlite3_close(db);
-    
-}   
+}
 
-bool product::isMaintenancePwdInMachineTable(){
+bool product::isMaintenancePwdInMachineTable()
+{
     bool contains_column_maintenance_pwd = false;
 
     rc = sqlite3_open(DB_PATH, &db);
@@ -509,7 +515,7 @@ bool product::isMaintenancePwdInMachineTable(){
             {
             case (1):
             {
-                // 
+                //
 
                 string column_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
                 // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
@@ -517,11 +523,11 @@ bool product::isMaintenancePwdInMachineTable(){
 
                 if (!column_name.compare("maintenance_pwd"))
                 {
-                    // FOUND returns 0 
+                    // FOUND returns 0
                     // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
                     contains_column_maintenance_pwd = true;
                 }
-                
+
                 break;
             }
             default:
@@ -536,14 +542,12 @@ bool product::isMaintenancePwdInMachineTable(){
     };
     sqlite3_finalize(stmt);
 
-
-    
     sqlite3_close(db);
     return contains_column_maintenance_pwd;
 }
 
-
-bool product::isShowTransactionsInMachineTable(){
+bool product::isShowTransactionsInMachineTable()
+{
     bool contains_column_show_transactions = false;
 
     rc = sqlite3_open(DB_PATH, &db);
@@ -575,7 +579,7 @@ bool product::isShowTransactionsInMachineTable(){
             {
             case (1):
             {
-                // 
+                //
 
                 string column_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
                 // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
@@ -583,11 +587,11 @@ bool product::isShowTransactionsInMachineTable(){
 
                 if (!column_name.compare("show_transactions"))
                 {
-                    // FOUND returns 0 
+                    // FOUND returns 0
                     // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
                     contains_column_show_transactions = true;
                 }
-                
+
                 break;
             }
             default:
@@ -602,8 +606,6 @@ bool product::isShowTransactionsInMachineTable(){
     };
     sqlite3_finalize(stmt);
 
-
-    
     sqlite3_close(db);
     return contains_column_show_transactions;
 }
@@ -642,7 +644,7 @@ bool product::isDbValid()
             {
             case (1):
             {
-                // 
+                //
 
                 string column_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
                 // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
@@ -675,7 +677,8 @@ bool product::isDbValid()
     return is_valid;
 }
 
-string product::getProductName(){
+string product::getProductName()
+{
     return m_product_properties[CSV_PRODUCT_COL_NAME];
 }
 
@@ -695,16 +698,18 @@ bool product::reloadParametersFromDb()
     }
 
     syncSoftwareVersionWithDb();
-    if (!isMaintenancePwdInMachineTable()){
+    if (!isMaintenancePwdInMachineTable())
+    {
         debugOutput::sendMessage("ERROR: Unexpected database layout, will add maintentance_pwd to end of table", MSG_ERROR);
         addMaintenancePwdToMachineTable();
     }
-     if (!isShowTransactionsInMachineTable()){
-        debugOutput::sendMessage("ERROR: Unexpected database layout, will add maintentance_pwd to end of table", MSG_ERROR);
+    if (!isShowTransactionsInMachineTable())
+    {
+        debugOutput::sendMessage("ERROR: Unexpected database layout, will add show_transactions to end of table", MSG_ERROR);
         addShowTransactionsToMachineTable();
     }
 
-    debugOutput::sendMessage("*** WARNING: Please note that no NULL values allowed in text fields. ***", MSG_INFO);
+    debugOutput::sendMessage("WARNING: Please note that no NULL values allowed in text fields.", MSG_INFO);
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT * FROM products WHERE slot=" + to_string(m_nSlot) + ";";
@@ -773,8 +778,7 @@ bool product::reloadParametersFromDb()
             case DB_PRODUCTS_NAME_RECEIPT:
             {
                 // GET FROM products csv!!!
-                //m_name_receipt = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-                
+                // m_name_receipt = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
             }
             break;
             case DB_PRODUCTS_CONCENTRATION_MULTIPLIER:
@@ -964,14 +968,14 @@ bool product::reloadParametersFromDb()
             break;
             case DB_PRODUCTS_FEATURES:
                 // GET FROM products csv!!!
-            {
-            }
-            break;
+                {
+                }
+                break;
             case DB_PRODUCTS_DESCRIPTION:
                 // GET FROM products csv!!!
-            {
-            }
-            break;
+                {
+                }
+                break;
 
             default:
             {

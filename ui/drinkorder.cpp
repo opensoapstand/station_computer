@@ -3,7 +3,6 @@
 #include "df_util.h" // lode added for settings
 // #include "product.h"
 
-
 // Ctor
 DrinkOrder::DrinkOrder()
 {
@@ -11,7 +10,6 @@ DrinkOrder::DrinkOrder()
     // overruledPrice = INVALID_PRICE;
     m_discount_percentage_fraction = 0.0;
     m_promoCode = "";
-
 }
 
 // Ctor Object Copy
@@ -19,7 +17,6 @@ DrinkOrder::DrinkOrder(const DrinkOrder &other) : QObject(nullptr)
 {
     selectedDrink = new DrinkSelection(*other.selectedDrink);
 }
-
 
 // Dtor
 DrinkOrder::~DrinkOrder()
@@ -41,6 +38,55 @@ char DrinkOrder::getSelectedSizeAsChar()
     // t
 
     return df_util::sizeIndexToChar(selectedSize);
+}
+
+void DrinkOrder::getCustomPriceDetails(QString *unitsInvoice, double *selectedPriceP, double *discountP, double *selectedPriceCorrectedP)
+{
+
+    double selectedPrice = getSelectedPrice();
+    double discount = getDiscount();
+    double selectedPriceCorrected = getSelectedPriceCorrected();
+
+    // if (getSelectedSize() == SIZE_CUSTOM_INDEX)
+    // {
+    QString unitsInvoiceBBB = getUnitsForSelectedSlot();
+
+    if (unitsInvoiceBBB == "ml")
+    {
+        unitsInvoiceBBB = "L";
+        selectedPrice = selectedPrice * 1000;
+        selectedPriceCorrected = selectedPriceCorrected * 1000;
+        discount = discount * 1000;
+    }
+    else if (unitsInvoiceBBB == "g")
+    {
+        if (getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
+        {
+            unitsInvoiceBBB = "100g";
+            selectedPrice = selectedPrice * 100;
+            selectedPriceCorrected = selectedPriceCorrected * 100;
+            discount = discount * 100;
+        }
+        else
+        {
+            unitsInvoiceBBB = "kg";
+            selectedPrice = selectedPrice * 1000;
+            selectedPriceCorrected = selectedPriceCorrected * 1000;
+            discount = discount * 1000;
+        }
+    }
+    else if (unitsInvoiceBBB == "oz")
+    {
+        unitsInvoiceBBB = "oz";
+        selectedPrice = selectedPrice * OZ_TO_ML;
+        selectedPriceCorrected = selectedPriceCorrected * OZ_TO_ML;
+        discount = discount * OZ_TO_ML;
+    }
+    unitsInvoice = &unitsInvoiceBBB;
+
+    selectedPriceP = &selectedPrice;
+    discountP = &discount;
+    selectedPriceCorrectedP = &selectedPriceCorrected;
 }
 
 int DrinkOrder::getSelectedSize()
@@ -102,7 +148,7 @@ bool DrinkOrder::isSelectedOrderValid()
 
 double DrinkOrder::getDiscount()
 {
-    //qDebug() << "--------=========" << QString::number(getSelectedPriceCorrected());
+    // qDebug() << "--------=========" << QString::number(getSelectedPriceCorrected());
 
     // the discount is the original price minus the discounted price
     return getPrice(getSelectedSize()) - getSelectedPriceCorrected();
@@ -123,7 +169,7 @@ void DrinkOrder::setDiscountPercentageFraction(double percentageFraction)
     // ratio = percentage / 100;
     qDebug() << "Set discount percentage fraction: " << QString::number(percentageFraction, 'f', 3);
     m_discount_percentage_fraction = percentageFraction;
-    
+
     // if (isSelectedOrderValid())
     // {
     //     qInfo() << "Set overrruled price.";
@@ -167,7 +213,8 @@ double DrinkOrder::getPrice(int sizeIndex)
     return price;
 }
 
-double DrinkOrder::getSelectedPrice(){
+double DrinkOrder::getSelectedPrice()
+{
     return getPrice(getSelectedSize());
 }
 double DrinkOrder::getSelectedPriceCorrected()
@@ -353,7 +400,6 @@ void DrinkOrder::loadSelectedProductProperties()
     loadSelectedProductPropertiesFromProductsFile();
 }
 
-
 void DrinkOrder::loadProductPropertiesFromDb(int slot)
 {
     qDebug() << "db load product properties";
@@ -366,35 +412,39 @@ void DrinkOrder::loadProductPropertiesFromDb(int slot)
 
     db.getProductProperties(slot, &m_product_id, m_isEnabledSizes);
 
-
     db.closeDB();
 }
 
-void DrinkOrder::loadSelectedProductPropertiesFromProductsFile( ){
+void DrinkOrder::loadSelectedProductPropertiesFromProductsFile()
+{
     getProductPropertiesFromProductsFile(m_product_id, &m_name_ui, &m_product_type, &m_description_ui, &m_features_ui, &m_ingredients_ui);
 }
 
-void DrinkOrder::getProductPropertiesFromProductsFile(QString product_id, QString * name_ui, QString* product_type, QString* description_ui, QString* features_ui, QString* ingredients_ui){
+void DrinkOrder::getProductPropertiesFromProductsFile(QString product_id, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui)
+{
 
     QFile file(PRODUCT_DETAILS_TSV_PATH);
-    if(!file.open(QIODevice::ReadOnly)) {
-        qDebug()<< "ERROR: Opening product details file. Expect unexpected behaviour now! ";
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        qDebug() << "ERROR: Opening product details file. Expect unexpected behaviour now! ";
         return;
     }
 
     QTextStream in(&file);
     qDebug() << "Load csv file with product properties";
 
-    while(!in.atEnd()) {
-        QString line = in.readLine();    
+    while (!in.atEnd())
+    {
+        QString line = in.readLine();
 
         QStringList fields = line.split("\t");
-        
+
         int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], product_id, Qt::CaseSensitive);
-        if (compareResult == 0){
+        if (compareResult == 0)
+        {
             *name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
             *product_type = fields[CSV_PRODUCT_COL_TYPE];
-            *description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI ];
+            *description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
             *features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
             *ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
             break;
@@ -429,8 +479,8 @@ QString DrinkOrder::getLoadedProductDescription()
 
 QString DrinkOrder::getSelectedProductPicturePath()
 {
-    
-    //return QString(PRODUCT_PICTURES_ROOT_PATH).arg(m_product_id);
+
+    // return QString(PRODUCT_PICTURES_ROOT_PATH).arg(m_product_id);
     return getProductPicturePath(getSelectedSlot());
 }
 QString DrinkOrder::getProductPicturePath(int slot)
@@ -459,15 +509,13 @@ QString DrinkOrder::getProductName(int slot)
     // QString product_name = db.getProductName(slot);
     // db.closeDB();
     // return product_name;
-    
+
     // qDebug() << "product db for name";
     // DbManager db(DB_PATH);
     // QString product_name = db.getProductName(slot);
     // db.closeDB();
     // return product_name;
-    
-    
-    
+
     QString product_id = getProductDrinkfillSerial(slot);
 
     QString name_ui;

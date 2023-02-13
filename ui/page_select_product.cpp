@@ -96,7 +96,7 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
 "qproperty-alignment: AlignCenter;"
 "border: none;"
 "}");
-                ui->label_notify_us->setText("Notify Us");
+                ui->label_notify_us->setText("Help");
 
 
     QFont font;

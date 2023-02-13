@@ -56,10 +56,6 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     // TODO: Hold and pass DrinkOrder Object
     currentProductOrder = new DrinkOrder();
     currentProductOrder->setSelectedSlot(OPTION_SLOT_INVALID);
-
-    
-
-    
 }
 
 // bool page_idle::isSlotAvailable(int slot){
@@ -78,9 +74,9 @@ void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pa
     this->p_pageSelectProduct = p_pageProduct;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_maintenance_general = pageMaintenanceGeneral;
-       #ifndef PLAY_VIDEO
+#ifndef PLAY_VIDEO
     setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
-    #endif
+#endif
 }
 
 // DTOR
@@ -112,17 +108,40 @@ void page_idle::showEvent(QShowEvent *event)
         "qproperty-alignment: AlignCenter;"
         "}");
 
+
+
+    ui->printer_status_label->setStyleSheet(
+        "QLabel {"
+
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 100;"
+        "background-color: #5E8580;"
+        "font-size: 42px;"
+        "text-align: centre;"
+        "line-height: auto;"
+        "letter-spacing: 0px;"
+        "qproperty-alignment: AlignCenter;"
+        "border-radius: 20px;"
+        "color: white;"
+        "border: none;"
+        "}");
+
+
     // reset promovalue
     currentProductOrder->setDiscountPercentageFraction(0.0);
     currentProductOrder->setPromoCode("");
 
     addCompanyLogoToLabel(ui->logo_label);
-     DbManager db(DB_PATH);
+    DbManager db(DB_PATH);
     QString paymentMethod = db.getPaymentMethod(1);
-    qDebug()<< paymentMethod;
-    if(paymentMethod== "plu"|| paymentMethod=="barcode"){
+    qDebug() << paymentMethod;
+
+    if (paymentMethod == "plu" || paymentMethod == "barcode")
+    {
         checkReceiptPrinterStatus();
     }
+
     db.closeDB();
     qDebug() << "db closed";
 
@@ -141,13 +160,13 @@ void page_idle::showEvent(QShowEvent *event)
     // player->play();
 
     // QMainWindow w;
-   //#define PLAY_VIDEO
-   #ifdef PLAY_VIDEO
+// #define PLAY_VIDEO
+#ifdef PLAY_VIDEO
     QVideoWidget *videoWidget = new QVideoWidget(ui->video_player);
     QMediaPlayer *player = new QMediaPlayer(this);
 
     videoWidget->setGeometry(QRect(0, 0, 1000, 1000));
-    
+
     // test text label
     video_label = new QLabel(this);
     // video_label = new QLabel(ui->video_player);
@@ -157,11 +176,8 @@ void page_idle::showEvent(QShowEvent *event)
     video_label->raise();
     video_label->show();
 
-    
-    
     // ui->video_player
     // w.setCentralWidget(&videoWidget);
-
 
     ui->media_player->show();
     ui->media_player->raise();
@@ -169,22 +185,21 @@ void page_idle::showEvent(QShowEvent *event)
     player->setMedia(QUrl::fromLocalFile("/home/df-admin/production/references/media/ttt.mp4"));
     player->setVideoOutput(videoWidget);
 
-
     // #define VIDEO_IN_WIDGET
     player->play();
 
-    #ifdef VIDEO_IN_WIDGET
+#ifdef VIDEO_IN_WIDGET
     // helpful?! https://stackoverflow.com/questions/65910004/qvideowidget-doesnt-display-frames
 
     videoWidget->show(); // needed to display in non full screen.
     // ui->video_player->raise();
     // ui->video_player->show();
-    
-    #else
+
+#else
     qDebug() << "Video player is fullscreen? : " << videoWidget->isFullScreen();
     videoWidget->setFullScreen(true);
-    
-    #endif
+
+#endif
     qDebug() << "Video player. Is fullscreen? : " << videoWidget->isFullScreen();
 #endif
     this->raise();
@@ -247,13 +262,13 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
     if (!isOnline)
     {
         ui->printer_status_label->raise();
-        ui->printer_status_label->setText("Error: Receipt Printer offline.");
+        ui->printer_status_label->setText("Assistance needed\nReceipt Printer offline.");
         ui->printer_status_label->show();
     }
     else if (!hasPaper)
     {
         ui->printer_status_label->raise();
-        ui->printer_status_label->setText("Error: Receipt printer empty or improperly loaded.");
+        ui->printer_status_label->setText("Assistance needed\nReceipt printer empty or improperly loaded.");
         ui->printer_status_label->show();
     }
     else

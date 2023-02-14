@@ -461,6 +461,7 @@ DF_ERROR messageMediator::parseCommandString()
    else if (first_char == '$')
    {
       double price = std::stod(sCommand.substr(1, sCommand.size()));
+      debugOutput::sendMessage("Setup price" + to_string(price), MSG_INFO);
       m_requestedDiscountPrice = price;
    }
    else if (sCommand.find("Promo") != string::npos)

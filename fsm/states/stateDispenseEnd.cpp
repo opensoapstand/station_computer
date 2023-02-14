@@ -103,10 +103,10 @@ DF_ERROR stateDispenseEnd::onAction()
         debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(productDispensers[pos_index].getVolumeDispensed()) + "ml).", MSG_INFO);
         dispenseEndUpdateDB(updated_volume_remaining); // update the db dispense statistics
     }
-    else if (!is_valid_dispense)
-    {
-        debugOutput::sendMessage("Not a transaction: No minimum quantity of product dispensed (" + to_string(productDispensers[pos_index].getVolumeDispensed()) + "ml). ", MSG_INFO);
-    }
+    // else if (!is_valid_dispense)
+    // {
+    //     debugOutput::sendMessage("Not a transaction: No minimum quantity of product dispensed (" + to_string(productDispensers[pos_index].getVolumeDispensed()) + "ml). ", MSG_INFO);
+    // }
     else
     {
         e_ret = handleTransactionPayment();
@@ -293,7 +293,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     std::string end_time = productDispensers[pos_index].getDispenseEndTime();
     double price = getFinalPrice();
     std::string price_string = to_string(price);
-
+    debugOutput::sendMessage("Final price" + price_string, MSG_INFO);
     std::string target_volume = to_string(productDispensers[pos_index].getProduct()->getTargetVolume(m_pMessaging->getRequestedSize()));
     std::string product = (productDispensers[pos_index].getProduct()->m_name);
     std::string machine_id = getMachineID();
@@ -606,6 +606,7 @@ double stateDispenseEnd::getFinalPrice()
         // price = productDispensers[pos_index].getProduct()->getPrice(size);
         price = m_pMessaging->getRequestedPrice();
     }
+    debugOutput::sendMessage("Price final for in Get final price fxn:" + to_string(price), MSG_INFO);
 
     return price;
 }
@@ -627,6 +628,7 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
     std::string units = (productDispensers[pos_index].getProduct()->getDisplayUnits());
     double price = getFinalPrice();
     double price_per_ml;
+    debugOutput::sendMessage("Price final for receipt:" + to_string(price), MSG_INFO);
 
     double volume_dispensed;
 

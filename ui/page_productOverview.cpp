@@ -501,6 +501,8 @@ void pageProductOverview::updatePrice()
     }
     else
     {
+        double discountAmount = selectedProductOrder->getSelectedPrice() - selectedProductOrder->getSelectedPriceCorrected();
+        ui->label_invoice_discount_amount->setText("-$" + QString::number(discountAmount, 'f', 2));
         ui->label_selected_volume->setText(selected_volume + " " + selectedProductOrder->getUnitsForSelectedSlot());
         ui->label_invoice_price->setText("$" + QString::number(selectedProductOrder->getSelectedPrice(), 'f', 2));
         ui->label_invoice_price_total->setText("$" + QString::number(selectedProductOrder->getSelectedPriceCorrected(), 'f', 2));

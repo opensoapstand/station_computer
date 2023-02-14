@@ -292,7 +292,12 @@ void page_dispenser::startDispensing()
         
     // fsmSendStartDispensing();
     fsmSendPrice();
-    fsmSendPromo();
+    sleep(1);
+    if(this->selectedProductOrder->getPromoCode()!=""){
+        fsmSendPromo();
+        qDebug() << "In send promo";
+        sleep(1);
+    }
     fsmSendStartDispensing();
 }
 

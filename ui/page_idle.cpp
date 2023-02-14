@@ -77,12 +77,7 @@ void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pa
     this->p_pageSelectProduct = p_pageProduct;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_maintenance_general = pageMaintenanceGeneral;
-<<<<<<< HEAD
-    
-       #ifndef PLAY_VIDEO
-=======
 #ifndef PLAY_VIDEO
->>>>>>> 7d95cbe48bb03169cbfe4c13d616443fc9bd01a9
     setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
 #endif
 }

@@ -103,10 +103,10 @@ DF_ERROR stateDispenseEnd::onAction()
         debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(productDispensers[pos_index].getVolumeDispensed()) + "ml).", MSG_INFO);
         dispenseEndUpdateDB(updated_volume_remaining); // update the db dispense statistics
     }
-    // else if (!is_valid_dispense)
-    // {
-    //     debugOutput::sendMessage("Not a transaction: No minimum quantity of product dispensed (" + to_string(productDispensers[pos_index].getVolumeDispensed()) + "ml). ", MSG_INFO);
-    // }
+    else if (!is_valid_dispense)
+    {
+        debugOutput::sendMessage("Not a transaction: No minimum quantity of product dispensed (" + to_string(productDispensers[pos_index].getVolumeDispensed()) + "ml). ", MSG_INFO);
+    }
     else
     {
         e_ret = handleTransactionPayment();

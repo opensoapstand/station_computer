@@ -380,7 +380,7 @@ void page_sendFeedback::on_send_Button_clicked()
     
     dialog->move(0,0);
     dialog->resize(1080,1920);
-    dialog->setStyleSheet("background-image:  url(/home/df-admin/drinkfill/ui/3_help_page.png);");
+    dialog->setStyleSheet("background-image:  url(/home/df-admin/drinkfill/ui/references/templates/default/background_feedbacksent.png);");
     dialog->show();
     dialog->exec();
     }

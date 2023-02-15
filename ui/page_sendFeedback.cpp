@@ -72,7 +72,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                 "qproperty-alignment: AlignCenter;"
                 "border: none;"
                 "}");
-        ui->label_select_problem->setText("Select problem(s) from the options below");
+        ui->label_select_problem->setText("Please provide feedback");
         ui->label_select_problem->setWordWrap(true);
         ui->label_problem_options->setStyleSheet("background-color: #5E8680; border-radius: 30px;");
         QString checkBoxLabelStyling = ("QPushButton {""font-family: 'Brevia';"

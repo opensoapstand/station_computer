@@ -47,7 +47,6 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                 "font-size: 32px;"
                 "line-height: 99px;"
                 "letter-spacing: 1.5px;"
-                "text-transform: lowercase;"
                 "color: #003840;"
                 "text-align: center;"
                 "qproperty-alignment: AlignCenter;"
@@ -55,7 +54,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                 "}");
 
 
-        // ui->previousPage_Button->setText("<-Back");
+        ui->previousPage_Button->setText("<-Back");
         ui->mainPage_Button->hide();
         
         ui->label_select_problem->setStyleSheet("QLabel { color:#555555; ; border: 1px }");
@@ -123,7 +122,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
         ui->checkBox_1_Label->setText("The station never dispensed soap");
        
         ui->checkBox_2_Label->setStyleSheet(checkBoxLabelStyling);
-        ui->checkBox_2_Label->setText("The station charged more amount");
+        ui->checkBox_2_Label->setText("Wrong amount charged");
  
         ui->checkBox_3_Label->setStyleSheet(checkBoxLabelStyling);
         ui->checkBox_3_Label->setText("The station is too slow");
@@ -133,6 +132,22 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 
         ui->checkBox_5_Label->setStyleSheet(checkBoxLabelStyling);
         ui->checkBox_5_Label->setText("Screen was frozen");
+
+        ui->label_enter_feedback->setStyleSheet(checkBoxLabelStyling);
+        ui->label_enter_feedback->setText("Enter other feedback below");
+        
+        ui->feedback_Input_Button->raise();
+        ui->feedback_Input_Button->setStyleSheet("QPushButton { border: 1px solid #FFFFFF}");
+        // ui->feedback_Input_Button->setText("Type here");
+        ui->label_type_here->show();
+        ui->label_type_here->setText("Type here");;
+  
+        ui->promoKeyboard->hide();
+    
+
+
+        
+
 
         
 
@@ -392,4 +407,24 @@ void page_sendFeedback::on_send_Button_clicked()
     // selectIdleTimer->stop();
     p_page_idle->pageTransition(this, p_page_idle);
 
+}
+
+void page_sendFeedback::on_previousPage_Button_clicked()
+{
+      while (!stopSelectTimers())
+    {
+    };
+    selectIdleTimer->stop();
+    p_page_idle->pageTransition(this, p_page_dispense);
+}
+void page_sendFeedback::on_feedback_Input_Button_clicked()
+{
+    QObject *button = QObject::sender();
+    // ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
+    ui->label_type_here->hide();
+    ui->feedback_Input_Button->show();
+
+    ui->promoKeyboard->show();
+    qDebug() << "show promo keyboard.";
+    // ui->promoCode->show();
 }

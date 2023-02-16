@@ -137,11 +137,13 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
         ui->label_enter_feedback->setText("Enter other feedback below");
         
         ui->feedback_Input_Button->raise();
-         ui->feedback_Input_Button->setStyleSheet("QPushButton { border: 1px solid #FFFFFF}");
-    ui->feedback_Input_Button->setText("Type here");
-    // ui->promoCode->setStyleSheet("QPushButton { background-color: transparent; border: 1px solid #5E8580 }");
-    // ui->page_payment_Button->show();
-    // ui->promoKeyboard->hide();
+        ui->feedback_Input_Button->setStyleSheet("QPushButton { border: 1px solid #FFFFFF}");
+        // ui->feedback_Input_Button->setText("Type here");
+        ui->label_type_here->show();
+        ui->label_type_here->setText("Type here");;
+  
+        ui->promoKeyboard->hide();
+    
 
 
         
@@ -414,4 +416,15 @@ void page_sendFeedback::on_previousPage_Button_clicked()
     };
     selectIdleTimer->stop();
     p_page_idle->pageTransition(this, p_page_dispense);
+}
+void page_sendFeedback::on_feedback_Input_Button_clicked()
+{
+    QObject *button = QObject::sender();
+    // ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
+    ui->label_type_here->hide();
+    ui->feedback_Input_Button->show();
+
+    ui->promoKeyboard->show();
+    qDebug() << "show promo keyboard.";
+    // ui->promoCode->show();
 }

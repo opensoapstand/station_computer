@@ -65,6 +65,7 @@ public:
 
    string getProcessString();
    DF_ERROR parseCommandString();
+   DF_ERROR parseSingleCommandString();
    DF_ERROR parseDispenseCommand(string sCommand);
 
    void clearProcessString();

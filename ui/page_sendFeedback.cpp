@@ -36,7 +36,9 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     qDebug()<< "IN send feedback";
     ui->setupUi(this);
 
-    
+    ui->feedback_Input_Button->hide();
+    ui->label_enter_feedback->hide();
+    ui->label_type_here->hide();
     ui->previousPage_Button->setStyleSheet("QPushButton { color:#555555; background-color: transparent; border: 0px }");
     ui->previousPage_Button->setStyleSheet(
                 "QPushButton {"

@@ -446,7 +446,7 @@ DF_ERROR messageMediator::parseCommandString()
       m_promoCode = promoCode;
       debugOutput::sendMessage("Promo code" + m_promoCode, MSG_INFO);
 
-   }
+   // }
    // else if (first_char == '$')
    // {
    //    double price = std::stod(sCommand.substr(1, sCommand.size()));

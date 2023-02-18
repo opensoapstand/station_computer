@@ -582,6 +582,10 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(double updated_volume_remaining)
     productDispensers[pos_index].getProduct()->reloadParametersFromDb();
 }
 
+
+
+
+
 double stateDispenseEnd::getFinalPrice()
 {
     // for fixed prices: will return fixed price
@@ -593,8 +597,13 @@ double stateDispenseEnd::getFinalPrice()
 
     if (size == SIZE_CUSTOM_CHAR)
     {
-        price_per_ml = productDispensers[pos_index].getProduct()->getPrice(m_pMessaging->getRequestedSize());
         volume_dispensed = productDispensers[pos_index].getVolumeDispensed();
+        // normal 
+        //price_per_ml = productDispensers[pos_index].getProduct()->getPrice(m_pMessaging->getRequestedSize());
+
+        // with price reduction at larger quantities
+        price_per_ml = productDispensers[pos_index].getProduct()->getCustomVolumePriceDependingOnDispensedVolume(volume_dispensed);
+
         price = price_per_ml * volume_dispensed;
     }
     else if (size == SIZE_TEST_CHAR)
@@ -646,14 +655,20 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
     }
     else if (m_pMessaging->getRequestedSize() == 'c')
     {
-
-        price_per_ml = productDispensers[pos_index].getProduct()->getPrice(m_pMessaging->getRequestedSize());
         volume_dispensed = productDispensers[pos_index].getVolumeDispensed();
+        // normal
+        //price_per_ml = productDispensers[pos_index].getProduct()->getPrice(m_pMessaging->getRequestedSize());
+        // with reduction for larger quantities
+        price_per_ml = productDispensers[pos_index].getProduct()->getCustomVolumePriceDependingOnDispensedVolume(volume_dispensed);
+
     }
     else if (m_pMessaging->getRequestedSize() == 't')
     {
-        price_per_ml = productDispensers[pos_index].getProduct()->getPrice(m_pMessaging->getRequestedSize());
         volume_dispensed = productDispensers[pos_index].getVolumeDispensed();
+        // normal
+        //price_per_ml = productDispensers[pos_index].getProduct()->getPrice(m_pMessaging->getRequestedSize());
+        // with reduction for larger quantities
+        price_per_ml = productDispensers[pos_index].getProduct()->getCustomVolumePriceDependingOnDispensedVolume(volume_dispensed);
     }
     else
     {

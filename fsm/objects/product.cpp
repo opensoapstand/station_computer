@@ -312,6 +312,27 @@ double product::getTargetVolume(char size)
     }
 }
 
+double product::getCustomVolumePriceDependingOnDispensedVolume(double volume){
+    // custom volume pricing is per ml. Often, pricing is more optimal when larger volumes are dispensed.
+    // if the volume provide is larger than "large volume pricing", the price per milliliter will be adjusted to match that. 
+    if (volume >= getTargetVolume (SIZE_LARGE_CHAR)){
+        // go for discount
+        // price per ml
+        double largePricePerMl = getPrice(SIZE_LARGE_CHAR) / getTargetVolume (SIZE_LARGE_CHAR);
+        
+        return largePricePerMl;
+        
+        // if (largePricePerMl < getPrice(SIZE_CUSTOM_CHAR)){
+        //     return getPrice(SIZE_CUSTOM_CHAR)
+        // }else{
+        //     return largePricePerMl
+        // }
+
+    }else{
+        return getPrice(SIZE_CUSTOM_CHAR);
+    }
+}
+
 double product::getPrice(char size)
 {
 

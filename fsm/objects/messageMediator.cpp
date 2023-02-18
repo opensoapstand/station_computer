@@ -447,17 +447,17 @@ DF_ERROR messageMediator::parseCommandString()
       debugOutput::sendMessage("Promo code" + m_promoCode, MSG_INFO);
 
    }
-   else if (first_char == '$')
-   {
-      double price = std::stod(sCommand.substr(1, sCommand.size()));
-      debugOutput::sendMessage("Setup price" + to_string(price), MSG_INFO);
-      m_requestedDiscountPrice = price;
-   }
-   else if (sCommand.find("Promo") != string::npos)
-   {
-      std::string promoCode = sCommand.substr(6, sCommand.size());
-      // debugOutput::sendMessage(promoCode, MSG_INFO);
-      m_promoCode = promoCode;
+   // else if (first_char == '$')
+   // {
+   //    double price = std::stod(sCommand.substr(1, sCommand.size()));
+   //    debugOutput::sendMessage("Setup price" + to_string(price), MSG_INFO);
+   //    m_requestedDiscountPrice = price;
+   // }
+   // else if (sCommand.find("Promo") != string::npos)
+   // {
+   //    std::string promoCode = sCommand.substr(6, sCommand.size());
+   //    // debugOutput::sendMessage(promoCode, MSG_INFO);
+   //    m_promoCode = promoCode;
    }else if (sCommand.length() == 3)
    //  first_char == '1' ||
    //  first_char == '2' ||

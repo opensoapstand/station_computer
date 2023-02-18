@@ -49,6 +49,7 @@ public:
         double getTargetVolume(char size);
         char getSizeCharFromTargetVolume(double volume);
         double getPrice(char size);
+        double getCustomVolumePriceDependingOnDispensedVolume(double volume);
         string getDisplayUnits();
         double convertVolumeMetricToDisplayUnits(double volume);
         string getProductName();

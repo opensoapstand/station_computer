@@ -407,19 +407,6 @@ text-align: center;
     <string>PushButton</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_type_here">
-   <property name="geometry">
-    <rect>
-     <x>460</x>
-     <y>1220</y>
-     <width>151</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
   <zorder>label_send</zorder>
   <zorder>send_Button</zorder>
   <zorder>label_problem_options</zorder>
@@ -439,10 +426,9 @@ text-align: center;
   <zorder>checkBox_1</zorder>
   <zorder>label_still_cant_find</zorder>
   <zorder>label_email</zorder>
-  <zorder>previousPage_Button</zorder>
   <zorder>label_enter_feedback</zorder>
   <zorder>feedback_Input_Button</zorder>
-  <zorder>label_type_here</zorder>
+  <zorder>previousPage_Button</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -403,21 +403,18 @@ void page_sendFeedback::on_send_Button_clicked()
     }
    
 
-    // while (!stopSelectTimers())
-    // {
-    // };
-    // selectIdleTimer->stop();
+   stopSelectTimers();
     p_page_idle->pageTransition(this, p_page_idle);
 
 }
 
 void page_sendFeedback::on_previousPage_Button_clicked()
 {
-      while (!stopSelectTimers())
-    {
-    };
-    selectIdleTimer->stop();
+    qDebug() << "On back button clicked."; 
+    stopSelectTimers();
+     
     p_page_idle->pageTransition(this, p_page_idle);
+     
 }
 void page_sendFeedback::on_feedback_Input_Button_clicked()
 {

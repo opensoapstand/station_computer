@@ -311,19 +311,12 @@ void page_sendFeedback::mainPage()
 {
     qDebug() << "page_sendFeedback: mainPage button" << endl;
     this->stopSelectTimers();
-    selectIdleTimer->stop();
-    // qDebug() << "product to idle";
-    // p_page_idle->showFullScreen();
-    // this->hide();
     p_page_idle->pageTransition(this, p_page_idle);
 }
 
 void page_sendFeedback::on_mainPage_Button_clicked()
 {
     this->stopSelectTimers();
-    selectIdleTimer->stop();
-    // p_page_help->showFullScreen();
-    // this->hide();
     p_page_idle->pageTransition(this, p_page_help);
 }
 

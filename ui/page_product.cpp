@@ -791,22 +791,13 @@ bool pageProduct::stopSelectTimers()
 
 void pageProduct::mainPage()
 {
-    //    qDebug() << "pageProduct: mainPage button" << endl;
     this->stopSelectTimers();
-    selectIdleTimer->stop();
-    // qDebug() << "product to idle";
-    // p_page_idle->showFullScreen();
-    // this->hide();
     p_page_idle->pageTransition(this, p_page_idle);
 }
 
 void pageProduct::on_mainPage_Button_clicked()
 {
-    //    qDebug() << "pageProduct: helpPage button" << endl;
     this->stopSelectTimers();
-    selectIdleTimer->stop();
-    // p_page_help->showFullScreen();
-    // this->hide();
     p_page_idle->pageTransition(this, p_page_help);
 }
 
@@ -850,10 +841,7 @@ void pageProduct::on_previousPage_Button_clicked()
 {
 
     //    qDebug() << "pageProduct: Previous button" << endl;
-    while (!stopSelectTimers())
-    {
-    };
-    selectIdleTimer->stop();
+    stopSelectTimers();
     p_page_idle->pageTransition(this, p_page_select_product);
 }
 
@@ -871,9 +859,6 @@ void pageProduct::on_page_payment_Button_clicked()
 void pageProduct::on_back_Button_clicked()
 {
     //    qDebug() << "pageProduct: Previous button" << endl;
-    while (!stopSelectTimers())
-    {
-    };
-    selectIdleTimer->stop();
+    stopSelectTimers();
     p_page_idle->pageTransition(this, p_page_select_product);
 }

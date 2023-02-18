@@ -142,7 +142,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
         ui->label_type_here->show();
         ui->label_type_here->setText("Type here");;
   
-        ui->promoKeyboard->hide();
+        // ui->promoKeyboard->hide();
     
 
 
@@ -424,7 +424,7 @@ void page_sendFeedback::on_feedback_Input_Button_clicked()
     ui->label_type_here->hide();
     ui->feedback_Input_Button->show();
 
-    ui->promoKeyboard->show();
+    // ui->promoKeyboard->show();
     qDebug() << "show promo keyboard.";
     // ui->promoCode->show();
 }

@@ -16,8 +16,6 @@
 #include "dispenser.h"
 #include <chrono>
 
-
-
 #define ACTIVATION_TIME 5
 #define TEST_ACTIVATION_TIME 3
 #define PRIME_PUMP_TIME 1
@@ -47,7 +45,7 @@ dispenser::dispenser()
     // }
 }
 
-DF_ERROR dispenser::setup(pcb* pcbtest)
+DF_ERROR dispenser::setup(pcb *pcbtest)
 {
     // Set the pump PWM value to a nominal value
 
@@ -177,56 +175,73 @@ string dispenser::getFinalPLU(char size, double price)
     char chars_plu_dynamic_formatted[MAX_BUF];
 
     std::string paymentMethod = getProduct()->getPaymentMethod();
-
-    if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13")
-    {
-        if (base_plu.size() != 8)
-        {
-            // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
-            debugOutput::sendMessage("ERROR custom plu length must be of length eight. (standard drinkfill preamble(627987) + 2digit product code) : " + base_plu, MSG_INFO);
-            string fake_plu = "66666666";
-            base_plu = fake_plu;
-        }
-
-        snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%5.2f", price);
-    }
-    else if (paymentMethod == "barcode_EAN-2")
-    {
-        if (base_plu.size() != 7)
-        {
-            // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
-            debugOutput::sendMessage("ERROR custom plu length must be of length seven. provided: " + base_plu, MSG_INFO);
-            string fake_plu = "6666666";
-            base_plu = fake_plu;
-        }
-
-        snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%6.2f", price);
-    }
-    else if (paymentMethod == "plu")
+    if (paymentMethod == "plu")
     {
         return base_plu;
     }
 
-    string plu_dynamic_price = (chars_plu_dynamic_formatted);
-    string plu_dynamic_formatted = base_plu + plu_dynamic_price;
-
-    // 3.14 --> " 3.14" --> " 314" --> "0314"
-    std::string toReplace(".");
-    size_t pos = plu_dynamic_formatted.find(toReplace);
-    if (pos != -1)
+    if (size == SIZE_CUSTOM_CHAR)
     {
-        plu_dynamic_formatted.replace(pos, toReplace.length(), "");
-    }
 
-    std::string toReplace2(" ");
-    pos = plu_dynamic_formatted.find(toReplace2);
-    while (pos != -1)
-    {
-        plu_dynamic_formatted.replace(pos, toReplace2.length(), "0");
+        if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13")
+        {
+            if (base_plu.size() != 8)
+            {
+                // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
+                debugOutput::sendMessage("ERROR custom plu length must be of length eight. (e.g. standard drinkfill preamble(627987) + 2digit product code) : " + base_plu, MSG_WARNING);
+                string fake_plu = "66666666";
+                base_plu = fake_plu;
+            }
+
+            snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%5.2f", price);// will always be at least 5 chars long e.g. 3.456 --> " 3.46" , 1234.456 --> "1234.45"
+        }
+        else if (paymentMethod == "barcode_EAN-2")
+        {
+            if (base_plu.size() != 7)
+            {
+                // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
+                debugOutput::sendMessage("ERROR custom plu length must be of length seven. provided: " + base_plu, MSG_WARNING);
+                string fake_plu = "6666666";
+                base_plu = fake_plu;
+            }
+
+            snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%6.2f", price); // will always be at least 6 chars long e.g. 3.456 --> "  3.45" , 1234.456 --> "1234.46"
+        }else{
+            debugOutput::sendMessage("ERROR Payment method not expected: " + paymentMethod, MSG_ERROR);
+            string fake_plu = "66666666";
+            base_plu = fake_plu;
+        }
+       
+
+        string plu_dynamic_price = (chars_plu_dynamic_formatted);
+
+        string plu_dynamic_formatted = base_plu + plu_dynamic_price;
+
+        // 3.14 --> " 3.14" --> " 314" --> "0314"
+        // 140.00 --> 
+        std::string toReplace(".");
+        size_t pos = plu_dynamic_formatted.find(toReplace);
+        if (pos != -1)
+        {
+            plu_dynamic_formatted.replace(pos, toReplace.length(), "");
+        }
+
+        std::string toReplace2(" ");
         pos = plu_dynamic_formatted.find(toReplace2);
-    }
+        while (pos != -1)
+        {
+            plu_dynamic_formatted.replace(pos, toReplace2.length(), "0");
+            pos = plu_dynamic_formatted.find(toReplace2);
+        }
 
-    return plu_dynamic_formatted;
+        if (plu_dynamic_formatted.length() != 12){
+             debugOutput::sendMessage("ERROR Generated barcode has an error. Was the price more than 99.99?  Its length should be twelve: " + plu_dynamic_formatted, MSG_ERROR);
+        }
+        return plu_dynamic_formatted;
+    }
+    
+    return base_plu;
+    
 }
 
 void dispenser::setAllDispenseButtonLightsOff()
@@ -369,7 +384,6 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
     {
         setPumpEnable();
         this->the_pcb->setSingleDispenseButtonLight(getSlot(), true);
-
     }
     else
     {
@@ -387,7 +401,7 @@ DF_ERROR dispenser::stopDispense()
     debugOutput::sendMessage("stop dispense actions...", MSG_INFO);
     // if (getMultiDispenseButtonEnabled())
     // {
-        setAllDispenseButtonLightsOff();
+    setAllDispenseButtonLightsOff();
     // }
 
     the_pcb->flowSensorsDisableAll();
@@ -843,7 +857,7 @@ DF_ERROR dispenser::startDispense()
     using namespace std::chrono;
     dispense_start_timestamp_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     dispenseButtonTimingreset();
-    
+
     this->the_pcb->flowSensorEnable(slot);
     this->the_pcb->resetFlowSensorTotalPulses(slot);
 
@@ -864,7 +878,6 @@ unsigned short dispenser::getPumpSpeed()
 
 void dispenser::loadMultiDispenseButtonEnabledFromDb()
 {
-    
 
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;

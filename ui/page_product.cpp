@@ -62,7 +62,8 @@ uint16_t orderSizeButtons_xywh_dynamic_ui_custom_available[4][4] = {
     {1, 1, 1, 1},
     {1, 1, 1, 1}, // M
     {1, 1, 1, 1},
-    {564, 1037, 424, 113} // custom
+    {564, 1037, 424, 213} // custom
+    // {564, 1037, 424, 113} // custom
 };
 
 // labels of volume and price are different (and annoying)
@@ -552,6 +553,9 @@ void pageProduct::loadProdSpecs()
             double price = selectedProductOrder->getPrice(product_sizes[i]);
             QString transparent_path = FULL_TRANSPARENT_IMAGE_PATH;
 
+            double largeVolumeStartsAt = selectedProductOrder->getVolume(SIZE_LARGE_INDEX) / 1000.0; // per liter
+            double largeVolumePricePerLiter = (selectedProductOrder->getPrice(SIZE_LARGE_INDEX) / largeVolumeStartsAt) ;
+
             if (product_sizes[i] == SIZE_CUSTOM_INDEX)
             {
                 orderSizeLabelsVolume[i]->setText("Custom Volume");
@@ -580,7 +584,8 @@ void pageProduct::loadProdSpecs()
                     units = "oz";
                     price = price * OZ_TO_ML;
                 }
-                orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + units);
+                orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + units + " \n $"+ QString::number(largeVolumePricePerLiter, 'f', 2) +"/L if over "+ QString::number(largeVolumeStartsAt, 'f', 1) + "L" );
+                orderSizeLabelsPrice[i]->setWordWrap(true);
             }
             else
             {

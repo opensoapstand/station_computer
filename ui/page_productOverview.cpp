@@ -744,8 +744,8 @@ void pageProductOverview::on_page_payment_Button_clicked()
 void pageProductOverview::return_to_selectProductPage()
 {
     //    qDebug() << "pageProduct: Previous button" << endl;
-    stopSelectTimers()
-    ui->promoKeyboard->hide();
+    stopSelectTimers();
+    //ui->promoKeyboard->hide();
     p_page_idle->pageTransition(this, p_page_product);
 }
 void pageProductOverview::on_selectProductPage_Button_clicked()

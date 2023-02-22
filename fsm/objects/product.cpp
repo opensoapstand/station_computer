@@ -528,7 +528,7 @@ void product::executeSQLStatement(string sql_string)
 bool product::isColumnInTable(string table, string column_name_to_find)
 {
     bool contains_column_maintenance_pwd = false;
-    debugOutput::sendMessage("dcolumn nameee to seach e" + column_name_to_find, MSG_INFO);
+    // debugOutput::sendMessage("dcolumn nameee to seach e" + column_name_to_find, MSG_INFO);
 
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
@@ -659,8 +659,6 @@ bool product::reloadParametersFromDb()
         isEnabledSizes[i] = false;
     }
 
-    debugOutput::sendMessage("=-=-=-=-=-==-=-", MSG_INFO);
-
     syncSoftwareVersionWithDb();
 
     if (!isColumnInTable("products", "is_enabled_custom_discount"))
@@ -704,7 +702,7 @@ bool product::reloadParametersFromDb()
         return false;
     }
 
-    debugOutput::sendMessage("WARNING: Please note that no NULL values allowed in text fields.", MSG_INFO);
+    debugOutput::sendMessage("Database check: Valid. Please note that no NULL values are allowed in text fields.", MSG_INFO);
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT * FROM products WHERE slot=" + to_string(m_nSlot) + ";";
@@ -722,10 +720,6 @@ bool product::reloadParametersFromDb()
 
         for (int column_index = 0; column_index < columns_count; column_index++)
         {
-
-            // debugOutput::sendMessage("column index: " + to_string(column_index), MSG_INFO);
-
-            // debugOutput::sendMessage("Col index: " + to_string(column_index), MSG_INFO);
             switch (column_index)
             {
             case DB_PRODUCTS_PRODUCTID:
@@ -857,6 +851,11 @@ bool product::reloadParametersFromDb()
             case DB_PRODUCTS_IS_ENABLED_CUSTOM:
             {
                 m_is_enabled_custom_discount = sqlite3_column_int(stmt, column_index);
+            }
+            break;
+            case DB_PRODUCTS_IS_ENABLED_CUSTOM_DISCOUNT:
+            {
+                m_price_custom_discount_per_liter = sqlite3_column_int(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_SIZE_SMALL:

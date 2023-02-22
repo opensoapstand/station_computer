@@ -130,7 +130,7 @@ struct Time_val
 typedef struct Time_val Time_val;
 
 
-#define TABLE_PRODUCTS_COLUMN_COUNT 46
+#define TABLE_PRODUCTS_COLUMN_COUNT 49
 
 // WARNING: If adding more column names to products, change TABLE_PRODUCTS_COLUMN_COUNT, and change products.cpp:isDbValid() and reloadParametersFromDb()
 #define DB_PRODUCTS_PRODUCTID 0
@@ -179,7 +179,9 @@ typedef struct Time_val Time_val;
 #define DB_PRODUCTS_INGREDIENTS 43
 #define DB_PRODUCTS_FEATURES 44
 #define DB_PRODUCTS_DESCRIPTION 45
-
+#define DB_PRODUCTS_IS_ENABLED_CUSTOM_DISCOUNT 46
+#define DB_PRODUCTS_SIZE_CUSTOM_DISCOUNT 47
+#define DB_PRODUCTS_PRICE_CUSTOM_DISCOUNT 48
 
 typedef enum DF_FSM
 {

@@ -267,6 +267,10 @@ double DbManager::getProductPrice(int slot, char size)
         {
             price_query.prepare("SELECT price_custom FROM products WHERE slot=:slot");
         }
+        else if (size == 'd')
+        {
+            price_query.prepare("SELECT price_custom_discount FROM products WHERE slot=:slot");
+        }
         else
         {
             qDebug() << " invalid size to volume character found.  " << size;

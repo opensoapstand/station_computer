@@ -88,6 +88,11 @@ public:
 
         void addMaintenancePwdToMachineTable();
         void addShowTransactionsToMachineTable();
+        void addSizeCustomDiscountToProductsTable();
+        void addPriceCustomDiscountToProductsTable();
+        void addIsEnabledCustomDiscountToProductsTable();
+
+        bool isColumnInTable(string table, string column_name);
         bool isMaintenancePwdInMachineTable();
         bool isShowTransactionsInMachineTable();
         void executeSQLStatement(string sql_string);
@@ -110,6 +115,7 @@ public:
         double m_nVolumeTarget_m;     // how much to dispense (medium)
         double m_nVolumeTarget_s;     // how much to dispense (small)
         double m_nVolumeTarget_c_min; // custom volume dispensing: min (zero volume can be dispensed, but we will still charge for min)
+        double m_nVolumeTarget_custom_discount; // custom volume from which a discount is applied.
         double m_nVolumeTarget_c_max; // custom volume dispensing: max
 
         double m_nVolumeTarget_t = 10000000; // test dispense (infinite)
@@ -118,7 +124,8 @@ public:
         double m_price_medium;
         double m_price_large;
         double m_price_custom_per_liter;
-
+        double m_price_custom_discount_per_liter;
+        bool m_is_enabled_custom_discount;
         bool isEnabledSizes[4];
 
         char sizeIndexToChar[4] = SIZE_INDEX_TO_CHAR_ARRAY;

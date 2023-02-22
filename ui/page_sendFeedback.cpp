@@ -36,8 +36,12 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     qDebug()<< "IN send feedback";
     ui->setupUi(this);
 
+    ui->feedback_Input_Button->setStyleSheet("QPushButton { border: 1px solid #5E8580}");
+    ui->feedback_Input_Button->setText("Type Here");
+    ui->feedbackText->setStyleSheet("QPushButton { background-color: transparent; border: 1px solid #5E8580 }");   // ui->page_payment_Button->show();
+ ui->feedbackKeyboard->hide();
     ui->feedback_Input_Button->hide();
-    ui->label_enter_feedback->hide();
+    ui->label_enter_feedback->show();
     // ui->label_type_here->hide();
     ui->previousPage_Button->setStyleSheet("QPushButton { color:#555555; background-color: transparent; border: 0px }");
     ui->previousPage_Button->setStyleSheet(
@@ -146,7 +150,19 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
   
         // ui->promoKeyboard->hide();
     
-
+         ui->feedbackText->clear();
+        ui->feedbackText->show();
+        QString keyboard = KEYBOARD_IMAGE_PATH;
+    QString keyboard_style_sheet = " background-image: url(" + keyboard + "); }";
+    ui->feedbackKeyboard->setStyleSheet(keyboard_style_sheet);
+ {
+        selectIdleTimer = new QTimer(this);
+        selectIdleTimer->setInterval(40);
+        // connect(ui->promoButton, SIGNAL(clicked()), this, SLOT(on_applyPromo_Button_clicked()));
+        connect(ui->feedback_Input_Button, SIGNAL(clicked()), this, SLOT(on_feedback_Input_Button_clicked()));
+        connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
+        connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
+    }
 
         
 

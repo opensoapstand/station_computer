@@ -74,9 +74,9 @@ line-height: 29px;</string>
   <widget class="QLabel" name="label_price_custom">
    <property name="geometry">
     <rect>
-     <x>560</x>
+     <x>550</x>
      <y>1160</y>
-     <width>421</width>
+     <width>451</width>
      <height>101</height>
     </rect>
    </property>

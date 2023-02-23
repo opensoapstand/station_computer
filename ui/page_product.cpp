@@ -62,7 +62,7 @@ uint16_t orderSizeButtons_xywh_dynamic_ui_custom_available[4][4] = {
     {1, 1, 1, 1},
     {1, 1, 1, 1}, // M
     {1, 1, 1, 1},
-    {564, 1037, 424, 213} // custom
+    {564, 1037, 424, 113} // custom
     // {564, 1037, 424, 113} // custom
 };
 
@@ -397,12 +397,13 @@ void pageProduct::reset_and_show_page_elements()
     uint16_t(*xy_size_labels_volume)[2];
     uint16_t(*xy_size_labels_price)[2];
 
-    // create signature by sizes availability
+    // create signature by sizes availability, use the bits
     for (uint8_t i = 0; i < 4; i++)
     {
         available_sizes_signature |= selectedProductOrder->getLoadedProductSizeEnabled(product_sizes[i]) << i;
     }
 
+    // every combination
     if (available_sizes_signature == 1)
     {
         // only small available
@@ -459,6 +460,26 @@ void pageProduct::reset_and_show_page_elements()
             orderSizeLabelsVolume[i]->move(xy_size_labels_volume[i][0], xy_size_labels_volume[i][1]);
 
             qDebug() << "Product size index enabled: " << i;
+
+            if (product_sizes[i] == SIZE_CUSTOM_INDEX)
+            {
+
+                bool large_volume_discount_is_enabled;
+                double min_volume_for_discount;
+                double discount_price_per_liter;
+                // check if there is a price decline for large volumes
+
+
+                selectedProductOrder->getCustomDiscountDetails(&large_volume_discount_is_enabled, &min_volume_for_discount, &discount_price_per_liter);
+                if (large_volume_discount_is_enabled)
+                {
+                    orderSizeButtons[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3] + 100));
+                    orderSizeLabelsPrice[i]->setFixedSize(QSize(420, 101));
+                }else{
+                    orderSizeLabelsPrice[i]->setFixedSize(QSize(420, 50));
+                    
+                }
+            }
         }
         else
         {
@@ -553,39 +574,67 @@ void pageProduct::loadProdSpecs()
             double price = selectedProductOrder->getPrice(product_sizes[i]);
             QString transparent_path = FULL_TRANSPARENT_IMAGE_PATH;
 
-            double largeVolumeStartsAt = selectedProductOrder->getVolume(SIZE_LARGE_INDEX) / 1000.0; // per liter
-            double largeVolumePricePerLiter = (selectedProductOrder->getPrice(SIZE_LARGE_INDEX) / largeVolumeStartsAt) ;
-
             if (product_sizes[i] == SIZE_CUSTOM_INDEX)
             {
+                bool large_volume_discount_is_enabled;
+                double min_volume_for_discount;
+                double discount_price_per_liter;
+                // check if there is a price decline for large volumes
+                selectedProductOrder->getCustomDiscountDetails(&large_volume_discount_is_enabled, &min_volume_for_discount, &discount_price_per_liter);
+                // double largeVolumeStartsAt = selectedProductOrder->getVolume(SIZE_LARGE_INDEX) / 1000.0; // per liter
+                // double largeVolumePricePerLiter = (selectedProductOrder->getPrice(SIZE_LARGE_INDEX) / largeVolumeStartsAt) ;
+
                 orderSizeLabelsVolume[i]->setText("Custom Volume");
                 QString units = selectedProductOrder->getUnitsForSelectedSlot();
+                QString units_discount_indication = selectedProductOrder->getUnitsForSelectedSlot();
                 if (units == "ml")
                 {
                     units = "L";
+                    units_discount_indication = "L";
                     price = price * 1000;
+                    discount_price_per_liter *= 1000; 
+                    min_volume_for_discount = min_volume_for_discount / 1000;
                 }
 
                 else if (units == "g")
                 {
                     if (selectedProductOrder->getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
                     {
-                        units = "100g";
+                        units = "110g";
+                        units_discount_indication = "kg";
                         price = price * 100;
+                        discount_price_per_liter *= 1000; 
+                        min_volume_for_discount = min_volume_for_discount / 1000;
                     }
                     else
                     {
                         units = "kg";
+                        units_discount_indication = "kg";
                         price = price * 1000;
+                        discount_price_per_liter *= 1000; 
+                        min_volume_for_discount = min_volume_for_discount / 1000.0;
                     }
                 }
                 else if (units == "oz")
                 {
                     units = "oz";
+                    units_discount_indication = "oz";
                     price = price * OZ_TO_ML;
+                    discount_price_per_liter *= OZ_TO_ML; 
+                    min_volume_for_discount /= OZ_TO_ML;
                 }
-                orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + units + " \n $"+ QString::number(largeVolumePricePerLiter, 'f', 2) +"/L if over "+ QString::number(largeVolumeStartsAt, 'f', 1) + "L" );
+
                 orderSizeLabelsPrice[i]->setWordWrap(true);
+
+                if (large_volume_discount_is_enabled)
+                {
+                    orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + units + " \n>"+ QString::number(min_volume_for_discount, 'f', 1) + units_discount_indication + " @ $" + QString::number(discount_price_per_liter, 'f', 2) + "/" + units);
+                    
+                }
+                else
+                {
+                    orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + units);
+                }
             }
             else
             {
@@ -609,63 +658,63 @@ void pageProduct::loadProdSpecs()
     double selectedPrice = selectedProductOrder->getSelectedPrice();
     double discount = selectedProductOrder->getDiscount();
     double selectedPriceCorrected = selectedProductOrder->getSelectedPriceCorrected();
-    //double selectedPrice;
-    // double discount;
-    // double selectedPriceCorrected;
+    // double selectedPrice;
+    //  double discount;
+    //  double selectedPriceCorrected;
 
     if (selectedProductOrder->getSelectedSize() == SIZE_CUSTOM_INDEX)
     {
         // QString unitsInvoice;
         // selectedProductOrder->getCustomPriceDetails(&unitsInvoice, &selectedPrice, &discount, &selectedPriceCorrected);
-    //     QString unitsInvoice = selectedProductOrder->getUnitsForSelectedSlot();
+        //     QString unitsInvoice = selectedProductOrder->getUnitsForSelectedSlot();
 
-    //     if (unitsInvoice == "ml")
-    //     {
-    //         unitsInvoice = "L";
-    //         selectedPrice = selectedPrice * 1000;
-    //         selectedPriceCorrected = selectedPriceCorrected * 1000;
-    //         discount = discount * 1000;
-    //     }
-    //     else if (unitsInvoice == "g")
-    //     {
-    //         if (selectedProductOrder->getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
-    //         {
-    //             unitsInvoice = "100g";
-    //             selectedPrice = selectedPrice * 100;
-    //             selectedPriceCorrected = selectedPriceCorrected * 100;
-    //             discount = discount * 100;
-    //         }
-    //         else
-    //         {
-    //             unitsInvoice = "kg";
-    //             selectedPrice = selectedPrice * 1000;
-    //             selectedPriceCorrected = selectedPriceCorrected * 1000;
-    //             discount = discount * 1000;
-    //         }
-    //     }
-    //     else if (unitsInvoice == "oz")
-    //     {
-    //         unitsInvoice = "oz";
-    //         selectedPrice = selectedPrice * OZ_TO_ML;
-    //         selectedPriceCorrected = selectedPriceCorrected * OZ_TO_ML;
-    //         discount = discount * OZ_TO_ML;
-    //     }
+        //     if (unitsInvoice == "ml")
+        //     {
+        //         unitsInvoice = "L";
+        //         selectedPrice = selectedPrice * 1000;
+        //         selectedPriceCorrected = selectedPriceCorrected * 1000;
+        //         discount = discount * 1000;
+        //     }
+        //     else if (unitsInvoice == "g")
+        //     {
+        //         if (selectedProductOrder->getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
+        //         {
+        //             unitsInvoice = "100g";
+        //             selectedPrice = selectedPrice * 100;
+        //             selectedPriceCorrected = selectedPriceCorrected * 100;
+        //             discount = discount * 100;
+        //         }
+        //         else
+        //         {
+        //             unitsInvoice = "kg";
+        //             selectedPrice = selectedPrice * 1000;
+        //             selectedPriceCorrected = selectedPriceCorrected * 1000;
+        //             discount = discount * 1000;
+        //         }
+        //     }
+        //     else if (unitsInvoice == "oz")
+        //     {
+        //         unitsInvoice = "oz";
+        //         selectedPrice = selectedPrice * OZ_TO_ML;
+        //         selectedPriceCorrected = selectedPriceCorrected * OZ_TO_ML;
+        //         discount = discount * OZ_TO_ML;
+        //     }
 
-    // ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName());
-    // ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2) + "/" + unitsInvoice);
+        // ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName());
+        // ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2) + "/" + unitsInvoice);
 
-    // ui->label_invoice_price_total->setText("$" + QString::number(selectedPriceCorrected, 'f', 2) + "/" + unitsInvoice); // how to handle promo ?! todo!
-}
-else
-{
+        // ui->label_invoice_price_total->setText("$" + QString::number(selectedPriceCorrected, 'f', 2) + "/" + unitsInvoice); // how to handle promo ?! todo!
+    }
+    else
+    {
 
-    // ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
-    // ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2));
+        // ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName() + " " + selectedProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
+        // ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2));
 
-    // ui->label_invoice_price_total->setText("$" + QString::number(selectedPriceCorrected, 'f', 2)); // how to handle promo ?! todo!
-}
+        // ui->label_invoice_price_total->setText("$" + QString::number(selectedPriceCorrected, 'f', 2)); // how to handle promo ?! todo!
+    }
 
-qDebug() << "-------------------------- END LOAD PRODUCT ----------------";
+    qDebug() << "-------------------------- END LOAD PRODUCT ----------------";
 }
 #else
 void pageProduct::loadProdSpecs()

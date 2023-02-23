@@ -511,7 +511,7 @@ void product::addPriceCustomDiscountToProductsTable()
 {
     executeSQLStatement("ALTER TABLE products ADD price_custom_discount REAL");
     // executeSQLStatement("ALTER TABLE products ADD price_custom_discount REAL AFTER price_custom");
-    executeSQLStatement("UPDATE products SET price_custom_discount=10.0;");
+    executeSQLStatement("UPDATE products SET price_custom_discount=0.01;");
 }
 void product::executeSQLStatement(string sql_string)
 {
@@ -532,7 +532,7 @@ bool product::isColumnInTable(string table, string column_name_to_find)
 
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
-    string sql_string = "PRAGMA table_info("+ table + ");";
+    string sql_string = "PRAGMA table_info(" + table + ");";
 
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     int status;

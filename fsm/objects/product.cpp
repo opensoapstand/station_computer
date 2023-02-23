@@ -312,29 +312,29 @@ double product::getTargetVolume(char size)
     }
 }
 
-double product::getCustomVolumePriceDependingOnDispensedVolume(double volume)
-{
-    // custom volume pricing is per ml. Often, pricing is more optimal when larger volumes are dispensed.
-    // if the volume provide is larger than "large volume pricing", the price per milliliter will be adjusted to match that.
-    if (volume >= getTargetVolume(SIZE_LARGE_CHAR))
-    {
-        // go for discount
-        // price per ml
-        double largePricePerMl = getPrice(SIZE_LARGE_CHAR) / getTargetVolume(SIZE_LARGE_CHAR);
+// double product::getCustomVolumePriceDependingOnDispensedVolume(double volume)
+// {
+//     // custom volume pricing is per ml. Often, pricing is more optimal when larger volumes are dispensed.
+//     // if the volume provide is larger than "large volume pricing", the price per milliliter will be adjusted to match that.
+//     if (volume >= getTargetVolume(SIZE_LARGE_CHAR))
+//     {
+//         // go for discount
+//         // price per ml
+//         double largePricePerMl = getPrice(SIZE_LARGE_CHAR) / getTargetVolume(SIZE_LARGE_CHAR);
 
-        return largePricePerMl;
+//         return largePricePerMl;
 
-        // if (largePricePerMl < getPrice(SIZE_CUSTOM_CHAR)){
-        //     return getPrice(SIZE_CUSTOM_CHAR)
-        // }else{
-        //     return largePricePerMl
-        // }
-    }
-    else
-    {
-        return getPrice(SIZE_CUSTOM_CHAR);
-    }
-}
+//         // if (largePricePerMl < getPrice(SIZE_CUSTOM_CHAR)){
+//         //     return getPrice(SIZE_CUSTOM_CHAR)
+//         // }else{
+//         //     return largePricePerMl
+//         // }
+//     }
+//     else
+//     {
+//         return getPrice(SIZE_CUSTOM_CHAR);
+//     }
+// }
 
 double product::getPrice(char size)
 {
@@ -355,10 +355,10 @@ double product::getPrice(char size)
     {
         return m_price_custom_per_liter;
     }
-    else if (size == 'd')
-    {
-        return m_price_custom_discount_per_liter;
-    }
+    // else if (size == 'd')
+    // {
+    //     return m_price_custom_discount_per_liter;
+    // }
     else if (size == 't')
     {
         return m_price_custom_per_liter;
@@ -391,6 +391,15 @@ char product::sizeIndexToSizeChar(int sizeIndex)
 {
     return sizeIndexToChar[sizeIndex];
 }
+
+void product::customDispenseDiscountData(bool *isEnabled, double *discountVolume, double *discountPrice)
+{
+
+    *isEnabled = m_is_enabled_custom_discount;
+    *discountVolume = m_nVolumeTarget_custom_discount;
+    *discountPrice = m_price_custom_discount_per_liter;
+}
+
 int product::sizeCharToSizeIndex(char size)
 {
 
@@ -855,7 +864,7 @@ bool product::reloadParametersFromDb()
             break;
             case DB_PRODUCTS_IS_ENABLED_CUSTOM_DISCOUNT:
             {
-                m_price_custom_discount_per_liter = sqlite3_column_int(stmt, column_index);
+                m_is_enabled_custom_discount = sqlite3_column_int(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_SIZE_SMALL:

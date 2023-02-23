@@ -49,7 +49,7 @@ public:
         double getTargetVolume(char size);
         char getSizeCharFromTargetVolume(double volume);
         double getPrice(char size);
-        double getCustomVolumePriceDependingOnDispensedVolume(double volume);
+        // double getCustomVolumePriceDependingOnDispensedVolume(double volume);
         string getDisplayUnits();
         double convertVolumeMetricToDisplayUnits(double volume);
         string getProductName();
@@ -63,6 +63,7 @@ public:
         void setIsEnabled(bool isEnabled);
 
         bool getIsSizeEnabled(char size);
+        
         // char getClosestLowerTargetVolume(double volume);
         // DB Updates
         // void recordSale(int volume);
@@ -78,6 +79,7 @@ public:
         bool testParametersFromDb();
 
         double getVolumeDispensed();
+        void customDispenseDiscountData(bool* isEnabled, double* discountVolume, double* discountPrice);
         void setVolumeDispensed(double volume);
         bool isDbValid();
 

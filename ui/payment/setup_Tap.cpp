@@ -20,7 +20,6 @@ std::string read_public_key()
 std::map<std::string,std::string> readXmlPacket(std::string xmlString){
     std::string tag, attribute, value; // variables to store tag, attribute, and value information
     std::map<std::string, std::string> dictionary; // dictionary to store parsed XML information
-    int tag_end;
     int textStart = 0;
     int lenValue = 0;
     for (size_t i = 0; i < xmlString.length(); i++) // loop through each character in the XML string
@@ -46,8 +45,8 @@ std::map<std::string,std::string> readXmlPacket(std::string xmlString){
     return dictionary;
 }
 
-std::map<std::string, std::string> sendAndReceivePacket(std::string command, int sockfd){
-    char buffer[2048];
+std::map<std::string, std::string> sendAndReceivePacket(std::string command, int sockfd, bool logging){
+    char buffer[4096];
     memset(buffer, 0, sizeof(buffer));
     strcpy(buffer, command.c_str());
     // Send the message
@@ -56,15 +55,17 @@ std::map<std::string, std::string> sendAndReceivePacket(std::string command, int
         return {};
     }
     memset(buffer, 0, sizeof(buffer));
-    char bufferReceived[2048];
+    char bufferReceived[4096];
     int bytes_received = recv(sockfd, bufferReceived, sizeof(bufferReceived), 0);
     if ( bytes_received < 0) {
         std::cerr << "Error receiving message" << std::endl;
         return {};
     }
-    std::string xml_string(bufferReceived, bytes_received); 
-    std::cout << xml_string << std::endl;
-    std::map<std::string, std::string> xmlObject = readXmlPacket(xml_string);
+    std::string xml_string(bufferReceived, bytes_received);
+    if(logging){
+        std::cout << xml_string << std::endl;
+    }
+    std::map<std::string, std::string> xmlObject= readXmlPacket(xml_string);
     return xmlObject;
 }
 
@@ -92,11 +93,11 @@ int connectSocket(){
         return 1;
     }
     std::cout << "Server connected" << std::endl; 
-    std::string public_key = read_public_key();
     // Clean up 
     // close(sockfd);
     return sockfd;
 }
+
 
 std::vector<unsigned char> base64_decode(const std::string& input) {
   // Initialize OpenSSL BIO
@@ -180,7 +181,7 @@ void print_vector_as_hex(const std::vector<unsigned char>& vec) {
 
 std::string create_counter_mac(int counter, std::string encrypted_mac){
     std::vector<unsigned char> ciphertext = base64_decode(encrypted_mac); 
-    RSA* private_key = load_private_key("private_key.der");
+    RSA* private_key = load_private_key("/home/df-admin/drinkfill/ui/payment/private_key.der");
     if (private_key == NULL) {
     // Handle error
         std::cout << "Error in reading private key";

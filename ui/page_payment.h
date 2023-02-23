@@ -20,12 +20,8 @@
 #include "df_util.h"
 #include "drinkorder.h"
 #include "page_help.h"
-
-#include "posm/mcommunication.h"
-#include "posm/packetfromecr.h"
-#include "posm/packetfromux410.h"
-#include "posm/transactionPackets.h"
-#include "posm/transactioninfo.h"
+#include "payment/commands.h"
+#include "payment/setup_Tap.h"
 
 #include "../library/qr/qrcodegen.hpp"
 #include <climits>
@@ -129,7 +125,7 @@ private slots:
     void displayPaymentPending(bool isVisible);
 
     void onTimeoutTick();
-    void readTimer_loop();
+    // void readTimer_loop();
     void progressStatusLabel();
     void declineTimer_start();
     void idlePaymentTimeout();
@@ -199,11 +195,11 @@ private:
 
     // Payment Communication
     // Moneris Packet communication reference
-    mCommunication com;
-    packetFromECR sendPacket;
-    packetFromUX410 readPacket;
-    transactionPacket paymentPacket;
-    transactionInfo paymentPktInfo;
+    // mCommunication com;
+    // packetFromECR sendPacket;
+    // packetFromUX410 readPacket;
+    // transactionPacket paymentPacket;
+    // transactionInfo paymentPktInfo;
 
     // Payment Package Control
     bool purchaseEnable;
@@ -212,9 +208,8 @@ private:
     std::vector<uint8_t> pktToSend;
     std::vector<uint8_t> pktResponded;
     std::string productSelectedPrice;
-    bool sendToUX410();
+    
     bool tap_init();
-    bool waitForUX410();
     void cancelPayment();
     bool getResponse(){return response;}
 

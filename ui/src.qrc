@@ -15,6 +15,12 @@
         <file>page_init.h</file>
         <file>page_init.cpp</file>
        
+        <file>payment/commands.h</file>
+        <file>payment/commands.cpp</file>
+        <file>payment/setup_Tap.h</file>
+        <file>payment/setup_Tap.cpp</file>
+
+
         <file>posm/enums.h</file>
         <file>posm/lrcgenerator.cpp</file>
         <file>posm/lrcgenerator.h</file>

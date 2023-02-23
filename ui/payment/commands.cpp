@@ -17,7 +17,8 @@ std::string getCounter(int socket, std::string MAC_LABEL, std::string MAC_KEY){
                             <MAC>"+ MAC_KEY + "</MAC>\
                             <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL> \
                         </TRANSACTION>";
-    std::map<std::string, std::string> responseObj = sendAndReceivePacket(get_counter_command, socket);
+    std::map<std::string, std::string> responseObj = sendAndReceivePacket(get_counter_command, socket, false);
+    std::cout << "Response" << responseObj["COUNTER"];
     return responseObj["COUNTER"];      
 }
 
@@ -31,13 +32,12 @@ std::map<std::string, std::string> getNextCounterMac(int socket, std::string MAC
     return responseObj;
 }
 
-std::map<std::string, std::string> startSession(int socket, std::string MAC_LABEL, std::string MAC_KEY){
-    int invoice = 1;
+std::map<std::string, std::string> startSession(int socket, std::string MAC_LABEL, std::string MAC_KEY, int invoice){
     std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
     std::string command = "<TRANSACTION> \
                     <FUNCTION_TYPE>SESSION</FUNCTION_TYPE>\
                     <COMMAND>START</COMMAND>\
-                    <BUSINESSDATE>20230213</BUSINESSDATE>\
+                    <BUSINESSDATE>20230222</BUSINESSDATE>\
                     <SWIPE_AHEAD>1</SWIPE_AHEAD>\
                     <TRAINING_MODE>0</TRAINING_MODE>\
                     <INVOICE>"+std::to_string(invoice)+"</INVOICE>\
@@ -49,7 +49,7 @@ std::map<std::string, std::string> startSession(int socket, std::string MAC_LABE
                     <POS_PORT>5015</POS_PORT>\
                     <NOTIFY_SCA_EVENTS>FALSE</NOTIFY_SCA_EVENTS>\
                     </TRANSACTION>";
-    std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket);
+    std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
     return dataReceived;
 }
 
@@ -63,7 +63,7 @@ std::map<std::string, std::string> finishSession(int socket, std::string MAC_LAB
                         <MAC>"+responseObj["COUNTER_ENCODED"]+"</MAC>\
                         <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
                     </TRANSACTION>";
-    std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket);
+    std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
 
     return dataReceived;
 }
@@ -84,12 +84,42 @@ std::map<std::string, std::string> authorization(int socket, std::string MAC_LAB
                         <ENCRYPT>TRUE</ENCRYPT> \
                         <SCMCI_INDICATOR>2</SCMCI_INDICATOR> \
                     </TRANSACTION>";
-        std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket);
-
+    std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
+    return dataReceived;
+}
+std::map<std::string, std::string> capture(int socket, std::string MAC_LABEL, std::string MAC_KEY, std::string CTROUTD, std::string amount){
+    std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
+    std::string command = "<TRANSACTION> \
+                    <FUNCTION_TYPE>PAYMENT</FUNCTION_TYPE> \
+                    <COMMAND>CAPTURE</COMMAND>\
+                    <CTROUTD>"+CTROUTD+"</CTROUTD> \
+                    <COUNTER>"+responseObj["COUNTER"]+"</COUNTER>\
+                    <MAC>"+responseObj["COUNTER_ENCODED"]+"</MAC>\
+                    <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
+                    <TRANS_AMOUNT>"+amount+"</TRANS_AMOUNT>\
+                    <PAYMENT_TYPE>CREDIT</PAYMENT_TYPE>\
+                    <FORCE_FLAG>1</FORCE_FLAG>\
+                </TRANSACTION>";
+    std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
     return dataReceived;
 }
 
+std::map<std::string, std::string> voidTransaction(int socket, std::string MAC_LABEL, std::string MAC_KEY, std::string CTROUTD){
+    std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
+    std::string command = "<TRANSACTION> \
+                <FUNCTION_TYPE>PAYMENT</FUNCTION_TYPE> \
+                <COMMAND>VOID</COMMAND> \
+                <CTROUTD>"+CTROUTD+"</CTROUTD> \
+                    <COUNTER>"+responseObj["COUNTER"]+"</COUNTER>\
+                    <MAC>"+responseObj["COUNTER_ENCODED"]+"</MAC>\
+                    <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
+                <PAYMENT_TYPE>CREDIT</PAYMENT_TYPE>\
+            </TRANSACTION>";
+        std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
+    return dataReceived;
+}
 std::string testMac(int socket, std::string counter, std::string MAC, std::string MAC_LABEL){
+
     std::string command = "<TRANSACTION> \
                     <FUNCTION_TYPE>SECURITY</FUNCTION_TYPE> \
                     <COMMAND>TEST_MAC</COMMAND> \
@@ -101,14 +131,11 @@ std::string testMac(int socket, std::string counter, std::string MAC, std::strin
 }
 
 
-
-int main(){
-    int socket = connectSocket();
-    std::string MAC_LABEL = "P_GQ63SC";
-    std::string MAC_KEY = "c0oOuJjLxFnt/e/43FqGSW+7xkuwQonAaNHusrdXHWZnhiX14EZeA32uLGvGz5LvUorrCEWQmbaezJR1ICKUgZQa4zE0GbmxZF+tKJa7V4d31o1y2IkgBx97ErA8HY9MegWhFr+2YOJoYtkrf62bjPAAZ6Ge2etpTAve/CaRa9rKiI5lbmucj7ygs2/7l6YoSspbSWyPZr2gML8plmZk0J6TWYOEB3IOdV1r4yzSTp6FMnnKPQafEScJ+jqbUrF54BQKU3UcAQbFI8WGEHYOS8FDRg8gjRlcviSwCZr7bslgp+9ndQMJPtmph9YhWCggTA6fJNziGWKjzwbwORzGRQ==";
-    // std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
-    // startSession(socket, MAC_LABEL, MAC_KEY);
-    finishSession(socket, MAC_LABEL, MAC_KEY);
-    return 1;
-}
-
+// int socket = connectSocket();
+//     std::string MAC_LABEL = "P_GQ63SC";
+//     std::string MAC_KEY = "c0oOuJjLxFnt/e/43FqGSW+7xkuwQonAaNHusrdXHWZnhiX14EZeA32uLGvGz5LvUorrCEWQmbaezJR1ICKUgZQa4zE0GbmxZF+tKJa7V4d31o1y2IkgBx97ErA8HY9MegWhFr+2YOJoYtkrf62bjPAAZ6Ge2etpTAve/CaRa9rKiI5lbmucj7ygs2/7l6YoSspbSWyPZr2gML8plmZk0J6TWYOEB3IOdV1r4yzSTp6FMnnKPQafEScJ+jqbUrF54BQKU3UcAQbFI8WGEHYOS8FDRg8gjRlcviSwCZr7bslgp+9ndQMJPtmph9YhWCggTA6fJNziGWKjzwbwORzGRQ==";
+//     // std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
+//     startSession(socket, MAC_LABEL, MAC_KEY);
+//     std::map<std::string, std::string> responseObj = authorization(socket, MAC_LABEL, MAC_KEY, "3.00");
+//     capture(socket, MAC_LABEL, MAC_KEY,responseObj["CTROUTD"], "2.00");
+//     finishSession(socket, MAC_LABEL, MAC_KEY);

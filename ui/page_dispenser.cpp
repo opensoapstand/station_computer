@@ -21,8 +21,14 @@
 #include "page_idle.h"
 #include "pagethankyou.h"
 #include "page_product.h"
+#include "payment/commands.h"
+#include "payment/setup_Tap.h"
 
 extern QString transactionLogging;
+extern std::string CTROUTD;
+extern std::string MAC_KEY;
+extern std::string MAC_LABEL;
+extern std::string socketAddr;
 // CTOR
 page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
                                                   ui(new Ui::page_dispenser)
@@ -241,36 +247,14 @@ void page_dispenser::dispensing_end_admin()
     {
         qDebug() << "dispense end: tap payment No volume dispensed.";
         // REVERSE PAYMENT
-        com.page_init();
-        pktToSend = paymentPacket.reversePurchasePacket();
-        if (sendToUX410())
-        {
-            waitForUX410();
-            qDebug() << "Tap Payment Reversed";
-            pktResponded.clear();
-            com.flushSerial(); 
-        }
+        voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD);
+        finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+        
     }
     else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && volumeDispensed != 0)
     {
-        // qDebug() << "dispense end: tap payment. Some volume dispensed.";
-        // QMessageBox msgBox;
-        // msgBox.setText("Complete!");
-        // msgBox.setInformativeText("Would you like your receipt emailed to you?");
-        // msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-        // int ret = msgBox.exec();
-
-        // switch (ret)
-        // {
-        // case QMessageBox::Yes:
-        //     //            qDebug() << "This person wants their receipt emailed";
-        //     break;
-        // case QMessageBox::No:
-        //     //            qDebug() << "This person doesn't want a receipt";
-        //     break;
-        // default:
-        //     break;
-        // }
+        capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD, "2.00");
+        finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);   
     }
     stopDispenseTimer();
     // thanksPage->showFullScreen();

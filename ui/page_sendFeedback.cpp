@@ -40,7 +40,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     ui->feedback_Input_Button->setText("Type Here");
     ui->feedbackText->setStyleSheet("QPushButton { background-color: transparent; border: 1px solid #5E8580 }");   // ui->page_payment_Button->show();
  ui->feedbackKeyboard->hide();
-    ui->feedback_Input_Button->hide();
+    // ui->feedback_Input_Button->hide();
     ui->label_enter_feedback->show();
     // ui->label_type_here->hide();
     ui->previousPage_Button->setStyleSheet("QPushButton { color:#555555; background-color: transparent; border: 0px }");
@@ -159,7 +159,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
         selectIdleTimer = new QTimer(this);
         selectIdleTimer->setInterval(40);
         // connect(ui->promoButton, SIGNAL(clicked()), this, SLOT(on_applyPromo_Button_clicked()));
-        connect(ui->feedback_Input_Button, SIGNAL(clicked()), this, SLOT(on_feedback_Input_Button_clicked()));
+        // connect(ui->feedback_Input_Button, SIGNAL(clicked()), this, SLOT(on_feedback_Input_Button_clicked()));
         connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
         connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
     }
@@ -330,6 +330,17 @@ void page_sendFeedback::mainPage()
     p_page_idle->pageTransition(this, p_page_idle);
 }
 
+// void page_sendFeedback::on_feedback_Input_Button_clicked()
+// {
+//     // QObject *button = QObject::sender();
+//     qDebug() << "feedback button clicked";
+//     ui->feedbackText->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
+//     // ui->promoInputButton->hide();
+//     ui->feedbackKeyboard->show();
+//     qDebug() << "show promo keyboard.";
+//     ui->feedbackText->show();
+// }
+
 void page_sendFeedback::on_mainPage_Button_clicked()
 {
     this->stopSelectTimers();
@@ -341,6 +352,7 @@ size_t WriteCallbackFeedback(char *contents, size_t size, size_t nmemb, void *us
     ((std::string *)userp)->append((char *)contents, size * nmemb);
     return size * nmemb;
 }
+
 
 void page_sendFeedback::on_send_Button_clicked()
 {   
@@ -379,7 +391,8 @@ void page_sendFeedback::on_send_Button_clicked()
     if(problems.length() != 0)
     {
     QString MachineSerialNumber = p_page_idle->currentProductOrder->getMachineId();
-    QString curl_param = "problems="+problems+"&MachineSerialNumber=" + MachineSerialNumber;
+    QString customFeedback = ui->feedbackText->text();
+    QString curl_param = "problems="+problems+" "+customFeedback+"&MachineSerialNumber=" + MachineSerialNumber;
     qDebug() << "Curl params" << curl_param << endl;
     curl_param_array = curl_param.toLocal8Bit();
     qDebug() << curl_param_array;
@@ -417,6 +430,41 @@ void page_sendFeedback::on_send_Button_clicked()
 
 }
 
+
+void page_sendFeedback::keyboardButtonPressed(int buttonID)
+{
+
+    QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
+    QString buttonText = buttonpressed->objectName();
+
+    if (buttonText == "backspace")
+    {
+        ui->feedbackText->backspace();
+    }
+    else if (buttonText == "space")
+    {
+       int cursorPosition = ui->feedbackText->cursorPosition();
+    ui->feedbackText->setText(ui->feedbackText->text().insert(cursorPosition, " "));
+    ui->feedbackText->setCursorPosition(cursorPosition + 1);
+    }
+    else if (buttonText == "done")
+    {
+        ui->feedbackKeyboard->hide();
+        if (ui->feedbackText->text() == "")
+        {
+            // ui->feedbackText->hide();
+        }
+        // on_applyPromo_Button_clicked();
+    }
+    else if (buttonText.mid(0, 3) == "num")
+    {
+        ui->feedbackText->setText(ui->feedbackText->text() + buttonText.mid(3, 1));
+    }
+    else
+    {
+        ui->feedbackText->setText(ui->feedbackText->text() + buttonText);
+    }
+} 
 void page_sendFeedback::on_previousPage_Button_clicked()
 {
     qDebug() << "On back button clicked."; 
@@ -426,13 +474,13 @@ void page_sendFeedback::on_previousPage_Button_clicked()
      
 }
 void page_sendFeedback::on_feedback_Input_Button_clicked()
-{
-    QObject *button = QObject::sender();
-    // ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
-    // ui->label_type_here->hide();
-    ui->feedback_Input_Button->show();
-
-    // ui->promoKeyboard->show();
+ {
+//  QObject *button = QObject::sender();
+    qDebug() << "feedback button clicked";
+    ui->feedbackText->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
+    // ui->promoInputButton->hide();
+    ui->feedbackKeyboard->show();
+    ui->feedback_Input_Button->lower();
     qDebug() << "show promo keyboard.";
-    // ui->promoCode->show();
+    ui->feedbackText->show();
 }

@@ -20,8 +20,14 @@
 #include "page_product.h"
 #include "page_dispenser.h"
 #include "page_idle.h"
+#include "payment/commands.h"
+#include "payment/setup_Tap.h"
 
 extern QString transactionLogging;
+std::string CTROUTD = "";
+std::string MAC_KEY = "";
+std::string MAC_LABEL = "";
+std::string socketAddr;
 // CTOR
 page_payment::page_payment(QWidget *parent) : QWidget(parent),
                                               ui(new Ui::page_payment)
@@ -41,7 +47,7 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
 
     // Payment Tap Ready
     readTimer = new QTimer(this);
-    connect(readTimer, SIGNAL(timeout()), this, SLOT(readTimer_loop()));
+    // connect(readTimer, SIGNAL(timeout()), this, SLOT(readTimer_loop()));
 
     // Payment Progress
     paymentProgressTimer = new QTimer(this);
@@ -153,8 +159,8 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
     db.closeDB();
     if (tap_payment)
     {
-        while (!tap_init());
-
+        // int socketAddr = connectSocket();
+        // qDebug() << "Socket Connected and address is: " << socketAddr << endl;     
     }
    
 }
@@ -247,15 +253,15 @@ void page_payment::updateTotals(string drinkDescription, string drinkAmount, str
 void page_payment::cancelPayment()
 {
 
-    com.flushSerial();
-    /*Cancel any previous payment*/
-    pktToSend = paymentPacket.purchaseCancelPacket();
-    if (sendToUX410())
-    {
-        waitForUX410();
-        // pktResponded.clear();
-    }
-    com.flushSerial();
+    // com.flushSerial();
+    // /*Cancel any previous payment*/
+    // pktToSend = paymentPacket.purchaseCancelPacket();
+    // if (sendToUX410())
+    // {
+    //     waitForUX410();
+    //     // pktResponded.clear();
+    // }
+    // com.flushSerial();
 }
 
 size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
@@ -324,7 +330,6 @@ void page_payment::showEvent(QShowEvent *event)
         ui->order_total_amount->hide();
         ui->steps_Label->hide();
         ui->processing_Label->hide();
-
     }
     else
     {
@@ -359,17 +364,22 @@ void page_payment::showEvent(QShowEvent *event)
     {
         createOrderIdAndSendToBackend();
         qDebug() << "Prepare tap order";
-        pktResponded = com.readForAck();
-        readPacket.packetReadFromUX(pktResponded);
-        pktResponded.clear();
-        response = false;
-        qDebug() << "Acknowledgement received";
-        if (readPacket.getAckOrNak() == communicationPacketField::ACK)
-        {
-            timerEnabled = true;
+        int socket = connectSocket();
+        socketAddr = to_string(socket);
+        qDebug()<< "Socket Connected" << endl;
+        MAC_LABEL = "P_GQ63SC";
+        MAC_KEY = "c0oOuJjLxFnt/e/43FqGSW+7xkuwQonAaNHusrdXHWZnhiX14EZeA32uLGvGz5LvUorrCEWQmbaezJR1ICKUgZQa4zE0GbmxZF+tKJa7V4d31o1y2IkgBx97ErA8HY9MegWhFr+2YOJoYtkrf62bjPAAZ6Ge2etpTAve/CaRa9rKiI5lbmucj7ygs2/7l6YoSspbSWyPZr2gML8plmZk0J6TWYOEB3IOdV1r4yzSTp6FMnnKPQafEScJ+jqbUrF54BQKU3UcAQbFI8WGEHYOS8FDRg8gjRlcviSwCZr7bslgp+9ndQMJPtmph9YhWCggTA6fJNziGWKjzwbwORzGRQ==";
+        startSession(socket, MAC_LABEL, MAC_KEY, 13);
+        double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
+        std::ostringstream stream;
+        stream << std::fixed << std::setprecision(2) << price;
+        std::map<std::string, std::string> responseObj = authorization(socket, MAC_LABEL, MAC_KEY, stream.str());
+        
+        if(responseObj["RESULT"] == "APPROVED"){
+            CTROUTD = responseObj["CTROUTD"];
+            proceed_to_dispense();
         }
-        readTimer->start(10);
-
+        
     }
     else if (payment_method == "qr")
     {
@@ -684,315 +694,11 @@ void page_payment::resetPaymentPage()
 
 /* ----- Payment ----- */
 
-void page_payment::stayAliveLogon()
-{
-    
-    cout << "Getting Lan Info" << endl;
-    pktToSend = paymentPacket.ppPosStatusCheckPkt(StatusType::GetLanInfo);
-    if (sendToUX410())
-    {
-        waitForUX410();
-    }
 
-    pktResponded.clear();
-
-    com.flushSerial();
-    
-    
-}
-
-void page_payment::batchClose()
-{
-    com.flushSerial();
-    /*logon packet to send*/
-    pktToSend = paymentPacket.batchClosePkt();
-    if (sendToUX410())
-    {
-        waitForUX410();
-    }
-
-    pktResponded.clear();
-}
-
-bool page_payment::sendToUX410()
-{
-    int waitForAck = 0;
-    while (waitForAck < 3)
-    {
-        std::cout << "Wait for ACK counter: " << waitForAck << endl;
-        std::cout << "sendtoUX410 Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
-        // std::cout << "Packet to send size :" << pktToSend.size() << "\n";
-        com.sendPacket(pktToSend, uint(pktToSend.size()));
-        sleep(1);
-        // read back what is responded
-        pktResponded = com.readForAck();
-        readPacket.packetReadFromUX(pktResponded);
-        pktResponded.clear();
-        waitForAck++;
-
-        // if(isReadyForTap) {
-        if (readPacket.getAckOrNak() == communicationPacketField::ACK)
-        {
-            return true;
-        }
-    }
-    return false;
-}
 
 bool page_payment::tap_init()
 {
-    paymentConnected = com.page_init();
-    int paymentConnectionFailed = 0;
-    while (!paymentConnected)
-    {
-        
-        paymentConnected = com.page_init();
-        sleep(1);
-        paymentConnectionFailed+=1;
-        if(paymentConnectionFailed==50){
-            DbManager db3(DB_PATH);
-            db3.updateTapToQR();
-            QString payment_method = db3.getPaymentMethod(1);
-            qDebug() << "Payment method" << payment_method;
-            db3.closeDB();
-            qDebug() << "Change the db to QR";
-            exit(1);
-        }
-    }
-
-    // sleep(35);
-
-    cout << "_----_-----__------_-----";
-   
-    // stayAliveLogon();
-    
-    
-    /*Cancel any previous payment*/
-    // cout << "Sending Cancel payment packet..." << endl;
-    // pktToSend = paymentPacket.purchaseCancelPacket();
-    // if (sendToUX410())
-    // {
-    //     cout << "Receiving Cancel payment response" << endl;
-    //     isInitCancelled = true;
-    //     waitForUX410();
-    //     pktResponded.clear();
-    // }
-    // else
-    // {
-    //     return false;
-    // }
-    // com.flushSerial();
-    // cout << "-----------------------------------------------" << endl;
-
-
-    /*batch close packet to send*/
-    // cout << "Sending Batch close packet..." << endl;
-    // pktToSend = paymentPacket.batchClosePkt();
-    // if (sendToUX410())
-    // {
-    //     cout << "Receiving Batch Close response" << endl;
-    //     isInitBatched = true;
-    //     waitForUX410();
-    //     pktResponded.clear();
-    // }
-    // else
-    // {
-    //     return false;
-    // }
-    // com.flushSerial();
-    // cout << "-----------------------------------------------" << endl;
-    // sleep(10);
-    /*logon packet to send*/
-    cout << "Sending Logon packet..." << endl;
-    pktToSend = paymentPacket.logonPacket();
-    if (sendToUX410())
-    {
-        cout << "Receiving Logon response" << endl;
-        isInitLogin = true;
-        waitForUX410();
-        pktResponded.clear();
-    }
-    else
-    {
-        return false;
-    }
-    com.flushSerial();
-    cout << "-----------------------------------------------" << endl;
-
-    /*getConfiguration packet to send*/
-    cout << "Sending Merchant Name query..." << endl;
-    pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::MERCH_NAME);
-    if (sendToUX410())
-    {
-        cout << "Receiving Merchant Name" << endl;
-        waitForUX410();
-        isInitMerchant = true;
-        merchantName = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
-        cout << merchantName << endl;
-        pktResponded.clear();
-    }
-    else
-    {
-        return false;
-    }
-    com.flushSerial();
-    cout << "-----------------------------------------------" << endl;
-
-    /*getConfiguration packet to send*/
-    cout << "Sending Merchant Address query..." << endl;
-    pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::URL1);
-    if (sendToUX410())
-    {
-        cout << "Receiving Merchant Address" << endl;
-        waitForUX410();
-        isInitAddress = true;
-        // merchantAddress = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
-        merchantAddress = paymentPktInfo.dataField(readPacket.getPacket().data);
-
-        std::cout << merchantAddress << endl;
-        pktResponded.clear();
-    }
-    else
-    {
-        return false;
-    }
-    com.flushSerial();
-    cout << "-----------------------------------------------" << endl;
-
-    /*getConfiguration packet to send*/
-    cout << "Sending PTID query..." << endl;
-    pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::CON_TID);
-    if (sendToUX410())
-    {
-        cout << "Receiving PTID" << endl;
-        waitForUX410();
-        isInitTerminalID = true;
-        terminalID = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
-        std::cout << terminalID;
-        pktResponded.clear();
-    }
-    else
-    {
-        return false;
-    }
-    com.flushSerial();
-
     return true;
-}
-
-bool page_payment::waitForUX410()
-{
-    bool waitResponse = false;
-    while (!waitResponse)
-    {
-        usleep(100);
-        QCoreApplication::processEvents();
-        if (pktResponded[0] != 0x02)
-        {
-            pktResponded.clear();
-            pktResponded = com.readPacket();
-            sleep(1);
-        }
-        else
-        {
-            readPacket.packetReadFromUX(pktResponded);
-            com.sendAck();
-            waitResponse = true;
-            sleep(1);
-        }
-    }
-    return waitResponse;
-}
-
-void page_payment::readTimer_loop()
-{
-    cout << p_page_idle->currentProductOrder->getSelectedPriceCorrected() << endl;
-    pktToSend = paymentPacket.purchasePacket((QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2)).QString::toStdString());
-    cout << "to PAY: " << ((QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2)).QString::toStdString());
-    response = getResponse();
-    //qDebug() << "In read timer";
-
-    if (sendToUX410())
-    {   
-        //qDebug() << "After send";
-        waitForUX410();
-        //qDebug() << "After wait";
-        while (!response)
-        {
-            response = getResponse();
-            QCoreApplication::processEvents();
-            if (pktResponded[0] != 0x02)
-            {
-                pktResponded.clear();
-                pktResponded = com.readPacket();
-                response = getResponse();
-                cout << "Polling Timer" << endl;
-                readTimer->start(1000);
-            }
-            else if (pktResponded[10] == 0x33)
-            {
-                pktResponded.clear();
-                pktResponded = com.readPacket();
-                usleep(100);
-                response = getResponse();
-            }
-            else
-            {
-                if (!response)
-                {
-                    cout << "HIT: pktResponded: " << to_string(pktResponded[0]) << endl;
-                    readPacket.packetReadFromUX(pktResponded);
-                    std::cout << readPacket;
-                    com.sendAck();
-                    if (pktResponded[19] == 0x41)
-                    {
-                         // Host Response 41 = A "Approved"
-                        purchaseEnable = true;
-                        approved = true;
-                        cout << "Approval Packet 41" << endl;
-                        this->ui->payment_countdownLabel->setText("Approved");
-                        paymentPktInfo.transactionID(readPacket.getPacket().data);
-                        paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
-                        response = true;
-                        on_payment_bypass_Button_clicked();
-                    }
-                    else if (pktResponded[19] == 0x44)
-                    { // Host Response 44 = D "Declined"
-                        purchaseEnable = true;
-                        approved = false;
-                        cout << "Declined Packet 32" << endl;
-                        this->ui->payment_countdownLabel->setText("Declined");
-                        paymentPktInfo.transactionID(readPacket.getPacket().data);
-                        paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
-                        pktResponded.clear();
-                        // QCoreApplication::processEvents();
-                        sleep(3);
-                        idlePaymentTimeout();
-                    }
-                    else if (pktResponded[19] == 0x4e)
-                    {
-                        purchaseEnable = false;
-                        cout << "No Approval Packet!" << endl;
-                        this->ui->payment_countdownLabel->setText("Not Approved");
-                        paymentPktInfo.transactionID(readPacket.getPacket().data);
-                        paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
-                        pktResponded.clear();
-                        QCoreApplication::processEvents();
-                        sleep(3);
-                        idlePaymentTimeout();
-                    }
-                    else
-                    {
-                        pktResponded.clear();
-                        pktResponded = com.readPacket();
-                        sleep(5);
-                        response = getResponse();
-                        readTimer->start(10);
-                    }
-                }
-        }
-    }
-}
 }
 
 std::string page_payment::toSvgString(const QrCode &qr, int border)

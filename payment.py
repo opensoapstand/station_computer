@@ -9,10 +9,12 @@ import signal
 import configparser
 from datetime import datetime
 import random
+import binascii
+
 config = configparser.ConfigParser()
 def initial_config_setup():
     config.add_section("payment_config")
-    config.set("payment_config", "HOST", "192.168.1.73")
+    config.set("payment_config", "HOST", "192.168.0.1")
     config.set("payment_config", "PORT", 5015)
     config.set("payment_config", "secondary_port", 5016)
     config.set("payment_config", "MAC_LABEL", "")
@@ -58,7 +60,7 @@ def generate_rsa_keys():
     key = RSA.generate(2048)
     private_key = key.exportKey(format="DER")
     public_key = key.publickey().exportKey(format="DER")
-    print(base64.b64encode(public_key))
+    # print(base64.b64encode(public_key))
     pubkey_b64 = base64.b64encode(public_key).decode()
 
     with open("private_key.der", "wb") as key_file:
@@ -73,6 +75,7 @@ def create_counter_mac(counter):
     macKeyBase64decoded = base64.b64decode(encrypted_mac)
     #Set the counter value
     encoded_counter = bytes(counter, 'utf-8')
+    
     # Read the private key file
     with open("private_key.der", "rb") as key_file:
         key_data = key_file.read()
@@ -81,13 +84,14 @@ def create_counter_mac(counter):
     #Decrypt Mac key
     cipher = PKCS1_v1_5.new(private_key)
     macKeyDecrypted = cipher.decrypt(macKeyBase64decoded, None)
-
+    hex_str = binascii.hexlify(macKeyDecrypted).decode('utf-8')  # convert bytes to hex string
+    print(hex_str)
     signing_key = hmac.new(macKeyDecrypted, digestmod='sha256')
     # Update the HMAC object with the bytes of the data
     signing_key.update(encoded_counter)
-
     counter_mac = signing_key.digest()
     counter_mac = base64.b64encode(counter_mac).decode()
+    print(counter_mac)
     return counter_mac
 
 def get_next_counter_and_mac(active_socket):
@@ -428,23 +432,25 @@ def secondary_port():
 def connect_device():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((HOST,PORT))
+        print(get_next_counter_and_mac(s))
         # s.send(unregisterall())
         # register_device(s, generate_rsa_keys())
 
         # s.send(unregister(MAC_LABEL))
-        counter_val, counter_mac = get_next_counter_and_mac(s)
-        s.send(TEST_MAC(counter_val, counter_mac, MAC_LABEL))
-        counter_val, counter_mac = get_next_counter_and_mac(s)
-        s.send(start_session(counter_val,counter_mac))
-        print(s.recv(4096))
-        counter_val, counter_mac = get_next_counter_and_mac(s)
-        s.send(authorization('15.00', counter_val, counter_mac))
-        CTROUTD, result,AUTHCODE = check_approval(s.recv(8192))
-        print(result)
-        print(CTROUTD)
-        counter_val, counter_mac = get_next_counter_and_mac(s)
-        s.send(capture(counter_val, counter_mac,CTROUTD))
-        print(s.recv(4096))
+        # counter_val, counter_mac = get_next_counter_and_mac(s)
+        # s.send(TEST_MAC(counter_val, counter_mac, MAC_LABEL))
+        # print(s.recv(4096))
+        # counter_val, counter_mac = get_next_counter_and_mac(s)
+        # s.send(start_session(counter_val,counter_mac))
+        # print(s.recv(4096))
+        # counter_val, counter_mac = get_next_counter_and_mac(s)
+        # s.send(authorization('15.00', counter_val, counter_mac))
+        # CTROUTD, result,AUTHCODE = check_approval(s.recv(8192))
+        # print(result)
+        # print(CTROUTD)
+        # counter_val, counter_mac = get_next_counter_and_mac(s)
+        # s.send(capture(counter_val, counter_mac,CTROUTD))
+        # print(s.recv(4096))
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(credit(counter_val,counter_mac))
         # print(s.recv(4096))
@@ -471,11 +477,12 @@ def connect_device():
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(querySAF(counter_val,counter_mac))
         # print(s.recv(4096))
-        counter_val, counter_mac = get_next_counter_and_mac(s)
-        s.send(finish_session(counter_val,counter_mac))
-        data2 = s.recv(8192)
-        print(data2)
+        # counter_val, counter_mac = get_next_counter_and_mac(s)
+        # s.send(finish_session(counter_val,counter_mac))
+        # data2 = s.recv(8192)
+        # print(data2)
 
-connect_device()
+# connect_device()
+# generate_rsa_keys()
 # secondary_port()
-
+create_counter_mac("1")

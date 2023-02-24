@@ -100,6 +100,7 @@ DF_ERROR stateManualPump::onAction()
          if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
          {
             productDispensers[m_active_pump_index].the_pcb->startPump(m_active_pump_index + 1);
+            productDispensers[m_active_pump_index].setSolenoid(true); 
          }
 
          if (productDispensers[m_active_pump_index].getMultiDispenseButtonEnabled())
@@ -111,13 +112,14 @@ DF_ERROR stateManualPump::onAction()
       else if ('2' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Disable dispenser pump " + to_string(m_active_pump_index + 1), MSG_INFO);
-         // productDispensers[m_active_pump_index].setSolenoid(false); // should be done at button press.
+         
          productDispensers[m_active_pump_index].setPumpsDisableAll();
          productDispensers[m_active_pump_index].stopDispense();
 
          if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
          {
             productDispensers[m_active_pump_index].the_pcb->stopPump(m_active_pump_index + 1);
+            productDispensers[m_active_pump_index].setSolenoid(false); 
          }
 
          if (productDispensers[m_active_pump_index].getMultiDispenseButtonEnabled())
@@ -454,6 +456,7 @@ DF_ERROR stateManualPump::pumpCyclicTestCycleStart()
    if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
    {
       productDispensers[m_active_pump_index].the_pcb->startPump(m_active_pump_index + 1);
+      productDispensers[m_active_pump_index].setSolenoid(true); 
    }
    else
    {
@@ -470,6 +473,7 @@ DF_ERROR stateManualPump::pumpCyclicTestCycleFinish()
    if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
    {
       productDispensers[m_active_pump_index].the_pcb->stopPump(m_active_pump_index + 1);
+      productDispensers[m_active_pump_index].setSolenoid(false); 
    }
    else
    {
@@ -573,6 +577,7 @@ DF_ERROR stateManualPump::autoPumpSetQuantityTest()
       if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
       {
          productDispensers[m_active_pump_index].the_pcb->startPump(m_active_pump_index + 1);
+         productDispensers[m_active_pump_index].setSolenoid(true); 
       }
       else
       {
@@ -599,6 +604,7 @@ DF_ERROR stateManualPump::autoPumpSetQuantityTest()
       if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
       {
          productDispensers[m_active_pump_index].the_pcb->stopPump(m_active_pump_index + 1);
+         productDispensers[m_active_pump_index].setSolenoid(false); 
       }
       else
       {

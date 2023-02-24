@@ -65,6 +65,7 @@ public:
 
    string getProcessString();
    DF_ERROR parseCommandString();
+   DF_ERROR parseSingleCommandString();
    DF_ERROR parseDispenseCommand(string sCommand);
 
    void clearProcessString();
@@ -82,6 +83,7 @@ public:
 
 
    double getRequestedPrice() { 
+      debugOutput::sendMessage("getRequestedPrice price" + to_string(m_requestedDiscountPrice), MSG_INFO);
       return m_requestedDiscountPrice;}
 
    string getPromoCode() { 

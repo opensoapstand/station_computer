@@ -394,22 +394,13 @@ bool pageProductOverview::stopSelectTimers()
 
 void pageProductOverview::mainPage()
 {
-    //    qDebug() << "pageProductOverview: mainPage button" << endl;
     this->stopSelectTimers();
-    selectIdleTimer->stop();
-    // qDebug() << "product to idle";
-    // p_page_idle->showFullScreen();
-    // this->hide();
     p_page_idle->pageTransition(this, p_page_idle);
 }
 
 void pageProductOverview::on_mainPage_Button_clicked()
 {
-    //    qDebug() << "pageProductOverview: helpPage button" << endl;
     this->stopSelectTimers();
-    selectIdleTimer->stop();
-    // p_page_help->showFullScreen();
-    // this->hide();
     p_page_idle->pageTransition(this, p_page_help);
 }
 
@@ -501,6 +492,8 @@ void pageProductOverview::updatePrice()
     }
     else
     {
+        double discountAmount = selectedProductOrder->getSelectedPrice() - selectedProductOrder->getSelectedPriceCorrected();
+        ui->label_invoice_discount_amount->setText("-$" + QString::number(discountAmount, 'f', 2));
         ui->label_selected_volume->setText(selected_volume + " " + selectedProductOrder->getUnitsForSelectedSlot());
         ui->label_invoice_price->setText("$" + QString::number(selectedProductOrder->getSelectedPrice(), 'f', 2));
         ui->label_invoice_price_total->setText("$" + QString::number(selectedProductOrder->getSelectedPriceCorrected(), 'f', 2));
@@ -690,7 +683,6 @@ void pageProductOverview::on_page_payment_Button_clicked()
     ui->previousPage_Button->setEnabled(false);
 
     this->stopSelectTimers();
-    selectIdleTimer->stop();
     QString paymentMethod = selectedProductOrder->getSelectedPaymentMethod();
 
     if (paymentMethod == "qr" || paymentMethod == "tap")
@@ -752,11 +744,8 @@ void pageProductOverview::on_page_payment_Button_clicked()
 void pageProductOverview::return_to_selectProductPage()
 {
     //    qDebug() << "pageProduct: Previous button" << endl;
-    while (!stopSelectTimers())
-    {
-    };
-    ui->promoKeyboard->hide();
-    selectIdleTimer->stop();
+    stopSelectTimers();
+    //ui->promoKeyboard->hide();
     p_page_idle->pageTransition(this, p_page_product);
 }
 void pageProductOverview::on_selectProductPage_Button_clicked()

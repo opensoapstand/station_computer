@@ -113,8 +113,6 @@ bool DbManager::addPageClick(const QString &page)
     return true;
 }
 
-
-
 bool DbManager::isDatabaseLocked(const QSqlDatabase &db)
 {
     // https://stackoverflow.com/questions/57744538/determine-whether-sqlite-database-is-locked
@@ -158,12 +156,31 @@ QString DbManager::getProductDrinkfillSerial(int slot)
     return val;
 }
 
-void DbManager::updateTapToQR(){
-    
+void DbManager::updateTapToQR()
+{
+
     QSqlQuery qry;
     {
         qry.prepare("UPDATE products SET payment=\"qr\";");
         qry.exec();
+    }
+}
+
+void DbManager::getCustomDiscountProperties(int slot, bool *isEnabled, double *volumeDiscount, double *pricePerLiterDiscount)
+{
+    QSqlQuery qry;
+    {
+        qry.prepare("SELECT is_enabled_custom_discount,size_custom_discount,price_custom_discount FROM products WHERE slot=:slot");
+        // qry.prepare("SELECT name,description,features,ingredients,is_enabled_small,is_enabled_medium,is_enabled_large,is_enabled_custom FROM products WHERE slot=:slot");
+        qry.bindValue(":slot", slot);
+        qry.exec();
+
+        while (qry.next())
+        {
+            *isEnabled = qry.value(0).toInt();
+            *volumeDiscount = qry.value(1).toDouble(); 
+            *pricePerLiterDiscount = qry.value(2).toDouble();
+        }
     }
 }
 
@@ -172,7 +189,7 @@ void DbManager::getProductProperties(int slot, QString *product_id, bool *isSize
 {
     QSqlQuery qry;
     {
-        qry.prepare("SELECT soapstand_product_serial, is_enabled_small,is_enabled_medium,is_enabled_large,is_enabled_custom FROM products WHERE slot=:slot");
+        qry.prepare("SELECT soapstand_product_serial, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom FROM products WHERE slot=:slot");
         // qry.prepare("SELECT name,description,features,ingredients,is_enabled_small,is_enabled_medium,is_enabled_large,is_enabled_custom FROM products WHERE slot=:slot");
         qry.bindValue(":slot", slot);
         qry.exec();
@@ -365,7 +382,6 @@ double DbManager::getProductVolume(int slot, char size)
     qDebug() << " size to volume  " << size << "=" << volume;
     return volume;
 }
-
 
 double DbManager::getFullProduct(int slot)
 {
@@ -704,14 +720,12 @@ double DbManager::getTotalDispensed(int slot)
 
 #ifndef USE_OLD_DATABASE
 
-
 int DbManager::getDispenseButtonCount()
 {
     // QSqlQuery qry;
     int count;
 
     // QString qry_qstr = QString("SELECT dispense_buttons_count FROM machine");
-
 
     QSqlQuery mid_query;
     QString mid_string;
@@ -748,8 +762,6 @@ int DbManager::getDispenseButtonCount()
 
     // return count;
 }
-
-
 
 int DbManager::getSlotEnabled(int slot)
 {
@@ -811,7 +823,7 @@ QString DbManager::getStatusText(int slot)
     return val;
 }
 
-bool DbManager::getRecentTransactions(QString values[][5], int count, int* count_retreived)
+bool DbManager::getRecentTransactions(QString values[][5], int count, int *count_retreived)
 {
     // get number of most recent transactions
     QSqlQuery qry;
@@ -824,7 +836,7 @@ bool DbManager::getRecentTransactions(QString values[][5], int count, int* count
         qry.prepare("SELECT id,end_time,quantity_dispensed,price,product FROM transactions ORDER BY id DESC LIMIT :count");
         qry.bindValue(":count", count);
 
-         qDebug() << " db retreive transactions: " << count;
+        qDebug() << " db retreive transactions: " << count;
         qry.exec();
         int i = 0;
         while (qry.next())
@@ -832,7 +844,7 @@ bool DbManager::getRecentTransactions(QString values[][5], int count, int* count
             for (uint8_t j = 0; j < 5; j++)
             {
                 values[i][j] = qry.value(j).toString();
-                 qDebug() << "db bdafes: " << i  << " : " << values[i][j];
+                qDebug() << "db bdafes: " << i << " : " << values[i][j];
             }
             i++;
             *count_retreived = i;
@@ -1548,7 +1560,8 @@ bool DbManager::updatePluLarge(int slot, QString new_plu)
     }
 }
 
-void DbManager::printerStatus(bool* isOnline, bool* hasPaper ){
+void DbManager::printerStatus(bool *isOnline, bool *hasPaper)
+{
     QSqlQuery qry;
     // bool is_online = false;
     // bool has_paper = false;
@@ -1562,7 +1575,6 @@ void DbManager::printerStatus(bool* isOnline, bool* hasPaper ){
             *isOnline = (qry.value(0).toInt() == 1);
             *hasPaper = (qry.value(1).toInt() == 1);
         }
-
     }
 }
 
@@ -1616,7 +1628,6 @@ QString DbManager::getMaintenanceAdminPassword()
     return mid_string;
 }
 
-
 QString DbManager::getProductType(int slot)
 {
     QSqlQuery product_type_query;
@@ -1655,7 +1666,6 @@ bool DbManager::showTransactions()
     }
     return is_enabled;
 }
-
 
 QString DbManager::getProductID(int slot)
 {
@@ -1705,4 +1715,3 @@ QString DbManager::getUnits(int slot)
     }
     return units_string;
 }
- 

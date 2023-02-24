@@ -876,7 +876,9 @@ void pcb::flowSensorEnable(uint8_t slot)
     case (EN134_4SLOTS):
     case (EN134_8SLOTS):
     {
+        // disable all to be sure
         flowSensorsDisableAll();
+        // enable only the active slot flow sensor
         setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE, true);
     };
     break;
@@ -1007,7 +1009,7 @@ void pcb::refreshFlowSensor(uint8_t slot)
         {
             flow_sensor_total_pulses[slot_index]++;
             flow_sensor_pulses_since_enable[slot_index]++;
-            debugOutput::sendMessage("Flow sensor pulse detected by PCA chip. Slot: " + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses_since_enable[slot_index]), MSG_INFO);
+            // debugOutput::sendMessage("Flow sensor pulse detected by PCA chip. Slot: " + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses_since_enable[slot_index]), MSG_INFO);
             flowSensorTickReceivedEpoch[slot_index] = now_epoch_millis;
         }
         flowSensorStateMemory[slot_index] = state;

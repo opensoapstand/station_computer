@@ -60,8 +60,14 @@ DF_ERROR stateDispense::onEntry()
 
    if (m_pMessaging->getAction() == ACTION_AUTOFILL)
    {
-      productDispensers[pos_index].the_pcb->virtualButtonPressHack(this->slot);
-      productDispensers[pos_index].pumpSlowStart(true);
+      if (productDispensers[pos_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
+      {
+      }
+      else
+      {
+         productDispensers[pos_index].the_pcb->virtualButtonPressHack(this->slot);
+      }
+      startPumping();
    }
 
    return e_ret;
@@ -122,7 +128,7 @@ DF_ERROR stateDispense::onAction()
    {
       debugOutput::sendMessage("Stop dispensing (stop command received)", MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
-      productDispensers[pos_index].pumpSlowStopBlocking();
+      stopPumping();
       return e_ret = OK;
    }
 
@@ -143,7 +149,7 @@ DF_ERROR stateDispense::onAction()
       {
 
          debugOutput::sendMessage("******************* EMPTY CONTAINER DETECTED **********************", MSG_INFO);
-         usleep(100000);                             // send message delay (pause from previous message) desperate attempt to prevent crashes
+         usleep(100000);                                   // send message delay (pause from previous message) desperate attempt to prevent crashes
          m_pMessaging->sendMessageOverIP("No flow abort"); // send to UI
          stopPumping();
          m_state_requested = STATE_DISPENSE_END;
@@ -232,8 +238,8 @@ DF_ERROR stateDispense::onExit()
 {
    productDispensers[pos_index].setPumpsDisableAll();
    productDispensers[pos_index].the_pcb->virtualButtonUnpressHack(this->slot);
-   productDispensers[pos_index].the_pcb->setSingleDispenseButtonLight(this->slot,false);
-  
+   productDispensers[pos_index].the_pcb->setSingleDispenseButtonLight(this->slot, false);
+
    DF_ERROR e_ret = OK;
    return e_ret;
 }

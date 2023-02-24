@@ -36,7 +36,9 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     qDebug()<< "IN send feedback";
     ui->setupUi(this);
 
-    
+    ui->feedback_Input_Button->hide();
+    ui->label_enter_feedback->hide();
+    // ui->label_type_here->hide();
     ui->previousPage_Button->setStyleSheet("QPushButton { color:#555555; background-color: transparent; border: 0px }");
     ui->previousPage_Button->setStyleSheet(
                 "QPushButton {"
@@ -47,7 +49,6 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                 "font-size: 32px;"
                 "line-height: 99px;"
                 "letter-spacing: 1.5px;"
-                "text-transform: lowercase;"
                 "color: #003840;"
                 "text-align: center;"
                 "qproperty-alignment: AlignCenter;"
@@ -55,7 +56,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                 "}");
 
 
-        // ui->previousPage_Button->setText("<-Back");
+        ui->previousPage_Button->setText("<-Back");
         ui->mainPage_Button->hide();
         
         ui->label_select_problem->setStyleSheet("QLabel { color:#555555; ; border: 1px }");
@@ -72,7 +73,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                 "qproperty-alignment: AlignCenter;"
                 "border: none;"
                 "}");
-        ui->label_select_problem->setText("Select problem(s) from the options below");
+        ui->label_select_problem->setText("Please provide feedback");
         ui->label_select_problem->setWordWrap(true);
         ui->label_problem_options->setStyleSheet("background-color: #5E8680; border-radius: 30px;");
         QString checkBoxLabelStyling = ("QPushButton {""font-family: 'Brevia';"
@@ -123,7 +124,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
         ui->checkBox_1_Label->setText("The station never dispensed soap");
        
         ui->checkBox_2_Label->setStyleSheet(checkBoxLabelStyling);
-        ui->checkBox_2_Label->setText("The station charged more amount");
+        ui->checkBox_2_Label->setText("Wrong amount charged");
  
         ui->checkBox_3_Label->setStyleSheet(checkBoxLabelStyling);
         ui->checkBox_3_Label->setText("The station is too slow");
@@ -133,6 +134,22 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 
         ui->checkBox_5_Label->setStyleSheet(checkBoxLabelStyling);
         ui->checkBox_5_Label->setText("Screen was frozen");
+
+        ui->label_enter_feedback->setStyleSheet(checkBoxLabelStyling);
+        ui->label_enter_feedback->setText("Enter other feedback below");
+        
+        ui->feedback_Input_Button->raise();
+        ui->feedback_Input_Button->setStyleSheet("QPushButton { border: 1px solid #FFFFFF}");
+        // ui->feedback_Input_Button->setText("Type here");
+        // ui->label_type_here->show();
+        // ui->label_type_here->setText("Type here");;
+  
+        // ui->promoKeyboard->hide();
+    
+
+
+        
+
 
         
 
@@ -294,19 +311,12 @@ void page_sendFeedback::mainPage()
 {
     qDebug() << "page_sendFeedback: mainPage button" << endl;
     this->stopSelectTimers();
-    selectIdleTimer->stop();
-    // qDebug() << "product to idle";
-    // p_page_idle->showFullScreen();
-    // this->hide();
     p_page_idle->pageTransition(this, p_page_idle);
 }
 
 void page_sendFeedback::on_mainPage_Button_clicked()
 {
     this->stopSelectTimers();
-    selectIdleTimer->stop();
-    // p_page_help->showFullScreen();
-    // this->hide();
     p_page_idle->pageTransition(this, p_page_help);
 }
 
@@ -380,16 +390,33 @@ void page_sendFeedback::on_send_Button_clicked()
     
     dialog->move(0,0);
     dialog->resize(1080,1920);
-    dialog->setStyleSheet("background-image:  url(/home/df-admin/drinkfill/ui/3_help_page.png);");
+    dialog->setStyleSheet("background-image:  url(/home/df-admin/drinkfill/ui/references/templates/default/background_feedbacksent.png);");
     dialog->show();
     dialog->exec();
     }
    
 
-    // while (!stopSelectTimers())
-    // {
-    // };
-    // selectIdleTimer->stop();
+   stopSelectTimers();
     p_page_idle->pageTransition(this, p_page_idle);
 
+}
+
+void page_sendFeedback::on_previousPage_Button_clicked()
+{
+    qDebug() << "On back button clicked."; 
+    stopSelectTimers();
+     
+    p_page_idle->pageTransition(this, p_page_idle);
+     
+}
+void page_sendFeedback::on_feedback_Input_Button_clicked()
+{
+    QObject *button = QObject::sender();
+    // ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
+    // ui->label_type_here->hide();
+    ui->feedback_Input_Button->show();
+
+    // ui->promoKeyboard->show();
+    qDebug() << "show promo keyboard.";
+    // ui->promoCode->show();
 }

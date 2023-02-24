@@ -22,6 +22,9 @@
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
 #include <QMainWindow>
+#include <QtWidgets>
+#include <QtMultimediaWidgets>
+
 //    #define PLAY_VIDEO
 // CTOR
 page_idle::page_idle(QWidget *parent) : QWidget(parent),
@@ -41,7 +44,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     ui->testButton->raise();
     ui->toSelectProductPageButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->toSelectProductPageButton->raise();
-
+  
     // QPixmap image_logo(logo_path);
     // df_util::fileExists(logo_path);
 
@@ -148,7 +151,7 @@ void page_idle::showEvent(QShowEvent *event)
     addPictureToLabel(ui->drinkfill_logo_label, DRINKFILL_LOGO_VERTICAL_PATH);
 
     // m_transitioning = false;
-
+    
     // player = new QMediaPlayer(this);
 
     // QGraphicsVideoItem *item = new QGraphicsVideoItem;

@@ -32,10 +32,10 @@ line-height: 29px;</string>
   <widget class="QPushButton" name="previousPage_Button">
    <property name="geometry">
     <rect>
-     <x>68</x>
-     <y>1757</y>
-     <width>118</width>
-     <height>118</height>
+     <x>80</x>
+     <y>65</y>
+     <width>99</width>
+     <height>36</height>
     </rect>
    </property>
    <property name="text">
@@ -163,7 +163,7 @@ text-align: center;
    <property name="geometry">
     <rect>
      <x>264</x>
-     <y>634</y>
+     <y>560</y>
      <width>576</width>
      <height>45</height>
     </rect>
@@ -176,7 +176,7 @@ text-align: center;
    <property name="geometry">
     <rect>
      <x>274</x>
-     <y>769</y>
+     <y>650</y>
      <width>576</width>
      <height>78</height>
     </rect>
@@ -189,7 +189,7 @@ text-align: center;
    <property name="geometry">
     <rect>
      <x>274</x>
-     <y>1037</y>
+     <y>850</y>
      <width>576</width>
      <height>78</height>
     </rect>
@@ -202,7 +202,7 @@ text-align: center;
    <property name="geometry">
     <rect>
      <x>274</x>
-     <y>903</y>
+     <y>750</y>
      <width>576</width>
      <height>78</height>
     </rect>
@@ -215,7 +215,7 @@ text-align: center;
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>625</y>
+     <y>550</y>
      <width>64</width>
      <height>64</height>
     </rect>
@@ -243,7 +243,7 @@ text-align: center;
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>770</y>
+     <y>650</y>
      <width>64</width>
      <height>64</height>
     </rect>
@@ -259,7 +259,7 @@ text-align: center;
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>903</y>
+     <y>750</y>
      <width>64</width>
      <height>64</height>
     </rect>
@@ -275,7 +275,7 @@ text-align: center;
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>1036</y>
+     <y>850</y>
      <width>64</width>
      <height>64</height>
     </rect>
@@ -291,7 +291,7 @@ text-align: center;
    <property name="geometry">
     <rect>
      <x>274</x>
-     <y>1172</y>
+     <y>950</y>
      <width>576</width>
      <height>78</height>
     </rect>
@@ -304,7 +304,7 @@ text-align: center;
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>1169</y>
+     <y>950</y>
      <width>64</width>
      <height>64</height>
     </rect>
@@ -381,13 +381,38 @@ text-align: center;
     <string>TextLabel</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label_enter_feedback">
+   <property name="geometry">
+    <rect>
+     <x>245</x>
+     <y>1060</y>
+     <width>640</width>
+     <height>37</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="feedback_Input_Button">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>1110</y>
+     <width>611</width>
+     <height>250</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
   <zorder>label_send</zorder>
   <zorder>send_Button</zorder>
   <zorder>label_problem_options</zorder>
   <zorder>mainPage_Button</zorder>
   <zorder>label_selected_volume</zorder>
   <zorder>label_select_problem</zorder>
-  <zorder>previousPage_Button</zorder>
   <zorder>label_still_cant_find_it</zorder>
   <zorder>checkBox_4_Label</zorder>
   <zorder>checkBox_1_Label</zorder>
@@ -401,6 +426,9 @@ text-align: center;
   <zorder>checkBox_1</zorder>
   <zorder>label_still_cant_find</zorder>
   <zorder>label_email</zorder>
+  <zorder>label_enter_feedback</zorder>
+  <zorder>feedback_Input_Button</zorder>
+  <zorder>previousPage_Button</zorder>
  </widget>
  <resources/>
  <connections/>

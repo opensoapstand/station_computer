@@ -154,8 +154,8 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
         ui->feedbackText->show();
         ui->feedbackText->setEchoMode(QLineEdit::Normal);
         QString keyboard = KEYBOARD_IMAGE_PATH;
-    QString keyboard_style_sheet = " background-image: url(" + keyboard + "); }";
-    ui->feedbackKeyboard->setStyleSheet(keyboard_style_sheet);
+    // QString keyboard_style_sheet = " background-image: url(" + keyboard + "); }";
+    // ui->feedbackKeyboard->setStyleSheet(keyboard_style_sheet);
  {
         selectIdleTimer = new QTimer(this);
         selectIdleTimer->setInterval(40);
@@ -354,6 +354,7 @@ void page_sendFeedback::on_send_Button_clicked()
     QTimer *timer = new QTimer(dialog);
     timer->setSingleShot(true);
     timer->start(3000);
+    ui->feedbackText->clear();
 
     QObject::connect(timer, &QTimer::timeout, dialog, &QDialog::close);
     
@@ -474,19 +475,11 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
     {
         qDebug() << "DONE CLICKED";
         QString textEntry = ui->feedbackText->text();
-
-        // int compareResult = QString::compare(textEntry, maintenance_pwd, Qt::CaseInsensitive);
-
-        // if (compareResult == 0)
-        // {
-
-        //     ui->keyboardTextEntry->setText("");
-        //     usleep(100000);
-        //     qDebug() << "Password correct. Will open maintenance page";
-        //     qDebug() << compareResult;
-        //     p_page_idle->pageTransition(this, p_page_maintenance);
-        //     ui->feedbackKeyboard->hide();
-        // }
+          ui->feedbackKeyboard->hide();
+        if (ui->feedbackText->text() == "")
+        {
+            ui->feedbackText->hide();
+        }
     }
     else if (buttonText == "Space")
     {

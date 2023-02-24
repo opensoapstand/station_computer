@@ -152,6 +152,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     
          ui->feedbackText->clear();
         ui->feedbackText->show();
+        ui->feedbackText->setEchoMode(QLineEdit::Normal);
         QString keyboard = KEYBOARD_IMAGE_PATH;
     QString keyboard_style_sheet = " background-image: url(" + keyboard + "); }";
     ui->feedbackKeyboard->setStyleSheet(keyboard_style_sheet);
@@ -330,16 +331,6 @@ void page_sendFeedback::mainPage()
     p_page_idle->pageTransition(this, p_page_idle);
 }
 
-// void page_sendFeedback::on_feedback_Input_Button_clicked()
-// {
-//     // QObject *button = QObject::sender();
-//     qDebug() << "feedback button clicked";
-//     ui->feedbackText->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
-//     // ui->promoInputButton->hide();
-//     ui->feedbackKeyboard->show();
-//     qDebug() << "show promo keyboard.";
-//     ui->feedbackText->show();
-// }
 
 void page_sendFeedback::on_mainPage_Button_clicked()
 {
@@ -433,38 +424,83 @@ void page_sendFeedback::on_send_Button_clicked()
 
 void page_sendFeedback::keyboardButtonPressed(int buttonID)
 {
+    qDebug() << "maintenance password Keyboard Button pressed";
 
     QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
-    QString buttonText = buttonpressed->objectName();
+    QString buttonText = buttonpressed->text();
 
-    if (buttonText == "backspace")
+    if (buttonText == "Cancel")
+    {
+        ui->feedbackKeyboard->hide();
+        ui->feedbackText->setText("");
+    }
+    else if (buttonText == "CAPS")
+    {
+        foreach (QAbstractButton *button, ui->buttonGroup->buttons())
+        {
+            if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace")
+            {
+                // qDebug() << "doing nothing";
+            }
+            else
+            {
+                button->setText(button->text().toLower());
+            }
+        }
+    }
+    else if (buttonText == "caps")
+    {
+        foreach (QAbstractButton *button, ui->buttonGroup->buttons())
+        {
+            if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace")
+            {
+                // doing nothing
+            }
+            else
+            {
+                button->setText(button->text().toUpper());
+            }
+        }
+    }
+    else if (buttonText == "Backspace")
     {
         ui->feedbackText->backspace();
     }
-    else if (buttonText == "space")
+    else if (buttonText == "Clear")
     {
-       int cursorPosition = ui->feedbackText->cursorPosition();
-    ui->feedbackText->setText(ui->feedbackText->text().insert(cursorPosition, " "));
-    ui->feedbackText->setCursorPosition(cursorPosition + 1);
+        ui->feedbackText->setText("");
     }
-    else if (buttonText == "done")
+    else if (buttonText == "Done")
     {
-        ui->feedbackKeyboard->hide();
-        if (ui->feedbackText->text() == "")
-        {
-            // ui->feedbackText->hide();
-        }
-        // on_applyPromo_Button_clicked();
+        qDebug() << "DONE CLICKED";
+        QString textEntry = ui->feedbackText->text();
+
+        // int compareResult = QString::compare(textEntry, maintenance_pwd, Qt::CaseInsensitive);
+
+        // if (compareResult == 0)
+        // {
+
+        //     ui->keyboardTextEntry->setText("");
+        //     usleep(100000);
+        //     qDebug() << "Password correct. Will open maintenance page";
+        //     qDebug() << compareResult;
+        //     p_page_idle->pageTransition(this, p_page_maintenance);
+        //     ui->feedbackKeyboard->hide();
+        // }
     }
-    else if (buttonText.mid(0, 3) == "num")
+    else if (buttonText == "Space")
     {
-        ui->feedbackText->setText(ui->feedbackText->text() + buttonText.mid(3, 1));
+        ui->feedbackText->setText(ui->feedbackText->text() + " ");
+    }
+    else if (buttonText == "&&")
+    {
+        ui->feedbackText->setText(ui->feedbackText->text() + "&");
     }
     else
     {
         ui->feedbackText->setText(ui->feedbackText->text() + buttonText);
     }
-} 
+}
 void page_sendFeedback::on_previousPage_Button_clicked()
 {
     qDebug() << "On back button clicked."; 

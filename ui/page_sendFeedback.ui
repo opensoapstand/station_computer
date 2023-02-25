@@ -459,6 +459,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>^</string>
       </property>
@@ -474,6 +477,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>Q</string>
@@ -491,6 +497,10 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);
+font: 11pt &quot;Montserrat&quot;;</string>
+      </property>
       <property name="text">
        <string>Backspace</string>
       </property>
@@ -506,6 +516,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>!</string>
@@ -523,6 +536,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>4</string>
       </property>
@@ -538,6 +554,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>2</string>
@@ -555,6 +574,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>$</string>
       </property>
@@ -570,6 +592,9 @@ text-align: center;
         <width>87</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>Clear</string>
@@ -587,6 +612,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>-</string>
       </property>
@@ -602,6 +630,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>&amp;&amp;</string>
@@ -619,6 +650,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>_</string>
       </property>
@@ -634,6 +668,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>)</string>
@@ -651,6 +688,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>@</string>
       </property>
@@ -663,6 +703,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>E</string>
@@ -680,6 +723,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>W</string>
       </property>
@@ -695,6 +741,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>U</string>
@@ -712,6 +761,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>5</string>
       </property>
@@ -727,6 +779,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>%</string>
@@ -744,6 +799,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>O</string>
       </property>
@@ -759,6 +817,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>3</string>
@@ -776,6 +837,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>0</string>
       </property>
@@ -791,6 +855,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>I</string>
@@ -808,6 +875,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>=</string>
       </property>
@@ -823,6 +893,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>6</string>
@@ -840,6 +913,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>Y</string>
       </property>
@@ -855,6 +931,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>+</string>
@@ -872,6 +951,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>Space</string>
       </property>
@@ -887,6 +969,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>P</string>
@@ -904,6 +989,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>G</string>
       </property>
@@ -919,6 +1007,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>N</string>
@@ -936,6 +1027,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>D</string>
       </property>
@@ -951,6 +1045,9 @@ text-align: center;
         <width>87</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>CAPS</string>
@@ -968,6 +1065,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>L</string>
       </property>
@@ -983,6 +1083,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>Z</string>
@@ -1000,24 +1103,11 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>V</string>
-      </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
-     </widget>
-    </item>
-    <item row="4" column="6">
-     <widget class="QPushButton" name="m">
-      <property name="maximumSize">
-       <size>
-        <width>50</width>
-        <height>50</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>M</string>
       </property>
       <attribute name="buttonGroup">
        <string notr="true">buttonGroup</string>
@@ -1031,6 +1121,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>B</string>
@@ -1047,6 +1140,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>&quot;</string>
@@ -1067,6 +1163,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>.</string>
       </property>
@@ -1082,6 +1181,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>X</string>
@@ -1099,6 +1201,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>:</string>
       </property>
@@ -1114,6 +1219,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>H</string>
@@ -1131,6 +1239,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>}</string>
       </property>
@@ -1146,6 +1257,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>|</string>
@@ -1163,6 +1277,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>K</string>
       </property>
@@ -1178,6 +1295,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>F</string>
@@ -1195,6 +1315,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>,</string>
       </property>
@@ -1210,6 +1333,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>S</string>
@@ -1227,6 +1353,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>J</string>
       </property>
@@ -1242,6 +1371,9 @@ text-align: center;
         <width>87</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>Done</string>
@@ -1259,6 +1391,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>Cancel</string>
       </property>
@@ -1274,6 +1409,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>~</string>
@@ -1291,6 +1429,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>R</string>
       </property>
@@ -1306,6 +1447,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>C</string>
@@ -1323,6 +1467,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>T</string>
       </property>
@@ -1338,6 +1485,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>A</string>
@@ -1355,24 +1505,11 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>`</string>
-      </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
-     </widget>
-    </item>
-    <item row="4" column="9">
-     <widget class="QPushButton" name="pushButton_252">
-      <property name="maximumSize">
-       <size>
-        <width>50</width>
-        <height>50</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>?</string>
       </property>
       <attribute name="buttonGroup">
        <string notr="true">buttonGroup</string>
@@ -1386,6 +1523,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>9</string>
@@ -1403,6 +1543,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>8</string>
       </property>
@@ -1418,6 +1561,10 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">
+color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>1</string>
@@ -1435,6 +1582,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>7</string>
       </property>
@@ -1450,6 +1600,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>(</string>
@@ -1467,6 +1620,9 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>{</string>
       </property>
@@ -1482,6 +1638,9 @@ text-align: center;
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>#</string>
@@ -1499,8 +1658,49 @@ text-align: center;
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
       <property name="text">
        <string>*</string>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">buttonGroup</string>
+      </attribute>
+     </widget>
+    </item>
+    <item row="4" column="9">
+     <widget class="QPushButton" name="pushButton_252">
+      <property name="maximumSize">
+       <size>
+        <width>50</width>
+        <height>50</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
+      <property name="text">
+       <string>?</string>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">buttonGroup</string>
+      </attribute>
+     </widget>
+    </item>
+    <item row="4" column="6">
+     <widget class="QPushButton" name="m">
+      <property name="maximumSize">
+       <size>
+        <width>50</width>
+        <height>50</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
+      <property name="text">
+       <string>M</string>
       </property>
       <attribute name="buttonGroup">
        <string notr="true">buttonGroup</string>

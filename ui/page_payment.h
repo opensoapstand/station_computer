@@ -100,7 +100,6 @@ public:
     QString getOID(){
         return orderId;
     }
-
     QTimer *readTimer;
     // char * curl_data;
     // char * curl_data1;
@@ -117,6 +116,7 @@ private slots:
     void on_payment_bypass_Button_clicked();
     void proceed_to_dispense();
      void on_mainPage_Button_clicked();
+
     //void on_payment_pass_Button_clicked();
     //void on_payment_cancel_Button_clicked();
     // For Debugging; will be removed.
@@ -213,6 +213,7 @@ private:
     void cancelPayment();
     bool getResponse(){return response;}
 
+    
     // **** Drink Order Reference ****
     // DrinkOrder paymentDrinkOrder;
 
@@ -231,7 +232,7 @@ private:
 
     bool response;
     bool tap_payment;
-
+    int lastTransactionId;
     void testQRgen();
 
     void printQr(const QrCode &qr);
@@ -239,6 +240,7 @@ private:
     void paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg);
     void resetPaymentPage();
     QString getPaymentMethod();
+
 
 
     // QString order_id;

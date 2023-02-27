@@ -2,7 +2,7 @@
 
 std::string read_public_key()
 {
-    std::ifstream infile("public_key.txt");
+    std::ifstream infile("/home/df-admin/drinkfill/ui/payment/public_key.txt");
     if (!infile.is_open()) {
         std::cerr << "Failed to open file" << std::endl;
         return "";
@@ -83,7 +83,7 @@ int connectSocket(){
     memset(&serv_addr, 0, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(5015);
-    if (inet_pton(AF_INET, "192.168.1.69", &serv_addr.sin_addr) <= 0) {
+    if (inet_pton(AF_INET, "192.168.1.64", &serv_addr.sin_addr) <= 0) {
         std::cerr << "Error converting IP address" << std::endl;
         return 1;
     }

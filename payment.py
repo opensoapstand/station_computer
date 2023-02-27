@@ -14,7 +14,7 @@ import binascii
 config = configparser.ConfigParser()
 def initial_config_setup():
     config.add_section("payment_config")
-    config.set("payment_config", "HOST", "192.168.0.1")
+    config.set("payment_config", "HOST", "192.168.1.64")
     config.set("payment_config", "PORT", 5015)
     config.set("payment_config", "secondary_port", 5016)
     config.set("payment_config", "MAC_LABEL", "")
@@ -431,8 +431,10 @@ def secondary_port():
 
 def connect_device():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        print("before connection")
         s.connect((HOST,PORT))
-        print(get_next_counter_and_mac(s))
+        # print("Connected")
+        # print(get_next_counter_and_mac(s))
         # s.send(unregisterall())
         # register_device(s, generate_rsa_keys())
 
@@ -477,12 +479,12 @@ def connect_device():
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(querySAF(counter_val,counter_mac))
         # print(s.recv(4096))
-        # counter_val, counter_mac = get_next_counter_and_mac(s)
-        # s.send(finish_session(counter_val,counter_mac))
-        # data2 = s.recv(8192)
-        # print(data2)
+        counter_val, counter_mac = get_next_counter_and_mac(s)
+        s.send(finish_session(counter_val,counter_mac))
+        data2 = s.recv(8192)
+        print(data2)
 
-# connect_device()
+connect_device()
 # generate_rsa_keys()
 # secondary_port()
-create_counter_mac("1")
+# create_counter_mac("1")

@@ -29,6 +29,7 @@ std::string MAC_KEY = "";
 std::string MAC_LABEL = "";
 std::string socketAddr;
 // CTOR
+
 page_payment::page_payment(QWidget *parent) : QWidget(parent),
                                               ui(new Ui::page_payment)
 {
@@ -65,6 +66,7 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
     qrPeriodicalCheckTimer = new QTimer(this);
     connect(qrPeriodicalCheckTimer, SIGNAL(timeout()), this, SLOT(qrProcessedPeriodicalCheck()));
     DbManager db(DB_PATH);
+    
      if (db.getPaymentMethod(1) == "tap")
         {
             tap_payment = true;
@@ -159,8 +161,16 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
     db.closeDB();
     if (tap_payment)
     {
-        // int socketAddr = connectSocket();
-        // qDebug() << "Socket Connected and address is: " << socketAddr << endl;     
+        std::map<std::string, std::string> configMap = readConfigFile();
+        std::map<std::string, std::string> testResponse = testMac(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
+        if(testResponse["RESPONSE_TEXT"]== "Match"){
+            qDebug() << "Test Mac Command Matched" << endl;
+        }
+        else{
+            qDebug() << "Mismatched" << endl;
+            qDebug() << "Re-registration of the device";
+            registerDevice(connectSocket());
+        }
     }
    
 }
@@ -252,6 +262,8 @@ void page_payment::updateTotals(string drinkDescription, string drinkAmount, str
 /*Cancel any previous payment*/
 void page_payment::cancelPayment()
 {
+    finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+    paymentProgressTimer->stop();
 
     // com.flushSerial();
     // /*Cancel any previous payment*/
@@ -364,21 +376,9 @@ void page_payment::showEvent(QShowEvent *event)
     {
         createOrderIdAndSendToBackend();
         qDebug() << "Prepare tap order";
-        int socket = connectSocket();
-        socketAddr = to_string(socket);
-        qDebug()<< "Socket Connected" << endl;
-        MAC_LABEL = "P_GQ63SC";
-        MAC_KEY = "c0oOuJjLxFnt/e/43FqGSW+7xkuwQonAaNHusrdXHWZnhiX14EZeA32uLGvGz5LvUorrCEWQmbaezJR1ICKUgZQa4zE0GbmxZF+tKJa7V4d31o1y2IkgBx97ErA8HY9MegWhFr+2YOJoYtkrf62bjPAAZ6Ge2etpTAve/CaRa9rKiI5lbmucj7ygs2/7l6YoSspbSWyPZr2gML8plmZk0J6TWYOEB3IOdV1r4yzSTp6FMnnKPQafEScJ+jqbUrF54BQKU3UcAQbFI8WGEHYOS8FDRg8gjRlcviSwCZr7bslgp+9ndQMJPtmph9YhWCggTA6fJNziGWKjzwbwORzGRQ==";
-        startSession(socket, MAC_LABEL, MAC_KEY, 13);
-        double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
-        std::ostringstream stream;
-        stream << std::fixed << std::setprecision(2) << price;
-        std::map<std::string, std::string> responseObj = authorization(socket, MAC_LABEL, MAC_KEY, stream.str());
+        paymentProgressTimer->start();
         
-        if(responseObj["RESULT"] == "APPROVED"){
-            CTROUTD = responseObj["CTROUTD"];
-            proceed_to_dispense();
-        }
+        
         
     }
     else if (payment_method == "qr")
@@ -605,6 +605,45 @@ void page_payment::storePaymentEvent(QSqlDatabase db, QString event)
 
 void page_payment::progressStatusLabel()
 {
+    if(tap_payment){
+       
+        int socket = connectSocket();
+        socketAddr = to_string(socket);
+        qDebug()<< "Socket Connected" << endl;
+        std::map<std::string, std::string> configMap = readConfigFile();
+        MAC_KEY = configMap["MAC_KEY"];
+        MAC_LABEL = configMap["MAC_LABEL"];
+        lastTransactionId = std::stoi(configMap["invoiceNumber"]);
+        // std::cout << MAC_KEY;
+        // MAC_LABEL = "P_GQ63SC";
+        // MAC_KEY = "c0oOuJjLxFnt/e/43FqGSW+7xkuwQonAaNHusrdXHWZnhiX14EZeA32uLGvGz5LvUorrCEWQmbaezJR1ICKUgZQa4zE0GbmxZF+tKJa7V4d31o1y2IkgBx97ErA8HY9MegWhFr+2YOJoYtkrf62bjPAAZ6Ge2etpTAve/CaRa9rKiI5lbmucj7ygs2/7l6YoSspbSWyPZr2gML8plmZk0J6TWYOEB3IOdV1r4yzSTp6FMnnKPQafEScJ+jqbUrF54BQKU3UcAQbFI8WGEHYOS8FDRg8gjRlcviSwCZr7bslgp+9ndQMJPtmph9YhWCggTA6fJNziGWKjzwbwORzGRQ==";
+        startSession(socket, MAC_LABEL, MAC_KEY, lastTransactionId + 1);
+        double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
+        std::ostringstream stream;
+        stream << std::fixed << std::setprecision(2) << price;
+        std::map<std::string, std::string> responseObj = authorization(socket, MAC_LABEL, MAC_KEY, stream.str());
+        
+        if(responseObj["RESULT"] == "APPROVED"){
+            p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
+            CTROUTD = responseObj["CTROUTD"];
+            paymentProgressTimer->stop();
+            proceed_to_dispense();
+        }
+        else if(responseObj["RESULT"] == "DECLINED"){
+            p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_FAIL);
+            std::map<std::string, std::string> responseObjSecond = authorization(socket, MAC_LABEL, MAC_KEY, stream.str());
+            if(responseObjSecond["RESULT"] == "APPROVED"){
+                CTROUTD = responseObjSecond["CTROUTD"];
+                proceed_to_dispense();
+            }
+            else{
+                finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+                paymentProgressTimer->stop();
+                p_page_idle->pageTransition(this, p_pageProduct);
+            }
+        }
+    }
+    
 }
 
 void page_payment::declineTimer_start()
@@ -658,6 +697,10 @@ void page_payment::on_previousPage_Button_clicked()
         // p_pageProduct->resizeEvent(pageProductResize);
         // p_pageProduct->showFullScreen();
         // this->hide();
+        if(tap_payment){
+            finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+            paymentProgressTimer->stop();
+        }
         p_page_idle->pageTransition(this, p_pageProduct);
     }
 }

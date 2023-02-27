@@ -1,13 +1,18 @@
 #include "setup_Tap.h"
 #include "commands.h"
 
-std::string registerDevice(int socket, std::string public_key){
+std::map<std::string, std::string> registerDevice(int socket){
+    std::string public_key = read_public_key();
     std::string registerCommand = "<TRANSACTION> <FUNCTION_TYPE>SECURITY</FUNCTION_TYPE> \
                         <COMMAND>REGISTER</COMMAND>\
                         <ENTRY_CODE>9121</ENTRY_CODE>\
                         <KEY>"+public_key+"</KEY> \
                     </TRANSACTION>";
-    return registerCommand;
+    std::cout << registerCommand;
+    std::map<std::string, std::string> dataReceived = sendAndReceivePacket(registerCommand, socket, true);
+    createOrUpdateConfigFile(dataReceived["MAC_KEY"], dataReceived["MAC_LABEL"], "192.168.1.64", "0");
+    close(socket);
+    return dataReceived;
 }
 
 std::string getCounter(int socket, std::string MAC_LABEL, std::string MAC_KEY){
@@ -33,11 +38,18 @@ std::map<std::string, std::string> getNextCounterMac(int socket, std::string MAC
 }
 
 std::map<std::string, std::string> startSession(int socket, std::string MAC_LABEL, std::string MAC_KEY, int invoice){
+    auto now = std::chrono::system_clock::now();
+    std::time_t time = std::chrono::system_clock::to_time_t(now);
+    // Convert the time to a string
+    std::stringstream ss;
+    ss << std::put_time(std::localtime(&time), "%Y%m%d");
+    std::string dateString = ss.str();
+
     std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
     std::string command = "<TRANSACTION> \
                     <FUNCTION_TYPE>SESSION</FUNCTION_TYPE>\
                     <COMMAND>START</COMMAND>\
-                    <BUSINESSDATE>20230222</BUSINESSDATE>\
+                    <BUSINESSDATE>"+dateString+"</BUSINESSDATE>\
                     <SWIPE_AHEAD>1</SWIPE_AHEAD>\
                     <TRAINING_MODE>0</TRAINING_MODE>\
                     <INVOICE>"+std::to_string(invoice)+"</INVOICE>\
@@ -50,6 +62,7 @@ std::map<std::string, std::string> startSession(int socket, std::string MAC_LABE
                     <NOTIFY_SCA_EVENTS>FALSE</NOTIFY_SCA_EVENTS>\
                     </TRANSACTION>";
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
+    updateInvoiceValueInConfig(std::to_string(invoice));
     return dataReceived;
 }
 
@@ -118,19 +131,80 @@ std::map<std::string, std::string> voidTransaction(int socket, std::string MAC_L
         std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
     return dataReceived;
 }
-std::string testMac(int socket, std::string counter, std::string MAC, std::string MAC_LABEL){
-
+std::map<std::string, std::string> testMac(int socket, std::string MAC_KEY, std::string MAC_LABEL){
+    std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
     std::string command = "<TRANSACTION> \
                     <FUNCTION_TYPE>SECURITY</FUNCTION_TYPE> \
                     <COMMAND>TEST_MAC</COMMAND> \
-                    <MAC_LABEL>"+ MAC_LABEL +"</MAC_LABEL> \
-                    <COUNTER>"+ counter+"</COUNTER> \
-                    <MAC>"+MAC+"</MAC> \
+                    <COUNTER>"+responseObj["COUNTER"]+"</COUNTER>\
+                    <MAC>"+responseObj["COUNTER_ENCODED"]+"</MAC>\
+                    <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
                 </TRANSACTION>";
-    return command;
+    std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
+    close(socket);
+    return dataReceived;
+}
+
+int createOrUpdateConfigFile (std::string macKey,std::string macLabel,std::string iP,std::string invoiceNumber){
+    std::ofstream configFile("/home/df-admin/production/admin/config.txt");
+    if (configFile.is_open()) {
+        chmod("config.txt", S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
+        configFile << "MAC_KEY=" + macKey +"\n";
+        configFile << "MAC_LABEL="+macLabel+"\n";
+        configFile << "IP="+iP+"\n";
+        configFile << "INVOICE="+invoiceNumber+"\n";
+        configFile.close();
+    }
+    else {
+        std::cout << "Unable to open file" << std::endl;
+    }
+    return 0;
 }
 
 
+std::map<std::string, std::string> readConfigFile(){
+    std::ifstream configFile("/home/df-admin/production/admin/config.txt");
+    std::map<std::string, std::string> configMap;
+    if (configFile.is_open()) {
+        std::string line;
+        while (std::getline(configFile, line)) {
+            // Split line into key-value pair
+            std::istringstream iss(line);
+            std::string key, value;
+            if (std::getline(iss, key, '=') && std::getline(iss, value)) {
+                configMap[key] = value;
+            }
+        }
+        configFile.close();
+    }
+    else {
+        registerDevice(connectSocket());
+    }
+    return configMap;
+}
+
+std::string updateInvoiceValueInConfig(std::string invoiceNumber){
+    
+    std::map<std::string, std::string> configMap = readConfigFile();
+    std::string key, value;
+
+    configMap["invoiceNumber"] = invoiceNumber;
+    
+    // Write the updated configMap back to the file
+    std::ofstream outFile("/home/df-admin/production/admin/config.txt");
+
+    if (outFile.is_open()) {
+        for (auto& [key, value] : configMap) {
+            outFile << key << "=" << value << std::endl;
+        }
+        outFile.close();
+    }
+    else {
+        std::cout << "Unable to write to file" << std::endl;
+        return "1";
+    }
+    return "0";
+}
 // int socket = connectSocket();
 //     std::string MAC_LABEL = "P_GQ63SC";
 //     std::string MAC_KEY = "c0oOuJjLxFnt/e/43FqGSW+7xkuwQonAaNHusrdXHWZnhiX14EZeA32uLGvGz5LvUorrCEWQmbaezJR1ICKUgZQa4zE0GbmxZF+tKJa7V4d31o1y2IkgBx97ErA8HY9MegWhFr+2YOJoYtkrf62bjPAAZ6Ge2etpTAve/CaRa9rKiI5lbmucj7ygs2/7l6YoSspbSWyPZr2gML8plmZk0J6TWYOEB3IOdV1r4yzSTp6FMnnKPQafEScJ+jqbUrF54BQKU3UcAQbFI8WGEHYOS8FDRg8gjRlcviSwCZr7bslgp+9ndQMJPtmph9YhWCggTA6fJNziGWKjzwbwORzGRQ==";

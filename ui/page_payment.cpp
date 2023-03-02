@@ -27,6 +27,7 @@ extern QString transactionLogging;
 std::string CTROUTD = "";
 std::string MAC_KEY = "";
 std::string MAC_LABEL = "";
+std::string AUTH_CODE = "";
 std::string socketAddr;
 // CTOR
 
@@ -374,7 +375,7 @@ void page_payment::showEvent(QShowEvent *event)
     QString payment_method = getPaymentMethod();
     if (payment_method == "tap")
     {
-        createOrderIdAndSendToBackend();
+        // createOrderIdAndSendToBackend();
         qDebug() << "Prepare tap order";
         paymentProgressTimer->start();
         
@@ -613,7 +614,7 @@ void page_payment::progressStatusLabel()
         std::map<std::string, std::string> configMap = readConfigFile();
         MAC_KEY = configMap["MAC_KEY"];
         MAC_LABEL = configMap["MAC_LABEL"];
-        lastTransactionId = std::stoi(configMap["invoiceNumber"]);
+        lastTransactionId = std::stoi(configMap["INVOICE"]);
         // std::cout << MAC_KEY;
         // MAC_LABEL = "P_GQ63SC";
         // MAC_KEY = "c0oOuJjLxFnt/e/43FqGSW+7xkuwQonAaNHusrdXHWZnhiX14EZeA32uLGvGz5LvUorrCEWQmbaezJR1ICKUgZQa4zE0GbmxZF+tKJa7V4d31o1y2IkgBx97ErA8HY9MegWhFr+2YOJoYtkrf62bjPAAZ6Ge2etpTAve/CaRa9rKiI5lbmucj7ygs2/7l6YoSspbSWyPZr2gML8plmZk0J6TWYOEB3IOdV1r4yzSTp6FMnnKPQafEScJ+jqbUrF54BQKU3UcAQbFI8WGEHYOS8FDRg8gjRlcviSwCZr7bslgp+9ndQMJPtmph9YhWCggTA6fJNziGWKjzwbwORzGRQ==";
@@ -626,6 +627,14 @@ void page_payment::progressStatusLabel()
         if(responseObj["RESULT"] == "APPROVED"){
             p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
             CTROUTD = responseObj["CTROUTD"];
+            AUTH_CODE = responseObj["AUTH_CODE"];
+            paymentProgressTimer->stop();
+            proceed_to_dispense();
+        }
+        else if(responseObj["RESULT"] == "APPROVED/STORED"){
+            p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
+            CTROUTD = responseObj["CTROUTD"];
+            AUTH_CODE = responseObj["AUTH_CODE"];
             paymentProgressTimer->stop();
             proceed_to_dispense();
         }

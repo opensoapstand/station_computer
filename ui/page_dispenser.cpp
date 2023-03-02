@@ -28,6 +28,7 @@ extern QString transactionLogging;
 extern std::string CTROUTD;
 extern std::string MAC_KEY;
 extern std::string MAC_LABEL;
+extern std::string AUTH_CODE;
 extern std::string socketAddr;
 // CTOR
 page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
@@ -247,13 +248,24 @@ void page_dispenser::dispensing_end_admin()
     {
         qDebug() << "dispense end: tap payment No volume dispensed.";
         // REVERSE PAYMENT
-        voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD);
+        if(CTROUTD!=""){
+            voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD);
+        }
+        else if(AUTH_CODE!=""){
+            std::cout << "Voiding transaction";
+            voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD);
+        }
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
         
     }
     else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && volumeDispensed != 0)
     {
-        capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD, "2.00");
+        if(CTROUTD!=""){
+            capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD, "2.00");
+        }
+        else if(AUTH_CODE!=""){
+            captureOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,AUTH_CODE, "2.00");
+        }
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);   
     }
     stopDispenseTimer();

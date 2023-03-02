@@ -83,7 +83,7 @@ int connectSocket(){
     memset(&serv_addr, 0, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(5015);
-    if (inet_pton(AF_INET, "192.168.1.64", &serv_addr.sin_addr) <= 0) {
+    if (inet_pton(AF_INET, "192.168.1.25", &serv_addr.sin_addr) <= 0) {
         std::cerr << "Error converting IP address" << std::endl;
         return 1;
     }

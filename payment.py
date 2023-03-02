@@ -14,7 +14,7 @@ import binascii
 config = configparser.ConfigParser()
 def initial_config_setup():
     config.add_section("payment_config")
-    config.set("payment_config", "HOST", "192.168.1.64")
+    config.set("payment_config", "HOST", "172.16.102.35")
     config.set("payment_config", "PORT", 5015)
     config.set("payment_config", "secondary_port", 5016)
     config.set("payment_config", "MAC_LABEL", "")
@@ -432,8 +432,8 @@ def secondary_port():
 def connect_device():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         print("before connection")
-        s.connect((HOST,PORT))
-        # print("Connected")
+        s.connect(("192.168.1.25",5015))
+        print("Connected")
         # print(get_next_counter_and_mac(s))
         # s.send(unregisterall())
         # register_device(s, generate_rsa_keys())

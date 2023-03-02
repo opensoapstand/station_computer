@@ -117,12 +117,46 @@ std::map<std::string, std::string> capture(int socket, std::string MAC_LABEL, st
     return dataReceived;
 }
 
+std::map<std::string, std::string> captureOffline(int socket, std::string MAC_LABEL, std::string MAC_KEY, std::string AUTH_CODE, std::string amount){
+    std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
+    std::string command = "<TRANSACTION> \
+                    <FUNCTION_TYPE>PAYMENT</FUNCTION_TYPE> \
+                    <COMMAND>CAPTURE</COMMAND>\
+                    <AUTH_CODE>"+AUTH_CODE+"</AUTH_CODE> \
+                    <COUNTER>"+responseObj["COUNTER"]+"</COUNTER>\
+                    <MAC>"+responseObj["COUNTER_ENCODED"]+"</MAC>\
+                    <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
+                    <TRANS_AMOUNT>"+amount+"</TRANS_AMOUNT>\
+                    <PAYMENT_TYPE>CREDIT</PAYMENT_TYPE>\
+                    <FORCE_FLAG>1</FORCE_FLAG>\
+                </TRANSACTION>";
+    std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
+    return dataReceived;
+}
+
 std::map<std::string, std::string> voidTransaction(int socket, std::string MAC_LABEL, std::string MAC_KEY, std::string CTROUTD){
     std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
     std::string command = "<TRANSACTION> \
                 <FUNCTION_TYPE>PAYMENT</FUNCTION_TYPE> \
                 <COMMAND>VOID</COMMAND> \
                 <CTROUTD>"+CTROUTD+"</CTROUTD> \
+                    <COUNTER>"+responseObj["COUNTER"]+"</COUNTER>\
+                    <MAC>"+responseObj["COUNTER_ENCODED"]+"</MAC>\
+                    <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
+                <PAYMENT_TYPE>CREDIT</PAYMENT_TYPE>\
+            </TRANSACTION>";
+        std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
+    return dataReceived;
+}
+
+
+
+std::map<std::string, std::string> voidTransactionOffline(int socket, std::string MAC_LABEL, std::string MAC_KEY, std::string AUTH_CODE){
+    std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
+    std::string command = "<TRANSACTION> \
+                <FUNCTION_TYPE>PAYMENT</FUNCTION_TYPE> \
+                <COMMAND>VOID</COMMAND> \
+                <AUTH_CODE>"+AUTH_CODE+"</AUTH_CODE> \
                     <COUNTER>"+responseObj["COUNTER"]+"</COUNTER>\
                     <MAC>"+responseObj["COUNTER_ENCODED"]+"</MAC>\
                     <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
@@ -188,7 +222,7 @@ std::string updateInvoiceValueInConfig(std::string invoiceNumber){
     std::map<std::string, std::string> configMap = readConfigFile();
     std::string key, value;
 
-    configMap["invoiceNumber"] = invoiceNumber;
+    configMap["INVOICE"] = invoiceNumber;
     
     // Write the updated configMap back to the file
     std::ofstream outFile("/home/df-admin/production/admin/config.txt");

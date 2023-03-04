@@ -5,9 +5,12 @@ After=network.target
 [Service]
 ExecStart = /usr/bin/ssh -NTC -o ServerAliveInterval=60 -o ExitOnForwardFailure=yes -o StrictHostKeyChecking=no -R 43084:localhost:22 -i /home/df-admin/.ssh/DrinkfillAWS.pem ubuntu@ec2-44-225-153-121.us-west-2.compute.amazonaws.com
 
-Restart = on-failure
+# StrictHostKeyChecking=no  if set to yes, it will ask confirmation the first time we use the rtunnel from server to station (with ssh df-admin@localhost -p 43xxx). 
+
+
+# Restart = on-failure
+Restart = always
 RestartSec = 5
 
 [Install]
 WantedBy = multi-user.target
-

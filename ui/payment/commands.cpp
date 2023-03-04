@@ -22,8 +22,8 @@ std::string getCounter(int socket, std::string MAC_LABEL, std::string MAC_KEY){
                             <MAC>"+ MAC_KEY + "</MAC>\
                             <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL> \
                         </TRANSACTION>";
+    std::cout << "In counter fxn";
     std::map<std::string, std::string> responseObj = sendAndReceivePacket(get_counter_command, socket, false);
-    std::cout << "Response" << responseObj["COUNTER"];
     return responseObj["COUNTER"];      
 }
 
@@ -44,7 +44,6 @@ std::map<std::string, std::string> startSession(int socket, std::string MAC_LABE
     std::stringstream ss;
     ss << std::put_time(std::localtime(&time), "%Y%m%d");
     std::string dateString = ss.str();
-
     std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
     std::string command = "<TRANSACTION> \
                     <FUNCTION_TYPE>SESSION</FUNCTION_TYPE>\
@@ -56,9 +55,8 @@ std::map<std::string, std::string> startSession(int socket, std::string MAC_LABE
                     <COUNTER>"+responseObj["COUNTER"]+"</COUNTER> \
                     <MAC>"+responseObj["COUNTER_ENCODED"]+"</MAC> \
                     <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
-                    <POS_IP>\
-                    </POS_IP>\
-                    <POS_PORT>5015</POS_PORT>\
+                    <POS_IP>192.168.1.25</POS_IP>\
+                    <POS_PORT>5016</POS_PORT>\
                     <NOTIFY_SCA_EVENTS>FALSE</NOTIFY_SCA_EVENTS>\
                     </TRANSACTION>";
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
@@ -129,7 +127,9 @@ std::map<std::string, std::string> captureOffline(int socket, std::string MAC_LA
                     <TRANS_AMOUNT>"+amount+"</TRANS_AMOUNT>\
                     <PAYMENT_TYPE>CREDIT</PAYMENT_TYPE>\
                     <FORCE_FLAG>1</FORCE_FLAG>\
+                    <MANUAL_ENTRY>0</MANUAL_ENTRY>\
                 </TRANSACTION>";
+    std::cout << command << std::endl;
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
     return dataReceived;
 }
@@ -145,6 +145,7 @@ std::map<std::string, std::string> voidTransaction(int socket, std::string MAC_L
                     <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
                 <PAYMENT_TYPE>CREDIT</PAYMENT_TYPE>\
             </TRANSACTION>";
+        std::cout << command << std::endl;
         std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
     return dataReceived;
 }
@@ -162,6 +163,7 @@ std::map<std::string, std::string> voidTransactionOffline(int socket, std::strin
                     <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
                 <PAYMENT_TYPE>CREDIT</PAYMENT_TYPE>\
             </TRANSACTION>";
+    std::cout << command << std::endl;
         std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
     return dataReceived;
 }

@@ -85,13 +85,13 @@ def create_counter_mac(counter):
     cipher = PKCS1_v1_5.new(private_key)
     macKeyDecrypted = cipher.decrypt(macKeyBase64decoded, None)
     hex_str = binascii.hexlify(macKeyDecrypted).decode('utf-8')  # convert bytes to hex string
-    print(hex_str)
+    # print(hex_str)
     signing_key = hmac.new(macKeyDecrypted, digestmod='sha256')
     # Update the HMAC object with the bytes of the data
     signing_key.update(encoded_counter)
     counter_mac = signing_key.digest()
     counter_mac = base64.b64encode(counter_mac).decode()
-    print(counter_mac)
+    # print(counter_mac)
     return counter_mac
 
 def get_next_counter_and_mac(active_socket):
@@ -416,6 +416,31 @@ def querySAF(counter_val, counter_mac):
                 <MAC_LABEL>'+MAC_LABEL+'</MAC_LABEL>\
                 <COUNTER>'+ counter_val +'</COUNTER>\
                 <MAC>'+counter_mac+'</MAC>\
+                <SAF_STATUS>PROCESSED</SAF_STATUS>\
+                </TRANSACTION>'
+    print(command)
+    return command.encode('UTF-8')
+
+
+def lastTran(counter_val, counter_mac):
+    command = '<TRANSACTION> \
+                <FUNCTION_TYPE>REPORT</FUNCTION_TYPE>\
+                <COMMAND>LAST_TRAN</COMMAND>\
+                <MAC_LABEL>'+MAC_LABEL+'</MAC_LABEL>\
+                <COUNTER>'+ counter_val +'</COUNTER>\
+                <MAC>'+counter_mac+'</MAC>\
+                </TRANSACTION>'
+    print(command)
+    return command.encode('UTF-8')
+
+def dupCheck(counter_val, counter_mac):
+    command = '<TRANSACTION> \
+                <FUNCTION_TYPE>REPORT</FUNCTION_TYPE>\
+                <COMMAND>DUPCHECK</COMMAND>\
+                <DUPCHECK_DATE>03/03/2023</DUPCHECK_DATE>\
+                <MAC_LABEL>'+MAC_LABEL+'</MAC_LABEL>\
+                <COUNTER>'+ counter_val +'</COUNTER>\
+                <MAC>'+counter_mac+'</MAC>\
                 </TRANSACTION>'
     print(command)
     return command.encode('UTF-8')
@@ -431,7 +456,7 @@ def secondary_port():
 
 def connect_device():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        print("before connection")
+        # print("before connection")
         s.connect(("192.168.1.25",5015))
         print("Connected")
         # print(get_next_counter_and_mac(s))
@@ -447,17 +472,21 @@ def connect_device():
         # print(s.recv(4096))
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(authorization('15.00', counter_val, counter_mac))
+        # print(s.recv(8192))
         # CTROUTD, result,AUTHCODE = check_approval(s.recv(8192))
         # print(result)
         # print(CTROUTD)
         # counter_val, counter_mac = get_next_counter_and_mac(s)
-        # s.send(capture(counter_val, counter_mac,CTROUTD))
+        # s.send(capture(counter_val, counter_mac,'1821'))
+        # print(s.recv(4096))
+        # counter_val, counter_mac = get_next_counter_and_mac(s)
+        # s.send(lastTran(counter_val, counter_mac))
         # print(s.recv(4096))
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(credit(counter_val,counter_mac))
         # print(s.recv(4096))
         # counter_val, counter_mac = get_next_counter_and_mac(s)
-        # s.send(voidTransaction(counter_val,counter_mac,'1688'))
+        # s.send(voidTransaction(counter_val,counter_mac,'1820'))
         # print(s.recv(4096))
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(creditWithCtroud(counter_val,counter_mac, '1633'))
@@ -473,16 +502,16 @@ def connect_device():
         # s.send(setTime(counter_val, counter_mac))
         # s.send(apply_updates(counter_val, counter_mac))
 
-        # counter_val, counter_mac = get_next_counter_and_mac(s)
-        # s.send(lastTransaction(counter_val,counter_mac))
-        # print(s.recv(4096))
+        counter_val, counter_mac = get_next_counter_and_mac(s)
+        s.send(dupCheck(counter_val,counter_mac))
+        print(s.recv(4096))
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(querySAF(counter_val,counter_mac))
-        # print(s.recv(4096))
-        counter_val, counter_mac = get_next_counter_and_mac(s)
-        s.send(finish_session(counter_val,counter_mac))
-        data2 = s.recv(8192)
-        print(data2)
+        # print(s.recv(65536))
+        # counter_val, counter_mac = get_next_counter_and_mac(s)
+        # s.send(finish_session(counter_val,counter_mac))
+        # data2 = s.recv(8192)
+        # print(data2)
 
 connect_device()
 # generate_rsa_keys()

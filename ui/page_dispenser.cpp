@@ -246,31 +246,33 @@ void page_dispenser::dispensing_end_admin()
 
     if (volumeDispensed == 0 && (selectedProductOrder->getSelectedPaymentMethod()) == "tap")
     {
+        std::map<std::string, std::string> response;
         qDebug() << "dispense end: tap payment No volume dispensed.";
         // REVERSE PAYMENT
         if(CTROUTD!=""){
-            voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD);
+             response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD);
         }
         else if(AUTH_CODE!=""){
             std::cout << "Voiding transaction";
-            voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD);
+             response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,AUTH_CODE);
         }
-        finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
         
     }
     else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && volumeDispensed != 0)
     {
         if(CTROUTD!=""){
-            capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD, "2.00");
+             std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD, "2.00");
         }
         else if(AUTH_CODE!=""){
-            captureOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,AUTH_CODE, "2.00");
+             std::map<std::string, std::string> testResponse = captureOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,AUTH_CODE, "2.00");
         }
-        finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);   
     }
+    std::cout << "Stopping dispense timer";
     stopDispenseTimer();
     // thanksPage->showFullScreen();
     // this->hide();
+    finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);   
+
     p_page_idle->pageTransition(this, thanksPage);
     qDebug() << "Finished dispense admin handling";
 }

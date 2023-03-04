@@ -44,7 +44,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     ui->testButton->raise();
     ui->toSelectProductPageButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->toSelectProductPageButton->raise();
-  
+
     // QPixmap image_logo(logo_path);
     // df_util::fileExists(logo_path);
 
@@ -111,8 +111,6 @@ void page_idle::showEvent(QShowEvent *event)
         "qproperty-alignment: AlignCenter;"
         "}");
 
-
-
     ui->printer_status_label->setStyleSheet(
         "QLabel {"
 
@@ -129,7 +127,6 @@ void page_idle::showEvent(QShowEvent *event)
         "color: white;"
         "border: none;"
         "}");
-
 
     // reset promovalue
     currentProductOrder->setDiscountPercentageFraction(0.0);
@@ -151,7 +148,7 @@ void page_idle::showEvent(QShowEvent *event)
     addPictureToLabel(ui->drinkfill_logo_label, DRINKFILL_LOGO_VERTICAL_PATH);
 
     // m_transitioning = false;
-    
+
     // player = new QMediaPlayer(this);
 
     // QGraphicsVideoItem *item = new QGraphicsVideoItem;
@@ -210,17 +207,24 @@ void page_idle::showEvent(QShowEvent *event)
 
 void page_idle::checkReceiptPrinterStatus()
 {
-    this->p_page_maintenance_general->send_check_printer_status_command();
+    qDebug() << "db idle check printer";
+    DbManager db(DB_PATH);
+    bool isPrinterOnline = false;
+    bool hasPrinterPaper = false;
+    bool hasReceiptPrinter = db.hasReceiptPrinter();
+    db.printerStatus(&isPrinterOnline, &hasPrinterPaper);
+    db.closeDB();
+
+    if (hasReceiptPrinter)
+    {
+        this->p_page_maintenance_general->send_check_printer_status_command();
+    }
+    else
+    {
+        ui->printer_status_label->hide();
+    }
     // this->p_page_maintenance_general->on_printer_check_status_clicked();
     // usleep(50000);
-
-    // qDebug() << "db idle check printer";
-    // DbManager db(DB_PATH);
-    // bool isPrinterOnline = false;
-    // bool hasPrinterPaper = false;
-    // bool hasReceiptPrinter = db.hasReceiptPrinter();
-    // db.printerStatus(&isPrinterOnline, &hasPrinterPaper);
-    // db.closeDB();
 
     // if (hasReceiptPrinter)
     // {

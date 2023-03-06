@@ -18,8 +18,8 @@ echo -e "controller          |$active  \t|$enabled "
 active=$(systemctl is-active ui_soapstand.service)
 enabled=$(systemctl is-enabled ui_soapstand.service)
 echo -e "ui                  |$active  \t|$enabled"
-active=$(systemctl is-active ui_soapstand.service)
-enabled=$(systemctl is-enabled ui_soapstand.service)
+active=$(systemctl is-active rtunnel.service)
+enabled=$(systemctl is-enabled rtunnel.service)
 echo -e "reversed ssh tunnel |$active  \t|$enabled"
 
 db_path=/home/df-admin/production/db/drinkfill-sqlite_newlayout.db

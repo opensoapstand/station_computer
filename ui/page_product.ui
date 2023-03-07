@@ -526,7 +526,7 @@ text-align: center;</string>
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
    </property>
   </widget>
   <zorder>page_payment_Button</zorder>

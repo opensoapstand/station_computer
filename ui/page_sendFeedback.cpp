@@ -36,8 +36,12 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     qDebug()<< "IN send feedback";
     ui->setupUi(this);
 
-    ui->feedback_Input_Button->hide();
-    ui->label_enter_feedback->hide();
+    ui->feedback_Input_Button->setStyleSheet("QPushButton { border: 1px solid #5E8580}");
+    ui->feedback_Input_Button->setText("Type Here");
+    ui->feedbackText->setStyleSheet("QPushButton { background-color: transparent; border: 1px solid #5E8580 }");   // ui->page_payment_Button->show();
+ ui->feedbackKeyboard->hide();
+    // ui->feedback_Input_Button->hide();
+    ui->label_enter_feedback->show();
     // ui->label_type_here->hide();
     ui->previousPage_Button->setStyleSheet("QPushButton { color:#555555; background-color: transparent; border: 0px }");
     ui->previousPage_Button->setStyleSheet(
@@ -146,7 +150,20 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
   
         // ui->promoKeyboard->hide();
     
-
+         ui->feedbackText->clear();
+        ui->feedbackText->show();
+        ui->feedbackText->setEchoMode(QLineEdit::Normal);
+        QString keyboard = KEYBOARD_IMAGE_PATH;
+    // QString keyboard_style_sheet = " background-image: url(" + keyboard + "); }";
+    // ui->feedbackKeyboard->setStyleSheet(keyboard_style_sheet);
+ {
+        selectIdleTimer = new QTimer(this);
+        selectIdleTimer->setInterval(40);
+        // connect(ui->promoButton, SIGNAL(clicked()), this, SLOT(on_applyPromo_Button_clicked()));
+        // connect(ui->feedback_Input_Button, SIGNAL(clicked()), this, SLOT(on_feedback_Input_Button_clicked()));
+        connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
+        connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
+    }
 
         
 
@@ -314,6 +331,7 @@ void page_sendFeedback::mainPage()
     p_page_idle->pageTransition(this, p_page_idle);
 }
 
+
 void page_sendFeedback::on_mainPage_Button_clicked()
 {
     this->stopSelectTimers();
@@ -326,6 +344,7 @@ size_t WriteCallbackFeedback(char *contents, size_t size, size_t nmemb, void *us
     return size * nmemb;
 }
 
+
 void page_sendFeedback::on_send_Button_clicked()
 {   
     QVBoxLayout* layout = new QVBoxLayout();
@@ -335,6 +354,7 @@ void page_sendFeedback::on_send_Button_clicked()
     QTimer *timer = new QTimer(dialog);
     timer->setSingleShot(true);
     timer->start(3000);
+    ui->feedbackText->clear();
 
     QObject::connect(timer, &QTimer::timeout, dialog, &QDialog::close);
     
@@ -363,7 +383,8 @@ void page_sendFeedback::on_send_Button_clicked()
     if(problems.length() != 0)
     {
     QString MachineSerialNumber = p_page_idle->currentProductOrder->getMachineId();
-    QString curl_param = "problems="+problems+"&MachineSerialNumber=" + MachineSerialNumber;
+    QString customFeedback = ui->feedbackText->text();
+    QString curl_param = "problems="+problems+" "+customFeedback+"&MachineSerialNumber=" + MachineSerialNumber;
     qDebug() << "Curl params" << curl_param << endl;
     curl_param_array = curl_param.toLocal8Bit();
     qDebug() << curl_param_array;
@@ -401,6 +422,78 @@ void page_sendFeedback::on_send_Button_clicked()
 
 }
 
+
+void page_sendFeedback::keyboardButtonPressed(int buttonID)
+{
+    qDebug() << "maintenance password Keyboard Button pressed";
+
+    QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
+    QString buttonText = buttonpressed->text();
+
+    if (buttonText == "Cancel")
+    {
+        ui->feedbackKeyboard->hide();
+        ui->feedbackText->setText("");
+    }
+    else if (buttonText == "CAPS")
+    {
+        foreach (QAbstractButton *button, ui->buttonGroup->buttons())
+        {
+            if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace")
+            {
+                // qDebug() << "doing nothing";
+            }
+            else
+            {
+                button->setText(button->text().toLower());
+            }
+        }
+    }
+    else if (buttonText == "caps")
+    {
+        foreach (QAbstractButton *button, ui->buttonGroup->buttons())
+        {
+            if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace")
+            {
+                // doing nothing
+            }
+            else
+            {
+                button->setText(button->text().toUpper());
+            }
+        }
+    }
+    else if (buttonText == "Backspace")
+    {
+        ui->feedbackText->backspace();
+    }
+    else if (buttonText == "Clear")
+    {
+        ui->feedbackText->setText("");
+    }
+    else if (buttonText == "Done")
+    {
+        qDebug() << "DONE CLICKED";
+        QString textEntry = ui->feedbackText->text();
+          ui->feedbackKeyboard->hide();
+        if (ui->feedbackText->text() == "")
+        {
+            ui->feedbackText->hide();
+        }
+    }
+    else if (buttonText == "Space")
+    {
+        ui->feedbackText->setText(ui->feedbackText->text() + " ");
+    }
+    else if (buttonText == "&&")
+    {
+        ui->feedbackText->setText(ui->feedbackText->text() + "&");
+    }
+    else
+    {
+        ui->feedbackText->setText(ui->feedbackText->text() + buttonText);
+    }
+}
 void page_sendFeedback::on_previousPage_Button_clicked()
 {
     qDebug() << "On back button clicked."; 
@@ -410,13 +503,13 @@ void page_sendFeedback::on_previousPage_Button_clicked()
      
 }
 void page_sendFeedback::on_feedback_Input_Button_clicked()
-{
-    QObject *button = QObject::sender();
-    // ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
-    // ui->label_type_here->hide();
-    ui->feedback_Input_Button->show();
-
-    // ui->promoKeyboard->show();
+ {
+//  QObject *button = QObject::sender();
+    qDebug() << "feedback button clicked";
+    ui->feedbackText->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
+    // ui->promoInputButton->hide();
+    ui->feedbackKeyboard->show();
+    ui->feedback_Input_Button->lower();
     qDebug() << "show promo keyboard.";
-    // ui->promoCode->show();
+    ui->feedbackText->show();
 }

@@ -261,8 +261,20 @@ void dispenser::setMultiDispenseButtonLight(int slot, bool enableElseDisable)
     {
         m_pDispenseButton4[0]->writePin(!enableElseDisable);
     }
-    else
+    else if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_NO_PIC){
+        this->the_pcb->setSingleDispenseButtonLight(1, enableElseDisable);
+
+    }
+    else if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON){
+        if (getMultiDispenseButtonEnabled())
+        {
+            this->the_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
+        }else{
+            this->the_pcb->setSingleDispenseButtonLight(1, enableElseDisable);
+        }
+    }else
     {
+
         this->the_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
     }
 
@@ -377,6 +389,8 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
         if (getMultiDispenseButtonEnabled())
         {
             setMultiDispenseButtonLight(getSlot(), true);
+        }else{
+            setMultiDispenseButtonLight(1, true);
         }
         setPumpEnable(); // Added at time of EN-134 integration. Why did things work earlier onwards?
     }
@@ -385,8 +399,13 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
         setPumpEnable();
         this->the_pcb->setSingleDispenseButtonLight(getSlot(), true);
     }
-    else
+    else if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_NO_PIC)
     {
+        this->the_pcb->setSingleDispenseButtonLight(getSlot(), true);
+
+    }else
+    {
+        debugOutput::sendMessage("No dispense button light enabled. ", MSG_WARNING);
     }
 
     // Set Start Time
@@ -493,8 +512,11 @@ DF_ERROR dispenser::initGlobalFlowsensorIO(int pin, int pos)
 
 DF_ERROR dispenser::initDispenseButton4Light()
 {
-    m_pDispenseButton4[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_4);
-    m_pDispenseButton4[0]->setPinAsInputElseOutput(false);
+    if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON)
+    {
+        m_pDispenseButton4[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_4);
+        m_pDispenseButton4[0]->setPinAsInputElseOutput(false);
+    }
 }
 
 DF_ERROR dispenser::initButtonsShutdownAndMaintenance()

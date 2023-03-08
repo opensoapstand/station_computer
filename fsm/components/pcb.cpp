@@ -545,6 +545,7 @@ void pcb::setSingleDispenseButtonLight(uint8_t slot, bool onElseOff)
 
     case (DSED8344_NO_PIC):
     {
+        setPCA9534Output(1, 6, !onElseOff);
     };
     break;
     case (DSED8344_PIC_MULTIBUTTON):

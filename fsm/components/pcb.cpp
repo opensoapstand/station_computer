@@ -580,6 +580,8 @@ void pcb::setSingleDispenseButtonLight(uint8_t slot, bool onElseOff)
             //    m_pDispenseButton4[0]->writePin(!enableElseDisable);
             // }
             // break;
+            debugOutput::sendMessage("ASSERT ERROR: wrong way of setting light four for multi dispense light. The hack is not through the PCA but the odyssey.", MSG_ERROR);
+            break;
         }
         default:
         {
@@ -1056,157 +1058,175 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
 {
     // low level state machine, to prevent damage to the solenoid. i.e. do not run pump with closed solenoid.
 
-    for (uint8_t slot_index = 0; slot_index < 4; slot_index++)
+    switch (pcb_version)
     {
-        uint8_t slot = slot_index + 1;
-        using namespace std::chrono;
-        uint64_t now_epoch_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
 
-        switch (pumpCycle_state[slot_index])
+        for (uint8_t slot_index = 0; slot_index < 4; slot_index++)
         {
+            uint8_t slot = slot_index + 1;
+            using namespace std::chrono;
+            uint64_t now_epoch_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
-        case state_init:
-        {
-            setSolenoid(slot, false);
-            setSingleDispenseButtonLight(slot, false);
-            stopPump(slot);
-            pumpCycle_state[slot_index] = state_idle;
-        }
-        break;
-        case state_idle:
-        {
-            if (slotEnabled[slot_index])
+            switch (pumpCycle_state[slot_index])
             {
-                pumpCycle_state[slot_index] = state_slot_enabled;
-                button_light_blink_on_else_off[slot_index] = false;
-                button_light_blink_period_start_millis[slot_index] = now_epoch_millis - SLOT_ENABLED_BLINK_BUTTON_OFF_MILLIS - 10;
-            }
-        }
-        break;
-        case state_slot_enabled:
-        {
-            if (!slotEnabled[slot_index])
+
+            case state_init:
             {
+                setSolenoid(slot, false);
+                setSingleDispenseButtonLight(slot, false);
+                stopPump(slot);
                 pumpCycle_state[slot_index] = state_idle;
             }
-
-            if (button_light_blink_on_else_off[slot_index])
+            break;
+            case state_idle:
             {
-                // button blink light ON
-                if (now_epoch_millis > (button_light_blink_period_start_millis[slot_index] + SLOT_ENABLED_BLINK_BUTTON_ON_MILLIS))
+                if (slotEnabled[slot_index])
                 {
+                    pumpCycle_state[slot_index] = state_slot_enabled;
                     button_light_blink_on_else_off[slot_index] = false;
-                    setSingleDispenseButtonLight(slot, false);
-                    button_light_blink_period_start_millis[slot_index] = now_epoch_millis;
+                    button_light_blink_period_start_millis[slot_index] = now_epoch_millis - SLOT_ENABLED_BLINK_BUTTON_OFF_MILLIS - 10;
                 }
             }
-            else
+            break;
+            case state_slot_enabled:
             {
-                // button blink light OFF
-                if (now_epoch_millis > (button_light_blink_period_start_millis[slot_index] + SLOT_ENABLED_BLINK_BUTTON_OFF_MILLIS))
+                if (!slotEnabled[slot_index])
                 {
-                    button_light_blink_on_else_off[slot_index] = true;
-                    setSingleDispenseButtonLight(slot, true);
-                    button_light_blink_period_start_millis[slot_index] = now_epoch_millis;
+                    pumpCycle_state[slot_index] = state_idle;
                 }
-            }
 
-            if (getDispenseButtonStateDebounced(slot))
-            {
-                pumpCycle_state[slot_index] = state_button_pressed;
-                pump_start_delay_start_epoch[slot_index] = now_epoch_millis;
-                setSolenoid(slot, true);
-                setSingleDispenseButtonLight(slot, true);
-            }
-        }
-        break;
-        case state_button_pressed:
-        {
-            // wait state. handle releasing button/ losing slot enable
-            if (!getDispenseButtonStateDebounced(slot) || !slotEnabled[slot_index])
-            {
-                pumpCycle_state[slot_index] = state_init;
-            }
-
-            if (now_epoch_millis > (pump_start_delay_start_epoch[slot_index] + PUMP_START_DELAY_MILLIS))
-            {
-                pumpCycle_state[slot_index] = state_pumping;
-                startPump(slot);
-            }
-        }
-        break;
-        case state_pumping:
-        {
-            if (!getDispenseButtonStateDebounced(slot) || !slotEnabled[slot_index])
-            {
-
-                if (PUMP_BACKTRACK_TIME_MILLIS > 0)
+                if (button_light_blink_on_else_off[slot_index])
                 {
-                    // only chose this path if there is any backtracking at all.
-
-                    stopPump(slot);
-                    pumpCycle_state[slot_index] = state_button_released_pump_stopped;
-                    pump_stop_before_backtrack_delay_start_epoch[slot_index] = now_epoch_millis;
+                    // button blink light ON
+                    if (now_epoch_millis > (button_light_blink_period_start_millis[slot_index] + SLOT_ENABLED_BLINK_BUTTON_ON_MILLIS))
+                    {
+                        button_light_blink_on_else_off[slot_index] = false;
+                        setSingleDispenseButtonLight(slot, false);
+                        button_light_blink_period_start_millis[slot_index] = now_epoch_millis;
+                    }
                 }
                 else
                 {
+                    // button blink light OFF
+                    if (now_epoch_millis > (button_light_blink_period_start_millis[slot_index] + SLOT_ENABLED_BLINK_BUTTON_OFF_MILLIS))
+                    {
+                        button_light_blink_on_else_off[slot_index] = true;
+                        setSingleDispenseButtonLight(slot, true);
+                        button_light_blink_period_start_millis[slot_index] = now_epoch_millis;
+                    }
+                }
+
+                if (getDispenseButtonStateDebounced(slot))
+                {
+                    pumpCycle_state[slot_index] = state_button_pressed;
+                    pump_start_delay_start_epoch[slot_index] = now_epoch_millis;
+                    setSolenoid(slot, true);
+                    setSingleDispenseButtonLight(slot, true);
+                }
+            }
+            break;
+            case state_button_pressed:
+            {
+                // wait state. handle releasing button/ losing slot enable
+                if (!getDispenseButtonStateDebounced(slot) || !slotEnabled[slot_index])
+                {
+                    pumpCycle_state[slot_index] = state_init;
+                }
+
+                if (now_epoch_millis > (pump_start_delay_start_epoch[slot_index] + PUMP_START_DELAY_MILLIS))
+                {
+                    pumpCycle_state[slot_index] = state_pumping;
+                    startPump(slot);
+                }
+            }
+            break;
+            case state_pumping:
+            {
+                if (!getDispenseButtonStateDebounced(slot) || !slotEnabled[slot_index])
+                {
+
+                    if (PUMP_BACKTRACK_TIME_MILLIS > 0)
+                    {
+                        // only chose this path if there is any backtracking at all.
+
+                        stopPump(slot);
+                        pumpCycle_state[slot_index] = state_button_released_pump_stopped;
+                        pump_stop_before_backtrack_delay_start_epoch[slot_index] = now_epoch_millis;
+                    }
+                    else
+                    {
+                        pumpCycle_state[slot_index] = state_stop_pump;
+                    }
+                }
+            }
+            break;
+            case state_button_released_pump_stopped:
+            {
+                if (now_epoch_millis > (pump_stop_before_backtrack_delay_start_epoch[slot_index] + PUMP_STOP_BEFORE_BACKTRACK_TIME_MILLIS))
+                {
+                    pumpCycle_state[slot_index] = state_pump_backtracking;
+                    setPumpDirection(slot, false);
+                    startPump(slot);
+                    pump_backtrack_start_epoch[slot_index] = now_epoch_millis;
+                }
+            }
+            break;
+            case state_pump_backtracking:
+            {
+
+                if (now_epoch_millis > (pump_backtrack_start_epoch[slot_index] + PUMP_BACKTRACK_TIME_MILLIS))
+                {
+
+                    setPumpDirection(slot, true);
+
                     pumpCycle_state[slot_index] = state_stop_pump;
                 }
             }
-        }
-        break;
-        case state_button_released_pump_stopped:
-        {
-            if (now_epoch_millis > (pump_stop_before_backtrack_delay_start_epoch[slot_index] + PUMP_STOP_BEFORE_BACKTRACK_TIME_MILLIS))
-            {
-                pumpCycle_state[slot_index] = state_pump_backtracking;
-                setPumpDirection(slot, false);
-                startPump(slot);
-                pump_backtrack_start_epoch[slot_index] = now_epoch_millis;
-            }
-        }
-        break;
-        case state_pump_backtracking:
-        {
-
-            if (now_epoch_millis > (pump_backtrack_start_epoch[slot_index] + PUMP_BACKTRACK_TIME_MILLIS))
-            {
-
-                setPumpDirection(slot, true);
-
-                pumpCycle_state[slot_index] = state_stop_pump;
-            }
-        }
-        break;
-
-        case state_stop_pump:
-        {
-            pumpCycle_state[slot_index] = state_wait_solenoid_delay;
-            stopPump(slot);
-            solenoid_stop_delay_start_epoch[slot_index] = now_epoch_millis;
-        }
-        break;
-
-        case state_wait_solenoid_delay:
-        {
-            if (getDispenseButtonStateDebounced(slot))
-            {
-                pumpCycle_state[slot_index] = state_pumping;
-                startPump(slot);
-            }
-
-            if (now_epoch_millis > (solenoid_stop_delay_start_epoch[slot_index] + SOLENOID_STOP_DELAY_MILLIS))
-            {
-                pumpCycle_state[slot_index] = state_slot_enabled;
-                setSolenoid(slot, false);
-                setSingleDispenseButtonLight(slot, false);
-            }
-        }
-        default:
-        {
             break;
-        }
-        }
+
+            case state_stop_pump:
+            {
+                pumpCycle_state[slot_index] = state_wait_solenoid_delay;
+                stopPump(slot);
+                solenoid_stop_delay_start_epoch[slot_index] = now_epoch_millis;
+            }
+            break;
+
+            case state_wait_solenoid_delay:
+            {
+                if (getDispenseButtonStateDebounced(slot))
+                {
+                    pumpCycle_state[slot_index] = state_pumping;
+                    startPump(slot);
+                }
+
+                if (now_epoch_millis > (solenoid_stop_delay_start_epoch[slot_index] + SOLENOID_STOP_DELAY_MILLIS))
+                {
+                    pumpCycle_state[slot_index] = state_slot_enabled;
+                    setSolenoid(slot, false);
+                    setSingleDispenseButtonLight(slot, false);
+                }
+            }
+            default:
+            {
+                break;
+            }
+            }
+        
+            };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Do not execute independent dispense cycle with this PCB", MSG_ERROR);
+        
+    }
+    break;
+    }
+    
+    
     }
 }
 

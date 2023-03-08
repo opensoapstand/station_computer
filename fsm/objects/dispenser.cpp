@@ -257,24 +257,30 @@ void dispenser::setMultiDispenseButtonLight(int slot, bool enableElseDisable)
 {
     // output has to be set low for light to be on.
     debugOutput::sendMessage("slot light: " + to_string(slot) + "on else off: " + to_string(enableElseDisable), MSG_INFO);
-    if ((the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON) && this->slot == 4)
+   
+    if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON)
     {
-        m_pDispenseButton4[0]->writePin(!enableElseDisable);
-    }
-    else if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_NO_PIC){
-        this->the_pcb->setSingleDispenseButtonLight(1, enableElseDisable);
-
-    }
-    else if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON){
         if (getMultiDispenseButtonEnabled())
         {
-            this->the_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
+
+             if (this->slot == 4)
+            {
+                m_pDispenseButton4[0]->writePin(!enableElseDisable);
+            }else{
+
+                this->the_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
+            }
+
         }else{
             this->the_pcb->setSingleDispenseButtonLight(1, enableElseDisable);
         }
-    }else
+    }
+    else if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_NO_PIC)
     {
-
+        this->the_pcb->setSingleDispenseButtonLight(1, enableElseDisable);
+    }
+    else
+    {
         this->the_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
     }
 
@@ -360,14 +366,12 @@ DF_ERROR dispenser::loadGeneralProperties()
     loadMultiDispenseButtonEnabledFromDb();
     usleep(20000);
 
-    if (getMultiDispenseButtonEnabled())
-    {
+    // if (getMultiDispenseButtonEnabled())
+    // {
         //    setAllDispenseButtonLightsOff();
-    }
-    else
-    {
         the_pcb->setSingleDispenseButtonLight(this->slot, false);
-    }
+    // }
+   
     resetVolumeDispensed();
 }
 
@@ -397,11 +401,11 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
     else if (the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS)
     {
         setPumpEnable();
-        this->the_pcb->setSingleDispenseButtonLight(getSlot(), true);
+        setMultiDispenseButtonLight(getSlot(), true);
     }
     else if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_NO_PIC)
     {
-        this->the_pcb->setSingleDispenseButtonLight(getSlot(), true);
+        setMultiDispenseButtonLight(getSlot(), true);
 
     }else
     {

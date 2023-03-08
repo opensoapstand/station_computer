@@ -14,6 +14,8 @@
 #include "pagethankyou.h"
 #include "ui_pagethankyou.h"
 #include "page_sendFeedback.h"
+#include "page_idle.h"
+
 
 // static QPointer<QFile> log_file = nullptr;
 extern QString transactionLogging;
@@ -183,9 +185,12 @@ void pagethankyou::showEvent(QShowEvent *event)
     is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
     exitIsForceable = false;
 
-    if (paymentMethod == "qr" || paymentMethod == "tap")
+    if (paymentMethod == "qr")
     {
         sendDispenseEndToCloud();
+    }
+    else if(paymentMethod=="tap"){
+        sendTapOrderToCloud();
     }
     else
     {
@@ -200,6 +205,69 @@ size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
 {
     ((std::string *)userp)->append((char *)contents, size * nmemb);
     return size * nmemb;
+}
+
+void pagethankyou::sendTapOrderToCloud(){
+    QString MachineSerialNumber = p_page_idle->currentProductOrder->getMachineId();
+    QString productUnits = p_page_idle->currentProductOrder->getUnitsForSelectedSlot();
+    QString productId = p_page_idle->currentProductOrder->getSelectedProductId();
+    QString contents = p_page_idle->currentProductOrder->getSelectedProductName();
+    QString quantity_requested = p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(false, false);
+    char drinkSize = p_page_idle->currentProductOrder->getSelectedSizeAsChar();
+    QString price = QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2);
+
+    // create a unique order id locally
+    QString dispensed_correct_units = this->p_page_dispense->getMostRecentDispensed();
+    QString promoCode = this->p_page_dispense->getPromoCodeUsed();
+    // qDebug() << "Send data at finish of order : " << order_id << ". Total dispensed: " << this->p_page_dispense->getMostRecentDispensed() << "corrected units send to soapstandportal: " << dispensed_correct_units;
+    if (dispensed_correct_units == 0)
+    {
+        transactionLogging += "\n ERROR: No Volume dispensed";
+    }
+    // QString curl_param = "&dispensed_amount=" + dispensed_correct_units + "&coupon=" + promoCode + "&logging=" + transactionLogging;
+    QString curl_param = "contents=" + contents + "&quantity_requested=" + quantity_requested + "&quantity_dispensed=" + dispensed_correct_units + "&size_unit=" + productUnits + "&price=" + price + "&productId=" + productId +"&MachineSerialNumber=" + MachineSerialNumber + "&paymentMethod=TAP&quantity_dispensed_ml=" + dispensed_correct_units + "&coupon="+ promoCode;
+    qDebug() << "Curl params" << curl_param << endl;
+    curl_param_array = curl_param.toLocal8Bit();
+    curl_data = curl_param_array.data();
+
+    curl = curl_easy_init();
+    if (!curl)
+    {
+        qDebug() << "pagethankyou: cURL failed to init. parameters:" + curl_param;
+        transactionToFile(curl_data);
+        is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
+        return;
+    }
+
+    curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/pushPrinterOrder");
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback2);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
+    res = curl_easy_perform(curl);
+
+    if (res != CURLE_OK)
+    {
+        qDebug() << "ERROR: Transaction NOT sent to cloud. cURL fail. Error code: " + QString::number(res);
+
+        transactionToFile(curl_data);
+        is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
+    }
+    else
+    {
+        QString feedback = QString::fromUtf8(readBuffer.c_str());
+        qDebug() << "Transaction sent to cloud. cURL success. Server feedback readbuffer: " << feedback;
+
+        // readbuffer is a string. "true" or "false"
+        if (readBuffer == "true" || "Order Completed")
+        {
+            // return data
+            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
+        }
+    }
+    curl_easy_cleanup(curl);
+    readBuffer = "";
+
 }
 
 void pagethankyou::sendDispenseEndToCloud()
@@ -353,6 +421,8 @@ void pagethankyou::exitPage()
 
         thankYouEndTimer->start(1000);
         _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
+        p_page_idle->pageTransition(this, p_page_idle);
+
     }
 }
 

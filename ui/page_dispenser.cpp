@@ -29,6 +29,7 @@ extern std::string CTROUTD;
 extern std::string MAC_KEY;
 extern std::string MAC_LABEL;
 extern std::string AUTH_CODE;
+extern std::string SAF_NUM;
 extern std::string socketAddr;
 // CTOR
 page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
@@ -78,7 +79,7 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
-    
+
 }
 
 /*
@@ -98,7 +99,6 @@ void page_dispenser::setPage(page_payment *page_payment, pagethankyou *pageThank
     // QPalette palette;
     // palette.setBrush(QPalette::Background, background);
     // this->setPalette(palette);
-
 
 }
 
@@ -181,61 +181,6 @@ void page_dispenser::updateVolumeDispensedLabel(double dispensed){
 
 }
 
-bool page_dispenser::sendToUX410()
-{
-    int waitForAck = 0;
-    while (waitForAck < 3)
-    {
-        cout << "Wait for ACK counter: " << waitForAck << endl;
-        qDebug() << "Wait for ACK counter: " << endl;
-        // sleep(1);
-        com.sendPacket(pktToSend, uint(pktToSend.size()));
-        std::cout << "sendtoUX410 Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
-
-        // read back what is responded
-        pktResponded = com.readForAck();
-        readPacket.packetReadFromUX(pktResponded);
-        pktResponded.clear();
-        waitForAck++;
-
-        cout << "Waiting for TAP in dispenser" << endl;
-        cout << readPacket << endl;
-        if (readPacket.getAckOrNak() == communicationPacketField::ACK)
-        {
-            return true;
-        }
-
-        usleep(50000);
-    }
-    return false;
-}
-
-bool page_dispenser::waitForUX410()
-{
-    bool waitResponse = false;
-    while (!waitResponse)
-    {
-        //        QCoreApplication::processEvents();
-        // cout << readPacket << endl;
-        // sleep(1);
-        if (pktResponded[0] != 0x02)
-        {
-            pktResponded.clear();
-            pktResponded = com.readPacket();
-            usleep(10);
-        }
-        else
-        {
-            //  pktResponded = com.readPacket();
-            readPacket.packetReadFromUX(pktResponded);
-            std::cout << readPacket;
-            com.sendAck();
-            waitResponse = true;
-        }
-    }
-    return waitResponse;
-}
-
 /*
  * Page Tracking reference to Payment page and completed payment
  */
@@ -252,29 +197,34 @@ void page_dispenser::dispensing_end_admin()
         if(CTROUTD!=""){
              response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD);
         }
-        else if(AUTH_CODE!=""){
+        else if(SAF_NUM!=""){
             std::cout << "Voiding transaction";
-             response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,AUTH_CODE);
+             response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,SAF_NUM);
         }
         
     }
     else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && volumeDispensed != 0)
     {
+        double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
+        std::ostringstream stream;
+        stream << std::fixed << std::setprecision(2) << price;
         if(CTROUTD!=""){
-             std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD, "2.00");
+             std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD, stream.str());
         }
         else if(AUTH_CODE!=""){
-             std::map<std::string, std::string> testResponse = captureOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,AUTH_CODE, "2.00");
+             std::map<std::string, std::string> testResponse = captureOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,AUTH_CODE, stream.str());
         }
     }
     std::cout << "Stopping dispense timer";
     stopDispenseTimer();
+
     // thanksPage->showFullScreen();
     // this->hide();
     finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);   
 
     p_page_idle->pageTransition(this, thanksPage);
     qDebug() << "Finished dispense admin handling";
+
 }
 
 void page_dispenser::force_finish_dispensing()
@@ -352,9 +302,10 @@ void page_dispenser::fsmSendPromo()
 void page_dispenser::stopDispenseTimer()
 {
     this->isDispensing = false;
-    //    qDebug() << "page_dispenser: Stop Timers" << endl;
+       qDebug() << "page_dispenser: Stop Dispense Timers" << endl;
     if (dispenseIdleTimer != nullptr)
     {
+        qDebug() << "Dispense timer stop function" <<endl;
         dispenseIdleTimer->stop();
     }
     dispenseIdleTimer = nullptr;

@@ -28,6 +28,7 @@ std::string CTROUTD = "";
 std::string MAC_KEY = "";
 std::string MAC_LABEL = "";
 std::string AUTH_CODE = "";
+std::string SAF_NUM = "";
 std::string socketAddr;
 // CTOR
 
@@ -48,7 +49,7 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
     // **** Timer and Slot Setup ****
 
     // Payment Tap Ready
-    readTimer = new QTimer(this);
+    // readTimer = new QTimer(this);
     // connect(readTimer, SIGNAL(timeout()), this, SLOT(readTimer_loop()));
 
     // Payment Progress
@@ -203,11 +204,11 @@ void page_payment::stopPayTimers()
         paymentEndTimer->stop();
     }
 
-    if (readTimer != nullptr)
-    {
-               qDebug() << "cancel readTimer" << endl;
-        readTimer->stop();
-    }
+    // if (readTimer != nullptr)
+    // {
+    //            qDebug() << "cancel readTimer" << endl;
+    //     readTimer->stop();
+    // }
 
     if (qrPeriodicalCheckTimer != nullptr)
     {
@@ -266,15 +267,7 @@ void page_payment::cancelPayment()
     finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     paymentProgressTimer->stop();
 
-    // com.flushSerial();
-    // /*Cancel any previous payment*/
-    // pktToSend = paymentPacket.purchaseCancelPacket();
-    // if (sendToUX410())
-    // {
-    //     waitForUX410();
-    //     // pktResponded.clear();
-    // }
-    // com.flushSerial();
+   
 }
 
 size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
@@ -635,6 +628,7 @@ void page_payment::progressStatusLabel()
             p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
             CTROUTD = responseObj["CTROUTD"];
             AUTH_CODE = responseObj["AUTH_CODE"];
+            SAF_NUM = responseObj["SAF_NUM"];
             paymentProgressTimer->stop();
             proceed_to_dispense();
         }
@@ -739,7 +733,7 @@ void page_payment::resetPaymentPage()
     }
     stopPayTimers();
     response = true;
-    readTimer->stop();
+    // readTimer->stop();
     qDebug() << "Cancelled";
     
 }

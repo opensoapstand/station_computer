@@ -192,10 +192,9 @@ def start_session(counter_val, mac_key):
                     <COUNTER>'+counter_val+'</COUNTER> \
                     <MAC>'+mac_key+'</MAC> \
                     <MAC_LABEL>'+MAC_LABEL+'</MAC_LABEL>\
-                    <POS_IP>\
-                    </POS_IP>\
-                    <POS_PORT>5015</POS_PORT>\
-                    <NOTIFY_SCA_EVENTS>FALSE</NOTIFY_SCA_EVENTS>\
+                    <POS_IP>192.168.1.25</POS_IP>\
+                    <POS_PORT>5016</POS_PORT>\
+                    <NOTIFY_SCA_EVENTS>TRUE</NOTIFY_SCA_EVENTS>\
                     </TRANSACTION>'
     # print(start_command)
     return start_command.encode('UTF-8')
@@ -411,12 +410,10 @@ def querySAF(counter_val, counter_mac):
     command = '<TRANSACTION> \
                 <FUNCTION_TYPE>SAF</FUNCTION_TYPE>\
                 <COMMAND>QUERY</COMMAND>\
-                <SAF_NUM_BEGIN>0</SAF_NUM_BEGIN>\
-                <SAF_NUM_END>100</SAF_NUM_END>\
                 <MAC_LABEL>'+MAC_LABEL+'</MAC_LABEL>\
                 <COUNTER>'+ counter_val +'</COUNTER>\
                 <MAC>'+counter_mac+'</MAC>\
-                <SAF_STATUS>PROCESSED</SAF_STATUS>\
+                <SAF_STATUS>NOT_PROCESSED</SAF_STATUS>\
                 </TRANSACTION>'
     print(command)
     return command.encode('UTF-8')
@@ -477,7 +474,7 @@ def connect_device():
         # print(result)
         # print(CTROUTD)
         # counter_val, counter_mac = get_next_counter_and_mac(s)
-        # s.send(capture(counter_val, counter_mac,'1821'))
+        # s.send(capture(counter_val, counter_mac,'1863'))
         # print(s.recv(4096))
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(lastTran(counter_val, counter_mac))
@@ -486,7 +483,7 @@ def connect_device():
         # s.send(credit(counter_val,counter_mac))
         # print(s.recv(4096))
         # counter_val, counter_mac = get_next_counter_and_mac(s)
-        # s.send(voidTransaction(counter_val,counter_mac,'1820'))
+        # s.send(voidTransaction(counter_val,counter_mac,'1864'))
         # print(s.recv(4096))
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(creditWithCtroud(counter_val,counter_mac, '1633'))
@@ -502,16 +499,19 @@ def connect_device():
         # s.send(setTime(counter_val, counter_mac))
         # s.send(apply_updates(counter_val, counter_mac))
 
-        counter_val, counter_mac = get_next_counter_and_mac(s)
-        s.send(dupCheck(counter_val,counter_mac))
-        print(s.recv(4096))
+        # counter_val, counter_mac = get_next_counter_and_mac(s)
+        # s.send(dupCheck(counter_val,counter_mac))
+        #print(s.recv(4096))
+        # counter_val, counter_mac = get_next_counter_and_mac(s)
+        # s.send(lastTran(counter_val,counter_mac))
+        # print(s.recv(65536))
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(querySAF(counter_val,counter_mac))
         # print(s.recv(65536))
-        # counter_val, counter_mac = get_next_counter_and_mac(s)
-        # s.send(finish_session(counter_val,counter_mac))
-        # data2 = s.recv(8192)
-        # print(data2)
+        counter_val, counter_mac = get_next_counter_and_mac(s)
+        s.send(finish_session(counter_val,counter_mac))
+        data2 = s.recv(8192)
+        print(data2)
 
 connect_device()
 # generate_rsa_keys()

@@ -22,7 +22,7 @@ std::string getCounter(int socket, std::string MAC_LABEL, std::string MAC_KEY){
                             <MAC>"+ MAC_KEY + "</MAC>\
                             <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL> \
                         </TRANSACTION>";
-    std::cout << "In counter fxn";
+    std::cout << "Counter  ";
     std::map<std::string, std::string> responseObj = sendAndReceivePacket(get_counter_command, socket, false);
     return responseObj["COUNTER"];      
 }
@@ -75,7 +75,7 @@ std::map<std::string, std::string> finishSession(int socket, std::string MAC_LAB
                         <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
                     </TRANSACTION>";
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
-
+    close(socket);
     return dataReceived;
 }
 
@@ -109,8 +109,10 @@ std::map<std::string, std::string> capture(int socket, std::string MAC_LABEL, st
                     <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
                     <TRANS_AMOUNT>"+amount+"</TRANS_AMOUNT>\
                     <PAYMENT_TYPE>CREDIT</PAYMENT_TYPE>\
-                    <FORCE_FLAG>1</FORCE_FLAG>\
+                    <FORCE_FLAG>0</FORCE_FLAG>\
+                    <ENCRYPT>TRUE</ENCRYPT>\
                 </TRANSACTION>";
+    std::cout << command << std::endl; 
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
     return dataReceived;
 }
@@ -152,16 +154,16 @@ std::map<std::string, std::string> voidTransaction(int socket, std::string MAC_L
 
 
 
-std::map<std::string, std::string> voidTransactionOffline(int socket, std::string MAC_LABEL, std::string MAC_KEY, std::string AUTH_CODE){
+std::map<std::string, std::string> voidTransactionOffline(int socket, std::string MAC_LABEL, std::string MAC_KEY, std::string SAF_NUM){
     std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
     std::string command = "<TRANSACTION> \
-                <FUNCTION_TYPE>PAYMENT</FUNCTION_TYPE> \
-                <COMMAND>VOID</COMMAND> \
-                <AUTH_CODE>"+AUTH_CODE+"</AUTH_CODE> \
+                <FUNCTION_TYPE>SAF</FUNCTION_TYPE> \
+                    <COMMAND>REMOVE</COMMAND> \
+                    <SAF_MUM_BEGIN>"+SAF_NUM+"</SAF_MUM_BEGIN> \
+                    <SAF_MUM_END>"+SAF_NUM+"</SAF_MUM_END> \
                     <COUNTER>"+responseObj["COUNTER"]+"</COUNTER>\
                     <MAC>"+responseObj["COUNTER_ENCODED"]+"</MAC>\
                     <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
-                <PAYMENT_TYPE>CREDIT</PAYMENT_TYPE>\
             </TRANSACTION>";
     std::cout << command << std::endl;
         std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);

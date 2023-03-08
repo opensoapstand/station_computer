@@ -22,6 +22,7 @@ std::map<std::string,std::string> readXmlPacket(std::string xmlString){
     std::map<std::string, std::string> dictionary; // dictionary to store parsed XML information
     int textStart = 0;
     int lenValue = 0;
+    std::cout << "XML Length" << xmlString.length() << std::endl;
     for (size_t i = 0; i < xmlString.length(); i++) // loop through each character in the XML string
     {
         if (xmlString[i] == '<' && xmlString[i+1] != '/') // if the character is the start of a new tag
@@ -41,12 +42,12 @@ std::map<std::string,std::string> readXmlPacket(std::string xmlString){
             lenValue +=1;
         }
         
-        }
+    }
     return dictionary;
 }
 
 std::map<std::string, std::string> sendAndReceivePacket(std::string command, int sockfd, bool logging){
-    char buffer[4096];
+    char buffer[8192];
     memset(buffer, 0, sizeof(buffer));
     strcpy(buffer, command.c_str());
     // Send the message
@@ -55,8 +56,10 @@ std::map<std::string, std::string> sendAndReceivePacket(std::string command, int
         return {};
     }
     memset(buffer, 0, sizeof(buffer));
-    char bufferReceived[4096];
+    char bufferReceived[8192];
+    memset(bufferReceived, 0, sizeof(bufferReceived));
     int bytes_received = recv(sockfd, bufferReceived, sizeof(bufferReceived), 0);
+    std::cout << "Bytes received" << bytes_received << std::endl;
     if ( bytes_received < 0) {
         std::cerr << "Error receiving message" << std::endl;
         return {};
@@ -66,6 +69,7 @@ std::map<std::string, std::string> sendAndReceivePacket(std::string command, int
         std::cout << xml_string << std::endl;
     }
     std::map<std::string, std::string> xmlObject= readXmlPacket(xml_string);
+    memset(bufferReceived, 0, sizeof(bufferReceived));
     return xmlObject;
 }
 

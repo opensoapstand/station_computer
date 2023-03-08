@@ -244,7 +244,7 @@ private:
 
 
     // QString order_id;
-    QString orderId;
+    QString orderId="";
 
     CURL *curl;
     CURLcode res;

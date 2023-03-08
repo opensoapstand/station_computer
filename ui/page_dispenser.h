@@ -108,12 +108,9 @@ private:
     double targetVolume;
 
     void stopDispenseTimer();
-    bool sendToUX410();
-    bool waitForUX410();
 
     mCommunication com;
     packetFromECR sendPacket;
-    packetFromUX410 readPacket;
     transactionPacket paymentPacket;
     std::vector<uint8_t> pktToSend;
     std::vector<uint8_t> pktResponded;

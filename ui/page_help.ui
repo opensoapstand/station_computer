@@ -1219,6 +1219,19 @@ Tap on screen to keep page open.</string>
     <string>Settings</string>
    </property>
   </widget>
+  <widget class="QLabel" name="need_help_label">
+   <property name="geometry">
+    <rect>
+     <x>365</x>
+     <y>192</y>
+     <width>349</width>
+     <height>86</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>refreshButton</zorder>
   <zorder>previousPage_Button_2</zorder>
   <zorder>previousPage_Button</zorder>
@@ -1227,6 +1240,7 @@ Tap on screen to keep page open.</string>
   <zorder>maintenance_page_Button</zorder>
   <zorder>keyboard_3</zorder>
   <zorder>feedback_Button</zorder>
+  <zorder>need_help_label</zorder>
  </widget>
  <resources/>
  <connections/>

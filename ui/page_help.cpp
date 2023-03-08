@@ -50,6 +50,21 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     ui->feedback_Button->setFont(font);
     ui->feedback_Button->setText("Contact Us");
     
+    ui->need_help_label->setText("need help?");
+    ui->need_help_label->setStyleSheet(
+        "QLabel {"
+
+        "font-family: 'Brevia';"
+        "font-style: bold;"
+        "font-weight: 700;"
+        "font-size: 64px;"
+        "line-height: 99px;"
+        "text-align: center;"
+        "letter-spacing: 1.5px;"
+        "text-transform: lowercase;"
+        "color: #003840;"
+        "qproperty-alignment: AlignCenter;"
+        "}");
     DbManager db(DB_PATH);
     bool showTransactions = db.showTransactions();
     db.closeDB();

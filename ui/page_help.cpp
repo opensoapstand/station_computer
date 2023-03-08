@@ -65,6 +65,72 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
         "color: #003840;"
         "qproperty-alignment: AlignCenter;"
         "}");
+
+    ui->contact_us_label->setText("contact us:");
+    ui->contact_us_label->setStyleSheet(
+        "QLabel {"
+
+        "font-family: 'Montserrat';"
+        "font-style: semibold;"
+        "font-weight: 700;"
+        "font-size: 28px;"
+        "line-height: 99px;"
+        "text-align: center;"
+        "letter-spacing: 1.5px;"
+        "text-transform: lowercase;"
+        "color: #5E8580;"
+        "qproperty-alignment: AlignCenter;"
+        "}");
+
+    ui->about_soapstand_label->setText("about soapstand");
+    ui->about_soapstand_label->setStyleSheet(
+        "QLabel {"
+
+        "font-family: 'Brevia';"
+        "font-style: bold;"
+        "font-weight: 700;"
+        "font-size: 64px;"
+        "line-height: 99px;"
+        "text-align: center;"
+        "letter-spacing: 1.5px;"
+        "text-transform: lowercase;"
+        "color: #003840;"
+        "qproperty-alignment: AlignCenter;"
+        "}");
+
+    
+    ui->about_nada_label->setText("about nada");
+    ui->about_nada_label->setStyleSheet(
+        "QLabel {"
+
+        "font-family: 'Brevia';"
+        "font-style: bold;"
+        "font-weight: 700;"
+        "font-size: 64px;"
+        "line-height: 99px;"
+        "text-align: center;"
+        "letter-spacing: 1.5px;"
+        "text-transform: lowercase;"
+        "color: #003840;"
+        "qproperty-alignment: AlignCenter;"
+        "}");
+
+
+    ui->other_locations_label->setText("other locations");
+    ui->other_locations_label->setStyleSheet(
+        "QLabel {"
+
+        "font-family: 'Brevia';"
+        "font-style: bold;"
+        "font-weight: 700;"
+        "font-size: 64px;"
+        "line-height: 99px;"
+        "text-align: center;"
+        "letter-spacing: 1.5px;"
+        "text-transform: lowercase;"
+        "color: #003840;"
+        "qproperty-alignment: AlignCenter;"
+        "}");
     DbManager db(DB_PATH);
     bool showTransactions = db.showTransactions();
     db.closeDB();

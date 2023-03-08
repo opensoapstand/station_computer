@@ -1232,6 +1232,58 @@ Tap on screen to keep page open.</string>
     <string>TextLabel</string>
    </property>
   </widget>
+  <widget class="QLabel" name="contact_us_label">
+   <property name="geometry">
+    <rect>
+     <x>401</x>
+     <y>278</y>
+     <width>281</width>
+     <height>68</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="about_soapstand_label">
+   <property name="geometry">
+    <rect>
+     <x>268</x>
+     <y>472</y>
+     <width>543</width>
+     <height>86</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="about_nada_label">
+   <property name="geometry">
+    <rect>
+     <x>345</x>
+     <y>860</y>
+     <width>375</width>
+     <height>86</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="other_locations_label">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>1375</y>
+     <width>651</width>
+     <height>68</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>refreshButton</zorder>
   <zorder>previousPage_Button_2</zorder>
   <zorder>previousPage_Button</zorder>
@@ -1241,6 +1293,10 @@ Tap on screen to keep page open.</string>
   <zorder>keyboard_3</zorder>
   <zorder>feedback_Button</zorder>
   <zorder>need_help_label</zorder>
+  <zorder>contact_us_label</zorder>
+  <zorder>about_soapstand_label</zorder>
+  <zorder>about_nada_label</zorder>
+  <zorder>other_locations_label</zorder>
  </widget>
  <resources/>
  <connections/>

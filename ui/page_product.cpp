@@ -277,7 +277,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
         "qproperty-alignment: AlignCenter;"
         "border: none;"
         "}");
-    ui->label_notify_us->setText("Help");
+    // ui->label_notify_us->setText("Help");
 
     {
         selectIdleTimer = new QTimer(this);

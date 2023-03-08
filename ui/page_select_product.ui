@@ -675,7 +675,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
    </property>
   </widget>
   <zorder>selection2_Button</zorder>

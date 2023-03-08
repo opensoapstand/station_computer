@@ -1284,6 +1284,45 @@ Tap on screen to keep page open.</string>
     <string>TextLabel</string>
    </property>
   </widget>
+  <widget class="QLabel" name="about_text1_label">
+   <property name="geometry">
+    <rect>
+     <x>157</x>
+     <y>571</y>
+     <width>800</width>
+     <height>252</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="about_text2_label">
+   <property name="geometry">
+    <rect>
+     <x>146</x>
+     <y>934</y>
+     <width>800</width>
+     <height>432</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="locations_text_label">
+   <property name="geometry">
+    <rect>
+     <x>129</x>
+     <y>1467</y>
+     <width>900</width>
+     <height>144</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>refreshButton</zorder>
   <zorder>previousPage_Button_2</zorder>
   <zorder>previousPage_Button</zorder>
@@ -1297,6 +1336,9 @@ Tap on screen to keep page open.</string>
   <zorder>about_soapstand_label</zorder>
   <zorder>about_nada_label</zorder>
   <zorder>other_locations_label</zorder>
+  <zorder>about_text1_label</zorder>
+  <zorder>about_text2_label</zorder>
+  <zorder>locations_text_label</zorder>
  </widget>
  <resources/>
  <connections/>

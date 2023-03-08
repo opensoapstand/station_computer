@@ -90,7 +90,7 @@
   <widget class="QPushButton" name="p_page_maintenanceButton">
    <property name="geometry">
     <rect>
-     <x>800</x>
+     <x>0</x>
      <y>0</y>
      <width>281</width>
      <height>241</height>

@@ -85,9 +85,9 @@ line-height: 29px;</string>
   <widget class="QLabel" name="label_invoice_price">
    <property name="geometry">
     <rect>
-     <x>804</x>
+     <x>743</x>
      <y>993</y>
-     <width>150</width>
+     <width>211</width>
      <height>80</height>
     </rect>
    </property>
@@ -105,15 +105,15 @@ color: #7F8080;</string>
     <string/>
    </property>
    <property name="alignment">
-    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="label_invoice_price_total">
    <property name="geometry">
     <rect>
-     <x>812</x>
+     <x>751</x>
      <y>1344</y>
-     <width>150</width>
+     <width>211</width>
      <height>80</height>
     </rect>
    </property>
@@ -131,7 +131,7 @@ color: #58595B;</string>
     <string/>
    </property>
    <property name="alignment">
-    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="label_selected_volume">
@@ -1832,9 +1832,9 @@ outline: none;
   <widget class="QLabel" name="label_invoice_name">
    <property name="geometry">
     <rect>
-     <x>188</x>
+     <x>130</x>
      <y>993</y>
-     <width>513</width>
+     <width>571</width>
      <height>80</height>
     </rect>
    </property>
@@ -1865,9 +1865,9 @@ color: #58595B;
    </property>
    <property name="geometry">
     <rect>
-     <x>800</x>
+     <x>749</x>
      <y>1160</y>
-     <width>150</width>
+     <width>201</width>
      <height>80</height>
     </rect>
    </property>
@@ -1885,7 +1885,7 @@ color: #7F8080;</string>
     <string>$ 0.00</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="label_invoice_discount_name">
@@ -2076,9 +2076,9 @@ text-align: center;</string>
   <widget class="QLabel" name="label_total">
    <property name="geometry">
     <rect>
-     <x>188</x>
+     <x>144</x>
      <y>1340</y>
-     <width>177</width>
+     <width>221</width>
      <height>44</height>
     </rect>
    </property>

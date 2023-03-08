@@ -600,7 +600,7 @@ void pageProduct::loadProdSpecs()
                 {
                     if (selectedProductOrder->getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
                     {
-                        units = "110g";
+                        units = "100g";
                         units_discount_indication = "kg";
                         price = price * 100;
                         discount_price_per_liter *= 1000; 

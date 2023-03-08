@@ -137,6 +137,8 @@ void page_idle::showEvent(QShowEvent *event)
     QString paymentMethod = db.getPaymentMethod(1);
     qDebug() << paymentMethod;
 
+    ui->printer_status_label->hide();
+
     if (paymentMethod == "plu" || paymentMethod == "barcode")
     {
         checkReceiptPrinterStatus();
@@ -215,7 +217,6 @@ void page_idle::checkReceiptPrinterStatus()
     db.printerStatus(&isPrinterOnline, &hasPrinterPaper);
     db.closeDB();
 
-    ui->printer_status_label->hide();
     if (hasReceiptPrinter)
     {
         this->p_page_maintenance_general->send_check_printer_status_command();

@@ -215,14 +215,12 @@ void page_idle::checkReceiptPrinterStatus()
     db.printerStatus(&isPrinterOnline, &hasPrinterPaper);
     db.closeDB();
 
+    ui->printer_status_label->hide();
     if (hasReceiptPrinter)
     {
         this->p_page_maintenance_general->send_check_printer_status_command();
     }
-    else
-    {
-        ui->printer_status_label->hide();
-    }
+   
     // this->p_page_maintenance_general->on_printer_check_status_clicked();
     // usleep(50000);
 

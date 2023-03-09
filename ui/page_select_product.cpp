@@ -82,9 +82,13 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
 "}");
                 ui->label_pick_soap->setText("Pick your soap");
 
+
+QPixmap icon(":/home/df-admin/production/references/help_icon.jpg.");
+
+
                 ui->label_notify_us->setStyleSheet(
 "QLabel {"
-
+// "background-image: url(:/home/df-admin/production/references/help_icon.jpg);"
 "font-family: 'Brevia';"
 "font-style: normal;"
 "font-weight: 75;"
@@ -96,6 +100,8 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
 "qproperty-alignment: AlignCenter;"
 "border: none;"
 "}");
+ui->label_notify_us->setPixmap(icon);
+
                 // ui->label_notify_us->setText("Help");
 
 

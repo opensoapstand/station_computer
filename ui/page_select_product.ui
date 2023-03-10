@@ -603,10 +603,10 @@
   <widget class="QLabel" name="product_1_overlay_label">
    <property name="geometry">
     <rect>
-     <x>53</x>
-     <y>334</y>
+     <x>60</x>
+     <y>280</y>
      <width>450</width>
-     <height>450</height>
+     <height>161</height>
     </rect>
    </property>
    <property name="text">

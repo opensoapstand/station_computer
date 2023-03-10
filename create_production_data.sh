@@ -48,6 +48,7 @@ scp /home/df-admin/drinkfill/screenshotbot.sh /home/df-admin/production/admin/sc
 scp /home/df-admin/drinkfill/screenshotbot_sequence_printer.txt /home/df-admin/production/admin/screenshotbot_sequence_printer.txt
 scp /home/df-admin/drinkfill/screenshotbot_sequence_qr.txt /home/df-admin/production/admin/screenshotbot_sequence_qr.txt
 scp /home/df-admin/drinkfill/updateDatabase.py /home/df-admin/production/admin/updateDatabase.py
+scp /home/df-admin/drinkfill/stationStatus.py /home/df-admin/production/admin/stationStatus.py
 scp /home/df-admin/drinkfill/missingTransactions.py /home/df-admin/production/admin/missingTransactions.py
 
 # ask for db to be written. By default: NO! 

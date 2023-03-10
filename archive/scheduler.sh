@@ -4,3 +4,4 @@ crontab -l | grep -q 'missingTransactions.py' && echo 'Already exists'  \
 echo "0 * * * *  python ~/production/admin/missingTransactions.py" >> mycron 
 crontab mycron
 rm mycron
+

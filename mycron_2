@@ -1,0 +1,1 @@
+0 * * * *  python ~/production/admin/stationStatus.py

@@ -464,18 +464,24 @@ def connect_device():
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(TEST_MAC(counter_val, counter_mac, MAC_LABEL))
         # print(s.recv(4096))
-        # counter_val, counter_mac = get_next_counter_and_mac(s)
-        # s.send(start_session(counter_val,counter_mac))
-        # print(s.recv(4096))
-        # counter_val, counter_mac = get_next_counter_and_mac(s)
-        # s.send(authorization('15.00', counter_val, counter_mac))
-        # print(s.recv(8192))
-        # CTROUTD, result,AUTHCODE = check_approval(s.recv(8192))
-        # print(result)
-        # print(CTROUTD)
-        # counter_val, counter_mac = get_next_counter_and_mac(s)
-        # s.send(capture(counter_val, counter_mac,'1863'))
-        # print(s.recv(4096))
+        counter_val, counter_mac = get_next_counter_and_mac(s)
+        s.send(start_session(counter_val,counter_mac))
+        print(s.recv(4096))
+        counter_val, counter_mac = get_next_counter_and_mac(s)
+        s.send(authorization('15.00', counter_val, counter_mac))
+        buffer = b''
+        delimiter = b'</RESPONSE>\r\n'
+        while delimiter not in buffer:
+            data = s.recv(8192)
+            if not data:
+                break
+            buffer += data
+        CTROUTD, result,AUTHCODE = check_approval(buffer)
+        print(result)
+        print(CTROUTD)
+        counter_val, counter_mac = get_next_counter_and_mac(s)
+        s.send(capture(counter_val, counter_mac,CTROUTD))
+        print(s.recv(4096))
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(lastTran(counter_val, counter_mac))
         # print(s.recv(4096))

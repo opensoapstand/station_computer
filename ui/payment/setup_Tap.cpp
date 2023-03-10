@@ -22,7 +22,6 @@ std::map<std::string,std::string> readXmlPacket(std::string xmlString){
     std::map<std::string, std::string> dictionary; // dictionary to store parsed XML information
     int textStart = 0;
     int lenValue = 0;
-    std::cout << "XML Length" << xmlString.length() << std::endl;
     for (size_t i = 0; i < xmlString.length(); i++) // loop through each character in the XML string
     {
         if (xmlString[i] == '<' && xmlString[i+1] != '/') // if the character is the start of a new tag
@@ -47,7 +46,7 @@ std::map<std::string,std::string> readXmlPacket(std::string xmlString){
 }
 
 std::map<std::string, std::string> sendAndReceivePacket(std::string command, int sockfd, bool logging){
-    char buffer[8192];
+    char buffer[4096];
     memset(buffer, 0, sizeof(buffer));
     strcpy(buffer, command.c_str());
     // Send the message
@@ -56,15 +55,30 @@ std::map<std::string, std::string> sendAndReceivePacket(std::string command, int
         return {};
     }
     memset(buffer, 0, sizeof(buffer));
-    char bufferReceived[8192];
+    char bufferReceived[4096];
     memset(bufferReceived, 0, sizeof(bufferReceived));
-    int bytes_received = recv(sockfd, bufferReceived, sizeof(bufferReceived), 0);
-    std::cout << "Bytes received" << bytes_received << std::endl;
-    if ( bytes_received < 0) {
-        std::cerr << "Error receiving message" << std::endl;
-        return {};
+    const char *delimiter = "</RESPONSE>";
+    bool found_delimiter = false;
+    std::string xml_string;
+    while(! found_delimiter){
+        int bytes_received = recv(sockfd, bufferReceived, sizeof(bufferReceived), 0);
+        if ( bytes_received < 0) {
+            std::cerr << "Error receiving message" << std::endl;
+            break;
+        }
+        bufferReceived[bytes_received] = '\0';
+        xml_string += bufferReceived;
+        if(strstr(xml_string.c_str(), delimiter)!= NULL){
+            found_delimiter = true;
+        }
     }
-    std::string xml_string(bufferReceived, bytes_received);
+    std::cout << xml_string << std::endl;
+    // int bytes_received = recv(sockfd, bufferReceived, sizeof(bufferReceived), 0);
+    // if ( bytes_received < 0) {
+    //     std::cerr << "Error receiving message" << std::endl;
+    //     return {};
+    // }
+    // std::string xml_string(bufferReceived, bytes_received);
     if(logging){
         std::cout << xml_string << std::endl;
     }

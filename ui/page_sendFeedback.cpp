@@ -153,7 +153,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
          ui->feedbackText->clear();
         ui->feedbackText->show();
         ui->feedbackText->setEchoMode(QLineEdit::Normal);
-        QString keyboard = KEYBOARD_IMAGE_PATH;
+        // QString keyboard = KEYBOARD_IMAGE_PATH;
     // QString keyboard_style_sheet = " background-image: url(" + keyboard + "); }";
     // ui->feedbackKeyboard->setStyleSheet(keyboard_style_sheet);
  {

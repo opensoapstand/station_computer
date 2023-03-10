@@ -33,7 +33,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>720</y>
+     <y>810</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -46,7 +46,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>790</y>
+     <y>880</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -59,7 +59,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>860</y>
+     <y>950</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -72,7 +72,7 @@
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>540</y>
+     <y>630</y>
      <width>151</width>
      <height>17</height>
     </rect>
@@ -85,7 +85,7 @@
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>500</y>
+     <y>590</y>
      <width>161</width>
      <height>17</height>
     </rect>
@@ -98,7 +98,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>470</y>
+     <y>560</y>
      <width>111</width>
      <height>17</height>
     </rect>
@@ -117,7 +117,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>660</y>
+     <y>750</y>
      <width>291</width>
      <height>23</height>
     </rect>
@@ -130,7 +130,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>630</y>
+     <y>720</y>
      <width>251</width>
      <height>23</height>
     </rect>
@@ -1317,7 +1317,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>610</y>
+     <y>700</y>
      <width>111</width>
      <height>17</height>
     </rect>
@@ -1355,7 +1355,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>700</y>
+     <y>790</y>
      <width>111</width>
      <height>17</height>
     </rect>
@@ -1374,7 +1374,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>490</y>
+     <y>580</y>
      <width>221</width>
      <height>41</height>
     </rect>
@@ -1387,13 +1387,39 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>540</y>
+     <y>630</y>
      <width>221</width>
      <height>41</height>
     </rect>
    </property>
    <property name="text">
     <string>Test Print</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="rtunnel_restart_Button">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>470</y>
+     <width>221</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Reset Backend Connection</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="backend_status_label">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>470</y>
+     <width>711</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Backend status</string>
    </property>
   </widget>
  </widget>

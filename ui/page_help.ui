@@ -1225,8 +1225,8 @@ Tap on screen to keep page open.</string>
   <zorder>refreshLabel</zorder>
   <zorder>transactions_Button</zorder>
   <zorder>maintenance_page_Button</zorder>
-  <zorder>keyboard_3</zorder>
   <zorder>feedback_Button</zorder>
+  <zorder>keyboard_3</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -456,7 +456,7 @@ void page_maintenance_general::on_wifiButton_clicked()
 void page_maintenance_general::on_rtunnel_restart_Button_clicked()
 {
 
-    //https://stackoverflow.com/questions/75689836/system-command-executed-from-qt-does-not-work-for-service
+    // https://stackoverflow.com/questions/75689836/system-command-executed-from-qt-does-not-work-for-service
 
     // QProcess process;
     // process.start("echo 'D@nkF1ll$' | sudo -S -n systemctl start rtunnel.service");
@@ -473,8 +473,23 @@ void page_maintenance_general::on_rtunnel_restart_Button_clicked()
     // QString feedback = process.readAllStandardOutput();
     // // QString feedback = process.readAllStandardError();
     // qDebug() << "rtunnel restart status: " << feedback;
-    // ui->backend_status_label->setText("rtunnel restart " + feedback);
+    // ui->status_feedback_label->setText("rtunnel restart " + feedback);
 
+    QProcess process;
+    process.start("bash");
+    process.waitForStarted();
+    process.write("echo 'D@nkF1ll$' | sudo -S systemctl restart rtunnel.service\n");
+    // process.write("echo 'D@nkF1ll$' | sudo -S shutdown -h now\n");
+
+    process.write("echo 'D@nkF1ll$' | sudo -S journalctl -r -u rtunnel.service | head -50\n");
+
+    process.write("exit\n");
+    process.waitForFinished(-1);
+    QString feedback = process.readAllStandardOutput();
+    
+    ui->status_feedback_label->setText(feedback);
+
+    
 
     // https://stackoverflow.com/questions/23322739/how-to-execute-complex-linux-commands-in-qt
 
@@ -497,14 +512,29 @@ void page_maintenance_general::on_rtunnel_restart_Button_clicked()
     // while ((retval = process2.waitForFinished())){
     //     buffer.append(process2.readAll());
     // }
-        
-
 
     // if (!retval)
     // {
     //     qDebug() << "Process 2 error:" << process2.errorString();
-    //     ui->backend_status_label->setText("Process 2 error:" + process2.errorString());
+    //     ui->status_feedback_label->setText("Process 2 error:" + process2.errorString());
     //     return;
     // }
-    // ui->backend_status_label->setText("Process 2 success:");
+    // ui->status_feedback_label->setText("Process 2 success:");
+}
+
+void page_maintenance_general::on_network_status_Button_clicked()
+{
+// iwconfig wlo2 | awk -F'[ =]+' '/Signal level/
+
+    QProcess process;
+    process.start("bash");
+    process.waitForStarted();
+    process.write("iwconfig\n");
+
+    process.write("exit\n");
+    process.waitForFinished(-1);
+    QString feedback = process.readAllStandardOutput();
+    
+    ui->status_feedback_label->setText(feedback);
+
 }

@@ -622,12 +622,16 @@ bool product::isDbValid()
             {
             case (1):
             {
-                //
-
                 string column_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
                 // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
-                // debugOutput::sendMessage("should be: " + table_products_columns[row], MSG_INFO);
+                // debugOutput::sendMessage("should be : " + table_products_columns[row], MSG_INFO);
 
+                if (row >= TABLE_PRODUCTS_COLUMN_COUNT ){
+
+                    debugOutput::sendMessage("ASSERT ERROR: More columns found than anticipated. CORRUPT DATABASE", MSG_ERROR);
+                    debugOutput::sendMessage("************************** PLEASE FIX DATABASE ********************. ", MSG_ERROR);
+                   is_valid = false;
+                }
                 if (!column_name.compare(table_products_columns[row]))
                 {
                     // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);

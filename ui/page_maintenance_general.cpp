@@ -487,7 +487,7 @@ void page_maintenance_general::on_rtunnel_restart_Button_clicked()
     process.waitForFinished(-1);
     QString feedback = process.readAllStandardOutput();
     
-    ui->status_feedback_label->setText(feedback);
+    ui->status_feedback_label->setText("rtunnel restart " + feedback);
 
     
 

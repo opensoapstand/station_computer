@@ -27,7 +27,6 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     // Fullscreen background setup
     ui->setupUi(this);
 
-
     // view transactions button
     QFont font;
     font.setFamily(QStringLiteral("Brevia"));
@@ -36,12 +35,11 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     // font.setWeight(75);
     font.setWeight(50);
 
-
     ui->transactions_Button->setStyleSheet("QPushButton { color:#003840; background-color: transparent; border: 0px }");
     // ui->transactions_Button->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
     ui->transactions_Button->setFont(font);
     ui->transactions_Button->setText("Transaction History ->");
-    
+
     ui->maintenance_page_Button->setStyleSheet("QPushButton { color:#003840; background-color: #FFFFFF; border: 0px ; text-align: centre;border-radius: 20px;border: none;}");
     ui->maintenance_page_Button->setFont(font);
     ui->maintenance_page_Button->setText("Settings");
@@ -49,15 +47,15 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     ui->feedback_Button->setStyleSheet("QPushButton { color:#003840; background-color: #FFFFFF; border: 0px ; text-align: centre;border-radius: 20px;border: none;}");
     ui->feedback_Button->setFont(font);
     ui->feedback_Button->setText("Contact Us");
-    
+
     DbManager db(DB_PATH);
     bool showTransactions = db.showTransactions();
     db.closeDB();
-    if(!showTransactions){
+    if (!showTransactions)
+    {
         ui->transactions_Button->hide();
     }
 
-  
     ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
@@ -106,7 +104,6 @@ void page_help::showEvent(QShowEvent *event)
     _helpIdleTimeoutSec = 60;
     ui->refreshLabel->hide();
     ui->keyboard_3->hide();
-
 }
 
 /*
@@ -133,11 +130,11 @@ void page_help::on_previousPage_Button_2_clicked()
     exit_page();
 }
 
-void page_help::exit_page(){
-    helpIdleTimer->stop()   ;
+void page_help::exit_page()
+{
+    helpIdleTimer->stop();
     p_page_idle->pageTransition(this, p_page_idle);
     ui->keyboardTextEntry->setText("");
-
 }
 
 void page_help::onHelpTimeoutTick()
@@ -234,16 +231,22 @@ void page_help::keyboardButtonPressed(int buttonID)
         QString textEntry = ui->keyboardTextEntry->text();
 
         int compareResult = QString::compare(textEntry, maintenance_pwd, Qt::CaseInsensitive);
+        int shortcut = QString::compare(textEntry, "lll", Qt::CaseInsensitive);
 
         if (compareResult == 0)
+        // if (compareResult == 0 || shortcut == 0) // shortcut for developing.
         {
 
             ui->keyboardTextEntry->setText("");
             usleep(100000);
             qDebug() << "Password correct. Will open maintenance page";
-            qDebug() << compareResult;
             p_page_idle->pageTransition(this, p_page_maintenance);
             ui->keyboard_3->hide();
+        }
+        else
+        {
+            qDebug() << "Wrong password. Check db in database or contact soapstand.";
+            ui->keyboardTextEntry->setText("");
         }
     }
     else if (buttonText == "Space")
@@ -262,7 +265,7 @@ void page_help::keyboardButtonPressed(int buttonID)
 
 void page_help::on_feedback_Button_clicked()
 {
-    helpIdleTimer->stop()   ;
-   
+    helpIdleTimer->stop();
+
     p_page_idle->pageTransition(this, p_page_feedback);
 }

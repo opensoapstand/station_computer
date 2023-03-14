@@ -56,6 +56,9 @@ void page_maintenance::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
     qDebug() << "<<<<<<< Page Enter: maintenance >>>>>>>>>";
 
+    // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH);
+    // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_PATH);
+
     for (int i = 0; i < SLOT_COUNT; i++)
     {
         QString p = p_page_idle->currentProductOrder->getProductPicturePath(i + 1);
@@ -153,7 +156,7 @@ void page_maintenance::setPage(page_idle *pageIdle, page_maintenance_dispenser *
     this->p_pageSelectProduct = p_pageProduct;
     this->p_pageProduct = pagePaySelect;
 
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH);
+    
     
 }
 

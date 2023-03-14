@@ -285,7 +285,7 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
 
 void page_idle::on_toSelectProductPageButton_clicked()
 {
-    qDebug() << "Proceed to next page button clicked. ";
+    qDebug() << "Proceed to next page button clicked. Go to select product page. ";
 
     this->pageTransition(this, p_pageSelectProduct);
 

@@ -188,7 +188,9 @@ void page_dispenser::dispensing_end_admin()
 {
     qDebug() << "Dispense end admin start";
     this->isDispensing = false;
-
+    double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
+    std::ostringstream stream;
+    stream << std::fixed << std::setprecision(2) << price;
     if (volumeDispensed == 0 && (selectedProductOrder->getSelectedPaymentMethod()) == "tap")
     {
         std::map<std::string, std::string> response;
@@ -199,20 +201,19 @@ void page_dispenser::dispensing_end_admin()
         }
         else if(SAF_NUM!=""){
             std::cout << "Voiding transaction";
-             response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,SAF_NUM);
+            response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,SAF_NUM);
         }
         
     }
     else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && volumeDispensed != 0)
     {
-        double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
-        std::ostringstream stream;
-        stream << std::fixed << std::setprecision(2) << price;
+        
         if(CTROUTD!=""){
              std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD, stream.str());
         }
-        else if(AUTH_CODE!=""){
-             std::map<std::string, std::string> testResponse = captureOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,AUTH_CODE, stream.str());
+        else if(SAF_NUM!=""){
+
+             std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,SAF_NUM, stream.str(), "ELIGIBLE");
         }
     }
     std::cout << "Stopping dispense timer";

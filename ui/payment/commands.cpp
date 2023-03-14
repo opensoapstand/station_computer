@@ -109,7 +109,7 @@ std::map<std::string, std::string> capture(int socket, std::string MAC_LABEL, st
                     <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
                     <TRANS_AMOUNT>"+amount+"</TRANS_AMOUNT>\
                     <PAYMENT_TYPE>CREDIT</PAYMENT_TYPE>\
-                    <FORCE_FLAG>0</FORCE_FLAG>\
+                    <FORCE_FLAG>FALSE</FORCE_FLAG>\
                     <ENCRYPT>TRUE</ENCRYPT>\
                 </TRANSACTION>";
     std::cout << command << std::endl; 
@@ -127,9 +127,28 @@ std::map<std::string, std::string> captureOffline(int socket, std::string MAC_LA
                     <MAC>"+responseObj["COUNTER_ENCODED"]+"</MAC>\
                     <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
                     <TRANS_AMOUNT>"+amount+"</TRANS_AMOUNT>\
-                    <PAYMENT_TYPE>CREDIT</PAYMENT_TYPE>\
-                    <FORCE_FLAG>1</FORCE_FLAG>\
-                    <MANUAL_ENTRY>0</MANUAL_ENTRY>\
+                    <FORCE_FLAG>FALSE</FORCE_FLAG>\
+                    <MANUAL_ENTRY>FALSE</MANUAL_ENTRY>\
+                    <CARD_PRESENT>FALSE</CARD_PRESENT>\
+                    <ENCRYPT>TRUE</ENCRYPT>\
+                </TRANSACTION>";
+    std::cout << command << std::endl;
+    std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
+    return dataReceived;
+}
+
+
+std::map<std::string, std::string> editSaf(int socket, std::string MAC_LABEL, std::string MAC_KEY, std::string SAF_NUM, std::string amount, std::string SAF_STATUS){
+    std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
+    std::string command = "<TRANSACTION> \
+                    <FUNCTION_TYPE>SAF</FUNCTION_TYPE> \
+                    <COMMAND>EDIT</COMMAND>\
+                    <SAF_NUM>"+SAF_NUM+"</SAF_NUM> \
+                    <COUNTER>"+responseObj["COUNTER"]+"</COUNTER>\
+                    <MAC>"+responseObj["COUNTER_ENCODED"]+"</MAC>\
+                    <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
+                    <TRANS_AMOUNT>"+amount+"</TRANS_AMOUNT>\
+                    <SET_SAF_STATUS>"+SAF_STATUS+"</SET_SAF_STATUS>\
                 </TRANSACTION>";
     std::cout << command << std::endl;
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
@@ -159,8 +178,8 @@ std::map<std::string, std::string> voidTransactionOffline(int socket, std::strin
     std::string command = "<TRANSACTION> \
                 <FUNCTION_TYPE>SAF</FUNCTION_TYPE> \
                     <COMMAND>REMOVE</COMMAND> \
-                    <SAF_MUM_BEGIN>"+SAF_NUM+"</SAF_MUM_BEGIN> \
-                    <SAF_MUM_END>"+SAF_NUM+"</SAF_MUM_END> \
+                    <SAF_NUM_BEGIN>"+SAF_NUM+"</SAF_NUM_BEGIN> \
+                    <SAF_NUM_END>"+SAF_NUM+"</SAF_NUM_END> \
                     <COUNTER>"+responseObj["COUNTER"]+"</COUNTER>\
                     <MAC>"+responseObj["COUNTER_ENCODED"]+"</MAC>\
                     <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\

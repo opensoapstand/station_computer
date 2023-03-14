@@ -413,7 +413,7 @@ def querySAF(counter_val, counter_mac):
                 <MAC_LABEL>'+MAC_LABEL+'</MAC_LABEL>\
                 <COUNTER>'+ counter_val +'</COUNTER>\
                 <MAC>'+counter_mac+'</MAC>\
-                <SAF_STATUS>NOT_PROCESSED</SAF_STATUS>\
+                <SAF_STATUS>PREAUTH</SAF_STATUS>\
                 </TRANSACTION>'
     print(command)
     return command.encode('UTF-8')
@@ -464,24 +464,24 @@ def connect_device():
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(TEST_MAC(counter_val, counter_mac, MAC_LABEL))
         # print(s.recv(4096))
-        counter_val, counter_mac = get_next_counter_and_mac(s)
-        s.send(start_session(counter_val,counter_mac))
-        print(s.recv(4096))
-        counter_val, counter_mac = get_next_counter_and_mac(s)
-        s.send(authorization('15.00', counter_val, counter_mac))
-        buffer = b''
-        delimiter = b'</RESPONSE>\r\n'
-        while delimiter not in buffer:
-            data = s.recv(8192)
-            if not data:
-                break
-            buffer += data
-        CTROUTD, result,AUTHCODE = check_approval(buffer)
-        print(result)
-        print(CTROUTD)
-        counter_val, counter_mac = get_next_counter_and_mac(s)
-        s.send(capture(counter_val, counter_mac,CTROUTD))
-        print(s.recv(4096))
+        # counter_val, counter_mac = get_next_counter_and_mac(s)
+        # s.send(start_session(counter_val,counter_mac))
+        # print(s.recv(4096))
+        # counter_val, counter_mac = get_next_counter_and_mac(s)
+        # s.send(authorization('15.00', counter_val, counter_mac))
+        # buffer = b''
+        # delimiter = b'</RESPONSE>\r\n'
+        # while delimiter not in buffer:
+        #     data = s.recv(8192)
+        #     if not data:
+        #         break
+        #     buffer += data
+        # CTROUTD, result,AUTHCODE = check_approval(buffer)
+        # print(result)
+        # print(CTROUTD)
+        # counter_val, counter_mac = get_next_counter_and_mac(s)
+        # s.send(capture(counter_val, counter_mac,CTROUTD))
+        # print(s.recv(4096))
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(lastTran(counter_val, counter_mac))
         # print(s.recv(4096))
@@ -511,13 +511,13 @@ def connect_device():
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(lastTran(counter_val,counter_mac))
         # print(s.recv(65536))
-        # counter_val, counter_mac = get_next_counter_and_mac(s)
-        # s.send(querySAF(counter_val,counter_mac))
-        # print(s.recv(65536))
         counter_val, counter_mac = get_next_counter_and_mac(s)
-        s.send(finish_session(counter_val,counter_mac))
-        data2 = s.recv(8192)
-        print(data2)
+        s.send(querySAF(counter_val,counter_mac))
+        print(s.recv(65536))
+        # counter_val, counter_mac = get_next_counter_and_mac(s)
+        # s.send(finish_session(counter_val,counter_mac))
+        # data2 = s.recv(8192)
+        # print(data2)
 
 connect_device()
 # generate_rsa_keys()

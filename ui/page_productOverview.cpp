@@ -347,6 +347,9 @@ void pageProductOverview::reset_and_show_page_elements()
     p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->currentProductOrder->getSelectedProductPicturePath());
     ui->label_selected_price->setText("$" + QString::number(selectedProductOrder->getSelectedPrice(), 'f', 2));
     qDebug() << "Selected size" << selectedProductOrder->getSelectedVolume();
+    QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
+        qDebug() << full_path;
+        p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
 
    
     updatePrice();

@@ -26,3 +26,4 @@ std::map<std::string,std::string> readXmlPacket(std::string xmlString);
 std::map<std::string, std::string> sendAndReceivePacket(std::string command, int sockfd, bool logging);
 std::string create_counter_mac(int counter, std::string encrypted_mac);
 int connectSocket();
+int connectInFlightSocket();

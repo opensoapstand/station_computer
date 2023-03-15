@@ -48,7 +48,7 @@ def capture(counter_val, counter_mac, CTROUTD):
                     <PAYMENT_TYPE>CREDIT</PAYMENT_TYPE>\
                     <FORCE_FLAG>1</FORCE_FLAG>\
                 </TRANSACTION>'
-    print(command)
+    # print(command)
     return command.encode('UTF-8')
 def get_current_time():
     t = datetime.now()
@@ -185,16 +185,16 @@ def start_session(counter_val, mac_key):
     start_command = '<TRANSACTION> \
                     <FUNCTION_TYPE>SESSION</FUNCTION_TYPE>\
                     <COMMAND>START</COMMAND>\
-                    <BUSINESSDATE>20230213</BUSINESSDATE>\
+                    <BUSINESSDATE>20230314</BUSINESSDATE>\
                     <SWIPE_AHEAD>1</SWIPE_AHEAD>\
                     <TRAINING_MODE>0</TRAINING_MODE>\
                     <INVOICE>'+str(invoice)+'</INVOICE>\
                     <COUNTER>'+counter_val+'</COUNTER> \
                     <MAC>'+mac_key+'</MAC> \
                     <MAC_LABEL>'+MAC_LABEL+'</MAC_LABEL>\
-                    <POS_IP>192.168.1.25</POS_IP>\
-                    <POS_PORT>5016</POS_PORT>\
-                    <NOTIFY_SCA_EVENTS>TRUE</NOTIFY_SCA_EVENTS>\
+                    <POS_IP>192.168.1.2</POS_IP>\
+                    <POS_PORT>5017</POS_PORT>\
+                    <NOTIFY_SCA_EVENTS>FALSE</NOTIFY_SCA_EVENTS>\
                     </TRANSACTION>'
     # print(start_command)
     return start_command.encode('UTF-8')
@@ -207,7 +207,7 @@ def finish_session(counter_val, counter_mac):
                         <MAC>'+counter_mac+'</MAC>\
                         <MAC_LABEL>'+MAC_LABEL+'</MAC_LABEL>\
                     </TRANSACTION>'
-    print(finish_command)
+    # print(finish_command)
     return finish_command.encode('UTF-8')
 
 def cancel_transaction():
@@ -233,7 +233,7 @@ def authorization(amount,counter_val,counter_mac):
                         <ENCRYPT>TRUE</ENCRYPT> \
                         <SCMCI_INDICATOR>2</SCMCI_INDICATOR> \
                     </TRANSACTION>'    
-    print(auth_command)           
+    # print(auth_command)           
     return auth_command.encode('UTF-8')
 
 def get_counter(mac, mac_label):
@@ -413,7 +413,7 @@ def querySAF(counter_val, counter_mac):
                 <MAC_LABEL>'+MAC_LABEL+'</MAC_LABEL>\
                 <COUNTER>'+ counter_val +'</COUNTER>\
                 <MAC>'+counter_mac+'</MAC>\
-                <SAF_STATUS>PREAUTH</SAF_STATUS>\
+                <SAF_STATUS>ELIGIBLE</SAF_STATUS>\
                 </TRANSACTION>'
     print(command)
     return command.encode('UTF-8')
@@ -466,9 +466,10 @@ def connect_device():
         # print(s.recv(4096))
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(start_session(counter_val,counter_mac))
-        # print(s.recv(4096))
+        # s.recv(4096)
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(authorization('15.00', counter_val, counter_mac))
+        
         # buffer = b''
         # delimiter = b'</RESPONSE>\r\n'
         # while delimiter not in buffer:
@@ -481,7 +482,7 @@ def connect_device():
         # print(CTROUTD)
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(capture(counter_val, counter_mac,CTROUTD))
-        # print(s.recv(4096))
+        # s.recv(4096)
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(lastTran(counter_val, counter_mac))
         # print(s.recv(4096))
@@ -511,12 +512,12 @@ def connect_device():
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(lastTran(counter_val,counter_mac))
         # print(s.recv(65536))
-        counter_val, counter_mac = get_next_counter_and_mac(s)
-        s.send(querySAF(counter_val,counter_mac))
-        print(s.recv(65536))
         # counter_val, counter_mac = get_next_counter_and_mac(s)
-        # s.send(finish_session(counter_val,counter_mac))
-        # data2 = s.recv(8192)
+        # s.send(querySAF(counter_val,counter_mac))
+        # print(s.recv(65536))
+        counter_val, counter_mac = get_next_counter_and_mac(s)
+        s.send(finish_session(counter_val,counter_mac))
+        data2 = s.recv(8192)
         # print(data2)
 
 connect_device()

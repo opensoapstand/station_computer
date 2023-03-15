@@ -110,13 +110,75 @@ int connectSocket(){
         std::cerr << "Error connecting to server" << std::endl;
         return 1;
     }
-    std::cout << "Server connected" << std::endl; 
+    // std::cout << "Server connected" << std::endl; 
     // Clean up 
     // close(sockfd);
     return sockfd;
 }
 
+int connectInFlightSocket(){
+    int server_socket, client_socket;
+    struct sockaddr_in server_address, client_address;
+    char buffer[1024]= {};
+    int opt = 1;
+    int addrlen = sizeof(server_address);
+    const int PORT = 5017;
 
+    if((server_socket = socket(AF_INET, SOCK_STREAM,0))==0){
+        perror("socket failed");
+        exit(EXIT_FAILURE);
+    }
+
+    if(setsockopt(server_socket,SOL_SOCKET, SO_REUSEADDR| SO_REUSEPORT, &opt,sizeof(opt))){
+        perror("setsocket failed");
+        exit(EXIT_FAILURE);
+    }
+  
+    server_address.sin_family = AF_INET;
+    server_address.sin_addr.s_addr = inet_addr("192.168.1.2");
+    server_address.sin_port = htons(PORT);
+       if (bind(server_socket, (struct sockaddr *)&server_address, sizeof(server_address)) < 0) {
+        perror("bind failed");
+        exit(EXIT_FAILURE);
+    }
+
+    // Listen for incoming connections
+    if (listen(server_socket, 1) < 0) {
+        perror("listen failed");
+        exit(EXIT_FAILURE);
+    }
+
+    std::cout << "Server is listening on " << PORT << std::endl;
+
+    // Accept a connection
+    if ((client_socket = accept(server_socket, (struct sockaddr *)&client_address, (socklen_t*)&addrlen)) < 0) {
+        perror("accept failed");
+        exit(EXIT_FAILURE);
+    }
+
+    std::cout << "Received connection from " << inet_ntoa(client_address.sin_addr) << std::endl;
+
+    // Receive data from the client in a loop
+    while (true) {
+        memset(buffer, 0, sizeof(buffer));
+        int bytes_received = recv(client_socket, buffer, sizeof(buffer), 0);
+        if (bytes_received <= 0) {
+            // If no more data is received, close the connection
+            std::cout << "Connection closed by client." << std::endl;
+            break;
+        }
+        else {
+            // Process the received data
+            std::cout << "Received data from client: " << buffer << std::endl;
+        }
+    }
+
+    // Close the sockets when finished
+    close(client_socket);
+    close(server_socket);
+
+    return 0;
+}
 std::vector<unsigned char> base64_decode(const std::string& input) {
   // Initialize OpenSSL BIO
   BIO *b64 = BIO_new(BIO_f_base64());

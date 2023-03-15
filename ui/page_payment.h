@@ -127,6 +127,7 @@ private slots:
     void onTimeoutTick();
     // void readTimer_loop();
     void progressStatusLabel();
+    void inFlightTransaction();
     void declineTimer_start();
     void idlePaymentTimeout();
     void on_refreshButton_clicked();
@@ -192,6 +193,7 @@ private:
     QTimer *declineTimer;
     QTimer *paymentProgressTimer;
     QTimer *idlePaymentTimer;
+    QTimer *inFlightTimer;
 
     // Payment Communication
     // Moneris Packet communication reference

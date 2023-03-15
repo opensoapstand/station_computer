@@ -57,6 +57,9 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
     connect(paymentProgressTimer, SIGNAL(timeout()), this, SLOT(progressStatusLabel()));
     paymentProgressTimer->setInterval(500);
 
+    inFlightTimer = new QTimer(this);
+    connect(inFlightTimer, SIGNAL(timeout()), this, SLOT(inFlightTransaction()));
+    inFlightTimer->setInterval(500);
     // Payment Declined
     declineTimer = new QTimer(this);
     connect(declineTimer, SIGNAL(timeout()), this, SLOT(declineTimer_start()));
@@ -186,6 +189,12 @@ void page_payment::stopPayTimers()
         paymentProgressTimer->stop();
     }
 
+     if (inFlightTimer != nullptr)
+    {
+               qDebug() << "cancel In flight progress Timer" << endl;
+        inFlightTimer->stop();
+    }
+
     if (declineTimer != nullptr)
     {
                qDebug() << "cancel decline Timer" << endl;
@@ -266,6 +275,8 @@ void page_payment::cancelPayment()
 {
     finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     paymentProgressTimer->stop();
+    inFlightTimer->stop();
+
 
    
 }
@@ -370,8 +381,8 @@ void page_payment::showEvent(QShowEvent *event)
     {
         // createOrderIdAndSendToBackend();
         qDebug() << "Prepare tap order";
+        // inFlightTimer->start();
         paymentProgressTimer->start();
-        
         
         
     }
@@ -597,6 +608,13 @@ void page_payment::storePaymentEvent(QSqlDatabase db, QString event)
 {
 }
 
+
+void page_payment::inFlightTransaction(){
+    std::cout << "In flight transaction function";
+    connectInFlightSocket();
+}
+
+
 void page_payment::progressStatusLabel()
 {
     if(tap_payment){
@@ -616,7 +634,8 @@ void page_payment::progressStatusLabel()
         std::ostringstream stream;
         stream << std::fixed << std::setprecision(2) << price;
         std::map<std::string, std::string> responseObj = authorization(socket, MAC_LABEL, MAC_KEY, stream.str());
-        
+        // connectInFlightSocket();
+
         if(responseObj["RESULT"] == "APPROVED"){
             p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
             CTROUTD = responseObj["CTROUTD"];
@@ -703,6 +722,7 @@ void page_payment::on_previousPage_Button_clicked()
         if(tap_payment){
             finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
             paymentProgressTimer->stop();
+            inFlightTimer->stop();
         }
         p_page_idle->pageTransition(this, p_pageProduct);
     }

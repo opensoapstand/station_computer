@@ -515,9 +515,9 @@ def connect_device():
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(querySAF(counter_val,counter_mac))
         # print(s.recv(65536))
-        counter_val, counter_mac = get_next_counter_and_mac(s)
-        s.send(finish_session(counter_val,counter_mac))
-        data2 = s.recv(8192)
+        # counter_val, counter_mac = get_next_counter_and_mac(s)
+        # s.send(finish_session(counter_val,counter_mac))
+        # data2 = s.recv(8192)
         # print(data2)
 
 connect_device()

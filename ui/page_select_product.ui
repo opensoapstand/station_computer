@@ -668,10 +668,10 @@
   <widget class="QLabel" name="label_notify_us">
    <property name="geometry">
     <rect>
-     <x>453</x>
-     <y>1733</y>
-     <width>191</width>
-     <height>171</height>
+     <x>478</x>
+     <y>1773</y>
+     <width>125</width>
+     <height>125</height>
     </rect>
    </property>
    <property name="text">

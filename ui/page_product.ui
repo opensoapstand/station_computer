@@ -61,10 +61,10 @@ line-height: 29px;</string>
   <widget class="QPushButton" name="mainPage_Button">
    <property name="geometry">
     <rect>
-     <x>422</x>
-     <y>1741</y>
-     <width>221</width>
-     <height>171</height>
+     <x>478</x>
+     <y>1773</y>
+     <width>125</width>
+     <height>125</height>
     </rect>
    </property>
    <property name="text">
@@ -519,10 +519,10 @@ text-align: center;</string>
   <widget class="QLabel" name="label_notify_us">
    <property name="geometry">
     <rect>
-     <x>428</x>
-     <y>1743</y>
-     <width>211</width>
-     <height>161</height>
+     <x>478</x>
+     <y>1773</y>
+     <width>125</width>
+     <height>125</height>
     </rect>
    </property>
    <property name="text">

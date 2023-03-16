@@ -2102,10 +2102,10 @@ text-align: center;</string>
   <widget class="QLabel" name="label_notify_us">
    <property name="geometry">
     <rect>
-     <x>446</x>
-     <y>1726</y>
-     <width>211</width>
-     <height>161</height>
+     <x>478</x>
+     <y>1773</y>
+     <width>125</width>
+     <height>125</height>
     </rect>
    </property>
    <property name="text">

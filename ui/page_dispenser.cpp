@@ -194,6 +194,8 @@ void page_dispenser::dispensing_end_admin()
     if (volumeDispensed == 0 && (selectedProductOrder->getSelectedPaymentMethod()) == "tap")
     {
         std::map<std::string, std::string> response;
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_VOID);
+
         qDebug() << "dispense end: tap payment No volume dispensed.";
         // REVERSE PAYMENT
         if(CTROUTD!=""){
@@ -203,6 +205,7 @@ void page_dispenser::dispensing_end_admin()
             std::cout << "Voiding transaction";
             response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,SAF_NUM);
         }
+
         
     }
     else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && volumeDispensed != 0)
@@ -215,6 +218,8 @@ void page_dispenser::dispensing_end_admin()
 
              std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,SAF_NUM, stream.str(), "ELIGIBLE");
         }
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_AUTHORIZE_NOW);
+
     }
     std::cout << "Stopping dispense timer";
     stopDispenseTimer();

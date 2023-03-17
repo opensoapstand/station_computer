@@ -443,6 +443,8 @@ void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QStrin
     QPalette palette;
     palette.setBrush(QPalette::Background, background);
     p_widget->setPalette(palette);
+    p_widget->repaint();
+    qDebug() << "Image change request" << image_path << endl;
 
     // QPixmap background(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
     // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);

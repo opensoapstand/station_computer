@@ -22,7 +22,6 @@ std::string getCounter(int socket, std::string MAC_LABEL, std::string MAC_KEY){
                             <MAC>"+ MAC_KEY + "</MAC>\
                             <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL> \
                         </TRANSACTION>";
-    std::cout << "Counter  ";
     std::map<std::string, std::string> responseObj = sendAndReceivePacket(get_counter_command, socket, false);
     return responseObj["COUNTER"];      
 }
@@ -97,6 +96,25 @@ std::map<std::string, std::string> authorization(int socket, std::string MAC_LAB
                     </TRANSACTION>";
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
     return dataReceived;
+}
+
+std::string authorizationCommand(int socket, std::string MAC_LABEL, std::string MAC_KEY, std::string amount){
+    std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
+    std::string command = "<TRANSACTION> \
+                        <FUNCTION_TYPE>PAYMENT</FUNCTION_TYPE> \
+                        <COMMAND>AUTH</COMMAND> \
+                        <COUNTER>"+responseObj["COUNTER"]+"</COUNTER>\
+                        <MAC>"+responseObj["COUNTER_ENCODED"]+"</MAC>\
+                        <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL> \
+                        <TRANS_AMOUNT>"+amount+"</TRANS_AMOUNT>\
+                        <MANUAL_ENTRY>FALSE</MANUAL_ENTRY>\
+                        <RECURRING>Y</RECURRING> \
+                        <BILLPAY>TRUE</BILLPAY> \
+                        <OC_INDUSTRY_CODE>M</OC_INDUSTRY_CODE> \
+                        <ENCRYPT>TRUE</ENCRYPT> \
+                        <SCMCI_INDICATOR>2</SCMCI_INDICATOR> \
+                    </TRANSACTION>";
+    return command;
 }
 std::map<std::string, std::string> capture(int socket, std::string MAC_LABEL, std::string MAC_KEY, std::string CTROUTD, std::string amount){
     std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);

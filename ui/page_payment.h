@@ -106,6 +106,8 @@ public:
     // char * curlOrderdata;
     StatePayment state_payment;
 
+// signals:
+//     void cardTapped();
 private slots:
 
     // Update Drink order totals section
@@ -127,7 +129,6 @@ private slots:
     void onTimeoutTick();
     // void readTimer_loop();
     void progressStatusLabel();
-    void inFlightTransaction();
     void declineTimer_start();
     void idlePaymentTimeout();
     void on_refreshButton_clicked();

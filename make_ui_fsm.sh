@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# cd ui/payment/
-# echo "Compiling payment module"
-# g++ -o command commands.cpp  setup_Tap.cpp -lssl -lcrypto
-# echo "Compilation Completed Payment"
 cd ui/
 echo "Starting to make UI"
 qmake

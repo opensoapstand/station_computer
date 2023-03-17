@@ -21,3 +21,5 @@ echo "Netmask added";
 sudo iptables -I FORWARD -o "${ETHERNET_PORT_ACTIVE}" -s 192.168.0.0/16 -j ACCEPT
 echo "port forwarding";
 sudo iptables -I INPUT -s 192.168.0.0/16 -j ACCEPT
+sudo systemctl restart ufw
+echo "All completed";

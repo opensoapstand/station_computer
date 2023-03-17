@@ -45,8 +45,49 @@ std::map<std::string,std::string> readXmlPacket(std::string xmlString){
     return dictionary;
 }
 
+std::string sendPacket(std::string command, int sockfd, bool logging){
+    char buffer[4096];
+    
+    memset(buffer, 0, sizeof(buffer));
+    strcpy(buffer, command.c_str());
+    // Send the message
+    if (send(sockfd, buffer, strlen(buffer), 0) < 0) {
+        std::cerr << "Error sending message" << std::endl;
+        return {};
+    } 
+    memset(buffer, 0, sizeof(buffer));
+
+    return "Packet sent";
+}
+
+std::map<std::string, std::string> receivePacket(std::string command, int sockfd, bool logging){
+    char bufferReceived[4096];
+    memset(bufferReceived, 0, sizeof(bufferReceived));
+    const char *delimiter = "</RESPONSE>";
+    bool found_delimiter = false;
+    std::string xml_string;
+    while(! found_delimiter){
+        int bytes_received = recv(sockfd, bufferReceived, sizeof(bufferReceived), 0);
+        if ( bytes_received < 0) {
+            std::cerr << "Error receiving message" << std::endl;
+            break;
+        }
+        bufferReceived[bytes_received] = '\0';
+        xml_string += bufferReceived;
+        if(strstr(xml_string.c_str(), delimiter)!= NULL){
+            found_delimiter = true;
+        }
+    }
+    if(logging){
+        std::cout << xml_string << std::endl;
+    }
+    std::map<std::string, std::string> xmlObject= readXmlPacket(xml_string);
+    memset(bufferReceived, 0, sizeof(bufferReceived));
+    return xmlObject;
+}
 std::map<std::string, std::string> sendAndReceivePacket(std::string command, int sockfd, bool logging){
     char buffer[4096];
+    
     memset(buffer, 0, sizeof(buffer));
     strcpy(buffer, command.c_str());
     // Send the message
@@ -54,6 +95,7 @@ std::map<std::string, std::string> sendAndReceivePacket(std::string command, int
         std::cerr << "Error sending message" << std::endl;
         return {};
     }
+ 
     memset(buffer, 0, sizeof(buffer));
     char bufferReceived[4096];
     memset(bufferReceived, 0, sizeof(bufferReceived));
@@ -72,7 +114,7 @@ std::map<std::string, std::string> sendAndReceivePacket(std::string command, int
             found_delimiter = true;
         }
     }
-    std::cout << xml_string << std::endl;
+    // std::cout << xml_string << std::endl;
     // int bytes_received = recv(sockfd, bufferReceived, sizeof(bufferReceived), 0);
     // if ( bytes_received < 0) {
     //     std::cerr << "Error receiving message" << std::endl;
@@ -116,14 +158,14 @@ int connectSocket(){
     return sockfd;
 }
 
-int connectInFlightSocket(){
+std::map<std::string, std::string> connectInFlightSocket(){
     int server_socket, client_socket;
     struct sockaddr_in server_address, client_address;
     char buffer[1024]= {};
     int opt = 1;
     int addrlen = sizeof(server_address);
     const int PORT = 5017;
-
+    std::string xmlString;
     if((server_socket = socket(AF_INET, SOCK_STREAM,0))==0){
         perror("socket failed");
         exit(EXIT_FAILURE);
@@ -168,16 +210,19 @@ int connectInFlightSocket(){
             break;
         }
         else {
+            xmlString += buffer;
             // Process the received data
             std::cout << "Received data from client: " << buffer << std::endl;
         }
+
     }
+    std::map<std::string, std::string> xmlObject= readXmlPacket(xmlString);
 
     // Close the sockets when finished
     close(client_socket);
     close(server_socket);
 
-    return 0;
+    return xmlObject;
 }
 std::vector<unsigned char> base64_decode(const std::string& input) {
   // Initialize OpenSSL BIO

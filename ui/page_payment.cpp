@@ -57,9 +57,6 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
     connect(paymentProgressTimer, SIGNAL(timeout()), this, SLOT(progressStatusLabel()));
     paymentProgressTimer->setInterval(500);
 
-    inFlightTimer = new QTimer(this);
-    connect(inFlightTimer, SIGNAL(timeout()), this, SLOT(inFlightTransaction()));
-    inFlightTimer->setInterval(500);
     // Payment Declined
     declineTimer = new QTimer(this);
     connect(declineTimer, SIGNAL(timeout()), this, SLOT(declineTimer_start()));
@@ -189,11 +186,11 @@ void page_payment::stopPayTimers()
         paymentProgressTimer->stop();
     }
 
-     if (inFlightTimer != nullptr)
-    {
-               qDebug() << "cancel In flight progress Timer" << endl;
-        inFlightTimer->stop();
-    }
+    //  if (inFlightTimer != nullptr)
+    // {
+    //            qDebug() << "cancel In flight progress Timer" << endl;
+    //     inFlightTimer->stop();
+    // }
 
     if (declineTimer != nullptr)
     {
@@ -609,11 +606,6 @@ void page_payment::storePaymentEvent(QSqlDatabase db, QString event)
 }
 
 
-void page_payment::inFlightTransaction(){
-    std::cout << "In flight transaction function";
-    connectInFlightSocket();
-}
-
 
 void page_payment::progressStatusLabel()
 {
@@ -626,15 +618,18 @@ void page_payment::progressStatusLabel()
         MAC_KEY = configMap["MAC_KEY"];
         MAC_LABEL = configMap["MAC_LABEL"];
         lastTransactionId = std::stoi(configMap["INVOICE"]);
-        // std::cout << MAC_KEY;
-        // MAC_LABEL = "P_GQ63SC";
-        // MAC_KEY = "c0oOuJjLxFnt/e/43FqGSW+7xkuwQonAaNHusrdXHWZnhiX14EZeA32uLGvGz5LvUorrCEWQmbaezJR1ICKUgZQa4zE0GbmxZF+tKJa7V4d31o1y2IkgBx97ErA8HY9MegWhFr+2YOJoYtkrf62bjPAAZ6Ge2etpTAve/CaRa9rKiI5lbmucj7ygs2/7l6YoSspbSWyPZr2gML8plmZk0J6TWYOEB3IOdV1r4yzSTp6FMnnKPQafEScJ+jqbUrF54BQKU3UcAQbFI8WGEHYOS8FDRg8gjRlcviSwCZr7bslgp+9ndQMJPtmph9YhWCggTA6fJNziGWKjzwbwORzGRQ==";
         startSession(socket, MAC_LABEL, MAC_KEY, lastTransactionId + 1);
         double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
         std::ostringstream stream;
         stream << std::fixed << std::setprecision(2) << price;
-        std::map<std::string, std::string> responseObj = authorization(socket, MAC_LABEL, MAC_KEY, stream.str());
-        // connectInFlightSocket();
+        std::string authCommand = authorizationCommand(socket, MAC_LABEL, MAC_KEY, stream.str());
+        std::string packetSent = sendPacket(authCommand,socket, true);
+        std::map<std::string, std::string> inFlight = connectInFlightSocket();
+        if(inFlight["CARD_ENTRY_METHOD"]=="TAPPED"){
+            p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_AUTHORIZE_NOW);
+
+        }
+        std::map<std::string, std::string> responseObj = receivePacket(authCommand,socket, true);
 
         if(responseObj["RESULT"] == "APPROVED"){
             p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);

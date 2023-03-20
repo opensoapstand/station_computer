@@ -629,6 +629,10 @@ void page_payment::progressStatusLabel()
             p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_AUTHORIZE_NOW);
 
         }
+        QMovie *movie = new QMovie("/home/df-admin/drinkfill/ui/soapstandspinner.gif");
+        ui->processing_Label->setMovie(movie);
+        ui->processing_Label->raise();
+        movie->start();
         std::map<std::string, std::string> responseObj = receivePacket(authCommand,socket, true);
 
         if(responseObj["RESULT"] == "APPROVED"){

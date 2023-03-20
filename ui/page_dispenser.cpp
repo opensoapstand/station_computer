@@ -195,7 +195,6 @@ void page_dispenser::dispensing_end_admin()
     {
         std::map<std::string, std::string> response;
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_VOID);
-
         qDebug() << "dispense end: tap payment No volume dispensed.";
         // REVERSE PAYMENT
         if(CTROUTD!=""){

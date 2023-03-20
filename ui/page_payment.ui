@@ -254,6 +254,9 @@ line-height: 29px;</string>
      <height>251</height>
     </rect>
    </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>processing label</string>
    </property>
@@ -332,11 +335,11 @@ line-height: 29px;</string>
   <zorder>productLabel</zorder>
   <zorder>qrCode</zorder>
   <zorder>refreshLabel</zorder>
-  <zorder>processing_Label</zorder>
   <zorder>steps_Label</zorder>
   <zorder>title_Label</zorder>
   <zorder>scan_Label</zorder>
   <zorder>animated_Label</zorder>
+  <zorder>processing_Label</zorder>
  </widget>
  <resources/>
  <connections/>

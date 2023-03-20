@@ -138,10 +138,6 @@ void pagethankyou::showEvent(QShowEvent *event)
 
     is_in_state_thank_you = true;
 
-    thankYouEndTimer = new QTimer(this);
-    thankYouEndTimer->setInterval(1000);
-    connect(thankYouEndTimer, SIGNAL(timeout()), this, SLOT(onThankyouTimeoutTick()));
-
     // THIS WILL HAVE TO BE CHANGED SO THE SYSTEM CHECKS IF IT IS A DF / SS MACHINE
 
     // reset promovalue
@@ -152,7 +148,7 @@ void pagethankyou::showEvent(QShowEvent *event)
     is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
     exitIsForceable = false;
 
-    if (paymentMethod == "qr" || paymentMethod == "tap")
+    if (paymentMethod == "qr")
     {
         sendDispenseEndToCloud();
     }
@@ -160,7 +156,7 @@ void pagethankyou::showEvent(QShowEvent *event)
     {
         is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
     }
-
+    thankYouEndTimer->stop();
     // ui->extra_message_label->hide();
     p_page_idle->addPictureToLabel(ui->drinkfill_logo_label2, DRINKFILL_LOGO_VERTICAL_PATH);
 }

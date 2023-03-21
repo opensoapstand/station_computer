@@ -1628,6 +1628,23 @@ QString DbManager::getMaintenanceAdminPassword()
     return mid_string;
 }
 
+QString DbManager::getHelpPageHtmlText()
+{
+    QSqlQuery mid_query;
+    QString mid_string;
+
+    {
+        mid_query.prepare("SELECT html_text FROM machine");
+        mid_query.exec();
+
+        while (mid_query.next())
+        {
+            mid_string = mid_query.value(0).toString();
+        }
+    }
+    return mid_string;
+}
+
 QString DbManager::getProductType(int slot)
 {
     QSqlQuery product_type_query;

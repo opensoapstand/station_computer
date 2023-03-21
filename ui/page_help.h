@@ -77,7 +77,7 @@ private:
 
     QResizeEvent *helpResize;
     QString maintenance_pwd;
-
+    QString html_text;
 };
 
 #endif // HELP_H

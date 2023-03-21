@@ -49,136 +49,156 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     ui->feedback_Button->setStyleSheet("QPushButton { color:#003840; background-color: #FFFFFF; border: 0px ; text-align: centre;border-radius: 20px;border: none;}");
     ui->feedback_Button->setFont(font);
     ui->feedback_Button->setText("Contact Us");
+
+    ui->previousPage_Button->setStyleSheet(
+                "QPushButton {"
+
+                "font-family: 'Brevia';"
+                "font-style: normal;"
+                "font-weight: 75;"
+                "font-size: 32px;"
+                "line-height: 99px;"
+                "letter-spacing: 1.5px;"
+                "color: #003840;"
+                "text-align: center;"
+                "qproperty-alignment: AlignCenter;"
+                "border: none;"
+                "}");
+
+
+    ui->previousPage_Button->setText("<-Back");
     
-    ui->need_help_label->setText("need help?");
-    ui->need_help_label->setStyleSheet(
-        "QLabel {"
+    
+    
+    // ui->need_help_label->setText("need help?");
+    // ui->need_help_label->setStyleSheet(
+    //     "QLabel {"
 
-        "font-family: 'Brevia';"
-        "font-style: bold;"
-        "font-weight: 700;"
-        "font-size: 64px;"
-        "line-height: 99px;"
-        "text-align: center;"
-        "letter-spacing: 1.5px;"
-        "text-transform: lowercase;"
-        "color: #003840;"
-        "qproperty-alignment: AlignCenter;"
-        "}");
+    //     "font-family: 'Brevia';"
+    //     "font-style: bold;"
+    //     "font-weight: 700;"
+    //     "font-size: 64px;"
+    //     "line-height: 99px;"
+    //     "text-align: center;"
+    //     "letter-spacing: 1.5px;"
+    //     "text-transform: lowercase;"
+    //     "color: #003840;"
+    //     "qproperty-alignment: AlignCenter;"
+    //     "}");
 
-    ui->contact_us_label->setText("contact us:");
-    ui->contact_us_label->setStyleSheet(
-        "QLabel {"
+    // ui->contact_us_label->setText("contact us:");
+    // ui->contact_us_label->setStyleSheet(
+    //     "QLabel {"
 
-        "font-family: 'Montserrat';"
-        "font-style: semibold;"
-        "font-weight: 700;"
-        "font-size: 28px;"
-        "line-height: 99px;"
-        "text-align: center;"
-        "letter-spacing: 1.5px;"
-        "text-transform: lowercase;"
-        "color: #5E8580;"
-        "qproperty-alignment: AlignCenter;"
-        "}");
+    //     "font-family: 'Montserrat';"
+    //     "font-style: semibold;"
+    //     "font-weight: 700;"
+    //     "font-size: 28px;"
+    //     "line-height: 99px;"
+    //     "text-align: center;"
+    //     "letter-spacing: 1.5px;"
+    //     "text-transform: lowercase;"
+    //     "color: #5E8580;"
+    //     "qproperty-alignment: AlignCenter;"
+    //     "}");
 
-    ui->about_soapstand_label->setText("about soapstand");
-    ui->about_soapstand_label->setStyleSheet(
-        "QLabel {"
+    // ui->about_soapstand_label->setText("about soapstand");
+    // ui->about_soapstand_label->setStyleSheet(
+    //     "QLabel {"
 
-        "font-family: 'Brevia';"
-        "font-style: bold;"
-        "font-weight: 700;"
-        "font-size: 64px;"
-        "line-height: 99px;"
-        "text-align: center;"
-        "letter-spacing: 1.5px;"
-        "text-transform: lowercase;"
-        "color: #003840;"
-        "qproperty-alignment: AlignCenter;"
-        "}");
+    //     "font-family: 'Brevia';"
+    //     "font-style: bold;"
+    //     "font-weight: 700;"
+    //     "font-size: 64px;"
+    //     "line-height: 99px;"
+    //     "text-align: center;"
+    //     "letter-spacing: 1.5px;"
+    //     "text-transform: lowercase;"
+    //     "color: #003840;"
+    //     "qproperty-alignment: AlignCenter;"
+    //     "}");
 
     
-    ui->about_nada_label->setText("about nada");
-    ui->about_nada_label->setStyleSheet(
-        "QLabel {"
+    // ui->about_nada_label->setText("about nada");
+    // ui->about_nada_label->setStyleSheet(
+    //     "QLabel {"
 
-        "font-family: 'Brevia';"
-        "font-style: bold;"
-        "font-weight: 700;"
-        "font-size: 64px;"
-        "line-height: 99px;"
-        "text-align: center;"
-        "letter-spacing: 1.5px;"
-        "text-transform: lowercase;"
-        "color: #003840;"
-        "qproperty-alignment: AlignCenter;"
-        "}");
+    //     "font-family: 'Brevia';"
+    //     "font-style: bold;"
+    //     "font-weight: 700;"
+    //     "font-size: 64px;"
+    //     "line-height: 99px;"
+    //     "text-align: center;"
+    //     "letter-spacing: 1.5px;"
+    //     "text-transform: lowercase;"
+    //     "color: #003840;"
+    //     "qproperty-alignment: AlignCenter;"
+    //     "}");
 
 
-    ui->other_locations_label->setText("other locations");
-    ui->other_locations_label->setStyleSheet(
-        "QLabel {"
+    // ui->other_locations_label->setText("other locations");
+    // ui->other_locations_label->setStyleSheet(
+    //     "QLabel {"
 
-        "font-family: 'Brevia';"
-        "font-style: bold;"
-        "font-weight: 700;"
-        "font-size: 64px;"
-        "line-height: 99px;"
-        "text-align: center;"
-        "letter-spacing: 1.5px;"
-        "text-transform: lowercase;"
-        "color: #003840;"
-        "qproperty-alignment: AlignCenter;"
-        "}");
+    //     "font-family: 'Brevia';"
+    //     "font-style: bold;"
+    //     "font-weight: 700;"
+    //     "font-size: 64px;"
+    //     "line-height: 99px;"
+    //     "text-align: center;"
+    //     "letter-spacing: 1.5px;"
+    //     "text-transform: lowercase;"
+    //     "color: #003840;"
+    //     "qproperty-alignment: AlignCenter;"
+    //     "}");
 
-     ui->about_text1_label->setText("Hi! We are Soapstand, a Vancouver Startup focused<br> on reducing plastic waste. We build zero-waste soap<br> refill stations, and partner with local operators to fill<br> the stations with products you’ll love! With Soapstand<br> you can be sure that you are reducing your plastic<br> waste and helping to improve the state of our planet.");
-    ui->about_text1_label->setStyleSheet(
-        "QLabel {"
+    //  ui->about_text1_label->setText("Hi! We are Soapstand, a Vancouver Startup focused<br> on reducing plastic waste. We build zero-waste soap<br> refill stations, and partner with local operators to fill<br> the stations with products you’ll love! With Soapstand<br> you can be sure that you are reducing your plastic<br> waste and helping to improve the state of our planet.");
+    // ui->about_text1_label->setStyleSheet(
+    //     "QLabel {"
 
-        "font-family: 'Montserrat';"
-        "font-style: normal;"
-        "font-weight: 200;"
-        "font-size: 28px;"
-        "line-height: 99px;"
-        "text-align: center;"
-        "letter-spacing: 1.5px;"
-        "text-transform: lowercase;"
-        "color: #58595B;"
-        "qproperty-alignment: AlignCenter;"
-        "}");
+    //     "font-family: 'Montserrat';"
+    //     "font-style: normal;"
+    //     "font-weight: 200;"
+    //     "font-size: 28px;"
+    //     "line-height: 99px;"
+    //     "text-align: center;"
+    //     "letter-spacing: 1.5px;"
+    //     "text-transform: lowercase;"
+    //     "color: #58595B;"
+    //     "qproperty-alignment: AlignCenter;"
+    //     "}");
 
-    ui->about_text2_label->setText("It's time to get curious about where your food <br>comes from. At Nada, we're here to connect people to food in its<br> simplest form and to spark a conversation about our<br> local food system - how we can all support our favourite<br> local businesses, contribute to local economies, and help<br> build resilient communities in the place we call home.<br> Our goal is to be part of the climate solution and foster a<br> more just food system. Let's seize the moment and make<br> changes that prioritize diversity and resilience!<br>");
-    ui->about_text2_label->setStyleSheet(
-        "QLabel {"
+    // ui->about_text2_label->setText("It's time to get curious about where your food <br>comes from. At Nada, we're here to connect people to food in its<br> simplest form and to spark a conversation about our<br> local food system - how we can all support our favourite<br> local businesses, contribute to local economies, and help<br> build resilient communities in the place we call home.<br> Our goal is to be part of the climate solution and foster a<br> more just food system. Let's seize the moment and make<br> changes that prioritize diversity and resilience!<br>");
+    // ui->about_text2_label->setStyleSheet(
+    //     "QLabel {"
 
-        "font-family: 'Montserrat';"
-        "font-style: normal;"
-        "font-weight: 200;"
-        "font-size: 28px;"
-        "line-height: 99px;"
-        "text-align: center;"
-        "letter-spacing: 1.5px;"
-        "text-transform: lowercase;"
-        "color: #58595B;"
-        "qproperty-alignment: AlignCenter;"
-        "}");
+    //     "font-family: 'Montserrat';"
+    //     "font-style: normal;"
+    //     "font-weight: 200;"
+    //     "font-size: 28px;"
+    //     "line-height: 99px;"
+    //     "text-align: center;"
+    //     "letter-spacing: 1.5px;"
+    //     "text-transform: lowercase;"
+    //     "color: #58595B;"
+    //     "qproperty-alignment: AlignCenter;"
+    //     "}");
     
-    ui->locations_text_label->setText("Soapstand - Famous Foods - 1595 Kingsway<br>Soapstand - Stongs Market - 2150 Dollarton Hwy<br>Soapstand - Choices Markets - 2627 W 16th Ave<br> Soapstand - East End Food Co-op - 1034 Commercial Dr<br>");
-    ui->locations_text_label->setStyleSheet(
-        "QLabel {"
+    // ui->locations_text_label->setText("Soapstand - Famous Foods - 1595 Kingsway<br>Soapstand - Stongs Market - 2150 Dollarton Hwy<br>Soapstand - Choices Markets - 2627 W 16th Ave<br> Soapstand - East End Food Co-op - 1034 Commercial Dr<br>");
+    // ui->locations_text_label->setStyleSheet(
+    //     "QLabel {"
 
-        "font-family: 'Montserrat';"
-        "font-style: normal;"
-        "font-weight: 200;"
-        "font-size: 28px;"
-        "line-height: 99px;"
-        "text-align: center;"
-        "letter-spacing: 1.5px;"
-        "text-transform: lowercase;"
-        "color: #58595B;"
-        "qproperty-alignment: AlignCenter;"
-        "}");
+    //     "font-family: 'Montserrat';"
+    //     "font-style: normal;"
+    //     "font-weight: 200;"
+    //     "font-size: 28px;"
+    //     "line-height: 99px;"
+    //     "text-align: center;"
+    //     "letter-spacing: 1.5px;"
+    //     "text-transform: lowercase;"
+    //     "color: #58595B;"
+    //     "qproperty-alignment: AlignCenter;"
+    //     "}");
 
     DbManager db(DB_PATH);
     bool showTransactions = db.showTransactions();
@@ -223,7 +243,10 @@ void page_help::showEvent(QShowEvent *event)
 
     DbManager db(DB_PATH);
     maintenance_pwd = db.getMaintenanceAdminPassword();
+    html_text = db.getHelpPageHtmlText();
     db.closeDB();
+
+  
 
     if (helpIdleTimer == nullptr)
     {

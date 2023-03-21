@@ -340,6 +340,12 @@ bool pcb::define_pcb_version(void)
                 max31760_pwm_found = true;
                 debugOutput::sendMessage("MAX31760 found on I2C bus for PWM and speed feedback", MSG_INFO);
             }
+            else if (i2c_probe_address == ADC081C021_ADDRESS){
+                // ADC081C021
+                
+                debugOutput::sendMessage("ADC081C021 current sensor found. NOT IN USE YET.", MSG_INFO);
+
+            }
             else if (i2c_probe_address == PIC_ADDRESS)
             {
                 pic_pwm_found = true;

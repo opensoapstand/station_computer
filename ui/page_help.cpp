@@ -246,6 +246,8 @@ void page_help::showEvent(QShowEvent *event)
     html_text = db.getHelpPageHtmlText();
     db.closeDB();
 
+    ui->html_text_label->setText(html_text);
+
   
 
     if (helpIdleTimer == nullptr)

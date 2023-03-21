@@ -45,7 +45,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="previousPage_Button_2">
+  <widget class="QPushButton" name="back_Button">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -55,35 +55,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>&lt;-- back</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="refreshLabel">
-   <property name="geometry">
-    <rect>
-     <x>50</x>
-     <y>150</y>
-     <width>421</width>
-     <height>91</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color: #58595B;
-font-family: Montserrat;
-font-style: light;
-font-weight: normal;
-font-size: 23px;
-line-height: 29px;</string>
-   </property>
-   <property name="text">
-    <string> 
-Tap on screen to keep page open.</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-   <property name="wordWrap">
-    <bool>true</bool>
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="transactions_Button">
@@ -1219,126 +1191,47 @@ Tap on screen to keep page open.</string>
     <string>Settings</string>
    </property>
   </widget>
-  <widget class="QLabel" name="need_help_label">
+  <widget class="QLabel" name="html_text_label">
    <property name="geometry">
     <rect>
-     <x>365</x>
-     <y>192</y>
-     <width>349</width>
-     <height>86</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="contact_us_label">
-   <property name="geometry">
-    <rect>
-     <x>401</x>
-     <y>278</y>
-     <width>281</width>
-     <height>68</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="about_soapstand_label">
-   <property name="geometry">
-    <rect>
-     <x>268</x>
-     <y>472</y>
-     <width>543</width>
-     <height>86</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="about_nada_label">
-   <property name="geometry">
-    <rect>
-     <x>345</x>
-     <y>860</y>
-     <width>375</width>
-     <height>86</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="other_locations_label">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>1375</y>
-     <width>651</width>
-     <height>68</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="about_text1_label">
-   <property name="geometry">
-    <rect>
-     <x>157</x>
-     <y>571</y>
+     <x>140</x>
+     <y>270</y>
      <width>800</width>
-     <height>252</height>
+     <height>1231</height>
     </rect>
    </property>
    <property name="text">
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="about_text2_label">
+  <widget class="QTextBrowser" name="html_textBrowser">
    <property name="geometry">
     <rect>
-     <x>146</x>
-     <y>934</y>
+     <x>100</x>
+     <y>270</y>
+     <width>891</width>
+     <height>1191</height>
+    </rect>
+   </property>
+   <property name="sizeIncrement">
+    <size>
      <width>800</width>
-     <height>432</height>
-    </rect>
+     <height>0</height>
+    </size>
    </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="locations_text_label">
-   <property name="geometry">
-    <rect>
-     <x>129</x>
-     <y>1467</y>
-     <width>900</width>
-     <height>144</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
    </property>
   </widget>
+  <zorder>html_text_label</zorder>
   <zorder>refreshButton</zorder>
-  <zorder>previousPage_Button_2</zorder>
+  <zorder>back_Button</zorder>
   <zorder>previousPage_Button</zorder>
-  <zorder>refreshLabel</zorder>
   <zorder>transactions_Button</zorder>
   <zorder>maintenance_page_Button</zorder>
   <zorder>keyboard_3</zorder>
   <zorder>feedback_Button</zorder>
-  <zorder>need_help_label</zorder>
-  <zorder>contact_us_label</zorder>
-  <zorder>about_soapstand_label</zorder>
-  <zorder>about_nada_label</zorder>
-  <zorder>other_locations_label</zorder>
-  <zorder>about_text1_label</zorder>
-  <zorder>about_text2_label</zorder>
-  <zorder>locations_text_label</zorder>
+  <zorder>html_textBrowser</zorder>
  </widget>
  <resources/>
  <connections/>

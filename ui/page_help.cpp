@@ -50,7 +50,7 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     ui->feedback_Button->setFont(font);
     ui->feedback_Button->setText("Contact Us");
 
-    ui->previousPage_Button->setStyleSheet(
+    ui->back_Button->setStyleSheet(
                 "QPushButton {"
 
                 "font-family: 'Brevia';"
@@ -66,7 +66,7 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
                 "}");
 
 
-    ui->previousPage_Button->setText("<-Back");
+    ui->back_Button->setText("<-Back");
     
     
     
@@ -211,9 +211,9 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    ui->previousPage_Button_2->setStyleSheet("QPushButton { color:#003840; background-color: transparent; border: 0px }");
-    ui->previousPage_Button_2->setFont(font);
-    ui->previousPage_Button_2->setText("<- Back");
+    // ui->previousPage_Button_2->setStyleSheet("QPushButton { color:#003840; background-color: transparent; border: 0px }");
+    // ui->previousPage_Button_2->setFont(font);
+    // ui->previousPage_Button_2->setText("<- Back");
 
     helpIdleTimer = new QTimer(this);
     helpIdleTimer->setInterval(1000);
@@ -246,7 +246,8 @@ void page_help::showEvent(QShowEvent *event)
     html_text = db.getHelpPageHtmlText();
     db.closeDB();
 
-    ui->html_text_label->setText(html_text);
+    ui->html_textBrowser->setHtml(html_text);
+    
 
   
 
@@ -259,7 +260,7 @@ void page_help::showEvent(QShowEvent *event)
 
     helpIdleTimer->start(1000);
     _helpIdleTimeoutSec = 60;
-    ui->refreshLabel->hide();
+    // ui->refreshLabel->hide();
     ui->keyboard_3->hide();
 
 }
@@ -310,14 +311,14 @@ void page_help::onHelpTimeoutTick()
 
     if (_helpIdleTimeoutSec < 10)
     {
-        ui->refreshLabel->show();
+        // ui->refreshLabel->show();
     }
 }
 
 void page_help::on_refreshButton_clicked()
 {
     _helpIdleTimeoutSec = 60;
-    ui->refreshLabel->hide();
+    // ui->refreshLabel->hide();
 }
 
 void page_help::on_transactions_Button_clicked()

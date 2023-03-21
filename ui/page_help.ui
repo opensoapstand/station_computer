@@ -1223,6 +1223,19 @@
     <enum>QFrame::NoFrame</enum>
    </property>
   </widget>
+  <widget class="QPushButton" name="previousPage_Button_2">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>20</y>
+     <width>211</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>html_text_label</zorder>
   <zorder>refreshButton</zorder>
   <zorder>back_Button</zorder>
@@ -1232,6 +1245,7 @@
   <zorder>keyboard_3</zorder>
   <zorder>feedback_Button</zorder>
   <zorder>html_textBrowser</zorder>
+  <zorder>previousPage_Button_2</zorder>
  </widget>
  <resources/>
  <connections/>

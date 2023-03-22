@@ -5,7 +5,7 @@ Description=Hello Service
 Type=simple
 ExecStart=/home/df-admin/production/admin/check_connectivity.sh
 Restart=always
-RestartSec=5
+RestartSec=1800
 
 [Install]
 WantedBy=multi-user.target

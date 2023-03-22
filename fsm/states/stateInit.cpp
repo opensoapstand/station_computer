@@ -150,7 +150,9 @@ DF_ERROR stateInit::dispenserSetup()
     }
     else if (testmachine.control_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || testmachine.control_pcb->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS  )
     {
+        debugOutput::sendMessage(" Enable 24V", MSG_INFO);
         testmachine.enablePcb24V();
+
 
     }else{
         debugOutput::sendMessage(" Unknown PCB (OLD?).", MSG_ERROR);

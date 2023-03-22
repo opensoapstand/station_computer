@@ -382,6 +382,9 @@ void pageProduct::reset_and_show_page_elements()
     ui->label_product_title->setText(selectedProductOrder->getLoadedProductName());
     ui->label_product_ingredients->setText(selectedProductOrder->getLoadedProductIngredients());
     ui->label_product_description->setText(selectedProductOrder->getLoadedProductDescription());
+    QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
+        qDebug() << full_path;
+        p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
 
     // bitmap_location = PAGE_PRODUCT_BACKGROUND_PATH;
     // uint16_t orderSizeButtons_xywh[4][4] = {

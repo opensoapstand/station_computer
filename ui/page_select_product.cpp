@@ -82,20 +82,25 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
 "}");
                 ui->label_pick_soap->setText("Pick your soap");
 
-                ui->label_notify_us->setStyleSheet(
-"QLabel {"
 
-"font-family: 'Brevia';"
-"font-style: normal;"
-"font-weight: 75;"
-"font-size: 20px;"
-"line-height: 99px;"
-"letter-spacing: px;"
-"color: #FFFFFF;"
-"text-align: center;"
-"qproperty-alignment: AlignCenter;"
-"border: none;"
-"}");
+// QPixmap icon(":/home/df-admin/production/references/help_icon.jpg.");
+
+
+//                 ui->label_notify_us->setStyleSheet(
+// "QLabel {"
+// "background-image: url(:/home/df-admin/production/references/help_icon.jpg);"
+// "font-family: 'Brevia';"
+// "font-style: normal;"
+// "font-weight: 75;"
+// "font-size: 20px;"
+// "line-height: 99px;"
+// "letter-spacing: px;"
+// "color: #FFFFFF;"
+// "text-align: center;"
+// "qproperty-alignment: AlignCenter;"
+// "border: none;"
+// "}");
+// ui->label_notify_us->setPixmap(icon);
                 // ui->label_notify_us->setText("Help");
 
 
@@ -178,6 +183,10 @@ void page_select_product::displayProducts()
         // display product picture
         selectProductPhotoLabels[i]->setStyleSheet("border: 1px solid black;");
         p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(slot));
+        QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
+        qDebug() << full_path;
+        p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
+
 
         qDebug() << "db (re)load product details:";
         DbManager db(DB_PATH);

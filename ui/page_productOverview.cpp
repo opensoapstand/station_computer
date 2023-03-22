@@ -142,21 +142,21 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
     ui->promoButton->setText("Apply");
     ui->promoButton->hide();
 
-    ui->label_notify_us->setStyleSheet(
-        "QLabel {"
+    // ui->label_notify_us->setStyleSheet(
+    //     "QLabel {"
 
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 20px;"
-        "line-height: 99px;"
-        "letter-spacing: px;"
-        "color: #FFFFFF;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
-    ui->label_notify_us->setText("Help");
+    //     "font-family: 'Brevia';"
+    //     "font-style: normal;"
+    //     "font-weight: 75;"
+    //     "font-size: 20px;"
+    //     "line-height: 99px;"
+    //     "letter-spacing: px;"
+    //     "color: #FFFFFF;"
+    //     "text-align: center;"
+    //     "qproperty-alignment: AlignCenter;"
+    //     "border: none;"
+    //     "}");
+    // ui->label_notify_us->setText("Help");
 
     ui->label_discount_code->setStyleSheet(
         "QLabel {"
@@ -347,6 +347,9 @@ void pageProductOverview::reset_and_show_page_elements()
     p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->currentProductOrder->getSelectedProductPicturePath());
     ui->label_selected_price->setText("$" + QString::number(selectedProductOrder->getSelectedPrice(), 'f', 2));
     qDebug() << "Selected size" << selectedProductOrder->getSelectedVolume();
+    QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
+        qDebug() << full_path;
+        p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
 
    
     updatePrice();

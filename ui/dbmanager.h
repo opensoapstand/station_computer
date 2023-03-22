@@ -28,6 +28,7 @@ public:
     QString getUnits(int slot);
     QString getMaintenanceAdminPassword();
     QString getCustomerId();
+    QString getHelpPageHtmlText();
 
     double getFullProduct(int slot);
     int getTotalTransactions();

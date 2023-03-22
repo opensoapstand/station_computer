@@ -48,6 +48,30 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     ui->feedback_Button->setFont(font);
     ui->feedback_Button->setText("Contact Us");
 
+<<<<<<< HEAD
+=======
+    ui->back_Button->setStyleSheet(
+                "QPushButton {"
+
+                "font-family: 'Brevia';"
+                "font-style: normal;"
+                "font-weight: 75;"
+                "font-size: 32px;"
+                "line-height: 99px;"
+                "letter-spacing: 1.5px;"
+                "color: #003840;"
+                "text-align: center;"
+                "qproperty-alignment: AlignCenter;"
+                "border: none;"
+                "}");
+
+
+    ui->back_Button->setText("<-Back");
+    
+    ui->previousPage_Button_2->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    
+   
+>>>>>>> Udbhav_ui_2.0
     DbManager db(DB_PATH);
     bool showTransactions = db.showTransactions();
     db.closeDB();
@@ -59,9 +83,9 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    ui->previousPage_Button_2->setStyleSheet("QPushButton { color:#003840; background-color: transparent; border: 0px }");
-    ui->previousPage_Button_2->setFont(font);
-    ui->previousPage_Button_2->setText("<- Back");
+    // ui->previousPage_Button_2->setStyleSheet("QPushButton { color:#003840; background-color: transparent; border: 0px }");
+    // ui->previousPage_Button_2->setFont(font);
+    // ui->previousPage_Button_2->setText("<- Back");
 
     helpIdleTimer = new QTimer(this);
     helpIdleTimer->setInterval(1000);
@@ -91,7 +115,13 @@ void page_help::showEvent(QShowEvent *event)
 
     DbManager db(DB_PATH);
     maintenance_pwd = db.getMaintenanceAdminPassword();
+    help_text_html = db.getHelpPageHtmlText();
     db.closeDB();
+
+    ui->html_textBrowser->setHtml(help_text_html);
+    
+
+  
 
     if (helpIdleTimer == nullptr)
     {
@@ -102,7 +132,7 @@ void page_help::showEvent(QShowEvent *event)
 
     helpIdleTimer->start(1000);
     _helpIdleTimeoutSec = 60;
-    ui->refreshLabel->hide();
+    // ui->refreshLabel->hide();
     ui->keyboard_3->hide();
 }
 
@@ -152,14 +182,14 @@ void page_help::onHelpTimeoutTick()
 
     if (_helpIdleTimeoutSec < 10)
     {
-        ui->refreshLabel->show();
+        // ui->refreshLabel->show();
     }
 }
 
 void page_help::on_refreshButton_clicked()
 {
     _helpIdleTimeoutSec = 60;
-    ui->refreshLabel->hide();
+    // ui->refreshLabel->hide();
 }
 
 void page_help::on_transactions_Button_clicked()

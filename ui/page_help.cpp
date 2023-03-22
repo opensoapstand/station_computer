@@ -48,7 +48,6 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     ui->feedback_Button->setFont(font);
     ui->feedback_Button->setText("Contact Us");
 
-
     ui->back_Button->setStyleSheet(
                 "QPushButton {"
 
@@ -70,7 +69,6 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     ui->previousPage_Button_2->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     
    
-
     DbManager db(DB_PATH);
     bool showTransactions = db.showTransactions();
     db.closeDB();

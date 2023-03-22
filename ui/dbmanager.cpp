@@ -1634,7 +1634,7 @@ QString DbManager::getHelpPageHtmlText()
     QString mid_string;
 
     {
-        mid_query.prepare("SELECT html_text FROM machine");
+        mid_query.prepare("SELECT help_text_html FROM machine");
         mid_query.exec();
 
         while (mid_query.next())

@@ -1,0 +1,13 @@
+[Unit]
+Description=Hello Service
+
+[Service]
+Type=simple
+ExecStart=/home/df-admin/production/admin/check_connectivity.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+
+

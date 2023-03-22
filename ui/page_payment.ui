@@ -264,7 +264,7 @@ line-height: 29px;</string>
     <set>Qt::AlignCenter</set>
    </property>
    <property name="wordWrap">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </widget>
   <widget class="QLabel" name="steps_Label">
@@ -315,10 +315,10 @@ line-height: 29px;</string>
   <widget class="QLabel" name="animated_Label">
    <property name="geometry">
     <rect>
-     <x>356</x>
-     <y>1170</y>
-     <width>331</width>
-     <height>251</height>
+     <x>350</x>
+     <y>1070</y>
+     <width>205</width>
+     <height>300</height>
     </rect>
    </property>
    <property name="text">

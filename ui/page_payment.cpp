@@ -77,6 +77,7 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
             ui->steps_Label->hide();
             ui->qrCode->hide();
             ui->scan_Label->hide();
+            
         }
         else
         {
@@ -344,6 +345,8 @@ void page_payment::showEvent(QShowEvent *event)
         ui->order_total_amount->hide();
         ui->steps_Label->hide();
         ui->processing_Label->hide();
+        
+       
     }
     else
     {
@@ -610,7 +613,10 @@ void page_payment::storePaymentEvent(QSqlDatabase db, QString event)
 void page_payment::progressStatusLabel()
 {
     if(tap_payment){
-       
+        QMovie *movie = new QMovie("/home/df-admin/drinkfill/ui/references/templates/default/soapstandspinner.gif");
+        movie->setCacheMode(QMovie::CacheAll);
+            ui->animated_Label->setMovie(movie);
+            movie->start();
         int socket = connectSocket();
         socketAddr = to_string(socket);
         qDebug()<< "Socket Connected" << endl;
@@ -624,15 +630,14 @@ void page_payment::progressStatusLabel()
         stream << std::fixed << std::setprecision(2) << price;
         std::string authCommand = authorizationCommand(socket, MAC_LABEL, MAC_KEY, stream.str());
         std::string packetSent = sendPacket(authCommand,socket, true);
+            
         std::map<std::string, std::string> inFlight = connectInFlightSocket();
         if(inFlight["CARD_ENTRY_METHOD"]=="TAPPED"){
+            
             p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_AUTHORIZE_NOW);
 
         }
-        QMovie *movie = new QMovie("/home/df-admin/drinkfill/ui/soapstandspinner.gif");
-        ui->processing_Label->setMovie(movie);
-        ui->processing_Label->raise();
-        movie->start();
+       
         std::map<std::string, std::string> responseObj = receivePacket(authCommand,socket, true);
 
         if(responseObj["RESULT"] == "APPROVED"){

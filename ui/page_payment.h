@@ -36,6 +36,7 @@
 #include <QUuid>
 
 #include <QMovie>
+
 #include <curl/curl.h>
 
 class pageProduct;

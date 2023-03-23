@@ -37,7 +37,6 @@ sudo -u df-admin scp -r /home/df-admin/drinkfill/ui/references /home/df-admin/pr
 
 # move scripts and other administrative stuff
 scp /home/df-admin/drinkfill/admin/controller_soapstand.service /home/df-admin/production/admin/controller_soapstand.service
-scp /home/df-admin/drinkfill/admin/check_connectivity.service /home/df-admin/production/admin/check_connectivity.service
 scp /home/df-admin/drinkfill/admin/controller_execute.sh /home/df-admin/production/admin/controller_execute.sh
 scp /home/df-admin/drinkfill/admin/ui_soapstand.service /home/df-admin/production/admin/ui_soapstand.service
 scp /home/df-admin/drinkfill/admin/ui_execute.sh /home/df-admin/production/admin/ui_execute.sh
@@ -45,13 +44,13 @@ scp /home/df-admin/drinkfill/admin/soapstand_manager.sh /home/df-admin/productio
 scp /home/df-admin/drinkfill/admin/status_services.sh /home/df-admin/production/admin/status_services.sh
 scp /home/df-admin/drinkfill/admin/check_connectivity.sh /home/df-admin/production/admin/check_connectivity.sh
 
-scp /home/df-admin/drinkfill/aws_operations.sh /home/df-admin/production/admin/aws_operations.sh
+scp /home/df-admin/drinkfill/admin/aws_operations.sh /home/df-admin/production/admin/aws_operations.sh
 
 scp /home/df-admin/drinkfill/admin/screenshotbot.sh /home/df-admin/production/admin/screenshotbot.sh
 scp /home/df-admin/drinkfill/admin/screenshotbot_sequence_printer.txt /home/df-admin/production/admin/screenshotbot_sequence_printer.txt
 scp /home/df-admin/drinkfill/admin/screenshotbot_sequence_qr.txt /home/df-admin/production/admin/screenshotbot_sequence_qr.txt
-scp /home/df-admin/drinkfill/updateDatabase.py /home/df-admin/production/admin/updateDatabase.py
-scp /home/df-admin/drinkfill/missingTransactions.py /home/df-admin/production/admin/missingTransactions.py
+scp /home/df-admin/drinkfill/admin/updateDatabase.py /home/df-admin/production/admin/updateDatabase.py
+scp /home/df-admin/drinkfill/admin/missingTransactions.py /home/df-admin/production/admin/missingTransactions.py
 
 # ask for db to be written. By default: NO! 
 read -p "Copy database? [y] for yes. [enter,anykey] for no:" -n 1 -r

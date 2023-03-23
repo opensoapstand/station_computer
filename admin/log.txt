@@ -1,2 +1,0 @@
-Wed Mar 22 10:48:27 PDT 2023 Wi-Fi signal strength: 68 dBm
-Wed Mar 22 10:48:42 PDT 2023 Wi-Fi signal strength: 69 dBm

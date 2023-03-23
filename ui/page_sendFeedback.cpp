@@ -60,7 +60,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                 "}");
 
 
-        ui->previousPage_Button->setText("<-Back");
+        ui->previousPage_Button->setText("<-back");
         ui->mainPage_Button->hide();
         
         ui->label_select_problem->setStyleSheet("QLabel { color:#555555; ; border: 1px }");

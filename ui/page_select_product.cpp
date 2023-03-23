@@ -131,7 +131,6 @@ void page_select_product::setPage(pageProduct *pageSizeSelect, page_idle *pageId
     selectedProductOrder = p_page_idle->currentProductOrder;
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
-    ui->label_notify_us->raise();
       QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
         qDebug() << full_path;
         p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);

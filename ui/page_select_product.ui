@@ -710,8 +710,8 @@
   <zorder>product_4_overlay_label</zorder>
   <zorder>product_3_overlay_label</zorder>
   <zorder>label_pick_soap</zorder>
-  <zorder>label_notify_us</zorder>
-  <zorder>helpPage_Button</zorder>
+   <zorder>label_notify_us</zorder>
+  <zorder>mainPage_Button</zorder>
  </widget>
  <resources/>
  <connections/>

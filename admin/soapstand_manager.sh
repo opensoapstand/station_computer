@@ -93,6 +93,7 @@ do
             # move services to systemd/system folder
             sudo scp /home/df-admin/production/admin/controller_soapstand.service /etc/systemd/system
             sudo scp /home/df-admin/production/admin/ui_soapstand.service /etc/systemd/system
+            sudo scp /home/df-admin/production/admin/check_connectivity.service /etc/systemd/system
 
             # reload services
             sudo systemctl daemon-reload
@@ -107,6 +108,8 @@ do
             sudo systemctl start ui_soapstand.service
             sudo systemctl start controller_soapstand.service
             sudo systemctl start check_connectivity.service
+
+             echo "start aefaefasefasef services"
             # status
             sudo ./status_services.sh
 
@@ -117,7 +120,7 @@ do
             # move files to service folder
             sudo scp /home/df-admin/production/admin/controller_soapstand.service /etc/systemd/system
             sudo scp /home/df-admin/production/admin/ui_soapstand.service /etc/systemd/system
-            sudo scp /home/df-admin/production/admin/check_connectivity.sh /etc/systemd/systemd
+            sudo scp /home/df-admin/production/admin/check_connectivity.service /etc/systemd/systemd
 
             #Update station status every 30 mins
             # crontab -l | grep -q 'stationStatus.py' && echo 'Station Status Already exists'  \

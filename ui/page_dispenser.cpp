@@ -200,7 +200,7 @@ void page_dispenser::dispensing_end_admin()
             std::cout << "Voiding transaction";
             response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,SAF_NUM);
         }
-
+        finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);   
         
     }
     else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && volumeDispensed != 0)
@@ -214,6 +214,7 @@ void page_dispenser::dispensing_end_admin()
              std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,SAF_NUM, stream.str(), "ELIGIBLE");
         }
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_AUTHORIZE_NOW);
+        finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);   
 
     }
     std::cout << "Stopping dispense timer";
@@ -221,7 +222,6 @@ void page_dispenser::dispensing_end_admin()
 
     // thanksPage->showFullScreen();
     // this->hide();
-    finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);   
 
     p_page_idle->pageTransition(this, thanksPage);
     qDebug() << "Finished dispense admin handling";

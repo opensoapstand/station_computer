@@ -2,7 +2,7 @@
 
 std::string read_public_key()
 {
-    std::ifstream infile("/home/df-admin/drinkfill/ui/payment/public_key.txt");
+    std::ifstream infile("/home/df-admin/production/admin/payment/public_key.txt");
     if (!infile.is_open()) {
         std::cerr << "Failed to open file" << std::endl;
         return "";
@@ -306,7 +306,7 @@ void print_vector_as_hex(const std::vector<unsigned char>& vec) {
 
 std::string create_counter_mac(int counter, std::string encrypted_mac){
     std::vector<unsigned char> ciphertext = base64_decode(encrypted_mac); 
-    RSA* private_key = load_private_key("/home/df-admin/drinkfill/ui/payment/private_key.der");
+    RSA* private_key = load_private_key("/home/df-admin/production/admin/payment/private_key.der");
     if (private_key == NULL) {
     // Handle error
         std::cout << "Error in reading private key";

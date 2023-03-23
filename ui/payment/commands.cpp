@@ -221,7 +221,7 @@ std::map<std::string, std::string> testMac(int socket, std::string MAC_KEY, std:
 }
 
 int createOrUpdateConfigFile (std::string macKey,std::string macLabel,std::string iP,std::string invoiceNumber){
-    std::ofstream configFile("/home/df-admin/production/admin/config.txt");
+    std::ofstream configFile("/home/df-admin/production/admin/payment/config.txt");
     if (configFile.is_open()) {
         chmod("config.txt", S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
         configFile << "MAC_KEY=" + macKey +"\n";
@@ -238,7 +238,7 @@ int createOrUpdateConfigFile (std::string macKey,std::string macLabel,std::strin
 
 
 std::map<std::string, std::string> readConfigFile(){
-    std::ifstream configFile("/home/df-admin/production/admin/config.txt");
+    std::ifstream configFile("/home/df-admin/production/admin/payment/config.txt");
     std::map<std::string, std::string> configMap;
     if (configFile.is_open()) {
         std::string line;
@@ -266,7 +266,7 @@ std::string updateInvoiceValueInConfig(std::string invoiceNumber){
     configMap["INVOICE"] = invoiceNumber;
     
     // Write the updated configMap back to the file
-    std::ofstream outFile("/home/df-admin/production/admin/config.txt");
+    std::ofstream outFile("/home/df-admin/production/admin/payment/config.txt");
 
     if (outFile.is_open()) {
         for (auto& [key, value] : configMap) {

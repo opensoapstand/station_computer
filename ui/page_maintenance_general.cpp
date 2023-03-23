@@ -140,7 +140,7 @@ void page_maintenance_general::send_check_printer_status_command()
 }
 void page_maintenance_general::on_printer_check_status_button_clicked()
 {
-    //qDebug() << "Maintenance general. yoooo.";
+    // qDebug() << "Maintenance general. yoooo.";
     send_check_printer_status_command();
 }
 
@@ -156,7 +156,6 @@ void page_maintenance_general::on_printer_test_print_button_clicked()
     usleep(50000);
     p_page_idle->dfUtility->send_command_to_FSM("q");
 }
-
 
 void page_maintenance_general::on_enable_pump_ramping_checkBox_clicked(bool checked)
 {
@@ -452,4 +451,90 @@ void page_maintenance_general::on_wifiButton_clicked()
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
     ui->wifi_internet->setText("Wifi Connectivity: " + stdout);
+}
+
+void page_maintenance_general::on_rtunnel_restart_Button_clicked()
+{
+
+    // https://stackoverflow.com/questions/75689836/system-command-executed-from-qt-does-not-work-for-service
+
+    // QProcess process;
+    // process.start("echo 'D@nkF1ll$' | sudo -S -n systemctl start rtunnel.service");
+    // process.start("echo 'D@nkF1ll$' | sudo -S -n journalctl -o cat -r -u  rtunnel.service");
+    // process.start("echo 'D@nkF1ll$' | sudo -S -n service rtunnel restart");
+
+    // QProcess process;
+    // process.start("sudo -S -n systemctl restart rtunnel.service");
+    // process.waitForStarted();
+    // // usleep(1000000);
+    // process.write("D@nkF1ll$");
+
+    // process.waitForFinished(-1);
+    // QString feedback = process.readAllStandardOutput();
+    // // QString feedback = process.readAllStandardError();
+    // qDebug() << "rtunnel restart status: " << feedback;
+    // ui->status_feedback_label->setText("rtunnel restart " + feedback);
+
+    QProcess process;
+    process.start("bash");
+    process.waitForStarted();
+    process.write("echo 'D@nkF1ll$' | sudo -S systemctl restart rtunnel.service\n");
+    // process.write("echo 'D@nkF1ll$' | sudo -S shutdown -h now\n");
+
+    process.write("echo 'D@nkF1ll$' | sudo -S journalctl -r -u rtunnel.service | head -50\n");
+
+    process.write("exit\n");
+    process.waitForFinished(-1);
+    QString feedback = process.readAllStandardOutput();
+    
+    ui->status_feedback_label->setText("rtunnel restart " + feedback);
+
+    
+
+    // https://stackoverflow.com/questions/23322739/how-to-execute-complex-linux-commands-in-qt
+
+    // QProcess process1;
+    // QProcess process2;
+
+    // process1.setStandardOutputProcess(&process2);
+
+    // process1.start("echo 'D@nkF1ll$'");
+    // process2.start("sudo -S systemctl restart rtunnel.service");
+    // process2.setProcessChannelMode(QProcess::ForwardedChannels);
+
+    // // Wait for it to start
+    // process1.waitForStarted();
+
+    // bool retval = false;
+    // QByteArray buffer;
+    // // To be fair: you only need to wait here for a bit with shutdown,
+    // // but I will still leave the rest here for a generic solution
+    // while ((retval = process2.waitForFinished())){
+    //     buffer.append(process2.readAll());
+    // }
+
+    // if (!retval)
+    // {
+    //     qDebug() << "Process 2 error:" << process2.errorString();
+    //     ui->status_feedback_label->setText("Process 2 error:" + process2.errorString());
+    //     return;
+    // }
+    // ui->status_feedback_label->setText("Process 2 success:");
+}
+
+void page_maintenance_general::on_network_status_Button_clicked()
+{
+// iwconfig wlo2 | awk -F'[ =]+' '/Signal level/
+
+    QProcess process;
+    process.start("bash");
+    process.waitForStarted();
+    process.write("iwconfig\n");
+
+    process.write("exit\n");
+    process.waitForFinished(-1);
+    QString feedback = process.readAllStandardOutput();
+    
+    ui->status_feedback_label->setText(feedback);
+
 }

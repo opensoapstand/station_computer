@@ -61,25 +61,24 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     // ui->abortButton->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
     QString volumeDispensedStylesheet = "QLabel {"
 
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 100;"
-        "font-size: 42px;"
-        "text-align: centre;"
-        "line-height: auto;"
-        "letter-spacing: 0px;"
-        "qproperty-alignment: AlignCenter;"
-        "border-radius: 20px;"
-        "color: #5e8580;"
-        "border: none;"
-        "}";
+                                        "font-family: 'Brevia';"
+                                        "font-style: normal;"
+                                        "font-weight: 100;"
+                                        "font-size: 42px;"
+                                        "text-align: centre;"
+                                        "line-height: auto;"
+                                        "letter-spacing: 0px;"
+                                        "qproperty-alignment: AlignCenter;"
+                                        "border-radius: 20px;"
+                                        "color: #5e8580;"
+                                        "border: none;"
+                                        "}";
     ui->volumeDispensedLabel->setStyleSheet(volumeDispensedStylesheet);
 
     ui->label_volume_dispensed->setStyleSheet(volumeDispensedStylesheet);
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
-
 }
 
 /*
@@ -99,7 +98,6 @@ void page_dispenser::setPage(page_payment *page_payment, pagethankyou *pageThank
     // QPalette palette;
     // palette.setBrush(QPalette::Background, background);
     // this->setPalette(palette);
-
 }
 
 // DTOR
@@ -112,27 +110,29 @@ void page_dispenser::showEvent(QShowEvent *event)
 {
     this->isDispensing = false;
     qDebug() << "<<<<<<< Page Enter: Dispenser >>>>>>>>>";
-    
+
     QWidget::showEvent(event);
 
     qDebug() << "selected slot: " << QString::number(selectedProductOrder->getSelectedSlot());
 
     qDebug() << "db check dispense buttons count:";
     DbManager db(DB_PATH);
-    
-    transactionLogging +="\n 6: Station Unlocked - True";
+
+    transactionLogging += "\n 6: Station Unlocked - True";
 
     int button_count = db.getDispenseButtonCount();
     updateVolumeDispensedLabel(0.0);
 
     db.closeDB();
 
-    if (button_count==1){
-        // single spout 
+    if (button_count == 1)
+    {
+        // single spout
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
-    }else{
+    }
+    else
+    {
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
-
     }
 
 #ifdef ENABLE_DYNAMIC_UI
@@ -148,7 +148,6 @@ void page_dispenser::showEvent(QShowEvent *event)
     // ui->abortButton->setText("Complete");
     // ui->abortButton->setStyleSheet("border-radius: 27px;font-size:42px;");
 
-    
     ui->abortButton->raise();
 
     if (nullptr == dispenseIdleTimer)
@@ -162,23 +161,20 @@ void page_dispenser::showEvent(QShowEvent *event)
     _dispenseIdleTimeoutSec = 120;
 }
 
-
-void page_dispenser::updateVolumeDispensedLabel(double dispensed){
+void page_dispenser::updateVolumeDispensedLabel(double dispensed)
+{
     QString dispensedVolumeUnitsCorrected;
     QString units = selectedProductOrder->getUnitsForSelectedSlot();
     if (units == "oz")
     {
-        dispensedVolumeUnitsCorrected = QString::number(ceil(dispensed * (double)ML_TO_OZ * 1.0) );
-
+        dispensedVolumeUnitsCorrected = QString::number(ceil(dispensed * (double)ML_TO_OZ * 1.0));
     }
     else
     {
-        dispensedVolumeUnitsCorrected = QString::number(ceil(dispensed ));
+        dispensedVolumeUnitsCorrected = QString::number(ceil(dispensed));
     }
 
     ui->volumeDispensedLabel->setText(dispensedVolumeUnitsCorrected + " " + units);
-   
-
 }
 
 /*
@@ -242,31 +238,44 @@ void page_dispenser::startDispensing()
 {
     volumeDispensed = 0;
     targetVolume = selectedProductOrder->getSelectedVolume();
-        
+
+    // // fsmSendStartDispensing();
+    // fsmSendPrice();
+    // sleep(1);
+    // if(this->selectedProductOrder->getPromoCode()!=""){
+    //     fsmSendPromo();
+    //     qDebug() << "In send promo";
+    //     sleep(1);
+    // }
     // fsmSendStartDispensing();
-    fsmSendPrice();
-    sleep(1);
-    if(this->selectedProductOrder->getPromoCode()!=""){
-        fsmSendPromo();
-        qDebug() << "In send promo";
-        sleep(1);
-    }
-    fsmSendStartDispensing();
+
+    QString dispenseCommand = getStartDispensingCommand();
+    QString priceCommand = QString::number(this->selectedProductOrder->getSelectedPriceCorrected());
+    QString promoCommand = this->selectedProductOrder->getPromoCode();
+
+    QString delimiter = QString("|");
+    QString preamble = "Order";
+    QString command = preamble + delimiter + dispenseCommand + delimiter + priceCommand + delimiter + promoCommand + delimiter;
+
+    qDebug() << "Send start command to FSM: " << command;
+    p_page_idle->dfUtility->send_command_to_FSM(command);
+    this->isDispensing = true;
 }
 
+QString page_dispenser::getStartDispensingCommand()
+{
+    QString command = QString::number(selectedProductOrder->getSelectedSlot());
+    command.append(selectedProductOrder->getSelectedSizeAsChar());
+    command.append(SEND_DISPENSE_START);
+    return command;
+}
 
 void page_dispenser::fsmSendStartDispensing()
 {
     qDebug() << "Send Start dispensing to fsm";
-    QString command = QString::number(selectedProductOrder->getSelectedSlot());
-    command.append(selectedProductOrder->getSelectedSizeAsChar());
-    command.append(SEND_DISPENSE_START);
-
-    p_page_idle->dfUtility->send_command_to_FSM(command);
+    p_page_idle->dfUtility->send_command_to_FSM(getStartDispensingCommand());
 
     this->isDispensing = true;
-    
-
 }
 
 void page_dispenser::fsmSendStopDispensing()
@@ -289,7 +298,6 @@ void page_dispenser::fsmSendPrice()
     p_page_idle->dfUtility->send_command_to_FSM(command);
 }
 
-
 void page_dispenser::fsmSendPromo()
 {
     qDebug() << "Send Promo to fsm";
@@ -298,7 +306,6 @@ void page_dispenser::fsmSendPromo()
     command.append(this->selectedProductOrder->getPromoCode());
     p_page_idle->dfUtility->send_command_to_FSM(command);
 }
-
 
 // void page_dispenser::onRinseTimerTick()
 // {
@@ -334,7 +341,7 @@ void page_dispenser::onDispenseIdleTick()
 QString page_dispenser::getMostRecentDispensed()
 {
     QString units = selectedProductOrder->getUnitsForSelectedSlot();
-    
+
     return df_util::getConvertedStringVolumeFromMl(volumeDispensed, units, false, false);
     // return volumeDispensed;
 }
@@ -357,26 +364,25 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
     if (this->isDispensing)
     {
         // if (dispensed > 0.01){
-            // ui->label_abort->setStyleSheet(
-            //     "QLabel {"
+        // ui->label_abort->setStyleSheet(
+        //     "QLabel {"
 
-            //     "font-family: 'Brevia';"
-            //     "font-style: normal;"
-            //     "font-weight: 75;"
-            //     "background-color: #5E8580;"
-            //     "font-size: 16px;"
-            //     "text-align: centre;"
-            //     "line-height: auto;"
-            //     "letter-spacing: 0px;"
-            //     "qproperty-alignment: AlignCenter;"
-            //     "border-radius: 20px;"
-            //     "color: #FFFFFF;"
-            //     "border: none;"
-            //     "}");        
-            //     ui->label_abort->setText("Complete333");
-                ui->label_abort->raise();
-        
-        
+        //     "font-family: 'Brevia';"
+        //     "font-style: normal;"
+        //     "font-weight: 75;"
+        //     "background-color: #5E8580;"
+        //     "font-size: 16px;"
+        //     "text-align: centre;"
+        //     "line-height: auto;"
+        //     "letter-spacing: 0px;"
+        //     "qproperty-alignment: AlignCenter;"
+        //     "border-radius: 20px;"
+        //     "color: #FFFFFF;"
+        //     "border: none;"
+        //     "}");
+        //     ui->label_abort->setText("Complete333");
+        ui->label_abort->raise();
+
         // }
         updateVolumeDispensedLabel(dispensed);
 
@@ -401,7 +407,6 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         ui->dispense_bottle_label->show();
         ui->fill_animation_label->show();
         ui->abortButton->raise();
-
     }
     else
     {

@@ -45,7 +45,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="previousPage_Button_2">
+  <widget class="QPushButton" name="back_Button">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -55,35 +55,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>&lt;-- back</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="refreshLabel">
-   <property name="geometry">
-    <rect>
-     <x>50</x>
-     <y>150</y>
-     <width>421</width>
-     <height>91</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color: #58595B;
-font-family: Montserrat;
-font-style: light;
-font-weight: normal;
-font-size: 23px;
-line-height: 29px;</string>
-   </property>
-   <property name="text">
-    <string> 
-Tap on screen to keep page open.</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-   <property name="wordWrap">
-    <bool>true</bool>
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="transactions_Button">
@@ -1219,14 +1191,61 @@ Tap on screen to keep page open.</string>
     <string>Settings</string>
    </property>
   </widget>
+  <widget class="QLabel" name="html_text_label">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>270</y>
+     <width>800</width>
+     <height>1231</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="html_textBrowser">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>270</y>
+     <width>891</width>
+     <height>1191</height>
+    </rect>
+   </property>
+   <property name="sizeIncrement">
+    <size>
+     <width>800</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="previousPage_Button_2">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>20</y>
+     <width>211</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <zorder>html_text_label</zorder>
   <zorder>refreshButton</zorder>
-  <zorder>previousPage_Button_2</zorder>
+  <zorder>back_Button</zorder>
   <zorder>previousPage_Button</zorder>
-  <zorder>refreshLabel</zorder>
   <zorder>transactions_Button</zorder>
   <zorder>maintenance_page_Button</zorder>
-  <zorder>keyboard_3</zorder>
   <zorder>feedback_Button</zorder>
+  <zorder>html_textBrowser</zorder>
+  <zorder>previousPage_Button_2</zorder>
+  <zorder>keyboard_3</zorder>
  </widget>
  <resources/>
  <connections/>

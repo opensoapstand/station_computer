@@ -61,10 +61,10 @@ line-height: 29px;</string>
   <widget class="QPushButton" name="mainPage_Button">
    <property name="geometry">
     <rect>
-     <x>422</x>
-     <y>1741</y>
-     <width>221</width>
-     <height>171</height>
+     <x>478</x>
+     <y>1773</y>
+     <width>125</width>
+     <height>125</height>
     </rect>
    </property>
    <property name="text">
@@ -74,10 +74,10 @@ line-height: 29px;</string>
   <widget class="QLabel" name="label_price_custom">
    <property name="geometry">
     <rect>
-     <x>560</x>
+     <x>550</x>
      <y>1160</y>
-     <width>421</width>
-     <height>41</height>
+     <width>451</width>
+     <height>101</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -99,6 +99,9 @@ text-align: center;
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QLabel" name="label_price_large">
@@ -232,7 +235,7 @@ text-align: center;</string>
      <x>563</x>
      <y>1113</y>
      <width>424</width>
-     <height>100</height>
+     <height>191</height>
     </rect>
    </property>
    <property name="autoFillBackground">
@@ -407,7 +410,7 @@ text-align: center;</string>
    <property name="geometry">
     <rect>
      <x>94</x>
-     <y>700</y>
+     <y>760</y>
      <width>450</width>
      <height>450</height>
     </rect>
@@ -516,19 +519,18 @@ text-align: center;</string>
   <widget class="QLabel" name="label_notify_us">
    <property name="geometry">
     <rect>
-     <x>488</x>
-     <y>1878</y>
-     <width>116</width>
-     <height>26</height>
+     <x>478</x>
+     <y>1773</y>
+     <width>125</width>
+     <height>125</height>
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
    </property>
   </widget>
   <zorder>page_payment_Button</zorder>
   <zorder>previousPage_Button</zorder>
-  <zorder>mainPage_Button</zorder>
   <zorder>orderSmall_Button</zorder>
   <zorder>orderBig_Button</zorder>
   <zorder>orderMedium_Button</zorder>
@@ -553,6 +555,7 @@ text-align: center;</string>
   <zorder>label_select_quantity</zorder>
   <zorder>back_Button</zorder>
   <zorder>label_notify_us</zorder>
+  <zorder>mainPage_Button</zorder>
  </widget>
  <resources/>
  <connections/>

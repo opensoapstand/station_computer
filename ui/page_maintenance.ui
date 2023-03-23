@@ -192,8 +192,6 @@
     <string>MAINTENANCE MODE</string>
    </property>
   </widget>
-
-  
   <widget class="QLabel" name="machineLabel">
    <property name="geometry">
     <rect>
@@ -290,8 +288,59 @@
     <string>General Settings</string>
    </property>
   </widget>
+  <widget class="QLabel" name="product1_position_label">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>350</y>
+     <width>81</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>P1</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="product2_position_label">
+   <property name="geometry">
+    <rect>
+     <x>850</x>
+     <y>350</y>
+     <width>81</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>P2</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="product3_position_label">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>800</y>
+     <width>81</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>P3</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="product4_position_label">
+   <property name="geometry">
+    <rect>
+     <x>850</x>
+     <y>810</y>
+     <width>81</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>P4</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
-
 </ui>

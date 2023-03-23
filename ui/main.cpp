@@ -148,6 +148,7 @@ int main(int argc, char *argv[])
     df_util::fileExists(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
     df_util::fileExists(PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
     df_util::fileExists(PAGE_QR_PAY_BACKGROUND_PATH);
+    df_util::fileExists(IMAGE_BUTTON_HELP);
     df_util::fileExists(PAGE_TAP_PAY);
     df_util::fileExists(PAGE_MAINTENANCE_BACKGROUND_PATH);
     df_util::fileExists(PAGE_THANK_YOU_BACKGROUND_PATH);

@@ -312,6 +312,30 @@ double product::getTargetVolume(char size)
     }
 }
 
+// double product::getCustomVolumePriceDependingOnDispensedVolume(double volume)
+// {
+//     // custom volume pricing is per ml. Often, pricing is more optimal when larger volumes are dispensed.
+//     // if the volume provide is larger than "large volume pricing", the price per milliliter will be adjusted to match that.
+//     if (volume >= getTargetVolume(SIZE_LARGE_CHAR))
+//     {
+//         // go for discount
+//         // price per ml
+//         double largePricePerMl = getPrice(SIZE_LARGE_CHAR) / getTargetVolume(SIZE_LARGE_CHAR);
+
+//         return largePricePerMl;
+
+//         // if (largePricePerMl < getPrice(SIZE_CUSTOM_CHAR)){
+//         //     return getPrice(SIZE_CUSTOM_CHAR)
+//         // }else{
+//         //     return largePricePerMl
+//         // }
+//     }
+//     else
+//     {
+//         return getPrice(SIZE_CUSTOM_CHAR);
+//     }
+// }
+
 double product::getPrice(char size)
 {
 
@@ -331,6 +355,10 @@ double product::getPrice(char size)
     {
         return m_price_custom_per_liter;
     }
+    // else if (size == 'd')
+    // {
+    //     return m_price_custom_discount_per_liter;
+    // }
     else if (size == 't')
     {
         return m_price_custom_per_liter;
@@ -363,6 +391,15 @@ char product::sizeIndexToSizeChar(int sizeIndex)
 {
     return sizeIndexToChar[sizeIndex];
 }
+
+void product::customDispenseDiscountData(bool *isEnabled, double *discountVolume, double *discountPrice)
+{
+
+    *isEnabled = m_is_enabled_custom_discount;
+    *discountVolume = m_nVolumeTarget_custom_discount;
+    *discountPrice = m_price_custom_discount_per_liter;
+}
+
 int product::sizeCharToSizeIndex(char size)
 {
 
@@ -467,14 +504,29 @@ void product::addShowTransactionsToMachineTable()
     executeSQLStatement("ALTER TABLE machine ADD show_transactions INTEGER");
     executeSQLStatement("UPDATE machine SET show_transactions=0;");
 }
+void product::addIsEnabledCustomDiscountToProductsTable()
+{
+    executeSQLStatement("ALTER TABLE products ADD is_enabled_custom_discount INT");
+    // executeSQLStatement("ALTER TABLE products ADD is_enabled_custom_discount INT AFTER is_enabled_custom");
+    executeSQLStatement("UPDATE products SET is_enabled_custom_discount=0;");
+}
+void product::addSizeCustomDiscountToProductsTable()
+{
+    executeSQLStatement("ALTER TABLE products ADD size_custom_discount REAL");
+    // executeSQLStatement("ALTER TABLE products ADD size_custom_discount REAL AFTER size_custom_min");
+    executeSQLStatement("UPDATE products SET size_custom_discount=2000;");
+}
+void product::addPriceCustomDiscountToProductsTable()
+{
+    executeSQLStatement("ALTER TABLE products ADD price_custom_discount REAL");
+    // executeSQLStatement("ALTER TABLE products ADD price_custom_discount REAL AFTER price_custom");
+    executeSQLStatement("UPDATE products SET price_custom_discount=0.01;");
+}
 void product::executeSQLStatement(string sql_string)
 {
 
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
-    // string sql_string = "ALTER TABLE machine ADD maintenance_pwd TEXT";
-    //  string sql_string = "ALTER TABLE machine ADD maintenance_pwd TEXT;UPDATE machine SET maintenance_pwd=\"soap\";";
-
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     int status;
     status = sqlite3_step(stmt);
@@ -482,49 +534,39 @@ void product::executeSQLStatement(string sql_string)
     sqlite3_close(db);
 }
 
-bool product::isMaintenancePwdInMachineTable()
+bool product::isColumnInTable(string table, string column_name_to_find)
 {
     bool contains_column_maintenance_pwd = false;
+    // debugOutput::sendMessage("dcolumn nameee to seach e" + column_name_to_find, MSG_INFO);
 
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
-    string sql_string = "PRAGMA table_info(machine);";
+    string sql_string = "PRAGMA table_info(" + table + ");";
 
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
-    // sqlite3_step(stmt);
-    // std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
-
     int status;
     status = sqlite3_step(stmt);
     int row = 0;
     // debugOutput::sendMessage("process record: " + sql_string, MSG_INFO);
     while (status == SQLITE_ROW)
     {
-        // int columns_count = sqlite3_data_count(stmt);
-        //  debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
-
-        // for (int column_index = 0; column_index < columns_count; column_index++)
+        // debugOutput::sendMessage("roooow " + std::to_string(row), MSG_INFO);
         int columns_count = 3;
         for (int column_index = 0; column_index < columns_count; column_index++)
         {
-            // for every row, go over all the the items (0=cid, 1=name, 2=type,3=notnull,...)
 
-            // debugOutput::sendMessage("column index: " + to_string(column_index), MSG_INFO);
+            // debugOutput::sendMessage("dcolumn index " + std::to_string(column_index), MSG_INFO);
+            // for every row, go over all the the items (0=cid, 1=name, 2=type,3=notnull,...)
 
             switch (column_index)
             {
             case (1):
             {
-                //
-
                 string column_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-                // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
-                // debugOutput::sendMessage("should be: " + table_products_columns[row], MSG_INFO);
-
-                if (!column_name.compare("maintenance_pwd"))
+                // debugOutput::sendMessage("col name: " +column_name, MSG_INFO);
+                if (!column_name.compare(column_name_to_find))
                 {
                     // FOUND returns 0
-                    // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
                     contains_column_maintenance_pwd = true;
                 }
 
@@ -546,73 +588,9 @@ bool product::isMaintenancePwdInMachineTable()
     return contains_column_maintenance_pwd;
 }
 
-bool product::isShowTransactionsInMachineTable()
-{
-    bool contains_column_show_transactions = false;
-
-    rc = sqlite3_open(DB_PATH, &db);
-    sqlite3_stmt *stmt;
-    string sql_string = "PRAGMA table_info(machine);";
-
-    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
-    // sqlite3_step(stmt);
-    // std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
-
-    int status;
-    status = sqlite3_step(stmt);
-    int row = 0;
-    // debugOutput::sendMessage("process record: " + sql_string, MSG_INFO);
-    while (status == SQLITE_ROW)
-    {
-        // int columns_count = sqlite3_data_count(stmt);
-        //  debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
-
-        // for (int column_index = 0; column_index < columns_count; column_index++)
-        int columns_count = 3;
-        for (int column_index = 0; column_index < columns_count; column_index++)
-        {
-            // for every row, go over all the the items (0=cid, 1=name, 2=type,3=notnull,...)
-
-            // debugOutput::sendMessage("column index: " + to_string(column_index), MSG_INFO);
-
-            switch (column_index)
-            {
-            case (1):
-            {
-                //
-
-                string column_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-                // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
-                // debugOutput::sendMessage("should be: " + table_products_columns[row], MSG_INFO);
-
-                if (!column_name.compare("show_transactions"))
-                {
-                    // FOUND returns 0
-                    // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
-                    contains_column_show_transactions = true;
-                }
-
-                break;
-            }
-            default:
-            {
-            }
-            break;
-            }
-        }
-
-        status = sqlite3_step(stmt); // next record, every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
-        row++;
-    };
-    sqlite3_finalize(stmt);
-
-    sqlite3_close(db);
-    return contains_column_show_transactions;
-}
-
 bool product::isDbValid()
 {
-    string table_products_columns[TABLE_PRODUCTS_COLUMN_COUNT] = {"productId", "soapstand_product_serial", "slot", "name", "size_unit", "currency", "payment", "name_receipt", "concentrate_multiplier", "dispense_speed", "threshold_flow", "retraction_time", "calibration_const", "volume_per_tick", "last_restock", "volume_full", "volume_remaining", "volume_dispensed_since_restock", "volume_dispensed_total", "is_enabled_small", "is_enabled_medium", "is_enabled_large", "is_enabled_custom", "size_small", "size_medium", "size_large", "size_custom_min", "size_custom_max", "price_small", "price_medium", "price_large", "price_custom", "plu_small", "plu_medium", "plu_large", "plu_custom", "pid_small", "pid_medium", "pid_large", "pid_custom", "flavour", "image_url", "type", "ingredients", "features", "description"};
+    string table_products_columns[TABLE_PRODUCTS_COLUMN_COUNT] = {"productId", "soapstand_product_serial", "slot", "name", "size_unit", "currency", "payment", "name_receipt", "concentrate_multiplier", "dispense_speed", "threshold_flow", "retraction_time", "calibration_const", "volume_per_tick", "last_restock", "volume_full", "volume_remaining", "volume_dispensed_since_restock", "volume_dispensed_total", "is_enabled_small", "is_enabled_medium", "is_enabled_large", "is_enabled_custom", "size_small", "size_medium", "size_large", "size_custom_min", "size_custom_max", "price_small", "price_medium", "price_large", "price_custom", "plu_small", "plu_medium", "plu_large", "plu_custom", "pid_small", "pid_medium", "pid_large", "pid_custom", "flavour", "image_url", "type", "ingredients", "features", "description", "is_enabled_custom_discount", "size_custom_discount", "price_custom_discount"};
     bool is_valid = true;
 
     rc = sqlite3_open(DB_PATH, &db);
@@ -644,12 +622,16 @@ bool product::isDbValid()
             {
             case (1):
             {
-                //
-
                 string column_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
                 // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
-                // debugOutput::sendMessage("should be: " + table_products_columns[row], MSG_INFO);
+                // debugOutput::sendMessage("should be : " + table_products_columns[row], MSG_INFO);
 
+                if (row >= TABLE_PRODUCTS_COLUMN_COUNT ){
+
+                    debugOutput::sendMessage("ASSERT ERROR: More columns found than anticipated. CORRUPT DATABASE", MSG_ERROR);
+                    debugOutput::sendMessage("************************** PLEASE FIX DATABASE ********************. ", MSG_ERROR);
+                   is_valid = false;
+                }
                 if (!column_name.compare(table_products_columns[row]))
                 {
                     // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
@@ -689,6 +671,42 @@ bool product::reloadParametersFromDb()
     {
         isEnabledSizes[i] = false;
     }
+
+    syncSoftwareVersionWithDb();
+
+    if (!isColumnInTable("products", "is_enabled_custom_discount"))
+    {
+
+        debugOutput::sendMessage("ERROR: Unexpected database layout, is_enabled_custom_discount not found  ******************************", MSG_ERROR);
+        addIsEnabledCustomDiscountToProductsTable();
+    }
+    if (!isColumnInTable("products", "size_custom_discount"))
+    {
+
+        debugOutput::sendMessage("ERROR: Unexpected database layout, size_custom_discount not found  ******************************", MSG_ERROR);
+        addSizeCustomDiscountToProductsTable();
+    }
+    if (!isColumnInTable("products", "price_custom_discount"))
+    {
+
+        debugOutput::sendMessage("ERROR: Unexpected database layout, price_custom_discount not found  ******************************", MSG_ERROR);
+        addPriceCustomDiscountToProductsTable();
+    }
+
+    if (!isColumnInTable("machine", "maintenance_pwd"))
+    // if (!isMaintenancePwdInMachineTable())
+    {
+        debugOutput::sendMessage("ERROR: Unexpected database layout, will add maintentance_pwd to end of table", MSG_ERROR);
+        addMaintenancePwdToMachineTable();
+    }
+
+    if (!isColumnInTable("machine", "show_transactions"))
+    // if (!isShowTransactionsInMachineTable())
+    {
+        debugOutput::sendMessage("ERROR: Unexpected database layout, will add show_transactions to end of table", MSG_ERROR);
+        addShowTransactionsToMachineTable();
+    }
+
     bool valid = isDbValid();
 
     if (!valid)
@@ -697,19 +715,7 @@ bool product::reloadParametersFromDb()
         return false;
     }
 
-    syncSoftwareVersionWithDb();
-    if (!isMaintenancePwdInMachineTable())
-    {
-        debugOutput::sendMessage("ERROR: Unexpected database layout, will add maintentance_pwd to end of table", MSG_ERROR);
-        addMaintenancePwdToMachineTable();
-    }
-    if (!isShowTransactionsInMachineTable())
-    {
-        debugOutput::sendMessage("ERROR: Unexpected database layout, will add show_transactions to end of table", MSG_ERROR);
-        addShowTransactionsToMachineTable();
-    }
-
-    debugOutput::sendMessage("WARNING: Please note that no NULL values allowed in text fields.", MSG_INFO);
+    debugOutput::sendMessage("Database check: Valid. Please note that no NULL values are allowed in text fields.", MSG_INFO);
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT * FROM products WHERE slot=" + to_string(m_nSlot) + ";";
@@ -727,10 +733,6 @@ bool product::reloadParametersFromDb()
 
         for (int column_index = 0; column_index < columns_count; column_index++)
         {
-
-            // debugOutput::sendMessage("column index: " + to_string(column_index), MSG_INFO);
-
-            // debugOutput::sendMessage("Col index: " + to_string(column_index), MSG_INFO);
             switch (column_index)
             {
             case DB_PRODUCTS_PRODUCTID:
@@ -861,7 +863,12 @@ bool product::reloadParametersFromDb()
             break;
             case DB_PRODUCTS_IS_ENABLED_CUSTOM:
             {
-                isEnabledSizes[SIZE_INDEX_CUSTOM] = sqlite3_column_int(stmt, column_index);
+                m_is_enabled_custom_discount = sqlite3_column_int(stmt, column_index);
+            }
+            break;
+            case DB_PRODUCTS_IS_ENABLED_CUSTOM_DISCOUNT:
+            {
+                m_is_enabled_custom_discount = sqlite3_column_int(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_SIZE_SMALL:
@@ -893,6 +900,12 @@ bool product::reloadParametersFromDb()
                 debugOutput::sendMessage("m_nVolumeTarget_c:" + to_string(m_nVolumeTarget_c_max), MSG_INFO);
             }
             break;
+            case DB_PRODUCTS_SIZE_CUSTOM_DISCOUNT:
+            {
+                m_nVolumeTarget_custom_discount = sqlite3_column_double(stmt, column_index);
+                debugOutput::sendMessage("m_nVolumeTarget_custom_volume_for_discount:" + to_string(m_nVolumeTarget_custom_discount), MSG_INFO);
+            }
+            break;
             case DB_PRODUCTS_PRICE_SMALL:
             {
                 m_price_small = sqlite3_column_double(stmt, column_index);
@@ -911,6 +924,11 @@ bool product::reloadParametersFromDb()
             case DB_PRODUCTS_PRICE_CUSTOM:
             {
                 m_price_custom_per_liter = sqlite3_column_double(stmt, column_index);
+            }
+            break;
+            case DB_PRODUCTS_PRICE_CUSTOM_DISCOUNT:
+            {
+                m_price_custom_discount_per_liter = sqlite3_column_double(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_PLU_SMALL:

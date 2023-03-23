@@ -100,12 +100,13 @@ do
             # enable at startup (disable to undo)
             sudo systemctl enable ui_soapstand.service
             sudo systemctl enable controller_soapstand.service
+            sudo systemctl enable check_connectivity.service
 
 
             # start service
             sudo systemctl start ui_soapstand.service
             sudo systemctl start controller_soapstand.service
-
+            sudo systemctl start check_connectivity.service
             # status
             sudo ./status_services.sh
 
@@ -116,7 +117,13 @@ do
             # move files to service folder
             sudo scp /home/df-admin/production/admin/controller_soapstand.service /etc/systemd/system
             sudo scp /home/df-admin/production/admin/ui_soapstand.service /etc/systemd/system
-            
+            sudo scp /home/df-admin/production/admin/check_connectivity.sh /etc/systemd/systemd
+
+            #Update station status every 30 mins
+            # crontab -l | grep -q 'stationStatus.py' && echo 'Station Status Already exists'  \
+            # || crontab -l > mycron 
+            # echo "*/30 * * * *  python ~/production/admin/stationStatus.py" >> mycron
+        
             #missing Transactions 
             # could be done as a service: run python ~/production/admin/missingTransactions.py hourly
             crontab -l | grep -q 'missingTransactions.py' && echo 'Missing transactions handler scheduler not reloaded: already exists'  \

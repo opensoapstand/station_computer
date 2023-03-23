@@ -16,8 +16,6 @@
 #include "dispenser.h"
 #include <chrono>
 
-
-
 #define ACTIVATION_TIME 5
 #define TEST_ACTIVATION_TIME 3
 #define PRIME_PUMP_TIME 1
@@ -47,7 +45,7 @@ dispenser::dispenser()
     // }
 }
 
-DF_ERROR dispenser::setup(pcb* pcbtest)
+DF_ERROR dispenser::setup(pcb *pcbtest)
 {
     // Set the pump PWM value to a nominal value
 
@@ -177,56 +175,73 @@ string dispenser::getFinalPLU(char size, double price)
     char chars_plu_dynamic_formatted[MAX_BUF];
 
     std::string paymentMethod = getProduct()->getPaymentMethod();
-
-    if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13")
-    {
-        if (base_plu.size() != 8)
-        {
-            // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
-            debugOutput::sendMessage("ERROR custom plu length must be of length eight. (standard drinkfill preamble(627987) + 2digit product code) : " + base_plu, MSG_INFO);
-            string fake_plu = "66666666";
-            base_plu = fake_plu;
-        }
-
-        snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%5.2f", price);
-    }
-    else if (paymentMethod == "barcode_EAN-2")
-    {
-        if (base_plu.size() != 7)
-        {
-            // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
-            debugOutput::sendMessage("ERROR custom plu length must be of length seven. provided: " + base_plu, MSG_INFO);
-            string fake_plu = "6666666";
-            base_plu = fake_plu;
-        }
-
-        snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%6.2f", price);
-    }
-    else if (paymentMethod == "plu")
+    if (paymentMethod == "plu")
     {
         return base_plu;
     }
 
-    string plu_dynamic_price = (chars_plu_dynamic_formatted);
-    string plu_dynamic_formatted = base_plu + plu_dynamic_price;
-
-    // 3.14 --> " 3.14" --> " 314" --> "0314"
-    std::string toReplace(".");
-    size_t pos = plu_dynamic_formatted.find(toReplace);
-    if (pos != -1)
+    if (size == SIZE_CUSTOM_CHAR)
     {
-        plu_dynamic_formatted.replace(pos, toReplace.length(), "");
-    }
 
-    std::string toReplace2(" ");
-    pos = plu_dynamic_formatted.find(toReplace2);
-    while (pos != -1)
-    {
-        plu_dynamic_formatted.replace(pos, toReplace2.length(), "0");
+        if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13")
+        {
+            if (base_plu.size() != 8)
+            {
+                // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
+                debugOutput::sendMessage("ERROR custom plu length must be of length eight. (e.g. standard drinkfill preamble(627987) + 2digit product code) : " + base_plu, MSG_WARNING);
+                string fake_plu = "66666666";
+                base_plu = fake_plu;
+            }
+
+            snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%5.2f", price);// will always be at least 5 chars long e.g. 3.456 --> " 3.46" , 1234.456 --> "1234.45"
+        }
+        else if (paymentMethod == "barcode_EAN-2")
+        {
+            if (base_plu.size() != 7)
+            {
+                // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
+                debugOutput::sendMessage("ERROR custom plu length must be of length seven. provided: " + base_plu, MSG_WARNING);
+                string fake_plu = "6666666";
+                base_plu = fake_plu;
+            }
+
+            snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%6.2f", price); // will always be at least 6 chars long e.g. 3.456 --> "  3.45" , 1234.456 --> "1234.46"
+        }else{
+            debugOutput::sendMessage("ERROR Payment method not expected: " + paymentMethod, MSG_ERROR);
+            string fake_plu = "66666666";
+            base_plu = fake_plu;
+        }
+       
+
+        string plu_dynamic_price = (chars_plu_dynamic_formatted);
+
+        string plu_dynamic_formatted = base_plu + plu_dynamic_price;
+
+        // 3.14 --> " 3.14" --> " 314" --> "0314"
+        // 140.00 --> 
+        std::string toReplace(".");
+        size_t pos = plu_dynamic_formatted.find(toReplace);
+        if (pos != -1)
+        {
+            plu_dynamic_formatted.replace(pos, toReplace.length(), "");
+        }
+
+        std::string toReplace2(" ");
         pos = plu_dynamic_formatted.find(toReplace2);
-    }
+        while (pos != -1)
+        {
+            plu_dynamic_formatted.replace(pos, toReplace2.length(), "0");
+            pos = plu_dynamic_formatted.find(toReplace2);
+        }
 
-    return plu_dynamic_formatted;
+        if (plu_dynamic_formatted.length() != 12){
+             debugOutput::sendMessage("ERROR Generated barcode has an error. Was the price more than 99.99?  Its length should be twelve: " + plu_dynamic_formatted, MSG_ERROR);
+        }
+        return plu_dynamic_formatted;
+    }
+    
+    return base_plu;
+    
 }
 
 void dispenser::setAllDispenseButtonLightsOff()
@@ -242,9 +257,27 @@ void dispenser::setMultiDispenseButtonLight(int slot, bool enableElseDisable)
 {
     // output has to be set low for light to be on.
     debugOutput::sendMessage("slot light: " + to_string(slot) + "on else off: " + to_string(enableElseDisable), MSG_INFO);
-    if ((the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON) && this->slot == 4)
+   
+    if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON)
     {
-        m_pDispenseButton4[0]->writePin(!enableElseDisable);
+        if (getMultiDispenseButtonEnabled())
+        {
+
+             if (this->slot == 4)
+            {
+                m_pDispenseButton4[0]->writePin(!enableElseDisable);
+            }else{
+
+                this->the_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
+            }
+
+        }else{
+            this->the_pcb->setSingleDispenseButtonLight(1, enableElseDisable);
+        }
+    }
+    else if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_NO_PIC)
+    {
+        this->the_pcb->setSingleDispenseButtonLight(1, enableElseDisable);
     }
     else
     {
@@ -333,14 +366,12 @@ DF_ERROR dispenser::loadGeneralProperties()
     loadMultiDispenseButtonEnabledFromDb();
     usleep(20000);
 
-    if (getMultiDispenseButtonEnabled())
-    {
+    // if (getMultiDispenseButtonEnabled())
+    // {
         //    setAllDispenseButtonLightsOff();
-    }
-    else
-    {
         the_pcb->setSingleDispenseButtonLight(this->slot, false);
-    }
+    // }
+   
     resetVolumeDispensed();
 }
 
@@ -362,17 +393,23 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
         if (getMultiDispenseButtonEnabled())
         {
             setMultiDispenseButtonLight(getSlot(), true);
+        }else{
+            setMultiDispenseButtonLight(1, true);
         }
         setPumpEnable(); // Added at time of EN-134 integration. Why did things work earlier onwards?
     }
     else if (the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS)
     {
         setPumpEnable();
-        this->the_pcb->setSingleDispenseButtonLight(getSlot(), true);
-
+        setMultiDispenseButtonLight(getSlot(), true);
     }
-    else
+    else if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_NO_PIC)
     {
+        setMultiDispenseButtonLight(getSlot(), true);
+
+    }else
+    {
+        debugOutput::sendMessage("No dispense button light enabled. ", MSG_WARNING);
     }
 
     // Set Start Time
@@ -387,7 +424,7 @@ DF_ERROR dispenser::stopDispense()
     debugOutput::sendMessage("stop dispense actions...", MSG_INFO);
     // if (getMultiDispenseButtonEnabled())
     // {
-        setAllDispenseButtonLightsOff();
+    setAllDispenseButtonLightsOff();
     // }
 
     the_pcb->flowSensorsDisableAll();
@@ -479,8 +516,11 @@ DF_ERROR dispenser::initGlobalFlowsensorIO(int pin, int pos)
 
 DF_ERROR dispenser::initDispenseButton4Light()
 {
-    m_pDispenseButton4[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_4);
-    m_pDispenseButton4[0]->setPinAsInputElseOutput(false);
+    if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON)
+    {
+        m_pDispenseButton4[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_4);
+        m_pDispenseButton4[0]->setPinAsInputElseOutput(false);
+    }
 }
 
 DF_ERROR dispenser::initButtonsShutdownAndMaintenance()
@@ -843,7 +883,7 @@ DF_ERROR dispenser::startDispense()
     using namespace std::chrono;
     dispense_start_timestamp_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     dispenseButtonTimingreset();
-    
+
     this->the_pcb->flowSensorEnable(slot);
     this->the_pcb->resetFlowSensorTotalPulses(slot);
 
@@ -864,7 +904,6 @@ unsigned short dispenser::getPumpSpeed()
 
 void dispenser::loadMultiDispenseButtonEnabledFromDb()
 {
-    
 
     rc = sqlite3_open(DB_PATH, &db);
     sqlite3_stmt *stmt;

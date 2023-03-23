@@ -40,54 +40,61 @@ char DrinkOrder::getSelectedSizeAsChar()
     return df_util::sizeIndexToChar(selectedSize);
 }
 
-void DrinkOrder::getCustomPriceDetails(QString *unitsInvoice, double *selectedPriceP, double *discountP, double *selectedPriceCorrectedP)
+void DrinkOrder::getCustomDiscountDetails( bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter)
 {
-
-    double selectedPrice = getSelectedPrice();
-    double discount = getDiscount();
-    double selectedPriceCorrected = getSelectedPriceCorrected();
-
-    // if (getSelectedSize() == SIZE_CUSTOM_INDEX)
-    // {
-    QString unitsInvoiceBBB = getUnitsForSelectedSlot();
-
-    if (unitsInvoiceBBB == "ml")
-    {
-        unitsInvoiceBBB = "L";
-        selectedPrice = selectedPrice * 1000;
-        selectedPriceCorrected = selectedPriceCorrected * 1000;
-        discount = discount * 1000;
-    }
-    else if (unitsInvoiceBBB == "g")
-    {
-        if (getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
-        {
-            unitsInvoiceBBB = "100g";
-            selectedPrice = selectedPrice * 100;
-            selectedPriceCorrected = selectedPriceCorrected * 100;
-            discount = discount * 100;
-        }
-        else
-        {
-            unitsInvoiceBBB = "kg";
-            selectedPrice = selectedPrice * 1000;
-            selectedPriceCorrected = selectedPriceCorrected * 1000;
-            discount = discount * 1000;
-        }
-    }
-    else if (unitsInvoiceBBB == "oz")
-    {
-        unitsInvoiceBBB = "oz";
-        selectedPrice = selectedPrice * OZ_TO_ML;
-        selectedPriceCorrected = selectedPriceCorrected * OZ_TO_ML;
-        discount = discount * OZ_TO_ML;
-    }
-    unitsInvoice = &unitsInvoiceBBB;
-
-    selectedPriceP = &selectedPrice;
-    discountP = &discount;
-    selectedPriceCorrectedP = &selectedPriceCorrected;
+    qDebug() << "db for large custom volume discount details ";
+    
+    DbManager db(DB_PATH);
+    db.getCustomDiscountProperties(getSelectedSlot(), large_volume_discount_is_enabled,min_volume_for_discount,discount_price_per_liter);
+    db.closeDB();
+    
 }
+// void DrinkOrder::getCustomPriceDetails(QString *unitsInvoice, double *selectedPriceP, double *discountP, double *selectedPriceCorrectedP)
+// {
+
+//     double selectedPrice = getSelectedPrice();
+//     double discount = getDiscount();
+//     double selectedPriceCorrected = getSelectedPriceCorrected();
+
+//     QString unitsInvoiceBBB = getUnitsForSelectedSlot();
+
+//     if (unitsInvoiceBBB == "ml")
+//     {
+//         unitsInvoiceBBB = "L";
+//         selectedPrice = selectedPrice * 1000;
+//         selectedPriceCorrected = selectedPriceCorrected * 1000;
+//         discount = discount * 1000;
+//     }
+//     else if (unitsInvoiceBBB == "g")
+//     {
+//         if (getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
+//         {
+//             unitsInvoiceBBB = "100g";
+//             selectedPrice = selectedPrice * 100;
+//             selectedPriceCorrected = selectedPriceCorrected * 100;
+//             discount = discount * 100;
+//         }
+//         else
+//         {
+//             unitsInvoiceBBB = "kg";
+//             selectedPrice = selectedPrice * 1000;
+//             selectedPriceCorrected = selectedPriceCorrected * 1000;
+//             discount = discount * 1000;
+//         }
+//     }
+//     else if (unitsInvoiceBBB == "oz")
+//     {
+//         unitsInvoiceBBB = "oz";
+//         selectedPrice = selectedPrice * OZ_TO_ML;
+//         selectedPriceCorrected = selectedPriceCorrected * OZ_TO_ML;
+//         discount = discount * OZ_TO_ML;
+//     }
+//     unitsInvoice = &unitsInvoiceBBB;
+
+//     selectedPriceP = &selectedPrice;
+//     discountP = &discount;
+//     selectedPriceCorrectedP = &selectedPriceCorrected;
+// }
 
 int DrinkOrder::getSelectedSize()
 {
@@ -405,10 +412,10 @@ void DrinkOrder::loadProductPropertiesFromDb(int slot)
     qDebug() << "db load product properties";
     DbManager db(DB_PATH);
 
-    bool m_isEnabledSmall;
-    bool m_isEnabledMedium;
-    bool m_isEnabledLarge;
-    bool m_isEnabledCustom;
+    // bool m_isEnabledSmall;
+    // bool m_isEnabledMedium;
+    // bool m_isEnabledLarge;
+    // bool m_isEnabledCustom;
 
     db.getProductProperties(slot, &m_product_id, m_isEnabledSizes);
 

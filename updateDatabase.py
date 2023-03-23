@@ -32,9 +32,9 @@ products = data['Products']
 for product in products:
    logging.info("Product " + product['name'] + " is updated to " + str(product)) 
    try:
-        productUpdate = database.execute("Update products set price_small=?, price_medium=?, price_large=?, price_custom=?, size_small=?, size_medium=?, size_large=?, name=? where productId=?",\
+        productUpdate = database.execute("Update products set price_small=?, price_medium=?, price_large=?, price_custom=?, size_small=?, size_medium=?, size_large=?, soapstand_product_serial=? where productId=?",\
                 (product['price_small'],product['price_medium'], product['price_large'], product['price_custom'], product['size_small'], product['size_medium'], product['size_large'],\
-                product['name'], product['productId'] ));
+                product['soapstand_product_serial'], product['productId'] ));
    except:
         logging.error("Database values are not matching the data type");
 logging.info("-------------------------------------------------------------------------------------------------------")

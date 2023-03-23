@@ -27,6 +27,7 @@
 #define SIZE_CUSTOM_INDEX 4
 #define SIZE_TEST_INDEX 5
 
+
 #ifndef START_FSM_FROM_UI
 //#define WAIT_FOR_CONTROLLER_READY // will wait for response of controller before continuing.
 #endif
@@ -104,7 +105,7 @@ using namespace std;
 #define PAGE_THANK_YOU_BACKGROUND_PATH                  "background_message.png"
 #define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_message.png"
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
-#define PAGE_HELP_BACKGROUND_PATH                       "background_help.png"
+#define PAGE_HELP_BACKGROUND_PATH                       "background_generic_white.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"
 #define PAGE_ORDER_OVERVIEW_PATH                        "order_overview.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH      "background_dispense_instructions.png"
@@ -120,9 +121,9 @@ using namespace std;
 #define PAGE_TAP_VOID                                   "void.png"
 // #define PAGE_WIFI_ERROR_BACKGROUND_PATH                 "/home/df-admin/production/references/oops.png"
 #define BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH            "/home/df-admin/production/references/bottle_fill_for_animation.png"
-#define PAGE_SEND_FEEDBACK_PATH                         "background_sendFeedback_page.png"
+#define PAGE_SEND_FEEDBACK_PATH                         "background_sendfeedback.png"
 #define PAGE_INIT_BACKGROUND_IMAGE_PATH                 "background_message.png"
-
+#define IMAGE_BUTTON_HELP                               "help_icon.png"
 
 #define SOLD_OUT_IMAGE_PATH                         "/home/df-admin/production/references/soldOut.png"
 #define KEYBOARD_IMAGE_PATH                         "/home/df-admin/production/references/soapstand-keyboard.png"

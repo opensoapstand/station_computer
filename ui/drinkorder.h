@@ -83,8 +83,9 @@ public:
     QString getVolumeRemainingCorrectUnits();
     QString getTotalDispensedCorrectUnits();
     QString getVolumeDispensedSinceRestockCorrectUnits();
-    void getCustomPriceDetails(QString *unitsInvoice, double *selectedPriceP, double *discountP, double *selectedPriceCorrectedP);
+    // void getCustomPriceDetails(QString *unitsInvoice, double *selectedPriceP, double *discountP, double *selectedPriceCorrectedP);
 
+    void getCustomDiscountDetails(bool* large_volume_discount_is_enabled, double* min_volume_for_discount, double* discount_price_per_liter);
     void setFullVolumeCorrectUnits(QString inputFullValue);
 
     void setSelectedSize(int sizeOption);
@@ -159,7 +160,7 @@ private:
     QString m_name_ui;
     QString m_description_ui;
     QString m_product_id;
-    bool m_isEnabledSizes [4];
+    bool m_isEnabledSizes [4]; // 0 is small?!
 
 
     DrinkSelection *selectedDrink;

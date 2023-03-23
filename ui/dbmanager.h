@@ -28,6 +28,7 @@ public:
     QString getUnits(int slot);
     QString getMaintenanceAdminPassword();
     QString getCustomerId();
+    QString getHelpPageHtmlText();
 
     double getFullProduct(int slot);
     int getTotalTransactions();
@@ -66,6 +67,7 @@ public:
     bool setEmptyContainerDetectionEnabled(int isEnabled);
     bool getPumpRampingEnabled();
     bool setPumpRampingEnabled(int isEnabled);
+    void getCustomDiscountProperties(int slot, bool *isEnabled, double *volumeDiscount, double *pricePerLiterDiscount);
 
     // bool updateTargetVolume_s(int slot, double new_volume);
     // bool updateTargetVolume_l(int slot, double new_volume);

@@ -33,7 +33,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>720</y>
+     <y>870</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -46,7 +46,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>790</y>
+     <y>940</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -59,7 +59,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>860</y>
+     <y>1010</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -72,7 +72,7 @@
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>540</y>
+     <y>690</y>
      <width>151</width>
      <height>17</height>
     </rect>
@@ -85,7 +85,7 @@
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>500</y>
+     <y>650</y>
      <width>161</width>
      <height>17</height>
     </rect>
@@ -98,7 +98,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>470</y>
+     <y>620</y>
      <width>111</width>
      <height>17</height>
     </rect>
@@ -117,7 +117,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>660</y>
+     <y>810</y>
      <width>291</width>
      <height>23</height>
     </rect>
@@ -130,7 +130,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>630</y>
+     <y>780</y>
      <width>251</width>
      <height>23</height>
     </rect>
@@ -1317,7 +1317,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>610</y>
+     <y>760</y>
      <width>111</width>
      <height>17</height>
     </rect>
@@ -1355,7 +1355,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>700</y>
+     <y>850</y>
      <width>111</width>
      <height>17</height>
     </rect>
@@ -1374,7 +1374,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>490</y>
+     <y>640</y>
      <width>221</width>
      <height>41</height>
     </rect>
@@ -1387,13 +1387,74 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>540</y>
+     <y>690</y>
      <width>221</width>
      <height>41</height>
     </rect>
    </property>
    <property name="text">
     <string>Test Print</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="rtunnel_restart_Button">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>530</y>
+     <width>221</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Reset Backend Connection</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="status_feedback_label">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>1140</y>
+     <width>661</width>
+     <height>471</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Command feedback</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>1100</y>
+     <width>111</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Feedback</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="network_status_Button">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>450</y>
+     <width>221</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Check network status</string>
    </property>
   </widget>
  </widget>

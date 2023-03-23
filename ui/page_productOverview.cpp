@@ -142,21 +142,21 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
     ui->promoButton->setText("Apply");
     ui->promoButton->hide();
 
-    ui->label_notify_us->setStyleSheet(
-        "QLabel {"
+    // ui->label_notify_us->setStyleSheet(
+    //     "QLabel {"
 
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 20px;"
-        "line-height: 99px;"
-        "letter-spacing: px;"
-        "color: #FFFFFF;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
-    ui->label_notify_us->setText("Help");
+    //     "font-family: 'Brevia';"
+    //     "font-style: normal;"
+    //     "font-weight: 75;"
+    //     "font-size: 20px;"
+    //     "line-height: 99px;"
+    //     "letter-spacing: px;"
+    //     "color: #FFFFFF;"
+    //     "text-align: center;"
+    //     "qproperty-alignment: AlignCenter;"
+    //     "border: none;"
+    //     "}");
+    // ui->label_notify_us->setText("Help");
 
     ui->label_discount_code->setStyleSheet(
         "QLabel {"
@@ -347,6 +347,9 @@ void pageProductOverview::reset_and_show_page_elements()
     p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->currentProductOrder->getSelectedProductPicturePath());
     ui->label_selected_price->setText("$" + QString::number(selectedProductOrder->getSelectedPrice(), 'f', 2));
     qDebug() << "Selected size" << selectedProductOrder->getSelectedVolume();
+    QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
+        qDebug() << full_path;
+        p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
 
    
     updatePrice();
@@ -394,22 +397,13 @@ bool pageProductOverview::stopSelectTimers()
 
 void pageProductOverview::mainPage()
 {
-    //    qDebug() << "pageProductOverview: mainPage button" << endl;
     this->stopSelectTimers();
-    selectIdleTimer->stop();
-    // qDebug() << "product to idle";
-    // p_page_idle->showFullScreen();
-    // this->hide();
     p_page_idle->pageTransition(this, p_page_idle);
 }
 
 void pageProductOverview::on_mainPage_Button_clicked()
 {
-    //    qDebug() << "pageProductOverview: helpPage button" << endl;
     this->stopSelectTimers();
-    selectIdleTimer->stop();
-    // p_page_help->showFullScreen();
-    // this->hide();
     p_page_idle->pageTransition(this, p_page_help);
 }
 
@@ -692,7 +686,6 @@ void pageProductOverview::on_page_payment_Button_clicked()
     ui->previousPage_Button->setEnabled(false);
 
     this->stopSelectTimers();
-    selectIdleTimer->stop();
     QString paymentMethod = selectedProductOrder->getSelectedPaymentMethod();
 
     if (paymentMethod == "qr" )
@@ -758,11 +751,8 @@ void pageProductOverview::on_page_payment_Button_clicked()
 void pageProductOverview::return_to_selectProductPage()
 {
     //    qDebug() << "pageProduct: Previous button" << endl;
-    while (!stopSelectTimers())
-    {
-    };
-    ui->promoKeyboard->hide();
-    selectIdleTimer->stop();
+    stopSelectTimers();
+    //ui->promoKeyboard->hide();
     p_page_idle->pageTransition(this, p_page_product);
 }
 void pageProductOverview::on_selectProductPage_Button_clicked()

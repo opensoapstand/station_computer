@@ -90,7 +90,7 @@
   <widget class="QPushButton" name="p_page_maintenanceButton">
    <property name="geometry">
     <rect>
-     <x>800</x>
+     <x>0</x>
      <y>0</y>
      <width>281</width>
      <height>241</height>
@@ -603,10 +603,10 @@
   <widget class="QLabel" name="product_1_overlay_label">
    <property name="geometry">
     <rect>
-     <x>53</x>
-     <y>334</y>
+     <x>60</x>
+     <y>280</y>
      <width>450</width>
-     <height>450</height>
+     <height>161</height>
     </rect>
    </property>
    <property name="text">
@@ -668,16 +668,17 @@
   <widget class="QLabel" name="label_notify_us">
    <property name="geometry">
     <rect>
-     <x>488</x>
-     <y>1878</y>
-     <width>116</width>
-     <height>26</height>
+     <x>478</x>
+     <y>1773</y>
+     <width>125</width>
+     <height>125</height>
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
    </property>
   </widget>
+  <zorder>label_notify_us</zorder>
   <zorder>selection2_Button</zorder>
   <zorder>product_2_photo_label</zorder>
   <zorder>product_2_photo_label_text</zorder>
@@ -688,7 +689,6 @@
   <zorder>selection3_Button</zorder>
   <zorder>selection4_Button</zorder>
   <zorder>mainPage_Button</zorder>
-  <zorder>helpPage_Button</zorder>
   <zorder>product_3_photo_label</zorder>
   <zorder>product_4_photo_label</zorder>
   <zorder>product_1_name_label</zorder>
@@ -711,7 +711,7 @@
   <zorder>product_4_overlay_label</zorder>
   <zorder>product_3_overlay_label</zorder>
   <zorder>label_pick_soap</zorder>
-  <zorder>label_notify_us</zorder>
+  <zorder>helpPage_Button</zorder>
  </widget>
  <resources/>
  <connections/>

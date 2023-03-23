@@ -59,6 +59,7 @@ public:
 
     void force_finish_dispensing();
     void startDispensing();
+    QString getStartDispensingCommand();
 
 public slots:
 

@@ -78,6 +78,10 @@ private slots:
     void on_printer_test_print_button_clicked();
 
 
+    void on_rtunnel_restart_Button_clicked();
+
+    void on_network_status_Button_clicked();
+
 private:
     void showEvent(QShowEvent *event);
     Ui::page_maintenance_general *ui;

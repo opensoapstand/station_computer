@@ -40,6 +40,8 @@ page_maintenance::page_maintenance(QWidget *parent) : QWidget(parent),
 
     QString title = QString("Soapstand UI v%1").arg(UI_VERSION);
     ui->label_ui_version->setText(title);
+
+    
 }
 
 // DTOR
@@ -54,10 +56,8 @@ void page_maintenance::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
     qDebug() << "<<<<<<< Page Enter: maintenance >>>>>>>>>";
 
-    
-
-
-#ifdef ENABLE_DYNAMIC_UI
+    // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH);
+    // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_PATH);
 
     for (int i = 0; i < SLOT_COUNT; i++)
     {
@@ -70,32 +70,6 @@ void page_maintenance::showEvent(QShowEvent *event)
         product_overlay_labels[i]->hide();
     }
 
-#else
-    QPixmap background1(PRODUCT_1_IMAGE_PATH);
-    QIcon ButtonIcon1(background1);
-
-    QPixmap background2(PRODUCT_2_IMAGE_PATH);
-    QIcon ButtonIcon2(background2);
-
-    QPixmap background3(PRODUCT_3_IMAGE_PATH);
-    QIcon ButtonIcon3(background3);
-
-    QPixmap background4(PRODUCT_4_IMAGE_PATH);
-    QIcon ButtonIcon4(background4);
-
-    ui->product1_button->setIcon(ButtonIcon1);
-    ui->product1_button->setIconSize(QSize(241, 381));
-
-    ui->product2_button->setIcon(ButtonIcon2);
-    ui->product2_button->setIconSize(QSize(241, 381));
-
-    ui->product3_button->setIcon(ButtonIcon3);
-    ui->product3_button->setIconSize(QSize(241, 381));
-
-    ui->product4_button->setIcon(ButtonIcon4);
-    ui->product4_button->setIconSize(QSize(241, 381));
-
-#endif
     if (page_maintenanceEndTimer == nullptr)
     {
         page_maintenanceEndTimer = new QTimer(this);
@@ -106,19 +80,65 @@ void page_maintenance::showEvent(QShowEvent *event)
     // page_maintenanceEndTimer->start(1000);
     _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
 
-    qDebug() << "db for names and id";
+    // int product_sold_out [SLOT_COUNT];
+    // bool product_slot_enabled [SLOT_COUNT];
+
+    qDebug() << "db for names and id maintenance";
     DbManager db(DB_PATH);
     // ui->enable_empty_container_checkBox->setChecked(db.getEmptyContainerDetectionEnabled());
     // ui->enable_pump_ramping_checkBox->setChecked(db.getPumpRampingEnabled());
     // qDebug()<<"ramping?"<<db.getPumpRampingEnabled();
     // ui->enable_pump_ramping_checkBox->setChecked(true);
 
-    ui->product1_label->setText(db.getProductName(1));
-    ui->product2_label->setText(db.getProductName(2));
-    ui->product3_label->setText(db.getProductName(3));
-    ui->product4_label->setText(db.getProductName(4));
+    // ui->product1_label->setText(db.getProductName(1));
+    // ui->product2_label->setText(db.getProductName(2));
+    // ui->product3_label->setText(db.getProductName(3));
+    // ui->product4_label->setText(db.getProductName(4));
     ui->machineLabel->setText("Machine ID: " + db.getMachineID());
+
+
     db.closeDB();
+
+    ui->product1_label->setText(p_page_idle->currentProductOrder->getProductName(1));
+    ui->product2_label->setText(p_page_idle->currentProductOrder->getProductName(2));
+    ui->product3_label->setText(p_page_idle->currentProductOrder->getProductName(3));
+    ui->product4_label->setText(p_page_idle->currentProductOrder->getProductName(4));
+
+
+
+    for (uint8_t i = 0; i < SLOT_COUNT; i++)
+    {
+         uint8_t slot = i+1;
+        qDebug() << "db for names and id maintenance";
+            DbManager db(DB_PATH);
+            int product_slot_enabled = db.getSlotEnabled(slot);
+            bool product_sold_out = !(db.isProductVolumeInContainer(slot));
+            QString product_status_text = db.getStatusText(slot);
+
+        db.closeDB();
+
+        // overlay product status
+        if (!product_slot_enabled)
+        {
+            product_overlay_labels[i]->setText(product_status_text);
+            product_overlay_labels[i]->setStyleSheet("background-color: rgba(255,255,255,170);");
+            // selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
+        }
+        else if (product_sold_out)
+        {
+            product_overlay_labels[i]->setText("Sold out");
+            product_overlay_labels[i]->setStyleSheet("background-color: transparent;");
+            // selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
+        }
+        else
+        {
+            product_overlay_labels[i]->setText("");
+            product_overlay_labels[i]->setStyleSheet("background-color: transparent;");
+            
+            // product_buttons[i]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
+        }
+    }
+
 
     p_pageSelectProduct->cancelTimers();
     p_pageProduct->cancelTimers();
@@ -136,7 +156,7 @@ void page_maintenance::setPage(page_idle *pageIdle, page_maintenance_dispenser *
     this->p_pageSelectProduct = p_pageProduct;
     this->p_pageProduct = pagePaySelect;
 
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH);
+    
     
 }
 

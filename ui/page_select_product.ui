@@ -678,7 +678,6 @@
     <string/>
    </property>
   </widget>
-  <zorder>label_notify_us</zorder>
   <zorder>selection2_Button</zorder>
   <zorder>product_2_photo_label</zorder>
   <zorder>product_2_photo_label_text</zorder>
@@ -711,7 +710,8 @@
   <zorder>product_4_overlay_label</zorder>
   <zorder>product_3_overlay_label</zorder>
   <zorder>label_pick_soap</zorder>
-  <zorder>helpPage_Button</zorder>
+   <zorder>label_notify_us</zorder>
+  <zorder>mainPage_Button</zorder>
  </widget>
  <resources/>
  <connections/>

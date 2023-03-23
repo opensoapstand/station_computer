@@ -131,6 +131,10 @@ void page_select_product::setPage(pageProduct *pageSizeSelect, page_idle *pageId
     selectedProductOrder = p_page_idle->currentProductOrder;
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
+      QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
+        qDebug() << full_path;
+        p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
+
 }
 
 // DTOR
@@ -183,10 +187,7 @@ void page_select_product::displayProducts()
         // display product picture
         selectProductPhotoLabels[i]->setStyleSheet("border: 1px solid black;");
         p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(slot));
-        QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
-        qDebug() << full_path;
-        p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
-
+      
 
         qDebug() << "db (re)load product details:";
         DbManager db(DB_PATH);

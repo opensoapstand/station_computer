@@ -1,26 +1,17 @@
 #!/usr/bin/env bash
-# echo "controller:"
-# systemctl is-active controller_soapstand.service
-# systemctl is-enabled controller_soapstand.service
-# echo "ui:"
-# systemctl is-active ui_soapstand.service
-# systemctl is-enabled ui_soapstand.service
-# echo "reversed ssh tunnel:"
-# systemctl is-active rtunnel.service
-# systemctl is-enabled rtunnel.service
-# systemctl status controller_soapstand.service
-# systemctl status ui_soapstand.service
-# systemctl status rtunnel.service
-echo -e "  Service Name      |  Running?\t|  Autostart?   "
+echo -e "  Service Name      \t|  Running?\t|  Autostart?   "
 active=$(systemctl is-active controller_soapstand.service)
 enabled=$(systemctl is-enabled controller_soapstand.service)
-echo -e "controller          |$active  \t|$enabled "
+echo -e "controller          \t| $active  \t| $enabled "
 active=$(systemctl is-active ui_soapstand.service)
 enabled=$(systemctl is-enabled ui_soapstand.service)
-echo -e "ui                  |$active  \t|$enabled"
+echo -e "ui                  \t| $active  \t| $enabled"
+active=$(systemctl is-active check_connectivity.service)
+enabled=$(systemctl is-enabled check_connectivity.service)
+echo -e "periodical network check| $active  \t| $enabled"
 active=$(systemctl is-active rtunnel.service)
 enabled=$(systemctl is-enabled rtunnel.service)
-echo -e "reversed ssh tunnel |$active  \t|$enabled"
+echo -e "reversed ssh tunnel \t| $active  \t| $enabled"
 
 db_path=/home/df-admin/production/db/drinkfill-sqlite_newlayout.db
 if [[ -f "$db_path" ]]; then

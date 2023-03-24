@@ -26,7 +26,6 @@ sudo -u df-admin mkdir /home/df-admin/production/admin
 sudo -u df-admin mkdir /home/df-admin/production/bin
 sudo -u df-admin mkdir /home/df-admin/production/references
 sudo -u df-admin mkdir /home/df-admin/production/references/logos
-# sudo chmod 777 /home/df-admin/production/references
 
 # move binary files
 scp /home/df-admin/drinkfill/ui/DF_UI /home/df-admin/production/bin/DF_UI
@@ -37,6 +36,8 @@ sudo -u df-admin scp -r /home/df-admin/drinkfill/ui/references /home/df-admin/pr
 
 # move scripts and other administrative stuff
 scp /home/df-admin/drinkfill/admin/controller_soapstand.service /home/df-admin/production/admin/controller_soapstand.service
+scp /home/df-admin/drinkfill/admin/rtunnel.service /home/df-admin/production/admin/rtunnel.service
+scp /home/df-admin/drinkfill/admin/check_connectivity.service /home/df-admin/production/admin/check_connectivity.service
 scp /home/df-admin/drinkfill/admin/controller_execute.sh /home/df-admin/production/admin/controller_execute.sh
 scp /home/df-admin/drinkfill/admin/ui_soapstand.service /home/df-admin/production/admin/ui_soapstand.service
 scp /home/df-admin/drinkfill/admin/ui_execute.sh /home/df-admin/production/admin/ui_execute.sh

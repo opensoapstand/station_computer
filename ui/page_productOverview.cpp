@@ -688,7 +688,7 @@ void pageProductOverview::on_page_payment_Button_clicked()
     this->stopSelectTimers();
     QString paymentMethod = selectedProductOrder->getSelectedPaymentMethod();
 
-    if (paymentMethod == "qr" || paymentMethod == "tap")
+    if (paymentMethod == "qr" )
     {
         CURL *curl;
         CURLcode res;
@@ -726,6 +726,10 @@ void pageProductOverview::on_page_payment_Button_clicked()
         }
         curl_easy_cleanup(curl);
         readBuffer = "";
+    }
+    else if(paymentMethod == "tap"){
+        p_page_idle->pageTransition(this, paymentPage);
+
     }
     else if (paymentMethod == "barcode" || paymentMethod == "plu")
     {

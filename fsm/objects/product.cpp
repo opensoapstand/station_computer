@@ -1077,3 +1077,4 @@ bool product::testParametersFromDb()
     //     cout << "INSIDE getPWM() and PWM is = " << str << endl;
     return pwm;
 }
+

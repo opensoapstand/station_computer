@@ -20,12 +20,9 @@
 #include "df_util.h"
 #include "drinkorder.h"
 #include "page_help.h"
-
-#include "posm/mcommunication.h"
-#include "posm/packetfromecr.h"
-#include "posm/packetfromux410.h"
-#include "posm/transactionPackets.h"
-#include "posm/transactioninfo.h"
+#include "page_error_wifi.h"
+#include "payment/commands.h"
+#include "payment/setup_Tap.h"
 
 #include "../library/qr/qrcodegen.hpp"
 #include <climits>
@@ -40,6 +37,7 @@
 #include <QUuid>
 
 #include <QMovie>
+
 #include <curl/curl.h>
 
 class pageProduct;
@@ -67,7 +65,7 @@ class page_payment : public QWidget
 public:
     // **** GUI Setup ****
     explicit page_payment(QWidget *parent = nullptr);
-    void setPage(pageProduct* pageSizeSelect, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp);
+    void setPage(pageProduct* pageSizeSelect,page_error_wifi *pageWifiError, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp);
     ~page_payment();
     void setProgressLabel(QLabel* label, int dot);
     // TODO: Figure out better Style Setup.
@@ -104,13 +102,14 @@ public:
     QString getOID(){
         return orderId;
     }
-
     QTimer *readTimer;
     // char * curl_data;
     // char * curl_data1;
     // char * curlOrderdata;
     StatePayment state_payment;
 
+// signals:
+//     void cardTapped();
 private slots:
 
     // Update Drink order totals section
@@ -121,6 +120,7 @@ private slots:
     void on_payment_bypass_Button_clicked();
     void proceed_to_dispense();
      void on_mainPage_Button_clicked();
+
     //void on_payment_pass_Button_clicked();
     //void on_payment_cancel_Button_clicked();
     // For Debugging; will be removed.
@@ -129,7 +129,7 @@ private slots:
     void displayPaymentPending(bool isVisible);
 
     void onTimeoutTick();
-    void readTimer_loop();
+    // void readTimer_loop();
     void progressStatusLabel();
     void declineTimer_start();
     void idlePaymentTimeout();
@@ -149,6 +149,8 @@ private:
     page_dispenser* p_page_dispense;
     page_idle* p_page_idle;
     page_help* p_page_help;
+    page_error_wifi *p_page_wifi_error;
+
 
     const QString TAP_READY_LABEL = "Ready for Tap";
     const QString TAP_PROCESSING_LABEL = "Processing";
@@ -196,14 +198,15 @@ private:
     QTimer *declineTimer;
     QTimer *paymentProgressTimer;
     QTimer *idlePaymentTimer;
+    QTimer *inFlightTimer;
 
     // Payment Communication
     // Moneris Packet communication reference
-    mCommunication com;
-    packetFromECR sendPacket;
-    packetFromUX410 readPacket;
-    transactionPacket paymentPacket;
-    transactionInfo paymentPktInfo;
+    // mCommunication com;
+    // packetFromECR sendPacket;
+    // packetFromUX410 readPacket;
+    // transactionPacket paymentPacket;
+    // transactionInfo paymentPktInfo;
 
     // Payment Package Control
     bool purchaseEnable;
@@ -212,12 +215,12 @@ private:
     std::vector<uint8_t> pktToSend;
     std::vector<uint8_t> pktResponded;
     std::string productSelectedPrice;
-    bool sendToUX410();
+    
     bool tap_init();
-    bool waitForUX410();
     void cancelPayment();
     bool getResponse(){return response;}
 
+    
     // **** Drink Order Reference ****
     // DrinkOrder paymentDrinkOrder;
 
@@ -236,7 +239,7 @@ private:
 
     bool response;
     bool tap_payment;
-
+    int lastTransactionId;
     void testQRgen();
 
     void printQr(const QrCode &qr);
@@ -246,8 +249,9 @@ private:
     QString getPaymentMethod();
 
 
+
     // QString order_id;
-    QString orderId;
+    QString orderId="";
 
     CURL *curl;
     CURLcode res;
@@ -265,7 +269,7 @@ private:
 
     void isQrProcessedCheckOnline();
     void setupQrOrder();
-    void createOrderIdAndSendToBackend();
+    bool createOrderIdAndSendToBackend();
     
 };
 

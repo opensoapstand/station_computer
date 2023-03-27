@@ -40,6 +40,7 @@ public:
     bool refill(int slot);
     bool sellout(int slot);
     bool unsellout(int slot);
+    int getLastTransactionIdFromDb();
 
     double getTemperature();
     int getPWM(int slot);

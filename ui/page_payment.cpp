@@ -458,7 +458,7 @@ bool page_payment::createOrderIdAndSendToBackend()
         return shouldShowQR;
     }
 
-    curl_easy_setopt(curl1, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/createOrderInDbbbb");
+    curl_easy_setopt(curl1, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/createOrderInDb");
     curl_easy_setopt(curl1, CURLOPT_POSTFIELDS, curl_order_parameters.data());
     curl_easy_setopt(curl1, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl1, CURLOPT_WRITEDATA, &readBuffer);

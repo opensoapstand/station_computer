@@ -26,6 +26,7 @@ sudo -u df-admin mkdir /home/df-admin/production/admin
 sudo -u df-admin mkdir /home/df-admin/production/bin
 sudo -u df-admin mkdir /home/df-admin/production/references
 sudo -u df-admin mkdir /home/df-admin/production/references/logos
+sudo -u df-admin mkdir /home/df-admin/production/admin/tap_payment
 
 # move binary files
 scp /home/df-admin/drinkfill/ui/DF_UI /home/df-admin/production/bin/DF_UI
@@ -52,6 +53,11 @@ scp /home/df-admin/drinkfill/admin/screenshotbot_sequence_printer.txt /home/df-a
 scp /home/df-admin/drinkfill/admin/screenshotbot_sequence_qr.txt /home/df-admin/production/admin/screenshotbot_sequence_qr.txt
 scp /home/df-admin/drinkfill/admin/updateDatabase.py /home/df-admin/production/admin/updateDatabase.py
 scp /home/df-admin/drinkfill/admin/missingTransactions.py /home/df-admin/production/admin/missingTransactions.py
+
+scp /home/df-admin/drinkfill/admin/enableIPForward.sh /home/df-admin/production/admin/tap_payment
+scp /home/df-admin/drinkfill/ui/payment/private_key.der /home/df-admin/production/admin/tap_payment
+scp /home/df-admin/drinkfill/ui/payment/public_key.txt /home/df-admin/production/admin/tap_payment
+
 
 # ask for db to be written. By default: NO! 
 read -p "Copy database? [y] for yes. [enter,anykey] for no:" -n 1 -r

@@ -6,8 +6,12 @@
 # set screen orientation (settings are not saved at reboot)
 # DISPLAY=:0 xrandr -o right
 
+./enableIPForward.sh  # create a connection between the two LAN controllers with a static ip on the Odyssey. This way, one network can access the internet to which the other network is connected. Used for tap payment
+gsettings set org.gnome.desktop.interface enable-animations false  # instant transition from one page to another. If animations are enabled, the quick minimization is a security issue (people can tap during that short timespan and access linux desktop)
+echo 
 while true
 	do
+
 	    DISPLAY=:0 xterm -maximized /home/df-admin/production/bin/DF_UI
         sleep 1
 done

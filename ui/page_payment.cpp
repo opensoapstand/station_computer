@@ -480,7 +480,7 @@ bool page_payment::createOrderIdAndSendToBackend()
     {
         qDebug() << "create order in the cloud request sent to soapstandportal (" + curl_order_parameters_string + "). Server feedback: " << feedback;
     }
-    if(feedback == true){
+    if(feedback == "true"){
         shouldShowQR = true;
     }
     curl_easy_cleanup(curl1);

@@ -228,10 +228,11 @@ void page_payment::stopPayTimers()
 /*
  * Page Tracking reference
  */
-void page_payment::setPage(pageProduct *pageSizeSelect, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
+void page_payment::setPage(pageProduct *pageSizeSelect,page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
 {
     tmpCounter = 0;
     this->p_pageProduct = pageSizeSelect;
+    this->p_page_wifi_error = pageWifiError;
     this->p_page_dispense = page_dispenser;
     this->p_page_idle = pageIdle;
     this->p_page_help = pageHelp;
@@ -399,7 +400,7 @@ void page_payment::showEvent(QShowEvent *event)
 void page_payment::setupQrOrder()
 {
 
-    createOrderIdAndSendToBackend();
+    if(createOrderIdAndSendToBackend()){
 
     QPixmap map(360, 360);
     map.fill(QColor("black"));
@@ -418,12 +419,17 @@ void page_payment::setupQrOrder()
 
     _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
     qrPeriodicalCheckTimer->start(1000);
+    }
+    else{
+        p_page_idle->pageTransition(this, p_page_wifi_error);
+
+    }
 }
 
-void page_payment::createOrderIdAndSendToBackend()
+bool page_payment::createOrderIdAndSendToBackend()
 {
     // an order Id is generated locally and the order is sent to the cloud.
-
+    bool shouldShowQR = false;
     qDebug() << "Get cloud to create an order and retrieve the order id";
     QString MachineSerialNumber = p_page_idle->currentProductOrder->getMachineId();
     QString productUnits = p_page_idle->currentProductOrder->getUnitsForSelectedSlot();
@@ -449,10 +455,10 @@ void page_payment::createOrderIdAndSendToBackend()
     if (!curl1)
     {
         qDebug() << "pagepayement cURL Failed to init : " + curl_order_parameters_string + "to: " + "https://soapstandportal.com/api/machine_data/createOrderInDb";
-        return;
+        return shouldShowQR;
     }
 
-    curl_easy_setopt(curl1, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/createOrderInDb");
+    curl_easy_setopt(curl1, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/createOrderInDbbbb");
     curl_easy_setopt(curl1, CURLOPT_POSTFIELDS, curl_order_parameters.data());
     curl_easy_setopt(curl1, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl1, CURLOPT_WRITEDATA, &readBuffer);
@@ -474,6 +480,9 @@ void page_payment::createOrderIdAndSendToBackend()
     {
         qDebug() << "create order in the cloud request sent to soapstandportal (" + curl_order_parameters_string + "). Server feedback: " << feedback;
     }
+    if(feedback == true){
+        shouldShowQR = true;
+    }
     curl_easy_cleanup(curl1);
     readBuffer = "";
     feedback = "";
@@ -481,6 +490,7 @@ void page_payment::createOrderIdAndSendToBackend()
     _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
     _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
     // qrPeriodicalCheckTimer->start(1000);
+    return shouldShowQR;
 }
 
 void page_payment::isQrProcessedCheckOnline()

@@ -20,6 +20,7 @@
 #include "df_util.h"
 #include "drinkorder.h"
 #include "page_help.h"
+#include "page_error_wifi.h"
 #include "payment/commands.h"
 #include "payment/setup_Tap.h"
 
@@ -64,7 +65,7 @@ class page_payment : public QWidget
 public:
     // **** GUI Setup ****
     explicit page_payment(QWidget *parent = nullptr);
-    void setPage(pageProduct* pageSizeSelect, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp);
+    void setPage(pageProduct* pageSizeSelect,page_error_wifi *pageWifiError, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp);
     ~page_payment();
     void setProgressLabel(QLabel* label, int dot);
     // TODO: Figure out better Style Setup.
@@ -148,6 +149,8 @@ private:
     page_dispenser* p_page_dispense;
     page_idle* p_page_idle;
     page_help* p_page_help;
+    page_error_wifi *p_page_wifi_error;
+
 
     const QString TAP_READY_LABEL = "Ready for Tap";
     const QString TAP_PROCESSING_LABEL = "Processing";
@@ -266,7 +269,7 @@ private:
 
     void isQrProcessedCheckOnline();
     void setupQrOrder();
-    void createOrderIdAndSendToBackend();
+    bool createOrderIdAndSendToBackend();
     
 };
 

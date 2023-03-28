@@ -44,18 +44,17 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
     ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     ui->payment_bypass_Button->setEnabled(false);
-    
-    
+
     // **** Timer and Slot Setup ****
 
     // Payment Tap Ready
     // readTimer = new QTimer(this);
     // connect(readTimer, SIGNAL(timeout()), this, SLOT(readTimer_loop()));
 
-    // Payment Progress
-    paymentProgressTimer = new QTimer(this);
-    connect(paymentProgressTimer, SIGNAL(timeout()), this, SLOT(progressStatusLabel()));
-    paymentProgressTimer->setInterval(500);
+    // Receive packets from tap device checker
+    checkPacketReceivedTimer = new QTimer(this);
+    connect(checkPacketReceivedTimer, SIGNAL(timeout()), this, SLOT(check_packet_available()));
+    checkPacketReceivedTimer->setInterval(1000); // was 500
 
     // Payment Declined
     declineTimer = new QTimer(this);
@@ -68,123 +67,123 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
     qrPeriodicalCheckTimer = new QTimer(this);
     connect(qrPeriodicalCheckTimer, SIGNAL(timeout()), this, SLOT(qrProcessedPeriodicalCheck()));
     DbManager db(DB_PATH);
-    
-     if (db.getPaymentMethod(1) == "tap")
-        {
-            tap_payment = true;
-            ui->payment_bypass_Button->setEnabled(false);
-            ui->title_Label->hide();
-            ui->steps_Label->hide();
-            ui->qrCode->hide();
-            ui->scan_Label->hide();
-            
-        }
-        else
-        {
-            ui->payment_bypass_Button->setEnabled(false);
-             state_payment = s_init;
-                tap_payment = false;
 
-                ui->title_Label->setText("pay by phone");
-                QString css_title = "QLabel{"
-                    "font-family: 'Brevia';"
-                    "font-style: normal;"
-                    "font-weight: 500;"
-                    "font-size: 64px;"
-                    "line-height: 86px;"
-                    "text-align: center;"
-                    "text-transform: lowercase;"
-                    "color: #003840;"
-                    "text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);"
-                    "}";
-                ui->title_Label->setStyleSheet(css_title);
+    if (db.getPaymentMethod(1) == "tap")
+    {
+        tap_payment = true;
+        ui->payment_bypass_Button->setEnabled(false);
+        ui->title_Label->hide();
+        ui->steps_Label->hide();
+        ui->qrCode->hide();
+        ui->scan_Label->hide();
+    }
+    else
+    {
+        ui->payment_bypass_Button->setEnabled(false);
+        state_payment = s_init;
+        tap_payment = false;
 
-                ui->scan_Label->setText(
-                        "Scan to Pay");
-                QString css_scan = "QLabel{"
-                    "text-align: center;"
-                    "font-family: 'Montserrat';"
-                    "font-style: normal;"
-                    "font-weight: 600;"
-                    "font-size: 48px;"
-                    "color: #5E8580;"
-                        "} .tab {"
-                        "display: inline-block;"
-                        "margin-left: 40px;"
-                    "}";
-                ui->scan_Label->setStyleSheet(css_scan);
+        ui->title_Label->setText("pay by phone");
+        QString css_title = "QLabel{"
+                            "font-family: 'Brevia';"
+                            "font-style: normal;"
+                            "font-weight: 500;"
+                            "font-size: 64px;"
+                            "line-height: 86px;"
+                            "text-align: center;"
+                            "text-transform: lowercase;"
+                            "color: #003840;"
+                            "text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);"
+                            "}";
+        ui->title_Label->setStyleSheet(css_title);
 
-                ui->steps_Label->setText(
-                        "<style>"
-                            "li:{margin-top:10px;}"
-                        "</style>"
-                        "<ol>"
-                        "<li><span class='tab'></span>Scan QR code with phone camera<br></li>"
-                        "<li><span class='tab'></span>Click to open the link that appears<br></li>"
-                        "<li><span class='tab'></span>Follow payment instructions on phone<br></li>"
-                        "<li><span class='tab'></span>The station will proceed after payment<br></li>"
-                        "<li><span class='tab'></span>Refill your soap!</li>"
-                        "</ol>"
-                        );
-                QString css_steps = "QLabel{"
-                        "position: absolute;"
-                        "width: 777px;"
-                        "height: 306px;"
-                        "left: 143px;"
-                        "top: 1029px;"
-                        "font-family: 'Montserrat';"
-                        "font-style: normal;"
-                        "font-weight: 600;"
-                        "font-size: 36px;"
-                        "line-height: 51px;"
-                        "color: #003840;"
-                        "}";
-                ui->steps_Label->setStyleSheet(css_steps);
+        ui->scan_Label->setText(
+            "Scan to Pay");
+        QString css_scan = "QLabel{"
+                           "text-align: center;"
+                           "font-family: 'Montserrat';"
+                           "font-style: normal;"
+                           "font-weight: 600;"
+                           "font-size: 48px;"
+                           "color: #5E8580;"
+                           "} .tab {"
+                           "display: inline-block;"
+                           "margin-left: 40px;"
+                           "}";
+        ui->scan_Label->setStyleSheet(css_scan);
 
-                ui->processing_Label->setText(
-                        "it can take a few moments for the station to<br>continue after your payment is confirmed"
-                        );
-                QString css_processing = "QLabel{"
-                        "position: absolute;"
-                        "width: 777px;"
-                        "height: 306px;"
-                        "left: 143px;"
-                        "top: 1029px;"
-                        "font-family: 'Montserrat';"
-                        "font-style: normal;"
-                        "font-weight: 600;"
-                        "font-size: 36px;"
-                        "line-height: 51px;"
-                        "color: #003840;"
-                        "}";
-                    ui->processing_Label->setStyleSheet(css_processing);
-                    }
-                ui->order_total_amount->hide();
+        ui->steps_Label->setText(
+            "<style>"
+            "li:{margin-top:10px;}"
+            "</style>"
+            "<ol>"
+            "<li><span class='tab'></span>Scan QR code with phone camera<br></li>"
+            "<li><span class='tab'></span>Click to open the link that appears<br></li>"
+            "<li><span class='tab'></span>Follow payment instructions on phone<br></li>"
+            "<li><span class='tab'></span>The station will proceed after payment<br></li>"
+            "<li><span class='tab'></span>Refill your soap!</li>"
+            "</ol>");
+        QString css_steps = "QLabel{"
+                            "position: absolute;"
+                            "width: 777px;"
+                            "height: 306px;"
+                            "left: 143px;"
+                            "top: 1029px;"
+                            "font-family: 'Montserrat';"
+                            "font-style: normal;"
+                            "font-weight: 600;"
+                            "font-size: 36px;"
+                            "line-height: 51px;"
+                            "color: #003840;"
+                            "}";
+        ui->steps_Label->setStyleSheet(css_steps);
+
+        ui->processing_Label->setText(
+            "it can take a few moments for the station to<br>continue after your payment is confirmed");
+        QString css_processing = "QLabel{"
+                                 "position: absolute;"
+                                 "width: 777px;"
+                                 "height: 306px;"
+                                 "left: 143px;"
+                                 "top: 1029px;"
+                                 "font-family: 'Montserrat';"
+                                 "font-style: normal;"
+                                 "font-weight: 600;"
+                                 "font-size: 36px;"
+                                 "line-height: 51px;"
+                                 "color: #003840;"
+                                 "}";
+        ui->processing_Label->setStyleSheet(css_processing);
+    }
+    ui->order_total_amount->hide();
 
     db.closeDB();
     if (tap_payment)
     {
         std::map<std::string, std::string> configMap = readConfigFile();
+
         std::map<std::string, std::string> testResponse = testMac(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
-        if(testResponse["RESPONSE_TEXT"]== "Match"){
+        if (testResponse["RESPONSE_TEXT"] == "Match")
+        {
             qDebug() << "Test Mac Command Matched" << endl;
         }
-        else{
+        else
+        {
             qDebug() << "Mismatched" << endl;
             qDebug() << "Re-registration of the device";
             registerDevice(connectSocket());
         }
+        // finishSession(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
     }
-   
 }
 
 void page_payment::stopPayTimers()
 {
 
-    if (paymentProgressTimer != nullptr)
+    if (checkPacketReceivedTimer != nullptr)
     {
-               qDebug() << "cancel payment progress Timer" << endl;
-        paymentProgressTimer->stop();
+        qDebug() << "cancel payment progress Timer" << endl;
+        checkPacketReceivedTimer->stop();
     }
 
     //  if (inFlightTimer != nullptr)
@@ -195,19 +194,19 @@ void page_payment::stopPayTimers()
 
     if (declineTimer != nullptr)
     {
-               qDebug() << "cancel decline Timer" << endl;
+        qDebug() << "cancel decline Timer" << endl;
         declineTimer->stop();
     }
 
     if (idlePaymentTimer != nullptr)
     {
-               qDebug() << "cancel page_idle payment Timer" << endl;
+        qDebug() << "cancel page_idle payment Timer" << endl;
         idlePaymentTimer->stop();
     }
 
     if (paymentEndTimer != nullptr)
     {
-               qDebug() << "cancel page_idle payment END Timer" << endl;
+        qDebug() << "cancel page_idle payment END Timer" << endl;
         paymentEndTimer->stop();
     }
 
@@ -228,7 +227,7 @@ void page_payment::stopPayTimers()
 /*
  * Page Tracking reference
  */
-void page_payment::setPage(pageProduct *pageSizeSelect,page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
+void page_payment::setPage(pageProduct *pageSizeSelect, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
 {
     tmpCounter = 0;
     this->p_pageProduct = pageSizeSelect;
@@ -273,11 +272,8 @@ void page_payment::updateTotals(string drinkDescription, string drinkAmount, str
 void page_payment::cancelPayment()
 {
     finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
-    paymentProgressTimer->stop();
+    checkPacketReceivedTimer->stop();
     inFlightTimer->stop();
-
-
-   
 }
 
 size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
@@ -330,10 +326,8 @@ void page_payment::showEvent(QShowEvent *event)
     qDebug() << "<<<<<<< Page Enter: Payment >>>>>>>>>";
     QWidget::showEvent(event);
     state_payment = s_init;
-    
+
     // ui->order_total_amount->show();
-    
-     
 
     if (getPaymentMethod() == "tap")
     {
@@ -346,8 +340,6 @@ void page_payment::showEvent(QShowEvent *event)
         ui->order_total_amount->hide();
         ui->steps_Label->hide();
         ui->processing_Label->hide();
-        
-       
     }
     else
     {
@@ -376,16 +368,20 @@ void page_payment::showEvent(QShowEvent *event)
 
     ui->refreshLabel->hide();
 
-    
     QString payment_method = getPaymentMethod();
+
     if (payment_method == "tap")
     {
+        progressStatusLabel();
         // createOrderIdAndSendToBackend();
         qDebug() << "Prepare tap order";
+
+        // QMovie *movieggg = new QMovie("/home/df-admin/drinkfill/ui/references/templates/default/soapstandspinner.gif");
+        // movieggg->setCacheMode(QMovie::CacheAll);
+        // ui->animated_Label->setMovie(movieggg);
+        // movieggg->start();
+
         // inFlightTimer->start();
-        paymentProgressTimer->start();
-        
-        
     }
     else if (payment_method == "qr")
     {
@@ -400,29 +396,30 @@ void page_payment::showEvent(QShowEvent *event)
 void page_payment::setupQrOrder()
 {
 
-    if(createOrderIdAndSendToBackend()){
+    if (createOrderIdAndSendToBackend())
+    {
 
-    QPixmap map(360, 360);
-    map.fill(QColor("black"));
-    QPainter painter(&map);
+        QPixmap map(360, 360);
+        map.fill(QColor("black"));
+        QPainter painter(&map);
 
-    // build up qr content (link)
-    QString qrdata = "https://soapstandportal.com/payment?oid=" + orderId;
+        // build up qr content (link)
+        QString qrdata = "https://soapstandportal.com/payment?oid=" + orderId;
 
-    // create qr code graphics
-    paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
-    ui->qrCode->setPixmap(map);
-    // _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
-    _paymentTimeLabel = QR_PAGE_TIMEOUT_SECONDS;
+        // create qr code graphics
+        paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
+        ui->qrCode->setPixmap(map);
+        // _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
+        _paymentTimeLabel = QR_PAGE_TIMEOUT_SECONDS;
 
-    _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
+        _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
 
-    _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
-    qrPeriodicalCheckTimer->start(1000);
+        _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
+        qrPeriodicalCheckTimer->start(1000);
     }
-    else{
+    else
+    {
         p_page_idle->pageTransition(this, p_page_wifi_error);
-
     }
 }
 
@@ -443,11 +440,10 @@ bool page_payment::createOrderIdAndSendToBackend()
     orderId = QUuid::createUuid().QUuid::toString();
     orderId = orderId.remove("{");
     orderId = orderId.remove("}");
-    
+
     // send order details to backend
     QString curl_order_parameters_string = "orderId=" + orderId + "&size=" + drinkSize + "&MachineSerialNumber=" + MachineSerialNumber +
-                                           "&contents=" + contents + "&price=" + price + "&productId=" + productId + "&quantity_requested=" + quantity_requested + "&size_unit=" + productUnits \
-                                            + "&logging=" + transactionLogging;
+                                           "&contents=" + contents + "&price=" + price + "&productId=" + productId + "&quantity_requested=" + quantity_requested + "&size_unit=" + productUnits + "&logging=" + transactionLogging;
     curl_order_parameters = curl_order_parameters_string.toLocal8Bit();
 
     curl1 = curl_easy_init();
@@ -466,12 +462,12 @@ bool page_payment::createOrderIdAndSendToBackend()
 
     int createOrderInDbAttempts = 0;
     QString feedback;
-    do{
+    do
+    {
         res1 = curl_easy_perform(curl1);
-        feedback= QString::fromUtf8(readBuffer.c_str());
-        createOrderInDbAttempts +=1;
-    }
-    while(feedback != "true" && createOrderInDbAttempts <= 3);    
+        feedback = QString::fromUtf8(readBuffer.c_str());
+        createOrderInDbAttempts += 1;
+    } while (feedback != "true" && createOrderInDbAttempts <= 3);
     if (feedback != "true")
     {
         qDebug() << "ERROR: Problem at create order in the cloud request. error code: " + QString::number(res1);
@@ -480,7 +476,8 @@ bool page_payment::createOrderIdAndSendToBackend()
     {
         qDebug() << "create order in the cloud request sent to soapstandportal (" + curl_order_parameters_string + "). Server feedback: " << feedback;
     }
-    if(feedback == "true"){
+    if (feedback == "true")
+    {
         shouldShowQR = true;
     }
     curl_easy_cleanup(curl1);
@@ -550,7 +547,7 @@ void page_payment::isQrProcessedCheckOnline()
             ui->order_drink_amount->hide();
             ui->order_total_amount->hide();
             ui->steps_Label->hide();
-            
+
             ui->processing_Label->show();
             ui->scan_Label->setText("Please finalize transaction");
             ui->title_Label->setText("almost there");
@@ -593,8 +590,8 @@ void page_payment::onTimeoutTick()
     }
     else
     {
-               qDebug() << "Timer Done!" << _pageTimeoutCounterSecondsLeft << endl;
-                transactionLogging +="\n 5: Timeout - True";
+        qDebug() << "Timer Done!" << _pageTimeoutCounterSecondsLeft << endl;
+        transactionLogging += "\n 5: Timeout - True";
 
         idlePaymentTimeout();
     }
@@ -618,70 +615,96 @@ void page_payment::storePaymentEvent(QSqlDatabase db, QString event)
 {
 }
 
-
-
 void page_payment::progressStatusLabel()
 {
-    if(tap_payment){
-        QMovie *movie = new QMovie("/home/df-admin/drinkfill/ui/references/templates/default/soapstandspinner.gif");
-        movie->setCacheMode(QMovie::CacheAll);
-            ui->animated_Label->setMovie(movie);
-            movie->start();
-        int socket = connectSocket();
-        socketAddr = to_string(socket);
-        qDebug()<< "Socket Connected" << endl;
-        std::map<std::string, std::string> configMap = readConfigFile();
-        MAC_KEY = configMap["MAC_KEY"];
-        MAC_LABEL = configMap["MAC_LABEL"];
-        lastTransactionId = std::stoi(configMap["INVOICE"]);
-        startSession(socket, MAC_LABEL, MAC_KEY, lastTransactionId + 1);
-        double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
-        std::ostringstream stream;
-        stream << std::fixed << std::setprecision(2) << price;
-        std::string authCommand = authorizationCommand(socket, MAC_LABEL, MAC_KEY, stream.str());
-        std::string packetSent = sendPacket(authCommand,socket, true);
-            
-        std::map<std::string, std::string> inFlight = connectInFlightSocket();
-        if(inFlight["CARD_ENTRY_METHOD"]=="TAPPED"){
-            
-            p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_AUTHORIZE_NOW);
 
-        }
-       
-        std::map<std::string, std::string> responseObj = receivePacket(authCommand,socket, true);
+    QMovie *movieggg = new QMovie("/home/df-admin/drinkfill/ui/references/templates/default/soapstandspinner.gif");
+    movieggg->setCacheMode(QMovie::CacheAll);
+    ui->animated_Label->setMovie(movieggg);
+    movieggg->start();
 
-        if(responseObj["RESULT"] == "APPROVED"){
-            p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
-            CTROUTD = responseObj["CTROUTD"];
-            AUTH_CODE = responseObj["AUTH_CODE"];
-            paymentProgressTimer->stop();
-            proceed_to_dispense();
-        }
-        else if(responseObj["RESULT"] == "APPROVED/STORED"){
-            p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
-            CTROUTD = responseObj["CTROUTD"];
-            AUTH_CODE = responseObj["AUTH_CODE"];
-            SAF_NUM = responseObj["SAF_NUM"];
-            paymentProgressTimer->stop();
-            proceed_to_dispense();
-        }
-        else if(responseObj["RESULT"] == "DECLINED"){
-            p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_FAIL);
-            std::map<std::string, std::string> responseObjSecond = authorization(socket, MAC_LABEL, MAC_KEY, stream.str());
-            if(responseObjSecond["RESULT"] == "APPROVED"){
-                CTROUTD = responseObjSecond["CTROUTD"];
-                proceed_to_dispense();
-            }
-            else{
-                finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
-                paymentProgressTimer->stop();
-                p_page_idle->pageTransition(this, p_pageProduct);
-            }
-        }
-    }
-    
+    int socket = connectSocket();
+
+    socketAddr = to_string(socket);
+    qDebug() << "Tap terminal Socket Connected" << endl;
+    std::map<std::string, std::string> configMap = readConfigFile();
+    MAC_KEY = configMap["MAC_KEY"];
+    MAC_LABEL = configMap["MAC_LABEL"];
+    lastTransactionId = std::stoi(configMap["INVOICE"]);
+
+    startSession(socket, MAC_LABEL, MAC_KEY, lastTransactionId + 1);
+    double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
+    std::ostringstream stream;
+    stream << std::fixed << std::setprecision(2) << price;
+    std::string authCommand = authorizationCommand(socket, MAC_LABEL, MAC_KEY, stream.str());
+
+    std::string packetSent = sendPacket(authCommand, socket, true);
+
+    std::thread dataThread(receiveThread, socket);
+
+    checkPacketReceivedTimer->start();
 }
 
+void page_payment::check_packet_available()
+{
+    qDebug() << "Check for received packets from tap terminal.";
+
+    std::map<std::string, std::string> xml_packet_dict;
+    bool isPacketReceived;
+    isPacketReceived = checkPacketReceived(true, &xml_packet_dict);
+    if (isPacketReceived)
+    {
+        checkPacketReceivedTimer->stop();
+        authorized_transaction(xml_packet_dict);
+    }
+}
+
+void page_payment::authorized_transaction(std::map<std::string, std::string> responseObj)
+{
+
+    //     std::map<std::string, std::string> inFlight = connectInFlightSocket();
+    //     if(inFlight["CARD_ENTRY_METHOD"]=="TAPPED"){
+
+    //         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_AUTHORIZE_NOW);
+
+    //     }
+
+    // std::map<std::string, std::string> responseObj = receivePacketBlocking(authCommand,socket, true);
+    double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
+    std::ostringstream stream;
+    stream << std::fixed << std::setprecision(2) << price;
+
+    if (responseObj["RESULT"] == "APPROVED")
+    {
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
+        CTROUTD = responseObj["CTROUTD"];
+        AUTH_CODE = responseObj["AUTH_CODE"];
+        proceed_to_dispense();
+    }
+    else if (responseObj["RESULT"] == "APPROVED/STORED")
+    {
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
+        CTROUTD = responseObj["CTROUTD"];
+        AUTH_CODE = responseObj["AUTH_CODE"];
+        SAF_NUM = responseObj["SAF_NUM"];
+        proceed_to_dispense();
+    }
+    // else if (responseObj["RESULT"] == "DECLINED")
+    // {
+    //     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_FAIL);
+    //     std::map<std::string, std::string> responseObjSecond = authorization(socket, MAC_LABEL, MAC_KEY, stream.str());
+    //     if (responseObjSecond["RESULT"] == "APPROVED")
+    //     {
+    //         CTROUTD = responseObjSecond["CTROUTD"];
+    //         proceed_to_dispense();
+    //     }
+    //     else
+    //     {
+    //         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+    //         p_page_idle->pageTransition(this, p_pageProduct);
+    //     }
+    // }
+}
 void page_payment::declineTimer_start()
 {
 }
@@ -727,15 +750,16 @@ bool page_payment::exitConfirm()
 // Navigation: Back to Drink Size Selection
 void page_payment::on_previousPage_Button_clicked()
 {
-   
+
     if (exitConfirm())
     {
         // p_pageProduct->resizeEvent(pageProductResize);
         // p_pageProduct->showFullScreen();
         // this->hide();
-        if(tap_payment){
+        if (tap_payment)
+        {
             finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
-            paymentProgressTimer->stop();
+            checkPacketReceivedTimer->stop();
             inFlightTimer->stop();
         }
         p_page_idle->pageTransition(this, p_pageProduct);
@@ -769,12 +793,9 @@ void page_payment::resetPaymentPage()
     response = true;
     // readTimer->stop();
     qDebug() << "Cancelled";
-    
 }
 
 /* ----- Payment ----- */
-
-
 
 bool page_payment::tap_init()
 {

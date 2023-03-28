@@ -33,6 +33,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <thread>
 #include <QPainter>
 #include <QUuid>
 
@@ -77,6 +78,9 @@ public:
 
     // **** Control Functions ****
     bool setpaymentProcess(bool status);
+
+    void check_packet_available();
+    void authorized_transaction(std::map<std::string, std::string> responseObj);
 
     // Database
     void storePaymentEvent(QSqlDatabase db, QString event);
@@ -196,7 +200,7 @@ private:
 
 
     QTimer *declineTimer;
-    QTimer *paymentProgressTimer;
+    QTimer *checkPacketReceivedTimer;
     QTimer *idlePaymentTimer;
     QTimer *inFlightTimer;
 

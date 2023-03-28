@@ -22,7 +22,7 @@
 #include "pagethankyou.h"
 #include "page_product.h"
 #include "payment/commands.h"
-#include "payment/setup_Tap.h"
+// #include "payment/setup_Tap.h"
 
 extern QString transactionLogging;
 extern std::string CTROUTD;

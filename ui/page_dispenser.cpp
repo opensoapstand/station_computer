@@ -22,7 +22,6 @@
 #include "pagethankyou.h"
 #include "page_product.h"
 #include "payment/commands.h"
-// #include "payment/setup_Tap.h"
 
 extern QString transactionLogging;
 extern std::string CTROUTD;
@@ -38,7 +37,23 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
 
     this->isDispensing = false;
     ui->setupUi(this);
+    ui->finishTransactionMessage->setStyleSheet(
+        "QLabel {"
 
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 100;"
+        "background-color: #5E8580;"
+        "font-size: 42px;"
+        "text-align: centre;"
+        "line-height: auto;"
+        "letter-spacing: 0px;"
+        "qproperty-alignment: AlignCenter;"
+        "border-radius: 20px;"
+        "color: white;"
+        "border: none;"
+        "}");
+    ui->finishTransactionMessage->hide();
     // ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->abortButton->setStyleSheet("QPushButton { color:#5E8580; background-color: transparent; border: 5px;border-color:#5E8580; }");
     ui->label_abort->setStyleSheet(
@@ -187,19 +202,22 @@ void page_dispenser::dispensing_end_admin()
     double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
     std::ostringstream stream;
     stream << std::fixed << std::setprecision(2) << price;
+    ui->finishTransactionMessage->show();
     if (volumeDispensed == 0 && (selectedProductOrder->getSelectedPaymentMethod()) == "tap")
     {
         std::map<std::string, std::string> response;
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_VOID);
+        ui->finishTransactionMessage->setText("Voiding Transaction");
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         qDebug() << "dispense end: tap payment No volume dispensed.";
-        // REVERSE PAYMENT
-        if(CTROUTD!=""){
-             response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD);
-        }
-        else if(SAF_NUM!=""){
+        // REVERSE PAYMENT.
+        if(SAF_NUM!=""){
             std::cout << "Voiding transaction";
             response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,SAF_NUM);
         }
+        else if(CTROUTD!=""){
+             response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD);
+        }
+         
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);   
         
     }
@@ -213,7 +231,8 @@ void page_dispenser::dispensing_end_admin()
 
              std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,SAF_NUM, stream.str(), "ELIGIBLE");
         }
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_AUTHORIZE_NOW);
+        ui->finishTransactionMessage->setText("Capturing Payment");
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);   
 
     }

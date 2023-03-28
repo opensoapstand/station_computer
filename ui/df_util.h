@@ -118,7 +118,7 @@ using namespace std;
 #define PAGE_TAP_PAY_SUCCESS                            "paymentSuccess.png"
 #define PAGE_TAP_PAY_FAIL                               "paymentFailed.png"
 #define PAGE_AUTHORIZE_NOW                              "authorizeNow.png"
-#define PAGE_TAP_VOID                                   "void.png"
+#define PAGE_TAP_GENERIC                                 "genericTap.png"
 // #define PAGE_WIFI_ERROR_BACKGROUND_PATH                 "/home/df-admin/production/references/oops.png"
 #define BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH            "/home/df-admin/production/references/bottle_fill_for_animation.png"
 #define PAGE_SEND_FEEDBACK_PATH                         "background_sendfeedback.png"

@@ -53,6 +53,8 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
     // readTimer = new QTimer(this);
     // connect(readTimer, SIGNAL(timeout()), this, SLOT(readTimer_loop()));
 
+    std::atomic<bool> stop_thread_tap(false);
+    std::atomic<bool> stop_thread_payment(false);
     // Receive packets from tap device checker
     checkPacketReceivedTimer = new QTimer(this);
     connect(checkPacketReceivedTimer, SIGNAL(timeout()), this, SLOT(check_packet_available()));
@@ -288,7 +290,6 @@ void page_payment::cancelPayment()
 {
     finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     checkPacketReceivedTimer->stop();
-    inFlightTimer->stop();
 }
 
 size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
@@ -698,6 +699,11 @@ void page_payment::check_card_tapped()
         movie->setCacheMode(QMovie::CacheAll);
         ui->animated_Label->setMovie(movie);
         movie->start();
+        if(!stop_thread_tap){
+            checkCardTappedTimer->stop();
+            
+        }
+        
     }
 }
 
@@ -761,7 +767,7 @@ bool page_payment::exitConfirm()
         {
         case QMessageBox::Yes:
         {
-            resetPaymentPage();
+            // resetPaymentPage();
             return true;
         }
         break;
@@ -775,7 +781,7 @@ bool page_payment::exitConfirm()
     else
     {
         // exit, no questions asked.
-        resetPaymentPage();
+        // resetPaymentPage();
         return true;
     }
 }
@@ -783,15 +789,19 @@ bool page_payment::exitConfirm()
 // Navigation: Back to Drink Size Selection
 void page_payment::on_previousPage_Button_clicked()
 {
-
+    qDebug() << "In previous page button" << endl;
     if (exitConfirm())
     {
         if (tap_payment)
-        {
-            
+        {   
+            stop_thread_tap = true;
+            stop_thread_payment=true;
             checkPacketReceivedTimer->stop();
             checkCardTappedTimer->stop();
+            qDebug() << "Stopping the threads";
+            cancelTransaction(connectSecondarySocket());
             finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+            // qDebug() << "Session finished sent";
             
         }
         p_page_idle->pageTransition(this, p_pageProduct);
@@ -808,7 +818,7 @@ void page_payment::on_mainPage_Button_clicked()
 
 void page_payment::idlePaymentTimeout()
 {
-    resetPaymentPage();
+    // resetPaymentPage();
     // p_page_idle->showFullScreen();
     // this->hide();
     p_page_idle->pageTransition(this, p_page_idle);

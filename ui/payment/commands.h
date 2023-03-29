@@ -28,3 +28,4 @@ std::map<std::string, std::string>  testMac(int socket, std::string MAC_KEY, std
 std::map<std::string, std::string> readConfigFile();
 std::string updateInvoiceValueInConfig(std::string invoiceNumber);
 std::string authorizationCommand(int socket, std::string MAC_LABEL, std::string MAC_KEY, std::string amount);
+std::map<std::string, std::string> cancelTransaction(int socket);

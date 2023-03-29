@@ -1,8 +1,13 @@
 #include "setup_Tap.h"
+#include "../page_payment.h"
+
 bool xml_packet_received_complete;
 bool xml_card_tap_complete;
 std::string xml_packet_string;
 std::string xml_card_tapped;
+std::atomic<bool> stop_thread_tap(false);
+std::atomic<bool> stop_thread_payment(false);
+
 
 std::string read_public_key()
 {
@@ -76,7 +81,8 @@ void receiveThread(int sockfd)
     memset(bufferReceived, 0, sizeof(bufferReceived));
     const char *delimiter = "</RESPONSE>";
     xml_packet_received_complete = false;
-    while (!xml_packet_received_complete)
+    std::cout << "Stop thread payment " << stop_thread_payment << std::endl;
+    while ((!xml_packet_received_complete || stop_thread_payment))
     {
         int bytes_received = recv(sockfd, bufferReceived, sizeof(bufferReceived), 0);
         if (bytes_received < 0)
@@ -95,8 +101,10 @@ void receiveThread(int sockfd)
 
 bool checkPacketReceived(bool logging, std::map<std::string, std::string> *xml_packet)
 { //
+    std::cout << "Stop thread payment " << stop_thread_payment << std::endl;
+
     //https://stackoverflow.com/questions/18849288/how-to-create-and-connect-slot-in-qt-to-tcp-recv-without-using-qtcpsockets
-    if (xml_packet_received_complete)
+    if (xml_packet_received_complete || stop_thread_payment)
     {
         if (logging)
         {
@@ -161,7 +169,7 @@ void receiveCardTapAction()
     std::cout << "Received connection from " << inet_ntoa(client_address.sin_addr) << std::endl;
 
     // Receive data from the client in a loop
-    while (true)
+    while ((true || stop_thread_tap))
     {
         memset(buffer, 0, sizeof(buffer));
         int bytes_received = recv(client_socket, buffer, sizeof(buffer), 0);
@@ -177,6 +185,7 @@ void receiveCardTapAction()
             if (strstr(xml_card_tapped.c_str(), "TAPPED") != NULL)
         {
             xml_card_tap_complete = true;
+            stop_thread_tap = true;
             std::cout << "Received data from client: " << buffer << std::endl;
             close(client_socket);
             close(server_socket);
@@ -187,7 +196,7 @@ void receiveCardTapAction()
 }
 bool checkCardTapped(bool logging, std::map<std::string, std::string> *card_tapped)
 { 
-    if(xml_card_tap_complete){
+    if(xml_card_tap_complete || stop_thread_tap){
         if (logging)
         {
             std::cout << xml_card_tapped << std::endl;
@@ -300,6 +309,39 @@ int connectSocket()
     memset(&serv_addr, 0, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(5015);
+    if (inet_pton(AF_INET, "192.168.1.25", &serv_addr.sin_addr) <= 0)
+    {
+        std::cerr << "Error converting IP address" << std::endl;
+        return 1;
+    }
+    // Connect to the server
+    if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
+    {
+        std::cerr << "Error connecting to server" << std::endl;
+        return 1;
+    }
+    // std::cout << "Server connected" << std::endl;
+    // Clean up
+    // close(sockfd);
+    return sockfd;
+}
+
+int connectSecondarySocket()
+{
+    int sockfd;
+    struct sockaddr_in serv_addr;
+
+    // Create a socket
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd < 0)
+    {
+        std::cerr << "Error opening socket" << std::endl;
+        return 1;
+    }
+    // Set up the server address
+    memset(&serv_addr, 0, sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(5016);
     if (inet_pton(AF_INET, "192.168.1.25", &serv_addr.sin_addr) <= 0)
     {
         std::cerr << "Error converting IP address" << std::endl;

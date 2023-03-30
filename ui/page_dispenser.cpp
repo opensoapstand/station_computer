@@ -198,8 +198,6 @@ void page_dispenser::updateVolumeDispensedLabel(double dispensed)
 void page_dispenser::dispensing_end_admin()
 {
     qDebug() << "Dispense end admin start";
-    ui->label_abort->hide();
-    ui->abortButton->hide();
     this->isDispensing = false;
     double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
     std::ostringstream stream;
@@ -403,6 +401,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         //     ui->label_abort->setText("Complete333");
         ui->label_abort->raise();
 
+
         // }
         updateVolumeDispensedLabel(dispensed);
 
@@ -427,6 +426,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         ui->dispense_bottle_label->show();
         ui->fill_animation_label->show();
         ui->abortButton->raise();
+        
     }
     else
     {

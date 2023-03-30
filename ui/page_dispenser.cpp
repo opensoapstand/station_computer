@@ -198,16 +198,16 @@ void page_dispenser::updateVolumeDispensedLabel(double dispensed)
 void page_dispenser::dispensing_end_admin()
 {
     qDebug() << "Dispense end admin start";
+    ui->label_abort->hide();
+    ui->abortButton->hide();
     this->isDispensing = false;
     double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
     std::ostringstream stream;
     stream << std::fixed << std::setprecision(2) << price;
-    ui->finishTransactionMessage->show();
     if (volumeDispensed == 0 && (selectedProductOrder->getSelectedPaymentMethod()) == "tap")
     {
         std::map<std::string, std::string> response;
-        ui->finishTransactionMessage->setText("Voiding Transaction");
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
+        // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         qDebug() << "dispense end: tap payment No volume dispensed.";
         // REVERSE PAYMENT.
         if(SAF_NUM!=""){
@@ -217,7 +217,6 @@ void page_dispenser::dispensing_end_admin()
         else if(CTROUTD!=""){
              response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD);
         }
-         
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);   
         
     }
@@ -231,8 +230,10 @@ void page_dispenser::dispensing_end_admin()
 
              std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,SAF_NUM, stream.str(), "ELIGIBLE");
         }
-        ui->finishTransactionMessage->setText("Capturing Payment");
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
+        // ui->finishTransactionMessage->setText("Capturing Payment");
+        // ui->finishTransactionMessage->show();
+
+        // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);   
 
     }

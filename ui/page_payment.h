@@ -40,8 +40,8 @@
 #include <curl/curl.h>
 #include<atomic>
 
-extern std::atomic<bool> stop_thread_tap;
-extern std::atomic<bool> stop_thread_payment;
+extern std::atomic<bool> stop_tap_action_thread;
+extern std::atomic<bool> stop_authorization_thread;
 
 class pageProduct;
 class page_dispenser;

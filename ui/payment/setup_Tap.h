@@ -29,7 +29,7 @@
 bool checkPacketReceived(bool logging, std::map<std::string, std::string> *xml_packet);
 bool checkCardTapped(bool logging, std::map<std::string, std::string> *card_tapped);
 void receiveCardTapAction();
-void receiveThread(int sockfd);
+void receiveAuthorizationThread(int sockfd);
 std::string read_public_key();
 std::map<std::string,std::string> readXmlPacket(std::string xmlString);
 std::map<std::string, std::string> sendAndReceivePacket(std::string command, int sockfd, bool logging);

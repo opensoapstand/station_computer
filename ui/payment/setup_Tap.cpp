@@ -5,8 +5,8 @@ bool xml_packet_received_complete;
 bool xml_card_tap_complete;
 std::string xml_packet_string;
 std::string xml_card_tapped;
-std::atomic<bool> stop_thread_tap(false);
-std::atomic<bool> stop_thread_payment(false);
+std::atomic<bool> stop_tap_action_thread(false);
+std::atomic<bool> stop_authorization_thread(false);
 
 
 std::string read_public_key()
@@ -75,14 +75,13 @@ std::string sendPacket(std::string command, int sockfd, bool logging)
     return "Packet sent";
 }
 
-void receiveThread(int sockfd)
+void receiveAuthorizationThread(int sockfd)
 {
     char bufferReceived[4096];
     memset(bufferReceived, 0, sizeof(bufferReceived));
     const char *delimiter = "</RESPONSE>";
     xml_packet_received_complete = false;
-    std::cout << "Stop thread payment " << stop_thread_payment << std::endl;
-    while ((!xml_packet_received_complete || stop_thread_payment))
+    while ((!xml_packet_received_complete && !stop_authorization_thread))
     {
         int bytes_received = recv(sockfd, bufferReceived, sizeof(bufferReceived), 0);
         if (bytes_received < 0)
@@ -94,17 +93,17 @@ void receiveThread(int sockfd)
         xml_packet_string += bufferReceived;
         if (strstr(xml_packet_string.c_str(), delimiter) != NULL)
         {
+             std::cout << "received packet complete. " << std::endl;
             xml_packet_received_complete = true;
+
         }
     }
 }
 
 bool checkPacketReceived(bool logging, std::map<std::string, std::string> *xml_packet)
 { //
-    std::cout << "Stop thread payment " << stop_thread_payment << std::endl;
-
-    //https://stackoverflow.com/questions/18849288/how-to-create-and-connect-slot-in-qt-to-tcp-recv-without-using-qtcpsockets
-    if (xml_packet_received_complete || stop_thread_payment)
+   //https://stackoverflow.com/questions/18849288/how-to-create-and-connect-slot-in-qt-to-tcp-recv-without-using-qtcpsockets
+    if (xml_packet_received_complete || stop_authorization_thread)
     {
         if (logging)
         {
@@ -112,6 +111,9 @@ bool checkPacketReceived(bool logging, std::map<std::string, std::string> *xml_p
         }
         std::map<std::string, std::string> xmlObject = readXmlPacket(xml_packet_string);
         *xml_packet = xmlObject;
+        xml_packet_string = "";
+        xmlObject = {};
+        xml_packet_received_complete = false;
         return true;
     }
     else
@@ -169,7 +171,7 @@ void receiveCardTapAction()
     std::cout << "Received connection from " << inet_ntoa(client_address.sin_addr) << std::endl;
 
     // Receive data from the client in a loop
-    while ((true || stop_thread_tap))
+    while ((!stop_tap_action_thread))
     {
         memset(buffer, 0, sizeof(buffer));
         int bytes_received = recv(client_socket, buffer, sizeof(buffer), 0);
@@ -183,26 +185,30 @@ void receiveCardTapAction()
         {
             xml_card_tapped += buffer;
             if (strstr(xml_card_tapped.c_str(), "TAPPED") != NULL)
-        {
-            xml_card_tap_complete = true;
-            stop_thread_tap = true;
-            std::cout << "Received data from client: " << buffer << std::endl;
-            close(client_socket);
-            close(server_socket);
-        }
+            {
+                xml_card_tap_complete = true;
+                std::cout << "Received data from client: " << buffer << std::endl;
+                close(client_socket);
+                close(server_socket);
+            }
             
         }
     }
 }
 bool checkCardTapped(bool logging, std::map<std::string, std::string> *card_tapped)
 { 
-    if(xml_card_tap_complete || stop_thread_tap){
+    if(xml_card_tap_complete || stop_tap_action_thread){
         if (logging)
         {
             std::cout << xml_card_tapped << std::endl;
         }
         std::map<std::string, std::string> xmlObject = readXmlPacket(xml_card_tapped);
+        
         *card_tapped = xmlObject;
+        xml_card_tapped="";
+        xmlObject = {};
+        xml_card_tap_complete = false;
+        // std::cout << "xml_card_tap_complete variable (should be false here  ---------) " << xml_card_tap_complete << std::endl;
         return true;
     }
     else{
@@ -211,36 +217,36 @@ bool checkCardTapped(bool logging, std::map<std::string, std::string> *card_tapp
         
     }
 
-std::map<std::string, std::string> receivePacketBlocking(std::string command, int sockfd, bool logging)
-{
-    char bufferReceivedLocal[4096];
-    memset(bufferReceivedLocal, 0, sizeof(bufferReceivedLocal));
-    const char *delimiter = "</RESPONSE>";
-    bool found_delimiter = false;
-    std::string xml_string;
-    while (!found_delimiter)
-    {
-        int bytes_received = recv(sockfd, bufferReceivedLocal, sizeof(bufferReceivedLocal), 0);
-        if (bytes_received < 0)
-        {
-            std::cerr << "Error receiving message" << std::endl;
-            break;
-        }
-        bufferReceivedLocal[bytes_received] = '\0';
-        xml_string += bufferReceivedLocal;
-        if (strstr(xml_string.c_str(), delimiter) != NULL)
-        {
-            found_delimiter = true;
-        }
-    }
-    if (logging)
-    {
-        std::cout << xml_string << std::endl;
-    }
-    std::map<std::string, std::string> xmlObject = readXmlPacket(xml_string);
-    memset(bufferReceivedLocal, 0, sizeof(bufferReceivedLocal));
-    return xmlObject;
-}
+// std::map<std::string, std::string> receivePacketBlocking(std::string command, int sockfd, bool logging)
+// {
+//     char bufferReceivedLocal[4096];
+//     memset(bufferReceivedLocal, 0, sizeof(bufferReceivedLocal));
+//     const char *delimiter = "</RESPONSE>";
+//     bool found_delimiter = false;
+//     std::string xml_string;
+//     while (!found_delimiter)
+//     {
+//         int bytes_received = recv(sockfd, bufferReceivedLocal, sizeof(bufferReceivedLocal), 0);
+//         if (bytes_received < 0)
+//         {
+//             std::cerr << "Error receiving message" << std::endl;
+//             break;
+//         }
+//         bufferReceivedLocal[bytes_received] = '\0';
+//         xml_string += bufferReceivedLocal;
+//         if (strstr(xml_string.c_str(), delimiter) != NULL)
+//         {
+//             found_delimiter = true;
+//         }
+//     }
+//     if (logging)
+//     {
+//         std::cout << xml_string << std::endl;
+//     }
+//     std::map<std::string, std::string> xmlObject = readXmlPacket(xml_string);
+//     memset(bufferReceivedLocal, 0, sizeof(bufferReceivedLocal));
+//     return xmlObject;
+// }
 
 
 std::map<std::string, std::string> sendAndReceivePacket(std::string command, int sockfd, bool logging)

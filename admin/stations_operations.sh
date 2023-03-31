@@ -146,7 +146,7 @@ if [[ $1 = "manual" ]]
         source_description="Manual"
         
     else
-         echo "Choose source station:"
+         echo "Choose destination station:"
         get_choice_from_names
         choice_index=$?
         destination_id="${station_ids[$choice_index]}"
@@ -206,6 +206,71 @@ done
     echo "done"
 }
 
+transfer_production_logging(){
+
+    if [[ $1 = "manual" ]]
+    then
+        read -p "Source station port e.g. 43066: " source_port
+        # port=$source_port
+        source_id="Manual"
+        source_description="Manual"
+        
+    else
+         echo "Choose source station:"
+        get_choice_from_names
+        choice_index=$?
+        source_id="${station_ids[$choice_index]}"
+        source_description="${station_descriptions[$choice_index]}"
+        source_port="${station_ports[$choice_index]}"
+    fi
+
+    if [[ $2 = "manual" ]]
+    then
+        read -p "Destination station port e.g. 43066: " destination_port
+        # port=$source_port
+        source_id="Manual"
+        source_description="Manual"
+        
+    else
+         echo "Choose destination station:"
+        get_choice_from_names
+        choice_index=$?
+        destination_id="${station_ids[$choice_index]}"
+        destination_description="${station_descriptions[$choice_index]}"
+        destination_port="${station_ports[$choice_index]}"
+    fi
+
+    logging_zip_name=logging_$source_port.zip  # check for where used, not as a variable. Because... it's hard.
+    
+    # zip it up
+    cmd0=( sudo ssh -t df-admin@localhost -p $source_port 'cd /home/df-admin/production; zip -r logging.zip logging; mv logging.zip ..' )
+    
+    # transfer zip from source station to aws 
+    cmd1=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/logging.zip" "/home/ubuntu/Stations/" )
+    # transfer zip from aws to destination station
+
+    cmd2=( scp -r -P $destination_port "/home/ubuntu/Stations/logging.zip" df-admin@localhost:/home/df-admin/$logging_zip_name )
+
+    printf -v cmd0_str '%q ' "${cmd0[@]}"
+    printf -v cmd1_str '%q ' "${cmd1[@]}"
+    printf -v cmd2_str '%q ' "${cmd2[@]}"
+
+    # confirm_execute "$cmd_str"
+    echo "Lined up commands: "
+    echo "$cmd0_str"
+    echo "$cmd1_str"
+    echo "$cmd2_str"
+    
+    continu_or_exit
+    echo "Zip production logs..."
+    "${cmd0[@]}"
+    echo "Transfer production logs to aws..."
+    "${cmd1[@]}"
+    echo "Transfer production logs from aws to station..."
+    "${cmd2[@]}"
+    echo "done"
+}
+
 transfer_production_static_files(){
 
     if [[ $1 = "manual" ]]
@@ -232,7 +297,7 @@ transfer_production_static_files(){
         source_description="Manual"
         
     else
-         echo "Choose source station:"
+         echo "Choose destination station:"
         get_choice_from_names
         choice_index=$?
         destination_id="${station_ids[$choice_index]}"
@@ -521,7 +586,12 @@ DB
 
 echo 'At AWS: Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 PS3='Choose option(digit + enter):'
-options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Manualport/production/x to Manualport/home/x" "Station mkdir" "Station log in manual port" "Copy Static Production Folder: Station to Station" "Copy Static Production Folder: Station to Manual Port" "Copy Static Production Folder: Manual Port to Station" "Copy Static Production Folder: Manual Port to Manual Port" "Copy Production DB: Station to Station" "Copy Production DB: Station to Manual Port" "Copy Production DB: Manual Port to Station" "Copy Production DB: Manual Port to Manual Port")
+options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station mkdir" "Station log in manual port" "Copy Static Production Folder: Station to Station" "Copy Static Production Folder: Station to Manual Port" "Copy Static Production Folder: Manual Port to Station" "Copy Static Production Folder: Manual Port to Manual Port" "Copy Production DB: Station to Station" "Copy Production DB: Station to Manual Port" "Copy Production DB: Manual Port to Station" "Copy Production DB: Manual Port to Manual Port" "Copy Production Logs: Station to Station" "Copy Production Logs: Station to Manual Port" "Copy Production Logs: Manual Port to Station" "Copy Production Logs: Manual Port to Manual Port")
+# options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Manualport/production/x to Manualport/home/x" "Station mkdir" "Station log in manual port" "Copy Static Production Folder: Station to Station" "Copy Static Production Folder: Station to Manual Port" "Copy Static Production Folder: Manual Port to Station" "Copy Static Production Folder: Manual Port to Manual Port" "Copy Production DB: Station to Station" "Copy Production DB: Station to Manual Port" "Copy Production DB: Manual Port to Station" "Copy Production DB: Manual Port to Manual Port" "Copy Production Logs: Station to Station" "Copy Production Logs: Station to Manual Port" "Copy Production Logs: Manual Port to Station" "Copy Production Logs: Manual Port to Manual Port")
+
+
+
+
 select opt in "${options[@]}"
 do
     case $opt in
@@ -587,6 +657,19 @@ do
             ;;
         "Copy Production DB: Manual Port to Manual Port")
             transfer_production_db "manual" "manual" 
+            ;;
+      
+        "Copy Production Logs: Station to Station")
+            transfer_production_logging "unit" "unit" 
+            ;;
+        "Copy Production Logs: Station to Manual Port")
+            transfer_production_logging "unit" "manual" 
+            ;;
+        "Copy Production Logs: Manual Port to Station")
+            transfer_production_logging "manual" "unit" 
+            ;;
+        "Copy Production Logs: Manual Port to Manual Port")
+            transfer_production_logging "manual" "manual" 
             ;;
 
         "Station to Lode DB")

@@ -171,8 +171,8 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
     db.closeDB();
     if (tap_payment)
     {
+        qDebug()<< "InitializingTap payment";
         std::map<std::string, std::string> configMap = readConfigFile();
-
         std::map<std::string, std::string> testResponse = testMac(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
         if (testResponse["RESPONSE_TEXT"] == "Match")
         {
@@ -804,7 +804,7 @@ void page_payment::on_previousPage_Button_clicked()
             checkCardTappedTimer->stop();
             qDebug() << "Stopping the threads";
             cancelTransaction(connectSecondarySocket());
-            finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+            // finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
             // qDebug() << "Session finished sent";
             
         }

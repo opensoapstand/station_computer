@@ -8,9 +8,9 @@
 
 # -----------------------------------
 # DO NOT ADD SPACES TO THE ELEMENTS, it causes a mess when looping over it (treats space as array delimiter in some cases).#
-station_descriptions=("SS-DEV-LODE" "SS-DEV-ASH" "SS-DEV-SHOP" "SS-DEV-SHOPFRAME" "EEFC" "UBC" "Ruddy" "Re-Up" "SS-0000009" "Pomme" "Petros11" "Petros12" "Petros13" "Petros14" "SS-0000015" "SS-0000016" "SS-0000017" "Choices" "Stongs" "FamousFoods44020" "SS-0000021" "Nada" "Petros23" "Petros24" "Petros25" "Petros26" "Petros27" "Petros28" "Petros29" "Petros30" "Petros31" "Petros32" "Petros33" "Petros34" "Petros35" "Petros36" "Petros37" "Petros38" "SS-0000039" "SS-0000040" "SS-0000041" "SS-0000042" "SS-0000043" "SS-0000044" "SS-0000045" "SS-0000046" "SS-0000047" "SS-0000048" "SS-0000049" "SS-0000050" "SS-0000051" "SS-0000052" "SS-0000053" "SS-0000054" "SS-0000055" "SS-0000056" "SS-0000057" "SS-0000058" "SS-0000059" "SS-0000060" "SS-0000061" "SS-0000062" "SS-0000063" "SS-0000064" "SS-0000065" "SS-0000066" "SS-0000067" "SS-0000068" "SS-0000069" "SS-0000070" "SS-0000071" "SS-0000072" "SS-0000073");
+station_descriptions=("SS-DEV-LODE" "SS-DEV-ASH" "SS-DEV-SHOP" "SS-DEV-SHOPFRAME" "EEFC" "UBC" "Ruddy" "Re-Up" "SS-0000009" "Pomme" "Petros11" "Petros12" "Petros13" "Petros14" "SS-0000015" "SS-0000016" "SS-0000017" "Choices" "Stongs" "FamousFoods" "SS-0000021" "Nada" "Petros23" "Petros24" "Petros25" "Petros26" "Petros27" "Petros28" "Petros29" "Petros30" "Petros31" "Petros32" "Petros33" "Petros34" "Petros35" "Petros36" "Petros37" "Petros38" "SS-0000039" "SS-0000040" "SS-0000041" "SS-0000042" "SS-0000043" "SS-0000044" "SS-0000045" "SS-0000046" "SS-0000047" "SS-0000048" "SS-0000049" "SS-0000050" "SS-0000051" "SS-0000052" "SS-0000053" "SS-0000054" "SS-0000055" "SS-0000056" "SS-0000057" "SS-0000058" "SS-0000059" "SS-0000060" "SS-0000061" "SS-0000062" "SS-0000063" "SS-0000064" "SS-0000065" "SS-0000066" "SS-0000067" "SS-0000068" "SS-0000069" "SS-0000070" "SS-0000071" "SS-0000072" "SS-0000073");
 station_ids=("SS-DEV-LODE" "SS-DEV-ASH" "SS-DEV-SHOP" "SS-DEV-SHOPFRAME" "SS-0000005" "SS-0000006" "SS-0000007" "SS-0000008" "SS-0000009" "SS-0000010" "SS-0000011" "SS-0000012" "SS-0000013" "SS-0000014" "SS-0000015" "SS-0000016" "SS-0000017" "SS-0000018" "SS-0000019" "SS-0000020" "SS-0000021" "SS-0000022" "SS-0000023" "SS-0000024" "SS-0000025" "SS-0000026" "SS-0000027" "SS-0000028" "SS-0000029" "SS-0000030" "SS-0000031" "SS-0000032" "SS-0000033" "SS-0000034" "SS-0000035" "SS-0000036" "SS-0000037" "SS-0000038" "SS-0000039" "SS-0000040" "SS-0000041" "SS-0000042" "SS-0000043" "SS-0000044" "SS-0000045" "SS-0000046" "SS-0000047" "SS-0000048" "SS-0000049" "SS-0000050" "SS-0000051" "SS-0000052" "SS-0000053" "SS-0000054" "SS-0000055" "SS-0000056" "SS-0000057" "SS-0000058" "SS-0000059" "SS-0000060" "SS-0000061" "SS-0000062" "SS-0000063" "SS-0000064" "SS-0000065" "SS-0000066" "SS-0000067" "SS-0000068" "SS-0000069" "SS-0000070" "SS-0000071" "SS-0000072" "SS-0000073" );
-station_ports=("44444" "43081" "44001" "44003" "43005" "43006" "43007" "43008" "43009" "43010" "43011" "43012" "43013" "43014" "43015" "43016" "43017" "43018" "43019" "44020" "43021" "43022" "43023" "43024" "43025" "43026" "43027" "43028" "43029" "43030" "43031" "43032" "43033" "43034" "43035" "43036" "43037" "43038" "43039" "43040" "43041" "43042" "43043" "43044" "43045" "43046" "43047" "43048" "43049" "43050" "43051" "43052" "43053" "43054" "43055" "43056" "43057" "43058" "43059" "43060" "43061" "43062" "43063" "43064" "43065" "43066" "43067" "43068" "43069" "43070" "43071" "43072" "43073");
+station_ports=("44444" "43081" "44001" "44003" "43005" "43006" "43007" "43008" "43009" "43010" "43011" "43012" "43013" "43014" "43015" "43016" "43017" "43018" "43019" "43020" "43021" "43022" "43023" "43024" "43025" "43026" "43027" "43028" "43029" "43030" "43031" "43032" "43033" "43034" "43035" "43036" "43037" "43038" "43039" "43040" "43041" "43042" "43043" "43044" "43045" "43046" "43047" "43048" "43049" "43050" "43051" "43052" "43053" "43054" "43055" "43056" "43057" "43058" "43059" "43060" "43061" "43062" "43063" "43064" "43065" "43066" "43067" "43068" "43069" "43070" "43071" "43072" "43073");
 # -----------------------------------
 
 # https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_10_02.html
@@ -120,6 +120,92 @@ ssh_into_station () {
     "${cmd[@]}"
 }
 
+transfer_production_db(){
+
+if [[ $1 = "manual" ]]
+    then
+        read -p "Source station port e.g. 43066: " source_port
+        # port=$source_port
+        source_id="Manual"
+        source_description="Manual"
+        
+    else
+         echo "Choose source station:"
+        get_choice_from_names
+        choice_index=$?
+        source_id="${station_ids[$choice_index]}"
+        source_description="${station_descriptions[$choice_index]}"
+        source_port="${station_ports[$choice_index]}"
+    fi
+
+    if [[ $2 = "manual" ]]
+    then
+        read -p "Destination station port e.g. 43066: " destination_port
+        # port=$source_port
+        source_id="Manual"
+        source_description="Manual"
+        
+    else
+         echo "Choose source station:"
+        get_choice_from_names
+        choice_index=$?
+        destination_id="${station_ids[$choice_index]}"
+        destination_description="${station_descriptions[$choice_index]}"
+        destination_port="${station_ports[$choice_index]}"
+    fi
+
+
+
+
+PS3='Choose option(digit + enter) for db_port, it will add the port number to the back of it. To indentify and prevent overwriting:'
+options=("db to db_port" "db_port to db OVERWRITE ALERT" "db to db OVERWRITE ALERT" "db_port to db_port")
+select opt in "${options[@]}"
+do
+    case $opt in
+        "db to db_port")
+           production_db_name_source="drinkfill-sqlite_newlayout.db"
+           production_db_name_destination="drinkfill-sqlite_newlayout_$source_port.db"
+            ;;
+        "db_port to db OVERWRITE ALERT")
+           production_db_name_source="drinkfill-sqlite_newlayout_$source_port.db"
+           production_db_name_destination="drinkfill-sqlite_newlayout.db"
+            ;;
+        "db to db OVERWRITE ALERT")
+           production_db_name_source="drinkfill-sqlite_newlayout.db"
+           production_db_name_destination="drinkfill-sqlite_newlayout.db"
+            ;;
+        "db_port to db_port")
+           production_db_name_source="drinkfill-sqlite_newlayout_$source_port.db"
+           production_db_name_destination="drinkfill-sqlite_newlayout_$source_port.db"
+            ;;
+        *) echo "invalid option $REPLY";;
+    esac
+    break;
+done
+
+    production_db_name="drinkfill-sqlite_newlayout_$source_port.db"  # check for where used, not as a variable. Because... it's hard.
+    
+    # transfer zip from source station to aws 
+    cmd0=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/production/db/$production_db_name_source" "/home/ubuntu/Stations/$production_db_name_destination" )
+    # transfer zip from aws to destination station
+    cmd1=( scp -r -P $destination_port "/home/ubuntu/Stations/$production_db_name_destination" df-admin@localhost:/home/df-admin/production/db)
+    printf -v cmd0_str '%q ' "${cmd0[@]}"
+    printf -v cmd1_str '%q ' "${cmd1[@]}"
+
+    # confirm_execute "$cmd_str"
+    echo "Lined up commands: "
+    echo "$cmd0_str"
+    echo "$cmd1_str"
+    
+    continu_or_exit
+
+    echo "Transfer db to aws..."
+    "${cmd0[@]}"
+    echo "Transfer db from aws to station..."
+    "${cmd1[@]}"
+    echo "done"
+}
+
 transfer_production_static_files(){
 
     if [[ $1 = "manual" ]]
@@ -179,7 +265,7 @@ transfer_production_static_files(){
     "${cmd0[@]}"
     echo "Transfer static production data to aws..."
     "${cmd1[@]}"
-    echo "Transfer static production data to station..."
+    echo "Transfer static production data from aws to station..."
     "${cmd2[@]}"
     echo "done"
 }
@@ -426,7 +512,7 @@ scp_transfer_db () {
         mv Stations/$2/drinkfill-sqlite_newlayout_toUnit.db Stations/$2/drinkfill-sqlite_newlayout_toUnit_bkp.db
         "${cmd1[@]}"
         "${cmd2[@]}"
-
+DB
     
     else
         echo "Please specify to_aws or to_unit as argument"
@@ -435,7 +521,7 @@ scp_transfer_db () {
 
 echo 'At AWS: Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 PS3='Choose option(digit + enter):'
-options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Manualport/production/x to Manualport/home/x" "Station mkdir" "Station log in manual port" "Copy Static Production Folder: Station to Station" "Copy Static Production Folder: Station to Manual Port" "Copy Static Production Folder: Manual Port to Station" "Copy Static Production Folder: Manual Port to Manual Port")
+options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Manualport/production/x to Manualport/home/x" "Station mkdir" "Station log in manual port" "Copy Static Production Folder: Station to Station" "Copy Static Production Folder: Station to Manual Port" "Copy Static Production Folder: Manual Port to Station" "Copy Static Production Folder: Manual Port to Manual Port" "Copy Production DB: Station to Station" "Copy Production DB: Station to Manual Port" "Copy Production DB: Manual Port to Station" "Copy Production DB: Manual Port to Manual Port")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -489,6 +575,20 @@ do
         "Copy Static Production Folder: Manual Port to Manual Port")
             transfer_production_static_files "manual" "manual" 
             ;;
+
+        "Copy Production DB: Station to Station")
+            transfer_production_db "unit" "unit" 
+            ;;
+        "Copy Production DB: Station to Manual Port")
+            transfer_production_db "unit" "manual" 
+            ;;
+        "Copy Production DB: Manual Port to Station")
+            transfer_production_db "manual" "unit" 
+            ;;
+        "Copy Production DB: Manual Port to Manual Port")
+            transfer_production_db "manual" "manual" 
+            ;;
+
         "Station to Lode DB")
             scp_transfer_db "to_dev" "SS-DEV-LODE" "44444"
             ;;

@@ -120,7 +120,7 @@ ssh_into_station () {
     "${cmd[@]}"
 }
 
-transfer_production_folder(){
+transfer_production_static_files(){
 
     if [[ $1 = "manual" ]]
     then
@@ -154,10 +154,12 @@ transfer_production_folder(){
         destination_port="${station_ports[$choice_index]}"
     fi
 
-    production_zip_name=production.zip
+    production_zip_name=productionstatic.zip  # check for where used, not as a variable. Because... it's hard.
+    
     # zip it up
-    cmd0=( sudo ssh -t df-admin@localhost -p $source_port 'cd "/home/df-admin/production"; zip -r $production_zip_name references admin bin' )
-    # cmd0=( sudo ssh -t df-admin@localhost -p $source_port 'cd "/home/df-admin/production"; zip -r $production_zip_name /home/df-admin/production/references /home/df-admin/production/admin /home/df-admin/production/bin' )
+    cmd0=( sudo ssh -t df-admin@localhost -p $source_port 'cd /home/df-admin/production; zip -r productionstatic.zip references admin bin; mv productionstatic.zip ..' )
+    # cmd0=( sudo ssh -t df-admin@localhost -p $source_port 'cd "/home/df-admin/production"; zip -r production.zip references admin bin; mv production.zip ..' )
+    
     # transfer zip from source station to aws 
     cmd1=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/$production_zip_name" "/home/ubuntu/Stations/" )
     # transfer zip from aws to destination station
@@ -433,7 +435,7 @@ scp_transfer_db () {
 
 echo 'At AWS: Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 PS3='Choose option(digit + enter):'
-options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Manualport/production/x to Manualport/home/x" "Station mkdir" "Station log in manual port" "Copy Static Production Folder: Station to Station")
+options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Manualport/production/x to Manualport/home/x" "Station mkdir" "Station log in manual port" "Copy Static Production Folder: Station to Station" "Copy Static Production Folder: Station to Manual Port" "Copy Static Production Folder: Manual Port to Station" "Copy Static Production Folder: Manual Port to Manual Port")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -476,8 +478,16 @@ do
             ;;
 
         "Copy Static Production Folder: Station to Station")
-            
-            transfer_production_folder "unit" "manual" 
+            transfer_production_static_files "unit" "unit" 
+            ;;
+        "Copy Static Production Folder: Station to Manual Port")
+            transfer_production_static_files "unit" "manual" 
+            ;;
+        "Copy Static Production Folder: Manual Port to Station")
+            transfer_production_static_files "manual" "unit" 
+            ;;
+        "Copy Static Production Folder: Manual Port to Manual Port")
+            transfer_production_static_files "manual" "manual" 
             ;;
         "Station to Lode DB")
             scp_transfer_db "to_dev" "SS-DEV-LODE" "44444"

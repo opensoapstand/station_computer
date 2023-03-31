@@ -1,6 +1,13 @@
 #include "setup_Tap.h"
+#include "../page_payment.h"
+
 bool xml_packet_received_complete;
+bool xml_card_tap_complete;
 std::string xml_packet_string;
+std::string xml_card_tapped;
+std::atomic<bool> stop_tap_action_thread(false);
+std::atomic<bool> stop_authorization_thread(false);
+
 
 std::string read_public_key()
 {
@@ -68,37 +75,35 @@ std::string sendPacket(std::string command, int sockfd, bool logging)
     return "Packet sent";
 }
 
-void receiveThread(int sockfd)
+void receiveAuthorizationThread(int sockfd)
 {
-    // char bufferReceived[4096];
-    // memset(bufferReceived, 0, sizeof(bufferReceived));
-    // const char *delimiter = "</RESPONSE>";
-    // xml_packet_received_complete = false;
-    // while (!xml_packet_received_complete)
-    // {
-    //     int bytes_received = recv(sockfd, bufferReceived, sizeof(bufferReceived), 0);
-    //     if (bytes_received < 0)
-    //     {
-    //         std::cerr << "Error receiving message" << std::endl;
-    //         break;
-    //     }
-    //     bufferReceived[bytes_received] = '\0';
-    //     xml_packet_string += bufferReceived;
-    //     if (strstr(xml_packet_string.c_str(), delimiter) != NULL)
-    //     {
-    //         xml_packet_received_complete = true;
-    //     }
-    // }
+    char bufferReceived[4096];
+    memset(bufferReceived, 0, sizeof(bufferReceived));
+    const char *delimiter = "</RESPONSE>";
+    xml_packet_received_complete = false;
+    while ((!xml_packet_received_complete && !stop_authorization_thread))
+    {
+        int bytes_received = recv(sockfd, bufferReceived, sizeof(bufferReceived), 0);
+        if (bytes_received < 0)
+        {
+            std::cerr << "Error receiving message" << std::endl;
+            break;
+        }
+        bufferReceived[bytes_received] = '\0';
+        xml_packet_string += bufferReceived;
+        if (strstr(xml_packet_string.c_str(), delimiter) != NULL)
+        {
+             std::cout << "received packet complete. " << std::endl;
+            xml_packet_received_complete = true;
 
-    while(true){
-
-    };
+        }
+    }
 }
 
 bool checkPacketReceived(bool logging, std::map<std::string, std::string> *xml_packet)
 { //
-    //https://stackoverflow.com/questions/18849288/how-to-create-and-connect-slot-in-qt-to-tcp-recv-without-using-qtcpsockets
-    if (xml_packet_received_complete)
+   //https://stackoverflow.com/questions/18849288/how-to-create-and-connect-slot-in-qt-to-tcp-recv-without-using-qtcpsockets
+    if (xml_packet_received_complete || stop_authorization_thread)
     {
         if (logging)
         {
@@ -106,6 +111,9 @@ bool checkPacketReceived(bool logging, std::map<std::string, std::string> *xml_p
         }
         std::map<std::string, std::string> xmlObject = readXmlPacket(xml_packet_string);
         *xml_packet = xmlObject;
+        xml_packet_string = "";
+        xmlObject = {};
+        xml_packet_received_complete = false;
         return true;
     }
     else
@@ -114,36 +122,133 @@ bool checkPacketReceived(bool logging, std::map<std::string, std::string> *xml_p
     }
 }
 
-std::map<std::string, std::string> receivePacketBlocking(std::string command, int sockfd, bool logging)
+void receiveCardTapAction()
 {
-    char bufferReceivedLocal[4096];
-    memset(bufferReceivedLocal, 0, sizeof(bufferReceivedLocal));
-    const char *delimiter = "</RESPONSE>";
-    bool found_delimiter = false;
-    std::string xml_string;
-    while (!found_delimiter)
+    xml_card_tap_complete = false;
+    int server_socket, client_socket;
+    struct sockaddr_in server_address, client_address;
+    char buffer[1024] = {};
+    int opt = 1;
+    int addrlen = sizeof(server_address);
+    const int PORT = 5017;
+    if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) == 0)
     {
-        int bytes_received = recv(sockfd, bufferReceivedLocal, sizeof(bufferReceivedLocal), 0);
-        if (bytes_received < 0)
+        perror("socket failed");
+        exit(EXIT_FAILURE);
+    }
+
+    if (setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
+    {
+        perror("setsocket failed");
+        exit(EXIT_FAILURE);
+    }
+
+    server_address.sin_family = AF_INET;
+    server_address.sin_addr.s_addr = inet_addr("192.168.1.2");
+    server_address.sin_port = htons(PORT);
+    if (bind(server_socket, (struct sockaddr *)&server_address, sizeof(server_address)) < 0)
+    {
+        perror("bind failed");
+        exit(EXIT_FAILURE);
+    }
+
+    // Listen for incoming connections
+    if (listen(server_socket, 1) < 0)
+    {
+        perror("listen failed");
+        exit(EXIT_FAILURE);
+    }
+
+    std::cout << "Server is listening on " << PORT << std::endl;
+
+    // Accept a connection
+    if ((client_socket = accept(server_socket, (struct sockaddr *)&client_address, (socklen_t *)&addrlen)) < 0)
+    {
+        perror("accept failed");
+        exit(EXIT_FAILURE);
+    }
+
+    std::cout << "Received connection from " << inet_ntoa(client_address.sin_addr) << std::endl;
+
+    // Receive data from the client in a loop
+    while ((!stop_tap_action_thread))
+    {
+        memset(buffer, 0, sizeof(buffer));
+        int bytes_received = recv(client_socket, buffer, sizeof(buffer), 0);
+        if (bytes_received <= 0)
         {
-            std::cerr << "Error receiving message" << std::endl;
+            // If no more data is received, close the connection
+            std::cout << "Connection closed by client." << std::endl;
             break;
         }
-        bufferReceivedLocal[bytes_received] = '\0';
-        xml_string += bufferReceivedLocal;
-        if (strstr(xml_string.c_str(), delimiter) != NULL)
+        else
         {
-            found_delimiter = true;
+            xml_card_tapped += buffer;
+            if (strstr(xml_card_tapped.c_str(), "TAPPED") != NULL)
+            {
+                xml_card_tap_complete = true;
+                std::cout << "Received data from client: " << buffer << std::endl;
+                close(client_socket);
+                close(server_socket);
+            }
+            
         }
     }
-    if (logging)
-    {
-        std::cout << xml_string << std::endl;
-    }
-    std::map<std::string, std::string> xmlObject = readXmlPacket(xml_string);
-    memset(bufferReceivedLocal, 0, sizeof(bufferReceivedLocal));
-    return xmlObject;
 }
+bool checkCardTapped(bool logging, std::map<std::string, std::string> *card_tapped)
+{ 
+    if(xml_card_tap_complete || stop_tap_action_thread){
+        if (logging)
+        {
+            std::cout << xml_card_tapped << std::endl;
+        }
+        std::map<std::string, std::string> xmlObject = readXmlPacket(xml_card_tapped);
+        
+        *card_tapped = xmlObject;
+        xml_card_tapped="";
+        xmlObject = {};
+        xml_card_tap_complete = false;
+        // std::cout << "xml_card_tap_complete variable (should be false here  ---------) " << xml_card_tap_complete << std::endl;
+        return true;
+    }
+    else{
+        return false;
+    }
+        
+    }
+
+// std::map<std::string, std::string> receivePacketBlocking(std::string command, int sockfd, bool logging)
+// {
+//     char bufferReceivedLocal[4096];
+//     memset(bufferReceivedLocal, 0, sizeof(bufferReceivedLocal));
+//     const char *delimiter = "</RESPONSE>";
+//     bool found_delimiter = false;
+//     std::string xml_string;
+//     while (!found_delimiter)
+//     {
+//         int bytes_received = recv(sockfd, bufferReceivedLocal, sizeof(bufferReceivedLocal), 0);
+//         if (bytes_received < 0)
+//         {
+//             std::cerr << "Error receiving message" << std::endl;
+//             break;
+//         }
+//         bufferReceivedLocal[bytes_received] = '\0';
+//         xml_string += bufferReceivedLocal;
+//         if (strstr(xml_string.c_str(), delimiter) != NULL)
+//         {
+//             found_delimiter = true;
+//         }
+//     }
+//     if (logging)
+//     {
+//         std::cout << xml_string << std::endl;
+//     }
+//     std::map<std::string, std::string> xmlObject = readXmlPacket(xml_string);
+//     memset(bufferReceivedLocal, 0, sizeof(bufferReceivedLocal));
+//     return xmlObject;
+// }
+
+
 std::map<std::string, std::string> sendAndReceivePacket(std::string command, int sockfd, bool logging)
 {
     char buffer[4096];
@@ -210,6 +315,39 @@ int connectSocket()
     memset(&serv_addr, 0, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(5015);
+    if (inet_pton(AF_INET, "192.168.1.25", &serv_addr.sin_addr) <= 0)
+    {
+        std::cerr << "Error converting IP address" << std::endl;
+        return 1;
+    }
+    // Connect to the server
+    if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
+    {
+        std::cerr << "Error connecting to server" << std::endl;
+        return 1;
+    }
+    // std::cout << "Server connected" << std::endl;
+    // Clean up
+    // close(sockfd);
+    return sockfd;
+}
+
+int connectSecondarySocket()
+{
+    int sockfd;
+    struct sockaddr_in serv_addr;
+
+    // Create a socket
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd < 0)
+    {
+        std::cerr << "Error opening socket" << std::endl;
+        return 1;
+    }
+    // Set up the server address
+    memset(&serv_addr, 0, sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(5016);
     if (inet_pton(AF_INET, "192.168.1.25", &serv_addr.sin_addr) <= 0)
     {
         std::cerr << "Error converting IP address" << std::endl;
@@ -437,7 +575,3 @@ std::string create_counter_mac(int counter, std::string encrypted_mac)
     BIO_free_all(b64);
     return encoded_hmac_string;
 }
-
-// g++ -o payment tap_payment.cpp  -lssl -lcrypto
-
-// g++ -o command commands.cpp  setup_Tap.cpp -lssl -lcrypto

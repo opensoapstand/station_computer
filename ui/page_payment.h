@@ -36,10 +36,12 @@
 #include <thread>
 #include <QPainter>
 #include <QUuid>
-
 #include <QMovie>
-
 #include <curl/curl.h>
+#include<atomic>
+
+extern std::atomic<bool> stop_tap_action_thread;
+extern std::atomic<bool> stop_authorization_thread;
 
 class pageProduct;
 class page_dispenser;
@@ -79,7 +81,6 @@ public:
     // **** Control Functions ****
     bool setpaymentProcess(bool status);
 
-    void check_packet_available();
     void authorized_transaction(std::map<std::string, std::string> responseObj);
 
     // Database
@@ -134,8 +135,11 @@ private slots:
 
     void onTimeoutTick();
     // void readTimer_loop();
-    void progressStatusLabel();
+    void tapPaymentHandler();
     void declineTimer_start();
+    void check_packet_available();
+    void check_card_tapped();
+
     void idlePaymentTimeout();
     void on_refreshButton_clicked();
 
@@ -201,6 +205,8 @@ private:
 
     QTimer *declineTimer;
     QTimer *checkPacketReceivedTimer;
+    QTimer *checkCardTappedTimer;
+
     QTimer *idlePaymentTimer;
     QTimer *inFlightTimer;
 

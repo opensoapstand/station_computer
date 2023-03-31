@@ -30,6 +30,8 @@ std::string MAC_LABEL = "";
 std::string AUTH_CODE = "";
 std::string SAF_NUM = "";
 std::string socketAddr;
+std::thread cardTapThread;
+std::thread dataThread;
 // CTOR
 
 page_payment::page_payment(QWidget *parent) : QWidget(parent),
@@ -51,10 +53,18 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
     // readTimer = new QTimer(this);
     // connect(readTimer, SIGNAL(timeout()), this, SLOT(readTimer_loop()));
 
+    std::atomic<bool> stop_tap_action_thread(false);
+    std::atomic<bool> stop_authorization_thread(false);
     // Receive packets from tap device checker
     checkPacketReceivedTimer = new QTimer(this);
     connect(checkPacketReceivedTimer, SIGNAL(timeout()), this, SLOT(check_packet_available()));
-    checkPacketReceivedTimer->setInterval(1000); // was 500
+    checkPacketReceivedTimer->setInterval(500); // was 500
+
+
+    checkCardTappedTimer = new QTimer(this);
+    connect(checkCardTappedTimer, SIGNAL(timeout()), this, SLOT(check_card_tapped()));
+    checkCardTappedTimer->setInterval(500); // was 500
+
 
     // Payment Declined
     declineTimer = new QTimer(this);
@@ -67,7 +77,8 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
     qrPeriodicalCheckTimer = new QTimer(this);
     connect(qrPeriodicalCheckTimer, SIGNAL(timeout()), this, SLOT(qrProcessedPeriodicalCheck()));
     DbManager db(DB_PATH);
-
+    
+        
     if (db.getPaymentMethod(1) == "tap")
     {
         tap_payment = true;
@@ -82,8 +93,6 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
         ui->payment_bypass_Button->setEnabled(false);
         state_payment = s_init;
         tap_payment = false;
-
-        ui->title_Label->setText("pay by phone");
         QString css_title = "QLabel{"
                             "font-family: 'Brevia';"
                             "font-style: normal;"
@@ -96,6 +105,8 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
                             "text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);"
                             "}";
         ui->title_Label->setStyleSheet(css_title);
+        ui->title_Label->setText("pay by phone");
+        
 
         ui->scan_Label->setText(
             "Scan to Pay");
@@ -183,8 +194,15 @@ void page_payment::stopPayTimers()
     if (checkPacketReceivedTimer != nullptr)
     {
         qDebug() << "cancel payment progress Timer" << endl;
+        // stop_tap_action_thread=true;
         checkPacketReceivedTimer->stop();
     }
+     if (checkCardTappedTimer != nullptr)
+    {
+        qDebug() << "cancel TAP progress Timer" << endl;
+        checkCardTappedTimer->stop();
+    }
+    
 
     //  if (inFlightTimer != nullptr)
     // {
@@ -257,6 +275,7 @@ void page_payment::on_payment_bypass_Button_clicked()
 
 void page_payment::proceed_to_dispense()
 {
+    ui->title_Label->hide();
     stopPayTimers();
     // p_page_dispense->showEvent(dispenseEvent);
     // p_page_dispense->showFullScreen();
@@ -273,7 +292,6 @@ void page_payment::cancelPayment()
 {
     finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     checkPacketReceivedTimer->stop();
-    inFlightTimer->stop();
 }
 
 size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
@@ -372,9 +390,9 @@ void page_payment::showEvent(QShowEvent *event)
 
     if (payment_method == "tap")
     {
-        progressStatusLabel();
         // createOrderIdAndSendToBackend();
         qDebug() << "Prepare tap order";
+        tapPaymentHandler();
 
         // QMovie *movieggg = new QMovie("/home/df-admin/drinkfill/ui/references/templates/default/soapstandspinner.gif");
         // movieggg->setCacheMode(QMovie::CacheAll);
@@ -615,11 +633,11 @@ void page_payment::storePaymentEvent(QSqlDatabase db, QString event)
 {
 }
 
-void page_payment::progressStatusLabel()
+void page_payment::tapPaymentHandler()
 {
 
-    QMovie *movieggg = new QMovie("/home/df-admin/drinkfill/ui/references/templates/default/soapstandspinner.gif");
-    movieggg->setCacheMode(QMovie::CacheAll);
+    QMovie *movieggg = new QMovie("/home/df-admin/drinkfill/ui/references/templates/default/tap.gif");
+    // movieggg->setCacheMode(QMovie::CacheAll);
     ui->animated_Label->setMovie(movieggg);
     movieggg->start();
 
@@ -639,37 +657,62 @@ void page_payment::progressStatusLabel()
     std::string authCommand = authorizationCommand(socket, MAC_LABEL, MAC_KEY, stream.str());
 
     std::string packetSent = sendPacket(authCommand, socket, true);
+    stop_tap_action_thread = false;
+    stop_authorization_thread=false;
+    cardTapThread = std::thread(receiveCardTapAction);
+    cardTapThread.detach();
+    checkCardTappedTimer->start();  
 
-    std::thread dataThread(receiveThread, socket);
+    dataThread = std::thread(receiveAuthorizationThread, socket);
+    dataThread.detach();
+    checkPacketReceivedTimer->start();  
+  
 
-    checkPacketReceivedTimer->start();
 }
 
 void page_payment::check_packet_available()
 {
-    qDebug() << "Check for received packets from tap terminal.";
+    // qDebug() << "Check for received packets from tap terminal.";
 
     std::map<std::string, std::string> xml_packet_dict;
     bool isPacketReceived;
     isPacketReceived = checkPacketReceived(true, &xml_packet_dict);
+    // qDebug() << "Is packet received" << isPacketReceived;
     if (isPacketReceived)
     {
         checkPacketReceivedTimer->stop();
+        // ui->animated_Label->hide();
         authorized_transaction(xml_packet_dict);
+    }
+}
+void page_payment::check_card_tapped()
+{
+    std::map<std::string, std::string> xml_packet_dict_tapped;
+    bool isPacketReceived;
+    isPacketReceived = checkCardTapped(true, &xml_packet_dict_tapped);
+    // qDebug() << "Is packet received for tap?" << isPacketReceived;
+
+    if (isPacketReceived)
+    {
+        qDebug() << "Packet received true";
+        ui->title_Label->setText("Processing Payment");
+        ui->title_Label->show();
+        checkCardTappedTimer->stop();
+        QMovie* currentGif = ui->animated_Label->movie();
+        currentGif->stop();
+        delete currentGif;
+        // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
+
+        QMovie *movie = new QMovie("/home/df-admin/drinkfill/ui/references/templates/default/soapstandspinner.gif");
+        ui->animated_Label->setMovie(movie);
+        movie->start();
+       
+        
     }
 }
 
 void page_payment::authorized_transaction(std::map<std::string, std::string> responseObj)
 {
-
-    //     std::map<std::string, std::string> inFlight = connectInFlightSocket();
-    //     if(inFlight["CARD_ENTRY_METHOD"]=="TAPPED"){
-
-    //         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_AUTHORIZE_NOW);
-
-    //     }
-
-    // std::map<std::string, std::string> responseObj = receivePacketBlocking(authCommand,socket, true);
     double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
     std::ostringstream stream;
     stream << std::fixed << std::setprecision(2) << price;
@@ -728,7 +771,7 @@ bool page_payment::exitConfirm()
         {
         case QMessageBox::Yes:
         {
-            resetPaymentPage();
+            // resetPaymentPage();
             return true;
         }
         break;
@@ -742,7 +785,7 @@ bool page_payment::exitConfirm()
     else
     {
         // exit, no questions asked.
-        resetPaymentPage();
+        // resetPaymentPage();
         return true;
     }
 }
@@ -750,17 +793,20 @@ bool page_payment::exitConfirm()
 // Navigation: Back to Drink Size Selection
 void page_payment::on_previousPage_Button_clicked()
 {
-
+    qDebug() << "In previous page button" << endl;
     if (exitConfirm())
     {
-        // p_pageProduct->resizeEvent(pageProductResize);
-        // p_pageProduct->showFullScreen();
-        // this->hide();
         if (tap_payment)
-        {
-            finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+        {   
+            stop_tap_action_thread = true;
+            stop_authorization_thread=true;
             checkPacketReceivedTimer->stop();
-            inFlightTimer->stop();
+            checkCardTappedTimer->stop();
+            qDebug() << "Stopping the threads";
+            cancelTransaction(connectSecondarySocket());
+            finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+            // qDebug() << "Session finished sent";
+            
         }
         p_page_idle->pageTransition(this, p_pageProduct);
     }
@@ -770,15 +816,13 @@ void page_payment::on_mainPage_Button_clicked()
 {
     if (exitConfirm())
     {
-        // p_page_help->showFullScreen();
-        // this->hide();
         p_page_idle->pageTransition(this, p_page_help);
     }
 }
 
 void page_payment::idlePaymentTimeout()
 {
-    resetPaymentPage();
+    // resetPaymentPage();
     // p_page_idle->showFullScreen();
     // this->hide();
     p_page_idle->pageTransition(this, p_page_idle);

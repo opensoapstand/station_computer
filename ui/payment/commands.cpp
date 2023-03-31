@@ -78,6 +78,17 @@ std::map<std::string, std::string> finishSession(int socket, std::string MAC_LAB
     return dataReceived;
 }
 
+std::map<std::string, std::string> cancelTransaction(int socket){
+
+    std::string command = "<TRANSACTION> \
+                        <FUNCTION_TYPE>SECONDARYPORT</FUNCTION_TYPE> \
+                        <COMMAND>CANCEL</COMMAND> \
+                    </TRANSACTION>";
+    std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
+    close(socket);
+    return dataReceived;
+}
+
 std::map<std::string, std::string> authorization(int socket, std::string MAC_LABEL, std::string MAC_KEY, std::string amount){
     std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
     std::string command = "<TRANSACTION> \
@@ -280,11 +291,3 @@ std::string updateInvoiceValueInConfig(std::string invoiceNumber){
     }
     return "0";
 }
-// int socket = connectSocket();
-//     std::string MAC_LABEL = "P_GQ63SC";
-//     std::string MAC_KEY = "c0oOuJjLxFnt/e/43FqGSW+7xkuwQonAaNHusrdXHWZnhiX14EZeA32uLGvGz5LvUorrCEWQmbaezJR1ICKUgZQa4zE0GbmxZF+tKJa7V4d31o1y2IkgBx97ErA8HY9MegWhFr+2YOJoYtkrf62bjPAAZ6Ge2etpTAve/CaRa9rKiI5lbmucj7ygs2/7l6YoSspbSWyPZr2gML8plmZk0J6TWYOEB3IOdV1r4yzSTp6FMnnKPQafEScJ+jqbUrF54BQKU3UcAQbFI8WGEHYOS8FDRg8gjRlcviSwCZr7bslgp+9ndQMJPtmph9YhWCggTA6fJNziGWKjzwbwORzGRQ==";
-//     // std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
-//     startSession(socket, MAC_LABEL, MAC_KEY);
-//     std::map<std::string, std::string> responseObj = authorization(socket, MAC_LABEL, MAC_KEY, "3.00");
-//     capture(socket, MAC_LABEL, MAC_KEY,responseObj["CTROUTD"], "2.00");
-//     finishSession(socket, MAC_LABEL, MAC_KEY);

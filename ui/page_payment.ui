@@ -283,9 +283,9 @@ line-height: 29px;</string>
   <widget class="QLabel" name="title_Label">
    <property name="geometry">
     <rect>
-     <x>270</x>
+     <x>190</x>
      <y>170</y>
-     <width>561</width>
+     <width>700</width>
      <height>81</height>
     </rect>
    </property>
@@ -315,10 +315,10 @@ line-height: 29px;</string>
   <widget class="QLabel" name="animated_Label">
    <property name="geometry">
     <rect>
-     <x>350</x>
-     <y>1070</y>
-     <width>205</width>
-     <height>300</height>
+     <x>221</x>
+     <y>327</y>
+     <width>639</width>
+     <height>639</height>
     </rect>
    </property>
    <property name="text">

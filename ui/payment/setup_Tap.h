@@ -26,15 +26,16 @@
 #include <cmath>
 #include <thread>
 
-
 bool checkPacketReceived(bool logging, std::map<std::string, std::string> *xml_packet);
-
-void receiveThread(int sockfd);
+bool checkCardTapped(bool logging, std::map<std::string, std::string> *card_tapped);
+void receiveCardTapAction();
+void receiveAuthorizationThread(int sockfd);
 std::string read_public_key();
 std::map<std::string,std::string> readXmlPacket(std::string xmlString);
 std::map<std::string, std::string> sendAndReceivePacket(std::string command, int sockfd, bool logging);
 std::string create_counter_mac(int counter, std::string encrypted_mac);
 int connectSocket();
+int connectSecondarySocket();
 std::map<std::string, std::string> connectInFlightSocket();
 std::string sendPacket(std::string command, int sockfd, bool logging);
 std::map<std::string, std::string> receivePacketBlocking(std::string command, int sockfd, bool logging);

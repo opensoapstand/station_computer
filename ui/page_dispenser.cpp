@@ -22,7 +22,6 @@
 #include "pagethankyou.h"
 #include "page_product.h"
 #include "payment/commands.h"
-// #include "payment/setup_Tap.h"
 
 extern QString transactionLogging;
 extern std::string CTROUTD;
@@ -38,7 +37,23 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
 
     this->isDispensing = false;
     ui->setupUi(this);
+    ui->finishTransactionMessage->setStyleSheet(
+        "QLabel {"
 
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 100;"
+        "background-color: #5E8580;"
+        "font-size: 42px;"
+        "text-align: centre;"
+        "line-height: auto;"
+        "letter-spacing: 0px;"
+        "qproperty-alignment: AlignCenter;"
+        "border-radius: 20px;"
+        "color: white;"
+        "border: none;"
+        "}");
+    ui->finishTransactionMessage->hide();
     // ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->abortButton->setStyleSheet("QPushButton { color:#5E8580; background-color: transparent; border: 5px;border-color:#5E8580; }");
     ui->label_abort->setStyleSheet(
@@ -190,15 +205,15 @@ void page_dispenser::dispensing_end_admin()
     if (volumeDispensed == 0 && (selectedProductOrder->getSelectedPaymentMethod()) == "tap")
     {
         std::map<std::string, std::string> response;
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_VOID);
+        // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         qDebug() << "dispense end: tap payment No volume dispensed.";
-        // REVERSE PAYMENT
-        if(CTROUTD!=""){
-             response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD);
-        }
-        else if(SAF_NUM!=""){
+        // REVERSE PAYMENT.
+        if(SAF_NUM!=""){
             std::cout << "Voiding transaction";
             response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,SAF_NUM);
+        }
+        else if(CTROUTD!=""){
+             response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD);
         }
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);   
         
@@ -213,7 +228,10 @@ void page_dispenser::dispensing_end_admin()
 
              std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,SAF_NUM, stream.str(), "ELIGIBLE");
         }
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_AUTHORIZE_NOW);
+        // ui->finishTransactionMessage->setText("Capturing Payment");
+        // ui->finishTransactionMessage->show();
+
+        // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);   
 
     }
@@ -383,6 +401,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         //     ui->label_abort->setText("Complete333");
         ui->label_abort->raise();
 
+
         // }
         updateVolumeDispensedLabel(dispensed);
 
@@ -407,6 +426,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         ui->dispense_bottle_label->show();
         ui->fill_animation_label->show();
         ui->abortButton->raise();
+        
     }
     else
     {

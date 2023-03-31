@@ -184,7 +184,7 @@ void page_idle::showEvent(QShowEvent *event)
     ui->media_player->show();
     ui->media_player->raise();
 
-    player->setMedia(QUrl::fromLocalFile("/home/df-admin/production/references/media/ttt.mp4"));
+    player->setMedia(QUrl::fromLocalFile("/home/df-admin/production/references/media/ttFILEREMOVEDITSTOOBIGt.mp4"));
     player->setVideoOutput(videoWidget);
 
     // #define VIDEO_IN_WIDGET

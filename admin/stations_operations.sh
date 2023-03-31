@@ -93,8 +93,6 @@ ssh_into_station () {
         station_description="Manual"
         
     else
-
-        
         get_choice_from_names
         choice_index=$?
         # echo $choice_index
@@ -122,6 +120,69 @@ ssh_into_station () {
     "${cmd[@]}"
 }
 
+transfer_production_folder(){
+
+    if [[ $1 = "manual" ]]
+    then
+        read -p "Source station port e.g. 43066: " source_port
+        # port=$source_port
+        source_id="Manual"
+        source_description="Manual"
+        
+    else
+         echo "Choose source station:"
+        get_choice_from_names
+        choice_index=$?
+        source_id="${station_ids[$choice_index]}"
+        source_description="${station_descriptions[$choice_index]}"
+        source_port="${station_ports[$choice_index]}"
+    fi
+
+    if [[ $2 = "manual" ]]
+    then
+        read -p "Destination station port e.g. 43066: " destination_port
+        # port=$source_port
+        source_id="Manual"
+        source_description="Manual"
+        
+    else
+         echo "Choose source station:"
+        get_choice_from_names
+        choice_index=$?
+        destination_id="${station_ids[$choice_index]}"
+        destination_description="${station_descriptions[$choice_index]}"
+        destination_port="${station_ports[$choice_index]}"
+    fi
+
+    production_zip_name=production.zip
+    # zip it up
+    cmd0=( sudo ssh -t df-admin@localhost -p $source_port 'cd "/home/df-admin/production"; zip -r $production_zip_name references admin bin' )
+    # cmd0=( sudo ssh -t df-admin@localhost -p $source_port 'cd "/home/df-admin/production"; zip -r $production_zip_name /home/df-admin/production/references /home/df-admin/production/admin /home/df-admin/production/bin' )
+    # transfer zip from source station to aws 
+    cmd1=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/$production_zip_name" "/home/ubuntu/Stations/" )
+    # transfer zip from aws to destination station
+    cmd2=( scp -r -P $destination_port "/home/ubuntu/Stations/$production_zip_name" df-admin@localhost:/home/df-admin )
+    printf -v cmd0_str '%q ' "${cmd0[@]}"
+    printf -v cmd1_str '%q ' "${cmd1[@]}"
+    printf -v cmd2_str '%q ' "${cmd2[@]}"
+
+    # confirm_execute "$cmd_str"
+    echo "Lined up commands: "
+    echo "$cmd0_str"
+    echo "$cmd1_str"
+    echo "$cmd2_str"
+    
+    continu_or_exit
+    echo "Zip static production data..."
+    "${cmd0[@]}"
+    echo "Transfer static production data to aws..."
+    "${cmd1[@]}"
+    echo "Transfer static production data to station..."
+    "${cmd2[@]}"
+    echo "done"
+}
+
+
 scp_aws_transfer(){
     echo "Choose destination station:"
     get_choice_from_names
@@ -146,6 +207,8 @@ scp_aws_transfer(){
     continu_or_exit
     "${cmd0[@]}"
 }
+
+
 
 scp_transfer () {
     # arg $1 : source folder. "" is home folder, "production/" is production folder
@@ -370,7 +433,7 @@ scp_transfer_db () {
 
 echo 'At AWS: Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 PS3='Choose option(digit + enter):'
-options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Manualport/production/x to Manualport/home/x" "Station mkdir" "Station log in manual port")
+options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Manualport/production/x to Manualport/home/x" "Station mkdir" "Station log in manual port" "Copy Static Production Folder: Station to Station")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -410,6 +473,11 @@ do
             ;;
         "AWS to Station DB")
             scp_transfer_db "to_unit"
+            ;;
+
+        "Copy Static Production Folder: Station to Station")
+            
+            transfer_production_folder "unit" "manual" 
             ;;
         "Station to Lode DB")
             scp_transfer_db "to_dev" "SS-DEV-LODE" "44444"

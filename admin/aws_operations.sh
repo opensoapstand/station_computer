@@ -7,19 +7,22 @@
 #   or                                                                #
 # Place and run in Station. In /home/df-admin/drinkfill               #
 #######################################################################
-
-./status_services.sh
-
 echo 'Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 
 PS3='Choose option(digit + enter):'
-options=("Quit" "Station info" "AWS log in" "AWS run station operations" "upload to AWS home folder" "upload to AWS station folder" "upload production as version in AWS SoftwareStation")
+options=("Quit" "Station info" "AWS log in" "AWS run station operations" "upload to AWS home folder" "upload to AWS station folder" "upload production as version in AWS SoftwareStation" "upload stationsoperations.sh to aws home")
 select opt in "${options[@]}"
 do
     case $opt in
         "Station info")
            ./status_services.sh
            ;;
+
+        "upload stationsoperations.sh to aws home")
+
+            cd /home/df-admin/Downloads
+            scp -r -i DrinkfillAWS.pem "/home/df-admin/drinkfill/admin/stations_operations.sh" ubuntu@ec2-44-225-153-121.us-west-2.compute.amazonaws.com:/home/ubuntu
+            ;;
 
         "AWS log in")
             cd /home/df-admin/Downloads

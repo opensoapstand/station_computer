@@ -586,8 +586,8 @@ DB
 
 echo 'At AWS: Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 PS3='Choose option(digit + enter):'
-options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station mkdir" "Station log in manual port" "Copy Static Production Folder: Station to Station" "Copy Static Production Folder: Station to Manual Port" "Copy Static Production Folder: Manual Port to Station" "Copy Static Production Folder: Manual Port to Manual Port" "Copy Production DB: Station to Station" "Copy Production DB: Station to Manual Port" "Copy Production DB: Manual Port to Station" "Copy Production DB: Manual Port to Manual Port" "Copy Production Logs: Station to Station" "Copy Production Logs: Station to Manual Port" "Copy Production Logs: Manual Port to Station" "Copy Production Logs: Manual Port to Manual Port")
-# options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Manualport/production/x to Manualport/home/x" "Station mkdir" "Station log in manual port" "Copy Static Production Folder: Station to Station" "Copy Static Production Folder: Station to Manual Port" "Copy Static Production Folder: Manual Port to Station" "Copy Static Production Folder: Manual Port to Manual Port" "Copy Production DB: Station to Station" "Copy Production DB: Station to Manual Port" "Copy Production DB: Manual Port to Station" "Copy Production DB: Manual Port to Manual Port" "Copy Production Logs: Station to Station" "Copy Production Logs: Station to Manual Port" "Copy Production Logs: Manual Port to Station" "Copy Production Logs: Manual Port to Manual Port")
+options=("Quit" "Stations status" "Show Station Descriptions" "Station log in by SS-id" "Station mkdir" "Station log in by port" "Static Production Copy: [SS-id] to [SS-id]" "Static Production Copy: [SS-id] to [port]" "Static Production Copy: [port] to [SS-id]" "Static Production Copy: [port] to [port]" "DB Production copy: [SS-id] to [SS-id]" "DB Production copy: [SS-id] to [port]" "DB Production copy: [port] to [SS-id]" "DB Production copy: [port] to [port]" "Logs Production Copy: [SS-id] to [SS-id]" "Logs Production Copy: [SS-id] to [port]" "Logs Production Copy: [port] to [SS-id]" "Logs Production Copy: [port] to [port]")
+# options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Manualport/production/x to Manualport/home/x" "Station mkdir" "Station log in [port]" "Static Production Copy: Station to Station" "Static Production Copy: Station to [port]" "Static Production Copy: [port] to Station" "Static Production Copy: [port] to [port]" "DB Production copy: Station to Station" "DB Production copy: Station to [port]" "DB Production copy: [port] to Station" "DB Production copy: [port] to [port]" "Logs Production Copy: Station to Station" "Logs Production Copy: Station to [port]" "Logs Production Copy: [port] to Station" "Logs Production Copy: [port] to [port]")
 
 
 
@@ -595,10 +595,10 @@ options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "
 select opt in "${options[@]}"
 do
     case $opt in
-        "Station log in")
+        "Station log in by SS-id")
             ssh_into_station 
             ;;
-        "Station log in manual port")
+        "Station log in manual by port")
             ssh_into_station "manual"
             ;;
         # "cd into Station AWS folder")
@@ -633,42 +633,42 @@ do
             scp_transfer_db "to_unit"
             ;;
 
-        "Copy Static Production Folder: Station to Station")
+        "Static Production Copy: [SS-id] to [SS-id]")
             transfer_production_static_files "unit" "unit" 
             ;;
-        "Copy Static Production Folder: Station to Manual Port")
+        "Static Production Copy: [SS-id] to [port]")
             transfer_production_static_files "unit" "manual" 
             ;;
-        "Copy Static Production Folder: Manual Port to Station")
+        "Static Production Copy: [port] to [SS-id]")
             transfer_production_static_files "manual" "unit" 
             ;;
-        "Copy Static Production Folder: Manual Port to Manual Port")
+        "Static Production Copy: [port] to [port]")
             transfer_production_static_files "manual" "manual" 
             ;;
 
-        "Copy Production DB: Station to Station")
+        "DB Production copy: [SS-id] to [SS-id]")
             transfer_production_db "unit" "unit" 
             ;;
-        "Copy Production DB: Station to Manual Port")
+        "DB Production copy: [SS-id] to [port]")
             transfer_production_db "unit" "manual" 
             ;;
-        "Copy Production DB: Manual Port to Station")
+        "DB Production copy: [port] to [SS-id]")
             transfer_production_db "manual" "unit" 
             ;;
-        "Copy Production DB: Manual Port to Manual Port")
+        "DB Production copy: [port] to [port]")
             transfer_production_db "manual" "manual" 
             ;;
       
-        "Copy Production Logs: Station to Station")
+        "Logs Production Copy: [SS-id] to [SS-id]")
             transfer_production_logging "unit" "unit" 
             ;;
-        "Copy Production Logs: Station to Manual Port")
+        "Logs Production Copy: [SS-id] to [port]")
             transfer_production_logging "unit" "manual" 
             ;;
-        "Copy Production Logs: Manual Port to Station")
+        "Logs Production Copy: [port] to [SS-id]")
             transfer_production_logging "manual" "unit" 
             ;;
-        "Copy Production Logs: Manual Port to Manual Port")
+        "Logs Production Copy: [port] to [port]")
             transfer_production_logging "manual" "manual" 
             ;;
 

@@ -384,6 +384,7 @@ void page_select_product::on_mainPage_Button_clicked()
 
 void page_select_product::on_helpPage_Button_clicked()
 {
+    qDebug() << "<<<<<<< Help_Button clicked >>>>>>>>>";
     productPageEndTimer->stop();
     // p_page_help->showFullScreen();
     // this->hide();

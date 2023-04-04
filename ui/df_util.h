@@ -99,13 +99,12 @@ using namespace std;
 
 
 
-#ifdef ENABLE_DYNAMIC_UI
+
 
 #define PAGE_IDLE_BACKGROUND_PATH                       "background_message.png"
 #define PAGE_THANK_YOU_BACKGROUND_PATH                  "background_message.png"
 #define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_message.png"
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
-#define PAGE_HELP_BACKGROUND_PATH                       "background_generic_white.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"
 #define PAGE_ORDER_OVERVIEW_PATH                        "order_overview.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH      "background_dispense_instructions.png"
@@ -125,7 +124,6 @@ using namespace std;
 #define PAGE_INIT_BACKGROUND_IMAGE_PATH                 "background_message.png"
 #define IMAGE_BUTTON_HELP                               "help_icon.png"
 
-#define SOLD_OUT_IMAGE_PATH                         "/home/df-admin/production/references/soldOut.png"
 #define KEYBOARD_IMAGE_PATH                         "/home/df-admin/production/references/soapstand-keyboard.png"
 #define FULL_TRANSPARENT_IMAGE_PATH                 "/home/df-admin/production/references/background.png"
 
@@ -138,38 +136,8 @@ using namespace std;
 #define DRINKFILL_LOGO_ANIMATED_PATH                "/home/df-admin/production/references/logos/Soapstand-logo-animated-spin.gif"
 #define COMPANY_LOGO_PATH                           "/home/df-admin/production/references/logos/%1_logo_white.png"
 #define DRINKFILL_LOGO_VERTICAL_PATH                 "/home/df-admin/production/references/logos/Soapstand-logo-white-vertical.png"
+#define PAGE_HELP_BACKGROUND_PATH                    "background_help.png"
 
-#else
-
-#define PAGE_IDLE_BACKGROUND_PATH "/home/df-admin/production/references/1_background_welcome.png"
-#define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/2_background_products.png"
-#define PAGE_HELP_BACKGROUND_PATH "/home/df-admin/production/references/3_background_help.png"
-#define PAGE_PRODUCT_1_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_1.png"
-#define PAGE_PRODUCT_2_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_2.png"
-#define PAGE_PRODUCT_3_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_3.png"
-#define PAGE_PRODUCT_4_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_4.png"
-#define PAGE_PRODUCT_1_S_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_1.png"
-#define PAGE_PRODUCT_2_S_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_2.png"
-#define PAGE_PRODUCT_3_S_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_3.png"
-#define PAGE_PRODUCT_4_S_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_s_4.png"
-#define PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH "/home/df-admin/production/references/5_background_dispense_instructions.png"
-#define PAGE_DISPENSE_BACKGROUND_PATH       "/home/df-admin/production/references/background_dispense.png"
-#define PAGE_QR_PAY_BACKGROUND_PATH "/home/df-admin/production/references/5_background_pay_qr.png"
-#define PAGE_TAP_PAY                      "/home/df-admin/production/references/tapNow.png"
-#define PRODUCT_1_IMAGE_PATH "/home/df-admin/production/references/product1.png"
-#define PRODUCT_2_IMAGE_PATH "/home/df-admin/production/references/product2.png"
-#define PRODUCT_3_IMAGE_PATH "/home/df-admin/production/references/product3.png"
-#define PRODUCT_4_IMAGE_PATH "/home/df-admin/production/references/product4.png"
-#define PAGE_THANK_YOU_BACKGROUND_PATH "/home/df-admin/production/references/7_background_thank_you.png"
-#define PAGE_WIFI_ERROR_BACKGROUND_PATH "/home/df-admin/production/references/oops.png"
-#define BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH "/home/df-admin/production/references/bottle_fill_for_animation.png"
-#define SOLD_OUT_IMAGE_PATH "/home/df-admin/production/references/soldOut.png"
-#define KEYBOARD_IMAGE_PATH "/home/df-admin/production/references/soapstand-keyboard.png"
-#define FULL_TRANSPARENT_IMAGE_PATH "/home/df-admin/production/references/background.png"
-#define PAGE_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/page_product_generic.png"
-
-
-#endif
 
 // #define PAGE_INIT_BACKGROUND_IMAGE_PATH "/home/df-admin/production/references/0_background_init.png"
 // 

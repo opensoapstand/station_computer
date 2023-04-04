@@ -21,8 +21,15 @@
 #include "page_idle.h"
 #include "pagethankyou.h"
 #include "page_product.h"
+#include "payment/commands.h"
 
 extern QString transactionLogging;
+extern std::string CTROUTD;
+extern std::string MAC_KEY;
+extern std::string MAC_LABEL;
+extern std::string AUTH_CODE;
+extern std::string SAF_NUM;
+extern std::string socketAddr;
 // CTOR
 page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
                                                   ui(new Ui::page_dispenser)
@@ -30,7 +37,23 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
 
     this->isDispensing = false;
     ui->setupUi(this);
+    ui->finishTransactionMessage->setStyleSheet(
+        "QLabel {"
 
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 100;"
+        "background-color: #5E8580;"
+        "font-size: 42px;"
+        "text-align: centre;"
+        "line-height: auto;"
+        "letter-spacing: 0px;"
+        "qproperty-alignment: AlignCenter;"
+        "border-radius: 20px;"
+        "color: white;"
+        "border: none;"
+        "}");
+    ui->finishTransactionMessage->hide();
     // ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->abortButton->setStyleSheet("QPushButton { color:#5E8580; background-color: transparent; border: 5px;border-color:#5E8580; }");
     ui->label_abort->setStyleSheet(
@@ -169,61 +192,6 @@ void page_dispenser::updateVolumeDispensedLabel(double dispensed)
     ui->volumeDispensedLabel->setText(dispensedVolumeUnitsCorrected + " " + units);
 }
 
-bool page_dispenser::sendToUX410()
-{
-    int waitForAck = 0;
-    while (waitForAck < 3)
-    {
-        cout << "Wait for ACK counter: " << waitForAck << endl;
-        qDebug() << "Wait for ACK counter: " << endl;
-        // sleep(1);
-        com.sendPacket(pktToSend, uint(pktToSend.size()));
-        std::cout << "sendtoUX410 Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
-
-        // read back what is responded
-        pktResponded = com.readForAck();
-        readPacket.packetReadFromUX(pktResponded);
-        pktResponded.clear();
-        waitForAck++;
-
-        cout << "Waiting for TAP in dispenser" << endl;
-        cout << readPacket << endl;
-        if (readPacket.getAckOrNak() == communicationPacketField::ACK)
-        {
-            return true;
-        }
-
-        usleep(50000);
-    }
-    return false;
-}
-
-bool page_dispenser::waitForUX410()
-{
-    bool waitResponse = false;
-    while (!waitResponse)
-    {
-        //        QCoreApplication::processEvents();
-        // cout << readPacket << endl;
-        // sleep(1);
-        if (pktResponded[0] != 0x02)
-        {
-            pktResponded.clear();
-            pktResponded = com.readPacket();
-            usleep(10);
-        }
-        else
-        {
-            //  pktResponded = com.readPacket();
-            readPacket.packetReadFromUX(pktResponded);
-            std::cout << readPacket;
-            com.sendAck();
-            waitResponse = true;
-        }
-    }
-    return waitResponse;
-}
-
 /*
  * Page Tracking reference to Payment page and completed payment
  */
@@ -231,47 +199,51 @@ void page_dispenser::dispensing_end_admin()
 {
     qDebug() << "Dispense end admin start";
     this->isDispensing = false;
-
+    double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
+    std::ostringstream stream;
+    stream << std::fixed << std::setprecision(2) << price;
     if (volumeDispensed == 0 && (selectedProductOrder->getSelectedPaymentMethod()) == "tap")
     {
+        std::map<std::string, std::string> response;
+        // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         qDebug() << "dispense end: tap payment No volume dispensed.";
-        // REVERSE PAYMENT
-        com.page_init();
-        pktToSend = paymentPacket.reversePurchasePacket();
-        if (sendToUX410())
-        {
-            waitForUX410();
-            qDebug() << "Tap Payment Reversed";
-            pktResponded.clear();
-            com.flushSerial();
+        // REVERSE PAYMENT.
+        if(SAF_NUM!=""){
+            std::cout << "Voiding transaction";
+            response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,SAF_NUM);
         }
+        else if(CTROUTD!=""){
+             response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD);
+        }
+        finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);   
+        
     }
     else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && volumeDispensed != 0)
     {
-        // qDebug() << "dispense end: tap payment. Some volume dispensed.";
-        // QMessageBox msgBox;
-        // msgBox.setText("Complete!");
-        // msgBox.setInformativeText("Would you like your receipt emailed to you?");
-        // msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-        // int ret = msgBox.exec();
+        
+        if(CTROUTD!=""){
+             std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD, stream.str());
+        }
+        else if(SAF_NUM!=""){
 
-        // switch (ret)
-        // {
-        // case QMessageBox::Yes:
-        //     //            qDebug() << "This person wants their receipt emailed";
-        //     break;
-        // case QMessageBox::No:
-        //     //            qDebug() << "This person doesn't want a receipt";
-        //     break;
-        // default:
-        //     break;
-        // }
+             std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,SAF_NUM, stream.str(), "ELIGIBLE");
+        }
+        // ui->finishTransactionMessage->setText("Capturing Payment");
+        // ui->finishTransactionMessage->show();
+
+        // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
+        finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);   
+
     }
+    std::cout << "Stopping dispense timer";
     stopDispenseTimer();
+
     // thanksPage->showFullScreen();
     // this->hide();
+
     p_page_idle->pageTransition(this, thanksPage);
     qDebug() << "Finished dispense admin handling";
+
 }
 
 void page_dispenser::force_finish_dispensing()
@@ -360,9 +332,10 @@ void page_dispenser::fsmSendPromo()
 void page_dispenser::stopDispenseTimer()
 {
     this->isDispensing = false;
-    //    qDebug() << "page_dispenser: Stop Timers" << endl;
+       qDebug() << "page_dispenser: Stop Dispense Timers" << endl;
     if (dispenseIdleTimer != nullptr)
     {
+        qDebug() << "Dispense timer stop function" <<endl;
         dispenseIdleTimer->stop();
     }
     dispenseIdleTimer = nullptr;
@@ -428,6 +401,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         //     ui->label_abort->setText("Complete333");
         ui->label_abort->raise();
 
+
         // }
         updateVolumeDispensedLabel(dispensed);
 
@@ -452,6 +426,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         ui->dispense_bottle_label->show();
         ui->fill_animation_label->show();
         ui->abortButton->raise();
+        
     }
     else
     {

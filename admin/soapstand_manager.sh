@@ -8,16 +8,6 @@
 # echo "  by Lode 2022-05-03"
 # echo "----------------------------------------"
 
-# echo "Status report"
-# echo "controller:"
-# systemctl is-active controller_soapstand.service
-# systemctl is-enabled controller_soapstand.service
-# echo "ui:"
-# systemctl is-active ui_soapstand.service
-# systemctl is-enabled ui_soapstand.service
-# echo "reversed ssh tunnel:"
-# systemctl is-active rtunnel.service
-# systemctl is-enabled rtunnel.service
 ./status_services.sh
 
 PS3='Please enter your choice: '
@@ -62,9 +52,8 @@ do
             gsettings set org.gnome.desktop.interface enable-animations false
             ;;
         "Setup rtunnel")
-            sudo nano /etc/systemd/system/rtunnel.service
-            sudo systemctl daemon-reload
-            sudo service rtunnel restart
+          
+            sudo ./rtunnel_setup.sh
             echo "retunnel restarted done"
             ;;
         "Copy binary files to production folder")
@@ -80,58 +69,13 @@ do
 
             ;;
         "Create and run production data")
-         
-            echo "stop soapstand services"
-            sudo systemctl stop ui_soapstand
-            sudo systemctl stop controller_soapstand
-
-            # create production data
-            sudo ./create_production_data.sh
-
-            echo "start soapstand services"
-
-            # move services to systemd/system folder
-            sudo scp /home/df-admin/production/admin/controller_soapstand.service /etc/systemd/system
-            sudo scp /home/df-admin/production/admin/ui_soapstand.service /etc/systemd/system
-
-            # reload services
-            sudo systemctl daemon-reload
-
-            # enable at startup (disable to undo)
-            sudo systemctl enable ui_soapstand.service
-            sudo systemctl enable controller_soapstand.service
-
-
-            # start service
-            sudo systemctl start ui_soapstand.service
-            sudo systemctl start controller_soapstand.service
-
-            # status
-            sudo ./status_services.sh
-
+            sudo ./create_and_run_production_data.sh
             echo "done."
             ;;
 
         "(Re)load services from production")
             # move files to service folder
-            sudo scp /home/df-admin/production/admin/controller_soapstand.service /etc/systemd/system
-            sudo scp /home/df-admin/production/admin/ui_soapstand.service /etc/systemd/system
-            
-            #Update station status every 30 mins
-            crontab -l | grep -q 'stationStatus.py' && echo 'Station Status Already exists'  \
-            || crontab -l > mycron 
-            echo "*/30 * * * *  python ~/production/admin/stationStatus.py" >> mycron
-        
-            #missing Transactions 
-            # could be done as a service: run python ~/production/admin/missingTransactions.py hourly
-            crontab -l | grep -q 'missingTransactions.py' && echo 'Missing transactions handler scheduler not reloaded: already exists'  \
-            || crontab -l > mycron 
-            echo "0 * * * *  python ~/production/admin/missingTransactions.py" >> mycron 
-            crontab mycron
-            rm mycron
-
-            # reload services
-            sudo systemctl daemon-reload
+            ./copy_and_enable_services.sh
             echo 'All done. (note: rtunnel.service is not copied automatically.)'
             ;;
         "Quit")
@@ -139,8 +83,6 @@ do
             ;;
 
         *) 
-
-      
         
         PS3="" # this hides the prompt
         echo asdf | select foo in "${options[@]}"; do break; done # dummy select 

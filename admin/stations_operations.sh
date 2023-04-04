@@ -253,9 +253,10 @@ scp_transfer_manual_ports () {
     fi
 
     aws_station_path="/home/ubuntu/Stations/$source_id"
+    # problem: we should be able to create the full path in aws (including subfolders. This doesn't happen though.)
     aws_file_path="/home/ubuntu/Stations/$source_id/$path"
     cmd1=( scp -r -P $source_port df-admin@localhost:$full_source_path $aws_station_path )
-    cmd2=( scp -r -P $destination_port $aws_file_path df-admin@localhost:$full_destination_path )
+    cmd2=( scp -r -P $destination_port $aws_station_path df-admin@localhost:$full_destination_path )
     printf -v cmd0_str '%q ' "${cmd0[@]}"
     printf -v cmd1_str '%q ' "${cmd1[@]}"
     printf -v cmd2_str '%q ' "${cmd2[@]}"
@@ -280,7 +281,8 @@ scp_transfer_manual_ports () {
 
 scp_transfer_db () {
     # arguments:
-    # echo $1 #action
+
+    # echo $1 #action: from_dev or to_dev
     # echo $2 #if action == to_dev or from_dev  : developer station name
     # echo $3 #if action == to_dev or from_dev  : developer rtunnel port
 

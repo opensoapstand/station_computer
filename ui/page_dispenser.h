@@ -22,7 +22,8 @@
 #include "includefiles.h"
 #include "page_idle.h"
 #include "pagethankyou.h"
-
+#include "payment/commands.h"
+#include "payment/setup_Tap.h"
 #include "posm/mcommunication.h"
 #include "posm/packetfromecr.h"
 #include "posm/packetfromux410.h"
@@ -108,12 +109,9 @@ private:
     double targetVolume;
 
     void stopDispenseTimer();
-    bool sendToUX410();
-    bool waitForUX410();
 
     mCommunication com;
     packetFromECR sendPacket;
-    packetFromUX410 readPacket;
     transactionPacket paymentPacket;
     std::vector<uint8_t> pktToSend;
     std::vector<uint8_t> pktResponded;

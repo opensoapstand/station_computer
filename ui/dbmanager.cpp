@@ -1732,3 +1732,25 @@ QString DbManager::getUnits(int slot)
     }
     return units_string;
 }
+ 
+
+
+int DbManager::getLastTransactionIdFromDb(){
+    qDebug() << " db... getLastTransactionIdFromDb" << endl;
+    QSqlQuery lastTransactionIdQuery;
+    int lastTransactionId = 0;
+
+    {
+
+        lastTransactionIdQuery.prepare("SELECT * FROM transactions ORDER BY id DESC LIMIT 1");
+        lastTransactionIdQuery.exec();
+
+        while (lastTransactionIdQuery.next())
+        {
+            lastTransactionId = lastTransactionIdQuery.value(0).toInt();;
+        }
+    }
+    qDebug() << " Last transaction :" << lastTransactionId << endl;
+
+    return lastTransactionId;
+}

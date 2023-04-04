@@ -47,6 +47,8 @@ HEADERS += \
     posm/transactioninfo.h \
     page_select_product.h \
     pagethankyou.h \
+    payment/commands.h \
+    payment/setup_Tap.h \
     df_util.h \
     drinkorder.h \
     dbmanager.h \
@@ -80,6 +82,8 @@ SOURCES += \
     page_select_product.cpp \
     page_sendFeedback.cpp \
     pagethankyou.cpp \
+    payment/commands.cpp \
+    payment/setup_Tap.cpp \
     df_util.cpp \
     drinkorder.cpp \
     dbmanager.cpp \
@@ -100,7 +104,7 @@ DISTFILES += \
     styles/product_select.qss  
 
 LIBS += \
-    -lcurl
+    -lcurl 
 
 # EV2 Reference for moneris
 # TODO: Determine new linkage to object and library files...
@@ -112,6 +116,7 @@ LIBS += \
 #     moneris_obj/packetfromux410.o\
 #     moneris_obj/transactionPackets.o\
 #     moneris_obj/transactioninfo.o
+unix:!macx: LIBS += -L$$PWD/objm/ -lssl -lcrypto
 
 #unix:!macx: LIBS += -L$$PWD/objm/ -lposm
 

@@ -7,7 +7,7 @@ StartLimitIntervalSec=10
 Requires=screen-calibration
 ExecStart=/home/df-admin/production/admin/ui_execute.sh
 Type=simple
-Restart=always #on-failure
+Restart=always
 RestartSec=5
 User=df-admin
 

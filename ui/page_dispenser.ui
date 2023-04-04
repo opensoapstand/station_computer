@@ -117,12 +117,26 @@
     <string>0.0</string>
    </property>
   </widget>
+  <widget class="QLabel" name="finishTransactionMessage">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>360</y>
+     <width>900</width>
+     <height>300</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>abortButton</zorder>
   <zorder>label_abort</zorder>
   <zorder>fill_animation_label</zorder>
   <zorder>dispense_bottle_label</zorder>
   <zorder>label_volume_dispensed</zorder>
   <zorder>volumeDispensedLabel</zorder>
+  <zorder>finishTransactionMessage</zorder>
  </widget>
  <resources/>
  <connections/>

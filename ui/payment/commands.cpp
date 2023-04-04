@@ -1,5 +1,9 @@
 #include "setup_Tap.h"
 #include "commands.h"
+#include <QDebug>
+#include <QString>
+
+
 
 std::map<std::string, std::string> registerDevice(int socket){
     std::string public_key = read_public_key();
@@ -10,8 +14,15 @@ std::map<std::string, std::string> registerDevice(int socket){
                     </TRANSACTION>";
     std::cout << registerCommand;
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(registerCommand, socket, true);
-    createOrUpdateConfigFile(dataReceived["MAC_KEY"], dataReceived["MAC_LABEL"], "192.168.1.64", "0");
-    close(socket);
+    if(dataReceived["MAC_KEY"]!=""){
+        createOrUpdateConfigFile(dataReceived["MAC_KEY"], dataReceived["MAC_LABEL"], "0");
+        close(socket);
+    }
+    else{
+        std::cout << "Registration failed";
+        rebootDevice(connectSecondarySocket());
+    }
+    
     return dataReceived;
 }
 
@@ -27,6 +38,7 @@ std::string getCounter(int socket, std::string MAC_LABEL, std::string MAC_KEY){
 }
 
 std::map<std::string, std::string> getNextCounterMac(int socket, std::string MAC_LABEL, std::string MAC_KEY){
+
     int counter = std::stoi(getCounter(socket, MAC_LABEL, MAC_KEY));
     counter +=1;
     std::string encoded_counter = create_counter_mac(counter, MAC_KEY);
@@ -64,8 +76,8 @@ std::map<std::string, std::string> startSession(int socket, std::string MAC_LABE
 }
 
 std::map<std::string, std::string> finishSession(int socket, std::string MAC_LABEL, std::string MAC_KEY){
+    qDebug() << "Before sending finish session";
     std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
-
     std::string command = "<TRANSACTION> \
                         <FUNCTION_TYPE>SESSION</FUNCTION_TYPE> \
                         <COMMAND>FINISH</COMMAND>\
@@ -73,8 +85,9 @@ std::map<std::string, std::string> finishSession(int socket, std::string MAC_LAB
                         <MAC>"+responseObj["COUNTER_ENCODED"]+"</MAC>\
                         <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
                     </TRANSACTION>";
+    qDebug() << "Finish Session command created";
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
-    close(socket);
+    // close(socket);
     return dataReceived;
 }
 
@@ -88,6 +101,29 @@ std::map<std::string, std::string> cancelTransaction(int socket){
     close(socket);
     return dataReceived;
 }
+
+std::map<std::string, std::string> checkDeviceStatus(int socket){
+
+    std::string command = "<TRANSACTION> \
+                        <FUNCTION_TYPE>SECONDARYPORT</FUNCTION_TYPE> \
+                        <COMMAND>STATUS</COMMAND> \
+                    </TRANSACTION>";
+    std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
+    close(socket);
+    return dataReceived;
+}
+
+std::map<std::string, std::string> rebootDevice(int socket){
+
+    std::string command = "<TRANSACTION> \
+                        <FUNCTION_TYPE>SECONDARYPORT</FUNCTION_TYPE> \
+                        <COMMAND>REBOOT</COMMAND> \
+                    </TRANSACTION>";
+    std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
+    close(socket);
+    return dataReceived;
+}
+
 
 std::map<std::string, std::string> authorization(int socket, std::string MAC_LABEL, std::string MAC_KEY, std::string amount){
     std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
@@ -218,6 +254,8 @@ std::map<std::string, std::string> voidTransactionOffline(int socket, std::strin
     return dataReceived;
 }
 std::map<std::string, std::string> testMac(int socket, std::string MAC_KEY, std::string MAC_LABEL){
+        qDebug()<< "IN test mac before counter";
+
     std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
     std::string command = "<TRANSACTION> \
                     <FUNCTION_TYPE>SECURITY</FUNCTION_TYPE> \
@@ -226,18 +264,18 @@ std::map<std::string, std::string> testMac(int socket, std::string MAC_KEY, std:
                     <MAC>"+responseObj["COUNTER_ENCODED"]+"</MAC>\
                     <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
                 </TRANSACTION>";
+    qDebug()<< "IN test mac";
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
     close(socket);
     return dataReceived;
 }
 
-int createOrUpdateConfigFile (std::string macKey,std::string macLabel,std::string iP,std::string invoiceNumber){
+int createOrUpdateConfigFile (std::string macKey,std::string macLabel,std::string invoiceNumber){
     std::ofstream configFile("/home/df-admin/production/admin/tap_payment/config.txt");
     if (configFile.is_open()) {
         chmod("config.txt", S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
         configFile << "MAC_KEY=" + macKey +"\n";
         configFile << "MAC_LABEL="+macLabel+"\n";
-        configFile << "IP="+iP+"\n";
         configFile << "INVOICE="+invoiceNumber+"\n";
         configFile.close();
     }

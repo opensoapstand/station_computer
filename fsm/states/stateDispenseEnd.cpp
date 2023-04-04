@@ -119,7 +119,7 @@ DF_ERROR stateDispenseEnd::onAction()
 
         std::string paymentMethod = productDispensers[pos_index].getProduct()->getPaymentMethod();
 
-        if (paymentMethod == "qr" || paymentMethod == "tap")
+        if (paymentMethod == "qr")
         {
             // these transactions are dealt with in the UI
         }

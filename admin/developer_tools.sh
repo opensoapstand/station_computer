@@ -58,7 +58,7 @@ make_options () {
 
 
 PS3='Choose option(digit + enter):'
-options=("Quit" "aws_operations" "AWS log in" "AWS run station operations" "soapstand_manager"  "Stop ui and controller" "(Re)start ui and controller" "run standalone controller" "Station info" "Copy binaries to production and run" "Create and run production data" "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)" "Services: SSH rtunnel setup from production" "make ui and fsm" "make ui and fsm and load binaries" "make ui" "make ui and load binaries" "make fsm" "make fsm and load binaries")
+options=("Quit" "Station info" "aws_operations" "AWS log in" "AWS run station operations" "soapstand_manager"  "Stop ui and controller" "(Re)start ui and controller" "run standalone controller" "Copy binaries to production and run" "Create and run production data" "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)" "Services: SSH rtunnel setup from production" "make ui and fsm" "make ui and fsm and load binaries" "make ui" "make ui and load binaries" "make fsm" "make fsm and load binaries")
 select opt in "${options[@]}"
 do
     case $opt in

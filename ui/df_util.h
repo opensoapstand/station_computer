@@ -105,7 +105,6 @@ using namespace std;
 #define PAGE_THANK_YOU_BACKGROUND_PATH                  "background_message.png"
 #define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_message.png"
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
-#define PAGE_HELP_BACKGROUND_PATH                       "background_generic_white.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"
 #define PAGE_ORDER_OVERVIEW_PATH                        "order_overview.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH      "background_dispense_instructions.png"
@@ -134,12 +133,13 @@ using namespace std;
 #define DRINKFILL_LOGO_ANIMATED_PATH                "/home/df-admin/production/references/logos/Soapstand-logo-animated-spin.gif"
 #define COMPANY_LOGO_PATH                           "/home/df-admin/production/references/logos/%1_logo_white.png"
 #define DRINKFILL_LOGO_VERTICAL_PATH                 "/home/df-admin/production/references/logos/Soapstand-logo-white-vertical.png"
+#define PAGE_HELP_BACKGROUND_PATH                    "background_help.png"
 
 #else
 
 #define PAGE_IDLE_BACKGROUND_PATH "/home/df-admin/production/references/1_background_welcome.png"
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH "/home/df-admin/production/references/2_background_products.png"
-#define PAGE_HELP_BACKGROUND_PATH "/home/df-admin/production/references/3_background_help.png"
+// #define PAGE_HELP_BACKGROUND_PATH "/home/df-admin/production/references/3_background_help.png"
 #define PAGE_PRODUCT_1_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_1.png"
 #define PAGE_PRODUCT_2_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_2.png"
 #define PAGE_PRODUCT_3_L_BACKGROUND_PATH "/home/df-admin/production/references/4_pay_select_page_l_3.png"

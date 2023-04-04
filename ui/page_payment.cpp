@@ -173,18 +173,32 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
     {
         qDebug()<< "InitializingTap payment";
         std::map<std::string, std::string> configMap = readConfigFile();
-        std::map<std::string, std::string> testResponse = testMac(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
-        if (testResponse["RESPONSE_TEXT"] == "Match")
-        {
-            qDebug() << "Test Mac Command Matched" << endl;
+        int socket = connectSocket();
+        qDebug() << "Socket connection successful " << socket << endl;
+        std::map<std::string, std::string> deviceStatus = checkDeviceStatus(connectSecondarySocket());
+        if(deviceStatus["MACLABEL_IN_SESSION"]!=""){
+            // finishSession(socket, configMap["MAC_KEY"], configMap["MAC_LABEL"]);
+        }
+        // cancelTransaction(connectSecondarySocket());
+        qDebug() << "Transaction cancelled";
+        if(configMap["MAC_KEY"]!=""){
+             std::map<std::string, std::string> testResponse = testMac(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
+            if (testResponse["RESPONSE_TEXT"] == "Match")
+            {
+                qDebug() << "Test Mac Command Matched" << endl;
+            }
+            else{
+                qDebug() << "Re-registration of the device";
+                registerDevice(connectSocket());
+            }
         }
         else
         {
-            qDebug() << "Mismatched" << endl;
-            qDebug() << "Re-registration of the device";
+            qDebug() << "No file config" << endl;
             registerDevice(connectSocket());
         }
-        // finishSession(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
+        
+        // finishSession(socket, configMap["MAC_KEY"], configMap["MAC_LABEL"]);
     }
 }
 
@@ -203,13 +217,6 @@ void page_payment::stopPayTimers()
         checkCardTappedTimer->stop();
     }
     
-
-    //  if (inFlightTimer != nullptr)
-    // {
-    //            qDebug() << "cancel In flight progress Timer" << endl;
-    //     inFlightTimer->stop();
-    // }
-
     if (declineTimer != nullptr)
     {
         qDebug() << "cancel decline Timer" << endl;
@@ -227,13 +234,6 @@ void page_payment::stopPayTimers()
         qDebug() << "cancel page_idle payment END Timer" << endl;
         paymentEndTimer->stop();
     }
-
-    // if (readTimer != nullptr)
-    // {
-    //            qDebug() << "cancel readTimer" << endl;
-    //     readTimer->stop();
-    // }
-
     if (qrPeriodicalCheckTimer != nullptr)
     {
         // qDebug() << "*************************cancel qrPeriodicalCheckTimer" << endl;
@@ -276,6 +276,7 @@ void page_payment::on_payment_bypass_Button_clicked()
 void page_payment::proceed_to_dispense()
 {
     ui->title_Label->hide();
+    
     stopPayTimers();
     // p_page_dispense->showEvent(dispenseEvent);
     // p_page_dispense->showFullScreen();
@@ -290,7 +291,7 @@ void page_payment::updateTotals(string drinkDescription, string drinkAmount, str
 /*Cancel any previous payment*/
 void page_payment::cancelPayment()
 {
-    finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+    // finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     checkPacketReceivedTimer->stop();
 }
 
@@ -394,12 +395,6 @@ void page_payment::showEvent(QShowEvent *event)
         qDebug() << "Prepare tap order";
         tapPaymentHandler();
 
-        // QMovie *movieggg = new QMovie("/home/df-admin/drinkfill/ui/references/templates/default/soapstandspinner.gif");
-        // movieggg->setCacheMode(QMovie::CacheAll);
-        // ui->animated_Label->setMovie(movieggg);
-        // movieggg->start();
-
-        // inFlightTimer->start();
     }
     else if (payment_method == "qr")
     {
@@ -635,39 +630,39 @@ void page_payment::storePaymentEvent(QSqlDatabase db, QString event)
 
 void page_payment::tapPaymentHandler()
 {
-
-    QMovie *movieggg = new QMovie("/home/df-admin/drinkfill/ui/references/templates/default/tap.gif");
-    // movieggg->setCacheMode(QMovie::CacheAll);
-    ui->animated_Label->setMovie(movieggg);
-    movieggg->start();
+    ui->animated_Label->move(221,327);
+    QMovie *tapGif = new QMovie("/home/df-admin/production/references/templates/default/tap.gif");
+    ui->animated_Label->setMovie(tapGif);
+    tapGif->start();
 
     int socket = connectSocket();
-
     socketAddr = to_string(socket);
-    qDebug() << "Tap terminal Socket Connected" << endl;
+    qDebug() << "Tap terminal Socket Connected to " << QString::fromStdString(socketAddr) << endl;
     std::map<std::string, std::string> configMap = readConfigFile();
     MAC_KEY = configMap["MAC_KEY"];
     MAC_LABEL = configMap["MAC_LABEL"];
     lastTransactionId = std::stoi(configMap["INVOICE"]);
 
     startSession(socket, MAC_LABEL, MAC_KEY, lastTransactionId + 1);
-    double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
+    startPaymentProcess();
+}
+
+void page_payment::startPaymentProcess(){
+     double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
     std::ostringstream stream;
     stream << std::fixed << std::setprecision(2) << price;
-    std::string authCommand = authorizationCommand(socket, MAC_LABEL, MAC_KEY, stream.str());
+    std::string authCommand = authorizationCommand(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, stream.str());
 
-    std::string packetSent = sendPacket(authCommand, socket, true);
+    std::string packetSent = sendPacket(authCommand, std::stoi(socketAddr), true);
     stop_tap_action_thread = false;
     stop_authorization_thread=false;
     cardTapThread = std::thread(receiveCardTapAction);
     cardTapThread.detach();
     checkCardTappedTimer->start();  
 
-    dataThread = std::thread(receiveAuthorizationThread, socket);
+    dataThread = std::thread(receiveAuthorizationThread, std::stoi(socketAddr));
     dataThread.detach();
     checkPacketReceivedTimer->start();  
-  
-
 }
 
 void page_payment::check_packet_available()
@@ -681,7 +676,6 @@ void page_payment::check_packet_available()
     if (isPacketReceived)
     {
         checkPacketReceivedTimer->stop();
-        // ui->animated_Label->hide();
         authorized_transaction(xml_packet_dict);
     }
 }
@@ -689,36 +683,43 @@ void page_payment::check_card_tapped()
 {
     std::map<std::string, std::string> xml_packet_dict_tapped;
     bool isPacketReceived;
-    isPacketReceived = checkCardTapped(true, &xml_packet_dict_tapped);
-    // qDebug() << "Is packet received for tap?" << isPacketReceived;
+    std::string card_tap_status;
+    auto output= checkCardTapped(true, &xml_packet_dict_tapped);
+    
+    isPacketReceived = std::get<0>(output);
+    card_tap_status = std::get<1>(output);
 
-    if (isPacketReceived)
+    if (isPacketReceived && card_tap_status=="Success")
     {
         qDebug() << "Packet received true";
-        ui->title_Label->setText("Processing Payment");
-        ui->title_Label->show();
+        // ui->title_Label->setText("Processing Payment");
+        // ui->title_Label->show();
         checkCardTappedTimer->stop();
         QMovie* currentGif = ui->animated_Label->movie();
         currentGif->stop();
         delete currentGif;
         // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
-
-        QMovie *movie = new QMovie("/home/df-admin/drinkfill/ui/references/templates/default/soapstandspinner.gif");
+        ui->animated_Label->move(410,480);
+        QMovie *movie = new QMovie("/home/df-admin/production/references/templates/default/soapstandspinner.gif");
         ui->animated_Label->setMovie(movie);
-        movie->start();
-       
-        
+        movie->start(); 
     }
-}
+    else if(card_tap_status=="Failed"){
+        on_previousPage_Button_clicked();
+    }     
+    }
 
 void page_payment::authorized_transaction(std::map<std::string, std::string> responseObj)
 {
     double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
     std::ostringstream stream;
     stream << std::fixed << std::setprecision(2) << price;
-
+    QMovie* currentGif = ui->animated_Label->movie();
+    currentGif->stop();
+    delete currentGif;
     if (responseObj["RESULT"] == "APPROVED")
     {
+        
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
         CTROUTD = responseObj["CTROUTD"];
         AUTH_CODE = responseObj["AUTH_CODE"];
@@ -732,21 +733,24 @@ void page_payment::authorized_transaction(std::map<std::string, std::string> res
         SAF_NUM = responseObj["SAF_NUM"];
         proceed_to_dispense();
     }
-    // else if (responseObj["RESULT"] == "DECLINED")
-    // {
-    //     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_FAIL);
-    //     std::map<std::string, std::string> responseObjSecond = authorization(socket, MAC_LABEL, MAC_KEY, stream.str());
-    //     if (responseObjSecond["RESULT"] == "APPROVED")
-    //     {
-    //         CTROUTD = responseObjSecond["CTROUTD"];
-    //         proceed_to_dispense();
-    //     }
-    //     else
-    //     {
-    //         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
-    //         p_page_idle->pageTransition(this, p_pageProduct);
-    //     }
-    // }
+    else if (responseObj["RESULT"] == "DECLINED")
+    {
+
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_FAIL);
+        startPaymentProcess();
+        paymentEndTimer->start();
+        // std::map<std::string, std::string> responseObjSecond = authorization(socket, MAC_LABEL, MAC_KEY, stream.str());
+        // if (responseObjSecond["RESULT"] == "APPROVED")
+        // {
+        //     CTROUTD = responseObjSecond["CTROUTD"];
+        //     proceed_to_dispense();
+        // }
+        // else
+        // {
+        //     finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+        //     p_page_idle->pageTransition(this, p_pageProduct);
+        // }
+    }
 }
 void page_payment::declineTimer_start()
 {
@@ -800,12 +804,15 @@ void page_payment::on_previousPage_Button_clicked()
         {   
             stop_tap_action_thread = true;
             stop_authorization_thread=true;
-            checkPacketReceivedTimer->stop();
-            checkCardTappedTimer->stop();
+            // paymentEndTimer->stop();
+            // checkPacketReceivedTimer->stop();
+            // checkCardTappedTimer->stop();
+            stopPayTimers();
             qDebug() << "Stopping the threads";
             cancelTransaction(connectSecondarySocket());
+            qDebug()<< "My socket address is "<< QString::fromStdString(socketAddr) << endl;
             // finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
-            // qDebug() << "Session finished sent";
+            qDebug() << "Session finished sent";
             
         }
         p_page_idle->pageTransition(this, p_pageProduct);

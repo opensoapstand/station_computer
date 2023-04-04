@@ -3,6 +3,7 @@
 
 bool xml_packet_received_complete;
 bool xml_card_tap_complete;
+bool xml_card_tap_failed;
 std::string xml_packet_string;
 std::string xml_card_tapped;
 std::atomic<bool> stop_tap_action_thread(false);
@@ -95,7 +96,7 @@ void receiveAuthorizationThread(int sockfd)
         {
              std::cout << "received packet complete. " << std::endl;
             xml_packet_received_complete = true;
-
+            break;
         }
     }
 }
@@ -191,11 +192,18 @@ void receiveCardTapAction()
                 close(client_socket);
                 close(server_socket);
             }
+            else if(strstr(xml_card_tapped.c_str(), "Failed to Read Card") != NULL)
+            {
+                xml_card_tap_failed = true;
+                std::cout << "Received data from client: " << buffer << std::endl;
+                close(client_socket);
+                close(server_socket);
+            }
             
         }
     }
 }
-bool checkCardTapped(bool logging, std::map<std::string, std::string> *card_tapped)
+std::tuple<bool , std::string> checkCardTapped(bool logging, std::map<std::string, std::string> *card_tapped)
 { 
     if(xml_card_tap_complete || stop_tap_action_thread){
         if (logging)
@@ -209,10 +217,13 @@ bool checkCardTapped(bool logging, std::map<std::string, std::string> *card_tapp
         xmlObject = {};
         xml_card_tap_complete = false;
         // std::cout << "xml_card_tap_complete variable (should be false here  ---------) " << xml_card_tap_complete << std::endl;
-        return true;
+        return std::make_tuple(true, "Success");
+    }
+    else if(xml_card_tap_failed){
+        return std::make_tuple(true, "Failed");
     }
     else{
-        return false;
+        return std::make_tuple(false, "No response");
     }
         
     }
@@ -251,17 +262,20 @@ bool checkCardTapped(bool logging, std::map<std::string, std::string> *card_tapp
 
 std::map<std::string, std::string> sendAndReceivePacket(std::string command, int sockfd, bool logging)
 {
+    // int flags = fcntl(sockfd, F_GETFL, 0);
+    // fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
     char buffer[4096];
-
     memset(buffer, 0, sizeof(buffer));
     strcpy(buffer, command.c_str());
+    qDebug() << sockfd;
+    qDebug() << QString::fromStdString(command);
     // Send the message
     if (send(sockfd, buffer, strlen(buffer), 0) < 0)
     {
-        std::cerr << "Error sending message" << std::endl;
+        qDebug() << "Error sending message";
+        std::cerr << "Error sending and receiving message" <<strerror(errno)<< std::endl;
         return {};
     }
-
     memset(buffer, 0, sizeof(buffer));
     char bufferReceived[4096];
     memset(bufferReceived, 0, sizeof(bufferReceived));
@@ -274,6 +288,7 @@ std::map<std::string, std::string> sendAndReceivePacket(std::string command, int
         if (bytes_received < 0)
         {
             std::cerr << "Error receiving message" << std::endl;
+            qDebug() << strerror(errno);
             break;
         }
         bufferReceived[bytes_received] = '\0';
@@ -283,13 +298,7 @@ std::map<std::string, std::string> sendAndReceivePacket(std::string command, int
             found_delimiter = true;
         }
     }
-    // std::cout << xml_string << std::endl;
-    // int bytes_received = recv(sockfd, bufferReceived, sizeof(bufferReceived), 0);
-    // if ( bytes_received < 0) {
-    //     std::cerr << "Error receiving message" << std::endl;
-    //     return {};
-    // }
-    // std::string xml_string(bufferReceived, bytes_received);
+
     if (logging)
     {
         std::cout << xml_string << std::endl;
@@ -365,80 +374,80 @@ int connectSecondarySocket()
     return sockfd;
 }
 
-std::map<std::string, std::string> connectInFlightSocket()
-{
-    int server_socket, client_socket;
-    struct sockaddr_in server_address, client_address;
-    char buffer[1024] = {};
-    int opt = 1;
-    int addrlen = sizeof(server_address);
-    const int PORT = 5017;
-    std::string xmlString;
-    if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) == 0)
-    {
-        perror("socket failed");
-        exit(EXIT_FAILURE);
-    }
+// std::map<std::string, std::string> connectInFlightSocket()
+// {
+//     int server_socket, client_socket;
+//     struct sockaddr_in server_address, client_address;
+//     char buffer[1024] = {};
+//     int opt = 1;
+//     int addrlen = sizeof(server_address);
+//     const int PORT = 5017;
+//     std::string xmlString;
+//     if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) == 0)
+//     {
+//         perror("socket failed");
+//         exit(EXIT_FAILURE);
+//     }
 
-    if (setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
-    {
-        perror("setsocket failed");
-        exit(EXIT_FAILURE);
-    }
+//     if (setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
+//     {
+//         perror("setsocket failed");
+//         exit(EXIT_FAILURE);
+//     }
 
-    server_address.sin_family = AF_INET;
-    server_address.sin_addr.s_addr = inet_addr("192.168.1.2");
-    server_address.sin_port = htons(PORT);
-    if (bind(server_socket, (struct sockaddr *)&server_address, sizeof(server_address)) < 0)
-    {
-        perror("bind failed");
-        exit(EXIT_FAILURE);
-    }
+//     server_address.sin_family = AF_INET;
+//     server_address.sin_addr.s_addr = inet_addr("192.168.1.2");
+//     server_address.sin_port = htons(PORT);
+//     if (bind(server_socket, (struct sockaddr *)&server_address, sizeof(server_address)) < 0)
+//     {
+//         perror("bind failed");
+//         exit(EXIT_FAILURE);
+//     }
 
-    // Listen for incoming connections
-    if (listen(server_socket, 1) < 0)
-    {
-        perror("listen failed");
-        exit(EXIT_FAILURE);
-    }
+//     // Listen for incoming connections
+//     if (listen(server_socket, 1) < 0)
+//     {
+//         perror("listen failed");
+//         exit(EXIT_FAILURE);
+//     }
 
-    std::cout << "Server is listening on " << PORT << std::endl;
+//     std::cout << "Server is listening on " << PORT << std::endl;
 
-    // Accept a connection
-    if ((client_socket = accept(server_socket, (struct sockaddr *)&client_address, (socklen_t *)&addrlen)) < 0)
-    {
-        perror("accept failed");
-        exit(EXIT_FAILURE);
-    }
+//     // Accept a connection
+//     if ((client_socket = accept(server_socket, (struct sockaddr *)&client_address, (socklen_t *)&addrlen)) < 0)
+//     {
+//         perror("accept failed");
+//         exit(EXIT_FAILURE);
+//     }
 
-    std::cout << "Received connection from " << inet_ntoa(client_address.sin_addr) << std::endl;
+//     std::cout << "Received connection from " << inet_ntoa(client_address.sin_addr) << std::endl;
 
-    // Receive data from the client in a loop
-    while (true)
-    {
-        memset(buffer, 0, sizeof(buffer));
-        int bytes_received = recv(client_socket, buffer, sizeof(buffer), 0);
-        if (bytes_received <= 0)
-        {
-            // If no more data is received, close the connection
-            std::cout << "Connection closed by client." << std::endl;
-            break;
-        }
-        else
-        {
-            xmlString += buffer;
-            // Process the received data
-            std::cout << "Received data from client: " << buffer << std::endl;
-        }
-    }
-    std::map<std::string, std::string> xmlObject = readXmlPacket(xmlString);
+//     // Receive data from the client in a loop
+//     while (true)
+//     {
+//         memset(buffer, 0, sizeof(buffer));
+//         int bytes_received = recv(client_socket, buffer, sizeof(buffer), 0);
+//         if (bytes_received <= 0)
+//         {
+//             // If no more data is received, close the connection
+//             std::cout << "Connection closed by client." << std::endl;
+//             break;
+//         }
+//         else
+//         {
+//             xmlString += buffer;
+//             // Process the received data
+//             std::cout << "Received data from client: " << buffer << std::endl;
+//         }
+//     }
+//     std::map<std::string, std::string> xmlObject = readXmlPacket(xmlString);
 
-    // Close the sockets when finished
-    close(client_socket);
-    close(server_socket);
+//     // Close the sockets when finished
+//     close(client_socket);
+//     close(server_socket);
 
-    return xmlObject;
-}
+//     return xmlObject;
+// }
 std::vector<unsigned char> base64_decode(const std::string &input)
 {
     // Initialize OpenSSL BIO

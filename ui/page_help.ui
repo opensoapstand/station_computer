@@ -48,7 +48,7 @@
   <widget class="QPushButton" name="back_Button">
    <property name="geometry">
     <rect>
-     <x>60</x>
+     <x>30</x>
      <y>40</y>
      <width>181</width>
      <height>81</height>
@@ -61,7 +61,7 @@
   <widget class="QPushButton" name="transactions_Button">
    <property name="geometry">
     <rect>
-     <x>700</x>
+     <x>660</x>
      <y>40</y>
      <width>361</width>
      <height>81</height>
@@ -1226,7 +1226,7 @@
   <widget class="QPushButton" name="previousPage_Button_2">
    <property name="geometry">
     <rect>
-     <x>50</x>
+     <x>0</x>
      <y>20</y>
      <width>211</width>
      <height>171</height>

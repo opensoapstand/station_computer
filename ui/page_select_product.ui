@@ -159,8 +159,8 @@
   <widget class="QPushButton" name="mainPage_Button">
    <property name="geometry">
     <rect>
-     <x>68</x>
-     <y>1757</y>
+     <x>470</x>
+     <y>1740</y>
      <width>118</width>
      <height>118</height>
     </rect>
@@ -687,7 +687,6 @@
   <zorder>p_page_maintenanceButton</zorder>
   <zorder>selection3_Button</zorder>
   <zorder>selection4_Button</zorder>
-  <zorder>mainPage_Button</zorder>
   <zorder>product_3_photo_label</zorder>
   <zorder>product_4_photo_label</zorder>
   <zorder>product_1_name_label</zorder>
@@ -710,8 +709,9 @@
   <zorder>product_4_overlay_label</zorder>
   <zorder>product_3_overlay_label</zorder>
   <zorder>label_pick_soap</zorder>
-   <zorder>label_notify_us</zorder>
+  <zorder>label_notify_us</zorder>
   <zorder>mainPage_Button</zorder>
+  <zorder>helpPage_Button</zorder>
  </widget>
  <resources/>
  <connections/>

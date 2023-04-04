@@ -154,7 +154,6 @@ int main(int argc, char *argv[])
     df_util::fileExists(PAGE_THANK_YOU_BACKGROUND_PATH);
     // df_util::fileExists(PAGE_WIFI_ERROR_BACKGROUND_PATH);
     df_util::fileExists(BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH);
-    df_util::fileExists(SOLD_OUT_IMAGE_PATH);
     df_util::fileExists(KEYBOARD_IMAGE_PATH);
     df_util::fileExists(FULL_TRANSPARENT_IMAGE_PATH);
 

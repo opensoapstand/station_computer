@@ -380,7 +380,7 @@ void page_sendFeedback::on_send_Button_clicked()
     }
     qDebug() << problemList;
     QString problems = problemList.join(",");
-    if(problems.length() != 0)
+    if(problems.length() != 0  && ui->feedbackText->text().isEmpty())
     {
     QString MachineSerialNumber = p_page_idle->currentProductOrder->getMachineId();
     QString customFeedback = ui->feedbackText->text();
@@ -415,6 +415,15 @@ void page_sendFeedback::on_send_Button_clicked()
     dialog->show();
     dialog->exec();
     }
+    
+    else
+{
+    dialog->move(0,0);
+    dialog->resize(1080,1920);
+    dialog->setStyleSheet("background-image:  url(/home/df-admin/drinkfill/ui/references/templates/default/background_feedbacksent.png);");
+    dialog->show();
+    dialog->exec();
+}
    
 
    stopSelectTimers();

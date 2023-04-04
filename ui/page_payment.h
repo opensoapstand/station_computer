@@ -139,6 +139,8 @@ private slots:
     void declineTimer_start();
     void check_packet_available();
     void check_card_tapped();
+    void startPaymentProcess();
+
 
     void idlePaymentTimeout();
     void on_refreshButton_clicked();

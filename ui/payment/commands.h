@@ -23,9 +23,11 @@ std::map<std::string, std::string> captureOffline(int socket, std::string MAC_LA
 std::map<std::string, std::string> editSaf(int socket, std::string MAC_LABEL, std::string MAC_KEY, std::string SAF_NUM, std::string amount, std::string SAF_STATUS);
 std::map<std::string, std::string> voidTransaction(int socket, std::string MAC_LABEL, std::string MAC_KEY, std::string CTROUTD);
 std::map<std::string, std::string> voidTransactionOffline(int socket, std::string MAC_LABEL, std::string MAC_KEY, std::string AUTH_CODE);
-int createOrUpdateConfigFile (std::string macKey, std::string macLabel, std::string iP, std::string invoiceNumber);
+int createOrUpdateConfigFile (std::string macKey, std::string macLabel,std::string invoiceNumber);
 std::map<std::string, std::string>  testMac(int socket, std::string MAC_KEY, std::string MAC_LABEL);
 std::map<std::string, std::string> readConfigFile();
 std::string updateInvoiceValueInConfig(std::string invoiceNumber);
 std::string authorizationCommand(int socket, std::string MAC_LABEL, std::string MAC_KEY, std::string amount);
 std::map<std::string, std::string> cancelTransaction(int socket);
+std::map<std::string, std::string> checkDeviceStatus(int socket);
+std::map<std::string, std::string> rebootDevice(int socket);

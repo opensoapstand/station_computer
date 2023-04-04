@@ -27,7 +27,7 @@
 #include <thread>
 
 bool checkPacketReceived(bool logging, std::map<std::string, std::string> *xml_packet);
-bool checkCardTapped(bool logging, std::map<std::string, std::string> *card_tapped);
+std::tuple<bool , std::string>  checkCardTapped(bool logging, std::map<std::string, std::string> *card_tapped);
 void receiveCardTapAction();
 void receiveAuthorizationThread(int sockfd);
 std::string read_public_key();

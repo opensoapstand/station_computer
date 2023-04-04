@@ -58,7 +58,7 @@ make_options () {
 
 
 PS3='Choose option(digit + enter):'
-options=("Quit" "aws_operations" "AWS log in" "AWS run station operations" "soapstand_manager"  "Stop ui and controller" "(Re)start ui and controller" "run standalone controller" "Station info" "Copy binaries to production and run" "Create and run production data" "make ui and fsm" "make ui and fsm and load binaries" "make ui" "make ui and load binaries" "make fsm" "make fsm and load binaries" "Setup ssh rtunnel" "(Re)load services from production")
+options=("Quit" "aws_operations" "AWS log in" "AWS run station operations" "soapstand_manager"  "Stop ui and controller" "(Re)start ui and controller" "run standalone controller" "Station info" "Copy binaries to production and run" "Create and run production data" "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)" "Services: SSH rtunnel setup from production" "make ui and fsm" "make ui and fsm and load binaries" "make ui" "make ui and load binaries" "make fsm" "make fsm and load binaries")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -87,10 +87,6 @@ do
         "Create and run production data")
             sudo ./create_and_run_production_data.sh
             echo "done."
-            ;;
-
-        "Setup ssh rtunnel")
-            ./rtunnel_setup.sh
             ;;
         "Station info")
            ./status_services.sh
@@ -126,10 +122,13 @@ do
             cd ../fsm
             ./controller
             ;;
-        "(Re)load services from production")
+        "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)")
             # move files to service folder
             ./copy_and_enable_services.sh
             echo 'All done. (note: rtunnel.service is not copied automatically.)'
+            ;;
+        "Services: SSH rtunnel setup from production")
+            ./rtunnel_setup.sh
             ;;
         "Quit") 
             break

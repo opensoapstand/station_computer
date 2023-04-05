@@ -82,6 +82,22 @@ DF_ERROR stateManualPump::onAction()
 
    productDispensers[m_active_pump_index].refresh();
 
+
+
+   if (productDispensers[m_active_pump_index].getDispenseButtonEdgePositive()){
+   // if(productDispensers[m_active_pump_index].the_pcb->getDispenseButtonEdgePositive(m_active_pump_index + 1)){
+      debugOutput::sendMessage("Button pos edge *************", MSG_INFO);
+      
+   }
+   // if(productDispensers[m_active_pump_index].the_pcb->getDispenseButtonEdgeNegative(m_active_pump_index + 1)){
+   if (productDispensers[m_active_pump_index].getDispenseButtonEdgeNegative()){
+      debugOutput::sendMessage("Button NEG edge *************", MSG_INFO);
+   }
+
+
+
+
+
    // // Check if Command String is ready
    // if (m_pMessaging->isCommandStringReadyToBeParsed())
    // {
@@ -283,7 +299,6 @@ DF_ERROR stateManualPump::onAction()
    // uint64_t millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
    // if (most_recent_data_output_epoch + MOTOR_TEST_DATA_OUTPUT_INTERVAL_MILLIS < millis_epoch)
    // {
-   //    // debugOutput::sendMessage("trrriiiiger", MSG_INFO);
    //    triggerOutputData = true;
    //    most_recent_data_output_epoch = millis_epoch;
    // }
@@ -291,8 +306,6 @@ DF_ERROR stateManualPump::onAction()
    // {
    //    triggerOutputData = false;
    // }
-
-   // // debugOutput::sendMessage("******", MSG_INFO);
    
    // if (m_state_auto_pump != AUTO_PUMP_STATE_IDLE)
    // {
@@ -363,26 +376,28 @@ DF_ERROR stateManualPump::onAction()
 
 
 
-   if (productDispensers[m_active_pump_index].getDispenseButtonEdgePositive()){
-      debugOutput::sendMessage("Button pos edge *************", MSG_INFO);
-      if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
-      {
-         productDispensers[m_active_pump_index].the_pcb->startPump(m_active_pump_index + 1);
-         productDispensers[m_active_pump_index].setSolenoid(true); 
-      }
-   }
-   if (productDispensers[m_active_pump_index].getDispenseButtonEdgeNegative()){
-      debugOutput::sendMessage("Button NEG edge *************", MSG_INFO);
-      if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
-      {
-         productDispensers[m_active_pump_index].the_pcb->stopPump(m_active_pump_index + 1);
-         productDispensers[m_active_pump_index].setSolenoid(false); 
-      }
-   }
+   // // if (productDispensers[m_active_pump_index].getDispenseButtonEdgePositive()){
+   // if(productDispensers[m_active_pump_index].the_pcb->getDispenseButtonEdgePositive(m_active_pump_index + 1)){
+   //    debugOutput::sendMessage("Button pos edge *************", MSG_INFO);
+   //    if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
+   //    {
+   //       productDispensers[m_active_pump_index].the_pcb->startPump(m_active_pump_index + 1);
+   //       productDispensers[m_active_pump_index].setSolenoid(true); 
+   //    }
+   // }
+   // if(productDispensers[m_active_pump_index].the_pcb->getDispenseButtonEdgeNegative(m_active_pump_index + 1)){
+   // // if (productDispensers[m_active_pump_index].getDispenseButtonEdgeNegative()){
+   //    debugOutput::sendMessage("Button NEG edge *************", MSG_INFO);
+   //    if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
+   //    {
+   //       productDispensers[m_active_pump_index].the_pcb->stopPump(m_active_pump_index + 1);
+   //       productDispensers[m_active_pump_index].setSolenoid(false); 
+   //    }
+   // }
 
-   e_ret = OK;
+   // e_ret = OK;
 
-   return e_ret;
+   // return e_ret;
 }
 
 DF_ERROR stateManualPump::customVolumeDispenseTest()

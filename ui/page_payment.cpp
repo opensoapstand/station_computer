@@ -551,7 +551,9 @@ void page_payment::isQrProcessedCheckOnline()
         }
         else if (readBuffer == "In progress")
         {
-            transactionLogging += "\n 3: QR Scanned - True";
+            if(!transactionLogging.contains("\n 3: QR Scanned - True")){
+                transactionLogging += "\n 3: QR Scanned - True";
+            }
             qDebug() << "Wait for QR processed. User must have finished transaction to continue.";
             // user scanned qr code and is processing transaction. Delete qr code and make it harder for user to leave page.
             state_payment = s_payment_processing;
@@ -775,7 +777,8 @@ bool page_payment::exitConfirm()
         {
         case QMessageBox::Yes:
         {
-            // resetPaymentPage();
+            resetPaymentPage();
+            transactionLogging = "";
             return true;
         }
         break;
@@ -790,6 +793,7 @@ bool page_payment::exitConfirm()
     {
         // exit, no questions asked.
         // resetPaymentPage();
+        transactionLogging = "";
         return true;
     }
 }
@@ -804,9 +808,6 @@ void page_payment::on_previousPage_Button_clicked()
         {   
             stop_tap_action_thread = true;
             stop_authorization_thread=true;
-            // paymentEndTimer->stop();
-            // checkPacketReceivedTimer->stop();
-            // checkCardTappedTimer->stop();
             stopPayTimers();
             qDebug() << "Stopping the threads";
             cancelTransaction(connectSecondarySocket());
@@ -836,10 +837,6 @@ void page_payment::idlePaymentTimeout()
 }
 void page_payment::resetPaymentPage()
 {
-    if (getPaymentMethod() == "tap")
-    {
-        cancelPayment();
-    }
     stopPayTimers();
     response = true;
     // readTimer->stop();

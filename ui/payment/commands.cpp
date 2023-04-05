@@ -76,7 +76,6 @@ std::map<std::string, std::string> startSession(int socket, std::string MAC_LABE
 }
 
 std::map<std::string, std::string> finishSession(int socket, std::string MAC_LABEL, std::string MAC_KEY){
-    qDebug() << "Before sending finish session";
     std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
     std::string command = "<TRANSACTION> \
                         <FUNCTION_TYPE>SESSION</FUNCTION_TYPE> \
@@ -85,7 +84,6 @@ std::map<std::string, std::string> finishSession(int socket, std::string MAC_LAB
                         <MAC>"+responseObj["COUNTER_ENCODED"]+"</MAC>\
                         <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
                     </TRANSACTION>";
-    qDebug() << "Finish Session command created";
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
     // close(socket);
     return dataReceived;
@@ -254,7 +252,6 @@ std::map<std::string, std::string> voidTransactionOffline(int socket, std::strin
     return dataReceived;
 }
 std::map<std::string, std::string> testMac(int socket, std::string MAC_KEY, std::string MAC_LABEL){
-        qDebug()<< "IN test mac before counter";
 
     std::map<std::string, std::string> responseObj = getNextCounterMac(socket, MAC_LABEL, MAC_KEY);
     std::string command = "<TRANSACTION> \
@@ -264,7 +261,6 @@ std::map<std::string, std::string> testMac(int socket, std::string MAC_KEY, std:
                     <MAC>"+responseObj["COUNTER_ENCODED"]+"</MAC>\
                     <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
                 </TRANSACTION>";
-    qDebug()<< "IN test mac";
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
     close(socket);
     return dataReceived;

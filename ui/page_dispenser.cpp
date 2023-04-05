@@ -91,7 +91,7 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     ui->volumeDispensedLabel->setStyleSheet(volumeDispensedStylesheet);
 
     ui->label_to_refill->setStyleSheet(
-                "QPushButton {"
+                "QLabel {"
 
                 "font-family: 'Brevia';"
                 "font-style: normal;"
@@ -101,7 +101,7 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
                 "border: 0px;"
                 "line-height: 99px;"
                 "letter-spacing: 1.5px;"
-                "color: #003840;"
+                "color: #FFFFFF;"
                 "text-align: center;"
                 "qproperty-alignment: AlignCenter;"
                 "border: none;"
@@ -111,7 +111,7 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     ui->label_to_refill->setText("to refill");
 
      ui->label_bring_container->setStyleSheet(
-                "QPushButton {"
+                "QLabel {"
 
                 "font-family: 'Brevia';"
                 "font-style: normal;"
@@ -121,7 +121,7 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
                 "border: 0px;"
                 "line-height: 99px;"
                 "letter-spacing: 1.5px;"
-                "color: #003840;"
+                "color: #FFFFFF;"
                 "text-align: center;"
                 "qproperty-alignment: AlignCenter;"
                 "border: none;"
@@ -131,7 +131,7 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     ui->label_bring_container->setText("bring container to nozzle");
 
     ui->label_press->setStyleSheet(
-                "QPushButton {"
+                "QLabel {"
 
                 "font-family: 'Brevia';"
                 "font-style: normal;"
@@ -141,14 +141,14 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
                 "border: 0px;"
                 "line-height: 99px;"
                 "letter-spacing: 1.5px;"
-                "color: #003840;"
+                "color: #FFFFFF;"
                 "text-align: center;"
                 "qproperty-alignment: AlignCenter;"
                 "border: none;"
                 "}");
 
 
-    ui->label_press->setText("press and hold the button");
+    ui->label_press->setText("press and hold <br>the button");
 
     
 

@@ -792,7 +792,7 @@ bool page_payment::exitConfirm()
     else
     {
         // exit, no questions asked.
-        // resetPaymentPage();
+        resetPaymentPage();
         transactionLogging = "";
         return true;
     }

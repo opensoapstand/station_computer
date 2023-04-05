@@ -35,7 +35,20 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     // font.setWeight(75);
     font.setWeight(50);
 
-    ui->transactions_Button->setStyleSheet("QPushButton { color:#003840; background-color: transparent; border: 0px }");
+    ui->transactions_Button->setStyleSheet(
+                "QPushButton {"
+
+                "font-family: 'Brevia';"
+                "font-style: normal;"
+                "font-weight: 75;"
+                "font-size: 32px;"
+                "line-height: 99px;"
+                "letter-spacing: 1.5px;"
+                "color: #003840;"
+                "text-align: center;"
+                "qproperty-alignment: AlignCenter;"
+                "border: none;"
+                "}");
     // ui->transactions_Button->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
     ui->transactions_Button->setFont(font);
     ui->transactions_Button->setText("Transaction History ->");

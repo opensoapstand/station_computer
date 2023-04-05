@@ -54,14 +54,14 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                 "line-height: 99px;"
                 "letter-spacing: 1.5px;"
                 "color: #003840;"
-                "text-align: center;"
+                "text-align: left;"
                 "qproperty-alignment: AlignCenter;"
                 "border: none;"
                 "}");
 
 
         ui->previousPage_Button->setText("<-back");
-        ui->mainPage_Button->hide();
+        // ui->mainPage_Button->hide();
         
         ui->label_select_problem->setStyleSheet("QLabel { color:#555555; ; border: 1px }");
         ui->label_select_problem->setStyleSheet(
@@ -380,7 +380,7 @@ void page_sendFeedback::on_send_Button_clicked()
     }
     qDebug() << problemList;
     QString problems = problemList.join(",");
-    if(problems.length() != 0)
+    if(problems.length() != 0  && ui->feedbackText->text().isEmpty())
     {
     QString MachineSerialNumber = p_page_idle->currentProductOrder->getMachineId();
     QString customFeedback = ui->feedbackText->text();
@@ -415,6 +415,15 @@ void page_sendFeedback::on_send_Button_clicked()
     dialog->show();
     dialog->exec();
     }
+    
+    else
+{
+    dialog->move(0,0);
+    dialog->resize(1080,1920);
+    dialog->setStyleSheet("background-image:  url(/home/df-admin/drinkfill/ui/references/templates/default/background_feedbacksent.png);");
+    dialog->show();
+    dialog->exec();
+}
    
 
    stopSelectTimers();

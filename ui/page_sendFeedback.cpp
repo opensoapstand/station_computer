@@ -230,9 +230,7 @@ void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser 
     this->p_page_product = page_product;
     // ui->promoCode->clear();
     // ui->promoCode->hide();
-    // ui->label_invoice_discount_amount->hide();
-    // ui->label_invoice_discount_name->hide();
-    // ui->label_discount_tag->hide();
+
 
     // selectedProductOrder = p_page_idle->currentProductOrder;
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_PATH);

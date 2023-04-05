@@ -54,14 +54,14 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                 "line-height: 99px;"
                 "letter-spacing: 1.5px;"
                 "color: #003840;"
-                "text-align: center;"
+                "text-align: left;"
                 "qproperty-alignment: AlignCenter;"
                 "border: none;"
                 "}");
 
 
         ui->previousPage_Button->setText("<-back");
-        ui->mainPage_Button->hide();
+        // ui->mainPage_Button->hide();
         
         ui->label_select_problem->setStyleSheet("QLabel { color:#555555; ; border: 1px }");
         ui->label_select_problem->setStyleSheet(

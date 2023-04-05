@@ -36,7 +36,7 @@ public:
 
     string toString();
     DF_ERROR pumpTest();
-    DF_ERROR autoPumpSetQuantityTest();
+    DF_ERROR autofillPresetQuantity();
     DF_ERROR pumpCyclicTest();
     DF_ERROR pumpCyclicTestCycleStart();
     DF_ERROR pumpCyclicTestCycleFinish();
@@ -53,6 +53,8 @@ private:
     bool iscustomVolumeDispenseTest=false;
     bool dispenseButtonValueMemory=false;
     bool dispenseButtonValue=false;
+
+
 
     uint64_t startFlowTestMillis;
 

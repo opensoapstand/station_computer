@@ -143,9 +143,6 @@ DF_ERROR stateLoop()
         {
             g_productDispensers[slot_index].refresh();
         }
-        
-
-
 
         if (fsmState == STATE_DUMMY)
         {
@@ -158,7 +155,6 @@ DF_ERROR stateLoop()
             debugOutput::sendMessage("Enter state: " + stateStrings[fsmState], MSG_STATE);
             dfRet = g_stateArray[fsmState]->onEntry();
         }
-
         previousState = fsmState;
 
         // state not changed

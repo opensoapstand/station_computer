@@ -90,6 +90,68 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
                                         "}";
     ui->volumeDispensedLabel->setStyleSheet(volumeDispensedStylesheet);
 
+    ui->label_to_refill->setStyleSheet(
+                "QPushButton {"
+
+                "font-family: 'Brevia';"
+                "font-style: normal;"
+                "font-weight: 75;"
+                "font-size: 85px;"
+                "background-color: transparent;"
+                "border: 0px;"
+                "line-height: 99px;"
+                "letter-spacing: 1.5px;"
+                "color: #003840;"
+                "text-align: center;"
+                "qproperty-alignment: AlignCenter;"
+                "border: none;"
+                "}");
+
+
+    ui->label_to_refill->setText("to refill");
+
+     ui->label_bring_container->setStyleSheet(
+                "QPushButton {"
+
+                "font-family: 'Brevia';"
+                "font-style: normal;"
+                "font-weight: 75;"
+                "font-size: 55px;"
+                "background-color: transparent;"
+                "border: 0px;"
+                "line-height: 99px;"
+                "letter-spacing: 1.5px;"
+                "color: #003840;"
+                "text-align: center;"
+                "qproperty-alignment: AlignCenter;"
+                "border: none;"
+                "}");
+
+
+    ui->label_bring_container->setText("bring container to nozzle");
+
+    ui->label_press->setStyleSheet(
+                "QPushButton {"
+
+                "font-family: 'Brevia';"
+                "font-style: normal;"
+                "font-weight: 75;"
+                "font-size: 55px;"
+                "background-color: transparent;"
+                "border: 0px;"
+                "line-height: 99px;"
+                "letter-spacing: 1.5px;"
+                "color: #003840;"
+                "text-align: center;"
+                "qproperty-alignment: AlignCenter;"
+                "border: none;"
+                "}");
+
+
+    ui->label_press->setText("press and hold the button");
+
+    
+
     ui->label_volume_dispensed->setStyleSheet(volumeDispensedStylesheet);
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);

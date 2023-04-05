@@ -598,7 +598,7 @@ do
         "Station log in by SS-id")
             ssh_into_station 
             ;;
-        "Station log in manual by port")
+        "Station log in by port")
             ssh_into_station "manual"
             ;;
         # "cd into Station AWS folder")

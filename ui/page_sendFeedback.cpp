@@ -39,7 +39,9 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     ui->feedback_Input_Button->setStyleSheet("QPushButton { border: 1px solid #5E8580}");
     ui->feedback_Input_Button->setText("Type Here");
     ui->feedbackText->setStyleSheet("QPushButton { background-color: transparent; border: 1px solid #5E8580 }");   // ui->page_payment_Button->show();
- ui->feedbackKeyboard->hide();
+    ui->feedbackKeyboard->hide();
+    ui->label_thanks_for_feedback->hide();
+
     // ui->feedback_Input_Button->hide();
     ui->label_enter_feedback->show();
     // ui->label_type_here->hide();
@@ -153,6 +155,22 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
          ui->feedbackText->clear();
         ui->feedbackText->show();
         ui->feedbackText->setEchoMode(QLineEdit::Normal);
+
+        ui->label_thanks_for_feedback->setStyleSheet(
+                "QLabel {"
+                "font-family: 'Brevia';"
+                "font-style: normal;"
+                "font-weight: 75;"
+                "font-size: 65px;"
+                "line-height: 99px;"
+                "letter-spacing: 1.5px;"
+                "color: #003840;"
+                "text-align: center;"
+                "qproperty-alignment: AlignCenter;"
+                "border: none;"
+                "}");
+        ui->label_thanks_for_feedback->setText("Thank you for helping us <br>make a better experience <br>for you");
+
         // QString keyboard = KEYBOARD_IMAGE_PATH;
     // QString keyboard_style_sheet = " background-image: url(" + keyboard + "); }";
     // ui->feedbackKeyboard->setStyleSheet(keyboard_style_sheet);
@@ -230,9 +248,7 @@ void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser 
     this->p_page_product = page_product;
     // ui->promoCode->clear();
     // ui->promoCode->hide();
-    // ui->label_invoice_discount_amount->hide();
-    // ui->label_invoice_discount_name->hide();
-    // ui->label_discount_tag->hide();
+
 
     // selectedProductOrder = p_page_idle->currentProductOrder;
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_PATH);
@@ -409,20 +425,74 @@ void page_sendFeedback::on_send_Button_clicked()
     }
     qDebug() << "Send button stores values" << endl;
     
-    dialog->move(0,0);
-    dialog->resize(1080,1920);
-    dialog->setStyleSheet("background-image:  url(/home/df-admin/drinkfill/ui/references/templates/default/background_feedbacksent.png);");
-    dialog->show();
-    dialog->exec();
+    
+    dialog->move(0,100);
+dialog->resize(1080,1920);
+dialog->setStyleSheet("background-image:  url(/home/df-admin/drinkfill/ui/references/templates/default/background_feedbacksent.png);");
+
+QLabel *label = new QLabel(dialog);
+label->setText("Thank you for helping us <br>make a better experience <br>for you");
+label->setStyleSheet("QLabel {"
+                "font-family: 'Brevia';"
+                "font-style: normal;"
+                "font-weight: 75;"
+                "font-size: 65px;"
+                "line-height: 99px;"
+                "letter-spacing: 1.5px;"
+                "color: #003840;"
+                "text-align: center;"
+                "qproperty-alignment: AlignCenter;"
+                "border: none;"
+                "}");
+// label->setAlignment(Qt::AlignCenter);
+label->setAlignment(Qt::AlignCenter | Qt::AlignTop); // Align label to the top
+label->setWordWrap(true);
+label->setMinimumHeight(dialog->height() / 2);
+label->setMinimumWidth(dialog->width());
+// Move the label up by 100 pixels
+// int xOffset = (dialog->width() - label->width()) / 2;
+// int yOffset = 100;
+// label->move(xOffset, yOffset);
+
+
+QVBoxLayout *layout = new QVBoxLayout(dialog);
+layout->addWidget(label);
+
+dialog->setLayout(layout);
+dialog->show();
+dialog->exec();
+
+    // ui->label_thanks_for_feedback->show();
+    // ui->label_thanks_for_feedback->raise();
     }
     
     else
 {
-    dialog->move(0,0);
-    dialog->resize(1080,1920);
-    dialog->setStyleSheet("background-image:  url(/home/df-admin/drinkfill/ui/references/templates/default/background_feedbacksent.png);");
-    dialog->show();
-    dialog->exec();
+      dialog->move(0,0);
+dialog->resize(1080,1920);
+dialog->setStyleSheet("background-image:  url(/home/df-admin/drinkfill/ui/references/templates/default/background_feedbacksent.png);");
+
+QLabel *label = new QLabel(dialog);
+label->setText("Thank you for helping us <br>make a better experience <br>for you");
+label->setStyleSheet("QLabel {"
+                "font-family: 'Brevia';"
+                "font-style: normal;"
+                "font-weight: 75;"
+                "font-size: 65px;"
+                "line-height: 99px;"
+                "letter-spacing: 1.5px;"
+                "color: #003840;"
+                "text-align: center;"
+                "qproperty-alignment: AlignCenter;"
+                "border: none;"
+                "}");
+// label->setAlignment(Qt::AlignCenter);
+label->setAlignment(Qt::AlignCenter | Qt::AlignTop); // Align label to the top
+label->setWordWrap(true);
+label->setMinimumHeight(dialog->height() / 2);
+label->setMinimumWidth(dialog->width());
+      
+   
 }
    
 

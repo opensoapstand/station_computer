@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "'Stop -> copy to production -> (re)load -> start' all soapstand services."
+echo "'Stop -> copy from production to systemd -> (re)load -> start' all soapstand services."
 
 echo "stop soapstand services"
 sudo systemctl stop ui_soapstand.service

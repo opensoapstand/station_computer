@@ -46,6 +46,7 @@ scp /home/df-admin/drinkfill/admin/soapstand_manager.sh /home/df-admin/productio
 scp /home/df-admin/drinkfill/admin/status_services.sh /home/df-admin/production/admin/status_services.sh
 scp /home/df-admin/drinkfill/admin/check_connectivity.sh /home/df-admin/production/admin/check_connectivity.sh
 scp /home/df-admin/drinkfill/admin/developer_tools.sh /home/df-admin/production/admin/developer_tools.sh
+scp /home/df-admin/drinkfill/admin/copy_and_enable_services.sh /home/df-admin/production/admin/copy_and_enable_services.sh
 scp /home/df-admin/drinkfill/admin/create_and_run_production_data.sh /home/df-admin/production/admin/create_and_run_production_data.sh
 
 scp /home/df-admin/drinkfill/admin/aws_operations.sh /home/df-admin/production/admin/aws_operations.sh

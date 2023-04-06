@@ -91,66 +91,61 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     ui->volumeDispensedLabel->setStyleSheet(volumeDispensedStylesheet);
 
     ui->label_to_refill->setStyleSheet(
-                "QLabel {"
+        "QLabel {"
 
-                "font-family: 'Brevia';"
-                "font-style: normal;"
-                "font-weight: 75;"
-                "font-size: 85px;"
-                "background-color: transparent;"
-                "border: 0px;"
-                "line-height: 99px;"
-                "letter-spacing: 1.5px;"
-                "color: #FFFFFF;"
-                "text-align: center;"
-                "qproperty-alignment: AlignCenter;"
-                "border: none;"
-                "}");
-
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 75;"
+        "font-size: 85px;"
+        "background-color: transparent;"
+        "border: 0px;"
+        "line-height: 99px;"
+        "letter-spacing: 1.5px;"
+        "color: #FFFFFF;"
+        "text-align: center;"
+        "qproperty-alignment: AlignCenter;"
+        "border: none;"
+        "}");
 
     ui->label_to_refill->setText("to refill");
 
-     ui->label_bring_container->setStyleSheet(
-                "QLabel {"
+    ui->label_bring_container->setStyleSheet(
+        "QLabel {"
 
-                "font-family: 'Brevia';"
-                "font-style: normal;"
-                "font-weight: 75;"
-                "font-size: 55px;"
-                "background-color: transparent;"
-                "border: 0px;"
-                "line-height: 99px;"
-                "letter-spacing: 1.5px;"
-                "color: #FFFFFF;"
-                "text-align: center;"
-                "qproperty-alignment: AlignCenter;"
-                "border: none;"
-                "}");
-
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 75;"
+        "font-size: 55px;"
+        "background-color: transparent;"
+        "border: 0px;"
+        "line-height: 99px;"
+        "letter-spacing: 1.5px;"
+        "color: #FFFFFF;"
+        "text-align: center;"
+        "qproperty-alignment: AlignCenter;"
+        "border: none;"
+        "}");
 
     ui->label_bring_container->setText("bring container to nozzle");
 
     ui->label_press->setStyleSheet(
-                "QLabel {"
+        "QLabel {"
 
-                "font-family: 'Brevia';"
-                "font-style: normal;"
-                "font-weight: 75;"
-                "font-size: 55px;"
-                "background-color: transparent;"
-                "border: 0px;"
-                "line-height: 99px;"
-                "letter-spacing: 1.5px;"
-                "color: #FFFFFF;"
-                "text-align: center;"
-                "qproperty-alignment: AlignCenter;"
-                "border: none;"
-                "}");
-
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 75;"
+        "font-size: 55px;"
+        "background-color: transparent;"
+        "border: 0px;"
+        "line-height: 99px;"
+        "letter-spacing: 1.5px;"
+        "color: #FFFFFF;"
+        "text-align: center;"
+        "qproperty-alignment: AlignCenter;"
+        "border: none;"
+        "}");
 
     ui->label_press->setText("press and hold <br>the button");
-
-    
 
     ui->label_volume_dispensed->setStyleSheet(volumeDispensedStylesheet);
     dispenseIdleTimer = new QTimer(this);
@@ -220,6 +215,9 @@ void page_dispenser::showEvent(QShowEvent *event)
 #endif
     ui->dispense_bottle_label->hide();
     ui->fill_animation_label->hide();
+    ui->label_press->show();
+    ui->label_to_refill->show();
+    ui->label_bring_container->show();
 
     startDispensing();
     // ui->abortButton->setText("Complete");
@@ -270,32 +268,34 @@ void page_dispenser::dispensing_end_admin()
         // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         qDebug() << "dispense end: tap payment No volume dispensed.";
         // REVERSE PAYMENT.
-        if(SAF_NUM!=""){
+        if (SAF_NUM != "")
+        {
             std::cout << "Voiding transaction";
-            response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,SAF_NUM);
+            response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, SAF_NUM);
         }
-        else if(CTROUTD!=""){
-             response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD);
+        else if (CTROUTD != "")
+        {
+            response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, CTROUTD);
         }
-        finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);   
-        
+        finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     }
     else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && volumeDispensed != 0)
     {
-        
-        if(CTROUTD!=""){
-             std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,CTROUTD, stream.str());
-        }
-        else if(SAF_NUM!=""){
 
-             std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY,SAF_NUM, stream.str(), "ELIGIBLE");
+        if (CTROUTD != "")
+        {
+            std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, CTROUTD, stream.str());
+        }
+        else if (SAF_NUM != "")
+        {
+
+            std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, SAF_NUM, stream.str(), "ELIGIBLE");
         }
         // ui->finishTransactionMessage->setText("Capturing Payment");
         // ui->finishTransactionMessage->show();
 
         // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
-        finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);   
-
+        finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     }
     std::cout << "Stopping dispense timer";
     stopDispenseTimer();
@@ -305,7 +305,6 @@ void page_dispenser::dispensing_end_admin()
 
     p_page_idle->pageTransition(this, thanksPage);
     qDebug() << "Finished dispense admin handling";
-
 }
 
 void page_dispenser::force_finish_dispensing()
@@ -394,10 +393,10 @@ void page_dispenser::fsmSendPromo()
 void page_dispenser::stopDispenseTimer()
 {
     this->isDispensing = false;
-       qDebug() << "page_dispenser: Stop Dispense Timers" << endl;
+    qDebug() << "page_dispenser: Stop Dispense Timers" << endl;
     if (dispenseIdleTimer != nullptr)
     {
-        qDebug() << "Dispense timer stop function" <<endl;
+        qDebug() << "Dispense timer stop function" << endl;
         dispenseIdleTimer->stop();
     }
     dispenseIdleTimer = nullptr;
@@ -463,7 +462,6 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         //     ui->label_abort->setText("Complete333");
         ui->label_abort->raise();
 
-
         // }
         updateVolumeDispensedLabel(dispensed);
 
@@ -486,9 +484,12 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
 #endif
 
         ui->dispense_bottle_label->show();
+        ui->label_press->hide();
+        ui->label_to_refill->hide();
+        ui->label_bring_container->hide();
+
         ui->fill_animation_label->show();
         ui->abortButton->raise();
-        
     }
     else
     {

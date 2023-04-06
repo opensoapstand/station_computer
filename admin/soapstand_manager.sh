@@ -100,7 +100,7 @@ do
             
             echo "change production backup to a name with a date."
             # Get the current date in YYYY-MM-DD format
-            current_date=$(date +%Y-%m-%d)
+            current_date=$(date +%Y%m%d-%H%M%S)
                        
             # Append the current date to the folder name
             name_with_date="production_bkp${current_date}"

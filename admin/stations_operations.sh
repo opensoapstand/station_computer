@@ -586,7 +586,7 @@ DB
 
 echo 'At AWS: Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 PS3='Choose option(digit + enter):'
-options=("Quit" "Stations status" "Show Station Descriptions" "Station log in by SS-id" "Station mkdir" "Station log in by port" "Static Production Copy: [SS-id] to [SS-id]" "Static Production Copy: [SS-id] to [port]" "Static Production Copy: [port] to [SS-id]" "Static Production Copy: [port] to [port]" "DB Production copy: [SS-id] to [SS-id]" "DB Production copy: [SS-id] to [port]" "DB Production copy: [port] to [SS-id]" "DB Production copy: [port] to [port]" "Logs Production Copy: [SS-id] to [SS-id]" "Logs Production Copy: [SS-id] to [port]" "Logs Production Copy: [port] to [SS-id]" "Logs Production Copy: [port] to [port]")
+options=("Quit" "Stations status" "Show Station Descriptions" "Station log in by SS-id" "Station mkdir" "Station log in by port" "Deploy wizard with Ash" "Static Production Copy: [SS-id] to [SS-id]" "Static Production Copy: [SS-id] to [port]" "Static Production Copy: [port] to [SS-id]" "Static Production Copy: [port] to [port]" "DB Production copy: [SS-id] to [SS-id]" "DB Production copy: [SS-id] to [port]" "DB Production copy: [port] to [SS-id]" "DB Production copy: [port] to [port]" "Logs Production Copy: [SS-id] to [SS-id]" "Logs Production Copy: [SS-id] to [port]" "Logs Production Copy: [port] to [SS-id]" "Logs Production Copy: [port] to [port]")
 # options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Manualport/production/x to Manualport/home/x" "Station mkdir" "Station log in [port]" "Static Production Copy: Station to Station" "Static Production Copy: Station to [port]" "Static Production Copy: [port] to Station" "Static Production Copy: [port] to [port]" "DB Production copy: Station to Station" "DB Production copy: Station to [port]" "DB Production copy: [port] to Station" "DB Production copy: [port] to [port]" "Logs Production Copy: Station to Station" "Logs Production Copy: Station to [port]" "Logs Production Copy: [port] to Station" "Logs Production Copy: [port] to [port]")
 
 
@@ -631,6 +631,9 @@ do
             ;;
         "AWS to Station DB")
             scp_transfer_db "to_unit"
+            ;;
+        "Deploy wizard with Ash")
+            echo "Deploy with Ash"
             ;;
 
         "Static Production Copy: [SS-id] to [SS-id]")

@@ -59,26 +59,12 @@ void page_error_wifi::showEvent(QShowEvent *event)
     
     QWidget::showEvent(event);
 
-    // QPixmap background(PAGE_WIFI_ERROR_BACKGROUND_PATH);
-    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-    // QPalette palette;
-    // palette.setBrush(QPalette::Background, background);
-    // this->setPalette(palette);
-
-    // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
-    // p_page_idle->setBackgroundPictureFromTemplateToPage(this, ERROR_MESSAGE_PATH);
     QString image_path = p_page_idle->getTemplatePathFromName(ERROR_MESSAGE_PATH);
     p_page_idle->addPictureToLabel(ui->error_message_label, image_path);
 
 
     ui->wifi_ack_Button->setEnabled(false);
-
-    //   if(nullptr == timeoutTimer){
-        // timeoutTimer = new QTimer(this);
-        // timeoutTimer->setInterval(1000);
-        // connect(timeoutTimer, SIGNAL(timeout()), this, SLOT(onTimeOutTick()));
-    // }
 
     timeoutTimer->start(1000);
     _goTop_page_idleTimeoutSec = 10;

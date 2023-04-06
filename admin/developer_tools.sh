@@ -84,6 +84,18 @@ do
              cmd=( ssh -tt -i DrinkfillAWS.pem ubuntu@ec2-44-225-153-121.us-west-2.compute.amazonaws.com "bash stations_operations.sh" )
             "${cmd[@]}"
             ;;
+        "Copy binaries to production and run")
+            echo "Copy soapstand application to production folder"
+            sudo systemctl stop ui_soapstand
+            sudo systemctl stop controller_soapstand
+            
+            sudo scp /home/df-admin/drinkfill/ui/DF_UI /home/df-admin/production/bin/DF_UI
+            sudo scp /home/df-admin/drinkfill/fsm/controller /home/df-admin/production/bin/controller
+            
+            sudo systemctl start ui_soapstand.service
+            sudo systemctl start controller_soapstand.service
+            echo "done."
+        ;;
         "Create and run production data")
             sudo ./create_and_run_production_data.sh
             echo "done."

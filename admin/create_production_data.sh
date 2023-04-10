@@ -38,6 +38,7 @@ sudo -u df-admin scp -r /home/df-admin/drinkfill/ui/references /home/df-admin/pr
 # move scripts and other administrative stuff
 scp /home/df-admin/drinkfill/admin/controller_soapstand.service /home/df-admin/production/admin/controller_soapstand.service
 scp /home/df-admin/drinkfill/admin/rtunnel.service /home/df-admin/production/admin/rtunnel.service
+scp /home/df-admin/drinkfill/admin/rtunnel_setup.sh /home/df-admin/production/admin/rtunnel_setup.sh
 scp /home/df-admin/drinkfill/admin/check_connectivity.service /home/df-admin/production/admin/check_connectivity.service
 scp /home/df-admin/drinkfill/admin/controller_execute.sh /home/df-admin/production/admin/controller_execute.sh
 scp /home/df-admin/drinkfill/admin/ui_soapstand.service /home/df-admin/production/admin/ui_soapstand.service

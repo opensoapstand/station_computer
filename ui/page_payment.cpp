@@ -173,13 +173,13 @@ page_payment::page_payment(QWidget *parent) : QWidget(parent),
     {
         qDebug()<< "InitializingTap payment";
         std::map<std::string, std::string> configMap = readConfigFile();
-        int socket = connectSocket();
-        qDebug() << "Socket connection successful " << socket << endl;
+        // int socket = connectSocket();
+        // qDebug() << "Socket connection successful " << socket << endl;
         std::map<std::string, std::string> deviceStatus = checkDeviceStatus(connectSecondarySocket());
         if(deviceStatus["MACLABEL_IN_SESSION"]!=""){
             // finishSession(socket, configMap["MAC_KEY"], configMap["MAC_LABEL"]);
         }
-        // cancelTransaction(connectSecondarySocket());
+        cancelTransaction(connectSecondarySocket());
         qDebug() << "Transaction cancelled";
         if(configMap["MAC_KEY"]!=""){
              std::map<std::string, std::string> testResponse = testMac(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
@@ -808,7 +808,7 @@ void page_payment::on_previousPage_Button_clicked()
         {   
             stop_tap_action_thread = true;
             stop_authorization_thread=true;
-            stopPayTimers();
+            // stopPayTimers();
             qDebug() << "Stopping the threads";
             cancelTransaction(connectSecondarySocket());
             qDebug()<< "My socket address is "<< QString::fromStdString(socketAddr) << endl;
@@ -830,7 +830,7 @@ void page_payment::on_mainPage_Button_clicked()
 
 void page_payment::idlePaymentTimeout()
 {
-    // resetPaymentPage();
+    resetPaymentPage();
     // p_page_idle->showFullScreen();
     // this->hide();
     p_page_idle->pageTransition(this, p_page_idle);

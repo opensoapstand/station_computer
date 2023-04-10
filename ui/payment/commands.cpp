@@ -85,7 +85,7 @@ std::map<std::string, std::string> finishSession(int socket, std::string MAC_LAB
                         <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
                     </TRANSACTION>";
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
-    // close(socket);
+    close(socket);
     return dataReceived;
 }
 
@@ -96,18 +96,17 @@ std::map<std::string, std::string> cancelTransaction(int socket){
                         <COMMAND>CANCEL</COMMAND> \
                     </TRANSACTION>";
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
-    close(socket);
+    // close(socket);
     return dataReceived;
 }
 
 std::map<std::string, std::string> checkDeviceStatus(int socket){
-
     std::string command = "<TRANSACTION> \
                         <FUNCTION_TYPE>SECONDARYPORT</FUNCTION_TYPE> \
                         <COMMAND>STATUS</COMMAND> \
                     </TRANSACTION>";
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
-    close(socket);
+    // close(socket);
     return dataReceived;
 }
 
@@ -118,7 +117,7 @@ std::map<std::string, std::string> rebootDevice(int socket){
                         <COMMAND>REBOOT</COMMAND> \
                     </TRANSACTION>";
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
-    close(socket);
+    // close(socket);
     return dataReceived;
 }
 

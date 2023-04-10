@@ -584,6 +584,21 @@ DB
     fi
 }
 
+
+deploy_with_ash () {
+    echo "Select Source station"
+    get_choice_from_names
+    choice_index=$?
+    source_id="${station_ids[$choice_index]}"
+    echo "$source_id"
+    echo "Select Destination station"
+    get_choice_from_names
+    choice_index=$?
+    destination_id="${station_ids[$choice_index]}"
+    echo "$destination_id"
+    
+}
+
 echo 'At AWS: Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 PS3='Choose option(digit + enter):'
 options=("Quit" "Stations status" "Show Station Descriptions" "Station log in by SS-id" "Station mkdir" "Station log in by port" "Deploy wizard with Ash" "Static Production Copy: [SS-id] to [SS-id]" "Static Production Copy: [SS-id] to [port]" "Static Production Copy: [port] to [SS-id]" "Static Production Copy: [port] to [port]" "DB Production copy: [SS-id] to [SS-id]" "DB Production copy: [SS-id] to [port]" "DB Production copy: [port] to [SS-id]" "DB Production copy: [port] to [port]" "Logs Production Copy: [SS-id] to [SS-id]" "Logs Production Copy: [SS-id] to [port]" "Logs Production Copy: [port] to [SS-id]" "Logs Production Copy: [port] to [port]")
@@ -634,6 +649,7 @@ do
             ;;
         "Deploy wizard with Ash")
             echo "Deploy with Ash"
+            deploy_with_ash
             ;;
 
         "Static Production Copy: [SS-id] to [SS-id]")
@@ -720,3 +736,4 @@ test_while () {
     echo $i
     done 
 }
+

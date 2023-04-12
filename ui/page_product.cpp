@@ -341,11 +341,6 @@ void pageProduct::setDefaultSize()
     }
 }
 
-void pageProduct::cancelTimers()
-{
-    selectIdleTimer->stop();
-}
-
 /* GUI */
 void pageProduct::showEvent(QShowEvent *event)
 {
@@ -373,7 +368,8 @@ void pageProduct::onSelectTimeoutTick()
     {
 
         selectIdleTimer->stop();
-        mainPage();
+        
+        hidePage(p_page_idle);
     }
 }
 
@@ -687,21 +683,24 @@ bool pageProduct::stopSelectTimers()
     }
 }
 
-void pageProduct::mainPage()
+void pageProduct::hidePage(QWidget *pageToShow)
 {
+
+    // ui->mainPage_Button->setEnabled(false);
+    // ui->previousPage_Button->setEnabled(false);
+    selectIdleTimer->stop();
     this->stopSelectTimers();
-    p_page_idle->pageTransition(this, p_page_idle);
+    p_page_idle->pageTransition(this, pageToShow);
 }
 
 void pageProduct::on_mainPage_Button_clicked()
 {
-    this->stopSelectTimers();
-    p_page_idle->pageTransition(this, p_page_help);
+    hidePage(p_page_help);
 }
 
 void pageProduct::on_orderCustom_Button_clicked()
 {
-    qDebug() << "button custom";
+    qDebug() << "button custom clicked ";
     this->loadProductBySize(SIZE_CUSTOM_INDEX);
     on_continue_Button_clicked();
 }
@@ -737,26 +736,15 @@ size_t WriteCallback_coupon(char *contents, size_t size, size_t nmemb, void *use
 
 void pageProduct::on_previousPage_Button_clicked()
 {
-
-    //    qDebug() << "pageProduct: Previous button" << endl;
-    stopSelectTimers();
-    p_page_idle->pageTransition(this, p_page_select_product);
+    hidePage(p_page_select_product);
 }
 
 void pageProduct::on_continue_Button_clicked()
 {
-    qDebug() << "pageProduct: Pay button";
-
-    ui->mainPage_Button->setEnabled(false);
-    ui->previousPage_Button->setEnabled(false);
-
-    this->stopSelectTimers();
-    p_page_idle->pageTransition(this, p_page_overview);
+    hidePage(p_page_overview);
 }
 
 void pageProduct::on_back_Button_clicked()
 {
-    //    qDebug() << "pageProduct: Previous button" << endl;
-    stopSelectTimers();
-    p_page_idle->pageTransition(this, p_page_select_product);
+    hidePage(p_page_select_product);
 }

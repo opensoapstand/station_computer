@@ -171,7 +171,7 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
         "color: white;"
         "border: none;"
         "}");
-    ui->setText("Continue");
+    ui->label_pay->setText("Continue");
 
     QString css_discount_name = "QLabel{"
                                 "font-family: 'Montserrat';"

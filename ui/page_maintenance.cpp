@@ -138,10 +138,8 @@ void page_maintenance::showEvent(QShowEvent *event)
             // product_buttons[i]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
         }
     }
-
-
-    p_pageSelectProduct->cancelTimers();
-    p_pageProduct->cancelTimers();
+    // p_pageSelectProduct->cancelTimers();
+    // p_pageProduct->cancelTimers();
      qDebug() << "End maintenance load";
 }
 

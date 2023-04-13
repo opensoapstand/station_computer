@@ -371,9 +371,9 @@ text-align: center;
   <widget class="QLabel" name="label_email">
    <property name="geometry">
     <rect>
-     <x>240</x>
+     <x>20</x>
      <y>1676</y>
-     <width>600</width>
+     <width>1041</width>
      <height>114</height>
     </rect>
    </property>
@@ -1722,7 +1722,7 @@ color: rgb(0, 0, 0);</string>
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="label_help">
    <property name="geometry">
     <rect>
      <x>470</x>
@@ -1760,7 +1760,7 @@ color: rgb(0, 0, 0);</string>
   <zorder>feedback_Input_Button</zorder>
   <zorder>feedbackKeyboard</zorder>
   <zorder>label_thanks_for_feedback</zorder>
-  <zorder>label</zorder>
+  <zorder>label_help</zorder>
  </widget>
  <resources/>
  <connections/>

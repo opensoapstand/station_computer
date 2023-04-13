@@ -1722,6 +1722,19 @@ color: rgb(0, 0, 0);</string>
     <string>TextLabel</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>1780</y>
+     <width>131</width>
+     <height>121</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>label_send</zorder>
   <zorder>send_Button</zorder>
   <zorder>label_problem_options</zorder>
@@ -1747,6 +1760,7 @@ color: rgb(0, 0, 0);</string>
   <zorder>feedback_Input_Button</zorder>
   <zorder>feedbackKeyboard</zorder>
   <zorder>label_thanks_for_feedback</zorder>
+  <zorder>label</zorder>
  </widget>
  <resources/>
  <connections/>

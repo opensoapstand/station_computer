@@ -72,10 +72,10 @@ void DfUiServer::messageHandlerFinishedSlot()
     startServer(); // task
 }
 
-void DfUiServer::MMSlot()
-{
-    emit MM();
-}
+// void DfUiServer::MMSlot()
+// {
+//     emit MM();
+// }
 
 // This function is called by QTcpServer when a new connection is available.
 void DfUiServer::incomingConnection(qintptr socketDescriptor)
@@ -123,7 +123,7 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
 
     connect(messageHandlerThread, &DfUiCommThread::initReadySignal, this, &DfUiServer::initReadySlot);
     connect(messageHandlerThread, &DfUiCommThread::printerStatusSignal, this, &DfUiServer::printerStatusSlot);
-    connect(messageHandlerThread, &DfUiCommThread::MMSignal, this, &DfUiServer::MMSlot);
+    // connect(messageHandlerThread, &DfUiCommThread::MMSignal, this, &DfUiServer::MMSlot);
     connect(messageHandlerThread, &DfUiCommThread::dispenseButtonPressedSignal, this, &DfUiServer::dispenseButtonPressedSlot);
 
     // send message to controller that acknowledges receipt?!

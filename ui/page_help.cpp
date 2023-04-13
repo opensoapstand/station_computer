@@ -93,22 +93,24 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    // ui->previousPage_Button_2->setStyleSheet("QPushButton { color:#003840; background-color: transparent; border: 0px }");
-    // ui->previousPage_Button_2->setFont(font);
-    // ui->previousPage_Button_2->setText("<- Back");
-
     helpIdleTimer = new QTimer(this);
     helpIdleTimer->setInterval(1000);
     connect(helpIdleTimer, SIGNAL(timeout()), this, SLOT(onHelpTimeoutTick()));
 
     connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
-    // ui->keyboardTextEntry->setText("LODE");
 }
 
 // DTOR
 page_help::~page_help()
 {
     delete ui;
+}
+
+void page_help::hidePage(QWidget *pageToShow){
+    helpIdleTimer->stop();
+    ui->keyboardTextEntry->setText("");
+    ui->keyboard_3->hide();
+    p_page_idle->pageTransition(this, pageToShow);
 }
 
 void page_help::showEvent(QShowEvent *event)
@@ -142,7 +144,6 @@ void page_help::showEvent(QShowEvent *event)
 
     helpIdleTimer->start(1000);
     _helpIdleTimeoutSec = 60;
-    // ui->refreshLabel->hide();
     ui->keyboard_3->hide();
 }
 
@@ -162,20 +163,15 @@ void page_help::setPage(page_select_product *pageSelect, pageProduct *pageProduc
 
 void page_help::on_previousPage_Button_clicked()
 {
-    exit_page();
+    hidePage(p_page_idle);
 }
 
 void page_help::on_previousPage_Button_2_clicked()
 {
-    exit_page();
+     hidePage(p_page_idle);
 }
 
-void page_help::exit_page()
-{
-    helpIdleTimer->stop();
-    p_page_idle->pageTransition(this, p_page_idle);
-    ui->keyboardTextEntry->setText("");
-}
+
 
 void page_help::onHelpTimeoutTick()
 {
@@ -186,34 +182,23 @@ void page_help::onHelpTimeoutTick()
     else
     {
         qDebug() << "Help Timer Done!" << _helpIdleTimeoutSec;
-
-        exit_page();
-    }
-
-    if (_helpIdleTimeoutSec < 10)
-    {
-        // ui->refreshLabel->show();
+        hidePage(p_page_idle);
     }
 }
 
 void page_help::on_refreshButton_clicked()
 {
     _helpIdleTimeoutSec = 60;
-    // ui->refreshLabel->hide();
 }
 
 void page_help::on_transactions_Button_clicked()
 {
-    helpIdleTimer->stop();
-    // p_page_transactions->showFullScreen();
-    // this->hide();
-    p_page_idle->pageTransition(this, p_page_transactions);
+    hidePage(p_page_transactions);
 }
 
 void page_help::on_maintenance_page_Button_clicked()
 {
-    helpIdleTimer->stop();
-    // p_page_idle->pageTransition(this, p_page_maintenance);
+    _helpIdleTimeoutSec = 60;
     ui->keyboard_3->show();
 }
 
@@ -276,12 +261,10 @@ void page_help::keyboardButtonPressed(int buttonID)
         if (compareResult == 0)
         // if (compareResult == 0 || shortcut == 0) // shortcut for developing.
         {
-
-            ui->keyboardTextEntry->setText("");
             usleep(100000);
             qDebug() << "Password correct. Will open maintenance page";
-            p_page_idle->pageTransition(this, p_page_maintenance);
-            ui->keyboard_3->hide();
+            hidePage(p_page_maintenance);
+            
         }
         else
         {
@@ -305,7 +288,5 @@ void page_help::keyboardButtonPressed(int buttonID)
 
 void page_help::on_feedback_Button_clicked()
 {
-    helpIdleTimer->stop();
-
-    p_page_idle->pageTransition(this, p_page_feedback);
+    hidePage(p_page_feedback);
 }

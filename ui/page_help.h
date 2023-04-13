@@ -45,13 +45,15 @@ public:
     ~page_help();
     QTimer* helpIdleTimer;
 
+    void hidePage(QWidget *pageToShow);
+
 private slots:
     // **** Navigation ****
     void on_previousPage_Button_clicked();
     void on_previousPage_Button_2_clicked();
     void on_refreshButton_clicked();
     void onHelpTimeoutTick();
-    void exit_page();
+    
 
     void on_transactions_Button_clicked();
 

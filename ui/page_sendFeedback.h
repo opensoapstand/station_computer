@@ -26,8 +26,6 @@
 #include "page_product.h"
 #include <curl/curl.h>
 
-
-
 class page_select_product;
 class page_payment;
 class page_idle;
@@ -57,6 +55,7 @@ public:
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
+    void hidePage(QWidget *pageToShow);
     // void paintEvent(QPaintEvent *event);
 
 signals:
@@ -64,7 +63,7 @@ signals:
 
 private slots:
     // **** Navigation ****
-//     void on_previousPage_Button_clicked();
+    //     void on_previousPage_Button_clicked();
     // void on_page_payment_Button_clicked();
     // void on_promoCodeInput_clicked();
 
@@ -73,15 +72,14 @@ private slots:
     void onSelectTimeoutTick();
 
     void on_send_Button_clicked();
-    
+
     // void keyboardButtonPressed(int);
     void on_previousPage_Button_clicked();
     void on_feedback_Input_Button_clicked();
-      void keyboardButtonPressed(int);
-      
+    void keyboardButtonPressed(int);
+
 private:
     int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
-    bool stopSelectTimers();
     void setDefaultSize();
     void reset_and_show_page_elements();
     void selectOnTick();
@@ -112,4 +110,3 @@ private:
 };
 
 #endif // PAYSELECT_H
-

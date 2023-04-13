@@ -19,10 +19,10 @@ public:
     void setPage(page_idle *pageIdle);
 
     QTimer *idleTimer;
-     void exitPage();
      void populateList();
     void populateTransactionsTable();
     void deleteAllListItems();
+    void hidePage(QWidget *pageToShow);
 
 private slots:
     void on_back_Button_clicked();

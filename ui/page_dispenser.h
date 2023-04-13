@@ -47,6 +47,7 @@ public:
     explicit page_dispenser(QWidget *parent = nullptr);
     void setPage(page_payment* page_payment, pagethankyou* pageThankYou, page_idle* pageIdle);
     ~page_dispenser();
+    void hidePage(QWidget *pageToShow);
     void showEvent(QShowEvent *event);
     void resetDispenseTimeout(void);
     void updateVolumeDisplayed(double dispensed, bool isFull );
@@ -79,6 +80,8 @@ private slots:
 
 
     void on_cancelButton_clicked();
+
+    void on_debug_Button_clicked();
 
 private:
     bool isDispensing;

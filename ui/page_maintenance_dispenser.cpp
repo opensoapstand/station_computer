@@ -41,6 +41,13 @@ page_maintenance_dispenser::~page_maintenance_dispenser()
     delete ui;
 }
 
+void page_maintenance_dispenser::hidePage(QWidget *pageToShow)
+{
+    dispense_test_end(true);
+    maintainProductPageEndTimer->stop();
+    p_page_idle->pageTransition(this, pageToShow);
+}
+
 void page_maintenance_dispenser::setSoldOutButtonText()
 {
     qDebug() << "db call from soldoutbuttonsetting";
@@ -154,10 +161,7 @@ void page_maintenance_dispenser::setPage(page_maintenance *pageMaintenance, page
 
 void page_maintenance_dispenser::on_backButton_clicked()
 {
-    maintainProductPageEndTimer->stop();
-    p_page_idle->pageTransition(this, p_page_maintenance);
-
-    dispense_test_end(true);
+    hidePage(p_page_maintenance);
 }
 
 void page_maintenance_dispenser::refreshLabels()
@@ -455,10 +459,11 @@ void page_maintenance_dispenser::updateVolumeDisplayed(double dispensed, bool is
 }
 void page_maintenance_dispenser::setButtonPressCountLabel(bool init)
 {
-    if (init){
+    if (init)
+    {
         this->button_press_count = 0;
     }
-    ui->dispense_button_presses_label->setText("Button press count: " + QString::number( this->button_press_count));
+    ui->dispense_button_presses_label->setText("Button press count: " + QString::number(this->button_press_count));
 }
 
 void page_maintenance_dispenser::fsmReceiveDispenseButtonPressed()
@@ -473,10 +478,9 @@ void page_maintenance_dispenser::fsmReceiveTargetVolumeReached()
     // gets called from the controller.
 
     // --> attention application can crash when there is content in here. combined with updateVolumeDisplayed
-    
-    
+
     // DO THE MINIMUM HERE. NO DEBUG PRINTS. This must be an interrupt call.. probably crashes when called again before handled.
-    //qDebug() << "Signal: maintenance target hit. *********************" << pumping;
+    // qDebug() << "Signal: maintenance target hit. *********************" << pumping;
 
     // maximum custom dispense volume applies here. controller stops at it when reached.
     dispense_test_end(false);
@@ -765,15 +769,7 @@ void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
     else
     {
         qDebug() << "Maintenance dispenser page timeout";
-
-        // Update Click DB
-        //qDebug() << "db open5";
-        //DbManager db(DB_PATH);
-        dispense_test_end(true);
-        //db.closeDB();
-
-        maintainProductPageEndTimer->stop();
-        p_page_idle->pageTransition(this, p_page_idle);
+        hidePage(p_page_idle);
     }
 }
 

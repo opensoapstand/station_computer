@@ -28,19 +28,18 @@
 class page_maintenance;
 class page_idle;
 
-namespace Ui {
-class page_maintenance_general;
+namespace Ui
+{
+    class page_maintenance_general;
 }
-
 
 class page_maintenance_general : public QWidget
 {
     Q_OBJECT
 
-
 public:
     explicit page_maintenance_general(QWidget *parent = nullptr);
-    void setPage(page_maintenance* pageMaintenance, page_idle* pageIdle);
+    void setPage(page_maintenance *pageMaintenance, page_idle *pageIdle);
     ~page_maintenance_general();
     void resizeEvent(QResizeEvent *event);
     void on_backButton_clicked();
@@ -50,6 +49,7 @@ public:
     void on_printer_check_status_clicked();
     void on_printer_test_button_clicked();
     void send_check_printer_status_command();
+    void hidePage(QWidget *pageToShow);
 
 private slots:
 
@@ -61,10 +61,8 @@ private slots:
 
     void on_shutdown_Button_clicked();
 
-
     void on_enable_pump_ramping_checkBox_clicked(bool checked);
     void on_enable_empty_container_checkBox_clicked(bool checked);
-
 
     void on_test_lineEdit_textChanged(const QString &arg1);
 
@@ -77,7 +75,6 @@ private slots:
 
     void on_printer_test_print_button_clicked();
 
-
     void on_rtunnel_restart_Button_clicked();
 
     void on_network_status_Button_clicked();
@@ -85,12 +82,11 @@ private slots:
 private:
     void showEvent(QShowEvent *event);
     Ui::page_maintenance_general *ui;
-    page_maintenance* p_page_maintenance;
-    page_idle* p_page_idle;
-
+    page_maintenance *p_page_maintenance;
+    page_idle *p_page_idle;
 
     int _maintenanceGeneralPageTimeoutSec;
-    QTimer* maintenanceGeneralPageEndTimer;
+    QTimer *maintenanceGeneralPageEndTimer;
 };
 
 #endif // PAGE_MAINTENANCE_GENERAL_H

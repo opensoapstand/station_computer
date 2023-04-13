@@ -26,8 +26,9 @@ class page_idle;
 class page_payment;
 class page_sendFeedback;
 
-namespace Ui {
-class pagethankyou;
+namespace Ui
+{
+    class pagethankyou;
 }
 
 class pagethankyou : public QWidget
@@ -36,56 +37,36 @@ class pagethankyou : public QWidget
 
 public:
     explicit pagethankyou(QWidget *parent = nullptr);
-    void setPage(page_dispenser* page_dispenser, page_idle* pageIdle, page_payment* page_payment, page_sendFeedback *page_sendFeedback);
+    void setPage(page_dispenser *page_dispenser, page_idle *pageIdle, page_payment *page_payment, page_sendFeedback *page_sendFeedback);
     ~pagethankyou();
 
     void controllerFinishedTransaction();
-    void  exitPage();
+    void hidePage(QWidget *pageToShow);
+    void finishHandler();
 
     bool is_controller_finished;
     bool is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER;
 
 public slots:
-    // void showPopup();
-    // void handleFirstOptionClick();
-    // void handleSecondOptionClick();
-    // void handleThirdOptionClick();
-    // void handleFourthOptionClick();
-    // void handleFifthOptionClick();
-    
-    // void handleFirstOptionRelease();
-    // void handleSecondOptionRelease();
-    // void handleThirdOptionRelease();
-    // void handleFourthOptionRelease();
-    // void handleFifthOptionRelease();
 private slots:
     void on_mainPage_Button_clicked();
     void onThankyouTimeoutTick();
     void on_notifyUs_Button_clicked();
-    // void onRinseTimerTick();
-
-    // void on_option1_Button_clicked(bool checked);
-
-    // void on_option1_Button_clicked();
-
 private:
     void showEvent(QShowEvent *event);
-   
-
 
     Ui::pagethankyou *ui;
-    page_dispenser* p_page_dispense;
-    page_idle* p_page_idle;
-    page_payment* paymentPage;
-    page_sendFeedback* p_page_sendFeedback;
+    page_dispenser *p_page_dispense;
+    page_idle *p_page_idle;
+    page_payment *paymentPage;
+    page_sendFeedback *p_page_sendFeedback;
 
-    QDialog* popup;
-    
+    QDialog *popup;
+
     int _thankYouTimeoutSec;
-    QTimer* thankYouEndTimer;
+    QTimer *thankYouEndTimer;
 
-
-    QTimer* rinseTimer;
+    QTimer *rinseTimer;
     int _rinseTimerTimeoutSec;
     bool rinse;
 
@@ -93,21 +74,19 @@ private:
     CURLcode res;
     std::string readBuffer;
     QByteArray curl_param_array;
-    char * curl_data;
+    char *curl_data;
 
     time_t rawtime;
-    struct tm * timeinfo;
+    struct tm *timeinfo;
 
     void sendDispenseEndToCloud();
     void sendTapOrderToCloud();
     void transactionToFile(char *curl_params);
 
-    
+
     bool exitIsForceable; // avoid being stuck if internet fails.
 
     bool is_in_state_thank_you;
-
-
 };
 
 #endif // PAGETHANKYOU_H

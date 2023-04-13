@@ -109,7 +109,7 @@ void page_idle::showEvent(QShowEvent *event)
     currentProductOrder->setDiscountPercentageFraction(0.0);
     currentProductOrder->setPromoCode("");
 
-    qDebug() << "open db for paymentmethode";
+    qDebug() << "open db: payment method";
     DbManager db(DB_PATH);
     bool needsReceiptPrinter = false;
     for (int slot = 1; slot < SLOT_COUNT; slot++)
@@ -127,6 +127,7 @@ void page_idle::showEvent(QShowEvent *event)
 
     if (needsReceiptPrinter)
     {
+        ui->printer_status_label->hide(); // hide here, will show if enabled and has problems.
         checkReceiptPrinterStatus();
     }
     else
@@ -206,8 +207,11 @@ void page_idle::checkReceiptPrinterStatus()
     {
         this->p_page_maintenance_general->send_check_printer_status_command();
     }
+}
 
-    
+void page_idle::hidePage(QWidget *pageToShow)
+{
+    this->pageTransition(this, pageToShow);
 }
 /*
  * Screen click shows product page as full screen and hides page_idle screen
@@ -237,9 +241,7 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
 
 void page_idle::on_toSelectProductPageButton_clicked()
 {
-    qDebug() << "Proceed to next page button clicked. Go to select product page. ";
-
-    this->pageTransition(this, p_pageSelectProduct);
+    this->hidePage(p_pageSelectProduct);
 }
 
 void page_idle::on_testButton_clicked()
@@ -267,12 +269,13 @@ bool page_idle::isEnough(int p)
     return false;
 }
 
-void page_idle::MMSlot()
-{
-    qDebug() << "Signal: Enter maintenance mode";
-    this->p_pageSelectProduct->hide();
-    this->pageTransition(this, p_page_maintenance);
-}
+// void page_idle::MMSlot()
+// {
+//     qDebug() << "Signal: Enter maintenance mode";
+//     this->p_pageSelectProduct->hide(); // if pressed from another page. This is not good. It could be on any page!
+
+//     hidePage(p_page_maintenance);
+// }
 
 void page_idle::addCompanyLogoToLabel(QLabel *label)
 {

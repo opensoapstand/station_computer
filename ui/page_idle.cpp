@@ -206,8 +206,9 @@ void page_idle::checkReceiptPrinterStatus()
 
     if (hasReceiptPrinter)
     {
-        this->p_page_maintenance_general->send_check_printer_status_command();
-        qDebug() << "Send check receipt printer command to controller";
+        qDebug() << "Check receipt printer functionality disabled.";
+        // this->p_page_maintenance_general->send_check_printer_status_command();
+        // qDebug() << "Send check receipt printer command to controller";
     }
     else
     {

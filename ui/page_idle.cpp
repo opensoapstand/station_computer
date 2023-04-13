@@ -115,9 +115,11 @@ void page_idle::showEvent(QShowEvent *event)
     for (int slot = 1; slot <= SLOT_COUNT; slot++)
     {
         QString paymentMethod = db.getPaymentMethod(slot);
-        if (paymentMethod == "plu" || paymentMethod == "barcode")
+        if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
         {
             needsReceiptPrinter = true;
+            qDebug() << "Needs receipt printer: " << paymentMethod;
+            break;
         }
     }
     db.closeDB();
@@ -205,6 +207,11 @@ void page_idle::checkReceiptPrinterStatus()
     if (hasReceiptPrinter)
     {
         this->p_page_maintenance_general->send_check_printer_status_command();
+        qDebug() << "Send check receipt printer command to controller";
+    }
+    else
+    {
+        qDebug() << "Can't check receipt printer. Not enabled in db->machine table";
     }
 }
 

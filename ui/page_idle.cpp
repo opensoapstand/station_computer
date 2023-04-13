@@ -112,14 +112,13 @@ void page_idle::showEvent(QShowEvent *event)
     qDebug() << "open db: payment method";
     DbManager db(DB_PATH);
     bool needsReceiptPrinter = false;
-    for (int slot = 1; slot < SLOT_COUNT; slot++)
+    for (int slot = 1; slot <= SLOT_COUNT; slot++)
     {
         QString paymentMethod = db.getPaymentMethod(slot);
         if (paymentMethod == "plu" || paymentMethod == "barcode")
         {
             needsReceiptPrinter = true;
         }
-        qDebug() << paymentMethod;
     }
     db.closeDB();
 

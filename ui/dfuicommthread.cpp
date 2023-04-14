@@ -113,10 +113,10 @@ QByteArray DfUiCommThread::readyRead()
         usleep(3000000);
     }
 
-    else if (Data == "MM")
-    {
-        emit MMSignal();
-    }
+    // else if (Data == "MM")
+    // {
+    //     emit MMSignal();
+    // }
     else if (Data == "Dispense Button Pos Edge")
     {
         emit dispenseButtonPressedSignal();

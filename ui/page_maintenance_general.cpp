@@ -92,6 +92,10 @@ void page_maintenance_general::refreshLabels()
 {
 }
 
+void page_maintenance_general::hidePage(QWidget *pageToShow)
+{
+    p_page_idle->pageTransition(this, pageToShow);
+}
 void page_maintenance_general::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
@@ -187,9 +191,7 @@ void page_maintenance_general::on_enable_empty_container_checkBox_clicked(bool c
 
 void page_maintenance_general::on_back_Button_clicked()
 {
-    // p_page_maintenance->showFullScreen();
-    // this->hide();
-    p_page_idle->pageTransition(this, p_page_maintenance);
+    hidePage(p_page_maintenance);
 }
 
 void page_maintenance_general::on_minimize_Button_clicked()
@@ -430,9 +432,7 @@ void page_maintenance_general::on_wifiButton_clicked()
         }
     }
 
-
-
-    // set label for 
+    // set label for
     QProcess process;
 
     process.start("iwgetid -r");
@@ -489,10 +489,8 @@ void page_maintenance_general::on_rtunnel_restart_Button_clicked()
     process.write("exit\n");
     process.waitForFinished(-1);
     QString feedback = process.readAllStandardOutput();
-    
-    ui->status_feedback_label->setText("rtunnel restart " + feedback);
 
-    
+    ui->status_feedback_label->setText("rtunnel restart " + feedback);
 
     // https://stackoverflow.com/questions/23322739/how-to-execute-complex-linux-commands-in-qt
 
@@ -527,7 +525,7 @@ void page_maintenance_general::on_rtunnel_restart_Button_clicked()
 
 void page_maintenance_general::on_network_status_Button_clicked()
 {
-// iwconfig wlo2 | awk -F'[ =]+' '/Signal level/
+    // iwconfig wlo2 | awk -F'[ =]+' '/Signal level/
 
     QProcess process;
     process.start("bash");
@@ -537,7 +535,6 @@ void page_maintenance_general::on_network_status_Button_clicked()
     process.write("exit\n");
     process.waitForFinished(-1);
     QString feedback = process.readAllStandardOutput();
-    
-    ui->status_feedback_label->setText(feedback);
 
+    ui->status_feedback_label->setText(feedback);
 }

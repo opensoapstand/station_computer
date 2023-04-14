@@ -53,9 +53,7 @@ public:
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
-    // void paintEvent(QPaintEvent *event);
-
-    void cancelTimers();
+    void hidePage(QWidget *pageToShow);
     
 signals:
     void paymentTotal(string, string, string);
@@ -83,7 +81,7 @@ private:
     void setDefaultSize();
     void reset_and_show_page_elements();
     void selectOnTick();
-    void mainPage();
+    
 
     std::string readBuffer;
     Ui::pageProduct *ui;

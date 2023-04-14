@@ -48,6 +48,12 @@ page_transactions::~page_transactions()
         delete ui;
 }
 
+void page_transactions::hidePage(QWidget *pageToShow)
+{
+        idleTimer->stop();
+        p_page_idle->pageTransition(this, pageToShow);
+}
+
 void page_transactions::showEvent(QShowEvent *event)
 {
         qDebug() << "<<<<<<< Page Enter: Transactions >>>>>>>>>";
@@ -87,12 +93,12 @@ void page_transactions::onIdleTimeoutTick()
 {
         if (--_idleTimeoutSec >= 0)
         {
-                qDebug() << "transactions  Tick Down: " << _idleTimeoutSec;
+                // qDebug() << "transactions  Tick Down: " << _idleTimeoutSec;
         }
         else
         {
                 qDebug() << "transactions Timer Done!" << _idleTimeoutSec;
-                exitPage();
+                hidePage(p_page_idle);
         }
 }
 
@@ -138,16 +144,10 @@ void page_transactions::populateList()
                 ui->transactions_List->addItem(rowItem);
         }
 }
-void page_transactions::exitPage()
-{
-        idleTimer->stop();
-        // p_page_idle->showFullScreen();
-        // this->hide();
-        p_page_idle->pageTransition(this, p_page_idle);
-}
+
 void page_transactions::on_back_Button_clicked()
 {
-        exitPage();
+        hidePage(p_page_idle);
 }
 
 void page_transactions::on_print_Button_clicked(bool checked)

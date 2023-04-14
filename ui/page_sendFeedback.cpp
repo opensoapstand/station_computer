@@ -31,14 +31,14 @@ using json = nlohmann::json;
 
 // CTOR
 page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
-                                            ui(new Ui::page_sendFeedback)
+                                                        ui(new Ui::page_sendFeedback)
 {
-    qDebug()<< "IN send feedback";
+    qDebug() << "IN send feedback";
     ui->setupUi(this);
 
     ui->feedback_Input_Button->setStyleSheet("QPushButton { border: 1px solid #5E8580}");
     ui->feedback_Input_Button->setText("Type Here");
-    ui->feedbackText->setStyleSheet("QPushButton { background-color: transparent; border: 1px solid #5E8580 }");   // ui->page_payment_Button->show();
+    ui->feedbackText->setStyleSheet("QPushButton { background-color: transparent; border: 1px solid #5E8580 }"); // ui->page_payment_Button->show();
     ui->feedbackKeyboard->hide();
     ui->label_thanks_for_feedback->hide();
 
@@ -47,42 +47,44 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     // ui->label_type_here->hide();
     ui->previousPage_Button->setStyleSheet("QPushButton { color:#555555; background-color: transparent; border: 0px }");
     ui->previousPage_Button->setStyleSheet(
-                "QPushButton {"
+        "QPushButton {"
 
-                "font-family: 'Brevia';"
-                "font-style: normal;"
-                "font-weight: 75;"
-                "font-size: 32px;"
-                "line-height: 99px;"
-                "letter-spacing: 1.5px;"
-                "color: #003840;"
-                "text-align: left;"
-                "qproperty-alignment: AlignCenter;"
-                "border: none;"
-                "}");
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 75;"
+        "font-size: 32px;"
+        "line-height: 99px;"
+        "letter-spacing: 1.5px;"
+        "color: #003840;"
+        "text-align: left;"
+        "qproperty-alignment: AlignCenter;"
+        "border: none;"
+        "}");
 
+    ui->previousPage_Button->setText("<-back");
 
-        ui->previousPage_Button->setText("<-back");
-        // ui->mainPage_Button->hide();
-        
-        ui->label_select_problem->setStyleSheet("QLabel { color:#555555; ; border: 1px }");
-        ui->label_select_problem->setStyleSheet(
-                "QLabel {"
-                "font-family: 'Brevia';"
-                "font-style: normal;"
-                "font-weight: 75;"
-                "font-size: 55px;"
-                "line-height: 99px;"
-                "letter-spacing: 1.5px;"
-                "color: #003840;"
-                "text-align: center;"
-                "qproperty-alignment: AlignCenter;"
-                "border: none;"
-                "}");
-        ui->label_select_problem->setText("Please provide feedback");
-        ui->label_select_problem->setWordWrap(true);
-        ui->label_problem_options->setStyleSheet("background-color: #5E8680; border-radius: 30px;");
-        QString checkBoxLabelStyling = ("QPushButton {""font-family: 'Brevia';"
+    // ui->mainPage_Button->hide();
+    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+
+    ui->label_select_problem->setStyleSheet("QLabel { color:#555555; ; border: 1px }");
+    ui->label_select_problem->setStyleSheet(
+        "QLabel {"
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 75;"
+        "font-size: 55px;"
+        "line-height: 99px;"
+        "letter-spacing: 1.5px;"
+        "color: #003840;"
+        "text-align: center;"
+        "qproperty-alignment: AlignCenter;"
+        "border: none;"
+        "}");
+    ui->label_select_problem->setText("Please provide feedback");
+    ui->label_select_problem->setWordWrap(true);
+    ui->label_problem_options->setStyleSheet("background-color: #5E8680; border-radius: 30px;");
+    QString checkBoxLabelStyling = ("QPushButton {"
+                                    "font-family: 'Brevia';"
                                     "font-style: normal;"
                                     "font-weight: 75;"
                                     "font-size: 32px;"
@@ -95,86 +97,98 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                                     "wordWrap:true;"
                                     "}");
 
-        ui->label_still_cant_find->setStyleSheet(
-                "QLabel {"
-                "font-family: 'Brevia';"
-                "font-style: normal;"
-                "font-weight: 75;"
-                "font-size: 43px;"
-                "line-height: 99px;"
-                "letter-spacing: 1.5px;"
-                "color: #438080;"
-                "text-align: center;"
-                "qproperty-alignment: AlignCenter;"
-                "border: none;"
-                "}");
-        ui->label_still_cant_find->setText("Still can't find it?");
+    ui->label_still_cant_find->setStyleSheet(
+        "QLabel {"
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 75;"
+        "font-size: 43px;"
+        "line-height: 99px;"
+        "letter-spacing: 1.5px;"
+        "color: #438080;"
+        "text-align: center;"
+        "qproperty-alignment: AlignCenter;"
+        "border: none;"
+        "}");
+    ui->label_still_cant_find->setText("Still can't find it?");
 
-        ui->label_email->setStyleSheet(
-                "QLabel {"
-                "font-family: 'Montserrat';"
-                "font-style: normal;"
-                "font-weight: 75;"
-                "font-size: 35px;"
-                "line-height: 99px;"
-                "letter-spacing: 1.5px;"
-                "color: #024B51;"
-                "text-align: center;"
-                "qproperty-alignment: AlignCenter;"
-                "border: none;"
-                "wordWrap:true;"
-                "}");
-        ui->label_email->setText("Email us at: sales@soapstand.com");
-    
-        ui->checkBox_1_Label->setStyleSheet(checkBoxLabelStyling);
-        ui->checkBox_1_Label->setText("The station never dispensed soap");
-       
-        ui->checkBox_2_Label->setStyleSheet(checkBoxLabelStyling);
-        ui->checkBox_2_Label->setText("Wrong amount charged");
- 
-        ui->checkBox_3_Label->setStyleSheet(checkBoxLabelStyling);
-        ui->checkBox_3_Label->setText("The station is too slow");
+    ui->label_email->setStyleSheet(
+        // "QLabel {"
+        // "font-family: 'Montserrat';"
+        // "font-style: normal;"
+        // "font-weight: 75;"
+        // "font-size: 35px;"
+        // "line-height: 99px;"
+        // "letter-spacing: 1.5px;"
+        // "color: #024B51;"
+        // "text-align: center;"
+        // "qproperty-alignment: AlignCenter;"
+        // "border: none;"
+        // "wordWrap:true;"
+        // "}");
+         "QLabel {"
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 75;"
+        "font-size: 43px;"
+        "line-height: 99px;"
+        "letter-spacing: 1.5px;"
+        "color: #438080;"
+        "text-align: center;"
+        "qproperty-alignment: AlignCenter;"
+        "border: none;"
+        "}");
+    ui->label_email->setText("Email us at: sales@soapstand.com");
 
-        ui->checkBox_4_Label->setStyleSheet(checkBoxLabelStyling);
-        ui->checkBox_4_Label->setText("I got charged more than once");
+    ui->checkBox_1_Label->setStyleSheet(checkBoxLabelStyling);
+    ui->checkBox_1_Label->setText("The station never dispensed soap");
 
-        ui->checkBox_5_Label->setStyleSheet(checkBoxLabelStyling);
-        ui->checkBox_5_Label->setText("Screen was frozen");
+    ui->checkBox_2_Label->setStyleSheet(checkBoxLabelStyling);
+    ui->checkBox_2_Label->setText("Wrong amount charged");
 
-        ui->label_enter_feedback->setStyleSheet(checkBoxLabelStyling);
-        ui->label_enter_feedback->setText("Enter other feedback below");
-        
-        ui->feedback_Input_Button->raise();
-        ui->feedback_Input_Button->setStyleSheet("QPushButton { border: 1px solid #FFFFFF}");
-        // ui->feedback_Input_Button->setText("Type here");
-        // ui->label_type_here->show();
-        // ui->label_type_here->setText("Type here");;
-  
-        // ui->promoKeyboard->hide();
-    
-         ui->feedbackText->clear();
-        ui->feedbackText->show();
-        ui->feedbackText->setEchoMode(QLineEdit::Normal);
+    ui->checkBox_3_Label->setStyleSheet(checkBoxLabelStyling);
+    ui->checkBox_3_Label->setText("The station is too slow");
 
-        ui->label_thanks_for_feedback->setStyleSheet(
-                "QLabel {"
-                "font-family: 'Brevia';"
-                "font-style: normal;"
-                "font-weight: 75;"
-                "font-size: 65px;"
-                "line-height: 99px;"
-                "letter-spacing: 1.5px;"
-                "color: #003840;"
-                "text-align: center;"
-                "qproperty-alignment: AlignCenter;"
-                "border: none;"
-                "}");
-        ui->label_thanks_for_feedback->setText("Thank you for helping us <br>make a better experience <br>for you");
+    ui->checkBox_4_Label->setStyleSheet(checkBoxLabelStyling);
+    ui->checkBox_4_Label->setText("I got charged more than once");
 
-        // QString keyboard = KEYBOARD_IMAGE_PATH;
+    ui->checkBox_5_Label->setStyleSheet(checkBoxLabelStyling);
+    ui->checkBox_5_Label->setText("Screen was frozen");
+
+    ui->label_enter_feedback->setStyleSheet(checkBoxLabelStyling);
+    ui->label_enter_feedback->setText("Enter other feedback below");
+
+    ui->feedback_Input_Button->raise();
+    ui->feedback_Input_Button->setStyleSheet("QPushButton { border: 1px solid #FFFFFF}");
+    // ui->feedback_Input_Button->setText("Type here");
+    // ui->label_type_here->show();
+    // ui->label_type_here->setText("Type here");;
+
+    // ui->promoKeyboard->hide();
+
+    ui->feedbackText->clear();
+    ui->feedbackText->show();
+    ui->feedbackText->setEchoMode(QLineEdit::Normal);
+
+    ui->label_thanks_for_feedback->setStyleSheet(
+        "QLabel {"
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 75;"
+        "font-size: 65px;"
+        "line-height: 99px;"
+        "letter-spacing: 1.5px;"
+        "color: #003840;"
+        "text-align: center;"
+        "qproperty-alignment: AlignCenter;"
+        "border: none;"
+        "}");
+    ui->label_thanks_for_feedback->setText("Thank you for <br> your feedback");
+
+    // QString keyboard = KEYBOARD_IMAGE_PATH;
     // QString keyboard_style_sheet = " background-image: url(" + keyboard + "); }";
     // ui->feedbackKeyboard->setStyleSheet(keyboard_style_sheet);
- {
+    {
         selectIdleTimer = new QTimer(this);
         selectIdleTimer->setInterval(40);
         // connect(ui->promoButton, SIGNAL(clicked()), this, SLOT(on_applyPromo_Button_clicked()));
@@ -183,61 +197,55 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
         connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
     }
 
-        
+    QSize size(30, 30);
+    ui->checkBox_1->setIconSize(size);
+    ui->checkBox_2->setIconSize(size);
+    ui->checkBox_3->setIconSize(size);
+    ui->checkBox_4->setIconSize(size);
+    ui->checkBox_5->setIconSize(size);
 
+    ui->label_send->setStyleSheet("QLabel {"
+                                  "font-family: 'Brevia';"
+                                  "font-style: normal;"
+                                  "font-weight: 75;"
+                                  "font-size: 35px;"
+                                  "line-height: 99px;"
+                                  "letter-spacing: 1.5px;"
+                                  "background-color: #5E8680;"
+                                  "color: #FFFFFF;"
+                                  "text-align: center;"
+                                  "qproperty-alignment: AlignCenter;"
+                                  "border-radius: 30px;"
+                                  "padding: 10px;"
+                                  "border: 2px solid #004D54;"
+                                  "}");
 
-        
+    ui->label_send->setText("SEND");
+    ui->send_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-        QSize size(30, 30);
-        ui->checkBox_1->setIconSize(size);
-        ui->checkBox_2->setIconSize(size);
-        ui->checkBox_3->setIconSize(size);
-        ui->checkBox_4->setIconSize(size);
-        ui->checkBox_5->setIconSize(size);
+    ui->label_send->setStyleSheet("QLabel {"
+                                  "font-family: 'Brevia';"
+                                  "font-style: normal;"
+                                  "font-weight: 75;"
+                                  "font-size: 35px;"
+                                  "line-height: 99px;"
+                                  "letter-spacing: 1.5px;"
+                                  "background-color: #5E8680;"
+                                  "color: #FFFFFF;"
+                                  "text-align: center;"
+                                  "qproperty-alignment: AlignCenter;"
+                                  "border-radius: 30px;"
+                                  "padding: 10px;"
+                                  "border: 2px solid #004D54;"
+                                  "}");
 
-        ui->label_send->setStyleSheet("QLabel {"
-            "font-family: 'Brevia';"
-            "font-style: normal;"
-            "font-weight: 75;"
-            "font-size: 35px;"
-            "line-height: 99px;"
-            "letter-spacing: 1.5px;"
-            "background-color: #5E8680;"
-            "color: #FFFFFF;"
-            "text-align: center;"
-            "qproperty-alignment: AlignCenter;"
-            "border-radius: 30px;"
-            "padding: 10px;"
-            "border: 2px solid #004D54;"
-"}");
-
-        ui->label_send->setText("SEND");
-        ui->send_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-        
-        ui->label_send->setStyleSheet("QLabel {"
-            "font-family: 'Brevia';"
-            "font-style: normal;"
-            "font-weight: 75;"
-            "font-size: 35px;"
-            "line-height: 99px;"
-            "letter-spacing: 1.5px;"
-            "background-color: #5E8680;"
-            "color: #FFFFFF;"
-            "text-align: center;"
-            "qproperty-alignment: AlignCenter;"
-            "border-radius: 30px;"
-            "padding: 10px;"
-            "border: 2px solid #004D54;"
-"}");
-
-        ui->label_send->setText("SEND");
-
+    ui->label_send->setText("SEND");
 }
-    
+
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_payment *page_payment, page_help *pageHelp, pageProduct *page_product, pagethankyou *page_thankyou )
+void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_payment *page_payment, page_help *pageHelp, pageProduct *page_product, pagethankyou *page_thankyou)
 {
     this->p_page_select_product = pageSelect;
     this->paymentPage = page_payment;
@@ -249,12 +257,13 @@ void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser 
     // ui->promoCode->clear();
     // ui->promoCode->hide();
 
-
-    // selectedProductOrder = p_page_idle->currentProductOrder;
+    
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_PATH);
     ui->send_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-
-
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
+    QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
+    p_page_idle->addPictureToLabel(ui->label_help, full_path);
+    // ui->label_help->raise();
     // couponHandler();
 }
 
@@ -285,12 +294,10 @@ void page_sendFeedback::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: Send Feedback>>>>>>>>>";
     QWidget::showEvent(event);
-        
-    
+
     // selectedProductOrder->loadSelectedProductProperties();
     reset_and_show_page_elements();
 }
-
 
 void page_sendFeedback::resizeEvent(QResizeEvent *event)
 {
@@ -317,41 +324,35 @@ void page_sendFeedback::onSelectTimeoutTick()
 
 void page_sendFeedback::reset_and_show_page_elements()
 {
+    ui->feedback_Input_Button->raise();
+    ui->feedbackText->clear();
+    ui->feedbackText->show();
+    
     ui->checkBox_1->setCheckState(Qt::Unchecked);
     ui->checkBox_2->setCheckState(Qt::Unchecked);
     ui->checkBox_3->setCheckState(Qt::Unchecked);
     ui->checkBox_4->setCheckState(Qt::Unchecked);
     ui->checkBox_5->setCheckState(Qt::Unchecked);
- 
 }
 
 
-
-bool page_sendFeedback::stopSelectTimers()
+void page_sendFeedback::hidePage(QWidget *pageToShow)
 {
-    if (selectIdleTimer != nullptr)
+     if (selectIdleTimer != nullptr)
     {
         selectIdleTimer->stop();
-        return true;
     }
-    else
-    {
-        return false;
-    }
+    p_page_idle->pageTransition(this, pageToShow);
 }
 
 void page_sendFeedback::mainPage()
 {
-    qDebug() << "page_sendFeedback: mainPage button" << endl;
-    this->stopSelectTimers();
-    p_page_idle->pageTransition(this, p_page_idle);
+    hidePage(p_page_idle);
 }
-
 
 void page_sendFeedback::on_mainPage_Button_clicked()
 {
-    this->stopSelectTimers();
-    p_page_idle->pageTransition(this, p_page_help);
+    hidePage(p_page_help);
 }
 
 size_t WriteCallbackFeedback(char *contents, size_t size, size_t nmemb, void *userp)
@@ -360,147 +361,143 @@ size_t WriteCallbackFeedback(char *contents, size_t size, size_t nmemb, void *us
     return size * nmemb;
 }
 
-
 void page_sendFeedback::on_send_Button_clicked()
-{   
-    QVBoxLayout* layout = new QVBoxLayout();
-    
-    //revert
-    QDialog* dialog = new QDialog(this);
+{
+    QVBoxLayout *layout = new QVBoxLayout();
+
+    // revert
+    QDialog *dialog = new QDialog(this);
     QTimer *timer = new QTimer(dialog);
     timer->setSingleShot(true);
     timer->start(3000);
     ui->feedbackText->clear();
 
     QObject::connect(timer, &QTimer::timeout, dialog, &QDialog::close);
-    
-    //to remove title bar
+
+    // to remove title bar
     dialog->setWindowFlags(Qt::CustomizeWindowHint);
     dialog->setLayout(layout);
     qDebug() << "Send button pressed";
     QStringList problemList;
-    if(ui->checkBox_1->isChecked()){
+    if (ui->checkBox_1->isChecked())
+    {
         problemList << ui->checkBox_1_Label->text();
     }
-    if(ui->checkBox_2->isChecked()){
+    if (ui->checkBox_2->isChecked())
+    {
         problemList << ui->checkBox_2_Label->text();
     }
-    if(ui->checkBox_3->isChecked()){
+    if (ui->checkBox_3->isChecked())
+    {
         problemList << ui->checkBox_3_Label->text();
     }
-    if(ui->checkBox_4->isChecked()){
+    if (ui->checkBox_4->isChecked())
+    {
         problemList << ui->checkBox_4_Label->text();
     }
-    if(ui->checkBox_5->isChecked()){
+    if (ui->checkBox_5->isChecked())
+    {
         problemList << ui->checkBox_5_Label->text();
     }
     qDebug() << problemList;
     QString problems = problemList.join(",");
-    if(problems.length() != 0  && ui->feedbackText->text().isEmpty())
+    if (problems.length() != 0 && ui->feedbackText->text().isEmpty())
     {
-    QString MachineSerialNumber = p_page_idle->currentProductOrder->getMachineId();
-    QString customFeedback = ui->feedbackText->text();
-    QString curl_param = "problems="+problems+" "+customFeedback+"&MachineSerialNumber=" + MachineSerialNumber;
-    qDebug() << "Curl params" << curl_param << endl;
-    curl_param_array = curl_param.toLocal8Bit();
-    qDebug() << curl_param_array;
-    curl = curl_easy_init();
-    if (!curl)
-    {
-        qDebug() << "pagethankyou: cURL failed to init. parameters:" + curl_param;
-        
-        return;
+        QString MachineSerialNumber = p_page_idle->currentProductOrder->getMachineId();
+        QString customFeedback = ui->feedbackText->text();
+        QString curl_param = "problems=" + problems + " " + customFeedback + "&MachineSerialNumber=" + MachineSerialNumber;
+        qDebug() << "Curl params" << curl_param << endl;
+        curl_param_array = curl_param.toLocal8Bit();
+        qDebug() << curl_param_array;
+        curl = curl_easy_init();
+        if (!curl)
+        {
+            qDebug() << "pagethankyou: cURL failed to init. parameters:" + curl_param;
+
+            return;
+        }
+
+        curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/alert/sendFeedbackEmail");
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallbackFeedback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
+        res = curl_easy_perform(curl);
+
+        if (res != CURLE_OK)
+        {
+            qDebug() << "ERROR: Transaction NOT sent to cloud. cURL fail. Error code: " + QString::number(res);
+        }
+        qDebug() << "Send button stores values" << endl;
+
+        dialog->move(0, 100);
+        dialog->resize(1080, 1920);
+        dialog->setStyleSheet("background-image:  url(/home/df-admin/drinkfill/ui/references/templates/default/background_feedbacksent.png);");
+
+        QLabel *label = new QLabel(dialog);
+        label->setText("Thank you for <br>your feedback <br>");
+        label->setStyleSheet("QLabel {"
+                             "font-family: 'Brevia';"
+                             "font-style: normal;"
+                             "font-weight: 75;"
+                             "font-size: 65px;"
+                             "line-height: 99px;"
+                             "letter-spacing: 1.5px;"
+                             "color: #003840;"
+                             "text-align: center;"
+                             "qproperty-alignment: AlignCenter;"
+                             "border: none;"
+                             "}");
+        // label->setAlignment(Qt::AlignCenter);
+        label->setAlignment(Qt::AlignCenter | Qt::AlignTop); // Align label to the top
+        label->setWordWrap(true);
+        label->setMinimumHeight(dialog->height() / 2);
+        label->setMinimumWidth(dialog->width());
+        // Move the label up by 100 pixels
+        // int xOffset = (dialog->width() - label->width()) / 2;
+        // int yOffset = 100;
+        // label->move(xOffset, yOffset);
+
+        QVBoxLayout *layout = new QVBoxLayout(dialog);
+        layout->addWidget(label);
+
+        dialog->setLayout(layout);
+        dialog->show();
+        dialog->exec();
+
+        // ui->label_thanks_for_feedback->show();
+        // ui->label_thanks_for_feedback->raise();
     }
 
-    curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/alert/sendFeedbackEmail");
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallbackFeedback);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
-    res = curl_easy_perform(curl);
-
-    if (res != CURLE_OK)
-    {
-        qDebug() << "ERROR: Transaction NOT sent to cloud. cURL fail. Error code: " + QString::number(res);
-    }
-    qDebug() << "Send button stores values" << endl;
-    
-    
-    dialog->move(0,100);
-dialog->resize(1080,1920);
-dialog->setStyleSheet("background-image:  url(/home/df-admin/drinkfill/ui/references/templates/default/background_feedbacksent.png);");
-
-QLabel *label = new QLabel(dialog);
-label->setText("Thank you for helping us <br>make a better experience <br>for you");
-label->setStyleSheet("QLabel {"
-                "font-family: 'Brevia';"
-                "font-style: normal;"
-                "font-weight: 75;"
-                "font-size: 65px;"
-                "line-height: 99px;"
-                "letter-spacing: 1.5px;"
-                "color: #003840;"
-                "text-align: center;"
-                "qproperty-alignment: AlignCenter;"
-                "border: none;"
-                "}");
-// label->setAlignment(Qt::AlignCenter);
-label->setAlignment(Qt::AlignCenter | Qt::AlignTop); // Align label to the top
-label->setWordWrap(true);
-label->setMinimumHeight(dialog->height() / 2);
-label->setMinimumWidth(dialog->width());
-// Move the label up by 100 pixels
-// int xOffset = (dialog->width() - label->width()) / 2;
-// int yOffset = 100;
-// label->move(xOffset, yOffset);
-
-
-QVBoxLayout *layout = new QVBoxLayout(dialog);
-layout->addWidget(label);
-
-dialog->setLayout(layout);
-dialog->show();
-dialog->exec();
-
-    // ui->label_thanks_for_feedback->show();
-    // ui->label_thanks_for_feedback->raise();
-    }
-    
     else
-{
-      dialog->move(0,0);
-dialog->resize(1080,1920);
-dialog->setStyleSheet("background-image:  url(/home/df-admin/drinkfill/ui/references/templates/default/background_feedbacksent.png);");
+    {
+        dialog->move(0, 0);
+        dialog->resize(1080, 1920);
+        dialog->setStyleSheet("background-image:  url(/home/df-admin/drinkfill/ui/references/templates/default/background_feedbacksent.png);");
 
-QLabel *label = new QLabel(dialog);
-label->setText("Thank you for helping us <br>make a better experience <br>for you");
-label->setStyleSheet("QLabel {"
-                "font-family: 'Brevia';"
-                "font-style: normal;"
-                "font-weight: 75;"
-                "font-size: 65px;"
-                "line-height: 99px;"
-                "letter-spacing: 1.5px;"
-                "color: #003840;"
-                "text-align: center;"
-                "qproperty-alignment: AlignCenter;"
-                "border: none;"
-                "}");
-// label->setAlignment(Qt::AlignCenter);
-label->setAlignment(Qt::AlignCenter | Qt::AlignTop); // Align label to the top
-label->setWordWrap(true);
-label->setMinimumHeight(dialog->height() / 2);
-label->setMinimumWidth(dialog->width());
-      
-   
+        QLabel *label = new QLabel(dialog);
+        label->setText("Thank you for <br>your feedback <br>");
+        label->setStyleSheet("QLabel {"
+                             "font-family: 'Brevia';"
+                             "font-style: normal;"
+                             "font-weight: 75;"
+                             "font-size: 65px;"
+                             "line-height: 99px;"
+                             "letter-spacing: 1.5px;"
+                             "color: #003840;"
+                             "text-align: center;"
+                             "qproperty-alignment: AlignCenter;"
+                             "border: none;"
+                             "}");
+        // label->setAlignment(Qt::AlignCenter);
+        label->setAlignment(Qt::AlignCenter | Qt::AlignTop); // Align label to the top
+        label->setWordWrap(true);
+        label->setMinimumHeight(dialog->height() / 2);
+        label->setMinimumWidth(dialog->width());
+    }
+
+    hidePage(p_page_idle);
 }
-   
-
-   stopSelectTimers();
-    p_page_idle->pageTransition(this, p_page_idle);
-
-}
-
 
 void page_sendFeedback::keyboardButtonPressed(int buttonID)
 {
@@ -554,7 +551,7 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
     {
         qDebug() << "DONE CLICKED";
         QString textEntry = ui->feedbackText->text();
-          ui->feedbackKeyboard->hide();
+        ui->feedbackKeyboard->hide();
         if (ui->feedbackText->text() == "")
         {
             ui->feedbackText->hide();
@@ -575,15 +572,11 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
 }
 void page_sendFeedback::on_previousPage_Button_clicked()
 {
-    qDebug() << "On back button clicked."; 
-    stopSelectTimers();
-     
-    p_page_idle->pageTransition(this, p_page_idle);
-     
+    hidePage(p_page_idle);
 }
 void page_sendFeedback::on_feedback_Input_Button_clicked()
- {
-//  QObject *button = QObject::sender();
+{
+    //  QObject *button = QObject::sender();
     qDebug() << "feedback button clicked";
     ui->feedbackText->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
     // ui->promoInputButton->hide();

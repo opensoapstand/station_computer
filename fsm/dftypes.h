@@ -19,7 +19,7 @@
 #include <stdint.h>
 
 
-#define CONTROLLER_VERSION "1.5.0"
+#define CONTROLLER_VERSION "1.5+"
 
 
 

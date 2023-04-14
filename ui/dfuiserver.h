@@ -20,7 +20,7 @@ public:
     void dispenseButtonPressedSlot();
     void noFlowAbortSlot();
     void initReadySlot();
-    void MMSlot();
+    // void MMSlot();
     void messageHandlerFinishedSlot();
 
     bool busyHandlingRequest;

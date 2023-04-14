@@ -67,38 +67,37 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
     ui->helpPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->label_pick_soap->setStyleSheet(
-"QLabel {"
+        "QLabel {"
 
-"font-family: 'Brevia';"
-"font-style: normal;"
-"font-weight: 75;"
-"font-size: 64px;"
-"line-height: 99px;"
-"letter-spacing: px;"
-"color: #003840;"
-"text-align: center;"
-"qproperty-alignment: AlignCenter;"
-"border: none;"
-"}");
-                ui->label_pick_soap->setText("Pick your soap");
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 75;"
+        "font-size: 64px;"
+        "line-height: 99px;"
+        "letter-spacing: px;"
+        "color: #003840;"
+        "text-align: center;"
+        "qproperty-alignment: AlignCenter;"
+        "border: none;"
+        "}");
+    ui->label_pick_soap->setText("Pick your soap");
 
-ui->mainPage_Button->setStyleSheet(
-                "QPushButton {"
+    ui->mainPage_Button->setStyleSheet(
+        "QPushButton {"
 
-                "font-family: 'Brevia';"
-                "font-style: normal;"
-                "font-weight: 75;"
-                "font-size: 32px;"
-                "background-color: transparent;"
-                "border: 0px;"
-                "line-height: 99px;"
-                "letter-spacing: 1.5px;"
-                "color: #003840;"
-                "text-align: center;"
-                "qproperty-alignment: AlignCenter;"
-                "border: none;"
-                "}");
-
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 75;"
+        "font-size: 32px;"
+        "background-color: transparent;"
+        "border: 0px;"
+        "line-height: 99px;"
+        "letter-spacing: 1.5px;"
+        "color: #003840;"
+        "text-align: center;"
+        "qproperty-alignment: AlignCenter;"
+        "border: none;"
+        "}");
 
     ui->mainPage_Button->setText("<-back");
 
@@ -107,8 +106,6 @@ ui->mainPage_Button->setStyleSheet(
     font.setPointSize(20);
     font.setBold(true);
     font.setWeight(75);
-    // ui->mainPage_Button->setFont(font);
-    // ui->mainPage_Button->setText("<- HOME");
 
     productPageEndTimer = new QTimer(this);
     productPageEndTimer->setInterval(1000);
@@ -125,14 +122,13 @@ void page_select_product::setPage(pageProduct *pageSizeSelect, page_idle *pageId
     this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_help = pageHelp;
-    
+
     selectedProductOrder = p_page_idle->currentProductOrder;
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
-      QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
-        qDebug() << full_path;
-        p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
-
+    QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
+    qDebug() << full_path;
+    p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
 }
 
 // DTOR
@@ -180,12 +176,11 @@ void page_select_product::displayProducts()
 
     for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
-        uint8_t slot = i+1;
+        uint8_t slot = i + 1;
 
         // display product picture
         selectProductPhotoLabels[i]->setStyleSheet("border: 1px solid black;");
         p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(slot));
-      
 
         qDebug() << "db (re)load product details:";
         DbManager db(DB_PATH);
@@ -287,14 +282,9 @@ void page_select_product::displayProducts()
 #endif
 }
 
-void page_select_product::cancelTimers()
-{
-    productPageEndTimer->stop();
-}
-
 void page_select_product::select_product(int slot)
 {
-    qDebug() << "db open16 (last call before freeze up?!)";
+    qDebug() << "db open: For enabled slot";
 
     DbManager db(DB_PATH);
     bool product_not_sold_out = (db.isProductVolumeInContainer(slot));
@@ -304,19 +294,15 @@ void page_select_product::select_product(int slot)
 
     if (product_not_sold_out && product_slot_enabled)
     {
-        qDebug() << "select product: " << slot;
-        productPageEndTimer->stop();
+        qDebug() << "selected slot: " << slot;
+
         p_page_idle->currentProductOrder->setSelectedSlot(slot);
         p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
-        // //this->raise();
-        // p_page_product->showFullScreen();
-        // usleep(200000);
-        // this->hide();
-        p_page_idle->pageTransition(this, p_page_product);
+        hidePage(p_page_product);
     }
     else
     {
-        qDebug() << "not enabled product: " << slot;
+        qDebug() << "Slot not enabled: " << slot;
     }
 }
 
@@ -347,19 +333,8 @@ void page_select_product::onProductPageTimeoutTick()
     else
     {
         // qDebug() << "Timer Done!" << _productPageTimeoutSec;
-        mainPage();
+        hidePage(p_page_idle);
     }
-}
-
-void page_select_product::mainPage()
-{
-    productPageEndTimer->stop();
-    qDebug() << "exit select product page for main page";
-    selectedProductOrder->setDiscountPercentageFraction(0.0);
-    this->raise();
-    // p_page_idle->showFullScreen();
-    // this->hide();
-    p_page_idle->pageTransition(this, p_page_idle);
 }
 
 void page_select_product::on_p_page_maintenanceButton_pressed()
@@ -367,24 +342,27 @@ void page_select_product::on_p_page_maintenanceButton_pressed()
     maintenanceCounter++;
     if (maintenanceCounter > 50)
     {
-        productPageEndTimer->stop();
-        // p_page_maintenance->showFullScreen();
-        // this->hide();
-        p_page_idle->pageTransition(this, p_page_maintenance);
+        hidePage(p_page_maintenance);
     }
+}
+
+void page_select_product::hidePage(QWidget *pageToShow)
+{
+    productPageEndTimer->stop();
+    qDebug() << "exit select product page for main page";
+    selectedProductOrder->setDiscountPercentageFraction(0.0);
+    this->raise();
+    p_page_idle->pageTransition(this, pageToShow);
 }
 
 void page_select_product::on_mainPage_Button_clicked()
 {
     qDebug() << "Back to Idle Page Button pressed";
-    mainPage();
+    hidePage(p_page_idle);
 }
 
 void page_select_product::on_helpPage_Button_clicked()
 {
     qDebug() << "<<<<<<< Help_Button clicked >>>>>>>>>";
-    productPageEndTimer->stop();
-    // p_page_help->showFullScreen();
-    // this->hide();
-    p_page_idle->pageTransition(this, p_page_help);
+    hidePage(p_page_help);
 }

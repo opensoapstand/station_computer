@@ -32,42 +32,19 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 {
     // IPC Networking
     dfUtility = new df_util();
-    // dfUtility->m_IsSendingFSM = false;
 
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
-
-    // QPixmap background(PAGE_IDLE_BACKGROUND_PATH);
-    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
 
     ui->testButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->testButton->raise();
     ui->toSelectProductPageButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->toSelectProductPageButton->raise();
 
-    // QPixmap image_logo(logo_path);
-    // df_util::fileExists(logo_path);
-
-    // int w = ui->logo_label->width();
-    // int h = ui->logo_label->height();
-
-    // // // set a scaled pixmap to a w x h window keeping its aspect ratio
-    // ui->logo_label->setPixmap(image_logo.scaled(w,h,Qt::KeepAspectRatio));
-    // // ui->logo_label->show();
-    // // ui->logo_label->raise();
-
     // TODO: Hold and pass DrinkOrder Object
     currentProductOrder = new DrinkOrder();
     currentProductOrder->setSelectedSlot(OPTION_SLOT_INVALID);
 }
-
-// bool page_idle::isSlotAvailable(int slot){
-//     return this->slotIndexAvailable[slot - 1];
-// }
-// void page_idle::setSlotAvailability(int slot, bool isEnabled){
-//     this->slotIndexAvailable[slot - 1] = isEnabled;
-// }
-
 /*
  * Navigation to Product item
  */
@@ -132,17 +109,18 @@ void page_idle::showEvent(QShowEvent *event)
     currentProductOrder->setDiscountPercentageFraction(0.0);
     currentProductOrder->setPromoCode("");
 
-    qDebug() << "open db for paymentmethode";
+    qDebug() << "open db: payment method";
     DbManager db(DB_PATH);
     bool needsReceiptPrinter = false;
-    for (int slot = 1; slot < SLOT_COUNT; slot++)
+    for (int slot = 1; slot <= SLOT_COUNT; slot++)
     {
         QString paymentMethod = db.getPaymentMethod(slot);
-        if (paymentMethod == "plu" || paymentMethod == "barcode")
+        if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
         {
             needsReceiptPrinter = true;
+            qDebug() << "Needs receipt printer: " << paymentMethod;
+            break;
         }
-        qDebug() << paymentMethod;
     }
     db.closeDB();
 
@@ -150,6 +128,7 @@ void page_idle::showEvent(QShowEvent *event)
 
     if (needsReceiptPrinter)
     {
+        ui->printer_status_label->hide(); // hide here, will show if enabled and has problems.
         checkReceiptPrinterStatus();
     }
     else
@@ -159,8 +138,8 @@ void page_idle::showEvent(QShowEvent *event)
 
     addPictureToLabel(ui->drinkfill_logo_label, DRINKFILL_LOGO_VERTICAL_PATH);
 
-    // m_transitioning = false;
-
+// #define PLAY_VIDEO
+#ifdef PLAY_VIDEO
     // player = new QMediaPlayer(this);
 
     // QGraphicsVideoItem *item = new QGraphicsVideoItem;
@@ -172,8 +151,6 @@ void page_idle::showEvent(QShowEvent *event)
     // player->play();
 
     // QMainWindow w;
-// #define PLAY_VIDEO
-#ifdef PLAY_VIDEO
     QVideoWidget *videoWidget = new QVideoWidget(ui->video_player);
     QMediaPlayer *player = new QMediaPlayer(this);
 
@@ -229,47 +206,23 @@ void page_idle::checkReceiptPrinterStatus()
 
     if (hasReceiptPrinter)
     {
-        this->p_page_maintenance_general->send_check_printer_status_command();
+        qDebug() << "Check receipt printer functionality disabled.";
+        // this->p_page_maintenance_general->send_check_printer_status_command();
+        // qDebug() << "Send check receipt printer command to controller";
     }
+    else
+    {
+        qDebug() << "Can't check receipt printer. Not enabled in db->machine table";
+    }
+}
 
-    // this->p_page_maintenance_general->on_printer_check_status_clicked();
-    // usleep(50000);
-
-    // if (hasReceiptPrinter)
-    // {
-    //     ui->printer_status_label->raise();
-    //     if (!isPrinterOnline)
-    //     {
-    //         ui->printer_status_label->setText("Error: Receipt Printer offline.");
-    //         ui->printer_status_label->show();
-    //     }
-    //     else if (!hasPrinterPaper)
-    //     {
-    //         ui->printer_status_label->setText("Error: Receipt printer empty or improperly loaded.");
-    //         ui->printer_status_label->show();
-    //     }
-    //     else
-    //     {
-    //         ui->printer_status_label->hide();
-    //     }
-    // }
-    // else
-    // {
-    //     ui->printer_status_label->hide();
-    // }
+void page_idle::hidePage(QWidget *pageToShow)
+{
+    this->pageTransition(this, pageToShow);
 }
 /*
  * Screen click shows product page as full screen and hides page_idle screen
  */
-
-// void page_idle::checkReceiptPrinter()
-// {
-//     p_page_idle->dfUtility->send_command_to_FSM("p");
-//     usleep(50000);
-//     p_page_idle->dfUtility->send_command_to_FSM("1");
-//     usleep(50000);
-//     p_page_idle->dfUtility->send_command_to_FSM("q");
-// }
 
 void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
 {
@@ -295,27 +248,7 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
 
 void page_idle::on_toSelectProductPageButton_clicked()
 {
-    qDebug() << "Proceed to next page button clicked. Go to select product page. ";
-
-    this->pageTransition(this, p_pageSelectProduct);
-
-    // p_pageSelectProduct->showFullScreen();
-
-    // // if (!m_transitioning)
-    // // {
-    // //     m_transitioning = true;
-    //     this->raise();
-    //     p_pageSelectProduct->showFullScreen();
-    // // this->lower();
-
-    //     // DO NOT HIDE IDLE PAGE
-    //     // it's staying in the background to counter a hack UBC students found (when changing screens and tapping during the swap, they could get a hold of the machine)
-    //     // Tapping on on the desktop wallpaper minimizes the application.
-    //     // If the idle page is not hidden, and always on the background, there is never a wall paper showing. Effectively preventing this vulnerability to be exploited.
-    //     this->hide();
-
-    //     // m_transitioning = false;
-    // }
+    this->hidePage(p_pageSelectProduct);
 }
 
 void page_idle::on_testButton_clicked()
@@ -343,14 +276,13 @@ bool page_idle::isEnough(int p)
     return false;
 }
 
-void page_idle::MMSlot()
-{
-    qDebug() << "Signal: Enter maintenance mode";
-    // p_page_maintenance->showFullScreen();
-    // this->hide();
-    this->p_pageSelectProduct->hide();
-    this->pageTransition(this, p_page_maintenance);
-}
+// void page_idle::MMSlot()
+// {
+//     qDebug() << "Signal: Enter maintenance mode";
+//     this->p_pageSelectProduct->hide(); // if pressed from another page. This is not good. It could be on any page!
+
+//     hidePage(p_page_maintenance);
+// }
 
 void page_idle::addCompanyLogoToLabel(QLabel *label)
 {
@@ -420,12 +352,9 @@ QString page_idle::getDefaultTemplatePathFromName(QString backgroundPictureName)
 
 void page_idle::pageTransition(QWidget *pageToHide, QWidget *pageToShow)
 {
-    // page transition effects are not part of QT but of the operating system!
-    // search for ubuntu tweaks program to set animations to "off"
+    // page transition effects are not part of QT but of the operating system! // search for ubuntu settings program to set transition animations to "off"
     qDebug() << "---------page transition";
-    // pageToHide->raise();
     pageToShow->showFullScreen();
-    // usleep(200000);
     pageToHide->hide();
 }
 

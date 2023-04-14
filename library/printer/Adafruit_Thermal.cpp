@@ -721,7 +721,9 @@ char Adafruit_Thermal::testCommschar() {
 
 bool Adafruit_Thermal::testComms() {
   // first requst not valid?!
-
+  this->disconnectPrinter();
+  this->connectToPrinter();
+  
   writeBytes(ASCII_ESC,'@'); //reset command. if omitted, after about 8 hasPaper calls, some chars are printed.
 
   std::string command(1,ASCII_ESC);
@@ -746,7 +748,6 @@ bool Adafruit_Thermal::testComms() {
   }else{
     return false;
   }
-
 }
 // char Adafruit_Thermal::cancelCustomCharacters() {
 //   serialPort.SetEcho(true);

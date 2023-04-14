@@ -42,7 +42,7 @@ char DrinkOrder::getSelectedSizeAsChar()
 
 void DrinkOrder::getCustomDiscountDetails( bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter)
 {
-    qDebug() << "db for large custom volume discount details ";
+    qDebug() << "Open db: get bulk volume discount details ";
     
     DbManager db(DB_PATH);
     db.getCustomDiscountProperties(getSelectedSlot(), large_volume_discount_is_enabled,min_volume_for_discount,discount_price_per_liter);
@@ -146,7 +146,7 @@ bool DrinkOrder::isSelectedOrderValid()
     }
     if (!(selectedSize >= 0 && selectedSize <= SIZES_COUNT))
     {
-        qInfo() << "ERROR: no slot set. " << m_selectedSlot;
+        qInfo() << "ERROR: no size set. " << m_selectedSlot;
         return false;
     }
 
@@ -202,7 +202,7 @@ void DrinkOrder::setPromoCode(QString promoCode)
 
 void DrinkOrder::setPriceSelected(int size, double price)
 {
-    qDebug() << "db... set product price";
+    qDebug() << "Open db: set product price";
     DbManager db(DB_PATH);
     db.updatePrice(getSelectedSlot(), size, price);
     db.closeDB();
@@ -211,7 +211,7 @@ void DrinkOrder::setPriceSelected(int size, double price)
 double DrinkOrder::getPrice(int sizeIndex)
 {
     // always from database
-    qDebug() << "db... get product price";
+    qDebug() << "Open db: get product price";
     DbManager db(DB_PATH);
     double price;
     price = db.getProductPrice(getSelectedSlot(), df_util::sizeIndexToChar(sizeIndex));
@@ -224,22 +224,13 @@ double DrinkOrder::getSelectedPrice()
 {
     return getPrice(getSelectedSize());
 }
+
 double DrinkOrder::getSelectedPriceCorrected()
 {
     // slot and size needs to be set.
     double price;
     if (isSelectedOrderValid())
     {
-        // if (overruledPrice != INVALID_PRICE)
-        // {
-        //     qInfo() << "Overruled price is set.";
-        //     price = overruledPrice;
-        // }
-        // else
-        // {
-        //     price = getPrice(getSelectedSize());
-        // }
-
         price = getPrice(getSelectedSize()) * (1.0 - m_discount_percentage_fraction);
     }
     else
@@ -254,7 +245,7 @@ double DrinkOrder::getSelectedPriceCorrected()
 double DrinkOrder::getVolume(int size)
 {
     double volume;
-    qInfo() << "db.... vol seijsf";
+    qInfo() << "Open db: get volume";
     DbManager db(DB_PATH);
     volume = db.getProductVolume(getSelectedSlot(), df_util::sizeIndexToChar(size));
     db.closeDB();
@@ -270,7 +261,6 @@ double DrinkOrder::getSelectedVolume()
     }
     else
     {
-
         qInfo() << "ERROR: No product set";
         volume = 66.6;
     }
@@ -280,7 +270,7 @@ double DrinkOrder::getSelectedVolume()
 QString DrinkOrder::getUnitsForSelectedSlot()
 {
 
-    qDebug() << "db units for label.";
+    qDebug() << "Open db:  units for label.";
     QString units;
     DbManager db(DB_PATH);
     units = db.getUnits(getSelectedSlot());
@@ -300,7 +290,7 @@ QString DrinkOrder::getVolumePerTickAsStringForSelectedSlot()
 double DrinkOrder::getVolumePerTickForSelectedSlot()
 {
     // ticks = db.getProductVolumePerTick(product_slot___);
-    qInfo() << "db.... vol per tick";
+    qInfo() << "Open db: get vol per tick";
     DbManager db(DB_PATH);
     double ml_per_tick = db.getProductVolumePerTick(getSelectedSlot());
 
@@ -312,7 +302,7 @@ void DrinkOrder::setVolumePerTickForSelectedSlot(QString volumePerTickInput)
 {
     // ticks = db.getProductVolumePerTick(product_slot___);
     double ml_per_tick = inputTextToMlConvertUnits(volumePerTickInput);
-    qInfo() << "db.... vol per tick";
+    qInfo() << "Open db: set vol per tick";
     DbManager db(DB_PATH);
     db.updateVolumePerTick(getSelectedSlot(), ml_per_tick);
 
@@ -322,7 +312,7 @@ void DrinkOrder::setVolumePerTickForSelectedSlot(QString volumePerTickInput)
 void DrinkOrder::setSizeToVolumeForSelectedSlot(QString volumeInput, int size)
 {
     double volume = inputTextToMlConvertUnits(volumeInput);
-    qInfo() << "db.... volume set";
+    qInfo() << "Open db: size to volume";
     DbManager db(DB_PATH);
     db.updateTargetVolume(getSelectedSlot(), size, volume);
     db.closeDB();
@@ -330,7 +320,7 @@ void DrinkOrder::setSizeToVolumeForSelectedSlot(QString volumeInput, int size)
 
 QString DrinkOrder::getVolumeRemainingCorrectUnits()
 {
-    qInfo() << "db.... volume dispensed since last restock";
+    qInfo() << "Open db: volume dispensed since last restock";
     DbManager db(DB_PATH);
     double volume = db.getVolumeRemaining(getSelectedSlot());
     db.closeDB();
@@ -343,7 +333,7 @@ QString DrinkOrder::getVolumeRemainingCorrectUnits()
 
 QString DrinkOrder::getVolumeDispensedSinceRestockCorrectUnits()
 {
-    qInfo() << "db.... volume dispensed since last restock";
+    qInfo() << "Open db:  volume dispensed since last restock";
     DbManager db(DB_PATH);
     double volume = db.getVolumeDispensedSinceRestock(getSelectedSlot());
     db.closeDB();
@@ -356,7 +346,7 @@ QString DrinkOrder::getVolumeDispensedSinceRestockCorrectUnits()
 
 QString DrinkOrder::getTotalDispensedCorrectUnits()
 {
-    qInfo() << "db.... volume dispensed";
+    qInfo() << "Open db:  volume dispensed";
     DbManager db(DB_PATH);
     double volume = db.getTotalDispensed(getSelectedSlot());
     db.closeDB();
@@ -394,7 +384,7 @@ double DrinkOrder::inputTextToMlConvertUnits(QString inputValueAsText)
 
 QString DrinkOrder::getProductDrinkfillSerial(int slot)
 {
-    qDebug() << "product db for drinkfill id";
+    qDebug() << "Open db: get product id";
     DbManager db(DB_PATH);
     QString serial = db.getProductDrinkfillSerial(slot);
     db.closeDB();
@@ -409,7 +399,7 @@ void DrinkOrder::loadSelectedProductProperties()
 
 void DrinkOrder::loadProductPropertiesFromDb(int slot)
 {
-    qDebug() << "db load product properties";
+    qDebug() << "Open db: db load product properties";
     DbManager db(DB_PATH);
 
     // bool m_isEnabledSmall;
@@ -511,18 +501,6 @@ QString DrinkOrder::getProductType(int slot)
 
 QString DrinkOrder::getProductName(int slot)
 {
-    // qDebug() << "product db for name";
-    // DbManager db(DB_PATH);
-    // QString product_name = db.getProductName(slot);
-    // db.closeDB();
-    // return product_name;
-
-    // qDebug() << "product db for name";
-    // DbManager db(DB_PATH);
-    // QString product_name = db.getProductName(slot);
-    // db.closeDB();
-    // return product_name;
-
     QString product_id = getProductDrinkfillSerial(slot);
 
     QString name_ui;
@@ -543,7 +521,7 @@ QString DrinkOrder::getSelectedProductName()
 QString DrinkOrder::getMachineId()
 {
 
-    qDebug() << " db... getMachineID";
+    qDebug() << "Open db: getMachineID";
 
     DbManager db(DB_PATH);
     QString idString = db.getMachineID();
@@ -553,7 +531,7 @@ QString DrinkOrder::getMachineId()
 
 QString DrinkOrder::getSelectedProductId()
 {
-    qDebug() << "db.... get productId ";
+    qDebug() << "Open db: get productId ";
     DbManager db(DB_PATH);
     QString idString = db.getProductID(getSelectedSlot());
     db.closeDB();
@@ -563,7 +541,7 @@ QString DrinkOrder::getSelectedProductId()
 QString DrinkOrder::getFullVolumeCorrectUnits(bool addUnits)
 {
 
-    qDebug() << "db.... get full volume ";
+    qDebug() << "Open db: get full volume ";
     DbManager db(DB_PATH);
 
     double volume = db.getFullProduct(getSelectedSlot());
@@ -577,7 +555,7 @@ QString DrinkOrder::getFullVolumeCorrectUnits(bool addUnits)
 
 void DrinkOrder::setFullVolumeCorrectUnits(QString inputFullValue)
 {
-    qDebug() << "db.... for write full vol";
+    qDebug() << "Open db: for write full vol";
     DbManager db(DB_PATH);
     db.updateFullVolume(getSelectedSlot(), inputTextToMlConvertUnits(inputFullValue));
     db.closeDB();
@@ -585,17 +563,13 @@ void DrinkOrder::setFullVolumeCorrectUnits(QString inputFullValue)
 
 QString DrinkOrder::getSelectedSizeToVolumeWithCorrectUnits(bool round, bool addUnits)
 {
-    // v = db.getProductVolume(product_slot___, drinkSize);
-
-    // ui->label_size_small->setText(QString::number(v) + "ml");
-
     return getSizeToVolumeWithCorrectUnitsForSelectedSlot(getSelectedSize(), round, addUnits);
 }
 
 QString DrinkOrder::getSelectedPaymentMethod()
 {
     QString paymentMethod;
-    qDebug() << "product pyament method";
+    qDebug() << "Open db: product payment method";
     DbManager db(DB_PATH);
     paymentMethod = db.getPaymentMethod(getSelectedSlot());
     db.closeDB();
@@ -606,7 +580,7 @@ int DrinkOrder::getSelectedDispenseSpeedPercentage()
 {
     int pwm;
 
-    qInfo() << "db.... pwm speed";
+    qInfo() << "Open db: pwm speed";
     DbManager db(DB_PATH);
     pwm = db.getPWM(getSelectedSlot());
     db.closeDB();
@@ -617,7 +591,7 @@ void DrinkOrder::setSelectedDispenseSpeedPercentage(int percentage)
 {
     int pwm = (int)round((percentage * 255) / 100);
 
-    qInfo() << "db.... pwm speed set";
+    qInfo() << "Open db: pwm speed set";
     DbManager db(DB_PATH);
     db.updatePWM(getSelectedSlot(), pwm);
     db.closeDB();

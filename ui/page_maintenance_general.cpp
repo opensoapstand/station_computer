@@ -430,6 +430,9 @@ void page_maintenance_general::on_wifiButton_clicked()
         }
     }
 
+
+
+    // set label for 
     QProcess process;
 
     process.start("iwgetid -r");

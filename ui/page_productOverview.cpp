@@ -87,9 +87,7 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
         "border: none;"
         "}");
     ui->selectProductPage_Button->setText("<- Back");
-    // ui->label_product_description->setStyleSheet(css_description);
 
-    // ui->label_product_description->setWordWrap(true);
     ui->label_selected_volume->setStyleSheet(
         "QLabel {"
         "font-family: 'Brevia';"
@@ -141,22 +139,6 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
         "}");
     ui->promoButton->setText("Apply");
     ui->promoButton->hide();
-
-    // ui->label_notify_us->setStyleSheet(
-    //     "QLabel {"
-
-    //     "font-family: 'Brevia';"
-    //     "font-style: normal;"
-    //     "font-weight: 75;"
-    //     "font-size: 20px;"
-    //     "line-height: 99px;"
-    //     "letter-spacing: px;"
-    //     "color: #FFFFFF;"
-    //     "text-align: center;"
-    //     "qproperty-alignment: AlignCenter;"
-    //     "border: none;"
-    //     "}");
-    // ui->label_notify_us->setText("Help");
 
     ui->label_discount_code->setStyleSheet(
         "QLabel {"

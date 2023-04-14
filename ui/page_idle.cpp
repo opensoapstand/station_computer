@@ -132,20 +132,30 @@ void page_idle::showEvent(QShowEvent *event)
     currentProductOrder->setDiscountPercentageFraction(0.0);
     currentProductOrder->setPromoCode("");
 
-    addCompanyLogoToLabel(ui->logo_label);
+    qDebug() << "open db for paymentmethode";
     DbManager db(DB_PATH);
-    QString paymentMethod = db.getPaymentMethod(1);
-    qDebug() << paymentMethod;
+    bool needsReceiptPrinter = false;
+    for (int slot = 1; slot < SLOT_COUNT; slot++)
+    {
+        QString paymentMethod = db.getPaymentMethod(slot);
+        if (paymentMethod == "plu" || paymentMethod == "barcode")
+        {
+            needsReceiptPrinter = true;
+        }
+        qDebug() << paymentMethod;
+    }
+    db.closeDB();
 
-    ui->printer_status_label->hide();
+    addCompanyLogoToLabel(ui->logo_label);
 
-    if (paymentMethod == "plu" || paymentMethod == "barcode")
+    if (needsReceiptPrinter)
     {
         checkReceiptPrinterStatus();
     }
-
-    db.closeDB();
-    qDebug() << "db closed";
+    else
+    {
+        ui->printer_status_label->hide();
+    }
 
     addPictureToLabel(ui->drinkfill_logo_label, DRINKFILL_LOGO_VERTICAL_PATH);
 
@@ -221,7 +231,7 @@ void page_idle::checkReceiptPrinterStatus()
     {
         this->p_page_maintenance_general->send_check_printer_status_command();
     }
-   
+
     // this->p_page_maintenance_general->on_printer_check_status_clicked();
     // usleep(50000);
 

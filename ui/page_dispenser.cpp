@@ -156,10 +156,11 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void page_dispenser::setPage(page_payment *page_payment, pagethankyou *pageThankYou, page_idle *pageIdle)
+void page_dispenser::setPage(page_qr_payment *page_qr_payment,page_tap_payment *page_tap_payment, pagethankyou *pageThankYou, page_idle *pageIdle)
 {
     this->thanksPage = pageThankYou;
-    this->paymentPage = page_payment;
+    this->paymentPage = page_qr_payment;
+    this->paymentTapPage = page_tap_payment;
     this->p_page_idle = pageIdle;
     selectedProductOrder = p_page_idle->currentProductOrder;
 
@@ -265,7 +266,6 @@ void page_dispenser::dispensing_end_admin()
     if (volumeDispensed == 0 && (selectedProductOrder->getSelectedPaymentMethod()) == "tap")
     {
         std::map<std::string, std::string> response;
-        // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         qDebug() << "dispense end: tap payment No volume dispensed.";
         // REVERSE PAYMENT.
         if (SAF_NUM != "")
@@ -290,11 +290,7 @@ void page_dispenser::dispensing_end_admin()
         {
 
             std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, SAF_NUM, stream.str(), "ELIGIBLE");
-        }
-        // ui->finishTransactionMessage->setText("Capturing Payment");
-        // ui->finishTransactionMessage->show();
-
-        // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
+        }        
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     }
     std::cout << "Stopping dispense timer";

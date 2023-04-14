@@ -129,11 +129,6 @@ void page_tap_payment::stopPayTimers()
         idlePaymentTimer->stop();
     }
 
-    if (paymentEndTimer != nullptr)
-    {
-        qDebug() << "cancel page_idle payment END Timer" << endl;
-        paymentEndTimer->stop();
-    }
 }
 
 /*
@@ -204,7 +199,6 @@ void page_tap_payment::showEvent(QShowEvent *event)
     ui->productLabel->hide();
     ui->order_drink_amount->hide();
     ui->order_total_amount->hide();
-    ui->processing_Label->hide();
 
     qDebug() << "Prepare tap order";
     tapPaymentHandler();
@@ -289,7 +283,7 @@ void page_tap_payment::check_card_tapped()
     if (isPacketReceived && card_tap_status=="Success")
     {
         qDebug() << "Packet received true";
-        // ui->title_Label->setText("Processing Payment");
+        ui->title_Label->setText("Processing Payment");
         // ui->title_Label->show();
         checkCardTappedTimer->stop();
         QMovie* currentGif = ui->animated_Label->movie();
@@ -335,7 +329,6 @@ void page_tap_payment::authorized_transaction(std::map<std::string, std::string>
 
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_FAIL);
         startPaymentProcess();
-        paymentEndTimer->start();
         // std::map<std::string, std::string> responseObjSecond = authorization(socket, MAC_LABEL, MAC_KEY, stream.str());
         // if (responseObjSecond["RESULT"] == "APPROVED")
         // {

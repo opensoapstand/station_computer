@@ -21,7 +21,7 @@
 #include <string>
 #include <cmath>
 
-#include "page_payment.h"
+#include "page_qr_payment.h"
 #include "page_select_product.h"
 #include "page_productOverview.h"
 
@@ -309,10 +309,10 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_payment *page_payment, page_help *pageHelp, pageProductOverview *page_Overview)
+void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, pageProductOverview *page_Overview)
 {
     this->p_page_select_product = pageSelect;
-    this->paymentPage = page_payment;
+    this->paymentPage = page_qr_payment;
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
     this->p_page_help = pageHelp;

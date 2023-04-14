@@ -30,7 +30,8 @@
 #include "posm/transactionPackets.h"
 #include "posm/transactioninfo.h"
 
-class page_payment;
+class page_qr_payment;
+class page_tap_payment;
 class pagethankyou;
 class page_idle;
 
@@ -45,7 +46,7 @@ class page_dispenser : public QWidget
 public:
     // **** GUI ****
     explicit page_dispenser(QWidget *parent = nullptr);
-    void setPage(page_payment* page_payment, pagethankyou* pageThankYou, page_idle* pageIdle);
+    void setPage(page_qr_payment* page_qr_payment, page_tap_payment* page_tap_payment, pagethankyou* pageThankYou, page_idle* pageIdle);
     ~page_dispenser();
     void showEvent(QShowEvent *event);
     void resetDispenseTimeout(void);
@@ -84,7 +85,8 @@ private:
     bool isDispensing;
     // **** GUI *****
     Ui::page_dispenser *ui;
-    page_payment* paymentPage;
+    page_qr_payment* paymentPage;
+    page_tap_payment* paymentTapPage;
     pagethankyou* thanksPage;
     page_idle* p_page_idle;
 

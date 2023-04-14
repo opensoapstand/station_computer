@@ -21,13 +21,20 @@
 #include <string>
 #include <cmath>
 
-#include "page_payment.h"
+#include "page_qr_payment.h"
+#include "page_tap_payment.h"
 #include "page_select_product.h"
 #include "page_idle.h"
 #include <curl/curl.h>
 #include <json.hpp>
 #include <QMovie>
 using json = nlohmann::json;
+std::string CTROUTD = "";
+std::string MAC_KEY = "";
+std::string MAC_LABEL = "";
+std::string AUTH_CODE = "";
+std::string SAF_NUM = "";
+std::string socketAddr;
 
 // CTOR
 pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
@@ -38,7 +45,7 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
     ui->promoInputButton->setStyleSheet("QPushButton { border: 1px solid #5E8580}");
     ui->promoInputButton->setText("Discount code");
     ui->promoCode->setStyleSheet("QPushButton { background-color: transparent; border: 1px solid #5E8580 }");
-    ui->page_payment_Button->show();
+    ui->page_qr_payment_Button->show();
     ui->promoKeyboard->hide();
     // ui->label_gif->hide();
     QString css_title = "QLabel{"
@@ -238,10 +245,11 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void pageProductOverview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_payment *page_payment, page_help *pageHelp, pageProduct *page_product)
+void pageProductOverview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,page_tap_payment *page_tap_payment, page_help *pageHelp, pageProduct *page_product)
 {
     this->p_page_select_product = pageSelect;
-    this->paymentPage = page_payment;
+    this->paymentQrPage = page_qr_payment;
+    this->paymentTapPage = page_tap_payment;
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
     this->p_page_help = pageHelp;
@@ -348,8 +356,8 @@ void pageProductOverview::reset_and_show_page_elements()
     ui->mainPage_Button->setEnabled(true);
     /* Hacky transparent button */
     ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->page_payment_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    // ui->page_payment_Button->setStyleSheet("QPushButton { background-color: red; border: 0px };QPushButton:pressed { background-color: green; border: 10px }");
+    ui->page_qr_payment_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    // ui->page_qr_payment_Button->setStyleSheet("QPushButton { background-color: red; border: 0px };QPushButton:pressed { background-color: green; border: 10px }");
 
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
@@ -660,7 +668,7 @@ void pageProductOverview::coupon_disable()
     ui->label_discount_code->hide();
 }
 
-void pageProductOverview::on_page_payment_Button_clicked()
+void pageProductOverview::on_page_qr_payment_Button_clicked()
 {
     qDebug() << "pageProductOverview: Pay button";
 
@@ -702,15 +710,15 @@ void pageProductOverview::on_page_payment_Button_clicked()
 
             ui->label_invoice_price->text();
 
-            // paymentPage->showFullScreen();
+            // paymentQrPage->showFullScreen();
             // this->hide();
-            p_page_idle->pageTransition(this, paymentPage);
+            p_page_idle->pageTransition(this, paymentQrPage);
         }
         curl_easy_cleanup(curl);
         readBuffer = "";
     }
     else if(paymentMethod == "tap"){
-        p_page_idle->pageTransition(this, paymentPage);
+        p_page_idle->pageTransition(this, paymentTapPage);
 
     }
     else if (paymentMethod == "barcode" || paymentMethod == "plu")

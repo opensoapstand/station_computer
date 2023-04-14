@@ -17,7 +17,7 @@
 #include "df_util.h"
 #include "page_select_product.h"
 #include "page_product.h"
-#include "page_payment.h"
+#include "page_qr_payment.h"
 #include "page_idle.h"
 
 // CTOR
@@ -149,11 +149,11 @@ void page_help::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference
  */
-void page_help::setPage(page_select_product *pageSelect, pageProduct *pageProduct, page_idle *pageIdle, page_payment *page_payment, page_transactions *pageTransactions, page_maintenance *pageMaintenance, page_sendFeedback *pageFeedback)
+void page_help::setPage(page_select_product *pageSelect, pageProduct *pageProduct, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_transactions *pageTransactions, page_maintenance *pageMaintenance, page_sendFeedback *pageFeedback)
 {
     this->p_page_idle = pageIdle;
     this->p_page_feedback = pageFeedback;
-    this->paymentPage = page_payment;
+    this->paymentPage = page_qr_payment;
     this->selectPage = pageProduct;
     this->p_page_select_product = pageSelect;
     this->p_page_transactions = pageTransactions;

@@ -721,16 +721,19 @@ char Adafruit_Thermal::testCommschar() {
 
 bool Adafruit_Thermal::testComms() {
   // first requst not valid?!
-  this->disconnectPrinter();
-  this->connectToPrinter();
-  
+  // this->disconnectPrinter();
+  this->reset();
+  usleep(100000);
   writeBytes(ASCII_ESC,'@'); //reset command. if omitted, after about 8 hasPaper calls, some chars are printed.
+  usleep(100000);
 
   std::string command(1,ASCII_ESC);
   command.push_back('v');
+    usleep(100000);
   command.push_back('n');
+    usleep(100000);
   serialPort.Write(command);
-  
+    usleep(100000);
   // usleep(10000);
 
   std::string readVal = "-";

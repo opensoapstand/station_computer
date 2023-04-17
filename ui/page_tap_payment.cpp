@@ -32,6 +32,7 @@ extern std::string SAF_NUM;
 extern std::string socketAddr;
 std::thread cardTapThread;
 std::thread dataThread;
+int numberOfTapAttempts = 0;
 // CTOR
 
 page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
@@ -73,6 +74,7 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
 
     if(db.getPaymentMethod(1) == "tap"){
     qDebug()<< "InitializingTap payment";
+    tap_payment = true;
     std::map<std::string, std::string> configMap = readConfigFile();
     std::map<std::string, std::string> deviceStatus = checkDeviceStatus(connectSecondarySocket());
     if(deviceStatus["MACLABEL_IN_SESSION"]!=""){
@@ -238,22 +240,41 @@ void page_tap_payment::tapPaymentHandler()
     startPaymentProcess();
 }
 
+
 void page_tap_payment::startPaymentProcess(){
-     double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
-    std::ostringstream stream;
-    stream << std::fixed << std::setprecision(2) << price;
-    std::string authCommand = authorizationCommand(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, stream.str());
+    if(numberOfTapAttempts <3){
+        numberOfTapAttempts += 1;
+        double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
+        std::ostringstream stream;
+        stream << std::fixed << std::setprecision(2) << price;
+        std::string authCommand = authorizationCommand(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, stream.str());
 
-    std::string packetSent = sendPacket(authCommand, std::stoi(socketAddr), true);
-    stop_tap_action_thread = false;
-    stop_authorization_thread=false;
-    cardTapThread = std::thread(receiveCardTapAction);
-    cardTapThread.detach();
-    checkCardTappedTimer->start();  
+        std::string packetSent = sendPacket(authCommand, std::stoi(socketAddr), true);
+        stop_tap_action_thread = false;
+        stop_authorization_thread=false;
+        cardTapThread = std::thread(receiveCardTapAction);
+        cardTapThread.detach();
+        checkCardTappedTimer->start();  
 
-    dataThread = std::thread(receiveAuthorizationThread, std::stoi(socketAddr));
-    dataThread.detach();
-    checkPacketReceivedTimer->start();  
+        dataThread = std::thread(receiveAuthorizationThread, std::stoi(socketAddr));
+        dataThread.detach();
+        checkPacketReceivedTimer->start();
+    }
+    else{
+        numberOfTapAttempts = 0;
+        // stopPayTimers();
+        on_previousPage_Button_clicked();
+    }
+     
+}
+
+void page_tap_payment::restartTapPayment(){
+    // ui->animated_Label->move(200,580);
+    // QMovie *tapGif = new QMovie("/home/df-admin/production/references/templates/default/tap.gif");
+    // ui->animated_Label->setMovie(tapGif);
+    // tapGif->start();  
+    startPaymentProcess();  
+
 }
 
 void page_tap_payment::check_packet_available()
@@ -282,13 +303,17 @@ void page_tap_payment::check_card_tapped()
 
     if (isPacketReceived && card_tap_status=="Success")
     {
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
         qDebug() << "Packet received true";
         ui->title_Label->setText("Processing Payment");
         // ui->title_Label->show();
         checkCardTappedTimer->stop();
         QMovie* currentGif = ui->animated_Label->movie();
-        currentGif->stop();
-        delete currentGif;
+        if(currentGif){
+            currentGif->stop();
+            delete currentGif;
+        }
+        
         // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         ui->animated_Label->move(410,480);
         QMovie *movie = new QMovie("/home/df-admin/production/references/templates/default/soapstandspinner.gif");
@@ -304,6 +329,7 @@ void page_tap_payment::authorized_transaction(std::map<std::string, std::string>
 {
     double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
     std::ostringstream stream;
+    stopPayTimers();
     stream << std::fixed << std::setprecision(2) << price;
     QMovie* currentGif = ui->animated_Label->movie();
     currentGif->stop();
@@ -328,7 +354,7 @@ void page_tap_payment::authorized_transaction(std::map<std::string, std::string>
     {
 
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_FAIL);
-        startPaymentProcess();
+        restartTapPayment();
         // std::map<std::string, std::string> responseObjSecond = authorization(socket, MAC_LABEL, MAC_KEY, stream.str());
         // if (responseObjSecond["RESULT"] == "APPROVED")
         // {
@@ -390,6 +416,7 @@ bool page_tap_payment::exitConfirm()
 void page_tap_payment::on_previousPage_Button_clicked()
 {
     qDebug() << "In previous page button" << endl;
+    stopPayTimers();
     if (exitConfirm())
     {
         if (tap_payment)

@@ -71,6 +71,8 @@ Adafruit_Thermal::Adafruit_Thermal(void) {
     // mn::CppLinuxSerial::SerialPort serialPort("/dev/ttyS4", BAUDRATE);
     // serialPort.Open();
     dtrEnabled = false;
+
+    pollCount = 0; //used to avoid problematic stray printed character. After about 11 commands without printing, a stray char is printed. 
 }
 
 // Destructor
@@ -719,21 +721,40 @@ char Adafruit_Thermal::testCommschar() {
 
 }
 
+void Adafruit_Thermal::resetPollCount() 
+{
+  pollCount=0;
+}
+
+// void Adafruit_Thermal::printText(string text) {
+//     string printerstring = text;
+//     string printer_command_string = "echo '\n" + printerstring + "' > /dev/ttyS4";
+//     system(printer_command_string.c_str());
+
+// }
+bool Adafruit_Thermal::getPollCountLimitReached() 
+{
+  // after polling x times, the printer spits out some random characters. This seems to be a buffer that's emptied. 
+  // when another printjob gets through. that buffer gets reset. 
+  // So make sure to reset the pollCount after each print. 
+  return pollCount > 29;  //11ok //15ok //20ok //25ok //27ok //28ok    //30nok
+}
 bool Adafruit_Thermal::testComms() {
   // first requst not valid?!
   // this->disconnectPrinter();
-  this->reset();
-  usleep(100000);
-  writeBytes(ASCII_ESC,'@'); //reset command. if omitted, after about 8 hasPaper calls, some chars are printed.
-  usleep(100000);
+  // this->reset();
+  // usleep(100000);
+  // writeBytes(ASCII_ESC,'@'); //reset command. if omitted, after about 8 hasPaper calls, some chars are printed.
+   pollCount++;
+  // usleep(100000);
 
   std::string command(1,ASCII_ESC);
   command.push_back('v');
-    usleep(100000);
+    // usleep(100000);
   command.push_back('n');
-    usleep(100000);
+    // usleep(100000);
   serialPort.Write(command);
-    usleep(100000);
+    // usleep(100000);
   // usleep(10000);
 
   std::string readVal = "-";
@@ -783,7 +804,9 @@ bool Adafruit_Thermal::hasPaper() {
 
 
 
-  writeBytes(ASCII_ESC,'@'); //if omitted, after about 8 hasPaper calls, some chars are printed.
+  //writeBytes(ASCII_ESC,'@'); //if omitted, after about 8 hasPaper calls, some chars are printed.
+  pollCount++;
+
   writeBytes(ASCII_ESC,'v','n');
   // // working
   // std::string command(1,ASCII_ESC);

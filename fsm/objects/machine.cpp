@@ -45,8 +45,9 @@ void machine::setup(){
     control_pcb->setup();
     control_pcb->setPumpPWM(DEFAULT_PUMP_PWM); 
 
+    // the 24V power has a master on/off switch
     switch_24V = new oddyseyx86GPIO(IO_PIN_ENABLE_24V);
-    switch_24V->setPinAsInputElseOutput(false);
+    switch_24V->setPinAsInputElseOutput(false); // set as output
 
 
 }
@@ -59,10 +60,10 @@ pcb* machine::getPcb(){
 //     debugOutput::sendMessage("*** global machine test message", MSG_INFO);
 // }
 
-void machine::enablePcb24V(){
+void machine::pcb24VPowerSwitch(bool enableElseDisable){
     
    
-    switch_24V->writePin(true);
+    switch_24V->writePin(enableElseDisable);
 }
 
 void machine::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string units, string paymentMethod, string plu, string promoCode){
@@ -126,4 +127,6 @@ void machine::print_text(string text)
     string printerstring = text;
     string printer_command_string = "echo '\n" + printerstring + "' > /dev/ttyS4";
     system(printer_command_string.c_str());
+   
+    //  printerr->printText(text);
 }

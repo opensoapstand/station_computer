@@ -71,6 +71,7 @@ void machine::pcb24VPowerSwitch(bool enableElseDisable)
 void machine::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string units, string paymentMethod, string plu, string promoCode)
 {
 
+  
     std::string out1 = name_receipt + "\nPrice: $" + receipt_cost + " \nQuantity: " + receipt_volume_formatted + "\nTime: " + time_stamp;
     receipt_printer->printText(out1.c_str());
 
@@ -93,6 +94,7 @@ void machine::print_receipt(string name_receipt, string receipt_cost, string rec
             // EAN13 codes need to be 13 digits, or else no barcode will be printed. If 12 dgits are provided, the last digit (checksum?!) is automatically generated
             debugOutput::sendMessage("ERROR: bar code invalid (" + plu + "). EAN13, Should be 13 digits" + to_string(plu.size()), MSG_INFO);
 
+
             std::string out = "\nPLU: " + plu + " (No barcode available)";
             receipt_printer->printText(out.c_str());
         }
@@ -101,14 +103,14 @@ void machine::print_receipt(string name_receipt, string receipt_cost, string rec
             debugOutput::sendMessage("Barcode:" + plu, MSG_INFO);
 
             // receipt_printer->connectToPrinter();
-            receipt_printer->setBarcodeHeight(100);
-            receipt_printer->printBarcode(plu.c_str(), EAN13);
+            // receipt_printer->setBarcodeHeight(100);
+            // receipt_printer->printBarcode(plu.c_str(), EAN13);
             // receipt_printer->disconnectPrinter();
-            // Adafruit_Thermal *printerr = new Adafruit_Thermal();
-            // printerr->connectToPrinter();
-            // printerr->setBarcodeHeight(100);
-            // printerr->printBarcode(plu.c_str(), EAN13);
-            // printerr->disconnectPrinter();
+            Adafruit_Thermal *printerr = new Adafruit_Thermal();
+            printerr->connectToPrinter();
+            printerr->setBarcodeHeight(100);
+            printerr->printBarcode(plu.c_str(), EAN13);
+            printerr->disconnectPrinter();
         }
     }
 
@@ -125,15 +127,16 @@ void machine::print_receipt(string name_receipt, string receipt_cost, string rec
         else
         {
             debugOutput::sendMessage("PLU as barcode:" + plu, MSG_INFO);
-            // receipt_printer->connectToPrinter();
-            receipt_printer->setBarcodeHeight(100);
-            receipt_printer->printBarcode(plu.c_str(), EAN13);
-            // receipt_printer->disconnectPrinter();
-            // Adafruit_Thermal *printerr = new Adafruit_Thermal();
-            // printerr->connectToPrinter();
-            // printerr->setBarcodeHeight(100);
-            // printerr->printBarcode(plu.c_str(), EAN13);
-            // printerr->disconnectPrinter();
+            // // receipt_printer->connectToPrinter();
+            // receipt_printer->setBarcodeHeight(100);
+            // receipt_printer->printBarcode(plu.c_str(), EAN13);
+            // // receipt_printer->disconnectPrinter();
+
+            Adafruit_Thermal *printerr = new Adafruit_Thermal();
+            printerr->connectToPrinter();
+            printerr->setBarcodeHeight(100);
+            printerr->printBarcode(plu.c_str(), EAN13);
+            printerr->disconnectPrinter();
         }
     }
     else
@@ -141,6 +144,6 @@ void machine::print_receipt(string name_receipt, string receipt_cost, string rec
         debugOutput::sendMessage("ERROR: Not a valid payment method" + paymentMethod, MSG_INFO);
     }
 
-    const char *out = "\n\n\n";
+    const char *out = "\n\n";
     receipt_printer->printText(out);
 }

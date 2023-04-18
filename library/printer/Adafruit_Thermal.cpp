@@ -741,20 +741,23 @@ void Adafruit_Thermal::resetPollCount()
 
 void Adafruit_Thermal::printText(const char* text) {
    int text_len = strlen(text);
-    char* printerstring = new char[text_len+1];
-    strcpy(printerstring, text);
-    printerstring[text_len] = '\0'; // ensure null termination
+    // char* printerstring = new char[text_len+1];
+  //   strcpy(printerstring, text);
+  //   printerstring[text_len] = '\0'; // ensure null termination
     const char* command_prefix = "echo '\\n";
     const char* command_suffix = "' > /dev/ttyS4";
-    int command_len = strlen(command_prefix) + text_len + strlen(command_suffix) + 1;
-    char* printer_command_string = new char[command_len];
+    int command_len = strlen(command_prefix) + text_len + strlen(command_suffix);
+    char* printer_command_string = new char[command_len +1];
+    printer_command_string[command_len] = '\0'; // ensure null termination
+
     strcpy(printer_command_string, command_prefix);
-    strcat(printer_command_string, printerstring);
+    strcat(printer_command_string, text);
     strcat(printer_command_string, command_suffix);
     system(printer_command_string);
-    delete[] printerstring;
-    delete[] printer_command_string;
-    resetPollCount();
+
+  //   // delete[] printerstring;
+  //   // delete[] printer_command_string;
+  //   resetPollCount();
 }
 
 

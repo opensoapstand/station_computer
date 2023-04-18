@@ -16,6 +16,7 @@
 ///////////////////////////////////////////////////////////////////////////
 #include <stddef.h>
 #include <ctype.h>
+// #include <string>
 #include <string.h>
 #include <unistd.h>
 #include <time.h>
@@ -138,7 +139,7 @@ public:
 
 void resetPollCount();
 
-// void printText(string text);
+void printText(const char* text);
 
 bool getPollCountLimitReached();
   size_t

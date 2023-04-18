@@ -1582,8 +1582,6 @@ bool DbManager::hasReceiptPrinter()
 {
     QSqlQuery qry;
     bool is_enabled;
-
-        qDebug()<<"db check hasReceiptpirfnr";
     {
         qry.prepare("SELECT has_receipt_printer FROM machine");
         qry.exec();
@@ -1591,7 +1589,6 @@ bool DbManager::hasReceiptPrinter()
         while (qry.next())
         {
             is_enabled = (qry.value(0).toInt() == 1);
-            qDebug()<<"RETERINRNENF EFVAL:E : " << is_enabled;
         }
     }
     return is_enabled;

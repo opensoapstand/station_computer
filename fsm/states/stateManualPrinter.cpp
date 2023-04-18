@@ -48,7 +48,10 @@ DF_ERROR stateManualPrinter::onEntry()
    m_state_requested = STATE_MANUAL_PRINTER;
    DF_ERROR e_ret = OK;
    debugOutput::sendMessage("Test printer manually.", MSG_INFO);
-   printerr.connectToPrinter();
+
+   printerr = g_machine.receipt_printer;
+
+   printerr->connectToPrinter();
    b_isContinuouslyChecking = false;
    productDispensers = g_productDispensers;
 
@@ -239,8 +242,8 @@ void stateManualPrinter::printTransaction(int transactionNumber)
 DF_ERROR stateManualPrinter::sendPrinterStatus()
 {
 
-   bool isOnline = printerr.testComms();
-   bool hasPaper = printerr.hasPaper();
+   bool isOnline = printerr->testComms();
+   bool hasPaper = printerr->hasPaper();
    string statusString;
    if (isOnline)
    {
@@ -286,9 +289,9 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
    sqlite3_close(db);
 
    // power cycling the printer. This will erase a annoying error that every 11th poll, one charater is printed.
-   if (printerr.getPollCountLimitReached())
+   if (printerr->getPollCountLimitReached())
    {
-      printerr.resetPollCount();
+      printerr->resetPollCount();
 
       debugOutput::sendMessage("Pollcount LIMIT REACHED. Will restart Printer ", MSG_INFO);
       g_machine.pcb24VPowerSwitch(false);
@@ -301,13 +304,13 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
 
 DF_ERROR stateManualPrinter::displayPrinterStatus()
 {
-   bool isOnline = printerr.testComms(); // first call returns always "online"
-   isOnline = printerr.testComms();
+   bool isOnline = printerr->testComms(); // first call returns always "online"
+   isOnline = printerr->testComms();
 
    if (isOnline)
    {
 
-      if (printerr.hasPaper())
+      if (printerr->hasPaper())
       {
          debugOutput::sendMessage("Printer online, has paper.", MSG_INFO);
       }
@@ -321,10 +324,10 @@ DF_ERROR stateManualPrinter::displayPrinterStatus()
       debugOutput::sendMessage("Printer not online.", MSG_INFO);
    }
 
-   if (printerr.getPollCountLimitReached())
+   if (printerr->getPollCountLimitReached())
    {
 
-      printerr.resetPollCount();
+      printerr->resetPollCount();
       debugOutput::sendMessage("Pollcount LIMIT REACHED. Will restart Printer ", MSG_INFO);
       g_machine.pcb24VPowerSwitch(false);
       usleep(1200000); //2000000ok //1500000ok //1200000ok //1000000nok
@@ -338,7 +341,7 @@ DF_ERROR stateManualPrinter::displayPrinterStatus()
 
 DF_ERROR stateManualPrinter::displayPrinterReachable()
 {
-   if (printerr.testComms())
+   if (printerr->testComms())
    {
       debugOutput::sendMessage("printer reachable", MSG_INFO);
    }
@@ -355,13 +358,13 @@ DF_ERROR stateManualPrinter::printTest()
    string plu = "978020137962";
 
    // Adafruit_Thermal printerr;
-   printerr.printBarcode(plu.c_str(), EAN13);
+   printerr->printBarcode(plu.c_str(), EAN13);
    // system("echo '\n---------------------------\n' > /dev/ttyS4");
 
    string printer_command_string = "echo '\n---------------------------\n" + printerstring + "' > /dev/ttyS4";
    system(printer_command_string.c_str());
 
-   // printerr.testPage();
+   // printerr->testPage();
 
    //  string printer_command_string = "echo '------------------------------\n-- Vancouver Active Tourism --\n--            2022-02-12    --\n------------------------------\n 1x Special morning activity \n 1x Batard Bakery experience \n 1x Guided bike tour to \n         Lighthouse park \n 1x Soapstand workplace demo \n Participants: Wafeltje + Lodey    \n   Grand total: Happy times <3 \n   Thank you, please come again!  \n\n\n\n' > /dev/ttyS4";
    //  system(printer_command_string.c_str());
@@ -375,11 +378,11 @@ DF_ERROR stateManualPrinter::onExit()
    // stop continuous checking setting
    b_isContinuouslyChecking = false;
 
-   // printerr.connectToPrinter();
+   // printerr->connectToPrinter();
    // printTest();
-   // printerr.testPage();
+   // printerr->testPage();
    // usleep(500000);
-   printerr.disconnectPrinter();
+   printerr->disconnectPrinter();
    DF_ERROR e_ret = OK;
    return e_ret;
 }

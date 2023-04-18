@@ -31,6 +31,10 @@
 
 #include "Adafruit_Thermal.h"
 
+#include <sstream>
+#include <iomanip>
+
+
 // Though most of these printers are factory configured for 19200 baud
 // operation, a few rare specimens instead work at 9600.  If so, change
 // this constant.  This will NOT make printing slower!  The physical
@@ -329,6 +333,8 @@ void Adafruit_Thermal::printBarcode(const char *text, uint8_t type) {
 #endif
   timeoutSet((barcodeHeight + 40) * dotPrintTime);
   prevByte = '\n';
+
+  resetPollCount();
 }
 
 // === Character commands ===
@@ -695,7 +701,7 @@ void  Adafruit_Thermal::connectToPrinter() {
 char Adafruit_Thermal::testCommschar() {
 
   // WILL CRASH AT TIMES WHEN NO PRINTER CONNECTED. RETURNS EMPTY STRING 
-
+   pollCount++;
   // first requst not valid?!
 
   writeBytes(ASCII_ESC,'@'); //if omitted, after about 8 hasPaper calls, some chars are printed.
@@ -730,8 +736,28 @@ void Adafruit_Thermal::resetPollCount()
 //     string printerstring = text;
 //     string printer_command_string = "echo '\n" + printerstring + "' > /dev/ttyS4";
 //     system(printer_command_string.c_str());
-
+//   resetPollCount();
 // }
+
+void Adafruit_Thermal::printText(const char* text) {
+   int text_len = strlen(text);
+    char* printerstring = new char[text_len+1];
+    strcpy(printerstring, text);
+    printerstring[text_len] = '\0'; // ensure null termination
+    const char* command_prefix = "echo '\\n";
+    const char* command_suffix = "' > /dev/ttyS4";
+    int command_len = strlen(command_prefix) + text_len + strlen(command_suffix) + 1;
+    char* printer_command_string = new char[command_len];
+    strcpy(printer_command_string, command_prefix);
+    strcat(printer_command_string, printerstring);
+    strcat(printer_command_string, command_suffix);
+    system(printer_command_string);
+    delete[] printerstring;
+    delete[] printer_command_string;
+    resetPollCount();
+}
+
+
 bool Adafruit_Thermal::getPollCountLimitReached() 
 {
   // after polling x times, the printer spits out some random characters. This seems to be a buffer that's emptied. 

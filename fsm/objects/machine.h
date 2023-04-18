@@ -37,7 +37,7 @@ public:
     pcb* getPcb();
     // static pcb *control_pcb;
     pcb *control_pcb;
-
+    Adafruit_Thermal* receipt_printer;
 };
 
 #endif

@@ -16,6 +16,7 @@
 ///////////////////////////////////////////////////////////////////////////
 #include <stddef.h>
 #include <ctype.h>
+// #include <string>
 #include <string.h>
 #include <unistd.h>
 #include <time.h>
@@ -136,6 +137,11 @@ public:
   Adafruit_Thermal(void);
   ~Adafruit_Thermal(void);
 
+void resetPollCount();
+
+void printText(const char* text);
+
+bool getPollCountLimitReached();
   size_t
     /*!
      * @brief Writes a character to the thermal printer
@@ -369,9 +375,11 @@ public:
     void disconnectPrinter();
     char testCommschar();
     bool testComms();
+    
 
 private:
   mn::CppLinuxSerial::SerialPort serialPort;
+  int pollCount;
 
   uint8_t printMode,
       prevByte,      // Last character issued to printer

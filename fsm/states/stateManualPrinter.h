@@ -54,7 +54,7 @@ public:
 private:
     //int waitSerial;
     bool b_isContinuouslyChecking;
-    Adafruit_Thermal printerr;
+    Adafruit_Thermal* printerr;
    
 };
 

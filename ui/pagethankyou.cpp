@@ -114,7 +114,7 @@ void pagethankyou::showEvent(QShowEvent *event)
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_THANK_YOU_BACKGROUND_PATH);
 
-    qDebug() << "db open24";
+    qDebug() << "db open: check receipt printer";
     DbManager db(DB_PATH);
     QString paymentMethod = db.getPaymentMethod(p_page_idle->currentProductOrder->getSelectedSlot());
     bool hasReceiptPrinter = db.hasReceiptPrinter();
@@ -138,11 +138,8 @@ void pagethankyou::showEvent(QShowEvent *event)
 
     is_in_state_thank_you = true;
 
-    // THIS WILL HAVE TO BE CHANGED SO THE SYSTEM CHECKS IF IT IS A DF / SS MACHINE
-
     // reset promovalue
     p_page_idle->currentProductOrder->setDiscountPercentageFraction(0.0);
-    // ui->extra_message_label->hide();
 
     is_controller_finished = false;
     is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
@@ -157,7 +154,6 @@ void pagethankyou::showEvent(QShowEvent *event)
         is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
     }
     thankYouEndTimer->stop();
-    // ui->extra_message_label->hide();
     p_page_idle->addPictureToLabel(ui->drinkfill_logo_label2, DRINKFILL_LOGO_VERTICAL_PATH);
 }
 
@@ -222,7 +218,6 @@ void pagethankyou::sendDispenseEndToCloud()
     readBuffer = "";
 }
 
-
 void pagethankyou::controllerFinishedTransaction()
 {
     if (is_in_state_thank_you)
@@ -241,7 +236,6 @@ void pagethankyou::controllerFinishedTransaction()
 void pagethankyou::transactionToFile(char *curl_params)
 {
     QString data_out = curl_params;
-    // p_page_idle->dfUtility->write_to_file_timestamped(TRANSACTION_DISPENSE_END_OFFINE_PATH, data_out);
     p_page_idle->dfUtility->write_to_file(TRANSACTION_DISPENSE_END_OFFINE_PATH, data_out);
 }
 
@@ -252,7 +246,7 @@ void pagethankyou::onThankyouTimeoutTick()
     }
     else
     {
-        exitPage();
+        finishHandler();
         exitIsForceable = true;
     }
 }
@@ -260,47 +254,42 @@ void pagethankyou::onThankyouTimeoutTick()
 void pagethankyou::on_mainPage_Button_clicked()
 {
     qDebug() << "main page button clicked.";
-    exitPage();
+    finishHandler();
 }
 
-void pagethankyou::exitPage()
+void pagethankyou::hidePage(QWidget *pageToShow)
+{
+
+    is_in_state_thank_you = false;
+    p_page_idle->currentProductOrder->setPromoCode("");
+
+    thankYouEndTimer->stop();
+    p_page_idle->pageTransition(this, pageToShow);
+}
+
+void pagethankyou::finishHandler()
 {
     transactionLogging = "";
     if ((is_controller_finished && is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER) || exitIsForceable)
     {
-        thankYouEndTimer->stop();
-        // qDebug() << "thank you to idle";
-        is_in_state_thank_you = false;
-        p_page_idle->currentProductOrder->setPromoCode("");
-
-        // p_page_idle->showFullScreen();
-        // this->hide();
-        p_page_idle->pageTransition(this, p_page_idle);
-
         if (exitIsForceable)
         {
             qDebug() << "ERROR?!:Forced exit. controller ok?: " << is_controller_finished << " is payment finished?:" << is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER;
         }
+
+        hidePage(p_page_idle);
     }
     else
     {
-        // ui->extra_message_label->setText("<p align=center><br>Waiting for end<br>of transaction...</p>");
-        // ui->extra_message_label->show();
         ui->thank_you_message_label->setText("Finishing<br>transaction");
         ui->thank_you_subtitle_message_label->hide();
 
         thankYouEndTimer->start(1000);
         _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     }
-    
 }
 
 void pagethankyou::on_notifyUs_Button_clicked()
 {
-
-    qDebug() << "Transition to Help Page";
-    thankYouEndTimer->stop();
-    // p_page_help->showFullScreen();
-    // this->hide();
-    p_page_idle->pageTransition(this, p_page_sendFeedback);
+    hidePage(p_page_sendFeedback);
 }

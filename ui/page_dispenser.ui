@@ -172,6 +172,30 @@
     <string>TextLabel</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="debug_Button">
+   <property name="geometry">
+    <rect>
+     <x>970</x>
+     <y>0</y>
+     <width>111</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Brevia</family>
+     <pointsize>9</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="flat">
+    <bool>false</bool>
+   </property>
+  </widget>
   <zorder>abortButton</zorder>
   <zorder>label_abort</zorder>
   <zorder>fill_animation_label</zorder>
@@ -182,6 +206,7 @@
   <zorder>label_to_refill</zorder>
   <zorder>label_bring_container</zorder>
   <zorder>label_press</zorder>
+  <zorder>debug_Button</zorder>
  </widget>
  <resources/>
  <connections/>

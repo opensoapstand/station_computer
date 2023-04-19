@@ -38,7 +38,7 @@ public:
     explicit page_select_product(QWidget *parent = nullptr);
     void setPage(pageProduct *pageSizeSelect, page_idle* pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp);
     ~page_select_product();
-    void cancelTimers();
+    
     void select_product(int slot);
     void displayProducts();
     
@@ -61,7 +61,7 @@ private slots:
     void on_selection4_Button_clicked();
     //void on_selection5_Button_clicked();
     //void on_selection6_Button_clicked();
-    void mainPage();
+    
     void onProductPageTimeoutTick();
     //void on_backButton_clicked();
     void on_p_page_maintenanceButton_pressed();
@@ -70,6 +70,7 @@ private slots:
 
 private:
     void showEvent(QShowEvent *event);
+    void hidePage(QWidget *pageToShow);
     void resizeEvent(QResizeEvent *event);
     Ui::page_select_product *ui;
     // productPage_2 *selection_PageTwo;

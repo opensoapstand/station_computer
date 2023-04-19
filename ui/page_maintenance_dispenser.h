@@ -28,21 +28,21 @@
 class page_maintenance;
 class page_idle;
 
-namespace Ui {
-class page_maintenance_dispenser;
+namespace Ui
+{
+    class page_maintenance_dispenser;
 }
-
 
 class page_maintenance_dispenser : public QWidget
 {
     Q_OBJECT
 
-
 public:
     explicit page_maintenance_dispenser(QWidget *parent = nullptr);
-    void setPage(page_maintenance* pageMaintenance, page_idle* pageIdle);
+    void setPage(page_maintenance *pageMaintenance, page_idle *pageIdle);
     ~page_maintenance_dispenser();
     void resizeEvent(QResizeEvent *event);
+    void hidePage(QWidget *pageToShow);
     void updateVolumeDisplayed(double dispensed, bool isFull);
     void fsmReceiveTargetVolumeReached();
     void fsmReceiveDispenseButtonPressed();
@@ -51,7 +51,7 @@ public:
     void dispense_test_end(bool sendStopToController);
     void dispense_test_start();
     void update_dispense_stats(double dispensed);
-    DrinkOrder* selectedProductOrder;
+    DrinkOrder *selectedProductOrder;
 
 private slots:
     void refreshLabels();
@@ -73,10 +73,10 @@ private slots:
     void on_temperatureButton_clicked();
     void on_pwmButton_clicked();
     void on_pumpButton_clicked();
-//    void on_testSmallButton_clicked();
-//    void on_testLargeButton_clicked();
-//    void on_pluButton_clicked();
-//    void on_numberEntry_buttonClicked();
+    //    void on_testSmallButton_clicked();
+    //    void on_testLargeButton_clicked();
+    //    void on_pluButton_clicked();
+    //    void on_numberEntry_buttonClicked();
     void on_button1_clicked();
     void on_button2_clicked();
     void on_button3_clicked();
@@ -104,13 +104,13 @@ private:
     void setButtonPressCountLabel(bool init);
     void showEvent(QShowEvent *event);
     Ui::page_maintenance_dispenser *ui;
-    page_maintenance* p_page_maintenance;
-    page_idle* p_page_idle;
+    page_maintenance *p_page_maintenance;
+    page_idle *p_page_idle;
 
     bool pumping = false;
 
     int _maintainProductPageTimeoutSec;
-    QTimer* maintainProductPageEndTimer;
+    QTimer *maintainProductPageEndTimer;
 
     QString text_entered;
     bool price_small;
@@ -125,8 +125,8 @@ private:
     uint16_t button_press_count;
 
     QString units_selected_product;
-//    bool plu_s;
-//    bool plu_l;
+    //    bool plu_s;
+    //    bool plu_l;
 
     double volume_per_tick_buffer;
 
@@ -135,12 +135,12 @@ private:
     void autoDispenseStart(int size);
     void restockTransactionToFile(char *curl_params);
     time_t rawtime;
-    struct tm * timeinfo;
+    struct tm *timeinfo;
     CURL *curl;
     CURLcode res;
     std::string readBuffer;
     QByteArray curl_param_array;
-    char * curl_data;
+    char *curl_data;
 };
 
 #endif // PAGE_MAINTENANCE_DISPENSER_H

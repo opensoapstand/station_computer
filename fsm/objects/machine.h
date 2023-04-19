@@ -28,16 +28,15 @@
 class machine
 {
 public:
-    void enablePcb24V();
-    // void testtest();
-    void print_text(string text);
+    void pcb24VPowerSwitch(bool enableElseDisable);
+    // void print_text(string text);
     void print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string units, string paymentMethod, string plu, string promoCode);
     gpio* switch_24V;
     void setup();
     pcb* getPcb();
     // static pcb *control_pcb;
     pcb *control_pcb;
-
+    Adafruit_Thermal* receipt_printer;
 };
 
 #endif

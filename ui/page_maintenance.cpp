@@ -27,7 +27,7 @@ page_maintenance::page_maintenance(QWidget *parent) : QWidget(parent),
     page_maintenanceEndTimer = new QTimer(this);
     page_maintenanceEndTimer->setInterval(1000);
     connect(page_maintenanceEndTimer, SIGNAL(timeout()), this, SLOT(onPage_maintenanceTimeoutTick()));
-    
+
     product_buttons[0] = ui->product1_button;
     product_buttons[1] = ui->product2_button;
     product_buttons[2] = ui->product3_button;
@@ -40,8 +40,6 @@ page_maintenance::page_maintenance(QWidget *parent) : QWidget(parent),
 
     QString title = QString("Soapstand UI v%1").arg(UI_VERSION);
     ui->label_ui_version->setText(title);
-
-    
 }
 
 // DTOR
@@ -96,7 +94,6 @@ void page_maintenance::showEvent(QShowEvent *event)
     // ui->product4_label->setText(db.getProductName(4));
     ui->machineLabel->setText("Machine ID: " + db.getMachineID());
 
-
     db.closeDB();
 
     ui->product1_label->setText(p_page_idle->currentProductOrder->getProductName(1));
@@ -104,16 +101,14 @@ void page_maintenance::showEvent(QShowEvent *event)
     ui->product3_label->setText(p_page_idle->currentProductOrder->getProductName(3));
     ui->product4_label->setText(p_page_idle->currentProductOrder->getProductName(4));
 
-
-
     for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
-         uint8_t slot = i+1;
+        uint8_t slot = i + 1;
         qDebug() << "db for names and id maintenance";
-            DbManager db(DB_PATH);
-            int product_slot_enabled = db.getSlotEnabled(slot);
-            bool product_sold_out = !(db.isProductVolumeInContainer(slot));
-            QString product_status_text = db.getStatusText(slot);
+        DbManager db(DB_PATH);
+        int product_slot_enabled = db.getSlotEnabled(slot);
+        bool product_sold_out = !(db.isProductVolumeInContainer(slot));
+        QString product_status_text = db.getStatusText(slot);
 
         db.closeDB();
 
@@ -134,15 +129,13 @@ void page_maintenance::showEvent(QShowEvent *event)
         {
             product_overlay_labels[i]->setText("");
             product_overlay_labels[i]->setStyleSheet("background-color: transparent;");
-            
+
             // product_buttons[i]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
         }
     }
-
-
-    p_pageSelectProduct->cancelTimers();
-    p_pageProduct->cancelTimers();
-     qDebug() << "End maintenance load";
+    // p_pageSelectProduct->cancelTimers();
+    // p_pageProduct->cancelTimers();
+    qDebug() << "End maintenance load";
 }
 
 /*
@@ -155,9 +148,12 @@ void page_maintenance::setPage(page_idle *pageIdle, page_maintenance_dispenser *
     this->p_page_maintenance_general = p_pageMaintenanceGeneral;
     this->p_pageSelectProduct = p_pageProduct;
     this->p_pageProduct = pagePaySelect;
+}
 
-    
-    
+void page_maintenance::hidePage(QWidget *pageToShow)
+{
+    page_maintenanceEndTimer->stop();
+    p_page_idle->pageTransition(this, pageToShow);
 }
 
 void page_maintenance::onPage_maintenanceTimeoutTick()
@@ -165,90 +161,57 @@ void page_maintenance::onPage_maintenanceTimeoutTick()
 
     if (--_page_maintenanceTimeoutSec >= 0)
     {
-        //        qDebug() << "Page_page_maintenance Tick Down: " << _page_maintenanceTimeoutSec << endl;
     }
     else
     {
-        //        qDebug() << "Page_page_maintenance Timer Done!" << _page_maintenanceTimeoutSec << endl;
-
-        page_maintenanceEndTimer->stop();
-        // qDebug() << "maintenance to idle";
-         // p_page_maintenance_product->showFullScreen();
-        // this->hide();
-        p_page_idle->pageTransition(this, p_page_idle);
+        hidePage(p_page_idle);
     }
 }
 
 void page_maintenance::on_generalSettings_button_clicked()
 {
-    page_maintenanceEndTimer->stop();
-    // p_page_maintenance_general->showFullScreen();
-    // this->hide();
-    p_page_idle->pageTransition(this, p_page_maintenance_general);
+    hidePage(p_page_maintenance_general);
 }
 
 void page_maintenance::on_backButton_clicked()
 {
-    page_maintenanceEndTimer->stop();
-    // p_page_idle->showFullScreen();
-    // this->hide();
-    p_page_idle->pageTransition(this, p_page_idle);
+    hidePage(p_page_idle);
 }
 
 void page_maintenance::on_product1_button_clicked()
 {
-    //    qDebug() << "Product 1 button clicked" << endl;
-    page_maintenanceEndTimer->stop();
-
     p_page_idle->currentProductOrder->setSelectedSlot(1);
     p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
 
     p_page_maintenance_product->resizeEvent(productSelection);
-    // p_page_maintenance_product->showFullScreen();
-    // this->hide();
-    p_page_idle->pageTransition(this, p_page_maintenance_product);
+    hidePage(p_page_maintenance_product);
 }
 
 void page_maintenance::on_product2_button_clicked()
 {
-    //    qDebug() << "Product 2 button clicked" << endl;
-    page_maintenanceEndTimer->stop();
-
     p_page_idle->currentProductOrder->setSelectedSlot(2);
     p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
 
     p_page_maintenance_product->resizeEvent(productSelection);
-    // p_page_maintenance_product->showFullScreen();
-    // this->hide();
-    p_page_idle->pageTransition(this, p_page_maintenance_product);
+    hidePage(p_page_maintenance_product);
 }
 
 void page_maintenance::on_product3_button_clicked()
 {
-    //    qDebug() << "Product 3 button clicked" << endl;
-    page_maintenanceEndTimer->stop();
-
     p_page_idle->currentProductOrder->setSelectedSlot(3);
     p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
 
     p_page_maintenance_product->resizeEvent(productSelection);
-    // p_page_maintenance_product->showFullScreen();
-    // this->hide();
-    p_page_idle->pageTransition(this, p_page_maintenance_product);
+    hidePage(p_page_maintenance_product);
 }
 
 void page_maintenance::on_product4_button_clicked()
 {
-    //    qDebug() << "Product 4 button clicked" << endl;
-    page_maintenanceEndTimer->stop();
-
     p_page_idle->currentProductOrder->setSelectedSlot(4);
     p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
 
     p_page_maintenance_product->resizeEvent(productSelection);
-    // p_page_maintenance_product->showFullScreen();
-    // this->hide();
-    p_page_idle->pageTransition(this, p_page_maintenance_product);
+    hidePage(p_page_maintenance_product);
 }
 
 // void page_maintenance::on_product5_button_clicked(){
@@ -276,10 +239,7 @@ void page_maintenance::on_product4_button_clicked()
 
 //}
 
-
 int getSelection()
 {
     return selection;
 }
-
-

@@ -25,7 +25,7 @@ signals:
     void updateVolumeSignal(double dispensed);
     void printerStatusSignal(bool isOnline, bool hasPaper);
     void initReadySignal(void);
-    void MMSignal(void);
+    // void MMSignal(void);
     void dispenseButtonPressedSignal(void);
     void messageHandlerFinishedSignal(void);
 

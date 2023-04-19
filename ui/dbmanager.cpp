@@ -1582,7 +1582,6 @@ bool DbManager::hasReceiptPrinter()
 {
     QSqlQuery qry;
     bool is_enabled;
-
     {
         qry.prepare("SELECT has_receipt_printer FROM machine");
         qry.exec();

@@ -56,6 +56,7 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     ui->finishTransactionMessage->hide();
     // ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->abortButton->setStyleSheet("QPushButton { color:#5E8580; background-color: transparent; border: 5px;border-color:#5E8580; }");
+    ui->debug_Button->setStyleSheet("QPushButton { color:#5E8580; background-color: transparent; border: 5px;border-color:#5E8580; }");
     ui->label_abort->setStyleSheet(
         "QLabel {"
 
@@ -179,6 +180,12 @@ page_dispenser::~page_dispenser()
     delete ui;
 }
 
+void page_dispenser::hidePage(QWidget *pageToShow)
+{
+    stopDispenseTimer();
+    p_page_idle->pageTransition(this, pageToShow);
+
+}
 void page_dispenser::showEvent(QShowEvent *event)
 {
     this->isDispensing = false;
@@ -290,17 +297,12 @@ void page_dispenser::dispensing_end_admin()
         {
 
             std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, SAF_NUM, stream.str(), "ELIGIBLE");
-        }        
+        }
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     }
-    std::cout << "Stopping dispense timer";
-    stopDispenseTimer();
 
-    // thanksPage->showFullScreen();
-    // this->hide();
-
-    p_page_idle->pageTransition(this, thanksPage);
     qDebug() << "Finished dispense admin handling";
+    hidePage(thanksPage);
 }
 
 void page_dispenser::force_finish_dispensing()
@@ -382,17 +384,13 @@ void page_dispenser::fsmSendPromo()
     p_page_idle->dfUtility->send_command_to_FSM(command);
 }
 
-// void page_dispenser::onRinseTimerTick()
-// {
-// }
-
 void page_dispenser::stopDispenseTimer()
 {
     this->isDispensing = false;
-    qDebug() << "page_dispenser: Stop Dispense Timers" << endl;
+    qDebug() << "page_dispenser: Stop Dispense Timers";
     if (dispenseIdleTimer != nullptr)
     {
-        qDebug() << "Dispense timer stop function" << endl;
+        qDebug() << "Dispense timer stop function";
         dispenseIdleTimer->stop();
     }
     dispenseIdleTimer = nullptr;
@@ -402,13 +400,10 @@ void page_dispenser::onDispenseIdleTick()
 {
     if (--_dispenseIdleTimeoutSec >= 0)
     {
-        //        qDebug() << "page_dispenser: Idle Tick Down: " << _dispenseIdleTimeoutSec << endl;
     }
     else
     {
-        //        qDebug() << "Timer Done!" << _dispenseIdleTimeoutSec << endl;
-        //        dispenseIdleTimer->stop();
-        qDebug() << "Dispensing timeout. End dispensing." << endl;
+        qDebug() << "Dispensing timeout. End dispensing.";
         force_finish_dispensing();
     }
 }
@@ -501,11 +496,11 @@ void page_dispenser::fsmReceiveTargetVolumeReached()
     if (this->isDispensing)
     {
         this->isDispensing = false;
-        // qDebug() << "Signal: Target volume reached."  << endl;
+        // qDebug() << "Signal: Target volume reached."  ;
         updateVolumeDisplayed(1.0, true); // make sure the fill bottle graphics are completed
         transactionLogging += "\n 8: Target Reached - True";
         dispensing_end_admin();
-        // qDebug() << "Finish dispense end admin."  << endl;
+        // qDebug() << "Finish dispense end admin."  ;
     }
     else
     {
@@ -518,11 +513,8 @@ void page_dispenser::fsmReceiveNoFlowAbort()
     if (this->isDispensing)
     {
         this->isDispensing = false;
-        // qDebug() << "Signal: Target volume reached."  << endl;
         updateVolumeDisplayed(1.0, true); // make sure the fill bottle graphics are completed
-
         dispensing_end_admin();
-        // qDebug() << "Finish dispense end admin."  << endl;
     }
     else
     {
@@ -548,4 +540,10 @@ void page_dispenser::on_cancelButton_clicked()
         transactionLogging += "\n 7: Cancel Button - True";
         force_finish_dispensing();
     }
+}
+
+void page_dispenser::on_debug_Button_clicked()
+{
+    qDebug() << "WARNING: >>>>>>>>>>>>> Debug button pressed. Fake dispensing of 100ml <<<<<<<<<<<<<<<<";
+    updateVolumeDisplayed(300.0, false); // make sure the fill bottle graphics are completed
 }

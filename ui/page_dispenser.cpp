@@ -435,6 +435,7 @@ void page_dispenser::resetDispenseTimeout(void)
 
 void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
 {
+    
     ui->fill_animation_label->move(380,889);
 
 

@@ -41,7 +41,22 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
     // Fullscreen background setup
     ui->setupUi(this);
     qDebug() << "Payment page" << endl;
-    ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    // ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+     ui->previousPage_Button->setStyleSheet(
+        "QPushButton {"
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 75;"
+        "font-size: 32px;"
+        "line-height: 99px;"
+        "letter-spacing: 1.5px;"
+        "text-transform: lowercase;"
+        "color: #003840;"
+        "text-align: cCenter;"
+        "qproperty-alignment: AlignCenter;"
+        "border: none;"
+        "}");
+    ui->previousPage_Button->setText("<- Back");
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->payment_bypass_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
@@ -78,7 +93,7 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
     std::map<std::string, std::string> configMap = readConfigFile();
     std::map<std::string, std::string> deviceStatus = checkDeviceStatus(connectSecondarySocket());
     if(deviceStatus["MACLABEL_IN_SESSION"]!=""){
-        // finishSession(socket, configMap["MAC_KEY"], configMap["MAC_LABEL"]);
+        // finishSession(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
     }
     cancelTransaction(connectSecondarySocket());
     qDebug() << "Transaction cancelled";
@@ -425,11 +440,15 @@ void page_tap_payment::on_previousPage_Button_clicked()
             stop_authorization_thread=true;
             // stopPayTimers();
             qDebug() << "Stopping the threads";
-            cancelTransaction(connectSecondarySocket());
+            std::map<std::string, std::string> cancelResp = cancelTransaction(connectSecondarySocket());
             qDebug()<< "My socket address is "<< QString::fromStdString(socketAddr) << endl;
-            finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
-            qDebug() << "Session finished sent";
-            
+            if(cancelResp["RESULT"]=="OK"){
+                qDebug() << QString::fromUtf8(cancelResp["RESULT"].c_str());
+                sleep(3);
+                finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+                qDebug() << "Session finished sent";
+            }
+
         }
         p_page_idle->pageTransition(this, p_pageProduct);
     }

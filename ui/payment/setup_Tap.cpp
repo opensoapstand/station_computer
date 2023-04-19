@@ -233,7 +233,9 @@ std::map<std::string, std::string> sendAndReceivePacket(std::string command, int
     memset(buffer, 0, sizeof(buffer));
     strcpy(buffer, command.c_str());
     // Send the message
-    if (send(sockfd, buffer, strlen(buffer), 0) < 0)
+    int bytesSent = send(sockfd, buffer, strlen(buffer), 0);
+    qDebug() << bytesSent;
+    if (bytesSent < 0)
     {
         qDebug() << "Error sending message";
         std::cerr << "Error sending and receiving message" <<strerror(errno)<< std::endl;

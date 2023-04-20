@@ -23,7 +23,7 @@
 
 class page_dispenser;
 class page_idle;
-class page_payment;
+class page_qr_payment;
 class page_sendFeedback;
 
 namespace Ui
@@ -37,7 +37,7 @@ class pagethankyou : public QWidget
 
 public:
     explicit pagethankyou(QWidget *parent = nullptr);
-    void setPage(page_dispenser *page_dispenser, page_idle *pageIdle, page_payment *page_payment, page_sendFeedback *page_sendFeedback);
+    void setPage(page_dispenser* page_dispenser, page_idle* pageIdle, page_qr_payment* page_qr_payment, page_sendFeedback *page_sendFeedback);
     ~pagethankyou();
 
     void controllerFinishedTransaction();
@@ -56,10 +56,10 @@ private:
     void showEvent(QShowEvent *event);
 
     Ui::pagethankyou *ui;
-    page_dispenser *p_page_dispense;
-    page_idle *p_page_idle;
-    page_payment *paymentPage;
-    page_sendFeedback *p_page_sendFeedback;
+    page_dispenser* p_page_dispense;
+    page_idle* p_page_idle;
+    page_qr_payment* paymentPage;
+    page_sendFeedback* p_page_sendFeedback;
 
     QDialog *popup;
 

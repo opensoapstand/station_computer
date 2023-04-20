@@ -48,7 +48,10 @@ DF_ERROR stateManualPrinter::onEntry()
    m_state_requested = STATE_MANUAL_PRINTER;
    DF_ERROR e_ret = OK;
    debugOutput::sendMessage("Test printer manually.", MSG_INFO);
-   printerr.connectToPrinter();
+
+   printerr = g_machine.receipt_printer;
+
+   printerr->connectToPrinter();
    b_isContinuouslyChecking = false;
    productDispensers = g_productDispensers;
 
@@ -74,11 +77,16 @@ DF_ERROR stateManualPrinter::onAction()
       else if (ACTION_UI_COMMAND_PRINTER_SEND_STATUS == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Printer status requested by UI", MSG_INFO);
-         sendPrinterStatus(); // first call after startup returns always online
+         // sendPrinterStatus(); // first call after startup returns always online
          sendPrinterStatus();
          m_state_requested = STATE_IDLE; // return after finished.
       }
 
+      else if ('1' == m_pMessaging->getAction())
+      {
+         debugOutput::sendMessage("Do test print", MSG_INFO);
+         printTest();
+      }
       // If ACTION_DISPENSE is received, enter Dispense state, else, stay in Idle state
       else if ('2' == m_pMessaging->getAction())
       {
@@ -90,11 +98,6 @@ DF_ERROR stateManualPrinter::onAction()
       {
          debugOutput::sendMessage("Get Printer display status", MSG_INFO);
          displayPrinterStatus();
-      }
-      else if ('1' == m_pMessaging->getAction())
-      {
-         debugOutput::sendMessage("Do test print", MSG_INFO);
-         printTest();
       }
       else if ('4' == m_pMessaging->getAction())
       {
@@ -136,45 +139,9 @@ DF_ERROR stateManualPrinter::onAction()
    if (b_isContinuouslyChecking)
    {
       displayPrinterStatus();
-      // printerr.flush();
-      // printerr.offline();
-      // printerr.online();
+    
       usleep(500000);
    }
-
-   // m_state = STATE_MANUAL_PRINTER;
-
-   // printerr.feed(1);
-   // printerr.connectToPrinter();
-   // printerr.cancelCustomCharacters();
-
-   // char tmpTest;
-   // waitSerial++;
-   // tmpTest = printerr.testComms(waitSerial);
-
-   // std::string c3(1,tmpTest);
-
-   // debugOutput::sendMessage("test byte:==" + c3 + "==", MSG_INFO);
-   // debugOutput::sendMessage("0.1 ms multiplier: " + std::to_string(waitSerial), MSG_INFO);
-
-   // if (tmpTest == 0){
-   //    // debugOutput::sendMessage("zero", MSG_INFO);
-   // }else if (tmpTest == 0x04){
-   //    debugOutput::sendMessage("four", MSG_INFO);
-
-   // }else{
-
-   //    std::string c3(1,tmpTest);
-
-   //    debugOutput::sendMessage("test byte:" + c3, MSG_INFO);
-
-   // }
-
-   // printerr.disconnectPrinter();
-
-   // usleep(500000);
-   // hasPaper
-
    e_ret = OK;
 
    return e_ret;
@@ -227,7 +194,6 @@ void stateManualPrinter::printTransaction(int transactionNumber)
    if (rc != SQLITE_OK)
    {
       debugOutput::sendMessage("ERROR: SQL transaction retrieval : (" + to_string(rc) + "):" + sql_string, MSG_INFO);
-
       sqlite3_free(zErrMsg);
    }
    else
@@ -276,8 +242,8 @@ void stateManualPrinter::printTransaction(int transactionNumber)
 DF_ERROR stateManualPrinter::sendPrinterStatus()
 {
 
-   bool isOnline = printerr.testComms();
-   bool hasPaper = printerr.hasPaper();
+   bool isOnline = printerr->testComms();
+   bool hasPaper = printerr->hasPaper();
    string statusString;
    if (isOnline)
    {
@@ -322,18 +288,29 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
 
    sqlite3_close(db);
 
-   m_pMessaging->sendMessageOverIP(statusString); // commented out. Let's communicate by setting the db fields only
+   // power cycling the printer. This will erase a annoying error that every 11th poll, one charater is printed.
+   if (printerr->getPollCountLimitReached())
+   {
+      printerr->resetPollCount();
+
+      debugOutput::sendMessage("Pollcount LIMIT REACHED. Will restart Printer ", MSG_INFO);
+      g_machine.pcb24VPowerSwitch(false);
+      usleep(1200000);
+      g_machine.pcb24VPowerSwitch(true);
+   }
+
+   m_pMessaging->sendMessageOverIP(statusString); // if commented out: Let's communicate by setting the db fields only
 }
 
 DF_ERROR stateManualPrinter::displayPrinterStatus()
 {
-   bool isOnline = printerr.testComms(); // first call returns always "online"
-   isOnline = printerr.testComms();
+   bool isOnline = printerr->testComms(); // first call returns always "online"
+   isOnline = printerr->testComms();
 
    if (isOnline)
    {
 
-      if (printerr.hasPaper())
+      if (printerr->hasPaper())
       {
          debugOutput::sendMessage("Printer online, has paper.", MSG_INFO);
       }
@@ -346,10 +323,25 @@ DF_ERROR stateManualPrinter::displayPrinterStatus()
    {
       debugOutput::sendMessage("Printer not online.", MSG_INFO);
    }
+
+   if (printerr->getPollCountLimitReached())
+   {
+
+      printerr->resetPollCount();
+      debugOutput::sendMessage("Pollcount LIMIT REACHED. Will restart Printer ", MSG_INFO);
+      g_machine.pcb24VPowerSwitch(false);
+      usleep(1200000); //2000000ok //1500000ok //1200000ok //1000000nok
+      g_machine.pcb24VPowerSwitch(true);
+      //usleep(2000000); //1000000
+   }
+
 }
+
+
+
 DF_ERROR stateManualPrinter::displayPrinterReachable()
 {
-   if (printerr.testComms())
+   if (printerr->testComms())
    {
       debugOutput::sendMessage("printer reachable", MSG_INFO);
    }
@@ -366,13 +358,13 @@ DF_ERROR stateManualPrinter::printTest()
    string plu = "978020137962";
 
    // Adafruit_Thermal printerr;
-   printerr.printBarcode(plu.c_str(), EAN13);
-   //system("echo '\n---------------------------\n' > /dev/ttyS4");
+   printerr->printBarcode(plu.c_str(), EAN13);
+   // system("echo '\n---------------------------\n' > /dev/ttyS4");
 
    string printer_command_string = "echo '\n---------------------------\n" + printerstring + "' > /dev/ttyS4";
    system(printer_command_string.c_str());
 
-   // printerr.testPage();
+   // printerr->testPage();
 
    //  string printer_command_string = "echo '------------------------------\n-- Vancouver Active Tourism --\n--            2022-02-12    --\n------------------------------\n 1x Special morning activity \n 1x Batard Bakery experience \n 1x Guided bike tour to \n         Lighthouse park \n 1x Soapstand workplace demo \n Participants: Wafeltje + Lodey    \n   Grand total: Happy times <3 \n   Thank you, please come again!  \n\n\n\n' > /dev/ttyS4";
    //  system(printer_command_string.c_str());
@@ -386,11 +378,11 @@ DF_ERROR stateManualPrinter::onExit()
    // stop continuous checking setting
    b_isContinuouslyChecking = false;
 
-   // printerr.connectToPrinter();
+   // printerr->connectToPrinter();
    // printTest();
-   // printerr.testPage();
+   // printerr->testPage();
    // usleep(500000);
-   printerr.disconnectPrinter();
+   printerr->disconnectPrinter();
    DF_ERROR e_ret = OK;
    return e_ret;
 }
@@ -417,10 +409,10 @@ DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double v
    snprintf(chars_cost, sizeof(chars_cost), "%.2f", price);
    string receipt_cost = (chars_cost);
 
-   machine tmp;
+   // machine tmp;
    receipt_cost = m_pMessaging->getRequestedPrice();
 
-   tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu, "");
+   g_machine.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu, "");
 }
 
 // DF_ERROR stateManualPrinter::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string units, string paymentMethod, string plu){

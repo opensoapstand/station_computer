@@ -18,14 +18,14 @@
 #include "page_select_product.h"
 #include "page_product.h"
 #include "page_transactions.h"
-#include "page_payment.h"
+#include "page_qr_payment.h"
 #include "page_idle.h"
 #include "page_maintenance.h"
 #include "dbmanager.h"
 #include "page_sendFeedback.h"
 
 class page_select_product;
-class page_payment;
+class page_qr_payment;
 class page_idle;
 class pageProduct;
 class page_transactions;
@@ -41,7 +41,7 @@ class page_help : public QWidget
 
 public:
     explicit page_help(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, page_payment *page_payment, page_transactions *pageTransactions, page_maintenance* pageMaintenance, page_sendFeedback *pageFeedback);
+    void setPage(page_select_product *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, page_qr_payment *page_qr_payment, page_transactions *pageTransactions, page_maintenance* pageMaintenance, page_sendFeedback *pageFeedback);
     ~page_help();
     QTimer* helpIdleTimer;
 
@@ -68,7 +68,7 @@ private:
 
     Ui::page_help *ui;
     page_select_product* p_page_select_product;
-    page_payment* paymentPage;
+    page_qr_payment* paymentPage;
     page_idle* p_page_idle;
     page_sendFeedback* p_page_feedback;
     pageProduct* selectPage;

@@ -40,10 +40,10 @@ page_error_wifi::page_error_wifi(QWidget *parent) :
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void page_error_wifi::setPage(page_payment *page_payment, pagethankyou* pageThankYou, page_idle* pageIdle)
+void page_error_wifi::setPage(page_qr_payment *page_qr_payment, pagethankyou* pageThankYou, page_idle* pageIdle)
 {
     this->thanksPage = pageThankYou;
-    this->paymentPage = page_payment;
+    this->paymentPage = page_qr_payment;
     this->p_page_idle = pageIdle;
 }
 

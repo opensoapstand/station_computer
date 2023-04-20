@@ -1,6 +1,6 @@
 //***************************************
 //
-// page_payment.h
+// page_qr_payment.h
 // GUI class while machine is processing
 // payment.
 //
@@ -14,8 +14,8 @@
 // all rights reserved
 //***************************************
 
-#ifndef PAGE_PAYMENT_H
-#define PAGE_PAYMENT_H
+#ifndef page_qr_payment_H
+#define page_qr_payment_H
 
 #include "df_util.h"
 #include "drinkorder.h"
@@ -40,8 +40,7 @@
 #include <curl/curl.h>
 #include<atomic>
 
-extern std::atomic<bool> stop_tap_action_thread;
-extern std::atomic<bool> stop_authorization_thread;
+
 
 class pageProduct;
 class page_dispenser;
@@ -49,7 +48,7 @@ class page_idle;
 class page_help;
 
 namespace Ui {
-class page_payment;
+class page_qr_payment;
 }
 
 typedef enum StatePayment{
@@ -61,15 +60,15 @@ typedef enum StatePayment{
 using namespace std;
 using namespace qrcodegen;
 
-class page_payment : public QWidget
+class page_qr_payment : public QWidget
 {
     Q_OBJECT
 
 public:
     // **** GUI Setup ****
-    explicit page_payment(QWidget *parent = nullptr);
+    explicit page_qr_payment(QWidget *parent = nullptr);
     void setPage(pageProduct* pageSizeSelect,page_error_wifi *pageWifiError, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp);
-    ~page_payment();
+    ~page_qr_payment();
     void setProgressLabel(QLabel* label, int dot);
     // TODO: Figure out better Style Setup.
     void labelSetup(QLabel *label, int fontSize);
@@ -81,28 +80,9 @@ public:
     // **** Control Functions ****
     bool setpaymentProcess(bool status);
 
-    void authorized_transaction(std::map<std::string, std::string> responseObj);
-
+  
     // Database
     void storePaymentEvent(QSqlDatabase db, QString event);
-
-    /* mpos */
-    void stayAliveLogon();
-    void batchClose();
-    int getSelectedPriceSelect();
-    void sendCommand();
-
-    string getTerminalID(){
-        return terminalID;
-    }
-
-    string getMerchantName(){
-        return merchantName;
-    }
-
-    string getMerchantAddress() {
-        return merchantAddress;
-    }
 
     QString getOID(){
         return orderId;
@@ -113,8 +93,6 @@ public:
     // char * curlOrderdata;
     StatePayment state_payment;
 
-// signals:
-//     void cardTapped();
 private slots:
 
     // Update Drink order totals section
@@ -134,12 +112,6 @@ private slots:
     void displayPaymentPending(bool isVisible);
 
     void onTimeoutTick();
-    // void readTimer_loop();
-    void tapPaymentHandler();
-    void declineTimer_start();
-    void check_packet_available();
-    void check_card_tapped();
-    void startPaymentProcess();
 
 
     void idlePaymentTimeout();
@@ -154,7 +126,7 @@ protected:
 
 private:
     // **** GUI ****
-    Ui::page_payment *ui;
+    Ui::page_qr_payment *ui;
     pageProduct* p_pageProduct;
     page_dispenser* p_page_dispense;
     page_idle* p_page_idle;
@@ -250,7 +222,6 @@ private:
     QShowEvent *dispenseEvent;
 
     bool response;
-    bool tap_payment;
     int lastTransactionId;
     void testQRgen();
 
@@ -285,4 +256,4 @@ private:
     
 };
 
-#endif // PAGE_PAYMENT_H
+#endif // page_qr_payment_H

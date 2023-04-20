@@ -132,6 +132,7 @@ void page_maintenance_general::printerStatusFeedback(bool isOnline, bool hasPape
     }
     ui->printer_isOnline_label->setText(printerStatus);
     ui->printer_hasPaper_label->setText(printerHasPaper);
+    ui->printer_check_status_button->show();
 }
 
 void page_maintenance_general::send_check_printer_status_command()
@@ -146,6 +147,7 @@ void page_maintenance_general::on_printer_check_status_button_clicked()
 {
     // qDebug() << "Maintenance general. yoooo.";
     send_check_printer_status_command();
+    ui->printer_check_status_button->hide();
 }
 
 void page_maintenance_general::on_printer_test_print_button_clicked()

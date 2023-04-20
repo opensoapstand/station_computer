@@ -13,7 +13,8 @@ FORMS += \
     page_dispenser.ui \
     page_error_wifi.ui \
     page_idle.ui \
-    page_payment.ui \
+    page_qr_payment.ui \
+    page_tap_payment.ui \
     page_product.ui \
     page_select_product.ui \
     pagethankyou.ui \
@@ -33,7 +34,8 @@ HEADERS += \
     page_dispenser.h \
     page_idle.h \
     includefiles.h \
-    page_payment.h \
+    page_qr_payment.h \
+    page_tap_payment.h \
     page_product.h \
     posm/enums.h \
     posm/lrcgenerator.h \
@@ -68,7 +70,8 @@ SOURCES += \
     page_dispenser.cpp \
     page_idle.cpp \
     main.cpp \
-    page_payment.cpp \
+    page_qr_payment.cpp \
+    page_tap_payment.cpp \
     page_product.cpp \
     posm/lrcgenerator.cpp \
     posm/mcommunication.cpp \

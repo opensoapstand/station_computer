@@ -157,10 +157,11 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void page_dispenser::setPage(page_payment *page_payment, pagethankyou *pageThankYou, page_idle *pageIdle)
+void page_dispenser::setPage(page_qr_payment *page_qr_payment,page_tap_payment *page_tap_payment, pagethankyou *pageThankYou, page_idle *pageIdle)
 {
     this->thanksPage = pageThankYou;
-    this->paymentPage = page_payment;
+    this->paymentPage = page_qr_payment;
+    this->paymentTapPage = page_tap_payment;
     this->p_page_idle = pageIdle;
     selectedProductOrder = p_page_idle->currentProductOrder;
 
@@ -272,7 +273,6 @@ void page_dispenser::dispensing_end_admin()
     if (volumeDispensed == 0 && (selectedProductOrder->getSelectedPaymentMethod()) == "tap")
     {
         std::map<std::string, std::string> response;
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         qDebug() << "dispense end: tap payment No volume dispensed.";
         // REVERSE PAYMENT.
         if (SAF_NUM != "")
@@ -431,6 +431,9 @@ void page_dispenser::resetDispenseTimeout(void)
 
 void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
 {
+    
+    ui->fill_animation_label->move(380,889);
+
 
     if (this->isDispensing)
     {

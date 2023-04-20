@@ -43,11 +43,11 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void pagethankyou::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, page_payment *page_payment, page_sendFeedback *page_sendFeedback)
+void pagethankyou::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_sendFeedback *page_sendFeedback)
 {
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
-    this->paymentPage = page_payment;
+    this->paymentPage = page_qr_payment;
     this->p_page_sendFeedback = page_sendFeedback;
 }
 

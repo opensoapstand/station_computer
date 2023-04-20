@@ -111,9 +111,6 @@ DF_ERROR stateInit::dispenserSetup()
     int idx;
     dispenser *productDispensers = g_productDispensers;
     debugOutput::sendMessage("Setting up control board.", MSG_INFO);
-    machine testmachine = g_machine;
-
-
 
     // We only need one flow sensor interrupt pin since only one pump
     // is ever active at a time.  The flow sensors are all connected
@@ -140,7 +137,7 @@ DF_ERROR stateInit::dispenserSetup()
 
     // needs to be set up only once. Dispenser index is only important for the button 4 index.
     
-    if (testmachine.control_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON )  //&& this->slot == 4
+    if (g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON )  //&& this->slot == 4
     {
         if (productDispensers[3].getMultiDispenseButtonEnabled())
         {
@@ -148,10 +145,10 @@ DF_ERROR stateInit::dispenserSetup()
             productDispensers[3].setAllDispenseButtonLightsOff();
         }
     }
-    else if (testmachine.control_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || testmachine.control_pcb->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS  )
+    else if (g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS  )
     {
         debugOutput::sendMessage(" Enable 24V", MSG_INFO);
-        testmachine.enablePcb24V();
+        g_machine.pcb24VPowerSwitch(true);
 
 
     }else{

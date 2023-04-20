@@ -37,6 +37,10 @@ page_init::page_init(QWidget *parent) : QWidget(parent),
     rebootTimer = new QTimer(this);
     rebootTimer->setInterval(1000);
     connect(rebootTimer, SIGNAL(timeout()), this, SLOT(onRebootTimeoutTick()));
+
+
+    // usleep(1000000);
+
 }
 
 /*

@@ -18,7 +18,7 @@
 
 //#include "database_logger.h"
 
-#include "../page_payment.h"
+#include "../page_qr_payment.h"
 //extern std::string merchantName;
 //extern std::string merchantAddress;
 //extern std::string terminalID;

@@ -21,7 +21,7 @@
 #include <string>
 #include <cmath>
 
-#include "page_payment.h"
+#include "page_qr_payment.h"
 #include "page_select_product.h"
 #include "page_productOverview.h"
 
@@ -113,7 +113,7 @@ uint16_t orderSizeVolumeLabels_xy_dynamic_ui_custom_available[8][2] = {
 };
 
 uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_available[8][2] = {
-    {605, 1110}, // S vol
+    {605, 1150}, // S vol
     {1, 1},      // M vol
     {1, 1},      // L vol
     {1, 1}       // custom col
@@ -131,7 +131,7 @@ uint16_t orderSizePriceLabels_xy_dynamic_ui_small_and_large_available[8][2] = {
     {1, 1}       // custom price
 };
 uint16_t orderSizePriceLabels_xy_dynamic_ui_small_available[8][2] = {
-    {605, 1150}, // S price
+    {605, 1110}, // S price
     {1, 1},      // M price
     {1, 1},      // L price
     {1, 1}       // custom price
@@ -309,10 +309,10 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_payment *page_payment, page_help *pageHelp, pageProductOverview *page_Overview)
+void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, pageProductOverview *page_Overview)
 {
     this->p_page_select_product = pageSelect;
-    this->paymentPage = page_payment;
+    this->paymentPage = page_qr_payment;
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
     this->p_page_help = pageHelp;
@@ -414,7 +414,7 @@ void pageProduct::reset_and_show_page_elements()
         // only small available
         xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_small_available;
         xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_small_available;
-        xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_small_and_large_available;
+        xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_small_available;
     }
     else if (available_sizes_signature == 5)
     {
@@ -665,6 +665,10 @@ void pageProduct::loadProdSpecs()
     if (sizes_available_count == 1)
     {
         ui->continue_Button->show();
+    }
+    else{
+        ui->continue_Button->hide();
+
     }
 
     qDebug() << "-------------------------- END LOAD PRODUCTS ----------------";

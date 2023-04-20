@@ -21,7 +21,7 @@
 #include <string>
 #include <cmath>
 
-#include "page_payment.h"
+#include "page_qr_payment.h"
 #include "page_select_product.h"
 #include "page_idle.h"
 #include <curl/curl.h>
@@ -38,7 +38,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 
     ui->feedback_Input_Button->setStyleSheet("QPushButton { border: 1px solid #5E8580}");
     ui->feedback_Input_Button->setText("Type Here");
-    ui->feedbackText->setStyleSheet("QPushButton { background-color: transparent; border: 1px solid #5E8580 }"); // ui->page_payment_Button->show();
+    ui->feedbackText->setStyleSheet("QPushButton { background-color: transparent; border: 1px solid #5E8580 }");   // ui->page_qr_payment_Button->show();
     ui->feedbackKeyboard->hide();
     ui->label_thanks_for_feedback->hide();
 
@@ -245,10 +245,10 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_payment *page_payment, page_help *pageHelp, pageProduct *page_product, pagethankyou *page_thankyou)
+void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, pageProduct *page_product, pagethankyou *page_thankyou )
 {
     this->p_page_select_product = pageSelect;
-    this->paymentPage = page_payment;
+    this->paymentPage = page_qr_payment;
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
     this->p_page_help = pageHelp;

@@ -141,7 +141,6 @@ private slots:
     void startPaymentProcess();
     void restartTapPayment();
 
-
     void idlePaymentTimeout();
 
 

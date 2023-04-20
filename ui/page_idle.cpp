@@ -126,14 +126,10 @@ void page_idle::showEvent(QShowEvent *event)
 
     addCompanyLogoToLabel(ui->logo_label);
 
+    ui->printer_status_label->hide(); // always hide here, will show if enabled and has problems.
     if (needsReceiptPrinter)
     {
-        ui->printer_status_label->hide(); // hide here, will show if enabled and has problems.
         checkReceiptPrinterStatus();
-    }
-    else
-    {
-        ui->printer_status_label->hide();
     }
 
     addPictureToLabel(ui->drinkfill_logo_label, DRINKFILL_LOGO_VERTICAL_PATH);
@@ -207,8 +203,8 @@ void page_idle::checkReceiptPrinterStatus()
     if (hasReceiptPrinter)
     {
         qDebug() << "Check receipt printer functionality disabled.";
-        // this->p_page_maintenance_general->send_check_printer_status_command();
-        // qDebug() << "Send check receipt printer command to controller";
+        this->p_page_maintenance_general->send_check_printer_status_command();
+        ui->toSelectProductPageButton->hide(); // when printer needs to be restarted, it can take some time. Make sure nobody presses the button in that interval (to prevent crashes)
     }
     else
     {
@@ -244,6 +240,7 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
     {
         ui->printer_status_label->hide();
     }
+    ui->toSelectProductPageButton->show();
 }
 
 void page_idle::on_toSelectProductPageButton_clicked()

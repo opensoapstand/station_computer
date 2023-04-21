@@ -29,7 +29,7 @@ page_error_wifi::page_error_wifi(QWidget *parent) :
     ui->setupUi(this);
 
     ui->wifi_ack_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-
+    ui->mainPageButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     timeoutTimer = new QTimer(this);
     timeoutTimer->setInterval(20);
     connect(timeoutTimer, SIGNAL(timeout()), this, SLOT(onTimeOutTick()));
@@ -83,6 +83,11 @@ void page_error_wifi::on_wifi_ack_Button_clicked()
     // //stopDispenseTimer();
     //  db.closeDB();
     // qDebug() << "error to idle";
+}
+
+void page_error_wifi::on_mainPageButton_clicked()
+{
+    exit_page();
 }
 
 

@@ -45,6 +45,9 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
 
     qrPeriodicalCheckTimer = new QTimer(this);
     connect(qrPeriodicalCheckTimer, SIGNAL(timeout()), this, SLOT(qrProcessedPeriodicalCheck()));
+
+    showError = new QTimer(this);
+    connect(showError, SIGNAL(timeout()), this, SLOT(showErrorPage()));
     
         
     
@@ -129,12 +132,6 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
 void page_qr_payment::stopPayTimers()
 {
     
-    if (declineTimer != nullptr)
-    {
-        qDebug() << "cancel decline Timer" << endl;
-        declineTimer->stop();
-    }
-
     if (idlePaymentTimer != nullptr)
     {
         qDebug() << "cancel page_idle payment Timer" << endl;
@@ -150,6 +147,10 @@ void page_qr_payment::stopPayTimers()
     {
         // qDebug() << "*************************cancel qrPeriodicalCheckTimer" << endl;
         qrPeriodicalCheckTimer->stop();
+    }
+
+    if(showError != nullptr){
+        showError->stop();
     }
     //    qDebug() << "page_qr_payment: Stopped Timers" << endl;
 }
@@ -247,7 +248,6 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->order_total_amount->setText("Total: $" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
     ui->steps_Label->show();
     ui->processing_Label->hide();
-    transactionLogging += "\n 2: QR code - True";
     
 
     // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
@@ -263,12 +263,14 @@ void page_qr_payment::showEvent(QShowEvent *event)
     setupQrOrder();
 }
 
+ 
 void page_qr_payment::setupQrOrder()
 {
 
     if (createOrderIdAndSendToBackend())
     {
 
+        transactionLogging += "\n 2: QR code - True";
         QPixmap map(360, 360);
         map.fill(QColor("black"));
         QPainter painter(&map);
@@ -289,8 +291,22 @@ void page_qr_payment::setupQrOrder()
     }
     else
     {
-        p_page_idle->pageTransition(this, p_page_wifi_error);
+        ui->qrCode->show();
+        ui->productLabel->show();
+        ui->order_drink_amount->show();
+        ui->title_Label->hide();
+        ui->scan_Label->hide();
+        ui->order_total_amount->hide();
+        ui->steps_Label->hide();
+        showError->start();
     }
+}
+
+void page_qr_payment::showErrorPage(){
+    qDebug() << "show error page";
+    stopPayTimers();
+    p_page_idle->pageTransition(this, p_page_wifi_error);
+
 }
 
 bool page_qr_payment::createOrderIdAndSendToBackend()
@@ -324,7 +340,7 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
         return shouldShowQR;
     }
 
-    curl_easy_setopt(curl1, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/createOrderInDb");
+    curl_easy_setopt(curl1, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/createOrderInDbA");
     curl_easy_setopt(curl1, CURLOPT_POSTFIELDS, curl_order_parameters.data());
     curl_easy_setopt(curl1, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl1, CURLOPT_WRITEDATA, &readBuffer);

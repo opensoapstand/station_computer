@@ -157,24 +157,25 @@ if [[ $1 = "manual" ]]
 
 
 
-PS3='Choose option(digit + enter) for db_port, it will add the port number to the back of it. To indentify and prevent overwriting:'
-options=("db to db_port" "db_port to db OVERWRITE ALERT" "db to db OVERWRITE ALERT" "db_port to db_port")
+PS3='Choose option(digit + enter):'
+options=("dbname to dbname_xxxxx" "dbname_xxxxx to dbname OVERWRITE ALERT" "dbname to dbname OVERWRITE ALERT" "dbname_xxxxx to dbname_xxxxx")
+printf "\ndbname=drinkfill-sqlite_newlayout.db, xxxxx=port number (e.g. 43020)\n"
 select opt in "${options[@]}"
 do
     case $opt in
-        "db to db_port")
+        "dbname to dbname_xxxxx")
            production_db_name_source="drinkfill-sqlite_newlayout.db"
            production_db_name_destination="drinkfill-sqlite_newlayout_$source_port.db"
             ;;
-        "db_port to db OVERWRITE ALERT")
+        "dbname_xxxxx to dbname OVERWRITE ALERT")
            production_db_name_source="drinkfill-sqlite_newlayout_$source_port.db"
            production_db_name_destination="drinkfill-sqlite_newlayout.db"
             ;;
-        "db to db OVERWRITE ALERT")
+        "dbname to dbname OVERWRITE ALERT")
            production_db_name_source="drinkfill-sqlite_newlayout.db"
            production_db_name_destination="drinkfill-sqlite_newlayout.db"
             ;;
-        "db_port to db_port")
+        "dbname_xxxxx to dbname_xxxxx")
            production_db_name_source="drinkfill-sqlite_newlayout_$source_port.db"
            production_db_name_destination="drinkfill-sqlite_newlayout_$source_port.db"
             ;;

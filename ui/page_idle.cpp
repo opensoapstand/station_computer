@@ -317,13 +317,13 @@ QString page_idle::getTemplateFolder()
 {
     return m_templatePath;
 }
-QString page_idle::getTemplatePathFromName(QString backgroundPictureName)
+QString page_idle::getTemplatePathFromName(QString pictureName)
 {
-    QString image_path = m_templatePath + backgroundPictureName;
+    QString image_path = getTemplateFolder() + pictureName;
 
     if (!df_util::fileExists(image_path))
     {
-        QString image_default_path = getDefaultTemplatePathFromName(backgroundPictureName);
+        QString image_default_path = getDefaultTemplatePathFromName(pictureName);
         qDebug() << "File not found in template folder: " + image_path + ". Default template path: " + image_default_path;
         if (!df_util::fileExists(image_default_path))
         {

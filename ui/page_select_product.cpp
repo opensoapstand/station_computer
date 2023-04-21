@@ -189,10 +189,11 @@ void page_select_product::displayProducts()
         product_sold_out = !(db.isProductVolumeInContainer(slot));
         product_status_text = db.getStatusText(slot);
         db.closeDB();
-        qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << ", product set as not available?: " << product_sold_out << " Status text: " << product_status_text;
 
         product_type = p_page_idle->currentProductOrder->getProductType(slot);
         product_name = p_page_idle->currentProductOrder->getProductName(slot);
+        
+        qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << ", product set as not available?: " << product_sold_out << " Status text: " << product_status_text;
 
         selectProductNameLabels[i]->setText(product_name);
         selectProductNameLabels[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
@@ -231,8 +232,9 @@ void page_select_product::displayProducts()
             type_text = product_type;
             qDebug() << "Product type not found for UI text and icon. Is the slot set correctly in database?";
         }
+        QString icon_path_with_template = p_page_idle->getTemplatePathFromName(icon_path);
 
-        p_page_idle->addPictureToLabel(selectProductIconLabels[i], icon_path);
+        p_page_idle->addPictureToLabel(selectProductIconLabels[i], icon_path_with_template);
         selectProductIconLabels[i]->setText(""); // icon should not display text.
 
         selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
@@ -284,26 +286,30 @@ void page_select_product::displayProducts()
 
 void page_select_product::select_product(int slot)
 {
-    qDebug() << "db open: For enabled slot";
-
-    DbManager db(DB_PATH);
-    bool product_not_sold_out = (db.isProductVolumeInContainer(slot));
-    bool product_slot_enabled = db.getSlotEnabled(slot);
-
-    db.closeDB();
-
-    if (product_not_sold_out && product_slot_enabled)
-    {
         qDebug() << "selected slot: " << slot;
-
         p_page_idle->currentProductOrder->setSelectedSlot(slot);
-        p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
         hideCurrentPageAndShowProvided(p_page_product);
-    }
-    else
-    {
-        qDebug() << "Slot not enabled: " << slot;
-    }
+
+    // qDebug() << "db open: For enabled slot";
+
+    // DbManager db(DB_PATH);
+    // bool product_not_sold_out = (db.isProductVolumeInContainer(slot));
+    // bool product_slot_enabled = db.getSlotEnabled(slot);
+
+    // db.closeDB();
+
+    // if (product_not_sold_out && product_slot_enabled)
+    // {
+    //     qDebug() << "selected slot: " << slot;
+
+    //     p_page_idle->currentProductOrder->setSelectedSlot(slot);
+    //     p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
+    //     hideCurrentPageAndShowProvided(p_page_product);
+    // }
+    // else
+    // {
+    //     qDebug() << "Slot not enabled: " << slot;
+    // }
 }
 
 // FIXME: This is terrible...no time to make array reference to hold button press functions
@@ -349,7 +355,7 @@ void page_select_product::on_p_page_maintenanceButton_pressed()
 void page_select_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     productPageEndTimer->stop();
-    qDebug() << "exit select product page for main page";
+    qDebug() << "Exit select product page.";
     selectedProductOrder->setDiscountPercentageFraction(0.0);
     this->raise();
     p_page_idle->pageTransition(this, pageToShow);
@@ -363,6 +369,6 @@ void page_select_product::on_mainPage_Button_clicked()
 
 void page_select_product::on_helpPage_Button_clicked()
 {
-    qDebug() << "<<<<<<< Help_Button clicked >>>>>>>>>";
+    qDebug() << "Help_Button pressed";
     hideCurrentPageAndShowProvided(p_page_help);
 }

@@ -55,7 +55,7 @@ public:
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
-    void hidePage(QWidget *pageToShow);
+    void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     // void paintEvent(QPaintEvent *event);
 
 signals:

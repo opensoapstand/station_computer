@@ -369,7 +369,7 @@ void pageProduct::onSelectTimeoutTick()
 
         selectIdleTimer->stop();
         
-        hidePage(p_page_idle);
+        hideCurrentPageAndShowProvided(p_page_idle);
     }
 }
 
@@ -683,7 +683,7 @@ bool pageProduct::stopSelectTimers()
     }
 }
 
-void pageProduct::hidePage(QWidget *pageToShow)
+void pageProduct::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
     // ui->mainPage_Button->setEnabled(false);
@@ -695,7 +695,7 @@ void pageProduct::hidePage(QWidget *pageToShow)
 
 void pageProduct::on_mainPage_Button_clicked()
 {
-    hidePage(p_page_help);
+    hideCurrentPageAndShowProvided(p_page_help);
 }
 
 void pageProduct::on_orderCustom_Button_clicked()
@@ -736,15 +736,15 @@ size_t WriteCallback_coupon(char *contents, size_t size, size_t nmemb, void *use
 
 void pageProduct::on_previousPage_Button_clicked()
 {
-    hidePage(p_page_select_product);
+    hideCurrentPageAndShowProvided(p_page_select_product);
 }
 
 void pageProduct::on_continue_Button_clicked()
 {
-    hidePage(p_page_overview);
+    hideCurrentPageAndShowProvided(p_page_overview);
 }
 
 void pageProduct::on_back_Button_clicked()
 {
-    hidePage(p_page_select_product);
+    hideCurrentPageAndShowProvided(p_page_select_product);
 }

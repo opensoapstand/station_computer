@@ -180,7 +180,7 @@ page_dispenser::~page_dispenser()
     delete ui;
 }
 
-void page_dispenser::hidePage(QWidget *pageToShow)
+void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     stopDispenseTimer();
     p_page_idle->pageTransition(this, pageToShow);
@@ -302,7 +302,7 @@ void page_dispenser::dispensing_end_admin()
     }
 
     qDebug() << "Finished dispense admin handling";
-    hidePage(thanksPage);
+    hideCurrentPageAndShowProvided(thanksPage);
 }
 
 void page_dispenser::force_finish_dispensing()

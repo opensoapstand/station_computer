@@ -70,7 +70,7 @@ private slots:
 
 private:
     void showEvent(QShowEvent *event);
-    void hidePage(QWidget *pageToShow);
+    void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void resizeEvent(QResizeEvent *event);
     Ui::page_select_product *ui;
     // productPage_2 *selection_PageTwo;

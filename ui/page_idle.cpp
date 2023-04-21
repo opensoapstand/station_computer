@@ -212,7 +212,7 @@ void page_idle::checkReceiptPrinterStatus()
     }
 }
 
-void page_idle::hidePage(QWidget *pageToShow)
+void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     this->pageTransition(this, pageToShow);
 }
@@ -245,7 +245,7 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
 
 void page_idle::on_toSelectProductPageButton_clicked()
 {
-    this->hidePage(p_pageSelectProduct);
+    this->hideCurrentPageAndShowProvided(p_pageSelectProduct);
 }
 
 void page_idle::on_testButton_clicked()
@@ -278,7 +278,7 @@ bool page_idle::isEnough(int p)
 //     qDebug() << "Signal: Enter maintenance mode";
 //     this->p_pageSelectProduct->hide(); // if pressed from another page. This is not good. It could be on any page!
 
-//     hidePage(p_page_maintenance);
+//     hideCurrentPageAndShowProvided(p_page_maintenance);
 // }
 
 void page_idle::addCompanyLogoToLabel(QLabel *label)

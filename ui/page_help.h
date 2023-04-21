@@ -45,7 +45,7 @@ public:
     ~page_help();
     QTimer* helpIdleTimer;
 
-    void hidePage(QWidget *pageToShow);
+    void hideCurrentPageAndShowProvided(QWidget *pageToShow);
 
 private slots:
     // **** Navigation ****

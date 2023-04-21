@@ -106,7 +106,7 @@ page_help::~page_help()
     delete ui;
 }
 
-void page_help::hidePage(QWidget *pageToShow){
+void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow){
     helpIdleTimer->stop();
     ui->keyboardTextEntry->setText("");
     ui->keyboard_3->hide();
@@ -163,12 +163,12 @@ void page_help::setPage(page_select_product *pageSelect, pageProduct *pageProduc
 
 void page_help::on_previousPage_Button_clicked()
 {
-    hidePage(p_page_idle);
+    hideCurrentPageAndShowProvided(p_page_idle);
 }
 
 void page_help::on_previousPage_Button_2_clicked()
 {
-     hidePage(p_page_idle);
+     hideCurrentPageAndShowProvided(p_page_idle);
 }
 
 
@@ -182,7 +182,7 @@ void page_help::onHelpTimeoutTick()
     else
     {
         qDebug() << "Help Timer Done!" << _helpIdleTimeoutSec;
-        hidePage(p_page_idle);
+        hideCurrentPageAndShowProvided(p_page_idle);
     }
 }
 
@@ -193,7 +193,7 @@ void page_help::on_refreshButton_clicked()
 
 void page_help::on_transactions_Button_clicked()
 {
-    hidePage(p_page_transactions);
+    hideCurrentPageAndShowProvided(p_page_transactions);
 }
 
 void page_help::on_maintenance_page_Button_clicked()
@@ -263,7 +263,7 @@ void page_help::keyboardButtonPressed(int buttonID)
         {
             usleep(100000);
             qDebug() << "Password correct. Will open maintenance page";
-            hidePage(p_page_maintenance);
+            hideCurrentPageAndShowProvided(p_page_maintenance);
             
         }
         else
@@ -288,5 +288,5 @@ void page_help::keyboardButtonPressed(int buttonID)
 
 void page_help::on_feedback_Button_clicked()
 {
-    hidePage(p_page_feedback);
+    hideCurrentPageAndShowProvided(p_page_feedback);
 }

@@ -150,7 +150,7 @@ void page_maintenance::setPage(page_idle *pageIdle, page_maintenance_dispenser *
     this->p_pageProduct = pagePaySelect;
 }
 
-void page_maintenance::hidePage(QWidget *pageToShow)
+void page_maintenance::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     page_maintenanceEndTimer->stop();
     p_page_idle->pageTransition(this, pageToShow);
@@ -164,18 +164,18 @@ void page_maintenance::onPage_maintenanceTimeoutTick()
     }
     else
     {
-        hidePage(p_page_idle);
+        hideCurrentPageAndShowProvided(p_page_idle);
     }
 }
 
 void page_maintenance::on_generalSettings_button_clicked()
 {
-    hidePage(p_page_maintenance_general);
+    hideCurrentPageAndShowProvided(p_page_maintenance_general);
 }
 
 void page_maintenance::on_backButton_clicked()
 {
-    hidePage(p_page_idle);
+    hideCurrentPageAndShowProvided(p_page_idle);
 }
 
 void page_maintenance::on_product1_button_clicked()
@@ -184,7 +184,7 @@ void page_maintenance::on_product1_button_clicked()
     p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
 
     p_page_maintenance_product->resizeEvent(productSelection);
-    hidePage(p_page_maintenance_product);
+    hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 
 void page_maintenance::on_product2_button_clicked()
@@ -193,7 +193,7 @@ void page_maintenance::on_product2_button_clicked()
     p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
 
     p_page_maintenance_product->resizeEvent(productSelection);
-    hidePage(p_page_maintenance_product);
+    hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 
 void page_maintenance::on_product3_button_clicked()
@@ -202,7 +202,7 @@ void page_maintenance::on_product3_button_clicked()
     p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
 
     p_page_maintenance_product->resizeEvent(productSelection);
-    hidePage(p_page_maintenance_product);
+    hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 
 void page_maintenance::on_product4_button_clicked()
@@ -211,7 +211,7 @@ void page_maintenance::on_product4_button_clicked()
     p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
 
     p_page_maintenance_product->resizeEvent(productSelection);
-    hidePage(p_page_maintenance_product);
+    hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 
 // void page_maintenance::on_product5_button_clicked(){

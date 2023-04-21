@@ -298,7 +298,7 @@ void page_select_product::select_product(int slot)
 
         p_page_idle->currentProductOrder->setSelectedSlot(slot);
         p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
-        hidePage(p_page_product);
+        hideCurrentPageAndShowProvided(p_page_product);
     }
     else
     {
@@ -333,7 +333,7 @@ void page_select_product::onProductPageTimeoutTick()
     else
     {
         // qDebug() << "Timer Done!" << _productPageTimeoutSec;
-        hidePage(p_page_idle);
+        hideCurrentPageAndShowProvided(p_page_idle);
     }
 }
 
@@ -342,11 +342,11 @@ void page_select_product::on_p_page_maintenanceButton_pressed()
     maintenanceCounter++;
     if (maintenanceCounter > 50)
     {
-        hidePage(p_page_maintenance);
+        hideCurrentPageAndShowProvided(p_page_maintenance);
     }
 }
 
-void page_select_product::hidePage(QWidget *pageToShow)
+void page_select_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     productPageEndTimer->stop();
     qDebug() << "exit select product page for main page";
@@ -358,11 +358,11 @@ void page_select_product::hidePage(QWidget *pageToShow)
 void page_select_product::on_mainPage_Button_clicked()
 {
     qDebug() << "Back to Idle Page Button pressed";
-    hidePage(p_page_idle);
+    hideCurrentPageAndShowProvided(p_page_idle);
 }
 
 void page_select_product::on_helpPage_Button_clicked()
 {
     qDebug() << "<<<<<<< Help_Button clicked >>>>>>>>>";
-    hidePage(p_page_help);
+    hideCurrentPageAndShowProvided(p_page_help);
 }

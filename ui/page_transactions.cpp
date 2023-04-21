@@ -48,7 +48,7 @@ page_transactions::~page_transactions()
         delete ui;
 }
 
-void page_transactions::hidePage(QWidget *pageToShow)
+void page_transactions::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
         idleTimer->stop();
         p_page_idle->pageTransition(this, pageToShow);
@@ -98,7 +98,7 @@ void page_transactions::onIdleTimeoutTick()
         else
         {
                 qDebug() << "transactions Timer Done!" << _idleTimeoutSec;
-                hidePage(p_page_idle);
+                hideCurrentPageAndShowProvided(p_page_idle);
         }
 }
 
@@ -147,7 +147,7 @@ void page_transactions::populateList()
 
 void page_transactions::on_back_Button_clicked()
 {
-        hidePage(p_page_idle);
+        hideCurrentPageAndShowProvided(p_page_idle);
 }
 
 void page_transactions::on_print_Button_clicked(bool checked)

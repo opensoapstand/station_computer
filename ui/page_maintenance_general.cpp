@@ -92,7 +92,7 @@ void page_maintenance_general::refreshLabels()
 {
 }
 
-void page_maintenance_general::hidePage(QWidget *pageToShow)
+void page_maintenance_general::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     p_page_idle->pageTransition(this, pageToShow);
 }
@@ -193,7 +193,7 @@ void page_maintenance_general::on_enable_empty_container_checkBox_clicked(bool c
 
 void page_maintenance_general::on_back_Button_clicked()
 {
-    hidePage(p_page_maintenance);
+    hideCurrentPageAndShowProvided(p_page_maintenance);
 }
 
 void page_maintenance_general::on_minimize_Button_clicked()

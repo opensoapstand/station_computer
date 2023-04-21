@@ -257,7 +257,7 @@ void pagethankyou::on_mainPage_Button_clicked()
     finishHandler();
 }
 
-void pagethankyou::hidePage(QWidget *pageToShow)
+void pagethankyou::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
     is_in_state_thank_you = false;
@@ -277,7 +277,7 @@ void pagethankyou::finishHandler()
             qDebug() << "ERROR?!:Forced exit. controller ok?: " << is_controller_finished << " is payment finished?:" << is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER;
         }
 
-        hidePage(p_page_idle);
+        hideCurrentPageAndShowProvided(p_page_idle);
     }
     else
     {
@@ -291,5 +291,5 @@ void pagethankyou::finishHandler()
 
 void pagethankyou::on_notifyUs_Button_clicked()
 {
-    hidePage(p_page_sendFeedback);
+    hideCurrentPageAndShowProvided(p_page_sendFeedback);
 }

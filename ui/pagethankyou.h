@@ -41,7 +41,7 @@ public:
     ~pagethankyou();
 
     void controllerFinishedTransaction();
-    void hidePage(QWidget *pageToShow);
+    void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void finishHandler();
 
     bool is_controller_finished;

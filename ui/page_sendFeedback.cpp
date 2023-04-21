@@ -336,7 +336,7 @@ void page_sendFeedback::reset_and_show_page_elements()
 }
 
 
-void page_sendFeedback::hidePage(QWidget *pageToShow)
+void page_sendFeedback::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
      if (selectIdleTimer != nullptr)
     {
@@ -347,12 +347,12 @@ void page_sendFeedback::hidePage(QWidget *pageToShow)
 
 void page_sendFeedback::mainPage()
 {
-    hidePage(p_page_idle);
+    hideCurrentPageAndShowProvided(p_page_idle);
 }
 
 void page_sendFeedback::on_mainPage_Button_clicked()
 {
-    hidePage(p_page_help);
+    hideCurrentPageAndShowProvided(p_page_help);
 }
 
 size_t WriteCallbackFeedback(char *contents, size_t size, size_t nmemb, void *userp)
@@ -496,7 +496,7 @@ void page_sendFeedback::on_send_Button_clicked()
         label->setMinimumWidth(dialog->width());
     }
 
-    hidePage(p_page_idle);
+    hideCurrentPageAndShowProvided(p_page_idle);
 }
 
 void page_sendFeedback::keyboardButtonPressed(int buttonID)
@@ -572,7 +572,7 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
 }
 void page_sendFeedback::on_previousPage_Button_clicked()
 {
-    hidePage(p_page_idle);
+    hideCurrentPageAndShowProvided(p_page_idle);
 }
 void page_sendFeedback::on_feedback_Input_Button_clicked()
 {

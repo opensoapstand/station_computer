@@ -48,7 +48,7 @@ public:
     explicit page_dispenser(QWidget *parent = nullptr);
     void setPage(page_qr_payment* page_qr_payment, page_tap_payment* page_tap_payment, pagethankyou* pageThankYou, page_idle* pageIdle);
     ~page_dispenser();
-    void hidePage(QWidget *pageToShow);
+    void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void showEvent(QShowEvent *event);
     void resetDispenseTimeout(void);
     void updateVolumeDisplayed(double dispensed, bool isFull );

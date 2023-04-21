@@ -41,7 +41,7 @@ page_maintenance_dispenser::~page_maintenance_dispenser()
     delete ui;
 }
 
-void page_maintenance_dispenser::hidePage(QWidget *pageToShow)
+void page_maintenance_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     dispense_test_end(true);
     maintainProductPageEndTimer->stop();
@@ -161,7 +161,7 @@ void page_maintenance_dispenser::setPage(page_maintenance *pageMaintenance, page
 
 void page_maintenance_dispenser::on_backButton_clicked()
 {
-    hidePage(p_page_maintenance);
+    hideCurrentPageAndShowProvided(p_page_maintenance);
 }
 
 void page_maintenance_dispenser::refreshLabels()
@@ -769,7 +769,7 @@ void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
     else
     {
         qDebug() << "Maintenance dispenser page timeout";
-        hidePage(p_page_idle);
+        hideCurrentPageAndShowProvided(p_page_idle);
     }
 }
 

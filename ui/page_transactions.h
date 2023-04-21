@@ -22,7 +22,7 @@ public:
      void populateList();
     void populateTransactionsTable();
     void deleteAllListItems();
-    void hidePage(QWidget *pageToShow);
+    void hideCurrentPageAndShowProvided(QWidget *pageToShow);
 
 private slots:
     void on_back_Button_clicked();

@@ -49,7 +49,7 @@ public:
 
     ~page_maintenance();
     int getSelection();
-    void hidePage(QWidget *pageToShow);
+    void hideCurrentPageAndShowProvided(QWidget *pageToShow);
 
 private slots:
     void on_backButton_clicked();

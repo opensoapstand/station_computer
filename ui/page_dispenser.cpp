@@ -288,6 +288,7 @@ void page_dispenser::dispensing_end_admin()
     }
     else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && volumeDispensed != 0)
     {
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
 
         if (CTROUTD != "")
         {

@@ -430,13 +430,13 @@ DF_ERROR messageMediator::parseCommandString()
 
       //std::size_t found = str.find(str2);
       std::string dispenseCommand = sCommand.substr(found0+1, found1-found0-1);
-      debugOutput::sendMessage("partial command: " + dispenseCommand , MSG_INFO);
+      debugOutput::sendMessage("Dispense command: " + dispenseCommand , MSG_INFO);
       parseDispenseCommand(dispenseCommand);
 
       std::string pricestr = sCommand.substr(found1+1, found2-found1-1);
       double price = std::stod(pricestr);
       m_requestedDiscountPrice = price;
-      debugOutput::sendMessage("Setup price" + to_string(m_requestedDiscountPrice), MSG_INFO);
+      debugOutput::sendMessage("(Discount) price : " + to_string(m_requestedDiscountPrice), MSG_INFO);
 
       std::string promoCode = "";
       if (found1 != string::npos){
@@ -446,18 +446,6 @@ DF_ERROR messageMediator::parseCommandString()
       m_promoCode = promoCode;
       debugOutput::sendMessage("Promo code" + m_promoCode, MSG_INFO);
 
-   // }
-   // else if (first_char == '$')
-   // {
-   //    double price = std::stod(sCommand.substr(1, sCommand.size()));
-   //    debugOutput::sendMessage("Setup price" + to_string(price), MSG_INFO);
-   //    m_requestedDiscountPrice = price;
-   // }
-   // else if (sCommand.find("Promo") != string::npos)
-   // {
-   //    std::string promoCode = sCommand.substr(6, sCommand.size());
-   //    // debugOutput::sendMessage(promoCode, MSG_INFO);
-   //    m_promoCode = promoCode;
    }else if (sCommand.length() == 3)
    //  first_char == '1' ||
    //  first_char == '2' ||

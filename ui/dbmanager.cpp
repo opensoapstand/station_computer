@@ -1474,25 +1474,24 @@ QString DbManager::getPLU(int slot, char size)
     QSqlQuery plu_query;
     QString plu_smalltring;
     {
-#ifdef USE_OLD_DATABASE
-        if (size == 's')
-        {
-            plu_query.prepare("SELECT PLU_s FROM products WHERE slot=:slot");
-        }
-        else if (size == 'l')
-        {
-            plu_query.prepare("SELECT PLU_l FROM products WHERE slot=:slot");
-        }
-#else
+
         if (size == 's')
         {
             plu_query.prepare("SELECT PLU_small FROM products WHERE slot=:slot");
+        }
+        else if (size == 'm')
+        {
+            plu_query.prepare("SELECT PLU_medium FROM products WHERE slot=:slot");
         }
         else if (size == 'l')
         {
             plu_query.prepare("SELECT PLU_large FROM products WHERE slot=:slot");
         }
-#endif
+        else if (size == 'c')
+        {
+            plu_query.prepare("SELECT PLU_custom FROM products WHERE slot=:slot");
+        }
+        
         plu_query.bindValue(":slot", slot);
         plu_query.exec();
 

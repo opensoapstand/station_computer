@@ -439,9 +439,10 @@ void DrinkOrder::loadSelectedProductPropertiesFromProductsFile()
     getProductPropertiesFromProductsFile(m_product_id, &m_name_ui, &m_product_type, &m_description_ui, &m_features_ui, &m_ingredients_ui);
 }
 
+
+
 void DrinkOrder::getProductPropertiesFromProductsFile(QString product_id, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui)
 {
-
     QFile file(PRODUCT_DETAILS_TSV_PATH);
     if (!file.open(QIODevice::ReadOnly))
     {

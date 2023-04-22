@@ -184,8 +184,9 @@ void page_select_product::displayProducts()
 
         qDebug() << "db (re)load product details:";
         DbManager db(DB_PATH);
-        // product_type = db.getProductType(slot);
+        
         product_slot_enabled = db.getSlotEnabled(slot);
+
         product_sold_out = !(db.isProductVolumeInContainer(slot));
         product_status_text = db.getStatusText(slot);
         db.closeDB();

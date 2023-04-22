@@ -273,21 +273,6 @@ page_sendFeedback::~page_sendFeedback()
     delete ui;
 }
 
-void page_sendFeedback::setDefaultSize()
-{
-
-    bool default_size_set = false;
-
-    for (uint8_t i = 0; i < 4; i++)
-    {
-        int size = product_sizes[i];
-        if (selectedProductOrder->getLoadedProductSizeEnabled(size))
-        {
-            selectedProductOrder->setSelectedSize(product_sizes[i]);
-        }
-    }
-}
-
 /* GUI */
 
 void page_sendFeedback::showEvent(QShowEvent *event)

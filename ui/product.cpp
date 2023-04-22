@@ -303,9 +303,9 @@
 //     bool m_isEnabledLarge;
 //     bool m_isEnabledCustom;
 
-//     // db.getProductProperties(slot, &m_name, &m_description, &m_features, &m_ingredients, m_isEnabledSizes);
+//     // db.getProductProperties(slot, &m_name, &m_description, &m_features, &m_ingredients, m_sizeIndexIsEnabled);
     
-//     db.getProductProperties(slot, &m_product_id, m_isEnabledSizes);
+//     db.getProductProperties(slot, &m_product_id, m_sizeIndexIsEnabled);
 
 
 //     db.closeDB();
@@ -316,7 +316,7 @@
 // bool Product::getLoadedProductSizeEnabled(int size)
 // {
 //     // caution!:  provide size index (0=small, ...)
-//     return m_isEnabledSizes[size];
+//     return m_sizeIndexIsEnabled[size];
 // }
 
 // QString Product::getLoadedProductIngredients()

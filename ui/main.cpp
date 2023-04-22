@@ -14,6 +14,7 @@
 // all rights reserved
 //***************************************
 
+#include "df_util.h"
 #include "page_transactions.h"
 #include "page_help.h"
 #include "page_init.h"
@@ -25,9 +26,9 @@
 #include "page_dispenser.h"
 #include "page_error_wifi.h"
 #include "page_productOverview.h"
+#include "drinkorder.h"
 #include "pagethankyou.h"
 #include <QApplication>
-#include "df_util.h"
 #include "page_maintenance.h"
 #include "page_maintenance_dispenser.h"
 #include "page_maintenance_general.h"

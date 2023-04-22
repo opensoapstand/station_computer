@@ -80,7 +80,6 @@ private slots:
 
 private:
     int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
-    void setDefaultSize();
     void reset_and_show_page_elements();
     void selectOnTick();
     void mainPage();

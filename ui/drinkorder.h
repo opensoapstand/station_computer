@@ -88,8 +88,9 @@ public:
     void getCustomDiscountDetails(bool* large_volume_discount_is_enabled, double* min_volume_for_discount, double* discount_price_per_liter);
     void setFullVolumeCorrectUnits(QString inputFullValue);
 
-    void setSelectedSize(int sizeOption);
+    void setSelectedSize(int sizeIndex);
     int getSelectedSize();
+    char getSelectedSizeAsChar();
 
     bool isSelectedOrderValid();
 
@@ -108,6 +109,9 @@ public:
     QString getLoadedProductIngredients();
     QString getLoadedProductFeatures();
     bool getLoadedProductSizeEnabled(int size);
+    int getLoadedProductBiggestEnabledSizeIndex();
+    
+    void setLoadedProductBiggestEnabledSizeIndex();
 
     QString getProductPicturePath(int slot);
     QString getSelectedProductPicturePath();
@@ -135,7 +139,7 @@ public:
     int getSelectedDispenseSpeedPercentage();
     void setSelectedDispenseSpeedPercentage(int percentage);
 
-    char getSelectedSizeAsChar();
+
     QString getSelectedPaymentMethod();
 
     double getDiscountPercentageFraction();
@@ -160,7 +164,7 @@ private:
     QString m_name_ui;
     QString m_description_ui;
     QString m_product_id;
-    bool m_isEnabledSizes [4]; // 0 is small?!
+    bool m_sizeIndexIsEnabled [SIZES_COUNT]; // size indeces. 
 
 
     DrinkSelection *selectedDrink;

@@ -329,18 +329,6 @@ pageProduct::~pageProduct()
     delete ui;
 }
 
-void pageProduct::setDefaultSize()
-{
-    for (uint8_t i = 0; i < 4; i++)
-    {
-        int size = product_sizes[i];
-        if (selectedProductOrder->getLoadedProductSizeEnabled(size))
-        {
-            selectedProductOrder->setSelectedSize(product_sizes[i]);
-        }
-    }
-}
-
 /* GUI */
 void pageProduct::showEvent(QShowEvent *event)
 {
@@ -348,7 +336,8 @@ void pageProduct::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     selectedProductOrder->loadSelectedProductProperties();
-    setDefaultSize();
+    selectedProductOrder->setLoadedProductBiggestEnabledSizeIndex();
+
     loadProdSpecs();
     reset_and_show_page_elements();
 }
@@ -539,8 +528,6 @@ void pageProduct::reset_and_show_page_elements()
 
 void pageProduct::loadProductBySize(int sizeIndex)
 {
-    // DF_QT_SIZES tmp [6] = {INVALID_DRINK, SIZE_SMALL_INDEX, MEDIUM_DRINK, SIZE_LARGE_INDEX, CUSTOM_DRINK, TEST_DRINK};
-
     selectedProductOrder->setSelectedSize(sizeIndex);
     loadProdSpecs();
 }

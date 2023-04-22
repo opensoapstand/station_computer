@@ -1,7 +1,6 @@
 #include "drinkorder.h"
 #include "page_idle.h"
 #include "df_util.h" // lode added for settings
-// #include "product.h"
 
 // Ctor
 DrinkOrder::DrinkOrder()
@@ -102,13 +101,42 @@ int DrinkOrder::getSelectedSize()
     return selectedSize;
 }
 
-void DrinkOrder::setSelectedSize(int sizeOption)
+void DrinkOrder::setSelectedSize(int sizeIndex)
 {
     // index!!!!  e.g. 0=small
     // overruledPrice = INVALID_PRICE;
     // m_discount_percentage_fraction = 0.0;
-    selectedSize = sizeOption;
+    qDebug() << "Set size index: " << sizeIndex;
+    selectedSize = sizeIndex;
 }
+
+void DrinkOrder::setLoadedProductBiggestEnabledSizeIndex(){
+    setSelectedSize(getLoadedProductBiggestEnabledSizeIndex());
+}
+
+int DrinkOrder::getLoadedProductBiggestEnabledSizeIndex(){
+
+    // cascade to largest size. Custom volume is seen as superior.
+    int maxSize = SIZE_SMALL_INDEX;
+    if (getLoadedProductSizeEnabled(SIZE_MEDIUM_INDEX)){
+        maxSize = SIZE_MEDIUM_INDEX;
+    }
+    if (getLoadedProductSizeEnabled(SIZE_LARGE_INDEX)){
+        maxSize = SIZE_LARGE_INDEX;
+    }
+    if (getLoadedProductSizeEnabled(SIZE_CUSTOM_INDEX)){
+        maxSize = SIZE_CUSTOM_INDEX;
+    }
+    return maxSize;
+}
+
+
+bool DrinkOrder::getLoadedProductSizeEnabled(int size)
+{
+    // caution!:  provide size index (0=small, ...)
+    return m_sizeIndexIsEnabled[size];
+}
+
 
 int DrinkOrder::getSelectedSlot()
 {
@@ -402,13 +430,7 @@ void DrinkOrder::loadProductPropertiesFromDb(int slot)
     qDebug() << "Open db: db load product properties";
     DbManager db(DB_PATH);
 
-    // bool m_isEnabledSmall;
-    // bool m_isEnabledMedium;
-    // bool m_isEnabledLarge;
-    // bool m_isEnabledCustom;
-
-    db.getProductProperties(slot, &m_product_id, m_isEnabledSizes);
-
+    db.getProductProperties(slot, &m_product_id, m_sizeIndexIsEnabled);
     db.closeDB();
 }
 
@@ -450,11 +472,7 @@ void DrinkOrder::getProductPropertiesFromProductsFile(QString product_id, QStrin
     file.close();
 }
 
-bool DrinkOrder::getLoadedProductSizeEnabled(int size)
-{
-    // caution!:  provide size index (0=small, ...)
-    return m_isEnabledSizes[size];
-}
+
 
 QString DrinkOrder::getLoadedProductIngredients()
 {

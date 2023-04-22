@@ -141,7 +141,7 @@
 //     QString m_name_ui;
 //     QString m_description;
 //     QString m_product_id;
-//     bool m_isEnabledSizes [4];
+//     bool m_sizeIndexIsEnabled [4];
 
 
 //     ProductProperties *selectedProduct;

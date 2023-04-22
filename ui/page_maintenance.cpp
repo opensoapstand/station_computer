@@ -181,8 +181,6 @@ void page_maintenance::on_backButton_clicked()
 void page_maintenance::on_product1_button_clicked()
 {
     p_page_idle->currentProductOrder->setSelectedSlot(1);
-    p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
-
     p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
@@ -190,8 +188,6 @@ void page_maintenance::on_product1_button_clicked()
 void page_maintenance::on_product2_button_clicked()
 {
     p_page_idle->currentProductOrder->setSelectedSlot(2);
-    p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
-
     p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
@@ -199,8 +195,6 @@ void page_maintenance::on_product2_button_clicked()
 void page_maintenance::on_product3_button_clicked()
 {
     p_page_idle->currentProductOrder->setSelectedSlot(3);
-    p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
-
     p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
@@ -208,8 +202,6 @@ void page_maintenance::on_product3_button_clicked()
 void page_maintenance::on_product4_button_clicked()
 {
     p_page_idle->currentProductOrder->setSelectedSlot(4);
-    p_page_idle->currentProductOrder->setSelectedSize(SIZE_LARGE_INDEX);
-
     p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }

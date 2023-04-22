@@ -87,8 +87,10 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     qDebug() << "*************************call db from maintenance select dispenser page" << endl;
     DbManager db(DB_PATH);
     this->units_selected_product = db.getUnits(this->p_page_idle->currentProductOrder->getSelectedSlot());
-    // DbManager db_temperature(DB_PATH_TEMPERATURE);
-    // db.addPageClick("PAGE_MAINTENANCE PAGE ENTERED");
+    
+    this->p_page_idle->currentProductOrder->setLoadedProductBiggestEnabledSizeIndex();
+    
+
 
     if (maintainProductPageEndTimer == nullptr)
     {

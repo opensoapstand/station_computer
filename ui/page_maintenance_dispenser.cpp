@@ -31,6 +31,13 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
     maintainProductPageEndTimer = new QTimer(this);
     maintainProductPageEndTimer->setInterval(1000);
     connect(maintainProductPageEndTimer, SIGNAL(timeout()), this, SLOT(onMaintainProductPageTimeoutTick()));
+    
+    dispenseTimer = new QTimer(this);
+    dispenseTimer->setInterval(100);
+    connect(dispenseTimer, SIGNAL(timeout()), this, SLOT(onDispenseTimerTick()));
+    
+    
+    
     connect(ui->pwmSlider, SIGNAL(valueChanged(int)), this, SLOT(pwmSliderMoved(int)));
     ui->refillButton->setStyleSheet("QPushButton {font-size: 36px;}");
 }
@@ -90,6 +97,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     
     this->p_page_idle->currentProductOrder->setLoadedProductBiggestEnabledSizeIndex();
     
+    dispenseTimeSecs =0.0;
 
 
     if (maintainProductPageEndTimer == nullptr)
@@ -146,6 +154,10 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     db.closeDB();
     refreshLabels();
     setSoldOutButtonText();
+
+    ui->dispenseTimeLabel->setText("");
+
+
 }
 
 /*
@@ -315,6 +327,8 @@ void page_maintenance_dispenser::dispense_test_start()
 
     if (!pumping)
     {
+        dispenseTimeSecs = 0.0;
+        dispenseTimer->start(100);
         qDebug() << "Start dispense in maintenance mode. (FYI: if app crashes, it's probably about the update volume interrupts caused by the controller sending data.)";
         QString command = QString::number(this->p_page_idle->currentProductOrder->getSelectedSlot());
         command.append("t");
@@ -335,6 +349,7 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
 {
     if (pumping)
     {
+        dispenseTimer->stop();
         pumping = false;
         ui->pumpLabel->setText("Pump manual mode OFF.");
         ui->pumpButton->setText("ENABLE PUMP");
@@ -759,6 +774,11 @@ void page_maintenance_dispenser::on_temperatureButton_clicked()
 {
     //    qDebug() << "Temperature button clicked" << endl;
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+}
+
+void page_maintenance_dispenser::onDispenseTimerTick(){
+    dispenseTimeSecs+=0.1;
+    ui->dispenseTimeLabel->setText(QString::number(dispenseTimeSecs));
 }
 
 void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()

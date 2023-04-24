@@ -67,6 +67,7 @@ private slots:
     void on_soldOutButton_clicked();
     void on_fullButton_clicked();
     void onMaintainProductPageTimeoutTick();
+    void onDispenseTimerTick();
     void on_remainingButton_clicked();
     void on_dispensedButton_clicked();
     void on_lastRefillButton_clicked();
@@ -110,7 +111,9 @@ private:
     bool pumping = false;
 
     int _maintainProductPageTimeoutSec;
+    float dispenseTimeSecs;
     QTimer *maintainProductPageEndTimer;
+    QTimer *dispenseTimer;
 
     QString text_entered;
     bool price_small;

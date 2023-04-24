@@ -444,8 +444,8 @@ void page_tap_payment::on_previousPage_Button_clicked()
             qDebug()<< "My socket address is "<< QString::fromStdString(socketAddr) << endl;
             if(cancelResp["RESULT"]=="OK"){
                 qDebug() << QString::fromUtf8(cancelResp["RESULT"].c_str());
-                sleep(3);
-                finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+                // sleep(3);
+                // finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
                 qDebug() << "Session finished sent";
             }
 

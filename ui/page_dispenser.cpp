@@ -526,11 +526,43 @@ void page_dispenser::fsmReceiveNoFlowAbort()
 void page_dispenser::on_abortButton_clicked()
 {
     qDebug() << "Pressed dispense complete.";
+    
     transactionLogging += "\n 7: Complete Button - True";
-    if (this->isDispensing)
-    {
-        force_finish_dispensing();
+    if(volumeDispensed== 0.0){
+        QMessageBox msgBox;
+        msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+
+        msgBox.setText("<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine.<br></p>");
+        msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
+
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        int ret = msgBox.exec();
+        bool success;
+        switch (ret)
+        {
+        case QMessageBox::Yes:
+        {
+            if (this->isDispensing)
+        {
+            force_finish_dispensing();
+        }
+        }
+        break;
+        case QMessageBox::No:
+        {
+            
+        }
+        break;
+        }
     }
+    else{
+        if (this->isDispensing)
+            {
+                force_finish_dispensing();
+            }
+    }
+    
+    
 }
 
 void page_dispenser::on_cancelButton_clicked()

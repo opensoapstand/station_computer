@@ -50,6 +50,16 @@ do
             echo "Screen setup for Drinkfill UI: - disable window transition animations. - set window vertical"
             echo "     - disable window transition animations."
             gsettings set org.gnome.desktop.interface enable-animations false
+            echo "     - decrease reboot time."
+            user_question="Continue to decrease boot time? change: GRUB_TIMEOUT=1 add: GRUB_RECORDFAIL_TIMEOUT=\$GRUB_TIMEOUT, [y] to continu, other key to skip."
+            read -p "$user_question" -n 1 -r
+            echo    # (optional) move to a new line
+            if [[ $REPLY =~ ^[Yy]$ ]]
+            then
+            sudo nano /etc/default/grub
+            sudo update-grub
+            fi
+
         ;;
         "Setup rtunnel")
             

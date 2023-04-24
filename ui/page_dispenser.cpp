@@ -286,7 +286,7 @@ void page_dispenser::dispensing_end_admin()
         }
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     }
-    else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && volumeDispensed != 0)
+    else if ((selectedProductOrder->getSelectedPaymentMethod()== "tap") && volumeDispensed != 0)
     {
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
 
@@ -531,26 +531,27 @@ void page_dispenser::on_abortButton_clicked()
     if(volumeDispensed== 0.0){
         QMessageBox msgBox;
         msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
-
-        msgBox.setText("<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine.<br></p>");
+        QString payment = selectedProductOrder->getSelectedPaymentMethod();
+        if(payment == "qr" || payment=="tap"){
+            msgBox.setText("<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine. \
+                                If you press cancel, you will not be charged for the order.<br></p>");
+        }
+        else{
+            msgBox.setText("<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine.<br></p>");
+        }
         msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
 
-        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        msgBox.setStandardButtons(QMessageBox::Cancel | QMessageBox::No);
         int ret = msgBox.exec();
         bool success;
         switch (ret)
         {
-        case QMessageBox::Yes:
+        case QMessageBox::Cancel:
         {
             if (this->isDispensing)
         {
             force_finish_dispensing();
         }
-        }
-        break;
-        case QMessageBox::No:
-        {
-            
         }
         break;
         }
@@ -561,8 +562,6 @@ void page_dispenser::on_abortButton_clicked()
                 force_finish_dispensing();
             }
     }
-    
-    
 }
 
 void page_dispenser::on_cancelButton_clicked()

@@ -456,7 +456,7 @@ bool DbManager::isProductVolumeInContainer(int slot)
     }
     else
     {
-        return getVolumeRemaining(slot) > getProductVolume(slot, 'l');
+        return getVolumeRemaining(slot) > getProductVolume(slot, 'l'); // ----> TODO VERY BUGGY (only instance found of using char volume as a magic number)
     }
 }
 
@@ -1491,7 +1491,7 @@ QString DbManager::getPLU(int slot, char size)
         {
             plu_query.prepare("SELECT PLU_custom FROM products WHERE slot=:slot");
         }
-        
+
         plu_query.bindValue(":slot", slot);
         plu_query.exec();
 

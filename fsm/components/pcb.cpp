@@ -1452,11 +1452,11 @@ bool pcb::startPump(uint8_t slot)
     case (EN134_8SLOTS):
     {
         if (slotEnabled[slot-1]){
-            debugOutput::sendMessage("Start pump " + to_string(slot-1), MSG_INFO);
+            debugOutput::sendMessage("Start pump " + to_string(slot), MSG_INFO);
             setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_PUMP_ENABLE, true); // start pump
 
         }else{
-            debugOutput::sendMessage("Fail: Cannot start non enabled pump " + to_string(slot-1), MSG_WARNING);
+            debugOutput::sendMessage("Fail: Cannot start non enabled pump " + to_string(slot), MSG_WARNING);
 
         }
     };

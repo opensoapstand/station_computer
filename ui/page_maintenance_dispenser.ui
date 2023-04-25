@@ -885,6 +885,19 @@ last restock</string>
     <rect>
      <x>260</x>
      <y>1110</y>
+     <width>141</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Timer pump enable</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="dispenseTimeLabelButton">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>920</y>
      <width>67</width>
      <height>17</height>
     </rect>

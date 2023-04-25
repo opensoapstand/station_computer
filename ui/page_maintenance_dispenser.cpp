@@ -156,6 +156,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     setSoldOutButtonText();
 
     ui->dispenseTimeLabel->setText("");
+    ui->dispenseTimeLabelButton->setText("");
 
 
 }
@@ -779,7 +780,23 @@ void page_maintenance_dispenser::on_temperatureButton_clicked()
 void page_maintenance_dispenser::onDispenseTimerTick(){
     dispenseTimeSecs+=0.1;
     ui->dispenseTimeLabel->setText(QString::number(dispenseTimeSecs));
+    if (setButtonPressCountLabel(true)){
+    ui->dispenseTimeLabelButton->setText(QString::number(dispenseTimeSecs));
+    }
+    //
+    
+    
 }
+
+/*void page_maintenance_dispenser::setButtonPressCountLabel2(bool init)
+{
+    if (init)
+    {
+    dispenseTimeSecs+=0.1;
+    
+    }
+    //ui->dispense_button_presses_label->setText("Button press count: " + QString::number(this->button_press_count));
+}*/
 
 void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
 {

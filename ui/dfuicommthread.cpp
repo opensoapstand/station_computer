@@ -86,8 +86,7 @@ QByteArray DfUiCommThread::readyRead()
 
     if (Data == "Transaction End")
     {
-        //        qDebug() << "from CLEAN";
-        emit transactionEndSignal();
+        // emit transactionEndSignal();
     }
 
     else if (Data == "Reset Timer")

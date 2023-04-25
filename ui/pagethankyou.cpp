@@ -15,7 +15,6 @@
 #include "ui_pagethankyou.h"
 #include "page_sendFeedback.h"
 
-// static QPointer<QFile> log_file = nullptr;
 extern QString transactionLogging;
 
 // CTOR
@@ -24,14 +23,10 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
 {
     ui->setupUi(this);
 
-    /*hacky transparent button*/
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    // ui->extra_message_label->setText("<p align=center>Water rinse coming in<br>5</p>");
     ui->extra_message_label->hide();
     connect(ui->notifyUs_Button, SIGNAL(clicked()), this, SLOT(on_notifyUs_Button_clicked()));
-
-    //
 
     thankYouEndTimer = new QTimer(this);
     thankYouEndTimer->setInterval(1000);
@@ -153,7 +148,8 @@ void pagethankyou::showEvent(QShowEvent *event)
     {
         is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
     }
-    thankYouEndTimer->stop();
+    _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
+    thankYouEndTimer->start();
     p_page_idle->addPictureToLabel(ui->drinkfill_logo_label2, DRINKFILL_LOGO_VERTICAL_PATH);
 }
 
@@ -224,7 +220,7 @@ void pagethankyou::controllerFinishedTransaction()
     {
         qDebug() << "Thank you page: Controller msg: All done for transaction.";
         is_controller_finished = true;
-        thankYouEndTimer->start(1000);
+        //thankYouEndTimer->start(1000);
         _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     }
     else
@@ -243,11 +239,14 @@ void pagethankyou::onThankyouTimeoutTick()
 {
     if (--_thankYouTimeoutSec >= 0)
     {
+       qDebug() << QString::number(_thankYouTimeoutSec);
     }
     else
     {
         finishHandler();
+        // once finishHandler is activated "unsuccessfully" make sure, next time it will finish for sure!
         exitIsForceable = true;
+        _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     }
 }
 
@@ -281,11 +280,9 @@ void pagethankyou::finishHandler()
     }
     else
     {
+        
         ui->thank_you_message_label->setText("Finishing<br>transaction");
         ui->thank_you_subtitle_message_label->hide();
-
-        thankYouEndTimer->start(1000);
-        _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     }
 }
 

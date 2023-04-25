@@ -45,7 +45,8 @@ public:
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void updateVolumeDisplayed(double dispensed, bool isFull);
     void fsmReceiveTargetVolumeReached();
-    void fsmReceiveDispenseButtonPressed();
+    void fsmReceiveDispenseButtonPressedPositiveEdge();
+    void fsmReceiveDispenseButtonPressedNegativeEdge();
     void fsmReceiveNoFlowAbort();
     void setSoldOutButtonText();
     void dispense_test_end(bool sendStopToController);

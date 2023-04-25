@@ -119,7 +119,11 @@ QByteArray DfUiCommThread::readyRead()
     // }
     else if (Data == "Dispense Button Pos Edge")
     {
-        emit dispenseButtonPressedSignal();
+        emit dispenseButtonPressedPosEdgeSignal();
+    }
+    else if (Data == "Dispense Button Neg Edge")
+    {
+        emit dispenseButtonPressedNegEdgeSignal();
     }
     else if (strtol(Data, &pEnd, 10) || (Data[0] == '0' && Data[1] == '.'))
     {

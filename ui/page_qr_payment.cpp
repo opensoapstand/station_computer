@@ -507,8 +507,8 @@ void page_qr_payment::storePaymentEvent(QSqlDatabase db, QString event)
 bool page_qr_payment::exitConfirm()
 {
     qDebug() << "In exit confirm";
-    if (state_payment == s_payment_processing || state_payment == s_payment_done)
-    {
+    // if (state_payment == s_payment_processing || state_payment == s_payment_done)
+    // {
         // ARE YOU SURE YOU WANT TO EXIT?
         QMessageBox msgBox;
         msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
@@ -534,14 +534,14 @@ bool page_qr_payment::exitConfirm()
         }
         break;
         }
-    }
-    else
-    {
-        // exit, no questions asked.
-        resetPaymentPage();
-        transactionLogging = "";
-        return true;
-    }
+    // }
+    // else
+    // {
+    //     // exit, no questions asked.
+    //     resetPaymentPage();
+    //     transactionLogging = "";
+    //     return true;
+    // }
 }
 
 // Navigation: Back to Drink Size Selection

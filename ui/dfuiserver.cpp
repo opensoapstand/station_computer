@@ -59,9 +59,13 @@ void DfUiServer::printerStatusSlot(bool isOnline, bool hasPaper)
 {
     emit printerStatus(isOnline, hasPaper);
 }
-void DfUiServer::dispenseButtonPressedSlot()
+void DfUiServer::dispenseButtonPressedPosEdgeSlot()
 {
-    emit dispenseButtonPressedSignal();
+    emit dispenseButtonPressedPosEdgeSignal();
+}
+void DfUiServer::dispenseButtonPressedNegEdgeSlot()
+{
+    emit dispenseButtonPressedNegEdgeSignal();
 }
 void DfUiServer::messageHandlerFinishedSlot()
 {
@@ -124,7 +128,8 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
     connect(messageHandlerThread, &DfUiCommThread::initReadySignal, this, &DfUiServer::initReadySlot);
     connect(messageHandlerThread, &DfUiCommThread::printerStatusSignal, this, &DfUiServer::printerStatusSlot);
     // connect(messageHandlerThread, &DfUiCommThread::MMSignal, this, &DfUiServer::MMSlot);
-    connect(messageHandlerThread, &DfUiCommThread::dispenseButtonPressedSignal, this, &DfUiServer::dispenseButtonPressedSlot);
+    connect(messageHandlerThread, &DfUiCommThread::dispenseButtonPressedPosEdgeSignal, this, &DfUiServer::dispenseButtonPressedPosEdgeSlot);
+    connect(messageHandlerThread, &DfUiCommThread::dispenseButtonPressedNegEdgeSignal, this, &DfUiServer::dispenseButtonPressedNegEdgeSlot);
 
     // send message to controller that acknowledges receipt?!
    

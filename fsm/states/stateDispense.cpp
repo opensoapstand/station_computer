@@ -108,6 +108,7 @@ DF_ERROR stateDispense::onAction()
       if (productDispensers[pos_index].getDispenseButtonEdgeNegative())
       {
          debugOutput::sendMessage("Dispense button released edge", MSG_INFO);
+         m_pMessaging->sendMessageOverIP("Dispense Button Neg Edge"); // send to UI
 
          stopPumping();
       }

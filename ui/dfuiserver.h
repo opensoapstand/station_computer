@@ -17,7 +17,8 @@ public:
     void updateVolumeSlot(double dispensed);
     void printerStatusSlot(bool isOnline, bool hasPaper);
     void targetHitSlot();
-    void dispenseButtonPressedSlot();
+    void dispenseButtonPressedPosEdgeSlot();
+    void dispenseButtonPressedNegEdgeSlot();
     void noFlowAbortSlot();
     void initReadySlot();
     // void MMSlot();
@@ -31,7 +32,8 @@ signals:
     void pleaseReset();
     void signalUpdateVolume(double dispensed, bool isFull);
     void targetHit();
-    void dispenseButtonPressedSignal();
+    void dispenseButtonPressedPosEdgeSignal();
+    void dispenseButtonPressedNegEdgeSignal();
     void noFlowAbort();
     void initReady();
     void MM();

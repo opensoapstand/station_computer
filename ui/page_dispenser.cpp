@@ -534,19 +534,19 @@ void page_dispenser::on_abortButton_clicked()
         QString payment = selectedProductOrder->getSelectedPaymentMethod();
         if(payment == "qr" || payment=="tap"){
             msgBox.setText("<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine. \
-                                If you press cancel, you will not be charged for the order.<br></p>");
+                                If you press Yes, you will not be charged for the order.<br></p>");
         }
         else{
             msgBox.setText("<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine.<br></p>");
         }
         msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
 
-        msgBox.setStandardButtons(QMessageBox::Cancel | QMessageBox::No);
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         int ret = msgBox.exec();
         bool success;
         switch (ret)
         {
-        case QMessageBox::Cancel:
+        case QMessageBox::Yes:
         {
             if (this->isDispensing)
         {

@@ -26,7 +26,8 @@ signals:
     void printerStatusSignal(bool isOnline, bool hasPaper);
     void initReadySignal(void);
     // void MMSignal(void);
-    void dispenseButtonPressedSignal(void);
+    void dispenseButtonPressedPosEdgeSignal(void);
+    void dispenseButtonPressedNegEdgeSignal(void);
     void messageHandlerFinishedSignal(void);
 
 public slots:

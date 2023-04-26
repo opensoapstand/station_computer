@@ -45,7 +45,8 @@ public:
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void updateVolumeDisplayed(double dispensed, bool isFull);
     void fsmReceiveTargetVolumeReached();
-    void fsmReceiveDispenseButtonPressed();
+    void fsmReceiveDispenseButtonPressedPositiveEdge();
+    void fsmReceiveDispenseButtonPressedNegativeEdge();
     void fsmReceiveNoFlowAbort();
     void setSoldOutButtonText();
     void dispense_test_end(bool sendStopToController);
@@ -67,6 +68,7 @@ private slots:
     void on_soldOutButton_clicked();
     void on_fullButton_clicked();
     void onMaintainProductPageTimeoutTick();
+    void onDispenseTimerTick();
     void on_remainingButton_clicked();
     void on_dispensedButton_clicked();
     void on_lastRefillButton_clicked();
@@ -102,6 +104,8 @@ private slots:
 
 private:
     void setButtonPressCountLabel(bool init);
+    void setButtonPressCountLabel2(bool init);
+
     void showEvent(QShowEvent *event);
     Ui::page_maintenance_dispenser *ui;
     page_maintenance *p_page_maintenance;
@@ -110,7 +114,10 @@ private:
     bool pumping = false;
 
     int _maintainProductPageTimeoutSec;
+    float dispenseTimeSecs;
+    float dispenseTimeSecs2;
     QTimer *maintainProductPageEndTimer;
+    QTimer *dispenseTimer;
 
     QString text_entered;
     bool price_small;
@@ -121,7 +128,7 @@ private:
     bool full;
     bool pwm;
     bool buffer;
-
+    int runningPump=0;
     uint16_t button_press_count;
 
     QString units_selected_product;

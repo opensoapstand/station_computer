@@ -158,7 +158,8 @@ if [[ $1 = "manual" ]]
 
 
 PS3='Choose option(digit + enter):'
-options=("dbname to dbname_xxxxx" "dbname_xxxxx to dbname OVERWRITE ALERT" "dbname_xDEST to dbname OVERWRITE ALERT --> SPECIAL CASE" "dbname to dbname OVERWRITE ALERT" "dbname_xxxxx to dbname_xxxxx")
+options=("dbname to dbname_xsrcx" "dbname_xsrcx to dbname OVERWRITE ALERT" "dbname_xDEST to dbname OVERWRITE ALERT --> SPECIAL CASE" "dbname to dbname OVERWRITE ALERT" "dbname_xsrcx to dbname_xsrcx")
+# 
 printf "\ndbname=drinkfill-sqlite_newlayout.db, xxxxx=port number (e.g. 43020)\n"
 select opt in "${options[@]}"
 do

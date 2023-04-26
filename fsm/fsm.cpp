@@ -24,6 +24,7 @@
 #include "states/stateDispenseIdle.h"
 #include "states/stateDispenseEnd.h"
 #include "states/stateManualPrinter.h"
+#include "states/stateManualConfig.h"
 #include "states/stateManualPump.h"
 #include "states/stateEnd.h"
 
@@ -42,6 +43,7 @@ std::string stateStrings[FSM_MAX + 1] = {
     "STATE_DISPENSE_END",
     "STATE_MANUAL_PRINTER",
     "STATE_MANUAL_PUMP",
+    "STATE_MANUAL_CONFIG",
     "STATE_END",
     "FSM_MAX"};
 
@@ -75,16 +77,8 @@ DF_ERROR createStateArray()
         g_stateArray[STATE_DISPENSE_END] = new stateDispenseEnd();
         g_stateArray[STATE_MANUAL_PRINTER] = new stateManualPrinter();
         g_stateArray[STATE_MANUAL_PUMP] = new stateManualPump();
+        g_stateArray[STATE_MANUAL_CONFIG] = new stateManualConfig();
         g_stateArray[STATE_END] = new stateEnd();
-        // g_stateArray[STATE_INIT] = new stateInit(g_pMessaging);
-        // g_stateArray[STATE_IDLE] = new stateIdle(g_pMessaging);
-        // g_stateArray[STATE_DISPENSE_INIT] = new stateDispenseInit(g_pMessaging);
-        // g_stateArray[STATE_DISPENSE_IDLE] = new stateDispenseIdle(g_pMessaging);
-        // g_stateArray[STATE_DISPENSE] = new stateDispense(g_pMessaging);
-        // g_stateArray[STATE_DISPENSE_END] = new stateDispenseEnd(g_pMessaging);
-        // g_stateArray[STATE_MANUAL_PRINTER] = new stateManualPrinter(g_pMessaging);
-        // g_stateArray[STATE_MANUAL_PUMP] = new stateManualPump(g_pMessaging);
-        // g_stateArray[STATE_END] = new stateEnd(g_pMessaging);
         dfRet = OK;
     }
 

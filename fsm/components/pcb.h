@@ -133,6 +133,9 @@ public:
     void flowSensorsDisableAll();
     // PcbVersion enum PcbVersion;
     enum PcbVersion pcb_version;
+    uint8_t readRegisterFromSlot(uint8_t slot, uint8_t reg);
+    void SendByteToSlot(uint8_t slot, unsigned char reg, unsigned char byte);
+    void sendEN134DefaultConfigurationToPCA9534(uint8_t slot);
 
 private:
     void EN134_PumpCycle_refresh(uint8_t slots);
@@ -142,7 +145,6 @@ private:
     void setup_i2c_bus(void);
     unsigned char ReadByte(unsigned char address, unsigned char reg);
     bool SendByte(unsigned char address, unsigned char reg, unsigned char byte);
-
     bool getPCA9534Input(uint8_t slot, int posIndex);
     void setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff);
     uint8_t get_PCA9534_address_from_slot(uint8_t slot);

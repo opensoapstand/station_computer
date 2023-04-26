@@ -84,6 +84,7 @@ pcb::~pcb(void)
 // Private methods
 ///////////////////////////////////////////////////////////////////////////
 
+
 bool pcb::SendByte(unsigned char address, unsigned char reg, unsigned char byte)
 {
 
@@ -116,6 +117,19 @@ bool pcb::SendByte(unsigned char address, unsigned char reg, unsigned char byte)
 } // End of SendByte()
 
 ///////////////////////////////////////////////////////////////////////////
+
+void pcb::SendByteToSlot(uint8_t slot, unsigned char reg, unsigned char byte)
+{
+
+    SendByte(get_PCA9534_address_from_slot(slot), reg, byte);
+}
+
+
+uint8_t pcb::readRegisterFromSlot(uint8_t slot, uint8_t reg)
+{
+    return ReadByte(get_PCA9534_address_from_slot(slot), reg);
+}
+
 unsigned char pcb::ReadByte(unsigned char address, unsigned char reg)
 {
     unsigned char buffer[2];
@@ -340,11 +354,11 @@ bool pcb::define_pcb_version(void)
                 max31760_pwm_found = true;
                 debugOutput::sendMessage("MAX31760 found on I2C bus for PWM and speed feedback", MSG_INFO);
             }
-            else if (i2c_probe_address == ADC081C021_ADDRESS){
+            else if (i2c_probe_address == ADC081C021_ADDRESS)
+            {
                 // ADC081C021
-                
-                debugOutput::sendMessage("ADC081C021 current sensor found. NOT IN USE YET.", MSG_INFO);
 
+                debugOutput::sendMessage("ADC081C021 current sensor found. NOT IN USE YET.", MSG_INFO);
             }
             else if (i2c_probe_address == PIC_ADDRESS)
             {
@@ -459,6 +473,11 @@ bool pcb::define_pcb_version(void)
     return config_valid;
 }
 
+void pcb::sendEN134DefaultConfigurationToPCA9534(uint8_t slot){
+         SendByteToSlot(slot, 0x01, 0b00100000); // Output pin values register (has no influence on input values)
+         SendByteToSlot(slot, 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+}
+
 void pcb::initialize_pcb()
 {
     // set initial values. depending on pcb version
@@ -494,8 +513,9 @@ void pcb::initialize_pcb()
         // Initialize the PCA9534
         for (uint8_t slot = 1; slot <= 4; slot++)
         {
-            SendByte(get_PCA9534_address_from_slot(slot), 0x01, 0b00100000); // Output pin values register (has no influence on input values)
-            SendByte(get_PCA9534_address_from_slot(slot), 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+            // SendByte(get_PCA9534_address_from_slot(slot), 0x01, 0b00100000); // Output pin values register (has no influence on input values)
+            // SendByte(get_PCA9534_address_from_slot(slot), 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+            sendEN134DefaultConfigurationToPCA9534(slot);
         }
 
         setPumpsDisableAll();
@@ -1221,18 +1241,14 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
                 break;
             }
             }
-        
-            };
-    break;
+        };
+        break;
     default:
     {
         debugOutput::sendMessage("Do not execute independent dispense cycle with this PCB", MSG_ERROR);
-        
     }
     break;
     }
-    
-    
     }
 }
 
@@ -1451,13 +1467,14 @@ bool pcb::startPump(uint8_t slot)
     case (EN134_4SLOTS):
     case (EN134_8SLOTS):
     {
-        if (slotEnabled[slot-1]){
+        if (slotEnabled[slot - 1])
+        {
             debugOutput::sendMessage("Start pump " + to_string(slot), MSG_INFO);
             setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_PUMP_ENABLE, true); // start pump
-
-        }else{
+        }
+        else
+        {
             debugOutput::sendMessage("Fail: Cannot start non enabled pump " + to_string(slot), MSG_WARNING);
-
         }
     };
     break;

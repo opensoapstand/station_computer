@@ -484,15 +484,21 @@ void page_maintenance_dispenser::setButtonPressCountLabel(bool init)
     ui->dispense_button_presses_label->setText("Button press count: " + QString::number(this->button_press_count));
 }
 
+
+
 void page_maintenance_dispenser::fsmReceiveDispenseButtonPressedPositiveEdge()
 {
     qDebug() << "Signal: dispense button pressed. (positive edge)";
     this->button_press_count++;
     setButtonPressCountLabel(false);
+
+    runningPump =1;
+//}
 }
 void page_maintenance_dispenser::fsmReceiveDispenseButtonPressedNegativeEdge()
 {
     qDebug() << "Signal: dispense button unpressed. (negative edge)";
+    runningPump =2;
 }
 
 void page_maintenance_dispenser::fsmReceiveTargetVolumeReached()
@@ -783,15 +789,18 @@ void page_maintenance_dispenser::on_temperatureButton_clicked()
 
 void page_maintenance_dispenser::onDispenseTimerTick(){
     dispenseTimeSecs+=0.1;
-    ui->dispenseTimeLabel->setText(QString::number(dispenseTimeSecs));
-    // if (setButtonPressCountLabel(true)){
-    ui->dispenseTimeLabelButton->setText(QString::number(dispenseTimeSecs));
-    // }
-    //
-    
-    
+    ui->dispenseTimeLabel->setText("Enable time : " +QString::number(dispenseTimeSecs));
+    //runningPump=0;
+            
+     if(runningPump==1){
+    dispenseTimeSecs2+=0.1;
+    ui->dispenseTimeLabelButton->setText("Pumping time : " +QString::number(dispenseTimeSecs2));
+     }
+     if(runningPump==2){
+    //ui->dispenseTimeLabelButton->setText(QString::number(dispenseTimeSecs));
+    dispenseTimeSecs2=0;
+     }
 }
-
 /*void page_maintenance_dispenser::setButtonPressCountLabel2(bool init)
 {
     if (init)

@@ -270,10 +270,12 @@ void page_maintenance_dispenser::on_pumpButton_clicked()
         if (!pumping)
         {
             dispense_test_start();
+            dispenseTimeSecs2=0;  //reset pumping timer
         }
         else
         {
             dispense_test_end(true);
+            dispenseTimeSecs2=0;  //reset pumping timer
         }
     }
 
@@ -325,7 +327,7 @@ void page_maintenance_dispenser::on_vol_per_tickButton_clicked()
 
 void page_maintenance_dispenser::dispense_test_start()
 {
-
+    
     if (!pumping)
     {
         dispenseTimeSecs = 0.0;
@@ -343,11 +345,13 @@ void page_maintenance_dispenser::dispense_test_start()
         ui->pumpLabel->setText("Manual Pump ready. Press dispense button.");
         ui->pumpButton->setText("DISABLE PUMP");
         ui->pumpButton->setStyleSheet("QPushButton { background-color: #E0A0A0;font-size: 20px;  }");
+         
     }
 }
 
 void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
 {
+    dispenseTimeSecs2=0;  //reset pumping timer
     if (pumping)
     {
         dispenseTimer->stop();
@@ -393,6 +397,7 @@ void page_maintenance_dispenser::autoDispenseStart(int size)
 
     if (!pumping)
     {
+        
         ui->pumpButton->setText("DISABLE PUMP");
         ui->pumpButton->setStyleSheet("QPushButton { background-color: #E0A0A0;font-size: 20px;  }");
         qDebug() << "Autofill small quantity pressed.";
@@ -789,16 +794,18 @@ void page_maintenance_dispenser::on_temperatureButton_clicked()
 
 void page_maintenance_dispenser::onDispenseTimerTick(){
     dispenseTimeSecs+=0.1;
-    ui->dispenseTimeLabel->setText("Enable time : " +QString::number(dispenseTimeSecs));
+    //ui->dispenseTimeLabel->setText("Enable time : " +QString::number(dispenseTimeSecs)+"s");
+    ui->dispenseTimeLabel->setText("Enable time : " +QString::number(dispenseTimeSecs, 'f', 1)+"s");
+    ui->dispenseTimeLabelButton->setText("Pumping time : " +QString::number(dispenseTimeSecs2)+"s");//shows all the time
     //runningPump=0;
             
      if(runningPump==1){
     dispenseTimeSecs2+=0.1;
-    ui->dispenseTimeLabelButton->setText("Pumping time : " +QString::number(dispenseTimeSecs2));
+    ui->dispenseTimeLabelButton->setText("Pumping time : " +QString::number(dispenseTimeSecs2)+"s");
      }
      if(runningPump==2){
     //ui->dispenseTimeLabelButton->setText(QString::number(dispenseTimeSecs));
-    dispenseTimeSecs2=0;
+    //dispenseTimeSecs2=0;
      }
 }
 /*void page_maintenance_dispenser::setButtonPressCountLabel2(bool init)

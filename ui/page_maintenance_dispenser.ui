@@ -679,7 +679,7 @@
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>980</y>
+     <y>960</y>
      <width>431</width>
      <height>17</height>
     </rect>
@@ -692,7 +692,7 @@
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>950</y>
+     <y>920</y>
      <width>391</width>
      <height>17</height>
     </rect>
@@ -871,7 +871,7 @@ last restock</string>
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>1020</y>
+     <y>1000</y>
      <width>221</width>
      <height>17</height>
     </rect>
@@ -884,7 +884,7 @@ last restock</string>
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>1100</y>
+     <y>1080</y>
      <width>141</width>
      <height>17</height>
     </rect>
@@ -897,7 +897,7 @@ last restock</string>
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>1060</y>
+     <y>1040</y>
      <width>211</width>
      <height>17</height>
     </rect>

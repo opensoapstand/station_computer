@@ -471,57 +471,27 @@ bool pcb::define_pcb_version(void)
     return config_valid;
 }
 
-void pcb::sendEN134DefaultConfigurationToPCA9534(uint8_t slot, bool atInit)
+void pcb::sendEN134DefaultConfigurationToPCA9534(uint8_t slot, bool reportIfModified)
 {
-
-    // check default configuration, if not ok, send it.
-    int attempts = 10;
-    while (readRegisterFromSlot(slot, 0x01) != 0b001000000)
-    {
-
-        if (attempts < 0)
-        {
-
-            debugOutput::sendMessage("Too many attempts. Could not set register 0x01 of PCA9534 for slot " + to_string(slot), MSG_ERROR);
-        }
-        attempts--;
-        if (!atInit){
-
-        }
-        debugOutput::sendMessage("PCA9534 register 0x01 of slot: " + to_string(slot) + ". Not configured right. Set to default: 0b001000000", MSG_INFO);
-        SendByteToSlot(slot, 0x01, 0b00100000); // Output pin values register (has no influence on input values)
-    }
-    
-    // int attempts = 10;
-    // while (readRegisterFromSlot(slot, 0x03) != 0b01011000)
-    // {
-    //     if (attempts < 0)
-    //     {
-
-    //         debugOutput::sendMessage("Too many attempts. Could not set register 0x01 of PCA9534 for slot " + to_string(slot), MSG_ERROR);
-    //     }
-    //     attempts--;
-    //     SendByteToSlot(slot, 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
-    //     debugOutput::sendMessage("PCA9534 register 0x03 of slot: " + to_string(slot) + ". Not configured right. Set to default: 0b01011000", MSG_INFO);
-
-    // }
-
-    sendByteIfNotCorrectToSlot(slot, 0x01, 0b001000000, true);
-    sendByteIfNotCorrectToSlot(slot, 0x03, 0b01011000, true);
+    sendByteIfNotSetToSlot(slot, 0x01, 0b001000000, reportIfModified);
+    sendByteIfNotSetToSlot(slot, 0x03, 0b01011000, reportIfModified);
 }
 
-void pcb::sendByteIfNotCorrectToSlot(uint8_t slot, unsigned char reg, unsigned char value, bool asCheck){
+void pcb::sendByteIfNotSetToSlot(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified){
     int attempts = 10;
     while (readRegisterFromSlot(slot, reg) != value)
     {
         if (attempts < 0)
         {
-
             debugOutput::sendMessage("Too many attempts. Could not set register 0x01 of PCA9534 for slot " + to_string(slot), MSG_ERROR);
+            break;
         }
         attempts--;
         SendByteToSlot(slot, reg, value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
-        debugOutput::sendMessage("PCA9534 register " + to_string(slot) + " of slot: " + to_string(slot) + ". Not configured right. Set to default: " + to_string(value), MSG_INFO);
+        debugOutput::sendMessage("PCA9534 register " + to_string(reg) + " of slot: " + to_string(slot) + ". Not configured right. Set to default: " + to_string(value), MSG_INFO);
+        if (reportIfModified){
+            debugOutput::sendMessage("WARNING: This register was changed. Was this a glitch?", MSG_WARNING);
+        }
     }
 }
 

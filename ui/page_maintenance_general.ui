@@ -33,39 +33,48 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>870</y>
-     <width>221</width>
-     <height>61</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Minimize Application</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="reboot_Button">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
      <y>940</y>
      <width>221</width>
      <height>61</height>
     </rect>
    </property>
    <property name="text">
-    <string>Restart Station</string>
+    <string>Minimize Soapstand App</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="reboot_Button">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>940</y>
+     <width>221</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Restart Computer</string>
    </property>
   </widget>
   <widget class="QPushButton" name="shutdown_Button">
    <property name="geometry">
     <rect>
-     <x>60</x>
+     <x>290</x>
      <y>1010</y>
      <width>221</width>
      <height>61</height>
     </rect>
    </property>
    <property name="text">
-    <string>Shut down Station</string>
+    <string>Shut down (unplug AC is ok too)</string>
+   </property>
+   <property name="autoDefault">
+    <bool>false</bool>
+   </property>
+   <property name="default">
+    <bool>false</bool>
+   </property>
+   <property name="flat">
+    <bool>false</bool>
    </property>
   </widget>
   <widget class="QLabel" name="printer_hasPaper_label">
@@ -1457,17 +1466,30 @@
     <string>Check network status</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="restart_application_Button">
+  <widget class="QPushButton" name="restart_electronics_Button">
    <property name="geometry">
     <rect>
-     <x>300</x>
+     <x>60</x>
      <y>870</y>
      <width>221</width>
      <height>61</height>
     </rect>
    </property>
    <property name="text">
-    <string>Restart Application</string>
+    <string>Restart Soapstand App (ui+fsm)</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="restart_UI_Button">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>870</y>
+     <width>221</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Restart UI only</string>
    </property>
   </widget>
  </widget>

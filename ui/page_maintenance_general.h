@@ -79,7 +79,9 @@ private slots:
 
     void on_network_status_Button_clicked();
 
-    void on_restart_application_Button_clicked();
+    void on_restart_UI_Button_clicked();
+
+    void on_restart_electronics_Button_clicked();
 
 private:
     void showEvent(QShowEvent *event);

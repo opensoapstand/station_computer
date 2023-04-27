@@ -165,9 +165,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>10</y>
-     <width>151</width>
-     <height>61</height>
+     <y>4</y>
+     <width>201</width>
+     <height>71</height>
     </rect>
    </property>
    <property name="text">
@@ -278,10 +278,10 @@
   <widget class="QPushButton" name="generalSettings_button">
    <property name="geometry">
     <rect>
-     <x>818</x>
-     <y>40</y>
-     <width>171</width>
-     <height>25</height>
+     <x>868</x>
+     <y>4</y>
+     <width>201</width>
+     <height>71</height>
     </rect>
    </property>
    <property name="text">

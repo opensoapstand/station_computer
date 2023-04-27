@@ -79,6 +79,8 @@ private slots:
 
     void on_network_status_Button_clicked();
 
+    void on_restart_application_Button_clicked();
+
 private:
     void showEvent(QShowEvent *event);
     Ui::page_maintenance_general *ui;

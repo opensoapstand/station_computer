@@ -540,3 +540,16 @@ void page_maintenance_general::on_network_status_Button_clicked()
 
     ui->status_feedback_label->setText(feedback);
 }
+
+void page_maintenance_general::on_restart_application_Button_clicked()
+{
+    QProcess process;
+    process.start("bash");
+    process.waitForStarted();
+    process.write("ls\n");
+
+    process.write("exit\n");
+    process.waitForFinished(-1);
+    QString feedback = process.readAllStandardOutput();
+    ui->status_feedback_label->setText(feedback);
+}

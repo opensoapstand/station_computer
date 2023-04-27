@@ -1457,6 +1457,19 @@
     <string>Check network status</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="restart_application_Button">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>870</y>
+     <width>221</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Restart Application</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

@@ -402,6 +402,7 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
     {
         setPumpEnable();
         setMultiDispenseButtonLight(getSlot(), true);
+        the_pcb->sendEN134DefaultConfigurationToPCA9534(slot, true);
     }
     else if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_NO_PIC)
     {

@@ -84,7 +84,6 @@ pcb::~pcb(void)
 // Private methods
 ///////////////////////////////////////////////////////////////////////////
 
-
 bool pcb::SendByte(unsigned char address, unsigned char reg, unsigned char byte)
 {
 
@@ -123,7 +122,6 @@ void pcb::SendByteToSlot(uint8_t slot, unsigned char reg, unsigned char byte)
 
     SendByte(get_PCA9534_address_from_slot(slot), reg, byte);
 }
-
 
 uint8_t pcb::readRegisterFromSlot(uint8_t slot, uint8_t reg)
 {
@@ -473,9 +471,28 @@ bool pcb::define_pcb_version(void)
     return config_valid;
 }
 
-void pcb::sendEN134DefaultConfigurationToPCA9534(uint8_t slot){
-         SendByteToSlot(slot, 0x01, 0b00100000); // Output pin values register (has no influence on input values)
-         SendByteToSlot(slot, 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+void pcb::sendEN134DefaultConfigurationToPCA9534(uint8_t slot, bool reportIfModified)
+{
+    sendByteIfNotSetToSlot(slot, 0x01, 0b001000000, reportIfModified);
+    sendByteIfNotSetToSlot(slot, 0x03, 0b01011000, reportIfModified);
+}
+
+void pcb::sendByteIfNotSetToSlot(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified){
+    int attempts = 10;
+    while (readRegisterFromSlot(slot, reg) != value)
+    {
+        if (attempts < 0)
+        {
+            debugOutput::sendMessage("Too many attempts. Could not set register 0x01 of PCA9534 for slot " + to_string(slot), MSG_ERROR);
+            break;
+        }
+        attempts--;
+        SendByteToSlot(slot, reg, value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+        debugOutput::sendMessage("PCA9534 register " + to_string(reg) + " of slot: " + to_string(slot) + ". Not configured right. Set to default: " + to_string(value), MSG_INFO);
+        if (reportIfModified){
+            debugOutput::sendMessage("WARNING: This register was changed. Was this a glitch?", MSG_WARNING);
+        }
+    }
 }
 
 void pcb::initialize_pcb()
@@ -515,7 +532,7 @@ void pcb::initialize_pcb()
         {
             // SendByte(get_PCA9534_address_from_slot(slot), 0x01, 0b00100000); // Output pin values register (has no influence on input values)
             // SendByte(get_PCA9534_address_from_slot(slot), 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
-            sendEN134DefaultConfigurationToPCA9534(slot);
+            sendEN134DefaultConfigurationToPCA9534(slot, true);
         }
 
         setPumpsDisableAll();

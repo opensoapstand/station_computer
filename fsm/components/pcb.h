@@ -135,7 +135,8 @@ public:
     enum PcbVersion pcb_version;
     uint8_t readRegisterFromSlot(uint8_t slot, uint8_t reg);
     void SendByteToSlot(uint8_t slot, unsigned char reg, unsigned char byte);
-    void sendEN134DefaultConfigurationToPCA9534(uint8_t slot);
+    void sendEN134DefaultConfigurationToPCA9534(uint8_t slot, bool reportIfModified);
+    void sendByteIfNotSetToSlot(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified);
 
 private:
     void EN134_PumpCycle_refresh(uint8_t slots);

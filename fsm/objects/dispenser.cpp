@@ -571,6 +571,7 @@ DF_ERROR dispenser::setPumpDirectionForward()
 
 bool dispenser::getIsStatusUpdateAllowed()
 {
+    // prevent flooding with messages by limiting amount of traffic let through
     return isStatusUpdateSendAndPrintAllowed;
 }
 

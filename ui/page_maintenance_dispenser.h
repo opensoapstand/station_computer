@@ -128,7 +128,7 @@ private:
     bool full;
     bool pwm;
     bool buffer;
-    int isDispenseButtonPressed=0;
+    bool isDispenseButtonPressed;
     uint16_t button_press_count;
 
     QString units_selected_product;

@@ -114,8 +114,8 @@ private:
     bool pumping = false;
 
     int _maintainProductPageTimeoutSec;
-    float dispenseTimeSecs;
-    float dispenseTimeSecs2;
+    float dispenserEnabledSecs;
+    float dispenserPumpingSecs;
     QTimer *maintainProductPageEndTimer;
     QTimer *dispenseTimer;
 
@@ -128,7 +128,7 @@ private:
     bool full;
     bool pwm;
     bool buffer;
-    int runningPump=0;
+    int isDispenseButtonPressed=0;
     uint16_t button_press_count;
 
     QString units_selected_product;

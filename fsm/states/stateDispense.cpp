@@ -120,7 +120,20 @@ DF_ERROR stateDispense::onAction()
    {
       if (productDispensers[pos_index].getIsStatusUpdateAllowed())
       {
-         m_pMessaging->sendMessageOverIP(to_string(productDispensers[pos_index].getVolumeDispensed()));
+         // m_pMessaging->sendMessageOverIP(to_string(productDispensers[pos_index].getVolumeDispensed()));
+         
+         
+         
+
+         double volume = productDispensers[pos_index].getVolumeDispensed();
+
+         productDispensers[pos_index].updateRunningAverageWindow();
+         Time_val avg_02s = productDispensers[pos_index].getAveragedFlowRate(2000);
+         double flowrate = avg_02s.value;
+         const char* statusStringChar = productDispensers[pos_index].getDispenseStatusAsString();
+         std::string statusString(statusStringChar);
+                 
+         m_pMessaging->sendMessageOverIP("dispenseupdate|" + to_string(volume) + "|" + to_string(flowrate) + "|" + statusString);
       }
    }
 
@@ -193,14 +206,9 @@ DF_ERROR stateDispense::onAction()
       // send IPC if pump fails
       productDispensers[pos_index].logUpdateIfAllowed("Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
 
-      
-      double flowRate = productDispensers[pos_index].getInstantFlowRate();
-      productDispensers[pos_index].logUpdateIfAllowed("Flow rate 2s: " + to_string(flowRate));
-
       productDispensers[pos_index].updateRunningAverageWindow();
       Time_val avg_02s = productDispensers[pos_index].getAveragedFlowRate(2000);
       productDispensers[pos_index].logUpdateIfAllowed("Flow rate 2s: " + to_string(avg_02s.value));
-
 
       // double flowRate = productDispensers[m_active_pump_index].getInstantFlowRate();
 

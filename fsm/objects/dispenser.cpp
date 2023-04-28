@@ -26,6 +26,16 @@
 
 // pcb *dispenser::the_pcb = nullptr;
 
+
+const char *DISPENSE_BEHAVIOUR_STRINGS[] = {
+    "FLOW_STATE_UNAVAILABLE",
+    "FLOW_STATE_DISPENSING",
+    "FLOW_STATE_PUMPING_NOT_DISPENSING",
+    "FLOW_STATE_NOT_PUMPING_NOT_DISPENSING",
+    "FLOW_STATE_ATTEMTPING_TO_PRIME",
+    "FLOW_STATE_CONTAINER_EMPTY"
+};
+
 // CTOR
 dispenser::dispenser()
 {
@@ -1199,6 +1209,12 @@ DF_ERROR dispenser::updateRunningAverageWindow()
 //     // update avg flowRate.
 
 // }
+
+const char* dispenser::getDispenseStatusAsString(){
+    Dispense_behaviour behaviour = getDispenseStatus();
+    const char * behaviour_str = DISPENSE_BEHAVIOUR_STRINGS[behaviour];
+    return behaviour_str;
+}
 
 Dispense_behaviour dispenser::getDispenseStatus()
 {

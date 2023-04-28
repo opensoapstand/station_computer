@@ -34,25 +34,16 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                                                         ui(new Ui::page_sendFeedback)
 {
 
-    // connect(ui->feedbackText, &QLineEdit::focusInEvent , this, SLOT(on_feedback_Text_Input_clicked()));
 
     qDebug() << "IN send feedback";
     ui->setupUi(this);
 
     ui->feedback_Input_Button->setStyleSheet("QPushButton { border: 1px solid #5E8580}");
 
-    // ui->feedbackText->setStyleSheet("QLineEdit { white-space: pre-wrap; }");
-    // ui->feedbackText->setWordWrap(true);
-
-    // ui->feedbackText->setLineWrapMode(QLineEdit::WidgetWidth);
-    // ui->feedbackText->setEchoMode(QLineEdit::Normal);
-
     ui->feedbackTextEdit->hide();
-
-    // ui->feedbackText->setStyleSheet("background-color: yellow; border: 2px solid red;");   // ui->page_qr_payment_Button->show();
-    ui->feedbackText->setEchoMode(QLineEdit::Normal);
-    ui->feedbackText->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-    ui->feedbackText->setStyleSheet(
+    // ui->feedbackTextEdit->setEchoMode(QTextEdit::Normal);
+    ui->feedbackTextEdit->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+    ui->feedbackTextEdit->setStyleSheet(
         "QLineEdit {"
 
         "font-family: 'Brevia', sans-serif;"
@@ -65,8 +56,6 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
         "qproperty-alignment: AlignLeft;"
         "border: none;"
         "}");
-
-    // ui->feedbackText->setStyleSheet("QPushButton { background-color: transparent; border: 1px solid #5E8580 }");   // ui->page_qr_payment_Button->show();
 
 
     ui->label_enter_feedback->show();
@@ -87,6 +76,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
         "}");
 
     ui->previousPage_Button->setText("<-back");
+    ui->feedbackText->hide();
 
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
@@ -303,9 +293,9 @@ void page_sendFeedback::onSelectTimeoutTick()
 void page_sendFeedback::reset_and_show_page_elements()
 {
 
-    ui->feedbackText->clear();
-    ui->feedbackText->setText(TEXTBOX_INVITE_TEXT);
-    ui->feedbackText->show();
+    ui->feedbackTextEdit->clear();
+    ui->feedbackTextEdit->setText(TEXTBOX_INVITE_TEXT);
+    ui->feedbackTextEdit->show();
 
     ui->feedbackKeyboard->hide();
     
@@ -377,7 +367,7 @@ void page_sendFeedback::on_send_Button_clicked()
     qDebug() << problemList;
     QString problems = problemList.join(",");
 
-    if (problems.length() != 0 || !(ui->feedbackText->text().isEmpty()))
+    if (problems.length() != 0 || !(ui->feedbackTextEdit->toPlainText().isEmpty()))
     {
 
         qDebug() << "Will send feedback to backend";
@@ -390,7 +380,7 @@ void page_sendFeedback::on_send_Button_clicked()
 
         // send to backend
         QString MachineSerialNumber = p_page_idle->currentProductOrder->getMachineId();
-        QString customFeedback = ui->feedbackText->text();
+        QString customFeedback = ui->feedbackTextEdit->toPlainText();
         QString curl_param = "problems=" + problems + " " + customFeedback + "&MachineSerialNumber=" + MachineSerialNumber;
         qDebug() << "Curl params" << curl_param;
         curl_param_array = curl_param.toLocal8Bit();
@@ -430,7 +420,7 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
     if (buttonText == "Cancel")
     {
         ui->feedbackKeyboard->hide();
-        ui->feedbackText->setText("");
+        ui->feedbackTextEdit->setText("");
         ui->feedback_Input_Button->raise();
         ui->feedback_Input_Button->show();
     }
@@ -464,31 +454,34 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
     }
     else if (buttonText == "Backspace")
     {
-        ui->feedbackText->backspace();
+        // ui->feedbackTextEdit->deletePreviousChar();
+        QTextCursor cursor = ui->feedbackTextEdit->textCursor();
+        cursor.deletePreviousChar();
+
     }
     else if (buttonText == "Clear")
     {
-        ui->feedbackText->setText("");
+        ui->feedbackTextEdit->setPlainText("");
     }
     else if (buttonText == "Done")
     {
         qDebug() << "DONE CLICKED";
-        QString textEntry = ui->feedbackText->text();
+        QString textEntry = ui->feedbackTextEdit->toPlainText();
         ui->feedbackKeyboard->hide();
         ui->feedback_Input_Button->raise();
         ui->feedback_Input_Button->show();
     }
     else if (buttonText == "Space")
     {
-        ui->feedbackText->setText(ui->feedbackText->text() + " ");
+        ui->feedbackTextEdit->setPlainText(ui->feedbackTextEdit->toPlainText() + " ");
     }
     else if (buttonText == "&&")
     {
-        ui->feedbackText->setText(ui->feedbackText->text() + "&");
+        ui->feedbackTextEdit->setPlainText(ui->feedbackTextEdit->toPlainText() + "&");
     }
     else
     {
-        ui->feedbackText->setText(ui->feedbackText->text() + buttonText);
+        ui->feedbackTextEdit->setPlainText(ui->feedbackTextEdit->toPlainText() + buttonText);
     }
 }
 
@@ -505,16 +498,16 @@ void page_sendFeedback::on_feedback_Text_Input_clicked()
 void page_sendFeedback::on_feedback_Input_Button_clicked()
 {
     qDebug() << "Feedback button clicked, will show keyboard";
-    ui->feedbackText->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
+    ui->feedbackTextEdit->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
 
     ui->feedbackKeyboard->show();
     ui->feedback_Input_Button->lower();
     ui->feedback_Input_Button->hide();
 
     // ui->feedbackText->show();
-    if (ui->feedbackText->text() == TEXTBOX_INVITE_TEXT)
+    if (ui->feedbackTextEdit->toPlainText() == TEXTBOX_INVITE_TEXT)
     {
-        ui->feedbackText->clear(); // clears init text
+        ui->feedbackTextEdit->clear(); // clears init text
     }
 }
 void page_sendFeedback::on_feedbackText_cursorPositionChanged(int arg1, int arg2)

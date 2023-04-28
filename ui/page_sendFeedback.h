@@ -78,6 +78,8 @@ private slots:
     void on_feedback_Input_Button_clicked();
     void keyboardButtonPressed(int);
 
+    
+
 private:
     int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
     void reset_and_show_page_elements();

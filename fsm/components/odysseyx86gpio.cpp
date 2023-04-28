@@ -380,9 +380,9 @@ void oddyseyx86GPIO::monitorGPIO_Buttons_powerAndMaintenance()
                         }
                         else if (readButtonPin(IO_PIN_BUTTON_MAINTENANCE))
                         {
-                                debugOutput::sendMessage("MM\n", MSG_INFO);
+                                debugOutput::sendMessage("Sending MM to UI. Deprecated. UI not listening.\n", MSG_INFO);
                                 // ENTER MAINTENANCE MODE!
-                                m_pMessaging->sendMessageOverIP("MM");
+                                //m_pMessaging->sendMessageOverIP("MM");
                         }
                         else
                         {

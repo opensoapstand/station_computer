@@ -157,7 +157,7 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void page_dispenser::setPage(page_qr_payment *page_qr_payment,page_tap_payment *page_tap_payment, pagethankyou *pageThankYou, page_idle *pageIdle)
+void page_dispenser::setPage(page_qr_payment *page_qr_payment, page_tap_payment *page_tap_payment, pagethankyou *pageThankYou, page_idle *pageIdle)
 {
     this->thanksPage = pageThankYou;
     this->paymentPage = page_qr_payment;
@@ -184,7 +184,6 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     stopDispenseTimer();
     p_page_idle->pageTransition(this, pageToShow);
-
 }
 void page_dispenser::showEvent(QShowEvent *event)
 {
@@ -286,7 +285,7 @@ void page_dispenser::dispensing_end_admin()
         }
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     }
-    else if ((selectedProductOrder->getSelectedPaymentMethod()== "tap") && volumeDispensed != 0)
+    else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && volumeDispensed != 0)
     {
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
 
@@ -429,11 +428,19 @@ void page_dispenser::resetDispenseTimeout(void)
     _dispenseIdleTimeoutSec = 30;
 }
 
+void page_dispenser::fsmReceiveDispenseRate(double flowrate)
+{
+    qDebug() << "Dispense flow rate received from FSM: " << QString::number(flowrate, 'f', 2);
+};
+void page_dispenser::fsmReceiveDispenseStatus(QString status)
+{
+    qDebug() << "Dispense status received from FSM: " << status;
+};
+
 void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
 {
-    
-    ui->fill_animation_label->move(380,889);
 
+    ui->fill_animation_label->move(380, 889);
 
     if (this->isDispensing)
     {
@@ -526,17 +533,20 @@ void page_dispenser::fsmReceiveNoFlowAbort()
 void page_dispenser::on_abortButton_clicked()
 {
     qDebug() << "Pressed dispense complete.";
-    
+
     transactionLogging += "\n 7: Complete Button - True";
-    if(volumeDispensed== 0.0){
+    if (volumeDispensed == 0.0)
+    {
         QMessageBox msgBox;
         msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
         QString payment = selectedProductOrder->getSelectedPaymentMethod();
-        if(payment == "qr" || payment=="tap"){
+        if (payment == "qr" || payment == "tap")
+        {
             msgBox.setText("<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine. \
                                 If you press Yes, you will not be charged for the order.<br></p>");
         }
-        else{
+        else
+        {
             msgBox.setText("<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine.<br></p>");
         }
         msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
@@ -549,18 +559,19 @@ void page_dispenser::on_abortButton_clicked()
         case QMessageBox::Yes:
         {
             if (this->isDispensing)
-        {
-            force_finish_dispensing();
-        }
+            {
+                force_finish_dispensing();
+            }
         }
         break;
         }
     }
-    else{
+    else
+    {
         if (this->isDispensing)
-            {
-                force_finish_dispensing();
-            }
+        {
+            force_finish_dispensing();
+        }
     }
 }
 

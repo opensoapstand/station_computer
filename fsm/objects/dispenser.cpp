@@ -1240,7 +1240,8 @@ Dispense_behaviour dispenser::getDispenseStatus()
 
         state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
     }
-    else if (getButtonPressedCurrentPressMillis() < 3 * EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS)
+    else if (getButtonPressedCurrentPressMillis() < 2 * EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS)
+    // else if (getButtonPressedCurrentPressMillis() < 3 * EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS)
     {
         // button pressed (aka pumping)
 

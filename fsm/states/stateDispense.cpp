@@ -120,11 +120,6 @@ DF_ERROR stateDispense::onAction()
    {
       if (productDispensers[pos_index].getIsStatusUpdateAllowed())
       {
-         // m_pMessaging->sendMessageOverIP(to_string(productDispensers[pos_index].getVolumeDispensed()));
-         
-         
-         
-
          double volume = productDispensers[pos_index].getVolumeDispensed();
 
          productDispensers[pos_index].updateRunningAverageWindow();

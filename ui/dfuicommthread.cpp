@@ -85,11 +85,12 @@ QByteArray DfUiCommThread::readyRead()
     {
         emit dispenseButtonPressedNegEdgeSignal();
     }
-    else if (strtol(Data, &pEnd, 10) || (Data[0] == '0' && Data[1] == '.'))
-    {
-        double volume_dispensed = stod(Data.constData(), &sz);
-        emit updateVolumeSignal(volume_dispensed); // induced crash at cancel dispense.
-    }
+    // else if (strtol(Data, &pEnd, 10) || (Data[0] == '0' && Data[1] == '.'))
+    // old rudimentary way of sending dispensed volumen from fsm to ui
+    // {
+    //     double volume_dispensed = stod(Data.constData(), &sz);
+    //     emit updateVolumeSignal(volume_dispensed); // induced crash at cancel dispense.
+    // }
 
     else if (Data.contains("printerstatus"))
 
@@ -116,13 +117,15 @@ QByteArray DfUiCommThread::readyRead()
         QByteArray fourth_part = Data.mid(third_delim_pos + 1);
 
         double volumeDispensed = second_part.toDouble();
-        double flowRate = third_part.toDouble();
-        double dispenseStatusString = fourth_part.toDouble();
+        double flowrate = third_part.toDouble();
+        QString dispenseStatusString = QString::fromUtf8(fourth_part);
 
         qDebug() << "volume: " << QString::number(volumeDispensed, 'f', 2);
-        qDebug() << "flowrate: " << QString::number(flowRate, 'f', 2);
+        qDebug() << "flowrate: " << QString::number(flowrate, 'f', 2);
         qDebug() << "dispenseStatus: " << dispenseStatusString;
         emit updateVolumeSignal(volumeDispensed); // induced crash at cancel dispense.
+        emit dispenseRateSignal(flowrate); 
+        emit dispenseStatusSignal(dispenseStatusString); 
     }
 
     else

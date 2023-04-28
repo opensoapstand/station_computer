@@ -58,7 +58,7 @@ make_options () {
 
 
 PS3='Choose option(digit + enter):'
-options=("Quit" "aws_operations" "AWS log in" "AWS run station operations" "soapstand_manager" "Station info" "Stop ui and controller" "(Re)start ui and controller" "run standalone controller" "Copy binaries to production and run" "Create and run production data" "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)" "Services: SSH rtunnel setup from production" "make ui and fsm" "make ui and fsm and load binaries" "make ui" "make ui and load binaries" "make fsm" "make fsm and load binaries")
+options=("Quit" "aws_operations" "AWS log in" "AWS run station operations" "soapstand_manager" "Station info" "Stop ui and controller" "(Re)start ui and controller" "run standalone controller" "Copy binaries to production and run" "Create and run production data" "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)" "Services: SSH rtunnel setup from production" "make ui and fsm" "make ui and fsm and deploy binaries" "make ui" "make ui and deploy binaries" "make fsm" "make fsm and deploy binaries")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -115,19 +115,19 @@ do
         "make ui and fsm")
            make_options 'ui_fsm' 
             ;;
-        "make ui and fsm and load binaries")
+        "make ui and fsm and deploy binaries")
            make_options 'ui_fsm' 'copy_binaries'
             ;;
         "make ui")
            make_options 'ui' 
             ;;
-        "make ui and load binaries")
+        "make ui and deploy binaries")
            make_options 'ui' 'copy_binaries'
             ;;
         "make fsm")
            make_options 'fsm' 
             ;;
-        "make fsm and load binaries")
+        "make fsm and deploy binaries")
            make_options 'fsm' 'copy_binaries'
             ;;
         "run standalone controller")

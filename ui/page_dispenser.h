@@ -52,7 +52,11 @@ public:
     void showEvent(QShowEvent *event);
     void resetDispenseTimeout(void);
     void updateVolumeDisplayed(double dispensed, bool isFull );
+
+    void fsmReceiveDispenseRate(double flowrate);
+    void fsmReceiveDispenseStatus(QString status);
     void volumeDispensedLabel(QLabel* label);
+    
     void fsmReceiveTargetVolumeReached();
     void updateVolumeDispensedLabel(double dispensed);
     void fsmReceiveNoFlowAbort();

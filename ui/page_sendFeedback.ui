@@ -404,7 +404,7 @@ text-align: center;
     </rect>
    </property>
    <property name="text">
-    <string>PushButton</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLineEdit" name="feedbackText">

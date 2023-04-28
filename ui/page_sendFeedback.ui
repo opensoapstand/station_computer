@@ -82,13 +82,13 @@ line-height: 29px;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_selected_volume">
+  <widget class="QLabel" name="label_thank_you_image">
    <property name="geometry">
     <rect>
-     <x>668</x>
-     <y>805</y>
-     <width>317</width>
-     <height>35</height>
+     <x>0</x>
+     <y>0</y>
+     <width>1080</width>
+     <height>1920</height>
     </rect>
    </property>
    <property name="font">
@@ -359,7 +359,7 @@ text-align: center;
    <property name="geometry">
     <rect>
      <x>210</x>
-     <y>1599</y>
+     <y>1530</y>
      <width>627</width>
      <height>75</height>
     </rect>
@@ -372,7 +372,7 @@ text-align: center;
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>1676</y>
+     <y>1580</y>
      <width>1041</width>
      <height>114</height>
     </rect>
@@ -404,7 +404,7 @@ text-align: center;
     </rect>
    </property>
    <property name="text">
-    <string>PushButton</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLineEdit" name="feedbackText">
@@ -1735,11 +1735,21 @@ color: rgb(0, 0, 0);</string>
     <string>TextLabel</string>
    </property>
   </widget>
+  <widget class="QTextEdit" name="feedbackTextEdit">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>250</y>
+     <width>341</width>
+     <height>261</height>
+    </rect>
+   </property>
+  </widget>
   <zorder>label_send</zorder>
   <zorder>send_Button</zorder>
   <zorder>label_problem_options</zorder>
   <zorder>mainPage_Button</zorder>
-  <zorder>label_selected_volume</zorder>
+  <zorder>label_thank_you_image</zorder>
   <zorder>label_select_problem</zorder>
   <zorder>label_still_cant_find_it</zorder>
   <zorder>checkBox_4_Label</zorder>
@@ -1761,6 +1771,7 @@ color: rgb(0, 0, 0);</string>
   <zorder>feedbackKeyboard</zorder>
   <zorder>label_thanks_for_feedback</zorder>
   <zorder>label_help</zorder>
+  <zorder>feedbackTextEdit</zorder>
  </widget>
  <resources/>
  <connections/>

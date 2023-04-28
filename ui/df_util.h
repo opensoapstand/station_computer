@@ -117,11 +117,12 @@ using namespace std;
 #define PAGE_TAP_PAY_SUCCESS                            "paymentSuccess.png"
 #define PAGE_TAP_PAY_FAIL                               "paymentFailed.png"
 #define PAGE_AUTHORIZE_NOW                              "authorizeNow.png"
-#define PAGE_TAP_GENERIC                                 "genericTap.png"
+#define PAGE_TAP_GENERIC                                "genericTap.png"
 #define BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH            "bottle_fill_for_animation.png"
 #define PAGE_SEND_FEEDBACK_PATH                         "background_sendfeedback.png"
 #define PAGE_INIT_BACKGROUND_IMAGE_PATH                 "background_message.png"
 #define IMAGE_BUTTON_HELP                               "help_icon.png"
+#define THANK_YOU_FOR_YOUR_FEEDBACK                     "background_feedbacksent.png"
 
 #define KEYBOARD_IMAGE_PATH                         "/home/df-admin/production/references/soapstand-keyboard.png"
 #define FULL_TRANSPARENT_IMAGE_PATH                 "/home/df-admin/production/references/background.png"

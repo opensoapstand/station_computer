@@ -1712,7 +1712,7 @@ font: 11pt &quot;Montserrat&quot;;</string>
   <widget class="QLabel" name="label_thanks_for_feedback">
    <property name="geometry">
     <rect>
-     <x>0</x>
+     <x>-30</x>
      <y>570</y>
      <width>1121</width>
      <height>481</height>

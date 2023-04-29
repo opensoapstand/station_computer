@@ -370,16 +370,21 @@ bool pageProductOverview::stopSelectTimers()
     }
 }
 
+void pageProductOverview::hideCurrentPageAndShowProvided(QWidget *pageToShow)
+{
+
+    this->stopSelectTimers();
+    p_page_idle->pageTransition(this, pageToShow);
+}
+
 void pageProductOverview::mainPage()
 {
-    this->stopSelectTimers();
-    p_page_idle->pageTransition(this, p_page_idle);
+    hideCurrentPageAndShowProvided(p_page_idle);
 }
 
 void pageProductOverview::on_mainPage_Button_clicked()
 {
-    this->stopSelectTimers();
-    p_page_idle->pageTransition(this, p_page_help);
+    hideCurrentPageAndShowProvided(p_page_help);
 }
 
 size_t WriteCallback_coupon1(char *contents, size_t size, size_t nmemb, void *userp)
@@ -686,7 +691,7 @@ void pageProductOverview::on_page_qr_payment_Button_clicked()
             // p_page_wifi_error->showEvent(wifiErrorEvent);
             // p_page_wifi_error->showFullScreen();
             // this->hide();
-            p_page_idle->pageTransition(this, p_page_wifi_error);
+            hideCurrentPageAndShowProvided(p_page_wifi_error);
         }
         else
         {
@@ -695,41 +700,31 @@ void pageProductOverview::on_page_qr_payment_Button_clicked()
 
             ui->label_invoice_price->text();
 
-            // paymentQrPage->showFullScreen();
-            // this->hide();
-            p_page_idle->pageTransition(this, paymentQrPage);
+            hideCurrentPageAndShowProvided(paymentQrPage);
         }
         curl_easy_cleanup(curl);
         readBuffer = "";
     }
     else if(paymentMethod == "tap"){
-        p_page_idle->pageTransition(this, paymentTapPage);
+        hideCurrentPageAndShowProvided(paymentTapPage);
 
     }
     else if (paymentMethod == "barcode" || paymentMethod == "plu")
     {
-        // p_page_dispense->showEvent(dispenseEvent); // todo Lode: this enabled together with showfullscreen calls the showEvent twice. only showevent, does not display the dispense page though.
-        // p_page_dispense->showFullScreen();
-        // this->hide();
-        p_page_idle->pageTransition(this, p_page_dispense);
+        hideCurrentPageAndShowProvided(p_page_dispense);
     }
     else
     {
         qDebug() << "WARNING: No payment method detected.";
-        // p_page_dispense->showFullScreen();
-        // this->hide();
-
-        p_page_idle->pageTransition(this, p_page_dispense);
+        hideCurrentPageAndShowProvided(p_page_dispense);
     }
 }
 
 void pageProductOverview::return_to_selectProductPage()
 {
-    //    qDebug() << "pageProduct: Previous button" << endl;
-    stopSelectTimers();
-    //ui->promoKeyboard->hide();
-    p_page_idle->pageTransition(this, p_page_product);
+    hideCurrentPageAndShowProvided(p_page_product);
 }
+
 void pageProductOverview::on_selectProductPage_Button_clicked()
 {
     this->return_to_selectProductPage();

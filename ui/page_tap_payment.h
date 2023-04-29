@@ -80,7 +80,7 @@ public:
 
     // **** Control Functions ****
     bool setpaymentProcess(bool status);
-
+    void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void authorized_transaction(std::map<std::string, std::string> responseObj);
 
     // Database
@@ -123,8 +123,7 @@ private slots:
     // Navigation
     void on_previousPage_Button_clicked();
     void on_payment_bypass_Button_clicked();
-    void proceed_to_dispense();
-     void on_mainPage_Button_clicked();
+    void on_mainPage_Button_clicked();
 
     //void on_payment_pass_Button_clicked();
     //void on_payment_cancel_Button_clicked();

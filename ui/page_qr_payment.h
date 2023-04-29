@@ -92,6 +92,7 @@ public:
     // char * curl_data1;
     // char * curlOrderdata;
     StatePayment state_payment;
+    void hideCurrentPageAndShowProvided(QWidget *pageToShow);
 
 private slots:
 

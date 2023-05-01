@@ -479,6 +479,12 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
     {
         ui->feedbackTextEdit->setPlainText(ui->feedbackTextEdit->toPlainText() + "&");
     }
+     else if (buttonText == "Enter")
+    {   
+        qDebug() << "Enter button pressed";
+        ui->feedbackTextEdit->moveCursor(QTextCursor::End); // Move the cursor to the end of the text
+        ui->feedbackTextEdit->insertPlainText("\n");
+    }
     else
     {
         ui->feedbackTextEdit->setPlainText(ui->feedbackTextEdit->toPlainText() + buttonText);

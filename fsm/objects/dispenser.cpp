@@ -32,8 +32,8 @@ const char *DISPENSE_BEHAVIOUR_STRINGS[] = {
     "FLOW_STATE_DISPENSING",
     "FLOW_STATE_PUMPING_NOT_DISPENSING",
     "FLOW_STATE_NOT_PUMPING_NOT_DISPENSING",
-    "FLOW_STATE_ATTEMTPING_TO_PRIME",
-    "FLOW_STATE_CONTAINER_EMPTY"};
+    "FLOW_STATE_PRIMING_OR_EMPTY",
+    "FLOW_STATE_EMPTY"};
 
 // CTOR
 dispenser::dispenser()
@@ -1241,7 +1241,7 @@ Dispense_behaviour dispenser::getDispenseStatus()
     {
         state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
     }
-    else if ((getButtonPressedCurrentPressMillis() < 2 * EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) && avg.value < getProduct()->getThresholdFlow())
+    else if ((getButtonPressedCurrentPressMillis() < EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) && avg.value < getProduct()->getThresholdFlow())
     {
         // flow rate needs to be ramped up until stable.
         state = FLOW_STATE_RAMP_UP;
@@ -1263,7 +1263,7 @@ Dispense_behaviour dispenser::getDispenseStatus()
         // once it was dispensing, empty dispenser is detected immediatly if no product flows.
         // bugfix: if the button was release and repressed, the average was not correct at restart
         //          --> take into account. at top level (FLOW_STATE_UNAVAILABLE)
-        state = FLOW_STATE_CONTAINER_EMPTY;
+        state = FLOW_STATE_EMPTY;
     }
     else if (getButtonPressedTotalMillis() > EMPTY_CONTAINER_DETECTION_MAXIMUM_PRIME_TIME_MILLIS)
     {
@@ -1273,7 +1273,7 @@ Dispense_behaviour dispenser::getDispenseStatus()
         // previous state was not dispensing
 
         // pump
-        state = FLOW_STATE_CONTAINER_EMPTY;
+        state = FLOW_STATE_EMPTY;
     }
     else
     {
@@ -1283,7 +1283,7 @@ Dispense_behaviour dispenser::getDispenseStatus()
         // previous state was not dispensing
         // pumping time has exceeded set value
 
-        state = FLOW_STATE_ATTEMTPING_TO_PRIME;
+        state = FLOW_STATE_PRIMING_OR_EMPTY;
     }
 
     previous_dispense_state = state;

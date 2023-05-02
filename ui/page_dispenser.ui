@@ -146,7 +146,7 @@
     <enum>Qt::RichText</enum>
    </property>
   </widget>
-  <widget class="QLabel" name="label_bring_container">
+  <widget class="QLabel" name="label_instructions_container">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -212,14 +212,27 @@
   <widget class="QLabel" name="label_dispense_flowrate">
    <property name="geometry">
     <rect>
-     <x>660</x>
-     <y>490</y>
+     <x>650</x>
+     <y>280</y>
      <width>411</width>
      <height>51</height>
     </rect>
    </property>
    <property name="text">
     <string>test</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="button_problems">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>10</y>
+     <width>401</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Problem detected</string>
    </property>
   </widget>
   <zorder>abortButton</zorder>
@@ -230,11 +243,12 @@
   <zorder>volumeDispensedLabel</zorder>
   <zorder>finishTransactionMessage</zorder>
   <zorder>label_to_refill</zorder>
-  <zorder>label_bring_container</zorder>
+  <zorder>label_instructions_container</zorder>
   <zorder>label_press</zorder>
   <zorder>debug_Button</zorder>
   <zorder>label_dispense_status</zorder>
   <zorder>label_dispense_flowrate</zorder>
+  <zorder>button_problems</zorder>
  </widget>
  <resources/>
  <connections/>

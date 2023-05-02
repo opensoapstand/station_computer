@@ -154,7 +154,7 @@ DF_ERROR stateDispense::onAction()
 
       Dispense_behaviour status = productDispensers[pos_index].getDispenseStatus();
 
-      if (status == FLOW_STATE_CONTAINER_EMPTY)
+      if (status == FLOW_STATE_EMPTY)
       {
 
          debugOutput::sendMessage("******************* EMPTY CONTAINER DETECTED **********************", MSG_INFO);
@@ -174,7 +174,7 @@ DF_ERROR stateDispense::onAction()
                                                          "," + to_string(productDispensers[pos_index].getProduct()->m_nVolumeTarget_c_max) +
                                                          ", Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
       }
-      else if (status == FLOW_STATE_ATTEMTPING_TO_PRIME)
+      else if (status == FLOW_STATE_PRIMING_OR_EMPTY)
       {
          productDispensers[pos_index].logUpdateIfAllowed("No flow during pumping. Priming? Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
       }

@@ -223,26 +223,12 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
 
     // DbManager db_temperature(DB_PATH_TEMPERATURE);
 
-#ifdef ENABLE_DYNAMIC_UI
     QString p = p_page_idle->currentProductOrder->getProductPicturePath(p_page_idle->currentProductOrder->getSelectedSlot());
     p_page_idle->dfUtility->fileExists(p);
     QPixmap im(p);
     QIcon qi(im);
     ui->productPhotoButton->setIcon(qi);
     ui->productPhotoButton->setIconSize(QSize(271, 391));
-#else
-    QString bitmap_location;
-
-    bitmap_location.append("/home/df-admin/production/references/product");
-    bitmap_location.append(QString::number(p_page_idle->currentProductOrder->getSelectedSlot()));
-    bitmap_location.append(".png");
-
-    QPixmap background(bitmap_location);
-    QIcon ButtonIcon(background);
-
-    ui->productPhotoButton->setIcon(ButtonIcon);
-    ui->productPhotoButton->setIconSize(QSize(271, 391));
-#endif
     refreshLabels();
     update_dispense_stats(0);
     setButtonPressCountLabel(true);
@@ -460,7 +446,7 @@ void page_maintenance_dispenser::update_dispense_stats(double dispensed)
     //}
 }
 
-void page_maintenance_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
+void page_maintenance_dispenser::fsmReceivedVolumeDispensed(double dispensed, bool isFull)
 {
     // gets called from the controller.
 
@@ -503,7 +489,7 @@ void page_maintenance_dispenser::fsmReceiveTargetVolumeReached()
 {
     // gets called from the controller.
 
-    // --> attention application can crash when there is content in here. combined with updateVolumeDisplayed
+    // --> attention application can crash when there is content in here. combined with fsmReceivedVolumeDispensed
 
     // DO THE MINIMUM HERE. NO DEBUG PRINTS. This must be an interrupt call.. probably crashes when called again before handled.
     // qDebug() << "Signal: maintenance target hit. *********************" << pumping;

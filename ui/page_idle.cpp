@@ -283,7 +283,6 @@ bool page_idle::isEnough(int p)
 
 void page_idle::addCompanyLogoToLabel(QLabel *label)
 {
-#ifdef ENABLE_DYNAMIC_UI
     qDebug() << "db init company logo";
     DbManager db(DB_PATH);
     QString id = db.getCustomerId();
@@ -298,7 +297,6 @@ void page_idle::addCompanyLogoToLabel(QLabel *label)
     {
         qDebug() << "WARNING: invalid customer ID. Should like C-1, C-374, ... . Provided id: " << id;
     }
-#endif
 }
 
 void page_idle::addPictureToLabel(QLabel *label, QString picturePath)
@@ -361,22 +359,10 @@ void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QStrin
     // on Page: if called from showEvent: will scale to screen
 
     QString image_path = imageName;
-#ifdef ENABLE_DYNAMIC_UI
     image_path = getTemplatePathFromName(imageName);
-    // if (! df_util::fileExists(image_path)){
-
-    //     image_path = getDefaultTemplatePathFromName(imageName);
-    //     qDebug() << "File not found in template folder, will revert to default template: " + image_path;
-    // }
-#endif
 #define USE_PIXMAP
 #ifdef USE_PIXMAP
-#ifdef ENABLE_DYNAMIC_UI
-
     QPixmap background(image_path);
-#else
-    QPixmap background(imageName);
-#endif
 
     // background = background.scaled(p_widget->size(), Qt::IgnoreAspectRatio);
     QPalette palette;

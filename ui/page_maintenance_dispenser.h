@@ -43,7 +43,7 @@ public:
     ~page_maintenance_dispenser();
     void resizeEvent(QResizeEvent *event);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
-    void updateVolumeDisplayed(double dispensed, bool isFull);
+    void fsmReceivedVolumeDispensed(double dispensed, bool isFull);
     void fsmReceiveTargetVolumeReached();
     void fsmReceiveDispenseButtonPressedPositiveEdge();
     void fsmReceiveDispenseButtonPressedNegativeEdge();

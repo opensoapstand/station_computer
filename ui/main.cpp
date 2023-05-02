@@ -189,13 +189,13 @@ int main(int argc, char *argv[])
     QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_idle, &page_idle::printerStatusFeedback);
     QObject::connect(&dfUiServer, &DfUiServer::pleaseReset, p_page_dispense, &page_dispenser::resetDispenseTimeout);
     
-    QObject::connect(&dfUiServer, &DfUiServer::signalUpdateVolume, p_page_dispense, &page_dispenser::updateVolumeDisplayed);
+    QObject::connect(&dfUiServer, &DfUiServer::signalUpdateVolume, p_page_dispense, &page_dispenser::fsmReceivedVolumeDispensed);
     QObject::connect(&dfUiServer, &DfUiServer::signalDispenseStatus, p_page_dispense, &page_dispenser::fsmReceiveDispenseStatus);
     QObject::connect(&dfUiServer, &DfUiServer::signalDispenseRate, p_page_dispense, &page_dispenser::fsmReceiveDispenseRate);
     QObject::connect(&dfUiServer, &DfUiServer::targetHit, p_page_dispense, &page_dispenser::fsmReceiveTargetVolumeReached);
     QObject::connect(&dfUiServer, &DfUiServer::noFlowAbort, p_page_dispense, &page_dispenser::fsmReceiveNoFlowAbort);
     
-    QObject::connect(&dfUiServer, &DfUiServer::signalUpdateVolume, p_page_maintenance_product, &page_maintenance_dispenser::updateVolumeDisplayed);
+    QObject::connect(&dfUiServer, &DfUiServer::signalUpdateVolume, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceivedVolumeDispensed);
     // QObject::connect(&dfUiServer, &DfUiServer::signalDispenseStatus, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveDispenseStatus);
     // QObject::connect(&dfUiServer, &DfUiServer::signalDispenseRate, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveDispenseRate);
     QObject::connect(&dfUiServer, &DfUiServer::dispenseButtonPressedPosEdgeSignal, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveDispenseButtonPressedPositiveEdge);

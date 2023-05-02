@@ -282,7 +282,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
 
     ui->continue_Button->setStyleSheet(
         "QPushButton {"
-              "font-family: 'Brevia';"
+        "font-family: 'Brevia';"
         "font-style: normal;"
         "font-weight: 200;"
         "background-color: #5E8580;"
@@ -351,21 +351,18 @@ void pageProduct::onSelectTimeoutTick()
 {
     if (--_selectIdleTimeoutSec >= 0)
     {
-        //        qDebug() << "pageProduct: Tick Down - " << _selectIdleTimeoutSec << endl;
     }
     else
     {
 
         selectIdleTimer->stop();
-        
+
         hideCurrentPageAndShowProvided(p_page_idle);
     }
 }
 
 void pageProduct::reset_and_show_page_elements()
 {
-
-#ifdef ENABLE_DYNAMIC_UI
 
     ui->label_product_photo->setStyleSheet("QLabel{border: 1px solid #5E8680;}");
     p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->currentProductOrder->getSelectedProductPicturePath());
@@ -481,39 +478,6 @@ void pageProduct::reset_and_show_page_elements()
             orderSizeButtons[i]->hide();
         }
     }
-
-#else
-    QString bitmap_location;
-    ui->label_product_ingredients->hide();
-    ui->label_product_ingredients_title->hide();
-    ui->label_product_title->hide();
-    ui->label_product_description->hide();
-    ui->label_product_photo->hide();
-    ui->label_product_photo->setStyleSheet("QLabel{border: 0px solid black;}");
-    int product_slot___ = selectedProductOrder->getSelectedSlot();
-    // uint16_t orderSizeButtons_xywh[4][4] = {{564, 1088, 209, 126}, {1, 1, 1, 1}, {790, 1087, 198, 126}, {1, 1, 1, 1}};
-    if (product_slot___ > 0 && product_slot___ <= SLOT_COUNT)
-    {
-        bitmap_location.append("/home/df-admin/production/references/4_pay_select_page_l_");
-        bitmap_location.append(QString::number(selectedProductOrder->getSelectedSlot()));
-        bitmap_location.append(".png");
-    }
-    else
-    {
-        bitmap_location = "/home/df-admin/production/references/4_pay_select_page_l_1.png";
-    }
-    for (uint8_t i = 0; i < SLOT_COUNT; i++)
-    {
-        orderSizeButtons[i]->setFixedSize(QSize(orderSizeButtons_xywh_static_product_page[i][2], orderSizeButtons_xywh_static_product_page[i][3]));
-        orderSizeButtons[i]->move(orderSizeButtons_xywh_static_product_page[i][0], orderSizeButtons_xywh_static_product_page[i][1]);
-    }
-    qDebug() << bitmap_location << endl;
-    QPixmap background(bitmap_location);
-    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-    QPalette palette;
-    palette.setBrush(QPalette::Background, background);
-    this->setPalette(palette);
-#endif
 
     // ordersize buttons
     /* Hacky transparent button */
@@ -653,9 +617,9 @@ void pageProduct::loadProdSpecs()
     {
         ui->continue_Button->show();
     }
-    else{
+    else
+    {
         ui->continue_Button->hide();
-
     }
 
     qDebug() << "-------------------------- END LOAD PRODUCTS ----------------";

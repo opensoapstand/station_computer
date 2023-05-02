@@ -12,7 +12,6 @@
 
 #define UI_VERSION "1.5+"
 
-#define ENABLE_DYNAMIC_UI
 #define ENABLE_COUPON   // Petros stations have no coupon
 
 #define OPTION_SLOT_INVALID 0

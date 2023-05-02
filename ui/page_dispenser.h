@@ -50,22 +50,26 @@ public:
     ~page_dispenser();
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void showEvent(QShowEvent *event);
-    void resetDispenseTimeout(void);
-    void updateVolumeDisplayed(double dispensed, bool isFull );
 
+    void resetDispenseTimeout(void);
+    void stopDispenseTimer();
+
+    void updateVolumeDisplayed(double dispensed, bool isFull );
+    void volumeDispensedLabel(QLabel* label);
+    void updateVolumeDispensedLabel(double dispensed);
+
+    void fsmReceivedVolumeDispensed(double dispensed, bool isFull );
     void fsmReceiveDispenseRate(double flowrate);
     void fsmReceiveDispenseStatus(QString status);
-    void volumeDispensedLabel(QLabel* label);
-    
     void fsmReceiveTargetVolumeReached();
-    void updateVolumeDispensedLabel(double dispensed);
     void fsmReceiveNoFlowAbort();
+    
     QString getMostRecentDispensed();
     QString getPromoCodeUsed();
-
-    void force_finish_dispensing();
     void startDispensing();
+    void force_finish_dispensing();
     QString getStartDispensingCommand();
+
 
 public slots:
 
@@ -75,18 +79,16 @@ private slots:
     void fsmSendStartDispensing();
     void fsmSendPrice();
     void fsmSendPromo();
-
     void fsmSendStopDispensing();
-   // void onDispenseTick();
+
     void onDispenseIdleTick();
-    // void onRinseTimerTick();
+
     void dispensing_end_admin();
+
     void on_abortButton_clicked();
-
-
     void on_cancelButton_clicked();
-
     void on_debug_Button_clicked();
+    void on_button_problems_clicked();
 
 private:
     bool isDispensing;
@@ -102,22 +104,13 @@ private:
     // XXX: Remove when interrupts and flowsensors work.
 
     QString _dispenseTimeLabel;
-    //int _dispenseTimeoutSec;
     QTimer *dispenseEndTimer;
-
     int _dispenseIdleTimeoutSec;
     QTimer *dispenseIdleTimer;
-
-    QTimer* dispenseNextPageTimer;
-
-    QTimer* rinseTimer;
-    int _rinseTimerTimeoutSec;
-    bool rinse;
 
     double volumeDispensed;
     double targetVolume;
 
-    void stopDispenseTimer();
 
     mCommunication com;
     packetFromECR sendPacket;

@@ -294,8 +294,12 @@ void page_sendFeedback::reset_and_show_page_elements()
 {
 
     ui->feedbackTextEdit->clear();
-    ui->feedbackTextEdit->setText(TEXTBOX_INVITE_TEXT);
     ui->feedbackTextEdit->show();
+    ui->feedbackTextEdit->setFocus(); // give focus to the feedbackTextEdit widget
+    qDebug() << "Setting feedback text to:" << TEXTBOX_INVITE_TEXT;
+    ui->feedbackTextEdit->setPlaceholderText(TEXTBOX_INVITE_TEXT);
+    // ui->feedbackTextEdit->setText(TEXTBOX_INVITE_TEXT);
+    
 
     ui->feedbackKeyboard->hide();
     
@@ -479,6 +483,12 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
     {
         ui->feedbackTextEdit->setPlainText(ui->feedbackTextEdit->toPlainText() + "&");
     }
+     else if (buttonText == "Enter")
+    {   
+        qDebug() << "Enter button pressed";
+        ui->feedbackTextEdit->moveCursor(QTextCursor::End); // Move the cursor to the end of the text
+        ui->feedbackTextEdit->insertPlainText("\n");
+    }
     else
     {
         ui->feedbackTextEdit->setPlainText(ui->feedbackTextEdit->toPlainText() + buttonText);
@@ -505,11 +515,14 @@ void page_sendFeedback::on_feedback_Input_Button_clicked()
     ui->feedback_Input_Button->hide();
 
     // ui->feedbackText->show();
-    if (ui->feedbackTextEdit->toPlainText() == TEXTBOX_INVITE_TEXT)
+    if (ui->feedbackTextEdit->toPlainText() != TEXTBOX_INVITE_TEXT)
     {
         ui->feedbackTextEdit->clear(); // clears init text
     }
 }
+
+
+
 void page_sendFeedback::on_feedbackText_cursorPositionChanged(int arg1, int arg2)
 {
     // on_feedback_Input_Button_clicked();

@@ -13,7 +13,8 @@ echo "| The application should be active and in idle screen.   |"
 echo "| requires: xdotool and scrot (sudo apt-get install xx ) |"
 echo "|--------------------------------------------------------|"
 
-options=("Has printer" "Has qr" "Quit")
+options=("Has printer" "Has qr" "Pillar" "Quit")
+
 select opt in "${options[@]}"
 do
     case $opt in
@@ -27,6 +28,11 @@ do
             file="./screenshotbot_sequence_qr.txt"
             break
             ;;
+        "Pillar")
+            echo "Start sequence for pillar."
+            file="./screenshotbot_sequence_pillar.txt"
+            break
+        ;;
         "Quit")
             file="./dummy.txt"
             break

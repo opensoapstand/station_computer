@@ -1707,6 +1707,25 @@ font: 11pt &quot;Montserrat&quot;;</string>
       </attribute>
      </widget>
     </item>
+    <item row="3" column="12">
+     <widget class="QPushButton" name="pushButton_259">
+      <property name="maximumSize">
+       <size>
+        <width>87</width>
+        <height>50</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
+      <property name="text">
+       <string>Enter</string>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">buttonGroup</string>
+      </attribute>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QLabel" name="label_thanks_for_feedback">

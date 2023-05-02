@@ -28,6 +28,7 @@
 
 class page_maintenance;
 class page_idle;
+class page_idle_products;
 
 namespace Ui
 {

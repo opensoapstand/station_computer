@@ -24,7 +24,6 @@
 #include "dbmanager.h"
 #include "page_maintenance.h"
 #include "page_maintenance_general.h"
-#include "ui_page_idle.h"
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
 
@@ -52,6 +51,12 @@ public:
 
     ~page_idle_products();
     void showEvent(QShowEvent *event);
+
+private:
+    Ui::page_idle_products *ui;
+    page_select_product *p_pageSelectProduct;
+    page_maintenance *p_page_maintenance;
+    page_maintenance_general *p_page_maintenance_general;
    
 };
 

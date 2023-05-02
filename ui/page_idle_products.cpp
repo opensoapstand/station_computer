@@ -14,8 +14,8 @@
 // all rights reserved
 //***************************************
 
-#include "page_idle.h"
-#include "ui_page_idle.h"
+#include "page_idle_products.h"
+#include "ui_page_idle_products.h"
 #include "page_maintenance.h"
 #include "page_maintenance_general.h"
 
@@ -40,13 +40,18 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
 
  
 }
+
+page_idle_products::~page_idle_products()
+{
+    delete ui;
+}
 /*
  * Navigation to Product item
  */
 void page_idle_products::setPage(page_select_product *p_pageProduct, page_idle *p_page_idle, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral)
 {
   this->p_pageSelectProduct = p_pageProduct;
-    this->p_page_idle = page_idle ;
+    // this->p_page_idle = page_idle ;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_maintenance_general = pageMaintenanceGeneral;
 }

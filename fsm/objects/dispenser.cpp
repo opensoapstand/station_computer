@@ -26,15 +26,14 @@
 
 // pcb *dispenser::the_pcb = nullptr;
 
-
 const char *DISPENSE_BEHAVIOUR_STRINGS[] = {
     "FLOW_STATE_UNAVAILABLE",
+    "FLOW_STATE_RAMP_UP",
     "FLOW_STATE_DISPENSING",
     "FLOW_STATE_PUMPING_NOT_DISPENSING",
     "FLOW_STATE_NOT_PUMPING_NOT_DISPENSING",
     "FLOW_STATE_ATTEMTPING_TO_PRIME",
-    "FLOW_STATE_CONTAINER_EMPTY"
-};
+    "FLOW_STATE_CONTAINER_EMPTY"};
 
 // CTOR
 dispenser::dispenser()
@@ -203,7 +202,7 @@ string dispenser::getFinalPLU(char size, double price)
                 base_plu = fake_plu;
             }
 
-            snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%5.2f", price);// will always be at least 5 chars long e.g. 3.456 --> " 3.46" , 1234.456 --> "1234.45"
+            snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%5.2f", price); // will always be at least 5 chars long e.g. 3.456 --> " 3.46" , 1234.456 --> "1234.45"
         }
         else if (paymentMethod == "barcode_EAN-2")
         {
@@ -216,19 +215,20 @@ string dispenser::getFinalPLU(char size, double price)
             }
 
             snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%6.2f", price); // will always be at least 6 chars long e.g. 3.456 --> "  3.45" , 1234.456 --> "1234.46"
-        }else{
+        }
+        else
+        {
             debugOutput::sendMessage("ERROR Payment method not expected: " + paymentMethod, MSG_ERROR);
             string fake_plu = "66666666";
             base_plu = fake_plu;
         }
-       
 
         string plu_dynamic_price = (chars_plu_dynamic_formatted);
 
         string plu_dynamic_formatted = base_plu + plu_dynamic_price;
 
         // 3.14 --> " 3.14" --> " 314" --> "0314"
-        // 140.00 --> 
+        // 140.00 -->
         std::string toReplace(".");
         size_t pos = plu_dynamic_formatted.find(toReplace);
         if (pos != -1)
@@ -244,14 +244,14 @@ string dispenser::getFinalPLU(char size, double price)
             pos = plu_dynamic_formatted.find(toReplace2);
         }
 
-        if (plu_dynamic_formatted.length() != 12){
-             debugOutput::sendMessage("ERROR Generated barcode has an error. Was the price more than 99.99?  Its length should be twelve: " + plu_dynamic_formatted, MSG_ERROR);
+        if (plu_dynamic_formatted.length() != 12)
+        {
+            debugOutput::sendMessage("ERROR Generated barcode has an error. Was the price more than 99.99?  Its length should be twelve: " + plu_dynamic_formatted, MSG_ERROR);
         }
         return plu_dynamic_formatted;
     }
-    
+
     return base_plu;
-    
 }
 
 void dispenser::setAllDispenseButtonLightsOff()
@@ -267,21 +267,24 @@ void dispenser::setMultiDispenseButtonLight(int slot, bool enableElseDisable)
 {
     // output has to be set low for light to be on.
     debugOutput::sendMessage("slot light: " + to_string(slot) + "on else off: " + to_string(enableElseDisable), MSG_INFO);
-   
+
     if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON)
     {
         if (getMultiDispenseButtonEnabled())
         {
 
-             if (this->slot == 4)
+            if (this->slot == 4)
             {
                 m_pDispenseButton4[0]->writePin(!enableElseDisable);
-            }else{
+            }
+            else
+            {
 
                 this->the_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
             }
-
-        }else{
+        }
+        else
+        {
             this->the_pcb->setSingleDispenseButtonLight(1, enableElseDisable);
         }
     }
@@ -378,10 +381,10 @@ DF_ERROR dispenser::loadGeneralProperties()
 
     // if (getMultiDispenseButtonEnabled())
     // {
-        //    setAllDispenseButtonLightsOff();
-        the_pcb->setSingleDispenseButtonLight(this->slot, false);
+    //    setAllDispenseButtonLightsOff();
+    the_pcb->setSingleDispenseButtonLight(this->slot, false);
     // }
-   
+
     resetVolumeDispensed();
 }
 
@@ -403,7 +406,9 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
         if (getMultiDispenseButtonEnabled())
         {
             setMultiDispenseButtonLight(getSlot(), true);
-        }else{
+        }
+        else
+        {
             setMultiDispenseButtonLight(1, true);
         }
         setPumpEnable(); // Added at time of EN-134 integration. Why did things work earlier onwards?
@@ -417,8 +422,8 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
     else if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_NO_PIC)
     {
         setMultiDispenseButtonLight(getSlot(), true);
-
-    }else
+    }
+    else
     {
         debugOutput::sendMessage("No dispense button light enabled. ", MSG_WARNING);
     }
@@ -1210,19 +1215,16 @@ DF_ERROR dispenser::updateRunningAverageWindow()
 
 // }
 
-const char* dispenser::getDispenseStatusAsString(){
+const char *dispenser::getDispenseStatusAsString()
+{
     Dispense_behaviour behaviour = getDispenseStatus();
-    const char * behaviour_str = DISPENSE_BEHAVIOUR_STRINGS[behaviour];
+    const char *behaviour_str = DISPENSE_BEHAVIOUR_STRINGS[behaviour];
     return behaviour_str;
 }
 
 Dispense_behaviour dispenser::getDispenseStatus()
 {
-    // CAUTION: we are not using motor speed feedback. Button press assumes motor running.
-    // todo: button press does not necessarily mean pump is on. We should work with pump speed feedback
-
     updateRunningAverageWindow();
-    // dispenseButtonTimingUpdate();
     logUpdateIfAllowed("Button press millis. Total:" + to_string(dispense_button_total_pressed_millis) + " Current press:" + to_string(dispense_button_current_press_millis));
 
     using namespace std::chrono;
@@ -1237,18 +1239,14 @@ Dispense_behaviour dispenser::getDispenseStatus()
 
     if (!getDispenseButtonValue())
     {
-
         state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
     }
-    else if (getButtonPressedCurrentPressMillis() < 2 * EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS)
-    // else if (getButtonPressedCurrentPressMillis() < 3 * EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS)
+    else if ((getButtonPressedCurrentPressMillis() < 2 * EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) && avg.value < getProduct()->getThresholdFlow())
     {
-        // button pressed (aka pumping)
-
-        // at each button press, the average flow needs to ramp up again. --> not available
-        state = FLOW_STATE_UNAVAILABLE;
+        // flow rate needs to be ramped up until stable.
+        state = FLOW_STATE_RAMP_UP;
     }
-    else if (avg.value > getProduct()->getThresholdFlow())
+    else if (avg.value >= getProduct()->getThresholdFlow())
     {
         // button pressed (aka pumping)
         // init time long enough for valid data

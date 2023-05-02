@@ -188,7 +188,11 @@ DF_ERROR stateDispense::onAction()
       }
       else if (status == FLOW_STATE_UNAVAILABLE)
       {
-         productDispensers[pos_index].logUpdateIfAllowed("No flow data yet (init).         Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
+         productDispensers[pos_index].logUpdateIfAllowed("No flow data                     Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
+      }
+      else if (status == FLOW_STATE_RAMP_UP)
+      {
+         productDispensers[pos_index].logUpdateIfAllowed("Flow ramping up                  Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
       }
       else
       {

@@ -117,19 +117,6 @@
     <string>0.0</string>
    </property>
   </widget>
-  <widget class="QLabel" name="finishTransactionMessage">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>360</y>
-     <width>900</width>
-     <height>300</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_to_refill">
    <property name="geometry">
     <rect>
@@ -196,17 +183,30 @@
     <bool>false</bool>
    </property>
   </widget>
+  <widget class="QLabel" name="finishTransactionMessage">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>600</y>
+     <width>480</width>
+     <height>300</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>abortButton</zorder>
   <zorder>label_abort</zorder>
   <zorder>fill_animation_label</zorder>
   <zorder>dispense_bottle_label</zorder>
   <zorder>label_volume_dispensed</zorder>
   <zorder>volumeDispensedLabel</zorder>
-  <zorder>finishTransactionMessage</zorder>
   <zorder>label_to_refill</zorder>
   <zorder>label_bring_container</zorder>
   <zorder>label_press</zorder>
   <zorder>debug_Button</zorder>
+  <zorder>finishTransactionMessage</zorder>
  </widget>
  <resources/>
  <connections/>

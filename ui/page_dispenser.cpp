@@ -39,18 +39,16 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     ui->setupUi(this);
     ui->finishTransactionMessage->setStyleSheet(
         "QLabel {"
-
         "font-family: 'Brevia';"
         "font-style: normal;"
         "font-weight: 100;"
-        "background-color: #5E8580;"
-        "font-size: 42px;"
+        "font-size: 52px;"
         "text-align: centre;"
         "line-height: auto;"
         "letter-spacing: 0px;"
         "qproperty-alignment: AlignCenter;"
         "border-radius: 20px;"
-        "color: white;"
+        "color: #5e8580;"
         "border: none;"
         "}");
     ui->finishTransactionMessage->hide();
@@ -267,11 +265,20 @@ void page_dispenser::dispensing_end_admin()
 {
     qDebug() << "Dispense end admin start";
     this->isDispensing = false;
+    ui->dispense_bottle_label->hide();
+    ui->fill_animation_label->hide();
+    ui->label_abort->hide();
+    ui->abortButton->hide();
+    ui->finishTransactionMessage->show();
+    ui->finishTransactionMessage->raise();
+    
     double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
     std::ostringstream stream;
     stream << std::fixed << std::setprecision(2) << price;
     if (volumeDispensed == 0 && (selectedProductOrder->getSelectedPaymentMethod()) == "tap")
     {
+        ui->finishTransactionMessage->setText("Voiding payment");
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         std::map<std::string, std::string> response;
         qDebug() << "dispense end: tap payment No volume dispensed.";
         // REVERSE PAYMENT.
@@ -288,8 +295,8 @@ void page_dispenser::dispensing_end_admin()
     }
     else if ((selectedProductOrder->getSelectedPaymentMethod()== "tap") && volumeDispensed != 0)
     {
+        ui->finishTransactionMessage->setText("Capturing payment");
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
-
         if (CTROUTD != "")
         {
             std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, CTROUTD, stream.str());
@@ -456,6 +463,8 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         //     "}");
         //     ui->label_abort->setText("Complete333");
         ui->label_abort->raise();
+        ui->label_abort->show();
+        ui->abortButton->show();
 
         // }
         updateVolumeDispensedLabel(dispensed);

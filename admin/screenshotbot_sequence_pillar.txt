@@ -1,0 +1,30 @@
+# products page
+175 550 products.jpg
+# product_1
+53 336 product_1.jpg
+# overview
+560 1160 overview.jpg
+# page dispense
+190 1575 dispense.jpg
+# thank you
+525 1380 dialog.jpg
+# dispense dialog
+301 971 thankyoujpg
+# help page
+355 1404 feedback.jpg
+# keyboard
+210 1120 keyboard.jpg
+# typing
+60 1420
+60 1420
+948 1755 typing.jpg
+# thanks for feedback
+395 1432 
+475 1432
+465 1432
+455 1432
+455 1432
+455 1462
+475 1462 feedbacksent.jpg
+#idle page
+140 80 idle.jpg

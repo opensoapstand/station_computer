@@ -3,7 +3,7 @@
 # create dir for screenshots 
 
 screenshotpath="/home/df-admin/production/screenshots"
-mkdir -p $screenshotpath
+mkdir -p $screenshotpath    
 
 PS3='Which kind of unit are we dealing with? Select number and press Enter: '
 echo "|-----Screenshotbot v1.0 2022-05-02----------------------|"
@@ -13,7 +13,8 @@ echo "| The application should be active and in idle screen.   |"
 echo "| requires: xdotool and scrot (sudo apt-get install xx ) |"
 echo "|--------------------------------------------------------|"
 
-options=("Has printer" "Has qr" "Quit")
+options=("Has printer" "Has qr" "Pillar" "Quit")
+
 select opt in "${options[@]}"
 do
     case $opt in
@@ -27,6 +28,11 @@ do
             file="./screenshotbot_sequence_qr.txt"
             break
             ;;
+        "Pillar")
+            echo "Start sequence for pillar."
+            file="./screenshotbot_sequence_pillar.txt"
+            break
+        ;;
         "Quit")
             file="./dummy.txt"
             break

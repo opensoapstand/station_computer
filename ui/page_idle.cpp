@@ -16,6 +16,7 @@
 
 #include "page_idle.h"
 #include "ui_page_idle.h"
+#include "page_idle_products.h"
 #include "page_maintenance.h"
 #include "page_maintenance_general.h"
 
@@ -48,7 +49,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 /*
  * Navigation to Product item
  */
-void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral)
+void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products)
 {
     // Chained to KB Listener
     this->p_pageSelectProduct = p_pageProduct;

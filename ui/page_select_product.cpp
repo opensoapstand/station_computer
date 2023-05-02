@@ -115,7 +115,7 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void page_select_product::setPage(pageProduct *pageSizeSelect, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp)
+void page_select_product::setPage(pageProduct *pageSizeSelect, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp)
 {
     // this->selection_PageTwo = pageTwoProducts;
     this->p_page_product = pageSizeSelect;

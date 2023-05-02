@@ -22,6 +22,7 @@
 #include "drinkorder.h"
 #include "dfuicommthread.h"
 #include "page_maintenance.h"
+#include "page_idle_products.h"
 #include <curl/curl.h>
 #include <ctime>
 
@@ -39,7 +40,7 @@ class page_maintenance_dispenser : public QWidget
 
 public:
     explicit page_maintenance_dispenser(QWidget *parent = nullptr);
-    void setPage(page_maintenance *pageMaintenance, page_idle *pageIdle);
+    void setPage(page_maintenance *pageMaintenance, page_idle *pageIdle, page_idle_products *p_page_idle_products);
     ~page_maintenance_dispenser();
     void resizeEvent(QResizeEvent *event);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);

@@ -26,7 +26,8 @@ FORMS += \
     keyboard.ui \
     page_sendFeedback.ui \
     page_transactions.ui \
-    page_maintenance_general.ui
+    page_maintenance_general.ui \
+    page_idle_products.ui
 
 HEADERS += \
     dfuicommthread.h \

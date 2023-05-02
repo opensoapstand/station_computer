@@ -196,6 +196,32 @@
     <bool>false</bool>
    </property>
   </widget>
+  <widget class="QLabel" name="label_dispense_status">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>410</y>
+     <width>391</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>test</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_flowrate">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>490</y>
+     <width>411</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>test</string>
+   </property>
+  </widget>
   <zorder>abortButton</zorder>
   <zorder>label_abort</zorder>
   <zorder>fill_animation_label</zorder>
@@ -207,6 +233,8 @@
   <zorder>label_bring_container</zorder>
   <zorder>label_press</zorder>
   <zorder>debug_Button</zorder>
+  <zorder>label_dispense_status</zorder>
+  <zorder>label_dispense_flowrate</zorder>
  </widget>
  <resources/>
  <connections/>

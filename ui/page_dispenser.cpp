@@ -431,10 +431,14 @@ void page_dispenser::resetDispenseTimeout(void)
 void page_dispenser::fsmReceiveDispenseRate(double flowrate)
 {
     qDebug() << "Dispense flow rate received from FSM: " << QString::number(flowrate, 'f', 2);
+    ui->label_dispense_flowrate->setText(QString::number(flowrate, 'f', 2) + "ml/s");
 };
+
 void page_dispenser::fsmReceiveDispenseStatus(QString status)
 {
     qDebug() << "Dispense status received from FSM: " << status;
+    ui->label_dispense_status->setText(status);
+    
 };
 
 void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)

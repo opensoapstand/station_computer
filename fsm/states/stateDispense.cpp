@@ -116,8 +116,8 @@ DF_ERROR stateDispense::onAction()
 
    // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
 
-   if (productDispensers[pos_index].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML)
-   {
+   // if (productDispensers[pos_index].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML)
+   // {
       if (productDispensers[pos_index].getIsStatusUpdateAllowed())
       {
          double volume = productDispensers[pos_index].getVolumeDispensed();
@@ -130,7 +130,7 @@ DF_ERROR stateDispense::onAction()
                  
          m_pMessaging->sendMessageOverIP("dispenseupdate|" + to_string(volume) + "|" + to_string(flowrate) + "|" + statusString);
       }
-   }
+   // }
 
    // Check if UI has sent a ACTION_DISPENSE_END to finish the transaction, or, if dispensing is complete
    if (m_pMessaging->getAction() == ACTION_DISPENSE_END)

@@ -483,7 +483,18 @@ void pageProduct::reset_and_show_page_elements()
     /* Hacky transparent button */
     ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->mainPage_Button->setStyleSheet("QPushButton {"
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 75;"
+        "font-size: 20px;"
+        "line-height: 99px;"
+        "letter-spacing: px;"
+        "color: #FFFFFF;"
+        "text-align: center;"
+        "qproperty-alignment: AlignCenter;"
+        "border: none;"
+        "}");
 
     loadProdSpecs();
     selectIdleTimer->start(1000);

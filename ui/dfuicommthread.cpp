@@ -48,40 +48,6 @@ QByteArray DfUiCommThread::readyRead()
 
     qDebug() << "Process received message : " << Data;
 
-    // if (Data == "Transaction End")
-    // {
-    // }
-    // else if (Data == "No flow abort")
-    // {
-    // }
-    // else if (Data == "Reset Timer")
-    // {
-    // }
-
-    // else if (Data == "Target Hit")
-    // {
-    // }
-
-    // else if (Data == "Init Ready")
-    // {
-    // }
-
-    // else if (Data == "MM")
-    // {
-    // }
-    // else if (Data == "Dispense Button Pos Edge")
-    // {
-    // }
-    // else if (strtol(Data, &pEnd, 10) || (Data[0] == '0' && Data[1] == '.'))
-    // {
-    //     // double volume_dispensed = stod(Data.constData(), &sz);
-    //     // emit updateVolumeSignal(volume_dispensed);
-    // }
-    // else
-    // {
-    //     qDebug() << "No matching command found." << Data;
-    // }
-
     // socket->write(Data); // THIS CAUSES THE UI TO CRASH AT TIMES.... for now, we delete it. todo. send ack to controller.
 
     if (Data == "Transaction End")
@@ -108,14 +74,9 @@ QByteArray DfUiCommThread::readyRead()
     }
     else if (Data == "OK")
     {
-        //emit initReadySignal();
+        // emit initReadySignal();
         usleep(3000000);
     }
-
-    // else if (Data == "MM")
-    // {
-    //     emit MMSignal();
-    // }
     else if (Data == "Dispense Button Pos Edge")
     {
         emit dispenseButtonPressedPosEdgeSignal();
@@ -124,25 +85,49 @@ QByteArray DfUiCommThread::readyRead()
     {
         emit dispenseButtonPressedNegEdgeSignal();
     }
-    else if (strtol(Data, &pEnd, 10) || (Data[0] == '0' && Data[1] == '.'))
-    {
-        double volume_dispensed = stod(Data.constData(), &sz);
-        emit updateVolumeSignal(volume_dispensed); // induced crash at cancel dispense.
-        //qDebug() << "vol tijetij89";
-    }
+    // else if (strtol(Data, &pEnd, 10) || (Data[0] == '0' && Data[1] == '.'))
+    // old rudimentary way of sending dispensed volumen from fsm to ui
+    // {
+    //     double volume_dispensed = stod(Data.constData(), &sz);
+    //     emit updateVolumeSignal(volume_dispensed); // induced crash at cancel dispense.
+    // }
 
-    // QByteArray data;
-    // QString DataAsString = QString(data);
-
-    // if (Data.contains("printerstatus") != std::string::npos)
     else if (Data.contains("printerstatus"))
 
     {
-        // std::cout << "found!" << '\n';
         bool isOnline = Data.at(13) == '1';
         bool hasPaper = Data.at(14) == '1';
         emit printerStatusSignal(isOnline, hasPaper);
     }
+
+    else if (Data.contains("dispenseupdate|"))
+
+    {
+        qDebug() << "dispenseupdatedata received: " << Data;
+        // bool isOnline = Data.at(13) == '1';
+        // bool hasPaper = Data.at(14) == '1';
+        // emit printerStatusSignal(isOnline, hasPaper);
+        int first_delim_pos = Data.indexOf('|');
+        int second_delim_pos = Data.indexOf('|', first_delim_pos + 1);
+        int third_delim_pos = Data.indexOf('|', second_delim_pos + 1);
+
+        QByteArray first_part = Data.mid(0, first_delim_pos);
+        QByteArray second_part = Data.mid(first_delim_pos + 1, second_delim_pos - first_delim_pos - 1);
+        QByteArray third_part = Data.mid(second_delim_pos + 1, third_delim_pos - second_delim_pos - 1);
+        QByteArray fourth_part = Data.mid(third_delim_pos + 1);
+
+        double volumeDispensed = second_part.toDouble();
+        double flowrate = third_part.toDouble();
+        QString dispenseStatusString = QString::fromUtf8(fourth_part);
+
+        qDebug() << "volume: " << QString::number(volumeDispensed, 'f', 2);
+        qDebug() << "flowrate: " << QString::number(flowrate, 'f', 2);
+        qDebug() << "dispenseStatus: " << dispenseStatusString;
+        emit updateVolumeSignal(volumeDispensed); // induced crash at cancel dispense.
+        emit dispenseRateSignal(flowrate); 
+        emit dispenseStatusSignal(dispenseStatusString); 
+    }
+
     else
     {
         qDebug() << "Non actionable message from fsm received: " << Data;

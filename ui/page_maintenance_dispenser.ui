@@ -660,7 +660,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>1130</y>
+     <y>1140</y>
      <width>341</width>
      <height>20</height>
     </rect>
@@ -890,7 +890,7 @@ last restock</string>
     </rect>
    </property>
    <property name="text">
-    <string>Ensable time</string>
+    <string>Enable time</string>
    </property>
   </widget>
   <widget class="QLabel" name="dispenseTimeLabelButton">
@@ -904,6 +904,19 @@ last restock</string>
    </property>
    <property name="text">
     <string>Pump time</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="flowRateLabel">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>1110</y>
+     <width>141</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Flow rate (2s)</string>
    </property>
   </widget>
  </widget>

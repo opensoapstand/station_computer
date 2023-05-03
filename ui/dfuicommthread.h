@@ -23,6 +23,8 @@ signals:
     void targetHitSignal(void);
     void noFlowAbortSignal(void);
     void updateVolumeSignal(double dispensed);
+    void dispenseRateSignal(double flowrate);
+    void dispenseStatusSignal(QString status);
     void printerStatusSignal(bool isOnline, bool hasPaper);
     void initReadySignal(void);
     // void MMSignal(void);

@@ -165,7 +165,6 @@ void page_select_product::resizeEvent(QResizeEvent *event)
 
 void page_select_product::displayProducts()
 {
-#ifdef ENABLE_DYNAMIC_UI
     QString product_type_icons[5] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH};
 
     bool product_slot_enabled;
@@ -184,7 +183,7 @@ void page_select_product::displayProducts()
 
         qDebug() << "db (re)load product details:";
         DbManager db(DB_PATH);
-        
+
         product_slot_enabled = db.getSlotEnabled(slot);
 
         product_sold_out = !(db.isProductVolumeInContainer(slot));
@@ -193,7 +192,7 @@ void page_select_product::displayProducts()
 
         product_type = p_page_idle->currentProductOrder->getProductType(slot);
         product_name = p_page_idle->currentProductOrder->getProductName(slot);
-        
+
         qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << ", product set as not available?: " << product_sold_out << " Status text: " << product_status_text;
 
         selectProductNameLabels[i]->setText(product_name);
@@ -271,25 +270,13 @@ void page_select_product::displayProducts()
         selectProductTypeLabels[i]->setText(type_text);
         selectProductTypeLabels[i]->setStyleSheet("QLabel{font-family: 'Brevia';font-style: normal;font-weight: 700;font-size: 30px;line-height: 41px;qproperty-alignment: AlignCenter;text-transform: uppercase;color: #5E8580;}");
     }
-#else
-    for (uint8_t i = 0; i < SLOT_COUNT; i++)
-    {
-        selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-        selectProductButtons[i]->raise();
-        selectProductPhotoLabels[i]->hide();
-        selectProductNameLabels[i]->hide();
-        selectProductIconLabels[i]->hide();
-        selectProductTypeLabels[i]->hide();
-    }
-
-#endif
 }
 
 void page_select_product::select_product(int slot)
 {
-        qDebug() << "selected slot: " << slot;
-        p_page_idle->currentProductOrder->setSelectedSlot(slot);
-        hideCurrentPageAndShowProvided(p_page_product);
+    qDebug() << "selected slot: " << slot;
+    p_page_idle->currentProductOrder->setSelectedSlot(slot);
+    hideCurrentPageAndShowProvided(p_page_product);
 }
 
 // FIXME: This is terrible...no time to make array reference to hold button press functions

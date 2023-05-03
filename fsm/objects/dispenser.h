@@ -83,6 +83,7 @@ public:
       void setMultiDispenseButtonLight(int slot, bool enableElseDisable);
       void setAllDispenseButtonLightsOff();
       void reversePumpForSetTimeMillis(int millis);
+      const char* getDispenseStatusAsString();
 
 
       DF_ERROR pumpSlowStart(bool forwardElseReverse);

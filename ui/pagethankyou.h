@@ -66,9 +66,9 @@ private:
     int _thankYouTimeoutSec;
     QTimer *thankYouEndTimer;
 
-    QTimer *rinseTimer;
-    int _rinseTimerTimeoutSec;
-    bool rinse;
+    // QTimer *rinseTimer;
+    // int _rinseTimerTimeoutSec;
+    // bool rinse;
 
     CURL *curl;
     CURLcode res;

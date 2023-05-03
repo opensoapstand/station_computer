@@ -517,6 +517,9 @@ text-align: center;</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_notify_us">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>478</x>

@@ -43,7 +43,7 @@ public:
     ~page_maintenance_dispenser();
     void resizeEvent(QResizeEvent *event);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
-    void updateVolumeDisplayed(double dispensed, bool isFull);
+    void fsmReceivedVolumeDispensed(double dispensed, bool isFull);
     void fsmReceiveTargetVolumeReached();
     void fsmReceiveDispenseButtonPressedPositiveEdge();
     void fsmReceiveDispenseButtonPressedNegativeEdge();
@@ -114,8 +114,8 @@ private:
     bool pumping = false;
 
     int _maintainProductPageTimeoutSec;
-    float dispenseTimeSecs;
-    float dispenseTimeSecs2;
+    float dispenserEnabledSecs;
+    float dispenserPumpingSecs;
     QTimer *maintainProductPageEndTimer;
     QTimer *dispenseTimer;
 
@@ -128,7 +128,7 @@ private:
     bool full;
     bool pwm;
     bool buffer;
-    int runningPump=0;
+    bool isDispenseButtonPressed;
     uint16_t button_press_count;
 
     QString units_selected_product;

@@ -54,7 +54,7 @@
      <x>340</x>
      <y>1380</y>
      <width>400</width>
-     <height>131</height>
+     <height>101</height>
     </rect>
    </property>
    <property name="font">
@@ -83,25 +83,6 @@
    </property>
    <property name="text">
     <string>Volume dispensed</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_abort">
-   <property name="geometry">
-    <rect>
-     <x>340</x>
-     <y>1380</y>
-     <width>400</width>
-     <height>101</height>
-    </rect>
-   </property>
-   <property name="layoutDirection">
-    <enum>Qt::LeftToRight</enum>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="volumeDispensedLabel">
@@ -133,7 +114,7 @@
     <enum>Qt::RichText</enum>
    </property>
   </widget>
-  <widget class="QLabel" name="label_bring_container">
+  <widget class="QLabel" name="label_instructions_container">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -194,19 +175,60 @@
    </property>
    <property name="text">
     <string/>
+    </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_status">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>410</y>
+     <width>391</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>test</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_flowrate">
+   <property name="geometry">
+    <rect>
+     <x>650</x>
+     <y>280</y>
+     <width>411</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>test</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="button_problems">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>10</y>
+     <width>700</width>
+     <height>180</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Problem detected</string>
    </property>
   </widget>
   <zorder>abortButton</zorder>
-  <zorder>label_abort</zorder>
   <zorder>fill_animation_label</zorder>
   <zorder>dispense_bottle_label</zorder>
   <zorder>label_volume_dispensed</zorder>
   <zorder>volumeDispensedLabel</zorder>
   <zorder>label_to_refill</zorder>
-  <zorder>label_bring_container</zorder>
+  <zorder>label_instructions_container</zorder>
   <zorder>label_press</zorder>
   <zorder>debug_Button</zorder>
   <zorder>finishTransactionMessage</zorder>
+  <zorder>label_dispense_status</zorder>
+  <zorder>label_dispense_flowrate</zorder>
+  <zorder>button_problems</zorder>
  </widget>
  <resources/>
  <connections/>

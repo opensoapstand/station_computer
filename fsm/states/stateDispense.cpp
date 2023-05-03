@@ -116,13 +116,21 @@ DF_ERROR stateDispense::onAction()
 
    // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
 
-   if (productDispensers[pos_index].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML)
-   {
+   // if (productDispensers[pos_index].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML)
+   // {
       if (productDispensers[pos_index].getIsStatusUpdateAllowed())
       {
-         m_pMessaging->sendMessageOverIP(to_string(productDispensers[pos_index].getVolumeDispensed()));
+         double volume = productDispensers[pos_index].getVolumeDispensed();
+
+         productDispensers[pos_index].updateRunningAverageWindow();
+         Time_val avg_02s = productDispensers[pos_index].getAveragedFlowRate(1000);
+         double flowrate = avg_02s.value;
+         const char* statusStringChar = productDispensers[pos_index].getDispenseStatusAsString();
+         std::string statusString(statusStringChar);
+                 
+         m_pMessaging->sendMessageOverIP("dispenseupdate|" + to_string(volume) + "|" + to_string(flowrate) + "|" + statusString);
       }
-   }
+   // }
 
    // Check if UI has sent a ACTION_DISPENSE_END to finish the transaction, or, if dispensing is complete
    if (m_pMessaging->getAction() == ACTION_DISPENSE_END)
@@ -146,7 +154,7 @@ DF_ERROR stateDispense::onAction()
 
       Dispense_behaviour status = productDispensers[pos_index].getDispenseStatus();
 
-      if (status == FLOW_STATE_CONTAINER_EMPTY)
+      if (status == FLOW_STATE_EMPTY)
       {
 
          debugOutput::sendMessage("******************* EMPTY CONTAINER DETECTED **********************", MSG_INFO);
@@ -166,7 +174,7 @@ DF_ERROR stateDispense::onAction()
                                                          "," + to_string(productDispensers[pos_index].getProduct()->m_nVolumeTarget_c_max) +
                                                          ", Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
       }
-      else if (status == FLOW_STATE_ATTEMTPING_TO_PRIME)
+      else if (status == FLOW_STATE_PRIMING_OR_EMPTY)
       {
          productDispensers[pos_index].logUpdateIfAllowed("No flow during pumping. Priming? Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
       }
@@ -180,7 +188,11 @@ DF_ERROR stateDispense::onAction()
       }
       else if (status == FLOW_STATE_UNAVAILABLE)
       {
-         productDispensers[pos_index].logUpdateIfAllowed("No flow data yet (init).         Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
+         productDispensers[pos_index].logUpdateIfAllowed("No flow data                     Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
+      }
+      else if (status == FLOW_STATE_RAMP_UP)
+      {
+         productDispensers[pos_index].logUpdateIfAllowed("Flow ramping up                  Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
       }
       else
       {
@@ -191,12 +203,11 @@ DF_ERROR stateDispense::onAction()
    {
       // TODO: Do a check if Pumps are operational
       // send IPC if pump fails
-      productDispensers[pos_index].logUpdateIfAllowed("debug. targets s,m,l,c_max:" +
-                                                      to_string(productDispensers[pos_index].getProduct()->m_nVolumeTarget_s) +
-                                                      "," + to_string(productDispensers[pos_index].getProduct()->m_nVolumeTarget_m) +
-                                                      "," + to_string(productDispensers[pos_index].getProduct()->m_nVolumeTarget_l) +
-                                                      "," + to_string(productDispensers[pos_index].getProduct()->m_nVolumeTarget_c_max) +
-                                                      ", Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
+      productDispensers[pos_index].logUpdateIfAllowed("Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
+
+      productDispensers[pos_index].updateRunningAverageWindow();
+      Time_val flowavg = productDispensers[pos_index].getAveragedFlowRate(2000);
+      productDispensers[pos_index].logUpdateIfAllowed("Flow rate 2s: " + to_string(flowavg.value));
    }
 
    e_ret = OK;

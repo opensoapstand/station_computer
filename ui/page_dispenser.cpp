@@ -52,7 +52,7 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
         "color: white;"
         "border: none;"
         "}");
-    
+
     // ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->abortButton->setStyleSheet("QPushButton { color:#5E8580; background-color: transparent; border: 5px;border-color:#5E8580; }");
     ui->debug_Button->setStyleSheet("QPushButton { color:#5E8580; background-color: transparent; border: 5px;border-color:#5E8580; }");
@@ -72,7 +72,7 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
         "color: white;"
         "border: none;"
         "}");
-    
+
     // ui->abortButton->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
     QString volumeDispensedStylesheet = "QLabel {"
 
@@ -107,8 +107,6 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
         "border: none;"
         "}");
 
-    
-
     ui->label_instructions_container->setStyleSheet(
         "QLabel {"
 
@@ -142,12 +140,11 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
         "qproperty-alignment: AlignCenter;"
         "border: none;"
         "}");
-    
+
     ui->finishTransactionMessage->hide();
     ui->label_to_refill->setText("to refill");
     ui->label_instructions_container->setText("bring container to nozzle");
     ui->label_press->setText("press and hold <br>the button");
-
 
     // ui->button_problems->setStyleSheet("QPushButton { color:#5E8580; background-color: transparent; border: 5px;border-color:#5E8580; }");
     // ui->button_problems->setStyleSheet(
@@ -167,7 +164,6 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     //     "border: none;"
     //     "}");
 
-
     ui->abortButton->raise();
     ui->button_problems->raise();
     ui->label_volume_dispensed->setStyleSheet(volumeDispensedStylesheet);
@@ -180,12 +176,13 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void page_dispenser::setPage(page_qr_payment *page_qr_payment, page_tap_payment *page_tap_payment, pagethankyou *pageThankYou, page_idle *pageIdle)
+void page_dispenser::setPage(page_qr_payment *page_qr_payment, page_tap_payment *page_tap_payment, pagethankyou *pageThankYou, page_idle *pageIdle, page_sendFeedback *pageFeedback)
 {
     this->thanksPage = pageThankYou;
     this->paymentPage = page_qr_payment;
     this->paymentTapPage = page_tap_payment;
     this->p_page_idle = pageIdle;
+    this->feedbackPage = pageFeedback;
     selectedProductOrder = p_page_idle->currentProductOrder;
 }
 
@@ -208,6 +205,8 @@ void page_dispenser::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     this->isDispensing = false;
+    askForFeedbackAtEnd = false;
+
     ui->fill_animation_label->move(380, 889);
     updateVolumeDispensedLabel(0.0);
 
@@ -227,7 +226,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     }
 
     p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
-    
+
     ui->label_abort->setText("Abort");
     ui->label_press->show();
     ui->label_to_refill->show();
@@ -239,8 +238,6 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->button_problems->hide();
 
     startDispensing();
-
-   
 
     if (nullptr == dispenseIdleTimer)
     {
@@ -279,7 +276,8 @@ void page_dispenser::dispensing_end_admin()
     double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
     std::ostringstream stream;
     stream << std::fixed << std::setprecision(2) << price;
-    if (volumeDispensed == 0 && (selectedProductOrder->getSelectedPaymentMethod()) == "tap")
+
+    if (volumeDispensed < MINIMUM_DISPENSE_VOLUME_ML && (selectedProductOrder->getSelectedPaymentMethod()) == "tap")
     {
         std::map<std::string, std::string> response;
         qDebug() << "dispense end: tap payment No volume dispensed.";
@@ -295,7 +293,7 @@ void page_dispenser::dispensing_end_admin()
         }
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     }
-    else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && volumeDispensed != 0)
+    else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && volumeDispensed >= MINIMUM_DISPENSE_VOLUME_ML)
     {
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
 
@@ -312,7 +310,15 @@ void page_dispenser::dispensing_end_admin()
     }
 
     qDebug() << "Finished dispense admin handling";
-    hideCurrentPageAndShowProvided(thanksPage);
+
+    if (askForFeedbackAtEnd)
+    {
+        hideCurrentPageAndShowProvided(feedbackPage);
+    }
+    else
+    {
+        hideCurrentPageAndShowProvided(thanksPage);
+    }
 }
 
 void page_dispenser::force_finish_dispensing()
@@ -468,32 +474,36 @@ void page_dispenser::fsmReceiveDispenseStatus(QString status)
 
 void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
 {
-    ui->label_abort->raise();
-    updateVolumeDispensedLabel(dispensed);
 
-    qDebug() << "Signal: dispensed " << dispensed << " of " << this->targetVolume;
     resetDispenseTimeout();
-
     volumeDispensed = dispensed;
+    qDebug() << "Signal: dispensed " << dispensed << " of " << this->targetVolume;
 
-    double percentage = dispensed / this->targetVolume * 100;
-    if (isFull)
+    if (volumeDispensed >= MINIMUM_DISPENSE_VOLUME_ML)
     {
-        percentage = 100;
+
+        updateVolumeDispensedLabel(dispensed);
+        ui->label_abort->raise();
+
+        double percentage = dispensed / this->targetVolume * 100;
+        if (isFull)
+        {
+            percentage = 100;
+        }
+
+        this->ui->fill_animation_label->move(380, 900 - 3 * percentage);
+
+        // transition from instructions to dispensing at first receival of volume.
+        ui->dispense_bottle_label->show();
+        ui->label_press->hide();
+        ui->label_to_refill->hide();
+        ui->label_instructions_container->hide();
+
+        ui->label_abort->setText("Complete");
+        ui->fill_animation_label->show();
+        ui->abortButton->raise();
+        ui->button_problems->raise();
     }
-
-    this->ui->fill_animation_label->move(380, 900 - 3 * percentage);
-
-
-    // transition from instructions to dispensing at first receival of volume. 
-    ui->dispense_bottle_label->show();
-    ui->label_press->hide();
-    ui->label_to_refill->hide();
-    ui->label_instructions_container->hide();
-
-    ui->label_abort->setText("Complete");
-    ui->fill_animation_label->show();
-    
 }
 
 void page_dispenser::fsmReceivedVolumeDispensed(double dispensed, bool isFull)
@@ -540,10 +550,10 @@ void page_dispenser::fsmReceiveNoFlowAbort()
 
 void page_dispenser::on_abortButton_clicked()
 {
-    qDebug() << "Pressed dispense complete.";
+    qDebug() << "Pressed button abort/complete";
 
     transactionLogging += "\n 7: Complete Button - True";
-    if (volumeDispensed == 0.0)
+    if (volumeDispensed < MINIMUM_DISPENSE_VOLUME_ML)
     {
         QMessageBox msgBox;
         msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
@@ -601,7 +611,33 @@ void page_dispenser::on_debug_Button_clicked()
 
 void page_dispenser::on_button_problems_clicked()
 {
-    resetDispenseTimeout();
+    QMessageBox msgBox;
+    msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+    QString payment = selectedProductOrder->getSelectedPaymentMethod();
+    if (payment == "qr" || payment == "tap")
+    {
+        msgBox.setText("<p align=center><br><br>Are you sure?<br> This will stop your dispensing.<br><br>You will only be charged for the dispensed amount<br></p>");
+    }
+    else
+    {
+        msgBox.setText("<p align=center><br><br>Are you sure?<br> This will stop your dispensing.<br></p>");
+    }
+     
+    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
 
-    // ui->button_problems->hide();
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    int ret = msgBox.exec();
+    bool success;
+    switch (ret)
+    {
+    case QMessageBox::Yes:
+    {
+        if (this->isDispensing)
+        {
+            askForFeedbackAtEnd = true;
+            force_finish_dispensing();
+        }
+    }
+    break;
+    }
 }

@@ -21,6 +21,7 @@
 #include "df_util.h"
 #include "includefiles.h"
 #include "page_idle.h"
+#include "page_sendFeedback.h"
 #include "pagethankyou.h"
 #include "payment/commands.h"
 #include "payment/setup_Tap.h"
@@ -46,7 +47,7 @@ class page_dispenser : public QWidget
 public:
     // **** GUI ****
     explicit page_dispenser(QWidget *parent = nullptr);
-    void setPage(page_qr_payment* page_qr_payment, page_tap_payment* page_tap_payment, pagethankyou* pageThankYou, page_idle* pageIdle);
+    void setPage(page_qr_payment* page_qr_payment, page_tap_payment* page_tap_payment, pagethankyou* pageThankYou, page_idle* pageIdle, page_sendFeedback* pageFeedback);
     ~page_dispenser();
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void showEvent(QShowEvent *event);
@@ -92,11 +93,13 @@ private slots:
 
 private:
     bool isDispensing;
+    bool askForFeedbackAtEnd;
     // **** GUI *****
     Ui::page_dispenser *ui;
     page_qr_payment* paymentPage;
     page_tap_payment* paymentTapPage;
     pagethankyou* thanksPage;
+    page_sendFeedback* feedbackPage;
     page_idle* p_page_idle;
 
     DrinkOrder* selectedProductOrder;

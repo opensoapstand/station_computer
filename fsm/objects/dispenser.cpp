@@ -1250,7 +1250,6 @@ Dispense_behaviour dispenser::getDispenseStatus()
     {
         // button pressed (aka pumping)
         // init time long enough for valid data
-
         state = FLOW_STATE_DISPENSING;
     }
 

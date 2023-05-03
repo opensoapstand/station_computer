@@ -123,7 +123,7 @@ DF_ERROR stateDispense::onAction()
          double volume = productDispensers[pos_index].getVolumeDispensed();
 
          productDispensers[pos_index].updateRunningAverageWindow();
-         Time_val avg_02s = productDispensers[pos_index].getAveragedFlowRate(2000);
+         Time_val avg_02s = productDispensers[pos_index].getAveragedFlowRate(1000);
          double flowrate = avg_02s.value;
          const char* statusStringChar = productDispensers[pos_index].getDispenseStatusAsString();
          std::string statusString(statusStringChar);

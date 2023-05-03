@@ -18,7 +18,7 @@
 #define SLOT_COUNT 4  // number of products
 
 #define SIZES_COUNT 6
-
+#define MINIMUM_DISPENSE_VOLUME_ML 10.0
 #define SIZE_INVALID_INDEX 0
 #define SIZE_SMALL_INDEX 1
 #define SIZE_MEDIUM_INDEX 2

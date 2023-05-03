@@ -54,10 +54,26 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
         "}");
 
     // ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->abortButton->setStyleSheet("QPushButton { color:#5E8580; background-color: transparent; border: 5px;border-color:#5E8580; }");
     ui->debug_Button->setStyleSheet("QPushButton { color:#5E8580; background-color: transparent; border: 5px;border-color:#5E8580; }");
-    ui->label_abort->setStyleSheet(
-        "QLabel {"
+    // ui->abortButton->setStyleSheet("QPushButton { color:#5E8580; background-color: transparent; border: 5px;border-color:#5E8580; }");
+    // ui->label_abort->setStyleSheet(
+    //     "QLabel {"
+
+    //     "font-family: 'Brevia';"
+    //     "font-style: normal;"
+    //     "font-weight: 100;"
+    //     "background-color: #5E8580;"
+    //     "font-size: 42px;"
+    //     "text-align: centre;"
+    //     "line-height: auto;"
+    //     "letter-spacing: 0px;"
+    //     "qproperty-alignment: AlignCenter;"
+    //     "border-radius: 20px;"
+    //     "color: white;"
+    //     "border: none;"
+    //     "}");
+ui->abortButton->setStyleSheet(
+        "QPushButton {"
 
         "font-family: 'Brevia';"
         "font-style: normal;"
@@ -227,7 +243,8 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
 
-    ui->label_abort->setText("Abort");
+    // ui->label_abort->setText("Abort");
+    ui->abortButton->setText("Abort");
     ui->label_press->show();
     ui->label_to_refill->show();
     ui->label_instructions_container->show();
@@ -467,7 +484,8 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
     {
 
         updateVolumeDispensedLabel(dispensed);
-        ui->label_abort->raise();
+        // ui->label_abort->raise();
+        
 
         double percentage = dispensed / this->targetVolume * 100;
         if (isFull)
@@ -483,7 +501,8 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         ui->label_to_refill->hide();
         ui->label_instructions_container->hide();
 
-        ui->label_abort->setText("Complete");
+        // ui->label_abort->setText("Complete");
+        ui->abortButton->setText("Complete");
         ui->fill_animation_label->show();
         ui->abortButton->raise();
         ui->button_problems->raise();

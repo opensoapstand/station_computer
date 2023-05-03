@@ -1643,6 +1643,26 @@ QString DbManager::getHelpPageHtmlText()
     return mid_string;
 }
 
+QString DbManager::getIdlePageType()
+{
+    QSqlQuery query;
+    QString idlePageType;
+
+    if (query.exec("SELECT idle_page_type FROM machine"))
+    {
+        if (query.first())
+        {
+            idlePageType = query.value(0).toString();
+        }
+    }
+    else
+    {
+        qWarning() << "Failed to get idle_page_type from database:" << query.lastError().text();
+    }
+
+    return idlePageType;
+}
+
 QString DbManager::getProductType(int slot)
 {
     QSqlQuery product_type_query;

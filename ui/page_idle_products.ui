@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>page_select_product</class>
- <widget class="QWidget" name="page_select_product">
+ <class>page_idle_products</class>
+ <widget class="QWidget" name="page_idle_products">
   <property name="geometry">
    <rect>
     <x>0</x>

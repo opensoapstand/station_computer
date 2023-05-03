@@ -87,10 +87,14 @@ private slots:
 private:
     void checkReceiptPrinterStatus();
     QString m_templatePath;
+    QString idle_page_type;
+
     Ui::page_idle *ui;
     page_select_product *p_pageSelectProduct;
     page_maintenance *p_page_maintenance;
     page_maintenance_general *p_page_maintenance_general;
+    page_idle_products *p_page_idle_products;
+
     bool p1, p2, p3, p4;
 };
 

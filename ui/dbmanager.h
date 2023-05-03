@@ -29,6 +29,7 @@ public:
     QString getMaintenanceAdminPassword();
     QString getCustomerId();
     QString getHelpPageHtmlText();
+    QString getIdlePageType();
 
     double getFullProduct(int slot);
     int getTotalTransactions();

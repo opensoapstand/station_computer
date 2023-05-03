@@ -270,6 +270,24 @@ double DrinkOrder::getSelectedPriceCorrected()
     return price;
 }
 
+
+double DrinkOrder::getSelectedPriceCustom()
+{
+    // slot and size needs to be set.
+    double price;
+    if (isSelectedOrderValid())
+    {
+        price = getPrice(getSelectedSize()) * (1.0 - m_discount_percentage_fraction)*getSelectedVolume();
+    }
+    else
+    {
+
+        qInfo() << "ERROR: no product set";
+        price = 66.6;
+    }
+    return price;
+}
+
 double DrinkOrder::getVolume(int size)
 {
     double volume;

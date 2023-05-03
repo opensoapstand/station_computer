@@ -223,7 +223,11 @@ void page_qr_payment::showEvent(QShowEvent *event)
     qDebug() << "<<<<<<< Page Enter: Payment >>>>>>>>>";
     QWidget::showEvent(event);
     state_payment = s_init;
-
+    QString price = QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2);
+    if(p_page_idle->currentProductOrder->getSelectedSizeAsChar()=='c'){
+        price = QString::number(p_page_idle->currentProductOrder->getSelectedPriceCustom(), 'f', 2);
+    }
+    
     ui->qrCode->show();
     ui->productLabel->show();
     ui->order_drink_amount->show();
@@ -232,8 +236,8 @@ void page_qr_payment::showEvent(QShowEvent *event)
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
     ui->payment_bypass_Button->setEnabled(false);
     ui->productLabel->setText(p_page_idle->currentProductOrder->getSelectedProductName() + " " + p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
-    ui->order_drink_amount->setText("$" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
-    ui->order_total_amount->setText("Total: $" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
+    ui->order_drink_amount->setText("$" +price);
+    ui->order_total_amount->setText("Total: $" +price);
     ui->steps_Label->show();
     ui->processing_Label->hide();
 
@@ -306,6 +310,9 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
     QString quantity_requested = p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(false, false);
     char drinkSize = p_page_idle->currentProductOrder->getSelectedSizeAsChar();
     QString price = QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2);
+    if(drinkSize=='c'){
+        price = QString::number(p_page_idle->currentProductOrder->getSelectedPriceCustom(), 'f', 2);
+    }
 
     // create a unique order id locally
     orderId = QUuid::createUuid().QUuid::toString();

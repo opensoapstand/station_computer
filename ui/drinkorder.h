@@ -135,6 +135,7 @@ public:
     double getDiscount();
     void setPriceSelected(int size, double price);
     double getSelectedPriceCorrected();
+    double getSelectedPriceCustom();
     double getSelectedPrice();
 
     int getSelectedDispenseSpeedPercentage();

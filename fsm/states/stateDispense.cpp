@@ -206,20 +206,8 @@ DF_ERROR stateDispense::onAction()
       productDispensers[pos_index].logUpdateIfAllowed("Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
 
       productDispensers[pos_index].updateRunningAverageWindow();
-      Time_val avg_02s = productDispensers[pos_index].getAveragedFlowRate(2000);
-      productDispensers[pos_index].logUpdateIfAllowed("Flow rate 2s: " + to_string(avg_02s.value));
-
-      // double flowRate = productDispensers[m_active_pump_index].getInstantFlowRate();
-
-      // // flow rate windowed avg
-      // productDispensers[m_active_pump_index].updateRunningAverageWindow();
-      // Time_val avg_1s = productDispensers[m_active_pump_index].getAveragedFlowRate(1000);
-      // productDispensers[pos_index].logUpdateIfAllowed("debug. targets s,m,l,c_max:" +
-      //                                                 to_string(productDispensers[pos_index].getProduct()->m_nVolumeTarget_s) +
-      //                                                 "," + to_string(productDispensers[pos_index].getProduct()->m_nVolumeTarget_m) +
-      //                                                 "," + to_string(productDispensers[pos_index].getProduct()->m_nVolumeTarget_l) +
-      //                                                 "," + to_string(productDispensers[pos_index].getProduct()->m_nVolumeTarget_c_max) +
-      //                                                 ", Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
+      Time_val flowavg = productDispensers[pos_index].getAveragedFlowRate(2000);
+      productDispensers[pos_index].logUpdateIfAllowed("Flow rate 2s: " + to_string(flowavg.value));
    }
 
    e_ret = OK;

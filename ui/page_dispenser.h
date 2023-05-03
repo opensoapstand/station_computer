@@ -53,7 +53,6 @@ public:
     void showEvent(QShowEvent *event);
 
     void resetDispenseTimeout(void);
-    void stopDispenseTimer();
 
     void updateVolumeDisplayed(double dispensed, bool isFull );
     void volumeDispensedLabel(QLabel* label);

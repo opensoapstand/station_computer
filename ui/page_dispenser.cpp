@@ -146,23 +146,21 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     ui->label_instructions_container->setText("bring container to nozzle");
     ui->label_press->setText("press and hold <br>the button");
 
-    // ui->button_problems->setStyleSheet("QPushButton { color:#5E8580; background-color: transparent; border: 5px;border-color:#5E8580; }");
-    // ui->button_problems->setStyleSheet(
-    //     "QLabel {"
-
-    //     "font-family: 'Brevia';"
-    //     "font-style: normal;"
-    //     "font-weight: 100;"
-    //     "background-color: #5E8580;"
-    //     "font-size: 42px;"
-    //     "text-align: centre;"
-    //     "line-height: auto;"
-    //     "letter-spacing: 0px;"
-    //     "qproperty-alignment: AlignCenter;"
-    //     "border-radius: 20px;"
-    //     "color: white;"
-    //     "border: none;"
-    //     "}");
+    ui->button_problems->setStyleSheet(
+        "QPushButton {"
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 100;"
+        "background-color: #5E8580;"
+        "font-size: 42px;"
+        "text-align: centre;"
+        "line-height: auto;"
+        "letter-spacing: 0px;"
+        "qproperty-alignment: AlignCenter;"
+        "border-radius: 20px;"
+        "color: white;"
+        "border: none;"
+        "}");
 
     ui->abortButton->raise();
     ui->button_problems->raise();
@@ -194,7 +192,9 @@ page_dispenser::~page_dispenser()
 
 void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
-    stopDispenseTimer();
+    
+    this->isDispensing = false;
+    dispenseIdleTimer->stop();
     p_page_idle->pageTransition(this, pageToShow);
 }
 void page_dispenser::showEvent(QShowEvent *event)
@@ -238,9 +238,8 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->button_problems->hide();
 
     startDispensing();
-
     dispenseIdleTimer->start(1000);
-    _dispenseIdleTimeoutSec = 120;
+    resetDispenseTimeout();
 }
 
 void page_dispenser::updateVolumeDispensedLabel(double dispensed)
@@ -336,6 +335,7 @@ void page_dispenser::startDispensing()
     qDebug() << "Send start command to FSM: " << command;
     p_page_idle->dfUtility->send_command_to_FSM(command);
     this->isDispensing = true;
+    qDebug() << "Dispensing started.";
 }
 
 QString page_dispenser::getStartDispensingCommand()
@@ -384,18 +384,6 @@ void page_dispenser::fsmSendPromo()
     p_page_idle->dfUtility->send_command_to_FSM(command);
 }
 
-void page_dispenser::stopDispenseTimer()
-{
-    this->isDispensing = false;
-    qDebug() << "page_dispenser: Stop Dispense Timers";
-    if (dispenseIdleTimer != nullptr)
-    {
-        qDebug() << "Dispense timer stop function";
-        dispenseIdleTimer->stop();
-    }
-    dispenseIdleTimer = nullptr;
-}
-
 void page_dispenser::onDispenseIdleTick()
 {
     if (--_dispenseIdleTimeoutSec >= 0)
@@ -410,7 +398,7 @@ void page_dispenser::onDispenseIdleTick()
 
 void page_dispenser::resetDispenseTimeout(void)
 {
-    _dispenseIdleTimeoutSec = 90;
+    _dispenseIdleTimeoutSec = 120;
 }
 
 QString page_dispenser::getMostRecentDispensed()
@@ -607,9 +595,11 @@ void page_dispenser::on_debug_Button_clicked()
 
 void page_dispenser::on_button_problems_clicked()
 {
+    qDebug() << "STEP A";
     QMessageBox msgBox;
     msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
     QString payment = selectedProductOrder->getSelectedPaymentMethod();
+    qDebug() << "STEP B";
     if (payment == "qr" || payment == "tap")
     {
         msgBox.setText("<p align=center><br><br>Are you sure?<br> This will stop your dispensing.<br><br>You will only be charged for the dispensed amount<br></p>");
@@ -622,6 +612,7 @@ void page_dispenser::on_button_problems_clicked()
     msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
 
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    qDebug() << "STEP C";
     int ret = msgBox.exec();
     bool success;
     switch (ret)
@@ -636,4 +627,5 @@ void page_dispenser::on_button_problems_clicked()
     }
     break;
     }
+    qDebug() << "STEP D";
 }

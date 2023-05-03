@@ -239,13 +239,6 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     startDispensing();
 
-    if (nullptr == dispenseIdleTimer)
-    {
-        dispenseIdleTimer = new QTimer(this);
-        dispenseIdleTimer->setInterval(1000);
-        connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
-    }
-
     dispenseIdleTimer->start(1000);
     _dispenseIdleTimeoutSec = 120;
 }
@@ -417,7 +410,7 @@ void page_dispenser::onDispenseIdleTick()
 
 void page_dispenser::resetDispenseTimeout(void)
 {
-    _dispenseIdleTimeoutSec = 30;
+    _dispenseIdleTimeoutSec = 90;
 }
 
 QString page_dispenser::getMostRecentDispensed()
@@ -475,7 +468,10 @@ void page_dispenser::fsmReceiveDispenseStatus(QString status)
 void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
 {
 
-    resetDispenseTimeout();
+    if (volumeDispensed != dispensed){
+        // only reset idle timer if volume has changed.
+        resetDispenseTimeout();
+    }
     volumeDispensed = dispensed;
     qDebug() << "Signal: dispensed " << dispensed << " of " << this->targetVolume;
 

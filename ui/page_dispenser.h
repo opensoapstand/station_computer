@@ -90,6 +90,8 @@ private slots:
     void on_debug_Button_clicked();
     void on_button_problems_clicked();
 
+    void on_button_report_clicked();
+
 private:
     bool isDispensing;
     bool askForFeedbackAtEnd;

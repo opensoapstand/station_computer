@@ -175,7 +175,7 @@
    </property>
    <property name="text">
     <string/>
-    </property>
+   </property>
   </widget>
   <widget class="QLabel" name="label_dispense_status">
    <property name="geometry">
@@ -206,14 +206,40 @@
   <widget class="QPushButton" name="button_problems">
    <property name="geometry">
     <rect>
-     <x>380</x>
-     <y>10</y>
-     <width>700</width>
-     <height>180</height>
+     <x>120</x>
+     <y>80</y>
+     <width>841</width>
+     <height>71</height>
     </rect>
    </property>
    <property name="text">
     <string>Problem detected</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="button_report">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>250</y>
+     <width>241</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>button report</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_message">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>1760</y>
+     <width>1051</width>
+     <height>151</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
    </property>
   </widget>
   <zorder>abortButton</zorder>
@@ -229,6 +255,8 @@
   <zorder>label_dispense_status</zorder>
   <zorder>label_dispense_flowrate</zorder>
   <zorder>button_problems</zorder>
+  <zorder>button_report</zorder>
+  <zorder>label_dispense_message</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -37,10 +37,7 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     ui->setupUi(this);
 
     ui->p_page_maintenanceButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-    selectProductButtons[0] = ui->selection1_Button;
-    selectProductButtons[1] = ui->selection2_Button;
-    selectProductButtons[2] = ui->selection3_Button;
-    selectProductButtons[3] = ui->selection4_Button;
+ 
 
     selectProductPhotoLabels[0] = ui->product_1_photo_label;
     selectProductPhotoLabels[1] = ui->product_2_photo_label;
@@ -57,10 +54,6 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     selectProductPhotoLabelsText[2] = ui->product_3_photo_label_text;
     selectProductPhotoLabelsText[3] = ui->product_4_photo_label_text;
 
-    selectProductNameLabels[0] = ui->product_1_name_label;
-    selectProductNameLabels[1] = ui->product_2_name_label;
-    selectProductNameLabels[2] = ui->product_3_name_label;
-    selectProductNameLabels[3] = ui->product_4_name_label;
 
     selectProductIconLabels[0] = ui->product_1_icon_label;
     selectProductIconLabels[1] = ui->product_2_icon_label;
@@ -88,7 +81,7 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
         "qproperty-alignment: AlignCenter;"
         "border: none;"
         "}");
-    ui->label_pick_soap->setText("Pick your soap");
+    ui->label_pick_soap->setText("refill soap here");
 
     // ui->mainPage_Button->setStyleSheet(
     //     "QPushButton {"
@@ -136,7 +129,7 @@ void page_idle_products::setPage(pageProduct *pageSizeSelect, page_idle_products
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
     QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     qDebug() << full_path;
-    p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
+    // p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
 }
 
 // DTOR
@@ -187,7 +180,7 @@ void page_idle_products::displayProducts()
         uint8_t slot = i + 1;
 
         // display product picture
-        selectProductPhotoLabels[i]->setStyleSheet("border: 1px solid black;");
+        selectProductPhotoLabels[i]->setStyleSheet("border: none;");
         p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(slot));
 
         qDebug() << "db (re)load product details:";
@@ -204,8 +197,8 @@ void page_idle_products::displayProducts()
         
         qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << ", product set as not available?: " << product_sold_out << " Status text: " << product_status_text;
 
-        selectProductNameLabels[i]->setText(product_name);
-        selectProductNameLabels[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
+        // selectProductNameLabels[i]->setText(product_name);
+        // selectProductNameLabels[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
 
         // display product type icon  picture
         QString icon_path = "not found";
@@ -246,12 +239,12 @@ void page_idle_products::displayProducts()
         p_page_idle->addPictureToLabel(selectProductIconLabels[i], icon_path_with_template);
         selectProductIconLabels[i]->setText(""); // icon should not display text.
 
-        selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+        // selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
         // selectProductButtons[i]->setStyleSheet("QPushButton{ background-color: 0x44881188; border: 2px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
         selectProductOverlayLabels[i]->raise();
         selectProductIconLabels[i]->raise();
         selectProductPhotoLabelsText[i]->raise();
-        selectProductButtons[i]->raise();
+        // selectProductButtons[i]->raise();
 
         selectProductOverlayLabels[i]->setText("");
 
@@ -273,11 +266,11 @@ void page_idle_products::displayProducts()
             selectProductPhotoLabelsText[i]->setText("");
             selectProductOverlayLabels[i]->setStyleSheet("background-color: transparent;");
             // selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,0);}");
-            selectProductButtons[i]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
+            // selectProductButtons[i]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
         }
 
         selectProductTypeLabels[i]->setText(type_text);
-        selectProductTypeLabels[i]->setStyleSheet("QLabel{font-family: 'Brevia';font-style: normal;font-weight: 700;font-size: 30px;line-height: 41px;qproperty-alignment: AlignCenter;text-transform: uppercase;color: #5E8580;}");
+        selectProductTypeLabels[i]->setStyleSheet("QLabel{font-family: 'Brevia';font-style: normal;font-weight: 700;font-size: 30px;line-height: 41px;qproperty-alignment: AlignCenter;text-transform: uppercase;color: #FFFFFF;}");
     }
 #else
     for (uint8_t i = 0; i < SLOT_COUNT; i++)
@@ -300,23 +293,7 @@ void page_idle_products::select_product(int slot)
         hideCurrentPageAndShowProvided(p_page_product);
 }
 
-// FIXME: This is terrible...no time to make array reference to hold button press functions
-void page_idle_products::on_selection1_Button_clicked()
-{
-    select_product(1);
-}
-void page_idle_products::on_selection2_Button_clicked()
-{
-    select_product(2);
-}
-void page_idle_products::on_selection3_Button_clicked()
-{
-    select_product(3);
-}
-void page_idle_products::on_selection4_Button_clicked()
-{
-    select_product(4);
-}
+
 
 void page_idle_products::onProductPageTimeoutTick()
 {

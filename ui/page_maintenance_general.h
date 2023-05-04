@@ -27,6 +27,8 @@
 
 class page_maintenance;
 class page_idle;
+class page_idle_products;
+
 
 namespace Ui
 {
@@ -39,7 +41,7 @@ class page_maintenance_general : public QWidget
 
 public:
     explicit page_maintenance_general(QWidget *parent = nullptr);
-    void setPage(page_maintenance *pageMaintenance, page_idle *pageIdle);
+    void setPage(page_maintenance *pageMaintenance, page_idle *pageIdle, page_idle_products *p_page_idle_products);    
     ~page_maintenance_general();
     void resizeEvent(QResizeEvent *event);
     void on_backButton_clicked();

@@ -160,7 +160,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference
  */
-void page_maintenance_dispenser::setPage(page_maintenance *pageMaintenance, page_idle *pageIdle)
+void page_maintenance_dispenser::setPage(page_maintenance *pageMaintenance, page_idle *pageIdle, page_idle_products *p_page_idle_products)
 {
 
     this->p_page_maintenance = pageMaintenance;

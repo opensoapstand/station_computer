@@ -23,6 +23,7 @@
 #include "dbmanager.h"
 #include "page_maintenance.h"
 #include "page_maintenance_general.h"
+#include "page_idle_products.h"
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
 
@@ -33,6 +34,7 @@
 class page_maintenance;
 class page_select_product;
 class page_maintenance_general;
+class page_idle_products;
 
 namespace Ui
 {
@@ -45,7 +47,7 @@ class page_idle : public QWidget
 
 public:
     explicit page_idle(QWidget *parent = nullptr);
-    void setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral);
+    void setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     ~page_idle();
     void showEvent(QShowEvent *event);
@@ -85,10 +87,14 @@ private slots:
 private:
     void checkReceiptPrinterStatus();
     QString m_templatePath;
+    QString idle_page_type;
+
     Ui::page_idle *ui;
     page_select_product *p_pageSelectProduct;
     page_maintenance *p_page_maintenance;
     page_maintenance_general *p_page_maintenance_general;
+    page_idle_products *p_page_idle_products;
+
     bool p1, p2, p3, p4;
 };
 

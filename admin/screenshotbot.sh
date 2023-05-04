@@ -3,7 +3,7 @@
 # create dir for screenshots 
 
 screenshotpath="/home/df-admin/production/screenshots"
-mkdir -p $screenshotpath
+mkdir -p $screenshotpath    
 
 PS3='Which kind of unit are we dealing with? Select number and press Enter: '
 echo "|-----Screenshotbot v1.0 2022-05-02----------------------|"

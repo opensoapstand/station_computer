@@ -1,30 +1,38 @@
-
-
 //***************************************
 //
-// page_select_product.cpp
-// GUI class for user to browse up to
-// 6 drinks.
+// page_idle_products.cpp
+// GUI class while machine is page_idle_products.
 //
-// Allows navigation to First product page
-// payment selection page
+// Display Fullscreen DF branded Wallpaper
+// Listen for User interaction to load
+// Product Page1
 //
-// created: 05-04-2022
-// by: Lode Ameije & Ash Singla
+// created: 01-05-2023
+// by: Lode Ameije & Ash Singla & Udbhav Kansal
 //
 // copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
 
-#include "page_select_product.h"
-#include "ui_page_select_product.h"
-
-#include "page_product.h"
+#include "page_idle_products.h"
+#include "ui_page_idle_products.h"
+#include "page_maintenance.h"
+#include "page_maintenance_general.h"
 #include "page_idle.h"
+#include "page_select_product.h"
+#include "page_product.h"
 
+
+#include <QMediaPlayer>
+#include <QGraphicsVideoItem>
+#include <QMainWindow>
+#include <QtWidgets>
+#include <QtMultimediaWidgets>
+
+//    #define PLAY_VIDEO
 // CTOR
-page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
-                                                            ui(new Ui::page_select_product)
+page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
+                                                            ui(new Ui::page_idle_products)
 {
     ui->setupUi(this);
 
@@ -115,7 +123,7 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void page_select_product::setPage(pageProduct *pageSizeSelect, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp)
+void page_idle_products::setPage(pageProduct *pageSizeSelect, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp)
 {
     // this->selection_PageTwo = pageTwoProducts;
     this->p_page_product = pageSizeSelect;
@@ -125,19 +133,19 @@ void page_select_product::setPage(pageProduct *pageSizeSelect, page_idle_product
 
     selectedProductOrder = p_page_idle->currentProductOrder;
 
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
     QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     qDebug() << full_path;
     p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
 }
 
 // DTOR
-page_select_product::~page_select_product()
+page_idle_products::~page_idle_products()
 {
     delete ui;
 }
 
-void page_select_product::showEvent(QShowEvent *event)
+void page_idle_products::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: Select Product >>>>>>>>>";
     this->lower();
@@ -158,13 +166,14 @@ void page_select_product::showEvent(QShowEvent *event)
 
     this->raise();
 }
-void page_select_product::resizeEvent(QResizeEvent *event)
+void page_idle_products::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
 }
 
-void page_select_product::displayProducts()
+void page_idle_products::displayProducts()
 {
+#ifdef ENABLE_DYNAMIC_UI
     QString product_type_icons[5] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH};
 
     bool product_slot_enabled;
@@ -183,7 +192,7 @@ void page_select_product::displayProducts()
 
         qDebug() << "db (re)load product details:";
         DbManager db(DB_PATH);
-
+        
         product_slot_enabled = db.getSlotEnabled(slot);
 
         product_sold_out = !(db.isProductVolumeInContainer(slot));
@@ -192,7 +201,7 @@ void page_select_product::displayProducts()
 
         product_type = p_page_idle->currentProductOrder->getProductType(slot);
         product_name = p_page_idle->currentProductOrder->getProductName(slot);
-
+        
         qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << ", product set as not available?: " << product_sold_out << " Status text: " << product_status_text;
 
         selectProductNameLabels[i]->setText(product_name);
@@ -270,34 +279,46 @@ void page_select_product::displayProducts()
         selectProductTypeLabels[i]->setText(type_text);
         selectProductTypeLabels[i]->setStyleSheet("QLabel{font-family: 'Brevia';font-style: normal;font-weight: 700;font-size: 30px;line-height: 41px;qproperty-alignment: AlignCenter;text-transform: uppercase;color: #5E8580;}");
     }
+#else
+    for (uint8_t i = 0; i < SLOT_COUNT; i++)
+    {
+        selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+        selectProductButtons[i]->raise();
+        selectProductPhotoLabels[i]->hide();
+        selectProductNameLabels[i]->hide();
+        selectProductIconLabels[i]->hide();
+        selectProductTypeLabels[i]->hide();
+    }
+
+#endif
 }
 
-void page_select_product::select_product(int slot)
+void page_idle_products::select_product(int slot)
 {
-    qDebug() << "selected slot: " << slot;
-    p_page_idle->currentProductOrder->setSelectedSlot(slot);
-    hideCurrentPageAndShowProvided(p_page_product);
+        qDebug() << "selected slot: " << slot;
+        p_page_idle->currentProductOrder->setSelectedSlot(slot);
+        hideCurrentPageAndShowProvided(p_page_product);
 }
 
 // FIXME: This is terrible...no time to make array reference to hold button press functions
-void page_select_product::on_selection1_Button_clicked()
+void page_idle_products::on_selection1_Button_clicked()
 {
     select_product(1);
 }
-void page_select_product::on_selection2_Button_clicked()
+void page_idle_products::on_selection2_Button_clicked()
 {
     select_product(2);
 }
-void page_select_product::on_selection3_Button_clicked()
+void page_idle_products::on_selection3_Button_clicked()
 {
     select_product(3);
 }
-void page_select_product::on_selection4_Button_clicked()
+void page_idle_products::on_selection4_Button_clicked()
 {
     select_product(4);
 }
 
-void page_select_product::onProductPageTimeoutTick()
+void page_idle_products::onProductPageTimeoutTick()
 {
     if (--_productPageTimeoutSec >= 0)
     {
@@ -310,7 +331,7 @@ void page_select_product::onProductPageTimeoutTick()
     }
 }
 
-void page_select_product::on_p_page_maintenanceButton_pressed()
+void page_idle_products::on_p_page_maintenanceButton_pressed()
 {
     maintenanceCounter++;
     if (maintenanceCounter > 50)
@@ -319,7 +340,7 @@ void page_select_product::on_p_page_maintenanceButton_pressed()
     }
 }
 
-void page_select_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
+void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     productPageEndTimer->stop();
     qDebug() << "Exit select product page.";
@@ -328,13 +349,13 @@ void page_select_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     p_page_idle->pageTransition(this, pageToShow);
 }
 
-void page_select_product::on_mainPage_Button_clicked()
+void page_idle_products::on_mainPage_Button_clicked()
 {
     qDebug() << "Back to Idle Page Button pressed";
     hideCurrentPageAndShowProvided(p_page_idle);
 }
 
-void page_select_product::on_helpPage_Button_clicked()
+void page_idle_products::on_helpPage_Button_clicked()
 {
     qDebug() << "Help_Button pressed";
     hideCurrentPageAndShowProvided(p_page_help);

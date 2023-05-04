@@ -16,6 +16,7 @@
 
 #include "page_idle.h"
 #include "ui_page_idle.h"
+#include "page_idle_products.h"
 #include "page_maintenance.h"
 #include "page_maintenance_general.h"
 
@@ -33,6 +34,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     // IPC Networking
     dfUtility = new df_util();
 
+
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
 
@@ -48,16 +50,18 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 /*
  * Navigation to Product item
  */
-void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral)
+void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products)
 {
     // Chained to KB Listener
     this->p_pageSelectProduct = p_pageProduct;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_maintenance_general = pageMaintenanceGeneral;
+    this->p_page_idle_products = p_page_idle_products;
 #ifndef PLAY_VIDEO
     setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
 #endif
 }
+
 
 // DTOR
 page_idle::~page_idle()
@@ -67,6 +71,38 @@ page_idle::~page_idle()
 
 void page_idle::showEvent(QShowEvent *event)
 {
+
+    qDebug() << "open db: payment method";
+    DbManager db(DB_PATH);
+    bool needsReceiptPrinter = false;
+    for (int slot = 1; slot <= SLOT_COUNT; slot++)
+    {
+        QString paymentMethod = db.getPaymentMethod(slot);
+        if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
+        {
+            needsReceiptPrinter = true;
+            qDebug() << "Needs receipt printer: " << paymentMethod;
+            break;
+        }
+    }
+     // call db check if idle or idle_products
+    idle_page_type = db.getIdlePageType();
+    db.closeDB();
+    
+    if (idle_page_type == "static_products")
+    {
+        hideCurrentPageAndShowProvided(p_page_idle_products);
+    }
+    
+    // DbManager db(DB_PATH);
+    
+    // else if (idlePageType == "dynamic_products")
+    // {
+    //     hideCurrentPageAndShowProvided(p_page_idle_products);
+    // }
+
+    // db.closeDB();
+   
 
     this->lower();
     qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
@@ -109,20 +145,7 @@ void page_idle::showEvent(QShowEvent *event)
     currentProductOrder->setDiscountPercentageFraction(0.0);
     currentProductOrder->setPromoCode("");
 
-    qDebug() << "open db: payment method";
-    DbManager db(DB_PATH);
-    bool needsReceiptPrinter = false;
-    for (int slot = 1; slot <= SLOT_COUNT; slot++)
-    {
-        QString paymentMethod = db.getPaymentMethod(slot);
-        if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
-        {
-            needsReceiptPrinter = true;
-            qDebug() << "Needs receipt printer: " << paymentMethod;
-            break;
-        }
-    }
-    db.closeDB();
+    
 
     addCompanyLogoToLabel(ui->logo_label);
 
@@ -382,3 +405,5 @@ void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QStrin
     // p_widget->setStyleSheet("background-image: url("+ image_path +")");
 #endif
 }
+
+

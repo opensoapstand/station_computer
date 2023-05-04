@@ -26,7 +26,8 @@ FORMS += \
     keyboard.ui \
     page_sendFeedback.ui \
     page_transactions.ui \
-    page_maintenance_general.ui
+    page_maintenance_general.ui \
+    page_idle_products.ui
 
 HEADERS += \
     dfuicommthread.h \
@@ -62,7 +63,8 @@ HEADERS += \
     page_help.h \
     page_sendFeedback.h  \
     page_transactions.h \
-    product.h 
+    product.h \
+    page_idle_products.h
 
 SOURCES += \
     dfuicommthread.cpp \
@@ -98,7 +100,8 @@ SOURCES += \
     page_help.cpp \
     ../library/qr/qrcodegen.cpp \
     page_transactions.cpp \
-    product.cpp
+    product.cpp \
+    page_idle_products.cpp
 
 RESOURCES += \
     src.qrc

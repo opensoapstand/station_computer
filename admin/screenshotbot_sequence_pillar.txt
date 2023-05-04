@@ -1,40 +1,30 @@
-# idle page
+# products page
 175 550 products.jpg
+# product_1
+53 336 product_1.jpg
+# overview
+560 1160 overview.jpg
+# page dispense
+190 1575 dispense.jpg
+# thank you
+525 1380 dialog.jpg
+# dispense dialog
+301 971 thankyoujpg
 # help page
-546 1808 help.jpg
+355 1404 feedback.jpg
+# keyboard
+210 1120 keyboard.jpg
+# typing
+60 1420
+60 1420
+948 1755 typing.jpg
+# thanks for feedback
+395 1432 
+475 1432
+465 1432
+455 1432
+455 1432
+455 1462
+475 1462 feedbacksent.jpg
 #idle page
 140 80 idle.jpg
-
-#back to products page
-140 80
-
-# get all products
-175 550 product_1.jpg
-140 80
-750 550 product_2.jpg
-140 80
-250 1200 product_3.jpg
-140 80
-800 1250 product_4.jpg
-
-# check product page functionality
-606 1091 product_size_sl_s.jpg
-784 1091 product_size_sl_l.jpg
-606 1064 product_size_smlc_s.jpg
-784 1064 product_size_smlc_m.jpg
-952 1064 product_size_smlc_l.jpg
-780 1200 product_size_smlc_c.jpg
-
-# next button from product page
-561 1590
-#empty click, win time
-941 141 
-941 141 
-941 141 
-941 141 qr.jpg
- 
-140 80
-140 80
-140 80
-
-

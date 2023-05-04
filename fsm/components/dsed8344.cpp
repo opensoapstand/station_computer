@@ -523,16 +523,14 @@ bool dsed8344::check_8344_configuration(void)
 
     for (i2c_probe_address = 0x03; i2c_probe_address <= 0x77; i2c_probe_address++)
     {
-        // Go through all the addresses
-
-        // debugOutput::sendMessage(to_string(i2c_probe_address), MSG_INFO);
-
+        debugOutput::sendMessage("address to look at: " + to_string(i2c_probe_address), MSG_INFO);
+        // Go through all the devices
         if (!set_i2c_address(i2c_probe_address))
         {
             std::string message("Error with i2c protocol");
             return false;
         }
-
+        
         if (i2c_smbus_read_byte(i2c_handle) < 0)
         {
             // error, check which device has error

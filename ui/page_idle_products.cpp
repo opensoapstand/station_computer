@@ -73,7 +73,7 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     selectProductTypeLabels[3] = ui->product_4_type_label;
 
     ui->helpPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    // ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->label_pick_soap->setStyleSheet(
         "QLabel {"
 
@@ -90,24 +90,24 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
         "}");
     ui->label_pick_soap->setText("Pick your soap");
 
-    ui->mainPage_Button->setStyleSheet(
-        "QPushButton {"
+    // ui->mainPage_Button->setStyleSheet(
+    //     "QPushButton {"
 
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "background-color: transparent;"
-        "border: 0px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "color: #003840;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
+    //     "font-family: 'Brevia';"
+    //     "font-style: normal;"
+    //     "font-weight: 75;"
+    //     "font-size: 32px;"
+    //     "background-color: transparent;"
+    //     "border: 0px;"
+    //     "line-height: 99px;"
+    //     "letter-spacing: 1.5px;"
+    //     "color: #003840;"
+    //     "text-align: center;"
+    //     "qproperty-alignment: AlignCenter;"
+    //     "border: none;"
+    //     "}");
 
-    ui->mainPage_Button->setText("<-back");
+    // ui->mainPage_Button->setText("<-back");
 
     QFont font;
     font.setFamily(QStringLiteral("Brevia"));
@@ -349,11 +349,11 @@ void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     p_page_idle->pageTransition(this, pageToShow);
 }
 
-void page_idle_products::on_mainPage_Button_clicked()
-{
-    qDebug() << "Back to Idle Page Button pressed";
-    hideCurrentPageAndShowProvided(p_page_idle);
-}
+// void page_idle_products::on_mainPage_Button_clicked()
+// {
+//     qDebug() << "Back to Idle Page Button pressed";
+//     hideCurrentPageAndShowProvided(p_page_idle);
+// }
 
 void page_idle_products::on_helpPage_Button_clicked()
 {

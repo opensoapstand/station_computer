@@ -156,19 +156,6 @@
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="mainPage_Button">
-   <property name="geometry">
-    <rect>
-     <x>-20</x>
-     <y>30</y>
-     <width>251</width>
-     <height>61</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QPushButton" name="helpPage_Button">
    <property name="geometry">
     <rect>
@@ -711,7 +698,6 @@
   <zorder>label_pick_soap</zorder>
   <zorder>label_notify_us</zorder>
   <zorder>helpPage_Button</zorder>
-  <zorder>mainPage_Button</zorder>
  </widget>
  <resources/>
  <connections/>

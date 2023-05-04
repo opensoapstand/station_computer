@@ -55,6 +55,8 @@ public:
     
     void select_product(int slot);
     void displayProducts();
+    void addCompanyLogoToLabel(QLabel *label);
+
     
 
     QLabel* selectProductPhotoLabels[4];

@@ -171,7 +171,7 @@
    <property name="geometry">
     <rect>
      <x>53</x>
-     <y>1514</y>
+     <y>1460</y>
      <width>450</width>
      <height>48</height>
     </rect>
@@ -184,7 +184,7 @@
    <property name="geometry">
     <rect>
      <x>562</x>
-     <y>814</y>
+     <y>760</y>
      <width>450</width>
      <height>46</height>
     </rect>
@@ -197,7 +197,7 @@
    <property name="geometry">
     <rect>
      <x>562</x>
-     <y>1508</y>
+     <y>1450</y>
      <width>450</width>
      <height>46</height>
     </rect>
@@ -210,7 +210,7 @@
    <property name="geometry">
     <rect>
      <x>53</x>
-     <y>814</y>
+     <y>760</y>
      <width>450</width>
      <height>46</height>
     </rect>
@@ -412,9 +412,74 @@
    <property name="geometry">
     <rect>
      <x>130</x>
-     <y>178</y>
+     <y>170</y>
      <width>800</width>
-     <height>86</height>
+     <height>151</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="logo_label">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>1820</y>
+     <width>351</width>
+     <height>211</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_product1_price">
+   <property name="geometry">
+    <rect>
+     <x>53</x>
+     <y>790</y>
+     <width>261</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_product2_price">
+   <property name="geometry">
+    <rect>
+     <x>562</x>
+     <y>790</y>
+     <width>261</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_product2_price_2">
+   <property name="geometry">
+    <rect>
+     <x>53</x>
+     <y>1500</y>
+     <width>261</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_product2_price_3">
+   <property name="geometry">
+    <rect>
+     <x>562</x>
+     <y>1500</y>
+     <width>261</width>
+     <height>171</height>
     </rect>
    </property>
    <property name="text">
@@ -441,6 +506,11 @@
   <zorder>label_pick_soap</zorder>
   <zorder>helpPage_Button</zorder>
   <zorder>product_1_type_label</zorder>
+  <zorder>logo_label</zorder>
+  <zorder>label_product1_price</zorder>
+  <zorder>label_product2_price</zorder>
+  <zorder>label_product2_price_2</zorder>
+  <zorder>label_product2_price_3</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -1,3 +1,4 @@
+from os import remove
 import socket
 import base64
 import hmac
@@ -39,8 +40,8 @@ import binascii
 
 INVOICE=2
 HOST = "192.168.1.25"
-encrypted_mac="ixOX9x532pKrRYIEnHfSTZIWMlfWujsG7apNb16Vp0/wKO+DYhh+TnTXDc4f6dt0w+6f3I8ebLVTxVZM0tDpscFRt+3rLUw6ut4PEfmlWMUQrG+AODspAVCoqr8Aya17/XH5fXdwAZIhrAX74QwfkemSzMf/oWWbFIOoQ5g5QUNEdZTHKPY9MCmh4zv3r2eLawQcuF+QtuWwx4pqVbc/UJaz9loMmt8xmhM/lhbsRbgPwTV4acgHqI4dtvS4Ti59ojmS9f+TrDSTo0jxcL6LBfHZ6RJwQRCm+DJuGTiTqNB7T5oR9l18ZYi6mndNgdE2t4PpvCh/B+4P6ZVZ8x4gHg=="
-MAC_LABEL="P_G6BRBM"
+encrypted_mac="tUf8JMQjGdds0N+8couNikavRcwPKbTsFd1QGkXzRR17FAX0rry0GIjBhVDuERie+bilxhIAKEqWA9thZQtcx+LGx9U2ItgNj6Uza9fDQazi3PGCjnEahxWDk/RHy3fxgY5MmvOb93onj4tlqFcPLr4BGevvF/jYkHawZyPWZKP4ANPgxbu8dBl6EtNelWW6tzGKTmI7aSJzMvLB/HKOfSWfQwiKrQbd/2lDvOu5NckMcIuaAwTLr9aapdYScSDIsU0D5pabz0n7NPB5repVOiSDI07k0oTfuNkaUTka5I/xZZ85j+9gQb/lov2D4TqMaVbDrXUe8jI5NJiN89pXWg=="
+MAC_LABEL="P_CUI66B"
 PORT = 5015
 
 def capture(counter_val, counter_mac, CTROUTD):
@@ -305,7 +306,7 @@ def reboot():
                 <COMMAND>REBOOT</COMMAND>\
                 </TRANSACTION>'
     print(command)
-    return command.encode
+    return command.encode('UTF-8')
 
 def deviceStatus():
     command = '<TRANSACTION>\
@@ -423,6 +424,7 @@ def querySAF(counter_val, counter_mac):
                 <MAC_LABEL>'+MAC_LABEL+'</MAC_LABEL>\
                 <COUNTER>'+ counter_val +'</COUNTER>\
                 <MAC>'+counter_mac+'</MAC>\
+                <SAF_STATUS>DECLINED</SAF_STATUS> \
                 </TRANSACTION>'
     print(command)
     return command.encode('UTF-8')
@@ -444,7 +446,7 @@ def removeSaf(counter_val, counter_mac):
 def secondary_port():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((HOST,5016))
-        s.send(cancel_transaction())
+        s.send(reboot())
         data = s.recv(8192)
         print(data)
         return
@@ -453,8 +455,10 @@ def connect_device():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((HOST,PORT))
         counter_val, counter_mac = get_next_counter_and_mac(s)
-        # s.send(querySAF(counter_val, counter_mac))
-        s.send(unregisterall())
+        s.send(querySAF(counter_val, counter_mac))
+        # s.send(apply_updates(counter_val, counter_mac))
+
+        # s.send(unregisterall())
         data = s.recv(8192)
         print(data)
         # s.send(unregisterall())
@@ -493,7 +497,6 @@ def connect_device():
         # s.send(display_message(counter_val, counter_mac))
         # s.send(laneClosed(counter_val, counter_mac))
         # s.send(setTime(counter_val, counter_mac))
-        # s.send(apply_updates(counter_val, counter_mac))
 
         # counter_val, counter_mac = get_next_counter_and_mac(s)
         # s.send(lastTransaction(counter_val,counter_mac))
@@ -506,6 +509,6 @@ def connect_device():
         # data2 = s.recv(8192)
         # print(data2)
 
-connect_device()
+# connect_device()
 # generate_rsa_keys()
-# secondary_port()
+secondary_port()

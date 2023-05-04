@@ -190,7 +190,9 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     
     this->isDispensing = false;
-    dispenseIdleTimer->stop();
+    if(dispenseIdleTimer!= nullptr){
+        dispenseIdleTimer->stop();
+    }
     p_page_idle->pageTransition(this, pageToShow);
 }
 void page_dispenser::showEvent(QShowEvent *event)
@@ -224,10 +226,11 @@ void page_dispenser::showEvent(QShowEvent *event)
     p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
 
     ui->abortButton->setText("Abort");
+    ui->abortButton->show();
     ui->label_press->show();
     ui->label_to_refill->show();
     ui->label_instructions_container->show();
-
+    ui->finishTransactionMessage->hide();
     ui->dispense_bottle_label->hide();
     ui->fill_animation_label->hide();
 
@@ -263,14 +266,15 @@ void page_dispenser::dispensing_end_admin()
     this->isDispensing = false;
     ui->dispense_bottle_label->hide();
     ui->fill_animation_label->hide();
-    // ui->abortButton->hide();
+    ui->abortButton->hide();
     ui->finishTransactionMessage->show();
     ui->finishTransactionMessage->raise();
     
     double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
     std::ostringstream stream;
     stream << std::fixed << std::setprecision(2) << price;
-
+    qDebug() << "Minimum volume dispensed" << MINIMUM_DISPENSE_VOLUME_ML;
+    qDebug() << "volume dispensed" << volumeDispensed;
     if (volumeDispensed < MINIMUM_DISPENSE_VOLUME_ML && (selectedProductOrder->getSelectedPaymentMethod()) == "tap")
     {
         ui->finishTransactionMessage->setText("Voiding payment");
@@ -304,7 +308,7 @@ void page_dispenser::dispensing_end_admin()
         }
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     }
-
+    // ui->finishTransactionMessage->setText("");
     qDebug() << "Finished dispense admin handling";
 
     if (askForFeedbackAtEnd)
@@ -513,7 +517,7 @@ void page_dispenser::fsmReceiveTargetVolumeReached()
     if (this->isDispensing)
     {
         this->isDispensing = false;
-        updateVolumeDisplayed(1.0, true); // make sure the fill bottle graphics are completed
+        updateVolumeDisplayed(this->targetVolume, true); // make sure the fill bottle graphics are completed
         transactionLogging += "\n 8: Target Reached - True";
         dispensing_end_admin();
         qDebug() << "Controller msg: Target reached.";

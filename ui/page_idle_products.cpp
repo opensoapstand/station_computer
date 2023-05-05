@@ -271,6 +271,8 @@ void page_idle_products::displayProducts()
     }
 
 #endif
+        QString price = ui->label_product1_price->text();
+
 }
 
 void page_idle_products::select_product(int slot)
@@ -286,6 +288,11 @@ void page_idle_products::addCompanyLogoToLabel(QLabel *label)
     qDebug() << "db init company logo";
     DbManager db(DB_PATH);
     QString id = db.getCustomerId();
+    QString size_units;
+    for (uint8_t i = 0; i < SLOT_COUNT; i++) {
+    size_units = db.getUnits(i);
+    // do something with size_units
+}
     db.closeDB();
     qDebug() << "db closed";
     if (id.at(0) == 'C')
@@ -298,8 +305,15 @@ void page_idle_products::addCompanyLogoToLabel(QLabel *label)
         qDebug() << "WARNING: invalid customer ID. Should like C-1, C-374, ... . Provided id: " << id;
     }
 #endif
-}
+     if (size_units == "ml")
+    {
+        ui->label_product1_price->setText("ml");
+        ui->label_product2_price->setText("ml");
+        ui->label_product3_price->setText("ml");
+        ui->label_product4_price->setText("ml");
+    }
 
+}
 
 
 void page_idle_products::onProductPageTimeoutTick()

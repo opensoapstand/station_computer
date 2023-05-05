@@ -424,8 +424,8 @@
   <widget class="QLabel" name="logo_label">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>1820</y>
+     <x>370</x>
+     <y>1680</y>
      <width>351</width>
      <height>211</height>
     </rect>
@@ -460,7 +460,7 @@
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_product2_price_2">
+  <widget class="QLabel" name="label_product3_price">
    <property name="geometry">
     <rect>
      <x>53</x>
@@ -473,7 +473,7 @@
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_product2_price_3">
+  <widget class="QLabel" name="label_product4_price">
    <property name="geometry">
     <rect>
      <x>562</x>
@@ -509,8 +509,8 @@
   <zorder>logo_label</zorder>
   <zorder>label_product1_price</zorder>
   <zorder>label_product2_price</zorder>
-  <zorder>label_product2_price_2</zorder>
-  <zorder>label_product2_price_3</zorder>
+  <zorder>label_product3_price</zorder>
+  <zorder>label_product4_price</zorder>
  </widget>
  <resources/>
  <connections/>

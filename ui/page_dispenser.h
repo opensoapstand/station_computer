@@ -45,6 +45,10 @@ class page_dispenser : public QWidget
     Q_OBJECT
 
 public:
+
+    QMessageBox* msgBox2;
+    QMessageBox* msgBox;
+
     // **** GUI ****
     explicit page_dispenser(QWidget *parent = nullptr);
     void setPage(page_qr_payment* page_qr_payment, page_tap_payment* page_tap_payment, pagethankyou* pageThankYou, page_idle* pageIdle, page_sendFeedback* pageFeedback);

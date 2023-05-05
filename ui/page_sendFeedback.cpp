@@ -34,7 +34,6 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                                                         ui(new Ui::page_sendFeedback)
 {
 
-
     qDebug() << "IN send feedback";
     ui->setupUi(this);
 
@@ -56,7 +55,6 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
         "qproperty-alignment: AlignLeft;"
         "border: none;"
         "}");
-
 
     ui->label_enter_feedback->show();
     ui->previousPage_Button->setStyleSheet("QPushButton { color:#555555; background-color: transparent; border: 0px }");
@@ -194,43 +192,22 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     ui->checkBox_3->setIconSize(size);
     ui->checkBox_4->setIconSize(size);
     ui->checkBox_5->setIconSize(size);
-
-    ui->label_send->setStyleSheet("QLabel {"
-                                  "font-family: 'Brevia';"
-                                  "font-style: normal;"
-                                  "font-weight: 75;"
-                                  "font-size: 35px;"
-                                  "line-height: 99px;"
-                                  "letter-spacing: 1.5px;"
-                                  "background-color: #5E8680;"
-                                  "color: #FFFFFF;"
-                                  "text-align: center;"
-                                  "qproperty-alignment: AlignCenter;"
-                                  "border-radius: 30px;"
-                                  "padding: 10px;"
-                                  "border: 2px solid #004D54;"
-                                  "}");
-
-    ui->label_send->setText("SEND");
-    ui->send_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-
-    ui->label_send->setStyleSheet("QLabel {"
-                                  "font-family: 'Brevia';"
-                                  "font-style: normal;"
-                                  "font-weight: 75;"
-                                  "font-size: 35px;"
-                                  "line-height: 99px;"
-                                  "letter-spacing: 1.5px;"
-                                  "background-color: #5E8680;"
-                                  "color: #FFFFFF;"
-                                  "text-align: center;"
-                                  "qproperty-alignment: AlignCenter;"
-                                  "border-radius: 30px;"
-                                  "padding: 10px;"
-                                  "border: 2px solid #004D54;"
-                                  "}");
-
-    ui->label_send->setText("SEND");
+    ui->send_Button->setStyleSheet("QPushButton { "
+                                   "font-family: 'Brevia';"
+                                   "font-style: normal;"
+                                   "font-weight: 75;"
+                                   "font-size: 35px;"
+                                   "line-height: 99px;"
+                                   "letter-spacing: 1.5px;"
+                                   "background-color: #5E8680;"
+                                   "color: #FFFFFF;"
+                                   "text-align: center;"
+                                   "qproperty-alignment: AlignCenter;"
+                                   "border-radius: 30px;"
+                                   "padding: 10px;"
+                                   "border: 2px solid #004D54;"
+                                   "}");
+    ui->send_Button->setText("SEND");
 }
 
 /*
@@ -247,9 +224,8 @@ void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser 
     this->p_page_product = page_product;
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_PATH);
-    ui->send_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
-
+    
     QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     p_page_idle->addPictureToLabel(ui->label_help, full_path);
 
@@ -302,10 +278,9 @@ void page_sendFeedback::reset_and_show_page_elements()
     qDebug() << "Setting feedback text to:" << TEXTBOX_INVITE_TEXT;
     ui->feedbackTextEdit->setPlaceholderText(TEXTBOX_INVITE_TEXT);
     // ui->feedbackTextEdit->setText(TEXTBOX_INVITE_TEXT);
-    
 
     ui->feedbackKeyboard->hide();
-    
+
     ui->feedback_Input_Button->raise();
     ui->feedback_Input_Button->show();
 
@@ -346,10 +321,11 @@ size_t WriteCallbackFeedback(char *contents, size_t size, size_t nmemb, void *us
 
 void page_sendFeedback::on_send_Button_clicked()
 {
+    qDebug() << "Send button pressed";
     QVBoxLayout *layout = new QVBoxLayout();
 
     // revert
-    qDebug() << "Send button pressed";
+    qDebug() << "AAAA";
     QStringList problemList;
     if (ui->checkBox_1->isChecked())
     {
@@ -382,8 +358,11 @@ void page_sendFeedback::on_send_Button_clicked()
         // instant reaction by hiding the page into "thank you"
         ui->label_thank_you_image->show();
         ui->label_thank_you_image->raise();
+        ui->label_thank_you_image->repaint();
+        
         ui->label_thanks_for_feedback->show();
         ui->label_thanks_for_feedback->raise();
+        ui->label_thanks_for_feedback->repaint();
 
         // send to backend
         QString MachineSerialNumber = p_page_idle->currentProductOrder->getMachineId();
@@ -464,7 +443,6 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
         // ui->feedbackTextEdit->deletePreviousChar();
         QTextCursor cursor = ui->feedbackTextEdit->textCursor();
         cursor.deletePreviousChar();
-
     }
     else if (buttonText == "Clear")
     {
@@ -486,8 +464,8 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
     {
         ui->feedbackTextEdit->setPlainText(ui->feedbackTextEdit->toPlainText() + "&");
     }
-     else if (buttonText == "Enter")
-    {   
+    else if (buttonText == "Enter")
+    {
         qDebug() << "Enter button pressed";
         ui->feedbackTextEdit->moveCursor(QTextCursor::End); // Move the cursor to the end of the text
         ui->feedbackTextEdit->insertPlainText("\n");
@@ -523,8 +501,6 @@ void page_sendFeedback::on_feedback_Input_Button_clicked()
         ui->feedbackTextEdit->clear(); // clears init text
     }
 }
-
-
 
 void page_sendFeedback::on_feedbackText_cursorPositionChanged(int arg1, int arg2)
 {

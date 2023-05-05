@@ -267,7 +267,6 @@ void page_sendFeedback::onSelectTimeoutTick()
     }
     else
     {
-        selectIdleTimer->stop();
         hideCurrentPageAndShowProvided(p_page_idle);
     }
 }
@@ -295,6 +294,20 @@ void page_sendFeedback::reset_and_show_page_elements()
     ui->checkBox_3->setCheckState(Qt::Unchecked);
     ui->checkBox_4->setCheckState(Qt::Unchecked);
     ui->checkBox_5->setCheckState(Qt::Unchecked);
+
+    // set keyboard to lower case
+    foreach (QAbstractButton *button, ui->buttonGroup->buttons())
+    {
+        if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace")
+        {
+            // qDebug() << "doing nothing";
+        }
+        else
+        {
+            button->setText(button->text().toLower());
+        }
+    }
+    
 }
 
 void page_sendFeedback::hideCurrentPageAndShowProvided(QWidget *pageToShow)
@@ -403,7 +416,7 @@ void page_sendFeedback::on_send_Button_clicked()
 void page_sendFeedback::keyboardButtonPressed(int buttonID)
 {
     qDebug() << "Feeback page Keyboard Button pressed";
-    _selectIdleTimeoutSec = 60;
+    _selectIdleTimeoutSec = 120;
     QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
     QString buttonText = buttonpressed->text();
 
@@ -454,7 +467,7 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
     }
     else if (buttonText == "Done")
     {
-        qDebug() << "DONE CLICKED";
+        qDebug() << "Keyboard: Done Clicked";
         QString textEntry = ui->feedbackTextEdit->toPlainText();
         ui->feedbackKeyboard->hide();
         ui->feedback_Input_Button->raise();
@@ -462,21 +475,19 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
     }
     else if (buttonText == "Space")
     {
-        ui->feedbackTextEdit->setPlainText(ui->feedbackTextEdit->toPlainText() + " ");
+        ui->feedbackTextEdit->insertPlainText(" ");
     }
     else if (buttonText == "&&")
     {
-        ui->feedbackTextEdit->setPlainText(ui->feedbackTextEdit->toPlainText() + "&");
+        ui->feedbackTextEdit->insertPlainText("&");
     }
     else if (buttonText == "Enter")
     {
-        qDebug() << "Enter button pressed";
-        ui->feedbackTextEdit->moveCursor(QTextCursor::End); // Move the cursor to the end of the text
         ui->feedbackTextEdit->insertPlainText("\n");
     }
     else
     {
-        ui->feedbackTextEdit->setPlainText(ui->feedbackTextEdit->toPlainText() + buttonText);
+        ui->feedbackTextEdit->insertPlainText(buttonText);
     }
 }
 
@@ -498,6 +509,7 @@ void page_sendFeedback::on_feedback_Input_Button_clicked()
     ui->feedback_Input_Button->lower();
     ui->feedback_Input_Button->hide();
 
+    // starts with welcome message
     if (ui->feedbackTextEdit->toPlainText() == TEXTBOX_INVITE_TEXT)
     {
         ui->feedbackTextEdit->clear(); // clears init text

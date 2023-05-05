@@ -678,6 +678,19 @@
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="logo_label">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>1730</y>
+     <width>191</width>
+     <height>181</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>selection2_Button</zorder>
   <zorder>product_2_photo_label</zorder>
   <zorder>product_2_photo_label_text</zorder>
@@ -712,6 +725,7 @@
   <zorder>label_notify_us</zorder>
   <zorder>helpPage_Button</zorder>
   <zorder>mainPage_Button</zorder>
+  <zorder>logo_label</zorder>
  </widget>
  <resources/>
  <connections/>

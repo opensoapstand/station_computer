@@ -1167,13 +1167,31 @@ bool DbManager::updatePrice(int slot, int size, double new_price)
 #endif
         }
         break;
-
+        case SIZE_MEDIUM_INDEX:
+        {
+#ifdef USE_OLD_DATABASE
+            update_price_query.prepare("UPDATE products SET price_m = :new_price WHERE slot = :slot");
+#else
+            update_price_query.prepare("UPDATE products SET price_medium = :new_price WHERE slot = :slot");
+#endif
+        }
+        break;
+        
         case SIZE_LARGE_INDEX:
         {
 #ifdef USE_OLD_DATABASE
             update_price_query.prepare("UPDATE products SET price_l = :new_price WHERE slot = :slot");
 #else
             update_price_query.prepare("UPDATE products SET price_large = :new_price WHERE slot = :slot");
+#endif
+        }
+        break;
+        case SIZE_CUSTOM_INDEX:
+        {
+#ifdef USE_OLD_DATABASE
+            update_price_query.prepare("UPDATE products SET price_c = :new_price WHERE slot = :slot");
+#else
+            update_price_query.prepare("UPDATE products SET price_custom = :new_price WHERE slot = :slot");
 #endif
         }
         break;

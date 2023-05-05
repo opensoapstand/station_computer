@@ -561,3 +561,4 @@ void page_maintenance_general::on_restart_electronics_Button_clicked()
 
     qApp->exit(); // restart UI. The problem with only controller restart is that there are two screens now.
 }
+

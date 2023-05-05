@@ -39,12 +39,12 @@
     <string>Product Name: </string>
    </property>
   </widget>
-  <widget class="QLabel" name="price_large">
+  <widget class="QLabel" name="price_medium">
    <property name="geometry">
     <rect>
-     <x>590</x>
-     <y>630</y>
-     <width>721</width>
+     <x>190</x>
+     <y>650</y>
+     <width>190</width>
      <height>31</height>
     </rect>
    </property>
@@ -55,7 +55,7 @@
   <widget class="QLabel" name="volume_per_tick">
    <property name="geometry">
     <rect>
-     <x>630</x>
+     <x>590</x>
      <y>950</y>
      <width>721</width>
      <height>31</height>
@@ -63,19 +63,6 @@
    </property>
    <property name="text">
     <string>Product Volume Per Tick: </string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="target_volume_l">
-   <property name="geometry">
-    <rect>
-     <x>590</x>
-     <y>570</y>
-     <width>721</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Product Target Volume: </string>
    </property>
   </widget>
   <widget class="QPushButton" name="productPhotoButton">
@@ -104,37 +91,26 @@
     <string>Name</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="priceButton_l">
+  <widget class="QPushButton" name="priceButton_m">
    <property name="geometry">
     <rect>
-     <x>440</x>
-     <y>620</y>
+     <x>40</x>
+     <y>640</y>
      <width>141</width>
      <height>51</height>
     </rect>
    </property>
    <property name="text">
-    <string>Large Price</string>
+    <string>Medium Price</string>
    </property>
-  </widget>
-  <widget class="QPushButton" name="target_volumeButton_l">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>560</y>
-     <width>141</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Large
- Target Volume</string>
-   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">editProductGroup</string>
+   </attribute>
   </widget>
   <widget class="QPushButton" name="vol_per_tickButton">
    <property name="geometry">
     <rect>
-     <x>470</x>
+     <x>440</x>
      <y>920</y>
      <width>141</width>
      <height>91</height>
@@ -148,8 +124,8 @@
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>630</y>
-     <width>721</width>
+     <y>590</y>
+     <width>190</width>
      <height>31</height>
     </rect>
    </property>
@@ -161,7 +137,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>620</y>
+     <y>580</y>
      <width>141</width>
      <height>51</height>
     </rect>
@@ -169,33 +145,9 @@
    <property name="text">
     <string>Small Price</string>
    </property>
-  </widget>
-  <widget class="QPushButton" name="target_volumeButton_s">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>560</y>
-     <width>141</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Small
- Target Volume</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="target_volume_s">
-   <property name="geometry">
-    <rect>
-     <x>190</x>
-     <y>570</y>
-     <width>721</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Product Target Volume: </string>
-   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">editProductGroup</string>
+   </attribute>
   </widget>
   <widget class="QPushButton" name="refillButton">
    <property name="geometry">
@@ -248,7 +200,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>740</y>
+     <y>920</y>
      <width>141</width>
      <height>51</height>
     </rect>
@@ -261,8 +213,8 @@
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>750</y>
-     <width>721</width>
+     <y>930</y>
+     <width>231</width>
      <height>31</height>
     </rect>
    </property>
@@ -378,7 +330,7 @@
   <widget class="QLabel" name="pwmLabel">
    <property name="geometry">
     <rect>
-     <x>630</x>
+     <x>590</x>
      <y>1060</y>
      <width>721</width>
      <height>31</height>
@@ -391,7 +343,7 @@
   <widget class="QPushButton" name="pwmButton">
    <property name="geometry">
     <rect>
-     <x>470</x>
+     <x>440</x>
      <y>1030</y>
      <width>141</width>
      <height>91</height>
@@ -647,7 +599,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>920</y>
+     <y>1090</y>
      <width>191</width>
      <height>201</height>
     </rect>
@@ -660,7 +612,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>1140</y>
+     <y>1310</y>
      <width>341</width>
      <height>20</height>
     </rect>
@@ -679,8 +631,8 @@
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>960</y>
-     <width>431</width>
+     <y>1130</y>
+     <width>190</width>
      <height>17</height>
     </rect>
    </property>
@@ -692,8 +644,8 @@
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>920</y>
-     <width>391</width>
+     <y>1090</y>
+     <width>180</width>
      <height>17</height>
     </rect>
    </property>
@@ -705,7 +657,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>820</y>
+     <y>990</y>
      <width>90</width>
      <height>90</height>
     </rect>
@@ -718,7 +670,7 @@
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>820</y>
+     <y>990</y>
      <width>90</width>
      <height>90</height>
     </rect>
@@ -727,56 +679,64 @@
     <string>Test Large</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pluButton_s">
+  <widget class="QPushButton" name="target_volumeButton_s">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>680</y>
+     <x>420</x>
+     <y>580</y>
      <width>141</width>
      <height>51</height>
     </rect>
    </property>
    <property name="text">
-    <string>Small PLU</string>
+    <string>Small
+ Target Volume</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">editProductGroup</string>
+   </attribute>
   </widget>
-  <widget class="QLabel" name="pluLabel_s">
+  <widget class="QLabel" name="target_volume_s">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>690</y>
-     <width>241</width>
+     <x>570</x>
+     <y>590</y>
+     <width>190</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>Small PLU</string>
+    <string>Small Target vol</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pluButton_l">
+  <widget class="QPushButton" name="target_volumeButton_m">
    <property name="geometry">
     <rect>
-     <x>440</x>
-     <y>680</y>
+     <x>420</x>
+     <y>640</y>
      <width>141</width>
      <height>51</height>
     </rect>
    </property>
    <property name="text">
-    <string>Large PLU</string>
+    <string>Medium
+ Target Volume</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">editProductGroup</string>
+   </attribute>
   </widget>
-  <widget class="QLabel" name="pluLabel_l">
+  <widget class="QLabel" name="target_volume_m">
    <property name="geometry">
     <rect>
-     <x>590</x>
-     <y>690</y>
-     <width>241</width>
+     <x>570</x>
+     <y>650</y>
+     <width>190</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>Large PLU</string>
+    <string>Medium target vol</string>
    </property>
   </widget>
   <widget class="QSlider" name="pwmSlider">
@@ -832,7 +792,7 @@ last restock</string>
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>1240</y>
+     <y>1410</y>
      <width>191</width>
      <height>171</height>
     </rect>
@@ -845,7 +805,7 @@ last restock</string>
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>1240</y>
+     <y>1410</y>
      <width>191</width>
      <height>171</height>
     </rect>
@@ -858,7 +818,7 @@ last restock</string>
    <property name="geometry">
     <rect>
      <x>450</x>
-     <y>1240</y>
+     <y>1410</y>
      <width>191</width>
      <height>171</height>
     </rect>
@@ -871,7 +831,7 @@ last restock</string>
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>1000</y>
+     <y>1170</y>
      <width>221</width>
      <height>17</height>
     </rect>
@@ -884,7 +844,7 @@ last restock</string>
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>1080</y>
+     <y>1250</y>
      <width>141</width>
      <height>17</height>
     </rect>
@@ -897,7 +857,7 @@ last restock</string>
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>1040</y>
+     <y>1210</y>
      <width>211</width>
      <height>17</height>
     </rect>
@@ -910,7 +870,7 @@ last restock</string>
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>1110</y>
+     <y>1280</y>
      <width>141</width>
      <height>17</height>
     </rect>
@@ -919,7 +879,215 @@ last restock</string>
     <string>Flow rate (2s)</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="update_portal">
+   <property name="geometry">
+    <rect>
+     <x>870</x>
+     <y>460</y>
+     <width>181</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Update Portal</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="price_large">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>720</y>
+     <width>190</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Product Price: </string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="priceButton_l">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>710</y>
+     <width>141</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Large Price</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">editProductGroup</string>
+   </attribute>
+  </widget>
+  <widget class="QPushButton" name="target_volumeButton_l">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>710</y>
+     <width>141</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Large
+ Target Volume</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">editProductGroup</string>
+   </attribute>
+  </widget>
+  <widget class="QLabel" name="target_volume_l">
+   <property name="geometry">
+    <rect>
+     <x>570</x>
+     <y>720</y>
+     <width>190</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Large Target vol</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="price_custom">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>790</y>
+     <width>190</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Product Price: </string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="priceButton_c">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>780</y>
+     <width>171</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Custom Price (per ml)</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">editProductGroup</string>
+   </attribute>
+  </widget>
+  <widget class="QPushButton" name="pluButton_m">
+   <property name="geometry">
+    <rect>
+     <x>730</x>
+     <y>640</y>
+     <width>141</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Medium PLU</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pluButton_l">
+   <property name="geometry">
+    <rect>
+     <x>730</x>
+     <y>710</y>
+     <width>141</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Large PLU</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="pluLabel_l">
+   <property name="geometry">
+    <rect>
+     <x>880</x>
+     <y>720</y>
+     <width>190</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Large PLU</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="pluLabel_m">
+   <property name="geometry">
+    <rect>
+     <x>880</x>
+     <y>650</y>
+     <width>190</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Medium PLU</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pluButton_s">
+   <property name="geometry">
+    <rect>
+     <x>730</x>
+     <y>580</y>
+     <width>141</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Small PLU</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="pluLabel_c">
+   <property name="geometry">
+    <rect>
+     <x>880</x>
+     <y>790</y>
+     <width>190</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Custom PLU</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="pluLabel_s">
+   <property name="geometry">
+    <rect>
+     <x>880</x>
+     <y>590</y>
+     <width>190</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Small PLU</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pluButton_c">
+   <property name="geometry">
+    <rect>
+     <x>730</x>
+     <y>780</y>
+     <width>141</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Custom PLU</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="editProductGroup"/>
+ </buttongroups>
 </ui>

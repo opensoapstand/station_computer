@@ -62,7 +62,9 @@ private slots:
     void on_image_clicked();
     void on_nameButton_clicked();
     void on_priceButton_s_clicked();
+    void on_priceButton_m_clicked();
     void on_priceButton_l_clicked();
+    void on_priceButton_c_clicked();
     void on_target_volumeButton_s_clicked();
     void on_target_volumeButton_l_clicked();
     void on_vol_per_tickButton_clicked();
@@ -104,6 +106,9 @@ private slots:
 
     void on_autoDispenseSmallButton_clicked();
 
+    void on_update_portal_clicked();
+    void editProductButtonPressed();
+
 private:
     void setButtonPressCountLabel(bool init);
     void setButtonPressCountLabel2(bool init);
@@ -123,7 +128,10 @@ private:
 
     QString text_entered;
     bool price_small;
+    bool price_medium;
     bool price_large;
+    bool price_custom;
+    
     bool target_s;
     bool target_l;
     bool vol_per_tick;
@@ -147,9 +155,13 @@ private:
     struct tm *timeinfo;
     CURL *curl;
     CURLcode res;
+    CURL *curl2;
+    CURLcode res2;
     std::string readBuffer;
     QByteArray curl_param_array;
+    QByteArray curl_param_array2;
     char *curl_data;
+
 };
 
 #endif // PAGE_MAINTENANCE_DISPENSER_H

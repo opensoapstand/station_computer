@@ -262,10 +262,10 @@ void page_idle_products::displayProducts()
 #else
     for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
-        selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-        selectProductButtons[i]->raise();
+        // selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+        // selectProductButtons[i]->raise();
         selectProductPhotoLabels[i]->hide();
-        selectProductNameLabels[i]->hide();
+        // selectProductNameLabels[i]->hide();
         selectProductIconLabels[i]->hide();
         selectProductTypeLabels[i]->hide();
     }
@@ -305,34 +305,34 @@ void page_idle_products::addCompanyLogoToLabel(QLabel *label)
         qDebug() << "WARNING: invalid customer ID. Should like C-1, C-374, ... . Provided id: " << id;
     }
 #endif
-     if (size_units == "ml")
-    {
-        ui->label_product1_price->setText("ml");
-        ui->label_product2_price->setText("ml");
-        ui->label_product3_price->setText("ml");
-        ui->label_product4_price->setText("ml");
-    }
-     else if (size_units == "L")
-    {
-        ui->label_product1_price->setText("L");
-        ui->label_product2_price->setText("L");
-        ui->label_product3_price->setText("L");
-        ui->label_product4_price->setText("L");
-    }
-     else if (size_units == "kg")
-    {
-        ui->label_product1_price->setText("kg");
-        ui->label_product2_price->setText("kg");
-        ui->label_product3_price->setText("kg");
-        ui->label_product4_price->setText("kg");
-    }
-    else if (size_units == "oz")
-    {
-        ui->label_product1_price->setText("oz");
-        ui->label_product2_price->setText("oz");
-        ui->label_product3_price->setText("oz");
-        ui->label_product4_price->setText("oz");
-    }
+    //  if (size_units == "ml")
+    // {
+    //     ui->label_product1_price->setText("ml");
+    //     ui->label_product2_price->setText("ml");
+    //     ui->label_product3_price->setText("ml");
+    //     ui->label_product4_price->setText("ml");
+    // }
+    //  else if (size_units == "L")
+    // {
+    //     ui->label_product1_price->setText("L");
+    //     ui->label_product2_price->setText("L");
+    //     ui->label_product3_price->setText("L");
+    //     ui->label_product4_price->setText("L");
+    // }
+    //  else if (size_units == "kg")
+    // {
+    //     ui->label_product1_price->setText("kg");
+    //     ui->label_product2_price->setText("kg");
+    //     ui->label_product3_price->setText("kg");
+    //     ui->label_product4_price->setText("kg");
+    // }
+    // else if (size_units == "oz")
+    // {
+    //     ui->label_product1_price->setText("oz");
+    //     ui->label_product2_price->setText("oz");
+    //     ui->label_product3_price->setText("oz");
+    //     ui->label_product4_price->setText("oz");
+    // }
 
 }
 

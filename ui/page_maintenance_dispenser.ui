@@ -141,7 +141,8 @@
     </rect>
    </property>
    <property name="text">
-    <string>Volume per Tick</string>
+    <string>Set DB
+Volume per Tick</string>
    </property>
   </widget>
   <widget class="QLabel" name="price_small">
@@ -917,6 +918,32 @@ last restock</string>
    </property>
    <property name="text">
     <string>Flow rate (2s)</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="calibration_instructions_label">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>760</y>
+     <width>581</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>calibration instructions</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="calibration_result_label">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>850</y>
+     <width>591</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Calibraton value (ml/tick if exactly 1000ml dispensed):</string>
    </property>
   </widget>
  </widget>

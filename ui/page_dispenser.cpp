@@ -453,8 +453,7 @@ void page_dispenser::onDispenseIdleTick()
 
 void page_dispenser::resetDispenseTimeout(void)
 {
-    // _dispenseIdleTimeoutSec = 120;
-    _dispenseIdleTimeoutSec = 5;
+    _dispenseIdleTimeoutSec = 120;
 }
 
 QString page_dispenser::getMostRecentDispensed()
@@ -614,6 +613,7 @@ void page_dispenser::on_abortButton_clicked()
         msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         int ret = msgBox->exec();
         bool success;
+        // qDebug() << "***********************************";
         switch (ret)
         {
         case QMessageBox::Yes:
@@ -622,12 +622,13 @@ void page_dispenser::on_abortButton_clicked()
             {
                 force_finish_dispensing();
             }
+            break;
         }
-        break;
         }
     }
     else
     {
+
         if (this->isDispensing)
         {
             force_finish_dispensing();
@@ -683,8 +684,15 @@ void page_dispenser::on_button_problems_clicked()
             askForFeedbackAtEnd = true;
             force_finish_dispensing();
         }
+        break;
     }
-    break;
+    case QMessageBox::No:
+    {
+        // send repair command
+        qDebug() << "Send repair command to fsm";
+        p_page_idle->dfUtility->send_command_to_FSM(SEND_REPAIR_PCA);
+        break;
+    }
     }
 }
 

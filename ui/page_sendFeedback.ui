@@ -385,9 +385,9 @@ text-align: center;
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>1060</y>
+     <y>1046</y>
      <width>640</width>
-     <height>37</height>
+     <height>61</height>
     </rect>
    </property>
    <property name="text">

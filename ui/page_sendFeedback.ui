@@ -322,39 +322,6 @@ text-align: center;
     </size>
    </property>
   </widget>
-  <widget class="QLabel" name="label_send">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>290</x>
-     <y>1424</y>
-     <width>438</width>
-     <height>95</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Montserrat</family>
-     <pointsize>-1</pointsize>
-     <weight>50</weight>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="autoFillBackground">
-    <bool>true</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_still_cant_find">
    <property name="geometry">
     <rect>
@@ -1765,7 +1732,6 @@ font: 11pt &quot;Montserrat&quot;;</string>
    </property>
   </widget>
   <zorder>label_thank_you_image</zorder>
-  <zorder>label_send</zorder>
   <zorder>send_Button</zorder>
   <zorder>label_problem_options</zorder>
   <zorder>mainPage_Button</zorder>

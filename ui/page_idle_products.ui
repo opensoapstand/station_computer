@@ -16,77 +16,6 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QPushButton" name="selection1_Button">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>290</y>
-     <width>491</width>
-     <height>651</height>
-    </rect>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>150</width>
-     <height>300</height>
-    </size>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>500</width>
-     <height>700</height>
-    </size>
-   </property>
-   <property name="baseSize">
-    <size>
-     <width>150</width>
-     <height>300</height>
-    </size>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 44px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="selection2_Button">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>550</x>
-     <y>290</y>
-     <width>481</width>
-     <height>651</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Montserrat</family>
-     <pointsize>-1</pointsize>
-     <weight>50</weight>
-     <italic>false</italic>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 92px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="iconSize">
-    <size>
-     <width>20</width>
-     <height>52</height>
-    </size>
-   </property>
-  </widget>
   <widget class="QPushButton" name="p_page_maintenanceButton">
    <property name="geometry">
     <rect>
@@ -94,75 +23,6 @@
      <y>0</y>
      <width>281</width>
      <height>241</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="selection3_Button">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>990</y>
-     <width>491</width>
-     <height>651</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Montserrat</family>
-     <pointsize>-1</pointsize>
-     <weight>50</weight>
-     <italic>false</italic>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 44px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="selection4_Button">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>550</x>
-     <y>990</y>
-     <width>491</width>
-     <height>651</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Montserrat</family>
-     <pointsize>-1</pointsize>
-     <weight>50</weight>
-     <italic>false</italic>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 44px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="mainPage_Button">
-   <property name="geometry">
-    <rect>
-     <x>-20</x>
-     <y>30</y>
-     <width>251</width>
-     <height>61</height>
     </rect>
    </property>
    <property name="text">
@@ -307,115 +167,11 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="product_1_name_label">
-   <property name="geometry">
-    <rect>
-     <x>58</x>
-     <y>875</y>
-     <width>450</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="product_2_name_label">
-   <property name="geometry">
-    <rect>
-     <x>562</x>
-     <y>875</y>
-     <width>450</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="product_3_name_label">
-   <property name="geometry">
-    <rect>
-     <x>53</x>
-     <y>1568</y>
-     <width>450</width>
-     <height>71</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="product_4_name_label">
-   <property name="geometry">
-    <rect>
-     <x>562</x>
-     <y>1568</y>
-     <width>450</width>
-     <height>71</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="product_1_icon_label">
-   <property name="geometry">
-    <rect>
-     <x>241</x>
-     <y>294</y>
-     <width>81</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="product_2_icon_label">
-   <property name="geometry">
-    <rect>
-     <x>750</x>
-     <y>294</y>
-     <width>81</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="product_3_icon_label">
-   <property name="geometry">
-    <rect>
-     <x>241</x>
-     <y>994</y>
-     <width>81</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="product_4_icon_label">
-   <property name="geometry">
-    <rect>
-     <x>750</x>
-     <y>991</y>
-     <width>81</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="product_3_type_label">
    <property name="geometry">
     <rect>
      <x>53</x>
-     <y>1514</y>
+     <y>1460</y>
      <width>450</width>
      <height>48</height>
     </rect>
@@ -428,7 +184,7 @@
    <property name="geometry">
     <rect>
      <x>562</x>
-     <y>814</y>
+     <y>760</y>
      <width>450</width>
      <height>46</height>
     </rect>
@@ -441,7 +197,7 @@
    <property name="geometry">
     <rect>
      <x>562</x>
-     <y>1508</y>
+     <y>1450</y>
      <width>450</width>
      <height>46</height>
     </rect>
@@ -454,7 +210,7 @@
    <property name="geometry">
     <rect>
      <x>53</x>
-     <y>814</y>
+     <y>760</y>
      <width>450</width>
      <height>46</height>
     </rect>
@@ -655,52 +411,91 @@
   <widget class="QLabel" name="label_pick_soap">
    <property name="geometry">
     <rect>
-     <x>311</x>
-     <y>178</y>
-     <width>478</width>
-     <height>86</height>
+     <x>130</x>
+     <y>170</y>
+     <width>800</width>
+     <height>151</height>
     </rect>
    </property>
    <property name="text">
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_notify_us">
+  <widget class="QLabel" name="logo_label">
    <property name="geometry">
     <rect>
-     <x>478</x>
-     <y>1773</y>
-     <width>125</width>
-     <height>125</height>
+     <x>370</x>
+     <y>1680</y>
+     <width>351</width>
+     <height>211</height>
     </rect>
    </property>
    <property name="text">
     <string/>
    </property>
   </widget>
-  <zorder>selection2_Button</zorder>
+  <widget class="QLabel" name="label_product1_price">
+   <property name="geometry">
+    <rect>
+     <x>53</x>
+     <y>790</y>
+     <width>261</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_product2_price">
+   <property name="geometry">
+    <rect>
+     <x>562</x>
+     <y>790</y>
+     <width>261</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_product3_price">
+   <property name="geometry">
+    <rect>
+     <x>53</x>
+     <y>1500</y>
+     <width>261</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_product4_price">
+   <property name="geometry">
+    <rect>
+     <x>562</x>
+     <y>1500</y>
+     <width>261</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>product_2_photo_label</zorder>
   <zorder>product_2_photo_label_text</zorder>
-  <zorder>selection1_Button</zorder>
   <zorder>product_1_photo_label</zorder>
   <zorder>product_1_photo_label_text</zorder>
   <zorder>p_page_maintenanceButton</zorder>
-  <zorder>selection3_Button</zorder>
-  <zorder>selection4_Button</zorder>
   <zorder>product_3_photo_label</zorder>
   <zorder>product_4_photo_label</zorder>
-  <zorder>product_1_name_label</zorder>
-  <zorder>product_2_name_label</zorder>
-  <zorder>product_3_name_label</zorder>
-  <zorder>product_4_name_label</zorder>
-  <zorder>product_1_icon_label</zorder>
-  <zorder>product_2_icon_label</zorder>
-  <zorder>product_3_icon_label</zorder>
-  <zorder>product_4_icon_label</zorder>
   <zorder>product_3_type_label</zorder>
   <zorder>product_2_type_label</zorder>
   <zorder>product_4_type_label</zorder>
-  <zorder>product_1_type_label</zorder>
   <zorder>product_photo_label_text_2</zorder>
   <zorder>product_4_photo_label_text</zorder>
   <zorder>product_3_photo_label_text</zorder>
@@ -709,9 +504,13 @@
   <zorder>product_4_overlay_label</zorder>
   <zorder>product_3_overlay_label</zorder>
   <zorder>label_pick_soap</zorder>
-  <zorder>label_notify_us</zorder>
   <zorder>helpPage_Button</zorder>
-  <zorder>mainPage_Button</zorder>
+  <zorder>product_1_type_label</zorder>
+  <zorder>logo_label</zorder>
+  <zorder>label_product1_price</zorder>
+  <zorder>label_product2_price</zorder>
+  <zorder>label_product3_price</zorder>
+  <zorder>label_product4_price</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -144,7 +144,7 @@ void page_idle::showEvent(QShowEvent *event)
     // reset promovalue
     currentProductOrder->setDiscountPercentageFraction(0.0);
     currentProductOrder->setPromoCode("");
-
+  
     
 
     addCompanyLogoToLabel(ui->logo_label);

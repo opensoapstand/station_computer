@@ -208,6 +208,9 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                                    "border: 2px solid #004D54;"
                                    "}");
     ui->send_Button->setText("SEND");
+
+    ui->feedbackTextEdit->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
+
 }
 
 /*
@@ -350,19 +353,20 @@ void page_sendFeedback::on_send_Button_clicked()
     qDebug() << problemList;
     QString problems = problemList.join(",");
 
-    if (problems.length() != 0 || !(ui->feedbackTextEdit->toPlainText().isEmpty()))
+    if (problems.length() != 0 || ( !(ui->feedbackTextEdit->toPlainText().isEmpty())  &&  (ui->feedbackTextEdit->toPlainText() != TEXTBOX_INVITE_TEXT )))
     {
+        
 
         qDebug() << "Will send feedback to backend";
 
         // instant reaction by hiding the page into "thank you"
         ui->label_thank_you_image->show();
         ui->label_thank_you_image->raise();
-        ui->label_thank_you_image->repaint();
+        ui->label_thank_you_image->repaint(); // instant showing instead of waiting for function to be finished.
         
         ui->label_thanks_for_feedback->show();
         ui->label_thanks_for_feedback->raise();
-        ui->label_thanks_for_feedback->repaint();
+        ui->label_thanks_for_feedback->repaint(); // instant showing instead of waiting for function to be finished.
 
         // send to backend
         QString MachineSerialNumber = p_page_idle->currentProductOrder->getMachineId();
@@ -398,7 +402,7 @@ void page_sendFeedback::on_send_Button_clicked()
 
 void page_sendFeedback::keyboardButtonPressed(int buttonID)
 {
-    qDebug() << "maintenance password Keyboard Button pressed";
+    qDebug() << "Feeback page Keyboard Button pressed";
     _selectIdleTimeoutSec = 60;
     QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
     QString buttonText = buttonpressed->text();
@@ -489,16 +493,15 @@ void page_sendFeedback::on_feedback_Text_Input_clicked()
 void page_sendFeedback::on_feedback_Input_Button_clicked()
 {
     qDebug() << "Feedback button clicked, will show keyboard";
-    ui->feedbackTextEdit->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
-
+    
     ui->feedbackKeyboard->show();
     ui->feedback_Input_Button->lower();
     ui->feedback_Input_Button->hide();
 
-    // ui->feedbackText->show();
-    if (ui->feedbackTextEdit->toPlainText() != TEXTBOX_INVITE_TEXT)
+    if (ui->feedbackTextEdit->toPlainText() == TEXTBOX_INVITE_TEXT)
     {
         ui->feedbackTextEdit->clear(); // clears init text
+        //ui->feedbackTextEdit->setPlainText("fefef");
     }
 }
 

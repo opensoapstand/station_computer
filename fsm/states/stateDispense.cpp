@@ -118,18 +118,18 @@ DF_ERROR stateDispense::onAction()
 
    // if (productDispensers[pos_index].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML)
    // {
-      if (productDispensers[pos_index].getIsStatusUpdateAllowed())
-      {
-         double volume = productDispensers[pos_index].getVolumeDispensed();
+   if (productDispensers[pos_index].getIsStatusUpdateAllowed())
+   {
+      double volume = productDispensers[pos_index].getVolumeDispensed();
 
-         productDispensers[pos_index].updateRunningAverageWindow();
-         Time_val avg_02s = productDispensers[pos_index].getAveragedFlowRate(1000);
-         double flowrate = avg_02s.value;
-         const char* statusStringChar = productDispensers[pos_index].getDispenseStatusAsString();
-         std::string statusString(statusStringChar);
-                 
-         m_pMessaging->sendMessageOverIP("dispenseupdate|" + to_string(volume) + "|" + to_string(flowrate) + "|" + statusString);
-      }
+      productDispensers[pos_index].updateRunningAverageWindow();
+      Time_val avg_02s = productDispensers[pos_index].getAveragedFlowRate(1000);
+      double flowrate = avg_02s.value;
+      const char *statusStringChar = productDispensers[pos_index].getDispenseStatusAsString();
+      std::string statusString(statusStringChar);
+
+      m_pMessaging->sendMessageOverIP("dispenseupdate|" + to_string(volume) + "|" + to_string(flowrate) + "|" + statusString);
+   }
    // }
 
    // Check if UI has sent a ACTION_DISPENSE_END to finish the transaction, or, if dispensing is complete
@@ -139,6 +139,16 @@ DF_ERROR stateDispense::onAction()
       m_state_requested = STATE_DISPENSE_END;
       stopPumping();
       return e_ret = OK;
+   }
+   if (m_pMessaging->getAction() == ACTION_REPAIR_PCA)
+   {
+      if (productDispensers[pos_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || productDispensers[pos_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS)
+      {
+
+         productDispensers[pos_index].the_pcb->sendEN134DefaultConfigurationToPCA9534(slot, true);
+         m_pMessaging->resetAction();
+         productDispensers[pos_index].setMultiDispenseButtonLight(slot, true);
+      }
    }
 
    if (productDispensers[pos_index].getIsDispenseTargetReached())

@@ -142,22 +142,25 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     ui->label_email->setText("Email us at: sales@soapstand.com");
 
     ui->checkBox_1_Label->setStyleSheet(checkBoxLabelStyling);
-    ui->checkBox_1_Label->setText("The station worked perfect, thanks!");
+    ui->checkBox_1_Label->setText("I love this, keep me in the loop.");
 
     ui->checkBox_2_Label->setStyleSheet(checkBoxLabelStyling);
+    // ui->checkBox_2_Label->setText("No soap was dispensed");
     ui->checkBox_2_Label->setText("Payment issue");
 
     ui->checkBox_3_Label->setStyleSheet(checkBoxLabelStyling);
     ui->checkBox_3_Label->setText("User interface problem");
+    // ui->checkBox_3_Label->setText("Wrong amount of soap");
 
     ui->checkBox_4_Label->setStyleSheet(checkBoxLabelStyling);
     ui->checkBox_4_Label->setText("Soap dispensing problem");
+    // ui->checkBox_4_Label->setText("Payment issue");
 
     ui->checkBox_5_Label->setStyleSheet(checkBoxLabelStyling);
     ui->checkBox_5_Label->setText("Other");
 
     ui->label_enter_feedback->setStyleSheet(checkBoxLabelStyling);
-    ui->label_enter_feedback->setText("Please enter details or comments below");
+    ui->label_enter_feedback->setText("Please enter details or comments below.\nProvide email for feedback.");
 
     ui->feedback_Input_Button->raise();
     ui->feedback_Input_Button->setStyleSheet("QPushButton { border: 1px solid #FFFFFF}");

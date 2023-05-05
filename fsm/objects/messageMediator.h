@@ -32,7 +32,7 @@
 #include "../../library/socket/ClientSocket.h"
 
 // #define AIR_CHAR 'a'
-// #define WATER_CHAR 'w'
+#define ACTION_REPAIR_PCA 'r'
 #define ACTION_DISPENSE 'd'
 #define ACTION_AUTOFILL 'a'
 // #define CLEAN_CHAR 'c'
@@ -75,6 +75,7 @@ public:
 
    // dispense command 
    char getAction() { return m_requestedAction; }
+   void resetAction();
    int getRequestedSlot() { return m_RequestedProductIndexInt; }
    char getRequestedSize() { return m_requestedSize; }
    int getCommandValue() { return m_commandValue; }

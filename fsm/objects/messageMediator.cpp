@@ -53,7 +53,6 @@ messageMediator::messageMediator()
    // new_sock = new ServerSocket();
    m_fExitThreads = false;
    // m_pKBThread = -1;
-   
 }
 
 // DTOR
@@ -77,10 +76,10 @@ DF_ERROR messageMediator::sendMessageOverIP(string msg)
 {
    DF_ERROR dfError = OK;
    debugOutput::sendMessage("Send msg to UI (don't wait for reply): " + msg, MSG_INFO);
-   
+
    int attempts = 200;
    bool done = false;
-   
+
    while (attempts > 0 && !done)
    {
 
@@ -93,53 +92,51 @@ DF_ERROR messageMediator::sendMessageOverIP(string msg)
       // else
       // {
 
-         
+      // m_handlingRequest = true;
 
-         // m_handlingRequest = true;
+      // usleep(10000);
+      try
+      {
+         // ClientSocket client_socket("localhost", 0); // with port 1235, once in a while error :'Could not bind to port", makes UI crash. //https://stackoverflow.com/questions/29866083/tcp-socket-cannot-bind-to-port-in-use
+         //  ClientSocket client_socket("localhost", 1235);
+         ClientSocket client_socket("localhost", 8645);
 
-         //usleep(10000);
+         std::string reply;
          try
          {
-            // ClientSocket client_socket("localhost", 0); // with port 1235, once in a while error :'Could not bind to port", makes UI crash. //https://stackoverflow.com/questions/29866083/tcp-socket-cannot-bind-to-port-in-use
-            //  ClientSocket client_socket("localhost", 1235);
-            ClientSocket client_socket("localhost", 8645);
+            client_socket << msg;
 
-            std::string reply;
-            try
-            {
-               client_socket << msg;
-               
-               // client_socket >> reply; // blocking. And we're not sending a reply from the UI anymore (it caused crashes.)
-               //usleep(10000);
-               
-               //client_socket >> reply;
-               //debugOutput::sendMessage("REPLY from UI" + reply, MSG_INFO);
+            // client_socket >> reply; // blocking. And we're not sending a reply from the UI anymore (it caused crashes.)
+            // usleep(10000);
 
-               done = true;
-               // if (reply.compare("accepted") == 0){
+            // client_socket >> reply;
+            // debugOutput::sendMessage("REPLY from UI" + reply, MSG_INFO);
 
-               //    debugOutput::sendMessage("Message sent and accepted by UI", MSG_INFO);
-               // }else{
-               //    debugOutput::sendMessage("waiting for reply", MSG_INFO);
-               // }
-            }
-            catch (SocketException &)
-            {
-               // TODO: Should catch no message error...
-               debugOutput::sendMessage("Error sending to UI " + reply, MSG_ERROR);
-               usleep(10000);
-               attempts--;
-            }
-            // debugOutput::sendMessage("We received this response from the server: " + reply, MSG_INFO);
-            ;
+            done = true;
+            // if (reply.compare("accepted") == 0){
+
+            //    debugOutput::sendMessage("Message sent and accepted by UI", MSG_INFO);
+            // }else{
+            //    debugOutput::sendMessage("waiting for reply", MSG_INFO);
+            // }
          }
-         catch (SocketException &e)
+         catch (SocketException &)
          {
-            //  std::cout << "Connection Exception was caught:" << e.description() << "\n";
-            debugOutput::sendMessage("UI server not reachable (UI not running? or Still processing previous message?).  " + e.description() + " Attempts left: " +to_string(attempts), MSG_ERROR);
-            usleep(100000);
+            // TODO: Should catch no message error...
+            debugOutput::sendMessage("Error sending to UI " + reply, MSG_ERROR);
+            usleep(10000);
             attempts--;
          }
+         // debugOutput::sendMessage("We received this response from the server: " + reply, MSG_INFO);
+         ;
+      }
+      catch (SocketException &e)
+      {
+         //  std::cout << "Connection Exception was caught:" << e.description() << "\n";
+         debugOutput::sendMessage("UI server not reachable (UI not running? or Still processing previous message?).  " + e.description() + " Attempts left: " + to_string(attempts), MSG_ERROR);
+         usleep(100000);
+         attempts--;
+      }
    }
 
    if (attempts <= 0)
@@ -394,12 +391,12 @@ void messageMediator::setRequestedSize(char size)
 
 DF_ERROR messageMediator::parseCommandString()
 {
-   // 
+   //
 
-//    parseSingleCommandString
-// }
+   //    parseSingleCommandString
+   // }
 
-// DF_ERROR messageMediator::parseSingleCommandString(){
+   // DF_ERROR messageMediator::parseSingleCommandString(){
 
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
@@ -409,17 +406,23 @@ DF_ERROR messageMediator::parseCommandString()
    // m_commandValue = std::stoi( sCommand );
    debugOutput::sendMessage("command length:" + to_string(sCommand.length()), MSG_INFO);
 
-   
-   
-   if (sCommand.find("Order") != string::npos){
+   if (sCommand.find("pcabugfix") != string::npos)
+   {
+      debugOutput::sendMessage("*************************************************", MSG_INFO);
+      debugOutput::sendMessage("Action: Repair PCA9534", MSG_INFO);
+      m_requestedAction = ACTION_REPAIR_PCA;
+      
+   }
+   else if (sCommand.find("Order") != string::npos)
+   {
       // e.g.   Order|1sd|2.2|super30off
       debugOutput::sendMessage("Order command found", MSG_INFO);
       std::string delimiter = "|";
       std::size_t found0 = sCommand.find(delimiter);
-      std::size_t found1 = sCommand.find(delimiter,found0+1);
-      std::size_t found2 = sCommand.find(delimiter,found1+1);
-      std::size_t found3 = sCommand.find(delimiter,found2+1);
-      
+      std::size_t found1 = sCommand.find(delimiter, found0 + 1);
+      std::size_t found2 = sCommand.find(delimiter, found1 + 1);
+      std::size_t found3 = sCommand.find(delimiter, found2 + 1);
+
       debugOutput::sendMessage(to_string(found0), MSG_INFO);
       debugOutput::sendMessage(to_string(found1), MSG_INFO);
       debugOutput::sendMessage(to_string(found2), MSG_INFO);
@@ -428,32 +431,33 @@ DF_ERROR messageMediator::parseCommandString()
       // if (found1 != string::npos)
       //    cout<< std::to_string(found1) << "\n";
 
-      //std::size_t found = str.find(str2);
-      std::string dispenseCommand = sCommand.substr(found0+1, found1-found0-1);
-      debugOutput::sendMessage("Dispense command: " + dispenseCommand , MSG_INFO);
+      // std::size_t found = str.find(str2);
+      std::string dispenseCommand = sCommand.substr(found0 + 1, found1 - found0 - 1);
+      debugOutput::sendMessage("Dispense command: " + dispenseCommand, MSG_INFO);
       parseDispenseCommand(dispenseCommand);
 
-      std::string pricestr = sCommand.substr(found1+1, found2-found1-1);
+      std::string pricestr = sCommand.substr(found1 + 1, found2 - found1 - 1);
       double price = std::stod(pricestr);
       m_requestedDiscountPrice = price;
       debugOutput::sendMessage("(Discount) price : " + to_string(m_requestedDiscountPrice), MSG_INFO);
 
       std::string promoCode = "";
-      if (found1 != string::npos){
+      if (found1 != string::npos)
+      {
 
-      promoCode = sCommand.substr(found2+1, found3-found2-1);
+         promoCode = sCommand.substr(found2 + 1, found3 - found2 - 1);
       }
       m_promoCode = promoCode;
       debugOutput::sendMessage("Promo code" + m_promoCode, MSG_INFO);
-
-   }else if (sCommand.length() == 3)
+   }
+   else if (sCommand.length() == 3)
    //  first_char == '1' ||
    //  first_char == '2' ||
    //  first_char == '3' ||
    //  first_char == '4')
 
    {
-      // length 3 command is always a dispense instruction. This is annoying, but it's grown organically like that. 
+      // length 3 command is always a dispense instruction. This is annoying, but it's grown organically like that.
       // check for dispensing command
       e_ret = parseDispenseCommand(sCommand);
    }
@@ -502,7 +506,7 @@ DF_ERROR messageMediator::parseCommandString()
    {
       m_requestedAction = first_char;
    }
-  
+
    else
    {
       // invalid commands
@@ -514,6 +518,9 @@ DF_ERROR messageMediator::parseCommandString()
    return e_ret;
 }
 
+void messageMediator::resetAction(){
+   m_requestedAction = ACTION_NO_ACTION;
+}
 DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
 {
 

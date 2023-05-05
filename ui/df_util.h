@@ -144,6 +144,7 @@ using namespace std;
 
 #define SEND_DISPENSE_START "d"
 #define SEND_DISPENSE_STOP "f"
+#define SEND_REPAIR_PCA "pcabugfix"
 #define SEND_DISPENSE_AUTOFILL "a"
 
 class df_util : public QWidget

@@ -312,6 +312,27 @@ void page_idle_products::addCompanyLogoToLabel(QLabel *label)
         ui->label_product3_price->setText("ml");
         ui->label_product4_price->setText("ml");
     }
+     else if (size_units == "L")
+    {
+        ui->label_product1_price->setText("L");
+        ui->label_product2_price->setText("L");
+        ui->label_product3_price->setText("L");
+        ui->label_product4_price->setText("L");
+    }
+     else if (size_units == "kg")
+    {
+        ui->label_product1_price->setText("kg");
+        ui->label_product2_price->setText("kg");
+        ui->label_product3_price->setText("kg");
+        ui->label_product4_price->setText("kg");
+    }
+    else if (size_units == "oz")
+    {
+        ui->label_product1_price->setText("oz");
+        ui->label_product2_price->setText("oz");
+        ui->label_product3_price->setText("oz");
+        ui->label_product4_price->setText("oz");
+    }
 
 }
 

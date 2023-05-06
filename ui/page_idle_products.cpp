@@ -163,7 +163,6 @@ void page_idle_products::resizeEvent(QResizeEvent *event)
 
 void page_idle_products::displayProducts()
 {
-#ifdef ENABLE_DYNAMIC_UI
     QString product_type_icons[5] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH};
 
     bool product_slot_enabled;
@@ -259,18 +258,7 @@ void page_idle_products::displayProducts()
         selectProductTypeLabels[i]->setText(type_text);
         selectProductTypeLabels[i]->setStyleSheet("QLabel{font-family: 'Brevia';font-style: normal;font-weight: 700;font-size: 30px;line-height: 41px;qproperty-alignment: AlignCenter;text-transform: uppercase;color: #003840;}");
     }
-#else
-    for (uint8_t i = 0; i < SLOT_COUNT; i++)
-    {
-        selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-        selectProductButtons[i]->raise();
-        selectProductPhotoLabels[i]->hide();
-        selectProductNameLabels[i]->hide();
-        selectProductIconLabels[i]->hide();
-        selectProductTypeLabels[i]->hide();
-    }
 
-#endif
         QString price = ui->label_product1_price->text();
 
 }
@@ -284,7 +272,6 @@ void page_idle_products::select_product(int slot)
 
 void page_idle_products::addCompanyLogoToLabel(QLabel *label)
 {
-#ifdef ENABLE_DYNAMIC_UI
     qDebug() << "db init company logo";
     DbManager db(DB_PATH);
     QString id = db.getCustomerId();
@@ -304,7 +291,7 @@ void page_idle_products::addCompanyLogoToLabel(QLabel *label)
     {
         qDebug() << "WARNING: invalid customer ID. Should like C-1, C-374, ... . Provided id: " << id;
     }
-#endif
+
      if (size_units == "ml")
     {
         ui->label_product1_price->setText("ml");

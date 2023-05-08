@@ -307,7 +307,6 @@ void page_sendFeedback::reset_and_show_page_elements()
             button->setText(button->text().toLower());
         }
     }
-    
 }
 
 void page_sendFeedback::hideCurrentPageAndShowProvided(QWidget *pageToShow)
@@ -341,7 +340,6 @@ void page_sendFeedback::on_send_Button_clicked()
     QVBoxLayout *layout = new QVBoxLayout();
 
     // revert
-    qDebug() << "AAAA";
     QStringList problemList;
     if (ui->checkBox_1->isChecked())
     {
@@ -368,8 +366,6 @@ void page_sendFeedback::on_send_Button_clicked()
 
     if (problems.length() != 0 || ( !(ui->feedbackTextEdit->toPlainText().isEmpty())  &&  (ui->feedbackTextEdit->toPlainText() != TEXTBOX_INVITE_TEXT )))
     {
-        
-
         qDebug() << "Will send feedback to backend";
 
         // instant reaction by hiding the page into "thank you"

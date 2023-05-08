@@ -75,7 +75,6 @@ public:
     int getSelectedSlot();
     void setPromoCode(QString promoCode);
     QString getSelectedProductId();
-    // QString getSelectedProductName();
     QString getMachineId();
 
     QString getFullVolumeCorrectUnits(bool addUnits);
@@ -83,9 +82,12 @@ public:
     QString getVolumeRemainingCorrectUnits();
     QString getTotalDispensedCorrectUnits();
     QString getVolumeDispensedSinceRestockCorrectUnits();
-    // void getCustomPriceDetails(QString *unitsInvoice, double *selectedPriceP, double *discountP, double *selectedPriceCorrectedP);
 
-    void getCustomDiscountDetails(bool* large_volume_discount_is_enabled, double* min_volume_for_discount, double* discount_price_per_liter);
+    double getSelectedVolumeDispensedMl();
+    void setSelectedVolumeDispensedMl(double volumeMl);
+    void resetSelectedVolumeDispensed();
+
+    void getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter);
     void setFullVolumeCorrectUnits(QString inputFullValue);
 
     void setSelectedSize(int sizeIndex);
@@ -99,7 +101,7 @@ public:
     QString getProductDrinkfillSerial(int slot);
 
     void loadSelectedProductPropertiesFromProductsFile();
-    void getProductPropertiesFromProductsFile(QString product_id, QString * name_ui, QString* product_type, QString* description_ui, QString* features_ui, QString* ingredients_ui);
+    void getProductPropertiesFromProductsFile(QString product_id, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);
 
     void loadSelectedProductProperties();
     void loadProductPropertiesFromDb(int slot);
@@ -110,7 +112,7 @@ public:
     QString getLoadedProductFeatures();
     bool getLoadedProductSizeEnabled(int size);
     int getLoadedProductBiggestEnabledSizeIndex();
-    
+
     void setLoadedProductBiggestEnabledSizeIndex();
 
     QString getProductPicturePath(int slot);
@@ -141,7 +143,6 @@ public:
     int getSelectedDispenseSpeedPercentage();
     void setSelectedDispenseSpeedPercentage(int percentage);
 
-
     QString getSelectedPaymentMethod();
 
     double getDiscountPercentageFraction();
@@ -160,17 +161,17 @@ signals:
 private:
     QString m_ingredients_ui;
     QString m_product_type;
-    
 
     QString m_features_ui;
     QString m_name_ui;
     QString m_description_ui;
     QString m_product_id;
-    bool m_sizeIndexIsEnabled [SIZES_COUNT]; // size indeces. 
-
+    bool m_sizeIndexIsEnabled[SIZES_COUNT]; // size indeces.
 
     DrinkSelection *selectedDrink;
     int selectedSize;
+    double selectedDispensedVolumeMl;
+
     int m_selectedSlot;
     double overruledPrice;
     double m_discount_percentage_fraction;

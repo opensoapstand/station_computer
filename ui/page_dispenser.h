@@ -68,9 +68,9 @@ public:
     void fsmReceiveTargetVolumeReached();
     void fsmReceiveNoFlowAbort();
     
-    QString getMostRecentDispensed();
+    // QString getMostRecentDispensed();
     QString getPromoCodeUsed();
-    void startDispensing();
+    // void startDispensing();
     void force_finish_dispensing();
     QString getStartDispensingCommand();
 
@@ -116,8 +116,8 @@ private:
     int _dispenseIdleTimeoutSec;
     QTimer *dispenseIdleTimer;
 
-    double volumeDispensed;
-    double targetVolume;
+    // double volumeDispensed;
+    // double targetVolume;
 
 
     mCommunication com;

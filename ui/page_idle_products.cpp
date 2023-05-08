@@ -347,7 +347,7 @@ void page_idle_products::addCompanyLogoToLabel(QLabel *label)
 
      if (size_units == "ml")
     { 
-        label_text = label_text.arg(size_small).arg(size_medium).arg(size_large).arg(price_small).arg(price_medium).arg(price_large);
+        label_text = label_text.arg(size_small).arg(size_medium).arg(size_large).arg( price_small).arg(price_medium).arg(price_large);
         ui->label_product1_price->setText(label_text);
         ui->label_product2_price->setText(label_text);
         ui->label_product3_price->setText(label_text);

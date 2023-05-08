@@ -81,8 +81,8 @@ public slots:
 private slots:
     // **** Navigation ****
     void fsmSendStartDispensing();
-    void fsmSendPrice();
-    void fsmSendPromo();
+    // void fsmSendPrice();
+    // void fsmSendPromo();
     void fsmSendStopDispensing();
 
     void onDispenseIdleTick();

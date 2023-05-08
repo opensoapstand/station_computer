@@ -223,10 +223,10 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
     this->isDispensing = false;
-    if(dispenseIdleTimer!= nullptr){
+    if (dispenseIdleTimer != nullptr)
+    {
         dispenseIdleTimer->stop();
     }
-
 
     if (msgBox != nullptr)
     {
@@ -297,6 +297,7 @@ void page_dispenser::updateVolumeDispensedLabel(double dispensed)
 {
     QString dispensedVolumeUnitsCorrected;
     QString units = selectedProductOrder->getUnitsForSelectedSlot();
+
     if (units == "oz")
     {
         dispensedVolumeUnitsCorrected = QString::number(ceil(dispensed * (double)ML_TO_OZ * 1.0));
@@ -306,7 +307,18 @@ void page_dispenser::updateVolumeDispensedLabel(double dispensed)
         dispensedVolumeUnitsCorrected = QString::number(ceil(dispensed));
     }
 
-    ui->volumeDispensedLabel->setText(dispensedVolumeUnitsCorrected + " " + units);
+    if (p_page_idle->currentProductOrder->getSelectedSize() == SIZE_CUSTOM_INDEX)
+    {
+
+        double unitprice = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
+        double current_price = dispensed * unitprice;
+        ui->volumeDispensedLabel->setText(dispensedVolumeUnitsCorrected + " " + units + " ( $" + QString::number(current_price, 'f', 2) + " )");
+    }
+    else
+    {
+        QString totalVolume = selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(selectedProductOrder->getSelectedSize(), true, true);
+        ui->volumeDispensedLabel->setText(dispensedVolumeUnitsCorrected + " " + units + "/ " + totalVolume);
+    }
 }
 
 /*
@@ -426,23 +438,23 @@ void page_dispenser::fsmSendStopDispensing()
     p_page_idle->dfUtility->send_command_to_FSM(command);
 }
 
-void page_dispenser::fsmSendPrice()
-{
-    qDebug() << "Send Price to fsm";
-    std::string prefix = "$";
-    QString command = QString::fromStdString(prefix);
-    command.append(QString::number(this->selectedProductOrder->getSelectedPriceCorrected()));
-    p_page_idle->dfUtility->send_command_to_FSM(command);
-}
+// void page_dispenser::fsmSendPrice()
+// {
+//     qDebug() << "Send Price to fsm";
+//     std::string prefix = "$";
+//     QString command = QString::fromStdString(prefix);
+//     command.append(QString::number(this->selectedProductOrder->getSelectedPriceCorrected()));
+//     p_page_idle->dfUtility->send_command_to_FSM(command);
+// }
 
-void page_dispenser::fsmSendPromo()
-{
-    qDebug() << "Send Promo to fsm";
-    std::string prefix = "Promo:";
-    QString command = QString::fromStdString(prefix);
-    command.append(this->selectedProductOrder->getPromoCode());
-    p_page_idle->dfUtility->send_command_to_FSM(command);
-}
+// void page_dispenser::fsmSendPromo()
+// {
+//     qDebug() << "Send Promo to fsm";
+//     std::string prefix = "Promo:";
+//     QString command = QString::fromStdString(prefix);
+//     command.append(this->selectedProductOrder->getPromoCode());
+//     p_page_idle->dfUtility->send_command_to_FSM(command);
+// }
 
 void page_dispenser::onDispenseIdleTick()
 {
@@ -523,6 +535,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         // only reset idle timer if volume has changed.
         resetDispenseTimeout();
     }
+
     volumeDispensed = dispensed;
     qDebug() << "Signal: dispensed " << dispensed << " of " << this->targetVolume;
 

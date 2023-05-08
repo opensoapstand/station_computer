@@ -170,10 +170,10 @@
   <widget class="QLabel" name="label_product1_price">
    <property name="geometry">
     <rect>
-     <x>58</x>
+     <x>50</x>
      <y>875</y>
      <width>450</width>
-     <height>81</height>
+     <height>71</height>
     </rect>
    </property>
    <property name="text">
@@ -213,58 +213,6 @@
      <y>1568</y>
      <width>450</width>
      <height>71</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="product_1_icon_label">
-   <property name="geometry">
-    <rect>
-     <x>241</x>
-     <y>294</y>
-     <width>81</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="product_2_icon_label">
-   <property name="geometry">
-    <rect>
-     <x>750</x>
-     <y>294</y>
-     <width>81</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="product_3_icon_label">
-   <property name="geometry">
-    <rect>
-     <x>241</x>
-     <y>994</y>
-     <width>81</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="product_4_icon_label">
-   <property name="geometry">
-    <rect>
-     <x>750</x>
-     <y>991</y>
-     <width>81</width>
-     <height>81</height>
     </rect>
    </property>
    <property name="text">
@@ -562,10 +510,6 @@
   <zorder>label_product2_price</zorder>
   <zorder>label_product3_price</zorder>
   <zorder>label_product4_price</zorder>
-  <zorder>product_1_icon_label</zorder>
-  <zorder>product_2_icon_label</zorder>
-  <zorder>product_3_icon_label</zorder>
-  <zorder>product_4_icon_label</zorder>
   <zorder>product_3_type_label</zorder>
   <zorder>product_2_type_label</zorder>
   <zorder>product_4_type_label</zorder>

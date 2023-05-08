@@ -298,7 +298,7 @@ void page_sendFeedback::reset_and_show_page_elements()
     // set keyboard to lower case
     foreach (QAbstractButton *button, ui->buttonGroup->buttons())
     {
-        if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace")
+        if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Enter" || button->text() == "Backspace")
         {
             // qDebug() << "doing nothing";
         }
@@ -431,7 +431,7 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
     {
         foreach (QAbstractButton *button, ui->buttonGroup->buttons())
         {
-            if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace")
+            if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Enter" || button->text() == "Backspace")
             {
                 // qDebug() << "doing nothing";
             }
@@ -445,7 +445,7 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
     {
         foreach (QAbstractButton *button, ui->buttonGroup->buttons())
         {
-            if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace")
+            if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Enter" || button->text() == "Backspace")
             {
                 // doing nothing
             }

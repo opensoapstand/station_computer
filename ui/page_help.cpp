@@ -97,13 +97,9 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
 
     connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
 
-
-
-    
     QString cssFilePath = "/home/df-admin/drinkfill/lodetest.css";
     QFile cssFile(cssFilePath);
 
-    
     qDebug() << "******************wefwef css file";
     if (cssFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
@@ -112,19 +108,18 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
         // ui->transactions_Button->setStyleSheet(styleSheet);
         // ui->back_Button->setStyleSheet(styleSheet);
 
-
-            QString styleSheet = QString::fromUtf8(cssFile.readAll());
-             QString buttonSelector = QString("QPushButton#%1").arg(ui->transactions_Button->objectName());
-           
-             QString buttonSelector2 = QString("QPushButton#%1").arg(ui->back_Button->objectName());
-            qDebug() << buttonSelector;
-            qDebug() << buttonSelector2;
-            qDebug() << "******************button back name: .";
-            ui->back_Button->setStyleSheet(styleSheet);
-            ui->transactions_Button->setStyleSheet(styleSheet);
-
-    }else{
-        qDebug() << "Css file could not be opened." << cssFilePath ;
+        QString styleSheet = QString::fromUtf8(cssFile.readAll());
+        // QString buttonSelector = QString("QPushButton#%1").arg(ui->transactions_Button->objectName());
+        // QString buttonSelector2 = QString("QPushButton#%1").arg(ui->back_Button->objectName());
+        // qDebug() << buttonSelector;
+        // qDebug() << buttonSelector2;
+        qDebug() << "******************button back name: .";
+        ui->back_Button->setStyleSheet(styleSheet);
+        ui->transactions_Button->setStyleSheet(styleSheet);
+    }
+    else
+    {
+        qDebug() << "Css file could not be opened." << cssFilePath;
     }
 }
 

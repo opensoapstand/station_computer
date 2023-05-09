@@ -30,6 +30,7 @@ extern std::string MAC_LABEL;
 extern std::string AUTH_CODE;
 extern std::string SAF_NUM;
 extern std::string socketAddr;
+float finalPrice;
 // CTOR
 page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
                                                   ui(new Ui::page_dispenser)
@@ -85,7 +86,7 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
                                         "border: none;"
                                         "}";
     ui->volumeDispensedLabel->setStyleSheet(volumeDispensedStylesheet);
-
+    ui->amountDispensedLabel->setStyleSheet(volumeDispensedStylesheet);
     ui->label_to_refill->setStyleSheet(
         "QLabel {"
 
@@ -194,7 +195,7 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     ui->button_problems->setText("Tap here if you notice a problem.");
     ui->button_report->setText("Report");
     ui->label_volume_dispensed->setStyleSheet(volumeDispensedStylesheet);
-
+    ui->label_dispensed_amount->setStyleSheet(volumeDispensedStylesheet);
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
@@ -305,7 +306,18 @@ void page_dispenser::updateVolumeDispensedLabel(double dispensed)
     {
         dispensedVolumeUnitsCorrected = QString::number(ceil(dispensed));
     }
-
+    if(selectedProductOrder->getSelectedSizeAsChar() == 'c'){
+        finalPrice = dispensed *
+        (p_page_idle->currentProductOrder->getSelectedPriceCustom())/
+        (selectedProductOrder->getSelectedVolume());
+        
+    }
+    else{
+        finalPrice = dispensed *
+        (p_page_idle->currentProductOrder->getSelectedPriceCorrected())/
+        (selectedProductOrder->getSelectedVolume());
+    }
+    ui->amountDispensedLabel->setText("$ " +QString::number(finalPrice, 'f', 2));
     ui->volumeDispensedLabel->setText(dispensedVolumeUnitsCorrected + " " + units);
 }
 
@@ -322,7 +334,7 @@ void page_dispenser::dispensing_end_admin()
     ui->finishTransactionMessage->show();
     ui->finishTransactionMessage->raise();
 
-    double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
+    double price = finalPrice;
     std::ostringstream stream;
     stream << std::fixed << std::setprecision(2) << price;
     qDebug() << "Minimum volume dispensed" << MINIMUM_DISPENSE_VOLUME_ML;
@@ -347,7 +359,7 @@ void page_dispenser::dispensing_end_admin()
     }
     else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && volumeDispensed >= MINIMUM_DISPENSE_VOLUME_ML)
     {
-        ui->finishTransactionMessage->setText("Capturing payment");
+        ui->finishTransactionMessage->setText("Capturing payment: $" + QString::number(finalPrice, 'f', 2));
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         if (CTROUTD != "")
         {

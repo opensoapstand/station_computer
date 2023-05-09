@@ -48,9 +48,9 @@
   <widget class="QLabel" name="order_total_amount">
    <property name="geometry">
     <rect>
-     <x>880</x>
-     <y>1640</y>
-     <width>231</width>
+     <x>800</x>
+     <y>1105</y>
+     <width>250</width>
      <height>41</height>
     </rect>
    </property>
@@ -73,13 +73,10 @@ line-height: 44px;
 color: #58595B;</string>
    </property>
    <property name="text">
-    <string>order_total_amount</string>
+    <string/>
    </property>
    <property name="textFormat">
     <enum>Qt::RichText</enum>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="order_drink_amount">
@@ -175,6 +172,28 @@ color: #58595B;</string>
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="preauthLabel">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>1090</y>
+     <width>581</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+font-style: light;
+font-size: 24px;
+color: #58595B;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
   </widget>
  </widget>

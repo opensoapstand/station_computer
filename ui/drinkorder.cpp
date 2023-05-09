@@ -39,14 +39,13 @@ char DrinkOrder::getSelectedSizeAsChar()
     return df_util::sizeIndexToChar(selectedSize);
 }
 
-void DrinkOrder::getCustomDiscountDetails( bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter)
+void DrinkOrder::getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter)
 {
     qDebug() << "Open db: get bulk volume discount details ";
-    
+
     DbManager db(DB_PATH);
-    db.getCustomDiscountProperties(getSelectedSlot(), large_volume_discount_is_enabled,min_volume_for_discount,discount_price_per_liter);
+    db.getCustomDiscountProperties(getSelectedSlot(), large_volume_discount_is_enabled, min_volume_for_discount, discount_price_per_liter);
     db.closeDB();
-    
 }
 // void DrinkOrder::getCustomPriceDetails(QString *unitsInvoice, double *selectedPriceP, double *discountP, double *selectedPriceCorrectedP)
 // {
@@ -110,33 +109,36 @@ void DrinkOrder::setSelectedSize(int sizeIndex)
     selectedSize = sizeIndex;
 }
 
-void DrinkOrder::setLoadedProductBiggestEnabledSizeIndex(){
+void DrinkOrder::setLoadedProductBiggestEnabledSizeIndex()
+{
     setSelectedSize(getLoadedProductBiggestEnabledSizeIndex());
 }
 
-int DrinkOrder::getLoadedProductBiggestEnabledSizeIndex(){
+int DrinkOrder::getLoadedProductBiggestEnabledSizeIndex()
+{
 
     // cascade to largest size. Custom volume is seen as superior.
     int maxSize = SIZE_SMALL_INDEX;
-    if (getLoadedProductSizeEnabled(SIZE_MEDIUM_INDEX)){
+    if (getLoadedProductSizeEnabled(SIZE_MEDIUM_INDEX))
+    {
         maxSize = SIZE_MEDIUM_INDEX;
     }
-    if (getLoadedProductSizeEnabled(SIZE_LARGE_INDEX)){
+    if (getLoadedProductSizeEnabled(SIZE_LARGE_INDEX))
+    {
         maxSize = SIZE_LARGE_INDEX;
     }
-    if (getLoadedProductSizeEnabled(SIZE_CUSTOM_INDEX)){
+    if (getLoadedProductSizeEnabled(SIZE_CUSTOM_INDEX))
+    {
         maxSize = SIZE_CUSTOM_INDEX;
     }
     return maxSize;
 }
-
 
 bool DrinkOrder::getLoadedProductSizeEnabled(int size)
 {
     // caution!:  provide size index (0=small, ...)
     return m_sizeIndexIsEnabled[size];
 }
-
 
 int DrinkOrder::getSelectedSlot()
 {
@@ -270,6 +272,22 @@ double DrinkOrder::getSelectedPriceCorrected()
     return price;
 }
 
+void DrinkOrder::resetSelectedVolumeDispensed()
+{
+    this->selectedDispensedVolumeMl = 0;
+}
+
+double DrinkOrder::getSelectedVolumeDispensedMl()
+{
+    // volume for this dispense
+    return this->selectedDispensedVolumeMl;
+}
+
+void DrinkOrder::setSelectedVolumeDispensedMl(double volumeMl)
+{
+    // volume for this dispense
+    this->selectedDispensedVolumeMl = volumeMl;
+}
 
 double DrinkOrder::getSelectedPriceCustom()
 {
@@ -277,7 +295,7 @@ double DrinkOrder::getSelectedPriceCustom()
     double price;
     if (isSelectedOrderValid())
     {
-        price = getPrice(getSelectedSize()) * (1.0 - m_discount_percentage_fraction)*getSelectedVolume();
+        price = getPrice(getSelectedSize()) * (1.0 - m_discount_percentage_fraction) * getSelectedVolume();
     }
     else
     {
@@ -457,8 +475,6 @@ void DrinkOrder::loadSelectedProductPropertiesFromProductsFile()
     getProductPropertiesFromProductsFile(m_product_id, &m_name_ui, &m_product_type, &m_description_ui, &m_features_ui, &m_ingredients_ui);
 }
 
-
-
 void DrinkOrder::getProductPropertiesFromProductsFile(QString product_id, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui)
 {
     QFile file(PRODUCT_DETAILS_TSV_PATH);
@@ -490,8 +506,6 @@ void DrinkOrder::getProductPropertiesFromProductsFile(QString product_id, QStrin
     }
     file.close();
 }
-
-
 
 QString DrinkOrder::getLoadedProductIngredients()
 {

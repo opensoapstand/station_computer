@@ -51,11 +51,10 @@ page_maintenance::~page_maintenance()
 void page_maintenance::showEvent(QShowEvent *event)
 {
     //    db.addPageClick("PAGE_PAGE_MAINTENANCE PAGE ENTERED");
-    QWidget::showEvent(event);
-    qDebug() << "<<<<<<< Page Enter: maintenance >>>>>>>>>";
 
-    // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH);
-    // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_PATH);
+    qDebug() << "<<<<<<< Page Enter: maintenance >>>>>>>>>";
+    QWidget::showEvent(event);
+    //p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH); // delays the page loading significantly.
 
     for (int i = 0; i < SLOT_COUNT; i++)
     {

@@ -33,6 +33,24 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
     connect(thankYouEndTimer, SIGNAL(timeout()), this, SLOT(onThankyouTimeoutTick()));
 
     is_in_state_thank_you = false;
+
+    QString volumeDispensedStylesheet = "QLabel {"
+
+                                        "font-family: 'Brevia';"
+                                        "font-style: normal;"
+                                        "font-weight: 100;"
+                                        "font-size: 42px;"
+                                        "text-align: centre;"
+                                        "line-height: auto;"
+                                        "letter-spacing: 0px;"
+                                        "qproperty-alignment: AlignCenter;"
+                                        "border-radius: 20px;"
+                                        "color: #ffffff;"
+                                        // "color: #5e8580;"
+                                        "border: none;"
+                                        "}";
+    ui->volumeDispensedLabel->setStyleSheet(volumeDispensedStylesheet);
+    ui->label_volume_dispensed->setStyleSheet(volumeDispensedStylesheet);
 }
 
 /*
@@ -107,6 +125,8 @@ void pagethankyou::showEvent(QShowEvent *event)
 
     p_page_idle->addCompanyLogoToLabel(ui->thank_you_logo_label);
 
+    ui->thank_you_logo_label->hide();
+
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_THANK_YOU_BACKGROUND_PATH);
 
     qDebug() << "db open: check receipt printer";
@@ -151,6 +171,17 @@ void pagethankyou::showEvent(QShowEvent *event)
     _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     thankYouEndTimer->start();
     p_page_idle->addPictureToLabel(ui->drinkfill_logo_label2, DRINKFILL_LOGO_VERTICAL_PATH);
+
+    QString units = p_page_idle->currentProductOrder->getUnitsForSelectedSlot();
+    QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->currentProductOrder->getSelectedVolumeDispensedMl(), units, false, true);
+
+    double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
+    
+    if (p_page_idle->currentProductOrder->getSelectedSize() == SIZE_CUSTOM_INDEX)
+    {
+        price = p_page_idle->currentProductOrder->getSelectedVolumeDispensedMl() * price;
+    }
+    ui->volumeDispensedLabel->setText(dispensed_correct_units + " ( $" + QString::number(price, 'f', 2) + " )");
 }
 
 size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
@@ -162,9 +193,12 @@ size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
 void pagethankyou::sendDispenseEndToCloud()
 {
     QString order_id = this->paymentPage->getOID();
-    QString dispensed_correct_units = this->p_page_dispense->getMostRecentDispensed();
+
+    QString units = p_page_idle->currentProductOrder->getUnitsForSelectedSlot();
+    QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->currentProductOrder->getSelectedVolumeDispensedMl(), units, false, false);
+
     QString promoCode = this->p_page_dispense->getPromoCodeUsed();
-    qDebug() << "Send data at finish of order : " << order_id << ". Total dispensed: " << this->p_page_dispense->getMostRecentDispensed() << "corrected units send to soapstandportal: " << dispensed_correct_units;
+    qDebug() << "Send data at finish of order : " << order_id << ". Total dispensed: " << dispensed_correct_units << "corrected units send to soapstandportal: " << dispensed_correct_units;
     if (dispensed_correct_units == 0)
     {
         transactionLogging += "\n ERROR: No Volume dispensed";
@@ -220,7 +254,7 @@ void pagethankyou::controllerFinishedTransaction()
     {
         qDebug() << "Thank you page: Controller msg: All done for transaction.";
         is_controller_finished = true;
-        //thankYouEndTimer->start(1000);
+        // thankYouEndTimer->start(1000);
         _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     }
     else
@@ -239,7 +273,7 @@ void pagethankyou::onThankyouTimeoutTick()
 {
     if (--_thankYouTimeoutSec >= 0)
     {
-       qDebug() << QString::number(_thankYouTimeoutSec);
+        qDebug() << QString::number(_thankYouTimeoutSec);
     }
     else
     {
@@ -280,7 +314,7 @@ void pagethankyou::finishHandler()
     }
     else
     {
-        
+
         ui->thank_you_message_label->setText("Finishing<br>transaction");
         ui->thank_you_subtitle_message_label->hide();
     }

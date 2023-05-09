@@ -473,7 +473,6 @@ bool pcb::define_pcb_version(void)
 
 void pcb::sendEN134DefaultConfigurationToPCA9534(uint8_t slot, bool reportIfModified)
 {
-    debugOutput::sendMessage("================================================", MSG_INFO);
     debugOutput::sendMessage("Default config sent to PCA9534", MSG_INFO);
     // sendByteIfNotSetToSlot(slot, 0x01, 0b00100000, reportIfModified); // BAAAD load  this to emulate a glitch in the chip
     // sendByteIfNotSetToSlot(slot, 0x03, 0b11111111, reportIfModified); //BAAAD load  this to emulate a glitch in the chip

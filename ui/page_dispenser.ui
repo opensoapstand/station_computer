@@ -75,9 +75,9 @@
   <widget class="QLabel" name="label_volume_dispensed">
    <property name="geometry">
     <rect>
-     <x>340</x>
+     <x>240</x>
      <y>1530</y>
-     <width>400</width>
+     <width>600</width>
      <height>71</height>
     </rect>
    </property>
@@ -88,9 +88,9 @@
   <widget class="QLabel" name="volumeDispensedLabel">
    <property name="geometry">
     <rect>
-     <x>340</x>
+     <x>240</x>
      <y>1620</y>
-     <width>400</width>
+     <width>600</width>
      <height>71</height>
     </rect>
    </property>

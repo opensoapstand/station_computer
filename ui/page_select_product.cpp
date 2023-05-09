@@ -274,9 +274,17 @@ void page_select_product::displayProducts()
 
 void page_select_product::select_product(int slot)
 {
-    qDebug() << "selected slot: " << slot;
-    p_page_idle->currentProductOrder->setSelectedSlot(slot);
-    hideCurrentPageAndShowProvided(p_page_product);
+    DbManager db(DB_PATH);
+
+    bool product_slot_enabled = db.getSlotEnabled(slot);
+    db.closeDB();
+
+    if (product_slot_enabled)
+    {
+        qDebug() << "selected slot: " << slot;
+        p_page_idle->currentProductOrder->setSelectedSlot(slot);
+        hideCurrentPageAndShowProvided(p_page_product);
+    }
 }
 
 // FIXME: This is terrible...no time to make array reference to hold button press functions

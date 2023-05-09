@@ -59,17 +59,15 @@ public:
 
     
 
-    QPushButton* selectProductButtons[4];
     QLabel* selectProductPhotoLabels[4];
     QLabel* selectProductOverlayLabels[4];
-    QLabel* selectProductNameLabels[4];
+    // QLabel* selectProductNameLabels[4];
     QLabel* selectProductIconLabels[4];
     QLabel* selectProductTypeLabels[4];
     QLabel* selectProductPhotoLabelsText[4];
     
 private slots:
     // **** Navigation ****
-
     void onProductPageTimeoutTick();
     void on_p_page_maintenanceButton_pressed();
     void on_helpPage_Button_clicked();

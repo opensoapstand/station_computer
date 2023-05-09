@@ -36,19 +36,19 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     font.setWeight(50);
 
     ui->transactions_Button->setStyleSheet(
-                "QPushButton {"
+        "QPushButton {"
 
-                "font-family: 'Brevia';"
-                "font-style: normal;"
-                "font-weight: 75;"
-                "font-size: 32px;"
-                "line-height: 99px;"
-                "letter-spacing: 1.5px;"
-                "color: #003840;"
-                "text-align: center;"
-                "qproperty-alignment: AlignCenter;"
-                "border: none;"
-                "}");
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 75;"
+        "font-size: 32px;"
+        "line-height: 99px;"
+        "letter-spacing: 1.5px;"
+        "color: #003840;"
+        "text-align: center;"
+        "qproperty-alignment: AlignCenter;"
+        "border: none;"
+        "}");
     // ui->transactions_Button->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
     ui->transactions_Button->setFont(font);
     ui->transactions_Button->setText("Transaction History ->");
@@ -62,26 +62,24 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     ui->feedback_Button->setText("Contact Us");
 
     ui->back_Button->setStyleSheet(
-                "QPushButton {"
+        "QPushButton {"
 
-                "font-family: 'Brevia';"
-                "font-style: normal;"
-                "font-weight: 75;"
-                "font-size: 32px;"
-                "line-height: 99px;"
-                "letter-spacing: 1.5px;"
-                "color: #003840;"
-                "text-align: center;"
-                "qproperty-alignment: AlignCenter;"
-                "border: none;"
-                "}");
-
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 75;"
+        "font-size: 32px;"
+        "line-height: 99px;"
+        "letter-spacing: 1.5px;"
+        "color: #003840;"
+        "text-align: center;"
+        "qproperty-alignment: AlignCenter;"
+        "border: none;"
+        "}");
 
     ui->back_Button->setText("<-back");
-    
+
     ui->previousPage_Button_2->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    
-   
+
     DbManager db(DB_PATH);
     bool showTransactions = db.showTransactions();
     db.closeDB();
@@ -106,7 +104,8 @@ page_help::~page_help()
     delete ui;
 }
 
-void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow){
+void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow)
+{
     helpIdleTimer->stop();
     ui->keyboardTextEntry->setText("");
     ui->keyboard_3->hide();
@@ -118,11 +117,6 @@ void page_help::showEvent(QShowEvent *event)
     qDebug() << "<<<<<<< Page Enter: Help >>>>>>>>>";
     QWidget::showEvent(event);
 
-    // QPixmap background(PAGE_HELP_BACKGROUND_PATH);
-    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-    // QPalette palette;
-    // palette.setBrush(QPalette::Background, background);
-    // this->setPalette(palette);
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_PATH);
 
     DbManager db(DB_PATH);
@@ -131,9 +125,6 @@ void page_help::showEvent(QShowEvent *event)
     db.closeDB();
 
     ui->html_textBrowser->setHtml(help_text_html);
-    
-
-  
 
     if (helpIdleTimer == nullptr)
     {
@@ -168,16 +159,13 @@ void page_help::on_previousPage_Button_clicked()
 
 void page_help::on_previousPage_Button_2_clicked()
 {
-     hideCurrentPageAndShowProvided(p_page_idle);
+    hideCurrentPageAndShowProvided(p_page_idle);
 }
-
-
 
 void page_help::onHelpTimeoutTick()
 {
     if (--_helpIdleTimeoutSec >= 0)
     {
-        // qDebug() << "Help Tick Down: " << _helpIdleTimeoutSec;
     }
     else
     {
@@ -264,7 +252,6 @@ void page_help::keyboardButtonPressed(int buttonID)
             usleep(100000);
             qDebug() << "Password correct. Will open maintenance page";
             hideCurrentPageAndShowProvided(p_page_maintenance);
-            
         }
         else
         {

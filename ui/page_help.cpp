@@ -79,19 +79,19 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     // ui->back_Button->setText("<-back");
     ui->previousPage_Button_2->setText("<-back");
 
-    // ui->previousPage_Button_2->setStyleSheet(
-    //     "QPushButton {"
+    ui->previousPage_Button_2->setStyleSheet(
+        "QPushButton {"
 
-    //     "font-family: 'Brevia';"
-    //     "font-style: normal;"
-    //     "font-weight: 75;"
-    //     "font-size: 32px;"
-    //     "line-height: 99px;"
-    //     "letter-spacing: 1.5px;"
-    //     "color: #003840;"
-    //     "text-align: center;"
-    //     "border: none;"
-    //     "}");
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 75;"
+        "font-size: 32px;"
+        "line-height: 99px;"
+        "letter-spacing: 1.5px;"
+        "color: #003840;"
+        "text-align: center;"
+        "border: none;"
+        "}");
 
     // ui->previousPage_Button_2->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
@@ -153,6 +153,7 @@ void page_help::setPage(page_select_product *pageSelect, pageProduct *pageProduc
 
     ui->previousPage_Button_2->setStyleSheet(styleSheet);
     ui->transactions_Button->setStyleSheet(styleSheet);
+    ui->refreshButton->setStyleSheet(styleSheet);
 }
 
 void page_help::showEvent(QShowEvent *event)

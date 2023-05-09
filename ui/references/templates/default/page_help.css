@@ -1,6 +1,6 @@
 
 .buttonTransparent{
-    background-color: transparent;
+     background-color: transparent;
      border: 0px;
 }
 
@@ -9,11 +9,12 @@
     font-style: normal;
     font-weight: 75;
     font-size: 32px;
-    background-color: transparent;
+
     border: 0px;
     line-height: 99px;
     letter-spacing: 1.5px;
-    color: #003840;
+    color: #bb0a71;
+    /* color: #003840; */
     text-align: center;
     border: none;
 }
@@ -23,7 +24,8 @@ QPushButton {
     font-style: normal;
     font-weight: 50;
     font-size: 20px;
-    color: #003840;
+    color: #0eb44e;
+    /* color: #003840; */
     background-color: #FFFFFF;
     border: 0px;
     text-align: centre;

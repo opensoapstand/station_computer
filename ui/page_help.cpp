@@ -79,19 +79,19 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     // ui->back_Button->setText("<-back");
     ui->previousPage_Button_2->setText("<-back");
 
-    ui->previousPage_Button_2->setStyleSheet(
-        "QPushButton {"
+    // ui->previousPage_Button_2->setStyleSheet(
+    //     "QPushButton {"
 
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "color: #003840;"
-        "text-align: center;"
-        "border: none;"
-        "}");
+    //     "font-family: 'Brevia';"
+    //     "font-style: normal;"
+    //     "font-weight: 75;"
+    //     "font-size: 32px;"
+    //     "line-height: 99px;"
+    //     "letter-spacing: 1.5px;"
+    //     "color: #003840;"
+    //     "text-align: center;"
+    //     "border: none;"
+    //     "}");
 
     // ui->previousPage_Button_2->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
@@ -103,46 +103,15 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
         ui->transactions_Button->hide();
     }
 
-    ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    // ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    // ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     helpIdleTimer = new QTimer(this);
     helpIdleTimer->setInterval(1000);
     connect(helpIdleTimer, SIGNAL(timeout()), this, SLOT(onHelpTimeoutTick()));
 
     connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
-
-    QString cssFilePath = "/home/df-admin/drinkfill/ui/references/templates/default/page_help.css";
-    QFile cssFile(cssFilePath);
-
-    // button->setProperty("class", "primary-button");
-    // ui->back_Button->setProperty("class", "big");
-
-    // demonstration of classes
-    // ui->previousPage_Button_2->setProperty("class", "big");
-    // ui->transactions_Button->setProperty("class", "small");
-
-    qDebug() << "******************wefwef css file";
-    if (cssFile.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        qDebug() << "******************qewqwefqw opened file.";
-
-        QString styleSheet = QString::fromUtf8(cssFile.readAll());
-        // qDebug() << "******************button names: ";
-        // ui->back_Button->setStyleSheet(styleSheet);
-        // ui->back_Button->setText("lode");
-        // QString buttonSelector = QString("QPushButton#%1").arg(ui->previousPage_Button_2->objectName());
-        // QString buttonSelector2 = QString("QPushButton#%1").arg(ui->back_Button->objectName());
-        // qDebug() << buttonSelector;
-        // qDebug() << buttonSelector2;
-        ui->previousPage_Button_2->setStyleSheet(styleSheet);
-        ui->transactions_Button->setStyleSheet(styleSheet);
-    }
-    else
-    {
-        qDebug() << "Css file could not be opened." << cssFilePath;
-    }
 }
 
 // DTOR
@@ -150,13 +119,40 @@ page_help::~page_help()
 {
     delete ui;
 }
-
-void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow)
+void page_help::setPage(page_select_product *pageSelect, pageProduct *pageProduct, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_transactions *pageTransactions, page_maintenance *pageMaintenance, page_sendFeedback *pageFeedback)
 {
-    helpIdleTimer->stop();
-    ui->keyboardTextEntry->setText("");
-    ui->keyboard_3->hide();
-    p_page_idle->pageTransition(this, pageToShow);
+    this->p_page_idle = pageIdle;
+    this->p_page_feedback = pageFeedback;
+    this->paymentPage = page_qr_payment;
+    this->selectPage = pageProduct;
+    this->p_page_select_product = pageSelect;
+    this->p_page_transactions = pageTransactions;
+    this->p_page_maintenance = pageMaintenance;
+
+    // QString cssFilePath = "/home/df-admin/drinkfill/ui/references/templates/default/page_help.css";
+
+    // button->setProperty("class", "primary-button");
+    // ui->back_Button->setProperty("class", "big");
+
+    // demonstration of classes
+    ui->previousPage_Button_2->setProperty("class", "buttonNoBorder");
+    ui->transactions_Button->setProperty("class", "buttonNoBorder");
+    ui->refreshButton->setProperty("class","buttonTransparent");
+
+
+
+    // QString path = QString("page_help.css");
+    QString styleSheet = p_page_idle->getCSS(PAGE_HELP_CSS);
+    // qDebug() << "******************button names: ";
+    // ui->back_Button->setStyleSheet(styleSheet);
+    // ui->back_Button->setText("lode");
+    // QString buttonSelector = QString("QPushButton#%1").arg(ui->previousPage_Button_2->objectName());
+    // QString buttonSelector2 = QString("QPushButton#%1").arg(ui->back_Button->objectName());
+    // qDebug() << buttonSelector;
+    // qDebug() << buttonSelector2;
+
+    ui->previousPage_Button_2->setStyleSheet(styleSheet);
+    ui->transactions_Button->setStyleSheet(styleSheet);
 }
 
 void page_help::showEvent(QShowEvent *event)
@@ -184,25 +180,16 @@ void page_help::showEvent(QShowEvent *event)
     _helpIdleTimeoutSec = 60;
     ui->keyboard_3->hide();
 }
-
+void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow)
+{
+    helpIdleTimer->stop();
+    ui->keyboardTextEntry->setText("");
+    ui->keyboard_3->hide();
+    p_page_idle->pageTransition(this, pageToShow);
+}
 /*
  * Page Tracking reference
  */
-void page_help::setPage(page_select_product *pageSelect, pageProduct *pageProduct, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_transactions *pageTransactions, page_maintenance *pageMaintenance, page_sendFeedback *pageFeedback)
-{
-    this->p_page_idle = pageIdle;
-    this->p_page_feedback = pageFeedback;
-    this->paymentPage = page_qr_payment;
-    this->selectPage = pageProduct;
-    this->p_page_select_product = pageSelect;
-    this->p_page_transactions = pageTransactions;
-    this->p_page_maintenance = pageMaintenance;
-}
-
-void page_help::on_previousPage_Button_clicked()
-{
-    hideCurrentPageAndShowProvided(p_page_idle);
-}
 
 void page_help::on_previousPage_Button_2_clicked()
 {

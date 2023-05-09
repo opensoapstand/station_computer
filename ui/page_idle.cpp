@@ -34,7 +34,6 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     // IPC Networking
     dfUtility = new df_util();
 
-
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
 
@@ -62,7 +61,6 @@ void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pa
 #endif
 }
 
-
 // DTOR
 page_idle::~page_idle()
 {
@@ -85,24 +83,23 @@ void page_idle::showEvent(QShowEvent *event)
             break;
         }
     }
-     // call db check if idle or idle_products
+    // call db check if idle or idle_products
     idle_page_type = db.getIdlePageType();
     db.closeDB();
-    
+
     if (idle_page_type == "static_products")
     {
         hideCurrentPageAndShowProvided(p_page_idle_products);
     }
-    
+
     // DbManager db(DB_PATH);
-    
+
     // else if (idlePageType == "dynamic_products")
     // {
     //     hideCurrentPageAndShowProvided(p_page_idle_products);
     // }
 
     // db.closeDB();
-   
 
     this->lower();
     qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
@@ -144,8 +141,6 @@ void page_idle::showEvent(QShowEvent *event)
     // reset promovalue
     currentProductOrder->setDiscountPercentageFraction(0.0);
     currentProductOrder->setPromoCode("");
-  
-    
 
     addCompanyLogoToLabel(ui->logo_label);
 
@@ -338,13 +333,31 @@ QString page_idle::getTemplateFolder()
 {
     return m_templatePath;
 }
-QString page_idle::getTemplatePathFromName(QString pictureName)
+
+QString page_idle::getCSS(QString cssName)
 {
-    QString image_path = getTemplateFolder() + pictureName;
+    QString cssFilePath = getTemplatePathFromName(cssName);
+
+    QFile cssFile(cssFilePath);
+    QString styleSheet = "";
+    if (cssFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        styleSheet = QString::fromUtf8(cssFile.readAll());
+    }
+    else
+    {
+        qDebug() << "CSS file could not be opened." << cssFilePath;
+    }
+    return styleSheet;
+}
+
+QString page_idle::getTemplatePathFromName(QString fileName)
+{
+    QString image_path = getTemplateFolder() + fileName;
 
     if (!df_util::fileExists(image_path))
     {
-        QString image_default_path = getDefaultTemplatePathFromName(pictureName);
+        QString image_default_path = getDefaultTemplatePathFromName(fileName);
         qDebug() << "File not found in template folder: " + image_path + ". Default template path: " + image_default_path;
         if (!df_util::fileExists(image_default_path))
         {
@@ -355,17 +368,16 @@ QString page_idle::getTemplatePathFromName(QString pictureName)
 
     return image_path;
 }
-
 void page_idle::setTemplateFolder(QString rootPath, QString templateFolder)
 {
     m_templatePath = rootPath + templateFolder + "/";
     qDebug() << "Template path set to: " + m_templatePath;
 }
 
-QString page_idle::getDefaultTemplatePathFromName(QString backgroundPictureName)
+QString page_idle::getDefaultTemplatePathFromName(QString fileName)
 {
     QString template_root_path = TEMPLATES_ROOT_PATH;
-    return template_root_path + TEMPLATES_DEFAULT_NAME + "/" + backgroundPictureName;
+    return template_root_path + TEMPLATES_DEFAULT_NAME + "/" + fileName;
 }
 
 void page_idle::pageTransition(QWidget *pageToHide, QWidget *pageToShow)
@@ -392,5 +404,3 @@ void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QStrin
     p_widget->repaint();
     p_widget->update();
 }
-
-

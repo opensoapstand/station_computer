@@ -16,19 +16,6 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QPushButton" name="previousPage_Button">
-   <property name="geometry">
-    <rect>
-     <x>420</x>
-     <y>1740</y>
-     <width>211</width>
-     <height>171</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QPushButton" name="refreshButton">
    <property name="geometry">
     <rect>
@@ -1225,7 +1212,6 @@
   </widget>
   <zorder>html_text_label</zorder>
   <zorder>refreshButton</zorder>
-  <zorder>previousPage_Button</zorder>
   <zorder>transactions_Button</zorder>
   <zorder>maintenance_page_Button</zorder>
   <zorder>feedback_Button</zorder>

@@ -55,9 +55,10 @@ public:
     void addCompanyLogoToLabel(QLabel *label);
     QString getTemplateFolder();
     void setTemplateFolder(QString rootPath, QString templateFolder);
-    QString getTemplatePathFromName(QString backgroundPictureName);
-    QString getDefaultTemplatePathFromName(QString backgroundPictureName);
+    QString getTemplatePathFromName(QString fileName);
+    QString getDefaultTemplatePathFromName(QString fileName);
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
+    QString getCSS(QString cssName);
     void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
 
     DrinkOrder *currentProductOrder;

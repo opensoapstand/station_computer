@@ -27,16 +27,17 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     // Fullscreen background setup
     ui->setupUi(this);
 
-    ui->transactions_Button->setText("Transaction History ->");
-    ui->maintenance_page_Button->setText("Settings");
-    ui->feedback_Button->setText("Contact Us");
-    ui->previousPage_Button_2->setText("<-back");
+    ui->pushButton_to_transactions->setText("Transaction History ->");
+    ui->pushButton_to_maintenance->setText("Settings");
+    ui->pushButton_to_feedback->setText("Contact Us");
+    ui->pushButton_to_idle->setText("<-back");
+    ui->label_keyboardInfo->setText("Enter password followed by the \"Done\" key to enter maintenance mode");
     DbManager db(DB_PATH);
     bool showTransactions = db.showTransactions();
     db.closeDB();
     if (!showTransactions)
     {
-        ui->transactions_Button->hide();
+        ui->pushButton_to_transactions->hide();
     }
 
     helpIdleTimer = new QTimer(this);
@@ -63,15 +64,15 @@ void page_help::setPage(page_select_product *pageSelect, pageProduct *pageProduc
 
     QString styleSheet = p_page_idle->getCSS(PAGE_HELP_CSS);
 
-    ui->previousPage_Button_2->setProperty("class", "buttonNoBorder");
-    ui->transactions_Button->setProperty("class", "buttonNoBorder");
-    ui->refreshButton->setProperty("class", "buttonTransparent");
+    ui->pushButton_to_idle->setProperty("class", "buttonNoBorder");
+    ui->pushButton_to_transactions->setProperty("class", "buttonNoBorder");
+    ui->pushButton_resetTimeout->setProperty("class", "buttonTransparent");
 
-    ui->previousPage_Button_2->setStyleSheet(styleSheet);
-    ui->transactions_Button->setStyleSheet(styleSheet);
-    ui->refreshButton->setStyleSheet(styleSheet);
-    ui->maintenance_page_Button->setStyleSheet(styleSheet);
-    ui->feedback_Button->setStyleSheet(styleSheet);
+    ui->pushButton_to_idle->setStyleSheet(styleSheet);
+    ui->pushButton_to_transactions->setStyleSheet(styleSheet);
+    ui->pushButton_resetTimeout->setStyleSheet(styleSheet);
+    ui->pushButton_to_maintenance->setStyleSheet(styleSheet);
+    ui->pushButton_to_feedback->setStyleSheet(styleSheet);
     // QString buttonSelector2 = QString("QPushButton#%1").arg(ui->back_Button->objectName());
 }
 
@@ -111,7 +112,7 @@ void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow)
  * Page Tracking reference
  */
 
-void page_help::on_previousPage_Button_2_clicked()
+void page_help::on_pushButton_to_idle_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_idle);
 }
@@ -128,17 +129,17 @@ void page_help::onHelpTimeoutTick()
     }
 }
 
-void page_help::on_refreshButton_clicked()
+void page_help::on_pushButton_resetTimeout_clicked()
 {
     _helpIdleTimeoutSec = 60;
 }
 
-void page_help::on_transactions_Button_clicked()
+void page_help::on_pushButton_to_transactions_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_transactions);
 }
 
-void page_help::on_maintenance_page_Button_clicked()
+void page_help::on_pushButton_to_maintenance_clicked()
 {
     _helpIdleTimeoutSec = 60;
     ui->keyboard_3->show();
@@ -227,7 +228,7 @@ void page_help::keyboardButtonPressed(int buttonID)
     }
 }
 
-void page_help::on_feedback_Button_clicked()
+void page_help::on_pushButton_to_feedback_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_feedback);
 }

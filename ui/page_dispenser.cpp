@@ -498,7 +498,7 @@ void page_dispenser::fsmReceiveDispenseStatus(QString status)
     ui->label_dispense_status->setText(dispenseStatus);
     ui->label_dispense_status->hide();
 
-    if (dispenseStatus == "FLOW_STATE_NOT_PUMPING_NOT_DISPENSING" || dispenseStatus == "FLOW_STATE_RAMP_UP")
+    if (dispenseStatus == "FLOW_STATE_NOT_PUMPING_NOT_DISPENSING" || dispenseStatus == "FLOW_STATE_PRIME_FAIL_OR_EMPTY" || dispenseStatus == "FLOW_STATE_RAMP_UP" )
     {
         // stable status. do not change button visibility.
     }
@@ -506,6 +506,11 @@ void page_dispenser::fsmReceiveDispenseStatus(QString status)
     {
         ui->label_dispense_message->show();
         ui->label_dispense_message->setText("It appears we're out of stock.\nTap the problem button in case of other issues.");
+    }
+    else if (dispenseStatus == "FLOW_STATE_PRIME_FAIL_OR_EMPTY")
+    {
+        ui->label_dispense_message->show();
+        ui->label_dispense_message->setText("We can't get the dispensing started.\nWe're empty or the pump needs help to prime.\nTap the problem button in case of other issues.");
     }
 
     else if (dispenseStatus == "FLOW_STATE_PRIMING_OR_EMPTY")

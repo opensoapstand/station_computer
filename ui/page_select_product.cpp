@@ -65,7 +65,7 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
     selectProductTypeLabels[3] = ui->product_4_type_label;
 
     ui->helpPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    // ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->label_pick_soap->setStyleSheet(
         "QLabel {"
 
@@ -82,6 +82,16 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
         "}");
     ui->label_pick_soap->setText("Pick your soap");
 
+    // ui->mainPage_Button->setStyleSheet(
+    //     "QPushButton {"
+
+    // "background-color: #3498db;"
+    // "border: 2px solid #2980b9;"
+    // "border-radius: 5px;"
+    // "color: #fff;"
+    // "font-size: 16px;"
+    // "padding: 10px 20px;"
+    //     "}");
     ui->mainPage_Button->setStyleSheet(
         "QPushButton {"
 
@@ -93,7 +103,8 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
         "border: 0px;"
         "line-height: 99px;"
         "letter-spacing: 1.5px;"
-        "color: #003840;"
+        "color: #0000FF;"
+        // "color: #003840;"
         "text-align: center;"
         "qproperty-alignment: AlignCenter;"
         "border: none;"
@@ -129,6 +140,7 @@ void page_select_product::setPage(pageProduct *pageSizeSelect, page_idle_product
     QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     qDebug() << full_path;
     p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
+
 }
 
 // DTOR

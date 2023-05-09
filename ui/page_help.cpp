@@ -35,22 +35,22 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     // font.setWeight(75);
     font.setWeight(50);
 
-    ui->transactions_Button->setStyleSheet(
-        "QPushButton {"
+    // ui->transactions_Button->setStyleSheet(
+    //     "QPushButton {"
 
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "color: #003840;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
+    //     "font-family: 'Brevia';"
+    //     "font-style: normal;"
+    //     "font-weight: 75;"
+    //     "font-size: 32px;"
+    //     "line-height: 99px;"
+    //     "letter-spacing: 1.5px;"
+    //     "color: #003840;"
+    //     "text-align: center;"
+    //     "qproperty-alignment: AlignCenter;"
+    //     "border: none;"
+    //     "}");
     // ui->transactions_Button->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
-    ui->transactions_Button->setFont(font);
+    // ui->transactions_Button->setFont(font);
     ui->transactions_Button->setText("Transaction History ->");
 
     ui->maintenance_page_Button->setStyleSheet("QPushButton { color:#003840; background-color: #FFFFFF; border: 0px ; text-align: centre;border-radius: 20px;border: none;}");
@@ -61,20 +61,20 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     ui->feedback_Button->setFont(font);
     ui->feedback_Button->setText("Contact Us");
 
-    ui->back_Button->setStyleSheet(
-        "QPushButton {"
+    // ui->back_Button->setStyleSheet(
+    //     "QPushButton {"
 
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "color: #003840;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
+    //     "font-family: 'Brevia';"
+    //     "font-style: normal;"
+    //     "font-weight: 75;"
+    //     "font-size: 32px;"
+    //     "line-height: 99px;"
+    //     "letter-spacing: 1.5px;"
+    //     "color: #003840;"
+    //     "text-align: center;"
+    //     "qproperty-alignment: AlignCenter;"
+    //     "border: none;"
+    //     "}");
 
     ui->back_Button->setText("<-back");
 
@@ -96,6 +96,36 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     connect(helpIdleTimer, SIGNAL(timeout()), this, SLOT(onHelpTimeoutTick()));
 
     connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
+
+
+
+    
+    QString cssFilePath = "/home/df-admin/drinkfill/lodetest.css";
+    QFile cssFile(cssFilePath);
+
+    
+    qDebug() << "******************wefwef css file";
+    if (cssFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        qDebug() << "******************qewqwefqw opened file.";
+        // QString styleSheet = QString::fromUtf8(cssFile.readAll());
+        // ui->transactions_Button->setStyleSheet(styleSheet);
+        // ui->back_Button->setStyleSheet(styleSheet);
+
+
+            QString styleSheet = QString::fromUtf8(cssFile.readAll());
+             QString buttonSelector = QString("QPushButton#%1").arg(ui->transactions_Button->objectName());
+           
+             QString buttonSelector2 = QString("QPushButton#%1").arg(ui->back_Button->objectName());
+            qDebug() << buttonSelector;
+            qDebug() << buttonSelector2;
+            qDebug() << "******************button back name: .";
+            ui->back_Button->setStyleSheet(styleSheet);
+            ui->transactions_Button->setStyleSheet(styleSheet);
+
+    }else{
+        qDebug() << "Css file could not be opened." << cssFilePath ;
+    }
 }
 
 // DTOR

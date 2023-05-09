@@ -383,8 +383,6 @@ void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QStrin
 
     QString image_path = imageName;
     image_path = getTemplatePathFromName(imageName);
-#define USE_PIXMAP
-#ifdef USE_PIXMAP
     QPixmap background(image_path);
 
     // background = background.scaled(p_widget->size(), Qt::IgnoreAspectRatio);
@@ -392,18 +390,7 @@ void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QStrin
     palette.setBrush(QPalette::Background, background);
     p_widget->setPalette(palette);
     p_widget->repaint();
-
-    // QPixmap background(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
-    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-    // QPalette palette;
-    // palette.setBrush(QPalette::Background, background);
-    // this->setPalette(palette);
-
-#else
-
-    p_widget->setStyleSheet("QWidget { border-image: url(" + image_path + "); }");
-    // p_widget->setStyleSheet("background-image: url("+ image_path +")");
-#endif
+    p_widget->update();
 }
 
 

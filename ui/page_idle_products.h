@@ -68,7 +68,6 @@ public:
     
 private slots:
     // **** Navigation ****
-    
     void onProductPageTimeoutTick();
     void on_p_page_maintenanceButton_pressed();
     void on_helpPage_Button_clicked();

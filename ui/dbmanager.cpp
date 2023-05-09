@@ -383,6 +383,8 @@ double DbManager::getProductVolume(int slot, char size)
     return volume;
 }
 
+
+
 double DbManager::getFullProduct(int slot)
 {
     qDebug() << " db... getFullProduct";
@@ -1661,6 +1663,138 @@ QString DbManager::getHelpPageHtmlText()
     return mid_string;
 }
 
+QString DbManager::getSizeSmall(int slot)
+{
+    qDebug() << " db... getSizeSmall";
+    QSqlQuery small_vol_query;
+    QString small_vol_string;
+    {
+
+        small_vol_query.prepare("SELECT size_small FROM products WHERE slot=:slot");
+
+        small_vol_query.bindValue(":slot", slot);
+        small_vol_query.exec();
+
+        while (small_vol_query.next())
+        {
+            small_vol_string = small_vol_query.value(0).toString();
+
+            // qDebug() << "Product: " << product_name << endl;
+        }
+    }
+    return small_vol_string;
+}
+
+QString DbManager::getSizeMedium(int slot)
+{
+    qDebug() << " db... getSizeMedium";
+    QSqlQuery medium_vol_query;
+    QString medium_vol_string;
+    {
+
+        medium_vol_query.prepare("SELECT size_medium FROM products WHERE slot=:slot");
+
+        medium_vol_query.bindValue(":slot", slot);
+        medium_vol_query.exec();
+
+        while (medium_vol_query.next())
+        {
+            medium_vol_string = medium_vol_query.value(0).toString();
+
+            // qDebug() << "Product: " << product_name << endl;
+        }
+    }
+    return medium_vol_string;
+    
+}
+
+    QString DbManager::getSizeLarge(int slot)
+{
+    qDebug() << " db... getSizeLarge";
+    QSqlQuery large_vol_query;
+    QString large_vol_string;
+    {
+
+        large_vol_query.prepare("SELECT size_large FROM products WHERE slot=:slot");
+
+        large_vol_query.bindValue(":slot", slot);
+        large_vol_query.exec();
+
+        while (large_vol_query.next())
+        {
+            large_vol_string = large_vol_query.value(0).toString();
+
+            // qDebug() << "Product: " << product_name << endl;
+        }
+    }
+    return large_vol_string;
+}
+
+    
+    QString DbManager::getPriceSmall(int slot)
+{
+    qDebug() << " db... getPriceSmall";
+    QSqlQuery small_price_query;
+    QString small_price_string;
+    {
+
+        small_price_query.prepare("SELECT price_small FROM products WHERE slot=:slot");
+
+        small_price_query.bindValue(":slot", slot);
+        small_price_query.exec();
+
+        while (small_price_query.next())
+        {
+            small_price_string = small_price_query.value(0).toString();
+
+            // qDebug() << "Product: " << product_name << endl;
+        }
+    }
+    return small_price_string;
+}
+   
+   
+    QString DbManager::getPriceMedium(int slot)
+{
+    qDebug() << " db... getPriceMedium";
+    QSqlQuery medium_price_query;
+    QString medium_price_string;
+    {
+
+        medium_price_query.prepare("SELECT price_medium FROM products WHERE slot=:slot");
+
+        medium_price_query.bindValue(":slot", slot);
+        medium_price_query.exec();
+
+        while (medium_price_query.next())
+        {
+            medium_price_string = medium_price_query.value(0).toString();
+        }
+    }
+    return medium_price_string;
+}
+    
+    
+    QString DbManager::getPriceLarge(int slot)
+{
+    qDebug() << " db... getPriceLarge";
+    QSqlQuery large_price_query;
+    QString large_price_string;
+    {
+
+        large_price_query.prepare("SELECT price_large FROM products WHERE slot=:slot");
+
+        large_price_query.bindValue(":slot", slot);
+        large_price_query.exec();
+
+        while (large_price_query.next())
+        {
+            large_price_string = large_price_query.value(0).toString();
+        }
+    }
+    return large_price_string;
+}
+    
 QString DbManager::getIdlePageType()
 {
     QSqlQuery query;

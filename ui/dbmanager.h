@@ -29,6 +29,14 @@ public:
     QString getMaintenanceAdminPassword();
     QString getCustomerId();
     QString getHelpPageHtmlText();
+    QString getSizeSmall(int slot);
+    QString getSizeMedium(int slot);
+    QString getSizeLarge(int slot);
+    QString getPriceSmall(int slot);
+    QString getPriceMedium(int slot);
+    QString getPriceLarge(int slot);
+
+
     QString getIdlePageType();
 
     double getFullProduct(int slot);

@@ -117,7 +117,8 @@
     </rect>
    </property>
    <property name="text">
-    <string>Volume per Tick</string>
+    <string>Set DB
+Volume per Tick</string>
    </property>
   </widget>
   <widget class="QLabel" name="price_small">
@@ -885,11 +886,21 @@ last restock</string>
      <x>870</x>
      <y>460</y>
      <width>181</width>
-     <height>81</height>
+     <height>0</height>
     </rect>
    </property>
    <property name="text">
     <string>Update Portal</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="calibration_instructions_label">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>760</y>
+     <width>581</width>
+     <height>81</height>
+    </rect>
    </property>
   </widget>
   <widget class="QLabel" name="price_large">
@@ -1074,14 +1085,27 @@ last restock</string>
   <widget class="QPushButton" name="pluButton_c">
    <property name="geometry">
     <rect>
-     <x>730</x>
-     <y>780</y>
+     <x>440</x>
+     <y>1140</y>
      <width>141</width>
      <height>51</height>
     </rect>
    </property>
    <property name="text">
-    <string>Custom PLU</string>
+    <string>calibration instructions</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="calibration_result_label">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>850</y>
+     <width>591</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Calibraton value (ml/tick if exactly 1000ml dispensed):</string>
    </property>
   </widget>
  </widget>

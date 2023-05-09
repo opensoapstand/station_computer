@@ -69,7 +69,7 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
         "font-family: 'Brevia';"
         "font-style: normal;"
         "font-weight: 75;"
-        "font-size: 74px;"
+        "font-size: 54px;"
         "line-height: 99px;"
         "letter-spacing: px;"
         "color: #003840;"
@@ -77,26 +77,9 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
         "qproperty-alignment: AlignCenter;"
         "border: none;"
         "}");
-    ui->label_pick_soap->setText("refill soap here");
+    ui->label_pick_soap->setText("Discover how to<br> refill soap here");
 
-    // ui->mainPage_Button->setStyleSheet(
-    //     "QPushButton {"
-
-    //     "font-family: 'Brevia';"
-    //     "font-style: normal;"
-    //     "font-weight: 75;"
-    //     "font-size: 32px;"
-    //     "background-color: transparent;"
-    //     "border: 0px;"
-    //     "line-height: 99px;"
-    //     "letter-spacing: 1.5px;"
-    //     "color: #003840;"
-    //     "text-align: center;"
-    //     "qproperty-alignment: AlignCenter;"
-    //     "border: none;"
-    //     "}");
-
-    // ui->mainPage_Button->setText("<-back");
+   
 
     QFont font;
     font.setFamily(QStringLiteral("Brevia"));
@@ -114,7 +97,6 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
  */
 void page_idle_products::setPage(pageProduct *pageSizeSelect, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp)
 {
-    // this->selection_PageTwo = pageTwoProducts;
     this->p_page_product = pageSizeSelect;
     this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
@@ -125,7 +107,6 @@ void page_idle_products::setPage(pageProduct *pageSizeSelect, page_idle_products
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
     QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     qDebug() << full_path;
-    // p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
 }
 
 // DTOR
@@ -163,7 +144,6 @@ void page_idle_products::resizeEvent(QResizeEvent *event)
 
 void page_idle_products::displayProducts()
 {
-#ifdef ENABLE_DYNAMIC_UI
     QString product_type_icons[5] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH};
 
     bool product_slot_enabled;
@@ -259,19 +239,8 @@ void page_idle_products::displayProducts()
         selectProductTypeLabels[i]->setText(type_text);
         selectProductTypeLabels[i]->setStyleSheet("QLabel{font-family: 'Brevia';font-style: normal;font-weight: 700;font-size: 30px;line-height: 41px;qproperty-alignment: AlignCenter;text-transform: uppercase;color: #003840;}");
     }
-#else
-    for (uint8_t i = 0; i < SLOT_COUNT; i++)
-    {
-        // selectProductButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-        // selectProductButtons[i]->raise();
-        selectProductPhotoLabels[i]->hide();
-        // selectProductNameLabels[i]->hide();
-        selectProductIconLabels[i]->hide();
-        selectProductTypeLabels[i]->hide();
-    }
 
-#endif
-        QString price = ui->label_product1_price->text();
+   
 
 }
 
@@ -284,13 +253,25 @@ void page_idle_products::select_product(int slot)
 
 void page_idle_products::addCompanyLogoToLabel(QLabel *label)
 {
-#ifdef ENABLE_DYNAMIC_UI
     qDebug() << "db init company logo";
     DbManager db(DB_PATH);
     QString id = db.getCustomerId();
+    QString size_small;
+    QString size_medium;
+    QString size_large;
     QString size_units;
+    QString price_small;
+    QString price_medium;
+    QString price_large;
     for (uint8_t i = 0; i < SLOT_COUNT; i++) {
     size_units = db.getUnits(i);
+    size_small = db.getSizeSmall(i);
+    size_medium = db.getSizeMedium(i);
+    size_large = db.getSizeLarge(i);
+    price_small = db.getPriceSmall(i);
+    price_medium = db.getPriceMedium(i);
+    price_large = db.getPriceLarge(i);
+
     // do something with size_units
 }
     db.closeDB();
@@ -304,13 +285,73 @@ void page_idle_products::addCompanyLogoToLabel(QLabel *label)
     {
         qDebug() << "WARNING: invalid customer ID. Should like C-1, C-374, ... . Provided id: " << id;
     }
-#endif
+        // ui->label_product1_price->setStyleSheet(
+        // "QLabel {"
+
+        // "font-family: 'Brevia';"
+        // "font-style: normal;"
+        // "font-weight: 50;"
+        // "font-size: 23px;"
+        // "line-height: 99px;"
+        // "text-align: center;"
+        // "letter-spacing: 1.5px;"
+        // "text-transform: lowercase;"
+        // "color: #003840;"
+        // "qproperty-alignment: AlignCenter;"
+        // "}");
+
+        // ui->label_product2_price->setStyleSheet(
+        // "QLabel {"
+
+        // "font-family: 'Brevia';"
+        // "font-style: normal;"
+        // "font-weight: 50;"
+        // "font-size: 23px;"
+        // "line-height: 99px;"
+        // "text-align: center;"
+        // "letter-spacing: 1.5px;"
+        // "text-transform: lowercase;"
+        // "color: #003840;"
+        // "qproperty-alignment: AlignCenter;"
+        // "}");
+
+        // ui->label_product3_price->setStyleSheet(
+        // "QLabel {"
+
+        // "font-family: 'Brevia';"
+        // "font-style: normal;"
+        // "font-weight: 50;"
+        // "font-size: 23px;"
+        // "line-height: 99px;"
+        // "text-align: center;"
+        // "letter-spacing: 1.5px;"
+        // "text-transform: lowercase;"
+        // "color: #003840;"
+        // "qproperty-alignment: AlignCenter;"
+        // "}");
+        // ui->label_product4_price->setStyleSheet(
+        // "QLabel {"
+
+        // "font-family: 'Brevia';"
+        // "font-style: normal;"
+        // "font-weight: 50;"
+        // "font-size: 23px;"
+        // "line-height: 99px;"
+        // "text-align: center;"
+        // "letter-spacing: 1.5px;"
+        // "text-transform: lowercase;"
+        // "color: #003840;"
+        // "qproperty-alignment: AlignCenter;"
+        // "}");
+    //     QString label_text = "%1 ml | %2 ml | %3 ml<br>%4....|....%5....|.... %6";
+
     //  if (size_units == "ml")
-    // {
-    //     ui->label_product1_price->setText("ml");
-    //     ui->label_product2_price->setText("ml");
-    //     ui->label_product3_price->setText("ml");
-    //     ui->label_product4_price->setText("ml");
+    // { 
+    //     label_text = label_text.arg(size_small).arg(size_medium).arg(size_large).arg( price_small).arg(price_medium).arg(price_large);
+    //     ui->label_product1_price->setText(label_text);
+    //     ui->label_product2_price->setText(label_text);
+    //     ui->label_product3_price->setText(label_text);
+    //     ui->label_product4_price->setText(label_text);
     // }
     //  else if (size_units == "L")
     // {

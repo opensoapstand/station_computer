@@ -27,74 +27,10 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     // Fullscreen background setup
     ui->setupUi(this);
 
-    // view transactions button
-    QFont font;
-    font.setFamily(QStringLiteral("Brevia"));
-    font.setPointSize(20);
-    // font.setBold(true);
-    // font.setWeight(75);
-    font.setWeight(50);
-
-    // ui->transactions_Button->setStyleSheet(
-    //     "QPushButton {"
-
-    //     "font-family: 'Brevia';"
-    //     "font-style: normal;"
-    //     "font-weight: 75;"
-    //     "font-size: 32px;"
-    //     "line-height: 99px;"
-    //     "letter-spacing: 1.5px;"
-    //     "color: #003840;"
-    //     "text-align: center;"
-    //     "qproperty-alignment: AlignCenter;"
-    //     "border: none;"
-    //     "}");
-    // ui->transactions_Button->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
-    // ui->transactions_Button->setFont(font);
     ui->transactions_Button->setText("Transaction History ->");
-
-    ui->maintenance_page_Button->setStyleSheet("QPushButton { color:#003840; background-color: #FFFFFF; border: 0px ; text-align: centre;border-radius: 20px;border: none;}");
-    ui->maintenance_page_Button->setFont(font);
     ui->maintenance_page_Button->setText("Settings");
-
-    ui->feedback_Button->setStyleSheet("QPushButton { color:#003840; background-color: #FFFFFF; border: 0px ; text-align: centre;border-radius: 20px;border: none;}");
-    ui->feedback_Button->setFont(font);
     ui->feedback_Button->setText("Contact Us");
-
-    // ui->back_Button->setStyleSheet(
-    //     "QPushButton {"
-
-    //     "font-family: 'Brevia';"
-    //     "font-style: normal;"
-    //     "font-weight: 75;"
-    //     "font-size: 32px;"
-    //     "line-height: 99px;"
-    //     "letter-spacing: 1.5px;"
-    //     "color: #003840;"
-    //     "text-align: center;"
-    //     "qproperty-alignment: AlignCenter;"
-    //     "border: none;"
-    //     "}");
-
-    // ui->back_Button->setText("<-back");
     ui->previousPage_Button_2->setText("<-back");
-
-    ui->previousPage_Button_2->setStyleSheet(
-        "QPushButton {"
-
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "color: #003840;"
-        "text-align: center;"
-        "border: none;"
-        "}");
-
-    // ui->previousPage_Button_2->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-
     DbManager db(DB_PATH);
     bool showTransactions = db.showTransactions();
     db.closeDB();
@@ -102,10 +38,6 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     {
         ui->transactions_Button->hide();
     }
-
-    // ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-
-    // ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     helpIdleTimer = new QTimer(this);
     helpIdleTimer->setInterval(1000);
@@ -129,31 +61,18 @@ void page_help::setPage(page_select_product *pageSelect, pageProduct *pageProduc
     this->p_page_transactions = pageTransactions;
     this->p_page_maintenance = pageMaintenance;
 
-    // QString cssFilePath = "/home/df-admin/drinkfill/ui/references/templates/default/page_help.css";
+    QString styleSheet = p_page_idle->getCSS(PAGE_HELP_CSS);
 
-    // button->setProperty("class", "primary-button");
-    // ui->back_Button->setProperty("class", "big");
-
-    // demonstration of classes
     ui->previousPage_Button_2->setProperty("class", "buttonNoBorder");
     ui->transactions_Button->setProperty("class", "buttonNoBorder");
-    ui->refreshButton->setProperty("class","buttonTransparent");
-
-
-
-    // QString path = QString("page_help.css");
-    QString styleSheet = p_page_idle->getCSS(PAGE_HELP_CSS);
-    // qDebug() << "******************button names: ";
-    // ui->back_Button->setStyleSheet(styleSheet);
-    // ui->back_Button->setText("lode");
-    // QString buttonSelector = QString("QPushButton#%1").arg(ui->previousPage_Button_2->objectName());
-    // QString buttonSelector2 = QString("QPushButton#%1").arg(ui->back_Button->objectName());
-    // qDebug() << buttonSelector;
-    // qDebug() << buttonSelector2;
+    ui->refreshButton->setProperty("class", "buttonTransparent");
 
     ui->previousPage_Button_2->setStyleSheet(styleSheet);
     ui->transactions_Button->setStyleSheet(styleSheet);
     ui->refreshButton->setStyleSheet(styleSheet);
+    ui->maintenance_page_Button->setStyleSheet(styleSheet);
+    ui->feedback_Button->setStyleSheet(styleSheet);
+    // QString buttonSelector2 = QString("QPushButton#%1").arg(ui->back_Button->objectName());
 }
 
 void page_help::showEvent(QShowEvent *event)

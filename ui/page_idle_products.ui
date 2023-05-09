@@ -167,11 +167,63 @@
     <bool>true</bool>
    </property>
   </widget>
+  <widget class="QLabel" name="label_product1_price">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>820</y>
+     <width>450</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_product2_price">
+   <property name="geometry">
+    <rect>
+     <x>562</x>
+     <y>820</y>
+     <width>450</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_product3_price">
+   <property name="geometry">
+    <rect>
+     <x>53</x>
+     <y>1520</y>
+     <width>450</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_product4_price">
+   <property name="geometry">
+    <rect>
+     <x>562</x>
+     <y>1520</y>
+     <width>450</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <widget class="QLabel" name="product_3_type_label">
    <property name="geometry">
     <rect>
      <x>53</x>
-     <y>1460</y>
+     <y>1490</y>
      <width>450</width>
      <height>48</height>
     </rect>
@@ -184,7 +236,7 @@
    <property name="geometry">
     <rect>
      <x>562</x>
-     <y>760</y>
+     <y>770</y>
      <width>450</width>
      <height>46</height>
     </rect>
@@ -197,7 +249,7 @@
    <property name="geometry">
     <rect>
      <x>562</x>
-     <y>1450</y>
+     <y>1490</y>
      <width>450</width>
      <height>46</height>
     </rect>
@@ -210,7 +262,7 @@
    <property name="geometry">
     <rect>
      <x>53</x>
-     <y>760</y>
+     <y>770</y>
      <width>450</width>
      <height>46</height>
     </rect>
@@ -411,10 +463,10 @@
   <widget class="QLabel" name="label_pick_soap">
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>170</y>
-     <width>800</width>
-     <height>151</height>
+     <x>0</x>
+     <y>178</y>
+     <width>1080</width>
+     <height>191</height>
     </rect>
    </property>
    <property name="text">
@@ -434,52 +486,13 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_product1_price">
+  <widget class="QLabel" name="logo_label">
    <property name="geometry">
     <rect>
-     <x>53</x>
-     <y>790</y>
-     <width>261</width>
-     <height>171</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_product2_price">
-   <property name="geometry">
-    <rect>
-     <x>562</x>
-     <y>790</y>
-     <width>261</width>
-     <height>171</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_product3_price">
-   <property name="geometry">
-    <rect>
-     <x>53</x>
-     <y>1500</y>
-     <width>261</width>
-     <height>171</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_product4_price">
-   <property name="geometry">
-    <rect>
-     <x>562</x>
-     <y>1500</y>
-     <width>261</width>
-     <height>171</height>
+     <x>450</x>
+     <y>1730</y>
+     <width>191</width>
+     <height>181</height>
     </rect>
    </property>
    <property name="text">
@@ -493,6 +506,10 @@
   <zorder>p_page_maintenanceButton</zorder>
   <zorder>product_3_photo_label</zorder>
   <zorder>product_4_photo_label</zorder>
+  <zorder>label_product1_price</zorder>
+  <zorder>label_product2_price</zorder>
+  <zorder>label_product3_price</zorder>
+  <zorder>label_product4_price</zorder>
   <zorder>product_3_type_label</zorder>
   <zorder>product_2_type_label</zorder>
   <zorder>product_4_type_label</zorder>
@@ -505,12 +522,7 @@
   <zorder>product_3_overlay_label</zorder>
   <zorder>label_pick_soap</zorder>
   <zorder>helpPage_Button</zorder>
-  <zorder>product_1_type_label</zorder>
   <zorder>logo_label</zorder>
-  <zorder>label_product1_price</zorder>
-  <zorder>label_product2_price</zorder>
-  <zorder>label_product3_price</zorder>
-  <zorder>label_product4_price</zorder>
  </widget>
  <resources/>
  <connections/>

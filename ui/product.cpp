@@ -9,7 +9,6 @@
 //     // overruledPrice = INVALID_PRICE;
 //     m_discount_percentage_fraction = 0.0;
 //     m_promoCode = "";
-
 // }
 
 // // Ctor Object Copy

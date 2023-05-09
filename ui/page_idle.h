@@ -61,6 +61,9 @@ public:
     void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
 
     DrinkOrder *currentProductOrder;
+    // Product [PRODUCTS_COUNT] products;
+    // Product* selectedProduct;
+
     df_util *dfUtility;
 
     DfUiCommThread *dfComm;

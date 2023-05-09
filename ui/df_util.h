@@ -101,7 +101,7 @@ using namespace std;
 
 
 #define PAGE_IDLE_BACKGROUND_PATH                       "background_message.png"
-#define PAGE_IDLE_PRODUCTS_BACKGROUND_PATH               "background_product_select.png"
+#define PAGE_IDLE_PRODUCTS_BACKGROUND_PATH              "background_product_select.png"
 #define PAGE_THANK_YOU_BACKGROUND_PATH                  "background_message.png"
 #define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_message.png"
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"

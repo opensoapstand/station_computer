@@ -45,19 +45,6 @@
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="back_Button">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>210</y>
-     <width>181</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QPushButton" name="transactions_Button">
    <property name="geometry">
     <rect>
@@ -1238,7 +1225,6 @@
   </widget>
   <zorder>html_text_label</zorder>
   <zorder>refreshButton</zorder>
-  <zorder>back_Button</zorder>
   <zorder>previousPage_Button</zorder>
   <zorder>transactions_Button</zorder>
   <zorder>maintenance_page_Button</zorder>

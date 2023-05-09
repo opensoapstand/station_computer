@@ -1,12 +1,12 @@
-QPushButton#back_Button {
+/* QPushButton#back_Button {
     color: #00FF00;
-}
- QPushButton#previousPage_Button_2 {
+} */
+ /* QPushButton#previousPage_Button_2 {
     color: #0000FF;
-} 
-QPushButton#transactions_Button {
+}  */
+/* QPushButton#transactions_Button {
     color: #FF0000;
-}
+} */
 
 QPushButton {
 font-family: 'Brevia';
@@ -17,12 +17,22 @@ background-color: transparent;
 border: 0px;
 line-height: 99px;
 letter-spacing: 1.5px;
-color: #0000FF;
+/* color: #003840; */
+color: #FF0000;
 text-align: center;
 border: none;
 }
 
-QPushButton:hover {
+/* QPushButton:hover {
     background-color: #2980b9;
     border: 2px solid #3498db;
+} */
+
+.big{
+    /* font-size: 100px; */
+}
+
+.small{
+    /* font-size: 20px; */
+
 }

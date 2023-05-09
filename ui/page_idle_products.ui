@@ -177,7 +177,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="label_product2_price">
@@ -190,7 +190,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="label_product3_price">
@@ -203,7 +203,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="label_product4_price">
@@ -216,7 +216,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="product_3_type_label">
@@ -465,7 +465,7 @@
     <rect>
      <x>150</x>
      <y>178</y>
-     <width>800</width>
+     <width>1080</width>
      <height>86</height>
     </rect>
    </property>

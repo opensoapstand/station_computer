@@ -76,9 +76,24 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     //     "border: none;"
     //     "}");
 
-    ui->back_Button->setText("<-back");
+    // ui->back_Button->setText("<-back");
+    ui->previousPage_Button_2->setText("<-back");
+        
+    ui->previousPage_Button_2->setStyleSheet(
+        "QPushButton {"
 
-    ui->previousPage_Button_2->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 75;"
+        "font-size: 32px;"
+        "line-height: 99px;"
+        "letter-spacing: 1.5px;"
+        "color: #003840;"
+        "text-align: center;"
+        "border: none;"
+        "}");
+
+    // ui->previousPage_Button_2->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     DbManager db(DB_PATH);
     bool showTransactions = db.showTransactions();
@@ -88,7 +103,10 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
         ui->transactions_Button->hide();
     }
 
-    ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    // ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+
+
+
     ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     helpIdleTimer = new QTimer(this);
@@ -109,12 +127,14 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
         // ui->back_Button->setStyleSheet(styleSheet);
 
         QString styleSheet = QString::fromUtf8(cssFile.readAll());
-        // QString buttonSelector = QString("QPushButton#%1").arg(ui->transactions_Button->objectName());
-        // QString buttonSelector2 = QString("QPushButton#%1").arg(ui->back_Button->objectName());
-        // qDebug() << buttonSelector;
-        // qDebug() << buttonSelector2;
-        qDebug() << "******************button back name: .";
+        qDebug() << "******************button names: ";
         ui->back_Button->setStyleSheet(styleSheet);
+        ui->back_Button->setText("lode");
+        ui->previousPage_Button_2->setStyleSheet(styleSheet);
+        QString buttonSelector = QString("QPushButton#%1").arg(ui->previousPage_Button_2->objectName());
+        QString buttonSelector2 = QString("QPushButton#%1").arg(ui->back_Button->objectName());
+        qDebug() << buttonSelector;
+        qDebug() << buttonSelector2;
         ui->transactions_Button->setStyleSheet(styleSheet);
     }
     else

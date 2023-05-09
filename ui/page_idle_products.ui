@@ -463,10 +463,10 @@
   <widget class="QLabel" name="label_pick_soap">
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>0</x>
      <y>178</y>
      <width>1080</width>
-     <height>86</height>
+     <height>191</height>
     </rect>
    </property>
    <property name="text">

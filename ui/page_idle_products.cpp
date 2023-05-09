@@ -77,7 +77,7 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
         "qproperty-alignment: AlignCenter;"
         "border: none;"
         "}");
-    ui->label_pick_soap->setText("Discover how to refill soap here");
+    ui->label_pick_soap->setText("Discover how to<br> refill soap here");
 
    
 

@@ -27,14 +27,11 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     // Fullscreen background setup
     ui->setupUi(this);
 
-    ui->pushButton_to_transactions->setText("Transaction History ->");
-    ui->pushButton_to_maintenance->setText("Settings");
-    ui->pushButton_to_feedback->setText("Contact Us");
-    ui->pushButton_to_idle->setText("<-back");
-    ui->label_keyboardInfo->setText("Enter password followed by the \"Done\" key to enter maintenance mode");
+
     DbManager db(DB_PATH);
     bool showTransactions = db.showTransactions();
     db.closeDB();
+
     if (!showTransactions)
     {
         ui->pushButton_to_transactions->hide();
@@ -56,8 +53,8 @@ void page_help::setPage(page_select_product *pageSelect, pageProduct *pageProduc
 {
     this->p_page_idle = pageIdle;
     this->p_page_feedback = pageFeedback;
-    this->paymentPage = page_qr_payment;
-    this->selectPage = pageProduct;
+    this->p_page_payment = page_qr_payment;
+    this->p_page_product = pageProduct;
     this->p_page_select_product = pageSelect;
     this->p_page_transactions = pageTransactions;
     this->p_page_maintenance = pageMaintenance;
@@ -74,6 +71,15 @@ void page_help::setPage(page_select_product *pageSelect, pageProduct *pageProduc
     ui->pushButton_to_maintenance->setStyleSheet(styleSheet);
     ui->pushButton_to_feedback->setStyleSheet(styleSheet);
     // QString buttonSelector2 = QString("QPushButton#%1").arg(ui->back_Button->objectName());
+
+    // QString styleSheet = p_page_idle->getCSS(PAGE_HELP_CSS);
+    ui->pushButton_to_transactions->setText("Transaction History ->");
+    ui->pushButton_to_maintenance->setText("Settings");
+    ui->pushButton_to_feedback->setText("Contact Us");
+    ui->pushButton_to_idle->setText("<-back");
+    ui->label_keyboardInfo->setText("Enter password followed by the \"Done\" key to enter maintenance mode");
+    
+
 }
 
 void page_help::showEvent(QShowEvent *event)

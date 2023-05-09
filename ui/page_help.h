@@ -68,10 +68,10 @@ private:
 
     Ui::page_help *ui;
     page_select_product* p_page_select_product;
-    page_qr_payment* paymentPage;
+    page_qr_payment* p_page_payment;
     page_idle* p_page_idle;
     page_sendFeedback* p_page_feedback;
-    pageProduct* selectPage;
+    pageProduct* p_page_product;
     page_transactions* p_page_transactions;
     page_maintenance* p_page_maintenance;
 

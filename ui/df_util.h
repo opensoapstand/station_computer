@@ -100,6 +100,8 @@ using namespace std;
 
 
 
+#define PAGE_HELP_TEXT                                   "page_help_text.txt"
+
 #define PAGE_HELP_CSS                                   "page_help.css"
 
 #define PAGE_IDLE_BACKGROUND_PATH                       "background_message.png"

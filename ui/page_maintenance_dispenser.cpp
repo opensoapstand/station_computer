@@ -550,7 +550,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
         {
             QMessageBox msgBox2;
             msgBox2.setWindowFlags(Qt::FramelessWindowHint);
-            msgBox2.setText("<p align=center>Is this product coming soon?</p>");
+            msgBox2.setText("<p align=center>Should the product be labeled as coming soon?</p>");
             msgBox2.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-width: 300px; min-height: 300px;}");
 
             msgBox2.setStandardButtons(QMessageBox::Yes | QMessageBox::No);

@@ -71,11 +71,11 @@ private slots:
     void on_mainPage_Button_clicked();
     void onSelectTimeoutTick();
 
-    void on_send_Button_clicked();
+    void on_pushButton_send_clicked();
 
     // void keyboardButtonPressed(int);
     void on_previousPage_Button_clicked();
-    void on_feedback_Input_Button_clicked();
+    void on_pushButton_start_input_clicked();
     void on_feedback_Text_Input_clicked();
     void keyboardButtonPressed(int);
 

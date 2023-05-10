@@ -42,7 +42,7 @@ line-height: 29px;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="send_Button">
+  <widget class="QPushButton" name="pushButton_send">
    <property name="geometry">
     <rect>
      <x>290</x>
@@ -361,7 +361,7 @@ text-align: center;
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="feedback_Input_Button">
+  <widget class="QPushButton" name="pushButton_start_input">
    <property name="geometry">
     <rect>
      <x>200</x>
@@ -1735,7 +1735,7 @@ font: 11pt &quot;Montserrat&quot;;</string>
    </property>
   </widget>
   <zorder>label_thank_you_image</zorder>
-  <zorder>send_Button</zorder>
+  <zorder>pushButton_send</zorder>
   <zorder>label_problem_options</zorder>
   <zorder>mainPage_Button</zorder>
   <zorder>label_select_problem</zorder>
@@ -1754,7 +1754,7 @@ font: 11pt &quot;Montserrat&quot;;</string>
   <zorder>label_email</zorder>
   <zorder>previousPage_Button</zorder>
   <zorder>label_enter_feedback</zorder>
-  <zorder>feedback_Input_Button</zorder>
+  <zorder>pushButton_start_input</zorder>
   <zorder>label_thanks_for_feedback</zorder>
   <zorder>label_help</zorder>
   <zorder>feedbackText</zorder>

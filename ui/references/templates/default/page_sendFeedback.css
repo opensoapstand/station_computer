@@ -1,0 +1,19 @@
+.buttonTransparent{
+   background-color: transparent;
+   border: 0px;
+}
+
+QPushButton {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 35px;
+   line-height: 99px;
+   letter-spacing: 1.5px;
+   background-color: #5E8680;
+   color: #FFFFFF;
+   text-align: center;
+   border-radius: 30px;
+   padding: 10px;
+   border: 2px solid #004D54;
+}

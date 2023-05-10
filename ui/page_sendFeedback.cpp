@@ -37,7 +37,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     qDebug() << "IN send feedback";
     ui->setupUi(this);
 
-    ui->feedback_Input_Button->setStyleSheet("QPushButton { border: 1px solid #5E8580}");
+   
 
     ui->feedbackTextEdit->hide();
     // ui->feedbackTextEdit->setEchoMode(QTextEdit::Normal);
@@ -160,8 +160,8 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     ui->label_enter_feedback->setStyleSheet(checkBoxLabelStyling);
     ui->label_enter_feedback->setText("Please enter details or comments below.\nProvide email for feedback.");
 
-    ui->feedback_Input_Button->raise();
-    ui->feedback_Input_Button->setStyleSheet("QPushButton { border: 1px solid #FFFFFF}");
+    ui->pushButton_start_input->raise();
+    // ui->pushButton_start_input->setStyleSheet("QPushButton { border: 1px solid #FFFFFF}");
 
     ui->label_thanks_for_feedback->setStyleSheet(
         "QLabel {"
@@ -192,22 +192,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     ui->checkBox_3->setIconSize(size);
     ui->checkBox_4->setIconSize(size);
     ui->checkBox_5->setIconSize(size);
-    ui->send_Button->setStyleSheet("QPushButton { "
-                                   "font-family: 'Brevia';"
-                                   "font-style: normal;"
-                                   "font-weight: 75;"
-                                   "font-size: 35px;"
-                                   "line-height: 99px;"
-                                   "letter-spacing: 1.5px;"
-                                   "background-color: #5E8680;"
-                                   "color: #FFFFFF;"
-                                   "text-align: center;"
-                                   "qproperty-alignment: AlignCenter;"
-                                   "border-radius: 30px;"
-                                   "padding: 10px;"
-                                   "border: 2px solid #004D54;"
-                                   "}");
-    ui->send_Button->setText("SEND");
+
 
     ui->feedbackTextEdit->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
 
@@ -218,6 +203,10 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
  */
 void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, pageProduct *page_product, pagethankyou *page_thankyou)
 {
+
+
+
+
     this->p_page_select_product = pageSelect;
     this->paymentPage = page_qr_payment;
     this->p_page_idle = pageIdle;
@@ -246,8 +235,24 @@ page_sendFeedback::~page_sendFeedback()
 
 void page_sendFeedback::showEvent(QShowEvent *event)
 {
+
     qDebug() << "<<<<<<< Page Enter: Send Feedback>>>>>>>>>";
+    QString styleSheet = p_page_idle->getCSS(PAGE_FEEDBACK_CSS);
+
+    ui->pushButton_send->setStyleSheet(styleSheet);
+    ui->pushButton_send->setText("SEND");
+    
+    ui->pushButton_start_input->setProperty("class", "buttonTransparent");
+    ui->pushButton_start_input->setStyleSheet(styleSheet);
+ 
+    
+    
+    
     QWidget::showEvent(event);
+    
+    
+    
+    
     _selectIdleTimeoutSec = 60;
     selectIdleTimer->start();
 
@@ -283,8 +288,8 @@ void page_sendFeedback::reset_and_show_page_elements()
 
     ui->feedbackKeyboard->hide();
 
-    ui->feedback_Input_Button->raise();
-    ui->feedback_Input_Button->show();
+    ui->pushButton_start_input->raise();
+    ui->pushButton_start_input->show();
 
     ui->label_thanks_for_feedback->hide();
     ui->label_thank_you_image->hide();
@@ -334,7 +339,7 @@ size_t WriteCallbackFeedback(char *contents, size_t size, size_t nmemb, void *us
     return size * nmemb;
 }
 
-void page_sendFeedback::on_send_Button_clicked()
+void page_sendFeedback::on_pushButton_send_clicked()
 {
     qDebug() << "Send button pressed";
     QVBoxLayout *layout = new QVBoxLayout();
@@ -420,8 +425,8 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
     {
         ui->feedbackKeyboard->hide();
         ui->feedbackTextEdit->setText("");
-        ui->feedback_Input_Button->raise();
-        ui->feedback_Input_Button->show();
+        ui->pushButton_start_input->raise();
+        ui->pushButton_start_input->show();
     }
     else if (buttonText == "CAPS")
     {
@@ -466,8 +471,8 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
         qDebug() << "Keyboard: Done Clicked";
         QString textEntry = ui->feedbackTextEdit->toPlainText();
         ui->feedbackKeyboard->hide();
-        ui->feedback_Input_Button->raise();
-        ui->feedback_Input_Button->show();
+        ui->pushButton_start_input->raise();
+        ui->pushButton_start_input->show();
     }
     else if (buttonText == "Space")
     {
@@ -494,16 +499,16 @@ void page_sendFeedback::on_previousPage_Button_clicked()
 
 void page_sendFeedback::on_feedback_Text_Input_clicked()
 {
-    // on_feedback_Input_Button_clicked();
+    // on_pushButton_start_input_clicked();
 }
 
-void page_sendFeedback::on_feedback_Input_Button_clicked()
+void page_sendFeedback::on_pushButton_start_input_clicked()
 {
     qDebug() << "Feedback button clicked, will show keyboard";
     
     ui->feedbackKeyboard->show();
-    ui->feedback_Input_Button->lower();
-    ui->feedback_Input_Button->hide();
+    ui->pushButton_start_input->lower();
+    ui->pushButton_start_input->hide();
 
     // starts with welcome message
     if (ui->feedbackTextEdit->toPlainText() == TEXTBOX_INVITE_TEXT)
@@ -515,5 +520,5 @@ void page_sendFeedback::on_feedback_Input_Button_clicked()
 
 void page_sendFeedback::on_feedbackText_cursorPositionChanged(int arg1, int arg2)
 {
-    // on_feedback_Input_Button_clicked();
+    // on_pushButton_start_input_clicked();
 }

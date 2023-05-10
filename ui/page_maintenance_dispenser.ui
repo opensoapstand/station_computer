@@ -56,8 +56,8 @@
    <property name="geometry">
     <rect>
      <x>590</x>
-     <y>950</y>
-     <width>721</width>
+     <y>1170</y>
+     <width>300</width>
      <height>31</height>
     </rect>
    </property>
@@ -111,7 +111,7 @@
    <property name="geometry">
     <rect>
      <x>440</x>
-     <y>920</y>
+     <y>1140</y>
      <width>141</width>
      <height>91</height>
     </rect>
@@ -332,8 +332,8 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>590</x>
-     <y>1060</y>
-     <width>721</width>
+     <y>1280</y>
+     <width>300</width>
      <height>31</height>
     </rect>
    </property>
@@ -345,7 +345,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>440</x>
-     <y>1030</y>
+     <y>1250</y>
      <width>141</width>
      <height>91</height>
     </rect>
@@ -886,7 +886,7 @@ last restock</string>
      <x>870</x>
      <y>460</y>
      <width>181</width>
-     <height>0</height>
+     <height>50</height>
     </rect>
    </property>
    <property name="text">
@@ -896,8 +896,8 @@ last restock</string>
   <widget class="QLabel" name="calibration_instructions_label">
    <property name="geometry">
     <rect>
-     <x>470</x>
-     <y>760</y>
+     <x>440</x>
+     <y>960</y>
      <width>581</width>
      <height>81</height>
     </rect>
@@ -1085,21 +1085,21 @@ last restock</string>
   <widget class="QPushButton" name="pluButton_c">
    <property name="geometry">
     <rect>
-     <x>440</x>
-     <y>1140</y>
+     <x>730</x>
+     <y>790</y>
      <width>141</width>
      <height>51</height>
     </rect>
    </property>
    <property name="text">
-    <string>calibration instructions</string>
+    <string>Custom PLU</string>
    </property>
   </widget>
   <widget class="QLabel" name="calibration_result_label">
    <property name="geometry">
     <rect>
-     <x>470</x>
-     <y>850</y>
+     <x>440</x>
+     <y>1050</y>
      <width>591</width>
      <height>17</height>
     </rect>

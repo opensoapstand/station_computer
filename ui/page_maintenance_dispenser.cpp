@@ -990,6 +990,7 @@ void page_maintenance_dispenser::on_update_portal_clicked()
 {
     qDebug() << "update portal clicked ";
     QString curl_params = "productId=" + p_page_idle->currentProductOrder->getSelectedProductId()
+                        + "&source=soapstandStation"
                         + "&price_small=" + QString::number(selectedProductOrder->getPrice(SIZE_SMALL_INDEX))
                         + "&price_medium=" + QString::number(selectedProductOrder->getPrice(SIZE_MEDIUM_INDEX)) 
                         + "&price_large=" + QString::number(selectedProductOrder->getPrice(SIZE_LARGE_INDEX))
@@ -1004,7 +1005,7 @@ void page_maintenance_dispenser::on_update_portal_clicked()
     }
     qDebug() << "Before pushing";
 
-    curl_easy_setopt(curl2, CURLOPT_URL, "https://soapstandportal.com/api/product/update_product_info");
+    curl_easy_setopt(curl2, CURLOPT_URL, "https://soapstandportal.com/api/product/update_product_from_station");
     curl_easy_setopt(curl2, CURLOPT_POSTFIELDS, curl_param_array2.data());
     curl_easy_setopt(curl2, CURLOPT_WRITEFUNCTION, WriteCallback4);
     curl_easy_setopt(curl2, CURLOPT_WRITEDATA, &readBuffer);
@@ -1023,8 +1024,8 @@ void page_maintenance_dispenser::on_update_portal_clicked()
     {
 
         QString feedback = QString::fromUtf8(readBuffer.c_str());
-        qDebug() << "ERROR: pagemaintenancedispenser cURL success. Server feedback readbuffer: " << feedback;
-
+        qDebug() << "Pagemaintenancedispenser cURL success. Server feedback readbuffer: " << feedback;
+        ui->infoLabel->setText("Portal Update Succesfull");
         // readbuffer is a string. "true" or "false"
         if (readBuffer == "true")
         {

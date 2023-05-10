@@ -116,9 +116,8 @@ DF_ERROR stateDispense::onAction()
 
    // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
 
-   
    productDispensers[pos_index].updateRunningAverageWindow();
-   
+
    if (productDispensers[pos_index].getIsStatusUpdateAllowed())
    {
       double volume = productDispensers[pos_index].getVolumeDispensed();
@@ -126,7 +125,7 @@ DF_ERROR stateDispense::onAction()
       Time_val avg_02s = productDispensers[pos_index].getAveragedFlowRate(1000);
       double flowrate = avg_02s.value;
       const char *statusStringChar = productDispensers[pos_index].getDispenseStatusAsString();
-      std::string statusString(statusStringChar);     
+      std::string statusString(statusStringChar);
 
       m_pMessaging->sendMessageOverIP("dispenseupdate|" + to_string(volume) + "|" + to_string(flowrate) + "|" + statusString);
    }
@@ -145,8 +144,14 @@ DF_ERROR stateDispense::onAction()
       {
 
          productDispensers[pos_index].the_pcb->sendEN134DefaultConfigurationToPCA9534(slot, true);
+
+         //  productDispensers[pos_index].the_pcb->sendByteIfNotSetToSlot(slot, 0x01, 0b10000000, true);
+         // productDispensers[pos_index].the_pcb->sendByteIfNotSetToSlot(slot, 0x03, 0b01011000, true);
+
          m_pMessaging->resetAction();
          productDispensers[pos_index].setMultiDispenseButtonLight(slot, true);
+         productDispensers[pos_index].the_pcb->flowSensorEnable(slot);
+
       }
    }
 
@@ -167,8 +172,8 @@ DF_ERROR stateDispense::onAction()
    //    {
 
    //       debugOutput::sendMessage("******************* EMPTY CONTAINER DETECTED **********************", MSG_INFO);
-   //       usleep(100000);     
-         
+   //       usleep(100000);
+
    //       send message delay (pause from previous message) desperate attempt to prevent crashes
    //       m_pMessaging->sendMessageOverIP("No flow abort"); // send to UI
    //       stopPumping();
@@ -212,18 +217,14 @@ DF_ERROR stateDispense::onAction()
    // }
    // else
    // {
-      // // TODO: Do a check if Pumps are operational
-      // // send IPC if pump fails
-      // productDispensers[pos_index].logUpdateIfAllowed("Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
+   // // TODO: Do a check if Pumps are operational
+   // // send IPC if pump fails
+   // productDispensers[pos_index].logUpdateIfAllowed("Vol dispensed: " + to_string(productDispensers[pos_index].getVolumeDispensed()));
 
-      // productDispensers[pos_index].updateRunningAverageWindow();
-      // Time_val flowavg = productDispensers[pos_index].getAveragedFlowRate(2000);
-      // productDispensers[pos_index].logUpdateIfAllowed("Flow rate 2s: " + to_string(flowavg.value));
+   // productDispensers[pos_index].updateRunningAverageWindow();
+   // Time_val flowavg = productDispensers[pos_index].getAveragedFlowRate(2000);
+   // productDispensers[pos_index].logUpdateIfAllowed("Flow rate 2s: " + to_string(flowavg.value));
    // }
-
-      
- 
-
 
    e_ret = OK;
 

@@ -245,6 +245,19 @@
     <string>TextLabel</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label_logo">
+   <property name="geometry">
+    <rect>
+     <x>600</x>
+     <y>180</y>
+     <width>151</width>
+     <height>131</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>abortButton</zorder>
   <zorder>fill_animation_label</zorder>
   <zorder>dispense_bottle_label</zorder>
@@ -260,6 +273,7 @@
   <zorder>button_problems</zorder>
   <zorder>button_report</zorder>
   <zorder>label_dispense_message</zorder>
+  <zorder>label_logo</zorder>
  </widget>
  <resources/>
  <connections/>

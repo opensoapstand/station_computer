@@ -32,7 +32,7 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
     ui->setupUi(this);
     qDebug() << "QR Payment page" << endl;
     ui->pushButton_previous_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->pushButton_to_idle->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->payment_bypass_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
@@ -548,7 +548,7 @@ void page_qr_payment::on_pushButton_previous_page_clicked()
     }
 }
 
-void page_qr_payment::on_mainPage_Button_clicked()
+void page_qr_payment::on_pushButton_to_idle_clicked()
 {
     if (exitConfirm())
     {

@@ -338,13 +338,13 @@ void pageProductOverview::reset_and_show_page_elements()
     ui->label_invoice_discount_amount->hide();
     ui->label_discount_tag->hide();
     ui->pushButton_previous_page->setEnabled(true);
-    ui->mainPage_Button->setEnabled(true);
+    ui->pushButton_to_idle->setEnabled(true);
     /* Hacky transparent button */
     ui->pushButton_previous_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->page_qr_payment_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     // ui->page_qr_payment_Button->setStyleSheet("QPushButton { background-color: red; border: 0px };QPushButton:pressed { background-color: green; border: 10px }");
 
-    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->pushButton_to_idle->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     QString keyboard = KEYBOARD_IMAGE_PATH;
     QString keyboard_style_sheet = " background-image: url(" + keyboard + "); }";
@@ -382,7 +382,7 @@ void pageProductOverview::mainPage()
     hideCurrentPageAndShowProvided(p_page_idle);
 }
 
-void pageProductOverview::on_mainPage_Button_clicked()
+void pageProductOverview::on_pushButton_to_idle_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_help);
 }
@@ -662,7 +662,7 @@ void pageProductOverview::on_page_qr_payment_Button_clicked()
 {
     qDebug() << "pageProductOverview: Pay button";
 
-    ui->mainPage_Button->setEnabled(false);
+    ui->pushButton_to_idle->setEnabled(false);
     ui->pushButton_previous_page->setEnabled(false);
 
     this->stopSelectTimers();

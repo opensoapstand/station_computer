@@ -55,7 +55,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     // ui->label_select_problem->setWordWrap(true);
     
 
-    ui->label_problem_options->setStyleSheet("background-color: #5E8680; border-radius: 30px;");
+    //ui->label_problem_options->setStyleSheet("background-color: #5E8680; border-radius: 30px;");
     QString checkBoxLabelStyling = ("QPushButton {"
                                     "font-family: 'Brevia';"
                                     "font-style: normal;"
@@ -70,34 +70,10 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                                     "wordWrap:true;"
                                     "}");
 
-    ui->label_still_cant_find->setStyleSheet(
-        "QLabel {"
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 43px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "color: #438080;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
+    
     ui->label_still_cant_find->setText("Still can't find it?");
 
-    ui->label_email->setStyleSheet(
-        "QLabel {"
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 43px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "color: #438080;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
+    
     ui->label_email->setText("Email us at: sales@soapstand.com");
 
     ui->checkBox_1_Label->setStyleSheet(checkBoxLabelStyling);
@@ -214,9 +190,27 @@ void page_sendFeedback::showEvent(QShowEvent *event)
     ui->label_select_problem->setProperty("class", "labelSelectProblem");
     ui->label_select_problem->setStyleSheet(styleSheet);
 
+     //ui->label_problem_options->setStyleSheet("background-color: #5E8680; border-radius: 30px;");
+     ui->label_problem_options->setStyleSheet(styleSheet);
 
-    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-
+    //ui->pushButton_to_idle->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->pushButton_to_idle->setStyleSheet(styleSheet);
+    ui->label_still_cant_find->setStyleSheet(styleSheet);
+    /*ui->label_email->setStyleSheet(
+        "QLabel {"
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 75;"
+        "font-size: 43px;"
+        "line-height: 99px;"
+        "letter-spacing: 1.5px;"
+        "color: #438080;"
+        "text-align: center;"
+        "qproperty-alignment: AlignCenter;"
+        "border: none;"
+        "}");
+*/
+    ui->label_email->setStyleSheet(styleSheet);
 
     QWidget::showEvent(event);
     
@@ -298,7 +292,7 @@ void page_sendFeedback::mainPage()
     hideCurrentPageAndShowProvided(p_page_idle);
 }
 
-void page_sendFeedback::on_mainPage_Button_clicked()
+void page_sendFeedback::on_pushButton_to_idle_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_help);
 }

@@ -57,7 +57,7 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
         "border: none;"
         "}");
     ui->pushButton_previous_page->setText("<- Back");
-    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->pushButton_to_idle->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->payment_bypass_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     ui->payment_bypass_Button->setEnabled(false);
@@ -439,7 +439,7 @@ void page_tap_payment::on_pushButton_previous_page_clicked()
     }
 }
 
-void page_tap_payment::on_mainPage_Button_clicked()
+void page_tap_payment::on_pushButton_to_idle_clicked()
 {
     if (exitConfirm())
     {

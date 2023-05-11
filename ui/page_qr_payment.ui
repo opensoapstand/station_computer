@@ -29,7 +29,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="mainPage_Button">
+  <widget class="QPushButton" name="pushButton_to_idle">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -327,7 +327,7 @@ line-height: 29px;</string>
   </widget>
   <zorder>refreshButton</zorder>
   <zorder>pushButton_previous_page</zorder>
-  <zorder>mainPage_Button</zorder>
+  <zorder>pushButton_to_idle</zorder>
   <zorder>order_total_amount</zorder>
   <zorder>order_drink_amount</zorder>
   <zorder>payment_bypass_Button</zorder>

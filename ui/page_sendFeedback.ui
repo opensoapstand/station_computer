@@ -69,7 +69,7 @@ line-height: 29px;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="mainPage_Button">
+  <widget class="QPushButton" name="pushButton_to_idle">
    <property name="geometry">
     <rect>
      <x>472</x>
@@ -1737,7 +1737,7 @@ font: 11pt &quot;Montserrat&quot;;</string>
   <zorder>label_thank_you_image</zorder>
   <zorder>pushButton_send</zorder>
   <zorder>label_problem_options</zorder>
-  <zorder>mainPage_Button</zorder>
+  <zorder>pushButton_to_idle</zorder>
   <zorder>label_select_problem</zorder>
   <zorder>label_still_cant_find_it</zorder>
   <zorder>checkBox_4_Label</zorder>

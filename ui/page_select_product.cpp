@@ -65,7 +65,7 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
     selectProductTypeLabels[3] = ui->product_4_type_label;
 
     ui->helpPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-    // ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    // ui->pushButton_to_idle->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->label_pick_soap->setStyleSheet(
         "QLabel {"
 
@@ -82,7 +82,7 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
         "}");
     ui->label_pick_soap->setText("Pick your soap");
 
-    // ui->mainPage_Button->setStyleSheet(
+    // ui->pushButton_to_idle->setStyleSheet(
     //     "QPushButton {"
 
     // "background-color: #3498db;"
@@ -92,7 +92,7 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
     // "font-size: 16px;"
     // "padding: 10px 20px;"
     //     "}");
-    ui->mainPage_Button->setStyleSheet(
+    ui->pushButton_to_idle->setStyleSheet(
         "QPushButton {"
 
         "font-family: 'Brevia';"
@@ -110,7 +110,7 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
         "border: none;"
         "}");
 
-    ui->mainPage_Button->setText("<-back");
+    ui->pushButton_to_idle->setText("<-back");
 
     QFont font;
     font.setFamily(QStringLiteral("Brevia"));
@@ -348,7 +348,7 @@ void page_select_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     p_page_idle->pageTransition(this, pageToShow);
 }
 
-void page_select_product::on_mainPage_Button_clicked()
+void page_select_product::on_pushButton_to_idle_clicked()
 {
     qDebug() << "Back to Idle Page Button pressed";
     hideCurrentPageAndShowProvided(p_page_idle);

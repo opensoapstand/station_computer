@@ -16,20 +16,55 @@
    background: transparent;
 }
 
-.labelSelectProblem{
+#label_select_problem{      /*selector not to make a class*/
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;
    font-size: 55px;
    line-height: 99px;
    letter-spacing: 1.5px;
-   color: #adb0b1;
+   color: #003840;
    text-align: center;
    border: none;
+   qproperty-alignment: AlignCenter;  /* Works despite not being CSS*/
 }
+#pushButton_to_idle{
+   background-color: transparent; 
+   border: 0px;
+}
+#label_problem_options{
+   background-color: #5E8680;
+   border-radius: 30px;
+}
+#label_still_cant_find{
+   
+      font-family: 'Brevia';
+      font-style: normal;
+      font-weight: 75;
+      font-size: 43px;
+      line-height: 99px;
+      letter-spacing: 1.5px;
+      color: #438080;
+      text-align: center;
+      qproperty-alignment: AlignCenter;
+      border: none
+}
+#label_email{
+      font-family: 'Brevia';
+      font-style: normal;
+      font-weight: 75;
+      font-size: 43px;
+      line-height: 99px;
+      letter-spacing: 1.5px;
+      color: #438080;
+      text-align: center;
+      qproperty-alignment: AlignCenter;
+      border: none;
+      }
 
 QLabel { 
    color:#555555; 
+   text-align: center;
    border: 1px; 
 }
 
@@ -58,3 +93,17 @@ QLineEdit {
    color: #003840;
    border: none;
 };
+/*
+QString checkBoxLabelStyling = ("QPushButton {"
+   "font-family: 'Brevia';"
+   "font-style: normal;"
+   "font-weight: 75;"
+   "font-size: 32px;"
+   "line-height: 99px;"
+   "letter-spacing: 1.5px;"
+   "color: #FFFFFF;"
+   "text-align: left;"
+   "qproperty-alignment: AlignCenter;"
+   "border: none;"
+   "wordWrap:true;"
+   "}");*/

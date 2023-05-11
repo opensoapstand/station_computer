@@ -483,7 +483,7 @@ void pageProduct::reset_and_show_page_elements()
     /* Hacky transparent button */
     ui->pushButton_previous_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    ui->mainPage_Button->setStyleSheet("QPushButton {"
+    ui->pushButton_to_idle->setStyleSheet("QPushButton {"
         "font-family: 'Brevia';"
         "font-style: normal;"
         "font-weight: 75;"
@@ -513,7 +513,7 @@ void pageProduct::loadProdSpecs()
     qDebug() << "-------------------------- LOAD PRODUCTS ----------------";
     _selectIdleTimeoutSec = 140;
 
-    ui->mainPage_Button->setEnabled(true);
+    ui->pushButton_to_idle->setEnabled(true);
     ui->pushButton_previous_page->setEnabled(true);
 
     int sizes_available_count = 0;
@@ -652,14 +652,14 @@ bool pageProduct::stopSelectTimers()
 void pageProduct::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
-    // ui->mainPage_Button->setEnabled(false);
+    // ui->pushButton_to_idle->setEnabled(false);
     // ui->pushButton_previous_page->setEnabled(false);
     selectIdleTimer->stop();
     this->stopSelectTimers();
     p_page_idle->pageTransition(this, pageToShow);
 }
 
-void pageProduct::on_mainPage_Button_clicked()
+void pageProduct::on_pushButton_to_idle_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_help);
 }

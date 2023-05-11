@@ -23,7 +23,7 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
 {
     ui->setupUi(this);
 
-    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->pushButton_to_idle->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     ui->extra_message_label->hide();
     connect(ui->notifyUs_Button, SIGNAL(clicked()), this, SLOT(on_notifyUs_Button_clicked()));
@@ -104,8 +104,8 @@ void pagethankyou::showEvent(QShowEvent *event)
         "qproperty-alignment: AlignCenter;"
         "}");
 
-    ui->mainPage_Button->setEnabled(true);
-    ui->mainPage_Button->raise();
+    ui->pushButton_to_idle->setEnabled(true);
+    ui->pushButton_to_idle->raise();
 
     QFont font;
     font.setFamily(QStringLiteral("Brevia"));
@@ -284,7 +284,7 @@ void pagethankyou::onThankyouTimeoutTick()
     }
 }
 
-void pagethankyou::on_mainPage_Button_clicked()
+void pagethankyou::on_pushButton_to_idle_clicked()
 {
     qDebug() << "main page button clicked.";
     finishHandler();

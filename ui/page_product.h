@@ -66,7 +66,7 @@ private slots:
     // Set Drink Order
     void on_orderSmall_Button_clicked();
     void on_orderBig_Button_clicked();
-    void on_mainPage_Button_clicked();
+    void on_pushButton_to_idle_clicked();
     void onSelectTimeoutTick();
 
     void on_orderCustom_Button_clicked();

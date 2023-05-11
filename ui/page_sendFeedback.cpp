@@ -37,25 +37,20 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     qDebug() << "IN send feedback";
     ui->setupUi(this);
 
-   
-
     ui->textEdit_custom_message->hide();
     // ui->textEdit_custom_message->setEchoMode(QTextEdit::Normal);
     ui->textEdit_custom_message->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
-
     ui->label_enter_feedback->show();
-    //ui->pushButton_previous_page->setStyleSheet("QPushButton { color:#555555; background-color: transparent; border: 0px }");
-
+    //  ui->pushButton_previous_page->setStyleSheet("QPushButton { color:#555555; background-color: transparent; border: 0px }");
 
     ui->pushButton_previous_page->setText("<-back");
     ui->feedbackText->hide();
 
     ui->label_select_problem->setText("Please provide feedback");
     // ui->label_select_problem->setWordWrap(true);
-    
 
-    //ui->label_problem_options->setStyleSheet("background-color: #5E8680; border-radius: 30px;");
+    // ui->label_problem_options->setStyleSheet("background-color: #5E8680; border-radius: 30px;");
     QString checkBoxLabelStyling = ("QPushButton {"
                                     "font-family: 'Brevia';"
                                     "font-style: normal;"
@@ -70,10 +65,8 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                                     "wordWrap:true;"
                                     "}");
 
-    
     ui->label_still_cant_find->setText("Still can't find it?");
 
-    
     ui->label_email->setText("Email us at: sales@soapstand.com");
 
     ui->checkBox_1_Label->setStyleSheet(checkBoxLabelStyling);
@@ -100,19 +93,6 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     ui->pushButton_start_input->raise();
     // ui->pushButton_start_input->setStyleSheet("QPushButton { border: 1px solid #FFFFFF}");
 
-    ui->label_thanks_for_feedback->setStyleSheet(
-        "QLabel {"
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 65px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "color: #003840;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
     ui->label_thanks_for_feedback->setText("Thank you for <br> your feedback");
 
     {
@@ -130,9 +110,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     ui->checkBox_4->setIconSize(size);
     ui->checkBox_5->setIconSize(size);
 
-
     ui->textEdit_custom_message->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
-
 }
 
 /*
@@ -140,9 +118,6 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
  */
 void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, pageProduct *page_product, pagethankyou *page_thankyou)
 {
-
-
-
 
     this->p_page_select_product = pageSelect;
     this->paymentPage = page_qr_payment;
@@ -154,7 +129,7 @@ void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser 
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_PATH);
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
-    
+
     QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     p_page_idle->addPictureToLabel(ui->label_help, full_path);
 
@@ -173,66 +148,54 @@ page_sendFeedback::~page_sendFeedback()
 void page_sendFeedback::showEvent(QShowEvent *event)
 {
 
+    QWidget::showEvent(event);
     qDebug() << "<<<<<<< Page Enter: Send Feedback>>>>>>>>>";
     QString styleSheet = p_page_idle->getCSS(PAGE_FEEDBACK_CSS);
 
     ui->pushButton_send->setStyleSheet(styleSheet);
     ui->pushButton_send->setText("SEND");
-    
+
     ui->pushButton_start_input->setProperty("class", "buttonTransparent");
     ui->pushButton_start_input->setStyleSheet(styleSheet);
-    
+
     ui->textEdit_custom_message->setStyleSheet(styleSheet);
-    
-    ui->pushButton_previous_page->setProperty( "class", "buttonPreviousPage");
+
+    ui->pushButton_previous_page->setProperty("class", "buttonPreviousPage");
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
 
     ui->label_select_problem->setProperty("class", "labelSelectProblem");
     ui->label_select_problem->setStyleSheet(styleSheet);
 
-     //ui->label_problem_options->setStyleSheet("background-color: #5E8680; border-radius: 30px;");
-     ui->label_problem_options->setStyleSheet(styleSheet);
+    ui->label_problem_options->setStyleSheet(styleSheet);
 
-    //ui->pushButton_to_idle->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
+
     ui->label_still_cant_find->setStyleSheet(styleSheet);
-    /*ui->label_email->setStyleSheet(
-        "QLabel {"
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 43px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "color: #438080;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
-*/
+
+    ui->label_email->setProperty("class", "labelMailFeedback");
     ui->label_email->setStyleSheet(styleSheet);
 
-    QWidget::showEvent(event);
-    
-    
-    
-    
+    ui->label_thanks_for_feedback->setProperty("class", "labelMailFeedback");
+    ui->label_thanks_for_feedback->setStyleSheet(styleSheet);
+
+    reset_and_show_page_elements();
+
     _selectIdleTimeoutSec = 60;
     selectIdleTimer->start();
 
-    reset_and_show_page_elements();
+    qDebug() << "End of show page";
 }
 
 void page_sendFeedback::resizeEvent(QResizeEvent *event)
 {
-    qDebug() << "\n---Page Send Feedback: resizeEvent";
+    // qDebug() << "\n---Page Send Feedback: resizeEvent";
 }
 
 void page_sendFeedback::onSelectTimeoutTick()
 {
     if (--_selectIdleTimeoutSec >= 0)
     {
-        //        qDebug() << "page_sendFeedback: Tick Down - " << _selectIdleTimeoutSec ;
+        qDebug() << "page_sendFeedback: Tick Down - " << _selectIdleTimeoutSec;
     }
     else
     {
@@ -333,7 +296,7 @@ void page_sendFeedback::on_pushButton_send_clicked()
     qDebug() << problemList;
     QString problems = problemList.join(",");
 
-    if (problems.length() != 0 || ( !(ui->textEdit_custom_message->toPlainText().isEmpty())  &&  (ui->textEdit_custom_message->toPlainText() != TEXTBOX_INVITE_TEXT )))
+    if (problems.length() != 0 || (!(ui->textEdit_custom_message->toPlainText().isEmpty()) && (ui->textEdit_custom_message->toPlainText() != TEXTBOX_INVITE_TEXT)))
     {
         qDebug() << "Will send feedback to backend";
 
@@ -341,7 +304,7 @@ void page_sendFeedback::on_pushButton_send_clicked()
         ui->label_thank_you_image->show();
         ui->label_thank_you_image->raise();
         ui->label_thank_you_image->repaint(); // instant showing instead of waiting for function to be finished.
-        
+
         ui->label_thanks_for_feedback->show();
         ui->label_thanks_for_feedback->raise();
         ui->label_thanks_for_feedback->repaint(); // instant showing instead of waiting for function to be finished.
@@ -469,7 +432,7 @@ void page_sendFeedback::on_feedback_Text_Input_clicked()
 void page_sendFeedback::on_pushButton_start_input_clicked()
 {
     qDebug() << "Feedback button clicked, will show keyboard";
-    
+
     ui->feedbackKeyboard->show();
     ui->pushButton_start_input->lower();
     ui->pushButton_start_input->hide();
@@ -478,7 +441,7 @@ void page_sendFeedback::on_pushButton_start_input_clicked()
     if (ui->textEdit_custom_message->toPlainText() == TEXTBOX_INVITE_TEXT)
     {
         ui->textEdit_custom_message->clear(); // clears init text
-        //ui->textEdit_custom_message->setPlainText("fefef");
+        // ui->textEdit_custom_message->setPlainText("fefef");
     }
 }
 

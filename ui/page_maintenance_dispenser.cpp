@@ -96,6 +96,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     price_large = false;
     price_custom = false;
     target_s = false;
+    target_m = false;
     target_l = false;
     vol_per_tick = false;
     full = false;
@@ -251,36 +252,49 @@ void page_maintenance_dispenser::on_nameButton_clicked()
 void page_maintenance_dispenser::on_priceButton_s_clicked()
 {
     price_small = true;
+    ui->textEntry->setText(QString::number(selectedProductOrder->getPrice(SIZE_SMALL_INDEX)));
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_priceButton_m_clicked()
 {
     price_medium = true;
+    ui->textEntry->setText(QString::number(selectedProductOrder->getPrice(SIZE_MEDIUM_INDEX)));
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_priceButton_l_clicked()
 {
     price_large = true;
+    ui->textEntry->setText(QString::number(selectedProductOrder->getPrice(SIZE_LARGE_INDEX)));
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_priceButton_c_clicked()
 {
     price_custom = true;
+    ui->textEntry->setText(QString::number(selectedProductOrder->getPrice(SIZE_CUSTOM_INDEX)));
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_target_volumeButton_s_clicked()
 {
     target_s = true;
+    ui->textEntry->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_SMALL_INDEX, false, false));
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+}
+
+void page_maintenance_dispenser::on_target_volumeButton_m_clicked()
+{
+    target_m = true;
+    ui->textEntry->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_MEDIUM_INDEX, false, false));
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_target_volumeButton_l_clicked()
 {
     target_l = true;
+    ui->textEntry->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_LARGE_INDEX, false, false));
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
@@ -831,6 +845,7 @@ void page_maintenance_dispenser::on_buttonCancel_clicked()
     price_small = false;
     price_large = false;
     target_s = false;
+    target_m = false;
     target_l = false;
     vol_per_tick = false;
     full = false;
@@ -844,9 +859,12 @@ void page_maintenance_dispenser::updateValues()
         {
             selectedProductOrder->setPriceSelected(SIZE_SMALL_INDEX, text_entered.toDouble());
             ui->price_small->setText("$" + QString::number(selectedProductOrder->getPrice(SIZE_SMALL_INDEX)));
+            ui->titleLabel->setText("Price Small:");
+
         }
         else if (price_medium)
         {
+            ui->titleLabel->setText("Price Medium:");
             selectedProductOrder->setPriceSelected(SIZE_MEDIUM_INDEX, text_entered.toDouble());
             ui->price_medium->setText("$" + QString::number(selectedProductOrder->getPrice(SIZE_MEDIUM_INDEX)));
         }
@@ -863,6 +881,11 @@ void page_maintenance_dispenser::updateValues()
         else if (target_s)
         {
             selectedProductOrder->setSizeToVolumeForSelectedSlot(text_entered, SIZE_SMALL_INDEX);
+            
+        }
+        else if (target_m)
+        {
+            selectedProductOrder->setSizeToVolumeForSelectedSlot(text_entered, SIZE_MEDIUM_INDEX);
             
         }
         else if (target_l)
@@ -890,6 +913,7 @@ void page_maintenance_dispenser::updateValues()
     price_large = false;
     price_custom = false;
     target_s = false;
+    target_m = false;
     target_l = false;
     vol_per_tick = false;
     full = false;
@@ -994,7 +1018,11 @@ void page_maintenance_dispenser::on_update_portal_clicked()
                         + "&price_small=" + QString::number(selectedProductOrder->getPrice(SIZE_SMALL_INDEX))
                         + "&price_medium=" + QString::number(selectedProductOrder->getPrice(SIZE_MEDIUM_INDEX)) 
                         + "&price_large=" + QString::number(selectedProductOrder->getPrice(SIZE_LARGE_INDEX))
-                        + "&price_custom=" + QString::number(selectedProductOrder->getPrice(SIZE_CUSTOM_INDEX)) ;
+                        + "&price_custom=" + QString::number(selectedProductOrder->getPrice(SIZE_CUSTOM_INDEX))
+                        + "&size_small=" + QString::number(selectedProductOrder->getPrice(SIZE_SMALL_INDEX))
+                        + "&size_medium=" + QString::number(selectedProductOrder->getPrice(SIZE_MEDIUM_INDEX)) 
+                        + "&size_large=" + QString::number(selectedProductOrder->getPrice(SIZE_LARGE_INDEX))
+                         ;
     curl_param_array2 = curl_params.toLocal8Bit();
 
     curl2 = curl_easy_init();

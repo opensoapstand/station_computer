@@ -66,7 +66,7 @@ private:
 
     char now[50];
 
-    DF_ERROR dispenseEndUpdateDB(double updated_volume_remaining);
+    DF_ERROR dispenseEndUpdateDB(bool empty_stock_detected);
     bool sendTransactionToCloud(double volume_remaining);
     DF_ERROR setup_and_print_receipt();
     // DF_ERROR print_receipt();

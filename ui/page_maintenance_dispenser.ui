@@ -779,7 +779,7 @@ Volume per Tick</string>
 last restock</string>
    </property>
   </widget>
-  <widget class="QLabel" name="volume_dispensed_since_last_restock">
+  <widget class="QLabel" name="volume_dispensed_since_restock">
    <property name="geometry">
     <rect>
      <x>590</x>

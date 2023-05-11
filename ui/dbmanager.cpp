@@ -425,7 +425,7 @@ bool DbManager::isProductVolumeInContainer(int slot)
     }
 }
 
-bool DbManager::refill(int slot)
+bool DbManager::restockProduct(int slot)
 {
     qDebug() << " db... refill";
     QSqlQuery refill_query;
@@ -867,7 +867,7 @@ double DbManager::getVolumeRemaining(int slot)
     return remaining;
 }
 
-QString DbManager::getLastRefill(int slot)
+QString DbManager::getLastRefillTime(int slot)
 {
     // last as in "most recent"
     qDebug() << " db... getLastRefill";

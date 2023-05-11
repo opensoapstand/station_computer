@@ -157,7 +157,7 @@ dispenser::~dispenser()
 // }
 
 // TODO: This function could live somewhere else...linked to future maintenance.
-// void dispenser::refill(int volume)
+// void dispenser::restockProduct(int volume)
 // {
 //     // TODO: SQLite database Update.
 // }

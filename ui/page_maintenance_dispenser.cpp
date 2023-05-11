@@ -192,14 +192,14 @@ void page_maintenance_dispenser::refreshLabels()
 
     ui->full_volume->setText(selectedProductOrder->getFullVolumeCorrectUnits(true));
     ui->volume_dispensed_total->setText(selectedProductOrder->getTotalDispensedCorrectUnits());
-    ui->volume_dispensed_since_last_restock->setText(selectedProductOrder->getVolumeDispensedSinceRestockCorrectUnits());
+    ui->volume_dispensed_since_restock->setText(selectedProductOrder->getVolumeDispensedSinceRestockCorrectUnits());
     ui->remainingLabel->setText(selectedProductOrder->getVolumeRemainingCorrectUnits());
     ui->pwmLabel->setText(QString::number(selectedProductOrder->getSelectedDispenseSpeedPercentage()) + "%");
 
     int product_slot___ = selectedProductOrder->getSelectedSlot();
     qDebug() << "db... refresh labels";
     DbManager db(DB_PATH);
-    ui->lastRefillLabel->setText(db.getLastRefill(product_slot___));
+    ui->lastRefillLabel->setText(db.getLastRefillTime(product_slot___));
     ui->pluLabel_s->setText(db.getPLU(product_slot___, 's'));
     ui->pluLabel_m->setText(db.getPLU(product_slot___, 'm'));
     ui->pluLabel_l->setText(db.getPLU(product_slot___, 'l'));
@@ -545,7 +545,7 @@ void page_maintenance_dispenser::on_refillButton_clicked()
     case QMessageBox::Yes:
     {
         DbManager db(DB_PATH);
-        success = db.refill(selectedProductOrder->getSelectedSlot());
+        success = db.restockProduct(selectedProductOrder->getSelectedSlot());
         db.closeDB();
 
         if (success)

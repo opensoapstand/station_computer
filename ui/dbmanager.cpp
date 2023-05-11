@@ -462,69 +462,16 @@ bool DbManager::isProductVolumeInContainer(int slot)
     }
 }
 
-// bool DbManager::remainingVolumeIsBiggerThanLargestFixedSize(int slot)
-// {
-// //     qDebug() << " db... remainingVolumeIsBiggerThanLargestFixedSize";
-// //     QSqlQuery level_query;
-// //     double level;
-// //     {
-// // #ifdef USE_OLD_DATABASE
-// //         level_query.prepare("SELECT remaining_ml FROM products where slot=:slot");
-
-// // #else
-// //         level_query.prepare("SELECT volume_remaining FROM products where slot=:slot");
-// // #endif
-
-// //         level_query.bindValue(":slot", slot);
-// //         level_query.exec();
-
-// //         if (!level_query.exec())
-// //         {
-// //             qDebug() << "ERROR: SQL query not successful: " << level_query.lastError() << endl;
-// //             return false;
-// //         }
-
-// //         // if(level_query.first()){
-// //         //     // takes first row
-// //         //     qDebug() << "aeijfaijf" << level_query.value(0) << endl;
-// //         // }
-
-// //         // CHECK IF things still work if first is skipped....
-// //         while (level_query.next())
-// //         {
-
-// //             level = level_query.value(0).toDouble();
-
-// //             if (level > getProductVolume(slot, 'l'))
-// //             {
-// //                 return true;
-// //             }
-// //             else
-// //             {
-// //                 qDebug() << level << "Remaining volume lower than biggest dispense size." << endl;
-// //                 return false;
-// //             }
-// //         }
-// //     }
-// }
-
 bool DbManager::refill(int slot)
 {
     qDebug() << " db... refill";
     QSqlQuery refill_query;
     bool success = false;
 
-#ifdef USE_OLD_DATABASE
-    QString sql_set_vol = "UPDATE products SET remaining_ml=full_ml WHERE slot=:slot";
-    QString sql_res_disp = "UPDATE products SET total_dispensed=0 WHERE slot=:slot";
-    QString sql_set_time = "UPDATE products SET last_refill=:time WHERE slot=:slot";
-
-#else
     QString sql_set_vol = "UPDATE products SET volume_remaining=volume_full WHERE slot=:slot";
     QString sql_res_disp = "UPDATE products SET volume_dispensed_since_restock=0 WHERE slot=:slot";
     QString sql_set_time = "UPDATE products SET last_restock=:time WHERE slot=:slot";
 
-#endif
     {
         refill_query.prepare(sql_set_vol);
         refill_query.bindValue(":slot", slot);
@@ -570,61 +517,6 @@ bool DbManager::refill(int slot)
 
     return success;
 }
-
-// bool DbManager::sellout(int slot){
-//     QSqlQuery sellout_query;
-//     bool success=false;
-// //    double remaining = getFullProduct(slot);
-//     {
-
-// #ifdef USE_OLD_DATABASE
-//     sellout_query.prepare("UPDATE products SET remaining_ml=0 WHERE slot=:slot");
-// #else
-//     sellout_query.prepare("UPDATE products SET volume_remaining=0 WHERE slot=:slot");
-// #endif
-//     sellout_query.bindValue(":slot", slot);
-//     if(sellout_query.exec())
-//     {
-//         success=true;
-//         }
-
-//     else
-//     {
-//        qDebug() << "remaining ml update error:"
-//                 << sellout_query.lastError();
-//         success=false;
-//     }
-//     }
-
-//     return success;
-// }
-
-// bool DbManager::unsellout(int slot){
-//     QSqlQuery sellout_query;
-//     bool success=false;
-//     {
-
-// #ifdef USE_OLD_DATABASE
-//     sellout_query.prepare("UPDATE products SET remaining_ml=full_ml-total_dispensed WHERE slot=:slot");
-//     #else
-//     sellout_query.prepare("UPDATE products SET volume_remaining=volume_full-volume_dispensed_total WHERE slot=:slot");
-// #endif
-//     sellout_query.bindValue(":slot", slot);
-//     if(sellout_query.exec())
-//     {
-//        qDebug() << "remaining ml updated successfully!";
-//         success=true;
-//     }
-//     else
-//     {
-//        qDebug() << "remaining ml update error:"
-//                 << sellout_query.lastError();
-//         success=false;
-//     }
-
-//     }
-//     return success;
-// }
 
 void DbManager::emailEmpty(int slot)
 {
@@ -1013,12 +905,7 @@ double DbManager::getVolumeRemaining(int slot)
     double remaining;
     {
 
-#ifdef USE_OLD_DATABASE
-        remaining_query.prepare("SELECT remaining_ml FROM products WHERE slot=:slot");
-#else
         remaining_query.prepare("SELECT volume_remaining FROM products WHERE slot=:slot");
-#endif
-
         remaining_query.bindValue(":slot", slot);
         remaining_query.exec();
 

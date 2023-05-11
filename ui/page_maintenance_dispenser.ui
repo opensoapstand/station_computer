@@ -209,6 +209,9 @@ Volume per Tick</string>
    <property name="text">
     <string>Full Volume</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">editProductGroup</string>
+   </attribute>
   </widget>
   <widget class="QLabel" name="full_volume">
    <property name="geometry">
@@ -535,24 +538,11 @@ Volume per Tick</string>
      <string>.</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="buttonDone">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>550</y>
-      <width>141</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>DONE</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="buttonCancel">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>550</y>
+      <x>40</x>
+      <y>560</y>
       <width>141</width>
       <height>71</height>
      </rect>
@@ -593,6 +583,19 @@ Volume per Tick</string>
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="buttonDone">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>560</y>
+      <width>141</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>DONE</string>
     </property>
    </widget>
   </widget>

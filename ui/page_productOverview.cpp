@@ -337,10 +337,10 @@ void pageProductOverview::reset_and_show_page_elements()
     selectedProductOrder->setDiscountPercentageFraction((0 * 1.0) / 100);
     ui->label_invoice_discount_amount->hide();
     ui->label_discount_tag->hide();
-    ui->previousPage_Button->setEnabled(true);
+    ui->pushButton_previous_page->setEnabled(true);
     ui->mainPage_Button->setEnabled(true);
     /* Hacky transparent button */
-    ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->pushButton_previous_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->page_qr_payment_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     // ui->page_qr_payment_Button->setStyleSheet("QPushButton { background-color: red; border: 0px };QPushButton:pressed { background-color: green; border: 10px }");
 
@@ -587,7 +587,7 @@ void pageProductOverview::keyboardButtonPressed(int buttonID)
         ui->promoCode->setText(ui->promoCode->text() + buttonText);
     }
 }
-void pageProductOverview::on_previousPage_Button_clicked()
+void pageProductOverview::on_pushButton_previous_page_clicked()
 {
 
     this->return_to_selectProductPage();
@@ -663,7 +663,7 @@ void pageProductOverview::on_page_qr_payment_Button_clicked()
     qDebug() << "pageProductOverview: Pay button";
 
     ui->mainPage_Button->setEnabled(false);
-    ui->previousPage_Button->setEnabled(false);
+    ui->pushButton_previous_page->setEnabled(false);
 
     this->stopSelectTimers();
     QString paymentMethod = selectedProductOrder->getSelectedPaymentMethod();

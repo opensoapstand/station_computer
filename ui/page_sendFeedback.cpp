@@ -39,61 +39,22 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 
    
 
-    ui->feedbackTextEdit->hide();
-    // ui->feedbackTextEdit->setEchoMode(QTextEdit::Normal);
-    ui->feedbackTextEdit->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-    ui->feedbackTextEdit->setStyleSheet(
-        "QLineEdit {"
+    ui->textEdit_custom_message->hide();
+    // ui->textEdit_custom_message->setEchoMode(QTextEdit::Normal);
+    ui->textEdit_custom_message->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
-        "font-family: 'Brevia', sans-serif;"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "color: #003840;"
-        "qproperty-alignment: AlignLeft;"
-        "border: none;"
-        "}");
 
     ui->label_enter_feedback->show();
-    ui->previousPage_Button->setStyleSheet("QPushButton { color:#555555; background-color: transparent; border: 0px }");
-    ui->previousPage_Button->setStyleSheet(
-        "QPushButton {"
+    //ui->pushButton_previous_page->setStyleSheet("QPushButton { color:#555555; background-color: transparent; border: 0px }");
 
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "color: #003840;"
-        "text-align: left;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
 
-    ui->previousPage_Button->setText("<-back");
+    ui->pushButton_previous_page->setText("<-back");
     ui->feedbackText->hide();
 
-    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-
-    ui->label_select_problem->setStyleSheet("QLabel { color:#555555; ; border: 1px }");
-    ui->label_select_problem->setStyleSheet(
-        "QLabel {"
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 55px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "color: #003840;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
     ui->label_select_problem->setText("Please provide feedback");
-    ui->label_select_problem->setWordWrap(true);
+    // ui->label_select_problem->setWordWrap(true);
+    
+
     ui->label_problem_options->setStyleSheet("background-color: #5E8680; border-radius: 30px;");
     QString checkBoxLabelStyling = ("QPushButton {"
                                     "font-family: 'Brevia';"
@@ -194,7 +155,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     ui->checkBox_5->setIconSize(size);
 
 
-    ui->feedbackTextEdit->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
+    ui->textEdit_custom_message->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
 
 }
 
@@ -244,10 +205,19 @@ void page_sendFeedback::showEvent(QShowEvent *event)
     
     ui->pushButton_start_input->setProperty("class", "buttonTransparent");
     ui->pushButton_start_input->setStyleSheet(styleSheet);
- 
     
+    ui->textEdit_custom_message->setStyleSheet(styleSheet);
     
-    
+    ui->pushButton_previous_page->setProperty( "class", "buttonPreviousPage");
+    ui->pushButton_previous_page->setStyleSheet(styleSheet);
+
+    ui->label_select_problem->setProperty("class", "labelSelectProblem");
+    ui->label_select_problem->setStyleSheet(styleSheet);
+
+
+    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+
+
     QWidget::showEvent(event);
     
     
@@ -279,12 +249,12 @@ void page_sendFeedback::onSelectTimeoutTick()
 void page_sendFeedback::reset_and_show_page_elements()
 {
 
-    ui->feedbackTextEdit->clear();
-    ui->feedbackTextEdit->show();
-    ui->feedbackTextEdit->setFocus(); // give focus to the feedbackTextEdit widget
+    ui->textEdit_custom_message->clear();
+    ui->textEdit_custom_message->show();
+    ui->textEdit_custom_message->setFocus(); // give focus to the textEdit_custom_message widget
     qDebug() << "Setting feedback text to:" << TEXTBOX_INVITE_TEXT;
-    ui->feedbackTextEdit->setPlaceholderText(TEXTBOX_INVITE_TEXT);
-    // ui->feedbackTextEdit->setText(TEXTBOX_INVITE_TEXT);
+    ui->textEdit_custom_message->setPlaceholderText(TEXTBOX_INVITE_TEXT);
+    // ui->textEdit_custom_message->setText(TEXTBOX_INVITE_TEXT);
 
     ui->feedbackKeyboard->hide();
 
@@ -369,7 +339,7 @@ void page_sendFeedback::on_pushButton_send_clicked()
     qDebug() << problemList;
     QString problems = problemList.join(",");
 
-    if (problems.length() != 0 || ( !(ui->feedbackTextEdit->toPlainText().isEmpty())  &&  (ui->feedbackTextEdit->toPlainText() != TEXTBOX_INVITE_TEXT )))
+    if (problems.length() != 0 || ( !(ui->textEdit_custom_message->toPlainText().isEmpty())  &&  (ui->textEdit_custom_message->toPlainText() != TEXTBOX_INVITE_TEXT )))
     {
         qDebug() << "Will send feedback to backend";
 
@@ -384,7 +354,7 @@ void page_sendFeedback::on_pushButton_send_clicked()
 
         // send to backend
         QString MachineSerialNumber = p_page_idle->currentProductOrder->getMachineId();
-        QString customFeedback = ui->feedbackTextEdit->toPlainText();
+        QString customFeedback = ui->textEdit_custom_message->toPlainText();
         QString curl_param = "problems=" + problems + " " + customFeedback + "&MachineSerialNumber=" + MachineSerialNumber;
         qDebug() << "Curl params" << curl_param;
         curl_param_array = curl_param.toLocal8Bit();
@@ -424,7 +394,7 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
     if (buttonText == "Cancel")
     {
         ui->feedbackKeyboard->hide();
-        ui->feedbackTextEdit->setText("");
+        ui->textEdit_custom_message->setText("");
         ui->pushButton_start_input->raise();
         ui->pushButton_start_input->show();
     }
@@ -458,41 +428,41 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
     }
     else if (buttonText == "Backspace")
     {
-        // ui->feedbackTextEdit->deletePreviousChar();
-        QTextCursor cursor = ui->feedbackTextEdit->textCursor();
+        // ui->textEdit_custom_message->deletePreviousChar();
+        QTextCursor cursor = ui->textEdit_custom_message->textCursor();
         cursor.deletePreviousChar();
     }
     else if (buttonText == "Clear")
     {
-        ui->feedbackTextEdit->setPlainText("");
+        ui->textEdit_custom_message->setPlainText("");
     }
     else if (buttonText == "Done")
     {
         qDebug() << "Keyboard: Done Clicked";
-        QString textEntry = ui->feedbackTextEdit->toPlainText();
+        QString textEntry = ui->textEdit_custom_message->toPlainText();
         ui->feedbackKeyboard->hide();
         ui->pushButton_start_input->raise();
         ui->pushButton_start_input->show();
     }
     else if (buttonText == "Space")
     {
-        ui->feedbackTextEdit->insertPlainText(" ");
+        ui->textEdit_custom_message->insertPlainText(" ");
     }
     else if (buttonText == "&&")
     {
-        ui->feedbackTextEdit->insertPlainText("&");
+        ui->textEdit_custom_message->insertPlainText("&");
     }
     else if (buttonText == "Enter")
     {
-        ui->feedbackTextEdit->insertPlainText("\n");
+        ui->textEdit_custom_message->insertPlainText("\n");
     }
     else
     {
-        ui->feedbackTextEdit->insertPlainText(buttonText);
+        ui->textEdit_custom_message->insertPlainText(buttonText);
     }
 }
 
-void page_sendFeedback::on_previousPage_Button_clicked()
+void page_sendFeedback::on_pushButton_previous_page_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_idle);
 }
@@ -511,10 +481,10 @@ void page_sendFeedback::on_pushButton_start_input_clicked()
     ui->pushButton_start_input->hide();
 
     // starts with welcome message
-    if (ui->feedbackTextEdit->toPlainText() == TEXTBOX_INVITE_TEXT)
+    if (ui->textEdit_custom_message->toPlainText() == TEXTBOX_INVITE_TEXT)
     {
-        ui->feedbackTextEdit->clear(); // clears init text
-        //ui->feedbackTextEdit->setPlainText("fefef");
+        ui->textEdit_custom_message->clear(); // clears init text
+        //ui->textEdit_custom_message->setPlainText("fefef");
     }
 }
 

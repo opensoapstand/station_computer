@@ -481,7 +481,7 @@ void pageProduct::reset_and_show_page_elements()
 
     // ordersize buttons
     /* Hacky transparent button */
-    ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->pushButton_previous_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     ui->mainPage_Button->setStyleSheet("QPushButton {"
         "font-family: 'Brevia';"
@@ -514,7 +514,7 @@ void pageProduct::loadProdSpecs()
     _selectIdleTimeoutSec = 140;
 
     ui->mainPage_Button->setEnabled(true);
-    ui->previousPage_Button->setEnabled(true);
+    ui->pushButton_previous_page->setEnabled(true);
 
     int sizes_available_count = 0;
     for (uint8_t i = 0; i < 4; i++)
@@ -653,7 +653,7 @@ void pageProduct::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
     // ui->mainPage_Button->setEnabled(false);
-    // ui->previousPage_Button->setEnabled(false);
+    // ui->pushButton_previous_page->setEnabled(false);
     selectIdleTimer->stop();
     this->stopSelectTimers();
     p_page_idle->pageTransition(this, pageToShow);
@@ -700,7 +700,7 @@ size_t WriteCallback_coupon(char *contents, size_t size, size_t nmemb, void *use
     return size * nmemb;
 }
 
-void pageProduct::on_previousPage_Button_clicked()
+void pageProduct::on_pushButton_previous_page_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_select_product);
 }

@@ -16,7 +16,7 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QPushButton" name="previousPage_Button">
+  <widget class="QPushButton" name="pushButton_previous_page">
    <property name="geometry">
     <rect>
      <x>20</x>

@@ -3,6 +3,36 @@
    border: 0px;
 }
 
+.buttonPreviousPage{
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 32px;
+   line-height: 99px;
+   letter-spacing: 1.5px;
+   color: #003840;
+   text-align: center;
+   border: none;
+   background: transparent;
+}
+
+.labelSelectProblem{
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 55px;
+   line-height: 99px;
+   letter-spacing: 1.5px;
+   color: #adb0b1;
+   text-align: center;
+   border: none;
+}
+
+QLabel { 
+   color:#555555; 
+   border: 1px; 
+}
+
 QPushButton {
    font-family: 'Brevia';
    font-style: normal;
@@ -17,3 +47,14 @@ QPushButton {
    padding: 10px;
    border: 2px solid #004D54;
 }
+
+QLineEdit {
+   font-family: 'Brevia', sans-serif;
+   font-style: normal;
+   font-weight: 75;
+   font-size: 32px;
+   line-height: 99px;
+   letter-spacing: 1.5px;
+   color: #003840;
+   border: none;
+};

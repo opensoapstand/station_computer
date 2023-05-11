@@ -29,7 +29,7 @@ font-weight: normal;
 font-size: 23px;
 line-height: 29px;</string>
   </property>
-  <widget class="QPushButton" name="previousPage_Button">
+  <widget class="QPushButton" name="pushButton_previous_page">
    <property name="geometry">
     <rect>
      <x>70</x>
@@ -2120,7 +2120,7 @@ text-align: center;</string>
   <zorder>label_payment_page</zorder>
   <zorder>label_invoice_price</zorder>
   <zorder>promoCode</zorder>
-  <zorder>previousPage_Button</zorder>
+  <zorder>pushButton_previous_page</zorder>
   <zorder>label_invoice_price_total</zorder>
   <zorder>label_invoice_name</zorder>
   <zorder>label_invoice_discount_amount</zorder>

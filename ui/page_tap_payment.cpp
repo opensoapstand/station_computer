@@ -41,8 +41,8 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
     // Fullscreen background setup
     ui->setupUi(this);
     qDebug() << "Payment page" << endl;
-    // ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->previousPage_Button->setStyleSheet(
+    // ui->pushButton_previous_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->pushButton_previous_page->setStyleSheet(
         "QPushButton {"
         "font-family: 'Brevia';"
         "font-style: normal;"
@@ -56,7 +56,7 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
         "qproperty-alignment: AlignCenter;"
         "border: none;"
         "}");
-    ui->previousPage_Button->setText("<- Back");
+    ui->pushButton_previous_page->setText("<- Back");
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->payment_bypass_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
@@ -276,7 +276,7 @@ void page_tap_payment::startPaymentProcess()
     {
         numberOfTapAttempts = 0;
         // stopPayTimers();
-        on_previousPage_Button_clicked();
+        on_pushButton_previous_page_clicked();
     }
 }
 
@@ -335,7 +335,7 @@ void page_tap_payment::check_card_tapped()
     }
     else if (card_tap_status == "Failed")
     {
-        on_previousPage_Button_clicked();
+        on_pushButton_previous_page_clicked();
     }
 }
 
@@ -427,7 +427,7 @@ bool page_tap_payment::exitConfirm()
 }
 
 // Navigation: Back to Drink Size Selection
-void page_tap_payment::on_previousPage_Button_clicked()
+void page_tap_payment::on_pushButton_previous_page_clicked()
 {
     qDebug() << "In previous page button" << endl;
 

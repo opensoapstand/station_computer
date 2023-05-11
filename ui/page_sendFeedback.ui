@@ -29,13 +29,13 @@ font-weight: normal;
 font-size: 23px;
 line-height: 29px;</string>
   </property>
-  <widget class="QPushButton" name="previousPage_Button">
+  <widget class="QPushButton" name="pushButton_previous_page">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>65</y>
-     <width>99</width>
-     <height>36</height>
+     <x>40</x>
+     <y>30</y>
+     <width>181</width>
+     <height>81</height>
     </rect>
    </property>
    <property name="text">
@@ -123,9 +123,9 @@ text-align: center;
   <widget class="QLabel" name="label_select_problem">
    <property name="geometry">
     <rect>
-     <x>-10</x>
+     <x>0</x>
      <y>220</y>
-     <width>1075</width>
+     <width>1080</width>
      <height>242</height>
     </rect>
    </property>
@@ -1724,7 +1724,7 @@ font: 11pt &quot;Montserrat&quot;;</string>
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="feedbackTextEdit">
+  <widget class="QTextEdit" name="textEdit_custom_message">
    <property name="geometry">
     <rect>
      <x>200</x>
@@ -1752,13 +1752,13 @@ font: 11pt &quot;Montserrat&quot;;</string>
   <zorder>checkBox_1</zorder>
   <zorder>label_still_cant_find</zorder>
   <zorder>label_email</zorder>
-  <zorder>previousPage_Button</zorder>
+  <zorder>pushButton_previous_page</zorder>
   <zorder>label_enter_feedback</zorder>
   <zorder>pushButton_start_input</zorder>
   <zorder>label_thanks_for_feedback</zorder>
   <zorder>label_help</zorder>
   <zorder>feedbackText</zorder>
-  <zorder>feedbackTextEdit</zorder>
+  <zorder>textEdit_custom_message</zorder>
   <zorder>feedbackKeyboard</zorder>
  </widget>
  <resources/>

@@ -389,6 +389,25 @@ DF_ERROR dispenser::loadGeneralProperties()
     resetVolumeDispensed();
 }
 
+DF_ERROR dispenser::startDispense()
+{
+    using namespace std::chrono;
+    dispense_start_timestamp_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    dispenseButtonTimingreset();
+
+    this->the_pcb->flowSensorEnable(slot);
+    this->the_pcb->resetFlowSensorTotalPulses(slot);
+
+    previous_dispense_state = FLOW_STATE_UNAVAILABLE;
+
+    DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
+    debugOutput::sendMessage("Dispense start at slot " + to_string(this->slot), MSG_INFO);
+
+    initFlowRateCalculation();
+
+    return e_ret = OK;
+}
+
 // Reset values onEntry()
 DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 // DF_ERROR dispenser::initDispense(int nVolumeToDispense)
@@ -896,24 +915,6 @@ DF_ERROR dispenser::setPumpPWM(uint8_t value, bool enableLog)
 //     return e_ret = OK;
 // }
 
-DF_ERROR dispenser::startDispense()
-{
-    using namespace std::chrono;
-    dispense_start_timestamp_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    dispenseButtonTimingreset();
-
-    this->the_pcb->flowSensorEnable(slot);
-    this->the_pcb->resetFlowSensorTotalPulses(slot);
-
-    previous_dispense_state = FLOW_STATE_UNAVAILABLE;
-
-    DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
-    debugOutput::sendMessage("Dispense start at slot " + to_string(this->slot), MSG_INFO);
-
-    initFlowRateCalculation();
-
-    return e_ret = OK;
-}
 
 unsigned short dispenser::getPumpSpeed()
 {

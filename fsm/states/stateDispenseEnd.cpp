@@ -77,6 +77,7 @@ DF_ERROR stateDispenseEnd::onAction()
 
     double dispensed_volume = productDispensers[pos_index].getVolumeDispensed();
     double volume_remaining_at_start = ceil(productDispensers[pos_index].getProduct()->getVolumeRemaining());
+    m_pMessaging->sendMessageOverIP(std::to_string(volume_remaining_at_start));
     double updated_volume_remaining = ceil(volume_remaining_at_start - dispensed_volume);
     // handle empty container detection
     if (m_pMessaging->getRequestedSize() == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
@@ -562,12 +563,12 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(double updated_volume_remaining)
 
     /* Create SQL statement for total product dispensed */
     std::string sql2;
-    sql2 = ("UPDATE products SET volume_dispensed_total=volume_dispensed_total+" + dispensed_volume_str + " WHERE name='" + product_name + "';");
+    sql2 = ("UPDATE products SET volume_dispensed_total=volume_dispensed_total+" + dispensed_volume_str + " WHERE slot='" + to_string(slot) + "';");
     databaseUpdateSql(sql2);
 
     /* Create SQL statement for product remaining */
     std::string sql3;
-    sql3 = ("UPDATE products SET volume_remaining=" + to_string(updated_volume_remaining) + " WHERE name='" + product_name + "';");
+    sql3 = ("UPDATE products SET volume_remaining=" + to_string(updated_volume_remaining) + " WHERE slot='" + to_string(slot) + "';");
     databaseUpdateSql(sql3);
 
     // reload (changed) db values

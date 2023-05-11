@@ -30,6 +30,7 @@ extern std::string MAC_LABEL;
 extern std::string AUTH_CODE;
 extern std::string SAF_NUM;
 extern std::string socketAddr;
+double current_price;
 // CTOR
 page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
                                                   ui(new Ui::page_dispenser)
@@ -85,7 +86,6 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
                                         "border: none;"
                                         "}";
     ui->volumeDispensedLabel->setStyleSheet(volumeDispensedStylesheet);
-
     ui->label_to_refill->setStyleSheet(
         "QLabel {"
 
@@ -194,7 +194,6 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     ui->button_problems->setText("Tap here if you notice a problem.");
     ui->button_report->setText("Report");
     ui->label_volume_dispensed->setStyleSheet(volumeDispensedStylesheet);
-
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
@@ -256,6 +255,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     askForFeedbackAtEnd = false;
 
     ui->fill_animation_label->move(380, 889);
+    ui->button_problems->move(120,40);
 
     qDebug() << "db check dispense buttons count:";
     DbManager db(DB_PATH);
@@ -325,13 +325,14 @@ void page_dispenser::updateVolumeDispensedLabel(double dispensed)
     {
 
         double unitprice = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
-        double current_price = dispensed * unitprice;
+        current_price = dispensed * unitprice;
         ui->volumeDispensedLabel->setText(dispensedVolumeUnitsCorrected + " " + units + " ( $" + QString::number(current_price, 'f', 2) + " )");
     }
     else
     {
         QString totalVolume = selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(selectedProductOrder->getSelectedSize(), true, true);
         ui->volumeDispensedLabel->setText(dispensedVolumeUnitsCorrected + " " + units + "/ " + totalVolume);
+        current_price = selectedProductOrder->getSelectedPrice();
     }
 }
 
@@ -348,7 +349,7 @@ void page_dispenser::dispensing_end_admin()
     ui->finishTransactionMessage->show();
     ui->finishTransactionMessage->raise();
 
-    double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
+    double price = current_price;
     std::ostringstream stream;
     stream << std::fixed << std::setprecision(2) << price;
     qDebug() << "Minimum volume dispensed" << MINIMUM_DISPENSE_VOLUME_ML;
@@ -373,7 +374,7 @@ void page_dispenser::dispensing_end_admin()
     }
     else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && selectedProductOrder->getSelectedVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
     {
-        ui->finishTransactionMessage->setText("Capturing payment");
+        ui->finishTransactionMessage->setText("Capturing payment: $" + QString::number(current_price, 'f', 2));
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         if (CTROUTD != "")
         {
@@ -388,7 +389,7 @@ void page_dispenser::dispensing_end_admin()
     }
     // ui->finishTransactionMessage->setText("");
     qDebug() << "Finished dispense admin handling";
-
+    current_price = 0.0;
     if (askForFeedbackAtEnd)
     {
         hideCurrentPageAndShowProvided(feedbackPage);
@@ -554,7 +555,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         }
 
         this->ui->fill_animation_label->move(380, 900 - 3 * percentage);
-
+        // ui->button_problems->move(120, 450);
         // transition from instructions to dispensing at first receival of volume.
         ui->dispense_bottle_label->show();
         ui->label_press->hide();

@@ -555,7 +555,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         }
 
         this->ui->fill_animation_label->move(380, 900 - 3 * percentage);
-        ui->button_problems->move(120, 450);
+        // ui->button_problems->move(120, 450);
         // transition from instructions to dispensing at first receival of volume.
         ui->dispense_bottle_label->show();
         ui->label_press->hide();

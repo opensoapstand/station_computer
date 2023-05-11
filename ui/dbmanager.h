@@ -58,11 +58,9 @@ public:
     QString getPLU(int slot, char size);
     QString getMachineID();
     QString getProductID(int slot);
-#ifndef USE_OLD_DATABASE
     int getSlotEnabled(int slot);
     QString getStatusText(int slot);
     bool updateSlotAvailability(int slot, int isEnabled, QString status_text);
-#endif
 
     uint32_t getNumberOfRows(QString table);
     bool initialize(const QString &path);

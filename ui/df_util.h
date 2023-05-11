@@ -7,7 +7,6 @@
 #include "dfuiserver.h"
 
 // TODO: Refactor to fit with dfuicommthread
-// #define USE_OLD_DATABASE
 //#define START_FSM_FROM_UI //enabled by default (start controller from ui)
 
 #define UI_VERSION "1.5+"
@@ -31,11 +30,7 @@
 //#define WAIT_FOR_CONTROLLER_READY // will wait for response of controller before continuing.
 #endif
 
-#ifdef USE_OLD_DATABASE
-#define DB_PATH "/home/df-admin/production/db/drinkfill-sqlite.db"
-#else
 #define DB_PATH "/home/df-admin/production/db/drinkfill-sqlite_newlayout.db"
-#endif
 
 #define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv"  // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file
 #define CSV_PRODUCT_COL_ID 0

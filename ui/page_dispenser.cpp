@@ -271,6 +271,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     {
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
     }
+    
     p_page_idle->addCompanyLogoToLabel(ui->label_logo);
     ui->label_logo->hide();
 

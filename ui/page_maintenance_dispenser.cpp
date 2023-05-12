@@ -12,7 +12,6 @@
 #include <QQmlEngine>
 #include <QSlider>
 
-
 // CTOR
 page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidget(parent),
                                                                           ui(new Ui::page_maintenance_dispenser)
@@ -205,7 +204,6 @@ void page_maintenance_dispenser::refreshLabels()
     ui->pluLabel_l->setText(db.getPLU(product_slot___, 'l'));
     ui->pluLabel_c->setText(db.getPLU(product_slot___, 'c'));
 
-
     db.closeDB();
 
     ui->testLargeButton->setVisible(false);
@@ -312,11 +310,12 @@ void page_maintenance_dispenser::on_vol_per_tickButton_clicked()
 void page_maintenance_dispenser::setSoldOutButtonText()
 {
     qDebug() << "db call from soldoutbuttonsetting";
-    DbManager db(DB_PATH); // TAKE CARE!!!! DO NOT NEST DB CALLS!!!;
-
     int slot = p_page_idle->currentProductOrder->getSelectedSlot();
+    DbManager db(DB_PATH);
+    bool isSlotEnabled = db.getSlotEnabled(slot);
+    db.closeDB();
 
-    if (db.getSlotEnabled(slot))
+    if (isSlotEnabled)
     {
         ui->soldOutButton->setText("Make \n unavailable");
         ui->soldOutButton->setStyleSheet("QPushButton { background-color: #5E8680;font-size: 36px; }");
@@ -326,8 +325,8 @@ void page_maintenance_dispenser::setSoldOutButtonText()
         ui->soldOutButton->setText("Make \n available");
         ui->soldOutButton->setStyleSheet("QPushButton { background-color: #E0A0A0;font-size: 36px;  }");
     }
-    db.closeDB();
 }
+
 void page_maintenance_dispenser::dispense_test_start()
 {
 
@@ -575,13 +574,14 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
     // qDebug() << "soldout clicked. size: " << QString::number(this->p_page_idle->currentProductOrder->getSelectedVolume());
 
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
-    bool success;
 
     DbManager db(DB_PATH);
-    success = db.getSlotEnabled(selectedProductOrder->getSelectedSlot());
+    bool slotEnabled = db.getSlotEnabled(selectedProductOrder->getSelectedSlot());
+    QString slotStatus = db.getStatusText(selectedProductOrder->getSelectedSlot());
     db.closeDB();
     QString infoLabelText = "";
-    if (success)
+
+    if (slotEnabled)
     {
 
         // ARE YOU SURE YOU WANT TO COMPLETE?
@@ -608,30 +608,33 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
             {
             case QMessageBox::Yes:
             {
-                infoLabelText = "Coming Soon";
+                slotStatus = "COMING_SOON";
+                // infoLabelText = "Coming Soon";
             }
             break;
             case QMessageBox::No:
             {
-                infoLabelText = "Sold Out";
+                slotStatus = "SOLD_OUT";
+                // infoLabelText = "Sold Out";
             }
             break;
             }
+            slotEnabled = false;
+            // DbManager db2(DB_PATH);
+            // bool success = db2.updateSlotAvailability(selectedProductOrder->getSelectedSlot(), 0, infoLabelText);
+            // db2.closeDB();
 
-            DbManager db2(DB_PATH);
-            bool success = db2.updateSlotAvailability(selectedProductOrder->getSelectedSlot(), 0, infoLabelText);
-            db2.closeDB();
-
-            if (!success)
-            {
-                infoLabelText = "Set Disabled ERROR";
-            }
-            ui->infoLabel->setText(infoLabelText);
+            // if (!success)
+            // {
+            //     infoLabelText = "Set Disabled ERROR";
+            // }
+            // ui->infoLabel->setText(infoLabelText);
 
             break;
         }
         case QMessageBox::No:
         {
+
             msgBox.hide();
         }
         break;
@@ -652,15 +655,18 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
         {
         case QMessageBox::Yes:
         {
-            QString infoLabelText = "Set Enabled Succesful";
-            DbManager db3(DB_PATH);
-            bool success = db3.updateSlotAvailability(this->p_page_idle->currentProductOrder->getSelectedSlot(), 1, "");
-            db3.closeDB();
-            if (!success)
-            {
-                infoLabelText = "Set Enabled ERROR";
-            }
-            ui->infoLabel->setText(infoLabelText);
+            // QString infoLabelText = "Set Enabled Succesful";
+            // DbManager db3(DB_PATH);
+            // bool success = db3.updateSlotAvailability(this->p_page_idle->currentProductOrder->getSelectedSlot(), 1, "");
+            // db3.closeDB();
+            // if (!success)
+            // {
+            //     infoLabelText = "Set Enabled ERROR";
+            // }
+            // ui->infoLabel->setText(infoLabelText);
+
+            slotEnabled = true;
+            slotStatus = "AVAILABLE";
 
             break;
         }
@@ -671,6 +677,20 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
         }
         }
     }
+
+    DbManager db3(DB_PATH);
+    bool success = db3.updateSlotAvailability(this->p_page_idle->currentProductOrder->getSelectedSlot(), slotEnabled, slotStatus);
+    db3.closeDB();
+    if (!success)
+    {
+        infoLabelText = "Set Enabled ERROR";
+    }
+    else
+    {
+        infoLabelText = "Slot Status set to\n" + slotStatus;
+    }
+
+    ui->infoLabel->setText(infoLabelText);
 
     setSoldOutButtonText();
 }
@@ -854,13 +874,13 @@ void page_maintenance_dispenser::on_buttonCancel_clicked()
 
 void page_maintenance_dispenser::updateValues()
 {
-    if(text_entered!=""){
+    if (text_entered != "")
+    {
         if (price_small)
         {
             selectedProductOrder->setPriceSelected(SIZE_SMALL_INDEX, text_entered.toDouble());
             ui->price_small->setText("$" + QString::number(selectedProductOrder->getPrice(SIZE_SMALL_INDEX)));
             ui->titleLabel->setText("Price Small:");
-
         }
         else if (price_medium)
         {
@@ -881,12 +901,10 @@ void page_maintenance_dispenser::updateValues()
         else if (target_s)
         {
             selectedProductOrder->setSizeToVolumeForSelectedSlot(text_entered, SIZE_SMALL_INDEX);
-            
         }
         else if (target_m)
         {
             selectedProductOrder->setSizeToVolumeForSelectedSlot(text_entered, SIZE_MEDIUM_INDEX);
-            
         }
         else if (target_l)
         {
@@ -904,7 +922,7 @@ void page_maintenance_dispenser::updateValues()
         {
             selectedProductOrder->setSelectedDispenseSpeedPercentage(text_entered.toInt());
         }
-        
+
         refreshLabels();
     }
 
@@ -1009,20 +1027,10 @@ size_t WriteCallback4(char *contents, size_t size, size_t nmemb, void *userp)
     return size * nmemb;
 }
 
-
 void page_maintenance_dispenser::on_update_portal_clicked()
 {
     qDebug() << "update portal clicked ";
-    QString curl_params = "productId=" + p_page_idle->currentProductOrder->getSelectedProductId()
-                        + "&source=soapstandStation"
-                        + "&price_small=" + QString::number(selectedProductOrder->getPrice(SIZE_SMALL_INDEX))
-                        + "&price_medium=" + QString::number(selectedProductOrder->getPrice(SIZE_MEDIUM_INDEX)) 
-                        + "&price_large=" + QString::number(selectedProductOrder->getPrice(SIZE_LARGE_INDEX))
-                        + "&price_custom=" + QString::number(selectedProductOrder->getPrice(SIZE_CUSTOM_INDEX))
-                        + "&size_small=" + QString::number(selectedProductOrder->getPrice(SIZE_SMALL_INDEX))
-                        + "&size_medium=" + QString::number(selectedProductOrder->getPrice(SIZE_MEDIUM_INDEX)) 
-                        + "&size_large=" + QString::number(selectedProductOrder->getPrice(SIZE_LARGE_INDEX))
-                         ;
+    QString curl_params = "productId=" + p_page_idle->currentProductOrder->getSelectedProductId() + "&source=soapstandStation" + "&price_small=" + QString::number(selectedProductOrder->getPrice(SIZE_SMALL_INDEX)) + "&price_medium=" + QString::number(selectedProductOrder->getPrice(SIZE_MEDIUM_INDEX)) + "&price_large=" + QString::number(selectedProductOrder->getPrice(SIZE_LARGE_INDEX)) + "&price_custom=" + QString::number(selectedProductOrder->getPrice(SIZE_CUSTOM_INDEX)) + "&size_small=" + QString::number(selectedProductOrder->getPrice(SIZE_SMALL_INDEX)) + "&size_medium=" + QString::number(selectedProductOrder->getPrice(SIZE_MEDIUM_INDEX)) + "&size_large=" + QString::number(selectedProductOrder->getPrice(SIZE_LARGE_INDEX));
     curl_param_array2 = curl_params.toLocal8Bit();
 
     curl2 = curl_easy_init();
@@ -1062,8 +1070,7 @@ void page_maintenance_dispenser::on_update_portal_clicked()
     }
     curl_easy_cleanup(curl2);
     readBuffer = "";
- 
-    }
+}
 
 void page_maintenance_dispenser::editProductButtonPressed()
 {
@@ -1072,4 +1079,3 @@ void page_maintenance_dispenser::editProductButtonPressed()
     // QString data_out = curl_params;
     // p_page_idle->dfUtility->write_to_file(TRANSACTIONS_RESTOCK_OFFINE_PATH, data_out);
 }
-

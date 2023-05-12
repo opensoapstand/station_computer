@@ -826,7 +826,6 @@ bool DbManager::updateSlotAvailability(int slot, int isEnabled, QString status_t
     QSqlQuery qry;
     bool enabled;
 
-    // QString qry_qstr = QString("UPDATE machine SET is_enabled_slot_%1=0").arg(QString::number(slot), QString::number(isEnabled));
     QString qry_qstr = QString("UPDATE machine SET status_text_slot_%1='").arg(QString::number(slot)) + status_text + QString("',is_enabled_slot_%1=").arg(QString::number(slot)) + QString::number(isEnabled);
     qDebug() << qry_qstr << endl;
     string qry_string = qry_qstr.toUtf8().constData(); // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922

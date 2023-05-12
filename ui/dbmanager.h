@@ -17,7 +17,7 @@ public:
     // double getProductTargetVolume(int slot);
     double getProductVolumePerTick(int slot);
     // bool remainingVolumeIsBiggerThanLargestFixedSize(int slot);
-    bool isProductVolumeInContainer(int slot);
+
     bool getRecentTransactions(QString values[][5], int count, int* count_retreived);
     bool hasReceiptPrinter();
     void printerStatus(bool* isOnline, bool* hasPaper );

@@ -200,7 +200,7 @@ void page_idle_products::displayProducts()
             icon_path = ICON_TYPE_ALL_PURPOSE_PATH;
             type_text = "CLEANER ";
         }
-        else if (product_type == "Contentrate")
+        else if (product_type == "Concentrate")
         {
             icon_path = ICON_TYPE_CONCENTRATE_PATH;
             type_text = "CONCENTRATE";

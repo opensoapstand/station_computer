@@ -83,6 +83,8 @@ using namespace std;
 #define SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS 3000
 #define QR_PROCESSED_PERIODICAL_CHECK_SECONDS 5
 
+#define CONTAINER_EMPTY_THRESHOLD_ML 1500
+
  
 
 #define TEMPLATES_ROOT_PATH "/home/df-admin/production/references/templates/"
@@ -123,7 +125,7 @@ using namespace std;
 #define FULL_TRANSPARENT_IMAGE_PATH                 "/home/df-admin/production/references/background.png"
 
 #define ICON_TYPE_CONCENTRATE_PATH                  "Soapstand_UI-concentrate-icon.png"
-#define ICON_TYPE_ALL_PURPOSE_PATH                  "Soapstand-UI-icon-all-purposs.png"
+#define ICON_TYPE_ALL_PURPOSE_PATH                  "Soapstand-UI-icon-all-purpose.png"
 #define ICON_TYPE_DISH_PATH                         "Soapstand-UI-icon-dish.png"
 #define ICON_TYPE_HAND_PATH                         "Soapstand-UI-icon-hand-soap.png"
 #define ICON_TYPE_LAUNDRY_PATH                      "Soapstand-UI-icon-laundry.png"

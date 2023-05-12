@@ -186,7 +186,7 @@ void page_select_product::displayProducts()
 
         product_slot_enabled = db.getSlotEnabled(slot);
 
-        // product_sold_out = !(db.isProductVolumeInContainer(slot));
+        product_sold_out = !(p_page_idle->currentProductOrder->isProductVolumeInContainer(slot));
 
         product_status_text = db.getStatusText(slot);
         double remaining_volume = db.getVolumeRemaining(slot);

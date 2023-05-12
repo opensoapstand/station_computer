@@ -185,21 +185,16 @@ void DbManager::getCustomDiscountProperties(int slot, bool *isEnabled, double *v
 }
 
 void DbManager::getProductProperties(int slot, QString *product_id, bool *isSizeEnabled)
-// void DbManager::getProductProperties(int slot, QString*name, QString *description, QString *features,  QString *ingredients, bool* isEnabledSmall,bool* isEnabledMedium,bool* isEnabledLarge,bool* isEnabledCustom)
 {
     QSqlQuery qry;
     {
         qry.prepare("SELECT soapstand_product_serial, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom FROM products WHERE slot=:slot");
-        // qry.prepare("SELECT name,description,features,ingredients,is_enabled_small,is_enabled_medium,is_enabled_large,is_enabled_custom FROM products WHERE slot=:slot");
         qry.bindValue(":slot", slot);
         qry.exec();
 
         while (qry.next())
         {
             *product_id = qry.value(0).toString();
-            // *description = qry.value(1).toString();
-            // *features = qry.value(2).toString();
-            // *ingredients = qry.value(3).toString();
             isSizeEnabled[1] = qry.value(1).toInt(); // small is index 1!!
             isSizeEnabled[2] = qry.value(2).toInt();
             isSizeEnabled[3] = qry.value(3).toInt();
@@ -413,17 +408,7 @@ uint32_t DbManager::getNumberOfRows(QString table)
     return row_count;
 }
 
-bool DbManager::isProductVolumeInContainer(int slot)
-{
-    if (getEmptyContainerDetectionEnabled())
-    {
-        return getVolumeRemaining(slot) > 0;
-    }
-    else
-    {
-        return getVolumeRemaining(slot) > getProductVolume(slot, 'l'); // ----> TODO VERY BUGGY (only instance found of using char volume as a magic number)
-    }
-}
+
 
 bool DbManager::restockProduct(int slot)
 {

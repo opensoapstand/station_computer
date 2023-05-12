@@ -103,10 +103,11 @@ void page_maintenance::showEvent(QShowEvent *event)
     for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
         uint8_t slot = i + 1;
+        bool product_sold_out = !(p_page_idle->currentProductOrder->isProductVolumeInContainer(slot));
+        
         qDebug() << "db for names and id maintenance";
         DbManager db(DB_PATH);
         int product_slot_enabled = db.getSlotEnabled(slot);
-        bool product_sold_out = !(db.isProductVolumeInContainer(slot));
         QString product_status_text = db.getStatusText(slot);
 
         db.closeDB();

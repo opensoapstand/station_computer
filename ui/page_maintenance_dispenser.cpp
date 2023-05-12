@@ -609,27 +609,15 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
             case QMessageBox::Yes:
             {
                 slotStatus = "COMING_SOON";
-                // infoLabelText = "Coming Soon";
             }
             break;
             case QMessageBox::No:
             {
-                slotStatus = "SOLD_OUT";
-                // infoLabelText = "Sold Out";
+                slotStatus = "EMPTY";
             }
             break;
             }
             slotEnabled = false;
-            // DbManager db2(DB_PATH);
-            // bool success = db2.updateSlotAvailability(selectedProductOrder->getSelectedSlot(), 0, infoLabelText);
-            // db2.closeDB();
-
-            // if (!success)
-            // {
-            //     infoLabelText = "Set Disabled ERROR";
-            // }
-            // ui->infoLabel->setText(infoLabelText);
-
             break;
         }
         case QMessageBox::No:
@@ -655,16 +643,6 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
         {
         case QMessageBox::Yes:
         {
-            // QString infoLabelText = "Set Enabled Succesful";
-            // DbManager db3(DB_PATH);
-            // bool success = db3.updateSlotAvailability(this->p_page_idle->currentProductOrder->getSelectedSlot(), 1, "");
-            // db3.closeDB();
-            // if (!success)
-            // {
-            //     infoLabelText = "Set Enabled ERROR";
-            // }
-            // ui->infoLabel->setText(infoLabelText);
-
             slotEnabled = true;
             slotStatus = "AVAILABLE";
 

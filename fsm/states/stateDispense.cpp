@@ -127,6 +127,8 @@ DF_ERROR stateDispense::onAction()
       const char *statusStringChar = productDispensers[pos_index].getDispenseStatusAsString();
       std::string statusString(statusStringChar);
 
+      
+
       m_pMessaging->sendMessageOverIP("dispenseupdate|" + to_string(volume) + "|" + to_string(flowrate) + "|" + statusString);
    }
 

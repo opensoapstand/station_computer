@@ -533,7 +533,9 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool empty_stock_detected)
     std::string product_id = (productDispensers[pos_index].getProduct()->getProductId());
     double price;
     std::string price_string;
-    
+    std::string product_status;
+    std::string slot_status_text;
+
     price = getFinalPrice();
     price_string = to_string(price);
 
@@ -562,6 +564,15 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool empty_stock_detected)
     if (empty_stock_detected)
     {
         updated_volume_remaining = 0;
+        slot_status_text = "EMPTY";
+    }
+    else if (updated_volume_remaining < CONTAINER_EMPTY_THRESHOLD_ML)
+    {
+        slot_status_text = "LOW_STOCK";
+    }
+    else
+    {
+        slot_status_text = "AVAILABLE";
     }
 
     std::string dispensed_volume_str = to_string(dispensed_volume);
@@ -569,21 +580,27 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool empty_stock_detected)
     std::string updated_volume_dispensed_total_ever_str = to_string(updated_volume_dispensed_total_ever);
     std::string updated_volume_dispensed_since_restock_str = to_string(updated_volume_dispensed_since_restock);
 
-
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
     debugOutput::sendMessage("Update DB at dispense end: Vol dispensed: " + dispensed_volume_str, MSG_INFO);
-    
+
     // std::string s = std::format("{:.2f}", 3.14159265359); // s == "3.14"
 
     // update transactions table
     std::string sql1;
     sql1 = ("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,slot,button_duration,button_times,processed_by_backend,product_id) VALUES ('" + product_name + "'," + target_volume + "," + price_string + ",'" + start_time + "'," + dispensed_volume_str + ",'" + end_time + "'," + updated_volume_remaining_str + "," + to_string(slot) + "," + button_press_duration + "," + dispense_button_count + "," + to_string(false) + ",'" + product_id + "');");
     databaseUpdateSql(sql1);
-    
+
     // update product table
     std::string sql2;
     sql2 = ("UPDATE products SET volume_dispensed_total=" + updated_volume_dispensed_total_ever_str + ", volume_remaining=" + updated_volume_remaining_str + ", volume_dispensed_since_restock=" + updated_volume_dispensed_since_restock_str + " WHERE slot='" + to_string(slot) + "';");
     databaseUpdateSql(sql2);
+
+    // update machine table
+    std::string slot_status_field_name = "status_text_slot_" + to_string(slot);
+
+    std::string sql3;
+    sql3 = ("UPDATE machine SET " + slot_status_field_name + "='" + slot_status_text + "';");
+    databaseUpdateSql(sql3);
 
     // reload (changed) db values
     productDispensers[pos_index].getProduct()->reloadParametersFromDb();
@@ -619,9 +636,6 @@ double stateDispenseEnd::getFinalPrice()
             price_per_ml = productDispensers[pos_index].getProduct()->getPrice(SIZE_CUSTOM_CHAR);
         }
 
-        // normal
-        // price_per_ml = productDispensers[pos_index].getProduct()->getPrice(m_pMessaging->getRequestedSize());
-
         price = price_per_ml * volume_dispensed;
     }
     else if (size == SIZE_TEST_CHAR)
@@ -630,7 +644,6 @@ double stateDispenseEnd::getFinalPrice()
     }
     else
     {
-        // price = productDispensers[pos_index].getProduct()->getPrice(size);
         price = m_pMessaging->getRequestedPrice();
     }
     debugOutput::sendMessage("Post dispense final price: " + to_string(price), MSG_INFO);

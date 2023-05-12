@@ -186,7 +186,7 @@ void page_select_product::displayProducts()
 
         product_slot_enabled = db.getSlotEnabled(slot);
 
-        product_sold_out = !(p_page_idle->currentProductOrder->isProductVolumeInContainer(slot));
+        
 
         product_status_text = db.getStatusText(slot);
         double remaining_volume = db.getVolumeRemaining(slot);
@@ -261,16 +261,24 @@ void page_select_product::displayProducts()
             selectProductPhotoLabelsText[i]->setStyleSheet("background-color: transparent;");
         }
 
-        if (remaining_volume < 2000.0)
-        {
+
+        if (!(p_page_idle->currentProductOrder->isProductVolumeInContainer(slot))){
             selectProductPhotoLabelsText[i]->setText("Almost Empty");
-            // selectProductPhotoLabelsText[i]->setText("Stock Limited");
+        }
+        // else if (remaining_volume < 2000.0)
+        // {
+        //     selectProductPhotoLabelsText[i]->setText("Almost Empty");
+        //     // selectProductPhotoLabelsText[i]->setText("Stock Limited");
+        // }
+        else if (product_status_text.contains("LOW_STOCK")){
+            selectProductPhotoLabelsText[i]->setText("Almost Empty");
+
         }
         else if (product_status_text.contains("AVAILABLE"))
         {
             selectProductPhotoLabelsText[i]->setText("");
         }
-        else if (product_status_text.contains("SOLD_OUT"))
+        else if (product_status_text.contains("EMPTY"))
         {
             selectProductPhotoLabelsText[i]->setText("Sold Out");
         }

@@ -270,7 +270,7 @@ void page_select_product::displayProducts()
         //     selectProductPhotoLabelsText[i]->setText("Almost Empty");
         //     // selectProductPhotoLabelsText[i]->setText("Stock Limited");
         // }
-        else if (product_status_text.contains("LOW_STOCK")){
+        else if (product_status_text.contains("AVAILABLE_LOW_STOCK")){
             selectProductPhotoLabelsText[i]->setText("Almost Empty");
 
         }
@@ -278,11 +278,11 @@ void page_select_product::displayProducts()
         {
             selectProductPhotoLabelsText[i]->setText("");
         }
-        else if (product_status_text.contains("EMPTY"))
+        else if (product_status_text.contains("PROBLEM_EMPTY"))
         {
             selectProductPhotoLabelsText[i]->setText("Sold Out");
         }
-        else if (product_status_text.contains("COMING_SOON"))
+        else if (product_status_text.contains("DISABLED_COMING_SOON"))
         {
             selectProductPhotoLabelsText[i]->setText("Coming Soon");
         }

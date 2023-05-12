@@ -18,13 +18,9 @@
 #include <sqlite3.h>
 #include <stdint.h>
 
-
 #define CONTROLLER_VERSION "1.5+"
 
-
-
-
-#define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv"  // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file
+#define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv" // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file
 #define CSV_PRODUCT_COL_ID 0
 #define CSV_PRODUCT_COL_NAME 1
 #define CSV_PRODUCT_COL_TYPE 2
@@ -41,7 +37,7 @@
 #define PRODUCT_DISPENSERS_MAX 4
 #define MINIMUM_DISPENSE_VOLUME_ML 10
 #define ENABLE_TRANSACTION_TO_CLOUD
-//#define ENABLE_MULTI_BUTTON
+// #define ENABLE_MULTI_BUTTON
 
 #define DB_PATH "/home/df-admin/production/db/drinkfill-sqlite_newlayout.db"
 
@@ -57,7 +53,7 @@
 #define IO_PIN_FLOW_SENSOR 364
 
 #define FLOWSENSOR_DEJITTER_MILLIS 10ULL
-#define IO_PIN_BUTTON_4 410 // for EN-29 pcb
+#define IO_PIN_BUTTON_4 410   // for EN-29 pcb
 #define IO_PIN_ENABLE_24V 410 // for EN-134 pcb
 
 #define PIC_PROGRAMMER_PIN_VPP 337
@@ -70,12 +66,12 @@
 #define FLOW_SENSOR_DEBOUNCE_MILLIS 1
 
 #define SLOW_START_INCREASE_PERIOD_MILLIS 2 // set to 0 for instant start
-#define SLOW_STOP_PERIOD_MILLIS 1 // set to 0 for instant stop
+#define SLOW_STOP_PERIOD_MILLIS 1           // set to 0 for instant stop
 
-#define DISPENSE_STATUS_UPDATE_DELTA_MILLIS 500 //period of which controller can send status to ui and logging and terminal
+#define DISPENSE_STATUS_UPDATE_DELTA_MILLIS 500 // period of which controller can send status to ui and logging and terminal
 
 #define SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS 3000
-//#define EMPTY_CONTAINER_DETECTION_FLOW_THRESHOLD_ML_PER_S 15 // reference: at 2l/min we have 33ml/s
+// #define EMPTY_CONTAINER_DETECTION_FLOW_THRESHOLD_ML_PER_S 15 // reference: at 2l/min we have 33ml/s
 #define EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS 1000
 #define EMPTY_CONTAINER_DETECTION_MAXIMUM_PRIME_TIME_MILLIS 10000
 
@@ -126,13 +122,25 @@ struct product_order
 };
 typedef struct product_order product_order;
 
+typedef enum Dispenser_state
+{
+   DISPENSER_STATE_AVAILABLE = 0,
+   DISPENSER_STATE_AVAILABLE_LOW_STOCK,
+   DISPENSER_STATE_PROBLEM_NEEDS_ATTENTION,
+   DISPENSER_STATE_PROBLEM_EMPTY,
+   DISPENSER_STATE_DISABLED_COMING_SOON,
+   DISPENSER_STATE_DISABLED
+
+} Dispenser_state;
+
+typedef struct product_order product_order;
+
 struct Time_val
 {
    uint64_t time_millis;
    double value;
 };
 typedef struct Time_val Time_val;
-
 
 #define TABLE_PRODUCTS_COLUMN_COUNT 49
 

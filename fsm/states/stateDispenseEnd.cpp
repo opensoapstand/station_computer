@@ -73,28 +73,12 @@ DF_ERROR stateDispenseEnd::onAction()
         m_pMessaging->sendMessageOverIP("Target Hit");
     }
 
-    // double dispensed_volume = productDispensers[pos_index].getVolumeDispensed();
-    // double volume_remaining_at_start = ceil(productDispensers[pos_index].getProduct()->getVolumeRemaining());
-    // double updated_volume_remaining = ceil(volume_remaining_at_start - dispensed_volume);
-
-    bool empty_stock_detected = false;
-    // handle empty container detection
-    if (m_pMessaging->getRequestedSize() == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
-    {
-        // updated_volume_remaining = 0;
-        empty_stock_detected = true;
-        debugOutput::sendMessage("WARNING: Empty container detected. Will set remaining volume to zero.", MSG_INFO);
-    }
-
-    // we don't care if remaining volume is negative....
-    // else if (updated_volume_remaining < 0)
+    // bool empty_stock_detected = false;
+    // // handle empty container detection
+    // if (m_pMessaging->getRequestedSize() == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
     // {
-    //     // anomaly: calculated lower than 0 volume. Which is clearly wrong. So, artificially increase volume.
-    //     // should be set to smallest fixed volume?!
-
-    //     // updated_volume_remaining = productDispensers[pos_index].getProduct()->getTargetVolume(SIZE_SMALL_CHAR); // error: todo: small volume might not be active.
-    //     updated_volume_remaining = 500;
-    //     debugOutput::sendMessage("WARNING: Remaining Volume negative anomaly. Increase remaining volume with 500ml. ", MSG_INFO);
+    //     empty_stock_detected = true;
+    //     debugOutput::sendMessage("WARNING: Empty container detected. Will set remaining volume to zero.", MSG_INFO);
     // }
 
     // adjust to nearest lower fixed volume if less dispensed than requested
@@ -104,7 +88,7 @@ DF_ERROR stateDispenseEnd::onAction()
     if (m_pMessaging->getRequestedSize() == SIZE_TEST_CHAR)
     {
         debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(productDispensers[pos_index].getVolumeDispensed()) + "ml).", MSG_INFO);
-        dispenseEndUpdateDB(empty_stock_detected); // update the db dispense statistics
+        dispenseEndUpdateDB(); // update the db dispense statistics
     }
     else if (!is_valid_dispense)
     {
@@ -115,7 +99,7 @@ DF_ERROR stateDispenseEnd::onAction()
         e_ret = handleTransactionPayment();
 
         debugOutput::sendMessage("Normal transaction.", MSG_INFO);
-        dispenseEndUpdateDB(empty_stock_detected);
+        dispenseEndUpdateDB();
 
         bool success = false;
 #ifdef ENABLE_TRANSACTION_TO_CLOUD
@@ -138,7 +122,6 @@ DF_ERROR stateDispenseEnd::onAction()
     }
 
     m_state_requested = STATE_IDLE;
-    // usleep(3000000);                               // send message delay (pause from previous message) desperate attempt to prevent crashes
     m_pMessaging->sendMessageOverIP("Transaction End"); // send to UI
 
     return e_ret;
@@ -448,40 +431,6 @@ std::string stateDispenseEnd::getMachineID()
     return str;
 }
 
-std::string stateDispenseEnd::getUnits(int slot)
-{
-
-    // does not work.... strings in C++ Lode needs a course!
-    // return productDispensers[slot-1].getProduct()->getDisplayUnits();
-    return "problemski";
-}
-
-std::string stateDispenseEnd::getUnitsFromDb(int slot)
-{
-    rc = sqlite3_open(DB_PATH, &db);
-    sqlite3_stmt *stmt;
-    debugOutput::sendMessage("Units getter START", MSG_INFO);
-
-    if (rc)
-    {
-        //       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
-        // TODO: Error handling here...
-    }
-    else
-    {
-        //       fprintf(stderr, "Opened database successfully\n");
-    }
-
-    std::string sql_string_units = "SELECT size_unit FROM products WHERE slot=" + std::to_string(slot) + ";";
-
-    sqlite3_prepare(db, sql_string_units.c_str(), -1, &stmt, NULL);
-    sqlite3_step(stmt);
-    std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
-
-    sqlite3_finalize(stmt);
-    sqlite3_close(db);
-    return str;
-}
 
 DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement)
 {
@@ -521,7 +470,7 @@ DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement)
 
 // This function updates the local SQLite3 database with the transaction data, as well as updates the total product remaining locally
 
-DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool empty_stock_detected)
+DF_ERROR stateDispenseEnd::dispenseEndUpdateDB()
 {
     char *zErrMsg = 0;
     std::string product_name = (productDispensers[pos_index].getProduct()->m_name).c_str();
@@ -561,24 +510,21 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool empty_stock_detected)
     updated_volume_remaining = volume_remaining - dispensed_volume;
     updated_volume_dispensed_since_restock = volume_dispensed_since_restock + dispensed_volume;
 
-    if (empty_stock_detected)
-    {
+    // update slot state
+    if (productDispensers[pos_index].getDispenserState() == DISPENSER_STATE_PROBLEM_EMPTY){
         updated_volume_remaining = 0;
-        slot_status_text = "EMPTY";
     }
-    else if (updated_volume_remaining < CONTAINER_EMPTY_THRESHOLD_ML)
+    
+    if (updated_volume_remaining < CONTAINER_EMPTY_THRESHOLD_ML)
     {
-        slot_status_text = "LOW_STOCK";
-    }
-    else
-    {
-        slot_status_text = "AVAILABLE";
+        productDispensers[pos_index].setDispenserState(DISPENSER_STATE_AVAILABLE_LOW_STOCK);
     }
 
     std::string dispensed_volume_str = to_string(dispensed_volume);
     std::string updated_volume_remaining_str = to_string(updated_volume_remaining);
     std::string updated_volume_dispensed_total_ever_str = to_string(updated_volume_dispensed_total_ever);
     std::string updated_volume_dispensed_since_restock_str = to_string(updated_volume_dispensed_since_restock);
+    std::string dispenser_state_str = productDispensers[pos_index].getDispenserStateAsString();
 
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
     debugOutput::sendMessage("Update DB at dispense end: Vol dispensed: " + dispensed_volume_str, MSG_INFO);
@@ -599,7 +545,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool empty_stock_detected)
     std::string slot_status_field_name = "status_text_slot_" + to_string(slot);
 
     std::string sql3;
-    sql3 = ("UPDATE machine SET " + slot_status_field_name + "='" + slot_status_text + "';");
+    sql3 = ("UPDATE machine SET " + slot_status_field_name + "='" + dispenser_state_str + "';");
     databaseUpdateSql(sql3);
 
     // reload (changed) db values
@@ -792,9 +738,9 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
     tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod, plu, promoCode);
 }
 
-DF_ERROR stateDispenseEnd::print_text(string text)
-{
-    string printerstring = text;
-    string printer_command_string = "echo '\n" + printerstring + "' > /dev/ttyS4";
-    system(printer_command_string.c_str());
-}
+// DF_ERROR stateDispenseEnd::print_text(string text)
+// {
+//     string printerstring = text;
+//     string printer_command_string = "echo '\n" + printerstring + "' > /dev/ttyS4";
+//     system(printer_command_string.c_str());
+// }

@@ -608,12 +608,12 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
             {
             case QMessageBox::Yes:
             {
-                slotStatus = "COMING_SOON";
+                slotStatus = "DISABLED_COMING_SOON";
             }
             break;
             case QMessageBox::No:
             {
-                slotStatus = "EMPTY";
+                slotStatus = "DISABLED";
             }
             break;
             }

@@ -19,6 +19,7 @@
 #include "page_idle_products.h"
 #include "page_maintenance.h"
 #include "page_maintenance_general.h"
+#include "product.h"
 
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
@@ -28,12 +29,24 @@
 
 //    #define PLAY_VIDEO
 // CTOR
+
 page_idle::page_idle(QWidget *parent) : QWidget(parent),
                                         ui(new Ui::page_idle)
 {
     // IPC Networking
     dfUtility = new df_util();
+    // product products[SLOT_COUNT]; // create an array of Product objects with size SLOT_COUNT
+// for products.cpp
+    // for (int slot_index = 0; slot_index <= SLOT_COUNT; slot_index++)
+    // {
+    //     products[slot_index].setSlot(slot_index);
+    //     products[slot_index].loadFromDb(slot_index);
+    // }
 
+    // products[0].setSelectedSlot(2);
+    // int selectedSlot = products[0].getSelectedSlot();
+    // selectedProduct = products[selectedSlot];
+    // product* selectedProduct = &products[selectedSlot];
 
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
@@ -46,7 +59,9 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     // TODO: Hold and pass DrinkOrder Object
     currentProductOrder = new DrinkOrder();
     currentProductOrder->setSelectedSlot(OPTION_SLOT_INVALID);
+    // product *selectedProduct;
 }
+
 /*
  * Navigation to Product item
  */
@@ -60,8 +75,8 @@ void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pa
 #ifndef PLAY_VIDEO
     setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
 #endif
-}
 
+}
 
 // DTOR
 page_idle::~page_idle()
@@ -85,24 +100,23 @@ void page_idle::showEvent(QShowEvent *event)
             break;
         }
     }
-     // call db check if idle or idle_products
+    // call db check if idle or idle_products
     idle_page_type = db.getIdlePageType();
     db.closeDB();
-    
+
     if (idle_page_type == "static_products")
     {
         hideCurrentPageAndShowProvided(p_page_idle_products);
     }
-    
+
     // DbManager db(DB_PATH);
-    
+
     // else if (idlePageType == "dynamic_products")
     // {
     //     hideCurrentPageAndShowProvided(p_page_idle_products);
     // }
 
     // db.closeDB();
-   
 
     this->lower();
     qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
@@ -144,8 +158,6 @@ void page_idle::showEvent(QShowEvent *event)
     // reset promovalue
     currentProductOrder->setDiscountPercentageFraction(0.0);
     currentProductOrder->setPromoCode("");
-  
-    
 
     addCompanyLogoToLabel(ui->logo_label);
 
@@ -212,6 +224,15 @@ void page_idle::showEvent(QShowEvent *event)
 #endif
     this->raise();
 }
+//for products.cpp
+// product* page_idle::getSelectedProduct(){
+//     return selectedProduct;
+// }
+
+// void page_idle::setSelectedProduct(uint8_t slot)
+// {
+//     product *selectedProduct = &products[slot - 1];
+// }
 
 void page_idle::checkReceiptPrinterStatus()
 {
@@ -392,5 +413,3 @@ void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QStrin
     p_widget->repaint();
     p_widget->update();
 }
-
-

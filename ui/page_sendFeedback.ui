@@ -1734,6 +1734,25 @@ font: 11pt &quot;Montserrat&quot;;</string>
     </rect>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButton_help_page">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>1830</y>
+     <width>151</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:greeen;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>label_thank_you_image</zorder>
   <zorder>pushButton_send</zorder>
   <zorder>label_problem_options</zorder>
@@ -1760,6 +1779,7 @@ font: 11pt &quot;Montserrat&quot;;</string>
   <zorder>feedbackText</zorder>
   <zorder>textEdit_custom_message</zorder>
   <zorder>feedbackKeyboard</zorder>
+  <zorder>pushButton_help_page</zorder>
  </widget>
  <resources/>
  <connections/>

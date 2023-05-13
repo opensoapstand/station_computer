@@ -64,7 +64,7 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
     selectProductTypeLabels[2] = ui->product_3_type_label;
     selectProductTypeLabels[3] = ui->product_4_type_label;
 
-    ui->helpPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    ui->pushButton_help_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     // ui->pushButton_to_idle->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->label_pick_soap->setStyleSheet(
         "QLabel {"
@@ -354,7 +354,7 @@ void page_select_product::on_pushButton_to_idle_clicked()
     hideCurrentPageAndShowProvided(p_page_idle);
 }
 
-void page_select_product::on_helpPage_Button_clicked()
+void page_select_product::on_pushButton_help_page_clicked()
 {
     qDebug() << "Help_Button pressed";
     hideCurrentPageAndShowProvided(p_page_help);

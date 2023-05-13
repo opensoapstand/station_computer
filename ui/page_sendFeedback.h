@@ -83,6 +83,8 @@ private slots:
 
     void on_feedbackText_cursorPositionChanged(int arg1, int arg2);
 
+    void on_pushButton_help_page_clicked();
+
 private:
     int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
     void reset_and_show_page_elements();

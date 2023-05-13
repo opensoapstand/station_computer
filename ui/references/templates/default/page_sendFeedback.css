@@ -28,6 +28,22 @@
       qproperty-alignment: AlignCenter;
       border: none;
 }
+.checkBoxLabelStyling{
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 32px;
+   line-height: 99px;
+   letter-spacing: 1.5px;
+   color: #FFFFFF;
+   text-align: left;
+   qproperty-alignment: AlignCenter;
+   border: none;
+   wordWrap:true;
+   background-color: #5E8680;
+   padding: 10px;
+}
+
 #textEdit_custom_message{
    font-family: Montserrat;
    font-style: normal;
@@ -37,6 +53,7 @@
    color: #5E8580;
    border-color:#5E8580;
 }
+
 #label_select_problem{      /*selector not to make a class*/
    font-family: 'Brevia';
    font-style: normal;
@@ -49,10 +66,12 @@
    border: none;
    qproperty-alignment: AlignCenter;  /* Works despite not being CSS*/
 }
+
 #pushButton_to_idle{
    background-color: transparent; 
    border: 0px;
 }
+
 #label_problem_options{
    background-color: #5E8680;
    border-radius: 30px;
@@ -70,6 +89,20 @@
       text-align: center;
       qproperty-alignment: AlignCenter;
       border: none
+}
+
+#label_enter_feedback{
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 20px;
+   line-height: 99px;
+   letter-spacing: 1.5px;
+   background-color: #5E8680;
+   color: #FFFFFF;
+   text-align: left;
+   border-radius: none;
+   padding: 10px;
 }
 
 QLabel { 
@@ -92,6 +125,7 @@ QPushButton {
    padding: 10px;
    border: 2px solid #004D54;
 }
+
 QString {
    font-family: 'Brevia';
    font-style: normal;
@@ -106,6 +140,7 @@ QString {
    padding: 10px;
    border: 2px solid #004D54;
 }
+
 QLineEdit {
    font-family: 'Brevia', sans-serif;
    font-style: normal;
@@ -115,46 +150,4 @@ QLineEdit {
    letter-spacing: 1.5px;
    color: #003840;
    border: none;
-}
-/*
-QString checkBoxLabelStyling = ("QPushButton {"
-   "font-family: 'Brevia';"
-   "font-style: normal;"
-   "font-weight: 75;"
-   "font-size: 32px;"
-   "line-height: 99px;"
-   "letter-spacing: 1.5px;"
-   "color: #FFFFFF;"
-   "text-align: left;"
-   "qproperty-alignment: AlignCenter;"
-   "border: none;"
-   "wordWrap:true;"
-   "}")*/
-.checkBoxLabelStyling{
-   font-family: 'Brevia';
-   font-style: normal;
-   font-weight: 75;
-   font-size: 32px;
-   line-height: 99px;
-   letter-spacing: 1.5px;
-   color: #FFFFFF;
-   text-align: left;
-   qproperty-alignment: AlignCenter;
-   border: none;
-   wordWrap:true;
-   background-color: #5E8680;
-   padding: 10px;
-}
-#label_enter_feedback{
-   font-family: 'Brevia';
-   font-style: normal;
-   font-weight: 75;
-   font-size: 20px;
-   line-height: 99px;
-   letter-spacing: 1.5px;
-   background-color: #5E8680;
-   color: #FFFFFF;
-   text-align: left;
-   border-radius: none;
-   padding: 10px;
 }

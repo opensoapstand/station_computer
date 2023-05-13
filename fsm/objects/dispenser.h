@@ -84,6 +84,7 @@ public:
       void setAllDispenseButtonLightsOff();
       void reversePumpForSetTimeMillis(int millis);
       const char* getDispenseStatusAsString();
+      void updateDispenseStatus();
       const char *getDispenserStateAsString();
 
 
@@ -202,6 +203,8 @@ private:
       bool isStatusUpdateSendAndPrintAllowed;
 
       Dispense_behaviour previous_dispense_state;
+      Dispense_behaviour dispense_state;
+
       Dispenser_state dispenser_state;
 
       int slot;

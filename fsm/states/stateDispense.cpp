@@ -112,7 +112,7 @@ DF_ERROR stateDispense::onAction()
    // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
 
    productDispensers[pos_index].updateRunningAverageWindow();
-   
+   productDispensers[pos_index].updateDispenseStatus();
    productDispensers[pos_index].updateDispenserState();
 
    if (productDispensers[pos_index].getIsStatusUpdateAllowed())
@@ -121,10 +121,16 @@ DF_ERROR stateDispense::onAction()
 
       Time_val avg_02s = productDispensers[pos_index].getAveragedFlowRate(1000);
       double flowrate = avg_02s.value;
-      const char *statusStringChar = productDispensers[pos_index].getDispenseStatusAsString();
+      // const char *statusStringChar = productDispensers[pos_index].getDispenseStatusAsString();
+      // std::string statusString(statusStringChar);
+      // std::string message = "dispenseupdate|" + std::to_string(volume) + "|" + std::to_string(flowrate) + "|" + statusString;
+      const char *statusStringChar = productDispensers[pos_index].getDispenserStateAsString();
       std::string statusString(statusStringChar);
+      std::string message = "dispenseupdate|" + std::to_string(volume) + "|" + std::to_string(flowrate) + "|" + statusString;
+      m_pMessaging->sendMessageOverIP(message);
 
-      m_pMessaging->sendMessageOverIP("dispenseupdate|" + to_string(volume) + "|" + to_string(flowrate) + "|" + statusString);
+      const char *dispenserStateStr = productDispensers[pos_index].getDispenseStatusAsString();
+      debugOutput::sendMessage(dispenserStateStr, MSG_INFO);
    }
 
    // Check if UI has sent a ACTION_DISPENSE_END to finish the transaction, or, if dispensing is complete

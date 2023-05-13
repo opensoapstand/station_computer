@@ -50,7 +50,7 @@ public:
     void fsmReceiveDispenseButtonPressedPositiveEdge();
     void fsmReceiveDispenseButtonPressedNegativeEdge();
     void fsmReceiveDispenseRate(double flowrate);
-    void fsmReceiveDispenseStatus(QString status);
+    void fsmReceiveDispenserStatus(QString status);
     void fsmReceiveNoFlowAbort();
     void setSoldOutButtonText();
     void dispense_test_end(bool sendStopToController);

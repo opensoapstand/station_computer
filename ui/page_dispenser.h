@@ -64,7 +64,7 @@ public:
 
     void fsmReceivedVolumeDispensed(double dispensed, bool isFull );
     void fsmReceiveDispenseRate(double flowrate);
-    void fsmReceiveDispenseStatus(QString status);
+    void fsmReceiveDispenserStatus(QString status);
     void fsmReceiveTargetVolumeReached();
     void fsmReceiveNoFlowAbort();
     

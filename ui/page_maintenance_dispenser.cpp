@@ -488,7 +488,7 @@ void page_maintenance_dispenser::fsmReceiveDispenseRate(double flowrate)
     qDebug() << "Dispense flow rate received from FSM: " << QString::number(flowrate, 'f', 2);
     ui->flowRateLabel->setText("Flow rate (2s): " + QString::number(flowrate, 'f', 2) + "ml/s");
 };
-void page_maintenance_dispenser::fsmReceiveDispenseStatus(QString status)
+void page_maintenance_dispenser::fsmReceiveDispenserStatus(QString status)
 {
     QString dispenseStatus = status;
     qDebug() << "Dispense status received from FSM: " << dispenseStatus;

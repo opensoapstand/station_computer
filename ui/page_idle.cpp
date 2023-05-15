@@ -19,6 +19,7 @@
 #include "page_idle_products.h"
 #include "page_maintenance.h"
 #include "page_maintenance_general.h"
+#include "product.h"
 
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
@@ -28,11 +29,20 @@
 
 //    #define PLAY_VIDEO
 // CTOR
+
 page_idle::page_idle(QWidget *parent) : QWidget(parent),
                                         ui(new Ui::page_idle)
 {
     // IPC Networking
     dfUtility = new df_util();
+    // product products[SLOT_COUNT]; // create an array of Product objects with size SLOT_COUNT
+// for products.cpp
+    // for (int slot_index = 0; slot_index <= SLOT_COUNT; slot_index++)
+    // {
+    //     products[slot_index].setSlot(slot_index);
+    //     products[slot_index].loadFromDb(slot_index);
+    // }
+
 
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
@@ -45,7 +55,9 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     // TODO: Hold and pass DrinkOrder Object
     currentProductOrder = new DrinkOrder();
     currentProductOrder->setSelectedSlot(OPTION_SLOT_INVALID);
+    // product *selectedProduct;
 }
+
 /*
  * Navigation to Product item
  */
@@ -59,6 +71,7 @@ void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pa
 #ifndef PLAY_VIDEO
     setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
 #endif
+
 }
 
 // DTOR
@@ -207,6 +220,15 @@ void page_idle::showEvent(QShowEvent *event)
 #endif
     this->raise();
 }
+//for products.cpp
+// product* page_idle::getSelectedProduct(){
+//     return selectedProduct;
+// }
+
+// void page_idle::setSelectedProduct(uint8_t slot)
+// {
+//     product *selectedProduct = &products[slot - 1];
+// }
 
 void page_idle::checkReceiptPrinterStatus()
 {

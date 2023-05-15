@@ -2,67 +2,29 @@
 // #define PRODUCT_H
 
 // #include "df_util.h"
-
-// // #define INVALID_PRICE -666
-
-// // TODO: Remove and direct link to dftypes.h and debug value headers in FSM
-// // typedef enum DF_QT_SLOTS {
-// //    // Drink Slots
-// //    OPTION_SLOT_INVALID = 0,
-// //    OPTION_SLOT_1,
-// //    OPTION_SLOT_2,
-// //    OPTION_SLOT_3,
-// //    OPTION_SLOT_4,
-// //    OPTION_SLOT_5,
-// //    OPTION_SLOT_6,
-// //    OPTION_SLOT_7,
-// //    OPTION_SLOT_8,
-// //    OPTION_SLOT_9,
-// //    OPTION_MAX_INVALID
-// // } DF_QT_OPTION_PICKED;
-
-// // typedef enum DF_QT_SIZES {
-// //    INVALID_DRINK=0,
-// //    SIZE_SMALL_INDEX,
-// //    MEDIUM_DRINK,
-// //    SIZE_LARGE_INDEX,
-// //    CUSTOM_DRINK,
-// //    TEST_DRINK,
-// //    MAX_INVALID_DRINK
-// // //    ,
-// // //    DRINK1,
-// // //    DRINK2,
-// // //    DRINK3,
-// // //    DRINK4
-// // } DF_QT_SIZE_PICKED;
-
-// // Values for Selected drink.
-// struct ProductProperties
-// {
-//     int optionNumber;
-//     double drinkML;
-//     double drinkPrice;
-// };
+// #include "page_idle.h"
 
 
-// class Product : public QObject
+
+// class product : public QObject
 // {
 //     Q_OBJECT
 
 // public:
-//     Product();
-//     ~Product();
-//     // DrinkOrder &operator=(const DrinkOrder &other);
+//     product();
+//     product(const product &other);
+//     ~product();
+//     product &operator=(const product &other);
 
 //     // HACK: Fixed volume reference; Need to figure out best storage location...
 //     constexpr static double EMPTY_SIZE_ML = 0.00;
 
 //     // Setters and Getters
+//     void setSlot(int slot);
 //     void setSelectedSlot(int optionSlot);
 //     int getSelectedSlot();
 //     void setPromoCode(QString promoCode);
 //     QString getSelectedProductId();
-//     // QString getSelectedProductName();
 //     QString getMachineId();
 
 //     QString getFullVolumeCorrectUnits(bool addUnits);
@@ -71,26 +33,39 @@
 //     QString getTotalDispensedCorrectUnits();
 //     QString getVolumeDispensedSinceRestockCorrectUnits();
 
+//     double getSelectedVolumeDispensedMl();
+//     void setSelectedVolumeDispensedMl(double volumeMl);
+//     void resetSelectedVolumeDispensed();
+//     void loadProductPropertiesFromProductsFile();
+
+
+//     void getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter);
 //     void setFullVolumeCorrectUnits(QString inputFullValue);
 
-//     void setSelectedSize(int sizeOption);
+//     void setSelectedSize(int sizeIndex);
 //     int getSelectedSize();
+//     char getSelectedSizeAsChar();
 
 //     bool isSelectedOrderValid();
 
-//     QString getSelectedProductName();
 //     QString getProductName(int slot);
+//     QString getProductType(int slot);
 //     QString getProductDrinkfillSerial(int slot);
 
-//     void loadProductPropertiesFromProductsFile(QString product_id);
+//     void loadFromDb(int slot);
+//     void getProductPropertiesFromProductsFile(QString product_id, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);
 
 //     void loadSelectedProductProperties();
 //     void loadProductPropertiesFromDb(int slot);
+//     QString getSelectedProductName();
 //     QString getLoadedProductName();
 //     QString getLoadedProductDescription();
 //     QString getLoadedProductIngredients();
 //     QString getLoadedProductFeatures();
 //     bool getLoadedProductSizeEnabled(int size);
+//     int getLoadedProductBiggestEnabledSizeIndex();
+
+//     void setLoadedProductBiggestEnabledSizeIndex();
 
 //     QString getProductPicturePath(int slot);
 //     QString getSelectedProductPicturePath();
@@ -106,28 +81,26 @@
 //     double inputTextToMlConvertUnits(QString inputValueAsText);
 //     QString getUnitsForSelectedSlot();
 //     QString getSelectedSizeToVolume(QString units);
-//     QString getSelectedSizeToVolumeWithCorrectUnits(bool round, bool addUnits);
+
+//     QString getSizeToVolumeWithCorrectUnits(bool round, bool addUnits);
 //     QString getSizeToVolumeWithCorrectUnitsForSelectedSlot(int size, bool roundValue, bool addUnits);
 
 //     double getPrice(int sizeIndex);
 //     double getDiscount();
 //     void setPriceSelected(int size, double price);
 //     double getSelectedPriceCorrected();
+//     double getSelectedPriceCustom();
 //     double getSelectedPrice();
 
-//     int getSelectedDispenseSpeedPercentage();
-//     void setSelectedDispenseSpeedPercentage(int percentage);
+//     int getDispenseSpeedPercentage();
+//     void setDispenseSpeedPercentage(int percentage);
 
-//     char getSelectedSizeAsChar();
-//     QString getSelectedPaymentMethod();
+//     QString getPaymentMethod();
 
 //     double getDiscountPercentageFraction();
 //     QString getPromoCode();
 // public slots:
-
-//     // void setSelectedSlot(int optNumber);
 //     void setDiscountPercentageFraction(double percentageFraction);
-//     // void setSize(double size);
 
 // signals:
 //     void orderSlotChange(int newOpt);
@@ -135,21 +108,66 @@
 //     void sizeChange(double newSize);
 
 // private:
-//     QString m_ingredients;
-//     QString m_features;
-//     QString m_name;
-//     QString m_name_ui;
-//     QString m_description;
+//     QString productId;
+//     QString soapstand_product_serial;
+//     int slot;
+//     int size_unit;
+//     QString currency;
+//     QString payment;
+//     QString name_receipt;
+//     int concentrate_multiplier;
+//     int dispense_speed;
+//     double threshold_flow;
+//     int retraction_time;
+//     double calibration_const;
+//     double volume_per_tick;
+//     QString last_restock;
+//     double volume_full;
+//     double volume_remaining;
+//     double volume_dispensed_since_restock;
+//     double volume_dispensed_toal;
+//     int is_enabled_small;
+//     int is_enabled_medium;
+//     int is_enabled_large;
+//     int is_enabled_custom;
+//     double size_small;
+//     double size_medium;
+//     double size_large;
+//     double size_custom_min;
+//     double size_custom_max;
+//     double price_small;
+//     double price_medium;
+//     double price_large;
+//     double price_custom;
+//     QString plu_small;
+//     QString plu_large;
+//     QString plu_custom;
+//     int is_enabled_custom_discount;
+//     double size_custom_discount;
+//     double price_custom_discount;
+
+//     QString m_ingredients_ui;
+//     QString m_product_type;
+
+//     QString m_features_ui;
+//     QString m_description_ui;
 //     QString m_product_id;
-//     bool m_sizeIndexIsEnabled [4];
 
+//     bool m_sizeIndexIsEnabled[SIZES_COUNT]; // size indeces.
 
-//     ProductProperties *selectedProduct;
 //     int selectedSize;
+//     double selectedDispensedVolumeMl;
+
 //     int m_selectedSlot;
 //     double overruledPrice;
 //     double m_discount_percentage_fraction;
 //     QString m_promoCode;
 // };
 
-// #endif // DRINKORDER_H
+// #endif PRODUCT_H
+
+
+
+
+
+

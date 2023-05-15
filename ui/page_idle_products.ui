@@ -236,7 +236,7 @@
    <property name="geometry">
     <rect>
      <x>562</x>
-     <y>770</y>
+     <y>780</y>
      <width>450</width>
      <height>46</height>
     </rect>
@@ -262,7 +262,7 @@
    <property name="geometry">
     <rect>
      <x>53</x>
-     <y>770</y>
+     <y>780</y>
      <width>450</width>
      <height>46</height>
     </rect>
@@ -496,9 +496,11 @@
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
    </property>
   </widget>
+  <zorder>product_1_type_label</zorder>
+  <zorder>logo_label</zorder>
   <zorder>product_2_photo_label</zorder>
   <zorder>product_2_photo_label_text</zorder>
   <zorder>product_1_photo_label</zorder>

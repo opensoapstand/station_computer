@@ -19,27 +19,20 @@ product::product(const product &other) : QObject(nullptr)
 // Dtor
 product::~product()
 {
-    
 }
 
 void product::loadFromDb()
 {
     qDebug() << "Open db: db load product properties";
     DbManager db(DB_PATH);
-    
+
     m_product_id = db.getProductID(slot);
     soapstand_product_serial = db.getProductDrinkfillSerial(slot);
+    db.closeDB();
+
     size_unit = getUnitsForSlot();
     payment = getPaymentMethod();
-    // volume_full;
-    // volume_remaining;
-    // volume_dispensed_since_restock;
-    // douvolume_dispensed_toal;
-    // is_enabled_small;
-    
-;    db.closeDB();
 }
-
 
 void product::loadProductPropertiesFromProductsFile()
 {
@@ -176,8 +169,6 @@ void product::setDiscountPercentageFraction(double percentageFraction)
     // ratio = percentage / 100;
     qDebug() << "Set discount percentage fraction: " << QString::number(percentageFraction, 'f', 3);
     m_discount_percentage_fraction = percentageFraction;
-
-    
 }
 
 void product::setPromoCode(QString promoCode)
@@ -515,8 +506,6 @@ QString product::getProductName()
     getProductPropertiesFromProductsFile(product_id, &name_ui, &product_type, &description_ui, &features_ui, &ingredients_ui);
     return name_ui;
 }
-
-
 
 QString product::getMachineId()
 {

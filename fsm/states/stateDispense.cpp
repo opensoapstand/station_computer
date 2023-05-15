@@ -129,8 +129,9 @@ DF_ERROR stateDispense::onAction()
       std::string message = "dispenseupdate|" + std::to_string(volume) + "|" + std::to_string(flowrate) + "|" + statusString;
       m_pMessaging->sendMessageOverIP(message);
 
-      const char *dispenserStateStr = productDispensers[pos_index].getDispenseStatusAsString();
-      debugOutput::sendMessage(dispenserStateStr, MSG_INFO);
+      // update of the actual dispense
+      const char *dispenseStatusStr = productDispensers[pos_index].getDispenseStatusAsString();
+      debugOutput::sendMessage(dispenseStatusStr, MSG_INFO);
    }
 
    // Check if UI has sent a ACTION_DISPENSE_END to finish the transaction, or, if dispensing is complete

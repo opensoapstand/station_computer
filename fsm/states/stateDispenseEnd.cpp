@@ -88,18 +88,21 @@ DF_ERROR stateDispenseEnd::onAction()
     if (m_pMessaging->getRequestedSize() == SIZE_TEST_CHAR)
     {
         debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(productDispensers[pos_index].getVolumeDispensed()) + "ml).", MSG_INFO);
-        dispenseEndUpdateDB(); // update the db dispense statistics
+        dispenseEndUpdateDB(false); // update the db dispense statistics
     }
     else if (!is_valid_dispense)
     {
         debugOutput::sendMessage("Not a transaction: No minimum quantity of product dispensed (" + to_string(productDispensers[pos_index].getVolumeDispensed()) + "ml). ", MSG_INFO);
+
+        // check for technical problems
+        dispenseEndUpdateDB(false); // update the db dispense statistics
     }
     else
     {
         e_ret = handleTransactionPayment();
 
         debugOutput::sendMessage("Normal transaction.", MSG_INFO);
-        dispenseEndUpdateDB();
+        dispenseEndUpdateDB(true);
 
         bool success = false;
 #ifdef ENABLE_TRANSACTION_TO_CLOUD
@@ -431,7 +434,6 @@ std::string stateDispenseEnd::getMachineID()
     return str;
 }
 
-
 DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement)
 {
 
@@ -470,7 +472,7 @@ DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement)
 
 // This function updates the local SQLite3 database with the transaction data, as well as updates the total product remaining locally
 
-DF_ERROR stateDispenseEnd::dispenseEndUpdateDB()
+DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
 {
     char *zErrMsg = 0;
     std::string product_name = (productDispensers[pos_index].getProduct()->m_name).c_str();
@@ -490,9 +492,6 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB()
 
     target_volume = to_string(ceil(productDispensers[pos_index].getProduct()->getTargetVolume(m_pMessaging->getRequestedSize())));
     char size = m_pMessaging->getRequestedSize();
-
-
-
 
     // everything rounded to the ml.
     double volume_dispensed_since_restock = ceil(productDispensers[pos_index].getProduct()->getVolumeDispensedSinceLastRestock());
@@ -514,11 +513,19 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB()
     updated_volume_dispensed_since_restock = volume_dispensed_since_restock + dispensed_volume;
 
     // update slot state
-    if (productDispensers[pos_index].getDispenserState() == DISPENSER_STATE_PROBLEM_EMPTY){
+    if (productDispensers[pos_index].getDispenserState() == DISPENSER_STATE_PROBLEM_EMPTY)
+    {
         updated_volume_remaining = 0;
     }
-    
-    if (updated_volume_remaining < CONTAINER_EMPTY_THRESHOLD_ML)
+    else if (productDispensers[pos_index].getDispenserState() == DISPENSER_STATE_PROBLEM_NEEDS_ATTENTION)
+    {
+        // do nothing
+    }
+    else if (productDispensers[pos_index].getDispenserState() == DISPENSER_STATE_DISABLED_COMING_SOON || productDispensers[pos_index].getDispenserState() == DISPENSER_STATE_DISABLED)
+    {
+        // do nothing
+    }
+    else if (updated_volume_remaining < CONTAINER_EMPTY_THRESHOLD_ML)
     {
         productDispensers[pos_index].setDispenserState(DISPENSER_STATE_AVAILABLE_LOW_STOCK);
     }
@@ -534,10 +541,13 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB()
 
     // std::string s = std::format("{:.2f}", 3.14159265359); // s == "3.14"
 
+    if (isValidTransaction){
+        std::string sql1;
+        sql1 = ("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,slot,button_duration,button_times,processed_by_backend,product_id) VALUES ('" + product_name + "'," + target_volume + "," + price_string + ",'" + start_time + "'," + dispensed_volume_str + ",'" + end_time + "'," + updated_volume_remaining_str + "," + to_string(slot) + "," + button_press_duration + "," + dispense_button_count + "," + to_string(false) + ",'" + product_id + "');");
+        databaseUpdateSql(sql1);
+
+    }
     // update transactions table
-    std::string sql1;
-    sql1 = ("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,slot,button_duration,button_times,processed_by_backend,product_id) VALUES ('" + product_name + "'," + target_volume + "," + price_string + ",'" + start_time + "'," + dispensed_volume_str + ",'" + end_time + "'," + updated_volume_remaining_str + "," + to_string(slot) + "," + button_press_duration + "," + dispense_button_count + "," + to_string(false) + ",'" + product_id + "');");
-    databaseUpdateSql(sql1);
 
     // update product table
     std::string sql2;

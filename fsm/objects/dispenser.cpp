@@ -1145,7 +1145,7 @@ const char *dispenser::getDispenserStateAsString()
 void dispenser::setDispenserState(Dispenser_state state)
 {
     // disabled states are only manually changeable.
-    if (getDispenserState() != DISPENSER_STATE_DISABLED_COMING_SOON || getDispenserState() != DISPENSER_STATE_DISABLED)
+    if (getDispenserState() != DISPENSER_STATE_DISABLED_COMING_SOON && getDispenserState() != DISPENSER_STATE_DISABLED)
     {
         dispenser_state = state;
     }
@@ -1159,14 +1159,6 @@ Dispenser_state dispenser::getDispenserState()
 
 void dispenser::updateDispenserState()
 {
-//        FLOW_STATE_UNAVAILABLE = 0,
-//    FLOW_STATE_RAMP_UP,
-//    FLOW_STATE_DISPENSING,
-//    FLOW_STATE_PUMPING_NOT_DISPENSING,
-//    FLOW_STATE_NOT_PUMPING_NOT_DISPENSING,
-//    FLOW_STATE_PRIMING_OR_EMPTY,
-//    FLOW_STATE_PRIME_FAIL_OR_EMPTY,
-//    FLOW_STATE_EMPTY
     switch (dispenser_state)
     {
     case DISPENSER_STATE_WARNING_PRIMING:

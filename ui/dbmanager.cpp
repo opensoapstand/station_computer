@@ -624,6 +624,57 @@ int DbManager::getSlotEnabled(int slot)
     return enabled;
 }
 
+// bool DbManager::setStatusText(int slot, QString text)
+// {
+
+//     QSqlQuery qry;
+//     bool enabled;
+
+//     QString qry_qstr = QString("UPDATE machine SET status_text_slot_%1=%2").arg(QString::number(slot),text);
+//     string qry_string = qry_qstr.toUtf8().constData(); // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
+//     qry.prepare(qry_string.c_str());
+//     qry.exec();
+
+//     if (qry.exec())
+//     {
+//         return true;
+//     }
+//     else
+//     {
+//         qDebug() << "Failed to set status text: " << qry_qstr;
+//         return false;
+//     }
+// }
+
+bool DbManager::updateSlotAvailability(int slot, int isEnabled, QString status_text)
+{
+    //setStatusText
+    //setIsEnabled
+    
+    QSqlQuery qry;
+    bool enabled;
+
+    QString qry_qstr = QString("UPDATE machine SET status_text_slot_%1='").arg(QString::number(slot)) + status_text + QString("',is_enabled_slot_%1=").arg(QString::number(slot)) + QString::number(isEnabled);
+    qDebug() << qry_qstr << endl;
+    string qry_string = qry_qstr.toUtf8().constData(); // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
+    qry.prepare(qry_string.c_str());
+    qry.bindValue(":slot", slot);
+    qry.bindValue(":status_text", status_text);
+    qry.bindValue(":isEnabled", isEnabled);
+    qry.exec();
+
+    if (qry.exec())
+    {
+        return true;
+    }
+    else
+    {
+        qDebug() << "Failed to set slot availability." << qry_qstr;
+        return false;
+    }
+}
+
+
 QString DbManager::getStatusText(int slot)
 {
     QSqlQuery qry;
@@ -806,30 +857,6 @@ QString DbManager::getCustomerId()
     return val;
 }
 
-bool DbManager::updateSlotAvailability(int slot, int isEnabled, QString status_text)
-{
-    QSqlQuery qry;
-    bool enabled;
-
-    QString qry_qstr = QString("UPDATE machine SET status_text_slot_%1='").arg(QString::number(slot)) + status_text + QString("',is_enabled_slot_%1=").arg(QString::number(slot)) + QString::number(isEnabled);
-    qDebug() << qry_qstr << endl;
-    string qry_string = qry_qstr.toUtf8().constData(); // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
-    qry.prepare(qry_string.c_str());
-    qry.bindValue(":slot", slot);
-    qry.bindValue(":status_text", status_text);
-    qry.bindValue(":isEnabled", isEnabled);
-    qry.exec();
-
-    if (qry.exec())
-    {
-        return true;
-    }
-    else
-    {
-        qDebug() << "Failed to set slot availability." << qry_qstr;
-        return false;
-    }
-}
 
 
 double DbManager::getVolumeRemaining(int slot)

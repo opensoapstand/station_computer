@@ -491,6 +491,9 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB()
     target_volume = to_string(ceil(productDispensers[pos_index].getProduct()->getTargetVolume(m_pMessaging->getRequestedSize())));
     char size = m_pMessaging->getRequestedSize();
 
+
+
+
     // everything rounded to the ml.
     double volume_dispensed_since_restock = ceil(productDispensers[pos_index].getProduct()->getVolumeDispensedSinceLastRestock());
     double volume_dispensed_total_ever = ceil(productDispensers[pos_index].getProduct()->getVolumeDispensedTotalEver());

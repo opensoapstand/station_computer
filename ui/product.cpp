@@ -395,11 +395,11 @@ double product::inputTextToMlConvertUnits(QString inputValueAsText)
     }
 }
 
-QString product::getProductDrinkfillSerial(int slot)
+QString product::getProductDrinkfillSerial()
 {
     qDebug() << "Open db: get product id";
     DbManager db(DB_PATH);
-    QString serial = db.getProductDrinkfillSerial(slot);
+    QString serial = db.getProductDrinkfillSerial(getSlot());
     db.closeDB();
     return serial;
 }
@@ -469,21 +469,21 @@ QString product::getLoadedProductDescription()
     return m_description_ui;
 }
 
+// QString product::getProductPicturePath()
+// {
+
+//     // return QString(PRODUCT_PICTURES_ROOT_PATH).arg(m_product_id);
+//     return getProductPicturePath(getSlot());
+// }
 QString product::getProductPicturePath()
 {
-
-    // return QString(PRODUCT_PICTURES_ROOT_PATH).arg(m_product_id);
-    return getProductPicturePath(getSlot());
-}
-QString product::getProductPicturePath(int slot)
-{
-    QString serial = getProductDrinkfillSerial(slot);
+    QString serial = getProductDrinkfillSerial();
     return QString(PRODUCT_PICTURES_ROOT_PATH).arg(serial);
 }
 
-QString product::getProductType(int slot)
+QString product::getProductType()
 {
-    QString product_id = getProductDrinkfillSerial(slot);
+    QString product_id = getProductDrinkfillSerial();
     QString name_ui;
     QString product_type;
     QString description_ui;
@@ -496,7 +496,7 @@ QString product::getProductType(int slot)
 
 QString product::getProductName()
 {
-    QString product_id = getProductDrinkfillSerial(getSlot());
+    QString product_id = getProductDrinkfillSerial();
 
     QString name_ui;
     QString product_type;

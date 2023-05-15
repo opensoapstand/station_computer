@@ -50,8 +50,8 @@ public:
     bool isOrderValid();
 
     QString getProductName();
-    QString getProductType(int slot);
-    QString getProductDrinkfillSerial(int slot);
+    QString getProductType();
+    QString getProductDrinkfillSerial();
 
     void load();
     void getProductPropertiesFromProductsFile(QString product_id, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);

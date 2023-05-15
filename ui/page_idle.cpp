@@ -19,6 +19,7 @@
 #include "page_idle_products.h"
 #include "page_maintenance.h"
 #include "page_maintenance_general.h"
+#include "product.h"
 
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
@@ -28,12 +29,22 @@
 
 //    #define PLAY_VIDEO
 // CTOR
+
 page_idle::page_idle(QWidget *parent) : QWidget(parent),
                                         ui(new Ui::page_idle)
 {
     // IPC Networking
     dfUtility = new df_util();
 
+// for products.cpp
+    for (int slot_index = 0; slot_index <= SLOT_COUNT; slot_index++)
+    {
+        products[slot_index].setSlot(slot_index);
+        products[slot_index].loadFromDb(slot_index);
+    }
+
+   
+    setSelectedProduct(0);
 
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
@@ -43,10 +54,14 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     ui->toSelectProductPageButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->toSelectProductPageButton->raise();
 
-    // TODO: Hold and pass DrinkOrder Object
-    currentProductOrder = new DrinkOrder();
-    currentProductOrder->setSelectedSlot(OPTION_SLOT_INVALID);
+    //TODO: Hold and pass Product Object
+    currentProductOrder = new Product();
+    currentProductOrder->setSlot(OPTION_SLOT_INVALID);
+    // product *selectedProduct;
+
+
 }
+
 /*
  * Navigation to Product item
  */
@@ -60,8 +75,8 @@ void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pa
 #ifndef PLAY_VIDEO
     setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
 #endif
-}
 
+}
 
 // DTOR
 page_idle::~page_idle()
@@ -85,24 +100,23 @@ void page_idle::showEvent(QShowEvent *event)
             break;
         }
     }
-     // call db check if idle or idle_products
+    // call db check if idle or idle_products
     idle_page_type = db.getIdlePageType();
     db.closeDB();
-    
+
     if (idle_page_type == "static_products")
     {
         hideCurrentPageAndShowProvided(p_page_idle_products);
     }
-    
+
     // DbManager db(DB_PATH);
-    
+
     // else if (idlePageType == "dynamic_products")
     // {
     //     hideCurrentPageAndShowProvided(p_page_idle_products);
     // }
 
     // db.closeDB();
-   
 
     this->lower();
     qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
@@ -144,8 +158,6 @@ void page_idle::showEvent(QShowEvent *event)
     // reset promovalue
     currentProductOrder->setDiscountPercentageFraction(0.0);
     currentProductOrder->setPromoCode("");
-
-    
 
     addCompanyLogoToLabel(ui->logo_label);
 
@@ -211,6 +223,15 @@ void page_idle::showEvent(QShowEvent *event)
     qDebug() << "Video player. Is fullscreen? : " << videoWidget->isFullScreen();
 #endif
     this->raise();
+}
+//for products.cpp
+product* page_idle::getSelectedProduct(){
+    return selectedProduct;
+}
+
+void page_idle::setSelectedProduct(uint8_t slot)
+{
+    product *selectedProduct = &products[slot - 1];
 }
 
 void page_idle::checkReceiptPrinterStatus()
@@ -383,8 +404,6 @@ void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QStrin
 
     QString image_path = imageName;
     image_path = getTemplatePathFromName(imageName);
-#define USE_PIXMAP
-#ifdef USE_PIXMAP
     QPixmap background(image_path);
 
     // background = background.scaled(p_widget->size(), Qt::IgnoreAspectRatio);
@@ -392,18 +411,5 @@ void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QStrin
     palette.setBrush(QPalette::Background, background);
     p_widget->setPalette(palette);
     p_widget->repaint();
-
-    // QPixmap background(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
-    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-    // QPalette palette;
-    // palette.setBrush(QPalette::Background, background);
-    // this->setPalette(palette);
-
-#else
-
-    p_widget->setStyleSheet("QWidget { border-image: url(" + image_path + "); }");
-    // p_widget->setStyleSheet("background-image: url("+ image_path +")");
-#endif
+    p_widget->update();
 }
-
-

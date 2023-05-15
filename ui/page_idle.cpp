@@ -47,8 +47,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
 
-    ui->testButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-    ui->testButton->raise();
+    ui->pushButton_test->raise();
     //ui->pushButton_to_select_product_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->pushButton_to_select_product_page->raise();
 
@@ -84,6 +83,11 @@ void page_idle::showEvent(QShowEvent *event)
 {
     QString styleSheet = getCSS(PAGE_IDLE_CSS);
     ui->pushButton_to_select_product_page->setStyleSheet(styleSheet); 
+    ui->label_welcome_message->setStyleSheet(styleSheet);
+    ui->pushButton_test->setStyleSheet(styleSheet);
+    ui->label_printer_status->setStyleSheet(styleSheet);
+
+
 
     qDebug() << "open db: payment method";
     DbManager db(DB_PATH);
@@ -120,46 +124,17 @@ void page_idle::showEvent(QShowEvent *event)
     qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
     QWidget::showEvent(event);
 
-    ui->welcome_message_label->setText("refill soap here! <br>tap screen to start");
-    ui->welcome_message_label->setStyleSheet(
-        "QLabel {"
+    ui->label_welcome_message->setText("refill soap here! <br>tap screen to start");
+    
 
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 700;"
-        "font-size: 85px;"
-        "line-height: 99px;"
-        "text-align: center;"
-        "letter-spacing: 1.5px;"
-        "text-transform: lowercase;"
-        "color: #FFFFFF;"
-        "qproperty-alignment: AlignCenter;"
-        "}");
-
-    ui->printer_status_label->setStyleSheet(
-        "QLabel {"
-
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 100;"
-        "background-color: #5E8580;"
-        "font-size: 42px;"
-        "text-align: centre;"
-        "line-height: auto;"
-        "letter-spacing: 0px;"
-        "qproperty-alignment: AlignCenter;"
-        "border-radius: 20px;"
-        "color: white;"
-        "border: none;"
-        "}");
-
+   
     // reset promovalue
     currentProductOrder->setDiscountPercentageFraction(0.0);
     currentProductOrder->setPromoCode("");
 
     addCompanyLogoToLabel(ui->logo_label);
 
-    ui->printer_status_label->hide(); // always hide here, will show if enabled and has problems.
+    ui->label_printer_status->hide(); // always hide here, will show if enabled and has problems.
     if (needsReceiptPrinter)
     {
         checkReceiptPrinterStatus();
@@ -268,19 +243,19 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
 
     if (!isOnline)
     {
-        ui->printer_status_label->raise();
-        ui->printer_status_label->setText("Assistance needed\nReceipt Printer offline.");
-        ui->printer_status_label->show();
+        ui->label_printer_status->raise();
+        ui->label_printer_status->setText("Assistance needed\nReceipt Printer offline.");
+        ui->label_printer_status->show();
     }
     else if (!hasPaper)
     {
-        ui->printer_status_label->raise();
-        ui->printer_status_label->setText("Assistance needed\nReceipt printer empty or improperly loaded.");
-        ui->printer_status_label->show();
+        ui->label_printer_status->raise();
+        ui->label_printer_status->setText("Assistance needed\nReceipt printer empty or improperly loaded.");
+        ui->label_printer_status->show();
     }
     else
     {
-        ui->printer_status_label->hide();
+        ui->label_printer_status->hide();
     }
     ui->pushButton_to_select_product_page->show();
 }
@@ -290,7 +265,7 @@ void page_idle::on_pushButton_to_select_product_page_clicked()
     this->hideCurrentPageAndShowProvided(p_pageSelectProduct);
 }
 
-void page_idle::on_testButton_clicked()
+void page_idle::on_pushButton_test_clicked()
 {
     qDebug() << "test buttonproceeed clicked.. ";
 }

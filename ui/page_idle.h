@@ -92,7 +92,7 @@ private slots:
     void on_pushButton_to_select_product_page_clicked();
     //    void on_savedBottles_label_clicked();
 
-    void on_testButton_clicked();
+    void on_pushButton_test_clicked();
 
 private:
     void checkReceiptPrinterStatus();

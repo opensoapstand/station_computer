@@ -140,7 +140,7 @@ void pagethankyou::showEvent(QShowEvent *event)
         ui->thank_you_message_label->setText("Please take <br>your receipt!");
         ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!");
     }
-    else if (paymentMethod == "qr" || paymentMethod == "tap")
+    else if (paymentMethod == "qr" || paymentMethod == "tapTcp")
     {
         ui->thank_you_message_label->setText("Thank you!");
         ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.");

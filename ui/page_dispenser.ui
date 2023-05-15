@@ -190,7 +190,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>test</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="label_dispense_flowrate">
@@ -203,7 +203,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>test</string>
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="button_problems">
@@ -255,7 +255,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
    </property>
   </widget>
   <zorder>abortButton</zorder>

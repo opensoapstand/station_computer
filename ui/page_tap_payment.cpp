@@ -87,7 +87,7 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
     // ui->order_total_amount->hide();
     DbManager db(DB_PATH);
 
-    if (db.getPaymentMethod(1) == "tap")
+    if (db.getPaymentMethod(1) == "tapTcp")
     {
         qDebug() << "InitializingTap payment";
         tap_payment = true;

@@ -50,6 +50,7 @@ public:
     explicit page_idle(QWidget *parent = nullptr);
     void setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products);
     ~page_idle();
+    void setSelectedProduct(uint8_t slot);
     void showEvent(QShowEvent *event);
     void addPictureToLabel(QLabel *label, QString picturePath);
     void addCompanyLogoToLabel(QLabel *label);
@@ -67,6 +68,10 @@ public:
     product *selectedProduct;
     DrinkOrder *currentProductOrder;
     df_util *dfUtility;
+   //for products.cpp
+   // product products[SLOT_COUNT]; // declare products as a member variable
+    // product* getSelectedProduct();
+    
 
     DfUiCommThread *dfComm;
 

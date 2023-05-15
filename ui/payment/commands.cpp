@@ -175,6 +175,7 @@ std::map<std::string, std::string> capture(int socket, std::string MAC_LABEL, st
                     <ENCRYPT>TRUE</ENCRYPT>\
                 </TRANSACTION>";
     std::cout << command << std::endl; 
+    qDebug() << QString::fromUtf8(command.c_str());
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
     return dataReceived;
 }

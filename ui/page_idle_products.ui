@@ -236,7 +236,7 @@
    <property name="geometry">
     <rect>
      <x>562</x>
-     <y>770</y>
+     <y>780</y>
      <width>450</width>
      <height>46</height>
     </rect>
@@ -262,7 +262,7 @@
    <property name="geometry">
     <rect>
      <x>53</x>
-     <y>770</y>
+     <y>780</y>
      <width>450</width>
      <height>46</height>
     </rect>
@@ -473,13 +473,13 @@
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_notify_us">
+  <widget class="QLabel" name="logo_label">
    <property name="geometry">
     <rect>
-     <x>478</x>
-     <y>1773</y>
-     <width>125</width>
-     <height>125</height>
+     <x>370</x>
+     <y>1680</y>
+     <width>351</width>
+     <height>211</height>
     </rect>
    </property>
    <property name="text">
@@ -496,9 +496,11 @@
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
    </property>
   </widget>
+  <zorder>product_1_type_label</zorder>
+  <zorder>logo_label</zorder>
   <zorder>product_2_photo_label</zorder>
   <zorder>product_2_photo_label_text</zorder>
   <zorder>product_1_photo_label</zorder>
@@ -513,7 +515,6 @@
   <zorder>product_3_type_label</zorder>
   <zorder>product_2_type_label</zorder>
   <zorder>product_4_type_label</zorder>
-  <zorder>product_1_type_label</zorder>
   <zorder>product_photo_label_text_2</zorder>
   <zorder>product_4_photo_label_text</zorder>
   <zorder>product_3_photo_label_text</zorder>
@@ -522,7 +523,6 @@
   <zorder>product_4_overlay_label</zorder>
   <zorder>product_3_overlay_label</zorder>
   <zorder>label_pick_soap</zorder>
-  <zorder>label_notify_us</zorder>
   <zorder>helpPage_Button</zorder>
   <zorder>logo_label</zorder>
  </widget>

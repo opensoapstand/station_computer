@@ -35,6 +35,13 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 {
     // IPC Networking
     dfUtility = new df_util();
+    // product products[SLOT_COUNT]; // create an array of Product objects with size SLOT_COUNT
+// for products.cpp
+    // for (int slot_index = 0; slot_index <= SLOT_COUNT; slot_index++)
+    // {
+    //     products[slot_index].setSlot(slot_index);
+    //     products[slot_index].loadFromDb(slot_index);
+    // }
 
     // for products.cpp
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)

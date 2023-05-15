@@ -33,6 +33,7 @@ const char *DISPENSE_BEHAVIOUR_STRINGS[] = {
     "FLOW_STATE_PUMPING_NOT_DISPENSING",
     "FLOW_STATE_NOT_PUMPING_NOT_DISPENSING",
     "FLOW_STATE_PRIMING_OR_EMPTY",
+    "FLOW_STATE_PRIME_FAIL_OR_EMPTY",
     "FLOW_STATE_EMPTY"};
 
 // CTOR
@@ -386,6 +387,25 @@ DF_ERROR dispenser::loadGeneralProperties()
     // }
 
     resetVolumeDispensed();
+}
+
+DF_ERROR dispenser::startDispense()
+{
+    using namespace std::chrono;
+    dispense_start_timestamp_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    dispenseButtonTimingreset();
+
+    this->the_pcb->flowSensorEnable(slot);
+    this->the_pcb->resetFlowSensorTotalPulses(slot);
+
+    previous_dispense_state = FLOW_STATE_UNAVAILABLE;
+
+    DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
+    debugOutput::sendMessage("Dispense start at slot " + to_string(this->slot), MSG_INFO);
+
+    initFlowRateCalculation();
+
+    return e_ret = OK;
 }
 
 // Reset values onEntry()
@@ -895,24 +915,6 @@ DF_ERROR dispenser::setPumpPWM(uint8_t value, bool enableLog)
 //     return e_ret = OK;
 // }
 
-DF_ERROR dispenser::startDispense()
-{
-    using namespace std::chrono;
-    dispense_start_timestamp_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    dispenseButtonTimingreset();
-
-    this->the_pcb->flowSensorEnable(slot);
-    this->the_pcb->resetFlowSensorTotalPulses(slot);
-
-    previous_dispense_state = FLOW_STATE_UNAVAILABLE;
-
-    DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
-    debugOutput::sendMessage("Dispense start at slot " + to_string(this->slot), MSG_INFO);
-
-    initFlowRateCalculation();
-
-    return e_ret = OK;
-}
 
 unsigned short dispenser::getPumpSpeed()
 {
@@ -1224,8 +1226,8 @@ const char *dispenser::getDispenseStatusAsString()
 
 Dispense_behaviour dispenser::getDispenseStatus()
 {
-    updateRunningAverageWindow();
-    logUpdateIfAllowed("Button press millis. Total:" + to_string(dispense_button_total_pressed_millis) + " Current press:" + to_string(dispense_button_current_press_millis));
+    // updateRunningAverageWindow();
+    logUpdateIfAllowed("Button press time [ms]. Total:" + to_string(dispense_button_total_pressed_millis) + " Current:" + to_string(dispense_button_current_press_millis));
 
     using namespace std::chrono;
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
@@ -1237,7 +1239,17 @@ Dispense_behaviour dispenser::getDispenseStatus()
 
     Dispense_behaviour state;
 
-    if (!getDispenseButtonValue())
+    if (state == FLOW_STATE_PRIME_FAIL_OR_EMPTY && avg.value < getProduct()->getThresholdFlow())
+    {
+        // once failed, stay failed until proven otherwise by having a good flow.
+        state = FLOW_STATE_PRIME_FAIL_OR_EMPTY;
+    }
+    else if (state == FLOW_STATE_EMPTY && avg.value < getProduct()->getThresholdFlow())
+    {
+        // once empty, stay empty until proven otherwise by having a good flow.
+        state = FLOW_STATE_EMPTY;
+    }
+    else if (!getDispenseButtonValue())
     {
         state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
     }
@@ -1264,7 +1276,7 @@ Dispense_behaviour dispenser::getDispenseStatus()
         //          --> take into account. at top level (FLOW_STATE_UNAVAILABLE)
         state = FLOW_STATE_EMPTY;
     }
-    else if (getButtonPressedTotalMillis() > EMPTY_CONTAINER_DETECTION_MAXIMUM_PRIME_TIME_MILLIS)
+    else if (getButtonPressedTotalMillis() > EMPTY_CONTAINER_DETECTION_MAXIMUM_PRIME_TIME_MILLIS )
     {
         // button pressed (aka pumping)
         // init time long enough for valid data
@@ -1272,7 +1284,7 @@ Dispense_behaviour dispenser::getDispenseStatus()
         // previous state was not dispensing
 
         // pump
-        state = FLOW_STATE_EMPTY;
+        state = FLOW_STATE_PRIME_FAIL_OR_EMPTY;
     }
     else
     {

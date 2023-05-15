@@ -84,7 +84,7 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
     ui->payment_bypass_Button->setEnabled(false);
     ui->title_Label->hide();
 
-    ui->order_total_amount->hide();
+    // ui->order_total_amount->hide();
     DbManager db(DB_PATH);
 
     if (db.getPaymentMethod(1) == "tap")
@@ -205,7 +205,7 @@ void page_tap_payment::showEvent(QShowEvent *event)
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
     ui->productLabel->hide();
     ui->order_drink_amount->hide();
-    ui->order_total_amount->hide();
+    // ui->order_total_amount->hide();
 
     qDebug() << "Prepare tap order";
     tapPaymentHandler();
@@ -257,6 +257,9 @@ void page_tap_payment::startPaymentProcess()
     {
         numberOfTapAttempts += 1;
         double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
+        if(p_page_idle->currentProductOrder->getSelectedSizeAsChar()=='c'){
+            price = p_page_idle->currentProductOrder->getSelectedPriceCustom();
+        }
         std::ostringstream stream;
         stream << std::fixed << std::setprecision(2) << price;
         std::string authCommand = authorizationCommand(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, stream.str());
@@ -271,6 +274,10 @@ void page_tap_payment::startPaymentProcess()
         dataThread = std::thread(receiveAuthorizationThread, std::stoi(socketAddr));
         dataThread.detach();
         checkPacketReceivedTimer->start();
+        ui->preauthLabel->setText("You are being pre-authorized for maximum volume "
+                                +p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true)+ 
+                                " with amount of:");
+        ui->order_total_amount->setText("$ "+ QString::number(price, 'f', 2));
     }
     else
     {
@@ -280,14 +287,7 @@ void page_tap_payment::startPaymentProcess()
     }
 }
 
-void page_tap_payment::restartTapPayment()
-{
-    // ui->animated_Label->move(200,580);
-    // QMovie *tapGif = new QMovie("/home/df-admin/production/references/templates/default/tap.gif");
-    // ui->animated_Label->setMovie(tapGif);
-    // tapGif->start();
-    startPaymentProcess();
-}
+
 
 void page_tap_payment::check_packet_available()
 {
@@ -341,10 +341,7 @@ void page_tap_payment::check_card_tapped()
 
 void page_tap_payment::authorized_transaction(std::map<std::string, std::string> responseObj)
 {
-    double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
-    std::ostringstream stream;
     stopPayTimers();
-    stream << std::fixed << std::setprecision(2) << price;
     QMovie *currentGif = ui->animated_Label->movie();
     currentGif->stop();
     delete currentGif;
@@ -368,18 +365,7 @@ void page_tap_payment::authorized_transaction(std::map<std::string, std::string>
     {
 
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_FAIL);
-        restartTapPayment();
-        // std::map<std::string, std::string> responseObjSecond = authorization(socket, MAC_LABEL, MAC_KEY, stream.str());
-        // if (responseObjSecond["RESULT"] == "APPROVED")
-        // {
-        //     CTROUTD = responseObjSecond["CTROUTD"];
-        //     hideCurrentPageAndShowProvided(p_page_dispense);
-        // }
-        // else
-        // {
-        //     finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
-        //     p_page_idle->pageTransition(this, p_pageProduct);
-        // }
+        startPaymentProcess();
     }
 }
 void page_tap_payment::declineTimer_start()

@@ -138,7 +138,6 @@ private slots:
     void check_packet_available();
     void check_card_tapped();
     void startPaymentProcess();
-    void restartTapPayment();
 
     void idlePaymentTimeout();
 

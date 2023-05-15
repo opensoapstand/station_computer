@@ -23,7 +23,6 @@
 #include "dbmanager.h"
 #include "page_maintenance.h"
 #include "page_maintenance_general.h"
-#include "page_idle_products.h"
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
 
@@ -34,11 +33,9 @@
 class page_maintenance;
 class page_select_product;
 class page_maintenance_general;
-class page_idle_products;
 
-namespace Ui
-{
-    class page_idle;
+namespace Ui {
+class page_idle;
 }
 
 class page_idle : public QWidget
@@ -47,58 +44,59 @@ class page_idle : public QWidget
 
 public:
     explicit page_idle(QWidget *parent = nullptr);
-    void setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products);
-    void hideCurrentPageAndShowProvided(QWidget *pageToShow);
+    void setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral);
+    
     ~page_idle();
     void showEvent(QShowEvent *event);
-    void addPictureToLabel(QLabel *label, QString picturePath);
+    void addPictureToLabel(QLabel* label, QString picturePath);
     void addCompanyLogoToLabel(QLabel *label);
     QString getTemplateFolder();
     void setTemplateFolder(QString rootPath, QString templateFolder);
     QString getTemplatePathFromName(QString backgroundPictureName);
     QString getDefaultTemplatePathFromName(QString backgroundPictureName);
-    void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
-    void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
+    void setBackgroundPictureFromTemplateToPage(QWidget* page, QString imageName );
+    void pageTransition(QWidget* pageToHide, QWidget* pageToShow);
 
-    DrinkOrder *currentProductOrder;
-    // Product [PRODUCTS_COUNT] products;
-    // Product* selectedProduct;
+    DrinkOrder* currentProductOrder;
+    df_util* dfUtility;
+    
 
-    df_util *dfUtility;
-
-    DfUiCommThread *dfComm;
+    DfUiCommThread* dfComm;
 
     // bool isSlotAvailable(int slot);
     // void setSlotAvailability(int slot, bool isEnabled);
     void printerStatusFeedback(bool isOnline, bool hasPaper);
 
+
     bool isEnough(int p);
-    // void MMSlot();
+    void MMSlot();
     bool m_transitioning = false;
     // bool slotIndexAvailable[4] = {true,true,true,true}; //;1,2,3,4
 
+
     QLabel *video_label;
-    QVideoWidget *videoWidget;
-    QMediaPlayer *player;
+    QVideoWidget* videoWidget;
+    QMediaPlayer* player;
+
+
 
 private slots:
     void on_toSelectProductPageButton_clicked();
-    //    void on_savedBottles_label_clicked();
+//    void on_savedBottles_label_clicked();
 
     void on_testButton_clicked();
 
 private:
     void checkReceiptPrinterStatus();
     QString m_templatePath;
-    QString idle_page_type;
-
     Ui::page_idle *ui;
-    page_select_product *p_pageSelectProduct;
-    page_maintenance *p_page_maintenance;
-    page_maintenance_general *p_page_maintenance_general;
-    page_idle_products *p_page_idle_products;
-
+    page_select_product* p_pageSelectProduct;
+    page_maintenance* p_page_maintenance;
+    page_maintenance_general* p_page_maintenance_general;
     bool p1, p2, p3, p4;
+
+    
+    
 };
 
 #endif // IDLE_H

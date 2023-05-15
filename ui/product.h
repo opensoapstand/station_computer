@@ -21,6 +21,7 @@ public:
 
     // Setters and Getters
     void setSlot(int slot);
+    int getSlot();
     // void setSelectedSlot(int optionSlot);
     // int getSelectedSlot();
     void setPromoCode(QString promoCode);

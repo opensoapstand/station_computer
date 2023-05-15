@@ -210,7 +210,7 @@ void page_dispenser::setPage(page_qr_payment *page_qr_payment, page_tap_payment 
     this->paymentTapPage = page_tap_payment;
     this->p_page_idle = pageIdle;
     this->feedbackPage = pageFeedback;
-    selectedProductOrder = p_page_idle->currentProductOrder;
+    // selectedProductOrder = p_page_idle->currentProductOrder;
 }
 
 // DTOR
@@ -385,8 +385,8 @@ void page_dispenser::startDispensing()
     targetVolume = selectedProductOrder->getSelectedVolume();
 
     QString dispenseCommand = getStartDispensingCommand();
-    QString priceCommand = QString::number(this->selectedProductOrder->getPriceCorrected());
-    QString promoCommand = this->selectedProductOrder->getPromoCode();
+    QString priceCommand = QString::number(p_page_idle->currentProductOrder->getPriceCorrected());
+    QString promoCommand = p_page_idle->currentProductOrder->getPromoCode();
 
     QString delimiter = QString("|");
     QString preamble = "Order";
@@ -420,7 +420,7 @@ void page_dispenser::fsmSendStopDispensing()
     qDebug() << "Send STOP dispensing to fsm";
     this->isDispensing = false;
 
-    QString command = QString::number(this->selectedProductOrder->getSelectedSlot());
+    QString command = QString::number(p_page_idle->currentProductOrder->getSlot());
     command.append(selectedProductOrder->getSelectedSizeAsChar());
     command.append(SEND_DISPENSE_STOP);
     p_page_idle->dfUtility->send_command_to_FSM(command);
@@ -431,7 +431,7 @@ void page_dispenser::fsmSendPrice()
     qDebug() << "Send Price to fsm";
     std::string prefix = "$";
     QString command = QString::fromStdString(prefix);
-    command.append(QString::number(this->selectedProductOrder->getPriceCorrected()));
+    command.append(QString::number(p_page_idle->currentProductOrder->getPriceCorrected()));
     p_page_idle->dfUtility->send_command_to_FSM(command);
 }
 
@@ -440,7 +440,7 @@ void page_dispenser::fsmSendPromo()
     qDebug() << "Send Promo to fsm";
     std::string prefix = "Promo:";
     QString command = QString::fromStdString(prefix);
-    command.append(this->selectedProductOrder->getPromoCode());
+    command.append(p_page_idle->currentProductOrder->getPromoCode());
     p_page_idle->dfUtility->send_command_to_FSM(command);
 }
 

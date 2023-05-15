@@ -36,7 +36,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     // IPC Networking
     dfUtility = new df_util();
 
-// for products.cpp
+    // for products.cpp
     for (int slot_index = 0; slot_index <= SLOT_COUNT; slot_index++)
     {
         products[slot_index].setSlot(slot_index);
@@ -55,8 +55,8 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     ui->toSelectProductPageButton->raise();
 
     //TODO: Hold and pass Product Object
-    currentProductOrder = new Product();
-    currentProductOrder->setSlot(OPTION_SLOT_INVALID);
+    // currentProductOrder = new Product();
+    //currentProductOrder->setSlot(OPTION_SLOT_INVALID);
     // product *selectedProduct;
 
 
@@ -106,7 +106,7 @@ void page_idle::showEvent(QShowEvent *event)
 
     if (idle_page_type == "static_products")
     {
-        hideCurrentPageAndShowProvided(p_page_idle_products);
+        hideCurrentPageAndShowProvided(this->p_page_idle_products);
     }
 
     // DbManager db(DB_PATH);
@@ -226,12 +226,12 @@ void page_idle::showEvent(QShowEvent *event)
 }
 //for products.cpp
 product* page_idle::getSelectedProduct(){
-    return selectedProduct;
+    return currentProductOrder;
 }
 
 void page_idle::setSelectedProduct(uint8_t slot)
 {
-    product *selectedProduct = &products[slot - 1];
+    currentProductOrder = &products[slot - 1];
 }
 
 void page_idle::checkReceiptPrinterStatus()

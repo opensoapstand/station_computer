@@ -54,6 +54,11 @@
    border-color:#5E8580;
 }
 
+#pushButton_help_page{
+   background-color: transparent; 
+   border: 0px ;
+}
+
 #label_select_problem{      /*selector not to make a class*/
    font-family: 'Brevia';
    font-style: normal;

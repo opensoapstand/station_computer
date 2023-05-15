@@ -184,6 +184,7 @@ void page_sendFeedback::showEvent(QShowEvent *event)
     ui->checkBox_3_Label->setStyleSheet(styleSheet);
     ui->checkBox_4_Label->setStyleSheet(styleSheet);
     ui->checkBox_5_Label->setStyleSheet(styleSheet);
+    ui->pushButton_help_page->setStyleSheet(styleSheet);
 
     //ui->label_enter_feedback->setProperty("class", "checkBoxLabelStyling");
     ui->label_enter_feedback->setStyleSheet(styleSheet);
@@ -472,3 +473,4 @@ void page_sendFeedback::on_pushButton_help_page_clicked()
     qDebug() << "Help_Button pressed///////////////////////////////////////////////////////////////////////////////";
     hideCurrentPageAndShowProvided(p_page_help);
 }
+ 

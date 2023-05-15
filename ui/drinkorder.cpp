@@ -445,7 +445,7 @@ void DrinkOrder::loadSelectedProductProperties()
 
 void DrinkOrder::loadProductPropertiesFromDb(int slot)
 {
-    qDebug() << "Open db: db load product properties";
+    qDebug() << "Open db: db load product properties for drinkordder";
     DbManager db(DB_PATH);
 
     db.getProductProperties(slot, &m_product_id, m_sizeIndexIsEnabled);

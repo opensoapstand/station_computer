@@ -53,7 +53,7 @@ public:
     QString getProductType(int slot);
     QString getProductDrinkfillSerial(int slot);
 
-    void loadFromDb();
+    void load();
     void getProductPropertiesFromProductsFile(QString product_id, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);
 
     void loadProductProperties();

@@ -21,9 +21,9 @@ product::~product()
 {
 }
 
-void product::loadFromDb()
+void product::load()
 {
-    qDebug() << "Open db: db load product properties";
+    qDebug() << "Open db: db load product properties from product load";
     DbManager db(DB_PATH);
 
     m_product_id = db.getProductID(slot);
@@ -32,6 +32,7 @@ void product::loadFromDb()
 
     size_unit = getUnitsForSlot();
     payment = getPaymentMethod();
+    loadProductProperties();
 }
 
 void product::loadProductPropertiesFromProductsFile()

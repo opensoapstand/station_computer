@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QPushButton" name="toSelectProductPageButton">
+  <widget class="QPushButton" name="pushButton_to_select_product_page">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -137,7 +137,7 @@ text-transform: lowercase;</string>
     </rect>
    </property>
   </widget>
-  <zorder>toSelectProductPageButton</zorder>
+  <zorder>pushButton_to_select_product_page</zorder>
   <zorder>savedBottles_label</zorder>
   <zorder>logo_label</zorder>
   <zorder>welcome_message_label</zorder>

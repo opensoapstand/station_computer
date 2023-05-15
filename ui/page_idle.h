@@ -89,7 +89,7 @@ public:
     QMediaPlayer *player;
 
 private slots:
-    void on_toSelectProductPageButton_clicked();
+    void on_pushButton_to_select_product_page_clicked();
     //    void on_savedBottles_label_clicked();
 
     void on_testButton_clicked();

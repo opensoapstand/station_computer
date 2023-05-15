@@ -107,7 +107,7 @@ private:
     page_sendFeedback* feedbackPage;
     page_idle* p_page_idle;
 
-    DrinkOrder* selectedProductOrder;
+    product* selectedProductOrder;
 
     // XXX: Remove when interrupts and flowsensors work.
 

@@ -22,6 +22,7 @@
 #include "dfuicommthread.h"
 #include "dbmanager.h"
 #include "page_maintenance.h"
+#include "product.h"
 #include "page_maintenance_general.h"
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
@@ -57,7 +58,7 @@ public:
     void setBackgroundPictureFromTemplateToPage(QWidget* page, QString imageName );
     void pageTransition(QWidget* pageToHide, QWidget* pageToShow);
 
-    DrinkOrder* currentProductOrder;
+    product* currentProductOrder;
     df_util* dfUtility;
     
 

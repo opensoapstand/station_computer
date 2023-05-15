@@ -90,6 +90,7 @@ public:
     void setPrice(int size, double price);
     double getPriceCorrected();
     double getPriceCustom();
+    
     double getPrice();
 
     int getDispenseSpeedPercentage();
@@ -166,4 +167,4 @@ private:
     QString m_promoCode;
 };
 
-#endif PRODUCT_H
+#endif //PRODUCT_H

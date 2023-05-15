@@ -322,7 +322,7 @@ void page_dispenser::dispensing_end_admin()
     ui->finishTransactionMessage->show();
     ui->finishTransactionMessage->raise();
 
-    double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
+    double price = p_page_idle->currentProductOrder->getPriceCorrected();
     std::ostringstream stream;
     stream << std::fixed << std::setprecision(2) << price;
     qDebug() << "Minimum volume dispensed" << MINIMUM_DISPENSE_VOLUME_ML;
@@ -385,7 +385,7 @@ void page_dispenser::startDispensing()
     targetVolume = selectedProductOrder->getSelectedVolume();
 
     QString dispenseCommand = getStartDispensingCommand();
-    QString priceCommand = QString::number(this->selectedProductOrder->getSelectedPriceCorrected());
+    QString priceCommand = QString::number(this->selectedProductOrder->getPriceCorrected());
     QString promoCommand = this->selectedProductOrder->getPromoCode();
 
     QString delimiter = QString("|");
@@ -431,7 +431,7 @@ void page_dispenser::fsmSendPrice()
     qDebug() << "Send Price to fsm";
     std::string prefix = "$";
     QString command = QString::fromStdString(prefix);
-    command.append(QString::number(this->selectedProductOrder->getSelectedPriceCorrected()));
+    command.append(QString::number(this->selectedProductOrder->getPriceCorrected()));
     p_page_idle->dfUtility->send_command_to_FSM(command);
 }
 

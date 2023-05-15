@@ -35,6 +35,7 @@
 class page_maintenance;
 class page_select_product;
 class page_maintenance_general;
+class page_idle_products;
 
 namespace Ui
 {
@@ -63,7 +64,8 @@ public:
     product *getSelectedProduct();
 
     product products[SLOT_COUNT];
-    product *currentProductOrder;
+    product *selectedProduct;
+    DrinkOrder *currentProductOrder;
     df_util *dfUtility;
 
     DfUiCommThread *dfComm;
@@ -81,7 +83,6 @@ public:
     QVideoWidget *videoWidget;
     QMediaPlayer *player;
 
-    void hideCurrentPageAndShowProvided(QWidget *pageToShow);
 
 private slots:
     void on_toSelectProductPageButton_clicked();
@@ -90,6 +91,7 @@ private slots:
     void on_testButton_clicked();
 
 private:
+    void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void checkReceiptPrinterStatus();
     QString m_templatePath;
     Ui::page_idle *ui;

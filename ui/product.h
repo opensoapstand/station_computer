@@ -2,7 +2,7 @@
 #define PRODUCT_H
 
 #include "df_util.h"
-#include "page_idle.h"
+// #include "page_idle.h"
 
 
 
@@ -49,16 +49,15 @@ public:
 
     bool isOrderValid();
 
-    QString getProductName(int slot);
+    QString getProductName();
     QString getProductType(int slot);
     QString getProductDrinkfillSerial(int slot);
 
-    void loadFromDb(int slot);
+    void loadFromDb();
     void getProductPropertiesFromProductsFile(QString product_id, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);
 
     void loadProductProperties();
-    void loadProductPropertiesFromDb(int slot);
-    QString getProductName();
+    void loadProductPropertiesFromDb();
     QString getLoadedProductName();
     QString getLoadedProductDescription();
     QString getLoadedProductIngredients();
@@ -112,10 +111,13 @@ signals:
     void sizeChange(double newSize);
 
 private:
+
+
+
     QString productId;
     QString soapstand_product_serial;
     int slot;
-    int size_unit;
+    QString size_unit;
     QString currency;
     QString payment;
     QString name_receipt;
@@ -153,9 +155,11 @@ private:
     QString m_ingredients_ui;
     QString m_product_type;
 
+    QString m_name_ui;
     QString m_features_ui;
     QString m_description_ui;
     QString m_product_id;
+
 
     bool m_sizeIndexIsEnabled[SIZES_COUNT]; // size indeces.
 

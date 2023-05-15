@@ -40,7 +40,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     for (int slot_index = 0; slot_index <= SLOT_COUNT; slot_index++)
     {
         products[slot_index].setSlot(slot_index);
-        products[slot_index].loadFromDb(slot_index);
+        products[slot_index].loadFromDb();
     }
 
    
@@ -55,8 +55,8 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     ui->toSelectProductPageButton->raise();
 
     //TODO: Hold and pass Product Object
-    // currentProductOrder = new Product();
-    //currentProductOrder->setSlot(OPTION_SLOT_INVALID);
+    currentProductOrder = new DrinkOrder();
+    currentProductOrder->setSelectedSlot(OPTION_SLOT_INVALID);
     // product *selectedProduct;
 
 
@@ -226,12 +226,12 @@ void page_idle::showEvent(QShowEvent *event)
 }
 //for products.cpp
 product* page_idle::getSelectedProduct(){
-    return currentProductOrder;
+    return selectedProduct;
 }
 
 void page_idle::setSelectedProduct(uint8_t slot)
 {
-    currentProductOrder = &products[slot - 1];
+    selectedProduct = &products[slot - 1];
 }
 
 void page_idle::checkReceiptPrinterStatus()

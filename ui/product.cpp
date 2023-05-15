@@ -5,7 +5,6 @@
 // Ctor
 product::product()
 {
-    // selectedProduct = new productSelect;
     // overruledPrice = INVALID_PRICE;
     m_discount_percentage_fraction = 0.0;
     m_promoCode = "";
@@ -14,33 +13,24 @@ product::product()
 // Ctor Object Copy
 product::product(const product &other) : QObject(nullptr)
 {
-    // selectedProduct = new productSelect(*other.selectedProduct);
-
     slot = getSlot();
 }
 
 // Dtor
 product::~product()
 {
-    delete selectedProduct;
+    
 }
 
-// Object Reassignment
-product &product::operator=(const product &other)
-{
-    *selectedProduct = *other.selectedProduct;
-    return *this;
-}
-
-void product::loadFromDb(int slot)
+void product::loadFromDb()
 {
     qDebug() << "Open db: db load product properties";
     DbManager db(DB_PATH);
-    int slot = myDispenser.getSlot();
+    
     m_product_id = db.getProductID(slot);
     soapstand_product_serial = db.getProductDrinkfillSerial(slot);
-    size_unit = getUnits(slot);
-    payment = getPaymentMethod(slot):
+    size_unit = getUnitsForSlot();
+    payment = getPaymentMethod();
     // volume_full;
     // volume_remaining;
     // volume_dispensed_since_restock;
@@ -226,7 +216,7 @@ double product::getPriceCorrected()
 {
     // slot and size needs to be set.
     double price;
-    if (is  OrderValid())
+    if (isOrderValid())
     {
         price = getPrice(getSize()) * (1.0 - m_discount_percentage_fraction);
     }
@@ -424,22 +414,17 @@ QString product::getProductDrinkfillSerial(int slot)
 
 void product::loadProductProperties()
 {
-    loadProductPropertiesFromDb(getSlot());
+    loadProductPropertiesFromDb();
     loadProductPropertiesFromProductsFile();
 }
 
-void product::loadProductPropertiesFromDb(int slot)
+void product::loadProductPropertiesFromDb()
 {
     qDebug() << "Open db: db load product properties";
     DbManager db(DB_PATH);
 
-    db.getProductProperties(slot, &m_product_id, m_sizeIndexIsEnabled);
+    db.getProductProperties(getSlot(), &m_product_id, m_sizeIndexIsEnabled);
     db.closeDB();
-}
-
-void product::loadProductPropertiesFromProductsFile()
-{
-    getProductPropertiesFromProductsFile(m_product_id, &m_name_ui, &m_product_type, &m_description_ui, &m_features_ui, &m_ingredients_ui);
 }
 
 void product::getProductPropertiesFromProductsFile(QString product_id, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui)
@@ -517,9 +502,9 @@ QString product::getProductType(int slot)
     return product_type;
 }
 
-QString product::getProductName(int slot)
+QString product::getProductName()
 {
-    QString product_id = getProductDrinkfillSerial(slot);
+    QString product_id = getProductDrinkfillSerial(getSlot());
 
     QString name_ui;
     QString product_type;
@@ -531,10 +516,7 @@ QString product::getProductName(int slot)
     return name_ui;
 }
 
-QString product::getProductName()
-{
-    return getProductName(getSlot());
-}
+
 
 QString product::getMachineId()
 {

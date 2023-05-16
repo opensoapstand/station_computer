@@ -147,6 +147,8 @@ public:
 
     double getDiscountPercentageFraction();
     QString getPromoCode();
+    bool isProductVolumeInContainer(int slot);
+    
 public slots:
 
     // void setSelectedSlot(int optNumber);

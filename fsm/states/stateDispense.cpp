@@ -27,7 +27,6 @@ stateDispense::stateDispense()
 // CTOR Linked to IPC
 stateDispense::stateDispense(messageMediator *message)
 {
-   // debugOutput::sendMessage("stateDispense(messageMediator * message)", MSG_INFO);
 }
 
 // DTOR
@@ -85,10 +84,6 @@ DF_ERROR stateDispense::onAction()
    productDispensers = g_productDispensers;
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
-   // periodic delay to slow down refreshing
-   // usleep(250000);
-   // productDispensers[pos_index].refresh();
-
    if (m_pMessaging->isCommandStringReadyToBeParsed())
    {
       m_pMessaging->parseCommandString();
@@ -117,6 +112,8 @@ DF_ERROR stateDispense::onAction()
    // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
 
    productDispensers[pos_index].updateRunningAverageWindow();
+   productDispensers[pos_index].updateDispenseStatus();
+   productDispensers[pos_index].updateDispenserState();
 
    if (productDispensers[pos_index].getIsStatusUpdateAllowed())
    {
@@ -124,10 +121,17 @@ DF_ERROR stateDispense::onAction()
 
       Time_val avg_02s = productDispensers[pos_index].getAveragedFlowRate(1000);
       double flowrate = avg_02s.value;
-      const char *statusStringChar = productDispensers[pos_index].getDispenseStatusAsString();
+      // const char *statusStringChar = productDispensers[pos_index].getDispenseStatusAsString();
+      // std::string statusString(statusStringChar);
+      // std::string message = "dispenseupdate|" + std::to_string(volume) + "|" + std::to_string(flowrate) + "|" + statusString;
+      const char *statusStringChar = productDispensers[pos_index].getDispenserStateAsString();
       std::string statusString(statusStringChar);
+      std::string message = "dispenseupdate|" + std::to_string(volume) + "|" + std::to_string(flowrate) + "|" + statusString;
+      m_pMessaging->sendMessageOverIP(message);
 
-      m_pMessaging->sendMessageOverIP("dispenseupdate|" + to_string(volume) + "|" + to_string(flowrate) + "|" + statusString);
+      // update of the actual dispense
+      const char *dispenseStatusStr = productDispensers[pos_index].getDispenseStatusAsString();
+      debugOutput::sendMessage(dispenseStatusStr, MSG_INFO);
    }
 
    // Check if UI has sent a ACTION_DISPENSE_END to finish the transaction, or, if dispensing is complete
@@ -138,20 +142,15 @@ DF_ERROR stateDispense::onAction()
       stopPumping();
       return e_ret = OK;
    }
+
    if (m_pMessaging->getAction() == ACTION_REPAIR_PCA)
    {
       if (productDispensers[pos_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || productDispensers[pos_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS)
       {
-
          productDispensers[pos_index].the_pcb->sendEN134DefaultConfigurationToPCA9534(slot, true);
-
-         //  productDispensers[pos_index].the_pcb->sendByteIfNotSetToSlot(slot, 0x01, 0b10000000, true);
-         // productDispensers[pos_index].the_pcb->sendByteIfNotSetToSlot(slot, 0x03, 0b01011000, true);
-
          m_pMessaging->resetAction();
          productDispensers[pos_index].setMultiDispenseButtonLight(slot, true);
          productDispensers[pos_index].the_pcb->flowSensorEnable(slot);
-
       }
    }
 

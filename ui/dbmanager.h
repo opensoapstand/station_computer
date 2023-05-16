@@ -17,7 +17,7 @@ public:
     // double getProductTargetVolume(int slot);
     double getProductVolumePerTick(int slot);
     // bool remainingVolumeIsBiggerThanLargestFixedSize(int slot);
-    bool isProductVolumeInContainer(int slot);
+
     bool getRecentTransactions(QString values[][5], int count, int* count_retreived);
     bool hasReceiptPrinter();
     void printerStatus(bool* isOnline, bool* hasPaper );
@@ -45,8 +45,8 @@ public:
     double getVolumeRemaining(int slot);
     double getTotalDispensed(int slot);
     double getVolumeDispensedSinceRestock(int slot);
-    QString getLastRefill(int slot);
-    bool refill(int slot);
+    QString getLastRefillTime(int slot);
+    bool restockProduct(int slot);
     bool sellout(int slot);
     bool unsellout(int slot);
     int getLastTransactionIdFromDb();
@@ -58,11 +58,10 @@ public:
     QString getPLU(int slot, char size);
     QString getMachineID();
     QString getProductID(int slot);
-#ifndef USE_OLD_DATABASE
     int getSlotEnabled(int slot);
     QString getStatusText(int slot);
+    // bool setStatusText(int slot, QString text);
     bool updateSlotAvailability(int slot, int isEnabled, QString status_text);
-#endif
 
     uint32_t getNumberOfRows(QString table);
     bool initialize(const QString &path);

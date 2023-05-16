@@ -74,7 +74,7 @@ void page_transactions::showEvent(QShowEvent *event)
 
         qDebug() << "db for receipt printer check";
         DbManager db(DB_PATH);
-        QString paymentMethod = db.getPaymentMethod(p_page_idle->currentProductOrder->getSelectedSlot());
+        QString paymentMethod = db.getPaymentMethod(p_page_idle->selectedProduct->getSlot());
         bool hasReceiptPrinter = db.hasReceiptPrinter();
         db.closeDB();
 

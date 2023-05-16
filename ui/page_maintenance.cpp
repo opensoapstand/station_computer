@@ -95,10 +95,11 @@ void page_maintenance::showEvent(QShowEvent *event)
 
     db.closeDB();
 
-    ui->product1_label->setText(p_page_idle->currentProductOrder->getProductName(1));
-    ui->product2_label->setText(p_page_idle->currentProductOrder->getProductName(2));
-    ui->product3_label->setText(p_page_idle->currentProductOrder->getProductName(3));
-    ui->product4_label->setText(p_page_idle->currentProductOrder->getProductName(4));
+    // ui->product1_label->setText(p_page_idle->currentProductOrder->getProductName(1));
+    ui->product1_label->setText(p_page_idle->products[0].getProductName());
+    ui->product2_label->setText(p_page_idle->products[1].getProductName());
+    ui->product3_label->setText(p_page_idle->products[2].getProductName());
+    ui->product4_label->setText(p_page_idle->products[3].getProductName());
 
     for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
@@ -179,28 +180,33 @@ void page_maintenance::on_backButton_clicked()
 
 void page_maintenance::on_product1_button_clicked()
 {
-    p_page_idle->currentProductOrder->setSelectedSlot(1);
+    // p_page_idle->currentProductOrder->setSelectedSlot(1);
+    // p_page_idle->products[0]->setSelectedSlot(1);
+    p_page_idle->setSelectedProduct(1);
     p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 
 void page_maintenance::on_product2_button_clicked()
 {
-    p_page_idle->currentProductOrder->setSelectedSlot(2);
+    // p_page_idle->currentProductOrder->setSelectedSlot(2);
+    p_page_idle->setSelectedProduct(2);
     p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 
 void page_maintenance::on_product3_button_clicked()
 {
-    p_page_idle->currentProductOrder->setSelectedSlot(3);
+    // p_page_idle->currentProductOrder->setSelectedSlot(3);
+    p_page_idle->setSelectedProduct(3);
     p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 
 void page_maintenance::on_product4_button_clicked()
 {
-    p_page_idle->currentProductOrder->setSelectedSlot(4);
+    // p_page_idle->currentProductOrder->setSelectedSlot(4);
+    p_page_idle->setSelectedProduct(4);
     p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }

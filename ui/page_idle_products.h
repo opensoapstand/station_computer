@@ -94,7 +94,7 @@ private:
 
     int maintenanceCounter;
 
-    DrinkOrder *selectedProductOrder;
+    // DrinkOrder *selectedProductOrder;
 
 };
 

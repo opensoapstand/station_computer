@@ -256,9 +256,9 @@ void page_tap_payment::startPaymentProcess()
     if (numberOfTapAttempts < 3)
     {
         numberOfTapAttempts += 1;
-        double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
-        if(p_page_idle->currentProductOrder->getSelectedSizeAsChar()=='c'){
-            price = p_page_idle->currentProductOrder->getSelectedPriceCustom();
+        double price = p_page_idle->selectedProduct->getPriceCorrected();
+        if(p_page_idle->selectedProduct->getSizeAsChar()=='c'){
+            price = p_page_idle->selectedProduct->getPriceCustom();
         }
         std::ostringstream stream;
         stream << std::fixed << std::setprecision(2) << price;
@@ -275,7 +275,7 @@ void page_tap_payment::startPaymentProcess()
         dataThread.detach();
         checkPacketReceivedTimer->start();
         ui->preauthLabel->setText("You are being pre-authorized for maximum volume "
-                                +p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true)+ 
+                                +p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true)+ 
                                 " with amount of:");
         ui->order_total_amount->setText("$ "+ QString::number(price, 'f', 2));
     }

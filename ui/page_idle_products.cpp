@@ -102,7 +102,7 @@ void page_idle_products::setPage(pageProduct *pageSizeSelect, page_idle_products
     this->p_page_maintenance = pageMaintenance;
     this->p_page_help = pageHelp;
 
-    selectedProductOrder = p_page_idle->currentProductOrder;
+    // selectedProductOrder = p_page_idle->currentProductOrder;
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
     QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
@@ -158,7 +158,7 @@ void page_idle_products::displayProducts()
 
         // display product picture
         selectProductPhotoLabels[i]->setStyleSheet("border: none;");
-        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(slot));
+        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->selectedProduct->getProductPicturePath());
 
         qDebug() << "db (re)load product details:";
         DbManager db(DB_PATH);
@@ -169,8 +169,8 @@ void page_idle_products::displayProducts()
         product_status_text = db.getStatusText(slot);
         db.closeDB();
 
-        product_type = p_page_idle->currentProductOrder->getProductType(slot);
-        product_name = p_page_idle->currentProductOrder->getProductName(slot);
+        product_type = p_page_idle->selectedProduct->getProductType();
+        product_name = p_page_idle->selectedProduct->getProductName();
         
         qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << ", product set as not available?: " << product_sold_out << " Status text: " << product_status_text;
 
@@ -247,7 +247,7 @@ void page_idle_products::displayProducts()
 void page_idle_products::select_product(int slot)
 {
         qDebug() << "selected slot: " << slot;
-        p_page_idle->currentProductOrder->setSelectedSlot(slot);
+        p_page_idle->selectedProduct->setSlot(slot);
         hideCurrentPageAndShowProvided(p_page_product);
 }
 
@@ -404,7 +404,7 @@ void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     productPageEndTimer->stop();
     qDebug() << "Exit select product page.";
-    selectedProductOrder->setDiscountPercentageFraction(0.0);
+    p_page_idle->selectedProduct->setDiscountPercentageFraction(0.0);
     this->raise();
     p_page_idle->pageTransition(this, pageToShow);
 }

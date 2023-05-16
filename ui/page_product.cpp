@@ -319,7 +319,7 @@ void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_
     this->p_page_wifi_error = pageWifiError;
     this->p_page_overview = page_Overview;
 
-    selectedProductOrder = p_page_idle->currentProductOrder;
+    // selectedProductOrder = p_page_idle->currentProductOrder;
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_PRODUCT_BACKGROUND_PATH);
 }
 

@@ -365,7 +365,7 @@ void pageProduct::reset_and_show_page_elements()
 {
 
     ui->label_product_photo->setStyleSheet("QLabel{border: 1px solid #5E8680;}");
-    p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->currentProductOrder->getSelectedProductPicturePath());
+    p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->selectedProduct->getProductPicturePath());
 
     ui->label_product_title->setText(selectedProductOrder->getLoadedProductName());
     ui->label_product_ingredients->setText(selectedProductOrder->getLoadedProductIngredients());

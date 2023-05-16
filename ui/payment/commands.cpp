@@ -268,12 +268,20 @@ std::map<std::string, std::string> testMac(int socket, std::string MAC_KEY, std:
 
 int createOrUpdateConfigFile (std::string macKey,std::string macLabel,std::string invoiceNumber){
     std::ofstream configFile("/home/df-admin/production/admin/tap_payment/config.txt");
+    std::ofstream configHistoryFile("/home/df-admin/production/admin/tap_payment/configHistory.txt", std::ios::app);
     if (configFile.is_open()) {
         chmod("config.txt", S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
         configFile << "MAC_KEY=" + macKey +"\n";
         configFile << "MAC_LABEL="+macLabel+"\n";
         configFile << "INVOICE="+invoiceNumber+"\n";
         configFile.close();
+    }
+    if (configHistoryFile.is_open()) {
+        chmod("configHistory.txt", S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
+        configHistoryFile << "---------------------- \n";
+        configHistoryFile << "MAC_KEY=" + macKey +"\n";
+        configHistoryFile << "MAC_LABEL="+macLabel+"\n";
+        configHistoryFile.close();
     }
     else {
         std::cout << "Unable to open file" << std::endl;

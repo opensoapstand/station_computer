@@ -15,6 +15,18 @@
    text-transform: capitalize;
    color: #5E8580;
 }
+#label_select_quantity {
+
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 200;
+   font-size: 36px;
+   line-height: auto;
+   letter-spacing: 0px;
+   color: #58595B;
+   border: none;
+   }
+
 
 #back_Button {
    /*QPushButton*/

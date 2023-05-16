@@ -188,18 +188,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
     ui->back_Button->setText("<- Products");
 
     
-    ui->label_select_quantity->setStyleSheet(
-        "QLabel {"
-
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 200;"
-        "font-size: 36px;"
-        "line-height: auto;"
-        "letter-spacing: 0px;"
-        "color: #58595B;"
-        "border: none;"
-        "}");
+    
     ui->label_select_quantity->setText("Select Quantity");
 
     ui->label_product_description->setWordWrap(true);
@@ -335,6 +324,7 @@ void pageProduct::showEvent(QShowEvent *event)
     ui->back_Button->setStyleSheet(styleSheet); //pushbutton
     ui->label_product_description->setStyleSheet(styleSheet);
 
+    ui->label_select_quantity->setStyleSheet(styleSheet);
     
 
 

@@ -1175,7 +1175,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
    </property>
   </widget>
   <widget class="QTextBrowser" name="html_textBrowser">

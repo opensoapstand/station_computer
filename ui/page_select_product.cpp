@@ -234,6 +234,8 @@ void page_select_product::displayProducts()
         product_status_text = db.getStatusText(slot);
         double remaining_volume = db.getVolumeRemaining(slot);
 
+        bool set_to_sold_out_below_threshold = db.getEmptyContainerDetectionEnabled();
+
         db.closeDB();
 
         product_type = p_page_idle->currentProductOrder->getProductType(slot);
@@ -307,10 +309,7 @@ void page_select_product::displayProducts()
             selectProductPhotoLabelsText[i]->setProperty("class", "label_product_oberlay_available");
         }
 
-        // if (!(p_page_idle->currentProductOrder->isProductVolumeInContainer(slot))){
-        //     selectProductPhotoLabelsText[i]->setText("Almost Empty");
-        // }
-        // else
+        
 
         if (product_status_text.compare("DISPENSER_STATE_AVAILABLE") == 0)
         {
@@ -347,7 +346,11 @@ void page_select_product::displayProducts()
         {
             selectProductPhotoLabelsText[i]->setText("Assistance Needed");
         }
-        
+
+        if (!(p_page_idle->currentProductOrder->isProductVolumeInContainer(slot))){
+            selectProductPhotoLabelsText[i]->setText("Sold Out");
+        }
+
         selectProductTypeLabels[i]->setText(type_text);
         //selectProductTypeLabels[i]->setStyleSheet("QLabel{font-family: 'Brevia';font-style: normal;font-weight: 700;font-size: 30px;line-height: 41px;qproperty-alignment: AlignCenter;text-transform: uppercase;color: #5E8580;}");
     }

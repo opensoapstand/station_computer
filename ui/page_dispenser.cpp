@@ -357,7 +357,7 @@ void page_dispenser::dispensing_end_admin()
     stream << std::fixed << std::setprecision(2) << price;
     qDebug() << "Minimum volume dispensed" << MINIMUM_DISPENSE_VOLUME_ML;
     qDebug() << "volume dispensed" << selectedProductOrder->getSelectedVolumeDispensedMl();
-    if (selectedProductOrder->getSelectedVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML && (selectedProductOrder->getSelectedPaymentMethod()) == "tap")
+    if (selectedProductOrder->getSelectedVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML && (selectedProductOrder->getSelectedPaymentMethod()) == "tapTcp")
     {
         ui->finishTransactionMessage->setText("Voiding payment");
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
@@ -375,7 +375,7 @@ void page_dispenser::dispensing_end_admin()
         }
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     }
-    else if ((selectedProductOrder->getSelectedPaymentMethod() == "tap") && selectedProductOrder->getSelectedVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
+    else if ((selectedProductOrder->getSelectedPaymentMethod() == "tapTcp") && selectedProductOrder->getSelectedVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
     {
         ui->finishTransactionMessage->setText("Capturing payment: $" + QString::number(current_price, 'f', 2));
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
@@ -627,7 +627,7 @@ void page_dispenser::on_abortButton_clicked()
         msgBox = new QMessageBox();
         msgBox->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
         QString payment = selectedProductOrder->getSelectedPaymentMethod();
-        if (payment == "qr" || payment == "tap")
+        if (payment == "qr" || payment == "tapTcp")
         {
             msgBox->setText("<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine. \
                                 If you press Yes, you will not be charged for the order.<br></p>");
@@ -688,7 +688,7 @@ void page_dispenser::on_button_problems_clicked()
     QString payment = selectedProductOrder->getSelectedPaymentMethod();
     QString base = "If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br>";
 
-    if (payment == "qr" || payment == "tap")
+    if (payment == "qr" || payment == "tapTcp")
     {
 
         msgBox2->setText("<p align=center><br><br>" + base + "<br><br>You will only be charged for the dispensed amount<br></p>");

@@ -1,6 +1,6 @@
 //***************************************
 //
-// page_tap_payment.h
+// page_tap_payment_serial.h
 // GUI class while machine is processing
 // payment.
 //
@@ -14,8 +14,8 @@
 // all rights reserved
 //***************************************
 
-#ifndef page_tap_payment_H
-#define page_tap_payment_H
+#ifndef page_tap_payment_serial_H
+#define page_tap_payment_serial_H
 
 #include "df_util.h"
 #include "drinkorder.h"
@@ -49,7 +49,7 @@ class page_idle;
 class page_help;
 
 namespace Ui {
-class page_tap_payment;
+class page_tap_payment_serial;
 }
 
 typedef enum StateTapPayment{
@@ -61,15 +61,15 @@ typedef enum StateTapPayment{
 using namespace std;
 using namespace qrcodegen;
 
-class page_tap_payment : public QWidget
+class page_tap_payment_serial : public QWidget
 {
     Q_OBJECT
 
 public:
     // **** GUI Setup ****
-    explicit page_tap_payment(QWidget *parent = nullptr);
+    explicit page_tap_payment_serial(QWidget *parent = nullptr);
     void setPage(pageProduct* pageSizeSelect,page_error_wifi *pageWifiError, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp);
-    ~page_tap_payment();
+    ~page_tap_payment_serial();
     void setProgressLabel(QLabel* label, int dot);
     // TODO: Figure out better Style Setup.
     void labelSetup(QLabel *label, int fontSize);
@@ -81,48 +81,70 @@ public:
     // **** Control Functions ****
     bool setpaymentProcess(bool status);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
-    void authorized_transaction(std::map<std::string, std::string> responseObj);
 
     // Database
     void storePaymentEvent(QSqlDatabase db, QString event);
 
+    /* mpos */
+    void stayAliveLogon();
+    void batchClose();
+    int getSelectedPriceSelect();
+    void sendCommand();
 
+    string getTerminalID(){
+        return terminalID;
+    }
+
+    string getMerchantName(){
+        return merchantName;
+    }
+
+    string getMerchantAddress() {
+        return merchantAddress;
+    }
+
+    QString getOID(){
+        return orderId;
+    }
+    QTimer *readTimer;
+    // char * curl_data;
+    // char * curl_data1;
+    // char * curlOrderdata;
     StateTapPayment state_tap_payment;
 
+// signals:
+//     void cardTapped();
 private slots:
 
     // Update Drink order totals section
     void updateTotals(string drinkDescription, string drinkAmount, string orderTotal);
 
     // Navigation
-    void on_pushButton_previous_page_clicked();
+    void on_previousPage_Button_clicked();
     void on_payment_bypass_Button_clicked();
-<<<<<<< HEAD
-    void on_pushButton_to_idle_clicked();
+    void on_mainPage_Button_clicked();
 
     //void on_payment_pass_Button_clicked();
     //void on_payment_cancel_Button_clicked();
     // For Debugging; will be removed.
 
-=======
-    void on_mainPage_Button_clicked();
->>>>>>> origin/SS1
     // **** Payment ****
     void displayPaymentPending(bool isVisible);
 
-    // void readTimer_loop();
-    void tapPaymentHandler();
     void declineTimer_start();
-    void check_packet_available();
-    void check_card_tapped();
-    void startPaymentProcess();
+
 
     void idlePaymentTimeout();
 
 
+
+protected:
+
+//    void paintEvent(QPaintEvent *p);
+
 private:
     // **** GUI ****
-    Ui::page_tap_payment *ui;
+    Ui::page_tap_payment_serial *ui;
     pageProduct* p_pageProduct;
     page_dispenser* p_page_dispense;
     page_idle* p_page_idle;
@@ -154,12 +176,21 @@ private:
     int progressLoopCounter = 0;
     int declineCounter;
 
-
+    // **** Payment ****
+    // Payment Information
+    string merchantName;
+    string merchantAddress;
+    string terminalID;
 
     // Payment Control
     bool paymentProcessing;
 
-   
+    bool isInitCancelled;
+    bool isInitBatched;
+    bool isInitLogin;
+    bool isInitMerchant;
+    bool isInitAddress;
+    bool isInitTerminalID;
 
     QSqlDatabase db;
 
@@ -171,18 +202,39 @@ private:
     QTimer *idlePaymentTimer;
     QTimer *inFlightTimer;
 
+    // Payment Communication
+    // Moneris Packet communication reference
+    // mCommunication com;
+    // packetFromECR sendPacket;
+    // packetFromUX410 readPacket;
+    // transactionPacket paymentPacket;
+    // transactionInfo paymentPktInfo;
+
+    // Payment Package Control
+    bool purchaseEnable;
+    int monerisConfig = 0;
+    bool timerEnabled;
+    std::vector<uint8_t> pktToSend;
+    std::vector<uint8_t> pktResponded;
     std::string productSelectedPrice;
     
     bool tap_init();
     void cancelPayment();
     bool getResponse(){return response;}
 
+    
+    // **** Drink Order Reference ****
+    // DrinkOrder paymentDrinkOrder;
+
+    // Placeholder
+    bool surveyBool;
 
     QString _paymentTimeLabel;
     int _pageTimeoutCounterSecondsLeft;
     QTimer* paymentEndTimer;
 
-
+    int _qrProcessedPeriodicalCheckSec;
+    QTimer* qrPeriodicalCheckTimer;
 
     QResizeEvent *pageProductResize;
     QShowEvent *dispenseEvent;
@@ -190,12 +242,16 @@ private:
     bool response;
     bool tap_payment;
     int lastTransactionId;
-
-    void resetPaymentPage();
+     void resetPaymentPage();
     QString getPaymentMethod();
+
+    //size_t WriteCallback(char* contents, size_t size, size_t nmemb, void *userp);
+    std::string readBuffer;
+
 
     int tmpCounter ;
 
+    
 };
 
-#endif // page_tap_payment_H
+#endif // page_tap_payment_serial_H

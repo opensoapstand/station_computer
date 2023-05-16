@@ -472,20 +472,24 @@ void DrinkOrder::loadProductPropertiesFromDb(int slot)
 
 bool DrinkOrder::isProductVolumeInContainer(int slot)
 {
-    // QString product_id;
-    // bool sizeIndexIsEnabled[SIZES_COUNT]; // size indeces.
-     DbManager db(DB_PATH);
-    // db.getProductProperties(slot, &product_id, sizeIndexIsEnabled);    
-    
-    if (db.getEmptyContainerDetectionEnabled())
+    DbManager db(DB_PATH);
+    // db.getProductProperties(slot, &product_id, sizeIndexIsEnabled);
+    bool retval;
+    // if (db.getEmptyContainerDetectionEnabled())
+    // {
+    //     retval=  db.getVolumeRemaining(slot) > CONTAINER_EMPTY_THRESHOLD_ML;
+    // }
+    // else
+    // {
+    //     retval = db.getVolumeRemaining(slot) > db.getProductVolume(slot, 'l'); // ----> TODO VERY BUGGY (only instance found of using char volume as a magic number)
+    // }
+    if (!db.getEmptyContainerDetectionEnabled())
     {
-        return db.getVolumeRemaining(slot) > CONTAINER_EMPTY_THRESHOLD_ML;
+        retval = db.getVolumeRemaining(slot) > CONTAINER_EMPTY_THRESHOLD_ML;
     }
-    else
-    {
-        return db.getVolumeRemaining(slot) > db.getProductVolume(slot, 'l'); // ----> TODO VERY BUGGY (only instance found of using char volume as a magic number)
-    }
+
     db.closeDB();
+    return retval;
 }
 
 void DrinkOrder::loadSelectedProductPropertiesFromProductsFile()

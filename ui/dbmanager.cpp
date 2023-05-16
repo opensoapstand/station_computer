@@ -870,10 +870,10 @@ double DbManager::getVolumeRemaining(int slot)
     return remaining;
 }
 
-QString DbManager::getLastRefill(int slot)
+QString DbManager::getLastRestockDate(int slot)
 {
     // last as in "most recent"
-    qDebug() << " db... getLastRefill";
+    qDebug() << " db... getLastRestockDate";
     QSqlQuery refill_date_query;
     QString refill_date_string;
 

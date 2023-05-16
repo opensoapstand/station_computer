@@ -322,10 +322,10 @@ void page_dispenser::updateVolumeDispensedLabel(double dispensed)
         dispensedVolumeUnitsCorrected = QString::number(ceil(dispensed));
     }
 
-    if (p_page_idle->currentProductOrder->getSelectedSize() == SIZE_CUSTOM_INDEX)
+    if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
     {
 
-        double unitprice = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
+        double unitprice = p_page_idle->selectedProduct->getPriceCorrected();
         current_price = dispensed * unitprice;
         ui->volumeDispensedLabel->setText(dispensedVolumeUnitsCorrected + " " + units + " ( $" + QString::number(current_price, 'f', 2) + " )");
     }

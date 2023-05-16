@@ -336,7 +336,7 @@ void pageProduct::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     selectedProductOrder->loadSelectedProductProperties();
-    selectedProductOrder->setLoadedProductBiggestEnabledSizeIndex();
+    p_page_idle->selectedProduct->setBiggestEnabledSizeIndex();
 
     loadProdSpecs();
     reset_and_show_page_elements();

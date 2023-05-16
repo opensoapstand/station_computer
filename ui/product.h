@@ -27,6 +27,7 @@ public:
     void setPromoCode(QString promoCode);
     QString getProductId();
     QString getMachineId();
+    bool getSlotEnabled();
 
     QString getFullVolumeCorrectUnits(bool addUnits);
 
@@ -46,6 +47,7 @@ public:
     void setSize(int sizeIndex);
     int getSize();
     char getSizeAsChar();
+    QString getPLU(char size);
 
     bool isOrderValid();
 
@@ -62,12 +64,13 @@ public:
     QString getLoadedProductDescription();
     QString getLoadedProductIngredients();
     QString getLoadedProductFeatures();
+    QString getLastRestockDate();
     bool getLoadedProductSizeEnabled(int size);
-    int getLoadedProductBiggestEnabledSizeIndex();
+    int getBiggestEnabledSizeIndex();
 
-    void setLoadedProductBiggestEnabledSizeIndex();
+    void setBiggestEnabledSizeIndex();
 
-    QString getProductPicturePath(int slot);
+    // QString getProductPicturePath(int slot);
     QString getProductPicturePath();
 
     double getVolume();
@@ -83,7 +86,7 @@ public:
     QString getSizeToVolume(QString units);
 
     QString getSizeToVolumeWithCorrectUnits(bool round, bool addUnits);
-    QString getSizeToVolumeWithCorrectUnitsForSlot(int size, bool roundValue, bool addUnits);
+    QString getSizeToVolumeWithCorrectUnits(int size, bool roundValue, bool addUnits);
 
     double getPrice(int sizeIndex);
     double getDiscount();
@@ -132,6 +135,7 @@ private:
     double volume_remaining;
     double volume_dispensed_since_restock;
     double volume_dispensed_toal;
+
     int is_enabled_small;
     int is_enabled_medium;
     int is_enabled_large;

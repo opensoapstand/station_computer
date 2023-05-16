@@ -21,6 +21,7 @@
 #include "df_util.h"
 #include "includefiles.h"
 #include "page_idle.h"
+#include "product.h"
 #include "page_sendFeedback.h"
 #include "pagethankyou.h"
 #include "payment/commands.h"
@@ -108,6 +109,7 @@ private:
     page_idle* p_page_idle;
 
     DrinkOrder* selectedProductOrder;
+    product* selectedProduct;
 
     // XXX: Remove when interrupts and flowsensors work.
 

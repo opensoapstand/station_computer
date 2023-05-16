@@ -45,7 +45,7 @@ public:
     double getVolumeRemaining(int slot);
     double getTotalDispensed(int slot);
     double getVolumeDispensedSinceRestock(int slot);
-    QString getLastRefill(int slot);
+    QString getLastRestockDate(int slot);
     bool refill(int slot);
     bool sellout(int slot);
     bool unsellout(int slot);

@@ -73,12 +73,12 @@ void product::setSize(int sizeIndex)
     Size = sizeIndex;
 }
 
-void product::setLoadedProductBiggestEnabledSizeIndex()
+void product::setBiggestEnabledSizeIndex()
 {
-    setSize(getLoadedProductBiggestEnabledSizeIndex());
+    setSize(getBiggestEnabledSizeIndex());
 }
 
-int product::getLoadedProductBiggestEnabledSizeIndex()
+int product::getBiggestEnabledSizeIndex()
 {
 
     // cascade to largest size. Custom volume is seen as superior.
@@ -96,6 +96,16 @@ int product::getLoadedProductBiggestEnabledSizeIndex()
         maxSize = SIZE_CUSTOM_INDEX;
     }
     return maxSize;
+}
+
+bool product::getSlotEnabled()
+{
+    qDebug() << "Open db: get slot enabled";
+    DbManager db(DB_PATH);
+    bool enabled = db.getSlotEnabled(getSlot());
+
+    db.closeDB();
+    return enabled;
 }
 
 bool product::getLoadedProductSizeEnabled(int size)
@@ -158,6 +168,16 @@ double product::getDiscount()
 double product::getDiscountPercentageFraction()
 {
     return m_discount_percentage_fraction;
+}
+
+QString product::getLastRestockDate()
+{
+    qDebug() << "Open db:  last restock date";
+    QString restockdate;
+    DbManager db(DB_PATH);
+    restockdate = db.getLastRestockDate(getSlot());
+    db.closeDB();
+    return restockdate;
 }
 
 QString product::getPromoCode()
@@ -370,7 +390,7 @@ QString product::getTotalDispensedCorrectUnits()
     return volume_as_string;
 }
 
-QString product::getSizeToVolumeWithCorrectUnitsForSlot(int size, bool roundValue, bool addUnits)
+QString product::getSizeToVolumeWithCorrectUnits(int size, bool roundValue, bool addUnits)
 {
     QString volume_as_string;
     double v;
@@ -494,6 +514,15 @@ QString product::getProductType()
     return product_type;
 }
 
+QString product::getPLU(char size)
+{
+
+    DbManager db(DB_PATH);
+    QString plu = db.getPLU(getSlot(), size);
+    db.closeDB();
+    return plu;
+}
+
 QString product::getProductName()
 {
     QString product_id = getProductDrinkfillSerial();
@@ -553,7 +582,7 @@ void product::setFullVolumeCorrectUnits(QString inputFullValue)
 
 QString product::getSizeToVolumeWithCorrectUnits(bool round, bool addUnits)
 {
-    return getSizeToVolumeWithCorrectUnitsForSlot(getSize(), round, addUnits);
+    return getSizeToVolumeWithCorrectUnits(getSize(), round, addUnits);
 }
 
 QString product::getPaymentMethod()

@@ -39,27 +39,27 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     ui->p_page_maintenanceButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
  
 
-    selectProductPhotoLabels[0] = ui->product_1_photo_label;
-    selectProductPhotoLabels[1] = ui->product_2_photo_label;
-    selectProductPhotoLabels[2] = ui->product_3_photo_label;
-    selectProductPhotoLabels[3] = ui->product_4_photo_label;
+    selectProductPhotoLabels[0] = ui->label_product_1_photo;
+    selectProductPhotoLabels[1] = ui->label_product_2_photo;
+    selectProductPhotoLabels[2] = ui->label_product_3_photo;
+    selectProductPhotoLabels[3] = ui->label_product_4_photo;
 
-    selectProductOverlayLabels[0] = ui->product_1_overlay_label;
-    selectProductOverlayLabels[1] = ui->product_2_overlay_label;
-    selectProductOverlayLabels[2] = ui->product_3_overlay_label;
-    selectProductOverlayLabels[3] = ui->product_4_overlay_label;
+    selectProductOverlayLabels[0] = ui->label_product_1_overlay;
+    selectProductOverlayLabels[1] = ui->label_product_2_overlay;
+    selectProductOverlayLabels[2] = ui->label_product_3_overlay;
+    selectProductOverlayLabels[3] = ui->label_product_4_overlay;
 
-    selectProductPhotoLabelsText[0] = ui->product_1_photo_label_text;
-    selectProductPhotoLabelsText[1] = ui->product_2_photo_label_text;
-    selectProductPhotoLabelsText[2] = ui->product_3_photo_label_text;
-    selectProductPhotoLabelsText[3] = ui->product_4_photo_label_text;
+    selectProductPhotoLabelsText[0] = ui->label_product_1_photo_text;
+    selectProductPhotoLabelsText[1] = ui->label_product_2_photo_text;
+    selectProductPhotoLabelsText[2] = ui->label_product_3_photo_text;
+    selectProductPhotoLabelsText[3] = ui->label_product_4_photo_text;
 
 
 
-    selectProductTypeLabels[0] = ui->product_1_type_label;
-    selectProductTypeLabels[1] = ui->product_2_type_label;
-    selectProductTypeLabels[2] = ui->product_3_type_label;
-    selectProductTypeLabels[3] = ui->product_4_type_label;
+    selectProductTypeLabels[0] = ui->label_product_1_type;
+    selectProductTypeLabels[1] = ui->label_product_2_type;
+    selectProductTypeLabels[2] = ui->label_product_3_type;
+    selectProductTypeLabels[3] = ui->label_product_4_type;
 
     //ui->pushButton_help_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     // ui->pushButton_to_idle->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget

@@ -60,12 +60,12 @@ public:
 
     void loadProductProperties();
     void loadProductPropertiesFromDb();
-    QString getLoadedProductName();
-    QString getLoadedProductDescription();
-    QString getLoadedProductIngredients();
-    QString getLoadedProductFeatures();
+    // QString getLoadedProductName();
+    QString getProductDescription();
+    QString getProductIngredients();
+    QString getProductFeatures();
     QString getLastRestockDate();
-    bool getLoadedProductSizeEnabled(int size);
+    bool getSizeEnabled(int size);
     int getBiggestEnabledSizeIndex();
 
     void setBiggestEnabledSizeIndex();

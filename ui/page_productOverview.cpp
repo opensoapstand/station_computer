@@ -318,7 +318,7 @@ void pageProductOverview::reset_and_show_page_elements()
     QString bitmap_location;
     ui->label_product_photo->setStyleSheet("QLabel{border: 2px solid #5E8580;}");
     // ui->label_product_title->setText(p_page_idle->selectedProduct->getProductName());
-    // ui->label_product_description->setText(p_page_idle->selectedProduct->getLoadedProductDescription());
+    // ui->label_product_description->setText(p_page_idle->selectedProduct->getProductDescription());
     p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->selectedProduct->getProductPicturePath());
     ui->label_selected_price->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(), 'f', 2));
     qDebug() << "Selected size" << p_page_idle->selectedProduct->getVolume();

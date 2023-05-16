@@ -83,15 +83,15 @@ int product::getBiggestEnabledSizeIndex()
 
     // cascade to largest size. Custom volume is seen as superior.
     int maxSize = SIZE_SMALL_INDEX;
-    if (getLoadedProductSizeEnabled(SIZE_MEDIUM_INDEX))
+    if (getSizeEnabled(SIZE_MEDIUM_INDEX))
     {
         maxSize = SIZE_MEDIUM_INDEX;
     }
-    if (getLoadedProductSizeEnabled(SIZE_LARGE_INDEX))
+    if (getSizeEnabled(SIZE_LARGE_INDEX))
     {
         maxSize = SIZE_LARGE_INDEX;
     }
-    if (getLoadedProductSizeEnabled(SIZE_CUSTOM_INDEX))
+    if (getSizeEnabled(SIZE_CUSTOM_INDEX))
     {
         maxSize = SIZE_CUSTOM_INDEX;
     }
@@ -108,7 +108,7 @@ bool product::getSlotEnabled()
     return enabled;
 }
 
-bool product::getLoadedProductSizeEnabled(int size)
+bool product::getSizeEnabled(int size)
 {
     // caution!:  provide size index (0=small, ...)
     return m_sizeIndexIsEnabled[size];
@@ -471,20 +471,20 @@ void product::getProductPropertiesFromProductsFile(QString product_id, QString *
     file.close();
 }
 
-QString product::getLoadedProductIngredients()
+QString product::getProductIngredients()
 {
     return m_ingredients_ui;
 }
 
-QString product::getLoadedProductFeatures()
+QString product::getProductFeatures()
 {
     return m_features_ui;
 }
-QString product::getLoadedProductName()
+QString product::getProductName()
 {
     return m_name_ui;
 }
-QString product::getLoadedProductDescription()
+QString product::getProductDescription()
 {
     return m_description_ui;
 }
@@ -523,19 +523,20 @@ QString product::getPLU(char size)
     return plu;
 }
 
-QString product::getProductName()
-{
-    QString product_id = getProductDrinkfillSerial();
+// QString product::getProductName()
+// {
+//     // QString product_id = getProductDrinkfillSerial();
 
-    QString name_ui;
-    QString product_type;
-    QString description_ui;
-    QString features_ui;
-    QString ingredients_ui;
+//     // QString name_ui;
+//     // QString product_type;
+//     // QString description_ui;
+//     // QString features_ui;
+//     // QString ingredients_ui;
 
-    getProductPropertiesFromProductsFile(product_id, &name_ui, &product_type, &description_ui, &features_ui, &ingredients_ui);
-    return name_ui;
-}
+//     // getProductPropertiesFromProductsFile(product_id, &name_ui, &product_type, &description_ui, &features_ui, &ingredients_ui);
+//     // return name_ui;
+
+// }
 
 QString product::getMachineId()
 {

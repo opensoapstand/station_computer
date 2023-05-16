@@ -54,7 +54,6 @@ public:
     void dispense_test_end(bool sendStopToController);
     void dispense_test_start();
     void update_dispense_stats(double dispensed);
-    DrinkOrder *selectedProductOrder;
 
 private slots:
     void refreshLabels();

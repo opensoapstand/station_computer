@@ -123,8 +123,6 @@ void page_select_product::setPage(pageProduct *pageSizeSelect, page_idle_product
     this->p_page_maintenance = pageMaintenance;
     this->p_page_help = pageHelp;
 
-    selectedProductOrder = p_page_idle->currentProductOrder;
-
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
     QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     qDebug() << full_path;
@@ -331,7 +329,7 @@ void page_select_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     productPageEndTimer->stop();
     qDebug() << "Exit select product page.";
-    selectedProductOrder->setDiscountPercentageFraction(0.0);
+    p_page_idle->selectedProduct->setDiscountPercentageFraction(0.0);
     this->raise();
     p_page_idle->pageTransition(this, pageToShow);
 }

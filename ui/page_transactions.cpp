@@ -126,7 +126,7 @@ void page_transactions::populateList()
         deleteAllListItems();
 
         // header is the first row. (caution: It messes up the indexing a little bit)
-        ui->transactions_List->addItem("Dispense time     \t Volume [ml]     Price     Name");
+        ui->transactions_List->addItem("Dispense time     \t Volume [ml]     Price[$]\t  Name");
 
         // populate the items of the list
         for (int i = 0; i < transaction_count; i++)

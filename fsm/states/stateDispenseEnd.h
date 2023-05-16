@@ -66,20 +66,12 @@ private:
 
     char now[50];
 
-    DF_ERROR dispenseEndUpdateDB(double updated_volume_remaining);
+    DF_ERROR dispenseEndUpdateDB(bool isValidTransaction);
     bool sendTransactionToCloud(double volume_remaining);
     DF_ERROR setup_and_print_receipt();
-    // DF_ERROR print_receipt();
-
-    // DF_ERROR print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted,string time_stamp, string units, string paymentMethod, string plu);
-    // DF_ERROR setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp);
     
     std::string getMachineID();
     std::string getProductID(int slot);
-    std::string getUnits(int slot);
-    std::string getUnitsFromDb(int slot);
-
-    void loadProductData(int slot);
 
     double getFinalPrice();
 
@@ -87,7 +79,7 @@ private:
     DF_ERROR dispenseEndUpdateTransactionDB();
     DF_ERROR databaseUpdateSql(string sqlStatement);
 
-    DF_ERROR print_text(std::string text);
+    // DF_ERROR print_text(std::string text);
 
     void write_curl_to_file(std::string curl_params);
     CURL *curl;

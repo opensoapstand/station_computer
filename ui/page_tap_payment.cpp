@@ -40,7 +40,7 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
 {
     // Fullscreen background setup
     ui->setupUi(this);
-    qDebug() << "Payment page" << endl;
+    qDebug() << "Tap payment page" << endl;
     // ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->previousPage_Button->setStyleSheet(
         "QPushButton {"
@@ -84,10 +84,30 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
     ui->payment_bypass_Button->setEnabled(false);
     ui->title_Label->hide();
 
-    // ui->order_total_amount->hide();
-    DbManager db(DB_PATH);
+    bool isTapUsedAsPaymentMethod = false;
+    qDebug()<<"afeijaseifjseidf";
+    for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    {
+        //QString paymentMethod = p_page_idle->products[slot_index].getPaymentMethod();
+        QString paymentMethod = getPaymentMethodForConstructorTime(slot_index+1); // DO NOT delete, crashes at startup when optimized to use selected product. can't call page_idle products db from constructor?
+        if ( paymentMethod == "tap")
+        {
+            isTapUsedAsPaymentMethod = true;
+        }
+        qDebug()<<"payment methtoeist : " << paymentMethod;
+    }
+    // qDebug()<<"afeijaseifjseidf";
+    // for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    // {
+    //     QString paymentMethod = p_page_idle->products[slot_index].getPaymentMethod();
+    //     if ( paymentMethod == "tap")
+    //     {
+    //         isTapUsedAsPaymentMethod = true;
+    //     }
+    //     qDebug()<<"payment methtoeist : " << paymentMethod;
+    // }
 
-    if (db.getPaymentMethod(1) == "tap")
+    if (isTapUsedAsPaymentMethod)
     {
         qDebug() << "InitializingTap payment";
         tap_payment = true;
@@ -118,6 +138,15 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
             registerDevice(connectSocket());
         }
     }
+}
+
+QString page_tap_payment::getPaymentMethodForConstructorTime(uint8_t slot)
+{
+    qDebug() << "db open245";
+    DbManager db2(DB_PATH);
+    QString payment_method = db2.getPaymentMethod(slot);
+    db2.closeDB();
+    return payment_method;
 }
 
 void page_tap_payment::stopPayTimers()
@@ -257,7 +286,8 @@ void page_tap_payment::startPaymentProcess()
     {
         numberOfTapAttempts += 1;
         double price = p_page_idle->selectedProduct->getPriceCorrected();
-        if(p_page_idle->selectedProduct->getSizeAsChar()=='c'){
+        if (p_page_idle->selectedProduct->getSizeAsChar() == 'c')
+        {
             price = p_page_idle->selectedProduct->getPriceCustom();
         }
         std::ostringstream stream;
@@ -274,10 +304,9 @@ void page_tap_payment::startPaymentProcess()
         dataThread = std::thread(receiveAuthorizationThread, std::stoi(socketAddr));
         dataThread.detach();
         checkPacketReceivedTimer->start();
-        ui->preauthLabel->setText("You are being pre-authorized for maximum volume "
-                                +p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true)+ 
-                                " with amount of:");
-        ui->order_total_amount->setText("$ "+ QString::number(price, 'f', 2));
+        ui->preauthLabel->setText("You are being pre-authorized for maximum volume " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true) +
+                                  " with amount of:");
+        ui->order_total_amount->setText("$ " + QString::number(price, 'f', 2));
     }
     else
     {
@@ -286,8 +315,6 @@ void page_tap_payment::startPaymentProcess()
         on_previousPage_Button_clicked();
     }
 }
-
-
 
 void page_tap_payment::check_packet_available()
 {

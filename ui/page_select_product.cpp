@@ -272,10 +272,7 @@ void page_select_product::displayProducts()
 
 void page_select_product::select_product(int slot)
 {
-    DbManager db(DB_PATH);
-
-    bool product_slot_enabled = db.getSlotEnabled(slot);
-    db.closeDB();
+    bool product_slot_enabled = p_page_idle->products[slot-1].getSlotEnabled();
 
     if (product_slot_enabled)
     {

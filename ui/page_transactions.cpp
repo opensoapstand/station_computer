@@ -73,8 +73,9 @@ void page_transactions::showEvent(QShowEvent *event)
         populateTransactionsTable();
 
         qDebug() << "db for receipt printer check";
+        QString paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
+
         DbManager db(DB_PATH);
-        QString paymentMethod = db.getPaymentMethod(p_page_idle->selectedProduct->getSlot());
         bool hasReceiptPrinter = db.hasReceiptPrinter();
         db.closeDB();
 
@@ -104,14 +105,14 @@ void page_transactions::onIdleTimeoutTick()
 
 void page_transactions::populateTransactionsTable()
 {
-        DbManager db(DB_PATH);
-
         transaction_count = TRANSACTION_HISTORY_COUNT;
         int retrieved_count;
-        db.getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
 
-        transaction_count = retrieved_count;
+        DbManager db(DB_PATH);
+        db.getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
         db.closeDB();
+        
+        transaction_count = retrieved_count;
 
         populateList();
 }

@@ -204,15 +204,15 @@ size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
     return size * nmemb;
 }
 
-QString page_qr_payment::getPaymentMethod()
-{
-    qDebug() << "db open245";
-    int product_slot___ = p_page_idle->selectedProduct->getSlot();
-    DbManager db2(DB_PATH);
-    QString payment_method = db2.getPaymentMethod(product_slot___);
-    db2.closeDB();
-    return payment_method;
-}
+// QString page_qr_payment::getPaymentMethod()
+// {
+//     qDebug() << "db open245";
+//     int product_slot___ = p_page_idle->selectedProduct->getSlot();
+//     DbManager db2(DB_PATH);
+//     QString payment_method = db2.getPaymentMethod(product_slot___);
+//     db2.closeDB();
+//     return payment_method;
+// }
 
 void page_qr_payment::resizeEvent(QResizeEvent *event)
 {

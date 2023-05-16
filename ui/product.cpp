@@ -13,7 +13,7 @@ product::product()
 // Ctor Object Copy
 product::product(const product &other) : QObject(nullptr)
 {
-    slot = getSlot();
+    // slot = getSlot();
 }
 
 // Dtor
@@ -26,18 +26,13 @@ void product::load()
     qDebug() << "Open db: db load product properties from product load";
     DbManager db(DB_PATH);
 
-    m_product_id = db.getProductID(slot);
-    soapstand_product_serial = db.getProductDrinkfillSerial(slot);
+    m_product_id = db.getProductID(getSlot());
+    soapstand_product_serial = db.getProductDrinkfillSerial(getSlot());
     db.closeDB();
 
     size_unit = getUnitsForSlot();
     payment = getPaymentMethod();
     loadProductProperties();
-}
-
-void product::loadProductPropertiesFromProductsFile()
-{
-    getProductPropertiesFromProductsFile(m_product_id, &m_name_ui, &m_product_type, &m_description_ui, &m_features_ui, &m_ingredients_ui);
 }
 
 char product::getSizeAsChar()
@@ -426,8 +421,9 @@ QString product::getProductDrinkfillSerial()
 
 void product::loadProductProperties()
 {
-    // loadProductPropertiesFromDb();
-    // loadProductPropertiesFromProductsFile();
+    loadProductPropertiesFromDb();
+    qDebug() << "done loading preoosersoieruoisuer";
+    loadProductPropertiesFromProductsFile();
 }
 
 void product::loadProductPropertiesFromDb()
@@ -437,6 +433,12 @@ void product::loadProductPropertiesFromDb()
 
     db.getProductProperties(getSlot(), &m_product_id, m_sizeIndexIsEnabled);
     db.closeDB();
+}
+
+
+void product::loadProductPropertiesFromProductsFile()
+{
+    getProductPropertiesFromProductsFile(m_product_id, &m_name_ui, &m_product_type, &m_description_ui, &m_features_ui, &m_ingredients_ui);
 }
 
 void product::getProductPropertiesFromProductsFile(QString product_id, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui)
@@ -489,6 +491,21 @@ QString product::getProductDescription()
     return m_description_ui;
 }
 
+QString product::getProductType()
+{
+    // QString product_id = getProductDrinkfillSerial();
+    // QString name_ui;
+    // QString product_type;
+    // QString description_ui;
+    // QString features_ui;
+    // QString ingredients_ui;
+
+    // getProductPropertiesFromProductsFile(product_id, &name_ui, &product_type, &description_ui, &features_ui, &ingredients_ui);
+    // return product_type;
+    return m_product_type;
+}
+
+
 // QString product::getProductPicturePath()
 // {
 
@@ -501,18 +518,7 @@ QString product::getProductPicturePath()
     return QString(PRODUCT_PICTURES_ROOT_PATH).arg(serial);
 }
 
-QString product::getProductType()
-{
-    QString product_id = getProductDrinkfillSerial();
-    QString name_ui;
-    QString product_type;
-    QString description_ui;
-    QString features_ui;
-    QString ingredients_ui;
 
-    getProductPropertiesFromProductsFile(product_id, &name_ui, &product_type, &description_ui, &features_ui, &ingredients_ui);
-    return product_type;
-}
 
 QString product::getPLU(char size)
 {
@@ -576,8 +582,9 @@ QString product::getFullVolumeCorrectUnits(bool addUnits)
 void product::setFullVolumeCorrectUnits(QString inputFullValue)
 {
     qDebug() << "Open db: for write full vol";
+    double full_volume = inputTextToMlConvertUnits(inputFullValue);
     DbManager db(DB_PATH);
-    db.updateFullVolume(getSlot(), inputTextToMlConvertUnits(inputFullValue));
+    db.updateFullVolume(getSlot(), full_volume);
     db.closeDB();
 }
 
@@ -590,10 +597,14 @@ QString product::getPaymentMethod()
 {
     QString paymentMethod;
     qDebug() << "Open db: product payment method";
+    
     DbManager db(DB_PATH);
     paymentMethod = db.getPaymentMethod(getSlot());
     db.closeDB();
     return paymentMethod;
+
+    // QString tmp = "tap";
+    // return tmp;
 }
 
 int product::getDispenseSpeedPercentage()

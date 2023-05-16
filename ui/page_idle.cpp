@@ -46,9 +46,15 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     // for products.cpp
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
-        products[slot_index].setSlot(slot_index);
+        products[slot_index].setSlot(slot_index+1);
         products[slot_index].load();
     }
+
+
+    // qDebug()<<"afeijaseifjseidf";
+    // QString paymentMethod = products[0].getPaymentMethod();
+    // qDebug()<<"afeijaseifjseidf" << paymentMethod;
+
 
    
     setSelectedProduct(0);
@@ -95,11 +101,10 @@ void page_idle::showEvent(QShowEvent *event)
 {
 
     qDebug() << "open db: payment method";
-    DbManager db(DB_PATH);
     bool needsReceiptPrinter = false;
     for (int slot = 1; slot <= SLOT_COUNT; slot++)
     {
-        QString paymentMethod = db.getPaymentMethod(slot);
+        QString paymentMethod = products[slot-1].getPaymentMethod();
         if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
         {
             needsReceiptPrinter = true;
@@ -107,6 +112,8 @@ void page_idle::showEvent(QShowEvent *event)
             break;
         }
     }
+
+    DbManager db(DB_PATH);
     // call db check if idle or idle_products
     idle_page_type = db.getIdlePageType();
     db.closeDB();

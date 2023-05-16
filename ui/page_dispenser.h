@@ -30,7 +30,6 @@
 #include "posm/packetfromecr.h"
 #include "posm/packetfromux410.h"
 #include "posm/transactionPackets.h"
-#include "posm/transactioninfo.h"
 
 class page_qr_payment;
 class page_tap_payment;

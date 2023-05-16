@@ -129,9 +129,10 @@ void pagethankyou::showEvent(QShowEvent *event)
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_THANK_YOU_BACKGROUND_PATH);
 
-    qDebug() << "db open: check receipt printer";
+    qDebug() << "db for receipt printer check";
+    QString paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
+
     DbManager db(DB_PATH);
-    QString paymentMethod = db.getPaymentMethod(p_page_idle->selectedProduct->getSlot());
     bool hasReceiptPrinter = db.hasReceiptPrinter();
     db.closeDB();
 
@@ -176,7 +177,7 @@ void pagethankyou::showEvent(QShowEvent *event)
     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->selectedProduct->getVolumeDispensedMl(), units, false, true);
 
     double price = p_page_idle->selectedProduct->getPriceCorrected();
-    
+
     if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
     {
         price = p_page_idle->selectedProduct->getVolumeDispensedMl() * price;

@@ -127,6 +127,7 @@ bool DbManager::isDatabaseLocked(const QSqlDatabase &db)
 
 void DbManager::closeDB()
 {
+    qDebug() << "close db";
     if (m_db.isOpen())
     {
         {
@@ -187,6 +188,7 @@ void DbManager::getCustomDiscountProperties(int slot, bool *isEnabled, double *v
 void DbManager::getProductProperties(int slot, QString *product_id, bool *isSizeEnabled)
 // void DbManager::getProductProperties(int slot, QString*name, QString *description, QString *features,  QString *ingredients, bool* isEnabledSmall,bool* isEnabledMedium,bool* isEnabledLarge,bool* isEnabledCustom)
 {
+    qDebug() << " db... product properties";
     QSqlQuery qry;
     {
         qry.prepare("SELECT soapstand_product_serial, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom FROM products WHERE slot=:slot");

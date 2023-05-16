@@ -35,6 +35,7 @@ double current_price;
 page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
                                                   ui(new Ui::page_dispenser)
 {
+    qDebug() << "constructor page_dispenser";
     ui->setupUi(this);
 
     ui->finishTransactionMessage->setStyleSheet(
@@ -254,7 +255,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     askForFeedbackAtEnd = false;
 
     ui->fill_animation_label->move(380, 889);
-    ui->button_problems->move(120,40);
+    ui->button_problems->move(120, 40);
 
     qDebug() << "db check dispense buttons count:";
     DbManager db(DB_PATH);
@@ -271,7 +272,7 @@ void page_dispenser::showEvent(QShowEvent *event)
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
     }
     // p_page_idle->addCompanyLogoToLabel(ui->label_logo);
-    
+
     p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
 
     ui->abortButton->setText("Abort");
@@ -435,7 +436,6 @@ void page_dispenser::fsmSendStopDispensing()
     p_page_idle->dfUtility->send_command_to_FSM(command);
 }
 
-
 // void page_dispenser::fsmSendPrice()
 // {
 //     qDebug() << "Send Price to fsm";
@@ -499,7 +499,7 @@ void page_dispenser::fsmReceiveDispenseStatus(QString status)
     ui->label_dispense_status->setText(dispenseStatus);
     ui->label_dispense_status->hide();
 
-    if (dispenseStatus == "FLOW_STATE_NOT_PUMPING_NOT_DISPENSING" || dispenseStatus == "FLOW_STATE_PRIME_FAIL_OR_EMPTY" || dispenseStatus == "FLOW_STATE_RAMP_UP" )
+    if (dispenseStatus == "FLOW_STATE_NOT_PUMPING_NOT_DISPENSING" || dispenseStatus == "FLOW_STATE_PRIME_FAIL_OR_EMPTY" || dispenseStatus == "FLOW_STATE_RAMP_UP")
     {
         // stable status. do not change button visibility.
     }

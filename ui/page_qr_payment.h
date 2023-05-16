@@ -232,7 +232,7 @@ private:
     std::string toSvgString(const QrCode &qr, int border);
     void paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg);
     void resetPaymentPage();
-    QString getPaymentMethod();
+    // QString getPaymentMethod();
 
 
 

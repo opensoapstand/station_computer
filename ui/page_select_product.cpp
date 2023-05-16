@@ -157,7 +157,14 @@ void page_select_product::showEvent(QShowEvent *event)
     ui->label_product_3_type->setStyleSheet(styleSheet);
     ui->label_product_4_type->setStyleSheet(styleSheet);
 
-    
+    ui->label_product_1_photo->setProperty("class", "label_product_photo");
+    ui->label_product_2_photo->setProperty("class", "label_product_photo");
+    ui->label_product_3_photo->setProperty("class", "label_product_photo");
+    ui->label_product_4_photo->setProperty("class", "label_product_photo");
+    ui->label_product_1_photo->setStyleSheet(styleSheet);
+    ui->label_product_2_photo->setStyleSheet(styleSheet);
+    ui->label_product_3_photo->setStyleSheet(styleSheet);
+    ui->label_product_4_photo->setStyleSheet(styleSheet);
 
 ////
 //
@@ -216,7 +223,7 @@ void page_select_product::displayProducts()
         // display product picture
         
         //selectProductPhotoLabels[i]->setStyleSheet("border: 1px solid black;");
-        selectProductPhotoLabels[i]->setStyleSheet(styleSheet);
+        //selectProductPhotoLabels[i]->setStyleSheet(styleSheet);
         p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(slot));
 
         qDebug() << "db (re)load product details:";
@@ -235,7 +242,7 @@ void page_select_product::displayProducts()
 
         selectProductNameLabels[i]->setText(product_name);
         //selectProductNameLabels[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
-        selectProductNameLabels[i]->setStyleSheet(styleSheet);
+        //selectProductNameLabels[i]->setStyleSheet(styleSheet);
 
 
         // display product type icon  picture

@@ -650,7 +650,7 @@ bool DbManager::updateSlotAvailability(int slot, int isEnabled, QString status_t
 {
     //setStatusText
     //setIsEnabled
-    
+
     QSqlQuery qry;
     bool enabled;
 
@@ -715,7 +715,7 @@ bool DbManager::getRecentTransactions(QString values[][5], int count, int *count
         // qry.prepare(sql_statement.c_str());
         // qry.prepare(sql_statement.c_str());
 
-        qry.prepare("SELECT id,end_time,quantity_dispensed,price,product FROM transactions ORDER BY id DESC LIMIT :count");
+        qry.prepare("SELECT id,end_time,quantity_dispensed,price,product_id FROM transactions ORDER BY id DESC LIMIT :count");
         qry.bindValue(":count", count);
 
         qDebug() << " db retreive transactions: " << count;
@@ -724,8 +724,17 @@ bool DbManager::getRecentTransactions(QString values[][5], int count, int *count
         while (qry.next())
         {
             for (uint8_t j = 0; j < 5; j++)
-            {
-                values[i][j] = qry.value(j).toString();
+            {   
+
+                if (j == 3){
+                    // price rounding
+                    double price = qry.value(j).toDouble();
+                    values[i][j] = QString::number(price, 'f', 2);
+
+                }else{
+                    values[i][j] = qry.value(j).toString();
+
+                }
                 qDebug() << "db bdafes: " << i << " : " << values[i][j];
             }
             i++;

@@ -163,7 +163,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
     orderSizeBackgroundLabels[2] = ui->label_background_large;
     orderSizeBackgroundLabels[3] = ui->label_background_custom;
 
-    QString css_title = "QLabel{"
+   /* QString css_title = "QLabel{"
                         "position: absolute;"
                         "width: 877px;"
                         "height: 104px;"
@@ -177,46 +177,17 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
                         "text-transform: capitalize;"
                         "color: #5E8580;"
                         "}";
-    ui->label_product_title->setStyleSheet(css_title);
-
+                        */
+/*
     QFont font;
     font.setFamily(QStringLiteral("Brevia"));
     font.setPointSize(20);
     font.setBold(true);
     font.setWeight(200);
-
-    ui->back_Button->setStyleSheet(
-        "QPushButton {"
-
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "text-transform: lowercase;"
-        "color: #003840;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
+*/
     ui->back_Button->setText("<- Products");
 
-    QString css_description = "QLabel{"
-                              "position: absolute;"
-                              //   "width: 894px;"
-                              //   "height: 252px;"
-                              //   "left: 95px;"
-                              //   "top: 474px;"
-                              "font-family: 'Montserrat';"
-                              "font-style: normal;"
-                              "font-weight: 400;"
-                              "font-size: 24px;"
-                              "line-height: 36px;"
-                              "color: #58595B;"
-                              "}";
-    ui->label_product_description->setStyleSheet(css_description);
-
+    
     ui->label_select_quantity->setStyleSheet(
         "QLabel {"
 
@@ -334,6 +305,40 @@ void pageProduct::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: Product >>>>>>>>>";
     QWidget::showEvent(event);
+
+    QString styleSheet = p_page_idle->getCSS(PAGE_PRODUCT_CSS);
+
+    ui->orderSmall_Button->setStyleSheet(styleSheet);
+    ui->orderMedium_Button->setStyleSheet(styleSheet);
+    ui->orderBig_Button->setStyleSheet(styleSheet);
+    ui->orderCustom_Button->setStyleSheet(styleSheet);
+
+    ui->label_price_small->setStyleSheet(styleSheet);
+    ui->label_price_medium->setStyleSheet(styleSheet);
+    ui->label_price_large->setStyleSheet(styleSheet);
+    ui->label_price_custom->setStyleSheet(styleSheet);
+
+    ui->label_size_small->setStyleSheet(styleSheet);
+    ui->label_size_medium->setStyleSheet(styleSheet);
+    ui->label_size_large->setStyleSheet(styleSheet);
+    ui->label_size_custom->setStyleSheet(styleSheet);
+
+    ui->label_background_small->setStyleSheet(styleSheet);
+    ui->label_background_medium->setStyleSheet(styleSheet);
+    ui->label_background_large->setStyleSheet(styleSheet);
+    ui->label_background_custom->setStyleSheet(styleSheet);
+
+    ui->label_product_title->setProperty("class", "css_title");
+    ui->label_product_title->setStyleSheet(styleSheet);
+
+    //ui->back_Button->setProperty("class", "back_Button");
+    ui->back_Button->setStyleSheet(styleSheet); //pushbutton
+    ui->label_product_description->setStyleSheet(styleSheet);
+
+    
+
+
+    ////////////////////////////////////////////////
 
     selectedProductOrder->loadSelectedProductProperties();
     selectedProductOrder->setLoadedProductBiggestEnabledSizeIndex();

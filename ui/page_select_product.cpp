@@ -286,7 +286,7 @@ void page_select_product::displayProducts()
         }
         else
         {
-            selectProductPhotoLabelsText[i]->setText("Assistance Needed");
+            selectProductPhotoLabelsText[i]->setText(". . .");
         }
 
         if (!(p_page_idle->currentProductOrder->isProductVolumeInContainer(slot))){

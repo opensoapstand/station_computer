@@ -444,6 +444,11 @@ void page_maintenance_dispenser::reset_all_dispense_stats()
     ui->dispenseTimeLabelButton->setText("Button time: " + QString::number(dispenserPumpingSecs, 'f', 1) + "s");
     ui->flowRateLabel->setText("Flow rate (2s): ");
     setButtonPressCountLabel(true);
+
+    DbManager db(DB_PATH);
+    QString slotStatus = db.getStatusText(selectedProductOrder->getSelectedSlot());
+    db.closeDB();
+    ui->dispense_status_label->setText(slotStatus);
 }
 
 void page_maintenance_dispenser::update_volume_received_dispense_stats(double dispensed)
@@ -539,8 +544,6 @@ void page_maintenance_dispenser::on_refillButton_clicked()
     qDebug() << "refill clicked. slot: " << QString::number(this->p_page_idle->currentProductOrder->getSelectedSlot());
     qDebug() << "refill clicked. size: " << QString::number(this->p_page_idle->currentProductOrder->getSelectedVolume());
 
-    //    qDebug() << "Refill button clicked" ;
-
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
     // ARE YOU SURE YOU WANT TO COMPLETE?
@@ -583,6 +586,12 @@ void page_maintenance_dispenser::on_refillButton_clicked()
     }
     break;
     }
+    
+    DbManager db(DB_PATH);
+    QString slotStatus = db.getStatusText(selectedProductOrder->getSelectedSlot());
+    db.closeDB();
+
+    ui->dispense_status_label->setText(slotStatus);
 }
 
 void page_maintenance_dispenser::on_soldOutButton_clicked()
@@ -688,6 +697,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
     ui->infoLabel->setText(infoLabelText);
 
     setSoldOutButtonText();
+    ui->dispense_status_label->setText(slotStatus);
 }
 
 void page_maintenance_dispenser::on_fullButton_clicked()

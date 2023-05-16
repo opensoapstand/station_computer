@@ -70,9 +70,9 @@ QLabel {
    border: 0px;
 }
 
-.label_product_oberlay_available{
+/* .label_product_oberlay_available{
    background-color: transparent;
-}
+} */
 
 .label_product_oberlay_sold_out{
    background-color: rgba(0,0,0,80);

@@ -426,8 +426,8 @@ QString product::getProductDrinkfillSerial()
 
 void product::loadProductProperties()
 {
-    loadProductPropertiesFromDb();
-    loadProductPropertiesFromProductsFile();
+    // loadProductPropertiesFromDb();
+    // loadProductPropertiesFromProductsFile();
 }
 
 void product::loadProductPropertiesFromDb()

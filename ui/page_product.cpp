@@ -336,13 +336,13 @@ void pageProduct::showEvent(QShowEvent *event)
 
     p_page_idle->selectedProduct->loadProductProperties();
     qDebug() << "loaded successfully";
-    p_page_idle->selectedProduct->setBiggestEnabledSizeIndex();
+    // p_page_idle->selectedProduct->setBiggestEnabledSizeIndex();
 
-    qDebug() << "loaded successfully2";
-    loadProdSpecs();
-    qDebug() << "loaded successfully3";
-    reset_and_show_page_elements();
-    qDebug() << "loaded successfully4";
+    // qDebug() << "loaded successfully2";
+    // loadProdSpecs();
+    // qDebug() << "loaded successfully3";
+    // reset_and_show_page_elements();
+    // qDebug() << "loaded successfully4";
 }
 
 void pageProduct::resizeEvent(QResizeEvent *event)

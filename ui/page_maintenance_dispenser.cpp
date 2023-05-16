@@ -487,7 +487,7 @@ void page_maintenance_dispenser::fsmReceiveDispenseRate(double flowrate)
     qDebug() << "Dispense flow rate received from FSM: " << QString::number(flowrate, 'f', 2);
     ui->flowRateLabel->setText("Flow rate (2s): " + QString::number(flowrate, 'f', 2) + "ml/s");
 };
-void page_maintenance_dispenser::fsmReceiveDispenseStatus(QString status)
+void page_maintenance_dispenser::fsmReceiveDispenserStatus(QString status)
 {
     QString dispenseStatus = status;
     qDebug() << "Dispense status received from FSM: " << dispenseStatus;
@@ -565,6 +565,11 @@ void page_maintenance_dispenser::on_refillButton_clicked()
             sendRestockToCloud();
             refreshLabels();
             ui->infoLabel->setText("Refill Succesfull");
+
+            DbManager db(DB_PATH);
+            bool isEnabled = db.getSlotEnabled(selectedProductOrder->getSelectedSlot());
+            bool success = db.updateSlotAvailability(selectedProductOrder->getSelectedSlot(), isEnabled, "DISPENSER_STATE_AVAILABLE");
+            db.closeDB();
         }
         else
         {
@@ -621,12 +626,12 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
             {
             case QMessageBox::Yes:
             {
-                slotStatus = "DISABLED_COMING_SOON";
+                slotStatus = "DISPENSER_STATE_DISABLED_COMING_SOON";
             }
             break;
             case QMessageBox::No:
             {
-                slotStatus = "DISABLED";
+                slotStatus = "DISPENSER_STATE_DISABLED";
             }
             break;
             }
@@ -646,7 +651,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
         // ARE YOU SURE YOU WANT TO COMPLETE?
         QMessageBox msgBox;
         msgBox.setWindowFlags(Qt::FramelessWindowHint);
-        msgBox.setText("<p align=center>Are you sure you want to Enable Product?</p>");
+        msgBox.setText("<p align=center>Are you sure you want to Enable Product? (This will reset technical problems messages too)</p>");
         msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-width: 300px; min-height: 300px;}");
 
         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
@@ -657,8 +662,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
         case QMessageBox::Yes:
         {
             slotEnabled = true;
-            slotStatus = "AVAILABLE";
-
+            slotStatus = "DISPENSER_STATE_AVAILABLE";
             break;
         }
         case QMessageBox::No:

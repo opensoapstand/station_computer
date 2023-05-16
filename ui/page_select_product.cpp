@@ -186,8 +186,6 @@ void page_select_product::displayProducts()
 
         product_slot_enabled = db.getSlotEnabled(slot);
 
-        
-
         product_status_text = db.getStatusText(slot);
         double remaining_volume = db.getVolumeRemaining(slot);
 
@@ -261,36 +259,37 @@ void page_select_product::displayProducts()
             selectProductPhotoLabelsText[i]->setStyleSheet("background-color: transparent;");
         }
 
-
-        if (!(p_page_idle->currentProductOrder->isProductVolumeInContainer(slot))){
-            selectProductPhotoLabelsText[i]->setText("Almost Empty");
-        }
-        // else if (remaining_volume < 2000.0)
-        // {
+        // if (!(p_page_idle->currentProductOrder->isProductVolumeInContainer(slot))){
         //     selectProductPhotoLabelsText[i]->setText("Almost Empty");
-        //     // selectProductPhotoLabelsText[i]->setText("Stock Limited");
         // }
-        else if (product_status_text.contains("AVAILABLE_LOW_STOCK")){
-            selectProductPhotoLabelsText[i]->setText("Almost Empty");
+        // else
 
-        }
-        else if (product_status_text.contains("AVAILABLE"))
+        if (product_status_text.compare("DISPENSER_STATE_AVAILABLE") == 0)
         {
             selectProductPhotoLabelsText[i]->setText("");
         }
-        else if (product_status_text.contains("PROBLEM_EMPTY"))
+        else if (product_status_text.compare("DISPENSER_STATE_AVAILABLE_LOW_STOCK") == 0)
+        {
+            selectProductPhotoLabelsText[i]->setText("Almost Empty");
+        }
+        else if (product_status_text.compare("DISPENSER_STATE_PROBLEM_EMPTY") == 0)
         {
             selectProductPhotoLabelsText[i]->setText("Sold Out");
         }
-        else if (product_status_text.contains("DISABLED_COMING_SOON"))
+        else if (product_status_text.compare("DISPENSER_STATE_DISABLED_COMING_SOON") == 0)
         {
             selectProductPhotoLabelsText[i]->setText("Coming Soon");
+        }
+        else if (product_status_text.compare("DISPENSER_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
+
+        {
+            selectProductPhotoLabelsText[i]->setText("Assistance Needed");
         }
         else
         {
             selectProductPhotoLabelsText[i]->setText("Assistance Needed");
         }
-
+        
         selectProductTypeLabels[i]->setText(type_text);
         selectProductTypeLabels[i]->setStyleSheet("QLabel{font-family: 'Brevia';font-style: normal;font-weight: 700;font-size: 30px;line-height: 41px;qproperty-alignment: AlignCenter;text-transform: uppercase;color: #5E8580;}");
     }

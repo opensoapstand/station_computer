@@ -60,6 +60,7 @@ public:
     QString getProductID(int slot);
     int getSlotEnabled(int slot);
     QString getStatusText(int slot);
+    // bool setStatusText(int slot, QString text);
     bool updateSlotAvailability(int slot, int isEnabled, QString status_text);
 
     uint32_t getNumberOfRows(QString table);

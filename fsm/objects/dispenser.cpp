@@ -39,6 +39,7 @@ const char *DISPENSE_BEHAVIOUR_STRINGS[] = {
 const char *DISPENSER_STATE_STRINGS[] = {
     "DISPENSER_STATE_AVAILABLE",
     "DISPENSER_STATE_AVAILABLE_LOW_STOCK",
+    "DISPENSER_STATE_WARNING_PRIMING",
     "DISPENSER_STATE_PROBLEM_NEEDS_ATTENTION",
     "DISPENSER_STATE_PROBLEM_EMPTY",
     "DISPENSER_STATE_DISABLED_COMING_SOON",
@@ -61,6 +62,8 @@ dispenser::dispenser()
     // {
     //     the_pcb = new pcb();
     // }
+    dispense_state = FLOW_STATE_UNAVAILABLE;
+    previous_dispense_state = FLOW_STATE_UNAVAILABLE;
 }
 
 DF_ERROR dispenser::setup(pcb *pcbtest)
@@ -107,27 +110,7 @@ void dispenser::refresh()
     dispenseButtonTimingUpdate();
     pumpSlowStartHandler();
 }
-/*
-dispenser::dispenser(gpio *ButtonReference)
-{
 
-    // NOT USED. To be reimplemented maybe.
-
-    //default constructor to set all pin to nullptr
-    //debugOutput::sendMessage("dispenser", MSG_INFO);
-    m_pButton[0] = ButtonReference;
-    //m_pButtonPress[0] = ButtonReference
-    m_pDispensedProduct = nullptr;
-
-    for (int i = 0; i < NUM_SOLENOID; i++)
-        m_pSolenoid[i] = nullptr;
-
-    m_pFlowsenor[NUM_FLOWSENSOR] = nullptr;
-
-    for (int i = 0; i < NUM_PUMP; i++)
-        m_pPump[i] = nullptr;
-}
-*/
 // DTOR
 dispenser::~dispenser()
 {
@@ -138,53 +121,7 @@ dispenser::~dispenser()
 
     using namespace std::chrono;
     previous_status_update_allowed_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-
-    // delete [] m_pDispensedProduct;
-    // delete [] m_pSolenoid;
-    // delete [] m_pFlowsenor;
-    // delete [] m_pPump;
 }
-
-// TODO: Check and remove; stateinit should handle productDispensers
-// void dispenser::initDispenser(int slot)
-// {
-// }
-
-// TODO: Call this function on Dispense onEntry()
-// DF_ERROR dispenser::setSolenoid(int mcpAddress, int pin, int pos)
-// {
-//     debugOutput::sendMessage("-----dispenser::setSolenoid-----", MSG_INFO);
-
-//     return OK;
-// }
-
-// // TODO: Function name is inaccurate...deduct sale would be better
-// void dispenser::recordSale(int volume)
-// {
-//     // TODO: SQLite database Update.
-// }
-
-// TODO: This function could live somewhere else...linked to future maintenance.
-// void dispenser::restockProduct(int volume)
-// {
-//     // TODO: SQLite database Update.
-// }
-
-// bool dispenser::registerFlowSensorTick()
-// {
-//     //    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
-//     m_nVolumeDispensed += m_pDispensedProduct->getVolumePerTick();
-// }
-
-// double dispenser::getVolumeSinceLastPoll()
-// {
-//     int temp = m_nVolumeDispensedSinceLastPoll;
-
-//     m_nVolumeDispensed += m_nVolumeDispensedSinceLastPoll;
-
-//     return temp;
-// }
-/* ------Getters, Setters and Utilities------ */
 
 string dispenser::getFinalPLU(char size, double price)
 {
@@ -305,43 +242,6 @@ void dispenser::setMultiDispenseButtonLight(int slot, bool enableElseDisable)
     {
         this->the_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
     }
-
-    // switch (slot)
-    // {
-
-    // case 1:
-    // {
-    //     // has a mosfet in between
-    //     the_pcb->setPCA9534Output(6, !enableElseDisable);
-    //     break;
-    // }
-    // case 2:
-    // {
-    //     the_pcb->setPCA9534Output(3, !enableElseDisable);
-    //     break;
-    // }
-    // case 3:
-    // {
-    //     the_pcb->setPCA9534Output(4, !enableElseDisable);
-    //     break;
-    // }
-    // case 4:
-    // {
-    //     // work on the gpio of the linux board directly.
-    //     // has a level shifter 3.3v to 5v
-
-    //     if (getSlot() == 4)
-    //     {
-    //        m_pDispenseButton4[0]->writePin(!enableElseDisable);
-    //     }
-    //     break;
-    // }
-    // default:
-    // {
-    //     debugOutput::sendMessage("Slot not found for setting dispense button light.", MSG_ERROR);
-    //     break;
-    // }
-    // }
 }
 
 DF_ERROR dispenser::setSlot(int slot)
@@ -389,12 +289,7 @@ DF_ERROR dispenser::loadGeneralProperties()
     usleep(20000);
     loadMultiDispenseButtonEnabledFromDb();
     usleep(20000);
-
-    // if (getMultiDispenseButtonEnabled())
-    // {
-    //    setAllDispenseButtonLightsOff();
-    the_pcb->setSingleDispenseButtonLight(this->slot, false);
-    // }
+    //  the_pcb->setSingleDispenseButtonLight(this->slot, false);
 
     resetVolumeDispensed();
 }
@@ -408,6 +303,7 @@ DF_ERROR dispenser::startDispense()
     this->the_pcb->flowSensorEnable(slot);
     this->the_pcb->resetFlowSensorTotalPulses(slot);
 
+    dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
     previous_dispense_state = FLOW_STATE_UNAVAILABLE;
 
     DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
@@ -420,7 +316,6 @@ DF_ERROR dispenser::startDispense()
 
 // Reset values onEntry()
 DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
-// DF_ERROR dispenser::initDispense(int nVolumeToDispense)
 {
 
     DF_ERROR dfRet = ERROR_BAD_PARAMS;
@@ -489,15 +384,6 @@ string dispenser::getDispenseEndTime()
     return m_nEndTime;
 }
 
-// void dispenser::setVolumeDispensedPreviously(double volume)
-// {
-//     m_nVolumeDispensedPreviously = volume;
-// }
-// double dispenser::getVolumeDispensedPreviously()
-// {
-//     return m_nVolumeDispensedPreviously;
-// }
-
 bool dispenser::getIsDispenseTargetReached()
 {
     bool bRet = false;
@@ -511,7 +397,6 @@ bool dispenser::getIsDispenseTargetReached()
 
 void dispenser::resetVolumeDispensed()
 {
-    // m_nVolumeDispensed = 0;
     getProduct()->resetVolumeDispensed();
 }
 
@@ -601,29 +486,11 @@ DF_ERROR dispenser::setPumpDirectionForward()
     the_pcb->setPumpDirection(this->slot, true);
 }
 
-//  dispenseButtonValue = productDispensers[m_active_pump_index].getDispenseButtonValue();
-
-//    if (!dispenseButtonValue && dispenseButtonValueMemory)
-//    {
-//       debugOutput::sendMessage("Dispense Button negative Edge.", MSG_INFO);
-//    }
-
-//    if (dispenseButtonValue && !dispenseButtonValueMemory)
-//    {
-//       debugOutput::sendMessage("Start Dispensing", MSG_INFO);
-
-//       // productDispensers[m_active_pump_index].setPumpPWM(125);
-
 bool dispenser::getIsStatusUpdateAllowed()
 {
     // prevent flooding with messages by limiting amount of traffic let through
     return isStatusUpdateSendAndPrintAllowed;
 }
-
-// void dispenser::sendToUiIfAllowed(string message){
-//     // only use this for updates that would happen at every stateDispense refresh cycle.
-//      m_pMessaging->sendMessageOverIP(message);
-// }
 
 void dispenser::logUpdateIfAllowed(string message)
 {
@@ -804,9 +671,6 @@ DF_ERROR dispenser::pumpSlowStartHandler()
             uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
             uint64_t delta = now - slowStartMostRecentIncreaseEpoch;
-            // debugOutput::sendMessage("delta: " + to_string(now), MSG_INFO);
-            // debugOutput::sendMessage("delta: " + to_string(slowStartMostRecentIncreaseEpoch), MSG_INFO);
-            // debugOutput::sendMessage("delta: " + to_string(delta), MSG_INFO);
 
             while (delta > SLOW_START_INCREASE_PERIOD_MILLIS)
             {
@@ -835,7 +699,6 @@ DF_ERROR dispenser::pumpSlowStart(bool forwardElseReverse)
     }
 
     // // set set speed to zero, as there is no real speed feedback, we can't guarantee a claimed initial set speed to be true
-    // pumpSlowStopBlocking();
 
     using namespace std::chrono;
     slowStartMostRecentIncreaseEpoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
@@ -882,7 +745,6 @@ DF_ERROR dispenser::pumpSlowStopBlocking()
             debugOutput::sendMessage("Pump slow stop. from " + to_string(pwm_actual_set_speed) + " to " + to_string(0), MSG_INFO);
             the_pcb->virtualButtonPressHack(this->slot);
 
-            // uint8_t start_pwm = (uint8_t)(m_pDispensedProduct->getPWM());
             for (int i = pwm_actual_set_speed; i >= 0; --i)
             {
                 setPumpPWM(i, false);
@@ -915,15 +777,6 @@ DF_ERROR dispenser::setPumpPWM(uint8_t value, bool enableLog)
     }
     the_pcb->setPumpPWM((unsigned char)value);
 }
-
-// DF_ERROR dispenser::preparePumpForDispenseTrigger()
-// {
-//     DF_ERROR e_ret;
-//     setPumpDirectionForward();
-//     setPumpPWM((uint8_t)(m_pDispensedProduct->getPWM()), true);
-//     setPumpEnable();
-//     return e_ret = OK;
-// }
 
 unsigned short dispenser::getPumpSpeed()
 {
@@ -1030,42 +883,38 @@ void dispenser::loadDispenserStateFromDb()
     status = sqlite3_step(stmt);
     string dispenserStateText = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
 
-
-
-    // "DISPENSER_STATE_AVAILABLE",
-    // "DISPENSER_STATE_AVAILABLE_LOW_STOCK",
-    // "DISPENSER_STATE_PROBLEM_NEEDS_ATTENTION",
-    // "DISPENSER_STATE_PROBLEM_EMPTY",
-    // "DISPENSER_STATE_DISABLED_COMING_SOON",
-    // "DISPENSER_STATE_DISABLED"};
-
-
     sqlite3_finalize(stmt);
     sqlite3_close(db);
     if (dispenserStateText.find("DISPENSER_STATE_AVAILABLE") != string::npos)
     {
         setDispenserState(DISPENSER_STATE_AVAILABLE);
-    }else
-    if (dispenserStateText.find("DISPENSER_STATE_AVAILABLE_LOW_STOCK") != string::npos)
+    }
+    else if (dispenserStateText.find("DISPENSER_STATE_AVAILABLE_LOW_STOCK") != string::npos)
     {
         setDispenserState(DISPENSER_STATE_AVAILABLE_LOW_STOCK);
-    }else
-    if (dispenserStateText.find("DISPENSER_STATE_PROBLEM_NEEDS_ATTENTION") != string::npos)
+    }
+    else if (dispenserStateText.find("DISPENSER_STATE_WARNING_PRIMING") != string::npos)
+    {
+        setDispenserState(DISPENSER_STATE_WARNING_PRIMING);
+    }
+    else if (dispenserStateText.find("DISPENSER_STATE_PROBLEM_NEEDS_ATTENTION") != string::npos)
     {
         setDispenserState(DISPENSER_STATE_PROBLEM_NEEDS_ATTENTION);
-    }else
-    if (dispenserStateText.find("DISPENSER_STATE_PROBLEM_EMPTY") != string::npos)
+    }
+    else if (dispenserStateText.find("DISPENSER_STATE_PROBLEM_EMPTY") != string::npos)
     {
         setDispenserState(DISPENSER_STATE_PROBLEM_EMPTY);
-    }else
-    if (dispenserStateText.find("DISPENSER_STATE_DISABLED_COMING_SOON") != string::npos)
+    }
+    else if (dispenserStateText.find("DISPENSER_STATE_DISABLED_COMING_SOON") != string::npos)
     {
         setDispenserState(DISPENSER_STATE_DISABLED_COMING_SOON);
-    }else
-    if (dispenserStateText.find("DISPENSER_STATE_DISABLED") != string::npos)
+    }
+    else if (dispenserStateText.find("DISPENSER_STATE_DISABLED") != string::npos)
     {
         setDispenserState(DISPENSER_STATE_DISABLED);
-    }else{
+    }
+    else
+    {
         setDispenserState(DISPENSER_STATE_AVAILABLE);
     }
     debugOutput::sendMessage("Set dispenser state to : " + std::string(getDispenserStateAsString()), MSG_INFO);
@@ -1296,7 +1145,7 @@ const char *dispenser::getDispenserStateAsString()
 void dispenser::setDispenserState(Dispenser_state state)
 {
     // disabled states are only manually changeable.
-    if (getDispenserState() != DISPENSER_STATE_DISABLED_COMING_SOON || getDispenserState() != DISPENSER_STATE_DISABLED)
+    if (getDispenserState() != DISPENSER_STATE_DISABLED_COMING_SOON && getDispenserState() != DISPENSER_STATE_DISABLED)
     {
         dispenser_state = state;
     }
@@ -1312,7 +1161,7 @@ void dispenser::updateDispenserState()
 {
     switch (dispenser_state)
     {
-    case DISPENSER_STATE_AVAILABLE:
+    case DISPENSER_STATE_WARNING_PRIMING:
     {
         if (getDispenseStatus() == FLOW_STATE_EMPTY)
         {
@@ -1322,6 +1171,33 @@ void dispenser::updateDispenserState()
         {
             dispenser_state = DISPENSER_STATE_PROBLEM_NEEDS_ATTENTION;
         }
+       
+        if (getDispenseStatus() == FLOW_STATE_NOT_PUMPING_NOT_DISPENSING)
+        {
+            dispenser_state = DISPENSER_STATE_AVAILABLE;
+        }
+       
+        if (getDispenseStatus() == FLOW_STATE_DISPENSING)
+        {
+            dispenser_state = DISPENSER_STATE_AVAILABLE;
+        }
+        break;
+    }
+    case DISPENSER_STATE_AVAILABLE:
+    {
+
+        if (getDispenseStatus() == FLOW_STATE_PRIMING_OR_EMPTY){
+            dispenser_state = DISPENSER_STATE_WARNING_PRIMING;
+        }
+        if (getDispenseStatus() == FLOW_STATE_EMPTY)
+        {
+            dispenser_state = DISPENSER_STATE_PROBLEM_EMPTY;
+        }
+        if (getDispenseStatus() == FLOW_STATE_PRIME_FAIL_OR_EMPTY)
+        {
+            dispenser_state = DISPENSER_STATE_PROBLEM_NEEDS_ATTENTION;
+        }
+       
         break;
     }
     case DISPENSER_STATE_AVAILABLE_LOW_STOCK:
@@ -1371,43 +1247,49 @@ void dispenser::updateDispenserState()
 
 Dispense_behaviour dispenser::getDispenseStatus()
 {
-    // updateRunningAverageWindow();
-    logUpdateIfAllowed("Button press time [ms]. Total:" + to_string(dispense_button_total_pressed_millis) + " Current:" + to_string(dispense_button_current_press_millis));
 
+    // logUpdateIfAllowed("Button press time [ms]. Total:" + to_string(dispense_button_total_pressed_millis) + " Current:" + to_string(dispense_button_current_press_millis));
     using namespace std::chrono;
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     uint64_t dispense_time_millis = millis_since_epoch - dispense_start_timestamp_epoch;
     Time_val avg = getAveragedFlowRate(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS);
 
     // restricted status update
-    logUpdateIfAllowed("Dispense flowRate " + to_string(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) + "ms avg [ml/s]: " + to_string(avg.value) + " Dispense state time: " + to_string(dispense_time_millis));
+    // logUpdateIfAllowed("Dispense flowRate " + to_string(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) + "ms avg [ml/s]: " + to_string(avg.value) + " Dispense state time: " + to_string(dispense_time_millis));
 
-    Dispense_behaviour state;
+    return dispense_state;
+}
 
-    if (state == FLOW_STATE_PRIME_FAIL_OR_EMPTY && avg.value < getProduct()->getThresholdFlow())
+void dispenser::updateDispenseStatus()
+{
+    Time_val avg = getAveragedFlowRate(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS);
+
+    // if (dispense_state == FLOW_STATE_PRIME_FAIL_OR_EMPTY && avg.value < getProduct()->getThresholdFlow())
+    // {
+    //     // once failed, stay failed until proven otherwise by having a good flow.
+    //     dispense_state = FLOW_STATE_PRIME_FAIL_OR_EMPTY;
+    // }
+    // else if (dispense_state == FLOW_STATE_EMPTY && avg.value < getProduct()->getThresholdFlow())
+    // {
+    //     // once empty, stay empty until proven otherwise by having a good flow.
+    //     dispense_state = FLOW_STATE_EMPTY;
+    // }
+    // else
+
+    if (!getDispenseButtonValue())
     {
-        // once failed, stay failed until proven otherwise by having a good flow.
-        state = FLOW_STATE_PRIME_FAIL_OR_EMPTY;
-    }
-    else if (state == FLOW_STATE_EMPTY && avg.value < getProduct()->getThresholdFlow())
-    {
-        // once empty, stay empty until proven otherwise by having a good flow.
-        state = FLOW_STATE_EMPTY;
-    }
-    else if (!getDispenseButtonValue())
-    {
-        state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
+        dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
     }
     else if ((getButtonPressedCurrentPressMillis() < EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) && avg.value < getProduct()->getThresholdFlow())
     {
         // flow rate needs to be ramped up until stable.
-        state = FLOW_STATE_RAMP_UP;
+        dispense_state = FLOW_STATE_RAMP_UP;
     }
     else if (avg.value >= getProduct()->getThresholdFlow())
     {
         // button pressed (aka pumping)
         // init time long enough for valid data
-        state = FLOW_STATE_DISPENSING;
+        dispense_state = FLOW_STATE_DISPENSING;
     }
 
     else if (previous_dispense_state == FLOW_STATE_DISPENSING)
@@ -1419,7 +1301,7 @@ Dispense_behaviour dispenser::getDispenseStatus()
         // once it was dispensing, empty dispenser is detected immediatly if no product flows.
         // bugfix: if the button was release and repressed, the average was not correct at restart
         //          --> take into account. at top level (FLOW_STATE_UNAVAILABLE)
-        state = FLOW_STATE_EMPTY;
+        dispense_state = FLOW_STATE_EMPTY;
     }
     else if (getButtonPressedTotalMillis() > EMPTY_CONTAINER_DETECTION_MAXIMUM_PRIME_TIME_MILLIS)
     {
@@ -1429,7 +1311,7 @@ Dispense_behaviour dispenser::getDispenseStatus()
         // previous state was not dispensing
 
         // pump
-        state = FLOW_STATE_PRIME_FAIL_OR_EMPTY;
+        dispense_state = FLOW_STATE_PRIME_FAIL_OR_EMPTY;
     }
     else
     {
@@ -1439,9 +1321,8 @@ Dispense_behaviour dispenser::getDispenseStatus()
         // previous state was not dispensing
         // pumping time has exceeded set value
 
-        state = FLOW_STATE_PRIMING_OR_EMPTY;
+        dispense_state = FLOW_STATE_PRIMING_OR_EMPTY;
     }
 
-    previous_dispense_state = state;
-    return state;
+    previous_dispense_state = dispense_state;
 }

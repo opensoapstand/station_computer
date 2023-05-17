@@ -328,6 +328,7 @@ void page_idle::addPictureToLabel(QLabel *label, QString picturePath)
     // // set a scaled pixmap to a w x h window keeping its aspect ratio
     label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio));
 }
+
 QString page_idle::getTemplateFolder()
 {
     return m_templatePath;
@@ -394,6 +395,10 @@ void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QStrin
 
     QString image_path = imageName;
     image_path = getTemplatePathFromName(imageName);
+    setBackgroundPictureToQWidget(p_widget, image_path);
+}
+
+void page_idle::setBackgroundPictureToQWidget(QWidget *p_widget, QString image_path){
     QPixmap background(image_path);
 
     // background = background.scaled(p_widget->size(), Qt::IgnoreAspectRatio);
@@ -403,3 +408,5 @@ void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QStrin
     p_widget->repaint();
     p_widget->update();
 }
+
+

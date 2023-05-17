@@ -24,6 +24,7 @@
 #include "page_qr_payment.h"
 #include "page_select_product.h"
 #include "page_productOverview.h"
+#include "product.h"
 
 #include "page_idle.h"
 #include <curl/curl.h>
@@ -339,9 +340,9 @@ void pageProduct::showEvent(QShowEvent *event)
     // p_page_idle->selectedProduct->setBiggestEnabledSizeIndex();
 
     // qDebug() << "loaded successfully2";
-    // loadProdSpecs();
-    // qDebug() << "loaded successfully3";
-    // reset_and_show_page_elements();
+    loadProdSpecs();
+    qDebug() << "loaded successfully3";
+    reset_and_show_page_elements();
     // qDebug() << "loaded successfully4";
 }
 
@@ -369,7 +370,7 @@ void pageProduct::reset_and_show_page_elements()
 
     ui->label_product_photo->setStyleSheet("QLabel{border: 1px solid #5E8680;}");
     p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->selectedProduct->getProductPicturePath());
-
+    qDebug() << "In reset and show page";
     ui->label_product_title->setText(p_page_idle->selectedProduct->getProductName());
     ui->label_product_ingredients->setText(p_page_idle->selectedProduct->getProductIngredients());
     ui->label_product_description->setText(p_page_idle->selectedProduct->getProductDescription());
@@ -526,7 +527,6 @@ void pageProduct::loadProdSpecs()
         orderSizeLabelsVolume[i]->hide();
         orderSizeBackgroundLabels[i]->hide();
         orderSizeButtons[i]->hide();
-
         if (p_page_idle->selectedProduct->getSizeEnabled(product_sizes[i]))
         {
             sizes_available_count++;
@@ -620,9 +620,9 @@ void pageProduct::loadProdSpecs()
         }
     }
 
-    double selectedPrice = p_page_idle->selectedProduct->getPrice();
-    double discount = p_page_idle->selectedProduct->getDiscount();
-    double selectedPriceCorrected = p_page_idle->selectedProduct->getPriceCorrected();
+    // double selectedPrice = p_page_idle->selectedProduct->getPrice();
+    // double discount = p_page_idle->selectedProduct->getDiscount();
+    // double selectedPriceCorrected = p_page_idle->selectedProduct->getPriceCorrected();
 
     // it was confusing for the people to chose a quantity if there was only one quantity available. So, add a continue button if they can't chose anyways.
     if (sizes_available_count == 1)

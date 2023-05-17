@@ -485,7 +485,7 @@ void DrinkOrder::getProductPropertiesFromProductsFile(QString product_id, QStrin
     }
 
     QTextStream in(&file);
-    qDebug() << "Load csv file with product properties";
+    // qDebug() << "Load csv file with product properties";
 
     while (!in.atEnd())
     {

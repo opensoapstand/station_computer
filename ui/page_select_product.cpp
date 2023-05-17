@@ -277,7 +277,8 @@ void page_select_product::select_product(int slot)
     if (product_slot_enabled)
     {
         qDebug() << "selected slot: " << slot;
-        p_page_idle->currentProductOrder->setSelectedSlot(slot);
+        // p_page_idle->currentProductOrder->setSelectedSlot(slot);
+        p_page_idle->selectedProduct->setSlot(slot);
         hideCurrentPageAndShowProvided(p_page_product);
     }
 }

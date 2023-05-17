@@ -35,14 +35,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 {
     // IPC Networking
     dfUtility = new df_util();
-    // product products[SLOT_COUNT]; // create an array of Product objects with size SLOT_COUNT
-// for products.cpp
-    // for (int slot_index = 0; slot_index <= SLOT_COUNT; slot_index++)
-    // {
-    //     products[slot_index].setSlot(slot_index);
-    //     products[slot_index].loadFromDb(slot_index);
-    // }
-
+   
     // for products.cpp
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
@@ -54,8 +47,6 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     // qDebug()<<"afeijaseifjseidf";
     // QString paymentMethod = products[0].getPaymentMethod();
     // qDebug()<<"afeijaseifjseidf" << paymentMethod;
-
-
    
     setSelectedProduct(0);
 
@@ -69,6 +60,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 
     //TODO: Hold and pass Product Object
     currentProductOrder = new DrinkOrder();
+    selectedProduct = new product();
     currentProductOrder->setSelectedSlot(OPTION_SLOT_INVALID);
     // product *selectedProduct;
 
@@ -123,14 +115,7 @@ void page_idle::showEvent(QShowEvent *event)
         hideCurrentPageAndShowProvided(this->p_page_idle_products);
     }
 
-    // DbManager db(DB_PATH);
-
-    // else if (idlePageType == "dynamic_products")
-    // {
-    //     hideCurrentPageAndShowProvided(p_page_idle_products);
-    // }
-
-    // db.closeDB();
+    
 
     this->lower();
     qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";

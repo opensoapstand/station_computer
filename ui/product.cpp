@@ -106,6 +106,7 @@ bool product::getSlotEnabled()
 bool product::getSizeEnabled(int size)
 {
     // caution!:  provide size index (0=small, ...)
+    qDebug() << size;
     return m_sizeIndexIsEnabled[size];
 }
 
@@ -447,24 +448,23 @@ void product::loadProductPropertiesFromProductsFile()
 
     QTextStream in(&file);
     qDebug() << "Load csv file with product properties";
-
     while (!in.atEnd())
     {
         QString line = in.readLine();
-        qDebug() << line;
 
         QStringList fields = line.split("\t");
-
         int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], m_product_id, Qt::CaseSensitive);
         if (compareResult == 0)
         {
+            qDebug() << "compare result is 0";
             m_name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
             m_product_type = fields[CSV_PRODUCT_COL_TYPE];
             m_description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
             m_features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
             m_ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
-            break;
+            break;            
         }
+        
     }
     qDebug() << "properties file read before close ";
     file.close();
@@ -519,6 +519,7 @@ QString product::getProductFeatures()
 }
 QString product::getProductName()
 {
+    qDebug() << m_name_ui;
     return m_name_ui;
 }
 QString product::getProductDescription()

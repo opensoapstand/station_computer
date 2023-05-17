@@ -92,6 +92,8 @@ private:
     page_help *p_page_help;
     pageProductOverview *p_page_overview;
 
+
+
     QTimer *selectIdleTimer;
     int _selectIdleTimeoutSec;
 

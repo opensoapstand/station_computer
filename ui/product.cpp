@@ -121,13 +121,13 @@ void product::setSlot(int slot)
     if (slot >= OPTION_SLOT_INVALID && slot <= SLOT_COUNT)
     {
 
-        if (slot != getSlot())
-        {
-            // overruledPrice = INVALID_PRICE;
-            // m_discount_percentage_fraction = 0.0;
+        // if (slot != getSlot())
+        // {
+        //     // overruledPrice = INVALID_PRICE;
+        //     // m_discount_percentage_fraction = 0.0;
             m_selectedSlot = slot;
-            emit orderSlotChange(slot);
-        }
+            // emit orderSlotChange(slot);
+        // }
     }
     else
     {

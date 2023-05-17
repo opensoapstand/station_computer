@@ -157,19 +157,19 @@ void page_idle_products::displayProducts()
 
         // display product picture
         selectProductPhotoLabels[i]->setStyleSheet("border: none;");
-        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->selectedProduct->getProductPicturePath());
+        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->products[i].getProductPicturePath());
 
         qDebug() << "db (re)load product details:";
-        DbManager db(DB_PATH);
         
-        product_slot_enabled = db.getSlotEnabled(slot);
+        product_slot_enabled = p_page_idle->products[i].getSlotEnabled();
 
+        DbManager db(DB_PATH);
         product_sold_out = !(db.isProductVolumeInContainer(slot));
         product_status_text = db.getStatusText(slot);
         db.closeDB();
 
-        product_type = p_page_idle->selectedProduct->getProductType();
-        product_name = p_page_idle->selectedProduct->getProductName();
+        product_type = p_page_idle->products[i].getProductType();
+        product_name = p_page_idle->products[i].getProductName();
         
         qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << ", product set as not available?: " << product_sold_out << " Status text: " << product_status_text;
 
@@ -246,7 +246,6 @@ void page_idle_products::displayProducts()
 void page_idle_products::select_product(int slot)
 {
         qDebug() << "selected slot: " << slot;
-        p_page_idle->selectedProduct->setSlot(slot);
         hideCurrentPageAndShowProvided(p_page_product);
 }
 
@@ -315,7 +314,6 @@ void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     productPageEndTimer->stop();
     qDebug() << "Exit select product page.";
-    p_page_idle->selectedProduct->setDiscountPercentageFraction(0.0);
     this->raise();
     p_page_idle->pageTransition(this, pageToShow);
 }

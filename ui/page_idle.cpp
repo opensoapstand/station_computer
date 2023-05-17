@@ -43,13 +43,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
         products[slot_index].load();
     }
 
-
-    // qDebug()<<"afeijaseifjseidf";
-    // QString paymentMethod = products[0].getPaymentMethod();
-    // qDebug()<<"afeijaseifjseidf" << paymentMethod;
-   
     setSelectedProduct(0);
-
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
 

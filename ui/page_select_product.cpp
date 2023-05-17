@@ -141,7 +141,7 @@ void page_select_product::showEvent(QShowEvent *event)
     this->lower();
     QWidget::showEvent(event);
     maintenanceCounter = 0;
-
+    
     displayProducts();
 
     if (productPageEndTimer == nullptr)
@@ -177,20 +177,18 @@ void page_select_product::displayProducts()
 
         // display product picture
         selectProductPhotoLabels[i]->setStyleSheet("border: 1px solid black;");
-        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(slot));
+        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->products[i].getProductPicturePath());
+        product_type = p_page_idle->products[i].getProductType();
+        product_name = p_page_idle->products[i].getProductName();
 
         qDebug() << "db (re)load product details:";
+        product_slot_enabled = p_page_idle->products[i].getSlotEnabled();
+
         DbManager db(DB_PATH);
-
-        product_slot_enabled = db.getSlotEnabled(slot);
-
         product_sold_out = !(db.isProductVolumeInContainer(slot));
         product_status_text = db.getStatusText(slot);
         db.closeDB();
-
-        product_type = p_page_idle->currentProductOrder->getProductType(slot);
-        product_name = p_page_idle->currentProductOrder->getProductName(slot);
-
+        
         qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << ", product set as not available?: " << product_sold_out << " Status text: " << product_status_text;
 
         selectProductNameLabels[i]->setText(product_name);
@@ -278,8 +276,11 @@ void page_select_product::select_product(int slot)
     {
         qDebug() << "selected slot: " << slot;
         // p_page_idle->currentProductOrder->setSelectedSlot(slot);
-        p_page_idle->selectedProduct->setSlot(slot);
+        p_page_idle->setSelectedProduct(slot);
         hideCurrentPageAndShowProvided(p_page_product);
+    }else{
+        qDebug() << "Slot not enabled : " << slot;
+
     }
 }
 

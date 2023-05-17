@@ -38,7 +38,6 @@ public:
     double getVolumeDispensedMl();
     void setVolumeDispensedMl(double volumeMl);
     void resetVolumeDispensed();
-    void loadProductPropertiesFromProductsFile();
 
 
     void getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter);
@@ -56,7 +55,9 @@ public:
     QString getProductDrinkfillSerial();
 
     void load();
-    void getProductPropertiesFromProductsFile(QString product_id, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);
+    // void loadProductPropertiesFromProductsFile();
+    // void getProductPropertiesFromProductsFile(QString product_id, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);
+    void loadProductPropertiesFromProductsFile();
 
     void loadProductProperties();
     void loadProductPropertiesFromDb();

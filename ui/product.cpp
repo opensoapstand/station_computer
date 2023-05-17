@@ -422,8 +422,9 @@ QString product::getProductDrinkfillSerial()
 void product::loadProductProperties()
 {
     loadProductPropertiesFromDb();
-    qDebug() << "done loading preoosersoieruoisuer";
+    qDebug() << "done loading from db";
     loadProductPropertiesFromProductsFile();
+    qDebug() << "done loading from csv";
 }
 
 void product::loadProductPropertiesFromDb()
@@ -435,13 +436,7 @@ void product::loadProductPropertiesFromDb()
     db.closeDB();
 }
 
-
 void product::loadProductPropertiesFromProductsFile()
-{
-    getProductPropertiesFromProductsFile(m_product_id, &m_name_ui, &m_product_type, &m_description_ui, &m_features_ui, &m_ingredients_ui);
-}
-
-void product::getProductPropertiesFromProductsFile(QString product_id, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui)
 {
     QFile file(PRODUCT_DETAILS_TSV_PATH);
     if (!file.open(QIODevice::ReadOnly))
@@ -456,22 +451,62 @@ void product::getProductPropertiesFromProductsFile(QString product_id, QString *
     while (!in.atEnd())
     {
         QString line = in.readLine();
+        qDebug() << line;
 
         QStringList fields = line.split("\t");
 
-        int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], product_id, Qt::CaseSensitive);
+        int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], m_product_id, Qt::CaseSensitive);
         if (compareResult == 0)
         {
-            *name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
-            *product_type = fields[CSV_PRODUCT_COL_TYPE];
-            *description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
-            *features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
-            *ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
+            m_name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
+            m_product_type = fields[CSV_PRODUCT_COL_TYPE];
+            m_description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
+            m_features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
+            m_ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
             break;
         }
     }
+    qDebug() << "properties file read before close ";
     file.close();
+    qDebug() << "properties file read done ";
 }
+
+// void product::loadProductPropertiesFromProductsFile()
+// {
+//     getProductPropertiesFromProductsFile(m_product_id, &m_name_ui, &m_product_type, &m_description_ui, &m_features_ui, &m_ingredients_ui);
+// }
+
+// void product::getProductPropertiesFromProductsFile(QString product_id, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui)
+// {
+//     QFile file(PRODUCT_DETAILS_TSV_PATH);
+//     if (!file.open(QIODevice::ReadOnly))
+//     {
+//         qDebug() << "ERROR: Opening product details file. Expect unexpected behaviour now! ";
+//         return;
+//     }
+
+//     QTextStream in(&file);
+//     qDebug() << "Load csv file with product properties";
+
+//     while (!in.atEnd())
+//     {
+//         QString line = in.readLine();
+
+//         QStringList fields = line.split("\t");
+
+//         int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], product_id, Qt::CaseSensitive);
+//         if (compareResult == 0)
+//         {
+//             *name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
+//             *product_type = fields[CSV_PRODUCT_COL_TYPE];
+//             *description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
+//             *features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
+//             *ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
+//             break;
+//         }
+//     }
+//     file.close();
+// }
 
 QString product::getProductIngredients()
 {

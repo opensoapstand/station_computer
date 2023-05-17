@@ -185,7 +185,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
     font.setBold(true);
     font.setWeight(200);
 */
-    ui->back_Button->setText("<- Products");
+    ui->pushButton_back->setText("<- Products");
 
     
     
@@ -198,8 +198,8 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
      
     // ui->->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    ui->continue_Button->setText("Continue");
-    ui->continue_Button->hide();
+    ui->pushButton_continue->setText("Continue");
+    ui->pushButton_continue->hide();
 
     {
         selectIdleTimer = new QTimer(this);
@@ -263,8 +263,8 @@ void pageProduct::showEvent(QShowEvent *event)
     ui->label_product_title->setProperty("class", "css_title");
     ui->label_product_title->setStyleSheet(styleSheet);
 
-    //ui->back_Button->setProperty("class", "back_Button");
-    ui->back_Button->setStyleSheet(styleSheet); //pushbutton
+    //ui->pushButton_back->setProperty("class", "pushButton_back");
+    ui->pushButton_back->setStyleSheet(styleSheet); //pushbutton
     ui->label_product_description->setStyleSheet(styleSheet);    
     ui->label_product_photo->setStyleSheet(styleSheet);
 
@@ -277,7 +277,7 @@ void pageProduct::showEvent(QShowEvent *event)
    
     ui->label_notify_us->setStyleSheet(styleSheet);
 
-    ui->continue_Button->setStyleSheet(styleSheet);
+    ui->pushButton_continue->setStyleSheet(styleSheet);
 
     //orderSizeBackgroundLabels[i]->setStyleSheet(stylesheet);
 
@@ -590,11 +590,11 @@ void pageProduct::loadProdSpecs()
     // it was confusing for the people to chose a quantity if there was only one quantity available. So, add a continue button if they can't chose anyways.
     if (sizes_available_count == 1)
     {
-        ui->continue_Button->show();
+        ui->pushButton_continue->show();
     }
     else
     {
-        ui->continue_Button->hide();
+        ui->pushButton_continue->hide();
     }
 
     qDebug() << "-------------------------- END LOAD PRODUCTS ----------------";
@@ -632,14 +632,14 @@ void pageProduct::on_orderCustom_Button_clicked()
 {
     qDebug() << "button custom clicked ";
     this->loadProductBySize(SIZE_CUSTOM_INDEX);
-    on_continue_Button_clicked();
+    on_pushButton_continue_clicked();
 }
 
 void pageProduct::on_orderMedium_Button_clicked()
 {
     qDebug() << "button medium";
     this->loadProductBySize(SIZE_MEDIUM_INDEX);
-    on_continue_Button_clicked();
+    on_pushButton_continue_clicked();
 }
 
 // on_Small_Order button listener
@@ -647,7 +647,7 @@ void pageProduct::on_orderSmall_Button_clicked()
 {
     qDebug() << "button small";
     this->loadProductBySize(SIZE_SMALL_INDEX);
-    on_continue_Button_clicked();
+    on_pushButton_continue_clicked();
 }
 
 // on_Large_Order button listener
@@ -655,7 +655,7 @@ void pageProduct::on_orderBig_Button_clicked()
 {
     qDebug() << "button big";
     this->loadProductBySize(SIZE_LARGE_INDEX);
-    on_continue_Button_clicked();
+    on_pushButton_continue_clicked();
 }
 
 size_t WriteCallback_coupon(char *contents, size_t size, size_t nmemb, void *userp)
@@ -669,12 +669,12 @@ void pageProduct::on_pushButton_previous_page_clicked()
     hideCurrentPageAndShowProvided(p_page_select_product);
 }
 
-void pageProduct::on_continue_Button_clicked()
+void pageProduct::on_pushButton_continue_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
-void pageProduct::on_back_Button_clicked()
+void pageProduct::on_pushButton_back_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_select_product);
 }

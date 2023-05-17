@@ -42,7 +42,7 @@ line-height: 29px;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="continue_Button">
+  <widget class="QPushButton" name="pushButton_continue">
    <property name="geometry">
     <rect>
      <x>188</x>
@@ -503,7 +503,7 @@ text-align: center;</string>
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="back_Button">
+  <widget class="QPushButton" name="pushButton_back">
    <property name="geometry">
     <rect>
      <x>40</x>
@@ -532,7 +532,7 @@ text-align: center;</string>
     <string/>
    </property>
   </widget>
-  <zorder>continue_Button</zorder>
+  <zorder>pushButton_continue</zorder>
   <zorder>pushButton_previous_page</zorder>
   <zorder>orderSmall_Button</zorder>
   <zorder>orderBig_Button</zorder>
@@ -556,7 +556,7 @@ text-align: center;</string>
   <zorder>label_background_custom</zorder>
   <zorder>label_product_ingredients</zorder>
   <zorder>label_select_quantity</zorder>
-  <zorder>back_Button</zorder>
+  <zorder>pushButton_back</zorder>
   <zorder>label_notify_us</zorder>
   <zorder>pushButton_to_idle</zorder>
  </widget>

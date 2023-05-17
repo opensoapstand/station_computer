@@ -61,8 +61,8 @@ signals:
 private slots:
     // **** Navigation ****
     void on_pushButton_previous_page_clicked();
-    void on_continue_Button_clicked();
-    void on_back_Button_clicked();
+    void on_pushButton_continue_clicked();
+    void on_pushButton_back_clicked();
     // Set Drink Order
     void on_orderSmall_Button_clicked();
     void on_orderBig_Button_clicked();

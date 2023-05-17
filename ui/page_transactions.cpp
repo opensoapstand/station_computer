@@ -17,9 +17,9 @@ page_transactions::page_transactions(QWidget *parent) : QWidget(parent),
         font.setBold(true);
         font.setWeight(75);
 
-        ui->back_Button->setStyleSheet("QPushButton { color:#FFFFFF; background-color: transparent; border: 0px }");
-        ui->back_Button->setFont(font);
-        ui->back_Button->setText("<- Back");
+        ui->pushButton_back->setStyleSheet("QPushButton { color:#FFFFFF; background-color: transparent; border: 0px }");
+        ui->pushButton_back->setFont(font);
+        ui->pushButton_back->setText("<- Back");
 
         // set up print button
 
@@ -145,7 +145,7 @@ void page_transactions::populateList()
         }
 }
 
-void page_transactions::on_back_Button_clicked()
+void page_transactions::on_pushButton_back_clicked()
 {
         hideCurrentPageAndShowProvided(p_page_idle);
 }

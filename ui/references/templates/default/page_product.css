@@ -69,7 +69,7 @@
 }
 
 
-#back_Button {
+#pushButton_back {
    /*QPushButton*/
    font-family: 'Brevia';
    font-style: normal;
@@ -167,7 +167,7 @@ QFont {
    border: none;
 }
 
-#continue_Button {
+#pushButton_continue {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 200;

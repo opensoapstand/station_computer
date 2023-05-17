@@ -70,7 +70,7 @@ void page_help::setPage(page_select_product *pageSelect, pageProduct *pageProduc
     ui->pushButton_resetTimeout->setStyleSheet(styleSheet);
     ui->pushButton_to_maintenance->setStyleSheet(styleSheet);
     ui->pushButton_to_feedback->setStyleSheet(styleSheet);
-    // QString buttonSelector2 = QString("QPushButton#%1").arg(ui->back_Button->objectName());
+    // QString buttonSelector2 = QString("QPushButton#%1").arg(ui->pushButton_back->objectName());
 
     // QString styleSheet = p_page_idle->getCSS(PAGE_HELP_CSS);
     ui->pushButton_to_transactions->setText("Transaction History ->");

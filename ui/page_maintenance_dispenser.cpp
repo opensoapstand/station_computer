@@ -625,7 +625,7 @@ void page_maintenance_dispenser::on_pushButton_set_volume_remaining_clicked()
     ui->numberEntry->show();
     ui->textEntry->setText("");
     ui->titleLabel->setText("Adjust the remaining volume:");
-    ui->buttonPoint->hide();
+    
 
 }
 
@@ -770,6 +770,7 @@ void page_maintenance_dispenser::on_buttonDone_clicked()
 
 void page_maintenance_dispenser::on_buttonCancel_clicked()
 {
+    ui->buttonPoint->show();
     ui->numberEntry->hide();
     ui->textEntry->setText("");
     ui->errorLabel->setText("");

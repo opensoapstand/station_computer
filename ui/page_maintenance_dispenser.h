@@ -77,9 +77,9 @@ private slots:
     void on_fullButton_clicked();
     void onMaintainProductPageTimeoutTick();
     void onDispenseTimerTick();
-    void on_remainingButton_clicked();
+    void on_pushButton_set_volume_remaining_clicked();
     void on_dispensedButton_clicked();
-    void on_lastRefillButton_clicked();
+    // void on_lastRefillButton_clicked();
     void on_temperatureButton_clicked();
     void on_pwmButton_clicked();
     void on_pumpButton_clicked();

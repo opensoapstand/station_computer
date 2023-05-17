@@ -40,6 +40,8 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
     connect(ui->pwmSlider, SIGNAL(valueChanged(int)), this, SLOT(pwmSliderMoved(int)));
     ui->refillButton->setStyleSheet("QPushButton {font-size: 36px;}");
     connect(ui->editProductGroup, SIGNAL(buttonClicked(int)), this, SLOT(editProductButtonPressed()));
+
+    
 }
 
 // DTOR
@@ -186,15 +188,19 @@ void page_maintenance_dispenser::refreshLabels()
     ui->target_volume_l->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_LARGE_INDEX, false, true));
 
     ui->full_volume->setText(selectedProductOrder->getFullVolumeCorrectUnits(true));
-    ui->volume_dispensed_total->setText(selectedProductOrder->getTotalDispensedCorrectUnits());
-    ui->volume_dispensed_since_restock->setText(selectedProductOrder->getVolumeDispensedSinceRestockCorrectUnits());
-    ui->remainingLabel->setText(selectedProductOrder->getVolumeRemainingCorrectUnits());
+    
+    ui->label_volume_dispensed_total->setText("Volume dispensed total: " + selectedProductOrder->getTotalDispensedCorrectUnits());
+    ui->label_volume_dispensed_since_restock->setText("Volume dispensed since restock: " + selectedProductOrder->getVolumeDispensedSinceRestockCorrectUnits());
+    
+    ui->label_volume_remaining->setText("Volume remaining: " + selectedProductOrder->getVolumeRemainingCorrectUnits());
+
     ui->pwmLabel->setText(QString::number(selectedProductOrder->getSelectedDispenseSpeedPercentage()) + "%");
 
     int product_slot___ = selectedProductOrder->getSelectedSlot();
     qDebug() << "db... refresh labels";
     DbManager db(DB_PATH);
-    ui->lastRefillLabel->setText(db.getLastRefillTime(product_slot___));
+    ui->label_restock_timestamp->setText("Most recent restock: " + db.getLastRefillTime(product_slot___));
+
     ui->pluLabel_s->setText(db.getPLU(product_slot___, 's'));
     ui->pluLabel_m->setText(db.getPLU(product_slot___, 'm'));
     ui->pluLabel_l->setText(db.getPLU(product_slot___, 'l'));
@@ -586,7 +592,7 @@ void page_maintenance_dispenser::on_refillButton_clicked()
     }
     break;
     }
-    
+
     DbManager db(DB_PATH);
     QString slotStatus = db.getStatusText(selectedProductOrder->getSelectedSlot());
     db.closeDB();
@@ -707,7 +713,7 @@ void page_maintenance_dispenser::on_fullButton_clicked()
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
-void page_maintenance_dispenser::on_remainingButton_clicked()
+void page_maintenance_dispenser::on_pushButton_set_volume_remaining_clicked()
 {
     //    qDebug() << "Remaining button clicked" ;
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
@@ -719,11 +725,11 @@ void page_maintenance_dispenser::on_dispensedButton_clicked()
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
-void page_maintenance_dispenser::on_lastRefillButton_clicked()
-{
-    //    qDebug() << "Last Refill button clicked" ;
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
-}
+// void page_maintenance_dispenser::on_lastRefillButton_clicked()
+// {
+//     //    qDebug() << "Last Refill button clicked" ;
+//     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+// }
 
 void page_maintenance_dispenser::on_temperatureButton_clicked()
 {

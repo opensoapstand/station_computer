@@ -40,8 +40,6 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
     connect(ui->pwmSlider, SIGNAL(valueChanged(int)), this, SLOT(pwmSliderMoved(int)));
     ui->refillButton->setStyleSheet("QPushButton {font-size: 36px;}");
     connect(ui->editProductGroup, SIGNAL(buttonClicked(int)), this, SLOT(editProductButtonPressed()));
-
-    
 }
 
 // DTOR
@@ -95,6 +93,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     price_medium = false;
     price_large = false;
     price_custom = false;
+    modify_stock = false;
     target_s = false;
     target_m = false;
     target_l = false;
@@ -102,8 +101,8 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     full = false;
     pwm = false;
 
-    if (db.getPaymentMethod(product_slot___) == "plu" || db.getPaymentMethod(product_slot___) == "barcode")
-    {
+    // if (db.getPaymentMethod(product_slot___) == "plu" || db.getPaymentMethod(product_slot___) == "barcode") paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13"
+    // {
         ui->pluButton_s->setVisible(true);
         ui->pluLabel_s->setVisible(true);
         ui->pluButton_s->setEnabled(true);
@@ -116,22 +115,22 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
         ui->pluButton_c->setVisible(true);
         ui->pluLabel_c->setVisible(true);
         ui->pluButton_c->setEnabled(true);
-    }
-    else
-    {
-        ui->pluButton_s->setVisible(false);
-        ui->pluLabel_s->setVisible(false);
-        ui->pluButton_s->setEnabled(false);
-        ui->pluButton_m->setVisible(false);
-        ui->pluLabel_m->setVisible(false);
-        ui->pluButton_m->setEnabled(false);
-        ui->pluButton_l->setVisible(false);
-        ui->pluLabel_l->setVisible(false);
-        ui->pluButton_l->setEnabled(false);
-        ui->pluButton_c->setVisible(false);
-        ui->pluLabel_c->setVisible(false);
-        ui->pluButton_c->setEnabled(false);
-    }
+    // }
+    // else
+    // {
+    //     ui->pluButton_s->setVisible(false);
+    //     ui->pluLabel_s->setVisible(false);
+    //     ui->pluButton_s->setEnabled(false);
+    //     ui->pluButton_m->setVisible(false);
+    //     ui->pluLabel_m->setVisible(false);
+    //     ui->pluButton_m->setEnabled(false);
+    //     ui->pluButton_l->setVisible(false);
+    //     ui->pluLabel_l->setVisible(false);
+    //     ui->pluButton_l->setEnabled(false);
+    //     ui->pluButton_c->setVisible(false);
+    //     ui->pluLabel_c->setVisible(false);
+    //     ui->pluButton_c->setEnabled(false);
+    // }
 
     // ui->pwmSlider->setValue(round(double((db.getPWM(product_slot___)) * 100) / 255));
 
@@ -187,18 +186,18 @@ void page_maintenance_dispenser::refreshLabels()
     ui->target_volume_m->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_MEDIUM_INDEX, false, true));
     ui->target_volume_l->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_LARGE_INDEX, false, true));
 
-    ui->full_volume->setText(                         "Full stock volume                       : "+ selectedProductOrder->getFullVolumeCorrectUnits(true));
-    
-    ui->label_volume_dispensed_total->setText(        "Volume dispensed total                : " + selectedProductOrder->getTotalDispensedCorrectUnits());
+    ui->full_volume->setText("Full stock volume                       : " + selectedProductOrder->getFullVolumeCorrectUnits(true));
+
+    ui->label_volume_dispensed_total->setText("Volume dispensed total                : " + selectedProductOrder->getTotalDispensedCorrectUnits());
     ui->label_volume_dispensed_since_restock->setText("Volume dispensed since restock : " + selectedProductOrder->getVolumeDispensedSinceRestockCorrectUnits());
-    ui->label_volume_remaining->setText(              "Volume remaining                        : " + selectedProductOrder->getVolumeRemainingCorrectUnits());
+    ui->label_volume_remaining->setText("Volume remaining                        : " + selectedProductOrder->getVolumeRemainingCorrectUnits());
 
     ui->pwmLabel->setText(QString::number(selectedProductOrder->getSelectedDispenseSpeedPercentage()) + "%");
 
     int product_slot___ = selectedProductOrder->getSelectedSlot();
     qDebug() << "db... refresh labels";
     DbManager db(DB_PATH);
-    ui->label_restock_timestamp->setText(             "Most recent restock                     : " + db.getLastRefillTime(product_slot___));
+    ui->label_restock_timestamp->setText("Most recent restock                     : " + db.getLastRefillTime(product_slot___));
 
     ui->pluLabel_s->setText(db.getPLU(product_slot___, 's'));
     ui->pluLabel_m->setText(db.getPLU(product_slot___, 'm'));
@@ -212,100 +211,6 @@ void page_maintenance_dispenser::refreshLabels()
 
     ui->temperatureButton->setVisible(false);
     ui->temperatureLabel->setVisible(false);
-}
-
-void page_maintenance_dispenser::on_image_clicked()
-{
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
-}
-
-void page_maintenance_dispenser::on_pumpButton_clicked()
-{
-    int product_slot___ = p_page_idle->currentProductOrder->getSelectedSlot();
-    if (product_slot___ > 0 && product_slot___ <= 9)
-    {
-        if (!pumping)
-        {
-            dispense_test_start();
-        }
-        else
-        {
-            dispense_test_end(true);
-        }
-    }
-
-    // refreshLabels(); // fsm did not yet respond at this time. wait for feedback.
-}
-
-void page_maintenance_dispenser::on_backButton_clicked()
-{
-    hideCurrentPageAndShowProvided(p_page_maintenance);
-}
-
-void page_maintenance_dispenser::on_nameButton_clicked()
-{
-    //    qDebug() << "Name button clicked" ;
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
-}
-
-void page_maintenance_dispenser::on_priceButton_s_clicked()
-{
-    price_small = true;
-    ui->textEntry->setText(QString::number(selectedProductOrder->getPrice(SIZE_SMALL_INDEX)));
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
-}
-
-void page_maintenance_dispenser::on_priceButton_m_clicked()
-{
-    price_medium = true;
-    ui->textEntry->setText(QString::number(selectedProductOrder->getPrice(SIZE_MEDIUM_INDEX)));
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
-}
-
-void page_maintenance_dispenser::on_priceButton_l_clicked()
-{
-    price_large = true;
-    ui->textEntry->setText(QString::number(selectedProductOrder->getPrice(SIZE_LARGE_INDEX)));
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
-}
-
-void page_maintenance_dispenser::on_priceButton_c_clicked()
-{
-    price_custom = true;
-    ui->textEntry->setText(QString::number(selectedProductOrder->getPrice(SIZE_CUSTOM_INDEX)));
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
-}
-
-void page_maintenance_dispenser::on_target_volumeButton_s_clicked()
-{
-    target_s = true;
-    ui->textEntry->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_SMALL_INDEX, false, false));
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
-}
-
-void page_maintenance_dispenser::on_target_volumeButton_m_clicked()
-{
-    target_m = true;
-    ui->textEntry->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_MEDIUM_INDEX, false, false));
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
-}
-
-void page_maintenance_dispenser::on_target_volumeButton_l_clicked()
-{
-    target_l = true;
-    ui->textEntry->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_LARGE_INDEX, false, false));
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
-}
-
-void page_maintenance_dispenser::on_vol_per_tickButton_clicked()
-{
-
-    //    qDebug() << "Volume Per Tick button clicked" ;
-    vol_per_tick = true;
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
-    ui->numberEntry->show();
-    ui->textEntry->setText("");
-    ui->titleLabel->setText("New Volume Per Tick:");
 }
 
 void page_maintenance_dispenser::setSoldOutButtonText()
@@ -715,7 +620,13 @@ void page_maintenance_dispenser::on_pushButton_set_restock_volume_clicked()
 void page_maintenance_dispenser::on_pushButton_set_volume_remaining_clicked()
 {
     //    qDebug() << "Remaining button clicked" ;
+    modify_stock = true;
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+    ui->numberEntry->show();
+    ui->textEntry->setText("");
+    ui->titleLabel->setText("Adjust the remaining volume:");
+    ui->buttonPoint->hide();
+
 }
 
 void page_maintenance_dispenser::on_dispensedButton_clicked()
@@ -869,8 +780,103 @@ void page_maintenance_dispenser::on_buttonCancel_clicked()
     target_m = false;
     target_l = false;
     vol_per_tick = false;
+    modify_stock - false;
     full = false;
     pwm = false;
+}
+
+void page_maintenance_dispenser::on_image_clicked()
+{
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+}
+
+void page_maintenance_dispenser::on_pumpButton_clicked()
+{
+    int product_slot___ = p_page_idle->currentProductOrder->getSelectedSlot();
+    if (product_slot___ > 0 && product_slot___ <= 9)
+    {
+        if (!pumping)
+        {
+            dispense_test_start();
+        }
+        else
+        {
+            dispense_test_end(true);
+        }
+    }
+
+    // refreshLabels(); // fsm did not yet respond at this time. wait for feedback.
+}
+
+void page_maintenance_dispenser::on_backButton_clicked()
+{
+    hideCurrentPageAndShowProvided(p_page_maintenance);
+}
+
+void page_maintenance_dispenser::on_nameButton_clicked()
+{
+    //    qDebug() << "Name button clicked" ;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+}
+
+void page_maintenance_dispenser::on_priceButton_s_clicked()
+{
+    price_small = true;
+    // ui->textEntry->setText(QString::number(selectedProductOrder->getPrice(SIZE_SMALL_INDEX)));
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+}
+
+void page_maintenance_dispenser::on_priceButton_m_clicked()
+{
+    price_medium = true;
+    ui->textEntry->setText(QString::number(selectedProductOrder->getPrice(SIZE_MEDIUM_INDEX)));
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+}
+
+void page_maintenance_dispenser::on_priceButton_l_clicked()
+{
+    price_large = true;
+    ui->textEntry->setText(QString::number(selectedProductOrder->getPrice(SIZE_LARGE_INDEX)));
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+}
+
+void page_maintenance_dispenser::on_priceButton_c_clicked()
+{
+    price_custom = true;
+    ui->textEntry->setText(QString::number(selectedProductOrder->getPrice(SIZE_CUSTOM_INDEX)));
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+}
+
+void page_maintenance_dispenser::on_target_volumeButton_s_clicked()
+{
+    target_s = true;
+    ui->textEntry->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_SMALL_INDEX, false, false));
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+}
+
+void page_maintenance_dispenser::on_target_volumeButton_m_clicked()
+{
+    target_m = true;
+    ui->textEntry->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_MEDIUM_INDEX, false, false));
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+}
+
+void page_maintenance_dispenser::on_target_volumeButton_l_clicked()
+{
+    target_l = true;
+    ui->textEntry->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_LARGE_INDEX, false, false));
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+}
+
+void page_maintenance_dispenser::on_vol_per_tickButton_clicked()
+{
+
+    //    qDebug() << "Volume Per Tick button clicked" ;
+    vol_per_tick = true;
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+    ui->numberEntry->show();
+    ui->textEntry->setText("");
+    ui->titleLabel->setText("New Volume Per Tick:");
 }
 
 void page_maintenance_dispenser::updateValues()
@@ -919,6 +925,14 @@ void page_maintenance_dispenser::updateValues()
         {
             selectedProductOrder->setFullVolumeCorrectUnits(text_entered);
         }
+        else if (modify_stock)
+        {
+            double vol_as_ml = this->p_page_idle->currentProductOrder->inputTextToMlConvertUnits(text_entered);
+            qDebug() << "db... set volume remaining";
+            DbManager db(DB_PATH);
+            db.setVolumeRemaining(this->p_page_idle->currentProductOrder->getSelectedSlot(), vol_as_ml);
+            db.closeDB();
+        }
         else if (pwm)
         {
             selectedProductOrder->setSelectedDispenseSpeedPercentage(text_entered.toInt());
@@ -931,6 +945,7 @@ void page_maintenance_dispenser::updateValues()
     price_medium = false;
     price_large = false;
     price_custom = false;
+    modify_stock = false;
     target_s = false;
     target_m = false;
     target_l = false;

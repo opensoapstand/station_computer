@@ -408,7 +408,27 @@ uint32_t DbManager::getNumberOfRows(QString table)
     return row_count;
 }
 
+bool DbManager::setVolumeRemaining(int slot, double volumeMl)
+{
+    
+    
+    
+    qDebug() << " db... modify remaining product";
+    QSqlQuery refill_query;
+    bool success = false;
+    QString sql_set_vol = "UPDATE products SET volume_remaining=:volume WHERE slot=:slot";
+    refill_query.prepare(sql_set_vol);
+    refill_query.bindValue(":volume", volumeMl);
+    refill_query.bindValue(":slot", slot);
+    if (!refill_query.exec())
+    {
+        qDebug() << "remaining ml update error:"
+                 << refill_query.lastError();
+        success = false;
+    }
 
+    return success;
+}
 
 bool DbManager::restockProduct(int slot)
 {
@@ -648,8 +668,8 @@ int DbManager::getSlotEnabled(int slot)
 
 bool DbManager::updateSlotAvailability(int slot, int isEnabled, QString status_text)
 {
-    //setStatusText
-    //setIsEnabled
+    // setStatusText
+    // setIsEnabled
 
     QSqlQuery qry;
     bool enabled;
@@ -673,7 +693,6 @@ bool DbManager::updateSlotAvailability(int slot, int isEnabled, QString status_t
         return false;
     }
 }
-
 
 QString DbManager::getStatusText(int slot)
 {
@@ -724,16 +743,17 @@ bool DbManager::getRecentTransactions(QString values[][5], int count, int *count
         while (qry.next())
         {
             for (uint8_t j = 0; j < 5; j++)
-            {   
+            {
 
-                if (j == 3){
+                if (j == 3)
+                {
                     // price rounding
                     double price = qry.value(j).toDouble();
                     values[i][j] = QString::number(price, 'f', 2);
-
-                }else{
+                }
+                else
+                {
                     values[i][j] = qry.value(j).toString();
-
                 }
                 qDebug() << "db bdafes: " << i << " : " << values[i][j];
             }
@@ -865,8 +885,6 @@ QString DbManager::getCustomerId()
     }
     return val;
 }
-
-
 
 double DbManager::getVolumeRemaining(int slot)
 {

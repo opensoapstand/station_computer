@@ -143,6 +143,7 @@ private:
     bool full;
     bool pwm;
     bool buffer;
+    bool modify_stock;
     bool isDispenseButtonPressed;
     uint16_t button_press_count;
 

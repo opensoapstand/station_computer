@@ -628,14 +628,14 @@ Volume per Tick</string>
     <string>Pump ON/OFF</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignCenter</set>
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="vol_dispensed_label">
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>1130</y>
+     <y>1120</y>
      <width>190</width>
      <height>17</height>
     </rect>
@@ -649,7 +649,7 @@ Volume per Tick</string>
     <rect>
      <x>240</x>
      <y>1090</y>
-     <width>180</width>
+     <width>191</width>
      <height>17</height>
     </rect>
    </property>
@@ -779,7 +779,7 @@ Volume per Tick</string>
 last restock</string>
    </property>
   </widget>
-  <widget class="QLabel" name="volume_dispensed_since_last_restock">
+  <widget class="QLabel" name="volume_dispensed_since_restock">
    <property name="geometry">
     <rect>
      <x>590</x>
@@ -795,7 +795,7 @@ last restock</string>
   <widget class="QPushButton" name="autoDispenseSmallButton">
    <property name="geometry">
     <rect>
-     <x>50</x>
+     <x>40</x>
      <y>1410</y>
      <width>191</width>
      <height>171</height>
@@ -808,7 +808,7 @@ last restock</string>
   <widget class="QPushButton" name="autoDispenseMedium">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>240</x>
      <y>1410</y>
      <width>191</width>
      <height>171</height>
@@ -821,7 +821,7 @@ last restock</string>
   <widget class="QPushButton" name="autoDispenseLarge">
    <property name="geometry">
     <rect>
-     <x>450</x>
+     <x>440</x>
      <y>1410</y>
      <width>191</width>
      <height>171</height>
@@ -835,8 +835,8 @@ last restock</string>
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>1170</y>
-     <width>221</width>
+     <y>1150</y>
+     <width>191</width>
      <height>17</height>
     </rect>
    </property>
@@ -848,8 +848,8 @@ last restock</string>
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>1250</y>
-     <width>141</width>
+     <y>1210</y>
+     <width>191</width>
      <height>17</height>
     </rect>
    </property>
@@ -861,8 +861,8 @@ last restock</string>
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>1210</y>
-     <width>211</width>
+     <y>1180</y>
+     <width>191</width>
      <height>17</height>
     </rect>
    </property>
@@ -874,8 +874,8 @@ last restock</string>
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>1280</y>
-     <width>141</width>
+     <y>1240</y>
+     <width>191</width>
      <height>17</height>
     </rect>
    </property>
@@ -1109,6 +1109,19 @@ last restock</string>
    </property>
    <property name="text">
     <string>Calibraton value (ml/tick if exactly 1000ml dispensed):</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="dispense_status_label">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>1350</y>
+     <width>351</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Dispense Status</string>
    </property>
   </widget>
  </widget>

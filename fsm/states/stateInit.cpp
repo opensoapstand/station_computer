@@ -133,8 +133,6 @@ DF_ERROR stateInit::dispenserSetup()
 
     productDispensers[0].initButtonsShutdownAndMaintenance(); // todo: this is a hack for the maintenance and power button. It should not be part of the dispenser class
 
-    // #ifdef ENABLE_MULTI_BUTTON
-
     // needs to be set up only once. Dispenser index is only important for the button 4 index.
     
     if (g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON )  //&& this->slot == 4
@@ -154,10 +152,6 @@ DF_ERROR stateInit::dispenserSetup()
     }else{
         debugOutput::sendMessage(" Unknown PCB (OLD?).", MSG_ERROR);
     }
-
-
-    
-    // #endif
 
     debugOutput::sendMessage("Dispenser intialized.", MSG_INFO);
 

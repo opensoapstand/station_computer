@@ -84,6 +84,8 @@ public:
       void setAllDispenseButtonLightsOff();
       void reversePumpForSetTimeMillis(int millis);
       const char* getDispenseStatusAsString();
+      void updateDispenseStatus();
+      const char *getDispenserStateAsString();
 
 
       DF_ERROR pumpSlowStart(bool forwardElseReverse);
@@ -99,6 +101,10 @@ public:
       string getDispenseStartTime();
       string getDispenseEndTime();
       Dispense_behaviour getDispenseStatus();
+      Dispenser_state getDispenserState();
+      void setDispenserState(Dispenser_state state);
+      void updateDispenserState();
+
       bool getIsDispenseTargetReached();
 
       void subtractFromVolumeDispensed(double volume_to_distract);
@@ -140,6 +146,7 @@ public:
       void loadMultiDispenseButtonEnabledFromDb();
       bool getMultiDispenseButtonEnabled();
       void loadEmptyContainerDetectionEnabledFromDb();
+      void loadDispenserStateFromDb();
       void loadPumpReversalEnabledFromDb();
       bool getPumpReversalEnabled();
       void loadPumpRampingEnabledFromDb();
@@ -196,6 +203,9 @@ private:
       bool isStatusUpdateSendAndPrintAllowed;
 
       Dispense_behaviour previous_dispense_state;
+      Dispense_behaviour dispense_state;
+
+      Dispenser_state dispenser_state;
 
       int slot;
       Time_val flowRateBuffer[RUNNING_AVERAGE_WINDOW_LENGTH];

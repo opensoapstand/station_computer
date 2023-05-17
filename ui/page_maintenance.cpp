@@ -54,7 +54,7 @@ void page_maintenance::showEvent(QShowEvent *event)
 
     qDebug() << "<<<<<<< Page Enter: maintenance >>>>>>>>>";
     QWidget::showEvent(event);
-    //p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH); // delays the page loading significantly.
+    // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH); // delays the page loading significantly.
 
     for (int i = 0; i < SLOT_COUNT; i++)
     {
@@ -103,34 +103,65 @@ void page_maintenance::showEvent(QShowEvent *event)
     for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
         uint8_t slot = i + 1;
+        // bool product_sold_out = !(p_page_idle->currentProductOrder->isProductVolumeInContainer(slot));
+
         qDebug() << "db for names and id maintenance";
         DbManager db(DB_PATH);
         int product_slot_enabled = db.getSlotEnabled(slot);
-        bool product_sold_out = !(db.isProductVolumeInContainer(slot));
         QString product_status_text = db.getStatusText(slot);
 
         db.closeDB();
 
-        // overlay product status
-        if (!product_slot_enabled)
+        if (product_status_text.compare("DISPENSER_STATE_AVAILABLE") == 0)
         {
-            product_overlay_labels[i]->setText(product_status_text);
-            product_overlay_labels[i]->setStyleSheet("background-color: rgba(255,255,255,170);");
-            // selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
+            product_overlay_labels[i]->setText("");
         }
-        else if (product_sold_out)
+        else if (product_status_text.compare("DISPENSER_STATE_AVAILABLE_LOW_STOCK") == 0)
         {
-            product_overlay_labels[i]->setText("Sold out");
-            product_overlay_labels[i]->setStyleSheet("background-color: transparent;");
-            // selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
+            product_overlay_labels[i]->setText("Almost Empty");
+        }
+        else if (product_status_text.compare("DISPENSER_STATE_PROBLEM_EMPTY") == 0)
+        {
+            product_overlay_labels[i]->setText("Sold Out");
+        }
+        else if (product_status_text.compare("DISPENSER_STATE_DISABLED_COMING_SOON") == 0)
+        {
+            product_overlay_labels[i]->setText("Coming Soon");
+        }
+        else if (product_status_text.compare("DISPENSER_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
+
+        {
+            product_overlay_labels[i]->setText("Assistance Needed");
         }
         else
         {
-            product_overlay_labels[i]->setText("");
-            product_overlay_labels[i]->setStyleSheet("background-color: transparent;");
-
-            // product_buttons[i]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
+            product_overlay_labels[i]->setText("Assistance Needed");
         }
+
+        if (!(p_page_idle->currentProductOrder->isProductVolumeInContainer(slot)))
+        {
+            product_overlay_labels[i]->setText("Auto Sold Out");
+        }
+
+        // // overlay product status
+        // if (!product_slot_enabled)
+        // {
+        //     product_overlay_labels[i]->setText(product_status_text);
+        //     product_overlay_labels[i]->setStyleSheet("background-color: rgba(255,255,255,170);");
+        //     // selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
+        // }
+        // // else if (product_sold_out)
+        // // {
+        // //     product_overlay_labels[i]->setText("Sold out");
+        // //     product_overlay_labels[i]->setStyleSheet("background-color: transparent;");
+        // //     // selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
+        // // }
+        // else
+        // {
+        // product_overlay_labels[i]->setText("");
+        product_overlay_labels[i]->setStyleSheet("background-color: transparent;");
+        // product_buttons[i]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
+        // }
     }
     // p_pageSelectProduct->cancelTimers();
     // p_pageProduct->cancelTimers();

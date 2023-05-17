@@ -185,21 +185,16 @@ void DbManager::getCustomDiscountProperties(int slot, bool *isEnabled, double *v
 }
 
 void DbManager::getProductProperties(int slot, QString *product_id, bool *isSizeEnabled)
-// void DbManager::getProductProperties(int slot, QString*name, QString *description, QString *features,  QString *ingredients, bool* isEnabledSmall,bool* isEnabledMedium,bool* isEnabledLarge,bool* isEnabledCustom)
 {
     QSqlQuery qry;
     {
         qry.prepare("SELECT soapstand_product_serial, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom FROM products WHERE slot=:slot");
-        // qry.prepare("SELECT name,description,features,ingredients,is_enabled_small,is_enabled_medium,is_enabled_large,is_enabled_custom FROM products WHERE slot=:slot");
         qry.bindValue(":slot", slot);
         qry.exec();
 
         while (qry.next())
         {
             *product_id = qry.value(0).toString();
-            // *description = qry.value(1).toString();
-            // *features = qry.value(2).toString();
-            // *ingredients = qry.value(3).toString();
             isSizeEnabled[1] = qry.value(1).toInt(); // small is index 1!!
             isSizeEnabled[2] = qry.value(2).toInt();
             isSizeEnabled[3] = qry.value(3).toInt();
@@ -413,19 +408,9 @@ uint32_t DbManager::getNumberOfRows(QString table)
     return row_count;
 }
 
-bool DbManager::isProductVolumeInContainer(int slot)
-{
-    if (getEmptyContainerDetectionEnabled())
-    {
-        return getVolumeRemaining(slot) > 0;
-    }
-    else
-    {
-        return getVolumeRemaining(slot) > getProductVolume(slot, 'l'); // ----> TODO VERY BUGGY (only instance found of using char volume as a magic number)
-    }
-}
 
-bool DbManager::refill(int slot)
+
+bool DbManager::restockProduct(int slot)
 {
     qDebug() << " db... refill";
     QSqlQuery refill_query;
@@ -566,8 +551,6 @@ double DbManager::getTotalDispensed(int slot)
     return dispensed;
 }
 
-#ifndef USE_OLD_DATABASE
-
 int DbManager::getDispenseButtonCount()
 {
     // QSqlQuery qry;
@@ -641,6 +624,57 @@ int DbManager::getSlotEnabled(int slot)
     return enabled;
 }
 
+// bool DbManager::setStatusText(int slot, QString text)
+// {
+
+//     QSqlQuery qry;
+//     bool enabled;
+
+//     QString qry_qstr = QString("UPDATE machine SET status_text_slot_%1=%2").arg(QString::number(slot),text);
+//     string qry_string = qry_qstr.toUtf8().constData(); // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
+//     qry.prepare(qry_string.c_str());
+//     qry.exec();
+
+//     if (qry.exec())
+//     {
+//         return true;
+//     }
+//     else
+//     {
+//         qDebug() << "Failed to set status text: " << qry_qstr;
+//         return false;
+//     }
+// }
+
+bool DbManager::updateSlotAvailability(int slot, int isEnabled, QString status_text)
+{
+    //setStatusText
+    //setIsEnabled
+
+    QSqlQuery qry;
+    bool enabled;
+
+    QString qry_qstr = QString("UPDATE machine SET status_text_slot_%1='").arg(QString::number(slot)) + status_text + QString("',is_enabled_slot_%1=").arg(QString::number(slot)) + QString::number(isEnabled);
+    qDebug() << qry_qstr << endl;
+    string qry_string = qry_qstr.toUtf8().constData(); // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
+    qry.prepare(qry_string.c_str());
+    qry.bindValue(":slot", slot);
+    qry.bindValue(":status_text", status_text);
+    qry.bindValue(":isEnabled", isEnabled);
+    qry.exec();
+
+    if (qry.exec())
+    {
+        return true;
+    }
+    else
+    {
+        qDebug() << "Failed to set slot availability." << qry_qstr;
+        return false;
+    }
+}
+
+
 QString DbManager::getStatusText(int slot)
 {
     QSqlQuery qry;
@@ -681,7 +715,7 @@ bool DbManager::getRecentTransactions(QString values[][5], int count, int *count
         // qry.prepare(sql_statement.c_str());
         // qry.prepare(sql_statement.c_str());
 
-        qry.prepare("SELECT id,end_time,quantity_dispensed,price,product FROM transactions ORDER BY id DESC LIMIT :count");
+        qry.prepare("SELECT id,end_time,quantity_dispensed,price,product_id FROM transactions ORDER BY id DESC LIMIT :count");
         qry.bindValue(":count", count);
 
         qDebug() << " db retreive transactions: " << count;
@@ -690,8 +724,17 @@ bool DbManager::getRecentTransactions(QString values[][5], int count, int *count
         while (qry.next())
         {
             for (uint8_t j = 0; j < 5; j++)
-            {
-                values[i][j] = qry.value(j).toString();
+            {   
+
+                if (j == 3){
+                    // price rounding
+                    double price = qry.value(j).toDouble();
+                    values[i][j] = QString::number(price, 'f', 2);
+
+                }else{
+                    values[i][j] = qry.value(j).toString();
+
+                }
                 qDebug() << "db bdafes: " << i << " : " << values[i][j];
             }
             i++;
@@ -823,33 +866,7 @@ QString DbManager::getCustomerId()
     return val;
 }
 
-bool DbManager::updateSlotAvailability(int slot, int isEnabled, QString status_text)
-{
-    QSqlQuery qry;
-    bool enabled;
 
-    // QString qry_qstr = QString("UPDATE machine SET is_enabled_slot_%1=0").arg(QString::number(slot), QString::number(isEnabled));
-    QString qry_qstr = QString("UPDATE machine SET status_text_slot_%1='").arg(QString::number(slot)) + status_text + QString("',is_enabled_slot_%1=").arg(QString::number(slot)) + QString::number(isEnabled);
-    qDebug() << qry_qstr << endl;
-    string qry_string = qry_qstr.toUtf8().constData(); // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
-    qry.prepare(qry_string.c_str());
-    qry.bindValue(":slot", slot);
-    qry.bindValue(":status_text", status_text);
-    qry.bindValue(":isEnabled", isEnabled);
-    qry.exec();
-
-    if (qry.exec())
-    {
-        return true;
-    }
-    else
-    {
-        qDebug() << "Failed to set slot availability." << qry_qstr;
-        return false;
-    }
-}
-
-#endif
 
 double DbManager::getVolumeRemaining(int slot)
 {
@@ -870,7 +887,7 @@ double DbManager::getVolumeRemaining(int slot)
     return remaining;
 }
 
-QString DbManager::getLastRefill(int slot)
+QString DbManager::getLastRefillTime(int slot)
 {
     // last as in "most recent"
     qDebug() << " db... getLastRefill";
@@ -1038,120 +1055,6 @@ bool DbManager::updatePrice(int slot, int size, double new_price)
     }
 }
 
-// bool DbManager::updatePriceSmall(int slot, double new_price)
-// {
-//     qDebug() << " db... updatePriceSmall";
-//     QSqlQuery update_price_query;
-
-//     {
-// #ifdef USE_OLD_DATABASE
-//         update_price_query.prepare("UPDATE products SET price_s = :new_price WHERE slot = :slot");
-// #else
-//         update_price_query.prepare("UPDATE products SET price_small = :new_price WHERE slot = :slot");
-// #endif
-//         update_price_query.bindValue(":new_price", new_price);
-//         update_price_query.bindValue(":slot", slot);
-
-//         if (update_price_query.exec())
-//         {
-//             //        qDebug() << "Price updated successfully!";
-//             return true;
-//         }
-//         else
-//         {
-//             //        qDebug() << "Price update error: !"
-//             //                 << update_price_query.lastQuery()
-//             //                 << update_price_query.lastError();
-//             return false;
-//         }
-//     }
-// }
-
-// bool DbManager::updatePriceLarge(int slot, double new_price)
-// {
-//     qDebug() << " db... updatePriceLarge";
-//     QSqlQuery update_price_query;
-
-//     {
-// #ifdef USE_OLD_DATABASE
-//         update_price_query.prepare("UPDATE products SET price_l = :new_price WHERE slot = :slot");
-// #else
-//         update_price_query.prepare("UPDATE products SET price_large = :new_price WHERE slot = :slot");
-// #endif
-//         update_price_query.bindValue(":new_price", new_price);
-//         update_price_query.bindValue(":slot", slot);
-
-//         if (update_price_query.exec())
-//         {
-//             //        qDebug() << "Price updated successfully!";
-//             return true;
-//         }
-//         else
-//         {
-//             //        qDebug() << "Price update error: !"
-//             //                 << update_price_query.lastError();
-//             return false;
-//         }
-//     }
-// }
-
-// bool DbManager::updateTargetVolume_s(int slot, double new_volume)
-// {
-//     qDebug() << " db... updateTargetVolume_s";
-//     QSqlQuery update_target_volume_query;
-//     {
-// #ifdef USE_OLD_DATABASE
-//         update_target_volume_query.prepare("UPDATE products SET volume_target_s=:new_volume WHERE slot=:slot");
-// #else
-//         update_target_volume_query.prepare("UPDATE products SET size_small=:new_volume WHERE slot=:slot");
-// #endif
-
-//         update_target_volume_query.bindValue(":new_volume", new_volume);
-//         update_target_volume_query.bindValue(":slot", slot);
-
-//         if (update_target_volume_query.exec())
-//         {
-//             //        qDebug() << "Target Volume updated successfully!";
-//             return true;
-//         }
-//         else
-//         {
-//             //        qDebug() << "Target volume update error: !"
-//             //                 << update_target_volume_query.lastError();
-//             return false;
-//         }
-//     }
-// }
-
-// bool DbManager::updateTargetVolume_l(int slot, double new_volume)
-// {
-//     qDebug() << " db... updateTargetVolume_l";
-//     QSqlQuery update_target_volume_query;
-
-//     {
-// #ifdef USE_OLD_DATABASE
-//         update_target_volume_query.prepare("UPDATE products SET volume_target_l=:new_volume WHERE slot=:slot");
-// #else
-//         update_target_volume_query.prepare("UPDATE products SET size_large=:new_volume WHERE slot=:slot");
-// #endif
-
-//         update_target_volume_query.bindValue(":new_volume", new_volume);
-
-//         update_target_volume_query.bindValue(":slot", slot);
-
-//         if (update_target_volume_query.exec())
-//         {
-//             //        qDebug() << "Target Volume updated successfully!";
-//             return true;
-//         }
-//         else
-//         {
-//             //        qDebug() << "Target volume update error: !"
-//             //                 << update_target_volume_query.lastError();
-//             return false;
-//         }
-//     }
-// }
 bool DbManager::updateTargetVolume(int slot, int size, double new_volume)
 {
     qDebug() << " db... updateTargetVolume_l";

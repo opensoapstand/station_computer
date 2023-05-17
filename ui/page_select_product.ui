@@ -211,38 +211,6 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="label_product_2_photo">
-   <property name="geometry">
-    <rect>
-     <x>562</x>
-     <y>334</y>
-     <width>450</width>
-     <height>450</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>48</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="layoutDirection">
-    <enum>Qt::LeftToRight</enum>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-   <property name="wordWrap">
-    <bool>true</bool>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_product_3_photo">
    <property name="geometry">
     <rect>
@@ -600,50 +568,11 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="label_product_1_overlay">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>280</y>
-     <width>450</width>
-     <height>161</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_product_2_overlay">
    <property name="geometry">
     <rect>
      <x>562</x>
      <y>334</y>
-     <width>450</width>
-     <height>450</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_product_4_overlay">
-   <property name="geometry">
-    <rect>
-     <x>562</x>
-     <y>1032</y>
-     <width>450</width>
-     <height>450</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_product_3_overlay">
-   <property name="geometry">
-    <rect>
-     <x>53</x>
-     <y>1032</y>
      <width>450</width>
      <height>450</height>
     </rect>
@@ -678,8 +607,36 @@
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="label_product_2_photo">
+   <property name="geometry">
+    <rect>
+     <x>562</x>
+     <y>334</y>
+     <width>441</width>
+     <height>450</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>48</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:#707173;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
   <zorder>pushButton_selection2</zorder>
-  <zorder>label_product_2_photo</zorder>
   <zorder>label_product_2_photo_text</zorder>
   <zorder>pushButton_selection1</zorder>
   <zorder>label_product_1_photo</zorder>
@@ -704,14 +661,12 @@
   <zorder>product_photo_label_text_2</zorder>
   <zorder>label_product_4_photo_text</zorder>
   <zorder>label_product_3_photo_text</zorder>
-  <zorder>label_product_1_overlay</zorder>
   <zorder>label_product_2_overlay</zorder>
-  <zorder>label_product_4_overlay</zorder>
-  <zorder>label_product_3_overlay</zorder>
   <zorder>label_pick_soap</zorder>
   <zorder>label_notify_us</zorder>
   <zorder>pushButton_help_page</zorder>
   <zorder>pushButton_to_idle</zorder>
+  <zorder>label_product_2_photo</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -74,7 +74,7 @@ private slots:
     void on_vol_per_tickButton_clicked();
     void on_refillButton_clicked();
     void on_soldOutButton_clicked();
-    void on_fullButton_clicked();
+    void on_pushButton_set_restock_volume_clicked();
     void onMaintainProductPageTimeoutTick();
     void onDispenseTimerTick();
     void on_pushButton_set_volume_remaining_clicked();

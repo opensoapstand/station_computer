@@ -187,19 +187,18 @@ void page_maintenance_dispenser::refreshLabels()
     ui->target_volume_m->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_MEDIUM_INDEX, false, true));
     ui->target_volume_l->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(SIZE_LARGE_INDEX, false, true));
 
-    ui->full_volume->setText(selectedProductOrder->getFullVolumeCorrectUnits(true));
+    ui->full_volume->setText(                         "Full stock volume                       : "+ selectedProductOrder->getFullVolumeCorrectUnits(true));
     
-    ui->label_volume_dispensed_total->setText("Volume dispensed total: " + selectedProductOrder->getTotalDispensedCorrectUnits());
-    ui->label_volume_dispensed_since_restock->setText("Volume dispensed since restock: " + selectedProductOrder->getVolumeDispensedSinceRestockCorrectUnits());
-    
-    ui->label_volume_remaining->setText("Volume remaining: " + selectedProductOrder->getVolumeRemainingCorrectUnits());
+    ui->label_volume_dispensed_total->setText(        "Volume dispensed total                : " + selectedProductOrder->getTotalDispensedCorrectUnits());
+    ui->label_volume_dispensed_since_restock->setText("Volume dispensed since restock : " + selectedProductOrder->getVolumeDispensedSinceRestockCorrectUnits());
+    ui->label_volume_remaining->setText(              "Volume remaining                        : " + selectedProductOrder->getVolumeRemainingCorrectUnits());
 
     ui->pwmLabel->setText(QString::number(selectedProductOrder->getSelectedDispenseSpeedPercentage()) + "%");
 
     int product_slot___ = selectedProductOrder->getSelectedSlot();
     qDebug() << "db... refresh labels";
     DbManager db(DB_PATH);
-    ui->label_restock_timestamp->setText("Most recent restock: " + db.getLastRefillTime(product_slot___));
+    ui->label_restock_timestamp->setText(             "Most recent restock                     : " + db.getLastRefillTime(product_slot___));
 
     ui->pluLabel_s->setText(db.getPLU(product_slot___, 's'));
     ui->pluLabel_m->setText(db.getPLU(product_slot___, 'm'));
@@ -706,7 +705,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
     ui->dispense_status_label->setText(slotStatus);
 }
 
-void page_maintenance_dispenser::on_fullButton_clicked()
+void page_maintenance_dispenser::on_pushButton_set_restock_volume_clicked()
 {
     //    qDebug() << "Full Volume button clicked" ;
     full = true;

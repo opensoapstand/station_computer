@@ -59,12 +59,12 @@ public:
 
     
 
-    QLabel* selectProductPhotoLabels[4];
+    QLabel* labels_product_picture[4];
     QLabel* selectProductOverlayLabels[4];
-    // QLabel* selectProductNameLabels[4];
-    QLabel* selectProductIconLabels[4];
-    QLabel* selectProductTypeLabels[4];
-    QLabel* selectProductPhotoLabelsText[4];
+    // QLabel* labels_product_name[4];
+    QLabel* labels_product_icon[4];
+    QLabel* labels_product_type[4];
+    QLabel* labels_product_overlay_text[4];
     
 private slots:
     // **** Navigation ****

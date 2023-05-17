@@ -64,14 +64,14 @@ private slots:
     void on_pushButton_continue_clicked();
     void on_pushButton_back_clicked();
     // Set Drink Order
-    void on_orderSmall_Button_clicked();
-    void on_orderBig_Button_clicked();
+    void on_pushButton_order_small_clicked();
+    void on_pushButton_order_big_clicked();
     void on_pushButton_to_idle_clicked();
     void onSelectTimeoutTick();
 
-    void on_orderCustom_Button_clicked();
+    void on_pushButton_order_custom_clicked();
 
-    void on_orderMedium_Button_clicked();
+    void on_pushButton_order_medium_clicked();
     void loadProductBySize(int sizeIndex);
     void loadProdSpecs();
 

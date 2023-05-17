@@ -148,13 +148,13 @@ void page_maintenance::showEvent(QShowEvent *event)
         // {
         //     product_overlay_labels[i]->setText(product_status_text);
         //     product_overlay_labels[i]->setStyleSheet("background-color: rgba(255,255,255,170);");
-        //     // selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
+        //     // labels_product_picture[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
         // }
         // // else if (product_sold_out)
         // // {
         // //     product_overlay_labels[i]->setText("Sold out");
         // //     product_overlay_labels[i]->setStyleSheet("background-color: transparent;");
-        // //     // selectProductPhotoLabels[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
+        // //     // labels_product_picture[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
         // // }
         // else
         // {

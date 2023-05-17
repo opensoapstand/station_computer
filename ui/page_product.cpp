@@ -143,10 +143,10 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
 {
     ui->setupUi(this);
 
-    orderSizeButtons[0] = ui->orderSmall_Button;
-    orderSizeButtons[1] = ui->orderMedium_Button;
-    orderSizeButtons[2] = ui->orderBig_Button;
-    orderSizeButtons[3] = ui->orderCustom_Button;
+    orderSizeButtons[0] = ui->pushButton_order_small;
+    orderSizeButtons[1] = ui->pushButton_order_medium;
+    orderSizeButtons[2] = ui->pushButton_order_big;
+    orderSizeButtons[3] = ui->pushButton_order_custom;
 
     orderSizeLabelsPrice[0] = ui->label_price_small;
     orderSizeLabelsPrice[1] = ui->label_price_medium;
@@ -163,40 +163,35 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
     orderSizeBackgroundLabels[2] = ui->label_background_large;
     orderSizeBackgroundLabels[3] = ui->label_background_custom;
 
-   /* QString css_title = "QLabel{"
-                        "position: absolute;"
-                        "width: 877px;"
-                        "height: 104px;"
-                        "left: 94px;"
-                        "top: 336px;"
-                        "font-family: 'Montserrat';"
-                        "font-style: normal;"
-                        "font-weight: 600;"
-                        "font-size: 48px;"
-                        "line-height: 52px;"
-                        "text-transform: capitalize;"
-                        "color: #5E8580;"
-                        "}";
-                        */
-/*
-    QFont font;
-    font.setFamily(QStringLiteral("Brevia"));
-    font.setPointSize(20);
-    font.setBold(true);
-    font.setWeight(200);
-*/
+    /* QString css_title = "QLabel{"
+                         "position: absolute;"
+                         "width: 877px;"
+                         "height: 104px;"
+                         "left: 94px;"
+                         "top: 336px;"
+                         "font-family: 'Montserrat';"
+                         "font-style: normal;"
+                         "font-weight: 600;"
+                         "font-size: 48px;"
+                         "line-height: 52px;"
+                         "text-transform: capitalize;"
+                         "color: #5E8580;"
+                         "}";
+                         */
+    /*
+        QFont font;
+        font.setFamily(QStringLiteral("Brevia"));
+        font.setPointSize(20);
+        font.setBold(true);
+        font.setWeight(200);
+    */
     ui->pushButton_back->setText("<- Products");
 
-    
-    
     ui->label_select_quantity->setText("Select Quantity");
 
     ui->label_product_description->setWordWrap(true);
 
     ui->label_product_ingredients->setWordWrap(true);
-
-     
-    // ui->->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     ui->pushButton_continue->setText("Continue");
     ui->pushButton_continue->hide();
@@ -236,61 +231,49 @@ pageProduct::~pageProduct()
 void pageProduct::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: Product >>>>>>>>>";
-    QWidget::showEvent(event);
 
     QString styleSheet = p_page_idle->getCSS(PAGE_PRODUCT_CSS);
 
-    //  ui->orderSmall_Button->setStyleSheet(styleSheet);
-    //  ui->orderMedium_Button->setStyleSheet(styleSheet);
-    //  ui->orderBig_Button->setStyleSheet(styleSheet);
-    //  ui->orderCustom_Button->setStyleSheet(styleSheet);
-
-    //  ui->label_price_small->setStyleSheet(styleSheet);
-    //  ui->label_price_medium->setStyleSheet(styleSheet);
-    //  ui->label_price_large->setStyleSheet(styleSheet);
-    //  ui->label_price_custom->setStyleSheet(styleSheet);
-
-    //  ui->label_size_small->setStyleSheet(styleSheet);
-    //  ui->label_size_medium->setStyleSheet(styleSheet);
-    //  ui->label_size_large->setStyleSheet(styleSheet);
-    //  ui->label_size_custom->setStyleSheet(styleSheet);
-
-    //  ui->label_background_small->setStyleSheet(styleSheet);
-    //  ui->label_background_medium->setStyleSheet(styleSheet);
-    //  ui->label_background_large->setStyleSheet(styleSheet);
-    //  ui->label_background_custom->setStyleSheet(styleSheet);
-
     ui->label_product_title->setProperty("class", "css_title");
+
     ui->label_product_title->setStyleSheet(styleSheet);
 
-    //ui->pushButton_back->setProperty("class", "pushButton_back");
-    ui->pushButton_back->setStyleSheet(styleSheet); //pushbutton
-    ui->label_product_description->setStyleSheet(styleSheet);    
+    ui->pushButton_back->setStyleSheet(styleSheet); // pushbutton
+
+    ui->label_product_description->setStyleSheet(styleSheet);
+
     ui->label_product_photo->setStyleSheet(styleSheet);
 
     ui->label_select_quantity->setStyleSheet(styleSheet);
 
-//QString css_ingredients = ;
+    // QString css_ingredients = ;
     ui->label_product_ingredients->setStyleSheet(styleSheet);
 
     ui->label_product_ingredients_title->setStyleSheet(styleSheet);
-   
+
     ui->label_notify_us->setStyleSheet(styleSheet);
 
     ui->pushButton_continue->setStyleSheet(styleSheet);
-
-    //orderSizeBackgroundLabels[i]->setStyleSheet(stylesheet);
 
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
 
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
 
-    //  ui->label_price_small->setStyleSheet(styleSheet);
-    //  ui->label_price_medium->setStyleSheet(styleSheet);
-    //  ui->label_price_large->setStyleSheet(styleSheet);
-    //  ui->label_price_custom->setStyleSheet(styleSheet);
-    
-
+    for (int i = 0; i < 4; i++)
+    {
+        // labels_product_overlay_text[i]->setProperty("class", "label_product_oberlay_available"); // apply class BEFORE setStyleSheet!!
+        // labels_product_overlay_text[i]->setStyleSheet(styleSheet);
+        orderSizeLabelsVolume[i]->setProperty("class", "orderSizeLabelsVolume");
+        orderSizeLabelsPrice[i]->setProperty("class", "orderSizeLabelsPrice");
+        orderSizeBackgroundLabels[i]->setProperty("class", "orderSizeBackgroundLabels");
+        orderSizeButtons[i]->setProperty("class", "orderSizeButtons");
+        orderSizeBackgroundLabels[i]->setProperty("class", "orderSizeBackgroundLabels1");
+        orderSizeLabelsVolume[i]->setStyleSheet(styleSheet);
+        orderSizeLabelsPrice[i]->setStyleSheet(styleSheet);
+        orderSizeBackgroundLabels[i]->setStyleSheet(styleSheet);
+        orderSizeButtons[i]->setStyleSheet(styleSheet);
+        orderSizeBackgroundLabels[i]->setStyleSheet(styleSheet);
+    }
 
     ////////////////////////////////////////////////
 
@@ -299,6 +282,7 @@ void pageProduct::showEvent(QShowEvent *event)
 
     loadProdSpecs();
     reset_and_show_page_elements();
+    QWidget::showEvent(event);
 }
 
 void pageProduct::resizeEvent(QResizeEvent *event)
@@ -404,9 +388,8 @@ void pageProduct::reset_and_show_page_elements()
             orderSizeBackgroundLabels[i]->move(xywh_size_buttons[i][0], xywh_size_buttons[i][1]);
             orderSizeBackgroundLabels[i]->lower();
             orderSizeBackgroundLabels[i]->setProperty("class", "orderSizeBackgroundLabels1");
-            
-    //       selectProductPhotoLabelsText[i]->setProperty("class", "label_product_oberlay_sold_out");
 
+            //       labels_product_overlay_text[i]->setProperty("class", "label_product_oberlay_sold_out");
 
             orderSizeLabelsPrice[i]->move(xy_size_labels_price[i][0], xy_size_labels_price[i][1]);
             orderSizeLabelsVolume[i]->move(xy_size_labels_volume[i][0], xy_size_labels_volume[i][1]);
@@ -478,18 +461,10 @@ void pageProduct::loadProdSpecs()
             orderSizeLabelsVolume[i]->show();
             orderSizeBackgroundLabels[i]->show();
             orderSizeButtons[i]->show();
-
-            // orderSizeLabelsVolume[i]->setStyleSheet("QLabel {font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: normal; font-size: 24px; line-height: 44px; color: #5E8580;}");
-            // orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 1px  solid #3D6675; }");
-            // orderSizeLabelsPrice[i]->setStyleSheet("QLabel {font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;}");
-            // orderSizeBackgroundLabels[i]->setStyleSheet("QLabel { background-color: #FFFFFF; border: 0px }");
-            
             orderSizeLabelsVolume[i]->setProperty("class", "orderSizeLabelsVolume");
             orderSizeLabelsPrice[i]->setProperty("class", "orderSizeLabelsPrice");
             orderSizeBackgroundLabels[i]->setProperty("class", "orderSizeBackgroundLabels");
             orderSizeButtons[i]->setProperty("class", "orderSizeButtons");
-
-            
 
             double price = selectedProductOrder->getPrice(product_sizes[i]);
             QString transparent_path = FULL_TRANSPARENT_IMAGE_PATH;
@@ -564,20 +539,13 @@ void pageProduct::loadProdSpecs()
             // selected size styling
             if (selectedProductOrder->getSelectedSize() == product_sizes[i])
             {
-                // orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 1px  solid #3D6675; }");
-                // orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 1px  solid #3D6675; }");
-                // orderSizeLabelsVolume[i]->setStyleSheet("QLabel { font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: normal; font-size: 24px; line-height: 44px; color: #5E8580; }");
+                orderSizeLabelsVolume[i]->setProperty("class", "orderSizeLabelsVolume");
                 // orderSizeLabelsPrice[i]->setStyleSheet("QLabel {font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;}");
-                // orderSizeBackgroundLabels[i]->setStyleSheet("QLabel { background-color: transparent; border: 0px }");
-
-                 orderSizeLabelsVolume[i]->setProperty("class", "orderSizeLabelsVolume");
-                 //orderSizeLabelsPrice[i]->setStyleSheet("QLabel {font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;}");
-                 orderSizeLabelsPrice[i]->setProperty("class", "orderSizeLabelsPrice");
-                 //orderSizeBackgroundLabels[i]->setStyleSheet("QLabel { background-color: #FFFFFF; border: 0px }");
-                 orderSizeBackgroundLabels[i]->setProperty("class", "orderSizeBackgroundLabels");
-                 //orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 1px  solid #3D6675; }");
-                 orderSizeButtons[i]->setProperty("class", "orderSizeButtons");
-
+                orderSizeLabelsPrice[i]->setProperty("class", "orderSizeLabelsPrice");
+                // orderSizeBackgroundLabels[i]->setStyleSheet("QLabel { background-color: #FFFFFF; border: 0px }");
+                orderSizeBackgroundLabels[i]->setProperty("class", "orderSizeBackgroundLabels");
+                // orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 1px  solid #3D6675; }");
+                orderSizeButtons[i]->setProperty("class", "orderSizeButtons");
             }
             orderSizeButtons[i]->raise();
         }
@@ -628,14 +596,14 @@ void pageProduct::on_pushButton_to_idle_clicked()
     hideCurrentPageAndShowProvided(p_page_help);
 }
 
-void pageProduct::on_orderCustom_Button_clicked()
+void pageProduct::on_pushButton_order_custom_clicked()
 {
     qDebug() << "button custom clicked ";
     this->loadProductBySize(SIZE_CUSTOM_INDEX);
     on_pushButton_continue_clicked();
 }
 
-void pageProduct::on_orderMedium_Button_clicked()
+void pageProduct::on_pushButton_order_medium_clicked()
 {
     qDebug() << "button medium";
     this->loadProductBySize(SIZE_MEDIUM_INDEX);
@@ -643,7 +611,7 @@ void pageProduct::on_orderMedium_Button_clicked()
 }
 
 // on_Small_Order button listener
-void pageProduct::on_orderSmall_Button_clicked()
+void pageProduct::on_pushButton_order_small_clicked()
 {
     qDebug() << "button small";
     this->loadProductBySize(SIZE_SMALL_INDEX);
@@ -651,7 +619,7 @@ void pageProduct::on_orderSmall_Button_clicked()
 }
 
 // on_Large_Order button listener
-void pageProduct::on_orderBig_Button_clicked()
+void pageProduct::on_pushButton_order_big_clicked()
 {
     qDebug() << "button big";
     this->loadProductBySize(SIZE_LARGE_INDEX);

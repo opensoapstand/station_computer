@@ -184,7 +184,7 @@ text-align: center;</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="orderSmall_Button">
+  <widget class="QPushButton" name="pushButton_order_small">
    <property name="geometry">
     <rect>
      <x>564</x>
@@ -200,7 +200,7 @@ text-align: center;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="orderBig_Button">
+  <widget class="QPushButton" name="pushButton_order_big">
    <property name="geometry">
     <rect>
      <x>858</x>
@@ -213,7 +213,7 @@ text-align: center;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="orderMedium_Button">
+  <widget class="QPushButton" name="pushButton_order_medium">
    <property name="geometry">
     <rect>
      <x>711</x>
@@ -229,7 +229,7 @@ text-align: center;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="orderCustom_Button">
+  <widget class="QPushButton" name="pushButton_order_custom">
    <property name="geometry">
     <rect>
      <x>563</x>
@@ -534,10 +534,10 @@ text-align: center;</string>
   </widget>
   <zorder>pushButton_continue</zorder>
   <zorder>pushButton_previous_page</zorder>
-  <zorder>orderSmall_Button</zorder>
-  <zorder>orderBig_Button</zorder>
-  <zorder>orderMedium_Button</zorder>
-  <zorder>orderCustom_Button</zorder>
+  <zorder>pushButton_order_small</zorder>
+  <zorder>pushButton_order_big</zorder>
+  <zorder>pushButton_order_medium</zorder>
+  <zorder>pushButton_order_custom</zorder>
   <zorder>label_size_medium</zorder>
   <zorder>label_price_medium</zorder>
   <zorder>label_size_small</zorder>

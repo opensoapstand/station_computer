@@ -1,7 +1,7 @@
-QPushButton {
+ QPushButton {
    background-color: transparent;
    border: 0px;
-}
+} 
 
 QLabel {
 
@@ -34,27 +34,6 @@ QLabel {
 }
 
 
-/*
-#label_product_1_photo {
-   border: 1px solid black;
-
-}
-
-#label_product_2_photo {
-   border: 1px solid black;
-}
-
-#label_product_3_photo {
-   border: 1px solid black;
-}
-
-#label_product_4_photo {
-   border: 1px solid black;
-
-}
-*/
-
-
 .label_product_name {
    font-family: 'Montserrat';
    font-style: normal;
@@ -70,9 +49,10 @@ QLabel {
    border: 0px;
 }
 
-/* .label_product_oberlay_available{
+.label_product_oberlay_available{
    background-color: transparent;
-} */
+}
+
 
 .label_product_oberlay_sold_out{
    background-color: rgba(0,0,0,80);

@@ -60,6 +60,7 @@ public:
     QString getTemplatePathFromName(QString fileName);
     QString getDefaultTemplatePathFromName(QString fileName);
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
+    void setBackgroundPictureToQWidget(QWidget *page, QString imageName);
     QString getCSS(QString cssName);
     void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
 

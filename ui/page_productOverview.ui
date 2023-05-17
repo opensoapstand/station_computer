@@ -205,7 +205,7 @@ text-align: center;</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="promoButton">
+  <widget class="QPushButton" name="pushButton_promo_button">
    <property name="geometry">
     <rect>
      <x>825</x>
@@ -221,7 +221,7 @@ text-align: center;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QLineEdit" name="promoCode">
+  <widget class="QLineEdit" name="lineEdit_promo_code">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -252,7 +252,7 @@ text-align: center;</string>
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="promoInputButton">
+  <widget class="QPushButton" name="pushButton_promo_input">
    <property name="geometry">
     <rect>
      <x>94</x>
@@ -1790,6 +1790,19 @@ outline: none;
      <string notr="true">buttonGroup</string>
     </attribute>
    </widget>
+   <widget class="QLabel" name="label_keyboard_background">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>841</width>
+      <height>321</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
    <zorder>num0</zorder>
    <zorder>num2</zorder>
    <zorder>done</zorder>
@@ -1828,6 +1841,7 @@ outline: none;
    <zorder>l</zorder>
    <zorder>w</zorder>
    <zorder>num1</zorder>
+   <zorder>label_keyboard_background</zorder>
   </widget>
   <widget class="QLabel" name="label_invoice_name">
    <property name="geometry">
@@ -1995,7 +2009,7 @@ font-weight:bold;</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="selectProductPage_Button">
+  <widget class="QPushButton" name="pushButton_select_product_page">
    <property name="geometry">
     <rect>
      <x>100</x>
@@ -2113,13 +2127,13 @@ text-align: center;</string>
    </property>
   </widget>
   <zorder>label_discount_code</zorder>
-  <zorder>promoButton</zorder>
+  <zorder>pushButton_promo_button</zorder>
   <zorder>label_pay</zorder>
   <zorder>page_qr_payment_Button</zorder>
   <zorder>label_invoice_box</zorder>
   <zorder>label_payment_page</zorder>
   <zorder>label_invoice_price</zorder>
-  <zorder>promoCode</zorder>
+  <zorder>lineEdit_promo_code</zorder>
   <zorder>pushButton_previous_page</zorder>
   <zorder>label_invoice_price_total</zorder>
   <zorder>label_invoice_name</zorder>
@@ -2128,8 +2142,8 @@ text-align: center;</string>
   <zorder>label_selected_price</zorder>
   <zorder>label_invoice_discount_name</zorder>
   <zorder>label_discount_tag</zorder>
-  <zorder>selectProductPage_Button</zorder>
-  <zorder>promoInputButton</zorder>
+  <zorder>pushButton_select_product_page</zorder>
+  <zorder>pushButton_promo_input</zorder>
   <zorder>label_total</zorder>
   <zorder>promoKeyboard</zorder>
   <zorder>label_product_photo</zorder>

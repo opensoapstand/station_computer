@@ -39,7 +39,8 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
 
     connect(ui->pwmSlider, SIGNAL(valueChanged(int)), this, SLOT(pwmSliderMoved(int)));
     ui->refillButton->setStyleSheet("QPushButton {font-size: 36px;}");
-    connect(ui->editProductGroup, SIGNAL(buttonClicked(int)), this, SLOT(editProductButtonPressed()));
+
+    connect(ui->buttonGroup_edit_product, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroup_edit_product_Pressed()));
 }
 
 // DTOR
@@ -103,18 +104,18 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 
     // if (db.getPaymentMethod(product_slot___) == "plu" || db.getPaymentMethod(product_slot___) == "barcode") paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13"
     // {
-        ui->pluButton_s->setVisible(true);
-        ui->pluLabel_s->setVisible(true);
-        ui->pluButton_s->setEnabled(true);
-        ui->pluButton_m->setVisible(true);
-        ui->pluLabel_m->setVisible(true);
-        ui->pluButton_m->setEnabled(true);
-        ui->pluButton_l->setVisible(true);
-        ui->pluLabel_l->setVisible(true);
-        ui->pluButton_l->setEnabled(true);
-        ui->pluButton_c->setVisible(true);
-        ui->pluLabel_c->setVisible(true);
-        ui->pluButton_c->setEnabled(true);
+    ui->pluButton_s->setVisible(true);
+    ui->pluLabel_s->setVisible(true);
+    ui->pluButton_s->setEnabled(true);
+    ui->pluButton_m->setVisible(true);
+    ui->pluLabel_m->setVisible(true);
+    ui->pluButton_m->setEnabled(true);
+    ui->pluButton_l->setVisible(true);
+    ui->pluLabel_l->setVisible(true);
+    ui->pluButton_l->setEnabled(true);
+    ui->pluButton_c->setVisible(true);
+    ui->pluLabel_c->setVisible(true);
+    ui->pluButton_c->setEnabled(true);
     // }
     // else
     // {
@@ -625,8 +626,6 @@ void page_maintenance_dispenser::on_pushButton_set_volume_remaining_clicked()
     ui->numberEntry->show();
     ui->textEntry->setText("");
     ui->titleLabel->setText("Adjust the remaining volume:");
-    
-
 }
 
 void page_maintenance_dispenser::on_dispensedButton_clicked()
@@ -1075,7 +1074,6 @@ void page_maintenance_dispenser::on_update_portal_clicked()
     }
     else
     {
-
         QString feedback = QString::fromUtf8(readBuffer.c_str());
         qDebug() << "Pagemaintenancedispenser cURL success. Server feedback readbuffer: " << feedback;
         ui->infoLabel->setText("Portal Update Succesfull");
@@ -1089,10 +1087,8 @@ void page_maintenance_dispenser::on_update_portal_clicked()
     readBuffer = "";
 }
 
-void page_maintenance_dispenser::editProductButtonPressed()
+void page_maintenance_dispenser::buttonGroup_edit_product_Pressed()
 {
     qDebug() << "Edit button pressed";
     ui->numberEntry->show();
-    // QString data_out = curl_params;
-    // p_page_idle->dfUtility->write_to_file(TRANSACTIONS_RESTOCK_OFFINE_PATH, data_out);
 }

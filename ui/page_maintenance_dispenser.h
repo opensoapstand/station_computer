@@ -79,14 +79,9 @@ private slots:
     void onDispenseTimerTick();
     void on_pushButton_set_volume_remaining_clicked();
     void on_dispensedButton_clicked();
-    // void on_lastRefillButton_clicked();
     void on_temperatureButton_clicked();
     void on_pwmButton_clicked();
     void on_pumpButton_clicked();
-    //    void on_testSmallButton_clicked();
-    //    void on_testLargeButton_clicked();
-    //    void on_pluButton_clicked();
-    //    void on_numberEntry_buttonClicked();
     void on_button1_clicked();
     void on_button2_clicked();
     void on_button3_clicked();
@@ -111,7 +106,7 @@ private slots:
     void on_autoDispenseSmallButton_clicked();
 
     void on_update_portal_clicked();
-    void editProductButtonPressed();
+    void buttonGroup_edit_product_Pressed();
 
 private:
     void setButtonPressCountLabel(bool init);

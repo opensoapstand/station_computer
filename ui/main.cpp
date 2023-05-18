@@ -24,6 +24,7 @@
 #include "page_product.h"
 #include "page_qr_payment.h"
 #include "page_tap_payment.h"
+#include "page_tap_payment_serial.h"
 #include "page_dispenser.h"
 #include "page_error_wifi.h"
 #include "page_productOverview.h"
@@ -113,6 +114,7 @@ int main(int argc, char *argv[])
     pageProduct *p_pageProduct = new pageProduct();
     page_qr_payment *paymentQrPage = new page_qr_payment();
     page_tap_payment *paymentTapPage = new page_tap_payment();
+    page_tap_payment_serial *paymentTapSerialPage = new page_tap_payment_serial();
     page_dispenser *p_page_dispense = new page_dispenser();
     page_error_wifi *p_page_wifi_error = new page_error_wifi();
     pagethankyou *p_page_thank_you = new pagethankyou();
@@ -175,8 +177,9 @@ int main(int argc, char *argv[])
     p_pageProduct->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, p_page_help,p_pageProductOverview);
     paymentQrPage->setPage(p_pageProduct, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
     paymentTapPage->setPage(p_pageProduct, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
+    paymentTapSerialPage->setPage(p_page_dispense);
     p_page_dispense->setPage(paymentQrPage,paymentTapPage, p_page_thank_you, p_page_idle, p_page_sendFeedback);
-    p_pageProductOverview->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, paymentTapPage, p_page_help, p_pageProduct);
+    p_pageProductOverview->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, paymentTapPage,paymentTapSerialPage, p_page_help, p_pageProduct);
     p_page_sendFeedback->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, p_page_help, p_pageProduct, p_page_thank_you);
     p_page_thank_you->setPage(p_page_dispense, p_page_idle, paymentQrPage, p_page_sendFeedback );
     p_page_wifi_error->setPage(paymentQrPage, p_page_thank_you, p_page_idle);

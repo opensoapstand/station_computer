@@ -245,11 +245,12 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void pageProductOverview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,page_tap_payment *page_tap_payment, page_help *pageHelp, pageProduct *page_product)
+void pageProductOverview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,page_tap_payment *page_tap_payment,page_tap_payment_serial *page_tap_payment_serial, page_help *pageHelp, pageProduct *page_product)
 {
     this->p_page_select_product = pageSelect;
     this->paymentQrPage = page_qr_payment;
     this->paymentTapPage = page_tap_payment;
+    this->paymentTapSerialPage = page_tap_payment_serial;
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
     this->p_page_help = pageHelp;
@@ -707,6 +708,10 @@ void pageProductOverview::on_page_qr_payment_Button_clicked()
     }
     else if(paymentMethod == "tapTcp"){
         hideCurrentPageAndShowProvided(paymentTapPage);
+
+    }
+    else if(paymentMethod == "tapSerial"){
+        hideCurrentPageAndShowProvided(paymentTapSerialPage);
 
     }
     else if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")

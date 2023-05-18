@@ -27,6 +27,7 @@
 class page_select_product;
 class page_qr_payment;
 class page_tap_payment;
+class page_tap_payment_serial;
 class page_idle;
 class page_dispenser;
 class page_error_wifi;
@@ -48,7 +49,7 @@ public:
     QLabel *orderSizeBackgroundLabels[4];
 
     explicit pageProductOverview(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,page_tap_payment *page_tap_payment, page_help *pageHelp, pageProduct *page_product);
+    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,page_tap_payment *page_tap_payment,page_tap_payment_serial *page_tap_payment_serial, page_help *pageHelp, pageProduct *page_product);
     ~pageProductOverview();
 
     void resizeEvent(QResizeEvent *event);
@@ -92,6 +93,7 @@ private:
     page_select_product *p_page_select_product;
     page_qr_payment *paymentQrPage;
     page_tap_payment *paymentTapPage;
+    page_tap_payment_serial *paymentTapSerialPage;
     page_idle *p_page_idle;
     page_dispenser *p_page_dispense;
     page_error_wifi *p_page_wifi_error;

@@ -596,7 +596,7 @@ void pageProductOverview::on_page_qr_payment_Button_clicked()
         hideCurrentPageAndShowProvided(paymentTapPage);
 
     }
-    else if (paymentMethod == "barcode" || paymentMethod == "plu")
+    else if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
     {
         hideCurrentPageAndShowProvided(p_page_dispense);
     }

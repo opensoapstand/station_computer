@@ -628,9 +628,10 @@ QString DrinkOrder::getFullVolumeCorrectUnits(bool addUnits)
 
 void DrinkOrder::setFullVolumeCorrectUnits(QString inputFullValue)
 {
+    double vol_as_ml =  inputTextToMlConvertUnits(inputFullValue);
     qDebug() << "Open db: for write full vol";
     DbManager db(DB_PATH);
-    db.updateFullVolume(getSelectedSlot(), inputTextToMlConvertUnits(inputFullValue));
+    db.updateFullVolume(getSelectedSlot(),vol_as_ml ); // vol_as_ml isolated. Caused nested db opening  
     db.closeDB();
 }
 

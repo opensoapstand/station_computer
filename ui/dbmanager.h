@@ -59,6 +59,7 @@ public:
     QString getMachineID();
     QString getProductID(int slot);
     int getSlotEnabled(int slot);
+    bool setVolumeRemaining(int slot, double volumeMl);
     QString getStatusText(int slot);
     // bool setStatusText(int slot, QString text);
     bool updateSlotAvailability(int slot, int isEnabled, QString status_text);

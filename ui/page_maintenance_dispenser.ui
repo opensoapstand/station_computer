@@ -197,17 +197,17 @@ Volume per Tick</string>
     <string>Mark as Sold Out</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="fullButton">
+  <widget class="QPushButton" name="pushButton_set_restock_volume">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>920</y>
-     <width>141</width>
+     <x>450</x>
+     <y>510</y>
+     <width>201</width>
      <height>51</height>
     </rect>
    </property>
    <property name="text">
-    <string>Full Volume</string>
+    <string>Set Full Volume</string>
    </property>
    <attribute name="buttonGroup">
     <string notr="true">editProductGroup</string>
@@ -216,9 +216,9 @@ Volume per Tick</string>
   <widget class="QLabel" name="full_volume">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>930</y>
-     <width>231</width>
+     <x>450</x>
+     <y>420</y>
+     <width>400</width>
      <height>31</height>
     </rect>
    </property>
@@ -226,39 +226,25 @@ Volume per Tick</string>
     <string>Full Volume:</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="dispensedButton">
+  <widget class="QPushButton" name="pushButton_set_volume_remaining">
    <property name="geometry">
     <rect>
-     <x>440</x>
-     <y>400</y>
-     <width>141</width>
+     <x>450</x>
+     <y>450</y>
+     <width>201</width>
      <height>51</height>
     </rect>
    </property>
    <property name="text">
-    <string>Total Dispensed 
- ever</string>
+    <string>Adjust Remaining Volume</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="remainingButton">
+  <widget class="QLabel" name="label_volume_dispensed_total">
    <property name="geometry">
     <rect>
-     <x>440</x>
-     <y>280</y>
-     <width>141</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Remaining:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="volume_dispensed_total">
-   <property name="geometry">
-    <rect>
-     <x>590</x>
-     <y>410</y>
-     <width>721</width>
+     <x>450</x>
+     <y>360</y>
+     <width>400</width>
      <height>31</height>
     </rect>
    </property>
@@ -266,12 +252,12 @@ Volume per Tick</string>
     <string>Total Dispensed:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="remainingLabel">
+  <widget class="QLabel" name="label_volume_remaining">
    <property name="geometry">
     <rect>
-     <x>590</x>
-     <y>290</y>
-     <width>721</width>
+     <x>450</x>
+     <y>300</y>
+     <width>371</width>
      <height>31</height>
     </rect>
    </property>
@@ -279,25 +265,12 @@ Volume per Tick</string>
     <string>Remaining</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="lastRefillButton">
+  <widget class="QLabel" name="label_restock_timestamp">
    <property name="geometry">
     <rect>
-     <x>440</x>
-     <y>460</y>
-     <width>141</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Last Restock:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="lastRefillLabel">
-   <property name="geometry">
-    <rect>
-     <x>590</x>
-     <y>470</y>
-     <width>721</width>
+     <x>450</x>
+     <y>390</y>
+     <width>431</width>
      <height>31</height>
     </rect>
    </property>
@@ -765,25 +738,11 @@ Volume per Tick</string>
     <number>10</number>
    </property>
   </widget>
-  <widget class="QPushButton" name="dispensedSinceLastRestockButton">
+  <widget class="QLabel" name="label_volume_dispensed_since_restock">
    <property name="geometry">
     <rect>
-     <x>440</x>
-     <y>340</y>
-     <width>141</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Dispensed since
-last restock</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="volume_dispensed_since_restock">
-   <property name="geometry">
-    <rect>
-     <x>590</x>
-     <y>346</y>
+     <x>450</x>
+     <y>330</y>
      <width>341</width>
      <height>31</height>
     </rect>
@@ -886,14 +845,14 @@ last restock</string>
   <widget class="QPushButton" name="update_portal">
    <property name="geometry">
     <rect>
-     <x>870</x>
-     <y>460</y>
-     <width>181</width>
+     <x>820</x>
+     <y>450</y>
+     <width>251</width>
      <height>50</height>
     </rect>
    </property>
    <property name="text">
-    <string>Update Portal</string>
+    <string>Update Changes to Portal</string>
    </property>
   </widget>
   <widget class="QLabel" name="calibration_instructions_label">

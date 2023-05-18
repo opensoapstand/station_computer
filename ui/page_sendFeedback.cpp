@@ -378,7 +378,7 @@ void page_sendFeedback::on_send_Button_clicked()
         ui->label_thanks_for_feedback->repaint(); // instant showing instead of waiting for function to be finished.
 
         // send to backend
-        QString MachineSerialNumber = p_page_idle->currentProductOrder->getMachineId();
+        QString MachineSerialNumber = p_page_idle->selectedProduct->getMachineId();
         QString customFeedback = ui->feedbackTextEdit->toPlainText();
         QString curl_param = "problems=" + problems + " " + customFeedback + "&MachineSerialNumber=" + MachineSerialNumber;
         qDebug() << "Curl params" << curl_param;

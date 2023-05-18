@@ -123,8 +123,6 @@ void page_select_product::setPage(pageProduct *pageSizeSelect, page_idle_product
     this->p_page_maintenance = pageMaintenance;
     this->p_page_help = pageHelp;
 
-    selectedProductOrder = p_page_idle->currentProductOrder;
-
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
     QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     qDebug() << full_path;
@@ -143,7 +141,7 @@ void page_select_product::showEvent(QShowEvent *event)
     this->lower();
     QWidget::showEvent(event);
     maintenanceCounter = 0;
-
+    
     displayProducts();
 
     if (productPageEndTimer == nullptr)
@@ -179,22 +177,20 @@ void page_select_product::displayProducts()
 
         // display product picture
         selectProductPhotoLabels[i]->setStyleSheet("border: 1px solid black;");
-        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(slot));
+        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->products[i].getProductPicturePath());
+        product_type = p_page_idle->products[i].getProductType();
+        product_name = p_page_idle->products[i].getProductName();
 
         qDebug() << "db (re)load product details:";
+        product_slot_enabled = p_page_idle->products[i].getSlotEnabled();
+
+       
+        
         DbManager db(DB_PATH);
-
-        product_slot_enabled = db.getSlotEnabled(slot);
-
+        double remaining_volume = db.getVolumeRemaining();
         product_status_text = db.getStatusText(slot);
-        double remaining_volume = db.getVolumeRemaining(slot);
-
         bool set_to_sold_out_below_threshold = db.getEmptyContainerDetectionEnabled();
-
         db.closeDB();
-
-        product_type = p_page_idle->currentProductOrder->getProductType(slot);
-        product_name = p_page_idle->currentProductOrder->getProductName(slot);
 
         qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << " Status text: " << product_status_text;
 
@@ -300,16 +296,17 @@ void page_select_product::displayProducts()
 
 void page_select_product::select_product(int slot)
 {
-    DbManager db(DB_PATH);
-
-    bool product_slot_enabled = db.getSlotEnabled(slot);
-    db.closeDB();
+    bool product_slot_enabled = p_page_idle->products[slot-1].getSlotEnabled();
 
     if (product_slot_enabled)
     {
         qDebug() << "selected slot: " << slot;
-        p_page_idle->currentProductOrder->setSelectedSlot(slot);
+        // p_page_idle->currentProductOrder->setSelectedSlot(slot);
+        p_page_idle->setSelectedProduct(slot);
         hideCurrentPageAndShowProvided(p_page_product);
+    }else{
+        qDebug() << "Slot not enabled : " << slot;
+
     }
 }
 
@@ -357,7 +354,7 @@ void page_select_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     productPageEndTimer->stop();
     qDebug() << "Exit select product page.";
-    selectedProductOrder->setDiscountPercentageFraction(0.0);
+    p_page_idle->selectedProduct->setDiscountPercentageFraction(0.0);
     this->raise();
     p_page_idle->pageTransition(this, pageToShow);
 }

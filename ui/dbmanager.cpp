@@ -127,6 +127,7 @@ bool DbManager::isDatabaseLocked(const QSqlDatabase &db)
 
 void DbManager::closeDB()
 {
+    qDebug() << "close db";
     if (m_db.isOpen())
     {
         {
@@ -186,6 +187,7 @@ void DbManager::getCustomDiscountProperties(int slot, bool *isEnabled, double *v
 
 void DbManager::getProductProperties(int slot, QString *product_id, bool *isSizeEnabled)
 {
+    qDebug() << " db... product properties";
     QSqlQuery qry;
     {
         qry.prepare("SELECT soapstand_product_serial, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom FROM products WHERE slot=:slot");
@@ -905,10 +907,10 @@ double DbManager::getVolumeRemaining(int slot)
     return remaining;
 }
 
-QString DbManager::getLastRefillTime(int slot)
+QString DbManager::getLastRestockDate(int slot)
 {
     // last as in "most recent"
-    qDebug() << " db... getLastRefill";
+    qDebug() << " db... getLastRestockDate";
     QSqlQuery refill_date_query;
     QString refill_date_string;
 

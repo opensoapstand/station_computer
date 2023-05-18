@@ -463,7 +463,7 @@ void DrinkOrder::loadSelectedProductProperties()
 
 void DrinkOrder::loadProductPropertiesFromDb(int slot)
 {
-    qDebug() << "Open db: db load product properties";
+    qDebug() << "Open db: db load product properties for drinkordder";
     DbManager db(DB_PATH);
 
     db.getProductProperties(slot, &m_product_id, m_sizeIndexIsEnabled);
@@ -507,7 +507,7 @@ void DrinkOrder::getProductPropertiesFromProductsFile(QString product_id, QStrin
     }
 
     QTextStream in(&file);
-    qDebug() << "Load csv file with product properties";
+    // qDebug() << "Load csv file with product properties";
 
     while (!in.atEnd())
     {

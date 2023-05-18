@@ -102,7 +102,6 @@ void page_idle_products::setPage(pageProduct *pageSizeSelect, page_idle_products
     this->p_page_maintenance = pageMaintenance;
     this->p_page_help = pageHelp;
 
-    selectedProductOrder = p_page_idle->currentProductOrder;
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
     QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
@@ -158,12 +157,11 @@ void page_idle_products::displayProducts()
 
         // display product picture
         selectProductPhotoLabels[i]->setStyleSheet("border: none;");
-        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(slot));
+        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->products[i].getProductPicturePath());
 
         qDebug() << "db (re)load product details:";
-        DbManager db(DB_PATH);
         
-        product_slot_enabled = db.getSlotEnabled(slot);
+        product_slot_enabled = p_page_idle->products[i].getSlotEnabled();
 
         
         // product_sold_out = !(db.isProductVolumeInContainer(slot));
@@ -171,8 +169,8 @@ void page_idle_products::displayProducts()
         product_status_text = db.getStatusText(slot);
         db.closeDB();
 
-        product_type = p_page_idle->currentProductOrder->getProductType(slot);
-        product_name = p_page_idle->currentProductOrder->getProductName(slot);
+        product_type = p_page_idle->products[i].getProductType();
+        product_name = p_page_idle->products[i].getProductName();
         
         // qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << ", product set as not available?: " << product_sold_out << " Status text: " << product_status_text;
 
@@ -235,7 +233,6 @@ void page_idle_products::displayProducts()
 void page_idle_products::select_product(int slot)
 {
         qDebug() << "selected slot: " << slot;
-        p_page_idle->currentProductOrder->setSelectedSlot(slot);
         hideCurrentPageAndShowProvided(p_page_product);
 }
 
@@ -273,95 +270,7 @@ void page_idle_products::addCompanyLogoToLabel(QLabel *label)
     {
         qDebug() << "WARNING: invalid customer ID. Should like C-1, C-374, ... . Provided id: " << id;
     }
-        // ui->label_product1_price->setStyleSheet(
-        // "QLabel {"
-
-        // "font-family: 'Brevia';"
-        // "font-style: normal;"
-        // "font-weight: 50;"
-        // "font-size: 23px;"
-        // "line-height: 99px;"
-        // "text-align: center;"
-        // "letter-spacing: 1.5px;"
-        // "text-transform: lowercase;"
-        // "color: #003840;"
-        // "qproperty-alignment: AlignCenter;"
-        // "}");
-
-        // ui->label_product2_price->setStyleSheet(
-        // "QLabel {"
-
-        // "font-family: 'Brevia';"
-        // "font-style: normal;"
-        // "font-weight: 50;"
-        // "font-size: 23px;"
-        // "line-height: 99px;"
-        // "text-align: center;"
-        // "letter-spacing: 1.5px;"
-        // "text-transform: lowercase;"
-        // "color: #003840;"
-        // "qproperty-alignment: AlignCenter;"
-        // "}");
-
-        // ui->label_product3_price->setStyleSheet(
-        // "QLabel {"
-
-        // "font-family: 'Brevia';"
-        // "font-style: normal;"
-        // "font-weight: 50;"
-        // "font-size: 23px;"
-        // "line-height: 99px;"
-        // "text-align: center;"
-        // "letter-spacing: 1.5px;"
-        // "text-transform: lowercase;"
-        // "color: #003840;"
-        // "qproperty-alignment: AlignCenter;"
-        // "}");
-        // ui->label_product4_price->setStyleSheet(
-        // "QLabel {"
-
-        // "font-family: 'Brevia';"
-        // "font-style: normal;"
-        // "font-weight: 50;"
-        // "font-size: 23px;"
-        // "line-height: 99px;"
-        // "text-align: center;"
-        // "letter-spacing: 1.5px;"
-        // "text-transform: lowercase;"
-        // "color: #003840;"
-        // "qproperty-alignment: AlignCenter;"
-        // "}");
-    //     QString label_text = "%1 ml | %2 ml | %3 ml<br>%4....|....%5....|.... %6";
-
-    //  if (size_units == "ml")
-    // { 
-    //     label_text = label_text.arg(size_small).arg(size_medium).arg(size_large).arg( price_small).arg(price_medium).arg(price_large);
-    //     ui->label_product1_price->setText(label_text);
-    //     ui->label_product2_price->setText(label_text);
-    //     ui->label_product3_price->setText(label_text);
-    //     ui->label_product4_price->setText(label_text);
-    // }
-    //  else if (size_units == "L")
-    // {
-    //     ui->label_product1_price->setText("L");
-    //     ui->label_product2_price->setText("L");
-    //     ui->label_product3_price->setText("L");
-    //     ui->label_product4_price->setText("L");
-    // }
-    //  else if (size_units == "kg")
-    // {
-    //     ui->label_product1_price->setText("kg");
-    //     ui->label_product2_price->setText("kg");
-    //     ui->label_product3_price->setText("kg");
-    //     ui->label_product4_price->setText("kg");
-    // }
-    // else if (size_units == "oz")
-    // {
-    //     ui->label_product1_price->setText("oz");
-    //     ui->label_product2_price->setText("oz");
-    //     ui->label_product3_price->setText("oz");
-    //     ui->label_product4_price->setText("oz");
-    // }
+        
 
 }
 
@@ -392,7 +301,6 @@ void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     productPageEndTimer->stop();
     qDebug() << "Exit select product page.";
-    selectedProductOrder->setDiscountPercentageFraction(0.0);
     this->raise();
     p_page_idle->pageTransition(this, pageToShow);
 }

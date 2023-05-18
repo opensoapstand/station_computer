@@ -98,7 +98,6 @@ private:
     page_error_wifi *p_page_wifi_error;
     page_help *p_page_help;
     pageProduct *p_page_product;
-    DrinkOrder *selectedProductOrder;
 
     QTimer *selectIdleTimer;
     int _selectIdleTimeoutSec;

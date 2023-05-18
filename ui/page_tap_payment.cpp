@@ -40,7 +40,7 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
 {
     // Fullscreen background setup
     ui->setupUi(this);
-    qDebug() << "Payment page" << endl;
+    qDebug() << "Tap payment page" << endl;
     // ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->previousPage_Button->setStyleSheet(
         "QPushButton {"
@@ -118,6 +118,15 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
             registerDevice(connectSocket());
         }
     }
+}
+
+QString page_tap_payment::getPaymentMethodForConstructorTime(uint8_t slot)
+{
+    qDebug() << "db open245";
+    DbManager db2(DB_PATH);
+    QString payment_method = db2.getPaymentMethod(slot);
+    db2.closeDB();
+    return payment_method;
 }
 
 void page_tap_payment::stopPayTimers()
@@ -256,9 +265,10 @@ void page_tap_payment::startPaymentProcess()
     if (numberOfTapAttempts < 3)
     {
         numberOfTapAttempts += 1;
-        double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
-        if(p_page_idle->currentProductOrder->getSelectedSizeAsChar()=='c'){
-            price = p_page_idle->currentProductOrder->getSelectedPriceCustom();
+        double price = p_page_idle->selectedProduct->getPriceCorrected();
+        if (p_page_idle->selectedProduct->getSizeAsChar() == 'c')
+        {
+            price = p_page_idle->selectedProduct->getPriceCustom();
         }
         std::ostringstream stream;
         stream << std::fixed << std::setprecision(2) << price;
@@ -274,10 +284,9 @@ void page_tap_payment::startPaymentProcess()
         dataThread = std::thread(receiveAuthorizationThread, std::stoi(socketAddr));
         dataThread.detach();
         checkPacketReceivedTimer->start();
-        ui->preauthLabel->setText("You are being pre-authorized for maximum volume "
-                                +p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true)+ 
-                                " with amount of:");
-        ui->order_total_amount->setText("$ "+ QString::number(price, 'f', 2));
+        ui->preauthLabel->setText("You are being pre-authorized for maximum volume " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true) +
+                                  " with amount of:");
+        ui->order_total_amount->setText("$ " + QString::number(price, 'f', 2));
     }
     else
     {
@@ -286,8 +295,6 @@ void page_tap_payment::startPaymentProcess()
         on_previousPage_Button_clicked();
     }
 }
-
-
 
 void page_tap_payment::check_packet_available()
 {

@@ -204,15 +204,15 @@ size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
     return size * nmemb;
 }
 
-QString page_qr_payment::getPaymentMethod()
-{
-    qDebug() << "db open245";
-    int product_slot___ = p_page_idle->currentProductOrder->getSelectedSlot();
-    DbManager db2(DB_PATH);
-    QString payment_method = db2.getPaymentMethod(product_slot___);
-    db2.closeDB();
-    return payment_method;
-}
+// QString page_qr_payment::getPaymentMethod()
+// {
+//     qDebug() << "db open245";
+//     int product_slot___ = p_page_idle->selectedProduct->getSlot();
+//     DbManager db2(DB_PATH);
+//     QString payment_method = db2.getPaymentMethod(product_slot___);
+//     db2.closeDB();
+//     return payment_method;
+// }
 
 void page_qr_payment::resizeEvent(QResizeEvent *event)
 {
@@ -223,9 +223,9 @@ void page_qr_payment::showEvent(QShowEvent *event)
     qDebug() << "<<<<<<< Page Enter: Payment >>>>>>>>>";
     QWidget::showEvent(event);
     state_payment = s_init;
-    QString price = QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2);
-    if(p_page_idle->currentProductOrder->getSelectedSizeAsChar()=='c'){
-        price = QString::number(p_page_idle->currentProductOrder->getSelectedPriceCustom(), 'f', 2);
+    QString price = QString::number(p_page_idle->selectedProduct->getPriceCorrected(), 'f', 2);
+    if(p_page_idle->selectedProduct->getSizeAsChar()=='c'){
+        price = QString::number(p_page_idle->selectedProduct->getPriceCustom(), 'f', 2);
     }
     
     ui->qrCode->show();
@@ -235,7 +235,7 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->scan_Label->setText("Scan to Pay");
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
     ui->payment_bypass_Button->setEnabled(false);
-    ui->productLabel->setText(p_page_idle->currentProductOrder->getSelectedProductName() + " " + p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
+    ui->productLabel->setText(p_page_idle->selectedProduct->getProductName() + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
     ui->order_drink_amount->setText("$" +price);
     ui->order_total_amount->setText("Total: $" +price);
     ui->steps_Label->show();
@@ -303,15 +303,15 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
     // an order Id is generated locally and the order is sent to the cloud.
     bool shouldShowQR = false;
     qDebug() << "Get cloud to create an order and retrieve the order id";
-    QString MachineSerialNumber = p_page_idle->currentProductOrder->getMachineId();
-    QString productUnits = p_page_idle->currentProductOrder->getUnitsForSelectedSlot();
-    QString productId = p_page_idle->currentProductOrder->getSelectedProductId();
-    QString contents = p_page_idle->currentProductOrder->getSelectedProductName();
-    QString quantity_requested = p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(false, false);
-    char drinkSize = p_page_idle->currentProductOrder->getSelectedSizeAsChar();
-    QString price = QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2);
+    QString MachineSerialNumber =p_page_idle->selectedProduct->getMachineId();
+    QString productUnits =p_page_idle->selectedProduct->getUnitsForSlot();
+    QString productId = p_page_idle->selectedProduct->getProductId();
+    QString contents = p_page_idle->selectedProduct->getProductName();
+    QString quantity_requested = p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(false, false);
+    char drinkSize = p_page_idle->selectedProduct->getSizeAsChar();
+    QString price = QString::number(p_page_idle->selectedProduct->getPriceCorrected(), 'f', 2);
     if(drinkSize=='c'){
-        price = QString::number(p_page_idle->currentProductOrder->getSelectedPriceCustom(), 'f', 2);
+        price = QString::number(p_page_idle->selectedProduct->getPriceCustom(), 'f', 2);
     }
 
     // create a unique order id locally

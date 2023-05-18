@@ -21,6 +21,7 @@
 #include "df_util.h"
 #include "includefiles.h"
 #include "page_idle.h"
+#include "product.h"
 #include "page_sendFeedback.h"
 #include "pagethankyou.h"
 #include "payment/commands.h"
@@ -29,7 +30,6 @@
 #include "posm/packetfromecr.h"
 #include "posm/packetfromux410.h"
 #include "posm/transactionPackets.h"
-#include "posm/transactioninfo.h"
 
 class page_qr_payment;
 class page_tap_payment;
@@ -107,7 +107,7 @@ private:
     page_sendFeedback* feedbackPage;
     page_idle* p_page_idle;
 
-    DrinkOrder* selectedProductOrder;
+    product* selectedProduct;
 
     // XXX: Remove when interrupts and flowsensors work.
 

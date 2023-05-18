@@ -35,19 +35,15 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 {
     // IPC Networking
     dfUtility = new df_util();
-    // product products[SLOT_COUNT]; // create an array of Product objects with size SLOT_COUNT
-// for products.cpp
-    // for (int slot_index = 0; slot_index <= SLOT_COUNT; slot_index++)
-    // {
-    //     products[slot_index].setSlot(slot_index);
-    //     products[slot_index].loadFromDb(slot_index);
-    // }
+   
+    // for products.cpp
+    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    {
+        products[slot_index].setSlot(slot_index+1);
+        products[slot_index].load();
+    }
 
-    // products[0].setSelectedSlot(2);
-    // int selectedSlot = products[0].getSelectedSlot();
-    // selectedProduct = products[selectedSlot];
-    // product* selectedProduct = &products[selectedSlot];
-
+    setSelectedProduct(0);
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
 
@@ -56,10 +52,13 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     ui->toSelectProductPageButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->toSelectProductPageButton->raise();
 
-    // TODO: Hold and pass DrinkOrder Object
+    //TODO: Hold and pass Product Object
     currentProductOrder = new DrinkOrder();
+    selectedProduct = new product();
     currentProductOrder->setSelectedSlot(OPTION_SLOT_INVALID);
     // product *selectedProduct;
+
+
 }
 
 /*
@@ -88,11 +87,10 @@ void page_idle::showEvent(QShowEvent *event)
 {
 
     qDebug() << "open db: payment method";
-    DbManager db(DB_PATH);
     bool needsReceiptPrinter = false;
     for (int slot = 1; slot <= SLOT_COUNT; slot++)
     {
-        QString paymentMethod = db.getPaymentMethod(slot);
+        QString paymentMethod = products[slot-1].getPaymentMethod();
         if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
         {
             needsReceiptPrinter = true;
@@ -100,23 +98,18 @@ void page_idle::showEvent(QShowEvent *event)
             break;
         }
     }
+
+    DbManager db(DB_PATH);
     // call db check if idle or idle_products
     idle_page_type = db.getIdlePageType();
     db.closeDB();
 
     if (idle_page_type == "static_products")
     {
-        hideCurrentPageAndShowProvided(p_page_idle_products);
+        hideCurrentPageAndShowProvided(this->p_page_idle_products);
     }
 
-    // DbManager db(DB_PATH);
-
-    // else if (idlePageType == "dynamic_products")
-    // {
-    //     hideCurrentPageAndShowProvided(p_page_idle_products);
-    // }
-
-    // db.closeDB();
+    
 
     this->lower();
     qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
@@ -225,14 +218,14 @@ void page_idle::showEvent(QShowEvent *event)
     this->raise();
 }
 //for products.cpp
-// product* page_idle::getSelectedProduct(){
-//     return selectedProduct;
-// }
+product* page_idle::getSelectedProduct(){
+    return selectedProduct;
+}
 
-// void page_idle::setSelectedProduct(uint8_t slot)
-// {
-//     product *selectedProduct = &products[slot - 1];
-// }
+void page_idle::setSelectedProduct(uint8_t slot)
+{
+    selectedProduct = &products[slot - 1];
+}
 
 void page_idle::checkReceiptPrinterStatus()
 {

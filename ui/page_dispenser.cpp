@@ -35,6 +35,7 @@ double current_price;
 page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
                                                   ui(new Ui::page_dispenser)
 {
+    qDebug() << "constructor page_dispenser";
     ui->setupUi(this);
 
     ui->finishTransactionMessage->setStyleSheet(
@@ -209,7 +210,6 @@ void page_dispenser::setPage(page_qr_payment *page_qr_payment, page_tap_payment 
     this->paymentTapPage = page_tap_payment;
     this->p_page_idle = pageIdle;
     this->feedbackPage = pageFeedback;
-    selectedProductOrder = p_page_idle->currentProductOrder;
 }
 
 // DTOR
@@ -243,7 +243,7 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 void page_dispenser::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: Dispenser >>>>>>>>>";
-    qDebug() << "Selected slot: " << QString::number(selectedProductOrder->getSelectedSlot());
+    qDebug() << "Selected slot: " << QString::number(p_page_idle->selectedProduct->getSlot());
     transactionLogging += "\n 6: Station Unlocked - True";
     QWidget::showEvent(event);
 
@@ -255,7 +255,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     askForFeedbackAtEnd = false;
 
     ui->fill_animation_label->move(380, 889);
-    ui->button_problems->move(120,40);
+    ui->button_problems->move(120, 40);
 
     qDebug() << "db check dispense buttons count:";
     DbManager db(DB_PATH);
@@ -293,12 +293,12 @@ void page_dispenser::showEvent(QShowEvent *event)
     dispenseIdleTimer->start(1000);
     resetDispenseTimeout();
 
-    selectedProductOrder->resetSelectedVolumeDispensed();
-    updateVolumeDispensedLabel(selectedProductOrder->getSelectedVolumeDispensedMl());
+    p_page_idle->selectedProduct->resetVolumeDispensed();
+    updateVolumeDispensedLabel(p_page_idle->selectedProduct->getVolumeDispensedMl());
 
     QString dispenseCommand = getStartDispensingCommand();
-    QString priceCommand = QString::number(this->selectedProductOrder->getSelectedPriceCorrected());
-    QString promoCommand = this->selectedProductOrder->getPromoCode();
+    QString priceCommand = QString::number(p_page_idle->selectedProduct->getPriceCorrected());
+    QString promoCommand = p_page_idle->selectedProduct->getPromoCode();
 
     QString delimiter = QString("|");
     QString preamble = "Order";
@@ -313,7 +313,7 @@ void page_dispenser::showEvent(QShowEvent *event)
 void page_dispenser::updateVolumeDispensedLabel(double dispensed)
 {
     QString dispensedVolumeUnitsCorrected;
-    QString units = selectedProductOrder->getUnitsForSelectedSlot();
+    QString units = p_page_idle->selectedProduct->getUnitsForSlot();
 
     if (units == "oz")
     {
@@ -324,18 +324,18 @@ void page_dispenser::updateVolumeDispensedLabel(double dispensed)
         dispensedVolumeUnitsCorrected = QString::number(ceil(dispensed));
     }
 
-    if (p_page_idle->currentProductOrder->getSelectedSize() == SIZE_CUSTOM_INDEX)
+    if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
     {
 
-        double unitprice = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
+        double unitprice = p_page_idle->selectedProduct->getPriceCorrected();
         current_price = dispensed * unitprice;
         ui->volumeDispensedLabel->setText(dispensedVolumeUnitsCorrected + " " + units + " ( $" + QString::number(current_price, 'f', 2) + " )");
     }
     else
     {
-        QString totalVolume = selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(selectedProductOrder->getSelectedSize(), true, true);
+        QString totalVolume = p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(p_page_idle->selectedProduct->getSize(), true, true);
         ui->volumeDispensedLabel->setText(dispensedVolumeUnitsCorrected + " " + units + "/ " + totalVolume);
-        current_price = selectedProductOrder->getSelectedPrice();
+        current_price = p_page_idle->selectedProduct->getPrice();
     }
 }
 
@@ -353,11 +353,12 @@ void page_dispenser::dispensing_end_admin()
     ui->finishTransactionMessage->raise();
 
     double price = current_price;
+
     std::ostringstream stream;
     stream << std::fixed << std::setprecision(2) << price;
     qDebug() << "Minimum volume dispensed" << MINIMUM_DISPENSE_VOLUME_ML;
-    qDebug() << "volume dispensed" << selectedProductOrder->getSelectedVolumeDispensedMl();
-    if (selectedProductOrder->getSelectedVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML && (selectedProductOrder->getSelectedPaymentMethod()) == "tapTcp")
+    qDebug() << "volume dispensed" << p_page_idle->selectedProduct->getVolumeDispensedMl();
+    if (p_page_idle->selectedProduct->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML && (p_page_idle->selectedProduct->getPaymentMethod()) == "tapTcp")
     {
         ui->finishTransactionMessage->setText("Voiding payment");
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
@@ -375,7 +376,7 @@ void page_dispenser::dispensing_end_admin()
         }
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     }
-    else if ((selectedProductOrder->getSelectedPaymentMethod() == "tapTcp") && selectedProductOrder->getSelectedVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
+    else if ((p_page_idle->selectedProduct->getPaymentMethod() == "tapTcp") && p_page_idle->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
     {
         ui->finishTransactionMessage->setText("Capturing payment: $" + QString::number(current_price, 'f', 2));
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
@@ -409,13 +410,11 @@ void page_dispenser::force_finish_dispensing()
     dispensing_end_admin();
 }
 
-
-
 QString page_dispenser::getStartDispensingCommand()
 {
     // build up command that will be sent to fsm
-    QString command = QString::number(selectedProductOrder->getSelectedSlot());
-    command.append(selectedProductOrder->getSelectedSizeAsChar());
+    QString command = QString::number(p_page_idle->selectedProduct->getSlot());
+    command.append(p_page_idle->selectedProduct->getSizeAsChar());
     command.append(SEND_DISPENSE_START);
     return command;
 }
@@ -433,8 +432,8 @@ void page_dispenser::fsmSendStopDispensing()
     qDebug() << "Send STOP dispensing to fsm";
     this->isDispensing = false;
 
-    QString command = QString::number(this->selectedProductOrder->getSelectedSlot());
-    command.append(selectedProductOrder->getSelectedSizeAsChar());
+    QString command = QString::number(p_page_idle->selectedProduct->getSlot());
+    command.append(p_page_idle->selectedProduct->getSizeAsChar());
     command.append(SEND_DISPENSE_STOP);
     p_page_idle->dfUtility->send_command_to_FSM(command);
 }
@@ -444,7 +443,7 @@ void page_dispenser::fsmSendStopDispensing()
 //     qDebug() << "Send Price to fsm";
 //     std::string prefix = "$";
 //     QString command = QString::fromStdString(prefix);
-//     command.append(QString::number(this->selectedProductOrder->getSelectedPriceCorrected()));
+//     command.append(QString::number(this->p_page_idle->selectedProduct->getSelectedPriceCorrected()));
 //     p_page_idle->dfUtility->send_command_to_FSM(command);
 // }
 
@@ -453,7 +452,7 @@ void page_dispenser::fsmSendStopDispensing()
 //     qDebug() << "Send Promo to fsm";
 //     std::string prefix = "Promo:";
 //     QString command = QString::fromStdString(prefix);
-//     command.append(this->selectedProductOrder->getPromoCode());
+//     command.append(this->p_page_idle->selectedProduct->getPromoCode());
 //     p_page_idle->dfUtility->send_command_to_FSM(command);
 // }
 
@@ -476,14 +475,14 @@ void page_dispenser::resetDispenseTimeout(void)
 
 // QString page_dispenser::getMostRecentDispensed()
 // {
-//     QString units = selectedProductOrder->getUnitsForSelectedSlot();
+//     QString units = p_page_idle->selectedProduct->getUnitsForSelectedSlot();
 
 //     return df_util::getConvertedStringVolumeFromMl(volumeDispensed, units, false, false);
 // }
 
 QString page_dispenser::getPromoCodeUsed()
 {
-    QString promoCode = selectedProductOrder->getPromoCode();
+    QString promoCode = p_page_idle->selectedProduct->getPromoCode();
 
     return promoCode;
 }
@@ -539,22 +538,22 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
 void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
 {
 
-    if (selectedProductOrder->getSelectedVolumeDispensedMl() != dispensed)
+    if (p_page_idle->selectedProduct->getVolumeDispensedMl() != dispensed)
     {
         // only reset idle timer if volume has changed.
         resetDispenseTimeout();
     }
-    selectedProductOrder->setSelectedVolumeDispensedMl(dispensed);
+    p_page_idle->selectedProduct->setVolumeDispensedMl(dispensed);
 
     // volumeDispensed = dispensed;
-    qDebug() << "Signal: dispensed " << dispensed << " of " << selectedProductOrder->getSelectedVolume();
+    qDebug() << "Signal: dispensed " << dispensed << " of " << p_page_idle->selectedProduct->getVolume();
 
-    if (selectedProductOrder->getSelectedVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
+    if (p_page_idle->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
     {
 
-        updateVolumeDispensedLabel(selectedProductOrder->getSelectedVolumeDispensedMl());
+        updateVolumeDispensedLabel(p_page_idle->selectedProduct->getVolumeDispensedMl());
 
-        double percentage = selectedProductOrder->getSelectedVolumeDispensedMl() / (selectedProductOrder->getSelectedVolume()) * 100;
+        double percentage = p_page_idle->selectedProduct->getVolumeDispensedMl() / (p_page_idle->selectedProduct->getVolume()) * 100;
         if (isFull)
         {
             percentage = 100;
@@ -592,7 +591,7 @@ void page_dispenser::fsmReceiveTargetVolumeReached()
     if (this->isDispensing)
     {
         this->isDispensing = false;
-        updateVolumeDisplayed(selectedProductOrder->getSelectedVolume(), true); // make sure the fill bottle graphics are completed
+        updateVolumeDisplayed(p_page_idle->selectedProduct->getVolume(), true); // make sure the fill bottle graphics are completed
         transactionLogging += "\n 8: Target Reached - True";
         dispensing_end_admin();
         qDebug() << "Controller msg: Target reached.";
@@ -622,12 +621,12 @@ void page_dispenser::on_abortButton_clicked()
     qDebug() << "Pressed button abort/complete";
 
     transactionLogging += "\n 7: Complete Button - True";
-    if (selectedProductOrder->getSelectedVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML)
+    if (p_page_idle->selectedProduct->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML)
     {
         msgBox = new QMessageBox();
         msgBox->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
-        QString payment = selectedProductOrder->getSelectedPaymentMethod();
-        if (payment == "qr" || payment == "tapTcp")
+        QString payment = p_page_idle->selectedProduct->getPaymentMethod();
+         if (payment == "qr" || payment == "tapTcp")
         {
             msgBox->setText("<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine. \
                                 If you press Yes, you will not be charged for the order.<br></p>");
@@ -685,7 +684,7 @@ void page_dispenser::on_button_problems_clicked()
 
     msgBox2 = new QMessageBox();
     msgBox2->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
-    QString payment = selectedProductOrder->getSelectedPaymentMethod();
+    QString payment = p_page_idle->selectedProduct->getPaymentMethod();
     QString base = "If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br>";
 
     if (payment == "qr" || payment == "tapTcp")

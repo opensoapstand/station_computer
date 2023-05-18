@@ -233,13 +233,7 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
         "border-radius: 20px;"
         "}");
     ui->label_gif->hide();
-    // QString paymentMethod = selectedProductOrder->getSelectedPaymentMethod();
-    // if(paymentMethod== "qr" || paymentMethod=="tapTcp"){
-    //     ui->label_payment_page->setText("Pay Now");
-    // }
-    // else{
-    //     ui->label_payment_page->setText("Next");
-    // }
+ 
 }
 
 /*
@@ -261,7 +255,7 @@ void pageProductOverview::setPage(page_select_product *pageSelect, page_dispense
     ui->label_invoice_discount_name->hide();
     ui->label_discount_tag->hide();
     ui->label_gif->hide();
-    selectedProductOrder = p_page_idle->currentProductOrder;
+    // p_page_idle->selectedProduct = p_page_idle->currentProductOrder;
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_ORDER_OVERVIEW_PATH);
 
@@ -286,7 +280,7 @@ void pageProductOverview::showEvent(QShowEvent *event)
     qDebug() << "<<<<<<< Page Enter: Product Overview>>>>>>>>>";
     QWidget::showEvent(event);
 
-    selectedProductOrder->loadSelectedProductProperties();
+    p_page_idle->selectedProduct->loadProductProperties();
     reset_and_show_page_elements();
 }
 
@@ -294,7 +288,7 @@ void pageProductOverview::resizeEvent(QResizeEvent *event)
 {
     qDebug() << "\n---Page_product Overview: resizeEvent";
     // QWidget::resizeEvent(event);
-    // selectedProductOrder->loadSelectedProductProperties();
+    // p_page_idle->selectedProduct->loadSelectedProductProperties();
     reset_and_show_page_elements();
 }
 
@@ -317,24 +311,24 @@ void pageProductOverview::reset_and_show_page_elements()
 {
     QString bitmap_location;
     ui->label_product_photo->setStyleSheet("QLabel{border: 2px solid #5E8580;}");
-    // ui->label_product_title->setText(selectedProductOrder->getSelectedProductName());
-    // ui->label_product_description->setText(selectedProductOrder->getLoadedProductDescription());
-    p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->currentProductOrder->getSelectedProductPicturePath());
-    ui->label_selected_price->setText("$" + QString::number(selectedProductOrder->getSelectedPrice(), 'f', 2));
-    qDebug() << "Selected size" << selectedProductOrder->getSelectedVolume();
+    // ui->label_product_title->setText(p_page_idle->selectedProduct->getProductName());
+    // ui->label_product_description->setText(p_page_idle->selectedProduct->getProductDescription());
+    p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->selectedProduct->getProductPicturePath());
+    ui->label_selected_price->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(), 'f', 2));
+    qDebug() << "Selected size" << p_page_idle->selectedProduct->getVolume();
     QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
         qDebug() << full_path;
         p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
 
    
     updatePrice();
-    ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName());
-    // ui->label_price_large->setText(selected_volume + " " + selectedProductOrder->getUnitsForSelectedSlot());
+    ui->label_invoice_name->setText(p_page_idle->selectedProduct->getProductName());
+    // ui->label_price_large->setText(selected_volume + " " + p_page_idle->selectedProduct->getUnitsForSelectedSlot());
 
     // Reset the discount percentage to 0 and clear promo code field
 
     ui->promoCode->clear();
-    selectedProductOrder->setDiscountPercentageFraction((0 * 1.0) / 100);
+    p_page_idle->selectedProduct->setDiscountPercentageFraction((0 * 1.0) / 100);
     ui->label_invoice_discount_amount->hide();
     ui->label_discount_tag->hide();
     ui->previousPage_Button->setEnabled(true);
@@ -397,41 +391,41 @@ size_t WriteCallback_coupon1(char *contents, size_t size, size_t nmemb, void *us
 // {
 //     // QString normal_price = (ui->label_invoice_price->text()).split("$")[1];
 //     // double price = normal_price.toDouble();
-//     selectedProductOrder->setDiscountPercentageFraction(discountPercent / 100);
+//     p_page_idle->selectedProduct->setDiscountPercentageFraction(discountPercent / 100);
 
 //     ui->label_invoice_discount_amount->show();
 //     ui->label_invoice_discount_name->show();
 
 //     double discount;
-//     discount = selectedProductOrder->getDiscountPercentageFraction() * selectedProductOrder->getPrice(selectedProductOrder->getSelectedSize());
+//     discount = p_page_idle->selectedProduct->getDiscountPercentageFraction() * p_page_idle->selectedProduct->getPrice(p_page_idle->selectedProduct->getSize());
 //     ui->label_invoice_discount_amount->setText("-$" + QString::number(discount, 'f', 2));
 
-//     ui->label_invoice_discount_amount->setText("-$" + QString::number(selectedProductOrder->getDiscount(), 'f', 2));
-//     ui->label_invoice_price_total->setText("$" + QString::number(selectedProductOrder->getSelectedPriceCorrected(), 'f', 2));
+//     ui->label_invoice_discount_amount->setText("-$" + QString::number(p_page_idle->selectedProduct->getDiscount(), 'f', 2));
+//     ui->label_invoice_price_total->setText("$" + QString::number(p_page_idle->selectedProduct->getPriceCorrected(), 'f', 2));
 // }
 
 void pageProductOverview::updatePrice()
 {
      QString selected_volume;
-    if (selectedProductOrder->getUnitsForSelectedSlot() == "oz")
+    if (p_page_idle->selectedProduct->getUnitsForSlot() == "oz")
     {
-        selected_volume = QString::number(ceil((double)selectedProductOrder->getSelectedVolume() * (double)ML_TO_OZ * 1.0));
+        selected_volume = QString::number(ceil((double)p_page_idle->selectedProduct->getVolume() * (double)ML_TO_OZ * 1.0));
     }
     else
     {
-        selected_volume = QString::number(selectedProductOrder->getSelectedVolume());
+        selected_volume = QString::number(p_page_idle->selectedProduct->getVolume());
     }
 
 
-    if (selectedProductOrder->getSelectedSize() == SIZE_CUSTOM_INDEX)
+    if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
     {
-        ui->label_selected_volume->setText("Custom Volume \n (maximum: " + selected_volume + " " + selectedProductOrder->getUnitsForSelectedSlot() + ")");
+        ui->label_selected_volume->setText("Custom Volume \n (maximum: " + selected_volume + " " + p_page_idle->selectedProduct->getUnitsForSlot() + ")");
 
-        double selectedPrice = selectedProductOrder->getSelectedPrice();
-        double discount = selectedProductOrder->getDiscount();
-        double selectedPriceCorrected = selectedProductOrder->getSelectedPriceCorrected();
-        double discountFraction = selectedProductOrder->getDiscountPercentageFraction();
-        QString units = selectedProductOrder->getUnitsForSelectedSlot();
+        double selectedPrice = p_page_idle->selectedProduct->getPrice();
+        double discount = p_page_idle->selectedProduct->getDiscount();
+        double selectedPriceCorrected = p_page_idle->selectedProduct->getPriceCorrected();
+        double discountFraction = p_page_idle->selectedProduct->getDiscountPercentageFraction();
+        QString units = p_page_idle->selectedProduct->getUnitsForSlot();
         if (units == "ml")
         {
             units = "L";
@@ -440,7 +434,7 @@ void pageProductOverview::updatePrice()
 
         else if (units == "g")
         {
-            if (selectedProductOrder->getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
+            if (p_page_idle->selectedProduct->getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
             {
                 units = "100g";
                 selectedPrice = selectedPrice * 100;
@@ -466,20 +460,20 @@ void pageProductOverview::updatePrice()
 
         ui->label_invoice_price_total->setText("$" + QString::number(selectedPriceCorrected, 'f', 2) + "/" + units);
 
-        // // double selectedPrice = selectedProductOrder->getSelectedPrice();
-        // // double discount = selectedProductOrder->getDiscount();
-        // // double selectedPriceCorrected = selectedProductOrder->getSelectedPriceCorrected();
+        // // double selectedPrice = p_page_idle->selectedProduct->getPrice();
+        // // double discount = p_page_idle->selectedProduct->getDiscount();
+        // // double selectedPriceCorrected = p_page_idle->selectedProduct->getPriceCorrected();
 
         // QString unitsInvoice;
-        // selectedProductOrder->getCustomPriceDetails(&unitsInvoice, &selectedPrice, &discount, &selectedPriceCorrected);
+        // p_page_idle->selectedProduct->getCustomPriceDetails(&unitsInvoice, &selectedPrice, &discount, &selectedPriceCorrected);
     }
     else
     {
-        double discountAmount = selectedProductOrder->getSelectedPrice() - selectedProductOrder->getSelectedPriceCorrected();
+        double discountAmount = p_page_idle->selectedProduct->getPrice() - p_page_idle->selectedProduct->getPriceCorrected();
         ui->label_invoice_discount_amount->setText("-$" + QString::number(discountAmount, 'f', 2));
-        ui->label_selected_volume->setText(selected_volume + " " + selectedProductOrder->getUnitsForSelectedSlot());
-        ui->label_invoice_price->setText("$" + QString::number(selectedProductOrder->getSelectedPrice(), 'f', 2));
-        ui->label_invoice_price_total->setText("$" + QString::number(selectedProductOrder->getSelectedPriceCorrected(), 'f', 2));
+        ui->label_selected_volume->setText(selected_volume + " " + p_page_idle->selectedProduct->getUnitsForSlot());
+        ui->label_invoice_price->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(), 'f', 2));
+        ui->label_invoice_price_total->setText("$" + QString::number(p_page_idle->selectedProduct->getPriceCorrected(), 'f', 2));
     }
 }
 
@@ -528,17 +522,17 @@ void pageProductOverview::on_applyPromo_Button_clicked()
                     if (coupon_obj["active"])
                     {
                         new_percent = coupon_obj["discount_amount"];
-                        selectedProductOrder->setPromoCode(promocode);
-                        selectedProductOrder->setDiscountPercentageFraction((new_percent * 1.0) / 100);
+                        p_page_idle->selectedProduct->setPromoCode(promocode);
+                        p_page_idle->selectedProduct->setDiscountPercentageFraction((new_percent * 1.0) / 100);
                         qDebug() << "Apply coupon percentage: " << new_percent;
                         // loadProdSpecs();
                         qDebug() << "Promo";
 
                         ui->label_invoice_discount_amount->show();
                         ui->label_discount_tag->show();
-                        // ui->label_invoice_discount_amount->setText("-$" + QString::number(selectedProductOrder->getDiscount(), 'f', 5));
-                        // ui->label_invoice_price_total->setText("$" + QString::number(selectedProductOrder->getSelectedPriceCorrected(), 'f', 2));
-                        // ui->label_invoice_price_total->setText("$" + QString::number(selectedProductOrder->getSelectedPriceCorrected(), 'f', 2)); // how to handle promo ?! todo!
+                        // ui->label_invoice_discount_amount->setText("-$" + QString::number(p_page_idle->selectedProduct->getDiscount(), 'f', 5));
+                        // ui->label_invoice_price_total->setText("$" + QString::number(p_page_idle->selectedProduct->getPriceCorrected(), 'f', 2));
+                        // ui->label_invoice_price_total->setText("$" + QString::number(p_page_idle->selectedProduct->getPriceCorrected(), 'f', 2)); // how to handle promo ?! todo!
 
                         updatePrice();
 
@@ -666,7 +660,7 @@ void pageProductOverview::on_page_qr_payment_Button_clicked()
     ui->previousPage_Button->setEnabled(false);
 
     this->stopSelectTimers();
-    QString paymentMethod = selectedProductOrder->getSelectedPaymentMethod();
+    QString paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
 
     if (paymentMethod == "qr" )
     {

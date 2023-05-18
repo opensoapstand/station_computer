@@ -18,7 +18,7 @@
 #define page_qr_payment_H
 
 #include "df_util.h"
-#include "drinkorder.h"
+
 #include "page_help.h"
 #include "page_error_wifi.h"
 #include "payment/commands.h"
@@ -232,7 +232,7 @@ private:
     std::string toSvgString(const QrCode &qr, int border);
     void paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg);
     void resetPaymentPage();
-    QString getPaymentMethod();
+    // QString getPaymentMethod();
 
 
 

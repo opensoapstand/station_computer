@@ -94,8 +94,6 @@ private:
 
     int maintenanceCounter;
 
-    DrinkOrder *selectedProductOrder;
-
 };
 
 #endif // page_idle_products_H

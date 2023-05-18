@@ -2,7 +2,7 @@
 #define DF_UTIL_H
 
 #include <includefiles.h>
-// #include "drinkorder.h"
+// 
 #include "dfuicommthread.h"
 #include "dfuiserver.h"
 
@@ -135,7 +135,7 @@ using namespace std;
 #define THANK_YOU_FOR_YOUR_FEEDBACK                     "background_feedbacksent.png"
 
 #define KEYBOARD_IMAGE_PATH                         "/home/df-admin/production/references/soapstand-keyboard.png"
-#define FULL_TRANSPARENT_IMAGE_PATH                 "/home/df-admin/production/references/background.png"
+// #define FULL_TRANSPARENT_IMAGE_PATH                 "/home/df-admin/production/references/background.png"
 
 #define ICON_TYPE_CONCENTRATE_PATH                  "Soapstand_UI-concentrate-icon.png"
 #define ICON_TYPE_ALL_PURPOSE_PATH                  "Soapstand-UI-icon-all-purpose.png"

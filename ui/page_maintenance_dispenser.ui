@@ -104,7 +104,7 @@
     <string>Medium Price</string>
    </property>
    <attribute name="buttonGroup">
-    <string notr="true">editProductGroup</string>
+    <string notr="true">buttonGroup_edit_product</string>
    </attribute>
   </widget>
   <widget class="QPushButton" name="vol_per_tickButton">
@@ -147,7 +147,7 @@ Volume per Tick</string>
     <string>Small Price</string>
    </property>
    <attribute name="buttonGroup">
-    <string notr="true">editProductGroup</string>
+    <string notr="true">buttonGroup_edit_product</string>
    </attribute>
   </widget>
   <widget class="QPushButton" name="refillButton">
@@ -210,7 +210,7 @@ Volume per Tick</string>
     <string>Set Full Volume</string>
    </property>
    <attribute name="buttonGroup">
-    <string notr="true">editProductGroup</string>
+    <string notr="true">buttonGroup_edit_product</string>
    </attribute>
   </widget>
   <widget class="QLabel" name="full_volume">
@@ -670,7 +670,7 @@ Volume per Tick</string>
  Target Volume</string>
    </property>
    <attribute name="buttonGroup">
-    <string notr="true">editProductGroup</string>
+    <string notr="true">buttonGroup_edit_product</string>
    </attribute>
   </widget>
   <widget class="QLabel" name="target_volume_s">
@@ -700,7 +700,7 @@ Volume per Tick</string>
  Target Volume</string>
    </property>
    <attribute name="buttonGroup">
-    <string notr="true">editProductGroup</string>
+    <string notr="true">buttonGroup_edit_product</string>
    </attribute>
   </widget>
   <widget class="QLabel" name="target_volume_m">
@@ -891,7 +891,7 @@ Volume per Tick</string>
     <string>Large Price</string>
    </property>
    <attribute name="buttonGroup">
-    <string notr="true">editProductGroup</string>
+    <string notr="true">buttonGroup_edit_product</string>
    </attribute>
   </widget>
   <widget class="QPushButton" name="target_volumeButton_l">
@@ -908,7 +908,7 @@ Volume per Tick</string>
  Target Volume</string>
    </property>
    <attribute name="buttonGroup">
-    <string notr="true">editProductGroup</string>
+    <string notr="true">buttonGroup_edit_product</string>
    </attribute>
   </widget>
   <widget class="QLabel" name="target_volume_l">
@@ -950,7 +950,7 @@ Volume per Tick</string>
     <string>Custom Price (per ml)</string>
    </property>
    <attribute name="buttonGroup">
-    <string notr="true">editProductGroup</string>
+    <string notr="true">buttonGroup_edit_product</string>
    </attribute>
   </widget>
   <widget class="QPushButton" name="pluButton_m">
@@ -1087,6 +1087,6 @@ Volume per Tick</string>
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="editProductGroup"/>
+  <buttongroup name="buttonGroup_edit_product"/>
  </buttongroups>
 </ui>

@@ -24,6 +24,7 @@
 #include "page_qr_payment.h"
 #include "page_select_product.h"
 #include "page_productOverview.h"
+#include "product.h"
 
 #include "page_idle.h"
 #include <curl/curl.h>
@@ -217,7 +218,6 @@ void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_
     this->p_page_wifi_error = pageWifiError;
     this->p_page_overview = page_Overview;
 
-    selectedProductOrder = p_page_idle->currentProductOrder;
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_PRODUCT_BACKGROUND_PATH);
 }
 
@@ -230,6 +230,7 @@ pageProduct::~pageProduct()
 /* GUI */
 void pageProduct::showEvent(QShowEvent *event)
 {
+    QWidget::showEvent(event);
     qDebug() << "<<<<<<< Page Enter: Product >>>>>>>>>";
 
     QString styleSheet = p_page_idle->getCSS(PAGE_PRODUCT_CSS);
@@ -277,12 +278,14 @@ void pageProduct::showEvent(QShowEvent *event)
 
     ////////////////////////////////////////////////
 
-    selectedProductOrder->loadSelectedProductProperties();
-    selectedProductOrder->setLoadedProductBiggestEnabledSizeIndex();
+    p_page_idle->selectedProduct->loadProductProperties();
+    qDebug() << "loaded successfully";
+    // p_page_idle->selectedProduct->setBiggestEnabledSizeIndex();
 
+    // qDebug() << "loaded successfully2";
     loadProdSpecs();
+    qDebug() << "loaded successfully3";
     reset_and_show_page_elements();
-    QWidget::showEvent(event);
 }
 
 void pageProduct::resizeEvent(QResizeEvent *event)
@@ -307,11 +310,11 @@ void pageProduct::onSelectTimeoutTick()
 void pageProduct::reset_and_show_page_elements()
 {
 
-    p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->currentProductOrder->getSelectedProductPicturePath());
+    p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->selectedProduct->getSelectedProductPicturePath());
 
-    ui->label_product_title->setText(selectedProductOrder->getLoadedProductName());
-    ui->label_product_ingredients->setText(selectedProductOrder->getLoadedProductIngredients());
-    ui->label_product_description->setText(selectedProductOrder->getLoadedProductDescription());
+    ui->label_product_title->setText(p_page_idle->selectedProduct->getLoadedProductName());
+    ui->label_product_ingredients->setText(p_page_idle->selectedProduct->getLoadedProductIngredients());
+    ui->label_product_description->setText(p_page_idle->selectedProduct->getLoadedProductDescription());
     QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     qDebug() << full_path;
     p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
@@ -333,7 +336,7 @@ void pageProduct::reset_and_show_page_elements()
     // create signature by sizes availability, use the bits
     for (uint8_t i = 0; i < 4; i++)
     {
-        available_sizes_signature |= selectedProductOrder->getLoadedProductSizeEnabled(product_sizes[i]) << i;
+        available_sizes_signature |= p_page_idle->selectedProduct->getSizeEnabled(product_sizes[i]) << i;
     }
 
     // every combination
@@ -377,7 +380,7 @@ void pageProduct::reset_and_show_page_elements()
 
     for (uint8_t i = 0; i < 4; i++)
     {
-        if (selectedProductOrder->getLoadedProductSizeEnabled(product_sizes[i]))
+        if (p_page_idle->selectedProduct->getSizeEnabled(product_sizes[i]))
         {
             orderSizeButtons[i]->show();
 
@@ -404,7 +407,7 @@ void pageProduct::reset_and_show_page_elements()
                 double discount_price_per_liter;
                 // check if there is a price decline for large volumes
 
-                selectedProductOrder->getCustomDiscountDetails(&large_volume_discount_is_enabled, &min_volume_for_discount, &discount_price_per_liter);
+                p_page_idle->selectedProduct->getCustomDiscountDetails(&large_volume_discount_is_enabled, &min_volume_for_discount, &discount_price_per_liter);
                 if (large_volume_discount_is_enabled)
                 {
                     orderSizeButtons[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3] + 100));
@@ -432,7 +435,7 @@ void pageProduct::reset_and_show_page_elements()
 
 void pageProduct::loadProductBySize(int sizeIndex)
 {
-    selectedProductOrder->setSelectedSize(sizeIndex);
+    p_page_idle->selectedProduct->setSize(sizeIndex);
     loadProdSpecs();
 }
 
@@ -452,8 +455,7 @@ void pageProduct::loadProdSpecs()
         orderSizeLabelsVolume[i]->hide();
         orderSizeBackgroundLabels[i]->hide();
         orderSizeButtons[i]->hide();
-
-        if (selectedProductOrder->getLoadedProductSizeEnabled(product_sizes[i]))
+        if (p_page_idle->selectedProduct->getSizeEnabled(product_sizes[i]))
         {
             sizes_available_count++;
 
@@ -466,8 +468,8 @@ void pageProduct::loadProdSpecs()
             orderSizeBackgroundLabels[i]->setProperty("class", "orderSizeBackgroundLabels");
             orderSizeButtons[i]->setProperty("class", "orderSizeButtons");
 
-            double price = selectedProductOrder->getPrice(product_sizes[i]);
-            QString transparent_path = FULL_TRANSPARENT_IMAGE_PATH;
+            double price = p_page_idle->selectedProduct->getPrice(product_sizes[i]);
+            // QString transparent_path = FULL_TRANSPARENT_IMAGE_PATH;
 
             if (product_sizes[i] == SIZE_CUSTOM_INDEX)
             {
@@ -475,13 +477,11 @@ void pageProduct::loadProdSpecs()
                 double min_volume_for_discount;
                 double discount_price_per_liter;
                 // check if there is a price decline for large volumes
-                selectedProductOrder->getCustomDiscountDetails(&large_volume_discount_is_enabled, &min_volume_for_discount, &discount_price_per_liter);
-                // double largeVolumeStartsAt = selectedProductOrder->getVolume(SIZE_LARGE_INDEX) / 1000.0; // per liter
-                // double largeVolumePricePerLiter = (selectedProductOrder->getPrice(SIZE_LARGE_INDEX) / largeVolumeStartsAt) ;
+                p_page_idle->selectedProduct->getCustomDiscountDetails(&large_volume_discount_is_enabled, &min_volume_for_discount, &discount_price_per_liter);
 
                 orderSizeLabelsVolume[i]->setText("Custom Volume");
-                QString units = selectedProductOrder->getUnitsForSelectedSlot();
-                QString units_discount_indication = selectedProductOrder->getUnitsForSelectedSlot();
+                QString units = p_page_idle->selectedProduct->getUnitsForSlot();
+                QString units_discount_indication = p_page_idle->selectedProduct->getUnitsForSlot();
                 if (units == "ml")
                 {
                     units = "L";
@@ -493,7 +493,7 @@ void pageProduct::loadProdSpecs()
 
                 else if (units == "g")
                 {
-                    if (selectedProductOrder->getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
+                    if (p_page_idle->selectedProduct->getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
                     {
                         units = "100g";
                         units_discount_indication = "kg";
@@ -533,11 +533,11 @@ void pageProduct::loadProdSpecs()
             else
             {
                 orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2));
-                orderSizeLabelsVolume[i]->setText(selectedProductOrder->getSizeToVolumeWithCorrectUnitsForSelectedSlot(product_sizes[i], true, true));
+                orderSizeLabelsVolume[i]->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(product_sizes[i], true, true));
             }
 
             // selected size styling
-            if (selectedProductOrder->getSelectedSize() == product_sizes[i])
+            if (p_page_idle->selectedProduct->getSize() == product_sizes[i])
             {
                 orderSizeLabelsVolume[i]->setProperty("class", "orderSizeLabelsVolume");
                 // orderSizeLabelsPrice[i]->setStyleSheet("QLabel {font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;}");
@@ -551,9 +551,9 @@ void pageProduct::loadProdSpecs()
         }
     }
 
-    double selectedPrice = selectedProductOrder->getSelectedPrice();
-    double discount = selectedProductOrder->getDiscount();
-    double selectedPriceCorrected = selectedProductOrder->getSelectedPriceCorrected();
+    // double selectedPrice = p_page_idle->selectedProduct->getPrice();
+    // double discount = p_page_idle->selectedProduct->getDiscount();
+    // double selectedPriceCorrected = p_page_idle->selectedProduct->getPriceCorrected();
 
     // it was confusing for the people to chose a quantity if there was only one quantity available. So, add a continue button if they can't chose anyways.
     if (sizes_available_count == 1)

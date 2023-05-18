@@ -58,7 +58,7 @@ void page_maintenance::showEvent(QShowEvent *event)
 
     for (int i = 0; i < SLOT_COUNT; i++)
     {
-        QString p = p_page_idle->currentProductOrder->getProductPicturePath(i + 1);
+        QString p = p_page_idle->products[i].getProductPicturePath();
         p_page_idle->dfUtility->fileExists(p);
         QPixmap im(p);
         QIcon qi(im);
@@ -95,15 +95,14 @@ void page_maintenance::showEvent(QShowEvent *event)
 
     db.closeDB();
 
-    ui->product1_label->setText(p_page_idle->currentProductOrder->getProductName(1));
-    ui->product2_label->setText(p_page_idle->currentProductOrder->getProductName(2));
-    ui->product3_label->setText(p_page_idle->currentProductOrder->getProductName(3));
-    ui->product4_label->setText(p_page_idle->currentProductOrder->getProductName(4));
+    ui->product1_label->setText(p_page_idle->products[0].getProductName());
+    ui->product2_label->setText(p_page_idle->products[1].getProductName());
+    ui->product3_label->setText(p_page_idle->products[2].getProductName());
+    ui->product4_label->setText(p_page_idle->products[3].getProductName());
 
     for (uint8_t i = 0; i < SLOT_COUNT; i++)
     {
         uint8_t slot = i + 1;
-        // bool product_sold_out = !(p_page_idle->currentProductOrder->isProductVolumeInContainer(slot));
 
         qDebug() << "db for names and id maintenance";
         DbManager db(DB_PATH);
@@ -112,23 +111,23 @@ void page_maintenance::showEvent(QShowEvent *event)
 
         db.closeDB();
 
-        if (product_status_text.compare("DISPENSER_STATE_AVAILABLE") == 0)
+        if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
         {
             product_overlay_labels[i]->setText("");
         }
-        else if (product_status_text.compare("DISPENSER_STATE_AVAILABLE_LOW_STOCK") == 0)
+        else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
         {
             product_overlay_labels[i]->setText("Almost Empty");
         }
-        else if (product_status_text.compare("DISPENSER_STATE_PROBLEM_EMPTY") == 0)
+        else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
         {
             product_overlay_labels[i]->setText("Sold Out");
         }
-        else if (product_status_text.compare("DISPENSER_STATE_DISABLED_COMING_SOON") == 0)
+        else if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
         {
             product_overlay_labels[i]->setText("Coming Soon");
         }
-        else if (product_status_text.compare("DISPENSER_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
+        else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
 
         {
             product_overlay_labels[i]->setText("Assistance Needed");
@@ -138,7 +137,7 @@ void page_maintenance::showEvent(QShowEvent *event)
             product_overlay_labels[i]->setText("Assistance Needed");
         }
 
-        if (!(p_page_idle->currentProductOrder->isProductVolumeInContainer(slot)))
+        if (!(p_page_idle->products[i].isProductVolumeInContainer()))
         {
             product_overlay_labels[i]->setText("Auto Sold Out");
         }
@@ -210,28 +209,28 @@ void page_maintenance::on_backButton_clicked()
 
 void page_maintenance::on_product1_button_clicked()
 {
-    p_page_idle->currentProductOrder->setSelectedSlot(1);
+    p_page_idle->setSelectedProduct(1);
     p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 
 void page_maintenance::on_product2_button_clicked()
 {
-    p_page_idle->currentProductOrder->setSelectedSlot(2);
+    p_page_idle->setSelectedProduct(2);
     p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 
 void page_maintenance::on_product3_button_clicked()
 {
-    p_page_idle->currentProductOrder->setSelectedSlot(3);
+    p_page_idle->setSelectedProduct(3);
     p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 
 void page_maintenance::on_product4_button_clicked()
 {
-    p_page_idle->currentProductOrder->setSelectedSlot(4);
+    p_page_idle->setSelectedProduct(4);
     p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }

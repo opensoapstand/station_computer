@@ -100,9 +100,10 @@ void pagethankyou::showEvent(QShowEvent *event)
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_THANK_YOU_BACKGROUND_PATH);
 
-    qDebug() << "db open: check receipt printer";
+    qDebug() << "db for receipt printer check";
+    QString paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
+
     DbManager db(DB_PATH);
-    QString paymentMethod = db.getPaymentMethod(p_page_idle->currentProductOrder->getSelectedSlot());
     bool hasReceiptPrinter = db.hasReceiptPrinter();
     db.closeDB();
 
@@ -125,7 +126,7 @@ void pagethankyou::showEvent(QShowEvent *event)
     is_in_state_thank_you = true;
 
     // reset promovalue
-    p_page_idle->currentProductOrder->setDiscountPercentageFraction(0.0);
+    p_page_idle->selectedProduct->setDiscountPercentageFraction(0.0);
 
     is_controller_finished = false;
     is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
@@ -143,14 +144,14 @@ void pagethankyou::showEvent(QShowEvent *event)
     thankYouEndTimer->start();
     p_page_idle->addPictureToLabel(ui->drinkfill_logo_label2, DRINKFILL_LOGO_VERTICAL_PATH);
 
-    QString units = p_page_idle->currentProductOrder->getUnitsForSelectedSlot();
-    QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->currentProductOrder->getSelectedVolumeDispensedMl(), units, false, true);
+    QString units = p_page_idle->selectedProduct->getUnitsForSlot();
+    QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->selectedProduct->getVolumeDispensedMl(), units, false, true);
 
-    double price = p_page_idle->currentProductOrder->getSelectedPriceCorrected();
-    
-    if (p_page_idle->currentProductOrder->getSelectedSize() == SIZE_CUSTOM_INDEX)
+    double price = p_page_idle->selectedProduct->getPriceCorrected();
+
+    if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
     {
-        price = p_page_idle->currentProductOrder->getSelectedVolumeDispensedMl() * price;
+        price = p_page_idle->selectedProduct->getVolumeDispensedMl() * price;
     }
     ui->volumeDispensedLabel->setText(dispensed_correct_units + " ( $" + QString::number(price, 'f', 2) + " )");
 }
@@ -165,8 +166,8 @@ void pagethankyou::sendDispenseEndToCloud()
 {
     QString order_id = this->paymentPage->getOID();
 
-    QString units = p_page_idle->currentProductOrder->getUnitsForSelectedSlot();
-    QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->currentProductOrder->getSelectedVolumeDispensedMl(), units, false, false);
+    QString units = p_page_idle->selectedProduct->getUnitsForSlot();
+    QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->selectedProduct->getVolumeDispensedMl(), units, false, false);
 
     QString promoCode = this->p_page_dispense->getPromoCodeUsed();
     qDebug() << "Send data at finish of order : " << order_id << ". Total dispensed: " << dispensed_correct_units << "corrected units send to soapstandportal: " << dispensed_correct_units;
@@ -265,7 +266,7 @@ void pagethankyou::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
     is_in_state_thank_you = false;
-    p_page_idle->currentProductOrder->setPromoCode("");
+    p_page_idle->selectedProduct->setPromoCode("");
 
     thankYouEndTimer->stop();
     p_page_idle->pageTransition(this, pageToShow);

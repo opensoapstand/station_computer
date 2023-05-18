@@ -27,69 +27,15 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     // Fullscreen background setup
     ui->setupUi(this);
 
-    // view transactions button
-    QFont font;
-    font.setFamily(QStringLiteral("Brevia"));
-    font.setPointSize(20);
-    // font.setBold(true);
-    // font.setWeight(75);
-    font.setWeight(50);
-
-    ui->transactions_Button->setStyleSheet(
-        "QPushButton {"
-
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "color: #003840;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
-    // ui->transactions_Button->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
-    ui->transactions_Button->setFont(font);
-    ui->transactions_Button->setText("Transaction History ->");
-
-    ui->maintenance_page_Button->setStyleSheet("QPushButton { color:#003840; background-color: #FFFFFF; border: 0px ; text-align: centre;border-radius: 20px;border: none;}");
-    ui->maintenance_page_Button->setFont(font);
-    ui->maintenance_page_Button->setText("Settings");
-
-    ui->feedback_Button->setStyleSheet("QPushButton { color:#003840; background-color: #FFFFFF; border: 0px ; text-align: centre;border-radius: 20px;border: none;}");
-    ui->feedback_Button->setFont(font);
-    ui->feedback_Button->setText("Contact Us");
-
-    ui->back_Button->setStyleSheet(
-        "QPushButton {"
-
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "color: #003840;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
-
-    ui->back_Button->setText("<-back");
-
-    ui->previousPage_Button_2->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     DbManager db(DB_PATH);
     bool showTransactions = db.showTransactions();
     db.closeDB();
+
     if (!showTransactions)
     {
-        ui->transactions_Button->hide();
+        ui->pushButton_to_transactions->hide();
     }
-
-    ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     helpIdleTimer = new QTimer(this);
     helpIdleTimer->setInterval(1000);
@@ -103,13 +49,37 @@ page_help::~page_help()
 {
     delete ui;
 }
-
-void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow)
+void page_help::setPage(page_select_product *pageSelect, pageProduct *pageProduct, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_transactions *pageTransactions, page_maintenance *pageMaintenance, page_sendFeedback *pageFeedback)
 {
-    helpIdleTimer->stop();
-    ui->keyboardTextEntry->setText("");
-    ui->keyboard_3->hide();
-    p_page_idle->pageTransition(this, pageToShow);
+    this->p_page_idle = pageIdle;
+    this->p_page_feedback = pageFeedback;
+    this->p_page_payment = page_qr_payment;
+    this->p_page_product = pageProduct;
+    this->p_page_select_product = pageSelect;
+    this->p_page_transactions = pageTransactions;
+    this->p_page_maintenance = pageMaintenance;
+
+    QString styleSheet = p_page_idle->getCSS(PAGE_HELP_CSS);
+
+    ui->pushButton_to_idle->setProperty("class", "buttonNoBorder");
+    ui->pushButton_to_transactions->setProperty("class", "buttonNoBorder");
+    ui->pushButton_resetTimeout->setProperty("class", "buttonTransparent");
+
+    ui->pushButton_to_idle->setStyleSheet(styleSheet);
+    ui->pushButton_to_transactions->setStyleSheet(styleSheet);
+    ui->pushButton_resetTimeout->setStyleSheet(styleSheet);
+    ui->pushButton_to_maintenance->setStyleSheet(styleSheet);
+    ui->pushButton_to_feedback->setStyleSheet(styleSheet);
+    // QString buttonSelector2 = QString("QPushButton#%1").arg(ui->back_Button->objectName());
+
+    // QString styleSheet = p_page_idle->getCSS(PAGE_HELP_CSS);
+    ui->pushButton_to_transactions->setText("Transaction History ->");
+    ui->pushButton_to_maintenance->setText("Settings");
+    ui->pushButton_to_feedback->setText("Contact Us");
+    ui->pushButton_to_idle->setText("<-back");
+    ui->label_keyboardInfo->setText("Enter password followed by the \"Done\" key to enter maintenance mode");
+    
+
 }
 
 void page_help::showEvent(QShowEvent *event)
@@ -141,27 +111,18 @@ void page_help::showEvent(QShowEvent *event)
     _helpIdleTimeoutSec = 60;
     ui->keyboard_3->hide();
 }
-
+void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow)
+{
+    helpIdleTimer->stop();
+    ui->keyboardTextEntry->setText("");
+    ui->keyboard_3->hide();
+    p_page_idle->pageTransition(this, pageToShow);
+}
 /*
  * Page Tracking reference
  */
-void page_help::setPage(page_select_product *pageSelect, pageProduct *pageProduct, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_transactions *pageTransactions, page_maintenance *pageMaintenance, page_sendFeedback *pageFeedback)
-{
-    this->p_page_idle = pageIdle;
-    this->p_page_feedback = pageFeedback;
-    this->paymentPage = page_qr_payment;
-    this->selectPage = pageProduct;
-    this->p_page_select_product = pageSelect;
-    this->p_page_transactions = pageTransactions;
-    this->p_page_maintenance = pageMaintenance;
-}
 
-void page_help::on_previousPage_Button_clicked()
-{
-    hideCurrentPageAndShowProvided(p_page_idle);
-}
-
-void page_help::on_previousPage_Button_2_clicked()
+void page_help::on_pushButton_to_idle_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_idle);
 }
@@ -178,17 +139,17 @@ void page_help::onHelpTimeoutTick()
     }
 }
 
-void page_help::on_refreshButton_clicked()
+void page_help::on_pushButton_resetTimeout_clicked()
 {
     _helpIdleTimeoutSec = 60;
 }
 
-void page_help::on_transactions_Button_clicked()
+void page_help::on_pushButton_to_transactions_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_transactions);
 }
 
-void page_help::on_maintenance_page_Button_clicked()
+void page_help::on_pushButton_to_maintenance_clicked()
 {
     _helpIdleTimeoutSec = 60;
     ui->keyboard_3->show();
@@ -277,7 +238,7 @@ void page_help::keyboardButtonPressed(int buttonID)
     }
 }
 
-void page_help::on_feedback_Button_clicked()
+void page_help::on_pushButton_to_feedback_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_feedback);
 }

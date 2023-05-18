@@ -49,29 +49,29 @@ public:
 
 private slots:
     // **** Navigation ****
-    void on_previousPage_Button_clicked();
-    void on_previousPage_Button_2_clicked();
-    void on_refreshButton_clicked();
+    // void on_previousPage_Button_clicked();
+    void on_pushButton_to_idle_clicked();
+    void on_pushButton_resetTimeout_clicked();
     void onHelpTimeoutTick();
     
 
-    void on_transactions_Button_clicked();
+    void on_pushButton_to_transactions_clicked();
 
     void keyboardButtonPressed(int);
 
-    void on_maintenance_page_Button_clicked();
+    void on_pushButton_to_maintenance_clicked();
 
-    void on_feedback_Button_clicked();
+    void on_pushButton_to_feedback_clicked();
 
 private:
     void showEvent(QShowEvent *event);
 
     Ui::page_help *ui;
     page_select_product* p_page_select_product;
-    page_qr_payment* paymentPage;
+    page_qr_payment* p_page_payment;
     page_idle* p_page_idle;
     page_sendFeedback* p_page_feedback;
-    pageProduct* selectPage;
+    pageProduct* p_page_product;
     page_transactions* p_page_transactions;
     page_maintenance* p_page_maintenance;
 

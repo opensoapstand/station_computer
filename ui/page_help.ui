@@ -16,20 +16,7 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QPushButton" name="previousPage_Button">
-   <property name="geometry">
-    <rect>
-     <x>420</x>
-     <y>1740</y>
-     <width>211</width>
-     <height>171</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="refreshButton">
+  <widget class="QPushButton" name="pushButton_resetTimeout">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -45,20 +32,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="back_Button">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>40</y>
-     <width>181</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="transactions_Button">
+  <widget class="QPushButton" name="pushButton_to_transactions">
    <property name="geometry">
     <rect>
      <x>660</x>
@@ -71,7 +45,7 @@
     <string>View Transactions</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="maintenance_page_Button">
+  <widget class="QPushButton" name="pushButton_to_maintenance">
    <property name="geometry">
     <rect>
      <x>810</x>
@@ -370,7 +344,7 @@
      </widget>
     </item>
     <item row="0" column="0" colspan="12">
-     <widget class="QLabel" name="wifiPassLabel">
+     <widget class="QLabel" name="label_keyboardInfo">
       <property name="text">
        <string>Enter password followed by the &quot;Done&quot; key to enter maintenance mode</string>
       </property>
@@ -1178,7 +1152,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QPushButton" name="feedback_Button">
+  <widget class="QPushButton" name="pushButton_to_feedback">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -1223,13 +1197,13 @@
     <enum>QFrame::NoFrame</enum>
    </property>
   </widget>
-  <widget class="QPushButton" name="previousPage_Button_2">
+  <widget class="QPushButton" name="pushButton_to_idle">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>20</y>
-     <width>211</width>
-     <height>171</height>
+     <x>30</x>
+     <y>40</y>
+     <width>181</width>
+     <height>81</height>
     </rect>
    </property>
    <property name="text">
@@ -1237,14 +1211,12 @@
    </property>
   </widget>
   <zorder>html_text_label</zorder>
-  <zorder>refreshButton</zorder>
-  <zorder>back_Button</zorder>
-  <zorder>previousPage_Button</zorder>
-  <zorder>transactions_Button</zorder>
-  <zorder>maintenance_page_Button</zorder>
-  <zorder>feedback_Button</zorder>
+  <zorder>pushButton_resetTimeout</zorder>
+  <zorder>pushButton_to_transactions</zorder>
+  <zorder>pushButton_to_maintenance</zorder>
+  <zorder>pushButton_to_feedback</zorder>
   <zorder>html_textBrowser</zorder>
-  <zorder>previousPage_Button_2</zorder>
+  <zorder>pushButton_to_idle</zorder>
   <zorder>keyboard_3</zorder>
  </widget>
  <resources/>

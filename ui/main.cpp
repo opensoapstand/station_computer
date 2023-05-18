@@ -15,10 +15,10 @@
 //***************************************
 
 #include "df_util.h"
+#include "page_idle.h"
 #include "page_transactions.h"
 #include "page_help.h"
 #include "page_init.h"
-#include "page_idle.h"
 #include "page_idle_products.h"
 #include "page_select_product.h"
 #include "page_product.h"

@@ -253,23 +253,23 @@ void page_select_product::displayProducts()
             selectProductPhotoLabelsText[i]->setStyleSheet("background-color: transparent;");
         }
 
-        if (product_status_text.compare("DISPENSER_STATE_AVAILABLE") == 0)
+        if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
         {
             selectProductPhotoLabelsText[i]->setText("");
         }
-        else if (product_status_text.compare("DISPENSER_STATE_AVAILABLE_LOW_STOCK") == 0)
+        else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
         {
             selectProductPhotoLabelsText[i]->setText("Almost Empty");
         }
-        else if (product_status_text.compare("DISPENSER_STATE_PROBLEM_EMPTY") == 0)
+        else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
         {
             selectProductPhotoLabelsText[i]->setText("Sold Out");
         }
-        else if (product_status_text.compare("DISPENSER_STATE_DISABLED_COMING_SOON") == 0)
+        else if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
         {
             selectProductPhotoLabelsText[i]->setText("Coming Soon");
         }
-        else if (product_status_text.compare("DISPENSER_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
+        else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
 
         {
             selectProductPhotoLabelsText[i]->setText("Assistance Needed");

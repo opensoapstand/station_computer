@@ -113,23 +113,23 @@ void page_maintenance::showEvent(QShowEvent *event)
 
         db.closeDB();
 
-        if (product_status_text.compare("DISPENSER_STATE_AVAILABLE") == 0)
+        if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
         {
             product_overlay_labels[i]->setText("");
         }
-        else if (product_status_text.compare("DISPENSER_STATE_AVAILABLE_LOW_STOCK") == 0)
+        else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
         {
             product_overlay_labels[i]->setText("Almost Empty");
         }
-        else if (product_status_text.compare("DISPENSER_STATE_PROBLEM_EMPTY") == 0)
+        else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
         {
             product_overlay_labels[i]->setText("Sold Out");
         }
-        else if (product_status_text.compare("DISPENSER_STATE_DISABLED_COMING_SOON") == 0)
+        else if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
         {
             product_overlay_labels[i]->setText("Coming Soon");
         }
-        else if (product_status_text.compare("DISPENSER_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
+        else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
 
         {
             product_overlay_labels[i]->setText("Assistance Needed");

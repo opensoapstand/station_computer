@@ -475,7 +475,7 @@ void page_maintenance_dispenser::on_refillButton_clicked()
 
             DbManager db(DB_PATH);
             bool isEnabled = db.getSlotEnabled(selectedProductOrder->getSelectedSlot());
-            bool success = db.updateSlotAvailability(selectedProductOrder->getSelectedSlot(), isEnabled, "DISPENSER_STATE_AVAILABLE");
+            bool success = db.updateSlotAvailability(selectedProductOrder->getSelectedSlot(), isEnabled, "SLOT_STATE_AVAILABLE");
             db.closeDB();
         }
         else
@@ -538,12 +538,12 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
             {
             case QMessageBox::Yes:
             {
-                slotStatus = "DISPENSER_STATE_DISABLED_COMING_SOON";
+                slotStatus = "SLOT_STATE_DISABLED_COMING_SOON";
             }
             break;
             case QMessageBox::No:
             {
-                slotStatus = "DISPENSER_STATE_DISABLED";
+                slotStatus = "SLOT_STATE_DISABLED";
             }
             break;
             }
@@ -595,7 +595,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
             // ui->infoLabel->setText(infoLabelText);
 
             slotEnabled = true;
-            slotStatus = "DISPENSER_STATE_AVAILABLE";
+            slotStatus = "SLOT_STATE_AVAILABLE";
             break;
         }
         case QMessageBox::No:

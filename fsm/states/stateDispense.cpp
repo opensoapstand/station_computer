@@ -113,7 +113,7 @@ DF_ERROR stateDispense::onAction()
 
    productDispensers[pos_index].updateRunningAverageWindow();
    productDispensers[pos_index].updateDispenseStatus();
-   productDispensers[pos_index].updateDispenserState();
+   productDispensers[pos_index].updateSlotState();
 
    if (productDispensers[pos_index].getIsStatusUpdateAllowed())
    {
@@ -124,7 +124,7 @@ DF_ERROR stateDispense::onAction()
       // const char *statusStringChar = productDispensers[pos_index].getDispenseStatusAsString();
       // std::string statusString(statusStringChar);
       // std::string message = "dispenseupdate|" + std::to_string(volume) + "|" + std::to_string(flowrate) + "|" + statusString;
-      const char *statusStringChar = productDispensers[pos_index].getDispenserStateAsString();
+      const char *statusStringChar = productDispensers[pos_index].getSlotStateAsString();
       std::string statusString(statusStringChar);
       std::string message = "dispenseupdate|" + std::to_string(volume) + "|" + std::to_string(flowrate) + "|" + statusString;
       m_pMessaging->sendMessageOverIP(message);

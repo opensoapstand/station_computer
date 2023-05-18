@@ -507,24 +507,24 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
     // }
     // else 
 
-    if (dispenseStatus == "DISPENSER_STATE_WARNING_PRIMING")
+    if (dispenseStatus == "SLOT_STATE_WARNING_PRIMING")
     {
         ui->label_dispense_message->setText("Please keep the button pressed.\nfor up to 15 seconds\nbefore the product starts dispensing.");
         ui->label_dispense_message->show();
     }
     else
-    if (dispenseStatus == "DISPENSER_STATE_PROBLEM_EMPTY")
+    if (dispenseStatus == "SLOT_STATE_PROBLEM_EMPTY")
     {
         ui->label_dispense_message->setText("It appears we're out of stock.\nTap the problem button in case of other issues.");
         ui->label_dispense_message->show();
     }
 
-    else if (dispenseStatus == "DISPENSER_STATE_PROBLEM_NEEDS_ATTENTION")
+    else if (dispenseStatus == "SLOT_STATE_PROBLEM_NEEDS_ATTENTION")
     {
         ui->label_dispense_message->setText("We can't get the dispensing started.\nWe're empty or the pump needs help to prime.\nTap the problem button in case of other issues.");
         ui->label_dispense_message->show();
     }
-    else if (dispenseStatus == "DISPENSER_STATE_AVAILABLE")
+    else if (dispenseStatus == "SLOT_STATE_AVAILABLE")
     {
         // normal status
         // ui->button_problems->hide();

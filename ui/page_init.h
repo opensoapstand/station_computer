@@ -42,7 +42,6 @@ public:
     ~page_init();
     void initReadySlot(void);
 
-    DrinkOrder* currentProductOrder;
     df_util* dfUtility;
 
     DfUiCommThread* dfComm;

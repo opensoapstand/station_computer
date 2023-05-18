@@ -27,7 +27,7 @@
 #include "page_dispenser.h"
 #include "page_error_wifi.h"
 #include "page_productOverview.h"
-#include "drinkorder.h"
+
 #include "pagethankyou.h"
 #include <QApplication>
 #include "page_maintenance.h"
@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
 
     // TODO: Instantiate a DrinkSelection[] Array
     // TODO: Create Query to populate DrinkSelection[0-12]
-    // TODO: Instantiate a DrinkOrder Object
+    
 
 
 

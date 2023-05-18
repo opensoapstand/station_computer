@@ -65,7 +65,7 @@ public:
 
     product products[SLOT_COUNT];
     product *selectedProduct;
-    DrinkOrder *currentProductOrder;
+    
     df_util *dfUtility;
    //for products.cpp
    // product products[SLOT_COUNT]; // declare products as a member variable

@@ -19,7 +19,7 @@
 
 #include <includefiles.h>
 #include "df_util.h"
-#include "drinkorder.h"
+
 #include "dfuicommthread.h"
 #include "page_maintenance.h"
 #include "page_idle_products.h"
@@ -57,7 +57,6 @@ public:
     void dispense_test_start();
     void update_volume_received_dispense_stats(double dispensed);
     void reset_all_dispense_stats();
-    DrinkOrder *selectedProductOrder;
 
 private slots:
     void refreshLabels();

@@ -18,7 +18,7 @@
 #define page_tap_payment_serial_H
 
 #include "df_util.h"
-#include "drinkorder.h"
+
 #include "page_help.h"
 #include "page_error_wifi.h"
 #include "payment/commands.h"

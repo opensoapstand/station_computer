@@ -428,6 +428,27 @@ void product::loadProductProperties()
     qDebug() << "done loading from csv";
 }
 
+bool product::isProductVolumeInContainer()
+{
+    DbManager db(DB_PATH);
+    // db.getProductProperties(slot, &product_id, sizeIndexIsEnabled);
+    bool retval;
+    // if (db.getEmptyContainerDetectionEnabled())
+    // {
+    //     retval=  db.getVolumeRemaining(slot) > CONTAINER_EMPTY_THRESHOLD_ML;
+    // }
+    // else
+    // {
+    //     retval = db.getVolumeRemaining(slot) > db.getProductVolume(slot, 'l'); // ----> TODO VERY BUGGY (only instance found of using char volume as a magic number)
+    // }
+    if (!db.getEmptyContainerDetectionEnabled())
+    {
+        retval = db.getVolumeRemaining(getSlot()) > CONTAINER_EMPTY_THRESHOLD_ML;
+    }
+
+    db.closeDB();
+    return retval;
+}
 void product::loadProductPropertiesFromDb()
 {
     qDebug() << "Open db: db load product properties";

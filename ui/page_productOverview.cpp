@@ -255,7 +255,6 @@ void pageProductOverview::setPage(page_select_product *pageSelect, page_dispense
     ui->label_invoice_discount_name->hide();
     ui->label_discount_tag->hide();
     ui->label_gif->hide();
-    // p_page_idle->selectedProduct = p_page_idle->currentProductOrder;
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_ORDER_OVERVIEW_PATH);
 

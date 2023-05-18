@@ -279,7 +279,7 @@ void page_select_product::displayProducts()
             selectProductPhotoLabelsText[i]->setText(". . .");
         }
 
-        if (!(p_page_idle->currentProductOrder->isProductVolumeInContainer(slot))){
+        if (!(p_page_idle->products[i].isProductVolumeInContainer())){
             selectProductPhotoLabelsText[i]->setText("Sold Out");
         }
 
@@ -295,7 +295,6 @@ void page_select_product::select_product(int slot)
     if (product_slot_enabled)
     {
         qDebug() << "selected slot: " << slot;
-        // p_page_idle->currentProductOrder->setSelectedSlot(slot);
         p_page_idle->setSelectedProduct(slot);
         hideCurrentPageAndShowProvided(p_page_product);
     }else{

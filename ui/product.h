@@ -61,6 +61,7 @@ public:
 
     void loadProductProperties();
     void loadProductPropertiesFromDb();
+    bool isProductVolumeInContainer();
     // QString getLoadedProductName();
     QString getProductDescription();
     QString getProductIngredients();

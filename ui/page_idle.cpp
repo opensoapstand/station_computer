@@ -35,11 +35,11 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 {
     // IPC Networking
     dfUtility = new df_util();
-   
+
     // for products.cpp
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
-        products[slot_index].setSlot(slot_index+1);
+        products[slot_index].setSlot(slot_index + 1);
         products[slot_index].load();
     }
 
@@ -52,13 +52,9 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     ui->toSelectProductPageButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->toSelectProductPageButton->raise();
 
-    //TODO: Hold and pass Product Object
-    currentProductOrder = new DrinkOrder();
+    // TODO: Hold and pass Product Object
     selectedProduct = new product();
-    currentProductOrder->setSelectedSlot(OPTION_SLOT_INVALID);
     // product *selectedProduct;
-
-
 }
 
 /*
@@ -74,7 +70,6 @@ void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pa
 #ifndef PLAY_VIDEO
     setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
 #endif
-
 }
 
 // DTOR
@@ -90,13 +85,19 @@ void page_idle::showEvent(QShowEvent *event)
     bool needsReceiptPrinter = false;
     for (int slot = 1; slot <= SLOT_COUNT; slot++)
     {
-        QString paymentMethod = products[slot-1].getPaymentMethod();
+        QString paymentMethod = products[slot - 1].getPaymentMethod();
         if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
         {
             needsReceiptPrinter = true;
             qDebug() << "Needs receipt printer: " << paymentMethod;
             break;
         }
+
+        // reset promovalue
+        // currentProductOrder->setDiscountPercentageFraction(0.0);
+        // currentProductOrder->setPromoCode("");
+        products[slot - 1].setDiscountPercentageFraction(0.0);
+        products[slot - 1].setPromoCode("");
     }
 
     DbManager db(DB_PATH);
@@ -108,8 +109,6 @@ void page_idle::showEvent(QShowEvent *event)
     {
         hideCurrentPageAndShowProvided(this->p_page_idle_products);
     }
-
-    
 
     this->lower();
     qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
@@ -147,10 +146,6 @@ void page_idle::showEvent(QShowEvent *event)
         "color: white;"
         "border: none;"
         "}");
-
-    // reset promovalue
-    currentProductOrder->setDiscountPercentageFraction(0.0);
-    currentProductOrder->setPromoCode("");
 
     addCompanyLogoToLabel(ui->logo_label);
 
@@ -217,8 +212,9 @@ void page_idle::showEvent(QShowEvent *event)
 #endif
     this->raise();
 }
-//for products.cpp
-product* page_idle::getSelectedProduct(){
+// for products.cpp
+product *page_idle::getSelectedProduct()
+{
     return selectedProduct;
 }
 

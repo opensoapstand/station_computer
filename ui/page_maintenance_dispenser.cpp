@@ -1,7 +1,7 @@
 #include "page_maintenance_dispenser.h"
 #include "ui_page_maintenance_dispenser.h"
 #include "page_idle.h"
-#include "drinkorder.h"
+
 #include <QInputDialog>
 #include <QCoreApplication>
 #include <QGuiApplication>
@@ -350,7 +350,7 @@ void page_maintenance_dispenser::reset_all_dispense_stats()
     setButtonPressCountLabel(true);
 
     DbManager db(DB_PATH);
-    QString slotStatus = db.getStatusText(selectedProductOrder->getSelectedSlot());
+    QString slotStatus = db.getStatusText(this->p_page_idle->selectedProduct->getSlot());
     db.closeDB();
     ui->dispense_status_label->setText(slotStatus);
 }
@@ -474,8 +474,8 @@ void page_maintenance_dispenser::on_refillButton_clicked()
             ui->infoLabel->setText("Refill Succesfull");
 
             DbManager db(DB_PATH);
-            bool isEnabled = db.getSlotEnabled(selectedProductOrder->getSelectedSlot());
-            bool success = db.updateSlotAvailability(selectedProductOrder->getSelectedSlot(), isEnabled, "SLOT_STATE_AVAILABLE");
+            bool isEnabled = db.getSlotEnabled(this->p_page_idle->selectedProduct->getSlot());
+            bool success = db.updateSlotAvailability(this->p_page_idle->selectedProduct->getSlot(), isEnabled, "SLOT_STATE_AVAILABLE");
             db.closeDB();
         }
         else
@@ -492,7 +492,7 @@ void page_maintenance_dispenser::on_refillButton_clicked()
     }
 
     DbManager db(DB_PATH);
-    QString slotStatus = db.getStatusText(selectedProductOrder->getSelectedSlot());
+    QString slotStatus = db.getStatusText(this->p_page_idle->selectedProduct->getSlot());
     db.closeDB();
 
     ui->dispense_status_label->setText(slotStatus);

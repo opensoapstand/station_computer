@@ -340,7 +340,9 @@ void pageProductOverview::reset_and_show_page_elements()
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     QString keyboard = KEYBOARD_IMAGE_PATH;
-    QString keyboard_style_sheet = " background-image: url(" + keyboard + "); }";
+    QString keyboard_path = p_page_idle->getTemplatePathFromName(keyboard);
+
+    QString keyboard_style_sheet = " background-image: url(" + keyboard_path + "); }";
     ui->promoKeyboard->setStyleSheet(keyboard_style_sheet);
 
     // loadProdSpecs();

@@ -541,7 +541,7 @@ void pageProduct::loadProdSpecs()
             orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 1px  solid #3D6675; }");
 
             double price = p_page_idle->selectedProduct->getPrice(product_sizes[i]);
-            QString transparent_path = FULL_TRANSPARENT_IMAGE_PATH;
+            // QString transparent_path = FULL_TRANSPARENT_IMAGE_PATH;
 
             if (product_sizes[i] == SIZE_CUSTOM_INDEX)
             {

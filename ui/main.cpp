@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
     // df_util::fileExists(PAGE_WIFI_ERROR_BACKGROUND_PATH);
     df_util::fileExists(BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH);
     df_util::fileExists(KEYBOARD_IMAGE_PATH);
-    df_util::fileExists(FULL_TRANSPARENT_IMAGE_PATH);
+    // df_util::fileExists(FULL_TRANSPARENT_IMAGE_PATH);
 
     // Page pathing references to function calls.
     p_page_help->setPage(firstSelectPage, p_pageProduct, p_page_idle, paymentQrPage, p_page_transactions, p_page_maintenance, p_page_sendFeedback);

@@ -18,9 +18,9 @@ public:
     double getProductVolumePerTick(int slot);
     // bool remainingVolumeIsBiggerThanLargestFixedSize(int slot);
 
-    bool getRecentTransactions(QString values[][5], int count, int* count_retreived);
+    bool getRecentTransactions(QString values[][5], int count, int *count_retreived);
     bool hasReceiptPrinter();
-    void printerStatus(bool* isOnline, bool* hasPaper );
+    void printerStatus(bool *isOnline, bool *hasPaper);
     bool showTransactions();
     QString getProductReceiptName(int slot);
     QString getPaymentMethod(int slot);
@@ -36,7 +36,6 @@ public:
     QString getPriceMedium(int slot);
     QString getPriceLarge(int slot);
 
-
     QString getIdlePageType();
 
     double getFullProduct(int slot);
@@ -46,7 +45,7 @@ public:
     double getTotalDispensed(int slot);
     double getVolumeDispensedSinceRestock(int slot);
     QString getLastRestockDate(int slot);
-    bool refill(int slot);
+    bool restockProduct(int slot);
     bool sellout(int slot);
     bool unsellout(int slot);
     int getLastTransactionIdFromDb();
@@ -93,6 +92,7 @@ public:
     void getProductProperties(int slot, QString *product_id, bool *isSizeEnabled);
     QString getTemplateName();
     void updateTapToQR();
+
 private:
     void emailEmpty(int slot);
     QSqlDatabase m_db;

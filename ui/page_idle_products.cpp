@@ -22,7 +22,6 @@
 #include "page_select_product.h"
 #include "page_product.h"
 
-
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
 #include <QMainWindow>
@@ -32,12 +31,11 @@
 //    #define PLAY_VIDEO
 // CTOR
 page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
-                                                            ui(new Ui::page_idle_products)
+                                                          ui(new Ui::page_idle_products)
 {
     ui->setupUi(this);
 
     ui->p_page_maintenanceButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
- 
 
     selectProductPhotoLabels[0] = ui->product_1_photo_label;
     selectProductPhotoLabels[1] = ui->product_2_photo_label;
@@ -53,8 +51,6 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     selectProductPhotoLabelsText[1] = ui->product_2_photo_label_text;
     selectProductPhotoLabelsText[2] = ui->product_3_photo_label_text;
     selectProductPhotoLabelsText[3] = ui->product_4_photo_label_text;
-
-
 
     selectProductTypeLabels[0] = ui->product_1_type_label;
     selectProductTypeLabels[1] = ui->product_2_type_label;
@@ -79,8 +75,6 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
         "}");
     ui->label_pick_soap->setText("Discover how to<br> refill soap here");
 
-   
-
     QFont font;
     font.setFamily(QStringLiteral("Brevia"));
     font.setPointSize(20);
@@ -101,7 +95,6 @@ void page_idle_products::setPage(pageProduct *pageSizeSelect, page_idle_products
     this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_help = pageHelp;
-
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
     QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
@@ -159,19 +152,16 @@ void page_idle_products::displayProducts()
         selectProductPhotoLabels[i]->setStyleSheet("border: none;");
         p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->products[i].getProductPicturePath());
 
-        qDebug() << "db (re)load product details:";
-        
         product_slot_enabled = p_page_idle->products[i].getSlotEnabled();
 
-        
-        // product_sold_out = !(db.isProductVolumeInContainer(slot));
-
+        qDebug() << "db (re)load product details:";
+        DbManager db(DB_PATH);
         product_status_text = db.getStatusText(slot);
         db.closeDB();
 
         product_type = p_page_idle->products[i].getProductType();
         product_name = p_page_idle->products[i].getProductName();
-        
+
         // qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << ", product set as not available?: " << product_sold_out << " Status text: " << product_status_text;
 
         // selectProductNameLabels[i]->setText(product_name);
@@ -215,25 +205,22 @@ void page_idle_products::displayProducts()
 
         selectProductOverlayLabels[i]->raise();
         selectProductPhotoLabelsText[i]->raise();
-      
+
         selectProductOverlayLabels[i]->setText("");
 
         // overlay product status
-            selectProductPhotoLabelsText[i]->setText("");
-            selectProductOverlayLabels[i]->setStyleSheet("background-color: transparent;");
+        selectProductPhotoLabelsText[i]->setText("");
+        selectProductOverlayLabels[i]->setStyleSheet("background-color: transparent;");
 
         selectProductTypeLabels[i]->setText(type_text);
         selectProductTypeLabels[i]->setStyleSheet("QLabel{font-family: 'Brevia';font-style: normal;font-weight: 700;font-size: 30px;line-height: 41px;qproperty-alignment: AlignCenter;text-transform: uppercase;color: #003840;}");
     }
-
-   
-
 }
 
 void page_idle_products::select_product(int slot)
 {
-        qDebug() << "selected slot: " << slot;
-        hideCurrentPageAndShowProvided(p_page_product);
+    qDebug() << "selected slot: " << slot;
+    hideCurrentPageAndShowProvided(p_page_product);
 }
 
 void page_idle_products::addCompanyLogoToLabel(QLabel *label)
@@ -248,17 +235,18 @@ void page_idle_products::addCompanyLogoToLabel(QLabel *label)
     QString price_small;
     QString price_medium;
     QString price_large;
-    for (uint8_t i = 0; i < SLOT_COUNT; i++) {
-    size_units = db.getUnits(i);
-    size_small = db.getSizeSmall(i);
-    size_medium = db.getSizeMedium(i);
-    size_large = db.getSizeLarge(i);
-    price_small = db.getPriceSmall(i);
-    price_medium = db.getPriceMedium(i);
-    price_large = db.getPriceLarge(i);
+    for (uint8_t i = 0; i < SLOT_COUNT; i++)
+    {
+        size_units = db.getUnits(i);
+        size_small = db.getSizeSmall(i);
+        size_medium = db.getSizeMedium(i);
+        size_large = db.getSizeLarge(i);
+        price_small = db.getPriceSmall(i);
+        price_medium = db.getPriceMedium(i);
+        price_large = db.getPriceLarge(i);
 
-    // do something with size_units
-}
+        // do something with size_units
+    }
     db.closeDB();
     qDebug() << "db closed";
     if (id.at(0) == 'C')
@@ -270,10 +258,7 @@ void page_idle_products::addCompanyLogoToLabel(QLabel *label)
     {
         qDebug() << "WARNING: invalid customer ID. Should like C-1, C-374, ... . Provided id: " << id;
     }
-        
-
 }
-
 
 void page_idle_products::onProductPageTimeoutTick()
 {

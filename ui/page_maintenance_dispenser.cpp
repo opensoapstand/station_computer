@@ -66,7 +66,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     qDebug() << "call db from maintenance select dispenser page";
     DbManager db(DB_PATH);
     this->units_selected_product = this->p_page_idle->selectedProduct->getUnitsForSlot();
-    volume_per_tick_buffer = p_page_idle->selectedProduct->getVolumePerTickForSelectedSlot();
+    volume_per_tick_buffer = p_page_idle->selectedProduct->getVolumePerTickForSlot();
     p_page_idle->selectedProduct->setBiggestEnabledSizeIndex();
 
     if (maintainProductPageEndTimer == nullptr)
@@ -187,12 +187,12 @@ void page_maintenance_dispenser::refreshLabels()
     ui->label_volume_dispensed_since_restock->setText("Volume dispensed since restock : " + p_page_idle->selectedProduct->getVolumeDispensedSinceRestockCorrectUnits());
     ui->label_volume_remaining->setText("Volume remaining                        : " + p_page_idle->selectedProduct->getVolumeRemainingCorrectUnits());
 
-    ui->pwmLabel->setText(QString::number(p_page_idle->selectedProduct->getSelectedDispenseSpeedPercentage()) + "%");
+    ui->pwmLabel->setText(QString::number(p_page_idle->selectedProduct->getDispenseSpeedPercentage()) + "%");
 
-    // int product_slot___ = p_page_idle->selectedProduct->getSlot();
+    int product_slot___ = p_page_idle->selectedProduct->getSlot();
     qDebug() << "db... refresh labels";
     DbManager db(DB_PATH);
-    ui->label_restock_timestamp->setText("Most recent restock                     : " + db.getLastRefillTime(product_slot___));
+    ui->label_restock_timestamp->setText("Most recent restock                     : " + db.getLastRestockDate(product_slot___));
     ui->pluLabel_s->setText(p_page_idle->selectedProduct->getPLU('s'));
     ui->pluLabel_m->setText(p_page_idle->selectedProduct->getPLU('m'));
     ui->pluLabel_l->setText(p_page_idle->selectedProduct->getPLU('l'));
@@ -464,7 +464,7 @@ void page_maintenance_dispenser::on_refillButton_clicked()
     case QMessageBox::Yes:
     {
         DbManager db(DB_PATH);
-        success = db.refill(p_page_idle->selectedProduct->getSlot());
+        success = db.restockProduct(p_page_idle->selectedProduct->getSlot());
         db.closeDB();
 
         if (success)
@@ -502,11 +502,13 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
 {
     qDebug() << "soldout clicked. slot: " << QString::number(this->p_page_idle->selectedProduct->getSlot());
 
-    // qDebug() << "soldout clicked. size: " << QString::number(this->p_page_idle->selectedProduct->getVolume());
-
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
-    success = p_page_idle->selectedProduct->getSlotEnabled();
+    DbManager db(DB_PATH);
+    bool slotEnabled = db.getSlotEnabled(this->p_page_idle->selectedProduct->getSlot());
+    QString slotStatus = db.getStatusText(this->p_page_idle->selectedProduct->getSlot());
+    db.closeDB();
+
     QString infoLabelText = "";
 
     if (slotEnabled)
@@ -605,7 +607,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
     }
 
     DbManager db3(DB_PATH);
-    bool success = db3.updateSlotAvailability(this->p_page_idle->currentProductOrder->getSelectedSlot(), slotEnabled, slotStatus);
+    bool success = db3.updateSlotAvailability(p_page_idle->selectedProduct->getSlot(), slotEnabled, slotStatus);
     db3.closeDB();
     if (!success)
     {
@@ -945,10 +947,10 @@ void page_maintenance_dispenser::updateValues()
         }
         else if (modify_stock)
         {
-            double vol_as_ml = this->p_page_idle->currentProductOrder->inputTextToMlConvertUnits(text_entered);
+            double vol_as_ml = p_page_idle->selectedProduct->inputTextToMlConvertUnits(text_entered);
             qDebug() << "db... set volume remaining";
             DbManager db(DB_PATH);
-            db.setVolumeRemaining(this->p_page_idle->currentProductOrder->getSelectedSlot(), vol_as_ml);
+            db.setVolumeRemaining(p_page_idle->selectedProduct->getSlot(), vol_as_ml);
             db.closeDB();
         }
         else if (pwm)

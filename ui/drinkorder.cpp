@@ -470,6 +470,28 @@ void DrinkOrder::loadProductPropertiesFromDb(int slot)
     db.closeDB();
 }
 
+bool DrinkOrder::isProductVolumeInContainer(int slot)
+{
+    DbManager db(DB_PATH);
+    // db.getProductProperties(slot, &product_id, sizeIndexIsEnabled);
+    bool retval;
+    // if (db.getEmptyContainerDetectionEnabled())
+    // {
+    //     retval=  db.getVolumeRemaining(slot) > CONTAINER_EMPTY_THRESHOLD_ML;
+    // }
+    // else
+    // {
+    //     retval = db.getVolumeRemaining(slot) > db.getProductVolume(slot, 'l'); // ----> TODO VERY BUGGY (only instance found of using char volume as a magic number)
+    // }
+    if (!db.getEmptyContainerDetectionEnabled())
+    {
+        retval = db.getVolumeRemaining(slot) > CONTAINER_EMPTY_THRESHOLD_ML;
+    }
+
+    db.closeDB();
+    return retval;
+}
+
 void DrinkOrder::loadSelectedProductPropertiesFromProductsFile()
 {
     getProductPropertiesFromProductsFile(m_product_id, &m_name_ui, &m_product_type, &m_description_ui, &m_features_ui, &m_ingredients_ui);

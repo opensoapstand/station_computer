@@ -233,13 +233,7 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
         "border-radius: 20px;"
         "}");
     ui->label_gif->hide();
-    // QString paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
-    // if(paymentMethod== "qr" || paymentMethod=="tap"){
-    //     ui->label_payment_page->setText("Pay Now");
-    // }
-    // else{
-    //     ui->label_payment_page->setText("Next");
-    // }
+ 
 }
 
 /*
@@ -705,7 +699,7 @@ void pageProductOverview::on_page_qr_payment_Button_clicked()
         curl_easy_cleanup(curl);
         readBuffer = "";
     }
-    else if(paymentMethod == "tap"){
+    else if(paymentMethod == "tapTcp"){
         hideCurrentPageAndShowProvided(paymentTapPage);
 
     }

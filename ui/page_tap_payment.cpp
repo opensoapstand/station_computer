@@ -84,30 +84,10 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
     ui->payment_bypass_Button->setEnabled(false);
     ui->title_Label->hide();
 
-    bool isTapUsedAsPaymentMethod = false;
-    qDebug()<<"afeijaseifjseidf";
-    for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
-    {
-        //QString paymentMethod = p_page_idle->products[slot_index].getPaymentMethod();
-        QString paymentMethod = getPaymentMethodForConstructorTime(slot_index+1); // DO NOT delete, crashes at startup when optimized to use selected product. can't call page_idle products db from constructor?
-        if ( paymentMethod == "tap")
-        {
-            isTapUsedAsPaymentMethod = true;
-        }
-        qDebug()<<"payment methtoeist : " << paymentMethod;
-    }
-    // qDebug()<<"afeijaseifjseidf";
-    // for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
-    // {
-    //     QString paymentMethod = p_page_idle->products[slot_index].getPaymentMethod();
-    //     if ( paymentMethod == "tap")
-    //     {
-    //         isTapUsedAsPaymentMethod = true;
-    //     }
-    //     qDebug()<<"payment methtoeist : " << paymentMethod;
-    // }
+    // ui->order_total_amount->hide();
+    DbManager db(DB_PATH);
 
-    if (isTapUsedAsPaymentMethod)
+    if (db.getPaymentMethod(1) == "tapTcp")
     {
         qDebug() << "InitializingTap payment";
         tap_payment = true;

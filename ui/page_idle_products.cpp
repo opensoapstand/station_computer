@@ -146,7 +146,7 @@ void page_idle_products::displayProducts()
     QString product_type_icons[5] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH};
 
     bool product_slot_enabled;
-    bool product_sold_out;
+    // bool product_sold_out;
     QString product_type;
     QString product_name;
     QString product_status_text;
@@ -163,15 +163,16 @@ void page_idle_products::displayProducts()
         
         product_slot_enabled = p_page_idle->products[i].getSlotEnabled();
 
-        DbManager db(DB_PATH);
-        product_sold_out = !(db.isProductVolumeInContainer(slot));
+        
+        // product_sold_out = !(db.isProductVolumeInContainer(slot));
+
         product_status_text = db.getStatusText(slot);
         db.closeDB();
 
         product_type = p_page_idle->products[i].getProductType();
         product_name = p_page_idle->products[i].getProductName();
         
-        qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << ", product set as not available?: " << product_sold_out << " Status text: " << product_status_text;
+        // qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << ", product set as not available?: " << product_sold_out << " Status text: " << product_status_text;
 
         // selectProductNameLabels[i]->setText(product_name);
         // selectProductNameLabels[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
@@ -199,7 +200,7 @@ void page_idle_products::displayProducts()
             icon_path = ICON_TYPE_ALL_PURPOSE_PATH;
             type_text = "CLEANER ";
         }
-        else if (product_type == "Contentrate")
+        else if (product_type == "Concentrate")
         {
             icon_path = ICON_TYPE_CONCENTRATE_PATH;
             type_text = "CONCENTRATE";
@@ -218,22 +219,8 @@ void page_idle_products::displayProducts()
         selectProductOverlayLabels[i]->setText("");
 
         // overlay product status
-        if (!product_slot_enabled)
-        {
-            selectProductPhotoLabelsText[i]->setText(product_status_text);
-            selectProductOverlayLabels[i]->setStyleSheet("background-color: rgba(255,255,255,170);");
-        }
-        else if (product_sold_out)
-        {
-            selectProductPhotoLabelsText[i]->setText("Sold out");
-            selectProductOverlayLabels[i]->setStyleSheet("background-color: transparent;");
-        }
-        else
-        {
             selectProductPhotoLabelsText[i]->setText("");
             selectProductOverlayLabels[i]->setStyleSheet("background-color: transparent;");
-      
-        }
 
         selectProductTypeLabels[i]->setText(type_text);
         selectProductTypeLabels[i]->setStyleSheet("QLabel{font-family: 'Brevia';font-style: normal;font-weight: 700;font-size: 30px;line-height: 41px;qproperty-alignment: AlignCenter;text-transform: uppercase;color: #003840;}");

@@ -271,7 +271,9 @@ void page_dispenser::showEvent(QShowEvent *event)
     {
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
     }
-    // p_page_idle->addCompanyLogoToLabel(ui->label_logo);
+    
+    p_page_idle->addCompanyLogoToLabel(ui->label_logo);
+    ui->label_logo->hide();
 
     p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
 
@@ -356,7 +358,7 @@ void page_dispenser::dispensing_end_admin()
     stream << std::fixed << std::setprecision(2) << price;
     qDebug() << "Minimum volume dispensed" << MINIMUM_DISPENSE_VOLUME_ML;
     qDebug() << "volume dispensed" << p_page_idle->selectedProduct->getVolumeDispensedMl();
-    if (p_page_idle->selectedProduct->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML && (p_page_idle->selectedProduct->getPaymentMethod()) == "tap")
+    if (p_page_idle->selectedProduct->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML && (p_page_idle->selectedProduct->getPaymentMethod()) == "tapTcp")
     {
         ui->finishTransactionMessage->setText("Voiding payment");
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
@@ -374,7 +376,7 @@ void page_dispenser::dispensing_end_admin()
         }
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     }
-    else if ((p_page_idle->selectedProduct->getPaymentMethod() == "tap") && p_page_idle->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
+    else if ((p_page_idle->selectedProduct->getPaymentMethod() == "tapTcp") && p_page_idle->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
     {
         ui->finishTransactionMessage->setText("Capturing payment: $" + QString::number(current_price, 'f', 2));
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
@@ -492,34 +494,37 @@ void page_dispenser::fsmReceiveDispenseRate(double flowrate)
     ui->label_dispense_flowrate->hide();
 };
 
-void page_dispenser::fsmReceiveDispenseStatus(QString status)
+void page_dispenser::fsmReceiveDispenserStatus(QString status)
 {
     QString dispenseStatus = status;
     qDebug() << "Dispense status received from FSM: " << dispenseStatus;
     ui->label_dispense_status->setText(dispenseStatus);
     ui->label_dispense_status->hide();
 
-    if (dispenseStatus == "FLOW_STATE_NOT_PUMPING_NOT_DISPENSING" || dispenseStatus == "FLOW_STATE_PRIME_FAIL_OR_EMPTY" || dispenseStatus == "FLOW_STATE_RAMP_UP")
+    // if (dispenseStatus == "FLOW_STATE_NOT_PUMPING_NOT_DISPENSING" || dispenseStatus == "FLOW_STATE_PRIME_FAIL_OR_EMPTY" || dispenseStatus == "FLOW_STATE_RAMP_UP" )
+    // {
+    //     // stable status. do not change button visibility.
+    // }
+    // else 
+
+    if (dispenseStatus == "DISPENSER_STATE_WARNING_PRIMING")
     {
-        // stable status. do not change button visibility.
-    }
-    else if (dispenseStatus == "FLOW_STATE_EMPTY")
-    {
+        ui->label_dispense_message->setText("Please keep the button pressed.\nfor up to 15 seconds\nbefore the product starts dispensing.");
         ui->label_dispense_message->show();
+    }
+    else
+    if (dispenseStatus == "DISPENSER_STATE_PROBLEM_EMPTY")
+    {
         ui->label_dispense_message->setText("It appears we're out of stock.\nTap the problem button in case of other issues.");
-    }
-    else if (dispenseStatus == "FLOW_STATE_PRIME_FAIL_OR_EMPTY")
-    {
         ui->label_dispense_message->show();
-        ui->label_dispense_message->setText("We can't get the dispensing started.\nWe're empty or the pump needs help to prime.\nTap the problem button in case of other issues.");
     }
 
-    else if (dispenseStatus == "FLOW_STATE_PRIMING_OR_EMPTY")
+    else if (dispenseStatus == "DISPENSER_STATE_PROBLEM_NEEDS_ATTENTION")
     {
+        ui->label_dispense_message->setText("We can't get the dispensing started.\nWe're empty or the pump needs help to prime.\nTap the problem button in case of other issues.");
         ui->label_dispense_message->show();
-        ui->label_dispense_message->setText("Please keep the button pressed.\nfor up to 15 seconds\nbefore the product starts dispensing.");
     }
-    else if (dispenseStatus == "FLOW_STATE_DISPENSING")
+    else if (dispenseStatus == "DISPENSER_STATE_AVAILABLE")
     {
         // normal status
         // ui->button_problems->hide();
@@ -621,7 +626,7 @@ void page_dispenser::on_abortButton_clicked()
         msgBox = new QMessageBox();
         msgBox->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
         QString payment = p_page_idle->selectedProduct->getPaymentMethod();
-        if (payment == "qr" || payment == "tap")
+         if (payment == "qr" || payment == "tapTcp")
         {
             msgBox->setText("<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine. \
                                 If you press Yes, you will not be charged for the order.<br></p>");
@@ -682,7 +687,7 @@ void page_dispenser::on_button_problems_clicked()
     QString payment = p_page_idle->selectedProduct->getPaymentMethod();
     QString base = "If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br>";
 
-    if (payment == "qr" || payment == "tap")
+    if (payment == "qr" || payment == "tapTcp")
     {
 
         msgBox2->setText("<p align=center><br><br>" + base + "<br><br>You will only be charged for the dispensed amount<br></p>");

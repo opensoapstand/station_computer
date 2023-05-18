@@ -49,11 +49,15 @@ public:
     void fsmReceiveTargetVolumeReached();
     void fsmReceiveDispenseButtonPressedPositiveEdge();
     void fsmReceiveDispenseButtonPressedNegativeEdge();
+    void fsmReceiveDispenseRate(double flowrate);
+    void fsmReceiveDispenserStatus(QString status);
     void fsmReceiveNoFlowAbort();
     void setSoldOutButtonText();
     void dispense_test_end(bool sendStopToController);
     void dispense_test_start();
-    void update_dispense_stats(double dispensed);
+    void update_volume_received_dispense_stats(double dispensed);
+    void reset_all_dispense_stats();
+    DrinkOrder *selectedProductOrder;
 
 private slots:
     void refreshLabels();
@@ -131,7 +135,7 @@ private:
     bool price_medium;
     bool price_large;
     bool price_custom;
-    
+
     bool target_s;
     bool target_m;
     bool target_l;
@@ -162,7 +166,6 @@ private:
     QByteArray curl_param_array;
     QByteArray curl_param_array2;
     char *curl_data;
-
 };
 
 #endif // PAGE_MAINTENANCE_DISPENSER_H

@@ -67,7 +67,7 @@ public:
         // char getClosestLowerTargetVolume(double volume);
         // DB Updates
         // void recordSale(int volume);
-        // void refill(int volume);
+        // void restockProduct(int volume);
 
         void productInfo();
         void productVolumeInfo();
@@ -103,6 +103,7 @@ public:
         int getSlot();
 
         double getVolumeRemaining();
+        double getVolumeDispensedTotalEver();
         double getVolumeDispensedSinceLastRestock();
         double getVolumeFull();
         double getThresholdFlow();
@@ -163,6 +164,7 @@ public:
         double m_nVolumeRemaining;
         double m_nVolumeFull;
         double m_nVolumeDispensedSinceRestock;
+        double m_nVolumeDispensedTotalEver;
 
         double m_concentration_multiplier; // some products are concentrated. In that case, we don't dispense the advertised volume. i.e. 1L of 10x concentrate --> dispense 100ml, 900ml of water needs to be added afterwards.
         int m_nSlot;

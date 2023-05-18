@@ -66,8 +66,6 @@ DF_ERROR stateDispenseEnd::onAction()
 
     // send dispensed volume to ui (will be used to write to portal)
     usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
-    // debugOutput::sendMessage("tododododo send volume update. ", MSG_STATE);
-    m_pMessaging->sendMessageOverIP(to_string(productDispensers[pos_index].getVolumeDispensed()));
 
     if (productDispensers[pos_index].getIsDispenseTargetReached())
     {
@@ -75,25 +73,13 @@ DF_ERROR stateDispenseEnd::onAction()
         m_pMessaging->sendMessageOverIP("Target Hit");
     }
 
-    double dispensed_volume = productDispensers[pos_index].getVolumeDispensed();
-    double volume_remaining_at_start = ceil(productDispensers[pos_index].getProduct()->getVolumeRemaining());
-    m_pMessaging->sendMessageOverIP(std::to_string(volume_remaining_at_start));
-    double updated_volume_remaining = ceil(volume_remaining_at_start - dispensed_volume);
-    // handle empty container detection
-    if (m_pMessaging->getRequestedSize() == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
-    {
-        updated_volume_remaining = 0;
-        debugOutput::sendMessage("WARNING: Empty container detected. Will set remaining volume to zero.", MSG_INFO);
-    }
-    else if (updated_volume_remaining < 0)
-    {
-        // anomaly: calculated lower than 0 volume. Which is clearly wrong. So, artificially increase volume.
-        // should be set to smallest fixed volume?!
-
-        // updated_volume_remaining = productDispensers[pos_index].getProduct()->getTargetVolume(SIZE_SMALL_CHAR); // error: todo: small volume might not be active.
-        updated_volume_remaining = 500;
-        debugOutput::sendMessage("WARNING: Remaining Volume negative anomaly. Increase remaining volume with 500ml. ", MSG_INFO);
-    }
+    // bool empty_stock_detected = false;
+    // // handle empty container detection
+    // if (m_pMessaging->getRequestedSize() == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
+    // {
+    //     empty_stock_detected = true;
+    //     debugOutput::sendMessage("WARNING: Empty container detected. Will set remaining volume to zero.", MSG_INFO);
+    // }
 
     // adjust to nearest lower fixed volume if less dispensed than requested
     adjustSizeToDispensedVolume();
@@ -102,18 +88,21 @@ DF_ERROR stateDispenseEnd::onAction()
     if (m_pMessaging->getRequestedSize() == SIZE_TEST_CHAR)
     {
         debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(productDispensers[pos_index].getVolumeDispensed()) + "ml).", MSG_INFO);
-        dispenseEndUpdateDB(updated_volume_remaining); // update the db dispense statistics
+        dispenseEndUpdateDB(false); // update the db dispense statistics
     }
     else if (!is_valid_dispense)
     {
         debugOutput::sendMessage("Not a transaction: No minimum quantity of product dispensed (" + to_string(productDispensers[pos_index].getVolumeDispensed()) + "ml). ", MSG_INFO);
+
+        // check for technical problems
+        dispenseEndUpdateDB(false); // update the db dispense statistics
     }
     else
     {
         e_ret = handleTransactionPayment();
 
         debugOutput::sendMessage("Normal transaction.", MSG_INFO);
-        dispenseEndUpdateDB(updated_volume_remaining);
+        dispenseEndUpdateDB(true);
 
         bool success = false;
 #ifdef ENABLE_TRANSACTION_TO_CLOUD
@@ -126,7 +115,9 @@ DF_ERROR stateDispenseEnd::onAction()
         }
         else
         {
-            success = sendTransactionToCloud(updated_volume_remaining);
+            // make sure to do this after dispenseEndUpdateDB
+            // at that point remaining product volume is already updated in db, and in Product
+            success = sendTransactionToCloud(productDispensers[pos_index].getProduct()->getVolumeRemaining());
         }
 #else
         debugOutput::sendMessage("NOT SENDING transaction to cloud.", MSG_INFO);
@@ -134,7 +125,6 @@ DF_ERROR stateDispenseEnd::onAction()
     }
 
     m_state_requested = STATE_IDLE;
-    // usleep(3000000);                               // send message delay (pause from previous message) desperate attempt to prevent crashes
     m_pMessaging->sendMessageOverIP("Transaction End"); // send to UI
 
     return e_ret;
@@ -444,41 +434,6 @@ std::string stateDispenseEnd::getMachineID()
     return str;
 }
 
-std::string stateDispenseEnd::getUnits(int slot)
-{
-
-    // does not work.... strings in C++ Lode needs a course!
-    // return productDispensers[slot-1].getProduct()->getDisplayUnits();
-    return "problemski";
-}
-
-std::string stateDispenseEnd::getUnitsFromDb(int slot)
-{
-    rc = sqlite3_open(DB_PATH, &db);
-    sqlite3_stmt *stmt;
-    debugOutput::sendMessage("Units getter START", MSG_INFO);
-
-    if (rc)
-    {
-        //       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
-        // TODO: Error handling here...
-    }
-    else
-    {
-        //       fprintf(stderr, "Opened database successfully\n");
-    }
-
-    std::string sql_string_units = "SELECT size_unit FROM products WHERE slot=" + std::to_string(slot) + ";";
-
-    sqlite3_prepare(db, sql_string_units.c_str(), -1, &stmt, NULL);
-    sqlite3_step(stmt);
-    std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
-
-    sqlite3_finalize(stmt);
-    sqlite3_close(db);
-    return str;
-}
-
 DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement)
 {
 
@@ -517,7 +472,7 @@ DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement)
 
 // This function updates the local SQLite3 database with the transaction data, as well as updates the total product remaining locally
 
-DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(double updated_volume_remaining)
+DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
 {
     char *zErrMsg = 0;
     std::string product_name = (productDispensers[pos_index].getProduct()->m_name).c_str();
@@ -527,48 +482,83 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(double updated_volume_remaining)
     std::string start_time = (productDispensers[pos_index].getDispenseStartTime());
     std::string end_time = (productDispensers[pos_index].getDispenseEndTime());
     std::string product_id = (productDispensers[pos_index].getProduct()->getProductId());
-
     double price;
     std::string price_string;
-
-    target_volume = to_string(ceil(productDispensers[pos_index].getProduct()->getTargetVolume(m_pMessaging->getRequestedSize())));
-    char size = m_pMessaging->getRequestedSize();
-
-    std::string dispensed_volume_str;
-    double dispensed_volume = ceil(productDispensers[pos_index].getVolumeDispensed());
-    if (dispensed_volume <= productDispensers[pos_index].getProduct()->getVolumePerTick())
-    {
-        dispensed_volume_str = "0";
-    }
-    else
-    {
-        dispensed_volume_str = to_string(dispensed_volume);
-    }
+    std::string product_status;
+    std::string slot_status_text;
 
     price = getFinalPrice();
     price_string = to_string(price);
 
+    target_volume = to_string(ceil(productDispensers[pos_index].getProduct()->getTargetVolume(m_pMessaging->getRequestedSize())));
+    char size = m_pMessaging->getRequestedSize();
+
+    // everything rounded to the ml.
+    double volume_dispensed_since_restock = ceil(productDispensers[pos_index].getProduct()->getVolumeDispensedSinceLastRestock());
+    double volume_dispensed_total_ever = ceil(productDispensers[pos_index].getProduct()->getVolumeDispensedTotalEver());
+    double volume_remaining = ceil(productDispensers[pos_index].getProduct()->getVolumeRemaining());
+
+    double dispensed_volume = ceil(productDispensers[pos_index].getVolumeDispensed());
+
+    double updated_volume_remaining;
+    double updated_volume_dispensed_since_restock;
+    double updated_volume_dispensed_total_ever;
+
+    if (dispensed_volume <= productDispensers[pos_index].getProduct()->getVolumePerTick())
+    {
+        dispensed_volume = 0;
+    }
+    updated_volume_dispensed_total_ever = volume_dispensed_total_ever + dispensed_volume;
+    updated_volume_remaining = volume_remaining - dispensed_volume;
+    updated_volume_dispensed_since_restock = volume_dispensed_since_restock + dispensed_volume;
+
+    // update slot state
+    if (productDispensers[pos_index].getDispenserState() == DISPENSER_STATE_PROBLEM_EMPTY)
+    {
+        updated_volume_remaining = 0;
+    }
+    else if (productDispensers[pos_index].getDispenserState() == DISPENSER_STATE_PROBLEM_NEEDS_ATTENTION)
+    {
+        // do nothing
+    }
+    else if (productDispensers[pos_index].getDispenserState() == DISPENSER_STATE_DISABLED_COMING_SOON || productDispensers[pos_index].getDispenserState() == DISPENSER_STATE_DISABLED)
+    {
+        // do nothing
+    }
+    else if (updated_volume_remaining < CONTAINER_EMPTY_THRESHOLD_ML)
+    {
+        productDispensers[pos_index].setDispenserState(DISPENSER_STATE_AVAILABLE_LOW_STOCK);
+    }
+
+    std::string dispensed_volume_str = to_string(dispensed_volume);
+    std::string updated_volume_remaining_str = to_string(updated_volume_remaining);
+    std::string updated_volume_dispensed_total_ever_str = to_string(updated_volume_dispensed_total_ever);
+    std::string updated_volume_dispensed_since_restock_str = to_string(updated_volume_dispensed_since_restock);
+    std::string dispenser_state_str = productDispensers[pos_index].getDispenserStateAsString();
+
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
-    debugOutput::sendMessage("update DB. dispense end: vol dispensed: " + to_string(dispensed_volume), MSG_INFO);
-    debugOutput::sendMessage("Dispensed volume to be subtracted: " + dispensed_volume_str, MSG_INFO);
+    debugOutput::sendMessage("Update DB at dispense end: Vol dispensed: " + dispensed_volume_str, MSG_INFO);
 
     // std::string s = std::format("{:.2f}", 3.14159265359); // s == "3.14"
 
-    std::string sql1;
-    // transaction id: null: will auto increment.
-    // value(text): datetime('now', 'localtime') // sql for adding automatic timestamp.
-    sql1 = ("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,slot,button_duration,button_times,processed_by_backend,product_id) VALUES ('" + product_name + "'," + target_volume + "," + price_string + ",'" + start_time + "'," + dispensed_volume_str + ",'" + end_time + "'," + to_string(updated_volume_remaining) + "," + to_string(slot) + "," + button_press_duration + "," + dispense_button_count + "," + to_string(false) + ",'" + product_id + "');");
+    if (isValidTransaction){
+        std::string sql1;
+        sql1 = ("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,slot,button_duration,button_times,processed_by_backend,product_id) VALUES ('" + product_name + "'," + target_volume + "," + price_string + ",'" + start_time + "'," + dispensed_volume_str + ",'" + end_time + "'," + updated_volume_remaining_str + "," + to_string(slot) + "," + button_press_duration + "," + dispense_button_count + "," + to_string(false) + ",'" + product_id + "');");
+        databaseUpdateSql(sql1);
 
-    databaseUpdateSql(sql1);
+    }
+    // update transactions table
 
-    /* Create SQL statement for total product dispensed */
+    // update product table
     std::string sql2;
-    sql2 = ("UPDATE products SET volume_dispensed_total=volume_dispensed_total+" + dispensed_volume_str + " WHERE slot='" + to_string(slot) + "';");
+    sql2 = ("UPDATE products SET volume_dispensed_total=" + updated_volume_dispensed_total_ever_str + ", volume_remaining=" + updated_volume_remaining_str + ", volume_dispensed_since_restock=" + updated_volume_dispensed_since_restock_str + " WHERE slot='" + to_string(slot) + "';");
     databaseUpdateSql(sql2);
 
-    /* Create SQL statement for product remaining */
+    // update machine table
+    std::string slot_status_field_name = "status_text_slot_" + to_string(slot);
+
     std::string sql3;
-    sql3 = ("UPDATE products SET volume_remaining=" + to_string(updated_volume_remaining) + " WHERE slot='" + to_string(slot) + "';");
+    sql3 = ("UPDATE machine SET " + slot_status_field_name + "='" + dispenser_state_str + "';");
     databaseUpdateSql(sql3);
 
     // reload (changed) db values
@@ -597,16 +587,13 @@ double stateDispenseEnd::getFinalPrice()
         {
             // with price reduction at larger quantities
             price_per_ml = discountPrice;
-            debugOutput::sendMessage("Discount volume dispensed. ", MSG_INFO);
+            debugOutput::sendMessage("Custom volume discount price will be applied. ", MSG_INFO);
         }
         else
         {
-            debugOutput::sendMessage("Below discount volume dispensed.", MSG_INFO);
+            debugOutput::sendMessage("No custom volume discount will be applied.", MSG_INFO);
             price_per_ml = productDispensers[pos_index].getProduct()->getPrice(SIZE_CUSTOM_CHAR);
         }
-
-        // normal
-        // price_per_ml = productDispensers[pos_index].getProduct()->getPrice(m_pMessaging->getRequestedSize());
 
         price = price_per_ml * volume_dispensed;
     }
@@ -616,10 +603,9 @@ double stateDispenseEnd::getFinalPrice()
     }
     else
     {
-        // price = productDispensers[pos_index].getProduct()->getPrice(size);
         price = m_pMessaging->getRequestedPrice();
     }
-    debugOutput::sendMessage("Price final for in Get final price fxn:" + to_string(price), MSG_INFO);
+    debugOutput::sendMessage("Post dispense final price: " + to_string(price), MSG_INFO);
 
     return price;
 }
@@ -765,9 +751,9 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
     tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod, plu, promoCode);
 }
 
-DF_ERROR stateDispenseEnd::print_text(string text)
-{
-    string printerstring = text;
-    string printer_command_string = "echo '\n" + printerstring + "' > /dev/ttyS4";
-    system(printer_command_string.c_str());
-}
+// DF_ERROR stateDispenseEnd::print_text(string text)
+// {
+//     string printerstring = text;
+//     string printer_command_string = "echo '\n" + printerstring + "' > /dev/ttyS4";
+//     system(printer_command_string.c_str());
+// }

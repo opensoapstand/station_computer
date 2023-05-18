@@ -249,6 +249,12 @@ double product::getVolumeRemaining()
 {
     return m_nVolumeRemaining;
 }
+double product::getVolumeDispensedTotalEver()
+{
+    // total volume ever dispensed by this slot.
+    return m_nVolumeDispensedTotalEver;
+}
+
 double product::getVolumeDispensedSinceLastRestock()
 {
     return m_nVolumeDispensedSinceRestock;
@@ -825,7 +831,7 @@ bool product::reloadParametersFromDb()
             case DB_PRODUCTS_LAST_RESTOCK:
             {
 
-                m_nVolumeDispensedSinceRestock = sqlite3_column_double(stmt, column_index);
+                //m_nVolumeDispensedSinceRestock = sqlite3_column_double(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_VOLUME_FULL:
@@ -840,10 +846,12 @@ bool product::reloadParametersFromDb()
             break;
             case DB_PRODUCTS_VOLUME_DISPENSED_SINCE_RESTOCK:
             {
+                m_nVolumeDispensedSinceRestock = sqlite3_column_double(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_VOLUME_DISPENSED_TOTAL:
             {
+                m_nVolumeDispensedTotalEver = sqlite3_column_double(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_IS_ENABLED_SMALL:

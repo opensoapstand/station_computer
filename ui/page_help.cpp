@@ -123,8 +123,12 @@ void page_help::showEvent(QShowEvent *event)
     maintenance_pwd = db.getMaintenanceAdminPassword();
     help_text_html = db.getHelpPageHtmlText();
     db.closeDB();
-
-    ui->html_textBrowser->setHtml(help_text_html);
+    if(help_text_html!=""){
+        ui->html_textBrowser->setHtml(help_text_html);
+    }
+    else{
+        ui->html_textBrowser->hide();
+    }
 
     if (helpIdleTimer == nullptr)
     {

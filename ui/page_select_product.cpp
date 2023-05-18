@@ -184,11 +184,12 @@ void page_select_product::displayProducts()
         qDebug() << "db (re)load product details:";
         product_slot_enabled = p_page_idle->products[i].getSlotEnabled();
 
+       
+        
+        DbManager db(DB_PATH);
+        double remaining_volume = db.getVolumeRemaining();
         product_status_text = db.getStatusText(slot);
-        double remaining_volume = db.getVolumeRemaining(slot);
-
         bool set_to_sold_out_below_threshold = db.getEmptyContainerDetectionEnabled();
-
         db.closeDB();
 
         qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << " Status text: " << product_status_text;

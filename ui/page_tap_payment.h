@@ -89,45 +89,9 @@ public:
     void storePaymentEvent(QSqlDatabase db, QString event);
     QString getPaymentMethodForConstructorTime(uint8_t slot);
 
-<<<<<<< HEAD
-    /* mpos */
-    void stayAliveLogon();
-    void batchClose();
-    int getSelectedPriceSelect();
-    void sendCommand();
-
-    string getTerminalID()
-    {
-        return terminalID;
-    }
-
-    string getMerchantName()
-    {
-        return merchantName;
-    }
-
-    string getMerchantAddress()
-    {
-        return merchantAddress;
-    }
-
-    QString getOID()
-    {
-        return orderId;
-    }
-    QTimer *readTimer;
-    // char * curl_data;
-    // char * curl_data1;
-    // char * curlOrderdata;
-    StateTapPayment state_tap_payment;
-
-    // signals:
-    //     void cardTapped();
-=======
 
     StateTapPayment state_tap_payment;
 
->>>>>>> origin/SS1
 private slots:
 
     // Update Drink order totals section

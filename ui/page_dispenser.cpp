@@ -9,7 +9,7 @@
 // thankyou page
 //
 // created: 05-04-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla & Daniel C.
 //
 // copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
@@ -48,54 +48,6 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     ui->label_to_refill->setText("to refill");
     ui->label_instructions_container->setText("bring container to nozzle");
     ui->label_press->setText("press and hold <br>the button");
-
-    ui->label_dispense_message->setStyleSheet(
-        "QLabel {"
-
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 42px;"
-        "background-color: transparent;"
-        "border: 0px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "color: #FFFFFF;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
-    ui->button_problems->setStyleSheet(
-        "QPushButton {"
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "background-color: #5E8580;"
-        "font-size: 42px;"
-        "text-align: centre;"
-        "line-height: auto;"
-        "letter-spacing: 0px;"
-        "qproperty-alignment: AlignCenter;"
-        "border-radius: 20px;"
-        "color: white;"
-        "border: none;"
-        "}");
-    ui->button_report->setStyleSheet(
-        "QPushButton {"
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "background-color: #5E8580;"
-        "font-size: 42px;"
-        "text-align: centre;"
-        "line-height: auto;"
-        "letter-spacing: 0px;"
-        "qproperty-alignment: AlignCenter;"
-        "border-radius: 20px;"
-        "color: white;"
-        "border: none;"
-        "}");
-
     ui->abortButton->raise();
     ui->button_problems->raise();
     ui->button_problems->setText("Tap here if you notice a problem.");
@@ -171,6 +123,14 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->label_instructions_container->setStyleSheet(styleSheet);
     
     ui->label_press->setStyleSheet(styleSheet);
+
+    ui->label_dispense_message->setStyleSheet(styleSheet);
+    
+    ui->button_problems->setStyleSheet(styleSheet);
+    
+    ui->button_report->setStyleSheet(styleSheet);
+
+    //msgBox->setStyleSheet(styleSheet);
 
    
 
@@ -570,6 +530,11 @@ void page_dispenser::on_abortButton_clicked()
         }
         msgBox->setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
 
+        QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
+            
+        //msgBox->setProperty("class", "msgBox");//set property goes first!!
+        //msgBox->setStyleSheet(styleSheet);
+
         msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         int ret = msgBox->exec();
         bool success;
@@ -631,6 +596,9 @@ void page_dispenser::on_button_problems_clicked()
     }
 
     msgBox2->setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
+    QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
+   // msgBox2->setProperty("class", "msgBox");//set property goes first!!
+   // msgBox2->setStyleSheet(styleSheet);
 
     msgBox2->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     int ret = msgBox2->exec();

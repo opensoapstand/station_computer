@@ -328,7 +328,7 @@ void page_select_product::on_pushButton_selection1_clicked()
     select_product(1);
 }
 void page_select_product::on_pushButton_selection2_clicked()
-{
+{ 
     select_product(2);
 }
 void page_select_product::on_pushButton_selection3_clicked()

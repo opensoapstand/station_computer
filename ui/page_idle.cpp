@@ -348,13 +348,31 @@ QString page_idle::getTemplateFolder()
 {
     return m_templatePath;
 }
-QString page_idle::getTemplatePathFromName(QString pictureName)
+
+QString page_idle::getCSS(QString cssName)
 {
-    QString image_path = getTemplateFolder() + pictureName;
+    QString cssFilePath = getTemplatePathFromName(cssName);
+
+    QFile cssFile(cssFilePath);
+    QString styleSheet = "";
+    if (cssFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        styleSheet = QString::fromUtf8(cssFile.readAll());
+    }
+    else
+    {
+        qDebug() << "CSS file could not be opened." << cssFilePath;
+    }
+    return styleSheet;
+}
+
+QString page_idle::getTemplatePathFromName(QString fileName)
+{
+    QString image_path = getTemplateFolder() + fileName;
 
     if (!df_util::fileExists(image_path))
     {
-        QString image_default_path = getDefaultTemplatePathFromName(pictureName);
+        QString image_default_path = getDefaultTemplatePathFromName(fileName);
         qDebug() << "File not found in template folder: " + image_path + ". Default template path: " + image_default_path;
         if (!df_util::fileExists(image_default_path))
         {
@@ -365,17 +383,16 @@ QString page_idle::getTemplatePathFromName(QString pictureName)
 
     return image_path;
 }
-
 void page_idle::setTemplateFolder(QString rootPath, QString templateFolder)
 {
     m_templatePath = rootPath + templateFolder + "/";
     qDebug() << "Template path set to: " + m_templatePath;
 }
 
-QString page_idle::getDefaultTemplatePathFromName(QString backgroundPictureName)
+QString page_idle::getDefaultTemplatePathFromName(QString fileName)
 {
     QString template_root_path = TEMPLATES_ROOT_PATH;
-    return template_root_path + TEMPLATES_DEFAULT_NAME + "/" + backgroundPictureName;
+    return template_root_path + TEMPLATES_DEFAULT_NAME + "/" + fileName;
 }
 
 void page_idle::pageTransition(QWidget *pageToHide, QWidget *pageToShow)

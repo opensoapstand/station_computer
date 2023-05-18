@@ -276,11 +276,11 @@ void page_tap_payment_serial::cancelPayment()
 QString page_tap_payment_serial::getPaymentMethod()
 {
     qDebug() << "db open245";
-    int product_slot___ = p_page_idle->currentProductOrder->getSelectedSlot();
-    DbManager db2(DB_PATH);
-    QString payment_method = db2.getPaymentMethod(product_slot___);
-    db2.closeDB();
-    return payment_method;
+    // int product_slot___ = p_page_idle->currentProductOrder->getSelectedSlot();
+    // DbManager db2(DB_PATH);
+    // QString payment_method = db2.getPaymentMethod(product_slot___);
+    // db2.closeDB();
+    return "tapSerial";
 }
 
 void page_tap_payment_serial::resizeEvent(QResizeEvent *event)
@@ -314,26 +314,25 @@ void page_tap_payment_serial::resizeEvent(QResizeEvent *event)
 
 void page_tap_payment_serial::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< Page Enter: Payment >>>>>>>>>";
+    qDebug() << "<<<<<<< Page Enter: Serial Payment >>>>>>>>>";
     QWidget::showEvent(event);
 
     state_payment = s_serial_init;
    
 
-    paymentEndTimer = new QTimer(this);
-    paymentEndTimer->setInterval(1000);
-    connect(paymentEndTimer, SIGNAL(timeout()), this, SLOT(onTimeoutTick()));
-    paymentEndTimer->start(1000);
 
     
     QString payment_method = getPaymentMethod();
     if (payment_method == "tapSerial")
     {
         qDebug() << "Prepare tap order";
-        // pktResponded = com.readForAck();
-        // readPacket.packetReadFromUX(pktResponded);
-        // pktResponded.clear();
-        // response = false;
+        while(!tap_init()){
+
+        };
+        pktResponded = com.readForAck();
+        readPacket.packetReadFromUX(pktResponded);
+        pktResponded.clear();
+        response = false;
 
         if (readPacket.getAckOrNak() == communicationPacketField::ACK)
         {

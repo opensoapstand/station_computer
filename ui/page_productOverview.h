@@ -22,7 +22,7 @@
 #include "page_error_wifi.h"
 #include "page_help.h"
 #include "page_product.h"
-
+#include "page_tap_payment_serial.h"
 
 class page_select_product;
 class page_qr_payment;

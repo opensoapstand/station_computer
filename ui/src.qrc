@@ -48,8 +48,6 @@
         <file>dfuiserver.h</file>
         <file>page_dispenser.cpp</file>
         <file>page_dispenser.h</file>
-        <file>drinkorder.cpp</file>
-        <file>drinkorder.h</file>
         <file>page_help.cpp</file>
         <file>page_help.h</file>
         <file>page_idle.h</file>

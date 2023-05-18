@@ -278,7 +278,7 @@ void page_select_product::displayProducts()
             labels_product_overlay_text[i]->setText(". . .");
         }
 
-        if (!(p_page_idle->products[i].isProductVolumeInContainer())){
+        if (!(p_page_idle->products[i].isProductVolumeInContainer()))
         {
             labels_product_overlay_text[i]->setText("Sold Out");
         }

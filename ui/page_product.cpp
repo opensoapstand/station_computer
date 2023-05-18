@@ -310,11 +310,11 @@ void pageProduct::onSelectTimeoutTick()
 void pageProduct::reset_and_show_page_elements()
 {
 
-    p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->selectedProduct->getSelectedProductPicturePath());
+    p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->selectedProduct->getProductPicturePath());
 
-    ui->label_product_title->setText(p_page_idle->selectedProduct->getLoadedProductName());
-    ui->label_product_ingredients->setText(p_page_idle->selectedProduct->getLoadedProductIngredients());
-    ui->label_product_description->setText(p_page_idle->selectedProduct->getLoadedProductDescription());
+    ui->label_product_title->setText(p_page_idle->selectedProduct->getProductName());
+    ui->label_product_ingredients->setText(p_page_idle->selectedProduct->getProductIngredients());
+    ui->label_product_description->setText(p_page_idle->selectedProduct->getProductDescription());
     QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     qDebug() << full_path;
     p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);

@@ -201,9 +201,9 @@ void pageProductOverview::reset_and_show_page_elements()
     QString bitmap_location;
     // ui->label_product_title->setText(selectedProductOrder->getSelectedProductName());
     // ui->label_product_description->setText(selectedProductOrder->getLoadedProductDescription());
-    p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->selectedProduct->getSelectedProductPicturePath());
-    ui->label_selected_price->setText("$" + QString::number(p_page_idle->selectedProduct->getSelectedPrice(), 'f', 2));
-    qDebug() << "Selected size" << p_page_idle->selectedProduct->getSelectedVolume();
+    p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->selectedProduct->getProductPicturePath());
+    ui->label_selected_price->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(), 'f', 2));
+    qDebug() << "Selected size" << p_page_idle->selectedProduct->getVolume();
     QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
         qDebug() << full_path;
         p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);

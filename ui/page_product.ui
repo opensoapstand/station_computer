@@ -29,7 +29,7 @@ font-weight: normal;
 font-size: 23px;
 line-height: 29px;</string>
   </property>
-  <widget class="QPushButton" name="previousPage_Button">
+  <widget class="QPushButton" name="pushButton_previous_page">
    <property name="geometry">
     <rect>
      <x>68</x>
@@ -42,7 +42,7 @@ line-height: 29px;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="continue_Button">
+  <widget class="QPushButton" name="pushButton_continue">
    <property name="geometry">
     <rect>
      <x>188</x>
@@ -58,7 +58,7 @@ line-height: 29px;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="mainPage_Button">
+  <widget class="QPushButton" name="pushButton_to_idle">
    <property name="geometry">
     <rect>
      <x>478</x>
@@ -184,7 +184,7 @@ text-align: center;</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="orderSmall_Button">
+  <widget class="QPushButton" name="pushButton_order_small">
    <property name="geometry">
     <rect>
      <x>564</x>
@@ -200,7 +200,7 @@ text-align: center;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="orderBig_Button">
+  <widget class="QPushButton" name="pushButton_order_big">
    <property name="geometry">
     <rect>
      <x>858</x>
@@ -213,7 +213,7 @@ text-align: center;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="orderMedium_Button">
+  <widget class="QPushButton" name="pushButton_order_medium">
    <property name="geometry">
     <rect>
      <x>711</x>
@@ -229,7 +229,7 @@ text-align: center;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="orderCustom_Button">
+  <widget class="QPushButton" name="pushButton_order_custom">
    <property name="geometry">
     <rect>
      <x>563</x>
@@ -503,7 +503,7 @@ text-align: center;</string>
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="back_Button">
+  <widget class="QPushButton" name="pushButton_back">
    <property name="geometry">
     <rect>
      <x>40</x>
@@ -532,12 +532,12 @@ text-align: center;</string>
     <string/>
    </property>
   </widget>
-  <zorder>continue_Button</zorder>
-  <zorder>previousPage_Button</zorder>
-  <zorder>orderSmall_Button</zorder>
-  <zorder>orderBig_Button</zorder>
-  <zorder>orderMedium_Button</zorder>
-  <zorder>orderCustom_Button</zorder>
+  <zorder>pushButton_continue</zorder>
+  <zorder>pushButton_previous_page</zorder>
+  <zorder>pushButton_order_small</zorder>
+  <zorder>pushButton_order_big</zorder>
+  <zorder>pushButton_order_medium</zorder>
+  <zorder>pushButton_order_custom</zorder>
   <zorder>label_size_medium</zorder>
   <zorder>label_price_medium</zorder>
   <zorder>label_size_small</zorder>
@@ -556,9 +556,9 @@ text-align: center;</string>
   <zorder>label_background_custom</zorder>
   <zorder>label_product_ingredients</zorder>
   <zorder>label_select_quantity</zorder>
-  <zorder>back_Button</zorder>
+  <zorder>pushButton_back</zorder>
   <zorder>label_notify_us</zorder>
-  <zorder>mainPage_Button</zorder>
+  <zorder>pushButton_to_idle</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -191,7 +191,7 @@ void page_maintenance_general::on_enable_empty_container_checkBox_clicked(bool c
     db.closeDB();
 }
 
-void page_maintenance_general::on_back_Button_clicked()
+void page_maintenance_general::on_pushButton_back_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_maintenance);
 }

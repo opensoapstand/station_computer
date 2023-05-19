@@ -58,6 +58,7 @@ public:
     QString getTemplatePathFromName(QString fileName);
     QString getDefaultTemplatePathFromName(QString fileName);
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
+    void setBackgroundPictureToQWidget(QWidget *page, QString imageName);
     QString getCSS(QString cssName);
     void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
 
@@ -90,10 +91,10 @@ public:
 
 
 private slots:
-    void on_toSelectProductPageButton_clicked();
+    void on_pushButton_to_select_product_page_clicked();
     //    void on_savedBottles_label_clicked();
 
-    void on_testButton_clicked();
+    void on_pushButton_test_clicked();
 
 private:
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);

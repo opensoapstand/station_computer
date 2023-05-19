@@ -37,28 +37,30 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
 
     ui->p_page_maintenanceButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
 
-    selectProductPhotoLabels[0] = ui->product_1_photo_label;
-    selectProductPhotoLabels[1] = ui->product_2_photo_label;
-    selectProductPhotoLabels[2] = ui->product_3_photo_label;
-    selectProductPhotoLabels[3] = ui->product_4_photo_label;
+    labels_product_picture[0] = ui->label_product_1_photo;
+    labels_product_picture[1] = ui->label_product_2_photo;
+    labels_product_picture[2] = ui->label_product_3_photo;
+    labels_product_picture[3] = ui->label_product_4_photo;
 
-    selectProductOverlayLabels[0] = ui->product_1_overlay_label;
-    selectProductOverlayLabels[1] = ui->product_2_overlay_label;
-    selectProductOverlayLabels[2] = ui->product_3_overlay_label;
-    selectProductOverlayLabels[3] = ui->product_4_overlay_label;
+    selectProductOverlayLabels[0] = ui->label_product_1_overlay;
+    selectProductOverlayLabels[1] = ui->label_product_2_overlay;
+    selectProductOverlayLabels[2] = ui->label_product_3_overlay;
+    selectProductOverlayLabels[3] = ui->label_product_4_overlay;
 
-    selectProductPhotoLabelsText[0] = ui->product_1_photo_label_text;
-    selectProductPhotoLabelsText[1] = ui->product_2_photo_label_text;
-    selectProductPhotoLabelsText[2] = ui->product_3_photo_label_text;
-    selectProductPhotoLabelsText[3] = ui->product_4_photo_label_text;
+    labels_product_overlay_text[0] = ui->label_product_1_photo_text;
+    labels_product_overlay_text[1] = ui->label_product_2_photo_text;
+    labels_product_overlay_text[2] = ui->label_product_3_photo_text;
+    labels_product_overlay_text[3] = ui->label_product_4_photo_text;
 
-    selectProductTypeLabels[0] = ui->product_1_type_label;
-    selectProductTypeLabels[1] = ui->product_2_type_label;
-    selectProductTypeLabels[2] = ui->product_3_type_label;
-    selectProductTypeLabels[3] = ui->product_4_type_label;
 
-    ui->helpPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-    // ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+
+    labels_product_type[0] = ui->label_product_1_type;
+    labels_product_type[1] = ui->label_product_2_type;
+    labels_product_type[2] = ui->label_product_3_type;
+    labels_product_type[3] = ui->label_product_4_type;
+
+    //ui->pushButton_help_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    // ui->pushButton_to_idle->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->label_pick_soap->setStyleSheet(
         "QLabel {"
 
@@ -149,9 +151,8 @@ void page_idle_products::displayProducts()
         uint8_t slot = i + 1;
 
         // display product picture
-        selectProductPhotoLabels[i]->setStyleSheet("border: none;");
-        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->products[i].getProductPicturePath());
-
+        labels_product_picture[i]->setStyleSheet("border: none;");
+        p_page_idle->addPictureToLabel(labels_product_picture[i], p_page_idle->products[i].getProductPicturePath());
         product_slot_enabled = p_page_idle->products[i].getSlotEnabled();
 
         qDebug() << "db (re)load product details:";
@@ -164,8 +165,8 @@ void page_idle_products::displayProducts()
 
         // qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << ", product set as not available?: " << product_sold_out << " Status text: " << product_status_text;
 
-        // selectProductNameLabels[i]->setText(product_name);
-        // selectProductNameLabels[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
+        // labels_product_name[i]->setText(product_name);
+        // labels_product_name[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
 
         // display product type icon  picture
         QString icon_path = "not found";
@@ -204,16 +205,16 @@ void page_idle_products::displayProducts()
         QString icon_path_with_template = p_page_idle->getTemplatePathFromName(icon_path);
 
         selectProductOverlayLabels[i]->raise();
-        selectProductPhotoLabelsText[i]->raise();
-
+        labels_product_overlay_text[i]->raise();
+      
         selectProductOverlayLabels[i]->setText("");
 
         // overlay product status
-        selectProductPhotoLabelsText[i]->setText("");
-        selectProductOverlayLabels[i]->setStyleSheet("background-color: transparent;");
+            labels_product_overlay_text[i]->setText("");
+            selectProductOverlayLabels[i]->setStyleSheet("background-color: transparent;");
 
-        selectProductTypeLabels[i]->setText(type_text);
-        selectProductTypeLabels[i]->setStyleSheet("QLabel{font-family: 'Brevia';font-style: normal;font-weight: 700;font-size: 30px;line-height: 41px;qproperty-alignment: AlignCenter;text-transform: uppercase;color: #003840;}");
+        labels_product_type[i]->setText(type_text);
+        labels_product_type[i]->setStyleSheet("QLabel{font-family: 'Brevia';font-style: normal;font-weight: 700;font-size: 30px;line-height: 41px;qproperty-alignment: AlignCenter;text-transform: uppercase;color: #003840;}");
     }
 }
 
@@ -290,13 +291,13 @@ void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     p_page_idle->pageTransition(this, pageToShow);
 }
 
-// void page_idle_products::on_mainPage_Button_clicked()
+// void page_idle_products::on_pushButton_to_idle_clicked()
 // {
 //     qDebug() << "Back to Idle Page Button pressed";
 //     hideCurrentPageAndShowProvided(p_page_idle);
 // }
 
-void page_idle_products::on_helpPage_Button_clicked()
+void page_idle_products::on_pushButton_help_page_clicked()
 {
     qDebug() << "Help_Button pressed";
     hideCurrentPageAndShowProvided(p_page_help);

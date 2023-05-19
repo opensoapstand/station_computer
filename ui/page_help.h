@@ -49,7 +49,7 @@ public:
 
 private slots:
     // **** Navigation ****
-    // void on_previousPage_Button_clicked();
+    // void on_pushButton_previous_page_clicked();
     void on_pushButton_to_idle_clicked();
     void on_pushButton_resetTimeout_clicked();
     void onHelpTimeoutTick();

@@ -31,8 +31,8 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
     // Fullscreen background setup
     ui->setupUi(this);
     qDebug() << "QR Payment page" << endl;
-    ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->pushButton_previous_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->pushButton_to_idle->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->payment_bypass_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
@@ -538,7 +538,7 @@ void page_qr_payment::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 }
 
 // Navigation: Back to Drink Size Selection
-void page_qr_payment::on_previousPage_Button_clicked()
+void page_qr_payment::on_pushButton_previous_page_clicked()
 {
     qDebug() << "In previous page button" << endl;
     if (exitConfirm())
@@ -548,7 +548,7 @@ void page_qr_payment::on_previousPage_Button_clicked()
     }
 }
 
-void page_qr_payment::on_mainPage_Button_clicked()
+void page_qr_payment::on_pushButton_to_idle_clicked()
 {
     if (exitConfirm())
     {

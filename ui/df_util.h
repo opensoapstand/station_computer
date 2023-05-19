@@ -94,6 +94,16 @@ using namespace std;
 #define PRODUCT_PICTURES_ROOT_PATH "/home/df-admin/production/references/products/%1.png"
 #define COMPANY_LOGO_PATH                           "/home/df-admin/production/references/logos/%1_logo_white.png"
 #define PAGE_HELP_CSS                                   "page_help.css"
+#define PAGE_FEEDBACK_CSS                               "page_sendFeedback.css"
+#define PAGE_IDLE_CSS                                   "page_idle.css"
+#define PAGE_SELECT_PRODUCT_CSS                         "page_select_product.css"
+#define PAGE_PRODUCT_CSS                                "page_product.css"
+#define PAGE_DISPENSER_CSS                              "page_dispenser.css"
+#define PAGE_PRODUCT_OVERVIEW_CSS                       "page_product_overview.css"
+#define PAGETHANKYOU_CSS                                "pagethankyou.css"
+
+
+
 #define PAGE_IDLE_BACKGROUND_PATH                       "background_message.png"
 #define PAGE_IDLE_PRODUCTS_BACKGROUND_PATH              "background_product_select.png"
 #define PAGE_THANK_YOU_BACKGROUND_PATH                  "background_message.png"

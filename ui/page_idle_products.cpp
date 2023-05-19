@@ -84,9 +84,6 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     font.setBold(true);
     font.setWeight(75);
 
-    // productPageEndTimer = new QTimer(this);
-    // productPageEndTimer->setInterval(1000);
-    // connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
 }
 
 /*
@@ -144,6 +141,23 @@ void page_idle_products::showEvent(QShowEvent *event)
     //     checkReceiptPrinterStatus();
     // }
     ui->toSelectProductPageButton->raise();
+
+    ui->printer_status_label->setStyleSheet(
+        "QLabel {"
+
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 100;"
+        "background-color: #5E8580;"
+        "font-size: 42px;"
+        "text-align: centre;"
+        "line-height: auto;"
+        "letter-spacing: 0px;"
+        "qproperty-alignment: AlignCenter;"
+        "border-radius: 20px;"
+        "color: white;"
+        "border: none;"
+        "}");
 }
 void page_idle_products::resizeEvent(QResizeEvent *event)
 {

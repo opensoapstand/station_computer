@@ -150,8 +150,8 @@ void page_idle::showEvent(QShowEvent *event)
 
     addPictureToLabel(ui->drinkfill_logo_label, DRINKFILL_LOGO_VERTICAL_PATH);
 
-    idlePageTypeSelectorTimer->start(10);
-    _idlePageTypeSelectorTimerTimeoutSec = 1;
+    idlePageTypeSelectorTimer->start(100);
+    _idlePageTypeSelectorTimerTimeoutSec = 2;
 
 // #define PLAY_VIDEO
 #ifdef PLAY_VIDEO
@@ -293,6 +293,7 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
         ui->printer_status_label->hide();
     }
     ui->toSelectProductPageButton->show();
+
 }
 
 void page_idle::on_toSelectProductPageButton_clicked()

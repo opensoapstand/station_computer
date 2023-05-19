@@ -515,10 +515,10 @@
   <widget class="QPushButton" name="toSelectProductPageButton">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>1050</y>
-     <width>1081</width>
-     <height>1921</height>
+     <x>0</x>
+     <y>0</y>
+     <width>1080</width>
+     <height>1920</height>
     </rect>
    </property>
    <property name="styleSheet">

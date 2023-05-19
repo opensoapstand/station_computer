@@ -100,7 +100,7 @@ void page_idle_products::setPage(page_idle *pageIdle, page_select_product *p_pag
     this->p_page_maintenance_general = pageMaintenanceGeneral;
     this->p_page_idle = pageIdle;
 
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
 }
 
 // DTOR
@@ -143,6 +143,7 @@ void page_idle_products::showEvent(QShowEvent *event)
     // {
     //     checkReceiptPrinterStatus();
     // }
+    ui->toSelectProductPageButton->raise();
 }
 void page_idle_products::resizeEvent(QResizeEvent *event)
 {

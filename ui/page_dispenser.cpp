@@ -38,21 +38,18 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     qDebug() << "constructor page_dispenser";
     ui->setupUi(this);
 
-    
-
     // ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    
-    // ui->abortButton->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
-    
- 
-    ui->finishTransactionMessage->hide();
+
+    // ui->pushButton_abort->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
+
+    ui->label_finishTransactionMessage->hide();
     ui->label_to_refill->setText("to refill");
     ui->label_instructions_container->setText("bring container to nozzle");
     ui->label_press->setText("press and hold <br>the button");
-    ui->abortButton->raise();
-    ui->button_problems->raise();
-    ui->button_problems->setText("Tap here if you notice a problem.");
-    ui->button_report->setText("Report");
+    ui->pushButton_abort->raise();
+    ui->pushButton_problems->raise();
+    ui->pushButton_problems->setText("Tap here if you notice a problem.");
+    ui->pushButton_report->setText("Report");
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
@@ -106,33 +103,30 @@ void page_dispenser::showEvent(QShowEvent *event)
     //
     //
     QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
-    
-    
-    ui->finishTransactionMessage->setStyleSheet(styleSheet);
-    
-    ui->debug_Button->setStyleSheet(styleSheet);
-    ui->abortButton->setStyleSheet(styleSheet);
 
-    ui->volumeDispensedLabel->setProperty("class", "volumeDispensedLabel");//set property goes first!!
-    ui->label_volume_dispensed->setProperty("class", "volumeDispensedLabel");
-    ui->volumeDispensedLabel->setStyleSheet(styleSheet);
+    ui->label_finishTransactionMessage->setStyleSheet(styleSheet);
+
+    ui->pushButton_debug_Button->setStyleSheet(styleSheet);
+    ui->pushButton_abort->setStyleSheet(styleSheet);
+
+    ui->label_volume_dispensed_ml->setProperty("class", "label_volume_dispensed_ml"); // set property goes first!!
+    ui->label_volume_dispensed->setProperty("class", "label_volume_dispensed_ml");
+    ui->label_volume_dispensed_ml->setStyleSheet(styleSheet);
     ui->label_volume_dispensed->setStyleSheet(styleSheet);
 
     ui->label_to_refill->setStyleSheet(styleSheet);
 
     ui->label_instructions_container->setStyleSheet(styleSheet);
-    
+
     ui->label_press->setStyleSheet(styleSheet);
 
     ui->label_dispense_message->setStyleSheet(styleSheet);
-    
-    ui->button_problems->setStyleSheet(styleSheet);
-    
-    ui->button_report->setStyleSheet(styleSheet);
 
-    //msgBox->setStyleSheet(styleSheet);
+    ui->pushButton_problems->setStyleSheet(styleSheet);
 
-   
+    ui->pushButton_report->setStyleSheet(styleSheet);
+
+    // msgBox->setStyleSheet(styleSheet);
 
     qDebug() << "<<<<<<< Page Enter: Dispenser >>>>>>>>>";
     qDebug() << "Selected slot: " << QString::number(p_page_idle->selectedProduct->getSlot());
@@ -147,7 +141,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     askForFeedbackAtEnd = false;
 
     ui->fill_animation_label->move(380, 889);
-    ui->button_problems->move(120, 40);
+    ui->pushButton_problems->move(120, 40);
 
     qDebug() << "db check dispense buttons count:";
     DbManager db(DB_PATH);
@@ -163,30 +157,30 @@ void page_dispenser::showEvent(QShowEvent *event)
     {
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
     }
-    
+
     p_page_idle->addCompanyLogoToLabel(ui->label_logo);
     ui->label_logo->hide();
 
     p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
 
-    ui->abortButton->setText("Abort");
-    ui->abortButton->show();
+    ui->pushButton_abort->setText("Abort");
+    ui->pushButton_abort->show();
     ui->label_press->show();
     ui->label_to_refill->show();
     ui->label_instructions_container->show();
-    ui->finishTransactionMessage->hide();
+    ui->label_finishTransactionMessage->hide();
     ui->dispense_bottle_label->hide();
     ui->fill_animation_label->hide();
 
     ui->label_dispense_message->hide();
-    ui->button_problems->show();
-    ui->button_report->hide();
+    ui->pushButton_problems->show();
+    ui->pushButton_report->hide();
 
     dispenseIdleTimer->start(1000);
     resetDispenseTimeout();
 
     p_page_idle->selectedProduct->resetVolumeDispensed();
-    updateVolumeDispensedLabel(p_page_idle->selectedProduct->getVolumeDispensedMl());
+    updatelabel_volume_dispensed_ml(p_page_idle->selectedProduct->getVolumeDispensedMl());
 
     QString dispenseCommand = getStartDispensingCommand();
     QString priceCommand = QString::number(p_page_idle->selectedProduct->getPriceCorrected());
@@ -202,7 +196,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     qDebug() << "Dispensing started.";
 }
 
-void page_dispenser::updateVolumeDispensedLabel(double dispensed)
+void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
 {
     QString dispensedVolumeUnitsCorrected;
     QString units = p_page_idle->selectedProduct->getUnitsForSlot();
@@ -221,12 +215,12 @@ void page_dispenser::updateVolumeDispensedLabel(double dispensed)
 
         double unitprice = p_page_idle->selectedProduct->getPriceCorrected();
         current_price = dispensed * unitprice;
-        ui->volumeDispensedLabel->setText(dispensedVolumeUnitsCorrected + " " + units + " ( $" + QString::number(current_price, 'f', 2) + " )");
+        ui->label_volume_dispensed_ml->setText(dispensedVolumeUnitsCorrected + " " + units + " ( $" + QString::number(current_price, 'f', 2) + " )");
     }
     else
     {
         QString totalVolume = p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(p_page_idle->selectedProduct->getSize(), true, true);
-        ui->volumeDispensedLabel->setText(dispensedVolumeUnitsCorrected + " " + units + "/ " + totalVolume);
+        ui->label_volume_dispensed_ml->setText(dispensedVolumeUnitsCorrected + " " + units + "/ " + totalVolume);
         current_price = p_page_idle->selectedProduct->getPrice();
     }
 }
@@ -240,9 +234,9 @@ void page_dispenser::dispensing_end_admin()
     this->isDispensing = false;
     ui->dispense_bottle_label->hide();
     ui->fill_animation_label->hide();
-    ui->abortButton->hide();
-    ui->finishTransactionMessage->show();
-    ui->finishTransactionMessage->raise();
+    ui->pushButton_abort->hide();
+    ui->label_finishTransactionMessage->show();
+    ui->label_finishTransactionMessage->raise();
 
     double price = current_price;
 
@@ -252,7 +246,7 @@ void page_dispenser::dispensing_end_admin()
     qDebug() << "volume dispensed" << p_page_idle->selectedProduct->getVolumeDispensedMl();
     if (p_page_idle->selectedProduct->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML && (p_page_idle->selectedProduct->getPaymentMethod()) == "tapTcp")
     {
-        ui->finishTransactionMessage->setText("Voiding payment");
+        ui->label_finishTransactionMessage->setText("Voiding payment");
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         std::map<std::string, std::string> response;
         qDebug() << "dispense end: tap payment No volume dispensed.";
@@ -270,7 +264,7 @@ void page_dispenser::dispensing_end_admin()
     }
     else if ((p_page_idle->selectedProduct->getPaymentMethod() == "tapTcp") && p_page_idle->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
     {
-        ui->finishTransactionMessage->setText("Capturing payment: $" + QString::number(current_price, 'f', 2));
+        ui->label_finishTransactionMessage->setText("Capturing payment: $" + QString::number(current_price, 'f', 2));
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         if (CTROUTD != "")
         {
@@ -283,7 +277,7 @@ void page_dispenser::dispensing_end_admin()
         }
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     }
-    // ui->finishTransactionMessage->setText("");
+    // ui->label_finishTransactionMessage->setText("");
     qDebug() << "Finished dispense admin handling";
     current_price = 0.0;
     if (askForFeedbackAtEnd)
@@ -397,15 +391,14 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
     // {
     //     // stable status. do not change button visibility.
     // }
-    // else 
+    // else
 
     if (dispenseStatus == "SLOT_STATE_WARNING_PRIMING")
     {
         ui->label_dispense_message->setText("Please keep the button pressed.\nfor up to 15 seconds\nbefore the product starts dispensing.");
         ui->label_dispense_message->show();
     }
-    else
-    if (dispenseStatus == "SLOT_STATE_PROBLEM_EMPTY")
+    else if (dispenseStatus == "SLOT_STATE_PROBLEM_EMPTY")
     {
         ui->label_dispense_message->setText("It appears we're out of stock.\nTap the problem button in case of other issues.");
         ui->label_dispense_message->show();
@@ -419,7 +412,7 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
     else if (dispenseStatus == "SLOT_STATE_AVAILABLE")
     {
         // normal status
-        // ui->button_problems->hide();
+        // ui->pushButton_problems->hide();
         ui->label_dispense_message->hide();
     }
     else
@@ -443,7 +436,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
     if (p_page_idle->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
     {
 
-        updateVolumeDispensedLabel(p_page_idle->selectedProduct->getVolumeDispensedMl());
+        updatelabel_volume_dispensed_ml(p_page_idle->selectedProduct->getVolumeDispensedMl());
 
         double percentage = p_page_idle->selectedProduct->getVolumeDispensedMl() / (p_page_idle->selectedProduct->getVolume()) * 100;
         if (isFull)
@@ -452,17 +445,17 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         }
 
         this->ui->fill_animation_label->move(380, 900 - 3 * percentage);
-        // ui->button_problems->move(120, 450);
+        // ui->pushButton_problems->move(120, 450);
         // transition from instructions to dispensing at first receival of volume.
         ui->dispense_bottle_label->show();
         ui->label_press->hide();
         ui->label_to_refill->hide();
         ui->label_instructions_container->hide();
 
-        ui->abortButton->setText("Complete");
+        ui->pushButton_abort->setText("Complete");
         ui->fill_animation_label->show();
-        ui->abortButton->raise();
-        ui->button_problems->raise();
+        ui->pushButton_abort->raise();
+        ui->pushButton_problems->raise();
     }
 }
 
@@ -508,7 +501,7 @@ void page_dispenser::fsmReceiveNoFlowAbort()
     }
 }
 
-void page_dispenser::on_abortButton_clicked()
+void page_dispenser::on_pushButton_abort_clicked()
 {
     qDebug() << "Pressed button abort/complete";
 
@@ -518,7 +511,7 @@ void page_dispenser::on_abortButton_clicked()
         msgBox = new QMessageBox();
         msgBox->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
         QString payment = p_page_idle->selectedProduct->getPaymentMethod();
-         if (payment == "qr" || payment == "tapTcp")
+        if (payment == "qr" || payment == "tapTcp")
         {
             msgBox->setText("<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine. \
                                 If you press Yes, you will not be charged for the order.<br></p>");
@@ -531,9 +524,9 @@ void page_dispenser::on_abortButton_clicked()
         //  msgBox->setStyleSheet("QMessageBox{ color: green; min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
 
         QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
-            
+
         // msgBox->setProperty("class", "msgBoxbutton");//set property goes first!!
-        msgBox->setProperty("class", "msgBoxbox msgBoxbutton");//set property goes first!!
+        msgBox->setProperty("class", "msgBoxbox msgBoxbutton"); // set property goes first!!
         msgBox->setStyleSheet(styleSheet);
 
         msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
@@ -572,13 +565,13 @@ void page_dispenser::on_cancelButton_clicked()
     }
 }
 
-void page_dispenser::on_debug_Button_clicked()
+void page_dispenser::on_pushButton_debug_Button_clicked()
 {
     qDebug() << "WARNING: ========= Debug button pressed. Fake dispensing of 100ml ==============";
     updateVolumeDisplayed(300.0, false); // make sure the fill bottle graphics are completed
 }
 
-void page_dispenser::on_button_problems_clicked()
+void page_dispenser::on_pushButton_problems_clicked()
 {
 
     msgBox2 = new QMessageBox();
@@ -599,13 +592,12 @@ void page_dispenser::on_button_problems_clicked()
     // msgBox2->setStyleSheet("QMessageBox{ color: greenyellow; min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';}");
     //  msgBox2->setStyleSheet("QMessageBox{ color: greenyellow; min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
     QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
-   // msgBox2->setProperty("class", "msgBox");//set property goes first!!
-   // msgBox2->setStyleSheet(styleSheet);
+    // msgBox2->setProperty("class", "msgBox");//set property goes first!!
+    // msgBox2->setStyleSheet(styleSheet);
 
-      
-        msgBox2->setProperty("class", "msgBoxbox msgBoxbutton");//set property goes first!!
+    msgBox2->setProperty("class", "msgBoxbox msgBoxbutton"); // set property goes first!!
 
-        msgBox2->setStyleSheet(styleSheet);
+    msgBox2->setStyleSheet(styleSheet);
     msgBox2->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     int ret = msgBox2->exec();
     bool success;
@@ -630,6 +622,6 @@ void page_dispenser::on_button_problems_clicked()
     }
 }
 
-void page_dispenser::on_button_report_clicked()
+void page_dispenser::on_pushButton_report_clicked()
 {
 }

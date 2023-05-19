@@ -1,6 +1,6 @@
 
 
-#finishTransactionMessage {
+#label_finishTransactionMessage {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 100;
@@ -14,7 +14,7 @@
    border: none;
 }
 
-#debug_Button {
+#pushButton_debug_Button {
    
    color: #5E8580;
    background-color: transparent;
@@ -22,7 +22,7 @@
    border-color: #5E8580;
 }
 
-#abortButton {
+#pushButton_abort {
    
    font-family: 'Brevia';
    font-style: normal;
@@ -39,7 +39,7 @@
    
 }
 
-.volumeDispensedLabel {
+.label_volume_dispensed_ml {
    
 
    font-family: 'Brevia';
@@ -120,7 +120,7 @@
    border: none;
 }
 
-#button_problems {
+#pushButton_problems {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;
@@ -135,7 +135,7 @@
    border: none;
 }
 
-#button_report {
+#pushButton_report {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;

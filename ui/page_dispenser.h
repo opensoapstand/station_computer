@@ -59,8 +59,8 @@ public:
     void resetDispenseTimeout(void);
 
     void updateVolumeDisplayed(double dispensed, bool isFull );
-    void volumeDispensedLabel(QLabel* label);
-    void updateVolumeDispensedLabel(double dispensed);
+    void label_volume_dispensed_ml(QLabel* label);
+    void updatelabel_volume_dispensed_ml(double dispensed);
 
     void fsmReceivedVolumeDispensed(double dispensed, bool isFull );
     void fsmReceiveDispenseRate(double flowrate);
@@ -89,12 +89,12 @@ private slots:
 
     void dispensing_end_admin();
 
-    void on_abortButton_clicked();
+    void on_pushButton_abort_clicked();
     void on_cancelButton_clicked();
-    void on_debug_Button_clicked();
-    void on_button_problems_clicked();
+    void on_pushButton_debug_Button_clicked();
+    void on_pushButton_problems_clicked();
 
-    void on_button_report_clicked();
+    void on_pushButton_report_clicked();
 
 private:
     bool isDispensing;

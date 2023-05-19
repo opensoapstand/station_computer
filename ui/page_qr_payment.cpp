@@ -176,20 +176,7 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->title_Label->setStyleSheet(styleSheet);
     ui->scan_Label->setStyleSheet(styleSheet);
     ui->steps_Label->setStyleSheet(styleSheet);
-    QString css_processing = "QLabel{"
-                             "position: absolute;"
-                             "width: 777px;"
-                             "height: 306px;"
-                             "left: 143px;"
-                             "top: 1029px;"
-                             "font-family: 'Montserrat';"
-                             "font-style: normal;"
-                             "font-weight: 600;"
-                             "font-size: 36px;"
-                             "line-height: 51px;"
-                             "color: #003840;"
-                             "}";
-    ui->processing_Label->setStyleSheet(css_processing);
+    ui->processing_Label->setStyleSheet(styleSheet);
 
 
 

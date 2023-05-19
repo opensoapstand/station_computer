@@ -54,6 +54,7 @@ public:
     void addPictureToLabel(QLabel *label, QString picturePath);
     void addCompanyLogoToLabel(QLabel *label);
     QString getTemplateFolder();
+    void changeToIdleProductsIfSet();
     void setTemplateFolder(QString rootPath, QString templateFolder);
     QString getTemplatePathFromName(QString fileName);
     QString getDefaultTemplatePathFromName(QString fileName);
@@ -66,12 +67,11 @@ public:
 
     product products[SLOT_COUNT];
     product *selectedProduct;
-    
+
     df_util *dfUtility;
-   //for products.cpp
-   // product products[SLOT_COUNT]; // declare products as a member variable
-    // product* getSelectedProduct();
-    
+    // for products.cpp
+    //  product products[SLOT_COUNT]; // declare products as a member variable
+    //  product* getSelectedProduct();
 
     DfUiCommThread *dfComm;
 
@@ -88,9 +88,12 @@ public:
     QVideoWidget *videoWidget;
     QMediaPlayer *player;
 
+    QTimer *idlePageTypeSelectorTimer;
+    int _idlePageTypeSelectorTimerTimeoutSec;
 
 private slots:
     void on_toSelectProductPageButton_clicked();
+    void onIdlePageTypeSelectorTimerTick();
     //    void on_savedBottles_label_clicked();
 
     void on_testButton_clicked();

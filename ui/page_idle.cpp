@@ -55,6 +55,11 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     // TODO: Hold and pass Product Object
     selectedProduct = new product();
     // product *selectedProduct;
+
+    idlePageTypeSelectorTimer = new QTimer(this);
+    idlePageTypeSelectorTimer->setInterval(1000);
+    connect(idlePageTypeSelectorTimer, SIGNAL(timeout()), this, SLOT(onIdlePageTypeSelectorTimerTick()));
+
 }
 
 /*
@@ -80,6 +85,8 @@ page_idle::~page_idle()
 
 void page_idle::showEvent(QShowEvent *event)
 {
+    qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
+    QWidget::showEvent(event);
 
     qDebug() << "open db: payment method";
     bool needsReceiptPrinter = false;
@@ -99,20 +106,6 @@ void page_idle::showEvent(QShowEvent *event)
         products[slot - 1].setDiscountPercentageFraction(0.0);
         products[slot - 1].setPromoCode("");
     }
-
-    DbManager db(DB_PATH);
-    // call db check if idle or idle_products
-    idle_page_type = db.getIdlePageType();
-    db.closeDB();
-
-    if (idle_page_type == "static_products")
-    {
-        hideCurrentPageAndShowProvided(this->p_page_idle_products);
-    }
-
-    this->lower();
-    qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
-    QWidget::showEvent(event);
 
     ui->welcome_message_label->setText("refill soap here! <br>tap screen to start");
     ui->welcome_message_label->setStyleSheet(
@@ -156,6 +149,9 @@ void page_idle::showEvent(QShowEvent *event)
     }
 
     addPictureToLabel(ui->drinkfill_logo_label, DRINKFILL_LOGO_VERTICAL_PATH);
+
+    idlePageTypeSelectorTimer->start(10);
+    _idlePageTypeSelectorTimerTimeoutSec = 1;
 
 // #define PLAY_VIDEO
 #ifdef PLAY_VIDEO
@@ -210,8 +206,21 @@ void page_idle::showEvent(QShowEvent *event)
 #endif
     qDebug() << "Video player. Is fullscreen? : " << videoWidget->isFullScreen();
 #endif
-    this->raise();
 }
+
+void page_idle::changeToIdleProductsIfSet()
+{
+    DbManager db(DB_PATH);
+    // call db check if idle or idle_products
+    idle_page_type = db.getIdlePageType();
+    db.closeDB();
+
+    if (idle_page_type == "static_products")
+    {
+        hideCurrentPageAndShowProvided(this->p_page_idle_products);
+    }
+}
+
 // for products.cpp
 product *page_idle::getSelectedProduct()
 {
@@ -248,11 +257,21 @@ void page_idle::checkReceiptPrinterStatus()
 void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     this->pageTransition(this, pageToShow);
+        idlePageTypeSelectorTimer->stop();
 }
 /*
  * Screen click shows product page as full screen and hides page_idle screen
  */
-
+void page_idle::onIdlePageTypeSelectorTimerTick()
+{
+    if (--_idlePageTypeSelectorTimerTimeoutSec >= 0)
+    {
+    }
+    else
+    {
+      changeToIdleProductsIfSet();
+    }
+}
 void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
 {
     qDebug() << "Printer feedback received from fsm";

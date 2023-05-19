@@ -57,6 +57,9 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     selectProductTypeLabels[2] = ui->product_3_type_label;
     selectProductTypeLabels[3] = ui->product_4_type_label;
 
+    ui->toSelectProductPageButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    ui->toSelectProductPageButton->raise();
+
     ui->helpPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     // ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->label_pick_soap->setStyleSheet(
@@ -81,21 +84,20 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     font.setBold(true);
     font.setWeight(75);
 
-    productPageEndTimer = new QTimer(this);
-    productPageEndTimer->setInterval(1000);
-    connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
+    // productPageEndTimer = new QTimer(this);
+    // productPageEndTimer->setInterval(1000);
+    // connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
 }
 
 /*
  * Page Tracking reference
  */
-void page_idle_products::setPage(page_idle *pageIdle, page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products)
+void page_idle_products::setPage(page_idle *pageIdle, page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral)
 {
     // Chained to KB Listener
     this->p_pageSelectProduct = p_pageProduct;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_maintenance_general = pageMaintenanceGeneral;
-    this->p_page_idle_products = p_page_idle_products;
     this->p_page_idle = pageIdle;
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
@@ -124,31 +126,23 @@ void page_idle_products::showEvent(QShowEvent *event)
         p_page_idle->products[slot - 1].setDiscountPercentageFraction(0.0);
         p_page_idle->products[slot - 1].setPromoCode("");
     }
-    qDebug() << "<<<<<<< Page Enter: Select Product >>>>>>>>>";
-    this->lower();
+    qDebug() << "<<<<<<< Page Enter: Idle page (show products) >>>>>>>>>";
+
     QWidget::showEvent(event);
     maintenanceCounter = 0;
 
     displayProducts();
 
-    if (productPageEndTimer == nullptr)
-    {
-        productPageEndTimer = new QTimer(this);
-        productPageEndTimer->setInterval(1000);
-        connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
-    }
+    // productPageEndTimer->start(1000);
+    // _productPageTimeoutSec = 15;
 
-    productPageEndTimer->start(1000);
-    _productPageTimeoutSec = 15;
-
-    this->raise();
     addCompanyLogoToLabel(ui->logo_label);
 
     ui->printer_status_label->hide(); // always hide here, will show if enabled and has problems.
-    if (needsReceiptPrinter)
-    {
-        checkReceiptPrinterStatus();
-    }
+    // if (needsReceiptPrinter)
+    // {
+    //     checkReceiptPrinterStatus();
+    // }
 }
 void page_idle_products::resizeEvent(QResizeEvent *event)
 {
@@ -279,20 +273,20 @@ void page_idle_products::addCompanyLogoToLabel(QLabel *label)
     }
 }
 
-void page_idle_products::onProductPageTimeoutTick()
-{
-    if (--_productPageTimeoutSec >= 0)
-    {
-    }
-    else
-    {
-        hideCurrentPageAndShowProvided(p_page_idle);
-    }
-}
+// void page_idle_products::onProductPageTimeoutTick()
+// {
+//     if (--_productPageTimeoutSec >= 0)
+//     {
+//     }
+//     else
+//     {
+//         // hideCurrentPageAndShowProvided(p_page_idle);
+//     }
+// }
 
 void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
-    productPageEndTimer->stop();
+    // productPageEndTimer->stop();
     qDebug() << "Exit select product page.";
     this->raise();
     p_page_idle->pageTransition(this, pageToShow);
@@ -319,4 +313,9 @@ void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
         ui->printer_status_label->hide();
     }
     ui->toSelectProductPageButton->show();
+}
+
+void page_idle_products::on_toSelectProductPageButton_clicked()
+{
+    this->hideCurrentPageAndShowProvided(p_pageSelectProduct);
 }

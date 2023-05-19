@@ -50,7 +50,7 @@ class page_idle_products : public QWidget
 
 public:
     explicit page_idle_products(QWidget *parent = nullptr);
-    void setPage(page_idle *pageIdle, page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products);
+    void setPage(page_idle *pageIdle, page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral);
     // function body
     ~page_idle_products();
 
@@ -71,7 +71,8 @@ public:
 private slots:
     // **** Navigation ****
 
-    void onProductPageTimeoutTick();
+    // void onProductPageTimeoutTick();
+    void on_toSelectProductPageButton_clicked();
     // void on_p_page_maintenanceButton_pressed();
 
 private:
@@ -87,8 +88,8 @@ private:
 
     QResizeEvent *productResize;
 
-    int _productPageTimeoutSec;
-    QTimer *productPageEndTimer;
+    // int _productPageTimeoutSec;
+    // QTimer *productPageEndTimer;
 
     page_select_product *p_pageSelectProduct;
     page_maintenance *p_page_maintenance;

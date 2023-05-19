@@ -502,8 +502,8 @@
   <widget class="QLabel" name="printer_status_label">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>230</y>
+     <x>50</x>
+     <y>1050</y>
      <width>980</width>
      <height>120</height>
     </rect>
@@ -515,10 +515,10 @@
   <widget class="QPushButton" name="toSelectProductPageButton">
    <property name="geometry">
     <rect>
-     <x>310</x>
-     <y>70</y>
+     <x>50</x>
+     <y>1050</y>
      <width>1081</width>
-     <height>1891</height>
+     <height>1921</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -528,6 +528,7 @@
     <string/>
    </property>
   </widget>
+  <zorder>toSelectProductPageButton</zorder>
   <zorder>product_1_type_label</zorder>
   <zorder>logo_label</zorder>
   <zorder>product_2_photo_label</zorder>
@@ -555,7 +556,6 @@
   <zorder>helpPage_Button</zorder>
   <zorder>logo_label</zorder>
   <zorder>printer_status_label</zorder>
-  <zorder>toSelectProductPageButton</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -527,12 +527,14 @@ void page_dispenser::on_abortButton_clicked()
         {
             msgBox->setText("<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine.<br></p>");
         }
-        msgBox->setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
+        //   msgBox->setStyleSheet("QMessageBox{ color: green; min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';}");
+        //  msgBox->setStyleSheet("QMessageBox{ color: green; min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
 
         QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
             
-        //msgBox->setProperty("class", "msgBox");//set property goes first!!
-        //msgBox->setStyleSheet(styleSheet);
+        // msgBox->setProperty("class", "msgBoxbutton");//set property goes first!!
+        msgBox->setProperty("class", "msgBoxbox msgBoxbutton");//set property goes first!!
+        msgBox->setStyleSheet(styleSheet);
 
         msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         int ret = msgBox->exec();
@@ -594,11 +596,16 @@ void page_dispenser::on_button_problems_clicked()
         msgBox2->setText("<p align=center><br>" + base + "</p>");
     }
 
-    msgBox2->setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
+    // msgBox2->setStyleSheet("QMessageBox{ color: greenyellow; min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';}");
+    //  msgBox2->setStyleSheet("QMessageBox{ color: greenyellow; min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
     QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
    // msgBox2->setProperty("class", "msgBox");//set property goes first!!
    // msgBox2->setStyleSheet(styleSheet);
 
+      
+        msgBox2->setProperty("class", "msgBoxbox msgBoxbutton");//set property goes first!!
+
+        msgBox2->setStyleSheet(styleSheet);
     msgBox2->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     int ret = msgBox2->exec();
     bool success;

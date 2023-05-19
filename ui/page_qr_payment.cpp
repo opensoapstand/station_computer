@@ -66,20 +66,7 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
     
     ui->processing_Label->setText(
         "it can take a few moments for the station to<br>continue after your payment is confirmed");
-    QString css_processing = "QLabel{"
-                             "position: absolute;"
-                             "width: 777px;"
-                             "height: 306px;"
-                             "left: 143px;"
-                             "top: 1029px;"
-                             "font-family: 'Montserrat';"
-                             "font-style: normal;"
-                             "font-weight: 600;"
-                             "font-size: 36px;"
-                             "line-height: 51px;"
-                             "color: #003840;"
-                             "}";
-    ui->processing_Label->setStyleSheet(css_processing);
+    
     ui->order_total_amount->hide();
 }
 
@@ -188,8 +175,21 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->pushButton_refresh->setStyleSheet(styleSheet);
     ui->title_Label->setStyleSheet(styleSheet);
     ui->scan_Label->setStyleSheet(styleSheet);
-
     ui->steps_Label->setStyleSheet(styleSheet);
+    QString css_processing = "QLabel{"
+                             "position: absolute;"
+                             "width: 777px;"
+                             "height: 306px;"
+                             "left: 143px;"
+                             "top: 1029px;"
+                             "font-family: 'Montserrat';"
+                             "font-style: normal;"
+                             "font-weight: 600;"
+                             "font-size: 36px;"
+                             "line-height: 51px;"
+                             "color: #003840;"
+                             "}";
+    ui->processing_Label->setStyleSheet(css_processing);
 
 
 

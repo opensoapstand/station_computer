@@ -137,7 +137,7 @@ void page_idle_products::showEvent(QShowEvent *event)
 
     addCompanyLogoToLabel(ui->logo_label);
 
-    ui->printer_status_label->hide(); // always hide here, will show if enabled and has problems.
+    // ui->printer_status_label->hide(); // always hide here, will show if enabled and has problems.
     // if (needsReceiptPrinter)
     // {
     //     checkReceiptPrinterStatus();
@@ -313,6 +313,23 @@ void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
         ui->printer_status_label->hide();
     }
     ui->toSelectProductPageButton->show();
+
+    ui->printer_status_label->setStyleSheet(
+        "QLabel {"
+
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 100;"
+        "background-color: #5E8580;"
+        "font-size: 42px;"
+        "text-align: centre;"
+        "line-height: auto;"
+        "letter-spacing: 0px;"
+        "qproperty-alignment: AlignCenter;"
+        "border-radius: 20px;"
+        "color: white;"
+        "border: none;"
+        "}");
 }
 
 void page_idle_products::on_toSelectProductPageButton_clicked()

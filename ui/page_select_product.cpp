@@ -245,16 +245,6 @@ void page_select_product::displayProducts()
         if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
         {
             labels_product_overlay_text[i]->setText("");
-            // <<<<<<< HEAD
-            //             ui->label_product_1_overlay->setProperty("class", "label_product_oberlay_sold_out");
-            //             ui->label_product_2_overlay->setProperty("class", "label_product_oberlay_sold_out");
-            //             ui->label_product_3_overlay->setProperty("class", "label_product_oberlay_sold_out");
-            //             ui->label_product_4_overlay->setProperty("class", "label_product_oberlay_sold_out");
-            //             //selectProductOverlayLabels[i]->setStyleSheet("background-color: transparent;");
-            //             //// labels_product_picture[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,0);}");
-            //             // pushButtons_product_select[i]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
-            // =======
-            // >>>>>>> origin/SS1
         }
         else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
         {

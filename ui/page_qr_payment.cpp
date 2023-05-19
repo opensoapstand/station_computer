@@ -31,12 +31,8 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
     // Fullscreen background setup
     ui->setupUi(this);
     qDebug() << "QR Payment page" << endl;
-    ui->pushButton_previous_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->pushButton_to_idle->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->payment_bypass_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-
-    ui->payment_bypass_Button->setEnabled(false);
+    
+    ui->pushButton_payment_bypass->setEnabled(false);
 
     // Idle Payment reset
     idlePaymentTimer = new QTimer(this);
@@ -48,7 +44,7 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
     showError = new QTimer(this);
     connect(showError, SIGNAL(timeout()), this, SLOT(showErrorPage()));
 
-    ui->payment_bypass_Button->setEnabled(false);
+    ui->pushButton_payment_bypass->setEnabled(false);
     state_payment = s_init;
     QString css_title = "QLabel{"
                         "font-family: 'Brevia';"
@@ -177,7 +173,7 @@ void page_qr_payment::displayPaymentPending(bool isVisible)
 {
 }
 
-void page_qr_payment::on_payment_bypass_Button_clicked()
+void page_qr_payment::on_pushButton_payment_bypass_clicked()
 {
     proceed_to_dispense();
 }
@@ -220,6 +216,15 @@ void page_qr_payment::resizeEvent(QResizeEvent *event)
 
 void page_qr_payment::showEvent(QShowEvent *event)
 {
+
+    QString styleSheet = p_page_idle->getCSS(PAGE_QR_PAYMENT_CSS);
+
+    ui->pushButton_previous_page->setStyleSheet(styleSheet);
+    ui->pushButton_to_idle->setStyleSheet(styleSheet);
+    ui->pushButton_payment_bypass->setStyleSheet(styleSheet);
+    ui->pushButton_refresh->setStyleSheet(styleSheet);
+
+
     qDebug() << "<<<<<<< Page Enter: Payment >>>>>>>>>";
     QWidget::showEvent(event);
     state_payment = s_init;
@@ -234,7 +239,7 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->title_Label->setText("pay by phone");
     ui->scan_Label->setText("Scan to Pay");
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
-    ui->payment_bypass_Button->setEnabled(false);
+    ui->pushButton_payment_bypass->setEnabled(false);
     ui->productLabel->setText(p_page_idle->selectedProduct->getProductName() + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
     ui->order_drink_amount->setText("$" +price);
     ui->order_total_amount->setText("Total: $" +price);
@@ -455,7 +460,7 @@ void page_qr_payment::qrProcessedPeriodicalCheck()
     }
 }
 
-void page_qr_payment::on_refreshButton_clicked()
+void page_qr_payment::on_pushButton_refresh_clicked()
 {
     ui->refreshLabel->hide();
     _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;

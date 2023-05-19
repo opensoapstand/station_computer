@@ -262,7 +262,7 @@ void pageProduct::showEvent(QShowEvent *event)
 
     for (int i = 0; i < 4; i++)
     {
-        // labels_product_overlay_text[i]->setProperty("class", "label_product_oberlay_available"); // apply class BEFORE setStyleSheet!!
+        // labels_product_overlay_text[i]->setProperty("class", "label_product_overlay_available"); // apply class BEFORE setStyleSheet!!
         // labels_product_overlay_text[i]->setStyleSheet(styleSheet);
         orderSizeLabelsVolume[i]->setProperty("class", "orderSizeLabelsVolume");
         orderSizeLabelsPrice[i]->setProperty("class", "orderSizeLabelsPrice");

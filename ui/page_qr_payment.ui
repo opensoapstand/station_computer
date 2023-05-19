@@ -113,7 +113,7 @@ color: #58595B;</string>
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="payment_bypass_Button">
+  <widget class="QPushButton" name="pushButton_payment_bypass">
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -229,7 +229,7 @@ line-height: 29px;</string>
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="refreshButton">
+  <widget class="QPushButton" name="pushButton_refresh">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -325,12 +325,12 @@ line-height: 29px;</string>
     <string/>
    </property>
   </widget>
-  <zorder>refreshButton</zorder>
+  <zorder>pushButton_refresh</zorder>
   <zorder>pushButton_previous_page</zorder>
   <zorder>pushButton_to_idle</zorder>
   <zorder>order_total_amount</zorder>
   <zorder>order_drink_amount</zorder>
-  <zorder>payment_bypass_Button</zorder>
+  <zorder>pushButton_payment_bypass</zorder>
   <zorder>payment_countdownLabel</zorder>
   <zorder>productLabel</zorder>
   <zorder>qrCode</zorder>

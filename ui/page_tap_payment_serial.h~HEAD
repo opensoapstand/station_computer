@@ -122,7 +122,7 @@ private slots:
 
     // Navigation
     void on_previousPage_Button_clicked();
-    void on_payment_bypass_Button_clicked();
+    void on_pushButton_payment_bypass_clicked();
     void proceed_to_dispense();
      void on_mainPage_Button_clicked();
 

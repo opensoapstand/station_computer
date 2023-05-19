@@ -101,7 +101,7 @@ private slots:
 
     // Navigation
     void on_pushButton_previous_page_clicked();
-    void on_payment_bypass_Button_clicked();
+    void on_pushButton_payment_bypass_clicked();
     void proceed_to_dispense();
      void on_pushButton_to_idle_clicked();
 
@@ -116,7 +116,7 @@ private slots:
 
 
     void idlePaymentTimeout();
-    void on_refreshButton_clicked();
+    void on_pushButton_refresh_clicked();
 
     void qrProcessedPeriodicalCheck();
     void showErrorPage();

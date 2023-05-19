@@ -228,25 +228,25 @@ void page_idle_products::addCompanyLogoToLabel(QLabel *label)
     qDebug() << "db init company logo";
     DbManager db(DB_PATH);
     QString id = db.getCustomerId();
-    QString size_small;
-    QString size_medium;
-    QString size_large;
-    QString size_units;
-    QString price_small;
-    QString price_medium;
-    QString price_large;
-    for (uint8_t i = 0; i < SLOT_COUNT; i++)
-    {
-        size_units = db.getUnits(i);
-        size_small = db.getSizeSmall(i);
-        size_medium = db.getSizeMedium(i);
-        size_large = db.getSizeLarge(i);
-        price_small = db.getPriceSmall(i);
-        price_medium = db.getPriceMedium(i);
-        price_large = db.getPriceLarge(i);
+    // QString size_small;
+    // QString size_medium;
+    // QString size_large;
+    // QString size_units;
+    // QString price_small;
+    // QString price_medium;
+    // QString price_large;
+    // for (uint8_t i = 0; i < SLOT_COUNT; i++)
+    // {
+    //     size_units = db.getUnits(i);
+    //     size_small = db.getSizeSmall(i);
+    //     size_medium = db.getSizeMedium(i);
+    //     size_large = db.getSizeLarge(i);
+    //     price_small = db.getPriceSmall(i);
+    //     price_medium = db.getPriceMedium(i);
+    //     price_large = db.getPriceLarge(i);
 
-        // do something with size_units
-    }
+    //     // do something with size_units
+    // }
     db.closeDB();
     qDebug() << "db closed";
     if (id.at(0) == 'C')
@@ -290,11 +290,7 @@ void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     p_page_idle->pageTransition(this, pageToShow);
 }
 
-// void page_idle_products::on_mainPage_Button_clicked()
-// {
-//     qDebug() << "Back to Idle Page Button pressed";
-//     hideCurrentPageAndShowProvided(p_page_idle);
-// }
+
 
 void page_idle_products::on_helpPage_Button_clicked()
 {

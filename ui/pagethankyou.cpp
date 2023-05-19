@@ -23,7 +23,6 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
 {
     ui->setupUi(this);
 
-
     ui->extra_message_label->hide();
     connect(ui->notifyUs_Button, SIGNAL(clicked()), this, SLOT(on_notifyUs_Button_clicked()));
 
@@ -32,8 +31,6 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
     connect(thankYouEndTimer, SIGNAL(timeout()), this, SLOT(onThankyouTimeoutTick()));
 
     is_in_state_thank_you = false;
-
-    
 }
 
 /*
@@ -69,13 +66,10 @@ void pagethankyou::showEvent(QShowEvent *event)
     ui->label_volume_dispensed->setStyleSheet(styleSheet);
     ui->notifyUs_Button->setStyleSheet(styleSheet);
 
-
-
     qDebug() << "<<<<<<< Page Enter: Thank you >>>>>>>>>";
 
     QWidget::showEvent(event);
 
-   
     ui->pushButton_to_idle->setEnabled(true);
     ui->pushButton_to_idle->raise();
 
@@ -142,7 +136,9 @@ void pagethankyou::showEvent(QShowEvent *event)
     }
     _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     thankYouEndTimer->start();
-    p_page_idle->addPictureToLabel(ui->drinkfill_logo_label2, DRINKFILL_LOGO_VERTICAL_PATH);
+
+    QString machine_logo_full_path = p_page_idle->getTemplatePathFromName(MACHINE_LOGO_PATH);
+    p_page_idle->addPictureToLabel(ui->drinkfill_logo_label2, machine_logo_full_path);
 
     QString units = p_page_idle->selectedProduct->getUnitsForSlot();
     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->selectedProduct->getVolumeDispensedMl(), units, false, true);

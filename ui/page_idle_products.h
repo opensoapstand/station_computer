@@ -57,6 +57,7 @@ public:
     void displayProducts();
     void addCompanyLogoToLabel(QLabel *label);
 
+
     
 
     QLabel* selectProductPhotoLabels[4];
@@ -71,8 +72,8 @@ private slots:
 
     
     void onProductPageTimeoutTick();
-    void on_p_page_maintenanceButton_pressed();
-    // void on_helpPage_Button_clicked();
+    // void on_p_page_maintenanceButton_pressed();
+    
 
 private:
     void showEvent(QShowEvent *event);

@@ -128,13 +128,32 @@ void page_idle_products::showEvent(QShowEvent *event)
 
     this->raise();
     addCompanyLogoToLabel(ui->logo_label);
+
+    qDebug() << "open db: payment method";
+    bool needsReceiptPrinter = false;
+    for (int slot = 1; slot <= SLOT_COUNT; slot++)
+    {
+        QString paymentMethod = p_page_idle->products[slot - 1].getPaymentMethod();
+        if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
+        {
+            needsReceiptPrinter = true;
+            qDebug() << "Needs receipt printer: " << paymentMethod;
+            break;
+        }
+
+
+        p_page_idle->products[slot - 1].setDiscountPercentageFraction(0.0);
+        p_page_idle->products[slot - 1].setPromoCode("");
+    }
 }
 void page_idle_products::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
 }
+    
+    
 
-void page_idle_products::displayProducts()
+    void page_idle_products::displayProducts()
 {
     QString product_type_icons[5] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH};
 
@@ -161,11 +180,6 @@ void page_idle_products::displayProducts()
 
         product_type = p_page_idle->products[i].getProductType();
         product_name = p_page_idle->products[i].getProductName();
-
-        // qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << ", product set as not available?: " << product_sold_out << " Status text: " << product_status_text;
-
-        // selectProductNameLabels[i]->setText(product_name);
-        // selectProductNameLabels[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
 
         // display product type icon  picture
         QString icon_path = "not found";
@@ -228,25 +242,7 @@ void page_idle_products::addCompanyLogoToLabel(QLabel *label)
     qDebug() << "db init company logo";
     DbManager db(DB_PATH);
     QString id = db.getCustomerId();
-    // QString size_small;
-    // QString size_medium;
-    // QString size_large;
-    // QString size_units;
-    // QString price_small;
-    // QString price_medium;
-    // QString price_large;
-    // for (uint8_t i = 0; i < SLOT_COUNT; i++)
-    // {
-    //     size_units = db.getUnits(i);
-    //     size_small = db.getSizeSmall(i);
-    //     size_medium = db.getSizeMedium(i);
-    //     size_large = db.getSizeLarge(i);
-    //     price_small = db.getPriceSmall(i);
-    //     price_medium = db.getPriceMedium(i);
-    //     price_large = db.getPriceLarge(i);
 
-    //     // do something with size_units
-    // }
     db.closeDB();
     qDebug() << "db closed";
     if (id.at(0) == 'C')
@@ -264,23 +260,13 @@ void page_idle_products::onProductPageTimeoutTick()
 {
     if (--_productPageTimeoutSec >= 0)
     {
-        // qDebug() << "Tick Down: " << _productPageTimeoutSec;
     }
     else
     {
-        // qDebug() << "Timer Done!" << _productPageTimeoutSec;
         hideCurrentPageAndShowProvided(p_page_idle);
     }
 }
 
-void page_idle_products::on_p_page_maintenanceButton_pressed()
-{
-    maintenanceCounter++;
-    if (maintenanceCounter > 50)
-    {
-        hideCurrentPageAndShowProvided(p_page_maintenance);
-    }
-}
 
 void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
@@ -289,11 +275,3 @@ void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     this->raise();
     p_page_idle->pageTransition(this, pageToShow);
 }
-
-
-
-// void page_idle_products::on_helpPage_Button_clicked()
-// {
-//     qDebug() << "Help_Button pressed";
-//     hideCurrentPageAndShowProvided(p_page_help);
-// }

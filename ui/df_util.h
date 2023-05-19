@@ -92,13 +92,7 @@ using namespace std;
 #define TRANSACTION_HISTORY_COUNT 15
 
 #define PRODUCT_PICTURES_ROOT_PATH "/home/df-admin/production/references/products/%1.png"
-
-
-
-
-
-#define PAGE_HELP_TEXT                                   "page_help_text.txt"
-
+#define COMPANY_LOGO_PATH                           "/home/df-admin/production/references/logos/%1_logo_white.png"
 #define PAGE_HELP_CSS                                   "page_help.css"
 #define PAGE_FEEDBACK_CSS                               "page_sendFeedback.css"
 #define PAGE_IDLE_CSS                                   "page_idle.css"
@@ -117,6 +111,7 @@ using namespace std;
 #define PAGE_IDLE_PRODUCTS_BACKGROUND_PATH              "background_product_select.png"
 #define PAGE_THANK_YOU_BACKGROUND_PATH                  "background_message.png"
 #define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_message.png"
+
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"
 #define PAGE_ORDER_OVERVIEW_PATH                        "background_generic_white_empty.png"
@@ -131,13 +126,13 @@ using namespace std;
 #define PAGE_TAP_PAY_FAIL                               "paymentFailed.png"
 #define PAGE_AUTHORIZE_NOW                              "authorizeNow.png"
 #define PAGE_TAP_GENERIC                                "genericTap.png"
-#define BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH            "bottle_fill_for_animation.png"
+// #define BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH            "bottle_fill_for_animation.png"
 #define PAGE_SEND_FEEDBACK_PATH                         "background_sendfeedback.png"
 #define PAGE_INIT_BACKGROUND_IMAGE_PATH                 "background_message.png"
 #define IMAGE_BUTTON_HELP                               "help_icon.png"
 #define THANK_YOU_FOR_YOUR_FEEDBACK                     "background_feedbacksent.png"
 
-#define KEYBOARD_IMAGE_PATH                         "/home/df-admin/production/references/soapstand-keyboard.png"
+#define KEYBOARD_IMAGE_PATH                         "soapstand-keyboard.png"
 // #define FULL_TRANSPARENT_IMAGE_PATH                 "/home/df-admin/production/references/background.png"
 
 #define ICON_TYPE_CONCENTRATE_PATH                  "Soapstand_UI-concentrate-icon.png"
@@ -146,10 +141,10 @@ using namespace std;
 #define ICON_TYPE_HAND_PATH                         "Soapstand-UI-icon-hand-soap.png"
 #define ICON_TYPE_LAUNDRY_PATH                      "Soapstand-UI-icon-laundry.png"
                          
-#define DRINKFILL_LOGO_ANIMATED_PATH                "/home/df-admin/production/references/logos/Soapstand-logo-animated-spin.gif"
-#define COMPANY_LOGO_PATH                           "/home/df-admin/production/references/logos/%1_logo_white.png"
+// #define DRINKFILL_LOGO_ANIMATED_PATH                "/home/df-admin/production/references/logos/Soapstand-logo-animated-spin.gif"
+
 #define DRINKFILL_LOGO_VERTICAL_PATH                 "/home/df-admin/production/references/logos/Soapstand-logo-white-vertical.png"
-#define PAGE_HELP_BACKGROUND_PATH                    "background_help.png"
+#define PAGE_HELP_BACKGROUND_PATH                    "background_generic_white_empty.png"
 
 
 // #define PAGE_INIT_BACKGROUND_IMAGE_PATH "/home/df-admin/production/references/0_background_init.png"

@@ -53,7 +53,6 @@ HEADERS += \
     payment/commands.h \
     payment/setup_Tap.h \
     df_util.h \
-    drinkorder.h \
     dbmanager.h \
     page_maintenance.h \
     page_maintenance_dispenser.h \
@@ -90,7 +89,6 @@ SOURCES += \
     payment/commands.cpp \
     payment/setup_Tap.cpp \
     df_util.cpp \
-    drinkorder.cpp \
     dbmanager.cpp \
     page_maintenance.cpp \
     page_error_wifi.cpp \

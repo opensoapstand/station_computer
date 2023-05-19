@@ -170,7 +170,7 @@ int main(int argc, char *argv[])
     p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle,p_page_idle_products);
     p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product,  p_page_maintenance_general, firstSelectPage, p_pageProduct);
     p_page_idle->setPage(firstSelectPage, p_page_maintenance, p_page_maintenance_general, p_page_idle_products);
-    p_page_idle_products->setPage(firstSelectPage, p_page_maintenance, p_page_maintenance_general, p_page_idle_products);
+    p_page_idle_products->setPage(p_page_idle, firstSelectPage, p_page_maintenance, p_page_maintenance_general, p_page_idle_products);
     firstSelectPage->setPage(p_pageProduct, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help);
     p_pageProduct->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, p_page_help,p_pageProductOverview);
     paymentQrPage->setPage(p_pageProduct, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);

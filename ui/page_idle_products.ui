@@ -499,6 +499,35 @@
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="printer_status_label">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>230</y>
+     <width>980</width>
+     <height>120</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="toSelectProductPageButton">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>70</y>
+     <width>1081</width>
+     <height>1891</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>product_1_type_label</zorder>
   <zorder>logo_label</zorder>
   <zorder>product_2_photo_label</zorder>
@@ -525,6 +554,8 @@
   <zorder>label_pick_soap</zorder>
   <zorder>helpPage_Button</zorder>
   <zorder>logo_label</zorder>
+  <zorder>printer_status_label</zorder>
+  <zorder>toSelectProductPageButton</zorder>
  </widget>
  <resources/>
  <connections/>

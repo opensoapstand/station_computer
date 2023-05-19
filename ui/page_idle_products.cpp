@@ -89,17 +89,17 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void page_idle_products::setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products)
+void page_idle_products::setPage(page_idle *pageIdle, page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products)
 {
     // Chained to KB Listener
     this->p_pageSelectProduct = p_pageProduct;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_maintenance_general = pageMaintenanceGeneral;
     this->p_page_idle_products = p_page_idle_products;
+    this->p_page_idle = pageIdle;
 
-    setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
 }
-
 
 // DTOR
 page_idle_products::~page_idle_products()
@@ -109,6 +109,21 @@ page_idle_products::~page_idle_products()
 
 void page_idle_products::showEvent(QShowEvent *event)
 {
+    qDebug() << "open db: payment method";
+    bool needsReceiptPrinter = false;
+    for (int slot = 1; slot <= SLOT_COUNT; slot++)
+    {
+        QString paymentMethod = p_page_idle->products[slot - 1].getPaymentMethod();
+        if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
+        {
+            needsReceiptPrinter = true;
+            qDebug() << "Needs receipt printer: " << paymentMethod;
+            break;
+        }
+
+        p_page_idle->products[slot - 1].setDiscountPercentageFraction(0.0);
+        p_page_idle->products[slot - 1].setPromoCode("");
+    }
     qDebug() << "<<<<<<< Page Enter: Select Product >>>>>>>>>";
     this->lower();
     QWidget::showEvent(event);
@@ -129,31 +144,18 @@ void page_idle_products::showEvent(QShowEvent *event)
     this->raise();
     addCompanyLogoToLabel(ui->logo_label);
 
-    qDebug() << "open db: payment method";
-    bool needsReceiptPrinter = false;
-    for (int slot = 1; slot <= SLOT_COUNT; slot++)
+    ui->printer_status_label->hide(); // always hide here, will show if enabled and has problems.
+    if (needsReceiptPrinter)
     {
-        QString paymentMethod = p_page_idle->products[slot - 1].getPaymentMethod();
-        if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
-        {
-            needsReceiptPrinter = true;
-            qDebug() << "Needs receipt printer: " << paymentMethod;
-            break;
-        }
-
-
-        p_page_idle->products[slot - 1].setDiscountPercentageFraction(0.0);
-        p_page_idle->products[slot - 1].setPromoCode("");
+        checkReceiptPrinterStatus();
     }
 }
 void page_idle_products::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
 }
-    
-    
 
-    void page_idle_products::displayProducts()
+void page_idle_products::displayProducts()
 {
     QString product_type_icons[5] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH};
 
@@ -237,6 +239,27 @@ void page_idle_products::select_product(int slot)
     hideCurrentPageAndShowProvided(p_page_product);
 }
 
+void page_idle_products::checkReceiptPrinterStatus()
+{
+    qDebug() << "db idle_products check printer";
+    DbManager db(DB_PATH);
+    bool isPrinterOnline = false;
+    bool hasPrinterPaper = false;
+    bool hasReceiptPrinter = db.hasReceiptPrinter();
+    db.printerStatus(&isPrinterOnline, &hasPrinterPaper);
+    db.closeDB();
+
+    if (hasReceiptPrinter)
+    {
+        qDebug() << "Check receipt printer functionality disabled.";
+        this->p_page_maintenance_general->send_check_printer_status_command();
+        ui->toSelectProductPageButton->hide(); // when printer needs to be restarted, it can take some time. Make sure nobody presses the button in that interval (to prevent crashes)
+    }
+    else
+    {
+        qDebug() << "Can't check receipt printer. Not enabled in db->machine table";
+    }
+}
 void page_idle_products::addCompanyLogoToLabel(QLabel *label)
 {
     qDebug() << "db init company logo";
@@ -267,11 +290,33 @@ void page_idle_products::onProductPageTimeoutTick()
     }
 }
 
-
 void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     productPageEndTimer->stop();
     qDebug() << "Exit select product page.";
     this->raise();
     p_page_idle->pageTransition(this, pageToShow);
+}
+
+void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
+{
+    qDebug() << "Printer feedback received from fsm";
+
+    if (!isOnline)
+    {
+        ui->printer_status_label->raise();
+        ui->printer_status_label->setText("Assistance needed\nReceipt Printer offline.");
+        ui->printer_status_label->show();
+    }
+    else if (!hasPaper)
+    {
+        ui->printer_status_label->raise();
+        ui->printer_status_label->setText("Assistance needed\nReceipt printer empty or improperly loaded.");
+        ui->printer_status_label->show();
+    }
+    else
+    {
+        ui->printer_status_label->hide();
+    }
+    ui->toSelectProductPageButton->show();
 }

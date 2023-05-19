@@ -50,7 +50,7 @@ class page_idle_products : public QWidget
 
 public:
     explicit page_idle_products(QWidget *parent = nullptr);
-    void setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products);
+    void setPage(page_idle *pageIdle, page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products);
     // function body
     ~page_idle_products();
 
@@ -58,6 +58,8 @@ public:
     void displayProducts();
     void addCompanyLogoToLabel(QLabel *label);
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
+
+    void printerStatusFeedback(bool isOnline, bool hasPaper);
 
     QLabel *selectProductPhotoLabels[4];
     QLabel *selectProductOverlayLabels[4];
@@ -76,6 +78,8 @@ private:
     void showEvent(QShowEvent *event);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void resizeEvent(QResizeEvent *event);
+    void checkReceiptPrinterStatus();
+
     Ui::page_idle_products *ui;
     // productPage_2 *selection_PageTwo;
     pageProduct *p_page_product;

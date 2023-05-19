@@ -39,8 +39,9 @@ class pageProduct;
 class page_maintenance;
 class page_help;
 
-namespace Ui {
-class page_idle_products;
+namespace Ui
+{
+    class page_idle_products;
 }
 
 class page_idle_products : public QWidget
@@ -49,31 +50,26 @@ class page_idle_products : public QWidget
 
 public:
     explicit page_idle_products(QWidget *parent = nullptr);
-    void setPage(pageProduct *pageSizeSelect, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp);
-    // function body
-    ~page_idle_products();
-    
+    void setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products);
+        // function body
+        ~page_idle_products();
+
     void select_product(int slot);
     void displayProducts();
     void addCompanyLogoToLabel(QLabel *label);
 
-
-    
-
-    QLabel* selectProductPhotoLabels[4];
-    QLabel* selectProductOverlayLabels[4];
+    QLabel *selectProductPhotoLabels[4];
+    QLabel *selectProductOverlayLabels[4];
     // QLabel* selectProductNameLabels[4];
-    QLabel* selectProductIconLabels[4];
-    QLabel* selectProductTypeLabels[4];
-    QLabel* selectProductPhotoLabelsText[4];
-    
+    QLabel *selectProductIconLabels[4];
+    QLabel *selectProductTypeLabels[4];
+    QLabel *selectProductPhotoLabelsText[4];
+
 private slots:
     // **** Navigation ****
 
-    
     void onProductPageTimeoutTick();
     // void on_p_page_maintenanceButton_pressed();
-    
 
 private:
     void showEvent(QShowEvent *event);
@@ -82,19 +78,18 @@ private:
     Ui::page_idle_products *ui;
     // productPage_2 *selection_PageTwo;
     pageProduct *p_page_product;
-    page_idle* p_page_idle;
+    page_idle *p_page_idle;
 
     QResizeEvent *productResize;
 
     int _productPageTimeoutSec;
-    QTimer* productPageEndTimer;
+    QTimer *productPageEndTimer;
 
-    page_maintenance* p_page_maintenance;
+    page_maintenance *p_page_maintenance;
 
-    page_help* p_page_help;
+    page_help *p_page_help;
 
     int maintenanceCounter;
-
 };
 
 #endif // page_idle_products_H

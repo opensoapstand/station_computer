@@ -89,17 +89,18 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void page_idle_products::setPage(pageProduct *pageSizeSelect, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp)
+void page_idle_products::setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products)
 {
-    this->p_page_product = pageSizeSelect;
-    this->p_page_idle = pageIdle;
+    // Chained to KB Listener
+    this->p_pageSelectProduct = p_pageProduct;
     this->p_page_maintenance = pageMaintenance;
-    this->p_page_help = pageHelp;
-
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
-    QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
-    qDebug() << full_path;
+    this->p_page_maintenance_general = pageMaintenanceGeneral;
+    this->p_page_idle_products = p_page_idle_products;
+#ifndef PLAY_VIDEO
+    setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
+#endif
 }
+
 
 // DTOR
 page_idle_products::~page_idle_products()

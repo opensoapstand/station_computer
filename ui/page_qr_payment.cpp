@@ -46,35 +46,12 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
 
     ui->pushButton_payment_bypass->setEnabled(false);
     state_payment = s_init;
-    QString css_title = "QLabel{"
-                        "font-family: 'Brevia';"
-                        "font-style: normal;"
-                        "font-weight: 500;"
-                        "font-size: 64px;"
-                        "line-height: 86px;"
-                        "text-align: center;"
-                        "text-transform: lowercase;"
-                        "color: #003840;"
-                        "text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);"
-                        "}";
-    ui->title_Label->setStyleSheet(css_title);
+    
     ui->title_Label->setText("pay by phone");
 
     ui->scan_Label->setText(
         "Scan to Pay");
-    QString css_scan = "QLabel{"
-                       "text-align: center;"
-                       "font-family: 'Montserrat';"
-                       "font-style: normal;"
-                       "font-weight: 600;"
-                       "font-size: 48px;"
-                       "color: #5E8580;"
-                       "} .tab {"
-                       "display: inline-block;"
-                       "margin-left: 40px;"
-                       "}";
-    ui->scan_Label->setStyleSheet(css_scan);
-
+    
     ui->steps_Label->setText(
         "<style>"
         "li:{margin-top:10px;}"
@@ -86,21 +63,7 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
         "<li><span class='tab'></span>The station will proceed after payment<br></li>"
         "<li><span class='tab'></span>Refill your soap!</li>"
         "</ol>");
-    QString css_steps = "QLabel{"
-                        "position: absolute;"
-                        "width: 777px;"
-                        "height: 306px;"
-                        "left: 143px;"
-                        "top: 1029px;"
-                        "font-family: 'Montserrat';"
-                        "font-style: normal;"
-                        "font-weight: 600;"
-                        "font-size: 36px;"
-                        "line-height: 51px;"
-                        "color: #003840;"
-                        "}";
-    ui->steps_Label->setStyleSheet(css_steps);
-
+    
     ui->processing_Label->setText(
         "it can take a few moments for the station to<br>continue after your payment is confirmed");
     QString css_processing = "QLabel{"
@@ -223,6 +186,14 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
     ui->pushButton_payment_bypass->setStyleSheet(styleSheet);
     ui->pushButton_refresh->setStyleSheet(styleSheet);
+    ui->title_Label->setStyleSheet(styleSheet);
+    ui->scan_Label->setStyleSheet(styleSheet);
+
+    ui->steps_Label->setStyleSheet(styleSheet);
+
+
+
+
 
 
     qDebug() << "<<<<<<< Page Enter: Payment >>>>>>>>>";

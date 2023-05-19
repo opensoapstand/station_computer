@@ -292,8 +292,8 @@ void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 
 
 
-void page_idle_products::on_helpPage_Button_clicked()
-{
-    qDebug() << "Help_Button pressed";
-    hideCurrentPageAndShowProvided(p_page_help);
-}
+// void page_idle_products::on_helpPage_Button_clicked()
+// {
+//     qDebug() << "Help_Button pressed";
+//     hideCurrentPageAndShowProvided(p_page_help);
+// }

@@ -42,7 +42,7 @@ QPushButton {
    color: #003840;
 }
 
-processing_Label{
+#processing_Label {
    position: absolute;
    width: 777px;
    height: 306px;
@@ -54,55 +54,23 @@ processing_Label{
    font-size: 36px;
    line-height: 51px;
    color: #003840;
-   }
-
-
-/* "QPushButton { background-color: transparent; border: 0px }" */
-
-/* QPushButton {
-   background-color: transparent;
-   border: 0px;
 }
 
+QMessageBox {
+   min-width: 7000px;
+   font-size: 24px;
+   font-weight: bold;
+   font-style: normal;
+   font-family: 'Montserrat';
+}
+
+QMessageBox.msgBoxbutton QPushButton{
+   font-size: 24px;
+   min-width: 300px;
+   min-height: 300px;
+}
 
 QLabel {
-
-   font-family: 'Brevia';
-   font-style: normal;
-   font-weight: 700;
-   font-size: 85px;
-   line-height: 95px;
-   text-align: center;
-   letter-spacing: 1.5px;
-   text-transform: lowercase;
-   color: #FFFFFF;
-   qproperty-alignment: AlignCenter;
+   /*this label controls the color of the checkbox */
+   color: black;
 }
-
-
-#thank_you_subtitle_message_label {
-   font-family: 'Montserrat';
-   font-style: normal;
-   font-weight: 600;
-   font-size: 36px;
-   line-height: 44px;
-   text-align: center;
-   letter-spacing: 1.5px;
-   color: #FFFFFF;
-   qproperty-alignment: AlignCenter;
-}
-
-
-.volumeDispensedStylesheet {
-
-   font-family: 'Brevia';
-   font-style: normal;
-   font-weight: 100;
-   font-size: 42px;
-   text-align: centre;
-   line-height: auto;
-   letter-spacing: 0px;
-   qproperty-alignment: AlignCenter;
-   border-radius: 20px;
-   color: #ffffff;
-   /* / "color: #5e8580; */

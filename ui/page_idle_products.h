@@ -51,12 +51,13 @@ class page_idle_products : public QWidget
 public:
     explicit page_idle_products(QWidget *parent = nullptr);
     void setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products);
-        // function body
-        ~page_idle_products();
+    // function body
+    ~page_idle_products();
 
     void select_product(int slot);
     void displayProducts();
     void addCompanyLogoToLabel(QLabel *label);
+    void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
 
     QLabel *selectProductPhotoLabels[4];
     QLabel *selectProductOverlayLabels[4];
@@ -85,7 +86,10 @@ private:
     int _productPageTimeoutSec;
     QTimer *productPageEndTimer;
 
+    page_select_product *p_pageSelectProduct;
     page_maintenance *p_page_maintenance;
+    page_maintenance_general *p_page_maintenance_general;
+    page_idle_products *p_page_idle_products;
 
     page_help *p_page_help;
 

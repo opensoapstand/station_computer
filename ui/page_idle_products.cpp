@@ -96,9 +96,8 @@ void page_idle_products::setPage(page_select_product *p_pageProduct, page_mainte
     this->p_page_maintenance = pageMaintenance;
     this->p_page_maintenance_general = pageMaintenanceGeneral;
     this->p_page_idle_products = p_page_idle_products;
-#ifndef PLAY_VIDEO
+
     setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
-#endif
 }
 
 

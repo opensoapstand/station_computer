@@ -48,7 +48,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     ui->setupUi(this);
 
     ui->pushButton_test->raise();
-    //ui->pushButton_to_select_product_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    // ui->pushButton_to_select_product_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->pushButton_to_select_product_page->raise();
 
     // TODO: Hold and pass Product Object
@@ -80,12 +80,10 @@ page_idle::~page_idle()
 void page_idle::showEvent(QShowEvent *event)
 {
     QString styleSheet = getCSS(PAGE_IDLE_CSS);
-    ui->pushButton_to_select_product_page->setStyleSheet(styleSheet); 
+    ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
     ui->label_welcome_message->setStyleSheet(styleSheet);
     ui->pushButton_test->setStyleSheet(styleSheet);
     ui->label_printer_status->setStyleSheet(styleSheet);
-
-
 
     qDebug() << "open db: payment method";
     bool needsReceiptPrinter = false;
@@ -121,7 +119,6 @@ void page_idle::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     ui->label_welcome_message->setText("refill soap here! <br>tap screen to start");
-    
 
     addCompanyLogoToLabel(ui->logo_label);
 
@@ -131,7 +128,8 @@ void page_idle::showEvent(QShowEvent *event)
         checkReceiptPrinterStatus();
     }
 
-    addPictureToLabel(ui->drinkfill_logo_label, DRINKFILL_LOGO_VERTICAL_PATH);
+    QString machine_logo_full_path = getTemplatePathFromName(MACHINE_LOGO_PATH);
+    addPictureToLabel(ui->drinkfill_logo_label, machine_logo_full_path);
 
 // #define PLAY_VIDEO
 #ifdef PLAY_VIDEO
@@ -299,7 +297,7 @@ void page_idle::addCompanyLogoToLabel(QLabel *label)
     qDebug() << "db closed";
     if (id.at(0) == 'C')
     {
-        QString logo_path = QString(COMPANY_LOGO_PATH).arg(id);
+        QString logo_path = QString(CLIENT_LOGO_PATH).arg(id);
         addPictureToLabel(label, logo_path);
     }
     else
@@ -390,7 +388,8 @@ void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QStrin
     setBackgroundPictureToQWidget(p_widget, image_path);
 }
 
-void page_idle::setBackgroundPictureToQWidget(QWidget *p_widget, QString image_path){
+void page_idle::setBackgroundPictureToQWidget(QWidget *p_widget, QString image_path)
+{
     QPixmap background(image_path);
 
     // background = background.scaled(p_widget->size(), Qt::IgnoreAspectRatio);
@@ -400,5 +399,3 @@ void page_idle::setBackgroundPictureToQWidget(QWidget *p_widget, QString image_p
     p_widget->repaint();
     p_widget->update();
 }
-
-

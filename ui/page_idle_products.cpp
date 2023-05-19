@@ -252,7 +252,7 @@ void page_idle_products::addCompanyLogoToLabel(QLabel *label)
     qDebug() << "db closed";
     if (id.at(0) == 'C')
     {
-        QString logo_path = QString(COMPANY_LOGO_PATH).arg(id);
+        QString logo_path = QString(CLIENT_LOGO_PATH).arg(id);
         p_page_idle->addPictureToLabel(label, logo_path);
     }
     else

@@ -245,7 +245,7 @@ line-height: 29px;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="processing_Label">
+  <widget class="QLabel" name="label_processing">
    <property name="geometry">
     <rect>
      <x>100</x>
@@ -267,7 +267,7 @@ line-height: 29px;</string>
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="steps_Label">
+  <widget class="QLabel" name="label_steps">
    <property name="geometry">
     <rect>
      <x>100</x>
@@ -280,7 +280,7 @@ line-height: 29px;</string>
     <string>steps</string>
    </property>
   </widget>
-  <widget class="QLabel" name="title_Label">
+  <widget class="QLabel" name="label_title">
    <property name="geometry">
     <rect>
      <x>190</x>
@@ -296,7 +296,7 @@ line-height: 29px;</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="scan_Label">
+  <widget class="QLabel" name="label_scan">
    <property name="geometry">
     <rect>
      <x>90</x>
@@ -335,11 +335,11 @@ line-height: 29px;</string>
   <zorder>productLabel</zorder>
   <zorder>qrCode</zorder>
   <zorder>refreshLabel</zorder>
-  <zorder>steps_Label</zorder>
-  <zorder>title_Label</zorder>
-  <zorder>scan_Label</zorder>
+  <zorder>label_steps</zorder>
+  <zorder>label_title</zorder>
+  <zorder>label_scan</zorder>
   <zorder>animated_Label</zorder>
-  <zorder>processing_Label</zorder>
+  <zorder>label_processing</zorder>
  </widget>
  <resources/>
  <connections/>

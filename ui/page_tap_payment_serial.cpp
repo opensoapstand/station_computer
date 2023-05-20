@@ -62,7 +62,7 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
     connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
 
     ui->pushButton_payment_bypass->setEnabled(false);
-    ui->title_Label->hide();
+    ui->label_title->hide();
 
     // ui->order_total_amount->hide();
     DbManager db(DB_PATH);
@@ -231,7 +231,7 @@ void page_tap_payment_serial::idlePaymentTimeout()
 }
 void page_tap_payment_serial::resetPaymentPage()
 {
-    ui->title_Label->hide();
+    ui->label_title->hide();
 
     stopPayTimers();
     transactionLogging = "";

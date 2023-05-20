@@ -28,8 +28,7 @@ page_error_wifi::page_error_wifi(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->wifi_ack_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->mainPageButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    
     timeoutTimer = new QTimer(this);
     timeoutTimer->setInterval(20);
     connect(timeoutTimer, SIGNAL(timeout()), this, SLOT(onTimeOutTick()));
@@ -55,6 +54,13 @@ page_error_wifi::~page_error_wifi()
 
 void page_error_wifi::showEvent(QShowEvent *event)
 {
+
+ QString styleSheet = p_page_idle->getCSS(PAGE_ERROR_WIFI_CSS);
+
+    ui->wifi_ack_Button->setStyleSheet(styleSheet);
+    ui->mainPageButton->setStyleSheet(styleSheet);
+
+
     qDebug() << "<<<<<<< Page Enter: (Wifi) error >>>>>>>>>";
     
     QWidget::showEvent(event);

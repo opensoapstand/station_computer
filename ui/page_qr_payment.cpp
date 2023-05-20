@@ -47,12 +47,12 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
     ui->pushButton_payment_bypass->setEnabled(false);
     state_payment = s_init;
     
-    ui->title_Label->setText("pay by phone");
+    ui->label_title->setText("pay by phone");
 
-    ui->scan_Label->setText(
+    ui->label_scan->setText(
         "Scan to Pay");
     
-    ui->steps_Label->setText(
+    ui->label_steps->setText(
         "<style>"
         "li:{margin-top:10px;}"
         "</style>"
@@ -64,7 +64,7 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
         "<li><span class='tab'></span>Refill your soap!</li>"
         "</ol>");
     
-    ui->processing_Label->setText(
+    ui->label_processing->setText(
         "it can take a few moments for the station to<br>continue after your payment is confirmed");
     
     ui->order_total_amount->hide();
@@ -173,10 +173,10 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
     ui->pushButton_payment_bypass->setStyleSheet(styleSheet);
     ui->pushButton_refresh->setStyleSheet(styleSheet);
-    ui->title_Label->setStyleSheet(styleSheet);
-    ui->scan_Label->setStyleSheet(styleSheet);
-    ui->steps_Label->setStyleSheet(styleSheet);
-    ui->processing_Label->setStyleSheet(styleSheet);
+    ui->label_title->setStyleSheet(styleSheet);
+    ui->label_scan->setStyleSheet(styleSheet);
+    ui->label_steps->setStyleSheet(styleSheet);
+    ui->label_processing->setStyleSheet(styleSheet);
 
 
 
@@ -194,15 +194,15 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->qrCode->show();
     ui->productLabel->show();
     ui->order_drink_amount->show();
-    ui->title_Label->setText("pay by phone");
-    ui->scan_Label->setText("Scan to Pay");
+    ui->label_title->setText("pay by phone");
+    ui->label_scan->setText("Scan to Pay");
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->productLabel->setText(p_page_idle->selectedProduct->getProductName() + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
     ui->order_drink_amount->setText("$" +price);
     ui->order_total_amount->setText("Total: $" +price);
-    ui->steps_Label->show();
-    ui->processing_Label->hide();
+    ui->label_steps->show();
+    ui->label_processing->hide();
 
     // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
     paymentEndTimer = new QTimer(this);
@@ -247,10 +247,10 @@ void page_qr_payment::setupQrOrder()
         ui->qrCode->show();
         ui->productLabel->show();
         ui->order_drink_amount->show();
-        ui->title_Label->hide();
-        ui->scan_Label->hide();
+        ui->label_title->hide();
+        ui->label_scan->hide();
         ui->order_total_amount->hide();
-        ui->steps_Label->hide();
+        ui->label_steps->hide();
         showError->start();
     }
 }
@@ -390,11 +390,11 @@ void page_qr_payment::isQrProcessedCheckOnline()
             ui->productLabel->hide();
             ui->order_drink_amount->hide();
             ui->order_total_amount->hide();
-            ui->steps_Label->hide();
+            ui->label_steps->hide();
 
-            ui->processing_Label->show();
-            ui->scan_Label->setText("Please finalize transaction");
-            ui->title_Label->setText("almost there");
+            ui->label_processing->show();
+            ui->label_scan->setText("Please finalize transaction");
+            ui->label_title->setText("almost there");
         }
         else
         {
@@ -482,7 +482,6 @@ bool page_qr_payment::exitConfirm()
 
     msgBox.setStyleSheet(styleSheet);
 
-
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     int ret = msgBox.exec();
     bool success;
@@ -534,7 +533,7 @@ void page_qr_payment::idlePaymentTimeout()
 }
 void page_qr_payment::resetPaymentPage()
 {
-    ui->title_Label->hide();
+    ui->label_title->hide();
     transactionLogging = "";
     stopPayTimers();
     response = true;

@@ -145,7 +145,7 @@ color: #58595B;</string>
     <string>order summary</string>
    </property>
   </widget>
-  <widget class="QLabel" name="title_Label">
+  <widget class="QLabel" name="label_title">
    <property name="geometry">
     <rect>
      <x>190</x>

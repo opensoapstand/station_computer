@@ -82,7 +82,7 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
     connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
 
     ui->pushButton_payment_bypass->setEnabled(false);
-    ui->title_Label->hide();
+    ui->label_title->hide();
 
     // ui->order_total_amount->hide();
     DbManager db(DB_PATH);
@@ -324,8 +324,8 @@ void page_tap_payment::check_card_tapped()
     {
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
         qDebug() << "Packet received true";
-        ui->title_Label->setText("Processing Payment");
-        // ui->title_Label->show();
+        ui->label_title->setText("Processing Payment");
+        // ui->label_title->show();
         checkCardTappedTimer->stop();
         QMovie *currentGif = ui->animated_Label->movie();
         if (currentGif)
@@ -460,7 +460,7 @@ void page_tap_payment::idlePaymentTimeout()
 }
 void page_tap_payment::resetPaymentPage()
 {
-    ui->title_Label->hide();
+    ui->label_title->hide();
 
     stopPayTimers();
     transactionLogging = "";

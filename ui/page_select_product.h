@@ -44,30 +44,30 @@ public:
     void displayProducts();
     
 
-    QPushButton* selectProductButtons[4];
-    QLabel* selectProductPhotoLabels[4];
+    QPushButton* pushButtons_product_select[4];
+    QLabel* labels_product_picture[4];
     QLabel* selectProductOverlayLabels[4];
-    QLabel* selectProductNameLabels[4];
-    QLabel* selectProductIconLabels[4];
-    QLabel* selectProductTypeLabels[4];
-    QLabel* selectProductPhotoLabelsText[4];
+    QLabel* labels_product_name[4];
+    QLabel* labels_product_icon[4];
+    QLabel* labels_product_type[4];
+    QLabel* labels_product_overlay_text[4];
     
 private slots:
     // **** Navigation ****
     //void on_nextPageButton_clicked();
     // HACK: Could have better way for modular reference to buttons and drink orders...
-    void on_selection1_Button_clicked();
-    void on_selection2_Button_clicked();
-    void on_selection3_Button_clicked();
-    void on_selection4_Button_clicked();
-    //void on_selection5_Button_clicked();
-    //void on_selection6_Button_clicked();
+    void on_pushButton_selection1_clicked();
+    void on_pushButton_selection2_clicked();
+    void on_pushButton_selection3_clicked();
+    void on_pushButton_selection4_clicked();
+    //void on_pushButton_selection5_clicked();
+    //void on_pushButton_selection6_clicked();
     
     void onProductPageTimeoutTick();
     //void on_backButton_clicked();
     void on_p_page_maintenanceButton_pressed();
-    void on_mainPage_Button_clicked();
-    void on_helpPage_Button_clicked();
+    void on_pushButton_to_idle_clicked();
+    void on_pushButton_help_page_clicked();
 
 private:
     void showEvent(QShowEvent *event);

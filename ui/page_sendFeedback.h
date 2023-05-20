@@ -63,25 +63,27 @@ signals:
 
 private slots:
     // **** Navigation ****
-//     void on_previousPage_Button_clicked();
+//     void on_pushButton_previous_page_clicked();
     // void on_page_qr_payment_Button_clicked();
-    // void on_promoCodeInput_clicked();
+    // void on_lineEdit_promo_codeInput_clicked();
 
     // Set Drink Order
-    void on_mainPage_Button_clicked();
+    void on_pushButton_to_idle_clicked();
     void onSelectTimeoutTick();
 
-    void on_send_Button_clicked();
+    void on_pushButton_send_clicked();
 
     // void keyboardButtonPressed(int);
-    void on_previousPage_Button_clicked();
-    void on_feedback_Input_Button_clicked();
+    void on_pushButton_previous_page_clicked();
+    void on_pushButton_start_input_clicked();
     void on_feedback_Text_Input_clicked();
     void keyboardButtonPressed(int);
 
     
 
     void on_feedbackText_cursorPositionChanged(int arg1, int arg2);
+
+    void on_pushButton_help_page_clicked();
 
 private:
     int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};

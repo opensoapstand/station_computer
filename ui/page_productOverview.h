@@ -68,15 +68,15 @@ signals:
 
 private slots:
     // **** Navigation ****
-    void on_previousPage_Button_clicked();
+    void on_pushButton_previous_page_clicked();
     void on_page_qr_payment_Button_clicked();
     void on_applyPromo_Button_clicked();
-    void on_promoCodeInput_clicked();
-    void on_selectProductPage_Button_clicked();
+    void on_lineEdit_promo_codeInput_clicked();
+    void on_pushButton_select_product_page_clicked();
     void return_to_selectProductPage();
     void updatePrice();
     // Set Drink Order
-    void on_mainPage_Button_clicked();
+    void on_pushButton_to_idle_clicked();
     void onSelectTimeoutTick();
     void keyboardButtonPressed(int);
 private:

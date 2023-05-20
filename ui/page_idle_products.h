@@ -61,19 +61,20 @@ public:
 
     void printerStatusFeedback(bool isOnline, bool hasPaper);
 
-    QLabel *selectProductPhotoLabels[4];
-    QLabel *selectProductOverlayLabels[4];
-    // QLabel* selectProductNameLabels[4];
-    QLabel *selectProductIconLabels[4];
-    QLabel *selectProductTypeLabels[4];
-    QLabel *selectProductPhotoLabelsText[4];
-
+    QLabel* labels_product_picture[4];
+    QLabel* selectProductOverlayLabels[4];
+    // QLabel* labels_product_name[4];
+    QLabel* labels_product_icon[4];
+    QLabel* labels_product_type[4];
+    QLabel* labels_product_overlay_text[4];
+    
 private slots:
     // **** Navigation ****
 
-    // void onProductPageTimeoutTick();
-    void on_toSelectProductPageButton_clicked();
-    // void on_p_page_maintenanceButton_pressed();
+    
+    void onProductPageTimeoutTick();
+    void on_p_page_maintenanceButton_pressed();
+    void on_pushButton_to_select_product_page_clicked();
 
 private:
     void showEvent(QShowEvent *event);

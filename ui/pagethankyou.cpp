@@ -23,8 +23,6 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
 {
     ui->setupUi(this);
 
-    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-
     ui->extra_message_label->hide();
     connect(ui->notifyUs_Button, SIGNAL(clicked()), this, SLOT(on_notifyUs_Button_clicked()));
 
@@ -33,24 +31,6 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
     connect(thankYouEndTimer, SIGNAL(timeout()), this, SLOT(onThankyouTimeoutTick()));
 
     is_in_state_thank_you = false;
-
-    QString volumeDispensedStylesheet = "QLabel {"
-
-                                        "font-family: 'Brevia';"
-                                        "font-style: normal;"
-                                        "font-weight: 100;"
-                                        "font-size: 42px;"
-                                        "text-align: centre;"
-                                        "line-height: auto;"
-                                        "letter-spacing: 0px;"
-                                        "qproperty-alignment: AlignCenter;"
-                                        "border-radius: 20px;"
-                                        "color: #ffffff;"
-                                        // "color: #5e8580;"
-                                        "border: none;"
-                                        "}";
-    ui->volumeDispensedLabel->setStyleSheet(volumeDispensedStylesheet);
-    ui->label_volume_dispensed->setStyleSheet(volumeDispensedStylesheet);
 }
 
 /*
@@ -72,40 +52,26 @@ pagethankyou::~pagethankyou()
 
 void pagethankyou::showEvent(QShowEvent *event)
 {
+
+    QString styleSheet = p_page_idle->getCSS(PAGETHANKYOU_CSS);
+
+    ui->pushButton_to_idle->setStyleSheet(styleSheet);
+    ui->thank_you_message_label->setStyleSheet(styleSheet);
+    ui->thank_you_subtitle_message_label->setStyleSheet(styleSheet);
+
+    ui->volumeDispensedLabel->setProperty("class", "volumeDispensedStylesheet");   // set property goes first!!
+    ui->label_volume_dispensed->setProperty("class", "volumeDispensedStylesheet"); // set property goes first!!
+
+    ui->volumeDispensedLabel->setStyleSheet(styleSheet);
+    ui->label_volume_dispensed->setStyleSheet(styleSheet);
+    ui->notifyUs_Button->setStyleSheet(styleSheet);
+
     qDebug() << "<<<<<<< Page Enter: Thank you >>>>>>>>>";
 
     QWidget::showEvent(event);
 
-    ui->thank_you_message_label->setStyleSheet(
-        "QLabel {"
-
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 700;"
-        "font-size: 85px;"
-        "line-height: 95px;"
-        "text-align: center;"
-        "letter-spacing: 1.5px;"
-        "text-transform: lowercase;"
-        "color: #FFFFFF;"
-        "qproperty-alignment: AlignCenter;"
-        "}");
-
-    ui->thank_you_subtitle_message_label->setStyleSheet(
-        "QLabel {"
-        "font-family: 'Montserrat';"
-        "font-style: normal;"
-        "font-weight: 600;"
-        "font-size: 36px;"
-        "line-height: 44px;"
-        "text-align: center;"
-        "letter-spacing: 1.5px;"
-        "color: #FFFFFF;"
-        "qproperty-alignment: AlignCenter;"
-        "}");
-
-    ui->mainPage_Button->setEnabled(true);
-    ui->mainPage_Button->raise();
+    ui->pushButton_to_idle->setEnabled(true);
+    ui->pushButton_to_idle->raise();
 
     QFont font;
     font.setFamily(QStringLiteral("Brevia"));
@@ -113,7 +79,6 @@ void pagethankyou::showEvent(QShowEvent *event)
     // font.setBold(true);
     // font.setWeight(75);
     font.setWeight(50);
-    ui->notifyUs_Button->setStyleSheet("QPushButton { color:#003840; background-color: #FFFFFF; border: 0px ; text-align: centre;border-radius: 20px;border: none;}");
     ui->notifyUs_Button->setFont(font);
     ui->notifyUs_Button->setText("Provide Feedback");
     ui->notifyUs_Button->raise();
@@ -171,7 +136,9 @@ void pagethankyou::showEvent(QShowEvent *event)
     }
     _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     thankYouEndTimer->start();
-    p_page_idle->addPictureToLabel(ui->drinkfill_logo_label2, DRINKFILL_LOGO_VERTICAL_PATH);
+
+    QString machine_logo_full_path = p_page_idle->getTemplatePathFromName(MACHINE_LOGO_PATH);
+    p_page_idle->addPictureToLabel(ui->drinkfill_logo_label2, machine_logo_full_path);
 
     QString units = p_page_idle->selectedProduct->getUnitsForSlot();
     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->selectedProduct->getVolumeDispensedMl(), units, false, true);
@@ -285,7 +252,7 @@ void pagethankyou::onThankyouTimeoutTick()
     }
 }
 
-void pagethankyou::on_mainPage_Button_clicked()
+void pagethankyou::on_pushButton_to_idle_clicked()
 {
     qDebug() << "main page button clicked.";
     finishHandler();

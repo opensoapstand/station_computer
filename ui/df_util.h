@@ -92,8 +92,18 @@ using namespace std;
 #define TRANSACTION_HISTORY_COUNT 15
 
 #define PRODUCT_PICTURES_ROOT_PATH "/home/df-admin/production/references/products/%1.png"
-#define COMPANY_LOGO_PATH                           "/home/df-admin/production/references/logos/%1_logo_white.png"
+#define CLIENT_LOGO_PATH                           "/home/df-admin/production/references/logos/%1_logo_white.png"
 #define PAGE_HELP_CSS                                   "page_help.css"
+#define PAGE_FEEDBACK_CSS                               "page_sendFeedback.css"
+#define PAGE_IDLE_CSS                                   "page_idle.css"
+#define PAGE_SELECT_PRODUCT_CSS                         "page_select_product.css"
+#define PAGE_PRODUCT_CSS                                "page_product.css"
+#define PAGE_DISPENSER_CSS                              "page_dispenser.css"
+#define PAGE_PRODUCT_OVERVIEW_CSS                       "page_product_overview.css"
+#define PAGETHANKYOU_CSS                                "pagethankyou.css"
+
+
+
 #define PAGE_IDLE_BACKGROUND_PATH                       "background_message.png"
 #define PAGE_IDLE_PRODUCTS_BACKGROUND_PATH              "background_product_select.png"
 #define PAGE_THANK_YOU_BACKGROUND_PATH                  "background_message.png"
@@ -119,7 +129,8 @@ using namespace std;
 #define IMAGE_BUTTON_HELP                               "help_icon.png"
 #define THANK_YOU_FOR_YOUR_FEEDBACK                     "background_feedbacksent.png"
 
-#define KEYBOARD_IMAGE_PATH                         "soapstand-keyboard.png"
+#define KEYBOARD_IMAGE_PATH                             "soapstand-keyboard.png"
+#define MACHINE_LOGO_PATH                               "machine_logo.png"
 // #define FULL_TRANSPARENT_IMAGE_PATH                 "/home/df-admin/production/references/background.png"
 
 #define ICON_TYPE_CONCENTRATE_PATH                  "Soapstand_UI-concentrate-icon.png"
@@ -130,7 +141,7 @@ using namespace std;
                          
 // #define DRINKFILL_LOGO_ANIMATED_PATH                "/home/df-admin/production/references/logos/Soapstand-logo-animated-spin.gif"
 
-#define DRINKFILL_LOGO_VERTICAL_PATH                 "/home/df-admin/production/references/logos/Soapstand-logo-white-vertical.png"
+// #define DRINKFILL_LOGO_VERTICAL_PATH                 "/home/df-admin/production/references/logos/Soapstand-logo-white-vertical.png"
 #define PAGE_HELP_BACKGROUND_PATH                    "background_generic_white_empty.png"
 
 

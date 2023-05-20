@@ -283,7 +283,7 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
         ui->label_printer_status->hide();
     }
     ui->pushButton_to_select_product_page->show();
-    // ui->toSelectProductPageButton->show();
+    // ui->pushButton_to_select_product_page->show();
 }
 
 void page_idle::on_pushButton_to_select_product_page_clicked()

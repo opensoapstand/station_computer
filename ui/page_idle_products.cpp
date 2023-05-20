@@ -145,7 +145,7 @@ void page_idle_products::showEvent(QShowEvent *event)
     // {
     //     checkReceiptPrinterStatus();
     // }
-    ui->toSelectProductPageButton->raise();
+    ui->pushButton_to_select_product_page->raise();
 }
 void page_idle_products::resizeEvent(QResizeEvent *event)
 {
@@ -249,7 +249,7 @@ void page_idle_products::checkReceiptPrinterStatus()
     {
         qDebug() << "Check receipt printer functionality disabled.";
         this->p_page_maintenance_general->send_check_printer_status_command();
-        ui->toSelectProductPageButton->hide(); // when printer needs to be restarted, it can take some time. Make sure nobody presses the button in that interval (to prevent crashes)
+        ui->pushButton_to_select_product_page->hide(); // when printer needs to be restarted, it can take some time. Make sure nobody presses the button in that interval (to prevent crashes)
     }
     else
     {
@@ -314,7 +314,7 @@ void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
     {
         ui->printer_status_label->hide();
     }
-    ui->toSelectProductPageButton->show();
+    ui->pushButton_to_select_product_page->show();
 
     ui->printer_status_label->setStyleSheet(
         "QLabel {"

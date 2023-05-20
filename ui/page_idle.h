@@ -94,7 +94,7 @@ public:
 
 private slots:
     void on_pushButton_to_select_product_page_clicked();
-    //  void on_toSelectProductPageButton_clicked();
+    //  void on_pushButton_to_select_product_page_clicked();
     void onIdlePageTypeSelectorTimerTick();
     //    void on_savedBottles_label_clicked();
 

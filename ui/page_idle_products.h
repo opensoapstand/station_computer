@@ -72,8 +72,8 @@ private slots:
     // **** Navigation ****
 
     
-    void onProductPageTimeoutTick();
-    void on_p_page_maintenanceButton_pressed();
+    // void onProductPageTimeoutTick();
+    // void on_p_page_maintenanceButton_pressed();
     void on_pushButton_to_select_product_page_clicked();
 
 private:

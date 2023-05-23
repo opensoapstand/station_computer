@@ -1,11 +1,15 @@
 QPushButton { 
-    border: 1px solid #5E8580
-}
-#promoCode{ 
-    background-color: transparent; 
     border: 1px solid #5E8580;
 }
-.promoCode1{
+#lineEdit_promo_code{
+    color: #58595B;
+    border: 1px solid #5E8580;
+}
+#pushButton_promo_input{ 
+    background-color: transparent; 
+    border: none;
+}
+.promoCode_invalid_response{
     font-family: Montserrat; 
     font-style: normal; 
     font-weight: bold; 
@@ -14,7 +18,7 @@ QPushButton {
     color: #f44336;
     border-color:#f44336;
 }
-.promoCode2{
+.promoCode_invalid_coupon{
     font-family: Montserrat; 
     font-style: normal; 
     font-weight: bold; 
@@ -23,7 +27,7 @@ QPushButton {
     color: #75756f;
     border-color:#f44336;
 }
-.promoCode3{
+.promoCode_valid{
     font-family: Montserrat; 
     font-style: normal; 
     font-weight: bold; 
@@ -65,6 +69,7 @@ QPushButton {
     border: 0px
 }
 
+
 QLabel {
     position: absolute;
     width: 870px;
@@ -103,18 +108,7 @@ QLabel {
 #label_invoice_box{
     border: 2px solid #5E8580;
 }
-#label_discount_code {
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 75;
-    font-size: 24px;
-    line-height: 99px;
-    letter-spacing: 1.5px;
-    text-transform: lowercase;
-    color: #9F9F9F;
-    text-align: center;
-    qproperty-alignment: AlignCenter;
-}
+
 #label_pay {
     font-family: 'Brevia';
     font-style: normal;
@@ -161,4 +155,3 @@ QLabel {
 #label_product_photo {
     border: 2px solid #5E8580;
 }
-

@@ -63,6 +63,9 @@ public:
     void coupon_input_hide();
     void coupon_input_reset();
 
+    bool areCouponsEnabled();
+    void apply_promo_code();
+
 signals:
     void paymentTotal(string, string, string);
 
@@ -70,7 +73,7 @@ private slots:
     // **** Navigation ****
     void on_pushButton_previous_page_clicked();
     void on_page_qr_payment_Button_clicked();
-    void on_applyPromo_Button_clicked();
+   
     void on_lineEdit_promo_codeInput_clicked();
     void on_pushButton_select_product_page_clicked();
     void return_to_selectProductPage();

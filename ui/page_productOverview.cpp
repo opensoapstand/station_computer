@@ -42,7 +42,7 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
 {
     ui->setupUi(this);
 
-    ui->pushButton_promo_input->setText("Discount code");
+    // ui->pushButton_promo_input->setText("Discount code");
     ui->page_qr_payment_Button->show();
 
     // ui->label_gif->hide();
@@ -63,21 +63,15 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
 
     ui->pushButton_select_product_page->setText("<- Back");
     ui->label_discount_tag->setText("Discount");
-    ui->pushButton_promo_button->setText("Apply");
-    ui->pushButton_promo_button->hide();
-    ui->label_discount_code->setText("Discount code");
+    ui->pushButton_promo_apply->setText("Apply");
     ui->label_pay->setText("Continue");
-    ui->label_invoice_discount_name->show();
-    ui->label_invoice_discount_amount->show();
     ui->label_discount_tag->show();
-    // ui->pushButton_promo_button->show();
-    ui->promoKeyboard->hide();
     ui->label_total->setText("Total");
 
     {
         selectIdleTimer = new QTimer(this);
         selectIdleTimer->setInterval(40);
-        // connect(ui->pushButton_promo_button, SIGNAL(clicked()), this, SLOT(on_applyPromo_Button_clicked()));
+        // connect(ui->pushButton_promo_apply, SIGNAL(clicked()), this, SLOT(apply_promo_code()));
         connect(ui->pushButton_promo_input, SIGNAL(clicked()), this, SLOT(on_lineEdit_promo_codeInput_clicked()));
         connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
         connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
@@ -98,8 +92,6 @@ void pageProductOverview::setPage(page_select_product *pageSelect, page_dispense
     this->p_page_help = pageHelp;
     this->p_page_wifi_error = pageWifiError;
     this->p_page_product = page_product;
-    ui->label_invoice_discount_amount->hide();
-    ui->label_invoice_discount_name->hide();
     ui->label_discount_tag->hide();
     ui->label_gif->hide();
 
@@ -123,7 +115,7 @@ void pageProductOverview::showEvent(QShowEvent *event)
 {
     QString styleSheet = p_page_idle->getCSS(PAGE_PRODUCT_OVERVIEW_CSS);
     ui->pushButton_promo_input->setStyleSheet(styleSheet);
-     ui->lineEdit_promo_code->setProperty("class", "promoCode1");
+    ui->lineEdit_promo_code->setProperty("class", "promoCode_invalid_response");
     ui->lineEdit_promo_code->setStyleSheet(styleSheet);
     //  ui->label_product_title->setStyleSheet(styleSheet);
     ui->label_selected_volume->setStyleSheet(styleSheet);
@@ -138,9 +130,8 @@ void pageProductOverview::showEvent(QShowEvent *event)
     ui->label_discount_tag->setStyleSheet(styleSheet);
     ui->label_invoice_discount_amount->setStyleSheet(styleSheet);
     ui->label_invoice_box->setStyleSheet(styleSheet);
-    ui->pushButton_promo_button->setProperty("class", "buttonPromo");
-    ui->pushButton_promo_button->setStyleSheet(styleSheet);
-    ui->label_discount_code->setStyleSheet(styleSheet);
+    ui->pushButton_promo_apply->setProperty("class", "buttonPromo");
+    ui->pushButton_promo_apply->setStyleSheet(styleSheet);
     ui->label_pay->setStyleSheet(styleSheet);
     ui->label_invoice_discount_name->setProperty("class", "labelDiscountName");
     ui->label_invoice_discount_name->setStyleSheet(styleSheet);
@@ -207,7 +198,32 @@ void pageProductOverview::reset_and_show_page_elements()
 
     // Reset the discount percentage to 0 and clear promo code field
 
-    ui->lineEdit_promo_code->clear();
+    // ui->lineEdit_promo_code->clear();
+
+    ui->promoKeyboard->hide();
+    if (areCouponsEnabled())
+    {
+        ui->lineEdit_promo_code->setText("Please tap here to enter promo code");
+        ui->lineEdit_promo_code->show();
+
+        ui->label_invoice_discount_amount->show();
+        ui->label_invoice_discount_name->show();
+        ui->label_discount_tag->show();
+        ui->pushButton_promo_input->show();
+
+        ui->pushButton_promo_apply->show();
+    }
+    else
+    {
+        qDebug() << "disable coupon";
+        coupon_input_hide();
+
+        ui->label_invoice_discount_amount->hide();
+        ui->label_invoice_discount_name->hide();
+        ui->label_discount_tag->hide();
+        ui->pushButton_promo_apply->hide();
+    }
+
     qDebug() << "Reset and show elements";
     p_page_idle->selectedProduct->setDiscountPercentageFraction((0 * 1.0) / 100);
     ui->label_invoice_discount_amount->hide();
@@ -353,7 +369,7 @@ void pageProductOverview::updatePrice()
     }
 }
 
-void pageProductOverview::on_applyPromo_Button_clicked()
+void pageProductOverview::apply_promo_code()
 {
 
     QString promocode = ui->lineEdit_promo_code->text();
@@ -384,7 +400,9 @@ void pageProductOverview::on_applyPromo_Button_clicked()
             curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
             if (res != CURLE_OK)
             {
-                ui->lineEdit_promo_code->setProperty("class", "promoCode1");
+                // ui->lineEdit_promo_code->setProperty("class", "promoCode_invalid_response");
+                p_page_idle->addCssStyleToObject(ui->lineEdit_promo_code, "promoCode_invalid_response", PAGE_PRODUCT_OVERVIEW_CSS);
+
                 qDebug() << "Invalid Coupon curl problem. error code: " << res;
             }
             else
@@ -415,13 +433,15 @@ void pageProductOverview::on_applyPromo_Button_clicked()
                     else
                     {
                         qDebug() << "Invalid Coupon";
-                        ui->lineEdit_promo_code->setProperty("class", "promoCode2");
+                        // ui->lineEdit_promo_code->setProperty("class", "promoCode_invalid_coupon");
+                        p_page_idle->addCssStyleToObject(ui->lineEdit_promo_code, "promoCode_invalid_coupon", PAGE_PRODUCT_OVERVIEW_CSS);
                     }
                 }
                 else
                 {
                     qDebug() << "Invalid Coupon http 200 response";
-                    ui->lineEdit_promo_code->setProperty("class", "promoCode1");
+                    // ui->lineEdit_promo_code->setProperty("class", "promoCode_invalid_response");
+                    p_page_idle->addCssStyleToObject(ui->lineEdit_promo_code, "promoCode_invalid_response", PAGE_PRODUCT_OVERVIEW_CSS);
                 }
             }
         }
@@ -443,11 +463,12 @@ void pageProductOverview::keyboardButtonPressed(int buttonID)
     else if (buttonText == "done")
     {
         ui->promoKeyboard->hide();
-        if (ui->lineEdit_promo_code->text() == "")
-        {
-            ui->lineEdit_promo_code->hide();
-        }
-        on_applyPromo_Button_clicked();
+        // if (ui->lineEdit_promo_code->text() == "")
+        // {
+        //     ui->lineEdit_promo_code->hide();
+        // }
+        ui->pushButton_promo_input->show();
+        apply_promo_code();
     }
     else if (buttonText.mid(0, 3) == "num")
     {
@@ -466,11 +487,20 @@ void pageProductOverview::on_pushButton_previous_page_clicked()
 
 void pageProductOverview::coupon_input_show()
 {
+    qDebug() << "show promo keyboard.";
+    ui->promoKeyboard->show();
+    ui->pushButton_promo_input->hide();
+    ui->lineEdit_promo_code->clear();
+    ui->lineEdit_promo_code->show();
+    p_page_idle->addCssStyleToObject(ui->lineEdit_promo_code, "promoCode_valid", PAGE_PRODUCT_OVERVIEW_CSS);
+    // p_page_idle->addCssStyleToObject(ui->lineEdit_promo_code, "promoCode_invalid_response", PAGE_PRODUCT_OVERVIEW_CSS);
+
 }
 
 void pageProductOverview::coupon_input_hide()
 {
     ui->promoKeyboard->hide();
+    ui->pushButton_promo_input->show();
 }
 
 void pageProductOverview::coupon_input_reset()
@@ -479,14 +509,19 @@ void pageProductOverview::coupon_input_reset()
 
 void pageProductOverview::on_lineEdit_promo_codeInput_clicked()
 {
-    QObject *button = QObject::sender();
-    ui->lineEdit_promo_code->setProperty("class", "promoCode3");
-    ui->label_discount_code->hide();
-    ui->pushButton_promo_input->show();
-    ui->promoKeyboard->show();
-    qDebug() << "show promo keyboard.";
-    ui->lineEdit_promo_code->show();
+    coupon_input_show();
 }
+
+bool pageProductOverview::areCouponsEnabled()
+{
+    qDebug() << "db for coupons";
+
+    DbManager db(DB_PATH);
+    bool coupons_enabled = db.getCouponsEnabled();
+    db.closeDB();
+    return coupons_enabled;
+}
+
 void pageProductOverview::couponHandler()
 {
     qDebug() << "db for coupons";
@@ -495,39 +530,6 @@ void pageProductOverview::couponHandler()
     bool coupons_enabled = db.getCouponsEnabled();
     db.closeDB();
 
-    if (coupons_enabled)
-    {
-        qDebug() << "Coupons are enabled for this machine.";
-
-        ui->pushButton_promo_input->setEnabled(true);
-
-        ui->lineEdit_promo_code->show();
-        ui->promoKeyboard->show();
-        ui->pushButton_promo_input->show();
-        ui->label_invoice_discount_amount->show();
-        ui->label_invoice_discount_name->show();
-        ui->label_discount_tag->show();
-        ui->pushButton_promo_button->show();
-        ui->label_discount_code->show();
-    }
-    else
-    {
-        qDebug() << "Coupons are disabled for this machine.";
-        ui->pushButton_promo_input->setEnabled(false);
-        coupon_disable();
-    }
-}
-void pageProductOverview::coupon_disable()
-{
-    qDebug() << "disable coupon";
-    ui->lineEdit_promo_code->hide();
-    ui->promoKeyboard->hide();
-    ui->pushButton_promo_input->hide();
-    ui->label_invoice_discount_amount->hide();
-    ui->label_invoice_discount_name->hide();
-    ui->label_discount_tag->hide();
-    ui->pushButton_promo_button->hide();
-    ui->label_discount_code->hide();
 }
 
 void pageProductOverview::on_page_qr_payment_Button_clicked()

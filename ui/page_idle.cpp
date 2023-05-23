@@ -13,7 +13,7 @@
 // copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
-
+#include <map>
 #include "page_idle.h"
 #include "ui_page_idle.h"
 #include "page_idle_products.h"
@@ -79,6 +79,12 @@ page_idle::~page_idle()
 
 void page_idle::showEvent(QShowEvent *event)
 {
+
+    qDebug() << "TEST TEXTS LOADING";
+    loadTextsFromCsv();
+    QString result = getText("lode");
+    qDebug() << result;
+
     QString styleSheet = getCSS(PAGE_IDLE_CSS);
     ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
     ui->label_welcome_message->setStyleSheet(styleSheet);
@@ -398,4 +404,56 @@ void page_idle::setBackgroundPictureToQWidget(QWidget *p_widget, QString image_p
     p_widget->setPalette(palette);
     p_widget->repaint();
     p_widget->update();
+}
+
+QString page_idle::getText(QString textName_to_find)
+{
+    auto it = textNameToTextMap.find(toStdString(textName_to_find));
+    QString retval;
+    if (it != textNameToTextMap.end())
+    {
+        // std::cout << "Word found! Sentence: " << it->second ;
+        retval = it->second;
+    }
+    else
+    {
+        retVal = "NOT FOUND"
+    }
+    return retval;
+}
+
+void page_idle::loadTextsFromCsv()
+{
+    // Create an input filestream
+
+    QString name = UI_TEXTS_CSV_PATH;
+    QString csv_path = getTemplatePathFromName(name);
+
+    std::ifstream file(csv_path);
+    if (file.is_open())
+    {
+        std::string line;
+        while (std::getline(file, line))
+        {
+            std::size_t space_pos = line.find(',');
+            if (space_pos != std::string::npos)
+            {
+                std::string word = line.substr(0, space_pos);
+                std::string sentence = line.substr(space_pos + 1);
+                textNameToTextMap[word] = sentence;
+            }
+        }
+        file.close();
+
+        // Print the word-sentence mapping
+        for (const auto &pair : textNameToTextMap)
+        {
+            std::cout << pair.first << ": " << pair.second << std::endl;
+        }
+    }
+    else
+    {
+
+        qDebug() << "Texts file path could not be opened: " + csv_path;
+    }
 }

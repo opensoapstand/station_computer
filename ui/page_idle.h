@@ -65,6 +65,9 @@ public:
     void setSelectedProduct(uint8_t slot);
     product *getSelectedProduct();
 
+    void loadTextsFromCsv();
+    QString getText(QString textName_to_find);
+
     product products[SLOT_COUNT];
     product *selectedProduct;
     
@@ -97,6 +100,8 @@ private slots:
     void on_pushButton_test_clicked();
 
 private:
+   std::map<QString, QString> textNameToTextMap;
+
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void checkReceiptPrinterStatus();
     QString m_templatePath;

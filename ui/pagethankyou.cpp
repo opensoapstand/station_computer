@@ -59,10 +59,10 @@ void pagethankyou::showEvent(QShowEvent *event)
     ui->thank_you_message_label->setStyleSheet(styleSheet);
     ui->thank_you_subtitle_message_label->setStyleSheet(styleSheet);
 
-    ui->volumeDispensedLabel->setProperty("class", "volumeDispensedStylesheet");   // set property goes first!!
-    ui->label_volume_dispensed->setProperty("class", "volumeDispensedStylesheet"); // set property goes first!!
+    ui->label_volume_dispensed_ml->setProperty("class", "volumeDispensedStylesheet");//set property goes first!!
+    ui->label_volume_dispensed->setProperty("class", "volumeDispensedStylesheet");//set property goes first!!
 
-    ui->volumeDispensedLabel->setStyleSheet(styleSheet);
+    ui->label_volume_dispensed_ml->setStyleSheet(styleSheet);
     ui->label_volume_dispensed->setStyleSheet(styleSheet);
     ui->notifyUs_Button->setStyleSheet(styleSheet);
 
@@ -149,7 +149,7 @@ void pagethankyou::showEvent(QShowEvent *event)
     {
         price = p_page_idle->selectedProduct->getVolumeDispensedMl() * price;
     }
-    ui->volumeDispensedLabel->setText(dispensed_correct_units + " ( $" + QString::number(price, 'f', 2) + " )");
+    ui->label_volume_dispensed_ml->setText(dispensed_correct_units + " ( $" + QString::number(price, 'f', 2) + " )");
 }
 
 size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)

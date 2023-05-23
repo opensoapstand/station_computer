@@ -189,7 +189,7 @@ text-transform: uppercase;
     <string>Volume dispensed</string>
    </property>
   </widget>
-  <widget class="QLabel" name="volumeDispensedLabel">
+  <widget class="QLabel" name="label_volume_dispensed_ml">
    <property name="geometry">
     <rect>
      <x>240</x>

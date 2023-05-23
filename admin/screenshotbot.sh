@@ -41,10 +41,12 @@ do
     esac
 done
 
+current_time=$(date +%Y%m%d-%H%M%S)
 while read -r line; do
     # disregard lines starting with #
     [[ "$line" =~ ^#.*$ ]] && continue  
     split_line=($line)
+
 
     if [ ! -z "${split_line[0]}" ] && [ ! -z "${split_line[1]}" ]; then
         # click mouse position
@@ -54,8 +56,9 @@ while read -r line; do
         sleep 0.5
         # take screenshot if a filename is given
         if [ ! -z "${split_line[2]}" ]; then # -z = empty string
-            echo "Screen shot, save to : ${screenshotpath}/${split_line[2]}"
-            DISPLAY=:0 scrot ${screenshotpath}/${split_line[2]}
+            full_path=${screenshotpath}/${current_time}_${split_line[2]}
+            echo "Screen shot, save to : ${full_path}"
+            DISPLAY=:0 scrot ${full_path}
             sleep 0.5
         fi
         # read -p "press any key to continue..." < /dev/tty

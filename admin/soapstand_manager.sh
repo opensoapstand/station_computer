@@ -11,7 +11,7 @@
 ./status_services.sh
 
 PS3='Please enter your choice: '
-options=("Quit" "Station info" "Status" "Start" "Stop" "Restart" "Screenshotbot execute" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data" "(Re)load services from production" "Setup rtunnel" "Setup Ubuntu for drinkfill UI" "Deploy productionstatic.zip")
+options=("Quit" "Station info" "Status" "Start" "Stop" "Restart" "Screenshotbot execute" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data" "(Re)load services from production" "Setup rtunnel" "Setup Ubuntu for drinkfill UI" "Deploy productionstatic.zip" "Screenshot: Take single shot")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -31,6 +31,16 @@ do
         ;;
         "Screenshotbot execute")
             ./screenshotbot.sh
+        ;;
+        "Screenshot: Take single shot")
+            
+            read -p "Will save to production/screenshots Input optional name: " name
+            current_date=$(date +%Y%m%d-%H%M%S)
+            name_with_date="${current_date}_${name}.jpg"
+            mkdir "/home/df-admin/production/screenshots"
+            full_path="/home/df-admin/production/screenshots/${name_with_date}"
+            echo "Screen shot, save to : ${full_path}"
+            DISPLAY=:0 scrot ${full_path}
         ;;
         "Restart")
             sudo systemctl stop ui_soapstand

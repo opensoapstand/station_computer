@@ -154,7 +154,6 @@
 QMessageBox.msgBoxbox{
    min-width: 7000px;
    font-size: 24px;
-   color: red;
    font-weight: bold;
    font-style: normal;
    font-family: 'Montserrat';

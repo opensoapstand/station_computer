@@ -1,8 +1,13 @@
-QPushButton {
+/* QPushButton {
+   background-color: transparent;
+   border: 0px;
+} */
+
+.invisible_button{
    background-color: transparent;
    border: 0px;
 }
-
+ 
 #label_title {
    font-family: 'Brevia';
    font-style: normal;

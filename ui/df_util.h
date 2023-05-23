@@ -103,6 +103,9 @@ using namespace std;
 #define PAGETHANKYOU_CSS                                "pagethankyou.css"
 #define PAGE_QR_PAYMENT_CSS                             "page_qr_payment.css"
 #define PAGE_ERROR_WIFI_CSS                             "page_error_wifi.css"
+#define PAGE_TAP_PAYMENT_CSS                            "page_tap_payment.css"
+#define PAGE_TRANSACTIONS_CSS                           "page_transactions.css"
+
 
 
 

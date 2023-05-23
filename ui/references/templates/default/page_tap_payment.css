@@ -1,0 +1,105 @@
+#pushButton_previous_page {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 32px;
+   line-height: 99px;
+   letter-spacing: 1.5px;
+   text-transform: lowercase;
+   color: #003840;
+   text-align: cCenter;
+   qproperty-alignment: AlignCenter;
+   border: none;
+}
+
+.invisible_button {
+   background-color: transparent;
+   border: 0px
+}
+
+QMessageBox.msgBoxbox{
+   min-width: 7000px;
+   font-size: 24px;
+   color: red;
+   font-weight: bold;
+   font-style: normal;
+   font-family: 'Montserrat';
+   /* Additional styles specific to QMessageBox */
+}
+
+QMessageBox.msgBoxbutton QPushButton{
+   font-size: 24px;
+   min-width: 300px;
+   min-height: 300px;
+   /* Additional styles specific to QPushButton within QMessageBox */
+   
+}
+
+
+/* 
+
+
+
+
+.buttonTransparent{
+   background-color: transparent;
+   border: 0px;
+}
+
+.buttonPreviousPage{
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 32px;
+   line-height: 99px;
+   letter-spacing: 1.5px;
+   color: #003840;
+   text-align: center;
+   border: none;
+   background: transparent;
+}
+
+.labelMailFeedback{
+   font-family: 'Brevia';
+      font-style: normal;
+      font-weight: 75;
+      font-size: 43px;
+      line-height: 99px;
+      letter-spacing: 1.5px;
+      color: #438080;
+      text-align: center;
+      qproperty-alignment: AlignCenter;
+      border: none;
+}
+.checkBoxLabelStyling{
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 32px;
+   line-height: 99px;
+   letter-spacing: 1.5px;
+   color: #FFFFFF;
+   text-align: left;
+   qproperty-alignment: AlignCenter;
+   border: none;
+   wordWrap:true;
+   background-color: #5E8680;
+   padding: 10px;
+}
+
+#textEdit_custom_message{
+   font-family: Montserrat;
+   font-style: normal;
+   font-weight: bold;
+   font-size: 28px;
+   line-height: 44px;
+   color: #5E8580;
+   border-color:#5E8580;
+}
+
+#pushButton_help_page{
+   background-color: transparent; 
+   border: 0px ;
+}
+
+#label_select_problem{      /*selector not to make a class*/

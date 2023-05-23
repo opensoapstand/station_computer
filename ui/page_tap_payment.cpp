@@ -42,23 +42,7 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
     ui->setupUi(this);
     qDebug() << "Payment page";
     // ui->pushButton_previous_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->pushButton_previous_page->setStyleSheet(
-        "QPushButton {"
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "text-transform: lowercase;"
-        "color: #003840;"
-        "text-align: cCenter;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
     ui->pushButton_previous_page->setText("<- Back");
-    ui->pushButton_to_idle->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->pushButton_payment_bypass->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
     ui->pushButton_payment_bypass->setEnabled(false);
 
@@ -205,6 +189,20 @@ void page_tap_payment::resizeEvent(QResizeEvent *event)
 
 void page_tap_payment::showEvent(QShowEvent *event)
 {
+
+
+    QString styleSheet = p_page_idle->getCSS(PAGE_TAP_PAYMENT_CSS);
+
+    ui->pushButton_previous_page->setStyleSheet(styleSheet);
+        
+        
+    ui->pushButton_to_idle->setProperty("class", "invisible_button");
+    ui->pushButton_payment_bypass->setProperty("class", "invisible_button");
+    ui->pushButton_to_idle->setStyleSheet(styleSheet);
+    ui->pushButton_payment_bypass->setStyleSheet(styleSheet);
+    
+
+
     qDebug() << "<<<<<<< Page Enter: Tap Payment >>>>>>>>>";
     QWidget::showEvent(event);
     state_tap_payment = s_tap_init;

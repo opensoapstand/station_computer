@@ -169,6 +169,13 @@ void page_qr_payment::showEvent(QShowEvent *event)
 
     QString styleSheet = p_page_idle->getCSS(PAGE_QR_PAYMENT_CSS);
 
+
+
+    ui->pushButton_previous_page->setProperty("class", "invisible_button");
+    ui->pushButton_to_idle->setProperty("class", "invisible_button");
+    ui->pushButton_payment_bypass->setProperty("class", "invisible_button");
+    ui->pushButton_refresh->setProperty("class", "invisible_button");
+
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
     ui->pushButton_payment_bypass->setStyleSheet(styleSheet);
@@ -476,9 +483,9 @@ bool page_qr_payment::exitConfirm()
     }
     QString styleSheet = p_page_idle->getCSS(PAGE_QR_PAYMENT_CSS);
 
-    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
+    //msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
 
-    msgBox.setProperty("class", "msgBox msgBoxbutton"); // set property goes first!!
+    msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
 
     msgBox.setStyleSheet(styleSheet);
 

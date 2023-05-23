@@ -84,6 +84,8 @@ void page_idle::showEvent(QShowEvent *event)
     loadTextsFromCsv();
     QString result = getText("lode");
     qDebug() << result;
+    result = getText("brecht");
+    qDebug() << result;
 
     QString styleSheet = getCSS(PAGE_IDLE_CSS);
     ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
@@ -408,7 +410,9 @@ void page_idle::setBackgroundPictureToQWidget(QWidget *p_widget, QString image_p
 
 QString page_idle::getText(QString textName_to_find)
 {
-    auto it = textNameToTextMap.find(toStdString(textName_to_find));
+
+    std::string key = textName_to_find.toStdString();
+    auto it = textNameToTextMap.find(QString::fromStdString(key));
     QString retval;
     if (it != textNameToTextMap.end())
     {
@@ -417,7 +421,7 @@ QString page_idle::getText(QString textName_to_find)
     }
     else
     {
-        retVal = "NOT FOUND"
+        retval = "NOT FOUND";
     }
     return retval;
 }
@@ -429,18 +433,22 @@ void page_idle::loadTextsFromCsv()
     QString name = UI_TEXTS_CSV_PATH;
     QString csv_path = getTemplatePathFromName(name);
 
-    std::ifstream file(csv_path);
+    std::ifstream file(csv_path.toStdString());
     if (file.is_open())
     {
         std::string line;
         while (std::getline(file, line))
         {
+            qDebug() << QString::fromStdString(line);
+
             std::size_t space_pos = line.find(',');
             if (space_pos != std::string::npos)
             {
                 std::string word = line.substr(0, space_pos);
                 std::string sentence = line.substr(space_pos + 1);
-                textNameToTextMap[word] = sentence;
+                QString qword = QString::fromStdString(word);
+                QString qsentence = QString::fromStdString(sentence);
+                textNameToTextMap[qword] = qsentence;
             }
         }
         file.close();
@@ -448,7 +456,7 @@ void page_idle::loadTextsFromCsv()
         // Print the word-sentence mapping
         for (const auto &pair : textNameToTextMap)
         {
-            std::cout << pair.first << ": " << pair.second << std::endl;
+            qDebug() << pair.first << ": " << pair.second;
         }
     }
     else

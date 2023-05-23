@@ -23,7 +23,7 @@
 
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
-#include <QMainWindow>
+// #include <QMainWindow>
 #include <QtWidgets>
 #include <QtMultimediaWidgets>
 

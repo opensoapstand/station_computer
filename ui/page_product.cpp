@@ -207,33 +207,20 @@ void pageProduct::showEvent(QShowEvent *event)
 
     QString styleSheet = p_page_idle->getCSS(PAGE_PRODUCT_CSS);
 
-<<<<<<< HEAD
     ui->label_product_title->setProperty("class", "title");
     ui->label_product_title->setStyleSheet(styleSheet);
     ui->pushButton_back->setStyleSheet(styleSheet); // pushbutton
-=======
-    ui->label_product_title->setProperty("class", "css_title");
-    ui->label_product_title->setStyleSheet(styleSheet);
-    ui->pushButton_back->setStyleSheet(styleSheet);
->>>>>>> origin/SS1
     ui->label_product_description->setStyleSheet(styleSheet);
     ui->label_product_photo->setStyleSheet(styleSheet);
     ui->label_select_quantity->setStyleSheet(styleSheet);
     ui->label_product_ingredients->setStyleSheet(styleSheet);
     ui->label_product_ingredients_title->setStyleSheet(styleSheet);
-<<<<<<< HEAD
     ui->label_help->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_to_help->setProperty("class", "button_transparent");
     ui->pushButton_to_help->setStyleSheet(styleSheet);
     
-=======
-    ui->label_notify_us->setStyleSheet(styleSheet);
-    ui->pushButton_continue->setStyleSheet(styleSheet);
-    ui->pushButton_previous_page->setStyleSheet(styleSheet);
-    ui->pushButton_to_idle->setStyleSheet(styleSheet);
->>>>>>> origin/SS1
 
     for (int i = 0; i < 4; i++)
     {

@@ -63,7 +63,7 @@ pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
 
     ui->pushButton_select_product_page->setText("<- Back");
     ui->label_discount_tag->setText("Discount");
-    ui->pushButton_promo_apply->setText("Apply");
+  //  ui->pushButton_promo_apply->setText("Apply");
     ui->label_pay->setText("Continue");
     ui->label_discount_tag->show();
     ui->label_total->setText("Total");
@@ -130,8 +130,8 @@ void pageProductOverview::showEvent(QShowEvent *event)
     ui->label_discount_tag->setStyleSheet(styleSheet);
     ui->label_invoice_discount_amount->setStyleSheet(styleSheet);
     ui->label_invoice_box->setStyleSheet(styleSheet);
-    ui->pushButton_promo_apply->setProperty("class", "buttonPromo");
-    ui->pushButton_promo_apply->setStyleSheet(styleSheet);
+    //ui->pushButton_promo_apply->setProperty("class", "buttonPromo");
+    //ui->pushButton_promo_apply->setStyleSheet(styleSheet);
     ui->label_pay->setStyleSheet(styleSheet);
     ui->label_invoice_discount_name->setProperty("class", "labelDiscountName");
     ui->label_invoice_discount_name->setStyleSheet(styleSheet);
@@ -211,7 +211,7 @@ void pageProductOverview::reset_and_show_page_elements()
         ui->label_discount_tag->show();
         ui->pushButton_promo_input->show();
 
-        ui->pushButton_promo_apply->show();
+  //      ui->pushButton_promo_apply->show();
     }
     else
     {
@@ -221,7 +221,7 @@ void pageProductOverview::reset_and_show_page_elements()
         ui->label_invoice_discount_amount->hide();
         ui->label_invoice_discount_name->hide();
         ui->label_discount_tag->hide();
-        ui->pushButton_promo_apply->hide();
+      //  ui->pushButton_promo_apply->hide();
     }
 
     qDebug() << "Reset and show elements";

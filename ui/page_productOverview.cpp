@@ -115,15 +115,15 @@ void pageProductOverview::showEvent(QShowEvent *event)
 {
     QString styleSheet = p_page_idle->getCSS(PAGE_PRODUCT_OVERVIEW_CSS);
     ui->pushButton_promo_input->setStyleSheet(styleSheet);
-    ui->lineEdit_promo_code->setProperty("class", "promoCode_invalid_response");
+    ui->lineEdit_promo_code->setProperty("class", "promoCode");
     ui->lineEdit_promo_code->setStyleSheet(styleSheet);
     //  ui->label_product_title->setStyleSheet(styleSheet);
     ui->label_selected_volume->setStyleSheet(styleSheet);
 
     ui->label_invoice_name->setProperty("class", "labelOrderOverview");
     ui->label_invoice_price->setProperty("class", "labelOrderOverview");
-    ui->label_discount_tag->setProperty("class", "labelOrderOverview");
-    ui->label_invoice_discount_amount->setProperty("class", "labelOrderOverview");
+    ui->label_discount_tag->setProperty("class", "labelDiscount");
+    ui->label_invoice_discount_amount->setProperty("class", "labelDiscount");
 
     ui->label_invoice_name->setStyleSheet(styleSheet);
     ui->label_invoice_price->setStyleSheet(styleSheet);
@@ -203,7 +203,7 @@ void pageProductOverview::reset_and_show_page_elements()
     ui->promoKeyboard->hide();
     if (areCouponsEnabled())
     {
-        ui->lineEdit_promo_code->setText("Please tap here to enter promo code");
+        ui->lineEdit_promo_code->setText("Tap here to enter promo code");
         ui->lineEdit_promo_code->show();
 
         ui->label_invoice_discount_amount->show();
@@ -400,9 +400,7 @@ void pageProductOverview::apply_promo_code()
             curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
             if (res != CURLE_OK)
             {
-                // ui->lineEdit_promo_code->setProperty("class", "promoCode_invalid_response");
-                p_page_idle->addCssStyleToObject(ui->lineEdit_promo_code, "promoCode_invalid_response", PAGE_PRODUCT_OVERVIEW_CSS);
-
+                p_page_idle->addCssStyleToObject(ui->lineEdit_promo_code, "promoCode_invalid", PAGE_PRODUCT_OVERVIEW_CSS);
                 qDebug() << "Invalid Coupon curl problem. error code: " << res;
             }
             else
@@ -424,6 +422,8 @@ void pageProductOverview::apply_promo_code()
 
                         ui->label_invoice_discount_amount->show();
                         ui->label_discount_tag->show();
+                        p_page_idle->addCssStyleToObject(ui->lineEdit_promo_code, "promoCode_valid", PAGE_PRODUCT_OVERVIEW_CSS);
+                        ui->lineEdit_promo_code->setText("Promo Code Valid");
                         // ui->label_invoice_discount_amount->setText("-$" + QString::number(p_page_idle->selectedProduct->getDiscount(), 'f', 5));
                         // ui->label_invoice_price_total->setText("$" + QString::number(p_page_idle->selectedProduct->getPriceCorrected(), 'f', 2));
                         // ui->label_invoice_price_total->setText("$" + QString::number(p_page_idle->selectedProduct->getPriceCorrected(), 'f', 2)); // how to handle promo ?! todo!
@@ -433,15 +433,15 @@ void pageProductOverview::apply_promo_code()
                     else
                     {
                         qDebug() << "Invalid Coupon";
-                        // ui->lineEdit_promo_code->setProperty("class", "promoCode_invalid_coupon");
-                        p_page_idle->addCssStyleToObject(ui->lineEdit_promo_code, "promoCode_invalid_coupon", PAGE_PRODUCT_OVERVIEW_CSS);
+                        // ui->lineEdit_promo_code->setProperty("class", "promoCode_invalid");
+                        p_page_idle->addCssStyleToObject(ui->lineEdit_promo_code, "promoCode_invalid", PAGE_PRODUCT_OVERVIEW_CSS);
                     }
                 }
                 else
                 {
                     qDebug() << "Invalid Coupon http 200 response";
-                    // ui->lineEdit_promo_code->setProperty("class", "promoCode_invalid_response");
-                    p_page_idle->addCssStyleToObject(ui->lineEdit_promo_code, "promoCode_invalid_response", PAGE_PRODUCT_OVERVIEW_CSS);
+                    // ui->lineEdit_promo_code->setProperty("class", "promoCode_invalid");
+                    p_page_idle->addCssStyleToObject(ui->lineEdit_promo_code, "promoCode_invalid", PAGE_PRODUCT_OVERVIEW_CSS);
                 }
             }
         }
@@ -492,8 +492,8 @@ void pageProductOverview::coupon_input_show()
     ui->pushButton_promo_input->hide();
     ui->lineEdit_promo_code->clear();
     ui->lineEdit_promo_code->show();
-    p_page_idle->addCssStyleToObject(ui->lineEdit_promo_code, "promoCode_valid", PAGE_PRODUCT_OVERVIEW_CSS);
-    // p_page_idle->addCssStyleToObject(ui->lineEdit_promo_code, "promoCode_invalid_response", PAGE_PRODUCT_OVERVIEW_CSS);
+    p_page_idle->addCssStyleToObject(ui->lineEdit_promo_code, "promoCode", PAGE_PRODUCT_OVERVIEW_CSS);
+    // p_page_idle->addCssStyleToObject(ui->lineEdit_promo_code, "promoCode_invalid", PAGE_PRODUCT_OVERVIEW_CSS);
 
 }
 

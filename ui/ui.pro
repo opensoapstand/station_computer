@@ -17,7 +17,7 @@ FORMS += \
     page_tap_payment.ui \
     page_product.ui \
     page_select_product.ui \
-    pagethankyou.ui \
+    page_end.ui \
     page_maintenance.ui \
     page_productOverview.ui \
     page_maintenance_dispenser.ui \
@@ -49,7 +49,7 @@ HEADERS += \
     posm/transactionPackets.h \
     posm/transactioninfo.h \
     page_select_product.h \
-    pagethankyou.h \
+    page_end.h \
     payment/commands.h \
     payment/setup_Tap.h \
     df_util.h \
@@ -85,7 +85,7 @@ SOURCES += \
     posm/transactioninfo.cpp \
     page_select_product.cpp \
     page_sendFeedback.cpp \
-    pagethankyou.cpp \
+    page_end.cpp \
     payment/commands.cpp \
     payment/setup_Tap.cpp \
     df_util.cpp \

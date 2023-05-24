@@ -10,8 +10,8 @@
 
 # empty lines are also permitted
 
-# Pageproduct 
-pageProduct->pushButton_back,<- Products
-pageProduct->label_select_quantity,Select Quantity
-pageProduct->pushButton_continue,Continue
+# Page_product 
+page_product->pushButton_back,<- Products
+page_product->label_select_quantity,Select Quantity
+page_product->pushButton_continue,Continue
 

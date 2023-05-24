@@ -88,10 +88,10 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void page_select_product::setPage(pageProduct *pageSizeSelect, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp)
+void page_select_product::setPage(page_product *p_page_product, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp)
 {
     // this->selection_PageTwo = pageTwoProducts;
-    this->p_page_product = pageSizeSelect;
+    this->p_page_product = p_page_product;
     this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_help = pageHelp;
@@ -337,7 +337,6 @@ void page_select_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     productPageEndTimer->stop();
     qDebug() << "Exit select product page.";
-    p_page_idle->selectedProduct->setDiscountPercentageFraction(0.0);
     this->raise();
     p_page_idle->pageTransition(this, pageToShow);
 }
@@ -345,11 +344,13 @@ void page_select_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 void page_select_product::on_pushButton_to_idle_clicked()
 {
     qDebug() << "Back to Idle Page Button pressed";
+    p_page_idle->setDiscountPercentage(0.0);
     hideCurrentPageAndShowProvided(p_page_idle);
 }
 
 void page_select_product::on_pushButton_help_page_clicked()
 {
     qDebug() << "Help_Button pressed";
+    p_page_idle->setDiscountPercentage(0.0);
     hideCurrentPageAndShowProvided(p_page_help);
 }

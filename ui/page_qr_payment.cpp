@@ -100,10 +100,10 @@ void page_qr_payment::stopPayTimers()
 /*
  * Page Tracking reference
  */
-void page_qr_payment::setPage(pageProduct *pageSizeSelect, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
+void page_qr_payment::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
 {
     tmpCounter = 0;
-    this->p_pageProduct = pageSizeSelect;
+    this->p_page_product = p_page_product;
     this->p_page_wifi_error = pageWifiError;
     this->p_page_dispense = page_dispenser;
     this->p_page_idle = pageIdle;
@@ -521,8 +521,8 @@ void page_qr_payment::on_pushButton_previous_page_clicked()
     qDebug() << "In previous page button" << endl;
     if (exitConfirm())
     {
-        // p_page_idle->pageTransition(this, p_pageProduct);
-        hideCurrentPageAndShowProvided(p_pageProduct);
+        // p_page_idle->pageTransition(this, p_page_product);
+        hideCurrentPageAndShowProvided(p_page_product);
     }
 }
 

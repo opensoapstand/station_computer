@@ -1,6 +1,6 @@
 //***************************************
 //
-// pagethankyou.cpp
+// page_end.cpp
 // GUI class to show user dispense has been
 // completed and route back to page_idle
 //
@@ -11,15 +11,15 @@
 // all rights reserved
 //***************************************
 
-#include "pagethankyou.h"
-#include "ui_pagethankyou.h"
+#include "page_end.h"
+#include "ui_page_end.h"
 #include "page_sendFeedback.h"
 
 extern QString transactionLogging;
 
 // CTOR
-pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
-                                              ui(new Ui::pagethankyou)
+page_end::page_end(QWidget *parent) : QWidget(parent),
+                                              ui(new Ui::page_end)
 {
     ui->setupUi(this);
 
@@ -36,7 +36,7 @@ pagethankyou::pagethankyou(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void pagethankyou::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_sendFeedback *page_sendFeedback)
+void page_end::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_sendFeedback *page_sendFeedback)
 {
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
@@ -45,15 +45,15 @@ void pagethankyou::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, 
 }
 
 // DTOR
-pagethankyou::~pagethankyou()
+page_end::~page_end()
 {
     delete ui;
 }
 
-void pagethankyou::showEvent(QShowEvent *event)
+void page_end::showEvent(QShowEvent *event)
 {
 
-    QString styleSheet = p_page_idle->getCSS(PAGETHANKYOU_CSS);
+    QString styleSheet = p_page_idle->getCSS(PAGE_END_CSS);
 
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
     ui->thank_you_message_label->setStyleSheet(styleSheet);
@@ -92,7 +92,7 @@ void pagethankyou::showEvent(QShowEvent *event)
 
     ui->thank_you_logo_label->hide();
 
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_THANK_YOU_BACKGROUND_PATH);
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_END_BACKGROUND_PATH);
 
     qDebug() << "db for receipt printer check";
     QString paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
@@ -120,7 +120,7 @@ void pagethankyou::showEvent(QShowEvent *event)
     is_in_state_thank_you = true;
 
     // reset promovalue
-    p_page_idle->selectedProduct->setDiscountPercentageFraction(0.0);
+    // p_page_idle->selectedProduct->setDiscountPercentageFraction(0.0);
 
     is_controller_finished = false;
     is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
@@ -143,13 +143,15 @@ void pagethankyou::showEvent(QShowEvent *event)
     QString units = p_page_idle->selectedProduct->getUnitsForSlot();
     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->selectedProduct->getVolumeDispensedMl(), units, false, true);
 
-    double price = p_page_idle->selectedProduct->getPriceCorrected();
+    double price = p_page_idle->getPriceCorrectedAfterDiscount(p_page_idle->selectedProduct->getPriceCorrected());
 
     if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
     {
         price = p_page_idle->selectedProduct->getVolumeDispensedMl() * price;
     }
     ui->label_volume_dispensed_ml->setText(dispensed_correct_units + " ( $" + QString::number(price, 'f', 2) + " )");
+    p_page_idle->setDiscountPercentage(0.0);
+
 }
 
 size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
@@ -158,7 +160,7 @@ size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
     return size * nmemb;
 }
 
-void pagethankyou::sendDispenseEndToCloud()
+void page_end::sendDispenseEndToCloud()
 {
     QString order_id = this->paymentPage->getOID();
 
@@ -180,7 +182,7 @@ void pagethankyou::sendDispenseEndToCloud()
     curl = curl_easy_init();
     if (!curl)
     {
-        qDebug() << "pagethankyou: cURL failed to init. parameters:" + curl_param;
+        qDebug() << "page_end: cURL failed to init. parameters:" + curl_param;
         transactionToFile(curl_data);
         is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
         return;
@@ -216,7 +218,7 @@ void pagethankyou::sendDispenseEndToCloud()
     readBuffer = "";
 }
 
-void pagethankyou::controllerFinishedTransaction()
+void page_end::controllerFinishedTransaction()
 {
     if (is_in_state_thank_you)
     {
@@ -231,13 +233,13 @@ void pagethankyou::controllerFinishedTransaction()
     }
 }
 
-void pagethankyou::transactionToFile(char *curl_params)
+void page_end::transactionToFile(char *curl_params)
 {
     QString data_out = curl_params;
     p_page_idle->dfUtility->write_to_file(TRANSACTION_DISPENSE_END_OFFINE_PATH, data_out);
 }
 
-void pagethankyou::onThankyouTimeoutTick()
+void page_end::onThankyouTimeoutTick()
 {
     if (--_thankYouTimeoutSec >= 0)
     {
@@ -252,23 +254,23 @@ void pagethankyou::onThankyouTimeoutTick()
     }
 }
 
-void pagethankyou::on_pushButton_to_idle_clicked()
+void page_end::on_pushButton_to_idle_clicked()
 {
     qDebug() << "main page button clicked.";
     finishHandler();
 }
 
-void pagethankyou::hideCurrentPageAndShowProvided(QWidget *pageToShow)
+void page_end::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
     is_in_state_thank_you = false;
-    p_page_idle->selectedProduct->setPromoCode("");
+    p_page_idle->setPromoCode("");
 
     thankYouEndTimer->stop();
     p_page_idle->pageTransition(this, pageToShow);
 }
 
-void pagethankyou::finishHandler()
+void page_end::finishHandler()
 {
     transactionLogging = "";
     if ((is_controller_finished && is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER) || exitIsForceable)
@@ -288,7 +290,7 @@ void pagethankyou::finishHandler()
     }
 }
 
-void pagethankyou::on_notifyUs_Button_clicked()
+void page_end::on_notifyUs_Button_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_sendFeedback);
 }

@@ -19,7 +19,7 @@
 #include "ui_page_dispenser.h"
 #include "includefiles.h"
 #include "page_idle.h"
-#include "pagethankyou.h"
+#include "page_end.h"
 #include "page_product.h"
 #include "payment/commands.h"
 
@@ -58,9 +58,9 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void page_dispenser::setPage(page_qr_payment *page_qr_payment, page_tap_payment *page_tap_payment, pagethankyou *pageThankYou, page_idle *pageIdle, page_sendFeedback *pageFeedback)
+void page_dispenser::setPage(page_qr_payment *page_qr_payment, page_tap_payment *page_tap_payment, page_end *page_end, page_idle *pageIdle, page_sendFeedback *pageFeedback)
 {
-    this->thanksPage = pageThankYou;
+    this->thanksPage = page_end;
     this->paymentPage = page_qr_payment;
     this->paymentTapPage = page_tap_payment;
     this->p_page_idle = pageIdle;
@@ -183,8 +183,8 @@ void page_dispenser::showEvent(QShowEvent *event)
     updatelabel_volume_dispensed_ml(p_page_idle->selectedProduct->getVolumeDispensedMl());
 
     QString dispenseCommand = getStartDispensingCommand();
-    QString priceCommand = QString::number(p_page_idle->selectedProduct->getPriceCorrected());
-    QString promoCommand = p_page_idle->selectedProduct->getPromoCode();
+    QString priceCommand = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(p_page_idle->selectedProduct->getPrice()));
+    QString promoCommand = p_page_idle->getPromoCode();
 
     QString delimiter = QString("|");
     QString preamble = "Order";
@@ -213,7 +213,7 @@ void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
     if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
     {
 
-        double unitprice = p_page_idle->selectedProduct->getPriceCorrected();
+        double unitprice = p_page_idle->getPriceCorrectedAfterDiscount(p_page_idle->selectedProduct->getPrice());
         current_price = dispensed * unitprice;
         ui->label_volume_dispensed_ml->setText(dispensedVolumeUnitsCorrected + " " + units + " ( $" + QString::number(current_price, 'f', 2) + " )");
     }
@@ -368,7 +368,7 @@ void page_dispenser::resetDispenseTimeout(void)
 
 QString page_dispenser::getPromoCodeUsed()
 {
-    QString promoCode = p_page_idle->selectedProduct->getPromoCode();
+    QString promoCode = p_page_idle->getPromoCode();
 
     return promoCode;
 }

@@ -35,7 +35,6 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
 {
     ui->setupUi(this);
 
-    ui->p_page_maintenanceButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
 
     labels_product_picture[0] = ui->label_product_1_photo;
     labels_product_picture[1] = ui->label_product_2_photo;
@@ -58,6 +57,9 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     labels_product_type[1] = ui->label_product_2_type;
     labels_product_type[2] = ui->label_product_3_type;
     labels_product_type[3] = ui->label_product_4_type;
+
+    ui->pushButton_to_select_product_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    ui->pushButton_to_select_product_page->raise();
 
     //ui->pushButton_help_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     // ui->pushButton_to_idle->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
@@ -83,24 +85,21 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     font.setBold(true);
     font.setWeight(75);
 
-    productPageEndTimer = new QTimer(this);
-    productPageEndTimer->setInterval(1000);
-    connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
+    // productPageEndTimer = new QTimer(this);
+    // productPageEndTimer->setInterval(1000);
+    // connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
 }
 
 /*
  * Page Tracking reference
  */
-void page_idle_products::setPage(pageProduct *pageSizeSelect, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp)
+void page_idle_products::setPage(page_idle *pageIdle, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral)
 {
-    this->p_page_product = pageSizeSelect;
     this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
-    this->p_page_help = pageHelp;
+    this->p_page_maintenance_general = pageMaintenanceGeneral;
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
-    QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
-    qDebug() << full_path;
 }
 
 // DTOR
@@ -111,25 +110,39 @@ page_idle_products::~page_idle_products()
 
 void page_idle_products::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< Page Enter: Select Product >>>>>>>>>";
-    this->lower();
+    qDebug() << "open db: payment method";
+    bool needsReceiptPrinter = false;
+    for (int slot = 1; slot <= SLOT_COUNT; slot++)
+    {
+        QString paymentMethod = p_page_idle->products[slot - 1].getPaymentMethod();
+        if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
+        {
+            needsReceiptPrinter = true;
+            qDebug() << "Needs receipt printer: " << paymentMethod;
+            break;
+        }
+
+        p_page_idle->products[slot - 1].setDiscountPercentageFraction(0.0);
+        p_page_idle->products[slot - 1].setPromoCode("");
+    }
+    qDebug() << "<<<<<<< Page Enter: Idle page (show products) >>>>>>>>>";
+
     QWidget::showEvent(event);
     maintenanceCounter = 0;
 
     displayProducts();
 
-    if (productPageEndTimer == nullptr)
-    {
-        productPageEndTimer = new QTimer(this);
-        productPageEndTimer->setInterval(1000);
-        connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
-    }
+    // productPageEndTimer->start(1000);
+    // _productPageTimeoutSec = 15;
 
-    productPageEndTimer->start(1000);
-    _productPageTimeoutSec = 15;
-
-    this->raise();
     addCompanyLogoToLabel(ui->logo_label);
+
+    // ui->printer_status_label->hide(); // always hide here, will show if enabled and has problems.
+    // if (needsReceiptPrinter)
+    // {
+    //     checkReceiptPrinterStatus();
+    // }
+    ui->pushButton_to_select_product_page->raise();
 }
 void page_idle_products::resizeEvent(QResizeEvent *event)
 {
@@ -162,11 +175,6 @@ void page_idle_products::displayProducts()
 
         product_type = p_page_idle->products[i].getProductType();
         product_name = p_page_idle->products[i].getProductName();
-
-        // qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << ", product set as not available?: " << product_sold_out << " Status text: " << product_status_text;
-
-        // labels_product_name[i]->setText(product_name);
-        // labels_product_name[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
 
         // display product type icon  picture
         QString icon_path = "not found";
@@ -224,30 +232,33 @@ void page_idle_products::select_product(int slot)
     hideCurrentPageAndShowProvided(p_page_product);
 }
 
+void page_idle_products::checkReceiptPrinterStatus()
+{
+    qDebug() << "db idle_products check printer";
+    DbManager db(DB_PATH);
+    bool isPrinterOnline = false;
+    bool hasPrinterPaper = false;
+    bool hasReceiptPrinter = db.hasReceiptPrinter();
+    db.printerStatus(&isPrinterOnline, &hasPrinterPaper);
+    db.closeDB();
+
+    if (hasReceiptPrinter)
+    {
+        qDebug() << "Check receipt printer functionality disabled.";
+        this->p_page_maintenance_general->send_check_printer_status_command();
+        ui->pushButton_to_select_product_page->hide(); // when printer needs to be restarted, it can take some time. Make sure nobody presses the button in that interval (to prevent crashes)
+    }
+    else
+    {
+        qDebug() << "Can't check receipt printer. Not enabled in db->machine table";
+    }
+}
 void page_idle_products::addCompanyLogoToLabel(QLabel *label)
 {
     qDebug() << "db init company logo";
     DbManager db(DB_PATH);
     QString id = db.getCustomerId();
-    QString size_small;
-    QString size_medium;
-    QString size_large;
-    QString size_units;
-    QString price_small;
-    QString price_medium;
-    QString price_large;
-    for (uint8_t i = 0; i < SLOT_COUNT; i++)
-    {
-        size_units = db.getUnits(i);
-        size_small = db.getSizeSmall(i);
-        size_medium = db.getSizeMedium(i);
-        size_large = db.getSizeLarge(i);
-        price_small = db.getPriceSmall(i);
-        price_medium = db.getPriceMedium(i);
-        price_large = db.getPriceLarge(i);
 
-        // do something with size_units
-    }
     db.closeDB();
     qDebug() << "db closed";
     if (id.at(0) == 'C')
@@ -261,44 +272,66 @@ void page_idle_products::addCompanyLogoToLabel(QLabel *label)
     }
 }
 
-void page_idle_products::onProductPageTimeoutTick()
-{
-    if (--_productPageTimeoutSec >= 0)
-    {
-        // qDebug() << "Tick Down: " << _productPageTimeoutSec;
-    }
-    else
-    {
-        // qDebug() << "Timer Done!" << _productPageTimeoutSec;
-        hideCurrentPageAndShowProvided(p_page_idle);
-    }
-}
-
-void page_idle_products::on_p_page_maintenanceButton_pressed()
-{
-    maintenanceCounter++;
-    if (maintenanceCounter > 50)
-    {
-        hideCurrentPageAndShowProvided(p_page_maintenance);
-    }
-}
+// void page_idle_products::onProductPageTimeoutTick()
+// {
+//     if (--_productPageTimeoutSec >= 0)
+//     {
+//     }
+//     else
+//     {
+//         // hideCurrentPageAndShowProvided(p_page_idle);
+//     }
+// }
 
 void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
-    productPageEndTimer->stop();
+    // productPageEndTimer->stop();
     qDebug() << "Exit select product page.";
     this->raise();
     p_page_idle->pageTransition(this, pageToShow);
 }
 
-// void page_idle_products::on_pushButton_to_idle_clicked()
-// {
-//     qDebug() << "Back to Idle Page Button pressed";
-//     hideCurrentPageAndShowProvided(p_page_idle);
-// }
-
-void page_idle_products::on_pushButton_help_page_clicked()
+void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
 {
-    qDebug() << "Help_Button pressed";
-    hideCurrentPageAndShowProvided(p_page_help);
+    qDebug() << "Printer feedback received from fsm";
+
+    if (!isOnline)
+    {
+        ui->printer_status_label->raise();
+        ui->printer_status_label->setText("Assistance needed\nReceipt Printer offline.");
+        ui->printer_status_label->show();
+    }
+    else if (!hasPaper)
+    {
+        ui->printer_status_label->raise();
+        ui->printer_status_label->setText("Assistance needed\nReceipt printer empty or improperly loaded.");
+        ui->printer_status_label->show();
+    }
+    else
+    {
+        ui->printer_status_label->hide();
+    }
+    ui->pushButton_to_select_product_page->show();
+
+    ui->printer_status_label->setStyleSheet(
+        "QLabel {"
+
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 100;"
+        "background-color: #5E8580;"
+        "font-size: 42px;"
+        "text-align: centre;"
+        "line-height: auto;"
+        "letter-spacing: 0px;"
+        "qproperty-alignment: AlignCenter;"
+        "border-radius: 20px;"
+        "color: white;"
+        "border: none;"
+        "}");
+}
+
+void page_idle_products::on_pushButton_to_select_product_page_clicked()
+{
+    this->hideCurrentPageAndShowProvided(p_pageSelectProduct);
 }

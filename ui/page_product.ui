@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>pageProduct</class>
- <widget class="QWidget" name="pageProduct">
+ <class>page_product</class>
+ <widget class="QWidget" name="page_product">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -85,7 +85,7 @@ line-height: 29px;</string>
    </property>
    <property name="styleSheet">
     <string notr="true">font-family: Montserrat;
-background-image: url(/home/df-admin/production/references/background.png);
+background-image: url(background.png);
 font-style: normal;
 font-weight: bold;
 font-size: 36px;

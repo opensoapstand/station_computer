@@ -21,11 +21,11 @@
 #include "df_util.h"
 #include "includefiles.h"
 #include "page_idle.h"
-#include "pagethankyou.h"
+#include "page_end.h"
 
 
 class page_qr_payment;
-class pagethankyou;
+class page_end;
 class page_idle;
 
 namespace Ui {
@@ -39,7 +39,7 @@ class page_error_wifi : public QWidget
 public:
     // **** GUI ****
     explicit page_error_wifi(QWidget *parent = nullptr);
-    void setPage(page_qr_payment* page_qr_payment, pagethankyou* pageThankYou, page_idle* pageIdle);
+    void setPage(page_qr_payment* page_qr_payment, page_end* page_end, page_idle* pageIdle);
     ~page_error_wifi();
     void showEvent(QShowEvent *event);
     void exit_page();
@@ -58,7 +58,7 @@ private:
     // **** GUI *****
     Ui::page_error_wifi *ui;
     page_qr_payment* paymentPage;
-    pagethankyou* thanksPage;
+    page_end* thanksPage;
     page_idle* p_page_idle;
 
     // XXX: Remove when interrupts and flowsensors work.

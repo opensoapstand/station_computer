@@ -54,15 +54,20 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     // TODO: Hold and pass Product Object
     selectedProduct = new product();
     // product *selectedProduct;
+
+    idlePageTypeSelectorTimer = new QTimer(this);
+    idlePageTypeSelectorTimer->setInterval(1000);
+    connect(idlePageTypeSelectorTimer, SIGNAL(timeout()), this, SLOT(onIdlePageTypeSelectorTimerTick()));
+
 }
 
 /*
  * Navigation to Product item
  */
-void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products)
+void page_idle::setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products)
 {
     // Chained to KB Listener
-    this->p_pageSelectProduct = p_pageProduct;
+    this->p_pageSelectProduct = p_page_select_product;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_maintenance_general = pageMaintenanceGeneral;
     this->p_page_idle_products = p_page_idle_products;
@@ -79,6 +84,8 @@ page_idle::~page_idle()
 
 void page_idle::showEvent(QShowEvent *event)
 {
+    qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
+    QWidget::showEvent(event);
 
     qDebug() << "TEST TEXTS LOADING";
     loadTextsFromCsv();
@@ -98,6 +105,8 @@ void page_idle::showEvent(QShowEvent *event)
     for (int slot = 1; slot <= SLOT_COUNT; slot++)
     {
         QString paymentMethod = products[slot - 1].getPaymentMethod();
+        // products[slot - 1].setDiscountPercentageFraction(0.0);
+        // products[slot - 1].setPromoCode("");
         if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
         {
             needsReceiptPrinter = true;
@@ -108,8 +117,7 @@ void page_idle::showEvent(QShowEvent *event)
         // reset promovalue
         // currentProductOrder->setDiscountPercentageFraction(0.0);
         // currentProductOrder->setPromoCode("");
-        products[slot - 1].setDiscountPercentageFraction(0.0);
-        products[slot - 1].setPromoCode("");
+        
     }
 
     DbManager db(DB_PATH);
@@ -129,6 +137,8 @@ void page_idle::showEvent(QShowEvent *event)
     setTemplateTextToObject(ui->label_welcome_message);
     
 
+    
+
     addCompanyLogoToLabel(ui->logo_label);
 
     ui->label_printer_status->hide(); // always hide here, will show if enabled and has problems.
@@ -140,6 +150,9 @@ void page_idle::showEvent(QShowEvent *event)
     QString machine_logo_full_path = getTemplatePathFromName(MACHINE_LOGO_PATH);
     addPictureToLabel(ui->drinkfill_logo_label, machine_logo_full_path);
     ui->drinkfill_logo_label->setStyleSheet(styleSheet);
+
+    idlePageTypeSelectorTimer->start(100);
+    _idlePageTypeSelectorTimerTimeoutSec = 2;
 
 // #define PLAY_VIDEO
 #ifdef PLAY_VIDEO
@@ -194,8 +207,21 @@ void page_idle::showEvent(QShowEvent *event)
 #endif
     qDebug() << "Video player. Is fullscreen? : " << videoWidget->isFullScreen();
 #endif
-    this->raise();
 }
+
+void page_idle::changeToIdleProductsIfSet()
+{
+    DbManager db(DB_PATH);
+    // call db check if idle or idle_products
+    idle_page_type = db.getIdlePageType();
+    db.closeDB();
+
+    if (idle_page_type == "static_products")
+    {
+        hideCurrentPageAndShowProvided(this->p_page_idle_products);
+    }
+}
+
 // for products.cpp
 product *page_idle::getSelectedProduct()
 {
@@ -205,6 +231,43 @@ product *page_idle::getSelectedProduct()
 void page_idle::setSelectedProduct(uint8_t slot)
 {
     selectedProduct = &products[slot - 1];
+}
+
+void page_idle::setDiscountPercentage(double percentageFraction)
+{
+    // ratio = percentage / 100;
+    qDebug() << "Set discount percentage fraction in idle page: " << QString::number(percentageFraction, 'f', 3);
+    m_discount_percentage_fraction = percentageFraction;
+}
+
+
+double page_idle::getDiscountPercentage()
+{
+    qDebug() << "Get Discount percentange" << m_discount_percentage_fraction;
+    return m_discount_percentage_fraction;
+}
+
+bool page_idle::isPromoApplied(){
+    if(m_discount_percentage_fraction != 0.0){
+        return true;
+    }
+    return false;
+}
+
+QString page_idle::getPromoCode()
+{
+    return m_promoCode;
+}
+
+void page_idle::setPromoCode(QString promoCode)
+{
+    // ratio = percentage / 100;
+    qDebug() << "Set Promo Code: " << promoCode;
+    m_promoCode = promoCode;
+}
+
+double page_idle::getPriceCorrectedAfterDiscount(double price){
+    return price*( 1 - m_discount_percentage_fraction);
 }
 
 void page_idle::checkReceiptPrinterStatus()
@@ -232,11 +295,22 @@ void page_idle::checkReceiptPrinterStatus()
 void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     this->pageTransition(this, pageToShow);
+        idlePageTypeSelectorTimer->stop();
 }
 /*
  * Screen click shows product page as full screen and hides page_idle screen
  */
-
+void page_idle::onIdlePageTypeSelectorTimerTick()
+{
+    if (--_idlePageTypeSelectorTimerTimeoutSec >= 0)
+    {
+    }
+    else
+    {
+       changeToIdleProductsIfSet();
+    idlePageTypeSelectorTimer->stop();
+    }
+}
 void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
 {
     qDebug() << "Printer feedback received from fsm";
@@ -258,6 +332,7 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
         ui->label_printer_status->hide();
     }
     ui->pushButton_to_select_product_page->show();
+    // ui->pushButton_to_select_product_page->show();
 }
 
 void page_idle::on_pushButton_to_select_product_page_clicked()
@@ -290,13 +365,6 @@ bool page_idle::isEnough(int p)
     return false;
 }
 
-// void page_idle::MMSlot()
-// {
-//     qDebug() << "Signal: Enter maintenance mode";
-//     this->p_pageSelectProduct->hide(); // if pressed from another page. This is not good. It could be on any page!
-
-//     hideCurrentPageAndShowProvided(p_page_maintenance);
-// }
 
 void page_idle::addCssStyleToObject(QWidget *qtType, QString classname, QString css_name)
 {

@@ -19,7 +19,7 @@
      <x>0</x>
      <y>0</y>
      <width>1081</width>
-     <height>1891</height>
+     <height>1921</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -143,9 +143,9 @@ text-transform: lowercase;</string>
   <zorder>label_welcome_message</zorder>
   <zorder>pushButton_test</zorder>
   <zorder>drinkfill_logo_label</zorder>
-  <zorder>label_printer_status</zorder>
   <zorder>media_player</zorder>
   <zorder>video_player</zorder>
+  <zorder>printer_status_label</zorder>
  </widget>
  <resources/>
  <connections/>

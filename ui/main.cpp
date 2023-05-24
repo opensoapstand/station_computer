@@ -28,7 +28,7 @@
 #include "page_error_wifi.h"
 #include "page_productOverview.h"
 
-#include "pagethankyou.h"
+#include "page_end.h"
 #include <QApplication>
 #include "page_maintenance.h"
 #include "page_maintenance_dispenser.h"
@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
     page_tap_payment *paymentTapPage = new page_tap_payment();
     page_dispenser *p_page_dispense = new page_dispenser();
     page_error_wifi *p_page_wifi_error = new page_error_wifi();
-    pagethankyou *p_page_thank_you = new pagethankyou();
+    page_end *p_page_end = new page_end();
     page_product_overview *p_page_product_overview = new page_product_overview();
     page_sendFeedback *p_page_sendFeedback = new page_sendFeedback();
     page_maintenance *p_page_maintenance = new page_maintenance();
@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
     df_util::fileExists(IMAGE_BUTTON_HELP);
     df_util::fileExists(PAGE_TAP_PAY);
     df_util::fileExists(PAGE_MAINTENANCE_BACKGROUND_PATH);
-    df_util::fileExists(PAGE_THANK_YOU_BACKGROUND_PATH);
+    df_util::fileExists(PAGE_END_BACKGROUND_PATH);
     // df_util::fileExists(PAGE_WIFI_ERROR_BACKGROUND_PATH);
     // df_util::fileExists(BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH);
     df_util::fileExists(KEYBOARD_IMAGE_PATH);
@@ -175,11 +175,11 @@ int main(int argc, char *argv[])
     p_pageProduct->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, p_page_help,p_page_product_overview);
     paymentQrPage->setPage(p_pageProduct, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
     paymentTapPage->setPage(p_pageProduct, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
-    p_page_dispense->setPage(paymentQrPage,paymentTapPage, p_page_thank_you, p_page_idle, p_page_sendFeedback);
+    p_page_dispense->setPage(paymentQrPage,paymentTapPage, p_page_end, p_page_idle, p_page_sendFeedback);
     p_page_product_overview->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, paymentTapPage, p_page_help, p_pageProduct);
-    p_page_sendFeedback->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, p_page_help, p_pageProduct, p_page_thank_you);
-    p_page_thank_you->setPage(p_page_dispense, p_page_idle, paymentQrPage, p_page_sendFeedback );
-    p_page_wifi_error->setPage(paymentQrPage, p_page_thank_you, p_page_idle);
+    p_page_sendFeedback->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, p_page_help, p_pageProduct, p_page_end);
+    p_page_end->setPage(p_page_dispense, p_page_idle, paymentQrPage, p_page_sendFeedback );
+    p_page_wifi_error->setPage(paymentQrPage, p_page_end, p_page_idle);
     
     initPage->showFullScreen();
 
@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
     DfUiServer dfUiServer;
     dfUiServer.startServer();
  
-    QObject::connect(&dfUiServer, &DfUiServer::controllerFinishedAck, p_page_thank_you, &pagethankyou::controllerFinishedTransaction);
+    QObject::connect(&dfUiServer, &DfUiServer::controllerFinishedAck, p_page_end, &page_end::controllerFinishedTransaction);
     QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_maintenance_general, &page_maintenance_general::printerStatusFeedback);
     QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_idle, &page_idle::printerStatusFeedback);
     QObject::connect(&dfUiServer, &DfUiServer::pleaseReset, p_page_dispense, &page_dispenser::resetDispenseTimeout);

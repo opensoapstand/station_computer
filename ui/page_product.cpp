@@ -433,7 +433,9 @@ void pageProduct::loadProdSpecs()
             orderSizeButtons[i]->setProperty("class", "orderSizeButtons");
 
             double price = p_page_idle->selectedProduct->getPrice(product_sizes[i]);
-            // QString transparent_path = FULL_TRANSPARENT_IMAGE_PATH;
+            
+            // set default size (if only one size available, this will be the size)
+            p_page_idle->selectedProduct->setSize(product_sizes[i]);
 
             if (product_sizes[i] == SIZE_CUSTOM_INDEX)
             {
@@ -504,11 +506,8 @@ void pageProduct::loadProdSpecs()
             if (p_page_idle->selectedProduct->getSize() == product_sizes[i])
             {
                 orderSizeLabelsVolume[i]->setProperty("class", "orderSizeLabelsVolume");
-                // orderSizeLabelsPrice[i]->setStyleSheet("QLabel {font-family: Montserrat; background-image: url(/home/df-admin/production/references/background.png); font-style: light; font-weight: bold; font-size: 36px; line-height: 44px; color: #5E8580;}");
                 orderSizeLabelsPrice[i]->setProperty("class", "orderSizeLabelsPrice");
-                // orderSizeBackgroundLabels[i]->setStyleSheet("QLabel { background-color: #FFFFFF; border: 0px }");
                 orderSizeBackgroundLabels[i]->setProperty("class", "orderSizeBackgroundLabels");
-                // orderSizeButtons[i]->setStyleSheet("QPushButton { background-color: transparent; border: 1px  solid #3D6675; }");
                 orderSizeButtons[i]->setProperty("class", "orderSizeButtons");
             }
             orderSizeButtons[i]->raise();

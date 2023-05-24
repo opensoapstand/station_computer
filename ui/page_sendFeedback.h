@@ -21,7 +21,7 @@
 #include "page_dispenser.h"
 #include "page_error_wifi.h"
 #include "page_sendFeedback.h"
-#include "pagethankyou.h"
+#include "page_end.h"
 #include "page_help.h"
 #include "page_product.h"
 #include <curl/curl.h>
@@ -33,7 +33,7 @@ class page_dispenser;
 class page_error_wifi;
 class page_help;
 class pageProduct;
-class pagethankyou;
+class page_end;
 namespace Ui
 {
     class page_sendFeedback;
@@ -50,7 +50,7 @@ public:
     QLabel *orderSizeBackgroundLabels[4];
 
     explicit page_sendFeedback(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, pageProduct *page_product, pagethankyou *pagethankyou);
+    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, pageProduct *page_product, page_end *page_end);
     ~page_sendFeedback();
 
     void resizeEvent(QResizeEvent *event);

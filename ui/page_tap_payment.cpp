@@ -42,25 +42,9 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
     ui->setupUi(this);
     qDebug() << "Payment page";
     // ui->pushButton_previous_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->pushButton_previous_page->setStyleSheet(
-        "QPushButton {"
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "text-transform: lowercase;"
-        "color: #003840;"
-        "text-align: cCenter;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
     ui->pushButton_previous_page->setText("<- Back");
-    ui->pushButton_to_idle->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->payment_bypass_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    ui->payment_bypass_Button->setEnabled(false);
+    ui->pushButton_payment_bypass->setEnabled(false);
 
     std::atomic<bool> stop_tap_action_thread(false);
     std::atomic<bool> stop_authorization_thread(false);
@@ -81,8 +65,8 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
     idlePaymentTimer = new QTimer(this);
     connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
 
-    ui->payment_bypass_Button->setEnabled(false);
-    ui->title_Label->hide();
+    ui->pushButton_payment_bypass->setEnabled(false);
+    ui->label_title->hide();
 
     // ui->order_total_amount->hide();
     DbManager db(DB_PATH);
@@ -183,7 +167,7 @@ void page_tap_payment::displayPaymentPending(bool isVisible)
 {
 }
 
-void page_tap_payment::on_payment_bypass_Button_clicked()
+void page_tap_payment::on_pushButton_payment_bypass_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_dispense);
 }
@@ -205,12 +189,26 @@ void page_tap_payment::resizeEvent(QResizeEvent *event)
 
 void page_tap_payment::showEvent(QShowEvent *event)
 {
+
+
+    QString styleSheet = p_page_idle->getCSS(PAGE_TAP_PAYMENT_CSS);
+
+    ui->pushButton_previous_page->setStyleSheet(styleSheet);
+        
+        
+    ui->pushButton_to_idle->setProperty("class", "invisible_button");
+    ui->pushButton_payment_bypass->setProperty("class", "invisible_button");
+    ui->pushButton_to_idle->setStyleSheet(styleSheet);
+    ui->pushButton_payment_bypass->setStyleSheet(styleSheet);
+    
+
+
     qDebug() << "<<<<<<< Page Enter: Tap Payment >>>>>>>>>";
     QWidget::showEvent(event);
     state_tap_payment = s_tap_init;
 
     qDebug() << "Init tap";
-    ui->payment_bypass_Button->setEnabled(false);
+    ui->pushButton_payment_bypass->setEnabled(false);
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
     ui->productLabel->hide();
     ui->order_drink_amount->hide();
@@ -324,8 +322,8 @@ void page_tap_payment::check_card_tapped()
     {
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
         qDebug() << "Packet received true";
-        ui->title_Label->setText("Processing Payment");
-        // ui->title_Label->show();
+        ui->label_title->setText("Processing Payment");
+        // ui->label_title->show();
         checkCardTappedTimer->stop();
         QMovie *currentGif = ui->animated_Label->movie();
         if (currentGif)
@@ -460,7 +458,7 @@ void page_tap_payment::idlePaymentTimeout()
 }
 void page_tap_payment::resetPaymentPage()
 {
-    ui->title_Label->hide();
+    ui->label_title->hide();
 
     stopPayTimers();
     transactionLogging = "";

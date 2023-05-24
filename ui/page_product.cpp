@@ -164,44 +164,16 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
     orderSizeBackgroundLabels[2] = ui->label_background_large;
     orderSizeBackgroundLabels[3] = ui->label_background_custom;
 
-    /* QString css_title = "QLabel{"
-                         "position: absolute;"
-                         "width: 877px;"
-                         "height: 104px;"
-                         "left: 94px;"
-                         "top: 336px;"
-                         "font-family: 'Montserrat';"
-                         "font-style: normal;"
-                         "font-weight: 600;"
-                         "font-size: 48px;"
-                         "line-height: 52px;"
-                         "text-transform: capitalize;"
-                         "color: #5E8580;"
-                         "}";
-                         */
-    /*
-        QFont font;
-        font.setFamily(QStringLiteral("Brevia"));
-        font.setPointSize(20);
-        font.setBold(true);
-        font.setWeight(200);
-    */
-    ui->pushButton_back->setText("<- Products");
 
-    ui->label_select_quantity->setText("Select Quantity");
-
-    ui->label_product_description->setWordWrap(true);
-
-    ui->label_product_ingredients->setWordWrap(true);
-
-    ui->pushButton_continue->setText("Continue");
-    ui->pushButton_continue->hide();
 
     {
         selectIdleTimer = new QTimer(this);
         selectIdleTimer->setInterval(40);
         connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
     }
+
+
+
     transactionLogging = "";
 }
 
@@ -236,34 +208,20 @@ void pageProduct::showEvent(QShowEvent *event)
     QString styleSheet = p_page_idle->getCSS(PAGE_PRODUCT_CSS);
 
     ui->label_product_title->setProperty("class", "css_title");
-
     ui->label_product_title->setStyleSheet(styleSheet);
-
-    ui->pushButton_back->setStyleSheet(styleSheet); // pushbutton
-
+    ui->pushButton_back->setStyleSheet(styleSheet);
     ui->label_product_description->setStyleSheet(styleSheet);
-
     ui->label_product_photo->setStyleSheet(styleSheet);
-
     ui->label_select_quantity->setStyleSheet(styleSheet);
-
-    // QString css_ingredients = ;
     ui->label_product_ingredients->setStyleSheet(styleSheet);
-
     ui->label_product_ingredients_title->setStyleSheet(styleSheet);
-
     ui->label_notify_us->setStyleSheet(styleSheet);
-
     ui->pushButton_continue->setStyleSheet(styleSheet);
-
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
-
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
 
     for (int i = 0; i < 4; i++)
     {
-        // labels_product_overlay_text[i]->setProperty("class", "label_product_oberlay_available"); // apply class BEFORE setStyleSheet!!
-        // labels_product_overlay_text[i]->setStyleSheet(styleSheet);
         orderSizeLabelsVolume[i]->setProperty("class", "orderSizeLabelsVolume");
         orderSizeLabelsPrice[i]->setProperty("class", "orderSizeLabelsPrice");
         orderSizeBackgroundLabels[i]->setProperty("class", "orderSizeBackgroundLabels");
@@ -276,15 +234,9 @@ void pageProduct::showEvent(QShowEvent *event)
         orderSizeBackgroundLabels[i]->setStyleSheet(styleSheet);
     }
 
-    ////////////////////////////////////////////////
-
     p_page_idle->selectedProduct->loadProductProperties();
-    qDebug() << "loaded successfully";
-    // p_page_idle->selectedProduct->setBiggestEnabledSizeIndex();
-
-    // qDebug() << "loaded successfully2";
     loadProdSpecs();
-    qDebug() << "loaded successfully3";
+    
     reset_and_show_page_elements();
 }
 
@@ -309,6 +261,18 @@ void pageProduct::onSelectTimeoutTick()
 
 void pageProduct::reset_and_show_page_elements()
 {
+
+    // ui->pushButton_back->setText("<- Products");
+    // ui->label_select_quantity->setText("Select Quantity");
+    // ui->pushButton_continue->setText("Continue");
+    p_page_idle->setTemplateTextToObject(ui->pushButton_back);
+    p_page_idle->setTemplateTextToObject(ui->label_select_quantity);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_continue);
+   
+    ui->label_product_description->setWordWrap(true);
+    ui->label_product_ingredients->setWordWrap(true);
+    ui->pushButton_continue->hide();
+
 
     p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->selectedProduct->getProductPicturePath());
 

@@ -62,9 +62,13 @@ public:
     void setBackgroundPictureToQWidget(QWidget *page, QString imageName);
     QString getCSS(QString cssName);
     void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
-
+    void addCssStyleToObject(QWidget *qtType, QString classname, QString css_name);
+    
     void setSelectedProduct(uint8_t slot);
     product *getSelectedProduct();
+
+    void loadTextsFromCsv();
+    QString getText(QString textName_to_find);
 
     product products[SLOT_COUNT];
     product *selectedProduct;
@@ -89,8 +93,13 @@ public:
     QVideoWidget *videoWidget;
     QMediaPlayer *player;
 
+<<<<<<< HEAD
     QTimer *idlePageTypeSelectorTimer;
     int _idlePageTypeSelectorTimerTimeoutSec;
+=======
+    void setTemplateTextToObject(QWidget* p_element);
+
+>>>>>>> SS1
 
 private slots:
     void on_pushButton_to_select_product_page_clicked();
@@ -101,6 +110,8 @@ private slots:
     void on_pushButton_test_clicked();
 
 private:
+   std::map<QString, QString> textNameToTextMap;
+
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void checkReceiptPrinterStatus();
     QString m_templatePath;

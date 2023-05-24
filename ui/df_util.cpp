@@ -327,3 +327,4 @@ void df_util::displayError(QAbstractSocket::SocketError socketError)
 // QString df_util::get_local_db_max_transaction()
 // {
 // }
+

@@ -48,7 +48,7 @@
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;/home/df-admin/production/references/templates/default/bottle_fill_for_animation.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="abortButton">
+  <widget class="QPushButton" name="pushButton_abort">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -85,7 +85,7 @@
     <string>Volume dispensed</string>
    </property>
   </widget>
-  <widget class="QLabel" name="volumeDispensedLabel">
+  <widget class="QLabel" name="label_volume_dispensed_ml">
    <property name="geometry">
     <rect>
      <x>240</x>
@@ -140,7 +140,7 @@
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="debug_Button">
+  <widget class="QPushButton" name="pushButton_debug_Button">
    <property name="geometry">
     <rect>
      <x>970</x>
@@ -164,7 +164,7 @@
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="finishTransactionMessage">
+  <widget class="QLabel" name="label_finishTransactionMessage">
    <property name="geometry">
     <rect>
      <x>240</x>
@@ -206,7 +206,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="button_problems">
+  <widget class="QPushButton" name="pushButton_problems">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -219,7 +219,7 @@
     <string>Problem detected</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="button_report">
+  <widget class="QPushButton" name="pushButton_report">
    <property name="geometry">
     <rect>
      <x>240</x>
@@ -258,20 +258,20 @@
     <string/>
    </property>
   </widget>
-  <zorder>abortButton</zorder>
+  <zorder>pushButton_abort</zorder>
   <zorder>fill_animation_label</zorder>
   <zorder>dispense_bottle_label</zorder>
   <zorder>label_volume_dispensed</zorder>
-  <zorder>volumeDispensedLabel</zorder>
+  <zorder>label_volume_dispensed_ml</zorder>
   <zorder>label_to_refill</zorder>
   <zorder>label_instructions_container</zorder>
   <zorder>label_press</zorder>
-  <zorder>debug_Button</zorder>
-  <zorder>finishTransactionMessage</zorder>
+  <zorder>pushButton_debug_Button</zorder>
+  <zorder>label_finishTransactionMessage</zorder>
   <zorder>label_dispense_status</zorder>
   <zorder>label_dispense_flowrate</zorder>
-  <zorder>button_problems</zorder>
-  <zorder>button_report</zorder>
+  <zorder>pushButton_problems</zorder>
+  <zorder>pushButton_report</zorder>
   <zorder>label_dispense_message</zorder>
   <zorder>label_logo</zorder>
  </widget>

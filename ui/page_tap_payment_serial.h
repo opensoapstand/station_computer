@@ -121,7 +121,7 @@ private slots:
 
     // Navigation
     void on_previousPage_Button_clicked();
-    void on_payment_bypass_Button_clicked();
+    void on_pushButton_payment_bypass_clicked();
     void on_mainPage_Button_clicked();
 
     //void on_payment_pass_Button_clicked();
@@ -153,7 +153,7 @@ private:
 
 
     const QString TAP_READY_LABEL = "Ready for Tap";
-    const QString TAP_PROCESSING_LABEL = "Processing";
+    const QString TAP_label_processing = "Processing";
     const QString TAP_DECLINED_LABEL = "Card Declined";
     const QString TAP_AGAIN_LABEL = "Try Again";
     const QString TAP_APPROVED_LABEL = "Payment Approved";

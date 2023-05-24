@@ -31,12 +31,8 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
     // Fullscreen background setup
     ui->setupUi(this);
     qDebug() << "QR Payment page" << endl;
-    ui->pushButton_previous_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->pushButton_to_idle->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->payment_bypass_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-
-    ui->payment_bypass_Button->setEnabled(false);
+    
+    ui->pushButton_payment_bypass->setEnabled(false);
 
     // Idle Payment reset
     idlePaymentTimer = new QTimer(this);
@@ -48,38 +44,15 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
     showError = new QTimer(this);
     connect(showError, SIGNAL(timeout()), this, SLOT(showErrorPage()));
 
-    ui->payment_bypass_Button->setEnabled(false);
+    ui->pushButton_payment_bypass->setEnabled(false);
     state_payment = s_init;
-    QString css_title = "QLabel{"
-                        "font-family: 'Brevia';"
-                        "font-style: normal;"
-                        "font-weight: 500;"
-                        "font-size: 64px;"
-                        "line-height: 86px;"
-                        "text-align: center;"
-                        "text-transform: lowercase;"
-                        "color: #003840;"
-                        "text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);"
-                        "}";
-    ui->title_Label->setStyleSheet(css_title);
-    ui->title_Label->setText("pay by phone");
+    
+    ui->label_title->setText("pay by phone");
 
-    ui->scan_Label->setText(
+    ui->label_scan->setText(
         "Scan to Pay");
-    QString css_scan = "QLabel{"
-                       "text-align: center;"
-                       "font-family: 'Montserrat';"
-                       "font-style: normal;"
-                       "font-weight: 600;"
-                       "font-size: 48px;"
-                       "color: #5E8580;"
-                       "} .tab {"
-                       "display: inline-block;"
-                       "margin-left: 40px;"
-                       "}";
-    ui->scan_Label->setStyleSheet(css_scan);
-
-    ui->steps_Label->setText(
+    
+    ui->label_steps->setText(
         "<style>"
         "li:{margin-top:10px;}"
         "</style>"
@@ -90,37 +63,10 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
         "<li><span class='tab'></span>The station will proceed after payment<br></li>"
         "<li><span class='tab'></span>Refill your soap!</li>"
         "</ol>");
-    QString css_steps = "QLabel{"
-                        "position: absolute;"
-                        "width: 777px;"
-                        "height: 306px;"
-                        "left: 143px;"
-                        "top: 1029px;"
-                        "font-family: 'Montserrat';"
-                        "font-style: normal;"
-                        "font-weight: 600;"
-                        "font-size: 36px;"
-                        "line-height: 51px;"
-                        "color: #003840;"
-                        "}";
-    ui->steps_Label->setStyleSheet(css_steps);
-
-    ui->processing_Label->setText(
+    
+    ui->label_processing->setText(
         "it can take a few moments for the station to<br>continue after your payment is confirmed");
-    QString css_processing = "QLabel{"
-                             "position: absolute;"
-                             "width: 777px;"
-                             "height: 306px;"
-                             "left: 143px;"
-                             "top: 1029px;"
-                             "font-family: 'Montserrat';"
-                             "font-style: normal;"
-                             "font-weight: 600;"
-                             "font-size: 36px;"
-                             "line-height: 51px;"
-                             "color: #003840;"
-                             "}";
-    ui->processing_Label->setStyleSheet(css_processing);
+    
     ui->order_total_amount->hide();
 }
 
@@ -177,7 +123,7 @@ void page_qr_payment::displayPaymentPending(bool isVisible)
 {
 }
 
-void page_qr_payment::on_payment_bypass_Button_clicked()
+void page_qr_payment::on_pushButton_payment_bypass_clicked()
 {
     proceed_to_dispense();
 }
@@ -220,6 +166,30 @@ void page_qr_payment::resizeEvent(QResizeEvent *event)
 
 void page_qr_payment::showEvent(QShowEvent *event)
 {
+
+    QString styleSheet = p_page_idle->getCSS(PAGE_QR_PAYMENT_CSS);
+
+
+
+    ui->pushButton_previous_page->setProperty("class", "invisible_button");
+    ui->pushButton_to_idle->setProperty("class", "invisible_button");
+    ui->pushButton_payment_bypass->setProperty("class", "invisible_button");
+    ui->pushButton_refresh->setProperty("class", "invisible_button");
+
+    ui->pushButton_previous_page->setStyleSheet(styleSheet);
+    ui->pushButton_to_idle->setStyleSheet(styleSheet);
+    ui->pushButton_payment_bypass->setStyleSheet(styleSheet);
+    ui->pushButton_refresh->setStyleSheet(styleSheet);
+    ui->label_title->setStyleSheet(styleSheet);
+    ui->label_scan->setStyleSheet(styleSheet);
+    ui->label_steps->setStyleSheet(styleSheet);
+    ui->label_processing->setStyleSheet(styleSheet);
+
+
+
+
+
+
     qDebug() << "<<<<<<< Page Enter: Payment >>>>>>>>>";
     QWidget::showEvent(event);
     state_payment = s_init;
@@ -231,15 +201,15 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->qrCode->show();
     ui->productLabel->show();
     ui->order_drink_amount->show();
-    ui->title_Label->setText("pay by phone");
-    ui->scan_Label->setText("Scan to Pay");
+    ui->label_title->setText("pay by phone");
+    ui->label_scan->setText("Scan to Pay");
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
-    ui->payment_bypass_Button->setEnabled(false);
+    ui->pushButton_payment_bypass->setEnabled(false);
     ui->productLabel->setText(p_page_idle->selectedProduct->getProductName() + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
     ui->order_drink_amount->setText("$" +price);
     ui->order_total_amount->setText("Total: $" +price);
-    ui->steps_Label->show();
-    ui->processing_Label->hide();
+    ui->label_steps->show();
+    ui->label_processing->hide();
 
     // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
     paymentEndTimer = new QTimer(this);
@@ -284,10 +254,10 @@ void page_qr_payment::setupQrOrder()
         ui->qrCode->show();
         ui->productLabel->show();
         ui->order_drink_amount->show();
-        ui->title_Label->hide();
-        ui->scan_Label->hide();
+        ui->label_title->hide();
+        ui->label_scan->hide();
         ui->order_total_amount->hide();
-        ui->steps_Label->hide();
+        ui->label_steps->hide();
         showError->start();
     }
 }
@@ -427,11 +397,11 @@ void page_qr_payment::isQrProcessedCheckOnline()
             ui->productLabel->hide();
             ui->order_drink_amount->hide();
             ui->order_total_amount->hide();
-            ui->steps_Label->hide();
+            ui->label_steps->hide();
 
-            ui->processing_Label->show();
-            ui->scan_Label->setText("Please finalize transaction");
-            ui->title_Label->setText("almost there");
+            ui->label_processing->show();
+            ui->label_scan->setText("Please finalize transaction");
+            ui->label_title->setText("almost there");
         }
         else
         {
@@ -455,7 +425,7 @@ void page_qr_payment::qrProcessedPeriodicalCheck()
     }
 }
 
-void page_qr_payment::on_refreshButton_clicked()
+void page_qr_payment::on_pushButton_refresh_clicked()
 {
     ui->refreshLabel->hide();
     _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
@@ -500,6 +470,8 @@ bool page_qr_payment::exitConfirm()
 {
     qDebug() << "In exit confirm";
     QMessageBox msgBox;
+    //     msgBox = nullptr;
+    // msgBox = new QMessageBox();
     msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
     if (state_payment == s_payment_processing || state_payment == s_payment_done)
     {
@@ -509,7 +481,13 @@ bool page_qr_payment::exitConfirm()
     {
         msgBox.setText("<p align=center><br><br>Are you sure you want to cancel this order?<br><br>The QR code won't be valid anymore if this order is cancelled.<br><br>In case a payment was made with an invalid QR code or cancelled order, a refund will be issued within 24-48 hours. <br></p>");
     }
-    msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
+    QString styleSheet = p_page_idle->getCSS(PAGE_QR_PAYMENT_CSS);
+
+    //msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
+
+    msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
+
+    msgBox.setStyleSheet(styleSheet);
 
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     int ret = msgBox.exec();
@@ -562,7 +540,7 @@ void page_qr_payment::idlePaymentTimeout()
 }
 void page_qr_payment::resetPaymentPage()
 {
-    ui->title_Label->hide();
+    ui->label_title->hide();
     transactionLogging = "";
     stopPayTimers();
     response = true;

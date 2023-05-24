@@ -50,7 +50,7 @@ class page_idle_products : public QWidget
 
 public:
     explicit page_idle_products(QWidget *parent = nullptr);
-    void setPage(pageProduct *p_page_product, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp);
+    void setPage(page_idle *pageIdle, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral);
     // function body
     ~page_idle_products();
 

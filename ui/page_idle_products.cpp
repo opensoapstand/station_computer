@@ -93,13 +93,11 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void page_idle_products::setPage(pageProduct *p_page_product, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp)
+void page_idle_products::setPage(page_idle *pageIdle, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral)
 {
-    this->p_page_product = p_page_product;
     this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_maintenance_general = pageMaintenanceGeneral;
-    this->p_page_idle = pageIdle;
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
 }

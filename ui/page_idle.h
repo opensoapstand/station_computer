@@ -94,6 +94,8 @@ public:
     QMediaPlayer *player;
 
     void setTemplateTextToObject(QWidget* p_element);
+    void setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier);
+
 
 
 private slots:

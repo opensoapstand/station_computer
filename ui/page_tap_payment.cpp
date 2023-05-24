@@ -144,7 +144,7 @@ void page_tap_payment::stopPayTimers()
 /*
  * Page Tracking reference
  */
-void page_tap_payment::setPage(pageProduct *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
+void page_tap_payment::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
 {
     tmpCounter = 0;
     this->p_page_product = p_page_product;

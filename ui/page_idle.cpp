@@ -306,7 +306,8 @@ void page_idle::onIdlePageTypeSelectorTimerTick()
     }
     else
     {
-      changeToIdleProductsIfSet();
+       changeToIdleProductsIfSet();
+    idlePageTypeSelectorTimer->stop();
     }
 }
 void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)

@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
     page_idle_products *p_page_idle_products = new page_idle_products();
     page_transactions *p_page_transactions = new page_transactions();
     page_select_product *firstSelectPage = new page_select_product();
-    pageProduct *p_page_product = new pageProduct();
+    page_product *p_page_product = new page_product();
     page_qr_payment *paymentQrPage = new page_qr_payment();
     page_tap_payment *paymentTapPage = new page_tap_payment();
     page_dispenser *p_page_dispense = new page_dispenser();

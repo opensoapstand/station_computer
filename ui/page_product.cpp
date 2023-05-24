@@ -140,8 +140,8 @@ uint16_t orderSizePriceLabels_xy_dynamic_ui_small_available[8][2] = {
 };
 
 // CTOR
-pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
-                                            ui(new Ui::pageProduct)
+page_product::page_product(QWidget *parent) : QWidget(parent),
+                                            ui(new Ui::page_product)
 {
     ui->setupUi(this);
 
@@ -181,7 +181,7 @@ pageProduct::pageProduct(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product_overview *page_Overview)
+void page_product::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product_overview *page_Overview)
 {
     this->p_page_select_product = pageSelect;
     this->paymentPage = page_qr_payment;
@@ -195,13 +195,13 @@ void pageProduct::setPage(page_select_product *pageSelect, page_dispenser *page_
 }
 
 // DTOR
-pageProduct::~pageProduct()
+page_product::~page_product()
 {
     delete ui;
 }
 
 /* GUI */
-void pageProduct::showEvent(QShowEvent *event)
+void page_product::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
     qDebug() << "<<<<<<< Page Enter: Product >>>>>>>>>";
@@ -241,12 +241,12 @@ void pageProduct::showEvent(QShowEvent *event)
     reset_and_show_page_elements();
 }
 
-void pageProduct::resizeEvent(QResizeEvent *event)
+void page_product::resizeEvent(QResizeEvent *event)
 {
     qDebug() << "\n---Page_product: resizeEvent";
 }
 
-void pageProduct::onSelectTimeoutTick()
+void page_product::onSelectTimeoutTick()
 {
     if (--_selectIdleTimeoutSec >= 0)
     {
@@ -260,7 +260,7 @@ void pageProduct::onSelectTimeoutTick()
     }
 }
 
-void pageProduct::reset_and_show_page_elements()
+void page_product::reset_and_show_page_elements()
 {
 
     // ui->pushButton_back->setText("<- Products");
@@ -398,13 +398,13 @@ void pageProduct::reset_and_show_page_elements()
     _selectIdleTimeoutSec = 400;
 }
 
-void pageProduct::loadProductBySize(int sizeIndex)
+void page_product::loadProductBySize(int sizeIndex)
 {
     p_page_idle->selectedProduct->setSize(sizeIndex);
     loadProdSpecs();
 }
 
-void pageProduct::loadProdSpecs()
+void page_product::loadProdSpecs()
 {
 
     qDebug() << "-------------------------- LOAD PRODUCTS ----------------";
@@ -532,7 +532,7 @@ void pageProduct::loadProdSpecs()
     qDebug() << "-------------------------- END LOAD PRODUCTS ----------------";
 }
 
-bool pageProduct::stopSelectTimers()
+bool page_product::stopSelectTimers()
 {
     if (selectIdleTimer != nullptr)
     {
@@ -545,7 +545,7 @@ bool pageProduct::stopSelectTimers()
     }
 }
 
-void pageProduct::hideCurrentPageAndShowProvided(QWidget *pageToShow)
+void page_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
     // ui->pushButton_to_idle->setEnabled(false);
@@ -555,19 +555,19 @@ void pageProduct::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     p_page_idle->pageTransition(this, pageToShow);
 }
 
-void pageProduct::on_pushButton_to_idle_clicked()
+void page_product::on_pushButton_to_idle_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_help);
 }
 
-void pageProduct::on_pushButton_order_custom_clicked()
+void page_product::on_pushButton_order_custom_clicked()
 {
     qDebug() << "button custom clicked ";
     this->loadProductBySize(SIZE_CUSTOM_INDEX);
     on_pushButton_continue_clicked();
 }
 
-void pageProduct::on_pushButton_order_medium_clicked()
+void page_product::on_pushButton_order_medium_clicked()
 {
     qDebug() << "button medium";
     this->loadProductBySize(SIZE_MEDIUM_INDEX);
@@ -575,7 +575,7 @@ void pageProduct::on_pushButton_order_medium_clicked()
 }
 
 // on_Small_Order button listener
-void pageProduct::on_pushButton_order_small_clicked()
+void page_product::on_pushButton_order_small_clicked()
 {
     qDebug() << "button small";
     this->loadProductBySize(SIZE_SMALL_INDEX);
@@ -583,7 +583,7 @@ void pageProduct::on_pushButton_order_small_clicked()
 }
 
 // on_Large_Order button listener
-void pageProduct::on_pushButton_order_big_clicked()
+void page_product::on_pushButton_order_big_clicked()
 {
     qDebug() << "button big";
     this->loadProductBySize(SIZE_LARGE_INDEX);
@@ -596,17 +596,17 @@ size_t WriteCallback_coupon(char *contents, size_t size, size_t nmemb, void *use
     return size * nmemb;
 }
 
-void pageProduct::on_pushButton_previous_page_clicked()
+void page_product::on_pushButton_previous_page_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_select_product);
 }
 
-void pageProduct::on_pushButton_continue_clicked()
+void page_product::on_pushButton_continue_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
-void pageProduct::on_pushButton_back_clicked()
+void page_product::on_pushButton_back_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_select_product);
 }

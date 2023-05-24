@@ -35,7 +35,7 @@ class page_maintenance;
 class page_select_product;
 class page_idle;
 class page_maintenance_general;
-class pageProduct;
+class page_product;
 class page_maintenance;
 class page_help;
 
@@ -84,7 +84,7 @@ private:
 
     Ui::page_idle_products *ui;
     // productPage_2 *selection_PageTwo;
-    pageProduct *p_page_product;
+    page_product *p_page_product;
     page_idle *p_page_idle;
 
     QResizeEvent *productResize;

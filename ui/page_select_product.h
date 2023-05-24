@@ -21,7 +21,7 @@
 #include "page_maintenance.h"
 #include "page_help.h"
 
-class pageProduct;
+class page_product;
 class page_idle;
 class page_maintenance;
 class page_help;
@@ -37,7 +37,7 @@ class page_select_product : public QWidget
 
 public:
     explicit page_select_product(QWidget *parent = nullptr);
-    void setPage(pageProduct *p_page_product, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp);
+    void setPage(page_product *p_page_product, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp);
     ~page_select_product();
     
     void select_product(int slot);
@@ -75,7 +75,7 @@ private:
     void resizeEvent(QResizeEvent *event);
     Ui::page_select_product *ui;
     // productPage_2 *selection_PageTwo;
-    pageProduct *p_page_product;
+    page_product *p_page_product;
     page_idle* p_page_idle;
 
     QResizeEvent *productResize;

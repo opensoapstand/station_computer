@@ -170,7 +170,7 @@ void page_maintenance::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference
  */
-void page_maintenance::setPage(page_idle *pageIdle, page_maintenance_dispenser *p_pageMaintenanceDispenser, page_maintenance_general *p_pageMaintenanceGeneral, page_select_product *p_page_product, pageProduct *pagePaySelect)
+void page_maintenance::setPage(page_idle *pageIdle, page_maintenance_dispenser *p_pageMaintenanceDispenser, page_maintenance_general *p_pageMaintenanceGeneral, page_select_product *p_page_product, page_product *pagePaySelect)
 {
     this->p_page_idle = pageIdle;
     this->p_page_maintenance_product = p_pageMaintenanceDispenser;

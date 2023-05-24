@@ -32,7 +32,7 @@ class page_idle;
 class page_dispenser;
 class page_error_wifi;
 class page_help;
-class pageProduct;
+class page_product;
 class page_end;
 namespace Ui
 {
@@ -50,7 +50,7 @@ public:
     QLabel *orderSizeBackgroundLabels[4];
 
     explicit page_sendFeedback(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, pageProduct *page_product, page_end *page_end);
+    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product *page_product, page_end *page_end);
     ~page_sendFeedback();
 
     void resizeEvent(QResizeEvent *event);
@@ -99,7 +99,7 @@ private:
     page_dispenser *p_page_dispense;
     page_error_wifi *p_page_wifi_error;
     page_help *p_page_help;
-    pageProduct *p_page_product;
+    page_product *p_page_product;
 
     QTimer *selectIdleTimer;
     int _selectIdleTimeoutSec;

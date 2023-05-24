@@ -41,7 +41,6 @@
 #include <QQmlEngine>
 #include <QDBusConnection>
 
-
 static QPointer<QFile> log_file = nullptr;
 
 void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
@@ -95,7 +94,6 @@ int main(int argc, char *argv[])
     qDebug() << "***************************************************************************";
     qDebug() << title;
     qDebug() << "***************************************************************************";
-    
 
     // Fire up QT GUI Thread
     QApplication mainApp(argc, argv);
@@ -124,28 +122,26 @@ int main(int argc, char *argv[])
 
     // TODO: Instantiate a DrinkSelection[] Array
     // TODO: Create Query to populate DrinkSelection[0-12]
-    
-
-
 
     // 1. db manager get template
-    // 2. get template files 
+    // 2. get template files
     // 3. test files exisitng
-    // 4. set files 
-    qDebug()<< "db init for template path";
-      DbManager db(DB_PATH);
+    // 4. set files
+    qDebug() << "db init for template path";
+    DbManager db(DB_PATH);
     QString template_folder = db.getTemplateName();
     db.closeDB();
 
-    if (template_folder == ""){
+    if (template_folder == "")
+    {
         template_folder = "default";
     }
-    qDebug()<< "template folder " << template_folder;
+    qDebug() << "template folder " << template_folder;
 
     p_page_idle->setTemplateFolder(TEMPLATES_ROOT_PATH, template_folder);
     df_util::fileExists(p_page_idle->getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
 
-    qDebug()<< "Check image paths.... (all paths resolved if nothing shows up).";
+    qDebug() << "Check image paths.... (all paths resolved if nothing shows up).";
     df_util::fileExists(PAGE_INIT_BACKGROUND_IMAGE_PATH);
     df_util::fileExists(PAGE_IDLE_BACKGROUND_PATH);
     df_util::fileExists(PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
@@ -167,37 +163,38 @@ int main(int argc, char *argv[])
     p_page_transactions->setPage(p_page_idle);
     initPage->setPage(p_page_idle);
     p_page_maintenance_product->setPage(p_page_maintenance, p_page_idle, p_page_idle_products);
-    p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle,p_page_idle_products);
-    p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product,  p_page_maintenance_general, firstSelectPage, p_pageProduct);
+    p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle, p_page_idle_products);
+    p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product, p_page_maintenance_general, firstSelectPage, p_pageProduct);
     p_page_idle->setPage(firstSelectPage, p_page_maintenance, p_page_maintenance_general, p_page_idle_products);
-    p_page_idle_products->setPage(p_pageProduct, p_page_idle_products, p_page_idle,  p_page_maintenance, p_page_help );
+    p_page_idle_products->setPage(p_page_idle, firstSelectPage, p_page_maintenance, p_page_maintenance_general);
     firstSelectPage->setPage(p_pageProduct, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help);
-    p_pageProduct->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, p_page_help,p_pageProductOverview);
+    p_pageProduct->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, p_page_help, p_pageProductOverview);
     paymentQrPage->setPage(p_pageProduct, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
     paymentTapPage->setPage(p_pageProduct, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
-    p_page_dispense->setPage(paymentQrPage,paymentTapPage, p_page_thank_you, p_page_idle, p_page_sendFeedback);
+    p_page_dispense->setPage(paymentQrPage, paymentTapPage, p_page_thank_you, p_page_idle, p_page_sendFeedback);
     p_pageProductOverview->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, paymentTapPage, p_page_help, p_pageProduct);
     p_page_sendFeedback->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, p_page_help, p_pageProduct, p_page_thank_you);
-    p_page_thank_you->setPage(p_page_dispense, p_page_idle, paymentQrPage, p_page_sendFeedback );
+    p_page_thank_you->setPage(p_page_dispense, p_page_idle, paymentQrPage, p_page_sendFeedback);
     p_page_wifi_error->setPage(paymentQrPage, p_page_thank_you, p_page_idle);
-    
+
     initPage->showFullScreen();
 
     // listen for fsm messages
     DfUiServer dfUiServer;
     dfUiServer.startServer();
- 
+
     QObject::connect(&dfUiServer, &DfUiServer::controllerFinishedAck, p_page_thank_you, &pagethankyou::controllerFinishedTransaction);
     QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_maintenance_general, &page_maintenance_general::printerStatusFeedback);
     QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_idle, &page_idle::printerStatusFeedback);
+    QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_idle_products, &page_idle_products::printerStatusFeedback);
     QObject::connect(&dfUiServer, &DfUiServer::pleaseReset, p_page_dispense, &page_dispenser::resetDispenseTimeout);
-    
+
     QObject::connect(&dfUiServer, &DfUiServer::signalUpdateVolume, p_page_dispense, &page_dispenser::fsmReceivedVolumeDispensed);
     QObject::connect(&dfUiServer, &DfUiServer::signalDispenseStatus, p_page_dispense, &page_dispenser::fsmReceiveDispenserStatus);
     QObject::connect(&dfUiServer, &DfUiServer::signalDispenseRate, p_page_dispense, &page_dispenser::fsmReceiveDispenseRate);
     QObject::connect(&dfUiServer, &DfUiServer::targetHit, p_page_dispense, &page_dispenser::fsmReceiveTargetVolumeReached);
     QObject::connect(&dfUiServer, &DfUiServer::noFlowAbort, p_page_dispense, &page_dispenser::fsmReceiveNoFlowAbort);
-    
+
     QObject::connect(&dfUiServer, &DfUiServer::signalUpdateVolume, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceivedVolumeDispensed);
     QObject::connect(&dfUiServer, &DfUiServer::signalDispenseStatus, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveDispenserStatus);
     QObject::connect(&dfUiServer, &DfUiServer::signalDispenseRate, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveDispenseRate);
@@ -205,9 +202,9 @@ int main(int argc, char *argv[])
     QObject::connect(&dfUiServer, &DfUiServer::dispenseButtonPressedNegEdgeSignal, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveDispenseButtonPressedNegativeEdge);
     QObject::connect(&dfUiServer, &DfUiServer::targetHit, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveTargetVolumeReached);
     QObject::connect(&dfUiServer, &DfUiServer::noFlowAbort, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveNoFlowAbort);
-    
+
     QObject::connect(&dfUiServer, &DfUiServer::initReady, initPage, &page_init::initReadySlot);
     // QObject::connect(&dfUiServer, &DfUiServer::MM, p_page_idle, &page_idle::MMSlot);
-    
+
     return mainApp.exec();
 }

@@ -29,19 +29,6 @@
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_help_page">
-   <property name="geometry">
-    <rect>
-     <x>446</x>
-     <y>1732</y>
-     <width>201</width>
-     <height>181</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_product_1_photo">
    <property name="geometry">
     <rect>
@@ -476,31 +463,51 @@
   <widget class="QLabel" name="logo_label">
    <property name="geometry">
     <rect>
-     <x>370</x>
-     <y>1680</y>
-     <width>351</width>
-     <height>211</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="logo_label">
-   <property name="geometry">
-    <rect>
-     <x>450</x>
-     <y>1730</y>
+     <x>446</x>
+     <y>1732</y>
      <width>191</width>
      <height>181</height>
+<<<<<<< HEAD
+=======
     </rect>
    </property>
    <property name="text">
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="printer_status_label">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>850</y>
+     <width>980</width>
+     <height>120</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_to_select_product_page">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1080</width>
+     <height>1920</height>
+>>>>>>> Udbhav_idleReceiptIntegration
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <zorder>pushButton_help_page</zorder>
+  <zorder>pushButton_to_select_product_page</zorder>
   <zorder>label_product_1_type</zorder>
-  <zorder>logo_label</zorder>
   <zorder>label_product_2_photo</zorder>
   <zorder>label_product_2_photo_text</zorder>
   <zorder>label_product_1_photo</zorder>
@@ -523,8 +530,8 @@
   <zorder>label_product_4_overlay</zorder>
   <zorder>label_product_3_overlay</zorder>
   <zorder>label_pick_soap</zorder>
-  <zorder>pushButton_help_page</zorder>
   <zorder>logo_label</zorder>
+  <zorder>printer_status_label</zorder>
  </widget>
  <resources/>
  <connections/>

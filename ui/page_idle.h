@@ -54,6 +54,7 @@ public:
     void addPictureToLabel(QLabel *label, QString picturePath);
     void addCompanyLogoToLabel(QLabel *label);
     QString getTemplateFolder();
+    void changeToIdleProductsIfSet();
     void setTemplateFolder(QString rootPath, QString templateFolder);
     QString getTemplatePathFromName(QString fileName);
     QString getDefaultTemplatePathFromName(QString fileName);
@@ -71,12 +72,11 @@ public:
 
     product products[SLOT_COUNT];
     product *selectedProduct;
-    
+
     df_util *dfUtility;
-   //for products.cpp
-   // product products[SLOT_COUNT]; // declare products as a member variable
-    // product* getSelectedProduct();
-    
+    // for products.cpp
+    //  product products[SLOT_COUNT]; // declare products as a member variable
+    //  product* getSelectedProduct();
 
     DfUiCommThread *dfComm;
 
@@ -93,11 +93,23 @@ public:
     QVideoWidget *videoWidget;
     QMediaPlayer *player;
 
+<<<<<<< HEAD
     void setTemplateTextToObject(QWidget* p_element);
 
+=======
+<<<<<<< HEAD
+    QTimer *idlePageTypeSelectorTimer;
+    int _idlePageTypeSelectorTimerTimeoutSec;
+=======
+    void setTemplateTextToObject(QWidget* p_element);
+
+>>>>>>> SS1
+>>>>>>> Udbhav_idleReceiptIntegration
 
 private slots:
     void on_pushButton_to_select_product_page_clicked();
+    //  void on_pushButton_to_select_product_page_clicked();
+    void onIdlePageTypeSelectorTimerTick();
     //    void on_savedBottles_label_clicked();
 
     void on_pushButton_test_clicked();

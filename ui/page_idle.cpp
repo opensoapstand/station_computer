@@ -54,6 +54,11 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     // TODO: Hold and pass Product Object
     selectedProduct = new product();
     // product *selectedProduct;
+
+    idlePageTypeSelectorTimer = new QTimer(this);
+    idlePageTypeSelectorTimer->setInterval(1000);
+    connect(idlePageTypeSelectorTimer, SIGNAL(timeout()), this, SLOT(onIdlePageTypeSelectorTimerTick()));
+
 }
 
 /*
@@ -79,6 +84,8 @@ page_idle::~page_idle()
 
 void page_idle::showEvent(QShowEvent *event)
 {
+    qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
+    QWidget::showEvent(event);
 
     qDebug() << "TEST TEXTS LOADING";
     loadTextsFromCsv();
@@ -128,6 +135,8 @@ void page_idle::showEvent(QShowEvent *event)
 
     ui->label_welcome_message->setText("refill soap here! <br>tap screen to start");
 
+    
+
     addCompanyLogoToLabel(ui->logo_label);
 
     ui->label_printer_status->hide(); // always hide here, will show if enabled and has problems.
@@ -139,6 +148,12 @@ void page_idle::showEvent(QShowEvent *event)
     QString machine_logo_full_path = getTemplatePathFromName(MACHINE_LOGO_PATH);
     addPictureToLabel(ui->drinkfill_logo_label, machine_logo_full_path);
     ui->drinkfill_logo_label->setStyleSheet(styleSheet);
+<<<<<<< HEAD
+=======
+
+    idlePageTypeSelectorTimer->start(100);
+    _idlePageTypeSelectorTimerTimeoutSec = 2;
+>>>>>>> Udbhav_idleReceiptIntegration
 
 // #define PLAY_VIDEO
 #ifdef PLAY_VIDEO
@@ -193,8 +208,21 @@ void page_idle::showEvent(QShowEvent *event)
 #endif
     qDebug() << "Video player. Is fullscreen? : " << videoWidget->isFullScreen();
 #endif
-    this->raise();
 }
+
+void page_idle::changeToIdleProductsIfSet()
+{
+    DbManager db(DB_PATH);
+    // call db check if idle or idle_products
+    idle_page_type = db.getIdlePageType();
+    db.closeDB();
+
+    if (idle_page_type == "static_products")
+    {
+        hideCurrentPageAndShowProvided(this->p_page_idle_products);
+    }
+}
+
 // for products.cpp
 product *page_idle::getSelectedProduct()
 {
@@ -231,11 +259,21 @@ void page_idle::checkReceiptPrinterStatus()
 void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     this->pageTransition(this, pageToShow);
+        idlePageTypeSelectorTimer->stop();
 }
 /*
  * Screen click shows product page as full screen and hides page_idle screen
  */
-
+void page_idle::onIdlePageTypeSelectorTimerTick()
+{
+    if (--_idlePageTypeSelectorTimerTimeoutSec >= 0)
+    {
+    }
+    else
+    {
+      changeToIdleProductsIfSet();
+    }
+}
 void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
 {
     qDebug() << "Printer feedback received from fsm";
@@ -257,6 +295,7 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
         ui->label_printer_status->hide();
     }
     ui->pushButton_to_select_product_page->show();
+    // ui->pushButton_to_select_product_page->show();
 }
 
 void page_idle::on_pushButton_to_select_product_page_clicked()

@@ -464,16 +464,19 @@ void page_idle::loadTextsFromCsv()
         std::string line;
         while (std::getline(file, line))
         {
-            qDebug() << QString::fromStdString(line);
-
-            std::size_t space_pos = line.find(',');
-            if (space_pos != std::string::npos)
+            if (!line.empty() && line[0] != '#')  // Skip empty lines and lines starting with '#'
             {
-                std::string word = line.substr(0, space_pos);
-                std::string sentence = line.substr(space_pos + 1);
-                QString qword = QString::fromStdString(word);
-                QString qsentence = QString::fromStdString(sentence);
-                textNameToTextMap[qword] = qsentence;
+                qDebug() << QString::fromStdString(line);
+
+                std::size_t space_pos = line.find(',');
+                if (space_pos != std::string::npos)
+                {
+                    std::string word = line.substr(0, space_pos);
+                    std::string sentence = line.substr(space_pos + 1);
+                    QString qword = QString::fromStdString(word);
+                    QString qsentence = QString::fromStdString(sentence);
+                    textNameToTextMap[qword] = qsentence;
+                }
             }
         }
         file.close();
@@ -486,7 +489,6 @@ void page_idle::loadTextsFromCsv()
     }
     else
     {
-
         qDebug() << "Texts file path could not be opened: " + csv_path;
     }
 }

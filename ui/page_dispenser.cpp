@@ -183,8 +183,8 @@ void page_dispenser::showEvent(QShowEvent *event)
     updatelabel_volume_dispensed_ml(p_page_idle->selectedProduct->getVolumeDispensedMl());
 
     QString dispenseCommand = getStartDispensingCommand();
-    QString priceCommand = QString::number(p_page_idle->selectedProduct->getPriceCorrected());
-    QString promoCommand = p_page_idle->selectedProduct->getPromoCode();
+    QString priceCommand = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(p_page_idle->selectedProduct->getPrice()));
+    QString promoCommand = p_page_idle->getPromoCode();
 
     QString delimiter = QString("|");
     QString preamble = "Order";
@@ -213,7 +213,7 @@ void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
     if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
     {
 
-        double unitprice = p_page_idle->selectedProduct->getPriceCorrected();
+        double unitprice = p_page_idle->getPriceCorrectedAfterDiscount(p_page_idle->selectedProduct->getPrice());
         current_price = dispensed * unitprice;
         ui->label_volume_dispensed_ml->setText(dispensedVolumeUnitsCorrected + " " + units + " ( $" + QString::number(current_price, 'f', 2) + " )");
     }
@@ -368,7 +368,7 @@ void page_dispenser::resetDispenseTimeout(void)
 
 QString page_dispenser::getPromoCodeUsed()
 {
-    QString promoCode = p_page_idle->selectedProduct->getPromoCode();
+    QString promoCode = p_page_idle->getPromoCode();
 
     return promoCode;
 }

@@ -54,6 +54,7 @@ public:
     void addPictureToLabel(QLabel *label, QString picturePath);
     void addCompanyLogoToLabel(QLabel *label);
     QString getTemplateFolder();
+    void changeToIdleProductsIfSet();
     void setTemplateFolder(QString rootPath, QString templateFolder);
     QString getTemplatePathFromName(QString fileName);
     QString getDefaultTemplatePathFromName(QString fileName);
@@ -63,6 +64,15 @@ public:
     void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
     void addCssStyleToObject(QWidget *qtType, QString classname, QString css_name);
     
+    void setPromoCode(QString promoCode);
+    QString getPromoCode();
+
+    void setDiscountPercentage(double percentageFraction);
+    double getDiscountPercentage();
+    bool isPromoApplied();
+
+    double getPriceCorrectedAfterDiscount(double price);
+    
     void setSelectedProduct(uint8_t slot);
     product *getSelectedProduct();
 
@@ -71,12 +81,11 @@ public:
 
     product products[SLOT_COUNT];
     product *selectedProduct;
-    
+
     df_util *dfUtility;
-   //for products.cpp
-   // product products[SLOT_COUNT]; // declare products as a member variable
-    // product* getSelectedProduct();
-    
+    // for products.cpp
+    //  product products[SLOT_COUNT]; // declare products as a member variable
+    //  product* getSelectedProduct();
 
     DfUiCommThread *dfComm;
 
@@ -93,11 +102,17 @@ public:
     QVideoWidget *videoWidget;
     QMediaPlayer *player;
 
+
     void setTemplateTextToObject(QWidget* p_element);
+
+    QTimer *idlePageTypeSelectorTimer;
+    int _idlePageTypeSelectorTimerTimeoutSec;
 
 
 private slots:
     void on_pushButton_to_select_product_page_clicked();
+    //  void on_pushButton_to_select_product_page_clicked();
+    void onIdlePageTypeSelectorTimerTick();
     //    void on_savedBottles_label_clicked();
 
     void on_pushButton_test_clicked();
@@ -115,6 +130,8 @@ private:
     page_idle_products *p_page_idle_products;
     bool p1, p2, p3, p4;
     QString idle_page_type;
+    double m_discount_percentage_fraction = 0.0;
+    QString m_promoCode;
 };
 
 #endif // IDLE_H

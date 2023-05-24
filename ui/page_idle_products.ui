@@ -16,19 +16,6 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QPushButton" name="p_page_maintenanceButton">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>281</width>
-     <height>241</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_product_1_photo">
    <property name="geometry">
     <rect>
@@ -473,12 +460,42 @@
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="printer_status_label">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>850</y>
+     <width>980</width>
+     <height>120</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_to_select_product_page">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1080</width>
+     <height>1920</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <zorder>pushButton_help_page</zorder>
+  <zorder>pushButton_to_select_product_page</zorder>
   <zorder>label_product_1_type</zorder>
   <zorder>label_product_2_photo</zorder>
   <zorder>label_product_2_photo_text</zorder>
   <zorder>label_product_1_photo</zorder>
   <zorder>label_product_1_photo_text</zorder>
-  <zorder>p_page_maintenanceButton</zorder>
   <zorder>label_product_3_photo</zorder>
   <zorder>label_product_4_photo</zorder>
   <zorder>label_product1_price</zorder>
@@ -497,6 +514,7 @@
   <zorder>label_product_3_overlay</zorder>
   <zorder>label_pick_soap</zorder>
   <zorder>logo_label</zorder>
+  <zorder>printer_status_label</zorder>
  </widget>
  <resources/>
  <connections/>

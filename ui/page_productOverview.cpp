@@ -65,7 +65,7 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
     ui->label_discount_tag->setText("Discount");
     ui->pushButton_promo_apply->setText("Apply");
     ui->label_pay->setText("Continue");
-    ui->label_discount_tag->show();
+    // ui->label_discount_tag->show();
     ui->label_total->setText("Total");
 
     {
@@ -203,21 +203,22 @@ void page_product_overview::reset_and_show_page_elements()
     ui->promoKeyboard->hide();
     if (areCouponsEnabled())
     {
+
         ui->lineEdit_promo_code->setText("Tap here to enter promo code");
         ui->lineEdit_promo_code->show();
-
+        if(p_page_idle->isPromoApplied()){
+            ui->lineEdit_promo_code->setText("Promo Code Valid");
+        }
         ui->label_invoice_discount_amount->show();
         ui->label_invoice_discount_name->show();
-        ui->label_discount_tag->show();
+        // ui->label_discount_tag->show();
         ui->pushButton_promo_input->show();
-
         ui->pushButton_promo_apply->show();
     }
     else
     {
         qDebug() << "disable coupon";
         coupon_input_hide();
-
         ui->label_invoice_discount_amount->hide();
         ui->label_invoice_discount_name->hide();
         ui->label_discount_tag->hide();
@@ -225,9 +226,14 @@ void page_product_overview::reset_and_show_page_elements()
     }
 
     qDebug() << "Reset and show elements";
-    p_page_idle->selectedProduct->setDiscountPercentageFraction((0 * 1.0) / 100);
-    ui->label_invoice_discount_amount->hide();
-    ui->label_discount_tag->hide();
+    // p_page_idle->selectedProduct->setDiscountPercentageFraction((0 * 1.0) / 100);
+    if(!p_page_idle->isPromoApplied())
+    {
+        ui->label_invoice_discount_amount->hide();
+        ui->label_invoice_discount_name->hide();
+        ui->label_discount_tag->hide();
+
+    }
     ui->pushButton_previous_page->setEnabled(true);
     ui->pushButton_to_idle->setEnabled(true);
 
@@ -315,8 +321,8 @@ void page_product_overview::updatePrice()
 
         double selectedPrice = p_page_idle->selectedProduct->getPrice();
         double discount = p_page_idle->selectedProduct->getDiscount();
-        double selectedPriceCorrected = p_page_idle->selectedProduct->getPriceCorrected();
-        double discountFraction = p_page_idle->selectedProduct->getDiscountPercentageFraction();
+        double selectedPriceCorrected = p_page_idle->getPriceCorrectedAfterDiscount(selectedPrice);
+        double discountFraction = p_page_idle->getDiscountPercentage();
         QString units = p_page_idle->selectedProduct->getUnitsForSlot();
         if (units == "ml")
         {
@@ -361,11 +367,14 @@ void page_product_overview::updatePrice()
     }
     else
     {
-        double discountAmount = p_page_idle->selectedProduct->getPrice() - p_page_idle->selectedProduct->getPriceCorrected();
+         double selectedPrice = p_page_idle->selectedProduct->getPrice();
+        double selectedPriceCorrected = p_page_idle->getPriceCorrectedAfterDiscount(selectedPrice);
+        double discountFraction = p_page_idle->getDiscountPercentage();
+        double discountAmount = selectedPrice - selectedPriceCorrected;
         ui->label_invoice_discount_amount->setText("-$" + QString::number(discountAmount, 'f', 2));
         ui->label_selected_volume->setText(selected_volume + " " + p_page_idle->selectedProduct->getUnitsForSlot());
-        ui->label_invoice_price->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(), 'f', 2));
-        ui->label_invoice_price_total->setText("$" + QString::number(p_page_idle->selectedProduct->getPriceCorrected(), 'f', 2));
+        ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2));
+        ui->label_invoice_price_total->setText("$" + QString::number(selectedPriceCorrected, 'f', 2));
     }
 }
 
@@ -414,16 +423,19 @@ void page_product_overview::apply_promo_code()
                     if (coupon_obj["active"])
                     {
                         new_percent = coupon_obj["discount_amount"];
-                        p_page_idle->selectedProduct->setPromoCode(promocode);
-                        p_page_idle->selectedProduct->setDiscountPercentageFraction((new_percent * 1.0) / 100);
+                        p_page_idle->setPromoCode(promocode);
+                        // p_page_idle->selectedProduct->setDiscountPercentageFraction((new_percent * 1.0) / 100);
+                        p_page_idle->setDiscountPercentage((new_percent * 1.0) / 100);
                         qDebug() << "Apply coupon percentage: " << new_percent;
                         // loadProdSpecs();
                         qDebug() << "Promo";
-
-                        ui->label_invoice_discount_amount->show();
-                        ui->label_discount_tag->show();
+                        if(p_page_idle->isPromoApplied()){
+                            ui->label_invoice_discount_amount->show();
+                            ui->label_discount_tag->show();
+                            ui->lineEdit_promo_code->setText("Promo Code Valid");
+                        }
+                        
                         p_page_idle->addCssStyleToObject(ui->lineEdit_promo_code, "promoCode_valid", PAGE_PRODUCT_OVERVIEW_CSS);
-                        ui->lineEdit_promo_code->setText("Promo Code Valid");
                         // ui->label_invoice_discount_amount->setText("-$" + QString::number(p_page_idle->selectedProduct->getDiscount(), 'f', 5));
                         // ui->label_invoice_price_total->setText("$" + QString::number(p_page_idle->selectedProduct->getPriceCorrected(), 'f', 2));
                         // ui->label_invoice_price_total->setText("$" + QString::number(p_page_idle->selectedProduct->getPriceCorrected(), 'f', 2)); // how to handle promo ?! todo!

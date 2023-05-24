@@ -85,9 +85,7 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     font.setBold(true);
     font.setWeight(75);
 
-    // productPageEndTimer = new QTimer(this);
-    // productPageEndTimer->setInterval(1000);
-    // connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
+   
 }
 
 /*
@@ -272,16 +270,6 @@ void page_idle_products::addCompanyLogoToLabel(QLabel *label)
     }
 }
 
-// void page_idle_products::onProductPageTimeoutTick()
-// {
-//     if (--_productPageTimeoutSec >= 0)
-//     {
-//     }
-//     else
-//     {
-//         // hideCurrentPageAndShowProvided(p_page_idle);
-//     }
-// }
 
 void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {

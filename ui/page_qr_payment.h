@@ -67,7 +67,7 @@ class page_qr_payment : public QWidget
 public:
     // **** GUI Setup ****
     explicit page_qr_payment(QWidget *parent = nullptr);
-    void setPage(pageProduct* pageSizeSelect,page_error_wifi *pageWifiError, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp);
+    void setPage(pageProduct* p_page_product,page_error_wifi *pageWifiError, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp);
     ~page_qr_payment();
     void setProgressLabel(QLabel* label, int dot);
     // TODO: Figure out better Style Setup.
@@ -129,7 +129,7 @@ protected:
 private:
     // **** GUI ****
     Ui::page_qr_payment *ui;
-    pageProduct* p_pageProduct;
+    pageProduct* p_page_product;
     page_dispenser* p_page_dispense;
     page_idle* p_page_idle;
     page_help* p_page_help;

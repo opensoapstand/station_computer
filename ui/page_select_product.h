@@ -37,7 +37,7 @@ class page_select_product : public QWidget
 
 public:
     explicit page_select_product(QWidget *parent = nullptr);
-    void setPage(pageProduct *pageSizeSelect, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp);
+    void setPage(pageProduct *p_page_product, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp);
     ~page_select_product();
     
     void select_product(int slot);

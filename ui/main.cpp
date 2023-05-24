@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
     page_idle_products *p_page_idle_products = new page_idle_products();
     page_transactions *p_page_transactions = new page_transactions();
     page_select_product *firstSelectPage = new page_select_product();
-    pageProduct *p_pageProduct = new pageProduct();
+    pageProduct *p_page_product = new pageProduct();
     page_qr_payment *paymentQrPage = new page_qr_payment();
     page_tap_payment *paymentTapPage = new page_tap_payment();
     page_dispenser *p_page_dispense = new page_dispenser();
@@ -163,21 +163,21 @@ int main(int argc, char *argv[])
     // df_util::fileExists(FULL_TRANSPARENT_IMAGE_PATH);
 
     // Page pathing references to function calls.
-    p_page_help->setPage(firstSelectPage, p_pageProduct, p_page_idle, paymentQrPage, p_page_transactions, p_page_maintenance, p_page_sendFeedback);
+    p_page_help->setPage(firstSelectPage, p_page_product, p_page_idle, paymentQrPage, p_page_transactions, p_page_maintenance, p_page_sendFeedback);
     p_page_transactions->setPage(p_page_idle);
     initPage->setPage(p_page_idle);
     p_page_maintenance_product->setPage(p_page_maintenance, p_page_idle, p_page_idle_products);
     p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle,p_page_idle_products);
-    p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product,  p_page_maintenance_general, firstSelectPage, p_pageProduct);
+    p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product,  p_page_maintenance_general, firstSelectPage, p_page_product);
     p_page_idle->setPage(firstSelectPage, p_page_maintenance, p_page_maintenance_general, p_page_idle_products);
-    p_page_idle_products->setPage(p_pageProduct, p_page_idle_products, p_page_idle,  p_page_maintenance, p_page_help );
-    firstSelectPage->setPage(p_pageProduct, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help);
-    p_pageProduct->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, p_page_help,p_page_product_overview);
-    paymentQrPage->setPage(p_pageProduct, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
-    paymentTapPage->setPage(p_pageProduct, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
+    p_page_idle_products->setPage(p_page_product, p_page_idle_products, p_page_idle,  p_page_maintenance, p_page_help );
+    firstSelectPage->setPage(p_page_product, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help);
+    p_page_product->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, p_page_help,p_page_product_overview);
+    paymentQrPage->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
+    paymentTapPage->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
     p_page_dispense->setPage(paymentQrPage,paymentTapPage, p_page_end, p_page_idle, p_page_sendFeedback);
-    p_page_product_overview->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, paymentTapPage, p_page_help, p_pageProduct);
-    p_page_sendFeedback->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, p_page_help, p_pageProduct, p_page_end);
+    p_page_product_overview->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, paymentTapPage, p_page_help, p_page_product);
+    p_page_sendFeedback->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, p_page_help, p_page_product, p_page_end);
     p_page_end->setPage(p_page_dispense, p_page_idle, paymentQrPage, p_page_sendFeedback );
     p_page_wifi_error->setPage(paymentQrPage, p_page_end, p_page_idle);
     

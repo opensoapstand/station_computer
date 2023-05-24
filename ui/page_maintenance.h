@@ -44,7 +44,7 @@ class page_maintenance : public QWidget
 
 public:
     explicit page_maintenance(QWidget *parent = nullptr);
-    void setPage(page_idle* pageIdle, page_maintenance_dispenser* p_pageMaintenanceDispenser, page_maintenance_general* p_pageMaintenanceGeneral, page_select_product *p_pageProduct, pageProduct* pagePaySelect);
+    void setPage(page_idle* pageIdle, page_maintenance_dispenser* p_pageMaintenanceDispenser, page_maintenance_general* p_pageMaintenanceGeneral, page_select_product *p_page_product, pageProduct* pagePaySelect);
 
 
     ~page_maintenance();
@@ -82,7 +82,7 @@ private:
     page_maintenance_dispenser* p_page_maintenance_product;
     page_maintenance_general* p_page_maintenance_general;
     page_select_product* p_pageSelectProduct;
-    pageProduct* p_pageProduct;
+    pageProduct* p_page_product;
 
     QResizeEvent *productSelection;
     QPushButton* product_buttons[4];

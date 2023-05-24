@@ -1,0 +1,17 @@
+# Display texts. 
+# Default template. 
+# Non default templates can be put in their template folder with the same name. Object names not found in the file in the template folder will be taken from the default template file
+# PAGE->OBJECTNAME,mytext
+# PAGE = QT page name
+# OBJECTNAME = QWidget (QLabel or QPushButton)
+# , = separator between name and text
+# mytext = custom text to be displayed on screen
+# template comment example (needs to start with a #)
+
+# empty lines are also permitted
+
+# Pageproduct 
+pageProduct->pushButton_back,<- Products
+pageProduct->label_select_quantity,Select Quantity
+pageProduct->pushButton_continue,Continue
+

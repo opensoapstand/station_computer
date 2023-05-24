@@ -13,7 +13,7 @@
 // copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
 //***************************************
-
+#include <map>
 #include "page_idle.h"
 #include "ui_page_idle.h"
 #include "page_idle_products.h"
@@ -23,7 +23,7 @@
 
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
-#include <QMainWindow>
+// #include <QMainWindow>
 #include <QtWidgets>
 #include <QtMultimediaWidgets>
 
@@ -79,6 +79,14 @@ page_idle::~page_idle()
 
 void page_idle::showEvent(QShowEvent *event)
 {
+
+    qDebug() << "TEST TEXTS LOADING";
+    loadTextsFromCsv();
+    QString result = getText("lode");
+    qDebug() << result;
+    result = getText("brecht");
+    qDebug() << result;
+
     QString styleSheet = getCSS(PAGE_IDLE_CSS);
     ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
     ui->label_welcome_message->setStyleSheet(styleSheet);
@@ -405,4 +413,89 @@ void page_idle::setBackgroundPictureToQWidget(QWidget *p_widget, QString image_p
     p_widget->setPalette(palette);
     p_widget->repaint();
     p_widget->update();
+}
+
+void page_idle::setTemplateTextToObject(QWidget *p_element)
+{
+   QWidget *parentWidget = p_element->parentWidget();
+    QString pageName = parentWidget->objectName();
+    QString elementName = p_element->objectName();
+
+    QString searchString = pageName + "->" + elementName;
+
+    QString text = getText(searchString);
+
+    if (QLabel *label = qobject_cast<QLabel *>(p_element))
+    {
+        label->setText(text);
+    }
+    else if (QPushButton *button = qobject_cast<QPushButton *>(p_element))
+    {
+        button->setText(text);
+    }
+    else
+    {
+        // Handle other types of elements if needed
+    }
+}
+
+QString page_idle::getText(QString textName_to_find)
+{
+
+    std::string key = textName_to_find.toStdString();
+    auto it = textNameToTextMap.find(QString::fromStdString(key));
+    QString retval;
+    if (it != textNameToTextMap.end())
+    {
+        // std::cout << "Word found! Sentence: " << it->second ;
+        retval = it->second;
+    }
+    else
+    {
+        qDebug() << "no template text value found for: " + textName_to_find;
+        retval = textName_to_find;
+    }
+    return retval;
+}
+
+void page_idle::loadTextsFromCsv()
+{
+    // Create an input filestream
+
+    QString name = UI_TEXTS_CSV_PATH;
+    QString csv_path = getTemplatePathFromName(name);
+
+    std::ifstream file(csv_path.toStdString());
+    if (file.is_open())
+    {
+        std::string line;
+        while (std::getline(file, line))
+        {
+            if (!line.empty() && line[0] != '#')  // Skip empty lines and lines starting with '#'
+            {
+                qDebug() << QString::fromStdString(line);
+
+                std::size_t space_pos = line.find(',');
+                if (space_pos != std::string::npos)
+                {
+                    std::string word = line.substr(0, space_pos);
+                    std::string sentence = line.substr(space_pos + 1);
+                    QString qword = QString::fromStdString(word);
+                    QString qsentence = QString::fromStdString(sentence);
+                    textNameToTextMap[qword] = qsentence;
+                }
+            }
+        }
+        file.close();
+
+        // Print the word-sentence mapping
+        for (const auto &pair : textNameToTextMap)
+        {
+            qDebug() << pair.first << ": " << pair.second;
+        }
+    }
+    else
+    {
+        qDebug() << "Texts file path could not be opened: " + csv_path;
+    }
 }

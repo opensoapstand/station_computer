@@ -61,9 +61,6 @@ int product::getSize()
 
 void product::setSize(int sizeIndex)
 {
-    // index!!!!  e.g. 0=small
-    // overruledPrice = INVALID_PRICE;
-    // m_discount_percentage_fraction = 0.0;
     qDebug() << "Set size index: " << sizeIndex;
     Size = sizeIndex;
 }
@@ -121,13 +118,8 @@ void product::setSlot(int slot)
     if (slot >= OPTION_SLOT_INVALID && slot <= SLOT_COUNT)
     {
 
-        // if (slot != getSlot())
-        // {
-        //     // overruledPrice = INVALID_PRICE;
-        //     // m_discount_percentage_fraction = 0.0;
             m_selectedSlot = slot;
-            // emit orderSlotChange(slot);
-        // }
+        
     }
     else
     {
@@ -155,8 +147,6 @@ bool product::isOrderValid()
 
 double product::getDiscount()
 {
-    // qDebug() << "--------=========" << QString::number(getSelectedPriceCorrected());
-
     // the discount is the original price minus the discounted price
     return getPrice(getSize()) - getPriceCorrected();
 }
@@ -303,7 +293,6 @@ QString product::getUnitsForSlot()
     QString units;
     DbManager db(DB_PATH);
     units = db.getUnits(getSlot());
-    // qDebug() << "Units: " << units;
     db.closeDB();
     return units;
 }
@@ -318,7 +307,6 @@ QString product::getVolumePerTickAsStringForSlot()
 
 double product::getVolumePerTickForSlot()
 {
-    // ticks = db.getProductVolumePerTick(product_slot___);
     qInfo() << "Open db: get vol per tick";
     DbManager db(DB_PATH);
     double ml_per_tick = db.getProductVolumePerTick(getSlot());
@@ -329,7 +317,6 @@ double product::getVolumePerTickForSlot()
 
 void product::setVolumePerTickForSlot(QString volumePerTickInput)
 {
-    // ticks = db.getProductVolumePerTick(product_slot___);
     double ml_per_tick = inputTextToMlConvertUnits(volumePerTickInput);
     qInfo() << "Open db: set vol per tick";
     DbManager db(DB_PATH);
@@ -431,16 +418,7 @@ void product::loadProductProperties()
 bool product::isProductVolumeInContainer()
 {
     DbManager db(DB_PATH);
-    // db.getProductProperties(slot, &product_id, sizeIndexIsEnabled);
     bool retval;
-    // if (db.getEmptyContainerDetectionEnabled())
-    // {
-    //     retval=  db.getVolumeRemaining(slot) > CONTAINER_EMPTY_THRESHOLD_ML;
-    // }
-    // else
-    // {
-    //     retval = db.getVolumeRemaining(slot) > db.getProductVolume(slot, 'l'); // ----> TODO VERY BUGGY (only instance found of using char volume as a magic number)
-    // }
     if (!db.getEmptyContainerDetectionEnabled())
     {
         retval = db.getVolumeRemaining(getSlot()) > CONTAINER_EMPTY_THRESHOLD_ML;
@@ -492,43 +470,6 @@ void product::loadProductPropertiesFromProductsFile()
     qDebug() << "properties file read done ";
 }
 
-// void product::loadProductPropertiesFromProductsFile()
-// {
-//     getProductPropertiesFromProductsFile(m_product_id, &m_name_ui, &m_product_type, &m_description_ui, &m_features_ui, &m_ingredients_ui);
-// }
-
-// void product::getProductPropertiesFromProductsFile(QString product_id, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui)
-// {
-//     QFile file(PRODUCT_DETAILS_TSV_PATH);
-//     if (!file.open(QIODevice::ReadOnly))
-//     {
-//         qDebug() << "ERROR: Opening product details file. Expect unexpected behaviour now! ";
-//         return;
-//     }
-
-//     QTextStream in(&file);
-//     qDebug() << "Load csv file with product properties";
-
-//     while (!in.atEnd())
-//     {
-//         QString line = in.readLine();
-
-//         QStringList fields = line.split("\t");
-
-//         int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], product_id, Qt::CaseSensitive);
-//         if (compareResult == 0)
-//         {
-//             *name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
-//             *product_type = fields[CSV_PRODUCT_COL_TYPE];
-//             *description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
-//             *features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
-//             *ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
-//             break;
-//         }
-//     }
-//     file.close();
-// }
-
 QString product::getProductIngredients()
 {
     return m_ingredients_ui;
@@ -550,25 +491,10 @@ QString product::getProductDescription()
 
 QString product::getProductType()
 {
-    // QString product_id = getProductDrinkfillSerial();
-    // QString name_ui;
-    // QString product_type;
-    // QString description_ui;
-    // QString features_ui;
-    // QString ingredients_ui;
-
-    // getProductPropertiesFromProductsFile(product_id, &name_ui, &product_type, &description_ui, &features_ui, &ingredients_ui);
-    // return product_type;
+  
     return m_product_type;
 }
 
-
-// QString product::getProductPicturePath()
-// {
-
-//     // return QString(PRODUCT_PICTURES_ROOT_PATH).arg(m_product_id);
-//     return getProductPicturePath(getSlot());
-// }
 QString product::getProductPicturePath()
 {
     QString serial = getProductDrinkfillSerial();
@@ -586,20 +512,6 @@ QString product::getPLU(char size)
     return plu;
 }
 
-// QString product::getProductName()
-// {
-//     // QString product_id = getProductDrinkfillSerial();
-
-//     // QString name_ui;
-//     // QString product_type;
-//     // QString description_ui;
-//     // QString features_ui;
-//     // QString ingredients_ui;
-
-//     // getProductPropertiesFromProductsFile(product_id, &name_ui, &product_type, &description_ui, &features_ui, &ingredients_ui);
-//     // return name_ui;
-
-// }
 
 QString product::getMachineId()
 {
@@ -659,9 +571,6 @@ QString product::getPaymentMethod()
     paymentMethod = db.getPaymentMethod(getSlot());
     db.closeDB();
     return paymentMethod;
-
-    // QString tmp = "tap";
-    // return tmp;
 }
 
 int product::getDispenseSpeedPercentage()

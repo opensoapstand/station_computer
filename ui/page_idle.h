@@ -104,6 +104,8 @@ public:
 
 
     void setTemplateTextToObject(QWidget* p_element);
+    void setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier);
+
 
     QTimer *idlePageTypeSelectorTimer;
     int _idlePageTypeSelectorTimerTimeoutSec;

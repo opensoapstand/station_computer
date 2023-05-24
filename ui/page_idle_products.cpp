@@ -35,7 +35,6 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
 {
     ui->setupUi(this);
 
-    ui->p_page_maintenanceButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
 
     labels_product_picture[0] = ui->label_product_1_photo;
     labels_product_picture[1] = ui->label_product_2_photo;

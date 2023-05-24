@@ -93,18 +93,12 @@ public:
     QVideoWidget *videoWidget;
     QMediaPlayer *player;
 
-<<<<<<< HEAD
+
     void setTemplateTextToObject(QWidget* p_element);
 
-=======
-<<<<<<< HEAD
     QTimer *idlePageTypeSelectorTimer;
     int _idlePageTypeSelectorTimerTimeoutSec;
-=======
-    void setTemplateTextToObject(QWidget* p_element);
 
->>>>>>> SS1
->>>>>>> Udbhav_idleReceiptIntegration
 
 private slots:
     void on_pushButton_to_select_product_page_clicked();

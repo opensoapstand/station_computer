@@ -467,8 +467,6 @@
      <y>1732</y>
      <width>191</width>
      <height>181</height>
-<<<<<<< HEAD
-=======
     </rect>
    </property>
    <property name="text">
@@ -495,7 +493,6 @@
      <y>0</y>
      <width>1080</width>
      <height>1920</height>
->>>>>>> Udbhav_idleReceiptIntegration
     </rect>
    </property>
    <property name="styleSheet">

@@ -148,12 +148,9 @@ void page_idle::showEvent(QShowEvent *event)
     QString machine_logo_full_path = getTemplatePathFromName(MACHINE_LOGO_PATH);
     addPictureToLabel(ui->drinkfill_logo_label, machine_logo_full_path);
     ui->drinkfill_logo_label->setStyleSheet(styleSheet);
-<<<<<<< HEAD
-=======
 
     idlePageTypeSelectorTimer->start(100);
     _idlePageTypeSelectorTimerTimeoutSec = 2;
->>>>>>> Udbhav_idleReceiptIntegration
 
 // #define PLAY_VIDEO
 #ifdef PLAY_VIDEO

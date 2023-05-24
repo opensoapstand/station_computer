@@ -30,7 +30,7 @@ class page_idle;
 class page_dispenser;
 class page_error_wifi;
 class page_help;
-class pageProductOverview;
+class page_product_overview;
 
 namespace Ui
 {
@@ -48,7 +48,7 @@ public:
     QLabel *orderSizeBackgroundLabels[4];
 
     explicit pageProduct(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, pageProductOverview *page_Overview);
+    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product_overview *page_Overview);
     ~pageProduct();
 
     void resizeEvent(QResizeEvent *event);
@@ -90,7 +90,7 @@ private:
     page_dispenser *p_page_dispense;
     page_error_wifi *p_page_wifi_error;
     page_help *p_page_help;
-    pageProductOverview *p_page_overview;
+    page_product_overview *p_page_overview;
 
 
 

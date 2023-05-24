@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
     page_dispenser *p_page_dispense = new page_dispenser();
     page_error_wifi *p_page_wifi_error = new page_error_wifi();
     pagethankyou *p_page_thank_you = new pagethankyou();
-    pageProductOverview *p_pageProductOverview = new pageProductOverview();
+    page_product_overview *p_page_product_overview = new page_product_overview();
     page_sendFeedback *p_page_sendFeedback = new page_sendFeedback();
     page_maintenance *p_page_maintenance = new page_maintenance();
     page_maintenance_dispenser *p_page_maintenance_product = new page_maintenance_dispenser();
@@ -172,11 +172,11 @@ int main(int argc, char *argv[])
     p_page_idle->setPage(firstSelectPage, p_page_maintenance, p_page_maintenance_general, p_page_idle_products);
     p_page_idle_products->setPage(p_pageProduct, p_page_idle_products, p_page_idle,  p_page_maintenance, p_page_help );
     firstSelectPage->setPage(p_pageProduct, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help);
-    p_pageProduct->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, p_page_help,p_pageProductOverview);
+    p_pageProduct->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, p_page_help,p_page_product_overview);
     paymentQrPage->setPage(p_pageProduct, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
     paymentTapPage->setPage(p_pageProduct, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
     p_page_dispense->setPage(paymentQrPage,paymentTapPage, p_page_thank_you, p_page_idle, p_page_sendFeedback);
-    p_pageProductOverview->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, paymentTapPage, p_page_help, p_pageProduct);
+    p_page_product_overview->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, paymentTapPage, p_page_help, p_pageProduct);
     p_page_sendFeedback->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, p_page_help, p_pageProduct, p_page_thank_you);
     p_page_thank_you->setPage(p_page_dispense, p_page_idle, paymentQrPage, p_page_sendFeedback );
     p_page_wifi_error->setPage(paymentQrPage, p_page_thank_you, p_page_idle);

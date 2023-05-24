@@ -34,10 +34,10 @@ class page_help;
 class pageProduct;
 namespace Ui
 {
-    class pageProductOverview;
+    class page_product_overview;
 }
 
-class pageProductOverview : public QWidget
+class page_product_overview : public QWidget
 {
     Q_OBJECT
 
@@ -47,9 +47,9 @@ public:
     QLabel *orderSizeLabelsVolume[4];
     QLabel *orderSizeBackgroundLabels[4];
 
-    explicit pageProductOverview(QWidget *parent = nullptr);
+    explicit page_product_overview(QWidget *parent = nullptr);
     void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,page_tap_payment *page_tap_payment, page_help *pageHelp, pageProduct *page_product);
-    ~pageProductOverview();
+    ~page_product_overview();
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
@@ -91,7 +91,7 @@ private:
     void mainPage();
 
     std::string readBuffer;
-    Ui::pageProductOverview *ui;
+    Ui::page_product_overview *ui;
     page_select_product *p_page_select_product;
     page_qr_payment *paymentQrPage;
     page_tap_payment *paymentTapPage;
@@ -104,7 +104,7 @@ private:
     QTimer *selectIdleTimer;
     int _selectIdleTimeoutSec;
 
-    QResizeEvent *pageProductOverviewResize;
+    QResizeEvent *page_product_overviewResize;
     QShowEvent *dispenseEvent;
     QShowEvent *wifiErrorEvent;
 };

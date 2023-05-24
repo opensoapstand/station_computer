@@ -105,6 +105,8 @@ void page_idle::showEvent(QShowEvent *event)
     for (int slot = 1; slot <= SLOT_COUNT; slot++)
     {
         QString paymentMethod = products[slot - 1].getPaymentMethod();
+        // products[slot - 1].setDiscountPercentageFraction(0.0);
+        // products[slot - 1].setPromoCode("");
         if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
         {
             needsReceiptPrinter = true;
@@ -115,8 +117,7 @@ void page_idle::showEvent(QShowEvent *event)
         // reset promovalue
         // currentProductOrder->setDiscountPercentageFraction(0.0);
         // currentProductOrder->setPromoCode("");
-        products[slot - 1].setDiscountPercentageFraction(0.0);
-        products[slot - 1].setPromoCode("");
+        
     }
 
     DbManager db(DB_PATH);
@@ -229,6 +230,43 @@ product *page_idle::getSelectedProduct()
 void page_idle::setSelectedProduct(uint8_t slot)
 {
     selectedProduct = &products[slot - 1];
+}
+
+void page_idle::setDiscountPercentage(double percentageFraction)
+{
+    // ratio = percentage / 100;
+    qDebug() << "Set discount percentage fraction in idle page: " << QString::number(percentageFraction, 'f', 3);
+    m_discount_percentage_fraction = percentageFraction;
+}
+
+
+double page_idle::getDiscountPercentage()
+{
+    qDebug() << "Get Discount percentange" << m_discount_percentage_fraction;
+    return m_discount_percentage_fraction;
+}
+
+bool page_idle::isPromoApplied(){
+    if(m_discount_percentage_fraction != 0.0){
+        return true;
+    }
+    return false;
+}
+
+QString page_idle::getPromoCode()
+{
+    return m_promoCode;
+}
+
+void page_idle::setPromoCode(QString promoCode)
+{
+    // ratio = percentage / 100;
+    qDebug() << "Set Promo Code: " << promoCode;
+    m_promoCode = promoCode;
+}
+
+double page_idle::getPriceCorrectedAfterDiscount(double price){
+    return price*( 1 - m_discount_percentage_fraction);
 }
 
 void page_idle::checkReceiptPrinterStatus()

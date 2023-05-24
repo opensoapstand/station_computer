@@ -32,6 +32,7 @@
 
 using json = nlohmann::json;
 QString transactionLogging = "";
+extern bool promoApplied;
 // button positions
 uint16_t orderSizeButtons_xywh_dynamic_ui_all_sizes_available[4][4] = {
     {560, 990, 135, 100}, // S

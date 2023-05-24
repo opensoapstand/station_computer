@@ -337,7 +337,6 @@ void page_select_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     productPageEndTimer->stop();
     qDebug() << "Exit select product page.";
-    p_page_idle->selectedProduct->setDiscountPercentageFraction(0.0);
     this->raise();
     p_page_idle->pageTransition(this, pageToShow);
 }
@@ -345,11 +344,13 @@ void page_select_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 void page_select_product::on_pushButton_to_idle_clicked()
 {
     qDebug() << "Back to Idle Page Button pressed";
+    p_page_idle->setDiscountPercentage(0.0);
     hideCurrentPageAndShowProvided(p_page_idle);
 }
 
 void page_select_product::on_pushButton_help_page_clicked()
 {
     qDebug() << "Help_Button pressed";
+    p_page_idle->setDiscountPercentage(0.0);
     hideCurrentPageAndShowProvided(p_page_help);
 }

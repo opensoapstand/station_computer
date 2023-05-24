@@ -1911,7 +1911,7 @@ color: #7F8080;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>186</x>
+     <x>130</x>
      <y>1400</y>
      <width>641</width>
      <height>41</height>
@@ -1960,7 +1960,7 @@ color: #58595B;
    </property>
    <property name="geometry">
     <rect>
-     <x>188</x>
+     <x>130</x>
      <y>1175</y>
      <width>185</width>
      <height>34</height>

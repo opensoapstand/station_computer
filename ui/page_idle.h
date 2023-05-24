@@ -92,6 +92,8 @@ public:
     QVideoWidget *videoWidget;
     QMediaPlayer *player;
 
+    void setTemplateTextToObject(QWidget* p_element);
+
 
 private slots:
     void on_pushButton_to_select_product_page_clicked();

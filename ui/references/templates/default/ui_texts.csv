@@ -1,3 +1,4 @@
-lode,afefij eiwiw eiw
-welcome_object,Bonjour
-brecht,poendi
+pageProduct->pushButton_back,<- Products
+pageProduct->label_select_quantity,Select Quantity
+pageProduct->pushButton_continue,Continue
+

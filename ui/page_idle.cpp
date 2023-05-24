@@ -408,6 +408,30 @@ void page_idle::setBackgroundPictureToQWidget(QWidget *p_widget, QString image_p
     p_widget->update();
 }
 
+void page_idle::setTemplateTextToObject(QWidget *p_element)
+{
+   QWidget *parentWidget = p_element->parentWidget();
+    QString pageName = parentWidget->objectName();
+    QString elementName = p_element->objectName();
+
+    QString searchString = pageName + "->" + elementName;
+
+    QString text = getText(searchString);
+
+    if (QLabel *label = qobject_cast<QLabel *>(p_element))
+    {
+        label->setText(text);
+    }
+    else if (QPushButton *button = qobject_cast<QPushButton *>(p_element))
+    {
+        button->setText(text);
+    }
+    else
+    {
+        // Handle other types of elements if needed
+    }
+}
+
 QString page_idle::getText(QString textName_to_find)
 {
 
@@ -421,7 +445,8 @@ QString page_idle::getText(QString textName_to_find)
     }
     else
     {
-        retval = "NOT FOUND";
+        qDebug() << "no template text value found for: " + textName_to_find;
+        retval = textName_to_find;
     }
     return retval;
 }

@@ -132,7 +132,6 @@ void page_idle::showEvent(QShowEvent *event)
     addPictureToLabel(ui->drinkfill_logo_label, machine_logo_full_path);
     ui->drinkfill_logo_label->setStyleSheet(styleSheet);
 
-
 // #define PLAY_VIDEO
 #ifdef PLAY_VIDEO
     // player = new QMediaPlayer(this);
@@ -289,6 +288,13 @@ bool page_idle::isEnough(int p)
 
 //     hideCurrentPageAndShowProvided(p_page_maintenance);
 // }
+
+void page_idle::addCssStyleToObject(QWidget *qtType, QString classname, QString css_name)
+{
+    QString styleSheet = getCSS(css_name);
+    qtType->setProperty("class", classname);
+    qtType->setStyleSheet(styleSheet);
+}
 
 void page_idle::addCompanyLogoToLabel(QLabel *label)
 {

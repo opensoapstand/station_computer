@@ -205,7 +205,7 @@ text-align: center;</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_promo_button">
+  <widget class="QPushButton" name="pushButton_promo_apply">
    <property name="geometry">
     <rect>
      <x>825</x>
@@ -255,8 +255,8 @@ text-align: center;</string>
   <widget class="QPushButton" name="pushButton_promo_input">
    <property name="geometry">
     <rect>
-     <x>94</x>
-     <y>775</y>
+     <x>90</x>
+     <y>770</y>
      <width>881</width>
      <height>46</height>
     </rect>
@@ -2103,19 +2103,7 @@ text-align: center;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_discount_code">
-   <property name="geometry">
-    <rect>
-     <x>103</x>
-     <y>784</y>
-     <width>185</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
+
   <widget class="QLabel" name="label_help">
    <property name="geometry">
     <rect>
@@ -2129,8 +2117,7 @@ text-align: center;</string>
     <string>TextLabel</string>
    </property>
   </widget>
-  <zorder>label_discount_code</zorder>
-  <zorder>pushButton_promo_button</zorder>
+  <zorder>pushButton_promo_apply</zorder>
   <zorder>label_pay</zorder>
   <zorder>page_qr_payment_Button</zorder>
   <zorder>label_invoice_box</zorder>

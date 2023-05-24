@@ -61,7 +61,8 @@ public:
     void setBackgroundPictureToQWidget(QWidget *page, QString imageName);
     QString getCSS(QString cssName);
     void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
-
+    void addCssStyleToObject(QWidget *qtType, QString classname, QString css_name);
+    
     void setSelectedProduct(uint8_t slot);
     product *getSelectedProduct();
 

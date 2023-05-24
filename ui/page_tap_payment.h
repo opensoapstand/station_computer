@@ -99,7 +99,7 @@ private slots:
 
     // Navigation
     void on_pushButton_previous_page_clicked();
-    void on_payment_bypass_Button_clicked();
+    void on_pushButton_payment_bypass_clicked();
     void on_pushButton_to_idle_clicked();
 
     //void on_payment_pass_Button_clicked();
@@ -129,7 +129,7 @@ private:
     page_error_wifi *p_page_wifi_error;
 
     const QString TAP_READY_LABEL = "Ready for Tap";
-    const QString TAP_PROCESSING_LABEL = "Processing";
+    const QString TAP_label_processing = "Processing";
     const QString TAP_DECLINED_LABEL = "Card Declined";
     const QString TAP_AGAIN_LABEL = "Try Again";
     const QString TAP_APPROVED_LABEL = "Payment Approved";

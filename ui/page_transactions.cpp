@@ -17,7 +17,6 @@ page_transactions::page_transactions(QWidget *parent) : QWidget(parent),
         font.setBold(true);
         font.setWeight(75);
 
-        ui->pushButton_back->setStyleSheet("QPushButton { color:#FFFFFF; background-color: transparent; border: 0px }");
         ui->pushButton_back->setFont(font);
         ui->pushButton_back->setText("<- Back");
 
@@ -29,13 +28,11 @@ page_transactions::page_transactions(QWidget *parent) : QWidget(parent),
         font.setWeight(75);
 
         // ui->print_Button->setStyleSheet("QPushButton { color:#FFFFFF; background-color: transparent; border: 0px }");
-        ui->print_Button->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
 
         ui->print_Button->setFont(font);
         ui->print_Button->setText("Print Selected Receipt");
 
         // ui->transactions_List->setStyleSheet("QListWidget{  background:transparent; }QListWidget::item{background:green;}");
-        ui->transactions_List->setStyleSheet("QListWidget{  background:transparent; }QListWidget::item{background-color: #5E8580;}");
 }
 
 void page_transactions::setPage(page_idle *pageIdle)
@@ -56,10 +53,21 @@ void page_transactions::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 
 void page_transactions::showEvent(QShowEvent *event)
 {
+        QString styleSheet = p_page_idle->getCSS(PAGE_TRANSACTIONS_CSS);
+
+        ui->pushButton_back->setStyleSheet(styleSheet);
+        ui->print_Button->setStyleSheet(styleSheet);
+        ui->transactions_List->setStyleSheet(styleSheet);
+
+
+
         qDebug() << "<<<<<<< Page Enter: Transactions >>>>>>>>>";
         QWidget::showEvent(event);
 
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TRANSACTIONS_BACKGROUND_PATH);
+
+
+
 
         if (idleTimer == nullptr)
         {

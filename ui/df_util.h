@@ -77,6 +77,13 @@ using namespace std;
 #define PAGE_DISPENSER_CSS                              "page_dispenser.css"
 #define PAGE_PRODUCT_OVERVIEW_CSS                       "page_product_overview.css"
 #define PAGETHANKYOU_CSS                                "pagethankyou.css"
+#define PAGE_QR_PAYMENT_CSS                             "page_qr_payment.css"
+#define PAGE_ERROR_WIFI_CSS                             "page_error_wifi.css"
+#define PAGE_TAP_PAYMENT_CSS                            "page_tap_payment.css"
+#define PAGE_TRANSACTIONS_CSS                           "page_transactions.css"
+
+
+
 
 #define PAGE_IDLE_BACKGROUND_PATH                       "background_message.png"
 #define PAGE_IDLE_PRODUCTS_BACKGROUND_PATH              "background_product_select.png"

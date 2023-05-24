@@ -49,9 +49,9 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
         "}");
     ui->previousPage_Button->setText("<- Back");
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->payment_bypass_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->pushButton_payment_bypass->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    ui->payment_bypass_Button->setEnabled(false);
+    ui->pushButton_payment_bypass->setEnabled(false);
 
     // Payment Declined
     declineTimer = new QTimer(this);
@@ -61,8 +61,8 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
     idlePaymentTimer = new QTimer(this);
     connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
 
-    ui->payment_bypass_Button->setEnabled(false);
-    ui->title_Label->hide();
+    ui->pushButton_payment_bypass->setEnabled(false);
+    ui->label_title->hide();
 
     // ui->order_total_amount->hide();
     DbManager db(DB_PATH);
@@ -123,7 +123,7 @@ void page_tap_payment_serial::displayPaymentPending(bool isVisible)
 {
 }
 
-void page_tap_payment_serial::on_payment_bypass_Button_clicked()
+void page_tap_payment_serial::on_pushButton_payment_bypass_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_dispense);
 }
@@ -231,7 +231,7 @@ void page_tap_payment_serial::idlePaymentTimeout()
 }
 void page_tap_payment_serial::resetPaymentPage()
 {
-    ui->title_Label->hide();
+    ui->label_title->hide();
 
     stopPayTimers();
     transactionLogging = "";

@@ -1,36 +1,36 @@
 QPushButton { 
-    border: 1px solid #5E8580
-}
-#promoCode{ 
-    background-color: transparent; 
     border: 1px solid #5E8580;
 }
-.promoCode1{
+#pushButton_promo_input{ 
+    background-color: transparent; 
+    border: none;
+}
+.promoCode{
+    font-family: Montserrat; 
+    font-style: normal; 
+    font-weight: bold; 
+    font-size: 28px; 
+    line-height: 44px; 
+    color: #58595B;
+    border: 1px solid #58595B;
+}
+.promoCode_invalid{
     font-family: Montserrat; 
     font-style: normal; 
     font-weight: bold; 
     font-size: 28px; 
     line-height: 44px; 
     color: #f44336;
-    border-color:#f44336;
+    border: 1px solid #f44336;
 }
-.promoCode2{
-    font-family: Montserrat; 
-    font-style: normal; 
-    font-weight: bold; 
-    font-size: 28px; 
-    line-height: 44px; 
-    color: #75756f;
-    border-color:#f44336;
-}
-.promoCode3{
+.promoCode_valid{
     font-family: Montserrat; 
     font-style: normal; 
     font-weight: bold; 
     font-size: 28px; 
     line-height: 44px; 
     color: #5E8580;
-    border-color:#5E8580;
+    border: 1px solid #58595B;
 }
 #pushButton_select_product_page{ 
     background-color: transparent; 
@@ -64,6 +64,7 @@ QPushButton {
     background-color: transparent; 
     border: 0px
 }
+
 
 QLabel {
     position: absolute;
@@ -103,18 +104,7 @@ QLabel {
 #label_invoice_box{
     border: 2px solid #5E8580;
 }
-#label_discount_code {
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 75;
-    font-size: 24px;
-    line-height: 99px;
-    letter-spacing: 1.5px;
-    text-transform: lowercase;
-    color: #9F9F9F;
-    text-align: center;
-    qproperty-alignment: AlignCenter;
-}
+
 #label_pay {
     font-family: 'Brevia';
     font-style: normal;
@@ -128,6 +118,14 @@ QLabel {
     border-radius: 20px;
     color: white;
     border: none;
+}
+.labelDiscount{
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 28px;
+    color: #F52B2C;
 }
 .labelDiscountName{
     font-family: 'Montserrat';
@@ -161,4 +159,3 @@ QLabel {
 #label_product_photo {
     border: 2px solid #5E8580;
 }
-

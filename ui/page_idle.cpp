@@ -364,13 +364,6 @@ bool page_idle::isEnough(int p)
     return false;
 }
 
-// void page_idle::MMSlot()
-// {
-//     qDebug() << "Signal: Enter maintenance mode";
-//     this->p_pageSelectProduct->hide(); // if pressed from another page. This is not good. It could be on any page!
-
-//     hideCurrentPageAndShowProvided(p_page_maintenance);
-// }
 
 void page_idle::addCssStyleToObject(QWidget *qtType, QString classname, QString css_name)
 {

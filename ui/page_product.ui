@@ -58,11 +58,11 @@ line-height: 29px;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_to_idle">
+  <widget class="QPushButton" name="pushButton_to_help">
    <property name="geometry">
     <rect>
-     <x>478</x>
-     <y>1773</y>
+     <x>480</x>
+     <y>1770</y>
      <width>125</width>
      <height>125</height>
     </rect>
@@ -516,9 +516,9 @@ text-align: center;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_notify_us">
+  <widget class="QLabel" name="label_help">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="geometry">
     <rect>
@@ -532,8 +532,8 @@ text-align: center;</string>
     <string/>
    </property>
   </widget>
+  <zorder>label_help</zorder>
   <zorder>pushButton_continue</zorder>
-  <zorder>pushButton_previous_page</zorder>
   <zorder>pushButton_order_small</zorder>
   <zorder>pushButton_order_big</zorder>
   <zorder>pushButton_order_medium</zorder>
@@ -557,8 +557,8 @@ text-align: center;</string>
   <zorder>label_product_ingredients</zorder>
   <zorder>label_select_quantity</zorder>
   <zorder>pushButton_back</zorder>
-  <zorder>label_notify_us</zorder>
-  <zorder>pushButton_to_idle</zorder>
+  <zorder>pushButton_to_help</zorder>
+  <zorder>pushButton_previous_page</zorder>
  </widget>
  <resources/>
  <connections/>

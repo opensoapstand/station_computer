@@ -235,30 +235,20 @@ void pageProduct::showEvent(QShowEvent *event)
 
     QString styleSheet = p_page_idle->getCSS(PAGE_PRODUCT_CSS);
 
-    ui->label_product_title->setProperty("class", "css_title");
-
+    ui->label_product_title->setProperty("class", "title");
     ui->label_product_title->setStyleSheet(styleSheet);
-
     ui->pushButton_back->setStyleSheet(styleSheet); // pushbutton
-
     ui->label_product_description->setStyleSheet(styleSheet);
-
     ui->label_product_photo->setStyleSheet(styleSheet);
-
     ui->label_select_quantity->setStyleSheet(styleSheet);
-
-    // QString css_ingredients = ;
     ui->label_product_ingredients->setStyleSheet(styleSheet);
-
     ui->label_product_ingredients_title->setStyleSheet(styleSheet);
-
-    ui->label_notify_us->setStyleSheet(styleSheet);
-
+    ui->label_help->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
-
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
-
-    ui->pushButton_to_idle->setStyleSheet(styleSheet);
+    ui->pushButton_to_help->setProperty("class", "button_transparent");
+    ui->pushButton_to_help->setStyleSheet(styleSheet);
+    
 
     for (int i = 0; i < 4; i++)
     {
@@ -315,9 +305,10 @@ void pageProduct::reset_and_show_page_elements()
     ui->label_product_title->setText(p_page_idle->selectedProduct->getProductName());
     ui->label_product_ingredients->setText(p_page_idle->selectedProduct->getProductIngredients());
     ui->label_product_description->setText(p_page_idle->selectedProduct->getProductDescription());
+
     QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     qDebug() << full_path;
-    p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
+    p_page_idle->addPictureToLabel(ui->label_help, full_path);
 
     // bitmap_location = PAGE_PRODUCT_BACKGROUND_PATH;
     // uint16_t orderSizeButtons_xywh[4][4] = {
@@ -444,9 +435,6 @@ void pageProduct::loadProdSpecs()
 
     qDebug() << "-------------------------- LOAD PRODUCTS ----------------";
     _selectIdleTimeoutSec = 140;
-
-    ui->pushButton_to_idle->setEnabled(true);
-    ui->pushButton_previous_page->setEnabled(true);
 
     int sizes_available_count = 0;
     for (uint8_t i = 0; i < 4; i++)
@@ -584,14 +572,12 @@ bool pageProduct::stopSelectTimers()
 void pageProduct::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
-    // ui->pushButton_to_idle->setEnabled(false);
-    // ui->pushButton_previous_page->setEnabled(false);
     selectIdleTimer->stop();
     this->stopSelectTimers();
     p_page_idle->pageTransition(this, pageToShow);
 }
 
-void pageProduct::on_pushButton_to_idle_clicked()
+void pageProduct::on_pushButton_to_help_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_help);
 }

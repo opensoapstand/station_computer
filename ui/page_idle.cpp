@@ -309,7 +309,6 @@ void page_idle::addCompanyLogoToLabel(QLabel *label)
 }
 
 void page_idle::addPictureToLabel(QLabel *label, QString picturePath)
-
 {
     df_util::fileExists(picturePath);
     QPixmap picture(picturePath);

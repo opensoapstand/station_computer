@@ -2116,7 +2116,7 @@ text-align: center;</string>
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_notify_us">
+  <widget class="QLabel" name="label_help">
    <property name="geometry">
     <rect>
      <x>478</x>
@@ -2151,7 +2151,7 @@ text-align: center;</string>
   <zorder>promoKeyboard</zorder>
   <zorder>label_product_photo</zorder>
   <zorder>label_gif</zorder>
-  <zorder>label_notify_us</zorder>
+  <zorder>label_help</zorder>
   <zorder>pushButton_to_idle</zorder>
  </widget>
  <resources/>

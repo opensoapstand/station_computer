@@ -99,7 +99,7 @@ void page_select_product::setPage(pageProduct *pageSizeSelect, page_idle_product
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
     QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     qDebug() << full_path;
-    p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
+    p_page_idle->addPictureToLabel(ui->label_help, full_path);
 }
 
 // DTOR

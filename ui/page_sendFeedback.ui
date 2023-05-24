@@ -1738,9 +1738,9 @@ font: 11pt &quot;Montserrat&quot;;</string>
    <property name="geometry">
     <rect>
      <x>460</x>
-     <y>1830</y>
+     <y>1820</y>
      <width>151</width>
-     <height>81</height>
+     <height>91</height>
     </rect>
    </property>
    <property name="autoFillBackground">

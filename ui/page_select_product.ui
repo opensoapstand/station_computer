@@ -594,7 +594,7 @@
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_notify_us">
+  <widget class="QLabel" name="label_help">
    <property name="geometry">
     <rect>
      <x>478</x>
@@ -663,7 +663,7 @@
   <zorder>label_product_3_photo_text</zorder>
   <zorder>label_product_2_overlay</zorder>
   <zorder>label_pick_soap</zorder>
-  <zorder>label_notify_us</zorder>
+  <zorder>label_help</zorder>
   <zorder>pushButton_help_page</zorder>
   <zorder>pushButton_to_idle</zorder>
   <zorder>label_product_2_photo</zorder>

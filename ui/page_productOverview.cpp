@@ -199,7 +199,7 @@ void pageProductOverview::reset_and_show_page_elements()
     qDebug() << "Selected size" << p_page_idle->selectedProduct->getVolume();
     QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     qDebug() << full_path;
-    p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
+    p_page_idle->addPictureToLabel(ui->label_help, full_path);
 
     updatePrice();
     ui->label_invoice_name->setText(p_page_idle->selectedProduct->getProductName());

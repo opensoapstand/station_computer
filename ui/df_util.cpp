@@ -167,21 +167,15 @@ void df_util::write_to_file(QString path, QString data)
     // will append to file if exists.
 
     QFile file(path);
-    // file.open(QIODevice::WriteOnly | QIODevice::Text );
     file.open(QIODevice::Append | QIODevice::Text);
     QTextStream out(&file);
     out << data << "\n";
-    // optional, as QFile destructor will already do it:
     file.close();
 }
 
 void df_util::send_to_FSM()
 {
 
-    // }
-    // void df_util::send_to_FSM()
-    // {
-    // QString msg = "fneinsef";
     tcpSocket->abort();
 
     tcpSocket->connectToHost(host, port);
@@ -214,22 +208,4 @@ void df_util::displayError(QAbstractSocket::SocketError socketError)
 {
 }
 
-// void df_util::initialize_local_db() {
-// }
-
-// bool df_util::open_local_db()
-// {
-// }
-
-// bool df_util::close_local_db()
-// {
-// }
-
-// bool df_util::getVendorDetails()
-// {
-// }
-
-// QString df_util::get_local_db_max_transaction()
-// {
-// }
 

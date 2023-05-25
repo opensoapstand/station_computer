@@ -72,7 +72,7 @@ private slots:
     void on_pushButton_order_custom_clicked();
 
     void on_pushButton_order_medium_clicked();
-    void loadProdSpecs();
+    // void loadProdSpecs();
 
 private:
     int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};

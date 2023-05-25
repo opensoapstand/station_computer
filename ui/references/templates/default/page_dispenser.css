@@ -110,7 +110,7 @@
    font-style: normal;
    font-weight: 75;
    font-size: 42px;
-   background-color: transparent;
+   background-color: orangered;
    border: 0px;
    line-height: 99px;
    letter-spacing: 1.5px;
@@ -118,6 +118,7 @@
    text-align: center;
    qproperty-alignment: AlignCenter;
    border: none;
+   border-radius: 20px;
 }
 
 #pushButton_problems {

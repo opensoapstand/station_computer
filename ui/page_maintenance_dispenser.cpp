@@ -40,7 +40,7 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
     connect(ui->pwmSlider, SIGNAL(valueChanged(int)), this, SLOT(pwmSliderMoved(int)));
     ui->refillButton->setStyleSheet("QPushButton {font-size: 36px;}");
 
-    connect(ui->buttonGroup_edit_product, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroup_edit_product_Pressed()));
+    connect(ui->buttonGroup_edit_product, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroup_edit_product_Pressed(int)));
 }
 
 // DTOR
@@ -845,49 +845,48 @@ void page_maintenance_dispenser::on_priceButton_s_clicked()
 {
     price_small = true;
     ui->textEntry->setText(QString::number(p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)));
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+    // _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_priceButton_m_clicked()
 {
     price_medium = true;
     ui->textEntry->setText(QString::number(p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)));
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+    // _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_priceButton_l_clicked()
 {
     price_large = true;
     ui->textEntry->setText(QString::number(p_page_idle->selectedProduct->getPrice(SIZE_LARGE_INDEX)));
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+    // _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_priceButton_c_clicked()
 {
     price_custom = true;
     ui->textEntry->setText(QString::number(p_page_idle->selectedProduct->getPrice(SIZE_CUSTOM_INDEX)));
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+    // _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_target_volumeButton_s_clicked()
 {
     target_s = true;
     ui->textEntry->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_SMALL_INDEX, false, false));
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+    // _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_target_volumeButton_m_clicked()
 {
     target_m = true;
     ui->textEntry->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_MEDIUM_INDEX, false, false));
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+    // _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_target_volumeButton_l_clicked()
 {
     target_l = true;
     ui->textEntry->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_LARGE_INDEX, false, false));
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_vol_per_tickButton_clicked()
@@ -1068,7 +1067,14 @@ size_t WriteCallback4(char *contents, size_t size, size_t nmemb, void *userp)
 void page_maintenance_dispenser::on_update_portal_clicked()
 {
     qDebug() << "update portal clicked ";
-    QString curl_params = "productId=" + p_page_idle->selectedProduct->getProductId() + "&source=soapstandStation" + "&price_small=" + QString::number( p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)) + "&price_medium=" + QString::number( p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)) + "&price_large=" + QString::number( p_page_idle->selectedProduct->getPrice(SIZE_LARGE_INDEX)) + "&price_custom=" + QString::number( p_page_idle->selectedProduct->getPrice(SIZE_CUSTOM_INDEX)) + "&size_small=" + QString::number( p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)) + "&size_medium=" + QString::number( p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)) + "&size_large=" + QString::number( p_page_idle->selectedProduct->getPrice(SIZE_LARGE_INDEX));
+    QString curl_params = "productId=" + p_page_idle->selectedProduct->getProductId() + "&source=soapstandStation" +
+     "&price_small=" + QString::number( p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)) + 
+     "&price_medium=" + QString::number( p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)) + 
+     "&price_large=" + QString::number( p_page_idle->selectedProduct->getPrice(SIZE_LARGE_INDEX)) + 
+     "&price_custom=" + QString::number( p_page_idle->selectedProduct->getPrice(SIZE_CUSTOM_INDEX)) + 
+     "&size_small=" + QString::number( p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)) + 
+     "&size_medium=" + QString::number( p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)) + 
+     "&size_large=" + QString::number( p_page_idle->selectedProduct->getPrice(SIZE_LARGE_INDEX));
     curl_param_array2 = curl_params.toLocal8Bit();
 
     curl2 = curl_easy_init();
@@ -1109,10 +1115,14 @@ void page_maintenance_dispenser::on_update_portal_clicked()
     readBuffer = "";
 }
 
-void page_maintenance_dispenser::buttonGroup_edit_product_Pressed()
+void page_maintenance_dispenser::buttonGroup_edit_product_Pressed(int buttonId)
 {
-    qDebug() << "Edit button pressed";
+    QAbstractButton *buttonpressed = ui->buttonGroup_edit_product->button(buttonId);
+    QString buttonText = buttonpressed->text();
+    ui->titleLabel->setText(buttonText);
     ui->numberEntry->show();
+    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+
 }
 
 

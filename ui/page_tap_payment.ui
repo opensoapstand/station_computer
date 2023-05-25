@@ -64,7 +64,7 @@
    </property>
    <property name="styleSheet">
     <string notr="true">font-family: Montserrat;
-background-image: url(/home/df-admin/production/references/background.png);
+background-image: url(background.png);
 font-style: light;
 font-weight: bold;
 font-size: 36px;

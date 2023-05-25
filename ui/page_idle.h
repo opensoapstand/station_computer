@@ -76,7 +76,9 @@ public:
     void setSelectedProduct(uint8_t slot);
     product *getSelectedProduct();
 
-    void loadTextsFromCsv();
+    void loadTextsFromTemplateCsv();
+    void loadTextsFromDefaultCsv();
+    void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
     QString getText(QString textName_to_find);
 
     product products[SLOT_COUNT];
@@ -118,7 +120,8 @@ private slots:
     void on_pushButton_test_clicked();
 
 private:
-   std::map<QString, QString> textNameToTextMap;
+   std::map<QString, QString> textNameToTextMap_template;
+   std::map<QString, QString> textNameToTextMap_default;
 
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void checkReceiptPrinterStatus();

@@ -215,7 +215,7 @@ void page_product::showEvent(QShowEvent *event)
     ui->label_notify_us->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
-    ui->pushButton_to_idle->setStyleSheet(styleSheet);
+    ui->pushButton_to_help->setStyleSheet(styleSheet);
 
     for (int i = 0; i < 4; i++)
     {
@@ -232,7 +232,6 @@ void page_product::showEvent(QShowEvent *event)
     }
 
     p_page_idle->selectedProduct->loadProductProperties();
-    loadProdSpecs();
     reset_and_show_page_elements();
 }
 
@@ -395,20 +394,8 @@ void page_product::reset_and_show_page_elements()
     _selectIdleTimeoutSec = 400;
 }
 
-void page_product::loadProductBySize(int sizeIndex)
-{
-    p_page_idle->selectedProduct->setSize(sizeIndex);
-    loadProdSpecs();
-}
-
 void page_product::loadProdSpecs()
 {
-
-    qDebug() << "-------------------------- LOAD PRODUCTS ----------------";
-    _selectIdleTimeoutSec = 140;
-
-    ui->pushButton_to_idle->setEnabled(true);
-    ui->pushButton_previous_page->setEnabled(true);
 
     int sizes_available_count = 0;
     for (uint8_t i = 0; i < 4; i++)
@@ -545,14 +532,12 @@ bool page_product::stopSelectTimers()
 void page_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
-    // ui->pushButton_to_idle->setEnabled(false);
-    // ui->pushButton_previous_page->setEnabled(false);
     selectIdleTimer->stop();
     this->stopSelectTimers();
     p_page_idle->pageTransition(this, pageToShow);
 }
 
-void page_product::on_pushButton_to_idle_clicked()
+void page_product::on_pushButton_to_help_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_help);
 }
@@ -560,14 +545,14 @@ void page_product::on_pushButton_to_idle_clicked()
 void page_product::on_pushButton_order_custom_clicked()
 {
     qDebug() << "button custom clicked ";
-    this->loadProductBySize(SIZE_CUSTOM_INDEX);
+     p_page_idle->selectedProduct->setSize(SIZE_CUSTOM_INDEX);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
 void page_product::on_pushButton_order_medium_clicked()
 {
     qDebug() << "button medium";
-    this->loadProductBySize(SIZE_MEDIUM_INDEX);
+     p_page_idle->selectedProduct->setSize(SIZE_MEDIUM_INDEX);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
@@ -575,7 +560,7 @@ void page_product::on_pushButton_order_medium_clicked()
 void page_product::on_pushButton_order_small_clicked()
 {
     qDebug() << "button small";
-    this->loadProductBySize(SIZE_SMALL_INDEX);
+     p_page_idle->selectedProduct->setSize(SIZE_SMALL_INDEX);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
@@ -583,7 +568,7 @@ void page_product::on_pushButton_order_small_clicked()
 void page_product::on_pushButton_order_big_clicked()
 {
     qDebug() << "button big";
-    this->loadProductBySize(SIZE_LARGE_INDEX);
+     p_page_idle->selectedProduct->setSize(SIZE_LARGE_INDEX);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
@@ -601,7 +586,7 @@ void page_product::on_pushButton_previous_page_clicked()
 void page_product::on_pushButton_continue_clicked()
 {
     // which size is enabled? select that size
-    this->loadProductBySize(default_size);
+     p_page_idle->selectedProduct->setSize(default_size);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 

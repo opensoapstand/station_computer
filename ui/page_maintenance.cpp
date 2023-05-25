@@ -50,6 +50,17 @@ page_maintenance::~page_maintenance()
 
 void page_maintenance::showEvent(QShowEvent *event)
 {
+
+    QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_CSS);
+
+
+for (int i = 0; i < 4; i++)
+    {
+    product_overlay_labels[i]->setStyleSheet(styleSheet);
+    }
+
+
+
     //    db.addPageClick("PAGE_PAGE_MAINTENANCE PAGE ENTERED");
 
     qDebug() << "<<<<<<< Page Enter: maintenance >>>>>>>>>";
@@ -158,7 +169,6 @@ void page_maintenance::showEvent(QShowEvent *event)
         // else
         // {
         // product_overlay_labels[i]->setText("");
-        product_overlay_labels[i]->setStyleSheet("background-color: transparent;");
         // product_buttons[i]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
         // }
     }

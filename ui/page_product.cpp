@@ -553,7 +553,7 @@ void page_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     p_page_idle->pageTransition(this, pageToShow);
 }
 
-void pageProduct::on_pushButton_to_help_clicked()
+void page_product::on_pushButton_to_help_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_help);
 }

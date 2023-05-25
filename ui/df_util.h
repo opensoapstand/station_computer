@@ -82,6 +82,7 @@ using namespace std;
 #define PAGE_TAP_PAYMENT_CSS                            "page_tap_payment.css"
 #define PAGE_TRANSACTIONS_CSS                           "page_transactions.css"
 #define PAGE_MAINTENANCE_CSS                            "page_maintenance.css"
+#define PAGE_MAINTENANCE_DISPENSER_CSS                  "page_maintenance_dispenser.css"
 
 
 

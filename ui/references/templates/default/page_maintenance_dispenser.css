@@ -1,11 +1,43 @@
 
 
-#product_overlay_labels{
-
-   background-color: transparent;
+.soldOutButton_unavailable { 
+   background-color: #5E8680;
+   font-size: 36px; 
 }
 
+.soldOutButton_available  { 
+   background-color: #E0A0A0;
+   font-size: 36px;  
+}
 
+.pump_disable{
+   background-color: #E0A0A0;
+   font-size: 20px;
+}
+.pump_enable{
+   background-color: #AAAAAA;
+   font-size: 20px;
+}
+#refillButton{
+   font-size: 36px;}
+
+QMessageBox {
+
+   min-width: 7000px; 
+   font-size: 24px;
+}
+
+QMessageBox.msgBoxbutton QPushButton{
+   
+   font-size: 18px;
+   min-width: 300px; 
+   min-height: 300px;
+}
+
+QLabel {
+   /*this label controls the color of the checkbox */
+   color: black;
+}
 
 /* QPushButton {
    font-family: 'Brevia';

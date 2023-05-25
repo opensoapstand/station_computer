@@ -10,6 +10,11 @@
 
 # empty lines are also permitted
 
+# page_idle
+page_idle->label_welcome_message,Refill soap here!<br>Tap screen to start
+page_idle->label_printer_status->offline,Assistance needed<br>Receipt Printer offline.
+page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer empty or improperly loaded.
+
 # Page_product 
 page_product->pushButton_back,<- Products
 page_product->label_select_quantity,Select Quantity

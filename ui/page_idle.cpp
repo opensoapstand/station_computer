@@ -58,7 +58,6 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     idlePageTypeSelectorTimer = new QTimer(this);
     idlePageTypeSelectorTimer->setInterval(1000);
     connect(idlePageTypeSelectorTimer, SIGNAL(timeout()), this, SLOT(onIdlePageTypeSelectorTimerTick()));
-
 }
 
 /*
@@ -87,12 +86,9 @@ void page_idle::showEvent(QShowEvent *event)
     qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
     QWidget::showEvent(event);
 
-    qDebug() << "TEST TEXTS LOADING";
-    loadTextsFromCsv();
-    QString result = getText("lode");
-    qDebug() << result;
-    result = getText("brecht");
-    qDebug() << result;
+    // get the texts from csv
+    loadTextsFromTemplateCsv();
+    loadTextsFromDefaultCsv();
 
     QString styleSheet = getCSS(PAGE_IDLE_CSS);
     ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
@@ -117,7 +113,6 @@ void page_idle::showEvent(QShowEvent *event)
         // reset promovalue
         // currentProductOrder->setDiscountPercentageFraction(0.0);
         // currentProductOrder->setPromoCode("");
-        
     }
 
     DbManager db(DB_PATH);
@@ -135,8 +130,6 @@ void page_idle::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     setTemplateTextToObject(ui->label_welcome_message);
-    
-
     
 
     addCompanyLogoToLabel(ui->logo_label);
@@ -240,15 +233,16 @@ void page_idle::setDiscountPercentage(double percentageFraction)
     m_discount_percentage_fraction = percentageFraction;
 }
 
-
 double page_idle::getDiscountPercentage()
 {
     qDebug() << "Get Discount percentange" << m_discount_percentage_fraction;
     return m_discount_percentage_fraction;
 }
 
-bool page_idle::isPromoApplied(){
-    if(m_discount_percentage_fraction != 0.0){
+bool page_idle::isPromoApplied()
+{
+    if (m_discount_percentage_fraction != 0.0)
+    {
         return true;
     }
     return false;
@@ -266,8 +260,9 @@ void page_idle::setPromoCode(QString promoCode)
     m_promoCode = promoCode;
 }
 
-double page_idle::getPriceCorrectedAfterDiscount(double price){
-    return price*( 1 - m_discount_percentage_fraction);
+double page_idle::getPriceCorrectedAfterDiscount(double price)
+{
+    return price * (1 - m_discount_percentage_fraction);
 }
 
 void page_idle::checkReceiptPrinterStatus()
@@ -295,7 +290,7 @@ void page_idle::checkReceiptPrinterStatus()
 void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     this->pageTransition(this, pageToShow);
-        idlePageTypeSelectorTimer->stop();
+    idlePageTypeSelectorTimer->stop();
 }
 /*
  * Screen click shows product page as full screen and hides page_idle screen
@@ -307,8 +302,8 @@ void page_idle::onIdlePageTypeSelectorTimerTick()
     }
     else
     {
-       changeToIdleProductsIfSet();
-    idlePageTypeSelectorTimer->stop();
+        changeToIdleProductsIfSet();
+        idlePageTypeSelectorTimer->stop();
     }
 }
 void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
@@ -364,7 +359,6 @@ bool page_idle::isEnough(int p)
     }
     return false;
 }
-
 
 void page_idle::addCssStyleToObject(QWidget *qtType, QString classname, QString css_name)
 {
@@ -486,7 +480,7 @@ void page_idle::setBackgroundPictureToQWidget(QWidget *p_widget, QString image_p
 
 void page_idle::setTemplateTextToObject(QWidget *p_element)
 {
-   QWidget *parentWidget = p_element->parentWidget();
+    QWidget *parentWidget = p_element->parentWidget();
     QString pageName = parentWidget->objectName();
     QString elementName = p_element->objectName();
 
@@ -536,35 +530,53 @@ QString page_idle::getText(QString textName_to_find)
 {
 
     std::string key = textName_to_find.toStdString();
-    auto it = textNameToTextMap.find(QString::fromStdString(key));
+    auto it = textNameToTextMap_template.find(QString::fromStdString(key));
     QString retval;
-    if (it != textNameToTextMap.end())
+    if (it != textNameToTextMap_template.end())
     {
         // std::cout << "Word found! Sentence: " << it->second ;
         retval = it->second;
     }
     else
     {
-        qDebug() << "no template text value found for: " + textName_to_find;
-        retval = textName_to_find;
+        it = textNameToTextMap_default.find(QString::fromStdString(key));
+        if (it != textNameToTextMap_default.end())
+        {
+            retval = it->second;
+        }
+        else
+        {
+
+            qDebug() << "no template text value found for: " + textName_to_find;
+            retval = textName_to_find;
+        }
     }
     return retval;
 }
 
-void page_idle::loadTextsFromCsv()
+void page_idle::loadTextsFromTemplateCsv()
 {
-    // Create an input filestream
-
     QString name = UI_TEXTS_CSV_PATH;
     QString csv_path = getTemplatePathFromName(name);
+    loadTextsFromCsv(csv_path, &textNameToTextMap_template);
+}
 
+void page_idle::loadTextsFromDefaultCsv()
+{
+    QString name = UI_TEXTS_CSV_PATH;
+    QString csv_default_template_path = getDefaultTemplatePathFromName(name);
+    loadTextsFromCsv(csv_default_template_path, &textNameToTextMap_default);
+}
+
+void page_idle::loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary)
+{
     std::ifstream file(csv_path.toStdString());
     if (file.is_open())
     {
         std::string line;
         while (std::getline(file, line))
         {
-            if (!line.empty() && line[0] != '#')  // Skip empty lines and lines starting with '#'
+            if (!line.empty() && line[0] != '#') // Skip empty lines and lines starting with '#'
             {
                 qDebug() << QString::fromStdString(line);
 
@@ -575,17 +587,17 @@ void page_idle::loadTextsFromCsv()
                     std::string sentence = line.substr(space_pos + 1);
                     QString qword = QString::fromStdString(word);
                     QString qsentence = QString::fromStdString(sentence);
-                    textNameToTextMap[qword] = qsentence;
+                    (*dictionary)[qword] = qsentence;
                 }
             }
         }
         file.close();
 
         // Print the word-sentence mapping
-        for (const auto &pair : textNameToTextMap)
-        {
-            qDebug() << pair.first << ": " << pair.second;
-        }
+        // for (const auto &pair : *dictionary)
+        // {
+        //     qDebug() << pair.first << ": " << pair.second;
+        // }
     }
     else
     {

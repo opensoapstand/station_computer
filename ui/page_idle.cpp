@@ -594,8 +594,8 @@ void page_idle::loadTextsFromCsv(QString csv_path, std::map<QString, QString> *d
         }
         file.close();
 
-        // // Print the word-sentence mapping
-        // for (const auto &pair : textNameToTextMap)
+        // Print the word-sentence mapping
+        // for (const auto &pair : *dictionary)
         // {
         //     qDebug() << pair.first << ": " << pair.second;
         // }

@@ -141,7 +141,7 @@ uint16_t orderSizePriceLabels_xy_dynamic_ui_small_available[8][2] = {
 
 // CTOR
 page_product::page_product(QWidget *parent) : QWidget(parent),
-                                            ui(new Ui::page_product)
+                                              ui(new Ui::page_product)
 {
     ui->setupUi(this);
 
@@ -165,15 +165,11 @@ page_product::page_product(QWidget *parent) : QWidget(parent),
     orderSizeBackgroundLabels[2] = ui->label_background_large;
     orderSizeBackgroundLabels[3] = ui->label_background_custom;
 
-
-
     {
         selectIdleTimer = new QTimer(this);
         selectIdleTimer->setInterval(40);
         connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
     }
-
-
 
     transactionLogging = "";
 }
@@ -237,7 +233,6 @@ void page_product::showEvent(QShowEvent *event)
 
     p_page_idle->selectedProduct->loadProductProperties();
     loadProdSpecs();
-    
     reset_and_show_page_elements();
 }
 
@@ -269,11 +264,10 @@ void page_product::reset_and_show_page_elements()
     p_page_idle->setTemplateTextToObject(ui->pushButton_back);
     p_page_idle->setTemplateTextToObject(ui->label_select_quantity);
     p_page_idle->setTemplateTextToObject(ui->pushButton_continue);
-   
+
     ui->label_product_description->setWordWrap(true);
     ui->label_product_ingredients->setWordWrap(true);
     ui->pushButton_continue->hide();
-
 
     p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->selectedProduct->getProductPicturePath());
 
@@ -343,10 +337,13 @@ void page_product::reset_and_show_page_elements()
         qDebug() << "ERROR: Product signature SIZES not available (limited combinations of size buttons available to be set in database) signature: " << available_sizes_signature;
     }
 
+    // run through all possible sizes
     for (uint8_t i = 0; i < 4; i++)
     {
+        // check if size is enabled
         if (p_page_idle->selectedProduct->getSizeEnabled(product_sizes[i]))
         {
+            default_size = product_sizes[i];
             orderSizeButtons[i]->show();
 
             orderSizeButtons[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3]));
@@ -434,9 +431,9 @@ void page_product::loadProdSpecs()
             orderSizeButtons[i]->setProperty("class", "orderSizeButtons");
 
             double price = p_page_idle->selectedProduct->getPrice(product_sizes[i]);
-            
+
             // set default size (if only one size available, this will be the size)
-            p_page_idle->selectedProduct->setSize(product_sizes[i]);
+            // p_page_idle->selectedProduct->setSize(product_sizes[i]);
 
             if (product_sizes[i] == SIZE_CUSTOM_INDEX)
             {
@@ -564,14 +561,14 @@ void page_product::on_pushButton_order_custom_clicked()
 {
     qDebug() << "button custom clicked ";
     this->loadProductBySize(SIZE_CUSTOM_INDEX);
-    on_pushButton_continue_clicked();
+    hideCurrentPageAndShowProvided(p_page_overview);
 }
 
 void page_product::on_pushButton_order_medium_clicked()
 {
     qDebug() << "button medium";
     this->loadProductBySize(SIZE_MEDIUM_INDEX);
-    on_pushButton_continue_clicked();
+    hideCurrentPageAndShowProvided(p_page_overview);
 }
 
 // on_Small_Order button listener
@@ -579,7 +576,7 @@ void page_product::on_pushButton_order_small_clicked()
 {
     qDebug() << "button small";
     this->loadProductBySize(SIZE_SMALL_INDEX);
-    on_pushButton_continue_clicked();
+    hideCurrentPageAndShowProvided(p_page_overview);
 }
 
 // on_Large_Order button listener
@@ -587,7 +584,7 @@ void page_product::on_pushButton_order_big_clicked()
 {
     qDebug() << "button big";
     this->loadProductBySize(SIZE_LARGE_INDEX);
-    on_pushButton_continue_clicked();
+    hideCurrentPageAndShowProvided(p_page_overview);
 }
 
 size_t WriteCallback_coupon(char *contents, size_t size, size_t nmemb, void *userp)
@@ -603,6 +600,8 @@ void page_product::on_pushButton_previous_page_clicked()
 
 void page_product::on_pushButton_continue_clicked()
 {
+    // which size is enabled? select that size
+    this->loadProductBySize(default_size);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 

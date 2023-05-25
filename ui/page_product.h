@@ -80,6 +80,7 @@ private:
     bool stopSelectTimers();
     void reset_and_show_page_elements();
     void selectOnTick();
+    int default_size;
     
 
     std::string readBuffer;

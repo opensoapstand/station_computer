@@ -24,8 +24,8 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
 
     ui->pumpLabel->setText("Pump manual mode OFF.");
     ui->calibration_instructions_label->setText("Flowsensor calibration instructions:\n1.Enable the pump\n2.Take a measuring cup and dispense until the 1liter mark\n3.Check the calibration value\n4.Update the calibration value if different");
-    ui->pumpButton->setText("ENABLE PUMP");
-   // ui->pumpButton->setStyleSheet("QPushButton { background-color: #AAAAAA;font-size: 20px;  }");
+    ui->pushButton_pump->setText("ENABLE PUMP");
+   // ui->pushButton_pump->setStyleSheet("QPushButton { background-color: #AAAAAA;font-size: 20px;  }");
 
     // ui->pwmSlider->setTracking(true);
 
@@ -63,9 +63,9 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
     //ui->refillButton->setStyleSheet("QPushButton {font-size: 36px;}");
     ui->refillButton->setStyleSheet(styleSheet);
-    //ui->pumpButton->setStyleSheet("QPushButton { background-color: #AAAAAA;font-size: 20px;  }");
-    ui->pumpButton->setProperty("class", "pump_enable");
-    ui->pumpButton->setStyleSheet(styleSheet);
+    //ui->pushButton_pump->setStyleSheet("QPushButton { background-color: #AAAAAA;font-size: 20px;  }");
+    ui->pushButton_pump->setProperty("class", "pump_enable");
+    ui->pushButton_pump->setStyleSheet(styleSheet);
 
 
 
@@ -151,7 +151,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->productPhotoButton->setIconSize(QSize(271, 391));
 
     refreshLabels();
-    setSoldOutButtonText();
+    setpushButton_soldOutText();
 
     isDispenseButtonPressed = false;
     // ui->dispenseTimeLabel->setText("Enabled time: " + QString::number(dispenserEnabledSecs, 'f', 1) + "s");
@@ -218,9 +218,9 @@ void page_maintenance_dispenser::refreshLabels()
     ui->temperatureLabel->setVisible(false);
 }
 
-void page_maintenance_dispenser::setSoldOutButtonText()
+void page_maintenance_dispenser::setpushButton_soldOutText()
 {
-    qDebug() << "db call from soldoutbuttonsetting";
+    qDebug() << "db call from pushButton_soldOutsetting";
     int slot = p_page_idle->selectedProduct->getSlotEnabled();
     DbManager db(DB_PATH);
     bool isSlotEnabled = db.getSlotEnabled(slot);
@@ -230,17 +230,17 @@ void page_maintenance_dispenser::setSoldOutButtonText()
     if (isSlotEnabled)
     {
 
-        ui->soldOutButton->setText("Make \n unavailable");
-//        ui->soldOutButton->setStyleSheet("QPushButton { background-color: #5E8680;font-size: 36px; }");
-        ui->soldOutButton->setProperty("class", "soldOutButton_unavailable");
-        ui->soldOutButton->setStyleSheet(styleSheet);
+        ui->pushButton_soldOut->setText("Make \n unavailable");
+//        ui->pushButton_soldOut->setStyleSheet("QPushButton { background-color: #5E8680;font-size: 36px; }");
+        ui->pushButton_soldOut->setProperty("class", "pushButton_soldOut_unavailable");
+        ui->pushButton_soldOut->setStyleSheet(styleSheet);
     }
     else
     {
-        ui->soldOutButton->setText("Make \n available");
-//        ui->soldOutButton->setStyleSheet("QPushButton { background-color: #E0A0A0;font-size: 36px;  }");
-        ui->soldOutButton->setProperty("class", "soldOutButton_available");
-        ui->soldOutButton->setStyleSheet(styleSheet);
+        ui->pushButton_soldOut->setText("Make \n available");
+//        ui->pushButton_soldOut->setStyleSheet("QPushButton { background-color: #E0A0A0;font-size: 36px;  }");
+        ui->pushButton_soldOut->setProperty("class", "pushButton_soldOut_available");
+        ui->pushButton_soldOut->setStyleSheet(styleSheet);
 
     }
 }
@@ -262,12 +262,12 @@ void page_maintenance_dispenser::dispense_test_start()
     pumping = true;
 
     ui->pumpLabel->setText("Manual Pump ready. Press dispense button.");
-    ui->pumpButton->setText("DISABLE PUMP");
+    ui->pushButton_pump->setText("DISABLE PUMP");
     
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
-    //ui->pumpButton->setStyleSheet("QPushButton { background-color: #E0A0A0;font-size: 20px;  }");
-    ui->pumpButton->setProperty("class", "pump_disable");
-    ui->pumpButton->setStyleSheet(styleSheet);
+    //ui->pushButton_pump->setStyleSheet("QPushButton { background-color: #E0A0A0;font-size: 20px;  }");
+    ui->pushButton_pump->setProperty("class", "pump_disable");
+    ui->pushButton_pump->setStyleSheet(styleSheet);
         
 }
 
@@ -280,10 +280,10 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
         dispenseTimer->stop();
         pumping = false;
         ui->pumpLabel->setText("Pump manual mode OFF.");
-        ui->pumpButton->setText("ENABLE PUMP");
-        //ui->pumpButton->setStyleSheet("QPushButton { background-color: #AAAAAA;font-size: 20px;  }");
-        ui->pumpButton->setProperty("class", "pump_enable");
-        ui->pumpButton->setStyleSheet(styleSheet);
+        ui->pushButton_pump->setText("ENABLE PUMP");
+        //ui->pushButton_pump->setStyleSheet("QPushButton { background-color: #AAAAAA;font-size: 20px;  }");
+        ui->pushButton_pump->setProperty("class", "pump_enable");
+        ui->pushButton_pump->setStyleSheet(styleSheet);
 
         if (sendStopToController)
         {
@@ -324,10 +324,10 @@ void page_maintenance_dispenser::autoDispenseStart(int size)
     if (!pumping)
     {
 
-        ui->pumpButton->setText("DISABLE PUMP");
-        //ui->pumpButton->setStyleSheet("QPushButton { background-color: #E0A0A0;font-size: 20px;  }");
-        ui->pumpButton->setProperty("class", "pump_disable");
-        ui->pumpButton->setStyleSheet(styleSheet);
+        ui->pushButton_pump->setText("DISABLE PUMP");
+        //ui->pushButton_pump->setStyleSheet("QPushButton { background-color: #E0A0A0;font-size: 20px;  }");
+        ui->pushButton_pump->setProperty("class", "pump_disable");
+        ui->pushButton_pump->setStyleSheet(styleSheet);
         qDebug() << "Autofill small quantity pressed.";
         QString command = QString::number(this->p_page_idle->selectedProduct->getSlot());
 
@@ -534,7 +534,7 @@ void page_maintenance_dispenser::on_refillButton_clicked()
     ui->dispense_status_label->setText(slotStatus);
 }
 
-void page_maintenance_dispenser::on_soldOutButton_clicked()
+void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
 {
     qDebug() << "soldout clicked. slot: " << QString::number(this->p_page_idle->selectedProduct->getSlot());
 
@@ -666,7 +666,7 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
 
     ui->infoLabel->setText(infoLabelText);
 
-    setSoldOutButtonText();
+    setpushButton_soldOutText();
     ui->dispense_status_label->setText(slotStatus);
 }
 
@@ -854,7 +854,7 @@ void page_maintenance_dispenser::on_image_clicked()
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
-void page_maintenance_dispenser::on_pumpButton_clicked()
+void page_maintenance_dispenser::on_pushButton_pump_clicked()
 {
     int slot = p_page_idle->selectedProduct->getSlot();
     if (slot < 1 || slot > SLOT_COUNT)

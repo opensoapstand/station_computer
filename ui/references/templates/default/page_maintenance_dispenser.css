@@ -1,11 +1,11 @@
 
 
-.soldOutButton_unavailable { 
+.pushButton_soldOut_unavailable { 
    background-color: #5E8680;
    font-size: 36px; 
 }
 
-.soldOutButton_available  { 
+.pushButton_soldOut_available  { 
    background-color: #E0A0A0;
    font-size: 36px;  
 }

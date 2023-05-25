@@ -184,7 +184,7 @@ Volume per Tick</string>
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="soldOutButton">
+  <widget class="QPushButton" name="pushButton_soldOut">
    <property name="geometry">
     <rect>
      <x>440</x>
@@ -572,7 +572,7 @@ Volume per Tick</string>
     </property>
    </widget>
   </widget>
-  <widget class="QPushButton" name="pumpButton">
+  <widget class="QPushButton" name="pushButton_pump">
    <property name="geometry">
     <rect>
      <x>40</x>

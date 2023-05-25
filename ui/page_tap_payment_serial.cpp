@@ -173,8 +173,8 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
     // db.closeDB();
     // if (tap_payment)
     // {
-    //     while (!tap_init())
-    //         ;
+        while (!tap_init())
+            ;
     // }
 }
 
@@ -326,9 +326,7 @@ void page_tap_payment_serial::showEvent(QShowEvent *event)
     if (payment_method == "tapSerial")
     {
         qDebug() << "Prepare tap order";
-        while(!tap_init()){
-
-        };
+    
         pktResponded = com.readForAck();
         readPacket.packetReadFromUX(pktResponded);
         pktResponded.clear();
@@ -513,44 +511,43 @@ bool page_tap_payment_serial::tap_init()
     }
 
     // This is super shitty - there must be a better way to find out when the green light starts flashing on the UX420 but it was 35
-    // sleep(35);
 
     cout << "_----_-----__------_-----";
    
     // stayAliveLogon();
-      cout << "Sending Device Reset packet..." << endl;
-    pktToSend = paymentPacket.resetDevice();
-    if (sendToUX410())
-    {
-        cout << "Receiving Device Reset response" << endl;
-        isInitBatched = true;
-        waitForUX410();
-        pktResponded.clear();
-    }
-    else
-    {
-        return false;
-    }
-    com.flushSerial();
-    cout << "-----------------------------------------------" << endl;
+    //   cout << "Sending Device Reset packet..." << endl;
+    // pktToSend = paymentPacket.resetDevice();
+    // if (sendToUX410())
+    // {
+    //     cout << "Receiving Device Reset response" << endl;
+    //     isInitBatched = true;
+    //     waitForUX410();
+    //     pktResponded.clear();
+    // }
+    // else
+    // {
+    //     return false;
+    // }
+    // com.flushSerial();
+    // cout << "-----------------------------------------------" << endl;
     
     
     /*Cancel any previous payment*/
-    cout << "Sending Cancel payment packet..." << endl;
-    pktToSend = paymentPacket.purchaseCancelPacket();
-    if (sendToUX410())
-    {
-        cout << "Receiving Cancel payment response" << endl;
-        isInitCancelled = true;
-        waitForUX410();
-        pktResponded.clear();
-    }
-    else
-    {
-        return false;
-    }
-    com.flushSerial();
-    cout << "-----------------------------------------------" << endl;
+    // cout << "Sending Cancel payment packet..." << endl;
+    // pktToSend = paymentPacket.purchaseCancelPacket();
+    // if (sendToUX410())
+    // {
+    //     cout << "Receiving Cancel payment response" << endl;
+    //     isInitCancelled = true;
+    //     waitForUX410();
+    //     pktResponded.clear();
+    // }
+    // else
+    // {
+    //     return false;
+    // }
+    // com.flushSerial();
+    // cout << "-----------------------------------------------" << endl;
 
 
     /*batch close packet to send*/

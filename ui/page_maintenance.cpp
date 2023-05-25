@@ -173,20 +173,20 @@ for (int i = 0; i < 4; i++)
         // }
     }
     // p_pageSelectProduct->cancelTimers();
-    // p_pageProduct->cancelTimers();
+    // p_page_product->cancelTimers();
     qDebug() << "End maintenance load";
 }
 
 /*
  * Page Tracking reference
  */
-void page_maintenance::setPage(page_idle *pageIdle, page_maintenance_dispenser *p_pageMaintenanceDispenser, page_maintenance_general *p_pageMaintenanceGeneral, page_select_product *p_pageProduct, pageProduct *pagePaySelect)
+void page_maintenance::setPage(page_idle *pageIdle, page_maintenance_dispenser *p_pageMaintenanceDispenser, page_maintenance_general *p_pageMaintenanceGeneral, page_select_product *p_page_product, page_product *pagePaySelect)
 {
     this->p_page_idle = pageIdle;
     this->p_page_maintenance_product = p_pageMaintenanceDispenser;
     this->p_page_maintenance_general = p_pageMaintenanceGeneral;
-    this->p_pageSelectProduct = p_pageProduct;
-    this->p_pageProduct = pagePaySelect;
+    this->p_pageSelectProduct = p_page_product;
+    this->p_page_product = pagePaySelect;
 }
 
 void page_maintenance::hideCurrentPageAndShowProvided(QWidget *pageToShow)

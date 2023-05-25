@@ -64,10 +64,10 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 /*
  * Navigation to Product item
  */
-void page_idle::setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products)
+void page_idle::setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products)
 {
     // Chained to KB Listener
-    this->p_pageSelectProduct = p_pageProduct;
+    this->p_pageSelectProduct = p_page_select_product;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_maintenance_general = pageMaintenanceGeneral;
     this->p_page_idle_products = p_page_idle_products;
@@ -134,7 +134,8 @@ void page_idle::showEvent(QShowEvent *event)
     qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
     QWidget::showEvent(event);
 
-    ui->label_welcome_message->setText("refill soap here! <br>tap screen to start");
+    setTemplateTextToObject(ui->label_welcome_message);
+    
 
     
 
@@ -306,7 +307,8 @@ void page_idle::onIdlePageTypeSelectorTimerTick()
     }
     else
     {
-      changeToIdleProductsIfSet();
+       changeToIdleProductsIfSet();
+    idlePageTypeSelectorTimer->stop();
     }
 }
 void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
@@ -316,13 +318,13 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
     if (!isOnline)
     {
         ui->label_printer_status->raise();
-        ui->label_printer_status->setText("Assistance needed\nReceipt Printer offline.");
+        setTemplateTextWithIdentifierToObject(ui->label_printer_status,"offline");
         ui->label_printer_status->show();
     }
     else if (!hasPaper)
     {
         ui->label_printer_status->raise();
-        ui->label_printer_status->setText("Assistance needed\nReceipt printer empty or improperly loaded.");
+        setTemplateTextWithIdentifierToObject(ui->label_printer_status,"nopaper");
         ui->label_printer_status->show();
     }
     else
@@ -489,6 +491,30 @@ void page_idle::setTemplateTextToObject(QWidget *p_element)
     QString elementName = p_element->objectName();
 
     QString searchString = pageName + "->" + elementName;
+
+    QString text = getText(searchString);
+
+    if (QLabel *label = qobject_cast<QLabel *>(p_element))
+    {
+        label->setText(text);
+    }
+    else if (QPushButton *button = qobject_cast<QPushButton *>(p_element))
+    {
+        button->setText(text);
+    }
+    else
+    {
+        // Handle other types of elements if needed
+    }
+}
+
+void page_idle::setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier)
+{
+   QWidget *parentWidget = p_element->parentWidget();
+    QString pageName = parentWidget->objectName();
+    QString elementName = p_element->objectName();
+
+    QString searchString = pageName + "->" + elementName+"->"+identifier;
 
     QString text = getText(searchString);
 

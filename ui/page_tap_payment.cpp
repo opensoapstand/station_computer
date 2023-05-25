@@ -144,10 +144,10 @@ void page_tap_payment::stopPayTimers()
 /*
  * Page Tracking reference
  */
-void page_tap_payment::setPage(pageProduct *pageSizeSelect, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
+void page_tap_payment::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
 {
     tmpCounter = 0;
-    this->p_pageProduct = pageSizeSelect;
+    this->p_page_product = p_page_product;
     this->p_page_wifi_error = pageWifiError;
     this->p_page_dispense = page_dispenser;
     this->p_page_idle = pageIdle;
@@ -242,7 +242,7 @@ void page_tap_payment::storePaymentEvent(QSqlDatabase db, QString event)
 void page_tap_payment::tapPaymentHandler()
 {
     ui->animated_Label->move(221, 327);
-    QMovie *tapGif = new QMovie("/home/df-admin/production/references/templates/default/tap.gif");
+    QMovie *tapGif = new QMovie("tap.gif");
     ui->animated_Label->setMovie(tapGif);
     tapGif->start();
 
@@ -440,7 +440,7 @@ void page_tap_payment::on_pushButton_previous_page_clicked()
                 qDebug() << "Session finished sent";
             }
         }
-        hideCurrentPageAndShowProvided(p_pageProduct);
+        hideCurrentPageAndShowProvided(p_page_product);
     }
 }
 

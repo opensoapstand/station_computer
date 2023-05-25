@@ -35,7 +35,7 @@ class page_maintenance;
 class page_select_product;
 class page_idle;
 class page_maintenance_general;
-class pageProduct;
+class page_product;
 class page_maintenance;
 class page_help;
 
@@ -50,7 +50,7 @@ class page_idle_products : public QWidget
 
 public:
     explicit page_idle_products(QWidget *parent = nullptr);
-    void setPage(page_idle *pageIdle, page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral);
+    void setPage(page_idle *pageIdle, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral);
     // function body
     ~page_idle_products();
 
@@ -84,7 +84,7 @@ private:
 
     Ui::page_idle_products *ui;
     // productPage_2 *selection_PageTwo;
-    pageProduct *p_page_product;
+    page_product *p_page_product;
     page_idle *p_page_idle;
 
     QResizeEvent *productResize;

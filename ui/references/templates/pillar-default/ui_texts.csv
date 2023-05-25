@@ -10,8 +10,13 @@
 
 # empty lines are also permitted
 
-# Page_product 
-page_product->pushButton_back,<- Products
-page_product->label_select_quantity,Select Quantity
-page_product->pushButton_continue,Continue
+# page_idle
+page_idle->label_welcome_message,Thirsty?<br>Choose~ Pour~ Enjoy~
+page_idle->label_printer_status->offline,Assistance needed<br>Receipt Printer offline.
+page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer empty or improperly loaded.
+
+# Pageproduct 
+pageProduct->pushButton_back,<- Products
+pageProduct->label_select_quantity,Select Quantity
+pageProduct->pushButton_continue,Continue
 

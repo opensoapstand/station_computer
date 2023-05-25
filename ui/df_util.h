@@ -76,7 +76,7 @@ using namespace std;
 #define PAGE_PRODUCT_CSS                                "page_product.css"
 #define PAGE_DISPENSER_CSS                              "page_dispenser.css"
 #define PAGE_PRODUCT_OVERVIEW_CSS                       "page_product_overview.css"
-#define PAGETHANKYOU_CSS                                "pagethankyou.css"
+#define PAGE_END_CSS                                    "page_end.css"
 #define PAGE_QR_PAYMENT_CSS                             "page_qr_payment.css"
 #define PAGE_ERROR_WIFI_CSS                             "page_error_wifi.css"
 #define PAGE_TAP_PAYMENT_CSS                            "page_tap_payment.css"
@@ -88,7 +88,7 @@ using namespace std;
 
 #define PAGE_IDLE_BACKGROUND_PATH                       "background_message.png"
 #define PAGE_IDLE_PRODUCTS_BACKGROUND_PATH              "background_product_select.png"
-#define PAGE_THANK_YOU_BACKGROUND_PATH                  "background_message.png"
+#define PAGE_END_BACKGROUND_PATH                    "background_message.png"
 #define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_message.png"
 
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"

@@ -85,21 +85,17 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     font.setBold(true);
     font.setWeight(75);
 
-    // productPageEndTimer = new QTimer(this);
-    // productPageEndTimer->setInterval(1000);
-    // connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
+   
 }
 
 /*
  * Page Tracking reference
  */
-void page_idle_products::setPage(page_idle *pageIdle, page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral)
+void page_idle_products::setPage(page_idle *pageIdle, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral)
 {
-    // Chained to KB Listener
-    this->p_pageSelectProduct = p_pageProduct;
+    this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_maintenance_general = pageMaintenanceGeneral;
-    this->p_page_idle = pageIdle;
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
 }
@@ -274,16 +270,6 @@ void page_idle_products::addCompanyLogoToLabel(QLabel *label)
     }
 }
 
-// void page_idle_products::onProductPageTimeoutTick()
-// {
-//     if (--_productPageTimeoutSec >= 0)
-//     {
-//     }
-//     else
-//     {
-//         // hideCurrentPageAndShowProvided(p_page_idle);
-//     }
-// }
 
 void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {

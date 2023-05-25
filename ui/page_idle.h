@@ -48,7 +48,7 @@ class page_idle : public QWidget
 
 public:
     explicit page_idle(QWidget *parent = nullptr);
-    void setPage(page_select_product *p_pageProduct, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products);
+    void setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products);
     ~page_idle();
     void showEvent(QShowEvent *event);
     void addPictureToLabel(QLabel *label, QString picturePath);
@@ -104,6 +104,8 @@ public:
 
 
     void setTemplateTextToObject(QWidget* p_element);
+    void setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier);
+
 
     QTimer *idlePageTypeSelectorTimer;
     int _idlePageTypeSelectorTimerTimeoutSec;

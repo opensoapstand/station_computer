@@ -43,7 +43,7 @@
 extern std::atomic<bool> stop_tap_action_thread;
 extern std::atomic<bool> stop_authorization_thread;
 
-class pageProduct;
+class page_product;
 class page_dispenser;
 class page_idle;
 class page_help;
@@ -68,7 +68,7 @@ class page_tap_payment_serial : public QWidget
 public:
     // **** GUI Setup ****
     explicit page_tap_payment_serial(QWidget *parent = nullptr);
-    void setPage(pageProduct* pageSizeSelect,page_error_wifi *pageWifiError, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp);
+    void setPage(page_product* p_page_product,page_error_wifi *pageWifiError, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp);
     ~page_tap_payment_serial();
     void setProgressLabel(QLabel* label, int dot);
     // TODO: Figure out better Style Setup.
@@ -145,7 +145,7 @@ protected:
 private:
     // **** GUI ****
     Ui::page_tap_payment_serial *ui;
-    pageProduct* p_pageProduct;
+    page_product* p_page_product;
     page_dispenser* p_page_dispense;
     page_idle* p_page_idle;
     page_help* p_page_help;
@@ -236,7 +236,7 @@ private:
     int _qrProcessedPeriodicalCheckSec;
     QTimer* qrPeriodicalCheckTimer;
 
-    QResizeEvent *pageProductResize;
+    QResizeEvent *page_productResize;
     QShowEvent *dispenseEvent;
 
     bool response;

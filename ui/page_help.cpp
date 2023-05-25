@@ -49,12 +49,12 @@ page_help::~page_help()
 {
     delete ui;
 }
-void page_help::setPage(page_select_product *pageSelect, pageProduct *pageProduct, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_transactions *pageTransactions, page_maintenance *pageMaintenance, page_sendFeedback *pageFeedback)
+void page_help::setPage(page_select_product *pageSelect, page_product *page_product, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_transactions *pageTransactions, page_maintenance *pageMaintenance, page_sendFeedback *pageFeedback)
 {
     this->p_page_idle = pageIdle;
     this->p_page_feedback = pageFeedback;
     this->p_page_payment = page_qr_payment;
-    this->p_page_product = pageProduct;
+    this->p_page_product = page_product;
     this->p_page_select_product = pageSelect;
     this->p_page_transactions = pageTransactions;
     this->p_page_maintenance = pageMaintenance;

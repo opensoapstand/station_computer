@@ -19,7 +19,7 @@
 #include "ui_page_dispenser.h"
 #include "includefiles.h"
 #include "page_idle.h"
-#include "pagethankyou.h"
+#include "page_end.h"
 #include "page_product.h"
 #include "payment/commands.h"
 
@@ -58,9 +58,9 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void page_dispenser::setPage(page_qr_payment *page_qr_payment, page_tap_payment *page_tap_payment, pagethankyou *pageThankYou, page_idle *pageIdle, page_sendFeedback *pageFeedback)
+void page_dispenser::setPage(page_qr_payment *page_qr_payment, page_tap_payment *page_tap_payment, page_end *page_end, page_idle *pageIdle, page_sendFeedback *pageFeedback)
 {
-    this->thanksPage = pageThankYou;
+    this->thanksPage = page_end;
     this->paymentPage = page_qr_payment;
     this->paymentTapPage = page_tap_payment;
     this->p_page_idle = pageIdle;

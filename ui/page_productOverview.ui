@@ -119,7 +119,7 @@ color: #7F8080;</string>
    </property>
    <property name="styleSheet">
     <string notr="true">font-family: Montserrat;
-background-image: url(/home/df-admin/production/references/background.png);
+background-image: url(background.png);
 font-style: light;
 font-weight: bold;
 font-size: 36px;
@@ -1999,7 +1999,7 @@ color: #58595B;
    </property>
    <property name="styleSheet">
     <string notr="true">font-family: Montserrat;
-background-image: url(/home/df-admin/production/references/background.png);
+background-image: url(background.png);
 color: #FFFFFF;
 text-align: center;
 font: 75 30pt &quot;Montserrat&quot;;

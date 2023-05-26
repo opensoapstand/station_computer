@@ -74,6 +74,9 @@ public:
     void force_finish_dispensing();
     QString getStartDispensingCommand();
 
+    QString previousDispenseStatus;
+
+
 
 public slots:
 

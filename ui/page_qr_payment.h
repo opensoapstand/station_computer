@@ -103,7 +103,6 @@ private slots:
     void on_pushButton_previous_page_clicked();
     void on_pushButton_payment_bypass_clicked();
     void proceed_to_dispense();
-     void on_pushButton_to_idle_clicked();
 
     //void on_payment_pass_Button_clicked();
     //void on_payment_cancel_Button_clicked();
@@ -119,7 +118,7 @@ private slots:
     void on_pushButton_refresh_clicked();
 
     void qrProcessedPeriodicalCheck();
-    void showErrorPage();
+    void showErrorTimerPage();
 
 
 protected:
@@ -183,7 +182,7 @@ private:
     QTimer *checkPacketReceivedTimer;
     QTimer *checkCardTappedTimer;
 
-    QTimer *idlePaymentTimer;
+    // QTimer *idlePaymentTimer;
     QTimer *inFlightTimer;
 
     // Payment Communication
@@ -219,7 +218,7 @@ private:
 
     int _qrProcessedPeriodicalCheckSec;
     QTimer* qrPeriodicalCheckTimer;
-    QTimer* showError;
+    QTimer* showErrorTimer;
 
     QResizeEvent *page_productResize;
     QShowEvent *dispenseEvent;

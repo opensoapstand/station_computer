@@ -31,6 +31,7 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
     maintainProductPageEndTimer = new QTimer(this);
     maintainProductPageEndTimer->setInterval(1000);
     connect(maintainProductPageEndTimer, SIGNAL(timeout()), this, SLOT(onMaintainProductPageTimeoutTick()));
+
     // maintainProductPageEndTimer->start(1000); // best to disable timeout. Maintenance page can be used as a permanent page in industrial or maintenance situations.
 
     dispenseTimer = new QTimer(this);
@@ -69,12 +70,6 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     volume_per_tick_buffer = p_page_idle->selectedProduct->getVolumePerTickForSlot();
     p_page_idle->selectedProduct->setBiggestEnabledSizeIndex();
 
-    if (maintainProductPageEndTimer == nullptr)
-    {
-        maintainProductPageEndTimer = new QTimer(this);
-        maintainProductPageEndTimer->setInterval(1000);
-        connect(maintainProductPageEndTimer, SIGNAL(timeout()), this, SLOT(onMaintainProductPageTimeoutTick()));
-    }
 
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 

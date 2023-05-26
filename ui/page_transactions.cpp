@@ -8,6 +8,7 @@ page_transactions::page_transactions(QWidget *parent) : QWidget(parent),
         idleTimer = new QTimer(this);
         idleTimer->setInterval(1000);
         connect(idleTimer, SIGNAL(timeout()), this, SLOT(onIdleTimeoutTick()));
+
         transaction_count = TRANSACTION_HISTORY_COUNT;
 
         // set up back button
@@ -66,15 +67,6 @@ void page_transactions::showEvent(QShowEvent *event)
 
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TRANSACTIONS_BACKGROUND_PATH);
 
-
-
-
-        if (idleTimer == nullptr)
-        {
-                idleTimer = new QTimer(this);
-                idleTimer->setInterval(1000);
-                connect(idleTimer, SIGNAL(timeout()), this, SLOT(onIdleTimeoutTick()));
-        }
 
         idleTimer->start(1000);
         _idleTimeoutSec = 60;

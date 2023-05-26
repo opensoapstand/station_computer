@@ -53,8 +53,8 @@
 
 using namespace std;
 
-#define QR_PAGE_TIMEOUT_SECONDS 420
-#define QR_PAGE_TIMEOUT_WARNING_SECONDS 120
+#define QR_PAGE_TIMEOUT_SECONDS 10 //420
+#define QR_PAGE_TIMEOUT_WARNING_SECONDS 5 //120
 #define PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS 600
 #define PAGE_MAINTENANCE_TIMEOUT_SECONDS 60
 #define PAGE_THANK_YOU_TIMEOUT_SECONDS 7
@@ -96,7 +96,7 @@ using namespace std;
 #define PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH      "background_dispense_instructions.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH      "background_dispense_instructions_multispout.png"
 #define PAGE_DISPENSE_BACKGROUND_PATH                   "background_dispense.png"
-#define PAGE_QR_PAY_BACKGROUND_PATH                     "background_generic_white.png"
+#define PAGE_QR_PAY_BACKGROUND_PATH                     "background_generic_white_empty.png"
 #define PAGE_MAINTENANCE_BACKGROUND_PATH                "background_generic_white_empty.png"
 #define ERROR_MESSAGE_PATH                              "error_message.png"
 #define PAGE_TAP_PAY                                    "tapNow.png"

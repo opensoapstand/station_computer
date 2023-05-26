@@ -3,6 +3,21 @@
    border: 0px;
 } */
 
+QPushButton {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 50;
+   font-size: 32px;
+   color: #003840;
+   background-color: #FFFFFF;
+   border: 0px;
+   text-align: centre;
+   border-radius: 20px;
+   border: none;
+  
+}
+
+
 .invisible_button{
    background-color: transparent;
    border: 0px;

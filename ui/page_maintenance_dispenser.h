@@ -161,6 +161,8 @@ private:
     QByteArray curl_param_array;
     QByteArray curl_param_array2;
     char *curl_data;
+
+    QString activeEditField = "";
 };
 
 #endif // PAGE_MAINTENANCE_DISPENSER_H

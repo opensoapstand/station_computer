@@ -11,7 +11,6 @@
 #include <QQmlEngine>
 #include <QSlider>
 
-QString activeEditField = "";
 // CTOR
 page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidget(parent),
                                                                           ui(new Ui::page_maintenance_dispenser)

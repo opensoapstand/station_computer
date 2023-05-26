@@ -68,14 +68,15 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
     // ui->label_discount_tag->show();
     ui->label_total->setText("Total");
 
-    {
-        selectIdleTimer = new QTimer(this);
-        selectIdleTimer->setInterval(40);
-        // connect(ui->pushButton_promo_apply, SIGNAL(clicked()), this, SLOT(apply_promo_code()));
-        connect(ui->pushButton_promo_input, SIGNAL(clicked()), this, SLOT(on_lineEdit_promo_codeInput_clicked()));
-        connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
-        connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
-    }
+    selectIdleTimer = new QTimer(this);
+    selectIdleTimer->setInterval(40);
+    connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
+
+
+    // connect(ui->pushButton_promo_apply, SIGNAL(clicked()), this, SLOT(apply_promo_code()));
+    connect(ui->pushButton_promo_input, SIGNAL(clicked()), this, SLOT(on_lineEdit_promo_codeInput_clicked()));
+    connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
+    
     ui->label_gif->hide();
 }
 

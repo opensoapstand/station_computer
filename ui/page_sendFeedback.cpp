@@ -51,29 +51,26 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     // ui->label_select_problem->setWordWrap(true);
 
     // ui->label_problem_options->setStyleSheet("background-color: #5E8680; border-radius: 30px;");
- /*  QString checkBoxLabelStyling = ("QPushButton {"
-   "font-family: 'Brevia';"
-   "font-style: normal;"
-   "font-weight: 75;"
-   "font-size: 32px;"
-   "line-height: 99px;"
-   "letter-spacing: 1.5px;"
-   "color: #FFFFFF;"
-   "text-align: left;"
-   "qproperty-alignment: AlignCenter;"
-   "border: none;"
-   "wordWrap:true;"
-   "}");*/
-
+    /*  QString checkBoxLabelStyling = ("QPushButton {"
+      "font-family: 'Brevia';"
+      "font-style: normal;"
+      "font-weight: 75;"
+      "font-size: 32px;"
+      "line-height: 99px;"
+      "letter-spacing: 1.5px;"
+      "color: #FFFFFF;"
+      "text-align: left;"
+      "qproperty-alignment: AlignCenter;"
+      "border: none;"
+      "wordWrap:true;"
+      "}");*/
 
     ui->label_still_cant_find->setText("Still can't find it?");
 
     ui->label_email->setText("Email us at: sales@soapstand.com");
 
-   
     ui->checkBox_1_Label->setText("I love this, keep me in the loop.");
 
-    
     // ui->checkBox_2_Label->setText("No soap was dispensed");
     ui->checkBox_2_Label->setText("Payment issue");
 
@@ -91,13 +88,11 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 
     ui->label_thanks_for_feedback->setText("Thank you for <br> your feedback");
 
-    {
-        selectIdleTimer = new QTimer(this);
-        selectIdleTimer->setInterval(1000);
+    selectIdleTimer = new QTimer(this);
+    selectIdleTimer->setInterval(1000);
+    connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
 
-        connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
-        connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
-    }
+    connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
 
     QSize size(30, 30);
     ui->checkBox_1->setIconSize(size);
@@ -106,7 +101,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     ui->checkBox_4->setIconSize(size);
     ui->checkBox_5->setIconSize(size);
 
-////    ui->textEdit_custom_message->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
+    ////    ui->textEdit_custom_message->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
 }
 
 /*
@@ -173,7 +168,7 @@ void page_sendFeedback::showEvent(QShowEvent *event)
 
     ui->label_thanks_for_feedback->setProperty("class", "labelMailFeedback");
     ui->label_thanks_for_feedback->setStyleSheet(styleSheet);
-    
+
     ui->checkBox_1_Label->setProperty("class", "checkBoxLabelStyling");
     ui->checkBox_2_Label->setProperty("class", "checkBoxLabelStyling");
     ui->checkBox_3_Label->setProperty("class", "checkBoxLabelStyling");
@@ -186,13 +181,10 @@ void page_sendFeedback::showEvent(QShowEvent *event)
     ui->checkBox_5_Label->setStyleSheet(styleSheet);
     ui->pushButton_help_page->setStyleSheet(styleSheet);
 
-    //ui->label_enter_feedback->setProperty("class", "checkBoxLabelStyling");
+    // ui->label_enter_feedback->setProperty("class", "checkBoxLabelStyling");
     ui->label_enter_feedback->setStyleSheet(styleSheet);
 
     ui->textEdit_custom_message->setStyleSheet(styleSheet);
-
-
-
 
     reset_and_show_page_elements();
 
@@ -463,14 +455,13 @@ void page_sendFeedback::on_pushButton_start_input_clicked()
 
 void page_sendFeedback::on_feedbackText_cursorPositionChanged(int arg1, int arg2)
 {
-    
+
     // on_pushButton_start_input_clicked();
 }
 
 void page_sendFeedback::on_pushButton_help_page_clicked()
 {
-   // pushButton_help_page->setVisible(false);
+    // pushButton_help_page->setVisible(false);
     qDebug() << "Help_Button pressed///////////////////////////////////////////////////////////////////////////////";
     hideCurrentPageAndShowProvided(p_page_help);
 }
- 

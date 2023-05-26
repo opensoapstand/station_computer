@@ -165,11 +165,9 @@ page_product::page_product(QWidget *parent) : QWidget(parent),
     orderSizeBackgroundLabels[2] = ui->label_background_large;
     orderSizeBackgroundLabels[3] = ui->label_background_custom;
 
-    {
-        selectIdleTimer = new QTimer(this);
-        selectIdleTimer->setInterval(40);
-        connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
-    }
+    selectIdleTimer = new QTimer(this);
+    selectIdleTimer->setInterval(40);
+    connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
 
     transactionLogging = "";
 }

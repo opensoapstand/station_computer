@@ -147,8 +147,8 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->page_qr_payment_Button->setStyleSheet(styleSheet);
     // ui->page_qr_payment_Button->setStyleSheet("QPushButton { background-color: red; border: 0px };QPushButton:pressed { background-color: green; border: 10px }");
 
-    ui->pushButton_to_idle->setProperty("class", "buttonBGTransparent");
-    ui->pushButton_to_idle->setStyleSheet(styleSheet);
+    ui->pushButton_to_help->setProperty("class", "buttonBGTransparent");
+    ui->pushButton_to_help->setStyleSheet(styleSheet);
 
     qDebug() << "<<<<<<< Page Enter: Product Overview>>>>>>>>>";
     QWidget::showEvent(event);
@@ -235,7 +235,7 @@ void page_product_overview::reset_and_show_page_elements()
 
     }
     ui->pushButton_previous_page->setEnabled(true);
-    ui->pushButton_to_idle->setEnabled(true);
+    ui->pushButton_to_help->setEnabled(true);
 
     QString keyboard = KEYBOARD_IMAGE_PATH;
     QString keyboard_picture_path = p_page_idle->getTemplatePathFromName(KEYBOARD_IMAGE_PATH);
@@ -275,7 +275,7 @@ void page_product_overview::mainPage()
     hideCurrentPageAndShowProvided(p_page_idle);
 }
 
-void page_product_overview::on_pushButton_to_idle_clicked()
+void page_product_overview::on_pushButton_to_help_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_help);
 }
@@ -366,7 +366,7 @@ void page_product_overview::updatePrice()
         // p_page_idle->selectedProduct->getCustomPriceDetails(&unitsInvoice, &selectedPrice, &discount, &selectedPriceCorrected);
     }
     else
-    {
+    {   //The label_invoice_price total displays the discounted total even when the user goes back to the select_product page. It's intended behaviour so user doesnt have to retype the promo-code
          double selectedPrice = p_page_idle->selectedProduct->getPrice();
         double selectedPriceCorrected = p_page_idle->getPriceCorrectedAfterDiscount(selectedPrice);
         double discountFraction = p_page_idle->getDiscountPercentage();
@@ -548,7 +548,7 @@ void page_product_overview::on_page_qr_payment_Button_clicked()
 {
     qDebug() << "page_product_overview: Pay button";
 
-    ui->pushButton_to_idle->setEnabled(false);
+    ui->pushButton_to_help->setEnabled(false);
     ui->pushButton_previous_page->setEnabled(false);
 
     this->stopSelectTimers();

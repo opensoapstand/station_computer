@@ -79,7 +79,7 @@ private slots:
     void return_to_selectProductPage();
     void updatePrice();
     // Set Drink Order
-    void on_pushButton_to_idle_clicked();
+    void on_pushButton_to_help_clicked();
     void onSelectTimeoutTick();
     void keyboardButtonPressed(int);
 private:

@@ -62,7 +62,7 @@ public:
     void setBackgroundPictureToQWidget(QWidget *page, QString imageName);
     QString getCSS(QString cssName);
     void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
-    void addCssStyleToObject(QWidget *qtType, QString classname, QString css_name);
+    void addCssStyleToObject(QWidget *element, QString classname, QString css_file_name);
     
     void setPromoCode(QString promoCode);
     QString getPromoCode();
@@ -78,6 +78,7 @@ public:
 
     void loadTextsFromTemplateCsv();
     void loadTextsFromDefaultCsv();
+    QString getTemplateTextByPage(QWidget *page, QString identifier);
     void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
     QString getText(QString textName_to_find);
 

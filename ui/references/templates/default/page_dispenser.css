@@ -121,7 +121,7 @@
    border-radius: 20px;
 }
 
-#pushButton_problems {
+#pushButton_problems.normal {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;

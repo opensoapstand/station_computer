@@ -53,6 +53,9 @@ page_end::~page_end()
 void page_end::showEvent(QShowEvent *event)
 {
 
+    p_page_idle->setTemplateTextToObject(ui->notifyUs_Button);
+
+
     QString styleSheet = p_page_idle->getCSS(PAGE_END_CSS);
 
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
@@ -80,7 +83,7 @@ void page_end::showEvent(QShowEvent *event)
     // font.setWeight(75);
     font.setWeight(50);
     ui->notifyUs_Button->setFont(font);
-    ui->notifyUs_Button->setText("Provide Feedback");
+//    ui->notifyUs_Button->setText("Provide Feedback");
     ui->notifyUs_Button->raise();
 
     // popup

@@ -36,7 +36,18 @@ page_dispenser->label_press,press and hold <br>the button
 page_dispenser->pushButton_problems,Tap here if you notice a problem.
 page_dispenser->pushButton_report,Report
 page_dispenser->pushButton_abort,Abort
-    //ui->pushButton_abort->setText("Abort");
+page_dispenser->label_volume_dispensed,Volume dispensed
+page_dispenser->msgBox2->button_problems_message,~test~
+      #  p_page_idle->setTemplateTextWithIdentifierToObject(msgBox2->setText,"button_problems_message");
+
+
+
+
+
+
+# page_end
+
+page_end->notifyUs_Button,Provide Feedback
 
 
 

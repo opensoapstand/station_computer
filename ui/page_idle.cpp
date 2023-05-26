@@ -520,6 +520,22 @@ void page_idle::setTemplateTextWithIdentifierToObject(QWidget *p_element, QStrin
     {
         button->setText(text);
     }
+    else if (QMessageBox *msgBox = qobject_cast<QMessageBox *>(p_element))
+    {
+       
+    msgBox->setText(text);
+    
+    
+    // ...
+    }
+       else if (QMessageBox *msgBox2 = qobject_cast<QMessageBox *>(p_element))
+    {
+       
+    msgBox2->setText(text);
+    
+    
+    // ...
+    }
     else
     {
         // Handle other types of elements if needed

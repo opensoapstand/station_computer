@@ -30,9 +30,18 @@ page_product_overview->lineEdit_promo_code->valid,Promo Code Valid
 
 # page_dispenser
 
-page_dispenser->lineEdit_promo_code->valid,Promo Code Valid
+page_dispenser->label_to_refill,to refill
+page_dispenser->label_instructions_container,bring container to nozzle
+page_dispenser->label_press,press and hold <br>the button
+page_dispenser->pushButton_problems,Tap here if you notice a problem.
+page_dispenser->pushButton_report,Report
+page_dispenser->pushButton_abort,Abort
+    //ui->pushButton_abort->setText("Abort");
 
-    ui->label_to_refill->setText("to refill");
+
+
+
+
 
 
 

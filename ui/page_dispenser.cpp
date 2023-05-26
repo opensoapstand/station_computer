@@ -44,13 +44,13 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
 
     ui->label_finishTransactionMessage->hide();
     //ui->label_to_refill->setText("to refill");
-    ui->label_to_refill->setText("to refill");
-    ui->label_instructions_container->setText("bring container to nozzle");
-    ui->label_press->setText("press and hold <br>the button");
+
+   // ui->label_instructions_container->setText("bring container to nozzle");
+   //   ui->label_press->setText("press and hold <br>the button");
     ui->pushButton_abort->raise();
     ui->pushButton_problems->raise();
-    ui->pushButton_problems->setText("Tap here if you notice a problem.");
-    ui->pushButton_report->setText("Report");
+//    ui->pushButton_problems->setText("Tap here if you notice a problem.");
+//    ui->pushButton_report->setText("Report");
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
@@ -102,6 +102,15 @@ void page_dispenser::showEvent(QShowEvent *event)
     qDebug() << "Selected slot: " << QString::number(p_page_idle->selectedProduct->getSlot());
     QWidget::showEvent(event);
     
+    p_page_idle->setTemplateTextToObject(ui->label_to_refill);
+    p_page_idle->setTemplateTextToObject(ui->label_instructions_container);
+    p_page_idle->setTemplateTextToObject(ui->label_press);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_problems);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_report);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_abort);
+
+
+
     QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
     ui->label_finishTransactionMessage->setStyleSheet(styleSheet);
     ui->pushButton_debug_Button->setStyleSheet(styleSheet);
@@ -149,7 +158,7 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
 
-    ui->pushButton_abort->setText("Abort");
+    //ui->pushButton_abort->setText("Abort");
     ui->pushButton_abort->show();
     ui->label_press->show();
     ui->label_to_refill->show();

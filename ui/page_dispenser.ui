@@ -82,7 +82,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Volume dispensed</string>
+    <string>volume dispensed</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_volume_dispensed_ml">
@@ -235,8 +235,8 @@
   <widget class="QLabel" name="label_dispense_message">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>1760</y>
+     <x>0</x>
+     <y>1750</y>
      <width>1051</width>
      <height>151</height>
     </rect>

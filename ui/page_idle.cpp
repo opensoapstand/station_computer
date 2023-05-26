@@ -130,7 +130,6 @@ void page_idle::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     setTemplateTextToObject(ui->label_welcome_message);
-    
 
     addCompanyLogoToLabel(ui->logo_label);
 
@@ -313,13 +312,13 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
     if (!isOnline)
     {
         ui->label_printer_status->raise();
-        setTemplateTextWithIdentifierToObject(ui->label_printer_status,"offline");
+        setTemplateTextWithIdentifierToObject(ui->label_printer_status, "offline");
         ui->label_printer_status->show();
     }
     else if (!hasPaper)
     {
         ui->label_printer_status->raise();
-        setTemplateTextWithIdentifierToObject(ui->label_printer_status,"nopaper");
+        setTemplateTextWithIdentifierToObject(ui->label_printer_status, "nopaper");
         ui->label_printer_status->show();
     }
     else
@@ -505,11 +504,11 @@ void page_idle::setTemplateTextToObject(QWidget *p_element)
 
 void page_idle::setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier)
 {
-   QWidget *parentWidget = p_element->parentWidget();
+    QWidget *parentWidget = p_element->parentWidget();
     QString pageName = parentWidget->objectName();
     QString elementName = p_element->objectName();
 
-    QString searchString = pageName + "->" + elementName+"->"+identifier;
+    QString searchString = pageName + "->" + elementName + "->" + identifier;
 
     QString text = getText(searchString);
 
@@ -525,6 +524,13 @@ void page_idle::setTemplateTextWithIdentifierToObject(QWidget *p_element, QStrin
     {
         // Handle other types of elements if needed
     }
+}
+QString page_idle::getTemplateTextByPage(QWidget *page, QString identifier)
+{
+    QString pageName = page->objectName();
+    QString searchString = pageName + "->" + identifier;
+
+    return getText(searchString);
 }
 
 QString page_idle::getText(QString textName_to_find)

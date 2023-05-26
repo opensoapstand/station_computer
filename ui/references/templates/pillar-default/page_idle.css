@@ -4,7 +4,7 @@ QPushButton {
 }
 
 QLabel {
-    font-family: 'Brevia';
+    font-family: 'EuropaNuova';
     font-style: normal;
     font-weight: 700;
     font-size: 85px;
@@ -26,7 +26,7 @@ QLabel {
 }
 
 #label_printer_status {
-    font-family: 'Brevia';
+    font-family: 'EuropaNuova';
     font-style: normal;
     font-weight: 100;
     background-color: #5E8580;

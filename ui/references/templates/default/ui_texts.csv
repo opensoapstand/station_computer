@@ -20,3 +20,16 @@ page_product->pushButton_back,<- Products
 page_product->label_select_quantity,Select Quantity
 page_product->pushButton_continue,Continue
 
+# page_product_overview
+page_product_overview->pushButton_select_product_page,<- Back
+page_product_overview->label_discount_tag,Discount
+page_product_overview->label_pay,Continue
+page_product_overview->label_total,Total
+page_product_overview->lineEdit_promo_code->cupons_enable,Tap here to enter promo code
+page_product_overview->lineEdit_promo_code->valid,Promo Code Validitch
+
+
+
+
+
+

@@ -61,12 +61,15 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
     //                           "color: #438080;"
     //                           "}";
 
-    ui->pushButton_select_product_page->setText("<- Back");
-    ui->label_discount_tag->setText("Discount");
+    //ui->pushButton_select_product_page->setText("<- Back");
+    //p_page_idle->setTemplateTextToObject(ui->pushButton_select_product_page);
+
+//    ui->label_discount_tag->setText("Discount");
   //  ui->pushButton_promo_apply->setText("Apply");
-    ui->label_pay->setText("Continue");
     // ui->label_discount_tag->show();
-    ui->label_total->setText("Total");
+   
+    // ui->label_pay->setText("Continue");
+    // ui->label_total->setText("Total");
 
     {
         selectIdleTimer = new QTimer(this);
@@ -182,6 +185,17 @@ void page_product_overview::onSelectTimeoutTick()
 
 void page_product_overview::reset_and_show_page_elements()
 {
+
+    p_page_idle->setTemplateTextToObject(ui->pushButton_select_product_page);
+    p_page_idle->setTemplateTextToObject(ui->label_discount_tag);
+    p_page_idle->setTemplateTextToObject(ui->label_pay);
+    p_page_idle->setTemplateTextToObject(ui->label_total);
+    //  ui->label_pay->setText("Continue");
+    // ui->label_total->setText("Total");
+
+    //ui->label_discount_tag->setText("Discount");
+
+
     QString bitmap_location;
     // ui->label_product_title->setText(selectedProductOrder->getSelectedProductName());
     // ui->label_product_description->setText(selectedProductOrder->getLoadedProductDescription());
@@ -204,10 +218,14 @@ void page_product_overview::reset_and_show_page_elements()
     if (areCouponsEnabled())
     {
 
-        ui->lineEdit_promo_code->setText("Tap here to enter promo code");
+    //    ui->lineEdit_promo_code->setText("Tap here to enter promo code");
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code,"cupons_enable");
+
         ui->lineEdit_promo_code->show();
         if(p_page_idle->isPromoApplied()){
-            ui->lineEdit_promo_code->setText("Promo Code Valid");
+            //ui->lineEdit_promo_code->setText("Promo Code Valid");
+            p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code,"valid");
+
         }
         ui->label_invoice_discount_amount->show();
         ui->label_invoice_discount_name->show();
@@ -432,7 +450,9 @@ void page_product_overview::apply_promo_code()
                         if(p_page_idle->isPromoApplied()){
                             ui->label_invoice_discount_amount->show();
                             ui->label_discount_tag->show();
-                            ui->lineEdit_promo_code->setText("Promo Code Valid");
+
+                            p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code,"valid");
+                            //ui->lineEdit_promo_code->setText("Promo Code Valid");
                         }
                         
                         p_page_idle->addCssStyleToObject(ui->lineEdit_promo_code, "promoCode_valid", PAGE_PRODUCT_OVERVIEW_CSS);

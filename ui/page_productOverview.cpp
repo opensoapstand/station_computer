@@ -229,6 +229,7 @@ void page_product_overview::reset_and_show_page_elements()
     // p_page_idle->selectedProduct->setDiscountPercentageFraction((0 * 1.0) / 100);
     if(!p_page_idle->isPromoApplied())
     {
+        ui->lineEdit_promo_code->setText("Tap here to enter promo code");
         ui->label_invoice_discount_amount->hide();
         ui->label_invoice_discount_name->hide();
         ui->label_discount_tag->hide();

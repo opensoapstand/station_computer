@@ -97,6 +97,7 @@ void page_idle::showEvent(QShowEvent *event)
     ui->label_printer_status->setStyleSheet(styleSheet);
 
     qDebug() << "open db: payment method";
+    setDiscountPercentage(0.0);
     bool needsReceiptPrinter = false;
     for (int slot = 1; slot <= SLOT_COUNT; slot++)
     {
@@ -243,6 +244,7 @@ bool page_idle::isPromoApplied()
 {
     if (m_discount_percentage_fraction != 0.0)
     {
+        qDebug() << "true";
         return true;
     }
     return false;

@@ -366,7 +366,7 @@ void page_product_overview::updatePrice()
         // p_page_idle->selectedProduct->getCustomPriceDetails(&unitsInvoice, &selectedPrice, &discount, &selectedPriceCorrected);
     }
     else
-    {
+    {   //The label_invoice_price total displays the discounted total even when the user goes back to the select_product page. It's intended behaviour so user doesnt have to retype the promo-code
          double selectedPrice = p_page_idle->selectedProduct->getPrice();
         double selectedPriceCorrected = p_page_idle->getPriceCorrectedAfterDiscount(selectedPrice);
         double discountFraction = p_page_idle->getDiscountPercentage();

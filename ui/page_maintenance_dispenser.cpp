@@ -11,6 +11,7 @@
 #include <QQmlEngine>
 #include <QSlider>
 
+QString activeEditField = "";
 // CTOR
 page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidget(parent),
                                                                           ui(new Ui::page_maintenance_dispenser)
@@ -88,18 +89,6 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->numberEntry->hide();
     ui->errorLabel->setText("");
     ui->titleLabel->setText("");
-
-    price_small = false;
-    price_medium = false;
-    price_large = false;
-    price_custom = false;
-    modify_stock = false;
-    target_s = false;
-    target_m = false;
-    target_l = false;
-    vol_per_tick = false;
-    full = false;
-    pwm = false;
 
     // if (p_page_idle->selectedProduct->getPaymentMethod() == "plu" || p_page_idle->selectedProduct->getPaymentMethod() == "barcode")  //|| paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13"
     // {
@@ -204,6 +193,7 @@ void page_maintenance_dispenser::refreshLabels()
 
     ui->temperatureButton->setVisible(false);
     ui->temperatureLabel->setVisible(false);
+    activeEditField = "";
 }
 
 void page_maintenance_dispenser::setSoldOutButtonText()
@@ -626,14 +616,14 @@ void page_maintenance_dispenser::on_soldOutButton_clicked()
 void page_maintenance_dispenser::on_pushButton_set_restock_volume_clicked()
 {
     //    qDebug() << "Full Volume button clicked" ;
-    full = true;
+    // full = true;
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_pushButton_set_volume_remaining_clicked()
 {
     //    qDebug() << "Remaining button clicked" ;
-    modify_stock = true;
+    // modify_stock = true;
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
     ui->numberEntry->show();
     ui->textEntry->setText("");
@@ -686,7 +676,7 @@ void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
 
 void page_maintenance_dispenser::on_pwmButton_clicked()
 {
-    pwm = true;
+    // pwm = true;
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
     ui->numberEntry->show();
     ui->textEntry->setText("");
@@ -786,15 +776,8 @@ void page_maintenance_dispenser::on_buttonCancel_clicked()
     ui->textEntry->setText("");
     ui->errorLabel->setText("");
     text_entered = "";
-    price_small = false;
-    price_large = false;
-    target_s = false;
-    target_m = false;
-    target_l = false;
-    vol_per_tick = false;
-    modify_stock - false;
-    full = false;
-    pwm = false;
+    activeEditField = "";
+
 }
 
 
@@ -840,49 +823,49 @@ void page_maintenance_dispenser::on_nameButton_clicked()
 
 void page_maintenance_dispenser::on_priceButton_s_clicked()
 {
-    price_small = true;
+    // price_small = true;
     ui->textEntry->setText(QString::number(p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)));
     // _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_priceButton_m_clicked()
 {
-    price_medium = true;
+    // price_medium = true;
     ui->textEntry->setText(QString::number(p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)));
     // _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_priceButton_l_clicked()
 {
-    price_large = true;
+    // price_large = true;
     ui->textEntry->setText(QString::number(p_page_idle->selectedProduct->getPrice(SIZE_LARGE_INDEX)));
     // _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_priceButton_c_clicked()
 {
-    price_custom = true;
+    // price_custom = true;
     ui->textEntry->setText(QString::number(p_page_idle->selectedProduct->getPrice(SIZE_CUSTOM_INDEX)));
     // _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_target_volumeButton_s_clicked()
 {
-    target_s = true;
+    // target_s = true;
     ui->textEntry->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_SMALL_INDEX, false, false));
     // _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_target_volumeButton_m_clicked()
 {
-    target_m = true;
+    // target_m = true;
     ui->textEntry->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_MEDIUM_INDEX, false, false));
     // _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_target_volumeButton_l_clicked()
 {
-    target_l = true;
+    // target_l = true;
     ui->textEntry->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_LARGE_INDEX, false, false));
 }
 
@@ -901,49 +884,49 @@ void page_maintenance_dispenser::updateValues()
 {
     if (text_entered != "")
     {
-        if (price_small)
+        if (activeEditField == "price_small")
         {
             p_page_idle->selectedProduct->setPrice(SIZE_SMALL_INDEX, text_entered.toDouble());
             ui->price_small->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)));
             ui->titleLabel->setText("Price Small:");
         }
-        else if (price_medium)
+        else if (activeEditField == "price_medium")
         {
             ui->titleLabel->setText("Price Medium:");
             p_page_idle->selectedProduct->setPrice(SIZE_MEDIUM_INDEX, text_entered.toDouble());
             ui->price_medium->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)));
         }
-        else if (price_large)
+        else if (activeEditField == "price_large")
         {
             p_page_idle->selectedProduct->setPrice(SIZE_LARGE_INDEX, text_entered.toDouble());
             ui->price_large->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_LARGE_INDEX)));
         }
-        else if (price_custom)
+        else if (activeEditField == "price_custom")
         {
             p_page_idle->selectedProduct->setPrice(SIZE_CUSTOM_INDEX, text_entered.toDouble());
             ui->price_custom->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_CUSTOM_INDEX)));
         }
-        else if (target_s)
+        else if (activeEditField == "target_s")
         {
             p_page_idle->selectedProduct->setSizeToVolumeForSlot(text_entered, SIZE_SMALL_INDEX);
         }
-        else if (target_m)
+        else if (activeEditField == "target_m")
         {
             p_page_idle->selectedProduct->setSizeToVolumeForSlot(text_entered, SIZE_MEDIUM_INDEX);
         }
-        else if (target_l)
+        else if (activeEditField == "target_l")
         {
             p_page_idle->selectedProduct->setSizeToVolumeForSlot(text_entered, SIZE_LARGE_INDEX);
         }
-        else if (vol_per_tick)
+        else if (activeEditField == "vol_per_tick")
         {
             p_page_idle->selectedProduct->setVolumePerTickForSlot(text_entered);
         }
-        else if (full)
+        else if (activeEditField == "full")
         {
             p_page_idle->selectedProduct->setFullVolumeCorrectUnits(text_entered);
         }
-        else if (modify_stock)
+        else if (activeEditField == "modify_stock")
         {
             double vol_as_ml = p_page_idle->selectedProduct->inputTextToMlConvertUnits(text_entered);
             qDebug() << "db... set volume remaining";
@@ -951,25 +934,13 @@ void page_maintenance_dispenser::updateValues()
             db.setVolumeRemaining(p_page_idle->selectedProduct->getSlot(), vol_as_ml);
             db.closeDB();
         }
-        else if (pwm)
+        else if (activeEditField == "pwm")
         {
             p_page_idle->selectedProduct->setDispenseSpeedPercentage(text_entered.toInt());
         }
 
         refreshLabels();
     }
-
-    price_small = false;
-    price_medium = false;
-    price_large = false;
-    price_custom = false;
-    modify_stock = false;
-    target_s = false;
-    target_m = false;
-    target_l = false;
-    vol_per_tick = false;
-    full = false;
-    pwm = false;
 
     ui->textEntry->setText("");
     ui->titleLabel->setText("");
@@ -1116,6 +1087,7 @@ void page_maintenance_dispenser::buttonGroup_edit_product_Pressed(int buttonId)
 {
     QAbstractButton *buttonpressed = ui->buttonGroup_edit_product->button(buttonId);
     QString buttonText = buttonpressed->text();
+    activeEditField = buttonpressed->accessibleName();
     ui->titleLabel->setText(buttonText);
     ui->numberEntry->show();
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;

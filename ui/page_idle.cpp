@@ -359,11 +359,11 @@ bool page_idle::isEnough(int p)
     return false;
 }
 
-void page_idle::addCssStyleToObject(QWidget *qtType, QString classname, QString css_name)
+void page_idle::addCssStyleToObject(QWidget *element, QString classname, QString css_file_name)
 {
-    QString styleSheet = getCSS(css_name);
-    qtType->setProperty("class", classname);
-    qtType->setStyleSheet(styleSheet);
+    QString styleSheet = getCSS(css_file_name);
+    element->setProperty("class", classname);
+    element->setStyleSheet(styleSheet);
 }
 
 void page_idle::addCompanyLogoToLabel(QLabel *label)

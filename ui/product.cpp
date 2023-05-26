@@ -418,7 +418,7 @@ void product::loadProductProperties()
 bool product::isProductVolumeInContainer()
 {
     DbManager db(DB_PATH);
-    bool retval;
+    bool retval=true;
     if (!db.getEmptyContainerDetectionEnabled())
     {
         retval = db.getVolumeRemaining(getSlot()) > CONTAINER_EMPTY_THRESHOLD_ML;

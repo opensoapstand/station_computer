@@ -39,7 +39,9 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     qDebug() << "db for maintenance general";
     DbManager db(DB_PATH);
     ui->enable_empty_container_checkBox->setChecked(db.getEmptyContainerDetectionEnabled());
+    ui->enable_empty_container_checkBox->setText( "Enable auto empty detection. (If disabled, will display sold out if less than " + QString::number(CONTAINER_EMPTY_THRESHOLD_ML) + "ml remaining)");
     ui->enable_pump_ramping_checkBox->setChecked(db.getPumpRampingEnabled());
+    ui->enable_pump_ramping_checkBox->hide();
     db.closeDB();
 
     QProcess process;

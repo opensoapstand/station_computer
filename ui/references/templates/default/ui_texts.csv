@@ -26,9 +26,13 @@ page_product_overview->label_discount_tag,Discount
 page_product_overview->label_pay,Continue
 page_product_overview->label_total,Total
 page_product_overview->lineEdit_promo_code->cupons_enable,Tap here to enter promo code
-page_product_overview->lineEdit_promo_code->valid,Promo Code Validitch
+page_product_overview->lineEdit_promo_code->valid,Promo Code Valid
 
+# page_dispenser
 
+page_dispenser->lineEdit_promo_code->valid,Promo Code Valid
+
+    ui->label_to_refill->setText("to refill");
 
 
 

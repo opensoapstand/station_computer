@@ -43,6 +43,7 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     // ui->pushButton_abort->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
 
     ui->label_finishTransactionMessage->hide();
+    //ui->label_to_refill->setText("to refill");
     ui->label_to_refill->setText("to refill");
     ui->label_instructions_container->setText("bring container to nozzle");
     ui->label_press->setText("press and hold <br>the button");

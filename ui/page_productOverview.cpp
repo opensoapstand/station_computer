@@ -382,7 +382,7 @@ void page_product_overview::apply_promo_code()
 {
 
     QString promocode = ui->lineEdit_promo_code->text();
-    QMovie *movie = new QMovie("/home/df-admin/drinkfill/ui/soapstandspinner.gif");
+    QMovie *movie = new QMovie("soapstandspinner.gif");
     ui->label_gif->setMovie(movie);
     movie->start();
     // ui->promoKeyboard->hide();

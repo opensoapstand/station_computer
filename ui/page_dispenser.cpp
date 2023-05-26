@@ -97,41 +97,26 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 }
 void page_dispenser::showEvent(QShowEvent *event)
 {
-    //
-    //
-    //
-    //
-    //
+    qDebug() << "<<<<<<< Page Enter: Dispenser >>>>>>>>>";
+    qDebug() << "Selected slot: " << QString::number(p_page_idle->selectedProduct->getSlot());
+    QWidget::showEvent(event);
+
     QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
-
     ui->label_finishTransactionMessage->setStyleSheet(styleSheet);
-
     ui->pushButton_debug_Button->setStyleSheet(styleSheet);
     ui->pushButton_abort->setStyleSheet(styleSheet);
-
     ui->label_volume_dispensed_ml->setProperty("class", "label_volume_dispensed_ml"); // set property goes first!!
     ui->label_volume_dispensed->setProperty("class", "label_volume_dispensed_ml");
     ui->label_volume_dispensed_ml->setStyleSheet(styleSheet);
     ui->label_volume_dispensed->setStyleSheet(styleSheet);
-
     ui->label_to_refill->setStyleSheet(styleSheet);
-
     ui->label_instructions_container->setStyleSheet(styleSheet);
-
     ui->label_press->setStyleSheet(styleSheet);
-
     ui->label_dispense_message->setStyleSheet(styleSheet);
-
+    ui->label_volume_dispensed->setProperty("class", "normal");
     ui->pushButton_problems->setStyleSheet(styleSheet);
-
     ui->pushButton_report->setStyleSheet(styleSheet);
-
-    // msgBox->setStyleSheet(styleSheet);
-
-    qDebug() << "<<<<<<< Page Enter: Dispenser >>>>>>>>>";
-    qDebug() << "Selected slot: " << QString::number(p_page_idle->selectedProduct->getSlot());
     transactionLogging += "\n 6: Station Unlocked - True";
-    QWidget::showEvent(event);
 
     // important to set to nullptr, to check at timeout if it was initialized (displayed...) or not.
     msgBox = nullptr;
@@ -142,6 +127,8 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     ui->fill_animation_label->move(380, 889);
     ui->pushButton_problems->move(120, 40);
+
+    previousDispenseStatus = "NO STATE";
 
     qDebug() << "db check dispense buttons count:";
     DbManager db(DB_PATH);
@@ -383,41 +370,44 @@ void page_dispenser::fsmReceiveDispenseRate(double flowrate)
 void page_dispenser::fsmReceiveDispenserStatus(QString status)
 {
     QString dispenseStatus = status;
-    qDebug() << "Dispense status received from FSM: " << dispenseStatus;
     ui->label_dispense_status->setText(dispenseStatus);
     ui->label_dispense_status->hide();
 
-    // if (dispenseStatus == "FLOW_STATE_NOT_PUMPING_NOT_DISPENSING" || dispenseStatus == "FLOW_STATE_PRIME_FAIL_OR_EMPTY" || dispenseStatus == "FLOW_STATE_RAMP_UP" )
-    // {
-    //     // stable status. do not change button visibility.
-    // }
-    // else
+    if (dispenseStatus != previousDispenseStatus)
+    {
+        qDebug() << "Dispense status received from FSM: " << dispenseStatus;
 
-    if (dispenseStatus == "SLOT_STATE_WARNING_PRIMING")
-    {
-        ui->label_dispense_message->setText("Please keep the button pressed.\nfor up to 15 seconds\nbefore the product starts dispensing.");
-        ui->label_dispense_message->show();
-    }
-    else if (dispenseStatus == "SLOT_STATE_PROBLEM_EMPTY")
-    {
-        ui->label_dispense_message->setText("It appears we're out of stock.\nTap the problem button in case of other issues.");
-        ui->label_dispense_message->show();
+        if (dispenseStatus == "SLOT_STATE_WARNING_PRIMING")
+        {
+            ui->label_dispense_message->setText("Please keep the button pressed.\nfor up to 15 seconds\nbefore the product starts dispensing.");
+            p_page_idle->addCssStyleToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
+            ui->label_dispense_message->show();
+        }
+        else if (dispenseStatus == "SLOT_STATE_PROBLEM_EMPTY")
+        {
+            ui->label_dispense_message->setText("It appears we're out of stock.");
+            p_page_idle->addCssStyleToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
+            ui->label_dispense_message->show();
+        }
+        else if (dispenseStatus == "SLOT_STATE_PROBLEM_NEEDS_ATTENTION")
+        {
+            ui->label_dispense_message->setText("We can't get the dispensing started.\nWe're empty or the pump needs help to prime.\nTap the problem button in case of other issues.");
+            p_page_idle->addCssStyleToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
+            ui->label_dispense_message->show();
+        }
+        else if (dispenseStatus == "SLOT_STATE_AVAILABLE")
+        {
+            p_page_idle->addCssStyleToObject(ui->pushButton_problems, "normal", PAGE_DISPENSER_CSS);
+            // normal status
+            // ui->pushButton_problems->hide();
+            ui->label_dispense_message->hide();
+        }
+        else
+        {
+        }
     }
 
-    else if (dispenseStatus == "SLOT_STATE_PROBLEM_NEEDS_ATTENTION")
-    {
-        ui->label_dispense_message->setText("We can't get the dispensing started.\nWe're empty or the pump needs help to prime.\nTap the problem button in case of other issues.");
-        ui->label_dispense_message->show();
-    }
-    else if (dispenseStatus == "SLOT_STATE_AVAILABLE")
-    {
-        // normal status
-        // ui->pushButton_problems->hide();
-        ui->label_dispense_message->hide();
-    }
-    else
-    {
-    }
+    previousDispenseStatus = dispenseStatus;
 };
 
 void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)

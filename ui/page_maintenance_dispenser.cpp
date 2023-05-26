@@ -172,6 +172,8 @@ void page_maintenance_dispenser::refreshLabels()
 
     ui->name->setText(p_page_idle->selectedProduct->getProductName());
 
+    ui->pushButton_set_restock_volume->setText("Define restock volume.");
+
     ui->price_small->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)));
     ui->price_medium->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)));
     ui->price_large->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_LARGE_INDEX)));
@@ -181,7 +183,7 @@ void page_maintenance_dispenser::refreshLabels()
     ui->target_volume_m->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_MEDIUM_INDEX, false, true));
     ui->target_volume_l->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_LARGE_INDEX, false, true));
 
-    ui->full_volume->setText("Full stock volume                       : " + p_page_idle->selectedProduct->getFullVolumeCorrectUnits(true));
+    ui->full_volume->setText("Restock volume                          : " + p_page_idle->selectedProduct->getFullVolumeCorrectUnits(true));
 
     ui->label_volume_dispensed_total->setText("Volume dispensed total                : " + p_page_idle->selectedProduct->getTotalDispensedCorrectUnits());
     ui->label_volume_dispensed_since_restock->setText("Volume dispensed since restock : " + p_page_idle->selectedProduct->getVolumeDispensedSinceRestockCorrectUnits());
@@ -199,9 +201,6 @@ void page_maintenance_dispenser::refreshLabels()
     ui->pluLabel_c->setText(p_page_idle->selectedProduct->getPLU('c'));
 
     // db.closeDB();
-
-    ui->testLargeButton->setVisible(false);
-    ui->testSmallButton->setVisible(false);
 
     ui->temperatureButton->setVisible(false);
     ui->temperatureLabel->setVisible(false);

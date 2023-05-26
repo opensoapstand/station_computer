@@ -215,7 +215,7 @@ void page_product::showEvent(QShowEvent *event)
     ui->label_notify_us->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
-    ui->pushButton_to_idle->setStyleSheet(styleSheet);
+    ui->pushButton_to_help->setStyleSheet(styleSheet);
 
     for (int i = 0; i < 4; i++)
     {
@@ -232,7 +232,6 @@ void page_product::showEvent(QShowEvent *event)
     }
 
     p_page_idle->selectedProduct->loadProductProperties();
-    loadProdSpecs();
     reset_and_show_page_elements();
 }
 
@@ -258,9 +257,7 @@ void page_product::onSelectTimeoutTick()
 void page_product::reset_and_show_page_elements()
 {
 
-    // ui->pushButton_back->setText("<- Products");
-    // ui->label_select_quantity->setText("Select Quantity");
-    // ui->pushButton_continue->setText("Continue");
+    // general setup
     p_page_idle->setTemplateTextToObject(ui->pushButton_back);
     p_page_idle->setTemplateTextToObject(ui->label_select_quantity);
     p_page_idle->setTemplateTextToObject(ui->pushButton_continue);
@@ -274,20 +271,15 @@ void page_product::reset_and_show_page_elements()
     ui->label_product_title->setText(p_page_idle->selectedProduct->getProductName());
     ui->label_product_ingredients->setText(p_page_idle->selectedProduct->getProductIngredients());
     ui->label_product_description->setText(p_page_idle->selectedProduct->getProductDescription());
+
     QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
-    qDebug() << full_path;
     p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
 
-    // bitmap_location = PAGE_PRODUCT_BACKGROUND_PATH;
-    // uint16_t orderSizeButtons_xywh[4][4] = {
-    //     {560, 990, 135, 110},  // S
-    //     {706, 990, 135, 105},  // M
-    //     {852, 990, 135, 100},  // L
-    //     {560, 1100, 430, 115}   // custom
-    //     };
+    selectIdleTimer->start(1000);
+    _selectIdleTimeoutSec = 400;
 
+    // dynamic page layout
     uint8_t available_sizes_signature = 0;
-
     uint16_t(*xywh_size_buttons)[4];
     uint16_t(*xy_size_labels_volume)[2];
     uint16_t(*xy_size_labels_price)[2];
@@ -337,86 +329,18 @@ void page_product::reset_and_show_page_elements()
         qDebug() << "ERROR: Product signature SIZES not available (limited combinations of size buttons available to be set in database) signature: " << available_sizes_signature;
     }
 
+    // set size specific details
     // run through all possible sizes
-    for (uint8_t i = 0; i < 4; i++)
-    {
-        // check if size is enabled
-        if (p_page_idle->selectedProduct->getSizeEnabled(product_sizes[i]))
-        {
-            default_size = product_sizes[i];
-            orderSizeButtons[i]->show();
-
-            orderSizeButtons[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3]));
-            orderSizeButtons[i]->move(xywh_size_buttons[i][0], xywh_size_buttons[i][1]);
-
-            orderSizeBackgroundLabels[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3]));
-            orderSizeBackgroundLabels[i]->move(xywh_size_buttons[i][0], xywh_size_buttons[i][1]);
-            orderSizeBackgroundLabels[i]->lower();
-            orderSizeBackgroundLabels[i]->setProperty("class", "orderSizeBackgroundLabels1");
-
-            //       labels_product_overlay_text[i]->setProperty("class", "label_product_oberlay_sold_out");
-
-            orderSizeLabelsPrice[i]->move(xy_size_labels_price[i][0], xy_size_labels_price[i][1]);
-            orderSizeLabelsVolume[i]->move(xy_size_labels_volume[i][0], xy_size_labels_volume[i][1]);
-
-            qDebug() << "Product size index enabled: " << i;
-
-            if (product_sizes[i] == SIZE_CUSTOM_INDEX)
-            {
-
-                bool large_volume_discount_is_enabled;
-                double min_volume_for_discount;
-                double discount_price_per_liter;
-                // check if there is a price decline for large volumes
-
-                p_page_idle->selectedProduct->getCustomDiscountDetails(&large_volume_discount_is_enabled, &min_volume_for_discount, &discount_price_per_liter);
-                if (large_volume_discount_is_enabled)
-                {
-                    orderSizeButtons[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3] + 100));
-                    orderSizeLabelsPrice[i]->setFixedSize(QSize(420, 101));
-                }
-                else
-                {
-                    orderSizeLabelsPrice[i]->setFixedSize(QSize(420, 50));
-                }
-            }
-        }
-        else
-        {
-            qDebug() << "Product size index NOT enabled: " << i;
-            orderSizeButtons[i]->hide();
-        }
-    }
-
-    // ordersize buttons
-    /* Hacky transparent button */
-    loadProdSpecs();
-    selectIdleTimer->start(1000);
-    _selectIdleTimeoutSec = 400;
-}
-
-void page_product::loadProductBySize(int sizeIndex)
-{
-    p_page_idle->selectedProduct->setSize(sizeIndex);
-    loadProdSpecs();
-}
-
-void page_product::loadProdSpecs()
-{
-
-    qDebug() << "-------------------------- LOAD PRODUCTS ----------------";
-    _selectIdleTimeoutSec = 140;
-
-    ui->pushButton_to_idle->setEnabled(true);
-    ui->pushButton_previous_page->setEnabled(true);
-
     int sizes_available_count = 0;
     for (uint8_t i = 0; i < 4; i++)
     {
+
         orderSizeLabelsPrice[i]->hide();
         orderSizeLabelsVolume[i]->hide();
         orderSizeBackgroundLabels[i]->hide();
         orderSizeButtons[i]->hide();
+
+        // check if size is enabled
         if (p_page_idle->selectedProduct->getSizeEnabled(product_sizes[i]))
         {
             sizes_available_count++;
@@ -425,25 +349,37 @@ void page_product::loadProdSpecs()
             orderSizeLabelsVolume[i]->show();
             orderSizeBackgroundLabels[i]->show();
             orderSizeButtons[i]->show();
-            orderSizeLabelsVolume[i]->setProperty("class", "orderSizeLabelsVolume");
-            orderSizeLabelsPrice[i]->setProperty("class", "orderSizeLabelsPrice");
-            orderSizeBackgroundLabels[i]->setProperty("class", "orderSizeBackgroundLabels");
-            orderSizeButtons[i]->setProperty("class", "orderSizeButtons");
+            p_page_idle->addCssStyleToObject(orderSizeLabelsVolume[i], "orderSizeLabelsVolume", PAGE_PRODUCT_CSS);
+            p_page_idle->addCssStyleToObject(orderSizeBackgroundLabels[i], "orderSizeBackgroundLabels", PAGE_PRODUCT_CSS);
+            p_page_idle->addCssStyleToObject(orderSizeButtons[i], "orderSizeButtons", PAGE_PRODUCT_CSS);
+            p_page_idle->addCssStyleToObject(orderSizeLabelsPrice[i], "orderSizeLabelsPrice", PAGE_PRODUCT_CSS);
 
             double price = p_page_idle->selectedProduct->getPrice(product_sizes[i]);
 
-            // set default size (if only one size available, this will be the size)
-            // p_page_idle->selectedProduct->setSize(product_sizes[i]);
+            // if there is only one product size available, the continue button will show, it will then load this default size
+            default_size = product_sizes[i];
+
+            orderSizeButtons[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3]));
+            orderSizeButtons[i]->move(xywh_size_buttons[i][0], xywh_size_buttons[i][1]);
+
+            orderSizeBackgroundLabels[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3]));
+            orderSizeBackgroundLabels[i]->move(xywh_size_buttons[i][0], xywh_size_buttons[i][1]);
+            orderSizeBackgroundLabels[i]->lower();
+
+            orderSizeLabelsPrice[i]->move(xy_size_labels_price[i][0], xy_size_labels_price[i][1]);
+            orderSizeLabelsVolume[i]->move(xy_size_labels_volume[i][0], xy_size_labels_volume[i][1]);
 
             if (product_sizes[i] == SIZE_CUSTOM_INDEX)
             {
+
                 bool large_volume_discount_is_enabled;
                 double min_volume_for_discount;
                 double discount_price_per_liter;
                 // check if there is a price decline for large volumes
-                p_page_idle->selectedProduct->getCustomDiscountDetails(&large_volume_discount_is_enabled, &min_volume_for_discount, &discount_price_per_liter);
 
+                p_page_idle->selectedProduct->getCustomDiscountDetails(&large_volume_discount_is_enabled, &min_volume_for_discount, &discount_price_per_liter);
                 orderSizeLabelsVolume[i]->setText("Custom Volume");
+
                 QString units = p_page_idle->selectedProduct->getUnitsForSlot();
                 QString units_discount_indication = p_page_idle->selectedProduct->getUnitsForSlot();
                 if (units == "ml")
@@ -488,9 +424,12 @@ void page_product::loadProdSpecs()
                 if (large_volume_discount_is_enabled)
                 {
                     orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + units + " \n>" + QString::number(min_volume_for_discount, 'f', 1) + units_discount_indication + " @ $" + QString::number(discount_price_per_liter, 'f', 2) + "/" + units);
+                    orderSizeButtons[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3] + 100));
+                    orderSizeLabelsPrice[i]->setFixedSize(QSize(420, 101));
                 }
                 else
                 {
+                    orderSizeLabelsPrice[i]->setFixedSize(QSize(420, 50));
                     orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + units);
                 }
             }
@@ -500,21 +439,14 @@ void page_product::loadProdSpecs()
                 orderSizeLabelsVolume[i]->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(product_sizes[i], true, true));
             }
 
-            // selected size styling
-            if (p_page_idle->selectedProduct->getSize() == product_sizes[i])
-            {
-                orderSizeLabelsVolume[i]->setProperty("class", "orderSizeLabelsVolume");
-                orderSizeLabelsPrice[i]->setProperty("class", "orderSizeLabelsPrice");
-                orderSizeBackgroundLabels[i]->setProperty("class", "orderSizeBackgroundLabels");
-                orderSizeButtons[i]->setProperty("class", "orderSizeButtons");
-            }
             orderSizeButtons[i]->raise();
         }
+        else
+        {
+            qDebug() << "Product size index NOT enabled: " << i;
+            orderSizeButtons[i]->hide();
+        }
     }
-
-    // double selectedPrice = p_page_idle->selectedProduct->getPrice();
-    // double discount = p_page_idle->selectedProduct->getDiscount();
-    // double selectedPriceCorrected = p_page_idle->selectedProduct->getPriceCorrected();
 
     // it was confusing for the people to chose a quantity if there was only one quantity available. So, add a continue button if they can't chose anyways.
     if (sizes_available_count == 1)
@@ -528,6 +460,111 @@ void page_product::loadProdSpecs()
 
     qDebug() << "-------------------------- END LOAD PRODUCTS ----------------";
 }
+
+// void page_product::loadProdSpecs()
+// {
+
+//     for (uint8_t i = 0; i < 4; i++)
+//     {
+//         orderSizeLabelsPrice[i]->hide();
+//         orderSizeLabelsVolume[i]->hide();
+//         orderSizeBackgroundLabels[i]->hide();
+//         orderSizeButtons[i]->hide();
+//         if (p_page_idle->selectedProduct->getSizeEnabled(product_sizes[i]))
+//         {
+
+//             orderSizeLabelsPrice[i]->show();
+//             orderSizeLabelsVolume[i]->show();
+//             orderSizeBackgroundLabels[i]->show();
+//             orderSizeButtons[i]->show();
+//             orderSizeLabelsVolume[i]->setProperty("class", "orderSizeLabelsVolume");
+//             orderSizeLabelsPrice[i]->setProperty("class", "orderSizeLabelsPrice");
+//             orderSizeBackgroundLabels[i]->setProperty("class", "orderSizeBackgroundLabels");
+//             orderSizeButtons[i]->setProperty("class", "orderSizeButtons");
+
+//             double price = p_page_idle->selectedProduct->getPrice(product_sizes[i]);
+
+//             // set default size (if only one size available, this will be the size)
+//             // p_page_idle->selectedProduct->setSize(product_sizes[i]);
+
+//             if (product_sizes[i] == SIZE_CUSTOM_INDEX)
+//             {
+//                 bool large_volume_discount_is_enabled;
+//                 double min_volume_for_discount;
+//                 double discount_price_per_liter;
+//                 // check if there is a price decline for large volumes
+//                 p_page_idle->selectedProduct->getCustomDiscountDetails(&large_volume_discount_is_enabled, &min_volume_for_discount, &discount_price_per_liter);
+
+//                 QString units = p_page_idle->selectedProduct->getUnitsForSlot();
+//                 QString units_discount_indication = p_page_idle->selectedProduct->getUnitsForSlot();
+//                 if (units == "ml")
+//                 {
+//                     units = "L";
+//                     units_discount_indication = "L";
+//                     price = price * 1000;
+//                     discount_price_per_liter *= 1000;
+//                     min_volume_for_discount = min_volume_for_discount / 1000;
+//                 }
+
+//                 else if (units == "g")
+//                 {
+//                     if (p_page_idle->selectedProduct->getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
+//                     {
+//                         units = "100g";
+//                         units_discount_indication = "kg";
+//                         price = price * 100;
+//                         discount_price_per_liter *= 1000;
+//                         min_volume_for_discount = min_volume_for_discount / 1000;
+//                     }
+//                     else
+//                     {
+//                         units = "kg";
+//                         units_discount_indication = "kg";
+//                         price = price * 1000;
+//                         discount_price_per_liter *= 1000;
+//                         min_volume_for_discount = min_volume_for_discount / 1000.0;
+//                     }
+//                 }
+//                 else if (units == "oz")
+//                 {
+//                     units = "oz";
+//                     units_discount_indication = "oz";
+//                     price = price * OZ_TO_ML;
+//                     discount_price_per_liter *= OZ_TO_ML;
+//                     min_volume_for_discount /= OZ_TO_ML;
+//                 }
+
+//                 if (large_volume_discount_is_enabled)
+//                 {
+//                     orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + units + " \n>" + QString::number(min_volume_for_discount, 'f', 1) + units_discount_indication + " @ $" + QString::number(discount_price_per_liter, 'f', 2) + "/" + units);
+//                 }
+//                 else
+//                 {
+//                     orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + units);
+//                 }
+//             }
+//             else
+//             {
+//                 orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2));
+//                 orderSizeLabelsVolume[i]->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(product_sizes[i], true, true));
+//             }
+
+//             // selected size styling
+//             if (p_page_idle->selectedProduct->getSize() == product_sizes[i])
+//             {
+//                 orderSizeLabelsVolume[i]->setProperty("class", "orderSizeLabelsVolume");
+//                 orderSizeLabelsPrice[i]->setProperty("class", "orderSizeLabelsPrice");
+//                 orderSizeBackgroundLabels[i]->setProperty("class", "orderSizeBackgroundLabels");
+//                 orderSizeButtons[i]->setProperty("class", "orderSizeButtons");
+//             }
+//             orderSizeButtons[i]->raise();
+//         }
+//     }
+
+//     // double selectedPrice = p_page_idle->selectedProduct->getPrice();
+//     // double discount = p_page_idle->selectedProduct->getDiscount();
+//     // double selectedPriceCorrected = p_page_idle->selectedProduct->getPriceCorrected();
+// }
 
 bool page_product::stopSelectTimers()
 {
@@ -545,14 +582,12 @@ bool page_product::stopSelectTimers()
 void page_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
-    // ui->pushButton_to_idle->setEnabled(false);
-    // ui->pushButton_previous_page->setEnabled(false);
     selectIdleTimer->stop();
     this->stopSelectTimers();
     p_page_idle->pageTransition(this, pageToShow);
 }
 
-void page_product::on_pushButton_to_idle_clicked()
+void page_product::on_pushButton_to_help_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_help);
 }
@@ -560,14 +595,14 @@ void page_product::on_pushButton_to_idle_clicked()
 void page_product::on_pushButton_order_custom_clicked()
 {
     qDebug() << "button custom clicked ";
-    this->loadProductBySize(SIZE_CUSTOM_INDEX);
+    p_page_idle->selectedProduct->setSize(SIZE_CUSTOM_INDEX);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
 void page_product::on_pushButton_order_medium_clicked()
 {
     qDebug() << "button medium";
-    this->loadProductBySize(SIZE_MEDIUM_INDEX);
+    p_page_idle->selectedProduct->setSize(SIZE_MEDIUM_INDEX);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
@@ -575,7 +610,7 @@ void page_product::on_pushButton_order_medium_clicked()
 void page_product::on_pushButton_order_small_clicked()
 {
     qDebug() << "button small";
-    this->loadProductBySize(SIZE_SMALL_INDEX);
+    p_page_idle->selectedProduct->setSize(SIZE_SMALL_INDEX);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
@@ -583,7 +618,7 @@ void page_product::on_pushButton_order_small_clicked()
 void page_product::on_pushButton_order_big_clicked()
 {
     qDebug() << "button big";
-    this->loadProductBySize(SIZE_LARGE_INDEX);
+    p_page_idle->selectedProduct->setSize(SIZE_LARGE_INDEX);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
@@ -601,7 +636,7 @@ void page_product::on_pushButton_previous_page_clicked()
 void page_product::on_pushButton_continue_clicked()
 {
     // which size is enabled? select that size
-    this->loadProductBySize(default_size);
+    p_page_idle->selectedProduct->setSize(default_size);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 

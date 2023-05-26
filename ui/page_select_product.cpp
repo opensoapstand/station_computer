@@ -59,26 +59,6 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
     labels_product_type[3] = ui->label_product_4_type;
 
     // ui->pushButton_to_idle->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-    ui->label_pick_soap->setText("Pick your soap");
-
-    // ui->pushButton_to_idle->setStyleSheet(
-    //     "QPushButton {"
-
-    // "background-color: #3498db;"
-    // "border: 2px solid #2980b9;"
-    // "border-radius: 5px;"
-    // "color: #fff;"
-    // "font-size: 16px;"
-    // "padding: 10px 20px;"
-    //     "}");
-
-    ui->pushButton_to_idle->setText("<-back");
-
-    QFont font;
-    font.setFamily(QStringLiteral("Brevia"));
-    font.setPointSize(20);
-    font.setBold(true);
-    font.setWeight(75);
 
     productPageEndTimer = new QTimer(this);
     productPageEndTimer->setInterval(1000);
@@ -110,6 +90,8 @@ page_select_product::~page_select_product()
 
 void page_select_product::showEvent(QShowEvent *event)
 {
+    qDebug() << "<<<<<<< Page Enter: Select Product >>>>>>>>>";
+
     QString styleSheet = p_page_idle->getCSS(PAGE_SELECT_PRODUCT_CSS);
     ui->p_page_maintenanceButton->setStyleSheet(styleSheet);
     ui->pushButton_help_page->setStyleSheet(styleSheet);
@@ -128,13 +110,16 @@ void page_select_product::showEvent(QShowEvent *event)
         labels_product_name[i]->setStyleSheet(styleSheet);
         pushButtons_product_select[i]->setProperty("class", "PushButton_selection");
         pushButtons_product_select[i]->setStyleSheet(styleSheet);
+        labels_product_icon[i]->setStyleSheet(styleSheet);
     }
 
-    qDebug() << "<<<<<<< Page Enter: Select Product >>>>>>>>>";
+    p_page_idle->setTemplateTextToObject(ui->label_pick_soap);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_to_idle);
+
     this->lower();
     QWidget::showEvent(event);
     maintenanceCounter = 0;
-    
+
     displayProducts();
 
     if (productPageEndTimer == nullptr)
@@ -157,7 +142,7 @@ void page_select_product::resizeEvent(QResizeEvent *event)
 
 void page_select_product::displayProducts()
 {
-    QString product_type_icons[5] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH};
+    QString product_type_icons[6] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH, ICON_TYPE_MOCKTAIL_PATH};
 
     bool product_slot_enabled;
     // bool product_sold_out;
@@ -180,7 +165,7 @@ void page_select_product::displayProducts()
 
         qDebug() << "db (re)load product details:";
         product_slot_enabled = p_page_idle->products[i].getSlotEnabled();
-        
+
         DbManager db(DB_PATH);
         product_status_text = db.getStatusText(slot);
         db.closeDB();
@@ -219,6 +204,10 @@ void page_select_product::displayProducts()
             icon_path = ICON_TYPE_CONCENTRATE_PATH;
             type_text = "CONCENTRATE";
         }
+        else if(product_type == "Mocktail"){
+            icon_path = ICON_TYPE_MOCKTAIL_PATH;
+            type_text = "MOCKTAIL";
+        }
         else
         {
             icon_path = "NOT A VALID PRODUCT TYPE";
@@ -228,7 +217,8 @@ void page_select_product::displayProducts()
         QString icon_path_with_template = p_page_idle->getTemplatePathFromName(icon_path);
 
         p_page_idle->addPictureToLabel(labels_product_icon[i], icon_path_with_template);
-        labels_product_icon[i]->setText(""); // icon should not display text.
+        // labels_product_icon[i]->setText(""); // icon should not display text.
+        labels_product_icon[i]->setText(p_page_idle->getTemplateTextByPage(this, "no_text"));
 
         // pushButtons_product_select[i]->setStyleSheet(styleSheet); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
         // pushButtons_product_select[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
@@ -239,38 +229,35 @@ void page_select_product::displayProducts()
 
         pushButtons_product_select[i]->raise();
 
-        // selectProductOverlayLabels[i]->setText("");
 
-        // overlay product status
         if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
         {
-            labels_product_overlay_text[i]->setText("");
+            labels_product_overlay_text[i]->setText(p_page_idle->getTemplateTextByPage(this, "available"));
         }
         else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
         {
-            labels_product_overlay_text[i]->setText("Almost Empty");
+            labels_product_overlay_text[i]->setText(p_page_idle->getTemplateTextByPage(this, "almost_empty"));
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
         {
-            labels_product_overlay_text[i]->setText("Sold Out");
+            labels_product_overlay_text[i]->setText(p_page_idle->getTemplateTextByPage(this, "sold_out"));
         }
         else if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
         {
-            labels_product_overlay_text[i]->setText("Coming Soon");
+            labels_product_overlay_text[i]->setText(p_page_idle->getTemplateTextByPage(this, "coming_soon"));
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
-
         {
-            labels_product_overlay_text[i]->setText("Assistance Needed");
+            labels_product_overlay_text[i]->setText(p_page_idle->getTemplateTextByPage(this, "assistance"));
         }
         else
         {
-            labels_product_overlay_text[i]->setText(". . .");
+            labels_product_overlay_text[i]->setText(p_page_idle->getTemplateTextByPage(this, "default"));
         }
 
         if (!(p_page_idle->products[i].isProductVolumeInContainer()))
         {
-            labels_product_overlay_text[i]->setText("Sold Out");
+            labels_product_overlay_text[i]->setText(p_page_idle->getTemplateTextByPage(this, "sold_out"));
         }
 
         labels_product_type[i]->setText(type_text);
@@ -280,16 +267,17 @@ void page_select_product::displayProducts()
 
 void page_select_product::select_product(int slot)
 {
-    bool product_slot_enabled = p_page_idle->products[slot-1].getSlotEnabled();
+    bool product_slot_enabled = p_page_idle->products[slot - 1].getSlotEnabled();
 
     if (product_slot_enabled)
     {
         qDebug() << "selected slot: " << slot;
         p_page_idle->setSelectedProduct(slot);
         hideCurrentPageAndShowProvided(p_page_product);
-    }else{
+    }
+    else
+    {
         qDebug() << "Slot not enabled : " << slot;
-
     }
 }
 
@@ -299,7 +287,7 @@ void page_select_product::on_pushButton_selection1_clicked()
     select_product(1);
 }
 void page_select_product::on_pushButton_selection2_clicked()
-{ 
+{
     select_product(2);
 }
 void page_select_product::on_pushButton_selection3_clicked()

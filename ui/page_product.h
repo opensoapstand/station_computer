@@ -72,14 +72,14 @@ private slots:
     void on_pushButton_order_custom_clicked();
 
     void on_pushButton_order_medium_clicked();
-    void loadProductBySize(int sizeIndex);
-    void loadProdSpecs();
+    // void loadProdSpecs();
 
 private:
     int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
     bool stopSelectTimers();
     void reset_and_show_page_elements();
     void selectOnTick();
+    int default_size;
     
 
     std::string readBuffer;

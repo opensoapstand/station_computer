@@ -105,7 +105,7 @@ private slots:
     void on_autoDispenseSmallButton_clicked();
 
     void on_update_portal_clicked();
-    void buttonGroup_edit_product_Pressed();
+    void buttonGroup_edit_product_Pressed(int buttonId);
 
 private:
     void setButtonPressCountLabel(bool init);

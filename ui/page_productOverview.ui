@@ -69,7 +69,7 @@ line-height: 29px;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_to_idle">
+  <widget class="QPushButton" name="pushButton_to_help">
    <property name="geometry">
     <rect>
      <x>446</x>
@@ -2138,8 +2138,8 @@ text-align: center;</string>
   <zorder>promoKeyboard</zorder>
   <zorder>label_product_photo</zorder>
   <zorder>label_gif</zorder>
-  <zorder>label_help</zorder>
-  <zorder>pushButton_to_idle</zorder>
+  <zorder>label_notify_us</zorder>
+  <zorder>pushButton_to_help</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -13,6 +13,7 @@ fsm/makefile.save
 fsm/build
 fsm/controller
 sqlite/build
+*.db-journal
 
 /production
 

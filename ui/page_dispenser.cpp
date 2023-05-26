@@ -97,41 +97,26 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 }
 void page_dispenser::showEvent(QShowEvent *event)
 {
-    //
-    //
-    //
-    //
-    //
+    qDebug() << "<<<<<<< Page Enter: Dispenser >>>>>>>>>";
+    qDebug() << "Selected slot: " << QString::number(p_page_idle->selectedProduct->getSlot());
+    QWidget::showEvent(event);
+    
     QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
-
     ui->label_finishTransactionMessage->setStyleSheet(styleSheet);
-
     ui->pushButton_debug_Button->setStyleSheet(styleSheet);
     ui->pushButton_abort->setStyleSheet(styleSheet);
-
     ui->label_volume_dispensed_ml->setProperty("class", "label_volume_dispensed_ml"); // set property goes first!!
     ui->label_volume_dispensed->setProperty("class", "label_volume_dispensed_ml");
     ui->label_volume_dispensed_ml->setStyleSheet(styleSheet);
     ui->label_volume_dispensed->setStyleSheet(styleSheet);
-
     ui->label_to_refill->setStyleSheet(styleSheet);
-
     ui->label_instructions_container->setStyleSheet(styleSheet);
-
     ui->label_press->setStyleSheet(styleSheet);
-
     ui->label_dispense_message->setStyleSheet(styleSheet);
-
     ui->pushButton_problems->setStyleSheet(styleSheet);
-
     ui->pushButton_report->setStyleSheet(styleSheet);
 
-    // msgBox->setStyleSheet(styleSheet);
-
-    qDebug() << "<<<<<<< Page Enter: Dispenser >>>>>>>>>";
-    qDebug() << "Selected slot: " << QString::number(p_page_idle->selectedProduct->getSlot());
     transactionLogging += "\n 6: Station Unlocked - True";
-    QWidget::showEvent(event);
 
     // important to set to nullptr, to check at timeout if it was initialized (displayed...) or not.
     msgBox = nullptr;
@@ -400,7 +385,8 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
     }
     else if (dispenseStatus == "SLOT_STATE_PROBLEM_EMPTY")
     {
-        ui->label_dispense_message->setText("It appears we're out of stock.\nTap the problem button in case of other issues.");
+        ui->label_dispense_message->setText("It appears we're out of stock.");
+        p_page_idle->addCssStyleToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
         ui->label_dispense_message->show();
     }
 

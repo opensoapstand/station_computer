@@ -30,7 +30,7 @@
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>510</y>
+     <y>690</y>
      <width>531</width>
      <height>31</height>
     </rect>
@@ -43,7 +43,7 @@
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>650</y>
+     <y>820</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -82,7 +82,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>500</y>
+     <y>680</y>
      <width>141</width>
      <height>51</height>
     </rect>
@@ -95,7 +95,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>640</y>
+     <y>810</y>
      <width>141</width>
      <height>51</height>
     </rect>
@@ -125,7 +125,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>590</y>
+     <y>760</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -138,7 +138,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>580</y>
+     <y>750</y>
      <width>141</width>
      <height>51</height>
     </rect>
@@ -630,37 +630,11 @@ Volume per Tick</string>
     <string>Ticks</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="testSmallButton">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>990</y>
-     <width>90</width>
-     <height>90</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Test Small</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="testLargeButton">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>990</y>
-     <width>90</width>
-     <height>90</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Test Large</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="target_volumeButton_s">
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>580</y>
+     <y>750</y>
      <width>141</width>
      <height>51</height>
     </rect>
@@ -677,7 +651,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>570</x>
-     <y>590</y>
+     <y>760</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -690,7 +664,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>640</y>
+     <y>810</y>
      <width>141</width>
      <height>51</height>
     </rect>
@@ -707,7 +681,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>570</x>
-     <y>650</y>
+     <y>820</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -869,7 +843,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>720</y>
+     <y>890</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -882,7 +856,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>710</y>
+     <y>880</y>
      <width>141</width>
      <height>51</height>
     </rect>
@@ -898,7 +872,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>710</y>
+     <y>880</y>
      <width>141</width>
      <height>51</height>
     </rect>
@@ -918,7 +892,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>570</x>
-     <y>720</y>
+     <y>890</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -931,7 +905,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>220</x>
-     <y>790</y>
+     <y>960</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -944,7 +918,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>780</y>
+     <y>950</y>
      <width>171</width>
      <height>51</height>
     </rect>
@@ -960,7 +934,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>730</x>
-     <y>640</y>
+     <y>730</y>
      <width>141</width>
      <height>51</height>
     </rect>
@@ -976,7 +950,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>730</x>
-     <y>710</y>
+     <y>800</y>
      <width>141</width>
      <height>51</height>
     </rect>
@@ -992,7 +966,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>880</x>
-     <y>720</y>
+     <y>810</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -1005,7 +979,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>880</x>
-     <y>650</y>
+     <y>740</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -1018,7 +992,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>730</x>
-     <y>580</y>
+     <y>670</y>
      <width>141</width>
      <height>51</height>
     </rect>
@@ -1034,7 +1008,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>880</x>
-     <y>790</y>
+     <y>880</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -1047,7 +1021,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>880</x>
-     <y>590</y>
+     <y>680</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -1060,7 +1034,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>730</x>
-     <y>790</y>
+     <y>880</y>
      <width>141</width>
      <height>51</height>
     </rect>

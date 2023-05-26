@@ -385,7 +385,8 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
     }
     else if (dispenseStatus == "SLOT_STATE_PROBLEM_EMPTY")
     {
-        ui->label_dispense_message->setText("It appears we're out of stock.\nTap the problem button in case of other issues.");
+        ui->label_dispense_message->setText("It appears we're out of stock.");
+        ui->p_page_idle->addCssStyleToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
         ui->label_dispense_message->show();
     }
 

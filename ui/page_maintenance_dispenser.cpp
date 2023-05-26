@@ -202,9 +202,6 @@ void page_maintenance_dispenser::refreshLabels()
 
     // db.closeDB();
 
-    ui->testLargeButton->setVisible(false);
-    ui->testSmallButton->setVisible(false);
-
     ui->temperatureButton->setVisible(false);
     ui->temperatureLabel->setVisible(false);
 }

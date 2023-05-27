@@ -44,10 +44,22 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     ui->label_enter_feedback->show();
     //  ui->pushButton_previous_page->setStyleSheet("QPushButton { color:#555555; background-color: transparent; border: 0px }");
 
-    ui->pushButton_previous_page->setText("<-back");
     ui->feedbackText->hide();
 
-    ui->label_select_problem->setText("Please provide feedback");
+    // ui->pushButton_previous_page->setText("<-back");
+    // ui->label_select_problem->setText("Please provide feedback");
+    // ui->label_still_cant_find->setText("Still can't find it?");
+    // ui->label_email->setText("Email us at: sales@soapstand.com");
+    // ui->checkBox_1_Label->setText("I love this, keep me in the loop.");
+    // ui->checkBox_2_Label->setText("Payment issue");
+    // ui->checkBox_3_Label->setText("User interface problem");
+    // ui->checkBox_4_Label->setText("Soap dispensing problem");
+    // ui->checkBox_5_Label->setText("Other");
+    // ui->label_enter_feedback->setText("Please enter details or comments below.\nProvide email for feedback.");
+    // ui->label_thanks_for_feedback->setText("Thank you for <br> your feedback");
+
+
+    ui->pushButton_start_input->raise();
     // ui->label_select_problem->setWordWrap(true);
 
     // ui->label_problem_options->setStyleSheet("background-color: #5E8680; border-radius: 30px;");
@@ -66,30 +78,15 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
    "}");*/
 
 
-    ui->label_still_cant_find->setText("Still can't find it?");
-
-    ui->label_email->setText("Email us at: sales@soapstand.com");
-
-   
-    ui->checkBox_1_Label->setText("I love this, keep me in the loop.");
 
     
     // ui->checkBox_2_Label->setText("No soap was dispensed");
-    ui->checkBox_2_Label->setText("Payment issue");
-
-    ui->checkBox_3_Label->setText("User interface problem");
     // ui->checkBox_3_Label->setText("Wrong amount of soap");
 
-    ui->checkBox_4_Label->setText("Soap dispensing problem");
     // ui->checkBox_4_Label->setText("Payment issue");
 
-    ui->checkBox_5_Label->setText("Other");
-    ui->label_enter_feedback->setText("Please enter details or comments below.\nProvide email for feedback.");
-
-    ui->pushButton_start_input->raise();
     // ui->pushButton_start_input->setStyleSheet("QPushButton { border: 1px solid #FFFFFF}");
 
-    ui->label_thanks_for_feedback->setText("Thank you for <br> your feedback");
 
     {
         selectIdleTimer = new QTimer(this);
@@ -144,12 +141,39 @@ page_sendFeedback::~page_sendFeedback()
 void page_sendFeedback::showEvent(QShowEvent *event)
 {
 
+    p_page_idle->setTemplateTextToObject(ui->pushButton_previous_page);
+    p_page_idle->setTemplateTextToObject(ui->label_select_problem);
+    p_page_idle->setTemplateTextToObject(ui->label_still_cant_find);
+    p_page_idle->setTemplateTextToObject(ui->label_email);
+    p_page_idle->setTemplateTextToObject(ui->checkBox_1_Label);
+    p_page_idle->setTemplateTextToObject(ui->checkBox_2_Label);
+    p_page_idle->setTemplateTextToObject(ui->checkBox_3_Label);
+    p_page_idle->setTemplateTextToObject(ui->checkBox_4_Label);
+    p_page_idle->setTemplateTextToObject(ui->checkBox_5_Label);
+    p_page_idle->setTemplateTextToObject(ui->label_enter_feedback);
+    p_page_idle->setTemplateTextToObject(ui->label_thanks_for_feedback);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_send);
+//    ui->pushButton_previous_page->setText("<-back");
+//    ui->label_select_problem->setText("Please provide feedback");
+  //  ui->label_still_cant_find->setText("Still can't find it?");
+    // ui->label_email->setText("Email us at: sales@soapstand.com");
+    // ui->checkBox_1_Label->setText("I love this, keep me in the loop.");
+    // ui->checkBox_2_Label->setText("Payment issue");
+    // ui->checkBox_3_Label->setText("User interface problem");
+    // ui->checkBox_4_Label->setText("Soap dispensing problem");
+    // ui->checkBox_5_Label->setText("Other");
+    // ui->label_enter_feedback->setText("Please enter details or comments below.\nProvide email for feedback.");
+    // ui->label_thanks_for_feedback->setText("Thank you for <br> your feedback");
+    // ui->pushButton_send->setText("SEND");
+
+
+
     QWidget::showEvent(event);
     qDebug() << "<<<<<<< Page Enter: Send Feedback>>>>>>>>>";
     QString styleSheet = p_page_idle->getCSS(PAGE_FEEDBACK_CSS);
 
+
     ui->pushButton_send->setStyleSheet(styleSheet);
-    ui->pushButton_send->setText("SEND");
 
     ui->pushButton_start_input->setProperty("class", "buttonTransparent");
     ui->pushButton_start_input->setStyleSheet(styleSheet);

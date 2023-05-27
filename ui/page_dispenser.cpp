@@ -584,7 +584,7 @@ void page_dispenser::on_pushButton_problems_clicked()
     else
     {
         //msgBox2->setText("<p align=center><br>" + base + "</p>");
-     //   p_page_idle->setTemplateTextWithIdentifierToObject(msgBox2, "button_problems_message");
+        //p_page_idle->setTemplateTextWithIdentifierToObject(msgBox2, "button_problems_message");
     }
 
     // msgBox2->setStyleSheet("QMessageBox{ color: greenyellow; min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';}");

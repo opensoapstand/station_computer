@@ -47,25 +47,25 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
     ui->pushButton_payment_bypass->setEnabled(false);
     state_payment = s_init;
     
-    ui->label_title->setText("pay by phone");
+//    ui->label_title->setText("pay by phone");
 
-    ui->label_scan->setText(
-        "Scan to Pay");
+    // ui->label_scan->setText(
+    //     "Scan to Pay");
     
-    ui->label_steps->setText(
-        "<style>"
-        "li:{margin-top:10px;}"
-        "</style>"
-        "<ol>"
-        "<li><span class='tab'></span>Scan QR code with phone camera<br></li>"
-        "<li><span class='tab'></span>Click to open the link that appears<br></li>"
-        "<li><span class='tab'></span>Follow payment instructions on phone<br></li>"
-        "<li><span class='tab'></span>The station will proceed after payment<br></li>"
-        "<li><span class='tab'></span>Refill your soap!</li>"
-        "</ol>");
+    // ui->label_steps->setText(
+    //     "<style>"
+    //     "li:{margin-top:10px;}"
+    //     "</style>"
+    //     "<ol>"
+    //     "<li><span class='tab'></span>Scan QR code with phone camera<br></li>"
+    //     "<li><span class='tab'></span>Click to open the link that appears<br></li>"
+    //     "<li><span class='tab'></span>Follow payment instructions on phone<br></li>"
+    //     "<li><span class='tab'></span>The station will proceed after payment<br></li>"
+    //     "<li><span class='tab'></span>Refill your soap!</li>"
+    //     "</ol>");
     
-    ui->label_processing->setText(
-        "it can take a few moments for the station to<br>continue after your payment is confirmed");
+    // ui->label_processing->setText(
+    //     "it can take a few moments for the station to<br>continue after your payment is confirmed");
     
     ui->order_total_amount->hide();
 }
@@ -167,6 +167,16 @@ void page_qr_payment::resizeEvent(QResizeEvent *event)
 void page_qr_payment::showEvent(QShowEvent *event)
 {
 
+    // p_page_idle->setTemplateTextWithIdentifierToObject(ox2, "button_problems_message");
+    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "pay_by_phone");
+    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_scan, "label_scan_1");
+    p_page_idle->setTemplateTextToObject(ui->label_steps);
+    p_page_idle->setTemplateTextToObject(ui->label_processing);
+    
+    
+  
+
+
     QString styleSheet = p_page_idle->getCSS(PAGE_QR_PAYMENT_CSS);
 
 
@@ -201,8 +211,8 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->qrCode->show();
     ui->productLabel->show();
     ui->order_drink_amount->show();
-    ui->label_title->setText("pay by phone");
-    ui->label_scan->setText("Scan to Pay");
+    //ui->label_title->setText("pay by phone");
+    //ui->label_scan->setText("Scan to Pay");
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->productLabel->setText(p_page_idle->selectedProduct->getProductName() + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));

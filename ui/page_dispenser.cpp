@@ -176,6 +176,22 @@ void page_dispenser::showEvent(QShowEvent *event)
     p_page_idle->dfUtility->send_command_to_FSM(command);
     this->isDispensing = true;
     qDebug() << "Dispensing started.";
+
+
+//     QMessageBox msgBox(QMessageBox::Question, "Title", "Message", QMessageBox::Yes | QMessageBox::No, this);
+//     msgBox.setStyleSheet("/* Your custom stylesheet */");
+
+//     // Customize the QMessageBox properties
+//     msgBox.setIconPixmap(QPixmap("path/to/icon.png"));
+//     msgBox.setWindowTitle("Custom Title");
+//     msgBox.setText("Custom Message");
+//     msgBox.setInformativeText("Custom Informative Text");
+
+//     // Display the customized QMessageBox and retrieve the result
+//     int result = msgBox.exec();
+//     QString sss = msgBox.styleSheet();
+// qDebug() << "Style sheet: " << sss;
+
 }
 
 void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
@@ -558,12 +574,7 @@ void page_dispenser::on_pushButton_problems_clicked()
     }
     else
     {
-<<<<<<< HEAD
         p_page_idle->setTemplateTextWithIdentifierToObject(msgBox_problems, "default");
-=======
-        //msgBox2->setText("<p align=center><br>" + base + "</p>");
-        //p_page_idle->setTemplateTextWithIdentifierToObject(msgBox2, "button_problems_message");
->>>>>>> origin/lode-css
     }
 
     QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);

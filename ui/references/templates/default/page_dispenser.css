@@ -164,7 +164,7 @@
    border: none;
 
 }
-
+ 
 QMessageBox {
    background-color: rgb(218, 217, 217);
    text-align: center;
@@ -188,15 +188,15 @@ QPushButton::menu-indicator {
    color: black;
 }
 
-QMessageBox.msgBoxbutton QPushButton {
+ QMessageBox.msgBoxbutton QPushButton {
+   /* Additional styles specific to QPushButton within QMessageBox */
    font-size: 24px;
    min-width: 300px;
    min-height: 300px;
-   color: black;
+   color: rgb(228, 20, 20);
+   text-align: center;
 
-   /* Additional styles specific to QPushButton within QMessageBox */
-
-}
+} 
 
 QLabel {
    /*this label controls the color of the checkbox */

@@ -490,7 +490,6 @@ QString page_idle::getTemplateTextByObjectPageAndName(QWidget *p_element)
     QString elementName = p_element->objectName();
 
     QString searchString = pageName + "->" + elementName;
-    qDebug() << "bbbbbbbbbbbbbbbbbbbbbbbbbbbb";
     return getTemplateText(searchString);
 }
 

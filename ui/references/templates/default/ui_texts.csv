@@ -36,13 +36,8 @@ page_dispenser->pushButton_problems,Tap here if you notice a problem.
 page_dispenser->pushButton_report,Report
 page_dispenser->pushButton_abort,Abort
 page_dispenser->label_volume_dispensed,Volume dispensed
-<<<<<<< HEAD
 page_dispenser->msgBox_problems->qr_tap,<p align=center><br><br>If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br><br><br>You will only be charged for the dispensed amount<br></p>
 page_dispenser->msgBox_problems->default,<p align=center><br>If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br><br><br>You will only be charged for the dispensed amount<br></p>
-=======
-page_dispenser->msgBox2->button_problems_message,test
-      #  p_page_idle->setTemplateTextWithIdentifierToObject(msgBox2->setText,"button_problems_message");
->>>>>>> origin/lode-css
 
 
 

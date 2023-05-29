@@ -165,11 +165,9 @@ page_product::page_product(QWidget *parent) : QWidget(parent),
     orderSizeBackgroundLabels[2] = ui->label_background_large;
     orderSizeBackgroundLabels[3] = ui->label_background_custom;
 
-    {
-        selectIdleTimer = new QTimer(this);
-        selectIdleTimer->setInterval(40);
-        connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
-    }
+    selectIdleTimer = new QTimer(this);
+    selectIdleTimer->setInterval(40);
+    connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
 
     transactionLogging = "";
 }
@@ -217,7 +215,6 @@ void page_product::showEvent(QShowEvent *event)
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_to_help->setProperty("class", "button_transparent");
     ui->pushButton_to_help->setStyleSheet(styleSheet);
-    
 
     for (int i = 0; i < 4; i++)
     {

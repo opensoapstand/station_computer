@@ -130,7 +130,6 @@ void page_idle::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     setTemplateTextToObject(ui->label_welcome_message);
-    
 
     addCompanyLogoToLabel(ui->logo_label);
 
@@ -313,13 +312,13 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
     if (!isOnline)
     {
         ui->label_printer_status->raise();
-        setTemplateTextWithIdentifierToObject(ui->label_printer_status,"offline");
+        setTemplateTextWithIdentifierToObject(ui->label_printer_status, "offline");
         ui->label_printer_status->show();
     }
     else if (!hasPaper)
     {
         ui->label_printer_status->raise();
-        setTemplateTextWithIdentifierToObject(ui->label_printer_status,"nopaper");
+        setTemplateTextWithIdentifierToObject(ui->label_printer_status, "nopaper");
         ui->label_printer_status->show();
     }
     else
@@ -480,38 +479,23 @@ void page_idle::setBackgroundPictureToQWidget(QWidget *p_widget, QString image_p
 
 void page_idle::setTemplateTextToObject(QWidget *p_element)
 {
+    QString searchString = getTemplateTextByObjectPageAndName(p_element);
+    setTextToOjbect(p_element, searchString);
+}
+
+QString page_idle::getTemplateTextByObjectPageAndName(QWidget *p_element)
+{
     QWidget *parentWidget = p_element->parentWidget();
     QString pageName = parentWidget->objectName();
     QString elementName = p_element->objectName();
 
     QString searchString = pageName + "->" + elementName;
-
-    QString text = getText(searchString);
-
-    if (QLabel *label = qobject_cast<QLabel *>(p_element))
-    {
-        label->setText(text);
-    }
-    else if (QPushButton *button = qobject_cast<QPushButton *>(p_element))
-    {
-        button->setText(text);
-    }
-    else
-    {
-        // Handle other types of elements if needed
-    }
+    qDebug() << "bbbbbbbbbbbbbbbbbbbbbbbbbbbb";
+    return getTemplateText(searchString);
 }
 
-void page_idle::setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier)
+void page_idle::setTextToOjbect(QWidget *p_element, QString text)
 {
-   QWidget *parentWidget = p_element->parentWidget();
-    QString pageName = parentWidget->objectName();
-    QString elementName = p_element->objectName();
-
-    QString searchString = pageName + "->" + elementName+"->"+identifier;
-
-    QString text = getText(searchString);
-
     if (QLabel *label = qobject_cast<QLabel *>(p_element))
     {
         label->setText(text);
@@ -522,19 +506,7 @@ void page_idle::setTemplateTextWithIdentifierToObject(QWidget *p_element, QStrin
     }
     else if (QMessageBox *msgBox = qobject_cast<QMessageBox *>(p_element))
     {
-       
-    msgBox->setText(text);
-    
-    
-    // ...
-    }
-       else if (QMessageBox *msgBox2 = qobject_cast<QMessageBox *>(p_element))
-    {
-       
-    msgBox2->setText(text);
-    
-    
-    // ...
+        msgBox->setText(text);
     }
     else
     {
@@ -542,7 +514,15 @@ void page_idle::setTemplateTextWithIdentifierToObject(QWidget *p_element, QStrin
     }
 }
 
-QString page_idle::getText(QString textName_to_find)
+void page_idle::setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier)
+{
+    QString element_page_and_name = getTemplateTextByObjectPageAndName(p_element);
+    QString searchString = element_page_and_name + "->" + identifier;
+    QString text = getTemplateText(searchString);
+    setTextToOjbect(p_element, text);
+}
+
+QString page_idle::getTemplateText(QString textName_to_find)
 {
 
     std::string key = textName_to_find.toStdString();

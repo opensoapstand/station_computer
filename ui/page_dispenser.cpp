@@ -38,19 +38,8 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     qDebug() << "constructor page_dispenser";
     ui->setupUi(this);
 
-    // ui->finish_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-
-    // ui->pushButton_abort->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
-
-    ui->label_finishTransactionMessage->hide();
-    //ui->label_to_refill->setText("to refill");
-
-   // ui->label_instructions_container->setText("bring container to nozzle");
-   //   ui->label_press->setText("press and hold <br>the button");
     ui->pushButton_abort->raise();
     ui->pushButton_problems->raise();
-//    ui->pushButton_problems->setText("Tap here if you notice a problem.");
-//    ui->pushButton_report->setText("Report");
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
@@ -88,10 +77,10 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
         msgBox->hide();
         msgBox->deleteLater();
     }
-    if (msgBox2 != nullptr)
+    if (msgBox_problems != nullptr)
     {
-        msgBox2->hide();
-        msgBox2->deleteLater();
+        msgBox_problems->hide();
+        msgBox_problems->deleteLater();
     }
 
     p_page_idle->pageTransition(this, pageToShow);
@@ -109,8 +98,6 @@ void page_dispenser::showEvent(QShowEvent *event)
     p_page_idle->setTemplateTextToObject(ui->pushButton_report);
     p_page_idle->setTemplateTextToObject(ui->pushButton_abort);
     p_page_idle->setTemplateTextToObject(ui->label_volume_dispensed);
-
-
 
     QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
     ui->label_finishTransactionMessage->setStyleSheet(styleSheet);
@@ -131,7 +118,7 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     // important to set to nullptr, to check at timeout if it was initialized (displayed...) or not.
     msgBox = nullptr;
-    msgBox2 = nullptr;
+    msgBox_problems = nullptr;
 
     this->isDispensing = false;
     askForFeedbackAtEnd = false;
@@ -159,7 +146,6 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
 
-    //ui->pushButton_abort->setText("Abort");
     ui->pushButton_abort->show();
     ui->label_press->show();
     ui->label_to_refill->show();
@@ -383,12 +369,6 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
     ui->label_dispense_status->setText(dispenseStatus);
     ui->label_dispense_status->hide();
 
-    // if (dispenseStatus == "FLOW_STATE_NOT_PUMPING_NOT_DISPENSING" || dispenseStatus == "FLOW_STATE_PRIME_FAIL_OR_EMPTY" || dispenseStatus == "FLOW_STATE_RAMP_UP" )
-    // {
-    //     // stable status. do not change button visibility.
-    // }
-    // else
-
     if (dispenseStatus == "SLOT_STATE_WARNING_PRIMING")
     {
         ui->label_dispense_message->setText("Please keep the button pressed.\nfor up to 15 seconds\nbefore the product starts dispensing.");
@@ -409,7 +389,6 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
     else if (dispenseStatus == "SLOT_STATE_AVAILABLE")
     {
         // normal status
-        // ui->pushButton_problems->hide();
         ui->label_dispense_message->hide();
     }
     else
@@ -517,12 +496,8 @@ void page_dispenser::on_pushButton_abort_clicked()
         {
             msgBox->setText("<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine.<br></p>");
         }
-        //   msgBox->setStyleSheet("QMessageBox{ color: green; min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';}");
-        //  msgBox->setStyleSheet("QMessageBox{ color: green; min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
 
         QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
-
-        // msgBox->setProperty("class", "msgBoxbutton");//set property goes first!!
         msgBox->setProperty("class", "msgBoxbox msgBoxbutton"); // set property goes first!!
         msgBox->setStyleSheet(styleSheet);
 
@@ -571,33 +546,27 @@ void page_dispenser::on_pushButton_debug_Button_clicked()
 void page_dispenser::on_pushButton_problems_clicked()
 {
 
-    msgBox2 = new QMessageBox();
-    msgBox2->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
-    QString payment = p_page_idle->selectedProduct->getPaymentMethod();
-    QString base = "If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br>";
+    msgBox_problems = new QMessageBox();
+    msgBox_problems->setParent(this);
+    msgBox_problems->setObjectName("msgBox_problems");
+    msgBox_problems->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
 
+    QString payment = p_page_idle->selectedProduct->getPaymentMethod();
     if (payment == "qr" || payment == "tapTcp")
     {
-
-        msgBox2->setText("<p align=center><br><br>" + base + "<br><br>You will only be charged for the dispensed amount<br></p>");
+        p_page_idle->setTemplateTextWithIdentifierToObject(msgBox_problems, "qr_tap");
     }
     else
     {
-        //msgBox2->setText("<p align=center><br>" + base + "</p>");
-     //   p_page_idle->setTemplateTextWithIdentifierToObject(msgBox2, "button_problems_message");
+        p_page_idle->setTemplateTextWithIdentifierToObject(msgBox_problems, "default");
     }
 
-    // msgBox2->setStyleSheet("QMessageBox{ color: greenyellow; min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';}");
-    //  msgBox2->setStyleSheet("QMessageBox{ color: greenyellow; min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
     QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
-    // msgBox2->setProperty("class", "msgBox");//set property goes first!!
-    // msgBox2->setStyleSheet(styleSheet);
+    msgBox_problems->setProperty("class", "msgBoxbox msgBoxbutton"); // set property goes first!!
+    msgBox_problems->setStyleSheet(styleSheet);
 
-    msgBox2->setProperty("class", "msgBoxbox msgBoxbutton"); // set property goes first!!
-
-    msgBox2->setStyleSheet(styleSheet);
-    msgBox2->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-    int ret = msgBox2->exec();
+    msgBox_problems->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    int ret = msgBox_problems->exec();
     bool success;
     switch (ret)
     {

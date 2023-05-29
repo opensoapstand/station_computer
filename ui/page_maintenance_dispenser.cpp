@@ -566,15 +566,15 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
         {
         case QMessageBox::Yes:
         {
-            QMessageBox msgBox2;
-            msgBox2.setWindowFlags(Qt::FramelessWindowHint);
-            msgBox2.setText("<p align=center>Should the product be labeled as coming soon?</p>");
-            //msgBox2.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-width: 300px; min-height: 300px;}");
-            msgBox2.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
-            msgBox2.setStyleSheet(styleSheet);
+            QMessageBox msgBox_set_availabilty;
+            msgBox_set_availabilty.setWindowFlags(Qt::FramelessWindowHint);
+            msgBox_set_availabilty.setText("<p align=center>Should the product be labeled as coming soon?</p>");
+            //msgBox_set_availabilty.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-width: 300px; min-height: 300px;}");
+            msgBox_set_availabilty.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
+            msgBox_set_availabilty.setStyleSheet(styleSheet);
 
-            msgBox2.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-            int ret2 = msgBox2.exec();
+            msgBox_set_availabilty.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+            int ret2 = msgBox_set_availabilty.exec();
             switch (ret2)
             {
             case QMessageBox::Yes:

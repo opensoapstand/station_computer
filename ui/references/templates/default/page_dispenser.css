@@ -1,5 +1,3 @@
-
-
 #label_finishTransactionMessage {
    font-family: 'Brevia';
    font-style: normal;
@@ -15,7 +13,7 @@
 }
 
 #pushButton_debug_Button {
-   
+
    color: #5E8580;
    background-color: transparent;
    border: 5px;
@@ -23,7 +21,7 @@
 }
 
 #pushButton_abort {
-   
+
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 100;
@@ -36,11 +34,11 @@
    border-radius: 20px;
    color: white;
    border: none;
-   
+
 }
 
 .label_volume_dispensed_ml {
-   
+
 
    font-family: 'Brevia';
    font-style: normal;
@@ -57,7 +55,7 @@
 }
 
 #label_to_refill {
-   
+
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;
@@ -70,11 +68,11 @@
    text-align: center;
    qproperty-alignment: AlignCenter;
    border: none;
-   
+
 }
 
 #label_instructions_container {
-   
+
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;
@@ -135,6 +133,7 @@
    color: white;
    border: none;
 }
+
 #pushButton_problems.alert {
    font-family: 'Brevia';
    font-style: normal;
@@ -163,10 +162,17 @@
    border-radius: 20px;
    color: white;
    border: none;
-   
+
 }
 
-QMessageBox.msgBoxbox{
+QMessageBox {
+   background-color: rgb(218, 217, 217);
+   text-align: center;
+   color: black;
+
+}
+
+QMessageBox.msgBoxbox {
    min-width: 7000px;
    font-size: 24px;
    font-weight: bold;
@@ -175,13 +181,24 @@ QMessageBox.msgBoxbox{
    /* Additional styles specific to QMessageBox */
 }
 
-QMessageBox.msgBoxbutton QPushButton{
+QPushButton::menu-indicator {
+   subcontrol-position: right center;
+   subcontrol-origin: padding;
+   right: 0px;
+   color: black;
+}
+
+QMessageBox.msgBoxbutton QPushButton {
    font-size: 24px;
    min-width: 300px;
    min-height: 300px;
+   color: black;
+
    /* Additional styles specific to QPushButton within QMessageBox */
-   
+
 }
- QLabel{ /*this label controls the color of the checkbox */
-  color: black;  
+
+QLabel {
+   /*this label controls the color of the checkbox */
+   color: black;
 }

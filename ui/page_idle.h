@@ -79,7 +79,11 @@ public:
     void loadTextsFromTemplateCsv();
     void loadTextsFromDefaultCsv();
     void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
-    QString getText(QString textName_to_find);
+    QString getTemplateText(QString textName_to_find);
+
+    QString getTemplateTextByObjectPageAndName(QWidget *p_element);
+    void setTextToOjbect(QWidget *p_element, QString text);
+
 
     product products[SLOT_COUNT];
     product *selectedProduct;

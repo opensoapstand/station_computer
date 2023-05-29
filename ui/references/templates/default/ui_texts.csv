@@ -87,6 +87,8 @@ page_sendFeedback->pushButton_send,SEND
 
 page_qr_payment->label_title->pay_by_phone,pay by phone
 page_qr_payment->label_scan->label_scan_1,Scan to Pay
+page_qr_payment->label_scan->finalize_transaction,
+finalize_transaction
 page_qr_payment->label_steps,<style>        li:{margin-top:10px;}        </style>        <ol>        <li><span class='tab'></span>Scan QR code with phone camera<br></li>        <li><span class='tab'></span>Click to open the link that appears<br></li>        <li><span class='tab'></span>Follow payment instructions on phone<br></li>        <li><span class='tab'></span>The station will proceed after payment<br></li>        <li><span class='tab'></span>Refill your soap!</li>        </ol>        <style>        li:{margin-top:10px;}        </style>        <ol>       
 page_qr_payment->label_processing,it can take a few moments for the station to<br>continue after your payment is confirmed
 

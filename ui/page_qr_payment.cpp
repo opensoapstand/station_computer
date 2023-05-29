@@ -410,7 +410,10 @@ void page_qr_payment::isQrProcessedCheckOnline()
             ui->label_steps->hide();
 
             ui->label_processing->show();
-            ui->label_scan->setText("Please finalize transaction");
+            // ui->label_scan->setText("Please finalize transaction");
+            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_scan, "finalize_transaction");
+
+            // ui->label_scan->setText("Please finalize transaction");
             ui->label_title->setText("almost there");
         }
         else

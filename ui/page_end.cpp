@@ -19,7 +19,7 @@ extern QString transactionLogging;
 
 // CTOR
 page_end::page_end(QWidget *parent) : QWidget(parent),
-                                              ui(new Ui::page_end)
+                                      ui(new Ui::page_end)
 {
     ui->setupUi(this);
 
@@ -55,15 +55,14 @@ void page_end::showEvent(QShowEvent *event)
 
     p_page_idle->setTemplateTextToObject(ui->notifyUs_Button);
 
-
     QString styleSheet = p_page_idle->getCSS(PAGE_END_CSS);
 
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
     ui->thank_you_message_label->setStyleSheet(styleSheet);
     ui->thank_you_subtitle_message_label->setStyleSheet(styleSheet);
 
-    ui->label_volume_dispensed_ml->setProperty("class", "volumeDispensedStylesheet");//set property goes first!!
-    ui->label_volume_dispensed->setProperty("class", "volumeDispensedStylesheet");//set property goes first!!
+    ui->label_volume_dispensed_ml->setProperty("class", "volumeDispensedStylesheet"); // set property goes first!!
+    ui->label_volume_dispensed->setProperty("class", "volumeDispensedStylesheet");    // set property goes first!!
 
     ui->label_volume_dispensed_ml->setStyleSheet(styleSheet);
     ui->label_volume_dispensed->setStyleSheet(styleSheet);
@@ -83,7 +82,7 @@ void page_end::showEvent(QShowEvent *event)
     // font.setWeight(75);
     font.setWeight(50);
     ui->notifyUs_Button->setFont(font);
-//    ui->notifyUs_Button->setText("Provide Feedback");
+    //    ui->notifyUs_Button->setText("Provide Feedback");
     ui->notifyUs_Button->raise();
 
     // popup
@@ -106,18 +105,27 @@ void page_end::showEvent(QShowEvent *event)
 
     if (hasReceiptPrinter)
     {
-        ui->thank_you_message_label->setText("Please take <br>your receipt!");
-        ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!");
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->thank_you_message_label, "hasReceiptPrinter");
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->thank_you_subtitle_message_label, "hasReceiptPrinter2");
+
+        // ui->thank_you_message_label->setText("Please take <br>your receipt!");
+        // ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!");
     }
     else if (paymentMethod == "qr" || paymentMethod == "tapTcp")
     {
-        ui->thank_you_message_label->setText("Thank you!");
-        ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.");
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->thank_you_message_label, "qr");
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->thank_you_subtitle_message_label, "qr2");
+
+        // ui->thank_you_message_label->setText("Thank you!");
+        // ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.");
     }
     else
     {
-        ui->thank_you_message_label->setText("Thank you!");
-        ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.");
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->thank_you_message_label, "any_pay");
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->thank_you_subtitle_message_label, "any_pay2");
+
+        // ui->thank_you_message_label->setText("Thank you!");
+        // ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.");
     }
 
     is_in_state_thank_you = true;
@@ -154,7 +162,6 @@ void page_end::showEvent(QShowEvent *event)
     }
     ui->label_volume_dispensed_ml->setText(dispensed_correct_units + " ( $" + QString::number(price, 'f', 2) + " )");
     p_page_idle->setDiscountPercentage(0.0);
-
 }
 
 size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
@@ -288,7 +295,9 @@ void page_end::finishHandler()
     else
     {
 
-        ui->thank_you_message_label->setText("Finishing<br>transaction");
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->thank_you_message_label, "finish_transaction");
+
+        //        ui->thank_you_message_label->setText("Finishing<br>transaction");
         ui->thank_you_subtitle_message_label->hide();
     }
 }

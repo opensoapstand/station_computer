@@ -73,17 +73,31 @@ void page_help::setPage(page_select_product *pageSelect, page_product *page_prod
     // QString buttonSelector2 = QString("QPushButton#%1").arg(ui->pushButton_back->objectName());
 
     // QString styleSheet = p_page_idle->getCSS(PAGE_HELP_CSS);
-    ui->pushButton_to_transactions->setText("Transaction History ->");
-    ui->pushButton_to_maintenance->setText("Settings");
-    ui->pushButton_to_feedback->setText("Contact Us");
-    ui->pushButton_to_idle->setText("<-back");
-    ui->label_keyboardInfo->setText("Enter password followed by the \"Done\" key to enter maintenance mode");
+
+    // p_page_idle->setTemplateTextToObject(ui->pushButton_to_transactions);
+    // p_page_idle->setTemplateTextToObject(ui->pushButton_to_maintenance);
+    // p_page_idle->setTemplateTextToObject(ui->pushButton_to_feedback);
+    // p_page_idle->setTemplateTextToObject(ui->pushButton_to_idle);
+    // p_page_idle->setTemplateTextToObject(ui->label_keyboardInfo);
+    
+    
+    //ui->pushButton_to_transactions->setText("Transaction History ->");
+    //ui->pushButton_to_maintenance->setText("Settings");
+    //ui->pushButton_to_feedback->setText("Contact Us");
+    //ui->pushButton_to_idle->setText("<-back");
+    //ui->label_keyboardInfo->setText("Enter password followed by the \"Done\" key to enter maintenance mode");
     
 
 }
 
 void page_help::showEvent(QShowEvent *event)
 {
+    p_page_idle->setTemplateTextToObject(ui->pushButton_to_transactions);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_to_maintenance);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_to_feedback);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_to_idle);
+    p_page_idle->setTemplateTextToObject(ui->label_keyboardInfo);
+    
     qDebug() << "<<<<<<< Page Enter: Help >>>>>>>>>";
     QWidget::showEvent(event);
 

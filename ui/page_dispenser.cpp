@@ -558,7 +558,12 @@ void page_dispenser::on_pushButton_problems_clicked()
     }
     else
     {
+<<<<<<< HEAD
         p_page_idle->setTemplateTextWithIdentifierToObject(msgBox_problems, "default");
+=======
+        //msgBox2->setText("<p align=center><br>" + base + "</p>");
+        //p_page_idle->setTemplateTextWithIdentifierToObject(msgBox2, "button_problems_message");
+>>>>>>> origin/lode-css
     }
 
     QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);

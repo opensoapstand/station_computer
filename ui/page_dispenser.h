@@ -46,7 +46,7 @@ class page_dispenser : public QWidget
 
 public:
 
-    QMessageBox* msgBox2;
+    QMessageBox* msgBox_problems;
     QMessageBox* msgBox;
 
     // **** GUI ****

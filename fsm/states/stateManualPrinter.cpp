@@ -385,28 +385,28 @@ DF_ERROR stateManualPrinter::onExit()
 
 DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp)
 {
-   std::string name_receipt = (productDispensers[slot - 1].getProduct()->getProductName());
+    std::string name_receipt = productDispensers[slot - 1].getProduct()->getProductName();
    //  std::string plu = productDispensers[slot-1].getProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
 
    char size = productDispensers[slot - 1].getProduct()->getSizeCharFromTargetVolume(volume_requested);
    string plu = productDispensers[slot - 1].getFinalPLU(size, price);
 
-   std::string units = (productDispensers[slot - 1].getProduct()->getDisplayUnits());
+   std::string units = productDispensers[slot - 1].getProduct()->getDisplayUnits();
    std::string paymentMethod = productDispensers[slot - 1].getProduct()->getPaymentMethod();
 
    char chars_cost[MAX_BUF];
    char chars_volume_formatted[MAX_BUF];
 
-   
    std::string char_units_formatted = productDispensers[slot - 1].getProduct()->getDisplayUnits();
 
-   std::string receipt_volume_formatted = to_string(volume_dispensed) + char_units_formatted;
-   //  string receipt_volume_formatted = to_string(chars_volume_formatted) + "ml";
-   snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.2f", volume_dispensed);
-   snprintf(chars_cost, sizeof(chars_cost), "%.2f", price);
-   string receipt_cost = (chars_cost);
+   snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", volume_dispensed);
 
-   // machine tmp;
+   std::string receipt_volume_formatted = chars_volume_formatted + char_units_formatted;
+
+   snprintf(chars_cost, sizeof(chars_cost), "%.2f", price);
+   string receipt_cost = chars_cost;
+
+   debugOutput::sendMessage("---------=======fjiefjeifjef: " + receipt_volume_formatted, MSG_INFO);
 
    g_machine.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu, "");
 }

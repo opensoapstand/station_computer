@@ -28,6 +28,7 @@ page_maintenance::page_maintenance(QWidget *parent) : QWidget(parent),
     page_maintenanceEndTimer->setInterval(1000);
     connect(page_maintenanceEndTimer, SIGNAL(timeout()), this, SLOT(onPage_maintenanceTimeoutTick()));
 
+    
     product_buttons[0] = ui->product1_button;
     product_buttons[1] = ui->product2_button;
     product_buttons[2] = ui->product3_button;
@@ -78,12 +79,6 @@ for (int i = 0; i < 4; i++)
         product_overlay_labels[i]->hide();
     }
 
-    if (page_maintenanceEndTimer == nullptr)
-    {
-        page_maintenanceEndTimer = new QTimer(this);
-        page_maintenanceEndTimer->setInterval(1000);
-        connect(page_maintenanceEndTimer, SIGNAL(timeout()), this, SLOT(onPage_maintenanceTimeoutTick()));
-    }
 
     // page_maintenanceEndTimer->start(1000);
     _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;

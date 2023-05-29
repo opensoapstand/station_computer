@@ -71,14 +71,15 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
     // ui->label_pay->setText("Continue");
     // ui->label_total->setText("Total");
 
-    {
-        selectIdleTimer = new QTimer(this);
-        selectIdleTimer->setInterval(40);
-        // connect(ui->pushButton_promo_apply, SIGNAL(clicked()), this, SLOT(apply_promo_code()));
-        connect(ui->pushButton_promo_input, SIGNAL(clicked()), this, SLOT(on_lineEdit_promo_codeInput_clicked()));
-        connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
-        connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
-    }
+    selectIdleTimer = new QTimer(this);
+    selectIdleTimer->setInterval(40);
+    connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
+
+
+    // connect(ui->pushButton_promo_apply, SIGNAL(clicked()), this, SLOT(apply_promo_code()));
+    connect(ui->pushButton_promo_input, SIGNAL(clicked()), this, SLOT(on_lineEdit_promo_codeInput_clicked()));
+    connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
+    
     ui->label_gif->hide();
 }
 
@@ -247,6 +248,7 @@ void page_product_overview::reset_and_show_page_elements()
     // p_page_idle->selectedProduct->setDiscountPercentageFraction((0 * 1.0) / 100);
     if(!p_page_idle->isPromoApplied())
     {
+        ui->lineEdit_promo_code->setText("Tap here to enter promo code");
         ui->label_invoice_discount_amount->hide();
         ui->label_invoice_discount_name->hide();
         ui->label_discount_tag->hide();

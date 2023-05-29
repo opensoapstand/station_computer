@@ -97,6 +97,7 @@ void page_idle::showEvent(QShowEvent *event)
     ui->label_printer_status->setStyleSheet(styleSheet);
 
     qDebug() << "open db: payment method";
+    setDiscountPercentage(0.0);
     bool needsReceiptPrinter = false;
     for (int slot = 1; slot <= SLOT_COUNT; slot++)
     {
@@ -242,6 +243,7 @@ bool page_idle::isPromoApplied()
 {
     if (m_discount_percentage_fraction != 0.0)
     {
+        qDebug() << "true";
         return true;
     }
     return false;
@@ -519,6 +521,13 @@ void page_idle::setTemplateTextWithIdentifierToObject(QWidget *p_element, QStrin
     QString searchString = element_page_and_name + "->" + identifier;
     QString text = getTemplateText(searchString);
     setTextToOjbect(p_element, text);
+}
+QString page_idle::getTemplateTextByPage(QWidget *page, QString identifier)
+{
+    QString pageName = page->objectName();
+    QString searchString = pageName + "->" + identifier;
+
+    return getTemplateText(searchString);
 }
 
 QString page_idle::getTemplateText(QString textName_to_find)

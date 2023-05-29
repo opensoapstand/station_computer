@@ -78,6 +78,7 @@ public:
 
     void loadTextsFromTemplateCsv();
     void loadTextsFromDefaultCsv();
+    QString getTemplateTextByPage(QWidget *page, QString identifier);
     void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
     QString getTemplateText(QString textName_to_find);
 

@@ -51,13 +51,7 @@ page_dispenser->label_volume_dispensed,Volume dispensed
 page_dispenser->msgBox_problems->qr_tap,<p align=center><br><br>If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br><br><br>You will only be charged for the dispensed amount<br></p>
 page_dispenser->msgBox_problems->default,<p align=center><br>If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br><br><br>You will only be charged for the dispensed amount<br></p>
 
-
-
-
-
-
 # page_end
-
 page_end->notifyUs_Button,Provide Feedback
 page_end->thank_you_message_label->hasReceiptPrinter,Please take <br>your receipt!
 page_end->thank_you_subtitle_message_label->hasReceiptPrinter2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!
@@ -68,7 +62,6 @@ page_end->thank_you_subtitle_message_label->any_pay2,By refilling you've helped 
 page_end->thank_you_message_label->finish_transaction,Finishing<br>transaction
 
 # page_help
-
 page_help->pushButton_to_transactions,Transaction History ->
 page_help->pushButton_to_maintenance,Settings
 page_help->pushButton_to_feedback,Contact Us
@@ -76,7 +69,6 @@ page_help->pushButton_to_idle,<-back
 page_help->label_keyboardInfo,Enter password followed by the \"Done\" key to enter maintenance mode
 
 # page_sendFeedback
-
 page_sendFeedback->pushButton_previous_page,<-back
 page_sendFeedback->label_select_problem,Please provide feedback
 page_sendFeedback->label_still_cant_find,Still can't find it?
@@ -91,15 +83,23 @@ page_sendFeedback->label_thanks_for_feedback,Thank you for <br> your feedback
 page_sendFeedback->pushButton_send,SEND
 
 # page_qr_payment
-
 page_qr_payment->label_title->pay_by_phone,pay by phone
 page_qr_payment->label_scan->label_scan_1,Scan to Pay
 page_qr_payment->label_scan->finalize_transaction,
 finalize_transaction
 page_qr_payment->label_steps,<style>        li:{margin-top:10px;}        </style>        <ol>        <li><span class='tab'></span>Scan QR code with phone camera<br></li>        <li><span class='tab'></span>Click to open the link that appears<br></li>        <li><span class='tab'></span>Follow payment instructions on phone<br></li>        <li><span class='tab'></span>The station will proceed after payment<br></li>        <li><span class='tab'></span>Refill your soap!</li>        </ol>        <style>        li:{margin-top:10px;}        </style>        <ol>       
 page_qr_payment->label_processing,it can take a few moments for the station to<br>continue after your payment is confirmed
+page_qr_payment->label_title->almost_there,almost there
+page_qr_payment->pushButton_previous_page,<-back
+
+# page_error_wifi (no csv)
+
+#page maintenance
+page_maintenance->product_overlay_labels[i]->almost_empty,Almost Empty
+page_maintenance->product_overlay_labels[i]->coming_soon,Comming soon
 
 
 
-    
+
+
 

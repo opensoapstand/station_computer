@@ -123,7 +123,9 @@ for (int i = 0; i < 4; i++)
         }
         else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
         {
-            product_overlay_labels[i]->setText("Almost Empty");
+             product_overlay_labels[i]->setText("Almost Empty");
+            //p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[i], "almost_empty");
+
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
         {
@@ -132,6 +134,7 @@ for (int i = 0; i < 4; i++)
         else if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
         {
             product_overlay_labels[i]->setText("Coming Soon");
+           // p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[i], "coming_soon");
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
 

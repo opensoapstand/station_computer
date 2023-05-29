@@ -59,6 +59,9 @@ line-height: 29px;</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_to_help">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>480</x>

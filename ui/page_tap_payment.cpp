@@ -242,7 +242,8 @@ void page_tap_payment::storePaymentEvent(QSqlDatabase db, QString event)
 void page_tap_payment::tapPaymentHandler()
 {
     ui->animated_Label->move(221, 327);
-    QMovie *tapGif = new QMovie("tap.gif");
+    QMovie *tapGif = new QMovie("/home/df-admin/production/references/templates/default/tap.gif");
+
     ui->animated_Label->setMovie(tapGif);
     tapGif->start();
 
@@ -268,6 +269,7 @@ void page_tap_payment::startPaymentProcess()
         {
             price = p_page_idle->selectedProduct->getPriceCustom();
         }
+        price = p_page_idle->getPriceCorrectedAfterDiscount(price);
         std::ostringstream stream;
         stream << std::fixed << std::setprecision(2) << price;
         std::string authCommand = authorizationCommand(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, stream.str());

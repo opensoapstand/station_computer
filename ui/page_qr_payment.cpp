@@ -30,7 +30,7 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
 {
     // Fullscreen background setup
     ui->setupUi(this);
-    qDebug() << "QR Payment page" << endl;
+    qDebug() << "QR Payment page" ;
 
     ui->pushButton_payment_bypass->setEnabled(false);
 
@@ -46,8 +46,6 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
 
     ui->pushButton_payment_bypass->setEnabled(false);
     state_payment = s_init;
-
-
 
     ui->label_scan->setText(
         "Scan to Pay");
@@ -152,7 +150,6 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->pushButton_payment_bypass->setProperty("class", "invisible_button");
     ui->pushButton_refresh->setProperty("class", "invisible_button");
 
-
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_previous_page->setText("<-back");
 
@@ -190,6 +187,8 @@ void page_qr_payment::showEvent(QShowEvent *event)
     this->ui->payment_countdownLabel->setText("");
 
     ui->refreshLabel->hide();
+    ui->pushButton_refresh->raise(); // make sure refresh button is on top. 
+    ui->pushButton_previous_page->raise();
 
     setupQrOrder();
 }
@@ -413,7 +412,7 @@ void page_qr_payment::onTimeoutTick()
     }
     else
     {
-        qDebug() << "Timer Done!" << _pageTimeoutCounterSecondsLeft << endl;
+        qDebug() << "Timer Done!" << _pageTimeoutCounterSecondsLeft ;
         transactionLogging += "\n 5: Timeout - True";
 
         idlePaymentTimeout();
@@ -497,7 +496,7 @@ void page_qr_payment::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 // Navigation: Back to Drink Size Selection
 void page_qr_payment::on_pushButton_previous_page_clicked()
 {
-    qDebug() << "In previous page button" << endl;
+    qDebug() << "In previous page button" ;
     if (exitConfirm())
     {
         // p_page_idle->pageTransition(this, p_page_product);

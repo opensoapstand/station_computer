@@ -349,10 +349,10 @@ void page_product::reset_and_show_page_elements()
             orderSizeLabelsVolume[i]->show();
             orderSizeBackgroundLabels[i]->show();
             orderSizeButtons[i]->show();
-            p_page_idle->addCssStyleToObject(orderSizeLabelsVolume[i], "orderSizeLabelsVolume", PAGE_PRODUCT_CSS);
-            p_page_idle->addCssStyleToObject(orderSizeBackgroundLabels[i], "orderSizeBackgroundLabels", PAGE_PRODUCT_CSS);
-            p_page_idle->addCssStyleToObject(orderSizeButtons[i], "orderSizeButtons", PAGE_PRODUCT_CSS);
-            p_page_idle->addCssStyleToObject(orderSizeLabelsPrice[i], "orderSizeLabelsPrice", PAGE_PRODUCT_CSS);
+            p_page_idle->addCssClassToObject(orderSizeLabelsVolume[i], "orderSizeLabelsVolume", PAGE_PRODUCT_CSS);
+            p_page_idle->addCssClassToObject(orderSizeBackgroundLabels[i], "orderSizeBackgroundLabels", PAGE_PRODUCT_CSS);
+            p_page_idle->addCssClassToObject(orderSizeButtons[i], "orderSizeButtons", PAGE_PRODUCT_CSS);
+            p_page_idle->addCssClassToObject(orderSizeLabelsPrice[i], "orderSizeLabelsPrice", PAGE_PRODUCT_CSS);
 
             double price = p_page_idle->selectedProduct->getPrice(product_sizes[i]);
 

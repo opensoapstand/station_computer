@@ -62,7 +62,7 @@ public:
     void setBackgroundPictureToQWidget(QWidget *page, QString imageName);
     QString getCSS(QString cssName);
     void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
-    void addCssStyleToObject(QWidget *element, QString classname, QString css_file_name);
+    void addCssClassToObject(QWidget *element, QString classname, QString css_file_name);
     
     void setPromoCode(QString promoCode);
     QString getPromoCode();

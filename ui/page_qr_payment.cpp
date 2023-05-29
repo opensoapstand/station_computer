@@ -30,8 +30,6 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
 {
     // Fullscreen background setup
     ui->setupUi(this);
-    qDebug() << "QR Payment page" << endl;
-
     ui->pushButton_payment_bypass->setEnabled(false);
 
     paymentEndTimer = new QTimer(this);

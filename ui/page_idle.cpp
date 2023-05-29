@@ -361,7 +361,7 @@ bool page_idle::isEnough(int p)
     return false;
 }
 
-void page_idle::addCssStyleToObject(QWidget *element, QString classname, QString css_file_name)
+void page_idle::addCssClassToObject(QWidget *element, QString classname, QString css_file_name)
 {
     QString styleSheet = getCSS(css_file_name);
     element->setProperty("class", classname);

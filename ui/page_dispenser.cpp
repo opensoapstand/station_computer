@@ -393,24 +393,24 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
         if (dispenseStatus == "SLOT_STATE_WARNING_PRIMING")
         {
             ui->label_dispense_message->setText("Please keep the button pressed.\nfor up to 15 seconds\nbefore the product starts dispensing.");
-            p_page_idle->addCssStyleToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
+            p_page_idle->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
             ui->label_dispense_message->show();
         }
         else if (dispenseStatus == "SLOT_STATE_PROBLEM_EMPTY")
         {
             ui->label_dispense_message->setText("It appears we're out of stock.");
-            p_page_idle->addCssStyleToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
+            p_page_idle->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
             ui->label_dispense_message->show();
         }
         else if (dispenseStatus == "SLOT_STATE_PROBLEM_NEEDS_ATTENTION")
         {
             ui->label_dispense_message->setText("We can't get the dispensing started.\nWe're empty or the pump needs help to prime.\nTap the problem button in case of other issues.");
-            p_page_idle->addCssStyleToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
+            p_page_idle->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
             ui->label_dispense_message->show();
         }
         else if (dispenseStatus == "SLOT_STATE_AVAILABLE")
         {
-            p_page_idle->addCssStyleToObject(ui->pushButton_problems, "normal", PAGE_DISPENSER_CSS);
+            p_page_idle->addCssClassToObject(ui->pushButton_problems, "normal", PAGE_DISPENSER_CSS);
             // normal status
             // ui->pushButton_problems->hide();
             ui->label_dispense_message->hide();
@@ -577,6 +577,7 @@ void page_dispenser::on_pushButton_problems_clicked()
     msgBox_problems->setParent(this);
     msgBox_problems->setObjectName("msgBox_problems");
     msgBox_problems->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+    msgBox_problems->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
     QString payment = p_page_idle->selectedProduct->getPaymentMethod();
     if (payment == "qr" || payment == "tapTcp")
@@ -588,11 +589,11 @@ void page_dispenser::on_pushButton_problems_clicked()
         p_page_idle->setTemplateTextWithIdentifierToObject(msgBox_problems, "default");
     }
 
-    QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
-    msgBox_problems->setProperty("class", "msgBoxbox msgBoxbutton"); // set property goes first!!
-    msgBox_problems->setStyleSheet(styleSheet);
+    p_page_idle->addCssClassToObject(msgBox_problems, "msgBoxbox msgBoxbutton", PAGE_DISPENSER_CSS);
+    // QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
+    // msgBox_problems->setProperty("class", "msgBoxbox msgBoxbutton"); // set property goes first!!
+    // msgBox_problems->setStyleSheet(styleSheet);
 
-    msgBox_problems->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     int ret = msgBox_problems->exec();
     bool success;
     switch (ret)

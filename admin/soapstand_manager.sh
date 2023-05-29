@@ -11,7 +11,7 @@
 ./status_services.sh
 
 PS3='Please enter your choice: '
-options=("Quit" "Station info" "Status" "Start" "Stop" "Restart" "Screenshotbot execute" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data" "(Re)load services from production" "Setup rtunnel" "Setup Ubuntu for drinkfill UI" "Deploy productionstatic.zip" "Screenshot: Take single shot")
+options=("Quit" "Station info" "Status" "Start" "Stop" "Restart" "Screenshotbot execute" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data" "(Re)load services from production" "Setup rtunnel" "Setup Ubuntu for drinkfill UI" "Deploy productionstatic.zip" "Screenshot: Take single shot" "Copy db from drinkfill to production folder")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -90,6 +90,11 @@ do
         ;;
         "Create and run production data")
             sudo ./create_and_run_production_data.sh
+            echo "done."
+        ;;
+
+        "Copy db from drinkfill to production folder")
+            sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite_newlayout.db /home/df-admin/production/db/drinkfill-sqlite_newlayout.db 
             echo "done."
         ;;
         

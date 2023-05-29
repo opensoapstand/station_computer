@@ -63,13 +63,19 @@ scp /home/df-admin/drinkfill/ui/payment/private_key.der /home/df-admin/productio
 scp /home/df-admin/drinkfill/ui/payment/public_key.txt /home/df-admin/production/admin/tap_payment
 
 
-# ask for db to be written. By default: NO! 
-read -p "Copy database? [y] for yes. [enter,anykey] for no:" -n 1 -r
-echo    # (optional) move to a new line
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
-    sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite_newlayout.db /home/df-admin/production/db/drinkfill-sqlite_newlayout.db 
-else
-    sudo -u df-admin rm -r /home/df-admin/production/db
-    sudo -u df-admin scp -r $BKP_PATH/db /home/df-admin/production
-fi
+# database gets copied from the backup folder. aka we do not copy the database from the drinkfill folder. 
+sudo -u df-admin rm -r /home/df-admin/production/db
+sudo -u df-admin scp -r $BKP_PATH/db /home/df-admin/production
+
+echo "Done. NOTE: the database was not copied from the drinkfill folder. It was preserved from the previous production folder. Copy the db manually from db if needed."
+
+## ask for db to be copied from drinkfill to production. By default: NO! 
+#read -p "Copy database? [y] for yes. [enter,anykey] for no:" -n 1 -r
+#echo    # (optional) move to a new line
+#if [[ $REPLY =~ ^[Yy]$ ]]
+#then
+#    sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite_newlayout.db /home/df-admin/production/db/drinkfill-sqlite_newlayout.db 
+#else
+#    sudo -u df-admin rm -r /home/df-admin/production/db
+#    sudo -u df-admin scp -r $BKP_PATH/db /home/df-admin/production
+#fi

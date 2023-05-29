@@ -242,7 +242,9 @@ void page_tap_payment::storePaymentEvent(QSqlDatabase db, QString event)
 void page_tap_payment::tapPaymentHandler()
 {
     ui->animated_Label->move(221, 327);
-    QMovie *tapGif = new QMovie("tap.gif");
+    QString image_path = p_page_idle->getTemplatePathFromName("tap.gif");
+    QMovie *tapGif = new QMovie(image_path);
+
     ui->animated_Label->setMovie(tapGif);
     tapGif->start();
 
@@ -268,6 +270,7 @@ void page_tap_payment::startPaymentProcess()
         {
             price = p_page_idle->selectedProduct->getPriceCustom();
         }
+        price = p_page_idle->getPriceCorrectedAfterDiscount(price);
         std::ostringstream stream;
         stream << std::fixed << std::setprecision(2) << price;
         std::string authCommand = authorizationCommand(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, stream.str());
@@ -334,7 +337,8 @@ void page_tap_payment::check_card_tapped()
 
         // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         ui->animated_Label->move(410, 480);
-        QMovie *movie = new QMovie("/home/df-admin/production/references/templates/default/soapstandspinner.gif");
+        QString image_path = p_page_idle->getTemplatePathFromName("soapstandspinner.gif");
+        QMovie *movie = new QMovie(image_path);
         ui->animated_Label->setMovie(movie);
         movie->start();
     }

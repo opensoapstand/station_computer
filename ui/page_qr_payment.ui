@@ -21,24 +21,8 @@
     <rect>
      <x>20</x>
      <y>20</y>
-     <width>301</width>
-     <height>100</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_to_idle">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>460</x>
-     <y>1760</y>
-     <width>161</width>
-     <height>141</height>
+     <width>201</width>
+     <height>61</height>
     </rect>
    </property>
    <property name="text">
@@ -327,7 +311,6 @@ line-height: 29px;</string>
   </widget>
   <zorder>pushButton_refresh</zorder>
   <zorder>pushButton_previous_page</zorder>
-  <zorder>pushButton_to_idle</zorder>
   <zorder>order_total_amount</zorder>
   <zorder>order_drink_amount</zorder>
   <zorder>pushButton_payment_bypass</zorder>

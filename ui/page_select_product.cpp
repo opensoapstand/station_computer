@@ -97,6 +97,7 @@ void page_select_product::showEvent(QShowEvent *event)
     ui->pushButton_help_page->setStyleSheet(styleSheet);
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
     ui->label_pick_soap->setStyleSheet(styleSheet);
+    displayProducts();
 
     for (int i = 0; i < 4; i++)
     {
@@ -110,7 +111,6 @@ void page_select_product::showEvent(QShowEvent *event)
         labels_product_name[i]->setStyleSheet(styleSheet);
         pushButtons_product_select[i]->setProperty("class", "PushButton_selection");
         pushButtons_product_select[i]->setStyleSheet(styleSheet);
-        labels_product_icon[i]->setStyleSheet(styleSheet);
     }
 
     p_page_idle->setTemplateTextToObject(ui->label_pick_soap);
@@ -120,7 +120,6 @@ void page_select_product::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
     maintenanceCounter = 0;
 
-    displayProducts();
 
    
 
@@ -137,7 +136,7 @@ void page_select_product::resizeEvent(QResizeEvent *event)
 
 void page_select_product::displayProducts()
 {
-    QString product_type_icons[6] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH, ICON_TYPE_MOCKTAIL_PATH};
+    QString product_type_icons[8] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH, ICON_TYPE_MOCKTAIL_PATH, ICON_TYPE_KOMBUCHA_PATH, ICON_TYPE_JUICE_PATH};
 
     bool product_slot_enabled;
     // bool product_sold_out;
@@ -168,6 +167,7 @@ void page_select_product::displayProducts()
         qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << " Status text: " << product_status_text;
 
         labels_product_name[i]->setText(product_name);
+        
         // labels_product_name[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
         // labels_product_name[i]->setStyleSheet(styleSheet);
 
@@ -199,9 +199,17 @@ void page_select_product::displayProducts()
             icon_path = ICON_TYPE_CONCENTRATE_PATH;
             type_text = "CONCENTRATE";
         }
+        else if(product_type== "Kombucha"){
+            icon_path = ICON_TYPE_KOMBUCHA_PATH;
+            type_text = "KOMBUCHA";
+        }
         else if(product_type == "Mocktail"){
             icon_path = ICON_TYPE_MOCKTAIL_PATH;
             type_text = "MOCKTAIL";
+        }
+        else if(product_type == "Juice"){
+            icon_path = ICON_TYPE_JUICE_PATH;
+            type_text = "JUICE";
         }
         else
         {

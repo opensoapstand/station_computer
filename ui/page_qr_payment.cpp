@@ -149,7 +149,9 @@ void page_qr_payment::showEvent(QShowEvent *event)
     p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_scan, "label_scan_1");
     p_page_idle->setTemplateTextToObject(ui->label_steps);
     p_page_idle->setTemplateTextToObject(ui->label_processing);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_previous_page);
     
+    // ui->pushButton_previous_page->setText("<-back");
     
   
 
@@ -161,7 +163,6 @@ void page_qr_payment::showEvent(QShowEvent *event)
 
 
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
-    ui->pushButton_previous_page->setText("<-back");
 
     ui->pushButton_payment_bypass->setStyleSheet(styleSheet);
     ui->pushButton_refresh->setStyleSheet(styleSheet);
@@ -377,8 +378,13 @@ void page_qr_payment::isQrProcessedCheckOnline()
             ui->label_steps->hide();
 
             ui->label_processing->show();
-            ui->label_scan->setText("Please finalize transaction");
-            ui->label_title->setText("almost there");
+            // ui->label_scan->setText("Please finalize transaction");
+            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_scan, "finalize_transaction");
+
+            // ui->label_scan->setText("Please finalize transaction");
+            // ui->label_title->setText("almost there");
+            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "almost_there");
+
         }
         else
         {

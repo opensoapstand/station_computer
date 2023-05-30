@@ -14,7 +14,6 @@
 //***************************************
 
 #include "stateManualPrinter.h"
-
 #define STRING_STATE_MANUAL_PRINTER "Manual Printer"
 
 #define MAX_BUF 64
@@ -139,7 +138,7 @@ DF_ERROR stateManualPrinter::onAction()
    if (b_isContinuouslyChecking)
    {
       displayPrinterStatus();
-    
+
       usleep(500000);
    }
    e_ret = OK;
@@ -330,14 +329,11 @@ DF_ERROR stateManualPrinter::displayPrinterStatus()
       printerr->resetPollCount();
       debugOutput::sendMessage("Pollcount LIMIT REACHED. Will restart Printer ", MSG_INFO);
       g_machine.pcb24VPowerSwitch(false);
-      usleep(1200000); //2000000ok //1500000ok //1200000ok //1000000nok
+      usleep(1200000); // 2000000ok //1500000ok //1200000ok //1000000nok
       g_machine.pcb24VPowerSwitch(true);
-      //usleep(2000000); //1000000
+      // usleep(2000000); //1000000
    }
-
 }
-
-
 
 DF_ERROR stateManualPrinter::displayPrinterReachable()
 {
@@ -389,69 +385,56 @@ DF_ERROR stateManualPrinter::onExit()
 
 DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp)
 {
-   std::string name_receipt = (productDispensers[slot - 1].getProduct()->getProductName());
+    std::string name_receipt = productDispensers[slot - 1].getProduct()->getProductName();
    //  std::string plu = productDispensers[slot-1].getProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
 
    char size = productDispensers[slot - 1].getProduct()->getSizeCharFromTargetVolume(volume_requested);
    string plu = productDispensers[slot - 1].getFinalPLU(size, price);
 
-   std::string units = (productDispensers[slot - 1].getProduct()->getDisplayUnits());
+   std::string units = productDispensers[slot - 1].getProduct()->getDisplayUnits();
    std::string paymentMethod = productDispensers[slot - 1].getProduct()->getPaymentMethod();
 
    char chars_cost[MAX_BUF];
    char chars_volume_formatted[MAX_BUF];
 
-   snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.2f", productDispensers[slot - 1].getProduct()->getTargetVolume(size));
-   string vol = (chars_volume_formatted);
-   string receipt_volume_formatted = vol + "ml";
-   //  string receipt_volume_formatted = to_string(chars_volume_formatted) + "ml";
+   std::string char_units_formatted = productDispensers[slot - 1].getProduct()->getDisplayUnits();
+
+   snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", volume_dispensed);
+
+   std::string receipt_volume_formatted = chars_volume_formatted + char_units_formatted;
 
    snprintf(chars_cost, sizeof(chars_cost), "%.2f", price);
-   string receipt_cost = (chars_cost);
+   string receipt_cost = chars_cost;
 
-   // machine tmp;
-   receipt_cost = m_pMessaging->getRequestedPrice();
+   debugOutput::sendMessage("---------=======fjiefjeifjef: " + receipt_volume_formatted, MSG_INFO);
 
    g_machine.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu, "");
 }
 
-// DF_ERROR stateManualPrinter::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string units, string paymentMethod, string plu){
-//     print_text(name_receipt + "\nPrice: $" + receipt_cost + " \nQuantity: " + receipt_volume_formatted + "\nTime: " + time_stamp);
-
-//     if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2")
-//     {
-
-//         if (plu.size() != 13 && plu.size() != 12)
-//         {
-//             // EAN13 codes need to be 13 digits, or else no barcode will be printed. If 12 dgits are provided, the last digit (checksum?!) is automatically generated
-//             debugOutput::sendMessage("ERROR: bar code invalid (" + plu + "). EAN13, Should be 13 digits" + to_string(plu.size()), MSG_INFO);
-//             print_text("\nPLU: " + plu + " (No barcode available)");
-//         }
-//         else
-//         {
-//             Adafruit_Thermal *printerr = new Adafruit_Thermal();
-//             printerr->connectToPrinter();
-//             printerr->setBarcodeHeight(100);
-//             printerr->printBarcode(plu.c_str(), EAN13);
-//             printerr->disconnectPrinter();
-//         }
-//     }
-
-//     else if (paymentMethod == "plu")
-//     {
-//         print_text("PLU: " + plu);
-//     }
-//     else
-//     {
-//         debugOutput::sendMessage("ERROR: Not a valid payment method" + paymentMethod, MSG_INFO);
-//     }
-//     print_text("\n\n\n");
-
-// }
-
-// DF_ERROR stateManualPrinter::print_text(string text)
+// DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp)
 // {
-//     string printerstring = text;
-//     string printer_command_string = "echo '\n" + printerstring + "' > /dev/ttyS4";
-//     system(printer_command_string.c_str());
+//    std::string name_receipt = (productDispensers[slot - 1].getProduct()->getProductName());
+//    //  std::string plu = productDispensers[slot-1].getProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
+
+//    char size = productDispensers[slot - 1].getProduct()->getSizeCharFromTargetVolume(volume_requested);
+//    string plu = productDispensers[slot - 1].getFinalPLU(size, price);
+
+//    std::string units = (productDispensers[slot - 1].getProduct()->getDisplayUnits());
+//    std::string paymentMethod = productDispensers[slot - 1].getProduct()->getPaymentMethod();
+
+//    char chars_cost[MAX_BUF];
+//    char chars_volume_formatted[MAX_BUF];
+
+//    snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.2f", productDispensers[slot - 1].getProduct()->getTargetVolume(size));
+//    string vol = (chars_volume_formatted);
+//    string receipt_volume_formatted = vol + "ml";
+//    //  string receipt_volume_formatted = to_string(chars_volume_formatted) + "ml";
+
+//    snprintf(chars_cost, sizeof(chars_cost), "%.2f", price);
+//    string receipt_cost = (chars_cost);
+
+//    // machine tmp;
+//    receipt_cost = m_pMessaging->getRequestedPrice();
+
+//    g_machine.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu, "");
 // }

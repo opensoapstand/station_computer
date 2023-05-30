@@ -68,10 +68,9 @@ void machine::pcb24VPowerSwitch(bool enableElseDisable)
     switch_24V->writePin(enableElseDisable);
 }
 
-void machine::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string units, string paymentMethod, string plu, string promoCode)
+void machine::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string char_units_formatted, string paymentMethod, string plu, string promoCode)
 {
 
-  
     std::string out1 = name_receipt + "\nPrice: $" + receipt_cost + " \nQuantity: " + receipt_volume_formatted + "\nTime: " + time_stamp;
     receipt_printer->printText(out1.c_str());
 
@@ -93,7 +92,6 @@ void machine::print_receipt(string name_receipt, string receipt_cost, string rec
         {
             // EAN13 codes need to be 13 digits, or else no barcode will be printed. If 12 dgits are provided, the last digit (checksum?!) is automatically generated
             debugOutput::sendMessage("ERROR: bar code invalid (" + plu + "). EAN13, Should be 13 digits" + to_string(plu.size()), MSG_INFO);
-
 
             std::string out = "\nPLU: " + plu + " (No barcode available)";
             receipt_printer->printText(out.c_str());

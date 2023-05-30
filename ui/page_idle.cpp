@@ -476,19 +476,33 @@ void page_idle::setBackgroundPictureToQWidget(QWidget *p_widget, QString image_p
     p_widget->update();
 }
 
+QString page_idle::getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_element, QString identifier)
+{
+    QString element_page_and_name = getTemplateTextByElementNameAndPage(p_element);
+    QString searchString = element_page_and_name + "->" + identifier;
+    return getTemplateText(searchString);
+}
+
+void page_idle::setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier)
+{
+    QString text = getTemplateTextByElementNameAndPageAndIdentifier(p_element, identifier);
+    setTextToOjbect(p_element, text);
+}
+
 void page_idle::setTemplateTextToObject(QWidget *p_element)
 {
-    QString searchString = getTemplateTextByObjectPageAndName(p_element);
+    QString searchString = getTemplateTextByElementNameAndPage(p_element);
     setTextToOjbect(p_element, searchString);
 }
 
-QString page_idle::getTemplateTextByObjectPageAndName(QWidget *p_element)
+QString page_idle::getTemplateTextByElementNameAndPage(QWidget *p_element)
 {
     QString elementName = p_element->objectName();
     QWidget *parentWidget = p_element->parentWidget();
 
-    if (!parentWidget) {
-        qDebug()<< "No parent for the provide widget!! " <<  elementName ;
+    if (!parentWidget)
+    {
+        qDebug() << "No parent for the provide widget!! " << elementName;
     }
 
     QString pageName = parentWidget->objectName();
@@ -515,14 +529,6 @@ void page_idle::setTextToOjbect(QWidget *p_element, QString text)
     {
         // Handle other types of elements if needed
     }
-}
-
-void page_idle::setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier)
-{
-    QString element_page_and_name = getTemplateTextByObjectPageAndName(p_element);
-    QString searchString = element_page_and_name + "->" + identifier;
-    QString text = getTemplateText(searchString);
-    setTextToOjbect(p_element, text);
 }
 
 // get a text that is not linked to an elements on a specific page by its identifier

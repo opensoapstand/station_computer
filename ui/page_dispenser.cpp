@@ -96,7 +96,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     p_page_idle->setTemplateTextToObject(ui->label_instructions_container);
     p_page_idle->setTemplateTextToObject(ui->label_press);
     p_page_idle->setTemplateTextToObject(ui->pushButton_problems);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_abort);
+    p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_abort, "abort");
     p_page_idle->setTemplateTextToObject(ui->label_volume_dispensed);
 
     QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
@@ -176,7 +176,6 @@ void page_dispenser::showEvent(QShowEvent *event)
     p_page_idle->dfUtility->send_command_to_FSM(command);
     this->isDispensing = true;
     qDebug() << "Dispensing started.";
-
 }
 
 void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
@@ -229,7 +228,7 @@ void page_dispenser::dispensing_end_admin()
     qDebug() << "volume dispensed" << p_page_idle->selectedProduct->getVolumeDispensedMl();
     if (p_page_idle->selectedProduct->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML && (p_page_idle->selectedProduct->getPaymentMethod()) == "tapTcp")
     {
-        ui->label_finishTransactionMessage->setText("Voiding payment");
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_finishTransactionMessage, "no_pay");
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         std::map<std::string, std::string> response;
         qDebug() << "dispense end: tap payment No volume dispensed.";
@@ -247,7 +246,11 @@ void page_dispenser::dispensing_end_admin()
     }
     else if ((p_page_idle->selectedProduct->getPaymentMethod() == "tapTcp") && p_page_idle->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
     {
-        ui->label_finishTransactionMessage->setText("Capturing payment: $" + QString::number(current_price, 'f', 2));
+
+        QString text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price" );
+
+        ui->label_finishTransactionMessage->setText(text.arg(QString::number(current_price, 'f', 2)));
+        // ui->label_finishTransactionMessage->setText("Capturing payment: $" + QString::number(current_price, 'f', 2));
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         if (CTROUTD != "")
         {
@@ -260,7 +263,7 @@ void page_dispenser::dispensing_end_admin()
         }
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     }
-    // ui->label_finishTransactionMessage->setText("");
+
     qDebug() << "Finished dispense admin handling";
     current_price = 0.0;
     if (askForFeedbackAtEnd)
@@ -375,19 +378,19 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
 
         if (dispenseStatus == "SLOT_STATE_WARNING_PRIMING")
         {
-            ui->label_dispense_message->setText("Please keep the button pressed.\nfor up to 15 seconds\nbefore the product starts dispensing.");
+            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "priming");
             p_page_idle->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
             ui->label_dispense_message->show();
         }
         else if (dispenseStatus == "SLOT_STATE_PROBLEM_EMPTY")
         {
-            ui->label_dispense_message->setText("It appears we're out of stock.");
+            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "out_of_stock");
             p_page_idle->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
             ui->label_dispense_message->show();
         }
         else if (dispenseStatus == "SLOT_STATE_PROBLEM_NEEDS_ATTENTION")
         {
-            ui->label_dispense_message->setText("We can't get the dispensing started.\nWe're empty or the pump needs help to prime.\nTap the problem button in case of other issues.");
+            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "needs_attention");
             p_page_idle->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
             ui->label_dispense_message->show();
         }
@@ -438,7 +441,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         ui->label_to_refill->hide();
         ui->label_instructions_container->hide();
 
-        ui->pushButton_abort->setText("Complete");
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_abort, "complete");
         ui->fill_animation_label->show();
         ui->pushButton_abort->raise();
         ui->pushButton_problems->raise();
@@ -528,7 +531,7 @@ void page_dispenser::on_pushButton_abort_clicked()
 
         p_page_idle->addCssClassToObject(msgBox_abort, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);
         msgBox_abort->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-        
+
         int ret = msgBox_abort->exec();
         bool success;
         switch (ret)

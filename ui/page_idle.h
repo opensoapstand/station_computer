@@ -82,7 +82,7 @@ public:
     void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
     QString getTemplateText(QString textName_to_find);
 
-    QString getTemplateTextByObjectPageAndName(QWidget *p_element);
+    QString getTemplateTextByElementNameAndPage(QWidget *p_element);
     void setTextToOjbect(QWidget *p_element, QString text);
 
 
@@ -109,7 +109,7 @@ public:
     QVideoWidget *videoWidget;
     QMediaPlayer *player;
 
-
+    QString getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_element, QString identifier);
     void setTemplateTextToObject(QWidget* p_element);
     void setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier);
 

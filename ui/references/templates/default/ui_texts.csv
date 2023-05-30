@@ -11,7 +11,8 @@
 # empty lines are also permitted
 
 #page_init
-page_select_product->label_init_message,soap,Wait for controller signal.
+page_init->label_init_message,soap,Wait for controller signal.
+page_init->label_fail_message,Timeout. No Response from controller. Will start standalone mode. If controller becomes active, commands will be executed. If not, no commands will be executed.
 
 # page_idle
 page_idle->label_welcome_message,Refill soap here!<br>Tap screen to start
@@ -48,7 +49,13 @@ page_dispenser->label_to_refill,to refill
 page_dispenser->label_instructions_container,bring container to nozzle
 page_dispenser->label_press,press and hold <br>the button
 page_dispenser->pushButton_problems,Tap here if you notice a problem.
-page_dispenser->pushButton_abort,Abort
+page_dispenser->pushButton_abort->abort,Abort
+page_dispenser->pushButton_abort->complete,Complete
+page_dispenser->label_finishTransactionMessage->no_pay,Voiding payment
+page_dispenser->label_finishTransactionMessage->display_price,Capturing payment: ${0}
+page_dispenser->label_dispense_message->priming,Please keep the button pressed.\nfor up to 15 seconds\nbefore the product starts dispensing.
+page_dispenser->label_dispense_message->out_of_stock,It appears we're out of stock.
+page_dispenser->label_dispense_message->needs_attention,We can't get the dispensing started.\nWe're empty or the pump needs help to prime.\nTap the problem button in case of other issues.
 page_dispenser->label_volume_dispensed,Volume dispensed
 page_dispenser->msgBox_problems->qr_tap,<p align=center><br><br>If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br><br><br>You will only be charged for the dispensed amount<br></p>
 page_dispenser->msgBox_problems->default,<p align=center><br>If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br><br><br>You will only be charged for the dispensed amount<br></p>

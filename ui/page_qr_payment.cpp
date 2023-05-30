@@ -161,11 +161,13 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->label_processing->setStyleSheet(styleSheet);
 
     state_payment = s_init;
-    QString price = QString::number(p_page_idle->selectedProduct->getPriceCorrected(), 'f', 2);
+    double originalPrice = p_page_idle->selectedProduct->getPrice();
     if (p_page_idle->selectedProduct->getSizeAsChar() == 'c')
     {
-        price = QString::number(p_page_idle->selectedProduct->getPriceCustom(), 'f', 2);
+        originalPrice = p_page_idle->selectedProduct->getPriceCustom();
     }
+    QString price = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(originalPrice), 'f', 2);
+
 
     ui->qrCode->show();
     ui->productLabel->show();
@@ -249,11 +251,13 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
     QString contents = p_page_idle->selectedProduct->getProductName();
     QString quantity_requested = p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(false, false);
     char drinkSize = p_page_idle->selectedProduct->getSizeAsChar();
-    QString price = QString::number(p_page_idle->selectedProduct->getPriceCorrected(), 'f', 2);
+    double originalPrice = p_page_idle->selectedProduct->getPriceCorrected();
     if (drinkSize == 'c')
     {
-        price = QString::number(p_page_idle->selectedProduct->getPriceCustom(), 'f', 2);
+        originalPrice = p_page_idle->selectedProduct->getPriceCustom();
     }
+
+    QString price = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(originalPrice), 'f', 2);
 
     // create a unique order id locally
     orderId = QUuid::createUuid().QUuid::toString();

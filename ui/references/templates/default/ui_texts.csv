@@ -10,6 +10,9 @@
 
 # empty lines are also permitted
 
+#page_init
+page_select_product->label_init_message,soap,Wait for controller signal.
+
 # page_idle
 page_idle->label_welcome_message,Refill soap here!<br>Tap screen to start
 page_idle->label_printer_status->offline,Assistance needed<br>Receipt Printer offline.

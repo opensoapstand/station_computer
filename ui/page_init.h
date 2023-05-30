@@ -40,7 +40,8 @@ public:
     void setPage(page_idle *pageIdle);
     void showEvent(QShowEvent *event);
     ~page_init();
-    void initReadySlot(void);
+    void hideCurrentPageAndShowProvided(QWidget *pageToShow);
+    void initReadySlot();
 
     df_util* dfUtility;
 

@@ -48,7 +48,7 @@ public:
 
     QMessageBox* msgBox_problems;
     QMessageBox* msgBox_abort;
-    QMessageBox* msgBox;
+    // QMessageBox* msgBox;
 
     // **** GUI ****
     explicit page_dispenser(QWidget *parent = nullptr);

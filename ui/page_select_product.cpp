@@ -121,12 +121,7 @@ void page_select_product::showEvent(QShowEvent *event)
     maintenanceCounter = 0;
 
 
-    if (productPageEndTimer == nullptr)
-    {
-        productPageEndTimer = new QTimer(this);
-        productPageEndTimer->setInterval(1000);
-        connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
-    }
+   
 
     productPageEndTimer->start(1000);
     _productPageTimeoutSec = 15;

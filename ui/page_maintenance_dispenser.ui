@@ -16,7 +16,7 @@
   <widget class="QPushButton" name="backButton">
    <property name="geometry">
     <rect>
-     <x>140</x>
+     <x>160</x>
      <y>1730</y>
      <width>821</width>
      <height>161</height>
@@ -30,7 +30,7 @@
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>690</y>
+     <y>510</y>
      <width>531</width>
      <height>31</height>
     </rect>
@@ -43,7 +43,7 @@
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>820</y>
+     <y>650</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -82,7 +82,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>680</y>
+     <y>500</y>
      <width>141</width>
      <height>51</height>
     </rect>
@@ -95,10 +95,13 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>810</y>
+     <y>640</y>
      <width>141</width>
      <height>51</height>
     </rect>
+   </property>
+   <property name="accessibleName">
+    <string>price_medium</string>
    </property>
    <property name="text">
     <string>Medium Price</string>
@@ -116,6 +119,9 @@
      <height>91</height>
     </rect>
    </property>
+   <property name="accessibleName">
+    <string>volume_per_tick</string>
+   </property>
    <property name="text">
     <string>Set DB
 Volume per Tick</string>
@@ -125,7 +131,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>760</y>
+     <y>590</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -138,10 +144,13 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>750</y>
+     <y>580</y>
      <width>141</width>
      <height>51</height>
     </rect>
+   </property>
+   <property name="accessibleName">
+    <string>price_small</string>
    </property>
    <property name="text">
     <string>Small Price</string>
@@ -206,6 +215,9 @@ Volume per Tick</string>
      <height>51</height>
     </rect>
    </property>
+   <property name="accessibleName">
+    <string>full</string>
+   </property>
    <property name="text">
     <string>Set Full Volume</string>
    </property>
@@ -235,9 +247,15 @@ Volume per Tick</string>
      <height>51</height>
     </rect>
    </property>
+   <property name="accessibleName">
+    <string>modify_stock</string>
+   </property>
    <property name="text">
     <string>Adjust Remaining Volume</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
   </widget>
   <widget class="QLabel" name="label_volume_dispensed_total">
    <property name="geometry">
@@ -325,6 +343,9 @@ Volume per Tick</string>
      <width>141</width>
      <height>91</height>
     </rect>
+   </property>
+   <property name="accessibleName">
+    <string>pwm</string>
    </property>
    <property name="text">
     <string> Pump Speed:</string>
@@ -630,14 +651,43 @@ Volume per Tick</string>
     <string>Ticks</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="testSmallButton">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>990</y>
+     <width>90</width>
+     <height>90</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Test Small</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="testLargeButton">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>990</y>
+     <width>90</width>
+     <height>90</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Test Large</string>
+   </property>
+  </widget>
   <widget class="QPushButton" name="target_volumeButton_s">
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>750</y>
+     <y>580</y>
      <width>141</width>
      <height>51</height>
     </rect>
+   </property>
+   <property name="accessibleName">
+    <string>target_s</string>
    </property>
    <property name="text">
     <string>Small
@@ -651,7 +701,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>570</x>
-     <y>760</y>
+     <y>590</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -664,10 +714,13 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>810</y>
+     <y>640</y>
      <width>141</width>
      <height>51</height>
     </rect>
+   </property>
+   <property name="accessibleName">
+    <string>target_m</string>
    </property>
    <property name="text">
     <string>Medium
@@ -681,7 +734,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>570</x>
-     <y>820</y>
+     <y>650</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -843,7 +896,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>890</y>
+     <y>720</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -856,10 +909,13 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>880</y>
+     <y>710</y>
      <width>141</width>
      <height>51</height>
     </rect>
+   </property>
+   <property name="accessibleName">
+    <string>price_large</string>
    </property>
    <property name="text">
     <string>Large Price</string>
@@ -872,7 +928,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>880</y>
+     <y>710</y>
      <width>141</width>
      <height>51</height>
     </rect>
@@ -892,7 +948,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>570</x>
-     <y>890</y>
+     <y>720</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -905,7 +961,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>220</x>
-     <y>960</y>
+     <y>790</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -918,10 +974,13 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>950</y>
+     <y>780</y>
      <width>171</width>
      <height>51</height>
     </rect>
+   </property>
+   <property name="accessibleName">
+    <string>price_custom</string>
    </property>
    <property name="text">
     <string>Custom Price (per ml)</string>
@@ -934,7 +993,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>730</x>
-     <y>730</y>
+     <y>640</y>
      <width>141</width>
      <height>51</height>
     </rect>
@@ -950,7 +1009,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>730</x>
-     <y>800</y>
+     <y>710</y>
      <width>141</width>
      <height>51</height>
     </rect>
@@ -966,7 +1025,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>880</x>
-     <y>810</y>
+     <y>720</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -979,7 +1038,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>880</x>
-     <y>740</y>
+     <y>650</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -992,7 +1051,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>730</x>
-     <y>670</y>
+     <y>580</y>
      <width>141</width>
      <height>51</height>
     </rect>
@@ -1008,7 +1067,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>880</x>
-     <y>880</y>
+     <y>790</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -1021,7 +1080,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>880</x>
-     <y>680</y>
+     <y>590</y>
      <width>190</width>
      <height>31</height>
     </rect>
@@ -1034,7 +1093,7 @@ Volume per Tick</string>
    <property name="geometry">
     <rect>
      <x>730</x>
-     <y>880</y>
+     <y>790</y>
      <width>141</width>
      <height>51</height>
     </rect>

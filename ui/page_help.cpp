@@ -40,6 +40,8 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     helpIdleTimer = new QTimer(this);
     helpIdleTimer->setInterval(1000);
     connect(helpIdleTimer, SIGNAL(timeout()), this, SLOT(onHelpTimeoutTick()));
+ 
+
 
     connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
 }
@@ -100,12 +102,8 @@ void page_help::showEvent(QShowEvent *event)
         ui->html_textBrowser->hide();
     }
 
-    if (helpIdleTimer == nullptr)
-    {
-        helpIdleTimer = new QTimer(this);
-        helpIdleTimer->setInterval(1000);
-        connect(helpIdleTimer, SIGNAL(timeout()), this, SLOT(onHelpTimeoutTick()));
-    }
+   
+   
 
     helpIdleTimer->start(1000);
     _helpIdleTimeoutSec = 60;

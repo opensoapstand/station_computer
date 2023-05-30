@@ -48,12 +48,14 @@ QLabel {
    border: none;
 }
 
-#notifyUs_Button{
+#notifyUs_Button {
    color: #003840;
    background-color: #FFFFFF;
    border: 0px;
    text-align: centre;
    border-radius: 20px;
    border: none;
+   font-family: Brevia;
+   font-size: 20pt;
+   font-weight: 500;
 }
-

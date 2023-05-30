@@ -191,15 +191,8 @@ void page_product_overview::reset_and_show_page_elements()
     p_page_idle->setTemplateTextToObject(ui->label_discount_tag);
     p_page_idle->setTemplateTextToObject(ui->label_pay);
     p_page_idle->setTemplateTextToObject(ui->label_total);
-    //  ui->label_pay->setText("Continue");
-    // ui->label_total->setText("Total");
-
-    //ui->label_discount_tag->setText("Discount");
-
 
     QString bitmap_location;
-    // ui->label_product_title->setText(selectedProductOrder->getSelectedProductName());
-    // ui->label_product_description->setText(selectedProductOrder->getLoadedProductDescription());
     p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->selectedProduct->getProductPicturePath());
     ui->label_selected_price->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(), 'f', 2));
     qDebug() << "Selected size" << p_page_idle->selectedProduct->getVolume();
@@ -209,10 +202,8 @@ void page_product_overview::reset_and_show_page_elements()
 
     updatePrice();
     ui->label_invoice_name->setText(p_page_idle->selectedProduct->getProductName());
-    // ui->label_price_large->setText(selected_volume + " " + p_page_idle->selectedProduct->getUnitsForSelectedSlot());
 
     // Reset the discount percentage to 0 and clear promo code field
-
     // ui->lineEdit_promo_code->clear();
 
     ui->promoKeyboard->hide();
@@ -220,11 +211,10 @@ void page_product_overview::reset_and_show_page_elements()
     {
 
     //    ui->lineEdit_promo_code->setText("Tap here to enter promo code");
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code,"cupons_enable");
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code,"coupons_enable");
 
         ui->lineEdit_promo_code->show();
         if(p_page_idle->isPromoApplied()){
-            //ui->lineEdit_promo_code->setText("Promo Code Valid");
             p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code,"valid");
 
         }

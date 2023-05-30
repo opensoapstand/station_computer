@@ -127,11 +127,8 @@ void page_idle::showEvent(QShowEvent *event)
     }
 
     this->lower();
-    qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
-    QWidget::showEvent(event);
 
     setTemplateTextToObject(ui->label_welcome_message);
-
     addCompanyLogoToLabel(ui->logo_label);
 
     ui->label_printer_status->hide(); // always hide here, will show if enabled and has problems.
@@ -361,13 +358,6 @@ bool page_idle::isEnough(int p)
     return false;
 }
 
-void page_idle::addCssClassToObject(QWidget *element, QString classname, QString css_file_name)
-{
-    QString styleSheet = getCSS(css_file_name);
-    element->setProperty("class", classname);
-    element->setStyleSheet(styleSheet);
-}
-
 void page_idle::addCompanyLogoToLabel(QLabel *label)
 {
     qDebug() << "db init company logo";
@@ -401,6 +391,13 @@ void page_idle::addPictureToLabel(QLabel *label, QString picturePath)
 QString page_idle::getTemplateFolder()
 {
     return m_templatePath;
+}
+
+void page_idle::addCssClassToObject(QWidget *element, QString classname, QString css_file_name)
+{
+    QString styleSheet = getCSS(css_file_name);
+    element->setProperty("class", classname);
+    element->setStyleSheet(styleSheet);
 }
 
 QString page_idle::getCSS(QString cssName)
@@ -487,9 +484,14 @@ void page_idle::setTemplateTextToObject(QWidget *p_element)
 
 QString page_idle::getTemplateTextByObjectPageAndName(QWidget *p_element)
 {
-    QWidget *parentWidget = p_element->parentWidget();
-    QString pageName = parentWidget->objectName();
     QString elementName = p_element->objectName();
+    QWidget *parentWidget = p_element->parentWidget();
+
+    if (!parentWidget) {
+        qDebug()<< "No parent for the provide widget!! " <<  elementName ;
+    }
+
+    QString pageName = parentWidget->objectName();
 
     QString searchString = pageName + "->" + elementName;
     return getTemplateText(searchString);
@@ -522,6 +524,8 @@ void page_idle::setTemplateTextWithIdentifierToObject(QWidget *p_element, QStrin
     QString text = getTemplateText(searchString);
     setTextToOjbect(p_element, text);
 }
+
+// get a text that is not linked to an elements on a specific page by its identifier
 QString page_idle::getTemplateTextByPage(QWidget *page, QString identifier)
 {
     QString pageName = page->objectName();

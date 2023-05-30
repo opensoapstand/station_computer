@@ -77,6 +77,13 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
         msgBox->hide();
         msgBox->deleteLater();
     }
+
+    if (msgBox_abort != nullptr)
+    {
+        msgBox_abort->hide();
+        msgBox_abort->deleteLater();
+    }
+    
     if (msgBox_problems != nullptr)
     {
         msgBox_problems->hide();
@@ -90,12 +97,11 @@ void page_dispenser::showEvent(QShowEvent *event)
     qDebug() << "<<<<<<< Page Enter: Dispenser >>>>>>>>>";
     qDebug() << "Selected slot: " << QString::number(p_page_idle->selectedProduct->getSlot());
     QWidget::showEvent(event);
-    
+
     p_page_idle->setTemplateTextToObject(ui->label_to_refill);
     p_page_idle->setTemplateTextToObject(ui->label_instructions_container);
     p_page_idle->setTemplateTextToObject(ui->label_press);
     p_page_idle->setTemplateTextToObject(ui->pushButton_problems);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_report);
     p_page_idle->setTemplateTextToObject(ui->pushButton_abort);
     p_page_idle->setTemplateTextToObject(ui->label_volume_dispensed);
 
@@ -113,7 +119,6 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->label_dispense_message->setStyleSheet(styleSheet);
     ui->label_volume_dispensed->setProperty("class", "normal");
     ui->pushButton_problems->setStyleSheet(styleSheet);
-    ui->pushButton_report->setStyleSheet(styleSheet);
     transactionLogging += "\n 6: Station Unlocked - True";
 
     // important to set to nullptr, to check at timeout if it was initialized (displayed...) or not.
@@ -158,7 +163,6 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     ui->label_dispense_message->hide();
     ui->pushButton_problems->show();
-    ui->pushButton_report->hide();
 
     dispenseIdleTimer->start(1000);
     resetDispenseTimeout();
@@ -179,21 +183,19 @@ void page_dispenser::showEvent(QShowEvent *event)
     this->isDispensing = true;
     qDebug() << "Dispensing started.";
 
+    //     QMessageBox msgBox(QMessageBox::Question, "Title", "Message", QMessageBox::Yes | QMessageBox::No, this);
+    //     msgBox.setStyleSheet("/* Your custom stylesheet */");
 
-//     QMessageBox msgBox(QMessageBox::Question, "Title", "Message", QMessageBox::Yes | QMessageBox::No, this);
-//     msgBox.setStyleSheet("/* Your custom stylesheet */");
+    //     // Customize the QMessageBox properties
+    //     msgBox.setIconPixmap(QPixmap("path/to/icon.png"));
+    //     msgBox.setWindowTitle("Custom Title");
+    //     msgBox.setText("Custom Message");
+    //     msgBox.setInformativeText("Custom Informative Text");
 
-//     // Customize the QMessageBox properties
-//     msgBox.setIconPixmap(QPixmap("path/to/icon.png"));
-//     msgBox.setWindowTitle("Custom Title");
-//     msgBox.setText("Custom Message");
-//     msgBox.setInformativeText("Custom Informative Text");
-
-//     // Display the customized QMessageBox and retrieve the result
-//     int result = msgBox.exec();
-//     QString sss = msgBox.styleSheet();
-// qDebug() << "Style sheet: " << sss;
-
+    //     // Display the customized QMessageBox and retrieve the result
+    //     int result = msgBox.exec();
+    //     QString sss = msgBox.styleSheet();
+    // qDebug() << "Style sheet: " << sss;
 }
 
 void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
@@ -511,27 +513,26 @@ void page_dispenser::on_pushButton_abort_clicked()
     transactionLogging += "\n 7: Complete Button - True";
     if (p_page_idle->selectedProduct->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML)
     {
-        msgBox = new QMessageBox();
-        msgBox->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+        msgBox_abort = new QMessageBox();
+        msgBox_abort->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
         QString payment = p_page_idle->selectedProduct->getPaymentMethod();
         if (payment == "qr" || payment == "tapTcp")
         {
-            msgBox->setText("<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine. \
+            msgBox_abort->setText("<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine. \
                                 If you press Yes, you will not be charged for the order.<br></p>");
         }
         else
         {
-            msgBox->setText("<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine.<br></p>");
+            msgBox_abort->setText("<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine.<br></p>");
         }
 
         QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
-        msgBox->setProperty("class", "msgBoxbox msgBoxbutton"); // set property goes first!!
-        msgBox->setStyleSheet(styleSheet);
+        msgBox_abort->setProperty("class", "msgBoxbox msgBoxbutton"); // set property goes first!!
+        msgBox_abort->setStyleSheet(styleSheet);
 
-        msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-        int ret = msgBox->exec();
+        msgBox_abort->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        int ret = msgBox_abort->exec();
         bool success;
-        // qDebug() << "***********************************";
         switch (ret)
         {
         case QMessageBox::Yes:
@@ -574,25 +575,26 @@ void page_dispenser::on_pushButton_problems_clicked()
 {
 
     msgBox_problems = new QMessageBox();
-    msgBox_problems->setParent(this);
     msgBox_problems->setObjectName("msgBox_problems");
     msgBox_problems->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
-    msgBox_problems->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
     QString payment = p_page_idle->selectedProduct->getPaymentMethod();
+
     if (payment == "qr" || payment == "tapTcp")
     {
         p_page_idle->setTemplateTextWithIdentifierToObject(msgBox_problems, "qr_tap");
+
+        QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";
+        p_page_idle->setTextToOjbect(msgBox_problems,  p_page_idle->getTemplateText(searchString));
     }
     else
     {
-        p_page_idle->setTemplateTextWithIdentifierToObject(msgBox_problems, "default");
+        QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "default";
+        p_page_idle->setTextToOjbect(msgBox_problems,  p_page_idle->getTemplateText(searchString));
     }
 
-    p_page_idle->addCssClassToObject(msgBox_problems, "msgBoxbox msgBoxbutton", PAGE_DISPENSER_CSS);
-    // QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
-    // msgBox_problems->setProperty("class", "msgBoxbox msgBoxbutton"); // set property goes first!!
-    // msgBox_problems->setStyleSheet(styleSheet);
+    p_page_idle->addCssClassToObject(msgBox_problems, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);
+    msgBox_problems->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
     int ret = msgBox_problems->exec();
     bool success;
@@ -616,9 +618,3 @@ void page_dispenser::on_pushButton_problems_clicked()
     }
     }
 }
-
-void page_dispenser::on_pushButton_report_clicked()
-{
-}
-
-

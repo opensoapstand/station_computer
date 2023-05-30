@@ -12,31 +12,6 @@
    border: none;
 }
 
-#pushButton_debug_Button {
-
-   color: #5E8580;
-   background-color: transparent;
-   border: 5px;
-   border-color: #5E8580;
-}
-
-#pushButton_abort {
-
-   font-family: 'Brevia';
-   font-style: normal;
-   font-weight: 100;
-   background-color: #5E8580;
-   font-size: 42px;
-   text-align: centre;
-   line-height: auto;
-   letter-spacing: 0px;
-   qproperty-alignment: AlignCenter;
-   border-radius: 20px;
-   color: white;
-   border: none;
-
-}
-
 .label_volume_dispensed_ml {
 
 
@@ -149,10 +124,19 @@
    border: none;
 }
 
-#pushButton_report {
+#pushButton_debug_Button {
+
+   color: #5E8580;
+   background-color: transparent;
+   border: 5px;
+   border-color: #5E8580;
+}
+
+#pushButton_abort {
+
    font-family: 'Brevia';
    font-style: normal;
-   font-weight: 75;
+   font-weight: 100;
    background-color: #5E8580;
    font-size: 42px;
    text-align: centre;
@@ -164,48 +148,31 @@
    border: none;
 
 }
- 
-QMessageBox {
-   background-color: rgb(218, 217, 217);
-   text-align: center;
-   color: black;
 
+QPushButton {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 50;
+   font-size: 32px;
+   color: #003840;
+   background-color: #FFFFFF;
+   border: 0px;
+   text-align: centre;
+   border-radius: 20px;
+   border: none;
+  
 }
 
-QMessageBox.msgBoxbox {
+QMessageBox {
    min-width: 7000px;
    font-size: 24px;
    font-weight: bold;
    font-style: normal;
    font-family: 'Montserrat';
-   /* Additional styles specific to QMessageBox */
 }
 
-QPushButton::menu-indicator {
-   subcontrol-position: right center;
-   subcontrol-origin: padding;
-   right: 0px;
-   color: black;
-}
-
- QMessageBox.msgBoxbutton QPushButton {
-   /* Additional styles specific to QPushButton within QMessageBox */
-   /* font-size: 24px; */
-   min-width: 300px; 
+QMessageBox.msgBoxbutton QPushButton{
+   font-size: 24px;
+   min-width: 300px;
    min-height: 300px;
-   /* color: rgb(228, 20, 20); */
-   /* text-align: center; */
-
-   background-color: palette(button);
-   border: 1px solid palette(mid);
-   padding: 4px 10px;
-   font-size: 12px;
-   /* min-width: 70px; */
-   /* min-height: 20px; */
-
-} 
-
-QLabel {
-   /*this label controls the color of the checkbox */
-   color: black;
 }

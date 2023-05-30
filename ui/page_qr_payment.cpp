@@ -447,8 +447,6 @@ bool page_qr_payment::exitConfirm()
 {
     qDebug() << "In exit confirm";
     QMessageBox msgBox;
-    //     msgBox = nullptr;
-    // msgBox = new QMessageBox();
     msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
     if (state_payment == s_payment_processing || state_payment == s_payment_done)
     {
@@ -459,11 +457,7 @@ bool page_qr_payment::exitConfirm()
         msgBox.setText("<p align=center><br><br>Are you sure you want to cancel this order?<br><br>The QR code won't be valid anymore if this order is cancelled.<br><br>In case a payment was made with an invalid QR code or cancelled order, a refund will be issued within 24-48 hours. <br></p>");
     }
     QString styleSheet = p_page_idle->getCSS(PAGE_QR_PAYMENT_CSS);
-
-    // msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
-
     msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
-
     msgBox.setStyleSheet(styleSheet);
 
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);

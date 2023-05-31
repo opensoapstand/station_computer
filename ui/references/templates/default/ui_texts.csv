@@ -36,6 +36,7 @@ page_select_product->available,
 page_product->pushButton_back,<- Products
 page_product->label_select_quantity,Select Quantity
 page_product->pushButton_continue,Continue
+page_product->custom_volume,Custom Volume
 
 # page_product_overview
 page_product_overview->pushButton_select_product_page,<- Back

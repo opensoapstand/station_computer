@@ -99,7 +99,6 @@ void page_init::onInitTimeoutTick()
 {
     if (--_initIdleTimeoutSec >= 0)
     {
-        //        qDebug() << "init: Tick Down - " << _initIdleTimeoutSec;
         ui->label_init_message->setText(ui->label_init_message->text() + ".");
     }
     else

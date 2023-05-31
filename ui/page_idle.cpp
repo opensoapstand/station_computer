@@ -178,7 +178,7 @@ void page_idle::showEvent(QShowEvent *event)
     // video_label = new QLabel(ui->video_player);
     video_label->setObjectName(QStringLiteral("video testset"));
     video_label->setGeometry(QRect(0, 0, 100, 31));
-    video_label->setText("lode was here. And Ash too");
+    video_label->setText("test");
     video_label->raise();
     video_label->show();
 

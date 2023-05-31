@@ -27,23 +27,21 @@ QLabel {
     font-family: 'EuropaNuova';
     font-style: normal;
     font-weight: 700;
-    font-size: 32px;
-    letter-spacing: 5px;
+    font-size: 65px;
     color: white;
     text-align: center;
     qproperty-alignment: AlignCenter;
-    border: none; 
+    border: none;
 }
 
-
 .label_product_name {
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 28px;
     line-height: 36px;
     qproperty-alignment: AlignCenter;
-    color: #003840;
+    font-family: 'EuropaNuova';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    color: #221F20;
 }
 
 .PushButton_selection {
@@ -53,33 +51,23 @@ QLabel {
 
 .label_product_overlay_available {
     background-color: transparent;
+    color: #003840;
 }
-
 
 .label_product_oberlay_sold_out {
     background-color: rgba(0, 0, 0, 80);
 }
 
-#label_product_1_icon{
-    display: none;
-    visibility: hidden;
-    background-image: none;
-    color: transparent;
-    background: yellow;
-    padding: 10px;
-}
-
 .label_product_type {
-    font-family: 'Brevia';
-    font-style: normal;
+    font-family: 'EuropaNuova';
     font-weight: 700;
-    font-size: 30px;
-    line-height: 41px;
+    font-size: 37px;
+    line-height: 49px;
     qproperty-alignment: AlignCenter;
-    text-transform: uppercase;
-    color: #5E8580;
+    /* text-transform: uppercase; */
+    color: #5E826A;
 }
 
 .label_product_photo {
-    border: 1px solid black;
+    /* border: 1px solid black;  */
 }

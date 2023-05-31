@@ -119,7 +119,9 @@ using namespace std;
 #define ICON_TYPE_DISH_PATH                             "Soapstand-UI-icon-dish.png"
 #define ICON_TYPE_HAND_PATH                             "Soapstand-UI-icon-hand-soap.png"
 #define ICON_TYPE_LAUNDRY_PATH                          "Soapstand-UI-icon-laundry.png"
+#define ICON_TYPE_KOMBUCHA_PATH                         "Soapstand-UI-icon-kombucha.png"
 #define ICON_TYPE_MOCKTAIL_PATH                         "Soapstand-UI-icon-mocktail.png"
+#define ICON_TYPE_JUICE_PATH                            "Soapstand-UI-icon-juice.png"
 
 #define PAGE_HELP_BACKGROUND_PATH                       "background_generic_white_empty.png"
 

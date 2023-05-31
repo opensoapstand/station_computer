@@ -164,18 +164,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     p_page_idle->selectedProduct->resetVolumeDispensed();
     updatelabel_volume_dispensed_ml(p_page_idle->selectedProduct->getVolumeDispensedMl());
 
-    QString dispenseCommand = getStartDispensingCommand();
-    QString priceCommand = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(p_page_idle->selectedProduct->getPrice()));
-    QString promoCommand = p_page_idle->getPromoCode();
-
-    QString delimiter = QString("|");
-    QString preamble = "Order";
-    QString command = preamble + delimiter + dispenseCommand + delimiter + priceCommand + delimiter + promoCommand + delimiter;
-
-    qDebug() << "Send start command to FSM: " << command;
-    p_page_idle->dfUtility->send_command_to_FSM(command);
-    this->isDispensing = true;
-    qDebug() << "Dispensing started.";
+    fsmSendStartDispensing();
 }
 
 void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
@@ -292,10 +281,18 @@ QString page_dispenser::getStartDispensingCommand()
 
 void page_dispenser::fsmSendStartDispensing()
 {
-    qDebug() << "Send Start dispensing to fsm";
-    p_page_idle->dfUtility->send_command_to_FSM(getStartDispensingCommand());
+    QString dispenseCommand = getStartDispensingCommand();
+    QString priceCommand = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(p_page_idle->selectedProduct->getPrice()));
+    QString promoCommand = p_page_idle->getPromoCode();
 
+    QString delimiter = QString("|");
+    QString preamble = "Order";
+    QString command = preamble + delimiter + dispenseCommand + delimiter + priceCommand + delimiter + promoCommand + delimiter;
+
+    qDebug() << "Send start command to FSM: " << command;
+    p_page_idle->dfUtility->send_command_to_FSM(command);
     this->isDispensing = true;
+    qDebug() << "Dispensing started.";
 }
 
 void page_dispenser::fsmSendStopDispensing()

@@ -27,19 +27,9 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     // Fullscreen background setup
     ui->setupUi(this);
 
-    DbManager db(DB_PATH);
-    bool showTransactions = db.showTransactions();
-    db.closeDB();
-
-    if (!showTransactions)
-    {
-        ui->pushButton_to_transactions->hide();
-    }
-
     helpIdleTimer = new QTimer(this);
     helpIdleTimer->setInterval(1000);
     connect(helpIdleTimer, SIGNAL(timeout()), this, SLOT(onHelpTimeoutTick()));
- 
     connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
 }
 
@@ -57,6 +47,13 @@ void page_help::setPage(page_select_product *pageSelect, page_product *page_prod
     this->p_page_select_product = pageSelect;
     this->p_page_transactions = pageTransactions;
     this->p_page_maintenance = pageMaintenance;
+}
+
+void page_help::showEvent(QShowEvent *event)
+{
+
+    qDebug() << "<<<<<<< Page Enter: Help >>>>>>>>>";
+    QWidget::showEvent(event);
 
     QString styleSheet = p_page_idle->getCSS(PAGE_HELP_CSS);
 
@@ -69,67 +66,49 @@ void page_help::setPage(page_select_product *pageSelect, page_product *page_prod
     ui->pushButton_resetTimeout->setStyleSheet(styleSheet);
     ui->pushButton_to_maintenance->setStyleSheet(styleSheet);
     ui->pushButton_to_feedback->setStyleSheet(styleSheet);
-    // QString buttonSelector2 = QString("QPushButton#%1").arg(ui->pushButton_back->objectName());
 
-    // QString styleSheet = p_page_idle->getCSS(PAGE_HELP_CSS);
-
-    // p_page_idle->setTemplateTextToObject(ui->pushButton_to_transactions);
-    // p_page_idle->setTemplateTextToObject(ui->pushButton_to_maintenance);
-    // p_page_idle->setTemplateTextToObject(ui->pushButton_to_feedback);
-    // p_page_idle->setTemplateTextToObject(ui->pushButton_to_idle);
-    // p_page_idle->setTemplateTextToObject(ui->label_keyboardInfo);
-    
-    
-    //ui->pushButton_to_transactions->setText("Transaction History ->");
-    //ui->pushButton_to_maintenance->setText("Settings");
-    //ui->pushButton_to_feedback->setText("Contact Us");
-    //ui->pushButton_to_idle->setText("<-back");
-    //ui->label_keyboardInfo->setText("Enter password followed by the \"Done\" key to enter maintenance mode");
-    
-
-}
-
-void page_help::showEvent(QShowEvent *event)
-{
     p_page_idle->setTemplateTextToObject(ui->pushButton_to_transactions);
     p_page_idle->setTemplateTextToObject(ui->pushButton_to_maintenance);
     p_page_idle->setTemplateTextToObject(ui->pushButton_to_feedback);
     p_page_idle->setTemplateTextToObject(ui->pushButton_to_idle);
     p_page_idle->setTemplateTextToObject(ui->label_keyboardInfo);
-    
-    qDebug() << "<<<<<<< Page Enter: Help >>>>>>>>>";
-    QWidget::showEvent(event);
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_PATH);
 
     DbManager db(DB_PATH);
     maintenance_pwd = db.getMaintenanceAdminPassword();
     help_text_html = db.getHelpPageHtmlText();
+    if (db.showTransactions())
+    {
+        ui->pushButton_to_transactions->show();
+    }
+    else
+    {
+        ui->pushButton_to_transactions->hide();
+    }
     db.closeDB();
-    if(help_text_html!=""){
+
+    if (help_text_html != "")
+    {
         ui->html_textBrowser->setHtml(help_text_html);
     }
-    else{
+    else
+    {
         ui->html_textBrowser->hide();
     }
-
-   
-   
 
     helpIdleTimer->start(1000);
     _helpIdleTimeoutSec = 60;
     ui->keyboard_3->hide();
+    ui->keyboardTextEntry->setText("");
 }
+
 void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     helpIdleTimer->stop();
-    ui->keyboardTextEntry->setText("");
     ui->keyboard_3->hide();
     p_page_idle->pageTransition(this, pageToShow);
 }
-/*
- * Page Tracking reference
- */
 
 void page_help::on_pushButton_to_idle_clicked()
 {

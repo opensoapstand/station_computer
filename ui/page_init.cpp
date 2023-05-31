@@ -24,7 +24,6 @@ page_init::page_init(QWidget *parent) : QWidget(parent),
 {
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
-   
 
     // IPC Networking
     dfUtility = new df_util();
@@ -55,6 +54,11 @@ void page_init::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: Init >>>>>>>>>";
     QWidget::showEvent(event);
+    
+    // load template texts 
+    p_page_idle->loadTextsFromTemplateCsv();
+    p_page_idle->loadTextsFromDefaultCsv();
+
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_INIT_BACKGROUND_IMAGE_PATH);
 
 

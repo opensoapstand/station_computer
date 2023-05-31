@@ -379,6 +379,7 @@ void page_product::reset_and_show_page_elements()
 
                 p_page_idle->selectedProduct->getCustomDiscountDetails(&large_volume_discount_is_enabled, &min_volume_for_discount, &discount_price_per_liter);
                 orderSizeLabelsVolume[i]->setText("Custom Volume");
+                p_page_idle->getTemplateTextByElementNameAndPage(orderSizeLabelsVolume[i]);
 
                 QString units = p_page_idle->selectedProduct->getUnitsForSlot();
                 QString units_discount_indication = p_page_idle->selectedProduct->getUnitsForSlot();

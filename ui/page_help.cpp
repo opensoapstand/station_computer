@@ -27,7 +27,6 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     // Fullscreen background setup
     ui->setupUi(this);
 
-
     DbManager db(DB_PATH);
     bool showTransactions = db.showTransactions();
     db.closeDB();
@@ -41,8 +40,6 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     helpIdleTimer->setInterval(1000);
     connect(helpIdleTimer, SIGNAL(timeout()), this, SLOT(onHelpTimeoutTick()));
  
-
-
     connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
 }
 

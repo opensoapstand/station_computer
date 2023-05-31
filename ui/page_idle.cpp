@@ -36,14 +36,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     // IPC Networking
     dfUtility = new df_util();
 
-    // for products.cpp
-    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
-    {
-        products[slot_index].setSlot(slot_index + 1);
-        products[slot_index].load();
-    }
-
-    setSelectedProduct(0);
+  
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
 
@@ -85,6 +78,18 @@ void page_idle::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
     QWidget::showEvent(event);
+
+
+      // for products.cpp
+    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    {
+        products[slot_index].setSlot(slot_index + 1);
+        products[slot_index].load();
+    }
+
+    setSelectedProduct(0);
+
+    
 
     // get the texts from csv
     loadTextsFromTemplateCsv();

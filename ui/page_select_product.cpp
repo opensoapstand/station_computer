@@ -220,8 +220,7 @@ void page_select_product::displayProducts()
         QString icon_path_with_template = p_page_idle->getTemplatePathFromName(icon_path);
 
         p_page_idle->addPictureToLabel(labels_product_icon[i], icon_path_with_template);
-        // labels_product_icon[i]->setText(""); // icon should not display text.
-        labels_product_icon[i]->setText(p_page_idle->getTemplateTextByPage(this, "no_text"));
+        // labels_product_icon[i]->setText(p_page_idle->getTemplateTextByPage(this, "no_text"));
 
         // pushButtons_product_select[i]->setStyleSheet(styleSheet); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
         // pushButtons_product_select[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget

@@ -95,6 +95,9 @@ void page_idle::showEvent(QShowEvent *event)
     loadTextsFromTemplateCsv();
     loadTextsFromDefaultCsv();
 
+
+
+
     QString styleSheet = getCSS(PAGE_IDLE_CSS);
     ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
     ui->label_welcome_message->setStyleSheet(styleSheet);

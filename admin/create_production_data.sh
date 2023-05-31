@@ -67,7 +67,7 @@ scp /home/df-admin/drinkfill/ui/payment/public_key.txt /home/df-admin/production
 sudo -u df-admin rm -r /home/df-admin/production/db
 sudo -u df-admin scp -r $BKP_PATH/db /home/df-admin/production
 
-echo "Done. NOTE: the database was not copied from the drinkfill folder. It was preserved from the previous production folder. Copy the db manually from db if needed."
+echo "Done. NOTE: the database was not copied from the drinkfill folder. It was preserved from the previous production folder. Copy the db manually from drinkfill if needed."
 
 ## ask for db to be copied from drinkfill to production. By default: NO! 
 #read -p "Copy database? [y] for yes. [enter,anykey] for no:" -n 1 -r

@@ -128,6 +128,9 @@ void page_idle::showEvent(QShowEvent *event)
 
     this->lower();
 
+    // template text with argument demo
+    //QString base_text = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_welcome_message, "testargument" );
+    //ui->label_welcome_message->setText(base_text.arg("SoAp")); // will replace %1 character in string by the provide text
     setTemplateTextToObject(ui->label_welcome_message);
     addCompanyLogoToLabel(ui->logo_label);
 

@@ -247,10 +247,9 @@ void page_dispenser::dispensing_end_admin()
     else if ((p_page_idle->selectedProduct->getPaymentMethod() == "tapTcp") && p_page_idle->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
     {
 
-        QString text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price" );
-
-        ui->label_finishTransactionMessage->setText(text.arg(QString::number(current_price, 'f', 2)));
-        // ui->label_finishTransactionMessage->setText("Capturing payment: $" + QString::number(current_price, 'f', 2));
+        
+        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price" );
+        ui->label_finishTransactionMessage->setText(base_text.arg(QString::number(current_price, 'f', 2))); // will replace %1 character in string by the provide text
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         if (CTROUTD != "")
         {

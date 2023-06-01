@@ -47,7 +47,8 @@ class page_dispenser : public QWidget
 public:
 
     QMessageBox* msgBox_problems;
-    QMessageBox* msgBox;
+    QMessageBox* msgBox_abort;
+    // QMessageBox* msgBox;
 
     // **** GUI ****
     explicit page_dispenser(QWidget *parent = nullptr);
@@ -96,8 +97,6 @@ private slots:
     void on_cancelButton_clicked();
     void on_pushButton_debug_Button_clicked();
     void on_pushButton_problems_clicked();
-
-    void on_pushButton_report_clicked();
 
 private:
     bool isDispensing;

@@ -189,7 +189,8 @@ void page_tap_payment::resizeEvent(QResizeEvent *event)
 
 void page_tap_payment::showEvent(QShowEvent *event)
 {
-
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    QWidget::showEvent(event);
 
     QString styleSheet = p_page_idle->getCSS(PAGE_TAP_PAYMENT_CSS);
 
@@ -203,8 +204,6 @@ void page_tap_payment::showEvent(QShowEvent *event)
     
 
 
-    qDebug() << "<<<<<<< Page Enter: Tap Payment >>>>>>>>>";
-    QWidget::showEvent(event);
     state_tap_payment = s_tap_init;
 
     qDebug() << "Init tap";
@@ -242,7 +241,8 @@ void page_tap_payment::storePaymentEvent(QSqlDatabase db, QString event)
 void page_tap_payment::tapPaymentHandler()
 {
     ui->animated_Label->move(221, 327);
-    QMovie *tapGif = new QMovie("/home/df-admin/production/references/templates/default/tap.gif");
+    QString image_path = p_page_idle->getTemplatePathFromName("tap.gif");
+    QMovie *tapGif = new QMovie(image_path);
 
     ui->animated_Label->setMovie(tapGif);
     tapGif->start();
@@ -336,7 +336,8 @@ void page_tap_payment::check_card_tapped()
 
         // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         ui->animated_Label->move(410, 480);
-        QMovie *movie = new QMovie("/home/df-admin/production/references/templates/default/soapstandspinner.gif");
+        QString image_path = p_page_idle->getTemplatePathFromName("soapstandspinner.gif");
+        QMovie *movie = new QMovie(image_path);
         ui->animated_Label->setMovie(movie);
         movie->start();
     }

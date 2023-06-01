@@ -36,14 +36,6 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     // IPC Networking
     dfUtility = new df_util();
 
-    // for products.cpp
-    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
-    {
-        products[slot_index].setSlot(slot_index + 1);
-        products[slot_index].load();
-    }
-
-    setSelectedProduct(0);
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
 
@@ -83,8 +75,17 @@ page_idle::~page_idle()
 
 void page_idle::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
+    registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
+
+    // for products.cpp
+    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    {
+        products[slot_index].setSlot(slot_index + 1);
+        products[slot_index].load();
+    }
+
+    setSelectedProduct(0);
 
     // get the texts from csv
     loadTextsFromTemplateCsv();
@@ -127,11 +128,11 @@ void page_idle::showEvent(QShowEvent *event)
     }
 
     this->lower();
-    qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
-    QWidget::showEvent(event);
 
+    // template text with argument demo
+    // QString base_text = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_welcome_message, "testargument" );
+    // ui->label_welcome_message->setText(base_text.arg("SoAp")); // will replace %1 character in string by the provide text
     setTemplateTextToObject(ui->label_welcome_message);
-
     addCompanyLogoToLabel(ui->logo_label);
 
     ui->label_printer_status->hide(); // always hide here, will show if enabled and has problems.
@@ -170,7 +171,7 @@ void page_idle::showEvent(QShowEvent *event)
     // video_label = new QLabel(ui->video_player);
     video_label->setObjectName(QStringLiteral("video testset"));
     video_label->setGeometry(QRect(0, 0, 100, 31));
-    video_label->setText("lode was here. And Ash too");
+    video_label->setText("test");
     video_label->raise();
     video_label->show();
 
@@ -231,6 +232,16 @@ void page_idle::setDiscountPercentage(double percentageFraction)
     // ratio = percentage / 100;
     qDebug() << "Set discount percentage fraction in idle page: " << QString::number(percentageFraction, 'f', 3);
     m_discount_percentage_fraction = percentageFraction;
+}
+
+void page_idle::registerUserInteraction(QWidget *page)
+{
+    QString page_name = page->objectName();
+    qDebug() << "||||||||||||||||||||||||||||||||||||| User entered: " + page_name + " |||||||||||||||||||||||||||||||||||||";
+    
+    DbManager db(DB_PATH);
+    db.addUserInteraction(page_name);
+    db.closeDB();
 }
 
 double page_idle::getDiscountPercentage()
@@ -361,13 +372,6 @@ bool page_idle::isEnough(int p)
     return false;
 }
 
-void page_idle::addCssStyleToObject(QWidget *element, QString classname, QString css_file_name)
-{
-    QString styleSheet = getCSS(css_file_name);
-    element->setProperty("class", classname);
-    element->setStyleSheet(styleSheet);
-}
-
 void page_idle::addCompanyLogoToLabel(QLabel *label)
 {
     qDebug() << "db init company logo";
@@ -401,6 +405,13 @@ void page_idle::addPictureToLabel(QLabel *label, QString picturePath)
 QString page_idle::getTemplateFolder()
 {
     return m_templatePath;
+}
+
+void page_idle::addCssClassToObject(QWidget *element, QString classname, QString css_file_name)
+{
+    QString styleSheet = getCSS(css_file_name);
+    element->setProperty("class", classname);
+    element->setStyleSheet(styleSheet);
 }
 
 QString page_idle::getCSS(QString cssName)
@@ -452,7 +463,6 @@ QString page_idle::getDefaultTemplatePathFromName(QString fileName)
 void page_idle::pageTransition(QWidget *pageToHide, QWidget *pageToShow)
 {
     // page transition effects are not part of QT but of the operating system! // search for ubuntu settings program to set transition animations to "off"
-    qDebug() << "---------page transition";
     pageToShow->showFullScreen();
     pageToHide->hide();
 }
@@ -479,17 +489,36 @@ void page_idle::setBackgroundPictureToQWidget(QWidget *p_widget, QString image_p
     p_widget->update();
 }
 
+QString page_idle::getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_element, QString identifier)
+{
+    QString element_page_and_name = getTemplateTextByElementNameAndPage(p_element);
+    QString searchString = element_page_and_name + "->" + identifier;
+    return getTemplateText(searchString);
+}
+
+void page_idle::setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier)
+{
+    QString text = getTemplateTextByElementNameAndPageAndIdentifier(p_element, identifier);
+    setTextToOjbect(p_element, text);
+}
+
 void page_idle::setTemplateTextToObject(QWidget *p_element)
 {
-    QString searchString = getTemplateTextByObjectPageAndName(p_element);
+    QString searchString = getTemplateTextByElementNameAndPage(p_element);
     setTextToOjbect(p_element, searchString);
 }
 
-QString page_idle::getTemplateTextByObjectPageAndName(QWidget *p_element)
+QString page_idle::getTemplateTextByElementNameAndPage(QWidget *p_element)
 {
-    QWidget *parentWidget = p_element->parentWidget();
-    QString pageName = parentWidget->objectName();
     QString elementName = p_element->objectName();
+    QWidget *parentWidget = p_element->parentWidget();
+
+    if (!parentWidget)
+    {
+        qDebug() << "No parent for the provide widget!! " << elementName;
+    }
+
+    QString pageName = parentWidget->objectName();
 
     QString searchString = pageName + "->" + elementName;
     return getTemplateText(searchString);
@@ -515,13 +544,7 @@ void page_idle::setTextToOjbect(QWidget *p_element, QString text)
     }
 }
 
-void page_idle::setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier)
-{
-    QString element_page_and_name = getTemplateTextByObjectPageAndName(p_element);
-    QString searchString = element_page_and_name + "->" + identifier;
-    QString text = getTemplateText(searchString);
-    setTextToOjbect(p_element, text);
-}
+// get a text that is not linked to an elements on a specific page by its identifier
 QString page_idle::getTemplateTextByPage(QWidget *page, QString identifier)
 {
     QString pageName = page->objectName();
@@ -582,7 +605,7 @@ void page_idle::loadTextsFromCsv(QString csv_path, std::map<QString, QString> *d
         {
             if (!line.empty() && line[0] != '#') // Skip empty lines and lines starting with '#'
             {
-                qDebug() << QString::fromStdString(line);
+                // qDebug() << QString::fromStdString(line);
 
                 std::size_t space_pos = line.find(',');
                 if (space_pos != std::string::npos)

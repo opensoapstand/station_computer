@@ -53,6 +53,9 @@ page_end::~page_end()
 void page_end::showEvent(QShowEvent *event)
 {
 
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    QWidget::showEvent(event);
+
     p_page_idle->setTemplateTextToObject(ui->notifyUs_Button);
 
     QString styleSheet = p_page_idle->getCSS(PAGE_END_CSS);
@@ -68,32 +71,13 @@ void page_end::showEvent(QShowEvent *event)
     ui->label_volume_dispensed->setStyleSheet(styleSheet);
     ui->notifyUs_Button->setStyleSheet(styleSheet);
 
-    qDebug() << "<<<<<<< Page Enter: Thank you >>>>>>>>>";
-
-    QWidget::showEvent(event);
 
     ui->pushButton_to_idle->setEnabled(true);
     ui->pushButton_to_idle->raise();
-
-    QFont font;
-    font.setFamily(QStringLiteral("Brevia"));
-    font.setPointSize(20);
-    // font.setBold(true);
-    // font.setWeight(75);
-    font.setWeight(50);
-    ui->notifyUs_Button->setFont(font);
-    //    ui->notifyUs_Button->setText("Provide Feedback");
     ui->notifyUs_Button->raise();
-
-    // popup
-    // ui->popup = new QDialogButtonBox(this);
-    // ui->popup->setWindowTitle("Pop-up Window");
-    // ui->popup->setFixedSize(400, 200);
-
-    p_page_idle->addCompanyLogoToLabel(ui->thank_you_logo_label);
-
     ui->thank_you_logo_label->hide();
 
+    p_page_idle->addCompanyLogoToLabel(ui->thank_you_logo_label);
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_END_BACKGROUND_PATH);
 
     qDebug() << "db for receipt printer check";
@@ -107,31 +91,19 @@ void page_end::showEvent(QShowEvent *event)
     {
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->thank_you_message_label, "hasReceiptPrinter");
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->thank_you_subtitle_message_label, "hasReceiptPrinter2");
-
-        // ui->thank_you_message_label->setText("Please take <br>your receipt!");
-        // ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!");
     }
     else if (paymentMethod == "qr" || paymentMethod == "tapTcp")
     {
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->thank_you_message_label, "qr");
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->thank_you_subtitle_message_label, "qr2");
-
-        // ui->thank_you_message_label->setText("Thank you!");
-        // ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.");
     }
     else
     {
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->thank_you_message_label, "any_pay");
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->thank_you_subtitle_message_label, "any_pay2");
-
-        // ui->thank_you_message_label->setText("Thank you!");
-        // ui->thank_you_subtitle_message_label->setText("By refilling you've helped keep a<br>plastic bottle out of our landfills.");
     }
 
     is_in_state_thank_you = true;
-
-    // reset promovalue
-    // p_page_idle->selectedProduct->setDiscountPercentageFraction(0.0);
 
     is_controller_finished = false;
     is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
@@ -234,7 +206,6 @@ void page_end::controllerFinishedTransaction()
     {
         qDebug() << "Thank you page: Controller msg: All done for transaction.";
         is_controller_finished = true;
-        // thankYouEndTimer->start(1000);
         _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     }
     else
@@ -266,7 +237,6 @@ void page_end::onThankyouTimeoutTick()
 
 void page_end::on_pushButton_to_idle_clicked()
 {
-    qDebug() << "main page button clicked.";
     finishHandler();
 }
 
@@ -296,8 +266,6 @@ void page_end::finishHandler()
     {
 
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->thank_you_message_label, "finish_transaction");
-
-        //        ui->thank_you_message_label->setText("Finishing<br>transaction");
         ui->thank_you_subtitle_message_label->hide();
     }
 }

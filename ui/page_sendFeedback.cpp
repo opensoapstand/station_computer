@@ -33,58 +33,15 @@ using json = nlohmann::json;
 page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                                                         ui(new Ui::page_sendFeedback)
 {
-
     qDebug() << "IN send feedback";
     ui->setupUi(this);
 
     ui->textEdit_custom_message->hide();
-    // ui->textEdit_custom_message->setEchoMode(QTextEdit::Normal);
     ui->textEdit_custom_message->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
     ui->label_enter_feedback->show();
-    //  ui->pushButton_previous_page->setStyleSheet("QPushButton { color:#555555; background-color: transparent; border: 0px }");
-
     ui->feedbackText->hide();
-
-    // ui->pushButton_previous_page->setText("<-back");
-    // ui->label_select_problem->setText("Please provide feedback");
-    // ui->label_still_cant_find->setText("Still can't find it?");
-    // ui->label_email->setText("Email us at: sales@soapstand.com");
-    // ui->checkBox_1_Label->setText("I love this, keep me in the loop.");
-    // ui->checkBox_2_Label->setText("Payment issue");
-    // ui->checkBox_3_Label->setText("User interface problem");
-    // ui->checkBox_4_Label->setText("Soap dispensing problem");
-    // ui->checkBox_5_Label->setText("Other");
-    // ui->label_enter_feedback->setText("Please enter details or comments below.\nProvide email for feedback.");
-    // ui->label_thanks_for_feedback->setText("Thank you for <br> your feedback");
-
-
     ui->pushButton_start_input->raise();
-    // ui->label_select_problem->setWordWrap(true);
-
-    // ui->label_problem_options->setStyleSheet("background-color: #5E8680; border-radius: 30px;");
-    /*  QString checkBoxLabelStyling = ("QPushButton {"
-      "font-family: 'Brevia';"
-      "font-style: normal;"
-      "font-weight: 75;"
-      "font-size: 32px;"
-      "line-height: 99px;"
-      "letter-spacing: 1.5px;"
-      "color: #FFFFFF;"
-      "text-align: left;"
-      "qproperty-alignment: AlignCenter;"
-      "border: none;"
-      "wordWrap:true;"
-      "}");*/
-
-
-    // ui->checkBox_2_Label->setText("No soap was dispensed");
-    // ui->checkBox_3_Label->setText("Wrong amount of soap");
-
-    // ui->checkBox_4_Label->setText("Payment issue");
-
-    // ui->pushButton_start_input->setStyleSheet("QPushButton { border: 1px solid #FFFFFF}");
-
 
     selectIdleTimer = new QTimer(this);
     selectIdleTimer->setInterval(1000);
@@ -98,8 +55,6 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     ui->checkBox_3->setIconSize(size);
     ui->checkBox_4->setIconSize(size);
     ui->checkBox_5->setIconSize(size);
-
-    ////    ui->textEdit_custom_message->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
 }
 
 /*
@@ -136,6 +91,8 @@ page_sendFeedback::~page_sendFeedback()
 
 void page_sendFeedback::showEvent(QShowEvent *event)
 {
+    QWidget::showEvent(event);
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
 
     p_page_idle->setTemplateTextToObject(ui->pushButton_previous_page);
     p_page_idle->setTemplateTextToObject(ui->label_select_problem);
@@ -149,51 +106,24 @@ void page_sendFeedback::showEvent(QShowEvent *event)
     p_page_idle->setTemplateTextToObject(ui->label_enter_feedback);
     p_page_idle->setTemplateTextToObject(ui->label_thanks_for_feedback);
     p_page_idle->setTemplateTextToObject(ui->pushButton_send);
-//    ui->pushButton_previous_page->setText("<-back");
-//    ui->label_select_problem->setText("Please provide feedback");
-  //  ui->label_still_cant_find->setText("Still can't find it?");
-    // ui->label_email->setText("Email us at: sales@soapstand.com");
-    // ui->checkBox_1_Label->setText("I love this, keep me in the loop.");
-    // ui->checkBox_2_Label->setText("Payment issue");
-    // ui->checkBox_3_Label->setText("User interface problem");
-    // ui->checkBox_4_Label->setText("Soap dispensing problem");
-    // ui->checkBox_5_Label->setText("Other");
-    // ui->label_enter_feedback->setText("Please enter details or comments below.\nProvide email for feedback.");
-    // ui->label_thanks_for_feedback->setText("Thank you for <br> your feedback");
-    // ui->pushButton_send->setText("SEND");
 
-
-
-    QWidget::showEvent(event);
-    qDebug() << "<<<<<<< Page Enter: Send Feedback>>>>>>>>>";
     QString styleSheet = p_page_idle->getCSS(PAGE_FEEDBACK_CSS);
 
-
     ui->pushButton_send->setStyleSheet(styleSheet);
-
     ui->pushButton_start_input->setProperty("class", "buttonTransparent");
     ui->pushButton_start_input->setStyleSheet(styleSheet);
-
     ui->textEdit_custom_message->setStyleSheet(styleSheet);
-
     ui->pushButton_previous_page->setProperty("class", "buttonPreviousPage");
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
-
     ui->label_select_problem->setProperty("class", "labelSelectProblem");
     ui->label_select_problem->setStyleSheet(styleSheet);
-
     ui->label_problem_options->setStyleSheet(styleSheet);
-
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
-
     ui->label_still_cant_find->setStyleSheet(styleSheet);
-
     ui->label_email->setProperty("class", "labelMailFeedback");
     ui->label_email->setStyleSheet(styleSheet);
-
     ui->label_thanks_for_feedback->setProperty("class", "labelMailFeedback");
     ui->label_thanks_for_feedback->setStyleSheet(styleSheet);
-
     ui->checkBox_1_Label->setProperty("class", "checkBoxLabelStyling");
     ui->checkBox_2_Label->setProperty("class", "checkBoxLabelStyling");
     ui->checkBox_3_Label->setProperty("class", "checkBoxLabelStyling");
@@ -205,10 +135,7 @@ void page_sendFeedback::showEvent(QShowEvent *event)
     ui->checkBox_4_Label->setStyleSheet(styleSheet);
     ui->checkBox_5_Label->setStyleSheet(styleSheet);
     ui->pushButton_help_page->setStyleSheet(styleSheet);
-
-    // ui->label_enter_feedback->setProperty("class", "checkBoxLabelStyling");
     ui->label_enter_feedback->setStyleSheet(styleSheet);
-
     ui->textEdit_custom_message->setStyleSheet(styleSheet);
 
     reset_and_show_page_elements();
@@ -221,7 +148,6 @@ void page_sendFeedback::showEvent(QShowEvent *event)
 
 void page_sendFeedback::resizeEvent(QResizeEvent *event)
 {
-    // qDebug() << "\n---Page Send Feedback: resizeEvent";
 }
 
 void page_sendFeedback::onSelectTimeoutTick()
@@ -244,7 +170,6 @@ void page_sendFeedback::reset_and_show_page_elements()
     ui->textEdit_custom_message->setFocus(); // give focus to the textEdit_custom_message widget
     qDebug() << "Setting feedback text to:" << TEXTBOX_INVITE_TEXT;
     ui->textEdit_custom_message->setPlaceholderText(TEXTBOX_INVITE_TEXT);
-    // ui->textEdit_custom_message->setText(TEXTBOX_INVITE_TEXT);
 
     ui->feedbackKeyboard->hide();
 
@@ -459,7 +384,6 @@ void page_sendFeedback::on_pushButton_previous_page_clicked()
 
 void page_sendFeedback::on_feedback_Text_Input_clicked()
 {
-    // on_pushButton_start_input_clicked();
 }
 
 void page_sendFeedback::on_pushButton_start_input_clicked()
@@ -474,19 +398,14 @@ void page_sendFeedback::on_pushButton_start_input_clicked()
     if (ui->textEdit_custom_message->toPlainText() == TEXTBOX_INVITE_TEXT)
     {
         ui->textEdit_custom_message->clear(); // clears init text
-        // ui->textEdit_custom_message->setPlainText("fefef");
     }
 }
 
 void page_sendFeedback::on_feedbackText_cursorPositionChanged(int arg1, int arg2)
 {
-
-    // on_pushButton_start_input_clicked();
 }
 
 void page_sendFeedback::on_pushButton_help_page_clicked()
 {
-    // pushButton_help_page->setVisible(false);
-    qDebug() << "Help_Button pressed///////////////////////////////////////////////////////////////////////////////";
     hideCurrentPageAndShowProvided(p_page_help);
 }

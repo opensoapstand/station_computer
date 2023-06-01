@@ -219,19 +219,6 @@
     <string>Problem detected</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_report">
-   <property name="geometry">
-    <rect>
-     <x>240</x>
-     <y>180</y>
-     <width>241</width>
-     <height>71</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>button report</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_dispense_message">
    <property name="geometry">
     <rect>
@@ -271,7 +258,6 @@
   <zorder>label_dispense_status</zorder>
   <zorder>label_dispense_flowrate</zorder>
   <zorder>pushButton_problems</zorder>
-  <zorder>pushButton_report</zorder>
   <zorder>label_dispense_message</zorder>
   <zorder>label_logo</zorder>
  </widget>

@@ -28,7 +28,7 @@ private slots:
     void on_pushButton_back_clicked();
     void onIdleTimeoutTick();
 
-    void on_print_Button_clicked(bool checked);
+    void on_pushButton_print_clicked(bool checked);
 
 private:
    

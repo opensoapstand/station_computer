@@ -13,31 +13,29 @@
 }
 
 .label_volume_dispensed_ml {
-
-
-   font-family: 'Brevia';
+   font-family: 'EuropaNuova-Regular';
    font-style: normal;
-   font-weight: 100;
-   font-size: 42px;
-   text-align: centre;
+   font-weight: 400;
+   font-size: 30px;
+   text-align: center;
    line-height: auto;
    letter-spacing: 0px;
    qproperty-alignment: AlignCenter;
    border-radius: 20px;
-   color: #5e8580;
+   color: #5E826A;
+   /* color: white; */
    border: none;
 
 }
 
 #label_to_refill {
-
-   font-family: 'Brevia';
+   font-family: 'EuropaNuova-ExtraBold';
    font-style: normal;
-   font-weight: 75;
-   font-size: 85px;
+   font-weight: 400;
+   font-size: 78px;
    background-color: transparent;
    border: 0px;
-   line-height: 99px;
+   line-height: 52px;
    letter-spacing: 1.5px;
    color: #FFFFFF;
    text-align: center;
@@ -47,14 +45,13 @@
 }
 
 #label_instructions_container {
-
-   font-family: 'Brevia';
+   font-family: 'EuropaNuova-Regular';
    font-style: normal;
-   font-weight: 75;
+   font-weight: 400;
    font-size: 55px;
    background-color: transparent;
    border: 0px;
-   line-height: 99px;
+   line-height: 52px;
    letter-spacing: 1.5px;
    color: #FFFFFF;
    text-align: center;
@@ -63,13 +60,13 @@
 }
 
 #label_press {
-   font-family: 'Brevia';
+   font-family: 'EuropaNuova-Regular';
    font-style: normal;
-   font-weight: 75;
+   font-weight: 400;
    font-size: 55px;
    background-color: transparent;
    border: 0px;
-   line-height: 99px;
+   line-height: 52px;
    letter-spacing: 1.5px;
    color: #FFFFFF;
    text-align: center;
@@ -95,24 +92,23 @@
 }
 
 #pushButton_problems.normal {
-   font-family: 'Brevia';
+   font-family: 'EuropaNuova-Regular';
    font-style: normal;
-   font-weight: 75;
-   background-color: #5E8580;
+   font-weight: 400;
+   background-color: #5E826A;
    font-size: 42px;
-   text-align: centre;
+   text-align: center;
    line-height: auto;
-   letter-spacing: 0px;
    qproperty-alignment: AlignCenter;
    border-radius: 20px;
    color: white;
-   border: none;
+   border: 5px double white;
 }
 
 #pushButton_problems.alert {
-   font-family: 'Brevia';
+   font-family: 'EuropaNuova-Regular';
    font-style: normal;
-   font-weight: 75;
+   font-weight: 400;
    background-color: #b87b0b;
    font-size: 42px;
    text-align: centre;
@@ -121,11 +117,10 @@
    qproperty-alignment: AlignCenter;
    border-radius: 20px;
    color: white;
-   border: none;
+   border: 5px double white;
 }
 
 #pushButton_debug_Button {
-
    color: #5E8580;
    background-color: transparent;
    border: 5px;
@@ -133,19 +128,17 @@
 }
 
 #pushButton_abort {
-
-   font-family: 'Brevia';
+   font-family: 'EuropaNuova-ExtraBold';
    font-style: normal;
-   font-weight: 100;
-   background-color: #5E8580;
-   font-size: 42px;
+   font-weight: 400;
+   background-color: transparent;
+   font-size: 45px;
    text-align: centre;
    line-height: auto;
-   letter-spacing: 0px;
    qproperty-alignment: AlignCenter;
-   border-radius: 20px;
+   border-radius: 25px;
    color: white;
-   border: none;
+   border: 5px solid white;
 
 }
 

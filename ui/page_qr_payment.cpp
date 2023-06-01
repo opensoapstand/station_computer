@@ -30,8 +30,6 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
 {
     // Fullscreen background setup
     ui->setupUi(this);
-    qDebug() << "QR Payment page" << endl;
-
     ui->pushButton_payment_bypass->setEnabled(false);
 
     paymentEndTimer = new QTimer(this);
@@ -144,7 +142,7 @@ void page_qr_payment::resizeEvent(QResizeEvent *event)
 void page_qr_payment::showEvent(QShowEvent *event)
 {
 
-    qDebug() << "<<<<<<< Page Enter: Payment >>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
     // p_page_idle->setTemplateTextWithIdentifierToObject(ox2, "button_problems_message");
     p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "pay_by_phone");
@@ -163,7 +161,6 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->pushButton_payment_bypass->setProperty("class", "invisible_button");
     ui->pushButton_refresh->setProperty("class", "invisible_button");
 
-
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
 
     ui->pushButton_payment_bypass->setStyleSheet(styleSheet);
@@ -174,11 +171,13 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->label_processing->setStyleSheet(styleSheet);
 
     state_payment = s_init;
-    QString price = QString::number(p_page_idle->selectedProduct->getPriceCorrected(), 'f', 2);
+    double originalPrice = p_page_idle->selectedProduct->getPrice();
     if (p_page_idle->selectedProduct->getSizeAsChar() == 'c')
     {
-        price = QString::number(p_page_idle->selectedProduct->getPriceCustom(), 'f', 2);
+        originalPrice = p_page_idle->selectedProduct->getPriceCustom();
     }
+    QString price = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(originalPrice), 'f', 2);
+
 
     ui->qrCode->show();
     ui->productLabel->show();
@@ -198,6 +197,8 @@ void page_qr_payment::showEvent(QShowEvent *event)
     this->ui->payment_countdownLabel->setText("");
 
     ui->refreshLabel->hide();
+    ui->pushButton_refresh->raise(); // make sure refresh button is on top. 
+    ui->pushButton_previous_page->raise();
 
     setupQrOrder();
 }
@@ -258,11 +259,13 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
     QString contents = p_page_idle->selectedProduct->getProductName();
     QString quantity_requested = p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(false, false);
     char drinkSize = p_page_idle->selectedProduct->getSizeAsChar();
-    QString price = QString::number(p_page_idle->selectedProduct->getPriceCorrected(), 'f', 2);
+    double originalPrice = p_page_idle->selectedProduct->getPriceCorrected();
     if (drinkSize == 'c')
     {
-        price = QString::number(p_page_idle->selectedProduct->getPriceCustom(), 'f', 2);
+        originalPrice = p_page_idle->selectedProduct->getPriceCustom();
     }
+
+    QString price = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(originalPrice), 'f', 2);
 
     // create a unique order id locally
     orderId = QUuid::createUuid().QUuid::toString();
@@ -426,7 +429,7 @@ void page_qr_payment::onTimeoutTick()
     }
     else
     {
-        qDebug() << "Timer Done!" << _pageTimeoutCounterSecondsLeft << endl;
+        qDebug() << "Timer Done!" << _pageTimeoutCounterSecondsLeft ;
         transactionLogging += "\n 5: Timeout - True";
 
         idlePaymentTimeout();
@@ -455,8 +458,6 @@ bool page_qr_payment::exitConfirm()
 {
     qDebug() << "In exit confirm";
     QMessageBox msgBox;
-    //     msgBox = nullptr;
-    // msgBox = new QMessageBox();
     msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
     if (state_payment == s_payment_processing || state_payment == s_payment_done)
     {
@@ -467,11 +468,7 @@ bool page_qr_payment::exitConfirm()
         msgBox.setText("<p align=center><br><br>Are you sure you want to cancel this order?<br><br>The QR code won't be valid anymore if this order is cancelled.<br><br>In case a payment was made with an invalid QR code or cancelled order, a refund will be issued within 24-48 hours. <br></p>");
     }
     QString styleSheet = p_page_idle->getCSS(PAGE_QR_PAYMENT_CSS);
-
-    // msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
-
     msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
-
     msgBox.setStyleSheet(styleSheet);
 
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
@@ -510,7 +507,7 @@ void page_qr_payment::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 // Navigation: Back to Drink Size Selection
 void page_qr_payment::on_pushButton_previous_page_clicked()
 {
-    qDebug() << "In previous page button" << endl;
+    qDebug() << "In previous page button" ;
     if (exitConfirm())
     {
         // p_page_idle->pageTransition(this, p_page_product);

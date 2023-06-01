@@ -53,8 +53,8 @@
 
 using namespace std;
 
-#define QR_PAGE_TIMEOUT_SECONDS 10 //420
-#define QR_PAGE_TIMEOUT_WARNING_SECONDS 5 //120
+#define QR_PAGE_TIMEOUT_SECONDS 420
+#define QR_PAGE_TIMEOUT_WARNING_SECONDS 120
 #define PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS 600
 #define PAGE_MAINTENANCE_TIMEOUT_SECONDS 60
 #define PAGE_THANK_YOU_TIMEOUT_SECONDS 7
@@ -95,12 +95,12 @@ using namespace std;
 
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"
-#define PAGE_ORDER_OVERVIEW_PATH                        "background_generic_white_empty.png"
+#define PAGE_ORDER_OVERVIEW_PATH                        "background_order_overview.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH      "background_dispense_instructions.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH      "background_dispense_instructions_multispout.png"
 #define PAGE_DISPENSE_BACKGROUND_PATH                   "background_dispense.png"
-#define PAGE_QR_PAY_BACKGROUND_PATH                     "background_generic_white_empty.png"
-#define PAGE_MAINTENANCE_BACKGROUND_PATH                "background_generic_white_empty.png"
+#define PAGE_QR_PAY_BACKGROUND_PATH                     "background_qr.png"
+#define PAGE_MAINTENANCE_BACKGROUND_PATH                "background_maintenance.png"
 #define ERROR_MESSAGE_PATH                              "error_message.png"
 #define PAGE_TAP_PAY                                    "tapNow.png"
 #define PAGE_TAP_PAY_SUCCESS                            "paymentSuccess.png"
@@ -120,9 +120,11 @@ using namespace std;
 #define ICON_TYPE_DISH_PATH                             "Soapstand-UI-icon-dish.png"
 #define ICON_TYPE_HAND_PATH                             "Soapstand-UI-icon-hand-soap.png"
 #define ICON_TYPE_LAUNDRY_PATH                          "Soapstand-UI-icon-laundry.png"
+#define ICON_TYPE_KOMBUCHA_PATH                         "Soapstand-UI-icon-kombucha.png"
 #define ICON_TYPE_MOCKTAIL_PATH                         "Soapstand-UI-icon-mocktail.png"
+#define ICON_TYPE_JUICE_PATH                            "Soapstand-UI-icon-juice.png"
 
-#define PAGE_HELP_BACKGROUND_PATH                       "background_generic_white_empty.png"
+#define PAGE_HELP_BACKGROUND_PATH                       "background_help.png"
 
 #define SEND_DISPENSE_START "d"
 #define SEND_DISPENSE_STOP "f"

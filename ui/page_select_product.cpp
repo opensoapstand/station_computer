@@ -90,13 +90,15 @@ page_select_product::~page_select_product()
 
 void page_select_product::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< Page Enter: Select Product >>>>>>>>>";
-
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    QWidget::showEvent(event);
+    
     QString styleSheet = p_page_idle->getCSS(PAGE_SELECT_PRODUCT_CSS);
     ui->p_page_maintenanceButton->setStyleSheet(styleSheet);
     ui->pushButton_help_page->setStyleSheet(styleSheet);
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
     ui->label_pick_soap->setStyleSheet(styleSheet);
+    displayProducts();
 
     for (int i = 0; i < 4; i++)
     {
@@ -110,19 +112,14 @@ void page_select_product::showEvent(QShowEvent *event)
         labels_product_name[i]->setStyleSheet(styleSheet);
         pushButtons_product_select[i]->setProperty("class", "PushButton_selection");
         pushButtons_product_select[i]->setStyleSheet(styleSheet);
-        labels_product_icon[i]->setStyleSheet(styleSheet);
     }
 
     p_page_idle->setTemplateTextToObject(ui->label_pick_soap);
     p_page_idle->setTemplateTextToObject(ui->pushButton_to_idle);
 
     this->lower();
-    QWidget::showEvent(event);
+
     maintenanceCounter = 0;
-
-    displayProducts();
-
-   
 
     productPageEndTimer->start(1000);
     _productPageTimeoutSec = 15;
@@ -137,7 +134,7 @@ void page_select_product::resizeEvent(QResizeEvent *event)
 
 void page_select_product::displayProducts()
 {
-    QString product_type_icons[6] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH, ICON_TYPE_MOCKTAIL_PATH};
+    QString product_type_icons[8] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH, ICON_TYPE_MOCKTAIL_PATH, ICON_TYPE_KOMBUCHA_PATH, ICON_TYPE_JUICE_PATH};
 
     bool product_slot_enabled;
     // bool product_sold_out;
@@ -168,6 +165,7 @@ void page_select_product::displayProducts()
         qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << " Status text: " << product_status_text;
 
         labels_product_name[i]->setText(product_name);
+
         // labels_product_name[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
         // labels_product_name[i]->setStyleSheet(styleSheet);
 
@@ -199,9 +197,20 @@ void page_select_product::displayProducts()
             icon_path = ICON_TYPE_CONCENTRATE_PATH;
             type_text = "CONCENTRATE";
         }
-        else if(product_type == "Mocktail"){
+        else if (product_type == "Kombucha")
+        {
+            icon_path = ICON_TYPE_KOMBUCHA_PATH;
+            type_text = "KOMBUCHA";
+        }
+        else if (product_type == "Mocktail")
+        {
             icon_path = ICON_TYPE_MOCKTAIL_PATH;
             type_text = "MOCKTAIL";
+        }
+        else if (product_type == "Juice")
+        {
+            icon_path = ICON_TYPE_JUICE_PATH;
+            type_text = "JUICE";
         }
         else
         {
@@ -212,8 +221,7 @@ void page_select_product::displayProducts()
         QString icon_path_with_template = p_page_idle->getTemplatePathFromName(icon_path);
 
         p_page_idle->addPictureToLabel(labels_product_icon[i], icon_path_with_template);
-        // labels_product_icon[i]->setText(""); // icon should not display text.
-        labels_product_icon[i]->setText(p_page_idle->getTemplateTextByPage(this, "no_text"));
+        // labels_product_icon[i]->setText(p_page_idle->getTemplateTextByPage(this, "no_text"));
 
         // pushButtons_product_select[i]->setStyleSheet(styleSheet); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
         // pushButtons_product_select[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
@@ -223,7 +231,6 @@ void page_select_product::displayProducts()
         labels_product_overlay_text[i]->raise();
 
         pushButtons_product_select[i]->raise();
-
 
         if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
         {

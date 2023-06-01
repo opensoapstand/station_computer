@@ -11,13 +11,13 @@
 # empty lines are also permitted
 
 # page_idle
-page_idle->label_welcome_message,Thirsty?<br>Choose~ Pour~ Enjoy~
+page_idle->label_welcome_message,Want a drink?
 page_idle->label_printer_status->offline,Assistance needed<br>Receipt Printer offline.
 page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer empty or improperly loaded.
 
 #page_select_product
 page_select_product->label_pick_soap,Discover our Drinks
-page_select_product->pushButton_to_idle,←Back
+page_select_product->pushButton_to_idle,⇦
 page_select_product->no_text,
 page_select_product->empty,empty
 page_select_product->almost_empty,almost-empty
@@ -27,9 +27,54 @@ page_select_product->coming_soon,coming-soon
 page_select_product->default,. . .
 page_select_product->available,
 
+# Page_product 
+page_product->pushButton_back,⇦
+page_product->label_select_quantity,Select Quantity
+page_product->pushButton_continue,Continue
 
-# Pageproduct 
-pageProduct->pushButton_back,<- Products
-pageProduct->label_select_quantity,Select Quantity
-pageProduct->pushButton_continue,Continue
+# page_product_overview
+page_product_overview->pushButton_select_product_page,⇦
+page_product_overview->label_discount_tag,Discount
+page_product_overview->label_pay,Proceed to Pay
+page_product_overview->label_total,Total Amount
+page_product_overview->lineEdit_promo_code->coupons_enable,Tap here to enter promo code
+page_product_overview->lineEdit_promo_code->valid,Promo Code Valid
 
+# page_dispenser
+page_dispenser->label_to_refill,To Refill
+page_dispenser->label_instructions_container,bring container to nozzle
+page_dispenser->label_press,press and hold the<br>button
+page_dispenser->pushButton_problems,Tap here if you notice a problem.
+page_dispenser->pushButton_abort->abort,Abort
+page_dispenser->pushButton_abort->complete,Complete
+page_dispenser->label_finishTransactionMessage->no_pay,Voiding payment
+page_dispenser->label_finishTransactionMessage->display_price,Capturing payment: ${0}
+page_dispenser->label_dispense_message->priming,Please keep the button pressed.\nfor up to 15 seconds\nbefore the product starts dispensing.
+page_dispenser->label_dispense_message->out_of_stock,It appears we're out of stock.
+page_dispenser->label_dispense_message->needs_attention,We can't get the dispensing started.\nWe're empty or the pump needs help to prime.\nTap the problem button in case of other issues.
+page_dispenser->label_volume_dispensed,Volume dispensed
+page_dispenser->msgBox_problems->qr_tap,<p align=center><br><br>If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br><br><br>You will only be charged for the dispensed amount<br></p>
+page_dispenser->msgBox_problems->default,<p align=center><br>If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br><br><br>You will only be charged for the dispensed amount<br></p>
+page_dispenser->msgBox_abort->qr_tap,<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine. <br><br> If you press Yes, you will not be charged for the order.<br></p>
+page_dispenser->msgBox_abort->default,<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine.<br></p>
+
+# page_help
+page_help->pushButton_to_transactions,Transaction History ->
+page_help->pushButton_to_maintenance,Settings
+page_help->pushButton_to_feedback,Contact Us
+page_help->pushButton_to_idle,⇦
+page_help->label_keyboardInfo,Enter password followed by the \"Done\" key to enter maintenance mode
+
+# page_sendFeedback
+page_sendFeedback->pushButton_previous_page,<-back
+page_sendFeedback->label_select_problem,Please provide feedback
+page_sendFeedback->label_still_cant_find,Still can't find it?
+page_sendFeedback->label_email,Email us at: sales@soapstand.com
+page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop.
+page_sendFeedback->checkBox_2_Label,User interface problem
+page_sendFeedback->checkBox_3_Label,Soap dispensing problem
+page_sendFeedback->checkBox_4_Label,Soap dispensing problem
+page_sendFeedback->checkBox_5_Label,Other
+page_sendFeedback->label_enter_feedback,Please enter details or comments below.\nProvide email for feedback.
+page_sendFeedback->label_thanks_for_feedback,Thank you for <br> your feedback
+page_sendFeedback->pushButton_send,SEND

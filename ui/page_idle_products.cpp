@@ -120,6 +120,9 @@ void page_idle_products::showEvent(QShowEvent *event)
 
     }
 
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    QWidget::showEvent(event);
+    
     qDebug() << "open db: payment method";
     bool needsReceiptPrinter = false;
     for (int slot = 1; slot <= SLOT_COUNT; slot++)
@@ -135,9 +138,6 @@ void page_idle_products::showEvent(QShowEvent *event)
         p_page_idle->products[slot - 1].setDiscountPercentageFraction(0.0);
         p_page_idle->products[slot - 1].setPromoCode("");
     }
-    qDebug() << "<<<<<<< Page Enter: Idle page (show products) >>>>>>>>>";
-
-    QWidget::showEvent(event);
     maintenanceCounter = 0;
 
     displayProducts();

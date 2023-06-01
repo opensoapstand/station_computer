@@ -72,11 +72,12 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
         dispenseIdleTimer->stop();
     }
 
-    if (msgBox != nullptr)
+    if (msgBox_abort != nullptr)
     {
-        msgBox->hide();
-        msgBox->deleteLater();
+        msgBox_abort->hide();
+        msgBox_abort->deleteLater();
     }
+
     if (msgBox_problems != nullptr)
     {
         msgBox_problems->hide();
@@ -87,16 +88,15 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 }
 void page_dispenser::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< Page Enter: Dispenser >>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     qDebug() << "Selected slot: " << QString::number(p_page_idle->selectedProduct->getSlot());
     QWidget::showEvent(event);
-    
+
     p_page_idle->setTemplateTextToObject(ui->label_to_refill);
     p_page_idle->setTemplateTextToObject(ui->label_instructions_container);
     p_page_idle->setTemplateTextToObject(ui->label_press);
     p_page_idle->setTemplateTextToObject(ui->pushButton_problems);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_report);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_abort);
+    p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_abort, "abort");
     p_page_idle->setTemplateTextToObject(ui->label_volume_dispensed);
 
     QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
@@ -113,12 +113,11 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->label_dispense_message->setStyleSheet(styleSheet);
     ui->label_volume_dispensed->setProperty("class", "normal");
     ui->pushButton_problems->setStyleSheet(styleSheet);
-    ui->pushButton_report->setStyleSheet(styleSheet);
     transactionLogging += "\n 6: Station Unlocked - True";
 
     // important to set to nullptr, to check at timeout if it was initialized (displayed...) or not.
-    msgBox = nullptr;
     msgBox_problems = nullptr;
+    msgBox_abort = nullptr;
 
     this->isDispensing = false;
     askForFeedbackAtEnd = false;
@@ -158,7 +157,6 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     ui->label_dispense_message->hide();
     ui->pushButton_problems->show();
-    ui->pushButton_report->hide();
 
     dispenseIdleTimer->start(1000);
     resetDispenseTimeout();
@@ -166,34 +164,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     p_page_idle->selectedProduct->resetVolumeDispensed();
     updatelabel_volume_dispensed_ml(p_page_idle->selectedProduct->getVolumeDispensedMl());
 
-    QString dispenseCommand = getStartDispensingCommand();
-    QString priceCommand = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(p_page_idle->selectedProduct->getPrice()));
-    QString promoCommand = p_page_idle->getPromoCode();
-
-    QString delimiter = QString("|");
-    QString preamble = "Order";
-    QString command = preamble + delimiter + dispenseCommand + delimiter + priceCommand + delimiter + promoCommand + delimiter;
-
-    qDebug() << "Send start command to FSM: " << command;
-    p_page_idle->dfUtility->send_command_to_FSM(command);
-    this->isDispensing = true;
-    qDebug() << "Dispensing started.";
-
-
-//     QMessageBox msgBox(QMessageBox::Question, "Title", "Message", QMessageBox::Yes | QMessageBox::No, this);
-//     msgBox.setStyleSheet("/* Your custom stylesheet */");
-
-//     // Customize the QMessageBox properties
-//     msgBox.setIconPixmap(QPixmap("path/to/icon.png"));
-//     msgBox.setWindowTitle("Custom Title");
-//     msgBox.setText("Custom Message");
-//     msgBox.setInformativeText("Custom Informative Text");
-
-//     // Display the customized QMessageBox and retrieve the result
-//     int result = msgBox.exec();
-//     QString sss = msgBox.styleSheet();
-// qDebug() << "Style sheet: " << sss;
-
+    fsmSendStartDispensing();
 }
 
 void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
@@ -246,7 +217,7 @@ void page_dispenser::dispensing_end_admin()
     qDebug() << "volume dispensed" << p_page_idle->selectedProduct->getVolumeDispensedMl();
     if (p_page_idle->selectedProduct->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML && (p_page_idle->selectedProduct->getPaymentMethod()) == "tapTcp")
     {
-        ui->label_finishTransactionMessage->setText("Voiding payment");
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_finishTransactionMessage, "no_pay");
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         std::map<std::string, std::string> response;
         qDebug() << "dispense end: tap payment No volume dispensed.";
@@ -264,7 +235,10 @@ void page_dispenser::dispensing_end_admin()
     }
     else if ((p_page_idle->selectedProduct->getPaymentMethod() == "tapTcp") && p_page_idle->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
     {
-        ui->label_finishTransactionMessage->setText("Capturing payment: $" + QString::number(current_price, 'f', 2));
+
+        
+        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price" );
+        ui->label_finishTransactionMessage->setText(base_text.arg(QString::number(current_price, 'f', 2))); // will replace %1 character in string by the provide text
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         if (CTROUTD != "")
         {
@@ -277,7 +251,7 @@ void page_dispenser::dispensing_end_admin()
         }
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     }
-    // ui->label_finishTransactionMessage->setText("");
+
     qDebug() << "Finished dispense admin handling";
     current_price = 0.0;
     if (askForFeedbackAtEnd)
@@ -307,10 +281,18 @@ QString page_dispenser::getStartDispensingCommand()
 
 void page_dispenser::fsmSendStartDispensing()
 {
-    qDebug() << "Send Start dispensing to fsm";
-    p_page_idle->dfUtility->send_command_to_FSM(getStartDispensingCommand());
+    QString dispenseCommand = getStartDispensingCommand();
+    QString priceCommand = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(p_page_idle->selectedProduct->getPrice()));
+    QString promoCommand = p_page_idle->getPromoCode();
 
+    QString delimiter = QString("|");
+    QString preamble = "Order";
+    QString command = preamble + delimiter + dispenseCommand + delimiter + priceCommand + delimiter + promoCommand + delimiter;
+
+    qDebug() << "Send start command to FSM: " << command;
+    p_page_idle->dfUtility->send_command_to_FSM(command);
     this->isDispensing = true;
+    qDebug() << "Dispensing started.";
 }
 
 void page_dispenser::fsmSendStopDispensing()
@@ -392,25 +374,25 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
 
         if (dispenseStatus == "SLOT_STATE_WARNING_PRIMING")
         {
-            ui->label_dispense_message->setText("Please keep the button pressed.\nfor up to 15 seconds\nbefore the product starts dispensing.");
-            p_page_idle->addCssStyleToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
+            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "priming");
+            p_page_idle->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
             ui->label_dispense_message->show();
         }
         else if (dispenseStatus == "SLOT_STATE_PROBLEM_EMPTY")
         {
-            ui->label_dispense_message->setText("It appears we're out of stock.");
-            p_page_idle->addCssStyleToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
+            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "out_of_stock");
+            p_page_idle->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
             ui->label_dispense_message->show();
         }
         else if (dispenseStatus == "SLOT_STATE_PROBLEM_NEEDS_ATTENTION")
         {
-            ui->label_dispense_message->setText("We can't get the dispensing started.\nWe're empty or the pump needs help to prime.\nTap the problem button in case of other issues.");
-            p_page_idle->addCssStyleToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
+            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "needs_attention");
+            p_page_idle->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
             ui->label_dispense_message->show();
         }
         else if (dispenseStatus == "SLOT_STATE_AVAILABLE")
         {
-            p_page_idle->addCssStyleToObject(ui->pushButton_problems, "normal", PAGE_DISPENSER_CSS);
+            p_page_idle->addCssClassToObject(ui->pushButton_problems, "normal", PAGE_DISPENSER_CSS);
             // normal status
             // ui->pushButton_problems->hide();
             ui->label_dispense_message->hide();
@@ -455,7 +437,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         ui->label_to_refill->hide();
         ui->label_instructions_container->hide();
 
-        ui->pushButton_abort->setText("Complete");
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_abort, "complete");
         ui->fill_animation_label->show();
         ui->pushButton_abort->raise();
         ui->pushButton_problems->raise();
@@ -504,6 +486,22 @@ void page_dispenser::fsmReceiveNoFlowAbort()
     }
 }
 
+void page_dispenser::on_cancelButton_clicked()
+{
+    qDebug() << "Pressed cancel dispensing.";
+    if (this->isDispensing)
+    {
+        transactionLogging += "\n 7: Cancel Button - True";
+        force_finish_dispensing();
+    }
+}
+
+void page_dispenser::on_pushButton_debug_Button_clicked()
+{
+    qDebug() << "WARNING: ========= Debug button pressed. Fake dispensing of 100ml ==============";
+    updateVolumeDisplayed(300.0, false); // make sure the fill bottle graphics are completed
+}
+
 void page_dispenser::on_pushButton_abort_clicked()
 {
     qDebug() << "Pressed button abort/complete";
@@ -511,27 +509,27 @@ void page_dispenser::on_pushButton_abort_clicked()
     transactionLogging += "\n 7: Complete Button - True";
     if (p_page_idle->selectedProduct->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML)
     {
-        msgBox = new QMessageBox();
-        msgBox->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+        msgBox_abort = new QMessageBox();
+        msgBox_abort->setObjectName("msgBox_abort");
+        msgBox_abort->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
         QString payment = p_page_idle->selectedProduct->getPaymentMethod();
+
         if (payment == "qr" || payment == "tapTcp")
         {
-            msgBox->setText("<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine. \
-                                If you press Yes, you will not be charged for the order.<br></p>");
+            QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "qr_tap";
+            p_page_idle->setTextToOjbect(msgBox_abort, p_page_idle->getTemplateText(searchString));
         }
         else
         {
-            msgBox->setText("<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine.<br></p>");
+            QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "default";
+            p_page_idle->setTextToOjbect(msgBox_abort, p_page_idle->getTemplateText(searchString));
         }
 
-        QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
-        msgBox->setProperty("class", "msgBoxbox msgBoxbutton"); // set property goes first!!
-        msgBox->setStyleSheet(styleSheet);
+        p_page_idle->addCssClassToObject(msgBox_abort, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);
+        msgBox_abort->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
-        msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-        int ret = msgBox->exec();
+        int ret = msgBox_abort->exec();
         bool success;
-        // qDebug() << "***********************************";
         switch (ret)
         {
         case QMessageBox::Yes:
@@ -554,45 +552,29 @@ void page_dispenser::on_pushButton_abort_clicked()
     }
 }
 
-void page_dispenser::on_cancelButton_clicked()
-{
-    qDebug() << "Pressed cancel dispensing.";
-    if (this->isDispensing)
-    {
-        transactionLogging += "\n 7: Cancel Button - True";
-        force_finish_dispensing();
-    }
-}
-
-void page_dispenser::on_pushButton_debug_Button_clicked()
-{
-    qDebug() << "WARNING: ========= Debug button pressed. Fake dispensing of 100ml ==============";
-    updateVolumeDisplayed(300.0, false); // make sure the fill bottle graphics are completed
-}
-
 void page_dispenser::on_pushButton_problems_clicked()
 {
 
     msgBox_problems = new QMessageBox();
-    msgBox_problems->setParent(this);
     msgBox_problems->setObjectName("msgBox_problems");
     msgBox_problems->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
 
     QString payment = p_page_idle->selectedProduct->getPaymentMethod();
+
     if (payment == "qr" || payment == "tapTcp")
     {
-        p_page_idle->setTemplateTextWithIdentifierToObject(msgBox_problems, "qr_tap");
+        QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";
+        p_page_idle->setTextToOjbect(msgBox_problems, p_page_idle->getTemplateText(searchString));
     }
     else
     {
-        p_page_idle->setTemplateTextWithIdentifierToObject(msgBox_problems, "default");
+        QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "default";
+        p_page_idle->setTextToOjbect(msgBox_problems, p_page_idle->getTemplateText(searchString));
     }
 
-    QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
-    msgBox_problems->setProperty("class", "msgBoxbox msgBoxbutton"); // set property goes first!!
-    msgBox_problems->setStyleSheet(styleSheet);
-
+    p_page_idle->addCssClassToObject(msgBox_problems, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);
     msgBox_problems->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+
     int ret = msgBox_problems->exec();
     bool success;
     switch (ret)
@@ -615,9 +597,3 @@ void page_dispenser::on_pushButton_problems_clicked()
     }
     }
 }
-
-void page_dispenser::on_pushButton_report_clicked()
-{
-}
-
-

@@ -157,22 +157,6 @@ QListWidget::item {
    border: none;
 }
 
-#pushButton_report {
-   font-family: 'Brevia';
-   font-style: normal;
-   font-weight: 75;
-   background-color: #5E8580;
-   font-size: 42px;
-   text-align: centre;
-   line-height: auto;
-   letter-spacing: 0px;
-   qproperty-alignment: AlignCenter;
-   border-radius: 20px;
-   color: white;
-   border: none;
-   
-}
-
 QMessageBox.msgBoxbox{
    min-width: 7000px;
    font-size: 24px;

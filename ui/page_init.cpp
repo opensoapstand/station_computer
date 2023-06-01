@@ -103,6 +103,7 @@ void page_init::onInitTimeoutTick()
     }
     else
     {
+        qDebug() << "No response from controller. Will reboot";
         // ui->label_fail_message->setText("No response from controller. Will reboot.");
         // _rebootTimeoutSec = 5;
         // rebootTimer->start(1000);

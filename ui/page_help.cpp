@@ -71,7 +71,7 @@ void page_help::showEvent(QShowEvent *event)
     p_page_idle->setTemplateTextToObject(ui->pushButton_to_maintenance);
     p_page_idle->setTemplateTextToObject(ui->pushButton_to_feedback);
     p_page_idle->setTemplateTextToObject(ui->pushButton_to_idle);
-    p_page_idle->setTemplateTextToObject(ui->label_keyboardInfo);
+    ui->label_keyboardInfo->setText(p_page_idle->getTemplateTextByPage(this, "label_keyboardInfo")); //p_page_idle->setTemplateTextToObject(ui->label_keyboardInfo); // does not work because the parent is the keyboard, not the page.
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_PATH);
 

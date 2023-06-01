@@ -113,6 +113,9 @@ public:
     QString getTemplateText(QString textName_to_find);
     void loadTextsFromTemplateCsv();
     void loadTextsFromDefaultCsv();
+    
+    void registerUserInteraction(QWidget*page);
+
     void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
 
     QTimer *idlePageTypeSelectorTimer;

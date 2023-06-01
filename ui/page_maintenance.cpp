@@ -64,7 +64,7 @@ for (int i = 0; i < 4; i++)
 
     //    db.addPageClick("PAGE_PAGE_MAINTENANCE PAGE ENTERED");
 
-    qDebug() << "<<<<<<< Page Enter: maintenance >>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
     // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH); // delays the page loading significantly.
 

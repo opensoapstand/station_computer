@@ -138,7 +138,7 @@ void page_tap_payment_serial::resizeEvent(QResizeEvent *event)
 
 void page_tap_payment_serial::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< Page Enter: Tap Payment >>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
 }

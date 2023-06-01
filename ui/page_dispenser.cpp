@@ -88,7 +88,7 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 }
 void page_dispenser::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< Page Enter: Dispenser >>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     qDebug() << "Selected slot: " << QString::number(p_page_idle->selectedProduct->getSlot());
     QWidget::showEvent(event);
 

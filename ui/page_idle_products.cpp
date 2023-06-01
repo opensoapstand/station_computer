@@ -123,7 +123,7 @@ void page_idle_products::showEvent(QShowEvent *event)
         p_page_idle->products[slot - 1].setDiscountPercentageFraction(0.0);
         p_page_idle->products[slot - 1].setPromoCode("");
     }
-    qDebug() << "<<<<<<< Page Enter: Idle page (show products) >>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
 
     QWidget::showEvent(event);
     maintenanceCounter = 0;

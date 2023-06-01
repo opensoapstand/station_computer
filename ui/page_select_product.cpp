@@ -90,7 +90,7 @@ page_select_product::~page_select_product()
 
 void page_select_product::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< Page Enter: Select Product >>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
 
     QString styleSheet = p_page_idle->getCSS(PAGE_SELECT_PRODUCT_CSS);
     ui->p_page_maintenanceButton->setStyleSheet(styleSheet);

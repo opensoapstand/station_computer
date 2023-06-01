@@ -70,7 +70,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 
 
 
-    qDebug() << "<<<<<<< Page Enter: maintenance dispense >>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
 
     QWidget::showEvent(event);
     ui->calibration_result_label->setText("Calibration value (if 1000ml dispensed): "); // calibration constant

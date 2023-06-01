@@ -61,7 +61,7 @@ void page_error_wifi::showEvent(QShowEvent *event)
     ui->mainPageButton->setStyleSheet(styleSheet);
 
 
-    qDebug() << "<<<<<<< Page Enter: (Wifi) error >>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     
     QWidget::showEvent(event);
 

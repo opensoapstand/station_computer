@@ -126,7 +126,7 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->pushButton_to_help->setStyleSheet(styleSheet);
 
 
-    qDebug() << "<<<<<<< Page Enter: Product Overview>>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
     p_page_idle->selectedProduct->loadProductProperties();

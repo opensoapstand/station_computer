@@ -53,7 +53,7 @@ void page_transactions::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 
 void page_transactions::showEvent(QShowEvent *event)
 {
-        qDebug() << "<<<<<<< Page Enter: Transactions >>>>>>>>>";
+        p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
         QWidget::showEvent(event);
 
         QString styleSheet = p_page_idle->getCSS(PAGE_TRANSACTIONS_CSS);

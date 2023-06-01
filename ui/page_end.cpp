@@ -53,7 +53,7 @@ page_end::~page_end()
 void page_end::showEvent(QShowEvent *event)
 {
 
-    qDebug() << "<<<<<<< Page Enter: Thank you >>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
     p_page_idle->setTemplateTextToObject(ui->notifyUs_Button);

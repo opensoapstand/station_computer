@@ -75,7 +75,7 @@ page_idle::~page_idle()
 
 void page_idle::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
+    registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
     // for products.cpp
@@ -237,7 +237,7 @@ void page_idle::setDiscountPercentage(double percentageFraction)
 void page_idle::registerUserInteraction(QWidget *page)
 {
     QString page_name = page->objectName();
-    qDebug() << "-------------------------------------- Show: " + page_name + " --------------------------------------";
+    qDebug() << "||||||||||||||||||||||||||||||||||||| User entered: " + page_name + " |||||||||||||||||||||||||||||||||||||";
     
     DbManager db(DB_PATH);
     db.addUserInteraction(page_name);
@@ -463,7 +463,6 @@ QString page_idle::getDefaultTemplatePathFromName(QString fileName)
 void page_idle::pageTransition(QWidget *pageToHide, QWidget *pageToShow)
 {
     // page transition effects are not part of QT but of the operating system! // search for ubuntu settings program to set transition animations to "off"
-    qDebug() << "---------page transition";
     pageToShow->showFullScreen();
     pageToHide->hide();
 }
@@ -606,7 +605,7 @@ void page_idle::loadTextsFromCsv(QString csv_path, std::map<QString, QString> *d
         {
             if (!line.empty() && line[0] != '#') // Skip empty lines and lines starting with '#'
             {
-                qDebug() << QString::fromStdString(line);
+                // qDebug() << QString::fromStdString(line);
 
                 std::size_t space_pos = line.find(',');
                 if (space_pos != std::string::npos)

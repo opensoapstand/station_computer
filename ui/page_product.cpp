@@ -198,7 +198,6 @@ page_product::~page_product()
 void page_product::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
-    qDebug() << "<<<<<<< Page Enter: Product >>>>>>>>>";
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
 
     QString styleSheet = p_page_idle->getCSS(PAGE_PRODUCT_CSS);

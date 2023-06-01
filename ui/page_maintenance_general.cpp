@@ -35,7 +35,7 @@ page_maintenance_general::~page_maintenance_general()
 
 void page_maintenance_general::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< Page Enter: maintenance general machine settings >>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     qDebug() << "db for maintenance general";
     DbManager db(DB_PATH);
     ui->enable_empty_container_checkBox->setChecked(db.getEmptyContainerDetectionEnabled());

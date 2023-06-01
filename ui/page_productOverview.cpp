@@ -86,6 +86,9 @@ void page_product_overview::cancelTimers()
 
 void page_product_overview::showEvent(QShowEvent *event)
 {
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    QWidget::showEvent(event);
+    
     QString styleSheet = p_page_idle->getCSS(PAGE_PRODUCT_OVERVIEW_CSS);
     ui->pushButton_promo_input->setStyleSheet(styleSheet);
     ui->lineEdit_promo_code->setProperty("class", "promoCode");
@@ -126,8 +129,7 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->pushButton_to_help->setStyleSheet(styleSheet);
 
 
-    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
-    QWidget::showEvent(event);
+    
 
     p_page_idle->selectedProduct->loadProductProperties();
     reset_and_show_page_elements();

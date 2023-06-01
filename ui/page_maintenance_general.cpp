@@ -36,10 +36,12 @@ page_maintenance_general::~page_maintenance_general()
 void page_maintenance_general::showEvent(QShowEvent *event)
 {
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    QWidget::showEvent(event);
+    
     qDebug() << "db for maintenance general";
     DbManager db(DB_PATH);
     ui->enable_empty_container_checkBox->setChecked(db.getEmptyContainerDetectionEnabled());
-    ui->enable_empty_container_checkBox->setText( "Enable auto empty detection. (If disabled, will display sold out if less than " + QString::number(CONTAINER_EMPTY_THRESHOLD_ML) + "ml remaining)");
+    ui->enable_empty_container_checkBox->setText("Enable auto empty detection. (If disabled, will display sold out if less than " + QString::number(CONTAINER_EMPTY_THRESHOLD_ML) + "ml remaining)");
     ui->enable_pump_ramping_checkBox->setChecked(db.getPumpRampingEnabled());
     ui->enable_pump_ramping_checkBox->hide();
     db.closeDB();
@@ -74,7 +76,7 @@ void page_maintenance_general::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference
  */
-void page_maintenance_general::setPage(page_maintenance *pageMaintenance, page_idle *pageIdle, page_idle_products *p_page_idle_products )
+void page_maintenance_general::setPage(page_maintenance *pageMaintenance, page_idle *pageIdle, page_idle_products *p_page_idle_products)
 {
 
     this->p_page_maintenance = pageMaintenance;
@@ -549,4 +551,3 @@ void page_maintenance_general::on_restart_electronics_Button_clicked()
 
     qApp->exit(); // restart UI. The problem with only controller restart is that there are two screens now.
 }
-

@@ -22,13 +22,11 @@
 #include "page_end.h"
 
 // CTOR
-page_error_wifi::page_error_wifi(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::page_error_wifi)
+page_error_wifi::page_error_wifi(QWidget *parent) : QWidget(parent),
+                                                    ui(new Ui::page_error_wifi)
 {
     ui->setupUi(this);
 
-    
     timeoutTimer = new QTimer(this);
     timeoutTimer->setInterval(20);
     connect(timeoutTimer, SIGNAL(timeout()), this, SLOT(onTimeOutTick()));
@@ -39,7 +37,7 @@ page_error_wifi::page_error_wifi(QWidget *parent) :
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void page_error_wifi::setPage(page_qr_payment *page_qr_payment, page_end* page_end, page_idle* pageIdle)
+void page_error_wifi::setPage(page_qr_payment *page_qr_payment, page_end *page_end, page_idle *pageIdle)
 {
     this->thanksPage = page_end;
     this->paymentPage = page_qr_payment;
@@ -55,28 +53,23 @@ page_error_wifi::~page_error_wifi()
 void page_error_wifi::showEvent(QShowEvent *event)
 {
 
- QString styleSheet = p_page_idle->getCSS(PAGE_ERROR_WIFI_CSS);
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+
+    QWidget::showEvent(event);
+    QString styleSheet = p_page_idle->getCSS(PAGE_ERROR_WIFI_CSS);
 
     ui->wifi_ack_Button->setStyleSheet(styleSheet);
     ui->mainPageButton->setStyleSheet(styleSheet);
 
-
-    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
-    
-    QWidget::showEvent(event);
-
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
     QString image_path = p_page_idle->getTemplatePathFromName(ERROR_MESSAGE_PATH);
     p_page_idle->addPictureToLabel(ui->error_message_label, image_path);
-
 
     ui->wifi_ack_Button->setEnabled(false);
 
     timeoutTimer->start(1000);
     _goTop_page_idleTimeoutSec = 10;
 }
-
-
 
 /*
  * Page Tracking reference to Payment page and completed payment
@@ -96,27 +89,28 @@ void page_error_wifi::on_mainPageButton_clicked()
     exit_page();
 }
 
-
-void page_error_wifi::exit_page(){
-//    qDebug() << "page_error_wifi: Stop Timers";
+void page_error_wifi::exit_page()
+{
+    //    qDebug() << "page_error_wifi: Stop Timers";
     // if(timeoutTimer != nullptr){
     timeoutTimer->stop();
-// }
+    // }
     // p_page_idle->showFullScreen();
     // this->hide();
     p_page_idle->pageTransition(this, p_page_idle);
 }
 
-
-void page_error_wifi::onTimeOutTick(){
-    if(-- _goTop_page_idleTimeoutSec >= 0) {
+void page_error_wifi::onTimeOutTick()
+{
+    if (--_goTop_page_idleTimeoutSec >= 0)
+    {
         // qDebug() << "page_dispenser: Idle Tick Down: " << _goTop_page_idleTimeoutSec;
-    } else {
-//        qDebug() << "Timer Done!" << _goTop_page_idleTimeoutSec;
+    }
+    else
+    {
+        //        qDebug() << "Timer Done!" << _goTop_page_idleTimeoutSec;
         qDebug() << "Show wifi error timed out. ";
         // timeoutTimer->stop();
         exit_page();
-        
     }
 }
-

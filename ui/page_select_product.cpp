@@ -91,7 +91,8 @@ page_select_product::~page_select_product()
 void page_select_product::showEvent(QShowEvent *event)
 {
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
-
+    QWidget::showEvent(event);
+    
     QString styleSheet = p_page_idle->getCSS(PAGE_SELECT_PRODUCT_CSS);
     ui->p_page_maintenanceButton->setStyleSheet(styleSheet);
     ui->pushButton_help_page->setStyleSheet(styleSheet);
@@ -117,11 +118,8 @@ void page_select_product::showEvent(QShowEvent *event)
     p_page_idle->setTemplateTextToObject(ui->pushButton_to_idle);
 
     this->lower();
-    QWidget::showEvent(event);
+
     maintenanceCounter = 0;
-
-
-   
 
     productPageEndTimer->start(1000);
     _productPageTimeoutSec = 15;
@@ -167,7 +165,7 @@ void page_select_product::displayProducts()
         qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << " Status text: " << product_status_text;
 
         labels_product_name[i]->setText(product_name);
-        
+
         // labels_product_name[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
         // labels_product_name[i]->setStyleSheet(styleSheet);
 
@@ -199,15 +197,18 @@ void page_select_product::displayProducts()
             icon_path = ICON_TYPE_CONCENTRATE_PATH;
             type_text = "CONCENTRATE";
         }
-        else if(product_type== "Kombucha"){
+        else if (product_type == "Kombucha")
+        {
             icon_path = ICON_TYPE_KOMBUCHA_PATH;
             type_text = "KOMBUCHA";
         }
-        else if(product_type == "Mocktail"){
+        else if (product_type == "Mocktail")
+        {
             icon_path = ICON_TYPE_MOCKTAIL_PATH;
             type_text = "MOCKTAIL";
         }
-        else if(product_type == "Juice"){
+        else if (product_type == "Juice")
+        {
             icon_path = ICON_TYPE_JUICE_PATH;
             type_text = "JUICE";
         }
@@ -230,7 +231,6 @@ void page_select_product::displayProducts()
         labels_product_overlay_text[i]->raise();
 
         pushButtons_product_select[i]->raise();
-
 
         if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
         {

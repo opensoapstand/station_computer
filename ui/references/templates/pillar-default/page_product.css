@@ -5,7 +5,6 @@
    font-weight: 75;
    font-size: 20px;
    line-height: 99px;
-   letter-spacing: px;
    color: #FFFFFF;
    text-align: center;
    qproperty-alignment: AlignCenter;
@@ -39,7 +38,6 @@
    font-weight: 400;
    font-size: 36px;
    line-height: auto;
-   letter-spacing: 0px;
    color: #58595B;
    border: none;
 }
@@ -52,6 +50,7 @@
    font-size: 24px;
    line-height: 44px;
    color: #221F20;
+   text-align: center;
    qproperty-alignment: AlignCenter;
 }
 
@@ -101,6 +100,7 @@
    font-size: 28px;
    line-height: 36px;
    color: #221F20;
+   text-align: left;
    qproperty-alignment: AlignLeftCenter;
    margin-top: 20px;
 }
@@ -136,9 +136,8 @@
    font-weight: 400;
    background-color: #221F20;
    font-size: 48px;
-   text-align: centre;
+   text-align: center;
    line-height: auto;
-   letter-spacing: 0px;
    qproperty-alignment: AlignCenter;
    border-radius: 20px;
    color: white;
@@ -151,7 +150,6 @@
    font-weight: 75;
    font-size: 20px;
    line-height: 99px;
-   letter-spacing: px;
    color: #FFFFFF;
    text-align: center;
    qproperty-alignment: AlignCenter;

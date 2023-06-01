@@ -6,47 +6,43 @@ QPushButton {
     border: none;
 }
 .promoCode{
-    font-family: Montserrat; 
+    font-family: "EuropaNuova-Regular"; 
     font-style: normal; 
-    font-weight: bold; 
+    font-weight: 400; 
     font-size: 28px; 
     line-height: 44px; 
     color: #58595B;
-    border: 1px solid #58595B;
+    border: 1px solid #221F20;
 }
 .promoCode_invalid{
-    font-family: Montserrat; 
+    font-family: "EuropaNuova-Regular"; 
     font-style: normal; 
-    font-weight: bold; 
+    font-weight: 400; 
     font-size: 28px; 
-    line-height: 44px; 
+    line-height: 44px;
     color: #f44336;
     border: 1px solid #f44336;
 }
 .promoCode_valid{
-    font-family: Montserrat; 
+    font-family: "EuropaNuova-Regular"; 
     font-style: normal; 
-    font-weight: bold; 
+    font-weight: 400; 
     font-size: 28px; 
     line-height: 44px; 
     color: #5E8580;
     border: 1px solid #58595B;
 }
 #pushButton_select_product_page{ 
-    background-color: transparent; 
-    font-family: 'Brevia';
+    font-family: 'EuropaNuova-Regular';
     font-style: normal;
-    font-weight: 75;
-    font-size: 32px;
-    line-height: 99px;
-    letter-spacing: 1.5px;
-    text-transform: lowercase;
-    color: #003840;
+    font-weight: 400;
+    font-size: 65px;
+    color: white;
     text-align: left;
-    qproperty-alignment: AlignCenter;
+    qproperty-alignment: AlignLeft;
     border: none;
 }
-.buttonPromo {
+/* .buttonPromo {
     font-family: 'Brevia';
     font-style: normal;
     font-weight: 75;
@@ -59,7 +55,7 @@ QPushButton {
     color: #FFFFFF;
     text-align: center;
     qproperty-alignment: AlignCenter;
-}
+} */
 .buttonBGTransparent{ 
     background-color: transparent; 
     border: 0px
@@ -80,69 +76,76 @@ QLabel {
     text-transform: capitalize;
     color: #438080;
 }
-#label_selected_volume{
-    font-family: 'Brevia';
-    font-style: normal;
-    font-weight: 75;
-    font-size: 32px;
-    line-height: 99px;
-    letter-spacing: 1.5px;
-    color: #003840;
-    text-align: center;
-    qproperty-alignment: AlignCenter;
-    border: 2px solid #5E8580;
-}
+
 .labelOrderOverview{
-    font-family: 'Montserrat';
+    font-family: 'EuropaNuova-Regular';
     font-style: normal;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 28px;
     line-height: 40px;
     letter-spacing: 0px;
-    color: #58595B;
+    color: #FFFFFF;
+}
+#label_invoice_price{
+    font-family: 'EuropaNuova-ExtraBold';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 40px;
+    letter-spacing: 0px;
+    color: #FFFFFF;
 }
 #label_invoice_box{
-    border: 2px solid #5E8580;
+    /* border: 2px solid #5E8580; */
+    background: #221F20;
+    border-radius: 20px;
+    box-shadow: 0px -5px 4px rgba(0, 0, 0, 0.25);
 }
 
 #label_pay {
-    font-family: 'Brevia';
+    font-family: 'EuropaNuova-Regular';
     font-style: normal;
-    font-weight: 200;
-    background-color: #5E8580;
-    font-size: 48px;
+    font-weight: 400;
+    background-color: #221F20;
+    font-size: 47px;
     text-align: centre;
     line-height: auto;
-    letter-spacing: 0px;
     qproperty-alignment: AlignCenter;
-    border-radius: 20px;
-    color: white;
-    border: none;
+    border-radius: 25px;
+    color: #FFFFFF;
+    border: 10px solid white;
 }
+
 .labelDiscount{
-    font-family: 'Montserrat';
+    font-family: 'EuropaNuova-Regular';
     font-style: normal;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 28px;
     line-height: 28px;
     color: #248C8C;
+    text-align: right;
 }
 .labelDiscountName{
-    font-family: 'Montserrat';
+    font-family: 'EuropaNuova-Regular';
     font-style: normal;
     font-weight: 400;
-    font-size: 24px;
+    font-size: 28px;
     line-height: 29px;
-    color: #58595B;
+    color: #FFFFFF;
 }
 #label_total{
-    font-family: 'Montserrat';
+    font-family: 'EuropaNuova-Regular';
     font-style: normal;
-    font-weight: 600;
-    font-size: 36px;
-    line-height: 40px;
-    letter-spacing: 0px;
-    color: #58595B;
+    font-weight: 400;
+    font-size: 37px;
+    line-height: 29px;
+    color: #FFFFFF;
+}
+#label_invoice_price_total{
+    font-family: "EuropaNuova-ExtraBold";
+    font-weight: 400;
+    font-size: 37px;
+    color: #FFFFFF;
 }
 #label_gif{
     font-family: 'Montserrat';
@@ -157,8 +160,19 @@ QLabel {
     border-radius: 20px;
 }
 #label_product_photo {
-    border: 2px solid #5E8580;
+    /* border: 2px solid #5E8580; */
 }
-#invoice_line{
-    border: none;
+#label_selected_volume{
+    font-family: 'EuropaNuova-ExtraBold';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 60px;
+    line-height: 79px;
+    letter-spacing: 1.5px;
+    color: #221F20;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #5E8580;
+    border-radius: 20px;
+    margin-left: 5px;
 }

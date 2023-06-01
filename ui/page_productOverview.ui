@@ -85,7 +85,7 @@ line-height: 29px;</string>
   <widget class="QLabel" name="label_invoice_price">
    <property name="geometry">
     <rect>
-     <x>743</x>
+     <x>749</x>
      <y>993</y>
      <width>211</width>
      <height>80</height>
@@ -111,10 +111,10 @@ color: #7F8080;</string>
   <widget class="QLabel" name="label_invoice_price_total">
    <property name="geometry">
     <rect>
-     <x>751</x>
-     <y>1344</y>
+     <x>749</x>
+     <y>1340</y>
      <width>211</width>
-     <height>80</height>
+     <height>44</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -139,7 +139,7 @@ color: #58595B;</string>
     <rect>
      <x>538</x>
      <y>256</y>
-     <width>444</width>
+     <width>445</width>
      <height>450</height>
     </rect>
    </property>
@@ -1882,7 +1882,7 @@ color: #58595B;
    </property>
    <property name="geometry">
     <rect>
-     <x>749</x>
+     <x>751</x>
      <y>1160</y>
      <width>201</width>
      <height>80</height>
@@ -1943,7 +1943,7 @@ color: #58595B;
     <rect>
      <x>94</x>
      <y>256</y>
-     <width>444</width>
+     <width>445</width>
      <height>450</height>
     </rect>
    </property>
@@ -2044,10 +2044,10 @@ font-weight:bold;</string>
   <widget class="QLabel" name="label_invoice_box">
    <property name="geometry">
     <rect>
-     <x>80</x>
+     <x>84</x>
      <y>890</y>
-     <width>895</width>
-     <height>590</height>
+     <width>911</width>
+     <height>795</height>
     </rect>
    </property>
    <property name="font">
@@ -2093,9 +2093,9 @@ text-align: center;</string>
   <widget class="QLabel" name="label_total">
    <property name="geometry">
     <rect>
-     <x>144</x>
+     <x>130</x>
      <y>1340</y>
-     <width>221</width>
+     <width>261</width>
      <height>44</height>
     </rect>
    </property>
@@ -2103,7 +2103,6 @@ text-align: center;</string>
     <string/>
    </property>
   </widget>
-
   <widget class="QLabel" name="label_help">
    <property name="geometry">
     <rect>
@@ -2117,6 +2116,20 @@ text-align: center;</string>
     <string>TextLabel</string>
    </property>
   </widget>
+  <widget class="Line" name="invoice_line">
+   <property name="geometry">
+    <rect>
+     <x>137</x>
+     <y>1280</y>
+     <width>821</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <zorder>label_help</zorder>
   <zorder>pushButton_promo_apply</zorder>
   <zorder>label_pay</zorder>
   <zorder>page_qr_payment_Button</zorder>
@@ -2138,8 +2151,8 @@ text-align: center;</string>
   <zorder>promoKeyboard</zorder>
   <zorder>label_product_photo</zorder>
   <zorder>label_gif</zorder>
-  <zorder>label_notify_us</zorder>
   <zorder>pushButton_to_help</zorder>
+  <zorder>invoice_line</zorder>
  </widget>
  <resources/>
  <connections/>

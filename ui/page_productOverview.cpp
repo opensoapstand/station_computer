@@ -131,16 +131,19 @@ void page_product_overview::showEvent(QShowEvent *event)
 
     ui->label_invoice_name->setStyleSheet(styleSheet);
     ui->label_invoice_price->setStyleSheet(styleSheet);
+    ui->label_invoice_price_total->setStyleSheet(styleSheet);
     ui->label_discount_tag->setStyleSheet(styleSheet);
     ui->label_invoice_discount_amount->setStyleSheet(styleSheet);
     ui->label_invoice_box->setStyleSheet(styleSheet);
     //ui->pushButton_promo_apply->setProperty("class", "buttonPromo");
     //ui->pushButton_promo_apply->setStyleSheet(styleSheet);
     ui->label_pay->setStyleSheet(styleSheet);
+    ui->label_pay->raise();
     ui->label_invoice_discount_name->setProperty("class", "labelDiscountName");
     ui->label_invoice_discount_name->setStyleSheet(styleSheet);
     ui->label_total->setStyleSheet(styleSheet);
     ui->label_gif->setStyleSheet(styleSheet);
+    ui->invoice_line->setStyleSheet(styleSheet);
     ui->pushButton_select_product_page->setStyleSheet(styleSheet);
 
     ui->label_product_photo->setStyleSheet(styleSheet);
@@ -149,6 +152,7 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->page_qr_payment_Button->setProperty("class", "buttonBGTransparent");
     ui->page_qr_payment_Button->setStyleSheet(styleSheet);
+    ui->page_qr_payment_Button->raise();
     // ui->page_qr_payment_Button->setStyleSheet("QPushButton { background-color: red; border: 0px };QPushButton:pressed { background-color: green; border: 10px }");
 
     ui->pushButton_to_help->setProperty("class", "buttonBGTransparent");

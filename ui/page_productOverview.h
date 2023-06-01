@@ -53,11 +53,8 @@ public:
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
-    // void paintEvent(QPaintEvent *event);
 
     void cancelTimers();
-    // void updatePriceAfterPromo(double promoPercent);
-    void couponHandler();
     void coupon_disable();
     void coupon_input_show();
     void coupon_input_hide();
@@ -72,13 +69,12 @@ signals:
 private slots:
     // **** Navigation ****
     void on_pushButton_previous_page_clicked();
-    void on_page_qr_payment_Button_clicked();
+    void on_pushButton_continue_clicked();
    
     void on_lineEdit_promo_codeInput_clicked();
     void on_pushButton_select_product_page_clicked();
     void return_to_selectProductPage();
-    void updatePrice();
-    // Set Drink Order
+    void updatePriceLabel();
     void on_pushButton_to_help_clicked();
     void onSelectTimeoutTick();
     void keyboardButtonPressed(int);
@@ -88,7 +84,6 @@ private:
     bool stopSelectTimers();
     void reset_and_show_page_elements();
     void selectOnTick();
-    void mainPage();
 
     std::string readBuffer;
     Ui::page_product_overview *ui;

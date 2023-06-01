@@ -50,7 +50,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="print_Button">
+  <widget class="QPushButton" name="pushButton_print">
    <property name="geometry">
     <rect>
      <x>280</x>

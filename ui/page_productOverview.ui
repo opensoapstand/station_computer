@@ -42,7 +42,7 @@ line-height: 29px;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="page_qr_payment_Button">
+  <widget class="QPushButton" name="pushButton_continue">
    <property name="geometry">
     <rect>
      <x>188</x>
@@ -139,7 +139,11 @@ color: #58595B;</string>
     <rect>
      <x>538</x>
      <y>256</y>
+<<<<<<< HEAD
      <width>445</width>
+=======
+     <width>441</width>
+>>>>>>> 33d5acfe6318682e796b0f86f75f779e7edcd889
      <height>450</height>
     </rect>
    </property>
@@ -203,22 +207,6 @@ text-align: center;</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_promo_apply">
-   <property name="geometry">
-    <rect>
-     <x>825</x>
-     <y>775</y>
-     <width>150</width>
-     <height>46</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-   <property name="text">
-    <string/>
    </property>
   </widget>
   <widget class="QLineEdit" name="lineEdit_promo_code">
@@ -1979,39 +1967,6 @@ color: #58595B;
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label_payment_page">
-   <property name="geometry">
-    <rect>
-     <x>345</x>
-     <y>1468</y>
-     <width>397</width>
-     <height>92</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Montserrat</family>
-     <pointsize>30</pointsize>
-     <weight>75</weight>
-     <italic>false</italic>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font-family: Montserrat;
-background-image: url(background.png);
-color: #FFFFFF;
-text-align: center;
-font: 75 30pt &quot;Montserrat&quot;;
-font-weight:bold;</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
   <widget class="QPushButton" name="pushButton_select_product_page">
    <property name="geometry">
     <rect>
@@ -2044,10 +1999,10 @@ font-weight:bold;</string>
   <widget class="QLabel" name="label_invoice_box">
    <property name="geometry">
     <rect>
-     <x>84</x>
+     <x>94</x>
      <y>890</y>
-     <width>911</width>
-     <height>795</height>
+     <width>881</width>
+     <height>590</height>
     </rect>
    </property>
    <property name="font">
@@ -2132,9 +2087,8 @@ text-align: center;</string>
   <zorder>label_help</zorder>
   <zorder>pushButton_promo_apply</zorder>
   <zorder>label_pay</zorder>
-  <zorder>page_qr_payment_Button</zorder>
+  <zorder>pushButton_continue</zorder>
   <zorder>label_invoice_box</zorder>
-  <zorder>label_payment_page</zorder>
   <zorder>label_invoice_price</zorder>
   <zorder>lineEdit_promo_code</zorder>
   <zorder>pushButton_previous_page</zorder>

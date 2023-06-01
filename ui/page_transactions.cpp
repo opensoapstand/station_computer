@@ -19,7 +19,6 @@ page_transactions::page_transactions(QWidget *parent) : QWidget(parent),
         font.setWeight(75);
 
         ui->pushButton_back->setFont(font);
-        ui->pushButton_back->setText("<- Back");
 
         // set up print button
 
@@ -28,10 +27,10 @@ page_transactions::page_transactions(QWidget *parent) : QWidget(parent),
         font.setBold(true);
         font.setWeight(75);
 
-        // ui->print_Button->setStyleSheet("QPushButton { color:#FFFFFF; background-color: transparent; border: 0px }");
+        // ui->pushButton_print->setStyleSheet("QPushButton { color:#FFFFFF; background-color: transparent; border: 0px }");
 
-        ui->print_Button->setFont(font);
-        ui->print_Button->setText("Print Selected Receipt");
+        ui->pushButton_print->setFont(font);
+        
 
         // ui->transactions_List->setStyleSheet("QListWidget{  background:transparent; }QListWidget::item{background:green;}");
 }
@@ -54,16 +53,16 @@ void page_transactions::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 
 void page_transactions::showEvent(QShowEvent *event)
 {
-        QString styleSheet = p_page_idle->getCSS(PAGE_TRANSACTIONS_CSS);
-
-        ui->pushButton_back->setStyleSheet(styleSheet);
-        ui->print_Button->setStyleSheet(styleSheet);
-        ui->transactions_List->setStyleSheet(styleSheet);
-
-
-
         qDebug() << "<<<<<<< Page Enter: Transactions >>>>>>>>>";
         QWidget::showEvent(event);
+
+        QString styleSheet = p_page_idle->getCSS(PAGE_TRANSACTIONS_CSS);
+        ui->pushButton_back->setStyleSheet(styleSheet);
+        ui->pushButton_print->setStyleSheet(styleSheet);
+        ui->transactions_List->setStyleSheet(styleSheet);
+
+        p_page_idle->setTemplateTextToObject(ui->pushButton_back);
+        p_page_idle->setTemplateTextToObject(ui->pushButton_print);
 
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TRANSACTIONS_BACKGROUND_PATH);
 
@@ -81,12 +80,12 @@ void page_transactions::showEvent(QShowEvent *event)
 
         if (hasReceiptPrinter)
         {
-                ui->print_Button->show();
+                ui->pushButton_print->show();
         }
         else
         {
-                ui->print_Button->show();
-                // ui->print_Button->hide();
+                ui->pushButton_print->show();
+                // ui->pushButton_print->hide();
         }
 }
 
@@ -151,7 +150,7 @@ void page_transactions::on_pushButton_back_clicked()
         hideCurrentPageAndShowProvided(p_page_idle);
 }
 
-void page_transactions::on_print_Button_clicked(bool checked)
+void page_transactions::on_pushButton_print_clicked(bool checked)
 {
 
         // Get the pointer to the currently selected item.

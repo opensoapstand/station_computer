@@ -6,7 +6,7 @@
 # Place and run in Station. In /home/df-admin/drinkfill/admin         #
 #######################################################################
 
-./status_services.sh
+sudo ./status_services.sh
 
 echo 'Drinkfill developer tools. Quick shortcuts to tools.'
 echo 'ui is the qt user interface program'
@@ -58,7 +58,7 @@ make_options () {
 
 
 PS3='Choose option(digit + enter):'
-options=("Quit" "aws_operations" "AWS log in" "AWS run station operations" "soapstand_manager" "Station info" "Stop ui and controller" "(Re)start ui and controller" "run standalone controller" "Copy program binary files from drinkfill to production folder and run" "Create and run production data copied from drinkfill folder (without db!)" "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)" "Services: SSH rtunnel setup from production" "make ui and fsm" "make ui and fsm and deploy binaries" "make ui" "make ui and deploy binaries" "make fsm" "make fsm and deploy binaries")
+options=("Quit" "aws_operations" "AWS log in" "AWS run station operations" "soapstand_manager" "Station info" "Stop ui and controller" "(Re)start ui and controller" "run standalone controller" "Copy program binary files from drinkfill to production folder and run" "Create and run production data copied from drinkfill folder (without db!)" "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)" "Setup aws port (rtunnel)" "make ui and fsm" "make ui and fsm and deploy binaries" "make ui" "make ui and deploy binaries" "make fsm" "make fsm and deploy binaries")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -139,8 +139,15 @@ do
             ./copy_and_enable_services.sh
             echo 'All done. (note: rtunnel.service is not copied automatically.)'
             ;;
-        "Services: SSH rtunnel setup from production")
-            ./rtunnel_setup.sh
+        "Set port number")
+        #0 ask for port number 
+        #1 change db open close
+        #2 get port number from db and add to service open close db
+        #3 restart service 
+
+        ;;
+        "Setup aws port (rtunnel)")
+            sudo ./set_aws_port.sh
             ;;
         "Quit") 
             break

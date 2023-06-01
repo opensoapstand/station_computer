@@ -38,7 +38,7 @@ sudo -u df-admin scp -r /home/df-admin/drinkfill/ui/references /home/df-admin/pr
 # move scripts and other administrative stuff
 scp /home/df-admin/drinkfill/admin/controller_soapstand.service /home/df-admin/production/admin/controller_soapstand.service
 scp /home/df-admin/drinkfill/admin/rtunnel.service /home/df-admin/production/admin/rtunnel.service
-scp /home/df-admin/drinkfill/admin/rtunnel_setup.sh /home/df-admin/production/admin/rtunnel_setup.sh
+scp /home/df-admin/drinkfill/admin/set_aws_port.sh /home/df-admin/production/admin/set_aws_port.sh
 scp /home/df-admin/drinkfill/admin/check_connectivity.service /home/df-admin/production/admin/check_connectivity.service
 scp /home/df-admin/drinkfill/admin/controller_execute.sh /home/df-admin/production/admin/controller_execute.sh
 scp /home/df-admin/drinkfill/admin/ui_soapstand.service /home/df-admin/production/admin/ui_soapstand.service
@@ -67,7 +67,7 @@ scp /home/df-admin/drinkfill/ui/payment/public_key.txt /home/df-admin/production
 sudo -u df-admin rm -r /home/df-admin/production/db
 sudo -u df-admin scp -r $BKP_PATH/db /home/df-admin/production
 
-echo "Done. NOTE: the database was not copied from the drinkfill folder. It was preserved from the previous production folder. Copy the db manually from db if needed."
+echo "Done. NOTE: the database was not copied from the drinkfill folder. It was preserved from the previous production folder. Copy the db manually from drinkfill if needed."
 
 ## ask for db to be copied from drinkfill to production. By default: NO! 
 #read -p "Copy database? [y] for yes. [enter,anykey] for no:" -n 1 -r

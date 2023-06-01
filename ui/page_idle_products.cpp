@@ -58,25 +58,25 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     labels_product_type[2] = ui->label_product_3_type;
     labels_product_type[3] = ui->label_product_4_type;
 
-    ui->pushButton_to_select_product_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    // ui->pushButton_to_select_product_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->pushButton_to_select_product_page->raise();
 
     //ui->pushButton_help_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     // ui->pushButton_to_idle->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-    ui->label_pick_soap->setStyleSheet(
-        "QLabel {"
+    // ui->label_pick_soap->setStyleSheet(
+    //     "QLabel {"
 
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 54px;"
-        "line-height: 99px;"
-        "letter-spacing: px;"
-        "color: #003840;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
+    //     "font-family: 'Brevia';"
+    //     "font-style: normal;"
+    //     "font-weight: 75;"
+    //     "font-size: 54px;"
+    //     "line-height: 99px;"
+    //     "letter-spacing: px;"
+    //     "color: #003840;"
+    //     "text-align: center;"
+    //     "qproperty-alignment: AlignCenter;"
+    //     "border: none;"
+    //     "}");
     ui->label_pick_soap->setText("Discover how to<br> refill soap here");
 
     QFont font;
@@ -108,6 +108,18 @@ page_idle_products::~page_idle_products()
 
 void page_idle_products::showEvent(QShowEvent *event)
 {
+    QString styleSheet = p_page_idle->getCSS(PAGE_IDLE_PRODUCTS_CSS);
+    ui->pushButton_to_select_product_page->setStyleSheet(styleSheet); 
+    ui->label_pick_soap->setStyleSheet(styleSheet);
+    
+    for (int i = 0; i < 4; i++)
+    {
+
+        labels_product_picture[i]->setStyleSheet(styleSheet);
+        selectProductOverlayLabels[i]->setStyleSheet(styleSheet);
+
+    }
+
     qDebug() << "open db: payment method";
     bool needsReceiptPrinter = false;
     for (int slot = 1; slot <= SLOT_COUNT; slot++)
@@ -162,7 +174,7 @@ void page_idle_products::displayProducts()
         uint8_t slot = i + 1;
 
         // display product picture
-        labels_product_picture[i]->setStyleSheet("border: none;");
+      //  labels_product_picture[i]->setStyleSheet("border: none;");
         p_page_idle->addPictureToLabel(labels_product_picture[i], p_page_idle->products[i].getProductPicturePath());
         product_slot_enabled = p_page_idle->products[i].getSlotEnabled();
 
@@ -217,7 +229,7 @@ void page_idle_products::displayProducts()
 
         // overlay product status
             labels_product_overlay_text[i]->setText("");
-            selectProductOverlayLabels[i]->setStyleSheet("background-color: transparent;");
+            // selectProductOverlayLabels[i]->setStyleSheet("background-color: transparent;");
 
         labels_product_type[i]->setText(type_text);
         labels_product_type[i]->setStyleSheet("QLabel{font-family: 'Brevia';font-style: normal;font-weight: 700;font-size: 30px;line-height: 41px;qproperty-alignment: AlignCenter;text-transform: uppercase;color: #003840;}");

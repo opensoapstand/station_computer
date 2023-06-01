@@ -139,11 +139,7 @@ color: #58595B;</string>
     <rect>
      <x>538</x>
      <y>256</y>
-<<<<<<< HEAD
      <width>445</width>
-=======
-     <width>441</width>
->>>>>>> 33d5acfe6318682e796b0f86f75f779e7edcd889
      <height>450</height>
     </rect>
    </property>
@@ -217,7 +213,7 @@ text-align: center;</string>
     <rect>
      <x>94</x>
      <y>775</y>
-     <width>881</width>
+     <width>891</width>
      <height>46</height>
     </rect>
    </property>
@@ -245,7 +241,7 @@ text-align: center;</string>
     <rect>
      <x>90</x>
      <y>770</y>
-     <width>881</width>
+     <width>891</width>
      <height>46</height>
     </rect>
    </property>
@@ -274,7 +270,7 @@ text-align: center;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>110</x>
+     <x>120</x>
      <y>830</y>
      <width>841</width>
      <height>320</height>
@@ -2001,8 +1997,8 @@ color: #58595B;
     <rect>
      <x>94</x>
      <y>890</y>
-     <width>881</width>
-     <height>590</height>
+     <width>891</width>
+     <height>781</height>
     </rect>
    </property>
    <property name="font">
@@ -2085,7 +2081,6 @@ text-align: center;</string>
    </property>
   </widget>
   <zorder>label_help</zorder>
-  <zorder>pushButton_promo_apply</zorder>
   <zorder>label_pay</zorder>
   <zorder>pushButton_continue</zorder>
   <zorder>label_invoice_box</zorder>

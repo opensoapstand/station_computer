@@ -119,6 +119,7 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
     // ui->pushButton_continue->setProperty("class", "buttonBGTransparent");
     ui->pushButton_continue->setStyleSheet(styleSheet);
+    ui->pushButton_continue->raise();
     // ui->pushButton_continue->setStyleSheet("QPushButton { background-color: red; border: 0px };QPushButton:pressed { background-color: green; border: 10px }");
 
     ui->pushButton_to_help->setProperty("class", "buttonBGTransparent");

@@ -31,7 +31,16 @@ border: 0px;
    }
 
 
-
+   QLabel{
+      font-family: 'Brevia';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 30px;
+      line-height: 41px;
+      qproperty-alignment: AlignCenter;
+      text-transform: uppercase;
+      color: #003840;
+   }
    /* 
 
 

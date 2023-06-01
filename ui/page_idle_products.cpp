@@ -117,6 +117,7 @@ void page_idle_products::showEvent(QShowEvent *event)
 
         labels_product_picture[i]->setStyleSheet(styleSheet);
         selectProductOverlayLabels[i]->setStyleSheet(styleSheet);
+        labels_product_type[i]->setStyleSheet(styleSheet);
 
     }
 
@@ -232,7 +233,7 @@ void page_idle_products::displayProducts()
             // selectProductOverlayLabels[i]->setStyleSheet("background-color: transparent;");
 
         labels_product_type[i]->setText(type_text);
-        labels_product_type[i]->setStyleSheet("QLabel{font-family: 'Brevia';font-style: normal;font-weight: 700;font-size: 30px;line-height: 41px;qproperty-alignment: AlignCenter;text-transform: uppercase;color: #003840;}");
+        // labels_product_type[i]->setStyleSheet(setStyle);
     }
 }
 

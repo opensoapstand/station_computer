@@ -83,6 +83,7 @@ using namespace std;
 #define PAGE_TRANSACTIONS_CSS                           "page_transactions.css"
 #define PAGE_MAINTENANCE_CSS                            "page_maintenance.css"
 #define PAGE_MAINTENANCE_DISPENSER_CSS                  "page_maintenance_dispenser.css"
+#define PAGE_IDLE_PRODUCTS_CSS                          "page_idle_products.css"
 
 
 

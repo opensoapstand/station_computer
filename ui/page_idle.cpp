@@ -237,7 +237,7 @@ void page_idle::setDiscountPercentage(double percentageFraction)
 void page_idle::registerUserInteraction(QWidget *page)
 {
     QString page_name = page->objectName();
-    qDebug() << "************** Page Enter: " + page_name + " **************" + page_name + ">>>";
+    qDebug() << "-------------------------------------- Show: " + page_name + " --------------------------------------";
     
     DbManager db(DB_PATH);
     db.addUserInteraction(page_name);

@@ -58,8 +58,8 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
 void page_product_overview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_tap_payment *page_tap_payment, page_help *pageHelp, page_product *page_product)
 {
     this->p_page_select_product = pageSelect;
-    this->paymentQrPage = page_qr_payment;
-    this->paymentTapPage = page_tap_payment;
+    this->p_page_payment_qr = page_qr_payment;
+    this->p_page_payment_tap = page_tap_payment;
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
     this->p_page_help = pageHelp;
@@ -467,14 +467,14 @@ void page_product_overview::on_pushButton_continue_clicked()
             qDebug() << "Server feedback readbuffer: " << feedback;
 
             ui->label_invoice_price->text();
-            hideCurrentPageAndShowProvided(paymentQrPage);
+            hideCurrentPageAndShowProvided(p_page_payment_qr);
         }
         curl_easy_cleanup(curl);
         readBuffer = "";
     }
     else if (paymentMethod == "tapTcp")
     {
-        hideCurrentPageAndShowProvided(paymentTapPage);
+        hideCurrentPageAndShowProvided(p_page_payment_tap);
     }
     else if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
     {

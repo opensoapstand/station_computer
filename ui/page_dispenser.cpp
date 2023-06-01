@@ -52,7 +52,7 @@ void page_dispenser::setPage(page_qr_payment *page_qr_payment, page_tap_payment 
 {
     this->thanksPage = page_end;
     this->paymentPage = page_qr_payment;
-    this->paymentTapPage = page_tap_payment;
+    this->p_page_payment_tap = page_tap_payment;
     this->p_page_idle = pageIdle;
     this->feedbackPage = pageFeedback;
 }

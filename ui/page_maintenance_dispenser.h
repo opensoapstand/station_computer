@@ -62,13 +62,13 @@ private slots:
     void refreshLabels();
     void on_backButton_clicked();
     void on_image_clicked();
-    void on_priceButton_s_clicked();
-    void on_priceButton_m_clicked();
-    void on_priceButton_l_clicked();
-    void on_priceButton_c_clicked();
-    void on_target_volumeButton_s_clicked();
-    void on_target_volumeButton_m_clicked();
-    void on_target_volumeButton_l_clicked();
+    void on_pushButton_price_small_clicked();
+    void on_pushButton_price_medium_clicked();
+    void on_pushButton_price_large_clicked();
+    void on_pushButton_price_custom_clicked();
+    void on_pushButton_target_volume_small_clicked();
+    void on_pushButton_target_volume_medium_clicked();
+    void on_pushButton_target_volume_large_clicked();
     void on_vol_per_tickButton_clicked();
     void on_refillButton_clicked();
     void on_pushButton_soldOut_clicked();
@@ -124,19 +124,19 @@ private:
     QTimer *dispenseTimer;
 
     QString text_entered;
-    bool price_small;
-    bool price_medium;
-    bool price_large;
-    bool price_custom;
+    // bool price_small;
+    // bool price_medium;
+    // bool price_large;
+    // bool price_custom;
 
-    bool target_s;
-    bool target_m;
-    bool target_l;
-    bool vol_per_tick;
-    bool full;
-    bool pwm;
-    bool buffer;
-    bool modify_stock;
+    // bool target_s;
+    // bool pushButton_target_volume_medium;
+    // bool target_l;
+    // bool vol_per_tick;
+    // bool full;
+    // bool pwm;
+    // bool buffer;
+    // bool modify_stock;
     bool isDispenseButtonPressed;
     uint16_t button_press_count;
 

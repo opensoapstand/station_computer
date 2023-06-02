@@ -29,27 +29,14 @@
   <widget class="QLabel" name="name">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>300</y>
+     <x>30</x>
+     <y>340</y>
      <width>531</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
     <string>Product Name: </string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="price_medium">
-   <property name="geometry">
-    <rect>
-     <x>190</x>
-     <y>650</y>
-     <width>190</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Product Price: </string>
    </property>
   </widget>
   <widget class="QLabel" name="volume_per_tick">
@@ -65,17 +52,17 @@
     <string>Product Volume Per Tick: </string>
    </property>
   </widget>
-  <widget class="QPushButton" name="priceButton_m">
+  <widget class="QPushButton" name="pushButton_price_medium">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>640</y>
-     <width>141</width>
-     <height>51</height>
+     <x>430</x>
+     <y>620</y>
+     <width>201</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="accessibleName">
-    <string>price_medium</string>
+    <string>pushButton_price_medium</string>
    </property>
    <property name="text">
     <string>Medium Price</string>
@@ -101,30 +88,17 @@
 Volume per Tick</string>
    </property>
   </widget>
-  <widget class="QLabel" name="price_small">
+  <widget class="QPushButton" name="pushButton_price_small">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>590</y>
-     <width>190</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Product Price: </string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="priceButton_s">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
+     <x>430</x>
      <y>580</y>
-     <width>141</width>
-     <height>51</height>
+     <width>201</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="accessibleName">
-    <string>price_small</string>
+    <string>pushButton_price_small</string>
    </property>
    <property name="text">
     <string>Small Price</string>
@@ -185,7 +159,7 @@ Volume per Tick</string>
     <rect>
      <x>830</x>
      <y>460</y>
-     <width>201</width>
+     <width>200</width>
      <height>41</height>
     </rect>
    </property>
@@ -202,7 +176,7 @@ Volume per Tick</string>
   <widget class="QLabel" name="full_volume">
    <property name="geometry">
     <rect>
-     <x>450</x>
+     <x>350</x>
      <y>460</y>
      <width>400</width>
      <height>31</height>
@@ -234,7 +208,7 @@ Volume per Tick</string>
   <widget class="QLabel" name="label_volume_dispensed_total">
    <property name="geometry">
     <rect>
-     <x>450</x>
+     <x>350</x>
      <y>380</y>
      <width>400</width>
      <height>31</height>
@@ -247,7 +221,7 @@ Volume per Tick</string>
   <widget class="QLabel" name="label_volume_remaining">
    <property name="geometry">
     <rect>
-     <x>450</x>
+     <x>350</x>
      <y>300</y>
      <width>371</width>
      <height>31</height>
@@ -260,7 +234,7 @@ Volume per Tick</string>
   <widget class="QLabel" name="label_restock_timestamp">
    <property name="geometry">
     <rect>
-     <x>450</x>
+     <x>350</x>
      <y>420</y>
      <width>431</width>
      <height>31</height>
@@ -625,17 +599,17 @@ Volume per Tick</string>
     <string>Ticks</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="target_volumeButton_s">
+  <widget class="QPushButton" name="pushButton_target_volume_small">
    <property name="geometry">
     <rect>
-     <x>420</x>
+     <x>630</x>
      <y>580</y>
-     <width>141</width>
-     <height>51</height>
+     <width>201</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="accessibleName">
-    <string>target_s</string>
+    <string>pushButton_target_volume_small</string>
    </property>
    <property name="text">
     <string>Small
@@ -645,30 +619,17 @@ Volume per Tick</string>
     <string notr="true">buttonGroup_edit_product</string>
    </attribute>
   </widget>
-  <widget class="QLabel" name="target_volume_s">
+  <widget class="QPushButton" name="pushButton_target_volume_medium">
    <property name="geometry">
     <rect>
-     <x>570</x>
-     <y>590</y>
-     <width>190</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Small Target vol</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="target_volumeButton_m">
-   <property name="geometry">
-    <rect>
-     <x>420</x>
-     <y>640</y>
-     <width>141</width>
-     <height>51</height>
+     <x>630</x>
+     <y>620</y>
+     <width>201</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="accessibleName">
-    <string>target_m</string>
+    <string>pushButton_target_volume_medium</string>
    </property>
    <property name="text">
     <string>Medium
@@ -677,19 +638,6 @@ Volume per Tick</string>
    <attribute name="buttonGroup">
     <string notr="true">buttonGroup_edit_product</string>
    </attribute>
-  </widget>
-  <widget class="QLabel" name="target_volume_m">
-   <property name="geometry">
-    <rect>
-     <x>570</x>
-     <y>650</y>
-     <width>190</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Medium target vol</string>
-   </property>
   </widget>
   <widget class="QSlider" name="pwmSlider">
    <property name="geometry">
@@ -716,7 +664,7 @@ Volume per Tick</string>
   <widget class="QLabel" name="label_volume_dispensed_since_restock">
    <property name="geometry">
     <rect>
-     <x>450</x>
+     <x>350</x>
      <y>340</y>
      <width>341</width>
      <height>31</height>
@@ -820,8 +768,8 @@ Volume per Tick</string>
   <widget class="QPushButton" name="update_portal">
    <property name="geometry">
     <rect>
-     <x>800</x>
-     <y>520</y>
+     <x>780</x>
+     <y>760</y>
      <width>251</width>
      <height>50</height>
     </rect>
@@ -840,30 +788,17 @@ Volume per Tick</string>
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="price_large">
+  <widget class="QPushButton" name="pushButton_price_large">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>720</y>
-     <width>190</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Product Price: </string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="priceButton_l">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>710</y>
-     <width>141</width>
-     <height>51</height>
+     <x>430</x>
+     <y>660</y>
+     <width>201</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="accessibleName">
-    <string>price_large</string>
+    <string>pushButton_price_large</string>
    </property>
    <property name="text">
     <string>Large Price</string>
@@ -872,17 +807,17 @@ Volume per Tick</string>
     <string notr="true">buttonGroup_edit_product</string>
    </attribute>
   </widget>
-  <widget class="QPushButton" name="target_volumeButton_l">
+  <widget class="QPushButton" name="pushButton_target_volume_large">
    <property name="geometry">
     <rect>
-     <x>420</x>
-     <y>710</y>
-     <width>141</width>
-     <height>51</height>
+     <x>630</x>
+     <y>660</y>
+     <width>201</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="accessibleName">
-    <string>target_l</string>
+    <string>pushButton_target_volume_large</string>
    </property>
    <property name="text">
     <string>Large
@@ -892,43 +827,17 @@ Volume per Tick</string>
     <string notr="true">buttonGroup_edit_product</string>
    </attribute>
   </widget>
-  <widget class="QLabel" name="target_volume_l">
+  <widget class="QPushButton" name="pushButton_price_custom">
    <property name="geometry">
     <rect>
-     <x>570</x>
-     <y>720</y>
-     <width>190</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Large Target vol</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="price_custom">
-   <property name="geometry">
-    <rect>
-     <x>220</x>
-     <y>790</y>
-     <width>190</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Product Price: </string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="priceButton_c">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>780</y>
-     <width>171</width>
-     <height>51</height>
+     <x>430</x>
+     <y>700</y>
+     <width>201</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="accessibleName">
-    <string>price_custom</string>
+    <string>pushButton_price_custom</string>
    </property>
    <property name="text">
     <string>Custom Price (per ml)</string>
@@ -937,13 +846,13 @@ Volume per Tick</string>
     <string notr="true">buttonGroup_edit_product</string>
    </attribute>
   </widget>
-  <widget class="QPushButton" name="pluButton_m">
+  <widget class="QPushButton" name="pushButton_plu_medium">
    <property name="geometry">
     <rect>
-     <x>730</x>
-     <y>640</y>
-     <width>141</width>
-     <height>51</height>
+     <x>830</x>
+     <y>620</y>
+     <width>201</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
@@ -953,13 +862,13 @@ Volume per Tick</string>
     <string notr="true">buttonGroup_edit_product</string>
    </attribute>
   </widget>
-  <widget class="QPushButton" name="pluButton_l">
+  <widget class="QPushButton" name="pushButton_plu_large">
    <property name="geometry">
     <rect>
-     <x>730</x>
-     <y>710</y>
-     <width>141</width>
-     <height>51</height>
+     <x>830</x>
+     <y>660</y>
+     <width>201</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
@@ -969,39 +878,13 @@ Volume per Tick</string>
     <string notr="true">buttonGroup_edit_product</string>
    </attribute>
   </widget>
-  <widget class="QLabel" name="pluLabel_l">
+  <widget class="QPushButton" name="pushButton_plu_small">
    <property name="geometry">
     <rect>
-     <x>880</x>
-     <y>720</y>
-     <width>190</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Large PLU</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="pluLabel_m">
-   <property name="geometry">
-    <rect>
-     <x>880</x>
-     <y>650</y>
-     <width>190</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Medium PLU</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pluButton_s">
-   <property name="geometry">
-    <rect>
-     <x>730</x>
+     <x>830</x>
      <y>580</y>
-     <width>141</width>
-     <height>51</height>
+     <width>201</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
@@ -1011,39 +894,13 @@ Volume per Tick</string>
     <string notr="true">buttonGroup_edit_product</string>
    </attribute>
   </widget>
-  <widget class="QLabel" name="pluLabel_c">
+  <widget class="QPushButton" name="pushButton_plu_custom">
    <property name="geometry">
     <rect>
-     <x>880</x>
-     <y>790</y>
-     <width>190</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Custom PLU</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="pluLabel_s">
-   <property name="geometry">
-    <rect>
-     <x>880</x>
-     <y>590</y>
-     <width>190</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Small PLU</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pluButton_c">
-   <property name="geometry">
-    <rect>
-     <x>730</x>
-     <y>790</y>
-     <width>141</width>
-     <height>51</height>
+     <x>830</x>
+     <y>700</y>
+     <width>201</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
@@ -1082,9 +939,9 @@ Volume per Tick</string>
   <widget class="Line" name="line">
    <property name="geometry">
     <rect>
-     <x>440</x>
+     <x>340</x>
      <y>370</y>
-     <width>591</width>
+     <width>691</width>
      <height>20</height>
     </rect>
    </property>
@@ -1095,9 +952,9 @@ Volume per Tick</string>
   <widget class="Line" name="line_2">
    <property name="geometry">
     <rect>
-     <x>440</x>
+     <x>340</x>
      <y>410</y>
-     <width>591</width>
+     <width>691</width>
      <height>20</height>
     </rect>
    </property>
@@ -1108,9 +965,9 @@ Volume per Tick</string>
   <widget class="Line" name="line_3">
    <property name="geometry">
     <rect>
-     <x>440</x>
+     <x>340</x>
      <y>330</y>
-     <width>591</width>
+     <width>691</width>
      <height>20</height>
     </rect>
    </property>
@@ -1121,9 +978,9 @@ Volume per Tick</string>
   <widget class="Line" name="line_4">
    <property name="geometry">
     <rect>
-     <x>440</x>
+     <x>340</x>
      <y>450</y>
-     <width>591</width>
+     <width>691</width>
      <height>20</height>
     </rect>
    </property>
@@ -1134,9 +991,9 @@ Volume per Tick</string>
   <widget class="Line" name="line_5">
    <property name="geometry">
     <rect>
-     <x>440</x>
+     <x>340</x>
      <y>490</y>
-     <width>591</width>
+     <width>691</width>
      <height>20</height>
     </rect>
    </property>
@@ -1147,9 +1004,9 @@ Volume per Tick</string>
   <widget class="Line" name="line_6">
    <property name="geometry">
     <rect>
-     <x>440</x>
+     <x>340</x>
      <y>290</y>
-     <width>591</width>
+     <width>691</width>
      <height>20</height>
     </rect>
    </property>
@@ -1168,6 +1025,257 @@ Volume per Tick</string>
    </property>
    <property name="text">
     <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_column_price">
+   <property name="geometry">
+    <rect>
+     <x>500</x>
+     <y>550</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Price</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_column_target_volume">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>550</y>
+     <width>131</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Target Volume</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_column_plu">
+   <property name="geometry">
+    <rect>
+     <x>890</x>
+     <y>550</y>
+     <width>131</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PLU/barcode</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_row_small">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>590</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Small</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_row_medium">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>630</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Medium</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_row_large">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>670</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Large</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_row_custom">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>710</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Custom</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_target_volume_custom">
+   <property name="geometry">
+    <rect>
+     <x>630</x>
+     <y>700</y>
+     <width>201</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>target_custom</string>
+   </property>
+   <property name="text">
+    <string>Custom
+ Target Volume</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_column_size">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>550</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Size</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line_7">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>570</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_8">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>610</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_9">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>650</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_10">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>690</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_11">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>730</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_12">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>540</y>
+     <width>20</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_13">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>540</y>
+     <width>20</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_14">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>540</y>
+     <width>20</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_15">
+   <property name="geometry">
+    <rect>
+     <x>1020</x>
+     <y>540</y>
+     <width>20</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_16">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>530</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
    </property>
   </widget>
  </widget>

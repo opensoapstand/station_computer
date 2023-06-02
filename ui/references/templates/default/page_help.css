@@ -12,7 +12,6 @@
 
    border: 0px;
    line-height: 99px;
-   letter-spacing: 1.5px;
    color: #003840;
    text-align: center;
    border: none;
@@ -26,7 +25,7 @@ QPushButton {
    color: #003840;
    background-color: #FFFFFF;
    border: 0px;
-   text-align: centre;
+   text-align: center;
    border-radius: 20px;
    border: none;
   
@@ -51,7 +50,6 @@ QPushButton {
    background-color: transparent;
    border: 0px;
    line-height: 99px;
-   letter-spacing: 1.5px;
    /* color: #003840; */
 /* color: #FF0000;
 text-align: center;

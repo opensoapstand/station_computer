@@ -56,6 +56,7 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     labels_product_type[3] = ui->label_product_4_type;
 
     ui->pushButton_to_select_product_page->raise();
+
     ui->label_pick_soap->setText("Discover how to<br> refill soap here<br><br> Tap here!!!");
 
     QFont font;
@@ -303,6 +304,7 @@ void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
     //     "color: white;"
     //     "border: none;"
     //     "}");
+
 }
 
 void page_idle_products::on_pushButton_to_select_product_page_clicked()

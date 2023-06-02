@@ -237,7 +237,7 @@ void page_idle::registerUserInteraction(QWidget *page)
 {
     QString page_name = page->objectName();
     qDebug() << "||||||||||||||||||||||||||||||||||||| User entered: " + page_name + " |||||||||||||||||||||||||||||||||||||";
-    
+
     DbManager db(DB_PATH);
     db.addUserInteraction(page_name);
     db.closeDB();
@@ -385,20 +385,34 @@ void page_idle::addCompanyLogoToLabel(QLabel *label)
     }
     else
     {
-        qDebug() << "WARNING: invalid customer ID. Should like C-1, C-374, ... . Provided id: " << id;
+        qDebug() << "WARNING: invalid customer ID. Should be with a format like C-1, C-374, ... . Provided id: " << id;
+    }
+}
+
+void page_idle::addPictureToButton(QPushButton *button, QString picturePath)
+{
+    QString p = selectedProduct->getProductPicturePath();
+    if (df_util::fileExists(p))
+    {
+        QPixmap im(p);
+        QIcon qi(im);
+        button->setIcon(qi);
+        button->setIconSize(QSize(271, 391));
     }
 }
 
 void page_idle::addPictureToLabel(QLabel *label, QString picturePath)
 {
-    df_util::fileExists(picturePath);
-    QPixmap picture(picturePath);
+    if (df_util::fileExists(picturePath))
+    {
+        QPixmap picture(picturePath);
 
-    int w = label->width();
-    int h = label->height();
+        int w = label->width();
+        int h = label->height();
 
-    // // set a scaled pixmap to a w x h window keeping its aspect ratio
-    label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio));
+        // // set a scaled pixmap to a w x h window keeping its aspect ratio
+        label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio));
+    }
 }
 
 QString page_idle::getTemplateFolder()

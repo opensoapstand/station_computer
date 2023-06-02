@@ -110,12 +110,14 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
         ui->pluButton_c->setEnabled(true);
   
 
-    QString p = p_page_idle->selectedProduct->getProductPicturePath();
-    p_page_idle->dfUtility->fileExists(p);
-    QPixmap im(p);
-    QIcon qi(im);
-    ui->productPhotoButton->setIcon(qi);
-    ui->productPhotoButton->setIconSize(QSize(271, 391));
+    QString path = p_page_idle->selectedProduct->getProductPicturePath();
+    p_page_idle->addPictureToLabel(ui->label_product_picture, path);
+    // if (p_page_idle->dfUtility->fileExists(p)){
+    //     QPixmap im(p);
+    //     QIcon qi(im);
+    //     ui->productPhotoButton->setIcon(qi);
+    //     ui->productPhotoButton->setIconSize(QSize(271, 391));
+    // };
 
     refreshLabels();
     setpushButton_soldOutText();
@@ -809,12 +811,6 @@ void page_maintenance_dispenser::on_pushButton_pump_clicked()
 void page_maintenance_dispenser::on_backButton_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_maintenance);
-}
-
-void page_maintenance_dispenser::on_nameButton_clicked()
-{
-    //    qDebug() << "Name button clicked" ;
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 void page_maintenance_dispenser::on_priceButton_s_clicked()

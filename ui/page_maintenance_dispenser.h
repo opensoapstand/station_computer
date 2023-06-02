@@ -62,7 +62,6 @@ private slots:
     void refreshLabels();
     void on_backButton_clicked();
     void on_image_clicked();
-    void on_nameButton_clicked();
     void on_priceButton_s_clicked();
     void on_priceButton_m_clicked();
     void on_priceButton_l_clicked();

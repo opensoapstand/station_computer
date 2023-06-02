@@ -52,6 +52,7 @@ public:
     ~page_idle();
     void showEvent(QShowEvent *event);
     void addPictureToLabel(QLabel *label, QString picturePath);
+    void addPictureToButton(QPushButton *button, QString picturePath);
     void addCompanyLogoToLabel(QLabel *label);
     QString getTemplateFolder();
     void changeToIdleProductsIfSet();
@@ -63,7 +64,7 @@ public:
     QString getCSS(QString cssName);
     void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
     void addCssClassToObject(QWidget *element, QString classname, QString css_file_name);
-    
+
     void setPromoCode(QString promoCode);
     QString getPromoCode();
 
@@ -72,14 +73,9 @@ public:
     bool isPromoApplied();
 
     double getPriceCorrectedAfterDiscount(double price);
-    
+
     void setSelectedProduct(uint8_t slot);
     product *getSelectedProduct();
-
-
-
-
-
 
     product products[SLOT_COUNT];
     product *selectedProduct;
@@ -105,7 +101,7 @@ public:
     QMediaPlayer *player;
 
     void setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier);
-    void setTemplateTextToObject(QWidget* p_element);
+    void setTemplateTextToObject(QWidget *p_element);
     void setTextToOjbect(QWidget *p_element, QString text);
     QString getTemplateTextByElementNameAndPage(QWidget *p_element);
     QString getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_element, QString identifier);
@@ -113,14 +109,13 @@ public:
     QString getTemplateText(QString textName_to_find);
     void loadTextsFromTemplateCsv();
     void loadTextsFromDefaultCsv();
-    
-    void registerUserInteraction(QWidget*page);
+
+    void registerUserInteraction(QWidget *page);
 
     void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
 
     QTimer *idlePageTypeSelectorTimer;
     int _idlePageTypeSelectorTimerTimeoutSec;
-
 
 private slots:
     void on_pushButton_to_select_product_page_clicked();
@@ -131,8 +126,8 @@ private slots:
     void on_pushButton_test_clicked();
 
 private:
-   std::map<QString, QString> textNameToTextMap_template;
-   std::map<QString, QString> textNameToTextMap_default;
+    std::map<QString, QString> textNameToTextMap_template;
+    std::map<QString, QString> textNameToTextMap_default;
 
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void checkReceiptPrinterStatus();

@@ -95,8 +95,6 @@ private slots:
     void on_buttonDone_clicked();
     void on_buttonCancel_clicked();
 
-    void pwmSliderMoved(int percentage);
-
     void on_autoDispenseLarge_clicked();
 
     void on_autoDispenseMedium_clicked();

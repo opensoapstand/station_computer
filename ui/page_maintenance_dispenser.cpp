@@ -38,8 +38,6 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
     dispenseTimer->setInterval(100);
     connect(dispenseTimer, SIGNAL(timeout()), this, SLOT(onDispenseTimerTick()));
 
-    connect(ui->pwmSlider, SIGNAL(valueChanged(int)), this, SLOT(pwmSliderMoved(int)));
-
     connect(ui->buttonGroup_edit_product, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroup_edit_product_Pressed(int)));
 }
 
@@ -142,8 +140,6 @@ void page_maintenance_dispenser::setPage(page_maintenance *pageMaintenance, page
 
 void page_maintenance_dispenser::refreshLabels()
 {
-    ui->pwmSlider->hide();
-
     volume_per_tick_buffer = p_page_idle->selectedProduct->getVolumePerTickForSlot();
 
     ui->volume_per_tick->setText(p_page_idle->selectedProduct->getVolumePerTickAsStringForSlot());
@@ -940,12 +936,6 @@ void page_maintenance_dispenser::updateValues()
     ui->textEntry->setText("");
     ui->titleLabel->setText("");
     ui->errorLabel->setText("");
-}
-
-void page_maintenance_dispenser::pwmSliderMoved(int percentage)
-{
-    qDebug() << "Slider not implemented";
- 
 }
 
 size_t WriteCallback3(char *contents, size_t size, size_t nmemb, void *userp)

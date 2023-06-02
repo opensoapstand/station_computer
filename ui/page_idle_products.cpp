@@ -227,7 +227,7 @@ void page_idle_products::displayProducts()
             // selectProductOverlayLabels[i]->setStyleSheet("background-color: transparent;");
 
         labels_product_type[i]->setText(type_text);
-        // labels_product_type[i]->setStyleSheet(setStyle);
+        //labels_product_type[i]->setStyleSheet(styleSheet);
     }
 }
 

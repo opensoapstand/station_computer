@@ -1,11 +1,11 @@
 
 #pushButton_to_select_product_page{
 background-color: transparent;
-border: 0px;
+border: 19px;
 }
 
 #labels_product_picture{
-   border: none;
+   border: 1px;
 
 }
 
@@ -41,6 +41,7 @@ border: 0px;
       text-transform: uppercase;
       color: #003840;
    }
+
    /* 
 
 

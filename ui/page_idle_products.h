@@ -62,7 +62,7 @@ public:
     void printerStatusFeedback(bool isOnline, bool hasPaper);
 
     QLabel* labels_product_picture[4];
-    QLabel* selectProductOverlayLabels[4];
+    QLabel* labels_selectProductOverlay[4];
     // QLabel* labels_product_name[4];
     QLabel* labels_product_icon[4];
     QLabel* labels_product_type[4];

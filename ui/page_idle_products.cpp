@@ -40,10 +40,10 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     labels_product_picture[2] = ui->label_product_3_photo;
     labels_product_picture[3] = ui->label_product_4_photo;
 
-    selectProductOverlayLabels[0] = ui->label_product_1_overlay;
-    selectProductOverlayLabels[1] = ui->label_product_2_overlay;
-    selectProductOverlayLabels[2] = ui->label_product_3_overlay;
-    selectProductOverlayLabels[3] = ui->label_product_4_overlay;
+    labels_selectProductOverlay[0] = ui->label_product_1_overlay;
+    labels_selectProductOverlay[1] = ui->label_product_2_overlay;
+    labels_selectProductOverlay[2] = ui->label_product_3_overlay;
+    labels_selectProductOverlay[3] = ui->label_product_4_overlay;
 
     labels_product_overlay_text[0] = ui->label_product_1_photo_text;
     labels_product_overlay_text[1] = ui->label_product_2_photo_text;
@@ -56,7 +56,7 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     labels_product_type[3] = ui->label_product_4_type;
 
     ui->pushButton_to_select_product_page->raise();
-    ui->label_pick_soap->setText("Discover how to<br> refill soap here");
+    ui->label_pick_soap->setText("Discover how to<br> refill soap here<br><br> Tap here!!!");
 
     QFont font;
     font.setFamily(QStringLiteral("Brevia"));
@@ -85,15 +85,16 @@ void page_idle_products::showEvent(QShowEvent *event)
     QString styleSheet = p_page_idle->getCSS(PAGE_IDLE_PRODUCTS_CSS);
     ui->pushButton_to_select_product_page->setStyleSheet(styleSheet); 
     ui->label_pick_soap->setStyleSheet(styleSheet);
+    // ui->printer_status_label->setStyleSheet(styleSheet);
     
     for (int i = 0; i < 4; i++)
     {
 
         labels_product_picture[i]->setProperty("class", "labels_product_picture");
         labels_product_type[i]->setProperty("class", "labels_product_type");
-        selectProductOverlayLabels[i]->setProperty("class", "selectProductOverlayLabels");
+        labels_selectProductOverlay[i]->setProperty("class", "labels_selectProductOverlay");
         labels_product_picture[i]->setStyleSheet(styleSheet);
-        selectProductOverlayLabels[i]->setStyleSheet(styleSheet);
+        labels_selectProductOverlay[i]->setStyleSheet(styleSheet);
         labels_product_type[i]->setStyleSheet(styleSheet);
 
     }
@@ -193,10 +194,10 @@ void page_idle_products::displayProducts()
         }
         QString icon_path_with_template = p_page_idle->getTemplatePathFromName(icon_path);
 
-        selectProductOverlayLabels[i]->raise();
+        labels_selectProductOverlay[i]->raise();
         labels_product_overlay_text[i]->raise();
 
-        selectProductOverlayLabels[i]->setText("");
+        labels_selectProductOverlay[i]->setText("");
 
         // overlay product status
             labels_product_overlay_text[i]->setText("");
@@ -282,22 +283,26 @@ void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
     }
     ui->pushButton_to_select_product_page->show();
 
-    ui->printer_status_label->setStyleSheet(
-        "QLabel {"
+    QString styleSheet = p_page_idle->getCSS(PAGE_IDLE_PRODUCTS_CSS);
 
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 100;"
-        "background-color: #5E8580;"
-        "font-size: 42px;"
-        "text-align: centre;"
-        "line-height: auto;"
-        "letter-spacing: 0px;"
-        "qproperty-alignment: AlignCenter;"
-        "border-radius: 20px;"
-        "color: white;"
-        "border: none;"
-        "}");
+    ui->printer_status_label->setStyleSheet(styleSheet);
+
+    // ui->printer_status_label->setStyleSheet(
+    //     "QLabel {"
+
+    //     "font-family: 'Brevia';"
+    //     "font-style: normal;"
+    //     "font-weight: 100;"
+    //     "background-color: #5E8580;"
+    //     "font-size: 42px;"
+    //     "text-align: centre;"
+    //     "line-height: auto;"
+    //     "letter-spacing: 0px;"
+    //     "qproperty-alignment: AlignCenter;"
+    //     "border-radius: 20px;"
+    //     "color: white;"
+    //     "border: none;"
+    //     "}");
 }
 
 void page_idle_products::on_pushButton_to_select_product_page_clicked()

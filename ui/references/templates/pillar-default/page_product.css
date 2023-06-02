@@ -84,10 +84,10 @@
 #pushButton_back {
    font-family: 'EuropaNuova-Regular';
    font-style: normal;
-   font-weight: 400;
+   font-weight: 700;
    font-size: 65px;
    color: white;
-   text-align: center;
+   text-align: left;
    qproperty-alignment: AlignCenter;
    border: none;
 }

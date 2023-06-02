@@ -20,7 +20,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>20</y>
+     <y>30</y>
      <width>201</width>
      <height>61</height>
     </rect>
@@ -72,7 +72,7 @@ color: #58595B;</string>
      <x>750</x>
      <y>1470</y>
      <width>221</width>
-     <height>41</height>
+     <height>81</height>
     </rect>
    </property>
    <property name="font">

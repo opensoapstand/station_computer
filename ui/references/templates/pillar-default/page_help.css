@@ -5,16 +5,17 @@
 }
 
 .buttonNoBorder {
-   font-family: 'EuropaNuova-ExtraBold';
+   font-family: 'EuropaNuova-Regular';
    font-style: normal;
-   font-weight: 400;
-   font-size: 35px;
+   font-weight: 700;
+   font-size: 65px;
 
    border: 0px;
    letter-spacing: 1.5px;
    color: white;
    text-align: center;
-   border: 1px solid white;
+   background: transparent;
+   qproperty-alignment: AlignCenter;
 }
 
 QPushButton {

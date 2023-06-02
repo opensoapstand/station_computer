@@ -159,7 +159,7 @@
   <widget class="QPushButton" name="pushButton_to_idle">
    <property name="geometry">
     <rect>
-     <x>-20</x>
+     <x>0</x>
      <y>30</y>
      <width>251</width>
      <height>61</height>

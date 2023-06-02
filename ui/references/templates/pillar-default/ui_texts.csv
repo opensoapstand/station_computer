@@ -28,7 +28,7 @@ page_select_product->default,. . .
 page_select_product->available,
 
 # Page_product 
-page_product->pushButton_back,⇦
+page_product->pushButton_back,   ⇦
 page_product->label_select_quantity,Select Quantity
 page_product->pushButton_continue,Continue
 
@@ -58,23 +58,43 @@ page_dispenser->msgBox_problems->default,<p align=center><br>If the pump is work
 page_dispenser->msgBox_abort->qr_tap,<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine. <br><br> If you press Yes, you will not be charged for the order.<br></p>
 page_dispenser->msgBox_abort->default,<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine.<br></p>
 
+# page_end
+page_end->notifyUs_Button,Provide Feedback
+page_end->thank_you_message_label->hasReceiptPrinter,Please take <br>your receipt!
+page_end->thank_you_subtitle_message_label->hasReceiptPrinter2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!
+page_end->thank_you_message_label->qr,Please take <br>your receipt!
+page_end->thank_you_subtitle_message_label->qr2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!
+page_end->thank_you_message_label->any_pay,Please take <br>your receipt!
+page_end->thank_you_subtitle_message_label->any_pay2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!
+page_end->thank_you_message_label->finish_transaction,Finishing<br>transaction
+
 # page_help
 page_help->pushButton_to_transactions,Transaction History ->
 page_help->pushButton_to_maintenance,Settings
 page_help->pushButton_to_feedback,Contact Us
-page_help->pushButton_to_idle,⇦
+page_help->pushButton_to_idle, ⇦
 page_help->label_keyboardInfo,Enter password followed by the \"Done\" key to enter maintenance mode
 
 # page_sendFeedback
-page_sendFeedback->pushButton_previous_page,<-back
+page_sendFeedback->pushButton_previous_page, ⇦
 page_sendFeedback->label_select_problem,Please provide feedback
 page_sendFeedback->label_still_cant_find,Still can't find it?
 page_sendFeedback->label_email,Email us at: sales@soapstand.com
 page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop.
 page_sendFeedback->checkBox_2_Label,User interface problem
-page_sendFeedback->checkBox_3_Label,Soap dispensing problem
-page_sendFeedback->checkBox_4_Label,Soap dispensing problem
+page_sendFeedback->checkBox_3_Label,Drink dispensing problem
+page_sendFeedback->checkBox_4_Label,Payment problem
 page_sendFeedback->checkBox_5_Label,Other
-page_sendFeedback->label_enter_feedback,Please enter details or comments below.\nProvide email for feedback.
+page_sendFeedback->label_enter_feedback,Please enter details or comments below.<br>Provide email for feedback.
 page_sendFeedback->label_thanks_for_feedback,Thank you for <br> your feedback
-page_sendFeedback->pushButton_send,SEND
+page_sendFeedback->pushButton_send,Send
+
+# page_qr_payment
+page_qr_payment->label_title->pay_by_phone,pay by phone
+page_qr_payment->label_scan->label_scan_1,Scan to Pay
+page_qr_payment->label_scan->finalize_transaction,
+finalize_transaction
+page_qr_payment->label_steps,<style>        li:{margin-top:10px; margin-left: 5px;}        </style>        <ol>        <li><span class='tab'></span>Scan QR code with phone camera<br></li>        <li><span class='tab'></span>Click to open the link that appears<br></li>        <li><span class='tab'></span>Follow payment instructions on phone<br></li>        <li><span class='tab'></span>The station will proceed after payment<br></li>        <li><span class='tab'></span>Refill your drink!</li>        </ol>        <style>        li:{margin-top:10px;}        </style>        <ol>       
+page_qr_payment->label_processing,it can take a few moments for the station to<br>continue after your payment is confirmed
+page_qr_payment->label_title->almost_there,almost there
+page_qr_payment->pushButton_previous_page,⇦

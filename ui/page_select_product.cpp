@@ -226,7 +226,7 @@ void page_select_product::displayProducts()
         // pushButtons_product_select[i]->setStyleSheet(styleSheet); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
         // pushButtons_product_select[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
         //  pushButtons_product_select[i]->setStyleSheet("QPushButton{ background-color: 0x44881188; border: 2px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-        //  selectProductOverlayLabels[i]->raise();
+        //  labels_selectProductOverlay[i]->raise();
         labels_product_icon[i]->raise();
         labels_product_overlay_text[i]->raise();
 

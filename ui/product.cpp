@@ -56,6 +56,27 @@ void product::loadProductPropertiesFromDb()
     DbManager db2(DB_PATH);
 
     db2.getProductProperties(getSlot(), &m_product_id, m_sizeIndexIsEnabled);
+    db2.getAllProductProperties(getSlot(),  &m_product_id,
+                                &m_soapstand_product_serial,
+                                &m_name_ui,
+                                &m_size_unit,
+                                &m_currency,
+                                &m_payment,
+                                &m_name_receipt,
+                                &m_concentrate_multiplier,
+                                &m_dispense_speed,
+                                &m_threshold_flow,
+                                &m_retraction_time,
+                                &m_calibration_const,
+                                &m_volume_per_tick,
+                                &m_lastRestockDate,
+                                &m_volume_full,
+                                &m_volume_remaining,
+                                &m_volume_dispensed_since_restock,
+                                &m_volume_dispensed_total,
+                                &m_is_enabled_custom_discount,
+                                &m_size_custom_discount,
+                                &m_price_custom_discount, m_sizeIndexIsEnabled, m_sizeIndexPrices,  m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 
     db2.closeDB();
 }
@@ -212,14 +233,14 @@ double product::getDiscountPercentageFraction()
 
 QString product::getLastRestockDate()
 {
-    qDebug() << "Open db:  last restock date";
-    QString restockdate;
-    DbManager db(DB_PATH);
-    restockdate = db.getLastRestockDate(getSlot());
-    db.closeDB();
+    // qDebug() << "Open db:  last restock date";
+    // QString restockdate;
+    // DbManager db(DB_PATH);
+    // restockdate = db.getLastRestockDate(getSlot());
+    // db.closeDB();
     
-    return restockdate;
-    // return m_lastRestockDate;
+    // return restockdate;
+    return m_lastRestockDate;
 }
 
 QString product::getPromoCode()
@@ -519,13 +540,14 @@ QString product::getProductPicturePath()
 
 
 
-QString product::getPLU(char size)
+QString product::getPLU(int sizeIndex)
+// QString product::getPLU(char size)
 {
 
-    DbManager db(DB_PATH);
-    QString plu = db.getPLU(getSlot(), size);
-    db.closeDB();
-    return plu;
+    // DbManager db(DB_PATH);
+    // QString plu = db.getPLU(getSlot(), size);
+    // db.closeDB();
+    return m_sizeIndexPLUs[sizeIndex];
 }
 
 
@@ -542,11 +564,11 @@ QString product::getMachineId()
 
 QString product::getProductId()
 {
-    qDebug() << "Open db: get productId ";
-    DbManager db(DB_PATH);
-    QString idString = db.getProductID(getSlot());
-    db.closeDB();
-    return idString;
+    // qDebug() << "Open db: get productId ";
+    // DbManager db(DB_PATH);
+    // QString idString = db.getProductID(getSlot());
+    // db.closeDB();
+    return m_product_id;
 }
 
 QString product::getFullVolumeCorrectUnits(bool addUnits)
@@ -580,13 +602,13 @@ QString product::getSizeToVolumeWithCorrectUnits(bool round, bool addUnits)
 
 QString product::getPaymentMethod()
 {
-    QString paymentMethod;
-    qDebug() << "Open db: product payment method";
+    // QString paymentMethod;
+    // qDebug() << "Open db: product payment method";
     
-    DbManager db(DB_PATH);
-    paymentMethod = db.getPaymentMethod(getSlot());
-    db.closeDB();
-    return paymentMethod;
+    // DbManager db(DB_PATH);
+    // paymentMethod = db.getPaymentMethod(getSlot());
+    // db.closeDB();
+    return m_payment;
 }
 
 int product::getDispenseSpeedPercentage()

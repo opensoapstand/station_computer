@@ -86,27 +86,6 @@ DbManager::~DbManager()
     }
 }
 
-// bool DbManager::initialize(const QString& path){
-
-//     qDebug() << "db init";
-//     if (m_db.isOpen()){
-//         qDebug() << "m_db is already open. Try to close.";
-//         m_db.close();
-//         m_db = QSqlDatabase();
-//         QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
-//         qDebug() << "m_db was already open. Closed it first.";
-//     }
-
-//     if (m_db.connectionName().isEmpty()){
-//         qDebug() << "connectionname is empty-->";
-//         m_db = QSqlDatabase::addDatabase("QSQLITE");
-//         m_db.setDatabaseName(path);
-//         qDebug() << "m_db set connectionName";
-//     }else{
-//         qDebug() << "m_db connectionName is NOT EMPTY";
-//     }
-// }
-
 bool DbManager::addPageClick(const QString &page)
 {
 
@@ -364,10 +343,10 @@ void DbManager::getAllProductProperties(int slot,
             prices[3] = qry.value(30).toDouble();
             prices[4] = qry.value(31).toDouble();
 
-            PLUs[1] = qry.value(32).toString();
-            PLUs[2] = qry.value(33).toString();
-            PLUs[3] = qry.value(34).toString();
-            PLUs[4] = qry.value(35).toString();
+            PLUs[SIZE_SMALL_INDEX] = qry.value(32).toString();
+            PLUs[SIZE_MEDIUM_INDEX] = qry.value(33).toString();
+            PLUs[SIZE_LARGE_INDEX] = qry.value(34).toString();
+            PLUs[SIZE_CUSTOM_INDEX] = qry.value(35).toString();
 
             PIDs[1] = qry.value(36).toString();
             PIDs[2] = qry.value(37).toString();

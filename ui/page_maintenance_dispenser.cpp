@@ -86,10 +86,10 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     reset_all_dispense_stats();
     update_volume_received_dispense_stats(0);
 
-    ui->pluLabel_s->setText(p_page_idle->selectedProduct->getPLU('s'));
-    ui->pluLabel_m->setText(p_page_idle->selectedProduct->getPLU('m'));
-    ui->pluLabel_l->setText(p_page_idle->selectedProduct->getPLU('l'));
-    ui->pluLabel_c->setText(p_page_idle->selectedProduct->getPLU('c'));
+    ui->pluLabel_s->setText(p_page_idle->selectedProduct->getPLU(SIZE_SMALL_INDEX));
+    ui->pluLabel_m->setText(p_page_idle->selectedProduct->getPLU(SIZE_MEDIUM_INDEX));
+    ui->pluLabel_l->setText(p_page_idle->selectedProduct->getPLU(SIZE_LARGE_INDEX));
+    ui->pluLabel_c->setText(p_page_idle->selectedProduct->getPLU(SIZE_CUSTOM_INDEX));
     ui->numberEntry->hide();
     ui->errorLabel->setText("");
     ui->titleLabel->setText("");

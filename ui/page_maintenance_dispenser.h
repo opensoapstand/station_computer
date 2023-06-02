@@ -145,7 +145,7 @@ private:
     //    bool plu_s;
     //    bool plu_l;
 
-    double volume_per_tick_buffer;
+    double volume_per_tick_buffer= 0.0;
 
     void updateValues();
     void sendRestockToCloud();

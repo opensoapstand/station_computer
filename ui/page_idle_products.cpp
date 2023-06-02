@@ -55,25 +55,7 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     labels_product_type[2] = ui->label_product_3_type;
     labels_product_type[3] = ui->label_product_4_type;
 
-    // ui->pushButton_to_select_product_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->pushButton_to_select_product_page->raise();
-
-    //ui->pushButton_help_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-    // ui->pushButton_to_idle->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-    // ui->label_pick_soap->setStyleSheet(
-    //     "QLabel {"
-
-    //     "font-family: 'Brevia';"
-    //     "font-style: normal;"
-    //     "font-weight: 75;"
-    //     "font-size: 54px;"
-    //     "line-height: 99px;"
-    //     "letter-spacing: px;"
-    //     "color: #003840;"
-    //     "text-align: center;"
-    //     "qproperty-alignment: AlignCenter;"
-    //     "border: none;"
-    //     "}");
     ui->label_pick_soap->setText("Discover how to<br> refill soap here");
 
     QFont font;
@@ -137,16 +119,8 @@ void page_idle_products::showEvent(QShowEvent *event)
 
     displayProducts();
 
-    // productPageEndTimer->start(1000);
-    // _productPageTimeoutSec = 15;
-
     addCompanyLogoToLabel(ui->logo_label);
 
-    // ui->printer_status_label->hide(); // always hide here, will show if enabled and has problems.
-    // if (needsReceiptPrinter)
-    // {
-    //     checkReceiptPrinterStatus();
-    // }
     ui->pushButton_to_select_product_page->raise();
 }
 void page_idle_products::resizeEvent(QResizeEvent *event)
@@ -159,7 +133,6 @@ void page_idle_products::displayProducts()
     QString product_type_icons[5] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH};
 
     bool product_slot_enabled;
-    // bool product_sold_out;
     QString product_type;
     QString product_name;
     QString product_status_text;
@@ -224,10 +197,12 @@ void page_idle_products::displayProducts()
 
         // overlay product status
             labels_product_overlay_text[i]->setText("");
-            // selectProductOverlayLabels[i]->setStyleSheet("background-color: transparent;");
 
         labels_product_type[i]->setText(type_text);
+<<<<<<< HEAD
         //labels_product_type[i]->setStyleSheet(styleSheet);
+=======
+>>>>>>> 5ef49c3fdb19cc9de8d8a2dc752cf54bdcb3f176
     }
 }
 

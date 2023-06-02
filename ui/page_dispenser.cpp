@@ -52,7 +52,7 @@ void page_dispenser::setPage(page_qr_payment *page_qr_payment, page_tap_payment 
 {
     this->thanksPage = page_end;
     this->paymentPage = page_qr_payment;
-    this->paymentTapPage = page_tap_payment;
+    this->p_page_payment_tap = page_tap_payment;
     this->p_page_idle = pageIdle;
     this->feedbackPage = pageFeedback;
 }
@@ -88,7 +88,7 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 }
 void page_dispenser::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< Page Enter: Dispenser >>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     qDebug() << "Selected slot: " << QString::number(p_page_idle->selectedProduct->getSlot());
     QWidget::showEvent(event);
 

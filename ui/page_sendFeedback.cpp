@@ -92,7 +92,7 @@ page_sendFeedback::~page_sendFeedback()
 void page_sendFeedback::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
-    qDebug() << "<<<<<<< Page Enter: Send Feedback>>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
 
     p_page_idle->setTemplateTextToObject(ui->pushButton_previous_page);
     p_page_idle->setTemplateTextToObject(ui->label_select_problem);

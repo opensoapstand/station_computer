@@ -36,7 +36,6 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     // IPC Networking
     dfUtility = new df_util();
 
-  
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
 
@@ -76,11 +75,10 @@ page_idle::~page_idle()
 
 void page_idle::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< Page Enter: idle >>>>>>>>>";
+    registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
-
-      // for products.cpp
+    // for products.cpp
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
         products[slot_index].setSlot(slot_index + 1);
@@ -89,14 +87,9 @@ void page_idle::showEvent(QShowEvent *event)
 
     setSelectedProduct(0);
 
-    
-
     // get the texts from csv
     loadTextsFromTemplateCsv();
     loadTextsFromDefaultCsv();
-
-
-
 
     QString styleSheet = getCSS(PAGE_IDLE_CSS);
     ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
@@ -137,8 +130,8 @@ void page_idle::showEvent(QShowEvent *event)
     this->lower();
 
     // template text with argument demo
-    //QString base_text = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_welcome_message, "testargument" );
-    //ui->label_welcome_message->setText(base_text.arg("SoAp")); // will replace %1 character in string by the provide text
+    // QString base_text = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_welcome_message, "testargument" );
+    // ui->label_welcome_message->setText(base_text.arg("SoAp")); // will replace %1 character in string by the provide text
     setTemplateTextToObject(ui->label_welcome_message);
     addCompanyLogoToLabel(ui->logo_label);
 
@@ -239,6 +232,16 @@ void page_idle::setDiscountPercentage(double percentageFraction)
     // ratio = percentage / 100;
     qDebug() << "Set discount percentage fraction in idle page: " << QString::number(percentageFraction, 'f', 3);
     m_discount_percentage_fraction = percentageFraction;
+}
+
+void page_idle::registerUserInteraction(QWidget *page)
+{
+    QString page_name = page->objectName();
+    qDebug() << "||||||||||||||||||||||||||||||||||||| User entered: " + page_name + " |||||||||||||||||||||||||||||||||||||";
+    
+    DbManager db(DB_PATH);
+    db.addUserInteraction(page_name);
+    db.closeDB();
 }
 
 double page_idle::getDiscountPercentage()
@@ -460,7 +463,6 @@ QString page_idle::getDefaultTemplatePathFromName(QString fileName)
 void page_idle::pageTransition(QWidget *pageToHide, QWidget *pageToShow)
 {
     // page transition effects are not part of QT but of the operating system! // search for ubuntu settings program to set transition animations to "off"
-    qDebug() << "---------page transition";
     pageToShow->showFullScreen();
     pageToHide->hide();
 }
@@ -603,7 +605,7 @@ void page_idle::loadTextsFromCsv(QString csv_path, std::map<QString, QString> *d
         {
             if (!line.empty() && line[0] != '#') // Skip empty lines and lines starting with '#'
             {
-                qDebug() << QString::fromStdString(line);
+                // qDebug() << QString::fromStdString(line);
 
                 std::size_t space_pos = line.find(',');
                 if (space_pos != std::string::npos)

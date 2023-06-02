@@ -52,7 +52,7 @@ page_init::~page_init()
 
 void page_init::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< Page Enter: Init >>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
     
     // load template texts 

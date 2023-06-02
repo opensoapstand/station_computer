@@ -142,7 +142,7 @@ void page_qr_payment::resizeEvent(QResizeEvent *event)
 void page_qr_payment::showEvent(QShowEvent *event)
 {
 
-    qDebug() << "<<<<<<< Page Enter: Payment >>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
     // p_page_idle->setTemplateTextWithIdentifierToObject(ox2, "button_problems_message");
     p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "pay_by_phone");

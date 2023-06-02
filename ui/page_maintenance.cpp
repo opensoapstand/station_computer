@@ -28,7 +28,6 @@ page_maintenance::page_maintenance(QWidget *parent) : QWidget(parent),
     page_maintenanceEndTimer->setInterval(1000);
     connect(page_maintenanceEndTimer, SIGNAL(timeout()), this, SLOT(onPage_maintenanceTimeoutTick()));
 
-    
     product_buttons[0] = ui->product1_button;
     product_buttons[1] = ui->product2_button;
     product_buttons[2] = ui->product3_button;
@@ -51,22 +50,16 @@ page_maintenance::~page_maintenance()
 
 void page_maintenance::showEvent(QShowEvent *event)
 {
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    QWidget::showEvent(event);
 
+    // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH); // delays the page loading significantly.
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_CSS);
 
-
-for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 4; i++)
     {
-    product_overlay_labels[i]->setStyleSheet(styleSheet);
+        product_overlay_labels[i]->setStyleSheet(styleSheet);
     }
-
-
-
-    //    db.addPageClick("PAGE_PAGE_MAINTENANCE PAGE ENTERED");
-
-    qDebug() << "<<<<<<< Page Enter: maintenance >>>>>>>>>";
-    QWidget::showEvent(event);
-    // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH); // delays the page loading significantly.
 
     for (int i = 0; i < SLOT_COUNT; i++)
     {
@@ -78,7 +71,6 @@ for (int i = 0; i < 4; i++)
         product_buttons[i]->setIconSize(QSize(241, 381));
         product_overlay_labels[i]->hide();
     }
-
 
     // page_maintenanceEndTimer->start(1000);
     _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
@@ -123,9 +115,8 @@ for (int i = 0; i < 4; i++)
         }
         else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
         {
-             product_overlay_labels[i]->setText("Almost Empty");
-            //p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[i], "almost_empty");
-
+            product_overlay_labels[i]->setText("Almost Empty");
+            // p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[i], "almost_empty");
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
         {
@@ -134,7 +125,7 @@ for (int i = 0; i < 4; i++)
         else if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
         {
             product_overlay_labels[i]->setText("Coming Soon");
-           // p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[i], "coming_soon");
+            // p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[i], "coming_soon");
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
 

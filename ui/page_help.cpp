@@ -52,7 +52,7 @@ void page_help::setPage(page_select_product *pageSelect, page_product *page_prod
 void page_help::showEvent(QShowEvent *event)
 {
 
-    qDebug() << "<<<<<<< Page Enter: Help >>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
     QString styleSheet = p_page_idle->getCSS(PAGE_HELP_CSS);

@@ -83,6 +83,7 @@ using namespace std;
 #define PAGE_TRANSACTIONS_CSS                           "page_transactions.css"
 #define PAGE_MAINTENANCE_CSS                            "page_maintenance.css"
 #define PAGE_MAINTENANCE_DISPENSER_CSS                  "page_maintenance_dispenser.css"
+#define PAGE_IDLE_PRODUCTS_CSS                          "page_idle_products.css"
 
 
 
@@ -94,12 +95,12 @@ using namespace std;
 
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"
-#define PAGE_ORDER_OVERVIEW_PATH                        "background_generic_white_empty.png"
+#define PAGE_ORDER_OVERVIEW_PATH                        "background_order_overview.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH      "background_dispense_instructions.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH      "background_dispense_instructions_multispout.png"
 #define PAGE_DISPENSE_BACKGROUND_PATH                   "background_dispense.png"
-#define PAGE_QR_PAY_BACKGROUND_PATH                     "background_generic_white_empty.png"
-#define PAGE_MAINTENANCE_BACKGROUND_PATH                "background_generic_white_empty.png"
+#define PAGE_QR_PAY_BACKGROUND_PATH                     "background_qr.png"
+#define PAGE_MAINTENANCE_BACKGROUND_PATH                "background_maintenance.png"
 #define ERROR_MESSAGE_PATH                              "error_message.png"
 #define PAGE_TAP_PAY                                    "tapNow.png"
 #define PAGE_TAP_PAY_SUCCESS                            "paymentSuccess.png"
@@ -123,7 +124,7 @@ using namespace std;
 #define ICON_TYPE_MOCKTAIL_PATH                         "Soapstand-UI-icon-mocktail.png"
 #define ICON_TYPE_JUICE_PATH                            "Soapstand-UI-icon-juice.png"
 
-#define PAGE_HELP_BACKGROUND_PATH                       "background_generic_white_empty.png"
+#define PAGE_HELP_BACKGROUND_PATH                       "background_help.png"
 
 #define SEND_DISPENSE_START "d"
 #define SEND_DISPENSE_STOP "f"

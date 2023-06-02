@@ -88,8 +88,8 @@ private:
     std::string readBuffer;
     Ui::page_product_overview *ui;
     page_select_product *p_page_select_product;
-    page_qr_payment *paymentQrPage;
-    page_tap_payment *paymentTapPage;
+    page_qr_payment *p_page_payment_qr;
+    page_tap_payment *p_page_payment_tap;
     page_idle *p_page_idle;
     page_dispenser *p_page_dispense;
     page_error_wifi *p_page_wifi_error;

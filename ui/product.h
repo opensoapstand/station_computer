@@ -117,14 +117,14 @@ signals:
 
 private:
 
-
-
-    QString productId;
-    QString soapstand_product_serial;
     int slot;
-    QString size_unit;
+
+    QString m_size_unit;
+    QString m_productId;
+    QString m_soapstand_product_serial;
+    QString m_payment;
+
     QString currency;
-    QString payment;
     QString name_receipt;
     int concentrate_multiplier;
     int dispense_speed;
@@ -168,6 +168,8 @@ private:
 
 
     bool m_sizeIndexIsEnabled[SIZES_COUNT]; // size indeces.
+    double m_sizeIndexPrices[SIZES_COUNT];
+    double m_sizeIndexVolumes[SIZES_COUNT];
 
     int Size;
     double DispensedVolumeMl;

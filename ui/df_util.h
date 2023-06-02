@@ -89,7 +89,7 @@ using namespace std;
 
 #define PAGE_IDLE_BACKGROUND_PATH                       "background_message.png"
 #define PAGE_IDLE_PRODUCTS_BACKGROUND_PATH              "background_product_select.png"
-#define PAGE_END_BACKGROUND_PATH                    "background_message.png"
+#define PAGE_END_BACKGROUND_PATH                        "background_message.png"
 #define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_message.png"
 
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
@@ -98,7 +98,7 @@ using namespace std;
 #define PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH      "background_dispense_instructions.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH      "background_dispense_instructions_multispout.png"
 #define PAGE_DISPENSE_BACKGROUND_PATH                   "background_dispense.png"
-#define PAGE_QR_PAY_BACKGROUND_PATH                     "background_generic_white_empty.png"
+#define PAGE_QR_PAY_BACKGROUND_PATH                     "background_qr.png"
 #define PAGE_MAINTENANCE_BACKGROUND_PATH                "background_generic_white_empty.png"
 #define ERROR_MESSAGE_PATH                              "error_message.png"
 #define PAGE_TAP_PAY                                    "tapNow.png"

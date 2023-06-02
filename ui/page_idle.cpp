@@ -44,6 +44,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     }
 
     setSelectedProduct(0);
+    
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
 

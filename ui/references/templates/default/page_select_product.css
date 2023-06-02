@@ -10,7 +10,6 @@ QLabel {
    font-weight: 75;
    font-size: 64px;
    line-height: 99px;
-   letter-spacing: px;
    color: #003840;
    text-align: center;
    qproperty-alignment: AlignCenter;
@@ -26,7 +25,6 @@ QLabel {
    background-color: transparent;
    border: 0px;
    line-height: 99px;
-   letter-spacing: 1.5px;
    color: #003840;
    text-align: center;
    qproperty-alignment: AlignCenter;
@@ -40,6 +38,7 @@ QLabel {
    font-weight: 400;
    font-size: 28px;
    line-height: 36px;
+   text-align: center;
    qproperty-alignment: AlignCenter;
    color: #003840;
 }
@@ -63,6 +62,7 @@ QLabel {
       font-weight: 700;
       font-size: 30px;
       line-height: 41px;
+      text-align: center;
       qproperty-alignment: AlignCenter;
       text-transform: uppercase;
       color: #5E8580;

@@ -40,10 +40,9 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
         "font-weight: 75;"
         "font-size: 32px;"
         "line-height: 99px;"
-        "letter-spacing: 1.5px;"
         "text-transform: lowercase;"
         "color: #003840;"
-        "text-align: cCenter;"
+        "text-align: center;"
         "qproperty-alignment: AlignCenter;"
         "border: none;"
         "}");

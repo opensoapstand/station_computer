@@ -3,9 +3,8 @@
    font-style: normal;
    font-weight: 100;
    font-size: 52px;
-   text-align: centre;
+   text-align: center;
    line-height: auto;
-   letter-spacing: 0px;
    qproperty-alignment: AlignCenter;
    border-radius: 20px;
    color: #5e8580;
@@ -19,9 +18,8 @@
    font-style: normal;
    font-weight: 100;
    font-size: 42px;
-   text-align: centre;
+   text-align: center;
    line-height: auto;
-   letter-spacing: 0px;
    qproperty-alignment: AlignCenter;
    border-radius: 20px;
    color: #5e8580;
@@ -38,7 +36,6 @@
    background-color: transparent;
    border: 0px;
    line-height: 99px;
-   letter-spacing: 1.5px;
    color: #FFFFFF;
    text-align: center;
    qproperty-alignment: AlignCenter;
@@ -55,7 +52,6 @@
    background-color: transparent;
    border: 0px;
    line-height: 99px;
-   letter-spacing: 1.5px;
    color: #FFFFFF;
    text-align: center;
    qproperty-alignment: AlignCenter;
@@ -70,7 +66,6 @@
    background-color: transparent;
    border: 0px;
    line-height: 99px;
-   letter-spacing: 1.5px;
    color: #FFFFFF;
    text-align: center;
    qproperty-alignment: AlignCenter;
@@ -86,7 +81,6 @@
    background-color: orangered;
    border: 0px;
    line-height: 99px;
-   letter-spacing: 1.5px;
    color: #FFFFFF;
    text-align: center;
    qproperty-alignment: AlignCenter;
@@ -100,9 +94,8 @@
    font-weight: 75;
    background-color: #5E8580;
    font-size: 42px;
-   text-align: centre;
+   text-align: center;
    line-height: auto;
-   letter-spacing: 0px;
    qproperty-alignment: AlignCenter;
    border-radius: 20px;
    color: white;
@@ -115,9 +108,8 @@
    font-weight: 75;
    background-color: #b87b0b;
    font-size: 42px;
-   text-align: centre;
+   text-align: center;
    line-height: auto;
-   letter-spacing: 0px;
    qproperty-alignment: AlignCenter;
    border-radius: 20px;
    color: white;
@@ -139,9 +131,8 @@
    font-weight: 100;
    background-color: #5E8580;
    font-size: 42px;
-   text-align: centre;
+   text-align: center;
    line-height: auto;
-   letter-spacing: 0px;
    qproperty-alignment: AlignCenter;
    border-radius: 20px;
    color: white;
@@ -157,7 +148,7 @@ QPushButton {
    color: #003840;
    background-color: #FFFFFF;
    border: 0px;
-   text-align: centre;
+   text-align: center;
    border-radius: 20px;
    border: none;
   

@@ -84,7 +84,6 @@ void page_idle::showEvent(QShowEvent *event)
         products[slot_index].setSlot(slot_index + 1);
         products[slot_index].load();
     }
-
     setSelectedProduct(0);
 
     // get the texts from csv

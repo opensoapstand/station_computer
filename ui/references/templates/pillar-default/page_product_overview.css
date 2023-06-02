@@ -48,7 +48,6 @@ QPushButton {
     font-weight: 75;
     font-size: 32px;
     line-height: 99px;
-    letter-spacing: 1.5px;
     text-transform: lowercase;
     background-color: #5E8580;
     border: 1px solid #3D6675;
@@ -89,7 +88,6 @@ QLabel {
     font-weight: 400;
     font-size: 28px;
     line-height: 40px;
-    letter-spacing: 0px;
     color: #FFFFFF;
 }
 #label_invoice_price{
@@ -98,7 +96,6 @@ QLabel {
     font-weight: 400;
     font-size: 28px;
     line-height: 40px;
-    letter-spacing: 0px;
     color: #FFFFFF;
 }
 #label_invoice_box{
@@ -114,7 +111,7 @@ QLabel {
     font-weight: 400;
     background-color: #221F20;
     font-size: 47px;
-    text-align: centre;
+    text-align: center;
     line-height: auto;
     qproperty-alignment: AlignCenter;
     border-radius: 25px;
@@ -159,7 +156,6 @@ QLabel {
     font-weight: 600;
     font-size: 36px;
     line-height: 40px;
-    letter-spacing: 0px;
     color: #58595B;
     padding: 3px;
     border:8px solid #248C8C;
@@ -174,7 +170,6 @@ QLabel {
     font-weight: 400;
     font-size: 60px;
     line-height: 79px;
-    letter-spacing: 1.5px;
     color: #221F20;
     text-align: center;
     qproperty-alignment: AlignCenter;

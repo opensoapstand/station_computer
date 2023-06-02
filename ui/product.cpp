@@ -23,17 +23,77 @@ product::~product()
 
 void product::load()
 {
-    qDebug() << "Open db: db load product properties from product load";
-    DbManager db(DB_PATH);
-
-    m_product_id = db.getProductID(getSlot());
-    soapstand_product_serial = db.getProductDrinkfillSerial(getSlot());
-    db.closeDB();
-
-    size_unit = getUnitsForSlot();
-    payment = getPaymentMethod();
+    // load all properties at once in a db call. 
     loadProductProperties();
 }
+
+void product::loadProductProperties()
+{
+    loadProductPropertiesFromDb();
+    qDebug() << "done loading from db";
+    loadProductPropertiesFromProductsFile();
+    qDebug() << "done loading from csv";
+}
+
+void product::loadProductPropertiesFromDb()
+{
+
+
+
+
+    qDebug() << "Open db: db load product properties from product load";
+
+
+    DbManager db(DB_PATH);
+    m_product_id = db.getProductID(getSlot());
+    m_soapstand_product_serial = db.getProductDrinkfillSerial(getSlot());
+    db.closeDB();
+
+    m_size_unit = getUnitsForSlot();
+    m_payment = getPaymentMethod();
+
+    qDebug() << "Open db: db load product properties";
+    DbManager db2(DB_PATH);
+
+    db2.getProductProperties(getSlot(), &m_product_id, m_sizeIndexIsEnabled);
+
+    db2.closeDB();
+}
+
+void product::loadProductPropertiesFromProductsFile()
+{
+    QFile file(PRODUCT_DETAILS_TSV_PATH);
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        qDebug() << "ERROR: Opening product details file. Expect unexpected behaviour now! ";
+        return;
+    }
+
+    QTextStream in(&file);
+    qDebug() << "Load csv file with product properties";
+    while (!in.atEnd())
+    {
+        QString line = in.readLine();
+
+        QStringList fields = line.split("\t");
+        int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], m_product_id, Qt::CaseSensitive);
+        if (compareResult == 0)
+        {
+            qDebug() << "compare result is 0";
+            m_name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
+            m_product_type = fields[CSV_PRODUCT_COL_TYPE];
+            m_description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
+            m_features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
+            m_ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
+            break;            
+        }
+        
+    }
+    qDebug() << "properties file read before close ";
+    file.close();
+    qDebug() << "properties file read done ";
+}
+
 
 char product::getSizeAsChar()
 {
@@ -42,15 +102,6 @@ char product::getSizeAsChar()
     // t
 
     return df_util::sizeIndexToChar(Size);
-}
-
-void product::getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter)
-{
-    qDebug() << "Open db: get bulk volume discount details ";
-
-    DbManager db(DB_PATH);
-    db.getCustomDiscountProperties(getSlot(), large_volume_discount_is_enabled, min_volume_for_discount, discount_price_per_liter);
-    db.closeDB();
 }
 
 int product::getSize()
@@ -64,6 +115,9 @@ void product::setSize(int sizeIndex)
     qDebug() << "Set size index: " << sizeIndex;
     Size = sizeIndex;
 }
+
+
+
 
 void product::setBiggestEnabledSizeIndex()
 {
@@ -163,7 +217,9 @@ QString product::getLastRestockDate()
     DbManager db(DB_PATH);
     restockdate = db.getLastRestockDate(getSlot());
     db.closeDB();
+    
     return restockdate;
+    // return m_lastRestockDate;
 }
 
 QString product::getPromoCode()
@@ -407,13 +463,6 @@ QString product::getProductDrinkfillSerial()
     return serial;
 }
 
-void product::loadProductProperties()
-{
-    loadProductPropertiesFromDb();
-    qDebug() << "done loading from db";
-    loadProductPropertiesFromProductsFile();
-    qDebug() << "done loading from csv";
-}
 
 bool product::isProductVolumeInContainer()
 {
@@ -427,47 +476,14 @@ bool product::isProductVolumeInContainer()
     db.closeDB();
     return retval;
 }
-void product::loadProductPropertiesFromDb()
+
+void product::getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter)
 {
-    qDebug() << "Open db: db load product properties";
+    qDebug() << "Open db: get bulk volume discount details ";
+
     DbManager db(DB_PATH);
-
-    db.getProductProperties(getSlot(), &m_product_id, m_sizeIndexIsEnabled);
+    db.getCustomDiscountProperties(getSlot(), large_volume_discount_is_enabled, min_volume_for_discount, discount_price_per_liter);
     db.closeDB();
-}
-
-void product::loadProductPropertiesFromProductsFile()
-{
-    QFile file(PRODUCT_DETAILS_TSV_PATH);
-    if (!file.open(QIODevice::ReadOnly))
-    {
-        qDebug() << "ERROR: Opening product details file. Expect unexpected behaviour now! ";
-        return;
-    }
-
-    QTextStream in(&file);
-    qDebug() << "Load csv file with product properties";
-    while (!in.atEnd())
-    {
-        QString line = in.readLine();
-
-        QStringList fields = line.split("\t");
-        int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], m_product_id, Qt::CaseSensitive);
-        if (compareResult == 0)
-        {
-            qDebug() << "compare result is 0";
-            m_name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
-            m_product_type = fields[CSV_PRODUCT_COL_TYPE];
-            m_description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
-            m_features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
-            m_ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
-            break;            
-        }
-        
-    }
-    qDebug() << "properties file read before close ";
-    file.close();
-    qDebug() << "properties file read done ";
 }
 
 QString product::getProductIngredients()

@@ -9,7 +9,6 @@
    font-weight: 75;
    font-size: 32px;
    line-height: 99px;
-   letter-spacing: 1.5px;
    color: #003840;
    text-align: center;
    border: none;
@@ -22,7 +21,6 @@
       font-weight: 75;
       font-size: 43px;
       line-height: 99px;
-      letter-spacing: 1.5px;
       color: #438080;
       text-align: center;
       qproperty-alignment: AlignCenter;
@@ -34,9 +32,8 @@
    font-weight: 75;
    font-size: 32px;
    line-height: 99px;
-   letter-spacing: 1.5px;
    color: #FFFFFF;
-   text-align: left;
+   text-align: center;
    qproperty-alignment: AlignCenter;
    border: none;
    wordWrap:true;
@@ -65,7 +62,6 @@
    font-weight: 75;
    font-size: 55px;
    line-height: 99px;
-   letter-spacing: 1.5px;
    color: #003840;
    text-align: center;
    border: none;
@@ -89,7 +85,6 @@
       font-weight: 75;
       font-size: 43px;
       line-height: 99px;
-      letter-spacing: 1.5px;
       color: #438080;
       text-align: center;
       qproperty-alignment: AlignCenter;
@@ -102,7 +97,6 @@
    font-weight: 75;
    font-size: 20px;
    line-height: 99px;
-   letter-spacing: 1.5px;
    background-color: #5E8680;
    color: #FFFFFF;
    text-align: left;
@@ -121,7 +115,6 @@ QPushButton {
    font-weight: 75;
    font-size: 35px;
    line-height: 99px;
-   letter-spacing: 1.5px;
    background-color: #5E8680;
    color: #FFFFFF;
    text-align: center;
@@ -136,7 +129,6 @@ QString {
    font-weight: 75;
    font-size: 35px;
    line-height: 99px;
-   letter-spacing: 1.5px;
    background-color: #5E8680;
    color: #FFFFFF;
    text-align: center;
@@ -151,7 +143,6 @@ QLineEdit {
    font-weight: 75;
    font-size: 32px;
    line-height: 99px;
-   letter-spacing: 1.5px;
    color: #003840;
    border: none;
 }

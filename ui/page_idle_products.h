@@ -50,7 +50,7 @@ class page_idle_products : public QWidget
 
 public:
     explicit page_idle_products(QWidget *parent = nullptr);
-    void setPage(page_idle *pageIdle, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral);
+    void  setPage(page_idle *pageIdle, page_select_product *p_page_select_product);
     // function body
     ~page_idle_products();
 
@@ -62,7 +62,7 @@ public:
     void printerStatusFeedback(bool isOnline, bool hasPaper);
 
     QLabel* labels_product_picture[4];
-    QLabel* selectProductOverlayLabels[4];
+    QLabel* labels_selectProductOverlay[4];
     // QLabel* labels_product_name[4];
     QLabel* labels_product_icon[4];
     QLabel* labels_product_type[4];

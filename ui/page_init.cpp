@@ -24,7 +24,6 @@ page_init::page_init(QWidget *parent) : QWidget(parent),
 {
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
-   
 
     // IPC Networking
     dfUtility = new df_util();
@@ -53,8 +52,13 @@ page_init::~page_init()
 
 void page_init::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< Page Enter: Init >>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
+    
+    // load template texts 
+    p_page_idle->loadTextsFromTemplateCsv();
+    p_page_idle->loadTextsFromDefaultCsv();
+
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_INIT_BACKGROUND_IMAGE_PATH);
 
 
@@ -95,11 +99,11 @@ void page_init::onInitTimeoutTick()
 {
     if (--_initIdleTimeoutSec >= 0)
     {
-        //        qDebug() << "init: Tick Down - " << _initIdleTimeoutSec;
         ui->label_init_message->setText(ui->label_init_message->text() + ".");
     }
     else
     {
+        qDebug() << "No response from controller. Will reboot";
         // ui->label_fail_message->setText("No response from controller. Will reboot.");
         // _rebootTimeoutSec = 5;
         // rebootTimer->start(1000);

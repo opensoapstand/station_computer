@@ -693,6 +693,24 @@ void DbManager::emailEmpty(int slot)
     system(email.toStdString().c_str());
 }
 
+void DbManager::addUserInteraction(QString action)
+{
+    QSqlQuery qry;
+
+    QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+    qry.prepare("INSERT INTO clicks (page_info,time) VALUES (:page_info,:time);");
+    qry.bindValue(":page_info", action);
+    qry.bindValue(":time", time);
+
+    if (!qry.exec())
+    {
+        qDebug() << "Failed to write user interaction. error type: " << qry.lastError().type() << "Error message:" << qry.lastError().text();
+        qDebug() << "Error message:" << qry.lastError().text();
+        qDebug() << "Query:" << qry.lastQuery();
+        
+    }
+}
+
 int DbManager::getTotalTransactions()
 {
     qDebug() << " db... getTotalTransactions";

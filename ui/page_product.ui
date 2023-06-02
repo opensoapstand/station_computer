@@ -509,7 +509,7 @@ text-align: center;</string>
   <widget class="QPushButton" name="pushButton_back">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>50</x>
      <y>30</y>
      <width>251</width>
      <height>61</height>

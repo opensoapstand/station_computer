@@ -11,7 +11,6 @@ QLabel {
     line-height: 99px;
     text-align: center;
     letter-spacing: 1.5px;
-    text-transform: lowercase;
     color: #FFFFFF;
     qproperty-alignment: AlignCenter;
 }
@@ -21,8 +20,7 @@ QLabel {
     font-weight: 700;
     line-height: 43px;
     color: white;
-    text-transform: uppercase;
-    font-family: 'EuropaNuova';
+    font-family: 'Montserrat';
 }
 
 #label_printer_status {

@@ -52,7 +52,7 @@ void page_dispenser::setPage(page_qr_payment *page_qr_payment, page_tap_payment 
 {
     this->thanksPage = page_end;
     this->paymentPage = page_qr_payment;
-    this->paymentTapPage = page_tap_payment;
+    this->p_page_payment_tap = page_tap_payment;
     this->p_page_idle = pageIdle;
     this->feedbackPage = pageFeedback;
 }
@@ -88,7 +88,7 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 }
 void page_dispenser::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< Page Enter: Dispenser >>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     qDebug() << "Selected slot: " << QString::number(p_page_idle->selectedProduct->getSlot());
     QWidget::showEvent(event);
 
@@ -164,18 +164,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     p_page_idle->selectedProduct->resetVolumeDispensed();
     updatelabel_volume_dispensed_ml(p_page_idle->selectedProduct->getVolumeDispensedMl());
 
-    QString dispenseCommand = getStartDispensingCommand();
-    QString priceCommand = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(p_page_idle->selectedProduct->getPrice()));
-    QString promoCommand = p_page_idle->getPromoCode();
-
-    QString delimiter = QString("|");
-    QString preamble = "Order";
-    QString command = preamble + delimiter + dispenseCommand + delimiter + priceCommand + delimiter + promoCommand + delimiter;
-
-    qDebug() << "Send start command to FSM: " << command;
-    p_page_idle->dfUtility->send_command_to_FSM(command);
-    this->isDispensing = true;
-    qDebug() << "Dispensing started.";
+    fsmSendStartDispensing();
 }
 
 void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
@@ -247,10 +236,9 @@ void page_dispenser::dispensing_end_admin()
     else if ((p_page_idle->selectedProduct->getPaymentMethod() == "tapTcp") && p_page_idle->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
     {
 
-        QString text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price" );
-
-        ui->label_finishTransactionMessage->setText(text.arg(QString::number(current_price, 'f', 2)));
-        // ui->label_finishTransactionMessage->setText("Capturing payment: $" + QString::number(current_price, 'f', 2));
+        
+        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price" );
+        ui->label_finishTransactionMessage->setText(base_text.arg(QString::number(current_price, 'f', 2))); // will replace %1 character in string by the provide text
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         if (CTROUTD != "")
         {
@@ -293,10 +281,18 @@ QString page_dispenser::getStartDispensingCommand()
 
 void page_dispenser::fsmSendStartDispensing()
 {
-    qDebug() << "Send Start dispensing to fsm";
-    p_page_idle->dfUtility->send_command_to_FSM(getStartDispensingCommand());
+    QString dispenseCommand = getStartDispensingCommand();
+    QString priceCommand = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(p_page_idle->selectedProduct->getPrice()));
+    QString promoCommand = p_page_idle->getPromoCode();
 
+    QString delimiter = QString("|");
+    QString preamble = "Order";
+    QString command = preamble + delimiter + dispenseCommand + delimiter + priceCommand + delimiter + promoCommand + delimiter;
+
+    qDebug() << "Send start command to FSM: " << command;
+    p_page_idle->dfUtility->send_command_to_FSM(command);
     this->isDispensing = true;
+    qDebug() << "Dispensing started.";
 }
 
 void page_dispenser::fsmSendStopDispensing()

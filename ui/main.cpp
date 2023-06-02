@@ -96,28 +96,46 @@ int main(int argc, char *argv[])
     qDebug() << "***************************************************************************";
 
     // Fire up QT GUI Thread
+    qDebug() << "Start main thread";
     QApplication mainApp(argc, argv);
 
     // Instantiate object to hold drink order
 
     // Build objects to hold navigation (pages)
     // Linking resources and Function definitions for pathing
-    page_help *p_page_help = new page_help();
-    page_init *initPage = new page_init();
+    qDebug() << "Constructor page_idle";
     page_idle *p_page_idle = new page_idle();
+    qDebug() << "Constructor page_help";
+    page_help *p_page_help = new page_help();
+    qDebug() << "Constructor page_init";
+    page_init *initPage = new page_init();
+    qDebug() << "Constructor page_idle_products";
     page_idle_products *p_page_idle_products = new page_idle_products();
+    qDebug() << "Constructor page_transactions";
     page_transactions *p_page_transactions = new page_transactions();
-    page_select_product *firstSelectPage = new page_select_product();
+    qDebug() << "Constructor page_select_product";
+    page_select_product *p_page_select_product = new page_select_product();
+    qDebug() << "Constructor page_product";
     page_product *p_page_product = new page_product();
-    page_qr_payment *paymentQrPage = new page_qr_payment();
-    page_tap_payment *paymentTapPage = new page_tap_payment();
+    qDebug() << "Constructor page_qr_payment";
+    page_qr_payment *p_page_payment_qr = new page_qr_payment();
+    qDebug() << "Constructor page_tap_payment";
+    page_tap_payment *p_page_payment_tap = new page_tap_payment();
+    qDebug() << "Constructor page_dispenser";
     page_dispenser *p_page_dispense = new page_dispenser();
+    qDebug() << "Constructor page_error_wifi";
     page_error_wifi *p_page_wifi_error = new page_error_wifi();
+    qDebug() << "Constructor page_end";
     page_end *p_page_end = new page_end();
+    qDebug() << "Constructor page_product_overview";
     page_product_overview *p_page_product_overview = new page_product_overview();
+    qDebug() << "Constructor page_sendFeedback";
     page_sendFeedback *p_page_sendFeedback = new page_sendFeedback();
+    qDebug() << "Constructor page_maintenance";
     page_maintenance *p_page_maintenance = new page_maintenance();
+    qDebug() << "Constructor page_maintenance_dispenser";
     page_maintenance_dispenser *p_page_maintenance_product = new page_maintenance_dispenser();
+    qDebug() << "Constructor page_maintenance_general";
     page_maintenance_general *p_page_maintenance_general = new page_maintenance_general();
 
     // TODO: Instantiate a DrinkSelection[] Array
@@ -159,23 +177,23 @@ int main(int argc, char *argv[])
     // df_util::fileExists(FULL_TRANSPARENT_IMAGE_PATH);
 
     // Page pathing references to function calls.
-    p_page_help->setPage(firstSelectPage, p_page_product, p_page_idle, paymentQrPage, p_page_transactions, p_page_maintenance, p_page_sendFeedback);
+    p_page_help->setPage(p_page_select_product, p_page_product, p_page_idle, p_page_payment_qr, p_page_transactions, p_page_maintenance, p_page_sendFeedback);
     p_page_transactions->setPage(p_page_idle);
     initPage->setPage(p_page_idle);
     p_page_maintenance_product->setPage(p_page_maintenance, p_page_idle, p_page_idle_products);
     p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle,p_page_idle_products);
-    p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product,  p_page_maintenance_general, firstSelectPage, p_page_product);
-    p_page_idle->setPage(firstSelectPage, p_page_maintenance, p_page_maintenance_general, p_page_idle_products);
-    p_page_idle_products->setPage(p_page_idle,  p_page_maintenance, p_page_maintenance_general );
-    firstSelectPage->setPage(p_page_product, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help);
-    p_page_product->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, p_page_help,p_page_product_overview);
-    paymentQrPage->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
-    paymentTapPage->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
-    p_page_dispense->setPage(paymentQrPage,paymentTapPage, p_page_end, p_page_idle, p_page_sendFeedback);
-    p_page_product_overview->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, paymentTapPage, p_page_help, p_page_product);
-    p_page_sendFeedback->setPage(firstSelectPage, p_page_dispense, p_page_wifi_error, p_page_idle, paymentQrPage, p_page_help, p_page_product, p_page_end);
-    p_page_end->setPage(p_page_dispense, p_page_idle, paymentQrPage, p_page_sendFeedback );
-    p_page_wifi_error->setPage(paymentQrPage, p_page_end, p_page_idle);
+    p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product,  p_page_maintenance_general, p_page_select_product, p_page_product);
+    p_page_idle->setPage(p_page_select_product, p_page_maintenance, p_page_maintenance_general, p_page_idle_products);
+    p_page_idle_products->setPage(p_page_idle,  p_page_select_product);
+    p_page_select_product->setPage(p_page_product, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help);
+    p_page_product->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_help,p_page_product_overview);
+    p_page_payment_qr->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
+    p_page_payment_tap->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
+    p_page_dispense->setPage(p_page_payment_qr,p_page_payment_tap, p_page_end, p_page_idle, p_page_sendFeedback);
+    p_page_product_overview->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap, p_page_help, p_page_product);
+    p_page_sendFeedback->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_help, p_page_product, p_page_end);
+    p_page_end->setPage(p_page_dispense, p_page_idle, p_page_payment_qr, p_page_sendFeedback );
+    p_page_wifi_error->setPage(p_page_payment_qr, p_page_end, p_page_idle);
     
     initPage->showFullScreen();
 

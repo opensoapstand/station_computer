@@ -189,7 +189,8 @@ void page_tap_payment::resizeEvent(QResizeEvent *event)
 
 void page_tap_payment::showEvent(QShowEvent *event)
 {
-
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    QWidget::showEvent(event);
 
     QString styleSheet = p_page_idle->getCSS(PAGE_TAP_PAYMENT_CSS);
 
@@ -203,8 +204,6 @@ void page_tap_payment::showEvent(QShowEvent *event)
     
 
 
-    qDebug() << "<<<<<<< Page Enter: Tap Payment >>>>>>>>>";
-    QWidget::showEvent(event);
     state_tap_payment = s_tap_init;
 
     qDebug() << "Init tap";

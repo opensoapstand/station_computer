@@ -49,7 +49,7 @@ public:
     bool sellout(int slot);
     bool unsellout(int slot);
     int getLastTransactionIdFromDb();
-
+    
     double getTemperature();
     int getPWM(int slot);
     int getDispenseButtonCount();
@@ -62,6 +62,8 @@ public:
     QString getStatusText(int slot);
     // bool setStatusText(int slot, QString text);
     bool updateSlotAvailability(int slot, int isEnabled, QString status_text);
+    
+    void addUserInteraction(QString action);
 
     uint32_t getNumberOfRows(QString table);
     bool initialize(const QString &path);

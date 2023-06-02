@@ -16,15 +16,17 @@ QLabel {
 }
 
 #label_pick_soap {
-    font-weight: 700;
+    font-weight: 400;
+    font-style: normal;
     font-size: 58px;
     color: #221F20;
     text-align: left;
     qproperty-alignment: AlignLeft;
+    font-family: 'EuropaNuova-ExtraBold';
 }
 
 #pushButton_to_idle {
-    font-family: 'EuropaNuova';
+    font-family: 'EuropaNuova-Regular';
     font-style: normal;
     font-weight: 700;
     font-size: 65px;
@@ -32,16 +34,6 @@ QLabel {
     text-align: center;
     qproperty-alignment: AlignCenter;
     border: none;
-}
-
-.label_product_name {
-    line-height: 36px;
-    qproperty-alignment: AlignCenter;
-    font-family: 'EuropaNuova';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 22px;
-    color: #221F20;
 }
 
 .PushButton_selection {
@@ -59,13 +51,23 @@ QLabel {
 }
 
 .label_product_type {
-    font-family: 'EuropaNuova';
-    font-weight: 700;
+    font-family: 'EuropaNuova-ExtraBold';
+    font-weight: 400;
+    font-style: normal;
     font-size: 37px;
     line-height: 49px;
     qproperty-alignment: AlignCenter;
-    /* text-transform: uppercase; */
     color: #5E826A;
+}
+
+.label_product_name {
+    line-height: 36px;
+    qproperty-alignment: AlignCenter;
+    font-family: 'EuropaNuova-Regular';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    color: #221F20;
 }
 
 .label_product_photo {

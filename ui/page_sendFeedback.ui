@@ -32,8 +32,8 @@ line-height: 29px;</string>
   <widget class="QPushButton" name="pushButton_previous_page">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>30</y>
+     <x>30</x>
+     <y>20</y>
      <width>181</width>
      <height>81</height>
     </rect>
@@ -162,10 +162,10 @@ text-align: center;
   <widget class="QPushButton" name="checkBox_1_Label">
    <property name="geometry">
     <rect>
-     <x>264</x>
-     <y>560</y>
+     <x>274</x>
+     <y>550</y>
      <width>576</width>
-     <height>45</height>
+     <height>78</height>
     </rect>
    </property>
    <property name="text">
@@ -352,7 +352,7 @@ text-align: center;
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>1046</y>
+     <y>1040</y>
      <width>640</width>
      <height>61</height>
     </rect>

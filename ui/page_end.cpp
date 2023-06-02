@@ -53,7 +53,7 @@ page_end::~page_end()
 void page_end::showEvent(QShowEvent *event)
 {
 
-    qDebug() << "<<<<<<< Page Enter: Thank you >>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
     p_page_idle->setTemplateTextToObject(ui->notifyUs_Button);
@@ -122,6 +122,7 @@ void page_end::showEvent(QShowEvent *event)
 
     QString machine_logo_full_path = p_page_idle->getTemplatePathFromName(MACHINE_LOGO_PATH);
     p_page_idle->addPictureToLabel(ui->drinkfill_logo_label2, machine_logo_full_path);
+    ui->drinkfill_logo_label2->setStyleSheet(styleSheet);
 
     QString units = p_page_idle->selectedProduct->getUnitsForSlot();
     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->selectedProduct->getVolumeDispensedMl(), units, false, true);

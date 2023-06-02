@@ -92,7 +92,7 @@ page_sendFeedback::~page_sendFeedback()
 void page_sendFeedback::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
-    qDebug() << "<<<<<<< Page Enter: Send Feedback>>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
 
     p_page_idle->setTemplateTextToObject(ui->pushButton_previous_page);
     p_page_idle->setTemplateTextToObject(ui->label_select_problem);
@@ -122,7 +122,7 @@ void page_sendFeedback::showEvent(QShowEvent *event)
     ui->label_still_cant_find->setStyleSheet(styleSheet);
     ui->label_email->setProperty("class", "labelMailFeedback");
     ui->label_email->setStyleSheet(styleSheet);
-    ui->label_thanks_for_feedback->setProperty("class", "labelMailFeedback");
+    ui->label_thanks_for_feedback->setProperty("class", "labelThankyouFeedback");
     ui->label_thanks_for_feedback->setStyleSheet(styleSheet);
     ui->checkBox_1_Label->setProperty("class", "checkBoxLabelStyling");
     ui->checkBox_2_Label->setProperty("class", "checkBoxLabelStyling");

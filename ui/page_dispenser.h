@@ -104,7 +104,7 @@ private:
     // **** GUI *****
     Ui::page_dispenser *ui;
     page_qr_payment* paymentPage;
-    page_tap_payment* paymentTapPage;
+    page_tap_payment* p_page_payment_tap;
     page_end* thanksPage;
     page_sendFeedback* feedbackPage;
     page_idle* p_page_idle;

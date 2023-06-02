@@ -15,6 +15,7 @@
 page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidget(parent),
                                                                           ui(new Ui::page_maintenance_dispenser)
 {
+    volume_per_tick_buffer = 0.0;
     // Fullscreen background setup
     ui->setupUi(this);
 
@@ -25,9 +26,7 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
     ui->pumpLabel->setText("Pump manual mode OFF.");
     ui->calibration_instructions_label->setText("Flowsensor calibration instructions:\n1.Enable the pump\n2.Take a measuring cup and dispense until the 1liter mark\n3.Check the calibration value\n4.Update the calibration value if different");
     ui->pushButton_pump->setText("ENABLE PUMP");
-   // ui->pushButton_pump->setStyleSheet("QPushButton { background-color: #AAAAAA;font-size: 20px;  }");
 
-    // ui->pwmSlider->setTracking(true);
 
     maintainProductPageEndTimer = new QTimer(this);
     maintainProductPageEndTimer->setInterval(1000);
@@ -59,6 +58,8 @@ void page_maintenance_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToS
 
 void page_maintenance_dispenser::showEvent(QShowEvent *event)
 {
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    QWidget::showEvent(event);
 
 
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
@@ -70,9 +71,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 
 
 
-    qDebug() << "<<<<<<< Page Enter: maintenance dispense >>>>>>>>>";
 
-    QWidget::showEvent(event);
     ui->calibration_result_label->setText("Calibration value (if 1000ml dispensed): "); // calibration constant
 
     qDebug() << "call db from maintenance select dispenser page";
@@ -109,22 +108,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
         ui->pluButton_c->setVisible(true);
         ui->pluLabel_c->setVisible(true);
         ui->pluButton_c->setEnabled(true);
-    // }
-    // else
-    // {
-    //     ui->pluButton_s->setVisible(false);
-    //     ui->pluLabel_s->setVisible(false);
-    //     ui->pluButton_s->setEnabled(false);
-    //     ui->pluButton_m->setVisible(false);
-    //     ui->pluLabel_m->setVisible(false);
-    //     ui->pluButton_m->setEnabled(false);
-    //     ui->pluButton_l->setVisible(false);
-    //     ui->pluLabel_l->setVisible(false);
-    //     ui->pluButton_l->setEnabled(false);
-    //     ui->pluButton_c->setVisible(false);
-    //     ui->pluLabel_c->setVisible(false);
-    //     ui->pluButton_c->setEnabled(false);
-    // }
+  
 
     QString p = p_page_idle->selectedProduct->getProductPicturePath();
     p_page_idle->dfUtility->fileExists(p);
@@ -137,8 +121,6 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     setpushButton_soldOutText();
 
     isDispenseButtonPressed = false;
-    // ui->dispenseTimeLabel->setText("Enabled time: " + QString::number(dispenserEnabledSecs, 'f', 1) + "s");
-    // ui->dispenseTimeLabelButton->setText("Pump ON time: " + QString::number(dispenserPumpingSecs, 'f', 1) + "s"); // shows all the time
 }
 
 void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
@@ -374,7 +356,7 @@ void page_maintenance_dispenser::update_volume_received_dispense_stats(double di
 
     if (this->units_selected_product == "oz")
     {
-        ui->ticksLabel->setText("Ticks (" + QString::number(df_util::convertMlToOz(volume_per_tick_buffer), 'f', 2) + "oz/tick): " + QString::number(vol_dispensed / volume_per_tick_buffer));
+        ui->ticksLabel->setText("fdvbc x (" + QString::number(df_util::convertMlToOz(volume_per_tick_buffer), 'f', 2) + "oz/tick): " + QString::number(vol_dispensed / volume_per_tick_buffer));
         ui->vol_dispensed_label->setText("Volume Dispensed: " + df_util::getConvertedStringVolumeFromMl(vol_dispensed, "oz", false, true));
     }
     else
@@ -394,10 +376,7 @@ void page_maintenance_dispenser::update_volume_received_dispense_stats(double di
 
 void page_maintenance_dispenser::fsmReceivedVolumeDispensed(double dispensed, bool isFull)
 {
-    // gets called from the controller.
 
-    // --> attention application can crash when there is content in here. combined with fsmReceiveTargetVolumeReached
-    // DO THE MINIMUM HERE. NO DEBUG PRINTS. This must be an interrupt call.. probably crashes when called again before handled.
     if (pumping)
     {
         update_volume_received_dispense_stats(dispensed);
@@ -441,13 +420,7 @@ void page_maintenance_dispenser::fsmReceiveDispenseButtonPressedNegativeEdge()
 
 void page_maintenance_dispenser::fsmReceiveTargetVolumeReached()
 {
-    // gets called from the controller.
 
-    // --> attention application can crash when there is content in here. combined with fsmReceivedVolumeDispensed
-
-    // DO THE MINIMUM HERE. NO DEBUG PRINTS. This must be an interrupt call.. probably crashes when called again before handled.
-
-    // maximum custom dispense volume applies here. controller stops at it when reached.
     dispense_test_end(false);
 }
 void page_maintenance_dispenser::fsmReceiveNoFlowAbort()
@@ -573,15 +546,6 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
             break;
             }
 
-            // DbManager db2(DB_PATH);
-            // bool success = db2.updateSlotAvailability(p_page_idle->selectedProduct->getSlot(), 0, infoLabelText); // move db call to product.cpp!
-            // db2.closeDB();
-
-            // if (!success)
-            // {
-            //     infoLabelText = "Set Disabled ERROR";
-            // }
-            // ui->infoLabel->setText(infoLabelText);
 
             slotEnabled = false;
             break;
@@ -613,15 +577,7 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
         {
         case QMessageBox::Yes:
         {
-            // QString infoLabelText = "Set Enabled Succesful";
-            // DbManager db3(DB_PATH);
-            // bool success = db3.updateSlotAvailability(this->p_page_idle->selectedProduct->getSlot(), 1, "");
-            // db3.closeDB();
-            // if (!success)
-            // {
-            //     infoLabelText = "Set Enabled ERROR";
-            // }
-            // ui->infoLabel->setText(infoLabelText);
+         
 
             slotEnabled = true;
             slotStatus = "SLOT_STATE_AVAILABLE";
@@ -990,22 +946,7 @@ void page_maintenance_dispenser::updateValues()
 void page_maintenance_dispenser::pwmSliderMoved(int percentage)
 {
     qDebug() << "Slider not implemented";
-    //     int value = ui->pwmSlider->value();
-    //     //    qDebug() << "Slider Value: " << value ;
-
-    //     QString command = QString::number(this->p_page_idle->selectedProduct->getSlot());
-    //     command.append("P");
-    //     command.append(QString::number(value));
-
-    //     //    qDebug() << "In PWMSlider: " << command ;
-
-    //     //    this->p_page_idle->dfUtility->msg = command;
-    //     //    p_page_idle->dfUtility->m_IsSendingFSM = true;
-    //     //    p_page_idle->dfUtility->m_fsmMsg = SEND_PWM;
-    //     //    p_page_idle->dfUtility->send_to_FSM();
-    //     //    p_page_idle->dfUtility->m_IsSendingFSM = false;
-
-    //     //    command = "";
+ 
 }
 
 size_t WriteCallback3(char *contents, size_t size, size_t nmemb, void *userp)

@@ -76,14 +76,9 @@ public:
     void setSelectedProduct(uint8_t slot);
     product *getSelectedProduct();
 
-    void loadTextsFromTemplateCsv();
-    void loadTextsFromDefaultCsv();
-    QString getTemplateTextByPage(QWidget *page, QString identifier);
-    void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
-    QString getTemplateText(QString textName_to_find);
 
-    QString getTemplateTextByElementNameAndPage(QWidget *p_element);
-    void setTextToOjbect(QWidget *p_element, QString text);
+
+
 
 
     product products[SLOT_COUNT];
@@ -109,10 +104,19 @@ public:
     QVideoWidget *videoWidget;
     QMediaPlayer *player;
 
-    QString getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_element, QString identifier);
-    void setTemplateTextToObject(QWidget* p_element);
     void setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier);
+    void setTemplateTextToObject(QWidget* p_element);
+    void setTextToOjbect(QWidget *p_element, QString text);
+    QString getTemplateTextByElementNameAndPage(QWidget *p_element);
+    QString getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_element, QString identifier);
+    QString getTemplateTextByPage(QWidget *page, QString identifier);
+    QString getTemplateText(QString textName_to_find);
+    void loadTextsFromTemplateCsv();
+    void loadTextsFromDefaultCsv();
+    
+    void registerUserInteraction(QWidget*page);
 
+    void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
 
     QTimer *idlePageTypeSelectorTimer;
     int _idlePageTypeSelectorTimerTimeoutSec;

@@ -4,7 +4,7 @@ background-color: transparent;
 border: 19px;
 }
 
-#labels_product_picture{
+.labels_product_picture{
    border: 1px;
 
 }
@@ -25,13 +25,13 @@ border: 19px;
 
 
 
-   #selectProductOverlayLabels{
+   .selectProductOverlayLabels{
     background-color: transparent;
       
    }
 
 
-   QLabel{
+   .labels_product_type{
       font-family: 'Brevia';
       font-style: normal;
       font-weight: 700;

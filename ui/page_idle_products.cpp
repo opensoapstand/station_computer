@@ -89,6 +89,9 @@ void page_idle_products::showEvent(QShowEvent *event)
     for (int i = 0; i < 4; i++)
     {
 
+        labels_product_picture[i]->setProperty("class", "labels_product_picture");
+        labels_product_type[i]->setProperty("class", "labels_product_type");
+        selectProductOverlayLabels[i]->setProperty("class", "selectProductOverlayLabels");
         labels_product_picture[i]->setStyleSheet(styleSheet);
         selectProductOverlayLabels[i]->setStyleSheet(styleSheet);
         labels_product_type[i]->setStyleSheet(styleSheet);
@@ -199,10 +202,7 @@ void page_idle_products::displayProducts()
             labels_product_overlay_text[i]->setText("");
 
         labels_product_type[i]->setText(type_text);
-<<<<<<< HEAD
         //labels_product_type[i]->setStyleSheet(styleSheet);
-=======
->>>>>>> 5ef49c3fdb19cc9de8d8a2dc752cf54bdcb3f176
     }
 }
 

@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QPushButton" name="backButton">
+  <widget class="QPushButton" name="pushButton_to_previous_page">
    <property name="geometry">
     <rect>
      <x>160</x>
@@ -29,7 +29,7 @@
   <widget class="QLabel" name="name">
    <property name="geometry">
     <rect>
-     <x>30</x>
+     <x>50</x>
      <y>340</y>
      <width>531</width>
      <height>31</height>
@@ -39,12 +39,12 @@
     <string>Product Name: </string>
    </property>
   </widget>
-  <widget class="QLabel" name="volume_per_tick">
+  <widget class="QLabel" name="label_volume_per_tick">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>1030</y>
-     <width>300</width>
+     <x>630</x>
+     <y>950</y>
+     <width>121</width>
      <height>16</height>
     </rect>
    </property>
@@ -71,21 +71,20 @@
     <string notr="true">buttonGroup_edit_product</string>
    </attribute>
   </widget>
-  <widget class="QPushButton" name="vol_per_tickButton">
+  <widget class="QPushButton" name="pushButton_volume_per_tick">
    <property name="geometry">
     <rect>
      <x>830</x>
-     <y>1020</y>
+     <y>940</y>
      <width>201</width>
      <height>41</height>
     </rect>
    </property>
    <property name="accessibleName">
-    <string>volume_per_tick</string>
+    <string>label_volume_per_tick</string>
    </property>
    <property name="text">
-    <string>Set DB
-Volume per Tick</string>
+    <string>Edit</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_price_small">
@@ -107,7 +106,7 @@ Volume per Tick</string>
     <string notr="true">buttonGroup_edit_product</string>
    </attribute>
   </widget>
-  <widget class="QPushButton" name="refillButton">
+  <widget class="QPushButton" name="pushButton_restock">
    <property name="geometry">
     <rect>
      <x>830</x>
@@ -120,7 +119,7 @@ Volume per Tick</string>
     <string>Restock</string>
    </property>
   </widget>
-  <widget class="QLabel" name="infoLabel">
+  <widget class="QLabel" name="label_action_feedback">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -173,13 +172,13 @@ Volume per Tick</string>
     <string notr="true">buttonGroup_edit_product</string>
    </attribute>
   </widget>
-  <widget class="QLabel" name="full_volume">
+  <widget class="QLabel" name="label_restock_volume">
    <property name="geometry">
     <rect>
-     <x>350</x>
-     <y>460</y>
-     <width>400</width>
-     <height>31</height>
+     <x>629</x>
+     <y>470</y>
+     <width>401</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="text">
@@ -208,10 +207,10 @@ Volume per Tick</string>
   <widget class="QLabel" name="label_volume_dispensed_total">
    <property name="geometry">
     <rect>
-     <x>350</x>
-     <y>380</y>
-     <width>400</width>
-     <height>31</height>
+     <x>629</x>
+     <y>390</y>
+     <width>401</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="text">
@@ -221,7 +220,7 @@ Volume per Tick</string>
   <widget class="QLabel" name="label_volume_remaining">
    <property name="geometry">
     <rect>
-     <x>350</x>
+     <x>630</x>
      <y>300</y>
      <width>371</width>
      <height>31</height>
@@ -234,17 +233,17 @@ Volume per Tick</string>
   <widget class="QLabel" name="label_restock_timestamp">
    <property name="geometry">
     <rect>
-     <x>350</x>
-     <y>420</y>
-     <width>431</width>
-     <height>31</height>
+     <x>630</x>
+     <y>430</y>
+     <width>421</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="text">
     <string>Last Refill</string>
    </property>
   </widget>
-  <widget class="QLabel" name="temperatureLabel">
+  <widget class="QLabel" name="label_setting_temperature">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -257,7 +256,7 @@ Volume per Tick</string>
     <string>Temperature</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="temperatureButton">
+  <widget class="QPushButton" name="pushButton_setting_temperature">
    <property name="geometry">
     <rect>
      <x>830</x>
@@ -270,7 +269,7 @@ Volume per Tick</string>
     <string>Temperature:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="pwmLabel">
+  <widget class="QLabel" name="label_setting_speed_pwm">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -283,7 +282,7 @@ Volume per Tick</string>
     <string>Pump Speed</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pwmButton">
+  <widget class="QPushButton" name="pushButton_setting_speed_pwm">
    <property name="geometry">
     <rect>
      <x>830</x>
@@ -554,7 +553,7 @@ Volume per Tick</string>
     <string>Toggle Pump Enable</string>
    </property>
   </widget>
-  <widget class="QLabel" name="pumpLabel">
+  <widget class="QLabel" name="label_enabled_status">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -573,30 +572,17 @@ Volume per Tick</string>
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="vol_dispensed_label">
+  <widget class="QLabel" name="label_status_volume_dispensed">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>830</y>
-     <width>190</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>vol. dispensed</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="ticksLabel">
-   <property name="geometry">
-    <rect>
-     <x>340</x>
+     <x>630</x>
      <y>790</y>
      <width>191</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>Ticks</string>
+    <string>ticks and volume </string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_target_volume_small">
@@ -642,7 +628,7 @@ Volume per Tick</string>
   <widget class="QLabel" name="label_volume_dispensed_since_restock">
    <property name="geometry">
     <rect>
-     <x>350</x>
+     <x>630</x>
      <y>340</y>
      <width>341</width>
      <height>31</height>
@@ -652,7 +638,7 @@ Volume per Tick</string>
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="autoDispenseSmallButton">
+  <widget class="QPushButton" name="pushButton_auto_dispense_small">
    <property name="geometry">
     <rect>
      <x>330</x>
@@ -665,7 +651,7 @@ Volume per Tick</string>
     <string>Auto Dispense Small </string>
    </property>
   </widget>
-  <widget class="QPushButton" name="autoDispenseMedium">
+  <widget class="QPushButton" name="pushButton_auto_dispense_medium">
    <property name="geometry">
     <rect>
      <x>580</x>
@@ -678,7 +664,7 @@ Volume per Tick</string>
     <string>Auto Dispense Medium</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="autoDispenseLarge">
+  <widget class="QPushButton" name="pushButton_auto_dispense_large">
    <property name="geometry">
     <rect>
      <x>830</x>
@@ -691,10 +677,10 @@ Volume per Tick</string>
     <string>Auto Dispense Large </string>
    </property>
   </widget>
-  <widget class="QLabel" name="dispense_button_presses_label">
+  <widget class="QLabel" name="label_status_dispense_button_press_count">
    <property name="geometry">
     <rect>
-     <x>340</x>
+     <x>630</x>
      <y>870</y>
      <width>191</width>
      <height>17</height>
@@ -704,37 +690,24 @@ Volume per Tick</string>
     <string>Button presses:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="dispenseTimeLabel">
+  <widget class="QLabel" name="label_status_button_press_time">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>950</y>
-     <width>191</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Enable time</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="dispenseTimeLabelButton">
-   <property name="geometry">
-    <rect>
-     <x>340</x>
+     <x>630</x>
      <y>910</y>
      <width>191</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>Pump time</string>
+    <string>Pump Time / Enable Time</string>
    </property>
   </widget>
-  <widget class="QLabel" name="flowRateLabel">
+  <widget class="QLabel" name="label_status_flow_rate">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>990</y>
+     <x>630</x>
+     <y>830</y>
      <width>191</width>
      <height>17</height>
     </rect>
@@ -743,7 +716,7 @@ Volume per Tick</string>
     <string>Flow rate (2s)</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="update_portal">
+  <widget class="QPushButton" name="pushButton_update_portal">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -756,11 +729,11 @@ Volume per Tick</string>
     <string>Update Changes to Portal</string>
    </property>
   </widget>
-  <widget class="QLabel" name="calibration_instructions_label">
+  <widget class="QLabel" name="label_calibration_instructions">
    <property name="geometry">
     <rect>
-     <x>370</x>
-     <y>1610</y>
+     <x>340</x>
+     <y>1020</y>
      <width>581</width>
      <height>81</height>
     </rect>
@@ -891,11 +864,11 @@ Volume per Tick</string>
     <string notr="true">buttonGroup_edit_product</string>
    </attribute>
   </widget>
-  <widget class="QLabel" name="calibration_result_label">
+  <widget class="QLabel" name="label_calibration_result">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>1070</y>
+     <x>630</x>
+     <y>990</y>
      <width>591</width>
      <height>17</height>
     </rect>
@@ -904,7 +877,7 @@ Volume per Tick</string>
     <string>Calibraton value (ml/tick if exactly 1000ml dispensed):</string>
    </property>
   </widget>
-  <widget class="QLabel" name="dispense_status_label">
+  <widget class="QLabel" name="label_status_dispenser">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -1337,37 +1310,11 @@ Volume per Tick</string>
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
-  <widget class="Line" name="line_23">
-   <property name="geometry">
-    <rect>
-     <x>340</x>
-     <y>1010</y>
-     <width>691</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
   <widget class="Line" name="line_24">
    <property name="geometry">
     <rect>
      <x>340</x>
      <y>1090</y>
-     <width>691</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="Line" name="line_25">
-   <property name="geometry">
-    <rect>
-     <x>340</x>
-     <y>1050</y>
      <width>691</width>
      <height>20</height>
     </rect>
@@ -1400,6 +1347,149 @@ Volume per Tick</string>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>870</y>
+     <width>161</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Button Press Count</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>790</y>
+     <width>161</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Volume Dispensed</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>910</y>
+     <width>201</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Pump Time / Enable Time</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>830</y>
+     <width>171</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Flow Rate (2s avg)</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>950</y>
+     <width>261</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Calibration Volume Per Tick</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>310</y>
+     <width>241</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Volume Remaining</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>350</y>
+     <width>241</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Volume Dispensed Since Restock</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_8">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>390</y>
+     <width>241</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Volume Dispensed Grand Total</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>430</y>
+     <width>241</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Restock Time</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_10">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>470</y>
+     <width>241</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Restock Volume</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_11">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>990</y>
+     <width>291</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Calibration value if exactly 1L dispensed</string>
    </property>
   </widget>
  </widget>

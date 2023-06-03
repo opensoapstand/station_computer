@@ -201,7 +201,7 @@ void page_maintenance::on_generalSettings_button_clicked()
     hideCurrentPageAndShowProvided(p_page_maintenance_general);
 }
 
-void page_maintenance::on_backButton_clicked()
+void page_maintenance::on_pushButton_to_previous_page_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_idle);
 }

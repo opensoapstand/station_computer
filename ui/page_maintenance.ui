@@ -161,7 +161,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="backButton">
+  <widget class="QPushButton" name="pushButton_to_previous_page">
    <property name="geometry">
     <rect>
      <x>10</x>

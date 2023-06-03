@@ -60,7 +60,7 @@ public:
 
 private slots:
     void refreshLabels();
-    void on_backButton_clicked();
+    void on_pushButton_to_previous_page_clicked();
     void on_image_clicked();
     void on_pushButton_price_small_clicked();
     void on_pushButton_price_medium_clicked();
@@ -69,16 +69,16 @@ private slots:
     void on_pushButton_target_volume_small_clicked();
     void on_pushButton_target_volume_medium_clicked();
     void on_pushButton_target_volume_large_clicked();
-    void on_vol_per_tickButton_clicked();
-    void on_refillButton_clicked();
+    void on_pushButton_volume_per_tick_clicked();
+    void on_pushButton_restock_clicked();
     void on_pushButton_soldOut_clicked();
     void on_pushButton_set_restock_volume_clicked();
     void onMaintainProductPageTimeoutTick();
     void onDispenseTimerTick();
     void on_pushButton_set_volume_remaining_clicked();
     void on_dispensedButton_clicked();
-    void on_temperatureButton_clicked();
-    void on_pwmButton_clicked();
+    void on_pushButton_setting_temperature_clicked();
+    void on_pushButton_setting_speed_pwm_clicked();
     void on_pushButton_pump_clicked();
     void on_button1_clicked();
     void on_button2_clicked();
@@ -95,13 +95,13 @@ private slots:
     void on_buttonDone_clicked();
     void on_buttonCancel_clicked();
 
-    void on_autoDispenseLarge_clicked();
+    void on_pushButton_auto_dispense_large_clicked();
 
-    void on_autoDispenseMedium_clicked();
+    void on_pushButton_auto_dispense_medium_clicked();
 
-    void on_autoDispenseSmallButton_clicked();
+    void on_pushButton_auto_dispense_small_clicked();
 
-    void on_update_portal_clicked();
+    void on_pushButton_update_portal_clicked();
     void buttonGroup_edit_product_Pressed(int buttonId);
 
 private:

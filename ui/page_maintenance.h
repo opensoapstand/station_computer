@@ -52,7 +52,7 @@ public:
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
 
 private slots:
-    void on_backButton_clicked();
+    void on_pushButton_to_previous_page_clicked();
     void on_product1_button_clicked();
     void on_product2_button_clicked();
     void on_product3_button_clicked();

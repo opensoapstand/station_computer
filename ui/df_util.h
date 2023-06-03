@@ -88,10 +88,10 @@ using namespace std;
 
 
 
-#define PAGE_IDLE_BACKGROUND_PATH                       "background_message.png"
-#define PAGE_IDLE_PRODUCTS_BACKGROUND_PATH              "background_product_select.png"
-#define PAGE_END_BACKGROUND_PATH                        "background_message.png"
-#define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_message.png"
+#define PAGE_IDLE_BACKGROUND_PATH                       "background_idle.png"
+#define PAGE_IDLE_PRODUCTS_BACKGROUND_PATH              "background_idle_products.png"
+#define PAGE_END_BACKGROUND_PATH                    "background_end.png"
+#define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_transactions.png"
 
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"

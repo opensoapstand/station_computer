@@ -233,13 +233,7 @@ double product::getDiscountPercentageFraction()
 
 QString product::getLastRestockDate()
 {
-    // qDebug() << "Open db:  last restock date";
-    // QString restockdate;
-    // DbManager db(DB_PATH);
-    // restockdate = db.getLastRestockDate(getSlot());
-    // db.closeDB();
-    
-    // return restockdate;
+
     return m_lastRestockDate;
 }
 
@@ -340,12 +334,12 @@ double product::getPriceCustom()
 
 double product::getVolume(int size)
 {
-    double volume;
-    qInfo() << "Open db: get volume";
-    DbManager db(DB_PATH);
-    volume = db.getProductVolume(getSlot(), df_util::sizeIndexToChar(size));
-    db.closeDB();
-    return volume;
+    // double volume;
+    // qInfo() << "Open db: get volume";
+    // DbManager db(DB_PATH);
+    // volume = db.getProductVolume(getSlot(), df_util::sizeIndexToChar(size));
+    // db.closeDB();
+    return m_volume_full;
 }
 
 double product::getVolume()
@@ -366,12 +360,12 @@ double product::getVolume()
 QString product::getUnitsForSlot()
 {
 
-    qDebug() << "Open db:  units for label.";
-    QString units;
-    DbManager db(DB_PATH);
-    units = db.getUnits(getSlot());
-    db.closeDB();
-    return units;
+    // qDebug() << "Open db:  units for label.";
+    // QString units;
+    // DbManager db(DB_PATH);
+    // units = db.getUnits(getSlot());
+    // db.closeDB();
+    return m_size_unit;
 }
 
 QString product::getVolumePerTickAsStringForSlot()
@@ -384,12 +378,12 @@ QString product::getVolumePerTickAsStringForSlot()
 
 double product::getVolumePerTickForSlot()
 {
-    qInfo() << "Open db: get vol per tick";
-    DbManager db(DB_PATH);
-    double ml_per_tick = db.getProductVolumePerTick(getSlot());
+    // qInfo() << "Open db: get vol per tick";
+    // DbManager db(DB_PATH);
+    // double ml_per_tick = db.getProductVolumePerTick(getSlot());
 
-    db.closeDB();
-    return ml_per_tick;
+    // db.closeDB();
+    return m_volume_per_tick;
 }
 
 void product::setVolumePerTickForSlot(QString volumePerTickInput)
@@ -413,39 +407,39 @@ void product::setSizeToVolumeForSlot(QString volumeInput, int size)
 
 QString product::getVolumeRemainingCorrectUnits()
 {
-    qInfo() << "Open db: volume dispensed since last restock";
-    DbManager db(DB_PATH);
-    double volume = db.getVolumeRemaining(getSlot());
-    db.closeDB();
+    // qInfo() << "Open db: volume dispensed since last restock";
+    // DbManager db(DB_PATH);
+    // double volume = db.getVolumeRemaining(getSlot());
+    // db.closeDB();
 
     QString units = getUnitsForSlot();
-    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units, false, true);
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_remaining, units, false, true);
 
     return volume_as_string;
 }
 
 QString product::getVolumeDispensedSinceRestockCorrectUnits()
 {
-    qInfo() << "Open db:  volume dispensed since last restock";
-    DbManager db(DB_PATH);
-    double volume = db.getVolumeDispensedSinceRestock(getSlot());
-    db.closeDB();
+    // qInfo() << "Open db:  volume dispensed since last restock";
+    // DbManager db(DB_PATH);
+    // double volume = db.getVolumeDispensedSinceRestock(getSlot());
+    // db.closeDB();
 
     QString units = getUnitsForSlot();
-    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units, false, true);
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_dispensed_since_restock, units, false, true);
 
     return volume_as_string;
 }
 
 QString product::getTotalDispensedCorrectUnits()
 {
-    qInfo() << "Open db:  volume dispensed";
-    DbManager db(DB_PATH);
-    double volume = db.getTotalDispensed(getSlot());
-    db.closeDB();
+    // qInfo() << "Open db:  volume dispensed";
+    // DbManager db(DB_PATH);
+    // double volume = db.getTotalDispensed(getSlot());
+    // db.closeDB();
 
     QString units = getUnitsForSlot();
-    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units, false, true);
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_dispensed_total, units, false, true);
 
     return volume_as_string;
 }
@@ -477,11 +471,11 @@ double product::inputTextToMlConvertUnits(QString inputValueAsText)
 
 QString product::getProductDrinkfillSerial()
 {
-    qDebug() << "Open db: get product id";
-    DbManager db(DB_PATH);
-    QString serial = db.getProductDrinkfillSerial(getSlot());
-    db.closeDB();
-    return serial;
+    // qDebug() << "Open db: get product id";
+    // DbManager db(DB_PATH);
+    // QString serial = db.getProductDrinkfillSerial(getSlot());
+    // db.closeDB();
+    return m_soapstand_product_serial;
 }
 
 
@@ -543,10 +537,6 @@ QString product::getProductPicturePath()
 QString product::getPLU(int sizeIndex)
 // QString product::getPLU(char size)
 {
-
-    // DbManager db(DB_PATH);
-    // QString plu = db.getPLU(getSlot(), size);
-    // db.closeDB();
     return m_sizeIndexPLUs[sizeIndex];
 }
 
@@ -574,14 +564,14 @@ QString product::getProductId()
 QString product::getFullVolumeCorrectUnits(bool addUnits)
 {
 
-    qDebug() << "Open db: get full volume ";
-    DbManager db(DB_PATH);
+    // qDebug() << "Open db: get full volume ";
+    // DbManager db(DB_PATH);
 
-    double volume = db.getFullProduct(getSlot());
-    db.closeDB();
+    // double volume = db.getFullProduct(getSlot());
+    // db.closeDB();
 
     QString units = getUnitsForSlot();
-    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units, false, addUnits);
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_full, units, false, addUnits);
 
     return volume_as_string;
 }
@@ -602,12 +592,6 @@ QString product::getSizeToVolumeWithCorrectUnits(bool round, bool addUnits)
 
 QString product::getPaymentMethod()
 {
-    // QString paymentMethod;
-    // qDebug() << "Open db: product payment method";
-    
-    // DbManager db(DB_PATH);
-    // paymentMethod = db.getPaymentMethod(getSlot());
-    // db.closeDB();
     return m_payment;
 }
 

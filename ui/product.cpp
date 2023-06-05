@@ -242,7 +242,7 @@ double product::getPrice(int sizeIndex)
     // always from database
     qDebug() << "Open db: get product price";
 
-    return m_sizeIndexPrices[SIZES_COUNT];
+    return m_sizeIndexPrices[sizeIndex];
 }
 
 double product::getPrice()

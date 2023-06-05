@@ -60,8 +60,7 @@ void product::loadProductPropertiesFromDb()
                                &m_price_custom_discount, m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 
     m_slot_enabled = db.getSlotEnabled(getSlot());
-    
-    bool m_empty_container_detection_enabled = db.getEmptyContainerDetectionEnabled();
+    m_empty_container_detection_enabled = db.getEmptyContainerDetectionEnabled();
 
     db.closeDB();
 }
@@ -444,11 +443,9 @@ bool product::isProductVolumeInContainer()
 
     bool retval = true;
     if (!m_empty_container_detection_enabled)
-    // if (!db.getEmptyContainerDetectionEnabled())
     {
         retval = m_volume_remaining > CONTAINER_EMPTY_THRESHOLD_ML;
     }
-
     return retval;
 }
 

@@ -413,7 +413,7 @@ void page_maintenance_dispenser::on_pushButton_restock_clicked()
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
 
     qDebug() << "refill clicked. slot: " << QString::number(this->p_page_idle->selectedProduct->getSlot());
-    qDebug() << "refill clicked. size: " << QString::number(this->p_page_idle->selectedProduct->getVolume());
+    qDebug() << "refill clicked. size: " << QString::number(this->p_page_idle->selectedProduct->getRestockVolume());
 
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 

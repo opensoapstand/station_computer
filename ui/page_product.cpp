@@ -388,7 +388,7 @@ void page_product::reset_and_show_page_elements()
 
                 else if (units == "g")
                 {
-                    if (p_page_idle->selectedProduct->getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
+                    if (p_page_idle->selectedProduct->getVolumeBySize(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
                     {
                         units = "100g";
                         units_discount_indication = "kg";

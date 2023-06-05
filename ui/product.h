@@ -32,7 +32,6 @@ public:
     void setVolumeDispensedMl(double volumeMl);
     void resetVolumeDispensed();
 
-
     void getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter);
     void setFullVolumeCorrectUnits(QString inputFullValue);
 
@@ -41,7 +40,7 @@ public:
     char getSizeAsChar();
     QString getPLU(int sizeIndex);
 
-    bool isOrderValid();
+    bool is_valid_size_selected();
 
     QString getProductName();
     QString getProductType();
@@ -65,8 +64,10 @@ public:
     // QString getProductPicturePath(int slot);
     QString getProductPicturePath();
 
-    double getVolume();
-    double getVolume(int size);
+    double getVolumeOfSelectedSize();
+    double getVolumeBySize(int size);
+
+    double getRestockVolume();
 
     void setSizeToVolumeForSlot(QString volumeInput, int size);
     QString getVolumePerTickAsStringForSlot();
@@ -74,6 +75,7 @@ public:
     void setVolumePerTickForSlot(QString volumePerTickInput);
 
     double inputTextToMlConvertUnits(QString inputValueAsText);
+    
     QString getUnitsForSlot();
     QString getSizeToVolume(QString units);
 
@@ -85,7 +87,7 @@ public:
     void setPrice(int size, double price);
     double getPriceCorrected();
     double getPriceCustom();
-    
+
     double getPrice();
 
     int getDispenseSpeedPercentage();
@@ -104,7 +106,6 @@ signals:
     void sizeChange(double newSize);
 
 private:
-
     int slot;
 
     QString m_size_unit;
@@ -173,25 +174,19 @@ private:
     double m_size_custom_discount;
     double m_price_custom_discount;
 
-    
-    
-
-
-
-
     bool m_sizeIndexIsEnabled[SIZES_COUNT]; // size indeces.
     QString m_sizeIndexPLUs[SIZES_COUNT];
     QString m_sizeIndexPIDs[SIZES_COUNT];
     double m_sizeIndexPrices[SIZES_COUNT];
     double m_sizeIndexVolumes[SIZES_COUNT];
 
-    int Size;
+    int m_selected_size;
     double DispensedVolumeMl;
 
-    int m_selectedSlot;
+    int m_dispenser_slot;
     double overruledPrice;
     double m_discount_percentage_fraction;
     QString m_promoCode;
 };
 
-#endif //PRODUCT_H
+#endif // PRODUCT_H

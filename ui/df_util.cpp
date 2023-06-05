@@ -6,18 +6,17 @@
 
 static QPointer<QFile> file_out = nullptr;
 
-bool df_util::fileExists(QString path)
+void df_util::warnIfPathDoesNotExist(QString path){
+    if (!pathExists(path)){
+        qDebug() << "WARNING: File not found: " << path;
+    }
+}
+
+bool df_util::pathExists(QString path)
 {
     // check if path exists and if yes: Is it a file and no directory?
     // https://stackoverflow.com/questions/10273816/how-to-check-whether-file-exists-in-qt-in-c
-    bool exists = QFileInfo::exists(path) && QFileInfo(path).isFile();
-
-    if (!exists)
-    {
-        qDebug() << "WARNING: File not found: " << path;
-    }
-
-    return exists;
+     return QFileInfo::exists(path) && QFileInfo(path).isFile();
 }
 
 char df_util::sizeIndexToChar(int size_index)

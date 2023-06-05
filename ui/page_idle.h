@@ -63,8 +63,8 @@ public:
     void setBackgroundPictureToQWidget(QWidget *page, QString imageName);
     QString getCSS(QString cssName);
     void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
-    void addCssClassToObject(QWidget *element, QString classname, QString css_file_name);
 
+    
     void setPromoCode(QString promoCode);
     QString getPromoCode();
 
@@ -81,25 +81,19 @@ public:
     product *selectedProduct;
 
     df_util *dfUtility;
-    // for products.cpp
-    //  product products[SLOT_COUNT]; // declare products as a member variable
-    //  product* getSelectedProduct();
-
     DfUiCommThread *dfComm;
 
-    // bool isSlotAvailable(int slot);
-    // void setSlotAvailability(int slot, bool isEnabled);
     void printerStatusFeedback(bool isOnline, bool hasPaper);
 
     bool isEnough(int p);
     void MMSlot();
     bool m_transitioning = false;
-    // bool slotIndexAvailable[4] = {true,true,true,true}; //;1,2,3,4
 
     QLabel *video_label;
     QVideoWidget *videoWidget;
     QMediaPlayer *player;
 
+    void addCssClassToObject(QWidget *element, QString classname, QString css_file_name);
     void setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier);
     void setTemplateTextToObject(QWidget *p_element);
     void setTextToOjbect(QWidget *p_element, QString text);

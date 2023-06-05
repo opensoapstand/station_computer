@@ -64,7 +64,7 @@ void page_maintenance::showEvent(QShowEvent *event)
     for (int i = 0; i < SLOT_COUNT; i++)
     {
         QString p = p_page_idle->products[i].getProductPicturePath();
-        p_page_idle->dfUtility->fileExists(p);
+        p_page_idle->dfUtility->pathExists(p);
         QPixmap im(p);
         QIcon qi(im);
         product_buttons[i]->setIcon(qi);

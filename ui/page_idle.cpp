@@ -392,7 +392,7 @@ void page_idle::addCompanyLogoToLabel(QLabel *label)
 void page_idle::addPictureToButton(QPushButton *button, QString picturePath)
 {
     QString p = selectedProduct->getProductPicturePath();
-    if (df_util::fileExists(p))
+    if (df_util::pathExists(p))
     {
         QPixmap im(p);
         QIcon qi(im);
@@ -403,7 +403,7 @@ void page_idle::addPictureToButton(QPushButton *button, QString picturePath)
 
 void page_idle::addPictureToLabel(QLabel *label, QString picturePath)
 {
-    if (df_util::fileExists(picturePath))
+    if (df_util::pathExists(picturePath))
     {
         QPixmap picture(picturePath);
 
@@ -412,6 +412,10 @@ void page_idle::addPictureToLabel(QLabel *label, QString picturePath)
 
         // // set a scaled pixmap to a w x h window keeping its aspect ratio
         label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio));
+    }
+    else
+    {
+        qDebug() << "Can't add picture to label: " << label->objectName() << " " << picturePath;
     }
 }
 
@@ -448,13 +452,13 @@ QString page_idle::getTemplatePathFromName(QString fileName)
 {
     QString image_path = getTemplateFolder() + fileName;
 
-    if (!df_util::fileExists(image_path))
+    if (!df_util::pathExists(image_path))
     {
         QString image_default_path = getDefaultTemplatePathFromName(fileName);
-        qDebug() << "File not found in template folder: " + image_path + ". Default template path: " + image_default_path;
-        if (!df_util::fileExists(image_default_path))
+        //qDebug() << "File not found in template folder: " + image_path + ". Default template path: " + image_default_path;
+        if (!df_util::pathExists(image_default_path))
         {
-            qDebug() << "File not found in default template folder (will use path anyways...): " + image_default_path;
+            qDebug() << "File not found in template folder and not in default template folder (will use path anyways...): " + image_default_path;
         }
         image_path = image_default_path;
     }

@@ -58,8 +58,9 @@ void product::loadProductPropertiesFromDb()
                                &m_is_enabled_custom_discount,
                                &m_size_custom_discount,
                                &m_price_custom_discount, m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
+
+    m_slot_enabled = db.getSlotEnabled(getSlot());
     
-    bool m_slot_enabled = db.getSlotEnabled(getSlot());
     bool m_empty_container_detection_enabled = db.getEmptyContainerDetectionEnabled();
 
     db.closeDB();
@@ -146,7 +147,7 @@ int product::getBiggestEnabledSizeIndex()
 
 bool product::getSlotEnabled()
 {
- return m_slot_enabled;
+    return m_slot_enabled;
 }
 
 bool product::getSizeEnabled(int size)
@@ -241,7 +242,7 @@ double product::getPrice(int sizeIndex)
 {
     // always from database
     qDebug() << "Open db: get product price";
-    
+
     return m_sizeIndexPrices[SIZES_COUNT];
 }
 
@@ -440,7 +441,7 @@ QString product::getProductDrinkfillSerial()
 
 bool product::isProductVolumeInContainer()
 {
-    
+
     bool retval = true;
     if (!m_empty_container_detection_enabled)
     // if (!db.getEmptyContainerDetectionEnabled())
@@ -495,7 +496,6 @@ QString product::getPLU(int sizeIndex)
 {
     return m_sizeIndexPLUs[sizeIndex];
 }
-
 
 QString product::getAwsProductId()
 {

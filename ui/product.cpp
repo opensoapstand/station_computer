@@ -315,11 +315,7 @@ double product::getPriceCustom()
 
 double product::getVolume(int size)
 {
-    // double volume;
-    // qInfo() << "Open db: get volume";
-    // DbManager db(DB_PATH);
-    // volume = db.getProductVolume(getSlot(), df_util::sizeIndexToChar(size));
-    // db.closeDB();
+
     return m_volume_full;
 }
 
@@ -341,11 +337,6 @@ double product::getVolume()
 QString product::getUnitsForSlot()
 {
 
-    // qDebug() << "Open db:  units for label.";
-    // QString units;
-    // DbManager db(DB_PATH);
-    // units = db.getUnits(getSlot());
-    // db.closeDB();
     return m_size_unit;
 }
 

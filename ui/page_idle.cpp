@@ -82,7 +82,7 @@ void page_idle::showEvent(QShowEvent *event)
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
         products[slot_index].setSlot(slot_index + 1);
-        products[slot_index].load();
+        products[slot_index].loadProductProperties();
     }
     setSelectedProduct(0);
 
@@ -565,6 +565,7 @@ QString page_idle::getTemplateTextByPage(QWidget *page, QString identifier)
 
     return getTemplateText(searchString);
 }
+
 
 QString page_idle::getTemplateText(QString textName_to_find)
 {

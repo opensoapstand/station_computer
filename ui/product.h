@@ -26,7 +26,6 @@ public:
     // int getSelectedSlot();
     void setPromoCode(QString promoCode);
     QString getAwsProductId();
-    QString getMachineId();
     bool getSlotEnabled();
 
     QString getFullVolumeCorrectUnits(bool addUnits);
@@ -54,9 +53,6 @@ public:
     QString getProductType();
     QString getProductDrinkfillSerial();
 
-    void load();
-    // void loadProductPropertiesFromProductsFile();
-    // void getProductPropertiesFromProductsFile(QString product_id, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);
     void loadProductPropertiesFromProductsFile();
 
     void loadProductProperties();
@@ -102,6 +98,7 @@ public:
     void setDispenseSpeedPercentage(int percentage);
 
     QString getPaymentMethod();
+    QString getMachineId();
     // productSelect *selectedProduct; // Declare selectedProduct as a pointer to productSelect
 
 
@@ -165,7 +162,8 @@ private:
     QString m_features_ui;
     QString m_description_ui;
     QString m_aws_product_id;
-
+    bool m_empty_container_detection_enabled;
+    bool m_slot_enabled;
     QString m_lastRestockDate;
     QString m_currency;
     QString m_name_receipt;

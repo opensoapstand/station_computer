@@ -127,11 +127,6 @@ void page_product_overview::showEvent(QShowEvent *event)
 
     ui->pushButton_to_help->setProperty("class", "buttonBGTransparent");
     ui->pushButton_to_help->setStyleSheet(styleSheet);
-
-
-    
-
-    p_page_idle->selectedProduct->loadProductProperties();
     reset_and_show_page_elements();
 }
 

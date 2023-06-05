@@ -21,12 +21,6 @@ product::~product()
 {
 }
 
-void product::load()
-{
-    // load all properties at once in a db call.
-    loadProductProperties();
-}
-
 void product::loadProductProperties()
 {
     loadProductPropertiesFromDb();
@@ -64,6 +58,9 @@ void product::loadProductPropertiesFromDb()
                                &m_is_enabled_custom_discount,
                                &m_size_custom_discount,
                                &m_price_custom_discount, m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
+    
+    bool m_slot_enabled = db.getSlotEnabled(getSlot());
+    bool m_empty_container_detection_enabled = db.getEmptyContainerDetectionEnabled();
 
     db.closeDB();
 }
@@ -149,12 +146,7 @@ int product::getBiggestEnabledSizeIndex()
 
 bool product::getSlotEnabled()
 {
-    qDebug() << "Open db: get slot enabled";
-    DbManager db(DB_PATH);
-    bool enabled = db.getSlotEnabled(getSlot());
-
-    db.closeDB();
-    return enabled;
+ return m_slot_enabled;
 }
 
 bool product::getSizeEnabled(int size)
@@ -249,12 +241,8 @@ double product::getPrice(int sizeIndex)
 {
     // always from database
     qDebug() << "Open db: get product price";
-    DbManager db(DB_PATH);
-    double price;
-    price = db.getProductPrice(getSlot(), df_util::sizeIndexToChar(sizeIndex));
-    qDebug() << "productsize: " << df_util::sizeIndexToChar(sizeIndex) << " price: " << price;
-    db.closeDB();
-    return price;
+    
+    return m_sizeIndexPrices[SIZES_COUNT];
 }
 
 double product::getPrice()
@@ -452,14 +440,14 @@ QString product::getProductDrinkfillSerial()
 
 bool product::isProductVolumeInContainer()
 {
-    DbManager db(DB_PATH);
+    
     bool retval = true;
-    if (!db.getEmptyContainerDetectionEnabled())
+    if (!m_empty_container_detection_enabled)
+    // if (!db.getEmptyContainerDetectionEnabled())
     {
-        retval = db.getVolumeRemaining(getSlot()) > CONTAINER_EMPTY_THRESHOLD_ML;
+        retval = m_volume_remaining > CONTAINER_EMPTY_THRESHOLD_ML;
     }
 
-    db.closeDB();
     return retval;
 }
 
@@ -508,6 +496,12 @@ QString product::getPLU(int sizeIndex)
     return m_sizeIndexPLUs[sizeIndex];
 }
 
+
+QString product::getAwsProductId()
+{
+    return m_aws_product_id;
+}
+
 QString product::getMachineId()
 {
 
@@ -519,24 +513,8 @@ QString product::getMachineId()
     return idString;
 }
 
-QString product::getAwsProductId()
-{
-    // qDebug() << "Open db: get productId ";
-    // DbManager db(DB_PATH);
-    // QString idString = db.(getSlot());
-    // db.closeDB();
-    return m_aws_product_id;
-}
-
 QString product::getFullVolumeCorrectUnits(bool addUnits)
 {
-
-    // qDebug() << "Open db: get full volume ";
-    // DbManager db(DB_PATH);
-
-    // double volume = db.getFullProduct(getSlot());
-    // db.closeDB();
-
     QString units = getUnitsForSlot();
     QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_full, units, false, addUnits);
 
@@ -564,15 +542,9 @@ QString product::getPaymentMethod()
 
 int product::getDispenseSpeedPercentage()
 {
-    int pwm;
-
-    qInfo() << "Open db: pwm speed";
-    DbManager db(DB_PATH);
-    pwm = db.getPWM(getSlot());
-    db.closeDB();
-
-    return (int)round((double(pwm) * 100) / 255);
+    return (int)round((double(m_dispense_speed) * 100) / 255);
 }
+
 void product::setDispenseSpeedPercentage(int percentage)
 {
     int pwm = (int)round((percentage * 255) / 100);

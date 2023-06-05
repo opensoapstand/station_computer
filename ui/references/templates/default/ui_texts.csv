@@ -117,6 +117,12 @@ page_qr_payment->pushButton_previous_page,<-back
 page_maintenance->product_overlay_labels[i]->almost_empty,Almost Empty
 page_maintenance->product_overlay_labels[i]->coming_soon,Comming soon
 
+#page_idle_products
+
+page_idle_products->label_pick_soap,Discover how to<br> refill soap here!
+page_idle_products->printer_status_label->assistance_printer_offline,Assistance neede<br>Receipt Printer offline.
+page_idle_products->printer_status_label->empty_improperly_loaded,Assistance needed<br>Receipt printer empty or improperly loaded.
+
 
 
 

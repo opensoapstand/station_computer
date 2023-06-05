@@ -78,37 +78,22 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     reset_all_dispense_stats();
     update_volume_received_dispense_stats(0);
 
-    ui->pluLabel_s->setText(p_page_idle->selectedProduct->getPLU(SIZE_SMALL_INDEX));
-    ui->pluLabel_m->setText(p_page_idle->selectedProduct->getPLU(SIZE_MEDIUM_INDEX));
-    ui->pluLabel_l->setText(p_page_idle->selectedProduct->getPLU(SIZE_LARGE_INDEX));
-    ui->pluLabel_c->setText(p_page_idle->selectedProduct->getPLU(SIZE_CUSTOM_INDEX));
+
+    ui->pushButton_plu_small->setText(p_page_idle->selectedProduct->getPLU(SIZE_SMALL_INDEX));
+    ui->pushButton_plu_medium->setText(p_page_idle->selectedProduct->getPLU(SIZE_MEDIUM_INDEX));
+    ui->pushButton_plu_large->setText(p_page_idle->selectedProduct->getPLU(SIZE_LARGE_INDEX));
+    ui->pushButton_plu_custom->setText(p_page_idle->selectedProduct->getPLU(SIZE_CUSTOM_INDEX));
     ui->numberEntry->hide();
     ui->errorLabel->setText("");
     ui->titleLabel->setText("");
 
-    // if (p_page_idle->selectedProduct->getPaymentMethod() == "plu" || p_page_idle->selectedProduct->getPaymentMethod() == "barcode")  //|| paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13"
-    // {
-    ui->pushButton_plu_small->setVisible(true);
-    ui->pushButton_plu_small->setVisible(true);
     ui->pushButton_plu_small->setEnabled(true);
-    ui->pushButton_plu_medium->setVisible(true);
-    ui->pushButton_plu_medium->setVisible(true);
     ui->pushButton_plu_medium->setEnabled(true);
-    ui->pushButton_plu_large->setVisible(true);
-    ui->pushButton_plu_large->setVisible(true);
     ui->pushButton_plu_large->setEnabled(true);
-    ui->pushButton_plu_custom->setVisible(true);
-    ui->pushButton_plu_custom->setVisible(true);
     ui->pushButton_plu_custom->setEnabled(true);
 
     QString path = p_page_idle->selectedProduct->getProductPicturePath();
     p_page_idle->addPictureToLabel(ui->label_product_picture, path);
-    // if (p_page_idle->dfUtility->fileExists(p)){
-    //     QPixmap im(p);
-    //     QIcon qi(im);
-    //     ui->productPhotoButton->setIcon(qi);
-    //     ui->productPhotoButton->setIconSize(QSize(271, 391));
-    // };
 
     refreshLabels();
     setpushButton_soldOutText();

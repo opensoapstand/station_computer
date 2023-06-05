@@ -25,7 +25,7 @@ public:
     // void setSelectedSlot(int optionSlot);
     // int getSelectedSlot();
     void setPromoCode(QString promoCode);
-    QString getProductId();
+    QString getAwsProductId();
     QString getMachineId();
     bool getSlotEnabled();
 

@@ -67,8 +67,6 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 
     
 
-    qDebug() << "call db from maintenance select dispenser page";
-    DbManager db(DB_PATH);
     this->units_selected_product = this->p_page_idle->selectedProduct->getUnitsForSlot();
     volume_per_tick_buffer = p_page_idle->selectedProduct->getVolumePerTickForSlot();
     p_page_idle->selectedProduct->setBiggestEnabledSizeIndex();
@@ -149,10 +147,10 @@ void page_maintenance_dispenser::refreshLabels()
     ui->label_restock_timestamp->setText(db.getLastRestockDate(product_slot___));
     db.closeDB();
 
-    ui->pushButton_plu_small->setText(p_page_idle->selectedProduct->getPLU('s'));
-    ui->pushButton_plu_medium->setText(p_page_idle->selectedProduct->getPLU('m'));
-    ui->pushButton_plu_large->setText(p_page_idle->selectedProduct->getPLU('l'));
-    ui->pushButton_plu_custom->setText(p_page_idle->selectedProduct->getPLU('c'));
+    ui->pushButton_plu_small->setText(p_page_idle->selectedProduct->getPLU(SIZE_SMALL_INDEX));
+    ui->pushButton_plu_medium->setText(p_page_idle->selectedProduct->getPLU(SIZE_MEDIUM_INDEX));
+    ui->pushButton_plu_large->setText(p_page_idle->selectedProduct->getPLU(SIZE_LARGE_INDEX));
+    ui->pushButton_plu_custom->setText(p_page_idle->selectedProduct->getPLU(SIZE_CUSTOM_INDEX));
 
     ui->pushButton_setting_speed_pwm->hide();
     ui->label_setting_speed_pwm->hide();

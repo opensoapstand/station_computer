@@ -528,7 +528,7 @@ QString product::getMachineId()
     return idString;
 }
 
-QString product::()
+QString product::getAwsProductId()
 {
     // qDebug() << "Open db: get productId ";
     // DbManager db(DB_PATH);

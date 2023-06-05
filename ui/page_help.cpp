@@ -96,6 +96,7 @@ void page_help::showEvent(QShowEvent *event)
     help_text_html = db.getHelpPageHtmlText();
     db.closeDB();
     if(help_text_html!=""){
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_GENERIC_WHITE);
         ui->html_textBrowser->setHtml(help_text_html);
     }
     else{

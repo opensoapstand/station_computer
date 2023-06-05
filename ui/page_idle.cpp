@@ -21,6 +21,7 @@
 #include "page_maintenance_general.h"
 #include "product.h"
 
+
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
 // #include <QMainWindow>
@@ -42,10 +43,6 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     ui->pushButton_test->raise();
     // ui->pushButton_to_select_product_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->pushButton_to_select_product_page->raise();
-
-    // TODO: Hold and pass Product Object
-    selectedProduct = new product();
-    // product *selectedProduct;
 
     idlePageTypeSelectorTimer = new QTimer(this);
     idlePageTypeSelectorTimer->setInterval(1000);
@@ -78,6 +75,8 @@ void page_idle::showEvent(QShowEvent *event)
     registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
+
+    thisMachine.loadParametersFromDb();
     // for products.cpp
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {

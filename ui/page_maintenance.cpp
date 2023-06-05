@@ -89,7 +89,7 @@ void page_maintenance::showEvent(QShowEvent *event)
     // ui->product2_label->setText(db.getProductName(2));
     // ui->product3_label->setText(db.getProductName(3));
     // ui->product4_label->setText(db.getProductName(4));
-    ui->machineLabel->setText("Machine ID: " + db.getMachineID());
+    ui->machineLabel->setText("Machine ID: " + p_page_idle->thisMachine.getMachineId());
 
     db.closeDB();
 

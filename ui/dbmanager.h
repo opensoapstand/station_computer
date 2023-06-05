@@ -49,7 +49,7 @@ public:
     bool sellout(int slot);
     bool unsellout(int slot);
     int getLastTransactionIdFromDb();
-    
+
     double getTemperature();
     int getPWM(int slot);
     int getDispenseButtonCount();
@@ -62,7 +62,7 @@ public:
     QString getStatusText(int slot);
     // bool setStatusText(int slot, QString text);
     bool updateSlotAvailability(int slot, int isEnabled, QString status_text);
-    
+
     void addUserInteraction(QString action);
 
     uint32_t getNumberOfRows(QString table);
@@ -114,6 +114,38 @@ public:
                                  double *size_custom_discount,
                                  double *price_custom_discount,
                                  bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs);
+
+    void getAllMachineProperties(
+    QString *machine_id,
+    int *Soapstand_customer_id,
+    QString *ttttemplate,
+    QString *location,
+    QString *controller_type,
+    QString *controller_id,
+    QString *screen_type,
+    QString *screen_id,
+    int *has_receipt_printer,
+    int *receipt_printer_is_online,
+    int *receipt_printer_has_paper,
+    int *has_tap_payment,
+    QString *hardware_version,
+    QString *software_version,
+    int *aws_port,
+
+    int *coupons_enabled,
+    int *has_empty_detection,
+    int *enable_pump_ramping,
+    int *enable_pump_reversal,
+    int *dispense_buttons_count,
+    QString *maintenance_pwd,
+    int *show_transactions,
+    QString *help_text_html,
+    QString *idle_page_type,
+
+    QString *pump_id_slots ,
+    int *is_enabled_slots,
+    QString *status_text_slots);
+
     QString getTemplateName();
     void updateTapToQR();
 

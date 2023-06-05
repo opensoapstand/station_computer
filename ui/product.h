@@ -2,9 +2,6 @@
 #define PRODUCT_H
 
 #include "df_util.h"
-// #include "page_idle.h"
-
-
 
 class product : public QObject
 {
@@ -15,9 +12,6 @@ public:
     product(const product &other);
     ~product();
     product &operator=(const product &other);
-
-    // HACK: Fixed volume reference; Need to figure out best storage location...
-    constexpr static double EMPTY_SIZE_ML = 0.00;
 
     // Setters and Getters
     void setSlot(int slot);
@@ -98,9 +92,6 @@ public:
     void setDispenseSpeedPercentage(int percentage);
 
     QString getPaymentMethod();
-    QString getMachineId();
-    // productSelect *selectedProduct; // Declare selectedProduct as a pointer to productSelect
-
 
     double getDiscountPercentageFraction();
     QString getPromoCode();

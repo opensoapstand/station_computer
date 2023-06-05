@@ -1,6 +1,6 @@
 #include "df_util.h" // lode added for settings
 #include "dbmanager.h"
-#include "page_dispenser.h"
+// #include "page_dispenser.h"
 #include "page_idle.h"
 // Ctor
 product::product()
@@ -27,9 +27,6 @@ void product::loadProductProperties()
     qDebug() << "done loading from db";
     loadProductPropertiesFromProductsFile();
     qDebug() << "done loading from csv";
-
-    qDebug() << "testtesttest: lst restock gasetzaset:: " << m_lastRestockDate;
-    qDebug() << "testtesttest: lst restock name:: " << getProductName();
 }
 
 void product::loadProductPropertiesFromDb()
@@ -84,7 +81,7 @@ void product::loadProductPropertiesFromProductsFile()
         int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], m_soapstand_product_serial, Qt::CaseSensitive);
         if (compareResult == 0)
         {
-            qDebug() << "compare result is 0";
+            //qDebug() << "compare result is 0";
             m_name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
             m_product_type = fields[CSV_PRODUCT_COL_TYPE];
             m_description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
@@ -93,9 +90,7 @@ void product::loadProductPropertiesFromProductsFile()
             break;
         }
     }
-    qDebug() << "properties file read before close ";
     file.close();
-    qDebug() << "properties file read done ";
 }
 
 char product::getSizeAsChar()
@@ -217,7 +212,6 @@ QString product::getPromoCode()
 
 void product::setDiscountPercentageFraction(double percentageFraction)
 {
-    // ratio = percentage / 100;
     qDebug() << "Set discount percentage fraction: " << QString::number(percentageFraction, 'f', 3);
     m_discount_percentage_fraction = percentageFraction;
 }
@@ -352,7 +346,6 @@ void product::setVolumePerTickForSlot(QString volumePerTickInput)
     qInfo() << "Open db: set vol per tick";
     DbManager db(DB_PATH);
     db.updateVolumePerTick(getSlot(), ml_per_tick);
-
     db.closeDB();
 }
 
@@ -497,17 +490,6 @@ QString product::getPLU(int sizeIndex)
 QString product::getAwsProductId()
 {
     return m_aws_product_id;
-}
-
-QString product::getMachineId()
-{
-
-    qDebug() << "Open db: getMachineID";
-
-    DbManager db(DB_PATH);
-    QString idString = db.getMachineID();
-    db.closeDB();
-    return idString;
 }
 
 QString product::getFullVolumeCorrectUnits(bool addUnits)

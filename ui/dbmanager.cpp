@@ -321,7 +321,6 @@ void DbManager::getAllProductProperties(int slot,
             *volume_dispensed_since_restock = qry.value(17).toDouble();
             *volume_dispensed_total = qry.value(18).toDouble();
 
-            
             isSizeEnabled[1] = qry.value(19).toInt(); // small is index 1!!
             isSizeEnabled[2] = qry.value(20).toInt();
             isSizeEnabled[3] = qry.value(21).toInt();
@@ -330,9 +329,8 @@ void DbManager::getAllProductProperties(int slot,
             volumes[1] = qry.value(23).toDouble();
             volumes[2] = qry.value(24).toDouble();
             volumes[3] = qry.value(25).toDouble();
-            //size custom min
+            // size custom min
             volumes[4] = qry.value(27).toDouble();
-
 
             prices[1] = qry.value(28).toDouble();
             prices[2] = qry.value(29).toDouble();
@@ -352,7 +350,6 @@ void DbManager::getAllProductProperties(int slot,
             *is_enabled_custom_discount = qry.value(46).toInt();
             *size_custom_discount = qry.value(47).toDouble();
             *price_custom_discount = qry.value(48).toDouble();
-
         }
     }
 }
@@ -682,7 +679,6 @@ void DbManager::addUserInteraction(QString action)
         qDebug() << "Failed to write user interaction. error type: " << qry.lastError().type() << "Error message:" << qry.lastError().text();
         qDebug() << "Error message:" << qry.lastError().text();
         qDebug() << "Query:" << qry.lastQuery();
-        
     }
 }
 
@@ -1521,6 +1517,157 @@ bool DbManager::hasReceiptPrinter()
         }
     }
     return is_enabled;
+}
+
+/*
+0	machine_id
+1	Soapstand_customer_id
+2	template
+3	location
+4	controller_type
+5	controller_id
+6	screen_type
+7	screen_id
+8	has_receipt_printer
+9	receipt_printer_is_online
+10	receipt_printer_has_paper
+11	has_tap_payment
+12	hardware_version
+13	software_version
+14	aws_port
+15	pump_id_slot_1
+16	pump_id_slot_2
+17	pump_id_slot_3
+18	pump_id_slot_4
+19	is_enabled_slot_1
+20	is_enabled_slot_2
+21	is_enabled_slot_3
+22	is_enabled_slot_4
+23	coupons_enabled
+24	status_text_slot_1
+25	status_text_slot_2
+26	status_text_slot_3
+27	status_text_slot_4
+28	has_empty_detection
+29	enable_pump_ramping
+30	enable_pump_reversal
+31	dispense_buttons_count
+32	maintenance_pwd
+33	show_transactions
+34	help_text_html
+35	idle_page_type
+
+QString* machine_id,
+int* Soapstand_customer_id,
+QString* template,
+QString* location,
+QString* controller_type,
+QString* controller_id,
+QString* screen_type,
+QString* screen_id,
+int* has_receipt_printer,
+int* receipt_printer_is_online,
+int* receipt_printer_has_paper,
+int* has_tap_payment,
+QString* hardware_version,
+QString* software_version,
+int* aws_port,
+
+int* coupons_enabled,
+int* has_empty_detection,
+int* enable_pump_ramping,
+int* enable_pump_reversal,
+int* dispense_buttons_count,
+QString* maintenance_pwd,
+int* show_transactions,
+QString* help_text_html,
+QString* idle_page_type,
+
+QString* pump_id_slots*,
+int* is_enabled_slots*,
+QString* status_text_slots
+
+*/
+
+void DbManager::getAllMachineProperties(
+    QString *machine_id,
+    int *Soapstand_customer_id,
+    QString *ttttemplate,
+    QString *location,
+    QString *controller_type,
+    QString *controller_id,
+    QString *screen_type,
+    QString *screen_id,
+    int *has_receipt_printer,
+    int *receipt_printer_is_online,
+    int *receipt_printer_has_paper,
+    int *has_tap_payment,
+    QString *hardware_version,
+    QString *software_version,
+    int *aws_port,
+
+    int *coupons_enabled,
+    int *has_empty_detection,
+    int *enable_pump_ramping,
+    int *enable_pump_reversal,
+    int *dispense_buttons_count,
+    QString *maintenance_pwd,
+    int *show_transactions,
+    QString *help_text_html,
+    QString *idle_page_type,
+
+    QString *pump_id_slots,
+    int *is_enabled_slots,
+    QString *status_text_slots)
+{
+    qDebug() << " db... product properties";
+    QSqlQuery qry;
+    {
+        qry.prepare("SELECT machine_id,Soapstand_customer_id,template,location,controller_type,controller_id,screen_type,screen_id,has_receipt_printer,receipt_printer_is_online,receipt_printer_has_paper,has_tap_payment,hardware_version,software_version,aws_port,pump_id_slot_1,pump_id_slot_2,pump_id_slot_3,pump_id_slot_4,is_enabled_slot_1,is_enabled_slot_2,is_enabled_slot_3,is_enabled_slot_4,coupons_enabled,status_text_slot_1,status_text_slot_2,status_text_slot_3,status_text_slot_4,has_empty_detection,enable_pump_ramping,enable_pump_reversal,dispense_buttons_count,maintenance_pwd,show_transactions,help_text_html,idle_page_type FROM machine");
+
+        qry.exec();
+
+        while (qry.next())
+        {
+
+            *machine_id = qry.value(0).toInt(0);
+            *Soapstand_customer_id = qry.value(1).toInt();
+            *ttttemplate = qry.value(2).toString();
+            *location = qry.value(3).toString();
+            *controller_type = qry.value(4).toString();
+            *controller_id = qry.value(5).toString();
+            *screen_type = qry.value(6).toString();
+            *screen_id = qry.value(7).toString();
+            *has_receipt_printer = qry.value(8).toInt();
+            *receipt_printer_is_online = qry.value(9).toInt();
+            *receipt_printer_has_paper = qry.value(10).toInt();
+            *has_tap_payment = qry.value(11).toInt();
+            *hardware_version = qry.value(12).toString();
+            *software_version = qry.value(13).toString();
+            *aws_port = qry.value(14).toInt();
+            pump_id_slots[0] = qry.value(15).toString();
+            pump_id_slots[1] = qry.value(16).toString();
+            pump_id_slots[2] = qry.value(17).toString();
+            pump_id_slots[3] = qry.value(18).toString();
+            *coupons_enabled = qry.value(19).toInt();
+            is_enabled_slots[0] = qry.value(20).toInt();
+            is_enabled_slots[1] = qry.value(21).toInt();
+            is_enabled_slots[2] = qry.value(22).toInt();
+            is_enabled_slots[3] = qry.value(23).toInt();
+            status_text_slots[0] = qry.value(24).toString();
+            status_text_slots[1] = qry.value(25).toString();
+            status_text_slots[2] = qry.value(26).toString();
+            status_text_slots[3] = qry.value(27).toString();
+            *has_empty_detection = qry.value(28).toInt();
+            *enable_pump_ramping = qry.value(29).toInt();
+            *enable_pump_reversal = qry.value(30).toInt();
+            *dispense_buttons_count = qry.value(31).toInt();
+            *maintenance_pwd = qry.value(32).toString();
+            *show_transactions = qry.value(33).toInt();
+            *help_text_html = qry.value(34).toString();
+            *idle_page_type = qry.value(35).toString();
+        }
+    }
 }
 
 QString DbManager::getMachineID()

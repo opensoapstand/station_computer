@@ -24,6 +24,7 @@
 #include "dbmanager.h"
 #include "page_maintenance.h"
 #include "product.h"
+#include "machine.h"
 #include "page_maintenance_general.h"
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
@@ -79,6 +80,8 @@ public:
 
     product products[SLOT_COUNT];
     product *selectedProduct;
+
+    machine thisMachine;
 
     df_util *dfUtility;
     DfUiCommThread *dfComm;

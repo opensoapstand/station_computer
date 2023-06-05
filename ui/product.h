@@ -164,7 +164,7 @@ private:
     QString m_name_ui;
     QString m_features_ui;
     QString m_description_ui;
-    QString m_product_id;
+    QString m_aws_product_id;
 
     QString m_lastRestockDate;
     QString m_currency;

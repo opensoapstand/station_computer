@@ -23,7 +23,7 @@ product::~product()
 
 void product::load()
 {
-    // load all properties at once in a db call. 
+    // load all properties at once in a db call.
     loadProductProperties();
 }
 
@@ -33,52 +33,39 @@ void product::loadProductProperties()
     qDebug() << "done loading from db";
     loadProductPropertiesFromProductsFile();
     qDebug() << "done loading from csv";
+
+    qDebug() << "testtesttest: lst restock gasetzaset:: " << m_lastRestockDate;
+    qDebug() << "testtesttest: lst restock name:: " << getProductName();
 }
 
 void product::loadProductPropertiesFromDb()
 {
-
-
-
-
-    qDebug() << "Open db: db load product properties from product load";
-
-
-    DbManager db(DB_PATH);
-    m_product_id = db.getProductID(getSlot());
-    m_soapstand_product_serial = db.getProductDrinkfillSerial(getSlot());
-    db.closeDB();
-
-    m_size_unit = getUnitsForSlot();
-    m_payment = getPaymentMethod();
-
     qDebug() << "Open db: db load product properties";
-    DbManager db2(DB_PATH);
+    DbManager db(DB_PATH);
 
-    db2.getProductProperties(getSlot(), &m_product_id, m_sizeIndexIsEnabled);
-    db2.getAllProductProperties(getSlot(),  &m_product_id,
-                                &m_soapstand_product_serial,
-                                &m_name_ui,
-                                &m_size_unit,
-                                &m_currency,
-                                &m_payment,
-                                &m_name_receipt,
-                                &m_concentrate_multiplier,
-                                &m_dispense_speed,
-                                &m_threshold_flow,
-                                &m_retraction_time,
-                                &m_calibration_const,
-                                &m_volume_per_tick,
-                                &m_lastRestockDate,
-                                &m_volume_full,
-                                &m_volume_remaining,
-                                &m_volume_dispensed_since_restock,
-                                &m_volume_dispensed_total,
-                                &m_is_enabled_custom_discount,
-                                &m_size_custom_discount,
-                                &m_price_custom_discount, m_sizeIndexIsEnabled, m_sizeIndexPrices,  m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
+    db.getProductProperties(getSlot(), &m_aws_product_id, m_sizeIndexIsEnabled);
+    db.getAllProductProperties(getSlot(), &m_aws_product_id,
+                               &m_soapstand_product_serial,
+                               &m_size_unit,
+                               &m_currency,
+                               &m_payment,
+                               &m_name_receipt,
+                               &m_concentrate_multiplier,
+                               &m_dispense_speed,
+                               &m_threshold_flow,
+                               &m_retraction_time,
+                               &m_calibration_const,
+                               &m_volume_per_tick,
+                               &m_lastRestockDate,
+                               &m_volume_full,
+                               &m_volume_remaining,
+                               &m_volume_dispensed_since_restock,
+                               &m_volume_dispensed_total,
+                               &m_is_enabled_custom_discount,
+                               &m_size_custom_discount,
+                               &m_price_custom_discount, m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 
-    db2.closeDB();
+    db.closeDB();
 }
 
 void product::loadProductPropertiesFromProductsFile()
@@ -97,7 +84,7 @@ void product::loadProductPropertiesFromProductsFile()
         QString line = in.readLine();
 
         QStringList fields = line.split("\t");
-        int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], m_product_id, Qt::CaseSensitive);
+        int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], m_soapstand_product_serial, Qt::CaseSensitive);
         if (compareResult == 0)
         {
             qDebug() << "compare result is 0";
@@ -106,15 +93,13 @@ void product::loadProductPropertiesFromProductsFile()
             m_description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
             m_features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
             m_ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
-            break;            
+            break;
         }
-        
     }
     qDebug() << "properties file read before close ";
     file.close();
     qDebug() << "properties file read done ";
 }
-
 
 char product::getSizeAsChar()
 {
@@ -136,9 +121,6 @@ void product::setSize(int sizeIndex)
     qDebug() << "Set size index: " << sizeIndex;
     Size = sizeIndex;
 }
-
-
-
 
 void product::setBiggestEnabledSizeIndex()
 {
@@ -193,8 +175,7 @@ void product::setSlot(int slot)
     if (slot >= OPTION_SLOT_INVALID && slot <= SLOT_COUNT)
     {
 
-            m_selectedSlot = slot;
-        
+        m_selectedSlot = slot;
     }
     else
     {
@@ -478,11 +459,10 @@ QString product::getProductDrinkfillSerial()
     return m_soapstand_product_serial;
 }
 
-
 bool product::isProductVolumeInContainer()
 {
     DbManager db(DB_PATH);
-    bool retval=true;
+    bool retval = true;
     if (!db.getEmptyContainerDetectionEnabled())
     {
         retval = db.getVolumeRemaining(getSlot()) > CONTAINER_EMPTY_THRESHOLD_ML;
@@ -512,7 +492,6 @@ QString product::getProductFeatures()
 }
 QString product::getProductName()
 {
-    qDebug() << m_name_ui;
     return m_name_ui;
 }
 QString product::getProductDescription()
@@ -522,7 +501,7 @@ QString product::getProductDescription()
 
 QString product::getProductType()
 {
-  
+
     return m_product_type;
 }
 
@@ -532,14 +511,11 @@ QString product::getProductPicturePath()
     return QString(PRODUCT_PICTURES_ROOT_PATH).arg(serial);
 }
 
-
-
 QString product::getPLU(int sizeIndex)
 // QString product::getPLU(char size)
 {
     return m_sizeIndexPLUs[sizeIndex];
 }
-
 
 QString product::getMachineId()
 {
@@ -552,13 +528,13 @@ QString product::getMachineId()
     return idString;
 }
 
-QString product::getProductId()
+QString product::()
 {
     // qDebug() << "Open db: get productId ";
     // DbManager db(DB_PATH);
-    // QString idString = db.getProductID(getSlot());
+    // QString idString = db.(getSlot());
     // db.closeDB();
-    return m_product_id;
+    return m_aws_product_id;
 }
 
 QString product::getFullVolumeCorrectUnits(bool addUnits)

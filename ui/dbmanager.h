@@ -56,7 +56,7 @@ public:
     double getBuffer(int slot);
     QString getPLU(int slot, char size);
     QString getMachineID();
-    QString getProductID(int slot);
+    QString getAwsProductId(int slot);
     int getSlotEnabled(int slot);
     bool setVolumeRemaining(int slot, double volumeMl);
     QString getStatusText(int slot);
@@ -95,7 +95,6 @@ public:
     void getAllProductProperties(int slot,
                                  QString *productId,
                                  QString *soapstand_product_serial,
-                                 QString *name,
                                  QString *size_unit,
                                  QString *currency,
                                  QString *payment,

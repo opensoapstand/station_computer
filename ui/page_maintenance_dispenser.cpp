@@ -921,7 +921,7 @@ size_t WriteCallback3(char *contents, size_t size, size_t nmemb, void *userp)
 
 void page_maintenance_dispenser::sendRestockToCloud()
 {
-    QString curl_param = "pid=" + p_page_idle->selectedProduct->getProductId() + "&volume_full=" + p_page_idle->selectedProduct->getFullVolumeCorrectUnits(false);
+    QString curl_param = "pid=" + p_page_idle->selectedProduct->getAwsProductId() + "&volume_full=" + p_page_idle->selectedProduct->getFullVolumeCorrectUnits(false);
 
     curl_param_array = curl_param.toLocal8Bit();
     curl_data = curl_param_array.data();
@@ -980,7 +980,7 @@ size_t WriteCallback4(char *contents, size_t size, size_t nmemb, void *userp)
 void page_maintenance_dispenser::on_pushButton_update_portal_clicked()
 {
     qDebug() << "update portal clicked ";
-    QString curl_params = "productId=" + p_page_idle->selectedProduct->getProductId() + "&source=soapstandStation" +
+    QString curl_params = "productId=" + p_page_idle->selectedProduct->getAwsProductId() + "&source=soapstandStation" +
                           "&price_small=" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)) +
                           "&price_medium=" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)) +
                           "&price_large=" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_LARGE_INDEX)) +

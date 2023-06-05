@@ -272,7 +272,6 @@ price_custom_discount
 void DbManager::getAllProductProperties(int slot,
                                         QString *productId,
                                         QString *soapstand_product_serial,
-                                        QString *name,
                                         QString *size_unit,
                                         QString *currency,
                                         QString *payment,
@@ -305,10 +304,7 @@ void DbManager::getAllProductProperties(int slot,
         while (qry.next())
         {
             *productId = qry.value(0).toString();
-
             *soapstand_product_serial = qry.value(1).toString();
-            
-            *name = qry.value(3).toString();
             *size_unit = qry.value(4).toString();
             *currency = qry.value(5).toString();
             *payment = qry.value(6).toString();
@@ -1699,7 +1695,7 @@ bool DbManager::showTransactions()
     return is_enabled;
 }
 
-QString DbManager::getProductID(int slot)
+QString DbManager::getAwsProductId(int slot)
 {
     QSqlQuery product_id_query;
     QString product_id_string;

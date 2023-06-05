@@ -25,8 +25,7 @@ public:
     // void setSelectedSlot(int optionSlot);
     // int getSelectedSlot();
     void setPromoCode(QString promoCode);
-    QString getProductId();
-    QString getMachineId();
+    QString getAwsProductId();
     bool getSlotEnabled();
 
     QString getFullVolumeCorrectUnits(bool addUnits);
@@ -46,7 +45,7 @@ public:
     void setSize(int sizeIndex);
     int getSize();
     char getSizeAsChar();
-    QString getPLU(char size);
+    QString getPLU(int sizeIndex);
 
     bool isOrderValid();
 
@@ -54,9 +53,6 @@ public:
     QString getProductType();
     QString getProductDrinkfillSerial();
 
-    void load();
-    // void loadProductPropertiesFromProductsFile();
-    // void getProductPropertiesFromProductsFile(QString product_id, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);
     void loadProductPropertiesFromProductsFile();
 
     void loadProductProperties();
@@ -102,6 +98,7 @@ public:
     void setDispenseSpeedPercentage(int percentage);
 
     QString getPaymentMethod();
+    QString getMachineId();
     // productSelect *selectedProduct; // Declare selectedProduct as a pointer to productSelect
 
 
@@ -117,14 +114,14 @@ signals:
 
 private:
 
-
-
-    QString productId;
-    QString soapstand_product_serial;
     int slot;
-    QString size_unit;
+
+    QString m_size_unit;
+    QString m_productId;
+    QString m_soapstand_product_serial;
+    QString m_payment;
+
     QString currency;
-    QString payment;
     QString name_receipt;
     int concentrate_multiplier;
     int dispense_speed;
@@ -164,10 +161,38 @@ private:
     QString m_name_ui;
     QString m_features_ui;
     QString m_description_ui;
-    QString m_product_id;
+    QString m_aws_product_id;
+    bool m_empty_container_detection_enabled;
+    bool m_slot_enabled;
+    QString m_lastRestockDate;
+    QString m_currency;
+    QString m_name_receipt;
+    int m_concentrate_multiplier;
+    int m_dispense_speed;
+    double m_threshold_flow;
+    int m_retraction_time;
+    double m_calibration_const;
+    double m_volume_per_tick;
+    QString m_last_restock;
+    double m_volume_full;
+    double m_volume_remaining;
+    double m_volume_dispensed_since_restock;
+    double m_volume_dispensed_total;
+    int m_is_enabled_custom_discount;
+    double m_size_custom_discount;
+    double m_price_custom_discount;
+
+    
+    
+
+
 
 
     bool m_sizeIndexIsEnabled[SIZES_COUNT]; // size indeces.
+    QString m_sizeIndexPLUs[SIZES_COUNT];
+    QString m_sizeIndexPIDs[SIZES_COUNT];
+    double m_sizeIndexPrices[SIZES_COUNT];
+    double m_sizeIndexVolumes[SIZES_COUNT];
 
     int Size;
     double DispensedVolumeMl;

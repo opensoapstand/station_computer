@@ -82,9 +82,8 @@ void page_idle::showEvent(QShowEvent *event)
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
         products[slot_index].setSlot(slot_index + 1);
-        products[slot_index].load();
+        products[slot_index].loadProductProperties();
     }
-
     setSelectedProduct(0);
 
     // get the texts from csv
@@ -238,7 +237,7 @@ void page_idle::registerUserInteraction(QWidget *page)
 {
     QString page_name = page->objectName();
     qDebug() << "||||||||||||||||||||||||||||||||||||| User entered: " + page_name + " |||||||||||||||||||||||||||||||||||||";
-    
+
     DbManager db(DB_PATH);
     db.addUserInteraction(page_name);
     db.closeDB();
@@ -386,20 +385,38 @@ void page_idle::addCompanyLogoToLabel(QLabel *label)
     }
     else
     {
-        qDebug() << "WARNING: invalid customer ID. Should like C-1, C-374, ... . Provided id: " << id;
+        qDebug() << "WARNING: invalid customer ID. Should be with a format like C-1, C-374, ... . Provided id: " << id;
+    }
+}
+
+void page_idle::addPictureToButton(QPushButton *button, QString picturePath)
+{
+    QString p = selectedProduct->getProductPicturePath();
+    if (df_util::pathExists(p))
+    {
+        QPixmap im(p);
+        QIcon qi(im);
+        button->setIcon(qi);
+        button->setIconSize(QSize(271, 391));
     }
 }
 
 void page_idle::addPictureToLabel(QLabel *label, QString picturePath)
 {
-    df_util::fileExists(picturePath);
-    QPixmap picture(picturePath);
+    if (df_util::pathExists(picturePath))
+    {
+        QPixmap picture(picturePath);
 
-    int w = label->width();
-    int h = label->height();
+        int w = label->width();
+        int h = label->height();
 
-    // // set a scaled pixmap to a w x h window keeping its aspect ratio
-    label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio));
+        // // set a scaled pixmap to a w x h window keeping its aspect ratio
+        label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio));
+    }
+    else
+    {
+        qDebug() << "Can't add picture to label: " << label->objectName() << " " << picturePath;
+    }
 }
 
 QString page_idle::getTemplateFolder()
@@ -435,13 +452,13 @@ QString page_idle::getTemplatePathFromName(QString fileName)
 {
     QString image_path = getTemplateFolder() + fileName;
 
-    if (!df_util::fileExists(image_path))
+    if (!df_util::pathExists(image_path))
     {
         QString image_default_path = getDefaultTemplatePathFromName(fileName);
-        qDebug() << "File not found in template folder: " + image_path + ". Default template path: " + image_default_path;
-        if (!df_util::fileExists(image_default_path))
+        //qDebug() << "File not found in template folder: " + image_path + ". Default template path: " + image_default_path;
+        if (!df_util::pathExists(image_default_path))
         {
-            qDebug() << "File not found in default template folder (will use path anyways...): " + image_default_path;
+            qDebug() << "File not found in template folder and not in default template folder (will use path anyways...): " + image_default_path;
         }
         image_path = image_default_path;
     }
@@ -552,6 +569,7 @@ QString page_idle::getTemplateTextByPage(QWidget *page, QString identifier)
 
     return getTemplateText(searchString);
 }
+
 
 QString page_idle::getTemplateText(QString textName_to_find)
 {

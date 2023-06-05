@@ -96,7 +96,9 @@ void page_select_product::showEvent(QShowEvent *event)
     QString styleSheet = p_page_idle->getCSS(PAGE_SELECT_PRODUCT_CSS);
     ui->p_page_maintenanceButton->setStyleSheet(styleSheet);
     ui->pushButton_help_page->setStyleSheet(styleSheet);
+    
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
+
     ui->label_pick_soap->setStyleSheet(styleSheet);
     displayProducts();
 
@@ -214,9 +216,9 @@ void page_select_product::displayProducts()
         }
         else
         {
-            icon_path = "NOT A VALID PRODUCT TYPE";
+            icon_path = ICON_TYPE_DEFAULT;
             type_text = product_type;
-            qDebug() << "Product type not found for UI text and icon. Is the slot type set correctly in the products file? : " << type_text;
+            //qDebug() << "Icon for product type not found : " << type_text << " Set to default. ";
         }
         QString icon_path_with_template = p_page_idle->getTemplatePathFromName(icon_path);
 
@@ -227,6 +229,7 @@ void page_select_product::displayProducts()
         // pushButtons_product_select[i]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
         //  pushButtons_product_select[i]->setStyleSheet("QPushButton{ background-color: 0x44881188; border: 2px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
         //  labels_selectProductOverlay[i]->raise();
+        labels_product_icon[i]->setText("");
         labels_product_icon[i]->raise();
         labels_product_overlay_text[i]->raise();
 

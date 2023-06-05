@@ -311,6 +311,7 @@ void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
     //     "color: white;"
     //     "border: none;"
     //     "}");
+
 }
 
 void page_idle_products::on_pushButton_to_select_product_page_clicked()

@@ -255,7 +255,7 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
     qDebug() << "Get cloud to create an order and retrieve the order id";
     QString MachineSerialNumber = p_page_idle->selectedProduct->getMachineId();
     QString productUnits = p_page_idle->selectedProduct->getUnitsForSlot();
-    QString productId = p_page_idle->selectedProduct->getProductId();
+    QString productId = p_page_idle->selectedProduct->getAwsProductId();
     QString contents = p_page_idle->selectedProduct->getProductName();
     QString quantity_requested = p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(false, false);
     char drinkSize = p_page_idle->selectedProduct->getSizeAsChar();

@@ -44,7 +44,7 @@ public:
     void setPage(page_maintenance *pageMaintenance, page_idle *pageIdle, page_idle_products *p_page_idle_products);    
     ~page_maintenance_general();
     void resizeEvent(QResizeEvent *event);
-    void on_backButton_clicked();
+    void on_pushButton_to_previous_page_clicked();
     void refreshLabels();
     void printerStatusFeedback(bool isOnline, bool hasPaper);
 

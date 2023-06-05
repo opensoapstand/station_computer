@@ -88,10 +88,10 @@ using namespace std;
 
 
 
-#define PAGE_IDLE_BACKGROUND_PATH                       "background_message.png"
-#define PAGE_IDLE_PRODUCTS_BACKGROUND_PATH              "background_product_select.png"
-#define PAGE_END_BACKGROUND_PATH                    "background_message.png"
-#define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_message.png"
+#define PAGE_IDLE_BACKGROUND_PATH                       "background_idle.png"
+#define PAGE_IDLE_PRODUCTS_BACKGROUND_PATH              "background_idle_products.png"
+#define PAGE_END_BACKGROUND_PATH                    "background_end.png"
+#define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_transactions.png"
 
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"
@@ -123,6 +123,7 @@ using namespace std;
 #define ICON_TYPE_KOMBUCHA_PATH                         "Soapstand-UI-icon-kombucha.png"
 #define ICON_TYPE_MOCKTAIL_PATH                         "Soapstand-UI-icon-mocktail.png"
 #define ICON_TYPE_JUICE_PATH                            "Soapstand-UI-icon-juice.png"
+#define ICON_TYPE_DEFAULT                               "Soapstand-UI-icon-default.png"
 
 #define PAGE_HELP_BACKGROUND_PATH                       "background_help.png"
 
@@ -137,7 +138,8 @@ class df_util : public QWidget
 public:
     explicit df_util(QWidget *parent = nullptr);
 
-    static bool fileExists(QString path);
+    static void warnIfPathDoesNotExist(QString path);
+    static bool pathExists(QString path);
     static double convertMlToOz(double vol_ml);
     static double convertOzToMl(double vol_oz);
     static char sizeIndexToChar(int size_index);

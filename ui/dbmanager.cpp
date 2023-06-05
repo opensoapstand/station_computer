@@ -86,27 +86,6 @@ DbManager::~DbManager()
     }
 }
 
-// bool DbManager::initialize(const QString& path){
-
-//     qDebug() << "db init";
-//     if (m_db.isOpen()){
-//         qDebug() << "m_db is already open. Try to close.";
-//         m_db.close();
-//         m_db = QSqlDatabase();
-//         QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
-//         qDebug() << "m_db was already open. Closed it first.";
-//     }
-
-//     if (m_db.connectionName().isEmpty()){
-//         qDebug() << "connectionname is empty-->";
-//         m_db = QSqlDatabase::addDatabase("QSQLITE");
-//         m_db.setDatabaseName(path);
-//         qDebug() << "m_db set connectionName";
-//     }else{
-//         qDebug() << "m_db connectionName is NOT EMPTY";
-//     }
-// }
-
 bool DbManager::addPageClick(const QString &page)
 {
 
@@ -185,6 +164,198 @@ void DbManager::getCustomDiscountProperties(int slot, bool *isEnabled, double *v
     }
 }
 
+/*
+productId
+soapstand_product_serial
+slot
+name
+size_unit
+currency
+payment
+name_receipt
+concentrate_multiplier
+dispense_speed
+threshold_flow
+retraction_time
+calibration_const
+volume_per_tick
+last_restock
+volume_full
+volume_remaining
+volume_dispensed_since_restock
+volume_dispensed_total
+is_enabled_small
+is_enabled_medium
+is_enabled_large
+is_enabled_custom
+size_small
+size_medium
+size_large
+size_custom_min
+size_custom_max
+price_small
+price_medium
+price_large
+price_custom
+plu_small
+plu_medium
+plu_large
+plu_custom
+pid_small
+pid_medium
+pid_large
+pid_custom
+flavour
+image_url
+type
+ingredients
+features
+description
+is_enabled_custom_discount
+size_custom_discount
+price_custom_discount
+
+0	productId
+1	soapstand_product_serial
+2	slot
+3	name
+4	size_unit
+5	currency
+6	payment
+7	name_receipt
+8	concentrate_multiplier
+9	dispense_speed
+10	threshold_flow
+11	retraction_time
+12	calibration_const
+13	volume_per_tick
+14	last_restock
+15	volume_full
+16	volume_remaining
+17	volume_dispensed_since_restock
+18	volume_dispensed_total
+19	is_enabled_small
+20	is_enabled_medium
+21	is_enabled_large
+22	is_enabled_custom
+23	size_small
+24	size_medium
+25	size_large
+26	size_custom_min
+27	size_custom_max
+28	price_small
+29	price_medium
+30	price_large
+31	price_custom
+32	plu_small
+33	plu_medium
+34	plu_large
+35	plu_custom
+36	pid_small
+37	pid_medium
+38	pid_large
+39	pid_custom
+40	flavour
+41	image_url
+42	type
+43	ingredients
+44	features
+45	description
+46	is_enabled_custom_discount
+47	size_custom_discount
+48	price_custom_discount
+
+ */
+// void DbManager::getAllProductProperties(int slot, QString* soapstand_product_serial, QString* size_unit, QString* payment, int* concentrate_multiplier, int* dispense_speed, bool *isSizeEnabled, double* prices, double* volumes, QString* PLUs, QString* PIDs)
+//   string table_products_columns[TABLE_PRODUCTS_COLUMN_COUNT] = {"productId", "soapstand_product_serial", "slot", "name", "size_unit", "currency", "payment", "name_receipt", "concentrate_multiplier", "dispense_speed", "threshold_flow", "retraction_time", "calibration_const", "volume_per_tick", "last_restock", "volume_full", "volume_remaining", "volume_dispensed_since_restock", "volume_dispensed_total", "is_enabled_small", "is_enabled_medium", "is_enabled_large", "is_enabled_custom", "size_small", "size_medium", "size_large", "size_custom_min", "size_custom_max", "price_small", "price_medium", "price_large", "price_custom", "plu_small", "plu_medium", "plu_large", "plu_custom", "pid_small", "pid_medium", "pid_large", "pid_custom", "flavour", "image_url", "type", "ingredients", "features", "description", "is_enabled_custom_discount", "size_custom_discount", "price_custom_discount"};
+//  (productId, soapstand_product_serial, slot, name, size_unit, currency, payment, name_receipt, concentrate_multiplier, dispense_speed, threshold_flow, retraction_time, calibration_const, volume_per_tick, last_restock, volume_full, volume_remaining, volume_dispensed_since_restock, volume_dispensed_total, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_min, size_custom_max, price_small, price_medium, price_large, price_custom, plu_small, plu_medium, plu_large, plu_custom, pid_small, pid_medium, pid_large, pid_custom, flavour, image_url, type, ingredients, features, description, is_enabled_custom_discount, size_custom_discount, price_custom_discount)
+void DbManager::getAllProductProperties(int slot,
+                                        QString *productId,
+                                        QString *soapstand_product_serial,
+                                        QString *size_unit,
+                                        QString *currency,
+                                        QString *payment,
+                                        QString *name_receipt,
+                                        int *concentrate_multiplier,
+                                        int *dispense_speed,
+                                        double *threshold_flow,
+                                        int *retraction_time,
+                                        double *calibration_const,
+                                        double *volume_per_tick,
+                                        QString *last_restock,
+                                        double *volume_full,
+                                        double *volume_remaining,
+                                        double *volume_dispensed_since_restock,
+                                        double *volume_dispensed_total,
+                                        int *is_enabled_custom_discount,
+                                        double *size_custom_discount,
+                                        double *price_custom_discount,
+                                        bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs)
+
+{
+    qDebug() << " db... product properties";
+    QSqlQuery qry;
+    {
+        // qry.prepare("SELECT soapstand_product_serial, size_unit, payment, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_max,price_small,price_medium, price_large,price_custom FROM products WHERE slot=:slot");
+        qry.prepare("SELECT productId, soapstand_product_serial, slot, name, size_unit, currency, payment, name_receipt, concentrate_multiplier, dispense_speed, threshold_flow, retraction_time, calibration_const, volume_per_tick, last_restock, volume_full, volume_remaining, volume_dispensed_since_restock, volume_dispensed_total, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_min, size_custom_max, price_small, price_medium, price_large, price_custom, plu_small, plu_medium, plu_large, plu_custom, pid_small, pid_medium, pid_large, pid_custom, flavour, image_url, type, ingredients, features, description, is_enabled_custom_discount, size_custom_discount, price_custom_discount FROM products WHERE slot=:slot");
+        qry.bindValue(":slot", slot);
+        qry.exec();
+
+        while (qry.next())
+        {
+            *productId = qry.value(0).toString();
+            *soapstand_product_serial = qry.value(1).toString();
+            *size_unit = qry.value(4).toString();
+            *currency = qry.value(5).toString();
+            *payment = qry.value(6).toString();
+            *name_receipt = qry.value(7).toString();
+            *concentrate_multiplier = qry.value(8).toInt();
+            *dispense_speed = qry.value(9).toInt();
+            *threshold_flow = qry.value(10).toDouble();
+            *retraction_time = qry.value(11).toInt();
+            *calibration_const = qry.value(12).toDouble();
+            *volume_per_tick = qry.value(13).toDouble();
+            *last_restock = qry.value(14).toString();
+            *volume_full = qry.value(15).toDouble();
+            *volume_remaining = qry.value(16).toDouble();
+            *volume_dispensed_since_restock = qry.value(17).toDouble();
+            *volume_dispensed_total = qry.value(18).toDouble();
+
+            
+            isSizeEnabled[1] = qry.value(19).toInt(); // small is index 1!!
+            isSizeEnabled[2] = qry.value(20).toInt();
+            isSizeEnabled[3] = qry.value(21).toInt();
+            isSizeEnabled[4] = qry.value(22).toInt();
+
+            volumes[1] = qry.value(23).toDouble();
+            volumes[2] = qry.value(24).toDouble();
+            volumes[3] = qry.value(25).toDouble();
+            //size custom min
+            volumes[4] = qry.value(27).toDouble();
+
+
+            prices[1] = qry.value(28).toDouble();
+            prices[2] = qry.value(29).toDouble();
+            prices[3] = qry.value(30).toDouble();
+            prices[4] = qry.value(31).toDouble();
+
+            PLUs[SIZE_SMALL_INDEX] = qry.value(32).toString();
+            PLUs[SIZE_MEDIUM_INDEX] = qry.value(33).toString();
+            PLUs[SIZE_LARGE_INDEX] = qry.value(34).toString();
+            PLUs[SIZE_CUSTOM_INDEX] = qry.value(35).toString();
+
+            PIDs[1] = qry.value(36).toString();
+            PIDs[2] = qry.value(37).toString();
+            PIDs[3] = qry.value(38).toString();
+            PIDs[4] = qry.value(39).toString();
+
+            *is_enabled_custom_discount = qry.value(46).toInt();
+            *size_custom_discount = qry.value(47).toDouble();
+            *price_custom_discount = qry.value(48).toDouble();
+
+        }
+    }
+}
 void DbManager::getProductProperties(int slot, QString *product_id, bool *isSizeEnabled)
 {
     qDebug() << " db... product properties";
@@ -1468,68 +1639,6 @@ QString DbManager::getSizeLarge(int slot)
     return large_vol_string;
 }
 
-QString DbManager::getPriceSmall(int slot)
-{
-    qDebug() << " db... getPriceSmall";
-    QSqlQuery small_price_query;
-    QString small_price_string;
-    {
-
-        small_price_query.prepare("SELECT price_small FROM products WHERE slot=:slot");
-
-        small_price_query.bindValue(":slot", slot);
-        small_price_query.exec();
-
-        while (small_price_query.next())
-        {
-            small_price_string = small_price_query.value(0).toString();
-
-            // qDebug() << "Product: " << product_name << endl;
-        }
-    }
-    return small_price_string;
-}
-
-QString DbManager::getPriceMedium(int slot)
-{
-    qDebug() << " db... getPriceMedium";
-    QSqlQuery medium_price_query;
-    QString medium_price_string;
-    {
-
-        medium_price_query.prepare("SELECT price_medium FROM products WHERE slot=:slot");
-
-        medium_price_query.bindValue(":slot", slot);
-        medium_price_query.exec();
-
-        while (medium_price_query.next())
-        {
-            medium_price_string = medium_price_query.value(0).toString();
-        }
-    }
-    return medium_price_string;
-}
-
-QString DbManager::getPriceLarge(int slot)
-{
-    qDebug() << " db... getPriceLarge";
-    QSqlQuery large_price_query;
-    QString large_price_string;
-    {
-
-        large_price_query.prepare("SELECT price_large FROM products WHERE slot=:slot");
-
-        large_price_query.bindValue(":slot", slot);
-        large_price_query.exec();
-
-        while (large_price_query.next())
-        {
-            large_price_string = large_price_query.value(0).toString();
-        }
-    }
-    return large_price_string;
-}
-
 QString DbManager::getIdlePageType()
 {
     QSqlQuery query;
@@ -1586,7 +1695,7 @@ bool DbManager::showTransactions()
     return is_enabled;
 }
 
-QString DbManager::getProductID(int slot)
+QString DbManager::getAwsProductId(int slot)
 {
     QSqlQuery product_id_query;
     QString product_id_string;
@@ -1648,3 +1757,65 @@ int DbManager::getLastTransactionIdFromDb()
 
     return lastTransactionId;
 }
+
+// QString DbManager::getPriceSmall(int slot)
+// {
+//     qDebug() << " db... getPriceSmall";
+//     QSqlQuery small_price_query;
+//     QString small_price_string;
+//     {
+
+//         small_price_query.prepare("SELECT price_small FROM products WHERE slot=:slot");
+
+//         small_price_query.bindValue(":slot", slot);
+//         small_price_query.exec();
+
+//         while (small_price_query.next())
+//         {
+//             small_price_string = small_price_query.value(0).toString();
+
+//             // qDebug() << "Product: " << product_name << endl;
+//         }
+//     }
+//     return small_price_string;
+// }
+
+// QString DbManager::getPriceMedium(int slot)
+// {
+//     qDebug() << " db... getPriceMedium";
+//     QSqlQuery medium_price_query;
+//     QString medium_price_string;
+//     {
+
+//         medium_price_query.prepare("SELECT price_medium FROM products WHERE slot=:slot");
+
+//         medium_price_query.bindValue(":slot", slot);
+//         medium_price_query.exec();
+
+//         while (medium_price_query.next())
+//         {
+//             medium_price_string = medium_price_query.value(0).toString();
+//         }
+//     }
+//     return medium_price_string;
+// }
+
+// QString DbManager::getPriceLarge(int slot)
+// {
+//     qDebug() << " db... getPriceLarge";
+//     QSqlQuery large_price_query;
+//     QString large_price_string;
+//     {
+
+//         large_price_query.prepare("SELECT price_large FROM products WHERE slot=:slot");
+
+//         large_price_query.bindValue(":slot", slot);
+//         large_price_query.exec();
+
+//         while (large_price_query.next())
+//         {
+//             large_price_string = large_price_query.value(0).toString();
+//         }
+//     }
+//     return large_price_string;
+// }

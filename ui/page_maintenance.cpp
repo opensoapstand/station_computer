@@ -64,7 +64,7 @@ void page_maintenance::showEvent(QShowEvent *event)
     for (int i = 0; i < SLOT_COUNT; i++)
     {
         QString p = p_page_idle->products[i].getProductPicturePath();
-        p_page_idle->dfUtility->fileExists(p);
+        p_page_idle->dfUtility->pathExists(p);
         QPixmap im(p);
         QIcon qi(im);
         product_buttons[i]->setIcon(qi);
@@ -201,7 +201,7 @@ void page_maintenance::on_generalSettings_button_clicked()
     hideCurrentPageAndShowProvided(p_page_maintenance_general);
 }
 
-void page_maintenance::on_backButton_clicked()
+void page_maintenance::on_pushButton_to_previous_page_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_idle);
 }

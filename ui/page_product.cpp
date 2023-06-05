@@ -230,7 +230,6 @@ void page_product::showEvent(QShowEvent *event)
         orderSizeBackgroundLabels[i]->setStyleSheet(styleSheet);
     }
 
-    p_page_idle->selectedProduct->loadProductProperties();
     reset_and_show_page_elements();
 }
 

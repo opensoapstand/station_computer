@@ -154,27 +154,27 @@ int main(int argc, char *argv[])
     {
         template_folder = "default";
     }
-    qDebug() << "template folder " << template_folder;
+    qDebug() << "template folder: " << template_folder;
 
     p_page_idle->setTemplateFolder(TEMPLATES_ROOT_PATH, template_folder);
-    df_util::fileExists(p_page_idle->getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
 
     qDebug() << "Check image paths.... (all paths resolved if nothing shows up).";
-    df_util::fileExists(PAGE_INIT_BACKGROUND_IMAGE_PATH);
-    df_util::fileExists(PAGE_IDLE_BACKGROUND_PATH);
-    df_util::fileExists(PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
-    df_util::fileExists(PAGE_HELP_BACKGROUND_PATH);
-    df_util::fileExists(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
-    df_util::fileExists(PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
-    df_util::fileExists(PAGE_QR_PAY_BACKGROUND_PATH);
-    df_util::fileExists(IMAGE_BUTTON_HELP);
-    df_util::fileExists(PAGE_TAP_PAY);
-    df_util::fileExists(PAGE_MAINTENANCE_BACKGROUND_PATH);
-    df_util::fileExists(PAGE_END_BACKGROUND_PATH);
-    // df_util::fileExists(PAGE_WIFI_ERROR_BACKGROUND_PATH);
-    // df_util::fileExists(BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH);
-    df_util::fileExists(KEYBOARD_IMAGE_PATH);
-    // df_util::fileExists(FULL_TRANSPARENT_IMAGE_PATH);
+    df_util::warnIfPathDoesNotExist(PAGE_INIT_BACKGROUND_IMAGE_PATH);
+    df_util::warnIfPathDoesNotExist(PAGE_IDLE_BACKGROUND_PATH);
+    df_util::warnIfPathDoesNotExist(PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
+    df_util::warnIfPathDoesNotExist(PAGE_HELP_BACKGROUND_PATH);
+    df_util::warnIfPathDoesNotExist(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
+    df_util::warnIfPathDoesNotExist(PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
+    df_util::warnIfPathDoesNotExist(PAGE_QR_PAY_BACKGROUND_PATH);
+    df_util::warnIfPathDoesNotExist(IMAGE_BUTTON_HELP);
+    df_util::warnIfPathDoesNotExist(PAGE_TAP_PAY);
+    df_util::warnIfPathDoesNotExist(PAGE_MAINTENANCE_BACKGROUND_PATH);
+    df_util::warnIfPathDoesNotExist(PAGE_END_BACKGROUND_PATH);
+    // df_util::warnIfPathDoesNotExist(PAGE_WIFI_ERROR_BACKGROUND_PATH);
+    // df_util::warnIfPathDoesNotExist(BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH);
+    df_util::warnIfPathDoesNotExist(KEYBOARD_IMAGE_PATH);
+    // df_util::warnIfPathDoesNotExist(FULL_TRANSPARENT_IMAGE_PATH);
 
     // Page pathing references to function calls.
     p_page_help->setPage(p_page_select_product, p_page_product, p_page_idle, p_page_payment_qr, p_page_transactions, p_page_maintenance, p_page_sendFeedback);

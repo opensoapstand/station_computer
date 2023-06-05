@@ -32,9 +32,9 @@ public:
     QString getSizeSmall(int slot);
     QString getSizeMedium(int slot);
     QString getSizeLarge(int slot);
-    QString getPriceSmall(int slot);
-    QString getPriceMedium(int slot);
-    QString getPriceLarge(int slot);
+    // QString getPriceSmall(int slot);
+    // QString getPriceMedium(int slot);
+    // QString getPriceLarge(int slot);
 
     QString getIdlePageType();
 
@@ -56,7 +56,7 @@ public:
     double getBuffer(int slot);
     QString getPLU(int slot, char size);
     QString getMachineID();
-    QString getProductID(int slot);
+    QString getAwsProductId(int slot);
     int getSlotEnabled(int slot);
     bool setVolumeRemaining(int slot, double volumeMl);
     QString getStatusText(int slot);
@@ -92,6 +92,28 @@ public:
     QString getProductDrinkfillSerial(int slot);
     // void getProductProperties(int slot, QString*name, QString *description, QString *features,  QString *ingredients);
     void getProductProperties(int slot, QString *product_id, bool *isSizeEnabled);
+    void getAllProductProperties(int slot,
+                                 QString *productId,
+                                 QString *soapstand_product_serial,
+                                 QString *size_unit,
+                                 QString *currency,
+                                 QString *payment,
+                                 QString *name_receipt,
+                                 int *concentrate_multiplier,
+                                 int *dispense_speed,
+                                 double *threshold_flow,
+                                 int *retraction_time,
+                                 double *calibration_const,
+                                 double *volume_per_tick,
+                                 QString *last_restock,
+                                 double *volume_full,
+                                 double *volume_remaining,
+                                 double *volume_dispensed_since_restock,
+                                 double *volume_dispensed_total,
+                                 int *is_enabled_custom_discount,
+                                 double *size_custom_discount,
+                                 double *price_custom_discount,
+                                 bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs);
     QString getTemplateName();
     void updateTapToQR();
 

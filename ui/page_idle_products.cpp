@@ -8,7 +8,7 @@
 // Product Page1
 //
 // created: 01-05-2023
-// by: Lode Ameije & Ash Singla & Udbhav Kansal
+// by: Lode Ameije & Ash Singla & Udbhav Kansal & Daniel C.
 //
 // copyright 2022 by Drinkfill Beverages Ltd
 // all rights reserved
@@ -56,7 +56,9 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     labels_product_type[3] = ui->label_product_4_type;
 
     ui->pushButton_to_select_product_page->raise();
-    ui->label_pick_soap->setText("Discover how to<br> refill soap here<br><br> Tap here!!!");
+    // ui->label_pick_soap->setText("Discover how to<br> refill soap here!");
+    //setTemplateTextToObject(ui->label_pick_soap);
+
 
     QFont font;
     font.setFamily(QStringLiteral("Brevia"));
@@ -82,6 +84,9 @@ page_idle_products::~page_idle_products()
 
 void page_idle_products::showEvent(QShowEvent *event)
 {
+
+    p_page_idle->setTemplateTextToObject(ui->label_pick_soap);
+
     QString styleSheet = p_page_idle->getCSS(PAGE_IDLE_PRODUCTS_CSS);
     ui->pushButton_to_select_product_page->setStyleSheet(styleSheet); 
     ui->label_pick_soap->setStyleSheet(styleSheet);
@@ -268,13 +273,16 @@ void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
     if (!isOnline)
     {
         ui->printer_status_label->raise();
-        ui->printer_status_label->setText("Assistance needed\nReceipt Printer offline.");
+
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->printer_status_label, "assistance_printer_offline");
+        // ui->printer_status_label->setText("Assistance needed\nReceipt Printer offline.");
         ui->printer_status_label->show();
     }
     else if (!hasPaper)
     {
         ui->printer_status_label->raise();
-        ui->printer_status_label->setText("Assistance needed\nReceipt printer empty or improperly loaded.");
+       // ui->printer_status_label->setText("Assistance needed\nReceipt printer empty or improperly loaded.");
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->printer_status_label, "empty_improperly_loaded");
         ui->printer_status_label->show();
     }
     else
@@ -309,3 +317,9 @@ void page_idle_products::on_pushButton_to_select_product_page_clicked()
 {
     this->hideCurrentPageAndShowProvided(p_pageSelectProduct);
 }
+
+// void page_idle_products::setTemplateTextToObject(QWidget *p_element)
+// {
+//     QString searchString = getTemplateTextByElementNameAndPage(p_element);
+//     setTextToOjbect(p_element, searchString);
+// }

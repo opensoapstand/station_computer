@@ -37,12 +37,12 @@ void page_maintenance_general::showEvent(QShowEvent *event)
 {
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-    
+
     qDebug() << "db for maintenance general";
-    DbManager db(DB_PATH);
-    ui->enable_empty_container_checkBox->setChecked(db.getEmptyContainerDetectionEnabled());
+    ui->enable_empty_container_checkBox->setChecked(p_page_idle->thisMachine.getEmptyContainerDetectionEnabled());
     ui->enable_empty_container_checkBox->setText("Enable auto empty detection. (If disabled, will display sold out if less than " + QString::number(CONTAINER_EMPTY_THRESHOLD_ML) + "ml remaining)");
-    ui->enable_pump_ramping_checkBox->setChecked(db.getPumpRampingEnabled());
+    DbManager db(DB_PATH);
+    ui->enable_pump_ramping_checkBox->setChecked(p_page_idle->thisMachine.getPumpRampingEnabled());
     ui->enable_pump_ramping_checkBox->hide();
     db.closeDB();
 
@@ -165,29 +165,29 @@ void page_maintenance_general::on_printer_test_print_button_clicked()
 void page_maintenance_general::on_enable_pump_ramping_checkBox_clicked(bool checked)
 {
     // qDebug() << "test ramp clicked" << checked;
-    DbManager db(DB_PATH);
-    // qDebug() << "test empty db: " << db.getPumpRampingEnabled();
-    if (checked != db.getPumpRampingEnabled())
+    // qDebug() << "test empty db: " << p_page_idle->thisMachine.getPumpRampingEnabled();
+    if (checked != p_page_idle->thisMachine.getPumpRampingEnabled())
     {
         qDebug() << "Write to db: Pump ramping enabled?" << checked;
+        DbManager db(DB_PATH);
         db.setPumpRampingEnabled(checked);
-        ui->enable_pump_ramping_checkBox->setChecked(db.getPumpRampingEnabled());
+        db.closeDB();
+        ui->enable_pump_ramping_checkBox->setChecked(p_page_idle->thisMachine.getPumpRampingEnabled());
     }
-    db.closeDB();
 }
 
 void page_maintenance_general::on_enable_empty_container_checkBox_clicked(bool checked)
 {
     // qDebug() << "test empty clicked" << checked;
-    DbManager db(DB_PATH);
     // qDebug() << "test empty db: " << db.getEmptyContainerDetectionEnabled();
-    if (checked != db.getEmptyContainerDetectionEnabled())
+    if (checked != p_page_idle->thisMachine.getEmptyContainerDetectionEnabled())
     {
         qDebug() << "Empty container detection enabled?" << checked;
+        DbManager db(DB_PATH);
         db.setEmptyContainerDetectionEnabled(checked);
-        ui->enable_empty_container_checkBox->setChecked(db.getEmptyContainerDetectionEnabled());
+        db.closeDB();
+        ui->enable_empty_container_checkBox->setChecked(p_page_idle->thisMachine.getEmptyContainerDetectionEnabled());
     }
-    db.closeDB();
 }
 
 void page_maintenance_general::on_pushButton_back_clicked()

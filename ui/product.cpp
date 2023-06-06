@@ -1,7 +1,9 @@
 #include "df_util.h" // lode added for settings
 #include "dbmanager.h"
-#include "page_dispenser.h"
+// #include "page_dispenser.h"
 #include "page_idle.h"
+#include "machine.h"
+
 // Ctor
 product::product()
 {
@@ -21,15 +23,16 @@ product::~product()
 {
 }
 
+void product::setMachine(machine* machine){
+    thisMachine = machine;
+}
+
 void product::loadProductProperties()
 {
     loadProductPropertiesFromDb();
     qDebug() << "done loading from db";
     loadProductPropertiesFromProductsFile();
     qDebug() << "done loading from csv";
-
-    qDebug() << "testtesttest: lst restock gasetzaset:: " << m_lastRestockDate;
-    qDebug() << "testtesttest: lst restock name:: " << getProductName();
 }
 
 void product::loadProductPropertiesFromDb()
@@ -59,9 +62,8 @@ void product::loadProductPropertiesFromDb()
                                &m_size_custom_discount,
                                &m_price_custom_discount, m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 
-    m_slot_enabled = db.getSlotEnabled(getSlot());
-    m_empty_container_detection_enabled = db.getEmptyContainerDetectionEnabled();
-
+    // m_slot_enabled = db.getSlotEnabled(getSlot());
+    // m_empty_container_detection_enabled = db.getEmptyContainerDetectionEnabled();
     db.closeDB();
 }
 
@@ -84,7 +86,7 @@ void product::loadProductPropertiesFromProductsFile()
         int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], m_soapstand_product_serial, Qt::CaseSensitive);
         if (compareResult == 0)
         {
-            qDebug() << "compare result is 0";
+            // qDebug() << "compare result is 0";
             m_name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
             m_product_type = fields[CSV_PRODUCT_COL_TYPE];
             m_description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
@@ -93,9 +95,7 @@ void product::loadProductPropertiesFromProductsFile()
             break;
         }
     }
-    qDebug() << "properties file read before close ";
     file.close();
-    qDebug() << "properties file read done ";
 }
 
 char product::getSizeAsChar()
@@ -103,25 +103,7 @@ char product::getSizeAsChar()
     // ! = invalid.
     // t  test to fsm, but should become c for custom. we're so ready for it.
     // t
-
-    return df_util::sizeIndexToChar(Size);
-}
-
-int product::getSize()
-{
-    // e.g. SIZE_SMALL_INDEX
-    return Size;
-}
-
-void product::setSize(int sizeIndex)
-{
-    qDebug() << "Set size index: " << sizeIndex;
-    Size = sizeIndex;
-}
-
-void product::setBiggestEnabledSizeIndex()
-{
-    setSize(getBiggestEnabledSizeIndex());
+    return df_util::sizeIndexToChar(m_selected_size);
 }
 
 int product::getBiggestEnabledSizeIndex()
@@ -146,7 +128,13 @@ int product::getBiggestEnabledSizeIndex()
 
 bool product::getSlotEnabled()
 {
-    return m_slot_enabled;
+    // return m_slot_enabled;
+    return thisMachine->getSlotEnabled(getSlot());
+}
+QString product::getStatusText()
+{
+    // return m_slot_enabled;
+    return thisMachine->getStatusText(getSlot());
 }
 
 bool product::getSizeEnabled(int size)
@@ -158,7 +146,7 @@ bool product::getSizeEnabled(int size)
 
 int product::getSlot()
 {
-    return m_selectedSlot;
+    return m_dispenser_slot;
 }
 
 void product::setSlot(int slot)
@@ -167,7 +155,7 @@ void product::setSlot(int slot)
     if (slot >= OPTION_SLOT_INVALID && slot <= SLOT_COUNT)
     {
 
-        m_selectedSlot = slot;
+        m_dispenser_slot = slot;
     }
     else
     {
@@ -175,21 +163,36 @@ void product::setSlot(int slot)
     }
 }
 
-// SLOTS Section
-
-bool product::isOrderValid()
+int product::getSize()
 {
-    if (!(m_selectedSlot >= OPTION_SLOT_INVALID && m_selectedSlot <= SLOT_COUNT))
-    {
-        qInfo() << "ERROR: no slot set. " << m_selectedSlot;
-        return false;
-    }
-    if (!(Size >= 0 && Size <= SIZES_COUNT))
-    {
-        qInfo() << "ERROR: no size set. " << m_selectedSlot;
-        return false;
-    }
+    // e.g. SIZE_SMALL_INDEX
+    return m_selected_size;
+}
 
+void product::setSize(int sizeIndex)
+{
+    qDebug() << "Set size index: " << sizeIndex;
+    m_selected_size = sizeIndex;
+}
+
+void product::setBiggestEnabledSizeIndex()
+{
+    setSize(getBiggestEnabledSizeIndex());
+}
+
+// SLOTS Section
+bool product::is_valid_size_selected()
+{
+    if (!(m_dispenser_slot >= OPTION_SLOT_INVALID && m_dispenser_slot <= SLOT_COUNT))
+    {
+        qInfo() << "ERROR: no slot set. " << m_dispenser_slot;
+        return false;
+    }
+    if (!(m_selected_size >= 0 && m_selected_size <= SIZES_COUNT))
+    {
+        qInfo() << "ERROR: no size set. " << m_selected_size;
+        return false;
+    }
     return true;
 }
 
@@ -217,7 +220,6 @@ QString product::getPromoCode()
 
 void product::setDiscountPercentageFraction(double percentageFraction)
 {
-    // ratio = percentage / 100;
     qDebug() << "Set discount percentage fraction: " << QString::number(percentageFraction, 'f', 3);
     m_discount_percentage_fraction = percentageFraction;
 }
@@ -254,9 +256,26 @@ double product::getPriceCorrected()
 {
     // slot and size needs to be set.
     double price;
-    if (isOrderValid())
+    if (is_valid_size_selected())
     {
         price = getPrice(getSize()) * (1.0 - m_discount_percentage_fraction);
+    }
+    else
+    {
+
+        qInfo() << "ERROR: no product set";
+        price = 66.6;
+    }
+    return price;
+}
+
+double product::getPriceCustom()
+{
+    // slot and size needs to be set.
+    double price;
+    if (is_valid_size_selected())
+    {
+        price = getPrice(getSize()) * (1.0 - m_discount_percentage_fraction) * getVolumeOfSelectedSize();
     }
     else
     {
@@ -284,35 +303,21 @@ void product::setVolumeDispensedMl(double volumeMl)
     this->DispensedVolumeMl = volumeMl;
 }
 
-double product::getPriceCustom()
-{
-    // slot and size needs to be set.
-    double price;
-    if (isOrderValid())
-    {
-        price = getPrice(getSize()) * (1.0 - m_discount_percentage_fraction) * getVolume();
-    }
-    else
-    {
-
-        qInfo() << "ERROR: no product set";
-        price = 66.6;
-    }
-    return price;
-}
-
-double product::getVolume(int size)
-{
-
+double product::getRestockVolume(){
     return m_volume_full;
 }
+double product::getVolumeBySize(int size)
+{
 
-double product::getVolume()
+    return m_sizeIndexVolumes[size];
+}
+
+double product::getVolumeOfSelectedSize()
 {
     double volume;
-    if (isOrderValid())
+    if (is_valid_size_selected())
     {
-        volume = getVolume(getSize());
+        volume = getVolumeBySize(getSize());
     }
     else
     {
@@ -352,7 +357,6 @@ void product::setVolumePerTickForSlot(QString volumePerTickInput)
     qInfo() << "Open db: set vol per tick";
     DbManager db(DB_PATH);
     db.updateVolumePerTick(getSlot(), ml_per_tick);
-
     db.closeDB();
 }
 
@@ -411,7 +415,7 @@ QString product::getSizeToVolumeWithCorrectUnits(int size, bool roundValue, bool
     double volume_oz;
     QString units;
 
-    v = getVolume(size);
+    v = getVolumeBySize(size);
     units = getUnitsForSlot();
     volume_as_string = df_util::getConvertedStringVolumeFromMl(v, units, roundValue, addUnits);
     return volume_as_string;
@@ -442,7 +446,9 @@ bool product::isProductVolumeInContainer()
 {
 
     bool retval = true;
-    if (!m_empty_container_detection_enabled)
+    // if (!m_empty_container_detection_enabled)
+    
+    if (!thisMachine->getEmptyContainerDetectionEnabled())
     {
         retval = m_volume_remaining > CONTAINER_EMPTY_THRESHOLD_ML;
     }
@@ -497,17 +503,6 @@ QString product::getPLU(int sizeIndex)
 QString product::getAwsProductId()
 {
     return m_aws_product_id;
-}
-
-QString product::getMachineId()
-{
-
-    qDebug() << "Open db: getMachineID";
-
-    DbManager db(DB_PATH);
-    QString idString = db.getMachineID();
-    db.closeDB();
-    return idString;
 }
 
 QString product::getFullVolumeCorrectUnits(bool addUnits)

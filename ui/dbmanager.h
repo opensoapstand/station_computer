@@ -19,19 +19,20 @@ public:
     // bool remainingVolumeIsBiggerThanLargestFixedSize(int slot);
 
     bool getRecentTransactions(QString values[][5], int count, int *count_retreived);
-    bool hasReceiptPrinter();
-    void printerStatus(bool *isOnline, bool *hasPaper);
-    bool showTransactions();
+    // bool hasReceiptPrinter();
+    void printerStatus(bool *isOnline, bool *hasPaper); // do not erase
+
+    // bool showTransactions();
     QString getProductReceiptName(int slot);
-    QString getPaymentMethod(int slot);
+    QString getPaymentMethod(int slot); //do not erase yet (wait for ash)
     double getProductVolume(int slot, char ml);
     QString getUnits(int slot);
-    QString getMaintenanceAdminPassword();
+    // QString getMaintenanceAdminPassword();
     QString getCustomerId();
-    QString getHelpPageHtmlText();
-    QString getSizeSmall(int slot);
-    QString getSizeMedium(int slot);
-    QString getSizeLarge(int slot);
+    // QString getHelpPageHtmlText();
+    // QString getSizeSmall(int slot);
+    // QString getSizeMedium(int slot);
+    // QString getSizeLarge(int slot);
     // QString getPriceSmall(int slot);
     // QString getPriceMedium(int slot);
     // QString getPriceLarge(int slot);
@@ -49,20 +50,20 @@ public:
     bool sellout(int slot);
     bool unsellout(int slot);
     int getLastTransactionIdFromDb();
-    
+
     double getTemperature();
     int getPWM(int slot);
     int getDispenseButtonCount();
     double getBuffer(int slot);
     QString getPLU(int slot, char size);
-    QString getMachineID();
+    // QString getMachineID();
     QString getAwsProductId(int slot);
     int getSlotEnabled(int slot);
     bool setVolumeRemaining(int slot, double volumeMl);
-    QString getStatusText(int slot);
+    // QString getStatusText(int slot);
     // bool setStatusText(int slot, QString text);
     bool updateSlotAvailability(int slot, int isEnabled, QString status_text);
-    
+
     void addUserInteraction(QString action);
 
     uint32_t getNumberOfRows(QString table);
@@ -72,10 +73,10 @@ public:
     // bool updatePriceSmall(int slot, double new_price);
     // bool updatePriceLarge(int slot, double new_price);
     bool updatePrice(int slot, int size, double new_price);
-    bool getCouponsEnabled();
-    bool getEmptyContainerDetectionEnabled();
+    // bool getCouponsEnabled();
+    // bool getEmptyContainerDetectionEnabled();
     bool setEmptyContainerDetectionEnabled(int isEnabled);
-    bool getPumpRampingEnabled();
+    // bool getPumpRampingEnabled();
     bool setPumpRampingEnabled(int isEnabled);
     void getCustomDiscountProperties(int slot, bool *isEnabled, double *volumeDiscount, double *pricePerLiterDiscount);
 
@@ -114,7 +115,38 @@ public:
                                  double *size_custom_discount,
                                  double *price_custom_discount,
                                  bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs);
-    QString getTemplateName();
+
+    void getAllMachineProperties(QString *machine_id,
+                                 QString *soapstand_customer_id,
+                                 QString *ttttemplate,
+                                 QString *location,
+                                 QString *controller_type,
+                                 QString *controller_id,
+                                 QString *screen_type,
+                                 QString *screen_id,
+                                 int *has_receipt_printer,
+                                 int *receipt_printer_is_online,
+                                 int *receipt_printer_has_paper,
+                                 int *has_tap_payment,
+                                 QString *hardware_version,
+                                 QString *software_version,
+                                 int *aws_port,
+
+                                 int *coupons_enabled,
+                                 int *has_empty_detection,
+                                 int *enable_pump_ramping,
+                                 int *enable_pump_reversal,
+                                 int *dispense_buttons_count,
+                                 QString *maintenance_pwd,
+                                 int *show_transactions,
+                                 QString *help_text_html,
+                                 QString *idle_page_type,
+
+                                 QString *pump_id_slots,
+                                 int *is_enabled_slots,
+                                 QString *status_text_slots);
+
+    // QString getTemplateName();
     void updateTapToQR();
 
 private:

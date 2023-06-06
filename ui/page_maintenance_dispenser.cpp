@@ -162,14 +162,9 @@ void page_maintenance_dispenser::refreshLabels()
 
 void page_maintenance_dispenser::setpushButton_soldOutText()
 {
-    qDebug() << "db call from pushButton_soldOutsetting";
-    int slot = p_page_idle->selectedProduct->getSlotEnabled();
-    DbManager db(DB_PATH);
-    bool isSlotEnabled = db.getSlotEnabled(slot);
-    db.closeDB();
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
 
-    if (isSlotEnabled)
+    if (p_page_idle->selectedProduct->getSlotEnabled())
     {
 
         ui->pushButton_soldOut->setText("Make \n unavailable");
@@ -322,10 +317,7 @@ void page_maintenance_dispenser::reset_all_dispense_stats()
     ui->label_calibration_result->setText("-"); // calibration constant
 
     setButtonPressCountLabel(true);
-
-    DbManager db(DB_PATH);
-    QString slotStatus = db.getStatusText(this->p_page_idle->selectedProduct->getSlot());
-    db.closeDB();
+    QString slotStatus = p_page_idle->selectedProduct->getStatusText();
     ui->label_status_dispenser->setText(slotStatus);
 }
 
@@ -413,7 +405,7 @@ void page_maintenance_dispenser::on_pushButton_restock_clicked()
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
 
     qDebug() << "refill clicked. slot: " << QString::number(this->p_page_idle->selectedProduct->getSlot());
-    qDebug() << "refill clicked. size: " << QString::number(this->p_page_idle->selectedProduct->getVolume());
+    qDebug() << "refill clicked. size: " << QString::number(this->p_page_idle->selectedProduct->getRestockVolume());
 
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
@@ -444,9 +436,9 @@ void page_maintenance_dispenser::on_pushButton_restock_clicked()
             refreshLabels();
             ui->label_action_feedback->setText("Refill Succesfull");
 
+            bool isSlotEnabled =  p_page_idle->selectedProduct->getSlotEnabled();
             DbManager db(DB_PATH);
-            bool isEnabled = db.getSlotEnabled(this->p_page_idle->selectedProduct->getSlot());
-            bool success = db.updateSlotAvailability(this->p_page_idle->selectedProduct->getSlot(), isEnabled, "SLOT_STATE_AVAILABLE");
+            bool success = db.updateSlotAvailability(this->p_page_idle->selectedProduct->getSlot(), isSlotEnabled, "SLOT_STATE_AVAILABLE");
             db.closeDB();
         }
         else
@@ -462,9 +454,7 @@ void page_maintenance_dispenser::on_pushButton_restock_clicked()
     break;
     }
 
-    DbManager db(DB_PATH);
-    QString slotStatus = db.getStatusText(this->p_page_idle->selectedProduct->getSlot());
-    db.closeDB();
+    QString slotStatus = p_page_idle->selectedProduct->getStatusText();
 
     ui->label_status_dispenser->setText(slotStatus);
 }
@@ -474,15 +464,13 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
     qDebug() << "soldout clicked. slot: " << QString::number(this->p_page_idle->selectedProduct->getSlot());
 
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
-
-    DbManager db(DB_PATH);
-    bool slotEnabled = db.getSlotEnabled(this->p_page_idle->selectedProduct->getSlot());
-    QString slotStatus = db.getStatusText(this->p_page_idle->selectedProduct->getSlot());
-    db.closeDB();
+    
+    bool isSlotEnabled =  p_page_idle->selectedProduct->getSlotEnabled();
+    QString slotStatus = p_page_idle->selectedProduct->getStatusText();
 
     QString label_action_feedbackText = "";
 
-    if (slotEnabled)
+    if (isSlotEnabled)
     {
 
         // ARE YOU SURE YOU WANT TO COMPLETE?
@@ -525,7 +513,7 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
             break;
             }
 
-            slotEnabled = false;
+            isSlotEnabled = false;
             break;
         }
         case QMessageBox::No:
@@ -556,7 +544,7 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
         case QMessageBox::Yes:
         {
 
-            slotEnabled = true;
+            isSlotEnabled = true;
             slotStatus = "SLOT_STATE_AVAILABLE";
             break;
         }
@@ -569,7 +557,7 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
     }
 
     DbManager db3(DB_PATH);
-    bool success = db3.updateSlotAvailability(p_page_idle->selectedProduct->getSlot(), slotEnabled, slotStatus);
+    bool success = db3.updateSlotAvailability(p_page_idle->selectedProduct->getSlot(), isSlotEnabled, slotStatus);
     db3.closeDB();
     if (!success)
     {

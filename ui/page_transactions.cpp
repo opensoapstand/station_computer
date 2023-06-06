@@ -71,21 +71,16 @@ void page_transactions::showEvent(QShowEvent *event)
         _idleTimeoutSec = 60;
         populateTransactionsTable();
 
-        qDebug() << "db for receipt printer check";
         QString paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
 
-        DbManager db(DB_PATH);
-        bool hasReceiptPrinter = db.hasReceiptPrinter();
-        db.closeDB();
-
-        if (hasReceiptPrinter)
+        if (p_page_idle->thisMachine.hasReceiptPrinter())
         {
                 ui->pushButton_print->show();
         }
         else
         {
-                ui->pushButton_print->show();
-                // ui->pushButton_print->hide();
+                //ui->pushButton_print->show();
+                ui->pushButton_print->hide();
         }
 }
 

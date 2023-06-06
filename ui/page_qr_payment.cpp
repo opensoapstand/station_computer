@@ -253,7 +253,7 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
     // an order Id is generated locally and the order is sent to the cloud.
     bool shouldShowQR = false;
     qDebug() << "Get cloud to create an order and retrieve the order id";
-    QString MachineSerialNumber = p_page_idle->selectedProduct->getMachineId();
+    QString MachineSerialNumber = p_page_idle->thisMachine.getMachineId();
     QString productUnits = p_page_idle->selectedProduct->getUnitsForSlot();
     QString productId = p_page_idle->selectedProduct->getAwsProductId();
     QString contents = p_page_idle->selectedProduct->getProductName();

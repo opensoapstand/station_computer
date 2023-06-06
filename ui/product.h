@@ -2,8 +2,7 @@
 #define PRODUCT_H
 
 #include "df_util.h"
-// #include "page_idle.h"
-
+#include "machine.h"
 
 
 class product : public QObject
@@ -15,19 +14,16 @@ public:
     product(const product &other);
     ~product();
     product &operator=(const product &other);
-
-    // HACK: Fixed volume reference; Need to figure out best storage location...
-    constexpr static double EMPTY_SIZE_ML = 0.00;
-
+    void setMachine(machine* machine);
+    
     // Setters and Getters
     void setSlot(int slot);
     int getSlot();
-    // void setSelectedSlot(int optionSlot);
-    // int getSelectedSlot();
     void setPromoCode(QString promoCode);
     QString getAwsProductId();
     bool getSlotEnabled();
-
+    QString getStatusText();
+    
     QString getFullVolumeCorrectUnits(bool addUnits);
 
     QString getVolumeRemainingCorrectUnits();
@@ -38,7 +34,6 @@ public:
     void setVolumeDispensedMl(double volumeMl);
     void resetVolumeDispensed();
 
-
     void getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter);
     void setFullVolumeCorrectUnits(QString inputFullValue);
 
@@ -47,7 +42,7 @@ public:
     char getSizeAsChar();
     QString getPLU(int sizeIndex);
 
-    bool isOrderValid();
+    bool is_valid_size_selected();
 
     QString getProductName();
     QString getProductType();
@@ -71,8 +66,10 @@ public:
     // QString getProductPicturePath(int slot);
     QString getProductPicturePath();
 
-    double getVolume();
-    double getVolume(int size);
+    double getVolumeOfSelectedSize();
+    double getVolumeBySize(int size);
+
+    double getRestockVolume();
 
     void setSizeToVolumeForSlot(QString volumeInput, int size);
     QString getVolumePerTickAsStringForSlot();
@@ -80,6 +77,7 @@ public:
     void setVolumePerTickForSlot(QString volumePerTickInput);
 
     double inputTextToMlConvertUnits(QString inputValueAsText);
+
     QString getUnitsForSlot();
     QString getSizeToVolume(QString units);
 
@@ -91,19 +89,17 @@ public:
     void setPrice(int size, double price);
     double getPriceCorrected();
     double getPriceCustom();
-    
+
     double getPrice();
 
     int getDispenseSpeedPercentage();
     void setDispenseSpeedPercentage(int percentage);
 
     QString getPaymentMethod();
-    QString getMachineId();
-    // productSelect *selectedProduct; // Declare selectedProduct as a pointer to productSelect
-
 
     double getDiscountPercentageFraction();
     QString getPromoCode();
+    
 public slots:
     void setDiscountPercentageFraction(double percentageFraction);
 
@@ -113,6 +109,7 @@ signals:
     void sizeChange(double newSize);
 
 private:
+    machine* thisMachine;
 
     int slot;
 
@@ -182,25 +179,19 @@ private:
     double m_size_custom_discount;
     double m_price_custom_discount;
 
-    
-    
-
-
-
-
     bool m_sizeIndexIsEnabled[SIZES_COUNT]; // size indeces.
     QString m_sizeIndexPLUs[SIZES_COUNT];
     QString m_sizeIndexPIDs[SIZES_COUNT];
     double m_sizeIndexPrices[SIZES_COUNT];
     double m_sizeIndexVolumes[SIZES_COUNT];
 
-    int Size;
+    int m_selected_size;
     double DispensedVolumeMl;
 
-    int m_selectedSlot;
+    int m_dispenser_slot;
     double overruledPrice;
     double m_discount_percentage_fraction;
     QString m_promoCode;
 };
 
-#endif //PRODUCT_H
+#endif // PRODUCT_H

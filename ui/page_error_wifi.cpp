@@ -61,7 +61,7 @@ void page_error_wifi::showEvent(QShowEvent *event)
     ui->wifi_ack_Button->setStyleSheet(styleSheet);
     ui->mainPageButton->setStyleSheet(styleSheet);
 
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_ERROR_BACKGROUND_PATH);
     QString image_path = p_page_idle->getTemplatePathFromName(ERROR_MESSAGE_PATH);
     p_page_idle->addPictureToLabel(ui->error_message_label, image_path);
 

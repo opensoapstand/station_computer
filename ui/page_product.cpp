@@ -534,3 +534,4 @@ void page_product::on_pushButton_back_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_select_product);
 }
+

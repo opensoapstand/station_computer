@@ -71,24 +71,9 @@ void page_error_wifi::showEvent(QShowEvent *event)
     //                                        "qproperty-alignment: AlignCenter;");
     ui->label_oops->setStyleSheet(styleSheet);
     ui->label_oops->setText("oops..");
-    ui->label_error_occured->setStyleSheet("font-family: 'Brevia';"
-                                           "font-style: normal;"
-                                           "font-weight: 700;"
-                                           "font-size: 30px;"
-                                           "line-height: 41px;"
-                                           "text-align: center;"
-                                           "qproperty-alignment: AlignCenter;"
-                                           "text-transform: uppercase;"
-                                           "color: #5E8580;");
+    ui->label_error_occured->setStyleSheet(styleSheet);
     ui->label_error_occured->setText("AN ERROR HAS OCCURED");
-    ui->label_check_back->setStyleSheet("font-family: 'Montserrat';"
-                                        "font-style: normal;"
-                                        "font-weight: 400;"
-                                        "font-size: 28px;"
-                                        "line-height: 36px;"
-                                        "text-align: center;"
-                                        "qproperty-alignment: AlignCenter;"
-                                        "color: #003840;");
+    ui->label_check_back->setStyleSheet(styleSheet);
     ui->label_check_back->setText("Please check back soon");
     ui->mainPageButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 

@@ -25,7 +25,7 @@
    border: none;
 }
 
-.label_error_occured {
+#label_error_occured {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 700;
@@ -37,7 +37,7 @@
    color: #5E8580;
 }
 
-.label_check_back {
+#label_check_back {
    font-family: 'Montserrat';
    font-style: normal;
    font-weight: 400;

@@ -22,12 +22,12 @@ public:
     // bool hasReceiptPrinter();
     void printerStatus(bool *isOnline, bool *hasPaper); // do not erase
 
-    bool showTransactions();
+    // bool showTransactions();
     QString getProductReceiptName(int slot);
     QString getPaymentMethod(int slot); //do not erase yet (wait for ash)
     double getProductVolume(int slot, char ml);
     QString getUnits(int slot);
-    QString getMaintenanceAdminPassword();
+    // QString getMaintenanceAdminPassword();
     QString getCustomerId();
     // QString getHelpPageHtmlText();
     // QString getSizeSmall(int slot);
@@ -56,11 +56,11 @@ public:
     int getDispenseButtonCount();
     double getBuffer(int slot);
     QString getPLU(int slot, char size);
-    QString getMachineID();
+    // QString getMachineID();
     QString getAwsProductId(int slot);
     int getSlotEnabled(int slot);
     bool setVolumeRemaining(int slot, double volumeMl);
-    QString getStatusText(int slot);
+    // QString getStatusText(int slot);
     // bool setStatusText(int slot, QString text);
     bool updateSlotAvailability(int slot, int isEnabled, QString status_text);
 

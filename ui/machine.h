@@ -14,9 +14,15 @@ public:
     void loadParametersFromDb();
 
     bool isSlotNumberValid(int slot);
+    QString getStatusText(int slot);
+
+    QString getPumpId(int slot);
+
 
     QString getMachineId();
     bool getCouponsEnabled();
+    bool getShowTransactionHistory();
+    QString getMaintenanceAdminPassword();
     QString getCustomerId();
 
     QString getTemplateFolder();
@@ -27,6 +33,9 @@ public:
     QString getHelpPageHtmlText();
 
     bool getSlotEnabled(int slot);
+    QString getIdlePageType();
+
+
 
     bool hasReceiptPrinter();
     void printerStatus(bool *isOnline, bool *hasPaper);

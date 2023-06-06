@@ -98,7 +98,6 @@ void page_idle::showEvent(QShowEvent *event)
     ui->pushButton_test->setStyleSheet(styleSheet);
     ui->label_printer_status->setStyleSheet(styleSheet);
 
-    qDebug() << "open db: payment method";
     setDiscountPercentage(0.0);
     bool needsReceiptPrinter = false;
     for (int slot = 1; slot <= SLOT_COUNT; slot++)
@@ -118,12 +117,7 @@ void page_idle::showEvent(QShowEvent *event)
         // currentProductOrder->setPromoCode("");
     }
 
-    DbManager db(DB_PATH);
-    // call db check if idle or idle_products
-    idle_page_type = db.getIdlePageType();
-    db.closeDB();
-
-    if (idle_page_type == "static_products")
+    if (thisMachine.getIdlePageType() == "static_products")
     {
         hideCurrentPageAndShowProvided(this->p_page_idle_products);
     }
@@ -206,12 +200,7 @@ void page_idle::showEvent(QShowEvent *event)
 
 void page_idle::changeToIdleProductsIfSet()
 {
-    DbManager db(DB_PATH);
-    // call db check if idle or idle_products
-    idle_page_type = db.getIdlePageType();
-    db.closeDB();
-
-    if (idle_page_type == "static_products")
+    if (thisMachine.getIdlePageType() == "static_products")
     {
         hideCurrentPageAndShowProvided(this->p_page_idle_products);
     }
@@ -280,19 +269,17 @@ double page_idle::getPriceCorrectedAfterDiscount(double price)
 
 void page_idle::checkReceiptPrinterStatus()
 {
-    // bool isPrinterOnline = false;
-    // bool hasPrinterPaper = false;
-    // thisMachine.printerStatus(&isPrinterOnline, &hasPrinterPaper);
-
+    
+    
     if (thisMachine.hasReceiptPrinter())
     {
-        qDebug() << "Check receipt printer functionality disabled.";
+        qDebug() << "Check receipt printer functionality.";
         this->p_page_maintenance_general->send_check_printer_status_command();
         ui->pushButton_to_select_product_page->hide(); // when printer needs to be restarted, it can take some time. Make sure nobody presses the button in that interval (to prevent crashes)
     }
     else
     {
-        qDebug() << "Can't check receipt printer. Not enabled in db->machine table";
+        qDebug() << "Receipt printer not enabled in db->machine table";
     }
 }
 

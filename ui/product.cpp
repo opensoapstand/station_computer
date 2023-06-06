@@ -129,12 +129,12 @@ int product::getBiggestEnabledSizeIndex()
 bool product::getSlotEnabled()
 {
     // return m_slot_enabled;
-    thisMachine->getSlotEnabled(getSlot());
+    return thisMachine->getSlotEnabled(getSlot());
 }
 QString product::getStatusText()
 {
     // return m_slot_enabled;
-    thisMachine->getStatusText(getSlot());
+    return thisMachine->getStatusText(getSlot());
 }
 
 bool product::getSizeEnabled(int size)

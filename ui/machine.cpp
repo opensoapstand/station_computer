@@ -71,15 +71,31 @@ bool machine::getEmptyContainerDetectionEnabled()
 {
     return m_has_empty_detection == 1;
 }
+bool machine::getShowTransactionHistory()
+{
+    return m_show_transactions == 1;
+}
+
+QString machine::getMaintenanceAdminPassword()
+{
+    return m_maintenance_pwd;
+}
 
 QString machine::getStatusText(int slot)
 {
     isSlotNumberValid(slot);
     return m_status_text_slots[slot - 1];
 }
+QString machine::getPumpId(int slot)
+{
+    
+    isSlotNumberValid(slot);
+    return m_pump_id_slots[slot - 1];
+}
+
 bool machine::isSlotNumberValid(int slot)
 {
-    valid = true;
+    bool valid = true;
     if (slot <= 0)
     {
         valid = false;
@@ -91,7 +107,7 @@ bool machine::isSlotNumberValid(int slot)
     if (!valid)
     {
 
-        qDebug() << "Invalid slot! slots are 1,2,3,4"
+        qDebug() << "Invalid slot! slots start from 1 and go up. e.g. 1,2,3,4. Slot provided: " << slot;
     }
     return valid;
 }
@@ -100,12 +116,18 @@ bool machine::getSlotEnabled(int slot)
     // this should have been part of the products table. But it isn't. We access this from the product.cpp class.
 
     isSlotNumberValid(slot);
+    qDebug() << "****************************************** " << m_is_enabled_slots[slot - 1];
     return (m_is_enabled_slots[slot - 1] == 1);
 }
 
 QString machine::getHelpPageHtmlText()
 {
     return m_help_text_html;
+}
+
+QString machine::getIdlePageType()
+{
+    return m_idle_page_type;
 }
 
 void machine::loadParametersFromDb()
@@ -185,6 +207,13 @@ void machine::loadParametersFromDb()
     qDebug() << "varr: " << m_show_transactions;
     qDebug() << "varr: " << m_help_text_html;
     qDebug() << "varr: " << m_idle_page_type;
+    for (int i=0;i<4;i++){
+        qDebug()<< "varrrr====";
+        qDebug()<< i;
+        qDebug() << m_is_enabled_slots[i];
+        qDebug() << m_pump_id_slots[i];
+        qDebug() << m_status_text_slots[i];
+    }
 }
 
 bool machine::getCouponsEnabled()

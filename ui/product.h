@@ -22,7 +22,8 @@ public:
     void setPromoCode(QString promoCode);
     QString getAwsProductId();
     bool getSlotEnabled();
-
+    QString getStatusText();
+    
     QString getFullVolumeCorrectUnits(bool addUnits);
 
     QString getVolumeRemainingCorrectUnits();

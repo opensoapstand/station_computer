@@ -76,9 +76,7 @@ void page_help::showEvent(QShowEvent *event)
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_PATH);
 
     help_text_html = p_page_idle->thisMachine.getHelpPageHtmlText();
-    DbManager db(DB_PATH);
-    maintenance_pwd = db.getMaintenanceAdminPassword();
-    if (db.showTransactions())
+    if (p_page_idle->thisMachine.getShowTransactionHistory())
     {
         ui->pushButton_to_transactions->show();
     }
@@ -86,7 +84,6 @@ void page_help::showEvent(QShowEvent *event)
     {
         ui->pushButton_to_transactions->hide();
     }
-    db.closeDB();
 
     if (help_text_html != "")
     {
@@ -196,7 +193,7 @@ void page_help::keyboardButtonPressed(int buttonID)
         qDebug() << "DONE CLICKED";
         QString textEntry = ui->keyboardTextEntry->text();
 
-        int compareResult = QString::compare(textEntry, maintenance_pwd, Qt::CaseInsensitive);
+        int compareResult = QString::compare(textEntry, p_page_idle->thisMachine.getMaintenanceAdminPassword(), Qt::CaseInsensitive);
         int shortcut = QString::compare(textEntry, "lll", Qt::CaseInsensitive);
 
         if (compareResult == 0)

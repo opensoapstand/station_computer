@@ -55,15 +55,16 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 /*
  * Navigation to Product item
  */
-void page_idle::setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products)
+void page_idle::setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_wifi_error)
 {
     // Chained to KB Listener
     this->p_pageSelectProduct = p_page_select_product;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_maintenance_general = pageMaintenanceGeneral;
     this->p_page_idle_products = p_page_idle_products;
+    this->p_page_error_wifi = p_page_error_wifi;
 #ifndef PLAY_VIDEO
-    setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
+        setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
 #endif
 }
 
@@ -455,7 +456,7 @@ QString page_idle::getTemplatePathFromName(QString fileName)
     if (!df_util::pathExists(image_path))
     {
         QString image_default_path = getDefaultTemplatePathFromName(fileName);
-        //qDebug() << "File not found in template folder: " + image_path + ". Default template path: " + image_default_path;
+        // qDebug() << "File not found in template folder: " + image_path + ". Default template path: " + image_default_path;
         if (!df_util::pathExists(image_default_path))
         {
             qDebug() << "File not found in template folder and not in default template folder (will use path anyways...): " + image_default_path;
@@ -569,7 +570,6 @@ QString page_idle::getTemplateTextByPage(QWidget *page, QString identifier)
 
     return getTemplateText(searchString);
 }
-
 
 QString page_idle::getTemplateText(QString textName_to_find)
 {

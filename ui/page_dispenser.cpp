@@ -101,7 +101,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     p_page_idle->setTemplateTextToObject(ui->label_volume_dispensed);
 
     QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
-        ui->label_volume_dispensed->setProperty("class", "normal");
+    ui->label_volume_dispensed->setProperty("class", "normal");
     ui->pushButton_problems->setStyleSheet(styleSheet);
     ui->label_finishTransactionMessage->setStyleSheet(styleSheet);
     ui->pushButton_debug_Button->setStyleSheet(styleSheet);

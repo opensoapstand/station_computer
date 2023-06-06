@@ -87,13 +87,19 @@ void page_help::showEvent(QShowEvent *event)
         ui->pushButton_to_transactions->hide();
     }
     db.closeDB();
-    if(help_text_html!=""){
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_GENERIC_WHITE);
+    
+    if (help_text_html != ""){
+
         ui->html_textBrowser->setHtml(help_text_html);
     }
     else
     {
         ui->html_textBrowser->hide();
+
+        QString image_path = p_page_idle->getTemplatePathFromName(PAGE_HELP_BACKGROUND_GENERIC_WHITE);
+        if (df_util::pathExists(image_path)){
+            p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_GENERIC_WHITE);
+        }
     }
 
     helpIdleTimer->start(1000);

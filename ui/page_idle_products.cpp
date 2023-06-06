@@ -197,7 +197,7 @@ void page_idle_products::displayProducts()
             type_text = product_type;
             qDebug() << "Product type not found for UI text and icon. Is the slot set correctly in database?";
         }
-        QString icon_path_with_template = p_page_idle->getTemplatePathFromName(icon_path);
+        QString icon_path_with_template = p_page_idle->thisMachine.getTemplatePathFromName(icon_path);
 
         labels_selectProductOverlay[i]->raise();
         labels_product_overlay_text[i]->raise();

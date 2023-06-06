@@ -18,6 +18,10 @@ public:
     bool getCouponsEnabled();
     QString getCustomerId();
 
+    QString getTemplateFolder();
+    QString getTemplatePathFromName(QString fileName);
+    QString getDefaultTemplatePathFromName(QString fileName);
+
 public slots:
 
 signals:

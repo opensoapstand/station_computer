@@ -137,7 +137,7 @@ void page_idle::showEvent(QShowEvent *event)
         checkReceiptPrinterStatus();
     }
 
-    QString machine_logo_full_path = getTemplatePathFromName(MACHINE_LOGO_PATH);
+    QString machine_logo_full_path = thisMachine.getTemplatePathFromName(MACHINE_LOGO_PATH);
     addPictureToLabel(ui->drinkfill_logo_label, machine_logo_full_path);
     ui->drinkfill_logo_label->setStyleSheet(styleSheet);
 
@@ -405,10 +405,10 @@ void page_idle::addPictureToLabel(QLabel *label, QString picturePath)
     }
 }
 
-QString page_idle::getTemplateFolder()
-{
-    return m_templatePath;
-}
+// QString page_idle::getTemplateFolder()
+// {
+//     return m_templatePath;
+// }
 
 void page_idle::addCssClassToObject(QWidget *element, QString classname, QString css_file_name)
 {
@@ -419,7 +419,7 @@ void page_idle::addCssClassToObject(QWidget *element, QString classname, QString
 
 QString page_idle::getCSS(QString cssName)
 {
-    QString cssFilePath = getTemplatePathFromName(cssName);
+    QString cssFilePath = thisMachine.getTemplatePathFromName(cssName);
 
     QFile cssFile(cssFilePath);
     QString styleSheet = "";
@@ -434,34 +434,6 @@ QString page_idle::getCSS(QString cssName)
     return styleSheet;
 }
 
-QString page_idle::getTemplatePathFromName(QString fileName)
-{
-    QString image_path = getTemplateFolder() + fileName;
-
-    if (!df_util::pathExists(image_path))
-    {
-        QString image_default_path = getDefaultTemplatePathFromName(fileName);
-        // qDebug() << "File not found in template folder: " + image_path + ". Default template path: " + image_default_path;
-        if (!df_util::pathExists(image_default_path))
-        {
-            qDebug() << "File not found in template folder and not in default template folder (will use path anyways...): " + image_default_path;
-        }
-        image_path = image_default_path;
-    }
-
-    return image_path;
-}
-void page_idle::setTemplateFolder(QString rootPath, QString templateFolder)
-{
-    m_templatePath = rootPath + templateFolder + "/";
-    qDebug() << "Template path set to: " + m_templatePath;
-}
-
-QString page_idle::getDefaultTemplatePathFromName(QString fileName)
-{
-    QString template_root_path = TEMPLATES_ROOT_PATH;
-    return template_root_path + TEMPLATES_DEFAULT_NAME + "/" + fileName;
-}
 
 void page_idle::pageTransition(QWidget *pageToHide, QWidget *pageToShow)
 {
@@ -476,7 +448,7 @@ void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QStrin
     // on Page: if called from showEvent: will scale to screen
 
     QString image_path = imageName;
-    image_path = getTemplatePathFromName(imageName);
+    image_path = thisMachine.getTemplatePathFromName(imageName);
     setBackgroundPictureToQWidget(p_widget, image_path);
 }
 
@@ -587,14 +559,14 @@ QString page_idle::getTemplateText(QString textName_to_find)
 void page_idle::loadTextsFromTemplateCsv()
 {
     QString name = UI_TEXTS_CSV_PATH;
-    QString csv_path = getTemplatePathFromName(name);
+    QString csv_path = thisMachine.getTemplatePathFromName(name);
     loadTextsFromCsv(csv_path, &textNameToTextMap_template);
 }
 
 void page_idle::loadTextsFromDefaultCsv()
 {
     QString name = UI_TEXTS_CSV_PATH;
-    QString csv_default_template_path = getDefaultTemplatePathFromName(name);
+    QString csv_default_template_path = thisMachine.getDefaultTemplatePathFromName(name);
     loadTextsFromCsv(csv_default_template_path, &textNameToTextMap_default);
 }
 

@@ -1039,21 +1039,21 @@ bool DbManager::setEmptyContainerDetectionEnabled(int isEnabled)
 //     return is_enabled;
 // }
 
-QString DbManager::getTemplateName()
-{
-    QSqlQuery qry;
-    QString val;
-    {
-        qry.prepare("SELECT template FROM machine");
-        qry.exec();
+// QString DbManager::getTemplateName()
+// {
+//     QSqlQuery qry;
+//     QString val;
+//     {
+//         qry.prepare("SELECT template FROM machine");
+//         qry.exec();
 
-        while (qry.next())
-        {
-            val = qry.value(0).toString();
-        }
-    }
-    return val;
-}
+//         while (qry.next())
+//         {
+//             val = qry.value(0).toString();
+//         }
+//     }
+//     return val;
+// }
 
 QString DbManager::getCustomerId()
 {

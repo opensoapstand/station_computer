@@ -13,6 +13,40 @@ machine::~machine()
 {
 }
 
+QString machine::getTemplateFolder()
+{
+    QString template_name = m_template;
+    if (template_name == "")
+    {
+        template_name = "default";
+    }
+    return TEMPLATES_ROOT_PATH + template_name + "/";
+}
+
+QString machine::getTemplatePathFromName(QString fileName)
+{
+    QString image_path = getTemplateFolder() + fileName;
+
+    if (!df_util::pathExists(image_path))
+    {
+        QString image_default_path = getDefaultTemplatePathFromName(fileName);
+        if (!df_util::pathExists(image_default_path))
+        {
+            qDebug() << "File not found in template folder and not in default template folder (will use path anyways...): " + image_default_path;
+        }
+        image_path = image_default_path;
+    }
+
+    return image_path;
+}
+
+QString machine::getDefaultTemplatePathFromName(QString fileName)
+{
+    QString template_root_path = TEMPLATES_ROOT_PATH;
+    return template_root_path + TEMPLATES_DEFAULT_NAME + "/" + fileName;
+}
+
+
 void machine::loadParametersFromDb()
 {
     qDebug() << "Load machine parametersssss";

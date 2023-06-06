@@ -160,7 +160,7 @@ void page_product_overview::reset_and_show_page_elements()
     p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->selectedProduct->getProductPicturePath());
     ui->label_selected_price->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(), 'f', 2));
     qDebug() << "Selected size" << p_page_idle->selectedProduct->getVolumeOfSelectedSize();
-    QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
+    QString full_path = p_page_idle->thisMachine.getTemplatePathFromName(IMAGE_BUTTON_HELP);
     qDebug() << full_path;
     p_page_idle->addPictureToLabel(ui->label_help, full_path);
 
@@ -201,7 +201,7 @@ void page_product_overview::reset_and_show_page_elements()
     ui->pushButton_to_help->setEnabled(true);
 
     QString keyboard = KEYBOARD_IMAGE_PATH;
-    QString keyboard_picture_path = p_page_idle->getTemplatePathFromName(KEYBOARD_IMAGE_PATH);
+    QString keyboard_picture_path = p_page_idle->thisMachine.getTemplatePathFromName(KEYBOARD_IMAGE_PATH);
     // QString keyboard_style_sheet = " background-image: url(" + keyboard + "); }";
     p_page_idle->addPictureToLabel(ui->label_keyboard_background, keyboard_picture_path);
     ui->label_keyboard_background->lower();

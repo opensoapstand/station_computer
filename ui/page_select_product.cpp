@@ -77,7 +77,7 @@ void page_select_product::setPage(page_product *p_page_product, page_idle_produc
     this->p_page_help = pageHelp;
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
-    QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
+    QString full_path = p_page_idle->thisMachine.getTemplatePathFromName(IMAGE_BUTTON_HELP);
     qDebug() << full_path;
     p_page_idle->addPictureToLabel(ui->label_help, full_path);
 }
@@ -220,7 +220,7 @@ void page_select_product::displayProducts()
             type_text = product_type;
             //qDebug() << "Icon for product type not found : " << type_text << " Set to default. ";
         }
-        QString icon_path_with_template = p_page_idle->getTemplatePathFromName(icon_path);
+        QString icon_path_with_template = p_page_idle->thisMachine.getTemplatePathFromName(icon_path);
 
         p_page_idle->addPictureToLabel(labels_product_icon[i], icon_path_with_template);
         // labels_product_icon[i]->setText(p_page_idle->getTemplateTextByPage(this, "no_text"));

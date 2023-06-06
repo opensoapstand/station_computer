@@ -267,7 +267,7 @@ void page_product::reset_and_show_page_elements()
     ui->label_product_ingredients->setText(p_page_idle->selectedProduct->getProductIngredients());
     ui->label_product_description->setText(p_page_idle->selectedProduct->getProductDescription());
 
-    QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
+    QString full_path = p_page_idle->thisMachine.getTemplatePathFromName(IMAGE_BUTTON_HELP);
     qDebug() << full_path;
     p_page_idle->addPictureToLabel(ui->label_help, full_path);
 
@@ -534,4 +534,3 @@ void page_product::on_pushButton_back_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_select_product);
 }
-

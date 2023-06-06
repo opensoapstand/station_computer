@@ -55,11 +55,11 @@ public:
     void addPictureToLabel(QLabel *label, QString picturePath);
     void addPictureToButton(QPushButton *button, QString picturePath);
     void addCompanyLogoToLabel(QLabel *label);
-    QString getTemplateFolder();
+    // QString getTemplateFolder();
     void changeToIdleProductsIfSet();
-    void setTemplateFolder(QString rootPath, QString templateFolder);
-    QString getTemplatePathFromName(QString fileName);
-    QString getDefaultTemplatePathFromName(QString fileName);
+    // void setTemplateFolder(QString rootPath, QString templateFolder);
+    // QString getTemplatePathFromName(QString fileName);
+    // QString getDefaultTemplatePathFromName(QString fileName);
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
     void setBackgroundPictureToQWidget(QWidget *page, QString imageName);
     QString getCSS(QString cssName);

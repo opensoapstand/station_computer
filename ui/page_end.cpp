@@ -120,7 +120,7 @@ void page_end::showEvent(QShowEvent *event)
     _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     thankYouEndTimer->start();
 
-    QString machine_logo_full_path = p_page_idle->getTemplatePathFromName(MACHINE_LOGO_PATH);
+    QString machine_logo_full_path = p_page_idle->thisMachine.getTemplatePathFromName(MACHINE_LOGO_PATH);
     p_page_idle->addPictureToLabel(ui->drinkfill_logo_label2, machine_logo_full_path);
     ui->drinkfill_logo_label2->setStyleSheet(styleSheet);
 

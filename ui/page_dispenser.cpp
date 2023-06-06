@@ -145,7 +145,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     p_page_idle->addCompanyLogoToLabel(ui->label_logo);
     ui->label_logo->hide();
 
-    p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
+    p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
 
     ui->pushButton_abort->show();
     ui->label_press->show();

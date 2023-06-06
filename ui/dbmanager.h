@@ -146,7 +146,7 @@ public:
     int *is_enabled_slots,
     QString *status_text_slots);
 
-    QString getTemplateName();
+    // QString getTemplateName();
     void updateTapToQR();
 
 private:

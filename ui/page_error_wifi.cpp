@@ -57,17 +57,18 @@ void page_error_wifi::showEvent(QShowEvent *event)
 
     QWidget::showEvent(event);
     QString styleSheet = p_page_idle->getCSS(PAGE_ERROR_WIFI_CSS);
-    ui->label_error_message->setStyleSheet("font-family: 'Brevia';"
-                                           "font-style: normal;"
-                                           "font-weight: 75;"
-                                           "font-size: 55px;"
-                                           "line-height: 99px;"
-                                           "color: #7c7474;"
-                                           "background-color: #dfd3d3;"
-                                           "text-align: center;"
-                                           "border: 1px solid #003840;"
-                                           "border-radius: 20px;"
-                                           "qproperty-alignment: AlignCenter;");
+        ui->label_error_message->setStyleSheet(styleSheet);
+    // ui->label_error_message->setStyleSheet("font-family: 'Brevia';"
+    //                                        "font-style: normal;"
+    //                                        "font-weight: 75;"
+    //                                        "font-size: 55px;"
+    //                                        "line-height: 99px;"
+    //                                        "color: #7c7474;"
+    //                                        "background-color: #dfd3d3;"
+    //                                        "text-align: center;"
+    //                                        "border: 1px solid #003840;"
+    //                                        "border-radius: 20px;"
+    //                                        "qproperty-alignment: AlignCenter;");
     ui->label_oops->setStyleSheet("font-family: 'Brevia';"
                                   "font-style: normal;"
                                   "font-weight: 75;"

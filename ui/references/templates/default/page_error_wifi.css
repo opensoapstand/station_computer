@@ -1,18 +1,18 @@
-#label_error_message {
-   /*selector not to make a class*/
+.label_error_message {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;
    font-size: 55px;
    line-height: 99px;
-   color: #d3c0c0;
+   color: #7c7474;
+   background-color: #dfd3d3;
    text-align: center;
-   border: black;
+   border: 1px solid #003840;
+   border-radius: 20px;
    qproperty-alignment: AlignCenter;
-   /* Works despite not being CSS*/
 }
 
-#label_oops {
+.label_oops {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;
@@ -25,7 +25,7 @@
    border: none;
 }
 
-#label_error_occured {
+.label_error_occured {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 700;
@@ -37,7 +37,7 @@
    color: #5E8580;
 }
 
-#label_check_back {
+.label_check_back {
    font-family: 'Montserrat';
    font-style: normal;
    font-weight: 400;

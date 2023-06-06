@@ -1503,21 +1503,21 @@ void DbManager::printerStatus(bool *isOnline, bool *hasPaper)
     }
 }
 
-bool DbManager::hasReceiptPrinter()
-{
-    QSqlQuery qry;
-    bool is_enabled;
-    {
-        qry.prepare("SELECT has_receipt_printer FROM machine");
-        qry.exec();
+// bool DbManager::hasReceiptPrinter()
+// {
+//     QSqlQuery qry;
+//     bool is_enabled;
+//     {
+//         qry.prepare("SELECT has_receipt_printer FROM machine");
+//         qry.exec();
 
-        while (qry.next())
-        {
-            is_enabled = (qry.value(0).toInt() == 1);
-        }
-    }
-    return is_enabled;
-}
+//         while (qry.next())
+//         {
+//             is_enabled = (qry.value(0).toInt() == 1);
+//         }
+//     }
+//     return is_enabled;
+// }
 
 /*
 0	machine_id

@@ -275,15 +275,11 @@ double page_idle::getPriceCorrectedAfterDiscount(double price)
 
 void page_idle::checkReceiptPrinterStatus()
 {
-    qDebug() << "db idle check printer";
-    DbManager db(DB_PATH);
-    bool isPrinterOnline = false;
-    bool hasPrinterPaper = false;
-    bool hasReceiptPrinter = db.hasReceiptPrinter();
-    db.printerStatus(&isPrinterOnline, &hasPrinterPaper);
-    db.closeDB();
+    // bool isPrinterOnline = false;
+    // bool hasPrinterPaper = false;
+    // thisMachine.printerStatus(&isPrinterOnline, &hasPrinterPaper);
 
-    if (hasReceiptPrinter)
+    if (thisMachine.hasReceiptPrinter())
     {
         qDebug() << "Check receipt printer functionality disabled.";
         this->p_page_maintenance_general->send_check_printer_status_command();

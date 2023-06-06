@@ -22,6 +22,9 @@ public:
     QString getTemplatePathFromName(QString fileName);
     QString getDefaultTemplatePathFromName(QString fileName);
 
+    bool hasReceiptPrinter();
+    void printerStatus(bool *isOnline, bool *hasPaper);
+
 public slots:
 
 signals:

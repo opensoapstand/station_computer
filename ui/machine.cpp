@@ -47,12 +47,29 @@ QString machine::getDefaultTemplatePathFromName(QString fileName)
 }
 
 
+void machine::printerStatus(bool *isOnline, bool *hasPaper)
+{
+    qDebug() << "DB call: Check printer status. ";
+    DbManager db(DB_PATH);
+    db.printerStatus(isOnline, hasPaper);
+    db.closeDB();
+
+    // This needs to be checked frequently, so caching is useless.
+    // *isOnline = m_receipt_printer_is_online==1;
+    // *hasPaper = m_receipt_printer_has_paper==1;
+}
+
+bool machine::hasReceiptPrinter()
+{
+    return (m_has_receipt_printer == 1);
+}
+
 void machine::loadParametersFromDb()
 {
-    qDebug() << "Load machine parametersssss";
+    qDebug() << "DB call: Load all machine parameters";
 
     DbManager db(DB_PATH);
-    qDebug() << "machine id independaent" << db.getMachineID();
+    // qDebug() << "machine id independaent" << db.getMachineID();
 
     db.getAllMachineProperties(
         &m_machine_id,

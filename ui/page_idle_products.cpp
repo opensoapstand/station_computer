@@ -220,16 +220,14 @@ void page_idle_products::select_product(int slot)
 
 void page_idle_products::checkReceiptPrinterStatus()
 {
-    qDebug() << "db idle_products check printer";
-    DbManager db(DB_PATH);
-    bool isPrinterOnline = false;
-    bool hasPrinterPaper = false;
-    bool hasReceiptPrinter = db.hasReceiptPrinter();
-    db.printerStatus(&isPrinterOnline, &hasPrinterPaper);
-    db.closeDB();
-
-    if (hasReceiptPrinter)
+    
+    
+    if (p_page_idle->thisMachine.hasReceiptPrinter())
     {
+        // bool isPrinterOnline = false;
+        // bool hasPrinterPaper = false;
+        // p_page_idle->thisMachine.printerStatus(&isPrinterOnline, &hasPrinterPaper);
+
         qDebug() << "Check receipt printer functionality disabled.";
         this->p_page_maintenance_general->send_check_printer_status_command();
         ui->pushButton_to_select_product_page->hide(); // when printer needs to be restarted, it can take some time. Make sure nobody presses the button in that interval (to prevent crashes)

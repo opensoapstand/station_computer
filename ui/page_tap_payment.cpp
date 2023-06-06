@@ -104,14 +104,14 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
     }
 }
 
-QString page_tap_payment::getPaymentMethodForConstructorTime(uint8_t slot)
-{
-    qDebug() << "db open245";
-    DbManager db2(DB_PATH);
-    QString payment_method = db2.getPaymentMethod(slot);
-    db2.closeDB();
-    return payment_method;
-}
+// QString page_tap_payment::getPaymentMethodForConstructorTime(uint8_t slot)
+// {
+//     qDebug() << "DB call: Get Payment method";
+//     DbManager db2(DB_PATH);
+//     QString payment_method = db2.getPaymentMethod(slot);
+//     db2.closeDB();
+//     return payment_method;
+// }
 
 void page_tap_payment::stopPayTimers()
 {
@@ -241,7 +241,7 @@ void page_tap_payment::storePaymentEvent(QSqlDatabase db, QString event)
 void page_tap_payment::tapPaymentHandler()
 {
     ui->animated_Label->move(221, 327);
-    QString image_path = p_page_idle->getTemplatePathFromName("tap.gif");
+    QString image_path = p_page_idle->thisMachine.getTemplatePathFromName("tap.gif");
     QMovie *tapGif = new QMovie(image_path);
 
     ui->animated_Label->setMovie(tapGif);
@@ -336,7 +336,7 @@ void page_tap_payment::check_card_tapped()
 
         // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         ui->animated_Label->move(410, 480);
-        QString image_path = p_page_idle->getTemplatePathFromName("soapstandspinner.gif");
+        QString image_path = p_page_idle->thisMachine.getTemplatePathFromName("soapstandspinner.gif");
         QMovie *movie = new QMovie(image_path);
         ui->animated_Label->setMovie(movie);
         movie->start();

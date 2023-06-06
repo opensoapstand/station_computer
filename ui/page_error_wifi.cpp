@@ -66,7 +66,7 @@ void page_error_wifi::showEvent(QShowEvent *event)
     ui->label_check_back->setText("Please check back soon");
     ui->mainPageButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    QString machine_logo_full_path = p_page_idle->getTemplatePathFromName(MACHINE_LOGO_PATH);
+    QString machine_logo_full_path = p_page_idle->thisMachine.getTemplatePathFromName(MACHINE_LOGO_PATH);
     p_page_idle->addPictureToLabel(ui->label_logo_drinkfill, machine_logo_full_path);
     ui->label_logo_drinkfill->setStyleSheet(styleSheet);
 

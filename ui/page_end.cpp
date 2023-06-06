@@ -80,14 +80,9 @@ void page_end::showEvent(QShowEvent *event)
     p_page_idle->addCompanyLogoToLabel(ui->thank_you_logo_label);
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_END_BACKGROUND_PATH);
 
-    qDebug() << "db for receipt printer check";
     QString paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
 
-    DbManager db(DB_PATH);
-    bool hasReceiptPrinter = db.hasReceiptPrinter();
-    db.closeDB();
-
-    if (hasReceiptPrinter)
+    if (p_page_idle->thisMachine.hasReceiptPrinter())
     {
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->thank_you_message_label, "hasReceiptPrinter");
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->thank_you_subtitle_message_label, "hasReceiptPrinter2");
@@ -120,7 +115,7 @@ void page_end::showEvent(QShowEvent *event)
     _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     thankYouEndTimer->start();
 
-    QString machine_logo_full_path = p_page_idle->getTemplatePathFromName(MACHINE_LOGO_PATH);
+    QString machine_logo_full_path = p_page_idle->thisMachine.getTemplatePathFromName(MACHINE_LOGO_PATH);
     p_page_idle->addPictureToLabel(ui->drinkfill_logo_label2, machine_logo_full_path);
     ui->drinkfill_logo_label2->setStyleSheet(styleSheet);
 

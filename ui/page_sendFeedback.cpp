@@ -74,10 +74,10 @@ void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_PATH);
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
 
-    QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
+    QString full_path = p_page_idle->thisMachine.getTemplatePathFromName(IMAGE_BUTTON_HELP);
     p_page_idle->addPictureToLabel(ui->label_help, full_path);
 
-    full_path = p_page_idle->getTemplatePathFromName(THANK_YOU_FOR_YOUR_FEEDBACK);
+    full_path = p_page_idle->thisMachine.getTemplatePathFromName(THANK_YOU_FOR_YOUR_FEEDBACK);
     p_page_idle->addPictureToLabel(ui->label_thank_you_image, full_path);
 }
 
@@ -268,7 +268,7 @@ void page_sendFeedback::on_pushButton_send_clicked()
         ui->label_thanks_for_feedback->repaint(); // instant showing instead of waiting for function to be finished.
 
         // send to backend
-        QString MachineSerialNumber = p_page_idle->selectedProduct->getMachineId();
+        QString MachineSerialNumber = p_page_idle->thisMachine.getMachineId();
         QString customFeedback = ui->textEdit_custom_message->toPlainText();
         QString curl_param = "problems=" + problems + " " + customFeedback + "&MachineSerialNumber=" + MachineSerialNumber;
         qDebug() << "Curl params" << curl_param;

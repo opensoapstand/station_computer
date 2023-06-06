@@ -60,7 +60,6 @@ public:
     void coupon_input_hide();
     void coupon_input_reset();
 
-    bool areCouponsEnabled();
     void apply_promo_code();
 
 signals:

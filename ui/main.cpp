@@ -145,19 +145,20 @@ int main(int argc, char *argv[])
     // 2. get template files
     // 3. test files exisitng
     // 4. set files
-    qDebug() << "db init for template path";
-    DbManager db(DB_PATH);
-    QString template_folder = db.getTemplateName();
-    db.closeDB();
+    // qDebug() << "db init for template path";
+    // DbManager db(DB_PATH);
+    // QString template_folder = db.getTemplateName();
+    // db.closeDB();
 
-    if (template_folder == "")
-    {
-        template_folder = "default";
-    }
-    qDebug() << "template folder: " << template_folder;
+    // if (template_folder == "")
+    // {
+    //     template_folder = "default";
+    // }
+    // qDebug() << "template folder: " << template_folder;
 
-    p_page_idle->setTemplateFolder(TEMPLATES_ROOT_PATH, template_folder);
-    df_util::warnIfPathDoesNotExist(p_page_idle->getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
+    //p_page_idle->setTemplateFolder(TEMPLATES_ROOT_PATH, template_folder);
+    // df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
 
     qDebug() << "Check image paths.... (all paths resolved if nothing shows up).";
     df_util::warnIfPathDoesNotExist(PAGE_INIT_BACKGROUND_IMAGE_PATH);

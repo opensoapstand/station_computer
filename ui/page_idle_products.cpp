@@ -92,15 +92,15 @@ void page_idle_products::showEvent(QShowEvent *event)
     ui->label_pick_soap->setStyleSheet(styleSheet);
     // ui->printer_status_label->setStyleSheet(styleSheet);
     
-    for (int i = 0; i < 4; i++)
+    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
 
-        labels_product_picture[i]->setProperty("class", "labels_product_picture");
-        labels_product_type[i]->setProperty("class", "labels_product_type");
-        labels_selectProductOverlay[i]->setProperty("class", "labels_selectProductOverlay");
-        labels_product_picture[i]->setStyleSheet(styleSheet);
-        labels_selectProductOverlay[i]->setStyleSheet(styleSheet);
-        labels_product_type[i]->setStyleSheet(styleSheet);
+        labels_product_picture[slot_index]->setProperty("class", "labels_product_picture");
+        labels_product_type[slot_index]->setProperty("class", "labels_product_type");
+        labels_selectProductOverlay[slot_index]->setProperty("class", "labels_selectProductOverlay");
+        labels_product_picture[slot_index]->setStyleSheet(styleSheet);
+        labels_selectProductOverlay[slot_index]->setStyleSheet(styleSheet);
+        labels_product_type[slot_index]->setStyleSheet(styleSheet);
 
     }
 
@@ -111,9 +111,9 @@ void page_idle_products::showEvent(QShowEvent *event)
 
     qDebug() << "open db: payment method";
     bool needsReceiptPrinter = false;
-    for (int slot = 1; slot <= SLOT_COUNT; slot++)
+    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
-        QString paymentMethod = p_page_idle->products[slot - 1].getPaymentMethod();
+        QString paymentMethod = p_page_idle->products[slot_index].getPaymentMethod();
         if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
         {
             needsReceiptPrinter = true;
@@ -121,8 +121,8 @@ void page_idle_products::showEvent(QShowEvent *event)
             break;
         }
 
-        p_page_idle->products[slot - 1].setDiscountPercentageFraction(0.0);
-        p_page_idle->products[slot - 1].setPromoCode("");
+        p_page_idle->products[slot_index].setDiscountPercentageFraction(0.0);
+        p_page_idle->products[slot_index].setPromoCode("");
     }
     maintenanceCounter = 0;
 
@@ -146,22 +146,15 @@ void page_idle_products::displayProducts()
     QString product_name;
     QString product_status_text;
 
-    for (uint8_t i = 0; i < SLOT_COUNT; i++)
+    for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
-        uint8_t slot = i + 1;
-
         // display product picture
-      //  labels_product_picture[i]->setStyleSheet("border: none;");
-        p_page_idle->addPictureToLabel(labels_product_picture[i], p_page_idle->products[i].getProductPicturePath());
-        product_slot_enabled = p_page_idle->products[i].getSlotEnabled();
-
-        qDebug() << "db (re)load product details:";
-        DbManager db(DB_PATH);
-        product_status_text = db.getStatusText(slot);
-        db.closeDB();
-
-        product_type = p_page_idle->products[i].getProductType();
-        product_name = p_page_idle->products[i].getProductName();
+      //  labels_product_picture[slot_index]->setStyleSheet("border: none;");
+        p_page_idle->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->products[slot_index].getProductPicturePath());
+        product_slot_enabled = p_page_idle->products[slot_index].getSlotEnabled();
+        product_status_text = p_page_idle->products[slot_index].getStatusText();
+        product_type = p_page_idle->products[slot_index].getProductType();
+        product_name = p_page_idle->products[slot_index].getProductName();
 
         // display product type icon  picture
         QString icon_path = "not found";
@@ -197,18 +190,18 @@ void page_idle_products::displayProducts()
             type_text = product_type;
             qDebug() << "Product type not found for UI text and icon. Is the slot set correctly in database?";
         }
-        QString icon_path_with_template = p_page_idle->getTemplatePathFromName(icon_path);
+        QString icon_path_with_template = p_page_idle->thisMachine.getTemplatePathFromName(icon_path);
 
-        labels_selectProductOverlay[i]->raise();
-        labels_product_overlay_text[i]->raise();
+        labels_selectProductOverlay[slot_index]->raise();
+        labels_product_overlay_text[slot_index]->raise();
 
-        labels_selectProductOverlay[i]->setText("");
+        labels_selectProductOverlay[slot_index]->setText("");
 
         // overlay product status
-            labels_product_overlay_text[i]->setText("");
+            labels_product_overlay_text[slot_index]->setText("");
 
-        labels_product_type[i]->setText(type_text);
-        //labels_product_type[i]->setStyleSheet(styleSheet);
+        labels_product_type[slot_index]->setText(type_text);
+        //labels_product_type[slot_index]->setStyleSheet(styleSheet);
     }
 }
 
@@ -220,25 +213,18 @@ void page_idle_products::select_product(int slot)
 
 void page_idle_products::checkReceiptPrinterStatus()
 {
-    qDebug() << "db idle_products check printer";
-    DbManager db(DB_PATH);
-    bool isPrinterOnline = false;
-    bool hasPrinterPaper = false;
-    bool hasReceiptPrinter = db.hasReceiptPrinter();
-    db.printerStatus(&isPrinterOnline, &hasPrinterPaper);
-    db.closeDB();
-
-    if (hasReceiptPrinter)
+    if (p_page_idle->thisMachine.hasReceiptPrinter())
     {
-        qDebug() << "Check receipt printer functionality disabled.";
+        qDebug() << "Check receipt printer functionality.";
         this->p_page_maintenance_general->send_check_printer_status_command();
         ui->pushButton_to_select_product_page->hide(); // when printer needs to be restarted, it can take some time. Make sure nobody presses the button in that interval (to prevent crashes)
     }
     else
     {
-        qDebug() << "Can't check receipt printer. Not enabled in db->machine table";
+        qDebug() << "Receipt printer not enabled in db->machine table";
     }
 }
+
 void page_idle_products::addCompanyLogoToLabel(QLabel *label)
 {
     qDebug() << "db init company logo";

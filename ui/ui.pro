@@ -63,7 +63,8 @@ HEADERS += \
     page_sendFeedback.h  \
     page_transactions.h \
     product.h \
-    page_idle_products.h
+    page_idle_products.h \
+    machine.h
 
 SOURCES += \
     dfuicommthread.cpp \
@@ -99,7 +100,8 @@ SOURCES += \
     ../library/qr/qrcodegen.cpp \
     page_transactions.cpp \
     product.cpp \
-    page_idle_products.cpp
+    page_idle_products.cpp \
+    machine.cpp
 
 RESOURCES += \
     src.qrc

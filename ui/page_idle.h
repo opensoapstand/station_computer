@@ -24,6 +24,7 @@
 #include "dbmanager.h"
 #include "page_maintenance.h"
 #include "product.h"
+#include "machine.h"
 #include "page_maintenance_general.h"
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
@@ -55,11 +56,11 @@ public:
     void addPictureToLabel(QLabel *label, QString picturePath);
     void addPictureToButton(QPushButton *button, QString picturePath);
     void addCompanyLogoToLabel(QLabel *label);
-    QString getTemplateFolder();
+    // QString getTemplateFolder();
     void changeToIdleProductsIfSet();
-    void setTemplateFolder(QString rootPath, QString templateFolder);
-    QString getTemplatePathFromName(QString fileName);
-    QString getDefaultTemplatePathFromName(QString fileName);
+    // void setTemplateFolder(QString rootPath, QString templateFolder);
+    // QString getTemplatePathFromName(QString fileName);
+    // QString getDefaultTemplatePathFromName(QString fileName);
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
     void setBackgroundPictureToQWidget(QWidget *page, QString imageName);
     QString getCSS(QString cssName);
@@ -80,6 +81,8 @@ public:
 
     product products[SLOT_COUNT];
     product *selectedProduct;
+
+    machine thisMachine;
 
     df_util *dfUtility;
     DfUiCommThread *dfComm;

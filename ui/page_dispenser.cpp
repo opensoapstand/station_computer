@@ -147,7 +147,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     p_page_idle->addCompanyLogoToLabel(ui->label_logo);
     ui->label_logo->hide();
 
-    p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
+    p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
 
     ui->pushButton_abort->show();
     ui->label_press->show();
@@ -418,14 +418,14 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
     p_page_idle->selectedProduct->setVolumeDispensedMl(dispensed);
 
     // volumeDispensed = dispensed;
-    qDebug() << "Signal: dispensed " << dispensed << " of " << p_page_idle->selectedProduct->getVolume();
+    qDebug() << "Signal: dispensed " << dispensed << " of " << p_page_idle->selectedProduct->getVolumeOfSelectedSize();
 
     if (p_page_idle->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
     {
 
         updatelabel_volume_dispensed_ml(p_page_idle->selectedProduct->getVolumeDispensedMl());
 
-        double percentage = p_page_idle->selectedProduct->getVolumeDispensedMl() / (p_page_idle->selectedProduct->getVolume()) * 100;
+        double percentage = p_page_idle->selectedProduct->getVolumeDispensedMl() / (p_page_idle->selectedProduct->getVolumeOfSelectedSize()) * 100;
         if (isFull)
         {
             percentage = 100;
@@ -464,7 +464,7 @@ void page_dispenser::fsmReceiveTargetVolumeReached()
     {
         qDebug() << "Target reached from controller.";
         this->isDispensing = false;
-        updateVolumeDisplayed(p_page_idle->selectedProduct->getVolume(), true); // make sure the fill bottle graphics are completed
+        updateVolumeDisplayed(p_page_idle->selectedProduct->getVolumeOfSelectedSize(), true); // make sure the fill bottle graphics are completed
         transactionLogging += "\n 8: Target Reached - True";
         dispensing_end_admin();
     }

@@ -267,7 +267,7 @@ void page_product::reset_and_show_page_elements()
     ui->label_product_ingredients->setText(p_page_idle->selectedProduct->getProductIngredients());
     ui->label_product_description->setText(p_page_idle->selectedProduct->getProductDescription());
 
-    QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
+    QString full_path = p_page_idle->thisMachine.getTemplatePathFromName(IMAGE_BUTTON_HELP);
     qDebug() << full_path;
     p_page_idle->addPictureToLabel(ui->label_help, full_path);
 
@@ -388,7 +388,7 @@ void page_product::reset_and_show_page_elements()
 
                 else if (units == "g")
                 {
-                    if (p_page_idle->selectedProduct->getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
+                    if (p_page_idle->selectedProduct->getVolumeBySize(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
                     {
                         units = "100g";
                         units_discount_indication = "kg";
@@ -534,4 +534,3 @@ void page_product::on_pushButton_back_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_select_product);
 }
-

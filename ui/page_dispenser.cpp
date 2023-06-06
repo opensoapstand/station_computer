@@ -100,6 +100,8 @@ void page_dispenser::showEvent(QShowEvent *event)
     p_page_idle->setTemplateTextToObject(ui->label_volume_dispensed);
 
     QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
+        ui->label_volume_dispensed->setProperty("class", "normal");
+    ui->pushButton_problems->setStyleSheet(styleSheet);
     ui->label_finishTransactionMessage->setStyleSheet(styleSheet);
     ui->pushButton_debug_Button->setStyleSheet(styleSheet);
     ui->pushButton_abort->setStyleSheet(styleSheet);
@@ -111,8 +113,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->label_instructions_container->setStyleSheet(styleSheet);
     ui->label_press->setStyleSheet(styleSheet);
     ui->label_dispense_message->setStyleSheet(styleSheet);
-    ui->label_volume_dispensed->setProperty("class", "normal");
-    ui->pushButton_problems->setStyleSheet(styleSheet);
+
     transactionLogging += "\n 6: Station Unlocked - True";
 
     // important to set to nullptr, to check at timeout if it was initialized (displayed...) or not.

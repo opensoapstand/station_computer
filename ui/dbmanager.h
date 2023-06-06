@@ -72,7 +72,7 @@ public:
     // bool updatePriceSmall(int slot, double new_price);
     // bool updatePriceLarge(int slot, double new_price);
     bool updatePrice(int slot, int size, double new_price);
-    bool getCouponsEnabled();
+    // bool getCouponsEnabled();
     bool getEmptyContainerDetectionEnabled();
     bool setEmptyContainerDetectionEnabled(int isEnabled);
     bool getPumpRampingEnabled();
@@ -117,7 +117,7 @@ public:
 
     void getAllMachineProperties(
     QString *machine_id,
-    int *Soapstand_customer_id,
+    QString *soapstand_customer_id,
     QString *ttttemplate,
     QString *location,
     QString *controller_type,

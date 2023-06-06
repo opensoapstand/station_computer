@@ -168,7 +168,7 @@ void page_product_overview::reset_and_show_page_elements()
     ui->label_invoice_name->setText(p_page_idle->selectedProduct->getProductName());
 
     ui->promoKeyboard->hide();
-    if (areCouponsEnabled())
+    if (p_page_idle->thisMachine.getCouponsEnabled())
     {
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code, "coupons_enable");
 
@@ -414,16 +414,6 @@ void page_product_overview::coupon_input_reset()
 void page_product_overview::on_lineEdit_promo_codeInput_clicked()
 {
     coupon_input_show();
-}
-
-bool page_product_overview::areCouponsEnabled()
-{
-    qDebug() << "db for coupons";
-
-    DbManager db(DB_PATH);
-    bool coupons_enabled = db.getCouponsEnabled();
-    db.closeDB();
-    return coupons_enabled;
 }
 
 void page_product_overview::on_pushButton_continue_clicked()

@@ -15,6 +15,8 @@ public:
 
 
     QString getMachineId();
+    bool getCouponsEnabled();
+    QString getCustomerId();
 
 public slots:
 
@@ -22,7 +24,7 @@ signals:
 
 private:
     QString m_machine_id;
-    int m_Soapstand_customer_id;
+    QString m_soapstand_customer_id;
     QString m_template;
     QString m_location;
     QString m_controller_type;

@@ -21,7 +21,6 @@
 #include "page_maintenance_general.h"
 #include "product.h"
 
-
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
 // #include <QMainWindow>
@@ -74,7 +73,6 @@ void page_idle::showEvent(QShowEvent *event)
 {
     registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-
 
     thisMachine.loadParametersFromDb();
     // for products.cpp
@@ -372,20 +370,9 @@ bool page_idle::isEnough(int p)
 
 void page_idle::addCompanyLogoToLabel(QLabel *label)
 {
-    qDebug() << "db init company logo";
-    DbManager db(DB_PATH);
-    QString id = db.getCustomerId();
-    db.closeDB();
-    qDebug() << "db closed";
-    if (id.at(0) == 'C')
-    {
-        QString logo_path = QString(CLIENT_LOGO_PATH).arg(id);
-        addPictureToLabel(label, logo_path);
-    }
-    else
-    {
-        qDebug() << "WARNING: invalid customer ID. Should be with a format like C-1, C-374, ... . Provided id: " << id;
-    }
+    QString id = thisMachine.getCustomerId();
+    QString logo_path = QString(CLIENT_LOGO_PATH).arg(id);
+    addPictureToLabel(label, logo_path);
 }
 
 void page_idle::addPictureToButton(QPushButton *button, QString picturePath)
@@ -454,7 +441,7 @@ QString page_idle::getTemplatePathFromName(QString fileName)
     if (!df_util::pathExists(image_path))
     {
         QString image_default_path = getDefaultTemplatePathFromName(fileName);
-        //qDebug() << "File not found in template folder: " + image_path + ". Default template path: " + image_default_path;
+        // qDebug() << "File not found in template folder: " + image_path + ". Default template path: " + image_default_path;
         if (!df_util::pathExists(image_default_path))
         {
             qDebug() << "File not found in template folder and not in default template folder (will use path anyways...): " + image_default_path;
@@ -568,7 +555,6 @@ QString page_idle::getTemplateTextByPage(QWidget *page, QString identifier)
 
     return getTemplateText(searchString);
 }
-
 
 QString page_idle::getTemplateText(QString textName_to_find)
 {

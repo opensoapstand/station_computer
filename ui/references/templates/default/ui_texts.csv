@@ -17,7 +17,7 @@ page_init->label_fail_message,Timeout. No Response from controller. Will start s
 # page_idle
 page_idle->label_welcome_message->testargument,Refill %1 here!<br>Tap screen to start
 page_idle->label_welcome_message,Refill soap here!<br>Tap screen to start
-page_idle->label_printer_status->offline,Assistance needed<br>Receipt Printer offline.
+page_idle->label_printer_status->offline,Assistance needed <br>Receipt Printer offline.
 page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer empty or improperly loaded.
 
 #page_select_product
@@ -28,7 +28,7 @@ page_select_product->empty,empty
 page_select_product->almost_empty,almost-empty
 page_select_product->sold_out,sold-out
 page_select_product->assistance,assistance
-page_select_product->coming_soon,coming-soon
+page_select_product->coming_soon,Coming<br>soon
 page_select_product->default,. . .
 page_select_product->available,
 
@@ -120,10 +120,8 @@ page_maintenance->product_overlay_labels[i]->coming_soon,Comming soon
 #page_idle_products
 
 page_idle_products->label_pick_soap,Discover how to<br> refill soap here!
-page_idle_products->printer_status_label->assistance_printer_offline,Assistance neede<br>Receipt Printer offline.
+page_idle_products->printer_status_label->assistance_printer_offline,Assistance needed<br>Receipt Printer offline.
 page_idle_products->printer_status_label->empty_improperly_loaded,Assistance needed<br>Receipt printer empty or improperly loaded.
-
-
 
 
 

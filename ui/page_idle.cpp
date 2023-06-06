@@ -56,15 +56,16 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 /*
  * Navigation to Product item
  */
-void page_idle::setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products)
+void page_idle::setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi)
 {
     // Chained to KB Listener
     this->p_pageSelectProduct = p_page_select_product;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_maintenance_general = pageMaintenanceGeneral;
     this->p_page_idle_products = p_page_idle_products;
+    this->p_page_error_wifi = p_page_error_wifi;
 #ifndef PLAY_VIDEO
-    setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
+        setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
 #endif
 }
 
@@ -116,13 +117,6 @@ void page_idle::showEvent(QShowEvent *event)
         // currentProductOrder->setDiscountPercentageFraction(0.0);
         // currentProductOrder->setPromoCode("");
     }
-
-    if (thisMachine.getIdlePageType() == "static_products")
-    {
-        hideCurrentPageAndShowProvided(this->p_page_idle_products);
-    }
-
-    this->lower();
 
     // template text with argument demo
     // QString base_text = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_welcome_message, "testargument" );
@@ -421,7 +415,6 @@ QString page_idle::getCSS(QString cssName)
     }
     return styleSheet;
 }
-
 
 void page_idle::pageTransition(QWidget *pageToHide, QWidget *pageToShow)
 {

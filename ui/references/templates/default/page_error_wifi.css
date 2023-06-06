@@ -1,5 +1,49 @@
-QPushButton {
-   
-   background-color: transparent;
-   border: 0px;
+#label_error_message {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 55px;
+   line-height: 99px;
+   color: #7c7474;
+   background-color: #dfd3d3;
+   text-align: center;
+   border: 1px solid #003840;
+   border-radius: 20px;
+   qproperty-alignment: AlignCenter;
+}
+
+#label_oops {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 54px;
+   line-height: 99px;
+   letter-spacing: px;
+   color: #003840;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
+}
+
+#label_error_occured {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 700;
+   font-size: 30px;
+   line-height: 41px;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   text-transform: uppercase;
+   color: #5E8580;
+}
+
+#label_check_back {
+   font-family: 'Montserrat';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 28px;
+   line-height: 36px;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   color: #003840;
 }

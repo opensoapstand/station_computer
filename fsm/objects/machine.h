@@ -34,6 +34,8 @@ public:
     gpio *switch_24V;
     void setup();
     pcb *getPcb();
+
+    // getTemperature(); temp sensor
     // static pcb *control_pcb;
     pcb *control_pcb;
     Adafruit_Thermal *receipt_printer;

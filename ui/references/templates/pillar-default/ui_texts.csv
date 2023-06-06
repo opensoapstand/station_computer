@@ -23,7 +23,7 @@ page_select_product->empty,empty
 page_select_product->almost_empty,almost-empty
 page_select_product->sold_out,sold-out
 page_select_product->assistance,assistance
-page_select_product->coming_soon,coming-soon
+page_select_product->coming_soon,coming<br>soon
 page_select_product->default,. . .
 page_select_product->available,
 

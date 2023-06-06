@@ -37,6 +37,7 @@ class page_maintenance;
 class page_select_product;
 class page_maintenance_general;
 class page_idle_products;
+class page_error_wifi;
 
 namespace Ui
 {
@@ -49,7 +50,7 @@ class page_idle : public QWidget
 
 public:
     explicit page_idle(QWidget *parent = nullptr);
-    void setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products);
+    void setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi);
     ~page_idle();
     void showEvent(QShowEvent *event);
     void addPictureToLabel(QLabel *label, QString picturePath);
@@ -134,6 +135,7 @@ private:
     page_maintenance *p_page_maintenance;
     page_maintenance_general *p_page_maintenance_general;
     page_idle_products *p_page_idle_products;
+    page_error_wifi *p_page_error_wifi;
     bool p1, p2, p3, p4;
     QString idle_page_type;
     double m_discount_percentage_fraction = 0.0;

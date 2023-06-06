@@ -111,7 +111,7 @@ using namespace std;
 #define PAGE_INIT_BACKGROUND_IMAGE_PATH                 "background_message.png"
 #define IMAGE_BUTTON_HELP                               "help_icon.png"
 #define THANK_YOU_FOR_YOUR_FEEDBACK                     "background_feedbacksent.png"
-
+#define PAGE_ERROR_BACKGROUND_PATH                      "background_error_wifi.png"
 #define KEYBOARD_IMAGE_PATH                             "soapstand-keyboard.png"
 #define MACHINE_LOGO_PATH                               "machine_logo.png"
 
@@ -125,8 +125,8 @@ using namespace std;
 #define ICON_TYPE_JUICE_PATH                            "Soapstand-UI-icon-juice.png"
 #define ICON_TYPE_DEFAULT                               "Soapstand-UI-icon-default.png"
 
+#define PAGE_HELP_BACKGROUND_GENERIC_WHITE              "background_generic_white_empty.png"
 #define PAGE_HELP_BACKGROUND_PATH                       "background_help.png"
-
 #define SEND_DISPENSE_START "d"
 #define SEND_DISPENSE_STOP "f"
 #define SEND_REPAIR_PCA "pcabugfix"

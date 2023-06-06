@@ -55,7 +55,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 /*
  * Navigation to Product item
  */
-void page_idle::setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_wifi_error)
+void page_idle::setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi)
 {
     // Chained to KB Listener
     this->p_pageSelectProduct = p_page_select_product;
@@ -212,7 +212,7 @@ void page_idle::changeToIdleProductsIfSet()
 
     if (idle_page_type == "static_products")
     {
-        hideCurrentPageAndShowProvided(this->p_page_idle_products);
+        hideCurrentPageAndShowProvided(this->p_page_error_wifi);
     }
 }
 

@@ -57,15 +57,59 @@ void page_error_wifi::showEvent(QShowEvent *event)
 
     QWidget::showEvent(event);
     QString styleSheet = p_page_idle->getCSS(PAGE_ERROR_WIFI_CSS);
+    ui->label_error_message->setStyleSheet("font-family: 'Brevia';"
+                                           "font-style: normal;"
+                                           "font-weight: 75;"
+                                           "font-size: 55px;"
+                                           "line-height: 99px;"
+                                           "color: #7c7474;"
+                                           "background-color: #dfd3d3;"
+                                           "text-align: center;"
+                                           "border: 1px solid #003840;"
+                                           "border-radius: 20px;"
+                                           "qproperty-alignment: AlignCenter;");
+    ui->label_oops->setStyleSheet("font-family: 'Brevia';"
+                                  "font-style: normal;"
+                                  "font-weight: 75;"
+                                  "font-size: 54px;"
+                                  "line-height: 99px;"
+                                  "letter-spacing: px;"
+                                  "color: #003840;"
+                                  "text-align: center;"
+                                  "qproperty-alignment: AlignCenter;"
+                                  "border: none;");
+    ui->label_oops->setText("oops..");
+    ui->label_error_occured->setStyleSheet("font-family: 'Brevia';"
+                                           "font-style: normal;"
+                                           "font-weight: 700;"
+                                           "font-size: 30px;"
+                                           "line-height: 41px;"
+                                           "text-align: center;"
+                                           "qproperty-alignment: AlignCenter;"
+                                           "text-transform: uppercase;"
+                                           "color: #5E8580;");
+    ui->label_error_occured->setText("AN ERROR HAS OCCURED");
+    ui->label_check_back->setStyleSheet("font-family: 'Montserrat';"
+                                        "font-style: normal;"
+                                        "font-weight: 400;"
+                                        "font-size: 28px;"
+                                        "line-height: 36px;"
+                                        "text-align: center;"
+                                        "qproperty-alignment: AlignCenter;"
+                                        "color: #003840;");
+    ui->label_check_back->setText("Please check back soon");
+    ui->mainPageButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    ui->wifi_ack_Button->setStyleSheet(styleSheet);
-    ui->mainPageButton->setStyleSheet(styleSheet);
+    QString machine_logo_full_path = p_page_idle->getTemplatePathFromName(MACHINE_LOGO_PATH);
+    p_page_idle->addPictureToLabel(ui->label_logo_drinkfill, machine_logo_full_path);
+    ui->label_logo_drinkfill->setStyleSheet(styleSheet);
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_ERROR_BACKGROUND_PATH);
-    QString image_path = p_page_idle->getTemplatePathFromName(ERROR_MESSAGE_PATH);
-    p_page_idle->addPictureToLabel(ui->error_message_label, image_path);
+    // QString image_path = p_page_idle->getTemplatePathFromName(ERROR_MESSAGE_PATH);
+    // p_page_idle->addPictureToLabel(ui->error_message_label, image_path);
 
     ui->wifi_ack_Button->setEnabled(false);
+    ui->wifi_ack_Button->hide();
 
     timeoutTimer->start(1000);
     _goTop_page_idleTimeoutSec = 10;

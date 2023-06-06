@@ -24,15 +24,15 @@ public:
 
     bool showTransactions();
     QString getProductReceiptName(int slot);
-    QString getPaymentMethod(int slot);
+    QString getPaymentMethod(int slot); //do not erase yet (wait for ash)
     double getProductVolume(int slot, char ml);
     QString getUnits(int slot);
     QString getMaintenanceAdminPassword();
     QString getCustomerId();
-    QString getHelpPageHtmlText();
-    QString getSizeSmall(int slot);
-    QString getSizeMedium(int slot);
-    QString getSizeLarge(int slot);
+    // QString getHelpPageHtmlText();
+    // QString getSizeSmall(int slot);
+    // QString getSizeMedium(int slot);
+    // QString getSizeLarge(int slot);
     // QString getPriceSmall(int slot);
     // QString getPriceMedium(int slot);
     // QString getPriceLarge(int slot);
@@ -74,9 +74,9 @@ public:
     // bool updatePriceLarge(int slot, double new_price);
     bool updatePrice(int slot, int size, double new_price);
     // bool getCouponsEnabled();
-    bool getEmptyContainerDetectionEnabled();
+    // bool getEmptyContainerDetectionEnabled();
     bool setEmptyContainerDetectionEnabled(int isEnabled);
-    bool getPumpRampingEnabled();
+    // bool getPumpRampingEnabled();
     bool setPumpRampingEnabled(int isEnabled);
     void getCustomDiscountProperties(int slot, bool *isEnabled, double *volumeDiscount, double *pricePerLiterDiscount);
 

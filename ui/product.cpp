@@ -2,6 +2,8 @@
 #include "dbmanager.h"
 // #include "page_dispenser.h"
 #include "page_idle.h"
+#include "machine.h"
+
 // Ctor
 product::product()
 {
@@ -19,6 +21,10 @@ product::product(const product &other) : QObject(nullptr)
 // Dtor
 product::~product()
 {
+}
+
+void product::setMachine(machine* machine){
+    thisMachine = machine;
 }
 
 void product::loadProductProperties()
@@ -57,8 +63,7 @@ void product::loadProductPropertiesFromDb()
                                &m_price_custom_discount, m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 
     m_slot_enabled = db.getSlotEnabled(getSlot());
-    m_empty_container_detection_enabled = db.getEmptyContainerDetectionEnabled();
-
+    // m_empty_container_detection_enabled = db.getEmptyContainerDetectionEnabled();
     db.closeDB();
 }
 
@@ -435,7 +440,9 @@ bool product::isProductVolumeInContainer()
 {
 
     bool retval = true;
-    if (!m_empty_container_detection_enabled)
+    // if (!m_empty_container_detection_enabled)
+    
+    if (!thisMachine->getEmptyContainerDetectionEnabled())
     {
         retval = m_volume_remaining > CONTAINER_EMPTY_THRESHOLD_ML;
     }

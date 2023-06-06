@@ -75,23 +75,7 @@ void page_maintenance::showEvent(QShowEvent *event)
     // page_maintenanceEndTimer->start(1000);
     _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
 
-    // int product_sold_out [SLOT_COUNT];
-    // bool product_slot_enabled [SLOT_COUNT];
-
-    qDebug() << "db for names and id maintenance";
-    DbManager db(DB_PATH);
-    // ui->enable_empty_container_checkBox->setChecked(db.getEmptyContainerDetectionEnabled());
-    // ui->enable_pump_ramping_checkBox->setChecked(db.getPumpRampingEnabled());
-    // qDebug()<<"ramping?"<<db.getPumpRampingEnabled();
-    // ui->enable_pump_ramping_checkBox->setChecked(true);
-
-    // ui->product1_label->setText(db.getProductName(1));
-    // ui->product2_label->setText(db.getProductName(2));
-    // ui->product3_label->setText(db.getProductName(3));
-    // ui->product4_label->setText(db.getProductName(4));
     ui->machineLabel->setText("Machine ID: " + p_page_idle->thisMachine.getMachineId());
-
-    db.closeDB();
 
     ui->product1_label->setText(p_page_idle->products[0].getProductName());
     ui->product2_label->setText(p_page_idle->products[1].getProductName());

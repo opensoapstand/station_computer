@@ -104,14 +104,14 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
     }
 }
 
-QString page_tap_payment::getPaymentMethodForConstructorTime(uint8_t slot)
-{
-    qDebug() << "db open245";
-    DbManager db2(DB_PATH);
-    QString payment_method = db2.getPaymentMethod(slot);
-    db2.closeDB();
-    return payment_method;
-}
+// QString page_tap_payment::getPaymentMethodForConstructorTime(uint8_t slot)
+// {
+//     qDebug() << "DB call: Get Payment method";
+//     DbManager db2(DB_PATH);
+//     QString payment_method = db2.getPaymentMethod(slot);
+//     db2.closeDB();
+//     return payment_method;
+// }
 
 void page_tap_payment::stopPayTimers()
 {

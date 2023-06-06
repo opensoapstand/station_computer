@@ -2,6 +2,8 @@
 #define PRODUCT_H
 
 #include "df_util.h"
+#include "machine.h"
+
 
 class product : public QObject
 {
@@ -12,12 +14,11 @@ public:
     product(const product &other);
     ~product();
     product &operator=(const product &other);
-
+    void setMachine(machine* machine);
+    
     // Setters and Getters
     void setSlot(int slot);
     int getSlot();
-    // void setSelectedSlot(int optionSlot);
-    // int getSelectedSlot();
     void setPromoCode(QString promoCode);
     QString getAwsProductId();
     bool getSlotEnabled();
@@ -75,7 +76,7 @@ public:
     void setVolumePerTickForSlot(QString volumePerTickInput);
 
     double inputTextToMlConvertUnits(QString inputValueAsText);
-    
+
     QString getUnitsForSlot();
     QString getSizeToVolume(QString units);
 
@@ -97,6 +98,7 @@ public:
 
     double getDiscountPercentageFraction();
     QString getPromoCode();
+    
 public slots:
     void setDiscountPercentageFraction(double percentageFraction);
 
@@ -106,6 +108,8 @@ signals:
     void sizeChange(double newSize);
 
 private:
+    machine* thisMachine;
+
     int slot;
 
     QString m_size_unit;

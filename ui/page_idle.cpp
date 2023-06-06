@@ -46,6 +46,11 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     idlePageTypeSelectorTimer = new QTimer(this);
     idlePageTypeSelectorTimer->setInterval(1000);
     connect(idlePageTypeSelectorTimer, SIGNAL(timeout()), this, SLOT(onIdlePageTypeSelectorTimerTick()));
+
+    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    {
+        products[slot_index].setMachine(&thisMachine);
+    }
 }
 
 /*

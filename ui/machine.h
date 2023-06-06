@@ -21,6 +21,9 @@ public:
     QString getTemplateFolder();
     QString getTemplatePathFromName(QString fileName);
     QString getDefaultTemplatePathFromName(QString fileName);
+    bool getEmptyContainerDetectionEnabled();
+    bool getPumpRampingEnabled();
+    QString getHelpPageHtmlText();
 
     bool hasReceiptPrinter();
     void printerStatus(bool *isOnline, bool *hasPaper);
@@ -30,6 +33,7 @@ public slots:
 signals:
 
 private:
+
     QString m_machine_id;
     QString m_soapstand_customer_id;
     QString m_template;

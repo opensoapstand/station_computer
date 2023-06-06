@@ -75,9 +75,9 @@ void page_help::showEvent(QShowEvent *event)
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_PATH);
 
+    help_text_html = p_page_idle->thisMachine.getHelpPageHtmlText();
     DbManager db(DB_PATH);
     maintenance_pwd = db.getMaintenanceAdminPassword();
-    help_text_html = db.getHelpPageHtmlText();
     if (db.showTransactions())
     {
         ui->pushButton_to_transactions->show();

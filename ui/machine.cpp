@@ -4,6 +4,7 @@
 #include "dbmanager.h"
 #include "machine.h"
 
+
 machine::machine()
 {
 }
@@ -62,6 +63,18 @@ void machine::printerStatus(bool *isOnline, bool *hasPaper)
 bool machine::hasReceiptPrinter()
 {
     return (m_has_receipt_printer == 1);
+}
+
+bool machine::getPumpRampingEnabled(){
+    return m_enable_pump_ramping == 1;
+
+}
+bool machine::getEmptyContainerDetectionEnabled(){
+    return m_has_empty_detection == 1;
+}
+
+QString machine::getHelpPageHtmlText(){
+    return m_help_text_html;
 }
 
 void machine::loadParametersFromDb()

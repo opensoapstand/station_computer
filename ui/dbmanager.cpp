@@ -537,9 +537,11 @@ double DbManager::getFullProduct(int slot)
     return full;
 }
 
+
 QString DbManager::getPaymentMethod(int slot)
 {
-    qDebug() << " db... getPaymentMethod";
+    // used by Ash in tap. to do --> get tap init out of constructor. 
+    qDebug() << "DB call: get payment method for slot";
     QSqlQuery paymeny_query;
     QString payment_method;
 
@@ -949,21 +951,21 @@ bool DbManager::getRecentTransactions(QString values[][5], int count, int *count
     return true;
 }
 
-bool DbManager::getPumpRampingEnabled()
-{
-    QSqlQuery qry;
-    bool is_enabled;
-    {
-        qry.prepare("SELECT enable_pump_ramping FROM machine");
-        qry.exec();
+// bool DbManager::getPumpRampingEnabled()
+// {
+//     QSqlQuery qry;
+//     bool is_enabled;
+//     {
+//         qry.prepare("SELECT enable_pump_ramping FROM machine");
+//         qry.exec();
 
-        while (qry.next())
-        {
-            is_enabled = (qry.value(0).toInt() == 1);
-        }
-    }
-    return is_enabled;
-}
+//         while (qry.next())
+//         {
+//             is_enabled = (qry.value(0).toInt() == 1);
+//         }
+//     }
+//     return is_enabled;
+// }
 
 bool DbManager::setPumpRampingEnabled(int isEnabled)
 {
@@ -986,21 +988,21 @@ bool DbManager::setPumpRampingEnabled(int isEnabled)
     }
 }
 
-bool DbManager::getEmptyContainerDetectionEnabled()
-{
-    QSqlQuery qry;
-    bool is_enabled;
-    {
-        qry.prepare("SELECT has_empty_detection FROM machine");
-        qry.exec();
+// bool DbManager::getEmptyContainerDetectionEnabled()
+// {
+//     QSqlQuery qry;
+//     bool is_enabled;
+//     {
+//         qry.prepare("SELECT has_empty_detection FROM machine");
+//         qry.exec();
 
-        while (qry.next())
-        {
-            is_enabled = (qry.value(0).toInt() == 1);
-        }
-    }
-    return is_enabled;
-}
+//         while (qry.next())
+//         {
+//             is_enabled = (qry.value(0).toInt() == 1);
+//         }
+//     }
+//     return is_enabled;
+// }
 
 bool DbManager::setEmptyContainerDetectionEnabled(int isEnabled)
 {
@@ -1752,88 +1754,88 @@ QString DbManager::getMaintenanceAdminPassword()
     return mid_string;
 }
 
-QString DbManager::getHelpPageHtmlText()
-{
-    QSqlQuery mid_query;
-    QString mid_string;
+// QString DbManager::getHelpPageHtmlText()
+// {
+//     QSqlQuery mid_query;
+//     QString mid_string;
 
-    {
-        mid_query.prepare("SELECT help_text_html FROM machine");
-        mid_query.exec();
+//     {
+//         mid_query.prepare("SELECT help_text_html FROM machine");
+//         mid_query.exec();
 
-        while (mid_query.next())
-        {
-            mid_string = mid_query.value(0).toString();
-        }
-    }
-    return mid_string;
-}
+//         while (mid_query.next())
+//         {
+//             mid_string = mid_query.value(0).toString();
+//         }
+//     }
+//     return mid_string;
+// }
 
-QString DbManager::getSizeSmall(int slot)
-{
-    qDebug() << " db... getSizeSmall";
-    QSqlQuery small_vol_query;
-    QString small_vol_string;
-    {
+// QString DbManager::getSizeSmall(int slot)
+// {
+//     qDebug() << " db... getSizeSmall";
+//     QSqlQuery small_vol_query;
+//     QString small_vol_string;
+//     {
 
-        small_vol_query.prepare("SELECT size_small FROM products WHERE slot=:slot");
+//         small_vol_query.prepare("SELECT size_small FROM products WHERE slot=:slot");
 
-        small_vol_query.bindValue(":slot", slot);
-        small_vol_query.exec();
+//         small_vol_query.bindValue(":slot", slot);
+//         small_vol_query.exec();
 
-        while (small_vol_query.next())
-        {
-            small_vol_string = small_vol_query.value(0).toString();
+//         while (small_vol_query.next())
+//         {
+//             small_vol_string = small_vol_query.value(0).toString();
 
-            // qDebug() << "Product: " << product_name << endl;
-        }
-    }
-    return small_vol_string;
-}
+//             // qDebug() << "Product: " << product_name << endl;
+//         }
+//     }
+//     return small_vol_string;
+// }
 
-QString DbManager::getSizeMedium(int slot)
-{
-    qDebug() << " db... getSizeMedium";
-    QSqlQuery medium_vol_query;
-    QString medium_vol_string;
-    {
+// QString DbManager::getSizeMedium(int slot)
+// {
+//     qDebug() << " db... getSizeMedium";
+//     QSqlQuery medium_vol_query;
+//     QString medium_vol_string;
+//     {
 
-        medium_vol_query.prepare("SELECT size_medium FROM products WHERE slot=:slot");
+//         medium_vol_query.prepare("SELECT size_medium FROM products WHERE slot=:slot");
 
-        medium_vol_query.bindValue(":slot", slot);
-        medium_vol_query.exec();
+//         medium_vol_query.bindValue(":slot", slot);
+//         medium_vol_query.exec();
 
-        while (medium_vol_query.next())
-        {
-            medium_vol_string = medium_vol_query.value(0).toString();
+//         while (medium_vol_query.next())
+//         {
+//             medium_vol_string = medium_vol_query.value(0).toString();
 
-            // qDebug() << "Product: " << product_name << endl;
-        }
-    }
-    return medium_vol_string;
-}
+//             // qDebug() << "Product: " << product_name << endl;
+//         }
+//     }
+//     return medium_vol_string;
+// }
 
-QString DbManager::getSizeLarge(int slot)
-{
-    qDebug() << " db... getSizeLarge";
-    QSqlQuery large_vol_query;
-    QString large_vol_string;
-    {
+// QString DbManager::getSizeLarge(int slot)
+// {
+//     qDebug() << " db... getSizeLarge";
+//     QSqlQuery large_vol_query;
+//     QString large_vol_string;
+//     {
 
-        large_vol_query.prepare("SELECT size_large FROM products WHERE slot=:slot");
+//         large_vol_query.prepare("SELECT size_large FROM products WHERE slot=:slot");
 
-        large_vol_query.bindValue(":slot", slot);
-        large_vol_query.exec();
+//         large_vol_query.bindValue(":slot", slot);
+//         large_vol_query.exec();
 
-        while (large_vol_query.next())
-        {
-            large_vol_string = large_vol_query.value(0).toString();
+//         while (large_vol_query.next())
+//         {
+//             large_vol_string = large_vol_query.value(0).toString();
 
-            // qDebug() << "Product: " << product_name << endl;
-        }
-    }
-    return large_vol_string;
-}
+//             // qDebug() << "Product: " << product_name << endl;
+//         }
+//     }
+//     return large_vol_string;
+// }
 
 QString DbManager::getIdlePageType()
 {

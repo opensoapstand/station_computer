@@ -204,11 +204,11 @@ private:
 
     // Payment Communication
     // Moneris Packet communication reference
-    // mCommunication com;
-    // packetFromECR sendPacket;
-    // packetFromUX410 readPacket;
-    // transactionPacket paymentPacket;
-    // transactionInfo paymentPktInfo;
+    mCommunication com;
+    packetFromECR sendPacket;
+    packetFromUX410 readPacket;
+    transactionPacket paymentPacket;
+    transactionInfo paymentPktInfo;
 
     // Payment Package Control
     bool purchaseEnable;
@@ -219,6 +219,21 @@ private:
     std::string productSelectedPrice;
     
     bool tap_init();
+    void cancelPayment();
+    bool getResponse(){return response;}
+   
+
+    // Payment Package Control
+    bool purchaseEnable;
+    int monerisConfig = 0;
+    bool timerEnabled;
+    std::vector<uint8_t> pktToSend;
+    std::vector<uint8_t> pktResponded;
+    std::string productSelectedPrice;
+
+    bool sendToUX410();
+    bool tap_init();
+    bool waitForUX410();
     void cancelPayment();
     bool getResponse(){return response;}
 

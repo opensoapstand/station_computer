@@ -125,8 +125,8 @@ using namespace std;
 #define ICON_TYPE_JUICE_PATH                            "Soapstand-UI-icon-juice.png"
 #define ICON_TYPE_DEFAULT                               "Soapstand-UI-icon-default.png"
 
+#define PAGE_HELP_BACKGROUND_GENERIC_WHITE              "background_generic_white_empty.png"
 #define PAGE_HELP_BACKGROUND_PATH                       "background_help.png"
-
 #define SEND_DISPENSE_START "d"
 #define SEND_DISPENSE_STOP "f"
 #define SEND_REPAIR_PCA "pcabugfix"

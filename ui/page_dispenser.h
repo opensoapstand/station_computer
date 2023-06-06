@@ -99,7 +99,7 @@ private slots:
     void on_pushButton_problems_clicked();
 
 private:
-    bool isDispensing;
+    bool isDispensing = false;
     bool askForFeedbackAtEnd;
     // **** GUI *****
     Ui::page_dispenser *ui;

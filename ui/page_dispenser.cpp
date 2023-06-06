@@ -43,6 +43,7 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     dispenseIdleTimer = new QTimer(this);
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
+    this->isDispensing = false;
 }
 
 /*
@@ -461,11 +462,11 @@ void page_dispenser::fsmReceiveTargetVolumeReached()
 {
     if (this->isDispensing)
     {
+        qDebug() << "Target reached from controller.";
         this->isDispensing = false;
         updateVolumeDisplayed(p_page_idle->selectedProduct->getVolume(), true); // make sure the fill bottle graphics are completed
         transactionLogging += "\n 8: Target Reached - True";
         dispensing_end_admin();
-        qDebug() << "Controller msg: Target reached.";
     }
     else
     {

@@ -87,9 +87,8 @@ void page_help::showEvent(QShowEvent *event)
         ui->pushButton_to_transactions->hide();
     }
     db.closeDB();
-
-    if (help_text_html != "")
-    {
+    if(help_text_html!=""){
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_GENERIC_WHITE);
         ui->html_textBrowser->setHtml(help_text_html);
     }
     else

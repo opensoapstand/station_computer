@@ -13,6 +13,7 @@ public:
     ~machine();
     void loadParametersFromDb();
 
+    bool isSlotNumberValid(int slot);
 
     QString getMachineId();
     bool getCouponsEnabled();
@@ -24,6 +25,8 @@ public:
     bool getEmptyContainerDetectionEnabled();
     bool getPumpRampingEnabled();
     QString getHelpPageHtmlText();
+
+    bool getSlotEnabled(int slot);
 
     bool hasReceiptPrinter();
     void printerStatus(bool *isOnline, bool *hasPaper);

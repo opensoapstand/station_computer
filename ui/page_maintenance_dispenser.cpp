@@ -164,9 +164,7 @@ void page_maintenance_dispenser::setpushButton_soldOutText()
 {
     qDebug() << "db call from pushButton_soldOutsetting";
     int slot = p_page_idle->selectedProduct->getSlotEnabled();
-    DbManager db(DB_PATH);
-    bool isSlotEnabled = db.getSlotEnabled(slot);
-    db.closeDB();
+    bool isSlotEnabled =  p_page_idle->products[slot-1]->getSlotEnabled(slot);
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
 
     if (isSlotEnabled)
@@ -444,9 +442,9 @@ void page_maintenance_dispenser::on_pushButton_restock_clicked()
             refreshLabels();
             ui->label_action_feedback->setText("Refill Succesfull");
 
+            bool isSlotEnabled =  p_page_idle->selectedProduct->getSlotEnabled(slot);
             DbManager db(DB_PATH);
-            bool isEnabled = db.getSlotEnabled(this->p_page_idle->selectedProduct->getSlot());
-            bool success = db.updateSlotAvailability(this->p_page_idle->selectedProduct->getSlot(), isEnabled, "SLOT_STATE_AVAILABLE");
+            bool success = db.updateSlotAvailability(this->p_page_idle->selectedProduct->getSlot(), isSlotEnabled, "SLOT_STATE_AVAILABLE");
             db.closeDB();
         }
         else

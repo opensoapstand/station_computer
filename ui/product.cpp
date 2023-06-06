@@ -62,7 +62,7 @@ void product::loadProductPropertiesFromDb()
                                &m_size_custom_discount,
                                &m_price_custom_discount, m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 
-    m_slot_enabled = db.getSlotEnabled(getSlot());
+    // m_slot_enabled = db.getSlotEnabled(getSlot());
     // m_empty_container_detection_enabled = db.getEmptyContainerDetectionEnabled();
     db.closeDB();
 }
@@ -128,7 +128,13 @@ int product::getBiggestEnabledSizeIndex()
 
 bool product::getSlotEnabled()
 {
-    return m_slot_enabled;
+    // return m_slot_enabled;
+    thisMachine->getSlotEnabled(getSlot());
+}
+QString product::getStatusText()
+{
+    // return m_slot_enabled;
+    thisMachine->getStatusText(getSlot());
 }
 
 bool product::getSizeEnabled(int size)

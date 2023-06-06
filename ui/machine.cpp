@@ -4,7 +4,6 @@
 #include "dbmanager.h"
 #include "machine.h"
 
-
 machine::machine()
 {
 }
@@ -47,7 +46,6 @@ QString machine::getDefaultTemplatePathFromName(QString fileName)
     return template_root_path + TEMPLATES_DEFAULT_NAME + "/" + fileName;
 }
 
-
 void machine::printerStatus(bool *isOnline, bool *hasPaper)
 {
     qDebug() << "DB call: Check printer status. ";
@@ -65,15 +63,48 @@ bool machine::hasReceiptPrinter()
     return (m_has_receipt_printer == 1);
 }
 
-bool machine::getPumpRampingEnabled(){
+bool machine::getPumpRampingEnabled()
+{
     return m_enable_pump_ramping == 1;
-
 }
-bool machine::getEmptyContainerDetectionEnabled(){
+bool machine::getEmptyContainerDetectionEnabled()
+{
     return m_has_empty_detection == 1;
 }
 
-QString machine::getHelpPageHtmlText(){
+QString machine::getStatusText(int slot)
+{
+    isSlotNumberValid(slot);
+    return m_status_text_slots[slot - 1];
+}
+bool machine::isSlotNumberValid(int slot)
+{
+    valid = true;
+    if (slot <= 0)
+    {
+        valid = false;
+    }
+    if (slot >= SLOT_COUNT)
+    {
+        valid = false;
+    }
+    if (!valid)
+    {
+
+        qDebug() << "Invalid slot! slots are 1,2,3,4"
+    }
+    return valid;
+}
+bool machine::getSlotEnabled(int slot)
+{
+    // this should have been part of the products table. But it isn't. We access this from the product.cpp class.
+
+    isSlotNumberValid(slot);
+    return (m_is_enabled_slots[slot - 1] == 1);
+}
+
+QString machine::getHelpPageHtmlText()
+{
     return m_help_text_html;
 }
 

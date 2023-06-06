@@ -1,4 +1,4 @@
-.label_error_message {
+#label_error_message {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;
@@ -12,7 +12,7 @@
    qproperty-alignment: AlignCenter;
 }
 
-.label_oops {
+#label_oops {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;

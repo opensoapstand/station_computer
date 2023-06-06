@@ -58,17 +58,6 @@ void page_error_wifi::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
     QString styleSheet = p_page_idle->getCSS(PAGE_ERROR_WIFI_CSS);
     ui->label_error_message->setStyleSheet(styleSheet);
-    // ui->label_error_message->setStyleSheet("font-family: 'Brevia';"
-    //                                        "font-style: normal;"
-    //                                        "font-weight: 75;"
-    //                                        "font-size: 55px;"
-    //                                        "line-height: 99px;"
-    //                                        "color: #7c7474;"
-    //                                        "background-color: #dfd3d3;"
-    //                                        "text-align: center;"
-    //                                        "border: 1px solid #003840;"
-    //                                        "border-radius: 20px;"
-    //                                        "qproperty-alignment: AlignCenter;");
     ui->label_oops->setStyleSheet(styleSheet);
     ui->label_oops->setText("oops..");
     ui->label_error_occured->setStyleSheet(styleSheet);
@@ -82,8 +71,6 @@ void page_error_wifi::showEvent(QShowEvent *event)
     ui->label_logo_drinkfill->setStyleSheet(styleSheet);
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_ERROR_BACKGROUND_PATH);
-    // QString image_path = p_page_idle->getTemplatePathFromName(ERROR_MESSAGE_PATH);
-    // p_page_idle->addPictureToLabel(ui->error_message_label, image_path);
 
     ui->wifi_ack_Button->setEnabled(false);
     ui->wifi_ack_Button->hide();

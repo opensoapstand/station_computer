@@ -113,6 +113,8 @@ public:
     bool startPump(uint8_t slot);
     bool stopPump(uint8_t slot);
 
+    //double readTemperature();  //temp sensor
+
     void setSingleDispenseButtonLight(uint8_t slot, bool onElseOff);
     bool getDispenseButtonStateDebounced(uint8_t slot);
     bool getDispenseButtonEdge(uint8_t slot);

@@ -1271,7 +1271,6 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
     }
     }
 }
-
 unsigned char pcb::getPumpPWM()
 {
     // pump speed is set globally. Not set per slot!
@@ -1569,6 +1568,11 @@ void pcb::setSolenoid(uint8_t slot, bool onElseOff)
     }
 }
 
+double pcb::getTemperature(){
+
+
+    
+}
 // switch (pcb_version)
 // {
 

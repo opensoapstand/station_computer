@@ -58,6 +58,7 @@
 #define DS2485Q_ADDRESS 0b1000000
 #define MCP3424T_ADDRESS 0b1101000
 #define ADC081C021_ADDRESS 0b01010100
+#define TEMPERATURE_SENSOR_ADDRESS 0b00011000 
 
 #define PUMP_START_DELAY_MILLIS 100
 #define PUMP_STOP_BEFORE_BACKTRACK_TIME_MILLIS 0
@@ -66,6 +67,7 @@
 
 #define SLOT_ENABLED_BLINK_BUTTON_ON_MILLIS 200
 #define SLOT_ENABLED_BLINK_BUTTON_OFF_MILLIS 500
+
 
 class pcb
 {
@@ -114,6 +116,7 @@ public:
     bool stopPump(uint8_t slot);
 
     //double readTemperature();  //temp sensor
+    double getTemperature();  //temp sensor
 
     void setSingleDispenseButtonLight(uint8_t slot, bool onElseOff);
     bool getDispenseButtonStateDebounced(uint8_t slot);

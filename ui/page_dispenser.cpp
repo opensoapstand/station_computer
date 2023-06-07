@@ -93,16 +93,17 @@ void page_dispenser::showEvent(QShowEvent *event)
     qDebug() << "Selected slot: " << QString::number(p_page_idle->selectedProduct->getSlot());
     QWidget::showEvent(event);
 
+    p_page_idle->setTemplateTextToObject(ui->pushButton_problems);
     p_page_idle->setTemplateTextToObject(ui->label_to_refill);
     p_page_idle->setTemplateTextToObject(ui->label_instructions_container);
     p_page_idle->setTemplateTextToObject(ui->label_press);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_problems);
     p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_abort, "abort");
     p_page_idle->setTemplateTextToObject(ui->label_volume_dispensed);
 
     QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
-    ui->label_volume_dispensed->setProperty("class", "normal");
+    ui->pushButton_problems->setProperty("class", "normal");
     ui->pushButton_problems->setStyleSheet(styleSheet);
+    ui->label_volume_dispensed->setProperty("class", "normal");
     ui->label_finishTransactionMessage->setStyleSheet(styleSheet);
     ui->pushButton_debug_Button->setStyleSheet(styleSheet);
     ui->pushButton_abort->setStyleSheet(styleSheet);

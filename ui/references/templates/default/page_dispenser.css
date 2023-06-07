@@ -88,7 +88,7 @@
    border-radius: 20px;
 }
 
-#pushButton_problems.normal {
+.normal {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;
@@ -140,7 +140,7 @@
 
 }
 
-QPushButton {
+/* QPushButton {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 50;
@@ -152,7 +152,7 @@ QPushButton {
    border-radius: 20px;
    border: none;
   
-}
+} */
 
 QMessageBox {
    min-width: 7000px;

@@ -156,8 +156,11 @@ int main(int argc, char *argv[])
     // }
     // qDebug() << "template folder: " << template_folder;
 
-    //p_page_idle->setTemplateFolder(TEMPLATES_ROOT_PATH, template_folder);
-    // df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
+    // p_page_idle->setTemplateFolder(TEMPLATES_ROOT_PATH, template_folder);
+    //  df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
+
+    p_page_idle->loadDynamicContent();
+
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
 
     qDebug() << "Check image paths.... (all paths resolved if nothing shows up).";
@@ -182,26 +185,26 @@ int main(int argc, char *argv[])
     p_page_transactions->setPage(p_page_idle);
     initPage->setPage(p_page_idle);
     p_page_maintenance_product->setPage(p_page_maintenance, p_page_idle, p_page_idle_products);
-    p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle,p_page_idle_products);
-    p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product,  p_page_maintenance_general, p_page_select_product, p_page_product);
-    p_page_idle->setPage(p_page_select_product, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error );
-    p_page_idle_products->setPage(p_page_idle,  p_page_select_product);
+    p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle, p_page_idle_products);
+    p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product, p_page_maintenance_general, p_page_select_product, p_page_product);
+    p_page_idle->setPage(p_page_select_product, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error);
+    p_page_idle_products->setPage(p_page_idle, p_page_select_product);
     p_page_select_product->setPage(p_page_product, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help);
-    p_page_product->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_help,p_page_product_overview);
+    p_page_product->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_help, p_page_product_overview);
     p_page_payment_qr->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
     p_page_payment_tap->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
-    p_page_dispense->setPage(p_page_payment_qr,p_page_payment_tap, p_page_end, p_page_idle, p_page_sendFeedback);
+    p_page_dispense->setPage(p_page_payment_qr, p_page_payment_tap, p_page_end, p_page_idle, p_page_sendFeedback);
     p_page_product_overview->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap, p_page_help, p_page_product);
     p_page_sendFeedback->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_help, p_page_product, p_page_end);
-    p_page_end->setPage(p_page_dispense, p_page_idle, p_page_payment_qr, p_page_sendFeedback );
+    p_page_end->setPage(p_page_dispense, p_page_idle, p_page_payment_qr, p_page_sendFeedback);
     p_page_wifi_error->setPage(p_page_payment_qr, p_page_end, p_page_idle);
-    
+
     initPage->showFullScreen();
 
     // listen for fsm messages
     DfUiServer dfUiServer;
     dfUiServer.startServer();
- 
+
     QObject::connect(&dfUiServer, &DfUiServer::controllerFinishedAck, p_page_end, &page_end::controllerFinishedTransaction);
     QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_maintenance_general, &page_maintenance_general::printerStatusFeedback);
     QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_idle, &page_idle::printerStatusFeedback);

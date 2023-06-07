@@ -149,6 +149,9 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
 
+    p_page_idle->addPictureToLabel(ui->fill_animation_label, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_FILL_ANIMATION));
+    
+
     ui->pushButton_abort->show();
     ui->label_press->show();
     ui->label_to_refill->show();

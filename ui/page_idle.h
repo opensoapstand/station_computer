@@ -65,8 +65,8 @@ public:
     void setBackgroundPictureToQWidget(QWidget *page, QString imageName);
     QString getCSS(QString cssName);
     void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
+    void loadDynamicContent();
 
-    
     void setPromoCode(QString promoCode);
     QString getPromoCode();
 

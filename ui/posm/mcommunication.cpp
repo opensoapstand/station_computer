@@ -1,15 +1,3 @@
-//***************************************
-//
-// mcommunication.cpp
-// payment device communication
-//
-// created: 04-Oct-2019
-// by: Kiru Sri & Jason
-//
-// copyright 2019 by drinkfill
-// all rights reserved
-//***************************************
-
 #include "mcommunication.h"
 
 #define  MONERIS_PORT "/dev/mpos"
@@ -36,7 +24,7 @@ bool mCommunication::page_init(){
     bool bRet = false;
   
     fd = open(MONERIS_PORT ,O_RDWR | O_NOCTTY| O_NDELAY);
-
+    std::cout << "FD" << fd << std::endl;
 
     /* O_RDWR Read/Write access to serial port           */
     /* O_NOCTTY - No terminal will control the process   */
@@ -137,6 +125,7 @@ std::vector<uint8_t> mCommunication::readForAck()
     long int readSize = -1;
     std::vector<uint8_t> pktRead;
     int readcount = 0;
+    std::cout << fd;
     while (readcount < 3){
         if (readSize == -1){
             readSize = read(fd, buffer, 1);
@@ -150,7 +139,7 @@ std::vector<uint8_t> mCommunication::readForAck()
         usleep(500000);
     }
 
-    std::cout << "\n"<<strerror(errno) << "\n";
+    // std::cout << "\n"<<strerror(errno) << "\n";
 
     if (readSize == -1)
     {

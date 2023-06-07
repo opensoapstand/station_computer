@@ -58,7 +58,6 @@ typedef enum StatePaymentSerial{
 }StatePaymentSerial;
 
 using namespace std;
-using namespace qrcodegen;
 
 class page_tap_payment_serial : public QWidget
 {
@@ -67,7 +66,7 @@ class page_tap_payment_serial : public QWidget
 public:
     // **** GUI Setup ****
     explicit page_tap_payment_serial(QWidget *parent = nullptr);
-    void setPage(page_dispenser* page_dispenser);
+    void setPage(page_idle *pageIdle,pageProduct *pageSizeSelect, page_dispenser *page_dispenser);
     ~page_tap_payment_serial();
     void setProgressLabel(QLabel* label, int dot);
     // TODO: Figure out better Style Setup.
@@ -75,6 +74,7 @@ public:
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
+    void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     bool exitConfirm();
 
     // **** Control Functions ****

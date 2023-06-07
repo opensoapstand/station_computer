@@ -28,90 +28,25 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
     // Fullscreen background setup
     ui->setupUi(this);
     qDebug() << "Payment page" << endl;
-    // ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    // ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    // ui->payment_bypass_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    // ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+   ui->previousPage_Button->setStyleSheet(
+        "QPushButton {"
+        "font-family: 'Brevia';"
+        "font-style: normal;"
+        "font-weight: 75;"
+        "font-size: 32px;"
+        "line-height: 99px;"
+        "letter-spacing: 1.5px;"
+        "text-transform: lowercase;"
+        "color: #003840;"
+        "text-align: cCenter;"
+        "qproperty-alignment: AlignCenter;"
+        "border: none;"
+        "}");
+    ui->previousPage_Button->setText("<- Back");
+    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->payment_bypass_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    // ui->payment_bypass_Button->setEnabled(false);
-
-    // state_payment = s_serial_init;
-
-    // ui->title_Label->setText("pay by phone");
-    // QString css_title = "QLabel{"
-    //     "font-family: 'Brevia';"
-    //     "font-style: normal;"
-    //     "font-weight: 500;"
-    //     "font-size: 64px;"
-    //     "line-height: 86px;"
-    //     "text-align: center;"
-    //     "text-transform: lowercase;"
-    //     "color: #003840;"
-    //     "text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);"
-    //     "}";
-    // ui->title_Label->setStyleSheet(css_title);
-
-    // ui->scan_Label->setText(
-    //         "Scan to Pay");
-    // QString css_scan = "QLabel{"
-    //     "text-align: center;"
-    //     "font-family: 'Montserrat';"
-    //     "font-style: normal;"
-    //     "font-weight: 600;"
-    //     "font-size: 48px;"
-    //     "color: #5E8580;"
-    //         "} .tab {"
-    //         "display: inline-block;"
-    //         "margin-left: 40px;"
-    //     "}";
-    // ui->scan_Label->setStyleSheet(css_scan);
-
-    // ui->steps_Label->setText(
-    //         "<style>"
-    //             "li:{margin-top:10px;}"
-    //         "</style>"
-    //         "<ol>"
-    //         "<li><span class='tab'></span>Scan QR code with phone camera<br></li>"
-    //         "<li><span class='tab'></span>Click to open the link that appears<br></li>"
-    //         "<li><span class='tab'></span>Follow payment instructions on phone<br></li>"
-    //         "<li><span class='tab'></span>The station will proceed after payment<br></li>"
-    //         "<li><span class='tab'></span>Refill your soap!</li>"
-    //         "</ol>"
-    //         );
-    // QString css_steps = "QLabel{"
-    //         "position: absolute;"
-    //         "width: 777px;"
-    //         "height: 306px;"
-    //         "left: 143px;"
-    //         "top: 1029px;"
-    //         "font-family: 'Montserrat';"
-    //         "font-style: normal;"
-    //         "font-weight: 600;"
-    //         "font-size: 36px;"
-    //         "line-height: 51px;"
-    //         "color: #003840;"
-    //         "}";
-    // ui->steps_Label->setStyleSheet(css_steps);
-
-    // ui->processing_Label->setText(
-    //         "it can take a few moments for the station to<br>continue after your payment is confirmed"
-    //         );
-    // QString css_processing = "QLabel{"
-    //         "position: absolute;"
-    //         "width: 777px;"
-    //         "height: 306px;"
-    //         "left: 143px;"
-    //         "top: 1029px;"
-    //         "font-family: 'Montserrat';"
-    //         "font-style: normal;"
-    //         "font-weight: 600;"
-    //         "font-size: 36px;"
-    //         "line-height: 51px;"
-    //         "color: #003840;"
-    //         "}";
-    // ui->processing_Label->setStyleSheet(css_processing);
-
-    // ui->order_total_amount->hide();
+    ui->payment_bypass_Button->setEnabled(false);
 
     // **** Timer and Slot Setup ****
 
@@ -131,51 +66,11 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
     // Idle Payment reset
     idlePaymentTimer = new QTimer(this);
     connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
-  // while(!tap_init());
+  
+    while (!tap_init());
 
-    // // need to install a plugin to get animated gifs to play
-    // QString gif_path = DRINKFILL_LOGO_ANIMATED_PATH;
-    // QMovie *movie = new QMovie(gif_path);
-    // ui->animated_Label->setMovie(movie);
-    // movie->start();
-    //  while (!tap_init());
-            
-    
-    // QString tap = "tap";
-    // if (getPaymentMethod() == tap)
-    // {
-    //     ui->payment_bypass_Button->setEnabled(false);
-    //     qDebug() << "In tap";
-    //     // while (!tap_init())
-    //     //     ;
-    // }
-    // else
-    // {
-    //     ui->payment_bypass_Button->setEnabled(false);
-    // }
-    // XXX: Comment on/off for Bypassing payment testing
-    // qDebug() << "constructor Payment page. Check for tap.";
-    // tap_payment = false;
-    // DbManager db(DB_PATH);
-
-    // for (int i = 0; i < SLOT_COUNT; i++)
-    // {
-    //  if (db.getPaymentMethod(i) == "tap")
-    //     {
-    //         tap_payment = true;
-    //         ui->payment_bypass_Button->setEnabled(false);
-    //     }
-    //     else
-    //     {
-    //         ui->payment_bypass_Button->setEnabled(false);
-    //     }
-    // }
-    // db.closeDB();
-    // if (tap_payment)
-    // {
-        while (!tap_init())
-            ;
-    // }
+    ui->payment_bypass_Button->setEnabled(false);
+    ui->title_Label->hide();
 }
 
 void page_tap_payment_serial::stopPayTimers()
@@ -219,12 +114,12 @@ void page_tap_payment_serial::stopPayTimers()
 /*
  * Page Tracking reference
  */
-void page_tap_payment_serial::setPage(page_dispenser *page_dispenser)
+void page_tap_payment_serial::setPage(page_idle *pageIdle,pageProduct *pageSizeSelect, page_dispenser *page_dispenser)
 {
     tmpCounter = 0;
-    // this->p_pageProduct = pageSizeSelect;
+    this->p_pageProduct = pageSizeSelect;
     this->p_page_dispense = page_dispenser;
-    // this->p_page_idle = pageIdle;
+    this->p_page_idle = pageIdle;
     // this->helpPage = pageHelp;
 }
 
@@ -275,41 +170,12 @@ void page_tap_payment_serial::cancelPayment()
 
 QString page_tap_payment_serial::getPaymentMethod()
 {
-    qDebug() << "db open245";
-    // int product_slot___ = p_page_idle->currentProductOrder->getSelectedSlot();
-    // DbManager db2(DB_PATH);
-    // QString payment_method = db2.getPaymentMethod(product_slot___);
-    // db2.closeDB();
     return "tapSerial";
 }
 
 void page_tap_payment_serial::resizeEvent(QResizeEvent *event)
 {
-    // QString bitmap_location;
-
-    // if (getPaymentMethod() == "tap")
-    // {
-    //     bitmap_location = PAGE_QR_PAY_BACKGROUND_PATH;
-    // }
-    // else
-    // {
-    //     qDebug("ERROR: No tap payment available yet.");
-    // }
-
-    // QPixmap background(bitmap_location);
-    // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-
-    // QPalette palette;
-    // palette.setBrush(QPalette::Background, background);
-    // this->setPalette(palette);
-
-    // ui->order_total_amount->setText("Total: $" + QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2));
-    // ui->order_drink_amount->setText("");
-
-    // ui->productLabel->setText(p_page_idle->currentProductOrder->getSelectedProductName() + " " + p_page_idle->currentProductOrder->getSelectedSizeToVolumeWithCorrectUnits(true, true));
-
-    // response = false;
-    // ui->refreshLabel->hide();
+    
 }
 
 void page_tap_payment_serial::showEvent(QShowEvent *event)
@@ -318,25 +184,26 @@ void page_tap_payment_serial::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     state_payment = s_serial_init;
-   
-
-
     
     QString payment_method = getPaymentMethod();
     if (payment_method == "tapSerial")
     {
-        qDebug() << "Prepare tap order";
     
+        qDebug() << "Prepare tap order";
         pktResponded = com.readForAck();
         readPacket.packetReadFromUX(pktResponded);
         pktResponded.clear();
         response = false;
-
+        qDebug() << "Acknowledgement received";
         if (readPacket.getAckOrNak() == communicationPacketField::ACK)
         {
             timerEnabled = true;
         }
-        readTimer->start(1000);
+        readTimer->start(10);
+        ui->payment_bypass_Button->setEnabled(false);
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
+        ui->productLabel->hide();
+        ui->order_drink_amount->hide();
     }
     else
     {
@@ -410,10 +277,15 @@ void page_tap_payment_serial::on_previousPage_Button_clicked()
 {
     if (exitConfirm())
     {
-        // p_pageProduct->resizeEvent(pageProductResize);
-        // p_pageProduct->showFullScreen();
-        this->hide();
+        hideCurrentPageAndShowProvided(p_pageProduct);
     }
+}
+
+void page_tap_payment_serial::hideCurrentPageAndShowProvided(QWidget *pageToShow)
+{
+
+    resetPaymentPage();
+    p_page_idle->pageTransition(this, pageToShow);
 }
 
 void page_tap_payment_serial::on_mainPage_Button_clicked()
@@ -429,7 +301,7 @@ void page_tap_payment_serial::idlePaymentTimeout()
 {
     resetPaymentPage();
     // p_page_idle->showFullScreen();
-    this->hide();
+    // this->hide();
 }
 void page_tap_payment_serial::resetPaymentPage()
 {
@@ -507,8 +379,8 @@ bool page_tap_payment_serial::tap_init()
     while (!paymentConnected)
     {
         paymentConnected = com.page_init();
-        sleep(1);
     }
+    sleep(35);
 
     // This is super shitty - there must be a better way to find out when the green light starts flashing on the UX420 but it was 35
 
@@ -605,7 +477,7 @@ bool page_tap_payment_serial::tap_init()
 
     /*getConfiguration packet to send*/
     cout << "Sending Merchant Address query..." << endl;
-    pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::URL1);
+    pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::MERCH_ADDR);
     if (sendToUX410())
     {
         cout << "Receiving Merchant Address" << endl;
@@ -633,7 +505,7 @@ bool page_tap_payment_serial::tap_init()
         waitForUX410();
         isInitTerminalID = true;
         terminalID = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
-        std::cout << terminalID;
+        std::cout << terminalID << endl;
         pktResponded.clear();
     }
     else
@@ -650,9 +522,9 @@ bool page_tap_payment_serial::waitForUX410()
     bool waitResponse = false;
     while (!waitResponse)
     {
-        // sleep(1);
-            //    QCoreApplication::processEvents();
-        // cout << readPacket << endl;
+        sleep(1);
+               QCoreApplication::processEvents();
+        cout << readPacket << endl;
         if (pktResponded[0] != 0x02)
         {
             pktResponded.clear();
@@ -661,7 +533,7 @@ bool page_tap_payment_serial::waitForUX410()
         }
         else
         {
-            //  pktResponded = com.readPacket();
+             pktResponded = com.readPacket();
             readPacket.packetReadFromUX(pktResponded);
             std::cout << readPacket;
             com.sendAck();
@@ -673,36 +545,31 @@ bool page_tap_payment_serial::waitForUX410()
 
 void page_tap_payment_serial::readTimer_loop()
 {
-    cout << p_page_idle->currentProductOrder->getSelectedPriceCorrected() << endl;
-    pktToSend = paymentPacket.purchasePacket((QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2)).QString::toStdString());
-    cout << "to PAY: " << ((QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2)).QString::toStdString());
+    // pktToSend = paymentPacket.purchasePacket((QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2)).QString::toStdString());
+    pktToSend = paymentPacket.purchasePacket("1.00");
     response = getResponse();
 
     if (sendToUX410())
     {
         waitForUX410();
-
         while (!response)
         {
             response = getResponse();
-
-            // QCoreApplication::processEvents();
-
+            QCoreApplication::processEvents();
             if (pktResponded[0] != 0x02)
             {
+                
                 pktResponded.clear();
                 pktResponded = com.readPacket();
                 usleep(10);
                 response = getResponse();
-
-                cout << "Polling Timer" << endl;
-                // readTimer->start(1000);
+                readTimer->start(1000);
             }
             else if (pktResponded[10] == 0x33)
             {
                 pktResponded.clear();
                 pktResponded = com.readPacket();
-                // usleep(100);
+                usleep(100);
                 response = getResponse();
             }
             else
@@ -756,11 +623,12 @@ void page_tap_payment_serial::readTimer_loop()
                     }
                     else
                     {
+                        qDebug() << "In else condition";
                         pktResponded.clear();
                         pktResponded = com.readPacket();
                         sleep(5);
                         response = getResponse();
-                        // readTimer->start(10);
+                        readTimer->start(10);
                     }
                 }
 

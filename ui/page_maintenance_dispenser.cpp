@@ -1020,7 +1020,7 @@ void page_maintenance_dispenser::buttonGroup_edit_product_Pressed(int buttonId)
     QString buttonText = buttonpressed->text();
     qDebug() << "accessible name: " << buttonpressed->accessibleName();
     activeEditField = buttonpressed->accessibleName();
-    ui->titleLabel->setText(buttonText);
+    ui->titleLabel->setText(activeEditField);
     ui->numberEntry->show();
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }

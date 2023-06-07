@@ -64,9 +64,6 @@ void page_idle::setPage(page_select_product *p_page_select_product, page_mainten
     this->p_page_maintenance_general = pageMaintenanceGeneral;
     this->p_page_idle_products = p_page_idle_products;
     this->p_page_error_wifi = p_page_error_wifi;
-#ifndef PLAY_VIDEO
-        setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
-#endif
 }
 
 // DTOR
@@ -75,23 +72,32 @@ page_idle::~page_idle()
     delete ui;
 }
 
-void page_idle::showEvent(QShowEvent *event)
+void page_idle::loadDynamicContent()
 {
-    registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
-    QWidget::showEvent(event);
-
     thisMachine.loadParametersFromDb();
+
     // for products.cpp
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
         products[slot_index].setSlot(slot_index + 1);
         products[slot_index].loadProductProperties();
     }
-    setSelectedProduct(0);
-
     // get the texts from csv
     loadTextsFromTemplateCsv();
     loadTextsFromDefaultCsv();
+}
+
+void page_idle::showEvent(QShowEvent *event)
+{
+    registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    QWidget::showEvent(event);
+    loadDynamicContent();
+
+    setSelectedProduct(0);
+
+#ifndef PLAY_VIDEO
+    setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
+#endif
 
     QString styleSheet = getCSS(PAGE_IDLE_CSS);
     ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
@@ -263,8 +269,7 @@ double page_idle::getPriceCorrectedAfterDiscount(double price)
 
 void page_idle::checkReceiptPrinterStatus()
 {
-    
-    
+
     if (thisMachine.hasReceiptPrinter())
     {
         qDebug() << "Check receipt printer functionality.";

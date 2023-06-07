@@ -101,6 +101,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     p_page_idle->setTemplateTextToObject(ui->label_volume_dispensed);
 
     QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
+    ui->pushButton_problems->setProperty("class", "normal");
     ui->label_volume_dispensed->setProperty("class", "normal");
     ui->pushButton_problems->setStyleSheet(styleSheet);
     ui->label_finishTransactionMessage->setStyleSheet(styleSheet);
@@ -522,12 +523,12 @@ void page_dispenser::on_pushButton_abort_clicked()
         if (payment == "qr" || payment == "tapTcp")
         {
             QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "qr_tap";
-            p_page_idle->setTextToOjbect(msgBox_abort, p_page_idle->getTemplateText(searchString));
+            p_page_idle->setTextToObject(msgBox_abort, p_page_idle->getTemplateText(searchString));
         }
         else
         {
             QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "default";
-            p_page_idle->setTextToOjbect(msgBox_abort, p_page_idle->getTemplateText(searchString));
+            p_page_idle->setTextToObject(msgBox_abort, p_page_idle->getTemplateText(searchString));
         }
 
         p_page_idle->addCssClassToObject(msgBox_abort, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);
@@ -569,12 +570,12 @@ void page_dispenser::on_pushButton_problems_clicked()
     if (payment == "qr" || payment == "tapTcp")
     {
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";
-        p_page_idle->setTextToOjbect(msgBox_problems, p_page_idle->getTemplateText(searchString));
+        p_page_idle->setTextToObject(msgBox_problems, p_page_idle->getTemplateText(searchString));
     }
     else
     {
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "default";
-        p_page_idle->setTextToOjbect(msgBox_problems, p_page_idle->getTemplateText(searchString));
+        p_page_idle->setTextToObject(msgBox_problems, p_page_idle->getTemplateText(searchString));
     }
 
     p_page_idle->addCssClassToObject(msgBox_problems, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);

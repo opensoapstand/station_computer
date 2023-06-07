@@ -99,7 +99,7 @@ public:
     void addCssClassToObject(QWidget *element, QString classname, QString css_file_name);
     void setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier);
     void setTemplateTextToObject(QWidget *p_element);
-    void setTextToOjbect(QWidget *p_element, QString text);
+    void setTextToObject(QWidget *p_element, QString text);
     QString getTemplateTextByElementNameAndPage(QWidget *p_element);
     QString getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_element, QString identifier);
     QString getTemplateTextByPage(QWidget *page, QString identifier);

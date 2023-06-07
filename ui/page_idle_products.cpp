@@ -308,5 +308,5 @@ void page_idle_products::on_pushButton_to_select_product_page_clicked()
 // void page_idle_products::setTemplateTextToObject(QWidget *p_element)
 // {
 //     QString searchString = getTemplateTextByElementNameAndPage(p_element);
-//     setTextToOjbect(p_element, searchString);
+//     setTextToObject(p_element, searchString);
 // }

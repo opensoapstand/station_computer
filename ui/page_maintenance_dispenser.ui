@@ -97,7 +97,7 @@
     </rect>
    </property>
    <property name="accessibleName">
-    <string>pushButton_price_small</string>
+    <string>price small</string>
    </property>
    <property name="text">
     <string>Small Price</string>
@@ -595,7 +595,7 @@
     </rect>
    </property>
    <property name="accessibleName">
-    <string>pushButton_target_volume_small</string>
+    <string>Small target volume</string>
    </property>
    <property name="text">
     <string>Small
@@ -615,7 +615,7 @@
     </rect>
    </property>
    <property name="accessibleName">
-    <string>pushButton_target_volume_medium</string>
+    <string>Medium Target volume</string>
    </property>
    <property name="text">
     <string>Medium
@@ -752,7 +752,7 @@
     </rect>
    </property>
    <property name="accessibleName">
-    <string>pushButton_price_large</string>
+    <string>price large</string>
    </property>
    <property name="text">
     <string>Large Price</string>
@@ -771,7 +771,7 @@
     </rect>
    </property>
    <property name="accessibleName">
-    <string>pushButton_target_volume_large</string>
+    <string>Large target volume</string>
    </property>
    <property name="text">
     <string>Large
@@ -791,7 +791,7 @@
     </rect>
    </property>
    <property name="accessibleName">
-    <string>pushButton_price_custom</string>
+    <string>price custom per ml</string>
    </property>
    <property name="text">
     <string>Custom Price (per ml)</string>
@@ -809,6 +809,9 @@
      <height>41</height>
     </rect>
    </property>
+   <property name="accessibleName">
+    <string>Medium PLU</string>
+   </property>
    <property name="text">
     <string>Medium PLU</string>
    </property>
@@ -824,6 +827,9 @@
      <width>201</width>
      <height>41</height>
     </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Large PLU</string>
    </property>
    <property name="text">
     <string>Large PLU</string>
@@ -841,6 +847,9 @@
      <height>41</height>
     </rect>
    </property>
+   <property name="accessibleName">
+    <string>Small PLU</string>
+   </property>
    <property name="text">
     <string>Small PLU</string>
    </property>
@@ -856,6 +865,9 @@
      <width>201</width>
      <height>41</height>
     </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Custom PLU</string>
    </property>
    <property name="text">
     <string>Custom PLU</string>
@@ -1082,7 +1094,7 @@
     </rect>
    </property>
    <property name="accessibleName">
-    <string>target_custom</string>
+    <string>Custom target volume</string>
    </property>
    <property name="text">
     <string>Custom
@@ -1136,6 +1148,9 @@
      <width>691</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="accessibleName">
+    <string>price medium</string>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>

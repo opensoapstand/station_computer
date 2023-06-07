@@ -201,7 +201,7 @@ void page_idle::changeToIdleProductsIfSet()
 {
     if (thisMachine.getIdlePageType() == "static_products")
     {
-        hideCurrentPageAndShowProvided(this->p_page_error_wifi);
+        hideCurrentPageAndShowProvided(this->p_page_idle_products);
     }
 }
 
@@ -439,13 +439,13 @@ QString page_idle::getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_e
 void page_idle::setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier)
 {
     QString text = getTemplateTextByElementNameAndPageAndIdentifier(p_element, identifier);
-    setTextToOjbect(p_element, text);
+    setTextToObject(p_element, text);
 }
 
 void page_idle::setTemplateTextToObject(QWidget *p_element)
 {
     QString searchString = getTemplateTextByElementNameAndPage(p_element);
-    setTextToOjbect(p_element, searchString);
+    setTextToObject(p_element, searchString);
 }
 
 QString page_idle::getTemplateTextByElementNameAndPage(QWidget *p_element)
@@ -464,7 +464,7 @@ QString page_idle::getTemplateTextByElementNameAndPage(QWidget *p_element)
     return getTemplateText(searchString);
 }
 
-void page_idle::setTextToOjbect(QWidget *p_element, QString text)
+void page_idle::setTextToObject(QWidget *p_element, QString text)
 {
     if (QLabel *label = qobject_cast<QLabel *>(p_element))
     {

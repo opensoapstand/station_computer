@@ -32,7 +32,6 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
     // Fullscreen background setup
     ui->setupUi(this);
     qDebug() << "Payment page" << endl;
-    // ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
     ui->previousPage_Button->setStyleSheet(
         "QPushButton {"
         "font-family: 'Brevia';"
@@ -153,7 +152,6 @@ void page_tap_payment_serial::showEvent(QShowEvent *event)
     if(p_page_idle->selectedProduct->getPaymentMethod()=="tapSerial"){
         qDebug() << "Tap initiated";
     }
-    // ui->order_total_amount->show();
     paymentEndTimer = new QTimer(this);
     paymentEndTimer->setInterval(1000);
     connect(paymentEndTimer, SIGNAL(timeout()), this, SLOT(onTimeoutTick()));

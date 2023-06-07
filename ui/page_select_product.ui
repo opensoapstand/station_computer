@@ -136,7 +136,7 @@
     <rect>
      <x>550</x>
      <y>990</y>
-     <width>491</width>
+     <width>481</width>
      <height>651</height>
     </rect>
    </property>
@@ -568,19 +568,6 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="label_product_2_overlay">
-   <property name="geometry">
-    <rect>
-     <x>562</x>
-     <y>334</y>
-     <width>450</width>
-     <height>450</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_pick_soap">
    <property name="geometry">
     <rect>
@@ -661,7 +648,6 @@
   <zorder>product_photo_label_text_2</zorder>
   <zorder>label_product_4_overlay_text</zorder>
   <zorder>label_product_3_overlay_text</zorder>
-  <zorder>label_product_2_overlay</zorder>
   <zorder>label_pick_soap</zorder>
   <zorder>label_help</zorder>
   <zorder>pushButton_help_page</zorder>

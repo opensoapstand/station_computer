@@ -40,7 +40,6 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     ui->setupUi(this);
 
     ui->pushButton_test->raise();
-    // ui->pushButton_to_select_product_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->pushButton_to_select_product_page->raise();
 
     idlePageTypeSelectorTimer = new QTimer(this);
@@ -49,6 +48,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
+        products[slot_index].setSlot(slot_index + 1);
         products[slot_index].setMachine(&thisMachine);
     }
 }
@@ -74,17 +74,16 @@ page_idle::~page_idle()
 
 void page_idle::loadDynamicContent()
 {
+    // load global machine data
     thisMachine.loadParametersFromDb();
 
-    // for products.cpp
+    // load slot data
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
-        products[slot_index].setSlot(slot_index + 1);
         products[slot_index].loadProductProperties();
     }
-    // get the texts from csv
-    loadTextsFromTemplateCsv();
-    loadTextsFromDefaultCsv();
+    loadTextsFromTemplateCsv(); // dynamic content (text by template)
+    loadTextsFromDefaultCsv(); // dynamic styling (css by template)
 }
 
 void page_idle::showEvent(QShowEvent *event)
@@ -227,7 +226,7 @@ void page_idle::setDiscountPercentage(double percentageFraction)
 void page_idle::registerUserInteraction(QWidget *page)
 {
     QString page_name = page->objectName();
-    qDebug() << "||||||||||||||||||||||||||||||||||||| User entered: " + page_name + " |||||||||||||||||||||||||||||||||||||";
+    qDebug() << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< User entered: " + page_name + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
 
     DbManager db(DB_PATH);
     db.addUserInteraction(page_name);
@@ -333,26 +332,6 @@ void page_idle::on_pushButton_to_select_product_page_clicked()
 void page_idle::on_pushButton_test_clicked()
 {
     qDebug() << "test buttonproceeed clicked.. ";
-}
-
-bool page_idle::isEnough(int p)
-{
-    switch (p)
-    {
-    case (1):
-        return p1;
-        break;
-    case (2):
-        return p2;
-        break;
-    case (3):
-        return p3;
-        break;
-    case (4):
-        return p4;
-        break;
-    }
-    return false;
 }
 
 void page_idle::addCompanyLogoToLabel(QLabel *label)

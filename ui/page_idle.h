@@ -89,7 +89,6 @@ public:
 
     void printerStatusFeedback(bool isOnline, bool hasPaper);
 
-    bool isEnough(int p);
     void MMSlot();
     bool m_transitioning = false;
 

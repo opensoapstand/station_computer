@@ -185,7 +185,7 @@
   <widget class="QLabel" name="label_product_1_photo">
    <property name="geometry">
     <rect>
-     <x>53</x>
+     <x>50</x>
      <y>334</y>
      <width>450</width>
      <height>450</height>
@@ -214,8 +214,8 @@
   <widget class="QLabel" name="label_product_3_photo">
    <property name="geometry">
     <rect>
-     <x>53</x>
-     <y>1032</y>
+     <x>50</x>
+     <y>1030</y>
      <width>450</width>
      <height>450</height>
     </rect>
@@ -247,7 +247,7 @@
    <property name="geometry">
     <rect>
      <x>562</x>
-     <y>1032</y>
+     <y>1030</y>
      <width>450</width>
      <height>450</height>
     </rect>
@@ -452,10 +452,10 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_product_1_photo_text">
+  <widget class="QLabel" name="label_product_1_overlay_text">
    <property name="geometry">
     <rect>
-     <x>53</x>
+     <x>50</x>
      <y>334</y>
      <width>450</width>
      <height>450</height>
@@ -481,7 +481,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="label_product_2_photo_text">
+  <widget class="QLabel" name="label_product_2_overlay_text">
    <property name="geometry">
     <rect>
      <x>562</x>
@@ -510,10 +510,10 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="label_product_4_photo_text">
+  <widget class="QLabel" name="label_product_4_overlay_text">
    <property name="geometry">
     <rect>
-     <x>570</x>
+     <x>562</x>
      <y>1030</y>
      <width>450</width>
      <height>450</height>
@@ -539,7 +539,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="label_product_3_photo_text">
+  <widget class="QLabel" name="label_product_3_overlay_text">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -637,10 +637,10 @@
    </property>
   </widget>
   <zorder>pushButton_selection2</zorder>
-  <zorder>label_product_2_photo_text</zorder>
+  <zorder>label_product_2_overlay_text</zorder>
   <zorder>pushButton_selection1</zorder>
   <zorder>label_product_1_photo</zorder>
-  <zorder>label_product_1_photo_text</zorder>
+  <zorder>label_product_1_overlay_text</zorder>
   <zorder>p_page_maintenanceButton</zorder>
   <zorder>pushButton_selection3</zorder>
   <zorder>pushButton_selection4</zorder>
@@ -659,8 +659,8 @@
   <zorder>label_product_4_type</zorder>
   <zorder>label_product_1_type</zorder>
   <zorder>product_photo_label_text_2</zorder>
-  <zorder>label_product_4_photo_text</zorder>
-  <zorder>label_product_3_photo_text</zorder>
+  <zorder>label_product_4_overlay_text</zorder>
+  <zorder>label_product_3_overlay_text</zorder>
   <zorder>label_product_2_overlay</zorder>
   <zorder>label_pick_soap</zorder>
   <zorder>label_help</zorder>

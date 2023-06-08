@@ -69,6 +69,7 @@ private slots:
     void on_pushButton_target_volume_small_clicked();
     void on_pushButton_target_volume_medium_clicked();
     void on_pushButton_target_volume_large_clicked();
+    void on_pushButton_target_volume_custom_clicked();
     void on_pushButton_volume_per_tick_clicked();
     void on_pushButton_restock_clicked();
     void on_pushButton_soldOut_clicked();
@@ -80,16 +81,16 @@ private slots:
     void on_pushButton_setting_temperature_clicked();
     void on_pushButton_setting_speed_pwm_clicked();
     void on_pushButton_pump_clicked();
-    void on_button1_clicked();
-    void on_button2_clicked();
-    void on_button3_clicked();
-    void on_button4_clicked();
-    void on_button5_clicked();
-    void on_button6_clicked();
-    void on_button7_clicked();
-    void on_button8_clicked();
-    void on_button9_clicked();
-    void on_button0_clicked();
+    // void on_button1_clicked();
+    // void on_button2_clicked();
+    // void on_button3_clicked();
+    // void on_button4_clicked();
+    // void on_button5_clicked();
+    // void on_button6_clicked();
+    // void on_button7_clicked();
+    // void on_button8_clicked();
+    // void on_button9_clicked();
+    // void on_button0_clicked();
     void on_buttonBack_clicked();
     void on_buttonPoint_clicked();
     void on_buttonDone_clicked();
@@ -101,8 +102,11 @@ private slots:
 
     void on_pushButton_auto_dispense_small_clicked();
 
+
     void on_pushButton_update_portal_clicked();
     void buttonGroup_edit_product_Pressed(int buttonId);
+    void buttonGroup_keypad_Pressed(int buttonId);
+    
 
 private:
     void setButtonPressCountLabel(bool init);

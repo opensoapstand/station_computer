@@ -216,7 +216,7 @@
      <x>220</x>
      <y>240</y>
      <width>281</width>
-     <height>391</height>
+     <height>341</height>
     </rect>
    </property>
    <property name="text">
@@ -229,7 +229,7 @@
      <x>550</x>
      <y>240</y>
      <width>281</width>
-     <height>391</height>
+     <height>341</height>
     </rect>
    </property>
    <property name="text">
@@ -242,7 +242,7 @@
      <x>220</x>
      <y>680</y>
      <width>281</width>
-     <height>391</height>
+     <height>341</height>
     </rect>
    </property>
    <property name="text">
@@ -255,7 +255,7 @@
      <x>550</x>
      <y>680</y>
      <width>281</width>
-     <height>391</height>
+     <height>341</height>
     </rect>
    </property>
    <property name="text">

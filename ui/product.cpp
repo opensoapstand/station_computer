@@ -135,11 +135,15 @@ bool product::getSlotEnabled()
 
 QString product::setStatusText(QString status)
 {
-    DbManager db(DB_PATH);
+
+    thisMachine->setStatusText(getSlot(), getSlotEnabled(), status);
+    // DbManager db(DB_PATH);
 
     //    SLOT_STATE_AVAILABLE
-    bool success = db.updateSlotAvailability(getSlot(), getSlotEnabled(), status);
-    db.closeDB();
+   
+    // bool success = db.updateSlotAvailability(getSlot(), getSlotEnabled(), status);
+    // db.updateTableProductsWithText(getSlot(),"")
+    // db.closeDB();
 }
 
 QString product::getStatusText()
@@ -244,10 +248,15 @@ void product::setPromoCode(QString promoCode)
 
 void product::setPrice(int size, double price)
 {
+    // db.updatePrice(getSlot(), size, price);
+    QString price_columns [5]= {"size_error", "price_small", "price_medium", "price_large", "price_custom"};
+
     qDebug() << "Open db: set product price";
     DbManager db(DB_PATH);
-    db.updatePrice(getSlot(), size, price);
+    QString column_name = price_columns[size];
+    db.updateTableProductsWithDouble(getSlot(),column_name,price,2);
     db.closeDB();
+
 }
 
 double product::getPrice(int sizeIndex)
@@ -396,9 +405,9 @@ bool product::restock()
     qDebug() << "Open db: restock";
     DbManager db(DB_PATH);
     bool success = true;
-    success &= db.updateProductsWithDouble(getSlot(), "volume_remaining", m_volume_full, 0);
-    success &= db.updateProductsWithDouble(getSlot(), "volume_dispensed_since_restock", 0, 0);
-    success &= db.updateProductsWithText(getSlot(), "last_restock", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+    success &= db.updateTableProductsWithDouble(getSlot(), "volume_remaining", m_volume_full, 0);
+    success &= db.updateTableProductsWithDouble(getSlot(), "volume_dispensed_since_restock", 0, 0);
+    success &= db.updateTableProductsWithText(getSlot(), "last_restock", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
     db.closeDB();
     return success;
 }
@@ -408,7 +417,7 @@ void product::setVolumeRemaining(double volume_as_ml)
     // qDebug() << "Open db: set volume remaining";
     DbManager db(DB_PATH);
     // db.setVolumeRemaining(getSlot(), volume_as_ml);
-    db.updateProductsWithDouble(getSlot(), "volume_remaining", volume_as_ml, 0);
+    db.updateTableProductsWithDouble(getSlot(), "volume_remaining", volume_as_ml, 0);
     db.closeDB();
 }
 

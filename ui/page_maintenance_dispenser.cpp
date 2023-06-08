@@ -93,7 +93,6 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->label_setting_temperature->setVisible(false);
     ui->pushButton_set_restock_volume->setText("Define restock volume.");
 
-
     isDispenseButtonPressed = false;
     activeEditField = "";
 
@@ -171,7 +170,6 @@ void page_maintenance_dispenser::on_image_clicked()
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
-
 void page_maintenance_dispenser::on_pushButton_setting_temperature_clicked()
 {
     //    qDebug() << "Temperature button clicked" ;
@@ -203,14 +201,9 @@ void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
     }
 }
 
-
-
-
 // ****************************************************************
 // ****************** DISPENSER PUMP ACTIONS **********************
 // ****************************************************************
-
-
 
 void page_maintenance_dispenser::on_pushButton_enable_pump_clicked()
 {
@@ -297,7 +290,6 @@ void page_maintenance_dispenser::autoDispenseStart(int size)
     {
     }
 }
-
 
 void page_maintenance_dispenser::dispense_test_start()
 {
@@ -447,13 +439,9 @@ void page_maintenance_dispenser::fsmReceiveNoFlowAbort()
     qDebug() << "Received no flow from controller (in maintenance mode). Will not take any action";
 }
 
-
-
 // ****************************************************************
 // ****************** PRODUCT STOCK ACTIONS ***********************
 // ****************************************************************
-
-
 
 void page_maintenance_dispenser::on_pushButton_restock_clicked()
 {
@@ -614,17 +602,18 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
         }
     }
 
-    DbManager db3(DB_PATH);
-    bool success = db3.updateSlotAvailability(p_page_idle->selectedProduct->getSlot(), isSlotEnabled, slotStatus);
-    db3.closeDB();
-    if (!success)
-    {
-        label_action_feedbackText = "Set Enabled ERROR";
-    }
-    else
-    {
-        label_action_feedbackText = "Slot Status set to\n" + slotStatus;
-    }
+    p_page_idle->selectedProduct->setStatusText(slotStatus);
+    // DbManager db3(DB_PATH);
+    // bool success = db3.updateSlotAvailability(p_page_idle->selectedProduct->getSlot(), isSlotEnabled, slotStatus);
+    // db3.closeDB();
+    // if (!success)
+    // {
+    //     label_action_feedbackText = "Set Enabled ERROR";
+    // }
+    // else
+    // {
+    //     label_action_feedbackText = "Slot Status set to\n" + slotStatus;
+    // }
 
     ui->label_action_feedback->setText(label_action_feedbackText);
 
@@ -649,12 +638,9 @@ void page_maintenance_dispenser::on_pushButton_set_volume_remaining_clicked()
     ui->titleLabel->setText("Adjust the remaining volume:");
 }
 
-
 // ****************************************************************
 // ****************** KEYPAD ACTIONS ******************************
 // ****************************************************************
-
-
 
 void page_maintenance_dispenser::buttonGroup_keypad_Pressed(int buttonId)
 {
@@ -734,7 +720,6 @@ void page_maintenance_dispenser::on_buttonDone_clicked()
         else if (activeEditField == "pushButton_set_volume_remaining")
         {
             p_page_idle->selectedProduct->setVolumeRemainingUserInput(text_entered);
-            
         }
         else if (activeEditField == "pushButton_setting_speed_pwm")
         {
@@ -764,11 +749,9 @@ void page_maintenance_dispenser::on_buttonCancel_clicked()
     activeEditField = "";
 }
 
-
 // ****************************************************************
 // ****************** PRODUCT PROPERTY ACTIONS ********************
 // ****************************************************************
-
 
 void page_maintenance_dispenser::buttonGroup_edit_product_Pressed(int buttonId)
 {
@@ -870,9 +853,6 @@ void page_maintenance_dispenser::on_pushButton_setting_speed_pwm_clicked()
 // ****************************************************************
 // ****************** BACKEND CLOUD ACTIONS ***********************
 // ****************************************************************
-
-
-
 
 size_t WriteCallback3(char *contents, size_t size, size_t nmemb, void *userp)
 {
@@ -988,4 +968,3 @@ void page_maintenance_dispenser::on_pushButton_update_portal_clicked()
     curl_easy_cleanup(curl2);
     readBuffer = "";
 }
-

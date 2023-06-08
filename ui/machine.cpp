@@ -83,8 +83,13 @@ QString machine::getMaintenanceAdminPassword()
 
 QString machine::setStatusText(int slot, bool isSlotEnabled, QString status)
 {
+
+    QString column = QString("status_text_slot_%1").arg(slot);
+
     DbManager db(DB_PATH);
-    bool success = db.updateSlotAvailability(slot, isSlotEnabled, status);
+    db.updateTableMachineWithText(column, status);
+    // bool success = db.updateSlotAvailability(slot, isSlotEnabled, status);
+
     db.closeDB();
 }
 

@@ -43,7 +43,7 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     ui->checkBox_enable_empty_container->setText("Enable auto empty detection. (If disabled, will display sold out if less than " + QString::number(CONTAINER_EMPTY_THRESHOLD_ML) + "ml remaining)");
     DbManager db(DB_PATH);
     ui->checkBox_enable_pump_ramping->setChecked(p_page_idle->thisMachine.getPumpRampingEnabled());
-    ui->checkBox_enable_pump_ramping->hide();
+    // ui->checkBox_enable_pump_ramping->hide();
     db.closeDB();
 
     QProcess process;

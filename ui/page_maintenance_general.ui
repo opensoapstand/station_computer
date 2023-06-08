@@ -148,7 +148,7 @@
     <string>Enable empty stock detection</string>
    </property>
   </widget>
-  <widget class="QLabel" name="wifi_internet">
+  <widget class="QLabel" name="label_wifi_internet">
    <property name="geometry">
     <rect>
      <x>310</x>
@@ -158,7 +158,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Internet connection</string>
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_wifi_networks">
@@ -192,7 +192,7 @@
     </property>
    </column>
   </widget>
-  <widget class="QLabel" name="wifi_name">
+  <widget class="QLabel" name="label_wifi_name">
    <property name="geometry">
     <rect>
      <x>310</x>
@@ -202,10 +202,10 @@
     </rect>
    </property>
    <property name="text">
-    <string>Wifi Name</string>
+    <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="wifi_status">
+  <widget class="QLabel" name="label_wifi_status">
    <property name="geometry">
     <rect>
      <x>310</x>
@@ -215,10 +215,10 @@
     </rect>
    </property>
    <property name="text">
-    <string>Wifi Status</string>
+    <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="wifi_ip_address">
+  <widget class="QLabel" name="label_wifi_ip_address">
    <property name="geometry">
     <rect>
      <x>310</x>
@@ -228,7 +228,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Wifi Name</string>
+    <string/>
    </property>
   </widget>
   <widget class="QWidget" name="keyboard_2" native="true">
@@ -1418,7 +1418,7 @@
     <string>Reset Backend Connection</string>
    </property>
   </widget>
-  <widget class="QLabel" name="status_feedback_label">
+  <widget class="QLabel" name="label_status_feedback">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -1434,7 +1434,7 @@
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label_5">
+  <widget class="QLabel" name="label_feedback">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -1492,6 +1492,33 @@
     <string>Restart UI only</string>
    </property>
   </widget>
+  <zorder>pushButton_back</zorder>
+  <zorder>pushButton_minimize</zorder>
+  <zorder>pushButton_reboot</zorder>
+  <zorder>pushButton_shutdown</zorder>
+  <zorder>printer_hasPaper_label</zorder>
+  <zorder>printer_isOnline_label</zorder>
+  <zorder>label_receipt_printer</zorder>
+  <zorder>checkBox_enable_empty_container</zorder>
+  <zorder>label_wifi_internet</zorder>
+  <zorder>pushButton_wifi_networks</zorder>
+  <zorder>wifiTable</zorder>
+  <zorder>label_wifi_name</zorder>
+  <zorder>label_wifi_status</zorder>
+  <zorder>label_wifi_ip_address</zorder>
+  <zorder>keyboard_2</zorder>
+  <zorder>label_settings</zorder>
+  <zorder>label_connectivity</zorder>
+  <zorder>label_4</zorder>
+  <zorder>pushButton_printer_check_status</zorder>
+  <zorder>pushButton_printer_test_print</zorder>
+  <zorder>pushButton_rtunnel_restart</zorder>
+  <zorder>label_status_feedback</zorder>
+  <zorder>label_feedback</zorder>
+  <zorder>pushButton_network_status</zorder>
+  <zorder>pushButton_restart_electronics</zorder>
+  <zorder>pushButton_restart_UI</zorder>
+  <zorder>checkBox_enable_pump_ramping</zorder>
  </widget>
  <resources/>
  <connections/>

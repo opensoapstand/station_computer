@@ -51,22 +51,22 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     process.start("iwgetid -r");
     process.waitForFinished(-1);
     QString stdout = process.readAllStandardOutput();
-    ui->wifi_name->setText("Wifi Name: " + stdout);
+    ui->label_wifi_name->setText("Wifi Name: " + stdout);
 
     process.start("hostname -I");
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
-    ui->wifi_ip_address->setText("Wifi IP Address: " + stdout);
+    ui->label_wifi_ip_address->setText("Wifi IP Address: " + stdout);
 
     process.start("nmcli -t -f STATE general");
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
-    ui->wifi_status->setText("Wifi State: " + stdout);
+    ui->label_wifi_status->setText("Wifi State: " + stdout);
 
     process.start("nmcli networking connectivity");
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
-    ui->wifi_internet->setText("Wifi Connectivity: " + stdout);
+    ui->label_wifi_internet->setText("Wifi Connectivity: " + stdout);
 
     ui->wifiTable->setRowCount(0);
 
@@ -86,6 +86,8 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     ui->pushButton_reboot->setText("Restart Computer");
     ui->pushButton_shutdown->setText("Restart Computer");
     ui->pushButton_reboot->setText("Minimize Soapstand App");
+    ui->label_feedback->setText("Feedback");
+    ui->label_status_feedback->setText("Command Feedback");
 }
 
 /*
@@ -258,22 +260,22 @@ void page_maintenance_general::btn_clicked()
     process.start("iwgetid -r"); // nmcli -t -f NAME connection show --active
     process.waitForFinished(-1);
     QString stdout = process.readAllStandardOutput();
-    ui->wifi_name->setText("Wifi Name: " + stdout);
+    ui->label_wifi_name->setText("Wifi Nfrfame: " + stdout);
 
     process.start("hostname -I");
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
-    ui->wifi_ip_address->setText("Wifi IP Address: " + stdout);
+    ui->label_wifi_ip_address->setText("Wifi IP Address: " + stdout);
 
     process.start("nmcli networking connectivity");
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
-    ui->wifi_internet->setText("Wifi Connectivity: " + stdout);
+    ui->label_wifi_internet->setText("Wifi Connectivity: " + stdout);
 
     process.start("nmcli -t -f STATE general");
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
-    ui->wifi_status->setText("Wifi State: " + stdout);
+    ui->label_wifi_status->setText("Wifi State: " + stdout);
 }
 
 void page_maintenance_general::keyboardButtonPressed(int buttonID)
@@ -343,22 +345,22 @@ void page_maintenance_general::keyboardButtonPressed(int buttonID)
         process.start("iwgetid -r");
         process.waitForFinished(-1);
         QString stdout = process.readAllStandardOutput();
-        ui->wifi_name->setText("Wifi Name: " + stdout);
+        ui->label_wifi_name->setText("Wifi Name: " + stdout);
 
         process.start("hostname -I");
         process.waitForFinished(-1);
         stdout = process.readAllStandardOutput();
-        ui->wifi_ip_address->setText("Wifi IP Address: " + stdout);
+        ui->label_wifi_ip_address->setText("Wifi IP Address: " + stdout);
 
         process.start("nmcli -t -f STATE general");
         process.waitForFinished(-1);
         stdout = process.readAllStandardOutput();
-        ui->wifi_status->setText("Wifi State: " + stdout);
+        ui->label_wifi_status->setText("Wifi State: " + stdout);
 
         process.start("nmcli networking connectivity");
         process.waitForFinished(-1);
         stdout = process.readAllStandardOutput();
-        ui->wifi_internet->setText("Wifi Connectivity: " + stdout);
+        ui->label_wifi_internet->setText("Wifi Connectivity: " + stdout);
     }
     else if (buttonText == "Space")
     {
@@ -445,22 +447,22 @@ void page_maintenance_general::on_wifiButton_clicked()
     process.start("iwgetid -r");
     process.waitForFinished(-1);
     QString stdout = process.readAllStandardOutput();
-    ui->wifi_name->setText("Wifi Name: " + stdout);
+    ui->label_wifi_name->setText("Wifi Name: " + stdout);
 
     process.start("hostname -I");
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
-    ui->wifi_ip_address->setText("Wifi IP Address: " + stdout);
+    ui->label_wifi_ip_address->setText("Wifi IP Address: " + stdout);
 
     process.start("nmcli -t -f STATE general");
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
-    ui->wifi_status->setText("Wifi State: " + stdout);
+    ui->label_wifi_status->setText("Wifi State: " + stdout);
 
     process.start("nmcli networking connectivity");
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
-    ui->wifi_internet->setText("Wifi Connectivity: " + stdout);
+    ui->label_wifi_internet->setText("Wifi Connectivity: " + stdout);
 }
 
 void page_maintenance_general::on_rtunnel_restart_Button_clicked()
@@ -483,7 +485,7 @@ void page_maintenance_general::on_rtunnel_restart_Button_clicked()
     // QString feedback = process.readAllStandardOutput();
     // // QString feedback = process.readAllStandardError();
     // qDebug() << "rtunnel restart status: " << feedback;
-    // ui->status_feedback_label->setText("rtunnel restart " + feedback);
+    // ui->label_status_feedback->setText("rtunnel restart " + feedback);
 
     QProcess process;
     process.start("bash");
@@ -497,7 +499,7 @@ void page_maintenance_general::on_rtunnel_restart_Button_clicked()
     process.waitForFinished(-1);
     QString feedback = process.readAllStandardOutput();
 
-    ui->status_feedback_label->setText("rtunnel restart " + feedback);
+    ui->label_status_feedback->setText("rtunnel restart " + feedback);
 
     // https://stackoverflow.com/questions/23322739/how-to-execute-complex-linux-commands-in-qt
 
@@ -524,10 +526,10 @@ void page_maintenance_general::on_rtunnel_restart_Button_clicked()
     // if (!retval)
     // {
     //     qDebug() << "Process 2 error:" << process2.errorString();
-    //     ui->status_feedback_label->setText("Process 2 error:" + process2.errorString());
+    //     ui->label_status_feedback->setText("Process 2 error:" + process2.errorString());
     //     return;
     // }
-    // ui->status_feedback_label->setText("Process 2 success:");
+    // ui->label_status_feedback->setText("Process 2 success:");
 }
 
 void page_maintenance_general::on_network_status_Button_clicked()
@@ -543,7 +545,7 @@ void page_maintenance_general::on_network_status_Button_clicked()
     process.waitForFinished(-1);
     QString feedback = process.readAllStandardOutput();
 
-    ui->status_feedback_label->setText(feedback);
+    ui->label_status_feedback->setText(feedback);
 }
 
 void page_maintenance_general::on_restart_UI_Button_clicked()
@@ -562,7 +564,7 @@ void page_maintenance_general::on_restart_electronics_Button_clicked()
     process.write("exit\n");
     process.waitForFinished(-1);
     QString feedback = process.readAllStandardOutput();
-    ui->status_feedback_label->setText(feedback);
+    ui->label_status_feedback->setText(feedback);
 
     qApp->exit(); // restart UI. The problem with only controller restart is that there are two screens now.
 }

@@ -26,10 +26,10 @@
     </rect>
    </property>
    <property name="text">
-    <string>&lt;-- back</string>
+    <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="minimize_Button">
+  <widget class="QPushButton" name="pushButton_minimize">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -42,7 +42,7 @@
     <string>Minimize Soapstand App</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="reboot_Button">
+  <widget class="QPushButton" name="pushButton_reboot">
    <property name="geometry">
     <rect>
      <x>290</x>
@@ -55,7 +55,7 @@
     <string>Restart Computer</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="shutdown_Button">
+  <widget class="QPushButton" name="pushButton_shutdown">
    <property name="geometry">
     <rect>
      <x>290</x>
@@ -103,7 +103,7 @@
     <string>.</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="label_receipt_printer">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -122,7 +122,7 @@
     <string>Receipt Printer</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="enable_pump_ramping_checkBox">
+  <widget class="QCheckBox" name="checkBox_enable_pump_ramping">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -135,7 +135,7 @@
     <string>Enable pump ramp up / ramp down</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="enable_empty_container_checkBox">
+  <widget class="QCheckBox" name="checkBox_enable_empty_container">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -161,7 +161,7 @@
     <string>Internet connection</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="wifiButton">
+  <widget class="QPushButton" name="pushButton_wifi_networks">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -171,7 +171,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Display WiFi networks</string>
+    <string/>
    </property>
   </widget>
   <widget class="QTableWidget" name="wifiTable">
@@ -1322,7 +1322,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="label_settings">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -1341,7 +1341,7 @@
     <string>Settings</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_3">
+  <widget class="QLabel" name="label_connectivity">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -1357,7 +1357,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Connectivity</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="label_4">
@@ -1379,7 +1379,7 @@
     <string>Control</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="printer_check_status_button">
+  <widget class="QPushButton" name="pushButton_printer_check_status">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -1392,7 +1392,7 @@
     <string>Check Status</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="printer_test_print_button">
+  <widget class="QPushButton" name="pushButton_printer_test_print">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -1405,7 +1405,7 @@
     <string>Test Print</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="rtunnel_restart_Button">
+  <widget class="QPushButton" name="pushButton_rtunnel_restart">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -1453,7 +1453,7 @@
     <string>Feedback</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="network_status_Button">
+  <widget class="QPushButton" name="pushButton_network_status">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -1466,7 +1466,7 @@
     <string>Check network status</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="restart_electronics_Button">
+  <widget class="QPushButton" name="pushButton_restart_electronics">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -1479,7 +1479,7 @@
     <string>Restart Soapstand App (ui+fsm)</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="restart_UI_Button">
+  <widget class="QPushButton" name="pushButton_restart_UI">
    <property name="geometry">
     <rect>
      <x>290</x>

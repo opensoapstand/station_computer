@@ -39,11 +39,11 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     qDebug() << "db for maintenance general";
-    ui->enable_empty_container_checkBox->setChecked(p_page_idle->thisMachine.getEmptyContainerDetectionEnabled());
-    ui->enable_empty_container_checkBox->setText("Enable auto empty detection. (If disabled, will display sold out if less than " + QString::number(CONTAINER_EMPTY_THRESHOLD_ML) + "ml remaining)");
+    ui->checkBox_enable_empty_container->setChecked(p_page_idle->thisMachine.getEmptyContainerDetectionEnabled());
+    ui->checkBox_enable_empty_container->setText("Enable auto empty detection. (If disabled, will display sold out if less than " + QString::number(CONTAINER_EMPTY_THRESHOLD_ML) + "ml remaining)");
     DbManager db(DB_PATH);
-    ui->enable_pump_ramping_checkBox->setChecked(p_page_idle->thisMachine.getPumpRampingEnabled());
-    ui->enable_pump_ramping_checkBox->hide();
+    ui->checkBox_enable_pump_ramping->setChecked(p_page_idle->thisMachine.getPumpRampingEnabled());
+    ui->checkBox_enable_pump_ramping->hide();
     db.closeDB();
 
     QProcess process;
@@ -71,6 +71,21 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     ui->wifiTable->setRowCount(0);
 
     ui->keyboard_2->hide();
+
+    ui->pushButton_back->setText("<-back");
+    ui->label_connectivity->setText("connectivity");
+    ui->pushButton_wifi_networks->setText("Display Wifi networks");
+    ui->pushButton_network_status->setText("Check Network status");
+    ui->pushButton_rtunnel_restart->setText("Reset Backend Connection");
+    ui->label_receipt_printer->setText("Receipt Printer");
+    ui->pushButton_printer_check_status->setText("Check Status");
+    ui->pushButton_printer_test_print->setText("Test Print");
+    ui->label_settings->setText("Settings");
+    ui->pushButton_restart_electronics->setText("Restart Soapstand App (ui+fsm)");
+    ui->pushButton_restart_UI->setText("Restart UI only");
+    ui->pushButton_reboot->setText("Restart Computer");
+    ui->pushButton_shutdown->setText("Restart Computer");
+    ui->pushButton_reboot->setText("Minimize Soapstand App");
 }
 
 /*
@@ -84,7 +99,7 @@ void page_maintenance_general::setPage(page_maintenance *pageMaintenance, page_i
 
     // refreshLabels();
     // ui->minimize_Button->setStyleSheet("QPushButton { background-color: 0x88448811; border: 5px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-    ui->minimize_Button->setStyleSheet("QPushButton {}"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
+    ui->pushButton_minimize->setStyleSheet("QPushButton {}"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
 }
 
 void page_maintenance_general::refreshLabels()
@@ -131,7 +146,7 @@ void page_maintenance_general::printerStatusFeedback(bool isOnline, bool hasPape
     }
     ui->printer_isOnline_label->setText(printerStatus);
     ui->printer_hasPaper_label->setText(printerHasPaper);
-    ui->printer_check_status_button->show();
+    ui->pushButton_printer_check_status->show();
 }
 
 void page_maintenance_general::send_check_printer_status_command()
@@ -146,7 +161,7 @@ void page_maintenance_general::on_printer_check_status_button_clicked()
 {
     // qDebug() << "Maintenance general. yoooo.";
     send_check_printer_status_command();
-    ui->printer_check_status_button->hide();
+    ui->pushButton_printer_check_status->hide();
 }
 
 void page_maintenance_general::on_printer_test_print_button_clicked()
@@ -162,7 +177,7 @@ void page_maintenance_general::on_printer_test_print_button_clicked()
     p_page_idle->dfUtility->send_command_to_FSM("q");
 }
 
-void page_maintenance_general::on_enable_pump_ramping_checkBox_clicked(bool checked)
+void page_maintenance_general::on_checkBox_enable_pump_ramping_clicked(bool checked)
 {
     // qDebug() << "test ramp clicked" << checked;
     // qDebug() << "test empty db: " << p_page_idle->thisMachine.getPumpRampingEnabled();
@@ -172,11 +187,11 @@ void page_maintenance_general::on_enable_pump_ramping_checkBox_clicked(bool chec
         DbManager db(DB_PATH);
         db.setPumpRampingEnabled(checked);
         db.closeDB();
-        ui->enable_pump_ramping_checkBox->setChecked(p_page_idle->thisMachine.getPumpRampingEnabled());
+        ui->checkBox_enable_pump_ramping->setChecked(p_page_idle->thisMachine.getPumpRampingEnabled());
     }
 }
 
-void page_maintenance_general::on_enable_empty_container_checkBox_clicked(bool checked)
+void page_maintenance_general::on_checkBox_enable_empty_container_clicked(bool checked)
 {
     // qDebug() << "test empty clicked" << checked;
     // qDebug() << "test empty db: " << db.getEmptyContainerDetectionEnabled();
@@ -186,7 +201,7 @@ void page_maintenance_general::on_enable_empty_container_checkBox_clicked(bool c
         DbManager db(DB_PATH);
         db.setEmptyContainerDetectionEnabled(checked);
         db.closeDB();
-        ui->enable_empty_container_checkBox->setChecked(p_page_idle->thisMachine.getEmptyContainerDetectionEnabled());
+        ui->checkBox_enable_empty_container->setChecked(p_page_idle->thisMachine.getEmptyContainerDetectionEnabled());
     }
 }
 

@@ -39,7 +39,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="product3_label">
+  <widget class="QLabel" name="label_product3">
    <property name="geometry">
     <rect>
      <x>230</x>
@@ -63,7 +63,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="product2_label">
+  <widget class="QLabel" name="label_product2">
    <property name="geometry">
     <rect>
      <x>560</x>
@@ -113,7 +113,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="product4_label">
+  <widget class="QLabel" name="label_product4">
    <property name="geometry">
     <rect>
      <x>560</x>
@@ -137,7 +137,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="product1_label">
+  <widget class="QLabel" name="label_product1">
    <property name="geometry">
     <rect>
      <x>230</x>
@@ -171,7 +171,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>&lt;-- Back</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="label_title">
@@ -192,7 +192,7 @@
     <string>MAINTENANCE MODE</string>
    </property>
   </widget>
-  <widget class="QLabel" name="machineLabel">
+  <widget class="QLabel" name="label_machine_id">
    <property name="geometry">
     <rect>
      <x>260</x>
@@ -207,7 +207,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Machine ID: </string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="product1_overlay_label">
@@ -216,7 +216,7 @@
      <x>220</x>
      <y>240</y>
      <width>281</width>
-     <height>391</height>
+     <height>341</height>
     </rect>
    </property>
    <property name="text">
@@ -229,7 +229,7 @@
      <x>550</x>
      <y>240</y>
      <width>281</width>
-     <height>391</height>
+     <height>341</height>
     </rect>
    </property>
    <property name="text">
@@ -242,7 +242,7 @@
      <x>220</x>
      <y>680</y>
      <width>281</width>
-     <height>391</height>
+     <height>341</height>
     </rect>
    </property>
    <property name="text">
@@ -255,7 +255,7 @@
      <x>550</x>
      <y>680</y>
      <width>281</width>
-     <height>391</height>
+     <height>341</height>
     </rect>
    </property>
    <property name="text">
@@ -275,7 +275,7 @@
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="generalSettings_button">
+  <widget class="QPushButton" name="pushButton_general_settings">
    <property name="geometry">
     <rect>
      <x>868</x>
@@ -288,7 +288,7 @@
     <string>General Settings</string>
    </property>
   </widget>
-  <widget class="QLabel" name="product1_position_label">
+  <widget class="QLabel" name="label_product1_position">
    <property name="geometry">
     <rect>
      <x>190</x>
@@ -301,7 +301,7 @@
     <string>P1</string>
    </property>
   </widget>
-  <widget class="QLabel" name="product2_position_label">
+  <widget class="QLabel" name="label_product2_position">
    <property name="geometry">
     <rect>
      <x>850</x>
@@ -314,7 +314,7 @@
     <string>P2</string>
    </property>
   </widget>
-  <widget class="QLabel" name="product3_position_label">
+  <widget class="QLabel" name="label_product3_position">
    <property name="geometry">
     <rect>
      <x>190</x>
@@ -327,7 +327,7 @@
     <string>P3</string>
    </property>
   </widget>
-  <widget class="QLabel" name="product4_position_label">
+  <widget class="QLabel" name="label_product4_position">
    <property name="geometry">
     <rect>
      <x>850</x>

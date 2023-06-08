@@ -63,8 +63,8 @@ private slots:
 
     void on_shutdown_Button_clicked();
 
-    void on_enable_pump_ramping_checkBox_clicked(bool checked);
-    void on_enable_empty_container_checkBox_clicked(bool checked);
+    void on_checkBox_enable_pump_ramping_clicked(bool checked);
+    void on_checkBox_enable_empty_container_clicked(bool checked);
 
     void on_test_lineEdit_textChanged(const QString &arg1);
 

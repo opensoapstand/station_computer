@@ -40,6 +40,10 @@ page_maintenance::page_maintenance(QWidget *parent) : QWidget(parent),
 
     QString title = QString("Soapstand UI v%1").arg(UI_VERSION);
     ui->label_ui_version->setText(title);
+    ui->label_product1_position->setText("P1");
+    ui->label_product2_position->setText("P2");
+    ui->label_product3_position->setText("P3");
+    ui->label_product4_position->setText("P4");
 }
 
 // DTOR
@@ -68,19 +72,22 @@ void page_maintenance::showEvent(QShowEvent *event)
         QPixmap im(p);
         QIcon qi(im);
         product_buttons[i]->setIcon(qi);
-        product_buttons[i]->setIconSize(QSize(241, 381));
+        product_buttons[i]->setIconSize(QSize(281, 341));
         product_overlay_labels[i]->hide();
+        product_buttons[i]->setStyleSheet("background-color: transparent; border: none;");
+
     }
 
+    
     // page_maintenanceEndTimer->start(1000);
     _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
 
-    ui->machineLabel->setText("Machine ID: " + p_page_idle->thisMachine.getMachineId());
+    ui->label_machine_id->setText("Machine ID: " + p_page_idle->thisMachine.getMachineId());
 
-    ui->product1_label->setText(p_page_idle->products[0].getProductName());
-    ui->product2_label->setText(p_page_idle->products[1].getProductName());
-    ui->product3_label->setText(p_page_idle->products[2].getProductName());
-    ui->product4_label->setText(p_page_idle->products[3].getProductName());
+    ui->label_product1->setText(p_page_idle->products[0].getProductName());
+    ui->label_product2->setText(p_page_idle->products[1].getProductName());
+    ui->label_product3->setText(p_page_idle->products[2].getProductName());
+    ui->label_product4->setText(p_page_idle->products[3].getProductName());
 
     for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
@@ -139,6 +146,9 @@ void page_maintenance::showEvent(QShowEvent *event)
         // product_buttons[slot_index]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
         // }
     }
+    
+    ui->pushButton_to_previous_page->setText("<-Back");
+    ui->pushButton_general_settings->setText("General Settings");
     // p_pageSelectProduct->cancelTimers();
     // p_page_product->cancelTimers();
     qDebug() << "End maintenance load";
@@ -174,7 +184,7 @@ void page_maintenance::onPage_maintenanceTimeoutTick()
     }
 }
 
-void page_maintenance::on_generalSettings_button_clicked()
+void page_maintenance::on_pushButton_general_settings_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_maintenance_general);
 }
@@ -212,30 +222,6 @@ void page_maintenance::on_product4_button_clicked()
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 
-// void page_maintenance::on_product5_button_clicked(){
-//     qDebug() << "Product 5 button clicked" << endl;
-
-//}
-
-// void page_maintenance::on_product6_button_clicked(){
-//     qDebug() << "Product 6 button clicked" << endl;
-
-//}
-
-// void page_maintenance::on_product7_button_clicked(){
-//     qDebug() << "Product 7 button clicked" << endl;
-
-//}
-
-// void page_maintenance::on_product8_button_clicked(){
-//     qDebug() << "Product 8 button clicked" << endl;
-
-//}
-
-// void page_maintenance::on_product9_button_clicked(){
-//     qDebug() << "Product 9 button clicked" << endl;
-
-//}
 
 int getSelection()
 {

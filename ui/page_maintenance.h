@@ -73,7 +73,7 @@ private slots:
     // void on_enable_pump_ramping_checkBox_stateChanged(int arg1);
 
 
-    void on_generalSettings_button_clicked();
+    void on_pushButton_general_settings_clicked();
 
 private:
     void showEvent(QShowEvent *event);

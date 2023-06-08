@@ -45,10 +45,10 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     labels_selectProductOverlay[2] = ui->label_product_3_overlay;
     labels_selectProductOverlay[3] = ui->label_product_4_overlay;
 
-    labels_product_overlay_text[0] = ui->label_product_1_photo_text;
-    labels_product_overlay_text[1] = ui->label_product_2_photo_text;
-    labels_product_overlay_text[2] = ui->label_product_3_photo_text;
-    labels_product_overlay_text[3] = ui->label_product_4_photo_text;
+    labels_product_overlay_text[0] = ui->label_product_1_overlay_text;
+    labels_product_overlay_text[1] = ui->label_product_2_overlay_text;
+    labels_product_overlay_text[2] = ui->label_product_3_overlay_text;
+    labels_product_overlay_text[3] = ui->label_product_4_overlay_text;
 
     labels_product_type[0] = ui->label_product_1_type;
     labels_product_type[1] = ui->label_product_2_type;
@@ -308,5 +308,5 @@ void page_idle_products::on_pushButton_to_select_product_page_clicked()
 // void page_idle_products::setTemplateTextToObject(QWidget *p_element)
 // {
 //     QString searchString = getTemplateTextByElementNameAndPage(p_element);
-//     setTextToOjbect(p_element, searchString);
+//     setTextToObject(p_element, searchString);
 // }

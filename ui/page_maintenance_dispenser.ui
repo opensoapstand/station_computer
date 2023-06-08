@@ -62,7 +62,7 @@
     </rect>
    </property>
    <property name="accessibleName">
-    <string>pushButton_price_medium</string>
+    <string>Medium Price</string>
    </property>
    <property name="text">
     <string>Medium Price</string>
@@ -97,7 +97,7 @@
     </rect>
    </property>
    <property name="accessibleName">
-    <string>pushButton_price_small</string>
+    <string>price small</string>
    </property>
    <property name="text">
     <string>Small Price</string>
@@ -335,6 +335,9 @@
     <property name="text">
      <string>1</string>
     </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup_keypad</string>
+    </attribute>
    </widget>
    <widget class="QPushButton" name="button2">
     <property name="geometry">
@@ -348,6 +351,9 @@
     <property name="text">
      <string>2</string>
     </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup_keypad</string>
+    </attribute>
    </widget>
    <widget class="QPushButton" name="button3">
     <property name="geometry">
@@ -361,6 +367,9 @@
     <property name="text">
      <string>3</string>
     </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup_keypad</string>
+    </attribute>
    </widget>
    <widget class="QPushButton" name="button6">
     <property name="geometry">
@@ -374,6 +383,9 @@
     <property name="text">
      <string>6</string>
     </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup_keypad</string>
+    </attribute>
    </widget>
    <widget class="QPushButton" name="button5">
     <property name="geometry">
@@ -387,6 +399,9 @@
     <property name="text">
      <string>5</string>
     </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup_keypad</string>
+    </attribute>
    </widget>
    <widget class="QPushButton" name="button4">
     <property name="geometry">
@@ -400,6 +415,9 @@
     <property name="text">
      <string>4</string>
     </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup_keypad</string>
+    </attribute>
    </widget>
    <widget class="QPushButton" name="button9">
     <property name="geometry">
@@ -413,6 +431,9 @@
     <property name="text">
      <string>9</string>
     </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup_keypad</string>
+    </attribute>
    </widget>
    <widget class="QPushButton" name="button8">
     <property name="geometry">
@@ -426,6 +447,9 @@
     <property name="text">
      <string>8</string>
     </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup_keypad</string>
+    </attribute>
    </widget>
    <widget class="QPushButton" name="button7">
     <property name="geometry">
@@ -439,6 +463,9 @@
     <property name="text">
      <string>7</string>
     </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup_keypad</string>
+    </attribute>
    </widget>
    <widget class="QPushButton" name="button0">
     <property name="geometry">
@@ -452,6 +479,9 @@
     <property name="text">
      <string>0</string>
     </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup_keypad</string>
+    </attribute>
    </widget>
    <widget class="QPushButton" name="buttonBack">
     <property name="geometry">
@@ -595,7 +625,7 @@
     </rect>
    </property>
    <property name="accessibleName">
-    <string>pushButton_target_volume_small</string>
+    <string>Small target volume</string>
    </property>
    <property name="text">
     <string>Small
@@ -615,7 +645,7 @@
     </rect>
    </property>
    <property name="accessibleName">
-    <string>pushButton_target_volume_medium</string>
+    <string>Medium Target volume</string>
    </property>
    <property name="text">
     <string>Medium
@@ -752,7 +782,7 @@
     </rect>
    </property>
    <property name="accessibleName">
-    <string>pushButton_price_large</string>
+    <string>Large Price</string>
    </property>
    <property name="text">
     <string>Large Price</string>
@@ -771,7 +801,7 @@
     </rect>
    </property>
    <property name="accessibleName">
-    <string>pushButton_target_volume_large</string>
+    <string>Large target volume</string>
    </property>
    <property name="text">
     <string>Large
@@ -791,7 +821,7 @@
     </rect>
    </property>
    <property name="accessibleName">
-    <string>pushButton_price_custom</string>
+    <string>price custom per ml</string>
    </property>
    <property name="text">
     <string>Custom Price (per ml)</string>
@@ -809,6 +839,9 @@
      <height>41</height>
     </rect>
    </property>
+   <property name="accessibleName">
+    <string>Medium PLU</string>
+   </property>
    <property name="text">
     <string>Medium PLU</string>
    </property>
@@ -824,6 +857,9 @@
      <width>201</width>
      <height>41</height>
     </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Large PLU</string>
    </property>
    <property name="text">
     <string>Large PLU</string>
@@ -841,6 +877,9 @@
      <height>41</height>
     </rect>
    </property>
+   <property name="accessibleName">
+    <string>Small PLU</string>
+   </property>
    <property name="text">
     <string>Small PLU</string>
    </property>
@@ -856,6 +895,9 @@
      <width>201</width>
      <height>41</height>
     </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Custom PLU</string>
    </property>
    <property name="text">
     <string>Custom PLU</string>
@@ -1082,7 +1124,7 @@
     </rect>
    </property>
    <property name="accessibleName">
-    <string>target_custom</string>
+    <string>Custom maximum volume</string>
    </property>
    <property name="text">
     <string>Custom
@@ -1136,6 +1178,9 @@
      <width>691</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="accessibleName">
+    <string>price medium</string>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
@@ -1497,5 +1542,6 @@
  <connections/>
  <buttongroups>
   <buttongroup name="buttonGroup_edit_product"/>
+  <buttongroup name="buttonGroup_keypad"/>
  </buttongroups>
 </ui>

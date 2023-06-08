@@ -44,27 +44,6 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
 
     ui->pushButton_payment_bypass->setEnabled(false);
     state_payment = s_init;
-    
-//    ui->label_title->setText("pay by phone");
-
-    // ui->label_scan->setText(
-    //     "Scan to Pay");
-    
-    // ui->label_steps->setText(
-    //     "<style>"
-    //     "li:{margin-top:10px;}"
-    //     "</style>"
-    //     "<ol>"
-    //     "<li><span class='tab'></span>Scan QR code with phone camera<br></li>"
-    //     "<li><span class='tab'></span>Click to open the link that appears<br></li>"
-    //     "<li><span class='tab'></span>Follow payment instructions on phone<br></li>"
-    //     "<li><span class='tab'></span>The station will proceed after payment<br></li>"
-    //     "<li><span class='tab'></span>Refill your soap!</li>"
-    //     "</ol>");
-    
-    // ui->label_processing->setText(
-    //     "it can take a few moments for the station to<br>continue after your payment is confirmed");
-    
     ui->order_total_amount->hide();
 }
 
@@ -77,7 +56,6 @@ void page_qr_payment::stopPayTimers()
  */
 void page_qr_payment::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
 {
-    tmpCounter = 0;
     this->p_page_product = p_page_product;
     this->p_page_wifi_error = pageWifiError;
     this->p_page_dispense = page_dispenser;
@@ -125,15 +103,6 @@ size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
     return size * nmemb;
 }
 
-// QString page_qr_payment::getPaymentMethod()
-// {
-//     qDebug() << "db open245";
-//     int product_slot___ = p_page_idle->selectedProduct->getSlot();
-//     DbManager db2(DB_PATH);
-//     QString payment_method = db2.getPaymentMethod(product_slot___);
-//     db2.closeDB();
-//     return payment_method;
-// }
 
 void page_qr_payment::resizeEvent(QResizeEvent *event)
 {
@@ -151,11 +120,6 @@ void page_qr_payment::showEvent(QShowEvent *event)
     p_page_idle->setTemplateTextToObject(ui->label_processing);
     p_page_idle->setTemplateTextToObject(ui->pushButton_previous_page);
     
-    // ui->pushButton_previous_page->setText("<-back");
-    
-  
-
-
     QString styleSheet = p_page_idle->getCSS(PAGE_QR_PAYMENT_CSS);
 
     ui->pushButton_payment_bypass->setProperty("class", "invisible_button");
@@ -183,11 +147,16 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->productLabel->show();
     ui->order_drink_amount->show();
 
+
+
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
     ui->pushButton_payment_bypass->setEnabled(false);
+
     ui->productLabel->setText(p_page_idle->selectedProduct->getProductName() + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
-    ui->order_drink_amount->setText("$" + price);
-    ui->order_total_amount->setText("Total: $" + price);
+    QString base_text = p_page_idle->getTemplateTextByElementNameAndPage(ui->order_drink_amount);
+    ui->order_drink_amount->setText(base_text.arg(price));
+
+ 
     ui->label_steps->show();
     ui->label_processing->hide();
 
@@ -383,11 +352,7 @@ void page_qr_payment::isQrProcessedCheckOnline()
             ui->label_steps->hide();
 
             ui->label_processing->show();
-            // ui->label_scan->setText("Please finalize transaction");
             p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_scan, "finalize_transaction");
-
-            // ui->label_scan->setText("Please finalize transaction");
-            // ui->label_title->setText("almost there");
             p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "almost_there");
 
         }
@@ -458,14 +423,22 @@ bool page_qr_payment::exitConfirm()
 {
     qDebug() << "In exit confirm";
     QMessageBox msgBox;
+        // msgBox_abort = new QMessageBox();
+        // msgBox_abort->setObjectName("msgBox_abort");
+
     msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
     if (state_payment == s_payment_processing || state_payment == s_payment_done)
     {
-        msgBox.setText("<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>");
+        QString searchString = this->objectName() + "->msgBox_cancel->default";
+        p_page_idle->setTextToObject(&msgBox, p_page_idle->getTemplateText(searchString));
+        //p_page_idle->setTemplateTextToObject();
+        // msgBox.setText("");
     }
     else if (state_payment == s_init)
     {
-        msgBox.setText("<p align=center><br><br>Are you sure you want to cancel this order?<br><br>The QR code won't be valid anymore if this order is cancelled.<br><br>In case a payment was made with an invalid QR code or cancelled order, a refund will be issued within 24-48 hours. <br></p>");
+        QString searchString = this->objectName() + "->msgBox_refund->default";
+        p_page_idle->setTextToObject(&msgBox, p_page_idle->getTemplateText(searchString));
+        // msgBox.setText("");
     }
     QString styleSheet = p_page_idle->getCSS(PAGE_QR_PAYMENT_CSS);
     msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
@@ -510,7 +483,6 @@ void page_qr_payment::on_pushButton_previous_page_clicked()
     qDebug() << "In previous page button" ;
     if (exitConfirm())
     {
-        // p_page_idle->pageTransition(this, p_page_product);
         hideCurrentPageAndShowProvided(p_page_product);
     }
 }

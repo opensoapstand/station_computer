@@ -38,6 +38,7 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
     connect(dispenseTimer, SIGNAL(timeout()), this, SLOT(onDispenseTimerTick()));
 
     connect(ui->buttonGroup_edit_product, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroup_edit_product_Pressed(int)));
+    connect(ui->buttonGroup_keypad, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroup_keypad_Pressed(int)));
 }
 
 // DTOR
@@ -59,13 +60,9 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
-    // ui->pushButton_restock->setStyleSheet("QPushButton {font-size: 36px;}");
     ui->pushButton_restock->setStyleSheet(styleSheet);
-    // ui->pushButton_pump->setStyleSheet("QPushButton { background-color: #AAAAAA;font-size: 20px;  }");
     ui->pushButton_pump->setProperty("class", "pump_enable");
     ui->pushButton_pump->setStyleSheet(styleSheet);
-
-    
 
     this->units_selected_product = this->p_page_idle->selectedProduct->getUnitsForSlot();
     volume_per_tick_buffer = p_page_idle->selectedProduct->getVolumePerTickForSlot();
@@ -75,7 +72,6 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 
     reset_all_dispense_stats();
     update_volume_received_dispense_stats(0);
-
 
     ui->pushButton_plu_small->setText(p_page_idle->selectedProduct->getPLU(SIZE_SMALL_INDEX));
     ui->pushButton_plu_medium->setText(p_page_idle->selectedProduct->getPLU(SIZE_MEDIUM_INDEX));
@@ -132,6 +128,7 @@ void page_maintenance_dispenser::refreshLabels()
     ui->pushButton_target_volume_small->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_SMALL_INDEX, false, true));
     ui->pushButton_target_volume_medium->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_MEDIUM_INDEX, false, true));
     ui->pushButton_target_volume_large->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_LARGE_INDEX, false, true));
+    ui->pushButton_target_volume_custom->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_CUSTOM_INDEX, false, true));
 
     ui->label_restock_volume->setText(p_page_idle->selectedProduct->getFullVolumeCorrectUnits(true));
 
@@ -355,7 +352,7 @@ void page_maintenance_dispenser::fsmReceivedVolumeDispensed(double dispensed, bo
 
 void page_maintenance_dispenser::fsmReceiveDispenseRate(double flowrate)
 {
-    //qDebug() << "Dispense flow rate received from FSM: " << QString::number(flowrate, 'f', 2);
+    // qDebug() << "Dispense flow rate received from FSM: " << QString::number(flowrate, 'f', 2);
     ui->label_status_flow_rate->setText(QString::number(flowrate, 'f', 2) + "ml/s");
 };
 
@@ -436,7 +433,7 @@ void page_maintenance_dispenser::on_pushButton_restock_clicked()
             refreshLabels();
             ui->label_action_feedback->setText("Refill Succesfull");
 
-            bool isSlotEnabled =  p_page_idle->selectedProduct->getSlotEnabled();
+            bool isSlotEnabled = p_page_idle->selectedProduct->getSlotEnabled();
             DbManager db(DB_PATH);
             bool success = db.updateSlotAvailability(this->p_page_idle->selectedProduct->getSlot(), isSlotEnabled, "SLOT_STATE_AVAILABLE");
             db.closeDB();
@@ -464,8 +461,8 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
     qDebug() << "soldout clicked. slot: " << QString::number(this->p_page_idle->selectedProduct->getSlot());
 
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
-    
-    bool isSlotEnabled =  p_page_idle->selectedProduct->getSlotEnabled();
+
+    bool isSlotEnabled = p_page_idle->selectedProduct->getSlotEnabled();
     QString slotStatus = p_page_idle->selectedProduct->getStatusText();
 
     QString label_action_feedbackText = "";
@@ -644,55 +641,67 @@ void page_maintenance_dispenser::on_pushButton_setting_speed_pwm_clicked()
     ui->buttonPoint->hide();
 }
 
-void page_maintenance_dispenser::on_button1_clicked()
+void page_maintenance_dispenser::buttonGroup_keypad_Pressed(int buttonId)
 {
-    ui->textEntry->setText(ui->textEntry->text() + "1");
+    QAbstractButton *buttonpressed = ui->buttonGroup_keypad->button(buttonId);
+    QString buttonText = buttonpressed->text();
+    if (ui->textEntry->hasSelectedText())
+    {
+        ui->textEntry->setText("");
+    }
+
+    ui->textEntry->setText(ui->textEntry->text() + buttonText);
 }
 
-void page_maintenance_dispenser::on_button2_clicked()
-{
-    ui->textEntry->setText(ui->textEntry->text() + "2");
-}
+// void page_maintenance_dispenser::on_button1_clicked()
+// {
+//     ui->textEntry->setText(ui->textEntry->text() + "1");
+// }
 
-void page_maintenance_dispenser::on_button3_clicked()
-{
-    ui->textEntry->setText(ui->textEntry->text() + "3");
-}
+// void page_maintenance_dispenser::on_button2_clicked()
+// {
+//     ui->textEntry->setText(ui->textEntry->text() + "2");
+// }
 
-void page_maintenance_dispenser::on_button4_clicked()
-{
-    ui->textEntry->setText(ui->textEntry->text() + "4");
-}
+// void page_maintenance_dispenser::on_button3_clicked()
+// {
+//     ui->textEntry->setText(ui->textEntry->text() + "3");
+// }
 
-void page_maintenance_dispenser::on_button5_clicked()
-{
-    ui->textEntry->setText(ui->textEntry->text() + "5");
-}
+// void page_maintenance_dispenser::on_button4_clicked()
+// {
+//     ui->textEntry->setText(ui->textEntry->text() + "4");
+// }
 
-void page_maintenance_dispenser::on_button6_clicked()
-{
-    ui->textEntry->setText(ui->textEntry->text() + "6");
-}
+// void page_maintenance_dispenser::on_button5_clicked()
+// {
+//     ui->textEntry->setText(ui->textEntry->text() + "5");
+// }
 
-void page_maintenance_dispenser::on_button7_clicked()
-{
-    ui->textEntry->setText(ui->textEntry->text() + "7");
-}
+// void page_maintenance_dispenser::on_button6_clicked()
+// {
+//     ui->textEntry->setText(ui->textEntry->text() + "6");
+// }
 
-void page_maintenance_dispenser::on_button8_clicked()
-{
-    ui->textEntry->setText(ui->textEntry->text() + "8");
-}
+// void page_maintenance_dispenser::on_button7_clicked()
+// {
+//     ui->textEntry->setText(ui->textEntry->text() + "7");
+// }
 
-void page_maintenance_dispenser::on_button9_clicked()
-{
-    ui->textEntry->setText(ui->textEntry->text() + "9");
-}
+// void page_maintenance_dispenser::on_button8_clicked()
+// {
+//     ui->textEntry->setText(ui->textEntry->text() + "8");
+// }
 
-void page_maintenance_dispenser::on_button0_clicked()
-{
-    ui->textEntry->setText(ui->textEntry->text() + "0");
-}
+// void page_maintenance_dispenser::on_button9_clicked()
+// {
+//     ui->textEntry->setText(ui->textEntry->text() + "9");
+// }
+
+// void page_maintenance_dispenser::on_button0_clicked()
+// {
+//     ui->textEntry->setText(ui->textEntry->text() + "0");
+// }
 
 void page_maintenance_dispenser::on_buttonBack_clicked()
 {
@@ -816,6 +825,11 @@ void page_maintenance_dispenser::on_pushButton_target_volume_large_clicked()
     // target_l = true;
     ui->textEntry->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_LARGE_INDEX, false, false));
 }
+void page_maintenance_dispenser::on_pushButton_target_volume_custom_clicked()
+{
+    // target_l = true;
+    ui->textEntry->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_CUSTOM_INDEX, false, false));
+}
 
 void page_maintenance_dispenser::on_pushButton_volume_per_tick_clicked()
 {
@@ -865,6 +879,10 @@ void page_maintenance_dispenser::updateValues()
         else if (activeEditField == "pushButton_target_volume_large")
         {
             p_page_idle->selectedProduct->setSizeToVolumeForSlot(text_entered, SIZE_LARGE_INDEX);
+        }
+        else if (activeEditField == "pushButton_target_volume_custom")
+        {
+            p_page_idle->selectedProduct->setSizeToVolumeForSlot(text_entered, SIZE_CUSTOM_INDEX);
         }
         else if (activeEditField == "pushButton_volume_per_tick")
         {
@@ -1018,9 +1036,12 @@ void page_maintenance_dispenser::buttonGroup_edit_product_Pressed(int buttonId)
 {
     QAbstractButton *buttonpressed = ui->buttonGroup_edit_product->button(buttonId);
     QString buttonText = buttonpressed->text();
-    qDebug() << "accessible name: " << buttonpressed->accessibleName();
-    activeEditField = buttonpressed->accessibleName();
-    ui->titleLabel->setText(buttonText);
+    qDebug() << "accessible name: " << buttonpressed->objectName();
+    QString buttonTitle = buttonpressed->accessibleName();
+    activeEditField = buttonpressed->objectName();
+    ui->titleLabel->setText(buttonTitle);
     ui->numberEntry->show();
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+
+    ui->textEntry->selectAll();
 }

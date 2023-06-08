@@ -81,7 +81,7 @@
     </rect>
    </property>
    <property name="accessibleName">
-    <string>label_volume_per_tick</string>
+    <string>Volume per flow sensor tick</string>
    </property>
    <property name="text">
     <string>Edit</string>
@@ -177,7 +177,7 @@
     <rect>
      <x>629</x>
      <y>470</y>
-     <width>401</width>
+     <width>191</width>
      <height>21</height>
     </rect>
    </property>
@@ -222,7 +222,7 @@
     <rect>
      <x>630</x>
      <y>300</y>
-     <width>371</width>
+     <width>191</width>
      <height>31</height>
     </rect>
    </property>
@@ -292,7 +292,7 @@
     </rect>
    </property>
    <property name="accessibleName">
-    <string>pwm</string>
+    <string>Pump Speed Percentage</string>
    </property>
    <property name="text">
     <string> Pump Speed:</string>
@@ -496,7 +496,7 @@
      <string>&lt;-</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="buttonPoint">
+   <widget class="QPushButton" name="buttonPeriod">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -570,7 +570,7 @@
     </property>
    </widget>
   </widget>
-  <widget class="QPushButton" name="pushButton_pump">
+  <widget class="QPushButton" name="pushButton_enable_pump">
    <property name="geometry">
     <rect>
      <x>40</x>
@@ -1130,6 +1130,9 @@
     <string>Custom
  Target Volume</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
   </widget>
   <widget class="QLabel" name="label_column_size">
    <property name="geometry">

@@ -4,7 +4,6 @@
 #include "df_util.h"
 #include "machine.h"
 
-
 class product : public QObject
 {
     Q_OBJECT
@@ -14,8 +13,8 @@ public:
     product(const product &other);
     ~product();
     product &operator=(const product &other);
-    void setMachine(machine* machine);
-    
+    void setMachine(machine *machine);
+
     // Setters and Getters
     void setSlot(int slot);
     int getSlot();
@@ -23,8 +22,14 @@ public:
     QString getAwsProductId();
     bool getSlotEnabled();
     QString getStatusText();
-    
+    QString setStatusText(QString status);
+
     QString getFullVolumeCorrectUnits(bool addUnits);
+
+    void setVolumeRemainingUserInput(QString volumeRemainingAsUserText);
+    void setVolumeRemaining(double volume_as_ml);
+
+    bool restock();
 
     QString getVolumeRemainingCorrectUnits();
     QString getTotalDispensedCorrectUnits();
@@ -34,8 +39,8 @@ public:
     void setVolumeDispensedMl(double volumeMl);
     void resetVolumeDispensed();
 
-    void getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter);
     void setFullVolumeCorrectUnits(QString inputFullValue);
+    void getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter);
 
     void setSize(int sizeIndex);
     int getSize();
@@ -99,7 +104,7 @@ public:
 
     double getDiscountPercentageFraction();
     QString getPromoCode();
-    
+
 public slots:
     void setDiscountPercentageFraction(double percentageFraction);
 
@@ -109,7 +114,7 @@ signals:
     void sizeChange(double newSize);
 
 private:
-    machine* thisMachine;
+    machine *thisMachine;
 
     int slot;
 

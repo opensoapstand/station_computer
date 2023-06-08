@@ -23,7 +23,8 @@ product::~product()
 {
 }
 
-void product::setMachine(machine* machine){
+void product::setMachine(machine *machine)
+{
     thisMachine = machine;
 }
 
@@ -40,7 +41,7 @@ void product::loadProductPropertiesFromDb()
     qDebug() << "Open db: db load product properties";
     DbManager db(DB_PATH);
 
-    db.getProductProperties(getSlot(), &m_aws_product_id, m_sizeIndexIsEnabled);
+    // db.getProductProperties(getSlot(), &m_aws_product_id, m_sizeIndexIsEnabled);
     db.getAllProductProperties(getSlot(), &m_aws_product_id,
                                &m_soapstand_product_serial,
                                &m_size_unit,
@@ -131,6 +132,16 @@ bool product::getSlotEnabled()
     // return m_slot_enabled;
     return thisMachine->getSlotEnabled(getSlot());
 }
+
+QString product::setStatusText(QString status)
+{
+    DbManager db(DB_PATH);
+
+    //    SLOT_STATE_AVAILABLE
+    bool success = db.updateSlotAvailability(getSlot(), getSlotEnabled(), status);
+    db.closeDB();
+}
+
 QString product::getStatusText()
 {
     // return m_slot_enabled;
@@ -303,7 +314,12 @@ void product::setVolumeDispensedMl(double volumeMl)
     this->DispensedVolumeMl = volumeMl;
 }
 
-double product::getRestockVolume(){
+// bool product::restockProduct(){
+
+// }
+
+double product::getRestockVolume()
+{
     return m_volume_full;
 }
 double product::getVolumeBySize(int size)
@@ -366,6 +382,33 @@ void product::setSizeToVolumeForSlot(QString volumeInput, int size)
     qInfo() << "Open db: size to volume";
     DbManager db(DB_PATH);
     db.updateTargetVolume(getSlot(), size, volume);
+    db.closeDB();
+}
+
+void product::setVolumeRemainingUserInput(QString volumeRemainingAsUserText)
+{
+    double vol_as_ml = inputTextToMlConvertUnits(volumeRemainingAsUserText);
+    setVolumeRemaining(vol_as_ml);
+}
+
+bool product::restock()
+{
+    qDebug() << "Open db: restock";
+    DbManager db(DB_PATH);
+    bool success = true;
+    success &= db.updateProductsWithDouble(getSlot(), "volume_remaining", m_volume_full, 0);
+    success &= db.updateProductsWithDouble(getSlot(), "volume_dispensed_since_restock", 0, 0);
+    success &= db.updateProductsWithText(getSlot(), "last_restock", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+    db.closeDB();
+    return success;
+}
+
+void product::setVolumeRemaining(double volume_as_ml)
+{
+    // qDebug() << "Open db: set volume remaining";
+    DbManager db(DB_PATH);
+    // db.setVolumeRemaining(getSlot(), volume_as_ml);
+    db.updateProductsWithDouble(getSlot(), "volume_remaining", volume_as_ml, 0);
     db.closeDB();
 }
 
@@ -447,7 +490,7 @@ bool product::isProductVolumeInContainer()
 
     bool retval = true;
     // if (!m_empty_container_detection_enabled)
-    
+
     if (!thisMachine->getEmptyContainerDetectionEnabled())
     {
         retval = m_volume_remaining > CONTAINER_EMPTY_THRESHOLD_ML;
@@ -459,9 +502,13 @@ void product::getCustomDiscountDetails(bool *large_volume_discount_is_enabled, d
 {
     qDebug() << "Open db: get bulk volume discount details ";
 
-    DbManager db(DB_PATH);
-    db.getCustomDiscountProperties(getSlot(), large_volume_discount_is_enabled, min_volume_for_discount, discount_price_per_liter);
-    db.closeDB();
+    *large_volume_discount_is_enabled = m_is_enabled_custom_discount;
+    *min_volume_for_discount = m_size_custom_discount;
+    *discount_price_per_liter = m_price_custom_discount;
+
+    // DbManager db(DB_PATH);
+    // db.getCustomDiscountProperties(getSlot(), large_volume_discount_is_enabled, min_volume_for_discount, discount_price_per_liter);
+    // db.closeDB();
 }
 
 QString product::getProductIngredients()
@@ -490,8 +537,7 @@ QString product::getProductType()
 
 QString product::getProductPicturePath()
 {
-    QString serial = getProductDrinkfillSerial();
-    return QString(PRODUCT_PICTURES_ROOT_PATH).arg(serial);
+    return QString(PRODUCT_PICTURES_ROOT_PATH).arg(m_soapstand_product_serial);
 }
 
 QString product::getPLU(int sizeIndex)

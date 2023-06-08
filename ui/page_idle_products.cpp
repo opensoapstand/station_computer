@@ -128,7 +128,7 @@ void page_idle_products::showEvent(QShowEvent *event)
 
     displayProducts();
 
-    addCompanyLogoToLabel(ui->logo_label);
+    p_page_idle->addCompanyLogoToLabel(ui->logo_label);
 
     ui->pushButton_to_select_product_page->raise();
 }
@@ -222,25 +222,6 @@ void page_idle_products::checkReceiptPrinterStatus()
     else
     {
         qDebug() << "Receipt printer not enabled in db->machine table";
-    }
-}
-
-void page_idle_products::addCompanyLogoToLabel(QLabel *label)
-{
-    qDebug() << "db init company logo";
-    DbManager db(DB_PATH);
-    QString id = db.getCustomerId();
-
-    db.closeDB();
-    qDebug() << "db closed";
-    if (id.at(0) == 'C')
-    {
-        QString logo_path = QString(CLIENT_LOGO_PATH).arg(id);
-        p_page_idle->addPictureToLabel(label, logo_path);
-    }
-    else
-    {
-        qDebug() << "WARNING: invalid customer ID. Should like C-1, C-374, ... . Provided id: " << id;
     }
 }
 

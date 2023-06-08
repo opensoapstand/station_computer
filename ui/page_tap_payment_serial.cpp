@@ -334,7 +334,7 @@ bool page_tap_payment_serial::tap_init()
         paymentConnectionFailed+=1;
         if(paymentConnectionFailed==50){
             DbManager db3(DB_PATH);
-            db3.updateTapToQR();
+            db3.setPaymentToQR();
             QString payment_method = db3.getPaymentMethod(1);
             qDebug() << "Payment method" << payment_method;
             db3.closeDB();

@@ -81,6 +81,13 @@ QString machine::getMaintenanceAdminPassword()
     return m_maintenance_pwd;
 }
 
+QString machine::setStatusText(int slot, bool isSlotEnabled, QString status)
+{
+    DbManager db(DB_PATH);
+    bool success = db.updateSlotAvailability(slot, isSlotEnabled, status);
+    db.closeDB();
+}
+
 QString machine::getStatusText(int slot)
 {
     isSlotNumberValid(slot);
@@ -88,7 +95,7 @@ QString machine::getStatusText(int slot)
 }
 QString machine::getPumpId(int slot)
 {
-    
+
     isSlotNumberValid(slot);
     return m_pump_id_slots[slot - 1];
 }
@@ -207,15 +214,20 @@ void machine::loadParametersFromDb()
     qDebug() << "varr: " << m_show_transactions;
     qDebug() << "varr: " << m_help_text_html;
     qDebug() << "varr: " << m_idle_page_type;
-    for (int i=0;i<4;i++){
-        qDebug()<< "varrrr====";
-        qDebug()<< i;
+    for (int i = 0; i < 4; i++)
+    {
+        qDebug() << "varrrr====";
+        qDebug() << i;
         qDebug() << m_is_enabled_slots[i];
         qDebug() << m_pump_id_slots[i];
         qDebug() << m_status_text_slots[i];
     }
 }
 
+int machine::getDispensersCount()
+{
+    return m_dispense_buttons_count;
+}
 bool machine::getCouponsEnabled()
 {
     qDebug() << "coupons enabled>>> :: " << m_coupons_enabled;

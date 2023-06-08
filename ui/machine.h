@@ -15,9 +15,9 @@ public:
 
     bool isSlotNumberValid(int slot);
     QString getStatusText(int slot);
+    QString setStatusText(int slot, bool isSlotEnabled, QString status);
 
     QString getPumpId(int slot);
-
 
     QString getMachineId();
     bool getCouponsEnabled();
@@ -35,8 +35,8 @@ public:
     bool getSlotEnabled(int slot);
     QString getIdlePageType();
 
-
-
+    int getDispensersCount();
+    
     bool hasReceiptPrinter();
     void printerStatus(bool *isOnline, bool *hasPaper);
 
@@ -45,7 +45,6 @@ public slots:
 signals:
 
 private:
-
     QString m_machine_id;
     QString m_soapstand_customer_id;
     QString m_template;
@@ -71,10 +70,9 @@ private:
     QString m_help_text_html;
     QString m_idle_page_type;
 
-    QString m_pump_id_slots [SLOT_COUNT];
-    int m_is_enabled_slots [SLOT_COUNT];
-    QString m_status_text_slots [SLOT_COUNT];
-
+    QString m_pump_id_slots[SLOT_COUNT];
+    int m_is_enabled_slots[SLOT_COUNT];
+    QString m_status_text_slots[SLOT_COUNT];
 };
 
 #endif // MACHINE_H

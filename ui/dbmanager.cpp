@@ -86,6 +86,55 @@ DbManager::~DbManager()
     }
 }
 
+bool DbManager::executeQuery(QSqlQuery* qry, QString sql){
+    bool success = false;
+   
+    qry->prepare(sql);
+    if (!qry->exec())
+    {
+        qDebug() << "Did not execute sql. "
+                 << qry->lastError() << " | " <<  qry->lastQuery();
+        success = false;
+    }else{
+       qDebug() <<  qry->lastQuery();
+    }
+
+    return success;
+}
+
+bool DbManager::updateProductsWithInt(int slot, QString column, int value ){
+
+    return updateProductsWithText(slot, column,  QString::number(value));
+}
+
+bool DbManager::updateProductsWithDouble(int slot, QString column, double value, int precision ){
+
+    return updateProductsWithText(slot, column,  QString::number(value, 'f',precision));
+}
+
+bool DbManager::updateProductsWithText(int slot, QString column, QString value ){
+    QSqlQuery qry;
+    QString sql_text = QString("UPDATE products SET %1=%2 WHERE slot=%3").arg(column,value,QString::number(slot));
+    return executeQuery(&qry, sql_text);
+    // QSqlQuery qry;
+    // bool success = false;
+    // QString sql_text = QString("UPDATE products SET %1=%2 WHERE slot=%3").arg(column,value,QString::number(slot));
+    // // QString sql_text = QString("UPDATE products SET %1=:value WHERE slot=:slot").arg(column);
+    // qDebug() << " db... update text" << sql_text;
+    // qry.prepare(sql_text);
+    // // qry.bindValue(":value", value);
+    // // qry.bindValue(":slot", slot);
+    // if (!qry.exec())
+    // {
+    //     qDebug() << "Did not execute sql. "
+    //              << qry.lastError() << " | " <<  qry.lastQuery();
+    //     success = false;
+    // }else{
+    //    qDebug() <<  qry.lastQuery();
+    // }
+    // return success;
+}
+
 bool DbManager::addPageClick(const QString &page)
 {
 
@@ -104,6 +153,8 @@ bool DbManager::isDatabaseLocked(const QSqlDatabase &db)
     return true; // failed to acquire the lock: returns true (db is locked)
 }
 
+
+
 void DbManager::closeDB()
 {
     qDebug() << "close db";
@@ -117,26 +168,26 @@ void DbManager::closeDB()
     }
 }
 
-QString DbManager::getProductDrinkfillSerial(int slot)
-{
-    QSqlQuery qry;
-    QString val;
+// QString DbManager::getProductDrinkfillSerial(int slot)
+// {
+//     QSqlQuery qry;
+//     QString val;
 
-    {
-        qry.prepare("SELECT soapstand_product_serial FROM products WHERE slot=:slot");
-        qry.bindValue(":slot", slot);
-        qry.exec();
+//     {
+//         qry.prepare("SELECT soapstand_product_serial FROM products WHERE slot=:slot");
+//         qry.bindValue(":slot", slot);
+//         qry.exec();
 
-        while (qry.next())
-        {
-            val = qry.value(0).toString();
-        }
-    }
+//         while (qry.next())
+//         {
+//             val = qry.value(0).toString();
+//         }
+//     }
 
-    return val;
-}
+//     return val;
+// }
 
-void DbManager::updateTapToQR()
+void DbManager::setPaymentToQR()
 {
 
     QSqlQuery qry;
@@ -146,23 +197,23 @@ void DbManager::updateTapToQR()
     }
 }
 
-void DbManager::getCustomDiscountProperties(int slot, bool *isEnabled, double *volumeDiscount, double *pricePerLiterDiscount)
-{
-    QSqlQuery qry;
-    {
-        qry.prepare("SELECT is_enabled_custom_discount,size_custom_discount,price_custom_discount FROM products WHERE slot=:slot");
-        // qry.prepare("SELECT name,description,features,ingredients,is_enabled_small,is_enabled_medium,is_enabled_large,is_enabled_custom FROM products WHERE slot=:slot");
-        qry.bindValue(":slot", slot);
-        qry.exec();
+// void DbManager::getCustomDiscountProperties(int slot, bool *isEnabled, double *volumeDiscount, double *pricePerLiterDiscount)
+// {
+//     QSqlQuery qry;
+//     {
+//         qry.prepare("SELECT is_enabled_custom_discount,size_custom_discount,price_custom_discount FROM products WHERE slot=:slot");
+//         // qry.prepare("SELECT name,description,features,ingredients,is_enabled_small,is_enabled_medium,is_enabled_large,is_enabled_custom FROM products WHERE slot=:slot");
+//         qry.bindValue(":slot", slot);
+//         qry.exec();
 
-        while (qry.next())
-        {
-            *isEnabled = qry.value(0).toInt();
-            *volumeDiscount = qry.value(1).toDouble();
-            *pricePerLiterDiscount = qry.value(2).toDouble();
-        }
-    }
-}
+//         while (qry.next())
+//         {
+//             *isEnabled = qry.value(0).toInt();
+//             *volumeDiscount = qry.value(1).toDouble();
+//             *pricePerLiterDiscount = qry.value(2).toDouble();
+//         }
+//     }
+// }
 
 /*
 productId
@@ -300,6 +351,13 @@ void DbManager::getAllProductProperties(int slot,
         qry.prepare("SELECT productId, soapstand_product_serial, slot, name, size_unit, currency, payment, name_receipt, concentrate_multiplier, dispense_speed, threshold_flow, retraction_time, calibration_const, volume_per_tick, last_restock, volume_full, volume_remaining, volume_dispensed_since_restock, volume_dispensed_total, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_min, size_custom_max, price_small, price_medium, price_large, price_custom, plu_small, plu_medium, plu_large, plu_custom, pid_small, pid_medium, pid_large, pid_custom, flavour, image_url, type, ingredients, features, description, is_enabled_custom_discount, size_custom_discount, price_custom_discount FROM products WHERE slot=:slot");
         qry.bindValue(":slot", slot);
         qry.exec();
+
+        if (!qry.exec())
+        {
+            qDebug() << "Did not execute sql. "
+                    << qry.lastError() << " | " <<  qry.lastQuery();
+            // success = false;
+        }
 
         while (qry.next())
         {
@@ -470,6 +528,12 @@ void DbManager::getAllMachineProperties(
 
     // qry.prepare("SELECT machine_id, soapstand_customer_id FROM machine");
     qry.exec();
+    if (!qry.exec())
+    {
+        qDebug() << "Did not execute sql. "
+                << qry.lastError() << " | " <<  qry.lastQuery();
+        // success = false;
+    }
 
     while (qry.next())
     {
@@ -555,189 +619,189 @@ void DbManager::getAllMachineProperties(
     // }
 }
 
-void DbManager::getProductProperties(int slot, QString *product_id, bool *isSizeEnabled)
-{
-    qDebug() << " db... product properties";
-    QSqlQuery qry;
-    {
-        qry.prepare("SELECT soapstand_product_serial, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom FROM products WHERE slot=:slot");
-        qry.bindValue(":slot", slot);
-        qry.exec();
+// void DbManager::getProductProperties(int slot, QString *product_id, bool *isSizeEnabled)
+// {
+//     qDebug() << " db... product properties";
+//     QSqlQuery qry;
+//     {
+//         qry.prepare("SELECT soapstand_product_serial, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom FROM products WHERE slot=:slot");
+//         qry.bindValue(":slot", slot);
+//         qry.exec();
 
-        while (qry.next())
-        {
-            *product_id = qry.value(0).toString();
-            isSizeEnabled[1] = qry.value(1).toInt(); // small is index 1!!
-            isSizeEnabled[2] = qry.value(2).toInt();
-            isSizeEnabled[3] = qry.value(3).toInt();
-            isSizeEnabled[4] = qry.value(4).toInt();
-        }
-    }
-}
+//         while (qry.next())
+//         {
+//             *product_id = qry.value(0).toString();
+//             isSizeEnabled[1] = qry.value(1).toInt(); // small is index 1!!
+//             isSizeEnabled[2] = qry.value(2).toInt();
+//             isSizeEnabled[3] = qry.value(3).toInt();
+//             isSizeEnabled[4] = qry.value(4).toInt();
+//         }
+//     }
+// }
 
-QString DbManager::getProductName(int slot)
-{
-    QSqlQuery product_query;
-    QString product_name;
+// QString DbManager::getProductName(int slot)
+// {
+//     QSqlQuery product_query;
+//     QString product_name;
 
-    {
+//     {
 
-        product_query.prepare("SELECT name FROM products WHERE slot=:slot");
-        product_query.bindValue(":slot", slot);
-        product_query.exec();
+//         product_query.prepare("SELECT name FROM products WHERE slot=:slot");
+//         product_query.bindValue(":slot", slot);
+//         product_query.exec();
 
-        while (product_query.next())
-        {
-            product_name = product_query.value(0).toString();
-        }
-    }
+//         while (product_query.next())
+//         {
+//             product_name = product_query.value(0).toString();
+//         }
+//     }
 
-    return product_name;
-}
+//     return product_name;
+// }
 
-QString DbManager::getProductReceiptName(int slot)
-{
-    qDebug() << " db... getProductReceiptName";
-    QSqlQuery product_query;
-    QString product_name;
+// QString DbManager::getProductReceiptName(int slot)
+// {
+//     qDebug() << " db... getProductReceiptName";
+//     QSqlQuery product_query;
+//     QString product_name;
 
-    {
+//     {
 
-        product_query.prepare("SELECT name_receipt FROM products WHERE slot=:slot");
-        product_query.bindValue(":slot", slot);
-        product_query.exec();
+//         product_query.prepare("SELECT name_receipt FROM products WHERE slot=:slot");
+//         product_query.bindValue(":slot", slot);
+//         product_query.exec();
 
-        while (product_query.next())
-        {
-            product_name = product_query.value(0).toString();
-        }
-    }
+//         while (product_query.next())
+//         {
+//             product_name = product_query.value(0).toString();
+//         }
+//     }
 
-    return product_name;
-}
+//     return product_name;
+// }
 
-double DbManager::getProductPrice(int slot, char size)
-{
-    qDebug() << " db... getProductPrice";
-    QSqlQuery price_query;
-    double price;
+// double DbManager::getProductPrice(int slot, char size)
+// {
+//     qDebug() << " db... getProductPrice";
+//     QSqlQuery price_query;
+//     double price;
 
-    {
+//     {
 
-        if (size == 'l')
-        {
-            price_query.prepare("SELECT price_large FROM products WHERE slot=:slot");
-        }
-        else if (size == 'm')
-        {
-            price_query.prepare("SELECT price_medium FROM products WHERE slot=:slot");
-        }
-        else if (size == 's')
-        {
-            price_query.prepare("SELECT price_small FROM products WHERE slot=:slot");
-        }
-        else if (size == 'c')
-        {
-            price_query.prepare("SELECT price_custom FROM products WHERE slot=:slot");
-        }
-        else
-        {
-            qDebug() << " invalid size to volume character found.  " << size;
-        }
+//         if (size == 'l')
+//         {
+//             price_query.prepare("SELECT price_large FROM products WHERE slot=:slot");
+//         }
+//         else if (size == 'm')
+//         {
+//             price_query.prepare("SELECT price_medium FROM products WHERE slot=:slot");
+//         }
+//         else if (size == 's')
+//         {
+//             price_query.prepare("SELECT price_small FROM products WHERE slot=:slot");
+//         }
+//         else if (size == 'c')
+//         {
+//             price_query.prepare("SELECT price_custom FROM products WHERE slot=:slot");
+//         }
+//         else
+//         {
+//             qDebug() << " invalid size to volume character found.  " << size;
+//         }
 
-        price_query.bindValue(":slot", slot);
-        price_query.exec();
+//         price_query.bindValue(":slot", slot);
+//         price_query.exec();
 
-        while (price_query.next())
-        {
-            price = price_query.value(0).toDouble();
-        }
-    }
+//         while (price_query.next())
+//         {
+//             price = price_query.value(0).toDouble();
+//         }
+//     }
 
-    return price;
-}
+//     return price;
+// }
 
-double DbManager::getProductVolumePerTick(int slot)
-{
-    qDebug() << " db... getProductVolumePerTick";
-    QSqlQuery vol_per_tick_query;
-    double vol_per_tick;
+// double DbManager::getProductVolumePerTick(int slot)
+// {
+//     qDebug() << " db... getProductVolumePerTick";
+//     QSqlQuery vol_per_tick_query;
+//     double vol_per_tick;
 
-    {
+//     {
 
-        vol_per_tick_query.prepare("SELECT volume_per_tick FROM products WHERE slot=:slot");
-        vol_per_tick_query.bindValue(":slot", slot);
-        vol_per_tick_query.exec();
+//         vol_per_tick_query.prepare("SELECT volume_per_tick FROM products WHERE slot=:slot");
+//         vol_per_tick_query.bindValue(":slot", slot);
+//         vol_per_tick_query.exec();
 
-        while (vol_per_tick_query.next())
-        {
-            vol_per_tick = vol_per_tick_query.value(0).toDouble();
-        }
-    }
+//         while (vol_per_tick_query.next())
+//         {
+//             vol_per_tick = vol_per_tick_query.value(0).toDouble();
+//         }
+//     }
 
-    return vol_per_tick;
-}
+//     return vol_per_tick;
+// }
 
-double DbManager::getProductVolume(int slot, char size)
-{
-    qDebug() << " db... getProductVolume";
-    QSqlQuery volume_query;
-    double volume;
+// double DbManager::getProductVolume(int slot, char size)
+// {
+//     qDebug() << " db... getProductVolume";
+//     QSqlQuery volume_query;
+//     double volume;
 
-    {
+//     {
 
-        if (size == 'l')
-        {
-            volume_query.prepare("SELECT size_large FROM products WHERE slot=:slot");
-        }
-        else if (size == 'm')
-        {
-            volume_query.prepare("SELECT size_medium FROM products WHERE slot=:slot");
-        }
-        else if (size == 's')
-        {
-            volume_query.prepare("SELECT size_small FROM products WHERE slot=:slot");
-        }
-        else if (size == 'c')
-        {
-            volume_query.prepare("SELECT size_custom_max FROM products WHERE slot=:slot");
-        }
-        else
-        {
-            qDebug() << " invalid size to volume character found.  " << size;
-        }
+//         if (size == 'l')
+//         {
+//             volume_query.prepare("SELECT size_large FROM products WHERE slot=:slot");
+//         }
+//         else if (size == 'm')
+//         {
+//             volume_query.prepare("SELECT size_medium FROM products WHERE slot=:slot");
+//         }
+//         else if (size == 's')
+//         {
+//             volume_query.prepare("SELECT size_small FROM products WHERE slot=:slot");
+//         }
+//         else if (size == 'c')
+//         {
+//             volume_query.prepare("SELECT size_custom_max FROM products WHERE slot=:slot");
+//         }
+//         else
+//         {
+//             qDebug() << " invalid size to volume character found.  " << size;
+//         }
 
-        volume_query.bindValue(":slot", slot);
-        volume_query.exec();
+//         volume_query.bindValue(":slot", slot);
+//         volume_query.exec();
 
-        while (volume_query.next())
-        {
-            volume = volume_query.value(0).toDouble();
-        }
-    }
-    qDebug() << " size to volume  " << size << "=" << volume;
-    return volume;
-}
+//         while (volume_query.next())
+//         {
+//             volume = volume_query.value(0).toDouble();
+//         }
+//     }
+//     qDebug() << " size to volume  " << size << "=" << volume;
+//     return volume;
+// }
 
-double DbManager::getFullProduct(int slot)
-{
-    qDebug() << " db... getFullProduct";
-    QSqlQuery full_query;
-    double full;
-    {
+// double DbManager::getFullProduct(int slot)
+// {
+//     qDebug() << " db... getFullProduct";
+//     QSqlQuery full_query;
+//     double full;
+//     {
 
-        full_query.prepare("SELECT volume_full FROM products WHERE slot=:slot");
+//         full_query.prepare("SELECT volume_full FROM products WHERE slot=:slot");
 
-        full_query.bindValue(":slot", slot);
-        full_query.exec();
+//         full_query.bindValue(":slot", slot);
+//         full_query.exec();
 
-        while (full_query.next())
-        {
-            full = full_query.value(0).toDouble();
-        }
-    }
-    return full;
-}
+//         while (full_query.next())
+//         {
+//             full = full_query.value(0).toDouble();
+//         }
+//     }
+//     return full;
+// }
 
 QString DbManager::getPaymentMethod(int slot)
 {
@@ -763,7 +827,6 @@ QString DbManager::getPaymentMethod(int slot)
 uint32_t DbManager::getNumberOfRows(QString table)
 {
     qDebug() << " db... getNumberOfRows";
-    // qDebug() << "rows: " << getNumberOfRows("products") << endl;
     QString qry = "SELECT COUNT(*) FROM ";
 
     qry.append(table);
@@ -781,91 +844,92 @@ uint32_t DbManager::getNumberOfRows(QString table)
     return row_count;
 }
 
-bool DbManager::setVolumeRemaining(int slot, double volumeMl)
-{
 
-    qDebug() << " db... modify remaining product";
-    QSqlQuery refill_query;
-    bool success = false;
-    QString sql_set_vol = "UPDATE products SET volume_remaining=:volume WHERE slot=:slot";
-    refill_query.prepare(sql_set_vol);
-    refill_query.bindValue(":volume", volumeMl);
-    refill_query.bindValue(":slot", slot);
-    if (!refill_query.exec())
-    {
-        qDebug() << "remaining ml update error:"
-                 << refill_query.lastError();
-        success = false;
-    }
+// bool DbManager::setVolumeRemaining(int slot, double volumeMl)
+// {
 
-    return success;
-}
+//     qDebug() << " db... modify remaining product";
+//     QSqlQuery refill_query;
+//     bool success = false;
+//     QString sql_set_vol = "UPDATE products SET volume_remaining=:volume WHERE slot=:slot";
+//     refill_query.prepare(sql_set_vol);
+//     refill_query.bindValue(":volume", volumeMl);
+//     refill_query.bindValue(":slot", slot);
+//     if (!refill_query.exec())
+//     {
+//         qDebug() << "remaining ml update error:"
+//                  << refill_query.lastError();
+//         success = false;
+//     }
 
-bool DbManager::restockProduct(int slot)
-{
-    qDebug() << " db... refill";
-    QSqlQuery refill_query;
-    bool success = false;
+//     return success;
+// }
 
-    QString sql_set_vol = "UPDATE products SET volume_remaining=volume_full WHERE slot=:slot";
-    QString sql_res_disp = "UPDATE products SET volume_dispensed_since_restock=0 WHERE slot=:slot";
-    QString sql_set_time = "UPDATE products SET last_restock=:time WHERE slot=:slot";
+// bool DbManager::restockProduct(int slot)
+// {
+//     qDebug() << " db... refill";
+//     QSqlQuery refill_query;
+//     bool success = false;
 
-    {
-        refill_query.prepare(sql_set_vol);
-        refill_query.bindValue(":slot", slot);
-        if (refill_query.exec())
-        {
-            refill_query.prepare(sql_res_disp);
-            refill_query.bindValue(":slot", slot);
-            if (refill_query.exec())
-            {
-                QSqlQuery refill_date;
-                refill_date.prepare(sql_set_time);
-                refill_date.bindValue(":slot", slot);
-                refill_date.bindValue(":time", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+//     QString sql_set_vol = "UPDATE products SET volume_remaining=volume_full WHERE slot=:slot";
+//     QString sql_res_disp = "UPDATE products SET volume_dispensed_since_restock=0 WHERE slot=:slot";
+//     QString sql_set_time = "UPDATE products SET last_restock=:time WHERE slot=:slot";
 
-                if (refill_date.exec())
-                {
-                    qDebug() << "Restock success. slot:" << QString::number(slot)
-                             << " volume:" << QString::number(getVolumeRemaining(slot));
+//     {
+//         refill_query.prepare(sql_set_vol);
+//         refill_query.bindValue(":slot", slot);
+//         if (refill_query.exec())
+//         {
+//             refill_query.prepare(sql_res_disp);
+//             refill_query.bindValue(":slot", slot);
+//             if (refill_query.exec())
+//             {
+//                 QSqlQuery refill_date;
+//                 refill_date.prepare(sql_set_time);
+//                 refill_date.bindValue(":slot", slot);
+//                 refill_date.bindValue(":time", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 
-                    success = true;
-                }
-                else
-                {
-                    qDebug() << "refill date error:"
-                             << refill_date.lastError();
-                    success = false;
-                }
-            }
-            else
-            {
-                qDebug() << "total ml dispensed update error:"
-                         << refill_query.lastError();
-                success = false;
-            }
-        }
-        else
-        {
-            qDebug() << "remaining ml update error:"
-                     << refill_query.lastError();
-            success = false;
-        }
-    }
+//                 if (refill_date.exec())
+//                 {
+//                     qDebug() << "Restock success. slot:" << QString::number(slot)
+//                              << " volume:" << QString::number(getVolumeRemaining(slot));
 
-    return success;
-}
+//                     success = true;
+//                 }
+//                 else
+//                 {
+//                     qDebug() << "refill date error:"
+//                              << refill_date.lastError();
+//                     success = false;
+//                 }
+//             }
+//             else
+//             {
+//                 qDebug() << "total ml dispensed update error:"
+//                          << refill_query.lastError();
+//                 success = false;
+//             }
+//         }
+//         else
+//         {
+//             qDebug() << "remaining ml update error:"
+//                      << refill_query.lastError();
+//             success = false;
+//         }
+//     }
+
+//     return success;
+// }
 
 void DbManager::emailEmpty(int slot)
 {
-    QString mt_product = getProductName(slot);
-    QString email_subject = mt_product + " has sold out!";
-    QString email_body = mt_product + " has sold out";
-    QString email_recipients = "paddy@drinkfill.com";
-    QString email = "echo '" + email_body + "' | mail -s '" + email_subject + "' -a 'From: Stongs Soapstand <hello@drinkfill.com>' " + email_recipients + " | screen -d -m";
+    // QString mt_product = getProductName(slot);
+    // QString email_subject = mt_product + " has sold out!";
+    // QString email_body = mt_product + " has sold out";
+    // QString email_recipients = "paddy@drinkfill.com";
+    // QString email = "echo '" + email_body + "' | mail -s '" + email_subject + "' -a 'From: Stongs Soapstand <hello@drinkfill.com>' " + email_recipients + " | screen -d -m";
 
-    system(email.toStdString().c_str());
+    // system(email.toStdString().c_str());
 }
 
 void DbManager::addUserInteraction(QString action)
@@ -885,122 +949,122 @@ void DbManager::addUserInteraction(QString action)
     }
 }
 
-int DbManager::getTotalTransactions()
-{
-    qDebug() << " db... getTotalTransactions";
-    QSqlQuery transaction_query;
-    double transactions;
+// int DbManager::getTotalTransactions()
+// {
+//     qDebug() << " db... getTotalTransactions";
+//     QSqlQuery transaction_query;
+//     double transactions;
 
-    {
-        transaction_query.prepare("SELECT COUNT(*) FROM transactions;");
-        transaction_query.exec();
+//     {
+//         transaction_query.prepare("SELECT COUNT(*) FROM transactions;");
+//         transaction_query.exec();
 
-        while (transaction_query.next())
-        {
-            transactions = transaction_query.value(0).toInt();
-        }
-    }
+//         while (transaction_query.next())
+//         {
+//             transactions = transaction_query.value(0).toInt();
+//         }
+//     }
 
-    return transactions;
-}
+//     return transactions;
+// }
 
-int DbManager::getNumberOfProducts()
-{
-    qDebug() << " db... getNumberOfProducts";
-    QSqlQuery products_query;
-    int products;
+// int DbManager::getNumberOfProducts()
+// {
+//     qDebug() << " db... getNumberOfProducts";
+//     QSqlQuery products_query;
+//     int products;
 
-    {
-        products_query.prepare("SELECT COUNT(*) FROM products;");
-        products_query.exec();
+//     {
+//         products_query.prepare("SELECT COUNT(*) FROM products;");
+//         products_query.exec();
 
-        while (products_query.next())
-        {
-            products = products_query.value(0).toInt();
-        }
-    }
-    return products;
-}
+//         while (products_query.next())
+//         {
+//             products = products_query.value(0).toInt();
+//         }
+//     }
+//     return products;
+// }
 
-double DbManager::getVolumeDispensedSinceRestock(int slot)
-{
-    qDebug() << " db...vol dispensed since restock";
-    QSqlQuery dispensed_query;
-    double dispensed;
-    {
+// double DbManager::getVolumeDispensedSinceRestock(int slot)
+// {
+//     qDebug() << " db...vol dispensed since restock";
+//     QSqlQuery dispensed_query;
+//     double dispensed;
+//     {
 
-        dispensed_query.prepare("SELECT volume_dispensed_since_restock FROM products WHERE slot=:slot");
-        dispensed_query.bindValue(":slot", slot);
-        dispensed_query.exec();
+//         dispensed_query.prepare("SELECT volume_dispensed_since_restock FROM products WHERE slot=:slot");
+//         dispensed_query.bindValue(":slot", slot);
+//         dispensed_query.exec();
 
-        while (dispensed_query.next())
-        {
-            dispensed = dispensed_query.value(0).toDouble();
-        }
-    }
-    return dispensed;
-}
+//         while (dispensed_query.next())
+//         {
+//             dispensed = dispensed_query.value(0).toDouble();
+//         }
+//     }
+//     return dispensed;
+// }
 
-double DbManager::getTotalDispensed(int slot)
-{
-    qDebug() << " db... getTotalDispensed";
-    QSqlQuery dispensed_query;
-    double dispensed;
-    {
-        dispensed_query.prepare("SELECT volume_dispensed_total FROM products WHERE slot=:slot");
-        dispensed_query.bindValue(":slot", slot);
-        dispensed_query.exec();
+// double DbManager::getTotalDispensed(int slot)
+// {
+//     qDebug() << " db... getTotalDispensed";
+//     QSqlQuery dispensed_query;
+//     double dispensed;
+//     {
+//         dispensed_query.prepare("SELECT volume_dispensed_total FROM products WHERE slot=:slot");
+//         dispensed_query.bindValue(":slot", slot);
+//         dispensed_query.exec();
 
-        while (dispensed_query.next())
-        {
-            dispensed = dispensed_query.value(0).toDouble();
-        }
-    }
-    return dispensed;
-}
+//         while (dispensed_query.next())
+//         {
+//             dispensed = dispensed_query.value(0).toDouble();
+//         }
+//     }
+//     return dispensed;
+// }
 
-int DbManager::getDispenseButtonCount()
-{
-    // QSqlQuery qry;
-    int count;
+// int DbManager::getDispenseButtonCount()
+// {
+//     // QSqlQuery qry;
+//     int count;
 
-    // QString qry_qstr = QString("SELECT dispense_buttons_count FROM machine");
+//     // QString qry_qstr = QString("SELECT dispense_buttons_count FROM machine");
 
-    QSqlQuery mid_query;
-    QString mid_string;
+//     QSqlQuery mid_query;
+//     QString mid_string;
 
-    {
-        mid_query.prepare("SELECT dispense_buttons_count FROM machine");
-        mid_query.exec();
+//     {
+//         mid_query.prepare("SELECT dispense_buttons_count FROM machine");
+//         mid_query.exec();
 
-        while (mid_query.next())
-        {
-            count = mid_query.value(0).toInt();
-        }
-    }
-    return count;
+//         while (mid_query.next())
+//         {
+//             count = mid_query.value(0).toInt();
+//         }
+//     }
+//     return count;
 
-    // // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
-    // string qry_string = qry_qstr.toUtf8().constData();
-    // qry.prepare(qry_string.c_str());
+//     // // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
+//     // string qry_string = qry_qstr.toUtf8().constData();
+//     // qry.prepare(qry_string.c_str());
 
-    // qry.exec();
-    // if (qry.exec())
-    // {
-    // }
-    // else
-    // {
-    //     qDebug() << "Failed to check slot available." << qry_qstr;
-    // }
+//     // qry.exec();
+//     // if (qry.exec())
+//     // {
+//     // }
+//     // else
+//     // {
+//     //     qDebug() << "Failed to check slot available." << qry_qstr;
+//     // }
 
-    // while (qry.next())
-    //     qDebug() << qry.value(0);
-    // {
-    //     count = qry.value(0).toInt();
-    // }
+//     // while (qry.next())
+//     //     qDebug() << qry.value(0);
+//     // {
+//     //     count = qry.value(0).toInt();
+//     // }
 
-    // return count;
-}
+//     // return count;
+// }
 
 // int DbManager::getSlotEnabled(int slot)
 // {
@@ -1258,116 +1322,116 @@ bool DbManager::setEmptyContainerDetectionEnabled(int isEnabled)
 //     return val;
 // }
 
-QString DbManager::getCustomerId()
-{
-    QSqlQuery qry;
-    QString val;
-    {
-        qry.prepare("SELECT soapstand_customer_id FROM machine");
-        qry.exec();
+// QString DbManager::getCustomerId()
+// {
+//     QSqlQuery qry;
+//     QString val;
+//     {
+//         qry.prepare("SELECT soapstand_customer_id FROM machine");
+//         qry.exec();
 
-        while (qry.next())
-        {
-            val = qry.value(0).toString();
-        }
-    }
-    return val;
-}
+//         while (qry.next())
+//         {
+//             val = qry.value(0).toString();
+//         }
+//     }
+//     return val;
+// }
 
-double DbManager::getVolumeRemaining(int slot)
-{
+// double DbManager::getVolumeRemaining(int slot)
+// {
 
-    qDebug() << " db... getVolumeRemaining";
-    QSqlQuery remaining_query;
-    double remaining;
-    {
-        remaining_query.prepare("SELECT volume_remaining FROM products WHERE slot=:slot");
-        remaining_query.bindValue(":slot", slot);
-        remaining_query.exec();
+//     qDebug() << " db... getVolumeRemaining";
+//     QSqlQuery remaining_query;
+//     double remaining;
+//     {
+//         remaining_query.prepare("SELECT volume_remaining FROM products WHERE slot=:slot");
+//         remaining_query.bindValue(":slot", slot);
+//         remaining_query.exec();
 
-        while (remaining_query.next())
-        {
-            remaining = remaining_query.value(0).toDouble();
-        }
-    }
-    return remaining;
-}
+//         while (remaining_query.next())
+//         {
+//             remaining = remaining_query.value(0).toDouble();
+//         }
+//     }
+//     return remaining;
+// }
 
-QString DbManager::getLastRestockDate(int slot)
-{
-    // last as in "most recent"
-    qDebug() << " db... getLastRestockDate";
-    QSqlQuery refill_date_query;
-    QString refill_date_string;
+// QString DbManager::getLastRestockDate(int slot)
+// {
+//     // last as in "most recent"
+//     qDebug() << " db... getLastRestockDate";
+//     QSqlQuery refill_date_query;
+//     QString refill_date_string;
 
-    {
-        refill_date_query.prepare("SELECT last_restock FROM products WHERE slot=:slot");
-        refill_date_query.bindValue(":slot", slot);
-        refill_date_query.exec();
+//     {
+//         refill_date_query.prepare("SELECT last_restock FROM products WHERE slot=:slot");
+//         refill_date_query.bindValue(":slot", slot);
+//         refill_date_query.exec();
 
-        while (refill_date_query.next())
-        {
-            refill_date_string = refill_date_query.value(0).toString();
+//         while (refill_date_query.next())
+//         {
+//             refill_date_string = refill_date_query.value(0).toString();
 
-            // qDebug() << "Product: " << product_name << endl;
-        }
-    }
-    return refill_date_string;
-}
+//             // qDebug() << "Product: " << product_name << endl;
+//         }
+//     }
+//     return refill_date_string;
+// }
 
-double DbManager::getTemperature()
-{
-    qDebug() << " db... getTemperature";
-    QSqlQuery temperature_query;
-    double temperature;
+// double DbManager::getTemperature()
+// {
+//     qDebug() << " db... getTemperature";
+//     QSqlQuery temperature_query;
+//     double temperature;
 
-    {
-        temperature_query.prepare("SELECT temp FROM temperature LIMIT 1 offset cast((SELECT count(*) FROM temperature) AS INT) - 1");
-        temperature_query.exec();
-        while (temperature_query.next())
-        {
-            temperature = temperature_query.value(0).toDouble();
-        }
-    }
-    return temperature;
-}
+//     {
+//         temperature_query.prepare("SELECT temp FROM temperature LIMIT 1 offset cast((SELECT count(*) FROM temperature) AS INT) - 1");
+//         temperature_query.exec();
+//         while (temperature_query.next())
+//         {
+//             temperature = temperature_query.value(0).toDouble();
+//         }
+//     }
+//     return temperature;
+// }
 
-int DbManager::getPWM(int slot)
-{
-    QSqlQuery pwm_query;
-    double pwm;
+// int DbManager::getPWM(int slot)
+// {
+//     QSqlQuery pwm_query;
+//     double pwm;
 
-    pwm_query.prepare("SELECT dispense_speed FROM products WHERE slot=:slot");
-    pwm_query.bindValue(":slot", slot);
-    pwm_query.exec();
-    {
-        while (pwm_query.next())
-        {
-            pwm = pwm_query.value(0).toInt();
-            qDebug() << "pwm" << slot << pwm << endl;
-        }
-    }
+//     pwm_query.prepare("SELECT dispense_speed FROM products WHERE slot=:slot");
+//     pwm_query.bindValue(":slot", slot);
+//     pwm_query.exec();
+//     {
+//         while (pwm_query.next())
+//         {
+//             pwm = pwm_query.value(0).toInt();
+//             qDebug() << "pwm" << slot << pwm << endl;
+//         }
+//     }
 
-    return pwm;
-}
+//     return pwm;
+// }
 
-double DbManager::getBuffer(int slot)
-{
-    qDebug() << " db... getBuffer";
-    QSqlQuery buffer_query;
-    double buffer;
+// double DbManager::getBuffer(int slot)
+// {
+//     qDebug() << " db... getBuffer";
+//     QSqlQuery buffer_query;
+//     double buffer;
 
-    {
-        buffer_query.prepare("SELECT buffer FROM products WHERE slot=:slot");
-        buffer_query.bindValue(":slot", slot);
-        buffer_query.exec();
-        while (buffer_query.next())
-        {
-            buffer = buffer_query.value(0).toDouble();
-        }
-    }
-    return buffer;
-}
+//     {
+//         buffer_query.prepare("SELECT buffer FROM products WHERE slot=:slot");
+//         buffer_query.bindValue(":slot", slot);
+//         buffer_query.exec();
+//         while (buffer_query.next())
+//         {
+//             buffer = buffer_query.value(0).toDouble();
+//         }
+//     }
+//     return buffer;
+// }
 
 bool DbManager::updatePaymentsDb(QString date, QString time, QString txnType, QString amount, QString cardNo, QString refNo, QString authNo, QString cardType, QString status, QString isoCode, QString hostCode, QString tvr)
 {
@@ -1603,40 +1667,40 @@ bool DbManager::updateBuffer(int slot, double new_buffer)
     }
 }
 
-QString DbManager::getPLU(int slot, char size)
-{
-    qDebug() << " db... getPLU";
-    QSqlQuery plu_query;
-    QString plu_smalltring;
-    {
+// QString DbManager::getPLU(int slot, char size)
+// {
+//     qDebug() << " db... getPLU";
+//     QSqlQuery plu_query;
+//     QString plu_smalltring;
+//     {
 
-        if (size == 's')
-        {
-            plu_query.prepare("SELECT PLU_small FROM products WHERE slot=:slot");
-        }
-        else if (size == 'm')
-        {
-            plu_query.prepare("SELECT PLU_medium FROM products WHERE slot=:slot");
-        }
-        else if (size == 'l')
-        {
-            plu_query.prepare("SELECT PLU_large FROM products WHERE slot=:slot");
-        }
-        else if (size == 'c')
-        {
-            plu_query.prepare("SELECT PLU_custom FROM products WHERE slot=:slot");
-        }
+//         if (size == 's')
+//         {
+//             plu_query.prepare("SELECT PLU_small FROM products WHERE slot=:slot");
+//         }
+//         else if (size == 'm')
+//         {
+//             plu_query.prepare("SELECT PLU_medium FROM products WHERE slot=:slot");
+//         }
+//         else if (size == 'l')
+//         {
+//             plu_query.prepare("SELECT PLU_large FROM products WHERE slot=:slot");
+//         }
+//         else if (size == 'c')
+//         {
+//             plu_query.prepare("SELECT PLU_custom FROM products WHERE slot=:slot");
+//         }
 
-        plu_query.bindValue(":slot", slot);
-        plu_query.exec();
+//         plu_query.bindValue(":slot", slot);
+//         plu_query.exec();
 
-        while (plu_query.next())
-        {
-            plu_smalltring = plu_query.value(0).toString();
-        }
-    }
-    return plu_smalltring;
-}
+//         while (plu_query.next())
+//         {
+//             plu_smalltring = plu_query.value(0).toString();
+//         }
+//     }
+//     return plu_smalltring;
+// }
 
 bool DbManager::updatePluSmall(int slot, QString new_plu)
 {
@@ -1856,24 +1920,24 @@ void DbManager::printerStatus(bool *isOnline, bool *hasPaper)
 //     return idlePageType;
 // }
 
-QString DbManager::getProductType(int slot)
-{
-    QSqlQuery product_type_query;
-    QString product_type_string;
+// QString DbManager::getProductType(int slot)
+// {
+//     QSqlQuery product_type_query;
+//     QString product_type_string;
 
-    {
+//     {
 
-        product_type_query.prepare("SELECT type FROM products WHERE slot=:slot");
-        product_type_query.bindValue(":slot", slot);
-        product_type_query.exec();
+//         product_type_query.prepare("SELECT type FROM products WHERE slot=:slot");
+//         product_type_query.bindValue(":slot", slot);
+//         product_type_query.exec();
 
-        while (product_type_query.next())
-        {
-            product_type_string = product_type_query.value(0).toString();
-        }
-    }
-    return product_type_string;
-}
+//         while (product_type_query.next())
+//         {
+//             product_type_string = product_type_query.value(0).toString();
+//         }
+//     }
+//     return product_type_string;
+// }
 
 // bool DbManager::showTransactions()
 // {
@@ -1892,68 +1956,68 @@ QString DbManager::getProductType(int slot)
 //     return is_enabled;
 // }
 
-QString DbManager::getAwsProductId(int slot)
-{
-    QSqlQuery product_id_query;
-    QString product_id_string;
+// QString DbManager::getAwsProductId(int slot)
+// {
+//     QSqlQuery product_id_query;
+//     QString product_id_string;
 
-    {
+//     {
 
-        product_id_query.prepare("SELECT productId FROM products WHERE slot=:slot");
-        product_id_query.bindValue(":slot", slot);
-        product_id_query.exec();
+//         product_id_query.prepare("SELECT productId FROM products WHERE slot=:slot");
+//         product_id_query.bindValue(":slot", slot);
+//         product_id_query.exec();
 
-        while (product_id_query.next())
-        {
-            product_id_string = product_id_query.value(0).toString();
+//         while (product_id_query.next())
+//         {
+//             product_id_string = product_id_query.value(0).toString();
 
-            // qDebug() << "Product: " << product_name << endl;
-        }
-    }
-    return product_id_string;
-}
+//             // qDebug() << "Product: " << product_name << endl;
+//         }
+//     }
+//     return product_id_string;
+// }
 
-QString DbManager::getUnits(int slot)
-{
-    qDebug() << " db... getUnits";
-    QSqlQuery units_query;
-    QString units_string;
-    {
-        units_query.prepare("SELECT size_unit FROM products WHERE slot=:slot");
-        units_query.bindValue(":slot", slot);
-        units_query.exec();
+// QString DbManager::getUnits(int slot)
+// {
+//     qDebug() << " db... getUnits";
+//     QSqlQuery units_query;
+//     QString units_string;
+//     {
+//         units_query.prepare("SELECT size_unit FROM products WHERE slot=:slot");
+//         units_query.bindValue(":slot", slot);
+//         units_query.exec();
 
-        while (units_query.next())
-        {
-            units_string = units_query.value(0).toString();
+//         while (units_query.next())
+//         {
+//             units_string = units_query.value(0).toString();
 
-            // qDebug() << "Product: " << product_name << endl;
-        }
-    }
-    return units_string;
-}
+//             // qDebug() << "Product: " << product_name << endl;
+//         }
+//     }
+//     return units_string;
+// }
 
-int DbManager::getLastTransactionIdFromDb()
-{
-    qDebug() << " db... getLastTransactionIdFromDb" << endl;
-    QSqlQuery lastTransactionIdQuery;
-    int lastTransactionId = 0;
+// int DbManager::getLastTransactionIdFromDb()
+// {
+//     qDebug() << " db... getLastTransactionIdFromDb" << endl;
+//     QSqlQuery lastTransactionIdQuery;
+//     int lastTransactionId = 0;
 
-    {
+//     {
 
-        lastTransactionIdQuery.prepare("SELECT * FROM transactions ORDER BY id DESC LIMIT 1");
-        lastTransactionIdQuery.exec();
+//         lastTransactionIdQuery.prepare("SELECT * FROM transactions ORDER BY id DESC LIMIT 1");
+//         lastTransactionIdQuery.exec();
 
-        while (lastTransactionIdQuery.next())
-        {
-            lastTransactionId = lastTransactionIdQuery.value(0).toInt();
-            ;
-        }
-    }
-    qDebug() << " Last transaction :" << lastTransactionId << endl;
+//         while (lastTransactionIdQuery.next())
+//         {
+//             lastTransactionId = lastTransactionIdQuery.value(0).toInt();
+//             ;
+//         }
+//     }
+//     qDebug() << " Last transaction :" << lastTransactionId << endl;
 
-    return lastTransactionId;
-}
+//     return lastTransactionId;
+// }
 
 // QString DbManager::getPriceSmall(int slot)
 // {

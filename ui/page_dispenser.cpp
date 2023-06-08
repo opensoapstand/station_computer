@@ -130,12 +130,13 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     previousDispenseStatus = "NO STATE";
 
-    qDebug() << "db check dispense buttons count:";
-    DbManager db(DB_PATH);
-    int button_count = db.getDispenseButtonCount();
-    db.closeDB();
+    // qDebug() << "db check dispense buttons count:";
+    // DbManager db(DB_PATH);
+    // int button_count = db.getDispenseButtonCount();
+    // db.closeDB();
+//    ;
 
-    if (button_count == 1)
+    if (p_page_idle->thisMachine.getDispensersCount() == 1)
     {
         // single spout
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);

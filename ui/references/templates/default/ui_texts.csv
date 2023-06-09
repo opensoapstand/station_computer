@@ -1,13 +1,16 @@
 # Display texts. 
 # Default template. 
 # Non default templates can be put in their template folder with the same name. Object names not found in the file in the template folder will be taken from the default template file
-# PAGE->OBJECTNAME,mytext
-# PAGE = QT page name
-# OBJECTNAME = QWidget (QLabel or QPushButton)
-# , = separator between name and text
-# mytext = custom text to be displayed on screen
-# template comment example (needs to start with a #)
 
+########################################## example ##############################
+# PAGE->OBJECTNAME,mytext
+#    PAGE = QT page name
+#    OBJECTNAME = QWidget (QLabel or QPushButton)
+#    , = separator between name and text
+#    mytext = custom text to be displayed on screen
+#################################################################################
+
+# comment example (needs to start with a #)
 # empty lines are also permitted
 
 #page_init
@@ -24,10 +27,10 @@ page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer em
 page_select_product->label_pick_soap,Pick your soap
 page_select_product->pushButton_to_idle,<-back
 page_select_product->no_text,
-page_select_product->empty,empty
-page_select_product->almost_empty,almost-empty
-page_select_product->sold_out,sold-out
-page_select_product->assistance,assistance
+page_select_product->empty,Empty
+page_select_product->almost_empty,Almost<br>empty
+page_select_product->sold_out,Sold<br>out
+page_select_product->assistance,Needs<br>assistance
 page_select_product->coming_soon,Coming<br>soon
 page_select_product->default,. . .
 page_select_product->available,
@@ -39,7 +42,7 @@ page_product->pushButton_continue,Continue
 page_product->custom_volume,Custom Volume
 
 # page_product_overview
-page_product_overview->pushButton_select_product_page,<- Back
+page_product_overview->pushButton_select_product_page,<- back
 page_product_overview->label_discount_tag,Discount
 page_product_overview->pushButton_continue,Continue
 page_product_overview->label_total,Total

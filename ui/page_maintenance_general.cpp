@@ -41,10 +41,7 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     qDebug() << "db for maintenance general";
     ui->checkBox_enable_empty_container->setChecked(p_page_idle->thisMachine.getEmptyContainerDetectionEnabled());
     ui->checkBox_enable_empty_container->setText("Enable auto empty detection. (If disabled, will display sold out if less than " + QString::number(CONTAINER_EMPTY_THRESHOLD_ML) + "ml remaining)");
-    DbManager db(DB_PATH);
     ui->checkBox_enable_pump_ramping->setChecked(p_page_idle->thisMachine.getPumpRampingEnabled());
-    // ui->checkBox_enable_pump_ramping->hide();
-    db.closeDB();
 
     QProcess process;
 
@@ -185,10 +182,11 @@ void page_maintenance_general::on_checkBox_enable_pump_ramping_clicked(bool chec
     // qDebug() << "test empty db: " << p_page_idle->thisMachine.getPumpRampingEnabled();
     if (checked != p_page_idle->thisMachine.getPumpRampingEnabled())
     {
-        qDebug() << "Write to db: Pump ramping enabled?" << checked;
-        DbManager db(DB_PATH);
-        db.setPumpRampingEnabled(checked);
-        db.closeDB();
+        // qDebug() << "Write to db: Pump ramping enabled?" << checked;
+        // DbManager db(DB_PATH);
+        // db.setPumpRampingEnabled(checked);
+        // db.closeDB();
+        p_page_idle->thisMachine.setPumpRampingEnabled(checked);
         ui->checkBox_enable_pump_ramping->setChecked(p_page_idle->thisMachine.getPumpRampingEnabled());
     }
 }
@@ -199,10 +197,11 @@ void page_maintenance_general::on_checkBox_enable_empty_container_clicked(bool c
     // qDebug() << "test empty db: " << db.getEmptyContainerDetectionEnabled();
     if (checked != p_page_idle->thisMachine.getEmptyContainerDetectionEnabled())
     {
-        qDebug() << "Empty container detection enabled?" << checked;
-        DbManager db(DB_PATH);
-        db.setEmptyContainerDetectionEnabled(checked);
-        db.closeDB();
+        // qDebug() << "Empty container detection enabled?" << checked;
+        // DbManager db(DB_PATH);
+        // db.setEmptyContainerDetectionEnabled(checked);
+        // db.closeDB();
+        p_page_idle->thisMachine.setEmptyContainerDetectionEnabled(checked);
         ui->checkBox_enable_empty_container->setChecked(p_page_idle->thisMachine.getEmptyContainerDetectionEnabled());
     }
 }

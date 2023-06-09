@@ -29,21 +29,21 @@ public:
     void printerStatus(bool *isOnline, bool *hasPaper); // do not erase
 
     QString getPaymentMethod(int slot); // do not erase yet (wait for ash)
-    void setPaymentToQR();              // ASh to change.
+    // void setPaymentToQR();              // ASh to change.
 
     bool updateSlotAvailability(int slot, int isEnabled, QString status_text);
     void addUserInteraction(QString action);
 
     // bool updatePrice(int slot, int size, double new_price);
-    bool setEmptyContainerDetectionEnabled(int isEnabled);
-    bool setPumpRampingEnabled(int isEnabled);
-    bool updateTargetVolume(int slot, int size, double new_volume);
-    bool updateVolumePerTick(int slot, double new_volume_per_tick);
-    bool updateFullVolume(int slot, double new_full_volume);
-    bool updatePWM(int slot, int new_pwm);
-    bool updateBuffer(int slot, double new_buffer);
-    bool updatePluSmall(int slot, QString new_plu);
-    bool updatePluLarge(int slot, QString new_plu);
+    // bool setEmptyContainerDetectionEnabled(int isEnabled);
+    // bool setPumpRampingEnabled(int isEnabled);
+    // bool updateTargetVolume(int slot, int size, double new_volume);
+    // bool updateVolumePerTick(int slot, double new_volume_per_tick);
+    // bool updateFullVolume(int slot, double new_full_volume);
+    // bool updatePWM(int slot, int new_pwm);
+    // bool updateBuffer(int slot, double new_buffer);
+    // bool updatePluSmall(int slot, QString new_plu);
+    // bool updatePluLarge(int slot, QString new_plu);
 
     void getAllProductProperties(int slot,
                                  QString *productId,

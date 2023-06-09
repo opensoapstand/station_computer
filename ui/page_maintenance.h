@@ -84,7 +84,7 @@ private:
     page_select_product* p_pageSelectProduct;
     page_product* p_page_product;
 
-    QResizeEvent *productSelection;
+    // QResizeEvent *productSelection;
     QPushButton* product_buttons[4];
     QLabel* product_overlay_labels[4];
     int _page_maintenanceTimeoutSec;

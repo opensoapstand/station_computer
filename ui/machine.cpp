@@ -67,6 +67,19 @@ bool machine::getPumpRampingEnabled()
 {
     return m_enable_pump_ramping == 1;
 }
+
+void machine::setPumpRampingEnabled(bool isEnabled){
+    DbManager db(DB_PATH);
+    db.updateTableMachineWithInt("enable_pump_ramping", isEnabled);
+    db.closeDB();
+}
+
+void machine::setEmptyContainerDetectionEnabled(bool isEnabled){
+    DbManager db(DB_PATH);
+    db.updateTableMachineWithInt("has_empty_detection", isEnabled);
+    db.closeDB();
+}
+
 bool machine::getEmptyContainerDetectionEnabled()
 {
     return m_has_empty_detection == 1;
@@ -95,40 +108,38 @@ QString machine::setStatusText(int slot, bool isSlotEnabled, QString status)
 
 QString machine::getStatusText(int slot)
 {
-    isSlotNumberValid(slot);
+    slotNumberValidityCheck(slot);
     return m_status_text_slots[slot - 1];
 }
 QString machine::getPumpId(int slot)
 {
 
-    isSlotNumberValid(slot);
+    slotNumberValidityCheck(slot);
     return m_pump_id_slots[slot - 1];
 }
 
-bool machine::isSlotNumberValid(int slot)
+bool machine::slotNumberValidityCheck(int slot)
 {
     bool valid = true;
-    if (slot <= 0)
+    if (slot < 1)
     {
         valid = false;
     }
-    if (slot >= SLOT_COUNT)
+    if (slot > SLOT_COUNT)
     {
         valid = false;
     }
     if (!valid)
     {
 
-        qDebug() << "Invalid slot! slots start from 1 and go up. e.g. 1,2,3,4. Slot provided: " << slot;
+        qDebug() << "Invalid slot! slots start from 1 and go up to " << SLOT_COUNT << " e.g. 1,2,3,4. Slot provided: " << slot;
     }
     return valid;
 }
 bool machine::getSlotEnabled(int slot)
 {
     // this should have been part of the products table. But it isn't. We access this from the product.cpp class.
-
-    isSlotNumberValid(slot);
-    qDebug() << "****************************************** " << m_is_enabled_slots[slot - 1];
+    slotNumberValidityCheck(slot);
     return (m_is_enabled_slots[slot - 1] == 1);
 }
 
@@ -147,7 +158,6 @@ void machine::loadParametersFromDb()
     qDebug() << "DB call: Load all machine parameters";
 
     DbManager db(DB_PATH);
-    // qDebug() << "machine id independaent" << db.getMachineID();
 
     db.getAllMachineProperties(
         &m_machine_id,
@@ -179,54 +189,52 @@ void machine::loadParametersFromDb()
         m_status_text_slots);
     db.closeDB();
 
-    qDebug() << "varr: "
-             << "m_machine_id:";
-    qDebug() << "varr: " << m_machine_id;
-    qDebug() << "varr: "
-             << "m_machine_id cuostm er id:";
-    qDebug() << "varr: " << m_soapstand_customer_id;
-    qDebug() << "varr: " << m_template;
-    qDebug() << "varr: " << m_location;
-    qDebug() << "varr: " << m_controller_type;
-    qDebug() << "varr: " << m_controller_id;
-    qDebug() << "varr: " << m_screen_type;
-    qDebug() << "varr: " << m_screen_id;
-    qDebug() << "varr: " << m_has_receipt_printer;
-    qDebug() << "varr: " << m_receipt_printer_is_online;
-    qDebug() << "varr: " << m_receipt_printer_has_paper;
-    qDebug() << "varr: " << m_has_tap_payment;
-    qDebug() << "varr: " << m_hardware_version;
-    qDebug() << "varr: " << m_software_version;
-    qDebug() << "varr: " << m_aws_port;
-    // qDebug() << "varr: " << m_pump_id_slot_1;
-    // qDebug() << "varr: " << m_pump_id_slot_2;
-    // qDebug() << "varr: " << m_pump_id_slot_3;
-    // qDebug() << "varr: " << m_pump_id_slot_4;
-    // qDebug() << "varr: " << m_is_enabled_slot_1;
-    // qDebug() << "varr: " << m_is_enabled_slot_2;
-    // qDebug() << "varr: " << m_is_enabled_slot_3;
-    // qDebug() << "varr: " << m_is_enabled_slot_4;
-    qDebug() << "varr: " << m_coupons_enabled;
-    // qDebug() << "varr: " << m_status_text_slot_1;
-    // qDebug() << "varr: " << m_status_text_slot_2;
-    // qDebug() << "varr: " << m_status_text_slot_3;
-    // qDebug() << "varr: " << m_status_text_slot_4;
-    qDebug() << "varr: " << m_has_empty_detection;
-    qDebug() << "varr: " << m_enable_pump_ramping;
-    qDebug() << "varr: " << m_enable_pump_reversal;
-    qDebug() << "varr: " << m_dispense_buttons_count;
-    qDebug() << "varr: " << m_maintenance_pwd;
-    qDebug() << "varr: " << m_show_transactions;
-    qDebug() << "varr: " << m_help_text_html;
-    qDebug() << "varr: " << m_idle_page_type;
-    for (int i = 0; i < 4; i++)
-    {
-        qDebug() << "varrrr====";
-        qDebug() << i;
-        qDebug() << m_is_enabled_slots[i];
-        qDebug() << m_pump_id_slots[i];
-        qDebug() << m_status_text_slots[i];
-    }
+    qDebug() << "Machine ID as loaded from db: " <<  m_machine_id;
+    // qDebug() << "varr: "
+    //          << "m_machine_id cuostm er id:";
+    // qDebug() << "varr: " << m_soapstand_customer_id;
+    // qDebug() << "varr: " << m_template;
+    // qDebug() << "varr: " << m_location;
+    // qDebug() << "varr: " << m_controller_type;
+    // qDebug() << "varr: " << m_controller_id;
+    // qDebug() << "varr: " << m_screen_type;
+    // qDebug() << "varr: " << m_screen_id;
+    // qDebug() << "varr: " << m_has_receipt_printer;
+    // qDebug() << "varr: " << m_receipt_printer_is_online;
+    // qDebug() << "varr: " << m_receipt_printer_has_paper;
+    // qDebug() << "varr: " << m_has_tap_payment;
+    // qDebug() << "varr: " << m_hardware_version;
+    // qDebug() << "varr: " << m_software_version;
+    // qDebug() << "varr: " << m_aws_port;
+    // // qDebug() << "varr: " << m_pump_id_slot_1;
+    // // qDebug() << "varr: " << m_pump_id_slot_2;
+    // // qDebug() << "varr: " << m_pump_id_slot_3;
+    // // qDebug() << "varr: " << m_pump_id_slot_4;
+    // // qDebug() << "varr: " << m_is_enabled_slot_1;
+    // // qDebug() << "varr: " << m_is_enabled_slot_2;
+    // // qDebug() << "varr: " << m_is_enabled_slot_3;
+    // // qDebug() << "varr: " << m_is_enabled_slot_4;
+    // qDebug() << "varr: " << m_coupons_enabled;
+    // // qDebug() << "varr: " << m_status_text_slot_1;
+    // // qDebug() << "varr: " << m_status_text_slot_2;
+    // // qDebug() << "varr: " << m_status_text_slot_3;
+    // // qDebug() << "varr: " << m_status_text_slot_4;
+    // qDebug() << "varr: " << m_has_empty_detection;
+    // qDebug() << "varr: " << m_enable_pump_ramping;
+    // qDebug() << "varr: " << m_enable_pump_reversal;
+    // qDebug() << "varr: " << m_dispense_buttons_count;
+    // qDebug() << "varr: " << m_maintenance_pwd;
+    // qDebug() << "varr: " << m_show_transactions;
+    // qDebug() << "varr: " << m_help_text_html;
+    // qDebug() << "varr: " << m_idle_page_type;
+    // for (int i = 0; i < 4; i++)
+    // {
+    //     qDebug() << "varrrr====";
+    //     qDebug() << i;
+    //     qDebug() << m_is_enabled_slots[i];
+    //     qDebug() << m_pump_id_slots[i];
+    //     qDebug() << m_status_text_slots[i];
+    // }
 }
 
 int machine::getDispensersCount()

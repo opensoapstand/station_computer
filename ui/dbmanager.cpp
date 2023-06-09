@@ -88,7 +88,7 @@ DbManager::~DbManager()
 
 bool DbManager::executeQuery(QSqlQuery *qry, QString sql)
 {
-    bool success = false;
+    bool success = true;
 
     qry->prepare(sql);
     if (!qry->exec())
@@ -112,13 +112,14 @@ bool DbManager::updateTableMachineWithInt(QString column, int value)
 
 bool DbManager::updateTableMachineWithDouble(QString column, double value, int precision)
 {
+    
     updateTableMachineWithText(column, QString::number(value, 'f', precision));
 }
 
 bool DbManager::updateTableMachineWithText(QString column, QString value)
 {
     QSqlQuery qry;
-    QString sql_text = QString("UPDATE machine SET %1=%2 ").arg(column, value);
+    QString sql_text = QString("UPDATE machine SET %1='%2'").arg(column, value);
     return executeQuery(&qry, sql_text);
 }
 
@@ -137,9 +138,52 @@ bool DbManager::updateTableProductsWithDouble(int slot, QString column, double v
 bool DbManager::updateTableProductsWithText(int slot, QString column, QString value)
 {
     QSqlQuery qry;
-    QString sql_text = QString("UPDATE products SET %1=%2 WHERE slot=%3").arg(column, value, QString::number(slot));
+    QString sql_text = QString("UPDATE products SET %1='%2' WHERE slot=%3").arg(column, value, QString::number(slot));
     return executeQuery(&qry, sql_text);
 }
+
+// bool DbManager::updateTableMachineWithInt(QString column, int value)
+// {
+//     QSqlQuery qry;
+//     QString sql_text = QString("UPDATE machine SET %1=%2").arg(column, QString::number(value));
+//     return executeQuery(&qry, sql_text);
+// }
+
+// bool DbManager::updateTableMachineWithDouble(QString column, double value, int precision)
+// {
+//     QSqlQuery qry;
+//     QString sql_text = QString("UPDATE machine SET %1=%2").arg(column, QString::number(value, 'f', precision));
+//     return executeQuery(&qry, sql_text);
+// }
+
+// bool DbManager::updateTableMachineWithText(QString column, QString value)
+// {
+//     QSqlQuery qry;
+//     QString sql_text = QString("UPDATE machine SET %1='%2'").arg(column, value);
+//     return executeQuery(&qry, sql_text);
+// }
+
+// bool DbManager::updateTableProductsWithInt(int slot, QString column, int value)
+// {
+
+//     QSqlQuery qry;
+//     QString sql_text = QString("UPDATE products SET %1=%2").arg(column, QString::number(value));
+//     return executeQuery(&qry, sql_text);
+// }
+
+// bool DbManager::updateTableProductsWithDouble(int slot, QString column, double value, int precision)
+// {
+//     QSqlQuery qry;
+//     QString sql_text = QString("UPDATE products SET %1=%2").arg(column, QString::number(value, 'f', precision));
+//     return executeQuery(&qry, sql_text);
+// }
+
+// bool DbManager::updateTableProductsWithText(int slot, QString column, QString value)
+// {
+//     QSqlQuery qry;
+//     QString sql_text = QString("UPDATE products SET %1='%2' WHERE slot=%3").arg(column, value, QString::number(slot));
+//     return executeQuery(&qry, sql_text);
+// }
 
 bool DbManager::addPageClick(const QString &page)
 {
@@ -172,15 +216,15 @@ void DbManager::closeDB()
     }
 }
 
-void DbManager::setPaymentToQR()
-{
+// void DbManager::setPaymentToQR()
+// {
 
-    QSqlQuery qry;
-    {
-        qry.prepare("UPDATE products SET payment=\"qr\";");
-        qry.exec();
-    }
-}
+//     QSqlQuery qry;
+//     {
+//         qry.prepare("UPDATE products SET payment=\"qr\";");
+//         qry.exec();
+//     }
+// }
 
 /*
 productId
@@ -311,7 +355,7 @@ void DbManager::getAllProductProperties(int slot,
                                         bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs)
 
 {
-    qDebug() << " db... product properties";
+    qDebug() << "Open db: load all product properties for slot: " <<  slot;
     QSqlQuery qry;
     {
         // qry.prepare("SELECT soapstand_product_serial, size_unit, payment, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_max,price_small,price_medium, price_large,price_custom FROM products WHERE slot=:slot");
@@ -536,6 +580,7 @@ void DbManager::getAllMachineProperties(
 QString DbManager::getPaymentMethod(int slot)
 {
     // used by Ash in tap. to do --> get tap init out of constructor.
+    qDebug() << "********* DEPRECATED *********** ";
     qDebug() << "DB call: get payment method for slot";
     QSqlQuery paymeny_query;
     QString payment_method;
@@ -670,47 +715,47 @@ bool DbManager::getRecentTransactions(QString values[][5], int count, int *count
     return true;
 }
 
-bool DbManager::setPumpRampingEnabled(int isEnabled)
-{
-    QSqlQuery qry;
-    bool enabled;
+// bool DbManager::setPumpRampingEnabled(int isEnabled)
+// {
+//     QSqlQuery qry;
+//     bool enabled;
 
-    QString qry_qstr = QString("UPDATE machine SET enable_pump_ramping=%1").arg(QString::number(isEnabled));
-    string qry_string = qry_qstr.toUtf8().constData(); // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
-    qry.prepare(qry_string.c_str());
-    qry.exec();
+//     QString qry_qstr = QString("UPDATE machine SET enable_pump_ramping=%1").arg(QString::number(isEnabled));
+//     string qry_string = qry_qstr.toUtf8().constData(); // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
+//     qry.prepare(qry_string.c_str());
+//     qry.exec();
 
-    if (qry.exec())
-    {
-        return true;
-    }
-    else
-    {
-        qDebug() << "Failed to set pump ramping value." << qry_qstr;
-        return false;
-    }
-}
+//     if (qry.exec())
+//     {
+//         return true;
+//     }
+//     else
+//     {
+//         qDebug() << "Failed to set pump ramping value." << qry_qstr;
+//         return false;
+//     }
+// }
 
-bool DbManager::setEmptyContainerDetectionEnabled(int isEnabled)
-{
-    QSqlQuery qry;
-    bool enabled;
+// bool DbManager::setEmptyContainerDetectionEnabled(int isEnabled)
+// {
+//     QSqlQuery qry;
+//     bool enabled;
 
-    QString qry_qstr = QString("UPDATE machine SET has_empty_detection=%1").arg(QString::number(isEnabled));
-    string qry_string = qry_qstr.toUtf8().constData(); // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
-    qry.prepare(qry_string.c_str());
-    qry.exec();
+//     QString qry_qstr = QString("UPDATE machine SET has_empty_detection=%1").arg(QString::number(isEnabled));
+//     string qry_string = qry_qstr.toUtf8().constData(); // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
+//     qry.prepare(qry_string.c_str());
+//     qry.exec();
 
-    if (qry.exec())
-    {
-        return true;
-    }
-    else
-    {
-        qDebug() << "Failed to set empty container value." << qry_qstr;
-        return false;
-    }
-}
+//     if (qry.exec())
+//     {
+//         return true;
+//     }
+//     else
+//     {
+//         qDebug() << "Failed to set empty container value." << qry_qstr;
+//         return false;
+//     }
+// }
 
 
 // bool DbManager::updatePrice(int slot, int size, double new_price)
@@ -770,195 +815,195 @@ bool DbManager::setEmptyContainerDetectionEnabled(int isEnabled)
 //     }
 // }
 
-bool DbManager::updateTargetVolume(int slot, int size, double new_volume)
-{
-    qDebug() << " db... updateTargetVolume_l";
-    QSqlQuery update_target_volume_query;
-    {
-        switch (size)
-        {
-        case SIZE_SMALL_INDEX:
-        {
-            update_target_volume_query.prepare("UPDATE products SET size_small=:new_volume WHERE slot=:slot");
-        }
-        break;
-        case SIZE_MEDIUM_INDEX:
-        {
-            update_target_volume_query.prepare("UPDATE products SET size_medium=:new_volume WHERE slot=:slot");
-        }
-        break;
-        case SIZE_LARGE_INDEX:
-        {
-            update_target_volume_query.prepare("UPDATE products SET size_large=:new_volume WHERE slot=:slot");
-        }
-        break;
-        default:
-        {
-            qDebug() << "size not handled... " << size;
-        }
-        }
+// bool DbManager::updateTargetVolume(int slot, int size, double new_volume)
+// {
+//     qDebug() << " db... updateTargetVolume_l";
+//     QSqlQuery update_target_volume_query;
+//     {
+//         switch (size)
+//         {
+//         case SIZE_SMALL_INDEX:
+//         {
+//             update_target_volume_query.prepare("UPDATE products SET size_small=:new_volume WHERE slot=:slot");
+//         }
+//         break;
+//         case SIZE_MEDIUM_INDEX:
+//         {
+//             update_target_volume_query.prepare("UPDATE products SET size_medium=:new_volume WHERE slot=:slot");
+//         }
+//         break;
+//         case SIZE_LARGE_INDEX:
+//         {
+//             update_target_volume_query.prepare("UPDATE products SET size_large=:new_volume WHERE slot=:slot");
+//         }
+//         break;
+//         default:
+//         {
+//             qDebug() << "size not handled... " << size;
+//         }
+//         }
 
-        update_target_volume_query.bindValue(":new_volume", new_volume);
+//         update_target_volume_query.bindValue(":new_volume", new_volume);
 
-        update_target_volume_query.bindValue(":slot", slot);
+//         update_target_volume_query.bindValue(":slot", slot);
 
-        if (update_target_volume_query.exec())
-        {
-            //        qDebug() << "Target Volume updated successfully!";
-            return true;
-        }
-        else
-        {
-            qDebug() << "Target volume update error: !"
-                     << update_target_volume_query.lastError();
-            return false;
-        }
-    }
-}
+//         if (update_target_volume_query.exec())
+//         {
+//             //        qDebug() << "Target Volume updated successfully!";
+//             return true;
+//         }
+//         else
+//         {
+//             qDebug() << "Target volume update error: !"
+//                      << update_target_volume_query.lastError();
+//             return false;
+//         }
+//     }
+// }
 
-bool DbManager::updateVolumePerTick(int slot, double new_volume_per_tick)
-{
-    qDebug() << " db... updateVolumePerTick";
-    QSqlQuery update_volume_per_tick_query;
+// bool DbManager::updateVolumePerTick(int slot, double new_volume_per_tick)
+// {
+//     qDebug() << " db... updateVolumePerTick";
+//     QSqlQuery update_volume_per_tick_query;
 
-    {
-        update_volume_per_tick_query.prepare("UPDATE products SET volume_per_tick=:new_volume_per_tick WHERE slot=:slot");
-        update_volume_per_tick_query.bindValue(":new_volume_per_tick", new_volume_per_tick);
-        update_volume_per_tick_query.bindValue(":slot", slot);
+//     {
+//         update_volume_per_tick_query.prepare("UPDATE products SET volume_per_tick=:new_volume_per_tick WHERE slot=:slot");
+//         update_volume_per_tick_query.bindValue(":new_volume_per_tick", new_volume_per_tick);
+//         update_volume_per_tick_query.bindValue(":slot", slot);
 
-        if (update_volume_per_tick_query.exec())
-        {
-            //        qDebug() << "Volume per tick updated successfully!";
-            return true;
-        }
-        else
-        {
-            //        qDebug() << "Volume per tick update error: !"
-            //                 << update_volume_per_tick_query.lastError();
-            return false;
-        }
-    }
-}
+//         if (update_volume_per_tick_query.exec())
+//         {
+//             //        qDebug() << "Volume per tick updated successfully!";
+//             return true;
+//         }
+//         else
+//         {
+//             //        qDebug() << "Volume per tick update error: !"
+//             //                 << update_volume_per_tick_query.lastError();
+//             return false;
+//         }
+//     }
+// }
 
-bool DbManager::updateFullVolume(int slot, double new_full_volume)
-{
-    qDebug() << " db... updateFullVolume";
-    QSqlQuery update_full_volume_query;
-    {
+// bool DbManager::updateFullVolume(int slot, double new_full_volume)
+// {
+//     qDebug() << " db... updateFullVolume";
+//     QSqlQuery update_full_volume_query;
+//     {
 
-        update_full_volume_query.prepare("UPDATE products SET volume_full=:new_full_volume WHERE slot=:slot");
-        update_full_volume_query.bindValue(":new_full_volume", new_full_volume);
-        update_full_volume_query.bindValue(":slot", slot);
-        if (update_full_volume_query.exec())
-        {
-            qDebug() << "Full volume updated successfully!";
-            return true;
-        }
-        else
-        {
-            qDebug() << "Full volume update error: !"
-                     << update_full_volume_query.lastError().text();
-            qDebug() << update_full_volume_query.lastQuery();
-            return false;
-        }
-    }
-}
+//         update_full_volume_query.prepare("UPDATE products SET volume_full=:new_full_volume WHERE slot=:slot");
+//         update_full_volume_query.bindValue(":new_full_volume", new_full_volume);
+//         update_full_volume_query.bindValue(":slot", slot);
+//         if (update_full_volume_query.exec())
+//         {
+//             qDebug() << "Full volume updated successfully!";
+//             return true;
+//         }
+//         else
+//         {
+//             qDebug() << "Full volume update error: !"
+//                      << update_full_volume_query.lastError().text();
+//             qDebug() << update_full_volume_query.lastQuery();
+//             return false;
+//         }
+//     }
+// }
 
-bool DbManager::updatePWM(int slot, int new_pwm)
-{
-    qDebug() << " db... updatePWM";
-    QSqlQuery pwm_query;
-    {
+// bool DbManager::updatePWM(int slot, int new_pwm)
+// {
+//     qDebug() << " db... updatePWM";
+//     QSqlQuery pwm_query;
+//     {
 
-        pwm_query.prepare("UPDATE products SET dispense_speed=:new_pwm WHERE slot=:slot");
-        pwm_query.bindValue(":new_pwm", new_pwm);
-        pwm_query.bindValue(":slot", slot);
+//         pwm_query.prepare("UPDATE products SET dispense_speed=:new_pwm WHERE slot=:slot");
+//         pwm_query.bindValue(":new_pwm", new_pwm);
+//         pwm_query.bindValue(":slot", slot);
 
-        if (pwm_query.exec())
-        {
-            //        qDebug() << "PWM updated successfully!";
-            return true;
-        }
-        else
-        {
-            //        qDebug() << "PWM update error: !"
-            //                 << pwm_query.lastError();
-            return false;
-        }
-    }
-}
+//         if (pwm_query.exec())
+//         {
+//             //        qDebug() << "PWM updated successfully!";
+//             return true;
+//         }
+//         else
+//         {
+//             //        qDebug() << "PWM update error: !"
+//             //                 << pwm_query.lastError();
+//             return false;
+//         }
+//     }
+// }
 
-bool DbManager::updateBuffer(int slot, double new_buffer)
-{
-    qDebug() << " db... updateBuffer";
-    QSqlQuery buffer_query;
+// bool DbManager::updateBuffer(int slot, double new_buffer)
+// {
+//     qDebug() << " db... updateBuffer";
+//     QSqlQuery buffer_query;
 
-    {
-        buffer_query.prepare("UPDATE products SET buffer=:new_buffer WHERE slot=:slot");
-        buffer_query.bindValue(":new_buffer", new_buffer);
-        buffer_query.bindValue(":slot", slot);
+//     {
+//         buffer_query.prepare("UPDATE products SET buffer=:new_buffer WHERE slot=:slot");
+//         buffer_query.bindValue(":new_buffer", new_buffer);
+//         buffer_query.bindValue(":slot", slot);
 
-        if (buffer_query.exec())
-        {
-            //        qDebug() << "Buffer updated successfully!";
-            return true;
-        }
-        else
-        {
-            //        qDebug() << "Buffer update error: !"
-            //                 << buffer_query.lastError();
-            return false;
-        }
-    }
-}
+//         if (buffer_query.exec())
+//         {
+//             //        qDebug() << "Buffer updated successfully!";
+//             return true;
+//         }
+//         else
+//         {
+//             //        qDebug() << "Buffer update error: !"
+//             //                 << buffer_query.lastError();
+//             return false;
+//         }
+//     }
+// }
 
-bool DbManager::updatePluSmall(int slot, QString new_plu)
-{
-    qDebug() << " db... updatePluSmall";
-    QSqlQuery plu_query;
-    {
-        plu_query.prepare("UPDATE products SET PLU_small=:new_plu WHERE slot=:slot");
-        plu_query.bindValue(":new_plu", new_plu);
-        plu_query.bindValue(":slot", slot);
+// bool DbManager::updatePluSmall(int slot, QString new_plu)
+// {
+//     qDebug() << " db... updatePluSmall";
+//     QSqlQuery plu_query;
+//     {
+//         plu_query.prepare("UPDATE products SET PLU_small=:new_plu WHERE slot=:slot");
+//         plu_query.bindValue(":new_plu", new_plu);
+//         plu_query.bindValue(":slot", slot);
 
-        if (plu_query.exec())
-        {
-            //        qDebug() << "PLU updated successfully!";
-            return true;
-        }
-        else
-        {
-            //        qDebug() << "PLU update error: !"
-            //                 << plu_query.lastError();
-            return false;
-        }
-    }
-}
+//         if (plu_query.exec())
+//         {
+//             //        qDebug() << "PLU updated successfully!";
+//             return true;
+//         }
+//         else
+//         {
+//             //        qDebug() << "PLU update error: !"
+//             //                 << plu_query.lastError();
+//             return false;
+//         }
+//     }
+// }
 
-bool DbManager::updatePluLarge(int slot, QString new_plu)
-{
-    qDebug() << " db... updatePluLarge";
-    QSqlQuery plu_query;
+// bool DbManager::updatePluLarge(int slot, QString new_plu)
+// {
+//     qDebug() << " db... updatePluLarge";
+//     QSqlQuery plu_query;
 
-    {
+//     {
 
-        plu_query.prepare("UPDATE products SET PLU_large=:new_plu WHERE slot=:slot");
-        plu_query.bindValue(":new_plu", new_plu);
-        plu_query.bindValue(":slot", slot);
+//         plu_query.prepare("UPDATE products SET PLU_large=:new_plu WHERE slot=:slot");
+//         plu_query.bindValue(":new_plu", new_plu);
+//         plu_query.bindValue(":slot", slot);
 
-        if (plu_query.exec())
-        {
-            //        qDebug() << "PLU updated successfully!";
-            return true;
-        }
-        else
-        {
-            //        qDebug() << "PLU update error: !"
-            //                 << plu_query.lastError();
-            return false;
-        }
-    }
-}
+//         if (plu_query.exec())
+//         {
+//             //        qDebug() << "PLU updated successfully!";
+//             return true;
+//         }
+//         else
+//         {
+//             //        qDebug() << "PLU update error: !"
+//             //                 << plu_query.lastError();
+//             return false;
+//         }
+//     }
+// }
 
 void DbManager::printerStatus(bool *isOnline, bool *hasPaper)
 {

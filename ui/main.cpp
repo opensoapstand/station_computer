@@ -145,10 +145,6 @@ int main(int argc, char *argv[])
     // 2. get template files
     // 3. test files exisitng
     // 4. set files
-    // qDebug() << "db init for template path";
-    // DbManager db(DB_PATH);
-    // QString template_folder = db.getTemplateName();
-    // db.closeDB();
 
     // if (template_folder == "")
     // {

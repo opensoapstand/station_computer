@@ -103,15 +103,19 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 
 void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
 {
-    // QWidget::resizeEvent(event);
+    QWidget::resizeEvent(event);
 }
 
 void page_maintenance_dispenser::updateProductLabelValues()
 {
+    qDebug()<<"update1";
     p_page_idle->loadDynamicContent();
+    qDebug()<<"updat2";
 
     this->units_selected_product = this->p_page_idle->selectedProduct->getUnitsForSlot();
-    p_page_idle->selectedProduct->setBiggestEnabledSizeIndex();
+    qDebug()<<"updat3";
+    // p_page_idle->selectedProduct->setBiggestEnabledSizeIndex();
+    qDebug()<<"Start labels loading";
 
     volume_per_tick_buffer = p_page_idle->selectedProduct->getVolumePerTickForSlot();
 
@@ -139,10 +143,11 @@ void page_maintenance_dispenser::updateProductLabelValues()
 
     ui->label_restock_timestamp->setText(p_page_idle->selectedProduct->getLastRestockDate());
 
-    ui->pushButton_plu_small->setText(p_page_idle->selectedProduct->getPLU(SIZE_SMALL_INDEX));
-    ui->pushButton_plu_medium->setText(p_page_idle->selectedProduct->getPLU(SIZE_MEDIUM_INDEX));
-    ui->pushButton_plu_large->setText(p_page_idle->selectedProduct->getPLU(SIZE_LARGE_INDEX));
-    ui->pushButton_plu_custom->setText(p_page_idle->selectedProduct->getPLU(SIZE_CUSTOM_INDEX));
+    ui->pushButton_plu_small->setText(p_page_idle->selectedProduct->getPlu(SIZE_SMALL_INDEX));
+    ui->pushButton_plu_medium->setText(p_page_idle->selectedProduct->getPlu(SIZE_MEDIUM_INDEX));
+    ui->pushButton_plu_large->setText(p_page_idle->selectedProduct->getPlu(SIZE_LARGE_INDEX));
+    ui->pushButton_plu_custom->setText(p_page_idle->selectedProduct->getPlu(SIZE_CUSTOM_INDEX));
+    qDebug()<<"labels loading done";
 }
 
 void page_maintenance_dispenser::setpushButton_soldOutText()
@@ -644,14 +649,17 @@ void page_maintenance_dispenser::on_pushButton_set_volume_remaining_clicked()
 
 void page_maintenance_dispenser::buttonGroup_keypad_Pressed(int buttonId)
 {
+    qDebug()<<"keypad group enter ";
     QAbstractButton *buttonpressed = ui->buttonGroup_keypad->button(buttonId);
     QString buttonText = buttonpressed->text();
+    qDebug()<<"keypad group enter button id: " << buttonText;
     if (ui->textEntry->hasSelectedText())
     {
         ui->textEntry->setText("");
     }
 
     ui->textEntry->setText(ui->textEntry->text() + buttonText);
+    qDebug()<<"keypad group exit ";
 }
 
 void page_maintenance_dispenser::on_buttonBack_clicked()
@@ -667,6 +675,8 @@ void page_maintenance_dispenser::on_buttonPeriod_clicked()
 void page_maintenance_dispenser::on_buttonDone_clicked()
 {
     QString text_entered = ui->textEntry->text();
+    text_entered.trimmed();
+    qDebug()<<"button done. Text entered (trimmed of whitespace): >>" << text_entered << "<<";
     ui->numberEntry->hide();
 
     if (text_entered != "")
@@ -708,6 +718,22 @@ void page_maintenance_dispenser::on_buttonDone_clicked()
         else if (activeEditField == "pushButton_target_volume_custom")
         {
             p_page_idle->selectedProduct->setSizeToVolumeForSlot(text_entered, SIZE_CUSTOM_INDEX);
+        }
+        else if (activeEditField == "pushButton_plu_small")
+        {
+            p_page_idle->selectedProduct->setPlu(SIZE_SMALL_INDEX, text_entered);
+        }
+        else if (activeEditField == "pushButton_plu_medium")
+        {
+            p_page_idle->selectedProduct->setPlu(SIZE_MEDIUM_INDEX, text_entered);
+        }
+        else if (activeEditField == "pushButton_plu_large")
+        {
+            p_page_idle->selectedProduct->setPlu(SIZE_LARGE_INDEX, text_entered);
+        }
+        else if (activeEditField == "pushButton_plu_custom")
+        {
+            p_page_idle->selectedProduct->setPlu(SIZE_CUSTOM_INDEX, text_entered);
         }
         else if (activeEditField == "pushButton_volume_per_tick")
         {
@@ -814,22 +840,22 @@ void page_maintenance_dispenser::on_pushButton_target_volume_custom_clicked()
 
 void page_maintenance_dispenser::on_pushButton_plu_small_clicked()
 {
-    ui->textEntry->setText(p_page_idle->selectedProduct->getPLU(SIZE_SMALL_INDEX));
+    ui->textEntry->setText(p_page_idle->selectedProduct->getPlu(SIZE_SMALL_INDEX));
 }
 
 void page_maintenance_dispenser::on_pushButton_plu_medium_clicked()
 {
-    ui->textEntry->setText(p_page_idle->selectedProduct->getPLU(SIZE_MEDIUM_INDEX));
+    ui->textEntry->setText(p_page_idle->selectedProduct->getPlu(SIZE_MEDIUM_INDEX));
 }
 
 void page_maintenance_dispenser::on_pushButton_plu_large_clicked()
 {
-    ui->textEntry->setText(p_page_idle->selectedProduct->getPLU(SIZE_LARGE_INDEX));
+    ui->textEntry->setText(p_page_idle->selectedProduct->getPlu(SIZE_LARGE_INDEX));
 }
 
 void page_maintenance_dispenser::on_pushButton_plu_custom_clicked()
 {
-    ui->textEntry->setText(p_page_idle->selectedProduct->getPLU(SIZE_CUSTOM_INDEX));
+    ui->textEntry->setText(p_page_idle->selectedProduct->getPlu(SIZE_CUSTOM_INDEX));
 }
 
 void page_maintenance_dispenser::on_pushButton_volume_per_tick_clicked()

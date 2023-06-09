@@ -13,7 +13,7 @@ public:
     ~machine();
     void loadParametersFromDb();
 
-    bool isSlotNumberValid(int slot);
+    bool slotNumberValidityCheck(int slot);
     QString getStatusText(int slot);
     QString setStatusText(int slot, bool isSlotEnabled, QString status);
 
@@ -29,6 +29,8 @@ public:
     QString getTemplatePathFromName(QString fileName);
     QString getDefaultTemplatePathFromName(QString fileName);
     bool getEmptyContainerDetectionEnabled();
+    void setEmptyContainerDetectionEnabled(bool isEnabled);
+    void setPumpRampingEnabled(bool isEnabled);
     bool getPumpRampingEnabled();
     QString getHelpPageHtmlText();
 

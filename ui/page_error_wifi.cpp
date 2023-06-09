@@ -84,12 +84,6 @@ void page_error_wifi::showEvent(QShowEvent *event)
  */
 void page_error_wifi::on_wifi_ack_Button_clicked()
 {
-    // qDebug() << "Call db from wifi error page";
-    // DbManager db(DB_PATH);
-
-    // //stopDispenseTimer();
-    //  db.closeDB();
-    // qDebug() << "error to idle";
 }
 
 void page_error_wifi::on_mainPageButton_clicked()

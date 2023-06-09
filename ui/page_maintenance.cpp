@@ -197,28 +197,28 @@ void page_maintenance::on_pushButton_to_previous_page_clicked()
 void page_maintenance::on_product1_button_clicked()
 {
     p_page_idle->setSelectedProduct(1);
-    p_page_maintenance_product->resizeEvent(productSelection);
+    // p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 
 void page_maintenance::on_product2_button_clicked()
 {
     p_page_idle->setSelectedProduct(2);
-    p_page_maintenance_product->resizeEvent(productSelection);
+    // p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 
 void page_maintenance::on_product3_button_clicked()
 {
     p_page_idle->setSelectedProduct(3);
-    p_page_maintenance_product->resizeEvent(productSelection);
+    // p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 
 void page_maintenance::on_product4_button_clicked()
 {
     p_page_idle->setSelectedProduct(4);
-    p_page_maintenance_product->resizeEvent(productSelection);
+    // p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 

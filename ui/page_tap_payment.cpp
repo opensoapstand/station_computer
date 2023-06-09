@@ -99,6 +99,7 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
             registerDevice(connectSocket());
         }
     }
+    db.closeDB();
 }
 
 

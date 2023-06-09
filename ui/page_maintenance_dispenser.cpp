@@ -111,14 +111,9 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
 
 void page_maintenance_dispenser::updateProductLabelValues()
 {
-    qDebug() << "update1";
     p_page_idle->loadDynamicContent();
-    qDebug() << "updat2";
 
     this->units_selected_product = this->p_page_idle->selectedProduct->getUnitsForSlot();
-    qDebug() << "updat3";
-    // p_page_idle->selectedProduct->setBiggestEnabledSizeIndex();
-    qDebug() << "Start labels loading";
 
     volume_per_tick_buffer = p_page_idle->selectedProduct->getVolumePerTickForSlot();
 
@@ -150,7 +145,6 @@ void page_maintenance_dispenser::updateProductLabelValues()
     ui->pushButton_plu_medium->setText(p_page_idle->selectedProduct->getPlu(SIZE_MEDIUM_INDEX));
     ui->pushButton_plu_large->setText(p_page_idle->selectedProduct->getPlu(SIZE_LARGE_INDEX));
     ui->pushButton_plu_custom->setText(p_page_idle->selectedProduct->getPlu(SIZE_CUSTOM_INDEX));
-    qDebug() << "labels loading done";
 }
 
 void page_maintenance_dispenser::setpushButton_soldOutText()
@@ -234,7 +228,7 @@ void page_maintenance_dispenser::on_pushButton_enable_pump_clicked()
 void page_maintenance_dispenser::on_pushButton_auto_dispense_large_clicked()
 {
     // if (pump_enabled)
-    {
+    // {
         // dispense_test_end(true);
         // usleep(1000);
         autoDispenseStart(SIZE_LARGE_INDEX);
@@ -634,22 +628,7 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
     ui->label_status_dispenser->setText(slotStatus);
 }
 
-void page_maintenance_dispenser::on_pushButton_set_restock_volume_clicked()
-{
-    //    qDebug() << "Full Volume button clicked" ;
-    // full = true;
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
-}
 
-void page_maintenance_dispenser::on_pushButton_set_volume_remaining_clicked()
-{
-    //    qDebug() << "Remaining button clicked" ;
-    // modify_stock = true;
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
-    ui->numberEntry->show();
-    ui->textEntry->setText("");
-    ui->label_title->setText("Adjust the remaining volume:");
-}
 
 // ****************************************************************
 // ****************** KEYPAD ACTIONS ******************************
@@ -687,9 +666,11 @@ void page_maintenance_dispenser::on_pushButton_done_clicked()
     qDebug() << "button done. Text entered (trimmed of whitespace): >>" << text_entered << "<<";
     ui->numberEntry->hide();
 
-    if (text_entered != "")
+    bool isAdmin = p_page_idle->thisMachine.isAllowedAsAdmin();
+
+    if (text_entered != "" && isAdmin)
     {
-        if (activeEditField == "pushButton_price_small")
+        if (activeEditField == "pushButton_price_small" )
         {
             p_page_idle->selectedProduct->setPrice(SIZE_SMALL_INDEX, text_entered.toDouble());
             ui->pushButton_price_small->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)));
@@ -799,6 +780,11 @@ void page_maintenance_dispenser::buttonGroup_edit_product_Pressed(int buttonId)
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
     ui->textEntry->selectAll();
+
+    if (!p_page_idle->thisMachine.isAllowedAsAdmin()){
+        QMessageBox::information(this, "Admininstrator role required", "You do not have the rights to change these values. Please enter maintenance mode with the admin password.", QMessageBox::Ok);
+        ui->numberEntry->hide();
+    }
 }
 
 void page_maintenance_dispenser::on_pushButton_to_previous_page_clicked()
@@ -868,20 +854,30 @@ void page_maintenance_dispenser::on_pushButton_plu_custom_clicked()
 
 void page_maintenance_dispenser::on_pushButton_volume_per_tick_clicked()
 {
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
-    // ui->numberEntry->show();
-    // ui->textEntry->setText("");
-    // ui->label_title->setText("Volume Per Tick");
+    ui->textEntry->setText(QString::number(p_page_idle->selectedProduct->getVolumePerTickForSlot()));
 }
 
 void page_maintenance_dispenser::on_pushButton_setting_speed_pwm_clicked()
 {
-    // pwm = true;
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
-    // ui->numberEntry->show();
-    // ui->textEntry->setText("");
-    // ui->label_title->setText("Pump Speed Percentage");
-    // ui->buttonPeriod->hide();
+    ui->textEntry->setText(QString::number(p_page_idle->selectedProduct->getDispenseSpeedPercentage()));
+}
+
+void page_maintenance_dispenser::on_pushButton_set_volume_remaining_clicked()
+{
+    //    qDebug() << "Remaining button clicked" ;
+    // modify_stock = true;
+    // _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+    ui->label_title->setText("Adjust the remaining volume");
+    ui->textEntry->setText(p_page_idle->selectedProduct->getVolumeRemainingCorrectUnits());
+}
+
+void page_maintenance_dispenser::on_pushButton_set_restock_volume_clicked()
+{
+    ui->textEntry->setText(p_page_idle->selectedProduct->getFullVolumeCorrectUnits(false));
+    ui->label_title->setText("Full Volume button clicked");
+    //    qDebug() << "Full Volume button clicked" ;
+    // full = true;
+    // _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
 // ****************************************************************

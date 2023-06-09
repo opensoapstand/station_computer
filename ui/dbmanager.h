@@ -81,6 +81,7 @@ public:
                                  int *show_transactions,
                                  QString *help_text_html,
                                  QString *idle_page_type,
+                                 QString *admin_pwd,
 
                                  QString *pump_id_slots,
                                  int *is_enabled_slots,

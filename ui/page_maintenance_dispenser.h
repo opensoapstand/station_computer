@@ -86,8 +86,8 @@ private slots:
     void on_pushButton_enable_pump_clicked();
     void on_buttonBack_clicked();
     void on_buttonPeriod_clicked();
-    void on_buttonDone_clicked();
-    void on_buttonCancel_clicked();
+    void on_pushButton_done_clicked();
+    void on_pushButton_cancel_clicked();
 
     void on_pushButton_auto_dispense_large_clicked();
     void on_pushButton_auto_dispense_medium_clicked();

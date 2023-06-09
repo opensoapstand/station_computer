@@ -26,7 +26,7 @@
     <string>Back</string>
    </property>
   </widget>
-  <widget class="QLabel" name="name">
+  <widget class="QLabel" name="label_name">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -509,7 +509,7 @@
      <string>.</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="buttonCancel">
+   <widget class="QPushButton" name="pushButton_cancel">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -519,10 +519,10 @@
      </rect>
     </property>
     <property name="text">
-     <string>CANCEL</string>
+     <string/>
     </property>
    </widget>
-   <widget class="QLabel" name="titleLabel">
+   <widget class="QLabel" name="label_title">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -556,7 +556,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="buttonDone">
+   <widget class="QPushButton" name="pushButton_done">
     <property name="geometry">
      <rect>
       <x>180</x>
@@ -1462,7 +1462,7 @@
     <string>Calibration Volume Per Tick</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_6">
+  <widget class="QLabel" name="labelText_volume_remaining">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -1475,7 +1475,7 @@
     <string>Volume Remaining</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_7">
+  <widget class="QLabel" name="labelText_volume_dispensed_since_restock">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -1488,7 +1488,7 @@
     <string>Volume Dispensed Since Restock</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_8">
+  <widget class="QLabel" name="labelText_volume_dispensed_grand_total">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -1501,7 +1501,7 @@
     <string>Volume Dispensed Grand Total</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_9">
+  <widget class="QLabel" name="labelText_restock_time">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -1514,7 +1514,7 @@
     <string>Restock Time</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_10">
+  <widget class="QLabel" name="labelText_restock_volume">
    <property name="geometry">
     <rect>
      <x>340</x>

@@ -201,7 +201,7 @@ void page_idle::changeToIdleProductsIfSet()
 {
     if (thisMachine.getIdlePageType() == "static_products")
     {
-        hideCurrentPageAndShowProvided(this->p_page_error_wifi);
+        hideCurrentPageAndShowProvided(this->p_page_idle_products);
     }
 }
 

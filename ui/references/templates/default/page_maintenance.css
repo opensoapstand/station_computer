@@ -1,10 +1,44 @@
-
-
-#product_overlay_labels{
+#product_overlay_labels {
 
    background-color: transparent;
 }
 
+.normal {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   background-color: #5E8580;
+   font-size: 24px;
+   text-align: center;
+   line-height: auto;
+   qproperty-alignment: AlignCenter;
+   border-radius: 20px;
+   color: white;
+   border: none;
+}
+
+
+#label_title_maintenance_mode {
+   font-size: 36px;
+   font-weight: 700;
+   line-height: 43px;
+   color: black;
+   font-family: 'Montserrat';
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+
+}
+
+.label_machine_ui {
+   font-size: 16px;
+   font-weight: 700;
+   line-height: 43px;
+   color: black;
+   font-family: 'Montserrat';
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+
+}
 
 
 /* QPushButton {
@@ -65,4 +99,3 @@
    font-size: 32px;
    background-color: transparent;
    /* border: 0px; */
-   

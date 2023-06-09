@@ -117,6 +117,11 @@ public:
 
     //double readTemperature();  //temp sensor
     double getTemperature();  //temp sensor
+    int temperatureSensor;
+    uint8_t temperature_msb9;
+
+    
+    // int fd = tempe(MCP9808_ADDRESS);
 
     void setSingleDispenseButtonLight(uint8_t slot, bool onElseOff);
     bool getDispenseButtonStateDebounced(uint8_t slot);

@@ -78,12 +78,12 @@ DF_ERROR stateIdle::onAction()
       {
          m_state_requested = STATE_MANUAL_PUMP;
       }
-      // else if (GET_TEMPERATURE == m_pMessaging->getAction()) //temperature code
-      // {
-      //    int temperature  = g_machine.getTemperature();
-      //    m_pMessaging->sendMessageOverIP("|temperature|" + to_int(temperature));
+      //  else if (GET_TEMPERATURE == m_pMessaging->getAction()) //temperature code
+      //  {
+      //     int temperature  = g_machine.getTemperature();
+      //     m_pMessaging->sendMessageOverIP("|temperature|" + to_int(temperature));
 
-      // }
+      //  }
       else if ('3' == m_pMessaging->getAction())
       {
          m_state_requested = STATE_MANUAL_CONFIG;

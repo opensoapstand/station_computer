@@ -3,7 +3,7 @@
 #include "pcb.h"
 #include <chrono>
 #include <cmath>
-
+#include <iostream>
 #define DEFAULT_I2C_BUS "/dev/i2c-1"
 
 #define __USE_SMBUS_I2C_LIBRARY__ 1
@@ -357,6 +357,63 @@ bool pcb::define_pcb_version(void)
                 // ADC081C021
 
                 debugOutput::sendMessage("ADC081C021 current sensor found. NOT IN USE YET.", MSG_INFO);
+            }
+            else if (i2c_probe_address == TEMPERATURE_SENSOR_ADDRESS)
+            {
+                temperatureSensor=2;
+                // temperature
+
+                debugOutput::sendMessage("-----------------------------temperature current sensor found. NOT IN USE YET.", MSG_INFO);
+                
+                uint8_t temperature_msb;
+                uint8_t temperature_lsb;
+                uint8_t temperature_msb3;
+                uint8_t temperature_msb4;
+                uint8_t temperature_msb5;
+                uint8_t temperature_msb6;
+                uint8_t temperature_msb7;
+                uint8_t temperature_msb8;
+                
+                uint8_t temperature_msba;
+                uint8_t temperature_msbb;
+                uint8_t temperature_msbc;
+                temperature_msb = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x01);
+                temperature_lsb = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x02);
+                temperature_msb3 = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x03);
+                temperature_msb4 = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x04);
+                temperature_msb5 = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x05);
+                temperature_msb6 = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x06);
+                temperature_msb7 = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x07);
+                temperature_msb8 = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x08);
+                temperature_msb9 = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x09);
+                temperature_msba = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x0A);
+                temperature_msbb = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x0B);
+                temperature_msbc = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x0C);
+    
+    //double temperature = calculateTemperature(temperature_msb, temperature_lsb);
+    
+   //  debugOutput::sendMessage("temperaturetest3333333333333------------------------------------", temperature_msb);
+   // debugOutput::sendMessage("temperaturetest------------------------------------" + temperature_msb,  MSG_INFO);
+   // debugOutput::sendMessage("temperaturetest------------------------------------",  static_cast<MESSAGE_LEVEL>(temperature_lsb));
+    //debugOutput::sendMessage("temperaturetest------------------------------------",  static_cast<MESSAGE_LEVEL>(temperature_msb));
+    std::cout << "Temperature LSB: " << static_cast<int>(temperature_lsb) << std::endl;
+    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msb) << std::endl;
+    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msb3) << std::endl;
+    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msb4) << std::endl;
+    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msb5) << std::endl;
+    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msb6) << std::endl;
+    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msb7) << std::endl;
+    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msb8) << std::endl;
+    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msb9) << std::endl;
+    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msba) << std::endl;
+    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msbb) << std::endl;
+    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msbc) << std::endl;
+    debugOutput::sendMessage("temperature= " + std::to_string(temperature_msb9), MSG_INFO);
+
+    
+
+    //debugOutput::sendMessage("temperaturetest------------------------------------" + temperature_msb, MSG_ERROR);
+
             }
             else if (i2c_probe_address == PIC_ADDRESS)
             {
@@ -1568,10 +1625,33 @@ void pcb::setSolenoid(uint8_t slot, bool onElseOff)
     }
 }
 
-double pcb::getTemperature(){
+double pcb::getTemperature(){//uint8_t slot, bool temperature){
+    if (temperatureSensor == 2)
+            {
+                // temperature
 
+                debugOutput::sendMessage("-----------------------------temperature -----------------------------temperature -----------------------------temperature -----------------------------temperature T.", MSG_INFO);
 
+            debugOutput::sendMessage("temperature new366666666666new366666666666new366666666666new366666666666new366666666666new366666666666new366666666666= " + std::to_string(temperature_msb9), MSG_INFO);
+            temperatureSensor == 1;
+
+            }
+    uint8_t temperature_msb;
+    uint8_t temperature_lsb;
+    temperature_msb = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x0A);
+    temperature_lsb = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x0B);
     
+    //double temperature = calculateTemperature(temperature_msb, temperature_lsb);
+    
+    // debugOutput::sendMessage("temperaturetest------------------------------------", temperature_msb);
+    debugOutput::sendMessage("temperaturetest------------------------------------" + temperature_msb,  MSG_INFO);
+    debugOutput::sendMessage("temperaturetest------------------------------------",  static_cast<MESSAGE_LEVEL>(temperature_lsb));
+    std::cout << "Temperature LSB: " << static_cast<int>(temperature_lsb) << std::endl;
+    debugOutput::sendMessage("temperaturetest------------------------------------" + temperature_msb, MSG_ERROR);
+
+
+    //debugOutput::sendMessage("I2C bus configuration appears correct.", MSG_INFO);
+ //   return temperature;
 }
 // switch (pcb_version)
 // {

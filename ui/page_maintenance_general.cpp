@@ -109,19 +109,6 @@ void page_maintenance_general::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
-void page_maintenance_general::on_printer_test_button_clicked()
-{
-
-    // qDebug() << "Send test printer to controller";
-
-    // // Send to fsm
-
-    // p_page_idle->dfUtility->send_command_to_FSM("p");
-    // usleep(50000);
-    // p_page_idle->dfUtility->send_command_to_FSM("1");
-    // usleep(50000);
-    // p_page_idle->dfUtility->send_command_to_FSM("q");
-}
 
 void page_maintenance_general::updateLabelValues()
 {
@@ -158,7 +145,7 @@ void page_maintenance_general::send_check_printer_status_command()
     p_page_idle->dfUtility->send_command_to_FSM("a");
     usleep(50000);
 }
-void page_maintenance_general::on_printer_check_status_button_clicked()
+void page_maintenance_general::on_pushButton_printer_check_status_clicked()
 {
     // qDebug() << "Maintenance general. yoooo.";
     send_check_printer_status_command();
@@ -224,7 +211,7 @@ void page_maintenance_general::on_pushButton_back_clicked()
     hideCurrentPageAndShowProvided(p_page_maintenance);
 }
 
-void page_maintenance_general::on_minimize_Button_clicked()
+void page_maintenance_general::on_pushButton_minimize_clicked()
 {
     if (!p_page_idle->thisMachine.isAllowedAsAdmin())
     {
@@ -235,7 +222,7 @@ void page_maintenance_general::on_minimize_Button_clicked()
     this->showMinimized();
 }
 
-void page_maintenance_general::on_reboot_Button_clicked()
+void page_maintenance_general::on_pushButton_reboot_clicked()
 {
     if (!p_page_idle->thisMachine.isAllowedAsAdmin())
     {
@@ -253,7 +240,7 @@ void page_maintenance_general::on_reboot_Button_clicked()
     system(qPrintable(command));
 }
 
-void page_maintenance_general::on_shutdown_Button_clicked()
+void page_maintenance_general::on_pushButton_shutdown_clicked()
 {
     if (!p_page_idle->thisMachine.isAllowedAsAdmin())
     {
@@ -403,7 +390,7 @@ void page_maintenance_general::keyboardButtonPressed(int buttonID)
     }
 }
 
-void page_maintenance_general::on_wifiButton_clicked()
+void page_maintenance_general::on_pushButton_wifi_networks_clicked()
 {
     //    qDebug() << "WiFi button clicked" << endl;
     // _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
@@ -492,7 +479,7 @@ void page_maintenance_general::on_wifiButton_clicked()
     ui->label_wifi_internet->setText("Wifi Connectivity: " + stdout);
 }
 
-void page_maintenance_general::on_rtunnel_restart_Button_clicked()
+void page_maintenance_general::on_pushButton_rtunnel_restart_clicked()
 {
 
     // https://stackoverflow.com/questions/75689836/system-command-executed-from-qt-does-not-work-for-service
@@ -559,7 +546,7 @@ void page_maintenance_general::on_rtunnel_restart_Button_clicked()
     // ui->label_status_feedback->setText("Process 2 success:");
 }
 
-void page_maintenance_general::on_network_status_Button_clicked()
+void page_maintenance_general::on_pushButton_network_status_clicked()
 {
     // iwconfig wlo2 | awk -F'[ =]+' '/Signal level/
 
@@ -575,7 +562,7 @@ void page_maintenance_general::on_network_status_Button_clicked()
     ui->label_status_feedback->setText(feedback);
 }
 
-void page_maintenance_general::on_restart_UI_Button_clicked()
+void page_maintenance_general::on_pushButton_restart_UI_clicked()
 {
     if (!p_page_idle->thisMachine.isAllowedAsAdmin())
     {
@@ -587,7 +574,7 @@ void page_maintenance_general::on_restart_UI_Button_clicked()
     qApp->exit();
 }
 
-void page_maintenance_general::on_restart_electronics_Button_clicked()
+void page_maintenance_general::on_pushButton_restart_electronics_clicked()
 {
     if (!p_page_idle->thisMachine.isAllowedAsAdmin())
     {

@@ -75,7 +75,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 
     ui->numberEntry->hide();
     ui->errorLabel->setText("");
-    ui->titleLabel->setText("");
+    ui->label_title->setText("");
 
     ui->pushButton_plu_small->setEnabled(true);
     ui->pushButton_plu_medium->setEnabled(true);
@@ -92,6 +92,9 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->pushButton_setting_temperature->setVisible(false);
     ui->label_setting_temperature->setVisible(false);
     ui->pushButton_set_restock_volume->setText("Define restock volume.");
+    ui->pushButton_update_portal->setText("Update Changes to Portal");
+    ui->pushButton_cancel->setText("CANCEL");
+    ui->pushButton_done->setText("DONE");
 
     isDispenseButtonPressed = false;
     activeEditField = "";
@@ -117,7 +120,7 @@ void page_maintenance_dispenser::updateProductLabelValues()
 
     ui->label_volume_per_tick->setText(p_page_idle->selectedProduct->getVolumePerTickAsStringForSlot() + "/tick");
 
-    ui->name->setText(p_page_idle->selectedProduct->getProductName());
+    ui->label_name->setText(p_page_idle->selectedProduct->getProductName());
 
     ui->pushButton_price_small->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)));
     ui->pushButton_price_medium->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)));
@@ -635,7 +638,7 @@ void page_maintenance_dispenser::on_pushButton_set_volume_remaining_clicked()
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
     ui->numberEntry->show();
     ui->textEntry->setText("");
-    ui->titleLabel->setText("Adjust the remaining volume:");
+    ui->label_title->setText("Adjust the remaining volume:");
 }
 
 // ****************************************************************
@@ -664,7 +667,7 @@ void page_maintenance_dispenser::on_buttonPeriod_clicked()
     ui->textEntry->setText(ui->textEntry->text() + ".");
 }
 
-void page_maintenance_dispenser::on_buttonDone_clicked()
+void page_maintenance_dispenser::on_pushButton_done_clicked()
 {
     QString text_entered = ui->textEntry->text();
     ui->numberEntry->hide();
@@ -675,11 +678,11 @@ void page_maintenance_dispenser::on_buttonDone_clicked()
         {
             p_page_idle->selectedProduct->setPrice(SIZE_SMALL_INDEX, text_entered.toDouble());
             ui->pushButton_price_small->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)));
-            ui->titleLabel->setText("Price Small:");
+            ui->label_title->setText("Price Small:");
         }
         else if (activeEditField == "pushButton_price_medium")
         {
-            ui->titleLabel->setText("Price Medium:");
+            ui->label_title->setText("Price Medium:");
             p_page_idle->selectedProduct->setPrice(SIZE_MEDIUM_INDEX, text_entered.toDouble());
             ui->pushButton_price_medium->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)));
         }
@@ -735,11 +738,11 @@ void page_maintenance_dispenser::on_buttonDone_clicked()
     }
 
     ui->textEntry->setText("");
-    ui->titleLabel->setText("");
+    ui->label_title->setText("");
     ui->errorLabel->setText("");
 }
 
-void page_maintenance_dispenser::on_buttonCancel_clicked()
+void page_maintenance_dispenser::on_pushButton_cancel_clicked()
 {
     ui->buttonPeriod->show();
     ui->numberEntry->hide();
@@ -760,7 +763,7 @@ void page_maintenance_dispenser::buttonGroup_edit_product_Pressed(int buttonId)
     qDebug() << "accessible name: " << buttonpressed->objectName();
     QString buttonTitle = buttonpressed->accessibleName();
     activeEditField = buttonpressed->objectName();
-    ui->titleLabel->setText(buttonTitle);
+    ui->label_title->setText(buttonTitle);
     ui->numberEntry->show();
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
@@ -837,7 +840,7 @@ void page_maintenance_dispenser::on_pushButton_volume_per_tick_clicked()
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
     // ui->numberEntry->show();
     // ui->textEntry->setText("");
-    // ui->titleLabel->setText("Volume Per Tick");
+    // ui->label_title->setText("Volume Per Tick");
 }
 
 void page_maintenance_dispenser::on_pushButton_setting_speed_pwm_clicked()
@@ -846,7 +849,7 @@ void page_maintenance_dispenser::on_pushButton_setting_speed_pwm_clicked()
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
     // ui->numberEntry->show();
     // ui->textEntry->setText("");
-    // ui->titleLabel->setText("Pump Speed Percentage");
+    // ui->label_title->setText("Pump Speed Percentage");
     // ui->buttonPeriod->hide();
 }
 

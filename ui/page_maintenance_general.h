@@ -47,6 +47,7 @@ public:
     void on_pushButton_to_previous_page_clicked();
     void updateProductLabelValues();
     void printerStatusFeedback(bool isOnline, bool hasPaper);
+    void updateLabelValues();
 
     void on_printer_check_status_clicked();
     void on_printer_test_button_clicked();

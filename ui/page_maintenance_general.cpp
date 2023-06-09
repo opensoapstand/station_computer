@@ -38,7 +38,6 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
-    qDebug() << "db for maintenance general";
     ui->checkBox_enable_empty_container->setChecked(p_page_idle->thisMachine.getEmptyContainerDetectionEnabled());
     ui->checkBox_enable_empty_container->setText("Enable auto empty detection. (If disabled, will display sold out if less than " + QString::number(CONTAINER_EMPTY_THRESHOLD_ML) + "ml remaining)");
     ui->checkBox_enable_pump_ramping->setChecked(p_page_idle->thisMachine.getPumpRampingEnabled());
@@ -101,10 +100,6 @@ void page_maintenance_general::setPage(page_maintenance *pageMaintenance, page_i
     ui->pushButton_minimize->setStyleSheet("QPushButton {}"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
 }
 
-void page_maintenance_general::updateProductLabelValues()
-{
-}
-
 void page_maintenance_general::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     p_page_idle->pageTransition(this, pageToShow);
@@ -126,6 +121,13 @@ void page_maintenance_general::on_printer_test_button_clicked()
     // p_page_idle->dfUtility->send_command_to_FSM("1");
     // usleep(50000);
     // p_page_idle->dfUtility->send_command_to_FSM("q");
+}
+
+void page_maintenance_general::updateLabelValues()
+{
+    
+    p_page_idle->loadDynamicContent();
+
 }
 
 void page_maintenance_general::printerStatusFeedback(bool isOnline, bool hasPaper)
@@ -178,6 +180,12 @@ void page_maintenance_general::on_printer_test_print_button_clicked()
 
 void page_maintenance_general::on_checkBox_enable_pump_ramping_clicked(bool checked)
 {
+    if (!p_page_idle->thisMachine.isAllowedAsAdmin())
+    {
+        QMessageBox::information(this, "Admininstrator role required", "You do not have the rights to change these values. Please enter maintenance mode with the admin password.", QMessageBox::Ok);
+        return;
+    }
+
     // qDebug() << "test ramp clicked" << checked;
     // qDebug() << "test empty db: " << p_page_idle->thisMachine.getPumpRampingEnabled();
     if (checked != p_page_idle->thisMachine.getPumpRampingEnabled())
@@ -187,12 +195,17 @@ void page_maintenance_general::on_checkBox_enable_pump_ramping_clicked(bool chec
         // db.setPumpRampingEnabled(checked);
         // db.closeDB();
         p_page_idle->thisMachine.setPumpRampingEnabled(checked);
-        ui->checkBox_enable_pump_ramping->setChecked(p_page_idle->thisMachine.getPumpRampingEnabled());
+        updateLabelValues();
     }
 }
 
 void page_maintenance_general::on_checkBox_enable_empty_container_clicked(bool checked)
 {
+    if (!p_page_idle->thisMachine.isAllowedAsAdmin())
+    {
+        QMessageBox::information(this, "Admininstrator role required", "You do not have the rights to change these values. Please enter maintenance mode with the admin password.", QMessageBox::Ok);
+        return;
+    }
     // qDebug() << "test empty clicked" << checked;
     // qDebug() << "test empty db: " << db.getEmptyContainerDetectionEnabled();
     if (checked != p_page_idle->thisMachine.getEmptyContainerDetectionEnabled())
@@ -213,12 +226,22 @@ void page_maintenance_general::on_pushButton_back_clicked()
 
 void page_maintenance_general::on_minimize_Button_clicked()
 {
+    if (!p_page_idle->thisMachine.isAllowedAsAdmin())
+    {
+        QMessageBox::information(this, "Admininstrator role required", "You do not have the rights to change these values. Please enter maintenance mode with the admin password.", QMessageBox::Ok);
+        return;
+    }
     qDebug() << "Maintenance Minimize button pressed.";
     this->showMinimized();
 }
 
 void page_maintenance_general::on_reboot_Button_clicked()
 {
+    if (!p_page_idle->thisMachine.isAllowedAsAdmin())
+    {
+        QMessageBox::information(this, "Admininstrator role required", "You do not have the rights to change these values. Please enter maintenance mode with the admin password.", QMessageBox::Ok);
+        return;
+    }
     qDebug() << "Maintenance Reboot button pressed.";
     // QProcess process;
     // process.start("reboot now");
@@ -232,6 +255,11 @@ void page_maintenance_general::on_reboot_Button_clicked()
 
 void page_maintenance_general::on_shutdown_Button_clicked()
 {
+    if (!p_page_idle->thisMachine.isAllowedAsAdmin())
+    {
+        QMessageBox::information(this, "Admininstrator role required", "You do not have the rights to change these values. Please enter maintenance mode with the admin password.", QMessageBox::Ok);
+        return;
+    }
     qDebug() << "Maintenance Shutdown button pressed.";
 
     QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -h 0";
@@ -549,6 +577,11 @@ void page_maintenance_general::on_network_status_Button_clicked()
 
 void page_maintenance_general::on_restart_UI_Button_clicked()
 {
+    if (!p_page_idle->thisMachine.isAllowedAsAdmin())
+    {
+        QMessageBox::information(this, "Admininstrator role required", "You do not have the rights to change these values. Please enter maintenance mode with the admin password.", QMessageBox::Ok);
+        return;
+    }
     // app is configured as an auto start service. So, dont bother about restarting.
     // QProcess::startDetached(qApp->applicationFilePath()); // if needed to start app
     qApp->exit();
@@ -556,6 +589,12 @@ void page_maintenance_general::on_restart_UI_Button_clicked()
 
 void page_maintenance_general::on_restart_electronics_Button_clicked()
 {
+    if (!p_page_idle->thisMachine.isAllowedAsAdmin())
+    {
+        QMessageBox::information(this, "Admininstrator role required", "You do not have the rights to change these values. Please enter maintenance mode with the admin password.", QMessageBox::Ok);
+        return;
+    }
+
     QProcess process;
     process.start("bash");
     process.waitForStarted();

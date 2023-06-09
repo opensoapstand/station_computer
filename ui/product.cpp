@@ -535,7 +535,6 @@ void product::setPlu(int sizeIndex, QString plu){
     QString column_name = plu_columns[sizeIndex];
     DbManager db(DB_PATH);
     bool success = db.updateTableProductsWithText(getSlot(), column_name, plu);
-    qDebug()<< "set Plu success?: " << success;
     db.closeDB();
 }
 

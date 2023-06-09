@@ -91,6 +91,7 @@ void page_idle::showEvent(QShowEvent *event)
     registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
     loadDynamicContent();
+    thisMachine.setRole(UserRole::user);
 
     setSelectedProduct(0);
 

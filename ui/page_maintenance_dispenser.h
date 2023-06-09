@@ -107,7 +107,7 @@ private:
     page_maintenance *p_page_maintenance;
     page_idle *p_page_idle;
 
-    bool pumping = false;
+    bool pump_enabled = false;
 
     int _maintainProductPageTimeoutSec;
     float dispenserEnabledSecs;

@@ -84,7 +84,7 @@ page_help->pushButton_to_transactions,Transaction History ->
 page_help->pushButton_to_maintenance,Settings
 page_help->pushButton_to_feedback,Contact Us
 page_help->pushButton_to_idle,<-back
-page_help->label_keyboardInfo,Enter password followed by the "Done" key to enter maintenance mode
+page_help->label_keyboardInfo,Provide maintainer or administrator password, followed by "Done". 
 
 # page_transactions
 page_transactions->pushButton_back,Print Selected Receipt

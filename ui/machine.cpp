@@ -6,6 +6,7 @@
 
 machine::machine()
 {
+    setRole(UserRole::user);
 }
 
 // Dtor
@@ -68,13 +69,15 @@ bool machine::getPumpRampingEnabled()
     return m_enable_pump_ramping == 1;
 }
 
-void machine::setPumpRampingEnabled(bool isEnabled){
+void machine::setPumpRampingEnabled(bool isEnabled)
+{
     DbManager db(DB_PATH);
     db.updateTableMachineWithInt("enable_pump_ramping", isEnabled);
     db.closeDB();
 }
 
-void machine::setEmptyContainerDetectionEnabled(bool isEnabled){
+void machine::setEmptyContainerDetectionEnabled(bool isEnabled)
+{
     DbManager db(DB_PATH);
     db.updateTableMachineWithInt("has_empty_detection", isEnabled);
     db.closeDB();
@@ -89,9 +92,69 @@ bool machine::getShowTransactionHistory()
     return m_show_transactions == 1;
 }
 
-QString machine::getMaintenanceAdminPassword()
+void machine::processRolePassword(QString password_input)
 {
-    return m_maintenance_pwd;
+    int compareResult_maintainer = QString::compare(password_input, m_maintenance_pwd, Qt::CaseInsensitive);
+    int compareResult_admin = QString::compare(password_input, m_admin_pwd, Qt::CaseInsensitive);
+
+    // if admin password is the same as maintainer password, make sure to set as admin!
+    if (compareResult_admin == 0)
+    {
+        setRole(UserRole::admin);
+    }
+    else if (compareResult_maintainer == 0)
+    {
+        setRole(UserRole::maintainer);
+    }
+    else
+    {
+        setRole(UserRole::user);
+        qDebug() << "Provided password not correct. Check machine tabel in database or contact soapstand.";
+    }
+}
+QString machine::getActiveRoleAsText()
+{
+    switch (active_role)
+    {
+    case user:
+        return "User";
+    case maintainer:
+        return "Maintainer";
+    case admin:
+        return "Admin";
+    default:
+        return "Unknown";
+    }
+}
+
+bool machine::isAllowedAsAdmin()
+{
+    bool allowed = false;
+    if (active_role == UserRole::admin)
+    {
+        allowed = true;
+    }
+    qDebug()<< "allowed as adming??@IJI" << allowed;
+    return allowed;
+}
+
+bool machine::isAllowedAsMaintainer()
+{
+    bool allowed = false;
+    if (active_role == UserRole::maintainer || active_role == UserRole::admin)
+    {
+        allowed = true;
+    }
+    return allowed;
+}
+
+void machine::setRole(UserRole role)
+{
+    if (active_role != role)
+    {
+        active_role = role;
+        qDebug() << "Role set as: " << getActiveRoleAsText();
+    }
 }
 
 QString machine::setStatusText(int slot, bool isSlotEnabled, QString status)
@@ -184,57 +247,13 @@ void machine::loadParametersFromDb()
         &m_show_transactions,
         &m_help_text_html,
         &m_idle_page_type,
+        &m_admin_pwd,
         m_pump_id_slots,
         m_is_enabled_slots,
         m_status_text_slots);
     db.closeDB();
 
-    qDebug() << "Machine ID as loaded from db: " <<  m_machine_id;
-    // qDebug() << "varr: "
-    //          << "m_machine_id cuostm er id:";
-    // qDebug() << "varr: " << m_soapstand_customer_id;
-    // qDebug() << "varr: " << m_template;
-    // qDebug() << "varr: " << m_location;
-    // qDebug() << "varr: " << m_controller_type;
-    // qDebug() << "varr: " << m_controller_id;
-    // qDebug() << "varr: " << m_screen_type;
-    // qDebug() << "varr: " << m_screen_id;
-    // qDebug() << "varr: " << m_has_receipt_printer;
-    // qDebug() << "varr: " << m_receipt_printer_is_online;
-    // qDebug() << "varr: " << m_receipt_printer_has_paper;
-    // qDebug() << "varr: " << m_has_tap_payment;
-    // qDebug() << "varr: " << m_hardware_version;
-    // qDebug() << "varr: " << m_software_version;
-    // qDebug() << "varr: " << m_aws_port;
-    // // qDebug() << "varr: " << m_pump_id_slot_1;
-    // // qDebug() << "varr: " << m_pump_id_slot_2;
-    // // qDebug() << "varr: " << m_pump_id_slot_3;
-    // // qDebug() << "varr: " << m_pump_id_slot_4;
-    // // qDebug() << "varr: " << m_is_enabled_slot_1;
-    // // qDebug() << "varr: " << m_is_enabled_slot_2;
-    // // qDebug() << "varr: " << m_is_enabled_slot_3;
-    // // qDebug() << "varr: " << m_is_enabled_slot_4;
-    // qDebug() << "varr: " << m_coupons_enabled;
-    // // qDebug() << "varr: " << m_status_text_slot_1;
-    // // qDebug() << "varr: " << m_status_text_slot_2;
-    // // qDebug() << "varr: " << m_status_text_slot_3;
-    // // qDebug() << "varr: " << m_status_text_slot_4;
-    // qDebug() << "varr: " << m_has_empty_detection;
-    // qDebug() << "varr: " << m_enable_pump_ramping;
-    // qDebug() << "varr: " << m_enable_pump_reversal;
-    // qDebug() << "varr: " << m_dispense_buttons_count;
-    // qDebug() << "varr: " << m_maintenance_pwd;
-    // qDebug() << "varr: " << m_show_transactions;
-    // qDebug() << "varr: " << m_help_text_html;
-    // qDebug() << "varr: " << m_idle_page_type;
-    // for (int i = 0; i < 4; i++)
-    // {
-    //     qDebug() << "varrrr====";
-    //     qDebug() << i;
-    //     qDebug() << m_is_enabled_slots[i];
-    //     qDebug() << m_pump_id_slots[i];
-    //     qDebug() << m_status_text_slots[i];
-    // }
+    qDebug() << "Machine ID as loaded from db: " << m_machine_id;
 }
 
 int machine::getDispensersCount()

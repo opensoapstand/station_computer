@@ -5,8 +5,12 @@
    background-color: transparent;
 }
 
+#product_buttons{
 
+   background-color: transparent;
+   border: none;
 
+}
 /* QPushButton {
    font-family: 'Brevia';
    font-style: normal;

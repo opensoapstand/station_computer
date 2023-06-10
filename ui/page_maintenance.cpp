@@ -62,6 +62,7 @@ void page_maintenance::showEvent(QShowEvent *event)
 
     for (int i = 0; i < 4; i++)
     {
+        product_overlay_labels[i]->setObjectName("product_overlay_labels");
         product_overlay_labels[i]->setStyleSheet(styleSheet);
     }
 
@@ -74,7 +75,9 @@ void page_maintenance::showEvent(QShowEvent *event)
         product_buttons[i]->setIcon(qi);
         product_buttons[i]->setIconSize(QSize(281, 341));
         product_overlay_labels[i]->hide();
-        product_buttons[i]->setStyleSheet("background-color: transparent; border: none;");
+        product_buttons[i]->setObjectName("product_buttons");
+        product_buttons[i]->setStyleSheet(styleSheet);
+        // product_buttons[i]->setStyleSheet("background-color: transparent; border: none;");
 
     }
 

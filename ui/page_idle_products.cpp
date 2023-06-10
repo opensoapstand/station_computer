@@ -56,9 +56,6 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     labels_product_type[3] = ui->label_product_4_type;
 
     ui->pushButton_to_select_product_page->raise();
-    // ui->label_pick_soap->setText("Discover how to<br> refill soap here!");
-    //setTemplateTextToObject(ui->label_pick_soap);
-
 
     QFont font;
     font.setFamily(QStringLiteral("Brevia"));
@@ -90,14 +87,13 @@ void page_idle_products::showEvent(QShowEvent *event)
     QString styleSheet = p_page_idle->getCSS(PAGE_IDLE_PRODUCTS_CSS);
     ui->pushButton_to_select_product_page->setStyleSheet(styleSheet); 
     ui->label_pick_soap->setStyleSheet(styleSheet);
-    // ui->printer_status_label->setStyleSheet(styleSheet);
     
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
 
-        labels_product_picture[slot_index]->setProperty("class", "labels_product_picture");
+       labels_product_picture[slot_index]->setProperty("class", "labels_product_picture");
         labels_product_type[slot_index]->setProperty("class", "labels_product_type");
-        labels_selectProductOverlay[slot_index]->setProperty("class", "labels_selectProductOverlay");
+        labels_selectProductOverlay[slot_index]->setProperty("class", "labels_selectProductOverlay"); //seems to do nothing
         labels_product_picture[slot_index]->setStyleSheet(styleSheet);
         labels_selectProductOverlay[slot_index]->setStyleSheet(styleSheet);
         labels_product_type[slot_index]->setStyleSheet(styleSheet);
@@ -242,13 +238,11 @@ void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
         ui->printer_status_label->raise();
 
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->printer_status_label, "assistance_printer_offline");
-        // ui->printer_status_label->setText("Assistance needed\nReceipt Printer offline.");
         ui->printer_status_label->show();
     }
     else if (!hasPaper)
     {
         ui->printer_status_label->raise();
-       // ui->printer_status_label->setText("Assistance needed\nReceipt printer empty or improperly loaded.");
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->printer_status_label, "empty_improperly_loaded");
         ui->printer_status_label->show();
     }
@@ -262,23 +256,6 @@ void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
 
     ui->printer_status_label->setStyleSheet(styleSheet);
 
-    // ui->printer_status_label->setStyleSheet(
-    //     "QLabel {"
-
-    //     "font-family: 'Brevia';"
-    //     "font-style: normal;"
-    //     "font-weight: 100;"
-    //     "background-color: #5E8580;"
-    //     "font-size: 42px;"
-    //     "text-align: centre;"
-    //     "line-height: auto;"
-    //     "letter-spacing: 0px;"
-    //     "qproperty-alignment: AlignCenter;"
-    //     "border-radius: 20px;"
-    //     "color: white;"
-    //     "border: none;"
-    //     "}");
-
 }
 
 void page_idle_products::on_pushButton_to_select_product_page_clicked()
@@ -286,8 +263,3 @@ void page_idle_products::on_pushButton_to_select_product_page_clicked()
     this->hideCurrentPageAndShowProvided(p_pageSelectProduct);
 }
 
-// void page_idle_products::setTemplateTextToObject(QWidget *p_element)
-// {
-//     QString searchString = getTemplateTextByElementNameAndPage(p_element);
-//     setTextToObject(p_element, searchString);
-// }

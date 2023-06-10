@@ -32,23 +32,8 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
     // Fullscreen background setup
     ui->setupUi(this);
     qDebug() << "Payment page" << endl;
-    ui->previousPage_Button->setStyleSheet(
-        "QPushButton {"
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "line-height: 99px;"
-        "text-transform: lowercase;"
-        "color: #003840;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
-    ui->previousPage_Button->setText("<- Back");
-    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->pushButton_payment_bypass->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
+    ui->previousPage_Button->setText("<- Back");
     ui->pushButton_payment_bypass->setEnabled(false);
 
     // Payment Declined
@@ -145,6 +130,16 @@ void page_tap_payment_serial::resizeEvent(QResizeEvent *event)
 
 void page_tap_payment_serial::showEvent(QShowEvent *event)
 {
+
+    QString styleSheet = p_page_idle->getCSS(PAGE_TAP_PAYMENT_SERIAL_CSS);
+    
+    ui->previousPage_Button->setStyleSheet(styleSheet);
+    ui->mainPage_Button->setProperty("class", "transparent");
+    ui->pushButton_payment_bypass->setProperty("class", "transparent");
+    ui->mainPage_Button->setStyleSheet(styleSheet);
+    ui->pushButton_payment_bypass->setStyleSheet(styleSheet);
+
+
     qDebug() << "<<<<<<< Page Enter: Tap Serial Payment >>>>>>>>>";
 
     QWidget::showEvent(event);
@@ -207,6 +202,7 @@ bool page_tap_payment_serial::exitConfirm()
 
         msgBox.setText("<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>");
         msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
+        //msgBox.setStyleSheet(styleSheet);
 
         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         int ret = msgBox.exec();

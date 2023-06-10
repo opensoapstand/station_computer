@@ -25,7 +25,9 @@ page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer em
 
 #page_idle_products
 
-page_idle_products->label_pick_soap,Discover how to<br> refill soap here!
+#tap here to refill your soap
+
+page_idle_products->label_pick_soap,Quick and easy soap refill,<br>just a tap away.
 page_idle_products->printer_status_label->assistance_printer_offline,Assistance needed<br>Receipt Printer offline.
 page_idle_products->printer_status_label->empty_improperly_loaded,Assistance needed<br>Receipt printer empty or improperly loaded.
 
@@ -90,7 +92,7 @@ page_help->pushButton_to_transactions,Transaction History ->
 page_help->pushButton_to_maintenance,Settings
 page_help->pushButton_to_feedback,Contact Us
 page_help->pushButton_to_idle,<-back
-page_help->label_keyboardInfo,Enter password followed by the "Done" key to enter maintenance mode
+page_help->label_keyboardInfo,Provide maintainer or administrator password, followed by "Done". 
 
 # page_transactions
 page_transactions->pushButton_back,Print Selected Receipt

@@ -4,6 +4,13 @@
 #include "df_util.h"
 // #include "page_idle.h"
 
+typedef enum UserRole
+{
+    user,
+    maintainer,
+    admin
+} UserRole;
+
 class machine : public QObject
 {
     Q_OBJECT
@@ -22,7 +29,13 @@ public:
     QString getMachineId();
     bool getCouponsEnabled();
     bool getShowTransactionHistory();
-    QString getMaintenanceAdminPassword();
+
+    void processRolePassword(QString password_input);
+    QString getActiveRoleAsText();
+    void setRole(UserRole role);
+    bool isAllowedAsAdmin();
+    bool isAllowedAsMaintainer();
+
     QString getCustomerId();
 
     QString getTemplateFolder();
@@ -38,7 +51,7 @@ public:
     QString getIdlePageType();
 
     int getDispensersCount();
-    
+
     bool hasReceiptPrinter();
     void printerStatus(bool *isOnline, bool *hasPaper);
 
@@ -47,6 +60,7 @@ public slots:
 signals:
 
 private:
+    UserRole active_role;
     QString m_machine_id;
     QString m_soapstand_customer_id;
     QString m_template;
@@ -71,6 +85,7 @@ private:
     int m_show_transactions;
     QString m_help_text_html;
     QString m_idle_page_type;
+    QString m_admin_pwd;
 
     QString m_pump_id_slots[SLOT_COUNT];
     int m_is_enabled_slots[SLOT_COUNT];

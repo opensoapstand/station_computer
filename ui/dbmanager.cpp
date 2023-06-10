@@ -417,6 +417,7 @@ void DbManager::getAllProductProperties(int slot,
 33	show_transactions
 34	help_text_html
 35	idle_page_type
+36	admin_pwd
 
 QString* machine_id,
 int* soapstand_customer_id,
@@ -476,6 +477,7 @@ void DbManager::getAllMachineProperties(
     int *show_transactions,
     QString *help_text_html,
     QString *idle_page_type,
+    QString *admin_pwd,
 
     QString *pump_id_slots,
     int *is_enabled_slots,
@@ -484,7 +486,7 @@ void DbManager::getAllMachineProperties(
     qDebug() << " db... all machine properties";
     QSqlQuery qry;
     // {
-    qry.prepare("SELECT machine_id,soapstand_customer_id,template,location,controller_type,controller_id,screen_type,'screen _id',has_receipt_printer,receipt_printer_is_online,receipt_printer_has_paper,has_tap_payment,hardware_version,software_version,aws_port,pump_id_slot_1,pump_id_slot_2,pump_id_slot_3,pump_id_slot_4,is_enabled_slot_1,is_enabled_slot_2,is_enabled_slot_3,is_enabled_slot_4,coupons_enabled,status_text_slot_1,status_text_slot_2,status_text_slot_3,status_text_slot_4,has_empty_detection,enable_pump_ramping,enable_pump_reversal,dispense_buttons_count,maintenance_pwd,show_transactions,help_text_html,idle_page_type FROM machine");
+    qry.prepare("SELECT machine_id,soapstand_customer_id,template,location,controller_type,controller_id,screen_type,'screen _id',has_receipt_printer,receipt_printer_is_online,receipt_printer_has_paper,has_tap_payment,hardware_version,software_version,aws_port,pump_id_slot_1,pump_id_slot_2,pump_id_slot_3,pump_id_slot_4,is_enabled_slot_1,is_enabled_slot_2,is_enabled_slot_3,is_enabled_slot_4,coupons_enabled,status_text_slot_1,status_text_slot_2,status_text_slot_3,status_text_slot_4,has_empty_detection,enable_pump_ramping,enable_pump_reversal,dispense_buttons_count,maintenance_pwd,show_transactions,help_text_html,idle_page_type,admin_pwd FROM machine");
     qry.exec();
     if (!qry.exec())
     {
@@ -531,6 +533,7 @@ void DbManager::getAllMachineProperties(
         *show_transactions = qry.value(33).toInt();
         *help_text_html = qry.value(34).toString();
         *idle_page_type = qry.value(35).toString();
+        *admin_pwd = qry.value(36).toString();
     }
 }
 

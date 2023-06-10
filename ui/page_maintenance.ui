@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="autoFillBackground">
+   <bool>true</bool>
+  </property>
   <widget class="QPushButton" name="product4_button">
    <property name="geometry">
     <rect>
@@ -174,12 +177,12 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_title">
+  <widget class="QLabel" name="label_title_maintenance_mode">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>220</x>
      <y>120</y>
-     <width>691</width>
+     <width>611</width>
      <height>71</height>
     </rect>
    </property>
@@ -190,6 +193,9 @@
    </property>
    <property name="text">
     <string>MAINTENANCE MODE</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="label_machine_id">
@@ -265,8 +271,8 @@
   <widget class="QLabel" name="label_ui_version">
    <property name="geometry">
     <rect>
-     <x>310</x>
-     <y>70</y>
+     <x>260</x>
+     <y>60</y>
      <width>351</width>
      <height>17</height>
     </rect>
@@ -278,9 +284,9 @@
   <widget class="QPushButton" name="pushButton_general_settings">
    <property name="geometry">
     <rect>
-     <x>868</x>
+     <x>768</x>
      <y>4</y>
-     <width>201</width>
+     <width>301</width>
      <height>71</height>
     </rect>
    </property>
@@ -340,6 +346,27 @@
     <string>P4</string>
    </property>
   </widget>
+  <zorder>label_product3</zorder>
+  <zorder>label_product2</zorder>
+  <zorder>label_product4</zorder>
+  <zorder>label_product1</zorder>
+  <zorder>pushButton_to_previous_page</zorder>
+  <zorder>label_title_maintenance_mode</zorder>
+  <zorder>label_machine_id</zorder>
+  <zorder>product2_overlay_label</zorder>
+  <zorder>product3_overlay_label</zorder>
+  <zorder>product4_overlay_label</zorder>
+  <zorder>label_ui_version</zorder>
+  <zorder>pushButton_general_settings</zorder>
+  <zorder>label_product1_position</zorder>
+  <zorder>label_product2_position</zorder>
+  <zorder>label_product3_position</zorder>
+  <zorder>label_product4_position</zorder>
+  <zorder>product1_overlay_label</zorder>
+  <zorder>product1_button</zorder>
+  <zorder>product2_button</zorder>
+  <zorder>product3_button</zorder>
+  <zorder>product4_button</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -57,7 +57,7 @@ void page_maintenance::showEvent(QShowEvent *event)
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
-    // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH); // delays the page loading significantly.
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH); // delays the page loading significantly.
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_CSS);
 
     for (int i = 0; i < 4; i++)
@@ -73,15 +73,12 @@ void page_maintenance::showEvent(QShowEvent *event)
         QPixmap im(p);
         QIcon qi(im);
         product_buttons[i]->setIcon(qi);
-        product_buttons[i]->setIconSize(QSize(281, 341));
-        product_overlay_labels[i]->hide();
         product_buttons[i]->setObjectName("product_buttons");
         product_buttons[i]->setStyleSheet(styleSheet);
-        // product_buttons[i]->setStyleSheet("background-color: transparent; border: none;");
-
+        product_buttons[i]->setIconSize(QSize(241, 341));
+        product_overlay_labels[i]->show();
     }
 
-    
     // page_maintenanceEndTimer->start(1000);
     _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
 
@@ -149,7 +146,16 @@ void page_maintenance::showEvent(QShowEvent *event)
         // product_buttons[slot_index]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
         // }
     }
-    
+    ui->pushButton_to_previous_page->setProperty("class", "normal");
+    ui->pushButton_general_settings->setProperty("class", "normal");
+    ui->pushButton_to_previous_page->setStyleSheet(styleSheet);
+    ui->pushButton_general_settings->setStyleSheet(styleSheet);
+    ui->label_title_maintenance_mode->setStyleSheet(styleSheet);
+    ui->label_machine_id->setProperty("class", "label_machine_ui");
+    ui->label_machine_id->setStyleSheet(styleSheet);
+    ui->label_ui_version->setProperty("class", "label_machine_ui");
+    ui->label_ui_version->setStyleSheet(styleSheet);
+
     ui->pushButton_to_previous_page->setText("<-Back");
     ui->pushButton_general_settings->setText("General Settings");
     // p_pageSelectProduct->cancelTimers();
@@ -224,7 +230,6 @@ void page_maintenance::on_product4_button_clicked()
     // p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
-
 
 int getSelection()
 {

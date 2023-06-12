@@ -142,4 +142,4 @@ page_tap_payment->msgBox_cancel,<p align=center><br><br>Cancel transaction and e
 page_tap_payment->preauthLabel,You are being pre-authorized for maximum volume %1 with amount of
 
 #page_maintenance
-page_maintenance->
+page_maintenance->pushButton_to_previous_page,<-back

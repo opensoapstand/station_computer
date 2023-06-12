@@ -59,11 +59,15 @@ void page_error_wifi::showEvent(QShowEvent *event)
     QString styleSheet = p_page_idle->getCSS(PAGE_ERROR_WIFI_CSS);
     ui->label_error_message->setStyleSheet(styleSheet);
     ui->label_oops->setStyleSheet(styleSheet);
-    ui->label_oops->setText("oops..");
+    // ui->label_oops->setText("oops..");
+    p_page_idle->setTemplateTextToObject(ui->label_oops);
+
     ui->label_error_occured->setStyleSheet(styleSheet);
-    ui->label_error_occured->setText("AN ERROR HAS OCCURED");
+    // ui->label_error_occured->setText("AN ERROR HAS OCCURED");
+    p_page_idle->setTemplateTextToObject(ui->label_error_occured);
     ui->label_check_back->setStyleSheet(styleSheet);
-    ui->label_check_back->setText("Please check back soon");
+    // ui->label_check_back->setText("Please check back soon");
+    p_page_idle->setTemplateTextToObject(ui->label_check_back);
     ui->pushButton_mainPage->setStyleSheet(styleSheet);
 
     QString machine_logo_full_path = p_page_idle->thisMachine.getTemplatePathFromName(MACHINE_LOGO_PATH);

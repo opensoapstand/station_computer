@@ -48,7 +48,7 @@
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="mainPageButton">
+  <widget class="QPushButton" name="pushButton_mainPage">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -126,7 +126,7 @@
     <string>TextLabel</string>
    </property>
   </widget>
-  <zorder>mainPageButton</zorder>
+  <zorder>pushButton_mainPage</zorder>
   <zorder>error_message_label</zorder>
   <zorder>wifi_ack_Button</zorder>
   <zorder>label_error_message</zorder>

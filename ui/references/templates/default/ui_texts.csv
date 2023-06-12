@@ -23,6 +23,14 @@ page_idle->label_welcome_message,Refill soap here!<br>Tap screen to start
 page_idle->label_printer_status->offline,Assistance needed <br>Receipt Printer offline.
 page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer empty or improperly loaded.
 
+#page_idle_products
+
+#tap here to refill your soap
+
+page_idle_products->label_pick_soap,Quick and easy soap refill,<br>just a tap away.
+page_idle_products->printer_status_label->assistance_printer_offline,Assistance needed<br>Receipt Printer offline.
+page_idle_products->printer_status_label->empty_improperly_loaded,Assistance needed<br>Receipt printer empty or improperly loaded.
+
 #page_select_product
 page_select_product->label_pick_soap,Pick your soap
 page_select_product->pushButton_to_idle,<-back
@@ -125,11 +133,6 @@ page_qr_payment->msgBox_refund->default,<p align=center><br><br>Are you sure you
 page_maintenance->product_overlay_labels[i]->almost_empty,Almost Empty
 page_maintenance->product_overlay_labels[i]->coming_soon,Comming soon
 
-#page_idle_products
-
-page_idle_products->label_pick_soap,Discover how to<br> refill soap here!
-page_idle_products->printer_status_label->assistance_printer_offline,Assistance needed<br>Receipt Printer offline.
-page_idle_products->printer_status_label->empty_improperly_loaded,Assistance needed<br>Receipt printer empty or improperly loaded.
 
 
 # page_tap_payment

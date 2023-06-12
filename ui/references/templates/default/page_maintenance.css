@@ -17,7 +17,11 @@
    border: none;
 }
 
+#product_buttons{
 
+   background-color: transparent;
+   border: none;
+}
 #label_title_maintenance_mode {
    font-family: 'Brevia';
    font-style: normal;
@@ -86,9 +90,9 @@
    text-align: center;
    qproperty-alignment: AlignCenter;
    border: none;
-} */
+} 
 
-/* .button_transparent {
+ .button_transparent {
    background-color: transparent;
    border: 0px;
 } 

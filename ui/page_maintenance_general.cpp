@@ -96,7 +96,6 @@ void page_maintenance_general::setPage(page_maintenance *pageMaintenance, page_i
     this->p_page_maintenance = pageMaintenance;
     this->p_page_idle = pageIdle;
 
-    // ui->minimize_Button->setStyleSheet("QPushButton { background-color: 0x88448811; border: 5px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->pushButton_minimize->setStyleSheet("QPushButton {}"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
 }
 

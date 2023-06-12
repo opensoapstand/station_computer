@@ -438,7 +438,7 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>178</y>
+     <y>80</y>
      <width>1080</width>
      <height>191</height>
     </rect>
@@ -489,7 +489,6 @@
     <string/>
    </property>
   </widget>
-  <zorder>pushButton_help_page</zorder>
   <zorder>pushButton_to_select_product_page</zorder>
   <zorder>label_product_1_type</zorder>
   <zorder>label_product_2_photo</zorder>

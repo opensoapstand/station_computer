@@ -64,7 +64,7 @@ void page_error_wifi::showEvent(QShowEvent *event)
     ui->label_error_occured->setText("AN ERROR HAS OCCURED");
     ui->label_check_back->setStyleSheet(styleSheet);
     ui->label_check_back->setText("Please check back soon");
-    ui->mainPageButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    ui->pushButton_mainPage->setStyleSheet(styleSheet);
 
     QString machine_logo_full_path = p_page_idle->thisMachine.getTemplatePathFromName(MACHINE_LOGO_PATH);
     p_page_idle->addPictureToLabel(ui->label_logo_drinkfill, machine_logo_full_path);
@@ -86,7 +86,7 @@ void page_error_wifi::on_wifi_ack_Button_clicked()
 {
 }
 
-void page_error_wifi::on_mainPageButton_clicked()
+void page_error_wifi::on_pushButton_mainPage_clicked()
 {
     exit_page();
 }

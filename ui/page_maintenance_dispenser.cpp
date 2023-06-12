@@ -154,14 +154,12 @@ void page_maintenance_dispenser::setpushButton_soldOutText()
     if (p_page_idle->selectedProduct->getSlotEnabled())
     {
         ui->pushButton_soldOut->setText("Make \n unavailable");
-        //        ui->pushButton_soldOut->setStyleSheet("QPushButton { background-color: #5E8680;font-size: 36px; }");
         ui->pushButton_soldOut->setProperty("class", "pushButton_soldOut_unavailable");
         ui->pushButton_soldOut->setStyleSheet(styleSheet);
     }
     else
     {
         ui->pushButton_soldOut->setText("Make \n available");
-        //        ui->pushButton_soldOut->setStyleSheet("QPushButton { background-color: #E0A0A0;font-size: 36px;  }");
         ui->pushButton_soldOut->setProperty("class", "pushButton_soldOut_available");
         ui->pushButton_soldOut->setStyleSheet(styleSheet);
     }
@@ -253,7 +251,6 @@ void page_maintenance_dispenser::autoDispenseStart(int size)
     {
 
         ui->pushButton_enable_pump->setText("DISABLE PUMP");
-        // ui->pushButton_enable_pump->setStyleSheet("QPushButton { background-color: #E0A0A0;font-size: 20px;  }");
         ui->pushButton_enable_pump->setProperty("class", "pump_disable");
         ui->pushButton_enable_pump->setStyleSheet(styleSheet);
         qDebug() << "Autofill small quantity pressed.";
@@ -317,7 +314,6 @@ void page_maintenance_dispenser::dispense_test_start()
     ui->pushButton_enable_pump->setText("DISABLE PUMP");
 
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
-    // ui->pushButton_enable_pump->setStyleSheet("QPushButton { background-color: #E0A0A0;font-size: 20px;  }");
     ui->pushButton_enable_pump->setProperty("class", "pump_disable");
     ui->pushButton_enable_pump->setStyleSheet(styleSheet);
 }
@@ -332,7 +328,6 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
         pump_enabled = false;
         ui->label_enabled_status->setText("Pump manual mode OFF.");
         ui->pushButton_enable_pump->setText("ENABLE PUMP");
-        // ui->pushButton_enable_pump->setStyleSheet("QPushButton { background-color: #AAAAAA;font-size: 20px;  }");
         ui->pushButton_enable_pump->setProperty("class", "pump_enable");
         ui->pushButton_enable_pump->setStyleSheet(styleSheet);
 
@@ -467,7 +462,6 @@ void page_maintenance_dispenser::on_pushButton_restock_clicked()
     msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
 
     msgBox.setStyleSheet(styleSheet);
-    // msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-width: 300px; min-height: 300px;}");
 
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     int ret = msgBox.exec();
@@ -530,7 +524,6 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
         QMessageBox msgBox;
         msgBox.setWindowFlags(Qt::FramelessWindowHint);
         msgBox.setText("<p align=center>Are you sure you want to Disable product?</p>");
-        // msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-width: 300px; min-height: 300px;}");
 
         QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
         msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
@@ -546,7 +539,6 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
             QMessageBox msgBox_set_availabilty;
             msgBox_set_availabilty.setWindowFlags(Qt::FramelessWindowHint);
             msgBox_set_availabilty.setText("<p align=center>Should the product be labeled as coming soon?</p>");
-            // msgBox_set_availabilty.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-width: 300px; min-height: 300px;}");
             msgBox_set_availabilty.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
             msgBox_set_availabilty.setStyleSheet(styleSheet);
 
@@ -583,7 +575,6 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
         QMessageBox msgBox;
         msgBox.setWindowFlags(Qt::FramelessWindowHint);
         msgBox.setText("<p align=center>Are you sure you want to Enable Product? (This will reset technical problems messages too)</p>");
-        // msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px;} QPushButton{font-size: 18px; min-width: 300px; min-height: 300px;}");
 
         QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
         msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!

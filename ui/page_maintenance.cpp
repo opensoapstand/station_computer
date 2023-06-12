@@ -40,10 +40,9 @@ page_maintenance::page_maintenance(QWidget *parent) : QWidget(parent),
 
     QString title = QString("Soapstand UI v%1").arg(UI_VERSION);
     ui->label_ui_version->setText(title);
-    ui->label_product1_position->setText("P1");
-    ui->label_product2_position->setText("P2");
-    ui->label_product3_position->setText("P3");
-    ui->label_product4_position->setText("P4");
+
+    // ui->label_title_maintenance_mode->setText("MAINTENANCE MODE");
+
 }
 
 // DTOR
@@ -58,7 +57,9 @@ void page_maintenance::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH); // delays the page loading significantly.
+
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_CSS);
+    p_page_idle->setTemplateTextToObject(ui->label_title_maintenance_mode);
 
     for (int i = 0; i < 4; i++)
     {
@@ -109,8 +110,8 @@ void page_maintenance::showEvent(QShowEvent *event)
         }
         else if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
         {
-            product_overlay_labels[slot_index]->setText("Coming Soon");
-            // p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "coming_soon");
+           // product_overlay_labels[slot_index]->setText("Coming Soon");
+            p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "coming_soon");
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
 
@@ -156,8 +157,17 @@ void page_maintenance::showEvent(QShowEvent *event)
     ui->label_ui_version->setProperty("class", "label_machine_ui");
     ui->label_ui_version->setStyleSheet(styleSheet);
 
-    ui->pushButton_to_previous_page->setText("<-Back");
-    ui->pushButton_general_settings->setText("General Settings");
+    // ui->pushButton_to_previous_page->setText("<-Back");
+    p_page_idle->setTemplateTextToObject(ui->pushButton_to_previous_page);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_general_settings);
+    p_page_idle->setTemplateTextToObject(ui->label_product1_position);
+    p_page_idle->setTemplateTextToObject(ui->label_product2_position);
+    p_page_idle->setTemplateTextToObject(ui->label_product3_position);
+    p_page_idle->setTemplateTextToObject(ui->label_product4_position);
+    // ui->label_product1_position->setText("P1");
+    // ui->label_product2_position->setText("P2");
+    // ui->label_product3_position->setText("P3");
+    // ui->label_product4_position->setText("P4");
     // p_pageSelectProduct->cancelTimers();
     // p_page_product->cancelTimers();
     qDebug() << "End maintenance load";
@@ -235,3 +245,4 @@ int getSelection()
 {
     return selection;
 }
+

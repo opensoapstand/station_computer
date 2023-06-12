@@ -1,6 +1,10 @@
 #product_overlay_labels {
 
    background-color: transparent;
+   qproperty-alignment: AlignCenter;
+   font-size: 15px;
+   color: #400000;
+   
 }
 
 .normal {
@@ -20,7 +24,9 @@
 #product_buttons{
 
    background-color: transparent;
-   border: none;
+   border: 10px;
+   border: 1px  solid #3D6675;
+
 }
 #label_title_maintenance_mode {
    font-family: 'Brevia';

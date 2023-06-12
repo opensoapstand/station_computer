@@ -220,9 +220,9 @@
    <property name="geometry">
     <rect>
      <x>220</x>
-     <y>240</y>
+     <y>561</y>
      <width>281</width>
-     <height>341</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="text">
@@ -233,9 +233,9 @@
    <property name="geometry">
     <rect>
      <x>550</x>
-     <y>240</y>
+     <y>561</y>
      <width>281</width>
-     <height>341</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="text">
@@ -243,12 +243,15 @@
    </property>
   </widget>
   <widget class="QLabel" name="product3_overlay_label">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>220</x>
-     <y>680</y>
+     <y>1001</y>
      <width>281</width>
-     <height>341</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="text">
@@ -259,9 +262,9 @@
    <property name="geometry">
     <rect>
      <x>550</x>
-     <y>680</y>
+     <y>1001</y>
      <width>281</width>
-     <height>341</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="text">
@@ -297,10 +300,10 @@
   <widget class="QLabel" name="label_product1_position">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>350</y>
-     <width>81</width>
-     <height>81</height>
+     <x>350</x>
+     <y>210</y>
+     <width>51</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
@@ -310,10 +313,10 @@
   <widget class="QLabel" name="label_product2_position">
    <property name="geometry">
     <rect>
-     <x>850</x>
-     <y>350</y>
-     <width>81</width>
-     <height>81</height>
+     <x>680</x>
+     <y>210</y>
+     <width>71</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
@@ -323,10 +326,10 @@
   <widget class="QLabel" name="label_product3_position">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>800</y>
-     <width>81</width>
-     <height>81</height>
+     <x>360</x>
+     <y>660</y>
+     <width>51</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="text">
@@ -336,10 +339,10 @@
   <widget class="QLabel" name="label_product4_position">
    <property name="geometry">
     <rect>
-     <x>850</x>
-     <y>810</y>
-     <width>81</width>
-     <height>81</height>
+     <x>680</x>
+     <y>650</y>
+     <width>71</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
@@ -353,20 +356,20 @@
   <zorder>pushButton_to_previous_page</zorder>
   <zorder>label_title_maintenance_mode</zorder>
   <zorder>label_machine_id</zorder>
-  <zorder>product2_overlay_label</zorder>
-  <zorder>product3_overlay_label</zorder>
-  <zorder>product4_overlay_label</zorder>
   <zorder>label_ui_version</zorder>
   <zorder>pushButton_general_settings</zorder>
   <zorder>label_product1_position</zorder>
   <zorder>label_product2_position</zorder>
   <zorder>label_product3_position</zorder>
   <zorder>label_product4_position</zorder>
-  <zorder>product1_overlay_label</zorder>
   <zorder>product1_button</zorder>
   <zorder>product2_button</zorder>
-  <zorder>product3_button</zorder>
   <zorder>product4_button</zorder>
+  <zorder>product3_button</zorder>
+  <zorder>product3_overlay_label</zorder>
+  <zorder>product1_overlay_label</zorder>
+  <zorder>product4_overlay_label</zorder>
+  <zorder>product2_overlay_label</zorder>
  </widget>
  <resources/>
  <connections/>

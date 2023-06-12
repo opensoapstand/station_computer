@@ -135,7 +135,14 @@ page_error_wifi->label_check_back,Please check back soon
 
 #page maintenance
 page_maintenance->product_overlay_labels[i]->almost_empty,Almost Empty
-page_maintenance->product_overlay_labels[i]->coming_soon,Comming soon
+page_maintenance->product_overlay_labels[i]->coming_soon,Comming soon987654321
+page_maintenance->label_title_maintenance_mode,MAINTENANCE MODE
+page_maintenance->pushButton_to_previous_page,<-back
+page_maintenance->pushButton_general_settings,General Settings
+page_maintenance->label_product1_position,P1
+page_maintenance->label_product2_position,P2
+page_maintenance->label_product3_position,P3
+page_maintenance->label_product4_position,P4
 
 
 

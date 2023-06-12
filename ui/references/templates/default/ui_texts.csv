@@ -134,8 +134,11 @@ page_error_wifi->label_error_occured,AN ERROR HAS OCCURED
 page_error_wifi->label_check_back,Please check back soon
 
 #page maintenance
-page_maintenance->product_overlay_labels[i]->almost_empty,Almost Empty
-page_maintenance->product_overlay_labels[i]->coming_soon,Comming soon
+page_maintenance->product_overlay_labels->auto_sold_out,Auto Sold Out
+page_maintenance->product_overlay_labels->almost_empty,Almost Empty
+page_maintenance->product_overlay_labels->assistance_needed,Assistance Needed
+page_maintenance->product_overlay_labels->coming_soon,Comming soon
+page_maintenance->product_overlay_labels->sold_out,Sold Out
 page_maintenance->label_title_maintenance_mode,MAINTENANCE MODE
 page_maintenance->pushButton_to_previous_page,<-back
 page_maintenance->pushButton_general_settings,General Settings
@@ -151,3 +154,8 @@ page_tap_payment->pushButton_previous_page,<-back
 page_tap_payment->label_title->processing,Processing Payment
 page_tap_payment->msgBox_cancel,<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>
 page_tap_payment->preauthLabel,You are being pre-authorized for maximum volume %1 with amount of
+
+#page_maintenance_dispenser
+page_maintenance_dispenser->label_enabled_status,Pump manual mode OFF.
+page_maintenance_dispenser->label_calibration_instructions,Flowsensor calibration instructions:<br>1.Enable the pump<br>2.Take a measuring cup and dispense until the 1liter mark<br>3.Check the calibration value<br>4.Update the calibration value if different
+page_maintenance->pushButton_enable_pump->enable_pump,ENABLE PUMP

@@ -101,22 +101,24 @@ void page_maintenance::showEvent(QShowEvent *event)
         }
         else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
         {
-            product_overlay_labels[slot_index]->setText("Almost Empty");
-            // p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "almost_empty");
+            //product_overlay_labels[slot_index]->setText("Almost Empty");
+            p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "almost_empty");
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
         {
-            product_overlay_labels[slot_index]->setText("Sold Out");
+           // product_overlay_labels[slot_index]->setText("Sold Out");
+                p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "sold_out");
         }
         else if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
         {
-            product_overlay_labels[slot_index]->setText("Coming Soon");
-            // p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "coming_soon");
+            //product_overlay_labels[slot_index]->setText("Coming Soon");
+             p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "coming_soon");
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
 
         {
-            product_overlay_labels[slot_index]->setText("Assistance Needed");
+            // product_overlay_labels[slot_index]->setText("Assistance Needed");
+                p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "assistance_needed");
         }
         else
         {
@@ -129,12 +131,13 @@ void page_maintenance::showEvent(QShowEvent *event)
             }
             else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
             {
-                product_overlay_labels[slot_index]->setText("Almost Empty");
-                // p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "almost_empty");
+                //product_overlay_labels[slot_index]->setText("Almost Empty");
+                 p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "almost_empty");
             }
             else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
             {
-                product_overlay_labels[slot_index]->setText("Sold Out");
+                // product_overlay_labels[slot_index]->setText("Sold Out");
+                p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "sold_out");
             }
             else if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
             {
@@ -144,16 +147,19 @@ void page_maintenance::showEvent(QShowEvent *event)
             else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
 
             {
-                product_overlay_labels[slot_index]->setText("Assistance Needed");
+                // product_overlay_labels[slot_index]->setText("Assistance Needed");
+                p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "assistance_needed");
             }
             else
             {
-                product_overlay_labels[slot_index]->setText("Assistance Needed");
+                p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "assistance_needed");
+                // product_overlay_labels[slot_index]->setText("Assistance Needed");
             }
 
             if (!(p_page_idle->products[slot_index].isProductVolumeInContainer()))
             {
-                product_overlay_labels[slot_index]->setText("Auto Sold Out");
+                // product_overlay_labels[slot_index]->setText("Auto Sold Out");
+                p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "auto_sold_out");
             }
 
             // // overlay product status

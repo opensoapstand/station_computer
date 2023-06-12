@@ -72,7 +72,6 @@ void page_init::showEvent(QShowEvent *event)
     
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_INIT_BACKGROUND_IMAGE_PATH);
 
-
     //    qDebug() << "Start init Timers" << endl;
     initIdleTimer->start(1000);
 #ifdef START_FSM_FROM_UI
@@ -86,15 +85,26 @@ void page_init::showEvent(QShowEvent *event)
         system("DISPLAY=:0 xterm -hold  /release/fsm/controller &");
         _initIdleTimeoutSec = 20;
     }
+    else if(!tapSetupStarted){
+        ui->init_label->setText("Wait for Payment signal.");
+
+        tap_init();
+    }
     else
     {
+
         ui->init_label->setText("Wait for controller signal.");
+
 #ifdef WAIT_FOR_CONTROLLER_READY
         _initIdleTimeoutSec = 20;
 #else
+
         _initIdleTimeoutSec = 1;
 #endif
     }
+    
+    // tap_init();
+
 }
 
 void page_init::initReadySlot(void)
@@ -151,4 +161,150 @@ void page_init::onRebootTimeoutTick()
         // REBOOT!
         system("./release/reboot.sh");
     }
+}
+
+bool page_init::tap_init()
+{
+    paymentConnected = com.page_init();
+
+    while (!paymentConnected)
+    {
+        paymentConnected = com.page_init();
+    }
+    sleep(35);
+
+    // This is super shitty - there must be a better way to find out when the green light starts flashing on the UX420 but it was 35
+
+    cout << "_----_-----__------_-----";
+   
+    
+    /*logon packet to send*/
+    cout << "Sending Logon packet..." << endl;
+    pktToSend = paymentPacket.logonPacket();
+    if (sendToUX410PageInit())
+    {
+        cout << "Receiving Logon response" << endl;
+        isInitLogin = true;
+        waitForUX410PageInit();
+        pktResponded.clear();
+    }
+    else
+    {
+        return false;
+    }
+    com.flushSerial();
+    cout << "-----------------------------------------------" << endl;
+
+    /*getConfiguration packet to send*/
+    cout << "Sending Merchant Name query..." << endl;
+    pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::MERCH_NAME);
+    if (sendToUX410PageInit())
+    {
+        cout << "Receiving Merchant Name" << endl;
+        waitForUX410PageInit();
+        isInitMerchant = true;
+        merchantName = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
+        cout << merchantName << endl;
+        pktResponded.clear();
+    }
+    else
+    {
+        return false;
+    }
+    com.flushSerial();
+    cout << "-----------------------------------------------" << endl;
+
+    /*getConfiguration packet to send*/
+    cout << "Sending Merchant Address query..." << endl;
+    pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::MERCH_ADDR);
+    if (sendToUX410PageInit())
+    {
+        cout << "Receiving Merchant Address" << endl;
+        waitForUX410PageInit();
+        isInitAddress = true;
+        // merchantAddress = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
+        merchantAddress = paymentPktInfo.dataField(readPacket.getPacket().data);
+
+        std::cout << merchantAddress << endl;
+        pktResponded.clear();
+    }
+    else
+    {
+        return false;
+    }
+    com.flushSerial();
+    cout << "-----------------------------------------------" << endl;
+
+    /*getConfiguration packet to send*/
+    cout << "Sending PTID query..." << endl;
+    pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::CON_TID);
+    if (sendToUX410PageInit())
+    {
+        cout << "Receiving PTID" << endl;
+        waitForUX410PageInit();
+        isInitTerminalID = true;
+        terminalID = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
+        std::cout << terminalID << endl;
+        pktResponded.clear();
+    }
+    else
+    {
+        return false;
+    }
+    com.flushSerial();
+    tapSetupStarted = true;
+    return true;
+}
+
+bool page_init::waitForUX410PageInit()
+{
+    bool waitResponse = false;
+    while (!waitResponse)
+    {
+        sleep(1);
+               QCoreApplication::processEvents();
+        cout << readPacket << endl;
+        if (pktResponded[0] != 0x02)
+        {
+            pktResponded.clear();
+            pktResponded = com.readPacket();
+            usleep(10);
+        }
+        else
+        {
+             pktResponded = com.readPacket();
+            readPacket.packetReadFromUX(pktResponded);
+            std::cout << readPacket;
+            com.sendAck();
+            waitResponse = true;
+        }
+    }
+    return waitResponse;
+}
+
+
+
+bool page_init::sendToUX410PageInit()
+{
+    int waitForAck = 0;
+    while (waitForAck < 3)
+    {
+        cout << "Wait for ACK counter: " << waitForAck << endl;
+        com.sendPacket(pktToSend, uint(pktToSend.size()));
+        std::cout << "sendtoUX410PageInit Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
+        sleep(1);
+        // read back what is responded
+        pktResponded = com.readForAck();
+        readPacket.packetReadFromUX(pktResponded);
+        pktResponded.clear();
+        waitForAck++;
+
+        // if(isReadyForTap) {
+        cout<< readPacket.getAckOrNak();
+        if (readPacket.getAckOrNak() == communicationPacketField::ACK)
+        {
+            return true;
+        }
+    }
+    return false;
 }

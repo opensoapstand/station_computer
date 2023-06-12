@@ -67,7 +67,7 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
     idlePaymentTimer = new QTimer(this);
     connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
   
-    while (!tap_init());
+    // while (!tap_init());
 
     ui->payment_bypass_Button->setEnabled(false);
     ui->title_Label->hide();
@@ -371,152 +371,6 @@ bool page_tap_payment_serial::sendToUX410()
     }
     return false;
 }
-
-bool page_tap_payment_serial::tap_init()
-{
-    paymentConnected = com.page_init();
-
-    while (!paymentConnected)
-    {
-        paymentConnected = com.page_init();
-    }
-    sleep(35);
-
-    // This is super shitty - there must be a better way to find out when the green light starts flashing on the UX420 but it was 35
-
-    cout << "_----_-----__------_-----";
-   
-    // stayAliveLogon();
-    //   cout << "Sending Device Reset packet..." << endl;
-    // pktToSend = paymentPacket.resetDevice();
-    // if (sendToUX410())
-    // {
-    //     cout << "Receiving Device Reset response" << endl;
-    //     isInitBatched = true;
-    //     waitForUX410();
-    //     pktResponded.clear();
-    // }
-    // else
-    // {
-    //     return false;
-    // }
-    // com.flushSerial();
-    // cout << "-----------------------------------------------" << endl;
-    
-    
-    /*Cancel any previous payment*/
-    // cout << "Sending Cancel payment packet..." << endl;
-    // pktToSend = paymentPacket.purchaseCancelPacket();
-    // if (sendToUX410())
-    // {
-    //     cout << "Receiving Cancel payment response" << endl;
-    //     isInitCancelled = true;
-    //     waitForUX410();
-    //     pktResponded.clear();
-    // }
-    // else
-    // {
-    //     return false;
-    // }
-    // com.flushSerial();
-    // cout << "-----------------------------------------------" << endl;
-
-
-    /*batch close packet to send*/
-    // cout << "Sending Batch close packet..." << endl;
-    // pktToSend = paymentPacket.batchClosePkt();
-    // if (sendToUX410())
-    // {
-    //     cout << "Receiving Batch Close response" << endl;
-    //     isInitBatched = true;
-    //     waitForUX410();
-    //     pktResponded.clear();
-    // }
-    // else
-    // {
-    //     return false;
-    // }
-    // com.flushSerial();
-    // cout << "-----------------------------------------------" << endl;
-    
-    /*logon packet to send*/
-    cout << "Sending Logon packet..." << endl;
-    pktToSend = paymentPacket.logonPacket();
-    if (sendToUX410())
-    {
-        cout << "Receiving Logon response" << endl;
-        isInitLogin = true;
-        waitForUX410();
-        pktResponded.clear();
-    }
-    else
-    {
-        return false;
-    }
-    com.flushSerial();
-    cout << "-----------------------------------------------" << endl;
-
-    /*getConfiguration packet to send*/
-    cout << "Sending Merchant Name query..." << endl;
-    pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::MERCH_NAME);
-    if (sendToUX410())
-    {
-        cout << "Receiving Merchant Name" << endl;
-        waitForUX410();
-        isInitMerchant = true;
-        merchantName = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
-        cout << merchantName << endl;
-        pktResponded.clear();
-    }
-    else
-    {
-        return false;
-    }
-    com.flushSerial();
-    cout << "-----------------------------------------------" << endl;
-
-    /*getConfiguration packet to send*/
-    cout << "Sending Merchant Address query..." << endl;
-    pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::MERCH_ADDR);
-    if (sendToUX410())
-    {
-        cout << "Receiving Merchant Address" << endl;
-        waitForUX410();
-        isInitAddress = true;
-        // merchantAddress = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
-        merchantAddress = paymentPktInfo.dataField(readPacket.getPacket().data);
-
-        std::cout << merchantAddress << endl;
-        pktResponded.clear();
-    }
-    else
-    {
-        return false;
-    }
-    com.flushSerial();
-    cout << "-----------------------------------------------" << endl;
-
-    /*getConfiguration packet to send*/
-    cout << "Sending PTID query..." << endl;
-    pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::CON_TID);
-    if (sendToUX410())
-    {
-        cout << "Receiving PTID" << endl;
-        waitForUX410();
-        isInitTerminalID = true;
-        terminalID = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
-        std::cout << terminalID << endl;
-        pktResponded.clear();
-    }
-    else
-    {
-        return false;
-    }
-    com.flushSerial();
-
-    return true;
-}
-
 bool page_tap_payment_serial::waitForUX410()
 {
     bool waitResponse = false;
@@ -542,6 +396,153 @@ bool page_tap_payment_serial::waitForUX410()
     }
     return waitResponse;
 }
+
+// bool page_tap_payment_serial::tap_init()
+// {
+//     paymentConnected = com.page_init();
+
+//     while (!paymentConnected)
+//     {
+//         paymentConnected = com.page_init();
+//     }
+//     sleep(35);
+
+//     // This is super shitty - there must be a better way to find out when the green light starts flashing on the UX420 but it was 35
+
+//     cout << "_----_-----__------_-----";
+   
+//     // stayAliveLogon();
+//     //   cout << "Sending Device Reset packet..." << endl;
+//     // pktToSend = paymentPacket.resetDevice();
+//     // if (sendToUX410())
+//     // {
+//     //     cout << "Receiving Device Reset response" << endl;
+//     //     isInitBatched = true;
+//     //     waitForUX410();
+//     //     pktResponded.clear();
+//     // }
+//     // else
+//     // {
+//     //     return false;
+//     // }
+//     // com.flushSerial();
+//     // cout << "-----------------------------------------------" << endl;
+    
+    
+//     /*Cancel any previous payment*/
+//     // cout << "Sending Cancel payment packet..." << endl;
+//     // pktToSend = paymentPacket.purchaseCancelPacket();
+//     // if (sendToUX410())
+//     // {
+//     //     cout << "Receiving Cancel payment response" << endl;
+//     //     isInitCancelled = true;
+//     //     waitForUX410();
+//     //     pktResponded.clear();
+//     // }
+//     // else
+//     // {
+//     //     return false;
+//     // }
+//     // com.flushSerial();
+//     // cout << "-----------------------------------------------" << endl;
+
+
+//     /*batch close packet to send*/
+//     // cout << "Sending Batch close packet..." << endl;
+//     // pktToSend = paymentPacket.batchClosePkt();
+//     // if (sendToUX410())
+//     // {
+//     //     cout << "Receiving Batch Close response" << endl;
+//     //     isInitBatched = true;
+//     //     waitForUX410();
+//     //     pktResponded.clear();
+//     // }
+//     // else
+//     // {
+//     //     return false;
+//     // }
+//     // com.flushSerial();
+//     // cout << "-----------------------------------------------" << endl;
+    
+//     /*logon packet to send*/
+//     cout << "Sending Logon packet..." << endl;
+//     pktToSend = paymentPacket.logonPacket();
+//     if (sendToUX410())
+//     {
+//         cout << "Receiving Logon response" << endl;
+//         isInitLogin = true;
+//         waitForUX410();
+//         pktResponded.clear();
+//     }
+//     else
+//     {
+//         return false;
+//     }
+//     com.flushSerial();
+//     cout << "-----------------------------------------------" << endl;
+
+//     /*getConfiguration packet to send*/
+//     cout << "Sending Merchant Name query..." << endl;
+//     pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::MERCH_NAME);
+//     if (sendToUX410())
+//     {
+//         cout << "Receiving Merchant Name" << endl;
+//         waitForUX410();
+//         isInitMerchant = true;
+//         merchantName = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
+//         cout << merchantName << endl;
+//         pktResponded.clear();
+//     }
+//     else
+//     {
+//         return false;
+//     }
+//     com.flushSerial();
+//     cout << "-----------------------------------------------" << endl;
+
+//     /*getConfiguration packet to send*/
+//     cout << "Sending Merchant Address query..." << endl;
+//     pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::MERCH_ADDR);
+//     if (sendToUX410())
+//     {
+//         cout << "Receiving Merchant Address" << endl;
+//         waitForUX410();
+//         isInitAddress = true;
+//         // merchantAddress = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
+//         merchantAddress = paymentPktInfo.dataField(readPacket.getPacket().data);
+
+//         std::cout << merchantAddress << endl;
+//         pktResponded.clear();
+//     }
+//     else
+//     {
+//         return false;
+//     }
+//     com.flushSerial();
+//     cout << "-----------------------------------------------" << endl;
+
+//     /*getConfiguration packet to send*/
+//     cout << "Sending PTID query..." << endl;
+//     pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::CON_TID);
+//     if (sendToUX410())
+//     {
+//         cout << "Receiving PTID" << endl;
+//         waitForUX410();
+//         isInitTerminalID = true;
+//         terminalID = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
+//         std::cout << terminalID << endl;
+//         pktResponded.clear();
+//     }
+//     else
+//     {
+//         return false;
+//     }
+//     com.flushSerial();
+
+//     return true;
+// }
+
+
 
 void page_tap_payment_serial::readTimer_loop()
 {

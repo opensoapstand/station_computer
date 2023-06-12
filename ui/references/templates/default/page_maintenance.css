@@ -7,26 +7,31 @@
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;
-   background-color: #5E8580;
-   font-size: 24px;
+   background-color: transparent;
+   font-size: 32px;
    text-align: center;
    line-height: auto;
    qproperty-alignment: AlignCenter;
    border-radius: 20px;
-   color: white;
+   color: #003840;
    border: none;
 }
 
+#product_buttons{
 
+   background-color: transparent;
+   border: none;
+}
 #label_title_maintenance_mode {
-   font-size: 36px;
-   font-weight: 700;
-   line-height: 43px;
-   color: black;
-   font-family: 'Montserrat';
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 54px;
+   line-height: 99px;
+   color: #003840;
    text-align: center;
    qproperty-alignment: AlignCenter;
-
+   border: none;
 }
 
 .label_machine_ui {
@@ -85,9 +90,9 @@
    text-align: center;
    qproperty-alignment: AlignCenter;
    border: none;
-} */
+} 
 
-/* .button_transparent {
+ .button_transparent {
    background-color: transparent;
    border: 0px;
 } 

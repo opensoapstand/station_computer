@@ -59,8 +59,6 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
     labels_product_type[2] = ui->label_product_3_type;
     labels_product_type[3] = ui->label_product_4_type;
 
-    // ui->pushButton_to_idle->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-
     productPageEndTimer = new QTimer(this);
     productPageEndTimer->setInterval(1000);
     connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
@@ -226,9 +224,6 @@ void page_select_product::displayProducts()
 
         // labels_product_icon[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "no_text"));
 
-        // pushButtons_product_select[slot_index]->setStyleSheet(styleSheet); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-        // pushButtons_product_select[slot_index]->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-        //  pushButtons_product_select[slot_index]->setStyleSheet("QPushButton{ background-color: 0x44881188; border: 2px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
         //  labels_selectProductOverlay[slot_index]->raise();
         labels_product_icon[slot_index]->setText("");
         labels_product_icon[slot_index]->raise();

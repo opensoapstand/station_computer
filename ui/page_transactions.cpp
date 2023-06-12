@@ -27,7 +27,6 @@ page_transactions::page_transactions(QWidget *parent) : QWidget(parent),
         font.setBold(true);
         font.setWeight(75);
 
-        // ui->pushButton_print->setStyleSheet("QPushButton { color:#FFFFFF; background-color: transparent; border: 0px }");
 
         ui->pushButton_print->setFont(font);
         

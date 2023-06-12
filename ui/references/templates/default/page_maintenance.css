@@ -21,13 +21,14 @@
    border: none;
 }
 
-#product_buttons{
+#product_buttons {
 
    background-color: transparent;
    border: 10px;
    border: 1px  solid #3D6675;
 
 }
+
 #label_title_maintenance_mode {
    font-family: 'Brevia';
    font-style: normal;
@@ -49,6 +50,10 @@
    text-align: center;
    qproperty-alignment: AlignCenter;
 
+}
+
+.product_buttons {
+   border: 1px solid black;
 }
 
 

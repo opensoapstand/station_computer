@@ -40,10 +40,9 @@ page_maintenance::page_maintenance(QWidget *parent) : QWidget(parent),
 
     QString title = QString("Soapstand UI v%1").arg(UI_VERSION);
     ui->label_ui_version->setText(title);
-    ui->label_product1_position->setText("P1");
-    ui->label_product2_position->setText("P2");
-    ui->label_product3_position->setText("P3");
-    ui->label_product4_position->setText("P4");
+
+    // ui->label_title_maintenance_mode->setText("MAINTENANCE MODE");
+
 }
 
 // DTOR
@@ -58,7 +57,9 @@ void page_maintenance::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH); // delays the page loading significantly.
+
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_CSS);
+    p_page_idle->setTemplateTextToObject(ui->label_title_maintenance_mode);
 
     for (int i = 0; i < 4; i++)
     {
@@ -121,50 +122,85 @@ for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     }
     else
     {
-        product_overlay_labels[slot_index]->setText("Assistance Needed");
+        int product_slot_enabled = p_page_idle->products[slot_index].getSlotEnabled();
+        QString product_status_text = p_page_idle->products[slot_index].getStatusText();
+
+        if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
+        {
+            product_overlay_labels[slot_index]->setText("");
+        }
+        else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
+        {
+            product_overlay_labels[slot_index]->setText("Almost Empty");
+            // p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "almost_empty");
+        }
+        else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
+        {
+            product_overlay_labels[slot_index]->setText("Sold Out");
+        }
+        else if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
+        {
+           // product_overlay_labels[slot_index]->setText("Coming Soon");
+            p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "coming_soon");
+        }
+        else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
+
+        {
+            product_overlay_labels[slot_index]->setText("Assistance Needed");
+        }
+        else
+        {
+            product_overlay_labels[slot_index]->setText("Assistance Needed");
+        }
+
+        if (!(p_page_idle->products[slot_index].isProductVolumeInContainer()))
+        {
+            product_overlay_labels[slot_index]->setText("Auto Sold Out");
+        }
+
+        // // overlay product status
+        // if (!product_slot_enabled)
+        // {
+        //     product_overlay_labels[slot_index]->setText(product_status_text);
+        //     product_overlay_labels[slot_index]->setStyleSheet("background-color: rgba(255,255,255,170);");
+        //     // labels_product_picture[slot_index]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
+        // }
+        // // else if (product_sold_out)
+        // // {
+        // //     product_overlay_labels[slot_index]->setText("Sold out");
+        // //     product_overlay_labels[slot_index]->setStyleSheet("background-color: transparent;");
+        // //     // labels_product_picture[slot_index]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
+        // // }
+        // else
+        // {
+        // product_overlay_labels[slot_index]->setText("");
+        // product_buttons[slot_index]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
+        // }
     }
+    ui->pushButton_to_previous_page->setProperty("class", "normal");
+    ui->pushButton_general_settings->setProperty("class", "normal");
+    ui->pushButton_to_previous_page->setStyleSheet(styleSheet);
+    ui->pushButton_general_settings->setStyleSheet(styleSheet);
+    ui->label_title_maintenance_mode->setStyleSheet(styleSheet);
+    ui->label_machine_id->setProperty("class", "label_machine_ui");
+    ui->label_machine_id->setStyleSheet(styleSheet);
+    ui->label_ui_version->setProperty("class", "label_machine_ui");
+    ui->label_ui_version->setStyleSheet(styleSheet);
 
-    if (!(p_page_idle->products[slot_index].isProductVolumeInContainer()))
-    {
-        product_overlay_labels[slot_index]->setText("Auto Sold Out");
-    }
-
-    // // overlay product status
-    // if (!product_slot_enabled)
-    // {
-    //     product_overlay_labels[slot_index]->setText(product_status_text);
-    //     product_overlay_labels[slot_index]->setStyleSheet("background-color: rgba(255,255,255,170);");
-    //     // labels_product_picture[slot_index]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
-    // }
-    // // else if (product_sold_out)
-    // // {
-    // //     product_overlay_labels[slot_index]->setText("Sold out");
-    // //     product_overlay_labels[slot_index]->setStyleSheet("background-color: transparent;");
-    // //     // labels_product_picture[slot_index]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
-    // // }
-    // else
-    // {
-    // product_overlay_labels[slot_index]->setText("");
-    // product_buttons[slot_index]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
-    // }
-}
-ui->pushButton_to_previous_page->setProperty("class", "normal");
-ui->pushButton_general_settings->setProperty("class", "normal");
-ui->pushButton_to_previous_page->setStyleSheet(styleSheet);
-ui->pushButton_general_settings->setStyleSheet(styleSheet);
-ui->label_title_maintenance_mode->setStyleSheet(styleSheet);
-ui->label_machine_id->setProperty("class", "label_machine_ui");
-ui->label_machine_id->setStyleSheet(styleSheet);
-ui->label_ui_version->setProperty("class", "label_machine_ui");
-ui->label_ui_version->setStyleSheet(styleSheet);
-// ui->product1_button->setProperty("class", "product_buttons");
-// ui->product1_button->setStyleSheet(styleSheet);
-
-// ui->pushButton_to_previous_page->setText("<-Back");
-ui->pushButton_general_settings->setText("General Settings");
-// p_pageSelectProduct->cancelTimers();
-// p_page_product->cancelTimers();
-qDebug() << "End maintenance load";
+    // ui->pushButton_to_previous_page->setText("<-Back");
+    p_page_idle->setTemplateTextToObject(ui->pushButton_to_previous_page);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_general_settings);
+    p_page_idle->setTemplateTextToObject(ui->label_product1_position);
+    p_page_idle->setTemplateTextToObject(ui->label_product2_position);
+    p_page_idle->setTemplateTextToObject(ui->label_product3_position);
+    p_page_idle->setTemplateTextToObject(ui->label_product4_position);
+    // ui->label_product1_position->setText("P1");
+    // ui->label_product2_position->setText("P2");
+    // ui->label_product3_position->setText("P3");
+    // ui->label_product4_position->setText("P4");
+    // p_pageSelectProduct->cancelTimers();
+    // p_page_product->cancelTimers();
+    qDebug() << "End maintenance load";
 }
 
 /*
@@ -239,3 +275,4 @@ int getSelection()
 {
     return selection;
 }
+

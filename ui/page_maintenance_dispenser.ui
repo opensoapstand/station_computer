@@ -86,6 +86,9 @@
    <property name="text">
     <string>Edit</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
   </widget>
   <widget class="QPushButton" name="pushButton_price_small">
    <property name="geometry">
@@ -268,6 +271,9 @@
    <property name="text">
     <string>Temperature:</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
   </widget>
   <widget class="QLabel" name="label_setting_speed_pwm">
    <property name="geometry">
@@ -295,8 +301,11 @@
     <string>Pump Speed Percentage</string>
    </property>
    <property name="text">
-    <string> Pump Speed:</string>
+    <string> Pump Speed</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
   </widget>
   <widget class="QWidget" name="numberEntry" native="true">
    <property name="geometry">

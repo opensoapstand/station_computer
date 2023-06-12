@@ -381,11 +381,10 @@ void page_maintenance_dispenser::update_volume_received_dispense_stats(double di
         ui->label_status_volume_dispensed->setText(QString::number(vol_dispensed / volume_per_tick_buffer) + "ticks  x " + QString::number(volume_per_tick_buffer) + "ml/tick = " + QString::number(vol_dispensed) + "ml");
     }
 
+    // update calibration field, ticks per ml if 1000ml would have been dispensed in reality at this point. 
     if (vol_dispensed > 0)
     {
-
         QString vol_per_tick_for_1000ml = QString::number(1000 / (vol_dispensed / volume_per_tick_buffer), 'f', 2);
-
         ui->label_calibration_result->setText(vol_per_tick_for_1000ml + "ml/tick"); // calibration constant if 1000ml were dispensed.
     }
 }

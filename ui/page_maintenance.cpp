@@ -77,7 +77,7 @@ void page_maintenance::showEvent(QShowEvent *event)
         product_buttons[i]->setStyleSheet(styleSheet);
         product_buttons[i]->setIconSize(QSize(241, 341));
         product_overlay_labels[i]->show();
-        product_buttons[i]->setStyleSheet("background-color: transparent; border: 2px solid black;");
+        product_buttons[i]->setStyleSheet("background-color: transparent; border: 1px solid black;");
     }
 
     // page_maintenanceEndTimer->start(1000);

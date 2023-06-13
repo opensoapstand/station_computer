@@ -167,10 +167,10 @@
   <widget class="QPushButton" name="pushButton_to_previous_page">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>4</y>
-     <width>201</width>
-     <height>71</height>
+     <x>0</x>
+     <y>30</y>
+     <width>251</width>
+     <height>61</height>
     </rect>
    </property>
    <property name="text">
@@ -201,10 +201,10 @@
   <widget class="QLabel" name="label_machine_id">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>10</y>
+     <x>50</x>
+     <y>1670</y>
      <width>391</width>
-     <height>51</height>
+     <height>50</height>
     </rect>
    </property>
    <property name="font">
@@ -274,10 +274,10 @@
   <widget class="QLabel" name="label_ui_version">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>60</y>
+     <x>40</x>
+     <y>1750</y>
      <width>351</width>
-     <height>17</height>
+     <height>30</height>
     </rect>
    </property>
    <property name="text">
@@ -288,7 +288,7 @@
    <property name="geometry">
     <rect>
      <x>768</x>
-     <y>4</y>
+     <y>30</y>
      <width>301</width>
      <height>71</height>
     </rect>

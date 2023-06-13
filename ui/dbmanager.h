@@ -8,10 +8,14 @@ class DbManager
 public:
     DbManager(const QString &path);
     ~DbManager();
-    void closeDB();
+    void closeDb();
+
+    void setPath(QString path);
+    void openDb();
+
     bool isDatabaseLocked(const QSqlDatabase &db);
 
-    bool executeQuery(QSqlQuery *qry, QString sql);
+    bool executeQuery(QString sql);
 
     bool updateTableMachineWithInt(QString column, int value);
     bool updateTableMachineWithDouble(QString column, double value, int precision);
@@ -31,7 +35,7 @@ public:
     QString getPaymentMethod(int slot); // do not erase yet (wait for ash)
     // void setPaymentToQR();              // ASh to change.
 
-    bool updateSlotAvailability(int slot, int isEnabled, QString status_text);
+    // bool updateSlotAvailability(int slot, int isEnabled, QString status_text);
     void addUserInteraction(QString action);
     void getAllProductProperties(int slot,
                                  QString *productId,
@@ -88,6 +92,7 @@ public:
                                  QString *status_text_slots);
 
 private:
+    QString m_dbPath;
     QSqlDatabase m_db;
 };
 

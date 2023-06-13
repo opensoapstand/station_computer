@@ -21,24 +21,39 @@
 
 DbManager::DbManager(const QString &path)
 {
-    //    qDebug() << "CREATING DB OBJECT" << endl;
+    setPath(path);
+}
+
+// DTOR
+DbManager::~DbManager()
+{
+    closeDb();
+}
+
+void DbManager::setPath(QString path)
+{
+    m_dbPath = path;
+}
+
+void DbManager::closeDb()
+{
+    qDebug() << "close db";
+    if (m_db.isOpen())
+    {
+        m_db.close();
+        m_db = QSqlDatabase();
+        QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
+    }
+}
+
+void DbManager::openDb()
+{
     int attempts = 10;
-
-    // while (!m_db.open() && attempts > 0)
-    // {
-    //     this->initialize(path);
-    //     if (!m_db.open()){
-    //         usleep(5);
-    //         qDebug() << "init db failed. attempt: " << attempts;
-    //         attempts --;
-    //     }
-    // }
-
-    // TAKE EXTREME CARE. DO NOT NEST DBopen en db close!!!! hard to find error:("is still in use all queries will cease to work" )
 
     qDebug() << "db init";
     if (m_db.isOpen())
     {
+        usleep(100000);
         qDebug() << "m_db is already open. Try to close.";
         m_db.close();
         m_db = QSqlDatabase();
@@ -50,7 +65,7 @@ DbManager::DbManager(const QString &path)
     {
         // qDebug() << "connectionname is empty-->";
         m_db = QSqlDatabase::addDatabase("QSQLITE");
-        m_db.setDatabaseName(path);
+        m_db.setDatabaseName(m_dbPath);
         // qDebug() << "m_db set connectionName";
     }
     else
@@ -64,44 +79,62 @@ DbManager::DbManager(const QString &path)
     }
     else
     {
-        // qDebug() << "Database: connection ok";
+        qDebug() << "Database: connection ok";
     }
 
-    while (isDatabaseLocked(m_db))
+    bool isLocked = true;
+    while (isLocked)
     {
-        qDebug() << "Database is locked. Wait until unlocked";
-        usleep(100000);
+        QSqlQuery q(m_db);
+        if (q.exec("BEGIN EXCLUSIVE")) // tries to acquire the lock
+        {
+            q.exec("COMMIT"); // releases the lock immediately
+            isLocked = false; // db is not locked
+        }
+        else
+        {
+            qDebug() << "Database is locked. Wait until unlocked";
+            usleep(250000);
+        }
     }
 }
 
-// DTOR
-DbManager::~DbManager()
+// bool DbManager::isDatabaseLocked(const QSqlDatabase &db)
+// {
+//     // https://stackoverflow.com/questions/57744538/determine-whether-sqlite-database-is-locked
+//         // openDb();
+//      QSqlQuery q(db);
+//         bool retval = true;
+//         if (q.exec("BEGIN EXCLUSIVE")) // tries to acquire the lock
+//         {
+//             q.exec("COMMIT"); // releases the lock immediately
+//             retval = false;   // db is not locked
+//         }
+//         // closeDb();
+//         return retval; // failed to acquire the lock: returns true (db is locked)
+// }
+
+bool DbManager::executeQuery(QString sql)
 {
+    bool success = false;
 
-    if (m_db.isOpen())
-    {
-        m_db.close();
-        m_db = QSqlDatabase();
-        QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
-    }
-}
+    openDb();
+    QSqlQuery qry;
+    qry.prepare(sql);
 
-bool DbManager::executeQuery(QSqlQuery *qry, QString sql)
-{
-    bool success = true;
-
-    qry->prepare(sql);
-    if (!qry->exec())
+    success = qry.exec();
+    if (success)
     {
         qDebug() << "Did not execute sql. "
-                 << qry->lastError() << " | " << qry->lastQuery();
-        success = false;
+                 << qry.lastError() << " | " << qry.lastQuery();
+        success = true;
     }
     else
     {
-        qDebug() << qry->lastQuery();
+        qDebug() << qry.lastQuery();
     }
 
+    closeDb();
     return success;
 }
 
@@ -112,15 +145,17 @@ bool DbManager::updateTableMachineWithInt(QString column, int value)
 
 bool DbManager::updateTableMachineWithDouble(QString column, double value, int precision)
 {
-    
+
     updateTableMachineWithText(column, QString::number(value, 'f', precision));
 }
 
 bool DbManager::updateTableMachineWithText(QString column, QString value)
 {
-    QSqlQuery qry;
+    // QSqlQuery qry;
+    // QString sql_text = QString("UPDATE machine SET %1='%2'").arg(column, value);
+    // return executeQuery(&qry, sql_text);
     QString sql_text = QString("UPDATE machine SET %1='%2'").arg(column, value);
-    return executeQuery(&qry, sql_text);
+    return executeQuery(sql_text);
 }
 
 bool DbManager::updateTableProductsWithInt(int slot, QString column, int value)
@@ -137,40 +172,17 @@ bool DbManager::updateTableProductsWithDouble(int slot, QString column, double v
 
 bool DbManager::updateTableProductsWithText(int slot, QString column, QString value)
 {
-    QSqlQuery qry;
+    // QSqlQuery qry;
+    // QString sql_text = QString("UPDATE products SET %1='%2' WHERE slot=%3").arg(column, value, QString::number(slot));
+    // return executeQuery(&qry, sql_text);
     QString sql_text = QString("UPDATE products SET %1='%2' WHERE slot=%3").arg(column, value, QString::number(slot));
-    return executeQuery(&qry, sql_text);
+    return executeQuery(sql_text);
 }
 
 bool DbManager::addPageClick(const QString &page)
 {
 
     return true;
-}
-
-bool DbManager::isDatabaseLocked(const QSqlDatabase &db)
-{
-    // https://stackoverflow.com/questions/57744538/determine-whether-sqlite-database-is-locked
-    QSqlQuery q(db);
-    if (q.exec("BEGIN EXCLUSIVE")) // tries to acquire the lock
-    {
-        q.exec("COMMIT"); // releases the lock immediately
-        return false;     // db is not locked
-    }
-    return true; // failed to acquire the lock: returns true (db is locked)
-}
-
-void DbManager::closeDB()
-{
-    qDebug() << "close db";
-    if (m_db.isOpen())
-    {
-        {
-            m_db.close();
-            m_db = QSqlDatabase();
-        }
-        QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
-    }
 }
 
 // void DbManager::setPaymentToQR()
@@ -312,15 +324,17 @@ void DbManager::getAllProductProperties(int slot,
                                         bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs)
 
 {
-    qDebug() << "Open db: load all product properties for slot: " <<  slot;
+    qDebug() << "Open db: load all product properties for slot: " << slot;
+    openDb();
     QSqlQuery qry;
     {
         // qry.prepare("SELECT soapstand_product_serial, size_unit, payment, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_max,price_small,price_medium, price_large,price_custom FROM products WHERE slot=:slot");
         qry.prepare("SELECT productId, soapstand_product_serial, slot, name, size_unit, currency, payment, name_receipt, concentrate_multiplier, dispense_speed, threshold_flow, retraction_time, calibration_const, volume_per_tick, last_restock, volume_full, volume_remaining, volume_dispensed_since_restock, volume_dispensed_total, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_min, size_custom_max, price_small, price_medium, price_large, price_custom, plu_small, plu_medium, plu_large, plu_custom, pid_small, pid_medium, pid_large, pid_custom, flavour, image_url, type, ingredients, features, description, is_enabled_custom_discount, size_custom_discount, price_custom_discount FROM products WHERE slot=:slot");
         qry.bindValue(":slot", slot);
-        qry.exec();
+        bool success;
+        success = qry.exec();
 
-        if (!qry.exec())
+        if (!success)
         {
             qDebug() << "Did not execute sql. "
                      << qry.lastError() << " | " << qry.lastQuery();
@@ -378,6 +392,7 @@ void DbManager::getAllProductProperties(int slot,
             *price_custom_discount = qry.value(48).toDouble();
         }
     }
+    closeDb();
 }
 
 /*
@@ -484,11 +499,14 @@ void DbManager::getAllMachineProperties(
     QString *status_text_slots)
 {
     qDebug() << " db... all machine properties";
-    QSqlQuery qry;
+    openDb();
+    QSqlQuery qry(m_db);
     // {
+
     qry.prepare("SELECT machine_id,soapstand_customer_id,template,location,controller_type,controller_id,screen_type,'screen _id',has_receipt_printer,receipt_printer_is_online,receipt_printer_has_paper,has_tap_payment,hardware_version,software_version,aws_port,pump_id_slot_1,pump_id_slot_2,pump_id_slot_3,pump_id_slot_4,is_enabled_slot_1,is_enabled_slot_2,is_enabled_slot_3,is_enabled_slot_4,coupons_enabled,status_text_slot_1,status_text_slot_2,status_text_slot_3,status_text_slot_4,has_empty_detection,enable_pump_ramping,enable_pump_reversal,dispense_buttons_count,maintenance_pwd,show_transactions,help_text_html,idle_page_type,admin_pwd FROM machine");
-    qry.exec();
-    if (!qry.exec())
+    bool success;
+    success = qry.exec();
+    if (!success)
     {
         qDebug() << "Did not execute sql. "
                  << qry.lastError() << " | " << qry.lastQuery();
@@ -535,6 +553,7 @@ void DbManager::getAllMachineProperties(
         *idle_page_type = qry.value(35).toString();
         *admin_pwd = qry.value(36).toString();
     }
+    closeDb();
 }
 
 QString DbManager::getPaymentMethod(int slot)
@@ -542,6 +561,7 @@ QString DbManager::getPaymentMethod(int slot)
     // used by Ash in tap. to do --> get tap init out of constructor.
     qDebug() << "********* DEPRECATED *********** ";
     qDebug() << "DB call: get payment method for slot";
+    openDb();
     QSqlQuery paymeny_query;
     QString payment_method;
 
@@ -549,19 +569,22 @@ QString DbManager::getPaymentMethod(int slot)
 
         paymeny_query.prepare("SELECT payment FROM products WHERE slot=:slot");
         paymeny_query.bindValue(":slot", slot);
-        paymeny_query.exec();
+        bool success;
+        success = paymeny_query.exec();
 
         while (paymeny_query.next())
         {
             payment_method = paymeny_query.value(0).toString();
         }
     }
+    closeDb();
     return payment_method;
 }
 
 uint32_t DbManager::getNumberOfRows(QString table)
 {
     qDebug() << " db... getNumberOfRows";
+    openDb();
     QString qry = "SELECT COUNT(*) FROM ";
 
     qry.append(table);
@@ -569,13 +592,15 @@ uint32_t DbManager::getNumberOfRows(QString table)
     QSqlQuery query;
     uint32_t row_count = 0;
 
-    query.exec(qry);
+    bool success;
+    success = query.exec();
 
     if (query.first())
     {
         row_count = query.value(0).toInt();
     }
 
+    closeDb();
     return row_count;
 }
 
@@ -592,6 +617,7 @@ void DbManager::emailEmpty(int slot)
 
 void DbManager::addUserInteraction(QString action)
 {
+    openDb();
     QSqlQuery qry;
 
     QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
@@ -599,45 +625,53 @@ void DbManager::addUserInteraction(QString action)
     qry.bindValue(":page_info", action);
     qry.bindValue(":time", time);
 
-    if (!qry.exec())
+    bool success;
+    success = qry.exec();
+
+    if (!success)
     {
         qDebug() << "Failed to write user interaction. error type: " << qry.lastError().type() << "Error message:" << qry.lastError().text();
         qDebug() << "Error message:" << qry.lastError().text();
         qDebug() << "Query:" << qry.lastQuery();
     }
+    closeDb();
 }
 
-bool DbManager::updateSlotAvailability(int slot, int isEnabled, QString status_text)
-{
-    // setStatusText
-    // setIsEnabled
+// bool DbManager::updateSlotAvailability(int slot, int isEnabled, QString status_text)
+// {
+//     // setStatusText
+//     // setIsEnabled
 
-    QSqlQuery qry;
-    bool enabled;
+//     QSqlQuery qry;
+//     bool enabled;
 
-    QString qry_qstr = QString("UPDATE machine SET status_text_slot_%1='").arg(QString::number(slot)) + status_text + QString("',is_enabled_slot_%1=").arg(QString::number(slot)) + QString::number(isEnabled);
-    qDebug() << qry_qstr << endl;
-    string qry_string = qry_qstr.toUtf8().constData(); // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
-    qry.prepare(qry_string.c_str());
-    qry.bindValue(":slot", slot);
-    qry.bindValue(":status_text", status_text);
-    qry.bindValue(":isEnabled", isEnabled);
-    qry.exec();
+//     QString qry_qstr = QString("UPDATE machine SET status_text_slot_%1='").arg(QString::number(slot)) + status_text + QString("',is_enabled_slot_%1=").arg(QString::number(slot)) + QString::number(isEnabled);
+//     qDebug() << qry_qstr << endl;
+//     string qry_string = qry_qstr.toUtf8().constData(); // https://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring/4644922#4644922
+//     qry.prepare(qry_string.c_str());
+//     qry.bindValue(":slot", slot);
+//     qry.bindValue(":status_text", status_text);
+//     qry.bindValue(":isEnabled", isEnabled);
+// bool success;
+//         openDb();
+//         success = paymeny_query.exec();
 
-    if (qry.exec())
-    {
-        return true;
-    }
-    else
-    {
-        qDebug() << "Failed to set slot availability." << qry_qstr;
-        return false;
-    }
-}
+//     if (success)
+//     {
+//         return true;
+//     }
+//     else
+//     {
+//         qDebug() << "Failed to set slot availability." << qry_qstr;
+//         return false;
+//     }
+//         closeDb();
+// }
 
 bool DbManager::getRecentTransactions(QString values[][5], int count, int *count_retreived)
 {
     // get number of most recent transactions
+    openDb();
     QSqlQuery qry;
     // bool is_enabled;
     {
@@ -672,11 +706,13 @@ bool DbManager::getRecentTransactions(QString values[][5], int count, int *count
             *count_retreived = i;
         }
     }
+    closeDb();
     return true;
 }
 
 void DbManager::printerStatus(bool *isOnline, bool *hasPaper)
 {
+    openDb();
     QSqlQuery qry;
     // bool is_online = false;
     // bool has_paper = false;
@@ -690,5 +726,6 @@ void DbManager::printerStatus(bool *isOnline, bool *hasPaper)
             *isOnline = (qry.value(0).toInt() == 1);
             *hasPaper = (qry.value(1).toInt() == 1);
         }
+        closeDb();
     }
 }

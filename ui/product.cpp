@@ -65,7 +65,7 @@ void product::loadProductPropertiesFromDb()
 
     // m_slot_enabled = db.getSlotEnabled(getSlot());
     // m_empty_container_detection_enabled = db.getEmptyContainerDetectionEnabled();
-    db.closeDB();
+    db.closeDb();
 }
 
 void product::loadProductPropertiesFromProductsFile()
@@ -147,7 +147,7 @@ QString product::setStatusText(QString status)
 
     // bool success = db.updateSlotAvailability(getSlot(), getSlotEnabled(), status);
     // db.updateTableProductsWithText(getSlot(),"")
-    // db.closeDB();
+    // db.closeDb();
 }
 
 QString product::getStatusText()
@@ -259,7 +259,7 @@ void product::setPrice(int size, double price)
     qDebug() << "Open db: set product price";
     DbManager db(DB_PATH);
     db.updateTableProductsWithDouble(getSlot(), column_name, price, 2);
-    db.closeDB();
+    db.closeDb();
 }
 
 double product::getPrice(int sizeIndex)
@@ -373,7 +373,7 @@ double product::getVolumePerTickForSlot()
     // DbManager db(DB_PATH);
     // double ml_per_tick = db.getProductVolumePerTick(getSlot());
 
-    // db.closeDB();
+    // db.closeDb();
     return m_volume_per_tick;
 }
 
@@ -384,7 +384,7 @@ void product::setVolumePerTickForSlot(QString volumePerTickInput)
     DbManager db(DB_PATH);
     // db.updateVolumePerTick(getSlot(), ml_per_tick);
     db.updateTableProductsWithDouble(getSlot(), "volume_per_tick", ml_per_tick, 2);
-    db.closeDB();
+    db.closeDb();
 }
 
 void product::setSizeToVolumeForSlot(QString volumeInput, int size)
@@ -396,7 +396,7 @@ void product::setSizeToVolumeForSlot(QString volumeInput, int size)
     qInfo() << "Open db: size to volume";
     DbManager db(DB_PATH);
     db.updateTableProductsWithDouble(getSlot(), column_name, volume, 2);
-    db.closeDB();
+    db.closeDb();
 }
 
 void product::setVolumeRemainingUserInput(QString volumeRemainingAsUserText)
@@ -413,7 +413,7 @@ bool product::restock()
     success &= db.updateTableProductsWithDouble(getSlot(), "volume_remaining", m_volume_full, 0);
     success &= db.updateTableProductsWithDouble(getSlot(), "volume_dispensed_since_restock", 0, 0);
     success &= db.updateTableProductsWithText(getSlot(), "last_restock", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
-    db.closeDB();
+    db.closeDb();
     return success;
 }
 
@@ -423,7 +423,7 @@ void product::setVolumeRemaining(double volume_as_ml)
     DbManager db(DB_PATH);
     // db.setVolumeRemaining(getSlot(), volume_as_ml);
     db.updateTableProductsWithDouble(getSlot(), "volume_remaining", volume_as_ml, 0);
-    db.closeDB();
+    db.closeDb();
 }
 
 QString product::getVolumeRemainingCorrectUnits()
@@ -539,7 +539,7 @@ void product::setPlu(int sizeIndex, QString plu){
     QString column_name = plu_columns[sizeIndex];
     DbManager db(DB_PATH);
     bool success = db.updateTableProductsWithText(getSlot(), column_name, plu);
-    db.closeDB();
+    db.closeDb();
 }
 
 QString product::getAwsProductId()
@@ -561,7 +561,7 @@ void product::setFullVolumeCorrectUnits(QString inputFullValue)
     DbManager db(DB_PATH);
     db.updateTableProductsWithDouble(getSlot(), "volume_full", full_volume, 0);
 
-    db.closeDB();
+    db.closeDb();
 }
 
 QString product::getSizeToVolumeWithCorrectUnits(bool round, bool addUnits)
@@ -574,7 +574,7 @@ void product::setPaymentMethod(QString paymentMethod)
     qDebug() << "Open db: set payment method";
     DbManager db(DB_PATH);
     db.updateTableProductsWithText(getSlot(), "payment", paymentMethod);
-    db.closeDB();
+    db.closeDb();
 }
 
 QString product::getPaymentMethod()
@@ -595,5 +595,5 @@ void product::setDispenseSpeedPercentage(int percentage)
     DbManager db(DB_PATH);
     // db.updatePWM(getSlot(), pwm);
     db.updateTableProductsWithInt(getSlot(), "dispense_speed", pwm);
-    db.closeDB();
+    db.closeDb();
 }

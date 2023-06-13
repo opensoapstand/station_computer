@@ -76,7 +76,6 @@ void page_idle::loadDynamicContent()
 {
     // load global machine data
     thisMachine.loadParametersFromDb();
-
     // load slot data
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
@@ -524,13 +523,14 @@ QString page_idle::getTemplateText(QString textName_to_find)
 
 void page_idle::loadTextsFromTemplateCsv()
 {
-    QString name = UI_TEXTS_CSV_PATH;
-    QString csv_path = thisMachine.getTemplatePathFromName(name);
+    qDebug()<< "Load dynamic texts from template csv";
+    QString csv_path = thisMachine.getTemplatePathFromName(UI_TEXTS_CSV_PATH);
     loadTextsFromCsv(csv_path, &textNameToTextMap_template);
 }
 
 void page_idle::loadTextsFromDefaultCsv()
 {
+    qDebug()<< "Load dynamic texts from devault csv";
     QString name = UI_TEXTS_CSV_PATH;
     QString csv_default_template_path = thisMachine.getDefaultTemplatePathFromName(name);
     loadTextsFromCsv(csv_default_template_path, &textNameToTextMap_default);

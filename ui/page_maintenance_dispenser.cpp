@@ -74,7 +74,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
     ui->numberEntry->hide();
-    ui->errorLabel->setText("");
+    // ui->errorLabel->setText("");
     ui->label_title->setText("");
 
     ui->pushButton_plu_small->setEnabled(true);
@@ -84,8 +84,6 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 
     QString path = p_page_idle->selectedProduct->getProductPicturePath();
     p_page_idle->addPictureToLabel(ui->label_product_picture, path);
-
-    setpushButton_soldOutText();
 
     ui->pushButton_setting_speed_pwm->hide();
     ui->label_setting_speed_pwm->hide();
@@ -101,7 +99,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 
     reset_all_dispense_stats();
     update_volume_received_dispense_stats(0);
-    updateProductLabelValues();
+    updateProductLabelValues(false);
 }
 
 void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
@@ -109,9 +107,11 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
-void page_maintenance_dispenser::updateProductLabelValues()
+void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
 {
-    p_page_idle->loadDynamicContent();
+    if (reloadFromDb){
+        p_page_idle->loadDynamicContent();
+    }
 
     this->units_selected_product = this->p_page_idle->selectedProduct->getUnitsForSlot();
 
@@ -145,6 +145,9 @@ void page_maintenance_dispenser::updateProductLabelValues()
     ui->pushButton_plu_medium->setText(p_page_idle->selectedProduct->getPlu(SIZE_MEDIUM_INDEX));
     ui->pushButton_plu_large->setText(p_page_idle->selectedProduct->getPlu(SIZE_LARGE_INDEX));
     ui->pushButton_plu_custom->setText(p_page_idle->selectedProduct->getPlu(SIZE_CUSTOM_INDEX));
+
+    ui->label_status_dispenser->setText(p_page_idle->selectedProduct->getStatusText());
+    setpushButton_soldOutText();
 }
 
 void page_maintenance_dispenser::setpushButton_soldOutText()
@@ -227,9 +230,9 @@ void page_maintenance_dispenser::on_pushButton_auto_dispense_large_clicked()
 {
     // if (pump_enabled)
     // {
-        // dispense_test_end(true);
-        // usleep(1000);
-        autoDispenseStart(SIZE_LARGE_INDEX);
+    // dispense_test_end(true);
+    // usleep(1000);
+    autoDispenseStart(SIZE_LARGE_INDEX);
     // }
 }
 
@@ -376,7 +379,7 @@ void page_maintenance_dispenser::update_volume_received_dispense_stats(double di
         ui->label_status_volume_dispensed->setText(QString::number(vol_dispensed / volume_per_tick_buffer) + "ticks  x " + QString::number(volume_per_tick_buffer) + "ml/tick = " + QString::number(vol_dispensed) + "ml");
     }
 
-    // update calibration field, ticks per ml if 1000ml would have been dispensed in reality at this point. 
+    // update calibration field, ticks per ml if 1000ml would have been dispensed in reality at this point.
     if (vol_dispensed > 0)
     {
         QString vol_per_tick_for_1000ml = QString::number(1000 / (vol_dispensed / volume_per_tick_buffer), 'f', 2);
@@ -458,8 +461,9 @@ void page_maintenance_dispenser::on_pushButton_restock_clicked()
     msgBox.setWindowFlags(Qt::FramelessWindowHint);
     msgBox.setText("<p align=center>Are you sure you want to refill?</p>");
 
-    msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
+    // p_page_idle->addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_MAINTENANCE_DISPENSER_CSS);
 
+    msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
     msgBox.setStyleSheet(styleSheet);
 
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
@@ -469,40 +473,31 @@ void page_maintenance_dispenser::on_pushButton_restock_clicked()
     {
     case QMessageBox::Yes:
     {
-        // DbManager db(DB_PATH);
-        // success = db.restockProduct(p_page_idle->selectedProduct->getSlot());
-        // db.closeDB();
-
-        p_page_idle->selectedProduct->restock();
-
-        if (success)
-        {
-            sendRestockToCloud();
-            updateProductLabelValues();
-            ui->label_action_feedback->setText("Refill Succesfull");
-
-            // bool isSlotEnabled = p_page_idle->selectedProduct->getSlotEnabled();
-            // DbManager db(DB_PATH);
-            // bool success = db.updateSlotAvailability(this->p_page_idle->selectedProduct->getSlot(), isSlotEnabled, "SLOT_STATE_AVAILABLE");
-            // db.closeDB();
-            p_page_idle->selectedProduct->setStatusText("SLOT_STATE_AVAILABLE");
-        }
-        else
-        {
-            ui->label_action_feedback->setText("Refill ERROR");
-        }
     }
     break;
     case QMessageBox::No:
     {
         msgBox.hide();
+        return;
     }
     break;
     }
 
-    QString slotStatus = p_page_idle->selectedProduct->getStatusText();
+    success = p_page_idle->selectedProduct->restock();
 
-    ui->label_status_dispenser->setText(slotStatus);
+    if (success)
+    {
+        sendRestockToCloud();
+
+        ui->label_action_feedback->setText("Refill Succesfull");
+        p_page_idle->selectedProduct->setStatusText("SLOT_STATE_AVAILABLE");
+    }
+    else
+    {
+        ui->label_action_feedback->setText("Refill ERROR");
+    }
+
+    updateProductLabelValues(true);
 }
 
 void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
@@ -511,114 +506,101 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
 
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
-    bool isSlotEnabled = p_page_idle->selectedProduct->getSlotEnabled();
     QString slotStatus = p_page_idle->selectedProduct->getStatusText();
 
-    QString label_action_feedbackText = "";
-
-    if (isSlotEnabled)
+    if (p_page_idle->selectedProduct->getSlotEnabled())
     {
 
-        // ARE YOU SURE YOU WANT TO COMPLETE?
-        QMessageBox msgBox;
-        msgBox.setWindowFlags(Qt::FramelessWindowHint);
-        msgBox.setText("<p align=center>Are you sure you want to Disable product?</p>");
+        // // ARE YOU SURE YOU WANT TO COMPLETE?
+        // QMessageBox msgBox;
+        // msgBox.setWindowFlags(Qt::FramelessWindowHint);
+        // msgBox.setText("<p align=center>Are you sure you want to Disable product?</p>");
 
+        // QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
+        // msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
+        // msgBox.setStyleSheet(styleSheet);
+
+        // msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        // int ret = msgBox.exec();
+
+        // switch (ret)
+        // {
+        // case QMessageBox::Yes:
+        // {
+        QMessageBox msgBox_set_availabilty;
+        msgBox_set_availabilty.setWindowFlags(Qt::FramelessWindowHint);
+
+        msgBox_set_availabilty.setText("<p align=center>Label product as 'coming soon' ?</p>");
         QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
-        msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
-        msgBox.setStyleSheet(styleSheet);
+        msgBox_set_availabilty.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
+        msgBox_set_availabilty.setStyleSheet(styleSheet);
 
-        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-        int ret = msgBox.exec();
-
-        switch (ret)
+        msgBox_set_availabilty.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        int ret2 = msgBox_set_availabilty.exec();
+        switch (ret2)
         {
         case QMessageBox::Yes:
         {
-            QMessageBox msgBox_set_availabilty;
-            msgBox_set_availabilty.setWindowFlags(Qt::FramelessWindowHint);
-            msgBox_set_availabilty.setText("<p align=center>Should the product be labeled as coming soon?</p>");
-            msgBox_set_availabilty.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
-            msgBox_set_availabilty.setStyleSheet(styleSheet);
-
-            msgBox_set_availabilty.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-            int ret2 = msgBox_set_availabilty.exec();
-            switch (ret2)
-            {
-            case QMessageBox::Yes:
-            {
-                slotStatus = "SLOT_STATE_DISABLED_COMING_SOON";
-            }
-            break;
-            case QMessageBox::No:
-            {
-                slotStatus = "SLOT_STATE_DISABLED";
-            }
-            break;
-            }
-
-            isSlotEnabled = false;
-            break;
+            slotStatus = "SLOT_STATE_DISABLED_COMING_SOON";
         }
+        break;
         case QMessageBox::No:
         {
-
-            msgBox.hide();
+            slotStatus = "SLOT_STATE_DISABLED";
         }
         break;
         }
+
+        p_page_idle->selectedProduct->setSlotEnabled(false);
+        // break;
+        // }
+        // case QMessageBox::No:
+        // {
+
+        //     msgBox.hide();
+        //     return;
+        // }
+        // break;
+        // }
     }
     else
     {
-        // ARE YOU SURE YOU WANT TO COMPLETE?
-        QMessageBox msgBox;
-        msgBox.setWindowFlags(Qt::FramelessWindowHint);
-        msgBox.setText("<p align=center>Are you sure you want to Enable Product? (This will reset technical problems messages too)</p>");
+        // // ARE YOU SURE YOU WANT TO COMPLETE?
+        // QMessageBox msgBox;
+        // msgBox.setWindowFlags(Qt::FramelessWindowHint);
+        // msgBox.setText("<p align=center>Are you sure you want to Enable Product? (This will reset technical problems messages too)</p>");
 
-        QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
-        msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
-        msgBox.setStyleSheet(styleSheet);
+        // QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
+        // msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
+        // msgBox.setStyleSheet(styleSheet);
 
-        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-        int ret = msgBox.exec();
+        // msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        // int ret = msgBox.exec();
 
-        switch (ret)
-        {
-        case QMessageBox::Yes:
-        {
+        // switch (ret)
+        // {
+        // case QMessageBox::Yes:
+        // {
 
-            isSlotEnabled = true;
-            slotStatus = "SLOT_STATE_AVAILABLE";
-            break;
-        }
-        case QMessageBox::No:
-        {
-            msgBox.hide();
-            break;
-        }
-        }
+        p_page_idle->selectedProduct->setSlotEnabled(true);
+        slotStatus = "SLOT_STATE_AVAILABLE";
+        // break;
+        // }
+        // case QMessageBox::No:
+        // {
+        //     msgBox.hide();
+        //     return;
+        //     break;
+        // }
+        // }
     }
 
+    // set to database
     p_page_idle->selectedProduct->setStatusText(slotStatus);
-    // DbManager db3(DB_PATH);
-    // bool success = db3.updateSlotAvailability(p_page_idle->selectedProduct->getSlot(), isSlotEnabled, slotStatus);
-    // db3.closeDB();
-    // if (!success)
-    // {
-    //     label_action_feedbackText = "Set Enabled ERROR";
-    // }
-    // else
-    // {
-    //     label_action_feedbackText = "Slot Status set to\n" + slotStatus;
-    // }
 
-    ui->label_action_feedback->setText(label_action_feedbackText);
-
-    setpushButton_soldOutText();
-    ui->label_status_dispenser->setText(slotStatus);
+    ui->label_action_feedback->setText("Slot Status set to\n" + slotStatus);
+    updateProductLabelValues(true);
 }
-
-
 
 // ****************************************************************
 // ****************** KEYPAD ACTIONS ******************************
@@ -660,7 +642,7 @@ void page_maintenance_dispenser::on_pushButton_done_clicked()
 
     if (text_entered != "" && isAdmin)
     {
-        if (activeEditField == "pushButton_price_small" )
+        if (activeEditField == "pushButton_price_small")
         {
             p_page_idle->selectedProduct->setPrice(SIZE_SMALL_INDEX, text_entered.toDouble());
             ui->pushButton_price_small->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)));
@@ -736,12 +718,12 @@ void page_maintenance_dispenser::on_pushButton_done_clicked()
         }
         activeEditField = "";
 
-        updateProductLabelValues();
+        updateProductLabelValues(true);
     }
 
     ui->textEntry->setText("");
     ui->label_title->setText("");
-    ui->errorLabel->setText("");
+    // ui->errorLabel->setText("");
 }
 
 void page_maintenance_dispenser::on_pushButton_cancel_clicked()
@@ -749,7 +731,7 @@ void page_maintenance_dispenser::on_pushButton_cancel_clicked()
     ui->buttonPeriod->show();
     ui->numberEntry->hide();
     ui->textEntry->setText("");
-    ui->errorLabel->setText("");
+    // ui->errorLabel->setText("");
     // text_entered = "";
     activeEditField = "";
 }
@@ -771,7 +753,8 @@ void page_maintenance_dispenser::buttonGroup_edit_product_Pressed(int buttonId)
 
     ui->textEntry->selectAll();
 
-    if (!p_page_idle->thisMachine.isAllowedAsAdmin()){
+    if (!p_page_idle->thisMachine.isAllowedAsAdmin())
+    {
         QMessageBox::information(this, "Admininstrator role required", "You do not have the rights to change these values. Please enter maintenance mode with the admin password.", QMessageBox::Ok);
         ui->numberEntry->hide();
     }

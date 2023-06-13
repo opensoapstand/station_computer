@@ -127,9 +127,13 @@ int product::getBiggestEnabledSizeIndex()
     return maxSize;
 }
 
+void product::setSlotEnabled(bool isEnabled)
+{
+    thisMachine->setSlotEnabled(getSlot(), isEnabled);
+}
+
 bool product::getSlotEnabled()
 {
-    // return m_slot_enabled;
     return thisMachine->getSlotEnabled(getSlot());
 }
 

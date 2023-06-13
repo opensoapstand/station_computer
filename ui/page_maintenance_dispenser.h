@@ -59,7 +59,7 @@ public:
     void reset_all_dispense_stats();
 
 private slots:
-    void updateProductLabelValues();
+    void updateProductLabelValues(bool reloadFromDb);
     void on_pushButton_to_previous_page_clicked();
     void on_image_clicked();
     void on_pushButton_price_small_clicked();

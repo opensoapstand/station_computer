@@ -48,6 +48,7 @@ public:
     QString getHelpPageHtmlText();
 
     bool getSlotEnabled(int slot);
+    bool setSlotEnabled(int slot, bool isEnabled);
     QString getIdlePageType();
 
     int getDispensersCount();

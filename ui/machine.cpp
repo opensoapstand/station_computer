@@ -134,7 +134,7 @@ bool machine::isAllowedAsAdmin()
     {
         allowed = true;
     }
-    qDebug()<< "allowed as adming??@IJI" << allowed;
+    qDebug()<< "Allowed as admin? " << allowed;
     return allowed;
 }
 
@@ -199,6 +199,15 @@ bool machine::slotNumberValidityCheck(int slot)
     }
     return valid;
 }
+bool machine::setSlotEnabled(int slot, bool isEnabled){
+    // do this through product.cpp, as this should have been a part of products table
+    QString column_name = QString("is_enabled_slot_%1").arg(slot);
+    DbManager db(DB_PATH);
+    db.updateTableMachineWithInt(column_name, isEnabled);
+    db.closeDB();
+}
+
+
 bool machine::getSlotEnabled(int slot)
 {
     // this should have been part of the products table. But it isn't. We access this from the product.cpp class.

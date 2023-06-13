@@ -597,7 +597,7 @@
     <rect>
      <x>340</x>
      <y>1530</y>
-     <width>231</width>
+     <width>351</width>
      <height>20</height>
     </rect>
    </property>
@@ -1553,7 +1553,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_edit_product"/>
   <buttongroup name="buttonGroup_keypad"/>
+  <buttongroup name="buttonGroup_edit_product"/>
  </buttongroups>
 </ui>

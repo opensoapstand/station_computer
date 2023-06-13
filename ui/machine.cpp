@@ -157,7 +157,7 @@ void machine::setRole(UserRole role)
     }
 }
 
-QString machine::setStatusText(int slot, bool isSlotEnabled, QString status)
+void machine::setStatusText(int slot, bool isSlotEnabled, QString status)
 {
 
     QString column = QString("status_text_slot_%1").arg(slot);
@@ -174,6 +174,7 @@ QString machine::getStatusText(int slot)
     slotNumberValidityCheck(slot);
     return m_status_text_slots[slot - 1];
 }
+
 QString machine::getPumpId(int slot)
 {
 
@@ -200,7 +201,7 @@ bool machine::slotNumberValidityCheck(int slot)
     return valid;
 }
 
-bool machine::setSlotEnabled(int slot, bool isEnabled){
+void machine::setSlotEnabled(int slot, bool isEnabled){
     // do this through product.cpp, as this should have been a part of products table
     QString column_name = QString("is_enabled_slot_%1").arg(slot);
     DbManager db(DB_PATH);

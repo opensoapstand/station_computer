@@ -78,7 +78,6 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->pushButton_cancel->setText("CANCEL");
     ui->pushButton_done->setText("DONE");
 
-
     ui->pushButton_restock->setStyleSheet(styleSheet);
     ui->pushButton_enable_pump->setProperty("class", "pump_enable");
     ui->pushButton_enable_pump->setStyleSheet(styleSheet);
@@ -117,7 +116,8 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
 
 void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
 {
-    if (reloadFromDb){
+    if (reloadFromDb)
+    {
         p_page_idle->loadDynamicContent();
     }
 
@@ -515,8 +515,9 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
     QString slotStatus = p_page_idle->selectedProduct->getStatusText();
+    bool isEnabled = p_page_idle->selectedProduct->getSlotEnabled();
 
-    if (p_page_idle->selectedProduct->getSlotEnabled())
+    if (isEnabled)
     {
 
         // // ARE YOU SURE YOU WANT TO COMPLETE?
@@ -558,8 +559,7 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
         }
         break;
         }
-
-        p_page_idle->selectedProduct->setSlotEnabled(false);
+        isEnabled = false;
         // break;
         // }
         // case QMessageBox::No:
@@ -570,6 +570,7 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
         // }
         // break;
         // }
+        qDebug() << "---will make UN available";
     }
     else
     {
@@ -590,8 +591,9 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
         // case QMessageBox::Yes:
         // {
 
-        p_page_idle->selectedProduct->setSlotEnabled(true);
+        isEnabled = true;
         slotStatus = "SLOT_STATE_AVAILABLE";
+        qDebug() << "---will make available";
         // break;
         // }
         // case QMessageBox::No:
@@ -604,10 +606,15 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
     }
 
     // set to database
+    p_page_idle->selectedProduct->setSlotEnabled(isEnabled);
+    qDebug() << "feiwjefwe ";
     p_page_idle->selectedProduct->setStatusText(slotStatus);
+    qDebug() << "after ste status ";
 
     ui->label_action_feedback->setText("Slot Status set to\n" + slotStatus);
+    qDebug() << "before updatelabels ";
     updateProductLabelValues(true);
+    qDebug() << "after updatelabels ";
 }
 
 // ****************************************************************

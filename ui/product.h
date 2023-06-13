@@ -23,7 +23,7 @@ public:
     bool getSlotEnabled();
     void setSlotEnabled(bool isEnabled);
     QString getStatusText();
-    QString setStatusText(QString status);
+    void setStatusText(QString status);
 
     QString getFullVolumeCorrectUnits(bool addUnits);
 

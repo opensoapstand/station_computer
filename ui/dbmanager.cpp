@@ -123,7 +123,7 @@ bool DbManager::executeQuery(QString sql)
     qry.prepare(sql);
 
     success = qry.exec();
-    if (success)
+    if (!success)
     {
         qDebug() << "Did not execute sql. "
                  << qry.lastError() << " | " << qry.lastQuery();

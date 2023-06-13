@@ -137,7 +137,7 @@ bool product::getSlotEnabled()
     return thisMachine->getSlotEnabled(getSlot());
 }
 
-QString product::setStatusText(QString status)
+void product::setStatusText(QString status)
 {
 
     thisMachine->setStatusText(getSlot(), getSlotEnabled(), status);

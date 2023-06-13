@@ -20,8 +20,18 @@
 #include <stdlib.h>
 
 DbManager::DbManager(const QString &path)
+// DbManager::DbManager(const QString &path) : m_db(QSqlDatabase::addDatabase("QSQLITE"))
 {
-    setPath(path);
+    // m_db = QSqlDatabase::addDatabase("QSQLITE");
+    // setPath(path);
+   setPath(path);
+    // m_db = QSqlDatabase::addDatabase("QSQLITE");
+
+}
+DbManager::DbManager()
+// DbManager::DbManager() : m_db(QSqlDatabase::addDatabase("QSQLITE"))
+{
+    // m_db = QSqlDatabase::addDatabase("QSQLITE");
 }
 
 // DTOR
@@ -32,7 +42,10 @@ DbManager::~DbManager()
 
 void DbManager::setPath(QString path)
 {
+    qDebug() << "Set db path to: " << path;
     m_dbPath = path;
+    // m_db = QSqlDatabase::addDatabase("QSQLITE");
+    m_db.setDatabaseName(m_dbPath);
 }
 
 void DbManager::closeDb()
@@ -48,9 +61,14 @@ void DbManager::closeDb()
 
 void DbManager::openDb()
 {
-    int attempts = 10;
+    QSqlDatabase m_db = QSqlDatabase::addDatabase("QSQLITE");
+    m_db.setDatabaseName(m_dbPath);
 
+    m_db.setDatabaseName("lodelodelode");
+
+    int attempts = 10;
     qDebug() << "db init";
+
     if (m_db.isOpen())
     {
         usleep(100000);
@@ -60,11 +78,23 @@ void DbManager::openDb()
         QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
         qDebug() << "m_db was already open. Closed it first.";
     }
+    // QSqlDatabase tmp  = QSqlDatabase::addDatabase("QSQLITE");
 
+    // if (tmp.isOpen())
+    // {
+    //     usleep(100000);
+    //     qDebug() << "m_db is already open. Try to close.";
+    //     tmp.close();
+    //     tmp = QSqlDatabase();
+    //     QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
+    //     qDebug() << "m_db was already open. Closed it first.";
+    // }
+
+    qDebug() << "db init1";
     if (m_db.connectionName().isEmpty())
     {
         // qDebug() << "connectionname is empty-->";
-        m_db = QSqlDatabase::addDatabase("QSQLITE");
+        // m_db = QSqlDatabase::addDatabase("QSQLITE");
         m_db.setDatabaseName(m_dbPath);
         // qDebug() << "m_db set connectionName";
     }
@@ -73,6 +103,7 @@ void DbManager::openDb()
         qDebug() << "m_db connectionName is NOT EMPTY";
     }
 
+    qDebug() << "db init2";
     if (!m_db.open())
     {
         qDebug() << "Error: connection with database failed";
@@ -81,6 +112,7 @@ void DbManager::openDb()
     {
         qDebug() << "Database: connection ok";
     }
+    qDebug() << "db init3";
 
     bool isLocked = true;
     while (isLocked)
@@ -97,6 +129,7 @@ void DbManager::openDb()
             usleep(250000);
         }
     }
+    qDebug() << "db init ok";
 }
 
 // bool DbManager::isDatabaseLocked(const QSqlDatabase &db)

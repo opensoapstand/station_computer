@@ -3,6 +3,7 @@
 
 #include "df_util.h"
 #include "machine.h"
+#include "dbmanager.h"
 
 class product : public QObject
 {
@@ -14,6 +15,7 @@ public:
     ~product();
     product &operator=(const product &other);
     void setMachine(machine *machine);
+    void setDb(DbManager* db);
 
     // Setters and Getters
     void setSlot(int slot);
@@ -117,6 +119,7 @@ signals:
 
 private:
     machine *thisMachine;
+    DbManager* m_db;
 
     int slot;
 

@@ -7,6 +7,7 @@ class DbManager
 {
 public:
     DbManager(const QString &path);
+    DbManager();
     ~DbManager();
     void closeDb();
 
@@ -93,7 +94,7 @@ public:
 
 private:
     QString m_dbPath;
-    QSqlDatabase m_db;
+    // QSqlDatabase m_db;
 };
 
 #endif // DBMANAGER_H

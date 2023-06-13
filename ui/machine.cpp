@@ -14,6 +14,11 @@ machine::~machine()
 {
 }
 
+void machine::setDb(DbManager *db)
+{
+    m_db = db;
+}
+
 QString machine::getTemplateFolder()
 {
     QString template_name = m_template;
@@ -50,9 +55,9 @@ QString machine::getDefaultTemplatePathFromName(QString fileName)
 void machine::printerStatus(bool *isOnline, bool *hasPaper)
 {
     qDebug() << "DB call: Check printer status. ";
-    DbManager db(DB_PATH);
-    db.printerStatus(isOnline, hasPaper);
-    db.closeDb();
+    // DbManager db(DB_PATH);
+    m_db->printerStatus(isOnline, hasPaper);
+    // db.closeDb();
 
     // This needs to be checked frequently, so caching is useless.
     // *isOnline = m_receipt_printer_is_online==1;
@@ -71,16 +76,16 @@ bool machine::getPumpRampingEnabled()
 
 void machine::setPumpRampingEnabled(bool isEnabled)
 {
-    DbManager db(DB_PATH);
-    db.updateTableMachineWithInt("enable_pump_ramping", isEnabled);
-    db.closeDb();
+    // DbManager db(DB_PATH);
+    m_db->updateTableMachineWithInt("enable_pump_ramping", isEnabled);
+    // db.closeDb();
 }
 
 void machine::setEmptyContainerDetectionEnabled(bool isEnabled)
 {
-    DbManager db(DB_PATH);
-    db.updateTableMachineWithInt("has_empty_detection", isEnabled);
-    db.closeDb();
+    // DbManager db(DB_PATH);
+    m_db->updateTableMachineWithInt("has_empty_detection", isEnabled);
+    // db.closeDb();
 }
 
 bool machine::getEmptyContainerDetectionEnabled()
@@ -134,7 +139,7 @@ bool machine::isAllowedAsAdmin()
     {
         allowed = true;
     }
-    qDebug()<< "Allowed as admin? " << allowed;
+    qDebug() << "Allowed as admin? " << allowed;
     return allowed;
 }
 
@@ -161,12 +166,12 @@ void machine::setStatusText(int slot, bool isSlotEnabled, QString status)
 {
 
     QString column = QString("status_text_slot_%1").arg(slot);
-// UPDATE machine SET status_text_slot_1='SLOT_STATE_AVAILABLE'
-    DbManager db(DB_PATH);
-    db.updateTableMachineWithText(column, status);
+    // UPDATE machine SET status_text_slot_1='SLOT_STATE_AVAILABLE'
+    // DbManager db(DB_PATH);
+    m_db->updateTableMachineWithText(column, status);
     // bool success = db.updateSlotAvailability(slot, isSlotEnabled, status);
 
-    db.closeDb();
+    // db.closeDb();
 }
 
 QString machine::getStatusText(int slot)
@@ -201,12 +206,13 @@ bool machine::slotNumberValidityCheck(int slot)
     return valid;
 }
 
-void machine::setSlotEnabled(int slot, bool isEnabled){
+void machine::setSlotEnabled(int slot, bool isEnabled)
+{
     // do this through product.cpp, as this should have been a part of products table
     QString column_name = QString("is_enabled_slot_%1").arg(slot);
-    DbManager db(DB_PATH);
-    db.updateTableMachineWithInt(column_name, isEnabled);
-    db.closeDb();
+    // DbManager db(DB_PATH);
+    m_db->updateTableMachineWithInt(column_name, isEnabled);
+    // db.closeDb();
 }
 
 bool machine::getSlotEnabled(int slot)
@@ -230,9 +236,9 @@ void machine::loadParametersFromDb()
 {
     qDebug() << "DB call: Load all machine parameters";
 
-    DbManager db(DB_PATH);
+    // DbManager db(DB_PATH);
 
-    db.getAllMachineProperties(
+    m_db->getAllMachineProperties(
         &m_machine_id,
         &m_soapstand_customer_id,
         &m_template,
@@ -261,7 +267,7 @@ void machine::loadParametersFromDb()
         m_pump_id_slots,
         m_is_enabled_slots,
         m_status_text_slots);
-    db.closeDb();
+    // db.closeDb();
 
     qDebug() << "Machine ID as loaded from db: " << m_machine_id;
 }

@@ -3,6 +3,7 @@
 
 #include "df_util.h"
 // #include "page_idle.h"
+#include "dbmanager.h"
 
 typedef enum UserRole
 {
@@ -19,6 +20,7 @@ public:
     machine();
     ~machine();
     void loadParametersFromDb();
+    void setDb(DbManager *db);
 
     bool slotNumberValidityCheck(int slot);
     QString getStatusText(int slot);
@@ -61,6 +63,7 @@ public slots:
 signals:
 
 private:
+    DbManager *m_db;
     UserRole active_role;
     QString m_machine_id;
     QString m_soapstand_customer_id;

@@ -101,9 +101,9 @@ void page_transactions::populateTransactionsTable()
         transaction_count = TRANSACTION_HISTORY_COUNT;
         int retrieved_count;
 
-        DbManager db(DB_PATH);
-        db.getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
-        db.closeDb();
+        // DbManager db(DB_PATH);
+        p_page_idle->g_db->getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
+        // db.closeDb();
         
         transaction_count = retrieved_count;
 

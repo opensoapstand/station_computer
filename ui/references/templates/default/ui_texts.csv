@@ -156,7 +156,6 @@ page_tap_payment->msgBox_cancel,<p align=center><br><br>Cancel transaction and e
 page_tap_payment->preauthLabel,You are being pre-authorized for maximum volume %1 with amount of
 
 #page_maintenance_dispenser
-page_maintenance_dispenser->label_enabled_status,Pump manual mode OFF.
 page_maintenance_dispenser->label_calibration_instructions,Flowsensor calibration instructions:<br>1.Enable the pump<br>2.Take a measuring cup and dispense until the 1liter mark<br>3.Check the calibration value<br>4.Update the calibration value if different
 page_maintenance_dispenser->pushButton_enable_pump->enable_pump,ENABLE PUMP
 page_maintenance_dispenser->pushButton_set_restock_volume,Define restock volume.
@@ -167,6 +166,16 @@ page_maintenance_dispenser->pushButton_enable_pump->disable_pump,DISABLE PUMP
 page_maintenance_dispenser->pushButton_soldOut->unavailable,Make\nunavailable
 page_maintenance_dispenser->pushButton_soldOut->available,Make\navailable
 page_maintenance_dispenser->label_enabled_status->pump_ready,Manual Pump ready. Press dispense button.
+page_maintenance_dispenser->label_enabled_status->pump_off,Pump manual mode OFF.
+page_maintenance_dispenser->label_action_feedback->succsess,Refill Succesfull
+page_maintenance_dispenser->label_action_feedback->error,Refill ERROR
+page_maintenance_dispenser->label_title->small,Price Small:
+page_maintenance_dispenser->label_title->medium,Price Medium:
+page_maintenance_dispenser->label_title->adjust_volume,Adjust the remaining volume
+page_maintenance_dispenser->label_title->full_button,Full Volume button clicked
+page_maintenance_dispenser->label_action_feedback->portal_succsess,Portal Update Succesfull
+
+
 
 
 

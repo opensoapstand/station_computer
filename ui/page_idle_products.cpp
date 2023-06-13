@@ -35,9 +35,9 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
 {
     ui->setupUi(this);
 
-    backgroundChangeTimer = new QTimer(this);
-    backgroundChangeTimer->setInterval(20);
-    connect(backgroundChangeTimer, SIGNAL(timeout()), this, &page_idle_products::changeBackground);
+    // backgroundChangeTimer = new QTimer(this);
+    // backgroundChangeTimer->setInterval(20);
+    // connect(backgroundChangeTimer, SIGNAL(timeout()), this, &page_idle_products::changeBackground);
 
     labels_product_picture[0] = ui->label_product_1_photo;
     labels_product_picture[1] = ui->label_product_2_photo;
@@ -289,35 +289,35 @@ void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
     ui->printer_status_label->setStyleSheet(styleSheet);
 }
 
-void page_idle_products::changeBackground()
-{
-    // Predefined list of background image paths
-    QStringList backgroundPaths = {
-        "background1.jpg",
-        "background3.jpg",
-        "background4.jpg",
-        "background5.jpg",
-        "background6.jpg",
-        "background7.jpg",
-        // Add more background image paths as needed
-    };
+// void page_idle_products::changeBackground()
+// {
+//     // Predefined list of background image paths
+//     QStringList backgroundPaths = {
+//         "background1.jpg",
+//         "background3.jpg",
+//         "background4.jpg",
+//         "background5.jpg",
+//         "background6.jpg",
+//         "background7.jpg",
+//         // Add more background image paths as needed
+//     };
 
-    static int currentIndex = 0;  // Static variable to keep track of the current background index
+//     static int currentIndex = 0;  // Static variable to keep track of the current background index
 
-    // Get the background image path at the current index
-    QString newBackgroundPath = backgroundPaths[currentIndex];
+//     // Get the background image path at the current index
+//     QString newBackgroundPath = backgroundPaths[currentIndex];
 
-    // Set the new background image path
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, newBackgroundPath);
+//     // Set the new background image path
+//     p_page_idle->setBackgroundPictureFromTemplateToPage(this, newBackgroundPath);
 
-    // Increment the current index
-    currentIndex++;
+//     // Increment the current index
+//     currentIndex++;
 
-    // If the index exceeds the number of backgrounds, reset it to 0
-    if (currentIndex >= backgroundPaths.size()) {
-        currentIndex = 0;
-    }
-}`
+//     // If the index exceeds the number of backgrounds, reset it to 0
+//     if (currentIndex >= backgroundPaths.size()) {
+//         currentIndex = 0;
+//     }
+// }
 
 
 void page_idle_products::on_pushButton_to_select_product_page_clicked()

@@ -139,7 +139,7 @@ page_maintenance->product_overlay_labels->almost_empty,Almost Empty
 page_maintenance->product_overlay_labels->assistance_needed,Assistance Needed
 page_maintenance->product_overlay_labels->coming_soon,Comming soon
 page_maintenance->product_overlay_labels->sold_out,Sold Out
-page_maintenance->label_title_maintenance_mode,MAINTENANCE MODE
+page_maintenance->label_title_maintenance_mode,Maintenance mode
 page_maintenance->pushButton_to_previous_page,<-back
 page_maintenance->pushButton_general_settings,General Settings
 page_maintenance->label_product1_position,P1

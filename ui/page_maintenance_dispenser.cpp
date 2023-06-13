@@ -23,9 +23,9 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
     palette.setBrush(QPalette::Background, Qt::white);
     this->setPalette(palette);
 
-    ui->label_enabled_status->setText("Pump manual mode OFF.");
-    ui->label_calibration_instructions->setText("Flowsensor calibration instructions:\n1.Enable the pump\n2.Take a measuring cup and dispense until the 1liter mark\n3.Check the calibration value\n4.Update the calibration value if different");
-    ui->pushButton_enable_pump->setText("ENABLE PUMP");
+    // ui->label_enabled_status->setText("Pump manual mode OFF.");
+    // ui->label_calibration_instructions->setText("Flowsensor calibration instructions:\n1.Enable the pump\n2.Take a measuring cup and dispense until the 1liter mark\n3.Check the calibration value\n4.Update the calibration value if different");
+    // ui->pushButton_enable_pump->setText("ENABLE PUMP");
 
     maintainProductPageEndTimer = new QTimer(this);
     maintainProductPageEndTimer->setInterval(1000);
@@ -67,6 +67,18 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
+
+    p_page_idle->setTemplateTextToObject(ui->label_enabled_status);
+    p_page_idle->setTemplateTextToObject(ui->label_calibration_instructions);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_enable_pump);
+    p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "enable_pump");
+    p_page_idle->setTemplateTextToObject(ui->pushButton_set_restock_volume);
+
+    ui->pushButton_update_portal->setText("Update Changes to Portal");
+    ui->pushButton_cancel->setText("CANCEL");
+    ui->pushButton_done->setText("DONE");
+
+
     ui->pushButton_restock->setStyleSheet(styleSheet);
     ui->pushButton_enable_pump->setProperty("class", "pump_enable");
     ui->pushButton_enable_pump->setStyleSheet(styleSheet);
@@ -89,10 +101,6 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->label_setting_speed_pwm->hide();
     ui->pushButton_setting_temperature->setVisible(false);
     ui->label_setting_temperature->setVisible(false);
-    ui->pushButton_set_restock_volume->setText("Define restock volume.");
-    ui->pushButton_update_portal->setText("Update Changes to Portal");
-    ui->pushButton_cancel->setText("CANCEL");
-    ui->pushButton_done->setText("DONE");
 
     isDispenseButtonPressed = false;
     activeEditField = "";

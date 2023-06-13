@@ -75,7 +75,7 @@ void page_maintenance::showEvent(QShowEvent *event)
         product_buttons[i]->setIcon(qi);
         product_buttons[i]->setObjectName("product_buttons");
         product_buttons[i]->setStyleSheet(styleSheet);
-        product_buttons[i]->setIconSize(QSize(440, 440));
+        product_buttons[i]->setIconSize(QSize(241, 341));
         product_overlay_labels[i]->show();
         product_buttons[i]->setStyleSheet("background-color: transparent; border: 1px solid black;");
     }
@@ -89,14 +89,6 @@ void page_maintenance::showEvent(QShowEvent *event)
     ui->label_product2->setText(p_page_idle->products[1].getProductName());
     ui->label_product3->setText(p_page_idle->products[2].getProductName());
     ui->label_product4->setText(p_page_idle->products[3].getProductName());
-    ui->label_product1->setProperty("class", "label_products");
-    ui->label_product1->setStyleSheet(styleSheet);
-    ui->label_product2->setProperty("class", "label_products");
-    ui->label_product2->setStyleSheet(styleSheet);
-    ui->label_product3->setProperty("class", "label_products");
-    ui->label_product3->setStyleSheet(styleSheet);
-    ui->label_product4->setProperty("class", "label_products");
-    ui->label_product4->setStyleSheet(styleSheet);
 
     for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
@@ -109,24 +101,24 @@ void page_maintenance::showEvent(QShowEvent *event)
         }
         else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
         {
-            // product_overlay_labels[slot_index]->setText("Almost Empty");
+            //product_overlay_labels[slot_index]->setText("Almost Empty");
             p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "almost_empty");
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
         {
-            // product_overlay_labels[slot_index]->setText("Sold Out");
-            p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "sold_out");
+           // product_overlay_labels[slot_index]->setText("Sold Out");
+                p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "sold_out");
         }
         else if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
         {
-            // product_overlay_labels[slot_index]->setText("Coming Soon");
-            p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "coming_soon");
+            //product_overlay_labels[slot_index]->setText("Coming Soon");
+             p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "coming_soon");
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
 
         {
             // product_overlay_labels[slot_index]->setText("Assistance Needed");
-            p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "assistance_needed");
+                p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "assistance_needed");
         }
         else
         {
@@ -139,8 +131,8 @@ void page_maintenance::showEvent(QShowEvent *event)
             }
             else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
             {
-                // product_overlay_labels[slot_index]->setText("Almost Empty");
-                p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "almost_empty");
+                //product_overlay_labels[slot_index]->setText("Almost Empty");
+                 p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "almost_empty");
             }
             else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
             {

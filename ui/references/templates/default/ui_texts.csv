@@ -137,7 +137,7 @@ page_error_wifi->label_check_back,Please check back soon
 page_maintenance->product_overlay_labels->auto_sold_out,Auto Sold Out
 page_maintenance->product_overlay_labels->almost_empty,Almost Empty
 page_maintenance->product_overlay_labels->assistance_needed,Assistance Needed
-page_maintenance->product_overlay_labels->coming_soon,Comming soon
+page_maintenance->product_overlay_labels->coming_soon,Coming soon
 page_maintenance->product_overlay_labels->sold_out,Sold Out
 page_maintenance->label_title_maintenance_mode,MAINTENANCE MODE
 page_maintenance->pushButton_to_previous_page,<-back
@@ -159,7 +159,17 @@ page_tap_payment->preauthLabel,You are being pre-authorized for maximum volume %
 page_maintenance_dispenser->label_enabled_status,Pump manual mode OFF.
 page_maintenance_dispenser->label_calibration_instructions,Flowsensor calibration instructions:<br>1.Enable the pump<br>2.Take a measuring cup and dispense until the 1liter mark<br>3.Check the calibration value<br>4.Update the calibration value if different
 page_maintenance_dispenser->pushButton_enable_pump->enable_pump,ENABLE PUMP
-page_maintenance_dispenser->pushButton_set_restock_volume,Define restock volume....232165
+page_maintenance_dispenser->pushButton_set_restock_volume,Define restock volume.
+page_maintenance_dispenser->pushButton_update_portal,Update Changes to Portal
+page_maintenance_dispenser->pushButton_cancel,CANCEL
+page_maintenance_dispenser->pushButton_done,DONE
+page_maintenance_dispenser->pushButton_enable_pump->disable_pump,DISABLE PUMP
+page_maintenance_dispenser->pushButton_soldOut->unavailable,Make <br> unavailable
+
+
+ 
+
+
 
 
 

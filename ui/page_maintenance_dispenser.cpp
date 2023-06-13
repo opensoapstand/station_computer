@@ -73,10 +73,12 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     p_page_idle->setTemplateTextToObject(ui->pushButton_enable_pump);
     p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "enable_pump");
     p_page_idle->setTemplateTextToObject(ui->pushButton_set_restock_volume);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_update_portal);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_cancel);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_done);
+//   ui->pushButton_cancel->setText("CANCEL");
+//     ui->pushButton_done->setText("DONE");
 
-    ui->pushButton_update_portal->setText("Update Changes to Portal");
-    ui->pushButton_cancel->setText("CANCEL");
-    ui->pushButton_done->setText("DONE");
 
 
     ui->pushButton_restock->setStyleSheet(styleSheet);
@@ -164,7 +166,9 @@ void page_maintenance_dispenser::setpushButton_soldOutText()
 
     if (p_page_idle->selectedProduct->getSlotEnabled())
     {
-        ui->pushButton_soldOut->setText("Make \n unavailable");
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_soldOut, "unavailable");
+
+        // ui->pushButton_soldOut->setText("Make \n unavailable");
         ui->pushButton_soldOut->setProperty("class", "pushButton_soldOut_unavailable");
         ui->pushButton_soldOut->setStyleSheet(styleSheet);
     }
@@ -261,7 +265,9 @@ void page_maintenance_dispenser::autoDispenseStart(int size)
     if (!pump_enabled)
     {
 
-        ui->pushButton_enable_pump->setText("DISABLE PUMP");
+        // ui->pushButton_enable_pump->setText("DISABLE PUMP");
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "disable_pump");
+
         ui->pushButton_enable_pump->setProperty("class", "pump_disable");
         ui->pushButton_enable_pump->setStyleSheet(styleSheet);
         qDebug() << "Autofill small quantity pressed.";
@@ -736,12 +742,14 @@ void page_maintenance_dispenser::on_pushButton_done_clicked()
 
 void page_maintenance_dispenser::on_pushButton_cancel_clicked()
 {
+
     ui->buttonPeriod->show();
     ui->numberEntry->hide();
     ui->textEntry->setText("");
     // ui->errorLabel->setText("");
     // text_entered = "";
     activeEditField = "";
+        p_page_idle->setTemplateTextToObject(ui->pushButton_cancel);
 }
 
 // ****************************************************************

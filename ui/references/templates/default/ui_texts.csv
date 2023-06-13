@@ -158,4 +158,11 @@ page_tap_payment->preauthLabel,You are being pre-authorized for maximum volume %
 #page_maintenance_dispenser
 page_maintenance_dispenser->label_enabled_status,Pump manual mode OFF.
 page_maintenance_dispenser->label_calibration_instructions,Flowsensor calibration instructions:<br>1.Enable the pump<br>2.Take a measuring cup and dispense until the 1liter mark<br>3.Check the calibration value<br>4.Update the calibration value if different
-page_maintenance->pushButton_enable_pump->enable_pump,ENABLE PUMP
+page_maintenance_dispenser->pushButton_enable_pump->enable_pump,ENABLE PUMP
+page_maintenance_dispenser->pushButton_set_restock_volume,Define restock volume....232165
+
+
+
+
+
+

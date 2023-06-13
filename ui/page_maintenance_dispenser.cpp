@@ -71,8 +71,12 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     p_page_idle->setTemplateTextToObject(ui->label_enabled_status);
     p_page_idle->setTemplateTextToObject(ui->label_calibration_instructions);
     p_page_idle->setTemplateTextToObject(ui->pushButton_enable_pump);
-    p_page_idle->setTemplateTextWithIdentifierToObject(pushButton_enable_pump, "enable_pump");
+    p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "enable_pump");
+    p_page_idle->setTemplateTextToObject(ui->pushButton_set_restock_volume);
 
+    ui->pushButton_update_portal->setText("Update Changes to Portal");
+    ui->pushButton_cancel->setText("CANCEL");
+    ui->pushButton_done->setText("DONE");
 
 
     ui->pushButton_restock->setStyleSheet(styleSheet);
@@ -99,10 +103,6 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->label_setting_speed_pwm->hide();
     ui->pushButton_setting_temperature->setVisible(false);
     ui->label_setting_temperature->setVisible(false);
-    ui->pushButton_set_restock_volume->setText("Define restock volume.");
-    ui->pushButton_update_portal->setText("Update Changes to Portal");
-    ui->pushButton_cancel->setText("CANCEL");
-    ui->pushButton_done->setText("DONE");
 
     isDispenseButtonPressed = false;
     activeEditField = "";

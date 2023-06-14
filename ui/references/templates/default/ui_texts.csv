@@ -167,13 +167,13 @@ page_maintenance_dispenser->pushButton_soldOut->unavailable,Make\nunavailable
 page_maintenance_dispenser->pushButton_soldOut->available,Make\navailable
 page_maintenance_dispenser->label_enabled_status->pump_ready,Manual Pump ready. Press dispense button.
 page_maintenance_dispenser->label_enabled_status->pump_off,Pump manual mode OFF.
-page_maintenance_dispenser->label_action_feedback->succsess,Refill Succesfull
+page_maintenance_dispenser->label_action_feedback->success,Refill Succesfull
 page_maintenance_dispenser->label_action_feedback->error,Refill ERROR
 page_maintenance_dispenser->label_title->small,Price Small:
 page_maintenance_dispenser->label_title->medium,Price Medium:
 page_maintenance_dispenser->label_title->adjust_volume,Adjust the remaining volume
 page_maintenance_dispenser->label_title->full_button,Full Volume button clicked
-page_maintenance_dispenser->label_action_feedback->portal_succsess,Portal Update Succesfull
+page_maintenance_dispenser->label_action_feedback->portal_success,Portal Update Succesfull
 
 
 #page_maintenance_general
@@ -191,7 +191,7 @@ page_maintenance_general->pushButton_minimize,Minimize Soapstand App
 page_maintenance_general->pushButton_restart_electronics,Restart Soapstand App (ui+fsm)
 page_maintenance_general->pushButton_restart_UI,Restart UI only
 page_maintenance_general->pushButton_reboot,Restart Computer
-page_maintenance_general->pushButton_shutdown,Shut down<br>(unplugging power is ok too)
+page_maintenance_general->pushButton_shutdown,Shut down\n(unplugging power is ok too)
 page_maintenance_general->pushButton_reboot,Minimize Soapstand App
 page_maintenance_general->label_feedback,Feedback
 page_maintenance_general->label_status_feedback,Command Feedback

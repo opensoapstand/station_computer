@@ -86,6 +86,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->pushButton_restock->setStyleSheet(styleSheet);
     ui->pushButton_enable_pump->setProperty("class", "pump_enable");
     ui->pushButton_enable_pump->setStyleSheet(styleSheet);
+    ui->label_action_feedback->setStyleSheet(styleSheet);
 
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 

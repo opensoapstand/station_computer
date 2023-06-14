@@ -1,4 +1,6 @@
-
+#label_action_feedback{
+   font-size: 18px; 
+}
 
 .pushButton_soldOut_unavailable { 
    background-color: #5E8680;

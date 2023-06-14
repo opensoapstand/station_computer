@@ -176,6 +176,30 @@ page_maintenance_dispenser->label_title->full_button,Full Volume button clicked
 page_maintenance_dispenser->label_action_feedback->portal_succsess,Portal Update Succesfull
 
 
+#page_maintenance_general
+
+#page_maintenance_general->pushButton_back->enable_pump,ENABLE PUMP
+page_maintenance_general->pushButton_back,<-back
+page_maintenance_general->label_connectivity,connectivity
+page_maintenance_general->pushButton_wifi_networks,Display Wifi networks
+page_maintenance_general->pushButton_network_status,Check Network status
+page_maintenance_general->pushButton_rtunnel_restart,Reset Backend Connection
+page_maintenance_general->label_receipt_printer,Receipt Printer
+page_maintenance_general->pushButton_printer_check_status,Check Status
+page_maintenance_general->pushButton_printer_test_print,Test Print
+page_maintenance_general->pushButton_minimize,Minimize Soapstand App
+page_maintenance_general->pushButton_restart_electronics,Restart Soapstand App (ui+fsm)
+page_maintenance_general->pushButton_restart_UI,Restart UI only
+page_maintenance_general->pushButton_reboot,Restart Computer
+page_maintenance_general->pushButton_shutdown,Shut down<br>(unplugging power is ok too)
+page_maintenance_general->pushButton_reboot,Minimize Soapstand App
+page_maintenance_general->label_feedback,Feedback
+page_maintenance_general->label_status_feedback,Command Feedback
+
+
+
+
+
 
 
 

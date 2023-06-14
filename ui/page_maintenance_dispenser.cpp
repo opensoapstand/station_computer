@@ -68,8 +68,8 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
 
-    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_enabled_status,"pump_off");
     //p_page_idle->setTemplateTextToObject(ui->label_enabled_status);
+    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_enabled_status,"pump_off");
     p_page_idle->setTemplateTextToObject(ui->label_calibration_instructions);
     p_page_idle->setTemplateTextToObject(ui->pushButton_enable_pump);
     p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump,"enable_pump");

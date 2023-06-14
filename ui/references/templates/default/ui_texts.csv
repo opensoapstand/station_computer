@@ -179,7 +179,7 @@ page_maintenance_dispenser->label_action_feedback->portal_success,Portal Update 
 #page_maintenance_general
 
 #page_maintenance_general->pushButton_back->enable_pump,ENABLE PUMP
-page_maintenance_general->pushButton_back,<-back
+page_maintenance_general->pushButton_back,⬅ back
 page_maintenance_general->label_connectivity,connectivity
 page_maintenance_general->pushButton_wifi_networks,Display Wifi networks
 page_maintenance_general->pushButton_network_status,Check Network status

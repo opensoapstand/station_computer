@@ -778,7 +778,9 @@ void page_maintenance_dispenser::on_pushButton_cancel_clicked()
     // ui->errorLabel->setText("");
     // text_entered = "";
     activeEditField = "";
-    p_page_idle->setTemplateTextToObject(ui->pushButton_cancel);
+    ui->pushButton_cancel->setText(p_page_idle->getTemplateTextByPage(this, "pushButton_keypad_cancel"));
+
+//    p_page_idle->setTemplateTextToObject(ui->pushButton_cancel);
 }
 
 // ****************************************************************

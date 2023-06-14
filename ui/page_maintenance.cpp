@@ -190,6 +190,14 @@ void page_maintenance::showEvent(QShowEvent *event)
         ui->label_machine_id->setStyleSheet(styleSheet);
         ui->label_ui_version->setProperty("class", "label_machine_ui");
         ui->label_ui_version->setStyleSheet(styleSheet);
+        ui->label_product1_position->setStyleSheet(styleSheet);
+        ui->label_product2_position->setStyleSheet(styleSheet);
+        ui->label_product3_position->setStyleSheet(styleSheet);
+        ui->label_product4_position->setStyleSheet(styleSheet);
+        ui->label_product1_position->setProperty("class", "label_product_position");
+        ui->label_product2_position->setProperty("class", "label_product_position");
+        ui->label_product3_position->setProperty("class", "label_product_position");
+        ui->label_product4_position->setProperty("class", "label_product_position");
 
         // ui->pushButton_to_previous_page->setText("<-Back");
         p_page_idle->setTemplateTextToObject(ui->pushButton_to_previous_page);

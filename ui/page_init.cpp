@@ -62,7 +62,6 @@ void page_init::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: Init >>>>>>>>>";
     QWidget::showEvent(event);
-
     // QPixmap background(PAGE_INIT_BACKGROUND_IMAGE_PATH);
     // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     // QPalette palette;
@@ -85,23 +84,29 @@ void page_init::showEvent(QShowEvent *event)
         system("DISPLAY=:0 xterm -hold  /release/fsm/controller &");
         _initIdleTimeoutSec = 20;
     }
-    else if(!tapSetupStarted){
-        ui->init_label->setText("Wait for Payment signal.");
-
-        tap_init();
-    }
     else
     {
 
         ui->init_label->setText("Wait for controller signal.");
 
-#ifdef WAIT_FOR_CONTROLLER_READY
-        _initIdleTimeoutSec = 20;
-#else
+        #ifdef WAIT_FOR_CONTROLLER_READY
+                _initIdleTimeoutSec = 20;
+        // #else
 
-        _initIdleTimeoutSec = 1;
-#endif
+        //         _initIdleTimeoutSec = 1;
+        #endif
     }
+     while(!tapSetupStarted){
+
+        ui->init_label->setText("Wait for Payment signal.");
+        qDebug() << "In tap init";
+        QCoreApplication::processEvents();
+
+        tap_init();
+        
+    }
+    _initIdleTimeoutSec = 1;
+
     
     // tap_init();
 
@@ -165,6 +170,7 @@ void page_init::onRebootTimeoutTick()
 
 bool page_init::tap_init()
 {
+
     paymentConnected = com.page_init();
 
     while (!paymentConnected)

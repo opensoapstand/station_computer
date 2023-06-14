@@ -21,6 +21,7 @@
 #include "page_dispenser.h"
 #include "page_idle.h"
 
+
 // CTOR
 page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(parent),
                                               ui(new Ui::page_tap_payment_serial)
@@ -75,7 +76,6 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
 
 void page_tap_payment_serial::stopPayTimers()
 {
-    //    readTimer->stop();
     //    qDebug() << "page_tap_payment_serial: Stop Timers" << endl;
     if (paymentProgressTimer != nullptr)
     {
@@ -190,6 +190,12 @@ void page_tap_payment_serial::showEvent(QShowEvent *event)
     {
     
         qDebug() << "Prepare tap order";
+        paymentConnected = com.page_init();
+
+    while (!paymentConnected)
+    {
+        paymentConnected = com.page_init();
+    }
         pktResponded = com.readForAck();
         readPacket.packetReadFromUX(pktResponded);
         pktResponded.clear();
@@ -354,7 +360,7 @@ bool page_tap_payment_serial::sendToUX410()
     {
         cout << "Wait for ACK counter: " << waitForAck << endl;
         com.sendPacket(pktToSend, uint(pktToSend.size()));
-        std::cout << "sendtoUX410 Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
+        std::cout << " \n sendtoUX410 Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
         sleep(1);
         // read back what is responded
         pktResponded = com.readForAck();
@@ -363,7 +369,7 @@ bool page_tap_payment_serial::sendToUX410()
         waitForAck++;
 
         // if(isReadyForTap) {
-        cout<< readPacket.getAckOrNak();
+        // cout<< readPacket.getAckOrNak();
         if (readPacket.getAckOrNak() == communicationPacketField::ACK)
         {
             return true;
@@ -376,22 +382,22 @@ bool page_tap_payment_serial::waitForUX410()
     bool waitResponse = false;
     while (!waitResponse)
     {
-        sleep(1);
-               QCoreApplication::processEvents();
+        usleep(100);
+        QCoreApplication::processEvents();
         cout << readPacket << endl;
         if (pktResponded[0] != 0x02)
         {
             pktResponded.clear();
             pktResponded = com.readPacket();
-            usleep(10);
+            sleep(1);
         }
         else
         {
-             pktResponded = com.readPacket();
             readPacket.packetReadFromUX(pktResponded);
             std::cout << readPacket;
             com.sendAck();
             waitResponse = true;
+            sleep(1);
         }
     }
     return waitResponse;
@@ -549,7 +555,7 @@ void page_tap_payment_serial::readTimer_loop()
     // pktToSend = paymentPacket.purchasePacket((QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2)).QString::toStdString());
     pktToSend = paymentPacket.purchasePacket("1.00");
     response = getResponse();
-
+    qDebug() << "Packet sent for payment";
     if (sendToUX410())
     {
         waitForUX410();
@@ -562,7 +568,6 @@ void page_tap_payment_serial::readTimer_loop()
                 
                 pktResponded.clear();
                 pktResponded = com.readPacket();
-                usleep(10);
                 response = getResponse();
                 readTimer->start(1000);
             }

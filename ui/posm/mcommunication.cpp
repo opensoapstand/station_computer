@@ -125,7 +125,6 @@ std::vector<uint8_t> mCommunication::readForAck()
     long int readSize = -1;
     std::vector<uint8_t> pktRead;
     int readcount = 0;
-    std::cout << fd;
     while (readcount < 3){
         if (readSize == -1){
             readSize = read(fd, buffer, 1);
@@ -139,7 +138,7 @@ std::vector<uint8_t> mCommunication::readForAck()
         usleep(500000);
     }
 
-    // std::cout << "\n"<<strerror(errno) << "\n";
+    std::cout << "\n"<<strerror(errno) << "\n";
 
     if (readSize == -1)
     {

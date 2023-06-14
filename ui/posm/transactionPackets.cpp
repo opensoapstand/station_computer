@@ -104,10 +104,10 @@ std::vector<uint8_t> transactionPacket::purchasePacket(std::string amount)
 
     //ETX is 0x03    
                                                //03
-    // packet.setPacketDataLen();                                  //00 0B
-    packet.setPacketDataLenPur();                                  //00 0D
-    // packet.setPacketLRC();                                      //LRC
-    packet.setPacketLRCPur();                                      //LRC
+    packet.setPacketDataLen();                                  //00 0B
+    // packet.setPacketDataLenPur();                                  //00 0D
+    packet.setPacketLRC();                                      //LRC
+    // packet.setPacketLRCPur();                                      //LRC
 
     return packet.getPacket();
 }

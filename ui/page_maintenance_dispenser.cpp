@@ -68,8 +68,8 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
 
-    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_enabled_status,"pump_off");
     //p_page_idle->setTemplateTextToObject(ui->label_enabled_status);
+    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_enabled_status,"pump_off");
     p_page_idle->setTemplateTextToObject(ui->label_calibration_instructions);
     p_page_idle->setTemplateTextToObject(ui->pushButton_enable_pump);
     p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump,"enable_pump");
@@ -86,6 +86,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->pushButton_restock->setStyleSheet(styleSheet);
     ui->pushButton_enable_pump->setProperty("class", "pump_enable");
     ui->pushButton_enable_pump->setStyleSheet(styleSheet);
+    ui->label_action_feedback->setStyleSheet(styleSheet);
 
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 

@@ -103,7 +103,7 @@ void page_transactions::populateTransactionsTable()
 
         DbManager db(DB_PATH);
         db.getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
-        db.closeDB();
+        db.closeDb();
         
         transaction_count = retrieved_count;
 

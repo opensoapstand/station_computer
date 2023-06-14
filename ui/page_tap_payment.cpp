@@ -65,41 +65,45 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->label_title->hide();
 
-    // ui->order_total_amount->hide();
-    DbManager db(DB_PATH);
 
-    if (db.getPaymentMethod(1) == "tapTcp")
-    {
-        qDebug() << "InitializingTap payment";
-        tap_payment = true;
-        std::map<std::string, std::string> configMap = readConfigFile();
-        std::map<std::string, std::string> deviceStatus = checkDeviceStatus(connectSecondarySocket());
-        if (deviceStatus["MACLABEL_IN_SESSION"] != "")
-        {
-            // finishSession(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
-        }
-        cancelTransaction(connectSecondarySocket());
-        qDebug() << "Transaction cancelled";
-        if (configMap["MAC_KEY"] != "")
-        {
-            std::map<std::string, std::string> testResponse = testMac(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
-            if (testResponse["RESPONSE_TEXT"] == "Match")
-            {
-                qDebug() << "Test Mac Command Matched" << endl;
-            }
-            else
-            {
-                qDebug() << "Re-registration of the device";
-                registerDevice(connectSocket());
-            }
-        }
-        else
-        {
-            qDebug() << "No file config" << endl;
-            registerDevice(connectSocket());
-        }
-    }
-    db.closeDB();
+
+
+  // THIS CODE SHOULD BE UNCOMMENTED AND PUT OUTSIDE CONSTRUCTOR
+    // ui->order_total_amount->hide();
+    // DbManager db(DB_PATH);
+
+    // if (db.getPaymentMethod(1) == "tapTcp")
+    // {
+    //     qDebug() << "InitializingTap payment";
+    //     tap_payment = true;
+    //     std::map<std::string, std::string> configMap = readConfigFile();
+    //     std::map<std::string, std::string> deviceStatus = checkDeviceStatus(connectSecondarySocket());
+    //     if (deviceStatus["MACLABEL_IN_SESSION"] != "")
+    //     {
+    //         // finishSession(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
+    //     }
+    //     cancelTransaction(connectSecondarySocket());
+    //     qDebug() << "Transaction cancelled";
+    //     if (configMap["MAC_KEY"] != "")
+    //     {
+    //         std::map<std::string, std::string> testResponse = testMac(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
+    //         if (testResponse["RESPONSE_TEXT"] == "Match")
+    //         {
+    //             qDebug() << "Test Mac Command Matched" << endl;
+    //         }
+    //         else
+    //         {
+    //             qDebug() << "Re-registration of the device";
+    //             registerDevice(connectSocket());
+    //         }
+    //     }
+    //     else
+    //     {
+    //         qDebug() << "No file config" << endl;
+    //         registerDevice(connectSocket());
+    //     }
+    // }
+    // db.closeDb();
 }
 
 

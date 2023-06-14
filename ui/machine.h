@@ -22,7 +22,7 @@ public:
 
     bool slotNumberValidityCheck(int slot);
     QString getStatusText(int slot);
-    QString setStatusText(int slot, bool isSlotEnabled, QString status);
+    void setStatusText(int slot, bool isSlotEnabled, QString status);
 
     QString getPumpId(int slot);
 
@@ -48,7 +48,7 @@ public:
     QString getHelpPageHtmlText();
 
     bool getSlotEnabled(int slot);
-    bool setSlotEnabled(int slot, bool isEnabled);
+    void setSlotEnabled(int slot, bool isEnabled);
     QString getIdlePageType();
 
     int getDispensersCount();

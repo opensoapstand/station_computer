@@ -52,7 +52,7 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
     {
         tap_payment = true;
     }
-    db.closeDB();
+    db.closeDb();
     if (tap_payment)
     {
 
@@ -330,7 +330,7 @@ bool page_tap_payment_serial::tap_init()
             // db3.setPaymentToQR();
             // QString payment_method = db3.getPaymentMethod(1);
             // qDebug() << "Payment method" << payment_method;
-            // db3.closeDB();
+            // db3.closeDb();
             for (int slotIndex = 0; slotIndex < SLOT_COUNT; slotIndex++)
             {
                 p_page_idle->products[slotIndex].setPaymentMethod("qr")

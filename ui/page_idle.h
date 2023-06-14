@@ -83,6 +83,7 @@ public:
     product *selectedProduct;
 
     machine thisMachine;
+    // DbManager g_db;
 
     df_util *dfUtility;
     DfUiCommThread *dfComm;

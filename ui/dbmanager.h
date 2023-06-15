@@ -9,8 +9,8 @@ public:
     DbManager(const QString &path);
     DbManager();
     ~DbManager();
-    // void closeDb();
-    void closeDb(QSqlDatabase db);
+    void closeDb();
+    // void closeDb(QSqlDatabase db);
     void setPath(QString path);
     QSqlDatabase openDb();
 

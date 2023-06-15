@@ -22,12 +22,14 @@
 DbManager::DbManager(const QString &path)
 // DbManager::DbManager(const QString &path) : m_db(QSqlDatabase::addDatabase("QSQLITE"))
 {
-    // m_db = QSqlDatabase::addDatabase("QSQLITE");
     // setPath(path);
     QString test = "fake1";
     m_dbPath2 = test;
     setPath(path);
     // m_db = QSqlDatabase::addDatabase("QSQLITE");
+
+    QSqlDatabase m_db = QSqlDatabase::addDatabase("QSQLITE");
+    QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
 }
 DbManager::DbManager()
 // DbManager::DbManager() : m_db(QSqlDatabase::addDatabase("QSQLITE"))
@@ -53,40 +55,39 @@ void DbManager::setPath(QString path)
     // m_db.setDatabaseName(m_dbPath2);
 }
 
-void DbManager::closeDb(QSqlDatabase db)
+// void DbManager::closeDb(QSqlDatabase db)
+void DbManager::closeDb()
 {
     qDebug() << "close db";
-    if (db.isOpen())
+    if (true)
+    // if (db.isOpen())
     {
-        db.close();
+        // QSqlQuery::clear();
+        // db.close();
         // db = QSqlDatabase();
         // QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
+        // QSqlDatabase::removeDatabase("qt_sql_default_connection666");
+        QSqlDatabase::database("qt_sql_default_connection666").close();
+        // QSqlDatabase::removeDatabase("qt_sql_default_connection666");
+        qDebug() << "closed. successs.";
     }
+    else
+    {
+        qDebug() << "Db was not open.";
+    }
+    if (QSqlDatabase::contains("qt_sql_default_connection666"))
+    {
+        QSqlDatabase::removeDatabase("qt_sql_default_connection666");
+    }
+    qDebug() << "Db close done.";
 }
 
 QSqlDatabase DbManager::openDb()
 {
     // qDebug() << "db init1";
-    QSqlDatabase m_db = QSqlDatabase::addDatabase("QSQLITE");
+    QSqlDatabase m_db = QSqlDatabase::addDatabase("QSQLITE", "qt_sql_default_connection666");
+    // QSqlDatabase m_db = QSqlDatabase::database();
     QString p = DB_PATH;
-    try
-    {
-        // Database code here
-        // qDebug() << m_dbPath2; // CRASHES HERE 
-        // qDebug() << "db init2 path: " << p;
-        m_db.setDatabaseName(p);
-    }
-    catch (const QSqlError &error)
-    {
-        qDebug() << "Database error: " << error.text();
-        // qDebug() << "db init2";
-    }
-
-    // m_db.setDatabaseName("lodelodelode");
-
-    int attempts = 10;
-    // qDebug() << "db init3";
-
     if (m_db.isOpen())
     {
         usleep(100000);
@@ -96,6 +97,24 @@ QSqlDatabase DbManager::openDb()
         QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
         qDebug() << "m_db was already open. Closed it first.";
     }
+    try
+    {
+        // Database code here
+        // qDebug() << m_dbPath2; // CRASHES HERE
+        qDebug() << "db init2 path: " << p;
+        m_db.setDatabaseName(p);
+    }
+    catch (const QSqlError &error)
+    {
+        qDebug() << "Database error: " << error.text();
+        qDebug() << "db init2";
+    }
+
+    // m_db.setDatabaseName("lodelodelode");
+
+    int attempts = 10;
+    // qDebug() << "db init3";
+
     // QSqlDatabase tmp  = QSqlDatabase::addDatabase("QSQLITE");
 
     // if (tmp.isOpen())
@@ -108,19 +127,19 @@ QSqlDatabase DbManager::openDb()
     //     qDebug() << "m_db was already open. Closed it first.";
     // }
 
-    // qDebug() << "db init1";
-    if (m_db.connectionName().isEmpty())
-    {
-        qDebug() << "not empty";
-        // qDebug() << "connectionname is empty-->";
-        // m_db = QSqlDatabase::addDatabase("QSQLITE");
-        m_db.setDatabaseName(DB_PATH);
-        // qDebug() << "m_db set connectionName";
-    }
-    else
-    {
-        qDebug() << "m_db connectionName is NOT EMPTY";
-    }
+    // // qDebug() << "db init1";
+    // if (m_db.connectionName().isEmpty())
+    // {
+    //     qDebug() << "not empty";
+    //     // qDebug() << "connectionname is empty-->";
+    //     // m_db = QSqlDatabase::addDatabase("QSQLITE");
+    //     m_db.setDatabaseName(DB_PATH);
+    //     // qDebug() << "m_db set connectionName";
+    // }
+    // else
+    // {
+    //     qDebug() << "m_db connectionName is NOT EMPTY";
+    // }
 
     // qDebug() << "db init2";
     if (!m_db.open())
@@ -156,23 +175,25 @@ bool DbManager::executeQuery(QString sql)
 {
     bool success = false;
 
-    QSqlDatabase db = openDb();
-    QSqlQuery qry(db);
-    qry.prepare(sql);
-
-    success = qry.exec();
-    if (!success)
     {
-        qDebug() << "Did not execute sql. "
-                 << qry.lastError() << " | " << qry.lastQuery();
-        success = true;
-    }
-    else
-    {
-        qDebug() << qry.lastQuery();
-    }
+        QSqlDatabase db = openDb();
+        QSqlQuery qry(db);
+        qry.prepare(sql);
 
-    closeDb(db);
+        success = qry.exec();
+        if (!success)
+        {
+            qDebug() << "Did not execute sql. "
+                     << qry.lastError() << " | " << qry.lastQuery();
+            success = true;
+        }
+        else
+        {
+            qDebug() << qry.lastQuery();
+        }
+        qry.finish();
+    }
+    closeDb();
     return success;
 }
 
@@ -189,9 +210,6 @@ bool DbManager::updateTableMachineWithDouble(QString column, double value, int p
 
 bool DbManager::updateTableMachineWithText(QString column, QString value)
 {
-    // QSqlQuery qry;
-    // QString sql_text = QString("UPDATE machine SET %1='%2'").arg(column, value);
-    // return executeQuery(&qry, sql_text);
     QString sql_text = QString("UPDATE machine SET %1='%2'").arg(column, value);
     return executeQuery(sql_text);
 }
@@ -210,9 +228,6 @@ bool DbManager::updateTableProductsWithDouble(int slot, QString column, double v
 
 bool DbManager::updateTableProductsWithText(int slot, QString column, QString value)
 {
-    // QSqlQuery qry;
-    // QString sql_text = QString("UPDATE products SET %1='%2' WHERE slot=%3").arg(column, value, QString::number(slot));
-    // return executeQuery(&qry, sql_text);
     QString sql_text = QString("UPDATE products SET %1='%2' WHERE slot=%3").arg(column, value, QString::number(slot));
     return executeQuery(sql_text);
 }
@@ -222,16 +237,6 @@ bool DbManager::addPageClick(const QString &page)
 
     return true;
 }
-
-// void DbManager::setPaymentToQR()
-// {
-
-//     QSqlQuery qry;
-//     {
-//         qry.prepare("UPDATE products SET payment=\"qr\";");
-//         qry.exec();
-//     }
-// }
 
 /*
 productId
@@ -363,9 +368,9 @@ void DbManager::getAllProductProperties(int slot,
 
 {
     qDebug() << "Open db: load all product properties for slot: " << slot;
-    QSqlDatabase db = openDb();
-    QSqlQuery qry(db);
     {
+        QSqlDatabase db = openDb();
+        QSqlQuery qry(db);
         // qry.prepare("SELECT soapstand_product_serial, size_unit, payment, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_max,price_small,price_medium, price_large,price_custom FROM products WHERE slot=:slot");
         qry.prepare("SELECT productId, soapstand_product_serial, slot, name, size_unit, currency, payment, name_receipt, concentrate_multiplier, dispense_speed, threshold_flow, retraction_time, calibration_const, volume_per_tick, last_restock, volume_full, volume_remaining, volume_dispensed_since_restock, volume_dispensed_total, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_min, size_custom_max, price_small, price_medium, price_large, price_custom, plu_small, plu_medium, plu_large, plu_custom, pid_small, pid_medium, pid_large, pid_custom, flavour, image_url, type, ingredients, features, description, is_enabled_custom_discount, size_custom_discount, price_custom_discount FROM products WHERE slot=:slot");
         qry.bindValue(":slot", slot);
@@ -429,8 +434,9 @@ void DbManager::getAllProductProperties(int slot,
             *size_custom_discount = qry.value(47).toDouble();
             *price_custom_discount = qry.value(48).toDouble();
         }
+        qry.finish();
     }
-    closeDb(db);
+    closeDb();
 }
 
 /*
@@ -537,61 +543,63 @@ void DbManager::getAllMachineProperties(
     QString *status_text_slots)
 {
     qDebug() << " db... all machine properties";
-    QSqlDatabase db = openDb();
-    QSqlQuery qry(db);
-    // {
-
-    qry.prepare("SELECT machine_id,soapstand_customer_id,template,location,controller_type,controller_id,screen_type,'screen _id',has_receipt_printer,receipt_printer_is_online,receipt_printer_has_paper,has_tap_payment,hardware_version,software_version,aws_port,pump_id_slot_1,pump_id_slot_2,pump_id_slot_3,pump_id_slot_4,is_enabled_slot_1,is_enabled_slot_2,is_enabled_slot_3,is_enabled_slot_4,coupons_enabled,status_text_slot_1,status_text_slot_2,status_text_slot_3,status_text_slot_4,has_empty_detection,enable_pump_ramping,enable_pump_reversal,dispense_buttons_count,maintenance_pwd,show_transactions,help_text_html,idle_page_type,admin_pwd FROM machine");
-    bool success;
-    success = qry.exec();
-    if (!success)
     {
-        qDebug() << "Did not execute sql. "
-                 << qry.lastError() << " | " << qry.lastQuery();
-        // success = false;
-    }
+        QSqlDatabase db = openDb();
+        QSqlQuery qry(db);
 
-    while (qry.next())
-    {
-        *machine_id = qry.value(0).toString();
-        *soapstand_customer_id = qry.value(1).toString();
-        *ttttemplate = qry.value(2).toString();
-        *location = qry.value(3).toString();
-        *controller_type = qry.value(4).toString();
-        *controller_id = qry.value(5).toString();
-        *screen_type = qry.value(6).toString();
-        *screen_id = qry.value(7).toString();
-        *has_receipt_printer = qry.value(8).toInt();
-        *receipt_printer_is_online = qry.value(9).toInt();
-        *receipt_printer_has_paper = qry.value(10).toInt();
-        *has_tap_payment = qry.value(11).toInt();
-        *hardware_version = qry.value(12).toString();
-        *software_version = qry.value(13).toString();
-        *aws_port = qry.value(14).toInt();
-        pump_id_slots[0] = qry.value(15).toString();
-        pump_id_slots[1] = qry.value(16).toString();
-        pump_id_slots[2] = qry.value(17).toString();
-        pump_id_slots[3] = qry.value(18).toString();
-        is_enabled_slots[0] = qry.value(19).toInt();
-        is_enabled_slots[1] = qry.value(20).toInt();
-        is_enabled_slots[2] = qry.value(21).toInt();
-        is_enabled_slots[3] = qry.value(22).toInt();
-        *coupons_enabled = qry.value(23).toInt();
-        status_text_slots[0] = qry.value(24).toString();
-        status_text_slots[1] = qry.value(25).toString();
-        status_text_slots[2] = qry.value(26).toString();
-        status_text_slots[3] = qry.value(27).toString();
-        *has_empty_detection = qry.value(28).toInt();
-        *enable_pump_ramping = qry.value(29).toInt();
-        *enable_pump_reversal = qry.value(30).toInt();
-        *dispense_buttons_count = qry.value(31).toInt();
-        *maintenance_pwd = qry.value(32).toString();
-        *show_transactions = qry.value(33).toInt();
-        *help_text_html = qry.value(34).toString();
-        *idle_page_type = qry.value(35).toString();
-        *admin_pwd = qry.value(36).toString();
+        qry.prepare("SELECT machine_id,soapstand_customer_id,template,location,controller_type,controller_id,screen_type,'screen _id',has_receipt_printer,receipt_printer_is_online,receipt_printer_has_paper,has_tap_payment,hardware_version,software_version,aws_port,pump_id_slot_1,pump_id_slot_2,pump_id_slot_3,pump_id_slot_4,is_enabled_slot_1,is_enabled_slot_2,is_enabled_slot_3,is_enabled_slot_4,coupons_enabled,status_text_slot_1,status_text_slot_2,status_text_slot_3,status_text_slot_4,has_empty_detection,enable_pump_ramping,enable_pump_reversal,dispense_buttons_count,maintenance_pwd,show_transactions,help_text_html,idle_page_type,admin_pwd FROM machine");
+        bool success;
+        success = qry.exec();
+        if (!success)
+        {
+            qDebug() << "Did not execute sql. "
+                     << qry.lastError() << " | " << qry.lastQuery();
+            // success = false;
+        }
+
+        while (qry.next())
+        {
+            *machine_id = qry.value(0).toString();
+            *soapstand_customer_id = qry.value(1).toString();
+            *ttttemplate = qry.value(2).toString();
+            *location = qry.value(3).toString();
+            *controller_type = qry.value(4).toString();
+            *controller_id = qry.value(5).toString();
+            *screen_type = qry.value(6).toString();
+            *screen_id = qry.value(7).toString();
+            *has_receipt_printer = qry.value(8).toInt();
+            *receipt_printer_is_online = qry.value(9).toInt();
+            *receipt_printer_has_paper = qry.value(10).toInt();
+            *has_tap_payment = qry.value(11).toInt();
+            *hardware_version = qry.value(12).toString();
+            *software_version = qry.value(13).toString();
+            *aws_port = qry.value(14).toInt();
+            pump_id_slots[0] = qry.value(15).toString();
+            pump_id_slots[1] = qry.value(16).toString();
+            pump_id_slots[2] = qry.value(17).toString();
+            pump_id_slots[3] = qry.value(18).toString();
+            is_enabled_slots[0] = qry.value(19).toInt();
+            is_enabled_slots[1] = qry.value(20).toInt();
+            is_enabled_slots[2] = qry.value(21).toInt();
+            is_enabled_slots[3] = qry.value(22).toInt();
+            *coupons_enabled = qry.value(23).toInt();
+            status_text_slots[0] = qry.value(24).toString();
+            status_text_slots[1] = qry.value(25).toString();
+            status_text_slots[2] = qry.value(26).toString();
+            status_text_slots[3] = qry.value(27).toString();
+            *has_empty_detection = qry.value(28).toInt();
+            *enable_pump_ramping = qry.value(29).toInt();
+            *enable_pump_reversal = qry.value(30).toInt();
+            *dispense_buttons_count = qry.value(31).toInt();
+            *maintenance_pwd = qry.value(32).toString();
+            *show_transactions = qry.value(33).toInt();
+            *help_text_html = qry.value(34).toString();
+            *idle_page_type = qry.value(35).toString();
+            *admin_pwd = qry.value(36).toString();
+        }
+        qry.finish();
     }
-    closeDb(db);
+    closeDb();
 }
 
 QString DbManager::getPaymentMethod(int slot)
@@ -599,11 +607,10 @@ QString DbManager::getPaymentMethod(int slot)
     // used by Ash in tap. to do --> get tap init out of constructor.
     qDebug() << "********* DEPRECATED *********** ";
     qDebug() << "DB call: get payment method for slot";
-    QSqlDatabase db = openDb();
-    QSqlQuery qry(db);
     QString payment_method;
-
     {
+        QSqlDatabase db = openDb();
+        QSqlQuery qry(db);
 
         qry.prepare("SELECT payment FROM products WHERE slot=:slot");
         qry.bindValue(":slot", slot);
@@ -614,8 +621,9 @@ QString DbManager::getPaymentMethod(int slot)
         {
             payment_method = qry.value(0).toString();
         }
+        qry.finish();
     }
-    closeDb(db);
+    closeDb();
     return payment_method;
 }
 
@@ -624,21 +632,23 @@ uint32_t DbManager::getNumberOfRows(QString table)
     qDebug() << " db... getNumberOfRows";
     QString qry_text = QString("SELECT COUNT(*) FROM %1").arg(table);
 
-    QSqlDatabase db = openDb();
-    QSqlQuery qry(db);
-    qry.prepare(qry_text);
-
     uint32_t row_count = 0;
-
-    bool success;
-    success = qry.exec();
-
-    if (qry.first())
     {
-        row_count = qry.value(0).toInt();
-    }
+        QSqlDatabase db = openDb();
+        QSqlQuery qry(db);
+        qry.prepare(qry_text);
 
-    closeDb(db);
+        bool success;
+        success = qry.exec();
+
+        if (qry.first())
+        {
+            row_count = qry.value(0).toInt();
+        }
+
+        qry.finish();
+    }
+    closeDb();
     return row_count;
 }
 
@@ -656,34 +666,37 @@ void DbManager::emailEmpty(int slot)
 void DbManager::addUserInteraction(QString action)
 {
 
-    QSqlDatabase db = openDb();
-    QSqlQuery qry(db);
-
-    QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
-    qry.prepare("INSERT INTO clicks (page_info,time) VALUES (:page_info,:time);");
-    qry.bindValue(":page_info", action);
-    qry.bindValue(":time", time);
-
-    bool success;
-    success = qry.exec();
-
-    if (!success)
     {
-        qDebug() << "Failed to write user interaction. error type: " << qry.lastError().type() << "Error message:" << qry.lastError().text();
-        qDebug() << "Error message:" << qry.lastError().text();
-        qDebug() << "Query:" << qry.lastQuery();
+        QSqlDatabase db = openDb();
+        QSqlQuery qry(db);
+
+        QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+        qry.prepare("INSERT INTO clicks (page_info,time) VALUES (:page_info,:time);");
+        qry.bindValue(":page_info", action);
+        qry.bindValue(":time", time);
+
+        bool success;
+        success = qry.exec();
+
+        if (!success)
+        {
+            qDebug() << "Failed to write user interaction. error type: " << qry.lastError().type() << "Error message:" << qry.lastError().text();
+            qDebug() << "Error message:" << qry.lastError().text();
+            qDebug() << "Query:" << qry.lastQuery();
+        }
+        qry.finish();
     }
-    closeDb(db);
+    closeDb();
 }
 
 bool DbManager::getRecentTransactions(QString values[][5], int count, int *count_retreived)
 {
     // get number of most recent transactions
 
-    QSqlDatabase db = openDb();
-    QSqlQuery qry(db);
-    // bool is_enabled;
     {
+        QSqlDatabase db = openDb();
+        QSqlQuery qry(db);
+        // bool is_enabled;
         // std::string sql_statement =  "SELECT id,end_time,quantity_dispensed,price,product FROM transactions ORDER BY id DESC LIMIT " + to_string(count);
         // qry.prepare(sql_statement.c_str());
         // qry.prepare(sql_statement.c_str());
@@ -714,20 +727,21 @@ bool DbManager::getRecentTransactions(QString values[][5], int count, int *count
             i++;
             *count_retreived = i;
         }
+        qry.finish();
     }
-    closeDb(db);
+    closeDb();
     return true;
 }
 
 void DbManager::printerStatus(bool *isOnline, bool *hasPaper)
 {
 
-    QSqlDatabase db = openDb();
-    QSqlQuery qry(db);
-    // bool is_online = false;
-    // bool has_paper = false;
-
     {
+        QSqlDatabase db = openDb();
+        QSqlQuery qry(db);
+        // bool is_online = false;
+        // bool has_paper = false;
+
         qry.prepare("SELECT receipt_printer_is_online,receipt_printer_has_paper FROM machine");
         qry.exec();
 
@@ -736,6 +750,7 @@ void DbManager::printerStatus(bool *isOnline, bool *hasPaper)
             *isOnline = (qry.value(0).toInt() == 1);
             *hasPaper = (qry.value(1).toInt() == 1);
         }
-        closeDb(db);
+        qry.finish();
     }
+    closeDb();
 }

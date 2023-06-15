@@ -95,8 +95,9 @@ page_help->pushButton_to_idle,<-back
 page_help->label_keyboardInfo,Provide maintainer or administrator password, followed by "Done". 
 
 # page_transactions
-page_transactions->pushButton_back,Print Selected Receipt
-page_transactions->pushButton_print,<-back
+page_transactions->pushButton_back,<-back
+page_transactions->pushButton_print,Print Selected Receipt
+page_transactions->label_title,Most Recent Transactions
 
 # page_sendFeedback
 page_sendFeedback->pushButton_previous_page,<-back

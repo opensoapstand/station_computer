@@ -41,7 +41,7 @@ void DbManager::setPath(QString path)
 
 void DbManager::closeDb()
 {
-    qDebug() << "close db";
+    qDebug() << "Close db";
     if (true)
     // if (db.isOpen())
     {
@@ -61,11 +61,12 @@ void DbManager::closeDb()
     {
         QSqlDatabase::removeDatabase("qt_sql_ui_connection");
     }
-    qDebug() << "Db close done.";
+    // qDebug() << "Db close done.";
 }
 
 QSqlDatabase DbManager::openDb()
 {
+    qDebug() << "Open db";
     QSqlDatabase m_db = QSqlDatabase::addDatabase("QSQLITE", "qt_sql_ui_connection");
     QString p = DB_PATH;
     if (m_db.isOpen())
@@ -85,16 +86,10 @@ QSqlDatabase DbManager::openDb()
     catch (const QSqlError &error)
     {
         qDebug() << "Database error: " << error.text();
-        // qDebug() << "db init2";
     }
 
-    // m_db.setDatabaseName("lodelodelode");
-
     int attempts = 10;
-    // qDebug() << "db init3";
-
     // QSqlDatabase tmp  = QSqlDatabase::addDatabase("QSQLITE");
-
     // if (tmp.isOpen())
     // {
     //     usleep(100000);
@@ -105,30 +100,21 @@ QSqlDatabase DbManager::openDb()
     //     qDebug() << "m_db was already open. Closed it first.";
     // }
 
-    // qDebug() << "db init1";
     if (m_db.connectionName().isEmpty())
     {
-        qDebug() << "not empty";
-        // qDebug() << "connectionname is empty-->";
+        qDebug() << "Database name was not empty.";
         // m_db = QSqlDatabase::addDatabase("QSQLITE");
         m_db.setDatabaseName(DB_PATH);
-        // qDebug() << "m_db set connectionName";
-    }
-    else
-    {
-        qDebug() << "m_db connectionName is NOT EMPTY";
     }
 
-    // qDebug() << "db init2";
     if (!m_db.open())
     {
         qDebug() << "Error: connection with database failed";
     }
     else
     {
-        qDebug() << "Database: connection ok";
+        // qDebug() << "Database: connection ok";
     }
-    // qDebug() << "db init3";
 
     bool isLocked = true;
     while (isLocked)
@@ -138,14 +124,17 @@ QSqlDatabase DbManager::openDb()
         {
             q.exec("COMMIT"); // releases the lock immediately
             isLocked = false; // db is not locked
+
+            if (isLocked){
+
+                qDebug() << "PROGRAM HALTED: Database is locked. Wait until unlocked. It's probably opened, close the db and the program will continue.";
+            }
         }
         else
         {
-            qDebug() << "Database is locked. Wait until unlocked";
             usleep(250000);
         }
     }
-    // qDebug() << "db init ok";
     return m_db;
 }
 
@@ -700,7 +689,7 @@ bool DbManager::getRecentTransactions(QString values[][5], int count, int *count
                 {
                     values[i][j] = qry.value(j).toString();
                 }
-                qDebug() << "db bdafes: " << i << " : " << values[i][j];
+                // qDebug() << "db bdafes: " << i << " : " << values[i][j];
             }
             i++;
             *count_retreived = i;

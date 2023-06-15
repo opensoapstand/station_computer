@@ -95,7 +95,7 @@ void page_idle::showEvent(QShowEvent *event)
     loadDynamicContent();
     thisMachine.setRole(UserRole::user);
 
-    setSelectedProduct(0);
+    setSelectedProduct(1); // default selected product is necessary to deal with things if no product is chosen yet e.g. show transaction history
 
 #ifndef PLAY_VIDEO
     setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);

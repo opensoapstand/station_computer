@@ -379,17 +379,106 @@ bool pcb::define_pcb_version(void)
                 uint8_t temperature_msbc;
                 temperature_msb = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x01);
                 temperature_lsb = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x02);
-                temperature_msb3 = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x03);
-                temperature_msb4 = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x04);
-                temperature_msb5 = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x05);
-                temperature_msb6 = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x06);
-                temperature_msb7 = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x07);
-                temperature_msb8 = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x08);
-                temperature_msb9 = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x09);
-                temperature_msba = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x0A);
-                temperature_msbb = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x0B);
-                temperature_msbc = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x0C);
-    
+        
+    ///
+    // Get I2C device, MCP9808 I2C address is 0x18(24)
+    int file;
+    char *bus = "/dev/i2c-1";
+    file = open(bus, O_RDWR);
+	ioctl(file, I2C_SLAVE, 0x18);
+
+	// Select configuration register(0x01)
+	// Continuous conversion mode, Power-up default(0x00, 0x00)
+	char config[3] = {0};
+	config[0] = 0x01;
+	config[1] = 0x00;
+	config[2] = 0x00;
+	write(file, config, 3);
+	// Select resolution rgister(0x08)
+	// Resolution = +0.0625 / C(0x03)
+	config[0] = 0x08;
+	config[1] = 0x03;
+	write(file, config, 2);
+	sleep(1);
+
+	// Read 2 bytes of data from register(0x05)
+	// temp msb, temp lsb
+	char reg[1] = {0x05};
+	write(file, reg, 1);
+	char data[2] = {0};
+	if(read(file, data, 2) != 2)
+	{
+		printf("Error : Input/Output error \n");
+	}
+	else
+	{
+		// Convert the data to 13-bits
+		int temp = ((data[0] & 0x1F) * 256 + data[1]);
+		if(temp > 4095)
+		{
+			temp -= 8192;
+		}
+		float cTemp = temp * 0.0625;
+		float fTemp = cTemp * 1.8 + 32;
+
+		// Output data to screen
+		printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+        	printf("Temperature in Celsius is : %.2f C \n", cTemp);
+		printf("Temperature in Fahrenheit is : %.2f F \n", fTemp);
+
+
+	}
     //double temperature = calculateTemperature(temperature_msb, temperature_lsb);
     
    //  debugOutput::sendMessage("temperaturetest3333333333333------------------------------------", temperature_msb);
@@ -398,16 +487,7 @@ bool pcb::define_pcb_version(void)
     //debugOutput::sendMessage("temperaturetest------------------------------------",  static_cast<MESSAGE_LEVEL>(temperature_msb));
     std::cout << "Temperature LSB: " << static_cast<int>(temperature_lsb) << std::endl;
     std::cout << "Temperature MSB: " << static_cast<int>(temperature_msb) << std::endl;
-    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msb3) << std::endl;
-    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msb4) << std::endl;
-    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msb5) << std::endl;
-    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msb6) << std::endl;
-    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msb7) << std::endl;
-    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msb8) << std::endl;
-    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msb9) << std::endl;
-    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msba) << std::endl;
-    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msbb) << std::endl;
-    std::cout << "Temperature MSB: " << static_cast<int>(temperature_msbc) << std::endl;
+
     debugOutput::sendMessage("temperature= " + std::to_string(temperature_msb9), MSG_INFO);
 
     

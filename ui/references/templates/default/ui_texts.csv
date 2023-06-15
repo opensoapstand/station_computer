@@ -1,13 +1,16 @@
 # Display texts. 
 # Default template. 
 # Non default templates can be put in their template folder with the same name. Object names not found in the file in the template folder will be taken from the default template file
-# PAGE->OBJECTNAME,mytext
-# PAGE = QT page name
-# OBJECTNAME = QWidget (QLabel or QPushButton)
-# , = separator between name and text
-# mytext = custom text to be displayed on screen
-# template comment example (needs to start with a #)
 
+########################################## example ##############################
+# PAGE->OBJECTNAME,mytext
+#    PAGE = QT page name
+#    OBJECTNAME = QWidget (QLabel or QPushButton)
+#    , = separator between name and text
+#    mytext = custom text to be displayed on screen
+#################################################################################
+
+# comment example (needs to start with a #)
 # empty lines are also permitted
 
 #page_init
@@ -20,14 +23,22 @@ page_idle->label_welcome_message,Refill soap here!<br>Tap screen to start
 page_idle->label_printer_status->offline,Assistance needed <br>Receipt Printer offline.
 page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer empty or improperly loaded.
 
+#page_idle_products
+
+#tap here to refill your soap
+
+page_idle_products->label_pick_soap,Quick and easy soap refill,<br>just a tap away.
+page_idle_products->printer_status_label->assistance_printer_offline,Assistance needed<br>Receipt Printer offline.
+page_idle_products->printer_status_label->empty_improperly_loaded,Assistance needed<br>Receipt printer empty or improperly loaded.
+
 #page_select_product
 page_select_product->label_pick_soap,Pick your soap
 page_select_product->pushButton_to_idle,<-back
 page_select_product->no_text,
-page_select_product->empty,empty
-page_select_product->almost_empty,almost-empty
-page_select_product->sold_out,sold-out
-page_select_product->assistance,assistance
+page_select_product->empty,Empty
+page_select_product->almost_empty,Almost<br>empty
+page_select_product->sold_out,Sold<br>out
+page_select_product->assistance,Needs<br>assistance
 page_select_product->coming_soon,Coming<br>soon
 page_select_product->default,. . .
 page_select_product->available,
@@ -39,7 +50,7 @@ page_product->pushButton_continue,Continue
 page_product->custom_volume,Custom Volume
 
 # page_product_overview
-page_product_overview->pushButton_select_product_page,<- Back
+page_product_overview->pushButton_select_product_page,<- back
 page_product_overview->label_discount_tag,Discount
 page_product_overview->pushButton_continue,Continue
 page_product_overview->label_total,Total
@@ -81,7 +92,7 @@ page_help->pushButton_to_transactions,Transaction History ->
 page_help->pushButton_to_maintenance,Settings
 page_help->pushButton_to_feedback,Contact Us
 page_help->pushButton_to_idle,<-back
-page_help->label_keyboardInfo,Enter password followed by the "Done" key to enter maintenance mode
+page_help->label_keyboardInfo,Provide maintainer or administrator password, followed by "Done". 
 
 # page_transactions
 page_transactions->pushButton_back,Print Selected Receipt
@@ -110,18 +121,94 @@ page_qr_payment->label_steps,<style>        li:{margin-top:10px; margin-left: 5p
 page_qr_payment->label_processing,it can take a few moments for the station to<br>continue after your payment is confirmed
 page_qr_payment->label_title->almost_there,almost there
 page_qr_payment->pushButton_previous_page,<-back
+page_qr_payment->order_drink_amount, $%1
+page_qr_payment->order_total_amount, Total: $%1
+page_qr_payment->msgBox_cancel->default,<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>
+page_qr_payment->msgBox_refund->default,<p align=center><br><br>Are you sure you want to cancel this order?<br><br>The QR code won't be valid anymore if this order is cancelled.<br><br>In case a payment was made with an invalid QR code or cancelled order, a refund will be issued within 24-48 hours. <br></p>
 
-# page_error_wifi (no csv)
+
+# page_error_wifi
+
+page_error_wifi->label_oops,oops..
+page_error_wifi->label_error_occured,AN ERROR HAS OCCURED
+page_error_wifi->label_check_back,Please check back soon
 
 #page maintenance
-page_maintenance->product_overlay_labels[i]->almost_empty,Almost Empty
-page_maintenance->product_overlay_labels[i]->coming_soon,Comming soon
+page_maintenance->product_overlay_labels->auto_sold_out,Auto Sold Out
+page_maintenance->product_overlay_labels->almost_empty,Almost Empty
+page_maintenance->product_overlay_labels->assistance_needed,Assistance Needed
+page_maintenance->product_overlay_labels->coming_soon,Coming soon
+page_maintenance->product_overlay_labels->sold_out,Sold Out
+page_maintenance->label_title_maintenance_mode,Maintenance mode
+page_maintenance->pushButton_to_previous_page,<-back
+page_maintenance->pushButton_general_settings,General Settings
+page_maintenance->label_product1_position,P1
+page_maintenance->label_product2_position,P2
+page_maintenance->label_product3_position,P3
+page_maintenance->label_product4_position,P4
 
-#page_idle_products
 
-page_idle_products->label_pick_soap,Discover how to<br> refill soap here!
-page_idle_products->printer_status_label->assistance_printer_offline,Assistance needed<br>Receipt Printer offline.
-page_idle_products->printer_status_label->empty_improperly_loaded,Assistance needed<br>Receipt printer empty or improperly loaded.
+
+# page_tap_payment
+page_tap_payment->pushButton_previous_page,<-back
+page_tap_payment->label_title->processing,Processing Payment
+page_tap_payment->msgBox_cancel,<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>
+page_tap_payment->preauthLabel,You are being pre-authorized for maximum volume %1 with amount of
+
+#page_maintenance_dispenser
+page_maintenance_dispenser->label_calibration_instructions,Flowsensor calibration instructions:<br>1.Enable the pump<br>2.Take a measuring cup and dispense until the 1liter mark<br>3.Check the calibration value<br>4.Update the calibration value if different
+page_maintenance_dispenser->pushButton_enable_pump->enable_pump,ENABLE PUMP
+page_maintenance_dispenser->pushButton_set_restock_volume,Define restock volume.
+page_maintenance_dispenser->pushButton_update_portal,Update Changes to Portal
+page_maintenance_dispenser->pushButton_keypad_cancel,CANCEL
+page_maintenance_dispenser->pushButton_keypad_done,DONE
+page_maintenance_dispenser->pushButton_enable_pump->disable_pump,DISABLE PUMP
+page_maintenance_dispenser->pushButton_soldOut->unavailable,Make\nunavailable
+page_maintenance_dispenser->pushButton_soldOut->available,Make\navailable
+page_maintenance_dispenser->label_enabled_status->pump_ready,Manual Pump ready. Press dispense button.
+page_maintenance_dispenser->label_enabled_status->pump_off,Pump manual mode OFF.
+page_maintenance_dispenser->label_action_feedback->success,Refill Succesfull
+page_maintenance_dispenser->label_action_feedback->error,Refill ERROR
+page_maintenance_dispenser->label_title->small,Price Small:
+page_maintenance_dispenser->label_title->medium,Price Medium:
+page_maintenance_dispenser->label_title->adjust_volume,Adjust the remaining volume
+page_maintenance_dispenser->label_title->full_button,Full Volume button clicked
+page_maintenance_dispenser->label_action_feedback->portal_success,Portal Update Succesfull
+
+
+#page_maintenance_general
+
+#page_maintenance_general->pushButton_back->enable_pump,ENABLE PUMP
+page_maintenance_general->pushButton_back,⬅ back
+page_maintenance_general->label_connectivity,connectivity
+page_maintenance_general->pushButton_wifi_networks,Display Wifi networks
+page_maintenance_general->pushButton_network_status,Check Network status
+page_maintenance_general->pushButton_rtunnel_restart,Reset Backend Connection
+page_maintenance_general->label_receipt_printer,Receipt Printer
+page_maintenance_general->pushButton_printer_check_status,Check Status
+page_maintenance_general->pushButton_printer_test_print,Test Print
+page_maintenance_general->pushButton_minimize,Minimize Soapstand App
+page_maintenance_general->pushButton_restart_electronics,Restart Soapstand App (ui+fsm)
+page_maintenance_general->pushButton_restart_UI,Restart UI only
+page_maintenance_general->pushButton_reboot,Restart Computer
+page_maintenance_general->pushButton_shutdown,Shut down\n(unplugging power is ok too)
+page_maintenance_general->pushButton_reboot,Minimize Soapstand App
+page_maintenance_general->label_feedback,Feedback
+page_maintenance_general->label_status_feedback,Command Feedback
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
 
 
 

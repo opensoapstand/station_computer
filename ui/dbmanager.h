@@ -8,90 +8,35 @@ class DbManager
 public:
     DbManager(const QString &path);
     ~DbManager();
-    void closeDB();
+    void closeDb();
+
+    void setPath(QString path);
+    void openDb();
+
     bool isDatabaseLocked(const QSqlDatabase &db);
 
+    bool executeQuery(QString sql);
+
+    bool updateTableMachineWithInt(QString column, int value);
+    bool updateTableMachineWithDouble(QString column, double value, int precision);
+    bool updateTableMachineWithText(QString column, QString value);
+
+    bool updateTableProductsWithText(int slot, QString column, QString value);
+    bool updateTableProductsWithInt(int slot, QString column, int value);
+    bool updateTableProductsWithDouble(int slot, QString column, double value, int precision);
+
     bool addPageClick(const QString &page);
-    QString getProductName(int slot);
-    double getProductPrice(int slot, char size);
-    // double getProductTargetVolume(int slot);
-    double getProductVolumePerTick(int slot);
-    // bool remainingVolumeIsBiggerThanLargestFixedSize(int slot);
+    void emailEmpty(int slot);
+    uint32_t getNumberOfRows(QString table);
 
     bool getRecentTransactions(QString values[][5], int count, int *count_retreived);
-    bool hasReceiptPrinter();
-    void printerStatus(bool *isOnline, bool *hasPaper);
-    bool showTransactions();
-    QString getProductReceiptName(int slot);
-    QString getPaymentMethod(int slot);
-    double getProductVolume(int slot, char ml);
-    QString getUnits(int slot);
-    QString getMaintenanceAdminPassword();
-    QString getCustomerId();
-    QString getHelpPageHtmlText();
-    QString getSizeSmall(int slot);
-    QString getSizeMedium(int slot);
-    QString getSizeLarge(int slot);
-    // QString getPriceSmall(int slot);
-    // QString getPriceMedium(int slot);
-    // QString getPriceLarge(int slot);
+    void printerStatus(bool *isOnline, bool *hasPaper); // do not erase
 
-    QString getIdlePageType();
+    QString getPaymentMethod(int slot); // do not erase yet (wait for ash)
+    // void setPaymentToQR();              // ASh to change.
 
-    double getFullProduct(int slot);
-    int getTotalTransactions();
-    int getNumberOfProducts();
-    double getVolumeRemaining(int slot);
-    double getTotalDispensed(int slot);
-    double getVolumeDispensedSinceRestock(int slot);
-    QString getLastRestockDate(int slot);
-    bool restockProduct(int slot);
-    bool sellout(int slot);
-    bool unsellout(int slot);
-    int getLastTransactionIdFromDb();
-    
-    double getTemperature();
-    int getPWM(int slot);
-    int getDispenseButtonCount();
-    double getBuffer(int slot);
-    QString getPLU(int slot, char size);
-    QString getMachineID();
-    QString getAwsProductId(int slot);
-    int getSlotEnabled(int slot);
-    bool setVolumeRemaining(int slot, double volumeMl);
-    QString getStatusText(int slot);
-    // bool setStatusText(int slot, QString text);
-    bool updateSlotAvailability(int slot, int isEnabled, QString status_text);
-    
+    // bool updateSlotAvailability(int slot, int isEnabled, QString status_text);
     void addUserInteraction(QString action);
-
-    uint32_t getNumberOfRows(QString table);
-    bool initialize(const QString &path);
-
-    bool updatePaymentsDb(QString date, QString time, QString txnType, QString amount, QString cardNo, QString refNo, QString authNo, QString cardType, QString status, QString isoCode, QString hostCode, QString tvr);
-    // bool updatePriceSmall(int slot, double new_price);
-    // bool updatePriceLarge(int slot, double new_price);
-    bool updatePrice(int slot, int size, double new_price);
-    bool getCouponsEnabled();
-    bool getEmptyContainerDetectionEnabled();
-    bool setEmptyContainerDetectionEnabled(int isEnabled);
-    bool getPumpRampingEnabled();
-    bool setPumpRampingEnabled(int isEnabled);
-    void getCustomDiscountProperties(int slot, bool *isEnabled, double *volumeDiscount, double *pricePerLiterDiscount);
-
-    // bool updateTargetVolume_s(int slot, double new_volume);
-    // bool updateTargetVolume_l(int slot, double new_volume);
-    bool updateTargetVolume(int slot, int size, double new_volume);
-    bool updateVolumePerTick(int slot, double new_volume_per_tick);
-    bool updateFullVolume(int slot, double new_full_volume);
-    bool updatePWM(int slot, int new_pwm);
-    bool updateBuffer(int slot, double new_buffer);
-    bool updatePluSmall(int slot, QString new_plu);
-    bool updatePluLarge(int slot, QString new_plu);
-    QString getProductType(int slot);
-    QString getProductDrinkfillSerial(int slot);
-    // void getProductProperties(int slot, QString*name, QString *description, QString *features,  QString *ingredients);
-    void getProductProperties(int slot, QString *product_id, bool *isSizeEnabled);
     void getAllProductProperties(int slot,
                                  QString *productId,
                                  QString *soapstand_product_serial,
@@ -114,11 +59,40 @@ public:
                                  double *size_custom_discount,
                                  double *price_custom_discount,
                                  bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs);
-    QString getTemplateName();
-    void updateTapToQR();
+
+    void getAllMachineProperties(QString *machine_id,
+                                 QString *soapstand_customer_id,
+                                 QString *ttttemplate,
+                                 QString *location,
+                                 QString *controller_type,
+                                 QString *controller_id,
+                                 QString *screen_type,
+                                 QString *screen_id,
+                                 int *has_receipt_printer,
+                                 int *receipt_printer_is_online,
+                                 int *receipt_printer_has_paper,
+                                 int *has_tap_payment,
+                                 QString *hardware_version,
+                                 QString *software_version,
+                                 int *aws_port,
+
+                                 int *coupons_enabled,
+                                 int *has_empty_detection,
+                                 int *enable_pump_ramping,
+                                 int *enable_pump_reversal,
+                                 int *dispense_buttons_count,
+                                 QString *maintenance_pwd,
+                                 int *show_transactions,
+                                 QString *help_text_html,
+                                 QString *idle_page_type,
+                                 QString *admin_pwd,
+
+                                 QString *pump_id_slots,
+                                 int *is_enabled_slots,
+                                 QString *status_text_slots);
 
 private:
-    void emailEmpty(int slot);
+    QString m_dbPath;
     QSqlDatabase m_db;
 };
 

@@ -102,6 +102,7 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
     ui->pushButton_problems->setProperty("class", "normal");
+    ui->label_volume_dispensed->setProperty("class", "normal");
     ui->pushButton_problems->setStyleSheet(styleSheet);
     ui->label_volume_dispensed->setProperty("class", "normal");
     ui->label_finishTransactionMessage->setStyleSheet(styleSheet);
@@ -130,12 +131,8 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     previousDispenseStatus = "NO STATE";
 
-    qDebug() << "db check dispense buttons count:";
-    DbManager db(DB_PATH);
-    int button_count = db.getDispenseButtonCount();
-    db.closeDB();
 
-    if (button_count == 1)
+    if (p_page_idle->thisMachine.getDispensersCount() == 1)
     {
         // single spout
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
@@ -148,7 +145,10 @@ void page_dispenser::showEvent(QShowEvent *event)
     p_page_idle->addCompanyLogoToLabel(ui->label_logo);
     ui->label_logo->hide();
 
-    p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
+    p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
+
+    p_page_idle->addPictureToLabel(ui->fill_animation_label, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_FILL_ANIMATION));
+    
 
     ui->pushButton_abort->show();
     ui->label_press->show();
@@ -419,14 +419,14 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
     p_page_idle->selectedProduct->setVolumeDispensedMl(dispensed);
 
     // volumeDispensed = dispensed;
-    qDebug() << "Signal: dispensed " << dispensed << " of " << p_page_idle->selectedProduct->getVolume();
+    qDebug() << "Signal: dispensed " << dispensed << " of " << p_page_idle->selectedProduct->getVolumeOfSelectedSize();
 
     if (p_page_idle->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
     {
 
         updatelabel_volume_dispensed_ml(p_page_idle->selectedProduct->getVolumeDispensedMl());
 
-        double percentage = p_page_idle->selectedProduct->getVolumeDispensedMl() / (p_page_idle->selectedProduct->getVolume()) * 100;
+        double percentage = p_page_idle->selectedProduct->getVolumeDispensedMl() / (p_page_idle->selectedProduct->getVolumeOfSelectedSize()) * 100;
         if (isFull)
         {
             percentage = 100;
@@ -465,7 +465,7 @@ void page_dispenser::fsmReceiveTargetVolumeReached()
     {
         qDebug() << "Target reached from controller.";
         this->isDispensing = false;
-        updateVolumeDisplayed(p_page_idle->selectedProduct->getVolume(), true); // make sure the fill bottle graphics are completed
+        updateVolumeDisplayed(p_page_idle->selectedProduct->getVolumeOfSelectedSize(), true); // make sure the fill bottle graphics are completed
         transactionLogging += "\n 8: Target Reached - True";
         dispensing_end_admin();
     }
@@ -520,12 +520,12 @@ void page_dispenser::on_pushButton_abort_clicked()
         if (payment == "qr" || payment == "tapTcp")
         {
             QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "qr_tap";
-            p_page_idle->setTextToOjbect(msgBox_abort, p_page_idle->getTemplateText(searchString));
+            p_page_idle->setTextToObject(msgBox_abort, p_page_idle->getTemplateText(searchString));
         }
         else
         {
             QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "default";
-            p_page_idle->setTextToOjbect(msgBox_abort, p_page_idle->getTemplateText(searchString));
+            p_page_idle->setTextToObject(msgBox_abort, p_page_idle->getTemplateText(searchString));
         }
 
         p_page_idle->addCssClassToObject(msgBox_abort, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);
@@ -567,12 +567,12 @@ void page_dispenser::on_pushButton_problems_clicked()
     if (payment == "qr" || payment == "tapTcp")
     {
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";
-        p_page_idle->setTextToOjbect(msgBox_problems, p_page_idle->getTemplateText(searchString));
+        p_page_idle->setTextToObject(msgBox_problems, p_page_idle->getTemplateText(searchString));
     }
     else
     {
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "default";
-        p_page_idle->setTextToOjbect(msgBox_problems, p_page_idle->getTemplateText(searchString));
+        p_page_idle->setTextToObject(msgBox_problems, p_page_idle->getTemplateText(searchString));
     }
 
     p_page_idle->addCssClassToObject(msgBox_problems, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);

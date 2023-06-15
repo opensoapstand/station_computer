@@ -59,7 +59,7 @@ public:
     void reset_all_dispense_stats();
 
 private slots:
-    void refreshLabels();
+    void updateProductLabelValues(bool reloadFromDb);
     void on_pushButton_to_previous_page_clicked();
     void on_image_clicked();
     void on_pushButton_price_small_clicked();
@@ -69,6 +69,11 @@ private slots:
     void on_pushButton_target_volume_small_clicked();
     void on_pushButton_target_volume_medium_clicked();
     void on_pushButton_target_volume_large_clicked();
+    void on_pushButton_target_volume_custom_clicked();
+    void on_pushButton_plu_small_clicked();
+    void on_pushButton_plu_medium_clicked();
+    void on_pushButton_plu_large_clicked();
+    void on_pushButton_plu_custom_clicked();
     void on_pushButton_volume_per_tick_clicked();
     void on_pushButton_restock_clicked();
     void on_pushButton_soldOut_clicked();
@@ -76,33 +81,22 @@ private slots:
     void onMaintainProductPageTimeoutTick();
     void onDispenseTimerTick();
     void on_pushButton_set_volume_remaining_clicked();
-    void on_dispensedButton_clicked();
     void on_pushButton_setting_temperature_clicked();
     void on_pushButton_setting_speed_pwm_clicked();
-    void on_pushButton_pump_clicked();
-    void on_button1_clicked();
-    void on_button2_clicked();
-    void on_button3_clicked();
-    void on_button4_clicked();
-    void on_button5_clicked();
-    void on_button6_clicked();
-    void on_button7_clicked();
-    void on_button8_clicked();
-    void on_button9_clicked();
-    void on_button0_clicked();
+    void on_pushButton_enable_pump_clicked();
     void on_buttonBack_clicked();
-    void on_buttonPoint_clicked();
-    void on_buttonDone_clicked();
-    void on_buttonCancel_clicked();
+    void on_buttonPeriod_clicked();
+    void on_pushButton_done_clicked();
+    void on_pushButton_cancel_clicked();
 
     void on_pushButton_auto_dispense_large_clicked();
-
     void on_pushButton_auto_dispense_medium_clicked();
-
     void on_pushButton_auto_dispense_small_clicked();
 
     void on_pushButton_update_portal_clicked();
     void buttonGroup_edit_product_Pressed(int buttonId);
+    void buttonGroup_keypad_Pressed(int buttonId);
+    
 
 private:
     void setButtonPressCountLabel(bool init);
@@ -113,7 +107,7 @@ private:
     page_maintenance *p_page_maintenance;
     page_idle *p_page_idle;
 
-    bool pumping = false;
+    bool pump_enabled = false;
 
     int _maintainProductPageTimeoutSec;
     float dispenserEnabledSecs;
@@ -121,7 +115,7 @@ private:
     QTimer *maintainProductPageEndTimer;
     QTimer *dispenseTimer;
 
-    QString text_entered;
+    // QString text_entered;
     // bool price_small;
     // bool price_medium;
     // bool price_large;
@@ -144,7 +138,6 @@ private:
 
     double volume_per_tick_buffer= 0.0;
 
-    void updateValues();
     void sendRestockToCloud();
     void autoDispenseStart(int size);
     void restockTransactionToFile(char *curl_params);

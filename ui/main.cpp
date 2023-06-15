@@ -138,69 +138,75 @@ int main(int argc, char *argv[])
     qDebug() << "Constructor page_maintenance_general";
     page_maintenance_general *p_page_maintenance_general = new page_maintenance_general();
 
-    // TODO: Instantiate a DrinkSelection[] Array
-    // TODO: Create Query to populate DrinkSelection[0-12]
+    p_page_idle->loadDynamicContent();
 
-    // 1. db manager get template
-    // 2. get template files
-    // 3. test files exisitng
-    // 4. set files
-    qDebug() << "db init for template path";
-    DbManager db(DB_PATH);
-    QString template_folder = db.getTemplateName();
-    db.closeDB();
-
-    if (template_folder == "")
-    {
-        template_folder = "default";
-    }
-    qDebug() << "template folder: " << template_folder;
-
-    p_page_idle->setTemplateFolder(TEMPLATES_ROOT_PATH, template_folder);
-    df_util::warnIfPathDoesNotExist(p_page_idle->getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
 
     qDebug() << "Check image paths.... (all paths resolved if nothing shows up).";
-    df_util::warnIfPathDoesNotExist(PAGE_INIT_BACKGROUND_IMAGE_PATH);
-    df_util::warnIfPathDoesNotExist(PAGE_IDLE_BACKGROUND_PATH);
-    df_util::warnIfPathDoesNotExist(PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
-    df_util::warnIfPathDoesNotExist(PAGE_HELP_BACKGROUND_PATH);
-    df_util::warnIfPathDoesNotExist(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
-    df_util::warnIfPathDoesNotExist(PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
-    df_util::warnIfPathDoesNotExist(PAGE_QR_PAY_BACKGROUND_PATH);
-    df_util::warnIfPathDoesNotExist(IMAGE_BUTTON_HELP);
-    df_util::warnIfPathDoesNotExist(PAGE_TAP_PAY);
-    df_util::warnIfPathDoesNotExist(PAGE_MAINTENANCE_BACKGROUND_PATH);
-    df_util::warnIfPathDoesNotExist(PAGE_END_BACKGROUND_PATH);
-    // df_util::warnIfPathDoesNotExist(PAGE_WIFI_ERROR_BACKGROUND_PATH);
-    // df_util::warnIfPathDoesNotExist(BOTTLE_FILL_FOR_ANIMATION_IMAGE_PATH);
-    df_util::warnIfPathDoesNotExist(KEYBOARD_IMAGE_PATH);
-    // df_util::warnIfPathDoesNotExist(FULL_TRANSPARENT_IMAGE_PATH);
+    
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));                       
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_IDLE_PRODUCTS_BACKGROUND_PATH));              
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_END_BACKGROUND_PATH));                        
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_TRANSACTIONS_BACKGROUND_PATH));               
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_SELECT_PRODUCT_BACKGROUND_PATH));             
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_PRODUCT_BACKGROUND_PATH));                    
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_ORDER_OVERVIEW_PATH));                        
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH));      
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH));      
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));                   
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_QR_PAY_BACKGROUND_PATH));                     
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_MAINTENANCE_BACKGROUND_PATH));                
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(ERROR_MESSAGE_PATH));                              
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_TAP_PAY));                                    
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_TAP_PAY_SUCCESS));                            
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_TAP_PAY_FAIL));                               
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_AUTHORIZE_NOW));                              
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_TAP_GENERIC));                                
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_SEND_FEEDBACK_PATH));                         
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_INIT_BACKGROUND_IMAGE_PATH));                 
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(IMAGE_BUTTON_HELP));                               
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(THANK_YOU_FOR_YOUR_FEEDBACK));                     
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_ERROR_BACKGROUND_PATH));                      
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(KEYBOARD_IMAGE_PATH));                             
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(MACHINE_LOGO_PATH));                               
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_FILL_ANIMATION));                    
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(ICON_TYPE_CONCENTRATE_PATH));                      
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(ICON_TYPE_ALL_PURPOSE_PATH));                      
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(ICON_TYPE_DISH_PATH));                             
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(ICON_TYPE_HAND_PATH));                             
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(ICON_TYPE_LAUNDRY_PATH));                          
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(ICON_TYPE_KOMBUCHA_PATH));                         
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(ICON_TYPE_MOCKTAIL_PATH));                         
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(ICON_TYPE_JUICE_PATH));                            
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(ICON_TYPE_DEFAULT));                               
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_HELP_BACKGROUND_GENERIC_WHITE));              
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_HELP_BACKGROUND_PATH));                       
 
     // Page pathing references to function calls.
     p_page_help->setPage(p_page_select_product, p_page_product, p_page_idle, p_page_payment_qr, p_page_transactions, p_page_maintenance, p_page_sendFeedback);
     p_page_transactions->setPage(p_page_idle);
     initPage->setPage(p_page_idle);
     p_page_maintenance_product->setPage(p_page_maintenance, p_page_idle, p_page_idle_products);
-    p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle,p_page_idle_products);
-    p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product,  p_page_maintenance_general, p_page_select_product, p_page_product);
-    p_page_idle->setPage(p_page_select_product, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error );
-    p_page_idle_products->setPage(p_page_idle,  p_page_select_product);
+    p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle, p_page_idle_products);
+    p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product, p_page_maintenance_general, p_page_select_product, p_page_product);
+    p_page_idle->setPage(p_page_select_product, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error);
+    p_page_idle_products->setPage(p_page_idle, p_page_select_product);
     p_page_select_product->setPage(p_page_product, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help);
-    p_page_product->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_help,p_page_product_overview);
+    p_page_product->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_help, p_page_product_overview);
     p_page_payment_qr->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
     p_page_payment_tap->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
-    p_page_dispense->setPage(p_page_payment_qr,p_page_payment_tap, p_page_end, p_page_idle, p_page_sendFeedback);
+    p_page_dispense->setPage(p_page_payment_qr, p_page_payment_tap, p_page_end, p_page_idle, p_page_sendFeedback);
     p_page_product_overview->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap, p_page_help, p_page_product);
     p_page_sendFeedback->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_help, p_page_product, p_page_end);
-    p_page_end->setPage(p_page_dispense, p_page_idle, p_page_payment_qr, p_page_sendFeedback );
+    p_page_end->setPage(p_page_dispense, p_page_idle, p_page_payment_qr, p_page_sendFeedback);
     p_page_wifi_error->setPage(p_page_payment_qr, p_page_end, p_page_idle);
-    
+
     initPage->showFullScreen();
 
     // listen for fsm messages
     DfUiServer dfUiServer;
     dfUiServer.startServer();
- 
+
     QObject::connect(&dfUiServer, &DfUiServer::controllerFinishedAck, p_page_end, &page_end::controllerFinishedTransaction);
     QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_maintenance_general, &page_maintenance_general::printerStatusFeedback);
     QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_idle, &page_idle::printerStatusFeedback);

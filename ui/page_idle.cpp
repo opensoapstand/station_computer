@@ -40,22 +40,25 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     ui->setupUi(this);
 
     ui->pushButton_test->raise();
-    // ui->pushButton_to_select_product_page->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
     ui->pushButton_to_select_product_page->raise();
-
-    // TODO: Hold and pass Product Object
-    selectedProduct = new product();
-    // product *selectedProduct;
 
     idlePageTypeSelectorTimer = new QTimer(this);
     idlePageTypeSelectorTimer->setInterval(1000);
     connect(idlePageTypeSelectorTimer, SIGNAL(timeout()), this, SLOT(onIdlePageTypeSelectorTimerTick()));
+
+    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    {
+        products[slot_index].setSlot(slot_index + 1);
+        products[slot_index].setMachine(&thisMachine);
+    }
+
+    //g_db.setPath(DB_PATH);
 }
 
 /*
  * Navigation to Product item
  */
-void page_idle::setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_wifi_error)
+void page_idle::setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi)
 {
     // Chained to KB Listener
     this->p_pageSelectProduct = p_page_select_product;
@@ -63,9 +66,6 @@ void page_idle::setPage(page_select_product *p_page_select_product, page_mainten
     this->p_page_maintenance_general = pageMaintenanceGeneral;
     this->p_page_idle_products = p_page_idle_products;
     this->p_page_error_wifi = p_page_error_wifi;
-#ifndef PLAY_VIDEO
-        setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
-#endif
 }
 
 // DTOR
@@ -74,22 +74,31 @@ page_idle::~page_idle()
     delete ui;
 }
 
+void page_idle::loadDynamicContent()
+{
+    // load global machine data
+    thisMachine.loadParametersFromDb();
+    // load slot data
+    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    {
+        products[slot_index].loadProductProperties();
+    }
+    loadTextsFromTemplateCsv(); // dynamic content (text by template)
+    loadTextsFromDefaultCsv(); // dynamic styling (css by template)
+}
+
 void page_idle::showEvent(QShowEvent *event)
 {
     registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
+    loadDynamicContent();
+    thisMachine.setRole(UserRole::user);
 
-    // for products.cpp
-    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
-    {
-        products[slot_index].setSlot(slot_index + 1);
-        products[slot_index].loadProductProperties();
-    }
     setSelectedProduct(0);
 
-    // get the texts from csv
-    loadTextsFromTemplateCsv();
-    loadTextsFromDefaultCsv();
+#ifndef PLAY_VIDEO
+    setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
+#endif
 
     QString styleSheet = getCSS(PAGE_IDLE_CSS);
     ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
@@ -97,7 +106,6 @@ void page_idle::showEvent(QShowEvent *event)
     ui->pushButton_test->setStyleSheet(styleSheet);
     ui->label_printer_status->setStyleSheet(styleSheet);
 
-    qDebug() << "open db: payment method";
     setDiscountPercentage(0.0);
     bool needsReceiptPrinter = false;
     for (int slot = 1; slot <= SLOT_COUNT; slot++)
@@ -117,18 +125,6 @@ void page_idle::showEvent(QShowEvent *event)
         // currentProductOrder->setPromoCode("");
     }
 
-    DbManager db(DB_PATH);
-    // call db check if idle or idle_products
-    idle_page_type = db.getIdlePageType();
-    db.closeDB();
-
-    if (idle_page_type == "static_products")
-    {
-        hideCurrentPageAndShowProvided(this->p_page_idle_products);
-    }
-
-    this->lower();
-
     // template text with argument demo
     // QString base_text = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_welcome_message, "testargument" );
     // ui->label_welcome_message->setText(base_text.arg("SoAp")); // will replace %1 character in string by the provide text
@@ -141,7 +137,7 @@ void page_idle::showEvent(QShowEvent *event)
         checkReceiptPrinterStatus();
     }
 
-    QString machine_logo_full_path = getTemplatePathFromName(MACHINE_LOGO_PATH);
+    QString machine_logo_full_path = thisMachine.getTemplatePathFromName(MACHINE_LOGO_PATH);
     addPictureToLabel(ui->drinkfill_logo_label, machine_logo_full_path);
     ui->drinkfill_logo_label->setStyleSheet(styleSheet);
 
@@ -205,12 +201,7 @@ void page_idle::showEvent(QShowEvent *event)
 
 void page_idle::changeToIdleProductsIfSet()
 {
-    DbManager db(DB_PATH);
-    // call db check if idle or idle_products
-    idle_page_type = db.getIdlePageType();
-    db.closeDB();
-
-    if (idle_page_type == "static_products")
+    if (thisMachine.getIdlePageType() == "static_products")
     {
         hideCurrentPageAndShowProvided(this->p_page_idle_products);
     }
@@ -237,11 +228,11 @@ void page_idle::setDiscountPercentage(double percentageFraction)
 void page_idle::registerUserInteraction(QWidget *page)
 {
     QString page_name = page->objectName();
-    qDebug() << "||||||||||||||||||||||||||||||||||||| User entered: " + page_name + " |||||||||||||||||||||||||||||||||||||";
+    qDebug() << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< User entered: " + page_name + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
 
     DbManager db(DB_PATH);
     db.addUserInteraction(page_name);
-    db.closeDB();
+    db.closeDb();
 }
 
 double page_idle::getDiscountPercentage()
@@ -279,23 +270,16 @@ double page_idle::getPriceCorrectedAfterDiscount(double price)
 
 void page_idle::checkReceiptPrinterStatus()
 {
-    qDebug() << "db idle check printer";
-    DbManager db(DB_PATH);
-    bool isPrinterOnline = false;
-    bool hasPrinterPaper = false;
-    bool hasReceiptPrinter = db.hasReceiptPrinter();
-    db.printerStatus(&isPrinterOnline, &hasPrinterPaper);
-    db.closeDB();
 
-    if (hasReceiptPrinter)
+    if (thisMachine.hasReceiptPrinter())
     {
-        qDebug() << "Check receipt printer functionality disabled.";
+        qDebug() << "Check receipt printer functionality.";
         this->p_page_maintenance_general->send_check_printer_status_command();
         ui->pushButton_to_select_product_page->hide(); // when printer needs to be restarted, it can take some time. Make sure nobody presses the button in that interval (to prevent crashes)
     }
     else
     {
-        qDebug() << "Can't check receipt printer. Not enabled in db->machine table";
+        qDebug() << "Receipt printer not enabled in db->machine table";
     }
 }
 
@@ -352,42 +336,11 @@ void page_idle::on_pushButton_test_clicked()
     qDebug() << "test buttonproceeed clicked.. ";
 }
 
-bool page_idle::isEnough(int p)
-{
-    switch (p)
-    {
-    case (1):
-        return p1;
-        break;
-    case (2):
-        return p2;
-        break;
-    case (3):
-        return p3;
-        break;
-    case (4):
-        return p4;
-        break;
-    }
-    return false;
-}
-
 void page_idle::addCompanyLogoToLabel(QLabel *label)
 {
-    qDebug() << "db init company logo";
-    DbManager db(DB_PATH);
-    QString id = db.getCustomerId();
-    db.closeDB();
-    qDebug() << "db closed";
-    if (id.at(0) == 'C')
-    {
-        QString logo_path = QString(CLIENT_LOGO_PATH).arg(id);
-        addPictureToLabel(label, logo_path);
-    }
-    else
-    {
-        qDebug() << "WARNING: invalid customer ID. Should be with a format like C-1, C-374, ... . Provided id: " << id;
-    }
+    QString id = thisMachine.getCustomerId();
+    QString logo_path = QString(CLIENT_LOGO_PATH).arg(id);
+    addPictureToLabel(label, logo_path);
 }
 
 void page_idle::addPictureToButton(QPushButton *button, QString picturePath)
@@ -420,10 +373,10 @@ void page_idle::addPictureToLabel(QLabel *label, QString picturePath)
     }
 }
 
-QString page_idle::getTemplateFolder()
-{
-    return m_templatePath;
-}
+// QString page_idle::getTemplateFolder()
+// {
+//     return m_templatePath;
+// }
 
 void page_idle::addCssClassToObject(QWidget *element, QString classname, QString css_file_name)
 {
@@ -434,7 +387,7 @@ void page_idle::addCssClassToObject(QWidget *element, QString classname, QString
 
 QString page_idle::getCSS(QString cssName)
 {
-    QString cssFilePath = getTemplatePathFromName(cssName);
+    QString cssFilePath = thisMachine.getTemplatePathFromName(cssName);
 
     QFile cssFile(cssFilePath);
     QString styleSheet = "";
@@ -447,35 +400,6 @@ QString page_idle::getCSS(QString cssName)
         qDebug() << "CSS file could not be opened." << cssFilePath;
     }
     return styleSheet;
-}
-
-QString page_idle::getTemplatePathFromName(QString fileName)
-{
-    QString image_path = getTemplateFolder() + fileName;
-
-    if (!df_util::pathExists(image_path))
-    {
-        QString image_default_path = getDefaultTemplatePathFromName(fileName);
-        // qDebug() << "File not found in template folder: " + image_path + ". Default template path: " + image_default_path;
-        if (!df_util::pathExists(image_default_path))
-        {
-            qDebug() << "File not found in template folder and not in default template folder (will use path anyways...): " + image_default_path;
-        }
-        image_path = image_default_path;
-    }
-
-    return image_path;
-}
-void page_idle::setTemplateFolder(QString rootPath, QString templateFolder)
-{
-    m_templatePath = rootPath + templateFolder + "/";
-    qDebug() << "Template path set to: " + m_templatePath;
-}
-
-QString page_idle::getDefaultTemplatePathFromName(QString fileName)
-{
-    QString template_root_path = TEMPLATES_ROOT_PATH;
-    return template_root_path + TEMPLATES_DEFAULT_NAME + "/" + fileName;
 }
 
 void page_idle::pageTransition(QWidget *pageToHide, QWidget *pageToShow)
@@ -491,7 +415,7 @@ void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QStrin
     // on Page: if called from showEvent: will scale to screen
 
     QString image_path = imageName;
-    image_path = getTemplatePathFromName(imageName);
+    image_path = thisMachine.getTemplatePathFromName(imageName);
     setBackgroundPictureToQWidget(p_widget, image_path);
 }
 
@@ -517,13 +441,13 @@ QString page_idle::getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_e
 void page_idle::setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier)
 {
     QString text = getTemplateTextByElementNameAndPageAndIdentifier(p_element, identifier);
-    setTextToOjbect(p_element, text);
+    setTextToObject(p_element, text);
 }
 
 void page_idle::setTemplateTextToObject(QWidget *p_element)
 {
     QString searchString = getTemplateTextByElementNameAndPage(p_element);
-    setTextToOjbect(p_element, searchString);
+    setTextToObject(p_element, searchString);
 }
 
 QString page_idle::getTemplateTextByElementNameAndPage(QWidget *p_element)
@@ -542,7 +466,7 @@ QString page_idle::getTemplateTextByElementNameAndPage(QWidget *p_element)
     return getTemplateText(searchString);
 }
 
-void page_idle::setTextToOjbect(QWidget *p_element, QString text)
+void page_idle::setTextToObject(QWidget *p_element, QString text)
 {
     if (QLabel *label = qobject_cast<QLabel *>(p_element))
     {
@@ -596,20 +520,25 @@ QString page_idle::getTemplateText(QString textName_to_find)
             retval = textName_to_find;
         }
     }
+
+    // \n values in the csv file get automatically escaped. We need to deescape them.
+    retval.replace("\\n", "\n");
+    
     return retval;
 }
 
 void page_idle::loadTextsFromTemplateCsv()
 {
-    QString name = UI_TEXTS_CSV_PATH;
-    QString csv_path = getTemplatePathFromName(name);
+    qDebug()<< "Load dynamic texts from template csv";
+    QString csv_path = thisMachine.getTemplatePathFromName(UI_TEXTS_CSV_PATH);
     loadTextsFromCsv(csv_path, &textNameToTextMap_template);
 }
 
 void page_idle::loadTextsFromDefaultCsv()
 {
+    qDebug()<< "Load dynamic texts from devault csv";
     QString name = UI_TEXTS_CSV_PATH;
-    QString csv_default_template_path = getDefaultTemplatePathFromName(name);
+    QString csv_default_template_path = thisMachine.getDefaultTemplatePathFromName(name);
     loadTextsFromCsv(csv_default_template_path, &textNameToTextMap_default);
 }
 

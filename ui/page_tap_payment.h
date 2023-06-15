@@ -87,7 +87,7 @@ public:
 
     // Database
     void storePaymentEvent(QSqlDatabase db, QString event);
-    QString getPaymentMethodForConstructorTime(uint8_t slot);
+    // QString getPaymentMethodForConstructorTime(uint8_t slot);
 
 
     StateTapPayment state_tap_payment;

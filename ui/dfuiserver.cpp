@@ -84,11 +84,6 @@ void DfUiServer::messageHandlerFinishedSlot()
     startServer(); // task
 }
 
-// void DfUiServer::MMSlot()
-// {
-//     emit MM();
-// }
-
 // This function is called by QTcpServer when a new connection is available.
 void DfUiServer::incomingConnection(qintptr socketDescriptor)
 {
@@ -107,7 +102,7 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
         // this->pauseAccepting(); // controller does not get error when trying to connect
 
 
-        // this turns out to be the most solid solution. Stop the server. Start up again when command finished. 
+        // this turns out to be the most solid solution. Stop the server after every command. Start up again when command finished. 
         closeServer(); // closes server. controller gets error when trying to connect
         
         // following works well, but controller needs a blocking routine to catch feedback. --> should be in different thread --> concurrency problems.

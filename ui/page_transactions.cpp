@@ -27,7 +27,6 @@ page_transactions::page_transactions(QWidget *parent) : QWidget(parent),
         font.setBold(true);
         font.setWeight(75);
 
-        // ui->pushButton_print->setStyleSheet("QPushButton { color:#FFFFFF; background-color: transparent; border: 0px }");
 
         ui->pushButton_print->setFont(font);
         
@@ -71,21 +70,16 @@ void page_transactions::showEvent(QShowEvent *event)
         _idleTimeoutSec = 60;
         populateTransactionsTable();
 
-        qDebug() << "db for receipt printer check";
         QString paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
 
-        DbManager db(DB_PATH);
-        bool hasReceiptPrinter = db.hasReceiptPrinter();
-        db.closeDB();
-
-        if (hasReceiptPrinter)
+        if (p_page_idle->thisMachine.hasReceiptPrinter())
         {
                 ui->pushButton_print->show();
         }
         else
         {
-                ui->pushButton_print->show();
-                // ui->pushButton_print->hide();
+                //ui->pushButton_print->show();
+                ui->pushButton_print->hide();
         }
 }
 
@@ -109,7 +103,7 @@ void page_transactions::populateTransactionsTable()
 
         DbManager db(DB_PATH);
         db.getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
-        db.closeDB();
+        db.closeDb();
         
         transaction_count = retrieved_count;
 

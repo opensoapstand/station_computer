@@ -103,10 +103,7 @@ QByteArray DfUiCommThread::readyRead()
     else if (Data.contains("dispenseupdate|"))
 
     {
-        qDebug() << "dispenseupdatedata received: " << Data;
-        // bool isOnline = Data.at(13) == '1';
-        // bool hasPaper = Data.at(14) == '1';
-        // emit printerStatusSignal(isOnline, hasPaper);
+        // qDebug() << "dispenseupdatedata received: " << Data;
         int first_delim_pos = Data.indexOf('|');
         int second_delim_pos = Data.indexOf('|', first_delim_pos + 1);
         int third_delim_pos = Data.indexOf('|', second_delim_pos + 1);
@@ -120,9 +117,9 @@ QByteArray DfUiCommThread::readyRead()
         double flowrate = third_part.toDouble();
         QString dispenseStatusString = QString::fromUtf8(fourth_part);
 
-        qDebug() << "volume: " << QString::number(volumeDispensed, 'f', 2);
-        qDebug() << "flowrate: " << QString::number(flowrate, 'f', 2);
-        qDebug() << "dispenseStatus: " << dispenseStatusString;
+        // qDebug() << "volume: " << QString::number(volumeDispensed, 'f', 2);
+        // qDebug() << "flowrate: " << QString::number(flowrate, 'f', 2);
+        // qDebug() << "dispenseStatus: " << dispenseStatusString;
         emit updateVolumeSignal(volumeDispensed); // induced crash at cancel dispense.
         emit dispenseRateSignal(flowrate); 
         emit dispenseStatusSignal(dispenseStatusString); 

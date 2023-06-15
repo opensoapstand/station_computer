@@ -27,29 +27,13 @@ extern QString transactionLogging;
 // CTOR
 
 page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(parent),
-                                                      ui(new Ui::page_tap_payment_serial)
+                                                                    ui(new Ui::page_tap_payment_serial)
 {
     // Fullscreen background setup
     ui->setupUi(this);
     qDebug() << "Payment page" << endl;
-    // ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->previousPage_Button->setStyleSheet(
-        "QPushButton {"
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "line-height: 99px;"
-        "text-transform: lowercase;"
-        "color: #003840;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
-    ui->previousPage_Button->setText("<- Back");
-    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->pushButton_payment_bypass->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
+    ui->previousPage_Button->setText("<- Back");
     ui->pushButton_payment_bypass->setEnabled(false);
 
     // Payment Declined
@@ -63,17 +47,17 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->label_title->hide();
 
-   
     DbManager db(DB_PATH);
     if (db.getPaymentMethod(1) == "tapSerial")
     {
         tap_payment = true;
     }
-    db.closeDB();
+    db.closeDb();
     if (tap_payment)
     {
-        while (!tap_init());
 
+        // bring out of constructor time please.
+        // while (!tap_init());
     }
 }
 
@@ -146,14 +130,24 @@ void page_tap_payment_serial::resizeEvent(QResizeEvent *event)
 
 void page_tap_payment_serial::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< Page Enter: Tap Serial Payment >>>>>>>>>";
+
+    QString styleSheet = p_page_idle->getCSS(PAGE_TAP_PAYMENT_SERIAL_CSS);
     
+    ui->previousPage_Button->setStyleSheet(styleSheet);
+    ui->mainPage_Button->setProperty("class", "transparent");
+    ui->pushButton_payment_bypass->setProperty("class", "transparent");
+    ui->mainPage_Button->setStyleSheet(styleSheet);
+    ui->pushButton_payment_bypass->setStyleSheet(styleSheet);
+
+
+    qDebug() << "<<<<<<< Page Enter: Tap Serial Payment >>>>>>>>>";
+
     QWidget::showEvent(event);
     state_payment = s_init;
-    if(p_page_idle->selectedProduct->getPaymentMethod()=="tapSerial"){
+    if (p_page_idle->selectedProduct->getPaymentMethod() == "tapSerial")
+    {
         qDebug() << "Tap initiated";
     }
-    // ui->order_total_amount->show();
     paymentEndTimer = new QTimer(this);
     paymentEndTimer->setInterval(1000);
     connect(paymentEndTimer, SIGNAL(timeout()), this, SLOT(onTimeoutTick()));
@@ -193,8 +187,6 @@ void page_tap_payment_serial::storePaymentEvent(QSqlDatabase db, QString event)
 {
 }
 
-
-
 void page_tap_payment_serial::declineTimer_start()
 {
 }
@@ -210,6 +202,7 @@ bool page_tap_payment_serial::exitConfirm()
 
         msgBox.setText("<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>");
         msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
+        //msgBox.setStyleSheet(styleSheet);
 
         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         int ret = msgBox.exec();
@@ -243,7 +236,6 @@ bool page_tap_payment_serial::exitConfirm()
 void page_tap_payment_serial::on_previousPage_Button_clicked()
 {
     qDebug() << "In previous page button" << endl;
-
 }
 
 void page_tap_payment_serial::on_mainPage_Button_clicked()
@@ -271,7 +263,7 @@ void page_tap_payment_serial::resetPaymentPage()
 /* ----- Payment ----- */
 void page_tap_payment_serial::stayAliveLogon()
 {
-    
+
     cout << "Getting Lan Info" << endl;
     pktToSend = paymentPacket.ppPosStatusCheckPkt(StatusType::GetLanInfo);
     if (sendToUX410())
@@ -282,8 +274,6 @@ void page_tap_payment_serial::stayAliveLogon()
     pktResponded.clear();
 
     com.flushSerial();
-    
-    
 }
 
 void page_tap_payment_serial::batchClose()
@@ -330,16 +320,21 @@ bool page_tap_payment_serial::tap_init()
     int paymentConnectionFailed = 0;
     while (!paymentConnected)
     {
-        
+
         paymentConnected = com.page_init();
         sleep(1);
-        paymentConnectionFailed+=1;
-        if(paymentConnectionFailed==50){
-            DbManager db3(DB_PATH);
-            db3.updateTapToQR();
-            QString payment_method = db3.getPaymentMethod(1);
-            qDebug() << "Payment method" << payment_method;
-            db3.closeDB();
+        paymentConnectionFailed += 1;
+        if (paymentConnectionFailed == 50)
+        {
+            // DbManager db3(DB_PATH);
+            // db3.setPaymentToQR();
+            // QString payment_method = db3.getPaymentMethod(1);
+            // qDebug() << "Payment method" << payment_method;
+            // db3.closeDb();
+            for (int slotIndex = 0; slotIndex < SLOT_COUNT; slotIndex++)
+            {
+                p_page_idle->products[slotIndex].setPaymentMethod("qr")
+            }
             qDebug() << "Change the db to QR";
             exit(1);
         }
@@ -348,10 +343,9 @@ bool page_tap_payment_serial::tap_init()
     // sleep(35);
 
     cout << "_----_-----__------_-----";
-   
+
     // stayAliveLogon();
-    
-    
+
     /*Cancel any previous payment*/
     // cout << "Sending Cancel payment packet..." << endl;
     // pktToSend = paymentPacket.purchaseCancelPacket();
@@ -368,7 +362,6 @@ bool page_tap_payment_serial::tap_init()
     // }
     // com.flushSerial();
     // cout << "-----------------------------------------------" << endl;
-
 
     /*batch close packet to send*/
     // cout << "Sending Batch close packet..." << endl;
@@ -495,13 +488,13 @@ void page_tap_payment_serial::readTimer_loop()
     pktToSend = paymentPacket.purchasePacket((QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2)).QString::toStdString());
     cout << "to PAY: " << ((QString::number(p_page_idle->currentProductOrder->getSelectedPriceCorrected(), 'f', 2)).QString::toStdString());
     response = getResponse();
-    //qDebug() << "In read timer";
+    // qDebug() << "In read timer";
 
     if (sendToUX410())
-    {   
-        //qDebug() << "After send";
+    {
+        // qDebug() << "After send";
         waitForUX410();
-        //qDebug() << "After wait";
+        // qDebug() << "After wait";
         while (!response)
         {
             response = getResponse();
@@ -531,7 +524,7 @@ void page_tap_payment_serial::readTimer_loop()
                     com.sendAck();
                     if (pktResponded[19] == 0x41)
                     {
-                         // Host Response 41 = A "Approved"
+                        // Host Response 41 = A "Approved"
                         purchaseEnable = true;
                         approved = true;
                         cout << "Approval Packet 41" << endl;
@@ -575,7 +568,7 @@ void page_tap_payment_serial::readTimer_loop()
                         readTimer->start(10);
                     }
                 }
+            }
         }
     }
-}
 }

@@ -57,15 +57,24 @@ void page_error_wifi::showEvent(QShowEvent *event)
 
     QWidget::showEvent(event);
     QString styleSheet = p_page_idle->getCSS(PAGE_ERROR_WIFI_CSS);
+    ui->label_error_message->setStyleSheet(styleSheet);
+    ui->label_oops->setStyleSheet(styleSheet);
+    p_page_idle->setTemplateTextToObject(ui->label_oops);
 
-    ui->wifi_ack_Button->setStyleSheet(styleSheet);
-    ui->mainPageButton->setStyleSheet(styleSheet);
+    ui->label_error_occured->setStyleSheet(styleSheet);
+    p_page_idle->setTemplateTextToObject(ui->label_error_occured);
+    ui->label_check_back->setStyleSheet(styleSheet);
+    p_page_idle->setTemplateTextToObject(ui->label_check_back);
+    ui->pushButton_mainPage->setStyleSheet(styleSheet);
+
+    QString machine_logo_full_path = p_page_idle->thisMachine.getTemplatePathFromName(MACHINE_LOGO_PATH);
+    p_page_idle->addPictureToLabel(ui->label_logo_drinkfill, machine_logo_full_path);
+    ui->label_logo_drinkfill->setStyleSheet(styleSheet);
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_ERROR_BACKGROUND_PATH);
-    QString image_path = p_page_idle->getTemplatePathFromName(ERROR_MESSAGE_PATH);
-    p_page_idle->addPictureToLabel(ui->error_message_label, image_path);
 
     ui->wifi_ack_Button->setEnabled(false);
+    ui->wifi_ack_Button->hide();
 
     timeoutTimer->start(1000);
     _goTop_page_idleTimeoutSec = 10;
@@ -76,15 +85,9 @@ void page_error_wifi::showEvent(QShowEvent *event)
  */
 void page_error_wifi::on_wifi_ack_Button_clicked()
 {
-    // qDebug() << "Call db from wifi error page";
-    // DbManager db(DB_PATH);
-
-    // //stopDispenseTimer();
-    //  db.closeDB();
-    // qDebug() << "error to idle";
 }
 
-void page_error_wifi::on_mainPageButton_clicked()
+void page_error_wifi::on_pushButton_mainPage_clicked()
 {
     exit_page();
 }

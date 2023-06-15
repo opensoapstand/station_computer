@@ -24,6 +24,7 @@
 #include "dbmanager.h"
 #include "page_maintenance.h"
 #include "product.h"
+#include "machine.h"
 #include "page_maintenance_general.h"
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
@@ -55,17 +56,17 @@ public:
     void addPictureToLabel(QLabel *label, QString picturePath);
     void addPictureToButton(QPushButton *button, QString picturePath);
     void addCompanyLogoToLabel(QLabel *label);
-    QString getTemplateFolder();
+    // QString getTemplateFolder();
     void changeToIdleProductsIfSet();
-    void setTemplateFolder(QString rootPath, QString templateFolder);
-    QString getTemplatePathFromName(QString fileName);
-    QString getDefaultTemplatePathFromName(QString fileName);
+    // void setTemplateFolder(QString rootPath, QString templateFolder);
+    // QString getTemplatePathFromName(QString fileName);
+    // QString getDefaultTemplatePathFromName(QString fileName);
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
     void setBackgroundPictureToQWidget(QWidget *page, QString imageName);
     QString getCSS(QString cssName);
     void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
+    void loadDynamicContent();
 
-    
     void setPromoCode(QString promoCode);
     QString getPromoCode();
 
@@ -81,12 +82,14 @@ public:
     product products[SLOT_COUNT];
     product *selectedProduct;
 
+    machine thisMachine;
+    // DbManager g_db;
+
     df_util *dfUtility;
     DfUiCommThread *dfComm;
 
     void printerStatusFeedback(bool isOnline, bool hasPaper);
 
-    bool isEnough(int p);
     void MMSlot();
     bool m_transitioning = false;
 
@@ -97,14 +100,13 @@ public:
     void addCssClassToObject(QWidget *element, QString classname, QString css_file_name);
     void setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier);
     void setTemplateTextToObject(QWidget *p_element);
-    void setTextToOjbect(QWidget *p_element, QString text);
+    void setTextToObject(QWidget *p_element, QString text);
     QString getTemplateTextByElementNameAndPage(QWidget *p_element);
     QString getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_element, QString identifier);
     QString getTemplateTextByPage(QWidget *page, QString identifier);
     QString getTemplateText(QString textName_to_find);
     void loadTextsFromTemplateCsv();
     void loadTextsFromDefaultCsv();
-
     void registerUserInteraction(QWidget *page);
 
     void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);

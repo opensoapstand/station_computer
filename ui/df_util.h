@@ -84,13 +84,14 @@ using namespace std;
 #define PAGE_MAINTENANCE_CSS                            "page_maintenance.css"
 #define PAGE_MAINTENANCE_DISPENSER_CSS                  "page_maintenance_dispenser.css"
 #define PAGE_IDLE_PRODUCTS_CSS                          "page_idle_products.css"
+#define PAGE_TAP_PAYMENT_SERIAL_CSS                     "page_tap_payment_serial.css"
 
 
 
 
 #define PAGE_IDLE_BACKGROUND_PATH                       "background_idle.png"
 #define PAGE_IDLE_PRODUCTS_BACKGROUND_PATH              "background_idle_products.png"
-#define PAGE_END_BACKGROUND_PATH                    "background_end.png"
+#define PAGE_END_BACKGROUND_PATH                        "background_end.png"
 #define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_transactions.png"
 
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
@@ -114,6 +115,9 @@ using namespace std;
 #define PAGE_ERROR_BACKGROUND_PATH                      "background_error_wifi.png"
 #define KEYBOARD_IMAGE_PATH                             "soapstand-keyboard.png"
 #define MACHINE_LOGO_PATH                               "machine_logo.png"
+#define PAGE_DISPENSE_FILL_ANIMATION                    "bottle_fill_for_animation.png"
+
+
 
 #define ICON_TYPE_CONCENTRATE_PATH                      "Soapstand_UI-concentrate-icon.png"
 #define ICON_TYPE_ALL_PURPOSE_PATH                      "Soapstand-UI-icon-all-purpose.png"

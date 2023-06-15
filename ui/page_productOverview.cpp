@@ -123,8 +123,6 @@ void page_product_overview::showEvent(QShowEvent *event)
     // ui->pushButton_continue->setProperty("class", "buttonBGTransparent");
     ui->pushButton_continue->setStyleSheet(styleSheet);
     ui->pushButton_continue->raise();
-    // ui->pushButton_continue->setStyleSheet("QPushButton { background-color: red; border: 0px };QPushButton:pressed { background-color: green; border: 10px }");
-
     ui->pushButton_to_help->setProperty("class", "buttonBGTransparent");
     ui->pushButton_to_help->setStyleSheet(styleSheet);
     reset_and_show_page_elements();
@@ -159,8 +157,8 @@ void page_product_overview::reset_and_show_page_elements()
     QString bitmap_location;
     p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->selectedProduct->getProductPicturePath());
     ui->label_selected_price->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(), 'f', 2));
-    qDebug() << "Selected size" << p_page_idle->selectedProduct->getVolume();
-    QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
+    qDebug() << "Selected size" << p_page_idle->selectedProduct->getVolumeOfSelectedSize();
+    QString full_path = p_page_idle->thisMachine.getTemplatePathFromName(IMAGE_BUTTON_HELP);
     qDebug() << full_path;
     p_page_idle->addPictureToLabel(ui->label_help, full_path);
 
@@ -168,7 +166,7 @@ void page_product_overview::reset_and_show_page_elements()
     ui->label_invoice_name->setText(p_page_idle->selectedProduct->getProductName());
 
     ui->promoKeyboard->hide();
-    if (areCouponsEnabled())
+    if (p_page_idle->thisMachine.getCouponsEnabled())
     {
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code, "coupons_enable");
 
@@ -201,7 +199,7 @@ void page_product_overview::reset_and_show_page_elements()
     ui->pushButton_to_help->setEnabled(true);
 
     QString keyboard = KEYBOARD_IMAGE_PATH;
-    QString keyboard_picture_path = p_page_idle->getTemplatePathFromName(KEYBOARD_IMAGE_PATH);
+    QString keyboard_picture_path = p_page_idle->thisMachine.getTemplatePathFromName(KEYBOARD_IMAGE_PATH);
     // QString keyboard_style_sheet = " background-image: url(" + keyboard + "); }";
     p_page_idle->addPictureToLabel(ui->label_keyboard_background, keyboard_picture_path);
     ui->label_keyboard_background->lower();
@@ -249,7 +247,7 @@ void page_product_overview::updatePriceLabel()
         }
         else if (units == "g")
         {
-            if (p_page_idle->selectedProduct->getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
+            if (p_page_idle->selectedProduct->getVolumeBySize(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
             {
                 units = "100g";
                 selectedPrice = selectedPrice * 100;
@@ -414,16 +412,6 @@ void page_product_overview::coupon_input_reset()
 void page_product_overview::on_lineEdit_promo_codeInput_clicked()
 {
     coupon_input_show();
-}
-
-bool page_product_overview::areCouponsEnabled()
-{
-    qDebug() << "db for coupons";
-
-    DbManager db(DB_PATH);
-    bool coupons_enabled = db.getCouponsEnabled();
-    db.closeDB();
-    return coupons_enabled;
 }
 
 void page_product_overview::on_pushButton_continue_clicked()

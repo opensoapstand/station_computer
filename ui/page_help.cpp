@@ -75,10 +75,8 @@ void page_help::showEvent(QShowEvent *event)
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_PATH);
 
-    DbManager db(DB_PATH);
-    maintenance_pwd = db.getMaintenanceAdminPassword();
-    help_text_html = db.getHelpPageHtmlText();
-    if (db.showTransactions())
+    help_text_html = p_page_idle->thisMachine.getHelpPageHtmlText();
+    if (p_page_idle->thisMachine.getShowTransactionHistory())
     {
         ui->pushButton_to_transactions->show();
     }
@@ -86,7 +84,6 @@ void page_help::showEvent(QShowEvent *event)
     {
         ui->pushButton_to_transactions->hide();
     }
-    db.closeDB();
     
     if (help_text_html != ""){
 
@@ -96,7 +93,7 @@ void page_help::showEvent(QShowEvent *event)
     {
         ui->html_textBrowser->hide();
 
-        QString image_path = p_page_idle->getTemplatePathFromName(PAGE_HELP_BACKGROUND_GENERIC_WHITE);
+        QString image_path = p_page_idle->thisMachine.getTemplatePathFromName(PAGE_HELP_BACKGROUND_GENERIC_WHITE);
         if (df_util::pathExists(image_path)){
             p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_GENERIC_WHITE);
         }
@@ -201,21 +198,41 @@ void page_help::keyboardButtonPressed(int buttonID)
         qDebug() << "DONE CLICKED";
         QString textEntry = ui->keyboardTextEntry->text();
 
-        int compareResult = QString::compare(textEntry, maintenance_pwd, Qt::CaseInsensitive);
-        int shortcut = QString::compare(textEntry, "lll", Qt::CaseInsensitive);
+        // if role was already set, do not check pwd. 
+        if (!p_page_idle->thisMachine.isAllowedAsMaintainer()){
+            p_page_idle->thisMachine.processRolePassword(textEntry);
+            
+            if (p_page_idle->thisMachine.isAllowedAsMaintainer()){
+                hideCurrentPageAndShowProvided(p_page_maintenance);
+            }else{
+                ui->keyboardTextEntry->setText("");
+            
+            }
+        }
 
-        if (compareResult == 0)
-        // if (compareResult == 0 || shortcut == 0) // shortcut for developing.
-        {
-            usleep(100000);
-            qDebug() << "Password correct. Will open maintenance page";
+        if (p_page_idle->thisMachine.isAllowedAsMaintainer()){
             hideCurrentPageAndShowProvided(p_page_maintenance);
+
         }
-        else
-        {
-            qDebug() << "Wrong password. Check db in database or contact soapstand.";
-            ui->keyboardTextEntry->setText("");
-        }
+        // int compareResult_user = QString::compare(textEntry, p_page_idle->thisMachine.getMaintenanceAdminPassword(false), Qt::CaseInsensitive);
+        // int compareResult_admin = QString::compare(textEntry, p_page_idle->thisMachine.getMaintenanceAdminPassword(true), Qt::CaseInsensitive);
+
+        // if (compareResult_user == 0)
+        // {
+        //     usleep(100000);
+        //     qDebug() << "Maintenance user password correct.";
+        //     hideCurrentPageAndShowProvided(p_page_maintenance);
+        // }
+        // else if (compareResult_user == 0){
+        //     qDebug() << "Maintenance admin password correct.";
+        //     hideCurrentPageAndShowProvided(p_page_maintenance);
+
+        // }
+        // else
+        // {
+        //     qDebug() << "Maintenance use password wrong . Check db in database or contact soapstand.";
+        //     ui->keyboardTextEntry->setText("");
+        // }
     }
     else if (buttonText == "Space")
     {

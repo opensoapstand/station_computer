@@ -7,8 +7,8 @@
    border: 0px;
    line-height: 99px;
    color: #003840;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
+   text-align: left;
+   /* qproperty-alignment: AlignCenter; */
    border: none;
 }
 
@@ -21,18 +21,23 @@
    qproperty-alignment: AlignCenter;
 
    color: #FFFFFF;
-   background-color: #5E8580;
+   background-color: #5e8580;
    border: 1px solid #3D6675;
    box-sizing: border-box;
    border-radius: 20px;
 }
 
 QListWidget {
+   
    background: transparent;
 }
 
 QListWidget::item {
-   background-color: #5E8580;
+   background-color: #c9ddc2;
+}
+
+QListWidget::item:alternate {
+   background-color: white;
 }
 
 #label_title {

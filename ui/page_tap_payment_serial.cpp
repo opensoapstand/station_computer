@@ -47,12 +47,12 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->label_title->hide();
 
-    // DbManager db(DB_PATH);
-    // if (p_page_idle->g_db.getPaymentMethod(1) == "tapSerial")
+    
+    // if (p_page_idle->g_database.getPaymentMethod(1) == "tapSerial")
     // {
     //     tap_payment = true;
     // }
-    // db.closeDb();
+   
     if (tap_payment)
     {
 

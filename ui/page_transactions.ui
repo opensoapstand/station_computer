@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>34</y>
+     <y>40</y>
      <width>131</width>
      <height>51</height>
     </rect>
@@ -29,9 +29,9 @@
   <widget class="QListWidget" name="transactions_List">
    <property name="geometry">
     <rect>
-     <x>5</x>
-     <y>430</y>
-     <width>1071</width>
+     <x>40</x>
+     <y>420</y>
+     <width>1001</width>
      <height>901</height>
     </rect>
    </property>

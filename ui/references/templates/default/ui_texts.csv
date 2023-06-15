@@ -35,7 +35,8 @@ page_idle_products->printer_status_label->empty_improperly_loaded,Assistance nee
 page_select_product->label_pick_soap,Pick your soap
 page_select_product->pushButton_to_idle,<-back
 page_select_product->no_text,
-page_select_product->empty,Empty
+page_select_product->not_enabled,Sold<br>out
+page_select_product->empty,Sold<br>out
 page_select_product->almost_empty,Almost<br>empty
 page_select_product->sold_out,Sold<br>out
 page_select_product->assistance,Needs<br>assistance

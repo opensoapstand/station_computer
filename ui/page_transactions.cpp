@@ -93,13 +93,8 @@ void page_transactions::populateTransactionsTable()
 {
         transaction_count = TRANSACTION_HISTORY_COUNT;
         int retrieved_count;
-
-        // DbManager db(DB_PATH);
-        p_page_idle->g_db->getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
-        // db.closeDb();
-
+        p_page_idle->g_database->getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
         transaction_count = retrieved_count;
-
         populateList();
 }
 
@@ -126,7 +121,7 @@ void page_transactions::populateList()
 
                 // get rid of last tab
                 int pos = rowItem.lastIndexOf(QChar('\t'));
-                qDebug() << rowItem.left(pos);
+                // qDebug() << rowItem.left(pos);
 
                 ui->transactions_List->addItem(rowItem);
         }

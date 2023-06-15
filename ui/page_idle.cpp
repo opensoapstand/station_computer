@@ -51,7 +51,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     {
         products[slot_index].setSlot(slot_index + 1);
         products[slot_index].setMachine(&thisMachine);
-        products[slot_index].setDb(g_db);
+        products[slot_index].setDb(g_database);
     }
 }
 
@@ -231,9 +231,9 @@ void page_idle::registerUserInteraction(QWidget *page)
     QString page_name = page->objectName();
     qDebug() << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< User entered: " + page_name + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
 
-    // DbManager db(DB_PATH);
-    g_db->addUserInteraction(page_name);
-    // db.closeDb();
+    
+    g_database->addUserInteraction(page_name);
+   
 }
 
 double page_idle::getDiscountPercentage()

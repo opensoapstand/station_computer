@@ -50,12 +50,14 @@ QLabel {
 
 .label_product_overlay_available{
    background-color: rgba(0,0,0,0);
+   font-size: 80px;
 }
-
 
 .label_product_overlay_sold_out{
    background-color: rgba(0,0,0,80);
+   font-size: 80px;
 }
+
 .label_product_type{
       font-family: 'Brevia';
       font-style: normal;

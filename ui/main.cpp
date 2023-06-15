@@ -140,8 +140,8 @@ int main(int argc, char *argv[])
     qDebug() << "All Pages created.";
 
     DbManager testdb;
-    // p_page_idle->g_db.setPath(DB_PATH);
-    p_page_idle->g_db = &testdb;
+    // p_page_idle->g_database.setPath(DB_PATH);
+    p_page_idle->g_database = &testdb;
 
     p_page_idle->loadDynamicContent();
 

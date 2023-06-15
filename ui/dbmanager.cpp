@@ -658,16 +658,11 @@ void DbManager::addUserInteraction(QString action)
 
 bool DbManager::getRecentTransactions(QString values[][5], int count, int *count_retreived)
 {
-    // get number of most recent transactions
-
+    // get most recent transactions
+    // if less records available then asked for in count, return the retrieved count in count_retreived
     {
         QSqlDatabase db = openDb();
         QSqlQuery qry(db);
-        // bool is_enabled;
-        // std::string sql_statement =  "SELECT id,end_time,quantity_dispensed,price,product FROM transactions ORDER BY id DESC LIMIT " + to_string(count);
-        // qry.prepare(sql_statement.c_str());
-        // qry.prepare(sql_statement.c_str());
-
         qry.prepare("SELECT id,end_time,quantity_dispensed,price,product_id FROM transactions ORDER BY id DESC LIMIT :count");
         qry.bindValue(":count", count);
 
@@ -689,7 +684,6 @@ bool DbManager::getRecentTransactions(QString values[][5], int count, int *count
                 {
                     values[i][j] = qry.value(j).toString();
                 }
-                // qDebug() << "db bdafes: " << i << " : " << values[i][j];
             }
             i++;
             *count_retreived = i;

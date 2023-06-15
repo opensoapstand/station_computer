@@ -27,9 +27,11 @@
 // #include <QMainWindow>
 #include <QtWidgets>
 #include <QtMultimediaWidgets>
+#include <QTimer>
+#include <QObject>
 
 //    #define PLAY_VIDEO
-// CTOR
+int currentIndex = 1; // CTOR
 page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
                                                           ui(new Ui::page_idle_products)
 {
@@ -37,7 +39,11 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
 
     backgroundChangeTimer = new QTimer(this);
     backgroundChangeTimer->setInterval(20);
-    // connect(backgroundChangeTimer, SIGNAL(timeout()), this, &page_idle_products::changeBackground);
+    connect(backgroundChangeTimer, SIGNAL(timeout()), this, SLOT(onBackgroundChangeTimerTimeout()));
+
+    backgroundPaths << "background1.png"
+                    << "background2.png"
+                    << "background3.png";
 
     labels_product_picture[0] = ui->label_product_1_photo;
     labels_product_picture[1] = ui->label_product_2_photo;
@@ -130,7 +136,8 @@ void page_idle_products::showEvent(QShowEvent *event)
     p_page_idle->addCompanyLogoToLabel(ui->logo_label);
 
     ui->pushButton_to_select_product_page->raise();
-    // hideAllLabelAndButtons();
+    // method called to change backgrounds (if they exist)
+    changeBackground();
 }
 void page_idle_products::resizeEvent(QResizeEvent *event)
 {
@@ -289,52 +296,68 @@ void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
     ui->printer_status_label->setStyleSheet(styleSheet);
 }
 
-// void page_idle_products::changeBackground()
-// {
-    // // Predefined list of background image paths
-    // QStringList backgroundPaths = {
-    //     "background1.jpg",
-    //     "background2.jpg",
-    //     "background3.jpg",
-    //     "background4.jpg",
-    //     "background5.jpg",
-    //     "background6.jpg",
-    //     // Add more background image paths as needed
-    // };
+void page_idle_products::changeBackground()
+{
+    qDebug() << "CHANGE BjkdegfhbkjwreqgfqwrekjgfwqkjAGAIN";
 
-//     static int currentIndex = 0;  // Static variable to keep track of the current background index
+    // Start the timer if it's not already running
+    if (!backgroundChangeTimer->isActive())
+    {
+        hideAllLabelAndButtons();
+        backgroundChangeTimer->start(3000); // Start the timer with a 3-second interval
+    }
 
-//     int initialIndex = currentIndex;  // Store the initial index for the loop
+    // Static variable to keep track of the current background index
+    qDebug() << "Current index" << currentIndex;
 
-//     // Loop through the backgroundPaths until a valid background image file is found
-//     do {
-//         QString currentBackgroundPath = backgroundPaths[currentIndex];
+    int initialIndex = 0; // Store the initial index for the loop
 
-//         // Check if the current background image file exists
-//         if (pathExists(currentBackgroundPath))
-//         {
-//             // Set the new background image path
-//             p_page_idle->setBackgroundPictureFromTemplateToPage(this, currentBackgroundPath);
-//             break;  // Exit the loop if a valid background is found
-//         }
+    // Loop through the backgroundPaths until a valid background image file is found
+    while (currentIndex != initialIndex)
+    {
+        QString currentBackgroundPath = backgroundPaths[currentIndex];
 
-//         // Increment the current index
-//         currentIndex++;
+        // Check if the current background image file exists
+        if (df_util::pathExists(currentBackgroundPath))
+        {
+            // Set the new background image path
+            p_page_idle->setBackgroundPictureFromTemplateToPage(this, currentBackgroundPath);
+            currentIndex = currentIndex + 1;
+            qDebug() << "Current index" << currentIndex;
+            break; // Exit the loop if a valid background is found
+        }
 
-//         // If the index exceeds the number of backgrounds, reset it to 0
-//         if (currentIndex >= backgroundPaths.size()) {
-//             currentIndex = 0;
-//         }
-//     } while (currentIndex != initialIndex);  // Continue the loop until we reach the initial index again
+        // Increment the current index
 
-//     if (currentIndex == initialIndex && !pathExists(backgroundPaths[initialIndex]))
-//     {
-//         // If the loop reached the initial index and the corresponding background doesn't exist, revert to the original background image
-//         p_page_idle->setBackgroundPictureFromTemplateToPage(this, "original_background.jpg");
-//     }
-// }
+        // If the index exceeds the number of backgrounds, reset it to 0
+        if (currentIndex >= backgroundPaths.size())
+        {
+            currentIndex = 0;
+        }
+        // Continue the loop until we reach the initial index again
 
+        if (!df_util::pathExists(backgroundPaths[currentIndex]))
+        {
+            // If the loop reached the initial index and the corresponding background doesn't exist, revert to the original background image
+            p_page_idle->setBackgroundPictureFromTemplateToPage(this, backgroundPaths[initialIndex]);
+        }
+    }
+}
 
+void page_idle_products::onBackgroundChangeTimerTimeout()
+{
+    // Stop the timer
+    // backgroundChangeTimer->stop();
+    qDebug() << "Bacjgroun=d change timetr";
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, backgroundPaths[currentIndex]);
+    qDebug() << "CHANGE BACKGROYUND CALLLED AGAIN";
+
+    // changeBackground();
+    // Set the new background image path
+    // QString newBackgroundPath = "background1.png";
+
+    // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_DYNAMIC_BACKGROUND_1);
+}
 
 void page_idle_products::on_pushButton_to_select_product_page_clicked()
 {

@@ -180,7 +180,7 @@
   <widget class="QLabel" name="label_title_maintenance_mode">
    <property name="geometry">
     <rect>
-     <x>78</x>
+     <x>85</x>
      <y>178</y>
      <width>881</width>
      <height>86</height>

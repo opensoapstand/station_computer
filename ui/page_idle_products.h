@@ -71,27 +71,23 @@ public:
 private slots:
     // **** Navigation ****
 
-    // void onProductPageTimeoutTick();
-    // void on_p_page_maintenanceButton_pressed();
     void on_pushButton_to_select_product_page_clicked();
+    void onBackgroundChangeTimerTimeout();
 
 private:
     void showEvent(QShowEvent *event);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void hideAllLabelAndButtons();
+    void changeBackground();
 
     void resizeEvent(QResizeEvent *event);
     void checkReceiptPrinterStatus();
 
     Ui::page_idle_products *ui;
-    // productPage_2 *selection_PageTwo;
     page_product *p_page_product;
     page_idle *p_page_idle;
 
     QResizeEvent *productResize;
-
-    // int _productPageTimeoutSec;
-    // QTimer *productPageEndTimer;
 
     page_select_product *p_pageSelectProduct;
     page_maintenance *p_page_maintenance;
@@ -102,6 +98,7 @@ private:
 
     int maintenanceCounter;
     QTimer *backgroundChangeTimer;
+    QStringList backgroundPaths; // Declare the backgroundPaths list as a member variable
 };
 
 #endif // page_idle_products_H

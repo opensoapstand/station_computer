@@ -118,6 +118,9 @@ using namespace std;
 #define PAGE_DISPENSE_FILL_ANIMATION                    "bottle_fill_for_animation.png"
 
 
+#define PAGE_IDLE_DYNAMIC_BACKGROUND_1                  "background1.png"
+
+
 
 #define ICON_TYPE_CONCENTRATE_PATH                      "Soapstand_UI-concentrate-icon.png"
 #define ICON_TYPE_ALL_PURPOSE_PATH                      "Soapstand-UI-icon-all-purpose.png"

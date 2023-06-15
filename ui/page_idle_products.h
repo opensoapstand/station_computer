@@ -50,7 +50,7 @@ class page_idle_products : public QWidget
 
 public:
     explicit page_idle_products(QWidget *parent = nullptr);
-    void  setPage(page_idle *pageIdle, page_select_product *p_page_select_product);
+    void setPage(page_idle *pageIdle, page_select_product *p_page_select_product);
     // function body
     ~page_idle_products();
 
@@ -61,17 +61,16 @@ public:
 
     void printerStatusFeedback(bool isOnline, bool hasPaper);
 
-    QLabel* labels_product_picture[4];
-    QLabel* labels_selectProductOverlay[4];
+    QLabel *labels_product_picture[4];
+    QLabel *labels_selectProductOverlay[4];
     // QLabel* labels_product_name[4];
-    QLabel* labels_product_icon[4];
-    QLabel* labels_product_type[4];
-    QLabel* labels_product_overlay_text[4];
-    
+    QLabel *labels_product_icon[4];
+    QLabel *labels_product_type[4];
+    QLabel *labels_product_overlay_text[4];
+
 private slots:
     // **** Navigation ****
 
-    
     // void onProductPageTimeoutTick();
     // void on_p_page_maintenanceButton_pressed();
     void on_pushButton_to_select_product_page_clicked();
@@ -79,6 +78,8 @@ private slots:
 private:
     void showEvent(QShowEvent *event);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
+    void hideAllLabelAndButtons();
+
     void resizeEvent(QResizeEvent *event);
     void checkReceiptPrinterStatus();
 
@@ -100,6 +101,7 @@ private:
     page_help *p_page_help;
 
     int maintenanceCounter;
+    QTimer *backgroundChangeTimer;
 };
 
 #endif // page_idle_products_H

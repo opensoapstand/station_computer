@@ -521,6 +521,10 @@ QString page_idle::getTemplateText(QString textName_to_find)
             retval = textName_to_find;
         }
     }
+
+    // \n values in the csv file get automatically escaped. We need to deescape them.
+    retval.replace("\\n", "\n");
+    
     return retval;
 }
 

@@ -23,19 +23,20 @@ DbManager::DbManager(const QString &path)
 // DbManager::DbManager(const QString &path) : m_db(QSqlDatabase::addDatabase("QSQLITE"))
 {
     // setPath(path);
-    QString test = "fake1";
-    m_dbPath2 = test;
+    // QString test = "fake1";
+    m_dbPath2 = DB_PATH;
+    //  qDebug() << m_dbPath2; // CRASHES HERE
     setPath(path);
     // m_db = QSqlDatabase::addDatabase("QSQLITE");
 
-    QSqlDatabase m_db = QSqlDatabase::addDatabase("QSQLITE");
-    QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
+    // QSqlDatabase m_db = QSqlDatabase::addDatabase("QSQLITE");
+    // QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
 }
 DbManager::DbManager()
 // DbManager::DbManager() : m_db(QSqlDatabase::addDatabase("QSQLITE"))
 {
-    QString test = "fake2";
-    m_dbPath2 = test;
+    // QString test = "fake2";
+    // m_dbPath2 = test;
 
     // m_db = QSqlDatabase::addDatabase("QSQLITE");
 }
@@ -84,9 +85,7 @@ void DbManager::closeDb()
 
 QSqlDatabase DbManager::openDb()
 {
-    // qDebug() << "db init1";
     QSqlDatabase m_db = QSqlDatabase::addDatabase("QSQLITE", "qt_sql_default_connection666");
-    // QSqlDatabase m_db = QSqlDatabase::database();
     QString p = DB_PATH;
     if (m_db.isOpen())
     {

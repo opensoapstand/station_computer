@@ -137,12 +137,9 @@ int main(int argc, char *argv[])
     page_maintenance_dispenser *p_page_maintenance_product = new page_maintenance_dispenser();
     qDebug() << "Constructor page_maintenance_general";
     page_maintenance_general *p_page_maintenance_general = new page_maintenance_general();
-    // qDebug() << "All classes created.";
+    qDebug() << "All Pages created.";
 
-    // p_page_idle->g_db.setPath(DB_PATH);
-
-    DbManager testdb(DB_PATH);
-
+    DbManager testdb;
     // p_page_idle->g_db.setPath(DB_PATH);
     p_page_idle->g_db = &testdb;
 

@@ -20,25 +20,12 @@
 #include <stdlib.h>
 
 DbManager::DbManager(const QString &path)
-// DbManager::DbManager(const QString &path) : m_db(QSqlDatabase::addDatabase("QSQLITE"))
 {
-    // setPath(path);
-    // QString test = "fake1";
     m_dbPath2 = DB_PATH;
-    //  qDebug() << m_dbPath2; // CRASHES HERE
     setPath(path);
-    // m_db = QSqlDatabase::addDatabase("QSQLITE");
-
-    // QSqlDatabase m_db = QSqlDatabase::addDatabase("QSQLITE");
-    // QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
 }
 DbManager::DbManager()
-// DbManager::DbManager() : m_db(QSqlDatabase::addDatabase("QSQLITE"))
 {
-    // QString test = "fake2";
-    // m_dbPath2 = test;
-
-    // m_db = QSqlDatabase::addDatabase("QSQLITE");
 }
 
 // DTOR
@@ -49,14 +36,9 @@ DbManager::~DbManager()
 
 void DbManager::setPath(QString path)
 {
-    // qDebug() << "Set db path to: " << path;
     m_dbPath2 = path;
-    // qDebug() << "Set db path to memem: " << m_dbPath2;
-    // m_db = QSqlDatabase::addDatabase("QSQLITE");
-    // m_db.setDatabaseName(m_dbPath2);
 }
 
-// void DbManager::closeDb(QSqlDatabase db)
 void DbManager::closeDb()
 {
     qDebug() << "close db";
@@ -67,25 +49,24 @@ void DbManager::closeDb()
         // db.close();
         // db = QSqlDatabase();
         // QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
-        // QSqlDatabase::removeDatabase("qt_sql_default_connection666");
-        QSqlDatabase::database("qt_sql_default_connection666").close();
-        // QSqlDatabase::removeDatabase("qt_sql_default_connection666");
-        qDebug() << "closed. successs.";
+        // QSqlDatabase::removeDatabase("qt_sql_ui_connection");
+        QSqlDatabase::database("qt_sql_ui_connection").close();
+        // QSqlDatabase::removeDatabase("qt_sql_ui_connection");
     }
     else
     {
         qDebug() << "Db was not open.";
     }
-    if (QSqlDatabase::contains("qt_sql_default_connection666"))
+    if (QSqlDatabase::contains("qt_sql_ui_connection"))
     {
-        QSqlDatabase::removeDatabase("qt_sql_default_connection666");
+        QSqlDatabase::removeDatabase("qt_sql_ui_connection");
     }
     qDebug() << "Db close done.";
 }
 
 QSqlDatabase DbManager::openDb()
 {
-    QSqlDatabase m_db = QSqlDatabase::addDatabase("QSQLITE", "qt_sql_default_connection666");
+    QSqlDatabase m_db = QSqlDatabase::addDatabase("QSQLITE", "qt_sql_ui_connection");
     QString p = DB_PATH;
     if (m_db.isOpen())
     {
@@ -94,19 +75,17 @@ QSqlDatabase DbManager::openDb()
         m_db.close();
         m_db = QSqlDatabase();
         QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
-        qDebug() << "m_db was already open. Closed it first.";
     }
     try
     {
-        // Database code here
         // qDebug() << m_dbPath2; // CRASHES HERE
-        qDebug() << "db init2 path: " << p;
+        // qDebug() << "db init2 path: " << p;
         m_db.setDatabaseName(p);
     }
     catch (const QSqlError &error)
     {
         qDebug() << "Database error: " << error.text();
-        qDebug() << "db init2";
+        // qDebug() << "db init2";
     }
 
     // m_db.setDatabaseName("lodelodelode");
@@ -126,19 +105,19 @@ QSqlDatabase DbManager::openDb()
     //     qDebug() << "m_db was already open. Closed it first.";
     // }
 
-    // // qDebug() << "db init1";
-    // if (m_db.connectionName().isEmpty())
-    // {
-    //     qDebug() << "not empty";
-    //     // qDebug() << "connectionname is empty-->";
-    //     // m_db = QSqlDatabase::addDatabase("QSQLITE");
-    //     m_db.setDatabaseName(DB_PATH);
-    //     // qDebug() << "m_db set connectionName";
-    // }
-    // else
-    // {
-    //     qDebug() << "m_db connectionName is NOT EMPTY";
-    // }
+    // qDebug() << "db init1";
+    if (m_db.connectionName().isEmpty())
+    {
+        qDebug() << "not empty";
+        // qDebug() << "connectionname is empty-->";
+        // m_db = QSqlDatabase::addDatabase("QSQLITE");
+        m_db.setDatabaseName(DB_PATH);
+        // qDebug() << "m_db set connectionName";
+    }
+    else
+    {
+        qDebug() << "m_db connectionName is NOT EMPTY";
+    }
 
     // qDebug() << "db init2";
     if (!m_db.open())

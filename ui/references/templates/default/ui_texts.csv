@@ -160,6 +160,7 @@ page_maintenance->label_product_3_position,P3
 page_maintenance->label_product_4_position,P4
 
 #page_maintenance_dispenser
+page_maintenance_dispenser->pushButton_to_previous_page,<- back
 page_maintenance_dispenser->label_calibration_instructions,Flowsensor calibration instructions:<br>1.Enable the pump<br>2.Take a measuring cup and dispense until the 1liter mark<br>3.Check the calibration value<br>4.Update the calibration value if different
 page_maintenance_dispenser->pushButton_enable_pump->enable_pump,ENABLE PUMP
 page_maintenance_dispenser->pushButton_set_restock_volume,Define restock volume.
@@ -186,7 +187,8 @@ page_maintenance_dispenser->status_text->assistance,Try priming. If primed, chec
 page_maintenance_dispenser->status_text->coming_soon,The dispenser is set disabled, enable manually with the button on top of this page.
 page_maintenance_dispenser->status_text->default,Not an identified state.
 page_maintenance_dispenser->status_text->available,Product available and dispenser working normally.
-page_maintenance_dispenser->status_text->priming,If the pump is working: See procedure to use the priming syringe on the nozzle to guide the product into the pump. Check stock volume, air leaks and pump, solenoid, button and flow sensor in case of problems. 
+page_maintenance_dispenser->status_text->priming,If the pump is working: See procedure to use the priming syringe\non the nozzle to guide the product into the pump. Check stock volume, air leaks and pump,\nsolenoid, button and flow sensor in case of problems. 
+page_maintenance_dispenser->status_text->disabled,Enable the dispenser with the button on top of this page. 
 
 #page_maintenance_general
 

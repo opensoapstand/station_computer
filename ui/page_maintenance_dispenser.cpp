@@ -69,8 +69,6 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
-
-    // p_page_idle->setTemplateTextToObject(ui->label_enabled_status);
     p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_enabled_status, "pump_off");
     p_page_idle->setTemplateTextToObject(ui->label_calibration_instructions);
     p_page_idle->setTemplateTextToObject(ui->pushButton_enable_pump);
@@ -79,7 +77,11 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     p_page_idle->setTemplateTextToObject(ui->pushButton_update_portal);
     ui->pushButton_done->setText(p_page_idle->getTemplateTextByPage(this, "pushButton_keypad_done"));
     ui->pushButton_cancel->setText(p_page_idle->getTemplateTextByPage(this, "pushButton_keypad_cancel"));
+    p_page_idle->setTemplateTextToObject(ui->pushButton_to_previous_page);
 
+    ui->label_product_name->setStyleSheet(styleSheet);
+    ui->label_product_picture->setStyleSheet(styleSheet);
+    ui->pushButton_to_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_restock->setStyleSheet(styleSheet);
     ui->pushButton_enable_pump->setProperty("class", "pump_enable");
     ui->pushButton_enable_pump->setStyleSheet(styleSheet);
@@ -130,7 +132,7 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
 
     ui->label_volume_per_tick->setText(p_page_idle->selectedProduct->getVolumePerTickAsStringForSlot() + "/tick");
 
-    ui->label_name->setText(p_page_idle->selectedProduct->getProductName());
+    ui->label_product_name->setText(p_page_idle->selectedProduct->getProductName());
 
     ui->pushButton_price_small->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)));
     ui->pushButton_price_medium->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)));
@@ -193,6 +195,11 @@ void page_maintenance_dispenser::setStatusTextLabel(QString statusText)
         else if (statusText.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
         {
             status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->empty");
+        }
+        else if (statusText.compare("SLOT_STATE_DISABLED") == 0)
+        {
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->disabled");
+
         }
         else if (statusText.compare("SLOT_STATE_WARNING_PRIMING") == 0)
         {

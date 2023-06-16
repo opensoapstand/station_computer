@@ -26,11 +26,11 @@
     <string>Back</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_name">
+  <widget class="QLabel" name="label_product_name">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>250</y>
+     <x>20</x>
+     <y>650</y>
      <width>311</width>
      <height>51</height>
     </rect>

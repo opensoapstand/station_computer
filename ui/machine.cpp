@@ -42,7 +42,6 @@ QString machine::getTemplatePathFromName(QString fileName)
         }
         image_path = image_default_path;
     }
-
     return image_path;
 }
 

@@ -26,8 +26,8 @@ QLabel {
    border: 0px;
    line-height: 99px;
    color: #003840;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
+   text-align: left;
+   qproperty-alignment: AlignLeft;
    border: none;
 }
 
@@ -53,7 +53,7 @@ QLabel {
    font-size: 80px;
 }
 
-.label_product_overlay_sold_out{
+.label_product_overlay_unavailable{
    background-color: rgba(0,0,0,80);
    font-size: 80px;
 }

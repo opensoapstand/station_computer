@@ -108,7 +108,7 @@ void page_select_product::showEvent(QShowEvent *event)
         labels_product_type[slot_index]->setStyleSheet(styleSheet);
         labels_product_picture[slot_index]->setProperty("class", "label_product_photo");
         labels_product_picture[slot_index]->setStyleSheet(styleSheet);
-        // p_page_idle->addCssClassToObject(labels_product_picture[slot_index], "label_product_overlay_sold_out", PAGE_SELECT_PRODUCT_CSS);
+        // p_page_idle->addCssClassToObject(labels_product_picture[slot_index], "label_product_overlay_unavailable", PAGE_SELECT_PRODUCT_CSS);
         labels_product_name[slot_index]->setProperty("class", "label_product_name");
         labels_product_name[slot_index]->setStyleSheet(styleSheet);
         pushButtons_product_select[slot_index]->setProperty("class", "PushButton_selection");
@@ -153,7 +153,7 @@ void page_select_product::displayProducts()
 
         if (!p_page_idle->products[slot_index].getSlotEnabled())
         {
-            p_page_idle->addCssClassToObject(labels_product_overlay_text[slot_index], "label_product_overlay_sold_out", PAGE_SELECT_PRODUCT_CSS);
+            p_page_idle->addCssClassToObject(labels_product_overlay_text[slot_index], "label_product_overlay_unavailable", PAGE_SELECT_PRODUCT_CSS);
             // qDebug() << labels_product_picture[slot_index]->styleSheet();
         }
         else
@@ -229,36 +229,36 @@ void page_select_product::displayProducts()
 
         if (!p_page_idle->products[slot_index].getSlotEnabled())
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "not_enabled"));
+            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->not_enabled"));
             // labels_product_overlay_text[slot_index]->setText("Needs<br>assistance");
         }
         else if (!(p_page_idle->products[slot_index].isProductVolumeInContainer()))
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "sold_out"));
+            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->empty"));
         }
         else if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "available"));
+            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->available"));
         }
         else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "almost_empty"));
+            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->almost_empty"));
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "empty"));
+            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->empty"));
         }
         else if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "coming_soon"));
+            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->coming_soon"));
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "assistance"));
+            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->assistance"));
         }
         else
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "default"));
+            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->default"));
         }
 
         labels_product_type[slot_index]->setText(type_text);

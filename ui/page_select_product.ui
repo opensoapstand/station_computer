@@ -90,8 +90,8 @@
   <widget class="QPushButton" name="p_page_maintenanceButton">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>0</y>
+     <x>230</x>
+     <y>10</y>
      <width>281</width>
      <height>241</height>
     </rect>
@@ -159,14 +159,14 @@
   <widget class="QPushButton" name="pushButton_to_idle">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>30</y>
-     <width>251</width>
-     <height>61</height>
+     <x>70</x>
+     <y>40</y>
+     <width>401</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>back</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_help_page">

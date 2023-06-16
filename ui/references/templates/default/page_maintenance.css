@@ -1,8 +1,6 @@
-
 .label_product_position{
    font-size: 28px;
    font-weight: 255;
-   
 }
 
 #pushButton_general_settings {
@@ -32,13 +30,6 @@
    color: #003840;
    border: none;
 }
-
-/* #pushButton_product_ {
-   
-   background-color: transparent;
-   border: 1px  solid #3D6675;
-   
-} */
 
 #label_title_maintenance_mode {
    font-family: 'Brevia';
@@ -83,7 +74,7 @@
 
    background-color: transparent;
    qproperty-alignment: AlignCenter;
-   font-size: 15px;
+   font-size: 28px;
    color: #400000;
    
 }

@@ -46,7 +46,7 @@ QLabel {
     color: #003840;
 }
 
-.label_product_overlay_sold_out {
+.label_product_overlay_unavailable {
     background-color: rgba(0, 0, 0, 80);
 }
 

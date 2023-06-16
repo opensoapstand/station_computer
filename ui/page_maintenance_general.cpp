@@ -68,7 +68,7 @@ void page_maintenance_general::showEvent(QShowEvent *event)
 
 
 // p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_enabled_status,"pump_off");
-    // ui->pushButton_back->setText("<-back");
+    // ui->pushButton_back->setText("<- back");
     // ui->label_connectivity->setText("connectivity");
     // ui->pushButton_wifi_networks->setText("Display Wifi networks");
     // ui->pushButton_network_status->setText("Check Network status");

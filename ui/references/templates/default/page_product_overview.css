@@ -55,7 +55,6 @@ QPushButton {
     font-weight: 75;
     font-size: 32px;
     line-height: 99px;
-    text-transform: lowercase;
     color: #003840;
     text-align: left;
     qproperty-alignment: AlignLeft;
@@ -67,7 +66,6 @@ QPushButton {
     font-weight: 75;
     font-size: 32px;
     line-height: 99px;
-    text-transform: lowercase;
     background-color: #5E8580;
     border: 1px solid #3D6675;
     color: #FFFFFF;

@@ -130,6 +130,8 @@ void page_tap_payment_serial::resizeEvent(QResizeEvent *event)
 
 void page_tap_payment_serial::showEvent(QShowEvent *event)
 {
+    QWidget::showEvent(event);
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
 
     QString styleSheet = p_page_idle->getCSS(PAGE_TAP_PAYMENT_SERIAL_CSS);
     
@@ -140,9 +142,6 @@ void page_tap_payment_serial::showEvent(QShowEvent *event)
     ui->pushButton_payment_bypass->setStyleSheet(styleSheet);
 
 
-    qDebug() << "<<<<<<< Page Enter: Tap Serial Payment >>>>>>>>>";
-
-    QWidget::showEvent(event);
     state_payment = s_init;
     if (p_page_idle->selectedProduct->getPaymentMethod() == "tapSerial")
     {

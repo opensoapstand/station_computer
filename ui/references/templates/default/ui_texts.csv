@@ -33,16 +33,16 @@ page_idle_products->printer_status_label->empty_improperly_loaded,Assistance nee
 
 #page_select_product
 page_select_product->label_pick_soap,Pick your soap
-page_select_product->pushButton_to_idle,<-back
+page_select_product->pushButton_to_idle,<- back
 page_select_product->no_text,
-page_select_product->not_enabled,Sold<br>out
-page_select_product->empty,Sold<br>out
-page_select_product->almost_empty,Almost<br>empty
-page_select_product->sold_out,Sold<br>out
-page_select_product->assistance,Needs<br>assistance
-page_select_product->coming_soon,Coming<br>soon
-page_select_product->default,. . .
-page_select_product->available,
+page_select_product->status_text->not_enabled,Sold<br>out
+page_select_product->status_text->empty,Sold<br>out
+page_select_product->status_text->almost_empty,Almost<br>empty
+page_select_product->status_text->sold_out,Sold<br>out
+page_select_product->status_text->assistance,Needs<br>assistance
+page_select_product->status_text->coming_soon,Coming<br>soon
+page_select_product->status_text->default,. . .
+page_select_product->status_text->available,
 
 # Page_product 
 page_product->pushButton_back,<- Products
@@ -71,7 +71,7 @@ page_dispenser->label_finishTransactionMessage->no_pay,Voiding payment
 page_dispenser->label_finishTransactionMessage->display_price,Capturing payment: $%1
 page_dispenser->label_dispense_message->priming,Please keep the button pressed.<br>for up to 15 seconds<br>before the product starts dispensing.
 page_dispenser->label_dispense_message->out_of_stock,It appears we're out of stock.
-page_dispenser->label_dispense_message->needs_attention,We can't get the dispensing started.<br>We're empty or the pump needs help to prime.<br>Tap the problem button in case of other issues.
+page_dispenser->label_dispense_message->needs_attention,We can't get the dispensing started.<br>We're empty or the pump needs help to prime.<br>Tap the problem button for other issues.
 page_dispenser->label_volume_dispensed,Volume dispensed
 page_dispenser->msgBox_problems->qr_tap,<p align=center><br><br>If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br><br><br>You will only be charged for the dispensed amount<br></p>
 page_dispenser->msgBox_problems->default,<p align=center><br>If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br><br><br>You will only be charged for the dispensed amount<br></p>
@@ -92,16 +92,16 @@ page_end->thank_you_message_label->finish_transaction,Finishing<br>transaction
 page_help->pushButton_to_transactions,Transaction History ->
 page_help->pushButton_to_maintenance,Settings
 page_help->pushButton_to_feedback,Contact Us
-page_help->pushButton_to_idle,<-back
+page_help->pushButton_to_idle,<- back
 page_help->label_keyboardInfo,Provide maintainer or administrator password, followed by "Done". 
 
 # page_transactions
-page_transactions->pushButton_back,<-back
+page_transactions->pushButton_back,<- back
 page_transactions->pushButton_print,Print Selected Receipt
 page_transactions->label_title,Most Recent Transactions
 
 # page_sendFeedback
-page_sendFeedback->pushButton_previous_page,<-back
+page_sendFeedback->pushButton_previous_page,<- back
 page_sendFeedback->label_select_problem,Please provide feedback
 page_sendFeedback->label_still_cant_find,Still can't find it?
 page_sendFeedback->label_email,Email us at: sales@soapstand.com
@@ -122,7 +122,7 @@ finalize_transaction
 page_qr_payment->label_steps,<style>        li:{margin-top:10px; margin-left: 5px;}        </style>        <ol>        <li><span class='tab'></span>Scan QR code with phone camera<br></li>        <li><span class='tab'></span>Click to open the link that appears<br></li>        <li><span class='tab'></span>Follow payment instructions on phone<br></li>        <li><span class='tab'></span>The station will proceed after payment<br></li>        <li><span class='tab'></span>Refill your soap!</li>        </ol>        <style>        li:{margin-top:10px;}        </style>        <ol>       
 page_qr_payment->label_processing,it can take a few moments for the station to<br>continue after your payment is confirmed
 page_qr_payment->label_title->almost_there,almost there
-page_qr_payment->pushButton_previous_page,<-back
+page_qr_payment->pushButton_previous_page,<- back
 page_qr_payment->order_drink_amount, $%1
 page_qr_payment->order_total_amount, Total: $%1
 page_qr_payment->msgBox_cancel->default,<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>
@@ -136,7 +136,7 @@ page_error_wifi->label_error_occured,AN ERROR HAS OCCURED
 page_error_wifi->label_check_back,Please check back soon
 
 # page_tap_payment
-page_tap_payment->pushButton_previous_page,<-back
+page_tap_payment->pushButton_previous_page,<- back
 page_tap_payment->label_title->processing,Processing Payment
 page_tap_payment->msgBox_cancel,<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>
 page_tap_payment->preauthLabel,You are being pre-authorized for maximum volume %1 with amount of
@@ -145,13 +145,14 @@ page_tap_payment->preauthLabel,You are being pre-authorized for maximum volume %
 page_maintenance->status_text->auto_empty,Empty detected
 page_maintenance->status_text->almost_empty,Almost Empty
 page_maintenance->status_text->empty,Empty
+page_maintenance->status_text->available,In Service
 page_maintenance->status_text->not_enabled,Not enabled
 page_maintenance->status_text->assistance,Assistance Needed
 page_maintenance->status_text->coming_soon,Coming soon
 page_maintenance->status_text->sold_out,Sold Out
 page_maintenance->status_text->default,No<br>Status
 page_maintenance->label_title_maintenance_mode,Maintenance mode
-page_maintenance->pushButton_to_previous_page,<-back
+page_maintenance->pushButton_to_previous_page,<- back
 page_maintenance->pushButton_general_settings,general settings->
 page_maintenance->label_product_1_position,P1
 page_maintenance->label_product_2_position,P2
@@ -166,8 +167,8 @@ page_maintenance_dispenser->pushButton_update_portal,Update Changes to Portal
 page_maintenance_dispenser->pushButton_keypad_cancel,CANCEL
 page_maintenance_dispenser->pushButton_keypad_done,DONE
 page_maintenance_dispenser->pushButton_enable_pump->disable_pump,DISABLE PUMP
-page_maintenance_dispenser->pushButton_soldOut->unavailable,Make\nunavailable
-page_maintenance_dispenser->pushButton_soldOut->available,Make\navailable
+page_maintenance_dispenser->pushButton_set_status->unavailable,Make\nunavailable
+page_maintenance_dispenser->pushButton_set_status->available,Make\navailable
 page_maintenance_dispenser->label_enabled_status->pump_ready,Manual Pump ready. Press dispense button.
 page_maintenance_dispenser->label_enabled_status->pump_off,Pump manual mode OFF.
 page_maintenance_dispenser->label_action_feedback->success,Refill Succesfull
@@ -177,7 +178,15 @@ page_maintenance_dispenser->label_title->medium,Price Medium:
 page_maintenance_dispenser->label_title->adjust_volume,Adjust the remaining volume
 page_maintenance_dispenser->label_title->full_button,Full Volume button clicked
 page_maintenance_dispenser->label_action_feedback->portal_success,Portal Update Succesfull
-
+page_maintenance_dispenser->status_text->not_enabled,Enable manually with the button on top of this page.
+page_maintenance_dispenser->status_text->empty,No more product available.
+page_maintenance_dispenser->status_text->almost_empty,Little product left.
+page_maintenance_dispenser->status_text->sold_out,The dispenser is set disabled, enable manually with the button on top of this page.
+page_maintenance_dispenser->status_text->assistance,Try priming. If primed, check for working button, pump, flowsensor and solenoid.
+page_maintenance_dispenser->status_text->coming_soon,The dispenser is set disabled, enable manually with the button on top of this page.
+page_maintenance_dispenser->status_text->default,Not an identified state.
+page_maintenance_dispenser->status_text->available,Product available and dispenser working normally.
+page_maintenance_dispenser->status_text->priming,If the pump is working: See procedure to use the priming syringe on the nozzle to guide the product into the pump. Check stock volume, air leaks and pump, solenoid, button and flow sensor in case of problems. 
 
 #page_maintenance_general
 

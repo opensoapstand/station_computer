@@ -2,12 +2,12 @@
    font-size: 18px; 
 }
 
-.pushButton_soldOut_unavailable { 
+.pushButton_set_status_unavailable { 
    background-color: #5E8680;
    font-size: 30px; 
 }
 
-.pushButton_soldOut_available  { 
+.pushButton_set_status_available  { 
    background-color: #E0A0A0;
    font-size: 36px;  
 }

@@ -63,13 +63,8 @@ void page_maintenance::showEvent(QShowEvent *event)
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH); // delays the page loading significantly.
 
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_CSS);
-
-    // ui->pushButton_to_previous_page->setProperty("class", "normal");
     ui->pushButton_to_previous_page->setStyleSheet(styleSheet);
-
-    // ui->pushButton_general_settings->setProperty("class", "normal");
     ui->pushButton_general_settings->setStyleSheet(styleSheet);
-
     ui->label_title_maintenance_mode->setStyleSheet(styleSheet);
 
     ui->label_machine_id->setProperty("class", "label_machine_ui");
@@ -112,7 +107,6 @@ void page_maintenance::showEvent(QShowEvent *event)
         int product_slot_enabled = p_page_idle->products[slot_index].getSlotEnabled();
 
         QString product_status_text = p_page_idle->products[slot_index].getStatusText();
-
         QString status_display_text = "";
         if (!(p_page_idle->products[slot_index].isProductVolumeInContainer()))
         {
@@ -124,15 +118,11 @@ void page_maintenance::showEvent(QShowEvent *event)
         }
         else if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
         {
-            status_display_text = "";
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->available");
         }
         else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
         {
-           status_display_text =  p_page_idle->getTemplateTextByPage(this, "status_text->almost_empty");
-        }
-        else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
-        {
-           status_display_text =  p_page_idle->getTemplateTextByPage(this, "status_text->sold_out");
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->almost_empty");
         }
         else if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
         {
@@ -140,7 +130,7 @@ void page_maintenance::showEvent(QShowEvent *event)
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
         {
-           status_display_text =  p_page_idle->getTemplateTextByPage(this, "status_text->assistance");
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->assistance");
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
         {

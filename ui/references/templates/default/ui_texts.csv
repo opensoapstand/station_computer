@@ -142,21 +142,21 @@ page_tap_payment->msgBox_cancel,<p align=center><br><br>Cancel transaction and e
 page_tap_payment->preauthLabel,You are being pre-authorized for maximum volume %1 with amount of
 
 #page maintenance
-page_maintenance->labels_product_status->auto_empty,Empty detected
-page_maintenance->labels_product_status->almost_empty,Almost Empty
-page_maintenance->labels_product_status->empty,Empty
-page_maintenance->labels_product_status->not_enabled,Not enabled
-page_maintenance->labels_product_status->assistance,Assistance Needed
-page_maintenance->labels_product_status->coming_soon,Coming soon
-page_maintenance->labels_product_status->sold_out,Sold Out
-page_maintenance->labels_product_status->default,No<br>Status
+page_maintenance->status_text->auto_empty,Empty detected
+page_maintenance->status_text->almost_empty,Almost Empty
+page_maintenance->status_text->empty,Empty
+page_maintenance->status_text->not_enabled,Not enabled
+page_maintenance->status_text->assistance,Assistance Needed
+page_maintenance->status_text->coming_soon,Coming soon
+page_maintenance->status_text->sold_out,Sold Out
+page_maintenance->status_text->default,No<br>Status
 page_maintenance->label_title_maintenance_mode,Maintenance mode
 page_maintenance->pushButton_to_previous_page,<-back
-page_maintenance->pushButton_general_settings,General Settings
-page_maintenance->label_product1_position,P1
-page_maintenance->label_product2_position,P2
-page_maintenance->label_product3_position,P3
-page_maintenance->label_product4_position,P4
+page_maintenance->pushButton_general_settings,general settings->
+page_maintenance->label_product_1_position,P1
+page_maintenance->label_product_2_position,P2
+page_maintenance->label_product_3_position,P3
+page_maintenance->label_product_4_position,P4
 
 #page_maintenance_dispenser
 page_maintenance_dispenser->label_calibration_instructions,Flowsensor calibration instructions:<br>1.Enable the pump<br>2.Take a measuring cup and dispense until the 1liter mark<br>3.Check the calibration value<br>4.Update the calibration value if different

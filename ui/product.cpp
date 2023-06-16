@@ -23,6 +23,11 @@ product::~product()
 {
 }
 
+void product::setDb(DbManager *db)
+{
+    m_db = db;
+}
+
 void product::setMachine(machine *machine)
 {
     thisMachine = machine;
@@ -32,71 +37,46 @@ void product::loadProductProperties()
 {
     loadProductPropertiesFromDb();
     qDebug() << "done loading from db";
-    loadProductPropertiesFromProductsFile();
+
+    thisMachine->loadProductPropertiesFromProductsFile(getProductDrinkfillSerial(),
+                                                       &m_name,
+                                                       &m_name_ui,
+                                                       &m_product_type,
+                                                       &m_description_ui,
+                                                       &m_features_ui,
+                                                       &m_ingredients_ui);
+
     qDebug() << "done loading from csv";
 }
 
 void product::loadProductPropertiesFromDb()
 {
     qDebug() << "Open db: db load product properties";
-    DbManager db(DB_PATH);
 
     // db.getProductProperties(getSlot(), &m_aws_product_id, m_sizeIndexIsEnabled);
-    db.getAllProductProperties(getSlot(), &m_aws_product_id,
-                               &m_soapstand_product_serial,
-                               &m_size_unit,
-                               &m_currency,
-                               &m_payment,
-                               &m_name_receipt,
-                               &m_concentrate_multiplier,
-                               &m_dispense_speed,
-                               &m_threshold_flow,
-                               &m_retraction_time,
-                               &m_calibration_const,
-                               &m_volume_per_tick,
-                               &m_lastRestockDate,
-                               &m_volume_full,
-                               &m_volume_remaining,
-                               &m_volume_dispensed_since_restock,
-                               &m_volume_dispensed_total,
-                               &m_is_enabled_custom_discount,
-                               &m_size_custom_discount,
-                               &m_price_custom_discount, m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
+    m_db->getAllProductProperties(getSlot(), &m_aws_product_id,
+                                  &m_soapstand_product_serial,
+                                  &m_size_unit,
+                                  &m_currency,
+                                  &m_payment,
+                                  &m_name_receipt,
+                                  &m_concentrate_multiplier,
+                                  &m_dispense_speed,
+                                  &m_threshold_flow,
+                                  &m_retraction_time,
+                                  &m_calibration_const,
+                                  &m_volume_per_tick,
+                                  &m_lastRestockDate,
+                                  &m_volume_full,
+                                  &m_volume_remaining,
+                                  &m_volume_dispensed_since_restock,
+                                  &m_volume_dispensed_total,
+                                  &m_is_enabled_custom_discount,
+                                  &m_size_custom_discount,
+                                  &m_price_custom_discount, m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 
     // m_slot_enabled = db.getSlotEnabled(getSlot());
     // m_empty_container_detection_enabled = db.getEmptyContainerDetectionEnabled();
-    db.closeDb();
-}
-
-void product::loadProductPropertiesFromProductsFile()
-{
-    QFile file(PRODUCT_DETAILS_TSV_PATH);
-    if (!file.open(QIODevice::ReadOnly))
-    {
-        qDebug() << "ERROR: Opening product details file. Expect unexpected behaviour now! ";
-        return;
-    }
-
-    QTextStream in(&file);
-    qDebug() << "Load csv file with product properties";
-    while (!in.atEnd())
-    {
-        QString line = in.readLine();
-
-        QStringList fields = line.split("\t");
-        int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], m_soapstand_product_serial, Qt::CaseSensitive);
-        if (compareResult == 0)
-        {
-            // qDebug() << "compare result is 0";
-            m_name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
-            m_product_type = fields[CSV_PRODUCT_COL_TYPE];
-            m_description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
-            m_features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
-            m_ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
-            break;
-        }
-    }
-    file.close();
 }
 
 char product::getSizeAsChar()
@@ -141,13 +121,11 @@ void product::setStatusText(QString status)
 {
 
     thisMachine->setStatusText(getSlot(), getSlotEnabled(), status);
-    // DbManager db(DB_PATH);
 
     //    SLOT_STATE_AVAILABLE
 
     // bool success = db.updateSlotAvailability(getSlot(), getSlotEnabled(), status);
     // db.updateTableProductsWithText(getSlot(),"")
-    // db.closeDb();
 }
 
 QString product::getStatusText()
@@ -257,9 +235,8 @@ void product::setPrice(int size, double price)
     QString column_name = price_columns[size];
 
     qDebug() << "Open db: set product price";
-    DbManager db(DB_PATH);
-    db.updateTableProductsWithDouble(getSlot(), column_name, price, 2);
-    db.closeDb();
+
+    m_db->updateTableProductsWithDouble(getSlot(), column_name, price, 2);
 }
 
 double product::getPrice(int sizeIndex)
@@ -370,10 +347,9 @@ QString product::getVolumePerTickAsStringForSlot()
 double product::getVolumePerTickForSlot()
 {
     // qInfo() << "Open db: get vol per tick";
-    // DbManager db(DB_PATH);
+
     // double ml_per_tick = db.getProductVolumePerTick(getSlot());
 
-    // db.closeDb();
     return m_volume_per_tick;
 }
 
@@ -381,10 +357,9 @@ void product::setVolumePerTickForSlot(QString volumePerTickInput)
 {
     double ml_per_tick = inputTextToMlConvertUnits(volumePerTickInput);
     qInfo() << "Open db: set vol per tick";
-    DbManager db(DB_PATH);
+
     // db.updateVolumePerTick(getSlot(), ml_per_tick);
-    db.updateTableProductsWithDouble(getSlot(), "volume_per_tick", ml_per_tick, 2);
-    db.closeDb();
+    m_db->updateTableProductsWithDouble(getSlot(), "volume_per_tick", ml_per_tick, 2);
 }
 
 void product::setSizeToVolumeForSlot(QString volumeInput, int size)
@@ -394,9 +369,8 @@ void product::setSizeToVolumeForSlot(QString volumeInput, int size)
     QString column_name = volume_columns[size];
 
     qInfo() << "Open db: size to volume";
-    DbManager db(DB_PATH);
-    db.updateTableProductsWithDouble(getSlot(), column_name, volume, 2);
-    db.closeDb();
+
+    m_db->updateTableProductsWithDouble(getSlot(), column_name, volume, 2);
 }
 
 void product::setVolumeRemainingUserInput(QString volumeRemainingAsUserText)
@@ -408,22 +382,21 @@ void product::setVolumeRemainingUserInput(QString volumeRemainingAsUserText)
 bool product::restock()
 {
     qDebug() << "Open db: restock";
-    DbManager db(DB_PATH);
+
     bool success = true;
-    success &= db.updateTableProductsWithDouble(getSlot(), "volume_remaining", m_volume_full, 0);
-    success &= db.updateTableProductsWithDouble(getSlot(), "volume_dispensed_since_restock", 0, 0);
-    success &= db.updateTableProductsWithText(getSlot(), "last_restock", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
-    db.closeDb();
+    success &= m_db->updateTableProductsWithDouble(getSlot(), "volume_remaining", m_volume_full, 0);
+    success &= m_db->updateTableProductsWithDouble(getSlot(), "volume_dispensed_since_restock", 0, 0);
+    success &= m_db->updateTableProductsWithText(getSlot(), "last_restock", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+
     return success;
 }
 
 void product::setVolumeRemaining(double volume_as_ml)
 {
     // qDebug() << "Open db: set volume remaining";
-    DbManager db(DB_PATH);
+
     // db.setVolumeRemaining(getSlot(), volume_as_ml);
-    db.updateTableProductsWithDouble(getSlot(), "volume_remaining", volume_as_ml, 0);
-    db.closeDb();
+    m_db->updateTableProductsWithDouble(getSlot(), "volume_remaining", volume_as_ml, 0);
 }
 
 QString product::getVolumeRemainingCorrectUnits()
@@ -534,12 +507,12 @@ QString product::getPlu(int sizeIndex)
     return m_sizeIndexPLUs[sizeIndex];
 }
 
-void product::setPlu(int sizeIndex, QString plu){
-    QString plu_columns [5] = {"Invalid size", "plu_small","plu_medium", "plu_large", "plu_custom"};
+void product::setPlu(int sizeIndex, QString plu)
+{
+    QString plu_columns[5] = {"Invalid size", "plu_small", "plu_medium", "plu_large", "plu_custom"};
     QString column_name = plu_columns[sizeIndex];
-    DbManager db(DB_PATH);
-    bool success = db.updateTableProductsWithText(getSlot(), column_name, plu);
-    db.closeDb();
+
+    bool success = m_db->updateTableProductsWithText(getSlot(), column_name, plu);
 }
 
 QString product::getAwsProductId()
@@ -558,10 +531,8 @@ void product::setFullVolumeCorrectUnits(QString inputFullValue)
 {
     qDebug() << "Open db: for write full vol";
     double full_volume = inputTextToMlConvertUnits(inputFullValue);
-    DbManager db(DB_PATH);
-    db.updateTableProductsWithDouble(getSlot(), "volume_full", full_volume, 0);
 
-    db.closeDb();
+    m_db->updateTableProductsWithDouble(getSlot(), "volume_full", full_volume, 0);
 }
 
 QString product::getSizeToVolumeWithCorrectUnits(bool round, bool addUnits)
@@ -572,9 +543,8 @@ QString product::getSizeToVolumeWithCorrectUnits(bool round, bool addUnits)
 void product::setPaymentMethod(QString paymentMethod)
 {
     qDebug() << "Open db: set payment method";
-    DbManager db(DB_PATH);
-    db.updateTableProductsWithText(getSlot(), "payment", paymentMethod);
-    db.closeDb();
+
+    m_db->updateTableProductsWithText(getSlot(), "payment", paymentMethod);
 }
 
 QString product::getPaymentMethod()
@@ -592,8 +562,7 @@ void product::setDispenseSpeedPercentage(int percentage)
     int pwm = (int)round((percentage * 255) / 100);
 
     qInfo() << "Open db: pwm speed set";
-    DbManager db(DB_PATH);
+
     // db.updatePWM(getSlot(), pwm);
-    db.updateTableProductsWithInt(getSlot(), "dispense_speed", pwm);
-    db.closeDb();
+    m_db->updateTableProductsWithInt(getSlot(), "dispense_speed", pwm);
 }

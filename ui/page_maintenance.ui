@@ -16,10 +16,10 @@
   <property name="autoFillBackground">
    <bool>true</bool>
   </property>
-  <widget class="QPushButton" name="product4_button">
+  <widget class="QPushButton" name="pushButton_product_4">
    <property name="geometry">
     <rect>
-     <x>550</x>
+     <x>580</x>
      <y>780</y>
      <width>281</width>
      <height>341</height>
@@ -29,7 +29,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="product1_button">
+  <widget class="QPushButton" name="pushButton_product_1">
    <property name="geometry">
     <rect>
      <x>220</x>
@@ -42,7 +42,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_product3">
+  <widget class="QLabel" name="label_product_3_name">
    <property name="geometry">
     <rect>
      <x>230</x>
@@ -66,10 +66,10 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="label_product2">
+  <widget class="QLabel" name="label_product_2_name">
    <property name="geometry">
     <rect>
-     <x>560</x>
+     <x>590</x>
      <y>670</y>
      <width>261</width>
      <height>81</height>
@@ -90,10 +90,10 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="product2_button">
+  <widget class="QPushButton" name="pushButton_product_2">
    <property name="geometry">
     <rect>
-     <x>550</x>
+     <x>580</x>
      <y>320</y>
      <width>281</width>
      <height>341</height>
@@ -103,7 +103,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="product3_button">
+  <widget class="QPushButton" name="pushButton_product_3">
    <property name="geometry">
     <rect>
      <x>220</x>
@@ -116,10 +116,10 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_product4">
+  <widget class="QLabel" name="label_product_4_name">
    <property name="geometry">
     <rect>
-     <x>550</x>
+     <x>580</x>
      <y>1140</y>
      <width>261</width>
      <height>51</height>
@@ -140,7 +140,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="label_product1">
+  <widget class="QLabel" name="label_product_1_name">
    <property name="geometry">
     <rect>
      <x>230</x>
@@ -167,22 +167,26 @@
   <widget class="QPushButton" name="pushButton_to_previous_page">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>30</y>
-     <width>251</width>
-     <height>61</height>
+     <x>70</x>
+     <y>40</y>
+     <width>401</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>back</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_title_maintenance_mode">
    <property name="geometry">
     <rect>
+<<<<<<< HEAD
      <x>85</x>
+=======
+     <x>0</x>
+>>>>>>> 6331627d157cfcee2d9c02da44026c0664d1527c
      <y>178</y>
-     <width>881</width>
+     <width>1080</width>
      <height>86</height>
     </rect>
    </property>
@@ -201,8 +205,8 @@
   <widget class="QLabel" name="label_machine_id">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>1670</y>
+     <x>220</x>
+     <y>1320</y>
      <width>391</width>
      <height>50</height>
     </rect>
@@ -213,58 +217,58 @@
     </font>
    </property>
    <property name="text">
-    <string/>
+    <string>machine serial</string>
    </property>
   </widget>
-  <widget class="QLabel" name="product1_overlay_label">
+  <widget class="QLabel" name="label_product_1_status">
    <property name="geometry">
     <rect>
      <x>220</x>
-     <y>561</y>
+     <y>619</y>
      <width>281</width>
-     <height>20</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="product2_overlay_label">
+  <widget class="QLabel" name="label_product_2_status">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>561</y>
+     <x>580</x>
+     <y>619</y>
      <width>281</width>
-     <height>20</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="product3_overlay_label">
+  <widget class="QLabel" name="label_product_3_status">
    <property name="enabled">
     <bool>true</bool>
    </property>
    <property name="geometry">
     <rect>
      <x>220</x>
-     <y>1001</y>
+     <y>1079</y>
      <width>281</width>
-     <height>20</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="product4_overlay_label">
+  <widget class="QLabel" name="label_product_4_status">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>1001</y>
+     <x>580</x>
+     <y>1079</y>
      <width>281</width>
-     <height>20</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
@@ -274,30 +278,30 @@
   <widget class="QLabel" name="label_ui_version">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>1750</y>
+     <x>220</x>
+     <y>1380</y>
      <width>351</width>
      <height>30</height>
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string>UI version</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_general_settings">
    <property name="geometry">
     <rect>
-     <x>768</x>
-     <y>30</y>
-     <width>301</width>
-     <height>71</height>
+     <x>610</x>
+     <y>40</y>
+     <width>401</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
     <string>General Settings</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_product1_position">
+  <widget class="QLabel" name="label_product_1_position">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -313,10 +317,10 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label_product2_position">
+  <widget class="QLabel" name="label_product_2_position">
    <property name="geometry">
     <rect>
-     <x>655</x>
+     <x>685</x>
      <y>290</y>
      <width>71</width>
      <height>31</height>
@@ -329,13 +333,13 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label_product3_position">
+  <widget class="QLabel" name="label_product_3_position">
    <property name="geometry">
     <rect>
      <x>340</x>
      <y>750</y>
      <width>51</width>
-     <height>21</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
@@ -345,11 +349,11 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label_product4_position">
+  <widget class="QLabel" name="label_product_4_position">
    <property name="geometry">
     <rect>
-     <x>655</x>
-     <y>740</y>
+     <x>680</x>
+     <y>750</y>
      <width>71</width>
      <height>31</height>
     </rect>
@@ -361,27 +365,41 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <zorder>label_product3</zorder>
-  <zorder>label_product2</zorder>
-  <zorder>label_product4</zorder>
-  <zorder>label_product1</zorder>
+  <widget class="Line" name="line">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>1300</y>
+     <width>641</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <zorder>label_product_3_name</zorder>
+  <zorder>label_product_2_name</zorder>
+  <zorder>label_product_4_name</zorder>
+  <zorder>label_product_1_name</zorder>
   <zorder>pushButton_to_previous_page</zorder>
   <zorder>label_title_maintenance_mode</zorder>
   <zorder>label_machine_id</zorder>
   <zorder>label_ui_version</zorder>
   <zorder>pushButton_general_settings</zorder>
-  <zorder>label_product1_position</zorder>
-  <zorder>label_product2_position</zorder>
-  <zorder>label_product3_position</zorder>
-  <zorder>label_product4_position</zorder>
-  <zorder>product1_button</zorder>
-  <zorder>product2_button</zorder>
-  <zorder>product4_button</zorder>
-  <zorder>product3_button</zorder>
-  <zorder>product3_overlay_label</zorder>
-  <zorder>product1_overlay_label</zorder>
-  <zorder>product4_overlay_label</zorder>
-  <zorder>product2_overlay_label</zorder>
+  <zorder>label_product_1_position</zorder>
+  <zorder>label_product_2_position</zorder>
+  <zorder>label_product_3_position</zorder>
+  <zorder>label_product_4_position</zorder>
+  <zorder>pushButton_product_1</zorder>
+  <zorder>pushButton_product_2</zorder>
+  <zorder>pushButton_product_4</zorder>
+  <zorder>pushButton_product_3</zorder>
+  <zorder>label_product_3_status</zorder>
+  <zorder>label_product_1_status</zorder>
+  <zorder>label_product_4_status</zorder>
+  <zorder>label_product_2_status</zorder>
+  <zorder>line</zorder>
  </widget>
  <resources/>
  <connections/>

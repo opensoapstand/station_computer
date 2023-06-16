@@ -1,31 +1,34 @@
-#product_overlay_labels {
-
-   background-color: transparent;
-   qproperty-alignment: AlignCenter;
-   font-size: 15px;
-   color: #400000;
-   
+.label_product_position{
+   font-size: 28px;
+   font-weight: 255;
 }
 
-.normal {
+#pushButton_general_settings {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;
    background-color: transparent;
    font-size: 32px;
-   text-align: center;
+   text-align: right;
    line-height: auto;
-   qproperty-alignment: AlignCenter;
+   qproperty-alignment: AlignRight;
    border-radius: 20px;
    color: #003840;
    border: none;
 }
 
-#product_buttons {
-
+#pushButton_to_previous_page {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
    background-color: transparent;
-   border: 1px  solid #3D6675;
-
+   font-size: 32px;
+   text-align: left;
+   line-height: auto;
+   qproperty-alignment: AlignLeft;
+   border-radius: 20px;
+   color: #003840;
+   border: none;
 }
 
 #label_title_maintenance_mode {
@@ -45,13 +48,14 @@
    font-weight: 700;
    line-height: 43px;
    color: black;
-   font-family: 'Montserrat';
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-
+   /* font-family: 'Montserrat'; */
+   /* background-color: red; */
+   text-align: left;
+   qproperty-alignment: AlignLeft;
+   
 }
 
-.product_buttons {
+.pushButton_product_ {
    border: 1px solid black;
 }
 
@@ -66,6 +70,14 @@
    color: #003840;
 }
 
+.label_product_status {
+
+   background-color: transparent;
+   qproperty-alignment: AlignCenter;
+   font-size: 28px;
+   color: #400000;
+   
+}
 .label_product_position {
    font-family: 'Brevia';
    font-style: normal;

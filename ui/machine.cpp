@@ -14,6 +14,11 @@ machine::~machine()
 {
 }
 
+void machine::setDb(DbManager *db)
+{
+    m_db = db;
+}
+
 QString machine::getTemplateFolder()
 {
     QString template_name = m_template;
@@ -22,6 +27,49 @@ QString machine::getTemplateFolder()
         template_name = "default";
     }
     return TEMPLATES_ROOT_PATH + template_name + "/";
+}
+
+
+void machine::loadProductPropertiesFromProductsFile(QString soapstand_product_number, QString* name, QString* name_ui, QString* product_type, QString* description_ui, QString* features_ui, QString* ingredients_ui)
+{
+    QFile file(PRODUCT_DETAILS_TSV_PATH);
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        qDebug() << "ERROR: Opening product details file. Expect unexpected behaviour now! ";
+        return;
+    }
+
+    QTextStream in(&file);
+    qDebug() << "Load csv file with product properties";
+    while (!in.atEnd())
+    {
+        QString line = in.readLine();
+
+        QStringList fields = line.split("\t");
+        int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], soapstand_product_number, Qt::CaseSensitive);
+        if (compareResult == 0)
+        {
+            // qDebug() << "compare result is 0";
+            *name = fields[CSV_PRODUCT_COL_NAME];
+            *name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
+            *product_type = fields[CSV_PRODUCT_COL_TYPE];
+            *description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
+            *features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
+            *ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
+            break;
+        // int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], m_soapstand_product_serial, Qt::CaseSensitive);
+        // if (compareResult == 0)
+        // {
+        //     // qDebug() << "compare result is 0";
+        //     m_name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
+        //     m_product_type = fields[CSV_PRODUCT_COL_TYPE];
+        //     m_description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
+        //     m_features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
+        //     m_ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
+        //     break;
+        }
+    }
+    file.close();
 }
 
 QString machine::getTemplatePathFromName(QString fileName)
@@ -37,7 +85,6 @@ QString machine::getTemplatePathFromName(QString fileName)
         }
         image_path = image_default_path;
     }
-
     return image_path;
 }
 
@@ -50,9 +97,9 @@ QString machine::getDefaultTemplatePathFromName(QString fileName)
 void machine::printerStatus(bool *isOnline, bool *hasPaper)
 {
     qDebug() << "DB call: Check printer status. ";
-    DbManager db(DB_PATH);
-    db.printerStatus(isOnline, hasPaper);
-    db.closeDb();
+    
+    m_db->printerStatus(isOnline, hasPaper);
+   
 
     // This needs to be checked frequently, so caching is useless.
     // *isOnline = m_receipt_printer_is_online==1;
@@ -71,16 +118,16 @@ bool machine::getPumpRampingEnabled()
 
 void machine::setPumpRampingEnabled(bool isEnabled)
 {
-    DbManager db(DB_PATH);
-    db.updateTableMachineWithInt("enable_pump_ramping", isEnabled);
-    db.closeDb();
+    
+    m_db->updateTableMachineWithInt("enable_pump_ramping", isEnabled);
+   
 }
 
 void machine::setEmptyContainerDetectionEnabled(bool isEnabled)
 {
-    DbManager db(DB_PATH);
-    db.updateTableMachineWithInt("has_empty_detection", isEnabled);
-    db.closeDb();
+    
+    m_db->updateTableMachineWithInt("has_empty_detection", isEnabled);
+   
 }
 
 bool machine::getEmptyContainerDetectionEnabled()
@@ -134,7 +181,7 @@ bool machine::isAllowedAsAdmin()
     {
         allowed = true;
     }
-    qDebug()<< "Allowed as admin? " << allowed;
+    qDebug() << "Allowed as admin? " << allowed;
     return allowed;
 }
 
@@ -161,12 +208,12 @@ void machine::setStatusText(int slot, bool isSlotEnabled, QString status)
 {
 
     QString column = QString("status_text_slot_%1").arg(slot);
-// UPDATE machine SET status_text_slot_1='SLOT_STATE_AVAILABLE'
-    DbManager db(DB_PATH);
-    db.updateTableMachineWithText(column, status);
+    // UPDATE machine SET status_text_slot_1='SLOT_STATE_AVAILABLE'
+    
+    m_db->updateTableMachineWithText(column, status);
     // bool success = db.updateSlotAvailability(slot, isSlotEnabled, status);
 
-    db.closeDb();
+   
 }
 
 QString machine::getStatusText(int slot)
@@ -201,12 +248,13 @@ bool machine::slotNumberValidityCheck(int slot)
     return valid;
 }
 
-void machine::setSlotEnabled(int slot, bool isEnabled){
+void machine::setSlotEnabled(int slot, bool isEnabled)
+{
     // do this through product.cpp, as this should have been a part of products table
     QString column_name = QString("is_enabled_slot_%1").arg(slot);
-    DbManager db(DB_PATH);
-    db.updateTableMachineWithInt(column_name, isEnabled);
-    db.closeDb();
+    
+    m_db->updateTableMachineWithInt(column_name, isEnabled);
+   
 }
 
 bool machine::getSlotEnabled(int slot)
@@ -230,9 +278,9 @@ void machine::loadParametersFromDb()
 {
     qDebug() << "DB call: Load all machine parameters";
 
-    DbManager db(DB_PATH);
+    
 
-    db.getAllMachineProperties(
+    m_db->getAllMachineProperties(
         &m_machine_id,
         &m_soapstand_customer_id,
         &m_template,
@@ -261,7 +309,7 @@ void machine::loadParametersFromDb()
         m_pump_id_slots,
         m_is_enabled_slots,
         m_status_text_slots);
-    db.closeDb();
+   
 
     qDebug() << "Machine ID as loaded from db: " << m_machine_id;
 }

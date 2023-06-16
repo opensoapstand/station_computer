@@ -1,24 +1,57 @@
 #pushButton_back {
-   color: #FFFFFF;
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 32px;
    background-color: transparent;
-   border: 0px
+   border: 0px;
+   line-height: 99px;
+   color: #003840;
+   text-align: left;
+   /* qproperty-alignment: AlignCenter; */
+   border: none;
 }
 
 
-#print_Button {
+#pushButton_print {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 32px;
+   qproperty-alignment: AlignCenter;
+
    color: #FFFFFF;
-   background-color: #5E8580;
+   background-color: #5e8580;
    border: 1px solid #3D6675;
    box-sizing: border-box;
    border-radius: 20px;
 }
 
 QListWidget {
+   
    background: transparent;
 }
 
 QListWidget::item {
-   background-color: #5E8580;
+   background-color: #c9ddc2;
+}
+
+QListWidget::item:alternate {
+   background-color: white;
+}
+
+#label_title {
+
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 54px;
+   line-height: 99px;
+   letter-spacing: px;
+   color: #003840;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
 }
 
 /* 

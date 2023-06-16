@@ -64,34 +64,33 @@ void page_maintenance_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToS
 void page_maintenance_dispenser::showEvent(QShowEvent *event)
 {
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+
+    qDebug()<< "Active Slot: " << QString::number(this->p_page_idle->selectedProduct->getSlot());
     QWidget::showEvent(event);
 
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
-
-    //p_page_idle->setTemplateTextToObject(ui->label_enabled_status);
-    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_enabled_status,"pump_off");
+    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_enabled_status, "pump_off");
     p_page_idle->setTemplateTextToObject(ui->label_calibration_instructions);
     p_page_idle->setTemplateTextToObject(ui->pushButton_enable_pump);
-    p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump,"enable_pump");
+    p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "enable_pump");
     p_page_idle->setTemplateTextToObject(ui->pushButton_set_restock_volume);
     p_page_idle->setTemplateTextToObject(ui->pushButton_update_portal);
     ui->pushButton_done->setText(p_page_idle->getTemplateTextByPage(this, "pushButton_keypad_done"));
     ui->pushButton_cancel->setText(p_page_idle->getTemplateTextByPage(this, "pushButton_keypad_cancel"));
-    // p_page_idle->setTemplateTextToObject(ui->pushButton_cancel);
-    // p_page_idle->setTemplateTextToObject(ui->pushButton_done);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_to_previous_page);
 
-    //   ui->pushButton_cancel->setText("CANCEL");
-    //     ui->pushButton_done->setText("DONE");
-
+    ui->label_product_name->setStyleSheet(styleSheet);
+    ui->label_product_picture->setStyleSheet(styleSheet);
+    ui->pushButton_to_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_restock->setStyleSheet(styleSheet);
     ui->pushButton_enable_pump->setProperty("class", "pump_enable");
     ui->pushButton_enable_pump->setStyleSheet(styleSheet);
     ui->label_action_feedback->setStyleSheet(styleSheet);
+    ui->label_action_feedback->setText("");
 
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
     ui->numberEntry->hide();
-    // ui->errorLabel->setText("");
     ui->label_title->setText("");
 
     ui->pushButton_plu_small->setEnabled(true);
@@ -133,7 +132,7 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
 
     ui->label_volume_per_tick->setText(p_page_idle->selectedProduct->getVolumePerTickAsStringForSlot() + "/tick");
 
-    ui->label_name->setText(p_page_idle->selectedProduct->getProductName());
+    ui->label_product_name->setText(p_page_idle->selectedProduct->getProductName());
 
     ui->pushButton_price_small->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)));
     ui->pushButton_price_medium->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)));
@@ -160,32 +159,77 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     ui->pushButton_plu_large->setText(p_page_idle->selectedProduct->getPlu(SIZE_LARGE_INDEX));
     ui->pushButton_plu_custom->setText(p_page_idle->selectedProduct->getPlu(SIZE_CUSTOM_INDEX));
 
-    ui->label_status_dispenser->setText(p_page_idle->selectedProduct->getStatusText());
-    setpushButton_soldOutText();
+    setStatusTextLabel(p_page_idle->selectedProduct->getStatusText());
+    setpushButton_set_statusText();
 }
 
-void page_maintenance_dispenser::setpushButton_soldOutText()
+void page_maintenance_dispenser::setStatusTextLabel(QString statusText)
 {
-    QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
+        QString status_display_text = "";
+        // if (!(p_page_idle->selectedProduct->isProductVolumeInContainer()))
+        // {
+        //     status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->auto_empty");
+        // }
+        // else 
+        // if (!p_page_idle->selectedProduct->getSlotEnabled())
+        // {
+        //     status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->not_enabled");
+        // }
+        
+        if (statusText.compare("SLOT_STATE_AVAILABLE") == 0)
+        {
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->available");
+        }
+        else if (statusText.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
+        {
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->almost_empty");
+        }
+        else if (statusText.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
+        {
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->coming_soon");
+        }
+        else if (statusText.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
+        {
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->assistance");
+        }
+        else if (statusText.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
+        {
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->empty");
+        }
+        else if (statusText.compare("SLOT_STATE_DISABLED") == 0)
+        {
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->disabled");
+
+        }
+        else if (statusText.compare("SLOT_STATE_WARNING_PRIMING") == 0)
+        {
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->priming");
+        }
+        else
+        {
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->default");
+        }
+        ui->label_status_dispenser->setText(statusText + ": " + status_display_text );
+
+}
+
+void page_maintenance_dispenser::setpushButton_set_statusText()
+{
+    // QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
 
     if (p_page_idle->selectedProduct->getSlotEnabled())
     {
-
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_soldOut, "unavailable");
-
-        // ui->pushButton_soldOut->setText("Make \n unavailable");
-        // QString caption = p_page_idle->getTemplateTextByPage(this, "pushButton_soldOut->unavailable");
-        // caption.replace("\\n", "\n");
-        // ui->pushButton_soldOut->setText(caption);
-        ui->pushButton_soldOut->setProperty("class", "pushButton_soldOut_unavailable");
-        ui->pushButton_soldOut->setStyleSheet(styleSheet);
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_set_status, "unavailable");
+        // ui->pushButton_set_status->setProperty("class", "pushButton_set_status_unavailable");
+        // ui->pushButton_set_status->setStyleSheet(styleSheet);
+         p_page_idle->addCssClassToObject(ui->pushButton_set_status, "pushButton_set_status_unavailable", PAGE_MAINTENANCE_DISPENSER_CSS);
     }
     else
     {
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_soldOut, "available");
-        // ui->pushButton_soldOut->setText("Make \n available");
-        ui->pushButton_soldOut->setProperty("class", "pushButton_soldOut_available");
-        ui->pushButton_soldOut->setStyleSheet(styleSheet);
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_set_status, "available");
+        // ui->pushButton_set_status->setProperty("class", "pushButton_set_status_available");
+        // ui->pushButton_set_status->setStyleSheet(styleSheet);
+         p_page_idle->addCssClassToObject(ui->pushButton_set_status, "pushButton_set_status_available", PAGE_MAINTENANCE_DISPENSER_CSS);
     }
 }
 
@@ -269,7 +313,7 @@ void page_maintenance_dispenser::on_pushButton_auto_dispense_small_clicked()
 
 void page_maintenance_dispenser::autoDispenseStart(int size)
 {
-    QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
+    // QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
 
     if (!pump_enabled)
     {
@@ -277,8 +321,9 @@ void page_maintenance_dispenser::autoDispenseStart(int size)
         // ui->pushButton_enable_pump->setText("DISABLE PUMP");
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "disable_pump");
 
-        ui->pushButton_enable_pump->setProperty("class", "pump_disable");
-        ui->pushButton_enable_pump->setStyleSheet(styleSheet);
+        // ui->pushButton_enable_pump->setProperty("class", "pump_disable");
+        // ui->pushButton_enable_pump->setStyleSheet(styleSheet);
+         p_page_idle->addCssClassToObject(ui->pushButton_enable_pump, "pump_disable", PAGE_MAINTENANCE_DISPENSER_CSS);
         qDebug() << "Autofill small quantity pressed.";
         QString command = QString::number(this->p_page_idle->selectedProduct->getSlot());
 
@@ -336,33 +381,22 @@ void page_maintenance_dispenser::dispense_test_start()
 
     pump_enabled = true;
 
-    //ui->label_enabled_status->setText("Manual Pump ready. Press dispense button.");
-     p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_enabled_status, "pump_ready");
-     p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "disable_pump");
-    //p_page_idle->setTemplateTextToObject(ui->pushButton_enable_pump);
-
-    //ui->pushButton_enable_pump->setText("DISABLE PUMP");
-
-    QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
-    ui->pushButton_enable_pump->setProperty("class", "pump_disable");
-    ui->pushButton_enable_pump->setStyleSheet(styleSheet);
+    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_enabled_status, "pump_ready");
+    p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "disable_pump");
+    p_page_idle->addCssClassToObject(ui->pushButton_enable_pump, "pump_disable", PAGE_MAINTENANCE_DISPENSER_CSS);
 }
 
 void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
 {
-    QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
-
     if (pump_enabled)
     {
         dispenseTimer->stop();
         pump_enabled = false;
-        // ui->label_enabled_status->setText("Pump manual mode OFF.");
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_enabled_status, "pump_off");
-        //ui->pushButton_enable_pump->setText("ENABLE PUMP");
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump,"enable_pump");
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "enable_pump");
 
-        ui->pushButton_enable_pump->setProperty("class", "pump_enable");
-        ui->pushButton_enable_pump->setStyleSheet(styleSheet);
+        p_page_idle->addCssClassToObject(ui->pushButton_enable_pump, "pump_enable", PAGE_MAINTENANCE_DISPENSER_CSS);
+
 
         if (sendStopToController)
         {
@@ -391,8 +425,7 @@ void page_maintenance_dispenser::reset_all_dispense_stats()
     ui->label_calibration_result->setText("-"); // calibration constant
 
     setButtonPressCountLabel(true);
-    QString slotStatus = p_page_idle->selectedProduct->getStatusText();
-    ui->label_status_dispenser->setText(slotStatus);
+    setStatusTextLabel(p_page_idle->selectedProduct->getStatusText());
 }
 
 void page_maintenance_dispenser::update_volume_received_dispense_stats(double dispensed)
@@ -436,7 +469,7 @@ void page_maintenance_dispenser::fsmReceiveDispenserStatus(QString status)
 {
     QString dispenseStatus = status;
     qDebug() << "Dispense status received from FSM: " << dispenseStatus;
-    ui->label_status_dispenser->setText(dispenseStatus);
+    setStatusTextLabel(dispenseStatus);
 };
 
 void page_maintenance_dispenser::setButtonPressCountLabel(bool init)
@@ -518,24 +551,20 @@ void page_maintenance_dispenser::on_pushButton_restock_clicked()
     if (success)
     {
         sendRestockToCloud();
-
-        // ui->label_action_feedback->setText("Refill Succesfull");
-    //p_page_idle->setTemplateTextToObject(ui->pushButton_enable_pump);
-    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_action_feedback, "success");
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_action_feedback, "success");
         p_page_idle->selectedProduct->setStatusText("SLOT_STATE_AVAILABLE");
     }
     else
     {
-        // ui->label_action_feedback->setText("Refill ERROR");
-    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_action_feedback, "error");
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_action_feedback, "error");
     }
 
     updateProductLabelValues(true);
 }
 
-void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
+void page_maintenance_dispenser::on_pushButton_set_status_clicked()
 {
-    qDebug() << "soldout clicked. slot: " << QString::number(this->p_page_idle->selectedProduct->getSlot());
+    qDebug() << "Soldout button clicked.";
 
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
@@ -544,23 +573,6 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
 
     if (isEnabled)
     {
-
-        // // ARE YOU SURE YOU WANT TO COMPLETE?
-        // QMessageBox msgBox;
-        // msgBox.setWindowFlags(Qt::FramelessWindowHint);
-        // msgBox.setText("<p align=center>Are you sure you want to Disable product?</p>");
-
-        // QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
-        // msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
-        // msgBox.setStyleSheet(styleSheet);
-
-        // msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-        // int ret = msgBox.exec();
-
-        // switch (ret)
-        // {
-        // case QMessageBox::Yes:
-        // {
         QMessageBox msgBox_set_availabilty;
         msgBox_set_availabilty.setWindowFlags(Qt::FramelessWindowHint);
 
@@ -585,61 +597,20 @@ void page_maintenance_dispenser::on_pushButton_soldOut_clicked()
         break;
         }
         isEnabled = false;
-        // break;
-        // }
-        // case QMessageBox::No:
-        // {
-
-        //     msgBox.hide();
-        //     return;
-        // }
-        // break;
-        // }
-        qDebug() << "---will make UN available";
     }
     else
     {
-        // // ARE YOU SURE YOU WANT TO COMPLETE?
-        // QMessageBox msgBox;
-        // msgBox.setWindowFlags(Qt::FramelessWindowHint);
-        // msgBox.setText("<p align=center>Are you sure you want to Enable Product? (This will reset technical problems messages too)</p>");
-
-        // QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
-        // msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
-        // msgBox.setStyleSheet(styleSheet);
-
-        // msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-        // int ret = msgBox.exec();
-
-        // switch (ret)
-        // {
-        // case QMessageBox::Yes:
-        // {
-
         isEnabled = true;
         slotStatus = "SLOT_STATE_AVAILABLE";
         qDebug() << "---will make available";
-        // break;
-        // }
-        // case QMessageBox::No:
-        // {
-        //     msgBox.hide();
-        //     return;
-        //     break;
-        // }
-        // }
     }
 
     // set to database
     p_page_idle->selectedProduct->setSlotEnabled(isEnabled);
-    qDebug() << "feiwjefwe ";
     p_page_idle->selectedProduct->setStatusText(slotStatus);
-    qDebug() << "after ste status ";
 
-    ui->label_action_feedback->setText("Slot Status set to\n" + slotStatus);
-    qDebug() << "before updatelabels ";
+    ui->label_action_feedback->setText("Slot Status set to " + slotStatus);
     updateProductLabelValues(true);
-    qDebug() << "after updatelabels ";
 }
 
 // ****************************************************************
@@ -686,14 +657,14 @@ void page_maintenance_dispenser::on_pushButton_done_clicked()
         {
             p_page_idle->selectedProduct->setPrice(SIZE_SMALL_INDEX, text_entered.toDouble());
             ui->pushButton_price_small->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)));
-            //p_page_idle->setTemplateTextToObject(ui->pushButton_enable_pump);
-            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title,"small");
+            // p_page_idle->setTemplateTextToObject(ui->pushButton_enable_pump);
+            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "small");
             // ui->label_title->setText("Price Small:");
         }
         else if (activeEditField == "pushButton_price_medium")
         {
-            //ui->label_title->setText("Price Medium:");
-            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title,"medium");
+            // ui->label_title->setText("Price Medium:");
+            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "medium");
             p_page_idle->selectedProduct->setPrice(SIZE_MEDIUM_INDEX, text_entered.toDouble());
             ui->pushButton_price_medium->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)));
         }
@@ -778,7 +749,9 @@ void page_maintenance_dispenser::on_pushButton_cancel_clicked()
     // ui->errorLabel->setText("");
     // text_entered = "";
     activeEditField = "";
-    p_page_idle->setTemplateTextToObject(ui->pushButton_cancel);
+    ui->pushButton_cancel->setText(p_page_idle->getTemplateTextByPage(this, "pushButton_keypad_cancel"));
+
+    //    p_page_idle->setTemplateTextToObject(ui->pushButton_cancel);
 }
 
 // ****************************************************************
@@ -886,7 +859,7 @@ void page_maintenance_dispenser::on_pushButton_set_volume_remaining_clicked()
     // modify_stock = true;
     // _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
     // ui->label_title->setText("Adjust the remaining volume");
-    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title,"adjust_volume");
+    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "adjust_volume");
     ui->textEntry->setText(p_page_idle->selectedProduct->getVolumeRemainingCorrectUnits());
 }
 
@@ -894,7 +867,7 @@ void page_maintenance_dispenser::on_pushButton_set_restock_volume_clicked()
 {
     ui->textEntry->setText(p_page_idle->selectedProduct->getFullVolumeCorrectUnits(false));
     // ui->label_title->setText("Full Volume button clicked");
-    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title,"full_button");
+    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "full_button");
     //    qDebug() << "Full Volume button clicked" ;
     // full = true;
     // _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
@@ -1008,7 +981,7 @@ void page_maintenance_dispenser::on_pushButton_update_portal_clicked()
     {
         QString feedback = QString::fromUtf8(readBuffer.c_str());
         qDebug() << "Pagemaintenancedispenser cURL success. Server feedback readbuffer: " << feedback;
-        //ui->label_action_feedback->setText("Portal Update Succesfull");
+        // ui->label_action_feedback->setText("Portal Update Succesfull");
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_action_feedback, "portal_success");
 
         // readbuffer is a string. "true" or "false"

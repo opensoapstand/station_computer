@@ -3,6 +3,7 @@
 
 #include "df_util.h"
 #include "machine.h"
+#include "dbmanager.h"
 
 class product : public QObject
 {
@@ -14,6 +15,7 @@ public:
     ~product();
     product &operator=(const product &other);
     void setMachine(machine *machine);
+    void setDb(DbManager* db);
 
     // Setters and Getters
     void setSlot(int slot);
@@ -54,7 +56,7 @@ public:
     QString getProductType();
     QString getProductDrinkfillSerial();
 
-    void loadProductPropertiesFromProductsFile();
+
 
     void loadProductProperties();
     void loadProductPropertiesFromDb();
@@ -117,6 +119,7 @@ signals:
 
 private:
     machine *thisMachine;
+    DbManager* m_db;
 
     int slot;
 
@@ -163,6 +166,7 @@ private:
     QString m_ingredients_ui;
     QString m_product_type;
 
+    QString m_name;
     QString m_name_ui;
     QString m_features_ui;
     QString m_description_ui;

@@ -11,27 +11,22 @@ page_transactions::page_transactions(QWidget *parent) : QWidget(parent),
 
         transaction_count = TRANSACTION_HISTORY_COUNT;
 
-        // set up back button
-        QFont font;
-        font.setFamily(QStringLiteral("Brevia"));
-        font.setPointSize(20);
-        font.setBold(true);
-        font.setWeight(75);
+        // // set up back button
+        // QFont font;
+        // font.setFamily(QStringLiteral("Brevia"));
+        // font.setPointSize(20);
+        // font.setBold(true);
+        // font.setWeight(75);
 
-        ui->pushButton_back->setFont(font);
+        // ui->pushButton_back->setFont(font);
 
-        // set up print button
+        // // set up print button
 
-        font.setFamily(QStringLiteral("Brevia"));
-        font.setPointSize(20);
-        font.setBold(true);
-        font.setWeight(75);
-
-
-        ui->pushButton_print->setFont(font);
-        
-
-        // ui->transactions_List->setStyleSheet("QListWidget{  background:transparent; }QListWidget::item{background:green;}");
+        // font.setFamily(QStringLiteral("Brevia"));
+        // font.setPointSize(20);
+        // font.setBold(true);
+        // font.setWeight(75);
+        // ui->pushButton_print->setFont(font);
 }
 
 void page_transactions::setPage(page_idle *pageIdle)
@@ -58,19 +53,18 @@ void page_transactions::showEvent(QShowEvent *event)
         QString styleSheet = p_page_idle->getCSS(PAGE_TRANSACTIONS_CSS);
         ui->pushButton_back->setStyleSheet(styleSheet);
         ui->pushButton_print->setStyleSheet(styleSheet);
+        ui->label_title->setStyleSheet(styleSheet);
         ui->transactions_List->setStyleSheet(styleSheet);
 
+        p_page_idle->setTemplateTextToObject(ui->label_title);
         p_page_idle->setTemplateTextToObject(ui->pushButton_back);
         p_page_idle->setTemplateTextToObject(ui->pushButton_print);
 
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TRANSACTIONS_BACKGROUND_PATH);
 
-
         idleTimer->start(1000);
         _idleTimeoutSec = 60;
         populateTransactionsTable();
-
-        QString paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
 
         if (p_page_idle->thisMachine.hasReceiptPrinter())
         {
@@ -78,7 +72,6 @@ void page_transactions::showEvent(QShowEvent *event)
         }
         else
         {
-                //ui->pushButton_print->show();
                 ui->pushButton_print->hide();
         }
 }
@@ -100,13 +93,8 @@ void page_transactions::populateTransactionsTable()
 {
         transaction_count = TRANSACTION_HISTORY_COUNT;
         int retrieved_count;
-
-        DbManager db(DB_PATH);
-        db.getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
-        db.closeDb();
-        
+        p_page_idle->g_database->getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
         transaction_count = retrieved_count;
-
         populateList();
 }
 
@@ -125,15 +113,29 @@ void page_transactions::populateList()
         // populate the items of the list
         for (int i = 0; i < transaction_count; i++)
         {
+                QString name;
+                QString name_ui;
+                QString product_type;
+                QString description_ui;
+                QString features_ui;
+                QString ingredients_ui;
                 QString rowItem;
-                for (int j = 1; j < 5; j++)
+                p_page_idle->thisMachine.loadProductPropertiesFromProductsFile(recent_transactions[i][4],
+                                                                               &name,
+                                                                               &name_ui,
+                                                                               &product_type,
+                                                                               &description_ui,
+                                                                               &features_ui,
+                                                                               &ingredients_ui);
+                for (int j = 1; j < 4; j++)
                 {
                         rowItem += recent_transactions[i][j].rightJustified(8, ' ') + "\t";
                 }
+                rowItem += name.rightJustified(8, ' ') + "\t";
 
                 // get rid of last tab
                 int pos = rowItem.lastIndexOf(QChar('\t'));
-                qDebug() << rowItem.left(pos);
+                // qDebug() << rowItem.left(pos);
 
                 ui->transactions_List->addItem(rowItem);
         }

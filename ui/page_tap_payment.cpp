@@ -70,7 +70,7 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
 
   // THIS CODE SHOULD BE UNCOMMENTED AND PUT OUTSIDE CONSTRUCTOR
     // ui->order_total_amount->hide();
-    // DbManager db(DB_PATH);
+    
 
     // if (db.getPaymentMethod(1) == "tapTcp")
     // {
@@ -103,7 +103,7 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
     //         registerDevice(connectSocket());
     //     }
     // }
-    // db.closeDb();
+   
 }
 
 

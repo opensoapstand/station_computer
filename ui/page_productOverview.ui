@@ -1966,10 +1966,10 @@ color: #58595B;
   <widget class="QPushButton" name="pushButton_select_product_page">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>30</y>
-     <width>351</width>
-     <height>61</height>
+     <x>70</x>
+     <y>40</y>
+     <width>401</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">

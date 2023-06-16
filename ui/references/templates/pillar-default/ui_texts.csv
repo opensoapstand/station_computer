@@ -25,7 +25,7 @@ page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer em
 
 #page_select_product
 page_select_product->label_pick_soap,Pick your soap
-page_select_product->pushButton_to_idle,<-back
+page_select_product->pushButton_to_idle,<- back
 page_select_product->no_text,
 page_select_product->empty,Empty
 page_select_product->almost_empty,Almost<br>empty
@@ -83,15 +83,15 @@ page_end->thank_you_message_label->finish_transaction,Finishing<br>transaction
 page_help->pushButton_to_transactions,Transaction History ->
 page_help->pushButton_to_maintenance,Settings
 page_help->pushButton_to_feedback,Contact Us
-page_help->pushButton_to_idle,<-back
+page_help->pushButton_to_idle,<- back
 page_help->label_keyboardInfo,Provide maintainer or administrator password, Provide maintainer or administrator password, followed by "Done". "Done". 
 
 # page_transactions
 page_transactions->pushButton_back,Print Selected Receipt
-page_transactions->pushButton_print,<-back
+page_transactions->pushButton_print,<- back
 
 # page_sendFeedback
-page_sendFeedback->pushButton_previous_page,<-back
+page_sendFeedback->pushButton_previous_page,<- back
 page_sendFeedback->label_select_problem,Please provide feedback
 page_sendFeedback->label_still_cant_find,Still can't find it?
 page_sendFeedback->label_email,Email us at: sales@soapstand.com
@@ -112,7 +112,7 @@ finalize_transaction
 page_qr_payment->label_steps,<style>        li:{margin-top:10px; margin-left: 5px;}        </style>        <ol>        <li><span class='tab'></span>Scan QR code with phone camera<br></li>        <li><span class='tab'></span>Click to open the link that appears<br></li>        <li><span class='tab'></span>Follow payment instructions on phone<br></li>        <li><span class='tab'></span>The station will proceed after payment<br></li>        <li><span class='tab'></span>Refill your soap!</li>        </ol>        <style>        li:{margin-top:10px;}        </style>        <ol>       
 page_qr_payment->label_processing,it can take a few moments for the station to<br>continue after your payment is confirmed
 page_qr_payment->label_title->almost_there,almost there
-page_qr_payment->pushButton_previous_page,<-back
+page_qr_payment->pushButton_previous_page,<- back
 page_qr_payment->order_drink_amount, $%1
 page_qr_payment->order_total_amount, Total: $%1
 page_qr_payment->msgBox_cancel->default,<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>
@@ -122,8 +122,8 @@ page_qr_payment->msgBox_refund->default,<p align=center><br><br>Are you sure you
 # page_error_wifi (no csv)
 
 #page maintenance
-page_maintenance->product_overlay_labels[i]->almost_empty,Almost Empty
-page_maintenance->product_overlay_labels[i]->coming_soon,Comming soon
+page_maintenance->labels_product_status[i]->almost_empty,Almost Empty
+page_maintenance->labels_product_status[i]->coming_soon,Comming soon
 
 #page_idle_products
 
@@ -133,7 +133,7 @@ page_idle_products->printer_status_label->empty_improperly_loaded,Assistance nee
 
 
 # page_tap_payment
-page_tap_payment->pushButton_previous_page,<-back
+page_tap_payment->pushButton_previous_page,<- back
 page_tap_payment->label_title->processing,Processing Payment
 page_tap_payment->msgBox_cancel,<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>
 page_tap_payment->preauthLabel,You are being pre-authorized for maximum volume %1 with amount of

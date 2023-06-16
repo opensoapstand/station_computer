@@ -32,14 +32,14 @@ line-height: 29px;</string>
   <widget class="QPushButton" name="pushButton_previous_page">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>20</y>
-     <width>181</width>
-     <height>81</height>
+     <x>70</x>
+     <y>40</y>
+     <width>401</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>back</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_send">

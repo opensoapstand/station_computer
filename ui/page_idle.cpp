@@ -20,6 +20,7 @@
 #include "page_maintenance.h"
 #include "page_maintenance_general.h"
 #include "product.h"
+#include "dbmanager.h"
 
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
@@ -50,9 +51,8 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     {
         products[slot_index].setSlot(slot_index + 1);
         products[slot_index].setMachine(&thisMachine);
+        products[slot_index].setDb(g_database);
     }
-
-    //g_db.setPath(DB_PATH);
 }
 
 /*
@@ -66,6 +66,7 @@ void page_idle::setPage(page_select_product *p_page_select_product, page_mainten
     this->p_page_maintenance_general = pageMaintenanceGeneral;
     this->p_page_idle_products = p_page_idle_products;
     this->p_page_error_wifi = p_page_error_wifi;
+
 }
 
 // DTOR
@@ -84,7 +85,7 @@ void page_idle::loadDynamicContent()
         products[slot_index].loadProductProperties();
     }
     loadTextsFromTemplateCsv(); // dynamic content (text by template)
-    loadTextsFromDefaultCsv(); // dynamic styling (css by template)
+    loadTextsFromDefaultCsv();  // dynamic styling (css by template)
 }
 
 void page_idle::showEvent(QShowEvent *event)
@@ -94,7 +95,7 @@ void page_idle::showEvent(QShowEvent *event)
     loadDynamicContent();
     thisMachine.setRole(UserRole::user);
 
-    setSelectedProduct(0);
+    setSelectedProduct(1); // default selected product is necessary to deal with things if no product is chosen yet e.g. show transaction history
 
 #ifndef PLAY_VIDEO
     setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
@@ -230,9 +231,9 @@ void page_idle::registerUserInteraction(QWidget *page)
     QString page_name = page->objectName();
     qDebug() << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< User entered: " + page_name + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
 
-    DbManager db(DB_PATH);
-    db.addUserInteraction(page_name);
-    db.closeDb();
+    
+    g_database->addUserInteraction(page_name);
+   
 }
 
 double page_idle::getDiscountPercentage()
@@ -529,14 +530,14 @@ QString page_idle::getTemplateText(QString textName_to_find)
 
 void page_idle::loadTextsFromTemplateCsv()
 {
-    qDebug()<< "Load dynamic texts from template csv";
+    qDebug() << "Load dynamic texts from template csv";
     QString csv_path = thisMachine.getTemplatePathFromName(UI_TEXTS_CSV_PATH);
     loadTextsFromCsv(csv_path, &textNameToTextMap_template);
 }
 
 void page_idle::loadTextsFromDefaultCsv()
 {
-    qDebug()<< "Load dynamic texts from devault csv";
+    qDebug() << "Load dynamic texts from devault csv";
     QString name = UI_TEXTS_CSV_PATH;
     QString csv_default_template_path = thisMachine.getDefaultTemplatePathFromName(name);
     loadTextsFromCsv(csv_default_template_path, &textNameToTextMap_default);

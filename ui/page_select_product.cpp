@@ -38,7 +38,6 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
     labels_product_picture[2] = ui->label_product_3_photo;
     labels_product_picture[3] = ui->label_product_4_photo;
 
-
     labels_product_overlay_text[0] = ui->label_product_1_overlay_text;
     labels_product_overlay_text[1] = ui->label_product_2_overlay_text;
     labels_product_overlay_text[2] = ui->label_product_3_overlay_text;
@@ -69,16 +68,11 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
  */
 void page_select_product::setPage(page_product *p_page_product, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp)
 {
-    // this->selection_PageTwo = pageTwoProducts;
     this->p_page_product = p_page_product;
     this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_help = pageHelp;
 
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
-    QString full_path = p_page_idle->thisMachine.getTemplatePathFromName(IMAGE_BUTTON_HELP);
-    qDebug() << full_path;
-    p_page_idle->addPictureToLabel(ui->label_help, full_path);
 }
 
 // DTOR
@@ -89,16 +83,20 @@ page_select_product::~page_select_product()
 
 void page_select_product::showEvent(QShowEvent *event)
 {
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
+    QString full_path = p_page_idle->thisMachine.getTemplatePathFromName(IMAGE_BUTTON_HELP);
+    p_page_idle->addPictureToLabel(ui->label_help, full_path);
+
+
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-    
+
     QString styleSheet = p_page_idle->getCSS(PAGE_SELECT_PRODUCT_CSS);
     ui->p_page_maintenanceButton->setStyleSheet(styleSheet);
     ui->pushButton_help_page->setStyleSheet(styleSheet);
-    
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
-
     ui->label_pick_soap->setStyleSheet(styleSheet);
+
     displayProducts();
 
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
@@ -110,7 +108,7 @@ void page_select_product::showEvent(QShowEvent *event)
         labels_product_type[slot_index]->setStyleSheet(styleSheet);
         labels_product_picture[slot_index]->setProperty("class", "label_product_photo");
         labels_product_picture[slot_index]->setStyleSheet(styleSheet);
-        // p_page_idle->addCssClassToObject(labels_product_picture[slot_index], "label_product_overlay_sold_out", PAGE_SELECT_PRODUCT_CSS);
+        // p_page_idle->addCssClassToObject(labels_product_picture[slot_index], "label_product_overlay_unavailable", PAGE_SELECT_PRODUCT_CSS);
         labels_product_name[slot_index]->setProperty("class", "label_product_name");
         labels_product_name[slot_index]->setStyleSheet(styleSheet);
         pushButtons_product_select[slot_index]->setProperty("class", "PushButton_selection");
@@ -139,8 +137,6 @@ void page_select_product::displayProducts()
 {
     QString product_type_icons[8] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH, ICON_TYPE_MOCKTAIL_PATH, ICON_TYPE_KOMBUCHA_PATH, ICON_TYPE_JUICE_PATH};
 
-    bool product_slot_enabled;
-    // bool product_sold_out;
     QString product_type;
     QString product_name;
     QString product_status_text;
@@ -148,25 +144,26 @@ void page_select_product::displayProducts()
     for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
         QString styleSheet = p_page_idle->getCSS(PAGE_SELECT_PRODUCT_CSS);
-        
+
         // display product picture
 
         p_page_idle->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->products[slot_index].getProductPicturePath());
         product_type = p_page_idle->products[slot_index].getProductType();
         product_name = p_page_idle->products[slot_index].getProductName();
 
-        product_slot_enabled = p_page_idle->products[slot_index].getSlotEnabled();
-
-        if (!product_slot_enabled){
-            p_page_idle->addCssClassToObject(labels_product_overlay_text[slot_index], "label_product_overlay_sold_out", PAGE_SELECT_PRODUCT_CSS);
+        if (!p_page_idle->products[slot_index].getSlotEnabled())
+        {
+            p_page_idle->addCssClassToObject(labels_product_overlay_text[slot_index], "label_product_overlay_unavailable", PAGE_SELECT_PRODUCT_CSS);
             // qDebug() << labels_product_picture[slot_index]->styleSheet();
-        }else{
+        }
+        else
+        {
             p_page_idle->addCssClassToObject(labels_product_overlay_text[slot_index], "label_product_overlay_available", PAGE_SELECT_PRODUCT_CSS);
         }
 
         product_status_text = p_page_idle->products[slot_index].getStatusText();
 
-        qDebug() << "Product: " << product_type << "At slot: " << (slot_index + 1) << ", enabled: " << product_slot_enabled << " Status text: " << product_status_text;
+        qDebug() << "Product: " << product_type << "At slot: " << (slot_index + 1) << ", enabled: " << p_page_idle->products[slot_index].getSlotEnabled() << " Status text: " << product_status_text;
 
         labels_product_name[slot_index]->setText(product_name);
 
@@ -217,7 +214,7 @@ void page_select_product::displayProducts()
         {
             icon_path = ICON_TYPE_DEFAULT;
             type_text = product_type;
-            //qDebug() << "Icon for product type not found : " << type_text << " Set to default. ";
+            // qDebug() << "Icon for product type not found : " << type_text << " Set to default. ";
         }
         QString product_type_icon_path = p_page_idle->thisMachine.getTemplatePathFromName(icon_path);
         p_page_idle->addPictureToLabel(labels_product_icon[slot_index], product_type_icon_path);
@@ -225,40 +222,43 @@ void page_select_product::displayProducts()
         // labels_product_icon[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "no_text"));
 
         //  labels_selectProductOverlay[slot_index]->raise();
+        labels_product_overlay_text[slot_index]->raise();
+        pushButtons_product_select[slot_index]->raise();
         labels_product_icon[slot_index]->setText("");
         labels_product_icon[slot_index]->raise();
-        labels_product_overlay_text[slot_index]->raise();
 
-        pushButtons_product_select[slot_index]->raise();
-
-        if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
+        if (!p_page_idle->products[slot_index].getSlotEnabled())
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "available"));
+            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->not_enabled"));
+            // labels_product_overlay_text[slot_index]->setText("Needs<br>assistance");
+        }
+        else if (!(p_page_idle->products[slot_index].isProductVolumeInContainer()))
+        {
+            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->empty"));
+        }
+        else if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
+        {
+            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->available"));
         }
         else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "almost_empty"));
+            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->almost_empty"));
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "sold_out"));
+            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->empty"));
         }
         else if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "coming_soon"));
+            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->coming_soon"));
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "assistance"));
+            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->assistance"));
         }
         else
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "default"));
-        }
-
-        if (!(p_page_idle->products[slot_index].isProductVolumeInContainer()))
-        {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "sold_out"));
+            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->default"));
         }
 
         labels_product_type[slot_index]->setText(type_text);
@@ -268,9 +268,8 @@ void page_select_product::displayProducts()
 
 void page_select_product::select_product(int slot)
 {
-    bool product_slot_enabled = p_page_idle->products[slot - 1].getSlotEnabled();
 
-    if (product_slot_enabled)
+    if (p_page_idle->products[slot - 1].getSlotEnabled())
     {
         qDebug() << "Selected slot: " << slot;
         p_page_idle->setSelectedProduct(slot);

@@ -52,7 +52,7 @@ public:
     void fsmReceiveDispenseRate(double flowrate);
     void fsmReceiveDispenserStatus(QString status);
     void fsmReceiveNoFlowAbort();
-    void setpushButton_soldOutText();
+    void setpushButton_set_statusText();
     void dispense_test_end(bool sendStopToController);
     void dispense_test_start();
     void update_volume_received_dispense_stats(double dispensed);
@@ -76,7 +76,7 @@ private slots:
     void on_pushButton_plu_custom_clicked();
     void on_pushButton_volume_per_tick_clicked();
     void on_pushButton_restock_clicked();
-    void on_pushButton_soldOut_clicked();
+    void on_pushButton_set_status_clicked();
     void on_pushButton_set_restock_volume_clicked();
     void onMaintainProductPageTimeoutTick();
     void onDispenseTimerTick();
@@ -99,6 +99,7 @@ private slots:
     
 
 private:
+    void setStatusTextLabel(QString statusText);
     void setButtonPressCountLabel(bool init);
     void setButtonPressCountLabel2(bool init);
 

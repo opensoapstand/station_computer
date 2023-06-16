@@ -201,8 +201,8 @@
   <widget class="QLabel" name="label_machine_id">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>1670</y>
+     <x>220</x>
+     <y>1320</y>
      <width>391</width>
      <height>50</height>
     </rect>
@@ -213,14 +213,14 @@
     </font>
    </property>
    <property name="text">
-    <string/>
+    <string>machine serial</string>
    </property>
   </widget>
   <widget class="QLabel" name="product1_overlay_label">
    <property name="geometry">
     <rect>
      <x>220</x>
-     <y>561</y>
+     <y>630</y>
      <width>281</width>
      <height>20</height>
     </rect>
@@ -233,7 +233,7 @@
    <property name="geometry">
     <rect>
      <x>550</x>
-     <y>561</y>
+     <y>630</y>
      <width>281</width>
      <height>20</height>
     </rect>
@@ -249,7 +249,7 @@
    <property name="geometry">
     <rect>
      <x>220</x>
-     <y>1001</y>
+     <y>1090</y>
      <width>281</width>
      <height>20</height>
     </rect>
@@ -262,7 +262,7 @@
    <property name="geometry">
     <rect>
      <x>550</x>
-     <y>1001</y>
+     <y>1090</y>
      <width>281</width>
      <height>20</height>
     </rect>
@@ -274,14 +274,14 @@
   <widget class="QLabel" name="label_ui_version">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>1750</y>
+     <x>220</x>
+     <y>1380</y>
      <width>351</width>
      <height>30</height>
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string>UI version</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_general_settings">

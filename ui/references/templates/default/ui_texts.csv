@@ -135,12 +135,21 @@ page_error_wifi->label_oops,oops..
 page_error_wifi->label_error_occured,AN ERROR HAS OCCURED
 page_error_wifi->label_check_back,Please check back soon
 
+# page_tap_payment
+page_tap_payment->pushButton_previous_page,<-back
+page_tap_payment->label_title->processing,Processing Payment
+page_tap_payment->msgBox_cancel,<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>
+page_tap_payment->preauthLabel,You are being pre-authorized for maximum volume %1 with amount of
+
 #page maintenance
-page_maintenance->product_overlay_labels->auto_sold_out,Auto Sold Out
+page_maintenance->product_overlay_labels->auto_empty,Empty detected
 page_maintenance->product_overlay_labels->almost_empty,Almost Empty
-page_maintenance->product_overlay_labels->assistance_needed,Assistance Needed
+page_maintenance->product_overlay_labels->empty,Empty
+page_maintenance->product_overlay_labels->not_enabled,Not enabled
+page_maintenance->product_overlay_labels->assistance,Assistance Needed
 page_maintenance->product_overlay_labels->coming_soon,Coming soon
 page_maintenance->product_overlay_labels->sold_out,Sold Out
+page_maintenance->product_overlay_labels->default,No<br>Status
 page_maintenance->label_title_maintenance_mode,Maintenance mode
 page_maintenance->pushButton_to_previous_page,<-back
 page_maintenance->pushButton_general_settings,General Settings
@@ -148,14 +157,6 @@ page_maintenance->label_product1_position,P1
 page_maintenance->label_product2_position,P2
 page_maintenance->label_product3_position,P3
 page_maintenance->label_product4_position,P4
-
-
-
-# page_tap_payment
-page_tap_payment->pushButton_previous_page,<-back
-page_tap_payment->label_title->processing,Processing Payment
-page_tap_payment->msgBox_cancel,<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>
-page_tap_payment->preauthLabel,You are being pre-authorized for maximum volume %1 with amount of
 
 #page_maintenance_dispenser
 page_maintenance_dispenser->label_calibration_instructions,Flowsensor calibration instructions:<br>1.Enable the pump<br>2.Take a measuring cup and dispense until the 1liter mark<br>3.Check the calibration value<br>4.Update the calibration value if different

@@ -73,11 +73,14 @@ private slots:
 
     void on_pushButton_to_select_product_page_clicked();
     void onBackgroundChangeTimerTimeout();
+    void onBackgroundChangeTimerTick();
+         
 
 private:
     void showEvent(QShowEvent *event);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void hideAllLabelAndButtons();
+    void showAllLabelsAndButtons();
     void changeBackground();
 
     void resizeEvent(QResizeEvent *event);
@@ -95,6 +98,10 @@ private:
     page_idle_products *p_page_idle_products;
 
     page_help *p_page_help;
+
+    int _backgroundChangeTimeLeftSec;
+
+    int active_background_index;
 
     int maintenanceCounter;
     QTimer *backgroundChangeTimer;

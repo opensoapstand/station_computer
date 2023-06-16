@@ -31,15 +31,18 @@
 #include <QObject>
 
 //    #define PLAY_VIDEO
-int currentIndex = 1; // CTOR
+// CTOR
 page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
                                                           ui(new Ui::page_idle_products)
 {
     ui->setupUi(this);
 
     backgroundChangeTimer = new QTimer(this);
-    backgroundChangeTimer->setInterval(20);
+    backgroundChangeTimer->setInterval(1000);
+    // backgroundChangeTimer->start(1000);
+
     connect(backgroundChangeTimer, SIGNAL(timeout()), this, SLOT(onBackgroundChangeTimerTimeout()));
+    connect(backgroundChangeTimer, SIGNAL(timeout()), this, SLOT(onBackgroundChangeTimerTick()));
 
     backgroundPaths << "background1.png"
                     << "background2.png"
@@ -91,6 +94,12 @@ page_idle_products::~page_idle_products()
 
 void page_idle_products::showEvent(QShowEvent *event)
 {
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    QWidget::showEvent(event);
+
+    _backgroundChangeTimeLeftSec = PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS;
+    backgroundChangeTimer->start();
+    active_background_index = 0;
 
     p_page_idle->setTemplateTextToObject(ui->label_pick_soap);
 
@@ -108,11 +117,6 @@ void page_idle_products::showEvent(QShowEvent *event)
         labels_selectProductOverlay[slot_index]->setStyleSheet(styleSheet);
         labels_product_type[slot_index]->setStyleSheet(styleSheet);
     }
-
-    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
-    QWidget::showEvent(event);
-
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
 
     qDebug() << "open db: payment method";
     bool needsReceiptPrinter = false;
@@ -138,6 +142,7 @@ void page_idle_products::showEvent(QShowEvent *event)
     ui->pushButton_to_select_product_page->raise();
     // method called to change backgrounds (if they exist)
     changeBackground();
+    showAllLabelsAndButtons();
 }
 void page_idle_products::resizeEvent(QResizeEvent *event)
 {
@@ -238,34 +243,40 @@ void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     qDebug() << "Exit select product page.";
     // this->raise();
     p_page_idle->pageTransition(this, pageToShow);
+    backgroundChangeTimer->stop();
+}
+
+void page_idle_products::showAllLabelsAndButtons(){
+ ui->label_pick_soap->show();
+    ui->logo_label->show();
+    ui->printer_status_label->show();
+    ui->pushButton_to_select_product_page->show();
+
+    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    {
+        labels_product_picture[slot_index]->show();
+        labels_selectProductOverlay[slot_index]->show(); // seems to do nothing
+        labels_product_picture[slot_index]->show();
+        labels_selectProductOverlay[slot_index]->show();
+        labels_product_type[slot_index]->show();
+    }
 }
 
 void page_idle_products::hideAllLabelAndButtons()
 {
     ui->label_pick_soap->hide();
-    ui->label_product1_price->hide();
-    ui->label_product2_price->hide();
-    ui->label_product3_price->hide();
-    ui->label_product4_price->hide();
-    ui->label_product_1_overlay->hide();
-    ui->label_product_2_overlay->hide();
-    ui->label_product_3_overlay->hide();
-    ui->label_product_4_overlay->hide();
-    ui->label_product_1_overlay_text->hide();
-    ui->label_product_2_overlay_text->hide();
-    ui->label_product_3_overlay_text->hide();
-    ui->label_product_4_overlay_text->hide();
-    ui->label_product_1_photo->hide();
-    ui->label_product_2_photo->hide();
-    ui->label_product_3_photo->hide();
-    ui->label_product_4_photo->hide();
-    ui->label_product_1_type->hide();
-    ui->label_product_2_type->hide();
-    ui->label_product_3_type->hide();
-    ui->label_product_4_type->hide();
     ui->logo_label->hide();
     ui->printer_status_label->hide();
-    ui->pushButton_to_select_product_page->hide();
+    // ui->pushButton_to_select_product_page->hide();
+
+    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    {
+        labels_product_picture[slot_index]->hide();
+        labels_selectProductOverlay[slot_index]->hide(); // seems to do nothing
+        labels_product_picture[slot_index]->hide();
+        labels_selectProductOverlay[slot_index]->hide();
+        labels_product_type[slot_index]->hide();
+    }
 }
 
 void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
@@ -298,49 +309,93 @@ void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
 
 void page_idle_products::changeBackground()
 {
-    qDebug() << "CHANGE BjkdegfhbkjwreqgfqwrekjgfwqkjAGAIN";
 
-    // Start the timer if it's not already running
-    if (!backgroundChangeTimer->isActive())
+    if (active_background_index == 0)
+    {
+
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
+        return;
+    }
+    QString fileName = "background%1.png";
+    QString background_name = fileName.arg(active_background_index); // "background" + active_background_index + ".png"
+    QString background_path = p_page_idle->thisMachine.getTemplatePathFromName(background_name);
+
+    if (df_util::pathExists(background_path))
     {
         hideAllLabelAndButtons();
-        backgroundChangeTimer->start(3000); // Start the timer with a 3-second interval
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, background_name);
+        _backgroundChangeTimeLeftSec = PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS;
     }
-
-    // Static variable to keep track of the current background index
-    qDebug() << "Current index" << currentIndex;
-
-    int initialIndex = 0; // Store the initial index for the loop
-
-    // Loop through the backgroundPaths until a valid background image file is found
-    while (currentIndex != initialIndex)
+    else
     {
-        QString currentBackgroundPath = backgroundPaths[currentIndex];
+        _backgroundChangeTimeLeftSec = PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS;
+        active_background_index = 0;
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
+        showAllLabelsAndButtons();
+    }
+    //     {
+    //         // Set the new background image path
+    //         p_page_idle->setBackgroundPictureFromTemplateToPage(this, currentBackgroundPath);
+    //         break; // Exit the loop if a valid background is found
+    //     }
 
-        // Check if the current background image file exists
-        if (df_util::pathExists(currentBackgroundPath))
-        {
-            // Set the new background image path
-            p_page_idle->setBackgroundPictureFromTemplateToPage(this, currentBackgroundPath);
-            currentIndex = currentIndex + 1;
-            qDebug() << "Current index" << currentIndex;
-            break; // Exit the loop if a valid background is found
-        }
+    // static int currentIndex = 0;     // Static variable to keep track of the current background index
+    // int initialIndex = currentIndex; // Store the initial index for the loop
 
-        // Increment the current index
+    // // Start the timer if it's not already running
+    // // if (!backgroundChangeTimer->isActive())
+    // // {
+    // //     backgroundChangeTimer->start(5000); // Start the timer with a 5-second interval
+    // // }
 
-        // If the index exceeds the number of backgrounds, reset it to 0
-        if (currentIndex >= backgroundPaths.size())
-        {
-            currentIndex = 0;
-        }
-        // Continue the loop until we reach the initial index again
+    // hideAllLabelAndButtons();
 
-        if (!df_util::pathExists(backgroundPaths[currentIndex]))
-        {
-            // If the loop reached the initial index and the corresponding background doesn't exist, revert to the original background image
-            p_page_idle->setBackgroundPictureFromTemplateToPage(this, backgroundPaths[initialIndex]);
-        }
+    // do
+    // {
+    //     qDebug() << "Entering the loop";
+
+    //     QString currentBackgroundPath = backgroundPaths[currentIndex];
+
+    //     // Check if the current background image file exists
+    //     if (df_util::pathExists(currentBackgroundPath))
+    //     {
+    //         // Set the new background image path
+    //         p_page_idle->setBackgroundPictureFromTemplateToPage(this, currentBackgroundPath);
+    //         break; // Exit the loop if a valid background is found
+    //     }
+
+    //     // Increment the current index
+    //     currentIndex++;
+    //     qDebug() << "Current index" << currentIndex;
+
+    //     // If the index exceeds the number of backgrounds, reset it to 0
+    //     if (currentIndex >= backgroundPaths.size())
+    //     {
+    //         currentIndex = 0;
+    //     }
+
+    //     // Check if the initial index is reached again
+    // } while (currentIndex != initialIndex);
+
+    // // Check if the loop reached the initial index and the corresponding background doesn't exist
+    // if (!df_util::pathExists(backgroundPaths[currentIndex]))
+    // {
+    //     // Revert to the original background image
+    //     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
+    // }
+}
+
+void page_idle_products::onBackgroundChangeTimerTick()
+{
+    if (--_backgroundChangeTimeLeftSec >= 0)
+    {
+        qDebug() << "one sec";
+    }
+    else
+    {
+        qDebug() << "timer elapsed";
+        active_background_index++;
+        changeBackground();
     }
 }
 
@@ -348,15 +403,8 @@ void page_idle_products::onBackgroundChangeTimerTimeout()
 {
     // Stop the timer
     // backgroundChangeTimer->stop();
-    qDebug() << "Bacjgroun=d change timetr";
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, backgroundPaths[currentIndex]);
-    qDebug() << "CHANGE BACKGROYUND CALLLED AGAIN";
-
+    // qDebug() << "Background change timer";
     // changeBackground();
-    // Set the new background image path
-    // QString newBackgroundPath = "background1.png";
-
-    // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_DYNAMIC_BACKGROUND_1);
 }
 
 void page_idle_products::on_pushButton_to_select_product_page_clicked()

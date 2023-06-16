@@ -53,6 +53,9 @@
 
 using namespace std;
 
+#define PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS 10
+#define PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS 2
+
 #define QR_PAGE_TIMEOUT_SECONDS 420
 #define QR_PAGE_TIMEOUT_WARNING_SECONDS 120
 #define PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS 600
@@ -62,6 +65,8 @@ using namespace std;
 #define QR_PROCESSED_PERIODICAL_CHECK_SECONDS 5
 
 #define CONTAINER_EMPTY_THRESHOLD_ML 2000
+
+
 
 #define TEMPLATES_ROOT_PATH                             "/home/df-admin/production/references/templates/"
 #define TEMPLATES_DEFAULT_NAME                          "default"
@@ -119,6 +124,8 @@ using namespace std;
 
 
 #define PAGE_IDLE_DYNAMIC_BACKGROUND_1                  "background1.png"
+#define PAGE_IDLE_DYNAMIC_BACKGROUND_2                  "background2.png"
+#define PAGE_IDLE_DYNAMIC_BACKGROUND_3                  "background3.png"
 
 
 

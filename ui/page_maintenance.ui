@@ -16,7 +16,7 @@
   <property name="autoFillBackground">
    <bool>true</bool>
   </property>
-  <widget class="QPushButton" name="product4_button">
+  <widget class="QPushButton" name="pushButtons_product">
    <property name="geometry">
     <rect>
      <x>550</x>
@@ -29,7 +29,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="product1_button">
+  <widget class="QPushButton" name="pushButtons_product">
    <property name="geometry">
     <rect>
      <x>220</x>
@@ -90,7 +90,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="product2_button">
+  <widget class="QPushButton" name="pushButtons_product">
    <property name="geometry">
     <rect>
      <x>550</x>
@@ -103,7 +103,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="product3_button">
+  <widget class="QPushButton" name="pushButtons_product">
    <property name="geometry">
     <rect>
      <x>220</x>
@@ -374,10 +374,10 @@
   <zorder>label_product2_position</zorder>
   <zorder>label_product3_position</zorder>
   <zorder>label_product4_position</zorder>
-  <zorder>product1_button</zorder>
-  <zorder>product2_button</zorder>
-  <zorder>product4_button</zorder>
-  <zorder>product3_button</zorder>
+  <zorder>pushButtons_product</zorder>
+  <zorder>pushButtons_product</zorder>
+  <zorder>pushButtons_product</zorder>
+  <zorder>pushButtons_product</zorder>
   <zorder>product3_overlay_label</zorder>
   <zorder>product1_overlay_label</zorder>
   <zorder>product4_overlay_label</zorder>

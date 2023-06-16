@@ -28,15 +28,15 @@ page_maintenance::page_maintenance(QWidget *parent) : QWidget(parent),
     page_maintenanceEndTimer->setInterval(1000);
     connect(page_maintenanceEndTimer, SIGNAL(timeout()), this, SLOT(onPage_maintenanceTimeoutTick()));
 
-    product_buttons[0] = ui->product1_button;
-    product_buttons[1] = ui->product2_button;
-    product_buttons[2] = ui->product3_button;
-    product_buttons[3] = ui->product4_button;
+    pushButtons_product;
+    pushButtons_product;
+    pushButtons_product;
+    pushButtons_product;
 
-    product_overlay_labels[0] = ui->product1_overlay_label;
-    product_overlay_labels[1] = ui->product2_overlay_label;
-    product_overlay_labels[2] = ui->product3_overlay_label;
-    product_overlay_labels[3] = ui->product4_overlay_label;
+    labels_product_status[0] = ui->product1_overlay_label;
+    labels_product_status[1] = ui->product2_overlay_label;
+    labels_product_status[2] = ui->product3_overlay_label;
+    labels_product_status[3] = ui->product4_overlay_label;
 }
 
 // DTOR
@@ -60,21 +60,21 @@ void page_maintenance::showEvent(QShowEvent *event)
 
     for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
-        product_overlay_labels[slot_index]->setObjectName("product_overlay_labels");
-        product_overlay_labels[slot_index]->setStyleSheet(styleSheet);
+        labels_product_status[slot_index]->setObjectName("labels_product_status");
+        labels_product_status[slot_index]->setStyleSheet(styleSheet);
 
         QString p = p_page_idle->products[slot_index].getProductPicturePath();
         p_page_idle->dfUtility->pathExists(p);
         QPixmap im(p);
         QIcon qi(im);
-        product_buttons[slot_index]->setIcon(qi);
+        pushButtons_products[slot_index]->setIcon(qi);
 
-        product_buttons[slot_index]->setObjectName("product_buttons");
-        product_buttons[slot_index]->setStyleSheet(styleSheet);
-        product_buttons[slot_index]->setIconSize(QSize(241, 341));
+        pushButtons_product");
+        pushButtons_products[slot_index]->setStyleSheet(styleSheet);
+        pushButtons_products[slot_index]->setIconSize(QSize(241, 341));
 
-        product_overlay_labels[slot_index]->show();
-        product_buttons[slot_index]->setStyleSheet("background-color: transparent; border: 1px solid black;");
+        labels_product_status[slot_index]->show();
+        pushButtons_products[slot_index]->setStyleSheet("background-color: transparent; border: 1px solid black;");
     }
 
     _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
@@ -93,39 +93,39 @@ void page_maintenance::showEvent(QShowEvent *event)
 
         if (!(p_page_idle->products[slot_index].isProductVolumeInContainer()))
         {
-            p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "auto_empty");
+            p_page_idle->setTemplateTextWithIdentifierToObject(labels_product_status[slot_index], "auto_empty");
         }
         else if (!p_page_idle->products[slot_index].getSlotEnabled())
         {
-             p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "not_enabled");
+             p_page_idle->setTemplateTextWithIdentifierToObject(labels_product_status[slot_index], "not_enabled");
         }
         else if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
         {
-            product_overlay_labels[slot_index]->setText("");
+            labels_product_status[slot_index]->setText("");
         }
         else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
         {
-            p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "almost_empty");
+            p_page_idle->setTemplateTextWithIdentifierToObject(labels_product_status[slot_index], "almost_empty");
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
         {
-            p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "sold_out");
+            p_page_idle->setTemplateTextWithIdentifierToObject(labels_product_status[slot_index], "sold_out");
         }
         else if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
         {
-            p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "coming_soon");
+            p_page_idle->setTemplateTextWithIdentifierToObject(labels_product_status[slot_index], "coming_soon");
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
         {
-            p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "assistance");
+            p_page_idle->setTemplateTextWithIdentifierToObject(labels_product_status[slot_index], "assistance");
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
         {
-            p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "empty");
+            p_page_idle->setTemplateTextWithIdentifierToObject(labels_product_status[slot_index], "empty");
         }
         else
         {
-            p_page_idle->setTemplateTextWithIdentifierToObject(product_overlay_labels[slot_index], "default");
+            p_page_idle->setTemplateTextWithIdentifierToObject(labels_product_status[slot_index], "default");
         }
 
         ui->pushButton_to_previous_page->setProperty("class", "normal");
@@ -204,25 +204,25 @@ void page_maintenance::on_pushButton_to_previous_page_clicked()
     hideCurrentPageAndShowProvided(p_page_idle);
 }
 
-void page_maintenance::on_product1_button_clicked()
+void page_maintenance::on_pushButtons_product_clicked()
 {
     p_page_idle->setSelectedProduct(1);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 
-void page_maintenance::on_product2_button_clicked()
+void page_maintenance::on_pushButtons_product_clicked()
 {
     p_page_idle->setSelectedProduct(2);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 
-void page_maintenance::on_product3_button_clicked()
+void page_maintenance::on_pushButtons_product_clicked()
 {
     p_page_idle->setSelectedProduct(3);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 
-void page_maintenance::on_product4_button_clicked()
+void page_maintenance::on_pushButtons_product_clicked()
 {
     p_page_idle->setSelectedProduct(4);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);

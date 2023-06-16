@@ -1,4 +1,4 @@
-#product_overlay_labels {
+#labels_product_status {
 
    background-color: transparent;
    qproperty-alignment: AlignCenter;
@@ -27,7 +27,7 @@
    border: none;
 }
 
-#product_buttons {
+#pushButtons_product {
 
    background-color: transparent;
    border: 1px  solid #3D6675;
@@ -57,7 +57,7 @@
 
 }
 
-.product_buttons {
+.pushButtons_product {
    border: 1px solid black;
 }
 

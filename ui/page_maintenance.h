@@ -53,15 +53,15 @@ public:
 
 private slots:
     void on_pushButton_to_previous_page_clicked();
-    void on_product1_button_clicked();
-    void on_product2_button_clicked();
-    void on_product3_button_clicked();
-    void on_product4_button_clicked();
-//    void on_product5_button_clicked();
-//    void on_product6_button_clicked();
-//    void on_product7_button_clicked();
-//    void on_product8_button_clicked();
-//    void on_product9_button_clicked();
+    void on_pushButtons_product_clicked();
+    void on_pushButtons_product_clicked();
+    void on_pushButtons_product_clicked();
+    void on_pushButtons_product_clicked();
+//    void on_pushButtons_product_clicked();
+//    void on_pushButtons_product_clicked();
+//    void on_pushButtons_product_clicked();
+//    void on_pushButtons_product_clicked();
+//    void on_pushButtons_product_clicked();
     // void on_wifiButton_clicked();
     //void on_clean_button_clicked();
     //void on_restock_button_clicked();
@@ -85,8 +85,8 @@ private:
     page_product* p_page_product;
 
     // QResizeEvent *productSelection;
-    QPushButton* product_buttons[4];
-    QLabel* product_overlay_labels[4];
+    QPushButton* pushButtons_products[4];
+    QLabel* labels_product_status[4];
     int _page_maintenanceTimeoutSec;
     QTimer* page_maintenanceEndTimer;
 

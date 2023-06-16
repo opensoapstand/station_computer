@@ -142,14 +142,14 @@ page_tap_payment->msgBox_cancel,<p align=center><br><br>Cancel transaction and e
 page_tap_payment->preauthLabel,You are being pre-authorized for maximum volume %1 with amount of
 
 #page maintenance
-page_maintenance->product_overlay_labels->auto_empty,Empty detected
-page_maintenance->product_overlay_labels->almost_empty,Almost Empty
-page_maintenance->product_overlay_labels->empty,Empty
-page_maintenance->product_overlay_labels->not_enabled,Not enabled
-page_maintenance->product_overlay_labels->assistance,Assistance Needed
-page_maintenance->product_overlay_labels->coming_soon,Coming soon
-page_maintenance->product_overlay_labels->sold_out,Sold Out
-page_maintenance->product_overlay_labels->default,No<br>Status
+page_maintenance->labels_product_status->auto_empty,Empty detected
+page_maintenance->labels_product_status->almost_empty,Almost Empty
+page_maintenance->labels_product_status->empty,Empty
+page_maintenance->labels_product_status->not_enabled,Not enabled
+page_maintenance->labels_product_status->assistance,Assistance Needed
+page_maintenance->labels_product_status->coming_soon,Coming soon
+page_maintenance->labels_product_status->sold_out,Sold Out
+page_maintenance->labels_product_status->default,No<br>Status
 page_maintenance->label_title_maintenance_mode,Maintenance mode
 page_maintenance->pushButton_to_previous_page,<-back
 page_maintenance->pushButton_general_settings,General Settings

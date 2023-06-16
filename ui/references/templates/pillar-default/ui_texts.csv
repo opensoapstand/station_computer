@@ -122,8 +122,8 @@ page_qr_payment->msgBox_refund->default,<p align=center><br><br>Are you sure you
 # page_error_wifi (no csv)
 
 #page maintenance
-page_maintenance->product_overlay_labels[i]->almost_empty,Almost Empty
-page_maintenance->product_overlay_labels[i]->coming_soon,Comming soon
+page_maintenance->labels_product_status[i]->almost_empty,Almost Empty
+page_maintenance->labels_product_status[i]->coming_soon,Comming soon
 
 #page_idle_products
 

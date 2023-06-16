@@ -56,7 +56,7 @@ public:
     QString getProductType();
     QString getProductDrinkfillSerial();
 
-    void loadProductPropertiesFromProductsFile();
+
 
     void loadProductProperties();
     void loadProductPropertiesFromDb();
@@ -166,6 +166,7 @@ private:
     QString m_ingredients_ui;
     QString m_product_type;
 
+    QString m_name;
     QString m_name_ui;
     QString m_features_ui;
     QString m_description_ui;

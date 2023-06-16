@@ -29,6 +29,49 @@ QString machine::getTemplateFolder()
     return TEMPLATES_ROOT_PATH + template_name + "/";
 }
 
+
+void machine::loadProductPropertiesFromProductsFile(QString soapstand_product_number, QString* name, QString* name_ui, QString* product_type, QString* description_ui, QString* features_ui, QString* ingredients_ui)
+{
+    QFile file(PRODUCT_DETAILS_TSV_PATH);
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        qDebug() << "ERROR: Opening product details file. Expect unexpected behaviour now! ";
+        return;
+    }
+
+    QTextStream in(&file);
+    qDebug() << "Load csv file with product properties";
+    while (!in.atEnd())
+    {
+        QString line = in.readLine();
+
+        QStringList fields = line.split("\t");
+        int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], soapstand_product_number, Qt::CaseSensitive);
+        if (compareResult == 0)
+        {
+            // qDebug() << "compare result is 0";
+            *name = fields[CSV_PRODUCT_COL_NAME];
+            *name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
+            *product_type = fields[CSV_PRODUCT_COL_TYPE];
+            *description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
+            *features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
+            *ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
+            break;
+        // int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], m_soapstand_product_serial, Qt::CaseSensitive);
+        // if (compareResult == 0)
+        // {
+        //     // qDebug() << "compare result is 0";
+        //     m_name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
+        //     m_product_type = fields[CSV_PRODUCT_COL_TYPE];
+        //     m_description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
+        //     m_features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
+        //     m_ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
+        //     break;
+        }
+    }
+    file.close();
+}
+
 QString machine::getTemplatePathFromName(QString fileName)
 {
     QString image_path = getTemplateFolder() + fileName;

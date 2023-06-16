@@ -113,11 +113,25 @@ void page_transactions::populateList()
         // populate the items of the list
         for (int i = 0; i < transaction_count; i++)
         {
+                QString name;
+                QString name_ui;
+                QString product_type;
+                QString description_ui;
+                QString features_ui;
+                QString ingredients_ui;
                 QString rowItem;
-                for (int j = 1; j < 5; j++)
+                p_page_idle->thisMachine.loadProductPropertiesFromProductsFile(recent_transactions[i][4],
+                                                                               &name,
+                                                                               &name_ui,
+                                                                               &product_type,
+                                                                               &description_ui,
+                                                                               &features_ui,
+                                                                               &ingredients_ui);
+                for (int j = 1; j < 4; j++)
                 {
                         rowItem += recent_transactions[i][j].rightJustified(8, ' ') + "\t";
                 }
+                rowItem += name.rightJustified(8, ' ') + "\t";
 
                 // get rid of last tab
                 int pos = rowItem.lastIndexOf(QChar('\t'));

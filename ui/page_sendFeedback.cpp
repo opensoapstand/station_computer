@@ -32,7 +32,6 @@ using json = nlohmann::json;
 page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                                                         ui(new Ui::page_sendFeedback)
 {
-    qDebug() << "IN send feedback";
     ui->setupUi(this);
 
     ui->textEdit_custom_message->hide();

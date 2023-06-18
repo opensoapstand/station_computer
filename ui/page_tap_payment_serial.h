@@ -26,7 +26,6 @@
 #include "posm/transactionPackets.h"
 #include "posm/transactioninfo.h"
 
-#include "../library/qr/qrcodegen.hpp"
 #include <climits>
 #include <cstdint>
 #include <cstdlib>
@@ -35,11 +34,6 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include <QPainter>
-#include <QUuid>
-
-#include <QMovie>
-#include <curl/curl.h>
 
 class page_product;
 class page_dispenser;
@@ -67,24 +61,18 @@ public:
     explicit page_tap_payment_serial(QWidget *parent = nullptr);
     void setPage(page_idle *pageIdle,page_product *pageSizeSelect, page_dispenser *page_dispenser);
     ~page_tap_payment_serial();
-    void setProgressLabel(QLabel* label, int dot);
-    void labelSetup(QLabel *label, int fontSize);
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     bool exitConfirm();
 
-    // **** Control Functions ****
     bool setpaymentProcess(bool status);
-
-    // Database
-    void storePaymentEvent(QSqlDatabase db, QString event);
 
     /* mpos */
     void stayAliveLogon();
     void batchClose();
-    int getSelectedPriceSelect();
+
     void sendCommand();
 
     string getTerminalID(){
@@ -99,40 +87,20 @@ public:
         return merchantAddress;
     }
 
-
-
     QTimer *readTimer;
-    // char * curl_data;
-    // char * curl_data1;
-    // char * curlOrderdata;
     StatePaymentSerial state_payment;
+    bool tap_serial_initiate();
 
 private slots:
-
-    // Update Drink order totals section
-    void updateTotals(string drinkDescription, string drinkAmount, string orderTotal);
 
     // Navigation
     void on_previousPage_Button_clicked();
     void on_payment_bypass_Button_clicked();
     void proceed_to_dispense();
      void on_mainPage_Button_clicked();
-    //void on_payment_pass_Button_clicked();
-    //void on_payment_cancel_Button_clicked();
-    // For Debugging; will be removed.
-
-    // **** Payment ****
-    void displayPaymentPending(bool isVisible);
 
     void readTimer_loop();
-    void progressStatusLabel();
-    void declineTimer_start();
     void idlePaymentTimeout();
-
-
-protected:
-
-//    void paintEvent(QPaintEvent *p);
 
 private:
     // **** GUI ****
@@ -141,100 +109,51 @@ private:
     page_dispenser* p_page_dispense;
     page_idle* p_page_idle;
     page_help* helpPage;
-
-    const QString TAP_READY_LABEL = "Ready for Tap";
-    const QString TAP_label_processing = "Processing";
-    const QString TAP_DECLINED_LABEL = "Card Declined";
-    const QString TAP_AGAIN_LABEL = "Try Again";
-    const QString TAP_APPROVED_LABEL = "Payment Approved";
-    const QString TAP_BLANK_LABEL = "";
-
-    // Label Reference for order Details
-    string drinkAmount;
-    string drinkDescription;
-    string orderTotal;
-
-    // TODO: Put payment information into XML
-    // Payment progress timer    
+   
     bool approved = false;
-    bool paymentConnected = false;
-    bool isReadyForTap = false;
 
     void stopPayTimers();
 
-    int progressDots = 1;
-    int progressLoopCounter = 0;
-    int declineCounter;
+    QSqlDatabase db;
 
-    // **** Payment ****
-    // Payment Information
+ // Tap Payment Control
     string merchantName;
     string merchantAddress;
     string terminalID;
-
-    // Payment Control
+    mCommunication com;
+    packetFromECR sendPacket;
+    packetFromUX410 readPacket;
+    transactionPacket paymentPacket;
+    transactionInfo paymentPktInfo;
     bool paymentProcessing;
-
+    
     bool isInitCancelled;
     bool isInitBatched;
     bool isInitLogin;
     bool isInitMerchant;
     bool isInitAddress;
     bool isInitTerminalID;
-
-    QSqlDatabase db;
-
-
-    QTimer *declineTimer;
-    QTimer *paymentProgressTimer;
-    QTimer *idlePaymentTimer;
-
-    // Payment Communication
-    // Moneris Packet communication reference
-    mCommunication com;
-    packetFromECR sendPacket;
-    packetFromUX410 readPacket;
-    transactionPacket paymentPacket;
-    transactionInfo paymentPktInfo;
-   
-
     // Payment Package Control
     bool purchaseEnable;
+    bool response;
+    bool paymentConnected = false;
+    bool isReadyForTap = false;
     int monerisConfig = 0;
     bool timerEnabled;
     std::vector<uint8_t> pktToSend;
     std::vector<uint8_t> pktResponded;
     std::string productSelectedPrice;
-
     bool sendToUX410();
-    bool tap_init();
     bool waitForUX410();
     void cancelPayment();
     bool getResponse(){return response;}
+    bool tapSetupStarted =false;
 
-    // **** Drink Order Reference ****
-    // DrinkOrder paymentDrinkOrder;
-
-    // Placeholder
-    bool surveyBool;
-
-    QString _paymentTimeLabel;
-    int _pageTimeoutCounterSecondsLeft;
     QTimer* paymentEndTimer;
-
-    QResizeEvent *page_productResize;
-    QShowEvent *dispenseEvent;
-
-    bool response;
-    // bool tap_payment;
+    QTimer* idlePaymentTimer;
     void resetPaymentPage();
     QString getPaymentMethod();
-
-
     int tmpCounter ;
-
-   
-    
 };
 
 #endif // page_tap_payment_serial_H

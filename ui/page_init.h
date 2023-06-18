@@ -18,13 +18,11 @@
 
 #include "df_util.h"
 #include "page_idle.h"
+#include "page_tap_payment.h"
+#include "page_tap_payment_serial.h"
 #include "dfuicommthread.h"
 #include "dbmanager.h"
-#include "posm/mcommunication.h"
-#include "posm/packetfromecr.h"
-#include "posm/packetfromux410.h"
-#include "posm/transactionPackets.h"
-#include "posm/transactioninfo.h"
+
 // #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 // #define DB_PATH_CLICKS "/release/db/sqlite/clicks.db"
 
@@ -45,43 +43,6 @@ public:
     ~page_init();
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void initReadySlot();
-
-
-    // Tap Payment Control
-
-    string merchantName;
-    string merchantAddress;
-    string terminalID;
-    mCommunication com;
-    packetFromECR sendPacket;
-    packetFromUX410 readPacket;
-    transactionPacket paymentPacket;
-    transactionInfo paymentPktInfo;
-    bool paymentProcessing;
-    
-    bool isInitCancelled;
-    bool isInitBatched;
-    bool isInitLogin;
-    bool isInitMerchant;
-    bool isInitAddress;
-    bool isInitTerminalID;
-    // Payment Package Control
-    bool purchaseEnable;
-    bool response;
-    bool paymentConnected = false;
-    bool isReadyForTap = false;
-    int monerisConfig = 0;
-    bool timerEnabled;
-    std::vector<uint8_t> pktToSend;
-    std::vector<uint8_t> pktResponded;
-    std::string productSelectedPrice;
-    bool sendToUX410PageInit();
-    bool tap_serial_initiate();
-    bool waitForUX410PageInit();
-    void cancelPayment();
-    bool getResponse(){return response;}
-    bool tapSetupStarted =false;
-
 
     df_util* dfUtility;
 

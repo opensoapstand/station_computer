@@ -33,8 +33,6 @@
 #include <string>
 #include <vector>
 #include <thread>
-#include <QPainter>
-#include <QUuid>
 #include <QMovie>
 #include <curl/curl.h>
 #include <atomic>
@@ -60,7 +58,6 @@ typedef enum StateTapPayment
 } StateTapPayment;
 
 using namespace std;
-using namespace qrcodegen;
 
 class page_tap_payment : public QWidget
 {
@@ -71,11 +68,7 @@ public:
     explicit page_tap_payment(QWidget *parent = nullptr);
     void setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp);
     ~page_tap_payment();
-    void setProgressLabel(QLabel *label, int dot);
-    // TODO: Figure out better Style Setup.
-    void labelSetup(QLabel *label, int fontSize);
 
-    void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
     bool exitConfirm();
 
@@ -84,11 +77,6 @@ public:
     bool setpaymentProcess(bool status);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void authorized_transaction(std::map<std::string, std::string> responseObj);
-
-    // Database
-    void storePaymentEvent(QSqlDatabase db, QString event);
-    // QString getPaymentMethodForConstructorTime(uint8_t slot);
-
 
     StateTapPayment state_tap_payment; 
 
@@ -106,8 +94,6 @@ private slots:
     void startPaymentProcess();
 
     void idlePaymentTimeout();
-
-
 private:
     // **** GUI ****
     Ui::page_tap_payment *ui;
@@ -140,9 +126,6 @@ private:
 
     void resetPaymentPage();
     QString getPaymentMethod();
-
-    int tmpCounter ;
-
 };
 
 #endif // page_tap_payment_H

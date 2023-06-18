@@ -26,25 +26,6 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
 {
     // Fullscreen background setup
     ui->setupUi(this);
-    ui->previousPage_Button->setStyleSheet(
-        "QPushButton {"
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "text-transform: lowercase;"
-        "color: #003840;"
-        "text-align: cCenter;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
-    ui->previousPage_Button->setText("<- Back");
-    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-
-    ui->previousPage_Button->setText("<- Back");
-
     // Payment Tap Ready
     readTimer = new QTimer(this);
     connect(readTimer, SIGNAL(timeout()), this, SLOT(readTimer_loop()));
@@ -52,6 +33,10 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
     // Idle Payment reset
     idlePaymentTimer = new QTimer(this);
     connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
+
+    ui->pushButton_payment_bypass->setEnabled(false);
+    ui->label_title->hide();
+    ui->order_total_amount->hide();
 }
 
 void page_tap_payment_serial::stopPayTimers()
@@ -79,12 +64,14 @@ void page_tap_payment_serial::stopPayTimers()
 /*
  * Page Tracking reference
  */
-void page_tap_payment_serial::setPage(page_idle *pageIdle, page_product *pageSizeSelect, page_dispenser *page_dispenser)
+void page_tap_payment_serial::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
 {
     tmpCounter = 0;
-    this->p_page_product = pageSizeSelect;
+    this->p_page_product = p_page_product;
+    this->p_page_wifi_error = pageWifiError;
     this->p_page_dispense = page_dispenser;
     this->p_page_idle = pageIdle;
+    this->p_page_help = pageHelp;
 }
 
 // DTOR
@@ -93,17 +80,9 @@ page_tap_payment_serial::~page_tap_payment_serial()
     delete ui;
 }
 
-void page_tap_payment_serial::on_payment_bypass_Button_clicked()
+void page_tap_payment_serial::on_pushButton_payment_bypass_clicked()
 {
-    proceed_to_dispense();
-}
-
-void page_tap_payment_serial::proceed_to_dispense()
-{
-    stopPayTimers();
-    // p_page_dispense->showEvent(dispenseEvent);
-    p_page_dispense->showFullScreen();
-    this->hide();
+    hideCurrentPageAndShowProvided(p_page_dispense);
 }
 
 /*Cancel any previous payment*/
@@ -121,6 +100,18 @@ void page_tap_payment_serial::cancelPayment()
     com.flushSerial();
 }
 
+
+// Navigation: Back to Drink Size Selection
+void page_tap_payment_serial::on_pushButton_previous_page_clicked()
+{
+    qDebug() << "In previous page button" << endl;
+
+    if (exitConfirm())
+    {
+        hideCurrentPageAndShowProvided(p_page_product);
+    }
+}
+
 QString page_tap_payment_serial::getPaymentMethod()
 {
     return "tapSerial";
@@ -133,10 +124,25 @@ void page_tap_payment_serial::resizeEvent(QResizeEvent *event)
 void page_tap_payment_serial::showEvent(QShowEvent *event)
 {
     qDebug() << "<<<<<<< Page Enter: Serial Payment >>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
-    state_payment = s_serial_init;
+    QString styleSheet = p_page_idle->getCSS(PAGE_TAP_PAYMENT_SERIAL_CSS);
 
+    ui->pushButton_previous_page->setStyleSheet(styleSheet);
+
+    ui->pushButton_to_idle->setProperty("class", "invisible_button");
+    ui->pushButton_payment_bypass->setProperty("class", "invisible_button");
+    ui->pushButton_to_idle->setStyleSheet(styleSheet);
+    ui->pushButton_payment_bypass->setStyleSheet(styleSheet);
+
+    p_page_idle->setTemplateTextToObject(ui->pushButton_previous_page);
+
+    ui->pushButton_payment_bypass->setEnabled(false);
+
+    state_payment = s_serial_init;
+    ui->pushButton_payment_bypass->setEnabled(false);
+   
     QString payment_method = getPaymentMethod();
     if (payment_method == "tapSerial")
     {
@@ -155,10 +161,10 @@ void page_tap_payment_serial::showEvent(QShowEvent *event)
         qDebug() << "Acknowledgement received";
         if (readPacket.getAckOrNak() == communicationPacketField::ACK)
         {
+            
             timerEnabled = true;
         }
         readTimer->start(10);
-        // ui->payment_bypass_Button->setEnabled(false);
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
         ui->productLabel->hide();
         ui->order_drink_amount->hide();
@@ -176,16 +182,16 @@ bool page_tap_payment_serial::setpaymentProcess(bool status)
 
 bool page_tap_payment_serial::exitConfirm()
 {
+    qDebug() << "In exit confirm";
     if (state_payment == s_serial_payment_processing || state_payment == s_serial_payment_done)
     {
         // ARE YOU SURE YOU WANT TO EXIT?
         QMessageBox msgBox;
         msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
-
-        msgBox.setText("<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>");
-        msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
-        // msgBox.setStyleSheet(styleSheet);
-
+        p_page_idle->addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_TAP_PAYMENT_CSS);
+        QString searchString = this->objectName() + "->msgBox_cancel";
+        p_page_idle->setTextToObject(&msgBox, p_page_idle->getTemplateText(searchString));
+    
         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         int ret = msgBox.exec();
         bool success;
@@ -193,7 +199,8 @@ bool page_tap_payment_serial::exitConfirm()
         {
         case QMessageBox::Yes:
         {
-            resetPaymentPage();
+            // resetPaymentPage();
+            // transactionLogging = "";
             return true;
         }
         break;
@@ -207,16 +214,18 @@ bool page_tap_payment_serial::exitConfirm()
     else
     {
         // exit, no questions asked.
-        resetPaymentPage();
+        // resetPaymentPage();
+        // transactionLogging = "";
         return true;
     }
 }
 
-void page_tap_payment_serial::on_previousPage_Button_clicked()
+
+void page_tap_payment_serial::on_pushButton_to_idle_clicked()
 {
     if (exitConfirm())
     {
-        hideCurrentPageAndShowProvided(p_page_product);
+        hideCurrentPageAndShowProvided(p_page_help);
     }
 }
 
@@ -227,18 +236,11 @@ void page_tap_payment_serial::hideCurrentPageAndShowProvided(QWidget *pageToShow
     p_page_idle->pageTransition(this, pageToShow);
 }
 
-void page_tap_payment_serial::on_mainPage_Button_clicked()
-{
-    if (exitConfirm())
-    {
-        this->hide();
-    }
-}
-
 void page_tap_payment_serial::idlePaymentTimeout()
 {
     resetPaymentPage();
 }
+
 void page_tap_payment_serial::resetPaymentPage()
 {
 
@@ -427,7 +429,8 @@ void page_tap_payment_serial::readTimer_loop()
                         paymentPktInfo.transactionID(readPacket.getPacket().data);
                         paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
                         response = true;
-                        on_payment_bypass_Button_clicked();
+                        hideCurrentPageAndShowProvided(p_page_dispense);
+
                     }
                     else if (pktResponded[19] == 0x44)
                     { // Host Response 44 = D "Declined"

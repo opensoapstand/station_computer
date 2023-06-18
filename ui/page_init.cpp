@@ -74,8 +74,7 @@ void page_init::showEvent(QShowEvent *event)
     }
     else
     {
-        //Need to add a database call to check the payment method and then proceed
-        QString paymentMethod = "";
+        QString paymentMethod = p_page_idle->products[0].getPaymentMethod();
         if(paymentMethod == "tapTcp"){
             QCoreApplication::processEvents();
             page_tap_payment paymentObject;

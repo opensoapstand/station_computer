@@ -59,7 +59,7 @@ class page_tap_payment_serial : public QWidget
 public:
     // **** GUI Setup ****
     explicit page_tap_payment_serial(QWidget *parent = nullptr);
-    void setPage(page_idle *pageIdle,page_product *pageSizeSelect, page_dispenser *page_dispenser);
+    void setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp);
     ~page_tap_payment_serial();
 
     void resizeEvent(QResizeEvent *event);
@@ -94,10 +94,9 @@ public:
 private slots:
 
     // Navigation
-    void on_previousPage_Button_clicked();
-    void on_payment_bypass_Button_clicked();
-    void proceed_to_dispense();
-     void on_mainPage_Button_clicked();
+    void on_pushButton_previous_page_clicked();
+    void on_pushButton_payment_bypass_clicked();
+    void on_pushButton_to_idle_clicked();
 
     void readTimer_loop();
     void idlePaymentTimeout();
@@ -105,10 +104,11 @@ private slots:
 private:
     // **** GUI ****
     Ui::page_tap_payment_serial *ui;
-    page_product* p_page_product;
-    page_dispenser* p_page_dispense;
-    page_idle* p_page_idle;
-    page_help* helpPage;
+    page_product *p_page_product;
+    page_dispenser *p_page_dispense;
+    page_idle *p_page_idle;
+    page_help *p_page_help;
+    page_error_wifi *p_page_wifi_error;
    
     bool approved = false;
 

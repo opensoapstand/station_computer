@@ -16,20 +16,20 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QPushButton" name="previousPage_Button">
+  <widget class="QPushButton" name="pushButton_previous_page">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>20</y>
-     <width>301</width>
-     <height>100</height>
+     <x>70</x>
+     <y>40</y>
+     <width>401</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>back</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="mainPage_Button">
+  <widget class="QPushButton" name="pushButton_to_idle">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -64,7 +64,7 @@
    </property>
    <property name="styleSheet">
     <string notr="true">font-family: Montserrat;
-background-image: url(/home/df-admin/production/references/background.png);
+background-image: url(background.png);
 font-style: light;
 font-weight: bold;
 font-size: 36px;
@@ -110,8 +110,7 @@ color: #58595B;</string>
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
-  
-  <widget class="QPushButton" name=">payment_bypass_Button">
+  <widget class="QPushButton" name="pushButton_payment_bypass">
    <property name="enabled">
     <bool>false</bool>
    </property>

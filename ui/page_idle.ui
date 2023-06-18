@@ -13,13 +13,13 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QPushButton" name="toSelectProductPageButton">
+  <widget class="QPushButton" name="pushButton_to_select_product_page">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
      <width>1081</width>
-     <height>1891</height>
+     <height>1921</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -65,7 +65,7 @@ text-transform: lowercase;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="welcome_message_label">
+  <widget class="QLabel" name="label_welcome_message">
    <property name="geometry">
     <rect>
      <x>40</x>
@@ -78,7 +78,7 @@ text-transform: lowercase;</string>
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="testButton">
+  <widget class="QPushButton" name="pushButton_test">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -104,7 +104,7 @@ text-transform: lowercase;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="printer_status_label">
+  <widget class="QLabel" name="label_printer_status">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -137,15 +137,15 @@ text-transform: lowercase;</string>
     </rect>
    </property>
   </widget>
-  <zorder>toSelectProductPageButton</zorder>
+  <zorder>pushButton_to_select_product_page</zorder>
   <zorder>savedBottles_label</zorder>
   <zorder>logo_label</zorder>
-  <zorder>welcome_message_label</zorder>
-  <zorder>testButton</zorder>
+  <zorder>label_welcome_message</zorder>
+  <zorder>pushButton_test</zorder>
   <zorder>drinkfill_logo_label</zorder>
-  <zorder>printer_status_label</zorder>
   <zorder>media_player</zorder>
   <zorder>video_player</zorder>
+  <zorder>printer_status_label</zorder>
  </widget>
  <resources/>
  <connections/>

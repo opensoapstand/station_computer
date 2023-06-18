@@ -8,17 +8,16 @@
 // class then communcates results to page_dispenser.
 //
 // created: 05-04-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef page_tap_payment_serial_H
 #define page_tap_payment_serial_H
 
 #include "df_util.h"
-#include "drinkorder.h"
+
 #include "page_help.h"
 
 #include "posm/mcommunication.h"
@@ -42,7 +41,7 @@
 #include <QMovie>
 #include <curl/curl.h>
 
-class pageProduct;
+class page_product;
 class page_dispenser;
 class page_idle;
 class page_help;
@@ -66,10 +65,9 @@ class page_tap_payment_serial : public QWidget
 public:
     // **** GUI Setup ****
     explicit page_tap_payment_serial(QWidget *parent = nullptr);
-    void setPage(page_idle *pageIdle,pageProduct *pageSizeSelect, page_dispenser *page_dispenser);
+    void setPage(page_idle *pageIdle,page_product *pageSizeSelect, page_dispenser *page_dispenser);
     ~page_tap_payment_serial();
     void setProgressLabel(QLabel* label, int dot);
-    // TODO: Figure out better Style Setup.
     void labelSetup(QLabel *label, int fontSize);
 
     void resizeEvent(QResizeEvent *event);
@@ -139,13 +137,13 @@ protected:
 private:
     // **** GUI ****
     Ui::page_tap_payment_serial *ui;
-    pageProduct* p_pageProduct;
+    page_product* p_page_product;
     page_dispenser* p_page_dispense;
     page_idle* p_page_idle;
     page_help* helpPage;
 
     const QString TAP_READY_LABEL = "Ready for Tap";
-    const QString TAP_PROCESSING_LABEL = "Processing";
+    const QString TAP_label_processing = "Processing";
     const QString TAP_DECLINED_LABEL = "Card Declined";
     const QString TAP_AGAIN_LABEL = "Try Again";
     const QString TAP_APPROVED_LABEL = "Payment Approved";
@@ -198,6 +196,7 @@ private:
     packetFromUX410 readPacket;
     transactionPacket paymentPacket;
     transactionInfo paymentPktInfo;
+   
 
     // Payment Package Control
     bool purchaseEnable;
@@ -206,6 +205,7 @@ private:
     std::vector<uint8_t> pktToSend;
     std::vector<uint8_t> pktResponded;
     std::string productSelectedPrice;
+
     bool sendToUX410();
     bool tap_init();
     bool waitForUX410();
@@ -222,7 +222,7 @@ private:
     int _pageTimeoutCounterSecondsLeft;
     QTimer* paymentEndTimer;
 
-    QResizeEvent *pageProductResize;
+    QResizeEvent *page_productResize;
     QShowEvent *dispenseEvent;
 
     bool response;

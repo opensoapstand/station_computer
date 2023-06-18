@@ -1,0 +1,77 @@
+QPushButton {
+    background-color: transparent;
+    border: 0px;
+}
+
+QLabel {
+    font-family: 'EuropaNuova';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 99px;
+    color: #003840;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+    border: none;
+}
+
+#label_pick_soap {
+    font-weight: 400;
+    font-style: normal;
+    font-size: 58px;
+    color: #221F20;
+    text-align: left;
+    qproperty-alignment: AlignLeft;
+    font-family: 'EuropaNuova-ExtraBold';
+}
+
+#pushButton_to_idle {
+    font-family: 'EuropaNuova-Regular';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 65px;
+    color: white;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+    border: none;
+}
+
+.PushButton_selection {
+    background-color: transparent;
+    border: 0px;
+}
+
+.label_product_overlay_available {
+    background-color: transparent;
+    color: #003840;
+}
+
+.label_product_overlay_sold_out {
+    background-color: rgba(0, 0, 0, 80);
+}
+
+.label_product_type {
+    font-family: 'EuropaNuova-ExtraBold';
+    font-weight: 400;
+    font-style: normal;
+    font-size: 37px;
+    line-height: 49px;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+    color: #5E826A;
+}
+
+.label_product_name {
+    line-height: 36px;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+    font-family: 'EuropaNuova-Regular';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    color: #221F20;
+}
+
+.label_product_photo {
+    /* border: 1px solid black;  */
+}

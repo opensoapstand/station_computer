@@ -29,20 +29,20 @@ font-weight: normal;
 font-size: 23px;
 line-height: 29px;</string>
   </property>
-  <widget class="QPushButton" name="previousPage_Button">
+  <widget class="QPushButton" name="pushButton_previous_page">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>65</y>
-     <width>99</width>
-     <height>36</height>
+     <x>30</x>
+     <y>20</y>
+     <width>181</width>
+     <height>81</height>
     </rect>
    </property>
    <property name="text">
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="send_Button">
+  <widget class="QPushButton" name="pushButton_send">
    <property name="geometry">
     <rect>
      <x>290</x>
@@ -69,7 +69,7 @@ line-height: 29px;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="mainPage_Button">
+  <widget class="QPushButton" name="pushButton_to_idle">
    <property name="geometry">
     <rect>
      <x>472</x>
@@ -123,9 +123,9 @@ text-align: center;
   <widget class="QLabel" name="label_select_problem">
    <property name="geometry">
     <rect>
-     <x>-10</x>
+     <x>0</x>
      <y>220</y>
-     <width>1075</width>
+     <width>1080</width>
      <height>242</height>
     </rect>
    </property>
@@ -162,10 +162,10 @@ text-align: center;
   <widget class="QPushButton" name="checkBox_1_Label">
    <property name="geometry">
     <rect>
-     <x>264</x>
-     <y>560</y>
+     <x>274</x>
+     <y>550</y>
      <width>576</width>
-     <height>45</height>
+     <height>78</height>
     </rect>
    </property>
    <property name="text">
@@ -352,7 +352,7 @@ text-align: center;
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>1046</y>
+     <y>1040</y>
      <width>640</width>
      <height>61</height>
     </rect>
@@ -361,7 +361,7 @@ text-align: center;
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="feedback_Input_Button">
+  <widget class="QPushButton" name="pushButton_start_input">
    <property name="geometry">
     <rect>
      <x>200</x>
@@ -1724,7 +1724,7 @@ font: 11pt &quot;Montserrat&quot;;</string>
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="feedbackTextEdit">
+  <widget class="QTextEdit" name="textEdit_custom_message">
    <property name="geometry">
     <rect>
      <x>200</x>
@@ -1734,10 +1734,29 @@ font: 11pt &quot;Montserrat&quot;;</string>
     </rect>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButton_help_page">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>1820</y>
+     <width>151</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:greeen;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>label_thank_you_image</zorder>
-  <zorder>send_Button</zorder>
+  <zorder>pushButton_send</zorder>
   <zorder>label_problem_options</zorder>
-  <zorder>mainPage_Button</zorder>
+  <zorder>pushButton_to_idle</zorder>
   <zorder>label_select_problem</zorder>
   <zorder>label_still_cant_find_it</zorder>
   <zorder>checkBox_4_Label</zorder>
@@ -1752,14 +1771,15 @@ font: 11pt &quot;Montserrat&quot;;</string>
   <zorder>checkBox_1</zorder>
   <zorder>label_still_cant_find</zorder>
   <zorder>label_email</zorder>
-  <zorder>previousPage_Button</zorder>
+  <zorder>pushButton_previous_page</zorder>
   <zorder>label_enter_feedback</zorder>
-  <zorder>feedback_Input_Button</zorder>
+  <zorder>pushButton_start_input</zorder>
   <zorder>label_thanks_for_feedback</zorder>
   <zorder>label_help</zorder>
   <zorder>feedbackText</zorder>
-  <zorder>feedbackTextEdit</zorder>
+  <zorder>textEdit_custom_message</zorder>
   <zorder>feedbackKeyboard</zorder>
+  <zorder>pushButton_help_page</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -1,18 +1,17 @@
 //***************************************
 //
-// pagethankyou.h
+// page_end.h
 // GUI class to show user dispense has been
 // completed and route back to page_idle
 //
 // created: 05-04-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
-#ifndef PAGETHANKYOU_H
-#define PAGETHANKYOU_H
+#ifndef PAGE_END_H
+#define PAGE_END_H
 
 #include "df_util.h"
 #include "page_idle.h"
@@ -28,17 +27,17 @@ class page_sendFeedback;
 
 namespace Ui
 {
-    class pagethankyou;
+    class page_end;
 }
 
-class pagethankyou : public QWidget
+class page_end : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit pagethankyou(QWidget *parent = nullptr);
+    explicit page_end(QWidget *parent = nullptr);
     void setPage(page_dispenser* page_dispenser, page_idle* pageIdle, page_qr_payment* page_qr_payment, page_sendFeedback *page_sendFeedback);
-    ~pagethankyou();
+    ~page_end();
 
     void controllerFinishedTransaction();
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
@@ -49,13 +48,13 @@ public:
 
 public slots:
 private slots:
-    void on_mainPage_Button_clicked();
+    void on_pushButton_to_idle_clicked();
     void onThankyouTimeoutTick();
     void on_notifyUs_Button_clicked();
 private:
     void showEvent(QShowEvent *event);
 
-    Ui::pagethankyou *ui;
+    Ui::page_end *ui;
     page_dispenser* p_page_dispense;
     page_idle* p_page_idle;
     page_qr_payment* paymentPage;
@@ -89,4 +88,4 @@ private:
     bool is_in_state_thank_you;
 };
 
-#endif // PAGETHANKYOU_H
+#endif // PAGE_END_H

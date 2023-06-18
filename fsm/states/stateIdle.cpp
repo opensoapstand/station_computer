@@ -7,10 +7,9 @@
 // command from IPC QT Socket
 //
 // created: 01-2022
-// by:Lode Ameije & Ash Singla
+// by:Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "stateIdle.h"
@@ -78,6 +77,12 @@ DF_ERROR stateIdle::onAction()
       {
          m_state_requested = STATE_MANUAL_PUMP;
       }
+      // else if (GET_TEMPERATURE == m_pMessaging->getAction()) //temp code
+      // {
+      //    int temperature  = g_machine.getTemperature();
+      //    m_pMessaging->sendMessageOverIP("temperature|" + to_int(temperature));
+
+      // }
       else if ('3' == m_pMessaging->getAction())
       {
          m_state_requested = STATE_MANUAL_CONFIG;

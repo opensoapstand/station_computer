@@ -48,8 +48,6 @@
         <file>dfuiserver.h</file>
         <file>page_dispenser.cpp</file>
         <file>page_dispenser.h</file>
-        <file>drinkorder.cpp</file>
-        <file>drinkorder.h</file>
         <file>page_help.cpp</file>
         <file>page_help.h</file>
         <file>page_idle.h</file>
@@ -61,8 +59,8 @@
         <file>page_product.h</file>
         <file>page_select_product.cpp</file>
         <file>page_select_product.h</file>
-        <file>pagethankyou.cpp</file>
-        <file>pagethankyou.h</file>
+        <file>page_end.cpp</file>
+        <file>page_end.h</file>
         <file>ui_page_dispenser.h</file>
         <file>ui_page_help.h</file>
         <file>ui_page_idle.h</file>
@@ -71,7 +69,7 @@
         <file>ui_page_qr_payment.h</file>
         <file>ui_page_product.h</file>
         <file>ui_page_select_product.h</file>
-        <file>ui_pagethankyou.h</file>
+        <file>ui_page_end.h</file>
 
     </qresource>
 </RCC>

@@ -7,11 +7,10 @@
 // Coordinates User input from payment select
 // class then communcates results to page_dispenser.
 //
-// created: 4-01-2021
-// by: Paddy Riley
+// created: 16-06-2023
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef PAGE_MAINTENANCE_H
@@ -19,7 +18,7 @@
 
 #include <includefiles.h>
 #include "df_util.h"
-#include "drinkorder.h"
+
 #include "dfuicommthread.h"
 #include "page_maintenance_dispenser.h"
 #include "page_maintenance_general.h"
@@ -30,7 +29,7 @@ class page_idle;
 class page_maintenance_dispenser;
 class page_maintenance_general;
 class page_select_product;
-class pageProduct;
+class page_product;
 
 namespace Ui {
 class page_maintenance;
@@ -44,7 +43,7 @@ class page_maintenance : public QWidget
 
 public:
     explicit page_maintenance(QWidget *parent = nullptr);
-    void setPage(page_idle* pageIdle, page_maintenance_dispenser* p_pageMaintenanceDispenser, page_maintenance_general* p_pageMaintenanceGeneral, page_select_product *p_pageProduct, pageProduct* pagePaySelect);
+    void setPage(page_idle* pageIdle, page_maintenance_dispenser* p_pageMaintenanceDispenser, page_maintenance_general* p_pageMaintenanceGeneral, page_select_product *p_page_product, page_product* pagePaySelect);
 
 
     ~page_maintenance();
@@ -52,7 +51,7 @@ public:
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
 
 private slots:
-    void on_backButton_clicked();
+    void on_pushButton_to_previous_page_clicked();
     void on_product1_button_clicked();
     void on_product2_button_clicked();
     void on_product3_button_clicked();
@@ -73,7 +72,7 @@ private slots:
     // void on_enable_pump_ramping_checkBox_stateChanged(int arg1);
 
 
-    void on_generalSettings_button_clicked();
+    void on_pushButton_general_settings_clicked();
 
 private:
     void showEvent(QShowEvent *event);
@@ -82,9 +81,9 @@ private:
     page_maintenance_dispenser* p_page_maintenance_product;
     page_maintenance_general* p_page_maintenance_general;
     page_select_product* p_pageSelectProduct;
-    pageProduct* p_pageProduct;
+    page_product* p_page_product;
 
-    QResizeEvent *productSelection;
+    // QResizeEvent *productSelection;
     QPushButton* product_buttons[4];
     QLabel* product_overlay_labels[4];
     int _page_maintenanceTimeoutSec;

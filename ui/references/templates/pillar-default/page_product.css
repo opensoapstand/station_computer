@@ -1,0 +1,157 @@
+/* #pushButton_to_idle {
+
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 20px;
+   line-height: 99px;
+   color: #FFFFFF;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
+} */
+
+.button_transparent {
+   background-color: transparent;
+   border: 0px;
+}
+
+.title {
+   position: absolute;
+   font-family: 'EuropaNuova-ExtraBold';
+   font-style: bold;
+   font-weight: 700;
+   font-size: 45px;
+   line-height: 52px;
+   text-transform: capitalize;
+   color: #221F20;
+}
+
+.orderSizeBackgroundLabels1 {
+   background-color: transparent;
+   border: 0px;
+}
+
+#label_select_quantity {
+   font-family: 'EuropaNuova-ExtraBold';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 36px;
+   line-height: auto;
+   color: #58595B;
+   border: none;
+}
+
+.orderSizeLabelsVolume {
+   font-family: 'EuropaNuova-Regular';
+   /* background-image: url(/home/df-admin/production/references/background.png); */
+   font-style: normal;
+   font-weight: 400;
+   font-size: 24px;
+   line-height: 44px;
+   color: #221F20;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+}
+
+.orderSizeLabelsPrice {
+   font-family: 'EuropaNuova-ExtraBold';
+   /* background-image: url(/home/df-admin/production/references/background.png); */
+   font-style: normal;
+   font-weight: 400;
+   font-size: 34px;
+   line-height: 44px;
+   color: #221F20;
+}
+
+.orderSizeBackgroundLabels {
+   background-color: #FFFFFF;
+   border: 0px;
+}
+
+.orderSizeButtons {
+   background-color: transparent;
+   border: 2px solid #221F20;
+   border-radius: 25px;
+}
+
+#pushButton_previous_page {
+   background-color: transparent;
+   border: 0px;
+}
+
+#pushButton_back {
+   font-family: 'EuropaNuova-Regular';
+   font-style: normal;
+   font-weight: 700;
+   font-size: 65px;
+   color: white;
+   text-align: left;
+   qproperty-alignment: AlignCenter;
+   border: none;
+}
+
+
+#label_product_description {
+   position: absolute;
+   font-family: 'EuropaNuova-Regular';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 28px;
+   line-height: 36px;
+   color: #221F20;
+   text-align: left;
+   qproperty-alignment: AlignLeftCenter;
+   margin-top: 20px;
+}
+
+#label_product_photo {
+   border: none;
+}
+
+#label_product_ingredients_title {
+   position: absolute;
+   font-family: 'EuropaNuova-ExtraBold';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 37px;
+   line-height: 49px;
+   color: #221F20;
+}
+
+#label_product_ingredients {
+   margin-top: 20px;
+   position: absolute;
+   font-family: 'EuropaNuova-Regular';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 22px;
+   line-height: 50px;
+   color: #221F20;
+}
+
+#pushButton_continue {
+   font-family: 'EuropaNuova-Regular';
+   font-style: normal;
+   font-weight: 400;
+   background-color: #221F20;
+   font-size: 48px;
+   text-align: center;
+   line-height: auto;
+   qproperty-alignment: AlignCenter;
+   border-radius: 20px;
+   color: white;
+   border: none;
+}
+
+#label_help {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 20px;
+   line-height: 99px;
+   color: #FFFFFF;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
+}

@@ -8,17 +8,16 @@
 // class then communcates results to page_dispenser.
 //
 // created: 05-04-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef page_qr_payment_H
 #define page_qr_payment_H
 
 #include "df_util.h"
-#include "drinkorder.h"
+
 #include "page_help.h"
 #include "page_error_wifi.h"
 #include "payment/commands.h"
@@ -42,7 +41,7 @@
 
 
 
-class pageProduct;
+class page_product;
 class page_dispenser;
 class page_idle;
 class page_help;
@@ -67,7 +66,7 @@ class page_qr_payment : public QWidget
 public:
     // **** GUI Setup ****
     explicit page_qr_payment(QWidget *parent = nullptr);
-    void setPage(pageProduct* pageSizeSelect,page_error_wifi *pageWifiError, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp);
+    void setPage(page_product* p_page_product,page_error_wifi *pageWifiError, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp);
     ~page_qr_payment();
     void setProgressLabel(QLabel* label, int dot);
     // TODO: Figure out better Style Setup.
@@ -100,10 +99,9 @@ private slots:
     void updateTotals(string drinkDescription, string drinkAmount, string orderTotal);
 
     // Navigation
-    void on_previousPage_Button_clicked();
-    void on_payment_bypass_Button_clicked();
+    void on_pushButton_previous_page_clicked();
+    void on_pushButton_payment_bypass_clicked();
     void proceed_to_dispense();
-     void on_mainPage_Button_clicked();
 
     //void on_payment_pass_Button_clicked();
     //void on_payment_cancel_Button_clicked();
@@ -116,10 +114,10 @@ private slots:
 
 
     void idlePaymentTimeout();
-    void on_refreshButton_clicked();
+    void on_pushButton_refresh_clicked();
 
     void qrProcessedPeriodicalCheck();
-    void showErrorPage();
+    void showErrorTimerPage();
 
 
 protected:
@@ -129,7 +127,7 @@ protected:
 private:
     // **** GUI ****
     Ui::page_qr_payment *ui;
-    pageProduct* p_pageProduct;
+    page_product* p_page_product;
     page_dispenser* p_page_dispense;
     page_idle* p_page_idle;
     page_help* p_page_help;
@@ -137,7 +135,7 @@ private:
 
 
     const QString TAP_READY_LABEL = "Ready for Tap";
-    const QString TAP_PROCESSING_LABEL = "Processing";
+    const QString TAP_label_processing = "Processing";
     const QString TAP_DECLINED_LABEL = "Card Declined";
     const QString TAP_AGAIN_LABEL = "Try Again";
     const QString TAP_APPROVED_LABEL = "Payment Approved";
@@ -183,7 +181,7 @@ private:
     QTimer *checkPacketReceivedTimer;
     QTimer *checkCardTappedTimer;
 
-    QTimer *idlePaymentTimer;
+    // QTimer *idlePaymentTimer;
     QTimer *inFlightTimer;
 
     // Payment Communication
@@ -219,9 +217,9 @@ private:
 
     int _qrProcessedPeriodicalCheckSec;
     QTimer* qrPeriodicalCheckTimer;
-    QTimer* showError;
+    QTimer* showErrorTimer;
 
-    QResizeEvent *pageProductResize;
+    QResizeEvent *page_productResize;
     QShowEvent *dispenseEvent;
 
     bool response;
@@ -232,7 +230,7 @@ private:
     std::string toSvgString(const QrCode &qr, int border);
     void paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg);
     void resetPaymentPage();
-    QString getPaymentMethod();
+    // QString getPaymentMethod();
 
 
 

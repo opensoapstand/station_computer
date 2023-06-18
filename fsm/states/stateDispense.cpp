@@ -8,10 +8,9 @@
 // Routes dispense instruction to GPIO's
 //
 // created: 01-2022
-// by:Lode Ameije & Ash Singla
+// by:Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "stateDispense.h"
@@ -113,7 +112,7 @@ DF_ERROR stateDispense::onAction()
 
    productDispensers[pos_index].updateRunningAverageWindow();
    productDispensers[pos_index].updateDispenseStatus();
-   productDispensers[pos_index].updateDispenserState();
+   productDispensers[pos_index].updateSlotState();
 
    if (productDispensers[pos_index].getIsStatusUpdateAllowed())
    {
@@ -124,7 +123,7 @@ DF_ERROR stateDispense::onAction()
       // const char *statusStringChar = productDispensers[pos_index].getDispenseStatusAsString();
       // std::string statusString(statusStringChar);
       // std::string message = "dispenseupdate|" + std::to_string(volume) + "|" + std::to_string(flowrate) + "|" + statusString;
-      const char *statusStringChar = productDispensers[pos_index].getDispenserStateAsString();
+      const char *statusStringChar = productDispensers[pos_index].getSlotStateAsString();
       std::string statusString(statusStringChar);
       std::string message = "dispenseupdate|" + std::to_string(volume) + "|" + std::to_string(flowrate) + "|" + statusString;
       m_pMessaging->sendMessageOverIP(message);

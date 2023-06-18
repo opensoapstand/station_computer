@@ -8,10 +8,9 @@
 // Product Page1
 //
 // created: 01-05-2023
-// by: Lode Ameije & Ash Singla & Udbhav Kansal
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado & Udbhav Kansal & Daniel C.
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "page_idle_products.h"
@@ -22,91 +21,59 @@
 #include "page_select_product.h"
 #include "page_product.h"
 
-
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
-#include <QMainWindow>
+// #include <QMainWindow>
 #include <QtWidgets>
 #include <QtMultimediaWidgets>
 
 //    #define PLAY_VIDEO
 // CTOR
 page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
-                                                            ui(new Ui::page_idle_products)
+                                                          ui(new Ui::page_idle_products)
 {
     ui->setupUi(this);
 
-    ui->p_page_maintenanceButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
- 
+    backgroundChangeTimer = new QTimer(this);
+    backgroundChangeTimer->setInterval(20);
+    // connect(backgroundChangeTimer, SIGNAL(timeout()), this, &page_idle_products::changeBackground);
 
-    selectProductPhotoLabels[0] = ui->product_1_photo_label;
-    selectProductPhotoLabels[1] = ui->product_2_photo_label;
-    selectProductPhotoLabels[2] = ui->product_3_photo_label;
-    selectProductPhotoLabels[3] = ui->product_4_photo_label;
+    labels_product_picture[0] = ui->label_product_1_photo;
+    labels_product_picture[1] = ui->label_product_2_photo;
+    labels_product_picture[2] = ui->label_product_3_photo;
+    labels_product_picture[3] = ui->label_product_4_photo;
 
-    selectProductOverlayLabels[0] = ui->product_1_overlay_label;
-    selectProductOverlayLabels[1] = ui->product_2_overlay_label;
-    selectProductOverlayLabels[2] = ui->product_3_overlay_label;
-    selectProductOverlayLabels[3] = ui->product_4_overlay_label;
+    labels_selectProductOverlay[0] = ui->label_product_1_overlay;
+    labels_selectProductOverlay[1] = ui->label_product_2_overlay;
+    labels_selectProductOverlay[2] = ui->label_product_3_overlay;
+    labels_selectProductOverlay[3] = ui->label_product_4_overlay;
 
-    selectProductPhotoLabelsText[0] = ui->product_1_photo_label_text;
-    selectProductPhotoLabelsText[1] = ui->product_2_photo_label_text;
-    selectProductPhotoLabelsText[2] = ui->product_3_photo_label_text;
-    selectProductPhotoLabelsText[3] = ui->product_4_photo_label_text;
+    labels_product_overlay_text[0] = ui->label_product_1_overlay_text;
+    labels_product_overlay_text[1] = ui->label_product_2_overlay_text;
+    labels_product_overlay_text[2] = ui->label_product_3_overlay_text;
+    labels_product_overlay_text[3] = ui->label_product_4_overlay_text;
 
+    labels_product_type[0] = ui->label_product_1_type;
+    labels_product_type[1] = ui->label_product_2_type;
+    labels_product_type[2] = ui->label_product_3_type;
+    labels_product_type[3] = ui->label_product_4_type;
 
-
-    selectProductTypeLabels[0] = ui->product_1_type_label;
-    selectProductTypeLabels[1] = ui->product_2_type_label;
-    selectProductTypeLabels[2] = ui->product_3_type_label;
-    selectProductTypeLabels[3] = ui->product_4_type_label;
-
-    ui->helpPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-    // ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-    ui->label_pick_soap->setStyleSheet(
-        "QLabel {"
-
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 54px;"
-        "line-height: 99px;"
-        "letter-spacing: px;"
-        "color: #003840;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
-    ui->label_pick_soap->setText("Discover how to<br> refill soap here");
-
-   
+    ui->pushButton_to_select_product_page->raise();
 
     QFont font;
     font.setFamily(QStringLiteral("Brevia"));
     font.setPointSize(20);
     font.setBold(true);
     font.setWeight(75);
-
-    productPageEndTimer = new QTimer(this);
-    productPageEndTimer->setInterval(1000);
-    connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
 }
 
 /*
  * Page Tracking reference
  */
-void page_idle_products::setPage(pageProduct *pageSizeSelect, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp)
+void page_idle_products::setPage(page_idle *pageIdle, page_select_product *p_page_select_product)
 {
-    this->p_page_product = pageSizeSelect;
+    this->p_pageSelectProduct = p_page_select_product;
     this->p_page_idle = pageIdle;
-    this->p_page_maintenance = pageMaintenance;
-    this->p_page_help = pageHelp;
-
-    selectedProductOrder = p_page_idle->currentProductOrder;
-
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
-    QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
-    qDebug() << full_path;
 }
 
 // DTOR
@@ -117,25 +84,52 @@ page_idle_products::~page_idle_products()
 
 void page_idle_products::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< Page Enter: Select Product >>>>>>>>>";
-    this->lower();
+
+    p_page_idle->setTemplateTextToObject(ui->label_pick_soap);
+
+    QString styleSheet = p_page_idle->getCSS(PAGE_IDLE_PRODUCTS_CSS);
+    ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
+    ui->label_pick_soap->setStyleSheet(styleSheet);
+
+    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    {
+
+        labels_product_picture[slot_index]->setProperty("class", "labels_product_picture");
+        labels_product_type[slot_index]->setProperty("class", "labels_product_type");
+        labels_selectProductOverlay[slot_index]->setProperty("class", "labels_selectProductOverlay"); // seems to do nothing
+        labels_product_picture[slot_index]->setStyleSheet(styleSheet);
+        labels_selectProductOverlay[slot_index]->setStyleSheet(styleSheet);
+        labels_product_type[slot_index]->setStyleSheet(styleSheet);
+    }
+
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
+
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
+
+    qDebug() << "open db: payment method";
+    bool needsReceiptPrinter = false;
+    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    {
+        QString paymentMethod = p_page_idle->products[slot_index].getPaymentMethod();
+        if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
+        {
+            needsReceiptPrinter = true;
+            qDebug() << "Needs receipt printer: " << paymentMethod;
+            break;
+        }
+
+        p_page_idle->products[slot_index].setDiscountPercentageFraction(0.0);
+        p_page_idle->products[slot_index].setPromoCode("");
+    }
     maintenanceCounter = 0;
 
     displayProducts();
 
-    if (productPageEndTimer == nullptr)
-    {
-        productPageEndTimer = new QTimer(this);
-        productPageEndTimer->setInterval(1000);
-        connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
-    }
+    p_page_idle->addCompanyLogoToLabel(ui->logo_label);
 
-    productPageEndTimer->start(1000);
-    _productPageTimeoutSec = 15;
-
-    this->raise();
-    addCompanyLogoToLabel(ui->logo_label);
+    ui->pushButton_to_select_product_page->raise();
+    // hideAllLabelAndButtons();
 }
 void page_idle_products::resizeEvent(QResizeEvent *event)
 {
@@ -147,37 +141,19 @@ void page_idle_products::displayProducts()
     QString product_type_icons[5] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH};
 
     bool product_slot_enabled;
-    // bool product_sold_out;
     QString product_type;
     QString product_name;
     QString product_status_text;
 
-    for (uint8_t i = 0; i < SLOT_COUNT; i++)
+    for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
-        uint8_t slot = i + 1;
-
         // display product picture
-        selectProductPhotoLabels[i]->setStyleSheet("border: none;");
-        p_page_idle->addPictureToLabel(selectProductPhotoLabels[i], p_page_idle->currentProductOrder->getProductPicturePath(slot));
-
-        qDebug() << "db (re)load product details:";
-        DbManager db(DB_PATH);
-        
-        product_slot_enabled = db.getSlotEnabled(slot);
-
-        
-        // product_sold_out = !(db.isProductVolumeInContainer(slot));
-
-        product_status_text = db.getStatusText(slot);
-        db.closeDB();
-
-        product_type = p_page_idle->currentProductOrder->getProductType(slot);
-        product_name = p_page_idle->currentProductOrder->getProductName(slot);
-        
-        // qDebug() << "Product: " << product_type << "At slot: " << slot << ", enabled: " << product_slot_enabled << ", product set as not available?: " << product_sold_out << " Status text: " << product_status_text;
-
-        // selectProductNameLabels[i]->setText(product_name);
-        // selectProductNameLabels[i]->setStyleSheet("QLabel{font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 28px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;}");
+        //  labels_product_picture[slot_index]->setStyleSheet("border: none;");
+        p_page_idle->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->products[slot_index].getProductPicturePath());
+        product_slot_enabled = p_page_idle->products[slot_index].getSlotEnabled();
+        product_status_text = p_page_idle->products[slot_index].getStatusText();
+        product_type = p_page_idle->products[slot_index].getProductType();
+        product_name = p_page_idle->products[slot_index].getProductName();
 
         // display product type icon  picture
         QString icon_path = "not found";
@@ -213,198 +189,153 @@ void page_idle_products::displayProducts()
             type_text = product_type;
             qDebug() << "Product type not found for UI text and icon. Is the slot set correctly in database?";
         }
-        QString icon_path_with_template = p_page_idle->getTemplatePathFromName(icon_path);
+        QString icon_path_with_template = p_page_idle->thisMachine.getTemplatePathFromName(icon_path);
 
-        selectProductOverlayLabels[i]->raise();
-        selectProductPhotoLabelsText[i]->raise();
-      
-        selectProductOverlayLabels[i]->setText("");
+        labels_selectProductOverlay[slot_index]->raise();
+        labels_product_overlay_text[slot_index]->raise();
+
+        labels_selectProductOverlay[slot_index]->setText("");
 
         // overlay product status
-            selectProductPhotoLabelsText[i]->setText("");
-            selectProductOverlayLabels[i]->setStyleSheet("background-color: transparent;");
+        labels_product_overlay_text[slot_index]->setText("");
 
-        selectProductTypeLabels[i]->setText(type_text);
-        selectProductTypeLabels[i]->setStyleSheet("QLabel{font-family: 'Brevia';font-style: normal;font-weight: 700;font-size: 30px;line-height: 41px;qproperty-alignment: AlignCenter;text-transform: uppercase;color: #003840;}");
+        labels_product_type[slot_index]->setText(type_text);
+        // labels_product_type[slot_index]->setStyleSheet(styleSheet);
     }
-
-   
-
 }
 
 void page_idle_products::select_product(int slot)
 {
-        qDebug() << "selected slot: " << slot;
-        p_page_idle->currentProductOrder->setSelectedSlot(slot);
-        hideCurrentPageAndShowProvided(p_page_product);
+    qDebug() << "selected slot: " << slot;
+    hideCurrentPageAndShowProvided(p_page_product);
 }
 
-void page_idle_products::addCompanyLogoToLabel(QLabel *label)
+void page_idle_products::checkReceiptPrinterStatus()
 {
-    qDebug() << "db init company logo";
-    DbManager db(DB_PATH);
-    QString id = db.getCustomerId();
-    QString size_small;
-    QString size_medium;
-    QString size_large;
-    QString size_units;
-    QString price_small;
-    QString price_medium;
-    QString price_large;
-    for (uint8_t i = 0; i < SLOT_COUNT; i++) {
-    size_units = db.getUnits(i);
-    size_small = db.getSizeSmall(i);
-    size_medium = db.getSizeMedium(i);
-    size_large = db.getSizeLarge(i);
-    price_small = db.getPriceSmall(i);
-    price_medium = db.getPriceMedium(i);
-    price_large = db.getPriceLarge(i);
-
-    // do something with size_units
-}
-    db.closeDB();
-    qDebug() << "db closed";
-    if (id.at(0) == 'C')
+    if (p_page_idle->thisMachine.hasReceiptPrinter())
     {
-        QString logo_path = QString(COMPANY_LOGO_PATH).arg(id);
-        p_page_idle->addPictureToLabel(label, logo_path);
+        qDebug() << "Check receipt printer functionality.";
+        this->p_page_maintenance_general->send_check_printer_status_command();
+        ui->pushButton_to_select_product_page->hide(); // when printer needs to be restarted, it can take some time. Make sure nobody presses the button in that interval (to prevent crashes)
     }
     else
     {
-        qDebug() << "WARNING: invalid customer ID. Should like C-1, C-374, ... . Provided id: " << id;
-    }
-        // ui->label_product1_price->setStyleSheet(
-        // "QLabel {"
-
-        // "font-family: 'Brevia';"
-        // "font-style: normal;"
-        // "font-weight: 50;"
-        // "font-size: 23px;"
-        // "line-height: 99px;"
-        // "text-align: center;"
-        // "letter-spacing: 1.5px;"
-        // "text-transform: lowercase;"
-        // "color: #003840;"
-        // "qproperty-alignment: AlignCenter;"
-        // "}");
-
-        // ui->label_product2_price->setStyleSheet(
-        // "QLabel {"
-
-        // "font-family: 'Brevia';"
-        // "font-style: normal;"
-        // "font-weight: 50;"
-        // "font-size: 23px;"
-        // "line-height: 99px;"
-        // "text-align: center;"
-        // "letter-spacing: 1.5px;"
-        // "text-transform: lowercase;"
-        // "color: #003840;"
-        // "qproperty-alignment: AlignCenter;"
-        // "}");
-
-        // ui->label_product3_price->setStyleSheet(
-        // "QLabel {"
-
-        // "font-family: 'Brevia';"
-        // "font-style: normal;"
-        // "font-weight: 50;"
-        // "font-size: 23px;"
-        // "line-height: 99px;"
-        // "text-align: center;"
-        // "letter-spacing: 1.5px;"
-        // "text-transform: lowercase;"
-        // "color: #003840;"
-        // "qproperty-alignment: AlignCenter;"
-        // "}");
-        // ui->label_product4_price->setStyleSheet(
-        // "QLabel {"
-
-        // "font-family: 'Brevia';"
-        // "font-style: normal;"
-        // "font-weight: 50;"
-        // "font-size: 23px;"
-        // "line-height: 99px;"
-        // "text-align: center;"
-        // "letter-spacing: 1.5px;"
-        // "text-transform: lowercase;"
-        // "color: #003840;"
-        // "qproperty-alignment: AlignCenter;"
-        // "}");
-    //     QString label_text = "%1 ml | %2 ml | %3 ml<br>%4....|....%5....|.... %6";
-
-    //  if (size_units == "ml")
-    // { 
-    //     label_text = label_text.arg(size_small).arg(size_medium).arg(size_large).arg( price_small).arg(price_medium).arg(price_large);
-    //     ui->label_product1_price->setText(label_text);
-    //     ui->label_product2_price->setText(label_text);
-    //     ui->label_product3_price->setText(label_text);
-    //     ui->label_product4_price->setText(label_text);
-    // }
-    //  else if (size_units == "L")
-    // {
-    //     ui->label_product1_price->setText("L");
-    //     ui->label_product2_price->setText("L");
-    //     ui->label_product3_price->setText("L");
-    //     ui->label_product4_price->setText("L");
-    // }
-    //  else if (size_units == "kg")
-    // {
-    //     ui->label_product1_price->setText("kg");
-    //     ui->label_product2_price->setText("kg");
-    //     ui->label_product3_price->setText("kg");
-    //     ui->label_product4_price->setText("kg");
-    // }
-    // else if (size_units == "oz")
-    // {
-    //     ui->label_product1_price->setText("oz");
-    //     ui->label_product2_price->setText("oz");
-    //     ui->label_product3_price->setText("oz");
-    //     ui->label_product4_price->setText("oz");
-    // }
-
-}
-
-
-void page_idle_products::onProductPageTimeoutTick()
-{
-    if (--_productPageTimeoutSec >= 0)
-    {
-        // qDebug() << "Tick Down: " << _productPageTimeoutSec;
-    }
-    else
-    {
-        // qDebug() << "Timer Done!" << _productPageTimeoutSec;
-        hideCurrentPageAndShowProvided(p_page_idle);
-    }
-}
-
-void page_idle_products::on_p_page_maintenanceButton_pressed()
-{
-    maintenanceCounter++;
-    if (maintenanceCounter > 50)
-    {
-        hideCurrentPageAndShowProvided(p_page_maintenance);
+        qDebug() << "Receipt printer not enabled in db->machine table";
     }
 }
 
 void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
-    productPageEndTimer->stop();
+    // productPageEndTimer->stop();
     qDebug() << "Exit select product page.";
-    selectedProductOrder->setDiscountPercentageFraction(0.0);
-    this->raise();
+    // this->raise();
     p_page_idle->pageTransition(this, pageToShow);
 }
 
-// void page_idle_products::on_mainPage_Button_clicked()
+void page_idle_products::hideAllLabelAndButtons()
+{
+    ui->label_pick_soap->hide();
+    ui->label_product1_price->hide();
+    ui->label_product2_price->hide();
+    ui->label_product3_price->hide();
+    ui->label_product4_price->hide();
+    ui->label_product_1_overlay->hide();
+    ui->label_product_2_overlay->hide();
+    ui->label_product_3_overlay->hide();
+    ui->label_product_4_overlay->hide();
+    ui->label_product_1_overlay_text->hide();
+    ui->label_product_2_overlay_text->hide();
+    ui->label_product_3_overlay_text->hide();
+    ui->label_product_4_overlay_text->hide();
+    ui->label_product_1_photo->hide();
+    ui->label_product_2_photo->hide();
+    ui->label_product_3_photo->hide();
+    ui->label_product_4_photo->hide();
+    ui->label_product_1_type->hide();
+    ui->label_product_2_type->hide();
+    ui->label_product_3_type->hide();
+    ui->label_product_4_type->hide();
+    ui->logo_label->hide();
+    ui->printer_status_label->hide();
+    ui->pushButton_to_select_product_page->hide();
+}
+
+void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
+{
+    qDebug() << "Printer feedback received from fsm";
+
+    if (!isOnline)
+    {
+        ui->printer_status_label->raise();
+
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->printer_status_label, "assistance_printer_offline");
+        ui->printer_status_label->show();
+    }
+    else if (!hasPaper)
+    {
+        ui->printer_status_label->raise();
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->printer_status_label, "empty_improperly_loaded");
+        ui->printer_status_label->show();
+    }
+    else
+    {
+        ui->printer_status_label->hide();
+    }
+    ui->pushButton_to_select_product_page->show();
+
+    QString styleSheet = p_page_idle->getCSS(PAGE_IDLE_PRODUCTS_CSS);
+
+    ui->printer_status_label->setStyleSheet(styleSheet);
+}
+
+// void page_idle_products::changeBackground()
 // {
-//     qDebug() << "Back to Idle Page Button pressed";
-//     hideCurrentPageAndShowProvided(p_page_idle);
+    // // Predefined list of background image paths
+    // QStringList backgroundPaths = {
+    //     "background1.jpg",
+    //     "background2.jpg",
+    //     "background3.jpg",
+    //     "background4.jpg",
+    //     "background5.jpg",
+    //     "background6.jpg",
+    //     // Add more background image paths as needed
+    // };
+
+//     static int currentIndex = 0;  // Static variable to keep track of the current background index
+
+//     int initialIndex = currentIndex;  // Store the initial index for the loop
+
+//     // Loop through the backgroundPaths until a valid background image file is found
+//     do {
+//         QString currentBackgroundPath = backgroundPaths[currentIndex];
+
+//         // Check if the current background image file exists
+//         if (pathExists(currentBackgroundPath))
+//         {
+//             // Set the new background image path
+//             p_page_idle->setBackgroundPictureFromTemplateToPage(this, currentBackgroundPath);
+//             break;  // Exit the loop if a valid background is found
+//         }
+
+//         // Increment the current index
+//         currentIndex++;
+
+//         // If the index exceeds the number of backgrounds, reset it to 0
+//         if (currentIndex >= backgroundPaths.size()) {
+//             currentIndex = 0;
+//         }
+//     } while (currentIndex != initialIndex);  // Continue the loop until we reach the initial index again
+
+//     if (currentIndex == initialIndex && !pathExists(backgroundPaths[initialIndex]))
+//     {
+//         // If the loop reached the initial index and the corresponding background doesn't exist, revert to the original background image
+//         p_page_idle->setBackgroundPictureFromTemplateToPage(this, "original_background.jpg");
+//     }
 // }
 
-void page_idle_products::on_helpPage_Button_clicked()
+
+
+void page_idle_products::on_pushButton_to_select_product_page_clicked()
 {
-    qDebug() << "Help_Button pressed";
-    hideCurrentPageAndShowProvided(p_page_help);
+    this->hideCurrentPageAndShowProvided(p_pageSelectProduct);
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>pageProductOverview</class>
- <widget class="QWidget" name="pageProductOverview">
+ <class>page_product_overview</class>
+ <widget class="QWidget" name="page_product_overview">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -29,7 +29,7 @@ font-weight: normal;
 font-size: 23px;
 line-height: 29px;</string>
   </property>
-  <widget class="QPushButton" name="previousPage_Button">
+  <widget class="QPushButton" name="pushButton_previous_page">
    <property name="geometry">
     <rect>
      <x>70</x>
@@ -42,7 +42,7 @@ line-height: 29px;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="page_qr_payment_Button">
+  <widget class="QPushButton" name="pushButton_continue">
    <property name="geometry">
     <rect>
      <x>188</x>
@@ -69,7 +69,7 @@ line-height: 29px;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="mainPage_Button">
+  <widget class="QPushButton" name="pushButton_to_help">
    <property name="geometry">
     <rect>
      <x>446</x>
@@ -85,7 +85,7 @@ line-height: 29px;</string>
   <widget class="QLabel" name="label_invoice_price">
    <property name="geometry">
     <rect>
-     <x>743</x>
+     <x>749</x>
      <y>993</y>
      <width>211</width>
      <height>80</height>
@@ -111,15 +111,15 @@ color: #7F8080;</string>
   <widget class="QLabel" name="label_invoice_price_total">
    <property name="geometry">
     <rect>
-     <x>751</x>
-     <y>1344</y>
+     <x>749</x>
+     <y>1340</y>
      <width>211</width>
-     <height>80</height>
+     <height>44</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">font-family: Montserrat;
-background-image: url(/home/df-admin/production/references/background.png);
+background-image: url(background.png);
 font-style: light;
 font-weight: bold;
 font-size: 36px;
@@ -139,7 +139,7 @@ color: #58595B;</string>
     <rect>
      <x>538</x>
      <y>256</y>
-     <width>444</width>
+     <width>445</width>
      <height>450</height>
     </rect>
    </property>
@@ -205,23 +205,7 @@ text-align: center;</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="promoButton">
-   <property name="geometry">
-    <rect>
-     <x>825</x>
-     <y>775</y>
-     <width>150</width>
-     <height>46</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="promoCode">
+  <widget class="QLineEdit" name="lineEdit_promo_code">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -229,7 +213,7 @@ text-align: center;</string>
     <rect>
      <x>94</x>
      <y>775</y>
-     <width>881</width>
+     <width>891</width>
      <height>46</height>
     </rect>
    </property>
@@ -252,12 +236,12 @@ text-align: center;</string>
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="promoInputButton">
+  <widget class="QPushButton" name="pushButton_promo_input">
    <property name="geometry">
     <rect>
-     <x>94</x>
-     <y>775</y>
-     <width>881</width>
+     <x>90</x>
+     <y>770</y>
+     <width>891</width>
      <height>46</height>
     </rect>
    </property>
@@ -286,8 +270,8 @@ text-align: center;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>107</x>
-     <y>920</y>
+     <x>120</x>
+     <y>830</y>
      <width>841</width>
      <height>320</height>
     </rect>
@@ -304,8 +288,8 @@ text-align: center;</string>
    <widget class="QPushButton" name="num1">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>30</y>
+      <x>53</x>
+      <y>32</y>
       <width>62</width>
       <height>47</height>
      </rect>
@@ -351,8 +335,8 @@ outline: none;
    <widget class="QPushButton" name="num2">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>30</y>
+      <x>128</x>
+      <y>32</y>
       <width>62</width>
       <height>47</height>
      </rect>
@@ -392,8 +376,8 @@ outline: none;
    <widget class="QPushButton" name="num3">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>30</y>
+      <x>203</x>
+      <y>32</y>
       <width>62</width>
       <height>47</height>
      </rect>
@@ -439,8 +423,8 @@ outline: none;
    <widget class="QPushButton" name="num4">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>30</y>
+      <x>278</x>
+      <y>32</y>
       <width>62</width>
       <height>47</height>
      </rect>
@@ -480,8 +464,8 @@ outline: none;
    <widget class="QPushButton" name="num5">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>30</y>
+      <x>353</x>
+      <y>32</y>
       <width>62</width>
       <height>47</height>
      </rect>
@@ -518,8 +502,8 @@ outline: none;
    <widget class="QPushButton" name="num6">
     <property name="geometry">
      <rect>
-      <x>420</x>
-      <y>30</y>
+      <x>428</x>
+      <y>32</y>
       <width>62</width>
       <height>47</height>
      </rect>
@@ -556,8 +540,8 @@ outline: none;
    <widget class="QPushButton" name="num7">
     <property name="geometry">
      <rect>
-      <x>490</x>
-      <y>30</y>
+      <x>503</x>
+      <y>32</y>
       <width>62</width>
       <height>47</height>
      </rect>
@@ -597,8 +581,8 @@ outline: none;
    <widget class="QPushButton" name="num8">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>20</y>
+      <x>578</x>
+      <y>32</y>
       <width>62</width>
       <height>47</height>
      </rect>
@@ -635,8 +619,8 @@ outline: none;
    <widget class="QPushButton" name="num9">
     <property name="geometry">
      <rect>
-      <x>650</x>
-      <y>30</y>
+      <x>653</x>
+      <y>32</y>
       <width>62</width>
       <height>47</height>
      </rect>
@@ -673,8 +657,8 @@ outline: none;
    <widget class="QPushButton" name="num0">
     <property name="geometry">
      <rect>
-      <x>720</x>
-      <y>30</y>
+      <x>728</x>
+      <y>32</y>
       <width>62</width>
       <height>47</height>
      </rect>
@@ -690,6 +674,9 @@ outline: none;
       <width>62</width>
       <height>47</height>
      </size>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
     </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
@@ -711,8 +698,8 @@ outline: none;
    <widget class="QPushButton" name="q">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>100</y>
+      <x>53</x>
+      <y>89</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -749,8 +736,8 @@ outline: none;
    <widget class="QPushButton" name="w">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>100</y>
+      <x>128</x>
+      <y>89</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -787,8 +774,8 @@ outline: none;
    <widget class="QPushButton" name="e">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>100</y>
+      <x>203</x>
+      <y>89</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -825,8 +812,8 @@ outline: none;
    <widget class="QPushButton" name="r">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>100</y>
+      <x>278</x>
+      <y>89</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -863,8 +850,8 @@ outline: none;
    <widget class="QPushButton" name="t">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>100</y>
+      <x>353</x>
+      <y>89</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -901,8 +888,8 @@ outline: none;
    <widget class="QPushButton" name="y">
     <property name="geometry">
      <rect>
-      <x>420</x>
-      <y>100</y>
+      <x>428</x>
+      <y>89</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -939,8 +926,8 @@ outline: none;
    <widget class="QPushButton" name="u">
     <property name="geometry">
      <rect>
-      <x>500</x>
-      <y>100</y>
+      <x>503</x>
+      <y>89</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -977,8 +964,8 @@ outline: none;
    <widget class="QPushButton" name="i">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>100</y>
+      <x>578</x>
+      <y>89</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -1015,8 +1002,8 @@ outline: none;
    <widget class="QPushButton" name="o">
     <property name="geometry">
      <rect>
-      <x>640</x>
-      <y>100</y>
+      <x>653</x>
+      <y>89</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -1053,8 +1040,8 @@ outline: none;
    <widget class="QPushButton" name="p">
     <property name="geometry">
      <rect>
-      <x>720</x>
-      <y>100</y>
+      <x>728</x>
+      <y>89</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -1091,8 +1078,8 @@ outline: none;
    <widget class="QPushButton" name="a">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>180</y>
+      <x>53</x>
+      <y>161</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -1129,8 +1116,8 @@ outline: none;
    <widget class="QPushButton" name="s">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>180</y>
+      <x>128</x>
+      <y>161</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -1167,8 +1154,8 @@ outline: none;
    <widget class="QPushButton" name="d">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>180</y>
+      <x>203</x>
+      <y>161</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -1205,8 +1192,8 @@ outline: none;
    <widget class="QPushButton" name="g">
     <property name="geometry">
      <rect>
-      <x>349</x>
-      <y>180</y>
+      <x>353</x>
+      <y>161</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -1243,8 +1230,8 @@ outline: none;
    <widget class="QPushButton" name="f">
     <property name="geometry">
      <rect>
-      <x>269</x>
-      <y>180</y>
+      <x>278</x>
+      <y>161</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -1281,8 +1268,8 @@ outline: none;
    <widget class="QPushButton" name="h">
     <property name="geometry">
      <rect>
-      <x>429</x>
-      <y>180</y>
+      <x>428</x>
+      <y>161</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -1319,8 +1306,8 @@ outline: none;
    <widget class="QPushButton" name="j">
     <property name="geometry">
      <rect>
-      <x>500</x>
-      <y>180</y>
+      <x>503</x>
+      <y>161</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -1357,8 +1344,8 @@ outline: none;
    <widget class="QPushButton" name="k">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>180</y>
+      <x>578</x>
+      <y>161</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -1395,8 +1382,8 @@ outline: none;
    <widget class="QPushButton" name="l">
     <property name="geometry">
      <rect>
-      <x>650</x>
-      <y>180</y>
+      <x>653</x>
+      <y>161</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -1433,8 +1420,8 @@ outline: none;
    <widget class="QPushButton" name="z">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>260</y>
+      <x>103</x>
+      <y>234</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -1471,8 +1458,8 @@ outline: none;
    <widget class="QPushButton" name="x">
     <property name="geometry">
      <rect>
-      <x>171</x>
-      <y>260</y>
+      <x>178</x>
+      <y>234</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -1512,8 +1499,8 @@ outline: none;
    <widget class="QPushButton" name="c">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>260</y>
+      <x>253</x>
+      <y>234</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -1553,8 +1540,8 @@ outline: none;
    <widget class="QPushButton" name="v">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>260</y>
+      <x>328</x>
+      <y>234</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -1594,8 +1581,8 @@ outline: none;
    <widget class="QPushButton" name="b">
     <property name="geometry">
      <rect>
-      <x>385</x>
-      <y>260</y>
+      <x>403</x>
+      <y>234</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -1635,8 +1622,8 @@ outline: none;
    <widget class="QPushButton" name="n">
     <property name="geometry">
      <rect>
-      <x>462</x>
-      <y>260</y>
+      <x>478</x>
+      <y>234</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -1676,8 +1663,8 @@ outline: none;
    <widget class="QPushButton" name="m">
     <property name="geometry">
      <rect>
-      <x>540</x>
-      <y>260</y>
+      <x>553</x>
+      <y>234</y>
       <width>62</width>
       <height>62</height>
      </rect>
@@ -1720,16 +1707,16 @@ outline: none;
    <widget class="QPushButton" name="backspace">
     <property name="geometry">
      <rect>
-      <x>730</x>
-      <y>180</y>
-      <width>80</width>
-      <height>50</height>
+      <x>728</x>
+      <y>161</y>
+      <width>77</width>
+      <height>62</height>
      </rect>
     </property>
     <property name="maximumSize">
      <size>
       <width>87</width>
-      <height>50</height>
+      <height>62</height>
      </size>
     </property>
     <property name="styleSheet">
@@ -1755,16 +1742,16 @@ outline: none;
     </property>
     <property name="geometry">
      <rect>
-      <x>640</x>
-      <y>260</y>
-      <width>87</width>
-      <height>50</height>
+      <x>628</x>
+      <y>234</y>
+      <width>125</width>
+      <height>64</height>
      </rect>
     </property>
     <property name="maximumSize">
      <size>
-      <width>87</width>
-      <height>50</height>
+      <width>125</width>
+      <height>64</height>
      </size>
     </property>
     <property name="focusPolicy">
@@ -1789,6 +1776,19 @@ outline: none;
     <attribute name="buttonGroup">
      <string notr="true">buttonGroup</string>
     </attribute>
+   </widget>
+   <widget class="QLabel" name="label_keyboard_background">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>841</width>
+      <height>321</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
    </widget>
    <zorder>num0</zorder>
    <zorder>num2</zorder>
@@ -1828,6 +1828,7 @@ outline: none;
    <zorder>l</zorder>
    <zorder>w</zorder>
    <zorder>num1</zorder>
+   <zorder>label_keyboard_background</zorder>
   </widget>
   <widget class="QLabel" name="label_invoice_name">
    <property name="geometry">
@@ -1865,7 +1866,7 @@ color: #58595B;
    </property>
    <property name="geometry">
     <rect>
-     <x>749</x>
+     <x>751</x>
      <y>1160</y>
      <width>201</width>
      <height>80</height>
@@ -1894,7 +1895,7 @@ color: #7F8080;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>186</x>
+     <x>130</x>
      <y>1400</y>
      <width>641</width>
      <height>41</height>
@@ -1926,7 +1927,7 @@ color: #58595B;
     <rect>
      <x>94</x>
      <y>256</y>
-     <width>444</width>
+     <width>445</width>
      <height>450</height>
     </rect>
    </property>
@@ -1943,7 +1944,7 @@ color: #58595B;
    </property>
    <property name="geometry">
     <rect>
-     <x>188</x>
+     <x>130</x>
      <y>1175</y>
      <width>185</width>
      <height>34</height>
@@ -1962,40 +1963,7 @@ color: #58595B;
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label_payment_page">
-   <property name="geometry">
-    <rect>
-     <x>345</x>
-     <y>1468</y>
-     <width>397</width>
-     <height>92</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Montserrat</family>
-     <pointsize>30</pointsize>
-     <weight>75</weight>
-     <italic>false</italic>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font-family: Montserrat;
-background-image: url(/home/df-admin/production/references/background.png);
-color: #FFFFFF;
-text-align: center;
-font: 75 30pt &quot;Montserrat&quot;;
-font-weight:bold;</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="selectProductPage_Button">
+  <widget class="QPushButton" name="pushButton_select_product_page">
    <property name="geometry">
     <rect>
      <x>100</x>
@@ -2027,10 +1995,10 @@ font-weight:bold;</string>
   <widget class="QLabel" name="label_invoice_box">
    <property name="geometry">
     <rect>
-     <x>80</x>
+     <x>94</x>
      <y>890</y>
-     <width>895</width>
-     <height>590</height>
+     <width>891</width>
+     <height>781</height>
     </rect>
    </property>
    <property name="font">
@@ -2076,9 +2044,9 @@ text-align: center;</string>
   <widget class="QLabel" name="label_total">
    <property name="geometry">
     <rect>
-     <x>144</x>
+     <x>130</x>
      <y>1340</y>
-     <width>221</width>
+     <width>261</width>
      <height>44</height>
     </rect>
    </property>
@@ -2086,20 +2054,7 @@ text-align: center;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_discount_code">
-   <property name="geometry">
-    <rect>
-     <x>103</x>
-     <y>784</y>
-     <width>185</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_notify_us">
+  <widget class="QLabel" name="label_help">
    <property name="geometry">
     <rect>
      <x>478</x>
@@ -2112,15 +2067,26 @@ text-align: center;</string>
     <string>TextLabel</string>
    </property>
   </widget>
-  <zorder>label_discount_code</zorder>
-  <zorder>promoButton</zorder>
+  <widget class="Line" name="invoice_line">
+   <property name="geometry">
+    <rect>
+     <x>137</x>
+     <y>1280</y>
+     <width>821</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <zorder>label_help</zorder>
   <zorder>label_pay</zorder>
-  <zorder>page_qr_payment_Button</zorder>
+  <zorder>pushButton_continue</zorder>
   <zorder>label_invoice_box</zorder>
-  <zorder>label_payment_page</zorder>
   <zorder>label_invoice_price</zorder>
-  <zorder>promoCode</zorder>
-  <zorder>previousPage_Button</zorder>
+  <zorder>lineEdit_promo_code</zorder>
+  <zorder>pushButton_previous_page</zorder>
   <zorder>label_invoice_price_total</zorder>
   <zorder>label_invoice_name</zorder>
   <zorder>label_invoice_discount_amount</zorder>
@@ -2128,14 +2094,14 @@ text-align: center;</string>
   <zorder>label_selected_price</zorder>
   <zorder>label_invoice_discount_name</zorder>
   <zorder>label_discount_tag</zorder>
-  <zorder>selectProductPage_Button</zorder>
-  <zorder>promoInputButton</zorder>
+  <zorder>pushButton_select_product_page</zorder>
+  <zorder>pushButton_promo_input</zorder>
   <zorder>label_total</zorder>
   <zorder>promoKeyboard</zorder>
   <zorder>label_product_photo</zorder>
   <zorder>label_gif</zorder>
-  <zorder>label_notify_us</zorder>
-  <zorder>mainPage_Button</zorder>
+  <zorder>pushButton_to_help</zorder>
+  <zorder>invoice_line</zorder>
  </widget>
  <resources/>
  <connections/>

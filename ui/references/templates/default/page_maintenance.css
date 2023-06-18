@@ -1,0 +1,147 @@
+#product_overlay_labels {
+
+   background-color: transparent;
+   qproperty-alignment: AlignCenter;
+   font-size: 15px;
+   color: #400000;
+   
+}
+
+.label_product_position{
+   font-size: 28px;
+   font-weight: 255;
+
+}
+
+.normal {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   background-color: transparent;
+   font-size: 32px;
+   text-align: center;
+   line-height: auto;
+   qproperty-alignment: AlignCenter;
+   border-radius: 20px;
+   color: #003840;
+   border: none;
+}
+
+#product_buttons {
+
+   background-color: transparent;
+   border: 1px  solid #3D6675;
+
+}
+
+#label_title_maintenance_mode {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 64px;
+   line-height: 99px;
+   color: #003840;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
+}
+
+.label_machine_ui {
+   font-size: 16px;
+   font-weight: 700;
+   line-height: 43px;
+   color: black;
+   font-family: 'Montserrat';
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+
+}
+
+.product_buttons {
+   border: 1px solid black;
+}
+
+.label_products {
+   font-family: 'Montserrat';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 28px;
+   line-height: 36px;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   color: #003840;
+}
+
+.label_product_position {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 28px;
+   line-height: 36px;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   color: #003840;
+}
+
+
+
+
+
+/* QPushButton {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 20px;
+   line-height: 99px;
+   color: green;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
+   }
+   QFont {
+      
+      font-family: Brevia;
+      font-size: 20pt;
+   font-weight: 200;
+   font-style: normal;
+} */
+/* 
+
+#label_help {
+   
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 20px;
+   line-height: 99px;
+   color: #FFFFFF;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
+}
+
+/* #pushButton_to_idle {
+
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 20px;
+   line-height: 99px;
+   color: #FFFFFF;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
+} 
+
+ .button_transparent {
+   background-color: transparent;
+   border: 0px;
+} 
+#pushButton_to_idle {
+
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 32px;
+   background-color: transparent;
+   /* border: 0px; */

@@ -104,7 +104,7 @@ std::vector<uint8_t> mCommunication::readPacket(){
                 pktRead.reserve(uint(readSize2));
                 for (long i = 0; i < readSize2; i++){ //store read bytes into vector
                     pktRead.push_back(buffer[i]);
-                    // std::cout << "buffer[" << i << "i] = " << int(buffer[i]) << " \n";
+                    std::cout << "buffer[" << i << "i] = " << int(buffer[i]) << " \n";
                 }
         }
 
@@ -131,7 +131,7 @@ std::vector<uint8_t> mCommunication::readForAck()
             readcount++;
         }
         
-
+        std::cout << "In read for ack";
         if (readSize != -1){
             break;
         }

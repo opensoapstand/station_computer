@@ -4,10 +4,9 @@
 // Dispense End State; Reset for Idle
 //
 // created: 01-2022
-// by:Lode Ameije & Ash Singla
+// by:Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "stateDispenseEnd.h"
@@ -513,28 +512,29 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     updated_volume_dispensed_since_restock = volume_dispensed_since_restock + dispensed_volume;
 
     // update slot state
-    if (productDispensers[pos_index].getDispenserState() == DISPENSER_STATE_PROBLEM_EMPTY)
+    if (productDispensers[pos_index].getSlotState() == SLOT_STATE_PROBLEM_EMPTY)
     {
         updated_volume_remaining = 0;
     }
-    else if (productDispensers[pos_index].getDispenserState() == DISPENSER_STATE_PROBLEM_NEEDS_ATTENTION)
+    else if (productDispensers[pos_index].getSlotState() == SLOT_STATE_PROBLEM_NEEDS_ATTENTION)
     {
         // do nothing
     }
-    else if (productDispensers[pos_index].getDispenserState() == DISPENSER_STATE_DISABLED_COMING_SOON || productDispensers[pos_index].getDispenserState() == DISPENSER_STATE_DISABLED)
+    else if (productDispensers[pos_index].getSlotState() == SLOT_STATE_DISABLED_COMING_SOON || productDispensers[pos_index].getSlotState() == SLOT_STATE_DISABLED)
     {
         // do nothing
     }
     else if (updated_volume_remaining < CONTAINER_EMPTY_THRESHOLD_ML)
     {
-        productDispensers[pos_index].setDispenserState(DISPENSER_STATE_AVAILABLE_LOW_STOCK);
+        productDispensers[pos_index].setSlotState(SLOT_STATE_AVAILABLE_LOW_STOCK);
+        debugOutput::sendMessage("Almost empty warning: " + to_string(updated_volume_remaining), MSG_INFO);
     }
 
     std::string dispensed_volume_str = to_string(dispensed_volume);
     std::string updated_volume_remaining_str = to_string(updated_volume_remaining);
     std::string updated_volume_dispensed_total_ever_str = to_string(updated_volume_dispensed_total_ever);
     std::string updated_volume_dispensed_since_restock_str = to_string(updated_volume_dispensed_since_restock);
-    std::string dispenser_state_str = productDispensers[pos_index].getDispenserStateAsString();
+    std::string slot_state_str = productDispensers[pos_index].getSlotStateAsString();
 
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
     debugOutput::sendMessage("Update DB at dispense end: Vol dispensed: " + dispensed_volume_str, MSG_INFO);
@@ -558,7 +558,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     std::string slot_status_field_name = "status_text_slot_" + to_string(slot);
 
     std::string sql3;
-    sql3 = ("UPDATE machine SET " + slot_status_field_name + "='" + dispenser_state_str + "';");
+    sql3 = ("UPDATE machine SET " + slot_status_field_name + "='" + slot_state_str + "';");
     databaseUpdateSql(sql3);
 
     // reload (changed) db values

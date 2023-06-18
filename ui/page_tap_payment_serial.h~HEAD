@@ -8,17 +8,16 @@
 // class then communcates results to page_dispenser.
 //
 // created: 05-04-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef page_tap_payment_serial_H
 #define page_tap_payment_serial_H
 
 #include "df_util.h"
-#include "drinkorder.h"
+
 #include "page_help.h"
 #include "page_error_wifi.h"
 #include "payment/commands.h"
@@ -43,7 +42,7 @@
 extern std::atomic<bool> stop_tap_action_thread;
 extern std::atomic<bool> stop_authorization_thread;
 
-class pageProduct;
+class page_product;
 class page_dispenser;
 class page_idle;
 class page_help;
@@ -68,7 +67,7 @@ class page_tap_payment_serial : public QWidget
 public:
     // **** GUI Setup ****
     explicit page_tap_payment_serial(QWidget *parent = nullptr);
-    void setPage(pageProduct* pageSizeSelect,page_error_wifi *pageWifiError, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp);
+    void setPage(page_product* p_page_product,page_error_wifi *pageWifiError, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp);
     ~page_tap_payment_serial();
     void setProgressLabel(QLabel* label, int dot);
     // TODO: Figure out better Style Setup.
@@ -122,7 +121,7 @@ private slots:
 
     // Navigation
     void on_previousPage_Button_clicked();
-    void on_payment_bypass_Button_clicked();
+    void on_pushButton_payment_bypass_clicked();
     void proceed_to_dispense();
      void on_mainPage_Button_clicked();
 
@@ -153,7 +152,7 @@ protected:
 private:
     // **** GUI ****
     Ui::page_tap_payment_serial *ui;
-    pageProduct* p_pageProduct;
+    page_product* p_page_product;
     page_dispenser* p_page_dispense;
     page_idle* p_page_idle;
     page_help* p_page_help;
@@ -161,7 +160,7 @@ private:
 
 
     const QString TAP_READY_LABEL = "Ready for Tap";
-    const QString TAP_PROCESSING_LABEL = "Processing";
+    const QString TAP_label_processing = "Processing";
     const QString TAP_DECLINED_LABEL = "Card Declined";
     const QString TAP_AGAIN_LABEL = "Try Again";
     const QString TAP_APPROVED_LABEL = "Payment Approved";
@@ -244,7 +243,7 @@ private:
     int _qrProcessedPeriodicalCheckSec;
     QTimer* qrPeriodicalCheckTimer;
 
-    QResizeEvent *pageProductResize;
+    QResizeEvent *page_productResize;
     QShowEvent *dispenseEvent;
 
     bool response;

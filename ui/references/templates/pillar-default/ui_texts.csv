@@ -1,0 +1,139 @@
+# Display texts. 
+# Default template. 
+# Non default templates can be put in their template folder with the same name. Object names not found in the file in the template folder will be taken from the default template file
+
+########################################## example ##############################
+# PAGE->OBJECTNAME,mytext
+#    PAGE = QT page name
+#    OBJECTNAME = QWidget (QLabel or QPushButton)
+#    , = separator between name and text
+#    mytext = custom text to be displayed on screen
+#################################################################################
+
+# comment example (needs to start with a #)
+# empty lines are also permitted
+
+#page_init
+page_init->label_init_message,Wait for controller signal.
+page_init->label_fail_message,Timeout. No Response from controller. Will start standalone mode. If controller becomes active, commands will be executed. If not, no commands will be executed.
+
+# page_idle
+page_idle->label_welcome_message->testargument,Refill %1 here!<br>Tap screen to start
+page_idle->label_welcome_message,Refill soap here!<br>Tap screen to start
+page_idle->label_printer_status->offline,Assistance needed <br>Receipt Printer offline.
+page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer empty or improperly loaded.
+
+#page_select_product
+page_select_product->label_pick_soap,Pick your soap
+page_select_product->pushButton_to_idle,<-back
+page_select_product->no_text,
+page_select_product->empty,Empty
+page_select_product->almost_empty,Almost<br>empty
+page_select_product->sold_out,Sold<br>out
+page_select_product->assistance,Needs<br>assistance
+page_select_product->coming_soon,Coming<br>soon
+page_select_product->default,. . .
+page_select_product->available,
+
+# Page_product 
+page_product->pushButton_back,<- Products
+page_product->label_select_quantity,Select Quantity
+page_product->pushButton_continue,Continue
+page_product->custom_volume,Custom Volume
+
+# page_product_overview
+page_product_overview->pushButton_select_product_page,<- back
+page_product_overview->label_discount_tag,Discount
+page_product_overview->pushButton_continue,Continue
+page_product_overview->label_total,Total
+page_product_overview->lineEdit_promo_code->coupons_enable,Tap here to enter promo code
+page_product_overview->lineEdit_promo_code->valid,Promo Code Valid
+page_product_overview->lineEdit_promo_code->invite,Tap here to enter promo code
+page_product_overview->label_selected_volume->custom_volume,Custom Volume<br>(maximum: %1)
+
+# page_dispenser
+page_dispenser->label_to_refill,to refill
+page_dispenser->label_instructions_container,bring container to nozzle
+page_dispenser->label_press,press and hold <br>the button
+page_dispenser->pushButton_problems,Tap here if you notice a problem.
+page_dispenser->pushButton_abort->abort,Abort
+page_dispenser->pushButton_abort->complete,Complete
+page_dispenser->label_finishTransactionMessage->no_pay,Voiding payment
+page_dispenser->label_finishTransactionMessage->display_price,Capturing payment: $%1
+page_dispenser->label_dispense_message->priming,Please keep the button pressed.<br>for up to 15 seconds<br>before the product starts dispensing.
+page_dispenser->label_dispense_message->out_of_stock,It appears we're out of stock.
+page_dispenser->label_dispense_message->needs_attention,We can't get the dispensing started.<br>We're empty or the pump needs help to prime.<br>Tap the problem button in case of other issues.
+page_dispenser->label_volume_dispensed,Volume dispensed
+page_dispenser->msgBox_problems->qr_tap,<p align=center><br><br>If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br><br><br>You will only be charged for the dispensed amount<br></p>
+page_dispenser->msgBox_problems->default,<p align=center><br>If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br><br><br>You will only be charged for the dispensed amount<br></p>
+page_dispenser->msgBox_abort->qr_tap,<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine. <br><br> If you press Yes, you will not be charged for the order.<br></p>
+page_dispenser->msgBox_abort->default,<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine.<br></p>
+
+# page_end
+page_end->notifyUs_Button,Provide Feedback
+page_end->thank_you_message_label->hasReceiptPrinter,Please take <br>your receipt!
+page_end->thank_you_subtitle_message_label->hasReceiptPrinter2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!
+page_end->thank_you_message_label->qr,Please take <br>your receipt!
+page_end->thank_you_subtitle_message_label->qr2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!
+page_end->thank_you_message_label->any_pay,Please take <br>your receipt!
+page_end->thank_you_subtitle_message_label->any_pay2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!
+page_end->thank_you_message_label->finish_transaction,Finishing<br>transaction
+
+# page_help
+page_help->pushButton_to_transactions,Transaction History ->
+page_help->pushButton_to_maintenance,Settings
+page_help->pushButton_to_feedback,Contact Us
+page_help->pushButton_to_idle,<-back
+page_help->label_keyboardInfo,Provide maintainer or administrator password, Provide maintainer or administrator password, followed by "Done". "Done". 
+
+# page_transactions
+page_transactions->pushButton_back,Print Selected Receipt
+page_transactions->pushButton_print,<-back
+
+# page_sendFeedback
+page_sendFeedback->pushButton_previous_page,<-back
+page_sendFeedback->label_select_problem,Please provide feedback
+page_sendFeedback->label_still_cant_find,Still can't find it?
+page_sendFeedback->label_email,Email us at: sales@soapstand.com
+page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop.
+page_sendFeedback->checkBox_2_Label,User interface problem
+page_sendFeedback->checkBox_3_Label,Soap dispensing problem
+page_sendFeedback->checkBox_4_Label,Soap dispensing problem
+page_sendFeedback->checkBox_5_Label,Other
+page_sendFeedback->label_enter_feedback,Please enter details or comments below.<br>Provide email for feedback.
+page_sendFeedback->label_thanks_for_feedback,Thank you for <br> your feedback
+page_sendFeedback->pushButton_send,SEND
+
+# page_qr_payment
+page_qr_payment->label_title->pay_by_phone,pay by phone
+page_qr_payment->label_scan->label_scan_1,Scan to Pay
+page_qr_payment->label_scan->finalize_transaction,
+finalize_transaction
+page_qr_payment->label_steps,<style>        li:{margin-top:10px; margin-left: 5px;}        </style>        <ol>        <li><span class='tab'></span>Scan QR code with phone camera<br></li>        <li><span class='tab'></span>Click to open the link that appears<br></li>        <li><span class='tab'></span>Follow payment instructions on phone<br></li>        <li><span class='tab'></span>The station will proceed after payment<br></li>        <li><span class='tab'></span>Refill your soap!</li>        </ol>        <style>        li:{margin-top:10px;}        </style>        <ol>       
+page_qr_payment->label_processing,it can take a few moments for the station to<br>continue after your payment is confirmed
+page_qr_payment->label_title->almost_there,almost there
+page_qr_payment->pushButton_previous_page,<-back
+page_qr_payment->order_drink_amount, $%1
+page_qr_payment->order_total_amount, Total: $%1
+page_qr_payment->msgBox_cancel->default,<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>
+page_qr_payment->msgBox_refund->default,<p align=center><br><br>Are you sure you want to cancel this order?<br><br>The QR code won't be valid anymore if this order is cancelled.<br><br>In case a payment was made with an invalid QR code or cancelled order, a refund will be issued within 24-48 hours. <br></p>
+
+
+# page_error_wifi (no csv)
+
+#page maintenance
+page_maintenance->product_overlay_labels[i]->almost_empty,Almost Empty
+page_maintenance->product_overlay_labels[i]->coming_soon,Comming soon
+
+#page_idle_products
+
+page_idle_products->label_pick_soap,Discover how to<br> refill soap here!
+page_idle_products->printer_status_label->assistance_printer_offline,Assistance needed<br>Receipt Printer offline.
+page_idle_products->printer_status_label->empty_improperly_loaded,Assistance needed<br>Receipt printer empty or improperly loaded.
+
+
+# page_tap_payment
+page_tap_payment->pushButton_previous_page,<-back
+page_tap_payment->label_title->processing,Processing Payment
+page_tap_payment->msgBox_cancel,<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>
+page_tap_payment->preauthLabel,You are being pre-authorized for maximum volume %1 with amount of

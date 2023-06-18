@@ -4,11 +4,10 @@
 // GUI class for user to see Drinkfill
 // page_help and contact info
 //
-// created: 28-05-2021
-// by: Paddy Riley
+// created: 16-06-2023
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef HELP_H
@@ -27,7 +26,7 @@
 class page_select_product;
 class page_qr_payment;
 class page_idle;
-class pageProduct;
+class page_product;
 class page_transactions;
 class page_maintenance;
 
@@ -41,7 +40,7 @@ class page_help : public QWidget
 
 public:
     explicit page_help(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, pageProduct* pageProduct, page_idle* pageIdle, page_qr_payment *page_qr_payment, page_transactions *pageTransactions, page_maintenance* pageMaintenance, page_sendFeedback *pageFeedback);
+    void setPage(page_select_product *pageSelect, page_product* page_product, page_idle* pageIdle, page_qr_payment *page_qr_payment, page_transactions *pageTransactions, page_maintenance* pageMaintenance, page_sendFeedback *pageFeedback);
     ~page_help();
     QTimer* helpIdleTimer;
 
@@ -49,29 +48,29 @@ public:
 
 private slots:
     // **** Navigation ****
-    void on_previousPage_Button_clicked();
-    void on_previousPage_Button_2_clicked();
-    void on_refreshButton_clicked();
+    // void on_pushButton_previous_page_clicked();
+    void on_pushButton_to_idle_clicked();
+    void on_pushButton_resetTimeout_clicked();
     void onHelpTimeoutTick();
     
 
-    void on_transactions_Button_clicked();
+    void on_pushButton_to_transactions_clicked();
 
     void keyboardButtonPressed(int);
 
-    void on_maintenance_page_Button_clicked();
+    void on_pushButton_to_maintenance_clicked();
 
-    void on_feedback_Button_clicked();
+    void on_pushButton_to_feedback_clicked();
 
 private:
     void showEvent(QShowEvent *event);
 
     Ui::page_help *ui;
     page_select_product* p_page_select_product;
-    page_qr_payment* paymentPage;
+    page_qr_payment* p_page_payment;
     page_idle* p_page_idle;
     page_sendFeedback* p_page_feedback;
-    pageProduct* selectPage;
+    page_product* p_page_product;
     page_transactions* p_page_transactions;
     page_maintenance* p_page_maintenance;
 

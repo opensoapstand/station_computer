@@ -8,6 +8,7 @@ page_transactions::page_transactions(QWidget *parent) : QWidget(parent),
         idleTimer = new QTimer(this);
         idleTimer->setInterval(1000);
         connect(idleTimer, SIGNAL(timeout()), this, SLOT(onIdleTimeoutTick()));
+
         transaction_count = TRANSACTION_HISTORY_COUNT;
 
         // set up back button
@@ -17,9 +18,7 @@ page_transactions::page_transactions(QWidget *parent) : QWidget(parent),
         font.setBold(true);
         font.setWeight(75);
 
-        ui->back_Button->setStyleSheet("QPushButton { color:#FFFFFF; background-color: transparent; border: 0px }");
-        ui->back_Button->setFont(font);
-        ui->back_Button->setText("<- Back");
+        ui->pushButton_back->setFont(font);
 
         // set up print button
 
@@ -28,14 +27,11 @@ page_transactions::page_transactions(QWidget *parent) : QWidget(parent),
         font.setBold(true);
         font.setWeight(75);
 
-        // ui->print_Button->setStyleSheet("QPushButton { color:#FFFFFF; background-color: transparent; border: 0px }");
-        ui->print_Button->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
 
-        ui->print_Button->setFont(font);
-        ui->print_Button->setText("Print Selected Receipt");
+        ui->pushButton_print->setFont(font);
+        
 
         // ui->transactions_List->setStyleSheet("QListWidget{  background:transparent; }QListWidget::item{background:green;}");
-        ui->transactions_List->setStyleSheet("QListWidget{  background:transparent; }QListWidget::item{background-color: #5E8580;}");
 }
 
 void page_transactions::setPage(page_idle *pageIdle)
@@ -56,36 +52,34 @@ void page_transactions::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 
 void page_transactions::showEvent(QShowEvent *event)
 {
-        qDebug() << "<<<<<<< Page Enter: Transactions >>>>>>>>>";
+        p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
         QWidget::showEvent(event);
+
+        QString styleSheet = p_page_idle->getCSS(PAGE_TRANSACTIONS_CSS);
+        ui->pushButton_back->setStyleSheet(styleSheet);
+        ui->pushButton_print->setStyleSheet(styleSheet);
+        ui->transactions_List->setStyleSheet(styleSheet);
+
+        p_page_idle->setTemplateTextToObject(ui->pushButton_back);
+        p_page_idle->setTemplateTextToObject(ui->pushButton_print);
 
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TRANSACTIONS_BACKGROUND_PATH);
 
-        if (idleTimer == nullptr)
-        {
-                idleTimer = new QTimer(this);
-                idleTimer->setInterval(1000);
-                connect(idleTimer, SIGNAL(timeout()), this, SLOT(onIdleTimeoutTick()));
-        }
 
         idleTimer->start(1000);
         _idleTimeoutSec = 60;
         populateTransactionsTable();
 
-        qDebug() << "db for receipt printer check";
-        DbManager db(DB_PATH);
-        QString paymentMethod = db.getPaymentMethod(p_page_idle->currentProductOrder->getSelectedSlot());
-        bool hasReceiptPrinter = db.hasReceiptPrinter();
-        db.closeDB();
+        QString paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
 
-        if (hasReceiptPrinter)
+        if (p_page_idle->thisMachine.hasReceiptPrinter())
         {
-                ui->print_Button->show();
+                ui->pushButton_print->show();
         }
         else
         {
-                ui->print_Button->show();
-                // ui->print_Button->hide();
+                //ui->pushButton_print->show();
+                ui->pushButton_print->hide();
         }
 }
 
@@ -104,14 +98,14 @@ void page_transactions::onIdleTimeoutTick()
 
 void page_transactions::populateTransactionsTable()
 {
-        DbManager db(DB_PATH);
-
         transaction_count = TRANSACTION_HISTORY_COUNT;
         int retrieved_count;
-        db.getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
 
+        // DbManager db(DB_PATH);
+        p_page_idle->g_db->getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
+        // db.closeDb();
+        
         transaction_count = retrieved_count;
-        db.closeDB();
 
         populateList();
 }
@@ -145,12 +139,12 @@ void page_transactions::populateList()
         }
 }
 
-void page_transactions::on_back_Button_clicked()
+void page_transactions::on_pushButton_back_clicked()
 {
         hideCurrentPageAndShowProvided(p_page_idle);
 }
 
-void page_transactions::on_print_Button_clicked(bool checked)
+void page_transactions::on_pushButton_print_clicked(bool checked)
 {
 
         // Get the pointer to the currently selected item.

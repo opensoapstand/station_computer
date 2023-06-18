@@ -7,10 +7,9 @@
 // holds instructions for dispensing.
 //
 // created: 01-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef _DISPENSER__H_
@@ -85,7 +84,7 @@ public:
       void reversePumpForSetTimeMillis(int millis);
       const char* getDispenseStatusAsString();
       void updateDispenseStatus();
-      const char *getDispenserStateAsString();
+      const char *getSlotStateAsString();
 
 
       DF_ERROR pumpSlowStart(bool forwardElseReverse);
@@ -101,9 +100,9 @@ public:
       string getDispenseStartTime();
       string getDispenseEndTime();
       Dispense_behaviour getDispenseStatus();
-      Dispenser_state getDispenserState();
-      void setDispenserState(Dispenser_state state);
-      void updateDispenserState();
+      Slot_state getSlotState();
+      void setSlotState(Slot_state state);
+      void updateSlotState();
 
       bool getIsDispenseTargetReached();
 
@@ -146,7 +145,7 @@ public:
       void loadMultiDispenseButtonEnabledFromDb();
       bool getMultiDispenseButtonEnabled();
       void loadEmptyContainerDetectionEnabledFromDb();
-      void loadDispenserStateFromDb();
+      void loadSlotStateFromDb();
       void loadPumpReversalEnabledFromDb();
       bool getPumpReversalEnabled();
       void loadPumpRampingEnabledFromDb();
@@ -205,7 +204,7 @@ private:
       Dispense_behaviour previous_dispense_state;
       Dispense_behaviour dispense_state;
 
-      Dispenser_state dispenser_state;
+      Slot_state slot_state;
 
       int slot;
       Time_val flowRateBuffer[RUNNING_AVERAGE_WINDOW_LENGTH];

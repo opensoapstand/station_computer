@@ -1,0 +1,148 @@
+.buttonTransparent{
+   background-color: transparent;
+   border: 0px;
+}
+
+.buttonPreviousPage{
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 32px;
+   line-height: 99px;
+   color: #003840;
+   text-align: center;
+   border: none;
+   background: transparent;
+}
+
+.labelMailFeedback, .labelThankyouFeedback{
+   font-family: 'Brevia';
+      font-style: normal;
+      font-weight: 75;
+      font-size: 43px;
+      line-height: 99px;
+      color: #438080;
+      text-align: center;
+      qproperty-alignment: AlignCenter;
+      border: none;
+}
+.checkBoxLabelStyling{
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 32px;
+   line-height: 99px;
+   color: #FFFFFF;
+   text-align: left;
+   qproperty-alignment: AlignCenter;
+   border: none;
+   wordWrap:true;
+   background-color: #5E8680;
+   padding: 10px;
+}
+
+#textEdit_custom_message{
+   font-family: Montserrat;
+   font-style: normal;
+   font-weight: bold;
+   font-size: 28px;
+   line-height: 44px;
+   color: #5E8580;
+   border-color:#5E8580;
+}
+
+#pushButton_help_page{
+   background-color: transparent; 
+   border: 0px ;
+}
+
+#label_select_problem{      /*selector not to make a class*/
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 55px;
+   line-height: 99px;
+   color: #003840;
+   text-align: center;
+   border: none;
+   qproperty-alignment: AlignCenter;  /* Works despite not being CSS*/
+}
+
+#pushButton_to_idle{
+   background-color: transparent; 
+   border: 0px;
+}
+
+#label_problem_options{
+   background-color: #5E8680;
+   border-radius: 30px;
+}
+
+#label_still_cant_find{
+   
+      font-family: 'Brevia';
+      font-style: normal;
+      font-weight: 75;
+      font-size: 43px;
+      line-height: 99px;
+      color: #438080;
+      text-align: center;
+      qproperty-alignment: AlignCenter;
+      border: none
+}
+
+#label_enter_feedback{
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 20px;
+   line-height: 99px;
+   background-color: #5E8680;
+   color: #FFFFFF;
+   text-align: left;
+   border-radius: none;
+}
+
+QLabel { 
+   color:#555555; 
+   text-align: center;
+   border: 1px; 
+}
+
+QPushButton {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 35px;
+   line-height: 99px;
+   background-color: #5E8680;
+   color: #FFFFFF;
+   text-align: center;
+   border-radius: 30px;
+   padding: 10px;
+   border: 2px solid #004D54;
+}
+
+QString {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 35px;
+   line-height: 99px;
+   background-color: #5E8680;
+   color: #FFFFFF;
+   text-align: center;
+   border-radius: 30px;
+   padding: 10px;
+   border: 2px solid #004D54;
+}
+
+QLineEdit {
+   font-family: 'Brevia', sans-serif;
+   font-style: normal;
+   font-weight: 75;
+   font-size: 32px;
+   line-height: 99px;
+   color: #003840;
+   border: none;
+}

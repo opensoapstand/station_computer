@@ -9,10 +9,9 @@
 // payment page and page_idle page
 //
 // created: 05-04-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "page_productOverview.h"
@@ -37,353 +36,186 @@ std::string SAF_NUM = "";
 std::string socketAddr;
 
 // CTOR
-pageProductOverview::pageProductOverview(QWidget *parent) : QWidget(parent),
-                                                            ui(new Ui::pageProductOverview)
+page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
+                                                                ui(new Ui::page_product_overview)
 {
     ui->setupUi(this);
 
-    ui->promoInputButton->setStyleSheet("QPushButton { border: 1px solid #5E8580}");
-    ui->promoInputButton->setText("Discount code");
-    ui->promoCode->setStyleSheet("QPushButton { background-color: transparent; border: 1px solid #5E8580 }");
-    ui->page_qr_payment_Button->show();
-    ui->promoKeyboard->hide();
-    // ui->label_gif->hide();
-    QString css_title = "QLabel{"
-                        "position: absolute;"
-                        "width: 870px;"
-                        "height: 102px;"
-                        "left: 99px;"
-                        "top: 261px;"
-                        "font-family: 'Montserrat';"
-                        "font-style: normal;"
-                        "font-weight: 500;"
-                        "font-size: 42px;"
-                        "line-height: 48px;"
-                        "text-transform: capitalize;"
-                        "color: #438080;"
-                        "}";
-    //  ui->label_product_title->setStyleSheet(css_title);
-    QString css_description = "QLabel{"
-                              "position: absolute;"
-                              //   "width: 894px;"
-                              //   "height: 252px;"
-                              //   "left: 95px;"
-                              //   "top: 474px;"
-                              "font-family: 'Montserrat';"
-                              "font-style: normal;"
-                              "font-weight: 400;"
-                              "font-size: 24px;"
-                              "line-height: 36px;"
-                              "color: #438080;"
-                              "}";
+    selectIdleTimer = new QTimer(this);
+    selectIdleTimer->setInterval(40);
+    connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
 
-    ui->selectProductPage_Button->setStyleSheet("QPushButton { color:#555555; background-color: transparent; border: 0px }");
-    ui->selectProductPage_Button->setStyleSheet(
-        "QPushButton {"
+    connect(ui->pushButton_promo_input, SIGNAL(clicked()), this, SLOT(on_lineEdit_promo_codeInput_clicked()));
+    connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
 
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "text-transform: lowercase;"
-        "color: #003840;"
-        "text-align: left;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
-    ui->selectProductPage_Button->setText("<- Back");
-
-    ui->label_selected_volume->setStyleSheet(
-        "QLabel {"
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "color: #003840;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: 2px solid #5E8580;"
-        "}");
-
-    QString orderOverviewStyle = "QLabel {"
-                                 "font-family: 'Montserrat';"
-                                 "font-style: normal;"
-                                 "font-weight: 600;"
-                                 "font-size: 28px;"
-                                 "line-height: 40px;"
-                                 "letter-spacing: 0px;"
-                                 "color: #58595B;"
-                                 "}";
-    ui->label_invoice_name->setStyleSheet(orderOverviewStyle);
-    ui->label_invoice_price->setStyleSheet(orderOverviewStyle);
-    ui->label_discount_tag->setStyleSheet(orderOverviewStyle);
-    ui->label_discount_tag->setText("Discount");
-    ui->label_invoice_discount_amount->setStyleSheet(orderOverviewStyle);
-    ui->label_invoice_box->setStyleSheet(
-        "QLabel {"
-
-        "border: 2px solid #5E8580;"
-        "}");
-
-    ui->promoButton->setStyleSheet(
-        "QPushButton {"
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "text-transform: lowercase;"
-        "background-color: #5E8580;"
-        "border: 1px solid #3D6675;"
-        "color: #FFFFFF;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "}");
-    ui->promoButton->setText("Apply");
-    ui->promoButton->hide();
-
-    ui->label_discount_code->setStyleSheet(
-        "QLabel {"
-        "font-family: 'Montserrat';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 24px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "text-transform: lowercase;"
-        "color: #9F9F9F;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "}");
-    ui->label_discount_code->setText("Discount code");
-
-    ui->label_pay->setStyleSheet(
-        "QLabel {"
-
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 200;"
-        "background-color: #5E8580;"
-        "font-size: 48px;"
-        "text-align: centre;"
-        "line-height: auto;"
-        "letter-spacing: 0px;"
-        "qproperty-alignment: AlignCenter;"
-        "border-radius: 20px;"
-        "color: white;"
-        "border: none;"
-        "}");
-    ui->label_pay->setText("Continue");
-
-    QString css_discount_name = "QLabel{"
-                                "font-family: 'Montserrat';"
-                                "font-style: normal;"
-                                "font-weight: 400;"
-                                "font-size: 24px;"
-                                "line-height: 29px;"
-                                "color: #58595B;"
-                                "}";
-    ui->label_invoice_discount_name->setStyleSheet(css_discount_name);
-    ui->label_invoice_discount_name->show();
-    ui->label_invoice_discount_amount->show();
-    ui->label_discount_tag->show();
-    ui->promoCode->clear();
-    ui->promoCode->show();
-    // ui->promoButton->show();
-    ui->promoKeyboard->hide();
-
-    ui->label_total->setStyleSheet(
-        "QLabel {"
-        "font-family: 'Montserrat';"
-        "font-style: normal;"
-        "font-weight: 600;"
-        "font-size: 36px;"
-        "line-height: 40px;"
-        "letter-spacing: 0px;"
-        "color: #58595B;"
-        "}");
-    ui->label_total->setText("Total");
-    couponHandler();
-
-    {
-        selectIdleTimer = new QTimer(this);
-        selectIdleTimer->setInterval(40);
-        // connect(ui->promoButton, SIGNAL(clicked()), this, SLOT(on_applyPromo_Button_clicked()));
-        connect(ui->promoInputButton, SIGNAL(clicked()), this, SLOT(on_promoCodeInput_clicked()));
-        connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
-        connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
-    }
-
-    ui->label_gif->setStyleSheet(
-        "QLabel {"
-        "font-family: 'Montserrat';"
-        "font-style: normal;"
-        "font-weight: 600;"
-        "font-size: 36px;"
-        "line-height: 40px;"
-        "letter-spacing: 0px;"
-        "color: #58595B;"
-        "padding: 3px;"
-        "border:8px solid #248C8C;"
-        "border-radius: 20px;"
-        "}");
     ui->label_gif->hide();
-    // QString paymentMethod = selectedProductOrder->getSelectedPaymentMethod();
-    // if(paymentMethod== "qr" || paymentMethod=="tapTcp"){
-    //     ui->label_payment_page->setText("Pay Now");
-    // }
-    // else{
-    //     ui->label_payment_page->setText("Next");
-    // }
 }
 
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void pageProductOverview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,page_tap_payment *page_tap_payment,page_tap_payment_serial *page_tap_payment_serial, page_help *pageHelp, pageProduct *page_product)
+void page_product_overview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_tap_payment *page_tap_payment, page_tap_payment_serial *page_tap_payment_serial, page_help *pageHelp, page_product *page_product)
 {
     this->p_page_select_product = pageSelect;
-    this->paymentQrPage = page_qr_payment;
-    this->paymentTapPage = page_tap_payment;
-    this->paymentTapSerialPage = page_tap_payment_serial;
+    this->p_page_payment_qr = page_qr_payment;
+    this->p_page_payment_tap = page_tap_payment;
+    this->p_page_payment_tap_serial = page_tap_payment_serial;
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
     this->p_page_help = pageHelp;
     this->p_page_wifi_error = pageWifiError;
     this->p_page_product = page_product;
-    ui->promoCode->clear();
-    ui->promoCode->hide();
-    ui->label_invoice_discount_amount->hide();
-    ui->label_invoice_discount_name->hide();
+
     ui->label_discount_tag->hide();
     ui->label_gif->hide();
-    selectedProductOrder = p_page_idle->currentProductOrder;
-
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_ORDER_OVERVIEW_PATH);
-
-    couponHandler();
 }
 
 // DTOR
-pageProductOverview::~pageProductOverview()
+page_product_overview::~page_product_overview()
 {
     delete ui;
 }
 
-void pageProductOverview::cancelTimers()
+void page_product_overview::cancelTimers()
 {
     selectIdleTimer->stop();
 }
 
 /* GUI */
 
-void pageProductOverview::showEvent(QShowEvent *event)
+void page_product_overview::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< Page Enter: Product Overview>>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
+    
+    QString styleSheet = p_page_idle->getCSS(PAGE_PRODUCT_OVERVIEW_CSS);
+    ui->pushButton_promo_input->setStyleSheet(styleSheet);
+    ui->lineEdit_promo_code->setProperty("class", "promoCode");
+    ui->lineEdit_promo_code->setStyleSheet(styleSheet);
+    //  ui->label_product_title->setStyleSheet(styleSheet);
+    ui->label_selected_volume->setStyleSheet(styleSheet);
 
-    selectedProductOrder->loadSelectedProductProperties();
+    ui->label_invoice_name->setProperty("class", "labelOrderOverview");
+    ui->label_invoice_price->setProperty("class", "labelOrderOverview");
+    ui->label_discount_tag->setProperty("class", "labelDiscount");
+    ui->label_invoice_discount_amount->setProperty("class", "labelDiscount");
+
+    ui->label_invoice_name->setStyleSheet(styleSheet);
+    ui->label_invoice_price->setStyleSheet(styleSheet);
+    ui->label_invoice_price_total->setStyleSheet(styleSheet);
+    ui->label_discount_tag->setStyleSheet(styleSheet);
+    ui->label_invoice_discount_amount->setStyleSheet(styleSheet);
+    ui->label_invoice_box->setStyleSheet(styleSheet);
+    ui->label_pay->setStyleSheet(styleSheet);
+    ui->label_pay->raise();
+    ui->label_invoice_discount_name->setProperty("class", "labelDiscountName");
+    ui->label_invoice_discount_name->setStyleSheet(styleSheet);
+    ui->label_total->setStyleSheet(styleSheet);
+    ui->label_gif->setStyleSheet(styleSheet);
+    ui->invoice_line->setStyleSheet(styleSheet);
+    ui->pushButton_select_product_page->setStyleSheet(styleSheet);
+
+    ui->label_product_photo->setStyleSheet(styleSheet);
+    /* Hacky transparent button */
+    ui->pushButton_previous_page->setProperty("class", "buttonBGTransparent");
+    ui->pushButton_previous_page->setStyleSheet(styleSheet);
+    // ui->pushButton_continue->setProperty("class", "buttonBGTransparent");
+    ui->pushButton_continue->setStyleSheet(styleSheet);
+    ui->pushButton_continue->raise();
+    ui->pushButton_to_help->setProperty("class", "buttonBGTransparent");
+    ui->pushButton_to_help->setStyleSheet(styleSheet);
     reset_and_show_page_elements();
 }
 
-void pageProductOverview::resizeEvent(QResizeEvent *event)
+void page_product_overview::resizeEvent(QResizeEvent *event)
 {
-    qDebug() << "\n---Page_product Overview: resizeEvent";
-    // QWidget::resizeEvent(event);
-    // selectedProductOrder->loadSelectedProductProperties();
-    reset_and_show_page_elements();
 }
 
-void pageProductOverview::onSelectTimeoutTick()
+void page_product_overview::onSelectTimeoutTick()
 {
     if (--_selectIdleTimeoutSec >= 0)
     {
-        //        qDebug() << "pageProductOverview: Tick Down - " << _selectIdleTimeoutSec << endl;
     }
     else
     {
         // qDebug() << "Timer Done!" << _selectIdleTimeoutSec << endl;
         selectIdleTimer->stop();
-
-        mainPage();
+        hideCurrentPageAndShowProvided(p_page_idle);
     }
 }
 
-void pageProductOverview::reset_and_show_page_elements()
+void page_product_overview::reset_and_show_page_elements()
 {
+
+    p_page_idle->setTemplateTextToObject(ui->pushButton_select_product_page);
+    p_page_idle->setTemplateTextToObject(ui->label_discount_tag);
+    p_page_idle->setTemplateTextToObject(ui->label_pay);
+    p_page_idle->setTemplateTextToObject(ui->label_total);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_continue);
+
     QString bitmap_location;
-    ui->label_product_photo->setStyleSheet("QLabel{border: 2px solid #5E8580;}");
-    // ui->label_product_title->setText(selectedProductOrder->getSelectedProductName());
-    // ui->label_product_description->setText(selectedProductOrder->getLoadedProductDescription());
-    p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->currentProductOrder->getSelectedProductPicturePath());
-    ui->label_selected_price->setText("$" + QString::number(selectedProductOrder->getSelectedPrice(), 'f', 2));
-    qDebug() << "Selected size" << selectedProductOrder->getSelectedVolume();
-    QString full_path = p_page_idle->getTemplatePathFromName(IMAGE_BUTTON_HELP);
-        qDebug() << full_path;
-        p_page_idle->addPictureToLabel(ui->label_notify_us, full_path);
+    p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->selectedProduct->getProductPicturePath());
+    ui->label_selected_price->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(), 'f', 2));
+    qDebug() << "Selected size" << p_page_idle->selectedProduct->getVolumeOfSelectedSize();
+    QString full_path = p_page_idle->thisMachine.getTemplatePathFromName(IMAGE_BUTTON_HELP);
+    qDebug() << full_path;
+    p_page_idle->addPictureToLabel(ui->label_help, full_path);
 
-   
-    updatePrice();
-    ui->label_invoice_name->setText(selectedProductOrder->getSelectedProductName());
-    // ui->label_price_large->setText(selected_volume + " " + selectedProductOrder->getUnitsForSelectedSlot());
+    updatePriceLabel();
+    ui->label_invoice_name->setText(p_page_idle->selectedProduct->getProductName());
 
-    // Reset the discount percentage to 0 and clear promo code field
-
-    ui->promoCode->clear();
-    selectedProductOrder->setDiscountPercentageFraction((0 * 1.0) / 100);
-    ui->label_invoice_discount_amount->hide();
-    ui->label_discount_tag->hide();
-    ui->previousPage_Button->setEnabled(true);
-    ui->mainPage_Button->setEnabled(true);
-    /* Hacky transparent button */
-    ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->page_qr_payment_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    // ui->page_qr_payment_Button->setStyleSheet("QPushButton { background-color: red; border: 0px };QPushButton:pressed { background-color: green; border: 10px }");
-
-    ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-
-    QString keyboard = KEYBOARD_IMAGE_PATH;
-    QString keyboard_style_sheet = " background-image: url(" + keyboard + "); }";
-    ui->promoKeyboard->setStyleSheet(keyboard_style_sheet);
-
-    // loadProdSpecs();
-    selectIdleTimer->start(1000);
-    _selectIdleTimeoutSec = 400;
-}
-
-bool pageProductOverview::stopSelectTimers()
-{
-    //    qDebug() << "Stop pageProductOverview Timers" << endl;
-    if (selectIdleTimer != nullptr)
+    ui->promoKeyboard->hide();
+    if (p_page_idle->thisMachine.getCouponsEnabled())
     {
-        // qDebug() << "Enter Stop" << endl;
-        selectIdleTimer->stop();
-        return true;
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code, "coupons_enable");
+
+        ui->lineEdit_promo_code->show();
+        if (p_page_idle->isPromoApplied())
+        {
+            p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code, "valid");
+        }
+        ui->label_invoice_discount_amount->show();
+        ui->label_invoice_discount_name->show();
+        ui->pushButton_promo_input->show();
     }
     else
     {
-        return false;
+        qDebug() << "Coupons not enabled";
+        coupon_input_hide();
+        ui->label_invoice_discount_amount->hide();
+        ui->label_invoice_discount_name->hide();
+        ui->label_discount_tag->hide();
     }
+
+    if (!p_page_idle->isPromoApplied())
+    {
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code, "invite");
+        ui->label_invoice_discount_amount->hide();
+        ui->label_invoice_discount_name->hide();
+        ui->label_discount_tag->hide();
+    }
+    ui->pushButton_previous_page->setEnabled(true);
+    ui->pushButton_to_help->setEnabled(true);
+
+    QString keyboard = KEYBOARD_IMAGE_PATH;
+    QString keyboard_picture_path = p_page_idle->thisMachine.getTemplatePathFromName(KEYBOARD_IMAGE_PATH);
+    // QString keyboard_style_sheet = " background-image: url(" + keyboard + "); }";
+    p_page_idle->addPictureToLabel(ui->label_keyboard_background, keyboard_picture_path);
+    ui->label_keyboard_background->lower();
+    // loadProdSpecs();
+    selectIdleTimer->start(1000);
+    _selectIdleTimeoutSec = 400;
+    
 }
 
-void pageProductOverview::hideCurrentPageAndShowProvided(QWidget *pageToShow)
+void page_product_overview::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
-
-    this->stopSelectTimers();
+    selectIdleTimer->stop();
     p_page_idle->pageTransition(this, pageToShow);
 }
 
-void pageProductOverview::mainPage()
-{
-    hideCurrentPageAndShowProvided(p_page_idle);
-}
-
-void pageProductOverview::on_mainPage_Button_clicked()
+void page_product_overview::on_pushButton_to_help_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_help);
 }
@@ -394,54 +226,28 @@ size_t WriteCallback_coupon1(char *contents, size_t size, size_t nmemb, void *us
     return size * nmemb;
 }
 
-// void pageProductOverview::updatePriceAfterPromo(double discountPercent)
-// {
-//     // QString normal_price = (ui->label_invoice_price->text()).split("$")[1];
-//     // double price = normal_price.toDouble();
-//     selectedProductOrder->setDiscountPercentageFraction(discountPercent / 100);
-
-//     ui->label_invoice_discount_amount->show();
-//     ui->label_invoice_discount_name->show();
-
-//     double discount;
-//     discount = selectedProductOrder->getDiscountPercentageFraction() * selectedProductOrder->getPrice(selectedProductOrder->getSelectedSize());
-//     ui->label_invoice_discount_amount->setText("-$" + QString::number(discount, 'f', 2));
-
-//     ui->label_invoice_discount_amount->setText("-$" + QString::number(selectedProductOrder->getDiscount(), 'f', 2));
-//     ui->label_invoice_price_total->setText("$" + QString::number(selectedProductOrder->getSelectedPriceCorrected(), 'f', 2));
-// }
-
-void pageProductOverview::updatePrice()
+void page_product_overview::updatePriceLabel()
 {
-     QString selected_volume;
-    if (selectedProductOrder->getUnitsForSelectedSlot() == "oz")
-    {
-        selected_volume = QString::number(ceil((double)selectedProductOrder->getSelectedVolume() * (double)ML_TO_OZ * 1.0));
-    }
-    else
-    {
-        selected_volume = QString::number(selectedProductOrder->getSelectedVolume());
-    }
+    QString selected_volume = p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(p_page_idle->selectedProduct->getSize(), true, true);
 
-
-    if (selectedProductOrder->getSelectedSize() == SIZE_CUSTOM_INDEX)
+    if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
     {
-        ui->label_selected_volume->setText("Custom Volume \n (maximum: " + selected_volume + " " + selectedProductOrder->getUnitsForSelectedSlot() + ")");
+        QString base = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier( ui->label_selected_volume, "custom_volume");
+        ui->label_selected_volume->setText(base.arg(selected_volume));
 
-        double selectedPrice = selectedProductOrder->getSelectedPrice();
-        double discount = selectedProductOrder->getDiscount();
-        double selectedPriceCorrected = selectedProductOrder->getSelectedPriceCorrected();
-        double discountFraction = selectedProductOrder->getDiscountPercentageFraction();
-        QString units = selectedProductOrder->getUnitsForSelectedSlot();
+        double selectedPrice = p_page_idle->selectedProduct->getPrice();
+        double discount = p_page_idle->selectedProduct->getDiscount();
+        double selectedPriceCorrected = p_page_idle->getPriceCorrectedAfterDiscount(selectedPrice);
+        double discountFraction = p_page_idle->getDiscountPercentage();
+        QString units = p_page_idle->selectedProduct->getUnitsForSlot();
         if (units == "ml")
         {
             units = "L";
             selectedPrice = selectedPrice * 1000;
         }
-
         else if (units == "g")
         {
-            if (selectedProductOrder->getVolume(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
+            if (p_page_idle->selectedProduct->getVolumeBySize(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
             {
                 units = "100g";
                 selectedPrice = selectedPrice * 100;
@@ -457,42 +263,35 @@ void pageProductOverview::updatePrice()
             units = "oz";
             selectedPrice = selectedPrice * OZ_TO_ML;
         }
-        // orderSizeLabelsselectedPrice[i]->setText("$" + QString::number(selectedPrice, 'f', 2) + "/" + units);
 
         selectedPriceCorrected = selectedPrice * (1 - discountFraction);
         double discountAmount = selectedPrice - selectedPriceCorrected;
 
         ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2) + "/" + units);
-        ui->label_invoice_discount_amount->setText("-$" + QString::number(discountAmount, 'f', 2)+ "/" + units);
+        ui->label_invoice_discount_amount->setText("-$" + QString::number(discountAmount, 'f', 2) + "/" + units);
 
         ui->label_invoice_price_total->setText("$" + QString::number(selectedPriceCorrected, 'f', 2) + "/" + units);
-
-        // // double selectedPrice = selectedProductOrder->getSelectedPrice();
-        // // double discount = selectedProductOrder->getDiscount();
-        // // double selectedPriceCorrected = selectedProductOrder->getSelectedPriceCorrected();
-
-        // QString unitsInvoice;
-        // selectedProductOrder->getCustomPriceDetails(&unitsInvoice, &selectedPrice, &discount, &selectedPriceCorrected);
     }
     else
-    {
-        double discountAmount = selectedProductOrder->getSelectedPrice() - selectedProductOrder->getSelectedPriceCorrected();
+    { 
+        // The label_invoice_price total displays the discounted total even when the user goes back to the select_product page. It's intended behaviour so user doesnt have to retype the promo-code
+        double selectedPrice = p_page_idle->selectedProduct->getPrice();
+        double selectedPriceCorrected = p_page_idle->getPriceCorrectedAfterDiscount(selectedPrice);
+        double discountFraction = p_page_idle->getDiscountPercentage();
+        double discountAmount = selectedPrice - selectedPriceCorrected;
         ui->label_invoice_discount_amount->setText("-$" + QString::number(discountAmount, 'f', 2));
-        ui->label_selected_volume->setText(selected_volume + " " + selectedProductOrder->getUnitsForSelectedSlot());
-        ui->label_invoice_price->setText("$" + QString::number(selectedProductOrder->getSelectedPrice(), 'f', 2));
-        ui->label_invoice_price_total->setText("$" + QString::number(selectedProductOrder->getSelectedPriceCorrected(), 'f', 2));
+        ui->label_selected_volume->setText(selected_volume);
+        ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2));
+        ui->label_invoice_price_total->setText("$" + QString::number(selectedPriceCorrected, 'f', 2));
     }
 }
 
-void pageProductOverview::on_applyPromo_Button_clicked()
+void page_product_overview::apply_promo_code()
 {
-
-    QString promocode = ui->promoCode->text();
-    QMovie *movie = new QMovie("/home/df-admin/drinkfill/ui/soapstandspinner.gif");
+    QString promocode = ui->lineEdit_promo_code->text();
+    QMovie *movie = new QMovie("soapstandspinner.gif");
     ui->label_gif->setMovie(movie);
     movie->start();
-    // ui->promoKeyboard->hide();
-
     CURL *curl;
     CURLcode res;
     long http_code = 0;
@@ -502,10 +301,9 @@ void pageProductOverview::on_applyPromo_Button_clicked()
         readBuffer.clear();
         curl = curl_easy_init();
         {
-
             if (!curl)
             {
-                qDebug() << "pageProductOverview: apply promo cURL failed init";
+                qDebug() << "page_product_overview: apply promo cURL failed init";
                 return;
             }
             curl_easy_setopt(curl, CURLOPT_URL, ("https://soapstandportal.com/api/coupon/find/" + promocode).toUtf8().constData());
@@ -515,7 +313,7 @@ void pageProductOverview::on_applyPromo_Button_clicked()
             curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
             if (res != CURLE_OK)
             {
-                ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
+                p_page_idle->addCssClassToObject(ui->lineEdit_promo_code, "promoCode_invalid", PAGE_PRODUCT_OVERVIEW_CSS);
                 qDebug() << "Invalid Coupon curl problem. error code: " << res;
             }
             else
@@ -528,148 +326,104 @@ void pageProductOverview::on_applyPromo_Button_clicked()
                     json coupon_obj = json::parse(readBuffer);
                     if (coupon_obj["active"])
                     {
-                        new_percent = coupon_obj["discount_amount"];
-                        selectedProductOrder->setPromoCode(promocode);
-                        selectedProductOrder->setDiscountPercentageFraction((new_percent * 1.0) / 100);
                         qDebug() << "Apply coupon percentage: " << new_percent;
-                        // loadProdSpecs();
-                        qDebug() << "Promo";
+                        new_percent = coupon_obj["discount_amount"];
+                        p_page_idle->setPromoCode(promocode);
+                        p_page_idle->setDiscountPercentage((new_percent * 1.0) / 100);
 
-                        ui->label_invoice_discount_amount->show();
-                        ui->label_discount_tag->show();
-                        // ui->label_invoice_discount_amount->setText("-$" + QString::number(selectedProductOrder->getDiscount(), 'f', 5));
-                        // ui->label_invoice_price_total->setText("$" + QString::number(selectedProductOrder->getSelectedPriceCorrected(), 'f', 2));
-                        // ui->label_invoice_price_total->setText("$" + QString::number(selectedProductOrder->getSelectedPriceCorrected(), 'f', 2)); // how to handle promo ?! todo!
+                        if (p_page_idle->isPromoApplied())
+                        {
+                            ui->label_invoice_discount_amount->show();
+                            ui->label_discount_tag->show();
+                            p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code, "valid");
+                        }
 
-                        updatePrice();
-
+                        p_page_idle->addCssClassToObject(ui->lineEdit_promo_code, "promoCode_valid", PAGE_PRODUCT_OVERVIEW_CSS);
+                        updatePriceLabel();
                     }
                     else
                     {
                         qDebug() << "Invalid Coupon";
-                        ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #75756f;border-color:#f44336;");
+                        p_page_idle->addCssClassToObject(ui->lineEdit_promo_code, "promoCode_invalid", PAGE_PRODUCT_OVERVIEW_CSS);
                     }
                 }
                 else
                 {
                     qDebug() << "Invalid Coupon http 200 response";
-                    ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #f44336;border-color:#f44336;");
+                    p_page_idle->addCssClassToObject(ui->lineEdit_promo_code, "promoCode_invalid", PAGE_PRODUCT_OVERVIEW_CSS);
                 }
             }
         }
     }
 }
 
-void pageProductOverview::keyboardButtonPressed(int buttonID)
+void page_product_overview::keyboardButtonPressed(int buttonID)
 {
-
     QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
     QString buttonText = buttonpressed->objectName();
-
+    qDebug() << buttonText;
+    QString promocode = ui->lineEdit_promo_code->text();
+    qDebug() << promocode;
     if (buttonText == "backspace")
     {
-        ui->promoCode->backspace();
+        ui->lineEdit_promo_code->backspace();
     }
     else if (buttonText == "done")
     {
         ui->promoKeyboard->hide();
-        if (ui->promoCode->text() == "")
-        {
-            ui->promoCode->hide();
-        }
-        on_applyPromo_Button_clicked();
+        ui->pushButton_promo_input->show();
+        apply_promo_code();
     }
     else if (buttonText.mid(0, 3) == "num")
     {
-        ui->promoCode->setText(ui->promoCode->text() + buttonText.mid(3, 1));
+        ui->lineEdit_promo_code->setText(ui->lineEdit_promo_code->text() + buttonText.mid(3, 1));
     }
     else
     {
-        ui->promoCode->setText(ui->promoCode->text() + buttonText);
+        ui->lineEdit_promo_code->setText(ui->lineEdit_promo_code->text() + buttonText);
     }
 }
-void pageProductOverview::on_previousPage_Button_clicked()
+void page_product_overview::on_pushButton_previous_page_clicked()
 {
 
     this->return_to_selectProductPage();
 }
 
-void pageProductOverview::coupon_input_show()
+void page_product_overview::coupon_input_show()
 {
-}
-
-void pageProductOverview::coupon_input_hide()
-{
-    ui->promoKeyboard->hide();
-}
-
-void pageProductOverview::coupon_input_reset()
-{
-}
-
-void pageProductOverview::on_promoCodeInput_clicked()
-{
-    QObject *button = QObject::sender();
-    ui->promoCode->setStyleSheet("font-family: Montserrat; font-style: normal; font-weight: bold; font-size: 28px; line-height: 44px; color: #5E8580;border-color:#5E8580;");
-    ui->label_discount_code->hide();
-    ui->promoInputButton->show();
-    ui->promoKeyboard->show();
     qDebug() << "show promo keyboard.";
-    ui->promoCode->show();
+    ui->promoKeyboard->show();
+    ui->pushButton_promo_input->hide();
+    ui->lineEdit_promo_code->clear();
+    ui->lineEdit_promo_code->show();
+    p_page_idle->addCssClassToObject(ui->lineEdit_promo_code, "promoCode", PAGE_PRODUCT_OVERVIEW_CSS);
 }
-void pageProductOverview::couponHandler()
+
+void page_product_overview::coupon_input_hide()
 {
-    qDebug() << "db for coupons";
-
-    DbManager db(DB_PATH);
-    bool coupons_enabled = db.getCouponsEnabled();
-    db.closeDB();
-
-    if (coupons_enabled)
-    {
-        qDebug() << "Coupons are enabled for this machine.";
-        ui->promoInputButton->show();
-        ui->promoInputButton->setEnabled(true);
-
-        ui->promoCode->show();
-        // ui->promoKeyboard->show();
-        ui->promoInputButton->show();
-        ui->label_invoice_discount_amount->show();
-        ui->label_invoice_discount_name->show();
-        ui->label_discount_tag->show();
-        ui->promoButton->show();
-        ui->label_discount_code->show();
-    }
-    else
-    {
-        qDebug() << "Coupons are disabled for this machine.";
-        ui->promoInputButton->setEnabled(false);
-        coupon_disable();
-    }
-}
-void pageProductOverview::coupon_disable()
-{
-    ui->promoCode->hide();
     ui->promoKeyboard->hide();
-    ui->promoInputButton->hide();
-    ui->label_invoice_discount_amount->hide();
-    ui->label_invoice_discount_name->hide();
-    ui->label_discount_tag->hide();
-    ui->promoButton->hide();
-    ui->label_discount_code->hide();
+    ui->pushButton_promo_input->show();
 }
 
-void pageProductOverview::on_page_qr_payment_Button_clicked()
+void page_product_overview::coupon_input_reset()
 {
-    qDebug() << "pageProductOverview: Pay button";
+}
 
-    ui->mainPage_Button->setEnabled(false);
-    ui->previousPage_Button->setEnabled(false);
+void page_product_overview::on_lineEdit_promo_codeInput_clicked()
+{
+    coupon_input_show();
+}
 
-    this->stopSelectTimers();
-    QString paymentMethod = selectedProductOrder->getSelectedPaymentMethod();
+void page_product_overview::on_pushButton_continue_clicked()
+{
+    qDebug() << "page_product_overview: Pay button";
 
-    if (paymentMethod == "qr" )
+    ui->pushButton_to_help->setEnabled(false);
+    ui->pushButton_previous_page->setEnabled(false);
+
+    QString paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
+
+    if (paymentMethod == "qr")
     {
         CURL *curl;
         CURLcode res;
@@ -677,7 +431,7 @@ void pageProductOverview::on_page_qr_payment_Button_clicked()
 
         if (!curl)
         {
-            qDebug() << "pageProductOverview: cURL failed init";
+            qDebug() << "page_product_overview: cURL failed init";
             return;
         }
 
@@ -688,10 +442,6 @@ void pageProductOverview::on_page_qr_payment_Button_clicked()
         if (res != CURLE_OK)
         {
             qDebug() << "ERROR: Failed to reach soapstandportal. error code: " + QString::number(res);
-
-            // p_page_wifi_error->showEvent(wifiErrorEvent);
-            // p_page_wifi_error->showFullScreen();
-            // this->hide();
             hideCurrentPageAndShowProvided(p_page_wifi_error);
         }
         else
@@ -700,18 +450,17 @@ void pageProductOverview::on_page_qr_payment_Button_clicked()
             qDebug() << "Server feedback readbuffer: " << feedback;
 
             ui->label_invoice_price->text();
-
-            hideCurrentPageAndShowProvided(paymentQrPage);
+            hideCurrentPageAndShowProvided(p_page_payment_qr);
         }
         curl_easy_cleanup(curl);
         readBuffer = "";
     }
-    else if(paymentMethod == "tapTcp"){
-        hideCurrentPageAndShowProvided(paymentTapPage);
-
+    else if (paymentMethod == "tapTcp")
+    {
+        hideCurrentPageAndShowProvided(p_page_payment_tap);
     }
     else if(paymentMethod == "tapSerial"){
-        hideCurrentPageAndShowProvided(paymentTapSerialPage);
+        hideCurrentPageAndShowProvided(p_page_payment_tap_serial);
 
     }
     else if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
@@ -725,12 +474,12 @@ void pageProductOverview::on_page_qr_payment_Button_clicked()
     }
 }
 
-void pageProductOverview::return_to_selectProductPage()
+void page_product_overview::return_to_selectProductPage()
 {
     hideCurrentPageAndShowProvided(p_page_product);
 }
 
-void pageProductOverview::on_selectProductPage_Button_clicked()
+void page_product_overview::on_pushButton_select_product_page_clicked()
 {
     this->return_to_selectProductPage();
 }

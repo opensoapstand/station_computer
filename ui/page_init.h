@@ -7,11 +7,10 @@
 // Listen for User interaction to load
 // Idle Page
 //
-// created: 16-04-2021
-// by: Paddy Riley
+// created: 16-06-2023
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef INIT_H
@@ -44,7 +43,8 @@ public:
     void setPage(page_idle *pageIdle);
     void showEvent(QShowEvent *event);
     ~page_init();
-    void initReadySlot(void);
+    void hideCurrentPageAndShowProvided(QWidget *pageToShow);
+    void initReadySlot();
 
 
     // Tap Payment Control
@@ -76,16 +76,13 @@ public:
     std::vector<uint8_t> pktResponded;
     std::string productSelectedPrice;
     bool sendToUX410PageInit();
-    bool tap_init();
+    bool tap_serial_initiate();
     bool waitForUX410PageInit();
     void cancelPayment();
     bool getResponse(){return response;}
     bool tapSetupStarted =false;
 
 
-
-
-    DrinkOrder* currentProductOrder;
     df_util* dfUtility;
 
     DfUiCommThread* dfComm;

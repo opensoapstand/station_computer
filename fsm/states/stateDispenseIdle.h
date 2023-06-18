@@ -5,10 +5,9 @@
 // Recieves and interprets string command from FSM.
 // Routes dispense instruction to GPIO's
 // created: 01-2022
-// by:Lode Ameije & Ash Singla
+// by:Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef STATEDISPENSEIDLE__H_

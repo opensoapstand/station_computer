@@ -18,7 +18,7 @@ FORMS += \
     page_tap_payment_serial.ui \
     page_product.ui \
     page_select_product.ui \
-    pagethankyou.ui \
+    page_end.ui \
     page_maintenance.ui \
     page_productOverview.ui \
     page_maintenance_dispenser.ui \
@@ -51,11 +51,10 @@ HEADERS += \
     posm/transactionPackets.h \
     posm/transactioninfo.h \
     page_select_product.h \
-    pagethankyou.h \
+    page_end.h \
     payment/commands.h \
     payment/setup_Tap.h \
     df_util.h \
-    drinkorder.h \
     dbmanager.h \
     page_maintenance.h \
     page_maintenance_dispenser.h \
@@ -66,7 +65,8 @@ HEADERS += \
     page_sendFeedback.h  \
     page_transactions.h \
     product.h \
-    page_idle_products.h
+    page_idle_products.h \
+    machine.h
 
 SOURCES += \
     dfuicommthread.cpp \
@@ -89,11 +89,10 @@ SOURCES += \
     posm/transactioninfo.cpp \
     page_select_product.cpp \
     page_sendFeedback.cpp \
-    pagethankyou.cpp \
+    page_end.cpp \
     payment/commands.cpp \
     payment/setup_Tap.cpp \
     df_util.cpp \
-    drinkorder.cpp \
     dbmanager.cpp \
     page_maintenance.cpp \
     page_error_wifi.cpp \
@@ -104,7 +103,8 @@ SOURCES += \
     ../library/qr/qrcodegen.cpp \
     page_transactions.cpp \
     product.cpp \
-    page_idle_products.cpp
+    page_idle_products.cpp \
+    machine.cpp
 
 RESOURCES += \
     src.qrc

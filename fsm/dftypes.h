@@ -4,7 +4,7 @@
 // types specific to drinkfill
 //
 // created: 01-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
 // copyright 2022 by Productfill Beverages Ltd
 // all rights reserved
@@ -122,17 +122,17 @@ struct product_order
 };
 typedef struct product_order product_order;
 
-typedef enum Dispenser_state
+typedef enum Slot_state
 {
-   DISPENSER_STATE_AVAILABLE = 0,
-   DISPENSER_STATE_AVAILABLE_LOW_STOCK,
-   DISPENSER_STATE_WARNING_PRIMING,
-   DISPENSER_STATE_PROBLEM_NEEDS_ATTENTION,
-   DISPENSER_STATE_PROBLEM_EMPTY,
-   DISPENSER_STATE_DISABLED_COMING_SOON,
-   DISPENSER_STATE_DISABLED
+   SLOT_STATE_AVAILABLE = 0,
+   SLOT_STATE_AVAILABLE_LOW_STOCK,
+   SLOT_STATE_WARNING_PRIMING,
+   SLOT_STATE_PROBLEM_NEEDS_ATTENTION,
+   SLOT_STATE_PROBLEM_EMPTY,
+   SLOT_STATE_DISABLED_COMING_SOON,
+   SLOT_STATE_DISABLED
 
-} Dispenser_state;
+} Slot_state;
 
 typedef struct product_order product_order;
 

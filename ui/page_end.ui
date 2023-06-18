@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>pagethankyou</class>
- <widget class="QWidget" name="pagethankyou">
+ <class>page_end</class>
+ <widget class="QWidget" name="page_end">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QPushButton" name="mainPage_Button">
+  <widget class="QPushButton" name="pushButton_to_idle">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -101,7 +101,7 @@ text-transform: uppercase;
     <rect>
      <x>0</x>
      <y>1050</y>
-     <width>1001</width>
+     <width>1081</width>
      <height>511</height>
     </rect>
    </property>
@@ -189,7 +189,7 @@ text-transform: uppercase;
     <string>Volume dispensed</string>
    </property>
   </widget>
-  <widget class="QLabel" name="volumeDispensedLabel">
+  <widget class="QLabel" name="label_volume_dispensed_ml">
    <property name="geometry">
     <rect>
      <x>240</x>

@@ -8,10 +8,9 @@
 // class then communcates results to page_dispenser.
 //
 // created: 05-04-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "page_tap_payment_serial.h"
@@ -28,7 +27,6 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
 {
     // Fullscreen background setup
     ui->setupUi(this);
-    qDebug() << "Payment page" << endl;
    ui->previousPage_Button->setStyleSheet(
         "QPushButton {"
         "font-family: 'Brevia';"
@@ -45,9 +43,10 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
         "}");
     ui->previousPage_Button->setText("<- Back");
     ui->mainPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->payment_bypass_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
+    // ui->payment_bypass_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
 
-    ui->payment_bypass_Button->setEnabled(false);
+    ui->previousPage_Button->setText("<- Back");
+    // ui->payment_bypass_Button->setEnabled(false);
 
     // **** Timer and Slot Setup ****
 
@@ -70,8 +69,7 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
   
     // while (!tap_init());
 
-    ui->payment_bypass_Button->setEnabled(false);
-    ui->title_Label->hide();
+    // ui->payment_bypass_Button->setEnabled(false);
 }
 
 void page_tap_payment_serial::stopPayTimers()
@@ -114,10 +112,10 @@ void page_tap_payment_serial::stopPayTimers()
 /*
  * Page Tracking reference
  */
-void page_tap_payment_serial::setPage(page_idle *pageIdle,pageProduct *pageSizeSelect, page_dispenser *page_dispenser)
+void page_tap_payment_serial::setPage(page_idle *pageIdle,page_product *pageSizeSelect, page_dispenser *page_dispenser)
 {
     tmpCounter = 0;
-    this->p_pageProduct = pageSizeSelect;
+    this->p_page_product = pageSizeSelect;
     this->p_page_dispense = page_dispenser;
     this->p_page_idle = pageIdle;
     // this->helpPage = pageHelp;
@@ -206,7 +204,7 @@ void page_tap_payment_serial::showEvent(QShowEvent *event)
             timerEnabled = true;
         }
         readTimer->start(10);
-        ui->payment_bypass_Button->setEnabled(false);
+        // ui->payment_bypass_Button->setEnabled(false);
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
         ui->productLabel->hide();
         ui->order_drink_amount->hide();
@@ -251,6 +249,7 @@ bool page_tap_payment_serial::exitConfirm()
 
         msgBox.setText("<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>");
         msgBox.setStyleSheet("QMessageBox{min-width: 7000px; font-size: 24px; font-weight: bold; font-style: normal;  font-family: 'Montserrat';} QPushButton{font-size: 24px; min-width: 300px; min-height: 300px;}");
+        //msgBox.setStyleSheet(styleSheet);
 
         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         int ret = msgBox.exec();
@@ -283,7 +282,7 @@ void page_tap_payment_serial::on_previousPage_Button_clicked()
 {
     if (exitConfirm())
     {
-        hideCurrentPageAndShowProvided(p_pageProduct);
+        hideCurrentPageAndShowProvided(p_page_product);
     }
 }
 
@@ -321,37 +320,8 @@ void page_tap_payment_serial::resetPaymentPage()
     }
 }
 
-/* ----- Payment ----- */
 
-void page_tap_payment_serial::stayAliveLogon()
-{
-    
-    cout << "Getting Lan Info" << endl;
-    pktToSend = paymentPacket.ppPosStatusCheckPkt(StatusType::GetLanInfo);
-    if (sendToUX410())
-    {
-        waitForUX410();
-    }
 
-    pktResponded.clear();
-
-    com.flushSerial();
-    
-    
-}
-
-void page_tap_payment_serial::batchClose()
-{
-    com.flushSerial();
-    /*logon packet to send*/
-    pktToSend = paymentPacket.batchClosePkt();
-    if (sendToUX410())
-    {
-        waitForUX410();
-    }
-
-    pktResponded.clear();
-}
 
 bool page_tap_payment_serial::sendToUX410()
 {
@@ -402,152 +372,6 @@ bool page_tap_payment_serial::waitForUX410()
     }
     return waitResponse;
 }
-
-// bool page_tap_payment_serial::tap_init()
-// {
-//     paymentConnected = com.page_init();
-
-//     while (!paymentConnected)
-//     {
-//         paymentConnected = com.page_init();
-//     }
-//     sleep(35);
-
-//     // This is super shitty - there must be a better way to find out when the green light starts flashing on the UX420 but it was 35
-
-//     cout << "_----_-----__------_-----";
-   
-//     // stayAliveLogon();
-//     //   cout << "Sending Device Reset packet..." << endl;
-//     // pktToSend = paymentPacket.resetDevice();
-//     // if (sendToUX410())
-//     // {
-//     //     cout << "Receiving Device Reset response" << endl;
-//     //     isInitBatched = true;
-//     //     waitForUX410();
-//     //     pktResponded.clear();
-//     // }
-//     // else
-//     // {
-//     //     return false;
-//     // }
-//     // com.flushSerial();
-//     // cout << "-----------------------------------------------" << endl;
-    
-    
-//     /*Cancel any previous payment*/
-//     // cout << "Sending Cancel payment packet..." << endl;
-//     // pktToSend = paymentPacket.purchaseCancelPacket();
-//     // if (sendToUX410())
-//     // {
-//     //     cout << "Receiving Cancel payment response" << endl;
-//     //     isInitCancelled = true;
-//     //     waitForUX410();
-//     //     pktResponded.clear();
-//     // }
-//     // else
-//     // {
-//     //     return false;
-//     // }
-//     // com.flushSerial();
-//     // cout << "-----------------------------------------------" << endl;
-
-
-//     /*batch close packet to send*/
-//     // cout << "Sending Batch close packet..." << endl;
-//     // pktToSend = paymentPacket.batchClosePkt();
-//     // if (sendToUX410())
-//     // {
-//     //     cout << "Receiving Batch Close response" << endl;
-//     //     isInitBatched = true;
-//     //     waitForUX410();
-//     //     pktResponded.clear();
-//     // }
-//     // else
-//     // {
-//     //     return false;
-//     // }
-//     // com.flushSerial();
-//     // cout << "-----------------------------------------------" << endl;
-    
-//     /*logon packet to send*/
-//     cout << "Sending Logon packet..." << endl;
-//     pktToSend = paymentPacket.logonPacket();
-//     if (sendToUX410())
-//     {
-//         cout << "Receiving Logon response" << endl;
-//         isInitLogin = true;
-//         waitForUX410();
-//         pktResponded.clear();
-//     }
-//     else
-//     {
-//         return false;
-//     }
-//     com.flushSerial();
-//     cout << "-----------------------------------------------" << endl;
-
-//     /*getConfiguration packet to send*/
-//     cout << "Sending Merchant Name query..." << endl;
-//     pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::MERCH_NAME);
-//     if (sendToUX410())
-//     {
-//         cout << "Receiving Merchant Name" << endl;
-//         waitForUX410();
-//         isInitMerchant = true;
-//         merchantName = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
-//         cout << merchantName << endl;
-//         pktResponded.clear();
-//     }
-//     else
-//     {
-//         return false;
-//     }
-//     com.flushSerial();
-//     cout << "-----------------------------------------------" << endl;
-
-//     /*getConfiguration packet to send*/
-//     cout << "Sending Merchant Address query..." << endl;
-//     pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::MERCH_ADDR);
-//     if (sendToUX410())
-//     {
-//         cout << "Receiving Merchant Address" << endl;
-//         waitForUX410();
-//         isInitAddress = true;
-//         // merchantAddress = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
-//         merchantAddress = paymentPktInfo.dataField(readPacket.getPacket().data);
-
-//         std::cout << merchantAddress << endl;
-//         pktResponded.clear();
-//     }
-//     else
-//     {
-//         return false;
-//     }
-//     com.flushSerial();
-//     cout << "-----------------------------------------------" << endl;
-
-//     /*getConfiguration packet to send*/
-//     cout << "Sending PTID query..." << endl;
-//     pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::CON_TID);
-//     if (sendToUX410())
-//     {
-//         cout << "Receiving PTID" << endl;
-//         waitForUX410();
-//         isInitTerminalID = true;
-//         terminalID = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
-//         std::cout << terminalID << endl;
-//         pktResponded.clear();
-//     }
-//     else
-//     {
-//         return false;
-//     }
-//     com.flushSerial();
-
-//     return true;
-// }
-
 
 
 void page_tap_payment_serial::readTimer_loop()

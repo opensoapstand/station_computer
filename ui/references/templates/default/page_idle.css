@@ -1,0 +1,39 @@
+
+QPushButton { 
+
+   background-color: transparent; 
+   border: 0px }
+
+QLabel {
+
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 700;
+   font-size: 85px;
+   line-height: 99px;
+   text-align: center;
+   text-transform: lowercase;
+   color: #FFFFFF;
+   qproperty-alignment: AlignCenter;
+   }
+
+#label_printer_status {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 100;
+   background-color: #5E8580;
+   font-size: 42px;
+   text-align: center;
+   line-height: auto;
+   qproperty-alignment: AlignCenter;
+   border-radius: 20px;
+   color: white;
+   border: none;
+   }
+
+#pushButton_to_select_product_page {
+
+   background-color: transparent; 
+   border: 0px;
+   }
+      

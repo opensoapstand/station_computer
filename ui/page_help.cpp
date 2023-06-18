@@ -8,8 +8,7 @@
 // updated: 08-11-2022
 // by: Ash Singla & Lode Ameije
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "page_help.h"
@@ -27,74 +26,9 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     // Fullscreen background setup
     ui->setupUi(this);
 
-    // view transactions button
-    QFont font;
-    font.setFamily(QStringLiteral("Brevia"));
-    font.setPointSize(20);
-    // font.setBold(true);
-    // font.setWeight(75);
-    font.setWeight(50);
-
-    ui->transactions_Button->setStyleSheet(
-        "QPushButton {"
-
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "color: #003840;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
-    // ui->transactions_Button->setStyleSheet("QPushButton { color:#FFFFFF;background-color: #5E8580; border: 1px solid #3D6675;box-sizing: border-box;border-radius: 20px;}");
-    ui->transactions_Button->setFont(font);
-    ui->transactions_Button->setText("Transaction History ->");
-
-    ui->maintenance_page_Button->setStyleSheet("QPushButton { color:#003840; background-color: #FFFFFF; border: 0px ; text-align: centre;border-radius: 20px;border: none;}");
-    ui->maintenance_page_Button->setFont(font);
-    ui->maintenance_page_Button->setText("Settings");
-
-    ui->feedback_Button->setStyleSheet("QPushButton { color:#003840; background-color: #FFFFFF; border: 0px ; text-align: centre;border-radius: 20px;border: none;}");
-    ui->feedback_Button->setFont(font);
-    ui->feedback_Button->setText("Contact Us");
-
-    ui->back_Button->setStyleSheet(
-        "QPushButton {"
-
-        "font-family: 'Brevia';"
-        "font-style: normal;"
-        "font-weight: 75;"
-        "font-size: 32px;"
-        "line-height: 99px;"
-        "letter-spacing: 1.5px;"
-        "color: #003840;"
-        "text-align: center;"
-        "qproperty-alignment: AlignCenter;"
-        "border: none;"
-        "}");
-
-    ui->back_Button->setText("<-back");
-
-    ui->previousPage_Button_2->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-
-    DbManager db(DB_PATH);
-    bool showTransactions = db.showTransactions();
-    db.closeDB();
-    if (!showTransactions)
-    {
-        ui->transactions_Button->hide();
-    }
-
-    ui->previousPage_Button->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-    ui->refreshButton->setStyleSheet("QPushButton { background-color: transparent; border: 0px }");
-
     helpIdleTimer = new QTimer(this);
     helpIdleTimer->setInterval(1000);
     connect(helpIdleTimer, SIGNAL(timeout()), this, SLOT(onHelpTimeoutTick()));
-
     connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
 }
 
@@ -103,65 +37,81 @@ page_help::~page_help()
 {
     delete ui;
 }
-
-void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow)
-{
-    helpIdleTimer->stop();
-    ui->keyboardTextEntry->setText("");
-    ui->keyboard_3->hide();
-    p_page_idle->pageTransition(this, pageToShow);
-}
-
-void page_help::showEvent(QShowEvent *event)
-{
-    qDebug() << "<<<<<<< Page Enter: Help >>>>>>>>>";
-    QWidget::showEvent(event);
-
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_PATH);
-
-    DbManager db(DB_PATH);
-    maintenance_pwd = db.getMaintenanceAdminPassword();
-    help_text_html = db.getHelpPageHtmlText();
-    db.closeDB();
-    if(help_text_html!=""){
-        ui->html_textBrowser->setHtml(help_text_html);
-    }
-    else{
-        ui->html_textBrowser->hide();
-    }
-
-    if (helpIdleTimer == nullptr)
-    {
-        helpIdleTimer = new QTimer(this);
-        helpIdleTimer->setInterval(1000);
-        connect(helpIdleTimer, SIGNAL(timeout()), this, SLOT(onHelpTimeoutTick()));
-    }
-
-    helpIdleTimer->start(1000);
-    _helpIdleTimeoutSec = 60;
-    ui->keyboard_3->hide();
-}
-
-/*
- * Page Tracking reference
- */
-void page_help::setPage(page_select_product *pageSelect, pageProduct *pageProduct, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_transactions *pageTransactions, page_maintenance *pageMaintenance, page_sendFeedback *pageFeedback)
+void page_help::setPage(page_select_product *pageSelect, page_product *page_product, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_transactions *pageTransactions, page_maintenance *pageMaintenance, page_sendFeedback *pageFeedback)
 {
     this->p_page_idle = pageIdle;
     this->p_page_feedback = pageFeedback;
-    this->paymentPage = page_qr_payment;
-    this->selectPage = pageProduct;
+    this->p_page_payment = page_qr_payment;
+    this->p_page_product = page_product;
     this->p_page_select_product = pageSelect;
     this->p_page_transactions = pageTransactions;
     this->p_page_maintenance = pageMaintenance;
 }
 
-void page_help::on_previousPage_Button_clicked()
+void page_help::showEvent(QShowEvent *event)
 {
-    hideCurrentPageAndShowProvided(p_page_idle);
+
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    QWidget::showEvent(event);
+
+    QString styleSheet = p_page_idle->getCSS(PAGE_HELP_CSS);
+
+    ui->pushButton_to_idle->setProperty("class", "buttonNoBorder");
+    ui->pushButton_to_transactions->setProperty("class", "buttonNoBorder");
+    ui->pushButton_resetTimeout->setProperty("class", "buttonTransparent");
+
+    ui->pushButton_to_idle->setStyleSheet(styleSheet);
+    ui->pushButton_to_transactions->setStyleSheet(styleSheet);
+    ui->pushButton_resetTimeout->setStyleSheet(styleSheet);
+    ui->pushButton_to_maintenance->setStyleSheet(styleSheet);
+    ui->pushButton_to_feedback->setStyleSheet(styleSheet);
+
+    p_page_idle->setTemplateTextToObject(ui->pushButton_to_transactions);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_to_maintenance);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_to_feedback);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_to_idle);
+    ui->label_keyboardInfo->setText(p_page_idle->getTemplateTextByPage(this, "label_keyboardInfo")); //p_page_idle->setTemplateTextToObject(ui->label_keyboardInfo); // does not work because the parent is the keyboard, not the page.
+
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_PATH);
+
+    help_text_html = p_page_idle->thisMachine.getHelpPageHtmlText();
+    if (p_page_idle->thisMachine.getShowTransactionHistory())
+    {
+        ui->pushButton_to_transactions->show();
+    }
+    else
+    {
+        ui->pushButton_to_transactions->hide();
+    }
+    
+    if (help_text_html != ""){
+
+        ui->html_textBrowser->setHtml(help_text_html);
+    }
+    else
+    {
+        ui->html_textBrowser->hide();
+
+        QString image_path = p_page_idle->thisMachine.getTemplatePathFromName(PAGE_HELP_BACKGROUND_GENERIC_WHITE);
+        if (df_util::pathExists(image_path)){
+            p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_GENERIC_WHITE);
+        }
+    }
+
+    helpIdleTimer->start(1000);
+    _helpIdleTimeoutSec = 60;
+    ui->keyboard_3->hide();
+    ui->keyboardTextEntry->setText("");
 }
 
-void page_help::on_previousPage_Button_2_clicked()
+void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow)
+{
+    helpIdleTimer->stop();
+    ui->keyboard_3->hide();
+    p_page_idle->pageTransition(this, pageToShow);
+}
+
+void page_help::on_pushButton_to_idle_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_idle);
 }
@@ -178,17 +128,17 @@ void page_help::onHelpTimeoutTick()
     }
 }
 
-void page_help::on_refreshButton_clicked()
+void page_help::on_pushButton_resetTimeout_clicked()
 {
     _helpIdleTimeoutSec = 60;
 }
 
-void page_help::on_transactions_Button_clicked()
+void page_help::on_pushButton_to_transactions_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_transactions);
 }
 
-void page_help::on_maintenance_page_Button_clicked()
+void page_help::on_pushButton_to_maintenance_clicked()
 {
     _helpIdleTimeoutSec = 60;
     ui->keyboard_3->show();
@@ -247,21 +197,41 @@ void page_help::keyboardButtonPressed(int buttonID)
         qDebug() << "DONE CLICKED";
         QString textEntry = ui->keyboardTextEntry->text();
 
-        int compareResult = QString::compare(textEntry, maintenance_pwd, Qt::CaseInsensitive);
-        int shortcut = QString::compare(textEntry, "lll", Qt::CaseInsensitive);
+        // if role was already set, do not check pwd. 
+        if (!p_page_idle->thisMachine.isAllowedAsMaintainer()){
+            p_page_idle->thisMachine.processRolePassword(textEntry);
+            
+            if (p_page_idle->thisMachine.isAllowedAsMaintainer()){
+                hideCurrentPageAndShowProvided(p_page_maintenance);
+            }else{
+                ui->keyboardTextEntry->setText("");
+            
+            }
+        }
 
-        if (compareResult == 0)
-        // if (compareResult == 0 || shortcut == 0) // shortcut for developing.
-        {
-            usleep(100000);
-            qDebug() << "Password correct. Will open maintenance page";
+        if (p_page_idle->thisMachine.isAllowedAsMaintainer()){
             hideCurrentPageAndShowProvided(p_page_maintenance);
+
         }
-        else
-        {
-            qDebug() << "Wrong password. Check db in database or contact soapstand.";
-            ui->keyboardTextEntry->setText("");
-        }
+        // int compareResult_user = QString::compare(textEntry, p_page_idle->thisMachine.getMaintenanceAdminPassword(false), Qt::CaseInsensitive);
+        // int compareResult_admin = QString::compare(textEntry, p_page_idle->thisMachine.getMaintenanceAdminPassword(true), Qt::CaseInsensitive);
+
+        // if (compareResult_user == 0)
+        // {
+        //     usleep(100000);
+        //     qDebug() << "Maintenance user password correct.";
+        //     hideCurrentPageAndShowProvided(p_page_maintenance);
+        // }
+        // else if (compareResult_user == 0){
+        //     qDebug() << "Maintenance admin password correct.";
+        //     hideCurrentPageAndShowProvided(p_page_maintenance);
+
+        // }
+        // else
+        // {
+        //     qDebug() << "Maintenance use password wrong . Check db in database or contact soapstand.";
+        //     ui->keyboardTextEntry->setText("");
+        // }
     }
     else if (buttonText == "Space")
     {
@@ -277,7 +247,7 @@ void page_help::keyboardButtonPressed(int buttonID)
     }
 }
 
-void page_help::on_feedback_Button_clicked()
+void page_help::on_pushButton_to_feedback_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_feedback);
 }

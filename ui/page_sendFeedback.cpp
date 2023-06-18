@@ -9,10 +9,9 @@
 // payment page and page_idle page
 //
 // created: 05-04-2022
-// by: Lode Ameije & Ash Singla & Udbhav Kansal
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado & Udbhav Kansal
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "page_sendFeedback.h"
@@ -33,7 +32,6 @@ using json = nlohmann::json;
 page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                                                         ui(new Ui::page_sendFeedback)
 {
-    qDebug() << "IN send feedback";
     ui->setupUi(this);
 
     ui->textEdit_custom_message->hide();

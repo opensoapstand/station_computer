@@ -110,7 +110,8 @@ color: #58595B;</string>
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_payment_bypass">
+  
+  <widget class="QPushButton" name=">payment_bypass_Button">
    <property name="enabled">
     <bool>false</bool>
    </property>

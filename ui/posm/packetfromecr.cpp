@@ -64,8 +64,8 @@ void packetFromECR::setPacketLRC()
 
 void packetFromECR::setPacketLRCPur()
 {
-    qDebug() <<"Current length 0:  "<< currentPacket.dataLen[0];
-    qDebug() <<"Current length 1:  " <<currentPacket.dataLen[1];
+    // qDebug() <<"Current length 0:  "<< currentPacket.dataLen[0];
+    // qDebug() <<"Current length 1:  " <<currentPacket.dataLen[1];
 
     uint16_t combineLength = convertFrom8To16(currentPacket.dataLen[0], currentPacket.dataLen[1]) + 2  ;
     std::vector<uint8_t> lrcPkt = constructPartialPacket(combineLength); //exclude STX, ETX

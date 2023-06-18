@@ -8,10 +8,9 @@
 // class then communcates results to page_dispenser.
 //
 // created: 05-04-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef page_tap_payment_H
@@ -81,6 +80,7 @@ public:
     bool exitConfirm();
 
     // **** Control Functions ****
+    void initiate_tap_setup();
     bool setpaymentProcess(bool status);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void authorized_transaction(std::map<std::string, std::string> responseObj);
@@ -90,28 +90,17 @@ public:
     // QString getPaymentMethodForConstructorTime(uint8_t slot);
 
 
-    StateTapPayment state_tap_payment;
+    StateTapPayment state_tap_payment; 
 
 private slots:
-
-    // Update Drink order totals section
-    void updateTotals(string drinkDescription, string drinkAmount, string orderTotal);
 
     // Navigation
     void on_pushButton_previous_page_clicked();
     void on_pushButton_payment_bypass_clicked();
     void on_pushButton_to_idle_clicked();
 
-    //void on_payment_pass_Button_clicked();
-    //void on_payment_cancel_Button_clicked();
-    // For Debugging; will be removed.
-
     // **** Payment ****
-    void displayPaymentPending(bool isVisible);
-
-    // void readTimer_loop();
     void tapPaymentHandler();
-    void declineTimer_start();
     void check_packet_available();
     void check_card_tapped();
     void startPaymentProcess();
@@ -128,40 +117,13 @@ private:
     page_help *p_page_help;
     page_error_wifi *p_page_wifi_error;
 
-    const QString TAP_READY_LABEL = "Ready for Tap";
-    const QString TAP_label_processing = "Processing";
-    const QString TAP_DECLINED_LABEL = "Card Declined";
-    const QString TAP_AGAIN_LABEL = "Try Again";
-    const QString TAP_APPROVED_LABEL = "Payment Approved";
-    const QString TAP_BLANK_LABEL = "";
-
-    // Label Reference for order Details
-    string drinkAmount;
-    string drinkDescription;
-    string orderTotal;
-
-    // TODO: Put payment information into XML
-    // Payment progress timer
-    bool approved = false;
-    bool paymentConnected = false;
-    bool isReadyForTap = false;
-
     void stopPayTimers();
-
-    int progressDots = 1;
-    int progressLoopCounter = 0;
-    int declineCounter;
-
-
 
     // Payment Control
     bool paymentProcessing;
 
-   
-
     QSqlDatabase db;
 
-    QTimer *declineTimer;
     QTimer *checkPacketReceivedTimer;
     QTimer *checkCardTappedTimer;
 
@@ -170,18 +132,7 @@ private:
 
     std::string productSelectedPrice;
 
-    bool tap_init();
     void cancelPayment();
-    bool getResponse() { return response; }
-
-
-    QString _paymentTimeLabel;
-    int _pageTimeoutCounterSecondsLeft;
-    QTimer *paymentEndTimer;
-
-
-    QResizeEvent *page_productResize;
-    QShowEvent *dispenseEvent;
 
     bool response;
     bool tap_payment;

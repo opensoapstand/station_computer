@@ -7,8 +7,7 @@
  // created: 07-02-2020
  // by: Li Yan Tong
  //
- // copyright 2022 by Drinkfill Beverages Ltd
- // all rights reserved
+ // copyright 2023 by Drinkfill Beverages Ltd // all rights reserved
  ********************************************************/
 /* 
  * AWS may require '' EG: CREATE TABLE IF NOT EXISTS 'df_transaction.user' ...

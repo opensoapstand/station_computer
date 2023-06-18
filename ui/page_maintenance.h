@@ -7,11 +7,10 @@
 // Coordinates User input from payment select
 // class then communcates results to page_dispenser.
 //
-// created: 4-01-2021
-// by: Paddy Riley
+// created: 16-06-2023
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef PAGE_MAINTENANCE_H

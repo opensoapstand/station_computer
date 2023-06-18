@@ -7,11 +7,10 @@
 // Listen for User interaction to load
 // Idle Page
 //
-// created: 16-04-2021
-// by: Paddy Riley
+// created: 16-06-2023
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "page_init.h"
@@ -54,13 +53,12 @@ void page_init::showEvent(QShowEvent *event)
 {
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-    
-    // load template texts 
+
+    // load template texts
     p_page_idle->loadTextsFromTemplateCsv();
     p_page_idle->loadTextsFromDefaultCsv();
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_INIT_BACKGROUND_IMAGE_PATH);
-
 
     initIdleTimer->start(1000);
 #ifdef START_FSM_FROM_UI
@@ -76,11 +74,22 @@ void page_init::showEvent(QShowEvent *event)
     }
     else
     {
+        //Need to add a database call to check the payment method and then proceed
+        QString paymentMethod = "";
+        if(paymentMethod == "tapTcp"){
+            QCoreApplication::processEvents();
+            page_tap_payment paymentObject;
+            paymentObject.initiate_tap_setup();
+        }
+        else if(paymentMethod=="tapSerial"){
+            QCoreApplication::processEvents();
+            page_tap_payment_serial paymentSerialObject;
+            paymentSerialObject.tap_serial_initiate();
+        }
         p_page_idle->setTemplateTextToObject(ui->label_init_message);
         _initIdleTimeoutSec = 1;
     }
 }
-
 
 void page_init::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
@@ -104,9 +113,6 @@ void page_init::onInitTimeoutTick()
     else
     {
         qDebug() << "No response from controller. Will reboot";
-        // ui->label_fail_message->setText("No response from controller. Will reboot.");
-        // _rebootTimeoutSec = 5;
-        // rebootTimer->start(1000);
         initIdleTimer->stop();
         p_page_idle->setTemplateTextToObject(ui->label_fail_message);
         hideCurrentPageAndShowProvided(p_page_idle);
@@ -128,3 +134,4 @@ void page_init::onRebootTimeoutTick()
         system("./release/reboot.sh");
     }
 }
+

@@ -8,10 +8,9 @@
 // class then communcates results to page_dispenser.
 //
 // created: 05-04-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "page_tap_payment.h"
@@ -39,9 +38,7 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
                                                       ui(new Ui::page_tap_payment)
 {
     // Fullscreen background setup
-    ui->setupUi(this);
-    qDebug() << "Payment page";
-    
+    ui->setupUi(this);    
 
     std::atomic<bool> stop_tap_action_thread(false);
     std::atomic<bool> stop_authorization_thread(false);
@@ -54,59 +51,45 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
     connect(checkCardTappedTimer, SIGNAL(timeout()), this, SLOT(check_card_tapped()));
     checkCardTappedTimer->setInterval(500); // was 500
 
-    // Payment Declined
-    declineTimer = new QTimer(this);
-    connect(declineTimer, SIGNAL(timeout()), this, SLOT(declineTimer_start()));
-
     // Idle Payment reset
     idlePaymentTimer = new QTimer(this);
     connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
 
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->label_title->hide();
-
-
-
-
-  // THIS CODE SHOULD BE UNCOMMENTED AND PUT OUTSIDE CONSTRUCTOR
-    // ui->order_total_amount->hide();
-    
-
-    // if (db.getPaymentMethod(1) == "tapTcp")
-    // {
-    //     qDebug() << "InitializingTap payment";
-    //     tap_payment = true;
-    //     std::map<std::string, std::string> configMap = readConfigFile();
-    //     std::map<std::string, std::string> deviceStatus = checkDeviceStatus(connectSecondarySocket());
-    //     if (deviceStatus["MACLABEL_IN_SESSION"] != "")
-    //     {
-    //         // finishSession(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
-    //     }
-    //     cancelTransaction(connectSecondarySocket());
-    //     qDebug() << "Transaction cancelled";
-    //     if (configMap["MAC_KEY"] != "")
-    //     {
-    //         std::map<std::string, std::string> testResponse = testMac(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
-    //         if (testResponse["RESPONSE_TEXT"] == "Match")
-    //         {
-    //             qDebug() << "Test Mac Command Matched" << endl;
-    //         }
-    //         else
-    //         {
-    //             qDebug() << "Re-registration of the device";
-    //             registerDevice(connectSocket());
-    //         }
-    //     }
-    //     else
-    //     {
-    //         qDebug() << "No file config" << endl;
-    //         registerDevice(connectSocket());
-    //     }
-    // }
-   
+    ui->order_total_amount->hide();
 }
 
-
+void page_tap_payment::initiate_tap_setup(){
+    qDebug() << "InitializingTap payment";
+    tap_payment = true;
+    std::map<std::string, std::string> configMap = readConfigFile();
+    std::map<std::string, std::string> deviceStatus = checkDeviceStatus(connectSecondarySocket());
+    if (deviceStatus["MACLABEL_IN_SESSION"] != "")
+    {
+        // finishSession(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
+    }
+    cancelTransaction(connectSecondarySocket());
+    qDebug() << "Transaction cancelled";
+    if (configMap["MAC_KEY"] != "")
+    {
+        std::map<std::string, std::string> testResponse = testMac(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
+        if (testResponse["RESPONSE_TEXT"] == "Match")
+        {
+            qDebug() << "Test Mac Command Matched" << endl;
+        }
+        else
+        {
+            qDebug() << "Re-registration of the device";
+            registerDevice(connectSocket());
+        }
+    }
+    else
+    {
+        qDebug() << "No file config" << endl;
+        registerDevice(connectSocket());
+    }
+}
 void page_tap_payment::stopPayTimers()
 {
 
@@ -119,12 +102,6 @@ void page_tap_payment::stopPayTimers()
     {
         qDebug() << "cancel TAP progress Timer" << endl;
         checkCardTappedTimer->stop();
-    }
-
-    if (declineTimer != nullptr)
-    {
-        qDebug() << "cancel decline Timer" << endl;
-        declineTimer->stop();
     }
 
     if (idlePaymentTimer != nullptr)
@@ -155,19 +132,11 @@ page_tap_payment::~page_tap_payment()
 
 /* ----- GUI ----- */
 
-// Labels and button for tapping payment
-void page_tap_payment::displayPaymentPending(bool isVisible)
-{
-}
-
 void page_tap_payment::on_pushButton_payment_bypass_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_dispense);
 }
 
-void page_tap_payment::updateTotals(string drinkDescription, string drinkAmount, string orderTotal)
-{
-}
 
 /*Cancel any previous payment*/
 void page_tap_payment::cancelPayment()
@@ -369,9 +338,6 @@ void page_tap_payment::authorized_transaction(std::map<std::string, std::string>
         startPaymentProcess();
     }
 }
-void page_tap_payment::declineTimer_start()
-{
-}
 
 bool page_tap_payment::exitConfirm()
 {
@@ -462,11 +428,4 @@ void page_tap_payment::resetPaymentPage()
     transactionLogging = "";
     response = true;
     qDebug() << "Cancelled";
-}
-
-/* ----- Payment ----- */
-
-bool page_tap_payment::tap_init()
-{
-    return true;
 }

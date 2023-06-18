@@ -7,11 +7,10 @@
 // Listen for User interaction to load
 // Idle Page
 //
-// created: 16-04-2021
-// by: Paddy Riley
+// created: 16-06-2023
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef INIT_H
@@ -19,6 +18,8 @@
 
 #include "df_util.h"
 #include "page_idle.h"
+#include "page_tap_payment.h"
+#include "page_tap_payment_serial.h"
 #include "dfuicommthread.h"
 #include "dbmanager.h"
 

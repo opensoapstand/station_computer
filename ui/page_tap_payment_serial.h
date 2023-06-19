@@ -152,7 +152,6 @@ private:
     QTimer* paymentEndTimer;
     QTimer* idlePaymentTimer;
     void resetPaymentPage();
-    QString getPaymentMethod();
     int tmpCounter ;
 };
 

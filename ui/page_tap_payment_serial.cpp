@@ -112,11 +112,6 @@ void page_tap_payment_serial::on_pushButton_previous_page_clicked()
     }
 }
 
-QString page_tap_payment_serial::getPaymentMethod()
-{
-    return "tapSerial";
-}
-
 void page_tap_payment_serial::resizeEvent(QResizeEvent *event)
 {
 }
@@ -143,7 +138,7 @@ void page_tap_payment_serial::showEvent(QShowEvent *event)
     state_payment = s_serial_init;
     ui->pushButton_payment_bypass->setEnabled(false);
    
-    QString payment_method = getPaymentMethod();
+    QString payment_method = p_page_idle->selectedProduct->getPaymentMethod();
     if (payment_method == "tapSerial")
     {
 
@@ -247,7 +242,8 @@ void page_tap_payment_serial::resetPaymentPage()
     stopPayTimers();
     response = true;
     readTimer->stop();
-    if (getPaymentMethod() == "tapSerial")
+    QString paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
+    if (paymentMethod == "tapSerial")
     {
         cancelPayment();
     }

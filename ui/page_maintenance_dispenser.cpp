@@ -67,7 +67,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     p_page_idle->setTemplateTextToObject(ui->label_calibration_instructions);
     p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "enable_pump");
     p_page_idle->setTemplateTextToObject(ui->pushButton_set_restock_volume);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_update_portal);
+    // p_page_idle->setTemplateTextToObject(ui->pushButton_update_portal);
     ui->pushButton_done->setText(p_page_idle->getTemplateTextByPage(this, "pushButton_keypad_done"));
     ui->pushButton_cancel->setText(p_page_idle->getTemplateTextByPage(this, "pushButton_keypad_cancel"));
     p_page_idle->setTemplateTextToObject(ui->pushButton_to_previous_page);
@@ -763,6 +763,7 @@ void page_maintenance_dispenser::buttonGroup_edit_product_Pressed(int buttonId)
 
 void page_maintenance_dispenser::on_pushButton_to_previous_page_clicked()
 {
+    update_changes_to_portal();
     hideCurrentPageAndShowProvided(p_page_maintenance);
 }
 
@@ -916,7 +917,7 @@ size_t WriteCallback4(char *contents, size_t size, size_t nmemb, void *userp)
     return size * nmemb;
 }
 
-void page_maintenance_dispenser::on_pushButton_update_portal_clicked()
+void page_maintenance_dispenser::update_changes_to_portal()
 {
     qDebug() << "update portal clicked ";
     QString curl_params = "productId=" + p_page_idle->selectedProduct->getAwsProductId() + "&source=soapstandStation" +
@@ -924,9 +925,9 @@ void page_maintenance_dispenser::on_pushButton_update_portal_clicked()
                           "&price_medium=" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)) +
                           "&price_large=" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_LARGE_INDEX)) +
                           "&price_custom=" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_CUSTOM_INDEX)) +
-                          "&size_small=" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)) +
-                          "&size_medium=" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)) +
-                          "&size_large=" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_LARGE_INDEX));
+                          "&size_small=" +p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_SMALL_INDEX, false, false) +
+                          "&size_medium=" + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_MEDIUM_INDEX, false, false) +
+                          "&size_large=" + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_LARGE_INDEX, false, false);
     curl_param_array2 = curl_params.toLocal8Bit();
 
     curl2 = curl_easy_init();
@@ -958,7 +959,7 @@ void page_maintenance_dispenser::on_pushButton_update_portal_clicked()
         qDebug() << "Pagemaintenancedispenser cURL success. Server feedback readbuffer: " << feedback;
         // ui->label_action_feedback->setText("Portal Update Succesfull");
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_action_feedback, "portal_success");
-
+        
         // readbuffer is a string. "true" or "false"
         if (readBuffer == "true")
         {

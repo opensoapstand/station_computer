@@ -154,6 +154,7 @@ public:
 
     static void warnIfPathDoesNotExist(QString path);
     static bool pathExists(QString path);
+    static QStringList getFileList(const QString& folderPath);
     static double convertMlToOz(double vol_ml);
     static double convertOzToMl(double vol_oz);
     static char sizeIndexToChar(int size_index);

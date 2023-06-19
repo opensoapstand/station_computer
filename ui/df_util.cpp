@@ -6,8 +6,10 @@
 
 static QPointer<QFile> file_out = nullptr;
 
-void df_util::warnIfPathDoesNotExist(QString path){
-    if (!pathExists(path)){
+void df_util::warnIfPathDoesNotExist(QString path)
+{
+    if (!pathExists(path))
+    {
         qDebug() << "WARNING: File not found: " << path;
     }
 }
@@ -16,7 +18,15 @@ bool df_util::pathExists(QString path)
 {
     // check if path exists and if yes: Is it a file and no directory?
     // https://stackoverflow.com/questions/10273816/how-to-check-whether-file-exists-in-qt-in-c
-     return QFileInfo::exists(path) && QFileInfo(path).isFile();
+    return QFileInfo::exists(path) && QFileInfo(path).isFile();
+}
+
+QStringList df_util::getFileList(const QString &folderPath)
+{
+    QDir directory(folderPath);
+    QStringList fileList = directory.entryList(QDir::Files | QDir::NoDotAndDotDot);
+
+    return fileList;
 }
 
 char df_util::sizeIndexToChar(int size_index)
@@ -38,7 +48,6 @@ double df_util::convertOzToMl(double vol_oz)
 QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString units, bool roundNumber, bool addUnits)
 {
     QString volume_as_string;
-  
 
     double volume_oz = convertMlToOz(volumeMilliLiter);
 
@@ -91,7 +100,7 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
             }
             volume_as_string = QString::number(volumeMilliLiter, 'f', decimals) + units_string;
         }
-   
+
         else
         {
             QString units_string = "";
@@ -139,7 +148,6 @@ df_util::df_util(QWidget *parent) : QWidget(parent),
     connect(tcpSocket, &QIODevice::readyRead, this, &df_util::send_to_FSM);
 }
 
-
 void df_util::send_command_to_FSM(QString command)
 {
     m_IsSendingFSM = true;
@@ -158,7 +166,6 @@ void df_util::write_to_file_timestamped(QString basePath, QString data)
     // provide basepath wiht %1 in it for the timestamp to be added.
     QString time_stamp = QDateTime::currentDateTime().toString("_yyyy-MM-dd-hh.mm.ss");
     QString log_file_path = QString(basePath).arg(time_stamp);
-
 }
 
 void df_util::write_to_file(QString path, QString data)
@@ -202,9 +209,6 @@ void df_util::send_to_FSM()
     tcpSocket->close();
 }
 
-
 void df_util::displayError(QAbstractSocket::SocketError socketError)
 {
 }
-
-

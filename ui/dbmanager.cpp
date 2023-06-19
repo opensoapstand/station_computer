@@ -618,30 +618,30 @@ void DbManager::getAllMachineProperties(
     closeDb();
 }
 
-QString DbManager::getPaymentMethod(int slot)
-{
-    // used by Ash in tap. to do --> get tap init out of constructor.
-    qDebug() << "********* DEPRECATED *********** ";
-    qDebug() << "DB call: get payment method for slot";
-    QString payment_method;
-    {
-        QSqlDatabase db = openDb();
-        QSqlQuery qry(db);
+// QString DbManager::getPaymentMethod(int slot)
+// {
+//     // used by Ash in tap. to do --> get tap init out of constructor.
+//     qDebug() << "********* DEPRECATED *********** ";
+//     qDebug() << "DB call: get payment method for slot";
+//     QString payment_method;
+//     {
+//         QSqlDatabase db = openDb();
+//         QSqlQuery qry(db);
 
-        qry.prepare("SELECT payment FROM products WHERE slot=:slot");
-        qry.bindValue(":slot", slot);
-        bool success;
-        success = qry.exec();
+//         qry.prepare("SELECT payment FROM products WHERE slot=:slot");
+//         qry.bindValue(":slot", slot);
+//         bool success;
+//         success = qry.exec();
 
-        while (qry.next())
-        {
-            payment_method = qry.value(0).toString();
-        }
-        qry.finish();
-    }
-    closeDb();
-    return payment_method;
-}
+//         while (qry.next())
+//         {
+//             payment_method = qry.value(0).toString();
+//         }
+//         qry.finish();
+//     }
+//     closeDb();
+//     return payment_method;
+// }
 
 uint32_t DbManager::getNumberOfRows(QString table)
 {

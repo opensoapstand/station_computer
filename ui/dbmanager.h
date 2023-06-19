@@ -33,7 +33,7 @@ public:
     bool getRecentTransactions(QString values[][5], int count, int *count_retreived);
     void printerStatus(bool *isOnline, bool *hasPaper); // do not erase
 
-    QString getPaymentMethod(int slot); // do not erase yet (wait for ash)
+    // QString getPaymentMethod(int slot); // do not erase yet (wait for ash)
     // void setPaymentToQR();              // ASh to change.
 
     // bool updateSlotAvailability(int slot, int isEnabled, QString status_text);

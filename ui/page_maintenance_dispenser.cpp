@@ -550,7 +550,7 @@ void page_maintenance_dispenser::on_pushButton_restock_clicked()
 
 void page_maintenance_dispenser::on_pushButton_set_status_clicked()
 {
-    qDebug() << "Soldout button clicked.";
+    qDebug() << "Toggle status button clicked.";
 
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 

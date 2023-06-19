@@ -186,16 +186,16 @@ page_maintenance_dispenser->label_title->medium,Price Medium:
 page_maintenance_dispenser->label_title->adjust_volume,Adjust the remaining volume
 page_maintenance_dispenser->label_title->full_button,Full Volume button clicked
 page_maintenance_dispenser->label_action_feedback->portal_success,Portal Update Succesfull
-page_maintenance_dispenser->status_text->not_enabled,Enable manually with the button on top of this page.
+page_maintenance_dispenser->status_text->not_enabled,Enable manually with the button on top\nof this page.
 page_maintenance_dispenser->status_text->empty,No more product available.
 page_maintenance_dispenser->status_text->almost_empty,Little product left.
-page_maintenance_dispenser->status_text->sold_out,The dispenser is set disabled, enable manually with the button on top of this page.
-page_maintenance_dispenser->status_text->assistance,Try priming. If primed, check for working button, pump, flowsensor and solenoid.
-page_maintenance_dispenser->status_text->coming_soon,The dispenser is set disabled, enable manually with the button on top of this page.
+page_maintenance_dispenser->status_text->sold_out,The dispenser is set disabled, enable manually\nwith the button on top of this page.
+page_maintenance_dispenser->status_text->assistance,Try priming. If primed, check for working button,\npump, flowsensor and solenoid.
+page_maintenance_dispenser->status_text->coming_soon,The dispenser is set disabled, enable manually\nwith the button on top of this page.
 page_maintenance_dispenser->status_text->default,Not an identified state.
 page_maintenance_dispenser->status_text->available,Product available and dispenser working normally.
-page_maintenance_dispenser->status_text->priming,If the pump is working: See procedure to use the priming syringe\non the nozzle to guide the product into the pump. Check stock volume, air leaks and pump,\nsolenoid, button and flow sensor in case of problems. 
-page_maintenance_dispenser->status_text->disabled,Enable the dispenser with the button on top of this page. 
+page_maintenance_dispenser->status_text->priming,If the pump is working: See procedure to use the\npriming syringe on the nozzle to guide the product into the pump.\nCheck stock volume, air leaks and pump,\nsolenoid, button and flow sensor in case of problems. 
+page_maintenance_dispenser->status_text->disabled,Enable the dispenser with the button on top\nof this page. 
 
 #page_maintenance_general
 

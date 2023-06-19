@@ -57,6 +57,7 @@ public:
     void displayProducts();
     void addCompanyLogoToLabel(QLabel *label);
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
+    int setStepTimerFromFileName(QString fileName, int defaultTimeMillis);
 
     void printerStatusFeedback(bool isOnline, bool hasPaper);
 
@@ -98,7 +99,7 @@ private:
 
     page_help *p_page_help;
 
-    int _backgroundChangeTimeLeftSec;
+    int _backgroundChangeTimeLeftTenthsOfSec;
 
     int active_background_index;
 

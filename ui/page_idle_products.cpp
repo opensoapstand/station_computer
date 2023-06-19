@@ -37,8 +37,7 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     ui->setupUi(this);
 
     backgroundChangeTimer = new QTimer(this);
-    backgroundChangeTimer->setInterval(1000);
-    // backgroundChangeTimer->start(1000);
+    backgroundChangeTimer->setInterval(100); // interval 10th's of seconds.
 
     connect(backgroundChangeTimer, SIGNAL(timeout()), this, SLOT(onBackgroundChangeTimerTimeout()));
     connect(backgroundChangeTimer, SIGNAL(timeout()), this, SLOT(onBackgroundChangeTimerTick()));
@@ -96,7 +95,7 @@ void page_idle_products::showEvent(QShowEvent *event)
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
-    _backgroundChangeTimeLeftSec = PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS;
+    _backgroundChangeTimeLeftTenthsOfSec = PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS;
     backgroundChangeTimer->start();
     active_background_index = 0;
 
@@ -307,141 +306,113 @@ void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
     ui->printer_status_label->setStyleSheet(styleSheet);
 }
 
-void page_idle_products::changeBackground()
+int page_idle_products::setStepTimerFromFileName(QString fileName, int defaultTimeMillis)
 {
-    if (active_background_index == 0)
+    // there should be only one file withheld. But, if more than one, we'll take the first element.
+    QString background_name = fileName;
+    QStringList name_split = background_name.split("_");
+    QString lastPart = name_split[name_split.size() - 1];
+    QStringList parts = lastPart.split(".");
+    QString timePart = parts[0];
+
+    QString timeIdentifier = "ms";
+    if (timePart.contains(timeIdentifier))
     {
-
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
-        return;
-    }
-
-    QString base_path = "/home/df-admin/production/references/templates/default/";
-    QStringList test = df_util::getFileList(base_path);
-
-    QString template_name = "background%1";
-    QString filterPattern = template_name.arg(active_background_index);
-    QStringList filteredList = test.filter(filterPattern, Qt::CaseSensitive);
-    // for (const QString &fileName : test)
-    // {
-    //     qDebug() << fileName;
-    // }
-
-    if (filteredList.count() == 0)
-    {
-        _backgroundChangeTimeLeftSec = PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS;
-        active_background_index = 0;
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
-        showAllLabelsAndButtons();
-    }
-    else if (filteredList.count() >= 1)
-    {
-
-        // QString background_name = fileName.arg(active_background_index); // "background" + active_background_index + ".png"
-        // QString background_path = p_page_idle->thisMachine.getTemplatePathFromName(filteredList[0]);
-        for (const QString &fileName : filteredList)
-        {
-            qDebug() << fileName;
-        }
-
-        hideAllLabelAndButtons();
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, filteredList[0]);
-        _backgroundChangeTimeLeftSec = PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS;
+        int time_millis = timePart.replace(timeIdentifier, "").toInt();
+        _backgroundChangeTimeLeftTenthsOfSec = time_millis / 100;
+        qDebug() << "The string contains the sequence.";
     }
     else
     {
-        qDebug() << "fiejfijeifjiejifjiejf" << filteredList.count();
+        qDebug() << "The string does not contain the sequence.";
+        _backgroundChangeTimeLeftTenthsOfSec = defaultTimeMillis / 100; // PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS;
+    }
+}
+
+void page_idle_products::changeBackground()
+{
+    QString base_path = "/home/df-admin/production/references/templates/default/";
+    QStringList all_files_in_template_folder = df_util::getFileList(base_path);
+
+    QString template_name = "background_idle_products_%1";
+    QString filterPattern = template_name.arg(active_background_index);
+    QStringList filteredList = all_files_in_template_folder.filter(filterPattern, Qt::CaseSensitive);
+
+    if (filteredList.count() == 0)
+    {
+        qDebug() << "active_background_index set to 0. was: " << active_background_index;
+        // automatically revert to first image if non found.
+        active_background_index = 0;
+        filterPattern = template_name.arg(active_background_index);
+        filteredList = all_files_in_template_folder.filter(filterPattern, Qt::CaseSensitive);
     }
 
-    // qDebug() << "fiejfijeifjiejifjiejf" << filteredList.count();
-    // // Print the file names
-    // for (const QString &fileName : filteredList)
-    // {
-    //     qDebug() << fileName;
-    // }
-    // }
+    if (filteredList.count() == 0)
+    {
+        // qDebug() << "background  " << filterPattern << "not found, will default.";
+        // default fall back
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
+        showAllLabelsAndButtons();
+        _backgroundChangeTimeLeftTenthsOfSec = PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS * 10; // PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS;
+    }
+    else if (filteredList.count() >= 1)
+    {
+        qDebug() << "background  " << filterPattern << "found.";
+        QString background_name = filteredList[0];
+        if (active_background_index == 0)
+        {
+            qDebug() << "Main page (index 0 )";
 
-    // void page_idle_products::changeBackground()
-    // {
+            setStepTimerFromFileName(background_name, PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS * 10);
+            showAllLabelsAndButtons();
+        }
+        else
+        {
+            qDebug() << "normal page. index: " << active_background_index;
 
-    //     if (active_background_index == 0)
-    //     {
-
-    //         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
-    //         return;
-    //     }
-    //     QString fileName = "background%1.png";
-    //     QString background_name = fileName.arg(active_background_index); // "background" + active_background_index + ".png"
-    //     QString background_path = p_page_idle->thisMachine.getTemplatePathFromName(background_name);
-
-    //     if (df_util::pathExists(background_path))
-    //     {
-    //         hideAllLabelAndButtons();
-    //         p_page_idle->setBackgroundPictureFromTemplateToPage(this, background_name);
-    //         _backgroundChangeTimeLeftSec = PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS;
-    //     }
-    //     else
-    //     {
-    //         _backgroundChangeTimeLeftSec = PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS;
-    //         active_background_index = 0;
-    //         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
-    //         showAllLabelsAndButtons();
-    //     }
-    //     //     {
-    //     //         // Set the new background image path
-    //     //         p_page_idle->setBackgroundPictureFromTemplateToPage(this, currentBackgroundPath);
-    //     //         break; // Exit the loop if a valid background is found
-    //     //     }
-
-    //     // static int currentIndex = 0;     // Static variable to keep track of the current background index
-    //     // int initialIndex = currentIndex; // Store the initial index for the loop
-
-    //     // // Start the timer if it's not already running
-    //     // // if (!backgroundChangeTimer->isActive())
-    //     // // {
-    //     // //     backgroundChangeTimer->start(5000); // Start the timer with a 5-second interval
-    //     // // }
-
-    //     // hideAllLabelAndButtons();
-
-    //     // do
-    //     // {
-    //     //     qDebug() << "Entering the loop";
-
-    //     //     QString currentBackgroundPath = backgroundPaths[currentIndex];
-
-    //     //     // Check if the current background image file exists
-    //     //     if (df_util::pathExists(currentBackgroundPath))
-    //     //     {
-    //     //         // Set the new background image path
-    //     //         p_page_idle->setBackgroundPictureFromTemplateToPage(this, currentBackgroundPath);
-    //     //         break; // Exit the loop if a valid background is found
-    //     //     }
-
-    //     //     // Increment the current index
-    //     //     currentIndex++;
-    //     //     qDebug() << "Current index" << currentIndex;
-
-    //     //     // If the index exceeds the number of backgrounds, reset it to 0
-    //     //     if (currentIndex >= backgroundPaths.size())
-    //     //     {
-    //     //         currentIndex = 0;
-    //     //     }
-
-    //     //     // Check if the initial index is reached again
-    //     // } while (currentIndex != initialIndex);
-
-    //     // // Check if the loop reached the initial index and the corresponding background doesn't exist
-    //     // if (!df_util::pathExists(backgroundPaths[currentIndex]))
-    //     // {
-    //     //     // Revert to the original background image
-    //     //     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
-    //     // }
-    // }
+            setStepTimerFromFileName(background_name, PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS * 10);
+            hideAllLabelAndButtons();
+        }
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, background_name);
+    }
+    else
+    {
+        qDebug() << "ASSERT ERROR.aeijies" << filteredList.count();
+    }
 }
+
+// void page_idle_products::changeBackground()
+// {
+
+//     if (active_background_index == 0)
+//     {
+
+//         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
+//         return;
+//     }
+//     QString fileName = "background%1.png";
+//     QString background_name = fileName.arg(active_background_index); // "background" + active_background_index + ".png"
+//     QString background_path = p_page_idle->thisMachine.getTemplatePathFromName(background_name);
+
+//     if (df_util::pathExists(background_path))
+//     {
+//         hideAllLabelAndButtons();
+//         p_page_idle->setBackgroundPictureFromTemplateToPage(this, background_name);
+//         _backgroundChangeTimeLeftTenthsOfSec = PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS;
+//     }
+//     else
+//     {
+//         _backgroundChangeTimeLeftTenthsOfSec = PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS;
+//         active_background_index = 0;
+//         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
+//         showAllLabelsAndButtons();
+//     }
+//
+// }
+
 void page_idle_products::onBackgroundChangeTimerTick()
 {
-    if (--_backgroundChangeTimeLeftSec >= 0)
+    if (--_backgroundChangeTimeLeftTenthsOfSec >= 0)
     {
         // qDebug() << "one sec";
     }

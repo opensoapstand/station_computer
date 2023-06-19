@@ -3,6 +3,8 @@
 }
 
 #label_product_name {
+   text-align: center;
+}
 #label_product_picture {
    border: 1px solid black;
 }

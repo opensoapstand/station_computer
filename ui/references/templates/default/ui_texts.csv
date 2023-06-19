@@ -169,11 +169,11 @@ page_maintenance->label_product_4_position,P4
 #page_maintenance_dispenser
 page_maintenance_dispenser->pushButton_to_previous_page,<- back
 page_maintenance_dispenser->label_calibration_instructions,Flowsensor calibration instructions:<br>1.Enable the pump<br>2.Take a measuring cup and dispense until the 1liter mark<br>3.Check the calibration value<br>4.Update the calibration value if different
-page_maintenance_dispenser->pushButton_enable_pump->enable_pump,ENABLE PUMP
-page_maintenance_dispenser->pushButton_set_restock_volume,Define restock volume.
+page_maintenance_dispenser->pushButton_set_restock_volume,Define restock volume
 page_maintenance_dispenser->pushButton_update_portal,Update Changes to Portal
 page_maintenance_dispenser->pushButton_keypad_cancel,CANCEL
 page_maintenance_dispenser->pushButton_keypad_done,DONE
+page_maintenance_dispenser->pushButton_enable_pump->enable_pump,ENABLE PUMP
 page_maintenance_dispenser->pushButton_enable_pump->disable_pump,DISABLE PUMP
 page_maintenance_dispenser->pushButton_set_status->unavailable,Make\nunavailable
 page_maintenance_dispenser->pushButton_set_status->available,Make\navailable
@@ -202,6 +202,7 @@ page_maintenance_dispenser->status_text->disabled,Enable the dispenser with the 
 #page_maintenance_general->pushButton_back->enable_pump,ENABLE PUMP
 page_maintenance_general->pushButton_back,⬅ back
 page_maintenance_general->label_connectivity,connectivity
+page_maintenance_general->label_settings,Settings
 page_maintenance_general->pushButton_wifi_networks,Display Wifi networks
 page_maintenance_general->pushButton_network_status,Check Network status
 page_maintenance_general->pushButton_rtunnel_restart,Reset Backend Connection

@@ -67,18 +67,6 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     ui->keyboard_2->hide();
 
 
-// p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_enabled_status,"pump_off");
-    // ui->pushButton_back->setText("<- back");
-    // ui->label_connectivity->setText("connectivity");
-    // ui->pushButton_wifi_networks->setText("Display Wifi networks");
-    // ui->pushButton_network_status->setText("Check Network status");
-    // ui->pushButton_rtunnel_restart->setText("Reset Backend Connection");
-    // ui->label_receipt_printer->setText("Receipt Printer");
-    // ui->pushButton_printer_check_status->setText("Check Status");
-    // ui->pushButton_printer_test_print->setText("Test Print");
-    // ui->pushButton_minimize->setText("Minimize Soapstand App");
-    // ui->label_settings->setText("Settings");
-    // ui->pushButton_restart_electronics->setText("Restart Soapstand App (ui+fsm)");
     p_page_idle->setTemplateTextToObject(ui->pushButton_back);
     p_page_idle->setTemplateTextToObject(ui->label_connectivity);
     p_page_idle->setTemplateTextToObject(ui->pushButton_wifi_networks);
@@ -96,12 +84,6 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     p_page_idle->setTemplateTextToObject(ui->pushButton_reboot);
     p_page_idle->setTemplateTextToObject(ui->label_feedback);
     p_page_idle->setTemplateTextToObject(ui->label_status_feedback);
-    // ui->pushButton_restart_UI->setText("Restart UI only");
-    // ui->pushButton_reboot->setText("Restart Computer");
-    // ui->pushButton_shutdown->setText("Shut down\n(unplugging power is ok too)");
-    // ui->pushButton_reboot->setText("Minimize Soapstand App");
-    // ui->label_feedback->setText("Feedback");
-    // ui->label_status_feedback->setText("Command Feedback");
 
     updateLabelValues();
 }

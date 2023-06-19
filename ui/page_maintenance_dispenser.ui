@@ -118,6 +118,9 @@
      <height>201</height>
     </rect>
    </property>
+   <property name="accessibleName">
+    <string>Restock</string>
+   </property>
    <property name="text">
     <string>Restock</string>
    </property>
@@ -166,7 +169,7 @@
     </rect>
    </property>
    <property name="accessibleName">
-    <string>full</string>
+    <string>Set full volume</string>
    </property>
    <property name="text">
     <string>Adjust</string>
@@ -198,7 +201,7 @@
     </rect>
    </property>
    <property name="accessibleName">
-    <string>modify_stock</string>
+    <string>Modify Remaining Stock</string>
    </property>
    <property name="text">
     <string>Adjust</string>

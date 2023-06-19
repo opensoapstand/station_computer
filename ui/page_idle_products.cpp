@@ -388,11 +388,11 @@ void page_idle_products::onBackgroundChangeTimerTick()
 {
     if (--_backgroundChangeTimeLeftSec >= 0)
     {
-        qDebug() << "one sec";
+        // qDebug() << "one sec";
     }
     else
     {
-        qDebug() << "timer elapsed";
+        // qDebug() << "timer elapsed";
         active_background_index++;
         changeBackground();
     }

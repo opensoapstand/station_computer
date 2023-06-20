@@ -43,7 +43,6 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
 
     ui->pushButton_payment_bypass->setEnabled(false);
     state_payment = s_init;
-    ui->order_total_amount->hide();
 }
 
 void page_qr_payment::stopPayTimers()
@@ -102,7 +101,6 @@ size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
     return size * nmemb;
 }
 
-
 void page_qr_payment::resizeEvent(QResizeEvent *event)
 {
 }
@@ -118,7 +116,7 @@ void page_qr_payment::showEvent(QShowEvent *event)
     p_page_idle->setTemplateTextToObject(ui->label_steps);
     p_page_idle->setTemplateTextToObject(ui->label_processing);
     p_page_idle->setTemplateTextToObject(ui->pushButton_previous_page);
-    
+
     QString styleSheet = p_page_idle->getCSS(PAGE_QR_PAYMENT_CSS);
 
     ui->pushButton_payment_bypass->setProperty("class", "invisible_button");
@@ -141,21 +139,27 @@ void page_qr_payment::showEvent(QShowEvent *event)
     }
     QString price = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(originalPrice), 'f', 2);
 
-
     ui->qrCode->show();
     ui->productLabel->show();
     ui->order_drink_amount->show();
-
-
+    ui->order_total_amount->hide();
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
     ui->pushButton_payment_bypass->setEnabled(false);
 
-    ui->productLabel->setText(p_page_idle->selectedProduct->getProductName() + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
-    QString base_text = p_page_idle->getTemplateTextByElementNameAndPage(ui->order_drink_amount);
-    ui->order_drink_amount->setText(base_text.arg(price));
+    if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
+    {
+        ui->productLabel->setText(p_page_idle->selectedProduct->getProductName() + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
+        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->order_drink_amount,  "custom_size");
+        ui->order_drink_amount->setText(base_text.arg(price));
+    }
+    else
+    {
+        ui->productLabel->setText(p_page_idle->selectedProduct->getProductName() + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
+        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->order_drink_amount, "fixed_size");
+        ui->order_drink_amount->setText(base_text.arg(price));
+    }
 
- 
     ui->label_steps->show();
     ui->label_processing->hide();
 
@@ -165,7 +169,7 @@ void page_qr_payment::showEvent(QShowEvent *event)
     this->ui->payment_countdownLabel->setText("");
 
     ui->refreshLabel->hide();
-    ui->pushButton_refresh->raise(); // make sure refresh button is on top. 
+    ui->pushButton_refresh->raise(); // make sure refresh button is on top.
     ui->pushButton_previous_page->raise();
 
     setupQrOrder();
@@ -204,7 +208,6 @@ void page_qr_payment::setupQrOrder()
         ui->order_drink_amount->show();
         ui->label_title->hide();
         ui->label_scan->hide();
-        ui->order_total_amount->hide();
         ui->label_steps->hide();
         showErrorTimer->start();
     }
@@ -347,13 +350,11 @@ void page_qr_payment::isQrProcessedCheckOnline()
             ui->qrCode->hide();
             ui->productLabel->hide();
             ui->order_drink_amount->hide();
-            ui->order_total_amount->hide();
             ui->label_steps->hide();
 
             ui->label_processing->show();
             p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_scan, "finalize_transaction");
             p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "almost_there");
-
         }
         else
         {
@@ -393,7 +394,7 @@ void page_qr_payment::onTimeoutTick()
     }
     else
     {
-        qDebug() << "Timer Done!" << _pageTimeoutCounterSecondsLeft ;
+        qDebug() << "Timer Done!" << _pageTimeoutCounterSecondsLeft;
         transactionLogging += "\n 5: Timeout - True";
 
         idlePaymentTimeout();
@@ -422,22 +423,16 @@ bool page_qr_payment::exitConfirm()
 {
     qDebug() << "In exit confirm";
     QMessageBox msgBox;
-        // msgBox_abort = new QMessageBox();
-        // msgBox_abort->setObjectName("msgBox_abort");
-
     msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
     if (state_payment == s_payment_processing || state_payment == s_payment_done)
     {
         QString searchString = this->objectName() + "->msgBox_cancel->default";
         p_page_idle->setTextToObject(&msgBox, p_page_idle->getTemplateText(searchString));
-        //p_page_idle->setTemplateTextToObject();
-        // msgBox.setText("");
     }
     else if (state_payment == s_init)
     {
         QString searchString = this->objectName() + "->msgBox_refund->default";
         p_page_idle->setTextToObject(&msgBox, p_page_idle->getTemplateText(searchString));
-        // msgBox.setText("");
     }
     QString styleSheet = p_page_idle->getCSS(PAGE_QR_PAYMENT_CSS);
     msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
@@ -479,7 +474,7 @@ void page_qr_payment::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 // Navigation: Back to Drink Size Selection
 void page_qr_payment::on_pushButton_previous_page_clicked()
 {
-    qDebug() << "In previous page button" ;
+    qDebug() << "In previous page button";
     if (exitConfirm())
     {
         hideCurrentPageAndShowProvided(p_page_product);

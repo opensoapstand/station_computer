@@ -3,6 +3,14 @@
    border: 0px;
 } */
 
+#order_drink_amount {
+   text-align: right;
+}
+
+#pushButton_previous_page {
+   text-align: left;
+}
+
 QPushButton {
    font-family: 'Brevia';
    font-style: normal;
@@ -14,15 +22,15 @@ QPushButton {
    text-align: center;
    border-radius: 20px;
    border: none;
-  
+
 }
 
 
-.invisible_button{
+.invisible_button {
    background-color: transparent;
    border: 0px;
 }
- 
+
 #label_title {
    font-family: 'Brevia';
    font-style: normal;
@@ -83,7 +91,7 @@ QMessageBox {
    font-family: 'Montserrat';
 }
 
-QMessageBox.msgBoxbutton QPushButton{
+QMessageBox.msgBoxbutton QPushButton {
    font-size: 24px;
    min-width: 300px;
    min-height: 300px;

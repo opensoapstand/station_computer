@@ -34,7 +34,7 @@
     <rect>
      <x>750</x>
      <y>1470</y>
-     <width>231</width>
+     <width>221</width>
      <height>41</height>
     </rect>
    </property>
@@ -42,22 +42,16 @@
     <font>
      <family>Montserrat</family>
      <pointsize>-1</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
     </font>
    </property>
    <property name="styleSheet">
     <string notr="true">font-family: Montserrat;
-background-image: url(background.png);
 font-style: light;
-font-weight: bold;
-font-size: 36px;
-line-height: 44px;
-
+font-size: 24px;
 color: #58595B;</string>
    </property>
    <property name="text">
-    <string>order_total_amount</string>
+    <string>label_product_amount</string>
    </property>
    <property name="textFormat">
     <enum>Qt::RichText</enum>

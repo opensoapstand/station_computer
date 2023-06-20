@@ -117,19 +117,17 @@ page_sendFeedback->pushButton_send,SEND
 # page_qr_payment
 page_qr_payment->label_title->pay_by_phone,pay by phone
 page_qr_payment->label_scan->label_scan_1,Scan to Pay
-page_qr_payment->label_scan->finalize_transaction,
-finalize_transaction
+page_qr_payment->label_scan->finalize_transaction,\nfinalize_transaction
 page_qr_payment->label_steps,<style>        li:{margin-top:10px; margin-left: 5px;}        </style>        <ol>        <li><span class='tab'></span>Scan QR code with phone camera<br></li>        <li><span class='tab'></span>Click to open the link that appears<br></li>        <li><span class='tab'></span>Follow payment instructions on phone<br></li>        <li><span class='tab'></span>The station will proceed after payment<br></li>        <li><span class='tab'></span>Refill your soap!</li>        </ol>        <style>        li:{margin-top:10px;}        </style>        <ol>       
 page_qr_payment->label_processing,it can take a few moments for the station to<br>continue after your payment is confirmed
 page_qr_payment->label_title->almost_there,almost there
 page_qr_payment->pushButton_previous_page,<- back
-page_qr_payment->label_product_amount, $%1
+page_qr_payment->label_product_amount->fixed_size,$%1
+page_qr_payment->label_product_amount->custom_size,pre authorized $%1
 page_qr_payment->msgBox_cancel->default,<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>
 page_qr_payment->msgBox_refund->default,<p align=center><br><br>Are you sure you want to cancel this order?<br><br>The QR code won't be valid anymore if this order is cancelled.<br><br>In case a payment was made with an invalid QR code or cancelled order, a refund will be issued within 24-48 hours. <br></p>
 
-
 # page_error_wifi
-
 page_error_wifi->label_oops,oops..
 page_error_wifi->label_error_occured,AN ERROR HAS OCCURED
 page_error_wifi->label_check_back,Please check back soon

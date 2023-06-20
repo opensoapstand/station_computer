@@ -107,6 +107,20 @@ void page_qr_payment::showEvent(QShowEvent *event)
         originalPrice = p_page_idle->selectedProduct->getPriceCustom();
     }
     QString price = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(originalPrice), 'f', 2);
+    
+    if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
+    {
+        ui->label_product_information->setText(p_page_idle->selectedProduct->getProductName() + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
+        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_amount,  "custom_size");
+        ui->label_product_amount->setText(base_text.arg(price));
+    }
+    else
+    {
+        ui->label_product_information->setText(p_page_idle->selectedProduct->getProductName() + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
+        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_amount, "fixed_size");
+        ui->label_product_amount->setText(base_text.arg(price));
+    }
+
 
     ui->label_qrCode->show();
     ui->label_product_information->show();
@@ -114,9 +128,7 @@ void page_qr_payment::showEvent(QShowEvent *event)
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
 
-    ui->label_product_information->setText(p_page_idle->selectedProduct->getProductName() + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
-    QString base_text = p_page_idle->getTemplateTextByElementNameAndPage(ui->label_product_amount);
-    ui->label_product_amount->setText(base_text.arg(price));
+    
  
     ui->label_steps->show();
     ui->label_processing->hide();

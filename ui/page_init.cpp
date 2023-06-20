@@ -67,6 +67,7 @@ void page_init::showEvent(QShowEvent *event)
     start_controller = false;
 #endif
 
+
     if (start_controller)
     {
         system("DISPLAY=:0 xterm -hold  /release/fsm/controller &");

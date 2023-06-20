@@ -98,6 +98,8 @@ void page_tap_payment_serial::cancelPayment()
         pktResponded.clear();
     }
     com.flushSerial();
+    stopPayTimers();
+
 }
 
 
@@ -137,37 +139,29 @@ void page_tap_payment_serial::showEvent(QShowEvent *event)
 
     state_payment = s_serial_init;
     ui->pushButton_payment_bypass->setEnabled(false);
-   
-    QString payment_method = p_page_idle->selectedProduct->getPaymentMethod();
-    if (payment_method == "tapSerial")
-    {
 
-        qDebug() << "Prepare tap order";
+    qDebug() << "Prepare tap order";
+    paymentConnected = com.page_init();
+
+    while (!paymentConnected)
+    {
         paymentConnected = com.page_init();
-
-        while (!paymentConnected)
-        {
-            paymentConnected = com.page_init();
-        }
-        pktResponded = com.readForAck();
-        readPacket.packetReadFromUX(pktResponded);
-        pktResponded.clear();
-        response = false;
-        qDebug() << "Acknowledgement received";
-        if (readPacket.getAckOrNak() == communicationPacketField::ACK)
-        {
-            
-            timerEnabled = true;
-        }
-        readTimer->start(10);
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
-        ui->productLabel->hide();
-        ui->order_drink_amount->hide();
     }
-    else
+    pktResponded = com.readForAck();
+    readPacket.packetReadFromUX(pktResponded);
+    pktResponded.clear();
+    response = false;
+    qDebug() << "Acknowledgement received";
+    if (readPacket.getAckOrNak() == communicationPacketField::ACK)
     {
-        qDebug() << "Payment method not valid " << payment_method;
+        
+        timerEnabled = true;
     }
+    readTimer->start(10);
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
+    ui->productLabel->hide();
+    ui->order_drink_amount->hide();
+   
 }
 
 bool page_tap_payment_serial::setpaymentProcess(bool status)
@@ -239,14 +233,8 @@ void page_tap_payment_serial::idlePaymentTimeout()
 void page_tap_payment_serial::resetPaymentPage()
 {
 
-    stopPayTimers();
-    response = true;
-    readTimer->stop();
-    QString paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
-    if (paymentMethod == "tapSerial")
-    {
-        cancelPayment();
-    }
+    cancelPayment();
+
 }
 
 bool page_tap_payment_serial::tap_serial_initiate()
@@ -256,7 +244,7 @@ bool page_tap_payment_serial::tap_serial_initiate()
     {
         paymentConnected = com.page_init();
     }
-    sleep(35);
+    sleep(3);
     cout << "_----_-----__------_-----";
     /*logon packet to send*/
     cout << "Sending Logon packet..." << endl;

@@ -29,11 +29,11 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="order_total_amount">
+  <widget class="QLabel" name="label_product_amount">
    <property name="geometry">
     <rect>
-     <x>880</x>
-     <y>1640</y>
+     <x>750</x>
+     <y>1470</y>
      <width>231</width>
      <height>41</height>
     </rect>
@@ -66,81 +66,7 @@ color: #58595B;</string>
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="order_drink_amount">
-   <property name="geometry">
-    <rect>
-     <x>750</x>
-     <y>1470</y>
-     <width>221</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Montserrat</family>
-     <pointsize>-1</pointsize>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font-family: Montserrat;
-font-style: light;
-font-size: 24px;
-color: #58595B;</string>
-   </property>
-   <property name="text">
-    <string>order_drink_amount</string>
-   </property>
-   <property name="textFormat">
-    <enum>Qt::RichText</enum>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_payment_bypass">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>880</x>
-     <y>1730</y>
-     <width>201</width>
-     <height>191</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="payment_countdownLabel">
-   <property name="geometry">
-    <rect>
-     <x>293</x>
-     <y>1610</y>
-     <width>421</width>
-     <height>71</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>30</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>TAP NOW</string>
-   </property>
-   <property name="textFormat">
-    <enum>Qt::RichText</enum>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="productLabel">
+  <widget class="QLabel" name="label_product_information">
    <property name="geometry">
     <rect>
      <x>100</x>
@@ -159,7 +85,7 @@ color: #58595B;</string>
     <string>order summary</string>
    </property>
   </widget>
-  <widget class="QLabel" name="qrCode">
+  <widget class="QLabel" name="label_qrCode">
    <property name="geometry">
     <rect>
      <x>370</x>
@@ -178,7 +104,7 @@ color: #58595B;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="refreshLabel">
+  <widget class="QLabel" name="label_refresh_page">
    <property name="geometry">
     <rect>
      <x>150</x>
@@ -296,32 +222,15 @@ line-height: 29px;</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="animated_Label">
-   <property name="geometry">
-    <rect>
-     <x>221</x>
-     <y>327</y>
-     <width>639</width>
-     <height>639</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <zorder>pushButton_refresh</zorder>
   <zorder>pushButton_previous_page</zorder>
-  <zorder>order_total_amount</zorder>
-  <zorder>order_drink_amount</zorder>
-  <zorder>pushButton_payment_bypass</zorder>
-  <zorder>payment_countdownLabel</zorder>
-  <zorder>productLabel</zorder>
-  <zorder>qrCode</zorder>
-  <zorder>refreshLabel</zorder>
+  <zorder>label_product_amount</zorder>
+  <zorder>label_product_information</zorder>
+  <zorder>label_qrCode</zorder>
+  <zorder>label_refresh_page</zorder>
   <zorder>label_steps</zorder>
   <zorder>label_title</zorder>
   <zorder>label_scan</zorder>
-  <zorder>animated_Label</zorder>
   <zorder>label_processing</zorder>
  </widget>
  <resources/>

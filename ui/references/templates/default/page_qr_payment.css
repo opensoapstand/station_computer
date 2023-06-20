@@ -75,6 +75,19 @@ QPushButton {
    color: #003840;
 }
 
+#pushButton_previous_page{ 
+   background-color: transparent; 
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 32px;
+   line-height: 99px;
+   color: #003840;
+   text-align: left;
+   qproperty-alignment: AlignLeft;
+   border: none;
+}
+
 QMessageBox {
    min-width: 7000px;
    font-size: 24px;

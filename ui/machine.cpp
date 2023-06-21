@@ -25,10 +25,10 @@ QString machine::getTemplateFolder()
     if (template_name == "")
     {
         template_name = "default";
+    }else{
     }
     return TEMPLATES_ROOT_PATH + template_name + "/";
 }
-
 
 void machine::loadProductPropertiesFromProductsFile(QString soapstand_product_number, QString* name, QString* name_ui, QString* product_type, QString* description_ui, QString* features_ui, QString* ingredients_ui)
 {
@@ -311,7 +311,8 @@ void machine::loadParametersFromDb()
         m_status_text_slots);
    
 
-    qDebug() << "Machine ID as loaded from db: " << m_machine_id;
+    qDebug() << "Machine ID as loaded from db: " << getMachineId();
+    qDebug() << "Template found : " << getTemplateFolder();
 }
 
 int machine::getDispensersCount()

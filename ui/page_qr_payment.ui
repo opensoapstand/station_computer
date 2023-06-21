@@ -69,9 +69,9 @@ color: #58595B;</string>
   <widget class="QLabel" name="order_drink_amount">
    <property name="geometry">
     <rect>
-     <x>750</x>
+     <x>470</x>
      <y>1470</y>
-     <width>221</width>
+     <width>501</width>
      <height>81</height>
     </rect>
    </property>

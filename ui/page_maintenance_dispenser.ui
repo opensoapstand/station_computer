@@ -758,19 +758,6 @@
     <string>Flow rate (2s)</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_update_portal">
-   <property name="geometry">
-    <rect>
-     <x>340</x>
-     <y>200</y>
-     <width>200</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Update Changes to Portal</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_calibration_instructions">
    <property name="geometry">
     <rect>

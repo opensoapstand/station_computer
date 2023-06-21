@@ -92,7 +92,7 @@ private slots:
     void on_pushButton_auto_dispense_medium_clicked();
     void on_pushButton_auto_dispense_small_clicked();
 
-    void on_pushButton_update_portal_clicked();
+    void update_changes_to_portal();
     void buttonGroup_edit_product_Pressed(int buttonId);
     void buttonGroup_keypad_Pressed(int buttonId);
     

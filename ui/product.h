@@ -34,7 +34,7 @@ public:
 
     bool restock();
 
-    QString getVolumeRemainingCorrectUnits();
+    QString getVolumeRemainingCorrectUnits(bool addUnits);
     QString getTotalDispensedCorrectUnits();
     QString getVolumeDispensedSinceRestockCorrectUnits();
 

@@ -42,26 +42,72 @@ void DbManager::setPath(QString path)
 void DbManager::closeDb()
 {
     qDebug() << "Close db";
-    if (true)
-    // if (db.isOpen())
-    {
-        // QSqlQuery::clear();
-        // db.close();
-        // db = QSqlDatabase();
-        // QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
-        // QSqlDatabase::removeDatabase("qt_sql_ui_connection");
-        QSqlDatabase::database("qt_sql_ui_connection").close();
-        // QSqlDatabase::removeDatabase("qt_sql_ui_connection");
-    }
-    else
-    {
-        qDebug() << "Db was not open.";
-    }
+    // no problem, even if called hundred times after one other and the db was not open.
+    QSqlDatabase::database("qt_sql_ui_connection").close();
     if (QSqlDatabase::contains("qt_sql_ui_connection"))
     {
         QSqlDatabase::removeDatabase("qt_sql_ui_connection");
     }
-    // qDebug() << "Db close done.";
+
+
+    // // this works, but outputs a warning line all the time (even if I close the queries)
+    // // the warning:  connection 'qt_sql_ui_connection' is still in use, all queries will cease to work. (at the removeDatabase line)
+    // if (db.isOpen())
+    // {
+    //     // QSqlQuery::clear();
+    //     // db.close();
+    //     // db = QSqlDatabase();
+    //     // QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
+    //     // QSqlDatabase::removeDatabase("qt_sql_ui_connection");
+    //     QSqlDatabase::database("qt_sql_ui_connection").close();
+    //     // QSqlDatabase::removeDatabase("qt_sql_ui_connection");
+    // }
+    // else
+    // {
+    //     qDebug() << "Db was not open.";
+    // }
+    // if (QSqlDatabase::contains("qt_sql_ui_connection"))
+    // {
+    //     QSqlDatabase::removeDatabase("qt_sql_ui_connection");
+    // }
+    // // qDebug() << "Db close done.";
+
+    // QString connectionName = "qt_sql_ui_connection";
+    // if (QSqlDatabase::contains(connectionName))
+    // {
+    //     QSqlDatabase database = QSqlDatabase::database(connectionName);
+    //     if (database.isOpen())
+    //     {
+    //         QSqlQuery query(database);
+    //         while (query.next())
+    //         {
+    //             // Iterate through the result set to ensure all queries are processed
+    //         }
+
+    //         // Commit or rollback transactions
+    //         if (database.transaction())
+    //         {
+    //             database.commit();
+    //         }
+    //         else
+    //         {
+    //             database.rollback();
+    //         }
+
+    //         database.close();
+    //         // Optionally, remove the database connection
+    //         QSqlDatabase::removeDatabase(connectionName);
+    //         qDebug() << "Database connection closed.";
+    //     }
+    //     else
+    //     {
+    //         qDebug() << "Database connection is already closed.";
+    //     }
+    // }
+    // else
+    // {
+    //     qDebug() << "Database connection does not exist.";
+    // }
 }
 
 QSqlDatabase DbManager::openDb()
@@ -125,7 +171,8 @@ QSqlDatabase DbManager::openDb()
             q.exec("COMMIT"); // releases the lock immediately
             isLocked = false; // db is not locked
 
-            if (isLocked){
+            if (isLocked)
+            {
 
                 qDebug() << "PROGRAM HALTED: Database is locked. Wait until unlocked. It's probably opened, close the db and the program will continue.";
             }
@@ -334,6 +381,7 @@ void DbManager::getAllProductProperties(int slot,
                                         bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs)
 
 {
+    // qDebug() << "Open db";
     qDebug() << "Open db: load all product properties for slot: " << slot;
     {
         QSqlDatabase db = openDb();
@@ -346,6 +394,7 @@ void DbManager::getAllProductProperties(int slot,
 
         if (!success)
         {
+            qDebug() << "Open db: Attempted to load all product properties for slot: " << slot;
             qDebug() << "Did not execute sql. "
                      << qry.lastError() << " | " << qry.lastQuery();
             // success = false;
@@ -569,30 +618,30 @@ void DbManager::getAllMachineProperties(
     closeDb();
 }
 
-QString DbManager::getPaymentMethod(int slot)
-{
-    // used by Ash in tap. to do --> get tap init out of constructor.
-    qDebug() << "********* DEPRECATED *********** ";
-    qDebug() << "DB call: get payment method for slot";
-    QString payment_method;
-    {
-        QSqlDatabase db = openDb();
-        QSqlQuery qry(db);
+// QString DbManager::getPaymentMethod(int slot)
+// {
+//     // used by Ash in tap. to do --> get tap init out of constructor.
+//     qDebug() << "********* DEPRECATED *********** ";
+//     qDebug() << "DB call: get payment method for slot";
+//     QString payment_method;
+//     {
+//         QSqlDatabase db = openDb();
+//         QSqlQuery qry(db);
 
-        qry.prepare("SELECT payment FROM products WHERE slot=:slot");
-        qry.bindValue(":slot", slot);
-        bool success;
-        success = qry.exec();
+//         qry.prepare("SELECT payment FROM products WHERE slot=:slot");
+//         qry.bindValue(":slot", slot);
+//         bool success;
+//         success = qry.exec();
 
-        while (qry.next())
-        {
-            payment_method = qry.value(0).toString();
-        }
-        qry.finish();
-    }
-    closeDb();
-    return payment_method;
-}
+//         while (qry.next())
+//         {
+//             payment_method = qry.value(0).toString();
+//         }
+//         qry.finish();
+//     }
+//     closeDb();
+//     return payment_method;
+// }
 
 uint32_t DbManager::getNumberOfRows(QString table)
 {

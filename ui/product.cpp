@@ -399,10 +399,10 @@ void product::setVolumeRemaining(double volume_as_ml)
     m_db->updateTableProductsWithDouble(getSlot(), "volume_remaining", volume_as_ml, 0);
 }
 
-QString product::getVolumeRemainingCorrectUnits()
+QString product::getVolumeRemainingCorrectUnits(bool addUnits)
 {
     QString units = getUnitsForSlot();
-    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_remaining, units, false, true);
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_remaining, units, false, addUnits);
 
     return volume_as_string;
 }

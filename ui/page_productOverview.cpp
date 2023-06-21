@@ -9,10 +9,9 @@
 // payment page and page_idle page
 //
 // created: 05-04-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "page_productOverview.h"
@@ -55,11 +54,12 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_product_overview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_tap_payment *page_tap_payment, page_help *pageHelp, page_product *page_product)
+void page_product_overview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_tap_payment *page_tap_payment, page_tap_payment_serial *page_tap_payment_serial, page_help *pageHelp, page_product *page_product)
 {
     this->p_page_select_product = pageSelect;
     this->p_page_payment_qr = page_qr_payment;
     this->p_page_payment_tap = page_tap_payment;
+    this->p_page_payment_tap_serial = page_tap_payment_serial;
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
     this->p_page_help = pageHelp;
@@ -458,6 +458,10 @@ void page_product_overview::on_pushButton_continue_clicked()
     else if (paymentMethod == "tapTcp")
     {
         hideCurrentPageAndShowProvided(p_page_payment_tap);
+    }
+    else if(paymentMethod == "tapSerial"){
+        hideCurrentPageAndShowProvided(p_page_payment_tap_serial);
+
     }
     else if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
     {

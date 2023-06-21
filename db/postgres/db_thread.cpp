@@ -8,8 +8,7 @@
  // created: 07-09-2020
  // by: Li Yan Tong
  //
- // copyright 2022 by Drinkfill Beverages Ltd
- // all rights reserved
+ // copyright 2023 by Drinkfill Beverages Ltd // all rights reserved
  ********************************************************/
 
 #include "db_thread.h"

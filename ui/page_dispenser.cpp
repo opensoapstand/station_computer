@@ -11,8 +11,7 @@
 // created: 05-04-2022
 // by: Lode Ameije, Ash Singla & Daniel C.
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "page_dispenser.h"

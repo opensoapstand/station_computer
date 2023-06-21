@@ -8,10 +8,9 @@
 // Product Page1
 //
 // created: 05-04-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 #include <map>
 #include "page_idle.h"
@@ -66,7 +65,6 @@ void page_idle::setPage(page_select_product *p_page_select_product, page_mainten
     this->p_page_maintenance_general = pageMaintenanceGeneral;
     this->p_page_idle_products = p_page_idle_products;
     this->p_page_error_wifi = p_page_error_wifi;
-
 }
 
 // DTOR
@@ -231,9 +229,7 @@ void page_idle::registerUserInteraction(QWidget *page)
     QString page_name = page->objectName();
     qDebug() << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< User entered: " + page_name + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
 
-    
     g_database->addUserInteraction(page_name);
-   
 }
 
 double page_idle::getDiscountPercentage()
@@ -524,7 +520,7 @@ QString page_idle::getTemplateText(QString textName_to_find)
 
     // \n values in the csv file get automatically escaped. We need to deescape them.
     retval.replace("\\n", "\n");
-    
+
     return retval;
 }
 

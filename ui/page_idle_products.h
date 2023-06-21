@@ -8,10 +8,9 @@
 // Product Page1
 //
 // created: 01-05-2022
-// by: Lode Ameije & Ash Singla & Udbhav Kansal
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado & Udbhav Kansal
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef IDLE_PRODUCTS_H
@@ -58,6 +57,7 @@ public:
     void displayProducts();
     void addCompanyLogoToLabel(QLabel *label);
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
+    int setStepTimerFromFileName(QString fileName, int defaultTimeMillis);
 
     void printerStatusFeedback(bool isOnline, bool hasPaper);
 
@@ -99,7 +99,7 @@ private:
 
     page_help *p_page_help;
 
-    int _backgroundChangeTimeLeftSec;
+    int _backgroundChangeTimeLeftTenthsOfSec;
 
     int active_background_index;
 

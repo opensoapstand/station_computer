@@ -8,10 +8,9 @@
 // holds instructions for dispensing.
 //
 // created: 25-06-2020
-// by:Lode Ameije & Ash Singla
+// by:Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 #include "dispenser.h"
 #include <chrono>

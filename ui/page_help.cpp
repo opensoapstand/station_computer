@@ -8,8 +8,7 @@
 // updated: 08-11-2022
 // by: Ash Singla & Lode Ameije
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "page_help.h"

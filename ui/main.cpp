@@ -8,10 +8,9 @@
 // Product Page1
 //
 // created: 05-04-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "df_util.h"
@@ -24,6 +23,7 @@
 #include "page_product.h"
 #include "page_qr_payment.h"
 #include "page_tap_payment.h"
+#include "page_tap_payment_serial.h"
 #include "page_dispenser.h"
 #include "page_error_wifi.h"
 #include "page_productOverview.h"
@@ -113,6 +113,7 @@ int main(int argc, char *argv[])
     page_idle_products *p_page_idle_products = new page_idle_products();
     qDebug() << "Constructor page_transactions";
     page_transactions *p_page_transactions = new page_transactions();
+
     qDebug() << "Constructor page_select_product";
     page_select_product *p_page_select_product = new page_select_product();
     qDebug() << "Constructor page_product";
@@ -121,6 +122,8 @@ int main(int argc, char *argv[])
     page_qr_payment *p_page_payment_qr = new page_qr_payment();
     qDebug() << "Constructor page_tap_payment";
     page_tap_payment *p_page_payment_tap = new page_tap_payment();
+    qDebug() << "Constructor page_tap_payment_serial";
+    page_tap_payment_serial *p_page_payment_tap_serial = new page_tap_payment_serial();
     qDebug() << "Constructor page_dispenser";
     page_dispenser *p_page_dispense = new page_dispenser();
     qDebug() << "Constructor page_error_wifi";
@@ -144,6 +147,8 @@ int main(int argc, char *argv[])
     p_page_idle->g_database = &testdb;
 
     p_page_idle->loadDynamicContent();
+
+    
 
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
 
@@ -192,6 +197,7 @@ int main(int argc, char *argv[])
     p_page_transactions->setPage(p_page_idle);
     initPage->setPage(p_page_idle);
     p_page_maintenance_product->setPage(p_page_maintenance, p_page_idle, p_page_idle_products);
+    
     p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle, p_page_idle_products);
     p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product, p_page_maintenance_general, p_page_select_product, p_page_product);
     p_page_idle->setPage(p_page_select_product, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error);
@@ -200,8 +206,10 @@ int main(int argc, char *argv[])
     p_page_product->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_help, p_page_product_overview);
     p_page_payment_qr->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
     p_page_payment_tap->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
+    p_page_payment_tap_serial->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
+
     p_page_dispense->setPage(p_page_payment_qr, p_page_payment_tap, p_page_end, p_page_idle, p_page_sendFeedback);
-    p_page_product_overview->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap, p_page_help, p_page_product);
+    p_page_product_overview->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap, p_page_payment_tap_serial,p_page_help, p_page_product);
     p_page_sendFeedback->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_help, p_page_product, p_page_end);
     p_page_end->setPage(p_page_dispense, p_page_idle, p_page_payment_qr, p_page_sendFeedback);
     p_page_wifi_error->setPage(p_page_payment_qr, p_page_end, p_page_idle);

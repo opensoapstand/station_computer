@@ -8,10 +8,9 @@
 // Product Page1
 //
 // created: 01-05-2023
-// by: Lode Ameije & Ash Singla & Udbhav Kansal & Daniel C.
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado & Udbhav Kansal & Daniel C.
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "page_idle_products.h"
@@ -38,8 +37,7 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     ui->setupUi(this);
 
     backgroundChangeTimer = new QTimer(this);
-    backgroundChangeTimer->setInterval(1000);
-    // backgroundChangeTimer->start(1000);
+    backgroundChangeTimer->setInterval(100); // interval 10th's of seconds.
 
     connect(backgroundChangeTimer, SIGNAL(timeout()), this, SLOT(onBackgroundChangeTimerTimeout()));
     connect(backgroundChangeTimer, SIGNAL(timeout()), this, SLOT(onBackgroundChangeTimerTick()));
@@ -97,7 +95,7 @@ void page_idle_products::showEvent(QShowEvent *event)
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
-    _backgroundChangeTimeLeftSec = PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS;
+    _backgroundChangeTimeLeftTenthsOfSec = PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS;
     backgroundChangeTimer->start();
     active_background_index = 0;
 
@@ -246,8 +244,9 @@ void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     backgroundChangeTimer->stop();
 }
 
-void page_idle_products::showAllLabelsAndButtons(){
- ui->label_pick_soap->show();
+void page_idle_products::showAllLabelsAndButtons()
+{
+    ui->label_pick_soap->show();
     ui->logo_label->show();
     ui->printer_status_label->show();
     ui->pushButton_to_select_product_page->show();
@@ -307,44 +306,123 @@ void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
     ui->printer_status_label->setStyleSheet(styleSheet);
 }
 
-void page_idle_products::changeBackground()
+int page_idle_products::setStepTimerFromFileName(QString fileName, int defaultTimeMillis)
 {
+    // there should be only one file withheld. But, if more than one, we'll take the first element.
+    QString background_name = fileName;
+    QStringList name_split = background_name.split("_");
+    QString lastPart = name_split[name_split.size() - 1];
+    QStringList parts = lastPart.split(".");
+    QString timePart = parts[0];
 
-    if (active_background_index == 0)
+    QString timeIdentifier = "ms";
+    if (timePart.contains(timeIdentifier))
     {
-
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
-        return;
-    }
-    QString fileName = "background%1.png";
-    QString background_name = fileName.arg(active_background_index); // "background" + active_background_index + ".png"
-    QString background_path = p_page_idle->thisMachine.getTemplatePathFromName(background_name);
-
-    if (df_util::pathExists(background_path))
-    {
-        hideAllLabelAndButtons();
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, background_name);
-        _backgroundChangeTimeLeftSec = PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS;
+        int time_millis = timePart.replace(timeIdentifier, "").toInt();
+        _backgroundChangeTimeLeftTenthsOfSec = time_millis / 100;
+        qDebug() << "The string contains the sequence.";
     }
     else
     {
-        _backgroundChangeTimeLeftSec = PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS;
+        qDebug() << "The string does not contain the sequence.";
+        _backgroundChangeTimeLeftTenthsOfSec = defaultTimeMillis / 100; // PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS;
+    }
+}
+
+void page_idle_products::changeBackground()
+{
+    // QString base_path = "/home/df-admin/production/references/templates/default/";
+    QStringList all_files_in_template_folder = df_util::getFileList(p_page_idle->thisMachine.getTemplateFolder());
+
+    QString template_name = "background_idle_products_%1";
+    QString filterPattern = template_name.arg(active_background_index);
+    QStringList filteredList = all_files_in_template_folder.filter(filterPattern, Qt::CaseSensitive);
+
+    if (filteredList.count() == 0)
+    {
+        qDebug() << "active_background_index set to 0. was: " << active_background_index;
+        // automatically revert to first image if non found.
         active_background_index = 0;
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
-        showAllLabelsAndButtons();
+        filterPattern = template_name.arg(active_background_index);
+        filteredList = all_files_in_template_folder.filter(filterPattern, Qt::CaseSensitive);
     }
 
+    if (filteredList.count() == 0)
+    {
+        // qDebug() << "background  " << filterPattern << "not found, will default.";
+        // default fall back
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
+        showAllLabelsAndButtons();
+        _backgroundChangeTimeLeftTenthsOfSec = PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS * 10; // PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS;
+    }
+    else if (filteredList.count() >= 1)
+    {
+        qDebug() << "background  " << filterPattern << "found.";
+        QString background_name = filteredList[0];
+        if (active_background_index == 0)
+        {
+            qDebug() << "Main page (index 0 )";
+
+            setStepTimerFromFileName(background_name, PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS * 10);
+            showAllLabelsAndButtons();
+        }
+        else
+        {
+            qDebug() << "normal page. index: " << active_background_index;
+
+            setStepTimerFromFileName(background_name, PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS * 10);
+            hideAllLabelAndButtons();
+        }
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, background_name);
+    }
+    else
+    {
+        qDebug() << "ASSERT ERROR.aeijies" << filteredList.count();
+    }
+<<<<<<< HEAD
+
+=======
+>>>>>>> 577ae263a4da9ff2991ba501f76d6b8e4a3537e2
 }
+
+// void page_idle_products::changeBackground()
+// {
+
+//     if (active_background_index == 0)
+//     {
+
+//         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
+//         return;
+//     }
+//     QString fileName = "background%1.png";
+//     QString background_name = fileName.arg(active_background_index); // "background" + active_background_index + ".png"
+//     QString background_path = p_page_idle->thisMachine.getTemplatePathFromName(background_name);
+
+//     if (df_util::pathExists(background_path))
+//     {
+//         hideAllLabelAndButtons();
+//         p_page_idle->setBackgroundPictureFromTemplateToPage(this, background_name);
+//         _backgroundChangeTimeLeftTenthsOfSec = PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS;
+//     }
+//     else
+//     {
+//         _backgroundChangeTimeLeftTenthsOfSec = PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS;
+//         active_background_index = 0;
+//         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
+//         showAllLabelsAndButtons();
+//     }
+//
+// }
 
 void page_idle_products::onBackgroundChangeTimerTick()
 {
-    if (--_backgroundChangeTimeLeftSec >= 0)
+    if (--_backgroundChangeTimeLeftTenthsOfSec >= 0)
     {
-        qDebug() << "one sec";
+        // qDebug() << "one sec";
     }
     else
     {
-        qDebug() << "timer elapsed";
+        // qDebug() << "timer elapsed";
         active_background_index++;
         changeBackground();
     }

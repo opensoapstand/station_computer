@@ -3,8 +3,14 @@
 }
 
 #label_product_name {
+   text-align: center;
+}
 #label_product_picture {
    border: 1px solid black;
+}
+
+#pushButton_restock {
+   font-size: 32px;
 }
 
 #pushButton_to_previous_page {
@@ -20,9 +26,14 @@
    border: none;
 }
 
+.pushButton_set_status_unavailable {
+   background-color: #abe0a0;
+   font-size: 32px;
+}
+
 .pushButton_set_status_available {
    background-color: #E0A0A0;
-   font-size: 36px;
+   font-size: 32px;
 }
 
 .pump_disable {
@@ -33,10 +44,6 @@
 .pump_enable {
    background-color: #AAAAAA;
    font-size: 20px;
-}
-
-#refillButton {
-   font-size: 36px;
 }
 
 QMessageBox {

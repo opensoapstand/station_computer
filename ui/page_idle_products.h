@@ -84,7 +84,6 @@ private:
     void changeBackground();
 
     void resizeEvent(QResizeEvent *event);
-    void checkReceiptPrinterStatus();
 
     Ui::page_idle_products *ui;
     page_product *p_page_product;
@@ -105,7 +104,6 @@ private:
 
     int maintenanceCounter;
     QTimer *backgroundChangeTimer;
-    QStringList backgroundPaths; // Declare the backgroundPaths list as a member variable
 };
 
 #endif // page_idle_products_H

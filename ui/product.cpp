@@ -7,7 +7,6 @@
 // Ctor
 product::product()
 {
-    // overruledPrice = INVALID_PRICE;
     m_discount_percentage_fraction = 0.0;
     m_promoCode = "";
 }
@@ -15,7 +14,6 @@ product::product()
 // Ctor Object Copy
 product::product(const product &other) : QObject(nullptr)
 {
-    // slot = getSlot();
 }
 
 // Dtor
@@ -35,9 +33,8 @@ void product::setMachine(machine *machine)
 
 void product::loadProductProperties()
 {
+    qDebug() << "Load product properties from db and csv";
     loadProductPropertiesFromDb();
-    qDebug() << "done loading from db";
-
     thisMachine->loadProductPropertiesFromProductsFile(getProductDrinkfillSerial(),
                                                        &m_name,
                                                        &m_name_ui,
@@ -45,15 +42,11 @@ void product::loadProductProperties()
                                                        &m_description_ui,
                                                        &m_features_ui,
                                                        &m_ingredients_ui);
-
-    qDebug() << "done loading from csv";
 }
 
 void product::loadProductPropertiesFromDb()
 {
     qDebug() << "Open db: db load product properties";
-
-    // db.getProductProperties(getSlot(), &m_aws_product_id, m_sizeIndexIsEnabled);
     m_db->getAllProductProperties(getSlot(), &m_aws_product_id,
                                   &m_soapstand_product_serial,
                                   &m_size_unit,
@@ -74,9 +67,6 @@ void product::loadProductPropertiesFromDb()
                                   &m_is_enabled_custom_discount,
                                   &m_size_custom_discount,
                                   &m_price_custom_discount, m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
-
-    // m_slot_enabled = db.getSlotEnabled(getSlot());
-    // m_empty_container_detection_enabled = db.getEmptyContainerDetectionEnabled();
 }
 
 char product::getSizeAsChar()
@@ -119,18 +109,11 @@ bool product::getSlotEnabled()
 
 void product::setStatusText(QString status)
 {
-
     thisMachine->setStatusText(getSlot(), getSlotEnabled(), status);
-
-    //    SLOT_STATE_AVAILABLE
-
-    // bool success = db.updateSlotAvailability(getSlot(), getSlotEnabled(), status);
-    // db.updateTableProductsWithText(getSlot(),"")
 }
 
 QString product::getStatusText()
 {
-    // return m_slot_enabled;
     return thisMachine->getStatusText(getSlot());
 }
 
@@ -148,7 +131,6 @@ int product::getSlot()
 
 void product::setSlot(int slot)
 {
-
     if (slot >= OPTION_SLOT_INVALID && slot <= SLOT_COUNT)
     {
 
@@ -223,14 +205,12 @@ void product::setDiscountPercentageFraction(double percentageFraction)
 
 void product::setPromoCode(QString promoCode)
 {
-    // ratio = percentage / 100;
     qDebug() << "Set Promo Code: " << promoCode;
     m_promoCode = promoCode;
 }
 
 void product::setPrice(int size, double price)
 {
-    // db.updatePrice(getSlot(), size, price);
     QString price_columns[5] = {"size_error", "price_small", "price_medium", "price_large", "price_custom"};
     QString column_name = price_columns[size];
 
@@ -241,7 +221,6 @@ void product::setPrice(int size, double price)
 
 double product::getPrice(int sizeIndex)
 {
-    // always from database
     return m_sizeIndexPrices[sizeIndex];
 }
 
@@ -252,7 +231,6 @@ double product::getPrice()
 
 double product::getPriceCorrected()
 {
-    // slot and size needs to be set.
     double price;
     if (is_valid_size_selected())
     {
@@ -269,7 +247,6 @@ double product::getPriceCorrected()
 
 double product::getPriceCustom()
 {
-    // slot and size needs to be set.
     double price;
     if (is_valid_size_selected())
     {
@@ -277,7 +254,6 @@ double product::getPriceCustom()
     }
     else
     {
-
         qInfo() << "ERROR: no product set";
         price = 66.6;
     }
@@ -301,14 +277,11 @@ void product::setVolumeDispensedMl(double volumeMl)
     this->DispensedVolumeMl = volumeMl;
 }
 
-// bool product::restockProduct(){
-
-// }
-
 double product::getRestockVolume()
 {
     return m_volume_full;
 }
+
 double product::getVolumeBySize(int size)
 {
 
@@ -346,10 +319,6 @@ QString product::getVolumePerTickAsStringForSlot()
 
 double product::getVolumePerTickForSlot()
 {
-    // qInfo() << "Open db: get vol per tick";
-
-    // double ml_per_tick = db.getProductVolumePerTick(getSlot());
-
     return m_volume_per_tick;
 }
 
@@ -357,8 +326,6 @@ void product::setVolumePerTickForSlot(QString volumePerTickInput)
 {
     double ml_per_tick = inputTextToMlConvertUnits(volumePerTickInput);
     qInfo() << "Open db: set vol per tick";
-
-    // db.updateVolumePerTick(getSlot(), ml_per_tick);
     m_db->updateTableProductsWithDouble(getSlot(), "volume_per_tick", ml_per_tick, 2);
 }
 
@@ -369,7 +336,6 @@ void product::setSizeToVolumeForSlot(QString volumeInput, int size)
     QString column_name = volume_columns[size];
 
     qInfo() << "Open db: size to volume";
-
     m_db->updateTableProductsWithDouble(getSlot(), column_name, volume, 2);
 }
 
@@ -393,9 +359,7 @@ bool product::restock()
 
 void product::setVolumeRemaining(double volume_as_ml)
 {
-    // qDebug() << "Open db: set volume remaining";
-
-    // db.setVolumeRemaining(getSlot(), volume_as_ml);
+    qDebug() << "Open db: set volume remaining";
     m_db->updateTableProductsWithDouble(getSlot(), "volume_remaining", volume_as_ml, 0);
 }
 
@@ -455,7 +419,6 @@ bool product::isProductVolumeInContainer()
 {
 
     bool retval = true;
-    // if (!m_empty_container_detection_enabled)
 
     if (!thisMachine->getEmptyContainerDetectionEnabled())
     {
@@ -466,8 +429,6 @@ bool product::isProductVolumeInContainer()
 
 void product::getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter)
 {
-    qDebug() << "Open db: get bulk volume discount details ";
-
     *large_volume_discount_is_enabled = m_is_enabled_custom_discount;
     *min_volume_for_discount = m_size_custom_discount;
     *discount_price_per_liter = m_price_custom_discount;
@@ -512,6 +473,7 @@ void product::setPlu(int sizeIndex, QString plu)
     QString plu_columns[5] = {"Invalid size", "plu_small", "plu_medium", "plu_large", "plu_custom"};
     QString column_name = plu_columns[sizeIndex];
 
+    qDebug() << "Open db: Set plu";
     bool success = m_db->updateTableProductsWithText(getSlot(), column_name, plu);
 }
 
@@ -531,7 +493,6 @@ void product::setFullVolumeCorrectUnits(QString inputFullValue)
 {
     qDebug() << "Open db: for write full vol";
     double full_volume = inputTextToMlConvertUnits(inputFullValue);
-
     m_db->updateTableProductsWithDouble(getSlot(), "volume_full", full_volume, 0);
 }
 
@@ -543,7 +504,6 @@ QString product::getSizeToVolumeWithCorrectUnits(bool round, bool addUnits)
 void product::setPaymentMethod(QString paymentMethod)
 {
     qDebug() << "Open db: set payment method";
-
     m_db->updateTableProductsWithText(getSlot(), "payment", paymentMethod);
 }
 
@@ -562,7 +522,5 @@ void product::setDispenseSpeedPercentage(int percentage)
     int pwm = (int)round((percentage * 255) / 100);
 
     qInfo() << "Open db: pwm speed set";
-
-    // db.updatePWM(getSlot(), pwm);
     m_db->updateTableProductsWithInt(getSlot(), "dispense_speed", pwm);
 }

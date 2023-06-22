@@ -39,7 +39,7 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     backgroundChangeTimer = new QTimer(this);
     backgroundChangeTimer->setInterval(100); // interval 10th's of seconds.
 
-    connect(backgroundChangeTimer, SIGNAL(timeout()), this, SLOT(onBackgroundChangeTimerTimeout()));
+    // connect(backgroundChangeTimer, SIGNAL(timeout()), this, SLOT(onBackgroundChangeTimerTimeout()));
     connect(backgroundChangeTimer, SIGNAL(timeout()), this, SLOT(onBackgroundChangeTimerTick()));
 
     backgroundPaths << "background1.png"
@@ -334,7 +334,7 @@ void page_idle_products::changeBackground()
     // QString base_path = "/home/df-admin/production/references/templates/default/";
     QStringList all_files_in_template_folder = df_util::getFileList(p_page_idle->thisMachine.getTemplateFolder());
 
-    QString template_name = "background_idle_products_%1";
+    QString template_name = "background_idle_products_%1_1000ms.png";
     QString filterPattern = template_name.arg(active_background_index);
     QStringList filteredList = all_files_in_template_folder.filter(filterPattern, Qt::CaseSensitive);
 
@@ -379,10 +379,6 @@ void page_idle_products::changeBackground()
     {
         qDebug() << "ASSERT ERROR.aeijies" << filteredList.count();
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> 577ae263a4da9ff2991ba501f76d6b8e4a3537e2
 }
 
 // void page_idle_products::changeBackground()

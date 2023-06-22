@@ -72,7 +72,7 @@ private slots:
     // **** Navigation ****
 
     void on_pushButton_to_select_product_page_clicked();
-    void onBackgroundChangeTimerTimeout();
+    // void onBackgroundChangeTimerTimeout();
     void onBackgroundChangeTimerTick();
          
 

@@ -17,7 +17,7 @@
 #include "stateVirtual.h"
 #include "../fsm.h"
 #include "../objects/product.h"
-#include "../objects/machine.h"
+// #include "../objects/machine.h"
 
 
 #include "../../library/printer/Adafruit_Thermal.h"

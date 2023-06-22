@@ -144,8 +144,10 @@ DF_ERROR stateInit::dispenserSetup()
     }
     else if (g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS  )
     {
-        debugOutput::sendMessage(" Enable 24V", MSG_INFO);
-        g_machine.pcb24VPowerSwitch(true);
+        // debugOutput::sendMessage(" Enable 24V", MSG_INFO);
+        // g_machine.pcb24VPowerSwitch(true);
+        g_machine.pcb24VPowerSwitch(false);
+        
 
 
     }else{

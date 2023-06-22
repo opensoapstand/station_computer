@@ -55,6 +55,8 @@ DF_ERROR stateDispenseInit::onEntry()
     {
         debugOutput::sendMessage("Did not reload parameters from database", MSG_INFO);
     }
+
+    g_machine.pcb24VPowerSwitch(true);
     
     return e_ret;
 }

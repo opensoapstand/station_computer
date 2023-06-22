@@ -53,6 +53,12 @@ DF_ERROR stateManualPrinter::onEntry()
    b_isContinuouslyChecking = false;
    productDispensers = g_productDispensers;
 
+   if (!g_machine.getPcb24VPowerSwitchStatus())
+   {
+      g_machine.pcb24VPowerSwitch(true); // printers take their power from the 24V converted to 5V (because of the high current)
+      usleep(1200000);                   // wait for printer to come online.
+   }
+
    return e_ret;
 }
 
@@ -292,9 +298,9 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
       printerr->resetPollCount();
 
       debugOutput::sendMessage("Pollcount LIMIT REACHED. Will restart Printer ", MSG_INFO);
-      g_machine.pcb24VPowerSwitch(false);
+      // g_machine.pcb24VPowerSwitch(false);
       usleep(1200000);
-      g_machine.pcb24VPowerSwitch(true);
+      // g_machine.pcb24VPowerSwitch(true);
    }
 
    m_pMessaging->sendMessageOverIP(statusString); // if commented out: Let's communicate by setting the db fields only
@@ -373,18 +379,16 @@ DF_ERROR stateManualPrinter::onExit()
    // stop continuous checking setting
    b_isContinuouslyChecking = false;
 
-   // printerr->connectToPrinter();
-   // printTest();
-   // printerr->testPage();
-   // usleep(500000);
    printerr->disconnectPrinter();
+   g_machine.pcb24VPowerSwitch(false);
+
    DF_ERROR e_ret = OK;
    return e_ret;
 }
 
 DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp)
 {
-    std::string name_receipt = productDispensers[slot - 1].getProduct()->getProductName();
+   std::string name_receipt = productDispensers[slot - 1].getProduct()->getProductName();
    //  std::string plu = productDispensers[slot-1].getProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
 
    char size = productDispensers[slot - 1].getProduct()->getSizeCharFromTargetVolume(volume_requested);

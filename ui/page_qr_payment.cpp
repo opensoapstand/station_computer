@@ -68,13 +68,11 @@ void page_qr_payment::proceed_to_dispense()
     hideCurrentPageAndShowProvided(p_page_dispense);
 }
 
-
 size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
 {
     ((std::string *)userp)->append((char *)contents, size * nmemb);
     return size * nmemb;
 }
-
 
 void page_qr_payment::showEvent(QShowEvent *event)
 {
@@ -87,7 +85,7 @@ void page_qr_payment::showEvent(QShowEvent *event)
     p_page_idle->setTemplateTextToObject(ui->label_steps);
     p_page_idle->setTemplateTextToObject(ui->label_processing);
     p_page_idle->setTemplateTextToObject(ui->pushButton_previous_page);
-    
+
     QString styleSheet = p_page_idle->getCSS(PAGE_QR_PAYMENT_CSS);
 
     ui->pushButton_refresh->setProperty("class", "invisible_button");
@@ -107,20 +105,21 @@ void page_qr_payment::showEvent(QShowEvent *event)
         originalPrice = p_page_idle->selectedProduct->getPriceCustom();
     }
     QString price = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(originalPrice), 'f', 2);
-    
+
     if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
     {
-        ui->label_product_information->setText(p_page_idle->selectedProduct->getProductName() + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
-        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_amount,  "custom_size");
-        ui->label_product_amount->setText(base_text.arg(price));
+        ui->label_product_information->setText(p_page_idle->selectedProduct->getProductName() + " " + "max" + " "  + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
+        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_amount, "custom_size");
+        QString label_product_amount_text = "max " + base_text.arg(price);
+        ui->label_product_amount->setText(label_product_amount_text);
     }
     else
     {
-        ui->label_product_information->setText(p_page_idle->selectedProduct->getProductName() + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
+        ui->label_product_information->setText(p_page_idle->selectedProduct->getProductName() + " " + "max" + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
         QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_amount, "fixed_size");
-        ui->label_product_amount->setText(base_text.arg(price));
+        QString label_product_amount_text = "max " + base_text.arg(price);
+        ui->label_product_amount->setText(label_product_amount_text);
     }
-
 
     ui->label_qrCode->show();
     ui->label_product_information->show();
@@ -128,8 +127,6 @@ void page_qr_payment::showEvent(QShowEvent *event)
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
 
-    
- 
     ui->label_steps->show();
     ui->label_processing->hide();
 
@@ -137,7 +134,7 @@ void page_qr_payment::showEvent(QShowEvent *event)
     _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
 
     ui->label_refresh_page->hide();
-    ui->pushButton_refresh->raise(); // make sure refresh button is on top. 
+    ui->pushButton_refresh->raise(); // make sure refresh button is on top.
     ui->pushButton_previous_page->raise();
 
     setupQrOrder();
@@ -323,7 +320,6 @@ void page_qr_payment::isQrProcessedCheckOnline()
             ui->label_processing->show();
             p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_scan, "finalize_transaction");
             p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "almost_there");
-
         }
         else
         {
@@ -363,7 +359,7 @@ void page_qr_payment::onTimeoutTick()
     }
     else
     {
-        qDebug() << "Timer Done!" << _pageTimeoutCounterSecondsLeft ;
+        qDebug() << "Timer Done!" << _pageTimeoutCounterSecondsLeft;
         transactionLogging += "\n 5: Timeout - True";
 
         idlePaymentTimeout();
@@ -373,7 +369,6 @@ void page_qr_payment::onTimeoutTick()
         ui->label_refresh_page->show();
     }
 }
-
 
 bool page_qr_payment::exitConfirm()
 {
@@ -385,7 +380,6 @@ bool page_qr_payment::exitConfirm()
     {
         QString searchString = this->objectName() + "->msgBox_cancel->default";
         p_page_idle->setTextToObject(&msgBox, p_page_idle->getTemplateText(searchString));
-        
     }
     else if (state_payment == s_init)
     {
@@ -424,7 +418,7 @@ void page_qr_payment::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 // Navigation: Back to Product Size Selection
 void page_qr_payment::on_pushButton_previous_page_clicked()
 {
-    qDebug() << "In previous page button" ;
+    qDebug() << "In previous page button";
     if (exitConfirm())
     {
         hideCurrentPageAndShowProvided(p_page_product);
@@ -436,7 +430,8 @@ void page_qr_payment::idlePaymentTimeout()
     hideCurrentPageAndShowProvided(p_page_idle);
 }
 
-void page_qr_payment::resetPaymentPage(){
+void page_qr_payment::resetPaymentPage()
+{
     transactionLogging = "";
     paymentEndTimer->stop();
     qrPeriodicalCheckTimer->stop();
@@ -488,7 +483,6 @@ void page_qr_payment::printQr(const QrCode &qr)
     }
     std::cout << std::endl;
 }
-
 
 void page_qr_payment::paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg)
 {

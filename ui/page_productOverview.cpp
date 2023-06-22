@@ -88,7 +88,7 @@ void page_product_overview::showEvent(QShowEvent *event)
 {
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-    
+
     QString styleSheet = p_page_idle->getCSS(PAGE_PRODUCT_OVERVIEW_CSS);
     ui->pushButton_promo_input->setStyleSheet(styleSheet);
     ui->lineEdit_promo_code->setProperty("class", "promoCode");
@@ -169,6 +169,8 @@ void page_product_overview::reset_and_show_page_elements()
     if (p_page_idle->thisMachine.getCouponsEnabled())
     {
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code, "coupons_enable");
+        QString promoCodeText = ui->lineEdit_promo_code->text();
+        qDebug() << "Promo code text: " << promoCodeText;
 
         ui->lineEdit_promo_code->show();
         if (p_page_idle->isPromoApplied())
@@ -206,7 +208,6 @@ void page_product_overview::reset_and_show_page_elements()
     // loadProdSpecs();
     selectIdleTimer->start(1000);
     _selectIdleTimeoutSec = 400;
-    
 }
 
 void page_product_overview::hideCurrentPageAndShowProvided(QWidget *pageToShow)
@@ -232,7 +233,7 @@ void page_product_overview::updatePriceLabel()
 
     if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
     {
-        QString base = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier( ui->label_selected_volume, "custom_volume");
+        QString base = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_selected_volume, "custom_volume");
         ui->label_selected_volume->setText(base.arg(selected_volume));
 
         double selectedPrice = p_page_idle->selectedProduct->getPrice();
@@ -273,7 +274,7 @@ void page_product_overview::updatePriceLabel()
         ui->label_invoice_price_total->setText("$" + QString::number(selectedPriceCorrected, 'f', 2) + "/" + units);
     }
     else
-    { 
+    {
         // The label_invoice_price total displays the discounted total even when the user goes back to the select_product page. It's intended behaviour so user doesnt have to retype the promo-code
         double selectedPrice = p_page_idle->selectedProduct->getPrice();
         double selectedPriceCorrected = p_page_idle->getPriceCorrectedAfterDiscount(selectedPrice);
@@ -459,9 +460,9 @@ void page_product_overview::on_pushButton_continue_clicked()
     {
         hideCurrentPageAndShowProvided(p_page_payment_tap);
     }
-    else if(paymentMethod == "tapSerial"){
+    else if (paymentMethod == "tapSerial")
+    {
         hideCurrentPageAndShowProvided(p_page_payment_tap_serial);
-
     }
     else if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
     {

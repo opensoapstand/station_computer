@@ -267,7 +267,6 @@ double page_idle::getPriceCorrectedAfterDiscount(double price)
 
 void page_idle::checkReceiptPrinterStatus()
 {
-
     if (thisMachine.hasReceiptPrinter())
     {
         qDebug() << "Check receipt printer functionality.";
@@ -320,7 +319,6 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
         ui->label_printer_status->hide();
     }
     ui->pushButton_to_select_product_page->show();
-    // ui->pushButton_to_select_product_page->show();
 }
 
 void page_idle::on_pushButton_to_select_product_page_clicked()
@@ -369,11 +367,6 @@ void page_idle::addPictureToLabel(QLabel *label, QString picturePath)
         qDebug() << "Can't add picture to label: " << label->objectName() << " " << picturePath;
     }
 }
-
-// QString page_idle::getTemplateFolder()
-// {
-//     return m_templatePath;
-// }
 
 void page_idle::addCssClassToObject(QWidget *element, QString classname, QString css_file_name)
 {

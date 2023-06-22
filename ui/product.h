@@ -56,12 +56,9 @@ public:
     QString getProductType();
     QString getProductDrinkfillSerial();
 
-
-
     void loadProductProperties();
     void loadProductPropertiesFromDb();
     bool isProductVolumeInContainer();
-    // QString getLoadedProductName();
     QString getProductDescription();
     QString getProductIngredients();
     QString getProductFeatures();
@@ -71,7 +68,6 @@ public:
 
     void setBiggestEnabledSizeIndex();
 
-    // QString getProductPicturePath(int slot);
     QString getProductPicturePath();
 
     double getVolumeOfSelectedSize();
@@ -127,41 +123,6 @@ private:
     QString m_productId;
     QString m_soapstand_product_serial;
     QString m_payment;
-
-    // QString currency;
-    // QString name_receipt;
-    // int concentrate_multiplier;
-    // int dispense_speed;
-    // double threshold_flow;
-    // int retraction_time;
-    // double calibration_const;
-    // double volume_per_tick;
-    // QString last_restock;
-    // double volume_full;
-    // double volume_remaining;
-    // double volume_dispensed_since_restock;
-    // double volume_dispensed_toal;
-
-    // int is_enabled_small;
-    // int is_enabled_medium;
-    // int is_enabled_large;
-    // int is_enabled_custom;
-    // double size_small;
-    // double size_medium;
-    // double size_large;
-    // double size_custom_min;
-    // double size_custom_max;
-    // double price_small;
-    // double price_medium;
-    // double price_large;
-    // double price_custom;
-    // QString plu_small;
-    // QString plu_large;
-    // QString plu_medium;
-    // QString plu_custom;
-    // int is_enabled_custom_discount;
-    // double size_custom_discount;
-    // double price_custom_discount;
 
     QString m_ingredients_ui;
     QString m_product_type;

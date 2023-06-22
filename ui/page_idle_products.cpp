@@ -42,10 +42,6 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     // connect(backgroundChangeTimer, SIGNAL(timeout()), this, SLOT(onBackgroundChangeTimerTimeout()));
     connect(backgroundChangeTimer, SIGNAL(timeout()), this, SLOT(onBackgroundChangeTimerTick()));
 
-    backgroundPaths << "background1.png"
-                    << "background2.png"
-                    << "background3.png";
-
     labels_product_picture[0] = ui->label_product_1_photo;
     labels_product_picture[1] = ui->label_product_2_photo;
     labels_product_picture[2] = ui->label_product_3_photo;
@@ -116,7 +112,6 @@ void page_idle_products::showEvent(QShowEvent *event)
         labels_product_type[slot_index]->setStyleSheet(styleSheet);
     }
 
-    qDebug() << "open db: payment method";
     bool needsReceiptPrinter = false;
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
@@ -219,20 +214,6 @@ void page_idle_products::select_product(int slot)
 {
     qDebug() << "selected slot: " << slot;
     hideCurrentPageAndShowProvided(p_page_product);
-}
-
-void page_idle_products::checkReceiptPrinterStatus()
-{
-    if (p_page_idle->thisMachine.hasReceiptPrinter())
-    {
-        qDebug() << "Check receipt printer functionality.";
-        this->p_page_maintenance_general->send_check_printer_status_command();
-        ui->pushButton_to_select_product_page->hide(); // when printer needs to be restarted, it can take some time. Make sure nobody presses the button in that interval (to prevent crashes)
-    }
-    else
-    {
-        qDebug() << "Receipt printer not enabled in db->machine table";
-    }
 }
 
 void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
@@ -349,8 +330,6 @@ void page_idle_products::changeBackground()
 
     if (filteredList.count() == 0)
     {
-        // qDebug() << "background  " << filterPattern << "not found, will default.";
-        // default fall back
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
         showAllLabelsAndButtons();
         _backgroundChangeTimeLeftTenthsOfSec = PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS * 10; // PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS;

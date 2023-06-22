@@ -88,6 +88,7 @@ void page_tap_payment_serial::on_pushButton_payment_bypass_clicked()
 /*Cancel any previous payment*/
 void page_tap_payment_serial::cancelPayment()
 {
+    stopPayTimers();
 
     com.flushSerial();
     /*Cancel any previous payment*/
@@ -98,7 +99,6 @@ void page_tap_payment_serial::cancelPayment()
         pktResponded.clear();
     }
     com.flushSerial();
-    stopPayTimers();
 
 }
 
@@ -237,7 +237,7 @@ void page_tap_payment_serial::resetPaymentPage()
 
 }
 
-bool page_tap_payment_serial::tap_serial_initiate()
+void page_tap_payment_serial::tap_serial_initiate()
 {
     paymentConnected = com.page_init();
     while (!paymentConnected)
@@ -256,10 +256,10 @@ bool page_tap_payment_serial::tap_serial_initiate()
         waitForUX410();
         pktResponded.clear();
     }
-    else
-    {
-        return false;
-    }
+    // else
+    // {
+    //     return false;
+    // }
     com.flushSerial();
     cout << "-----------------------------------------------" << endl;
 
@@ -275,10 +275,10 @@ bool page_tap_payment_serial::tap_serial_initiate()
         cout << merchantName << endl;
         pktResponded.clear();
     }
-    else
-    {
-        return false;
-    }
+    // else
+    // {
+    //     return false;
+    // }
     com.flushSerial();
     cout << "-----------------------------------------------" << endl;
 
@@ -294,10 +294,10 @@ bool page_tap_payment_serial::tap_serial_initiate()
         std::cout << merchantAddress << endl;
         pktResponded.clear();
     }
-    else
-    {
-        return false;
-    }
+    // else
+    // {
+    //     return false;
+    // }
     com.flushSerial();
     cout << "-----------------------------------------------" << endl;
 
@@ -313,13 +313,13 @@ bool page_tap_payment_serial::tap_serial_initiate()
         std::cout << terminalID << endl;
         pktResponded.clear();
     }
-    else
-    {
-        return false;
-    }
+    // else
+    // {
+    //     return false;
+    // }
     com.flushSerial();
     tapSetupStarted = true;
-    return true;
+    // return true;
 }
 
 bool page_tap_payment_serial::sendToUX410()

@@ -17,6 +17,10 @@
 #include "page_idle.h"
 #include "ui_page_init.h"
 
+std::thread tapInitThread;
+std::atomic<bool> threadActive(false);
+
+
 // CTOR
 page_init::page_init(QWidget *parent) : QWidget(parent),
                                         ui(new Ui::page_init)
@@ -48,6 +52,14 @@ page_init::~page_init()
 {
     delete ui;
 }
+
+void page_init::showLoadingScreen(){
+    this->showFullScreen();
+    p_page_idle->setTemplateTextWithIdentifierToObject(this->ui->label_fail_message, "tap_payment");
+    page_tap_payment_serial paymentSerialObject;
+    paymentSerialObject.tap_serial_initiate();
+    threadActive=false;
+    }
 
 void page_init::showEvent(QShowEvent *event)
 {
@@ -82,14 +94,14 @@ void page_init::showEvent(QShowEvent *event)
             paymentObject.initiate_tap_setup();
         }
         else if(paymentMethod=="tapSerial"){
-            QCoreApplication::processEvents();
-            page_tap_payment_serial paymentSerialObject;
-            paymentSerialObject.tap_serial_initiate();
+            threadActive = true;
+            auto bindFn = std::bind(&page_init::showLoadingScreen, this);
+            tapInitThread = std::thread(bindFn);
+            tapInitThread.detach();
+
+            }
         }
-        p_page_idle->setTemplateTextToObject(ui->label_init_message);
-        _initIdleTimeoutSec = 1;
     }
-}
 
 void page_init::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
@@ -101,7 +113,17 @@ void page_init::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 void page_init::initReadySlot(void)
 {
     qDebug() << "Signal: init ready from fsm";
-    hideCurrentPageAndShowProvided(p_page_idle);
+    // while(threadActive){
+    //     _initIdleTimeoutSec = 1;
+    //     }
+    if(!tapInitThread.joinable()){
+        p_page_idle->setTemplateTextToObject(ui->label_init_message);
+        // hideCurrentPageAndShowProvided(p_page_idle);
+    }
+    else{
+    p_page_idle->setTemplateTextWithIdentifierToObject(this->ui->label_fail_message, "tap_payment");
+
+    }
 }
 
 void page_init::onInitTimeoutTick()
@@ -112,10 +134,9 @@ void page_init::onInitTimeoutTick()
     }
     else
     {
-        qDebug() << "No response from controller. Will reboot";
         initIdleTimer->stop();
         p_page_idle->setTemplateTextToObject(ui->label_fail_message);
-        hideCurrentPageAndShowProvided(p_page_idle);
+        // hideCurrentPageAndShowProvided(p_page_idle);
     }
 }
 

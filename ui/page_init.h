@@ -43,10 +43,10 @@ public:
     ~page_init();
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void initReadySlot();
-
     df_util* dfUtility;
 
     DfUiCommThread* dfComm;
+    void showLoadingScreen();
 
 private slots:
     void onInitTimeoutTick();
@@ -62,5 +62,6 @@ private:
     bool start_controller;
 
 };
+
 
 #endif // INIT_H

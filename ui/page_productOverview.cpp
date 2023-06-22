@@ -152,7 +152,7 @@ void page_product_overview::reset_and_show_page_elements()
     p_page_idle->setTemplateTextToObject(ui->label_discount_tag);
     p_page_idle->setTemplateTextToObject(ui->label_pay);
     p_page_idle->setTemplateTextToObject(ui->label_total);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_continue);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_continue);  
 
     QString bitmap_location;
     p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->selectedProduct->getProductPicturePath());

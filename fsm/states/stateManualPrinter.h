@@ -17,7 +17,7 @@
 #include "stateVirtual.h"
 #include "../fsm.h"
 #include "../objects/product.h"
-#include "../objects/machine.h"
+// #include "../objects/machine.h"
 
 
 #include "../../library/printer/Adafruit_Thermal.h"
@@ -37,6 +37,7 @@ public:
 
     string toString();
     DF_ERROR printTest();
+    DF_ERROR getPrinterStatus(bool *r_isOnline, bool *r_hasPaper);
     DF_ERROR displayPrinterStatus();
     DF_ERROR displayPrinterReachable();
     DF_ERROR sendPrinterStatus();

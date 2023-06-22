@@ -141,6 +141,10 @@ void page_maintenance_general::send_check_printer_status_command()
     qDebug() << "Send check printer status to controller";
     p_page_idle->dfUtility->send_command_to_FSM("p");
     usleep(50000);
+    usleep(1200000); // minimum
+    // usleep(5000000); 
+    // p_page_idle->dfUtility->send_command_to_FSM("1");
+    // usleep(5000000); 
     p_page_idle->dfUtility->send_command_to_FSM("a");
     usleep(50000);
 }

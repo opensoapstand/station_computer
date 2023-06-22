@@ -114,17 +114,13 @@ using namespace std;
 #define PAGE_AUTHORIZE_NOW                              "authorizeNow.png"
 #define PAGE_TAP_GENERIC                                "genericTap.png"
 #define PAGE_SEND_FEEDBACK_PATH                         "background_sendfeedback.png"
-#define PAGE_INIT_BACKGROUND_IMAGE_PATH                 "background_message.png"
+#define PAGE_INIT_BACKGROUND_IMAGE_PATH                 "background_init.png"
 #define IMAGE_BUTTON_HELP                               "help_icon.png"
 #define THANK_YOU_FOR_YOUR_FEEDBACK                     "background_feedbacksent.png"
 #define PAGE_ERROR_BACKGROUND_PATH                      "background_error_wifi.png"
 #define KEYBOARD_IMAGE_PATH                             "soapstand-keyboard.png"
 #define MACHINE_LOGO_PATH                               "machine_logo.png"
 #define PAGE_DISPENSE_FILL_ANIMATION                    "bottle_fill_for_animation.png"
-
-
-
-
 
 #define ICON_TYPE_CONCENTRATE_PATH                      "Soapstand_UI-concentrate-icon.png"
 #define ICON_TYPE_ALL_PURPOSE_PATH                      "Soapstand-UI-icon-all-purpose.png"

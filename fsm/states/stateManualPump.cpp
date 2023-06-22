@@ -65,6 +65,8 @@ DF_ERROR stateManualPump::onEntry()
    uint64_t millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
    most_recent_data_output_epoch = millis_epoch;
 
+   g_machine.pcb24VPowerSwitch(true);
+
    return e_ret;
 }
 
@@ -562,7 +564,7 @@ DF_ERROR stateManualPump::autofillPresetQuantity()
    }
    else if (m_state_auto_pump == AUTO_PUMP_STATE_INIT)
    {
-      // pump should be enabled first. 
+      // pump should be enabled first.
       // productDispensers[m_active_pump_index].startDispense();
       // productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
       // productDispensers[m_active_pump_index].setMultiDispenseButtonLight(m_active_pump_index + 1, true);
@@ -596,9 +598,7 @@ DF_ERROR stateManualPump::autofillPresetQuantity()
       {
          debugOutput::sendMessage("Interrupt auto fill process with button.", MSG_INFO);
          m_state_auto_pump = AUTO_PUMP_STATE_FINISHED;
-        
       }
-
    }
    else if (m_state_auto_pump == AUTO_PUMP_STATE_FINISHED)
    {
@@ -647,6 +647,8 @@ DF_ERROR stateManualPump::onExit()
 {
    DF_ERROR e_ret = OK;
    productDispensers[m_active_pump_index].setPumpsDisableAll();
+
+   g_machine.pcb24VPowerSwitch(false);
 
    return e_ret;
 }

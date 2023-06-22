@@ -102,7 +102,7 @@ void page_qr_payment::showEvent(QShowEvent *event)
     double originalPrice = p_page_idle->selectedProduct->getPrice();
     if (p_page_idle->selectedProduct->getSizeAsChar() == 'c')
     {
-        originalPrice = p_page_idle->selectedProduct->getPriceCustom();
+        originalPrice = p_page_idle->selectedProduct->getPriceCustom();""
     }
     QString price = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(originalPrice), 'f', 2);
 

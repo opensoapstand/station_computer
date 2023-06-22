@@ -95,7 +95,7 @@ using namespace std;
 
 
 #define PAGE_IDLE_BACKGROUND_PATH                       "background_idle.png"
-#define PAGE_IDLE_PRODUCTS_BACKGROUND_PATH              "background_idle_products_0_57000ms.png"
+#define PAGE_IDLE_PRODUCTS_BACKGROUND_PATH              "background_idle_products.png"
 #define PAGE_END_BACKGROUND_PATH                        "background_end.png"
 #define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_transactions.png"
 

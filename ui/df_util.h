@@ -122,13 +122,6 @@ using namespace std;
 #define MACHINE_LOGO_PATH                               "machine_logo.png"
 #define PAGE_DISPENSE_FILL_ANIMATION                    "bottle_fill_for_animation.png"
 
-
-#define PAGE_IDLE_DYNAMIC_BACKGROUND_1                  "background1.png"
-#define PAGE_IDLE_DYNAMIC_BACKGROUND_2                  "background2.png"
-#define PAGE_IDLE_DYNAMIC_BACKGROUND_3                  "background3.png"
-
-
-
 #define ICON_TYPE_CONCENTRATE_PATH                      "Soapstand_UI-concentrate-icon.png"
 #define ICON_TYPE_ALL_PURPOSE_PATH                      "Soapstand-UI-icon-all-purpose.png"
 #define ICON_TYPE_DISH_PATH                             "Soapstand-UI-icon-dish.png"

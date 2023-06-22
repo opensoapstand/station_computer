@@ -57,6 +57,7 @@ DF_ERROR stateManualPrinter::onEntry()
    {
       g_machine.pcb24VPowerSwitch(true); // printers take their power from the 24V converted to 5V (because of the high current)
       // usleep(1200000);                   // wait for printer to come online.
+      printerr->resetPollCount();
    }
 
    return e_ret;
@@ -82,8 +83,8 @@ DF_ERROR stateManualPrinter::onAction()
       {
          debugOutput::sendMessage("Printer status requested by UI", MSG_INFO);
          // sendPrinterStatus(); // first call after startup returns always online
-         displayPrinterStatus();
-         displayPrinterStatus();
+         // displayPrinterStatus();
+         // displayPrinterStatus();
          sendPrinterStatus();
          m_state_requested = STATE_IDLE; // return after finished.
       }
@@ -405,6 +406,7 @@ DF_ERROR stateManualPrinter::onExit()
 
    printerr->disconnectPrinter();
    g_machine.pcb24VPowerSwitch(false);
+   printerr->resetPollCount();
 
    DF_ERROR e_ret = OK;
    return e_ret;

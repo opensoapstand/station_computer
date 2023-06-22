@@ -56,7 +56,7 @@ DF_ERROR stateManualPrinter::onEntry()
    if (!g_machine.getPcb24VPowerSwitchStatus())
    {
       g_machine.pcb24VPowerSwitch(true); // printers take their power from the 24V converted to 5V (because of the high current)
-      usleep(1200000);                   // wait for printer to come online.
+      // usleep(1200000);                   // wait for printer to come online.
    }
 
    return e_ret;
@@ -82,6 +82,8 @@ DF_ERROR stateManualPrinter::onAction()
       {
          debugOutput::sendMessage("Printer status requested by UI", MSG_INFO);
          // sendPrinterStatus(); // first call after startup returns always online
+         displayPrinterStatus();
+         displayPrinterStatus();
          sendPrinterStatus();
          m_state_requested = STATE_IDLE; // return after finished.
       }
@@ -246,8 +248,14 @@ void stateManualPrinter::printTransaction(int transactionNumber)
 DF_ERROR stateManualPrinter::sendPrinterStatus()
 {
 
-   bool isOnline = printerr->testComms();
-   bool hasPaper = printerr->hasPaper();
+   // bool isOnline = printerr->testComms();
+   // bool hasPaper = printerr->hasPaper();
+   bool isOnline ;
+   bool hasPaper ;
+
+
+   getPrinterStatus(&isOnline, &hasPaper);
+
    string statusString;
    if (isOnline)
    {
@@ -292,40 +300,29 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
 
    sqlite3_close(db);
 
-   // power cycling the printer. This will erase a annoying error that every 11th poll, one charater is printed.
-   if (printerr->getPollCountLimitReached())
-   {
-      printerr->resetPollCount();
+   // // power cycling the printer. This will erase a annoying error that every 11th poll, one charater is printed.
+   // if (printerr->getPollCountLimitReached())
+   // {
+   //    printerr->resetPollCount();
 
-      debugOutput::sendMessage("Pollcount LIMIT REACHED. Will restart Printer ", MSG_INFO);
-      // g_machine.pcb24VPowerSwitch(false);
-      usleep(1200000);
-      // g_machine.pcb24VPowerSwitch(true);
-   }
+   //    debugOutput::sendMessage("Pollcount LIMIT REACHED. Will restart Printer ", MSG_INFO);
+   //    g_machine.pcb24VPowerSwitch(false);
+   //    usleep(1200000);
+   //    g_machine.pcb24VPowerSwitch(true);
+   // }
 
    m_pMessaging->sendMessageOverIP(statusString); // if commented out: Let's communicate by setting the db fields only
 }
 
-DF_ERROR stateManualPrinter::displayPrinterStatus()
+DF_ERROR stateManualPrinter::getPrinterStatus(bool *r_isOnline, bool *r_hasPaper)
 {
    bool isOnline = printerr->testComms(); // first call returns always "online"
    isOnline = printerr->testComms();
 
-   if (isOnline)
-   {
+   bool hasPaper = false;
 
-      if (printerr->hasPaper())
-      {
-         debugOutput::sendMessage("Printer online, has paper.", MSG_INFO);
-      }
-      else
-      {
-         debugOutput::sendMessage("Printer online, no paper.", MSG_INFO);
-      }
-   }
-   else
-   {
-      debugOutput::sendMessage("Printer not online.", MSG_INFO);
+   if (isOnline){
+      hasPaper= printerr->hasPaper();
    }
 
    if (printerr->getPollCountLimitReached())
@@ -337,6 +334,33 @@ DF_ERROR stateManualPrinter::displayPrinterStatus()
       usleep(1200000); // 2000000ok //1500000ok //1200000ok //1000000nok
       g_machine.pcb24VPowerSwitch(true);
       // usleep(2000000); //1000000
+   }
+   *r_isOnline = r_isOnline;
+   *r_hasPaper = hasPaper;
+}
+
+DF_ERROR stateManualPrinter::displayPrinterStatus()
+{
+
+   bool isOnline;
+   bool hasPaper;
+   getPrinterStatus(&isOnline, &hasPaper);
+
+   if (isOnline)
+   {
+
+      if (hasPaper)
+      {
+         debugOutput::sendMessage("Printer online, has paper.", MSG_INFO);
+      }
+      else
+      {
+         debugOutput::sendMessage("Printer online, no paper.", MSG_INFO);
+      }
+   }
+   else
+   {
+      debugOutput::sendMessage("Printer not online.", MSG_INFO);
    }
 }
 

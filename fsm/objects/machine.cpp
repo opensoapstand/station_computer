@@ -49,6 +49,7 @@ void machine::setup()
 
     // the 24V power has a master on/off switch
     switch_24V = new oddyseyx86GPIO(IO_PIN_ENABLE_24V);
+    power24VEnabled = false;
     switch_24V->setPinAsInputElseOutput(false); // set as output
 }
 
@@ -61,10 +62,17 @@ pcb *machine::getPcb()
 //     debugOutput::sendMessage("*** global machine test message", MSG_INFO);
 // }
 
+bool machine::getPcb24VPowerSwitchStatus()
+{
+    return power24VEnabled;
+}
 void machine::pcb24VPowerSwitch(bool enableElseDisable)
 {
-
-    switch_24V->writePin(enableElseDisable);
+    if (power24VEnabled != enableElseDisable)
+    {
+        power24VEnabled = enableElseDisable;
+        switch_24V->writePin(power24VEnabled);
+    }
 }
 
 void machine::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string char_units_formatted, string paymentMethod, string plu, string promoCode)

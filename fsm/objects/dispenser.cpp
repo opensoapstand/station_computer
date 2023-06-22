@@ -14,6 +14,7 @@
 //***************************************
 #include "dispenser.h"
 #include <chrono>
+// #include "machine.h"
 
 #define ACTIVATION_TIME 5
 #define TEST_ACTIVATION_TIME 3
@@ -65,12 +66,14 @@ dispenser::dispenser()
     previous_dispense_state = FLOW_STATE_UNAVAILABLE;
 }
 
+// DF_ERROR dispenser::setup(pcb *pcbtest, machine* machine)
 DF_ERROR dispenser::setup(pcb *pcbtest)
 {
     // Set the pump PWM value to a nominal value
 
     // the_pcb->setup();
     the_pcb = pcbtest;
+    // global_machine = machine;
 
     the_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
 
@@ -592,6 +595,7 @@ DF_ERROR dispenser::setPumpDirectionReverse()
 // Stops pumping: Turn forward pin LOW - Reverse pin LOW
 DF_ERROR dispenser::setPumpsDisableAll()
 {
+    // g_machine.pcb24VPowerSwitch(false);
     debugOutput::sendMessage("Pump disable: all.", MSG_INFO);
     the_pcb->setPumpsDisableAll();
     m_isSlotEnabled = false;
@@ -764,6 +768,7 @@ DF_ERROR dispenser::setPumpEnable()
     // first pump is 1.
     // still needs dispense button to actually get the pump to start
     debugOutput::sendMessage("Pump enable position: " + to_string(this->slot), MSG_INFO);
+    // g_machine.pcb24VPowerSwitch(true);
     the_pcb->setPumpEnable(this->slot); // pump 1 to 4
     m_isSlotEnabled = true;
 }

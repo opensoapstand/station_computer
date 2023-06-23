@@ -52,7 +52,7 @@ public slots:
     void showIdlePage();
 
 signals:
-    void taskCompleted();
+    void tapSetupInitialized();
 
 private slots:
     void onInitTimeoutTick();

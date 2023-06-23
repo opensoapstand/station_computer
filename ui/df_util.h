@@ -140,6 +140,9 @@ using namespace std;
 #define SEND_REPAIR_PCA "pcabugfix"
 #define SEND_DISPENSE_AUTOFILL "a"
 
+#define PAYMENT_TAP_SERIAL                              "tapSerial"
+#define PAYMENT_TAP_TCP                                 "tapTCP"
+#define PAYMENT_QR                                      "qr"
 class df_util : public QWidget
 {
     Q_OBJECT

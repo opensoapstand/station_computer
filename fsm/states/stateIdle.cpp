@@ -90,9 +90,9 @@ DF_ERROR stateIdle::onAction()
       else if ('4' == m_pMessaging->getAction())
       {
          productDispensers = g_productDispensers;
-         debugOutput::sendMessage("beffooore reload parameters from product1", MSG_INFO);
+         debugOutput::sendMessage("Before reload parameters from product", MSG_INFO);
          bool success = this->productDispensers[0].getProduct()->reloadParametersFromDb();
-         debugOutput::sendMessage("after" + to_string(success), MSG_INFO);
+         debugOutput::sendMessage("After" + to_string(success), MSG_INFO);
       }
       else
       {

@@ -115,28 +115,10 @@ private:
     QTimer *maintainProductPageEndTimer;
     QTimer *dispenseTimer;
 
-    // QString text_entered;
-    // bool price_small;
-    // bool price_medium;
-    // bool price_large;
-    // bool price_custom;
-
-    // bool target_s;
-    // bool pushButton_target_volume_medium;
-    // bool target_l;
-    // bool vol_per_tick;
-    // bool full;
-    // bool pwm;
-    // bool buffer;
-    // bool modify_stock;
     bool isDispenseButtonPressed;
     uint16_t button_press_count;
 
     QString units_selected_product;
-    //    bool plu_s;
-    //    bool plu_l;
-
-    double volume_per_tick_buffer= 0.0;
 
     void sendRestockToCloud();
     void autoDispenseStart(int size);

@@ -59,7 +59,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 {
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
 
-    qDebug()<< "Active Slot: " << QString::number(this->p_page_idle->selectedProduct->getSlot());
+    qDebug() << "Active Slot: " << QString::number(this->p_page_idle->selectedProduct->getSlot());
     QWidget::showEvent(event);
 
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
@@ -121,7 +121,7 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
 
     this->units_selected_product = this->p_page_idle->selectedProduct->getUnitsForSlot();
 
-    volume_per_tick_buffer = p_page_idle->selectedProduct->getVolumePerTickForSlot();
+    // volume_per_tick_buffer = p_page_idle->selectedProduct->getVolumePerTickForSlot();
 
     ui->label_volume_per_tick->setText(p_page_idle->selectedProduct->getVolumePerTickAsStringForSlot() + "/tick");
 
@@ -158,55 +158,53 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
 
 void page_maintenance_dispenser::setStatusTextLabel(QString statusText)
 {
-        QString status_display_text = "";
-        // if (!(p_page_idle->selectedProduct->isProductVolumeInContainer()))
-        // {
-        //     status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->auto_empty");
-        // }
-        // else 
-        // if (!p_page_idle->selectedProduct->getSlotEnabled())
-        // {
-        //     status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->not_enabled");
-        // }
-        if (statusText.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
-        {
-            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->coming_soon");
-        }
-        else if (statusText.compare("SLOT_STATE_DISABLED") == 0)
-        {
-            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->not_enabled");
-        }
-        else if (statusText.compare("SLOT_STATE_AVAILABLE") == 0)
-        {
-            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->available");
-        }
-        else if (statusText.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
-        {
-            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->almost_empty");
-        }
-        else if (statusText.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
-        {
-            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->assistance");
-        }
-        else if (statusText.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
-        {
-            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->empty");
-        }
-        else if (statusText.compare("SLOT_STATE_DISABLED") == 0)
-        {
-            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->disabled");
-
-        }
-        else if (statusText.compare("SLOT_STATE_WARNING_PRIMING") == 0)
-        {
-            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->priming");
-        }
-        else
-        {
-            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->default");
-        }
-        ui->label_status_dispenser->setText(statusText + ": " + status_display_text );
-
+    QString status_display_text = "";
+    // if (!(p_page_idle->selectedProduct->isProductVolumeInContainer()))
+    // {
+    //     status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->auto_empty");
+    // }
+    // else
+    // if (!p_page_idle->selectedProduct->getSlotEnabled())
+    // {
+    //     status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->not_enabled");
+    // }
+    if (statusText.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
+    {
+        status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->coming_soon");
+    }
+    else if (statusText.compare("SLOT_STATE_DISABLED") == 0)
+    {
+        status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->not_enabled");
+    }
+    else if (statusText.compare("SLOT_STATE_AVAILABLE") == 0)
+    {
+        status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->available");
+    }
+    else if (statusText.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
+    {
+        status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->almost_empty");
+    }
+    else if (statusText.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
+    {
+        status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->assistance");
+    }
+    else if (statusText.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
+    {
+        status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->empty");
+    }
+    else if (statusText.compare("SLOT_STATE_DISABLED") == 0)
+    {
+        status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->disabled");
+    }
+    else if (statusText.compare("SLOT_STATE_WARNING_PRIMING") == 0)
+    {
+        status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->priming");
+    }
+    else
+    {
+        status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->default");
+    }
+    ui->label_status_dispenser->setText(statusText + ": " + status_display_text);
 }
 
 void page_maintenance_dispenser::setpushButton_set_statusText()
@@ -218,14 +216,14 @@ void page_maintenance_dispenser::setpushButton_set_statusText()
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_set_status, "unavailable");
         // ui->pushButton_set_status->setProperty("class", "pushButton_set_status_unavailable");
         // ui->pushButton_set_status->setStyleSheet(styleSheet);
-         p_page_idle->addCssClassToObject(ui->pushButton_set_status, "pushButton_set_status_unavailable", PAGE_MAINTENANCE_DISPENSER_CSS);
+        p_page_idle->addCssClassToObject(ui->pushButton_set_status, "pushButton_set_status_unavailable", PAGE_MAINTENANCE_DISPENSER_CSS);
     }
     else
     {
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_set_status, "available");
         // ui->pushButton_set_status->setProperty("class", "pushButton_set_status_available");
         // ui->pushButton_set_status->setStyleSheet(styleSheet);
-         p_page_idle->addCssClassToObject(ui->pushButton_set_status, "pushButton_set_status_available", PAGE_MAINTENANCE_DISPENSER_CSS);
+        p_page_idle->addCssClassToObject(ui->pushButton_set_status, "pushButton_set_status_available", PAGE_MAINTENANCE_DISPENSER_CSS);
     }
 }
 
@@ -312,7 +310,7 @@ void page_maintenance_dispenser::autoDispenseStart(int size)
     if (!pump_enabled)
     {
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "disable_pump");
-         p_page_idle->addCssClassToObject(ui->pushButton_enable_pump, "pump_disable", PAGE_MAINTENANCE_DISPENSER_CSS);
+        p_page_idle->addCssClassToObject(ui->pushButton_enable_pump, "pump_disable", PAGE_MAINTENANCE_DISPENSER_CSS);
         qDebug() << "Autofill small quantity pressed.";
         QString command = QString::number(this->p_page_idle->selectedProduct->getSlot());
 
@@ -386,7 +384,6 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
 
         p_page_idle->addCssClassToObject(ui->pushButton_enable_pump, "pump_enable", PAGE_MAINTENANCE_DISPENSER_CSS);
 
-
         if (sendStopToController)
         {
             qDebug() << "Manually finish dispense in maintenance mode.";
@@ -420,10 +417,10 @@ void page_maintenance_dispenser::reset_all_dispense_stats()
 void page_maintenance_dispenser::update_volume_received_dispense_stats(double dispensed)
 {
     double vol_dispensed = dispensed;
+    double volume_per_tick_buffer = p_page_idle->selectedProduct->getVolumePerTickForSlot();
 
     if (this->units_selected_product == "oz")
     {
-        // ui->label_status_volume_dispensed->setText("fdvbc x (" + QString::number(df_util::convertMlToOz(volume_per_tick_buffer), 'f', 2) + "oz/tick: " + QString::number(vol_dispensed / volume_per_tick_buffer));
         ui->label_status_volume_dispensed->setText(QString::number(vol_dispensed / volume_per_tick_buffer) + "ticks x " + QString::number(df_util::convertMlToOz(volume_per_tick_buffer), 'f', 2) + "oz/tick = " + QString::number(vol_dispensed) + df_util::getConvertedStringVolumeFromMl(vol_dispensed, "oz", false, true));
     }
     else
@@ -928,7 +925,7 @@ void page_maintenance_dispenser::update_changes_to_portal()
                           "&price_medium=" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)) +
                           "&price_large=" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_LARGE_INDEX)) +
                           "&price_custom=" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_CUSTOM_INDEX)) +
-                          "&size_small=" +p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_SMALL_INDEX, false, false) +
+                          "&size_small=" + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_SMALL_INDEX, false, false) +
                           "&size_medium=" + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_MEDIUM_INDEX, false, false) +
                           "&size_large=" + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_LARGE_INDEX, false, false);
     curl_param_array2 = curl_params.toLocal8Bit();
@@ -962,7 +959,7 @@ void page_maintenance_dispenser::update_changes_to_portal()
         qDebug() << "Pagemaintenancedispenser cURL success. Server feedback readbuffer: " << feedback;
         // ui->label_action_feedback->setText("Portal Update Succesfull");
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_action_feedback, "portal_success");
-        
+
         // readbuffer is a string. "true" or "false"
         if (readBuffer == "true")
         {

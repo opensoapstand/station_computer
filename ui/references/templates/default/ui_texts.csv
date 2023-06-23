@@ -15,6 +15,7 @@
 
 #page_init
 page_init->label_init_message,Wait for controller signal.
+page_init->label_fail_message->tap_payment,Waiting for payment...
 page_init->label_fail_message,Timeout. No Response from controller. Will start standalone mode. If controller becomes active, commands will be executed. If not, no commands will be executed.
 
 # page_idle

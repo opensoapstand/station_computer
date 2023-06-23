@@ -22,7 +22,7 @@ QPushButton {
    font-weight: 700;
    font-size: 65px;
    color: white;
-   text-align: center;
+   text-align: left;
    qproperty-alignment: AlignCenter;
    border: none;
    background: transparent;

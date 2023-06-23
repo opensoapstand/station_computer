@@ -137,6 +137,7 @@ using namespace std;
 #define ICON_TYPE_KOMBUCHA_PATH                         "Soapstand-UI-icon-kombucha.png"
 #define ICON_TYPE_MOCKTAIL_PATH                         "Soapstand-UI-icon-mocktail.png"
 #define ICON_TYPE_JUICE_PATH                            "Soapstand-UI-icon-juice.png"
+#define ICON_TYPE_TEA_PATH                            "Soapstand-UI-icon-tea.png"
 #define ICON_TYPE_DEFAULT                               "Soapstand-UI-icon-default.png"
 
 #define PAGE_HELP_BACKGROUND_GENERIC_WHITE              "background_generic_white_empty.png"

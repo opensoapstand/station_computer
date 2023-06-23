@@ -17,6 +17,10 @@
    qproperty-alignment: AlignCenter;
 }
 
+#pushButton_to_idle{
+   text-align: left;
+}
+
 QPushButton {
    font-family: 'EuropaNuova-ExtraBold';
    font-style: normal;

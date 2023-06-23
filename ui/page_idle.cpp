@@ -242,7 +242,7 @@ bool page_idle::isPromoApplied()
 {
     if (m_discount_percentage_fraction != 0.0)
     {
-        qDebug() << "true";
+        qDebug() << "promo applied: true";
         return true;
     }
     return false;

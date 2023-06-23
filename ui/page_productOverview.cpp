@@ -148,6 +148,7 @@ void page_product_overview::onSelectTimeoutTick()
 void page_product_overview::reset_and_show_page_elements()
 {
 
+        qDebug() << "Reset and show page elements";
     p_page_idle->setTemplateTextToObject(ui->pushButton_select_product_page);
     p_page_idle->setTemplateTextToObject(ui->label_discount_tag);
     p_page_idle->setTemplateTextToObject(ui->label_pay);
@@ -173,13 +174,17 @@ void page_product_overview::reset_and_show_page_elements()
         // p_page_idle->setTextToObject(ui->lineEdit_promo_code, promo_code_input_text);
         ui->lineEdit_promo_code->setText(promo_code_input_text);
 
-        QString promoCodeText = ui->lineEdit_promo_code->text();                    
+        QString promoCodeText = ui->lineEdit_promo_code->text();
         qDebug() << "Promo code text: " << promoCodeText;
 
         ui->lineEdit_promo_code->show();
         if (p_page_idle->isPromoApplied())
         {
-            p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code, "valid");
+            qDebug() << "Promo code is applied: ";
+            // p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code, "valid");
+            QString promo_code_input_text2 = p_page_idle->getTemplateTextByPage(this, "lineEdit_promo_code->valid");
+            // p_page_idle->setTextToObject(ui->lineEdit_promo_code, promo_code_input_text);
+            ui->lineEdit_promo_code->setText(promo_code_input_text2);
         }
         ui->label_invoice_discount_amount->show();
         ui->label_invoice_discount_name->show();
@@ -357,6 +362,7 @@ void page_product_overview::apply_promo_code()
             }
         }
     }
+    reset_and_show_page_elements();
 }
 
 void page_product_overview::keyboardButtonPressed(int buttonID)

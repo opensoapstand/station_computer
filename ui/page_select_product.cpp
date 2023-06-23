@@ -226,10 +226,17 @@ void page_select_product::displayProducts()
         labels_product_icon[slot_index]->setText("");
         labels_product_icon[slot_index]->raise();
 
-        if (!p_page_idle->products[slot_index].getSlotEnabled())
+        if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
+        {
+            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->coming_soon"));
+        }
+        else if (product_status_text.compare("SLOT_STATE_DISABLED") == 0)
         {
             labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->not_enabled"));
-            // labels_product_overlay_text[slot_index]->setText("Needs<br>assistance");
+        }
+        else if (!p_page_idle->products[slot_index].getSlotEnabled())
+        {
+            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->not_enabled"));
         }
         else if (!(p_page_idle->products[slot_index].isProductVolumeInContainer()))
         {
@@ -246,10 +253,6 @@ void page_select_product::displayProducts()
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
         {
             labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->empty"));
-        }
-        else if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
-        {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->getTemplateTextByPage(this, "status_text->coming_soon"));
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
         {

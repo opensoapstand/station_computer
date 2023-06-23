@@ -889,6 +889,7 @@ void dispenser::loadSlotStateFromDb()
 
     sqlite3_finalize(stmt);
     sqlite3_close(db);
+
     if (slotStateText.find("SLOT_STATE_AVAILABLE") != string::npos)
     {
         setSlotState(SLOT_STATE_AVAILABLE);
@@ -921,7 +922,7 @@ void dispenser::loadSlotStateFromDb()
     {
         setSlotState(SLOT_STATE_AVAILABLE);
     }
-    debugOutput::sendMessage("Set dispenser state to : " + std::string(getSlotStateAsString()), MSG_INFO);
+    debugOutput::sendMessage("Dispenser state loaded from db: " + std::string(getSlotStateAsString())  + "(db value: " + std::string(slotStateText) + ")", MSG_INFO);
 }
 
 void dispenser::loadEmptyContainerDetectionEnabledFromDb()
@@ -1148,11 +1149,8 @@ const char *dispenser::getSlotStateAsString()
 
 void dispenser::setSlotState(Slot_state state)
 {
-    // disabled states are only manually changeable.
-    if (getSlotState() != SLOT_STATE_DISABLED_COMING_SOON && getSlotState() != SLOT_STATE_DISABLED)
-    {
         slot_state = state;
-    }
+    
 }
 
 Slot_state dispenser::getSlotState()

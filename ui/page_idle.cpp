@@ -406,7 +406,7 @@ void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QStrin
 
     QString image_path = imageName;
     image_path = thisMachine.getTemplatePathFromName(imageName);
-    qDebug()<< "background image path: " << image_path;
+    // qDebug()<< "background image path: " << image_path;
     setBackgroundPictureToQWidget(p_widget, image_path);
 }
 

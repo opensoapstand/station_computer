@@ -66,6 +66,9 @@ DF_ERROR stateDispenseInit::onAction()
 
     DF_ERROR e_ret = OK;
     this->productDispensers[dispenser_index].loadGeneralProperties();
+    debugOutput::sendMessage(std::string("SLOT dispenesrs erstate: ") + productDispensers[dispenser_index].getSlotStateAsString(),
+                             MSG_INFO);
+
 
     debugOutput::sendMessage("Chosen dispenser slot: " +
                                  std::to_string(productDispensers[dispenser_index].getSlot()) +

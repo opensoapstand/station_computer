@@ -23,13 +23,11 @@
 #include "dfuicommthread.h"
 #include "dbmanager.h"
 
-// #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
-// #define DB_PATH_CLICKS "/release/db/sqlite/clicks.db"
-
 class page_idle;
 
-namespace Ui {
-class page_init;
+namespace Ui
+{
+    class page_init;
 }
 
 class page_init : public QWidget
@@ -43,10 +41,18 @@ public:
     ~page_init();
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void initReadySlot();
+    df_util *dfUtility;
 
-    df_util* dfUtility;
+    DfUiCommThread *dfComm;
+    void initiateTapPayment();
+    QString paymentMethod;
+    std::thread tapInitThread;
 
-    DfUiCommThread* dfComm;
+public slots:
+    void showIdlePage();
+
+signals:
+    void taskCompleted();
 
 private slots:
     void onInitTimeoutTick();
@@ -54,13 +60,12 @@ private slots:
 
 private:
     Ui::page_init *ui;
-    page_idle* p_page_idle;
-    QTimer* initIdleTimer;
+    page_idle *p_page_idle;
+    QTimer *initIdleTimer;
     int _initIdleTimeoutSec;
-    QTimer* rebootTimer;
+    QTimer *rebootTimer;
     int _rebootTimeoutSec;
     bool start_controller;
-
 };
 
 #endif // INIT_H

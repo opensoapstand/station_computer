@@ -35,6 +35,8 @@ page_init::page_init(QWidget *parent) : QWidget(parent),
     rebootTimer = new QTimer(this);
     rebootTimer->setInterval(1000);
     connect(rebootTimer, SIGNAL(timeout()), this, SLOT(onRebootTimeoutTick()));
+
+    connect(this, SIGNAL(taskCompleted()), this, SLOT(showIdlePage()));
 }
 
 void page_init::setPage(page_idle *pageIdle)
@@ -61,12 +63,12 @@ void page_init::showEvent(QShowEvent *event)
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_INIT_BACKGROUND_IMAGE_PATH);
 
     initIdleTimer->start(1000);
+    paymentMethod = p_page_idle->products[0].getPaymentMethod();
 #ifdef START_FSM_FROM_UI
     start_controller = true;
 #else
     start_controller = false;
 #endif
-
 
     if (start_controller)
     {
@@ -75,19 +77,12 @@ void page_init::showEvent(QShowEvent *event)
     }
     else
     {
-        QString paymentMethod = p_page_idle->products[0].getPaymentMethod();
-        if(paymentMethod == "tapTcp"){
-            QCoreApplication::processEvents();
-            page_tap_payment paymentObject;
-            paymentObject.initiate_tap_setup();
+        if (paymentMethod.contains("tap"))
+        {
+            auto bindFn = std::bind(&page_init::initiateTapPayment, this);
+            tapInitThread = std::thread(bindFn);
+            tapInitThread.detach();
         }
-        else if(paymentMethod=="tapSerial"){
-            QCoreApplication::processEvents();
-            page_tap_payment_serial paymentSerialObject;
-            paymentSerialObject.tap_serial_initiate();
-        }
-        p_page_idle->setTemplateTextToObject(ui->label_init_message);
-        _initIdleTimeoutSec = 1;
     }
 }
 
@@ -101,7 +96,10 @@ void page_init::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 void page_init::initReadySlot(void)
 {
     qDebug() << "Signal: init ready from fsm";
-    hideCurrentPageAndShowProvided(p_page_idle);
+    if (paymentMethod != "tapTcp" && paymentMethod != "tapSerial")
+    {
+        hideCurrentPageAndShowProvided(p_page_idle);
+    }
 }
 
 void page_init::onInitTimeoutTick()
@@ -112,10 +110,11 @@ void page_init::onInitTimeoutTick()
     }
     else
     {
-        qDebug() << "No response from controller. Will reboot";
         initIdleTimer->stop();
-        p_page_idle->setTemplateTextToObject(ui->label_fail_message);
-        hideCurrentPageAndShowProvided(p_page_idle);
+        if (paymentMethod != "tapTcp" && paymentMethod != "tapSerial")
+        {
+            hideCurrentPageAndShowProvided(p_page_idle);
+        }
     }
 }
 
@@ -135,3 +134,26 @@ void page_init::onRebootTimeoutTick()
     }
 }
 
+void page_init::initiateTapPayment()
+{
+    this->showFullScreen();
+    QString waitingForPayment = p_page_idle->getTemplateText("page_init->label_fail_message->tap_payment");
+    p_page_idle->setTextToObject(ui->label_fail_message, waitingForPayment);
+    if (paymentMethod == "tapTcp")
+    {
+        page_tap_payment paymentObject;
+        paymentObject.initiate_tap_setup();
+    }
+    else if (paymentMethod == "tapSerial")
+    {
+        page_tap_payment_serial paymentSerialObject;
+        paymentSerialObject.tap_serial_initiate();
+    }
+
+    emit taskCompleted();
+}
+
+void page_init::showIdlePage()
+{
+    hideCurrentPageAndShowProvided(p_page_idle);
+}

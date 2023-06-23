@@ -321,7 +321,7 @@ void page_idle_products::changeBackground()
 
     if (filteredList.count() == 0)
     {
-        qDebug() << "active_background_index set to 0. was: " << active_background_index;
+        // qDebug() << "active_background_index set to 0. was: " << active_background_index;
         // automatically revert to first image if non found.
         active_background_index = 0;
         filterPattern = template_name.arg(active_background_index);

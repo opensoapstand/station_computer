@@ -29,12 +29,12 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_product_amount">
+  <widget class="QLabel" name="label_product_price">
    <property name="geometry">
     <rect>
-     <x>470</x>
+     <x>530</x>
      <y>1470</y>
-     <width>221</width>
+     <width>451</width>
      <height>41</height>
     </rect>
    </property>
@@ -51,7 +51,7 @@ font-size: 24px;
 color: #58595B;</string>
    </property>
    <property name="text">
-    <string>label_product_amount</string>
+    <string>label_product_price</string>
    </property>
    <property name="textFormat">
     <enum>Qt::RichText</enum>
@@ -176,7 +176,7 @@ line-height: 29px;</string>
     <rect>
      <x>100</x>
      <y>940</y>
-     <width>881</width>
+     <width>885</width>
      <height>501</height>
     </rect>
    </property>
@@ -218,7 +218,7 @@ line-height: 29px;</string>
   </widget>
   <zorder>pushButton_refresh</zorder>
   <zorder>pushButton_previous_page</zorder>
-  <zorder>label_product_amount</zorder>
+  <zorder>label_product_price</zorder>
   <zorder>label_product_information</zorder>
   <zorder>label_qrCode</zorder>
   <zorder>label_refresh_page</zorder>

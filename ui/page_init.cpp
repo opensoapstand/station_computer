@@ -17,10 +17,6 @@
 #include "page_idle.h"
 #include "ui_page_init.h"
 
-std::thread tapInitThread;
-std::atomic<bool> threadActive(false);
-
-
 // CTOR
 page_init::page_init(QWidget *parent) : QWidget(parent),
                                         ui(new Ui::page_init)
@@ -39,6 +35,8 @@ page_init::page_init(QWidget *parent) : QWidget(parent),
     rebootTimer = new QTimer(this);
     rebootTimer->setInterval(1000);
     connect(rebootTimer, SIGNAL(timeout()), this, SLOT(onRebootTimeoutTick()));
+
+    connect(this, SIGNAL(taskCompleted()), this, SLOT(showIdlePage()));
 }
 
 void page_init::setPage(page_idle *pageIdle)
@@ -53,14 +51,6 @@ page_init::~page_init()
     delete ui;
 }
 
-void page_init::showLoadingScreen(){
-    this->showFullScreen();
-    p_page_idle->setTemplateTextWithIdentifierToObject(this->ui->label_fail_message, "tap_payment");
-    page_tap_payment_serial paymentSerialObject;
-    paymentSerialObject.tap_serial_initiate();
-    threadActive=false;
-    }
-
 void page_init::showEvent(QShowEvent *event)
 {
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
@@ -73,12 +63,12 @@ void page_init::showEvent(QShowEvent *event)
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_INIT_BACKGROUND_IMAGE_PATH);
 
     initIdleTimer->start(1000);
+    paymentMethod = p_page_idle->products[0].getPaymentMethod();
 #ifdef START_FSM_FROM_UI
     start_controller = true;
 #else
     start_controller = false;
 #endif
-
 
     if (start_controller)
     {
@@ -87,21 +77,14 @@ void page_init::showEvent(QShowEvent *event)
     }
     else
     {
-        QString paymentMethod = p_page_idle->products[0].getPaymentMethod();
-        if(paymentMethod == "tapTcp"){
-            QCoreApplication::processEvents();
-            page_tap_payment paymentObject;
-            paymentObject.initiate_tap_setup();
-        }
-        else if(paymentMethod=="tapSerial"){
-            threadActive = true;
-            auto bindFn = std::bind(&page_init::showLoadingScreen, this);
+        if (paymentMethod.contains("tap"))
+        {
+            auto bindFn = std::bind(&page_init::initiateTapPayment, this);
             tapInitThread = std::thread(bindFn);
             tapInitThread.detach();
-
-            }
         }
     }
+}
 
 void page_init::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
@@ -113,16 +96,9 @@ void page_init::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 void page_init::initReadySlot(void)
 {
     qDebug() << "Signal: init ready from fsm";
-    // while(threadActive){
-    //     _initIdleTimeoutSec = 1;
-    //     }
-    if(!tapInitThread.joinable()){
-        p_page_idle->setTemplateTextToObject(ui->label_init_message);
-        // hideCurrentPageAndShowProvided(p_page_idle);
-    }
-    else{
-    p_page_idle->setTemplateTextWithIdentifierToObject(this->ui->label_fail_message, "tap_payment");
-
+    if (paymentMethod != "tapTcp" && paymentMethod != "tapSerial")
+    {
+        hideCurrentPageAndShowProvided(p_page_idle);
     }
 }
 
@@ -135,8 +111,10 @@ void page_init::onInitTimeoutTick()
     else
     {
         initIdleTimer->stop();
-        p_page_idle->setTemplateTextToObject(ui->label_fail_message);
-        // hideCurrentPageAndShowProvided(p_page_idle);
+        if (paymentMethod != "tapTcp" && paymentMethod != "tapSerial")
+        {
+            hideCurrentPageAndShowProvided(p_page_idle);
+        }
     }
 }
 
@@ -156,3 +134,26 @@ void page_init::onRebootTimeoutTick()
     }
 }
 
+void page_init::initiateTapPayment()
+{
+    this->showFullScreen();
+    QString waitingForPayment = p_page_idle->getTemplateText("page_init->label_fail_message->tap_payment");
+    p_page_idle->setTextToObject(ui->label_fail_message, waitingForPayment);
+    if (paymentMethod == "tapTcp")
+    {
+        page_tap_payment paymentObject;
+        paymentObject.initiate_tap_setup();
+    }
+    else if (paymentMethod == "tapSerial")
+    {
+        page_tap_payment_serial paymentSerialObject;
+        paymentSerialObject.tap_serial_initiate();
+    }
+
+    emit taskCompleted();
+}
+
+void page_init::showIdlePage()
+{
+    hideCurrentPageAndShowProvided(p_page_idle);
+}

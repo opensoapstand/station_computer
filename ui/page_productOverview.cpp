@@ -152,7 +152,7 @@ void page_product_overview::reset_and_show_page_elements()
     p_page_idle->setTemplateTextToObject(ui->label_discount_tag);
     p_page_idle->setTemplateTextToObject(ui->label_pay);
     p_page_idle->setTemplateTextToObject(ui->label_total);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_continue);  
+    p_page_idle->setTemplateTextToObject(ui->pushButton_continue);
 
     QString bitmap_location;
     p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->selectedProduct->getProductPicturePath());
@@ -168,8 +168,12 @@ void page_product_overview::reset_and_show_page_elements()
     ui->promoKeyboard->hide();
     if (p_page_idle->thisMachine.getCouponsEnabled())
     {
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code, "coupons_enable");
-        QString promoCodeText = ui->lineEdit_promo_code->text();
+        // p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code, "coupons_enable");
+        QString promo_code_input_text = p_page_idle->getTemplateTextByPage(this, "lineEdit_promo_code->coupons_enable");
+        // p_page_idle->setTextToObject(ui->lineEdit_promo_code, promo_code_input_text);
+        ui->lineEdit_promo_code->setText(promo_code_input_text);
+
+        QString promoCodeText = ui->lineEdit_promo_code->text();                    
         qDebug() << "Promo code text: " << promoCodeText;
 
         ui->lineEdit_promo_code->show();
@@ -185,9 +189,6 @@ void page_product_overview::reset_and_show_page_elements()
     {
         qDebug() << "Coupons not enabled";
         coupon_input_hide();
-        ui->label_invoice_discount_amount->hide();
-        ui->label_invoice_discount_name->hide();
-        ui->label_discount_tag->hide();
     }
 
     if (!p_page_idle->isPromoApplied())
@@ -403,7 +404,11 @@ void page_product_overview::coupon_input_show()
 void page_product_overview::coupon_input_hide()
 {
     ui->promoKeyboard->hide();
-    ui->pushButton_promo_input->show();
+    ui->pushButton_promo_input->hide();
+    ui->lineEdit_promo_code->hide();
+    ui->label_invoice_discount_amount->hide();
+    ui->label_invoice_discount_name->hide();
+    ui->label_discount_tag->hide();
 }
 
 void page_product_overview::coupon_input_reset()

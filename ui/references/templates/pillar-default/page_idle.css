@@ -15,11 +15,12 @@ QLabel {
 }
 
 #label_welcome_message {
-    font-size: 55px;
+    font-size: 80px;
     font-weight: 700;
     line-height: 43px;
     color: white;
-    font-family: 'Montserrat';
+    font-family: 'Lora';
+    /* font-family: 'Vollkorn'; */
 }
 
 #label_printer_status {

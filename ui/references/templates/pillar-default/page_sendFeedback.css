@@ -3,17 +3,7 @@
    border: 0px;
 }
 
-.buttonPreviousPage{
-   font-family: 'EuropaNuova-Regular';
-   font-style: normal;
-   font-weight: 700;
-   font-size: 65px;
-   color: white;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-   border: none;
-   background: transparent;
-}
+
 
 .labelMailFeedback, .labelThankyouFeedback{
    font-family: 'EuropaNuova-ExtraBold';
@@ -155,4 +145,17 @@ QLineEdit {
    letter-spacing: 1.5px;
    color: #221F20;
    border: none;
+}
+
+.buttonPreviousPage{
+   font-family: 'EuropaNuova-Regular';
+   font-style: normal;
+   font-weight: 700;
+   font-size: 65px;
+   color: white;
+   text-align: left;
+   qproperty-alignment: AlignCenter; 
+   border: none;
+   background: transparent;
+   padding: 0px !important;
 }

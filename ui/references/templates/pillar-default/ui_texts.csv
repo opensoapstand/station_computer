@@ -14,7 +14,7 @@
 # empty lines are also permitted
 
 # page_idle
-page_idle->label_welcome_message,Want a drink?
+page_idle->label_welcome_message,Fancy a beverage?
 page_idle->label_printer_status->offline,Assistance needed<br>Receipt Printer offline.
 page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer empty or improperly loaded.
 
@@ -41,6 +41,7 @@ page_dispenser->label_press,press and hold the<br>button
 
 # page_help
 page_help->pushButton_to_idle,⇦
+
 # page_sendFeedback
 page_sendFeedback->pushButton_previous_page,⇦
 page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop.

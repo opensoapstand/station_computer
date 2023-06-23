@@ -315,7 +315,7 @@ void page_idle_products::changeBackground()
     // QString base_path = "/home/df-admin/production/references/templates/default/";
     QStringList all_files_in_template_folder = df_util::getFileList(p_page_idle->thisMachine.getTemplateFolder());
 
-    QString template_name = "background_idle_products_%1_1000ms.png";
+    QString template_name = "background_idle_products_%1_2000ms.png";
     QString filterPattern = template_name.arg(active_background_index);
     QStringList filteredList = all_files_in_template_folder.filter(filterPattern, Qt::CaseSensitive);
 

@@ -19,22 +19,22 @@ QLabel {
     font-weight: 700;
     font-style: normal;
     font-size: 58px;
-    /* color: #221F20; */
-    color: #AB7B57;
+    color: #221F20;
+    /* color: #AB7B57; */
     text-align: left;
     qproperty-alignment: AlignCenter;
-    /* font-family: 'EuropaNuova-ExtraBold'; */
-    font-family: 'Lora';
+    font-family: 'EuropaNuova-ExtraBold';
+    /* font-family: 'Lora'; */
     /* font-family: 'Vollkorn'; */
 }
 
 #pushButton_to_idle {
-    font-family: 'Lora';
-    /* font-family: 'EuropaNuova-Regular'; */
+    /* font-family: 'Lora'; */
+    font-family: 'EuropaNuova-Regular';
     font-style: normal;
     font-weight: 700;
-    font-size: 65px;
-    color: black;
+    font-size: 35px;
+    color: #221F20;
     text-align: left;
     qproperty-alignment: AlignCenter;
     border: none;
@@ -55,9 +55,9 @@ QLabel {
 }
 
 .label_product_type {
-    font-family: 'Lora';
+    /* font-family: 'Lora'; */
     /* font-family: 'Vollkorn'; */
-    /* font-family: 'EuropaNuova-ExtraBold'; */
+    font-family: 'EuropaNuova-ExtraBold';
     font-weight: 700;
     font-style: normal;
     font-size: 37px;
@@ -65,8 +65,8 @@ QLabel {
     text-align: center;
     qproperty-alignment: AlignCenter;
     /* color: #5E826A; */
-    /* color: #221F20; */
-    color: #AB7B57;
+    color: #221F20;
+    /* color: #AB7B57; */
 }
 
 .label_product_name {
@@ -81,6 +81,8 @@ QLabel {
     font-size: 22px;
     color: #221F20;
     /* color: #D6BFAB; */
+    /* color: #F3DA7F; */
+
 }
 
 .label_product_photo {

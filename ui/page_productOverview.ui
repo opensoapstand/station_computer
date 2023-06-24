@@ -1836,7 +1836,7 @@ outline: none;
      <x>130</x>
      <y>993</y>
      <width>571</width>
-     <height>80</height>
+     <height>90</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -1998,7 +1998,7 @@ color: #58595B;
      <x>94</x>
      <y>890</y>
      <width>891</width>
-     <height>781</height>
+     <height>760</height>
     </rect>
    </property>
    <property name="font">
@@ -2073,7 +2073,7 @@ text-align: center;</string>
      <x>137</x>
      <y>1280</y>
      <width>821</width>
-     <height>20</height>
+     <height>5</height>
     </rect>
    </property>
    <property name="orientation">

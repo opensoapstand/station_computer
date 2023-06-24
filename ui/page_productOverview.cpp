@@ -167,9 +167,29 @@ void page_product_overview::reset_and_show_page_elements()
     ui->label_invoice_name->setText(p_page_idle->selectedProduct->getProductName());
 
     ui->promoKeyboard->hide();
-    if (p_page_idle->thisMachine.getCouponsEnabled())
+
+    switch (p_page_idle->thisMachine.getCouponState())
     {
-        // p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code, "coupons_enable");
+    case (enabled_invalid_input):
+    {
+
+    }
+    break;
+    case (enabled_set_valid_input):
+    {
+
+    }
+    break;
+    case (disabled):
+    {
+         qDebug() << "Coupons not enabled";
+
+        coupon_input_hide();
+    }
+    break;
+    case (enabled_not_set):
+    {
+         // p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code, "coupons_enable");
         QString promo_code_input_text = p_page_idle->getTemplateTextByPage(this, "lineEdit_promo_code->coupons_enable");
         ui->lineEdit_promo_code->setText(promo_code_input_text);
 
@@ -190,12 +210,13 @@ void page_product_overview::reset_and_show_page_elements()
         ui->label_invoice_discount_name->show();
         ui->pushButton_promo_input->show();
     }
-    else
+    break;
+    default:
     {
-        qDebug() << "Coupons not enabled";
-       
-        coupon_input_hide();
     }
+    break;
+    }
+    
 
     if (!p_page_idle->isPromoApplied())
     {

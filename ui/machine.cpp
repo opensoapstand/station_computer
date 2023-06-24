@@ -19,6 +19,21 @@ void machine::setDb(DbManager *db)
     m_db = db;
 }
 
+StateCoupon machine::getCouponState(){
+    return m_stateCoupon
+}
+void machine::setCouponValid(StateCoupon state){
+    m_stateCoupon = state;
+}
+
+void machine::setCouponStateFromDb(){
+    if (getCouponsEnabled){
+        m_stateCoupon = enabled_not_set;
+    }else{
+        m_stateCoupon = disabled;
+    }
+}
+
 QString machine::getTemplateFolder()
 {
     QString template_name = m_template;

@@ -32,6 +32,15 @@ class page_dispenser;
 class page_error_wifi;
 class page_help;
 class page_product;
+
+// typedef enum UserRole
+// {
+//     user,
+//     maintainer,
+//     admin
+// } UserRole;
+
+
 namespace Ui
 {
     class page_product_overview;
@@ -48,9 +57,9 @@ public:
     QLabel *orderSizeBackgroundLabels[4];
 
     explicit page_product_overview(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,page_tap_payment *page_tap_payment,page_tap_payment_serial *page_tap_payment_serial, page_help *pageHelp, page_product *page_product);
+    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_tap_payment *page_tap_payment, page_tap_payment_serial *page_tap_payment_serial, page_help *pageHelp, page_product *page_product);
     ~page_product_overview();
-  
+
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
 
@@ -69,7 +78,7 @@ private slots:
     // **** Navigation ****
     void on_pushButton_previous_page_clicked();
     void on_pushButton_continue_clicked();
-   
+
     void on_lineEdit_promo_codeInput_clicked();
     void on_pushButton_select_product_page_clicked();
     void return_to_selectProductPage();
@@ -77,7 +86,10 @@ private slots:
     void on_pushButton_to_help_clicked();
     void onSelectTimeoutTick();
     void keyboardButtonPressed(int);
+
 private:
+
+
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
     bool stopSelectTimers();

@@ -172,24 +172,28 @@ void page_product_overview::reset_and_show_page_elements()
     {
     case (enabled_invalid_input):
     {
-
+        p_page_idle->addCssClassToObject(ui->lineEdit_promo_code, "promoCode_invalid", PAGE_PRODUCT_OVERVIEW_CSS);
+        QString promo_code_input_text = p_page_idle->getTemplateTextByPage(this, "lineEdit_promo_code->invalid");
+        ui->lineEdit_promo_code->setText(promo_code_input_text);
     }
     break;
     case (enabled_set_valid_input):
     {
-
+        p_page_idle->addCssClassToObject(ui->lineEdit_promo_code, "promoCode_valid", PAGE_PRODUCT_OVERVIEW_CSS);
+        QString promo_code_input_text = p_page_idle->getTemplateTextByPage(this, "lineEdit_promo_code->valid");
+        ui->lineEdit_promo_code->setText(promo_code_input_text);
     }
     break;
     case (disabled):
     {
-         qDebug() << "Coupons not enabled";
+        qDebug() << "Coupons not enabled";
 
         coupon_input_hide();
     }
     break;
     case (enabled_not_set):
     {
-         // p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code, "coupons_enable");
+        // p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code, "coupons_enable");
         QString promo_code_input_text = p_page_idle->getTemplateTextByPage(this, "lineEdit_promo_code->coupons_enable");
         ui->lineEdit_promo_code->setText(promo_code_input_text);
 
@@ -213,10 +217,11 @@ void page_product_overview::reset_and_show_page_elements()
     break;
     default:
     {
+        QString promo_code_input_text = p_page_idle->getTemplateTextByPage(this, "lineEdit_promo_code->coupons_enable");
+        ui->lineEdit_promo_code->setText(promo_code_input_text);
     }
     break;
     }
-    
 
     if (!p_page_idle->isPromoApplied())
     {

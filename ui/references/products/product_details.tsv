@@ -1,5 +1,5 @@
 Product ID	Product Name	Type	Supplier	Brand	Location (see company C-code )	Ingredients	Product Name on UI	Product Description on UI	Features on UI	Ingredients on UI	Flow Calibration [ml/tick]	Notes	URL
-P-0	WATER					WATER	Water	Quench your thirst with the refreshing purity of Vancouver water. Derived from pristine mountain springs and cascading rivers, this liquid jewel captures the essence of nature itself. Its crisp and clean taste revitalizes your senses, offering a revitalizing embrace of clarity and hydration. Experience the essence of Vancouver in every sip.		Rain, mist, snow, ice	7.1		
+P-0	WATER	Water				WATER	Water	Quench your thirst with the refreshing purity of Vancouver water. Derived from pristine mountain springs and cascading rivers, this liquid jewel captures the essence of nature itself. Its crisp and clean taste revitalizes your senses, offering a revitalizing embrace of clarity and hydration. Experience the essence of Vancouver in every sip.		Rain, mist, snow, ice	7.1		
 P-1		Dish	Jusu	Jusu									
 P-2		Hand	Jusu	Jusu									
 P-3		Dish	Jusu	Jusu							6.0		

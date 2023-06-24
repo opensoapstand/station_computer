@@ -34,6 +34,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <thread>
 
 class page_product;
 class page_dispenser;
@@ -86,10 +87,10 @@ public:
     string getMerchantAddress() {
         return merchantAddress;
     }
+    void tap_serial_initiate();
 
     QTimer *readTimer;
     StatePaymentSerial state_payment;
-    bool tap_serial_initiate();
 
 private slots:
 
@@ -154,5 +155,6 @@ private:
     void resetPaymentPage();
     int tmpCounter ;
 };
+
 
 #endif // page_tap_payment_serial_H

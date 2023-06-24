@@ -526,7 +526,15 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     }
     else if (updated_volume_remaining < CONTAINER_EMPTY_THRESHOLD_ML)
     {
-        productDispensers[pos_index].setSlotState(SLOT_STATE_AVAILABLE_LOW_STOCK);
+        // disabled states are only manually changeable.
+        if (productDispensers[pos_index].getSlotState() != SLOT_STATE_DISABLED_COMING_SOON && productDispensers[pos_index].getSlotState() != SLOT_STATE_DISABLED)
+        {
+            productDispensers[pos_index].setSlotState(SLOT_STATE_AVAILABLE_LOW_STOCK);
+        }
+        else
+        {
+            debugOutput::sendMessage("State will not be set, as it's disabled", MSG_INFO);
+        }
         debugOutput::sendMessage("Almost empty warning: " + to_string(updated_volume_remaining), MSG_INFO);
     }
 
@@ -541,11 +549,11 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
 
     // std::string s = std::format("{:.2f}", 3.14159265359); // s == "3.14"
 
-    if (isValidTransaction){
+    if (isValidTransaction)
+    {
         std::string sql1;
         sql1 = ("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,slot,button_duration,button_times,processed_by_backend,product_id) VALUES ('" + product_name + "'," + target_volume + "," + price_string + ",'" + start_time + "'," + dispensed_volume_str + ",'" + end_time + "'," + updated_volume_remaining_str + "," + to_string(slot) + "," + button_press_duration + "," + dispense_button_count + "," + to_string(false) + ",'" + product_id + "');");
         databaseUpdateSql(sql1);
-
     }
     // update transactions table
 

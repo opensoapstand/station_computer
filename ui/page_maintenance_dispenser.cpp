@@ -168,18 +168,21 @@ void page_maintenance_dispenser::setStatusTextLabel(QString statusText)
         // {
         //     status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->not_enabled");
         // }
-        
-        if (statusText.compare("SLOT_STATE_AVAILABLE") == 0)
+        if (statusText.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
+        {
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->coming_soon");
+        }
+        else if (statusText.compare("SLOT_STATE_DISABLED") == 0)
+        {
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->not_enabled");
+        }
+        else if (statusText.compare("SLOT_STATE_AVAILABLE") == 0)
         {
             status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->available");
         }
         else if (statusText.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
         {
             status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->almost_empty");
-        }
-        else if (statusText.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
-        {
-            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->coming_soon");
         }
         else if (statusText.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
         {

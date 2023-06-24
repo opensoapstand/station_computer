@@ -92,6 +92,8 @@ DF_ERROR stateIdle::onAction()
          productDispensers = g_productDispensers;
          debugOutput::sendMessage("Before reload parameters from product", MSG_INFO);
          bool success = this->productDispensers[0].getProduct()->reloadParametersFromDb();
+         this->productDispensers[0].loadGeneralProperties();
+         
          debugOutput::sendMessage("After" + to_string(success), MSG_INFO);
       }
       else

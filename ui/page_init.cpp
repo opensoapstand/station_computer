@@ -35,7 +35,7 @@ page_init::page_init(QWidget *parent) : QWidget(parent),
     rebootTimer = new QTimer(this);
     rebootTimer->setInterval(1000);
     connect(rebootTimer, SIGNAL(timeout()), this, SLOT(onRebootTimeoutTick()));
-    connect(this, SIGNAL(taskCompleted()), this, SLOT(showIdlePage()));
+    connect(this, SIGNAL(tapSetupInitialized()), this, SLOT(showIdlePage()));
 }
 
 void page_init::setPage(page_idle *pageIdle)
@@ -76,8 +76,10 @@ void page_init::showEvent(QShowEvent *event)
     }
     else
     {
-        if (paymentMethod.contains("tap"))
+        if (paymentMethod==PAYMENT_TAP_TCP || paymentMethod==PAYMENT_TAP_SERIAL)
         {
+            // Thread setup for non-blocking tap payment initialization
+            // Using bind for non-static functions
             auto bindFn = std::bind(&page_init::initiateTapPayment, this);
             tapInitThread = std::thread(bindFn);
             tapInitThread.detach();
@@ -95,7 +97,7 @@ void page_init::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 void page_init::initReadySlot(void)
 {
     qDebug() << "Signal: init ready from fsm";
-    if (paymentMethod != "tapTcp" && paymentMethod != "tapSerial")
+    if (paymentMethod != PAYMENT_TAP_TCP && paymentMethod != PAYMENT_TAP_SERIAL)
     {
         hideCurrentPageAndShowProvided(p_page_idle);
     }
@@ -110,7 +112,7 @@ void page_init::onInitTimeoutTick()
     else
     {
         initIdleTimer->stop();
-        if (paymentMethod != "tapTcp" && paymentMethod != "tapSerial")
+        if (paymentMethod != PAYMENT_TAP_TCP && paymentMethod != PAYMENT_TAP_SERIAL)
         {
             hideCurrentPageAndShowProvided(p_page_idle);
         }
@@ -136,20 +138,22 @@ void page_init::onRebootTimeoutTick()
 void page_init::initiateTapPayment()
 {
     this->showFullScreen();
+    // Waiting for payment label setup
     QString waitingForPayment = p_page_idle->getTemplateText("page_init->label_fail_message->tap_payment");
     p_page_idle->setTextToObject(ui->label_fail_message, waitingForPayment);
-    if (paymentMethod == "tapTcp")
+    
+    if (paymentMethod == PAYMENT_TAP_TCP)
     {
         page_tap_payment paymentObject;
         paymentObject.initiate_tap_setup();
     }
-    else if (paymentMethod == "tapSerial")
+    else if (paymentMethod == PAYMENT_TAP_SERIAL)
     {
         page_tap_payment_serial paymentSerialObject;
         paymentSerialObject.tap_serial_initiate();
     }
 
-    emit taskCompleted();
+    emit tapSetupInitialized();
 }
 
 void page_init::showIdlePage()

@@ -20,8 +20,8 @@ QPushButton {
    font-family: 'EuropaNuova-Regular';
    font-style: normal;
    font-weight: 700;
-   font-size: 65px;
-   color: white;
+   font-size: 35px;
+   color: #221F20;
    text-align: left;
    qproperty-alignment: AlignCenter;
    border: none;
@@ -35,6 +35,8 @@ QPushButton {
 }
  
 #label_title {
+   /* font-family: 'Lora'; */
+   /* font-family: 'Vollkorn'; */
    font-family: 'EuropaNuova-ExtraBold';
    font-style: normal;
    font-weight: 400;

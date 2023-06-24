@@ -19,6 +19,14 @@
 
 #pushButton_to_idle{
    text-align: left;
+   color: #221F20;
+   font-family: 'EuropaNuova-Regular';
+   font-style: normal;
+   font-weight: 700;
+   font-size: 35px;
+   color: #221F20;
+   qproperty-alignment: AlignCenter;
+   border: none;
 }
 
 QPushButton {
@@ -28,7 +36,7 @@ QPushButton {
    font-size: 32px;
    color: white;
    background-color: #221F20;
-   border: 1px solid white;
+   border: 2px solid white;
    text-align: center;
    border-radius: 20px;  
 }

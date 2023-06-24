@@ -432,7 +432,6 @@ void page_product::reset_and_show_page_elements()
                 orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2));
                 orderSizeLabelsVolume[i]->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(product_sizes[i], true, true));
             }
-
             orderSizeButtons[i]->raise();
         }
         else

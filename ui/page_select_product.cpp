@@ -218,7 +218,7 @@ void page_select_product::displayProducts()
         {
             icon_path = ICON_TYPE_DEFAULT;
             type_text = product_type;
-            // qDebug() << "Icon for product type not found : " << type_text << " Set to default. ";
+            qDebug() << "Icon for product type not found : " << type_text << " Set to default. ";
         }
         QString product_type_icon_path = p_page_idle->thisMachine.getTemplatePathFromName(icon_path);
         p_page_idle->addPictureToLabel(labels_product_icon[slot_index], product_type_icon_path);

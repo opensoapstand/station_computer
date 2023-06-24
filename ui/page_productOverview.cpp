@@ -200,15 +200,15 @@ void page_product_overview::reset_and_show_page_elements()
         QString promoCodeText = ui->lineEdit_promo_code->text();
         qDebug() << "Promo code text: " << promoCodeText;
 
-        ui->lineEdit_promo_code->show();
-        if (p_page_idle->isPromoApplied())
-        {
-            qDebug() << "Promo code is applied: ";
-            // p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code, "valid");
-            QString promo_code_input_text = p_page_idle->getTemplateTextByPage(this, "lineEdit_promo_code->valid");
-            // p_page_idle->setTextToObject(ui->lineEdit_promo_code, promo_code_input_text);
-            ui->lineEdit_promo_code->setText(promo_code_input_text);
-        }
+        // ui->lineEdit_promo_code->show();
+        // if (p_page_idle->isPromoApplied())
+        // {
+        //     qDebug() << "Promo code is applied: ";
+        //     // p_page_idle->setTemplateTextWithIdentifierToObject(ui->lineEdit_promo_code, "valid");
+        //     QString promo_code_input_text = p_page_idle->getTemplateTextByPage(this, "lineEdit_promo_code->valid");
+        //     // p_page_idle->setTextToObject(ui->lineEdit_promo_code, promo_code_input_text);
+        //     ui->lineEdit_promo_code->setText(promo_code_input_text);
+        // }
 
         ui->label_invoice_discount_amount->show();
         ui->label_invoice_discount_name->show();

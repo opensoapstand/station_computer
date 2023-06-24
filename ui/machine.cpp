@@ -20,13 +20,13 @@ void machine::setDb(DbManager *db)
 }
 
 StateCoupon machine::getCouponState(){
-    return m_stateCoupon
+    return m_stateCoupon;
 }
 void machine::setCouponValid(StateCoupon state){
     m_stateCoupon = state;
 }
 
-void machine::setCouponStateFromDb(){
+bool machine::setCouponStateFromDb(){
     if (getCouponsEnabled){
         m_stateCoupon = enabled_not_set;
     }else{

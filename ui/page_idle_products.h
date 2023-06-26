@@ -49,7 +49,8 @@ class page_idle_products : public QWidget
 
 public:
     explicit page_idle_products(QWidget *parent = nullptr);
-    void setPage(page_idle *pageIdle, page_select_product *p_page_select_product);
+    void setPage(page_idle *pageIdle);
+    
     // function body
     ~page_idle_products();
 
@@ -71,7 +72,7 @@ public:
 private slots:
     // **** Navigation ****
 
-    void on_pushButton_to_select_product_page_clicked();
+    // void on_pushButton_to_select_product_page_clicked();
     // void onBackgroundChangeTimerTimeout();
     void onBackgroundChangeTimerTick();
          

@@ -53,12 +53,6 @@ void machine::setDiscountPercentageFraction(double percentageFraction)
     m_discount_percentage_fraction = percentageFraction;
 }
 
-// double page_idle::getDiscountPercentage()
-// {
-//     qDebug() << "Get Discount percentange" << m_discount_percentage_fraction;
-//     return m_discount_percentage_fraction;
-// }
-
 double machine::getDiscountPercentageFraction()
 {
     return m_discount_percentage_fraction;
@@ -75,16 +69,6 @@ double machine::getPriceWithDiscount(double price)
     return price * (1 - m_discount_percentage_fraction);
 }
 
-// bool machine::isPromoApplied()
-// {
-//     if (m_discount_percentage_fraction != 0.0)
-//     {
-//         qDebug() << "promo applied: true";
-//         return true;
-//     }
-//     return false;
-// }
-
 QString machine::getPromoCode()
 {
     return m_promoCode;
@@ -92,7 +76,6 @@ QString machine::getPromoCode()
 
 void machine::setPromoCode(QString promoCode)
 {
-    // ratio = percentage / 100;
     qDebug() << "Set Promo Code: " << promoCode;
     m_promoCode = promoCode;
 }
@@ -137,16 +120,6 @@ void machine::loadProductPropertiesFromProductsFile(QString soapstand_product_nu
             *features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
             *ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
             break;
-            // int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], m_soapstand_product_serial, Qt::CaseSensitive);
-            // if (compareResult == 0)
-            // {
-            //     // qDebug() << "compare result is 0";
-            //     m_name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
-            //     m_product_type = fields[CSV_PRODUCT_COL_TYPE];
-            //     m_description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
-            //     m_features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
-            //     m_ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
-            //     break;
         }
     }
     file.close();
@@ -177,12 +150,7 @@ QString machine::getDefaultTemplatePathFromName(QString fileName)
 void machine::printerStatus(bool *isOnline, bool *hasPaper)
 {
     qDebug() << "DB call: Check printer status. ";
-
     m_db->printerStatus(isOnline, hasPaper);
-
-    // This needs to be checked frequently, so caching is useless.
-    // *isOnline = m_receipt_printer_is_online==1;
-    // *hasPaper = m_receipt_printer_has_paper==1;
 }
 
 bool machine::hasReceiptPrinter()
@@ -203,7 +171,6 @@ void machine::setPumpRampingEnabled(bool isEnabled)
 
 void machine::setEmptyContainerDetectionEnabled(bool isEnabled)
 {
-
     m_db->updateTableMachineWithInt("has_empty_detection", isEnabled);
 }
 

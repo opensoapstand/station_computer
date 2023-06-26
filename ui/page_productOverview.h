@@ -64,12 +64,10 @@ public:
     void showEvent(QShowEvent *event);
 
     void cancelTimers();
-    void coupon_disable();
-    // void coupon_input_show();
-    void coupon_input_hide();
-    void coupon_input_reset();
 
-    void apply_promo_code();
+    void apply_promo_code(QString promocode);
+
+    bool m_readyToSendCoupon; 
 
 signals:
     void paymentTotal(string, string, string);

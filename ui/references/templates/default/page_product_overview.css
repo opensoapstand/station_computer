@@ -48,6 +48,15 @@ QPushButton {
     color: #f44336;
     border: 1px solid #f44336;
 }
+.promoCode_processing{
+    font-family: Montserrat; 
+    font-style: normal; 
+    font-weight: bold; 
+    font-size: 28px; 
+    line-height: 44px; 
+    color: #858585;
+    border: 1px solid #858585;
+}
 .promoCode_valid{
     font-family: Montserrat; 
     font-style: normal; 

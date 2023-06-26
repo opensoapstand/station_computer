@@ -74,9 +74,8 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void page_idle_products::setPage(page_idle *pageIdle, page_select_product *p_page_select_product)
+void page_idle_products::setPage(page_idle *pageIdle)
 {
-    this->p_pageSelectProduct = p_page_select_product;
     this->p_page_idle = pageIdle;
 }
 
@@ -112,20 +111,26 @@ void page_idle_products::showEvent(QShowEvent *event)
         labels_product_type[slot_index]->setStyleSheet(styleSheet);
     }
 
-    bool needsReceiptPrinter = false;
-    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
-    {
-        QString paymentMethod = p_page_idle->products[slot_index].getPaymentMethod();
-        if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
-        {
-            needsReceiptPrinter = true;
-            qDebug() << "Needs receipt printer: " << paymentMethod;
-            break;
-        }
+    ui->label_printer_status->setStyleSheet(styleSheet);
 
-        // p_page_idle->products[slot_index].setDiscountPercentageFraction(0.0);
-        // p_page_idle->products[slot_index].setPromoCode("");
+    // bool needsReceiptPrinter = false;
+    // for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    // {
+    //     QString paymentMethod = p_page_idle->products[slot_index].getPaymentMethod();
+    //     if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
+    //     {
+    //         needsReceiptPrinter = true;
+    //         qDebug() << "Needs receipt printer: " << paymentMethod;
+    //         break;
+    //     }
+    // }
+
+    ui->label_printer_status->hide(); // always hide here, will show if enabled and has problems.
+    if (p_page_idle->thisMachine.hasReceiptPrinter())
+    {
+        p_page_idle->checkReceiptPrinterStatus();
     }
+
     maintenanceCounter = 0;
 
     displayProducts();
@@ -218,9 +223,6 @@ void page_idle_products::select_product(int slot)
 
 void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
-    // productPageEndTimer->stop();
-    qDebug() << "Exit select product page.";
-    // this->raise();
     p_page_idle->pageTransition(this, pageToShow);
     backgroundChangeTimer->stop();
 }
@@ -229,7 +231,7 @@ void page_idle_products::showAllLabelsAndButtons()
 {
     ui->label_pick_soap->show();
     ui->logo_label->show();
-    ui->printer_status_label->show();
+    ui->label_printer_status->show();
     ui->pushButton_to_select_product_page->show();
 
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
@@ -246,8 +248,7 @@ void page_idle_products::hideAllLabelAndButtons()
 {
     ui->label_pick_soap->hide();
     ui->logo_label->hide();
-    ui->printer_status_label->hide();
-    // ui->pushButton_to_select_product_page->hide();
+    ui->label_printer_status->hide();
 
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
@@ -265,26 +266,26 @@ void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
 
     if (!isOnline)
     {
-        ui->printer_status_label->raise();
+        ui->label_printer_status->raise();
 
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->printer_status_label, "assistance_printer_offline");
-        ui->printer_status_label->show();
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_printer_status, "assistance_printer_offline");
+        ui->label_printer_status->show();
     }
     else if (!hasPaper)
     {
-        ui->printer_status_label->raise();
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->printer_status_label, "empty_improperly_loaded");
-        ui->printer_status_label->show();
+        ui->label_printer_status->raise();
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_printer_status, "empty_improperly_loaded");
+        ui->label_printer_status->show();
     }
     else
     {
-        ui->printer_status_label->hide();
+        ui->label_printer_status->hide();
     }
     ui->pushButton_to_select_product_page->show();
 
     QString styleSheet = p_page_idle->getCSS(PAGE_IDLE_PRODUCTS_CSS);
 
-    ui->printer_status_label->setStyleSheet(styleSheet);
+    ui->label_printer_status->setStyleSheet(styleSheet);
 }
 
 int page_idle_products::setStepTimerFromFileName(QString fileName, int defaultTimeMillis)
@@ -403,8 +404,7 @@ void page_idle_products::onBackgroundChangeTimerTick()
     }
 }
 
-
-void page_idle_products::on_pushButton_to_select_product_page_clicked()
-{
-    this->hideCurrentPageAndShowProvided(p_pageSelectProduct);
-}
+// void page_idle_products::on_pushButton_to_select_product_page_clicked()
+// {
+//     this->hideCurrentPageAndShowProvided(p_pageSelectProduct);
+// }

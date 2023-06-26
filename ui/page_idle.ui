@@ -145,7 +145,7 @@ text-transform: lowercase;</string>
   <zorder>drinkfill_logo_label</zorder>
   <zorder>media_player</zorder>
   <zorder>video_player</zorder>
-  <zorder>printer_status_label</zorder>
+  <zorder>label_printer_status</zorder>
  </widget>
  <resources/>
  <connections/>

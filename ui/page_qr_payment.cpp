@@ -108,22 +108,22 @@ void page_qr_payment::showEvent(QShowEvent *event)
 
     if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
     {
-        ui->label_product_information->setText(p_page_idle->selectedProduct->getProductName() + " " + "max" + " "  + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
-        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_amount, "custom_size");
-        QString label_product_amount_text = "max " + base_text.arg(price);
-        ui->label_product_amount->setText(label_product_amount_text);
+        ui->label_product_information->setText(p_page_idle->selectedProduct->getProductName() + p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_information, "volume_upto") + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
+        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "custom_size");
+        QString label_product_price_text = base_text.arg(price);
+        ui->label_product_price->setText(label_product_price_text);
     }
     else
     {
-        ui->label_product_information->setText(p_page_idle->selectedProduct->getProductName() + " " + "max" + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
-        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_amount, "fixed_size");
-        QString label_product_amount_text = "max " + base_text.arg(price);
-        ui->label_product_amount->setText(label_product_amount_text);
+        ui->label_product_information->setText(p_page_idle->selectedProduct->getProductName() + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
+        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "fixed_size");
+        QString label_product_price_text = base_text.arg(price);
+        ui->label_product_price->setText(label_product_price_text);
     }
 
     ui->label_qrCode->show();
     ui->label_product_information->show();
-    ui->label_product_amount->show();
+    ui->label_product_price->show();
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
 
@@ -170,7 +170,7 @@ void page_qr_payment::setupQrOrder()
     {
         ui->label_qrCode->show();
         ui->label_product_information->show();
-        ui->label_product_amount->show();
+        ui->label_product_price->show();
         ui->label_title->hide();
         ui->label_scan->hide();
         ui->label_steps->hide();
@@ -314,7 +314,7 @@ void page_qr_payment::isQrProcessedCheckOnline()
             state_payment = s_payment_processing;
             ui->label_qrCode->hide();
             ui->label_product_information->hide();
-            ui->label_product_amount->hide();
+            ui->label_product_price->hide();
             ui->label_steps->hide();
 
             ui->label_processing->show();

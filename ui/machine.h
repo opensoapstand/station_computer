@@ -12,6 +12,14 @@ typedef enum UserRole
     admin
 } UserRole;
 
+typedef enum StateCoupon
+{
+    disabled,
+    enabled_not_set,
+    enabled_invalid_input,
+    enabled_set_valid_input
+} StateCoupon;
+
 class machine : public QObject
 {
     Q_OBJECT
@@ -25,7 +33,7 @@ public:
     bool slotNumberValidityCheck(int slot);
     QString getStatusText(int slot);
     void setStatusText(int slot, bool isSlotEnabled, QString status);
-    void loadProductPropertiesFromProductsFile(QString soapstand_product_number, QString* name, QString* name_ui, QString* product_type, QString* description_ui, QString* features_ui, QString* ingredients_ui);
+    void loadProductPropertiesFromProductsFile(QString soapstand_product_number, QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);
 
     QString getPumpId(int slot);
 
@@ -59,11 +67,17 @@ public:
     bool hasReceiptPrinter();
     void printerStatus(bool *isOnline, bool *hasPaper);
 
+    StateCoupon getCouponState();
+    void setCouponValid(StateCoupon state);
+    void setCouponStateFromDb();
+
 public slots:
 
 signals:
 
 private:
+    StateCoupon m_stateCoupon;
+
     DbManager *m_db;
     UserRole active_role;
     QString m_machine_id;

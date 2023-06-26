@@ -1,6 +1,7 @@
 #include "page_maintenance_dispenser.h"
 #include "ui_page_maintenance_dispenser.h"
 #include "page_idle.h"
+#include "/home/df-admin/drinkfill/fsm/components/pcb.cpp"
 
 #include <QInputDialog>
 #include <QCoreApplication>
@@ -105,7 +106,10 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->pushButton_setting_speed_pwm->hide();
     ui->label_setting_speed_pwm->hide();
     ui->pushButton_setting_temperature->setVisible(false);
-    ui->label_setting_temperature->setVisible(false);
+   // ui->label_setting_temperature->setVisible(false);
+   double temperature = getTemperatureConfigure();
+       //  debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
+    ui->label_setting_temperature->setText("Temp="+temperature);
 
     isDispenseButtonPressed = false;
     activeEditField = "";
@@ -1022,3 +1026,4 @@ void page_maintenance_dispenser::on_pushButton_update_portal_clicked()
     curl_easy_cleanup(curl2);
     readBuffer = "";
 }
+

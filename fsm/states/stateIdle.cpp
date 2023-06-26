@@ -95,6 +95,15 @@ DF_ERROR stateIdle::onAction()
          bool success = this->productDispensers[0].getProduct()->reloadParametersFromDb();
          debugOutput::sendMessage("after" + to_string(success), MSG_INFO);
       }
+      else if ('5' == m_pMessaging->getAction())
+      {
+
+         double temperature = this->productDispensers[0].the_pcb->getTemperatureConfigure();
+         debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
+
+
+         printf("Temperature polling from MCP9808: %.3f Celcius \n", temperature);
+      }
       else
       {
          debugOutput::sendMessage("---Main Menu---\n"
@@ -103,7 +112,8 @@ DF_ERROR stateIdle::onAction()
                                   " 1: Test printer\n"
                                   " 2: Test pumps\n"
                                   " 3: Manual Config \n"
-                                  " 4: Specific debug \n"
+                                  " 4: Get slot 1 properties loaded from db \n"
+                                  " 5: Get temperature from MCP9808 \n"
                                   " [1..4]d[l,s,t]: Enter dispense mode. [product number]d[size] e.g. 1ld;\n"
                                   " [1..4]f[l,s,t]: If dispensing: to End Dispensing [product number]f[size] e.g. 1lf;\n"
                                   " h: Display this help message"

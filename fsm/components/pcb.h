@@ -32,6 +32,8 @@
 
 // #include "pcbEN134.h"
 
+#define MAX_BUF 64
+
 #define MAX_SLOT_COUNT 8
 #define PCA9534_ADDRESS_SLOT_1 0b0100000
 #define PCA9534_ADDRESS_SLOT_2 0b0100001
@@ -118,8 +120,12 @@ public:
 
     //double readTemperature();  //temp sensor
     double getTemperature();  //temp sensor
+    double getTemperatureConfigure();  //temp sensor
+    double getTemperaturenotworking();  //temp sensor
     int temperatureSensor;
     uint8_t temperature_msb9;
+    int16_t temp;
+    double cTemp;
 
     
     // int fd = tempe(MCP9808_ADDRESS);

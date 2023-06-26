@@ -52,7 +52,6 @@ void machine::setup()
     switch_24V = new oddyseyx86GPIO(IO_PIN_ENABLE_24V);
     switch_24V->setPinAsInputElseOutput(false); // set as output
 }
-
 pcb *machine::getPcb()
 {
     return control_pcb;
@@ -145,3 +144,8 @@ void machine::print_receipt(string name_receipt, string receipt_cost, string rec
     const char *out = "\n\n";
     receipt_printer->printText(out);
 }
+
+//pcb *machine::getTemperature();
+// {
+//     return 0;
+// }double cTemp

@@ -1,51 +1,48 @@
 #pushButton_previous_page {
-   font-family: 'Brevia';
-   font-style: normal;
-   font-weight: 75;
-   font-size: 32px;
-   line-height: 99px;
-   color: #003840;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-   border: none;
+  font-family: "Brevia";
+  font-style: normal;
+  font-weight: 75;
+  font-size: 32px;
+  line-height: 99px;
+  color: #003840;
+  text-align: left;
+  qproperty-alignment: AlignCenter;
+  border: none;
 }
 
-
 QPushButton {
-   font-family: 'Brevia';
-   font-style: normal;
-   font-weight: 50;
-   font-size: 32px;
-   color: #003840;
-   background-color: #FFFFFF;
-   border: 0px;
-   text-align: center;
-   border-radius: 20px;
-   border: none;
-  
+  font-family: "Brevia";
+  font-style: normal;
+  font-weight: 50;
+  font-size: 32px;
+  color: #003840;
+  background-color: #ffffff;
+  border: 0px;
+  text-align: center;
+  border-radius: 20px;
+  border: none;
 }
 
 .invisible_button {
-   background-color: transparent;
-   border: 0px
+  background-color: transparent;
+  border: 0px;
 }
 
-QMessageBox.msgBoxbox{
-   min-width: 7000px;
-   font-size: 24px;
-   color: red;
-   font-weight: bold;
-   font-style: normal;
-   font-family: 'Montserrat';
-   /* Additional styles specific to QMessageBox */
+QMessageBox.msgBoxbox {
+  min-width: 7000px;
+  font-size: 24px;
+  color: red;
+  font-weight: bold;
+  font-style: normal;
+  font-family: "Montserrat";
+  /* Additional styles specific to QMessageBox */
 }
 
-QMessageBox.msgBoxbutton QPushButton{
-   font-size: 24px;
-   min-width: 300px;
-   min-height: 300px;
-   /* Additional styles specific to QPushButton within QMessageBox */
-   
+QMessageBox.msgBoxbutton QPushButton {
+  font-size: 24px;
+  min-width: 300px;
+  min-height: 300px;
+  /* Additional styles specific to QPushButton within QMessageBox */
 }
 
 /* 

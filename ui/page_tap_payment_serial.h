@@ -41,15 +41,17 @@ class page_dispenser;
 class page_idle;
 class page_help;
 
-namespace Ui {
-class page_tap_payment_serial;
+namespace Ui
+{
+    class page_tap_payment_serial;
 }
 
-typedef enum StatePaymentSerial{
+typedef enum StatePaymentSerial
+{
     s_serial_init,
     s_serial_payment_processing,
     s_serial_payment_done
-}StatePaymentSerial;
+} StatePaymentSerial;
 
 using namespace std;
 
@@ -76,15 +78,18 @@ public:
 
     void sendCommand();
 
-    string getTerminalID(){
+    string getTerminalID()
+    {
         return terminalID;
     }
 
-    string getMerchantName(){
+    string getMerchantName()
+    {
         return merchantName;
     }
 
-    string getMerchantAddress() {
+    string getMerchantAddress()
+    {
         return merchantAddress;
     }
     void tap_serial_initiate();
@@ -110,14 +115,14 @@ private:
     page_idle *p_page_idle;
     page_help *p_page_help;
     page_error_wifi *p_page_wifi_error;
-   
+
     bool approved = false;
 
     void stopPayTimers();
 
     QSqlDatabase db;
 
- // Tap Payment Control
+    // Tap Payment Control
     string merchantName;
     string merchantAddress;
     string terminalID;
@@ -127,7 +132,7 @@ private:
     transactionPacket paymentPacket;
     transactionInfo paymentPktInfo;
     bool paymentProcessing;
-    
+
     bool isInitCancelled;
     bool isInitBatched;
     bool isInitLogin;
@@ -147,14 +152,12 @@ private:
     bool sendToUX410();
     bool waitForUX410();
     void cancelPayment();
-    bool getResponse(){return response;}
-    bool tapSetupStarted =false;
+    bool getResponse() { return response; }
+    bool tapSetupStarted = false;
 
-    QTimer* paymentEndTimer;
-    QTimer* idlePaymentTimer;
+    QTimer *paymentEndTimer;
     void resetPaymentPage();
-    int tmpCounter ;
+    int tmpCounter;
 };
-
 
 #endif // page_tap_payment_serial_H

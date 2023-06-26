@@ -30,10 +30,6 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
     readTimer = new QTimer(this);
     connect(readTimer, SIGNAL(timeout()), this, SLOT(readTimer_loop()));
 
-    // Idle Payment reset
-    idlePaymentTimer = new QTimer(this);
-    connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
-
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->label_title->hide();
     ui->order_total_amount->hide();
@@ -41,18 +37,6 @@ page_tap_payment_serial::page_tap_payment_serial(QWidget *parent) : QWidget(pare
 
 void page_tap_payment_serial::stopPayTimers()
 {
-
-    if (idlePaymentTimer != nullptr)
-    {
-        qDebug() << "cancel page_idle payment Timer" << endl;
-        idlePaymentTimer->stop();
-    }
-
-    if (paymentEndTimer != nullptr)
-    {
-        qDebug() << "cancel page_idle payment END Timer" << endl;
-        paymentEndTimer->stop();
-    }
 
     if (readTimer != nullptr)
     {
@@ -88,7 +72,6 @@ void page_tap_payment_serial::on_pushButton_payment_bypass_clicked()
 /*Cancel any previous payment*/
 void page_tap_payment_serial::cancelPayment()
 {
-    stopPayTimers();
 
     com.flushSerial();
     /*Cancel any previous payment*/
@@ -99,9 +82,7 @@ void page_tap_payment_serial::cancelPayment()
         pktResponded.clear();
     }
     com.flushSerial();
-
 }
-
 
 // Navigation: Back to Drink Size Selection
 void page_tap_payment_serial::on_pushButton_previous_page_clicked()
@@ -154,14 +135,13 @@ void page_tap_payment_serial::showEvent(QShowEvent *event)
     qDebug() << "Acknowledgement received";
     if (readPacket.getAckOrNak() == communicationPacketField::ACK)
     {
-        
+
         timerEnabled = true;
     }
     readTimer->start(10);
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
     ui->productLabel->hide();
     ui->order_drink_amount->hide();
-   
 }
 
 bool page_tap_payment_serial::setpaymentProcess(bool status)
@@ -180,7 +160,7 @@ bool page_tap_payment_serial::exitConfirm()
         p_page_idle->addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_TAP_PAYMENT_CSS);
         QString searchString = this->objectName() + "->msgBox_cancel";
         p_page_idle->setTextToObject(&msgBox, p_page_idle->getTemplateText(searchString));
-    
+
         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         int ret = msgBox.exec();
         bool success;
@@ -188,8 +168,6 @@ bool page_tap_payment_serial::exitConfirm()
         {
         case QMessageBox::Yes:
         {
-            // resetPaymentPage();
-            // transactionLogging = "";
             return true;
         }
         break;
@@ -203,12 +181,9 @@ bool page_tap_payment_serial::exitConfirm()
     else
     {
         // exit, no questions asked.
-        // resetPaymentPage();
-        // transactionLogging = "";
         return true;
     }
 }
-
 
 void page_tap_payment_serial::on_pushButton_to_idle_clicked()
 {
@@ -234,7 +209,7 @@ void page_tap_payment_serial::resetPaymentPage()
 {
 
     cancelPayment();
-
+    stopPayTimers();
 }
 
 void page_tap_payment_serial::tap_serial_initiate()
@@ -414,7 +389,6 @@ void page_tap_payment_serial::readTimer_loop()
                         paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
                         response = true;
                         hideCurrentPageAndShowProvided(p_page_dispense);
-
                     }
                     else if (pktResponded[19] == 0x44)
                     { // Host Response 44 = D "Declined"

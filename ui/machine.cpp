@@ -49,7 +49,7 @@ void machine::initCouponState()
 void machine::setDiscountPercentageFraction(double percentageFraction)
 {
     // ratio = percentage / 100;
-    qDebug() << "Set discount percentage fraction in idle page: " << QString::number(percentageFraction, 'f', 3);
+    qDebug() << "Set discount percentage as a fraction. " << QString::number(percentageFraction, 'f', 3);
     m_discount_percentage_fraction = percentageFraction;
 }
 

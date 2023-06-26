@@ -55,10 +55,9 @@ page_product_overview->pushButton_select_product_page,<- back
 page_product_overview->label_discount_tag,Discount
 page_product_overview->pushButton_continue,Continue
 page_product_overview->label_total,Total
-page_product_overview->lineEdit_promo_code->coupons_enable,Tap here to enter promo code
 page_product_overview->lineEdit_promo_code->valid,Promo Code Valid
 page_product_overview->lineEdit_promo_code->invalid,Promo Code Invalid
-page_product_overview->lineEdit_promo_code->network_error,Network error, could not verify.
+page_product_overview->lineEdit_promo_code->network_error,Network error, could not verify. Try again.
 page_product_overview->lineEdit_promo_code->invite,Tap here to enter promo code
 page_product_overview->label_selected_volume->custom_volume,Custom Volume<br>(maximum: %1)
 

@@ -199,7 +199,6 @@ void page_product_overview::reset_and_show_page_elements()
         p_page_idle->addCssClassToObject(ui->lineEdit_promo_code, "promoCode_network_error", PAGE_PRODUCT_OVERVIEW_CSS);
         QString promo_code_input_text = p_page_idle->getTemplateTextByPage(this, "lineEdit_promo_code->network_error");
         ui->lineEdit_promo_code->setText(promo_code_input_text);
-        // ui->lineEdit_promo_code->setText(promo_code_input_text);
         ui->lineEdit_promo_code->show();
         ui->pushButton_promo_input->show();
     }
@@ -366,7 +365,7 @@ void page_product_overview::apply_promo_code()
             curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
             if (res != CURLE_OK)
             {
-                qDebug() << "Invalid Coupon curl backend problem. error code: " << res;
+                qDebug() << "Backend coupon response: curl backend problem. error code: " << res;
                 p_page_idle->thisMachine.setCouponState(network_error);
             }
             else
@@ -379,7 +378,7 @@ void page_product_overview::apply_promo_code()
                     json coupon_obj = json::parse(readBuffer);
                     if (coupon_obj["active"])
                     {
-                        qDebug() << "Apply coupon percentage: " << new_percent;
+                        qDebug() << "Backend coupon response: Valid. Discount percentage: " << new_percent;
                         new_percent = coupon_obj["discount_amount"];
 
                         p_page_idle->thisMachine.setPromoCode(promocode);
@@ -389,13 +388,13 @@ void page_product_overview::apply_promo_code()
                     }
                     else
                     {
+                        qDebug() << "Backend coupon response: Invalid ";
                         p_page_idle->thisMachine.setCouponState(enabled_invalid_input);
-                        qDebug() << "Invalid Coupon";
                     }
                 }
                 else
                 {
-                    qDebug() << "Invalid Coupon http 200 response";
+                    qDebug() << "Backend coupon response: http 200 response ";
                     p_page_idle->thisMachine.setCouponState(enabled_invalid_input);
                 }
             }
